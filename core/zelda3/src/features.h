@@ -103,6 +103,15 @@ enum {
 // The 42 split bug-fix toggles (kFeatures1_* / kFeatures2_*) — generated from the Wave-1b catalog.
 #include "features_bugfixes.h"
 
+// Hand-authored features2 bits, allocated DOWNWARD from bit 31. The generated catalog above
+// (features_bugfixes.h, from gen-bundle-flags.mjs) owns features2 UPWARD from bit 0, and the generator
+// throws if it ever grows past this floor, so the two ranges can never collide.
+enum {
+  kFeatures2_HandAuthoredFloor  = 1u << 24,
+  kFeatures2_WidescreenPlayArea = 1u << 24,
+  kFeatures2_WidescreenIdleAI   = 1u << 25,
+};
+
 // Enum values for kRam_Features3 — cheats and other C-side hook divergences. Unlike kFeatures0 (opt-in
 // rendering/QoL settings, each independent), every kFeatures3_Cheat* bit here ALSO requires
 // kFeatures3_CheatsEnabled — see CheatGate() in core/game-hooks/game_hooks_internal.h, the single helper
@@ -163,5 +172,11 @@ extern uint32 g_wanted_gate_words[kGateWordCount];
 // very first SyncGateWords() call, since WRAM starts zeroed and nothing has synced into it yet — the
 // honest answer for "what is in effect" before any frame has run.
 uint32 ZeldaGetEffectiveGateWord(int index);
+
+// Opt-in gate on top of a wide view merely being configured: extends the sprite spawn, spawner-activity
+// and room-clear windows to the rendered view instead of the original 256x224 area. A macro, not an inline,
+// because enhanced_features2 resolves through g_ram, which is declared in variables.h and is not visible
+// here; expanding at the use site keeps this header free of that dependency.
+#define Wide_PlayArea() (Wide_Active() && (enhanced_features2 & kFeatures2_WidescreenPlayArea))
 
 #endif  // ZELDA3_FEATURES_H_

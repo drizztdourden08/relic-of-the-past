@@ -14,6 +14,14 @@
 #include "sprite_main.h"
 #include "assets.h"
 #include "game_hooks.h"
+
+// True once a sprite is confirmed to sit in the wide/tall extra band (Sprite_PrepOamCoordOrDoubleRet)
+// and the idle-AI mode is selected: the sprite keeps running its handler (moves, animates, draws) but
+// cannot act on the player.
+static bool Sprite_BandSuppressed(int k) {
+  return (enhanced_features2 & kFeatures2_WidescreenIdleAI) && g_sprite_in_band[k];
+}
+
 static const uint16 kOamGetBufferPos_Tab0[6] = {0x171, 0x201, 0x31, 0xc1, 0x141, 0x1d1};
 static const uint16 kOamGetBufferPos_Tab1[48] = {
    0x30,  0x50,  0x80,  0xb0,  0xe0, 0x110, 0x140, 0x170, 0x1d0, 0x1d4, 0x1dc, 0x1e0, 0x1e4, 0x1ec, 0x1f0, 0x1f8,
@@ -600,7 +608,7 @@ void Garnish_SparkleCommon(int k, uint8 shift) {
     return;
   OamEnt *oam = GetOamCurPtr();
   int j = garnish_sprite[k];
-  SetOamPlain(oam, pt.x, pt.y, kGarnishSparkle_Char[t],
+  Garnish_SetOam(oam, pt.x, pt.y, kGarnishSparkle_Char[t],
                (sprite_oam_flags[j] | sprite_obj_prio[j]) & 0xf0 | 4, 0);
 }
 
@@ -611,7 +619,7 @@ void Garnish_DustCommon(int k, uint8 shift) {
   if (Garnish_ReturnIfPrepFails(k, &pt))
     return;
   OamEnt *oam = GetOamCurPtr();
-  SetOamPlain(oam, pt.x, pt.y, kRunningManDust_Char[tmp_counter], 0x24, 0);
+  Garnish_SetOam(oam, pt.x, pt.y, kRunningManDust_Char[tmp_counter], 0x24, 0);
 }
 
 void SpriteModule_Explode(int k) {
@@ -877,6 +885,8 @@ int Ancilla_SpawnFallingPrize(uint8 item) {  // 85a51d
 
 bool Sprite_CheckDamageToAndFromLink(int k) {  // 85ab93
   Sprite_CheckDamageFromLink(k);
+  if (Sprite_BandSuppressed(k))
+    return false;
   return Sprite_CheckDamageToLink(k);
 }
 
@@ -1528,13 +1538,30 @@ void SpriteDraw_Shadow_custom(int k, PrepOamCoordsRet *info, uint8 a) {  // 86dc
     return;
   y -= BG2VOFS_copy2;
   info->y = y;
-  if ((uint16)(y + 0x10) >= 0x100)
-    return;
+  if (!Tall_Active()) {
+    if ((uint16)(y + 0x10) >= 0x100)
+      return;
+  } else {
+    // Same representable window OamSetY uses for a tall view: keep instead of hiding across the whole
+    // extra vertical band, not just the stock 256-row screen.
+    int16 ys = (int16)y;
+    int b = (int)g_oam_tall_budget;
+    if (!(ys >= b - 256 && ys < 256 + b))
+      return;
+  }
   OamEnt *oam = GetOamCurPtr() + (sprite_flags2[k] & 0x1f);
+  // SetOamHelper1 keeps only the low byte of the Y handed to it, which on a tall screen cannot say whether
+  // a shadow belongs above the camera or in the bottom band. This site still holds the full signed screen
+  // Y, so re-encode from that: without it the widened keep window above hands back a shadow whose Y has
+  // wrapped, and it draws a band away from the sprite casting it.
   if (sprite_flags3[k] & 0x20) {
     SetOamHelper1(oam, info->x, y + 1, 0x38, (info->flags & 0x30) | 8, 0);
+    if (Tall_Active())
+      OamSetY(oam, y + 1);
   } else {
     SetOamHelper1(oam, info->x, y, 0x6c, (info->flags & 0x30) | 8, 2);
+    if (Tall_Active())
+      OamSetY(oam, y);
   }
 }
 
@@ -1846,21 +1873,48 @@ bool Sprite_PrepOamCoordOrDoubleRet(int k, PrepOamCoordsRet *ret) {  // 86e41e
   ret->r4 = 0;
   int xt = 2 * (int)g_oam_wide_budget;  // wide: cover the wide extra band + worst-case camera-lock shift (|shift| <= budget); mirror of yt
   int yt = 2 * (int)g_oam_tall_budget;  // tall: widen the vertical keep-alive window so sprites in the tall band aren't culled/killed (mirror of xt)
+  // The active section is the 256px window the original game would have shown, and it FOLLOWS the player
+  // rather than sitting at a fixed offset: it is centred on him and slides to stay inside the rendered
+  // view. Pinned against an area edge it stops centring, so the band on that side thins to nothing while
+  // the opposite side keeps the whole extra width. Sprites are classified against that window, so an enemy
+  // beside the player is never treated as off-screen just because the view is pinned.
+  //
+  // Coordinates are relative to the GAME camera, while the PPU places a sprite at x + cameraLockShift, so
+  // both the sprite and the player are converted to rendered coordinates first. With no lock and no band
+  // this reduces exactly to the stock window: shift 0 and zero extras give lo = 0, hi = 256.
+  int shift_x = Wide_Active() ? g_camera_lock_shift_x : 0;
+  int shift_y = Tall_Active() ? g_camera_lock_shift_y : 0;
+  int xr = (int)(int16)x + shift_x;
+  int yr = (int)(int16)y + shift_y;
+  int player_xr = (int)(int16)(link_x_coord - BG2HOFS_copy2) + shift_x;
+  int lo_x = IntMax(-g_render_extra_left, IntMin(g_render_extra_right, player_xr - 128));
+  int hi_x = lo_x + 256;
+  g_band_lo_x = lo_x, g_band_hi_x = hi_x;
 
-  if ((uint16)(x + 0x40 + xt) >= (0x170 + xt * 2) ||
-      (uint16)(y + 0x40 + yt) >= (0x170 + yt * 2) && !(sprite_flags4[k] & 0x20)) {
+  // Keep-alive window, in the same RENDERED frame as the classifier above and as the spawn sweep in
+  // Sprite_ActivateWithinViewRect, which works from BG2HOFS minus the lock shift. Measuring this one in
+  // game-camera coordinates instead left the two disagreeing by the whole shift, so a sprite inside the
+  // spawn rect could sit outside the keep-alive window: spawned, killed, spawned again, which reads on
+  // screen as the sprite flickering in and out. Width is unchanged; only the frame is corrected, so with
+  // no lock this is the stock window.
+  if (xr < -(0x40 + xt) || xr >= 0x130 + xt ||
+      (yr < -(0x40 + yt) || yr >= 0x130 + yt) && !(sprite_flags4[k] & 0x20)) {
     sprite_pause[k]++;
     if (!(sprite_defl_bits[k] & 0x80))
       Sprite_KillSelf(k);
     out_of_bounds = true;
-  } else if ((uint16)(x + 0x40) >= 0x170 ||
-             (uint16)(y + 0x40) >= 0x170 && !(sprite_flags4[k] & 0x20)) {
+  } else if (xr < lo_x - 0x40 || xr >= hi_x + 0x30 ||
+             (yr < -0x40 || yr >= 0x130) && !(sprite_flags4[k] & 0x20)) {
     // In the wide/tall extra band but outside the stock 256px screen: keep the sprite alive and DRAWN
-    // so the wide view renders it, but optionally pause its AI — behind kFeatures0_PauseOffscreenAI
-    // because it changes gameplay (guards can't react from off-screen). Off = stock behavior where the
-    // sprite simply wouldn't be loaded out there; on = explicit user opt-in to avoid the guard-alarm bug.
-    if (enhanced_features0 & kFeatures0_PauseOffscreenAI)
+    // so the wide view renders it. Three responses, in priority order: pause the AI entirely (existing
+    // opt-in, changes gameplay because guards can't react from off-screen); leave the handler running but
+    // suppress aggression toward the player (idle opt-in, still moves/animates); or do nothing (stock —
+    // the sprite simply wouldn't have been loaded out there).
+    if (enhanced_features0 & kFeatures0_PauseOffscreenAI) {
       sprite_pause[k]++;
+    } else if (enhanced_features2 & kFeatures2_WidescreenIdleAI) {
+      g_sprite_in_band[k] = 1;
+    }
   }
   ret->x = R0;
   ret->y = R2;
@@ -2094,6 +2148,9 @@ void Sprite_MoveZ(int k) {  // 86e96c
 }
 
 ProjectSpeedRet Sprite_ProjectSpeedTowardsLink(int k, uint8 vel) {  // 86e991
+  // No band suppression here: this is a pure query and several callers use its result for things other
+  // than chasing (facing, aim, distance). Handing back a zero vector produced degenerate values at those
+  // call sites. Suppression belongs at the helpers that ACT on the projection.
   if (vel == 0) {
     ProjectSpeedRet rv = { 0, 0, 0, 0 };
     return rv;
@@ -2103,6 +2160,25 @@ ProjectSpeedRet Sprite_ProjectSpeedTowardsLink(int k, uint8 vel) {  // 86e991
 
   PairU8 right = Sprite_IsRightOfLink(k);
   uint8 r13 = sign8(right.b) ? -right.b : right.b;
+
+  // Sprite_IsRightOfLink/Sprite_IsBelowLink take the SIGN from a full 16-bit difference but the MAGNITUDE
+  // from its low byte, so a target more than 255px away on an axis wraps: 300 arrives as 44. The ratio walk
+  // below is exact, but only over that range, and a wrong ratio sends the sprite off at an arbitrary angle
+  // while still heading into the right half-plane. Inside the stock 256px screen the case cannot arise. A
+  // wide view can put a target far enough out that it does, so recover the true magnitudes and scale them
+  // down together until both fit, which preserves the ratio and so the direction. Only taken when the
+  // stock path would already be wrong, so nothing changes for a target within range.
+  if (Wide_Active()) {
+    int dx = (int)(int16)(link_x_coord - Sprite_GetX(k));
+    int dy = (int)(int16)(link_y_coord + 8 + sprite_z[k] - Sprite_GetY(k));
+    int adx = dx < 0 ? -dx : dx, ady = dy < 0 ? -dy : dy;
+    if (adx > 255 || ady > 255) {
+      while (adx > 255 || ady > 255)
+        adx >>= 1, ady >>= 1;
+      r12 = (uint8)ady, r13 = (uint8)adx;
+    }
+  }
+
   uint8 t;
   bool swapped = false;
   if (r13 < r12) {
@@ -2129,6 +2205,12 @@ ProjectSpeedRet Sprite_ProjectSpeedTowardsLink(int k, uint8 vel) {  // 86e991
 }
 
 void Sprite_ApplySpeedTowardsLink(int k, uint8 vel) {  // 86ea04
+  // Suppressed means "do not re-aim at the player", not "stop". Leave the existing velocity alone: a
+  // sprite that was given a heading when it spawned keeps travelling on it, which is what lets a summoned
+  // attacker cross the extra width instead of halting the moment it is classified outside the active
+  // section. Zeroing here would freeze anything whose only motion comes from this call.
+  if (Sprite_BandSuppressed(k))
+    return;
   ProjectSpeedRet pt = Sprite_ProjectSpeedTowardsLink(k, vel);
   sprite_x_vel[k] = pt.x;
   sprite_y_vel[k] = pt.y;
@@ -2542,7 +2624,7 @@ void Sprite_Func3(int k) {  // 86efda
 }
 
 bool Sprite_CheckDamageToLink(int k) {  // 86f145
-  if (link_disable_sprite_damage)
+  if (link_disable_sprite_damage || Sprite_BandSuppressed(k))
     return false;
   return Sprite_CheckDamageToPlayer_1(k);
 }
@@ -2554,7 +2636,7 @@ bool Sprite_CheckDamageToPlayer_1(int k) {  // 86f14a
 }
 
 bool Sprite_CheckDamageToLink_same_layer(int k) {  // 86f154
-  if (link_is_on_lower_level != sprite_floor[k])
+  if (link_is_on_lower_level != sprite_floor[k] || Sprite_BandSuppressed(k))
     return false;
   return Sprite_CheckDamageToLink_ignore_layer(k);
 }
@@ -2743,7 +2825,7 @@ void Sprite_AttemptDamageToLinkWithCollisionCheck(int k) {  // 86f3ca
 }
 
 void Sprite_AttemptDamageToLinkPlusRecoil(int k) {  // 86f3db
-  if (countdown_for_blink | link_disable_sprite_damage)
+  if (countdown_for_blink | link_disable_sprite_damage | Sprite_BandSuppressed(k))
     return;
   link_incapacitated_timer = 19;
   Sprite_ApplyRecoilToLink(k, 24);
@@ -2861,8 +2943,13 @@ void Sprite_PlaceWeaponTink(int k) {  // 86f6ca
 void Sprite_PlaceRupulseSpark_2(int k) {  // 86f6d5
   uint16 x = Sprite_GetX(k) - BG2HOFS_copy2;
   uint16 y = Sprite_GetY(k) - BG2VOFS_copy2;
-  if (x & ~0xff || y & ~0xff)
-    return;
+  if (!Wide_Active()) {
+    if (x & ~0xff || y & ~0xff)
+      return;
+  } else {
+    if ((int16)x < -WideLeftPx() || (int16)x >= 256 + WideRightPx() || y & ~0xff)
+      return;
+  }
   repulsespark_x_lo = sprite_x_lo[k];
   repulsespark_y_lo = sprite_y_lo[k];
   repulsespark_timer = 5;
@@ -3156,9 +3243,25 @@ void Sprite_CorrectOamEntries(int k, int n, uint8 islarge) {  // 86febc
     uint16 x = spr_x + (int8)(oam->x - scrollx);
     uint16 y = spr_y + (int8)(oam->y - scrolly);
     uint8 ext = sign8(islarge) ? (*extp & 2) : islarge;
-    *extp = ext + ((uint16)(x - BG2HOFS_copy2) >= 0x100);
-    if ((uint16)(y + 0x10 - BG2VOFS_copy2) >= 0x100)
-      oam->y = 0xf0;
+    if (!Wide_Active()) {
+      *extp = ext + ((uint16)(x - BG2HOFS_copy2) >= 0x100);
+    } else {
+      // The 9th OAM X bit is the actual bit, not a magnitude comparison that only matches it while the
+      // screen-relative position stays under 512px. Keep g_oam_x_high (bits above the 9th) in step with it.
+      uint16 diff = x - BG2HOFS_copy2;
+      *extp = ext + (diff >> 8 & 1);
+      g_oam_x_high[oam - oam_buf] = (uint8)((int16)diff >> 9);
+    }
+    if (!Tall_Active()) {
+      if ((uint16)(y + 0x10 - BG2VOFS_copy2) >= 0x100)
+        oam->y = 0xf0;
+    } else {
+      // Same representable window OamSetY uses for a tall view, instead of hiding past the stock 256 rows.
+      int16 ys = (int16)(uint16)(y - BG2VOFS_copy2);
+      int b = (int)g_oam_tall_budget;
+      if (!(ys >= b - 256 && ys < 256 + b))
+        oam->y = 0xf0;
+    }
   } while (oam++, extp++, --n >= 0);
 }
 
@@ -3216,8 +3319,13 @@ bool Sprite_CheckIfScreenIsClear() {  // 89af32
     if (sprite_state[i] && !(sprite_flags4[i] & 0x40)) {
       uint16 x = Sprite_GetX(i) - BG2HOFS_copy2;
       uint16 y = Sprite_GetY(i) - BG2VOFS_copy2;
-      if (x < 256 && y < 256)
-        return false;
+      if (!Wide_PlayArea()) {
+        if (x < 256 && y < 256)
+          return false;
+      } else {
+        if ((int16)x >= -WideLeftPx() && (int16)x < 256 + WideRightPx() && y < 256)
+          return false;
+      }
     }
   }
   return Sprite_CheckIfOverlordsClear();
@@ -3330,7 +3438,7 @@ void Garnish15_ArrghusSplash(int k) {  // 89b178
   int g = (garnish_countdown[k] >> 1) & 6;
   for (int i = 1; i >= 0; i--, oam++) {
     int j = i + g;
-    SetOamPlain(oam, pt.x + kArrghusSplash_X[j], pt.y + kArrghusSplash_Y[j], kArrghusSplash_Char[j], kArrghusSplash_Flags[j], kArrghusSplash_Ext[j]);
+    Garnish_SetOam(oam, pt.x + kArrghusSplash_X[j], pt.y + kArrghusSplash_Y[j], kArrghusSplash_Char[j], kArrghusSplash_Flags[j], kArrghusSplash_Ext[j]);
   }
 }
 
@@ -3347,11 +3455,26 @@ void Garnish13_PyramidDebris(int k) {  // 89b216
 
   garnish_y_vel[k] = garnish_y_vel[k] + 3;
   uint8 t;
-  if ((t = garnish_x_lo[k] - BG2HOFS_copy2) >= 248) {
-    garnish_type[k] = 0;
-    return;
+  if (!Wide_Active()) {
+    if ((t = garnish_x_lo[k] - BG2HOFS_copy2) >= 248) {
+      garnish_type[k] = 0;
+      return;
+    }
+    OamSetX(oam, t);
+  } else {
+    // This debris only ever tracks a low byte of X (never the high byte, see garnish_x_hi), so it has no
+    // true 16-bit world position to test against — widen the kill margin itself instead, clamped to what
+    // an 8-bit signed distance can represent.
+    t = garnish_x_lo[k] - BG2HOFS_copy2;
+    int margin = 8 + WideLeftPx();
+    if (margin > 128)
+      margin = 128;
+    if ((int8)t < -margin) {
+      garnish_type[k] = 0;
+      return;
+    }
+    OamSetX(oam, t);
   }
-  OamSetX(oam, t);
   if ((t = garnish_y_lo[k] - BG2VOFS_copy2) >= 240) {
     garnish_type[k] = 0;
     return;
@@ -3370,8 +3493,8 @@ void Garnish11_WitheringGanonBatFlame(int k) {  // 89b2b2
   if (Garnish_ReturnIfPrepFails(k, &pt))
     return;
   OamEnt *oam = GetOamCurPtr();
-  SetOamPlain(oam + 0, pt.x + 0, pt.y, 0xa4, 0x22, 0);
-  SetOamPlain(oam + 1, pt.x + 8, pt.y, 0xa5, 0x22, 0);
+  Garnish_SetOam(oam + 0, pt.x + 0, pt.y, 0xa4, 0x22, 0);
+  Garnish_SetOam(oam + 1, pt.x + 8, pt.y, 0xa5, 0x22, 0);
 }
 
 void Garnish10_GanonBatFlame(int k) {  // 89b306
@@ -3388,7 +3511,7 @@ void Garnish10_GanonBatFlame(int k) {  // 89b306
   if (Garnish_ReturnIfPrepFails(k, &pt))
     return;
   int j = kGanonBatFlame_Idx[garnish_countdown[k] >> 3];
-  SetOamPlain(GetOamCurPtr(), pt.x, pt.y, kGanonBatFlame_Char[j], kGanonBatFlame_Flags[j] | 0x22, 2);
+  Garnish_SetOam(GetOamCurPtr(), pt.x, pt.y, kGanonBatFlame_Char[j], kGanonBatFlame_Flags[j] | 0x22, 2);
   Garnish_CheckPlayerCollision(k, pt.x, pt.y);
 }
 
@@ -3402,7 +3525,7 @@ void Garnish0C_TrinexxIceBreath(int k) {  // 89b34f
   Point16U pt;
   if (Garnish_ReturnIfPrepFails(k, &pt))
     return;
-  SetOamPlain(GetOamCurPtr(), pt.x, pt.y, kTrinexxIce_Char[garnish_countdown[k] >> 4],
+  Garnish_SetOam(GetOamCurPtr(), pt.x, pt.y, kTrinexxIce_Char[garnish_countdown[k] >> 4],
                kTrinexxIce_Flags[(garnish_countdown[k] >> 2) & 3] | 0x35, 2);
 }
 
@@ -3421,7 +3544,7 @@ void Garnish0A_CannonSmoke(int k) {  // 89b3ee
   if (Garnish_ReturnIfPrepFails(k, &pt))
     return;
   int j = garnish_sprite[k];
-  SetOamPlain(GetOamCurPtr(), pt.x, pt.y, kGarnish_CannonPoof_Char[garnish_countdown[k] >> 3], kGarnish_CannonPoof_Flags[j] | 4, 2);
+  Garnish_SetOam(GetOamCurPtr(), pt.x, pt.y, kGarnish_CannonPoof_Char[garnish_countdown[k] >> 3], kGarnish_CannonPoof_Flags[j] | 4, 2);
 }
 
 void Garnish09_LightningTrail(int k) {  // 89b429
@@ -3431,7 +3554,7 @@ void Garnish09_LightningTrail(int k) {  // 89b429
   if (Garnish_ReturnIfPrepFails(k, &pt))
     return;
   int j = garnish_sprite[k];
-  SetOamPlain(GetOamCurPtr(), pt.x, pt.y,
+  Garnish_SetOam(GetOamCurPtr(), pt.x, pt.y,
                kLightningTrail_Char[j] - (BYTE(dungeon_room_index2) == 0x20 ? 0x80 : 0),
                (frame_counter << 1) & 0xe | kLightningTrail_Flags[j], 2);
   Garnish_CheckPlayerCollision(k, pt.x, pt.y);
@@ -3458,7 +3581,7 @@ void Garnish07_BabasuFlash(int k) {  // 89b49e
   if (Garnish_ReturnIfPrepFails(k, &pt))
     return;
   int j = garnish_countdown[k] >> 3;
-  SetOamPlain(GetOamCurPtr(), pt.x, pt.y, kBabusuFlash_Char[j], kBabusuFlash_Flags[j], 2);
+  Garnish_SetOam(GetOamCurPtr(), pt.x, pt.y, kBabusuFlash_Char[j], kBabusuFlash_Flags[j], 2);
 }
 
 void Garnish08_KholdstareTrail(int k) {  // 89b4c6
@@ -3470,7 +3593,7 @@ void Garnish08_KholdstareTrail(int k) {  // 89b4c6
     return;
   int i = garnish_countdown[k] >> 2;
   int j = garnish_sprite[k];
-  SetOamPlain(GetOamCurPtr(), pt.x + kGarnish_Nebule_XY[i], pt.y + kGarnish_Nebule_XY[i], kGarnish_Nebule_Char[i],
+  Garnish_SetOam(GetOamCurPtr(), pt.x + kGarnish_Nebule_XY[i], pt.y + kGarnish_Nebule_XY[i], kGarnish_Nebule_Char[i],
                (sprite_oam_flags[j] | sprite_obj_prio[j]) & ~1, 0);
 }
 
@@ -3479,7 +3602,7 @@ void Garnish06_ZoroTrail(int k) {  // 89b4fb
   if (Garnish_ReturnIfPrepFails(k, &pt))
     return;
   int j = garnish_sprite[k];
-  SetOamPlain(GetOamCurPtr(), pt.x, pt.y, 0x75, sprite_oam_flags[j] | sprite_obj_prio[j], 0);
+  Garnish_SetOam(GetOamCurPtr(), pt.x, pt.y, 0x75, sprite_oam_flags[j] | sprite_obj_prio[j], 0);
 }
 
 void Garnish12_Sparkle(int k) {  // 89b520
@@ -3496,7 +3619,7 @@ void Garnish0E_TrinexxFireBreath(int k) {  // 89b55d
   if (Garnish_ReturnIfPrepFails(k, &pt))
     return;
   int j = garnish_sprite[k];
-  SetOamPlain(GetOamCurPtr(), pt.x, pt.y, kTrinexxLavaBubble_Char[garnish_countdown[k] >> 3],
+  Garnish_SetOam(GetOamCurPtr(), pt.x, pt.y, kTrinexxLavaBubble_Char[garnish_countdown[k] >> 3],
                (sprite_oam_flags[j] | sprite_obj_prio[j]) & 0xf0 | 0xe, 0);
 }
 
@@ -3506,7 +3629,7 @@ void Garnish0F_BlindLaserTrail(int k) {  // 89b591
   if (Garnish_ReturnIfPrepFails(k, &pt))
     return;
   int j = garnish_sprite[k];
-  SetOamPlain(GetOamCurPtr(), pt.x, pt.y, kBlindLaserTrail_Char[garnish_oam_flags[k] - 7], sprite_oam_flags[j] | sprite_obj_prio[j], 0);
+  Garnish_SetOam(GetOamCurPtr(), pt.x, pt.y, kBlindLaserTrail_Char[garnish_oam_flags[k] - 7], sprite_oam_flags[j] | sprite_obj_prio[j], 0);
 }
 
 void Garnish04_LaserTrail(int k) {  // 89b5bb
@@ -3514,16 +3637,23 @@ void Garnish04_LaserTrail(int k) {  // 89b5bb
   Point16U pt;
   if (Garnish_ReturnIfPrepFails(k, &pt))
     return;
-  SetOamPlain(GetOamCurPtr(), pt.x, pt.y, kLaserBeamTrail_Char[garnish_oam_flags[k]], 0x25, 0);
+  Garnish_SetOam(GetOamCurPtr(), pt.x, pt.y, kLaserBeamTrail_Char[garnish_oam_flags[k]], 0x25, 0);
 }
 
 bool Garnish_ReturnIfPrepFails(int k, Point16U *pt) {  // 89b5de
   uint16 x = Garnish_GetX(k) - BG2HOFS_copy2;
   uint16 y = Garnish_GetY(k) - BG2VOFS_copy2;
 
-  if (x >= 256 || y >= 256) {
-    garnish_type[k] = 0;
-    return true;
+  if (!Wide_Active()) {
+    if (x >= 256 || y >= 256) {
+      garnish_type[k] = 0;
+      return true;
+    }
+  } else {
+    if ((int16)x < -WideLeftPx() || (int16)x >= 256 + WideRightPx() || y >= 256) {
+      garnish_type[k] = 0;
+      return true;
+    }
   }
   pt->x = x;
   pt->y = y - 16;
@@ -3542,8 +3672,13 @@ void Garnish03_FallingTile(int k) {  // 89b627
   j >>= 3;
   uint16 x = Garnish_GetX(k) + kCrumbleTile_XY[j] - BG2HOFS_copy2;
   uint16 y = Garnish_GetY(k) + kCrumbleTile_XY[j] - BG2VOFS_copy2;
-  if (x < 256 && y < 256)
-    SetOamPlain(GetOamCurPtr(), x, y - 16, kCrumbleTile_Char[j], kCrumbleTile_Flags[j], kCrumbleTile_Ext[j]);
+  if (!Wide_Active()) {
+    if (x < 256 && y < 256)
+      SetOamPlain(GetOamCurPtr(), x, y - 16, kCrumbleTile_Char[j], kCrumbleTile_Flags[j], kCrumbleTile_Ext[j]);
+  } else {
+    if ((int16)x >= -WideLeftPx() && (int16)x < 256 + WideRightPx() && y < 256)
+      Garnish_SetOam(GetOamCurPtr(), x, y - 16, kCrumbleTile_Char[j], kCrumbleTile_Flags[j], kCrumbleTile_Ext[j]);
+  }
 }
 
 void Garnish01_FireSnakeTail(int k) {  // 89b6c0
@@ -3551,13 +3686,21 @@ void Garnish01_FireSnakeTail(int k) {  // 89b6c0
   if (Garnish_ReturnIfPrepFails(k, &pt))
     return;
   int j = garnish_sprite[k];
-  SetOamPlain(GetOamCurPtr(), pt.x, pt.y, 0x28, sprite_oam_flags[j] | sprite_obj_prio[j], 2);
+  Garnish_SetOam(GetOamCurPtr(), pt.x, pt.y, 0x28, sprite_oam_flags[j] | sprite_obj_prio[j], 2);
 }
 
 void Garnish02_MothulaBeamTrail(int k) {  // 89b6e1
   int j = garnish_sprite[k];
-  SetOamPlain(GetOamCurPtr(), garnish_x_lo[k] - BG2HOFS_copy2, garnish_y_lo[k] - BG2VOFS_copy2, 0xaa,
-               sprite_oam_flags[j] | sprite_obj_prio[j], 2);
+  if (!Wide_Active()) {
+    SetOamPlain(GetOamCurPtr(), garnish_x_lo[k] - BG2HOFS_copy2, garnish_y_lo[k] - BG2VOFS_copy2, 0xaa,
+                 sprite_oam_flags[j] | sprite_obj_prio[j], 2);
+  } else {
+    // Unlike the low-byte-only physics garnishes, this one is a static decal: both halves of its position
+    // are set once at spawn (Sprite_89_MothulaBeam) and never touched again, so the full 16-bit world
+    // position is genuinely available here.
+    Garnish_SetOam(GetOamCurPtr(), Garnish_GetX(k) - BG2HOFS_copy2, Garnish_GetY(k) - BG2VOFS_copy2, 0xaa,
+                    sprite_oam_flags[j] | sprite_obj_prio[j], 2);
+  }
 }
 
 void Dungeon_ResetSprites() {  // 89c114
@@ -3777,9 +3920,6 @@ void Sprite_ActivateAllProxima() {  // 89c55e
   byte_7E069E[1] = bak1;
   BG2HOFS_copy2 = bak0;
 }
-
-// Camera-lock shift per axis (see zelda_rtl.c) — the rendered view sits at the GAME camera minus this shift.
-extern int g_camera_lock_shift_x, g_camera_lock_shift_y;
 
 // Phase 2: spawn every sprite whose true world position lies in the rendered view rectangle (game camera ±
 // the camera-lock shift ± the wide/tall budget), regardless of distance to Link — so nothing in a wide /
@@ -4349,7 +4489,7 @@ void SpriteFall_Draw(int k, PrepOamCoordsRet *info) {  // 9dffc5
   static const uint8 kSpriteFall_Char[8] = {0x83, 0x83, 0x83, 0x80, 0x80, 0x80, 0xb7, 0xb7};
   OamEnt *oam = GetOamCurPtr();
   OamSetX(oam, info->x + 4);
-  oam->y = info->y + 4;
+  OamSetYFull(oam, info->y + 4);
   oam->charnum = kSpriteFall_Char[sprite_delay_main[k] >> 2];
   oam->flags = info->flags & 0x30 | 0x04;
   Sprite_CorrectOamEntries(k, 0, 0);

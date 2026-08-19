@@ -759,6 +759,34 @@ void CalculateSwordHitBox() {  // 879e63
   player_oam_x_offset = kSwordOamXOffs[i];
 }
 
+// Diagnostic record of the player-hide decision, for the developer-tools OAM snapshot query. Bit 0 is
+// set when the hide ran at all, bit 1 when it took the offscreen-Y branch, bit 2 the stock extended-bit
+// branch. The remaining bytes carry the inputs the decision is made from, so a capture can show which
+// term differs between two configurations instead of inferring it from pixels.
+uint8 g_link_hide_debug[6];
+
+// The OAM X writes for the player character's sprite entries built by LinkOam_Main below all store only
+// an 8-bit screen X, so once a wide view lets the player character stand at a negative screen X (the left
+// extra band, under the viewport camera lock) the sign gets truncated away and the sprite reappears 256px
+// to the right instead. Reconstruct each entry's true signed X from the low byte the write already
+// produced, then carry the bits that don't fit in the stock 9-bit X into the wide-view side channels,
+// exactly as Sprite_CorrectOamEntries does for regular sprites. No-op outside a wide view, and it only
+// ever touches the high-X bits: the existing 8-bit writes stay untouched.
+static void LinkOam_CarryWideHighX(void) {
+  if (!Wide_Active())
+    return;
+  int base = (int16)(link_x_coord - BG2HOFS_copy2);
+  OamEnt *oam = &oam_buf[sort_sprites_offset_into_oam_buffer >> 2];
+  int slot0 = (int)(oam - oam_buf);
+  for (int i = 0; i < 12; i++) {
+    if (oam[i].y == 0xf0)
+      continue;  // hidden this frame: leave hidden, don't touch its high-X bits
+    int x = base + (int8)(oam[i].x - (uint8)base);
+    bytewise_extended_oam[slot0 + i] = (bytewise_extended_oam[slot0 + i] & ~1) | (((uint16)x >> 8) & 1);
+    g_oam_x_high[slot0 + i] = (uint8)((int16)x >> 9);
+  }
+}
+
 void LinkOam_Main() {  // 8da18e
   uint16 y_coord_backup = link_y_coord;
 
@@ -1101,6 +1129,12 @@ continue_after_set:
 
   uint16 t;
   bool hide_shadow = true;
+  g_link_hide_debug[0] = 0;
+  g_link_hide_debug[1] = (uint8)submodule_index;
+  g_link_hide_debug[2] = countdown_for_blink;
+  g_link_hide_debug[3] = is_standing_in_doorway ? 1 : 0;
+  g_link_hide_debug[4] = link_cape_mode;
+  g_link_hide_debug[5] = 0xff;
   if (is_standing_in_doorway && ((t = link_x_coord - BG2HOFS_copy2) < 4 || t >= 252 || (t = link_y_coord - BG2VOFS_copy2) < 4 || t >= 224) ||
       (hide_shadow = false,
       submodule_index == 0 && countdown_for_blink && --countdown_for_blink >= 4 && (countdown_for_blink & 1) == 0 ||
@@ -1111,13 +1145,17 @@ continue_after_set:
 
     // This appears to hide link by setting the extended bits of the oam to hide them from the screen.
     // It doesn't really play well with the widescreen modes, so change how it's done.
+    g_link_hide_debug[0] |= 1;
+    g_link_hide_debug[5] = (uint8)(int8)shadow_oam_pos;
     if (enhanced_features2 & kFeatures2_WidescreenLinkHideViaOffscreenY) {
+      g_link_hide_debug[0] |= 2;
       OamEnt *oam = &oam_buf[sort_sprites_offset_into_oam_buffer >> 2];
       for (int i = 0; i < 12; i++) {
         if (i < shadow_oam_pos || i > shadow_oam_pos + 1)
           oam[i].y = 0xf0;
       }
     } else {
+      g_link_hide_debug[0] |= 4;
       uint8 *p = &bytewise_extended_oam[sort_sprites_offset_into_oam_buffer >> 2];
       WORD(p[0]) = 0x101;
       WORD(p[2]) = 0x101;
@@ -1130,6 +1168,10 @@ continue_after_set:
         WORD(p[shadow_oam_pos]) = 0;
     }
   }
+
+  // Runs after the hide block above so it sees this frame's final hidden state (the y == 0xf0 skip
+  // inside it must not touch, or un-hide, an entry the hide block just hid).
+  LinkOam_CarryWideHighX();
 
   if (submodule_index == 18 || submodule_index == 19)
     link_y_coord = y_coord_backup;

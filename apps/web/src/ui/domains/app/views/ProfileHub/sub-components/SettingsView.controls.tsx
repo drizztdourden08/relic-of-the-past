@@ -18,6 +18,20 @@ const WINDOW_MODE_OPTIONS = [
   { value: 'borderless', label: 'Borderless' },
 ];
 
+const OFFSCREEN_AI_OPTIONS = [
+  { value: 'idle', label: 'Idle' },
+  { value: 'vanilla', label: 'Act normally' },
+  { value: 'paused', label: 'Freeze' },
+];
+
+// Shown under the control for whichever option is selected, so each one explains itself rather than
+// leaving the player to guess what "Idle" does to an enemy they can see but that is ignoring them.
+const OFFSCREEN_AI_DESCRIPTIONS: Record<string, string> = {
+  idle: 'Enemies in the extra width walk and animate normally, but will not chase, shoot or hurt you until they reach the original 4:3 screen. You can still hit them.',
+  vanilla: 'Enemies behave fully everywhere, including chasing, shooting and hurting you from the extra width you can see but the original game could not. Matches the original game.',
+  paused: 'Enemies in the extra width stop completely, mid-step, until they reach the original 4:3 screen. No movement, no animation, and no shadow.',
+};
+
 const ASPECT_DESCRIPTIONS: Record<string, string> = {
   auto: 'Matches the window size — adapts to notch, resize, and rotation automatically.',
   screen: 'Matches the full physical screen ratio.',
@@ -81,6 +95,18 @@ const renderDisplayControl = (params: DisplayControlsParams): ReactNode | null =
         value={settings.viewportConstraint}
         options={VIEWPORT_OPTIONS}
         onChange={(v) => onChange({ viewportConstraint: v as GameSettings['viewportConstraint'] })}
+      />
+    );
+  }
+
+  if (key === 'offscreenAI') {
+    return (
+      <SegmentedControl
+        label="Off-Screen AI"
+        description={OFFSCREEN_AI_DESCRIPTIONS[settings.offscreenAI ?? 'idle']}
+        value={settings.offscreenAI ?? 'idle'}
+        options={OFFSCREEN_AI_OPTIONS}
+        onChange={(v) => onChange({ offscreenAI: v as GameSettings['offscreenAI'] })}
       />
     );
   }

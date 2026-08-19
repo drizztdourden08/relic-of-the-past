@@ -162,4 +162,7 @@ void AttrGridState_Restore(void);
 // Gated on kFeatures0_DeveloperTools: makes zero host-calls when that setting is off.
 void GameHook_ModuleFrameEnd(void);
 
+// Captures the completed OAM for one frame into a diagnostic ring; no-op without developer tools.
+void GameHook_CaptureOamFrame(void);
+
 #endif // GAME_HOOKS_H

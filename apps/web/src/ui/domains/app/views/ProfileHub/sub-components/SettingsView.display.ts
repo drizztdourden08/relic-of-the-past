@@ -82,14 +82,20 @@ const buildDisplaySection = (s: GameSettings): Section => {
         description: 'Apply graphics corrections for the wider view (edges and sprites that assume a 4:3 screen).',
         keywords: 'visual fixes widescreen tiles edges',
       },
+      {
+        key: 'widescreenPlayArea',
+        label: 'Extend Play Area',
+        description: 'Extends game activity to the whole widescreen picture: where hazards and enemies spawn, how long enemy spawners stay active, and how much of the view a "room cleared" check looks at. Off, only the original 4:3 area counts, so the extra width you can see stays inactive. Changes gameplay.',
+        keywords: 'play area hazards spawns room clear widescreen gameplay',
+      },
     );
   }
 
   items.push({
-    key: 'pauseOffscreenAI',
-    label: 'Pause Off-Screen AI',
-    description: 'Enemies in the wide/tall extra band cannot react or fire alarms. Off = stock behavior.',
-    keywords: 'sprite AI pause off screen wide guard enemy alarm',
+    key: 'offscreenAI',
+    label: 'Off-Screen AI',
+    description: 'How enemies in the wide/tall extra band behave before reaching the original screen.',
+    keywords: 'sprite AI pause idle freeze off screen wide guard enemy alarm',
   });
 
   return { id: 'display', title: 'Display', subsections: [{ id: 'display-main', title: 'Rendering', items }] };

@@ -180,18 +180,41 @@ const DISPLAY_FEATURES: FeatureDef[] = [
     live: true,
   },
   {
-    id: 'pauseOffscreenAI',
-    label: 'Pause off-screen enemy AI',
+    id: 'widescreenPlayArea',
+    label: 'Extend the play area to the full view',
     description:
-      'Freezes sprite AI in the wide/tall extra band so enemies revealed past the stock 256px screen cannot act before the player sees them.',
+      'Extends hazards, enemy spawns and "room cleared" checks to the whole widescreen picture instead of just the original 4:3 area.',
     userMessage:
-      'In widescreen, stops enemies that the wider view reveals from reacting or raising alarms until they would have been on the original screen. Changes gameplay, so leave off for vanilla parity. Needs extended rendering.',
+      'Extends game activity to the whole widescreen picture rather than only the original 4:3 area: where hazards and enemies spawn, how long enemy spawners stay active, and how much of the view a "room cleared" check considers. Off, the extra width you can see stays inactive. This changes gameplay, so leave it off for vanilla parity.',
     group: 'Display / Aspect',
     kind: 'features0-bit',
     origin: 'relic',
-    flag: 'kFeatures0_PauseOffscreenAI',
-    bit: 2097152,
+    flag: 'kFeatures2_WidescreenPlayArea',
+    word: 2,
+    bit: 16777216,
     default: false,
+    requires: ['extendedRendering'],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
+    // NOTE: offscreenAI is a three-way setting, not a single bit, so the registry's flag/bit/default
+    // model only carries one bit cleanly. This entry documents the new 'idle' bit (the default);
+    // 'paused' resolves to the older kFeatures0_PauseOffscreenAI bit instead, and 'vanilla' sets
+    // neither. See offscreenAiMode in apps/web/src/lib/game/settings.ts for the real resolution.
+    id: 'offscreenAI',
+    label: 'Off-screen enemy AI',
+    description:
+      'Controls how sprites in the wide/tall extra band behave before reaching the stock 256px screen: idle, full behavior, or frozen.',
+    userMessage:
+      'Idle: enemies the wider view reveals walk and animate, but will not chase or attack until they reach the original 4:3 screen. Act normally: full behaviour, including attacking you from the edge of a wide view; this is the vanilla-parity option. Freeze: they stop completely until they reach the 4:3 screen. Needs extended rendering.',
+    group: 'Display / Aspect',
+    kind: 'features0-bit',
+    origin: 'relic',
+    flag: 'kFeatures2_WidescreenIdleAI',
+    word: 2,
+    bit: 33554432,
+    default: true,
     requires: ['extendedRendering'],
     affectsVanillaParity: true,
     live: true,

@@ -119,8 +119,36 @@ void NORETURN Die(const char *error);
 // 9-bit-Y encoding and the viewport camera lock (kFeatures0_CameraLockToViewport). Defined in zelda_rtl.c.
 extern uint16 g_oam_tall_budget;
 extern uint16 g_oam_wide_budget;
-// OAM Y is only 8-bit, so a view taller than ~256px needs an extra Y-high bit per sprite; g_oam_y_high
-// holds the per-slot bit, set by the OAM helpers and synced to the PPU each frame.
+
+// Camera-lock shift per axis (see zelda_rtl.c ConfigurePpuSideSpace): the rendered view sits at the GAME
+// camera minus this shift. Declared once here; sprite.c and overworld.c used to each carry their own
+// ad-hoc `extern int` line for this instead of a shared declaration.
+extern int g_camera_lock_shift_x, g_camera_lock_shift_y;
+// Visible band width on each side for the frame just configured, in stock-screen coordinates: the rendered
+// view spans [-g_render_extra_left, 256 + g_render_extra_right]. Both 0 outside a wide view.
+extern int g_render_extra_left, g_render_extra_right;
+extern int g_render_extra_top, g_render_extra_bottom;
+// The active-section window the sprite band classifier last used, in rendered coordinates.
+extern int g_band_lo_x, g_band_hi_x;
+
+// Wide_Active()/Tall_Active(): true once a wide/tall view is actually configured. Need no setting of their
+// own; both budgets are 0 at 4:3 with extended rendering off, so any gate built on these is automatically
+// a no-op in vanilla.
+static inline bool Wide_Active(void) { return g_oam_wide_budget != 0; }
+static inline bool Tall_Active(void) { return g_oam_tall_budget != 0; }
+
+// Camera-relative pixels visible beyond the stock 4:3 frame on each side, using the BUDGET rather than the
+// PPU's per-frame extraLeftCur/extraRightCur: game logic (sprite spawn/activity/culling) runs before the
+// draw step sets the frame's real extents, so the per-frame value isn't there yet. The budget is a fixed
+// upper bound for the session, so using it is a conservative superset: it only ever culls slightly late,
+// never early.
+static inline int WideLeftPx(void)  { return (int)g_oam_wide_budget + g_camera_lock_shift_x; }
+static inline int WideRightPx(void) { return (int)g_oam_wide_budget - g_camera_lock_shift_x; }
+// OAM Y is only 8-bit, so a view taller than ~256px needs more per sprite than the entry can hold.
+// g_oam_y_high holds a per-slot THREE-state marker (see kOamY_* in sprite.h): untouched, tall-encoded with
+// the 9th bit clear, or tall-encoded with it set. The untouched state matters because rows 240 and -16 both
+// encode to the low byte 0xf0, which is also the hardware's hide value. Set by the OAM helpers, cleared
+// with the buffer each frame, synced to the PPU each frame.
 extern uint8 g_oam_y_high[128];
 // OAM X is only 9-bit (≤512px), so a view WIDER than 512px (extra > 128, ~21:9+) draws a sprite AND its
 // 512-wrapped alias = the "ghost". g_oam_x_high holds the SIGNED X bits ABOVE the stock 9 (i.e.
@@ -132,5 +160,13 @@ extern uint8 g_oam_x_high[128];
 // them. Marked slots read a private palette bank in the PPU instead. Set by the player OAM builder,
 // cleared with the buffer each frame, synced to the PPU alongside the arrays above.
 extern uint8 g_oam_player[128];
+
+// Per-slot idle-AI band flag (kFeatures2_WidescreenIdleAI): set when a sprite sits in the wide/tall extra
+// band, so it can keep moving/animating there but is suppressed from acting on the player. One entry per
+// sprite slot (16), NOT per OAM slot (128) like the arrays above. Recomputed every frame from position; a
+// plain C global, deliberately NOT a g_ram field, since it must never enter the save-state snapshot
+// (adding fields to a sizeof/offsetof save-load struct breaks loading existing saves). Defined in
+// zelda_rtl.c, cleared in ClearOamBuffer.
+extern uint8 g_sprite_in_band[16];
 
 #endif  // ZELDA3_TYPES_H_

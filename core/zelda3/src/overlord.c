@@ -72,7 +72,14 @@ void Overlord_SpawnBoulder() {  // 89b714
   SpriteSpawnInfo info;
   int j = Sprite_SpawnDynamically(0, 0xc2, &info);
   if (j >= 0) {
-    Sprite_SetX(j, BG2HOFS_copy2 + (GetRandomNumber() & 127) + 64);
+    if (!Wide_PlayArea()) {
+      Sprite_SetX(j, BG2HOFS_copy2 + (GetRandomNumber() & 127) + 64);
+    } else {
+      // Spread the drop across the rendered picture instead of the stock 128px strip.
+      int span = 128 + WideLeftPx() + WideRightPx();
+      int off = 64 - WideLeftPx() + (int)GetRandomNumber() * span / 256;
+      Sprite_SetX(j, BG2HOFS_copy2 + (uint16)off);
+    }
     Sprite_SetY(j, BG2VOFS_copy2 - 0x30);
     sprite_floor[j] = 0;
     sprite_D[j] = 0;
@@ -603,8 +610,19 @@ void Overlord_CheckIfActive(int k) {  // 89c08d
   if (player_is_indoors)
     return;
   int j = frame_counter & 1;
-  uint16 x = BG2HOFS_copy2 + kOverlordInRangeOffs[j] - (overlord_x_lo[k] | overlord_x_hi[k] << 8);
-  uint16 y = BG2VOFS_copy2 + kOverlordInRangeOffs[j] - (overlord_y_lo[k] | overlord_y_hi[k] << 8);
+  uint16 x, y;
+  if (!Wide_PlayArea()) {
+    x = BG2HOFS_copy2 + kOverlordInRangeOffs[j] - (overlord_x_lo[k] | overlord_x_hi[k] << 8);
+    y = BG2VOFS_copy2 + kOverlordInRangeOffs[j] - (overlord_y_lo[k] | overlord_y_hi[k] << 8);
+  } else {
+    // Push the alternating near/far edge out to the rendered view so a spawner visible in the
+    // band is not dropped along with the enemies it feeds.
+    int tb = Tall_Active() ? (int)g_oam_tall_budget : 0;
+    int xoff = j ? -0x40 - WideLeftPx() : 0x130 + WideRightPx();
+    int yoff = j ? -0x40 - tb : 0x130 + tb;
+    x = BG2HOFS_copy2 + (uint16)xoff - (overlord_x_lo[k] | overlord_x_hi[k] << 8);
+    y = BG2VOFS_copy2 + (uint16)yoff - (overlord_y_lo[k] | overlord_y_hi[k] << 8);
+  }
   if ((x >> 15) != j || (y >> 15) != j) {
     overlord_type[k] = 0;
     uint16 blk = overlord_offset_sprite_pos[k];

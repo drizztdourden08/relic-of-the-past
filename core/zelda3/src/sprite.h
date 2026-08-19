@@ -48,18 +48,36 @@ enum {
 };
 
 // Tall screens: OAM Y is only 8-bit. When a tall view is configured (g_oam_tall_budget != 0) encode a
-// 9-bit screen-Y — low 8 bits in oam->y, the high bit in g_oam_y_high[slot] — so the PPU can place
-// sprites across the taller-than-256px pan (mirror of the stock 9-bit X). Outside the representable
-// range, hide (0xf0). Non-tall keeps the exact stock 8-bit clip (screen-Y in [-16, 239]).
+// 9-bit screen-Y — low 8 bits in oam->y, the rest in g_oam_y_high[slot] — so the PPU can place sprites
+// across the taller-than-256px pan (mirror of the stock 9-bit X). Outside the representable range, hide
+// (0xf0). Non-tall keeps the exact stock 8-bit clip (screen-Y in [-16, 239]).
+//
+// g_oam_y_high is a THREE-state marker, not a bare bit: kOamY_Stock means no tall-aware writer touched
+// this slot this frame, so the PPU reads the entry the vanilla way. That distinction is load-bearing.
+// The hardware's hide value is a Y of 0xf0, and on a 224-row screen no visible row can produce that byte
+// — but a tall view renders rows 240 and -16, whose 9-bit encodings BOTH have 0xf0 as their low byte. With
+// only a bit to go on, the PPU cannot tell those two real rows from a hidden sprite and blanks the entry
+// for exactly the frames it sits there: every sprite crossing either row blinks out, once per crossing,
+// which reads as a flicker while the view pans. The marker says "this Y is a tall-encoded coordinate",
+// making the sentinel unambiguous again.
+enum {
+  kOamY_Stock = 0,  // untouched this frame: vanilla 8-bit Y, 0xf0 means hidden
+  kOamY_Low   = 1,  // tall-encoded, 9th bit clear
+  kOamY_High  = 2,  // tall-encoded, 9th bit set
+};
+
 static inline void OamSetY(OamEnt *oam, uint16 y) {
   if (g_oam_tall_budget) {
     int16 ys = (int16)y;
     int b = (int)g_oam_tall_budget;
     if (ys >= b - 256 && ys < 256 + b) {
       oam->y = (uint8)y;
-      g_oam_y_high[oam - oam_buf] = (y >> 8) & 1;
+      g_oam_y_high[oam - oam_buf] = ((y >> 8) & 1) ? kOamY_High : kOamY_Low;
     } else {
       oam->y = 0xf0;
+      // Clear it: the OAM region allocator recycles slots within a frame, so a marker left by an earlier
+      // sprite would make this hidden entry read as a tall coordinate (the Y-axis twin of W-14).
+      g_oam_y_high[oam - oam_buf] = kOamY_Stock;
     }
   } else {
     oam->y = (uint16)(y + 0x10) < 0x100 ? (uint8)y : 0xf0;
@@ -86,6 +104,31 @@ static inline uint16 OamWrappedScreenY(int y) {
   return (uint16)(v >= 0xf0 ? (int)v - 256 : (int)v);
 }
 
+// The Y counterpart of OamSetXLowByte, for the helpers that only ever receive a low-byte screen Y. Such a
+// caller cannot say WHICH band it means: on a tall screen the byte 0xf8 is row -8 in the top band and row
+// 248 in the bottom one, both rendered, and nothing in the byte separates them. So store it raw and let the
+// PPU read it the vanilla way, and clear the marker — the OAM region allocator recycles slots within a
+// frame, and a marker left by an earlier sprite would make this raw byte read as a tall coordinate (the
+// Y-axis twin of W-14).
+static inline void OamSetYRaw(OamEnt *oam, uint8 y) {
+  oam->y = y;
+  if (g_oam_tall_budget)
+    g_oam_y_high[oam - oam_buf] = kOamY_Stock;
+}
+
+// For the draw routines that write oam->y directly from an expression built on the FULL signed screen Y
+// (info.y and friends) and lose the sign to the 8-bit store. Vanilla could afford that: the PPU's row test
+// wraps mod 256, and on a 224-row screen only one of the two aliases is ever on screen, so a sprite above
+// the camera resolved correctly. A tall view renders 320 rows, where BOTH aliases can be visible, and the
+// truncated value draws an off-screen-above sprite down in the play area instead. The value is right there
+// at these call sites, so keep it. Off, this is the same byte the vanilla store wrote.
+static inline void OamSetYFull(OamEnt *oam, uint16 y) {
+  if (g_oam_tall_budget)
+    OamSetY(oam, y);
+  else
+    oam->y = (uint8)y;
+}
+
 // Wide screens: the stock OAM X is 9-bit (oam->x + the high bit in bytewise_extended_oam below), which
 // caps the view at 512px. When a wide view is configured (g_oam_wide_budget != 0) also carry the SIGNED X
 // bits ABOVE the 9th in g_oam_x_high[slot] = (int16)x >> 9, so the PPU can place the sprite at its true
@@ -106,18 +149,43 @@ static inline void SetOamHelper0(OamEnt *oam, uint16 x, uint16 y, uint8 charnum,
 
 static inline void SetOamHelper1(OamEnt *oam, uint16 x, uint8 y, uint8 charnum, uint8 flags, uint8 big) {
   OamSetX(oam, x);
-  oam->y = y;
+  OamSetYRaw(oam, y);
   oam->charnum = charnum;
   oam->flags = flags;
   bytewise_extended_oam[oam - oam_buf] = big | (x >> 8 & 1);
 }
 
+// W-14: this never cleared g_oam_x_high on slot reuse, so the OAM region allocator (Oam_GetBufferPosition)
+// recycling a slot within a frame after OamSetX set a high bit for an earlier (wide) sprite would draw
+// THIS sprite ~512px off-screen. Gated: only touch g_oam_x_high when a wide view is actually configured,
+// so the vanilla path stays byte-identical. The uint8 x parameter deliberately stays 8-bit; see
+// OamSetXLowByte above; 94 call sites pass genuine low-byte values, and widening it here would derive
+// garbage high bits for every one of them.
 static inline void SetOamPlain(OamEnt *oam, uint8 x, uint8 y, uint8 charnum, uint8 flags, uint8 big) {
   oam->x = x;
-  oam->y = y;
+  OamSetYRaw(oam, y);
   oam->charnum = charnum;
   oam->flags = flags;
   bytewise_extended_oam[oam - oam_buf] = big;
+  if (Wide_Active())
+    g_oam_x_high[oam - oam_buf] = 0;
+}
+
+// Wraps SetOamPlain for the garnish draw handlers (W-01), which call SetOamPlain directly today and so
+// truncate screen X to 8 bits. Off, this is exactly SetOamPlain. On, it routes X through the same 9-bit /
+// high-X path OamSetX already gives every other OAM helper, while keeping Y/charnum/flags/ext semantics
+// identical to what SetOamPlain produces for an in-range X. Not called from anywhere yet; the call sites
+// are fixed per-handler elsewhere.
+static inline void Garnish_SetOam(OamEnt *oam, uint16 x, uint16 y, uint8 ch, uint8 flags, uint8 big) {
+  if (!Wide_Active()) {
+    SetOamPlain(oam, (uint8)x, (uint8)y, ch, flags, big);
+    return;
+  }
+  OamSetX(oam, x);
+  oam->y = (uint8)y;
+  oam->charnum = ch;
+  oam->flags = flags;
+  bytewise_extended_oam[oam - oam_buf] = big | (x >> 8 & 1);
 }
 
 

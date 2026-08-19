@@ -157,6 +157,12 @@ int PpuGetCurrentRenderScale(Ppu *ppu, uint32_t render_flags) {
 }
 
 void PpuBeginDrawing(Ppu *ppu, uint8_t *pixels, size_t pitch, uint32_t render_flags) {
+  // Rasteriser diagnostics: cleared each frame, accumulated across this frame's lines.
+  if (g_ppu_diag) {
+    for (int i = 0; i < 128; i++)
+      g_ppu_slot_drawn[i] = 0;
+    g_ppu_sprite_budget_hits = 0, g_ppu_tile_budget_hits = 0;
+  }
   ppu->renderFlags = render_flags;
   ppu->renderPitch = (uint)pitch;
   ppu->renderBuffer = pixels;
@@ -957,8 +963,15 @@ static void PpuDrawBackgrounds(Ppu *ppu, int y, bool sub) {
     else
       PpuDrawBackground_4bpp(ppu, y, sub, 1, 0xb100, 0x7100);
 
+    // BG3 carries the HUD and the message text, never world content, so it has no business in the extra
+    // vertical bands. Its tilemap spans only the base 224 rows; a band row samples it WRAPPED and paints
+    // whatever sits outside the status bar, which is the message-box font — the glyph litter along the top
+    // and bottom of a tall view. The horizontal case is already excluded in PpuWindows_Clear (layer != 2);
+    // this is the vertical mirror of it. Gated on a tall view, so 4:3 and the legacy 240-row mode are
+    // untouched.
+    bool bg3_in_view = ppu->extraTopBottom == 0 || (y >= 1 && y < 225);
     // Skip BG3 (HUD) when NoBG3 flag is set
-    if (!(ppu->renderFlags & kPpuRenderFlags_NoBG3)) {
+    if (!(ppu->renderFlags & kPpuRenderFlags_NoBG3) && bg3_in_view) {
       if (IS_MOSAIC_ENABLED(ppu, 2))
         PpuDrawBackground_2bpp_mosaic(ppu, y, sub, 2, 0xf200, 0x1200);
       else
@@ -990,6 +1003,15 @@ static NOINLINE void PpuDrawWholeLine(Ppu *ppu, uint y) {
 
   // Render main screen
   PpuDrawBackgrounds(ppu, y, false);
+
+  // Layer probe: for one chosen physical row, record the priority byte that painted each column. A pixel in
+  // an extra band can come from any layer, and which one it is decides where the fix belongs; the priority
+  // byte separates them (BG1 0xc0/0x80, BG2 0xb1/0x71, BG3 0xf2/0x12, sprites 0x02..0x0e), where the layer
+  // nibble alone does not.
+  if (g_ppu_probe_row == (int)(y - 1 + (int)ppu->extraTopBottom)) {
+    for (int i = 0; i < 256; i++)
+      g_ppu_probe_prio[i] = (uint8)(ppu->bgBuffers[0].data[i + kPpuExtraLeftRight] >> 8);
+  }
 
   // The 6:th bit is automatically zero, math is never applied to the first half of the sprites.
   uint32 math_enabled = ppu->mathEnabled;
@@ -1397,6 +1419,16 @@ static bool ppu_getWindowState(Ppu* ppu, int layer, int x) {
   return test1 || test2;
 }
 
+// Rasteriser diagnostics for the developer-tools OAM ring. A sprite can be correctly placed in OAM and
+// still never reach the screen: the per-line sprite and tile budgets cut evaluation short, and the row and
+// column range tests can reject it. These record what actually happened per frame so a capture can tell a
+// placement fault from a rasterisation one. Reset per frame in PpuBeginDrawing.
+uint8 g_ppu_slot_drawn[128];
+uint8 g_ppu_diag;           // developer tools on: accumulate the diagnostics below, otherwise skip them
+int g_ppu_probe_row = -1;   // physical buffer row to probe, -1 = off
+uint8 g_ppu_probe_prio[256];
+uint16 g_ppu_sprite_budget_hits, g_ppu_tile_budget_hits;
+
 static bool ppu_evaluateSprites(Ppu* ppu, int line) {
   // TODO: iterate over oam normally to determine in-range sprites,
   //   then iterate those in-range sprites in reverse for tile-fetching
@@ -1405,29 +1437,40 @@ static bool ppu_evaluateSprites(Ppu* ppu, int line) {
   int spritesLeft = 32 + 1, tilesLeft = 34 + 1;
   uint8 spriteSizes[2] = { kSpriteSizes[ppu->objSize][0], kSpriteSizes[ppu->objSize][1] };
   int extra_left_right = ppu->extraLeftRight;
+  bool tall_view = ppu->extraTopBottom != 0;
   if (ppu->renderFlags & kPpuRenderFlags_NoSpriteLimits)
     spritesLeft = tilesLeft = 1024;
   int tilesLeftOrg = tilesLeft;
 
   do {
     int yy = ppu->oam[index] >> 8;
-    if (yy == 0xf0)
+    // The hide test has to know whether this Y is a tall-encoded coordinate, so read the marker first.
+    // 0xf0 is only reserved as "hidden" on a 224-row screen, where no visible row produces that byte; a
+    // tall view renders rows 240 and -16 and BOTH encode to it. oamHighY says which entries the game wrote
+    // as tall coordinates (see kOamY_* in sprite.h) and so which ones mean a real row by that byte. Without
+    // it, every sprite crossing either row blanks for the frame it lands there and flickers as the view
+    // pans. Entries with no marker keep the sentinel, exactly as they always have.
+    int tallY = tall_view ? ppu->oamHighY[index >> 1] : 0;
+    if (tallY == 0 && yy == 0xf0)
       continue;  // this works for zelda because sprites are always 8 or 16.
     int highOam = ppu->oam[0x100 + (index >> 4)] >> (index & 15);
     int spriteSize = spriteSizes[(highOam >> 1) & 1];
     // check if the sprite is on this line and get the sprite size
     int row;
-    if (ppu->extraTopBottom != 0) {
+    if (tall_view) {
       // Tall view spans >256 lines, more than the 8-bit OAM-Y can place. Reconstruct the game's 9-bit Y
-      // (high bit from oamHighY, synced from g_oam_y_high) and map the high range to negative — above the
-      // screen top — exactly like the stock 9-bit X does for the left edge. Each sprite is then evaluated
-      // on a single line (no 256px-apart duplicate) and can sit anywhere in the tall pan.
-      yy += ppu->oamHighY[index >> 1] ? 256 : 0;
-      // camera-lock: shift BEFORE the wrap (see the X axis below) so a sprite in the bottom lock band isn't
-      // folded above the screen and culled.
-      yy += ppu->cameraLockShiftY;
+      // (high bit from the marker) and map the high range to negative — above the screen top — exactly like
+      // the stock 9-bit X does for the left edge. Each sprite is then evaluated on a single line (no 256px-
+      // apart duplicate) and can sit anywhere in the tall pan.
+      yy += tallY == 2 ? 256 : 0;
+      // Decode the 9-bit value FIRST: the fold is what maps its high range back to negative rows above the
+      // screen, so it is part of reading the coordinate, not an adjustment to it. Applying the view shift
+      // beforehand moves the value across the fold threshold and the decode then lands 512 rows out; since
+      // the shift changes as the view pans, a sprite near that threshold alternates between placements and
+      // flickers. Shift after decoding instead.
       if (yy >= 256 + (int)ppu->extraTopBottom)
         yy -= 512;
+      yy += ppu->cameraLockShiftY;
       row = line - yy;
       if (row < 0 || row >= spriteSize)
         continue;
@@ -1444,16 +1487,17 @@ static bool ppu_evaluateSprites(Ppu* ppu, int line) {
       x += (int)(int8_t)ppu->oamHighX[index >> 1] * 512;
       x += ppu->cameraLockShiftX;
     } else {
-      // Stock path (4:3 / tall-only): the view is ≤256px so the 9-bit X + fold is exact and never ghosts.
-      // Camera-lock shift applies BEFORE the fold so a lock-band sprite isn't folded off-screen + culled.
-      x += ppu->cameraLockShiftX;
+      // Stock path (4:3 / tall-only): the view is at most 256px wide so the 9-bit X plus fold is exact and
+      // never ghosts. Same ordering rule as the Y axis above: fold to decode, then apply the view shift.
       x -= (x >= 256 + extra_left_right) * 512;
+      x += ppu->cameraLockShiftX;
     }
     // if in x-range
     if (x <= -(spriteSize + extra_left_right))
       continue;
     // break if we found 32 sprites already
     if (--spritesLeft == 0) {
+      g_ppu_sprite_budget_hits++;
       break;
     }
     // get some data for the sprite and y-flip row if needed
@@ -1473,6 +1517,7 @@ static bool ppu_evaluateSprites(Ppu* ppu, int line) {
       if (col + x > -8 - extra_left_right && col + x < 256 + extra_left_right) {
         // break if we found 34 8*1 slivers already
         if (--tilesLeft == 0) {
+          g_ppu_tile_budget_hits++;
           return true;
         }
         // figure out which tile this uses, looping within 16x16 pages, and get it's data
@@ -1483,6 +1528,8 @@ static bool ppu_evaluateSprites(Ppu* ppu, int line) {
         // go over each pixel
         int px_left = IntMax(-(col + x + kPpuExtraLeftRight), 0);
         int px_right = IntMin(256 + kPpuExtraLeftRight - (col + x), 8);
+        if (g_ppu_diag)
+          g_ppu_slot_drawn[index >> 1] = 1;
         PpuZbufType *dst = ppu->objBuffer.data + col + x + px_left + kPpuExtraLeftRight;
         
         for (int px = px_left; px < px_right; px++, dst++) {

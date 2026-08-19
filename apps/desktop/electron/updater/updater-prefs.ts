@@ -6,6 +6,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { dirname } from 'path';
 import { getUserDataPath } from '../lib/paths';
+import { stripBom } from '../lib/json-store';
 import type { UpdaterPrefs } from './updater.type';
 
 /**
@@ -18,9 +19,13 @@ const prefsPath = (): string => getUserDataPath('config', 'updater.json');
 
 const readPrefs = (): UpdaterPrefs => {
   try {
-    const saved = JSON.parse(readFileSync(prefsPath(), 'utf-8')) as Partial<UpdaterPrefs>;
+    const raw = readFileSync(prefsPath(), 'utf-8');
+    const saved = JSON.parse(stripBom(raw)) as Partial<UpdaterPrefs>;
     return { allowPrerelease: saved.allowPrerelease === true };
-  } catch {
+  } catch (err) {
+    if ((err as NodeJS.ErrnoException).code !== 'ENOENT') {
+      console.warn(`[updater-prefs] Failed to read ${prefsPath()}, using defaults:`, err);
+    }
     return DEFAULTS;
   }
 };

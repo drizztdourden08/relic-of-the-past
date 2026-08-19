@@ -141,6 +141,28 @@ const reassertVolumes = (): void => {
   tryVoidCcall('WasmSetSfxVolume', lastSfxVol);
 };
 
+/**
+ * Push all three feature words from the last primed/pushed settings.
+ *
+ * These words have no INI path (config.c parses features0 only), so the core starts with all three at
+ * zero and they only ever become non-zero through a ccall. Priming a profile seeds the JS side but
+ * cannot ccall, because the module is not running yet; so without this the granular fix words stayed
+ * zero for a whole session unless a settings change happened to push them.
+ */
+const reassertFeatureWords = (): void => {
+  const mod = getModule();
+  // Without primed settings there is nothing truthful to send: features0 already carries the boot INI
+  // values, and rebuilding it from DEFAULT_SETTINGS would push a 4:3 non-extended word over them, which
+  // drops flags the INI legitimately set. features1/features2 have no INI path, so skipping costs nothing
+  // that the next real push will not supply.
+  if (!mod || !lastSettings) return;
+  const settings = lastSettings;
+  const { features1, features2 } = buildFeatureWords(settings);
+  tryVoidCcall('WasmSetFeatures', buildFeatureFlags(settings));
+  tryVoidCcall('WasmSetFeatures1', features1);
+  tryVoidCcall('WasmSetFeatures2', features2);
+};
+
 /** Re-assert every live flag after a save-state load clobbers WRAM. */
 /**
  * Recompute and re-push only the gate word (features3). Lets a live override (e.g. the
@@ -155,6 +177,10 @@ const reassertGateWord3 = (): void => {
 };
 
 const reassertLiveFlagsAfterLoad = (): void => {
+  // features1 and features2 only ever reached the core through this live path, so a state load that
+  // reasserted the flags without them left every feature in those two words off until a setting was
+  // touched. Push all three words, then word 3 below.
+  reassertFeatureWords();
   // Gate words first: the C boot seed (emscripten_main.c) rebuilds word 3 from the INI, which only
   // carries the cheat bits, so it lands AFTER whatever pushLiveSettings pushed and silently drops
   // hudOverride/trackerNotifications/playerSpriteOverride. Re-pushing the renderer's value here makes
@@ -197,4 +223,4 @@ const primeLiveSettings = (settings: GameSettings): void => {
   lastSfxVol = settings.sfxMuted ? 0 : Math.round(settings.sfxVolume * 1.28);
 };
 
-export { LIVE_SETTINGS, pushLiveSettings, reassertBackdropBlack, reassertVsync, reassertHudHidden, reassertPauseHidden, reassertVolumes, reassertLiveFlagsAfterLoad, reassertFeatureFlags, reassertGateWord3, primeLiveSettings };
+export { LIVE_SETTINGS, pushLiveSettings, reassertFeatureWords, reassertBackdropBlack, reassertVsync, reassertHudHidden, reassertPauseHidden, reassertVolumes, reassertLiveFlagsAfterLoad, reassertFeatureFlags, reassertGateWord3, primeLiveSettings };

@@ -1,0 +1,415 @@
+{
+  "settings": [
+    {
+      "id": "medallionSpinAttackAbortFix",
+      "name": "Medallion cast vs spin attack",
+      "userMessage": "Stop spin attacks from cancelling a Bombos/Ether/Quake medallion cast triggered on the same frame.",
+      "category": "gameplay-affecting",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/player.c:282 (PlayerHandler_00_Ground_3)"
+      ]
+    },
+    {
+      "id": "doubleCameraDoorHandlingFix",
+      "name": "Double indoor-camera nudge",
+      "userMessage": "Prevent the indoor camera from being nudged twice in one frame (e.g. spin attack between bumpers).",
+      "category": "bug-fix-cosmetic",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/player.c:367 (PlayerHandler_00_Ground_3)"
+      ]
+    },
+    {
+      "id": "turboDashPitLevitationFix",
+      "name": "Turbo-dash pit levitation",
+      "userMessage": "Stop turbo-tapping the dash button from letting Link levitate across pits.",
+      "category": "gameplay-affecting",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/player.c:1430 (LinkState_Pits)"
+      ]
+    },
+    {
+      "id": "walkOnWaterPitStateFix",
+      "name": "Walk-on-water near-pit flag",
+      "userMessage": "Clear the near-pit flag promptly when leaving a hole so Link can't walk on water.",
+      "category": "gameplay-affecting",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/player.c:1445 (LinkState_Pits)"
+      ]
+    },
+    {
+      "id": "pitLandingExplorationGlitchFix",
+      "name": "Pit-landing exploration glitch",
+      "userMessage": "Disarm the exploration glitch when landing in a dungeon through an access pit.",
+      "category": "gameplay-affecting",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/player.c:1628 (HandleDungeonLandingFromPit)"
+      ]
+    },
+    {
+      "id": "capeMagicUnderflowFix",
+      "name": "Cape magic underflow",
+      "userMessage": "Prevent the magic meter from wrapping to full when the cape drains your last magic.",
+      "category": "gameplay-affecting",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/player.c:3298 (cape depletion decrement)"
+      ]
+    },
+    {
+      "id": "capeDrainWhileGrabbingFix",
+      "name": "Cape drain while grabbing",
+      "userMessage": "Make the cape keep draining magic while Link is grabbing or pulling a wall.",
+      "category": "gameplay-affecting",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/player.c:3340 (Link_HandleCape_passive_LiftCheck)"
+      ]
+    },
+    {
+      "id": "somariaNoMagicPowderFix",
+      "name": "Somaria empty-magic powder slip",
+      "userMessage": "Stop an empty-magic Cane of Somaria from auto-sprinkling magic powder if you switch items.",
+      "category": "gameplay-affecting",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/player.c:3372 (LinkItem_CaneOfSomaria)"
+      ]
+    },
+    {
+      "id": "somariaMagicRefundExploitFix",
+      "name": "Somaria free-magic refund",
+      "userMessage": "Stop the Cane of Somaria from refunding magic it never spent when slots are full.",
+      "category": "gameplay-affecting",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/player.c:3384 (LinkItem_CaneOfSomaria)"
+      ]
+    },
+    {
+      "id": "magicRefundOverflowClampFix",
+      "name": "Magic refund overflow clamp",
+      "userMessage": "Clamp refunded magic to the meter maximum so it can't overflow.",
+      "category": "gameplay-affecting",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/player.c:3521 (Refund_Magic)"
+      ]
+    },
+    {
+      "id": "dashBufferingSlopeFlagFix",
+      "name": "Dash-buffering slope flag",
+      "userMessage": "Always run slope detection while dashing so the dash-buffering glitch can't trigger.",
+      "category": "gameplay-affecting",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/player.c:5227 (FlagMovingIntoSlopes caller)"
+      ]
+    },
+    {
+      "id": "slopeJudderOobReadFix",
+      "name": "Vertical-slope judder / OOB read",
+      "userMessage": "Fix jittery diagonal-slope movement and an out-of-bounds read in the vertical slope code.",
+      "category": "bug-fix-cosmetic",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/player.c:5641 (FlagMovingIntoSlopes_Y)"
+      ]
+    },
+    {
+      "id": "tempBunnyAnimationStepsFix",
+      "name": "Temp-bunny walk animation",
+      "userMessage": "Use the correct walk animation for the temporary bunny form.",
+      "category": "visual-only",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/player.c:6042 (Link animation-step handler)"
+      ]
+    },
+    {
+      "id": "potionModuleDoorTransitionFix",
+      "name": "Potion-module door transition guard",
+      "userMessage": "Skip door-transition handling when a potion has switched Link into another game module.",
+      "category": "gameplay-affecting",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/player.c:6161 (HandleDoorTransitions)"
+      ]
+    },
+    {
+      "id": "linkInitGlitchStateReset",
+      "name": "Link_Initialize leftover-state reset (bundles 6 fixes)",
+      "userMessage": "Reset leftover state on load/continue to close several save-quit, mirror, and bunny-revert glitches.",
+      "category": "gameplay-affecting",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/player.c:6315 (Link_Initialize)"
+      ]
+    },
+    {
+      "id": "kikiDefuseBigBomb",
+      "name": "Kiki big-bomb defuse",
+      "userMessage": "Defuse the big bomb when Kiki the monkey re-grabs you, instead of letting it detonate.",
+      "category": "gameplay-affecting",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/sprite_main.c:1505 (Kiki_LyingInwait)"
+      ]
+    },
+    {
+      "id": "zoraSpawnInShallowWater",
+      "name": "Zora shallow-water spawn",
+      "userMessage": "Let Zoras surface from shallow water (fixes Zoras in Misery Mire that never appear).",
+      "category": "bug-fix-cosmetic",
+      "bundleFlag": "GameChangingBugFixes",
+      "sites": [
+        "core/zelda3/src/sprite_main.c:2878 (Sprite_Zora_Main case 0)"
+      ]
+    },
+    {
+      "id": "mushroomNoPickupDuringMirrorWarp",
+      "name": "Mushroom pickup during mirror warp",
+      "userMessage": "Don't pick up the magic mushroom while a mirror warp is in progress.",
+      "category": "bug-fix-cosmetic",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/sprite_main.c:6382 (Sprite_E7_Mushroom)"
+      ]
+    },
+    {
+      "id": "giantMoldormKnockbackSfx",
+      "name": "Giant Moldorm knockback SFX",
+      "userMessage": "Play the missing hit sound when Giant Moldorm knocks you back.",
+      "category": "visual-only",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/sprite_main.c:8309 (GiantMoldorm main)"
+      ]
+    },
+    {
+      "id": "noDoubleAbsorptionHandling",
+      "name": "Double heart/fairy absorption",
+      "userMessage": "Stop hearts and fairies from being processed twice when absorbed (fixes double-absorption).",
+      "category": "bug-fix-cosmetic",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/sprite_main.c:11754 (Sprite_D8_Heart)",
+        "core/zelda3/src/sprite_main.c:11826 (Sprite_E3_Fairy case 0)"
+      ]
+    },
+    {
+      "id": "swamolaCorrectSegmentIndex",
+      "name": "Swamola segment index",
+      "userMessage": "Fix the Swamola index bug that causes Lanmola glitches in Misery Mire.",
+      "category": "bug-fix-cosmetic",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/sprite_main.c:5207 (SpritePrep_Swamola_InitializeSegments)"
+      ]
+    },
+    {
+      "id": "mothulaTakesL4AndSpinDamage",
+      "name": "Mothula L4/spin damage table",
+      "userMessage": "Let the upgraded sword and spin attack hurt Mothula.",
+      "category": "gameplay-affecting",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/sprite_main.c:22499 (Sprite_88_Mothula)"
+      ]
+    },
+    {
+      "id": "reloadShieldPaletteAfterPikit",
+      "name": "Shield palette after Pikit",
+      "userMessage": "Refresh the shield's colors immediately after a Pikit steals/returns your shield, instead of leaving it the wrong palette.",
+      "category": "visual-only",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/sprite.c:1416 (Sprite_HandleAbsorptionByPlayer case 14)"
+      ]
+    },
+    {
+      "id": "cancelHookshotGrabOnHiddenAbsorbable",
+      "name": "Stale hookshot grab on hidden item",
+      "userMessage": "Cancel a hookshot's grab on an item once that item becomes hidden under a rock, instead of keeping a stale grab link.",
+      "category": "bug-fix-cosmetic",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/sprite.c:1435 (SpriteDraw_AbsorbableTransient)"
+      ]
+    },
+    {
+      "id": "mothulaSpikeTileDamageClassFix",
+      "name": "Mothula spike-tile damage class",
+      "userMessage": "Make Mothula take the correct amount of damage from spike-floor tiles (a fix for an altered internal damage class).",
+      "category": "gameplay-affecting",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/sprite.c:2029 (sprite tile-collision damage handler, tiletype 0x44)"
+      ]
+    },
+    {
+      "id": "giantMoldormWeaponTinkSfxFix",
+      "name": "Giant Moldorm weapon-tink SFX",
+      "userMessage": "Play the correct 'tink' sound (with panning) when your weapon bounces off the Giant Moldorm, instead of a missing/silent effect.",
+      "category": "visual-only",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/sprite.c:2696 (Sprite_CheckDamageFromLink, type 9)"
+      ]
+    },
+    {
+      "id": "boomerangTerminateWhenEmptyHanded",
+      "name": "Boomerang stuck on empty-hand release",
+      "userMessage": "Boomerang ends correctly when released early with nothing in hand, instead of getting stuck.",
+      "category": "gameplay-affecting",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/ancilla.c:1276 (Ancilla05_Boomerang)"
+      ]
+    },
+    {
+      "id": "bigBombPreserveFollowerIndicator",
+      "name": "Big-bomb follower-indicator preserve",
+      "userMessage": "A super bomb explosion no longer wipes your active follower state.",
+      "category": "gameplay-affecting",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/ancilla.c:5385 (Ancilla3A_BigBombExplosion)"
+      ]
+    },
+    {
+      "id": "permabunnyRestorePaletteOnRevive",
+      "name": "Permabunny palette on revive",
+      "userMessage": "Reviving as a permanent bunny restores the correct bunny colors instead of a glitched palette.",
+      "category": "visual-only",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/ancilla.c:5495 (RevivalFairy_MonitorHP)"
+      ]
+    },
+    {
+      "id": "fixDeathCounterOvercount",
+      "name": "Death-counter overcount",
+      "userMessage": "Don't count a death when you choose 'continue without saving' on the game-over screen.",
+      "category": "gameplay-affecting",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/messaging.c:799 (Death_Func15)"
+      ]
+    },
+    {
+      "id": "fixResumeMosaicSanctuaryWarp",
+      "name": "Resume-mosaic sanctuary warp",
+      "userMessage": "Fix saving/quitting mid-mosaic (e.g. while being electrocuted) wrongly resuming you at the sanctuary.",
+      "category": "bug-fix-cosmetic",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/messaging.c:2110 (CopySaveToWRAM)"
+      ]
+    },
+    {
+      "id": "fixPermabunnyDeathPalette",
+      "name": "Permabunny death palette",
+      "userMessage": "Fix Link showing bunny colors during the death animation when dying as a permanent bunny.",
+      "category": "visual-only",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/messaging.c:2913 (Death_PrepFaint)"
+      ]
+    },
+    {
+      "id": "skipRoomTagsDuringStaircaseTransition",
+      "name": "Room tags during staircase race",
+      "userMessage": "Prevents items from spawning in the wrong spot when you step onto a staircase at the same moment a room trigger fires.",
+      "category": "gameplay-affecting",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/dungeon.c:4288 (Dungeon_HandleRoomTags)"
+      ]
+    },
+    {
+      "id": "skipDungeonUpdateAfterModuleExit",
+      "name": "Dungeon update after module exit",
+      "userMessage": "Fixes a corrupted exit when leaving Skull Woods via a Cane of Somaria door button.",
+      "category": "gameplay-affecting",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/dungeon.c:6510 (Module07_Dungeon)"
+      ]
+    },
+    {
+      "id": "kholdstareShellPaletteRange",
+      "name": "Kholdstare shell palette range",
+      "userMessage": "Fix Kholdstare's frozen shell using the correct palette range during its freeze/melt color fade.",
+      "category": "visual-only",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/load_gfx.c:1107 (KholdstareShell_PaletteFiltering)"
+      ]
+    },
+    {
+      "id": "preserveGlovesColorOnGearReload",
+      "name": "Glove color on gear reload",
+      "userMessage": "Keep the glove color correct (Power/Titan's Glove tint) when Link's gear palettes are reloaded.",
+      "category": "visual-only",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/load_gfx.c:1889 (LoadActualGearPalettes)"
+      ]
+    },
+    {
+      "id": "superBombClearFollowerOnExplode",
+      "name": "Super-bomb follower snap-back",
+      "userMessage": "Super bombs no longer teleport back to you as a follower the moment they detonate.",
+      "category": "gameplay-affecting",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/tagalong.c:439 (Follower_NotFollowing)"
+      ]
+    },
+    {
+      "id": "superBombPaletteOnFrameZero",
+      "name": "Super-bomb final-frame palette",
+      "userMessage": "The super bomb keeps its colorful flashing palette on its final frame instead of glitching.",
+      "category": "visual-only",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/tagalong.c:670 (Tagalong_Draw)"
+      ]
+    },
+    {
+      "id": "fixPortalMusicRestart",
+      "name": "Portal music restart",
+      "userMessage": "Stops the background music from restarting when you step through a portal.",
+      "category": "bug-fix-cosmetic",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/audio.c:115 (ZeldaIsPlayingMusicTrackWithBug)"
+      ]
+    },
+    {
+      "id": "icePortalRevealChime",
+      "name": "Ice Temple portal reveal chime",
+      "userMessage": "Play the discovery chime when lifting the rock that uncovers the magic portal to the Ice Temple (vanilla is silent here).",
+      "category": "bug-fix-cosmetic",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/overworld.c:3595 (Overworld_RevealSecret)"
+      ]
+    },
+    {
+      "id": "widescreenLinkHideViaOffscreenY",
+      "name": "Widescreen Link hide",
+      "userMessage": "Hides Link correctly across the full widescreen view (blinking, cape, doorways) instead of only off the normal 4:3 screen.",
+      "category": "visual-only",
+      "bundleFlag": "WidescreenVisualFixes",
+      "sites": [
+        "core/zelda3/src/player_oam.c:1110 (LinkOam_Main)"
+      ]
+    }
+  ]
+}

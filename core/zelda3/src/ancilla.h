@@ -9,7 +9,12 @@ typedef struct CheckPlayerCollOut {
 } CheckPlayerCollOut;
 
 typedef struct AncillaOamInfo {
-  uint8 x;
+  // Widened from uint8 so a wide view can carry a true camera-relative screen X past
+  // the stock +-244px window; see Ancilla_ReturnIfOutsideBounds. Every consumer narrows
+  // this back down through an 8-bit OAM helper or an explicit uint8 local, and the
+  // non-wide path always stores an 8-bit-truncated value here, so this widening changes
+  // nothing when a wide view is not configured.
+  uint16 x;
   uint8 y;
   uint8 flags;
 } AncillaOamInfo;

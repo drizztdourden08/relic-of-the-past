@@ -257,6 +257,9 @@ static int g_lock_last_cam_x, g_lock_last_cam_y;
 // parallax (BG1) holds when non-zero so it doesn't drift against the static scene; the sprite proximity
 // loader scans the lock band (the shifted side) so sprites in the extended view spawn even while pinned.
 int g_camera_lock_shift_x, g_camera_lock_shift_y;
+int g_render_extra_left, g_render_extra_right;
+int g_render_extra_top, g_render_extra_bottom;
+int g_band_lo_x, g_band_hi_x;  // window the sprite band classifier last used, for the diagnostic dump
 
 // Camera-lock clamp for one axis: the rendered-view camera position the lock pins to, given the real game
 // camera, the area's scroll bounds [start,end], and that side's budget. The inset is half the area span at
@@ -343,7 +346,12 @@ static void ConfigurePpuSideSpace() {
         if (enhanced_features0 & kFeatures0_CameraLockToViewport) {
           int dir = overworld_screen_transition & 3;  // 0 up, 1 down, 2 left, 3 right
           int destArea = g_ow_src_area + kOverworld_Func6B_AreaDelta[dir];
-          if (submodule_index <= 8 && (unsigned)destArea < 64) {
+          // The smooth 2-area transition is its own opt-in. Off, control falls to the sibling branch
+          // below, which holds the current area's stationary lock and builds that one area's tilemap: a
+          // complete path already used for every non-scroll sub-state, and the stock wrapped-edge seam the
+          // setting describes. Only the interpolated 2-area pan is gated here.
+          if (submodule_index <= 8 && (unsigned)destArea < 64
+              && (enhanced_features0 & kFeatures0_SmoothTransitions)) {
             int big = !kOverworldMapIsSmall[destArea];
             int destXs = kOverworld_OffsetBaseX[destArea], destYs = kOverworld_OffsetBaseY[destArea];
             int destXe = destXs + kOverworld_Size2[big], destYe = destYs + kOverworld_Size1[big];
@@ -424,12 +432,30 @@ static void ConfigurePpuSideSpace() {
     extra_bottom = 16;
   }
   PpuSetExtraSideSpace(g_zenv.ppu, extra_left, extra_right, extra_top, extra_bottom);
+  // The shift is by definition how far the rendered view is inset from the game camera, so it cannot
+  // exceed the budget: |shift| <= budget holds by construction. A larger value means the inputs the lock
+  // was derived from did not describe this screen - a mode-7 map, for instance, whose BG2HOFS bears no
+  // relation to ow_scroll_vars0. Clamping keeps a bad derivation from reaching ppu_evaluateSprites, which
+  // adds the shift to every sprite and would otherwise throw whole sprite sets off the screen.
+  int budget_x = (int)g_zenv.ppu->extraLeftRight, budget_y = (int)g_zenv.ppu->extraTopBottom;
+  g_zenv.ppu->cameraLockShiftX = IntMax(-budget_x, IntMin(budget_x, g_zenv.ppu->cameraLockShiftX));
+  g_zenv.ppu->cameraLockShiftY = IntMax(-budget_y, IntMin(budget_y, g_zenv.ppu->cameraLockShiftY));
   g_camera_lock_shift_x = g_zenv.ppu->cameraLockShiftX;
   g_camera_lock_shift_y = g_zenv.ppu->cameraLockShiftY;
+  // Per-frame visible band widths, for the sprite band classifier: the rendered view spans
+  // [-g_render_extra_left, 256 + g_render_extra_right] in stock-screen coordinates.
+  g_render_extra_left = (int)g_zenv.ppu->extraLeftCur;
+  g_render_extra_right = (int)g_zenv.ppu->extraRightCur;
+  g_render_extra_top = (int)g_zenv.ppu->extraTopCur;
+  g_render_extra_bottom = (int)g_zenv.ppu->extraBottomCur;
 }
 
 void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
   SimpleHdma hdma_chans[2];
+
+  // The rasteriser's own diagnostics cost a branch per sprite tile, so they only accumulate when the
+  // developer tools that read them are on.
+  g_ppu_diag = (enhanced_features0 & kFeatures0_DeveloperTools) ? 1 : 0;
 
   PpuBeginDrawing(g_zenv.ppu, pixel_buffer, pitch, render_flags);
 
@@ -494,6 +520,8 @@ void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
     SimpleHdma_DoLine(&hdma_chans[0]);
     SimpleHdma_DoLine(&hdma_chans[1]);
   }
+  // After the draw, so the OAM and the rasteriser's own account of what it drew describe the same frame.
+  GameHook_CaptureOamFrame();
 }
 
 void HdmaSetup(uint32 addr6, uint32 addr7, uint8 transfer_unit, uint8 reg6, uint8 reg7, uint8 indirect_bank) {
@@ -536,6 +564,7 @@ uint16 g_oam_wide_budget;
 uint8 g_oam_y_high[128];
 uint8 g_oam_x_high[128];  // see types.h — signed high X bits (above the stock 9) for wide views
 uint8 g_oam_player[128];  // see types.h — which slots are the player's own body, for the private palette
+uint8 g_sprite_in_band[16];  // see types.h: idle-AI band flag, one entry per SPRITE slot, not OAM slot
 
 static void ClearOamBuffer() {  // 80841e
   for (int i = 0; i < 128; i++) {
@@ -544,6 +573,8 @@ static void ClearOamBuffer() {  // 80841e
     g_oam_x_high[i] = 0;  // reset each frame; OAM helpers set it for wide sprites this frame
     g_oam_player[i] = 0;  // reset each frame; the player OAM builder marks its own slots
   }
+  for (int i = 0; i < 16; i++)
+    g_sprite_in_band[i] = 0;  // reset each frame; recomputed per sprite slot from position
 }
 
 static void ZeldaRunGameLoop() {
@@ -1020,12 +1051,16 @@ static const uint32 kGateWordParityMask[kGateWordCount] = {
   // bundle-fixes.generated.ts and the word is fully packed with no unused bits, so the mask is total.
   0xFFFFFFFFu,
 
-  // features2: the 10 split bug-fix bits in use (bits 0-9); bits 10-31 are unallocated so far.
+  // features2: the 10 split bug-fix bits in use (bits 0-9), plus the hand-authored bits allocated downward
+  // from bit 31 (features.h). Both widescreen bits change what the game computes — the play area moves the
+  // sprite spawn, spawner-activity and room-clear windows off the original 256x224 area, and the idle-AI
+  // bit lets a sprite outside the active section keep animating — so Vanilla Safe forces both off.
   kFeatures2_SkipRoomTagsDuringStaircaseTransition | kFeatures2_SkipDungeonUpdateAfterModuleExit |
   kFeatures2_KholdstareShellPaletteRange | kFeatures2_PreserveGlovesColorOnGearReload |
   kFeatures2_SuperBombClearFollowerOnExplode | kFeatures2_SuperBombPaletteOnFrameZero |
   kFeatures2_FixPortalMusicRestart | kFeatures2_IcePortalRevealChime |
-  kFeatures2_WidescreenLinkHideViaOffscreenY | kFeatures2_SaveMenuLockoutAfterMedallionFix,
+  kFeatures2_WidescreenLinkHideViaOffscreenY | kFeatures2_SaveMenuLockoutAfterMedallionFix |
+  kFeatures2_WidescreenPlayArea | kFeatures2_WidescreenIdleAI,
 
   // features3: cheats (the master + all four per-category permission bits), the randomizer item-override
   // table, tracker notifications, the custom player sprite/palette, and the HUD override all diverge
