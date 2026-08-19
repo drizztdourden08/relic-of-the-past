@@ -23,6 +23,8 @@ import { useGameUIStore } from '../../stores/game-ui-store';
 import { DEFAULT_SETTINGS } from './settings';
 import { deliveryQueue } from './delivery-queue';
 import { createInstantiateWasm } from './instantiate-wasm';
+import { readOamSnapshot } from './oam-snapshot';
+import { readOamRing } from './oam-ring';
 import { loadGlueScript } from './wasm-warmup';
 import { getPlatform } from '../../platform/get-platform';
 
@@ -215,6 +217,13 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
     // Debug-only handle for devtools inspection; the canonical module ref is
     // wasm-bridge's `currentModule` (set via setModule above) — never read this in code.
     (window as any).__zelda3Module = module;
+    // Debug-only handle for the OAM snapshot query; gated on the developer-tools setting in C, so it
+    // returns null when that is off. Lets a diagnostic read the sprite table as the PPU sees it,
+    // including the wide/tall high-coordinate side channels a screenshot cannot show.
+    (window as any).__oamSnapshot = readOamSnapshot;
+    // Drains the per-frame OAM ring the core fills after each frame's OAM is complete. Same developer-tools
+    // gate; unlike the live snapshot above it carries no sampling race against the game loop.
+    (window as any).__oamRing = readOamRing;
     setState({ status: 'running', error: null });
     log.wasm('WASM module running');
     canvas.focus();
