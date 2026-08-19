@@ -1533,10 +1533,10 @@ void Module09_2A_00_ScrollToLand() {  // 82b532
     OverworldHandleMapScroll();
 }
 
-// Set by ConfigurePpuSideSpace: the camera-lock shift on each axis (non-zero while the lock holds the
-// rendered view at a boundary). The BG1 parallax below is driven by the GAME camera's scroll, which keeps
-// moving while the view is held — so suppress it then, otherwise the parallax drifts against the static scene.
-extern int g_camera_lock_shift_x, g_camera_lock_shift_y;
+// g_camera_lock_shift_x/y (types.h) is set by ConfigurePpuSideSpace: the camera-lock shift on each axis
+// (non-zero while the lock holds the rendered view at a boundary). The BG1 parallax below is driven by the
+// GAME camera's scroll, which keeps moving while the view is held, so suppress it then, otherwise the
+// parallax drifts against the static scene.
 
 void Overworld_OperateCameraScroll() {  // 82bb90
   int z = (allow_scroll_z && link_z_coord != 0xffff) ? link_z_coord : 0;

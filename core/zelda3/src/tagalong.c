@@ -599,8 +599,23 @@ void Tagalong_Draw() {  // 89a907
 }
 
 static inline void SetOam_Follower(OamEnt *oam, uint16 x, uint16 y, uint8 charnum, uint8 flags, uint8 big) {
-  oam->x = x;
-  oam->y = (uint16)(x + 0x80) < 0x180 && (big |= x >> 8 & 1, (uint16)(y + 0x10) < 0x100) ? y : 0xf0;
+  if (!Wide_Active()) {
+    oam->x = x;
+    oam->y = (uint16)(x + 0x80) < 0x180 && (big |= x >> 8 & 1, (uint16)(y + 0x10) < 0x100) ? y : 0xf0;
+  } else {
+    // The stock 9-bit X caps the follower at the original screen span; carry the true X so it stays
+    // placed across the rendered view.
+    int sx = (int16)x;
+    if (sx >= -0x80 - WideLeftPx() && sx < 0x180 + WideRightPx() && (uint16)(y + 0x10) < 0x100) {
+      OamSetX(oam, x);
+      big |= x >> 8 & 1;
+      oam->y = y;
+    } else {
+      oam->x = x;
+      g_oam_x_high[oam - oam_buf] = 0;
+      oam->y = 0xf0;
+    }
+  }
   oam->charnum = charnum;
   oam->flags = flags;
   bytewise_extended_oam[oam - oam_buf] = big;

@@ -16,4 +16,6 @@ int LinkOam_CalculateSwordSparklePosition(int oam_pos, uint8 oam_x, uint8 oam_y)
 void LinkOam_UnusedWeaponSettings(int r4loc, uint8 oam_x, uint8 oam_y);
 void LinkOam_DrawDungeonFallShadow(int r4loc, uint8 xcoord);
 void LinkOam_DrawFootObject(int r4loc, uint8 oam_x, uint8 oam_y);
-void LinkOam_CalculateXOffsetRelativeLink(uint8 x);
+void LinkOam_CalculateXOffsetRelativeLink(uint8 x);extern uint8 g_link_hide_debug[6];
+
+

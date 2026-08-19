@@ -155,8 +155,11 @@ struct Ppu {
   int32_t m7startY;
 
   uint16_t oam[0x110];
-  // Tall screens: OAM Y is 8-bit. This carries the per-sprite high Y bit (synced from the game's
-  // g_oam_y_high each frame) so ppu_evaluateSprites can place sprites across a >256px tall pan.
+  // Tall screens: OAM Y is 8-bit. This carries the per-sprite Y marker (synced from the game's
+  // g_oam_y_high each frame) so ppu_evaluateSprites can place sprites across a >256px tall pan:
+  // 0 = not tall-encoded, read the entry the vanilla way; 1 = 9th bit clear; 2 = 9th bit set. The
+  // three states exist because a tall screen renders rows 240 and -16, both of which encode to the
+  // hardware's hide value 0xf0 — the marker is what tells a real row from a hidden sprite.
   uint8_t oamHighY[128];
   // Wide screens: OAM X is 9-bit. This carries the SIGNED per-sprite X bits above the stock 9 (synced from
   // g_oam_x_high each frame) so ppu_evaluateSprites can place sprites at their true X across a >512px wide
@@ -206,5 +209,15 @@ int PpuGetCurrentRenderScale(Ppu *ppu, uint32_t render_flags);
 
 void PpuSetMode7PerspectiveCorrection(Ppu *ppu, int low, int high);
 void PpuSetExtraSideSpace(Ppu *ppu, int left, int right, int top, int bottom);
+
+// Rasteriser diagnostics, see ppu.c. Per frame: which OAM slots actually drew pixels, and how often the
+// per-line sprite/tile budgets cut evaluation short.
+extern uint8 g_ppu_slot_drawn[128];
+extern uint16 g_ppu_sprite_budget_hits, g_ppu_tile_budget_hits;
+// Layer probe: set g_ppu_probe_row to a physical buffer row (-1 = off) and g_ppu_probe_prio holds the
+// per-column priority byte that painted it, which names the layer responsible for a pixel in an extra band.
+extern uint8 g_ppu_diag;
+extern int g_ppu_probe_row;
+extern uint8 g_ppu_probe_prio[256];
 
 #endif  // ZELDA3_SNES_PPU_H_

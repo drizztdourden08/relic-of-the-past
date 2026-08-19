@@ -353,32 +353,72 @@ int Ancilla_AllocHigh() {
 
 static void Ancilla_SetOam(OamEnt *oam, uint16 x, uint16 y, uint8 charnum, uint8 flags, uint8 big) {
   uint8 yval = 0xf0;
-  int xt = enhanced_features0 & kFeatures0_ExtendScreen64 ? 0x40 : 0;
-  if ((uint16)(x + xt) < 256 + xt * 2 && y < 256) {
-    big |= (x >> 8) & 1;
-    oam->x = x;
-    if (y < 0xf0)
-      yval = y;
+  if (!Wide_Active()) {
+    int xt = enhanced_features0 & kFeatures0_ExtendScreen64 ? 0x40 : 0;
+    if ((uint16)(x + xt) < 256 + xt * 2 && y < 256) {
+      big |= (x >> 8) & 1;
+      oam->x = x;
+      if (y < 0xf0)
+        yval = y;
+    }
+    oam->y = yval;
+    oam->charnum = charnum;
+    oam->flags = flags;
+    bytewise_extended_oam[oam - oam_buf] = big;
+  } else {
+    // A wide view needs the true 9-bit-plus-extension X, so route the in-range case
+    // through OamSetX (which also carries the bits above the 9th in g_oam_x_high).
+    // Out of range, clear g_oam_x_high explicitly: unlike the in-range case, nothing
+    // else here writes it this frame, and a slot reused from an earlier wide sprite
+    // would otherwise keep flinging this one hundreds of pixels off-screen.
+    int16 xs = (int16)x;
+    if (xs >= -WideLeftPx() && xs < 256 + WideRightPx() && y < 256) {
+      big |= (x >> 8) & 1;
+      OamSetX(oam, x);
+      if (y < 0xf0)
+        yval = y;
+    } else {
+      g_oam_x_high[oam - oam_buf] = 0;
+    }
+    oam->y = yval;
+    oam->charnum = charnum;
+    oam->flags = flags;
+    bytewise_extended_oam[oam - oam_buf] = big;
   }
-  oam->y = yval;
-  oam->charnum = charnum;
-  oam->flags = flags;
-  bytewise_extended_oam[oam - oam_buf] = big;
 }
 
 static void Ancilla_SetOam_Safe(OamEnt *oam, uint16 x, uint16 y, uint8 charnum, uint8 flags, uint8 big) {
   uint8 yval = 0xf0;
-  oam->x = x;
-  int xt = enhanced_features0 & kFeatures0_ExtendScreen64 ? 0x48 : 0;
-  if ((uint16)(x + 0x80) < (0x180 + xt)) {
-    big |= (x >> 8) & 1;
-    if ((uint16)(y + 0x10) < 0x100)
-      yval = y;
+  if (!Wide_Active()) {
+    oam->x = x;
+    int xt = enhanced_features0 & kFeatures0_ExtendScreen64 ? 0x48 : 0;
+    if ((uint16)(x + 0x80) < (0x180 + xt)) {
+      big |= (x >> 8) & 1;
+      if ((uint16)(y + 0x10) < 0x100)
+        yval = y;
+    }
+    oam->y = yval;
+    oam->charnum = charnum;
+    oam->flags = flags;
+    bytewise_extended_oam[oam - oam_buf] = big;
+  } else {
+    // OamSetX runs unconditionally here, mirroring the stock unconditional oam->x = x
+    // above, so g_oam_x_high is always refreshed for this slot regardless of range.
+    // The stock -128/+256 safety margin (already more generous than Ancilla_SetOam's
+    // plain 0/256) is kept and extended by the live wide budget on each side, plus the
+    // same +8px the stock 0x48 gave this variant over Ancilla_SetOam's 0x40.
+    OamSetX(oam, x);
+    int16 xs = (int16)x;
+    if (xs >= -(128 + WideLeftPx()) && xs < 256 + WideRightPx() + 8) {
+      big |= (x >> 8) & 1;
+      if ((uint16)(y + 0x10) < 0x100)
+        yval = y;
+    }
+    oam->y = yval;
+    oam->charnum = charnum;
+    oam->flags = flags;
+    bytewise_extended_oam[oam - oam_buf] = big;
   }
-  oam->y = yval;
-  oam->charnum = charnum;
-  oam->flags = flags;
-  bytewise_extended_oam[oam - oam_buf] = big;
 }
 
 void Ancilla_Empty(int k) {
@@ -465,8 +505,13 @@ void AddBirdCommon(int k) {
   ancilla_K[k] = 0;
   ancilla_G[k] = 0;
 
-  int xt = (enhanced_features0 & kFeatures0_ExtendScreen64) ? 0x40 : 0;
-  Ancilla_SetXY(k, BG2HOFS_copy2 - 16 - xt, link_y_coord - 8);
+  if (!Wide_Active()) {
+    int xt = (enhanced_features0 & kFeatures0_ExtendScreen64) ? 0x40 : 0;
+    Ancilla_SetXY(k, BG2HOFS_copy2 - 16 - xt, link_y_coord - 8);
+  } else {
+    // Enter from the true left edge of the wide view instead of the fixed 64px point.
+    Ancilla_SetXY(k, BG2HOFS_copy2 - 16 - WideLeftPx(), link_y_coord - 8);
+  }
 }
 
 ProjectSpeedRet Bomb_ProjectSpeedTowardsPlayer(int k, uint16 x, uint16 y, uint8 vel) {  // 84eb63
@@ -765,12 +810,29 @@ void Ancilla01_SomariaBullet(int k) {  // 88851b
 bool Ancilla_ReturnIfOutsideBounds(int k, AncillaOamInfo *info) {  // 88862a
   static const uint8 kAncilla_FloorFlags[2] = {0x20, 0x10};
   info->flags = kAncilla_FloorFlags[ancilla_floor[k]];
-  if ((info->x = ancilla_x_lo[k] - BG2HOFS_copy2) >= 0xf4 ||
-      (info->y = ancilla_y_lo[k] - BG2VOFS_copy2) >= 0xf0) {
-    ancilla_type[k] = 0;
-    return true;
+  if (!Wide_Active()) {
+    // The stock band uses only the ancilla's low X byte, so this is really a
+    // residue mod 256 of the true screen-relative X, not the signed distance
+    // itself; cast explicitly so widening the field above cannot change the result.
+    if ((info->x = (uint8)(ancilla_x_lo[k] - BG2HOFS_copy2)) >= 0xf4 ||
+        (info->y = ancilla_y_lo[k] - BG2VOFS_copy2) >= 0xf0) {
+      ancilla_type[k] = 0;
+      return true;
+    }
+    return false;
+  } else {
+    // A wide view can put the true screen-relative X outside the +-244px window the
+    // low-byte residue above can represent, so reconstruct the full signed X here and
+    // test it against the live wide budget instead of the fixed +-12/+244 stock band.
+    int rel_x = Ancilla_GetX(k) - BG2HOFS_copy2;
+    info->x = (uint16)rel_x;
+    if (rel_x < -WideLeftPx() || rel_x >= 256 + WideRightPx() ||
+        (info->y = ancilla_y_lo[k] - BG2VOFS_copy2) >= 0xf0) {
+      ancilla_type[k] = 0;
+      return true;
+    }
+    return false;
   }
-  return false;
 }
 
 void SomarianBlast_Draw(int k) {  // 888650
@@ -4640,8 +4702,13 @@ void Ancilla27_Duck(int k) {  // 88dde8
     goto endif_1;
 
   if (ancilla_timer[k]) {
-    int xt = (enhanced_features0 & kFeatures0_ExtendScreen64) ? 0x40 : 0;
-    Ancilla_SetXY(k, BG2HOFS_copy2 - 16 - xt, link_y_coord - 8);
+    if (!Wide_Active()) {
+      int xt = (enhanced_features0 & kFeatures0_ExtendScreen64) ? 0x40 : 0;
+      Ancilla_SetXY(k, BG2HOFS_copy2 - 16 - xt, link_y_coord - 8);
+    } else {
+      // Hover at the true left edge of the wide view instead of the fixed 64px point.
+      Ancilla_SetXY(k, BG2HOFS_copy2 - 16 - WideLeftPx(), link_y_coord - 8);
+    }
     return;
   }
 
@@ -6455,6 +6522,15 @@ void AddBirdTravelSomething(uint8 a, uint8 y) {  // 89951d
     }
     ancilla_step[k] = 2;
     AddBirdCommon(k);
+    // Arrival only: keep the stock entry distance. The descent arc set just above is a fixed curve, and
+    // the player rides in unrendered until the bird reaches his destination X, so entering from the true
+    // edge of a wide view only lengthens the stretch where nothing is drawn - he vanishes off to the side
+    // and reappears already on the ground. The take-off path has no arc to honour and does enter from the
+    // real edge. Widening this one means scaling the curve to match, which is a separate change.
+    if (Wide_Active()) {
+      int xt = (enhanced_features0 & kFeatures0_ExtendScreen64) ? 0x40 : 0;
+      Ancilla_SetXY(k, BG2HOFS_copy2 - 16 - xt, link_y_coord - 8);
+    }
   }
 }
 
@@ -7105,11 +7181,21 @@ int DashTremor_TwiddleOffset(int k) {  // 8ffafe
 }
 
 void Ancilla_TerminateIfOffscreen(int j) {  // 8ffd52
-  int xt = (enhanced_features0 & kFeatures0_ExtendScreen64) ? 0x40 : 0;
-  uint16 x = Ancilla_GetX(j) - BG2HOFS_copy2 + xt;
-  uint16 y = Ancilla_GetY(j) - BG2VOFS_copy2;
-  if (x >= 244 + xt * 2 || y >= 240)
-    ancilla_type[j] = 0;
+  if (!Wide_Active()) {
+    int xt = (enhanced_features0 & kFeatures0_ExtendScreen64) ? 0x40 : 0;
+    uint16 x = Ancilla_GetX(j) - BG2HOFS_copy2 + xt;
+    uint16 y = Ancilla_GetY(j) - BG2VOFS_copy2;
+    if (x >= 244 + xt * 2 || y >= 240)
+      ancilla_type[j] = 0;
+  } else {
+    // Same band as the stock check, but sized to the live wide budget on each side
+    // instead of the fixed 64px allowance, so a projectile survives the full width
+    // of the extended view instead of being destroyed 64px into the band.
+    int rel_x = Ancilla_GetX(j) - BG2HOFS_copy2;
+    uint16 y = Ancilla_GetY(j) - BG2VOFS_copy2;
+    if (rel_x < -WideLeftPx() || rel_x >= 244 + WideRightPx() || y >= 240)
+      ancilla_type[j] = 0;
+  }
 }
 
 bool Bomb_CheckUndersideSpriteStatus(int k, Point16U *out_pt, uint8 *out_r10) {  // 8ffdcf

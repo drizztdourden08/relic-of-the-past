@@ -2361,7 +2361,7 @@ void MasterSword_Draw(int k) {  // 858da8
   OamEnt *oam = GetOamCurPtr();
   for (int i = 5; i >= 0; i--, oam++) {
     OamSetX(oam, kMasterSword_Draw_X[i] + info.x);
-    oam->y = kMasterSword_Draw_Y[i] + info.y;
+    OamSetYFull(oam, kMasterSword_Draw_Y[i] + info.y);
     oam->charnum = kMasterSword_Draw_Char[i];
     oam->flags = info.flags;
   }
@@ -2530,7 +2530,7 @@ void SpriteDraw_Beamos_Eyeball(int k, PrepOamCoordsRet *info) {  // 859151
   BYTE(dungmap_var7) = kBeamosEyeball_Draw_X[i] - 3;
   OamSetX(oam, BYTE(dungmap_var7) + info->x);
   HIBYTE(dungmap_var7) = kBeamosEyeball_Draw_Y[i] - 18;
-  oam->y = HIBYTE(dungmap_var7) + info->y;
+  OamSetYFull(oam, HIBYTE(dungmap_var7) + info->y);
   oam->charnum = kBeamosEyeball_Draw_Char[i];
   oam->flags = info->flags&0x31|0xA|kBeamosEyeball_Draw_Flags[i];
   oam_cur_ptr += n * 4;
@@ -3120,7 +3120,7 @@ void ZoraKing_Draw(int k) {  // 859cab
     for (int i = 3; i >= 0; i--, oam++) {
       int j = g * 4 + i;
       OamSetX(oam, kZoraKing_Draw_X0[j] + info.x);
-      oam->y = kZoraKing_Draw_Y0[j] + info.y;
+      OamSetYFull(oam, kZoraKing_Draw_Y0[j] + info.y);
       oam->charnum = kZoraKing_Draw_Char0[j];
       uint8 f = kZoraKing_Draw_Flags0[j];
       oam->flags = (f & 0xf ? f : f | info.flags) | 0x20;
@@ -4548,7 +4548,7 @@ void SpriteDraw_SpriteBombExplosion(int k) {  // 85c113
   for (int i = 3; i >= 0; i--, oam++) {
     int j = base + i;
     OamSetX(oam, kEnemyBombExplosion_X[j] + info.x);
-    oam->y = kEnemyBombExplosion_Y[j] + info.y;
+    OamSetYFull(oam, kEnemyBombExplosion_Y[j] + info.y);
     oam->charnum = kEnemyBombExplosion_Char[j];
     oam->flags = kEnemyBombExplosion_Flags[j] | info.flags;
   }
@@ -5434,8 +5434,8 @@ void GoodPullSwitch_Draw(int k) {  // 85d953
   OamEnt *oam = GetOamCurPtr();
   uint8 t = kGoodPullSwitch_Tab2[sprite_graphics[k]];
   oam[0].x = oam[1].x = info.x;
-  oam[0].y = info.y - 1;
-  oam[1].y = info.y - 1 + t;
+  OamSetYFull(&oam[0], info.y - 1);
+  OamSetYFull(&oam[1], info.y - 1 + t);
   oam[0].charnum = 0xee;
   oam[1].charnum = 0xce;
   oam[0].flags = oam[1].flags = info.flags;
@@ -9454,13 +9454,34 @@ void Cucco_SummonAvenger(int k) {  // 86a7d3
   sprite_C[j] = 1;
   uint8 t = GetRandomNumber();
   uint16 x = BG2HOFS_copy2, y = BG2VOFS_copy2;
-  if (t & 2)
-    x += t, y += kChicken_Avenger[t & 1];
-  else
-    y += t, x += kChicken_Avenger[t & 1];
+  if (!Wide_PlayArea()) {
+    if (t & 2)
+      x += t, y += kChicken_Avenger[t & 1];
+    else
+      y += t, x += kChicken_Avenger[t & 1];
+  } else {
+    // Place arrivals on the perimeter of the rendered picture; the stock perimeter sits inside it.
+    int left = -WideLeftPx(), right = 256 + WideRightPx();
+    if (t & 2)
+      x += (uint16)(left + (int)t * (right - left) / 256), y += kChicken_Avenger[t & 1];
+    else
+      y += t, x += (uint16)(kChicken_Avenger[t & 1] ? right : left);
+  }
   Sprite_SetX(j, x);
   Sprite_SetY(j, y);
-  Sprite_ApplySpeedTowardsLink(j, 32);
+  if (!Wide_Active()) {
+    Sprite_ApplySpeedTowardsLink(j, 32);
+  } else {
+    // Set the heading from the projection directly rather than through Sprite_ApplySpeedTowardsLink. That
+    // helper declines to re-aim a sprite sitting outside the active section, which is right for an enemy
+    // already under way but wrong here: a slot reused by Sprite_SpawnDynamicallyEx keeps the previous
+    // occupant's velocity, so declining leaves this one travelling on a stale vector instead of at the
+    // player. The spawn point is on the picture perimeter, which is outside the active section by
+    // definition, so it would be declined every time.
+    ProjectSpeedRet pt = Sprite_ProjectSpeedTowardsLink(j, 32);
+    sprite_x_vel[j] = pt.x;
+    sprite_y_vel[j] = pt.y;
+  }
   BawkBawk(k);
 }
 
@@ -13323,16 +13344,16 @@ void SpriteDraw_Pikit_Tongue(int k, PrepOamCoordsRet *info) {  // 8dd74a
   OamEnt *oam = GetOamCurPtr();
   int x = info->x + 4, y = info->y + 3;
   oam[5].x = x;
-  oam[5].y = y;
+  OamSetYFull(&oam[5], y);
   oam[0].x = x + sprite_A[k];
-  oam[0].y = y + sprite_B[k];
+  OamSetYFull(&oam[0], y + sprite_B[k]);
   oam[0].charnum = oam[5].charnum = 0xfe;
   oam[0].flags = oam[5].flags = info->flags;
   oam++;
   int g = sprite_D[k];
   for (int i = 3; i >= 0; i--, oam++) {
     OamSetX(oam, x + (int8)sprite_A[k] * kPikit_TongueMult[i] / 256);
-    oam->y = y + (int8)sprite_B[k] * kPikit_TongueMult[i] / 256;
+    OamSetYFull(oam, y + (int8)sprite_B[k] * kPikit_TongueMult[i] / 256);
     oam->charnum = kPikit_Draw_Char[g];
     oam->flags = kPikit_Draw_Flags[g] | info->flags;
   }
@@ -13766,7 +13787,7 @@ void MovableMantle_Draw(int k) {  // 9afcb3
   OamEnt *oam = GetOamCurPtr();
   for (int i = 5; i >= 0; i--, oam++) {
     OamSetX(oam, kMovableMantle_X[i] + info.x);
-    oam->y = kMovableMantle_Y[i] + info.y;
+    OamSetYFull(oam, kMovableMantle_Y[i] + info.y);
     oam->charnum = kMovableMantle_Char[i];
     oam->flags = kMovableMantle_Flags[i];
   }
@@ -20734,7 +20755,7 @@ void HauntedGroveBird_Blink(int k) {  // 9e9b9c
   OamEnt *oam = GetOamCurPtr();
   int j = sprite_D[k];
   OamSetX(oam, info.x + kFluteBoyBird_X[j]);
-  oam->y = info.y;
+  OamSetYFull(oam, info.y);
   oam->charnum = 0xae;
   oam->flags = info.flags | kFluteBoyAnimal_OamFlags[j];
   Sprite_CorrectOamEntries(k, 0, 0);
