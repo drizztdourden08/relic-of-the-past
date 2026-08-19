@@ -3,6 +3,7 @@
 import type { GameSettings } from '@shared/types/settings';
 import { BUNDLE_FIXES } from '@shared/features/bundle-fixes.generated';
 import { effectiveFeatureIds } from './live-settings-gate';
+import { offscreenAiMode } from './settings';
 
 // Feature flag enum values — must match features.h
 const FEATURE_FLAGS = {
@@ -56,6 +57,13 @@ let developerToolsOverride: boolean | null = null;
 const setDeveloperToolsOverride = (on: boolean | null): void => {
   developerToolsOverride = on;
 };
+
+// Hand-authored features2 bits, allocated downward from bit 24; the generated bug-fix catalog
+// (BUNDLE_FIXES) owns features2 upward from bit 0. Values must match features.h.
+const FEATURES2_FLAGS = {
+  widescreenPlayArea: 16777216, // kFeatures2_WidescreenPlayArea = 1 << 24
+  widescreenIdleAI: 33554432, // kFeatures2_WidescreenIdleAI = 1 << 25
+} as const;
 
 // Word 3 (features3) bit values — must match kRam_Features3 in features.h. The four category bits
 // (CheatIgnoreCollision/CheatItemGrant/CheatStats/CheatCombat) are PERMISSIONS: each one just lets its
@@ -175,7 +183,9 @@ const buildFeatureFlags = (s: GameSettings): number => {
   if (wide && isOn('widescreenVisualFixes')) flags |= FEATURE_FLAGS.widescreenVisualFixes;
   if (isOn('cameraLockToViewport')) flags |= FEATURE_FLAGS.cameraLockToViewport;
   if (isOn('smoothTransitions')) flags |= FEATURE_FLAGS.smoothTransitions;
-  if (isOn('pauseOffscreenAI')) flags |= FEATURE_FLAGS.pauseOffscreenAI;
+  // Off-screen behaviour is three-way now, so the pause bit answers to the mode rather than to a
+  // boolean: 'idle' carries its own features2 bit (buildFeatureWords) and 'acting' sets neither.
+  if (isOn('pauseOffscreenAI') && offscreenAiMode(s) === 'paused') flags |= FEATURE_FLAGS.pauseOffscreenAI;
   if (isOn('inventoryReorder')) flags |= FEATURE_FLAGS.inventoryReorder;
   if (isOn('secondaryItemSlots')) flags |= FEATURE_FLAGS.secondaryItemSlots;
   if (autoSkipDialogOverride === null ? isOn('autoSkipDialog') : autoSkipDialogOverride)
@@ -234,6 +244,14 @@ const buildFeatureWords = (s: GameSettings): { features1: number; features2: num
     if (!effective.has(fix.id) || !fix.bit) continue;
     if (fix.word === 2) f2 |= fix.bit;
     else f1 |= fix.bit;
+  }
+  // Hand-authored features2 bits. Both are registered ids, so they go through the same Vanilla Safe
+  // resolver as the generated fixes above; the wide-view condition stays separate because it depends on
+  // aspectRatio rather than on another feature id.
+  const wide = effective.has('extendedRendering') && s.aspectRatio !== '4:3';
+  if (wide) {
+    if (effective.has('widescreenPlayArea')) f2 |= FEATURES2_FLAGS.widescreenPlayArea;
+    if (effective.has('offscreenAI') && offscreenAiMode(s) === 'idle') f2 |= FEATURES2_FLAGS.widescreenIdleAI;
   }
   return { features1: f1, features2: f2 };
 };

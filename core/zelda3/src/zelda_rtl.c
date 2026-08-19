@@ -1051,12 +1051,16 @@ static const uint32 kGateWordParityMask[kGateWordCount] = {
   // bundle-fixes.generated.ts and the word is fully packed with no unused bits, so the mask is total.
   0xFFFFFFFFu,
 
-  // features2: the 10 split bug-fix bits in use (bits 0-9); bits 10-31 are unallocated so far.
+  // features2: the 10 split bug-fix bits in use (bits 0-9), plus the hand-authored bits allocated downward
+  // from bit 31 (features.h). Both widescreen bits change what the game computes — the play area moves the
+  // sprite spawn, spawner-activity and room-clear windows off the original 256x224 area, and the idle-AI
+  // bit lets a sprite outside the active section keep animating — so Vanilla Safe forces both off.
   kFeatures2_SkipRoomTagsDuringStaircaseTransition | kFeatures2_SkipDungeonUpdateAfterModuleExit |
   kFeatures2_KholdstareShellPaletteRange | kFeatures2_PreserveGlovesColorOnGearReload |
   kFeatures2_SuperBombClearFollowerOnExplode | kFeatures2_SuperBombPaletteOnFrameZero |
   kFeatures2_FixPortalMusicRestart | kFeatures2_IcePortalRevealChime |
-  kFeatures2_WidescreenLinkHideViaOffscreenY | kFeatures2_SaveMenuLockoutAfterMedallionFix,
+  kFeatures2_WidescreenLinkHideViaOffscreenY | kFeatures2_SaveMenuLockoutAfterMedallionFix |
+  kFeatures2_WidescreenPlayArea | kFeatures2_WidescreenIdleAI,
 
   // features3: cheats (the master + all four per-category permission bits), the randomizer item-override
   // table, tracker notifications, the custom player sprite/palette, and the HUD override all diverge

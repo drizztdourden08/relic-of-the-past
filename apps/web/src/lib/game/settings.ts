@@ -3,7 +3,7 @@
  * Game Settings — defaults, serialization to INI, and merge logic.
  */
 
-import type { GameSettings } from '@shared/types/settings';
+import type { GameSettings, OffscreenAiMode } from '@shared/types/settings';
 import { effectiveCustomRatio, detectScreenRatio, detectViewportRatio } from './aspect-ratio';
 
 const DEFAULT_SETTINGS: GameSettings = {
@@ -32,6 +32,8 @@ const DEFAULT_SETTINGS: GameSettings = {
   tallRendering: false,
   cameraLockToViewport: false,
   smoothTransitions: false,
+  widescreenPlayArea: false,
+  offscreenAI: 'idle',
   pauseOffscreenAI: false,
 
   // Graphics
@@ -142,6 +144,13 @@ const boolToIni = (v: boolean): string => {
   return v ? '1' : '0';
 };
 
+// Anyone who explicitly turned the old pause setting ON keeps 'paused'. Everyone else, including
+// profiles carrying the old default of false, moves to the new 'idle' default, because false was
+// the absence of a choice rather than a choice.
+const offscreenAiMode = (s: GameSettings): OffscreenAiMode => {
+  return s.offscreenAI ?? (s.pauseOffscreenAI === true ? 'paused' : 'idle');
+};
+
 const serializeToIni = (settings: GameSettings, msuPath?: string, language?: string): string => {
   // ExtendedAspectRatio now carries ONLY the ratio value (+ extend_y). Every rendering companion is an
   // individual [Features] key below (positive naming), so INI ↔ bridge ↔ registry stay aligned.
@@ -179,7 +188,7 @@ const serializeToIni = (settings: GameSettings, msuPath?: string, language?: str
     TallRendering: er && !!settings.tallRendering,
     WidescreenSprites: wide && settings.widescreenSprites,
     WidescreenVisualFixes: wide && settings.widescreenVisualFixes,
-    PauseOffscreenAI: er && !!settings.pauseOffscreenAI,
+    PauseOffscreenAI: er && offscreenAiMode(settings) === 'paused',
     CameraLock: er && settings.cameraLockToViewport,
     SmoothTransitions: er && settings.cameraLockToViewport && !!settings.smoothTransitions,
   };
@@ -345,6 +354,13 @@ const mergeSettings = (partial: Partial<GameSettings>): GameSettings => {
   delete (merged as Record<string, unknown>).unchangedSprites;
   delete (merged as Record<string, unknown>).noVisualFixes;
 
+  // pauseOffscreenAI -> offscreenAI migration: only seed offscreenAI the first time a profile is
+  // merged without it. After that, offscreenAI is the one written field and pauseOffscreenAI stays
+  // untouched as a deprecated, read-only artifact.
+  if (!('offscreenAI' in raw)) {
+    merged.offscreenAI = raw.pauseOffscreenAI === true ? 'paused' : 'idle';
+  }
+
   // Inventory reorder + secondary X/L/R item slots used to be bundled under itemSwitchLR. Existing profiles
   // that had Advanced Item Selection on keep both behaviors; otherwise they default off (vanilla).
   if (!('inventoryReorder' in raw)) merged.inventoryReorder = merged.itemSwitchLR;
@@ -359,4 +375,4 @@ const mergeSettings = (partial: Partial<GameSettings>): GameSettings => {
   return merged;
 };
 
-export { DEFAULT_SETTINGS, mergeSettings, serializeToIni };
+export { DEFAULT_SETTINGS, mergeSettings, serializeToIni, offscreenAiMode };

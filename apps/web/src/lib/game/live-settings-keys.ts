@@ -29,6 +29,10 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   // tallRendering, extendY — are baked at init and are deliberately NOT here.
   'cameraLockToViewport',
   'smoothTransitions',
+  'widescreenPlayArea',
+  'offscreenAI',
+  // Deprecated migration source for offscreenAI, never written going forward; kept live so any
+  // stray legacy write still applies without forcing a restart.
   'pauseOffscreenAI',
   'widescreenSprites',
   'widescreenVisualFixes',

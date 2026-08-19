@@ -1,6 +1,9 @@
 /* @layer shared-types @kind logic */
 import type { FunctionMapping } from './controls';
 
+/** How sprites in the wide/tall extra band behave before reaching the stock 4:3 screen. */
+type OffscreenAiMode = 'idle' | 'vanilla' | 'paused';
+
 /** Haptic feedback configuration — controls vibration/rumble for game events */
 interface HapticSettings {
   enabled: boolean;
@@ -71,8 +74,14 @@ interface GameSettings {
   // Pan through area transitions via a 2-area world tilemap instead of the wrapping 512px stock
   // tilemap — removes the wrapped-edge slice at screen seams. Requires cameraLockToViewport.
   smoothTransitions?: boolean;
-  // Pause sprite AI while the sprite is in the wide/tall extra band but outside the stock 256px
-  // screen — prevents guards reacting or alarms firing from off screen. Off = stock behavior.
+  // Extend hazards, spawns and clear-room checks to the whole wide/tall view instead of just the
+  // stock 4:3 area. Off = the extra width is scenery only. Changes gameplay; default off.
+  widescreenPlayArea?: boolean;
+  // How sprites in the wide/tall extra band behave before reaching the stock 4:3 screen: 'idle'
+  // (move/animate but cannot act on the player), 'vanilla' (full behavior, matches the original),
+  // or 'paused' (frozen). Default 'idle'.
+  offscreenAI?: OffscreenAiMode;
+  /** @deprecated Read-only migration source for offscreenAI ('paused' when this was true), never written going forward. */
   pauseOffscreenAI?: boolean;
 
   // ─── Graphics ───
@@ -203,4 +212,4 @@ interface GameSettings {
   trackerEnabled: boolean;
 }
 
-export type { GameSettings, HapticSettings };
+export type { GameSettings, HapticSettings, OffscreenAiMode };
