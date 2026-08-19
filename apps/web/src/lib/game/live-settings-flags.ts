@@ -73,6 +73,11 @@ const FEATURE_FLAGS_3 = {
   trackerNotifications:  128,
   playerSpriteOverride:  256,
   hudOverride:           512,
+  trackerQueries:        1024,
+  navigationQueries:     2048,
+  renderQueries:         4096,
+  overlayQueries:        8192,
+  deliveryQueries:       16384,
 } as const;
 
 // Whether the randomizer's chest-override table currently has entries. randomizer.ts flips this
@@ -123,6 +128,23 @@ const buildFeatureWord3 = (s: GameSettings): number => {
   // core/game-hooks/hud_override.c, called the instant this bit clears in WRAM).
   const hudOverrideWanted = s.hudMode === 'enhanced' && (s.hudEnhancedParts.includes('main') || s.hudEnhancedParts.includes('pause'));
   if (hudOverrideWanted && !s.vanillaSafe) flags |= FEATURE_FLAGS_3.hudOverride;
+
+  // Host-data gates. These feed host systems (tracker, navigation, renderer, overlay UI, delivery
+  // queue) rather than the game, so none of them is a parity concern and none is stripped by Vanilla
+  // Safe. They are gated all the same: a host feature reading emulated state answers to a switch, and
+  // an export nobody enabled returns nothing.
+  if (s.trackerEnabled) flags |= FEATURE_FLAGS_3.trackerQueries;
+  // Navigation data is dev-surface data, so it needs BOTH the dev master and its own toggle. The two
+  // conditions resolve here rather than at 30-odd call sites.
+  if (s.developerToolsEnabled && s.devNavigationData) flags |= FEATURE_FLAGS_3.navigationQueries;
+  // Delivery readiness is only meaningful while something can actually deliver an item: a cheat grant,
+  // or the randomizer's override table. No new setting needed, the condition already exists.
+  if ((s.cheatsEnabled && !s.vanillaSafe) || itemOverridesActive) flags |= FEATURE_FLAGS_3.deliveryQueries;
+  // Renderer and overlay reads have no meaningful "off" yet: the app cannot draw a frame or route its
+  // own overlay without them, so inventing a user toggle would only offer a way to break the window.
+  // They are declared and gate-checked like the rest so a future embedder (or a headless build) can
+  // withhold them, and so the audit can prove they were classified rather than forgotten.
+  flags |= FEATURE_FLAGS_3.renderQueries | FEATURE_FLAGS_3.overlayQueries;
   return flags;
 };
 

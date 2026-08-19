@@ -178,7 +178,8 @@ void PlayerSprite_Restore(bool push_live) {
 // Applying a sheet is file-based (WasmApplyPlayerSpriteFile, emscripten_io.c) so the renderer reuses
 // the MEMFS path it already writes at boot instead of hand-managing a heap buffer.
 
-// Back to the sheet the assets shipped with.
+// Back to the sheet the assets shipped with. Deliberately UNGATED: restoring the stock sheet is always
+// allowed even when the override gate is off, the same rule as un-hiding the HUD.
 EMSCRIPTEN_KEEPALIVE
 void WasmClearPlayerSprite(void) {
   PlayerSprite_Restore(true);
@@ -188,6 +189,7 @@ void WasmClearPlayerSprite(void) {
 // one the bank was last built for.
 EMSCRIPTEN_KEEPALIVE
 void WasmRefreshPlayerPalette(void) {
+  if (!(enhanced_features3 & kFeatures3_PlayerSpriteOverride)) return;
   if (g_has_custom)
     PlayerSprite_RefreshPalette();
 }

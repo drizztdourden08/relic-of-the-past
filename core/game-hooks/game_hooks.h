@@ -106,6 +106,16 @@ void HudOverride_Sync(void);
 
 void HudOverride_Restore(void);
 
+// ─── Receive counters (receive_counters.c) ───
+
+// Tally an item grant against its call site, so a check granted twice is visible rather than inferred.
+void SimCountReceive(uint8 site, uint8 item_id);
+
+// ─── Gated empty region (gated_empty.c) ───
+
+// The buffer a refused query returns when the real one is a live-WRAM alias that must not be blanked.
+void *GatedEmpty(void);
+
 // ─── Haptic Events (haptic_events.c) ───
 
 // Called when the player starts a sword swing animation.
@@ -134,6 +144,17 @@ void GameHook_NotifyHookshotWall(void);
 
 // Called when boomerang returns to the player (catch).
 void GameHook_NotifyBoomerangCatch(void);
+
+// ─── Attr Grid State Snapshot (attr_grid_state.c) ───
+
+// Save the WRAM scratch span WasmBuildOverworldAttrGrid's vendored decode step writes through,
+// before running the decode.
+void AttrGridState_Snapshot(void);
+
+// Put that scratch span back exactly as it was. Called on every return path out of
+// WasmBuildOverworldAttrGrid, including the gated-off one, so the decode is never observable
+// from inside a live run.
+void AttrGridState_Restore(void);
 
 // ─── Transition Events (transition_events.c) ───
 

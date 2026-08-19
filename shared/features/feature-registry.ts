@@ -573,6 +573,44 @@ const DEV_FEATURES: FeatureDef[] = [
     affectsVanillaParity: false,
     live: true,
   },
+  {
+    id: 'devNavigationData',
+    label: 'Navigation data reads',
+    description: 'Room/grid/sprite data reads that feed the Location & Navigation widget, the flood fill, and the simulator. Needs developer tools on as well (NavQueryGate checks both).',
+    userMessage:
+      'Feeds the Location & Navigation widget, the flood fill, and the simulator with room/grid/sprite reads. Requires developer tools. Host-side and purely observational, so it never changes what the game computes.',
+    group: 'Dev',
+    kind: 'host-event',
+    origin: 'relic',
+    flag: 'kFeatures3_NavigationQueries',
+    bit: 2048,
+    default: true,
+    requires: ['developerToolsEnabled'],
+    affectsVanillaParity: false,
+    live: true,
+  },
+]
+
+// --- Host systems reading emulated state --------------------------------------
+// A normal player feature (not developer-only): the checks tracker polls inventory and save flags out of
+// the running game. Grouped with the other player-facing toggles rather than Dev.
+const HOST_QUERY_FEATURES: FeatureDef[] = [
+  {
+    id: 'trackerEnabled',
+    label: 'Checks tracker',
+    description: 'Inventory and save-flag polling that drives the checks tracker widget.',
+    userMessage:
+      'Lets the checks tracker read inventory and save flags out of the running game. Turning it off stops that polling and the tracker stops updating. Host-side and purely observational, so it never changes what the game computes.',
+    group: 'Quality of life',
+    kind: 'host-event',
+    origin: 'relic',
+    flag: 'kFeatures3_TrackerQueries',
+    bit: 1024,
+    default: true,
+    requires: [],
+    affectsVanillaParity: false,
+    live: true,
+  },
 ]
 
 const FEATURES: FeatureDef[] = [
@@ -582,9 +620,10 @@ const FEATURES: FeatureDef[] = [
   ...GAMEPLAY_FEATURES,
   ...BUG_FIXES_FEATURES,
   ...DEV_FEATURES,
+  ...HOST_QUERY_FEATURES,
   ...BUNDLE_FIXES, // the 42 split bug-fix toggles (generated)
 ]
 
 const FEATURES_BY_ID: Record<string, FeatureDef> = Object.fromEntries(FEATURES.map((f) => [f.id, f]))
 
-export { FEATURES, FEATURES_BY_ID, DISPLAY_FEATURES, AUDIO_FEATURES, INPUT_FEATURES, GAMEPLAY_FEATURES, BUG_FIXES_FEATURES, DEV_FEATURES }
+export { FEATURES, FEATURES_BY_ID, DISPLAY_FEATURES, AUDIO_FEATURES, INPUT_FEATURES, GAMEPLAY_FEATURES, BUG_FIXES_FEATURES, DEV_FEATURES, HOST_QUERY_FEATURES }

@@ -10,11 +10,25 @@ static uint8 g_overworld_guard_spawns_buf[1 + 16 * 4];
 
 static uint8 g_nav_overworld_grid[64 * 64];
 
+// Forward-declared here rather than added to game_hooks_internal.h: only this call site needs them.
+void AttrGridState_Snapshot(void);  // attr_grid_state.c
+void AttrGridState_Restore(void);   // attr_grid_state.c
+
 EMSCRIPTEN_KEEPALIVE
 int WasmBuildOverworldAttrGrid(int screen_idx) {
   // Use a 64-wide uint16 buffer (stride matches what DecompressAndDrawOneQuadrant expects).
   // The function writes 32×32 Map16 tile IDs with row stride 64.
   static uint16 nav_map16_buf[64 * 32];
+
+  if (!NavQueryGate()) {
+    memset(g_nav_overworld_grid, 0, sizeof(g_nav_overworld_grid));
+    return (int)g_nav_overworld_grid;
+  }
+
+  // The decode step below writes through a fixed WRAM scratch span (attr_grid_state.c has the
+  // full account) that a real screen load always leaves overwritten before it's read again — but
+  // this query has no business leaving that decode sitting in the live run's WRAM once it's done.
+  AttrGridState_Snapshot();
 
   map16_decode_last = 0xffff;
   Overworld_DecompressAndDrawOneQuadrant(nav_map16_buf, screen_idx);
@@ -52,6 +66,7 @@ int WasmBuildOverworldAttrGrid(int screen_idx) {
     }
   }
 
+  AttrGridState_Restore();
   return (int)g_nav_overworld_grid;
 }
 
@@ -60,6 +75,10 @@ int WasmGetOverworldGuardSpawns(void) {
   // Buffer format:
   // [0] = count (0..16)
   // then per entry 4 bytes: xLo, xHi, yLo, yHi
+  if (!NavQueryGate()) {
+    memset(g_overworld_guard_spawns_buf, 0, sizeof(g_overworld_guard_spawns_buf));
+    return (int)g_overworld_guard_spawns_buf;
+  }
   g_overworld_guard_spawns_buf[0] = 0;
 
   if (player_is_indoors)

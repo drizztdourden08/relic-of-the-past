@@ -57,4 +57,41 @@ static inline bool TriggerGrantAllowed(void) {
   return CheatGate(kFeatures3_CheatItemGrant) || SimMutateGate();
 }
 
+// ─── Host-data gates ───
+// Exports that feed a HOST system rather than the game. None of them changes what the game computes,
+// but "it only reads" is not a reason to skip a gate: each is a host feature consuming emulated state,
+// so each answers to its own bit. Keeping them separate is what makes the granularity real — turning
+// the tracker off must not take navigation down with it.
+//
+// Every one of these is a plain single-bit test, so a call site stays one condition. Where a query
+// genuinely serves two systems the OR lives HERE, in a named helper, never at the call site.
+
+static inline bool TrackerQueryGate(void) {
+  return (enhanced_features3 & kFeatures3_TrackerQueries) != 0;
+}
+
+static inline bool NavQueryGate(void) {
+  return (enhanced_features3 & kFeatures3_NavigationQueries) != 0;
+}
+
+static inline bool RenderQueryGate(void) {
+  return (enhanced_features3 & kFeatures3_RenderQueries) != 0;
+}
+
+static inline bool OverlayQueryGate(void) {
+  return (enhanced_features3 & kFeatures3_OverlayQueries) != 0;
+}
+
+static inline bool DeliveryQueryGate(void) {
+  return (enhanced_features3 & kFeatures3_DeliveryQueries) != 0;
+}
+
+// The save-flag reads (progress, room, overworld) genuinely serve two masters: the tracker polls them
+// for the player's checklist, and the simulator reads them while walking a route. Gating them on the
+// simulator's half alone would silently kill the tracker for every player, which is the trap this
+// helper exists to make impossible to fall into at a call site.
+static inline bool FlagQueryGate(void) {
+  return TrackerQueryGate() || NavQueryGate() || SimQueryGate();
+}
+
 #endif // GAME_HOOKS_INTERNAL_H

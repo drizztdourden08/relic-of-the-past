@@ -111,6 +111,19 @@ const SECTIONS: Section[] = [
     ],
   },
   {
+    id: 'tracker',
+    title: 'Tracker',
+    subsections: [
+      {
+        id: 'tracker-options',
+        title: 'Options',
+        items: [
+          { key: 'trackerEnabled', label: 'Enable Checks Tracker', description: 'The checks tracker reads inventory and save flags out of the running game. Turning it off stops that polling and the tracker stops updating.', keywords: 'tracker checks inventory save flags poll widget' },
+        ],
+      },
+    ],
+  },
+  {
     id: 'vanilla-safe',
     title: 'Vanilla Safe',
     subsections: [

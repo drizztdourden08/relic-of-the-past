@@ -241,11 +241,7 @@ uint8 GameHook_GetWantedIgnoreCollision(void) {
 // Returns 1 if safe to call Link_ReceiveItem, 0 otherwise.
 EMSCRIPTEN_KEEPALIVE
 int WasmCanReceiveItem(void) {
-  // Deliberately UNGATED. This mutates nothing: it answers "is the engine ready to hand the player an
-  // item right now", and the delivery queue polls it every frame to decide when to drain. Pinning it to
-  // 0 while a grant gate is closed strands every queued entry instead of refusing it, and the queue is
-  // shared with the simulator, so the stall would not stay inside the cheat system. The grant carries
-  // the gate; this is only the readiness read.
+  if (!DeliveryQueryGate()) return 0;
   // Must be in dungeon or overworld gameplay
   if (!IsInGameplay())
     return 0;

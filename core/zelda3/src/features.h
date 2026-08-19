@@ -121,6 +121,16 @@ enum {
   kFeatures3_TrackerNotifications  = 128, // __onItemReceived host-call on every item receipt
   kFeatures3_PlayerSpriteOverride  = 256, // custom ZSPR player sheet + private palette bank
   kFeatures3_HudOverride           = 512, // native HUD/pause hiding — see HudOverride_Allowed/Restore
+
+  // Host-data gates. These cover exports that feed a HOST system (tracker, renderer, overlay UI,
+  // delivery queue) rather than the game itself. They are not cheats and change nothing the game
+  // computes, but each one is still a host feature reading emulated state, so it answers to a switch
+  // like everything else instead of being implicitly always-on.
+  kFeatures3_TrackerQueries        = 1024, // inventory/flag polling that drives the checks tracker
+  kFeatures3_NavigationQueries     = 2048, // room, door, grid, sprite and table reads for navigation
+  kFeatures3_RenderQueries         = 4096, // viewport/player-state reads the renderer needs
+  kFeatures3_OverlayQueries        = 8192, // overlay-UI mode get/set
+  kFeatures3_DeliveryQueries       = 16384, // delivery-queue readiness probe
 };
 
 #define enhanced_features0 (*(uint32*)(g_ram+0x64c))

@@ -12,6 +12,10 @@ static uint8 g_ow_entrances_buf[2 + 129 * 5];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetOverworldEntrances(void) {
+  if (!NavQueryGate()) {
+    memset(g_ow_entrances_buf, 0, sizeof(g_ow_entrances_buf));
+    return (int)g_ow_entrances_buf;
+  }
   uint16 count = kOverworld_Entrance_Area_SIZE / 2;
   if (count > 129) count = 129;
   BufW b = BufW_Init(g_ow_entrances_buf);
@@ -30,6 +34,10 @@ static uint8 g_fall_holes_buf[2 + 19 * 5];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetFallHoles(void) {
+  if (!NavQueryGate()) {
+    memset(g_fall_holes_buf, 0, sizeof(g_fall_holes_buf));
+    return (int)g_fall_holes_buf;
+  }
   uint16 count = kFallHole_Area_SIZE / 2;
   if (count > 19) count = 19;
   BufW b = BufW_Init(g_fall_holes_buf);
@@ -61,6 +69,10 @@ static uint8 g_exit_screen_buf[2 + 128 * 3];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetExitScreenMap(void) {
+  if (!NavQueryGate()) {
+    memset(g_exit_screen_buf, 0, sizeof(g_exit_screen_buf));
+    return (int)g_exit_screen_buf;
+  }
   uint16 count = kExitData_ScreenIndex_SIZE;
   if (count > 128) count = 128;
   BufW b = BufW_Init(g_exit_screen_buf);
@@ -91,8 +103,16 @@ int WasmGetExitScreenMap(void) {
 }
 
 
+// g_area_heads above is `const`, so a closed gate can't memset it in place; stand in a zeroed
+// mutable scratch buffer of the same 64-byte shape instead.
+static uint8 g_area_heads_zero_buf[64];
+
 EMSCRIPTEN_KEEPALIVE
 int WasmGetAreaHeads(void) {
+  if (!NavQueryGate()) {
+    memset(g_area_heads_zero_buf, 0, sizeof(g_area_heads_zero_buf));
+    return (int)g_area_heads_zero_buf;
+  }
   return (int)g_area_heads;
 }
 
@@ -107,6 +127,10 @@ static uint8 g_entrance_rooms_buf[2 + SIM_MAX_ENTRANCES * 2];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetEntranceRooms(void) {
+  if (!NavQueryGate()) {
+    memset(g_entrance_rooms_buf, 0, sizeof(g_entrance_rooms_buf));
+    return (int)g_entrance_rooms_buf;
+  }
   uint16 count = kEntranceData_rooms_SIZE / 2;
   if (count > SIM_MAX_ENTRANCES) count = SIM_MAX_ENTRANCES;
   BufW b = BufW_Init(g_entrance_rooms_buf);
@@ -123,6 +147,10 @@ static uint8 g_entrance_spawn_buf[2 + SIM_MAX_ENTRANCES * 5];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetEntranceSpawns(void) {
+  if (!NavQueryGate()) {
+    memset(g_entrance_spawn_buf, 0, sizeof(g_entrance_spawn_buf));
+    return (int)g_entrance_spawn_buf;
+  }
   uint16 count = kEntranceData_playerX_SIZE / 2;
   if (count > SIM_MAX_ENTRANCES) count = SIM_MAX_ENTRANCES;
   BufW b = BufW_Init(g_entrance_spawn_buf);

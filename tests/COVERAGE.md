@@ -124,7 +124,7 @@
 | bundle-fixes/bundle-flags C↔TS parity | tests/features/bundle-flags-parity.keep.test.ts | covered |
 | all-off/vanilla preset | tests/features/all-off-vanilla.keep.test.ts | covered |
 | Vanilla Safe lock (resolveGates completeness across the whole registry) | tests/features/vanilla-safe-lock.keep.test.ts | covered |
-| feature-registry.ts / feature.type.ts (own shape) | none directly (exercised transitively) | partial |
+| feature-registry.ts / feature.type.ts (own shape), including the `devNavigationData` / `trackerEnabled` host-query gates | none directly (exercised transitively — vanilla-safe-lock.keep.test.ts and resolve-features.keep.test.ts iterate the whole `FEATURES` array, so new entries are covered automatically) | partial |
 
 ## WASM / game-hooks bridge (`core/game-hooks/` C surface + JS consumers)
 

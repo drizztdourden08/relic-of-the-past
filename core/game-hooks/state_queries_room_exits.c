@@ -10,6 +10,10 @@ static uint8 g_exit_doors_buf[2 + 8 * 3];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetRoomExitDoors(void) {
+  if (!NavQueryGate()) {
+    memset(g_exit_doors_buf, 0, sizeof(g_exit_doors_buf));
+    return (int)g_exit_doors_buf;
+  }
   memset(g_exit_doors_buf, 0, sizeof(g_exit_doors_buf));
 
   if (!player_is_indoors) {
@@ -116,6 +120,10 @@ static int SimScanRoomStairs(void) {
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetRoomStairInfo(void) {
+  if (!NavQueryGate()) {
+    memset(g_room_stairs_buf, 0, sizeof(g_room_stairs_buf));
+    return (int)g_room_stairs_buf;
+  }
   memset(g_room_stairs_buf, 0, sizeof(g_room_stairs_buf));
 
   if (!player_is_indoors) {
@@ -130,6 +138,10 @@ int WasmGetRoomStairInfo(void) {
 // simulator can discover a remote room's staircases without the player being there.
 EMSCRIPTEN_KEEPALIVE
 int WasmGetRoomStairInfoFor(int room_id) {
+  if (!NavQueryGate()) {
+    memset(g_room_stairs_buf, 0, sizeof(g_room_stairs_buf));
+    return (int)g_room_stairs_buf;
+  }
   memset(g_room_stairs_buf, 0, sizeof(g_room_stairs_buf));
   WasmBuildRoomAttrGrid(room_id);
   return (int)g_room_stairs_buf;
@@ -143,6 +155,10 @@ static uint8 g_travel_dest_buf[5];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetRoomTravelDestinations(void) {
+  if (!NavQueryGate()) {
+    memset(g_travel_dest_buf, 0, sizeof(g_travel_dest_buf));
+    return (int)g_travel_dest_buf;
+  }
   for (int i = 0; i < 5; i++) {
     g_travel_dest_buf[i] = player_is_indoors ? dung_hdr_travel_destinations[i] : 0;
   }
@@ -154,6 +170,10 @@ int WasmGetRoomTravelDestinations(void) {
 // warp-room doors teleport to [3] (west) / [4] (east), dungeon.c:2067).
 EMSCRIPTEN_KEEPALIVE
 int WasmGetRoomTravelDestinationsFor(int room_id) {
+  if (!NavQueryGate()) {
+    memset(g_travel_dest_buf, 0, sizeof(g_travel_dest_buf));
+    return (int)g_travel_dest_buf;
+  }
   memset(g_travel_dest_buf, 0, sizeof(g_travel_dest_buf));
   if (room_id < 0 || room_id >= 0x128) return (int)g_travel_dest_buf;
   WasmBuildRoomAttrGrid(room_id);
@@ -169,6 +189,7 @@ int WasmGetRoomTravelDestinationsFor(int room_id) {
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetStaircaseType(void) {
+  if (!NavQueryGate()) return 0;
   if (!player_is_indoors) return -1;
   return *(uint16*)(g_ram + 0x44A);
 }
@@ -216,6 +237,10 @@ static int SimScanWalkBoundaries(uint16 room) {
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetRoomWalkBoundaries(void) {
+  if (!NavQueryGate()) {
+    memset(g_walk_bounds_buf, 0, sizeof(g_walk_bounds_buf));
+    return (int)g_walk_bounds_buf;
+  }
   memset(g_walk_bounds_buf, 0, sizeof(g_walk_bounds_buf));
   if (!player_is_indoors) return (int)g_walk_bounds_buf;
   return SimScanWalkBoundaries(dungeon_room_index);
@@ -227,6 +252,10 @@ static uint8 g_room_tags_buf[2];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetRoomTagsFor(int room_id) {
+  if (!NavQueryGate()) {
+    g_room_tags_buf[0] = g_room_tags_buf[1] = 0;
+    return (int)g_room_tags_buf;
+  }
   g_room_tags_buf[0] = g_room_tags_buf[1] = 0;
   if (room_id < 0 || room_id >= 0x128) return (int)g_room_tags_buf;
   WasmBuildRoomAttrGrid(room_id);
@@ -237,6 +266,10 @@ int WasmGetRoomTagsFor(int room_id) {
 // walk-through positions), then run the same scan — remote rooms included.
 EMSCRIPTEN_KEEPALIVE
 int WasmGetRoomWalkBoundariesFor(int room_id) {
+  if (!NavQueryGate()) {
+    memset(g_walk_bounds_buf, 0, sizeof(g_walk_bounds_buf));
+    return (int)g_walk_bounds_buf;
+  }
   memset(g_walk_bounds_buf, 0, sizeof(g_walk_bounds_buf));
   if (room_id < 0 || room_id >= 0x128) return (int)g_walk_bounds_buf;
   WasmBuildRoomAttrGrid(room_id);

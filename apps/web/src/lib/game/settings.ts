@@ -132,6 +132,10 @@ const DEFAULT_SETTINGS: GameSettings = {
 
   // Developer
   developerToolsEnabled: false,
+  devNavigationData: true,
+
+  // Host systems
+  trackerEnabled: true,
 };
 
 const boolToIni = (v: boolean): string => {
@@ -244,6 +248,8 @@ CancelBirdTravel = ${boolToIni(settings.cancelBirdTravel)}
 DisableTelepathy = ${boolToIni(settings.disableTelepathy)}
 Haptics = ${boolToIni(!!settings.haptics?.enabled)}
 DeveloperTools = ${boolToIni(settings.developerToolsEnabled)}
+DevNavigationData = ${boolToIni(settings.devNavigationData)}
+TrackerEnabled = ${boolToIni(settings.trackerEnabled)}
 CheatsEnabled = ${boolToIni(settings.cheatsEnabled)}
 VanillaSafe = ${boolToIni(settings.vanillaSafe)}
 ${renderFlagsIni}

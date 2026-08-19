@@ -1,8 +1,6 @@
 /* @layer core-game-hooks @kind native */
 #include "game_hooks_internal.h"
 
-/** Item-grant tally, defined in check_triggers.c — see SimCountReceive there. */
-void SimCountReceive(uint8 site, uint8 item_id);
 
 // Simulator trigger writes: door unlock/close and virtual enemy kills. These
 // mutate the same SRAM room words the game persists, so a rebuilt attr grid
