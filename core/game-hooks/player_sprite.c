@@ -178,10 +178,15 @@ void PlayerSprite_Restore(bool push_live) {
 // Applying a sheet is file-based (WasmApplyPlayerSpriteFile, emscripten_io.c) so the renderer reuses
 // the MEMFS path it already writes at boot instead of hand-managing a heap buffer.
 
-// Back to the sheet the assets shipped with. Deliberately UNGATED: restoring the stock sheet is always
-// allowed even when the override gate is off, the same rule as un-hiding the HUD.
+// Back to the sheet the assets shipped with. Gated like everything else: the override bit closing is
+// itself what puts the stock sheet back (GateWordTeardown in zelda_rtl.c runs the restore while the
+// gate is still open, before the bit clears), so by the time this export is refused there is nothing
+// left for it to undo. Leaving it open instead would be a way to reach the sprite system with the
+// gate shut.
 EMSCRIPTEN_KEEPALIVE
 void WasmClearPlayerSprite(void) {
+  if (!(enhanced_features3 & kFeatures3_PlayerSpriteOverride))
+    return;
   PlayerSprite_Restore(true);
 }
 

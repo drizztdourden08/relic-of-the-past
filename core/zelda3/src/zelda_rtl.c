@@ -1052,15 +1052,28 @@ static void GateWordSideEffects(int i, uint32 wanted) {
   if (i == 0 && g_zenv.player)
     dsp_setPerGroupVolumeEnabled(g_zenv.player->dsp, (wanted & kFeatures0_PerGroupVolume) != 0);
 
-  // Word 3's PlayerSpriteOverride/HudOverride bits each gate a piece of live state (a custom sheet
-  // applied, the native HUD/pause hidden) that has no other way to learn its gate closed — Vanilla
-  // Safe engaging, the setting itself flipping off, or a future embedder writing the word directly.
-  // Both restores are documented no-ops when there's nothing to undo, so reasserting them whenever
-  // this word changes and the bit reads clear is simpler than tracking an on->off transition.
-  if (i == 3 && !(wanted & kFeatures3_PlayerSpriteOverride))
-    PlayerSprite_Restore(true);
+  // The HUD/pause hide masks are RECONCILED from the gate rather than undone, so this has to run after
+  // the new word is in WRAM: HudOverride_Sync reads the gate to decide whether hiding is still allowed,
+  // and running it a moment earlier would just re-apply the hide it is meant to lift. The player-sprite
+  // teardown is the opposite case and runs before the write, in GateWordTeardown below.
   if (i == 3 && !(wanted & kFeatures3_HudOverride))
     HudOverride_Restore();
+}
+
+// Undo for bits that are about to CLEAR, run while the OLD word is still in WRAM, i.e. while the gate
+// those features answer to still reads open.
+//
+// The order is the contract: put the feature back the way it was, THEN close the gate. Reversed, any
+// restore path that consults its own gate becomes a silent no-op and the feature is stranded on screen
+// with no way left to reach it. PlayerSprite_Restore happens to test its own bookkeeping rather than
+// the gate today, so it would survive either order, but relying on that makes the correctness of a
+// teardown depend on an implementation detail of the thing being torn down.
+static void GateWordTeardown(int i, uint32 current, uint32 wanted) {
+  if (i != 3)
+    return;
+  uint32 closing = current & ~wanted;
+  if (closing & kFeatures3_PlayerSpriteOverride)
+    PlayerSprite_Restore(true);
 }
 
 // One entry per cheat-owned WRAM byte that must survive a full-RAM restore (save-state load, and any
@@ -1108,6 +1121,7 @@ static void SyncGateWords(void) {
       wanted &= ~kGateWordParityMask[i];
     if (*word == wanted)
       continue;
+    GateWordTeardown(i, *word, wanted);
     *word = wanted;
     EmuSyncMemoryRegion(word, sizeof(*word));
     StateRecorder_RecordPatchByte(&state_recorder, kGateWordRamAddr[i], (uint8 *)word, 4);
