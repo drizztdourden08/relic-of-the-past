@@ -570,7 +570,9 @@ const DEV_FEATURES: FeatureDef[] = [
     bit: 1073741824,
     default: false,
     requires: [],
-    affectsVanillaParity: false,
+    // Observational, but its hook is compiled into vendored misc.c, and touching that code is the
+    // line under Vanilla Safe rather than whether the feature changes the outcome.
+    affectsVanillaParity: true,
     live: true,
   },
   {

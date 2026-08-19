@@ -33,9 +33,18 @@ describe('Vanilla Safe — resolveGates locks out every parity-affecting feature
     expect(effective.size).toBe(0);
   });
 
-  it('locks haptics like any other feature that touches vendored game code, but leaves developerToolsEnabled (purely host-side) untouched', () => {
+  // Both of these only observe and neither changes what the game computes, so "purely host-side" would
+  // clear both. It is not the test. Both have GameHook_* call sites compiled into vendored sources
+  // (haptics across ancilla.c/player.c/sprite.c/overworld.c, developer tools at misc.c's
+  // GameHook_ModuleFrameEnd), and touching that code is the line under Vanilla Safe.
+  //
+  // This assertion used to require the opposite for developerToolsEnabled, on the reasoning that it is
+  // purely host-side. That reasoning was wrong about the code and wrong as a test: applied
+  // consistently it exempts every observational feature, which is how tracker notifications ended up
+  // wrongly exempt too.
+  it('locks every feature with a call site in vendored game code, observational or not', () => {
     const { effective } = resolveGates(['haptics', 'developerToolsEnabled'], { vanillaSafe: true });
     expect(effective.has('haptics')).toBe(false);
-    expect(effective.has('developerToolsEnabled')).toBe(true);
+    expect(effective.has('developerToolsEnabled')).toBe(false);
   });
 });

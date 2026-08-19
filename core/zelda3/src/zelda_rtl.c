@@ -994,13 +994,19 @@ _Static_assert(kRam_Features5 + 4 <= 0x670, "gate words must stay inside the unu
 // path, but the INI loader and any future embedder write these words directly, so the mask is enforced
 // again here regardless of what set it.
 static const uint32 kGateWordParityMask[kGateWordCount] = {
-  // features0: every currently-defined bit EXCEPT DeveloperTools, which is a host-only
-  // instrumentation hook that never changes what the game computes (see feature-registry.ts
-  // DEV_FEATURES, affectsVanillaParity: false). Haptics IS included here even though its rumble
-  // events likewise never change what the game computes: its GameHook_Notify* call sites are
-  // inserted into vendored game code (ancilla.c, player.c, sprite.c, overworld.c, sprite_main.c),
-  // and anything that touches that code is a divergence under Vanilla Safe, harmless or not.
-  kFeatures0_Haptics | kFeatures0_ExtendScreen64 | kFeatures0_SwitchLR | kFeatures0_TurnWhileDashing | kFeatures0_MirrorToDarkworld |
+  // features0: every currently-defined bit, with no exemptions. The test is not "does it change what
+  // the game computes" but "does it touch the vendored game code at all": Haptics and DeveloperTools
+  // both only observe, yet both have GameHook_* call sites compiled into vendored sources (haptics
+  // across ancilla.c/player.c/sprite.c/overworld.c/sprite_main.c, developer tools at misc.c's
+  // GameHook_ModuleFrameEnd), so under Vanilla Safe both are a divergence, harmless or not.
+  //
+  // DeveloperTools used to be exempt here, justified by "it never changes what the game computes".
+  // That reason was wrong about the code and, worse, it is the wrong test: applied to any other
+  // observational feature it exempts that one too, which is how TrackerNotifications ended up
+  // wrongly exempt as well. Consequence worth knowing: under Vanilla Safe the developer surfaces
+  // (navigation, simulator, inspector) read nothing, and their widgets show the standard overlay
+  // saying so rather than silently reporting empty results.
+  kFeatures0_DeveloperTools | kFeatures0_Haptics | kFeatures0_ExtendScreen64 | kFeatures0_SwitchLR | kFeatures0_TurnWhileDashing | kFeatures0_MirrorToDarkworld |
   kFeatures0_CollectItemsWithSword | kFeatures0_BreakPotsWithSword | kFeatures0_DisableLowHealthBeep |
   kFeatures0_SkipIntroOnKeypress | kFeatures0_ShowMaxItemsInYellow | kFeatures0_MoreActiveBombs |
   kFeatures0_WidescreenVisualFixes | kFeatures0_CarryMoreRupees | kFeatures0_MiscBugFixes |

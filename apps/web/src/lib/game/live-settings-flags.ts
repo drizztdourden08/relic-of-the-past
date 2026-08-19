@@ -207,12 +207,16 @@ const buildFeatureFlags = (s: GameSettings): number => {
   // un-bypassable C-side mask (zelda_rtl.c kGateWordParityMask) already covers this regardless, but
   // gating the live push too keeps this file's "wanted" bits honest about what is actually allowed.
   // developerTools stays host-only and unconditional. It DOES reach vendored code — its
-  // GameHook_ModuleFrameEnd() call site sits in misc.c, and state_queries_combat.c reads this same
-  // gate — so "never touches the vendored game code" would be false; what actually earns the
-  // affectsVanillaParity: false exemption is that neither call ever changes what the game computes,
-  // only observes it and relays state to the host (matches feature-registry.ts's DEV_FEATURES wording).
+  // Both of these only observe, and neither changes what the game computes. Neither is exempt from
+  // Vanilla Safe all the same, because the test is whether a feature touches the vendored game code
+  // at all: haptics has GameHook_Notify* call sites across ancilla.c/player.c/sprite.c/overworld.c,
+  // and developer tools has GameHook_ModuleFrameEnd in misc.c. "Purely observational" was tried as
+  // the exemption test and is the reason two features sat wrongly exempt; touching the code is the
+  // line, harmless or not. The C-side kGateWordParityMask enforces the same thing where it cannot
+  // be bypassed.
   if (!s.vanillaSafe && s.haptics?.enabled) flags |= FEATURE_FLAGS.haptics;
-  if (developerToolsOverride === null ? s.developerToolsEnabled : developerToolsOverride)
+  const devWanted = developerToolsOverride === null ? s.developerToolsEnabled : developerToolsOverride;
+  if (devWanted && !s.vanillaSafe)
     flags |= FEATURE_FLAGS.developerTools;
   return flags;
 };
