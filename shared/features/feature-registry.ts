@@ -588,7 +588,10 @@ const DEV_FEATURES: FeatureDef[] = [
     bit: 2048,
     default: true,
     requires: ['developerToolsEnabled'],
-    affectsVanillaParity: false,
+    // Dead under Vanilla Safe either way, since it requires developer tools and those are masked.
+    // Flagged so it is covered by the same lock rather than sitting enabled next to a locked control
+    // and inviting the user to toggle something that cannot take effect.
+    affectsVanillaParity: true,
     live: true,
   },
 ]
