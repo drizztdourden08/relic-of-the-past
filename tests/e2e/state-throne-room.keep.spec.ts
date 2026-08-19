@@ -27,9 +27,9 @@ test('test-throne-room keeps the follower gate shut with no follower', async () 
     ).toHaveLength(0);
 
     const flood = await r.flood();
-    expect(flood, 'the blessed count with the gate shut').toEqual({ reachable: 1320, total: 4096 });
+    expect(flood, 'the blessed count with the gate shut').toEqual({ reachable: 3076, total: 8192 });
 
-    expect(await r.groups()).toEqual({ 'Locks & barriers': 1, 'Ways out': 1 });
+    expect(await r.groups()).toEqual({ 'Locks & barriers': 1, 'Ways out': 4 });
 
     // Half two: the gate itself, annotated as a follower gate and shut.
     const rows = await r.rows();

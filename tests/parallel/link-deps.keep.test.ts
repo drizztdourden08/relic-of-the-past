@@ -2,11 +2,16 @@
 /**
  * Regression test for the most dangerous operation in the worktree tooling.
  *
- * A worktree shares .claude, .vault and test-roms with the main repo through directory
- * junctions. `git worktree remove --force` walks INTO a junction and deletes what it
- * points at — verified: it emptied the real .claude (skills, tools, settings) when the
- * link was still in place. So the links must be detached first, and detaching must
- * remove the link WITHOUT touching its contents.
+ * A worktree shares the record dataset with the main repo through a directory junction.
+ * `git worktree remove --force` walks INTO a junction and deletes what it points at:
+ * verified, it emptied the real .claude (skills, tools, settings) back when that was
+ * linked too. So the links must be detached first, and detaching must remove the link
+ * WITHOUT touching its contents.
+ *
+ * .claude is COPIED now, precisely because of that incident, so it is no longer the
+ * subject here. This exercises whatever LINKED_DIRS actually holds, which is the record
+ * dataset; pointing the test at a directory the tooling no longer links would leave the
+ * dangerous operation untested while still looking green.
  *
  * These tests use a throwaway target; they never point a link at a real repo directory.
  */
@@ -21,8 +26,9 @@ import { assertNoSharedLinks, unlinkSharedDirs } from '../../scripts/parallel/li
 const ROOT = join(tmpdir(), 'rotp-link-deps-test');
 const TARGET = join(ROOT, 'shared-target');
 const WORKTREE = join(ROOT, 'worktree');
-const LINK = join(WORKTREE, '.claude');
-const CANARY = join(TARGET, 'skills', 'canary.md');
+const LINKED_NAME = 'shared/game/data/records';
+const LINK = join(WORKTREE, LINKED_NAME);
+const CANARY = join(TARGET, 'screens', 'canary.md');
 
 /** Create the link exactly the way link-deps does on this platform. */
 const makeLink = () => {
@@ -35,9 +41,9 @@ const makeLink = () => {
 
 beforeEach(() => {
   rmSync(ROOT, { recursive: true, force: true });
-  mkdirSync(join(TARGET, 'skills'), { recursive: true });
+  mkdirSync(join(TARGET, 'screens'), { recursive: true });
   writeFileSync(CANARY, 'precious\n');
-  mkdirSync(WORKTREE, { recursive: true });
+  mkdirSync(join(WORKTREE, 'shared', 'game', 'data'), { recursive: true });
   makeLink();
 });
 
@@ -49,13 +55,13 @@ afterEach(() => {
 
 describe('unlinkSharedDirs', () => {
   it('removes the link and leaves the shared contents untouched', () => {
-    expect(existsSync(join(LINK, 'skills', 'canary.md'))).toBe(true);
+    expect(existsSync(join(LINK, 'screens', 'canary.md'))).toBe(true);
 
     unlinkSharedDirs(WORKTREE);
 
     expect(existsSync(LINK)).toBe(false);
     expect(existsSync(CANARY)).toBe(true);
-    expect(readdirSync(join(TARGET, 'skills'))).toEqual(['canary.md']);
+    expect(readdirSync(join(TARGET, 'screens'))).toEqual(['canary.md']);
   });
 
   it('is safe to call when no links are present', () => {
@@ -66,11 +72,11 @@ describe('unlinkSharedDirs', () => {
 
 describe('assertNoSharedLinks', () => {
   it('throws while a shared link is still in place', () => {
-    expect(() => assertNoSharedLinks(WORKTREE)).toThrow(/still linked to the main repo/);
+    expect(() => assertNoSharedLinks(WORKTREE)).toThrow(/link\(s\) still present/);
   });
 
   it('names the directory that would be destroyed', () => {
-    expect(() => assertNoSharedLinks(WORKTREE)).toThrow(/\.claude/);
+    expect(() => assertNoSharedLinks(WORKTREE)).toThrow(/records/);
   });
 
   it('passes once the links are detached', () => {
