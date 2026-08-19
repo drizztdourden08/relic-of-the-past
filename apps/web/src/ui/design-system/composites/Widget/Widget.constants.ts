@@ -23,6 +23,7 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     defaultDockedSize: 320,
     defaultFloatingSize: { width: 320, height: 280 },
     readsGameData: true,
+    requiresSetting: 'trackerEnabled',
   },
   {
     id: 'checks',
@@ -32,6 +33,7 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     defaultDockedSize: 380,
     defaultFloatingSize: { width: 380, height: 500 },
     readsGameData: true,
+    requiresSetting: 'trackerEnabled',
   },
   {
     id: 'logs',
@@ -61,6 +63,7 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     defaultFloatingSize: { width: 340, height: 460 },
     devOnly: true,
     readsGameData: true,
+    requiresSetting: 'devNavigationData',
   },
   {
     id: 'dataset',
@@ -71,6 +74,7 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     defaultFloatingSize: { width: 320, height: 400 },
     devOnly: true,
     readsGameData: true,
+    requiresSetting: 'devNavigationData',
   },
   {
     id: 'cheats',
@@ -91,6 +95,7 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     defaultFloatingSize: { width: 380, height: 560 },
     devOnly: true,
     readsGameData: true,
+    requiresSetting: 'devNavigationData',
   },
 ];
 

@@ -8,6 +8,8 @@
 const DISABLED_SETTING_MESSAGES: Record<string, string> = {
   vanillaSafe: 'Disabled in Vanilla Safe mode',
   cheatsEnabled: 'Cheats are disabled',
+  trackerEnabled: 'Tracker is disabled',
+  devNavigationData: 'Navigation data is disabled',
 };
 
 export { DISABLED_SETTING_MESSAGES };
