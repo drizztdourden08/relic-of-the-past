@@ -1,6 +1,6 @@
 /* @layer shared-asset-extraction @kind logic */
 /**
- * Game data tables ported from core/zelda3/assets/tables.py.
+ * Game data tables ported from upstream's tables.py.
  * Only the tables needed for item sprite extraction are included here;
  * remaining tables will be added as other extraction modules are ported.
  */

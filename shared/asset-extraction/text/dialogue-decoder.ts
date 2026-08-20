@@ -2,7 +2,7 @@
 /**
  * Dialogue decoder — reads compressed dialogue strings from ROM.
  *
- * Ported from: core/zelda3/assets/text_compression.py decode_strings_generic()
+ * Ported from: upstream's text_compression.py decode_strings_generic()
  */
 import type { LanguageConfig } from './data/language-data';
 import { kLanguages } from './data/language-data';

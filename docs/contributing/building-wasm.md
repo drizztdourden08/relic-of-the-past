@@ -46,7 +46,9 @@ compiles fine but throws at the `ccall` site at runtime.
 
 ## Notes
 
-- Win32-only sources (`opengl.c`, `glsl_shader.c`, `gl_core_3_1.c`, `volume_control.c`) and the native
-  `main.c` are intentionally excluded; `emscripten_main.c` replaces `main.c`.
+- `emscripten_main.c` is the entry point; the app ships through Electron, not an SDL window.
+- `core/zelda3/snes/` builds three units: `ppu.c` (the renderer), `dma.c` and `dsp.c` (audio).
+  Those are the chips the decompiled game still writes registers to. There is no CPU emulation —
+  the game's own processor code is what was decompiled into C, which is the point of the port.
 - It's a full recompile of dozens of translation units — expect it to take a while.
 - The repo's `build-wasm` skill automates this exact flow.

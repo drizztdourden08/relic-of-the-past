@@ -7,7 +7,7 @@
  * font at a different bank than the US ROM; the translation hacks reuse the US
  * font slot but vary the glyph count.
  *
- * Ported from: core/zelda3/assets/sprite_sheets.py kFontTypes.
+ * Ported from: upstream's sprite_sheets.py kFontTypes.
  */
 
 /** Every dialogue font is 256 tiles of 16 bytes (8x8, 2bpp). */

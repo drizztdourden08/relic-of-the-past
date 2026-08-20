@@ -3,7 +3,7 @@
  * Overworld area extraction — ROM → YAML data for all 160 overworld areas.
  * ROM metadata readers live in overworld-rom-tables.ts.
  *
- * Ported from: core/zelda3/assets/extract_resources.py (overworld portion)
+ * Ported from: upstream's extract_resources.py (overworld portion)
  */
 import * as yaml from 'js-yaml';
 import type { RomData } from '../rom/rom-types';

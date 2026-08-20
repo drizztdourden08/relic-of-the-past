@@ -23,7 +23,6 @@
 #include "src/types.h"
 #include "src/variables.h"
 #include "src/zelda_rtl.h"
-#include "src/zelda_cpu_infra.h"
 #include "src/config.h"
 #include "src/assets.h"
 #include "src/load_gfx.h"

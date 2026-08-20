@@ -624,29 +624,6 @@ static int IncrementCrystalCountdown(uint8 *a, int v) {
 }
 
 int frame_ctr_dbg;
-static uint8 *g_emu_memory_ptr;
-static ZeldaRunFrameFunc *g_emu_runframe;
-static ZeldaSyncAllFunc *g_emu_syncall;
-
-void ZeldaSetupEmuCallbacks(uint8 *emu_ram, ZeldaRunFrameFunc *func, ZeldaSyncAllFunc *sync_all) {
-  g_emu_memory_ptr = emu_ram;
-  g_emu_runframe = func;
-  g_emu_syncall = sync_all;
-}
-
-static void EmuSynchronizeWholeState() {
-  if (g_emu_syncall)
-    g_emu_syncall();
-}
-
-// |ptr| must be a pointer into g_ram, will synchronize the RAM memory with the
-// emulator.
-static void EmuSyncMemoryRegion(void *ptr, size_t n) {
-  uint8 *data = (uint8 *)ptr;
-  assert(data >= g_ram && data < g_ram + 0x20000);
-  if (g_emu_memory_ptr)
-    memcpy(g_emu_memory_ptr + (data - g_ram), data, n);
-}
 
 static void Startup_InitializeMemory() {  // 8087c0
   memset(g_ram + 0x0, 0, 0x2000);
@@ -709,7 +686,6 @@ void ZeldaReset(bool preserve_sram) {
   ZeldaApuLock();
   ZeldaRestoreMusicAfterLoad_Locked(true);
   ZeldaApuUnlock();
-  EmuSynchronizeWholeState();
 
 }
 
@@ -721,7 +697,6 @@ static void LoadSnesState(SaveLoadFunc *func, void *ctx) {
 
   ZeldaRestoreMusicAfterLoad_Locked(false);
   ZeldaApuUnlock();
-  EmuSynchronizeWholeState();
 }
 
 static void SaveSnesState(SaveLoadFunc *func, void *ctx) {
@@ -937,7 +912,6 @@ uint16 StateRecorder_ReadNextReplayState(StateRecorder *sr) {
         addr |= sr->log.data[replay_pos++];
         do {
           g_ram[addr & 0x1ffff] = sr->log.data[replay_pos++];
-          EmuSyncMemoryRegion(&g_ram[addr & 0x1ffff], 1);
         } while (addr++, --nb);
       } else {
         assert(0);
@@ -1140,7 +1114,6 @@ static void SyncCheatWram(void) {
     uint8 wanted = kCheatWramSlots[i].wanted();
     if (*byte == wanted) continue;
     *byte = wanted;
-    EmuSyncMemoryRegion(byte, 1);
     StateRecorder_RecordPatchByte(&state_recorder, kCheatWramSlots[i].addr, byte, 1);
   }
 }
@@ -1164,7 +1137,6 @@ static void SyncGateWords(void) {
       continue;
     GateWordTeardown(i, *word, wanted);
     *word = wanted;
-    EmuSyncMemoryRegion(word, sizeof(*word));
     StateRecorder_RecordPatchByte(&state_recorder, kGateWordRamAddr[i], (uint8 *)word, 4);
     GateWordSideEffects(i, *word);
   }
@@ -1177,16 +1149,6 @@ uint32 ZeldaGetEffectiveGateWord(int index) {
   if ((unsigned)index >= (unsigned)kGateWordCount)
     return 0;
   return *(uint32 *)(g_ram + kGateWordRamAddr[index]);
-}
-
-// True once any gate is on, i.e. we are no longer bit-identical to the original game and so cannot be
-// compared against the emulated CPU. Covers every segment, not just features0.
-static bool AnyGateWordSet(void) {
-  for (int i = 0; i < kGateWordCount; i++) {
-    if (*(uint32 *)(g_ram + kGateWordRamAddr[i]))
-      return true;
-  }
-  return false;
 }
 
 bool ZeldaRunFrame(int inputs) {
@@ -1210,7 +1172,6 @@ bool ZeldaRunFrame(int inputs) {
     uint8 apui00 = ZeldaIsMusicPlaying();
     if (apui00 != g_ram[kRam_APUI00]) {
       g_ram[kRam_APUI00] = apui00;
-      EmuSyncMemoryRegion(&g_ram[kRam_APUI00], 1);
       StateRecorder_RecordPatchByte(&state_recorder, 0x648, &apui00, 1);
     }
 
@@ -1219,7 +1180,6 @@ bool ZeldaRunFrame(int inputs) {
       // but only if game is initialized.
       if (g_ram[kRam_BugsFixed] < kBugFix_Latest) {
         g_ram[kRam_BugsFixed] = kBugFix_Latest;
-        EmuSyncMemoryRegion(&g_ram[kRam_BugsFixed], 1);
         StateRecorder_RecordPatchByte(&state_recorder, kRam_BugsFixed, &g_ram[kRam_BugsFixed], 1);
       }
 
@@ -1244,17 +1204,9 @@ bool ZeldaRunFrame(int inputs) {
     // while each fram until it eventually completes a frame.
     // Simulate this by rendering the poly every n:th frame.
     run_what = (is_nmi_thread_active && IncrementCrystalCountdown(&g_ram[kRam_CrystalRotateCounter], virq_trigger)) ? 3 : 1;
-    EmuSyncMemoryRegion(&g_ram[kRam_CrystalRotateCounter], 1);
   }
 
-  // Was `enhanced_features0 != 0`, which missed the later gate segments and would have compared a
-  // modified run against the stock ROM whenever only those were on.
-  if (g_emu_runframe == NULL || AnyGateWordSet() || g_zenv.dialogue_flags) {
-    // can't compare against real impl when running with extra features.
-    ZeldaRunFrameInternal(inputs, run_what);
-  } else {
-    g_emu_runframe(inputs, run_what);
-  }
+  ZeldaRunFrameInternal(inputs, run_what);
 
   ZeldaPushApuState();
 
@@ -1358,7 +1310,6 @@ void StateRecoderMultiPatch_Patch(StateRecoderMultiPatch *mp, uint32 addr, uint8
   }
   mp->vals[mp->count++] = value;
   g_ram[addr] = value;
-  EmuSyncMemoryRegion(&g_ram[addr], 1);
 }
 
 void PatchCommand(char c) {
@@ -1394,7 +1345,6 @@ void ZeldaReadSram() {
     if (fread(g_zenv.sram, 1, 8192, f) != 8192)
       fprintf(stderr, "Error reading saves/sram.dat\n");
     fclose(f);
-    EmuSynchronizeWholeState();
   }
 }
 

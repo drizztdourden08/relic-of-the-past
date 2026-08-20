@@ -10,12 +10,17 @@
 
 typedef struct Snes Snes;
 
-#include "cpu.h"
-#include "apu.h"
+// struct Snes holds these only as pointers and nothing here dereferences them,
+// so a forward declaration is all the renderer and the register transfer unit
+// need. No definition is required, and none is built.
+typedef struct Cpu Cpu;
+typedef struct Apu Apu;
+typedef struct Cart Cart;
+typedef struct Input Input;
+
+#include "saveload.h"
 #include "dma.h"
 #include "ppu.h"
-#include "cart.h"
-#include "input.h"
 
 struct Snes {
   Cpu* cpu;
