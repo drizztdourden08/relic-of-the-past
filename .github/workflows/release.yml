@@ -158,8 +158,15 @@ jobs:
 
       - name: Build WASM
         # Shared build script (single source of truth) writes straight into
-        # apps/web/public/wasm — same output the desktop package consumes.
+        # apps/web/public/wasm — same output the desktop package consumes. It also
+        # re-runs the save state layout probe, so the format id is this build's own.
         run: node core/wasm-build/build.mjs
+        shell: bash
+
+      - name: Check the save state format is registered
+        # Stops the release if the layout moved without a KNOWN_FORMATS row explaining it.
+        # Nothing to remember here: the id is computed, this only insists it be described.
+        run: node scripts/build/check-state-format.mjs
         shell: bash
 
       # Before npm install, not after: its postinstall builds SDL, and SDL only
@@ -280,6 +287,16 @@ jobs:
         if: matrix.platform == 'win'
         shell: bash
         run: node scripts/build/make-install-manifest.mjs --dir release/win --tag "${{ needs.prepare.outputs.tag }}"
+
+      # One platform only: the format is a property of the core, not of the installer, and
+      # a release carries a single copy. Windows is the one that always runs.
+      # Lands in the folder the upload glob below already collects, so it becomes a release
+      # asset with no new upload step — and its FILENAME carries the id, which is how an
+      # older build answers the compatibility question from the release listing alone.
+      - name: Publish the save state format
+        if: matrix.platform == 'win'
+        shell: bash
+        run: node scripts/build/check-state-format.mjs --emit release/win
 
       - name: Clean build artifacts
         shell: bash

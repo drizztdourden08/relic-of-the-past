@@ -56,15 +56,26 @@ const getUpdateManager = (): UpdateManager | null => {
 const canSelfUpdate = (): boolean => getUpdateManager() !== null;
 
 /**
+ * True when the updater has been pointed at a fixture origin instead of the release page.
+ * Only a developer exercising the update path ever sets it; no shipped build does.
+ *
+ * It makes a dev run behave like a packaged one for CHECKING and LISTING, which is what the
+ * dialog needs in order to be looked at without publishing anything. Applying is left alone
+ * on purpose: it still goes through Velopack and still fails here, because a dev run
+ * genuinely has no install to replace.
+ */
+const isUpdateHarness = (): boolean => !!process.env.ROTP_UPDATE_API_ORIGIN;
+
+/**
  * Whether it is worth asking what the newest version is. True for any packaged build,
  * including the ones that cannot install what they find: knowing an update exists is
  * useful even when applying it means visiting the release page.
  */
-const canCheckForUpdates = (): boolean => app.isPackaged;
+const canCheckForUpdates = (): boolean => app.isPackaged || isUpdateHarness();
 
 const currentVersion = (): string => {
   const manager = getUpdateManager();
   return manager ? manager.getCurrentVersion() : app.getVersion();
 };
 
-export { canCheckForUpdates, canSelfUpdate, currentVersion, getUpdateManager };
+export { canCheckForUpdates, canSelfUpdate, currentVersion, getUpdateManager, isUpdateHarness };

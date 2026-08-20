@@ -8,6 +8,8 @@ import { Select } from '../../../../design-system/primitives/Select';
 import { Toggle } from '../../../../design-system/primitives/Toggle';
 import { ProgressBar } from '../../../../design-system/primitives/ProgressBar';
 import { DialogShell } from '../../../../design-system/composites/DialogShell';
+import { describeTargetCompat } from '@shared/game/save-state';
+import type { TargetCompat } from '@shared/game/save-state';
 import { BugReportButton } from '../BugReportButton';
 import { useVersionChoice } from './behavior/useVersionChoice';
 import './UpdateDialog.css';
@@ -18,6 +20,16 @@ const renderNotes = (md: string): string => {
   // Strip <a> tags to plain text so links aren't clickable
   return html.replace(/<a[^>]*>(.*?)<\/a>/g, '$1');
 };
+
+/**
+ * A confirmed break and "could not check" are different claims, so they get different
+ * headings and different colours. Saying the second one in red would teach people to
+ * ignore the red.
+ */
+const saveStateTitle = (compat: TargetCompat): string =>
+  (compat.kind === 'incompatible'
+    ? 'Your save states will not load'
+    : 'Save state compatibility could not be checked');
 
 const titleFor = (status: string, hasInfo: boolean): string =>
   status === 'checking' ? 'Checking for newer version...'
@@ -35,6 +47,13 @@ const UpdateDialog = (props: UpdateDialogProps) => {
   const notes = chosen?.releaseNotes ?? info?.releaseNotes ?? '';
   const notesHtml = useMemo(() => (notes ? renderNotes(notes) : ''), [notes]);
   const busy = status === 'downloading' || status === 'ready';
+
+  // Follows the picker rather than the offered update, so switching rows re-answers it.
+  // Reinstalling the running version is the one case with nothing to say.
+  const saveStates = chosen?.saveStates ?? info?.saveStates ?? null;
+  const saveStateNote = saveStates && !chosen?.installed
+    ? describeTargetCompat(saveStates, currentVersion)
+    : null;
 
   const buttonLabel = status === 'ready' ? 'Restarting...'
     : status === 'downloading' ? 'Downloading...'
@@ -107,6 +126,17 @@ const UpdateDialog = (props: UpdateDialogProps) => {
           <Box className="update-dialog__warning" role="note">
             This is a pre-release. It ships before the usual testing, so expect rough edges and
             bugs the stable builds do not have.
+          </Box>
+        )}
+
+        {/* Above the notes on purpose: it decides whether the notes are worth reading. */}
+        {saveStates && saveStateNote && (
+          <Box
+            className={`update-dialog__warning${saveStates.kind === 'incompatible' ? ' update-dialog__warning--breaking' : ''}`}
+            role="note"
+          >
+            <Text className="update-dialog__warning-title">{saveStateTitle(saveStates)}</Text>
+            {saveStateNote}
           </Box>
         )}
 

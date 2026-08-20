@@ -6,11 +6,12 @@
  * nothing but the release list, so it works wherever the app runs, and it is the same
  * question the in-app updater asks: is there something newer than this build?
  */
-import { FEED_OWNER, FEED_REPO } from './updater.constants';
+import { FEED_OWNER, FEED_REPO, releasesUrl } from './updater.constants';
 import type { UpdateInfo } from './updater.type';
 import { compareVersions } from './version-feed';
+import { targetCompatFor } from './target-format';
 
-const RELEASES_URL = `https://api.github.com/repos/${FEED_OWNER}/${FEED_REPO}/releases?per_page=20`;
+const RELEASES_URL = releasesUrl(20);
 
 interface GithubRelease {
   tag_name: string;
@@ -18,6 +19,7 @@ interface GithubRelease {
   draft: boolean;
   prerelease: boolean;
   published_at?: string;
+  assets?: { name: string }[];
 }
 
 /** The newest release, or null when nothing is newer than what is running. */
@@ -38,6 +40,7 @@ const findNewerRelease = async (currentVersion: string, allowPrerelease: boolean
     version: newest.version,
     releaseNotes: newest.release.body ?? '',
     releaseDate: newest.release.published_at ?? '',
+    saveStates: targetCompatFor(newest.version, newest.release.assets),
   };
 };
 

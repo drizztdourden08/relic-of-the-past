@@ -115,6 +115,15 @@ const run = () => {
   console.log(`Output: ${join(outputDir, 'zelda3.js')}`);
   console.log(`        ${join(outputDir, 'zelda3.wasm')}`);
   console.log('============================================');
+
+  // The save state layout can only have moved if the core was just rebuilt, so the probe
+  // rides along here. This is what keeps the format id computed rather than declared:
+  // every path that rebuilds the core — dev, ensure-wasm, the release job — re-derives it.
+  const probe = spawnSync(process.execPath, [join(here, 'layout-probe.mjs')], { stdio: 'inherit' });
+  if (probe.status !== 0) {
+    console.error('\nSave state layout probe FAILED — the format id was not refreshed.');
+    process.exit(probe.status ?? 1);
+  }
 };
 
 run();

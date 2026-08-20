@@ -10,7 +10,7 @@ import type { BrowserWindow } from 'electron';
 import { handle, emit } from '../lib/ipc/handle';
 import { getMainWindow } from '../window';
 import { applyVersion } from './apply-update';
-import { canCheckForUpdates, canSelfUpdate, currentVersion, getUpdateManager } from './update-manager';
+import { canCheckForUpdates, canSelfUpdate, currentVersion, getUpdateManager, isUpdateHarness } from './update-manager';
 import { findNewerRelease, releasePageUrl } from './latest-release';
 import { readPrefs, writePrefs } from './updater-prefs';
 import { FIRST_CHECK_DELAY_MS } from './updater.constants';
@@ -24,6 +24,7 @@ const asUpdateInfo = (option: VersionCandidate): UpdateInfo => ({
   version: option.version,
   releaseNotes: option.releaseNotes,
   releaseDate: option.releaseDate,
+  saveStates: option.saveStates,
 });
 
 /** Refreshes the picker's list and returns it. Empty when the feed cannot be read. */
@@ -80,6 +81,9 @@ const runCheck = async (mainWindow: BrowserWindow): Promise<UpdateInfo | null> =
       version: target.Version,
       releaseNotes: target.NotesMarkdown ?? '',
       releaseDate: '',
+      // Velopack's own result carries no asset list, so compatibility is unknown until
+      // the release listing below fills it in. Unverifiable is the honest placeholder.
+      saveStates: { kind: 'unverifiable', why: 'not-published' },
     };
     await refreshVersions();
     const listed = versions.find((v) => v.version === target.Version);
@@ -104,7 +108,9 @@ const initAutoUpdater = (mainWindow: BrowserWindow): void => {
 const registerUpdaterHandlers = (): void => {
   handle('updater:capabilities', () => ({
     canCheck: canSelfUpdate() || canCheckForUpdates(),
-    canInstall: canSelfUpdate(),
+    // The harness claims the picker so every version can be inspected side by side.
+    // Pressing the button there still fails at Velopack, which is the truth.
+    canInstall: canSelfUpdate() || isUpdateHarness(),
   }));
 
   // The way out for a build that can see an update but not apply one.
@@ -121,8 +127,9 @@ const registerUpdaterHandlers = (): void => {
   });
 
   handle('updater:listVersions', async () => {
-    // Choosing a version only means something when this build can install one.
-    if (!canSelfUpdate()) return [];
+    // Choosing a version only means something when this build can install one — or when
+    // the harness is up, where the whole point is to look at the choices.
+    if (!canSelfUpdate() && !isUpdateHarness()) return [];
     const list = await refreshVersions();
     // The plan holds feed entries, which are main-process detail. The renderer picks by
     // version string and reads the plan's total through downloadSize.

@@ -52,6 +52,24 @@
   color: var(--c-text-dim);
 }
 
+/* Red is kept for a break we have actually confirmed. Not being able to check is a
+   weaker claim and stays on the gold above. */
+.update-dialog__warning--breaking {
+  border-color: var(--c-danger);
+  background: var(--c-danger-soft);
+}
+
+.update-dialog__warning-title {
+  display: block;
+  margin-bottom: var(--space-2xs);
+  font-weight: var(--weight-semi);
+  color: var(--c-text);
+}
+
+.update-dialog__warning--breaking .update-dialog__warning-title {
+  color: var(--c-danger);
+}
+
 .update-dialog__footnote {
   display: flex;
   align-items: center;

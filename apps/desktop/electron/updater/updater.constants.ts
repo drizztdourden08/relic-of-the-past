@@ -4,6 +4,16 @@ const FEED_OWNER = 'drizztdourden08';
 const FEED_REPO = 'relic-of-the-past';
 const FEED_REPO_URL = `https://github.com/${FEED_OWNER}/${FEED_REPO}`;
 
+/**
+ * Where the release list is read from. Overridable so the whole update path — fetch,
+ * parse, compare, warn — can be pointed at a local fixture server and exercised without
+ * publishing anything. Unset in every shipped build.
+ */
+const API_ORIGIN = process.env.ROTP_UPDATE_API_ORIGIN || 'https://api.github.com';
+
+const releasesUrl = (perPage: number): string =>
+  `${API_ORIGIN}/repos/${FEED_OWNER}/${FEED_REPO}/releases?per_page=${perPage}`;
+
 /** Releases are tagged `v<version>`, which is how a feed entry finds its release. */
 const releaseTagFor = (version: string): string => `v${version}`;
 
@@ -24,4 +34,7 @@ const FEED_FILE = 'releases.win.json';
  */
 const MAX_DELTAS = 10;
 
-export { FEED_FILE, FEED_OWNER, FEED_REPO, FEED_REPO_URL, FIRST_CHECK_DELAY_MS, MAX_DELTAS, releaseTagFor };
+export {
+  API_ORIGIN, FEED_FILE, FEED_OWNER, FEED_REPO, FEED_REPO_URL,
+  FIRST_CHECK_DELAY_MS, MAX_DELTAS, releasesUrl, releaseTagFor,
+};

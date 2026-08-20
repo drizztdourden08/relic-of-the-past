@@ -11,8 +11,10 @@
  * pre-release and when each was published.
  */
 import type { VelopackAsset } from 'velopack';
-import { FEED_FILE, FEED_OWNER, FEED_REPO, MAX_DELTAS } from './updater.constants';
+import { FEED_FILE, MAX_DELTAS, releasesUrl } from './updater.constants';
 import type { VersionCandidate } from './updater.type';
+import { compareVersions } from './version-compare';
+import { targetCompatFor } from './target-format';
 
 interface GithubAsset {
   name: string;
@@ -28,7 +30,7 @@ interface GithubRelease {
   assets?: GithubAsset[];
 }
 
-const RELEASES_URL = `https://api.github.com/repos/${FEED_OWNER}/${FEED_REPO}/releases?per_page=30`;
+const RELEASES_URL = releasesUrl(30);
 
 const readReleases = async (): Promise<GithubRelease[]> => {
   const res = await fetch(RELEASES_URL, { headers: { Accept: 'application/vnd.github.v3+json' } });
@@ -47,18 +49,6 @@ const parseFeed = (raw: unknown): VelopackAsset[] => {
     const asset = entry as Partial<VelopackAsset>;
     return typeof asset?.Version === 'string' && typeof asset?.FileName === 'string';
   });
-};
-
-/** Numeric compare on x.y.z; a build with a pre-release suffix sorts below a plain one. */
-const compareVersions = (a: string, b: string): number => {
-  const parts = (v: string) => v.split('-')[0].split('.').map((n) => parseInt(n, 10) || 0);
-  const [pa, pb] = [parts(a), parts(b)];
-  for (let i = 0; i < Math.max(pa.length, pb.length); i += 1) {
-    const diff = (pa[i] ?? 0) - (pb[i] ?? 0);
-    if (diff !== 0) return diff;
-  }
-  const tag = (v: string) => (v.includes('-') ? 0 : 1);
-  return tag(a) - tag(b);
 };
 
 /**
@@ -157,6 +147,9 @@ const listVersions = async (currentVersion: string, allowPrerelease: boolean): P
         prerelease: release.prerelease,
         downgrade: order < 0,
         installed: order === 0,
+        // Read off the release listing already in hand — the id is in the asset's
+        // filename, so every row in the picker is answered without another request.
+        saveStates: targetCompatFor(asset.Version, release.assets),
         plan,
       } satisfies VersionCandidate;
     });
