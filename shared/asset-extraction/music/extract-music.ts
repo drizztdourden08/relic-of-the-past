@@ -3,7 +3,7 @@
  * Music extraction — orchestrator that loads SPC sound banks from ROM,
  * decodes songs/phrases/patterns/SFX, and produces text + sample output.
  *
- * Ported from: core/zelda3/assets/extract_music.py
+ * Ported from: upstream's extract_music.py
  */
 import type { RomData } from '../rom/rom-types';
 import type { MusicExtractionResult } from './extract-types';

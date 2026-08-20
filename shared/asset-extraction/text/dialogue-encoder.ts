@@ -2,7 +2,7 @@
 /**
  * Dialogue encoder — compresses dialogue strings back to ROM format.
  *
- * Ported from: core/zelda3/assets/text_compression.py compress_strings() + encoders
+ * Ported from: upstream's text_compression.py compress_strings() + encoders
  */
 import type { LanguageConfig } from './data/language-data';
 import { kLanguages } from './data/language-data';

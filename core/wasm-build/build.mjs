@@ -33,11 +33,14 @@ const gameSrcs = [
   'ancilla', 'attract', 'audio', 'config', 'dungeon', 'ending', 'hud', 'load_gfx',
   'messaging', 'misc', 'nmi', 'overlord', 'overworld', 'player', 'player_oam', 'poly',
   'select_file', 'spc_player', 'sprite', 'sprite_main', 'tagalong', 'tile_detect',
-  'util', 'zelda_cpu_infra', 'zelda_rtl',
+  'util', 'zelda_rtl',
 ].map((f) => z('src', `${f}.c`));
 
+// The hardware the decompiled game still writes registers to: the graphics chip
+// (our renderer), the register-transfer unit, and the audio sample mixer. No CPU
+// is emulated — the game's own processor code is what was decompiled into C.
 const snesSrcs = [
-  'apu', 'cart', 'cpu', 'dma', 'dsp', 'input', 'ppu', 'snes', 'snes_other', 'spc', 'tracing',
+  'dma', 'dsp', 'ppu',
 ].map((f) => z('snes', `${f}.c`));
 
 const opusSrc = [z('third_party', 'opus-1.3.1-stripped', 'opus_decoder_amalgam.c')];

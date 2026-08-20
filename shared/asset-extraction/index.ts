@@ -1,7 +1,8 @@
 /* @layer shared-asset-extraction @kind logic */
 /**
- * Asset extraction pipeline — TypeScript port of core/zelda3/assets/ Python tools.
- * Eliminates the Python runtime dependency for end users.
+ * Asset extraction pipeline — reads a user ROM and writes the asset blob the
+ * game core loads. A TypeScript port of upstream's Python tools, so end users
+ * need no Python runtime.
  */
 
 // ROM layer

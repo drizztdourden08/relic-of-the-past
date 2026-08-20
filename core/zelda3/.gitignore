@@ -1,33 +1,8 @@
-/.vs/
-/packages/
-/.vscode/
-.DS_Store
-*.dSYM
-/*.vcxproj.user
-*.aps
-/obj/
-/bin/
-/assets/overworld/*.yaml
-/assets/dungeon/*.yaml
-/assets/img/
-/assets/old/
+# A ROM, a save or an extracted asset blob must never be committed — this repo is
+# public. Everything else upstream ignored here belonged to build paths this copy
+# no longer has.
 /zelda3.sfc
 /zelda3.smc
-/saves/*.sav
-/saves/sram.dat
-/saves/sram.bak
-/zelda3
-__pycache__
-/src/*.o
-/*.exe
-/*.out
-/snes/*.o
-/msu/
-/tmp/
 /zelda3_assets.dat
-/SDL2.dll
-/zelda3.*.ini
-/zelda3.wiki
-/sprites-gfx
-/glsl-shaders
-/token.txt
+/saves/
+/msu/

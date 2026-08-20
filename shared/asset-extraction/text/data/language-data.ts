@@ -3,7 +3,7 @@
  * Language definitions for the game's text compression/decompression.
  * Data-driven — each language is a config object, not a class.
  *
- * Ported from: core/zelda3/assets/text_compression.py
+ * Ported from: upstream's text_compression.py
  */
 
 interface LanguageConfig {

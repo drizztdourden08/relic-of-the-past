@@ -2,8 +2,8 @@
 # Asset-Extraction Pipeline
 
 The app ships no game data. On first run it reads the user's ROM and produces the
-`zelda3_assets.dat` blob the game core loads. That extraction is a pure-TypeScript port of the
-Python tools in `core/zelda3/assets/`, and it lives in `shared/asset-extraction/`.
+`zelda3_assets.dat` blob the game core loads. That extraction is a pure-TypeScript port of
+upstream's Python tools, and it lives in `shared/asset-extraction/`.
 
 ## Flow
 

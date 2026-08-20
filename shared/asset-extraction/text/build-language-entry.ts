@@ -6,7 +6,7 @@
  * is the US ROM, extras follow. ZeldaSetLanguage(code) looks the code up in
  * kDialogueMap and pulls dialogue/font by the stored index.
  *
- * Ported from: core/zelda3/assets/compile_resources.py print_dialogue().
+ * Ported from: upstream's compile_resources.py print_dialogue().
  */
 import type { RomData } from '../rom/rom-types';
 import type { DialogueLine } from '@shared/types/language';

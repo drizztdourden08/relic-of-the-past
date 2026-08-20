@@ -2,7 +2,7 @@
 /**
  * Dungeon extraction orchestration — extracts all 320 rooms, defaults, overlays, and map32 data.
  *
- * Ported from: core/zelda3/assets/extract_resources.py (dungeon portion)
+ * Ported from: upstream's extract_resources.py (dungeon portion)
  */
 import * as yaml from 'js-yaml';
 import type { RomData } from '../rom/rom-types';

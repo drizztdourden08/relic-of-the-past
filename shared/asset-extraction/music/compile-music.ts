@@ -2,7 +2,7 @@
 /**
  * Music compiler — orchestrator that compiles extracted music text back to SPC sound bank binary.
  *
- * Ported from: core/zelda3/assets/compile_music.py
+ * Ported from: upstream's compile_music.py
  */
 import * as yaml from 'js-yaml';
 import type { CompiledSong, CompiledSoundBank, MusicCompileInput } from './compile-types';
