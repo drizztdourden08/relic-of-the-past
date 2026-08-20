@@ -3,6 +3,7 @@
  * Save States — save/load game state snapshots + screenshot capture.
  */
 
+import { checkLoadable, stripStamp } from '@shared/game/save-state';
 import { log } from '../log-bus';
 import * as savesStore from '../storage/saves-store';
 import { getModule, getProfileId } from './wasm-bridge';
@@ -75,8 +76,17 @@ const loadState = async (slot: number): Promise<boolean> => {
     }
     log.app(`[LoadState] Got ${buffer.byteLength} bytes from disk`);
 
+    // Before the core sees it: a snapshot from a different layout would read off the end
+    // of the buffer, and the assert that would have caught it is compiled out of a
+    // release build.
+    const verdict = checkLoadable(buffer);
+    if (!verdict.ok) {
+      log.error(`[LoadState] Refusing slot ${slot}: ${verdict.message}`);
+      return false;
+    }
+
     const savePath = `/saves/save${slot}.sav`;
-    const arr = new Uint8Array(buffer);
+    const arr = new Uint8Array(stripStamp(buffer));
     log.app(`[LoadState] Writing ${arr.byteLength} bytes to MEMFS ${savePath}`);
     mod.FS.writeFile(savePath, arr);
 
@@ -159,8 +169,17 @@ const captureStateBuffer = (slot = 98): ArrayBuffer | null => {
 const loadStateFromBuffer = (buffer: ArrayBuffer, slot = 98): boolean => {
   const mod = getModule();
   if (!mod) return false;
+
+  // Same guard as loadState. Buffers captured in-session are unstamped and pass
+  // straight through; the check matters for the ones that came off disk.
+  const verdict = checkLoadable(buffer);
+  if (!verdict.ok) {
+    log.error(`[LoadState] Refusing buffer: ${verdict.message}`);
+    return false;
+  }
+
   const savePath = `/saves/save${slot}.sav`;
-  mod.FS.writeFile(savePath, new Uint8Array(buffer));
+  mod.FS.writeFile(savePath, new Uint8Array(stripStamp(buffer)));
   mod.ccall('WasmLoadState', null, ['number'], [slot]);
   reassertLiveFlagsAfterLoad();
   pollInventoryState(true);

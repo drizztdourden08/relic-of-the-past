@@ -3,11 +3,14 @@
  * Shapes shared between the updater's main-process side and the renderer. The feed
  * entry a version was built from stays in main: the renderer picks by version string.
  */
+import type { TargetCompat } from '@shared/game/save-state';
 
 interface UpdateInfo {
   version: string;
   releaseNotes: string;
   releaseDate: string;
+  /** Whether this version reads the save states the running build writes. */
+  saveStates: TargetCompat;
 }
 
 /** One row in the version picker. */
@@ -28,6 +31,8 @@ interface VersionOption {
   downgrade: boolean;
   /** Exactly what is running, so choosing it is a reinstall. */
   installed: boolean;
+  /** Whether picking this row would leave the existing save states unreadable. */
+  saveStates: TargetCompat;
 }
 
 /** What this build is able to do about updates. */
@@ -42,4 +47,4 @@ interface UpdaterPrefs {
   allowPrerelease: boolean;
 }
 
-export type { UpdateInfo, UpdaterCapabilities, UpdaterPrefs, VersionOption };
+export type { TargetCompat, UpdateInfo, UpdaterCapabilities, UpdaterPrefs, VersionOption };
