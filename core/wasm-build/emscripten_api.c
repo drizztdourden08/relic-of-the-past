@@ -113,6 +113,12 @@ int WasmDebugGetDungeonAttr(int index) {
 }
 
 EMSCRIPTEN_KEEPALIVE
+int WasmDebugGetInputMode(void) { return g_js_input_mode; }
+
+EMSCRIPTEN_KEEPALIVE
+void WasmDebugResetGbaPalace(void) { GbaAlttp_EndPalace(); }
+
+EMSCRIPTEN_KEEPALIVE
 void WasmDebugShiftOverworld(int dx, int dy) {
   if (player_is_indoors)
     return;

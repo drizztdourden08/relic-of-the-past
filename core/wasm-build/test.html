@@ -35,6 +35,18 @@
       font-size: 12px;
       color: #888;
     }
+    #reload-state {
+      display: none;
+      margin-top: 12px;
+      padding: 8px 14px;
+      border: 1px solid #4a9;
+      border-radius: 4px;
+      background: #102d32;
+      color: #bfe8d8;
+      font: inherit;
+      cursor: pointer;
+    }
+    #reload-state:hover { background: #174047; }
   </style>
 </head>
 <body>
@@ -49,6 +61,8 @@
 
   <canvas id="canvas" tabindex="0" style="display:none;"></canvas>
 
+  <button id="reload-state" type="button">Reload test state</button>
+
   <div class="controls" id="controls" style="display:none;">
     <p>Arrow keys = D-pad | Z = Y | X = B | S = A | A = X | Enter = Start | RShift = Select | D = L | C = R</p>
   </div>
@@ -60,6 +74,7 @@
     const status = document.getElementById('status');
     const canvas = document.getElementById('canvas');
     const controls = document.getElementById('controls');
+    const reloadState = document.getElementById('reload-state');
 
     dropZone.addEventListener('click', () => fileInput.click());
     dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('active'); });
@@ -136,13 +151,22 @@
             wasmModule.ccall(name, 'number', args.map(() => 'number'), args);
           status.textContent = 'Running!';
           if (stateData) {
-            setTimeout(() => {
+            const resetTestState = () => {
               wasmModule.ccall('WasmLoadState', null, ['number'], [99]);
+              wasmModule.ccall('WasmDebugResetGbaPalace', null, [], []);
               const shiftX = Number(new URLSearchParams(location.search).get('shiftx')) || 0;
               const shiftY = Number(new URLSearchParams(location.search).get('shifty')) || 0;
               if (shiftX || shiftY)
                 wasmModule.ccall('WasmDebugShiftOverworld', null,
                   ['number', 'number'], [shiftX, shiftY]);
+              wasmModule.ccall('WasmSetInput', null, ['number'], [0]);
+              wasmModule.ccall('WasmSetInputMode', null, ['number'], [0]);
+              canvas.focus();
+            };
+            reloadState.style.display = 'block';
+            reloadState.addEventListener('click', resetTestState);
+            setTimeout(() => {
+              resetTestState();
               const mapDebug = document.createElement('pre');
               mapDebug.id = 'map-debug';
               mapDebug.hidden = true;
@@ -165,10 +189,13 @@
                 'palaceActive', 'layoutQuadrant', 'collision',
               ];
               const updateRuntimeDebug = () => {
-                runtimeDebug.textContent = JSON.stringify(Object.fromEntries(runtimeNames.map((name, index) => [
-                  name,
-                  wasmModule.ccall('WasmDebugGetRuntimeState', 'number', ['number'], [index]),
-                ])));
+                runtimeDebug.textContent = JSON.stringify({
+                  ...Object.fromEntries(runtimeNames.map((name, index) => [
+                    name,
+                    wasmModule.ccall('WasmDebugGetRuntimeState', 'number', ['number'], [index]),
+                  ])),
+                  inputMode: wasmModule.ccall('WasmDebugGetInputMode', 'number', [], []),
+                });
               };
               updateRuntimeDebug();
               const collisionDebug = document.createElement('pre');
@@ -201,7 +228,11 @@
                       [direction in moveBits ? 1 << moveBits[direction] : 0]), elapsed);
                   elapsed += duration;
                 }
-                setTimeout(() => wasmModule.ccall('WasmSetInput', null, ['number'], [0]), elapsed);
+                setTimeout(() => {
+                  wasmModule.ccall('WasmSetInput', null, ['number'], [0]);
+                  wasmModule.ccall('WasmSetInputMode', null, ['number'], [0]);
+                  canvas.focus();
+                }, elapsed);
               }
               const requestedRoundTrips = Number(new URLSearchParams(location.search).get('roundtrips')) || 0;
               if (requestedRoundTrips > 0) {
@@ -218,6 +249,7 @@
                   const module = wasmModule.ccall('WasmDebugGetRuntimeState', 'number', ['number'], [20]);
                   const submodule = wasmModule.ccall('WasmDebugGetRuntimeState', 'number', ['number'], [21]);
                   let input = 0;
+                  let releaseInput = false;
                   if (phase === 'enter') {
                     if (indoors) phase = 'exit';
                     else if (module === 9) input = 1 << moveBits.up;
@@ -232,11 +264,16 @@
                     if (completed >= requestedRoundTrips) {
                       clearInterval(timer);
                       roundTripDebug.textContent = JSON.stringify({ completed, returns });
+                      releaseInput = true;
                     } else {
                       phase = 'enter';
                     }
                   }
                   wasmModule.ccall('WasmSetInput', null, ['number'], [input]);
+                  if (releaseInput) {
+                    wasmModule.ccall('WasmSetInputMode', null, ['number'], [0]);
+                    canvas.focus();
+                  }
                 }, 16);
               }
               setInterval(() => {
@@ -263,7 +300,11 @@
                 const duration = Number(new URLSearchParams(location.search).get('walk')) || 500;
                 wasmModule.ccall('WasmSetInputMode', null, ['number'], [1]);
                 wasmModule.ccall('WasmSetInput', null, ['number'], [1 << 4]);
-                setTimeout(() => wasmModule.ccall('WasmSetInput', null, ['number'], [0]), duration);
+                setTimeout(() => {
+                  wasmModule.ccall('WasmSetInput', null, ['number'], [0]);
+                  wasmModule.ccall('WasmSetInputMode', null, ['number'], [0]);
+                  canvas.focus();
+                }, duration);
               }
             }, 100);
           }
