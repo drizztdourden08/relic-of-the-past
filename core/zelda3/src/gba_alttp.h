@@ -12,6 +12,7 @@ bool GbaAlttp_IsAvailable(void);
 bool GbaAlttp_IsPyramidEntrancePosition(uint16 x, uint16 y);
 bool GbaAlttp_IsPalaceActive(void);
 bool GbaAlttp_IsPalaceRoom(uint16 room);
+bool GbaAlttp_UsesFixedHorizontalCamera(void);
 void GbaAlttp_BeginPalace(void);
 void GbaAlttp_EndPalace(void);
 void GbaAlttp_SetupEntrance(void);

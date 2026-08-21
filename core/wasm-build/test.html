@@ -67,7 +67,7 @@
     <p>Arrow keys = D-pad | Z = Y | X = B | S = A | A = X | Enter = Start | RShift = Select | D = L | C = R</p>
   </div>
 
-  <script src="output/zelda3.js"></script>
+  <script src="output/zelda3.js?build=palace-camera-4"></script>
   <script>
     const dropZone = document.getElementById('drop-zone');
     const fileInput = document.getElementById('file-input');
@@ -135,6 +135,7 @@
       let wasmModule;
       Zelda3({
         canvas: canvas,
+        locateFile: (path) => path.endsWith('.wasm') ? `output/${path}?build=palace-camera-4` : path,
         preRun: [(module) => {
           wasmModule = module;
           window.wasmModule = module;
@@ -188,6 +189,8 @@
                 'facing', 'tileBelow', 'entranceValue', 'module', 'submodule',
                 'palaceActive', 'layoutQuadrant', 'collision',
                 'lowerLevel', 'lowerLevelMirror', 'oamPriority',
+                'walkThroughWalls',
+                'fixedHorizontalCamera',
               ];
               const updateRuntimeDebug = () => {
                 runtimeDebug.textContent = JSON.stringify({

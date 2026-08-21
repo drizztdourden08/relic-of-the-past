@@ -106,6 +106,8 @@ int WasmDebugGetRuntimeState(int index) {
   case 25: return link_is_on_lower_level;
   case 26: return link_is_on_lower_level_mirror;
   case 27: return oam_priority_value;
+  case 28: return cheatWalkThroughWalls;
+  case 29: return GbaAlttp_UsesFixedHorizontalCamera();
   default: return -1;
   }
 }

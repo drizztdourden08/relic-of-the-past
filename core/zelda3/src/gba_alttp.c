@@ -62,6 +62,12 @@ bool GbaAlttp_IsPalaceRoom(uint16 room) {
   return GbaAlttp_IsPalaceActive() && FindPalaceRoom(room) >= 0;
 }
 
+bool GbaAlttp_UsesFixedHorizontalCamera(void) {
+  // The entrance chamber is centered across the SNES engine's internal
+  // 256-pixel quadrant seam, but it is a single viewport with no side exits.
+  return GbaAlttp_IsPalaceRoom(0x88) && dungeon_room_index == 0x88;
+}
+
 void GbaAlttp_BeginPalace(void) {
   g_palace_active = GbaAlttp_IsAvailable();
 }
@@ -85,16 +91,18 @@ void GbaAlttp_SetupEntrance(void) {
   ow_entrance_value = 0;
   up_down_scroll_target = room_base;
   up_down_scroll_target_end = room_base + 0x110;
-  left_right_scroll_target = room_base;
-  left_right_scroll_target_end = room_base + 0x100;
+  left_right_scroll_target = room_base + 0x80;
+  left_right_scroll_target_end = room_base + 0x80;
   room_bounds_y.a0 = room_base + 0x100;
   room_bounds_y.b0 = room_base;
   room_bounds_y.a1 = room_base + 0x110;
   room_bounds_y.b1 = room_base + 0x110;
-  room_bounds_x.a0 = room_base;
-  room_bounds_x.b0 = room_base;
-  room_bounds_x.a1 = room_base + 0x100;
-  room_bounds_x.b1 = room_base + 0x100;
+  // Room 0x88's chamber is one viewport wide, centered in its 512px map.
+  // Pin horizontal scrolling so walking sideways cannot displace the room.
+  room_bounds_x.a0 = room_base + 0x80;
+  room_bounds_x.b0 = room_base + 0x80;
+  room_bounds_x.a1 = room_base + 0x80;
+  room_bounds_x.b1 = room_base + 0x80;
   link_direction_facing = 0;
   main_tile_theme_index = 0;
   dung_cur_floor = 0;
@@ -144,6 +152,13 @@ bool GbaAlttp_LoadPrebuiltRoom(uint16 room) {
 
   memcpy(dung_bg2_attr_table, collision0.ptr, 0x1000);
   if (room == 0x88) {
+    // Keep the one-viewport chamber inside its visible side walls. The GBA
+    // collision conversion leaves gaps in these columns that otherwise allow
+    // a false horizontal quadrant transition.
+    for (int y = 4; y <= 61; y++) {
+      dung_bg2_attr_table[y * 64 + 19] = 0x02;
+      dung_bg2_attr_table[y * 64 + 44] = 0x02;
+    }
     // The GBA doorway's side frame lives on the base layer, while only its
     // bottom lip is repeated on the foreground layer. Promote that footprint
     // so Link passes behind the frame without affecting the adjacent floor.
