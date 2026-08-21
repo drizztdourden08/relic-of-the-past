@@ -76,6 +76,43 @@ EMSCRIPTEN_KEEPALIVE
 int WasmDebugGetOverworldBaseY(void) { return overworld_offset_base_y; }
 
 EMSCRIPTEN_KEEPALIVE
+int WasmDebugGetRuntimeState(int index) {
+  switch (index) {
+  case 0: return player_is_indoors;
+  case 1: return dungeon_room_index;
+  case 2: return link_x_coord;
+  case 3: return link_y_coord;
+  case 4: return BG2HOFS_copy2;
+  case 5: return BG2VOFS_copy2;
+  case 6: return camera_x_coord_scroll_low;
+  case 7: return camera_y_coord_scroll_low;
+  case 8: return room_bounds_x.a0;
+  case 9: return room_bounds_x.a1;
+  case 10: return room_bounds_y.a0;
+  case 11: return room_bounds_y.a1;
+  case 12: return link_quadrant_x;
+  case 13: return link_quadrant_y;
+  case 14: return quadrant_fullsize_x;
+  case 15: return quadrant_fullsize_y;
+  case 16: return is_standing_in_doorway;
+  case 17: return link_direction_facing;
+  case 18: return link_tile_below;
+  case 19: return ow_entrance_value;
+  case 20: return main_module_index;
+  case 21: return submodule_index;
+  case 22: return GbaAlttp_IsPalaceActive();
+  case 23: return composite_of_layout_and_quadrant;
+  case 24: return dung_hdr_collision;
+  default: return -1;
+  }
+}
+
+EMSCRIPTEN_KEEPALIVE
+int WasmDebugGetDungeonAttr(int index) {
+  return (unsigned)index < 0x2000 ? dung_bg2_attr_table[index] : -1;
+}
+
+EMSCRIPTEN_KEEPALIVE
 void WasmDebugShiftOverworld(int dx, int dy) {
   if (player_is_indoors)
     return;

@@ -2147,7 +2147,7 @@ void Dungeon_StartInterRoomTrans_Down() {
   if (!link_quadrant_y) {
     RoomBounds_AddB(&room_bounds_y);
     BYTE(dungeon_room_index_prev) = dungeon_room_index;
-    if (link_tile_below == 0x8e || GbaAlttp_IsPalaceActive() && dungeon_room_index == 0x88) {
+    if (link_tile_below == 0x8e) {
       Dung_HandleExitToOverworld();
       return;
     }
@@ -6519,15 +6519,6 @@ void LoadOWMusicIfNeeded() {  // 82854c
 void Module07_Dungeon() {  // 8287a2
   Dungeon_HandleLayerEffect();
   kDungeonSubmodules[submodule_index]();
-
-  // The converted Palace entrance stops at the south doorway before reaching
-  // the SNES room-edge threshold. Hand it to the normal overworld exit path.
-  if (submodule_index == 0 && GbaAlttp_IsPalaceActive() && dungeon_room_index == 0x88 &&
-      (joypad1H_last & kJoypadH_Down) && link_x_coord >= 0x10e0 &&
-      link_x_coord < 0x1100 && link_y_coord >= 0x11b8) {
-    Dung_HandleExitToOverworld();
-    goto skip;
-  }
 
   // When having the somaria on door button and exiting in skull woods, 
   // don't overwrite submodule_index

@@ -153,6 +153,34 @@
                   wasmModule.ccall('WasmDebugGetOverworldMap16Cell', 'number', ['number'], [index])),
               });
               document.body.appendChild(mapDebug);
+              const runtimeDebug = document.createElement('pre');
+              runtimeDebug.id = 'runtime-debug';
+              runtimeDebug.hidden = true;
+              document.body.appendChild(runtimeDebug);
+              const runtimeNames = [
+                'indoors', 'room', 'linkX', 'linkY', 'scrollX', 'scrollY',
+                'cameraX', 'cameraY', 'boundX0', 'boundX1', 'boundY0', 'boundY1',
+                'quadrantX', 'quadrantY', 'fullsizeX', 'fullsizeY', 'doorway',
+                'facing', 'tileBelow', 'entranceValue', 'module', 'submodule',
+                'palaceActive', 'layoutQuadrant', 'collision',
+              ];
+              const updateRuntimeDebug = () => {
+                runtimeDebug.textContent = JSON.stringify(Object.fromEntries(runtimeNames.map((name, index) => [
+                  name,
+                  wasmModule.ccall('WasmDebugGetRuntimeState', 'number', ['number'], [index]),
+                ])));
+              };
+              updateRuntimeDebug();
+              const collisionDebug = document.createElement('pre');
+              collisionDebug.id = 'collision-debug';
+              collisionDebug.hidden = true;
+              const updateCollisionDebug = () => {
+                collisionDebug.textContent = JSON.stringify(Array.from({ length: 0x2000 }, (_, index) =>
+                  wasmModule.ccall('WasmDebugGetDungeonAttr', 'number', ['number'], [index])));
+              };
+              updateCollisionDebug();
+              setTimeout(updateCollisionDebug, 1800);
+              document.body.appendChild(collisionDebug);
               const move = new URLSearchParams(location.search).get('move');
               const moveBits = { up: 4, down: 5, left: 6, right: 7 };
               const route = new URLSearchParams(location.search).get('route');
@@ -169,12 +197,50 @@
                 let elapsed = 0;
                 for (const [direction, duration] of moves) {
                   setTimeout(() =>
-                    wasmModule.ccall('WasmSetInput', null, ['number'], [1 << moveBits[direction]]), elapsed);
+                    wasmModule.ccall('WasmSetInput', null, ['number'],
+                      [direction in moveBits ? 1 << moveBits[direction] : 0]), elapsed);
                   elapsed += duration;
                 }
                 setTimeout(() => wasmModule.ccall('WasmSetInput', null, ['number'], [0]), elapsed);
               }
+              const requestedRoundTrips = Number(new URLSearchParams(location.search).get('roundtrips')) || 0;
+              if (requestedRoundTrips > 0) {
+                const roundTripDebug = document.createElement('pre');
+                roundTripDebug.id = 'roundtrip-debug';
+                roundTripDebug.hidden = true;
+                document.body.appendChild(roundTripDebug);
+                wasmModule.ccall('WasmSetInputMode', null, ['number'], [1]);
+                let completed = 0;
+                const returns = [];
+                let phase = 'enter';
+                const timer = setInterval(() => {
+                  const indoors = wasmModule.ccall('WasmDebugGetRuntimeState', 'number', ['number'], [0]);
+                  const module = wasmModule.ccall('WasmDebugGetRuntimeState', 'number', ['number'], [20]);
+                  const submodule = wasmModule.ccall('WasmDebugGetRuntimeState', 'number', ['number'], [21]);
+                  let input = 0;
+                  if (phase === 'enter') {
+                    if (indoors) phase = 'exit';
+                    else if (module === 9) input = 1 << moveBits.up;
+                  } else if (indoors) {
+                    if (module === 7 && submodule === 0) input = 1 << moveBits.down;
+                  } else {
+                    completed++;
+                    returns.push({
+                      x: wasmModule.ccall('WasmDebugGetRuntimeState', 'number', ['number'], [2]),
+                      y: wasmModule.ccall('WasmDebugGetRuntimeState', 'number', ['number'], [3]),
+                    });
+                    if (completed >= requestedRoundTrips) {
+                      clearInterval(timer);
+                      roundTripDebug.textContent = JSON.stringify({ completed, returns });
+                    } else {
+                      phase = 'enter';
+                    }
+                  }
+                  wasmModule.ccall('WasmSetInput', null, ['number'], [input]);
+                }, 16);
+              }
               setInterval(() => {
+                updateRuntimeDebug();
                 const screen = wasmModule.ccall('WasmDebugGetOverworldScreen', 'number', [], []);
                 const x = wasmModule.ccall('WasmDebugGetLinkX', 'number', [], []);
                 const y = wasmModule.ccall('WasmDebugGetLinkY', 'number', [], []);

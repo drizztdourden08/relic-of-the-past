@@ -1792,8 +1792,9 @@ void LoadOverworldFromDungeon() {  // 82e4a3
   if (GbaAlttp_IsPalaceActive()) {
     GbaAlttp_EndPalace();
     LoadCachedEntranceProperties();
+    // Preserve the native doorway adjustment. The cached approach coordinate
+    // is normalized on entry, so this offset cannot accumulate across trips.
     link_y_coord += 24;
-    link_direction_facing = 2;
   } else if (dungeon_room_index != 0x104 && dungeon_room_index < 0x180 && dungeon_room_index >= 0x100) {
     LoadCachedEntranceProperties();
   } else {
@@ -3231,6 +3232,9 @@ void Overworld_GetPitDestination() {  // 9bb860
 void Overworld_UseEntrance() {  // 9bbbf4
   if ((joypad1H_last & kJoypadH_Up) &&
       GbaAlttp_IsPyramidEntrancePosition(link_x_coord, link_y_coord)) {
+    // The copied wall opening collides before Link's feet reach its visual
+    // threshold. Normalize the cached approach point to the doorway edge.
+    link_y_coord = 0x7c0;
     which_entrance = kGbaAlttpEntrance;
     link_auxiliary_state = 0;
     link_incapacitated_timer = 0;

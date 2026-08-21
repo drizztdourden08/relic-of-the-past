@@ -74,12 +74,12 @@ void GbaAlttp_SetupEntrance(void) {
   const uint16 room_base = 0x1000;
   dungeon_room_index = dungeon_room_index2 = 0x88;
   BG1HOFS_copy = BG2HOFS_copy = BG1HOFS_copy2 = BG2HOFS_copy2 = room_base + 0x80;
-  BG1VOFS_copy = BG2VOFS_copy = BG1VOFS_copy2 = BG2VOFS_copy2 = room_base + 0x120;
-  link_x_coord = room_base + 0xf0;
-  link_y_coord = room_base + 0x1b0;
-  camera_x_coord_scroll_low = room_base + 0x80;
+  BG1VOFS_copy = BG2VOFS_copy = BG1VOFS_copy2 = BG2VOFS_copy2 = room_base + 0x110;
+  link_x_coord = room_base + 0xf8;
+  link_y_coord = room_base + 0x1d8;
+  camera_x_coord_scroll_low = room_base + 0x7f;
   camera_x_coord_scroll_hi = camera_x_coord_scroll_low + 2;
-  camera_y_coord_scroll_low = room_base + 0x120;
+  camera_y_coord_scroll_low = room_base + 0x187;
   camera_y_coord_scroll_hi = camera_y_coord_scroll_low + 2;
   tilemap_location_calc_mask = 0x1f8;
   ow_entrance_value = 0;
@@ -87,8 +87,8 @@ void GbaAlttp_SetupEntrance(void) {
   up_down_scroll_target_end = room_base + 0x110;
   left_right_scroll_target = room_base;
   left_right_scroll_target_end = room_base + 0x100;
-  room_bounds_y.a0 = room_base;
-  room_bounds_y.b0 = room_base;
+  room_bounds_y.a0 = room_base + 0x100;
+  room_bounds_y.b0 = room_base + 0x100;
   room_bounds_y.a1 = room_base + 0x110;
   room_bounds_y.b1 = room_base + 0x110;
   room_bounds_x.a0 = room_base;
@@ -99,10 +99,12 @@ void GbaAlttp_SetupEntrance(void) {
   main_tile_theme_index = 0;
   dung_cur_floor = 0;
   BYTE(cur_palace_index_x2) = 0xff;
-  is_standing_in_doorway = 0;
+  is_standing_in_doorway = 1;
   link_is_on_lower_level = link_is_on_lower_level_mirror = 0;
-  quadrant_fullsize_x = quadrant_fullsize_y = 0;
-  link_quadrant_x = link_quadrant_y = 1;
+  quadrant_fullsize_x = 0;
+  quadrant_fullsize_y = 2;
+  link_quadrant_x = 1;
+  link_quadrant_y = 2;
   queued_music_control = 0x10;
 }
 
@@ -139,6 +141,14 @@ bool GbaAlttp_LoadPrebuiltRoom(uint16 room) {
     dung_bg1[i] = TileHasVisiblePixels(top[i]) ? top[i] : middle[i];
 
   memcpy(dung_bg2_attr_table, collision0.ptr, 0x1000);
+  if (room == 0x88) {
+    // Translate the GBA entrance threshold to the native SNES doorway stripe.
+    // This matches the two columns and five rows used by vanilla room exits.
+    for (int y = 0x1d8; y <= 0x1f8; y += 8) {
+      dung_bg2_attr_table[y * 8 + 31] = 0x8e;
+      dung_bg2_attr_table[y * 8 + 32] = 0x8e;
+    }
+  }
   const uint8 *middle_attr = collision1.ptr;
   const uint8 *top_attr = collision2.ptr;
   for (int i = 0; i < 4096; i++)
