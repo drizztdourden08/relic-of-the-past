@@ -16,6 +16,8 @@
 #include "src/features.h"
 #include "src/hud.h"
 #include "src/spc_player.h"
+#include "src/dungeon.h"
+#include "src/gba_alttp.h"
 
 #include "game_constants.h"
 #include "game_hooks_internal.h"
@@ -25,6 +27,73 @@
 
 // Backdrop-black flag pairs with g_ppu_render_flags; only the API touches it.
 static bool g_force_backdrop_black = false;
+
+// Developer harness entry point. Normal gameplay reaches this through the
+// Pyramid hole and never calls this export.
+EMSCRIPTEN_KEEPALIVE
+int WasmDebugEnterGbaPalace(void) {
+  if (!GbaAlttp_IsAvailable())
+    return 0;
+  which_entrance = kGbaAlttpEntrance;
+  sram_progress_indicator = 3;
+  if (link_health_capacity == 0)
+    link_health_capacity = link_health_current = 0x18;
+  Module_PreDungeon();
+  main_module_index = 7;
+  submodule_index = 0;
+  subsubmodule_index = 0;
+  flag_is_link_immobilized = 0;
+  flag_block_link_menu = 0;
+  link_auxiliary_state = 0;
+  link_incapacitated_timer = 0;
+  link_player_handler_state = 0;
+  printf("[GBA ALttP] Debug entrance room=%04x active=%d\n",
+         dungeon_room_index, GbaAlttp_IsPalaceActive());
+  return GbaAlttp_IsPalaceRoom(dungeon_room_index) && dungeon_room_index == 0x88;
+}
+
+EMSCRIPTEN_KEEPALIVE
+int WasmDebugGetLinkX(void) { return link_x_coord; }
+
+EMSCRIPTEN_KEEPALIVE
+int WasmDebugGetLinkY(void) { return link_y_coord; }
+
+EMSCRIPTEN_KEEPALIVE
+int WasmDebugGetDungeonRoom(void) { return dungeon_room_index; }
+
+EMSCRIPTEN_KEEPALIVE
+int WasmDebugGetOverworldScreen(void) { return overworld_screen_index; }
+
+EMSCRIPTEN_KEEPALIVE
+int WasmDebugGetOverworldMap16Cell(int index) {
+  return (unsigned)index < 4096 ? dung_bg2[index] : -1;
+}
+
+EMSCRIPTEN_KEEPALIVE
+int WasmDebugGetOverworldBaseX(void) { return overworld_offset_base_x; }
+
+EMSCRIPTEN_KEEPALIVE
+int WasmDebugGetOverworldBaseY(void) { return overworld_offset_base_y; }
+
+EMSCRIPTEN_KEEPALIVE
+void WasmDebugShiftOverworld(int dx, int dy) {
+  if (player_is_indoors)
+    return;
+  link_x_coord += dx;
+  link_y_coord += dy;
+  BG1HOFS_copy += dx;
+  BG1HOFS_copy2 += dx;
+  BG2HOFS_copy += dx;
+  BG2HOFS_copy2 += dx;
+  BG1VOFS_copy += dy;
+  BG1VOFS_copy2 += dy;
+  BG2VOFS_copy += dy;
+  BG2VOFS_copy2 += dy;
+  camera_x_coord_scroll_low += dx;
+  camera_x_coord_scroll_hi += dx;
+  camera_y_coord_scroll_low += dy;
+  camera_y_coord_scroll_hi += dy;
+}
 
 // ---------------------------------------------------------------------------
 // Live settings — callable from JS while game is running

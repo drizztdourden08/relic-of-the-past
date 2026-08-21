@@ -4,9 +4,10 @@
  * core can switch language at runtime via the INI. Also exposes a recompile pass used
  * when the set of language packs changes (extract / delete).
  */
-import { writeFile, access } from 'fs/promises';
+import { writeFile, access, readdir } from 'fs/promises';
 import { loadRom } from '@shared/asset-extraction/rom/load-rom-file';
-import { compileResources } from '@shared/asset-extraction/compile-resources';
+import { compileAlttpAssetSet } from '@shared/asset-extraction/compile-alttp-asset-set';
+import { loadGbaAlttpRom } from '@shared/asset-extraction/rom/load-gba-rom-file';
 import { getUserDataPath } from '../lib/paths';
 import { getAssetFileName, hasAssetForRom, listRoms } from '../roms/store';
 import { logToRenderer } from '../lib/renderer-log';
@@ -31,7 +32,12 @@ const compileRomAssets = async (romFile: string): Promise<CompileResult> => {
     if (extraLanguages.length > 0) {
       logToRenderer('app', 'info', `Baking ${extraLanguages.length} language pack(s): ${extraLanguages.map((e) => e.code).join(', ')}`);
     }
-    const dat = compileResources(rom, { extraLanguages });
+    const gbaFile = (await readdir(getUserDataPath('roms'))).find(file => /\.gba$/i.test(file));
+    const set = compileAlttpAssetSet({
+      snes: rom,
+      gbaAlttp: gbaFile ? loadGbaAlttpRom(getUserDataPath('roms', gbaFile)) : undefined,
+    }, { extraLanguages });
+    const dat = set.gbaSupplement ? Buffer.concat([set.base, set.gbaSupplement]) : set.base;
     const assetFile = getAssetFileName(romFile);
     await writeFile(getUserDataPath('assets', assetFile), dat);
     logToRenderer('app', 'info', `Assets cached as ${assetFile} (${(dat.length / 1024).toFixed(0)} KB)`);

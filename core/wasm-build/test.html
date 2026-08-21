@@ -73,36 +73,134 @@
       if (e.target.files.length > 0) loadAssetFile(e.target.files[0]);
     });
 
+    if (new URLSearchParams(location.search).has('auto')) {
+      const statePath = new URLSearchParams(location.search).get('state');
+      const assetPath = new URLSearchParams(location.search).get('assets') || 'assets/zelda3_assets.dat';
+      Promise.all([
+        fetch(assetPath).then((response) => {
+          if (!response.ok) throw new Error(`Asset request failed: ${response.status}`);
+          return response.arrayBuffer();
+        }),
+        statePath ? fetch(statePath).then((response) => {
+          if (!response.ok) throw new Error(`State request failed: ${response.status}`);
+          return response.arrayBuffer();
+        }) : null,
+      ])
+        .then(([assets, state]) => startGame(new Uint8Array(assets), state && new Uint8Array(state)))
+        .catch((error) => { status.textContent = `Error: ${error.message}`; });
+    }
+
     function loadAssetFile(file) {
       status.textContent = 'Loading ' + file.name + '...';
       const reader = new FileReader();
       reader.onload = (e) => {
         const data = new Uint8Array(e.target.result);
-        startGame(data);
+        startGame(data, null);
       };
       reader.onerror = () => { status.textContent = 'Failed to read file'; };
       reader.readAsArrayBuffer(file);
     }
 
-    function startGame(assetData) {
+    function stripStateStamp(bytes) {
+      if (!bytes || bytes.length < 12) return bytes;
+      const magic = new TextDecoder().decode(bytes.subarray(bytes.length - 8));
+      if (magic !== 'ROTPMETA') return bytes;
+      const jsonLength = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength)
+        .getUint32(bytes.length - 12, true);
+      return jsonLength + 12 <= bytes.length ? bytes.subarray(0, bytes.length - jsonLength - 12) : bytes;
+    }
+
+    function startGame(assetData, stateData) {
       status.textContent = 'Initializing WASM...';
       dropZone.classList.add('hidden');
 
       canvas.style.display = 'block';
       controls.style.display = 'block';
 
+      let wasmModule;
       Zelda3({
         canvas: canvas,
         preRun: [(module) => {
+          wasmModule = module;
+          window.wasmModule = module;
           // Write the assets file to the virtual filesystem
           module.FS.writeFile('/zelda3_assets.dat', assetData);
           // Create saves directory
           module.FS.mkdir('/saves');
+          if (stateData) module.FS.writeFile('/saves/save99.sav', stripStateStamp(stateData));
         }],
         print: (text) => console.log('[zelda3]', text),
         printErr: (text) => console.error('[zelda3]', text),
         onRuntimeInitialized: () => {
+          window.wasmDebugCall = (name, ...args) =>
+            wasmModule.ccall(name, 'number', args.map(() => 'number'), args);
           status.textContent = 'Running!';
+          if (stateData) {
+            setTimeout(() => {
+              wasmModule.ccall('WasmLoadState', null, ['number'], [99]);
+              const shiftX = Number(new URLSearchParams(location.search).get('shiftx')) || 0;
+              const shiftY = Number(new URLSearchParams(location.search).get('shifty')) || 0;
+              if (shiftX || shiftY)
+                wasmModule.ccall('WasmDebugShiftOverworld', null,
+                  ['number', 'number'], [shiftX, shiftY]);
+              const mapDebug = document.createElement('pre');
+              mapDebug.id = 'map-debug';
+              mapDebug.hidden = true;
+              mapDebug.textContent = JSON.stringify({
+                baseX: wasmModule.ccall('WasmDebugGetOverworldBaseX', 'number', [], []),
+                baseY: wasmModule.ccall('WasmDebugGetOverworldBaseY', 'number', [], []),
+                cells: Array.from({ length: 4096 }, (_, index) =>
+                  wasmModule.ccall('WasmDebugGetOverworldMap16Cell', 'number', ['number'], [index])),
+              });
+              document.body.appendChild(mapDebug);
+              const move = new URLSearchParams(location.search).get('move');
+              const moveBits = { up: 4, down: 5, left: 6, right: 7 };
+              const route = new URLSearchParams(location.search).get('route');
+              const moves = route
+                ? route.split(',').map((step) => {
+                    const [direction, milliseconds] = step.split(':');
+                    return [direction, Number(milliseconds) || 500];
+                  })
+                : move in moveBits
+                  ? [[move, Number(new URLSearchParams(location.search).get('duration')) || 500]]
+                  : [];
+              if (moves.length) {
+                wasmModule.ccall('WasmSetInputMode', null, ['number'], [1]);
+                let elapsed = 0;
+                for (const [direction, duration] of moves) {
+                  setTimeout(() =>
+                    wasmModule.ccall('WasmSetInput', null, ['number'], [1 << moveBits[direction]]), elapsed);
+                  elapsed += duration;
+                }
+                setTimeout(() => wasmModule.ccall('WasmSetInput', null, ['number'], [0]), elapsed);
+              }
+              setInterval(() => {
+                const screen = wasmModule.ccall('WasmDebugGetOverworldScreen', 'number', [], []);
+                const x = wasmModule.ccall('WasmDebugGetLinkX', 'number', [], []);
+                const y = wasmModule.ccall('WasmDebugGetLinkY', 'number', [], []);
+                status.textContent = `Electron state - Screen 0x${screen.toString(16)} - Link ${x.toString(16)},${y.toString(16)}`;
+              }, 100);
+              canvas.focus();
+            }, 100);
+          }
+          if (new URLSearchParams(location.search).has('palace')) {
+            setTimeout(() => {
+              const entered = wasmModule.ccall('WasmDebugEnterGbaPalace', 'number', [], []);
+              status.textContent = entered ? 'Running Palace room 0x88' : 'Palace assets unavailable';
+              if (entered) setInterval(() => {
+                const room = wasmModule.ccall('WasmDebugGetDungeonRoom', 'number', [], []);
+                const x = wasmModule.ccall('WasmDebugGetLinkX', 'number', [], []);
+                const y = wasmModule.ccall('WasmDebugGetLinkY', 'number', [], []);
+                status.textContent = `Running Palace room 0x${room.toString(16)} - Link ${x.toString(16)},${y.toString(16)}`;
+              }, 100);
+              if (entered && new URLSearchParams(location.search).has('walk')) {
+                const duration = Number(new URLSearchParams(location.search).get('walk')) || 500;
+                wasmModule.ccall('WasmSetInputMode', null, ['number'], [1]);
+                wasmModule.ccall('WasmSetInput', null, ['number'], [1 << 4]);
+                setTimeout(() => wasmModule.ccall('WasmSetInput', null, ['number'], [0]), duration);
+              }
+            }, 100);
+          }
           canvas.focus();
         },
       }).catch((err) => {

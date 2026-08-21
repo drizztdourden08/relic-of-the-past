@@ -12,6 +12,7 @@
 #include "player_oam.h"
 #include "snes/snes_regs.h"
 #include "assets.h"
+#include "gba_alttp.h"
 
 const uint16 kOverworld_OffsetBaseX[64] = {
   0,     0, 0x400, 0x600, 0x600, 0xa00, 0xa00, 0xe00,
@@ -1788,7 +1789,12 @@ void LoadOverworldFromDungeon() {  // 82e4a3
   cur_palace_index_x2 = 0xff;
   num_memorized_tiles = 0;
 
-  if (dungeon_room_index != 0x104 && dungeon_room_index < 0x180 && dungeon_room_index >= 0x100) {
+  if (GbaAlttp_IsPalaceActive()) {
+    GbaAlttp_EndPalace();
+    LoadCachedEntranceProperties();
+    link_y_coord += 24;
+    link_direction_facing = 2;
+  } else if (dungeon_room_index != 0x104 && dungeon_room_index < 0x180 && dungeon_room_index >= 0x100) {
     LoadCachedEntranceProperties();
   } else {
 
@@ -2108,6 +2114,7 @@ void Overworld_HandleOverlaysAndBombDoors() {  // 82ef29
     dung_bg2[pos + 0] = 0xdb4;
     dung_bg2[pos + 1] = 0xdb5;
   }
+  GbaAlttp_ApplyPyramidEntrance();
 }
 
 void TriggerAndFinishMapLoadStripe_Y(int n) {  // 82ef7a
@@ -3222,6 +3229,17 @@ void Overworld_GetPitDestination() {  // 9bb860
 }
 
 void Overworld_UseEntrance() {  // 9bbbf4
+  if ((joypad1H_last & kJoypadH_Up) &&
+      GbaAlttp_IsPyramidEntrancePosition(link_x_coord, link_y_coord)) {
+    which_entrance = kGbaAlttpEntrance;
+    link_auxiliary_state = 0;
+    link_incapacitated_timer = 0;
+    main_module_index = 15;
+    saved_module_for_menu = 6;
+    submodule_index = 0;
+    subsubmodule_index = 0;
+    return;
+  }
   uint16 xc = link_x_coord >> 3, yc = link_y_coord + 7;
   uint16 pos = ((yc - overworld_offset_base_y) & overworld_offset_mask_y) * 8 +
     ((xc - overworld_offset_base_x) & overworld_offset_mask_x);
@@ -3556,6 +3574,23 @@ void CreatePyramidHole() {  // 9bc2a7
   WORD(sound_effect_ambient) = 0x3515;
   save_ow_event_info[0x5b] |= 0x20;
   sound_effect_2 = 3;
+  nmi_load_bg_from_vram = 1;
+}
+
+void GbaAlttp_ApplyPyramidEntrance() {
+  if (!GbaAlttp_IsAvailable() || BYTE(overworld_screen_index) != 0x5b)
+    return;
+
+  // Reuse the Pyramid's west wall opening at the GBA Palace entrance. Only
+  // copy the actual opening so the native brown brickwork above stays intact.
+  static const uint16 kSource[] = {
+    28 * 64 + 14, 28 * 64 + 15,
+  };
+  static const uint16 kDestination[] = {
+    28 * 64 + 43, 28 * 64 + 44,
+  };
+  for (int i = 0; i < countof(kSource); i++)
+    Overworld_DrawMap16_Persist(kDestination[i] * 2, dung_bg2[kSource[i]]);
   nmi_load_bg_from_vram = 1;
 }
 

@@ -6,6 +6,7 @@
 #include "player.h"
 #include "sprite.h"
 #include "assets.h"
+#include "gba_alttp.h"
 #include "game_hooks.h"
 
 // Allow this to be overwritten
@@ -842,6 +843,7 @@ void InitializeTilesets() {  // 80e19b
   LoadBackgroundGraphics(&g_zenv.vram[0x3400], aux_bg_subset_2, 2, &g_ram[0x6c00]);
   LoadBackgroundGraphics(&g_zenv.vram[0x3800], aux_bg_subset_3, 1, &g_ram[0x7200]);
   LoadBackgroundGraphics(&g_zenv.vram[0x3c00], mt[7], 0, &g_ram[0x14000]);
+  GbaAlttp_ApplyDungeonGraphics();
 }
 
 void LoadDefaultGraphics() {  // 80e2d0
@@ -1737,6 +1739,7 @@ void Dungeon_LoadPalettes() {  // 82c630
   Palette_Load_HUD();
   Palette_Load_DungeonSet();
   Overworld_LoadPalettesInner();
+  GbaAlttp_ApplyDungeonPalette();
 }
 
 void Overworld_LoadPalettesInner() {  // 82c65f

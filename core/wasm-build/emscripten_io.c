@@ -17,6 +17,8 @@
 #include "src/zelda_rtl.h"
 #include "src/config.h"
 #include "src/assets.h"
+#include "src/gba_alttp.h"
+#include "src/overworld.h"
 #include "src/util.h"
 #include "src/spc_player.h"
 
@@ -77,6 +79,28 @@ void LoadAssets(void) {
     g_asset_ptrs[i] = data + offset;
     offset += size;
   }
+
+  // The optional GBA supplement is a second asset container concatenated after
+  // the unchanged SNES container.
+  if (offset + 88 + kGbaAlttpAssetCount * 4 <= length &&
+      memcmp(data + offset, kAssetsSig, 16) == 0 &&
+      *(uint32 *)(data + offset + 80) == kGbaAlttpAssetCount) {
+    size_t base = offset;
+    size_t supplement_offset = base + 88 + kGbaAlttpAssetCount * 4 + *(uint32 *)(data + base + 84);
+    for (size_t i = 0; i < kGbaAlttpAssetCount; i++) {
+      uint32 size = *(uint32 *)(data + base + 88 + i * 4);
+      supplement_offset = (supplement_offset + 3) & ~3;
+      if ((uint64)supplement_offset + size > length)
+        Die("GBA ALttP supplement corruption");
+      g_gba_alttp_asset_sizes[i] = size;
+      g_gba_alttp_asset_ptrs[i] = data + supplement_offset;
+      supplement_offset += size;
+    }
+    printf("[GBA ALttP] Loaded %d supplemental assets\n", kGbaAlttpAssetCount);
+  } else if (offset < length) {
+    printf("[GBA ALttP] Ignored trailing asset data at %u (%u bytes total)\n",
+           (unsigned)offset, (unsigned)length);
+  }
 }
 
 MemBlk FindInAssetArray(int asset, int idx) {
@@ -122,6 +146,10 @@ void WasmSaveState(int slot) {
 EMSCRIPTEN_KEEPALIVE
 void WasmLoadState(int slot) {
   SaveLoadSlot(kSaveLoad_Load, slot);
+  // Save states carry a baked overworld tilemap. Reconcile only the optional
+  // GBA entrance after restoring WRAM; the vanilla Pyramid event remains intact.
+  if (GbaAlttp_IsAvailable() && !player_is_indoors && BYTE(overworld_screen_index) == 0x5b)
+    GbaAlttp_ApplyPyramidEntrance();
   // A snapshot carries the palette buffers that were live when it was recorded, so a state saved
   // under a different sheet reinstates that sheet's colors — the selected one would sit unused in
   // the assets until some in-game event happened to reload gear palettes. Re-push it here.

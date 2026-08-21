@@ -13,6 +13,7 @@
 #include "tile_detect.h"
 #include "sprite_main.h"
 #include "assets.h"
+#include "gba_alttp.h"
 #include "game_hooks.h"
 
 // True once a sprite is confirmed to sit in the wide/tall extra band (Sprite_PrepOamCoordOrDoubleRet)
@@ -3786,6 +3787,8 @@ void Sprite_DisableAll() {  // 89c22f
 }
 
 void Dungeon_LoadSprites() {  // 89c290
+  if (GbaAlttp_IsPalaceActive())
+    return;
   const uint8 *src = kDungeonSprites + kDungeonSpriteOffs[dungeon_room_index2];
   byte_7E0FB1 = dungeon_room_index2 >> 3 & 0xfe;
   byte_7E0FB0 = (dungeon_room_index2 & 0xf) << 1;

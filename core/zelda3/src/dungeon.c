@@ -15,6 +15,7 @@
 #include "tagalong.h"
 #include "messaging.h"
 #include "assets.h"
+#include "gba_alttp.h"
 
 // todo: move to config
 static const uint16 kBossRooms[] = {
@@ -2146,7 +2147,7 @@ void Dungeon_StartInterRoomTrans_Down() {
   if (!link_quadrant_y) {
     RoomBounds_AddB(&room_bounds_y);
     BYTE(dungeon_room_index_prev) = dungeon_room_index;
-    if (link_tile_below == 0x8e) {
+    if (link_tile_below == 0x8e || GbaAlttp_IsPalaceActive() && dungeon_room_index == 0x88) {
       Dung_HandleExitToOverworld();
       return;
     }
@@ -2254,10 +2255,16 @@ void Door_Draw_Helper4(uint8 door_type, uint16 dsto) {
 }
 
 const uint16 *GetRoomDoorInfo(int room) {
+  const uint16 *gba_doors = GbaAlttp_IsPalaceActive() ? GbaAlttp_GetRoomDoors(room) : NULL;
+  if (gba_doors)
+    return gba_doors;
   return (uint16 *)(kDungeonRoom + kDungeonRoomDoorOffs[room]);
 }
 
 const uint8 *GetRoomHeaderPtr(int room) {
+  const uint8 *gba_header = GbaAlttp_IsPalaceActive() ? GbaAlttp_GetRoomHeader(room) : NULL;
+  if (gba_header)
+    return gba_header;
   return kDungeonRoomHeaders + kDungeonRoomHeadersOffs[room];
 }
 
@@ -2605,6 +2612,9 @@ void Dungeon_LoadRoom() {  // 81873a
     dung_object_pos_in_objdata[i] = 0;
     dung_object_tilemap_pos[i] = 0;
   }
+
+  if (GbaAlttp_LoadPrebuiltRoom(dungeon_room_index))
+    return;
 
   const uint8 *cur_p0 = GetDungeonRoomLayout(dungeon_room_index);
   dung_load_ptr_offs = 0;
@@ -3697,7 +3707,8 @@ void Dungeon_LoadHeader() {  // 81b564
   dung_hdr_collision = (hdr_ptr[0] >> 2) & 7;
   dung_want_lights_out_copy = dung_want_lights_out;
   dung_want_lights_out = hdr_ptr[0] & 1;
-  const DungPalInfo *dpi = &kDungPalinfos[hdr_ptr[1]];
+  int palette_index = GbaAlttp_IsPalaceActive() ? 15 : hdr_ptr[1];
+  const DungPalInfo *dpi = &kDungPalinfos[palette_index];
   palette_main_indoors = dpi->pal0;
   palette_sp0l = dpi->pal1;
   palette_sp5l = dpi->pal2;
@@ -3707,6 +3718,8 @@ void Dungeon_LoadHeader() {  // 81b564
   dung_hdr_collision_2 = hdr_ptr[4];
   dung_hdr_tag[0] = hdr_ptr[5];
   dung_hdr_tag[1] = hdr_ptr[6];
+  if (GbaAlttp_IsPalaceActive())
+    dung_hdr_tag[0] = dung_hdr_tag[1] = 0;
   dung_hdr_hole_teleporter_plane = hdr_ptr[7] & 3;
   dung_hdr_staircase_plane[0] = (hdr_ptr[7] >> 2) & 3;
   dung_hdr_staircase_plane[1] = (hdr_ptr[7] >> 4) & 3;
@@ -3827,6 +3840,8 @@ void Dungeon_LoadAttribute_Selectable() {  // 81b8b4
 }
 
 void Dungeon_LoadAttributeTable() {  // 81b8bf
+  if (GbaAlttp_IsPalaceActive())
+    return;
   dung_draw_width_indicator = dung_draw_height_indicator = 0;
   Dungeon_LoadBasicAttribute_full(0x1000);
   Dungeon_LoadObjectAttribute();
@@ -6505,6 +6520,15 @@ void Module07_Dungeon() {  // 8287a2
   Dungeon_HandleLayerEffect();
   kDungeonSubmodules[submodule_index]();
 
+  // The converted Palace entrance stops at the south doorway before reaching
+  // the SNES room-edge threshold. Hand it to the normal overworld exit path.
+  if (submodule_index == 0 && GbaAlttp_IsPalaceActive() && dungeon_room_index == 0x88 &&
+      (joypad1H_last & kJoypadH_Down) && link_x_coord >= 0x10e0 &&
+      link_x_coord < 0x1100 && link_y_coord >= 0x11b8) {
+    Dung_HandleExitToOverworld();
+    goto skip;
+  }
+
   // When having the somaria on door button and exiting in skull woods, 
   // don't overwrite submodule_index
   if (enhanced_features2 & kFeatures2_SkipDungeonUpdateAfterModuleExit && main_module_index != 7)
@@ -7794,7 +7818,7 @@ void Module07_1A_RoomDraw_OpenTriforceDoor_bounce() {  // 829916
 void Module11_DungeonFallingEntrance() {  // 829af9
   switch (subsubmodule_index) {
   case 0:  // Module_11_00_SetSongAndInit
-    if (kEntranceData_musicTrack[which_entrance] != 3 || sram_progress_indicator >= 2)
+    if (which_entrance == kGbaAlttpEntrance || kEntranceData_musicTrack[which_entrance] != 3 || sram_progress_indicator >= 2)
       music_control = 0xf1;
     ResetTransitionPropsAndAdvance_ResetInterface();
     break;
@@ -8323,7 +8347,10 @@ void Dungeon_LoadEntrance() {  // 82d8b3
   }
   bg1_y_offset = bg1_x_offset = 0;
   WORD(death_var5) = 0;
-  if (WORD(follower_indicator) == 4 || WORD(death_var4)) {
+  if (which_entrance == kGbaAlttpEntrance) {
+    GbaAlttp_BeginPalace();
+    GbaAlttp_SetupEntrance();
+  } else if (WORD(follower_indicator) == 4 || WORD(death_var4)) {
     int i = which_starting_point;
     WORD(which_entrance) = kStartingPoint_entrance[i];
     dungeon_room_index = dungeon_room_index2 = kStartingPoint_rooms[i];
@@ -8741,6 +8768,8 @@ void LayerEffect_WaterRapids() {  // 8affde
 }
 
 void Dungeon_LoadCustomTileAttr() {  // 8e942a
+  if (GbaAlttp_IsPalaceActive())
+    return;
   memcpy(&attributes_for_tile[0x140], &kDungAttrsForTile[kDungAttrsForTile_Offs[aux_tile_theme_index]], 0x80);
 }
 

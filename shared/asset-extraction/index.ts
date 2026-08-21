@@ -37,3 +37,10 @@ export {
   extractAllItemSprites, extractAllItemSpritesFromRom,
   type ExtractionResult,
 } from './item-sprites';
+
+// Optional ALttP GBA supplement source
+export { ALTTP_GBA_US_SHA256, GbaRomReader, loadGbaAlttpRomFromBuffer } from './rom/gba-rom';
+export { GbaAlttpDungeonSource, PALACE_ROOM_IDS, extractPalaceSnes4bppTiles } from './sources/gba-alttp';
+export { compileGbaAlttpSupplement } from './compile-resources-gba-alttp';
+export { compileAlttpAssetSet } from './compile-alttp-asset-set';
+export type { AlttpAssetSources, CompiledAlttpAssetSet } from './compile-alttp-asset-set';

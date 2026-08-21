@@ -30,7 +30,7 @@ const z = (...p) => join(zelda3, ...p);
 const h = (...p) => join(hooks, ...p);
 
 const gameSrcs = [
-  'ancilla', 'attract', 'audio', 'config', 'dungeon', 'ending', 'hud', 'load_gfx',
+  'ancilla', 'attract', 'audio', 'config', 'dungeon', 'ending', 'gba_alttp', 'hud', 'load_gfx',
   'messaging', 'misc', 'nmi', 'overlord', 'overworld', 'player', 'player_oam', 'poly',
   'select_file', 'spc_player', 'sprite', 'sprite_main', 'tagalong', 'tile_detect',
   'util', 'zelda_rtl',

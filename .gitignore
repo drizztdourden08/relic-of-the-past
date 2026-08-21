@@ -117,6 +117,8 @@ temp-scripts/
 # Saves (user data)
 saves/
 !apps/desktop/electron/saves/
+# Local ROM-derived WASM harness assets and imported save states.
+core/wasm-build/assets/
 seeds/
 config/
 scripts/analyze/report.json
