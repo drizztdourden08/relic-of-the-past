@@ -80,7 +80,7 @@ const run = async ({ positional, options }) => {
 
   console.log('\n[wt] Provisioning the game profile…');
   const quickSlot = resolveQuickSlot(options['quick-slot']);
-  const { romFile, savesCopied, quickSaveCopied } = await provisionProfile({
+  const { romFile, savesCopied, fixturesCopied, quickSaveCopied } = await provisionProfile({
     name,
     romFile: typeof options.rom === 'string' ? options.rom : null,
     inheritConfigFrom: typeof options.from_profile === 'string' ? options.from_profile : null,
@@ -88,6 +88,9 @@ const run = async ({ positional, options }) => {
   });
   console.log(`  profile ${name} → ${romFile}`);
   console.log(`  ${savesCopied} named save state(s) copied — what --auto-state=<name> can load`);
+  if (fixturesCopied != null) {
+    console.log(`  ${fixturesCopied} regression fixture(s) merged in from tests/fixtures/save-states/`);
+  }
   if (quickSaveCopied) {
     console.log(`  quick slot ${quickSlot} copied — load it with --auto-state=${quickSlot}`);
   }
