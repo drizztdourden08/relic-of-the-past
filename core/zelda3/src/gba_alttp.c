@@ -77,9 +77,9 @@ void GbaAlttp_SetupEntrance(void) {
   BG1VOFS_copy = BG2VOFS_copy = BG1VOFS_copy2 = BG2VOFS_copy2 = room_base + 0x110;
   link_x_coord = room_base + 0xf8;
   link_y_coord = room_base + 0x1d8;
-  camera_x_coord_scroll_low = room_base + 0x7f;
+  camera_x_coord_scroll_low = 0x7f;
   camera_x_coord_scroll_hi = camera_x_coord_scroll_low + 2;
-  camera_y_coord_scroll_low = room_base + 0x187;
+  camera_y_coord_scroll_low = 0x187;
   camera_y_coord_scroll_hi = camera_y_coord_scroll_low + 2;
   tilemap_location_calc_mask = 0x1f8;
   ow_entrance_value = 0;
@@ -88,7 +88,7 @@ void GbaAlttp_SetupEntrance(void) {
   left_right_scroll_target = room_base;
   left_right_scroll_target_end = room_base + 0x100;
   room_bounds_y.a0 = room_base + 0x100;
-  room_bounds_y.b0 = room_base + 0x100;
+  room_bounds_y.b0 = room_base;
   room_bounds_y.a1 = room_base + 0x110;
   room_bounds_y.b1 = room_base + 0x110;
   room_bounds_x.a0 = room_base;
@@ -144,6 +144,15 @@ bool GbaAlttp_LoadPrebuiltRoom(uint16 room) {
 
   memcpy(dung_bg2_attr_table, collision0.ptr, 0x1000);
   if (room == 0x88) {
+    // The GBA doorway's side frame lives on the base layer, while only its
+    // bottom lip is repeated on the foreground layer. Promote that footprint
+    // so Link passes behind the frame without affecting the adjacent floor.
+    for (int y = 58; y <= 61; y++) {
+      for (int x = 26; x <= 37; x++) {
+        if (y == 61 || x < 30 || x > 33)
+          dung_bg2[y * 64 + x] |= 0x2000;
+      }
+    }
     // Translate the GBA entrance threshold to the native SNES doorway stripe.
     // This matches the two columns and five rows used by vanilla room exits.
     for (int y = 0x1d8; y <= 0x1f8; y += 8) {

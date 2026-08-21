@@ -103,6 +103,9 @@ int WasmDebugGetRuntimeState(int index) {
   case 22: return GbaAlttp_IsPalaceActive();
   case 23: return composite_of_layout_and_quadrant;
   case 24: return dung_hdr_collision;
+  case 25: return link_is_on_lower_level;
+  case 26: return link_is_on_lower_level_mirror;
+  case 27: return oam_priority_value;
   default: return -1;
   }
 }
