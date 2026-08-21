@@ -24,7 +24,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { stripTypeScriptTypes } from 'node:module';
 import { gameDataPath, repoRoot } from './paths.mjs';
-import { seedFixtureSaves } from '../auto-launch/fixture-saves.mjs';
+import { seedFixtureSaves } from './fixture-saves.mjs';
 
 const importStrippedTs = async (relativePath) => {
   const path = join(dirname(fileURLToPath(import.meta.url)), relativePath);

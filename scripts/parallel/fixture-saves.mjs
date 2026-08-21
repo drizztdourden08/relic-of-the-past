@@ -17,7 +17,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync, cpSync } from 'node:fs';
 import { join } from 'node:path';
 import { locateVault, treeDirOf } from '../vault/locate.mjs';
-import { gameDataPath } from '../parallel/paths.mjs';
+import { gameDataPath } from './paths.mjs';
 
 const FIXTURE_REL_PATH = ['tests', 'fixtures', 'save-states'];
 

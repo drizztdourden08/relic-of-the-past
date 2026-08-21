@@ -62,8 +62,6 @@
     "version:patch": "npm version patch --no-git-tag-version",
     "version:minor": "npm version minor --no-git-tag-version",
     "version:major": "npm version major --no-git-tag-version",
-    "auto": "node scripts/auto-launch.mjs",
-    "wire": "node scripts/wire-ai-config.mjs",
     "wt": "node scripts/parallel/wt.mjs",
     "wt:list": "node scripts/parallel/wt.mjs list",
     "wt:new": "node scripts/parallel/wt.mjs new",
