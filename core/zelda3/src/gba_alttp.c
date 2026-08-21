@@ -51,7 +51,7 @@ bool GbaAlttp_IsAvailable(void) {
 
 bool GbaAlttp_IsPyramidEntrancePosition(uint16 x, uint16 y) {
   return GbaAlttp_IsAvailable() && BYTE(overworld_screen_index) == 0x5b &&
-      x >= 0x8a8 && x < 0x8c8 && y >= 0x7b0 && y < 0x7e0;
+      x >= 0x8b0 && x < 0x8c0 && y >= 0x7b0 && y < 0x7c0;
 }
 
 bool GbaAlttp_IsPalaceActive(void) {
@@ -138,7 +138,9 @@ bool GbaAlttp_LoadPrebuiltRoom(uint16 room) {
   const uint16 *middle = (const uint16 *)layer1.ptr;
   const uint16 *top = (const uint16 *)layer2.ptr;
   for (int i = 0; i < 4096; i++)
-    dung_bg1[i] = TileHasVisiblePixels(top[i]) ? top[i] : middle[i];
+    // GBA BG priority is layer-wide. Preserve the top layer as SNES
+    // high-priority tiles so doorway frames and wall tops cover sprites.
+    dung_bg1[i] = TileHasVisiblePixels(top[i]) ? top[i] | 0x2000 : middle[i];
 
   memcpy(dung_bg2_attr_table, collision0.ptr, 0x1000);
   if (room == 0x88) {

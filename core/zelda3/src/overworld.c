@@ -3232,9 +3232,6 @@ void Overworld_GetPitDestination() {  // 9bb860
 void Overworld_UseEntrance() {  // 9bbbf4
   if ((joypad1H_last & kJoypadH_Up) &&
       GbaAlttp_IsPyramidEntrancePosition(link_x_coord, link_y_coord)) {
-    // The copied wall opening collides before Link's feet reach its visual
-    // threshold. Normalize the cached approach point to the doorway edge.
-    link_y_coord = 0x7c0;
     which_entrance = kGbaAlttpEntrance;
     link_auxiliary_state = 0;
     link_incapacitated_timer = 0;
@@ -3585,12 +3582,15 @@ void GbaAlttp_ApplyPyramidEntrance() {
   if (!GbaAlttp_IsAvailable() || BYTE(overworld_screen_index) != 0x5b)
     return;
 
-  // Reuse the Pyramid's west wall opening at the GBA Palace entrance. Only
-  // copy the actual opening so the native brown brickwork above stays intact.
+  // Reuse the Pyramid's west wall opening and its brown foreground overhang.
+  // The overhang carries the native priority/collision needed to walk Link
+  // into the hole while drawing the wall in front of him.
   static const uint16 kSource[] = {
+    27 * 64 + 14, 27 * 64 + 15,
     28 * 64 + 14, 28 * 64 + 15,
   };
   static const uint16 kDestination[] = {
+    27 * 64 + 43, 27 * 64 + 44,
     28 * 64 + 43, 28 * 64 + 44,
   };
   for (int i = 0; i < countof(kSource); i++)
