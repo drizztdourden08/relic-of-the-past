@@ -53,3 +53,5 @@ export {
   extractGbaAlttpText,
 } from './text-source';
 export type { GbaAlttpTextMessage } from './text-source';
+export { GBA_ALTTP_ASSET_INDEX, GBA_ALTTP_ASSET_MANIFEST } from './asset-manifest';
+export type { GbaAlttpAssetManifestEntry } from './asset-manifest';

@@ -23,7 +23,6 @@ import { onFullscreenChange, restoreOnShutdown } from './display/mode-switch';
 import { registerDialogHandlers } from './dialogs/ipc-handlers';
 import { registerProfileHandlers, migrateDataFolder } from './profiles';
 import { registerRomHandlers } from './roms';
-import { registerAssetHandlers } from './assets/ipc-handlers';
 import { registerSaveHandlers } from './saves/ipc-handlers';
 import { registerMsuHandlers } from './msu/ipc-handlers';
 import { registerSpriteHandlers } from './sprites/ipc-handlers';
@@ -71,7 +70,6 @@ const IPC_HANDLERS: Array<{ register: () => void; devOnly?: boolean }> = [
   { register: registerDialogHandlers },
   { register: registerProfileHandlers },
   { register: registerRomHandlers },
-  { register: registerAssetHandlers },
   { register: registerSaveHandlers },
   { register: registerMsuHandlers },
   { register: registerSpriteHandlers },

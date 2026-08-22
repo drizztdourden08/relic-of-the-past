@@ -99,11 +99,6 @@ interface InvokeContract extends ControllerInvokeContract {
   'roms:delete': (romFile: string) => Promise<void>;
   'roms:getInfo': (romFile: string) => Promise<{ name: string; size: number; hash: string; created: string; modified: string } | null>;
 
-  // Assets
-  'assets:check': (romFile: string) => Promise<boolean>;
-  'assets:load': (romFile: string) => Promise<ArrayBuffer | null>;
-  'assets:extract': (romFile: string) => Promise<Result>;
-
   // Saves — quick states
   'saves:writeSram': (profileId: string, data: ArrayBuffer) => Promise<void>;
   'saves:readSram': (profileId: string) => Promise<ArrayBuffer | null>;

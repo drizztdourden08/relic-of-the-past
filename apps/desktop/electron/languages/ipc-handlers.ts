@@ -9,7 +9,6 @@ import { loadRom } from '@shared/asset-extraction/rom/load-rom-file';
 import { fail, errMessage } from '../lib/result';
 import { makeImportReporter } from '../lib/import-progress';
 import { extractLanguagePack, listLanguageSummaries, readLanguagePack } from './language-pack';
-import { recompileAllAssets } from '../assets/compile-rom-assets';
 
 type ExtractResult = { success: boolean; error?: string };
 
@@ -26,7 +25,8 @@ const extractDialogueFromRom = async (romAbsPath: string, langCode: string): Pro
     const meta = await extractLanguagePack(rom, rom.language);
     logToRenderer('app', 'info', `Language '${rom.language}' extracted (${meta.lineCount} strings, ${meta.glyphCount} glyphs)`);
     report('extract', undefined, undefined, 'Baking into assets…');
-    await recompileAllAssets();
+    // Asset rebuilds live in the renderer worker now (the one compile path); the
+    // languages store there calls recompileAll after extracting or deleting a pack.
     report('done');
     return { success: true };
   } catch (err) {
@@ -78,7 +78,8 @@ const registerLanguageHandlers = () => {
 
   handle('languages:delete', async (_event, langCode: string) => {
     await rm(getUserDataPath('languages', langCode), { recursive: true, force: true });
-    await recompileAllAssets();
+    // Asset rebuilds live in the renderer worker now (the one compile path); the
+    // languages store there calls recompileAll after extracting or deleting a pack.
   });
 
   handle('languages:getLanguage', (_event, langCode: string) => readLanguagePack(langCode));

@@ -195,6 +195,12 @@ interface GameSettings {
   // vanilla run (the VanillaSafe bit in kRam_Features3). Off by default alongside cheatsEnabled.
   vanillaSafe: boolean;
 
+  // ─── Second cartridge ───
+  // Whether the optional extra dungeon carried by the second cartridge is offered. Separate from
+  // whether its data is present: owning the cartridge and leaving this off must give an untouched
+  // overworld. Off by default, so a profile that never sets it behaves exactly like the base game.
+  extraDungeon: boolean;
+
   // ─── Developer ───
   // Master gate for developer-only instrumentation (transition-settled events, and any future dev-only
   // GameHook). Off by default: the C hook that would fire these makes zero host-calls when this is off,

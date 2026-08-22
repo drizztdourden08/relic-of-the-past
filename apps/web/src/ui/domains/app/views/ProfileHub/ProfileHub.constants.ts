@@ -60,6 +60,8 @@ const PROFILE_HUB_TABS: Record<ProfileHubTab, ProfileHubTabSpec> = {
   controls: { icon: '⌨️', label: 'Controls' },
   haptics: { icon: '📳', label: 'Haptics', sections: () => HAPTICS_SECTIONS },
   developer: { icon: '🛠️', label: 'Developer', sections: () => DEVELOPER_SECTIONS },
+  // Read-only reference catalogue, not a SettingsLayout screen — no sections to index.
+  gba: { icon: '🕹️', label: 'Game Boy Advance' },
   mobile: { icon: '📱', label: 'Mobile', sections: () => [MOBILE_SECTION], mobileOnly: true },
 };
 

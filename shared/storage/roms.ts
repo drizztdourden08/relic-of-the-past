@@ -2,32 +2,73 @@
 /**
  * ROMs store over FileStore: list/status/info/delete + byte-based import (ZIP via
  * jszip or raw), mirroring the Electron layout (roms/<file>, assets/<stem>.dat).
- * Deleting a ROM cascades to profiles that use it (via the profile store).
+ * Deleting a base ROM cascades to profiles that use it (via the profile store).
+ *
+ * Every import is explicit about its kind. A supplement cartridge used to be picked up by
+ * scanning this folder for the first file ending in `.gba`, so a stray or wrong-revision
+ * file was adopted silently and then failed deep inside the asset compile, taking the base
+ * game's assets down with it. Kind and digest are settled here, at import, where the user
+ * can still be told which file was refused and why.
  */
 import type { FileStore } from '@shared/platform';
+import { SUPPLEMENT_IDS } from '@shared/asset-extraction/sources/source-ids';
 import { sha256Hex } from './hash';
 import { isZip, unzip } from './archive';
 import { listProfiles, deleteProfile } from './profiles';
+import { ROM_KINDS, isBaseRom, kindOfFile } from './rom-kinds';
+import { datName, sidecarName } from './assets';
+import type { RomKind } from './rom-kinds';
 
 type RomImportResult = { success: boolean; romFile: string; error?: string; alreadyExists?: boolean };
 type ImportPhase = (phase: 'extract' | 'copy', loaded?: number, total?: number) => void;
+type RomEntry = { romFile: string; kind: RomKind };
+type RomStatus = { romFile: string; hasAssets: boolean; assetSize: number | null };
+type SupplementStatus = { romFile: string; kind: RomKind; attachedTo: string[]; bytes: number | null };
 
-const ROM_RE = /\.(sfc|smc)$/i;
-const RAW_ROM_MAX_BYTES = 8 * 1024 * 1024;
-const datName = (romFile: string): string => romFile.replace(/\.(sfc|smc)$/i, '.dat');
+/** Extensions offered by the picker for a kind (no leading dots). */
+const pickExtensionsFor = (kind: RomKind): readonly string[] => ROM_KINDS[kind].pickExtensions;
 
-// Extensions offered by the cross-platform ROM file picker (no leading dots).
-const ROM_PICK_EXTENSIONS = ['sfc', 'smc', 'zip'];
+/** Kept for call sites that only ever meant the base cartridge. */
+const ROM_PICK_EXTENSIONS = pickExtensionsFor('snes-alttp');
 
-const listRoms = async (files: FileStore): Promise<string[]> =>
-  (await files.list('roms')).filter((f) => ROM_RE.test(f));
+const listEntries = async (files: FileStore): Promise<RomEntry[]> =>
+  (await files.list('roms')).flatMap((romFile) => {
+    const kind = kindOfFile(romFile);
+    return kind ? [{ romFile, kind }] : [];
+  });
 
-const listWithStatus = async (files: FileStore): Promise<{ romFile: string; hasAssets: boolean; assetSize: number | null }[]> => {
-  const out: { romFile: string; hasAssets: boolean; assetSize: number | null }[] = [];
-  for (const romFile of await listRoms(files)) {
+const listRoms = async (files: FileStore, kind: RomKind = 'snes-alttp'): Promise<string[]> =>
+  (await listEntries(files)).filter((entry) => entry.kind === kind).map((entry) => entry.romFile);
+
+/** Base cartridges and whether their blob is built. Supplements have no blob of their own. */
+const listWithStatus = async (files: FileStore): Promise<RomStatus[]> => {
+  const out: RomStatus[] = [];
+  for (const romFile of await listRoms(files, 'snes-alttp')) {
     const stat = await files.stat(`assets/${datName(romFile)}`);
     const hasAssets = !!stat && stat.bytes > 0;
     out.push({ romFile, hasAssets, assetSize: hasAssets ? stat!.bytes : null });
+  }
+  return out;
+};
+
+/** Supplement cartridges, and which base blobs currently carry their sidecar. */
+const listSupplements = async (files: FileStore): Promise<SupplementStatus[]> => {
+  const bases = await listRoms(files, 'snes-alttp');
+  const out: SupplementStatus[] = [];
+
+  for (const entry of await listEntries(files)) {
+    const spec = ROM_KINDS[entry.kind];
+    if (spec.role !== 'supplement' || !spec.sourceId) continue;
+
+    const attachedTo: string[] = [];
+    let bytes: number | null = null;
+    for (const base of bases) {
+      const stat = await files.stat(`assets/${sidecarName(base, spec.sourceId)}`);
+      if (!stat || stat.bytes <= 0) continue;
+      attachedTo.push(base);
+      bytes = stat.bytes;
+    }
+    out.push({ romFile: entry.romFile, kind: entry.kind, attachedTo, bytes });
   }
   return out;
 };
@@ -41,35 +82,97 @@ const getInfo = async (files: FileStore, romFile: string): Promise<{ name: strin
   return { name: romFile, size: stat.bytes, hash, created: iso, modified: iso };
 };
 
+/**
+ * Deleting a base cartridge takes its blob and its profiles with it, as before. Deleting a
+ * supplement only drops the sidecars it produced — the base game is untouched, which is the
+ * whole point of the two being separate files.
+ */
 const deleteRom = async (files: FileStore, romFile: string): Promise<void> => {
   await files.remove(`roms/${romFile}`);
+
+  if (!isBaseRom(romFile)) {
+    const spec = ROM_KINDS[kindOfFile(romFile) ?? 'gba-alttp'];
+    if (spec.sourceId) {
+      for (const base of await listRoms(files, 'snes-alttp')) {
+        await files.remove(`assets/${sidecarName(base, spec.sourceId)}`);
+      }
+    }
+    return;
+  }
+
   await files.remove(`assets/${datName(romFile)}`);
+  for (const id of SUPPLEMENT_IDS) await files.remove(`assets/${sidecarName(romFile, id)}`);
   for (const profile of await listProfiles(files)) {
     if (profile.romFile === romFile) await deleteProfile(files, profile.id);
   }
 };
 
-// Import raw bytes (a chosen file or a download): ZIP → single ROM entry, else raw.
-const importBytes = async (files: FileStore, fileName: string, bytes: Uint8Array, onPhase?: ImportPhase): Promise<RomImportResult> => {
-  let romName = fileName;
-  let romBytes = bytes;
+const resolveCandidate = async (
+  fileName: string,
+  bytes: Uint8Array,
+  kind: RomKind,
+  onPhase?: ImportPhase,
+): Promise<{ ok: true; name: string; bytes: Uint8Array } | { ok: false; error: string }> => {
+  const spec = ROM_KINDS[kind];
+  const pretty = spec.pickExtensions.filter((ext) => ext !== 'zip').map((ext) => `.${ext}`).join('/');
+
   if (isZip(bytes)) {
     onPhase?.('extract');
-    const roms = (await unzip(bytes)).filter((e) => ROM_RE.test(e.name));
-    if (roms.length === 0) return { success: false, error: 'No ROM (.sfc/.smc) found in the archive', romFile: '' };
-    if (roms.length > 1) return { success: false, error: `Multiple ROM files found (${roms.length}). Provide exactly one ROM.`, romFile: '' };
-    romName = roms[0].name;
-    romBytes = roms[0].bytes;
-  } else if (!ROM_RE.test(fileName)) {
-    if (bytes.length === 0 || bytes.length > RAW_ROM_MAX_BYTES) return { success: false, error: 'File is not a valid ROM or archive', romFile: '' };
-    romName = `rom-${Date.now()}.sfc`;
+    const found = (await unzip(bytes)).filter((entry) => spec.pattern.test(entry.name));
+    if (found.length === 0) return { ok: false, error: `No ${pretty} file found in the archive` };
+    if (found.length > 1) return { ok: false, error: `Multiple ${pretty} files found (${found.length}). Provide exactly one.` };
+    return { ok: true, name: found[0].name, bytes: found[0].bytes };
   }
-  const dest = `roms/${romName}`;
-  if (await files.exists(dest)) return { success: true, romFile: romName, alreadyExists: true };
-  onPhase?.('copy');
-  await files.writeBytes(dest, romBytes);
-  return { success: true, romFile: romName, alreadyExists: false };
+
+  if (spec.pattern.test(fileName)) return { ok: true, name: fileName, bytes };
+  if (bytes.length === 0 || bytes.length > spec.maxBytes) return { ok: false, error: `File is not a valid ${spec.label} or archive` };
+  return { ok: true, name: `${kind}-${bytes.length}${pretty.split('/')[0]}`, bytes };
 };
 
-export { listRoms, listWithStatus, getInfo, deleteRom, importBytes, ROM_PICK_EXTENSIONS };
-export type { RomImportResult };
+/**
+ * Import raw bytes (a chosen file or a download) as a given kind.
+ *
+ * Never overwrites: an existing destination is reported as `alreadyExists` and the bytes on
+ * disk are left exactly as they are.
+ */
+const importBytes = async (
+  files: FileStore,
+  fileName: string,
+  bytes: Uint8Array,
+  kind: RomKind = 'snes-alttp',
+  onPhase?: ImportPhase,
+): Promise<RomImportResult> => {
+  const spec = ROM_KINDS[kind];
+  const candidate = await resolveCandidate(fileName, bytes, kind, onPhase);
+  if (!candidate.ok) return { success: false, error: candidate.error, romFile: '' };
+
+  if (spec.accepts.length > 0) {
+    const sha = await sha256Hex(candidate.bytes);
+    if (!spec.accepts.includes(sha)) {
+      return {
+        success: false,
+        romFile: '',
+        error: `Not a recognised ${spec.label} (SHA-256 ${sha.slice(0, 16)}…). This build only accepts the revision it was reverse-engineered against.`,
+      };
+    }
+  }
+
+  const dest = `roms/${candidate.name}`;
+  if (await files.exists(dest)) return { success: true, romFile: candidate.name, alreadyExists: true };
+  onPhase?.('copy');
+  await files.writeBytes(dest, candidate.bytes);
+  return { success: true, romFile: candidate.name, alreadyExists: false };
+};
+
+export {
+  ROM_PICK_EXTENSIONS,
+  deleteRom,
+  getInfo,
+  importBytes,
+  listEntries,
+  listRoms,
+  listSupplements,
+  listWithStatus,
+  pickExtensionsFor,
+};
+export type { RomEntry, RomImportResult, RomStatus, SupplementStatus };

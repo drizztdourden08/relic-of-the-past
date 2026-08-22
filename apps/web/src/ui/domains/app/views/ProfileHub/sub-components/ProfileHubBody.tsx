@@ -14,6 +14,7 @@ import { HudSettings } from './HudSettings';
 import { ControlsSettings } from './ControlsSettings';
 import { HapticsSettings } from './HapticsSettings';
 import { DeveloperSettings } from './DeveloperSettings';
+import { GbaSettings } from './GbaSettings';
 import { MobileSettings } from './MobileSettings';
 import { usePlatform } from '@app/platform';
 import { PROFILE_HUB_TABS } from '../ProfileHub.constants';
@@ -72,6 +73,7 @@ const ProfileHubBody = (props: ProfileHubBodyProps) => {
         )}
         {activeTab === 'haptics' && <HapticsSettings settings={settings} onChange={onChange} />}
         {activeTab === 'developer' && <DeveloperSettings settings={settings} onChange={onChange} />}
+        {activeTab === 'gba' && <GbaSettings settings={settings} onChange={onChange} />}
         {activeTab === 'mobile' && <MobileSettings settings={settings} onChange={onChange} />}
       </Box>
     </Box>

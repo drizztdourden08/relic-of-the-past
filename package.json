@@ -23,6 +23,7 @@
     "ensure-sdl3": "node scripts/ensure-sdl3.mjs",
     "fetch-sdl3": "node scripts/build/fetch-sdl3.mjs",
     "generate:enum-types": "node scripts/generate-enum-types-cli.mjs",
+    "generate:gba-asset-index": "node scripts/generate-gba-asset-index-cli.mjs",
     "gba:extract-palace": "tsx scripts/gba-alttp-re/export-palace-dungeon.ts",
     "gba:build-playable-assets": "tsx scripts/gba-alttp-re/build-playable-assets.ts",
     "predev": "node scripts/ensure-electron.mjs && node scripts/ensure-wasm.mjs && node scripts/ensure-sdl3.mjs",

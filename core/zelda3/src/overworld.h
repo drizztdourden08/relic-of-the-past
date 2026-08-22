@@ -158,7 +158,6 @@ void Overworld_BombTile(int x, int y);
 void Overworld_AlterWeathervane();
 void OpenGargoylesDomain();
 void CreatePyramidHole();
-void GbaAlttp_ApplyPyramidEntrance();
 uint16 Overworld_RevealSecret(uint16 pos);
 void AdjustSecretForPowder();
 void Overworld_DrawMap16_Persist(uint16 pos, uint16 value);

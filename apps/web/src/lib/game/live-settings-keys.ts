@@ -20,6 +20,8 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'cancelBirdTravel',
   'dimFlashes',
   'disableTelepathy',
+  // Second-cartridge content (gates the extra dungeon's overworld entrance)
+  'extraDungeon',
   // PPU flags (read every frame)
   'noSpriteLimits',
   'newRenderer',

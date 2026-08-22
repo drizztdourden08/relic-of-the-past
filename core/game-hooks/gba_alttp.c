@@ -1,25 +1,26 @@
+/* @layer core-game-hooks @kind native */
 #include "gba_alttp.h"
 
 #include <string.h>
 
-#include "variables.h"
-#include "zelda_rtl.h"
-
-enum {
-  kGbaAssetRoomIds = 0,
-  kGbaAssetRoomHeaders = 1,
-  kGbaAssetRoomLayers = 2,
-  kGbaAssetRoomCollision = 3,
-  kGbaAssetBgGraphics = 7,
-  kGbaAssetPaletteIds = 8,
-  kGbaAssetBgPalettes = 9,
-};
+#include "src/variables.h"
+#include "src/zelda_rtl.h"
 
 const uint8 *g_gba_alttp_asset_ptrs[kGbaAlttpAssetCount];
 uint32 g_gba_alttp_asset_sizes[kGbaAlttpAssetCount];
 
 static bool g_palace_active;
+// Opt-in, so a build that never pushes the setting behaves exactly like the base game.
+static bool g_extra_dungeon_enabled;
 static const uint16 kNoDoors[] = { 0xffff };
+
+void GbaAlttp_SetExtraDungeonEnabled(bool enabled) {
+  g_extra_dungeon_enabled = enabled;
+}
+
+bool GbaAlttp_IsExtraDungeonEnabled(void) {
+  return g_extra_dungeon_enabled;
+}
 
 static MemBlk GbaAsset(int index) {
   return (MemBlk) { g_gba_alttp_asset_ptrs[index], g_gba_alttp_asset_sizes[index] };
@@ -37,7 +38,7 @@ static int FindPalaceRoom(uint16 room) {
 
 static bool TileHasVisiblePixels(uint16 map_word) {
   int tile = map_word & 0x3ff;
-  const uint8 *gfx = g_gba_alttp_asset_ptrs[kGbaAssetBgGraphics] + tile * 32;
+  const uint8 *gfx = g_gba_alttp_asset_ptrs[kGbaAssetBgGfxSnes4bpp] + tile * 32;
   for (int i = 0; i < 32; i++) {
     if (gfx[i])
       return true;
@@ -50,7 +51,7 @@ bool GbaAlttp_IsAvailable(void) {
 }
 
 bool GbaAlttp_IsPyramidEntrancePosition(uint16 x, uint16 y) {
-  return GbaAlttp_IsAvailable() && BYTE(overworld_screen_index) == 0x5b &&
+  return GbaAlttp_IsAvailable() && g_extra_dungeon_enabled && BYTE(overworld_screen_index) == 0x5b &&
       x >= 0x8b0 && x < 0x8c0 && y >= 0x7b0 && y < 0x7c0;
 }
 
@@ -132,9 +133,9 @@ bool GbaAlttp_LoadPrebuiltRoom(uint16 room) {
   if (index < 0)
     return false;
 
-  MemBlk layer0 = FindIndexInMemblk(GbaAsset(kGbaAssetRoomLayers), index * 3 + 0);
-  MemBlk layer1 = FindIndexInMemblk(GbaAsset(kGbaAssetRoomLayers), index * 3 + 1);
-  MemBlk layer2 = FindIndexInMemblk(GbaAsset(kGbaAssetRoomLayers), index * 3 + 2);
+  MemBlk layer0 = FindIndexInMemblk(GbaAsset(kGbaAssetRoomLayersSnes), index * 3 + 0);
+  MemBlk layer1 = FindIndexInMemblk(GbaAsset(kGbaAssetRoomLayersSnes), index * 3 + 1);
+  MemBlk layer2 = FindIndexInMemblk(GbaAsset(kGbaAssetRoomLayersSnes), index * 3 + 2);
   MemBlk collision0 = FindIndexInMemblk(GbaAsset(kGbaAssetRoomCollision), index * 3 + 0);
   MemBlk collision1 = FindIndexInMemblk(GbaAsset(kGbaAssetRoomCollision), index * 3 + 1);
   MemBlk collision2 = FindIndexInMemblk(GbaAsset(kGbaAssetRoomCollision), index * 3 + 2);
@@ -187,8 +188,8 @@ bool GbaAlttp_LoadPrebuiltRoom(uint16 room) {
 void GbaAlttp_ApplyDungeonGraphics(void) {
   if (!GbaAlttp_IsPalaceRoom(dungeon_room_index))
     return;
-  if (g_gba_alttp_asset_sizes[kGbaAssetBgGraphics] == 512 * 32)
-    memcpy(&g_zenv.vram[0x2000], g_gba_alttp_asset_ptrs[kGbaAssetBgGraphics], 512 * 32);
+  if (g_gba_alttp_asset_sizes[kGbaAssetBgGfxSnes4bpp] == 512 * 32)
+    memcpy(&g_zenv.vram[0x2000], g_gba_alttp_asset_ptrs[kGbaAssetBgGfxSnes4bpp], 512 * 32);
 }
 
 void GbaAlttp_ApplyDungeonPalette(void) {

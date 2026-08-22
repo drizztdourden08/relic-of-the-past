@@ -4,6 +4,7 @@ import type { DungeonRoomRecord, NativeDungeonLayer } from './dungeon/model';
 import type { GbaRomReader } from './rom/gba-rom';
 import { compressStrings } from './text/dialogue-encoder';
 import {
+  GBA_ALTTP_ASSET_MANIFEST,
   GbaAlttpDungeonSource,
   extractDungeonPalette,
   extractDungeonSpriteGraphics,
@@ -71,45 +72,60 @@ const compileGbaAlttpSupplement = (rom: GbaRomReader): Buffer => {
   const spritePalettes = extractPalaceSpritePalettes(rom);
   const assets = new AssetBuilder();
 
-  assets.addUint16('kGbaPalaceRoomIds', rooms.map(room => room.id));
-  assets.addPacked('kGbaPalaceRoomHeaders', rooms.map(room => Buffer.from(room.header.nativeBytes)));
-  assets.addPacked('kGbaPalaceRoomLayersSnes', layerBuffers(rooms, layer => wordsToBuffer(layer.snesWords)));
-  assets.addPacked('kGbaPalaceRoomCollision', layerBuffers(rooms, layer => Buffer.from(layer.collision)));
-  assets.addPacked('kGbaPalaceRoomInteractions', rooms.map(room => Buffer.concat([
-    ...source.roomInteractions(room).map(cell => Buffer.from([
-      cell.layer,
-      cell.x,
-      cell.y,
-      cell.attribute,
-      INTERACTION_KIND_IDS[cell.kind],
+  // One builder per manifest entry, keyed by the asset's name. The MANIFEST —
+  // not the order these are declared below — decides call order, so inserting
+  // or reordering an asset only ever means editing asset-manifest.ts.
+  const builders: Record<string, () => void> = {
+    kGbaPalaceRoomIds: () => assets.addUint16('kGbaPalaceRoomIds', rooms.map(room => room.id)),
+    kGbaPalaceRoomHeaders: () => assets.addPacked('kGbaPalaceRoomHeaders', rooms.map(room => Buffer.from(room.header.nativeBytes))),
+    kGbaPalaceRoomLayersSnes: () => assets.addPacked('kGbaPalaceRoomLayersSnes', layerBuffers(rooms, layer => wordsToBuffer(layer.snesWords))),
+    kGbaPalaceRoomCollision: () => assets.addPacked('kGbaPalaceRoomCollision', layerBuffers(rooms, layer => Buffer.from(layer.collision))),
+    kGbaPalaceRoomInteractions: () => assets.addPacked('kGbaPalaceRoomInteractions', rooms.map(room => Buffer.concat([
+      ...source.roomInteractions(room).map(cell => Buffer.from([
+        cell.layer,
+        cell.x,
+        cell.y,
+        cell.attribute,
+        INTERACTION_KIND_IDS[cell.kind],
+      ])),
+      Buffer.from([0xff]),
+    ]))),
+    kGbaPalaceRoomEntities: () => assets.addPacked('kGbaPalaceRoomEntities', rooms.map(serializeEntityList)),
+    kGbaPalaceRoomSecrets: () => assets.addPacked('kGbaPalaceRoomSecrets', rooms.map(serializeSecretList)),
+    kGbaPalaceBgGfxSnes4bpp: () => assets.addUint8('kGbaPalaceBgGfxSnes4bpp', [...extractPalaceSnes4bppTiles(rom)]),
+    kGbaPalacePaletteIds: () => assets.addUint8('kGbaPalacePaletteIds', paletteIds),
+    kGbaPalaceBgPalettes: () => assets.addPacked('kGbaPalaceBgPalettes', paletteIds.map(id => extractDungeonPalette(rom, id))),
+    kGbaPalaceEnemyBlocksets: () => assets.addUint8('kGbaPalaceEnemyBlocksets', spriteGraphics.tilesets.map(tileset => tileset.enemyBlockset)),
+    kGbaPalaceSpriteTilesets: () => assets.addPacked('kGbaPalaceSpriteTilesets', spriteGraphics.tilesets.map(tileset => Buffer.from(tileset.sheetIds))),
+    kGbaPalaceSpriteSheetIds: () => assets.addUint8('kGbaPalaceSpriteSheetIds', spriteGraphics.sheets.map(sheet => sheet.id)),
+    kGbaPalaceSpriteGfxSnes4bpp: () => assets.addPacked('kGbaPalaceSpriteGfxSnes4bpp', spriteGraphics.sheets.map(sheet => sheet.snes4bpp)),
+    kGbaPalaceSpritePaletteBanks: () => assets.addUint8('kGbaPalaceSpritePaletteBanks', spritePalettes.map(palette => palette.bank)),
+    kGbaPalaceSpritePalettes: () => assets.addPacked('kGbaPalaceSpritePalettes', spritePalettes.map(palette => palette.bgr555)),
+    kGbaPalaceTileAttributes: () => assets.addUint8('kGbaPalaceTileAttributes', [...source.dungeonTileAttributes(rooms[0].header.blockset)]),
+    kGbaPalaceTopology: () => assets.addUint16('kGbaPalaceTopology', topology.flatMap(edge => [
+      edge.fromRoomId,
+      edge.toRoomId,
+      edge.quadrant,
+      edge.kind === 'hole' ? 0 : edge.slot + 1,
     ])),
-    Buffer.from([0xff]),
-  ])));
-  assets.addPacked('kGbaPalaceRoomEntities', rooms.map(serializeEntityList));
-  assets.addPacked('kGbaPalaceRoomSecrets', rooms.map(serializeSecretList));
-  assets.addUint8('kGbaPalaceBgGfxSnes4bpp', [...extractPalaceSnes4bppTiles(rom)]);
-  assets.addUint8('kGbaPalacePaletteIds', paletteIds);
-  assets.addPacked('kGbaPalaceBgPalettes', paletteIds.map(id => extractDungeonPalette(rom, id)));
-  assets.addUint8('kGbaPalaceEnemyBlocksets', spriteGraphics.tilesets.map(tileset => tileset.enemyBlockset));
-  assets.addPacked('kGbaPalaceSpriteTilesets', spriteGraphics.tilesets.map(tileset => Buffer.from(tileset.sheetIds)));
-  assets.addUint8('kGbaPalaceSpriteSheetIds', spriteGraphics.sheets.map(sheet => sheet.id));
-  assets.addPacked('kGbaPalaceSpriteGfxSnes4bpp', spriteGraphics.sheets.map(sheet => sheet.snes4bpp));
-  assets.addUint8('kGbaPalaceSpritePaletteBanks', spritePalettes.map(palette => palette.bank));
-  assets.addPacked('kGbaPalaceSpritePalettes', spritePalettes.map(palette => palette.bgr555));
-  assets.addUint8('kGbaPalaceTileAttributes', [...source.dungeonTileAttributes(rooms[0].header.blockset)]);
-  assets.addUint16('kGbaPalaceTopology', topology.flatMap(edge => [
-    edge.fromRoomId,
-    edge.toRoomId,
-    edge.quadrant,
-    edge.kind === 'hole' ? 0 : edge.slot + 1,
-  ]));
-  assets.addUint16('kGbaAlttpTextIds', text.map(message => message.id));
-  assets.addPacked('kGbaAlttpTextNative', text.map(message => message.bytes));
-  assets.addPacked('kGbaAlttpTextPortUs', portText.map(message => Buffer.from(message)));
-  assets.addUint8('kGbaAlttpEntityHandlerTypes', handlers.map(handler => handler.type));
-  assets.addUint8('kGbaAlttpEntityHandlers', [...uint32Buffer(handlers.map(handler => handler.thumbAddress))]);
-  assets.addUint8('kGbaAlttpRoomTagHandlerTags', roomTagHandlers.map(handler => handler.tag));
-  assets.addUint8('kGbaAlttpRoomTagHandlers', [...uint32Buffer(roomTagHandlers.map(handler => handler.thumbAddress))]);
+    kGbaAlttpTextIds: () => assets.addUint16('kGbaAlttpTextIds', text.map(message => message.id)),
+    kGbaAlttpTextNative: () => assets.addPacked('kGbaAlttpTextNative', text.map(message => message.bytes)),
+    kGbaAlttpTextPortUs: () => assets.addPacked('kGbaAlttpTextPortUs', portText.map(message => Buffer.from(message))),
+    kGbaAlttpEntityHandlerTypes: () => assets.addUint8('kGbaAlttpEntityHandlerTypes', handlers.map(handler => handler.type)),
+    kGbaAlttpEntityHandlers: () => assets.addUint8('kGbaAlttpEntityHandlers', [...uint32Buffer(handlers.map(handler => handler.thumbAddress))]),
+    kGbaAlttpRoomTagHandlerTags: () => assets.addUint8('kGbaAlttpRoomTagHandlerTags', roomTagHandlers.map(handler => handler.tag)),
+    kGbaAlttpRoomTagHandlers: () => assets.addUint8('kGbaAlttpRoomTagHandlers', [...uint32Buffer(roomTagHandlers.map(handler => handler.thumbAddress))]),
+  };
+
+  if (Object.keys(builders).length !== GBA_ALTTP_ASSET_MANIFEST.length) {
+    throw new Error('compileGbaAlttpSupplement: builders and asset-manifest.ts have drifted apart (count mismatch)');
+  }
+  for (const entry of GBA_ALTTP_ASSET_MANIFEST) {
+    const build = builders[entry.name];
+    if (!build) throw new Error(`compileGbaAlttpSupplement: no builder registered for manifest entry "${entry.name}"`);
+    build();
+  }
+
   return assets.serialize();
 };
 

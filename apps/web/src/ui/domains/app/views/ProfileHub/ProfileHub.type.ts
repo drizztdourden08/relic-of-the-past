@@ -13,6 +13,7 @@ type ProfileHubTab =
   | 'controls'
   | 'haptics'
   | 'developer'
+  | 'gba'
   | 'mobile';
 
 interface ProfileHubProps {

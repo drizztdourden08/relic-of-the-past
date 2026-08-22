@@ -132,6 +132,9 @@ const DEFAULT_SETTINGS: GameSettings = {
   cheatsEnabled: false,
   vanillaSafe: false,
 
+  // Second cartridge
+  extraDungeon: false,
+
   // Developer
   developerToolsEnabled: false,
   devNavigationData: true,

@@ -1,22 +1,11 @@
 /* @layer renderer-components @kind component */
-import { useState, useEffect, useCallback } from 'react';
-import type { CSSProperties } from 'react';
 import { ImportForm } from './ImportForm';
-import { Box } from '../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../design-system/primitives/Text';
-import { IconButton } from '../../../../../design-system/primitives/IconButton';
-import { Button } from '../../../../../design-system/primitives/Button';
-import { EmptyState } from '../../../../../design-system/primitives/EmptyState';
-import { MasterDetailLayout } from '../../../../../design-system/composites/MasterDetailLayout';
-import { ListItemRow } from '../../../../../design-system/composites/ListItemRow';
-import { formatBytes } from '../../../../../../utils/formatBytes';
-import * as romsStore from '@app/lib/storage/roms-store';
-
-const IL: Record<string, CSSProperties> = {
-  mono: { fontFamily: 'var(--font-mono)' },
-  green: { color: 'var(--c-green)' },
-  gold: { color: 'var(--c-gold)' },
-};
+import { RomKindTabs } from './RomKindTabs';
+import { RomList } from './rom-manager/RomList';
+import { RomDetailPanel } from './rom-manager/RomDetailPanel';
+import { useRomManager } from './rom-manager/useRomManager';
+import { MasterDetailLayout } from '@ds/composites/MasterDetailLayout';
+import { IMPORT_LANE_CONFIG } from './rom-manager/import-lane-config';
 
 interface RomManagerProps {
   romStatuses: RomDisplayInfo[];
@@ -26,139 +15,52 @@ interface RomManagerProps {
   onRefresh: () => void;
 }
 
-interface RomDetail {
-  name: string;
-  size: number;
-  hash: string;
-  created: string;
-  modified: string;
-}
-
 const RomManager = (props: RomManagerProps) => {
-  const { romStatuses, onImportRom, onExtractAssets, onDeleteRom, onRefresh } = props;
-  const [selected, setSelected] = useState<string | null>(null);
-  const [detail, setDetail] = useState<RomDetail | null>(null);
-  const [loadingDetail, setLoadingDetail] = useState(false);
+  const { romStatuses, onExtractAssets, onDeleteRom, onRefresh } = props;
+  const {
+    activeKind, setActiveKind,
+    supplements,
+    selected, setSelected,
+    detail, loadingDetail,
+    handleUrlImport, handleFileImport,
+  } = useRomManager({ romStatuses, onRefresh, onExtractAssets });
 
-  // Load ROM detail when selection changes
-  useEffect(() => {
-    if (!selected) { setDetail(null); return; }
-    setLoadingDetail(true);
-    romsStore.getRomInfo(selected).then((info) => {
-      setDetail(info);
-      setLoadingDetail(false);
-    });
-  }, [selected]);
-
-  const handleUrlImport = useCallback(async (url: string) => {
-    const result = await romsStore.importUrl(url);
-    if (result.success) {
-      onRefresh();
-      if (!result.alreadyExists) {
-        onExtractAssets(result.romFile);
-      }
-      return { success: true, message: result.alreadyExists ? 'ROM already imported' : `Imported ${result.romFile}` };
-    }
-    return { success: false, message: result.error ?? 'Download failed' };
-  }, [onRefresh, onExtractAssets]);
-
-  const handleFileImport = useCallback(async (files: File[]) => {
-    if (files.length === 0) return { success: false, message: 'No file selected' };
-    const result = await romsStore.importFile(files[0]);
-    if (result.success) {
-      onRefresh();
-      // Auto-extract assets
-      if (!result.alreadyExists) {
-        onExtractAssets(result.romFile);
-      }
-      return { success: true, message: result.alreadyExists ? `ROM already imported` : `Imported ${result.romFile}` };
-    }
-    return { success: false, message: result.error ?? 'Import failed' };
-  }, [onRefresh, onExtractAssets]);
-
-  const selectedRom = romStatuses.find((r) => r.romFile === selected);
+  const laneConfig = IMPORT_LANE_CONFIG[activeKind];
+  const selectedBase = romStatuses.find((rom) => rom.romFile === selected);
+  const selectedSupplement = supplements.find((s) => s.romFile === selected);
 
   const list = (
     <>
+      <RomKindTabs value={activeKind} onChange={setActiveKind} />
       <ImportForm
         kind="rom"
-        placeholder="Paste ROM download URL…"
-        accept={['.sfc', '.smc', '.zip', '.7z', '.rar']}
-        dropLabel="Drop ROM file here"
-        dropHint=".sfc, .smc, or compressed archive (.zip, .7z, .rar)"
+        placeholder={laneConfig.placeholder}
+        accept={laneConfig.accept}
+        dropLabel={laneConfig.dropLabel}
+        dropHint={laneConfig.dropHint}
         onUrlImport={handleUrlImport}
         onFileImport={handleFileImport}
       />
 
-      <Box className="data-list">
-        {romStatuses.length === 0 && <EmptyState message="No ROMs imported yet" />}
-        {romStatuses.map((rom) => (
-          <ListItemRow
-            key={rom.romFile}
-            icon="🎮"
-            name={rom.romFile}
-            selected={selected === rom.romFile}
-            onClick={() => setSelected(rom.romFile)}
-            meta={
-              <>
-                {rom.extractionStatus === 'ready' ? '✓ Assets extracted' :
-                 rom.extractionStatus === 'extracting' ? '⟳ Extracting…' :
-                 rom.extractionStatus === 'failed' ? '✗ Extraction failed' :
-                 'No assets'}
-                {rom.assetSize ? ` · ${formatBytes(rom.assetSize)}` : ''}
-              </>
-            }
-            action={
-              <IconButton variant="ghost" size="sm" label="Delete" onClick={(e) => { e.stopPropagation(); onDeleteRom(rom.romFile); }}>
-                ✕
-              </IconButton>
-            }
-          />
-        ))}
-      </Box>
+      <RomList
+        romStatuses={romStatuses}
+        supplements={supplements}
+        selected={selected}
+        onSelect={setSelected}
+        onDelete={onDeleteRom}
+      />
     </>
   );
 
   const detailContent = (
-    <>
-        {!selected ? (
-          <Text>Select a ROM to view details</Text>
-        ) : loadingDetail ? (
-          <Text>Loading…</Text>
-        ) : detail ? (
-          <Box>
-            <Text as="h3" className="detail-panel__title">{detail.name}</Text>
-            <Box className="detail-panel__grid">
-              <Text className="detail-panel__label">Size</Text>
-              <Text className="detail-panel__value">{formatBytes(detail.size)}</Text>
-
-              <Text className="detail-panel__label">Hash</Text>
-              <Text className="detail-panel__value" style={IL.mono}>{detail.hash}</Text>
-
-              <Text className="detail-panel__label">Added</Text>
-              <Text className="detail-panel__value">{new Date(detail.created).toLocaleDateString()}</Text>
-
-              <Text className="detail-panel__label">Modified</Text>
-              <Text className="detail-panel__value">{new Date(detail.modified).toLocaleDateString()}</Text>
-
-              <Text className="detail-panel__label">Assets</Text>
-              <Text className="detail-panel__value">
-                {selectedRom?.extractionStatus === 'ready' ? (
-                  <Text style={IL.green}>✓ Extracted{selectedRom.assetSize ? ` (${formatBytes(selectedRom.assetSize)})` : ''}</Text>
-                ) : selectedRom?.extractionStatus === 'extracting' ? (
-                  <Text style={IL.gold}>⟳ Extracting…</Text>
-                ) : (
-                  <Button variant="primary" size="sm" onClick={() => selected && onExtractAssets(selected)}>
-                    Extract Assets
-                  </Button>
-                )}
-              </Text>
-            </Box>
-          </Box>
-        ) : (
-          <Text>ROM info not available</Text>
-        )}
-    </>
+    <RomDetailPanel
+      selected={selected}
+      loadingDetail={loadingDetail}
+      detail={detail}
+      selectedBase={selectedBase}
+      selectedSupplement={selectedSupplement}
+      onExtractAssets={onExtractAssets}
+    />
   );
 
   return <MasterDetailLayout list={list} detail={detailContent} detailEmpty={!selected} />;

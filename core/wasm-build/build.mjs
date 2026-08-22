@@ -30,7 +30,7 @@ const z = (...p) => join(zelda3, ...p);
 const h = (...p) => join(hooks, ...p);
 
 const gameSrcs = [
-  'ancilla', 'attract', 'audio', 'config', 'dungeon', 'ending', 'gba_alttp', 'hud', 'load_gfx',
+  'ancilla', 'attract', 'audio', 'config', 'dungeon', 'ending', 'hud', 'load_gfx',
   'messaging', 'misc', 'nmi', 'overlord', 'overworld', 'player', 'player_oam', 'poly',
   'select_file', 'spc_player', 'sprite', 'sprite_main', 'tagalong', 'tile_detect',
   'util', 'zelda_rtl',
@@ -52,11 +52,11 @@ const hookSrcs = [
   'state_queries_room_objects', 'attr_grid_state', 'gated_empty', 'receive_counters',
   'sim_queries', 'sim_triggers', 'item_overrides', 'check_triggers', 'ui_state', 'cheats', 'haptic_events',
   'player_sprite', 'transition_events', 'state_queries_combat', 'state_queries_oam',
-  'host_gates', 'hud_override',
+  'host_gates', 'hud_override', 'gba_alttp', 'gba_pyramid_entrance',
 ].map((f) => h(`${f}.c`));
 
 // Our Emscripten entry points (replace the native main.c). Resolved from this dir.
-const emMain = ['emscripten_main.c', 'emscripten_sdl.c', 'emscripten_api.c', 'emscripten_io.c', 'emscripten_pacing.c'].map((f) => join(here, f));
+const emMain = ['emscripten_main.c', 'emscripten_sdl.c', 'emscripten_api.c', 'emscripten_debug_gba.c', 'emscripten_io.c', 'emscripten_pacing.c'].map((f) => join(here, f));
 
 const cflags = [
   '-O2', '-g2',

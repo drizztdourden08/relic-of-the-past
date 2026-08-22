@@ -106,6 +106,12 @@ const pushLiveSettings = (settings: GameSettings): boolean => {
       mod.ccall('WasmSetPauseHidden', null, ['number'], [hidePause ? 1 : 0]);
     } catch { /* WASM not rebuilt yet */ }
 
+    // Optional second-cartridge content. Guarded like its neighbours: an older WASM build
+    // simply has no such export, and the base game must not care.
+    try {
+      mod.ccall('WasmSetExtraDungeonEnabled', null, ['number'], [settings.extraDungeon ? 1 : 0]);
+    } catch { /* WASM not rebuilt yet */ }
+
     // Haptic feedback settings (JS-only, no WASM needed)
     updateHapticBridgeSettings(settings.haptics ?? DEFAULT_SETTINGS.haptics);
     updateHapticsProfileEnabled(settings.hapticsEnabled ?? DEFAULT_SETTINGS.hapticsEnabled);

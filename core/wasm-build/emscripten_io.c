@@ -17,7 +17,7 @@
 #include "src/zelda_rtl.h"
 #include "src/config.h"
 #include "src/assets.h"
-#include "src/gba_alttp.h"
+#include "gba_alttp.h"
 #include "src/overworld.h"
 #include "src/util.h"
 #include "src/spc_player.h"
