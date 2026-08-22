@@ -1,0 +1,120 @@
+/* @layer renderer-components @kind style */
+
+/* Shared row styling for NamesTable and GlossaryTable — a dense, one-line-per-entry
+   editable list: a de-emphasized key/label on the left, an editable value on the
+   right. Horizontal scroll is contained here so a narrow pane never forces the
+   page body to scroll sideways. */
+
+.names-table,
+.glossary-table {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  overflow-x: auto;
+}
+
+.names-table__rows,
+.glossary-table__rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 360px;
+}
+
+.names-table__row,
+.glossary-table__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-2xs) var(--space-xs);
+  border-radius: var(--radius-sm);
+}
+
+.names-table__row:hover,
+.glossary-table__row:hover {
+  background: var(--c-hover);
+}
+
+.names-table__key {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  flex: 1 1 40%;
+  min-width: 0;
+}
+
+.names-table__key-label {
+  font-size: var(--text-sm);
+  color: var(--c-text-dim);
+  overflow-wrap: anywhere;
+}
+
+.names-table__key-id {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-faint);
+  overflow-wrap: anywhere;
+}
+
+.names-table__value {
+  flex: 1 1 55%;
+  min-width: 0;
+}
+
+.glossary-table__key {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex: 1 1 35%;
+  min-width: 0;
+}
+
+.glossary-table__key-text {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-faint);
+  overflow-wrap: anywhere;
+}
+
+.glossary-table__count {
+  flex-shrink: 0;
+  background: var(--c-inset);
+  border: 1px solid var(--c-border);
+  padding: 0 var(--space-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.glossary-table__value {
+  flex: 1 1 55%;
+  min-width: 0;
+}
+
+.glossary-table__remove {
+  flex-shrink: 0;
+}
+
+.glossary-table__add {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--c-border);
+}
+
+.glossary-table__add-key {
+  flex: 1 1 30%;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.glossary-table__add-value {
+  flex: 1 1 50%;
+}
+
+.names-table__value:focus-visible,
+.glossary-table__value:focus-visible,
+.glossary-table__add-key:focus-visible,
+.glossary-table__add-value:focus-visible {
+  outline: 2px solid var(--c-gold);
+  outline-offset: -2px;
+}

@@ -9,7 +9,6 @@ import type { Profile, AppState } from '@shared/types/profile';
 import type { NormalSaveInfo, AutoSaveInfo, QuickSaveSlotInfo } from '@shared/types/saves';
 import type { PlaySession } from '@shared/types/session';
 import type { ShadowCastingProject, ScreenShadowData } from '@shared/types/shadow-casting';
-import type { LanguagePack, LanguageSummary } from '@shared/types/language';
 import type { RefreshRateInfo, SyncedRateStatus } from '@shared/types/display';
 import type { DataLocation, StorageSummary, FileStat } from '@shared/platform';
 import type { SystemDiagnostics } from '@shared/types/diagnostics';
@@ -30,6 +29,7 @@ import type { UiViewsMap } from './ui-views-contract';
 import type { ReviewEntry, ReviewFile } from './review-contract';
 import type { DetectionContext, DraftRecommendation, PassResult, Recommendation } from './recommendation-contract';
 import type { ControllerInvokeContract } from './controller-contract';
+import type { LanguageInvokeContract } from './language-contract';
 import type { UpdateInfo, UpdaterCapabilities, UpdaterPrefs, VersionOption } from './updater-contract';
 
 
@@ -38,7 +38,7 @@ type MsuResult = { success: boolean; fileCount?: number; error?: string };
 type TriggerCal = { base: number; max: number; deadzone: number };
 type ReviewMap = Record<string, { status: string; comment?: string }>;
 
-interface InvokeContract extends ControllerInvokeContract {
+interface InvokeContract extends ControllerInvokeContract, LanguageInvokeContract {
   // App
   'app:getUserDataPath': () => Promise<string>;
 
@@ -144,13 +144,7 @@ interface InvokeContract extends ControllerInvokeContract {
   'msu:getTrackList': (packName: string) => Promise<Array<{ fileName: string; trackNum: number; ext: string }>>;
   'msu:readTrackFile': (packName: string, fileName: string) => Promise<ArrayBuffer>;
 
-  // Languages
-  'languages:list': () => Promise<LanguageSummary[]>;
-  'languages:extract': (romFile: string, langCode: string) => Promise<Result>;
-  'languages:extractFromFile': (filePath: string, langCode: string) => Promise<Result>;
-  'languages:extractFromUrl': (url: string, langCode: string) => Promise<Result>;
-  'languages:delete': (langCode: string) => Promise<void>;
-  'languages:getLanguage': (langCode: string) => Promise<LanguagePack | null>;
+  // Languages — see shared/ipc/language-contract.ts
 
   // Sessions + tracker
   'sessions:list': (profileId: string) => Promise<PlaySession[]>;

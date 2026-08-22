@@ -1,0 +1,93 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * The resting state of one dialogue entry. The boxes are the content, so the
+ * chrome around them stays quiet: a single identity line on top, the previews
+ * flowing left to right beneath it, and one muted sentence underneath saying
+ * what the line pulls in at runtime.
+ *
+ * The identity line is one line that wraps rather than truncates — an entry can
+ * carry several validation badges, and a hidden badge is worse than a second
+ * row. The meter and the Edit button travel together at the far end so the
+ * button lands in the same place on every card.
+ */
+
+.entry-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-sm);
+}
+
+.entry-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.entry-card__id {
+  font-family: var(--font-mono);
+  color: var(--c-text-muted);
+}
+
+/*
+ * What opens the entry, and where a prompt's options lead. Reference marks, not
+ * status: they stay quieter than a validation badge so a flagged card still
+ * wins the eye.
+ */
+.entry-card__trigger {
+  flex: none;
+  background: transparent;
+  border: var(--border-width-thin) solid var(--c-border);
+  color: var(--c-text-muted);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+
+.entry-card__choice {
+  flex: none;
+  font-family: var(--font-mono);
+  color: var(--c-text-muted);
+  white-space: nowrap;
+  cursor: help;
+}
+
+.entry-card__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-left: auto;
+}
+
+.entry-card__screens {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.entry-card__screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.entry-card__screen-label {
+  font-family: var(--font-mono);
+  color: var(--c-text-faint);
+}
+
+/*
+ * Stands in for a box while the set's font loads, at exactly the size the
+ * canvas will take (the width and height come from the layout constants), so
+ * nothing on the card moves when the glyphs arrive.
+ */
+.entry-card__placeholder {
+  background: var(--c-sunken);
+  border: var(--border-width-thin) solid var(--c-border);
+}
+
+.entry-card__note,
+.entry-card__contains {
+  color: var(--c-text-muted);
+}

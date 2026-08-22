@@ -163,4 +163,4 @@ const encodeDictionary = (lang = 'us'): Uint8Array[] => {
   });
 };
 
-export { compressStrings, encodeDictionary };
+export { compressStrings, encodeDictionary, kCmdInfo };

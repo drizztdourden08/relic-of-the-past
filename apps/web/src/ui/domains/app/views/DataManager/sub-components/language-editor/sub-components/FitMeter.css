@@ -1,0 +1,81 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * Full mode: a hairline-bordered strip per row, the border colour carrying
+ * the state so the eye catches it before reading a single number. An
+ * overflow row goes further than a tint — a thicker danger border and its
+ * own "overflow" badge — because the engine corrupts that row's tiles rather
+ * than clamping it, and a colour-only warning reads as too soft for that.
+ *
+ * Compact mode is the same three states collapsed into one chip plus a
+ * numeric detail, for a card header that has no room for a bar per row.
+ */
+
+.fit-meter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.fit-meter__row {
+  display: grid;
+  grid-template-columns: 3.5em 1fr auto auto;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-2xs) var(--space-xs);
+  border-left: var(--border-width-thin) solid var(--c-border);
+  font-variant-numeric: tabular-nums;
+}
+
+.fit-meter__row--near {
+  border-left-color: var(--c-warning);
+}
+
+.fit-meter__row--over {
+  border-left: var(--border-width-thick) solid var(--c-danger);
+  background: var(--c-danger-dim);
+}
+
+.fit-meter__label {
+  color: var(--c-text-dim);
+  font-family: var(--font-mono);
+}
+
+.fit-meter__bar {
+  min-width: 0;
+}
+
+.fit-meter__numbers,
+.fit-meter__remaining {
+  color: var(--c-text-dim);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+
+.fit-meter__row--over .fit-meter__numbers,
+.fit-meter__row--over .fit-meter__remaining {
+  color: var(--c-danger);
+  font-weight: var(--weight-semi);
+}
+
+.fit-meter__overflow-badge {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+
+.fit-meter--compact {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.fit-meter__chip {
+  flex: none;
+}
+
+.fit-meter__detail {
+  color: var(--c-text-muted);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}

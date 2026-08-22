@@ -6,13 +6,13 @@
  */
 import { loadRomFromBuffer } from '@shared/asset-extraction/rom/rom-loader';
 import { compileResources } from '@shared/asset-extraction/compile-resources';
-import { buildPackedEntry, extractLangEntry } from '@shared/asset-extraction/text/build-language-entry';
-import { dialogueTexts } from '@shared/asset-extraction/text/parse-dialogue-text';
+import { extractLangEntry } from '@shared/asset-extraction/text/build-language-entry';
+import { compileSets } from '@shared/game/language';
+import type { SetBakeInput } from '@shared/game/language';
 import { extractSpriteBuffers, type SpriteDef } from '@shared/asset-extraction/item-sprites/extract-items';
 
-interface LangInput { code: string; dialogueText: string; fontData: Uint8Array; fontWidth: Uint8Array }
 type Req =
-  | { op: 'assets'; romBytes: Uint8Array; languages: LangInput[] }
+  | { op: 'assets'; romBytes: Uint8Array; languages: SetBakeInput[] }
   | { op: 'language'; romBytes: Uint8Array; code: string }
   | { op: 'sprites'; romBytes: Uint8Array; defs: SpriteDef[] };
 
@@ -21,15 +21,9 @@ const ctx = self as unknown as {
   postMessage: (msg: unknown) => void;
 };
 
-const runAssets = (romBytes: Uint8Array, languages: LangInput[]): Uint8Array => {
+const runAssets = (romBytes: Uint8Array, languages: SetBakeInput[]): Uint8Array => {
   const rom = loadRomFromBuffer(Buffer.from(romBytes));
-  const extraLanguages = languages.map((l) => buildPackedEntry({
-    code: l.code,
-    texts: dialogueTexts(l.dialogueText),
-    fontData: Buffer.from(l.fontData),
-    fontWidth: Buffer.from(l.fontWidth),
-    index: 1,
-  }));
+  const extraLanguages = compileSets(languages, (message) => console.warn(`[assets] ${message}`));
   return new Uint8Array(compileResources(rom, { extraLanguages }));
 };
 

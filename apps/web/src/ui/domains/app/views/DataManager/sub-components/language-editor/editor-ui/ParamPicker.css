@@ -1,0 +1,55 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * A small floating value list, anchored under the toolbar button that opened it.
+ * Absolute rather than portalled: it belongs to its button, and staying in the
+ * same stacking context means it moves with the toolbar for free.
+ */
+
+.param-picker {
+  position: absolute;
+  z-index: var(--z-popover);
+  top: calc(100% + var(--space-2xs));
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: var(--panel-w-sm);
+  padding: var(--space-xs);
+  border: var(--border-width-thin) solid var(--color-border-strong);
+  border-radius: var(--r-md);
+  background: var(--c-surface);
+  box-shadow: var(--shadow-dropdown);
+}
+
+.param-picker__title {
+  padding: 0 var(--space-2xs);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.param-picker__list {
+  display: flex;
+  max-height: var(--panel-w-sm);
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+}
+
+.param-picker__choice {
+  display: flex;
+  min-width: var(--space-xl);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+}
+
+.param-picker__choice-label {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.param-picker__choice-hint {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}

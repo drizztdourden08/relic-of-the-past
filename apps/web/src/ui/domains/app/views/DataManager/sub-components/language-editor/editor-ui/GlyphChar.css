@@ -1,0 +1,36 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * A picture character occupies exactly one cell of the dialogue alphabet: eight
+ * game pixels wide by sixteen tall. The size comes from the same geometry tokens
+ * the line itself is set from, so a picture cannot be a fraction of a cell out of
+ * step with the letters either side of it.
+ *
+ * This is the CSS size only. The canvas's backing store is sized in device pixels
+ * when it is painted, which is what keeps the pixel art sharp on a scaled display
+ * instead of being stretched up from a smaller bitmap.
+ *
+ * The cell is stated as two custom properties rather than as `width`/`height`
+ * directly, so a view that sets the game face at its own size — the read-only
+ * card does — overrides the cell and not the geometry that follows from it.
+ */
+
+.glyph-char {
+  --glyph-cell-w: var(--game-advance);
+  --glyph-cell-h: var(--game-line-h);
+
+  display: inline-block;
+  width: var(--glyph-cell-w);
+  height: var(--glyph-cell-h);
+  vertical-align: text-bottom;
+}
+
+/*
+ * The fallback: the bracketed name, in the game's face, tinted so it reads as
+ * "this alphabet has no character for this" rather than as typed text.
+ */
+.glyph-char__name {
+  border-radius: var(--r-sm);
+  background: var(--c-gold-soft);
+  font-size: var(--text-sm);
+}
