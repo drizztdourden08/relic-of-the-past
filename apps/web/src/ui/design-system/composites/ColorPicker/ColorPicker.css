@@ -1,0 +1,74 @@
+/* @layer renderer-components @kind style */
+.color-picker {
+  display: flex;
+  gap: var(--space-md);
+  align-items: flex-start;
+  padding: var(--space-md);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  width: fit-content;
+}
+
+/* react-colorful sizes itself from its own class; keep it compact for a side panel. */
+.color-picker .react-colorful {
+  width: 132px;
+  height: 132px;
+}
+
+.color-picker .react-colorful__saturation {
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.color-picker .react-colorful__last-control {
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+}
+
+.color-picker__side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-width: 132px;
+}
+
+.color-picker__title {
+  font-size: var(--text-sm);
+  color: var(--c-text-dim);
+}
+
+.color-picker__hex {
+  width: 100%;
+  background: var(--c-sunken);
+  color: var(--c-text);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-xs) var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+.color-picker__word,
+.color-picker__snap,
+.color-picker__original-hex {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+.color-picker__snap {
+  color: var(--c-warning);
+}
+
+.color-picker__original {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+
+  --swatch-size: 18px;
+}
+
+.color-picker__actions {
+  display: flex;
+  gap: var(--space-xs);
+  margin-top: auto;
+}

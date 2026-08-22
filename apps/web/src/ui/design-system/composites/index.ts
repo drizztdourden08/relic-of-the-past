@@ -42,3 +42,5 @@ export { CreateRecordDialog } from './CreateRecordDialog';
 export type { CreateOutcome, CreateRecordDialogProps } from './CreateRecordDialog';
 export { CompactRecordView } from './CompactRecordView';
 export type { CompactRecordViewProps } from './CompactRecordView';
+export { ColorPicker } from './ColorPicker';
+export type { ColorPickerProps } from './ColorPicker';

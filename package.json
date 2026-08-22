@@ -91,6 +91,7 @@
     "pngjs": "^7.0.0",
     "prism-react-renderer": "^2.4.1",
     "react": "^19.2.6",
+    "react-colorful": "^5.8.0",
     "react-dom": "^19.2.6",
     "velopack": "^1.2.110-ge826545",
     "zustand": "^5.0.13"

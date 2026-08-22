@@ -38,6 +38,7 @@ const INVOKE_MAP = {
   applyRefreshRate: 'display:applyRefreshRate',
   openRomDialog: 'dialog:openRom',
   pickFile: 'dialog:pickFile',
+  saveFile: 'dialog:saveFile',
   listProfiles: 'profiles:list',
   createProfile: 'profiles:create',
   deleteProfile: 'profiles:delete',
