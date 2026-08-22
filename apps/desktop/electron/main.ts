@@ -13,6 +13,7 @@ const logBoot = (label: string): void => {
 
 import { initPaths, ensureDataDirectories } from './lib/paths';
 import { applyPortableMode } from './app/portable-mode';
+import { applyUserDataArg } from './app/user-data-arg';
 import { registerInstallSize } from './app/install-size-type';
 import { applyInstanceIdentity, parseInstanceConfig } from './instance';
 import { createWindow, getMainWindow, registerWindowHandlers, registerAspectRatioHandlers, setSplashStatus } from './window';
@@ -58,8 +59,10 @@ import { installDevFileLogging } from './lib/dev-file-logger';
 VelopackApp.build().run();
 
 // A copy carrying its own `data` folder keeps everything there. This runs before any
-// path is read, because every other location is derived from userData.
+// path is read, because every other location is derived from userData. An explicit
+// --user-data flag outranks the portable convention, so it is applied second.
 const portableData = applyPortableMode();
+const userDataOverride = applyUserDataArg();
 
 // Every IPC domain's register fn, gated by environment. ipcMain.handle order is
 // irrelevant, so this list is declarative; window/input/updater wiring that needs
@@ -130,6 +133,7 @@ app.whenReady().then(async () => {
   // Initialize paths and data directories
   const dataPath = app.getPath('userData');
   if (portableData) console.log(`[portable] user data lives beside the app: ${portableData}`);
+  if (userDataOverride) console.log(`[user-data] user data redirected by flag: ${userDataOverride}`);
   // Velopack writes the size in a type Windows ignores. Not awaited: it is cosmetic.
   if (!portableData) void registerInstallSize();
   initPaths(dataPath);

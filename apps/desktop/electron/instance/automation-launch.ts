@@ -44,9 +44,18 @@ const isAutomationLaunch = (): boolean =>
 // visible; `--instance=NAME --no-focus` (a real automated run) must still go headless.
 const HEADLESS_FLAGS = AUTOMATION_FLAGS.filter((flag) => flag !== '--instance' && flag !== '--profile');
 
-const isHeadlessLaunch = (): boolean =>
-  process.argv.some((arg) =>
+/**
+ * `--visible` is the explicit handover override: a launch that pins a state for the
+ * person to look at (`--auto-state=… --visible`) is a handover, not an unattended run,
+ * and the explicit word must beat the heuristic. Without it, any state-pinned launch
+ * was forced headless no matter what the caller intended — so a "visible" handover
+ * produced no window at all, silently.
+ */
+const isHeadlessLaunch = (): boolean => {
+  if (process.argv.includes('--visible')) return false;
+  return process.argv.some((arg) =>
     HEADLESS_FLAGS.some((flag) => arg === flag || arg.startsWith(`${flag}=`)),
   );
+};
 
 export { AUTOMATION_FLAGS, HEADLESS_FLAGS, isAutomationLaunch, isHeadlessLaunch };

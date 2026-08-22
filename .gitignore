@@ -122,6 +122,9 @@ config/
 scripts/analyze/report.json
 .claude/worktrees/
 
+# Per-worktree isolated user data (the app's --user-data flag points here)
+.user-data/
+
 # Loop scheduler transient lock
 .claude/scheduled_tasks.lock
 
