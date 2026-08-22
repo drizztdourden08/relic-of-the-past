@@ -4,8 +4,9 @@
  * recompile all asset blobs (baking in the new pack). Mirrors window.api names.
  */
 import type { LanguageSummary, LanguagePack } from '@shared/types/language';
+import type { LanguageSet } from '@shared/game/language';
 import * as languages from '@shared/storage/languages';
-import type { ExtractedPack } from '@shared/storage/languages';
+import type { ExtractedPack, LanguageSetSummary, NewSetParams, SetFontBytes } from '@shared/storage/languages';
 import { fetchToBytes } from '@shared/storage/download';
 import { isZip, unzip } from '@shared/storage/archive';
 import { getPlatform } from '@app/platform/get-platform';
@@ -44,7 +45,7 @@ const extractFromBytes = async (romBytes: Uint8Array, code: string): Promise<Res
   }
 };
 
-const listLanguages = (): Promise<LanguageSummary[]> => languages.list(files());
+const listLanguages = (): Promise<LanguageSummary[]> => languages.listPacks(files());
 const getLanguage = (code: string): Promise<LanguagePack | null> => languages.getLanguage(files(), code);
 
 const extractLanguage = async (romFile: string, code: string): Promise<Result> => {
@@ -67,4 +68,34 @@ const extractLanguageFromUrl = async (url: string, code: string): Promise<Result
 
 const deleteLanguage = async (code: string): Promise<void> => { await languages.remove(files(), code); await recompileAll(); };
 
+const getLanguageSet = (id: string): Promise<LanguageSet | null> => languages.getSet(files(), id);
+
+// A whole-set overwrite, then a rebake so the edit reaches the blob the core
+// reads at boot — expensive, so callers debounce rather than save per keystroke.
+const saveLanguageSet = async (set: LanguageSet): Promise<void> => {
+  await languages.saveSet(files(), set);
+  await recompileAll();
+};
+
+const listLanguageSets = (): Promise<LanguageSetSummary[]> => languages.list(files());
+
+// The set's glyph tiles plus its per-glyph advance table. A read-only lookup —
+// nothing here rebakes, so a preview can ask for it freely.
+const getLanguageSetFont = (id: string): Promise<SetFontBytes | null> => languages.getSetFont(files(), id);
+
+// Creating and duplicating both add a set the core can select, so both rebake.
+const createLanguageSet = async (params: NewSetParams): Promise<LanguageSet> => {
+  const created = await languages.createSet(files(), params);
+  await recompileAll();
+  return created;
+};
+
+const duplicateLanguageSet = async (sourceId: string, id: string, name: string): Promise<LanguageSet> => {
+  const created = await languages.duplicateSet(files(), sourceId, id, name);
+  await recompileAll();
+  return created;
+};
+
 export { listLanguages, getLanguage, extractLanguage, extractLanguageFromFile, extractLanguageFromUrl, deleteLanguage };
+export { getLanguageSet, saveLanguageSet, listLanguageSets, createLanguageSet, duplicateLanguageSet };
+export { getLanguageSetFont };

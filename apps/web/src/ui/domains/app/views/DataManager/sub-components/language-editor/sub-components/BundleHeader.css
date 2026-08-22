@@ -1,0 +1,40 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * The set's identity, pinned above the entry list: name and origin first, the
+ * countable facts in a quiet mono row, save state last so it reads as status
+ * rather than as part of the name.
+ */
+
+.bundle-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  background: var(--c-surface);
+}
+
+.bundle-header__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.bundle-header__facts {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  color: var(--c-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.bundle-header__state {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}

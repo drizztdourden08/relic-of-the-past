@@ -1,0 +1,51 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * The dialogue face, used wherever the app shows text that the game itself will
+ * display — so a translator reads their line in the shape it will take on
+ * screen. It is a pixel font: it only looks right at whole multiples of its
+ * design size, and it must not be hinted or smoothed.
+ *
+ * A community recreation of that face by Patrick H. Lauke, under Creative
+ * Commons Attribution 3.0. Its LICENSE.txt and README.txt sit beside the file
+ * in this folder and must travel with it; the credits entry names it in full.
+ */
+
+@font-face {
+  font-family: 'ALttP Dialogue';
+  src: url('./alttp-ext.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+:root {
+  --font-game: 'ALttP Dialogue', var(--font-mono);
+}
+
+/*
+ * White fill, blue edge. `paint-order` keeps the stroke behind the fill so the
+ * letterform stays full width; the shadow ring fills the diagonal gaps a
+ * stroke leaves on a blocky pixel face.
+ */
+.game-text {
+  font-family: var(--font-game);
+  color: var(--game-ink);
+  -webkit-text-stroke: 1px var(--game-stroke);
+  paint-order: stroke fill;
+  text-shadow:
+    1px 0 0 var(--game-stroke),
+    -1px 0 0 var(--game-stroke),
+    0 1px 0 var(--game-stroke),
+    0 -1px 0 var(--game-stroke);
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+  font-synthesis: none;
+
+  /*
+   * No tracking. The face is a pixel font on a fixed cell; anything added here
+   * puts the text out of step with the cell grid the box is measured in.
+   */
+  letter-spacing: 0;
+  line-height: var(--leading-normal);
+}

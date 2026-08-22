@@ -1,0 +1,33 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * The editor fills its detail pane and scrolls only on the inside: the header
+ * and tabs stay put while a tab's own content moves.
+ */
+
+.language-editor {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  gap: var(--space-xs);
+}
+
+.language-editor__head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.language-editor__meta {
+  font-family: var(--font-mono);
+  color: var(--c-text-muted);
+  margin-right: auto;
+}
+
+.language-editor__pane {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}

@@ -1,0 +1,45 @@
+/* @layer renderer-design-system @kind style */
+
+/*
+ * Colours for text the game itself draws, as opposed to app chrome.
+ *
+ * These are game-accurate values rather than design decisions — the dialogue
+ * face is white with a blue edge over a near-black box — so they live here with
+ * the other raw values instead of in the component that uses them. Same
+ * reasoning as the HUD's palette: matching the screen is the requirement, and a
+ * themed token would be wrong by definition.
+ */
+
+:root {
+  --game-ink: #fff;
+  --game-stroke: #3850a8;
+  --game-ground: #101018;
+
+  /*
+   * Geometry for text the game draws, in game pixels scaled up for the screen.
+ *
+ * The dialogue face is designed on an 8x16 cell and its em box is 16px, so a
+ * 16px font-size renders one cell 1:1. The cell is the CEILING, not the advance:
+ * the game's own font advances 1 to 8 pixels per glyph from a table in the
+ * language pack, and every surface that shows a line gives each character its
+ * own width out of that table. `--game-advance` is therefore the widest a
+ * character can be, which is what makes 21 of them the real width of a text-box
+ * row: a line reaching `--game-row-width` is a line reaching the edge in the
+ * game.
+ *
+ * These are measured properties of that face, not design choices, which is why
+ * they live with the other raw values.
+   */
+  --game-scale: 2;
+  --game-cell-w: 8px;
+  --game-cell-h: 16px;
+
+  /* One full cell's advance and one line's height, on screen. */
+  --game-advance: calc(var(--game-cell-w) * var(--game-scale));
+  --game-line-h: calc(var(--game-cell-h) * var(--game-scale));
+  --game-font-size: calc(16px * var(--game-scale));
+
+  /* 21 cells — the usable interior of one row. */
+  --game-row-cells: 21;
+  --game-row-width: calc(var(--game-row-cells) * var(--game-advance));
+}

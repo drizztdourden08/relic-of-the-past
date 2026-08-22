@@ -1,0 +1,32 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * The icon row along the top of the editor card. It wraps rather than scrolls: a
+ * translator with a narrow pane should still see every insert at once, and a
+ * hidden button in a scroller is a button nobody finds.
+ */
+
+.editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs);
+  border-bottom: var(--border-width-thin) solid var(--color-border-subtle);
+}
+
+/*
+ * Clusters are separated by a rule rather than by a gap alone, so "pacing" and
+ * "layout" stay legibly distinct once the row wraps.
+ */
+.editor-toolbar__group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.editor-toolbar__group + .editor-toolbar__group {
+  padding-left: var(--space-xs);
+  border-left: var(--border-width-thin) solid var(--color-border-subtle);
+}

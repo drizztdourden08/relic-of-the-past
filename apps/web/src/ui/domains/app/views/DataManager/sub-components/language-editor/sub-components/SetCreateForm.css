@@ -1,0 +1,21 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * Collapsed, this is a single quiet button; open, a short stack of fields above
+ * the set list.
+ */
+
+.set-create {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  padding-bottom: var(--space-xs);
+}
+
+.set-create--open {
+  gap: var(--space-xs);
+  padding: var(--space-xs);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  background: var(--c-surface);
+}

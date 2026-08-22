@@ -1,8 +1,8 @@
 /* @layer electron-main @kind logic */
 /**
- * Compile a ROM's zelda3_assets.dat, baking in every extracted language pack so the
+ * Compile a ROM's zelda3_assets.dat, baking in every stored language set so the
  * core can switch language at runtime via the INI. Also exposes a recompile pass used
- * when the set of language packs changes (extract / delete).
+ * when the stored sets change (extract / edit / delete).
  */
 import { writeFile, access } from 'fs/promises';
 import { loadRom } from '@shared/asset-extraction/rom/load-rom-file';
@@ -10,7 +10,7 @@ import { compileResources } from '@shared/asset-extraction/compile-resources';
 import { getUserDataPath } from '../lib/paths';
 import { getAssetFileName, hasAssetForRom, listRoms } from '../roms/store';
 import { logToRenderer } from '../lib/renderer-log';
-import { loadPackedLanguages } from '../languages/language-pack';
+import { loadCompiledLanguages } from './load-compiled-languages';
 import { errMessage } from '../lib/result';
 
 type CompileResult = { success: boolean; error?: string };
@@ -26,10 +26,10 @@ const compileRomAssets = async (romFile: string): Promise<CompileResult> => {
 
   try {
     const rom = loadRom(localRomPath);
-    const extraLanguages = await loadPackedLanguages();
+    const extraLanguages = await loadCompiledLanguages();
     logToRenderer('core', 'info', `ROM loaded: ${rom.language} (${rom.description})`);
     if (extraLanguages.length > 0) {
-      logToRenderer('app', 'info', `Baking ${extraLanguages.length} language pack(s): ${extraLanguages.map((e) => e.code).join(', ')}`);
+      logToRenderer('app', 'info', `Baking ${extraLanguages.length} language set(s): ${extraLanguages.map((e) => e.code).join(', ')}`);
     }
     const dat = compileResources(rom, { extraLanguages });
     const assetFile = getAssetFileName(romFile);

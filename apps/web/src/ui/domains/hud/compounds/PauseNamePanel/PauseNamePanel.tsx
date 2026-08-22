@@ -67,8 +67,9 @@ const PauseNamePanel = ({ itemName, itemSprite, borderColor = 'green', scale, sp
   const innerCols = 8;
   const innerRows = 4;
   const lines = Array.isArray(itemName) ? itemName : [itemName];
-  // One shared size for every line in the name — a name's line break is hand-placed (see
-  // getItemNameForSlot), not computed per line, so all its lines read at the same scale.
+  // One shared size for every line in the name: the caller has already broken the name
+  // onto this grid (see the view's wrap-name), so a line still wider than the box shrinks
+  // the whole name rather than one row, keeping every row at the same scale.
   // '&' counts as 2 columns (see AMPERSAND_COLS) since its sprite is double-width.
   const lineWidth = (line: string): number =>
     line.split('').reduce((cols, char) => cols + (char === '&' ? AMPERSAND_COLS : 1), 0);

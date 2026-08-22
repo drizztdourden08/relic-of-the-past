@@ -13,7 +13,7 @@
  * For widescreen: the 256px BG3 content is centered in the wider viewport.
  */
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { HudBox } from '../../primitives/HudBox';
 import { usePauseMenu } from '../../hooks/usePauseMenu';
 import { PauseItemGrid } from '../../compounds/PauseItemGrid';
@@ -23,20 +23,12 @@ import { PauseAbilitiesPanel } from '../../compounds/PauseAbilitiesPanel';
 import { PauseEquipmentPanel } from '../../compounds/PauseEquipmentPanel';
 import { PauseBottlePanel } from '../../compounds/PauseBottlePanel';
 import { getSlotSprite } from '../../composites/PauseItemSlot';
+import { useLocalizedNames } from './behavior/useLocalizedNames';
+import { itemNameKeyForSlot } from './behavior/item-name-key';
+import { wrapName } from './behavior/wrap-name';
 
 /** Standard SNES menu content area */
 const MENU_H = 224;
-
-/** Bottle content value → display name */
-const BOTTLE_CONTENT_NAMES: Record<number, string> = {
-  2: 'BOTTLE',
-  3: 'RED POTION',
-  4: 'GREEN POTION',
-  5: 'BLUE POTION',
-  6: 'FAIRY',
-  7: 'BEE',
-  8: 'GOOD BEE',
-};
 
 /**
  * Grid slot → save RAM index (kHudItemToItemOrg from hud.c).
@@ -44,27 +36,6 @@ const BOTTLE_CONTENT_NAMES: Record<number, string> = {
  * Used for cursor navigation logic, NOT for visual display order.
  */
 const GRID_TO_SAVE = [0, 3, 2, 14, 1, 10, 5, 6, 15, 16, 17, 9, 4, 8, 7, 12, 11, 18, 13, 19];
-
-/** Item names indexed by save-RAM slot (0-19) */
-const SAVE_SLOT_NAMES: (string | string[])[] = [
-  'BOW', 'BOOMERANG', 'HOOKSHOT', 'BOMB', 'MUSHROOM',
-  'FIRE ROD', 'ICE ROD', 'BOMBOS', 'ETHER', 'QUAKE',
-  'LAMP', ['MAGIC', 'HAMMER'], 'SHOVEL', 'BUG NET', ['BOOK OF', 'MUDORA'],
-  'BOTTLE', ['CANE OF', 'SOMARIA'], ['CANE OF', 'BYRNA'], ['MAGIC', 'CAPE'], ['MAGIC', 'MIRROR'],
-];
-
-const getItemNameForSlot = (saveIdx: number, items: number[]): string | string[] => {
-  if (saveIdx < 0 || saveIdx >= 20) return '';
-  const value = items[saveIdx];
-  if (!value) return '';
-  // Upgrade variants — the boomerang has no separate upgrade-tier name (only its icon
-  // color changes), so it always falls through to the base SAVE_SLOT_NAMES entry.
-  if (saveIdx === 0 && value >= 4) return ['BOW &', 'SILVER ARROWS'];
-  if (saveIdx === 4 && value >= 2) return ['MAGIC', 'POWDER'];
-  if (saveIdx === 12 && value >= 2) return 'FLUTE';
-  if (saveIdx === 12 && value === 1) return 'SHOVEL';
-  return SAVE_SLOT_NAMES[saveIdx];
-};
 
 const PauseMenuView = ({ slideTransform, slideTransition }: { slideTransform?: string; slideTransition?: string } = {}) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -131,10 +102,15 @@ const PauseMenuView = ({ slideTransform, slideTransition }: { slideTransform?: s
     else if (bottlePhase === 'collapsing') setBottlePhase('hidden');
   }, [bottlePhase]);
 
-  // When on bottle slot, show the selected bottle's content name
-  const selectedItemName = isBottleSelected
-    ? (BOTTLE_CONTENT_NAMES[data.bottles[data.items[15] - 1]] ?? '')
-    : getItemNameForSlot(selectedSaveIdx, data.items);
+  // Names come from the active profile's language set (English defaults behind it),
+  // then get folded to drawable glyphs and wrapped onto the panel's column grid.
+  const { itemName, bottleName } = useLocalizedNames();
+  const selectedItemName = useMemo(() => {
+    if (isBottleSelected) return bottleName(data.bottles[data.items[15] - 1] ?? 0);
+    const key = itemNameKeyForSlot(selectedSaveIdx, data.items);
+    return key ? itemName(key.recordId, key.tier) : '';
+  }, [isBottleSelected, bottleName, itemName, data.bottles, data.items, selectedSaveIdx]);
+  const selectedNameLines = useMemo(() => wrapName(selectedItemName), [selectedItemName]);
 
   // Get the selected item's sprite for the name panel
   const selectedItemSprite = selectedSaveIdx >= 0
@@ -187,7 +163,7 @@ const PauseMenuView = ({ slideTransform, slideTransition }: { slideTransform?: s
 
       {/* Name panel: tiles (21,5)→(30,10), offset = rows 2-7, cols 22-31 */}
       <PauseNamePanel
-        itemName={selectedItemName}
+        itemName={selectedNameLines}
         itemSprite={selectedItemSprite}
         borderColor={showBottlePanel ? 'yellow' : 'green'}
         spritesBase={spritesBase}
@@ -255,4 +231,4 @@ const PauseMenuView = ({ slideTransform, slideTransition }: { slideTransform?: s
   );
 };
 
-export { PauseMenuView, GRID_TO_SAVE, SAVE_SLOT_NAMES, getItemNameForSlot };
+export { PauseMenuView, GRID_TO_SAVE };

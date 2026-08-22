@@ -1,18 +1,21 @@
 /* @layer renderer-lib @kind logic */
 /**
  * Renderer assets store: check/load the .dat over FileStore, and extract by running
- * the pure pipeline in a Web Worker (read ROM + language packs via FileStore → Worker
+ * the pure pipeline in a Web Worker (read ROM + language sets via FileStore → Worker
  * → write .dat). Mirrors the window.api assets surface for 1:1 call-site swap.
+ *
+ * The sets are read here and compiled in the Worker: the bake step pulls in the
+ * whole dialogue compression path, which belongs off the UI thread.
  */
 import * as assets from '@shared/storage/assets';
-import type { LanguageInput } from '@shared/storage/assets';
+import type { SetBakeInput } from '@shared/game/language';
 import { getPlatform } from '@app/platform/get-platform';
 import { runOnWorker } from './extraction-client';
 import { listRomsWithStatus } from './roms-store';
 
 const files = () => getPlatform().files;
 
-const runExtraction = (romBytes: Uint8Array, languages: LanguageInput[]): Promise<Uint8Array> =>
+const runExtraction = (romBytes: Uint8Array, languages: SetBakeInput[]): Promise<Uint8Array> =>
   runOnWorker<Uint8Array>({ op: 'assets', romBytes, languages });
 
 const checkAssets = (romFile: string): Promise<boolean> => assets.check(files(), romFile);
@@ -26,7 +29,7 @@ const extractAssets = async (romFile: string): Promise<{ success: boolean; error
   try {
     const romBytes = await assets.readRomBytes(files(), romFile);
     if (!romBytes) return { success: false, error: `ROM file not found: ${romFile}` };
-    const languages = await assets.readLanguageInputs(files());
+    const languages = await assets.readLanguageSets(files());
     const dat = await runExtraction(romBytes, languages);
     await assets.writeDat(files(), romFile, dat);
     return { success: true };
@@ -35,7 +38,7 @@ const extractAssets = async (romFile: string): Promise<{ success: boolean; error
   }
 };
 
-// Rebuild every ROM that already has a cached .dat (after a language pack changes).
+// Rebuild every ROM that already has a cached .dat (after a language set changes).
 const recompileAll = async (): Promise<void> => {
   for (const rom of await listRomsWithStatus()) {
     if (rom.hasAssets) await extractAssets(rom.romFile);

@@ -4,6 +4,7 @@ export type { ExtractionResult } from './extract-items-node';
 export { extractSpriteBuffers } from './extract-items';
 export type { SpriteDef } from './extract-items';
 export { loadHudPalette, loadHudSheets, decodeHudTile, extractHudStandard, extractHudSpecial } from './hud-decoder';
+export { loadDialogueFont, extractDialogueGlyph } from './dialogue-glyph-decoder';
 export { loadSpritePalettes, loadReceiptSheets, extractReceipt, extractReceiptRecolor } from './receipt-decoder';
 export {
   loadDropSheets, extractDropStandard, extractDropNumbered,

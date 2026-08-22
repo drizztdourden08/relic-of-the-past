@@ -1,0 +1,273 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * The editor card: toolbar, text, action strip — a rounded bordered box, the
+ * ordinary shape of a text editor.
+ *
+ * `position: relative` is load-bearing: it is the anchor the legend floats
+ * against, which is how the legend can appear on focus without taking any room
+ * in the flow. Overflow stays visible for the same reason — a clipped card would
+ * cut off both the legend and a parameter picker.
+ */
+
+.dialogue-editor {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: var(--border-width-thin) solid var(--color-border-default);
+  border-radius: var(--r-md);
+  background: var(--c-surface);
+}
+
+.dialogue-editor:focus-within {
+  border-color: var(--c-gold);
+}
+
+.dialogue-editor--read-only {
+  opacity: 0.7;
+}
+
+/*
+ * The typing surface. The game face is a pixel font, so the size is a whole
+ * pixel token and nothing smooths it (`.game-text` in the design system's font
+ * layer settles the face, the white fill and the blue edge).
+ */
+.dialogue-editor__surface {
+  padding: calc(var(--space-sm) + var(--gutter-head-h)) var(--space-sm) var(--space-sm);
+  background: var(--game-ground);
+
+  /*
+   * The face is drawn at its design size; the ADVANCE is not the face's, it is
+   * the pack's. Every character is wrapped in a cell of its own real width (see
+   * `char-advance.ts`), which is why no tracking is set here: a single value
+   * cannot stand in for a font that advances 1 to 8 pixels per glyph, and the one
+   * that used to be here overstated a typical line by about a third.
+   */
+  font-size: var(--game-font-size);
+  line-height: var(--game-line-h);
+}
+
+/*
+ * One typed character, as wide as the pack's width table says it is. The width
+ * arrives as an inline length from the decoration, in game pixels times the
+ * shared scale.
+ *
+ * Ink is NOT clipped to the cell. The engine emits only as many pixel columns as
+ * the width allows and a glyph's ink already sits at the left of its cell, so
+ * letting it paint its full width while advancing less is closer to the result
+ * than cropping a letter in half — and the advance is what the row is measured
+ * in either way.
+ */
+.dialogue-editor__surface .ProseMirror .dialogue-editor__cell {
+  display: inline-block;
+  flex: none;
+  overflow: visible;
+  text-align: left;
+  vertical-align: top;
+}
+
+/*
+ * A character this language has no glyph for. It keeps the face's own advance,
+ * because there is no table entry to ask, and is called out instead: it is the
+ * reason the line will not encode. Same treatment as the read-only card.
+ */
+.dialogue-editor__surface .ProseMirror .dialogue-editor__cell--unknown {
+  color: var(--c-danger);
+  text-decoration: underline wavy var(--c-danger);
+}
+
+/*
+ * ProseMirror's own editable element. It is created by the editor, not by JSX,
+ * which is why it is reached through a descendant selector rather than given a
+ * class of its own.
+ */
+.dialogue-editor__surface .ProseMirror {
+  /* The caret has to read against the box ground, so it takes the face's own ink. */
+  min-height: var(--space-2xl);
+  caret-color: var(--game-ink);
+  outline: none;
+
+  /*
+   * Stated on the editing HOST, not only on the line.
+   *
+   * The editor sets `break-spaces` here, and that is what governs whether a
+   * break may fall at a node boundary — so with it in place a long line broke
+   * immediately after an inline atom and the remainder painted over the line
+   * below, even though the line itself said `pre`.
+   */
+  white-space-collapse: preserve;
+  text-wrap-mode: nowrap;
+
+  /*
+   * The row's edge, drawn BEHIND the text rather than as a box around it: a
+   * background cannot create a line-break opportunity, so it marks the limit
+   * without any risk of reflowing what it measures.
+   *
+   * It is now a true ruler: 21 cells is the row's real interior and every
+   * character on the line is billed its own advance out of the same width table
+   * the gutter reads, so text reaching this rule is text reaching the edge in the
+   * game. The gutter's figure remains the one that decides — it is the number,
+   * this is the picture of it.
+   */
+  background-image: linear-gradient(
+    to right,
+    transparent calc(var(--game-row-width) + var(--space-xs)),
+    var(--c-gold-dim) calc(var(--game-row-width) + var(--space-xs)),
+    var(--c-gold-dim) calc(var(--game-row-width) + var(--space-xs) + 1px),
+    transparent calc(var(--game-row-width) + var(--space-xs) + 1px)
+  );
+  background-repeat: no-repeat;
+
+}
+
+/*
+ * The empty-line prompt the schema's placeholder extension draws. Muted and in
+ * the interface face, so it never reads as text that is actually in the line.
+ */
+.dialogue-editor__surface .ProseMirror p.is-editor-empty::before {
+  height: 0;
+  float: left;
+  color: var(--color-text-muted);
+  content: attr(data-placeholder);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  pointer-events: none;
+}
+
+/*
+ * Gutter and text side by side. `--line-row-h` is declared here, on their common
+ * parent, because both sides must agree on it exactly: the gutter numbers are
+ * only meaningful while row N of the column sits beside line N of the text.
+ */
+.dialogue-editor__body {
+  /*
+   * One line's height is the game's own cell height, scaled — the gutter and the
+   * text both take it from here, so a gutter row cannot drift off its line.
+   *
+   * `--gutter-head-h` is the other half of that alignment. The gutter carries a
+   * heading row that the text side does not, so the text is pushed down by
+   * exactly its height; measured misalignment of 21px was this, before it was
+   * stated in one place.
+   */
+
+  /*
+   * A cell tall, plus a little leading. The face's ink measures ~3px more than
+   * its 16px cell at this size, so rows pitched at exactly one cell let one
+   * line's ink touch the next. The gutter takes the same value, so the extra
+   * leading costs nothing in alignment.
+   */
+  --line-row-h: calc(var(--game-line-h) + var(--space-2xs));
+  --gutter-head-h: var(--space-lg);
+
+  display: flex;
+  align-items: stretch;
+  min-width: 0;
+}
+
+.dialogue-editor__body .dialogue-editor__surface {
+  flex: 1;
+  min-width: 0;
+}
+
+/*
+ * One paragraph is one line of the box. The height is pinned rather than left to
+ * the text, so a line holding a taller glyph cannot drift out of step with its
+ * gutter row.
+ */
+.dialogue-editor__surface .ProseMirror p {
+  /*
+   * One cell tall. The row's WIDTH is not set here: constraining it made a long
+   * line wrap, and a wrapped line overflowed its fixed height and painted over
+   * the line below. The edge is drawn as a ruler behind the text instead, which
+   * cannot be wrapped at.
+   *
+   * Text is neither wrapped nor clipped, because the engine does neither: a line
+   * that runs past the ruler is a line that will paint over the row below, and
+   * the gutter says so in pixels.
+   */
+
+  /*
+   * A single flex line, which cannot break.
+   *
+   * `white-space: pre` does not suppress the break opportunity beside an inline
+   * atom — measured: text before the atom at y=718, text after it at y=752, and
+   * that second line then painted over the next paragraph. A flex line lays its
+   * items out in one line by definition, so the break cannot happen at all.
+   */
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: baseline;
+  height: var(--line-row-h);
+
+  /*
+   * Stated HERE, not on the surface: the shared `.game-text` class also sets a
+   * line-height, and at this font size its 1.5 came to 48px against a 32px row —
+   * which drew every line on top of the one below it. One cell tall, exactly.
+   */
+  line-height: var(--line-row-h);
+  margin: 0;
+  border-left: var(--border-width-thin) solid var(--c-gold-dim);
+  padding-left: var(--space-xs);
+
+  /*
+   * Preserve the spacing, and never wrap.
+   *
+   * `white-space: pre` alone is not enough: an inline atom (a substitution, a
+   * picture character) is a break opportunity of its own, so a long line broke
+   * after the atom and the remainder painted over the line below. Stating the
+   * two halves separately turns wrapping off for those boundaries too, while
+   * keeping the double spaces the dialogue relies on.
+   */
+  white-space-collapse: preserve;
+  text-wrap-mode: nowrap;
+}
+
+/*
+ * The lines of one box are joined by that rule; it breaks after the line the
+ * player stops on, so each group reads as the single screen it is.
+ */
+.dialogue-editor__surface .ProseMirror p[data-ends-box='true'] {
+  margin-bottom: var(--space-xs);
+  border-bottom-left-radius: var(--r-sm);
+}
+
+.dialogue-editor__surface .ProseMirror p[data-ends-box='true'] + p {
+  border-top-left-radius: var(--r-sm);
+}
+
+/*
+ * The markers the editor draws at a line's edges: the wait that closes a box,
+ * and the return or scroll that puts the pen on the next line's row. They are
+ * the card's own gold symbols so the two surfaces read alike, and they are
+ * DECORATIONS — no text, no position in the document — so neither the caret nor
+ * the per-character widths beside them know they exist.
+ */
+.dialogue-editor__surface .ProseMirror .line-end {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  margin-left: var(--space-2xs);
+  color: var(--c-gold-bright);
+  vertical-align: middle;
+
+  /* Chrome of ours, not the game's face — no stroke, no glow. */
+  -webkit-text-stroke: 0;
+  text-shadow: none;
+  user-select: none;
+}
+
+/* The wait is the one marker that is also a control, so it says so. */
+.dialogue-editor__surface .ProseMirror .line-end--wait {
+  cursor: pointer;
+}
+
+/* Off means "no wait here yet" — visible on the caret's line only, and faint. */
+.dialogue-editor__surface .ProseMirror .line-end--off {
+  color: var(--c-gold-dim);
+  opacity: 0.7;
+}
+
+.dialogue-editor__surface .ProseMirror .line-end--off:hover {
+  color: var(--c-gold);
+  opacity: 1;
+}

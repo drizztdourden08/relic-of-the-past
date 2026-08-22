@@ -1,10 +1,11 @@
 /* @layer renderer-components @kind component */
 import { useState, useEffect, useCallback } from 'react';
 import type { CSSProperties } from 'react';
-import type { LanguageSummary } from '@shared/types/language';
+import type { LanguageSetSummary } from '@shared/storage/languages';
 import { ImportForm } from './ImportForm';
 import { LANGUAGE_NAMES } from './language-names';
-import { LanguageDetail } from './language-detail';
+import { LanguageEditor } from './language-editor';
+import { SetCreateForm } from './language-editor/sub-components/SetCreateForm';
 import * as languagesStore from '@app/lib/storage/languages-store';
 import { Box } from '../../../../../design-system/primitives/Box';
 import { IconButton } from '../../../../../design-system/primitives/IconButton';
@@ -25,16 +26,41 @@ interface LanguageManagerProps {
 
 const LanguageManager = (props: LanguageManagerProps) => {
   const { onDeleteConfirm } = props;
-  const [languages, setLanguages] = useState<LanguageSummary[]>([]);
+  const [languages, setLanguages] = useState<LanguageSetSummary[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
   const [extractLang, setExtractLang] = useState('');
+  const [busy, setBusy] = useState(false);
 
   const refresh = useCallback(async () => {
-    const langs = await languagesStore.listLanguages();
+    const langs = await languagesStore.listLanguageSets();
     setLanguages(langs);
   }, []);
 
   useEffect(() => { refresh(); }, [refresh]);
+
+  const setLabel = useCallback(
+    (set: LanguageSetSummary) => (set.origin === 'rom' ? LANGUAGE_NAMES[set.id] ?? set.name : set.name),
+    [],
+  );
+
+  // Both writes rebake the asset blobs, so the list is locked while one runs.
+  const handleCreate = useCallback(async (id: string, name: string, base: string) => {
+    setBusy(true);
+    try {
+      await languagesStore.createLanguageSet({ id, name, base });
+      await refresh();
+      setSelected(id);
+    } finally { setBusy(false); }
+  }, [refresh]);
+
+  const handleDuplicate = useCallback(async (sourceId: string, id: string, name: string) => {
+    setBusy(true);
+    try {
+      await languagesStore.duplicateLanguageSet(sourceId, id, name);
+      await refresh();
+      setSelected(id);
+    } finally { setBusy(false); }
+  }, [refresh]);
 
   const handleUrlImport = useCallback(async (url: string) => {
     if (!extractLang) return { success: false, message: 'Select a language first' };
@@ -61,7 +87,7 @@ const LanguageManager = (props: LanguageManagerProps) => {
 
   const handleDelete = useCallback((code: string) => {
     const name = LANGUAGE_NAMES[code] ?? code;
-    onDeleteConfirm('Delete Language', `Delete language pack "${name}"? This cannot be undone.`, async () => {
+    onDeleteConfirm('Delete Language', `Delete language set "${name}"? This cannot be undone.`, async () => {
       await languagesStore.deleteLanguage(code);
       if (selected === code) setSelected(null);
       await refresh();
@@ -97,18 +123,25 @@ const LanguageManager = (props: LanguageManagerProps) => {
         onFileImport={handleFileImport}
       />
 
+      <SetCreateForm
+        sets={languages}
+        busy={busy}
+        onCreate={handleCreate}
+        onDuplicate={handleDuplicate}
+      />
+
       <Box className="data-list">
         {languages.length === 0 && <EmptyState message="No languages extracted yet" />}
         {languages.map((lang) => (
           <ListItemRow
-            key={lang.code}
+            key={lang.id}
             icon="🌐"
-            name={LANGUAGE_NAMES[lang.code] ?? lang.code}
-            meta={`${lang.glyphCount} glyphs · ${lang.lineCount} lines`}
-            selected={selected === lang.code}
-            onClick={() => setSelected(lang.code)}
+            name={setLabel(lang)}
+            meta={`${lang.lineCount} lines · base ${lang.base}${lang.origin === 'custom' ? ' · custom' : ''}`}
+            selected={selected === lang.id}
+            onClick={() => setSelected(lang.id)}
             action={
-              <IconButton variant="ghost" size="sm" label="Delete" onClick={(e) => { e.stopPropagation(); handleDelete(lang.code); }}>
+              <IconButton variant="ghost" size="sm" label="Delete" onClick={(e) => { e.stopPropagation(); handleDelete(lang.id); }}>
                 ✕
               </IconButton>
             }
@@ -118,9 +151,7 @@ const LanguageManager = (props: LanguageManagerProps) => {
     </>
   );
 
-  const detail = (
-    <LanguageDetail code={selected} name={selected ? (LANGUAGE_NAMES[selected] ?? selected) : ''} />
-  );
+  const detail = <LanguageEditor id={selected} />;
 
   return <MasterDetailLayout list={list} detail={detail} detailEmpty={!selected} />;
 };

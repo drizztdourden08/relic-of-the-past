@@ -1,0 +1,136 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * Edit mode for one entry, plus the three pieces only it renders — the screen
+ * stack, the whole-message settings strip and its fields. They share this file
+ * the way TokenLine.css carries its chips: none of them appears anywhere else,
+ * so one prefix and one stylesheet keeps the relationship obvious.
+ *
+ * Two columns on a wide panel (the work, then the menu), stacked below the
+ * breakpoint. The block reason sits inside the action row rather than under it,
+ * because it is the disabled button's explanation and has to be read there.
+ */
+
+.entry-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  border: var(--border-width-thin) solid var(--c-gold-dim);
+  border-radius: var(--radius-md);
+  background: var(--c-panel);
+}
+
+/* ─── Header ─── */
+
+.entry-editor__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.entry-editor__id {
+  color: var(--c-gold-bright);
+  font-family: var(--font-mono);
+}
+
+.entry-editor__dirty {
+  color: var(--c-warning);
+}
+
+/* A row, at the end of the header. Without `display`, the buttons stacked. */
+.entry-editor__actions {
+  display: flex;
+  flex: 1 1 auto;
+  gap: var(--space-xs);
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* Long on purpose — it is a sentence, so it wraps and caps its measure. */
+.entry-editor__block {
+  max-width: 46ch;
+  color: var(--c-danger);
+  line-height: var(--leading-tight);
+  text-align: end;
+}
+
+/* ─── Body: work column, then the menu ─── */
+
+.entry-editor__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(18rem, 24rem);
+  gap: var(--space-sm);
+  align-items: start;
+}
+
+@media (width <= 60rem) {
+  .entry-editor__body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.entry-editor__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+
+/* ─── Screen stack ─── */
+
+.entry-editor__screens {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.entry-editor__screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.entry-editor__screen-label {
+  color: var(--c-text-muted);
+  font-family: var(--font-mono);
+}
+
+.entry-editor__no-font {
+  color: var(--c-text-muted);
+  font-style: italic;
+}
+
+/* ─── Whole-message settings strip ─── */
+
+.entry-editor__settings {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-2xs) var(--space-xs);
+  border: var(--border-width-thin) dashed var(--c-border);
+  border-radius: var(--radius-sm);
+}
+
+.entry-editor__settings-label {
+  color: var(--c-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.entry-editor__setting {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.entry-editor__setting-label {
+  color: var(--c-text-muted);
+}
+
+.entry-editor__setting-pick.select-trigger {
+  width: 11ch;
+  font-variant-numeric: tabular-nums;
+}

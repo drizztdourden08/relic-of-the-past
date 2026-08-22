@@ -32,5 +32,7 @@ export type { InventoryCategory, InventorySlot, InventoryViewMode } from './type
 export { COMPACT_LAYOUT, INGAME_EQUIPMENT, INGAME_ITEMS_GRID, INGAME_PASSIVES, INVENTORY_LAYOUT } from './inventory-layouts';
 export { CATEGORY_LABELS, CATEGORY_ORDER, SPRITE_MANIFEST } from './sprite-manifest/manifest';
 export type { SpriteCategory, SpriteManifestEntry } from './sprite-manifest/manifest';
+export { PICTURE_GLYPH_SPRITES, pictureGlyphSpriteByName } from './sprite-manifest/picture-glyph-sprites';
+export type { GlyphSpan, PictureGlyphSprite } from './sprite-manifest/picture-glyph-sprites';
 export { directionOf, isReachable, toScreenIdOf } from './connections/derive';
 export { pendingPartnerId, pendingPartnerScreenId } from './connections/pending-partner';
