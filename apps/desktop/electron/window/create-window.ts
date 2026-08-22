@@ -169,7 +169,15 @@ const createWindow = (): BrowserWindow => {
   // --muted is documented as mandatory alongside --no-focus for every automated
   // launch (docs/contributing/testing.md); enforced the same way so forgetting the
   // literal flag doesn't leave a headless run making noise.
-  if (process.argv.includes('--muted') || isHeadlessLaunch()) {
+  //
+  // Deliberately NOT applied to a --visible launch. setAudioMuted is a webContents-level
+  // kill switch the app's own audio state knows nothing about, so the in-app control kept
+  // showing "unmuted" while nothing could ever play — mute that the user cannot undo, on
+  // the one launch shape meant for them to sit and use. A visible launch mutes through the
+  // app's own master volume instead (the CLI passes --muted only when headless), leaving
+  // the speaker button honest and functional.
+  const visibleLaunch = process.argv.includes('--visible');
+  if (!visibleLaunch && (process.argv.includes('--muted') || isHeadlessLaunch())) {
     mainWindow.webContents.setAudioMuted(true);
   }
 
@@ -179,10 +187,17 @@ const createWindow = (): BrowserWindow => {
     return { action: 'deny' };
   });
 
+  // A visible launch asked to be silent starts the app's OWN volume at zero rather than
+  // muting the webContents, so the in-app control stays truthful and the user can turn
+  // sound on. The renderer reads this off its own URL — the automation IPC that carries
+  // the other launch flags lives in a protected harness file.
+  const startMutedQuery = visibleLaunch && process.argv.includes('--muted') ? { muted: '1' } : undefined;
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL']);
+    const url = new URL(process.env['ELECTRON_RENDERER_URL']);
+    if (startMutedQuery) url.searchParams.set('muted', '1');
+    mainWindow.loadURL(url.toString());
   } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'));
+    mainWindow.loadFile(join(__dirname, '../renderer/index.html'), { query: startMutedQuery });
   }
 
   return mainWindow;

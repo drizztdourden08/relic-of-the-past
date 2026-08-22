@@ -29,9 +29,17 @@ const useAudioSettings = () => {
     }
   }, [masterVolume]);
 
+  /**
+   * A `--muted` launch starts at zero through the app's own volume rather than the
+   * window-level audio kill switch, so the speaker control reflects reality and the user
+   * can unmute normally. The saved volume is remembered as the restore point, which is
+   * what unmuting returns to.
+   */
   const initFromSettings = useCallback((volume: number) => {
-    setMasterVolumeState(volume);
+    const startMuted = typeof window !== 'undefined' && window.location.search.includes('muted=1');
     if (volume > 0) prevVolumeRef.current = volume;
+    setMasterVolumeState(startMuted ? 0 : volume);
+    if (startMuted) setMasterVolume(0);
   }, []);
 
   return {
