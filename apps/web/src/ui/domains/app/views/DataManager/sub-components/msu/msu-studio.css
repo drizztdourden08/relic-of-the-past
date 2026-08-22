@@ -1,0 +1,125 @@
+/* @layer renderer-components @kind style */
+
+.msu-studio {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  height: 100%;
+  min-height: 0;
+}
+
+.msu-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  height: 100%;
+}
+
+/* ─── Pack header ─── */
+
+.msu-pack-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--c-border);
+}
+
+.msu-pack-header__name {
+  max-width: 28rem;
+}
+
+/* ─── Track rows ─── */
+
+.msu-track-row {
+  min-height: 2rem;
+}
+
+.msu-track-row--open {
+  background: var(--c-inset);
+}
+
+.msu-track-row__file {
+  flex: 0 0 auto;
+  max-width: 12rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  cursor: pointer;
+}
+
+.msu-track-row__file--empty {
+  color: var(--c-text-faint);
+}
+
+.msu-track-row__select {
+  flex: 0 0 auto;
+  min-width: 12rem;
+  max-width: 18rem;
+}
+
+.msu-track-row__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex: 0 0 auto;
+}
+
+/* ─── Sound rows ─── */
+
+.msu-sound-row {
+  align-items: flex-start;
+  min-height: 2.25rem;
+}
+
+.msu-sound-row--open {
+  background: var(--c-inset);
+}
+
+.msu-sound-row__ident {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+
+.msu-sound-row__name {
+  overflow: hidden;
+  color: var(--c-text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.msu-sound-row__triggers {
+  overflow: hidden;
+  color: var(--c-text-faint);
+  font-size: var(--text-xs);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ─── Expanded slot ─── */
+
+.msu-track-detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin: var(--space-xs) 0 var(--space-md);
+  padding: var(--space-md);
+  background: var(--c-inset);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+}
+
+.msu-status {
+  margin-top: var(--space-sm);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+.msu-status--error {
+  color: var(--c-danger);
+}

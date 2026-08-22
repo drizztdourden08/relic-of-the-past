@@ -154,3 +154,6 @@ tests/fixtures/save-states/
 
 # Merge base for the two-sided sync — local state, never shared.
 .vault-state.json
+
+# Derived .msul document icon (built by scripts/build/make-msul-icon.mjs)
+apps/web/public/logos/generated/

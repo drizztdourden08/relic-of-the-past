@@ -289,7 +289,6 @@ int main(int argc, char **argv) {
   if (g_config.link_graphics != NULL && !(features3 & kFeatures3_VanillaSafe))
     features3 |= kFeatures3_PlayerSpriteOverride;
   g_wanted_gate_words[3] = features3;
-  ZeldaEnableMsu(g_config.enable_msu);
   ZeldaSetLanguage(g_config.language);
 
   // Init SDL

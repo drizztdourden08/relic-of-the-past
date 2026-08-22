@@ -7,6 +7,7 @@
 #include "snes/ppu.h"
 #include "assets.h"
 #include "audio.h"
+#include "game_hooks.h"
 
 // ---------------------------------------------------------------------------
 // HUD tile value arrays for per-component hiding.
@@ -461,11 +462,14 @@ static void Interrupt_NMI_AudioParts_Locked() {
       zelda_apu_write(APUI01, 0);
   } else {
     sound_effect_ambient_last = sound_effect_ambient;
-    zelda_apu_write(APUI01, sound_effect_ambient);
+    if (!GameHook_Sound(kSoundChannel_Ambient, sound_effect_ambient))
+      zelda_apu_write(APUI01, sound_effect_ambient);
     sound_effect_ambient = 0;
   }
-  zelda_apu_write(APUI02, sound_effect_1);
-  zelda_apu_write(APUI03, sound_effect_2);
+  if (!GameHook_Sound(kSoundChannel_Sfx1, sound_effect_1))
+    zelda_apu_write(APUI02, sound_effect_1);
+  if (!GameHook_Sound(kSoundChannel_Sfx2, sound_effect_2))
+    zelda_apu_write(APUI03, sound_effect_2);
   sound_effect_1 = 0;
   sound_effect_2 = 0;
 

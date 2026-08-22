@@ -1,103 +1,151 @@
 /* @layer renderer-components @kind component */
-import type { CSSProperties } from 'react';
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../../design-system/primitives/Text';
-import type { SelectOption } from '../../../../../../design-system/primitives/Select';
-
-const IL: Record<string, CSSProperties> = {
-  col: { display: 'flex', flexDirection: 'column', height: '100%' },
-  gridMb: { marginBottom: 'var(--space-md)' },
-  muted: { color: 'var(--c-text-muted)' },
-  faint: { color: 'var(--c-text-faint)' },
-};
-import { formatBytes } from '../../../../../../../utils/formatBytes';
-import { TrackRow } from './TrackRow';
-import type { MsuFile, TrackInfo, MatchedTrack } from './msu.type';
+import { useCallback } from 'react';
+import type { MsuPackManifest } from '@shared/types/msu-manifest';
+import { DELUXE_TRACK_THRESHOLD } from '@shared/types/msu-manifest';
+import { Box } from '@ds/primitives/Box';
+import { IconButton } from '@ds/primitives/IconButton';
+import { Text } from '@ds/primitives/Text';
+import type { SelectOption } from '@ds/primitives/Select';
+import { formatBytes } from '@app/utils/formatBytes';
+import { MsuPackHeader } from './MsuPackHeader';
+import { TrackDetail } from './TrackDetail';
+import { TrackSection } from './TrackSection';
+import { useOriginalPreview } from './behavior/useOriginalPreview';
+import { trackTarget } from './behavior/layer-target';
+import type { ExportFormat } from './behavior/usePackExport';
+import type { PreviewReportStore } from './behavior/preview-report-store';
+import type { MatchedTrack, MsuFile, PackFormat } from './msu.type';
+import './msu-studio.css';
 
 interface MsuTrackPanelProps {
   selected: string;
   files: MsuFile[];
-  trackInfos: TrackInfo[];
+  manifest: MsuPackManifest;
+  saveBase: MsuPackManifest;
+  format: PackFormat;
+  totalSize: number;
   isDeluxe: boolean;
   hasOpuz: boolean;
-  matchedTracks: MatchedTrack[];
-  unmatchedFiles: TrackInfo[];
+  rows: MatchedTrack[];
+  unusedFiles: MsuFile[];
   fileOptions: SelectOption[];
+  playing: number | null;
+  /** The preview's live per-layer feed, read only by the readouts that draw it. */
+  reportStore: PreviewReportStore;
+  openTrack: number | null;
+  busy: boolean;
+  exporting: ExportFormat | null;
+  statusMessage: string | null;
+  statusOk: boolean;
   onTrackAssign: (trackNum: number, fileName: string) => void;
+  onTrackUpload: (trackNum: number, files: File[]) => void;
+  onToggleLayers: (trackNum: number) => void;
+  onPreview: (trackNum: number) => void;
+  onStopPreview: () => void;
+  onRename: (name: string) => void;
+  onExport: (format: ExportFormat) => void;
+  onDeleteFile: (fileName: string) => void;
+  onReload: () => void;
 }
 
 const MsuTrackPanel = (props: MsuTrackPanelProps) => {
-  const { selected, files, trackInfos, isDeluxe, hasOpuz, matchedTracks, unmatchedFiles, fileOptions, onTrackAssign } = props;
+  const {
+    selected, files, manifest, saveBase, format, totalSize, isDeluxe, hasOpuz, rows, unusedFiles, fileOptions,
+    playing, reportStore, openTrack, busy, exporting, statusMessage, statusOk,
+    onTrackAssign, onTrackUpload, onToggleLayers, onPreview, onStopPreview, onRename, onExport,
+    onDeleteFile, onReload,
+  } = props;
 
-  const standardTracks = matchedTracks.filter((t) => t.trackNum <= 36);
-  const deluxeTracks = matchedTracks.filter((t) => t.trackNum > 36);
+  const filled = rows.filter((r) => r.fileName !== null).length;
+
+  // The chip's own music, for hearing a slot as the game plays it. Owned here rather than passed
+  // in: it needs no pack context, only the slot number.
+  const original = useOriginalPreview('music');
+
+  // One thing sounds at a time, so each start silences the other.
+  const previewTrack = useCallback((trackNum: number) => {
+    original.stop();
+    onPreview(trackNum);
+  }, [original, onPreview]);
+
+  const playOriginal = useCallback((trackNum: number) => {
+    onStopPreview();
+    original.play(trackNum);
+  }, [original, onStopPreview]);
+
+  const renderDetail = useCallback((trackNum: number) => (
+    <TrackDetail
+      pack={selected}
+      trackNum={trackNum}
+      target={trackTarget(trackNum)}
+      manifest={manifest}
+      saveBase={saveBase}
+      availableFiles={files.map((f) => f.name)}
+      isLayered={format === 'layered'}
+      reportStore={reportStore}
+      uploading={busy}
+      onUpload={onTrackUpload}
+      onSaved={onReload}
+    />
+  ), [selected, manifest, saveBase, files, format, reportStore, busy, onTrackUpload, onReload]);
+
+  const sectionProps = {
+    files, fileOptions, playing, reportStore, openTrack, busy,
+    playingOriginal: original.playing,
+    onAssign: onTrackAssign, onPreview: previewTrack, onStopPreview, onPlayOriginal: playOriginal,
+    onToggleLayers, renderDetail,
+  };
 
   return (
-    <Box style={IL.col}>
-      <Text as="h3" className="detail-panel__title">{selected}</Text>
-      <Box className="detail-panel__grid" style={IL.gridMb}>
-        <Text className="detail-panel__label">Tracks</Text>
-        <Text className="detail-panel__value">{trackInfos.length}</Text>
-        <Text className="detail-panel__label">Total Size</Text>
-        <Text className="detail-panel__value">{formatBytes(files.reduce((s, f) => s + f.size, 0))}</Text>
-        <Text className="detail-panel__label">Type</Text>
-        <Text className="detail-panel__value">
-          {isDeluxe ? 'Deluxe' : 'Standard'}
-          {hasOpuz ? ' (Opus)' : ' (PCM)'}
+    <Box className="msu-panel">
+      <MsuPackHeader
+        pack={selected}
+        format={format}
+        slotCount={filled}
+        fileCount={files.length}
+        totalSize={totalSize}
+        isDeluxe={isDeluxe}
+        hasOpuz={hasOpuz}
+        busy={busy}
+        exporting={exporting}
+        onRename={onRename}
+        onExport={onExport}
+      />
+
+      {(original.note ?? statusMessage) != null && (
+        <Text className={`msu-status${original.note === null && statusOk ? '' : ' msu-status--error'}`}>
+          {original.note ?? statusMessage}
         </Text>
-      </Box>
-
-      {standardTracks.length > 0 && (
-        <Box className="detail-panel__section">
-          <Text as="h4" className="detail-panel__section-title">Standard Tracks</Text>
-          <Box className="track-list">
-            {standardTracks.map((track) => (
-              <TrackRow
-                key={track.trackNum}
-                trackNum={track.trackNum}
-                description={track.description}
-                fileName={track.fileName}
-                fileSize={files.find((f) => f.name === track.fileName)?.size}
-                options={fileOptions}
-                onAssign={onTrackAssign}
-              />
-            ))}
-          </Box>
-        </Box>
       )}
 
-      {deluxeTracks.length > 0 && (
-        <Box className="detail-panel__section">
-          <Text as="h4" className="detail-panel__section-title">Deluxe Tracks</Text>
-          <Box className="track-list">
-            {deluxeTracks.map((track) => (
-              <TrackRow
-                key={track.trackNum}
-                trackNum={track.trackNum}
-                description={track.description}
-                fileName={track.fileName}
-                fileSize={files.find((f) => f.name === track.fileName)?.size}
-                options={fileOptions}
-                onAssign={onTrackAssign}
-              />
-            ))}
-          </Box>
-        </Box>
-      )}
+      <TrackSection
+        title="Standard Slots"
+        rows={rows.filter((r) => r.trackNum < DELUXE_TRACK_THRESHOLD)}
+        {...sectionProps}
+      />
+      <TrackSection
+        title="Extended Slots"
+        rows={rows.filter((r) => r.trackNum >= DELUXE_TRACK_THRESHOLD)}
+        {...sectionProps}
+      />
 
-      {unmatchedFiles.length > 0 && (
+      {unusedFiles.length > 0 && (
         <Box className="detail-panel__section">
-          <Text as="h4" className="detail-panel__section-title" style={IL.muted}>
-            Unmatched Files ({unmatchedFiles.length})
+          <Text as="h4" className="detail-panel__section-title">
+            Unused Audio ({unusedFiles.length})
           </Text>
           <Box className="track-list">
-            {unmatchedFiles.map((f) => (
-              <Box key={f.fileName} className="track-list__item">
-                <Text className="track-list__num" style={IL.faint}>—</Text>
-                <Text className="track-list__name" style={IL.muted}>{f.fileName}</Text>
-                <Text className="track-list__size">
-                  {formatBytes(files.find((file) => file.name === f.fileName)?.size ?? 0)}
-                </Text>
+            {unusedFiles.map((file) => (
+              <Box key={file.name} className="track-list__item">
+                <Text className="track-list__num">—</Text>
+                <Text className="track-list__name">{file.name}</Text>
+                <Text className="track-list__size">{formatBytes(file.size)}</Text>
+                <IconButton
+                  variant="ghost" size="sm" label={`Delete ${file.name}`} disabled={busy}
+                  onClick={() => onDeleteFile(file.name)}
+                >
+                  ✕
+                </IconButton>
               </Box>
             ))}
           </Box>

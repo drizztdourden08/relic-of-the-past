@@ -3,7 +3,10 @@
  * Renderer MSU store over FileStore + import (pick/download → zip/raw → install).
  * Mirrors the window.api MSU surface (readMsuTrackFile returns ArrayBuffer).
  */
+import type { MsuPackManifest, MsuPackMeta, MsuResumeState } from '@shared/types/msu-manifest';
+import type { SaveKind } from '@shared/storage/save-paths';
 import * as msu from '@shared/storage/msu';
+import * as resume from '@shared/storage/msu-resume';
 import { fetchToBytes } from '@shared/storage/download';
 import { isZip, unzip } from '@shared/storage/archive';
 import { getPlatform } from '@app/platform/get-platform';
@@ -40,7 +43,26 @@ const nameFromUrl = (url: string): string => {
 const listMsuPacks = () => msu.listPacks(files());
 const getMsuPackFiles = (pack: string) => msu.getPackFiles(files(), pack);
 const getMsuTrackList = (pack: string) => msu.getTrackList(files(), pack);
+const listMsuAudioFiles = (pack: string) => msu.listAudioFiles(files(), pack);
 const deleteMsuPack = (pack: string) => msu.deletePack(files(), pack);
+
+// ── Pack editing (.msul manifest + per-file operations) ──
+const readMsuManifest = (pack: string) => msu.readManifest(files(), pack);
+const writeMsuManifest = (pack: string, manifest: MsuPackManifest) => msu.writeManifest(files(), pack, manifest);
+const createMsuPack = (pack: string, meta?: Partial<MsuPackMeta>) => msu.createPack(files(), pack, meta);
+const renameMsuPack = (from: string, to: string) => msu.renamePack(files(), from, to);
+const renameMsuTrackFile = (pack: string, from: string, to: string) => msu.renameTrackFile(files(), pack, from, to);
+const deleteMsuTrackFile = (pack: string, fileName: string) => msu.deleteTrackFile(files(), pack, fileName);
+const writeMsuTrackFile = (pack: string, fileName: string, data: ArrayBuffer) =>
+  msu.writeTrackFile(files(), pack, fileName, new Uint8Array(data));
+
+// ── Per-save music-resume sidecars ──
+const writeMsuResume = (profile: string, kind: SaveKind, id: string | number, state: MsuResumeState) =>
+  resume.writeMsuResume(files(), profile, kind, id, state);
+const readMsuResume = (profile: string, kind: SaveKind, id: string | number) =>
+  resume.readMsuResume(files(), profile, kind, id);
+const deleteMsuResume = (profile: string, kind: SaveKind, id: string | number) =>
+  resume.deleteMsuResume(files(), profile, kind, id);
 
 const readMsuTrackFile = async (pack: string, fileName: string): Promise<ArrayBuffer> => {
   const bytes = await msu.readTrackFile(files(), pack, fileName);
@@ -60,4 +82,10 @@ const importMsu = async (pack: string, url: string): Promise<MsuResult> => {
   } catch (err) { const msg = err instanceof Error ? err.message : String(err); emit('error', undefined, undefined, msg); return { success: false, error: msg }; }
 };
 
-export { listMsuPacks, getMsuPackFiles, getMsuTrackList, deleteMsuPack, readMsuTrackFile, importMsuFile, importMsu };
+export {
+  listMsuPacks, getMsuPackFiles, getMsuTrackList, listMsuAudioFiles, deleteMsuPack, readMsuTrackFile,
+  importMsuFile, importMsu,
+  readMsuManifest, writeMsuManifest, createMsuPack, renameMsuPack, renameMsuTrackFile, deleteMsuTrackFile,
+  writeMsuTrackFile,
+  writeMsuResume, readMsuResume, deleteMsuResume,
+};

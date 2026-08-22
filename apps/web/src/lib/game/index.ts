@@ -10,9 +10,9 @@ export type { DoorBoundaryTile, DungeonMapPosition, FallHole, LiveSpriteInfo, Ov
 export type { SimChestRaw, SimSpriteRaw, SimDoorRaw, SimDoorDirection, SimFlagSnapshot } from './wasm-bridge';
 export type { SpriteCombatInfo, CombatTables } from './wasm-bridge';
 export { startGame, resetGame } from './lifecycle';
-export { setMsuData, setAutoSaveConfig, setLinkSpriteData } from './lifecycle';
+export { setAutoSaveConfig, setLinkSpriteData } from './lifecycle';
 export { applyPlayerSprite, clearPlayerSprite } from './player-sprite';
-export type { MsuTrackData, AutoSaveConfig } from './lifecycle';
+export type { AutoSaveConfig } from './lifecycle';
 export { saveState, loadState, loadNamedState, loadStateRef, captureStateBuffer, loadStateFromBuffer } from './save-states';
 export { captureGameFrameBlob, fulfillFrameCapture } from './capture-frame';
 export { setItemOverride, clearItemOverrides } from './randomizer';

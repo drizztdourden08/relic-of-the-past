@@ -106,6 +106,18 @@ const getPendingVolume = (): number | null => {
   return pendingVolume;
 };
 
+/**
+ * The node replacement music should feed into, plus the context to build its nodes on.
+ * Routing through the master gain (when it exists yet) keeps MSU under the master volume
+ * slider like every other sound; before it exists, the destination is the honest fallback.
+ * Null while SDL2 has not created its audio context — the caller should retry after boot.
+ */
+const getMasterAudioTarget = (): { ctx: AudioContext; node: AudioNode } | null => {
+  const sdl2 = getSDL2Audio();
+  if (!sdl2) return null;
+  return { ctx: sdl2.audioContext, node: gainNode ?? sdl2.audioContext.destination };
+};
+
 const resetMasterVolume = (): void => {
   gainNode = null;
   pendingVolume = null;
@@ -128,6 +140,7 @@ const resumeAudio = (): void => {
 };
 
 export {
+  getMasterAudioTarget,
   getPendingVolume,
   initMasterVolume,
   resetMasterVolume,

@@ -185,5 +185,40 @@ bool GameHook_RunningManExtendRun(int k);
 // (back to idle, in place) at a world-distance cap or the moment he collides with solid geometry,
 // so a wide view never shows him stuck against the fence/forest bounding the Kakariko race track.
 void GameHook_RunningManOverrun(int k, bool running);
+// ─── Music (music_hooks.c) ───
+
+// Called on every write the game makes to the SPC music-control port. Reports the raw control byte
+// plus the location context a host player needs to resolve which music it actually means (the module,
+// the entrance, and the overworld area). Gated on kHostGate_ExternalMusic: zero host-calls when off.
+void GameHook_MusicCtrl(uint8 music_ctrl);
+
+// True while the host owns music playback, so the core keeps its own music channel silent.
+bool GameHook_MusicExternal(void);
+
+// Re-announces the current track so the sound chip resumes its own music. Call BEFORE clearing
+// the external-music gate: the control port is held paused while the host plays, and nothing
+// else would write it again until the music happened to change.
+void GameHook_MusicRestore(void);
+
+// ─── Sound (sound_hooks.c) ───
+
+// The three sound-effect ports the audio NMI writes, in the order it writes them. Ambient (APUI01)
+// carries the looping environment sound; the two sfx channels (APUI02/APUI03) carry one-shots and the
+// game picks whichever is free. An id means a different sound per channel, so a claim is per channel.
+enum {
+  kSoundChannel_Ambient = 0,
+  kSoundChannel_Sfx1 = 1,
+  kSoundChannel_Sfx2 = 2,
+  kSoundChannel_Count = 3,
+};
+
+// Record which of the 64 sound ids the host can play on |channel|, as a bitmask pair (ids 0-31 in
+// |low|, 32-63 in |high|). Out-of-range channels are ignored.
+void GameHook_SetSoundClaim(int channel, uint32 low, uint32 high);
+
+// Report one sound the game wants played, and answer whether the host took it. True means the host
+// has claimed this id — which is also the signal NOT to write the port, so the chip stays silent for
+// it. Gated on kHostGate_ExternalAmbient / kHostGate_ExternalSfx: zero host-calls when off.
+bool GameHook_Sound(int channel, uint8 raw);
 
 #endif // GAME_HOOKS_H

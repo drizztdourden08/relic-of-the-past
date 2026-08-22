@@ -104,6 +104,14 @@ const registerMsuHandlers = (): void => {
     } catch { return []; }
   });
 
+  // A pack file the app was opened with (file association). Scoped to the one extension on
+  // purpose: this reads a path chosen outside the app's own storage, so it must not become a
+  // general-purpose file reader for the renderer.
+  handle('msu:readMsulFile', async (_event, filePath: string) => {
+    if (!filePath.toLowerCase().endsWith('.msul')) throw new Error('Not a music-pack file');
+    return toArrayBuffer(await readFile(filePath));
+  });
+
   handle('msu:readTrackFile', async (_event, packName: string, fileName: string) => {
     if (fileName.includes('..') || fileName.includes('/') || fileName.includes('\\')) {
       throw new Error('Invalid filename');

@@ -39,11 +39,21 @@ const useProfileManagement = (params: {
     return { profiles: profileList, romStatuses: romStatusList };
   }, []);
 
-  const loadProfileForGame = useCallback(async (profile: Profile) => {
+  const loadProfileForGame = useCallback(async (staleProfile: Profile) => {
     onGameClear();
     await resetGame();
 
-    setActiveProfile(profile);
+    // Re-read the profile from storage for THIS boot: the caller's object can be a snapshot
+    // from an earlier load, and fields edited in Data Manager since (msuPack, language) must
+    // reach the game rather than the values the snapshot was taken with.
+    const profile = (await profileStore.listProfiles()).find((p) => p.id === staleProfile.id) ?? staleProfile;
+
+    // Deliberately the CALLER's object, not the re-read one. Automation keys an effect on
+    // activeProfile's identity (App/behavior/useAutoTest.ts), so handing back a fresh object
+    // re-runs that effect, whose cleanup cancels the launch already in flight — the run then
+    // stops before it loads its save state. Nothing needs the fresh object in state: the
+    // settings UI reads the pack from storage itself.
+    setActiveProfile(staleProfile);
     setLoadingProfile(profile.name);
     void applySpritesForRom(profile.romFile);
     log.app(`Loading profile: ${profile.name} (${profile.romFile})`);
@@ -55,8 +65,9 @@ const useProfileManagement = (params: {
     await loadMsuPack(profile, settings);
     await loadPlayerSprite(settings);
 
-    const msuPath = (profile.msuPack && settings.enableMSU !== 'false') ? '/msu/' : undefined;
-    const ini = serializeToIni(settings, msuPath, profile.language);
+    // No MSU path any more: music packs are played by the app, not the core, so nothing is
+    // written into the core's virtual filesystem for it to open.
+    const ini = serializeToIni(settings, undefined, profile.language);
     log.app(`Loaded profile settings (aspect: ${settings.aspectRatio}, viewport: ${settings.viewportConstraint}, renderer: ${settings.newRenderer ? 'new' : 'old'}, language: ${profile.language ?? 'us'})`);
 
     // Configure auto-save before game starts

@@ -22,7 +22,8 @@ const VANILLA_SAFE_LOCKED_SETTINGS: readonly string[] = [
   // Replacement soundtrack: serializeToIni emits MSU off and withholds the pack path.
   'enableMSU',
   'resumeMSU',
-  'msuVolume',
+  'packReplaceAmbient',
+  'packReplaceSfx',
   // Custom player sheet: serializeToIni withholds LinkGraphics, and the override bit is masked.
   'linkSprite',
   // Enhanced HUD and pause overlay: the HudOverride bit is masked, so the native HUD is restored and

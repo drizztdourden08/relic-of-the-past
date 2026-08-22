@@ -6,6 +6,7 @@ export type {
 export { ENTITY_COUNTS, ID_PAD_WIDTH, KIND_ID_PREFIXES, makeId } from './ids';
 export type { EntityOf, EntityRecordMap } from './entity-map';
 export type { ItemGroupRecord } from './item-group';
+export type { SoundNameRecord } from './sound-name';
 export type { EnumerationCategory, EnumerationEntry } from './enumeration';
 export type {
   InteriorKind, ScreenGameId, ScreenKind, ScreenPosition, ScreenRecord, ScreenSpawn,

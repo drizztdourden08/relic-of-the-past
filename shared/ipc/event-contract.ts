@@ -38,6 +38,9 @@ interface EventContract {
   // Data imports (ROM / MSU / language / sprites)
   'import:progress': (progress: ImportProgress) => void;
 
+  // A .msul music pack the app was opened with (file association / open-file).
+  'msu:openPack': (filePath: string) => void;
+
   // Controllers (SDL3 native transport — see apps/desktop/electron/input/sdl3-source.ts)
   'controller:added': (info: ControllerAddedInfo) => void;
   'controller:state': (deviceKey: string, buttons: boolean[], axes: number[]) => void;

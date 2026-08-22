@@ -14,6 +14,7 @@
 
 import type { GameSettings } from '@shared/types/settings';
 import { getModule } from './wasm-bridge';
+import { msuSyncVolume } from './msu-session';
 import { setMasterVolume } from './audio-volume';
 import { updateHapticBridgeSettings, updateHapticsProfileEnabled } from '../input/haptic-bridge';
 import { DEFAULT_SETTINGS } from './settings';
@@ -74,6 +75,8 @@ const pushLiveSettings = (settings: GameSettings): boolean => {
     const sfxVol = settings.sfxMuted ? 0 : Math.round(settings.sfxVolume * 1.28);
     try { mod.ccall('WasmSetMusicVolume', null, ['number'], [musicVol]); lastMusicVol = musicVol; } catch {}
     try { mod.ccall('WasmSetSfxVolume', null, ['number'], [sfxVol]); lastSfxVol = sfxVol; } catch {}
+    // Replacement music is mixed in the app, not the sound chip, so it needs the same push.
+    msuSyncVolume();
 
     // FPS display toggle (guard: function may not exist in older WASM builds)
     try {

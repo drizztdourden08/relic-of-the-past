@@ -151,9 +151,22 @@ interface GameSettings {
   audioFreq: number;
   audioChannels: 1 | 2;
   audioSamples: number;
-  enableMSU: 'false' | 'true' | 'deluxe' | 'opuz' | 'deluxe-opuz';
+  // 'auto' (default): enableMSU/audioFreq/audioChannels are derived from the assigned pack's actual
+  // contents (shared/features/msu-auto-config.ts) rather than user-edited. 'manual': the three below
+  // are free-form, same as before this field existed.
+  msuConfigMode: 'auto' | 'manual';
+  // The pack formats, including 'msul' — our own layered container, whose manifest decides
+  // what each slot plays rather than one file per slot.
+  enableMSU: 'false' | 'true' | 'deluxe' | 'opuz' | 'deluxe-opuz' | 'msul';
   resumeMSU: boolean;
-  msuVolume: number; // 0-100
+  // A pack may replace the game's ambient beds and sound effects as well as its music. Each
+  // group is its own switch because they are separate decisions: someone may want an authored
+  // rain bed while keeping every native effect. Off means the core never even reports those
+  // sounds to the app, so the group costs nothing when unused.
+  packReplaceAmbient: boolean;
+  packReplaceSfx: boolean;
+  // No separate msuVolume: MSU replaces the music channel rather than running alongside it, so
+  // musicVolume governs both — serializeToIni writes MSUVolume from musicVolume.
 
   // ─── Post-Processing ───
   overworldEdgeEffect: boolean;

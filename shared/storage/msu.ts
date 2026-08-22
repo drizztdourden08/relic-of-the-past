@@ -1,9 +1,13 @@
 /* @layer shared-storage @kind logic */
-/** MSU audio-pack storage over FileStore (msu/<pack>/<track>.{pcm,opuz,msu}). */
+/**
+ * MSU audio-pack storage over FileStore (msu/<pack>/<track>.{pcm,opuz,msu}).
+ * The editing half lives in ./msu-edit and is re-exported at the bottom, so this
+ * module stays the one import site for the whole MSU storage surface.
+ */
 import type { FileStore } from '@shared/platform';
+import { isAudioFile, packDir, packFile } from './msu-paths';
 
 const isMsuFile = (name: string): boolean => /\.(pcm|opuz|msu)$/i.test(name);
-const packDir = (pack: string): string => `msu/${pack}`;
 
 const listPacks = async (files: FileStore): Promise<{ name: string; fileCount: number; totalSize: number }[]> => {
   const out: { name: string; fileCount: number; totalSize: number }[] = [];
@@ -34,15 +38,30 @@ const getTrackList = async (files: FileStore, pack: string): Promise<{ fileName:
   return out;
 };
 
-const readTrackFile = (files: FileStore, pack: string, fileName: string): Promise<Uint8Array | null> => {
-  if (fileName.includes('..') || fileName.includes('/') || fileName.includes('\\')) throw new Error('Invalid filename');
-  return files.readBytes(`${packDir(pack)}/${fileName}`);
+// Every audio file in the pack, whatever its name — a layered pack's files are
+// arbitrary (wind-loop.flac), so the numbered getTrackList above cannot see them.
+const listAudioFiles = async (files: FileStore, pack: string): Promise<{ name: string; size: number }[]> => {
+  const out: { name: string; size: number }[] = [];
+  for (const f of (await files.list(packDir(pack))).filter(isAudioFile)) {
+    const st = await files.stat(`${packDir(pack)}/${f}`);
+    if (st && !st.isDirectory) out.push({ name: f, size: st.bytes });
+  }
+  return out;
 };
+
+const readTrackFile = (files: FileStore, pack: string, fileName: string): Promise<Uint8Array | null> =>
+  files.readBytes(packFile(pack, fileName));
 
 const deletePack = (files: FileStore, pack: string): Promise<void> => files.remove(packDir(pack));
 
 const installTracks = async (files: FileStore, pack: string, tracks: { name: string; bytes: Uint8Array }[]): Promise<void> => {
-  for (const t of tracks) await files.writeBytes(`${packDir(pack)}/${t.name}`, t.bytes);
+  for (const t of tracks) await files.writeBytes(packFile(pack, t.name), t.bytes);
 };
 
-export { isMsuFile, listPacks, getPackFiles, getTrackList, readTrackFile, deletePack, installTracks };
+export {
+  isMsuFile, listPacks, getPackFiles, getTrackList, listAudioFiles, readTrackFile, deletePack, installTracks,
+};
+export { isAudioFile } from './msu-paths';
+export {
+  readManifest, writeManifest, createPack, renamePack, writeTrackFile, deleteTrackFile, renameTrackFile,
+} from './msu-edit';

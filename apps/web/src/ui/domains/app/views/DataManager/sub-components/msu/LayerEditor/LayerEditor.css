@@ -1,0 +1,75 @@
+/* @layer renderer-components @kind style */
+
+.layer-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.layer-editor__error {
+  font-size: var(--text-xs);
+  color: var(--c-danger);
+}
+
+.layer-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.layer-card__header {
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--c-border);
+}
+
+.layer-card__index {
+  min-width: 1.25rem;
+  color: var(--c-text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.layer-card__name {
+  flex: 1;
+  min-width: 8rem;
+}
+
+.layer-card__modes,
+.layer-card__files,
+.layer-card__intervals {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* The two optional scheduling settings. Framed, and inset from the controls above them, so
+   neither is mistaken for another volume-style slider or for body copy — both were. */
+.layer-card__crossfade,
+.layer-card__switch {
+  padding: var(--space-sm) var(--space-md);
+  background: var(--c-inset);
+  border: 1px solid var(--c-border);
+  border-left: 2px solid var(--c-gold);
+  border-radius: var(--radius-md);
+}
+
+/* The exact-seconds box and the state chip sit beside the slider, so the slider needs a floor
+   wide enough to still be draggable and a ceiling that leaves room for them. */
+.layer-card__crossfade .slider {
+  flex: 1 1 12rem;
+  min-width: 10rem;
+  max-width: 22rem;
+}
+
+.layer-card__file-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+}
+
+.layer-card__file-select {
+  min-width: 12rem;
+  max-width: 20rem;
+}

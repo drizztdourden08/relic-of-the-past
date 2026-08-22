@@ -68,6 +68,20 @@ uint32_t WasmGetHostGateWord(int index) {
   return HostGates_GetWord(index);
 }
 
+// Which sound ids the host can play on one channel, as a bitmask pair (ids 0-31 in |low|, 32-63 in
+// |high|). A claimed id is reported to the host and never written to the chip; everything else plays
+// natively. Paired with the kHostGate_ExternalAmbient / kHostGate_ExternalSfx bits above.
+EMSCRIPTEN_KEEPALIVE
+void WasmSetSoundClaim(int channel, uint32_t low, uint32_t high) {
+  GameHook_SetSoundClaim(channel, low, high);
+}
+
+// Hands music back to the sound chip. Paired with clearing the external-music gate.
+EMSCRIPTEN_KEEPALIVE
+void WasmRestoreMusic(void) {
+  GameHook_MusicRestore();
+}
+
 // The three original per-word entry points, kept as adapters onto the same array so every existing
 // caller keeps working unchanged. Prefer WasmSetGateWord for anything new.
 EMSCRIPTEN_KEEPALIVE
