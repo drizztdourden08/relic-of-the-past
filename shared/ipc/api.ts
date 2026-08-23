@@ -87,7 +87,10 @@ interface ExtrasApi {
   // Test/automation startup flags (see electron window/startup-config.ts). `automation`
   // is true for ANY automated launch and makes it read-only for shared configuration.
   startup: {
-    fresh: boolean; widgets: string[]; automation: boolean; muted: boolean;
+    fresh: boolean; widgets: string[]; automation: boolean;
+    // The launch's audio intent, applied through the app's own mute control. Both
+    // directions are explicit so neither depends on the profile's stored volume.
+    muted: boolean; sound: boolean;
     // Boot the game and stop at its title screen; no save state involved.
     autoStart: boolean;
   };

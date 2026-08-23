@@ -65,6 +65,11 @@ const useAutoTest = ({ activeProfile, loadProfileForGame }: AutoTestDeps) => {
         await loadStateRef(args.autoState);
         // Wait for a few frames to render
         await new Promise((r) => setTimeout(r, 2000));
+      } else if (args.screenshot) {
+        // 'running' is reached before the first frame is painted, so a screenshot taken
+        // right here catches a black canvas and proves nothing. Same settle the state
+        // branch above already relies on.
+        await new Promise((r) => setTimeout(r, 2000));
       }
 
       // Take screenshot if requested

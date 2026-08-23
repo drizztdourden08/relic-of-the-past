@@ -34,6 +34,7 @@ const api: IpcApi = {
     // Start with the app's master volume at zero. A launch flag, never a window-level
     // audio override, so the in-app control still reflects and owns the state.
     muted: process.argv.includes('--startup-muted'),
+    sound: process.argv.includes('--startup-sound'),
     autoStart: process.argv.includes('--startup-auto-start'),
   },
   // Named-instance identity (--instance / --profile), null on a normal launch. The

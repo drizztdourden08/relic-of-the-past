@@ -8,7 +8,8 @@
  *                        their default side, on top of a clean layout.
  *   --fresh              Ignore the saved widget layout, start with nothing open
  *                        (no home menu), and do NOT persist layout/window changes.
- *   --muted              Start with the app's own master volume at zero.
+ *   --muted              Mute the app once it is up, exactly as the speaker button does.
+ *   --sound              The opposite signal, for a profile that was left muted.
  *   --auto-start         Boot the game with the active profile and stop there, so the
  *                        game's own title screen comes up and the profile's SRAM files
  *                        are there to continue from. No state is loaded — that is what
@@ -55,6 +56,7 @@ const startupRendererArgs = (config: StartupConfig): string[] => {
   // mechanism for every launch shape: the volume the app starts at, which its own
   // control then owns.
   if (process.argv.includes('--muted')) args.push('--startup-muted');
+  if (process.argv.includes('--sound')) args.push('--startup-sound');
   // Starting the game is a renderer action (it owns the profile and the module), so the
   // flag travels rather than being acted on here.
   if (process.argv.includes('--auto-start')) args.push('--startup-auto-start');
