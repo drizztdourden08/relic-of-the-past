@@ -52,7 +52,7 @@ const hookSrcs = [
   'state_queries_room_objects', 'attr_grid_state', 'gated_empty', 'receive_counters',
   'sim_queries', 'sim_triggers', 'item_overrides', 'check_triggers', 'ui_state', 'cheats', 'haptic_events',
   'player_sprite', 'transition_events', 'state_queries_combat', 'state_queries_oam',
-  'host_gates', 'hud_override', 'gba_alttp', 'gba_pyramid_entrance',
+  'host_gates', 'hud_override', 'running_man', 'gba_alttp', 'gba_pyramid_entrance',
 ].map((f) => h(`${f}.c`));
 
 // Our Emscripten entry points (replace the native main.c). Resolved from this dir.

@@ -6062,6 +6062,7 @@ void Sprite_RunningMan(int k) {  // 85e8b2
   static const uint8 kRunningMan_A[4] = {120, 24, 128, 3};
   int j;
   RunningMan_Draw(k);
+  GameHook_RunningManStayActive(k);
   if (Sprite_ReturnIfInactive(k))
     return;
   Sprite_TrackBodyToHead(k);
@@ -6097,6 +6098,7 @@ void Sprite_RunningMan(int k) {  // 85e8b2
     if (sprite_delay_main[k] != 0) {
       sprite_graphics[k] = frame_counter >> 3 & 1;
       Sprite_MoveXY(k);
+      GameHook_RunningManOverrun(k, false);
     } else {
       RunningBoy_SpawnDustGarnish(k);
       sprite_graphics[k] = frame_counter >> 2 & 1;
@@ -6104,6 +6106,7 @@ void Sprite_RunningMan(int k) {  // 85e8b2
       sprite_x_vel[k] = kRunningMan_Xvel[j];
       sprite_y_vel[k] = kRunningMan_Yvel[j];
       Sprite_MoveXY(k);
+      GameHook_RunningManOverrun(k, true);
       if (sprite_A[k]) {
         sprite_A[k]--;
         break;
@@ -6111,6 +6114,11 @@ void Sprite_RunningMan(int k) {  // 85e8b2
       if (sprite_ai_state[k] == 1) {  // left
         sprite_A[k] = 255;
         sprite_head_dir[k] = 2;
+      } else if (kRunningMan_Dir[sprite_B[k]] < 0 && GameHook_RunningManExtendRun(k)) {
+        // widescreen: the scripted right-side path (right, down, right) is a fixed handful of
+        // frames tuned to end past a 256px screen — skip the vanilla "return to idle" and keep
+        // him running the same direction; sprite_B stays put so this stays reachable every time
+        // its re-armed timer runs out, without ever advancing past the last real leg index.
       } else {
         j = sprite_B[k]++;
         sprite_A[k] = kRunningMan_A[j];

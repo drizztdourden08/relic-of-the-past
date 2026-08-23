@@ -165,4 +165,25 @@ void GameHook_ModuleFrameEnd(void);
 // Captures the completed OAM for one frame into a diagnostic ring; no-op without developer tools.
 void GameHook_CaptureOamFrame(void);
 
+// ─── Running Man Widescreen Overrun (running_man.c) ───
+
+// Called every frame right after RunningMan_Draw, before Sprite_ReturnIfInactive gates the rest of
+// the function. No-op unless a wide/tall view is active and he's actively fleeing; otherwise clears
+// the screen-relative active window's per-frame pause and immunizes him against its auto-kill, so a
+// stationary player doesn't leave him frozen mid-view well short of the fence/forest.
+void GameHook_RunningManStayActive(int k);
+
+// Called at the point the scripted right-side leg sequence (right, down, right) would normally
+// hand him back to idle. Vanilla's script is a fixed handful of frames tuned to end past a 256px
+// screen, which falls well short of a wide view. Returns false (vanilla ends the flee, unchanged)
+// unless a wide/tall view is active; when it returns true, the caller must skip that transition —
+// this call has already re-armed him to keep running the same direction.
+bool GameHook_RunningManExtendRun(int k);
+
+// Called each frame Sprite_RunningMan is in a run leg. No-op unless a wide/tall view is active
+// (Wide_Active()); otherwise accelerates his fixed vanilla velocity over time and ends the flee
+// (back to idle, in place) at a world-distance cap or the moment he collides with solid geometry,
+// so a wide view never shows him stuck against the fence/forest bounding the Kakariko race track.
+void GameHook_RunningManOverrun(int k, bool running);
+
 #endif // GAME_HOOKS_H

@@ -89,12 +89,30 @@ const romFiles = () => {
   return readdirSync(assets).filter((f) => ROM_PATTERN.test(f)).map((f) => join('assets', f));
 };
 
+/**
+ * Never copied out of a COPIED_DIRS entry. `.claude/worktrees/` is where session worktrees
+ * live, so copying `.claude` wholesale duplicates entire checkouts into the new worktree:
+ * measured at 54,557 files and 0.9 GB, and it happened to two pool worktrees before anyone
+ * noticed, because nothing about it errors.
+ *
+ * The size is the lesser problem. Those checkouts carry a node_modules junction pointing at
+ * the MAIN repo, so the copy plants a link back into the main checkout inside a directory a
+ * recursive delete is expected to walk — the same hazard unlinkSharedDirs exists to prevent,
+ * reintroduced one level down where it was not being looked for.
+ */
+const EXCLUDED_CHILDREN = new Set(['worktrees']);
+
+const isExcluded = (target, src) => {
+  const rel = relative(target, src);
+  return rel !== '' && EXCLUDED_CHILDREN.has(rel.split(/[\\/]/)[0]);
+};
+
 const copyDir = (name, worktree) => {
   const target = join(repoRoot, name);
   const dest = join(worktree, name);
   if (!existsSync(target)) return { name, action: 'absent' };
   try {
-    cpSync(target, dest, { recursive: true });
+    cpSync(target, dest, { recursive: true, filter: (src) => !isExcluded(target, src) });
     return { name, action: 'copied' };
   } catch (err) {
     return { name, action: `failed (${err.message})` };

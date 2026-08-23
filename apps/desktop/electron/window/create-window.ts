@@ -166,12 +166,17 @@ const createWindow = (): BrowserWindow => {
     callback(true);
   });
 
-  // --muted is documented as mandatory alongside --no-focus for every automated
-  // launch (docs/contributing/testing.md); enforced the same way so forgetting the
-  // literal flag doesn't leave a headless run making noise.
-  if (process.argv.includes('--muted') || isHeadlessLaunch()) {
-    mainWindow.webContents.setAudioMuted(true);
-  }
+  // Muting deliberately does NOT happen here any more. setAudioMuted is a webContents
+  // kill switch the app's own audio state cannot see or undo: the in-app speaker kept
+  // reading "unmuted" while nothing could play, and toggling it did nothing, because the
+  // real gate sat outside the app entirely. Worse, it was inferred from
+  // isHeadlessLaunch(), so merely pinning a save state silenced a window someone was
+  // sitting in front of.
+  //
+  // --muted is now forwarded to the renderer (startup-config) and starts the app's own
+  // master volume at zero. One mechanism for every launch shape, no flag combination
+  // that behaves differently, and the in-app control remains the single owner of the
+  // state — which is what the flag always meant.
 
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
     const { shell } = require('electron');

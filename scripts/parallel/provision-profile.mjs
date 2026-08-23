@@ -23,7 +23,8 @@ import { mkdirSync, writeFileSync, existsSync, readdirSync, readFileSync, cpSync
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { stripTypeScriptTypes } from 'node:module';
-import { gameDataPath } from './paths.mjs';
+import { gameDataPath, repoRoot } from './paths.mjs';
+import { seedFixtureSaves } from './fixture-saves.mjs';
 
 const importStrippedTs = async (relativePath) => {
   const path = join(dirname(fileURLToPath(import.meta.url)), relativePath);
@@ -155,8 +156,17 @@ const keyboardInputProfile = async (now) => {
  * Provision (or repair) the profile for `name`. Idempotent: an existing profile keeps
  * its saves and is only topped up with anything missing, so re-running never destroys
  * an agent's state.
+ *
+ * `seedFixtureSaves` (default true) merges the `tests/fixtures/save-states/` regression
+ * fixtures into the profile's named saves, additive to whatever `copyManualSaves` already
+ * pulled from a human profile — a no-op, not an error, when no vault checkout is found.
+ *
+ * `seedCheats` (default true) turns `cheatsEnabled` on in a freshly written config.json,
+ * only at creation time. The four cheat category bits (item grant, stats, combat,
+ * ignore-collision) are all granted automatically alongside the master switch by
+ * buildFeatureWord3 (apps/web/src/lib/game/live-settings-flags.ts) — nothing else to set.
  */
-const provisionProfile = async ({ name, romFile, inheritConfigFrom, quickSlot }) => {
+const provisionProfile = async ({ name, romFile, inheritConfigFrom, quickSlot, seedFixtureSaves: withFixtures = true, seedCheats = true }) => {
   const now = Date.now();
   const dir = gameDataPath('profiles', name);
 
@@ -195,13 +205,16 @@ const provisionProfile = async ({ name, romFile, inheritConfigFrom, quickSlot })
   if (!existsSync(configPath)) {
     // Start from the user's own settings (aspect ratio, renderer flags) so an agent
     // screenshot matches what they would see, then pin the keyboard input profile.
-    writeJson(configPath, { ...sourceConfig, activeInputProfileId: keyboard.id });
+    const config = { ...sourceConfig, activeInputProfileId: keyboard.id };
+    if (seedCheats) config.cheatsEnabled = true;
+    writeJson(configPath, config);
   }
 
   const savesCopied = copyManualSaves(source?.id ?? null, name);
+  const fixturesCopied = withFixtures ? seedFixtureSaves(repoRoot, name) : null;
   const quickSaveCopied = quickSlot != null ? copyQuickSave(source?.id ?? null, name, quickSlot) : false;
 
-  return { dir, romFile: rom, inheritedFrom: source?.id ?? null, savesCopied, quickSaveCopied };
+  return { dir, romFile: rom, inheritedFrom: source?.id ?? null, savesCopied, fixturesCopied, quickSaveCopied };
 };
 
 export { provisionProfile };
