@@ -6,7 +6,7 @@ import { log } from '../../lib/log-bus';
 import { readInputProfiles } from '@app/lib/storage/profile-data-store';
 import { updateActiveInputProfileId } from '@app/lib/storage/profile-store';
 import * as msuStore from '@app/lib/storage/msu-store';
-import { readLinkSprite } from '@app/lib/storage/link-sprites-store';
+import { readSpriteAsZspr } from '@app/lib/game/player-sheet/load-sheet';
 import type { InputProfile } from '@shared/types/controls';
 
 type Settings = ReturnType<typeof mergeSettings>;
@@ -63,11 +63,12 @@ const loadMsuPack = async (profile: Profile, settings: Settings) => {
   }
 };
 
-// Stage the profile's selected custom player sprite (.zspr) for the next boot; the bridge writes it to MEMFS.
+// Stage the profile's selected player sprite for the next boot; the bridge writes it to MEMFS.
+// Flattened on the way through, since a sprite pack is not something the core can read.
 const loadPlayerSprite = async (settings: Settings) => {
   if (!settings.linkSprite) { setLinkSpriteData(null); return; }
   try {
-    const bytes = await readLinkSprite(settings.linkSprite);
+    const bytes = await readSpriteAsZspr(settings.linkSprite);
     setLinkSpriteData(bytes ?? null);
     if (!bytes) log.app(`[PlayerSprite] Selected sprite "${settings.linkSprite}" not found`);
   } catch (err) {

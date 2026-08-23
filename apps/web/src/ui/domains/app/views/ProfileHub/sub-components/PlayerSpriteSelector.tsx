@@ -4,7 +4,7 @@ import { useMemo, type KeyboardEvent } from 'react';
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../design-system/primitives/Text';
 import { Image } from '../../../../../design-system/primitives/Image';
-import { useLinkSprites } from '@app/hooks/useLinkSprites';
+import { useSpriteLibrary } from '../../PlayerSpriteStudio/behavior/useSpriteLibrary';
 import './PlayerSpriteSelector.css';
 
 interface PlayerSpriteSelectorProps {
@@ -20,14 +20,14 @@ interface Choice {
 
 const PlayerSpriteSelector = (props: PlayerSpriteSelectorProps) => {
   const { value, onChange } = props;
-  const { sprites, loading } = useLinkSprites();
+  const { entries, loading } = useSpriteLibrary();
 
   const choices = useMemo<Choice[]>(
     () => [
       { name: null, label: 'Original', preview: null },
-      ...sprites.map((s) => ({ name: s.name, label: s.name.replace(/\.zspr$/i, ''), preview: s.preview })),
+      ...entries.map((e) => ({ name: e.name, label: e.label, preview: e.preview })),
     ],
-    [sprites],
+    [entries],
   );
 
   const onKey = (e: KeyboardEvent, name: string | null) => {
@@ -38,7 +38,7 @@ const PlayerSpriteSelector = (props: PlayerSpriteSelectorProps) => {
     <Box className="player-sprite-selector">
       <Text className="player-sprite-selector__title">Player Sprite</Text>
       <Text className="player-sprite-selector__hint">
-        Manage sprites in Data Manager › Player Sprites. Applies right away.
+        Manage sprites in Data Manager › Character Studio. Applies right away.
       </Text>
       <Box className="player-sprite-selector__grid">
         {choices.map((c) => {

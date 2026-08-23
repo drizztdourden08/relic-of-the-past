@@ -91,6 +91,7 @@
     "pngjs": "^7.0.0",
     "prism-react-renderer": "^2.4.1",
     "react": "^19.2.6",
+    "react-color": "^2.19.3",
     "react-dom": "^19.2.6",
     "velopack": "^1.2.110-ge826545",
     "zustand": "^5.0.13"
@@ -102,6 +103,7 @@
     "@types/js-yaml": "^4.0.9",
     "@types/pngjs": "^6.0.5",
     "@types/react": "^19.2.15",
+    "@types/react-color": "^3.0.13",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.2.0",
     "astral-regex": "^2.0.0",

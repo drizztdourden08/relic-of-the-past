@@ -81,6 +81,7 @@ interface InvokeContract extends ControllerInvokeContract {
   // Dialog
   'dialog:openRom': () => Promise<string | null>;
   'dialog:pickFile': (extensions: string[]) => Promise<{ name: string; data: ArrayBuffer } | null>;
+  'dialog:saveFile': (name: string, data: ArrayBuffer, extensions: string[]) => Promise<{ saved: boolean; name?: string; error?: string }>;
 
   // Profiles
   'profiles:list': () => Promise<Profile[]>;

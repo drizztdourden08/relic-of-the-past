@@ -1,0 +1,50 @@
+/* @layer renderer-components @kind style */
+.color-swatch {
+  position: relative;
+  width: var(--swatch-size, 28px);
+  height: var(--swatch-size, 28px);
+  padding: 0;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.color-swatch:hover {
+  border-color: var(--c-border-strong);
+}
+
+.color-swatch--selected {
+  outline: 2px solid var(--c-gold);
+  outline-offset: 1px;
+}
+
+/* An override reads as a magnitude marker on the top edge, never as a fill or border
+   change — the fill is the colour itself and must not be tinted by state. */
+.color-swatch--edited::after {
+  content: '';
+  position: absolute;
+  inset-inline: 2px;
+  top: 1px;
+  height: 2px;
+  background: var(--c-gold);
+}
+
+.color-swatch--transparent {
+  background-image:
+    linear-gradient(45deg, var(--c-border) 25%, transparent 25% 75%, var(--c-border) 75%),
+    linear-gradient(45deg, var(--c-border) 25%, transparent 25% 75%, var(--c-border) 75%);
+  background-size: 8px 8px;
+  background-position: 0 0, 4px 4px;
+}
+
+.color-swatch__caption {
+  font-size: var(--text-xs);
+  line-height: 1;
+  padding-bottom: var(--space-2xs);
+  color: var(--c-text);
+  text-shadow: 0 0 2px var(--c-scrim), 0 0 2px var(--c-scrim);
+  pointer-events: none;
+}
