@@ -47,7 +47,7 @@ const DataManager = (props: DataManagerProps) => {
     { id: 'profiles', icon: '👤', label: 'Profiles' },
     { id: 'roms', icon: '🎮', label: 'ROMs' },
     { id: 'sprites', icon: '🖼️', label: 'Sprites' },
-    { id: 'linkSprites', icon: '🧝', label: 'Player Sprites' },
+    { id: 'linkSprites', icon: '🧝', label: 'Character Studio' },
     { id: 'languages', icon: '🌐', label: 'Languages' },
     { id: 'msu', icon: '🎵', label: 'MSU' },
   ];

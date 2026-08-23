@@ -1,34 +1,13 @@
 /* @layer renderer-components @kind style */
 .color-picker {
   display: flex;
-  gap: var(--space-md);
-  align-items: flex-start;
+  flex-direction: column;
+  gap: var(--space-sm);
   padding: var(--space-md);
   background: var(--c-surface);
   border: 1px solid var(--c-border);
   border-radius: var(--radius-md);
-  width: fit-content;
-}
-
-/* react-colorful sizes itself from its own class; keep it compact for a side panel. */
-.color-picker .react-colorful {
-  width: 132px;
-  height: 132px;
-}
-
-.color-picker .react-colorful__saturation {
-  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-}
-
-.color-picker .react-colorful__last-control {
-  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
-}
-
-.color-picker__side {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
-  min-width: 132px;
+  width: 248px;
 }
 
 .color-picker__title {
@@ -36,26 +15,119 @@
   color: var(--c-text-dim);
 }
 
-.color-picker__hex {
+.color-picker__hex-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-xs);
+}
+
+.color-picker__swatch {
+  --swatch-size: 28px;
+
+  flex: none;
+}
+
+.color-picker__fields {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  flex: 1;
+  min-width: 0;
+}
+
+.color-picker__field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2xs);
+  flex: 1;
+  min-width: 0;
+}
+
+/* Hex holds six characters plus its sigil; the channels hold three digits. */
+.color-picker__field--hex { flex: 2.4; }
+
+.color-picker__field-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  letter-spacing: 0.06em;
+}
+
+/* The box carries the field chrome so the sigil sits inside the same border as the
+   input, reading as one control rather than a label stuck to its left. */
+.color-picker__hex-box {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
   width: 100%;
+  min-width: 0;
+  background: var(--c-sunken);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-xs) var(--space-2xs) var(--space-xs) var(--space-xs);
+}
+
+.color-picker__hex-box:focus-within { border-color: var(--c-border-strong); }
+
+.color-picker__hex-sigil {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--c-text-muted);
+  user-select: none;
+  flex: none;
+}
+
+.color-picker__hex {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--c-text);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+}
+
+.color-picker__hex:focus { outline: none; }
+
+.color-picker__channel {
+  width: 100%;
+  min-width: 0;
   background: var(--c-sunken);
   color: var(--c-text);
   border: 1px solid var(--c-border);
   border-radius: var(--radius-sm);
-  padding: var(--space-xs) var(--space-sm);
+  padding: var(--space-xs) var(--space-2xs);
   font-family: var(--font-mono);
   font-size: var(--text-sm);
+  text-align: center;
 }
 
-.color-picker__word,
-.color-picker__snap,
-.color-picker__original-hex {
+/* The spinners cost more width than they earn at this size. */
+.color-picker__channel::-webkit-inner-spin-button,
+.color-picker__channel::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+.color-picker__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.color-picker__word {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   color: var(--c-text-muted);
 }
 
 .color-picker__snap {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
   color: var(--c-warning);
 }
 
@@ -64,11 +136,68 @@
   align-items: center;
   gap: var(--space-xs);
 
-  --swatch-size: 18px;
+  --swatch-size: 16px;
+}
+
+.color-picker__original-hex {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+.color-picker__quick-assign-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--c-border);
+}
+
+/* One scrollable region for every origin group, so the card's own height stays
+   bounded no matter how many outfits or how large a sheet's palette gets. A full
+   border + a sunken (rather than the card's own surface) background is what marks
+   it as its own bounded, scrollable container rather than more of the card's flow. */
+.color-picker__quick-assign {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  max-height: 160px;
+  overflow-y: auto;
+  padding: var(--space-sm);
+  background: var(--c-sunken);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+}
+
+.color-picker__quick-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.color-picker__quick-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--c-text-muted);
+}
+
+.color-picker__quick-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+}
+
+.color-picker__quick-swatch {
+  --swatch-size: 16px;
 }
 
 .color-picker__actions {
   display: flex;
   gap: var(--space-xs);
-  margin-top: auto;
+}
+
+.color-picker__actions > * {
+  flex: 1;
 }

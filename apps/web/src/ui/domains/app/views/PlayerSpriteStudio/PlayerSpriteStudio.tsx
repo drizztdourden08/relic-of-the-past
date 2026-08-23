@@ -2,7 +2,6 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { Text } from '@ds/primitives/Text';
-import { Select } from '@ds/primitives/Select';
 import { Button } from '@ds/primitives/Button';
 import { SegmentedControl } from '@ds/primitives/SegmentedControl';
 import { RangeInput } from '@ds/primitives/RangeInput';
@@ -31,8 +30,8 @@ const VIEW_OPTIONS = [
   { value: 'contact', label: 'All states' },
   { value: 'sheet', label: 'Tile sheet' },
 ];
-const SCALES = [2, 3, 4, 6];
-const CONTACT_SCALE = 2;
+const MIN_SCALE = 1;
+const MAX_SCALE = 8;
 
 const PlayerSpriteStudio = (props: PlayerSpriteStudioProps) => {
   const { romStatuses, onDeleteConfirm } = props;
@@ -132,10 +131,12 @@ const PlayerSpriteStudio = (props: PlayerSpriteStudioProps) => {
           value={clock.fps}
           onChange={(e) => clock.setFps(Number(e.target.value))}
         />
-        <Select
-          value={String(scale)}
-          options={SCALES.map((s) => ({ value: String(s), label: `${s}x` }))}
-          onChange={(v) => setScale(Number(v))}
+        <Text className="sprite-studio__control-label">Zoom {scale}x</Text>
+        <RangeInput
+          min={MIN_SCALE}
+          max={MAX_SCALE}
+          value={scale}
+          onChange={(e) => setScale(Number(e.target.value))}
         />
       </Box>
 
@@ -150,21 +151,21 @@ const PlayerSpriteStudio = (props: PlayerSpriteStudioProps) => {
               sheet={sheet}
               row={row}
               tick={clock.tick}
-              scale={CONTACT_SCALE}
+              scale={scale}
               onSelect={(next) => { setAction(next); setView('state'); }}
             />
           )}
-          {view === 'sheet' && <SheetBrowser sheet={sheet} wearing={wearing.wearing} scale={Math.max(2, scale - 1)} />}
+          {view === 'sheet' && <SheetBrowser sheet={sheet} wearing={wearing.wearing} scale={scale} />}
         </Box>
-      </Box>
 
-      <PaletteEditor
-        sheet={sheet}
-        outfit={wearing.outfit}
-        onColor={(index, word) => draft.setColor(wearing.outfit, index, word)}
-        onGloveColor={draft.setGloveColor}
-        onReset={(index) => draft.resetColor(wearing.outfit, index)}
-      />
+        <PaletteEditor
+          sheet={sheet}
+          outfit={wearing.outfit}
+          onColor={(index, word) => draft.setColor(wearing.outfit, index, word)}
+          onGloveColor={draft.setGloveColor}
+          onReset={(index) => draft.resetColor(wearing.outfit, index)}
+        />
+      </Box>
     </Box>
   );
 

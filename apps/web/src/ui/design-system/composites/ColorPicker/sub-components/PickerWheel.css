@@ -1,0 +1,24 @@
+/* @layer renderer-components @kind style */
+.picker-wheel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* Saturation renders absolutely positioned to fill this box — it needs an
+   explicit height and a positioned ancestor, which is all this wrapper is for. */
+.picker-wheel__saturation {
+  position: relative;
+  height: 130px;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+}
+
+/* Same contract as the saturation wrapper, just shorter. */
+.picker-wheel__hue,
+.picker-wheel__alpha {
+  position: relative;
+  height: 12px;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+}

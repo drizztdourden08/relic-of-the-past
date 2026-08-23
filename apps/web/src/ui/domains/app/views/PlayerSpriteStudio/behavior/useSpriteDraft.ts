@@ -17,6 +17,8 @@ import { withColor, withGloveColor, isEmptyOverride } from '@app/lib/game/player
 import { loadStockSheet } from '@app/lib/game/stock-player-sheet';
 import { toZsprBytes } from '@app/lib/game/zspr-write';
 import { applyPlayerSprite } from '@app/lib/game/player-sprite';
+import { getActiveProfileId } from '@app/lib/game';
+import { readConfig } from '@app/lib/storage/profile-store';
 import { safeFileName } from '@app/lib/storage/link-sprites-store';
 
 interface OpenDraft {
@@ -24,6 +26,22 @@ interface OpenDraft {
   file: string | null;
   sheet: PlayerSheet;
 }
+
+/**
+ * Whether this file is the sheet the running game is actually wearing.
+ *
+ * The core's override gate opens for the active profile having SOME selection, not for
+ * the one the studio happens to have open — so pushing on every save would drop an
+ * unselected sheet into the running game, and the next boot would stage the real
+ * selection and silently swap it back. Editing one sprite must not repaint the player
+ * with a different one.
+ */
+const isLiveSelection = async (name: string): Promise<boolean> => {
+  const id = getActiveProfileId();
+  if (!id) return false;
+  const config = await readConfig(id);
+  return config?.linkSprite === name;
+};
 
 const useSpriteDraft = (romFile: string | null, stockPalette?: SheetPalette) => {
   const [draft, setDraft] = useState<OpenDraft | null>(null);
@@ -71,7 +89,8 @@ const useSpriteDraft = (romFile: string | null, stockPalette?: SheetPalette) => 
     const name = safeFileName(as ?? draft.file ?? `${draft.sheet.meta.name || 'sprite'}.rsp`);
     await saveSheet(name, draft.sheet);
     // The core only speaks ZSPR, so a live push always flattens regardless of container.
-    setApplied(applyPlayerSprite(toZsprBytes(draft.sheet)));
+    const live = await isLiveSelection(name) && applyPlayerSprite(toZsprBytes(draft.sheet));
+    setApplied(live);
     setDraft({ file: name, sheet: draft.sheet });
     return name;
   }, [draft]);

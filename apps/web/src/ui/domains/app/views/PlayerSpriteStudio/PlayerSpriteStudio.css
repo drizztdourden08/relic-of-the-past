@@ -203,7 +203,7 @@
 
 .contact-sheet {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(max(5rem, var(--contact-sheet-cell-min, 0px)), 1fr));
   gap: var(--space-sm);
 }
 
@@ -247,21 +247,33 @@
   border: 1px solid var(--c-border);
 }
 
-/* ── palette ── */
+/* ── palette: a right-hand sidebar, level with the stage, so it never scrolls out of
+   view under a tall zoomed-in state or contact sheet ── */
 .palette-editor {
+  width: 14rem;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  padding-left: var(--space-md);
+  border-left: 1px solid var(--c-border);
+}
+
+.palette-editor__scroll {
+  max-height: 26rem;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
-  padding-top: var(--space-sm);
-  border-top: 1px solid var(--c-border);
 }
 
+/* Stacked, not inline: the sidebar is too narrow to sit a label and its hint side by
+   side without both wrapping mid-phrase. */
 .palette-editor__title {
   font-size: var(--text-sm);
   color: var(--c-text-dim);
   display: flex;
-  gap: var(--space-sm);
-  align-items: baseline;
+  flex-direction: column;
+  gap: var(--space-2xs);
 }
 
 .palette-editor__hint {
