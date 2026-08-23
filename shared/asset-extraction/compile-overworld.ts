@@ -9,6 +9,7 @@ import { buildOverworldContext } from './compile-overworld-utils';
 import { buildOverworldExits } from './compile-overworld-exits';
 import { buildOverworldTravel } from './compile-overworld-travel';
 import { buildOverworldSprites } from './compile-overworld-sprites';
+import { appendExtraOverworldEntrance } from './extensions/second-cartridge-links';
 
 const buildOverworldCompressed = (rom: RomData, A: AssetBuilder): void => {
   const hi: Buffer[] = [];
@@ -72,6 +73,8 @@ const buildOverworldTables = (rom: RomData, A: AssetBuilder): void => {
     entPos[i] = rom.getWord(0x9bba71 + i * 2);
     entId[i] = rom.getByte(0x9bbb73 + i);
   }
+  appendExtraOverworldEntrance(entArea, entPos, entId);
+
   A.addUint16('kOverworld_Entrance_Area', entArea);
   A.addUint16('kOverworld_Entrance_Pos', entPos);
   A.addUint8('kOverworld_Entrance_Id', entId);

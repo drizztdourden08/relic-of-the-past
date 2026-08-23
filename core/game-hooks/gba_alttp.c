@@ -9,7 +9,6 @@
 const uint8 *g_gba_alttp_asset_ptrs[kGbaAlttpAssetCount];
 uint32 g_gba_alttp_asset_sizes[kGbaAlttpAssetCount];
 
-static bool g_palace_active;
 // Opt-in, so a build that never pushes the setting behaves exactly like the base game.
 static bool g_extra_dungeon_enabled;
 static const uint16 kNoDoors[] = { 0xffff };
@@ -50,71 +49,24 @@ bool GbaAlttp_IsAvailable(void) {
   return g_gba_alttp_asset_ptrs[kGbaAssetRoomIds] != NULL;
 }
 
-bool GbaAlttp_IsPyramidEntrancePosition(uint16 x, uint16 y) {
-  return GbaAlttp_IsAvailable() && g_extra_dungeon_enabled && BYTE(overworld_screen_index) == 0x5b &&
-      x >= 0x8b0 && x < 0x8c0 && y >= 0x7b0 && y < 0x7c0;
-}
-
-bool GbaAlttp_IsPalaceActive(void) {
-  return g_palace_active && GbaAlttp_IsAvailable();
-}
-
+// Derived from the room rather than a lifecycle flag: the engine enters and leaves through
+// its own entrance and exit tables now, so there is no longer a moment we own in which to
+// set or clear one, and a stale flag was a bug waiting to happen.
 bool GbaAlttp_IsPalaceRoom(uint16 room) {
-  return GbaAlttp_IsPalaceActive() && FindPalaceRoom(room) >= 0;
+  return GbaAlttp_IsAvailable() && g_extra_dungeon_enabled && FindPalaceRoom(room) >= 0;
+}
+
+// Indoors matters as much as the room id: leaving does not clear dungeon_room_index, so a
+// room-only test stays true out on the overworld and the graphics/palette hooks re-upload
+// the dungeon's tiles over the overworld ones.
+bool GbaAlttp_IsPalaceActive(void) {
+  return player_is_indoors && GbaAlttp_IsPalaceRoom(dungeon_room_index);
 }
 
 bool GbaAlttp_UsesFixedHorizontalCamera(void) {
   // The entrance chamber is centered across the SNES engine's internal
   // 256-pixel quadrant seam, but it is a single viewport with no side exits.
   return GbaAlttp_IsPalaceRoom(0x88) && dungeon_room_index == 0x88;
-}
-
-void GbaAlttp_BeginPalace(void) {
-  g_palace_active = GbaAlttp_IsAvailable();
-}
-
-void GbaAlttp_EndPalace(void) {
-  g_palace_active = false;
-}
-
-void GbaAlttp_SetupEntrance(void) {
-  const uint16 room_base = 0x1000;
-  dungeon_room_index = dungeon_room_index2 = 0x88;
-  BG1HOFS_copy = BG2HOFS_copy = BG1HOFS_copy2 = BG2HOFS_copy2 = room_base + 0x80;
-  BG1VOFS_copy = BG2VOFS_copy = BG1VOFS_copy2 = BG2VOFS_copy2 = room_base + 0x110;
-  link_x_coord = room_base + 0xf8;
-  link_y_coord = room_base + 0x1d8;
-  camera_x_coord_scroll_low = 0x7f;
-  camera_x_coord_scroll_hi = camera_x_coord_scroll_low + 2;
-  camera_y_coord_scroll_low = 0x187;
-  camera_y_coord_scroll_hi = camera_y_coord_scroll_low + 2;
-  tilemap_location_calc_mask = 0x1f8;
-  ow_entrance_value = 0;
-  up_down_scroll_target = room_base;
-  up_down_scroll_target_end = room_base + 0x110;
-  left_right_scroll_target = room_base + 0x80;
-  left_right_scroll_target_end = room_base + 0x80;
-  room_bounds_y.a0 = room_base + 0x100;
-  room_bounds_y.b0 = room_base;
-  room_bounds_y.a1 = room_base + 0x110;
-  room_bounds_y.b1 = room_base + 0x110;
-  // Room 0x88's chamber is one viewport wide, centered in its 512px map.
-  // Pin horizontal scrolling so walking sideways cannot displace the room.
-  room_bounds_x.a0 = room_base + 0x80;
-  room_bounds_x.b0 = room_base + 0x80;
-  room_bounds_x.a1 = room_base + 0x80;
-  room_bounds_x.b1 = room_base + 0x80;
-  link_direction_facing = 0;
-  main_tile_theme_index = 0;
-  dung_cur_floor = 0;
-  BYTE(cur_palace_index_x2) = 0xff;
-  is_standing_in_doorway = 1;
-  link_is_on_lower_level = link_is_on_lower_level_mirror = 0;
-  quadrant_fullsize_x = 0;
-  quadrant_fullsize_y = 2;
-  link_quadrant_x = 1;
-  link_quadrant_y = 2;
-  queued_music_control = 0x10;
 }
 
 const uint8 *GbaAlttp_GetRoomHeader(uint16 room) {
@@ -186,14 +138,17 @@ bool GbaAlttp_LoadPrebuiltRoom(uint16 room) {
 }
 
 void GbaAlttp_ApplyDungeonGraphics(void) {
-  if (!GbaAlttp_IsPalaceRoom(dungeon_room_index))
+  if (!GbaAlttp_IsPalaceActive())
     return;
   if (g_gba_alttp_asset_sizes[kGbaAssetBgGfxSnes4bpp] == 512 * 32)
     memcpy(&g_zenv.vram[0x2000], g_gba_alttp_asset_ptrs[kGbaAssetBgGfxSnes4bpp], 512 * 32);
 }
 
 void GbaAlttp_ApplyDungeonPalette(void) {
-  if (!GbaAlttp_IsPalaceRoom(dungeon_room_index))
+  // Indoors-gated like the graphics hook: this runs at the tail of Dungeon_LoadPalettes,
+  // which also feeds the overworld palette, and the room id still reads as ours after
+  // leaving — so a room-only test repaints the overworld in the dungeon's colours.
+  if (!GbaAlttp_IsPalaceActive())
     return;
   const uint8 *header = GbaAlttp_GetRoomHeader(dungeon_room_index);
   const uint8 *ids = g_gba_alttp_asset_ptrs[kGbaAssetPaletteIds];

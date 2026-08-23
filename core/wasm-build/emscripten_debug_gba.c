@@ -14,6 +14,7 @@
 #include "src/variables.h"
 #include "src/zelda_rtl.h"
 #include "src/dungeon.h"
+#include "src/assets.h"
 #include "gba_alttp.h"
 
 #include "emscripten_internal.h"
@@ -24,7 +25,9 @@ EMSCRIPTEN_KEEPALIVE
 int WasmDebugEnterGbaPalace(void) {
   if (!GbaAlttp_IsAvailable())
     return 0;
-  which_entrance = kGbaAlttpEntrance;
+  // The extra dungeon's entrance is the last record the asset pipeline appends, so derive
+  // it rather than restating an index that lives in the data.
+  which_entrance = (uint16)(kEntranceData_rooms_SIZE / sizeof(uint16) - 1);
   sram_progress_indicator = 3;
   if (link_health_capacity == 0)
     link_health_capacity = link_health_current = 0x18;
@@ -109,9 +112,6 @@ int WasmDebugGetDungeonAttr(int index) {
 
 EMSCRIPTEN_KEEPALIVE
 int WasmDebugGetInputMode(void) { return g_js_input_mode; }
-
-EMSCRIPTEN_KEEPALIVE
-void WasmDebugResetGbaPalace(void) { GbaAlttp_EndPalace(); }
 
 EMSCRIPTEN_KEEPALIVE
 void WasmDebugShiftOverworld(int dx, int dy) {

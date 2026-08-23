@@ -6,6 +6,7 @@ import type { RomData } from './rom/rom-types';
 import type { AssetBuilder } from './asset-builder';
 import { bufToArr, lzDecompressWithLen } from './asset-builder';
 import { kCompSpritePtrs, kCompBgPtrs } from './data/tables';
+import { appendWallPriorityTwins } from './extensions/second-cartridge-tiles';
 
 const buildSpriteGfx = (rom: RomData, A: AssetBuilder): void => {
   const all: Buffer[] = [];
@@ -45,7 +46,9 @@ const buildMisc = (rom: RomData, A: AssetBuilder): void => {
   A.addUint8('kLightOverworldTilemap', bufToArr(rom.getBytes(0xac727, 4096)));
   A.addUint8('kDarkOverworldTilemap', bufToArr(rom.getBytes(0xaD727, 1024)));
   A.addUint16('kPredefinedTileData', rom.getWords(0x9B52, 6438));
-  A.addUint16('kMap16ToMap8', rom.getWords(0x8f8000, 3752 * 4));
+  const map16 = rom.getWords(0x8f8000, 3752 * 4);
+  appendWallPriorityTwins(map16);
+  A.addUint16('kMap16ToMap8', map16);
   A.addUint8('kGeneratedWishPondItem', bufToArr(rom.getBytes(0x888450, 256)));
   A.addUint8('kGeneratedBombosArr', bufToArr(rom.getBytes(0x8890FC, 256)));
   A.addUint8('kGeneratedEndSequence15', bufToArr(rom.getBytes(0x8ead25, 256)));

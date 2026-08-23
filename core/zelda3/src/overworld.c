@@ -258,11 +258,13 @@ bool LookupInOwEntranceTab(uint16 r0, uint16 r2) {
     if (r0 == kOverworld_Entrance_Tab0[i] && r2 == kOverworld_Entrance_Tab1[i])
       return true;
   }
-  return false;
+  return GbaAlttp_IsExtraEntranceTilePair(r0, r2);
 }
 
 int LookupInOwEntranceTab2(uint16 pos) {
-  for (int i = 128; i >= 0; i--) {
+  // Size-derived rather than a literal 128: the port appends entrance records, and a
+  // fixed bound would never see them.
+  for (int i = (int)kOverworld_Entrance_Id_SIZE - 1; i >= 0; i--) {
     if (pos == kOverworld_Entrance_Pos[i] && overworld_area_index == kOverworld_Entrance_Area[i])
       return i;
   }
@@ -1789,18 +1791,12 @@ void LoadOverworldFromDungeon() {  // 82e4a3
   cur_palace_index_x2 = 0xff;
   num_memorized_tiles = 0;
 
-  if (GbaAlttp_IsPalaceActive()) {
-    GbaAlttp_EndPalace();
-    LoadCachedEntranceProperties();
-    // Preserve the native doorway adjustment. The cached approach coordinate
-    // is normalized on entry, so this offset cannot accumulate across trips.
-    link_y_coord += 24;
-  } else if (dungeon_room_index != 0x104 && dungeon_room_index < 0x180 && dungeon_room_index >= 0x100) {
+  if (dungeon_room_index != 0x104 && dungeon_room_index < 0x180 && dungeon_room_index >= 0x100) {
     LoadCachedEntranceProperties();
   } else {
 
-    int k = 79;
-    do k--; while (kExitDataRooms[k] != dungeon_room_index);
+    int k = (int)(kExitDataRooms_SIZE / sizeof(uint16));
+    do k--; while (k > 0 && kExitDataRooms[k] != dungeon_room_index);
     BG1VOFS_copy2 = BG2VOFS_copy2 = BG1VOFS_copy = BG2VOFS_copy = kExitData_ScrollY[k];
     BG1HOFS_copy2 = BG2HOFS_copy2 = BG1HOFS_copy = BG2HOFS_copy = kExitData_ScrollX[k];
     link_y_coord = kExitData_YCoord[k];
@@ -3230,17 +3226,6 @@ void Overworld_GetPitDestination() {  // 9bb860
 }
 
 void Overworld_UseEntrance() {  // 9bbbf4
-  if ((joypad1H_last & kJoypadH_Up) &&
-      GbaAlttp_IsPyramidEntrancePosition(link_x_coord, link_y_coord)) {
-    which_entrance = kGbaAlttpEntrance;
-    link_auxiliary_state = 0;
-    link_incapacitated_timer = 0;
-    main_module_index = 15;
-    saved_module_for_menu = 6;
-    submodule_index = 0;
-    subsubmodule_index = 0;
-    return;
-  }
   uint16 xc = link_x_coord >> 3, yc = link_y_coord + 7;
   uint16 pos = ((yc - overworld_offset_base_y) & overworld_offset_mask_y) * 8 +
     ((xc - overworld_offset_base_x) & overworld_offset_mask_x);

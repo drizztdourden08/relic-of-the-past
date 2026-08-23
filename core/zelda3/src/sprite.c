@@ -3787,7 +3787,7 @@ void Sprite_DisableAll() {  // 89c22f
 }
 
 void Dungeon_LoadSprites() {  // 89c290
-  if (GbaAlttp_IsPalaceActive())
+  if (GbaAlttp_IsPalaceRoom(dungeon_room_index2))
     return;
   const uint8 *src = kDungeonSprites + kDungeonSpriteOffs[dungeon_room_index2];
   byte_7E0FB1 = dungeon_room_index2 >> 3 & 0xfe;

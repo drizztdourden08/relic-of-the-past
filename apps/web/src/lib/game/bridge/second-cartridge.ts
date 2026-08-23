@@ -1,4 +1,4 @@
-/* @layer bridge-wasm @kind logic */
+﻿/* @layer bridge-wasm @kind logic */
 /**
  * Optional second-cartridge content (core/game-hooks/gba_alttp.c).
  *

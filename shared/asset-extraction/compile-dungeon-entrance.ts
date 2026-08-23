@@ -4,6 +4,7 @@
  */
 import type { RomData } from './rom/rom-types';
 import type { AssetBuilder } from './asset-builder';
+import { appendExtraEntrance } from './extensions/second-cartridge-links';
 
 const buildEntranceData = (rom: RomData, A: AssetBuilder, set: 0 | 1, count: number, prefix: string): void => {
   const rooms: number[] = [];
@@ -55,6 +56,14 @@ const buildEntranceData = (rom: RomData, A: AssetBuilder, set: 0 | 1, count: num
     if (set === 1) {
       entrance.push(rom.getWord(0x82dc40 + i * 2));
     }
+  }
+
+  // Set 0 is the overworld entrance table; the port appends its own records there.
+  if (set === 0) {
+    appendExtraEntrance({
+      rooms, relCoords, scrollX, scrollY, playerX, playerY, cameraX, cameraY,
+      blockset, floor, palace, doorway, startBg, quad1, quad2, doorSettings, music,
+    });
   }
 
   A.addUint16(prefix + 'rooms', rooms);

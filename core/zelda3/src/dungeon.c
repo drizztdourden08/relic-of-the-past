@@ -2255,14 +2255,14 @@ void Door_Draw_Helper4(uint8 door_type, uint16 dsto) {
 }
 
 const uint16 *GetRoomDoorInfo(int room) {
-  const uint16 *gba_doors = GbaAlttp_IsPalaceActive() ? GbaAlttp_GetRoomDoors(room) : NULL;
+  const uint16 *gba_doors = GbaAlttp_GetRoomDoors(room);
   if (gba_doors)
     return gba_doors;
   return (uint16 *)(kDungeonRoom + kDungeonRoomDoorOffs[room]);
 }
 
 const uint8 *GetRoomHeaderPtr(int room) {
-  const uint8 *gba_header = GbaAlttp_IsPalaceActive() ? GbaAlttp_GetRoomHeader(room) : NULL;
+  const uint8 *gba_header = GbaAlttp_GetRoomHeader(room);
   if (gba_header)
     return gba_header;
   return kDungeonRoomHeaders + kDungeonRoomHeadersOffs[room];
@@ -7809,7 +7809,7 @@ void Module07_1A_RoomDraw_OpenTriforceDoor_bounce() {  // 829916
 void Module11_DungeonFallingEntrance() {  // 829af9
   switch (subsubmodule_index) {
   case 0:  // Module_11_00_SetSongAndInit
-    if (which_entrance == kGbaAlttpEntrance || kEntranceData_musicTrack[which_entrance] != 3 || sram_progress_indicator >= 2)
+    if (kEntranceData_musicTrack[which_entrance] != 3 || sram_progress_indicator >= 2)
       music_control = 0xf1;
     ResetTransitionPropsAndAdvance_ResetInterface();
     break;
@@ -8338,10 +8338,7 @@ void Dungeon_LoadEntrance() {  // 82d8b3
   }
   bg1_y_offset = bg1_x_offset = 0;
   WORD(death_var5) = 0;
-  if (which_entrance == kGbaAlttpEntrance) {
-    GbaAlttp_BeginPalace();
-    GbaAlttp_SetupEntrance();
-  } else if (WORD(follower_indicator) == 4 || WORD(death_var4)) {
+  if (WORD(follower_indicator) == 4 || WORD(death_var4)) {
     int i = which_starting_point;
     WORD(which_entrance) = kStartingPoint_entrance[i];
     dungeon_room_index = dungeon_room_index2 = kStartingPoint_rooms[i];
