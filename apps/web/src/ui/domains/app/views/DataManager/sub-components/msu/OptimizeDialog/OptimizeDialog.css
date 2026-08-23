@@ -1,0 +1,74 @@
+/* @layer renderer-components @kind style */
+
+.msu-optimize {
+  width: min(44rem, 92vw);
+}
+
+.msu-optimize__step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.msu-optimize__note {
+  color: var(--c-text-dim);
+  font-size: var(--text-sm);
+}
+
+.msu-optimize__note--faint {
+  color: var(--c-text-muted);
+  font-size: var(--text-xs);
+}
+
+.msu-optimize__note--bad {
+  color: var(--c-danger);
+}
+
+/* The list can run to a hundred files, so it scrolls inside the dialog rather than
+   pushing the actions off the bottom of it. */
+.msu-optimize__rows {
+  display: flex;
+  flex-direction: column;
+  max-height: 18rem;
+  overflow-y: auto;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+}
+
+.msu-optimize__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-2xs) var(--space-sm);
+  border-bottom: 1px solid var(--c-border);
+}
+
+.msu-optimize__row:last-child {
+  border-bottom: none;
+}
+
+.msu-optimize__row-name {
+  flex: 1 1 auto;
+  min-width: 6rem;
+  overflow: hidden;
+  color: var(--c-text);
+  font-size: var(--text-xs);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.msu-optimize__cell {
+  flex: 0 0 auto;
+  color: var(--c-text-dim);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.msu-optimize__cell--faint {
+  color: var(--c-text-muted);
+}
+
+.msu-optimize__cell--bad {
+  color: var(--c-danger);
+}

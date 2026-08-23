@@ -148,12 +148,32 @@ interface GameSettings {
   musicMuted: boolean;
   sfxVolume: number; // 0-100
   sfxMuted: boolean;
+  /**
+   * The replacement ambient bed's own group. The sound chip cannot split its ambience out of its
+   * mix, so these govern replacement audio only — which is where a bed loud enough to fight the
+   * music comes from in the first place.
+   */
+  ambientVolume: number; // 0-100
+  ambientMuted: boolean;
   audioFreq: number;
   audioChannels: 1 | 2;
   audioSamples: number;
-  enableMSU: 'false' | 'true' | 'deluxe' | 'opuz' | 'deluxe-opuz';
+  // 'auto' (default): enableMSU/audioFreq/audioChannels are derived from the assigned pack's actual
+  // contents (shared/features/msu-auto-config.ts) rather than user-edited. 'manual': the three below
+  // are free-form, same as before this field existed.
+  msuConfigMode: 'auto' | 'manual';
+  // The pack formats, including 'msul' — our own layered container, whose manifest decides
+  // what each slot plays rather than one file per slot.
+  enableMSU: 'false' | 'true' | 'deluxe' | 'opuz' | 'deluxe-opuz' | 'msul';
   resumeMSU: boolean;
-  msuVolume: number; // 0-100
+  // A pack may replace the game's ambient beds and sound effects as well as its music. Each
+  // group is its own switch because they are separate decisions: someone may want an authored
+  // rain bed while keeping every native effect. Off means the core never even reports those
+  // sounds to the app, so the group costs nothing when unused.
+  packReplaceAmbient: boolean;
+  packReplaceSfx: boolean;
+  // No separate msuVolume: MSU replaces the music channel rather than running alongside it, so
+  // musicVolume governs both — serializeToIni writes MSUVolume from musicVolume.
 
   // ─── Post-Processing ───
   overworldEdgeEffect: boolean;

@@ -5,6 +5,7 @@ import { usePlatform } from '@app/platform';
 import type { NormalSaveInfo, AutoSaveInfo } from '@shared/types/saves';
 import type { PlaySession } from '@shared/types/session';
 import { saveState, loadState, captureStateBuffer, loadStateFromBuffer } from '../../../../../../../lib/game';
+import { saveMusicPosition, restoreMusicPosition } from '../../../../../../../lib/game/msu-save-glue';
 import { listSessions } from '../../../../../../../lib/game/session-tracker';
 import { log } from '../../../../../../../lib/log-bus';
 import * as savesStore from '@app/lib/storage/saves-store';
@@ -88,7 +89,8 @@ const useHomeTabSaves = (params: { profileId: string; isGameRunning: boolean; on
     const ab = captureStateBuffer();
     if (!ab) { setBusyNormal(null); return; }
     const screenshot = await captureCanvasScreenshot();
-    await savesStore.createNormalSave(profileId, name, ab, screenshot);
+    const created = await savesStore.createNormalSave(profileId, name, ab, screenshot);
+    if (created?.id) await saveMusicPosition(profileId, 'normal', created.id);
     await loadNormalSaves();
     setBusyNormal(null);
   }, [profileId, newSaveName]);
@@ -98,7 +100,10 @@ const useHomeTabSaves = (params: { profileId: string; isGameRunning: boolean; on
     log.app(`Loading normal save: ${id}`);
     await ensureGameRunning(isGameRunning, onStartGame);
     const buffer = await savesStore.loadNormalSave(profileId, id);
-    if (buffer) loadStateFromBuffer(buffer);
+    if (buffer) {
+      loadStateFromBuffer(buffer);
+      await restoreMusicPosition(profileId, 'normal', id);
+    }
     setBusyNormal(null);
   }, [profileId, isGameRunning, onStartGame]);
 
@@ -117,6 +122,7 @@ const useHomeTabSaves = (params: { profileId: string; isGameRunning: boolean; on
     if (!ab) { setBusyNormal(null); return; }
     const screenshot = await captureCanvasScreenshot();
     await savesStore.overwriteNormalSave(profileId, id, ab, screenshot);
+    await saveMusicPosition(profileId, 'normal', id);
     await loadNormalSaves();
     setBusyNormal(null);
   }, [profileId, dialog]);
@@ -147,7 +153,10 @@ const useHomeTabSaves = (params: { profileId: string; isGameRunning: boolean; on
     log.app(`Loading auto-save: ${id}`);
     await ensureGameRunning(isGameRunning, onStartGame);
     const buffer = await savesStore.loadAutoSave(profileId, id);
-    if (buffer) loadStateFromBuffer(buffer);
+    if (buffer) {
+      loadStateFromBuffer(buffer);
+      await restoreMusicPosition(profileId, 'auto', id);
+    }
     setBusyAuto(null);
   }, [profileId, isGameRunning, onStartGame]);
 

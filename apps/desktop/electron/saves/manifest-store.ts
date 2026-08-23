@@ -9,6 +9,7 @@
 import { join } from 'path';
 import { writeFile, readFile, unlink, mkdir } from 'fs/promises';
 import { readJson, writeJson } from '../lib/json-store';
+import { MSU_SIDECAR_SUFFIX } from '@shared/storage/save-paths';
 import { statSaveSlot, type SaveSlotStat } from './save-slot';
 
 interface ManifestEntry {
@@ -27,6 +28,9 @@ const createManifestStore = <TEntry extends ManifestEntry, TInfo>(config: Manife
   const savPaths = (dir: string, id: string): { sav: string; png: string } =>
     ({ sav: join(dir, `${id}.sav`), png: join(dir, `${id}.png`) });
 
+  /** The save's music-resume sidecar — written by the audio engine, owned by the save. */
+  const msuPath = (dir: string, id: string): string => join(dir, `${id}${MSU_SIDECAR_SUFFIX}`);
+
   const manifestPath = (profileId: string): string => join(getDir(profileId), 'manifest.json');
 
   const readManifest = (profileId: string): Promise<TEntry[]> =>
@@ -35,11 +39,15 @@ const createManifestStore = <TEntry extends ManifestEntry, TInfo>(config: Manife
   const writeManifest = (profileId: string, entries: TEntry[]): Promise<void> =>
     writeJson(manifestPath(profileId), entries);
 
+  // Writing over a save invalidates its resume sidecar: the position belonged to the
+  // state that was there before. A caller with a fresh snapshot writes it afterwards.
   const writePair = async (profileId: string, id: string, data: Buffer, screenshot?: Buffer): Promise<void> => {
-    const { sav, png } = savPaths(getDir(profileId), id);
-    await mkdir(getDir(profileId), { recursive: true });
+    const dir = getDir(profileId);
+    const { sav, png } = savPaths(dir, id);
+    await mkdir(dir, { recursive: true });
     await writeFile(sav, data);
     if (screenshot) await writeFile(png, screenshot);
+    try { await unlink(msuPath(dir, id)); } catch { /* ignore */ }
   };
 
   const append = async (profileId: string, entry: TEntry, data: Buffer, screenshot?: Buffer): Promise<void> => {
@@ -73,12 +81,16 @@ const createManifestStore = <TEntry extends ManifestEntry, TInfo>(config: Manife
   const remove = async (profileId: string, id: string): Promise<void> => {
     const manifest = await readManifest(profileId);
     await writeManifest(profileId, manifest.filter((e) => e.id !== id));
-    const { sav, png } = savPaths(getDir(profileId), id);
+    const dir = getDir(profileId);
+    const { sav, png } = savPaths(dir, id);
     try { await unlink(sav); } catch { /* ignore */ }
     try { await unlink(png); } catch { /* ignore */ }
+    try { await unlink(msuPath(dir, id)); } catch { /* ignore */ }
   };
 
-  return { savPaths, manifestPath, readManifest, writeManifest, writePair, append, list, load, loadScreenshot, remove };
+  return {
+    savPaths, msuPath, manifestPath, readManifest, writeManifest, writePair, append, list, load, loadScreenshot, remove,
+  };
 };
 
 export { createManifestStore };

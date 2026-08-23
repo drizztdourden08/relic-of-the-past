@@ -49,7 +49,7 @@ const DataManager = (props: DataManagerProps) => {
     { id: 'sprites', icon: '🖼️', label: 'Sprites' },
     { id: 'linkSprites', icon: '🧝', label: 'Character Studio' },
     { id: 'languages', icon: '🌐', label: 'Languages' },
-    { id: 'msu', icon: '🎵', label: 'MSU' },
+    { id: 'msu', icon: '🎵', label: 'MSU Studio' },
   ];
 
   return (

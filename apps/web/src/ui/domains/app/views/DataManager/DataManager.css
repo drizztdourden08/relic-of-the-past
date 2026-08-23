@@ -18,15 +18,16 @@
 
 /* ─── Tab rail (left side) ─── */
 
+/*
+ * Sized by its own widest item, so renaming a tab can never truncate it. A fixed width had to be
+ * guessed and re-guessed: "Player Sprites" and "MSU Studio" were both ellipsized at the 120px this
+ * used to be, which turns a destination's name into a riddle.
+ *
+ * This also covers the compact viewport with no second rule — the labels are hidden there, so the
+ * widest item becomes an icon and the rail shrinks to the icon strip on its own.
+ */
 .data-manager__tabs {
-  width: 120px;
-}
-
-/* Compact viewport (< --bp-compact): let the rail shrink to its icon strip. */
-@media (width <= 820px) {
-  .data-manager__tabs {
-    width: auto;
-  }
+  width: max-content;
 }
 
 /* ─── Content ─── */

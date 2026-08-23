@@ -45,6 +45,8 @@ extern int g_sdl_audio_mixer_volume;
 // ── Deferred sub-volumes (defined in emscripten_main.c) ──
 extern int g_pending_music_volume;
 extern int g_pending_sfx_volume;
+extern int g_pending_ambient_volume;
+void FlushPendingVolumes(void);
 
 // ── SDL renderer/input handlers (defined in emscripten_sdl.c) ──
 extern const struct RendererFuncs kSdlRendererFuncs;

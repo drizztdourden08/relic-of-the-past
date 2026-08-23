@@ -60,6 +60,9 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'musicMuted',
   'sfxVolume',
   'sfxMuted',
+  // Ambience is app-mixed only (msuSyncVolume on every push) — the sound chip has no ambient split
+  'ambientVolume',
+  'ambientMuted',
   // FPS display (toggled via WasmSetDisplayPerf)
   'displayPerfInTitle',
   // Enhanced save slot settings (JS-only, no WASM restart needed)

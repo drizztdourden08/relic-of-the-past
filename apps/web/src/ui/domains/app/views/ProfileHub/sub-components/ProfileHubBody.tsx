@@ -63,7 +63,7 @@ const ProfileHubBody = (props: ProfileHubBodyProps) => {
         )}
         {activeTab === 'settings' && <SettingsView settings={settings} onChange={onChange} />}
         {activeTab === 'graphics' && <GraphicsSettings settings={settings} onChange={onChange} />}
-        {activeTab === 'audio' && <AudioSettings settings={settings} onChange={onChange} />}
+        {activeTab === 'audio' && <AudioSettings settings={settings} onChange={onChange} profileId={profile.id} />}
         {activeTab === 'gameplay' && <GameplaySettings settings={settings} onChange={onChange} />}
         {activeTab === 'bugfixes' && <BugFixesSettings settings={settings} onChange={onChange} />}
         {activeTab === 'hud' && <HudSettings settings={settings} onChange={onChange} />}

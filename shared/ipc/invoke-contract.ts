@@ -30,15 +30,16 @@ import type { UiViewsMap } from './ui-views-contract';
 import type { ReviewEntry, ReviewFile } from './review-contract';
 import type { DetectionContext, DraftRecommendation, PassResult, Recommendation } from './recommendation-contract';
 import type { ControllerInvokeContract } from './controller-contract';
+import type { MsuInvokeContract } from './msu-contract';
+import type { FfmpegInvokeContract } from './ffmpeg-contract';
 import type { UpdateInfo, UpdaterCapabilities, UpdaterPrefs, VersionOption } from './updater-contract';
 
 
 type Result = { success: boolean; error?: string };
-type MsuResult = { success: boolean; fileCount?: number; error?: string };
 type TriggerCal = { base: number; max: number; deadzone: number };
 type ReviewMap = Record<string, { status: string; comment?: string }>;
 
-interface InvokeContract extends ControllerInvokeContract {
+interface InvokeContract extends ControllerInvokeContract, MsuInvokeContract, FfmpegInvokeContract {
   // App
   'app:getUserDataPath': () => Promise<string>;
 
@@ -135,15 +136,6 @@ interface InvokeContract extends ControllerInvokeContract {
   // Config (per-profile settings)
   'config:read': (profileId: string) => Promise<Record<string, unknown> | null>;
   'config:write': (profileId: string, settings: Record<string, unknown>) => Promise<void>;
-
-  // MSU
-  'msu:import': (packName: string, url: string) => Promise<MsuResult>;
-  'msu:importFile': (packName: string, filePath: string) => Promise<MsuResult>;
-  'msu:listPacks': () => Promise<Array<{ name: string; fileCount: number; totalSize: number }>>;
-  'msu:getPackFiles': (packName: string) => Promise<Array<{ name: string; size: number }>>;
-  'msu:deletePack': (packName: string) => Promise<void>;
-  'msu:getTrackList': (packName: string) => Promise<Array<{ fileName: string; trackNum: number; ext: string }>>;
-  'msu:readTrackFile': (packName: string, fileName: string) => Promise<ArrayBuffer>;
 
   // Languages
   'languages:list': () => Promise<LanguageSummary[]>;

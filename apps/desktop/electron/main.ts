@@ -27,10 +27,14 @@ import { registerRomHandlers } from './roms';
 import { registerAssetHandlers } from './assets/ipc-handlers';
 import { registerSaveHandlers } from './saves/ipc-handlers';
 import { registerMsuHandlers } from './msu/ipc-handlers';
+import { registerMsuEditHandlers } from './msu/edit-handlers';
+import { registerMsuOptimizeHandlers } from './msu/optimize-handlers';
+import { registerMsuResumeHandlers } from './msu/resume-handlers';
 import { registerSpriteHandlers } from './sprites/ipc-handlers';
 import { registerLanguageHandlers } from './languages/ipc-handlers';
 import { registerSessionHandlers } from './sessions/ipc-handlers';
 import { registerSpriteProtocol } from './protocol/sprite-protocol';
+import { registerMsulOpenHandler } from './msu/open-file';
 import { registerInputHandlers, stopInputHandlers } from './input';
 import { registerTestHandlers } from './test/ipc-handlers';
 import { registerDumpLayersHandler } from './debug/dump-layers-handler';
@@ -50,6 +54,7 @@ import { registerStorageHandlers } from './storage/ipc-handlers';
 import { registerFileHandlers } from './storage/file-handlers';
 import { initAutoUpdater, registerUpdaterHandlers } from './updater';
 import { registerGithubHandlers } from './github/ipc-handlers';
+import { registerFfmpegHandlers } from './tools/ipc-handlers';
 import { emit } from './lib/ipc/handle';
 import { installDevFileLogging } from './lib/dev-file-logger';
 
@@ -77,6 +82,9 @@ const IPC_HANDLERS: Array<{ register: () => void; devOnly?: boolean }> = [
   { register: registerAssetHandlers },
   { register: registerSaveHandlers },
   { register: registerMsuHandlers },
+  { register: registerMsuEditHandlers },
+  { register: registerMsuOptimizeHandlers },
+  { register: registerMsuResumeHandlers },
   { register: registerSpriteHandlers },
   { register: registerLanguageHandlers },
   { register: registerSessionHandlers },
@@ -100,6 +108,7 @@ const IPC_HANDLERS: Array<{ register: () => void; devOnly?: boolean }> = [
   { register: registerStorageHandlers },
   { register: registerFileHandlers },
   { register: registerGithubHandlers },
+  { register: registerFfmpegHandlers },
 ];
 
 // Ensure consistent userData path across dev and production
@@ -178,6 +187,9 @@ app.whenReady().then(async () => {
   // Initialize input subsystem (HID, USB) — calibration/profile stores resolve
   // their paths via the shared getUserDataPath (initialized by initPaths above).
   registerInputHandlers(mainWindow);
+
+  // A .msul pack the app was launched with (file association) reaches the renderer's importer.
+  registerMsulOpenHandler(mainWindow);
 
   // Set up application menu for clipboard shortcuts only (debug items moved to in-app Advanced menu)
   Menu.setApplicationMenu(Menu.buildFromTemplate([
