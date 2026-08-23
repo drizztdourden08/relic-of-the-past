@@ -9,8 +9,9 @@
  */
 import { useState, useEffect, useCallback } from 'react';
 import {
-  listLinkSprites, importLinkSprite, deleteLinkSprite, spriteStem,
+  listLinkSprites, importLinkSprite, spriteStem,
 } from '@app/lib/storage/link-sprites-store';
+import { deleteSprite } from '@app/lib/game/player-sheet/delete-sprite';
 import { loadSheet } from '@app/lib/game/player-sheet/load-sheet';
 import { renderThumbnail } from '@app/lib/game/player-sheet/thumbnail';
 import { isRspName } from '@app/lib/game/rsp';
@@ -64,8 +65,10 @@ const useSpriteLibrary = () => {
     return { success: true, message: `Imported ${spriteStem(result.name ?? name)}` };
   }, [refresh]);
 
+  // Deleting also puts the selection back to default on any profile that pointed at it,
+  // so no profile is left naming a sprite that no longer exists.
   const remove = useCallback(async (name: string) => {
-    await deleteLinkSprite(name);
+    await deleteSprite(name);
     await refresh();
   }, [refresh]);
 

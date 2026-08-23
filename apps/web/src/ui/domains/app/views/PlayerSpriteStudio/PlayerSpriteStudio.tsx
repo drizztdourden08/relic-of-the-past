@@ -70,7 +70,8 @@ const PlayerSpriteStudio = (props: PlayerSpriteStudioProps) => {
   }, [library]);
 
   const handleDelete = useCallback((name: string) => {
-    onDeleteConfirm('Delete player sprite', `Delete "${name}"? This cannot be undone.`, async () => {
+    const message = `Delete "${name}"? Any profile using it goes back to the original sprite. This cannot be undone.`;
+    onDeleteConfirm('Delete player sprite', message, async () => {
       if (draft.draft?.file === name) draft.close();
       await library.remove(name);
     });
