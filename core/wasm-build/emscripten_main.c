@@ -61,8 +61,6 @@ uint8 g_audio_channels;
 int g_sdl_audio_mixer_volume = SDL_MIX_MAXVOLUME;
 
 // Pending sub-volumes: -1 = no pending value, 0-128 = deferred until player/DSP ready
-int g_pending_music_volume = -1;
-int g_pending_sfx_volume = -1;
 
 // ---------------------------------------------------------------------------
 // Die (required by various zelda3 modules)
@@ -85,16 +83,7 @@ void ZeldaApuUnlock(void) { /* no-op in WASM */ }
 // ---------------------------------------------------------------------------
 static void MainFrameCallback(void) {
   // Apply deferred sub-volumes once the player/DSP are initialized
-  if (g_zenv.player && g_zenv.player->dsp) {
-    if (g_pending_music_volume >= 0) {
-      dsp_setMusicVolume(g_zenv.player->dsp, (uint8_t)g_pending_music_volume);
-      g_pending_music_volume = -1;
-    }
-    if (g_pending_sfx_volume >= 0) {
-      dsp_setSfxVolume(g_zenv.player->dsp, (uint8_t)g_pending_sfx_volume);
-      g_pending_sfx_volume = -1;
-    }
-  }
+  FlushPendingVolumes();
 
   SDL_Event event;
   while (SDL_PollEvent(&event)) {

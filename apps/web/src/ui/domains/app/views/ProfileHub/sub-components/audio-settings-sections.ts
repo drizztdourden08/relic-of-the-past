@@ -26,6 +26,7 @@ const SECTIONS: Section[] = [
         items: [
           { key: 'perGroupVolume', label: 'Independent Music / SFX', description: 'Mix music and sound effects separately. Off keeps the original audio mix exactly — the sliders below do nothing until this is on.', keywords: 'split independent music sfx mix per group separate volume' },
           { key: 'musicVolume', label: 'Music Volume', description: 'Sets the music level — the original soundtrack and any music pack alike, since a pack plays in place of it rather than alongside it', keywords: 'volume music bgm background msu pack' },
+          { key: 'ambientVolume', label: 'Ambience Volume', description: 'Sets the replacement ambient-bed level — rain, waterfalls, wind played by a pack. The sound chip cannot split its own ambience, so this governs replacement audio only', keywords: 'volume ambience ambient bed rain water background loop pack replacement' },
           { key: 'sfxVolume', label: 'SFX Volume', description: 'Sets the sound-effects level', keywords: 'volume sfx sound effects' },
         ],
       },

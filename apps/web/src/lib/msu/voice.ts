@@ -19,6 +19,16 @@ interface VoiceOptions {
   /** Fall to silence over `fadeOutSeconds`, starting this many seconds from now. */
   fadeOutAfterSeconds?: number;
   fadeOutSeconds?: number;
+  /**
+   * Loop restart point in SECONDS, overriding whatever the file declared. This is what gives a
+   * `.wav` or `.mp3` layer the intro-then-loop structure only MSU-1 `.pcm` can carry in its own
+   * header: the point lives in the manifest instead of the file. Undefined defers to the file.
+   *
+   * Seconds rather than samples on purpose. A manifest loop point is defined at 44100 Hz whatever
+   * the file's own rate is, while a `.pcm` header's is in that file's rate, so carrying both as
+   * "samples" invites converting one against the wrong rate. The caller converts; this just uses it.
+   */
+  loopSecondsOverride?: number;
 }
 
 /** Where a voice is in its fade envelope, so a preview can show a crossfade as it happens. */
@@ -36,6 +46,12 @@ interface Voice {
   offsetSeconds: () => number;
   /** Length of the audio this voice is playing. */
   durationSeconds: number;
+  /**
+   * Where playback returns to when it reaches the end, or null when it does not loop. An MSU-1 file
+   * carries this in its header, and it is normally NOT zero: the track has an intro that plays once
+   * and a body that repeats, so position jumping backwards to here is the file working as authored.
+   */
+  loopSeconds: number | null;
   /** The fade currently under way, or null when the voice is at steady volume. */
   fade: () => VoiceFade | null;
 }
@@ -43,13 +59,18 @@ interface Voice {
 const createVoice = (ctx: BaseAudioContext, destination: AudioNode, decoded: DecodedAudio, options: VoiceOptions): Voice => {
   const {
     loop, offsetSeconds: startOffset = 0, onEnded,
-    fadeInSeconds = 0, fadeOutAfterSeconds, fadeOutSeconds = 0,
+    fadeInSeconds = 0, fadeOutAfterSeconds, fadeOutSeconds = 0, loopSecondsOverride,
   } = options;
   const { buffer, loopSample } = decoded;
 
   const source = ctx.createBufferSource();
   source.buffer = buffer;
-  const loopStart = loopSample > 0 ? loopSample / buffer.sampleRate : 0;
+  // The manifest wins over the file: an author who set a loop point in the studio meant it, and for
+  // every format except MSU-1 `.pcm` the file has nowhere to state one at all.
+  const loopStart = Math.min(
+    loopSecondsOverride ?? (loopSample > 0 ? loopSample / buffer.sampleRate : 0),
+    buffer.duration,
+  );
 
   if (loop) {
     source.loop = true;
@@ -122,7 +143,7 @@ const createVoice = (ctx: BaseAudioContext, destination: AudioNode, decoded: Dec
     envelope?.disconnect();
   };
 
-  return { stop, offsetSeconds, durationSeconds: buffer.duration, fade };
+  return { stop, offsetSeconds, durationSeconds: buffer.duration, loopSeconds: loop ? loopStart : null, fade };
 };
 
 export { createVoice };

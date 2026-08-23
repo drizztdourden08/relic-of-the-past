@@ -28,6 +28,7 @@ import { registerAssetHandlers } from './assets/ipc-handlers';
 import { registerSaveHandlers } from './saves/ipc-handlers';
 import { registerMsuHandlers } from './msu/ipc-handlers';
 import { registerMsuEditHandlers } from './msu/edit-handlers';
+import { registerMsuOptimizeHandlers } from './msu/optimize-handlers';
 import { registerMsuResumeHandlers } from './msu/resume-handlers';
 import { registerSpriteHandlers } from './sprites/ipc-handlers';
 import { registerLanguageHandlers } from './languages/ipc-handlers';
@@ -53,6 +54,7 @@ import { registerStorageHandlers } from './storage/ipc-handlers';
 import { registerFileHandlers } from './storage/file-handlers';
 import { initAutoUpdater, registerUpdaterHandlers } from './updater';
 import { registerGithubHandlers } from './github/ipc-handlers';
+import { registerFfmpegHandlers } from './tools/ipc-handlers';
 import { emit } from './lib/ipc/handle';
 import { installDevFileLogging } from './lib/dev-file-logger';
 
@@ -81,6 +83,7 @@ const IPC_HANDLERS: Array<{ register: () => void; devOnly?: boolean }> = [
   { register: registerSaveHandlers },
   { register: registerMsuHandlers },
   { register: registerMsuEditHandlers },
+  { register: registerMsuOptimizeHandlers },
   { register: registerMsuResumeHandlers },
   { register: registerSpriteHandlers },
   { register: registerLanguageHandlers },
@@ -105,6 +108,7 @@ const IPC_HANDLERS: Array<{ register: () => void; devOnly?: boolean }> = [
   { register: registerStorageHandlers },
   { register: registerFileHandlers },
   { register: registerGithubHandlers },
+  { register: registerFfmpegHandlers },
 ];
 
 // Ensure consistent userData path across dev and production

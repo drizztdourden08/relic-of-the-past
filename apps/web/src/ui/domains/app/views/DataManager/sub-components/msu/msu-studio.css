@@ -101,6 +101,18 @@
   white-space: nowrap;
 }
 
+/* The channel a row belongs to, shown wherever one list carries more than one of them. Fixed
+   width so the ids beside it still line up, and monospaced so the tag reads as a port name
+   rather than as part of the sound's description. */
+.msu-sound-row__channel {
+  flex: 0 0 auto;
+  width: 2.75rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-gold);
+  letter-spacing: 0.04em;
+}
+
 /* ─── Expanded slot ─── */
 
 .msu-track-detail {
@@ -122,4 +134,168 @@
 
 .msu-status--error {
   color: var(--c-danger);
+}
+
+/* ─── File rows ─── */
+
+.msu-file-summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--c-border);
+}
+
+.msu-file-summary__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+/* The files tab owns its own scrolling, so its header can stay put while the list moves under it. */
+.msu-panel--files {
+  flex: 1 1 auto;
+  height: auto;
+  min-height: 0;
+}
+
+/*
+ * ONE column template for the whole files list, declared here and nowhere else. The header row and
+ * every card read it from this custom property, so a column cannot be widened on one of them and
+ * drift out of line with the other — which is exactly what happened while each row laid itself out.
+ */
+.msu-file-grid {
+  --msu-file-cols:
+    minmax(8rem, 1fr) 4rem 5.5rem 4.5rem 9rem 5.5rem minmax(6rem, 11rem) 4.5rem;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.msu-file-grid__head,
+.msu-file-row {
+  display: grid;
+  grid-template-columns: var(--msu-file-cols);
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
+}
+
+/*
+ * A label strip, not a table head: it names the columns and holds its place while the list moves,
+ * but carries no rules and no frame of its own, so what sits under it still reads as cards rather
+ * than as rows in a grid. Opaque because the cards scroll underneath it, not beside it.
+ */
+.msu-file-grid__head {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  padding-bottom: var(--space-2xs);
+  background: var(--c-bg);
+
+  /* Matches the card's border so the two share one column origin — without it every heading sits
+     a pixel left of the values under it, which is exactly the kind of drift the shared template is
+     here to prevent. */
+  border: 1px solid transparent;
+  border-bottom: none;
+}
+
+.msu-file-grid__label {
+  overflow: hidden;
+  color: var(--c-text-dim);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semi);
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.msu-file-grid__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+/*
+ * The card is the entry, not the row: the player expands inside it, so a playing file reads as one
+ * object rather than as a row with something loose underneath.
+ *
+ * Every card gets the SAME surface and border. Striping alternate ones would sort the list into a
+ * table by eye — the separation here comes from each file being its own object with space around
+ * it, and the columns line up because the card reads the list's template, not because it is ruled.
+ */
+.msu-file-entry {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+}
+
+.msu-file-entry:hover {
+  border-color: var(--c-border-strong);
+}
+
+.msu-file-row {
+  font-size: var(--text-sm);
+}
+
+.msu-file-row__name {
+  overflow: hidden;
+  color: var(--c-text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: text;
+}
+
+.msu-file-row__cell {
+  justify-self: start;
+  min-width: 0;
+}
+
+.msu-file-row__edit {
+  min-width: 0;
+}
+
+.msu-file-row__spec {
+  overflow: hidden;
+  color: var(--c-text-muted);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.msu-file-row__used {
+  overflow: hidden;
+  color: var(--c-text-dim);
+  font-size: var(--text-xs);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.msu-file-row__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2xs);
+}
+
+/* Inside the card, under its row — so a playing file reads as one object rather than as a row with
+   something loose beneath it. */
+.msu-file-player {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  padding: 0 var(--space-sm) var(--space-xs);
+}
+
+.msu-file-entry--playing {
+  border-color: var(--c-gold);
+  box-shadow: inset 2px 0 0 var(--c-gold);
+}
+
+.msu-file-player__clock {
+  color: var(--c-text-muted);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
 }

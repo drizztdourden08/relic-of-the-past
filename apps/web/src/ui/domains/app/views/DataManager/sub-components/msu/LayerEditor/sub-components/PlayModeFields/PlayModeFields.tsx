@@ -26,7 +26,7 @@ import type { PlayModeKind } from '../../behavior/layer-ops';
 import { CrossfadeField } from '../CrossfadeField';
 import { IntervalTimes } from '../IntervalTimes';
 import {
-  MODE_HINTS, MODE_OPTIONS, ORDER_OPTIONS, WAIT_HINTS, WAIT_LABEL,
+  MODE_HINTS, MODE_OPTIONS, ORDER_HINTS, ORDER_OPTIONS, WAIT_HINTS, WAIT_LABEL,
 } from './PlayModeFields.constants';
 import type { PlayModeFieldsProps } from './PlayModeFields.type';
 
@@ -48,17 +48,21 @@ const PlayModeFields = (props: PlayModeFieldsProps) => {
         <>
           <SegmentedControl
             label="Order"
+            description={ORDER_HINTS[mode.order]}
             value={mode.order}
             options={ORDER_OPTIONS}
             disabled={disabled}
             onChange={(order) => onChange({ ...mode, order })}
           />
-          <CrossfadeField
-            seconds={mode.crossfadeSeconds ?? 0}
-            layerId={layerId}
-            disabled={disabled}
-            onChange={(crossfadeSeconds) => onChange({ ...mode, crossfadeSeconds })}
-          />
+          {/* Nothing to cross into when one track repeats on itself, so the control is not offered. */}
+          {mode.order !== 'single' && (
+            <CrossfadeField
+              seconds={mode.crossfadeSeconds ?? 0}
+              layerId={layerId}
+              disabled={disabled}
+              onChange={(crossfadeSeconds) => onChange({ ...mode, crossfadeSeconds })}
+            />
+          )}
         </>
       )}
 
@@ -67,13 +71,13 @@ const PlayModeFields = (props: PlayModeFieldsProps) => {
           <Flex gap="md" align="end" wrap>
             <Field label="Shortest gap (s)">
               <NumberInput
-                min={0} step={0.5} max={3600} sizeToContent value={mode.minDelaySeconds} disabled={disabled}
+                min={0} step={0.25} max={3600} sizeToContent value={mode.minDelaySeconds} disabled={disabled}
                 onChange={(value) => onChange({ ...mode, minDelaySeconds: Number.isFinite(value) ? value : 0 })}
               />
             </Field>
             <Field label="Longest gap (s)">
               <NumberInput
-                min={0} step={0.5} max={3600} sizeToContent value={mode.maxDelaySeconds} disabled={disabled}
+                min={0} step={0.25} max={3600} sizeToContent value={mode.maxDelaySeconds} disabled={disabled}
                 onChange={(value) => onChange({ ...mode, maxDelaySeconds: Number.isFinite(value) ? value : 0 })}
               />
             </Field>

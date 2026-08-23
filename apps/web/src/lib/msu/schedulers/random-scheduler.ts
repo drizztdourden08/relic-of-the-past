@@ -22,6 +22,7 @@ const soundingVoices = (
   fileName: names[e.fileIndex] ?? null,
   positionSeconds: e.voice.offsetSeconds(),
   durationSeconds: e.voice.durationSeconds,
+  loopSeconds: e.voice.loopSeconds,
   fade: e.voice.fade(),
 }));
 

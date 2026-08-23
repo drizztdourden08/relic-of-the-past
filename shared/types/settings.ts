@@ -148,6 +148,13 @@ interface GameSettings {
   musicMuted: boolean;
   sfxVolume: number; // 0-100
   sfxMuted: boolean;
+  /**
+   * The replacement ambient bed's own group. The sound chip cannot split its ambience out of its
+   * mix, so these govern replacement audio only — which is where a bed loud enough to fight the
+   * music comes from in the first place.
+   */
+  ambientVolume: number; // 0-100
+  ambientMuted: boolean;
   audioFreq: number;
   audioChannels: 1 | 2;
   audioSamples: number;

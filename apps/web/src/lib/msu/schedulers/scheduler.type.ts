@@ -17,6 +17,12 @@ interface LayerContext {
   play: (fileIndex: number, options: VoiceOptions) => Voice;
   /** Seconds since the track started — the clock `interval` mode measures against. */
   elapsedSeconds: () => number;
+  /**
+   * Where each repeat of this layer starts, in seconds; 0 repeats the whole file. Taken from the
+   * layer's manifest loop point, or the file's own when it declared one. Zero unless the layer has
+   * exactly one file — a pool restarts each file from its top, the same rule the exporter applies.
+   */
+  loopSeconds: number;
 }
 
 /** One sound this layer has audible right now — a layer can have several at once. */
@@ -24,6 +30,8 @@ interface SoundingVoice {
   fileName: string | null;
   positionSeconds: number;
   durationSeconds: number;
+  /** Where this sound repeats from, when it loops from somewhere other than the start. */
+  loopSeconds: number | null;
   /** Set while this sound is crossfading, so the overlap is visible as it happens. */
   fade: VoiceFade | null;
 }

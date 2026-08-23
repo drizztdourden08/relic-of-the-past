@@ -18,8 +18,14 @@
  * carries the results of that and this side carries none of it.
  */
 import { collectRecords } from './collect-records';
-import type { SoundNameRecord } from './types';
 import type { SoundChannel } from '@shared/types/msu-manifest';
+
+interface SoundNameRecord {
+  channel: SoundChannel;
+  /** The id as the game writes it, before the pan bits. */
+  id: number;
+  name: string;
+}
 
 const files = import.meta.glob('./records/sound-names.ts', { eager: true });
 
@@ -38,3 +44,4 @@ const namedSoundCount = (channel: SoundChannel): number =>
   [...NAMES.keys()].filter((key) => key.startsWith(`${channel}:`)).length;
 
 export { soundName, namedSoundCount };
+export type { SoundNameRecord };

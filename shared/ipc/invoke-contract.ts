@@ -31,6 +31,7 @@ import type { ReviewEntry, ReviewFile } from './review-contract';
 import type { DetectionContext, DraftRecommendation, PassResult, Recommendation } from './recommendation-contract';
 import type { ControllerInvokeContract } from './controller-contract';
 import type { MsuInvokeContract } from './msu-contract';
+import type { FfmpegInvokeContract } from './ffmpeg-contract';
 import type { UpdateInfo, UpdaterCapabilities, UpdaterPrefs, VersionOption } from './updater-contract';
 
 
@@ -38,7 +39,7 @@ type Result = { success: boolean; error?: string };
 type TriggerCal = { base: number; max: number; deadzone: number };
 type ReviewMap = Record<string, { status: string; comment?: string }>;
 
-interface InvokeContract extends ControllerInvokeContract, MsuInvokeContract {
+interface InvokeContract extends ControllerInvokeContract, MsuInvokeContract, FfmpegInvokeContract {
   // App
   'app:getUserDataPath': () => Promise<string>;
 

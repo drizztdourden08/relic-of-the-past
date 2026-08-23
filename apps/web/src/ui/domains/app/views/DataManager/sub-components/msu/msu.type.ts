@@ -1,6 +1,9 @@
 /* @layer renderer-components @kind types */
-import type { SoundChannel } from '@shared/types/msu-manifest';
+import type { MsuPackManifest, SoundChannel } from '@shared/types/msu-manifest';
+import { trackNumberOf } from '@shared/storage/msu-paths';
+import type { AmbientRole } from '@shared/game/data/ambient-reach';
 import type { SelectOption } from '@ds/primitives/Select';
+import type { useSoundPanel } from './behavior/useSoundPanel';
 
 /** A pack carrying a `pack.json` is layered; one with only numbered audio files is classic. */
 type PackFormat = 'layered' | 'classic';
@@ -45,6 +48,19 @@ interface MsuManagerProps {
   onRefresh: () => void;
 }
 
+/** Everything the effects tab hands straight through to each of its channel sections. */
+interface MsuEffectsPanelProps {
+  pack: string;
+  /** What the rows and the editors SHOW. */
+  manifest: MsuPackManifest;
+  /** What a save WRITES into. */
+  saveBase: MsuPackManifest;
+  files: MsuFile[];
+  isLayered: boolean;
+  onDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
+  onReload: () => void;
+}
+
 interface TrackRowProps {
   trackNum: number;
   description: string;
@@ -82,11 +98,20 @@ interface SoundRowData {
   layerCount: number;
   /** True for an id this pack claims that the catalogue does not list. */
   unlisted: boolean;
+  /** What the id does on the ambient channel; null on the effects channels, which have no roles. */
+  role: AmbientRole | null;
+  /** True for an id nothing in the game can raise, so it is only shown on request. */
+  unreachable: boolean;
 }
 
 interface SoundRowProps {
   row: SoundRowData;
   channel: SoundChannel;
+  /**
+   * Tags the row with its channel. Set wherever one list holds more than one channel — an id
+   * alone does not say which channel it belongs to, and the channels do not share id spaces.
+   */
+  showChannel?: boolean;
   /** True while this sound is the one the preview session belongs to. */
   playing: boolean;
   /** On an effects channel every press adds a sound, so play never becomes stop. */
@@ -104,13 +129,39 @@ interface SoundRowProps {
   onStopReplacing: (soundId: number) => void;
 }
 
-const getTrackNumber = (filename: string): number | null => {
-  const match = filename.match(/(\d+)\.(pcm|opuz)$/i);
-  return match ? parseInt(match[1], 10) : null;
-};
+/**
+ * One channel's wiring, handed around whole. `useSoundPanel` builds it; a list that shows more
+ * than one channel keeps one per channel and picks by row, which is how a single list drives two
+ * id spaces without either channel knowing the other is on screen.
+ */
+type SoundPanelController = ReturnType<typeof useSoundPanel>;
+
+interface SoundListItemProps {
+  pack: string;
+  channel: SoundChannel;
+  row: SoundRowData;
+  /** The controller for THIS row's channel, not for the list. */
+  sound: SoundPanelController;
+  manifest: MsuPackManifest;
+  saveBase: MsuPackManifest;
+  availableFiles: string[];
+  isLayered: boolean;
+  /** Tags the row with its channel — set wherever one list holds more than one. */
+  showChannel?: boolean;
+  onPreview: (channel: SoundChannel, soundId: number) => void;
+  onPlayOriginal: (channel: SoundChannel, soundId: number) => void;
+  onToggleLayers: (channel: SoundChannel, soundId: number) => void;
+  onStopReplacing: (soundId: number) => void;
+  onConfirm: (title: string, message: string, onConfirm: () => void) => void;
+  onReload: () => void;
+}
+
+/** Re-exported from shared so the studio and the pack loader can never disagree on this. */
+const getTrackNumber = (filename: string): number | null => trackNumberOf(filename);
 
 export { getTrackNumber };
 export type {
   PackFormat, MsuPack, MsuPackRow, MsuFile, TrackInfo, MatchedTrack, ActionResult,
-  MsuManagerProps, TrackRowProps, SoundRowData, SoundRowProps,
+  MsuManagerProps, MsuEffectsPanelProps, TrackRowProps, SoundRowData, SoundRowProps,
+  SoundPanelController, SoundListItemProps,
 };

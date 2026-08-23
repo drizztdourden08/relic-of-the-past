@@ -12,6 +12,8 @@ import { createMsuEngine } from '../msu/engine';
 import type { MsuEngine } from '../msu/engine';
 import type { LoadBytes } from '../msu/track-loader';
 import { getMasterAudioTarget } from './audio-volume';
+import { announceCoreMusic } from './bridge/announce-music';
+import { setDeluxeEntrances } from './bridge/deluxe-entrances';
 import { restoreCoreMusic } from './bridge/restore-music';
 import { setExternalMusic } from './bridge/host-gates';
 import { publishSoundClaims, withdrawSoundClaims } from './msu-sound-claims';
@@ -24,6 +26,8 @@ interface MsuSessionOptions {
   musicVolume: () => number;
   /** Replacement effects are effects: they follow the SFX slider, not the music one. */
   sfxVolume: () => number;
+  /** The bed's own slider — a storm sits under quiet music without touching either. */
+  ambientVolume: () => number;
   resumeEnabled: () => boolean;
   /**
    * Whether the pack may replace the ambient bed and the sound effects. Read once, here, because
@@ -39,6 +43,8 @@ declare global {
     __onMusicCtrl?: (ctrl: number, module: number, entrance: number, overworldArea: number) => void;
     /** Channel is the core's own index: 0 ambient, 1 sfx1, 2 sfx2. Pan is the two pan bits. */
     __onGameSound?: (channel: number, id: number, pan: number) => void;
+    /** The core's synchronous "is this track, remapped, already playing" query. */
+    __msuIsPlaying?: (ctrl: number, module: number, entrance: number, overworldArea: number) => boolean;
   }
 }
 
@@ -62,6 +68,7 @@ const build = (options: MsuSessionOptions): boolean => {
     isDeluxe: options.isDeluxe,
     musicVolume: options.musicVolume,
     sfxVolume: options.sfxVolume,
+    ambientVolume: options.ambientVolume,
     resumeEnabled: options.resumeEnabled,
     onError: (message) => log.error(`[MSU] ${message}`),
     onTrack: (trackNum, layerCount, resumed) =>
@@ -76,10 +83,17 @@ const build = (options: MsuSessionOptions): boolean => {
   window.__onGameSound = (channel, id, pan) => {
     engine?.onGameSound(channel, id, pan);
   };
+  window.__msuIsPlaying = (ctrl, _module, entrance, overworldArea) =>
+    engine?.isPlayingTrack(ctrl, entrance, overworldArea) ?? false;
   setExternalMusic(true);
+  setDeluxeEntrances(options.isDeluxe);
   const claimed = publishSoundClaims(options.manifest, {
     ambient: options.replaceAmbient, sfx: options.replaceSfx,
   });
+  // Only now is anything listening. Whatever the game selected before this point — at boot, or
+  // through a state loaded on the way in — was reported to nobody, and the core will not repeat
+  // it on its own, so ask. Has to follow the gate AND the claims: the core checks both.
+  announceCoreMusic();
   log.app(`[MSU] Engine attached (${options.manifest.tracks.length} tracks${options.isDeluxe ? ', deluxe' : ''})`);
   const sounds = claimed.ambient + claimed.sfx1 + claimed.sfx2;
   if (sounds > 0) {
@@ -111,11 +125,13 @@ const stopMsuSession = (): void => {
   engine = null;
   window.__onMusicCtrl = undefined;
   window.__onGameSound = undefined;
+  window.__msuIsPlaying = undefined;
   // Order matters: the core holds its music port paused while the host owns music, and only
   // rewrites it when the music CHANGES — which it will not, because the track it wants is the
   // one it thinks is already playing. Re-announce it while the gate is still on, then release.
   restoreCoreMusic();
   setExternalMusic(false);
+  setDeluxeEntrances(false);
   withdrawSoundClaims();
 };
 

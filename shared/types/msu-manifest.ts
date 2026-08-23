@@ -20,7 +20,12 @@ type LayerPlayMode =
   // Play continuously; with several files, in order or shuffled, one after another.
   | {
     kind: 'loop';
-    order: 'sequential' | 'random';
+    /**
+     * How the loop comes round again. `sequential` and `random` move BETWEEN files; `single` plays
+     * one track that repeats on itself at its own loop point, with no crossfade — which is exactly
+     * what MSU-1 does, and why it is an order rather than a mode of its own.
+     */
+    order: 'sequential' | 'random' | 'single';
     /**
      * Overlap between one pass and the next, in seconds (0-10). The outgoing audio fades out
      * while the incoming fades in over this window, so a pool of themes blends instead of
@@ -45,12 +50,31 @@ type LayerPlayMode =
   // Fire at fixed offsets measured from the moment the track started.
   | { kind: 'interval'; atSeconds: number[] };
 
+/**
+ * One processing stage on a layer, applied in the order listed, after the layer's own volume and
+ * before it joins the channel. Kept to what a single biquad filter can do, so the description is
+ * small, plays identically everywhere the pack does, and can be flattened into an export later.
+ *
+ * The case that made this exist: one recording of rain serving both outdoors and indoors. The
+ * indoor version is the same file heard through walls — the highs gone, the rest dulled — which is
+ * a low-pass, not a second recording.
+ */
+type LayerEffect =
+  /** Rolls off everything above the cutoff: muffled, behind a wall, under water. */
+  | { kind: 'lowpass'; frequencyHz: number }
+  /** Rolls off everything below the cutoff: thin, distant, through a speaker. */
+  | { kind: 'highpass'; frequencyHz: number }
+  /** Three bands of shelf and peak gain, in decibels; 0 on all three is a no-op. */
+  | { kind: 'eq'; lowDb: number; midDb: number; highDb: number };
+
 interface MsuLayer {
   id: string;
   name: string;
   /** Filenames within the pack. More than one = a pool the play mode draws from. */
   files: string[];
   mode: LayerPlayMode;
+  /** Processing on this layer's audio, in order. Absent or empty plays the files as they are. */
+  effects?: LayerEffect[];
   /** 0-100, relative to the profile's music volume. */
   volume: number;
   /**
@@ -75,6 +99,14 @@ type SoundChannel = 'ambient' | 'sfx1' | 'sfx2';
 interface MsuSoundDef {
   soundId: number;
   layers: MsuLayer[];
+  /**
+   * Sounds sharing a group hand playback across when one replaces the other: a layer whose files
+   * and play mode match a layer of the outgoing sound carries on from the same position instead
+   * of restarting. Whatever does NOT match still changes — effects, volume, an extra layer only
+   * one of them has. The case in mind: the same storm indoors and outdoors, where a doorway
+   * should change how the rain sounds, never where it is.
+   */
+  syncGroup?: string;
 }
 
 interface MsuTrackDef {
@@ -129,7 +161,21 @@ interface MsuResumeState {
 
 const MSUL_EXTENSION = 'msul';
 const MSUL_MANIFEST_NAME = 'pack.json';
-/** Track numbers at or above this are the Deluxe-only range (beyond the vanilla 36 slots). */
+/**
+ * The game's own music slots run 1..34 — that is every song id the engine has. Slot 15 is among
+ * them but no code path ever requests it, so it is listed and simply never heard.
+ *
+ * 35 and 36 are NOT slots: they are the gap between the vanilla range and the Deluxe one. Listing
+ * up to the Deluxe threshold treats that gap as two real tracks, which is how the studio came to
+ * show slots the game cannot play and hang names on them.
+ */
+const VANILLA_TRACK_COUNT = 34;
+
+/**
+ * Track numbers at or above this are the Deluxe-only range: the per-area and per-interior tracks
+ * that extend the vanilla set. Used to RECOGNISE a Deluxe pack — not to count vanilla slots, which
+ * stop at VANILLA_TRACK_COUNT.
+ */
 const DELUXE_TRACK_THRESHOLD = 37;
 /**
  * Ids a sound channel can carry, 0 included. The value the game writes to a port keeps its top two
@@ -139,9 +185,11 @@ const DELUXE_TRACK_THRESHOLD = 37;
 const SOUND_ID_COUNT = 64;
 
 export {
-  MSUL_EXTENSION, MSUL_MANIFEST_NAME, DELUXE_TRACK_THRESHOLD, MAX_CROSSFADE_SECONDS, SOUND_ID_COUNT,
+  MSUL_EXTENSION, MSUL_MANIFEST_NAME, DELUXE_TRACK_THRESHOLD, VANILLA_TRACK_COUNT,
+  MAX_CROSSFADE_SECONDS, SOUND_ID_COUNT,
 };
 export type {
+  LayerEffect,
   LayerPlayMode, MsuLayer, MsuTrackDef, MsuPackMeta, MsuPackManifest, LayerResume, MsuResumeState,
   SoundChannel, MsuSoundDef,
 };

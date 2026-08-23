@@ -37,6 +37,14 @@ void GameHook_SetSoundClaim(int channel, uint32 low, uint32 high) {
   s_claim[channel][1] = high;
 }
 
+// Whether the host claims |id| on |channel| — the predicate alone, no report and no gate check.
+// For the paths that must act on claim-ness without implying a sound was just raised.
+bool GameHook_SoundClaimed(int channel, uint8 id) {
+  if ((unsigned)channel >= (unsigned)kSoundChannel_Count)
+    return false;
+  return (s_claim[channel][(id & 0x3f) >> 5] & (1u << (id & 31))) != 0;
+}
+
 bool GameHook_Sound(int channel, uint8 raw) {
   // Id 0 is the game's "nothing to play" write, which every frame without a sound effect makes.
   // There is no sound there to replace, and the port still needs it to clear the previous one.

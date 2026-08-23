@@ -8,6 +8,7 @@
  * share one interface and the engine never branches on which channel it is holding.
  */
 import type { LayerResume, MsuLayer, SoundChannel } from '@shared/types/msu-manifest';
+import type { EffectChain } from '../layer-effects';
 import type { LayerActivity, LayerScheduler } from '../schedulers/scheduler.type';
 import type { LoadBytes } from '../track-loader';
 
@@ -33,6 +34,8 @@ type ChannelKind = 'stateful' | 'additive';
 interface SoundProgram {
   id: number;
   layers: MsuLayer[];
+  /** Programs sharing a group hand playback across on a switch — see MsuSoundDef.syncGroup. */
+  group?: string;
 }
 
 /** One layer of a sounding program: its scheduler and the gain node that scheduler feeds. */
@@ -42,6 +45,8 @@ interface ActiveLayer {
   modeKind: string;
   scheduler: LayerScheduler;
   gain: GainNode;
+  /** The layer's effects, between its gain and the channel; empty is a pass-through. */
+  effects: EffectChain;
 }
 
 /** One layer's live state, for the studio's preview readout. */
@@ -86,6 +91,12 @@ interface ChannelOptions {
    * captured, so toggling the setting mid-session takes effect immediately. Stateful only.
    */
   resumeEnabled?: () => boolean;
+  /**
+   * Whether selecting the id already playing starts it again. Off, a repeat is a no-op — the
+   * chip's own behaviour for a port rewritten with the value it holds, and what the ambient bed
+   * needs. On, it restarts, which is what music needs after a fade to zero. Stateful only.
+   */
+  restartOnRepeat?: boolean;
   onError?: (message: string) => void;
   /** Reports each id that starts, for diagnostics — how many layers actually decoded. */
   onStart?: (id: number, layerCount: number, resumed: boolean) => void;

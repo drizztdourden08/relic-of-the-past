@@ -22,14 +22,17 @@ import { MAX_CROSSFADE_SECONDS } from '@shared/types/msu-manifest';
 import { CROSSFADE_HINT, CROSSFADE_LABEL } from '../PlayModeFields/PlayModeFields.constants';
 import type { CrossfadeFieldProps } from './CrossfadeField.type';
 
-/** Snapped to tenths: a crossfade typed as 2.55s would otherwise read back as itself forever. */
+/**
+ * Snapped to hundredths. Tenths were too coarse once the arrows moved by a quarter second, which
+ * lands on .25 and .75 — rounding those to a tenth silently moved the value the arrow just set.
+ */
 const clamp = (value: number): number => {
   if (!Number.isFinite(value)) return 0;
-  return Math.round(Math.max(0, Math.min(MAX_CROSSFADE_SECONDS, value)) * 10) / 10;
+  return Math.round(Math.max(0, Math.min(MAX_CROSSFADE_SECONDS, value)) * 100) / 100;
 };
 
 const stateOf = (seconds: number): string =>
-  (seconds === 0 ? 'Off — no overlap, hard cut' : `${seconds.toFixed(1)}s of overlap`);
+  (seconds === 0 ? 'Off — no overlap, hard cut' : `${seconds.toFixed(2)}s of overlap`);
 
 const CrossfadeField = (props: CrossfadeFieldProps) => {
   const { seconds, layerId, disabled = false, onChange } = props;
@@ -43,7 +46,7 @@ const CrossfadeField = (props: CrossfadeFieldProps) => {
             value={seconds}
             min={0}
             max={MAX_CROSSFADE_SECONDS}
-            step={0.5}
+            step={0.25}
             disabled={disabled}
             showValue={false}
             onChange={(value) => onChange(clamp(value))}
@@ -52,7 +55,7 @@ const CrossfadeField = (props: CrossfadeFieldProps) => {
             id={inputId}
             min={0}
             max={MAX_CROSSFADE_SECONDS}
-            step={0.5}
+            step={0.25}
             sizeToContent
             value={seconds}
             disabled={disabled}

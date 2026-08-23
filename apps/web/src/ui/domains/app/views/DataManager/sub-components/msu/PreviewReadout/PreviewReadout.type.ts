@@ -34,6 +34,12 @@ interface LayerMeterRow {
   label: string;
   /** Set while this row's sound is crossfading; a countdown row never has one. */
   fade: FadeMeter | null;
+  /**
+   * 0-1 mark for the intro a looping file plays only once, or null when the whole file repeats.
+   * Drawn behind the fill so the region is visible, which is what makes the position jumping
+   * backwards on a loop legible as the file's own structure rather than a glitch.
+   */
+  introFill?: number | null;
 }
 
 /**

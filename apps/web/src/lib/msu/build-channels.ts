@@ -19,12 +19,16 @@ import type { LoadBytes } from './track-loader';
 const SOUND_CACHE_LIMIT = 48;
 
 const soundPrograms = (manifest: MsuPackManifest, channel: SoundChannel): SoundProgram[] =>
-  (manifest.sounds?.[channel] ?? []).map((sound) => ({ id: sound.soundId, layers: sound.layers }));
+  (manifest.sounds?.[channel] ?? []).map((sound) => ({
+    id: sound.soundId, layers: sound.layers, group: sound.syncGroup,
+  }));
 
 interface BuildChannelsParams {
   ctx: BaseAudioContext;
   /** Music and the ambient bed follow the music volume; the effect channels follow SFX. */
   musicOut: AudioNode;
+  /** The bed's own group, so a storm can sit under quiet music without touching it. */
+  ambientOut: AudioNode;
   sfxOut: AudioNode;
   manifest: MsuPackManifest;
   loadBytes: LoadBytes;
@@ -35,7 +39,7 @@ interface BuildChannelsParams {
 }
 
 const buildChannels = (params: BuildChannelsParams): Record<MsuChannelName, SoundChannelApi> => {
-  const { ctx, musicOut, sfxOut, manifest, loadBytes, resumeEnabled, onError, onTrack, onAmbient } = params;
+  const { ctx, musicOut, ambientOut, sfxOut, manifest, loadBytes, resumeEnabled, onError, onTrack, onAmbient } = params;
   const shared = { ctx, loadBytes, onError };
 
   const effects = (name: SoundChannel): SoundChannelApi => createSoundChannel({
@@ -57,11 +61,14 @@ const buildChannels = (params: BuildChannelsParams): Record<MsuChannelName, Soun
       kind: 'stateful',
       programs: manifest.tracks.map((track) => ({ id: track.trackNum, layers: track.layers })),
       resumeEnabled,
+      // The game's own repeats are filtered before they reach us; the one that arrives follows a
+      // fade to zero and is meant to bring the music back.
+      restartOnRepeat: true,
       onStart: onTrack,
     }),
     ambient: createSoundChannel({
       ...shared,
-      destination: musicOut,
+      destination: ambientOut,
       name: 'ambient',
       kind: 'stateful',
       programs: soundPrograms(manifest, 'ambient'),

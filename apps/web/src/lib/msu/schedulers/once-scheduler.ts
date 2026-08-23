@@ -38,6 +38,7 @@ const createOnceScheduler = (ctx: LayerContext): LayerScheduler => {
       fileName: ctx.fileNames[fileIndex] ?? null,
       positionSeconds: voice.offsetSeconds(),
       durationSeconds: voice.durationSeconds,
+      loopSeconds: voice.loopSeconds,
       fade: voice.fade(),
     }] : [],
   });

@@ -7,11 +7,21 @@
  * signatures.
  */
 import type { MsuPackManifest, MsuPackMeta, MsuResumeState } from '@shared/types/msu-manifest';
+import type { OptimizeAnalysis, OptimizeRunResult } from '@shared/types/msu-optimize';
 import type { SaveKind } from '@shared/storage/save-paths';
 
-type MsuResult = { success: boolean; fileCount?: number; error?: string };
+type MsuResult = {
+  success: boolean;
+  fileCount?: number;
+  error?: string;
+  /** Audio the archive kept below the pack's own level — alternates and extras, not tracks. */
+  skippedNested?: number;
+  /** Audio dropped because an earlier file already claimed its track number. */
+  skippedDuplicate?: number;
+};
 /** One audio file in a pack. Also the shape of `msu:getPackFiles`. */
 type MsuFileEntry = { name: string; size: number };
+
 
 interface MsuInvokeContract {
   'msu:import': (packName: string, url: string) => Promise<MsuResult>;
@@ -37,6 +47,14 @@ interface MsuInvokeContract {
   'msu:renameTrackFile': (packName: string, from: string, to: string) => Promise<void>;
   'msu:deleteTrackFile': (packName: string, fileName: string) => Promise<void>;
   'msu:writeTrackFile': (packName: string, fileName: string, data: ArrayBuffer) => Promise<void>;
+
+  // ── Normalising a pack to one audio format ──
+  /** Measures every candidate by really encoding a slice of it, so nothing is written yet.
+   *  One encoder run per file, reported on `msu:optimize:progress`. */
+  'msu:optimize:analyze': (packName: string) => Promise<OptimizeAnalysis>;
+  /** Moves repeat points into the manifest FIRST, then encodes and re-points it at the new
+   *  names. Originals are kept — removing them is a separate action. */
+  'msu:optimize:run': (packName: string, fileNames: string[]) => Promise<OptimizeRunResult>;
 
   // ── Per-save music-resume sidecars (`{save}.msu.json`, beside the save) ──
   'msu:readResume': (profileId: string, kind: SaveKind, id: string | number) => Promise<MsuResumeState | null>;

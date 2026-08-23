@@ -12,6 +12,7 @@
 #include "player.h"
 #include "misc.h"
 #include "player_oam.h"
+#include "game_hooks.h"
 #include "tagalong.h"
 #include "messaging.h"
 #include "assets.h"
@@ -8367,6 +8368,7 @@ void Dungeon_LoadEntrance() {  // 82d8b3
     queued_music_control = kStartingPoint_musicTrack[i];
     if (i == 0 && sram_progress_indicator == 0)
       queued_music_control = 0xff;
+    queued_music_control = GameHook_StartingPointMusic(i, queued_music_control);
     death_var4 = 0;
   } else {
     int i = which_entrance;

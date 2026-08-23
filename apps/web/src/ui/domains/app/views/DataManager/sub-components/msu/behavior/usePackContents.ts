@@ -16,9 +16,14 @@ const usePackContents = (pack: string | null) => {
   const [trackInfos, setTrackInfos] = useState<TrackInfo[]>([]);
   const [manifest, setManifest] = useState<MsuPackManifest | null>(null);
   const [loading, setLoading] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const [generation, setGeneration] = useState(0);
 
   const reload = useCallback(() => { setGeneration((n) => n + 1); }, []);
+
+  // Only a pack SWITCH starts from nothing. A reload of the same pack keeps what is on screen —
+  // the contents stay up while the re-read is in flight, so `loaded` survives it.
+  useEffect(() => { setLoaded(false); }, [pack]);
 
   useEffect(() => {
     if (!pack) { setFiles([]); setTrackInfos([]); setManifest(null); return; }
@@ -34,7 +39,8 @@ const usePackContents = (pack: string | null) => {
       setTrackInfos([...tracks].sort((a, b) => a.trackNum - b.trackNum));
       setManifest(packManifest);
       setLoading(false);
-    }).catch(() => { if (live) setLoading(false); });
+      setLoaded(true);
+    }).catch(() => { if (live) { setLoading(false); setLoaded(true); } });
     return () => { live = false; };
   }, [pack, generation]);
 
@@ -45,7 +51,7 @@ const usePackContents = (pack: string | null) => {
 
   const totalSize = useMemo(() => files.reduce((sum, f) => sum + f.size, 0), [files]);
 
-  return { files, trackInfos, manifest, resolved, totalSize, loading, reload };
+  return { files, trackInfos, manifest, resolved, totalSize, loading, loaded, reload };
 };
 
 export { usePackContents };

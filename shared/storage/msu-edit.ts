@@ -20,10 +20,42 @@ const isManifest = (value: unknown): value is MsuPackManifest => {
 };
 
 /** null for missing text, malformed JSON, or a version this build does not know. */
+/**
+ * Rewrites a play mode this build no longer has into its current equivalent.
+ *
+ * There was briefly a separate `repeat` kind for a single self-looping file, before it turned out to
+ * be what `loop` with one file already is. A pack saved while it existed must still open, and it must
+ * open as the same thing it sounded like, which is now the `single` order.
+ */
+const migrateMode = (mode: { kind?: unknown }): unknown =>
+  (mode?.kind === 'repeat' ? { kind: 'loop', order: 'single' } : mode);
+
+const migrateLayers = (layers: { mode?: { kind?: unknown } }[]): unknown[] =>
+  layers.map((layer) => ({ ...layer, mode: migrateMode(layer.mode ?? {}) }));
+
+/** Applied before validation, so a migrated manifest is judged on its current shape. */
+const migrateManifest = (parsed: unknown): unknown => {
+  if (typeof parsed !== 'object' || parsed === null) return parsed;
+  const doc = parsed as { tracks?: unknown; sounds?: Record<string, unknown> };
+  const tracks = Array.isArray(doc.tracks)
+    ? doc.tracks.map((t) => (typeof t === 'object' && t !== null && Array.isArray((t as { layers?: unknown }).layers)
+      ? { ...t, layers: migrateLayers((t as { layers: { mode?: { kind?: unknown } }[] }).layers) }
+      : t))
+    : doc.tracks;
+  const sounds = doc.sounds === undefined ? undefined : Object.fromEntries(
+    Object.entries(doc.sounds).map(([channel, defs]) => [channel, Array.isArray(defs)
+      ? defs.map((d) => (typeof d === 'object' && d !== null && Array.isArray((d as { layers?: unknown }).layers)
+        ? { ...d, layers: migrateLayers((d as { layers: { mode?: { kind?: unknown } }[] }).layers) }
+        : d))
+      : defs]),
+  );
+  return sounds === undefined ? { ...doc, tracks } : { ...doc, tracks, sounds };
+};
+
 const parseManifest = (text: string | null): MsuPackManifest | null => {
   if (text == null) return null;
   try {
-    const parsed: unknown = JSON.parse(text);
+    const parsed: unknown = migrateManifest(JSON.parse(text));
     return isManifest(parsed) ? parsed : null;
   } catch { return null; }
 };

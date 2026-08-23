@@ -11,12 +11,24 @@ import { IconButton } from '@ds/primitives/IconButton';
 import { Slider } from '@ds/primitives/Slider';
 import { Text } from '@ds/primitives/Text';
 import { TextInput } from '@ds/primitives/TextInput';
+import { LayerEffectsField } from '../LayerEffectsField';
 import { LayerFileList } from '../LayerFileList';
+import { LoopPointField } from '../LoopPointField';
 import { PlayModeFields } from '../PlayModeFields';
+import { useModeChange } from './behavior/useModeChange';
 import type { LayerCardProps } from './LayerCard.type';
 
+/** Stable empty chain, so a layer without effects is not handed a fresh array on every render. */
+const NO_EFFECTS: never[] = [];
+
 const LayerCard = (props: LayerCardProps) => {
-  const { layer, index, total, available, disabled = false, live, onChange, onMove, onRemove } = props;
+  const {
+    layer, index, total, available, fileLoopSample, disabled = false, live,
+    onConfirm, onChange, onMove, onRemove,
+  } = props;
+  const { changeMode } = useModeChange({ layer, onConfirm, onChange });
+  // One track repeating on itself: the layer holds exactly that file, and it has an end of its own.
+  const single = layer.mode.kind === 'loop' && layer.mode.order === 'single';
 
   return (
     <Card className="layer-card">
@@ -67,12 +79,32 @@ const LayerCard = (props: LayerCardProps) => {
         mode={layer.mode}
         layerId={layer.id}
         disabled={disabled}
-        onChange={(mode) => onChange({ mode })}
+        onChange={changeMode}
+      />
+
+      {/* Only the one order that repeats a single file reaches that file's own end; every other
+          order moves on to the next file, which starts from its top. */}
+      {single && (
+        <LoopPointField
+          loopSample={layer.loopSample}
+          fileLoopSample={fileLoopSample}
+          layerId={layer.id}
+          disabled={disabled}
+          onChange={(loopSample) => onChange({ loopSample })}
+        />
+      )}
+
+      <LayerEffectsField
+        effects={layer.effects ?? NO_EFFECTS}
+        layerId={layer.id}
+        disabled={disabled}
+        onChange={(effects) => onChange({ effects: effects.length === 0 ? undefined : effects })}
       />
 
       <LayerFileList
         files={layer.files}
         available={available}
+        oneFileOnly={single}
         disabled={disabled}
         onChange={(files) => onChange({ files })}
       />

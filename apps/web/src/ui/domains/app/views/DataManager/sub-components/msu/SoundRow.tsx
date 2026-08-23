@@ -7,21 +7,30 @@
  * because a name for a sound nobody has pinned down is a best guess, while the call sites are not.
  * An id with neither falls back to its function names as the name. The full trigger list stays on
  * the tooltip rather than wrapping the row into a paragraph.
+ *
+ * The badges carry the two things that decide whether replacing an id is worth doing: its role on
+ * the channel, and — for a row only visible because the unreachable ids were asked for — the fact
+ * that the game never writes it, so whatever is put there will never be heard.
+ *
+ * `showChannel` puts the channel in front of the id. It is set wherever one list carries more than
+ * one channel, because the channels do NOT share an id space: 0x12 read on its own says nothing
+ * about which sound is about to be replaced.
  */
 import { Badge } from '@ds/primitives/Badge';
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
 import { IconButton } from '@ds/primitives/IconButton';
 import { Text } from '@ds/primitives/Text';
-import { triggerSummary } from './sound-labels';
+import { soundChannelPort, soundChannelTag, triggerSummary } from './sound-labels';
+import { AMBIENT_ROLE_HINTS, AMBIENT_ROLE_LABELS } from './msu.constants';
 import type { SoundRowProps } from './msu.type';
 
 const SoundRow = (props: SoundRowProps) => {
   const {
-    row, channel, playing, additive, busy, expanded, playingOriginal, chipAudible,
+    row, channel, showChannel = false, playing, additive, busy, expanded, playingOriginal, chipAudible,
     onPreview, onStopPreview, onPlayOriginal, onToggleLayers, onStopReplacing,
   } = props;
-  const { soundId, hex, label, triggers, sites, layerCount, unlisted } = row;
+  const { soundId, hex, label, triggers, sites, layerCount, unlisted, role, unreachable } = row;
   const replaced = layerCount > 0;
   const summary = triggerSummary(triggers);
   // A named sound keeps its triggers as evidence underneath; an unnamed one is named by them.
@@ -34,6 +43,11 @@ const SoundRow = (props: SoundRowProps) => {
 
   return (
     <Box className={`track-list__item msu-sound-row${expanded ? ' msu-sound-row--open' : ''}`}>
+      {showChannel && (
+        <Text className="msu-sound-row__channel" title={soundChannelPort(channel)}>
+          {soundChannelTag(channel)}
+        </Text>
+      )}
       <Text className="track-list__num">{hex}</Text>
 
       <Box className="msu-sound-row__ident">
@@ -42,6 +56,17 @@ const SoundRow = (props: SoundRowProps) => {
           <Text className="msu-sound-row__triggers">{under}</Text>
         )}
       </Box>
+
+      {/* What the id does on its channel, which is what decides whether a replacement can work. */}
+      {role !== null && (
+        <Badge variant="neutral" title={AMBIENT_ROLE_HINTS[role]}>{AMBIENT_ROLE_LABELS[role]}</Badge>
+      )}
+      {/* Shown only because the unreachable ids were asked for, so say why it was hidden. */}
+      {unreachable && (
+        <Badge variant="warning" title="Nothing in the game writes this id, so a sound put here never plays">
+          Never raised
+        </Badge>
+      )}
 
       <Badge variant={replaced ? 'success' : 'neutral'}>{replaced ? 'Replaced' : 'Native'}</Badge>
       {layerCount > 1 && <Badge variant="neutral">{layerCount} layers</Badge>}

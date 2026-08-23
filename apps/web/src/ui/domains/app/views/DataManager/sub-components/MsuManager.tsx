@@ -9,6 +9,8 @@ import { deleteMsuPack } from '@app/lib/storage/msu-store';
 import { useMsuManager } from './msu/useMsuManager';
 import { MsuPackList } from './msu/MsuPackList';
 import { MsuPackToolbar } from './msu/MsuPackToolbar';
+import { MsuEffectsPanel } from './msu/MsuEffectsPanel';
+import { MsuFilePanel } from './msu/MsuFilePanel';
 import { MsuSoundPanel } from './msu/MsuSoundPanel';
 import { MsuTrackPanel } from './msu/MsuTrackPanel';
 import { STUDIO_TABS } from './msu/sound-labels';
@@ -72,12 +74,10 @@ const MsuManager = (props: MsuManagerProps) => {
   const studio = selected === null ? null : (
     <Box className="msu-studio">
       <TabBar tabs={STUDIO_TABS} activeTab={tab} onTabChange={(id) => setTab(id as StudioTab)} />
-      {tab !== 'music' ? (
-        // Keyed by channel so switching tabs remounts the panel, which stops its audition.
+      {tab === 'ambient' && (
         <MsuSoundPanel
-          key={tab}
           pack={selected}
-          channel={tab}
+          channel="ambient"
           manifest={msu.resolved}
           saveBase={msu.manifest ?? msu.resolved}
           files={msu.files}
@@ -85,7 +85,31 @@ const MsuManager = (props: MsuManagerProps) => {
           onDeleteConfirm={onDeleteConfirm}
           onReload={msu.reload}
         />
-      ) : (
+      )}
+      {tab === 'effects' && (
+        // Both effect ports, one section each — see MsuEffectsPanel for why they are not merged.
+        <MsuEffectsPanel
+          pack={selected}
+          manifest={msu.resolved}
+          saveBase={msu.manifest ?? msu.resolved}
+          files={msu.files}
+          isLayered={msu.format === 'layered'}
+          onDeleteConfirm={onDeleteConfirm}
+          onReload={msu.reload}
+        />
+      )}
+      {tab === 'files' && (
+        // saveBase is the pack's OWN manifest: a rename must not hand a classic pack one.
+        <MsuFilePanel
+          pack={selected}
+          manifest={msu.resolved}
+          saveBase={msu.manifest}
+          files={msu.files}
+          onDeleteConfirm={onDeleteConfirm}
+          onReload={msu.reload}
+        />
+      )}
+      {tab === 'music' && (
         <MsuTrackPanel
           selected={selected}
           files={msu.files}
@@ -113,6 +137,7 @@ const MsuManager = (props: MsuManagerProps) => {
           onRename={msu.handleRenamePack}
           onExport={msu.handleExport}
           onDeleteFile={confirmDeleteFile}
+          onConfirm={onDeleteConfirm}
           onReload={msu.reload}
         />
       )}

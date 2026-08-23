@@ -84,6 +84,8 @@ const DEFAULT_SETTINGS: GameSettings = {
   musicMuted: false,
   sfxVolume: 100,
   sfxMuted: false,
+  ambientVolume: 100,
+  ambientMuted: false,
   audioFreq: 44100,
   audioChannels: 2,
   audioSamples: 2048,

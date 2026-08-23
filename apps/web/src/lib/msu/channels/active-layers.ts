@@ -10,7 +10,9 @@
 import type { LayerResume, MsuLayer } from '@shared/types/msu-manifest';
 import { createScheduler } from '../schedulers/create-scheduler';
 import type { LoadedLayer } from '../track-loader';
+import { MSU1_SAMPLE_RATE } from '../decode/parse-msu1';
 import { createVoice } from '../voice';
+import { buildEffectChain } from '../layer-effects';
 import type { ActiveLayer, ChannelResume, LayerReport, SoundProgram } from './channel.type';
 
 /**
@@ -33,18 +35,34 @@ const startLayers = (params: {
 
   for (const entry of loaded) {
     const layer = program.layers[entry.layerIndex];
+    // Volume first, then the layer's effects, then the channel: the chain is where one recording
+    // becomes its indoor or distant version, so it sits on the layer and not on the channel.
+    const effects = buildEffectChain(ctx, destination, layer.effects);
     const gain = ctx.createGain();
     gain.gain.value = layer.volume / 100;
-    gain.connect(destination);
+    gain.connect(effects.input);
+
+    // Where each repeat starts. A pool restarts every file from its top, so this only applies to a
+    // single-file layer — the same rule the exporter follows, so a pack sounds the same either way.
+    const loopSeconds = entry.files.length === 1
+      ? Math.min(
+        (layer.loopSample ?? 0) / MSU1_SAMPLE_RATE,
+        entry.files[0]?.buffer.duration ?? 0,
+      )
+      : 0;
 
     const scheduler = createScheduler(layer.mode, {
       files: entry.files,
       fileNames: entry.fileNames,
       elapsedSeconds,
-      play: (fileIndex, opts) => createVoice(ctx, gain, entry.files[fileIndex], opts),
+      loopSeconds,
+      play: (fileIndex, opts) => createVoice(ctx, gain, entry.files[fileIndex], {
+        ...opts,
+        loopSecondsOverride: loopSeconds > 0 ? loopSeconds : opts.loopSecondsOverride,
+      }),
     });
     scheduler.start(resumeFor(layer, entry.files.length));
-    layers.push({ layerId: layer.id, layerName: layer.name, modeKind: layer.mode.kind, scheduler, gain });
+    layers.push({ layerId: layer.id, layerName: layer.name, modeKind: layer.mode.kind, scheduler, gain, effects });
   }
 
   return layers;
@@ -54,6 +72,7 @@ const stopLayers = (layers: ActiveLayer[]): void => {
   for (const entry of layers) {
     entry.scheduler.stop();
     entry.gain.disconnect();
+    entry.effects.dispose();
   }
 };
 

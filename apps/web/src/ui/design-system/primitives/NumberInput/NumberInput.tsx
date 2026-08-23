@@ -35,7 +35,14 @@ const NumberInput = (props: NumberInputProps) => {
     if (!sizeToContent) return undefined;
     const maxNum = toNum(max);
     if (maxNum === undefined) return undefined;
-    return Math.max(1, Math.abs(maxNum).toString().length);
+    const whole = Math.max(1, Math.abs(maxNum).toString().length);
+    // A fractional step means fractional values, which need room for the point and the digits after
+    // it. Sizing from |max| alone would fit "10" and clip the "10.5" the same field now accepts.
+    const stepN = toNum(step);
+    const places = stepN !== undefined && !Number.isInteger(stepN)
+      ? (String(stepN).split('.')[1]?.length ?? 1)
+      : 0;
+    return whole + (places > 0 ? places + 1 : 0);
   };
 
   const columns = digitColumns();

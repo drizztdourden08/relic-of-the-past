@@ -8,6 +8,8 @@ import { getModule } from './wasm-bridge';
 
 let gainNode: GainNode | null = null;
 let pendingVolume: number | null = null;
+/** The last volume anyone asked for, so a gain node created on demand starts at it. */
+let lastVolume = 100;
 let pendingPollId: ReturnType<typeof setInterval> | null = null;
 
 const getSDL2Audio = (): { audioContext: AudioContext; scriptProcessorNode: AudioNode } | null => {
@@ -66,6 +68,7 @@ const startPendingPoll = (): void => {
 };
 
 const initMasterVolume = (volume: number): void => {
+  lastVolume = volume;
   const sdl2 = getSDL2Audio();
   if (!sdl2) {
     pendingVolume = volume;
@@ -95,6 +98,7 @@ const initMasterVolume = (volume: number): void => {
 };
 
 const setMasterVolume = (volume: number): void => {
+  lastVolume = volume;
   if (gainNode) {
     gainNode.gain.value = volume / 100;
   } else {
@@ -108,13 +112,17 @@ const getPendingVolume = (): number | null => {
 
 /**
  * The node replacement music should feed into, plus the context to build its nodes on.
- * Routing through the master gain (when it exists yet) keeps MSU under the master volume
- * slider like every other sound; before it exists, the destination is the honest fallback.
- * Null while SDL2 has not created its audio context — the caller should retry after boot.
+ *
+ * The master gain is CREATED here if it does not exist yet, rather than falling back to the raw
+ * destination. The fallback looked honest and was a trap: a caller that connected to the
+ * destination stayed connected to it, so replacement audio attached early enough escaped the
+ * master volume slider for the rest of the session. Null only while SDL2 has not created its
+ * audio context — the caller should retry after boot.
  */
 const getMasterAudioTarget = (): { ctx: AudioContext; node: AudioNode } | null => {
   const sdl2 = getSDL2Audio();
   if (!sdl2) return null;
+  if (!gainNode) initMasterVolume(pendingVolume ?? lastVolume);
   return { ctx: sdl2.audioContext, node: gainNode ?? sdl2.audioContext.destination };
 };
 

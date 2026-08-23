@@ -3,6 +3,13 @@ import type { MsuPackManifest } from '@shared/types/msu-manifest';
 import type { LayerTarget } from '../behavior/layer-target';
 import type { PreviewReportStore } from '../behavior/preview-report-store';
 
+/**
+ * Ask the app's own confirm dialog a yes/no question, and run the callback on a yes. The same
+ * signature the rest of this manager already takes, so an editor nested in it hands the request
+ * up rather than standing up a dialog of its own.
+ */
+type ConfirmRequest = (title: string, message: string, onConfirm: () => void) => void;
+
 interface LayerEditorProps {
   pack: string;
   /** Which layer list is being edited — a music slot, or a sound on one of the three channels. */
@@ -29,7 +36,14 @@ interface LayerEditorProps {
    * layer shows what it is doing while it is being edited.
    */
   reportStore: PreviewReportStore;
+  /**
+   * The host's confirm dialog, for the one edit that costs the layer something — see
+   * `useModeChange`. Optional only because a host may not have been wired to it yet; without it
+   * that edit falls back to changing nothing else, so no file is ever lost unasked.
+   */
+  onConfirm: ConfirmRequest;
   onSaved: () => void;
 }
 
 export type { LayerEditorProps };
+export type { ConfirmRequest };

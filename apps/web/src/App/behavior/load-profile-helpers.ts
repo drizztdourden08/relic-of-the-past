@@ -9,7 +9,8 @@ import * as msuStore from '@app/lib/storage/msu-store';
 import { readLinkSprite } from '@app/lib/storage/link-sprites-store';
 import type { InputProfile } from '@shared/types/controls';
 import { detectMsuPackProfile, resolveMsuPlayback } from '@shared/features/msu-auto-config';
-import { effectivePackManifest } from '@app/lib/msu/classic-manifest';
+import { effectivePackManifest } from '@shared/storage/msu-classic-manifest';
+import { liveSettingsNow } from '@app/lib/game/live-settings';
 import { startMsuSession, stopMsuSession } from '@app/lib/game/msu-session';
 
 type Settings = ReturnType<typeof mergeSettings>;
@@ -37,6 +38,10 @@ const loadInputProfile = async (profileId: string, settings: Settings) => {
  * and decodes a track the first time the game asks for it, so assigning a multi-gigabyte pack
  * no longer costs anything at boot.
  */
+/** One group's effective volume: the slider when independent mix is on, full passthrough when off. */
+const groupVolume = (s: Settings, read: (s: Settings) => number): number =>
+  (s.perGroupVolume ? read(s) : 100);
+
 const loadMsuPack = async (profile: Profile, settings: Settings) => {
   stopMsuSession();
   if (!profile.msuPack) return;
@@ -66,6 +71,7 @@ const loadMsuPack = async (profile: Profile, settings: Settings) => {
     }
     log.app(`[MSU] Resolved '${plan.resolved.enableMSU}' @ ${plan.resolved.audioFreq}Hz, ${plan.resolved.audioChannels}ch, buffer ${plan.resolved.audioSamples}`);
 
+    const live = (): Settings => liveSettingsNow() ?? settings;
     startMsuSession({
       manifest: effectivePackManifest(packName, manifest, tracks),
       isDeluxe: plan.isDeluxe,
@@ -77,13 +83,18 @@ const loadMsuPack = async (profile: Profile, settings: Settings) => {
           return null;
         }
       },
+      // Every callback reads the settings AS THEY ARE, not as they were when the profile
+      // loaded: these closures live for the whole session, and a captured snapshot would pin
+      // the sliders to their boot-time values. The load-time object is only the fallback for
+      // the moments before the first live push.
+      //
       // Music volume only takes effect once the independent-mix toggle is on, matching the
       // sound chip's own behavior — otherwise replacement music would obey a slider the
-      // original music ignores.
-      musicVolume: () => (settings.perGroupVolume && !settings.musicMuted ? settings.musicVolume : settings.perGroupVolume ? 0 : 100),
-      // Replacement effects are effects, so they read the SFX slider on exactly the same terms.
-      sfxVolume: () => (settings.perGroupVolume && !settings.sfxMuted ? settings.sfxVolume : settings.perGroupVolume ? 0 : 100),
-      resumeEnabled: () => settings.resumeMSU,
+      // original music ignores. Effects and the bed read their sliders on the same terms.
+      musicVolume: () => groupVolume(live(), (s) => (s.musicMuted ? 0 : s.musicVolume)),
+      sfxVolume: () => groupVolume(live(), (s) => (s.sfxMuted ? 0 : s.sfxVolume)),
+      ambientVolume: () => groupVolume(live(), (s) => (s.ambientMuted ? 0 : s.ambientVolume)),
+      resumeEnabled: () => live().resumeMSU,
       // Vanilla Safe already stops the session from starting at all (resolveMsuPlayback), but a
       // gate handed to the core is worth denying twice rather than relying on that.
       replaceAmbient: settings.packReplaceAmbient && !settings.vanillaSafe,

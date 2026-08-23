@@ -11,9 +11,16 @@ import { DropZone } from '@ds/primitives/DropZone';
 import { Text } from '@ds/primitives/Text';
 import { LayerEditor } from './LayerEditor';
 import type { LayerEditorProps } from './LayerEditor';
+import { SoundGroupField } from './SoundGroupField';
 import { AUDIO_ACCEPT, AUDIO_ACCEPT_HINT } from './msu.constants';
+import type { SoundChannel } from '@shared/types/msu-manifest';
 
 interface SoundDetailProps extends LayerEditorProps {
+  /** Which channel and id this sound is, for the sound-level fields beside the layer editor. */
+  channel: SoundChannel;
+  soundId: number;
+  /** The saved continuity group, or undefined for none. */
+  syncGroup: string | undefined;
   /** True while nothing claims this sound yet, so the first save is what claims it. */
   unclaimed: boolean;
   uploading: boolean;
@@ -23,7 +30,7 @@ interface SoundDetailProps extends LayerEditorProps {
 const SoundDetail = (props: SoundDetailProps) => {
   const {
     pack, target, manifest, saveBase, availableFiles, isLayered, reportStore,
-    unclaimed, uploading, onUpload, onSaved,
+    channel, soundId, syncGroup, unclaimed, uploading, onUpload, onConfirm, onSaved,
   } = props;
 
   return (
@@ -41,6 +48,18 @@ const SoundDetail = (props: SoundDetailProps) => {
         disabled={uploading}
         onDrop={onUpload}
       />
+      {/* Sound-level, so it sits beside the editor rather than inside it. Meaningless until the
+          sound is claimed: with no definition there is nothing to hand playback across from. */}
+      {!unclaimed && (
+        <SoundGroupField
+          pack={pack}
+          channel={channel}
+          soundId={soundId}
+          group={syncGroup}
+          saveBase={saveBase}
+          onSaved={onSaved}
+        />
+      )}
       <LayerEditor
         key={`${pack}:${target.previewKey}`}
         pack={pack}
@@ -50,6 +69,7 @@ const SoundDetail = (props: SoundDetailProps) => {
         availableFiles={availableFiles}
         isLayered={isLayered}
         reportStore={reportStore}
+        onConfirm={onConfirm}
         onSaved={onSaved}
       />
     </Box>

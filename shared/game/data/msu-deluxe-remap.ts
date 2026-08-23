@@ -48,12 +48,32 @@ const ENTRANCE_TRACKS: readonly number[] = [
 /** Sentinel in ENTRANCE_TRACKS meaning "leave the original track alone". */
 const NO_REPLACEMENT = 242;
 
+/**
+ * The entrance table with the sentinel resolved: the dedicated track per entrance, or null where
+ * the entrance keeps whatever the vanilla byte selects. What the core is told about, so it can
+ * make those entrances select a track at all — see bridge/deluxe-entrances.
+ */
+const DELUXE_ENTRANCE_TRACKS: ReadonlyArray<number | null> =
+  ENTRANCE_TRACKS.map((track) => (track === NO_REPLACEMENT ? null : track));
+
 interface RemapContext {
   /** Overworld area index, for area-based replacement. */
   overworldArea: number;
   /** Entrance index, for interior-based replacement. */
   entrance: number;
 }
+
+/**
+ * Every track number the Deluxe tables can actually ask for.
+ *
+ * Derived from the tables rather than written out, so it cannot fall out of step with them. A pack
+ * is free to ship a file for any number it likes, but a number neither table names is one the game
+ * has no way to reach: it would sit in the studio looking like a slot to fill and would never play.
+ */
+const DELUXE_TRACKS: ReadonlySet<number> = new Set([
+  ...OVERWORLD_AREA_TRACKS,
+  ...ENTRANCE_TRACKS.filter((track) => track !== NO_REPLACEMENT),
+]);
 
 /**
  * The Deluxe replacement for `track`, or `track` itself when none applies. Callers that
@@ -72,5 +92,5 @@ const remapDeluxeTrack = (track: number, ctx: RemapContext): number => {
   return track;
 };
 
-export { remapDeluxeTrack };
+export { remapDeluxeTrack, DELUXE_TRACKS, DELUXE_ENTRANCE_TRACKS };
 export type { RemapContext };

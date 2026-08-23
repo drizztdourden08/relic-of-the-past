@@ -1,34 +1,27 @@
 /* @layer renderer-components @kind component */
 /**
- * The block that opens under a slot: drop audio into it, then shape what that audio does.
+ * The block that opens under a slot: shape what the slot's audio does.
+ *
+ * Deliberately no drop zone. A pack's files are a shared pool that any slot or sound can draw
+ * from, so a per-slot target implied a file belonged to the slot it was dropped on — and it put
+ * the same control on screen once per expanded row. Adding files is a pack-level action and lives
+ * with the pack, once.
  */
 import { Box } from '@ds/primitives/Box';
-import { DropZone } from '@ds/primitives/DropZone';
 import { LayerEditor } from './LayerEditor';
 import type { LayerEditorProps } from './LayerEditor';
-import { AUDIO_ACCEPT, AUDIO_ACCEPT_HINT } from './msu.constants';
 
 interface TrackDetailProps extends LayerEditorProps {
   trackNum: number;
-  uploading: boolean;
-  onUpload: (trackNum: number, files: File[]) => void;
 }
 
 const TrackDetail = (props: TrackDetailProps) => {
   const {
-    pack, trackNum, target, manifest, saveBase, availableFiles, isLayered, reportStore,
-    uploading, onUpload, onSaved,
+    pack, target, manifest, saveBase, availableFiles, isLayered, reportStore, onConfirm, onSaved,
   } = props;
 
   return (
     <Box className="msu-track-detail">
-      <DropZone
-        accept={AUDIO_ACCEPT}
-        label={uploading ? 'Adding audio…' : `Drop audio for slot ${trackNum}`}
-        hint={AUDIO_ACCEPT_HINT}
-        disabled={uploading}
-        onDrop={(files) => onUpload(trackNum, files)}
-      />
       <LayerEditor
         key={`${pack}:${target.previewKey}`}
         pack={pack}
@@ -38,6 +31,7 @@ const TrackDetail = (props: TrackDetailProps) => {
         availableFiles={availableFiles}
         isLayered={isLayered}
         reportStore={reportStore}
+        onConfirm={onConfirm}
         onSaved={onSaved}
       />
     </Box>

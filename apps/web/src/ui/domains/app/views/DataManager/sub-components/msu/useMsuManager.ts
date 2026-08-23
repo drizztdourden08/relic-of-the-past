@@ -16,9 +16,21 @@ import { usePackExport } from './behavior/usePackExport';
 import { usePackImport, isMsulName } from './behavior/usePackImport';
 import type { ActionResult, PackFormat } from './msu.type';
 
+/**
+ * What an import left out, said plainly. Both kinds are normal for a pack that ships extras, but
+ * silence about them reads as "everything came in" — and the files it skipped are exactly the ones
+ * that would otherwise have fought the real tracks for a slot.
+ */
+const skipNote = (result: { skippedNested?: number; skippedDuplicate?: number }): string => {
+  const parts: string[] = [];
+  if (result.skippedNested) parts.push(`${result.skippedNested} in subfolders (alternates and extras)`);
+  if (result.skippedDuplicate) parts.push(`${result.skippedDuplicate} already claimed by another file`);
+  return parts.length === 0 ? '' : ` — skipped ${parts.join(', ')}`;
+};
+
 const useMsuManager = (onRefresh: () => void) => {
   const { packs, selected, setSelected, refresh, createPack, renamePack } = usePackList(onRefresh);
-  const { files, trackInfos, manifest, resolved, totalSize, loading, reload } = usePackContents(selected);
+  const { files, trackInfos, manifest, resolved, totalSize, loading, loaded, reload } = usePackContents(selected);
   const format: PackFormat = manifest ? 'layered' : 'classic';
 
   const [newPackName, setNewPackName] = useState('');
@@ -88,7 +100,7 @@ const useMsuManager = (onRefresh: () => void) => {
     await refresh();
     setSelected(pack);
     setNewPackName('');
-    return { success: true, message: `Imported ${result.fileCount ?? 0} audio files` };
+    return { success: true, message: `Imported ${result.fileCount ?? 0} audio files${skipNote(result)}` };
   }, [newPackName, refresh, setSelected]);
 
   const handleFileImport = useCallback(async (dropped: File[]): Promise<ActionResult> => {
@@ -105,12 +117,14 @@ const useMsuManager = (onRefresh: () => void) => {
     await refresh();
     setSelected(pack);
     setNewPackName('');
-    return { success: true, message: `Imported ${result.fileCount ?? 0} audio files` };
+    return { success: true, message: `Imported ${result.fileCount ?? 0} audio files${skipNote(result)}` };
   }, [newPackName, refresh, setSelected, importMsul]);
 
   return {
     packs, selected, setSelected, refresh,
-    files, trackInfos, manifest, resolved, totalSize, loadingFiles: loading, reload, format,
+    // True only while a pack's FIRST read is in flight. A reload keeps the studio mounted with
+    // its current rows, so an edit never blanks the pane and throws the scroll position away.
+    files, trackInfos, manifest, resolved, totalSize, loadingFiles: loading && !loaded, reload, format,
     newPackName, setNewPackName,
     rows, unusedFiles, fileOptions, isDeluxe, hasOpuz,
     status, statusMessage: previewError ?? exportProgress ?? status?.message ?? null,

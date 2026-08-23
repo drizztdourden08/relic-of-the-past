@@ -9,15 +9,21 @@
 #include "game_hooks.h"
 
 bool ZeldaIsPlayingMusicTrack(uint8 track) {
+  int host = GameHook_MusicIsPlayingRemapped(track);
+  if (host >= 0)
+    return host != 0;
   return track == music_unk1;
 }
 
 bool ZeldaIsPlayingMusicTrackWithBug(uint8 track) {
+  int host = GameHook_MusicIsPlayingRemapped(track);
+  if (host >= 0)
+    return host != 0;
   return track == (enhanced_features2 & kFeatures2_FixPortalMusicRestart ? music_unk1 : last_music_control);
 }
 
 uint8 ZeldaGetEntranceMusicTrack(int i) {
-  return kEntranceData_musicTrack[i];
+  return GameHook_EntranceMusic(i, kEntranceData_musicTrack[i]);
 }
 
 void ZeldaPlayMsuAudioTrack(uint8 music_ctrl) {
@@ -42,6 +48,7 @@ static uint8 g_apu_write_ent_pos, g_apu_write_count, g_apu_total_write;
 void zelda_apu_write(uint32_t adr, uint8_t val) {
   g_apu_write.ports[adr & 0x3] = val;
 }
+
 
 void ZeldaPushApuState() {
   ZeldaApuLock();
@@ -120,13 +127,10 @@ void ZeldaRestoreMusicAfterLoad_Locked(bool is_reset) {
     zelda_apu_write(APUI00, 0xf0);
   }
 
-  // Same problem for a host-played ambient bed, and no chip state to fall back on: the port is
-  // only written when the ambience CHANGES, and the snapshot restored the chip's own player, so
-  // a claimed bed would simply never be asked for again. The id the snapshot was playing is in
-  // sound_effect_ambient_last. An unclaimed id no-ops here, which is right — the restored chip
-  // is already producing it.
-  if (sound_effect_ambient_last)
-    GameHook_Sound(kSoundChannel_Ambient, sound_effect_ambient_last);
+  // Same problem for a host-played ambient bed, plus one more: the snapshot restored the chip's
+  // own player mid-note, so a claimed bed must also silence the chip's resumed copy or both
+  // sound at once. The hook does both; an unclaimed id no-ops, and the chip's bed is the sound.
+  GameHook_AmbientAfterLoad(sound_effect_ambient_last);
 
   ZeldaResetApuQueue();
 }

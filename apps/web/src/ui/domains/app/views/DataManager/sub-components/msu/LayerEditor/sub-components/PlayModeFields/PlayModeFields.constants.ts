@@ -15,17 +15,27 @@ const MODE_OPTIONS: SegmentOption<PlayModeKind>[] = (Object.keys(MODE_LABELS) as
 
 const MODE_HINTS: Record<PlayModeKind, string> = {
   once: 'Plays through a single time and stops.',
-  loop: 'Plays continuously — the body of a track.',
+  loop: 'Repeats forever. With one file it loops on itself at its own repeat point; with several '
+    + 'it plays them one after another.',
   random: 'Fires one file at a random gap, forever.',
   interval: 'Fires at fixed times measured from the start of the slot.',
 };
 
-type LoopOrder = 'sequential' | 'random';
+type LoopOrder = 'sequential' | 'random' | 'single';
 
 const ORDER_OPTIONS: SegmentOption<LoopOrder>[] = [
   { value: 'sequential', label: 'Sequential' },
   { value: 'random', label: 'Shuffle' },
+  { value: 'single', label: 'Single' },
 ];
+
+/** Read under the control, because which one is selected changes what the layer even is. */
+const ORDER_HINTS: Record<LoopOrder, string> = {
+  sequential: 'Plays the files in the order listed, then starts over.',
+  random: 'Draws a different file each pass.',
+  single: 'One track, repeating at its own loop point — the intro plays once and the body repeats. '
+    + 'No crossfade: the seam is wherever the file says it is. This is how MSU-1 itself works.',
+};
 
 const CROSSFADE_LABEL = 'Crossfade — overlap into the next pass';
 
@@ -42,6 +52,7 @@ const WAIT_HINTS = {
 };
 
 export {
-  MODE_OPTIONS, MODE_HINTS, ORDER_OPTIONS, CROSSFADE_LABEL, CROSSFADE_HINT, WAIT_LABEL, WAIT_HINTS,
+  MODE_OPTIONS, MODE_HINTS, ORDER_OPTIONS, ORDER_HINTS,
+  CROSSFADE_LABEL, CROSSFADE_HINT, WAIT_LABEL, WAIT_HINTS,
 };
 export type { LoopOrder };

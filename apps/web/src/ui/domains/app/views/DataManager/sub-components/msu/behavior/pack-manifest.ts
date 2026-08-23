@@ -8,7 +8,7 @@
  * which is the moment a pack stops being classic.
  */
 import type { MsuLayer, MsuPackManifest, MsuTrackDef } from '@shared/types/msu-manifest';
-import { effectivePackManifest } from '@app/lib/msu/classic-manifest';
+import { effectivePackManifest } from '@shared/storage/msu-classic-manifest';
 import type { TrackInfo } from '../msu.type';
 
 const effectiveManifest = (
@@ -36,12 +36,18 @@ const withTrackLayers = (
   return { ...manifest, tracks };
 };
 
-/** The layer a slot gets when nothing has described it yet: one body of music, looping. */
+/**
+ * The layer a slot gets when nothing has described it yet: one body of music, looping.
+ *
+ * `single` while it holds one file — that is the plain music case and it repeats at the file's own
+ * loop point. Several files are a pool the author assembled deliberately, so those get an order that
+ * moves between them.
+ */
 const bodyLayer = (trackNum: number, files: string[]): MsuLayer => ({
   id: `track-${trackNum}`,
   name: `Track ${trackNum}`,
   files,
-  mode: { kind: 'loop', order: 'sequential' },
+  mode: files.length > 1 ? { kind: 'loop', order: 'sequential' } : { kind: 'loop', order: 'single' },
   volume: 100,
 });
 

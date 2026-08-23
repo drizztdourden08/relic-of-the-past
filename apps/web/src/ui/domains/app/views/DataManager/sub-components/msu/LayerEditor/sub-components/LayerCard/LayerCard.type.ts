@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
 import type { MsuLayer } from '@shared/types/msu-manifest';
+import type { ConfirmRequest } from '../../LayerEditor.type';
 
 interface LayerCardProps {
   layer: MsuLayer;
@@ -16,6 +17,13 @@ interface LayerCardProps {
    * on its own every frame.
    */
   live?: ReactNode;
+  /** What this layer's own file declares as its loop point, when the manifest sets none. */
+  fileLoopSample: number | null;
+  /**
+   * Handed up to the app's confirm dialog before an order change discards files — see
+   * `useModeChange`. Without it that order change simply leaves the files alone.
+   */
+  onConfirm: ConfirmRequest;
   onChange: (patch: Partial<Omit<MsuLayer, 'id'>>) => void;
   onMove: (delta: number) => void;
   onRemove: () => void;

@@ -5,6 +5,8 @@ interface LayerFileListProps {
   files: string[];
   /** Every audio file the pack holds, offered as additions. */
   available: string[];
+  /** True where the play mode can only draw on one file, so the pool stops offering additions. */
+  oneFileOnly?: boolean;
   disabled?: boolean;
   onChange: (files: string[]) => void;
 }

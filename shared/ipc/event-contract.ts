@@ -8,6 +8,8 @@
 
 import type { ControllerAddedInfo, ControllerJoystickSample, ControllerRawReport, DeviceEntry } from './controller-contract';
 import type { UpdateInfo } from './updater-contract';
+import type { FfmpegState } from '@shared/types/ffmpeg-tool';
+import type { OptimizeProgress } from '@shared/types/msu-optimize';
 
 /** Progress of a data import (ROM / MSU / language / sprites), main → renderer. */
 interface ImportProgress {
@@ -37,6 +39,14 @@ interface EventContract {
 
   // Data imports (ROM / MSU / language / sprites)
   'import:progress': (progress: ImportProgress) => void;
+
+  // Optional-ffmpeg install: every state the install passes through, so a progress bar
+  // can follow the download and the verify without polling.
+  'ffmpeg:progress': (state: FfmpegState) => void;
+
+  // Normalising an MSU pack to one audio format: one report per file, for the measuring
+  // pass and the converting pass alike, so a bar can follow either without polling.
+  'msu:optimize:progress': (progress: OptimizeProgress) => void;
 
   // A .msul music pack the app was opened with (file association / open-file).
   'msu:openPack': (filePath: string) => void;

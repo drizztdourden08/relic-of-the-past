@@ -27,6 +27,7 @@ const MeterRow = (props: MeterRowProps) => {
         <ProgressBar
           className="layer-meter__bar"
           value={row.fill}
+          secondaryValue={row.introFill ?? undefined}
           max={1}
           live
           variant={row.kind === 'next' ? 'gold' : 'green'}

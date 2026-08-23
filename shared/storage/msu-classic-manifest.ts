@@ -1,4 +1,4 @@
-/* @layer renderer-lib @kind logic */
+/* @layer shared-storage @kind logic */
 /**
  * Presents a classic MSU-1 pack (bare `<n>.pcm` files, no manifest) as a manifest with one
  * layer per track. That way the engine has a single shape to play and nothing downstream
@@ -19,8 +19,10 @@ const classicTrackDef = (track: ClassicTrack): MsuTrackDef => ({
     id: `track-${track.trackNum}`,
     name: `Track ${track.trackNum}`,
     files: [track.fileName],
-    // The game's own table decides looping; a fanfare must not repeat.
-    mode: trackRepeats(track.trackNum) ? { kind: 'loop', order: 'sequential' } : { kind: 'once' },
+    // The game's own table decides looping; a fanfare must not repeat. A classic pack is one file
+    // per slot repeating at its own loop point, so `single` is what it actually is — `sequential`
+    // would describe a pool of files that is not there.
+    mode: trackRepeats(track.trackNum) ? { kind: 'loop', order: 'single' } : { kind: 'once' },
     volume: 100,
   }],
 });

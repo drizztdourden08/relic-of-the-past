@@ -14,6 +14,7 @@ import { SegmentedControl } from '../../../../../design-system/primitives/Segmen
 import { Slider } from '../../../../../design-system/primitives/Slider';
 import { MsuDetectedSummary } from './MsuDetectedSummary';
 import { MsuMismatchCallout } from './MsuMismatchCallout';
+import { renderVolumeSlider } from './audio-volume-sliders';
 
 const CHANNEL_OPTIONS = [
   { value: '1', label: 'Mono' },
@@ -66,53 +67,11 @@ const renderControl = (
   // What will actually be used, so a locked control shows the real value rather than a stale one.
   const resolved = resolveAudioConfig(settings, pack ?? null);
 
+  // Master, Music, Ambience and SFX are plain sliders with one shape — they render in their own file.
+  const volumeSlider = renderVolumeSlider(key, settings, onChange);
+  if (volumeSlider) return volumeSlider;
+
   switch (key) {
-    case 'masterVolume':
-      return (
-        <Slider
-          label="Master Volume"
-          description="Controls the overall game volume — affects all audio output"
-          value={settings.masterVolume ?? 100}
-          min={0}
-          max={100}
-          step={5}
-          onChange={(v) => onChange({ masterVolume: v })}
-          formatValue={(v) => `${v}%`}
-          mute={settings.masterVolume === 0}
-        />
-      );
-    case 'musicVolume':
-      return (
-        <Slider
-          label="Music Volume"
-          description="Sets the music level — the original soundtrack and any music pack alike, since a pack plays in place of it rather than alongside it"
-          value={settings.musicVolume ?? 100}
-          min={0}
-          max={100}
-          step={5}
-          onChange={(v) => onChange({ musicVolume: v })}
-          formatValue={(v) => `${v}%`}
-          mute={settings.musicMuted}
-          onMuteToggle={() => onChange({ musicMuted: !settings.musicMuted })}
-          disabled={!settings.perGroupVolume}
-        />
-      );
-    case 'sfxVolume':
-      return (
-        <Slider
-          label="SFX Volume"
-          description="Sets the sound-effects level"
-          value={settings.sfxVolume ?? 100}
-          min={0}
-          max={100}
-          step={5}
-          onChange={(v) => onChange({ sfxVolume: v })}
-          formatValue={(v) => `${v}%`}
-          mute={settings.sfxMuted}
-          onMuteToggle={() => onChange({ sfxMuted: !settings.sfxMuted })}
-          disabled={!settings.perGroupVolume}
-        />
-      );
     case 'audioFreq':
       return (
         <>
@@ -200,8 +159,8 @@ const isDisabled = (key: string, settings: GameSettings): boolean => {
     if (settings.vanillaSafe) return true;
     return settings.msuConfigMode === 'manual' && settings.enableMSU === 'false';
   }
-  // The Music/SFX sliders only do anything once the independent-mix toggle is on.
-  if (key === 'musicVolume' || key === 'sfxVolume') return !settings.perGroupVolume;
+  // The Music/Ambience/SFX sliders only do anything once the independent-mix toggle is on.
+  if (key === 'musicVolume' || key === 'ambientVolume' || key === 'sfxVolume') return !settings.perGroupVolume;
   return false;
 };
 

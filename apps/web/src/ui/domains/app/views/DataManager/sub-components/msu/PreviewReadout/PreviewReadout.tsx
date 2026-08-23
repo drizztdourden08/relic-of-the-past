@@ -6,11 +6,15 @@
  * frame redraws this block alone and the slot list it sits inside stays still.
  *
  * The elapsed clock is here because it is the number `interval` layers are scheduled against —
- * their offsets are measured from the moment the track started, not from the last sound.
+ * their offsets are measured from the moment the track started, not from the last sound. It is
+ * labelled and formatted like a clock for one reason: unlabelled seconds next to a row reading
+ * "0:15 / 0:50" get read as the track's own time, so a session that has outlasted the track looks
+ * like a bug in the track.
  */
 import { Box } from '@ds/primitives/Box';
 import { Text } from '@ds/primitives/Text';
 import { usePreviewReport } from '../behavior/usePreviewReport';
+import { clock } from '../behavior/clock';
 import { LayerMeter } from './sub-components/LayerMeter';
 import './PreviewReadout.css';
 import type { PreviewReadoutProps } from './PreviewReadout.type';
@@ -29,7 +33,7 @@ const PreviewReadout = (props: PreviewReadoutProps) => {
         {report.detail != null && (
           <Text className="preview-readout__clock preview-readout__detail">{report.detail}</Text>
         )}
-        <Text className="preview-readout__clock">{report.elapsedSeconds.toFixed(1)}s</Text>
+        <Text className="preview-readout__clock">elapsed {clock(report.elapsedSeconds)}</Text>
       </Box>
       {report.layers.map((layer) => (
         <LayerMeter key={layer.layerId} report={layer} showName />

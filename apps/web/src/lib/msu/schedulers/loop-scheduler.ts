@@ -15,24 +15,29 @@ import type { Voice } from '../voice';
 
 /** Live sounds, oldest first, each with its own position and fade — one preview row apiece. */
 const soundingVoices = (
-  entries: { voice: Voice; fileIndex: number }[], names: string[],
+  entries: { voice: Voice; fileIndex: number }[], names: string[], loopSeconds: number,
 ): SoundingVoice[] => entries.map((e) => ({
   fileName: names[e.fileIndex] ?? null,
   positionSeconds: e.voice.offsetSeconds(),
   durationSeconds: e.voice.durationSeconds,
+  // The scheduler's own figure comes first: with a crossfade the buffer does not loop, so the voice
+  // has no loop point to report even though every pass after the first does start at one.
+  loopSeconds: loopSeconds > 0 ? loopSeconds : e.voice.loopSeconds,
   fade: e.voice.fade(),
 }));
 
 const createLoopScheduler = (
-  ctx: LayerContext, order: 'sequential' | 'random', crossfadeSeconds = 0,
+  ctx: LayerContext, order: 'sequential' | 'random' | 'single', crossfadeSeconds = 0,
 ): LayerScheduler => {
-  const crossfade = Math.max(0, crossfadeSeconds);
+  // `single` is one track repeating on itself, so there is nothing to cross into and any crossfade
+  // set on the layer is ignored rather than half-applied.
+  const crossfade = order === 'single' ? 0 : Math.max(0, crossfadeSeconds);
   let voices: { voice: Voice; fileIndex: number }[] = [];
   let fileIndex = 0;
   let handoff: ReturnType<typeof setTimeout> | null = null;
 
   const nextIndex = (): number => {
-    if (ctx.files.length <= 1) return 0;
+    if (ctx.files.length <= 1 || order === 'single') return 0;
     if (order === 'sequential') return (fileIndex + 1) % ctx.files.length;
     // Never repeat the same file twice running — a shuffle that stutters reads as a bug.
     let candidate = fileIndex;
@@ -48,11 +53,12 @@ const createLoopScheduler = (
   /** Hard-cut chaining: one voice at a time, the next starting when this one ends. */
   const playPlain = (index: number, offsetSeconds: number): void => {
     fileIndex = index;
-    const single = ctx.files.length === 1;
+    // One file, or an order that only ever uses the first: let the source loop itself.
+    const single = ctx.files.length === 1 || order === 'single';
     const voice = ctx.play(index, {
       loop: single,
       offsetSeconds,
-      onEnded: single ? undefined : () => { voices = []; playPlain(nextIndex(), 0); },
+      onEnded: single ? undefined : () => { voices = []; playPlain(nextIndex(), ctx.loopSeconds); },
     });
     voices = [{ voice, fileIndex: index }];
   };
@@ -81,7 +87,8 @@ const createLoopScheduler = (
 
     handoff = setTimeout(() => {
       handoff = null;
-      playFaded(nextIndex(), 0, true);
+      // Repeat from the loop point rather than the top: the intro is meant to be heard once.
+      playFaded(nextIndex(), ctx.loopSeconds, true);
     }, handoffIn * 1000);
   };
 
@@ -113,7 +120,7 @@ const createLoopScheduler = (
       durationSeconds: active?.voice.durationSeconds ?? null,
       sounding: voices.length > 0,
       voiceCount: voices.length,
-      voices: soundingVoices(voices, ctx.fileNames),
+      voices: soundingVoices(voices, ctx.fileNames, ctx.loopSeconds),
     };
   };
 

@@ -22,6 +22,7 @@
  * it completes.
  */
 import type { LayerReport } from '@app/lib/msu/engine';
+import { clock } from '../../behavior/clock';
 import { shortName, voiceCaptions } from './voiceCaptions';
 import type { FadeMeter, LayerMeterRow, LayerMeters, ReportedVoice } from '../PreviewReadout.type';
 
@@ -29,12 +30,6 @@ import type { FadeMeter, LayerMeterRow, LayerMeters, ReportedVoice } from '../Pr
 const GAP_MODES = ['random', 'interval'];
 
 const clamp01 = (value: number): number => Math.max(0, Math.min(1, value));
-
-/** m:ss — how a position inside a file is read. */
-const clock = (seconds: number): string => {
-  const whole = Math.max(0, Math.floor(seconds));
-  return `${Math.floor(whole / 60)}:${String(whole % 60).padStart(2, '0')}`;
-};
 
 const fadeMeter = (fade: ReportedVoice['fade']): FadeMeter | null => {
   if (fade === null) return null;
@@ -46,17 +41,32 @@ const fadeMeter = (fade: ReportedVoice['fade']): FadeMeter | null => {
   };
 };
 
+/**
+ * An MSU-1 file carries its own loop point, and it is usually NOT the start: the track opens with an
+ * intro played once, then repeats everything after it. Saying so is the difference between a reading
+ * that makes sense and one that looks broken, because on the repeat the position drops back to the
+ * loop point rather than to zero.
+ */
+const loopNote = (loopSeconds: number | null, durationSeconds: number): string =>
+  loopSeconds !== null && loopSeconds > 0 && loopSeconds < durationSeconds
+    ? ` · repeats from ${clock(loopSeconds)}`
+    : '';
+
 const voiceRow = (voice: ReportedVoice, index: number, caption: string, title: string | null): LayerMeterRow => {
-  const { positionSeconds, durationSeconds } = voice;
+  const { positionSeconds, durationSeconds, loopSeconds } = voice;
   const measured = durationSeconds > 0;
+  const intro = loopSeconds !== null && loopSeconds > 0 && loopSeconds < durationSeconds;
   return {
     id: `voice-${index}`,
     kind: 'voice',
     caption,
     title,
     fill: measured ? clamp01(positionSeconds / durationSeconds) : null,
-    label: measured ? `${clock(positionSeconds)} / ${clock(durationSeconds)}` : 'playing',
+    label: measured
+      ? `${clock(positionSeconds)} / ${clock(durationSeconds)}${loopNote(loopSeconds, durationSeconds)}`
+      : 'playing',
     fade: fadeMeter(voice.fade),
+    introFill: measured && intro ? clamp01(loopSeconds / durationSeconds) : null,
   };
 };
 

@@ -46,7 +46,7 @@ const IntervalTimes = (props: IntervalTimesProps) => {
       <Flex gap="sm" align="end">
         <Field label="Add time (s)">
           <NumberInput
-            min={0} step={0.5} max={3600} sizeToContent value={draft} disabled={disabled}
+            min={0} step={0.25} max={3600} sizeToContent value={draft} disabled={disabled}
             onChange={(value) => setDraft(Number.isFinite(value) ? value : 0)}
           />
         </Field>

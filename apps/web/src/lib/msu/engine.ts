@@ -33,6 +33,8 @@ interface MsuEngineOptions {
    * rather than the music one. Omitted (previewing a single track) means "the music volume".
    */
   sfxVolume?: () => number;
+  /** The ambient bed's own slider; falls back to the music one where the setting is absent. */
+  ambientVolume?: () => number;
   /**
    * Whether re-entering an area picks its music up where it left off. Read per track change
    * rather than captured, so toggling the setting mid-session takes effect immediately.
@@ -56,19 +58,25 @@ interface TrackReport {
 const createMsuEngine = (options: MsuEngineOptions) => {
   const {
     ctx, destination, manifest, loadBytes, isDeluxe,
-    musicVolume, sfxVolume, resumeEnabled, onError, onTrack, onAmbient,
+    musicVolume, sfxVolume, ambientVolume, resumeEnabled, onError, onTrack, onAmbient,
   } = options;
 
   const readSfxVolume = sfxVolume ?? musicVolume;
+  // The bed is its own group: it is neither music nor a one-shot, and the reason the setting
+  // exists is to hold a storm under a quiet piece without touching either slider.
+  const readAmbientVolume = ambientVolume ?? musicVolume;
   const musicGain = ctx.createGain();
+  const ambientGain = ctx.createGain();
   const sfxGain = ctx.createGain();
   musicGain.connect(destination);
+  ambientGain.connect(destination);
   sfxGain.connect(destination);
   musicGain.gain.value = musicVolume() / 100;
+  ambientGain.gain.value = readAmbientVolume() / 100;
   sfxGain.gain.value = readSfxVolume() / 100;
 
   const channels = buildChannels({
-    ctx, musicOut: musicGain, sfxOut: sfxGain, manifest, loadBytes,
+    ctx, musicOut: musicGain, ambientOut: ambientGain, sfxOut: sfxGain, manifest, loadBytes,
     resumeEnabled, onError, onTrack, onAmbient,
   });
   const music = channels.music;
@@ -79,13 +87,34 @@ const createMsuEngine = (options: MsuEngineOptions) => {
    * The game's music-control byte. Values below 0xf0 select a track (0 = silence), 0xf1..0xf3
    * are volume transitions, and anything else in the 0xf0 range only concerns the sound chip.
    */
+  // Whether the music has been faded to silence and not brought back. Part of the "is playing"
+  // answer below: a faded track is still active in the graph, but telling the game it is playing
+  // would make it skip the re-select that is the only thing that brings the sound back.
+  let fadedToZero = false;
+
   const onMusicCtrl = (ctrl: number, _module: number, entrance: number, overworldArea: number): void => {
     if (isFadeControl(ctrl)) {
+      if (ctrl === 0xf1) fadedToZero = true;
+      if (ctrl === 0xf3) fadedToZero = false;
       applyFade(music.fadeNode, ctx.currentTime, ctrl);
       return;
     }
     if ((ctrl & 0xf0) === 0xf0) return;
+    fadedToZero = false;
     music.trigger(isDeluxe ? remapDeluxeTrack(ctrl, { overworldArea, entrance }) : ctrl);
+  };
+
+  /**
+   * The game's "is this track playing" question, answered the way this engine plays it: the
+   * track is remapped first, so two areas sharing one vanilla byte compare as different music
+   * where the pack gives them different tracks — which is what makes the music change at plain
+   * screen edges. Audibility counts: a track faded to silence answers no, so the re-select that
+   * follows a fade is never skipped.
+   */
+  const isPlayingTrack = (ctrl: number, entrance: number, overworldArea: number): boolean => {
+    if (fadedToZero) return false;
+    const target = isDeluxe ? remapDeluxeTrack(ctrl, { overworldArea, entrance }) : ctrl;
+    return music.report()?.id === target;
   };
 
   /**
@@ -101,6 +130,7 @@ const createMsuEngine = (options: MsuEngineOptions) => {
 
   const syncVolume = (): void => {
     musicGain.gain.value = musicVolume() / 100;
+    ambientGain.gain.value = readAmbientVolume() / 100;
     sfxGain.gain.value = readSfxVolume() / 100;
   };
 
@@ -147,7 +177,7 @@ const createMsuEngine = (options: MsuEngineOptions) => {
     sfxGain.disconnect();
   };
 
-  return { onMusicCtrl, onGameSound, syncVolume, snapshot, report, reportChannel, restore, stop, dispose };
+  return { onMusicCtrl, onGameSound, isPlayingTrack, syncVolume, snapshot, report, reportChannel, restore, stop, dispose };
 };
 
 type MsuEngine = ReturnType<typeof createMsuEngine>;

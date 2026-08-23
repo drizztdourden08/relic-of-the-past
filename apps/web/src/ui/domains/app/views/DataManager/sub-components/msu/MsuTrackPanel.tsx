@@ -45,6 +45,8 @@ interface MsuTrackPanelProps {
   onRename: (name: string) => void;
   onExport: (format: ExportFormat) => void;
   onDeleteFile: (fileName: string) => void;
+  /** The app's confirm dialog, for a layer edit that discards files — see `LayerEditorProps`. */
+  onConfirm: (title: string, message: string, onConfirm: () => void) => void;
   onReload: () => void;
 }
 
@@ -53,7 +55,7 @@ const MsuTrackPanel = (props: MsuTrackPanelProps) => {
     selected, files, manifest, saveBase, format, totalSize, isDeluxe, hasOpuz, rows, unusedFiles, fileOptions,
     playing, reportStore, openTrack, busy, exporting, statusMessage, statusOk,
     onTrackAssign, onTrackUpload, onToggleLayers, onPreview, onStopPreview, onRename, onExport,
-    onDeleteFile, onReload,
+    onDeleteFile, onConfirm, onReload,
   } = props;
 
   const filled = rows.filter((r) => r.fileName !== null).length;
@@ -83,11 +85,10 @@ const MsuTrackPanel = (props: MsuTrackPanelProps) => {
       availableFiles={files.map((f) => f.name)}
       isLayered={format === 'layered'}
       reportStore={reportStore}
-      uploading={busy}
-      onUpload={onTrackUpload}
+      onConfirm={onConfirm}
       onSaved={onReload}
     />
-  ), [selected, manifest, saveBase, files, format, reportStore, busy, onTrackUpload, onReload]);
+  ), [selected, manifest, saveBase, files, format, reportStore, onConfirm, onReload]);
 
   const sectionProps = {
     files, fileOptions, playing, reportStore, openTrack, busy,

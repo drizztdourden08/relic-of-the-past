@@ -1,4 +1,8 @@
 /* @layer renderer-lib @kind logic */
+import {
+  MSU1_HEADER_BYTES, MSU1_SAMPLE_RATE, MSU1_CHANNELS, MSU1_BYTES_PER_FRAME,
+} from '@shared/types/msu1-format';
+
 /**
  * The MSU-1 `.pcm` container: 4-byte "MSU1" magic, a 32-bit little-endian loop point
  * measured in samples, then interleaved signed 16-bit little-endian stereo at 44100 Hz.
@@ -7,11 +11,6 @@
  */
 
 const MSU1_MAGIC = 0x4d535531; // 'MSU1' read big-endian, i.e. the bytes M,S,U,1
-const MSU1_HEADER_BYTES = 8;
-const MSU1_SAMPLE_RATE = 44100;
-const MSU1_CHANNELS = 2;
-/** One frame is a left+right pair of int16. */
-const MSU1_BYTES_PER_FRAME = 4;
 
 interface Msu1Audio {
   /** De-interleaved planar channel data, in playback order. */

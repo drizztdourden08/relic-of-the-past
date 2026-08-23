@@ -15,15 +15,22 @@ import { SectionHeader } from '@ds/primitives/SectionHeader';
 import { Text } from '@ds/primitives/Text';
 import { useLayerEditor } from './behavior/useLayerEditor';
 import { LayerCard } from './sub-components/LayerCard';
+import { useFileLoopSamples } from './behavior/useFileLoopSamples';
 import { LayerLive } from '../PreviewReadout';
 import './LayerEditor.css';
 import type { LayerEditorProps } from './LayerEditor.type';
 
 const LayerEditor = (props: LayerEditorProps) => {
-  const { pack, target, manifest, saveBase, availableFiles, isLayered, reportStore, onSaved } = props;
+  const {
+    pack, target, manifest, saveBase, availableFiles, isLayered, reportStore, onConfirm, onSaved,
+  } = props;
   const {
     layers, dirty, saving, error, addLayer, removeLayer, moveLayer, updateLayer, save, revert,
   } = useLayerEditor({ pack, target, manifest, saveBase, onSaved });
+  // A loop point applies to a single-file layer, so only each layer's first file is consulted.
+  const fileLoopSamples = useFileLoopSamples(
+    pack, [...new Set(layers.map((layer) => layer.files[0]).filter((name) => name !== undefined))],
+  );
 
   return (
     <Box className="layer-editor">
@@ -49,8 +56,10 @@ const LayerEditor = (props: LayerEditorProps) => {
             index={index}
             total={layers.length}
             available={availableFiles}
+            fileLoopSample={fileLoopSamples.get(layer.files[0] ?? '') ?? null}
             disabled={saving}
             live={<LayerLive store={reportStore} previewKey={target.previewKey} layerId={layer.id} />}
+            onConfirm={onConfirm}
             onChange={(patch) => updateLayer(layer.id, patch)}
             onMove={(delta) => moveLayer(layer.id, delta)}
             onRemove={() => removeLayer(layer.id)}

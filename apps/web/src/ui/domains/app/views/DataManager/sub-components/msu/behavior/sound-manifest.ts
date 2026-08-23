@@ -33,15 +33,40 @@ const withChannelDefs = (
   return { ...manifest, sounds: Object.keys(next).length > 0 ? next : undefined };
 };
 
-/** The manifest with one sound's layers replaced, inserting the sound when it is new. */
+/**
+ * The manifest with one sound's layers replaced, inserting the sound when it is new. The rest of
+ * the definition is carried, not rebuilt — a layer save must never eat the sound's other fields.
+ */
 const withSoundLayers = (
   manifest: MsuPackManifest, channel: SoundChannel, soundId: number, layers: MsuLayer[],
 ): MsuPackManifest => {
   const defs = soundDefsOfChannel(manifest, channel);
-  const replaced: MsuSoundDef = { soundId, layers };
-  const next = defs.some((sound) => sound.soundId === soundId)
+  const existing = defs.find((sound) => sound.soundId === soundId);
+  const replaced: MsuSoundDef = { ...existing, soundId, layers };
+  const next = existing
     ? defs.map((sound) => (sound.soundId === soundId ? replaced : sound))
     : [...defs, replaced].sort((a, b) => a.soundId - b.soundId);
+  return withChannelDefs(manifest, channel, next);
+};
+
+/** The saved continuity group of one sound, or undefined for none or an unclaimed id. */
+const syncGroupOf = (
+  manifest: MsuPackManifest, channel: SoundChannel, soundId: number,
+): string | undefined =>
+  soundDefsOfChannel(manifest, channel).find((sound) => sound.soundId === soundId)?.syncGroup;
+
+/**
+ * The manifest with one sound's continuity group set or cleared. Only a claimed sound can carry
+ * one — with no definition there is nothing to hand playback across from.
+ */
+const withSoundGroup = (
+  manifest: MsuPackManifest, channel: SoundChannel, soundId: number, group: string | undefined,
+): MsuPackManifest => {
+  const defs = soundDefsOfChannel(manifest, channel);
+  if (!defs.some((sound) => sound.soundId === soundId)) return manifest;
+  const next = defs.map((sound) => (sound.soundId === soundId
+    ? { ...sound, syncGroup: group === '' ? undefined : group }
+    : sound));
   return withChannelDefs(manifest, channel, next);
 };
 
@@ -69,6 +94,6 @@ const singleSoundManifest = (
 });
 
 export {
-  soundDefsOfChannel, layersOfSound, withChannelDefs, withSoundLayers, withoutSound,
+  soundDefsOfChannel, layersOfSound, syncGroupOf, withChannelDefs, withSoundLayers, withSoundGroup, withoutSound,
   singleSoundManifest,
 };

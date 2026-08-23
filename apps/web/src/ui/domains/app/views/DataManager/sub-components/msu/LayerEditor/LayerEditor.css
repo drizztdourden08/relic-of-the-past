@@ -73,3 +73,38 @@
   min-width: 12rem;
   max-width: 20rem;
 }
+
+/* The effect chain: the same framed, inset block as the scheduling settings, for the same reason.
+   Each effect is one line, its place in the chain leading, so the order reads top to bottom. */
+.layer-card__effects {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--c-inset);
+  border: 1px solid var(--c-border);
+  border-left: 2px solid var(--c-gold);
+  border-radius: var(--radius-md);
+}
+
+.layer-card__effect {
+  padding: var(--space-2xs) 0;
+  border-top: 1px solid var(--c-border);
+}
+
+.layer-card__effect-index {
+  min-width: 1.2rem;
+  color: var(--c-text-faint);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.layer-card__effect-label {
+  color: var(--c-text-dim);
+  font-size: var(--text-xs);
+}
+
+.layer-card__effect-unit {
+  color: var(--c-text-muted);
+  font-size: var(--text-xs);
+}
