@@ -31,11 +31,15 @@ const useAutoTest = ({ activeProfile, loadProfileForGame }: AutoTestDeps) => {
 
     (async () => {
       const args = await window.api.getTestArgs();
-      if (args.autoState === null && !args.screenshot) return;
+      // --auto-start is the third way in: boot the game and stop, no state and no
+      // screenshot. The sequence below already separates starting the game from loading
+      // a state, so this guard is the only thing that stood between them.
+      const autoStart = window.api.startup.autoStart;
+      if (args.autoState === null && !args.screenshot && !autoStart) return;
       if (cancelled || didRun.current) return;
       didRun.current = true;
 
-      log.app(`[AutoTest] args: autoState=${args.autoState}, screenshot=${args.screenshot}`);
+      log.app(`[AutoTest] args: autoState=${args.autoState}, screenshot=${args.screenshot}, autoStart=${autoStart}`);
 
       // Start the game with the active profile
       log.app(`[AutoTest] Starting game with profile: ${activeProfile.name}`);
@@ -60,6 +64,11 @@ const useAutoTest = ({ activeProfile, loadProfileForGame }: AutoTestDeps) => {
         log.app(`[AutoTest] Loading ${kind} ${args.autoState}...`);
         await loadStateRef(args.autoState);
         // Wait for a few frames to render
+        await new Promise((r) => setTimeout(r, 2000));
+      } else if (args.screenshot) {
+        // 'running' is reached before the first frame is painted, so a screenshot taken
+        // right here catches a black canvas and proves nothing. Same settle the state
+        // branch above already relies on.
         await new Promise((r) => setTimeout(r, 2000));
       }
 

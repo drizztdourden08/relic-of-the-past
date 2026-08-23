@@ -320,6 +320,7 @@ const mergeSettings = (partial: Partial<GameSettings>): GameSettings => {
     merged.masterVolume = 100;
   }
 
+
   // enableAudio is no longer exposed in UI; always keep enabled
   merged.enableAudio = true;
 

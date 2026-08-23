@@ -62,7 +62,7 @@ const installApiShim = (): void => {
     os: 'android',
     getSpritesBaseUrl: () => '',
     getFilePath: () => '',
-    startup: { fresh: false, widgets: [], automation: false },
+    startup: { fresh: false, widgets: [], automation: false, muted: false, sound: false, autoStart: false },
     instance: { name: null, profile: null },
     updater: {
       capabilities: async () => ({ canCheck: false, canInstall: false }),

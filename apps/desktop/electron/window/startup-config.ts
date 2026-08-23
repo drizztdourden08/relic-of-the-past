@@ -8,8 +8,14 @@
  *                        their default side, on top of a clean layout.
  *   --fresh              Ignore the saved widget layout, start with nothing open
  *                        (no home menu), and do NOT persist layout/window changes.
+ *   --muted              Mute the app once it is up, exactly as the speaker button does.
+ *   --sound              The opposite signal, for a profile that was left muted.
+ *   --auto-start         Boot the game with the active profile and stop there, so the
+ *                        game's own title screen comes up and the profile's SRAM files
+ *                        are there to continue from. No state is loaded — that is what
+ *                        --auto-state is for.
  *
- * Window size is consumed in the main process (create-window); widgets/fresh are
+ * Window size is consumed in the main process (create-window); widgets/fresh/muted are
  * forwarded to the renderer via webPreferences.additionalArguments.
  */
 
@@ -45,6 +51,15 @@ const startupRendererArgs = (config: StartupConfig): string[] => {
   const args: string[] = [];
   if (config.fresh) args.push('--startup-fresh');
   if (config.widgets.length > 0) args.push(`--startup-widgets=${config.widgets.join(',')}`);
+  // Muting is the app's own setting, so --muted travels to the renderer like any other
+  // renderer-bound flag rather than being imposed on the window from outside. One
+  // mechanism for every launch shape: the volume the app starts at, which its own
+  // control then owns.
+  if (process.argv.includes('--muted')) args.push('--startup-muted');
+  if (process.argv.includes('--sound')) args.push('--startup-sound');
+  // Starting the game is a renderer action (it owns the profile and the module), so the
+  // flag travels rather than being acted on here.
+  if (process.argv.includes('--auto-start')) args.push('--startup-auto-start');
   // The renderer process does not inherit the main process's argv, so --instance and
   // --profile have to be forwarded explicitly like every other renderer-bound flag.
   const instance = parseInstanceConfig();
