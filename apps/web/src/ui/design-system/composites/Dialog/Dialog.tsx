@@ -13,6 +13,8 @@ const Dialog = (props: DialogProps) => {
     message,
     confirmLabel = 'Confirm',
     cancelLabel = 'Cancel',
+    confirmDisabled = false,
+    hideCancel = false,
     variant = 'default',
     onConfirm,
     onCancel,
@@ -23,8 +25,8 @@ const Dialog = (props: DialogProps) => {
 
   const actions = (
     <>
-      <Button variant="tertiary" onClick={onCancel}>{cancelLabel}</Button>
-      <Button ref={confirmRef} variant={variant === 'danger' ? 'danger' : 'primary'} onClick={onConfirm}>
+      {!hideCancel && <Button variant="tertiary" onClick={onCancel}>{cancelLabel}</Button>}
+      <Button ref={confirmRef} variant={variant === 'danger' ? 'danger' : 'primary'} onClick={onConfirm} disabled={confirmDisabled}>
         {confirmLabel}
       </Button>
     </>

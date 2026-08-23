@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind hook */
 /** All Home-tab save/session state, data loading, and action handlers. */
 import { useState, useEffect, useCallback } from 'react';
+import { usePlatform } from '@app/platform';
 import type { NormalSaveInfo, AutoSaveInfo } from '@shared/types/saves';
 import type { PlaySession } from '@shared/types/session';
 import { saveState, loadState, captureStateBuffer, loadStateFromBuffer } from '../../../../../../../lib/game';
@@ -10,9 +11,13 @@ import * as savesStore from '@app/lib/storage/saves-store';
 import type { SlotInfo, DialogState } from './home-tab.type';
 import { QUICK_SAVE_SLOTS, defaultSaveName, ensureGameRunning, captureCanvasScreenshot } from './home-tab-helpers';
 import { fetchQuickSlots, fetchNormalSaves, fetchAutoSaves } from './home-tab-data';
+import { useHomeTabToasts } from './useHomeTabToasts';
+import { useHomeTabSramImport } from './useHomeTabSramImport';
 
 const useHomeTabSaves = (params: { profileId: string; isGameRunning: boolean; onStartGame: () => void }) => {
   const { profileId, isGameRunning, onStartGame } = params;
+  const { filePicker } = usePlatform();
+  const { toasts, showToast, dismissToast } = useHomeTabToasts();
 
   const [slots, setSlots] = useState<SlotInfo[]>(() =>
     Array.from({ length: QUICK_SAVE_SLOTS }, (_, i) => ({ slot: i, timestamp: null, screenshot: null }))
@@ -27,6 +32,9 @@ const useHomeTabSaves = (params: { profileId: string; isGameRunning: boolean; on
   const [sessions, setSessions] = useState<PlaySession[]>([]);
   const [dialog, setDialog] = useState<DialogState>({ type: null });
   const [newSaveName, setNewSaveName] = useState('');
+  const {
+    importConfirmText, setImportConfirmText, handleImportSram, handleCancelImportSram, handleConfirmImportSram,
+  } = useHomeTabSramImport({ profileId, filePicker, dialog, setDialog, showToast });
 
   const loadQuickSlots = async () => { const d = await fetchQuickSlots(profileId); if (d) setSlots(d); };
   const loadNormalSaves = async () => {
@@ -154,10 +162,11 @@ const useHomeTabSaves = (params: { profileId: string; isGameRunning: boolean; on
 
   return {
     slots, busySlot, normalSaves, normalScreenshots, busyNormal, autoSaves, autoScreenshots, busyAuto, sessions,
-    dialog, setDialog, newSaveName, setNewSaveName, heroSave,
+    dialog, setDialog, newSaveName, setNewSaveName, heroSave, toasts, dismissToast,
+    importConfirmText, setImportConfirmText,
     handleQuickSave, handleQuickLoad, handleCreateNormalSave, handleConfirmCreate, handleLoadNormal,
     handleOverwriteNormal, handleConfirmOverwrite, handleDeleteNormal, handleConfirmDelete, handleRenameNormal,
-    handleLoadAuto, handleDeleteAuto,
+    handleLoadAuto, handleDeleteAuto, handleImportSram, handleCancelImportSram, handleConfirmImportSram,
   };
 };
 
