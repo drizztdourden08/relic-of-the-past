@@ -31,11 +31,15 @@ const useAutoTest = ({ activeProfile, loadProfileForGame }: AutoTestDeps) => {
 
     (async () => {
       const args = await window.api.getTestArgs();
-      if (args.autoState === null && !args.screenshot) return;
+      // --auto-start is the third way in: boot the game and stop, no state and no
+      // screenshot. The sequence below already separates starting the game from loading
+      // a state, so this guard is the only thing that stood between them.
+      const autoStart = window.api.startup.autoStart;
+      if (args.autoState === null && !args.screenshot && !autoStart) return;
       if (cancelled || didRun.current) return;
       didRun.current = true;
 
-      log.app(`[AutoTest] args: autoState=${args.autoState}, screenshot=${args.screenshot}`);
+      log.app(`[AutoTest] args: autoState=${args.autoState}, screenshot=${args.screenshot}, autoStart=${autoStart}`);
 
       // Start the game with the active profile
       log.app(`[AutoTest] Starting game with profile: ${activeProfile.name}`);

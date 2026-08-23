@@ -29,6 +29,14 @@ const useAudioSettings = () => {
     }
   }, [masterVolume]);
 
+  /**
+   * Takes the volume as loaded. A `--muted` launch is already zero here, because the
+   * flag is applied once in mergeSettings where the setting is born — not layered on
+   * afterwards. Two earlier attempts set the engine volume (and then the muteOverride)
+   * from here instead, and both lost: pushLiveSettings re-applies settings.masterVolume
+   * to the gain node AND the WASM mixer when the game starts, so anything not in the
+   * setting itself is overwritten while the control keeps showing the value it set.
+   */
   const initFromSettings = useCallback((volume: number) => {
     setMasterVolumeState(volume);
     if (volume > 0) prevVolumeRef.current = volume;

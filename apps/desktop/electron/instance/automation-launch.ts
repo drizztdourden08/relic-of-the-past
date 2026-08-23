@@ -23,6 +23,7 @@ const AUTOMATION_FLAGS = [
   '--instance',
   '--profile',
   '--auto-state',
+  '--auto-start',
   '--screenshot',
   '--dump-layers',
   '--dump-nav',

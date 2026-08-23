@@ -320,6 +320,18 @@ const mergeSettings = (partial: Partial<GameSettings>): GameSettings => {
     merged.masterVolume = 100;
   }
 
+  // A --muted launch is muted HERE, where the setting is born, because this is the only
+  // place nothing downstream can contradict. Volume reaches the game through two
+  // surfaces at once — the Web Audio gain node and the WASM mixer — and
+  // pushLiveSettings re-applies settings.masterVolume to both whenever the game starts.
+  // Anything that mutes by calling those directly is silently overwritten moments later,
+  // leaving audible sound behind a control that reads muted. As a setting instead, the
+  // flag simply IS the value every surface and the speaker button agree on, and unmuting
+  // works normally from there.
+  // typeof-guarded: mergeSettings is also exercised from node (vitest, no window).
+  const mutedLaunch = typeof window !== 'undefined' && window.api?.startup?.muted === true;
+  if (mutedLaunch) merged.masterVolume = 0;
+
   // enableAudio is no longer exposed in UI; always keep enabled
   merged.enableAudio = true;
 

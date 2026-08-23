@@ -29,11 +29,12 @@ const useStartup = (
         const dumpSlot = await window.api.getDumpLayersSlot();
         const dumpNavSlot = await window.api.getDumpNavSlot();
         const simRun = await window.api.getSimRunConfig();
-        // Automation launches (--fresh, --sim-run, --dump-*, --auto-state, --screenshot,
-        // --instance) start straight in the game view with no home/profile menu in the
-        // way — the game only reaches 'running' on the game view, which the sim waits for.
+        // Automation launches (--fresh, --sim-run, --dump-*, --auto-state, --auto-start,
+        // --screenshot, --instance) start straight in the game view with no home/profile
+        // menu in the way — the game only reaches 'running' on the game view, which the
+        // sim waits for.
         const wanted = instanceProfile();
-        const isAutoTest = testArgs.autoState !== null || !!testArgs.screenshot || dumpSlot !== null || dumpNavSlot !== null || simRun !== null || window.api.startup.fresh || wanted !== null;
+        const isAutoTest = testArgs.autoState !== null || !!testArgs.screenshot || dumpSlot !== null || dumpNavSlot !== null || simRun !== null || window.api.startup.fresh || window.api.startup.autoStart || wanted !== null;
 
         // A named instance pins its own profile, matched by id first then by name. An
         // unknown name stops here rather than falling through to the user's profile: a
