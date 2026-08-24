@@ -27,14 +27,22 @@ const EXTRA_DUNGEON_DOORS: Readonly<Record<number, readonly number[]>> = {
   // The east record is not from the pattern match: the match missed it, and walking the room on
   // original hardware showed an exit there onto 0x79. Its partner is room 0x79's own west door
   // at the same position, which the match did find, and both were observed at the same height.
-  0x78: [0x0010, 0x0071, 0x0022, 0x0023],
+  // The west record is a TELEPORT door, not a plain one: type 0x10's attribute becomes the
+  // 0x89 transit family on a west/east door, and the engine then reads the destination from
+  // the header's third staircase slot instead of walking to the grid neighbour. Measured on
+  // hardware: the hub's west exit leads to the west chamber, whose own east door is the same
+  // type reading the fourth slot for the way back.
+  // No north record: the top-centre is the staircase to the east wing, and the door-shaped
+  // frame around it pattern-matched as a door. Drawing one there registers it, and its transit
+  // strip overwrites the staircase's slot attribute - measured through the engine.
+  0x78: [0x0071, 0x1022, 0x0023],
   0x79: [0x3660, 0x0001, 0x0022],
   0x88: [0x0010, 0x0a71],
   0x9a: [0x0020, 0x0071],
   0xad: [0x3680, 0x0021, 0x1881],
   0xbd: [0x3680, 0x0021, 0x0083],
   0xcd: [0x3680, 0x0021],
-  0xdd: [0x0083],
+  0xdd: [0x1083],
   0xe9: [0x0022, 0x0083],
   0xec: [0x3660, 0x0001, 0x1861],
   0xfc: [0x3660, 0x0001, 0x0022],

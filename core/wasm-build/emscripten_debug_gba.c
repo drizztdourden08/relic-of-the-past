@@ -109,6 +109,8 @@ int WasmDebugGetRuntimeState(int index) {
   case 39: return dung_num_inter_room_southdown_stairs;
   case 40: return dung_num_inroom_upnorth_stairs;
   case 41: return dung_num_inroom_southdown_stairs;
+  case 42: return subsubmodule_index;
+  case 43: return overworld_screen_transition;
   default: return -1;
   }
 }

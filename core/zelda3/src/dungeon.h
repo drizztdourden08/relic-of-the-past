@@ -396,7 +396,7 @@ void Dungeon_LoadSongBankIfNeeded();
 void Mirror_SaveRoomData();
 void SaveDungeonKeys();
 void Dungeon_AdjustAfterSpiralStairs();
-void Dungeon_AdjustForTeleportDoors(uint8 room, uint8 flag);
+void Dungeon_AdjustForTeleportDoors(uint16 room, uint8 flag);
 void Dungeon_AdjustForRoomLayout();
 void HandleEdgeTransitionMovementEast_RightBy8();
 void Dungeon_StartInterRoomTrans_Right();

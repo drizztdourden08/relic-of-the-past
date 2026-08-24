@@ -70,6 +70,10 @@ const uint32Buffer = (values: readonly number[]): Buffer => {
  */
 const HEADER_LIGHTS_OUT = 0x01;
 
+/** Header byte 4 is the layer effect; the engine's dispatch table defines eight. */
+const EFFECT_BYTE = 4;
+const ENGINE_EFFECT_COUNT = 8;
+
 /** Header bytes 9 to 13: where a hole drops to, then the four staircase destinations. */
 const FIRST_TRAVEL_BYTE = 9;
 const LAST_TRAVEL_BYTE = 13;
@@ -106,6 +110,12 @@ const assertTravelStaysInDungeon = (bytes: Buffer, roomId: number, rooms: Readon
 const nativeHeaderBytes = (room: DungeonRoomRecord, rooms: ReadonlySet<number>): Buffer => {
   const bytes = Buffer.from(room.header.nativeBytes);
   bytes[0] &= ~HEADER_LIGHTS_OUT;
+  // The layer-effect byte indexes an engine dispatch table with eight defined entries; the
+  // cartridge uses values past it for effects of its own (the west chamber carries 8), and an
+  // out-of-range value dispatches a null pointer. Unknown effects become "none" until their
+  // meaning is measured on hardware.
+  if (bytes[EFFECT_BYTE] >= ENGINE_EFFECT_COUNT) bytes[EFFECT_BYTE] = 0;
+
   bytes[1] = EXTRA_DUNGEON_PALINFO;
   bytes[2] = AUX_TILE_THEME;
   assertTravelStaysInDungeon(bytes, room.id, rooms);

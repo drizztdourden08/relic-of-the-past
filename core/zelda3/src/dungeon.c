@@ -7941,7 +7941,7 @@ void Dungeon_AdjustAfterSpiralStairs() {  // 82a2f0
   room_bounds_y.b0 += yd;
 }
 
-void Dungeon_AdjustForTeleportDoors(uint8 room, uint8 flag) {  // 82a37c
+void Dungeon_AdjustForTeleportDoors(uint16 room, uint8 flag) {  // 82a37c
   dungeon_room_index2 = room;
   dungeon_room_index_prev = room;
 
@@ -7953,7 +7953,7 @@ void Dungeon_AdjustForTeleportDoors(uint8 room, uint8 flag) {  // 82a37c
   room_bounds_x.a0 += (xx << 8);
   room_bounds_x.b0 += (xx << 8);
 
-  xx = ((room & 0xf0) >> 3) - (link_y_coord >> 8);
+  xx = ((room & 0xff0) >> 3) - (link_y_coord >> 8);
   link_y_coord += (xx << 8);
   BG2VOFS_copy2 += (xx << 8);
   room_bounds_y.a1 += (xx << 8);

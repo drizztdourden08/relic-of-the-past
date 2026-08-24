@@ -252,6 +252,7 @@ int WasmProbeStreamAttrs(void) {
 
   Dungeon_LoadBasicAttribute_full(0x1000);
   Dungeon_LoadObjectAttribute();
+  Dungeon_LoadDoorAttribute();
 
   memcpy(g_probe_attrs, dung_bg2_attr_table, sizeof(g_probe_attrs));
   memcpy(g_probe_maps, &g_ram[kLowerBase], 0x2000);
@@ -263,3 +264,17 @@ int WasmProbeStreamAttrs(void) {
 /** The tilemaps captured by the last WasmProbeStreamAttrs call. */
 EMSCRIPTEN_KEEPALIVE
 int WasmProbeStreamMaps(void) { return (int)g_probe_maps; }
+
+/**
+ * Headless frame stepping, so a crash can be reproduced and dissected outside the app.
+ *
+ * Runs the engine's own frame loop with a fixed input mask. The return value is how many
+ * frames actually ran: a caller stepping in small batches around a crash narrows it to the
+ * exact frame, and the ordinary debug state exports tell the rest.
+ */
+EMSCRIPTEN_KEEPALIVE
+int WasmProbeRunFrames(int frames, int input_mask) {
+  for (int i = 0; i < frames; i++)
+    ZeldaRunFrame(input_mask);
+  return frames;
+}
