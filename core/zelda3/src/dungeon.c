@@ -7953,7 +7953,10 @@ void Dungeon_AdjustForTeleportDoors(uint16 room, uint8 flag) {  // 82a37c
   room_bounds_x.a0 += (xx << 8);
   room_bounds_x.b0 += (xx << 8);
 
-  xx = ((room & 0xff0) >> 3) - (link_y_coord >> 8);
+  // Rooms are two 256px pages tall and the player keeps their position within the page, so
+  // the destination page must keep the half the player left from - an east/west teleport door
+  // sits at one physical row. Base-game pairs sit in the upper half, where the term is zero.
+  xx = (((room & 0xff0) >> 3) | ((link_y_coord >> 8) & 1)) - (link_y_coord >> 8);
   link_y_coord += (xx << 8);
   BG2VOFS_copy2 += (xx << 8);
   room_bounds_y.a1 += (xx << 8);
