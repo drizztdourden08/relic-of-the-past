@@ -8,6 +8,7 @@ import { bufToArr } from './asset-builder';
 import { decompress as lzDecompress } from './compression/lz-decompress';
 import { buildDungeonRooms } from './compile-dungeon-rooms';
 import { buildEntranceData } from './compile-dungeon-entrance';
+import { appendExtraDungeonMapRecords } from './extensions/second-cartridge-map';
 
 const buildDungeonMap = (rom: RomData, A: AssetBuilder): void => {
   const kSizes = [75, 125, 50, 75, 175, 75, 50, 75, 50, 200, 150, 75, 100, 200];
@@ -21,6 +22,7 @@ const buildDungeonMap = (rom: RomData, A: AssetBuilder): void => {
     const tileAddr = 0xa0000 + rom.getWord(0x8AFBE4 + i * 2);
     tiles.push(Buffer.from(rom.getBytes(tileAddr, nonzero)));
   }
+  appendExtraDungeonMapRecords(layouts, tiles);
   A.addPacked('kDungMap_FloorLayout', layouts);
   A.addPacked('kDungMap_Tiles', tiles);
 };

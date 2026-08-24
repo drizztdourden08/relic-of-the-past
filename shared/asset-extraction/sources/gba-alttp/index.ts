@@ -55,3 +55,6 @@ export {
 export type { GbaAlttpTextMessage } from './text-source';
 export { GBA_ALTTP_ASSET_INDEX, GBA_ALTTP_ASSET_MANIFEST } from './asset-manifest';
 export type { GbaAlttpAssetManifestEntry } from './asset-manifest';
+export { AUX_TILE_THEME, MAIN_TILE_THEME, assertBlocksetIdentity } from './blockset-identity';
+export { BASE_SHEET_DELTA, SHEET_UNCHANGED, compareSpriteSheets, toBaseSheetId } from './sprite-sheet-identity';
+export type { SheetMatch } from './sprite-sheet-identity';

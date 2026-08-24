@@ -40,6 +40,6 @@ describe('multi-source asset aggregation', () => {
     const [supplement] = combined.supplements;
     expect(supplement.ok).toBe(true);
     expect(supplement.id).toBe('gba-alttp');
-    if (supplement.ok) expect(supplement.container).toEqual(compileGbaAlttpSupplement(gba));
+    if (supplement.ok) expect(supplement.container).toEqual(compileGbaAlttpSupplement(gba, snes));
   });
 });

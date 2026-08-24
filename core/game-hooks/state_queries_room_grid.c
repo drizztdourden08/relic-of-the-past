@@ -9,6 +9,10 @@
 // Whole-WRAM backup for the rebuild, plus private copies of everything it produces.
 static uint8 g_nav_room_ram_backup[sizeof(g_ram)];
 static uint8 g_nav_room_grid[0x2000];
+// The tilemap the rebuild drew, both layers: 0x1000 words of BG2 then 0x1000 of BG1, which
+// are contiguous in WRAM. Captured for the same reason as the grid — it belongs to the room
+// just drawn and the restore puts the live room's words back.
+static uint16 g_nav_room_tilemap[0x2000];
 // [count][pad] then per entry: [posLo, posHi, row, col]
 static uint8 g_toggle_floor_debug[2 + 16 * 4];
 
@@ -119,10 +123,27 @@ int WasmBuildRoomAttrGrid(int room_id) {
   CaptureToggleFloorPositions();
   SimCaptureRoomHeaderState();
   memcpy(g_nav_room_grid, dung_bg2_attr_table, sizeof(g_nav_room_grid));
+  memcpy(g_nav_room_tilemap, dung_bg2, sizeof(g_nav_room_tilemap));
   memcpy(g_ram, g_nav_room_ram_backup, sizeof(g_ram));
 
   // Caller reads 64×64 from ptr, +0x1000 for the lower layer.
   return (int)g_nav_room_grid;
+}
+
+/**
+ * The tilemap words the last WasmBuildRoomAttrGrid drew.
+ *
+ * 0x1000 words of the lower layer followed by 0x1000 of the upper, exactly as the object
+ * drawer left them. Lets a caller compare what the engine's own room interpreter produces
+ * against a pre-expanded tilemap obtained some other way.
+ */
+EMSCRIPTEN_KEEPALIVE
+int WasmGetLastRoomTilemap(void) {
+  if (!NavQueryGate()) {
+    memset(g_nav_room_tilemap, 0, sizeof(g_nav_room_tilemap));
+    return (int)g_nav_room_tilemap;
+  }
+  return (int)g_nav_room_tilemap;
 }
 
 // Debug: the toggle-floor positions captured by the last WasmBuildRoomAttrGrid.

@@ -34,6 +34,9 @@ enum {
   kGbaAssetEntityHandlers,  // kGbaAlttpEntityHandlers — Entity handler THUMB entry-point addresses, packed as uint32.
   kGbaAssetRoomTagHandlerTags,  // kGbaAlttpRoomTagHandlerTags — Room tag byte per entry in the room-tag handler table.
   kGbaAssetRoomTagHandlers,  // kGbaAlttpRoomTagHandlers — Room-tag handler THUMB entry-point addresses, packed as uint32.
+  kGbaAssetRoomDoors,  // kGbaPalaceRoomDoors — Per-room native door records, sentinel-terminated.
+  kGbaAssetRoomStairs,  // kGbaPalaceRoomStairs — Per-room staircase bands: count, then row, column, width and destination slot each.
+  kGbaAssetRoomLayouts,  // kGbaPalaceRoomLayouts — Per-room object stream in the native room format: floor byte, layout byte, then object and door sections.
   kGbaAlttpAssetCount,
 };
 

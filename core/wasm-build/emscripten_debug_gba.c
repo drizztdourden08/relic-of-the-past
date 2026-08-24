@@ -100,7 +100,15 @@ int WasmDebugGetRuntimeState(int index) {
   case 26: return link_is_on_lower_level_mirror;
   case 27: return oam_priority_value;
   case 28: return cheatWalkThroughWalls;
-  case 29: return GbaAlttp_UsesFixedHorizontalCamera();
+  case 29: return dung_layout_and_starting_quadrant;
+  // Door registration, which a pre-expanded room only has if something replays the records.
+  case 30: case 31: case 32: case 33: return dung_door_tilemap_address[index - 30];
+  case 34: case 35: case 36: case 37: return door_type_and_slot[index - 34];
+  // Staircase registration, which a pre-expanded room only has if something replays it.
+  case 38: return dung_num_inter_room_upnorth_stairs;
+  case 39: return dung_num_inter_room_southdown_stairs;
+  case 40: return dung_num_inroom_upnorth_stairs;
+  case 41: return dung_num_inroom_southdown_stairs;
   default: return -1;
   }
 }
@@ -132,3 +140,8 @@ void WasmDebugShiftOverworld(int dx, int dy) {
   camera_y_coord_scroll_low += dy;
   camera_y_coord_scroll_hi += dy;
 }
+
+// Which dungeon the engine thinks the player is in. 0xff means "not a dungeon", which is what
+// the map screen and the HUD refuse on.
+EMSCRIPTEN_KEEPALIVE
+int WasmDebugGetPalaceIndex(void) { return (int)(uint8)BYTE(cur_palace_index_x2); }

@@ -22,6 +22,9 @@
  * opening is drawn, and that only happens while the supplement is loaded.
  */
 
+import { MAIN_TILE_THEME } from '../sources/gba-alttp/blockset-identity';
+import { EXTRA_DUNGEON_PALACE } from './second-cartridge-map';
+
 /** The base game's Pyramid opening: overworld cell (col 14, row 27) on area 0x5b. */
 const PYRAMID_AREA = 0x5b;
 const PYRAMID_HOLE_CELL = 27 * 64 + 14;
@@ -57,32 +60,67 @@ interface EntranceArrays {
 /**
  * One entrance record for the extra dungeon's chamber.
  *
- * Values match what the engine needs for a single-viewport room entered from its south
- * doorway. `relativeCoords` are stored as high bytes: the engine reconstructs the room
- * bounds as `value << 8` (with the two y-maxima carrying a `| 0x10`).
+ * Every geometry field is derived from the room's place in the 16x20 room grid rather than
+ * measured by hand. Verified against two base-game entrances into full-size rooms: id 19 into
+ * room 0xf8 (row 15, column 8) and id 9 into room 0x84 (row 8, column 4) both reproduce
+ * exactly from these formulas.
+ *
+ * Getting `quadrant1` wrong is what made the camera drift: it is read as
+ * `quadrant_fullsize_x = value >> 4, quadrant_fullsize_y = value & 0xf`, and a room declared
+ * not-full-size horizontally is treated as two 256px pages, so the background scrolls past the
+ * room's edge and wraps.
  */
+
+/** A room is 0x200 by 0x200, and the grid is 16 wide. */
+const ROOM_SPAN = 0x200;
+const ROOMS_PER_GRID_ROW = 16;
+
+/** Both axes full size — one viewport, no page split. */
+const QUADRANT_FULLSIZE_BOTH = 0x22;
+/** The player arrives in the left half of the room, lower vertical quadrant. */
+const PLAYER_QUADRANT = 0x02;
+
+/** Where the player and camera sit relative to the room's own origin. */
+const PLAYER_OFFSET_X = 0xf8;
+const PLAYER_OFFSET_Y = 0x1d8;
+const SCROLL_OFFSET_X = 0x80;
+const SCROLL_OFFSET_Y = 0x110;
+const CAMERA_THRESHOLD_X = 0xff;
+const CAMERA_THRESHOLD_Y = 0x187;
+
 const appendExtraEntrance = (a: EntranceArrays): void => {
   if (a.rooms.length !== BASE_ENTRANCE_COUNT) {
     throw new Error(`Expected ${BASE_ENTRANCE_COUNT} base entrance records, found ${a.rooms.length}`);
   }
+  const row = Math.floor(EXTRA_DUNGEON_ROOM / ROOMS_PER_GRID_ROW);
+  const column = EXTRA_DUNGEON_ROOM % ROOMS_PER_GRID_ROW;
+  const originX = column * ROOM_SPAN;
+  const originY = row * ROOM_SPAN;
+
   a.rooms.push(EXTRA_DUNGEON_ROOM);
-  a.scrollX.push(0x1080);
-  a.scrollY.push(0x1110);
-  a.playerX.push(0x10f8);
-  a.playerY.push(0x11d8);
-  a.cameraX.push(0x7f);
-  a.cameraY.push(0x187);
-  a.blockset.push(0);
+  a.scrollX.push(originX + SCROLL_OFFSET_X);
+  a.scrollY.push(originY + SCROLL_OFFSET_Y);
+  a.playerX.push(originX + PLAYER_OFFSET_X);
+  a.playerY.push(originY + PLAYER_OFFSET_Y);
+  a.cameraX.push(CAMERA_THRESHOLD_X);
+  a.cameraY.push(CAMERA_THRESHOLD_Y);
+  a.blockset.push(MAIN_TILE_THEME); // the engine reads this as main_tile_theme_index
   a.floor.push(0);
-  a.palace.push(-1); // 0xff — not a numbered palace
+  a.palace.push(EXTRA_DUNGEON_PALACE); // a real dungeon: map screen, HUD slots, banked keys
   a.doorway.push(1); // standing in a doorway on entry
   a.startBg.push(0);
-  a.quad1.push(0x02); // quadrant_fullsize x=0, y=2
-  a.quad2.push(0x12); // link_quadrant x=1, y=2
+  a.quad1.push(QUADRANT_FULLSIZE_BOTH);
+  a.quad2.push(PLAYER_QUADRANT);
   a.doorSettings.push(0);
   a.music.push(0x10);
-  // y: a0, b0, a1, b1 then x: a0, b0, a1, b1 — one 512px-wide, 256px-tall room.
-  a.relCoords.push(0x11, 0x10, 0x11, 0x11, 0x10, 0x10, 0x11, 0x11);
+  // Room bounds, as high bytes the engine shifts back up. y first, then x; each pair is one
+  // quadrant's low and high edge, in half-room units.
+  const halfRoomsY = row * 2;
+  const halfRoomsX = column * 2;
+  a.relCoords.push(
+    halfRoomsY + 1, halfRoomsY, halfRoomsY + 1, halfRoomsY + 1,
+    halfRoomsX, halfRoomsX, halfRoomsX, halfRoomsX + 1,
+  );
 };
 
 /** Register the opening's overworld cell, cloned from the Pyramid's own entry. */

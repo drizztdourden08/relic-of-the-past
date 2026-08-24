@@ -49,7 +49,7 @@ static const uint8 transferLength[8] = {
 };
 const uint16 kUpperBitmasks[] = { 0x8000, 0x4000, 0x2000, 0x1000, 0x800, 0x400, 0x200, 0x100, 0x80, 0x40, 0x20, 0x10, 8, 4, 2, 1 };
 const uint8 kLitTorchesColorPlus[] = {31, 8, 4, 0};
-const uint8 kDungeonCrystalPendantBit[13] = {0, 0, 4, 2, 0, 16, 2, 1, 64, 4, 1, 32, 8};
+const uint8 kDungeonCrystalPendantBit[15] = {0, 0, 4, 2, 0, 16, 2, 1, 64, 4, 1, 32, 8, 0, 0};
 const int8 kGetBestActionToPerformOnTile_x[4] = { 7, 7, -3, 16 };
 const int8 kGetBestActionToPerformOnTile_y[4] = { 6, 24, 12, 12 };
 #define AT_WORD(x) (uint8)(x), (x)>>8

@@ -6216,7 +6216,7 @@ void ApplyLinksMovementToCamera() {  // 87e9d3
   link_y_page_movement_delta = (link_y_coord >> 8) - link_y_coord_safe_return_hi;
   link_x_page_movement_delta = (link_x_coord >> 8) - link_x_coord_safe_return_hi;
 
-  if (link_x_page_movement_delta && !GbaAlttp_UsesFixedHorizontalCamera()) {
+  if (link_x_page_movement_delta) {
     if (sign8(link_x_page_movement_delta))
       AdjustQuadrantAndCamera_left();
     else

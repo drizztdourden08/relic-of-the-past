@@ -618,6 +618,9 @@ void Gfx_LoadSpritesInner(uint8 *dst) {  // 80d706
   const uint8 *p = kSpriteTilesets[sprite_graphics_index];
   int len;
 
+  GbaAlttp_SelectDungeonSpriteSheets(&sprite_gfx_subset_0, &sprite_gfx_subset_1,
+                                     &sprite_gfx_subset_2, &sprite_gfx_subset_3);
+
   if (p[0])
     sprite_gfx_subset_0 = p[0];
   len = Decomp_spr(dst, sprite_gfx_subset_0);
@@ -821,6 +824,8 @@ void InitializeTilesets() {  // 80e19b
   if (p[1]) sprite_gfx_subset_1 = p[1];
   if (p[2]) sprite_gfx_subset_2 = p[2];
   if (p[3]) sprite_gfx_subset_3 = p[3];
+  GbaAlttp_SelectDungeonSpriteSheets(&sprite_gfx_subset_0, &sprite_gfx_subset_1,
+                                     &sprite_gfx_subset_2, &sprite_gfx_subset_3);
 
   LoadSpriteGraphics(&g_zenv.vram[0x5000], sprite_gfx_subset_0, &g_ram[0x7800]);
   LoadSpriteGraphics(&g_zenv.vram[0x5400], sprite_gfx_subset_1, &g_ram[0x7e00]);
@@ -1696,6 +1701,7 @@ void Dungeon_HandleTranslucencyAndPalette() {  // 82a1e9
   Palette_Load_Sp0L();
   Palette_Load_Sp5L();
   Palette_Load_Sp6L();
+  GbaAlttp_ApplyDungeonPalette();
   subsubmodule_index += 1;
 }
 

@@ -52,11 +52,11 @@ const hookSrcs = [
   'state_queries_room_objects', 'attr_grid_state', 'gated_empty', 'receive_counters',
   'sim_queries', 'sim_triggers', 'item_overrides', 'check_triggers', 'ui_state', 'cheats', 'haptic_events',
   'player_sprite', 'transition_events', 'state_queries_combat', 'state_queries_oam',
-  'host_gates', 'hud_override', 'running_man', 'gba_alttp', 'gba_pyramid_entrance',
+  'host_gates', 'hud_override', 'running_man', 'gba_alttp', 'gba_dungeon_room', 'gba_dungeon_gfx', 'gba_pyramid_entrance',
 ].map((f) => h(`${f}.c`));
 
 // Our Emscripten entry points (replace the native main.c). Resolved from this dir.
-const emMain = ['emscripten_main.c', 'emscripten_sdl.c', 'emscripten_api.c', 'emscripten_debug_gba.c', 'emscripten_io.c', 'emscripten_pacing.c'].map((f) => join(here, f));
+const emMain = ['emscripten_main.c', 'emscripten_sdl.c', 'emscripten_api.c', 'emscripten_debug_gba.c', 'object_probe.c', 'emscripten_io.c', 'emscripten_pacing.c'].map((f) => join(here, f));
 
 const cflags = [
   '-O2', '-g2',

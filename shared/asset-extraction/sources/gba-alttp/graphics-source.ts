@@ -38,7 +38,10 @@ const PALACE_SHEETS: readonly SheetSource[] = [
 ];
 const DUNGEON_PALETTE_BASE = 0x083be018;
 const DUNGEON_PALETTE_SIZE = 0xc0;
-const SPRITE_SHEET_POINTER_TABLE = 0x0822b314;
+// Four entries higher than it first appears: reading from 0x0822b314 returns the art of the
+// sheet four ids lower, which is what made the cartridge's ids look renumbered. They are not —
+// its quartets match the base game's for every blockset the base table also defines.
+const SPRITE_SHEET_POINTER_TABLE = 0x0822b324;
 const SPRITE_TILESET_TABLE = 0x0822b624;
 const PALACE_SPRITE_PALETTES: readonly SpritePaletteSource[] = [
   { bank: 17, address: 0x083bd7d8 },

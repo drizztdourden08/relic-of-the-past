@@ -18,11 +18,24 @@ bool GbaAlttp_IsExtraDungeonEnabled(void);
 bool GbaAlttp_IsAvailable(void);
 bool GbaAlttp_IsPalaceActive(void);
 bool GbaAlttp_IsPalaceRoom(uint16 room);
-bool GbaAlttp_UsesFixedHorizontalCamera(void);
 const uint8 *GbaAlttp_GetRoomHeader(uint16 room);
 const uint16 *GbaAlttp_GetRoomDoors(uint16 room);
-bool GbaAlttp_LoadPrebuiltRoom(uint16 room);
+const uint8 *GbaAlttp_GetRoomLayout(uint16 room);
 void GbaAlttp_ApplyDungeonGraphics(void);
+void GbaAlttp_SelectDungeonSpriteSheets(uint8 *slot0, uint8 *slot1, uint8 *slot2, uint8 *slot3);
+
+// Fills attributes_for_tile[0x140..0x1bf] from this dungeon's own bank, returning false when
+// it does not apply so the caller falls back to the base game's table. Collision is DERIVED
+// from that array per drawn tile, so supplying the bank is what lets the engine's own
+// attribute pass produce this dungeon's collision instead of a shipped map.
+bool GbaAlttp_ApplyDungeonTileAttr(void);
+
+// Room-scoped lists in the engine's own format, or NULL to fall back to the base table.
+const uint8 *GbaAlttp_GetRoomSprites(uint16 room);
+const uint8 *GbaAlttp_GetRoomSecrets(uint16 room);
+
+// INTERIM. Stamps the entrance chamber's transit strip, which a door record would otherwise
+// stamp. Goes away with the interim doorway it exists for.
 void GbaAlttp_ApplyDungeonPalette(void);
 void GbaAlttp_ApplyPyramidEntrance();
 

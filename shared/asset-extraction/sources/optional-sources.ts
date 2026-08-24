@@ -11,7 +11,7 @@ const OPTIONAL_SOURCES: OptionalSource[] = [
   {
     id: 'gba-alttp',
     compile: (sources: AlttpAssetSources) =>
-      sources.gbaAlttp ? compileGbaAlttpSupplement(sources.gbaAlttp) : null,
+      sources.gbaAlttp ? compileGbaAlttpSupplement(sources.gbaAlttp, sources.snes) : null,
   },
 ];
 

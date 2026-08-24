@@ -127,7 +127,7 @@ static const uint16 kDungeon_QueryIfTileLiftable_rv[16] = { 0x5252, 0x5050, 0x54
 static const uint16 kDoor_BlastWallUp_Dsts[] = { 0xd8a, 0xdaa, 0xdca, 0x2b6, 0xab6, 0x12b6 };
 #define adjacent_doors_flags (*(uint16*)(g_ram+0x1100))
 #define adjacent_doors ((uint16*)(g_ram+0x1110))
-static const DungPalInfo kDungPalinfos[41] = {
+static const DungPalInfo kDungPalinfos[42] = {
   { 0,  0,  3,  1},
   { 2,  0,  3,  1},
   { 4,  0, 10,  1},
@@ -169,6 +169,9 @@ static const DungPalInfo kDungPalinfos[41] = {
   { 0,  0,  3,  2},
   {14,  0,  3,  7},
   {26,  5,  5, 11},
+  // The extra dungeon. Its background colours come from its own cartridge; these are the
+  // sprite and aux palettes that go with them.
+  {18,  0,  2, 12},
 };
 // these are not used by the code, but needed for the comparison with the real rom to work.
 static const uint8 kDungeon_DrawObjectOffsets_BG1[33] = {
@@ -2273,7 +2276,8 @@ const uint8 *GetDefaultRoomLayout(int i) {
 }
 
 const uint8 *GetDungeonRoomLayout(int i) {
-  return kDungeonRoom + kDungeonRoomOffs[i];
+  const uint8 *extra = GbaAlttp_GetRoomLayout((uint16)i);
+  return extra ? extra : kDungeonRoom + kDungeonRoomOffs[i];
 }
 
 static inline void WriteAttr1(int j, uint16 attr) {
@@ -2612,9 +2616,6 @@ void Dungeon_LoadRoom() {  // 81873a
     dung_object_pos_in_objdata[i] = 0;
     dung_object_tilemap_pos[i] = 0;
   }
-
-  if (GbaAlttp_LoadPrebuiltRoom(dungeon_room_index))
-    return;
 
   const uint8 *cur_p0 = GetDungeonRoomLayout(dungeon_room_index);
   dung_load_ptr_offs = 0;
@@ -3707,7 +3708,7 @@ void Dungeon_LoadHeader() {  // 81b564
   dung_hdr_collision = (hdr_ptr[0] >> 2) & 7;
   dung_want_lights_out_copy = dung_want_lights_out;
   dung_want_lights_out = hdr_ptr[0] & 1;
-  int palette_index = GbaAlttp_IsPalaceActive() ? 15 : hdr_ptr[1];
+  int palette_index = hdr_ptr[1];
   const DungPalInfo *dpi = &kDungPalinfos[palette_index];
   palette_main_indoors = dpi->pal0;
   palette_sp0l = dpi->pal1;
@@ -3840,8 +3841,6 @@ void Dungeon_LoadAttribute_Selectable() {  // 81b8b4
 }
 
 void Dungeon_LoadAttributeTable() {  // 81b8bf
-  if (GbaAlttp_IsPalaceActive())
-    return;
   dung_draw_width_indicator = dung_draw_height_indicator = 0;
   Dungeon_LoadBasicAttribute_full(0x1000);
   Dungeon_LoadObjectAttribute();
@@ -4595,7 +4594,7 @@ void Dung_TagRoutine_BlastWallStuff(int k) {  // 81c68c
 
 // Used for bosses
 void RoomTag_GetHeartForPrize(int k) {  // 81c709
-  static const uint8 kBossFinishedFallingItem[13] = { 0, 0, 1, 2, 0, 6, 6, 6, 6, 6, 3, 6, 6 };
+  static const uint8 kBossFinishedFallingItem[15] = { 0, 0, 1, 2, 0, 6, 6, 6, 6, 6, 3, 6, 6, 6, 6 };
   if (!(dung_savegame_state_bits & 0x8000))
     return;
   int t = savegame_is_darkworld ? link_has_crystals : link_which_pendants;
@@ -5613,7 +5612,9 @@ void ManipBlock_Something(Point16U *pt) {  // 81db41
 void RevealPotItem(uint16 pos6, uint16 pos4) {  // 81e6b2
   BYTE(dung_secrets_unk1) = 0;
 
-  const uint8 *src_ptr = kDungeonSecrets + WORD(kDungeonSecrets[dungeon_room_index * 2]);
+  const uint8 *src_ptr = GbaAlttp_GetRoomSecrets(dungeon_room_index);
+  if (!src_ptr)
+    src_ptr = kDungeonSecrets + WORD(kDungeonSecrets[dungeon_room_index * 2]);
 
   int index = 0;
   for (;;) {
@@ -8756,7 +8757,7 @@ void LayerEffect_WaterRapids() {  // 8affde
 }
 
 void Dungeon_LoadCustomTileAttr() {  // 8e942a
-  if (GbaAlttp_IsPalaceActive())
+  if (GbaAlttp_ApplyDungeonTileAttr())
     return;
   memcpy(&attributes_for_tile[0x140], &kDungAttrsForTile[kDungAttrsForTile_Offs[aux_tile_theme_index]], 0x80);
 }
