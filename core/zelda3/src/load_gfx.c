@@ -777,6 +777,7 @@ void PrepTransAuxGfx() {  // 80df1a
   } else {
     Do3To4Low16Bit(&g_ram[0x10800], &g_ram[0x6600], 0xC0);
   }
+  GbaAlttp_PatchTransAuxStaging();
 }
 
 void Do3To4High16Bit(uint8 *dst, const uint8 *src, int num) {  // 80df4f

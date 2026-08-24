@@ -176,6 +176,8 @@ int WasmProbeDrawDoor(int word, int upper) {
 enum { kMaxStreamBytes = 2048 };
 static uint8 g_probe_stream[kMaxStreamBytes];
 static uint8 g_probe_attrs[0x2000];
+/** Both tilemaps as the engine drew them for the staged stream: lower then upper. */
+static uint8 g_probe_maps[0x4000];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmProbeStreamBuffer(void) { return (int)g_probe_stream; }
@@ -252,6 +254,12 @@ int WasmProbeStreamAttrs(void) {
   Dungeon_LoadObjectAttribute();
 
   memcpy(g_probe_attrs, dung_bg2_attr_table, sizeof(g_probe_attrs));
+  memcpy(g_probe_maps, &g_ram[kLowerBase], 0x2000);
+  memcpy(g_probe_maps + 0x2000, &g_ram[kUpperBase], 0x2000);
   memcpy(g_ram, g_probe_ram_backup, sizeof(g_ram));
   return (int)g_probe_attrs;
 }
+
+/** The tilemaps captured by the last WasmProbeStreamAttrs call. */
+EMSCRIPTEN_KEEPALIVE
+int WasmProbeStreamMaps(void) { return (int)g_probe_maps; }

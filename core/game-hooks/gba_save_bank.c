@@ -3,7 +3,7 @@
  * Bank 1 of the per-room save words.
  *
  * The room grid's save array is 320 words wedged between other save data, so it cannot grow
- * in place. Rooms in bank 1 (ids 0x140-0x27F) keep their words in a second array placed in
+ * in place. Rooms in the dungeon page (ids 0x200-0x2FF) keep their words in a second array placed in
  * unclaimed WRAM inside g_ram - save states snapshot it automatically, so their format does
  * not change. Bank-0 ids fall through to the original array untouched.
  *
@@ -23,8 +23,8 @@
 #define save_dung_info_bank1 ((uint16 *)(g_ram + 0xE200))
 
 enum {
-  kBankFirstRoom = 0x140,
-  kBankEndRoom = 0x280,
+  kBankFirstRoom = 0x200,
+  kBankEndRoom = 0x300,
   kBankRooms = kBankEndRoom - kBankFirstRoom,
   /* Per-slot extension block in the SRAM tail, past the third slot's mirror. */
   kBankSramBase = 0x1E00,

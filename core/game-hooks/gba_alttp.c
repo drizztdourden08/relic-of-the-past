@@ -54,7 +54,7 @@ bool GbaAlttp_IsPalaceActive(void) {
 }
 
 bool GbaAlttp_IsBankRoom(uint16 room) {
-  enum { kBankFirstRoom = 0x140, kBankEndRoom = 0x280 };
+  enum { kBankFirstRoom = 0x200, kBankEndRoom = 0x300 };
   return GbaAlttp_IsAvailable() && room >= kBankFirstRoom && room < kBankEndRoom;
 }
 

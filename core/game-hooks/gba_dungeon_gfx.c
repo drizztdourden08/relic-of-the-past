@@ -25,6 +25,27 @@ bool GbaAlttp_ApplyDungeonTileAttr(void) {
   return true;
 }
 
+/**
+ * Keep this dungeon's aux tiles through an in-dungeon transition.
+ *
+ * A door or staircase transition does not rerun the full tileset load: the engine
+ * re-decompresses only the four aux sheets into a staging buffer and lets the NMI upload
+ * them over VRAM 0x2c00-0x3bff - straight through the middle of the block this dungeon
+ * uploads whole. Patching the staging buffer instead of VRAM lets the engine's own upload
+ * machinery carry the right pixels, in its own order, on its own frames.
+ *
+ * The dungeon's sheet block mirrors VRAM words 0x2000-0x3fff, so the aux region sits at
+ * byte offset (0x2c00 - 0x2000) * 2 within it.
+ */
+void GbaAlttp_PatchTransAuxStaging(void) {
+  enum { kStaging = 0x10000, kAuxByteOffset = (0x2c00 - 0x2000) * 2, kAuxBytes = 4 * 0x800 };
+  if (!GbaAlttp_IsPalaceActive())
+    return;
+  if (g_gba_alttp_asset_sizes[kGbaAssetBgGfxSnes4bpp] != 512 * 32)
+    return;
+  memcpy(&g_ram[kStaging], g_gba_alttp_asset_ptrs[kGbaAssetBgGfxSnes4bpp] + kAuxByteOffset, kAuxBytes);
+}
+
 void GbaAlttp_ApplyDungeonPalette(void) {
   // Indoors-gated: this runs at the tail of the shared palette load, which also feeds the
   // overworld, and the room id still reads as ours after leaving — so a room-only test would
