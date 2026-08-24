@@ -79,6 +79,12 @@ const createEngineProbe = async (bundle: EngineBundle, baseAssets: Buffer): Prom
       call('WasmProbeDrawObjectInState', [word, index, upper, stateBits]),
     drawDoor: (word, upper) => call('WasmProbeDrawDoor', [word, upper]),
     drawTemplate: (layout) => call('WasmProbeDrawTemplate', [layout]),
+    streamAttrs: (stream) => {
+      const staging = mod.ccall('WasmProbeStreamBuffer', 'number', [], []);
+      mod.HEAPU8.set(stream, staging);
+      const attrs = mod.ccall('WasmProbeStreamAttrs', 'number', [], []);
+      return mod.HEAPU8.slice(attrs, attrs + 0x2000);
+    },
   };
 };
 

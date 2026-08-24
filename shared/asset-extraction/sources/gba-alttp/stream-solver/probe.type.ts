@@ -22,6 +22,12 @@ interface RoomDrawProbe {
   drawDoor(word: number, upper: number): ProbeCell[];
   /** Draw one of the eight shared layout templates. */
   drawTemplate(layout: number): ProbeCell[];
+  /**
+   * Draw a whole candidate stream as a room and return the 0x2000-byte attribute table the
+   * engine derives for it. This is how staircase slot assignment is evaluated: the cascade
+   * that numbers staircases lives in the engine, and only the engine gets to run it.
+   */
+  streamAttrs(stream: Uint8Array): Uint8Array;
 }
 
 /** The engine build the probe host instantiates: the Emscripten glue and its wasm binary. */

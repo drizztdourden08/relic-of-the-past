@@ -10,6 +10,8 @@
  * (doors, staircases, collision, priority) comes back for free.
  */
 import { EXTRA_DUNGEON_DOORS } from '../../../extensions/second-cartridge-doors';
+import { MEASURED_STAIR_SLOTS } from '../../../extensions/second-cartridge-stair-slots';
+import { orderStairsToMeasuredSlots } from './stair-slots';
 import { readFloorPatterns } from './base-map';
 import { createEngineProbe } from './probe-host';
 import { buildBytes } from './room-attempt';
@@ -87,6 +89,18 @@ const solveGbaRoomStreams = async (
       stairSlotsWanted: stairSlotsWanted(room, dungeonRooms),
       tries: COMBO_TRIES,
     });
+    // Where hardware measurements pin the staircase slots, re-order and re-type the stair
+    // objects until the engine's own derivation, replayed over the candidate stream, hands
+    // each staircase the slot the measurements demand.
+    const spec = MEASURED_STAIR_SLOTS[room.id];
+    if (spec) {
+      const ordered = orderStairsToMeasuredSlots(
+        probe, st, floors, templates, solved.combo, tw, care, solved.sections, spec,
+        candidate => Uint8Array.from(buildBytes(st, solved.combo, candidate)));
+      if (!ordered) throw new Error(`Room 0x${room.id.toString(16)}: no stair configuration satisfies the measured slots`);
+      solved.sections = ordered.sections;
+      solved.mism = ordered.mism;
+    }
     streams.set(room.id, Buffer.from(buildBytes(st, solved.combo, solved.sections)));
     residuals.set(room.id, solved.mism);
   }

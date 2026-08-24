@@ -171,3 +171,87 @@ int WasmProbeDrawDoor(int word, int upper) {
   memcpy(g_ram, g_probe_ram_backup, sizeof(g_ram));
   return (int)g_probe_cells;
 }
+
+/** Staging area for a whole candidate stream, and the attribute table it produces. */
+enum { kMaxStreamBytes = 2048 };
+static uint8 g_probe_stream[kMaxStreamBytes];
+static uint8 g_probe_attrs[0x2000];
+
+EMSCRIPTEN_KEEPALIVE
+int WasmProbeStreamBuffer(void) { return (int)g_probe_stream; }
+
+/**
+ * Draw a whole candidate stream as a room and report the attribute table it derives.
+ *
+ * A staircase's destination slot is decided by the ORDER stair objects register across the
+ * engine's many stair buckets — a cascade a solver should never re-derive. So the solver
+ * stages a candidate stream here, the engine draws it exactly the way it draws a real room
+ * (floor pass, layout template, three object sections), runs its own attribute passes, and
+ * the solver reads the slot attribute each staircase actually received.
+ */
+EMSCRIPTEN_KEEPALIVE
+int WasmProbeStreamAttrs(void) {
+  memcpy(g_probe_ram_backup, g_ram, sizeof(g_ram));
+
+  // The registration state a real room load resets before drawing.
+  dung_num_inter_room_upnorth_stairs = 0;
+  dung_num_inter_room_southdown_stairs = 0;
+  dung_num_inroom_upnorth_stairs = 0;
+  dung_num_inroom_southdown_stairs = 0;
+  dung_num_interpseudo_upnorth_stairs = 0;
+  dung_num_inroom_upnorth_stairs_water = 0;
+  dung_num_activated_water_ladders = 0;
+  dung_num_water_ladders = 0;
+  dung_some_stairs_unk4 = 0;
+  dung_num_stairs_1 = 0;
+  dung_num_stairs_2 = 0;
+  dung_num_stairs_wet = 0;
+  dung_num_inroom_upsouth_stairs_water = 0;
+  dung_num_wall_upnorth_spiral_stairs = 0;
+  dung_num_wall_downnorth_spiral_stairs = 0;
+  dung_num_wall_upnorth_spiral_stairs_2 = 0;
+  dung_num_wall_downnorth_spiral_stairs_2 = 0;
+  dung_num_inter_room_upnorth_straight_stairs = 0;
+  dung_num_inter_room_upsouth_straight_stairs = 0;
+  dung_num_inter_room_downnorth_straight_stairs = 0;
+  dung_num_inter_room_downsouth_straight_stairs = 0;
+  dung_num_star_shaped_switches = 0;
+  dung_misc_objs_index = 0;
+  dung_index_of_torches = 0;
+  dung_num_chests_x2 = 0;
+  dung_num_bigkey_locks_x2 = 0;
+  dung_cur_door_idx = 0;
+  for (int i = 0; i < 16; i++) {
+    dung_door_tilemap_address[i] = 0;
+    door_type_and_slot[i] = 0;
+    dung_door_direction[i] = 0;
+    dung_object_pos_in_objdata[i] = 0;
+    dung_object_tilemap_pos[i] = 0;
+  }
+
+  // The same draw the engine performs on a real room: floor, template, then the three object
+  // sections, each to the layer the working streams already draw correctly with in-game.
+  const uint8 *stream = g_probe_stream;
+  dung_load_ptr_offs = 0;
+  RoomDraw_DrawFloors(stream);
+  uint16 old_offs = dung_load_ptr_offs;
+  dung_layout_and_starting_quadrant = stream[dung_load_ptr_offs];
+  dung_load_ptr_offs = 0;
+  RoomDraw_DrawAllObjects(GetDefaultRoomLayout(dung_layout_and_starting_quadrant >> 2));
+  dung_load_ptr_offs = old_offs + 1;
+  SelectLayer(0);
+  RoomDraw_DrawAllObjects(stream);
+  dung_load_ptr_offs += 2;
+  SelectLayer(1);
+  RoomDraw_DrawAllObjects(stream);
+  dung_load_ptr_offs += 2;
+  SelectLayer(0);
+  RoomDraw_DrawAllObjects(stream);
+
+  Dungeon_LoadBasicAttribute_full(0x1000);
+  Dungeon_LoadObjectAttribute();
+
+  memcpy(g_probe_attrs, dung_bg2_attr_table, sizeof(g_probe_attrs));
+  memcpy(g_ram, g_probe_ram_backup, sizeof(g_ram));
+  return (int)g_probe_attrs;
+}
