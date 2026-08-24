@@ -58,6 +58,15 @@ const uint8 *GbaAlttp_GetRoomHeader(uint16 room) {
   return index < 0 ? NULL : FindIndexInMemblk(GbaAlttpAsset(kGbaAssetRoomHeaders), index).ptr;
 }
 
+/**
+ * The doors that REGISTER, as opposed to the doors that draw.
+ *
+ * The room stream carries every recovered door record, because their art is part of the baked
+ * map; this table is the subset whose destinations were verified to stay inside the dungeon,
+ * and it is what the engine's attribute pass reads. A drawn-but-unregistered door stays
+ * sealed. Verified against original hardware room by room; when a sealed door turns out to
+ * work on the cartridge, it moves into this list as data.
+ */
 const uint16 *GbaAlttp_GetRoomDoors(uint16 room) {
   int index = GbaAlttpFindRoom(room);
   if (index < 0)

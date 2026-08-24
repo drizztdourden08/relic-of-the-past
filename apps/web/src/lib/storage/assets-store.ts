@@ -25,11 +25,29 @@ type ExtractResult = { success: boolean; error?: string; failures?: { id: AssetS
 
 const files = () => getPlatform().files;
 
-const runExtraction = (
+/**
+ * The engine's own build, handed to the worker so the second cartridge's room streams can be
+ * solved through it. Fetched from the same place the game loads it; when either file is
+ * unavailable the extraction still runs and the supplement reports its failure on its own.
+ */
+const fetchEngineFiles = async (): Promise<{ glueSource: string; wasmBinary: Uint8Array } | undefined> => {
+  try {
+    const [glue, wasm] = await Promise.all([fetch('./wasm/zelda3.js'), fetch('./wasm/zelda3.wasm')]);
+    if (!glue.ok || !wasm.ok) return undefined;
+    return { glueSource: await glue.text(), wasmBinary: new Uint8Array(await wasm.arrayBuffer()) };
+  } catch {
+    return undefined;
+  }
+};
+
+const runExtraction = async (
   romBytes: Uint8Array,
   supplementRoms: Partial<Record<AssetSourceId, Uint8Array>>,
   languages: LanguageInput[],
-): Promise<AssetsResult> => runOnWorker<AssetsResult>({ op: 'assets', romBytes, supplementRoms, languages });
+): Promise<AssetsResult> => {
+  const engine = supplementRoms['gba-alttp'] ? await fetchEngineFiles() : undefined;
+  return runOnWorker<AssetsResult>({ op: 'assets', romBytes, supplementRoms, languages, engine });
+};
 
 const checkAssets = (romFile: string): Promise<boolean> => assets.check(files(), romFile);
 

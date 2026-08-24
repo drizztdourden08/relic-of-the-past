@@ -13,6 +13,14 @@ import type { AssetSourceId } from './source-ids';
 interface AlttpAssetSources {
   snes: RomData;
   gbaAlttp?: GbaRomReader;
+  /**
+   * The per-room object streams solved from the GBA cartridge's baked maps. Solving needs a
+   * live engine instance, so the caller performs it (against the freshly-compiled base) and
+   * hands the result in; the compile itself stays synchronous and pure.
+   */
+  gbaStreams?: ReadonlyMap<number, Buffer>;
+  /** Why solving the streams failed, when it was attempted and did not produce a map. */
+  gbaStreamsError?: string;
 }
 
 type SourceOutcome =

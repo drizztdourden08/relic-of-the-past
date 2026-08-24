@@ -6,7 +6,6 @@ import type { RomData } from './rom/rom-types';
 import { compressStrings } from './text/dialogue-encoder';
 import { EXTRA_DUNGEON_PALINFO } from './extensions/second-cartridge-palette';
 import { doorListFor } from './extensions/second-cartridge-doors';
-import { roomLayoutFor } from './extensions/second-cartridge-layouts';
 import {
   AUX_TILE_THEME,
   GBA_ALTTP_ASSET_MANIFEST,
@@ -21,12 +20,6 @@ import {
   extractPalaceSnes4bppTiles,
   extractPalaceSpritePalettes,
 } from './sources/gba-alttp';
-
-const wordsToBuffer = (words: Uint16Array): Buffer => {
-  const result = Buffer.alloc(words.length * 2);
-  for (let i = 0; i < words.length; i++) result.writeUInt16LE(words[i], i * 2);
-  return result;
-};
 
 /**
  * Entity types the base engine has a handler for. The port added four of its own beyond this
@@ -50,28 +43,11 @@ const serializeSecretList = (room: DungeonRoomRecord): Buffer => Buffer.concat([
   Buffer.from([0xff, 0xff]),
 ]);
 
-const layerBuffers = (rooms: readonly DungeonRoomRecord[], select: (layer: NativeDungeonLayer) => Buffer): Buffer[] => {
-  const result: Buffer[] = [];
-  for (const room of rooms) for (const layer of room.layers) result.push(select(layer));
-  return result;
-};
-
 const uint32Buffer = (values: readonly number[]): Buffer => {
   const result = Buffer.alloc(values.length * 4);
   values.forEach((value, index) => result.writeUInt32LE(value, index * 4));
   return result;
 };
-
-const INTERACTION_KIND_IDS = {
-  'deep-water': 1,
-  'shallow-water': 2,
-  pit: 3,
-  stair: 4,
-  'conveyor-up': 5,
-  'conveyor-down': 6,
-  'conveyor-left': 7,
-  'conveyor-right': 8,
-} as const;
 
 /**
  * The room header the engine reads, with the theme byte replaced.
@@ -135,7 +111,15 @@ const nativeHeaderBytes = (room: DungeonRoomRecord, rooms: ReadonlySet<number>):
   return bytes;
 };
 
-const compileGbaAlttpSupplement = (rom: GbaRomReader, snes: RomData): Buffer => {
+/**
+ * `streams` is the per-room object stream recovered by the stream solver — the engine's own
+ * room format, solved from the cartridge's baked maps through the engine itself. It is an
+ * input rather than computed here because solving needs a live engine instance, which the
+ * caller hosts; this compile stays a pure synchronous function of its inputs.
+ */
+const compileGbaAlttpSupplement = (
+  rom: GbaRomReader, snes: RomData, streams: ReadonlyMap<number, Buffer>,
+): Buffer => {
   const source = new GbaAlttpDungeonSource(rom);
   const rooms = source.palaceRooms();
   const paletteIds = [...new Set(rooms.map(room => room.header.palette))].sort((a, b) => a - b);
@@ -170,18 +154,6 @@ const compileGbaAlttpSupplement = (rom: GbaRomReader, snes: RomData): Buffer => 
   const builders: Record<string, () => void> = {
     kGbaPalaceRoomIds: () => assets.addUint16('kGbaPalaceRoomIds', rooms.map(room => room.id)),
     kGbaPalaceRoomHeaders: () => assets.addPacked('kGbaPalaceRoomHeaders', rooms.map(room => nativeHeaderBytes(room, roomIds))),
-    kGbaPalaceRoomLayersSnes: () => assets.addPacked('kGbaPalaceRoomLayersSnes', layerBuffers(rooms, layer => wordsToBuffer(layer.snesWords))),
-    kGbaPalaceRoomCollision: () => assets.addPacked('kGbaPalaceRoomCollision', layerBuffers(rooms, layer => Buffer.from(layer.collision))),
-    kGbaPalaceRoomInteractions: () => assets.addPacked('kGbaPalaceRoomInteractions', rooms.map(room => Buffer.concat([
-      ...source.roomInteractions(room).map(cell => Buffer.from([
-        cell.layer,
-        cell.x,
-        cell.y,
-        cell.attribute,
-        INTERACTION_KIND_IDS[cell.kind],
-      ])),
-      Buffer.from([0xff]),
-    ]))),
     kGbaPalaceRoomEntities: () => assets.addPacked('kGbaPalaceRoomEntities', rooms.map(serializeEntityList)),
     kGbaPalaceRoomSecrets: () => assets.addPacked('kGbaPalaceRoomSecrets', rooms.map(serializeSecretList)),
     kGbaPalaceBgGfxSnes4bpp: () => assets.addUint8('kGbaPalaceBgGfxSnes4bpp', [...bgTiles]),
@@ -208,8 +180,11 @@ const compileGbaAlttpSupplement = (rom: GbaRomReader, snes: RomData): Buffer => 
     kGbaAlttpEntityHandlers: () => assets.addUint8('kGbaAlttpEntityHandlers', [...uint32Buffer(handlers.map(handler => handler.thumbAddress))]),
     kGbaAlttpRoomTagHandlerTags: () => assets.addUint8('kGbaAlttpRoomTagHandlerTags', roomTagHandlers.map(handler => handler.tag)),
     kGbaPalaceRoomDoors: () => assets.addPacked('kGbaPalaceRoomDoors', rooms.map(room => doorListFor(room.id))),
-    kGbaPalaceRoomStairs: () => assets.addPacked('kGbaPalaceRoomStairs', rooms.map(() => Buffer.alloc(1))),
-    kGbaPalaceRoomLayouts: () => assets.addPacked('kGbaPalaceRoomLayouts', rooms.map(room => roomLayoutFor(room.id))),
+    kGbaPalaceRoomLayouts: () => assets.addPacked('kGbaPalaceRoomLayouts', rooms.map(room => {
+      const stream = streams.get(room.id);
+      if (!stream || stream.length <= 2) throw new Error(`No solved stream for room 0x${room.id.toString(16)}`);
+      return stream;
+    })),
     kGbaAlttpRoomTagHandlers: () => assets.addUint8('kGbaAlttpRoomTagHandlers', [...uint32Buffer(roomTagHandlers.map(handler => handler.thumbAddress))]),
   };
 

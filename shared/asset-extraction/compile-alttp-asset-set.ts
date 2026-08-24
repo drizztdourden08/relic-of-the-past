@@ -18,15 +18,34 @@ import type { AlttpAssetSources, CompiledAlttpAssetSet, SourceOutcome } from './
 
 const reasonOf = (error: unknown): string => (error instanceof Error ? error.message : String(error));
 
-const compileAlttpAssetSet = (
+/**
+ * Solves the GBA rooms' object streams against the freshly-compiled base container. Provided
+ * by the caller because it needs a live engine instance, which only the caller can host —
+ * the extraction worker fetches the engine build, a test reads it from disk.
+ */
+type SolveStreams = (base: Buffer) => Promise<ReadonlyMap<number, Buffer>>;
+
+const compileAlttpAssetSet = async (
   sources: AlttpAssetSources,
   options: CompileOptions = {},
-): CompiledAlttpAssetSet => {
+  solveStreams?: SolveStreams,
+): Promise<CompiledAlttpAssetSet> => {
   const base = compileResources(sources.snes, options);
+
+  const resolved = { ...sources };
+  if (resolved.gbaAlttp && !resolved.gbaStreams && solveStreams) {
+    try {
+      resolved.gbaStreams = await solveStreams(base);
+    } catch (error) {
+      // Solving is part of the optional source: its failure surfaces as that source's
+      // failure below, with the real reason, never as a failed base compile.
+      resolved.gbaStreamsError = reasonOf(error);
+    }
+  }
 
   const supplements = OPTIONAL_SOURCES.flatMap((source): SourceOutcome[] => {
     try {
-      const container = source.compile(sources);
+      const container = source.compile(resolved);
       return container ? [{ id: source.id, ok: true, container }] : [];
     } catch (error) {
       return [{ id: source.id, ok: false, reason: reasonOf(error) }];
@@ -37,4 +56,5 @@ const compileAlttpAssetSet = (
 };
 
 export { compileAlttpAssetSet };
+export type { SolveStreams };
 export type { AlttpAssetSources, CompiledAlttpAssetSet };

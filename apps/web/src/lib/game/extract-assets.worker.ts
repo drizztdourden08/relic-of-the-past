@@ -10,12 +10,16 @@ import { compileAlttpAssetSet } from '@shared/asset-extraction/compile-alttp-ass
 import { buildPackedEntry, extractLangEntry } from '@shared/asset-extraction/text/build-language-entry';
 import { dialogueTexts } from '@shared/asset-extraction/text/parse-dialogue-text';
 import { extractSpriteBuffers, type SpriteDef } from '@shared/asset-extraction/item-sprites/extract-items';
+import { GbaAlttpDungeonSource } from '@shared/asset-extraction/sources/gba-alttp';
+import { solveGbaRoomStreams } from '@shared/asset-extraction/sources/gba-alttp/stream-solver';
 import type { AssetSourceId } from '@shared/asset-extraction/sources/source-ids';
+import type { EngineBundle } from '@shared/asset-extraction/sources/gba-alttp/stream-solver/probe.type';
 
 interface LangInput { code: string; dialogueText: string; fontData: Uint8Array; fontWidth: Uint8Array }
 type SupplementRoms = Partial<Record<AssetSourceId, Uint8Array>>;
+interface EngineFiles { glueSource: string; wasmBinary: Uint8Array }
 type Req =
-  | { op: 'assets'; romBytes: Uint8Array; supplementRoms?: SupplementRoms; languages: LangInput[] }
+  | { op: 'assets'; romBytes: Uint8Array; supplementRoms?: SupplementRoms; languages: LangInput[]; engine?: EngineFiles }
   | { op: 'language'; romBytes: Uint8Array; code: string }
   | { op: 'sprites'; romBytes: Uint8Array; defs: SpriteDef[] };
 
@@ -34,7 +38,9 @@ const ctx = self as unknown as {
 // This is the ONLY place the asset blob is compiled. An Electron-main copy used to exist
 // alongside it and drifted — it learned about the second cartridge while this one, the path
 // the app actually runs, did not. Keep it that way: one compile, every platform.
-const runAssets = (romBytes: Uint8Array, supplementRoms: SupplementRoms, languages: LangInput[]): AssetsResult => {
+const runAssets = async (
+  romBytes: Uint8Array, supplementRoms: SupplementRoms, languages: LangInput[], engine?: EngineFiles,
+): Promise<AssetsResult> => {
   const extraLanguages = languages.map((l) => buildPackedEntry({
     code: l.code,
     texts: dialogueTexts(l.dialogueText),
@@ -44,10 +50,19 @@ const runAssets = (romBytes: Uint8Array, supplementRoms: SupplementRoms, languag
   }));
 
   const gbaBytes = supplementRoms['gba-alttp'];
-  const set = compileAlttpAssetSet({
+  const gbaRom = gbaBytes ? loadGbaAlttpRomFromBuffer(Buffer.from(gbaBytes)) : undefined;
+  // Solving the second cartridge's room streams needs a live engine instance; the renderer
+  // passed the engine build in, and the solve runs here against the fresh base container.
+  const bundle: EngineBundle | undefined = engine
+    ? { glueSource: engine.glueSource, wasmBinary: engine.wasmBinary }
+    : undefined;
+  const set = await compileAlttpAssetSet({
     snes: loadRomFromBuffer(Buffer.from(romBytes)),
-    gbaAlttp: gbaBytes ? loadGbaAlttpRomFromBuffer(Buffer.from(gbaBytes)) : undefined,
-  }, { extraLanguages });
+    gbaAlttp: gbaRom,
+  }, { extraLanguages }, gbaRom && bundle
+    ? (base) => solveGbaRoomStreams(bundle, base, new GbaAlttpDungeonSource(gbaRom).palaceRooms())
+        .then(solved => solved.streams)
+    : undefined);
 
   return {
     base: new Uint8Array(set.base),
@@ -79,13 +94,12 @@ const runSprites = (romBytes: Uint8Array, defs: SpriteDef[]) =>
   extractSpriteBuffers(loadRomFromBuffer(Buffer.from(romBytes)), defs);
 
 ctx.onmessage = (e) => {
-  try {
+  const respond = async (): Promise<unknown> => {
     const req = e.data;
-    const result = req.op === 'assets' ? runAssets(req.romBytes, req.supplementRoms ?? {}, req.languages)
-      : req.op === 'language' ? runLanguage(req.romBytes, req.code)
-        : runSprites(req.romBytes, req.defs);
-    ctx.postMessage({ ok: true, result });
-  } catch (err) {
-    ctx.postMessage({ ok: false, error: err instanceof Error ? err.message : String(err) });
-  }
+    if (req.op === 'assets') return runAssets(req.romBytes, req.supplementRoms ?? {}, req.languages, req.engine);
+    return req.op === 'language' ? runLanguage(req.romBytes, req.code) : runSprites(req.romBytes, req.defs);
+  };
+  respond()
+    .then(result => ctx.postMessage({ ok: true, result }))
+    .catch((err: unknown) => ctx.postMessage({ ok: false, error: err instanceof Error ? err.message : String(err) }));
 };

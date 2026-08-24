@@ -11,9 +11,6 @@
 enum {
   kGbaAssetRoomIds = 0,  // kGbaPalaceRoomIds — Native room id per palace room, in room order.
   kGbaAssetRoomHeaders,  // kGbaPalaceRoomHeaders — Raw room header bytes per palace room.
-  kGbaAssetRoomLayersSnes,  // kGbaPalaceRoomLayersSnes — BG1/BG2/BG3 tilemap words per room, translated to SNES layout.
-  kGbaAssetRoomCollision,  // kGbaPalaceRoomCollision — Per-layer collision attribute bytes per room.
-  kGbaAssetRoomInteractions,  // kGbaPalaceRoomInteractions — Per-room interactive cell list (water, pits, stairs, conveyors).
   kGbaAssetRoomEntities,  // kGbaPalaceRoomEntities — Per-room native entity spawn list, sentinel-terminated.
   kGbaAssetRoomSecrets,  // kGbaPalaceRoomSecrets — Per-room native secret/item spawn list, sentinel-terminated.
   kGbaAssetBgGfxSnes4bpp,  // kGbaPalaceBgGfxSnes4bpp — Background tile graphics, converted to SNES planar 4bpp.
@@ -35,7 +32,6 @@ enum {
   kGbaAssetRoomTagHandlerTags,  // kGbaAlttpRoomTagHandlerTags — Room tag byte per entry in the room-tag handler table.
   kGbaAssetRoomTagHandlers,  // kGbaAlttpRoomTagHandlers — Room-tag handler THUMB entry-point addresses, packed as uint32.
   kGbaAssetRoomDoors,  // kGbaPalaceRoomDoors — Per-room native door records, sentinel-terminated.
-  kGbaAssetRoomStairs,  // kGbaPalaceRoomStairs — Per-room staircase bands: count, then row, column, width and destination slot each.
   kGbaAssetRoomLayouts,  // kGbaPalaceRoomLayouts — Per-room object stream in the native room format: floor byte, layout byte, then object and door sections.
   kGbaAlttpAssetCount,
 };

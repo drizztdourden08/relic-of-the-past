@@ -28,9 +28,6 @@ interface GbaAlttpAssetManifestEntry {
 const GBA_ALTTP_ASSET_MANIFEST: readonly GbaAlttpAssetManifestEntry[] = [
   { name: 'kGbaPalaceRoomIds', description: 'Native room id per palace room, in room order.' },
   { name: 'kGbaPalaceRoomHeaders', description: 'Raw room header bytes per palace room.' },
-  { name: 'kGbaPalaceRoomLayersSnes', description: 'BG1/BG2/BG3 tilemap words per room, translated to SNES layout.' },
-  { name: 'kGbaPalaceRoomCollision', description: 'Per-layer collision attribute bytes per room.' },
-  { name: 'kGbaPalaceRoomInteractions', description: 'Per-room interactive cell list (water, pits, stairs, conveyors).' },
   { name: 'kGbaPalaceRoomEntities', description: 'Per-room native entity spawn list, sentinel-terminated.' },
   { name: 'kGbaPalaceRoomSecrets', description: 'Per-room native secret/item spawn list, sentinel-terminated.' },
   { name: 'kGbaPalaceBgGfxSnes4bpp', description: 'Background tile graphics, converted to SNES planar 4bpp.' },
@@ -52,7 +49,6 @@ const GBA_ALTTP_ASSET_MANIFEST: readonly GbaAlttpAssetManifestEntry[] = [
   { name: 'kGbaAlttpRoomTagHandlerTags', description: 'Room tag byte per entry in the room-tag handler table.' },
   { name: 'kGbaAlttpRoomTagHandlers', description: 'Room-tag handler THUMB entry-point addresses, packed as uint32.' },
   { name: 'kGbaPalaceRoomDoors', description: 'Per-room native door records, sentinel-terminated.' },
-  { name: 'kGbaPalaceRoomStairs', description: 'Per-room staircase bands: count, then row, column, width and destination slot each.' },
   { name: 'kGbaPalaceRoomLayouts', description: 'Per-room object stream in the native room format: floor byte, layout byte, then object and door sections.' },
 ];
 
