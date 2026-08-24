@@ -17,7 +17,14 @@
   padding: 0 var(--space-2xs) var(--space-2xs);
 }
 
+/*
+ * The list is the QUERY CONTAINER for its rows. Every row carries the same fixed
+ * fact columns, so whether there is room left for the line's own words is a
+ * property of the list's width and not of any one row — see
+ * `EntryCardCollapsed.css`.
+ */
 .dialogue-tab__scroll {
+  container: entry-list / inline-size;
   flex: 1;
   min-height: 0;
   overflow: auto;
@@ -29,5 +36,5 @@
 
 .dialogue-tab__hint {
   padding: var(--space-2xs) var(--space-xs);
-  color: var(--c-text-muted);
+  color: var(--c-text-dim);
 }

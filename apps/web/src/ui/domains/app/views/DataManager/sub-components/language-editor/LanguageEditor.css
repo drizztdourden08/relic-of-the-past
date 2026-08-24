@@ -13,6 +13,28 @@
   gap: var(--space-xs);
 }
 
+/*
+ * Selection is opted back IN for this whole pane, itself and every descendant.
+ *
+ * The app-wide reset turns selection off on the document root, and an ancestor
+ * that resolves to `none` re-resolves every `auto` descendant to `none` as well.
+ * Inside the typing surface the browser overrides that so a drag can select, but
+ * every element AROUND it still computes `none` — and an element that cannot be
+ * selected cannot START a selection either, so a press elsewhere in the pane did
+ * not collapse the one already in the text: the old highlight simply stayed
+ * painted. Measured: the whole ancestor chain from the editing host to `html`
+ * reported `none`, and a click on the pane's header left the selection
+ * uncollapsed.
+ *
+ * Naming both the element and its descendants is what makes it stick, and is the
+ * same fix the log panel carries for the same trap. It is done here rather than
+ * by relaxing the app-wide rule, which every other surface relies on.
+ */
+.language-editor,
+.language-editor * {
+  user-select: text;
+}
+
 .language-editor__head {
   display: flex;
   align-items: center;
@@ -22,7 +44,7 @@
 
 .language-editor__meta {
   font-family: var(--font-mono);
-  color: var(--c-text-muted);
+  color: var(--c-text-dim);
   margin-right: auto;
 }
 

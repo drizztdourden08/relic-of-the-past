@@ -12,6 +12,7 @@ import type { SetBakeInput } from '@shared/game/language';
 import { getPlatform } from '@app/platform/get-platform';
 import { runOnWorker } from './extraction-client';
 import { listRomsWithStatus } from './roms-store';
+import { markAssetsBaked } from '@app/stores/game-assets-store';
 
 const files = () => getPlatform().files;
 
@@ -32,6 +33,8 @@ const extractAssets = async (romFile: string): Promise<{ success: boolean; error
     const languages = await assets.readLanguageSets(files());
     const dat = await runExtraction(romBytes, languages);
     await assets.writeDat(files(), romFile, dat);
+    // Anything already running booted with the previous blob and is now behind.
+    markAssetsBaked();
     return { success: true };
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : String(err) };

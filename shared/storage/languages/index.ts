@@ -4,6 +4,7 @@ export { saveSet, writeSetFont, remove } from './write';
 export { createSet, duplicateSet } from './create';
 export { writePack } from './extract';
 export { migrateLegacySet } from './migrate';
+export { DEFAULT_STRUCTURE, SET_FORMAT } from './format-2';
 export { assertValidSetId } from './set-id';
 // Legacy extraction-payload view, still used by the read-only inspector UI.
 export { listPacks, readPack as getLanguage } from './pack';

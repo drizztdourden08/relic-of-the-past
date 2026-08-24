@@ -28,7 +28,7 @@
   gap: var(--space-sm);
   flex-wrap: wrap;
   font-family: var(--font-mono);
-  color: var(--c-text-muted);
+  color: var(--c-text-dim);
   font-variant-numeric: tabular-nums;
 }
 

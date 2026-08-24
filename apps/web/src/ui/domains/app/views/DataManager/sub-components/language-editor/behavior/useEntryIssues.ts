@@ -9,11 +9,15 @@
  * changed and reuses every other result untouched.
  *
  * Two things invalidate the whole cache rather than one entry — the set's base
- * language (a different alphabet) and the glossary key set (which references
+ * language (a different alphabet) and the reference key set (which references
  * resolve). Both are compared by a cheap signature.
+ *
+ * The keys come from the set's whole substitution list, not from its glossary
+ * alone: a menu name is now referenceable from a line, and validating against
+ * the glossary would report every such reference as missing.
  */
 import { useMemo, useRef } from 'react';
-import type { EntryIssue, LanguageSet, Token } from '@shared/game/language';
+import type { EntryIssue, GlossaryTerm, LanguageSet, Token } from '@shared/game/language';
 import { validateEntry } from '@shared/game/language';
 import { kLanguages } from '@shared/asset-extraction/text/data/language-data';
 import type { EntryIssueMap } from '../language-editor.type';
@@ -22,18 +26,14 @@ type CacheRow = { tokens: Token[]; issues: EntryIssue[] };
 
 const NO_ISSUES: EntryIssueMap = {};
 
-const useEntryIssues = (set: LanguageSet | null): EntryIssueMap => {
+const useEntryIssues = (set: LanguageSet | null, terms: GlossaryTerm[]): EntryIssueMap => {
   const cache = useRef<Map<number, CacheRow>>(new Map());
   const signature = useRef<string>('');
 
-  const glossary = set?.glossary;
   const base = set?.base;
   const dialogue = set?.dialogue;
 
-  const glossaryKeys = useMemo(
-    () => new Set((glossary ?? []).map((term) => term.key)),
-    [glossary],
-  );
+  const refKeys = useMemo(() => new Set(terms.map((term) => term.key)), [terms]);
 
   // The validator reads its alphabet/dictionary from the extraction language
   // table, resolved through the set's declared base language code.
@@ -42,7 +42,7 @@ const useEntryIssues = (set: LanguageSet | null): EntryIssueMap => {
   return useMemo(() => {
     if (!dialogue || !config) return NO_ISSUES;
 
-    const next = `${base ?? ''}|${[...glossaryKeys].sort().join('\u0000')}`;
+    const next = `${base ?? ''}|${[...refKeys].sort().join('\u0000')}`;
     if (next !== signature.current) {
       cache.current.clear();
       signature.current = next;
@@ -55,12 +55,12 @@ const useEntryIssues = (set: LanguageSet | null): EntryIssueMap => {
         issues[entry.id] = cached.issues;
         continue;
       }
-      const found = validateEntry(entry.tokens, config, glossaryKeys);
+      const found = validateEntry(entry.tokens, config, refKeys);
       cache.current.set(entry.id, { tokens: entry.tokens, issues: found });
       issues[entry.id] = found;
     }
     return issues;
-  }, [base, config, dialogue, glossaryKeys]);
+  }, [base, config, dialogue, refKeys]);
 };
 
 export { useEntryIssues };

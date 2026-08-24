@@ -1,32 +1,25 @@
 /* @layer renderer-components @kind style */
 
 /*
- * The icon row along the top of the editor card. It wraps rather than scrolls: a
- * translator with a narrow pane should still see every insert at once, and a
- * hidden button in a scroller is a button nobody finds.
+ * One row of equal icon buttons along the top of the editor card. It does not
+ * wrap: eight small buttons and three rules fit any pane the editor itself fits
+ * in, and a row that reflows moves a button out from under the pointer.
+ *
+ * `overflow: visible` is load-bearing — every card is anchored inside this row
+ * and would be clipped by anything else.
  */
 
 .editor-toolbar {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-xs);
-  padding: var(--space-xs);
-  border-bottom: var(--border-width-thin) solid var(--color-border-subtle);
-}
-
-/*
- * Clusters are separated by a rule rather than by a gap alone, so "pacing" and
- * "layout" stay legibly distinct once the row wraps.
- */
-.editor-toolbar__group {
-  display: flex;
-  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2xs);
+  padding: var(--space-2xs) var(--space-xs);
+  border-bottom: var(--border-width-thin) solid var(--color-border-subtle);
+  overflow: visible;
 }
 
-.editor-toolbar__group + .editor-toolbar__group {
-  padding-left: var(--space-xs);
-  border-left: var(--border-width-thin) solid var(--color-border-subtle);
+/* A hairline between groups: shorter than the row, so it reads as a pause. */
+.editor-toolbar__split {
+  height: var(--space-md);
+  margin: 0 var(--space-2xs);
 }

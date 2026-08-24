@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 /**
- * Pure derivations the editor view needs: which entries a search is showing,
- * and how many entries lean on each glossary term.
+ * Pure derivations the editor view needs: which entries a search is showing, and
+ * how many entries lean on each variable.
  */
 import type { DialogueEntry } from '@shared/game/language';
 import type { SearchHit } from '../language-editor.type';
@@ -23,18 +23,27 @@ const filterEntriesByHits = (
   return entries.filter((entry) => matched.has(entry.id));
 };
 
-/** How many entries reference each glossary key, for the term list's badges. */
-const countGlossaryRefs = (entries: DialogueEntry[]): Record<string, number> => {
+/**
+ * How many entries use each variable, for the list's own counts.
+ *
+ * BOTH token shapes count. A variable of ours is referenced (`ref`), while one
+ * the engine owns is a substitution code (`var`) — counting only the first would
+ * report the two commonest variables in any set as unused. An entry that names
+ * the same variable twice still counts once: the figure answers "how many lines
+ * would a rename touch".
+ */
+const countVariableUses = (entries: DialogueEntry[]): Record<string, number> => {
   const counts: Record<string, number> = {};
   for (const entry of entries) {
     const seen = new Set<string>();
     for (const token of entry.tokens) {
-      if (token.t !== 'ref' || seen.has(token.key)) continue;
-      seen.add(token.key);
-      counts[token.key] = (counts[token.key] ?? 0) + 1;
+      const key = token.t === 'ref' ? token.key : (token.t === 'var' ? token.name : null);
+      if (key === null || seen.has(key)) continue;
+      seen.add(key);
+      counts[key] = (counts[key] ?? 0) + 1;
     }
   }
   return counts;
 };
 
-export { countGlossaryRefs, filterEntriesByHits };
+export { countVariableUses, filterEntriesByHits };

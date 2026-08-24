@@ -10,15 +10,29 @@
  * desktop host and on the portable/browser host (where window.api is only a
  * boot-safe stub).
  */
-import { useCallback, useEffect, useRef, useState } from 'react';
-import type { GlossaryTerm, LanguageSet, Token } from '@shared/game/language';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type {
+  GlossaryTerm, LanguageSet, SetStructure, TextGroupId, Token, Variable,
+} from '@shared/game/language';
+import { mergeVariableMeta, variablesFromLegacy } from '@shared/game/language';
 import { getLanguageSet } from '@app/lib/storage/languages-store';
 import type { LanguageEditorState, NameEdit } from '../language-editor.type';
 import {
-  withEntryNote, withEntryTokens, withGlossaryTerm, withNameValue, withoutGlossaryTerm,
+  withEntryNote, withEntryTokens, withGlossaryTerm, withManyEntryTokens, withNameValue,
+  withStructure, withTextValue,
+  withoutGlossaryTerm,
 } from './language-set-edits';
+import { nameEditFor } from './variable-edits';
 import { useEntryIssues } from './useEntryIssues';
 import { useSetPersistence } from './useSetPersistence';
+
+const NO_VARIABLES: Variable[] = [];
+const NO_TERMS: GlossaryTerm[] = [];
+
+/** Every variable carrying literal text, as the walks that expand refs take it. */
+const literalTermsOf = (variables: Variable[]): GlossaryTerm[] => variables.flatMap(
+  (variable) => (variable.value === null ? [] : [{ key: variable.key, value: variable.value }]),
+);
 
 const useLanguageEditor = (id: string | null): LanguageEditorState => {
   const [set, setSet] = useState<LanguageSet | null>(null);
@@ -87,7 +101,58 @@ const useLanguageEditor = (id: string | null): LanguageEditorState => {
     apply((from) => withoutGlossaryTerm(from, key));
   }, [apply]);
 
-  const issues = useEntryIssues(set);
+  const setManyEntryTokens = useCallback((edits: { entryId: number; tokens: Token[] }[]) => {
+    apply((from) => withManyEntryTokens(from, edits));
+  }, [apply]);
+
+  const setStructureMode = useCallback((mode: SetStructure) => {
+    apply((from) => withStructure(from, mode));
+  }, [apply]);
+
+  const setTextValue = useCallback((group: TextGroupId, key: string, value: string) => {
+    apply((from) => withTextValue(from, group, key, value));
+  }, [apply]);
+
+  /*
+   * The stored pair, folded into the one list the UI edits. `mergeVariableMeta`
+   * carries over the fields the pair cannot hold (a label, a note on a menu
+   * name), exactly as the write path does, so what is shown here is what a save
+   * will persist.
+   */
+  const glossary = set?.glossary;
+  const names = set?.names;
+  const stored = set?.variables;
+  /*
+   * Keyed on the three fields it is built from, NOT on the set. Every dialogue
+   * edit produces a new set while leaving these three untouched, and a new
+   * variable list on each keystroke would invalidate the layout cache for the
+   * whole set — a few hundred entries re-measured per character typed.
+   */
+  const variables = useMemo(
+    () => (glossary === undefined || names === undefined
+      ? NO_VARIABLES
+      : mergeVariableMeta(variablesFromLegacy(glossary, names), stored)),
+    [glossary, names, stored],
+  );
+  const terms = useMemo(
+    () => (variables === NO_VARIABLES ? NO_TERMS : literalTermsOf(variables)),
+    [variables],
+  );
+
+  const setVariableValue = useCallback((variable: Variable, value: string) => {
+    if (variable.locked || variable.value === null) return;
+    if (variable.kind !== 'term') {
+      apply((from) => withNameValue(from, nameEditFor(variable.key, value)));
+      return;
+    }
+    const note = variable.note;
+    const term: GlossaryTerm = note === undefined
+      ? { key: variable.key, value }
+      : { key: variable.key, value, note };
+    apply((from) => withGlossaryTerm(from, term));
+  }, [apply]);
+
+  const issues = useEntryIssues(set, terms);
 
   return {
     set,
@@ -97,9 +162,15 @@ const useLanguageEditor = (id: string | null): LanguageEditorState => {
     saving,
     saveError,
     issues,
+    variables,
+    terms,
     setEntryTokens,
     setEntryNote,
     setNameValue,
+    setVariableValue,
+    setManyEntryTokens,
+    setStructureMode,
+    setTextValue,
     upsertGlossaryTerm,
     removeGlossaryTerm,
     saveNow,

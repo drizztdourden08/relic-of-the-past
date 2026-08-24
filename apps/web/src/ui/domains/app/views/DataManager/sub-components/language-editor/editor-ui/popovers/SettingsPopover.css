@@ -1,0 +1,27 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * One column of label-and-value rows, then the structure chooser under a rule.
+ * The label sits above its list rather than beside it: the card is narrow, and a
+ * two-column row would squeeze the values into something unreadable.
+ */
+
+.settings-popover__row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.settings-popover__row-label {
+  color: var(--color-text-secondary);
+}
+
+.settings-popover__row-pick {
+  width: 100%;
+}
+
+/* What the chosen mode will do, in one line under the chooser. */
+.settings-popover__note {
+  color: var(--color-text-secondary);
+  line-height: var(--leading-normal);
+}

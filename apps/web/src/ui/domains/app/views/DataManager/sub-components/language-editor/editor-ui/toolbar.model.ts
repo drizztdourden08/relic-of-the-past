@@ -1,28 +1,25 @@
 /* @layer renderer-components @kind logic */
 /**
- * Turns the existing grouped insert model into toolbar buttons.
+ * The alphabet's picture characters, as the glyph popover offers them.
  *
- * `buildInsertGroups` already does the deciding — it reads the control-code
- * catalog and the language's own alphabet, drops anything the catalog refuses to
- * offer or marks dangerous, and works out which values the encoder can actually
- * bake. This file adds presentation only: a symbol per row, and a numeral where
- * one symbol serves several rows. No second list of codes is introduced.
+ * Which bracket names are characters rather than control codes is settled by
+ * `buildInsertGroups`, which reads the language's own alphabet and the
+ * control-code catalog. This file takes that answer's character cluster and
+ * presents it; no second list of names is introduced here.
  *
- * A row's id carries which family it came from (`code-Wait`, `glyph-Up`,
- * `glossary-term`), which is how the symbol is chosen without re-deriving it.
+ * A picture the alphabet spells as TWO adjacent entries is one character to an
+ * author, so the pair becomes ONE item: the opening half draws the whole picture
+ * and inserts both entries' tokens in order. Half a picture is something the
+ * encoder will happily bake and a player will read as nonsense.
  */
 import { buildInsertGroups } from '../sub-components/insert-menu.model';
-import { GLOSSARY_ICON, iconForCodeName } from './icon-for-token';
-import type { GlossaryTerm } from '@shared/game/language';
+import { isMergedSecond, mergedSecondOf } from '../editor/merged-glyph';
 import type { LanguageConfig } from '@shared/asset-extraction/text/data/language-data';
 import type { InsertOption } from '../sub-components/insert-menu.types';
-import type { ToolbarGroup, ToolbarItem } from './editor-ui.type';
+import type { ToolbarItem } from './editor-ui.type';
 
-const CODE_ID = /^code-(.+)$/;
-const GLYPH_ID = /^glyph-(.+)$/;
-
-/** The three line-start markers share a symbol; the row number separates them. */
-const BADGE_FOR_CODE: Record<string, string> = { 1: '1', 2: '2', 3: '3' };
+/** The cluster `buildInsertGroups` files the alphabet's own characters under. */
+const GLYPH_GROUP = 'icons';
 
 /**
  * A picture character is drawn as itself in the game face rather than as a
@@ -37,41 +34,44 @@ const glyphItem = (option: InsertOption): ToolbarItem => ({
   glyph: option.label,
   needsChoice: option.needsChoice,
   choices: option.choices,
-  make: option.make,
+  make: (choice) => [option.make(choice)],
 });
 
-const symbolItem = (option: InsertOption, code: string | null): ToolbarItem => ({
-  id: option.id,
-  label: option.label,
-  description: option.description,
-  icon: code ? iconForCodeName(code) : GLOSSARY_ICON,
-  badge: code ? BADGE_FOR_CODE[code] : undefined,
-  needsChoice: option.needsChoice,
-  choices: option.choices,
-  make: option.make,
-});
+/** `[1HeartL]` as the alphabet stores it, `1HeartL` as a token carries it. */
+const bareGlyph = (item: ToolbarItem): string => (item.glyph ?? '').replace(/^\[|\]$/g, '');
 
-const toolbarItem = (option: InsertOption): ToolbarItem => (
-  GLYPH_ID.test(option.id)
-    ? glyphItem(option)
-    : symbolItem(option, CODE_ID.exec(option.id)?.[1] ?? null)
-);
+/** The pair, as one item: the whole picture drawn, and both entries inserted. */
+const pairedWith = (item: ToolbarItem, tail: ToolbarItem): ToolbarItem => ({
+  ...item,
+  description: `${item.description}, spelled as a pair of entries and inserted as one`,
+  make: (choice) => [...item.make(choice), ...tail.make(choice)],
+});
 
 /**
- * An empty cluster is dropped rather than shown empty: a set with no glossary
- * terms, or a base language whose alphabet carries no picture characters, should
- * not leave a heading with nothing under it.
+ * The closing half of a two-entry picture gets no item of its own; the opening
+ * half's item calls that half's own maker straight after its own, so the token
+ * pair is built by the alphabet's makers rather than assembled here.
  */
-const buildToolbarGroups = (cfg: LanguageConfig, glossary: GlossaryTerm[]): ToolbarGroup[] => (
-  buildInsertGroups(cfg, glossary)
-    .map((group) => ({
-      id: group.id,
-      heading: group.heading,
-      items: group.options
-        .filter((option) => !option.needsChoice || option.choices.length > 0)
-        .map(toolbarItem),
-    }))
-    .filter((group) => group.items.length > 0)
-);
+const mergePairedGlyphs = (items: ToolbarItem[]): ToolbarItem[] => {
+  const byGlyph = new Map(items.map((item) => [bareGlyph(item), item]));
 
-export { buildToolbarGroups };
+  return items
+    .filter((item) => !isMergedSecond(bareGlyph(item)))
+    .map((item) => {
+      const second = mergedSecondOf(bareGlyph(item));
+      const tail = second === null ? undefined : byGlyph.get(second);
+      return tail === undefined ? item : pairedWith(item, tail);
+    });
+};
+
+/**
+ * The characters this language actually carries, as whole pictures. An alphabet
+ * with none of them returns an empty list, and the button that would open the
+ * popover is disabled rather than opening on nothing.
+ */
+const buildGlyphItems = (cfg: LanguageConfig): ToolbarItem[] => {
+  const group = buildInsertGroups(cfg, []).find((entry) => entry.id === GLYPH_GROUP);
+  return group === undefined ? [] : mergePairedGlyphs(group.options.map(glyphItem));
+};
+
+export { buildGlyphItems };

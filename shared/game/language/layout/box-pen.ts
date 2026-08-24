@@ -17,6 +17,19 @@
  *   arrives at the bottom) and parks the pen on the last row.
  * - A wait-for-button holds the box without clearing anything, which is why the
  *   next screen inherits whichever rows are still standing.
+ *
+ * TWO CONVENTIONS FOR A ROW JUMP, and they are not the same thing:
+ *
+ * - `blankOnJump: true` (the DEFAULT, and what `measureRows`/`splitScreens`
+ *   use) treats the landing row as empty. That is a MEASUREMENT convention, not
+ *   the engine: it is how a fresh run gets sized without an earlier run's
+ *   leftovers being charged to it, and every published width depends on it.
+ * - `blankOnJump: false` is the ENGINE's real behaviour. The pixel buffer is
+ *   cleared exactly once per message and no code path clears it again, so a row
+ *   marker blanks nothing at all — the row keeps standing, and a shorter
+ *   rewrite only overpaints its left part. Anything claiming to show what is on
+ *   screen (`blocks/inherited-rows.ts`) has to use this mode; anything reporting
+ *   a width must not.
  */
 import type { Token } from '../types';
 import type { GlyphMetrics, RowFit } from './types';
@@ -30,12 +43,23 @@ const kScrollCommand = 'Scroll';
 /** Holds the box until the player presses a button; clears nothing. */
 const kWaitCommand = 'Waitkey';
 
-/** One row buffer: the run currently drawn on it. */
-type BoxRow = {
+/** A run left standing on a row, with each glyph's left edge in pixels. */
+type Run = {
   glyphs: number[];
+  /** Left edge of the glyph at the same position, in pixels from the row start. */
+  offsets: number[];
   widthPx: number;
+};
+
+/** One row buffer: the run the pen is drawing, over whatever was there before. */
+type BoxRow = Run & {
   /** Something was written here, even if it turned out to be unmeasurable. */
   drawn: boolean;
+  /**
+   * What was standing when the pen last returned to this row's left edge, kept
+   * only in the faithful mode — `blankOnJump: true` wipes the row instead.
+   */
+  stale: Run | null;
 };
 
 /** The whole walk state: the visible box, plus every run it has closed. */
@@ -49,27 +73,60 @@ type Pen = {
   unmatched: string[];
   /** Count of visible changes, so a caller can tell "nothing happened" apart. */
   edits: number;
+  blankOnJump: boolean;
+};
+
+/** How a walk treats a row jump — see the two conventions in the header. */
+type PenOptions = {
+  /**
+   * Whether landing on a row wipes it. Defaults to true, the measurement
+   * convention; pass false for the engine's behaviour, where nothing is cleared.
+   */
+  blankOnJump?: boolean;
 };
 
 /** What a token did that a caller may need to react to. */
 type TokenEffect = 'none' | 'wait';
 
-const blankRow = (): BoxRow => ({ glyphs: [], widthPx: 0, drawn: false });
+const emptyRun = (): Run => ({ glyphs: [], offsets: [], widthPx: 0 });
 
-const createPen = (): Pen => ({
+const blankRow = (): BoxRow => ({ ...emptyRun(), drawn: false, stale: null });
+
+const createPen = (opts?: PenOptions): Pen => ({
   row: 1,
   slots: Array.from({ length: ROWS_PER_BOX }, blankRow),
   runs: [],
   unmatched: [],
   edits: 0,
+  blankOnJump: opts?.blankOnJump ?? true,
 });
 
-const asRowFit = (row: number, buf: BoxRow): RowFit => ({
+const asRowFit = (row: number, run: Run): RowFit => ({
   row,
-  glyphs: [...buf.glyphs],
-  widthPx: buf.widthPx,
-  overflow: buf.widthPx > ROW_WIDTH_PX,
+  glyphs: [...run.glyphs],
+  widthPx: run.widthPx,
+  overflow: run.widthPx > ROW_WIDTH_PX,
 });
+
+/**
+ * The row as the player sees it: the pen's own run, then the part of an earlier
+ * run it did not paint over. A glyph straddling the new run's right edge is half
+ * repainted, so it drops out of `glyphs` while its pixels still count toward
+ * `widthPx` — which is why a row's glyph widths need not add up to its width.
+ */
+const visibleRun = (buf: BoxRow): Run => {
+  const { stale } = buf;
+  if (stale === null) return buf;
+
+  const from = stale.offsets.findIndex(at => at >= buf.widthPx);
+  const kept = from < 0 ? stale.offsets.length : from;
+
+  return {
+    glyphs: [...buf.glyphs, ...stale.glyphs.slice(kept)],
+    offsets: [...buf.offsets, ...stale.offsets.slice(kept)],
+    widthPx: Math.max(buf.widthPx, stale.widthPx),
+  };
+};
 
 /**
  * Record the run the pen just finished. The row itself stays on screen — this
@@ -87,6 +144,7 @@ const drawGlyphs = (pen: Pen, glyphs: number[], metrics: GlyphMetrics): void => 
 
   for (const index of glyphs) {
     buf.glyphs.push(index);
+    buf.offsets.push(buf.widthPx);
     buf.widthPx += widthOf(index, metrics);
   }
 };
@@ -98,9 +156,16 @@ const writeText = (pen: Pen, text: string, metrics: GlyphMetrics): void => {
   drawGlyphs(pen, glyphs, metrics);
 };
 
+/** Back to a row's left edge with everything on it left standing. */
+const reopenRow = (buf: BoxRow): BoxRow => {
+  if (!buf.drawn && buf.stale === null) return buf;
+  return { ...emptyRun(), drawn: false, stale: visibleRun(buf) };
+};
+
 const jumpTo = (pen: Pen, row: number): void => {
   closeRun(pen);
-  pen.slots[row - 1] = blankRow();
+  const buf = pen.slots[row - 1];
+  pen.slots[row - 1] = pen.blankOnJump ? blankRow() : reopenRow(buf);
   pen.row = row;
   pen.edits += 1;
 };
@@ -114,7 +179,7 @@ const scroll = (pen: Pen): void => {
 
 /** The box as the player sees it right now, top row first. */
 const visibleRows = (pen: Pen): RowFit[] => pen.slots.flatMap(
-  (buf, at) => (buf.drawn ? [asRowFit(at + 1, buf)] : []),
+  (buf, at) => (buf.drawn || buf.stale !== null ? [asRowFit(at + 1, visibleRun(buf))] : []),
 );
 
 /**
@@ -172,4 +237,4 @@ const applyToken = (pen: Pen, token: Token, plan: LayoutPlan): TokenEffect => {
 };
 
 export { applyToken, closeRun, createPen, visibleRows };
-export type { Pen, TokenEffect };
+export type { Pen, PenOptions, TokenEffect };

@@ -85,6 +85,40 @@ type DialogueChoiceRecord = {
   outcomes: ChoiceOutcome[];
 };
 
+/**
+ * WHAT causes an entry to open — the concrete key the game core looks the entry
+ * up by, one variant per kind of key.
+ *
+ * - `actor`        a placed entity, keyed by its native type byte. `alsoTypes`
+ *                  carries the other candidates when several types can open the
+ *                  same entry (one shared handler, or two handlers that both
+ *                  name it); `actorId` is the dataset record for `spriteType`,
+ *                  or null when no record covers that type yet.
+ * - `follower`     the companion walking behind, keyed by its indicator value.
+ * - `place`        a readable marker, keyed by overworld area.
+ * - `room`         remote speech, keyed by indoor room.
+ * - `item`         a fresh pickup, keyed by the received-item value.
+ * - `engine`       opened by the core itself — a menu, a scripted sequence, or a
+ *                  game rule. `site` names the routine that opens it.
+ * - `cursor-frame` NOT prose: a caret-only overlay the prompt renderer swaps in.
+ */
+type TriggerSource =
+  | { by: 'actor'; spriteType: number; alsoTypes?: number[]; actorId: string | null }
+  | { by: 'follower'; followerId: number }
+  | { by: 'place'; areaId: number }
+  | { by: 'room'; roomId: number }
+  | { by: 'item'; itemId: number }
+  | { by: 'engine'; site: string }
+  | { by: 'cursor-frame' };
+
+/** One dataset row: a source, the entry it belongs to, and its evidence. */
+type TriggerSourceRow = TriggerSource & {
+  /** Entry index, 1..397 (see ./context.ts for the convention). */
+  id: number;
+  /** Where the evidence came from, e.g. 'sprite_main.c:5690'. */
+  source: string;
+};
+
 export type {
   DialogueTrigger,
   ChoiceOutcome,
@@ -93,4 +127,6 @@ export type {
   ContextTableGroup,
   ContextSiteGroup,
   DialogueChoiceRecord,
+  TriggerSource,
+  TriggerSourceRow,
 };

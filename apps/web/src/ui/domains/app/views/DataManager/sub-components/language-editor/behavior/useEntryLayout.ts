@@ -8,13 +8,27 @@
  * measured, which keeps a set of a few hundred lines cheap to scroll.
  */
 import { useCallback, useMemo, useRef } from 'react';
-import { measureRows, splitScreens } from '@shared/game/language';
-import type { DialogueEntry, GlossaryTerm, Token } from '@shared/game/language';
+import { measureRows, splitBlocks, splitLines, splitScreens } from '@shared/game/language';
+import type {
+  BlockDoc, DialogueEntry, DialogueLineView, GlossaryTerm, Token,
+} from '@shared/game/language';
 import type { GlyphMetrics, RowFit, ScreenFit } from '@shared/game/language/layout/types';
 
-type EntryLayout = { rows: RowFit[]; screens: ScreenFit[] };
+/**
+ * One entry, measured every way the interface reads it: as rows for the fit
+ * verdict, as screens for a box preview, and as the lines and BLOCKS the
+ * collapsed row counts and the editor groups by.
+ */
+type EntryLayout = {
+  rows: RowFit[];
+  screens: ScreenFit[];
+  lines: DialogueLineView[];
+  blocks: BlockDoc;
+};
 
-const EMPTY_LAYOUT: EntryLayout = { rows: [], screens: [] };
+const NO_BLOCKS: BlockDoc = { blocks: [] };
+
+const EMPTY_LAYOUT: EntryLayout = { rows: [], screens: [], lines: [], blocks: NO_BLOCKS };
 
 type LayoutLookup = {
   /** Layout for one entry, measured on first ask and reused after. */
@@ -40,9 +54,12 @@ const useEntryLayout = (metrics: GlyphMetrics | null, glossary: GlossaryTerm[]):
     if (!metrics) return EMPTY_LAYOUT;
     const hit = cache.current.get(tokens);
     if (hit) return hit;
+    const lines = splitLines(tokens, metrics, glossary);
     const measured: EntryLayout = {
       rows: measureRows(tokens, metrics, glossary),
       screens: splitScreens(tokens, metrics, glossary),
+      lines,
+      blocks: splitBlocks(lines),
     };
     cache.current.set(tokens, measured);
     return measured;

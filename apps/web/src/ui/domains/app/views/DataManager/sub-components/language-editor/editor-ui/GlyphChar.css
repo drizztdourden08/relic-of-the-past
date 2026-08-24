@@ -1,28 +1,52 @@
 /* @layer renderer-components @kind style */
 
 /*
- * A picture character occupies exactly one cell of the dialogue alphabet: eight
- * game pixels wide by sixteen tall. The size comes from the same geometry tokens
- * the line itself is set from, so a picture cannot be a fraction of a cell out of
+ * A picture character's ink box is one cell of the dialogue alphabet: eight game
+ * pixels wide by sixteen tall. The size comes from the same geometry tokens the
+ * line itself is set from, so a picture cannot be a fraction of a cell out of
  * step with the letters either side of it.
+ *
+ * The box it ADVANCES by is a separate number. The pack's width table charges
+ * each picture its own advance, exactly as it does a letter, so the cell takes
+ * `--glyph-advance` when the caller knows it and falls back to the full ink box
+ * when it does not. Ink is allowed to overflow that advance, the same trade the
+ * typed cells make: the engine emits the pixels and moves the pen by the table.
  *
  * This is the CSS size only. The canvas's backing store is sized in device pixels
  * when it is painted, which is what keeps the pixel art sharp on a scaled display
  * instead of being stretched up from a smaller bitmap.
  *
- * The cell is stated as two custom properties rather than as `width`/`height`
+ * The ink box is stated as two custom properties rather than as `width`/`height`
  * directly, so a view that sets the game face at its own size — the read-only
- * card does — overrides the cell and not the geometry that follows from it.
+ * card and the toolbar both do — overrides the box and not the geometry that
+ * follows from it.
  */
 
 .glyph-char {
   --glyph-cell-w: var(--game-advance);
   --glyph-cell-h: var(--game-line-h);
 
-  display: inline-block;
-  width: var(--glyph-cell-w);
+  display: inline-flex;
+  overflow: visible;
+  width: var(--glyph-advance, var(--glyph-cell-w));
   height: var(--glyph-cell-h);
   vertical-align: text-bottom;
+}
+
+/*
+ * Two alphabet entries spelling one picture: two ink boxes side by side in a
+ * single cell. Without a stated advance the cell is simply both boxes wide, which
+ * is what the toolbar and the legend want.
+ */
+.glyph-char--pair {
+  width: var(--glyph-advance, calc(var(--glyph-cell-w) * 2));
+}
+
+/* One half's pixels, at the ink box's own size whatever the cell advances by. */
+.glyph-char__ink {
+  flex: none;
+  width: var(--glyph-cell-w);
+  height: var(--glyph-cell-h);
 }
 
 /*

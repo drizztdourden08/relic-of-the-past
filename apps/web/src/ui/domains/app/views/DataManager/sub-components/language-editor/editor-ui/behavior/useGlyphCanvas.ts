@@ -16,9 +16,37 @@
  */
 import { useEffect, useRef, useState } from 'react';
 import type { RefObject } from 'react';
-import { paintGlyphCell } from '../paint-glyph-cell';
+import { measureStore, paintGlyphCell } from '../paint-glyph-cell';
 
 const ratioNow = (): number => window.devicePixelRatio || 1;
+
+type PaintJob = { canvas: HTMLCanvasElement; tiles: Uint8Array; glyph: number; ratio: number };
+
+/*
+ * Paints are BATCHED per animation frame: every cell mounted in one commit
+ * queues here, then the frame measures all of them before resizing any. A cell
+ * that measured and resized itself in its own effect forced a reflow per
+ * glyph — a three-row box is sixty reflows, which is what made opening the
+ * preview lag.
+ */
+let pending: PaintJob[] = [];
+let frame: number | null = null;
+
+const flushPaints = (): void => {
+  frame = null;
+  const jobs = pending;
+  pending = [];
+  const stores = jobs.map((job) => measureStore(job.canvas, job.ratio));
+  jobs.forEach((job, at) => {
+    const store = stores[at];
+    if (store !== null) paintGlyphCell(job.canvas, job.tiles, job.glyph, store);
+  });
+};
+
+const queuePaint = (job: PaintJob): void => {
+  pending.push(job);
+  if (frame === null) frame = window.requestAnimationFrame(flushPaints);
+};
 
 /**
  * `tiles` is the pack's glyph sheet and `glyph` the character to draw; either
@@ -35,7 +63,7 @@ const useGlyphCanvas = (
   useEffect(() => {
     const canvas = ref.current;
     if (canvas === null || tiles === null || glyph === null) return;
-    paintGlyphCell(canvas, tiles, glyph, ratio);
+    queuePaint({ canvas, tiles, glyph, ratio });
   }, [tiles, glyph, ratio]);
 
   useEffect(() => {

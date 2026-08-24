@@ -43,7 +43,12 @@ type ToolbarItem = {
   /** True when a value must be picked before anything can be inserted. */
   needsChoice: boolean;
   choices: InsertChoice[];
-  make: (choice: string | null) => Token;
+  /**
+   * The tokens this button adds, in order. Almost always one — a picture the
+   * alphabet spells as a PAIR of entries is inserted as both at once, because it
+   * is one character to the author and half of one is nonsense on screen.
+   */
+  make: (choice: string | null) => Token[];
 };
 
 /** One cluster of the toolbar, under the heading a translator reads. */
@@ -54,13 +59,4 @@ type ToolbarGroup = {
 };
 
 /** One row of the legend: a symbol this line actually uses, and what it does. */
-type LegendEntry = {
-  id: string;
-  icon: IconifyIcon | null;
-  /** Set instead of `icon` for a picture character, drawn in the game face. */
-  glyph?: string;
-  label: string;
-  description: string;
-};
-
-export type { GlyphFont, GlyphFontHandle, LegendEntry, ToolbarGroup, ToolbarItem };
+export type { GlyphFont, GlyphFontHandle, ToolbarGroup, ToolbarItem };

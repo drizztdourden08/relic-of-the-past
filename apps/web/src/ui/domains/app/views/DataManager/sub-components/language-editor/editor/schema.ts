@@ -15,9 +15,15 @@
  * pastes in as formatting either — an unknown mark has no type to parse into and
  * is dropped to plain text.
  */
+import { Extension } from '@tiptap/core';
 import { Document } from '@tiptap/extension-document';
 import { Text } from '@tiptap/extension-text';
 import { Placeholder } from '@tiptap/extension-placeholder';
+import { history } from '@tiptap/pm/history';
+import { AutoWrap } from './auto-wrap';
+import { Renumber } from './renumber';
+import { GutterRefresh } from './gutter-refresh';
+import { ChoiceLines } from './choice-lines';
 import { DialogueLine } from './line-paragraph';
 import { DialogueToken } from './token-node';
 import type { Extensions } from '@tiptap/core';
@@ -27,6 +33,16 @@ type DialogueSchemaOptions = {
   placeholder?: string;
 };
 
+/**
+ * Undo/redo. The framework's own history extension is not installed (no starter
+ * kit, no marks), so the ProseMirror plugin is wired directly — same engine,
+ * one dependency fewer.
+ */
+const EditHistory = Extension.create({
+  name: 'dialogueHistory',
+  addProseMirrorPlugins: () => [history()],
+});
+
 /** Paragraphs only, one or more — a line is the only block this format has. */
 const LineStackDocument = Document.extend({ content: 'paragraph+' });
 
@@ -35,6 +51,11 @@ const dialogueExtensions = (options?: DialogueSchemaOptions): Extensions => [
   DialogueLine,
   Text,
   DialogueToken,
+  EditHistory,
+  AutoWrap,
+  GutterRefresh,
+  ChoiceLines,
+  Renumber,
   Placeholder.configure({ placeholder: options?.placeholder ?? '' }),
 ];
 

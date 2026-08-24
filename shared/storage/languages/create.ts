@@ -38,7 +38,7 @@ const store = async (files: FileStore, set: LanguageSet, fromId: string): Promis
   return set;
 };
 
-/** A fresh custom set seeded from `base`: its dialogue, an empty glossary/name table. */
+/** A fresh custom set seeded from `base`: its dialogue, and no variables of its own. */
 const createSet = async (files: FileStore, params: NewSetParams): Promise<LanguageSet> => {
   const { id, name, base } = params;
   await assertFreeSetId(files, id);
@@ -46,6 +46,7 @@ const createSet = async (files: FileStore, params: NewSetParams): Promise<Langua
   return store(files, {
     id, name, base: source.base, origin: 'custom', version: 1,
     dialogue: clone(source.dialogue), glossary: [], names: emptyNameTable(),
+    structure: source.structure,
   }, base);
 };
 
@@ -53,10 +54,11 @@ const createSet = async (files: FileStore, params: NewSetParams): Promise<Langua
 const duplicateSet = async (files: FileStore, sourceId: string, id: string, name: string): Promise<LanguageSet> => {
   await assertFreeSetId(files, id);
   const source = await requireSet(files, sourceId);
-  const { base, version, author, dialogue, glossary, names } = source;
+  const { base, version, author, dialogue, glossary, names, variables, structure, text } = source;
   return store(files, {
     id, name, base, origin: 'custom', version, author,
     dialogue: clone(dialogue), glossary: clone(glossary), names: clone(names),
+    variables: variables && clone(variables), structure, text: text && clone(text),
   }, sourceId);
 };
 

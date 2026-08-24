@@ -1,51 +1,12 @@
 /* @layer renderer-components @kind style */
 
 /*
- * A toolbar button and the value list it may open. The wrapper is the anchor —
- * the picker positions against it — which is why the wrapper, not the button,
- * carries `position: relative`.
+ * A toolbar button and the card it may open. The wrapper is the anchor — the
+ * card positions against it — which is why the wrapper, not the button, carries
+ * `position: relative`.
  */
 
 .toolbar-button {
   position: relative;
   display: inline-flex;
-}
-
-/*
- * The numeral that separates three buttons sharing one symbol (the line-start
- * markers). Small, mono, and tucked against the icon so the pair reads as one
- * mark rather than as a badge count.
- */
-.toolbar-button__badge {
-  margin-left: var(--space-2xs);
-  color: var(--c-gold);
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
-}
-
-/* A picture character previews itself, so it is drawn in the game face. */
-.toolbar-button__glyph {
-  font-size: var(--text-sm);
-}
-
-.toolbar-button__tip {
-  display: block;
-  max-width: var(--panel-w-md);
-}
-
-.toolbar-button__tip-name {
-  color: var(--c-gold);
-  font-weight: var(--weight-semi);
-}
-
-/*
- * A picture-character button draws a real game cell, but here it stands in for an
- * icon, so it takes the icon's size rather than the text's. Keeping the cell's
- * 1:2 proportion is what stops it looking stretched.
- */
-.toolbar-button .glyph-char {
-  --glyph-cell-h: var(--text-lg);
-  --glyph-cell-w: calc(var(--text-lg) / 2);
 }

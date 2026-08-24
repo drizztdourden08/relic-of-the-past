@@ -8,6 +8,8 @@
  * edited and validated independently before a bake step recompiles it back
  * into the ROM's compressed dialogue format.
  */
+import type { TextOverrides } from './text/types';
+import type { Variable } from './variables/types';
 
 /**
  * One decoded unit of dialogue text. `cmd`/`break`/`var` cover the game's
@@ -68,13 +70,43 @@ type LanguageSetMeta = {
   author?: string;
 };
 
-/** A full editable language set: identity plus its dialogue/glossary/name content. */
+/**
+ * How a set lays its dialogue out for editing: `continuous` treats an entry as
+ * flowing text and derives the box breaks, `block` keeps the author's own
+ * breaks, `off` disables the assistance entirely.
+ */
+type SetStructure = 'continuous' | 'block' | 'off';
+
+/**
+ * A full editable language set: identity, its dialogue, and the one list of
+ * everything that can vary in shown text.
+ *
+ * `glossary` and `names` are the PROJECTION of `variables` through
+ * `legacyFromVariables` — the shape every current reader expects (the enhanced
+ * pause menu, the bake step, the editor's tables), kept so none of them has to
+ * change. The storage layer populates all three on read and rebuilds
+ * `variables` from the pair on write, so the two views cannot drift.
+ *
+ * `variables` and `structure` are optional in the TYPE only, because a set
+ * assembled in memory (a migration, a fixture) need not carry them; every set
+ * the storage layer hands out has both.
+ *
+ * `text` is the translator's overrides for everything the game shows that is
+ * not a dialogue line. It holds ONLY what was actually retyped — which slots
+ * exist is decided by the catalog (./text), rebuilt from the shipped data — so
+ * an absent field means "nothing translated yet", never "nothing to translate".
+ * Additive: a set written before it existed reads back unchanged.
+ */
 type LanguageSet = LanguageSetMeta & {
   dialogue: DialogueEntry[];
   glossary: GlossaryTerm[];
   names: NameTable;
+  variables?: Variable[];
+  structure?: SetStructure;
+  text?: TextOverrides;
 };
 
 export type {
-  DialogueEntry, GlossaryTerm, LanguageSet, LanguageSetMeta, NameTable, PauseLabelKey, Token,
+  DialogueEntry, GlossaryTerm, LanguageSet, LanguageSetMeta, NameTable, PauseLabelKey,
+  SetStructure, Token,
 };

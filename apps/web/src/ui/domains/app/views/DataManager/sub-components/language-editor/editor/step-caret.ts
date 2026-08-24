@@ -18,8 +18,15 @@
  * selection changes — Shift with an arrow, word jumps, the vertical arrows and
  * clicking are all left to the editor, which is why only the two bare keys are
  * taken.
+ *
+ * A merged picture character is the one place where one press crosses TWO
+ * positions. The alphabet spells it as a pair of entries and the document keeps
+ * both, but it is one character on screen and the position between its halves is
+ * one the browser cannot even draw a caret at — so the step passes over it and
+ * lands on the far side of the picture.
  */
 import { TextSelection } from '@tiptap/pm/state';
+import { splitsMergedPair } from './merged-pair';
 import type { Command, EditorState } from '@tiptap/pm/state';
 
 /** Which way a step goes, as the bias `TextSelection.near` wants. */
@@ -37,8 +44,13 @@ const targetOf = (state: EditorState, dir: 1 | -1): number => {
   return selection.head + dir;
 };
 
+/** One more position, when the step would have stopped inside a picture. */
+const clearOfPair = (state: EditorState, at: number, dir: 1 | -1): number => (
+  splitsMergedPair(state.doc, at) ? at + dir : at
+);
+
 const stepCaret = (dir: 1 | -1): Command => (state, dispatch) => {
-  const at = targetOf(state, dir);
+  const at = clearOfPair(state, targetOf(state, dir), dir);
   if (at < 0 || at > state.doc.content.size) return false;
 
   const next = TextSelection.near(state.doc.resolve(at), dir);

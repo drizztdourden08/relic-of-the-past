@@ -1,21 +1,39 @@
 /* @layer shared-storage @kind logic */
 /**
  * Reading language sets. Every entry point migrates a legacy folder first, so
- * a caller never sees the old layout.
+ * a caller never sees the old layout, and the content half is upgraded to the
+ * current set format on the way past (see ./format-2).
  */
 import type { FileStore } from '@shared/platform';
-import type { DialogueEntry, GlossaryTerm, LanguageSet, LanguageSetMeta, NameTable } from '@shared/game/language';
-import { emptyNameTable } from '@shared/game/language';
+import type { DialogueEntry, LanguageSet, LanguageSetMeta, TextOverrides } from '@shared/game/language';
 import { readJson } from '../json';
+import { readContent } from './format-2';
 import { migrateLegacySet } from './migrate';
-import { dialoguePath, fontPath, fontWidthPath, glossaryPath, namesPath, setMetaPath } from './paths';
+import { dialoguePath, fontPath, fontWidthPath, setMetaPath, textPath } from './paths';
 import type { LanguageSetSummary, SetFontBytes } from './types';
 
-const readSetMeta = (files: FileStore, id: string): Promise<LanguageSetMeta | null> =>
-  readJson<LanguageSetMeta | null>(files, setMetaPath(id), null);
+/**
+ * Identity only. Picked field by field so the format bookkeeping the header
+ * also carries stays in the storage layer instead of riding along on every set
+ * a caller holds.
+ */
+const readSetMeta = async (files: FileStore, id: string): Promise<LanguageSetMeta | null> => {
+  const raw = await readJson<LanguageSetMeta | null>(files, setMetaPath(id), null);
+  if (!raw) return null;
+  const { name, base, origin, version, author } = raw;
+  return { id: raw.id, name, base, origin, version, author };
+};
 
 const readDialogue = (files: FileStore, id: string): Promise<DialogueEntry[]> =>
   readJson<DialogueEntry[]>(files, dialoguePath(id), []);
+
+/**
+ * Overrides only, so a folder written before this file existed reads as an
+ * empty object — which is exactly "nothing translated yet". The catalog, not
+ * this payload, decides which slots the editor shows.
+ */
+const readText = (files: FileStore, id: string): Promise<TextOverrides> =>
+  readJson<TextOverrides>(files, textPath(id), {});
 
 const getSet = async (files: FileStore, id: string): Promise<LanguageSet | null> => {
   if (!await migrateLegacySet(files, id)) return null;
@@ -24,8 +42,8 @@ const getSet = async (files: FileStore, id: string): Promise<LanguageSet | null>
   return {
     ...meta,
     dialogue: await readDialogue(files, id),
-    glossary: await readJson<GlossaryTerm[]>(files, glossaryPath(id), []),
-    names: await readJson<NameTable>(files, namesPath(id), emptyNameTable()),
+    text: await readText(files, id),
+    ...await readContent(files, id),
   };
 };
 

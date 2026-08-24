@@ -56,7 +56,7 @@
 }
 
 .number-input__field::placeholder {
-  color: var(--c-text-faint);
+  color: var(--c-text-muted);
 }
 
 /* Stacked buttons, flush against the field (shared border, no gap). */

@@ -9,6 +9,32 @@
  * A community recreation of that face by Patrick H. Lauke, under Creative
  * Commons Attribution 3.0. Its LICENSE.txt and README.txt sit beside the file
  * in this folder and must travel with it; the credits entry names it in full.
+ *
+ * KNOWN ASSET GAP — six characters of this face are not the pack's characters.
+ *
+ * Being a recreation, it is close but not identical to the font a language pack
+ * carries, and a surface that measures a line reads the PACK's width table (the
+ * game's own numbers) while drawing with this face. Measured against one pack's
+ * table, 67 of the 73 characters checked advance exactly the same; these six
+ * differ, in game pixels:
+ *
+ *   char   pack   face
+ *   I         5      3     drawn as a bare stem where the pack has a serifed form
+ *   i         5      3     same stem
+ *   Q         6      7     one pixel wider
+ *   :         3      5     two pixels wider
+ *   "         8      5     three pixels narrower
+ *   >         8      6     two pixels narrower
+ *
+ * The pack's table is the source of truth and the surfaces keep billing every
+ * character out of it, so the numbers a translator steers by stay the game's. The
+ * consequence is purely visual and confined to these six: their ink sits up to a
+ * game pixel and a half off centre in a cell sized for the real character. That
+ * is why a cell centres its ink rather than parking it left — it halves the
+ * error instead of collecting all of it on one side.
+ *
+ * Closing the gap means an asset change, not a code change: a face whose glyphs
+ * are the pack's own. Until then this is the divergence, written down.
  */
 
 @font-face {

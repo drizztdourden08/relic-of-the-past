@@ -67,7 +67,7 @@
   flex-shrink: 0;
   font-family: var(--font-mono);
   font-size: var(--text-xs);
-  color: var(--c-text-faint);
+  color: var(--c-text-muted);
 }
 
 .dialogue-line__content {

@@ -1,0 +1,8 @@
+/* @layer renderer-components @kind style */
+
+.view-mode-switch {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-width: 0;
+}

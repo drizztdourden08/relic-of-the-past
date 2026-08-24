@@ -1,5 +1,14 @@
 /* @layer renderer-components @kind style */
 .data-manager {
+  /*
+   * Opts the pane out of the app-wide `user-select: none`. That rule
+   * (tokens/reset.css) is right for game chrome and stays — but a selection
+   * can only be cleared by starting one somewhere else, so while every
+   * surface around the editor computed `none`, a click on this pane's own
+   * chrome left a selection standing with no way to dismiss it. Same opt-out
+   * the simulator log already makes, for the same reason.
+   */
+  user-select: text;
   display: flex;
   flex-direction: column;
   flex: 1;

@@ -1,0 +1,62 @@
+/* @layer renderer-components @kind style */
+
+.unbuilt-pane {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-height: 0;
+}
+
+/*
+ * Deliberately OUTSIDE the covered region: the scrim blurs what it sits over, and
+ * the one thing that must stay readable is the reason it is there.
+ */
+.unbuilt-pane__notice {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  flex: none;
+  padding: var(--space-xs) var(--space-sm);
+  border: var(--border-width-thin) solid var(--c-warning);
+  border-left-width: var(--border-width-thick);
+  border-radius: var(--r-sm);
+  background: var(--c-warning-dim);
+}
+
+.unbuilt-pane__title {
+  color: var(--c-warning);
+  font-weight: var(--weight-semi);
+}
+
+.unbuilt-pane__summary {
+  color: var(--c-text);
+}
+
+.unbuilt-pane__body {
+  flex: 1;
+  min-height: 0;
+}
+
+/*
+ * The shared scrim is the vanilla-safe green, which reads as a setting the owner
+ * chose. This lock is not a choice — it is work that has not happened — so it
+ * takes the warning tone the notice above it already uses.
+ *
+ * It is also held at the TOP rather than centred: the surface it covers scrolls
+ * to a thousand rows, so the scrim is as tall as the content and a centred
+ * message would land far below the fold.
+ */
+.unbuilt-pane__body .disabled-overlay__scrim {
+  justify-content: flex-start;
+  background: var(--c-warning-soft);
+  border-color: var(--c-warning);
+}
+
+/* Stays in view however deep the covered list is scrolled. */
+.unbuilt-pane__body .disabled-overlay__message {
+  position: sticky;
+  top: 0;
+  color: var(--c-warning);
+}

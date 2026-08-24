@@ -59,40 +59,41 @@ const paintTile = (
 };
 
 /**
- * Resize the backing store to the canvas's own box at the display's pixel ratio.
- * Null when the box has no size yet — a cell in a container that has not been laid
- * out would otherwise be baked at one pixel square and never corrected.
+ * The bitmap size the canvas needs, read from its laid-out box at the display's
+ * pixel ratio. Null when the box has no size yet — a cell in a container that
+ * has not been laid out would otherwise be baked at one pixel square and never
+ * corrected.
+ *
+ * A READ only: it forces layout, so a caller painting many cells measures them
+ * all first and resizes after (see `useGlyphCanvas`), which keeps a whole batch
+ * to one reflow instead of one per cell.
  */
-const storeFor = (canvas: HTMLCanvasElement, ratio: number): Store | null => {
+const measureStore = (canvas: HTMLCanvasElement, ratio: number): Store | null => {
   const box = canvas.getBoundingClientRect();
   if (box.width === 0 || box.height === 0) return null;
-
-  const store = {
+  return {
     width: Math.max(1, Math.round(box.width * ratio)),
     height: Math.max(1, Math.round(box.height * ratio)),
   };
-  // Assigning either dimension clears the bitmap, so only a real change is written.
-  if (canvas.width !== store.width) canvas.width = store.width;
-  if (canvas.height !== store.height) canvas.height = store.height;
-  return store;
 };
 
 /**
- * Draw character `glyph` of `tiles`, filling the canvas exactly. False means
- * nothing was drawn — an index the sheet cannot spell, a canvas with no box yet,
- * or no 2d context — and the caller leaves the cell empty rather than showing
+ * Draw character `glyph` of `tiles` into a canvas sized to `store`, filling it
+ * exactly. False means nothing was drawn — an index the sheet cannot spell, or
+ * no 2d context — and the caller leaves the cell empty rather than showing
  * something that is not the character.
  */
 const paintGlyphCell = (
   canvas: HTMLCanvasElement,
   tiles: Uint8Array,
   glyph: number,
-  ratio: number,
+  store: Store,
 ): boolean => {
   if (!sheetHolds(glyph, Math.floor(tiles.length / TILE_BYTES))) return false;
 
-  const store = storeFor(canvas, ratio);
-  if (store === null) return false;
+  // Assigning either dimension clears the bitmap, so only a real change is written.
+  if (canvas.width !== store.width) canvas.width = store.width;
+  if (canvas.height !== store.height) canvas.height = store.height;
 
   const ctx = canvas.getContext('2d');
   if (ctx === null) return false;
@@ -104,4 +105,5 @@ const paintGlyphCell = (
   return true;
 };
 
-export { paintGlyphCell };
+export { measureStore, paintGlyphCell };
+export type { Store as GlyphStore };

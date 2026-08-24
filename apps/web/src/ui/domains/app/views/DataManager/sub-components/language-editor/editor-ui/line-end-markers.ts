@@ -1,29 +1,25 @@
 /* @layer renderer-components @kind logic */
 /**
- * The markers drawn at the END of a line, and nothing else there.
+ * The markers drawn at the END of a line: the return or scroll that moves the
+ * pen on, and the wait that closes a box.
  *
- * A wait, a row return and a scroll are the codes a player actually experiences
- * — one stops the box until a button is pressed, the next puts the pen back at
- * the left edge of a row, the last shunts the box up a line to make room — and
- * all of them happen at a line's edge, never inside a sentence. So none is a
- * labelled chip in the run any more: a wait is an icon at the end of the line it
- * closes, and the advance is an icon at the end of the line the box moves on
- * FROM, which is where a reader experiences it even though the code belongs to
- * the line below.
+ * A wait, a row return and a scroll are the codes a player actually experiences,
+ * and all of them happen at a line's edge, never inside a sentence. So the
+ * advance is an icon at the end of the line the box moves on FROM — where a
+ * reader experiences it, even though the code belongs to the line below — and
+ * the wait is an icon on the line it closes.
  *
  * They are WIDGET DECORATIONS: no text, no size in the document, nothing the
  * caret can land in or a copy can carry out. Placement is automatic and follows
- * the line's own attributes, so a wait is never typed and never has to be found.
- * The symbols are the ones the read-only card draws, so a line reads the same
- * whether it is being edited or scanned.
+ * the line structure, so none is ever typed and none has to be found.
  *
- * The wait is the affordance: clicking it turns the line's wait on or off. It is
- * drawn dim on whichever line the caret is in, so it can be found without
- * cluttering every other line with a control nobody asked for. The scroll is a
- * statement of fact and does nothing when pressed — the row a line lands on is
- * decided by the line structure, not by poking at it.
+ * Every line gets BOTH slots, in a fixed order, and a slot with nothing to show
+ * is hidden rather than omitted: a marker that appears only sometimes used to
+ * shunt its neighbour sideways every time the caret moved. The wait slot is the
+ * one control here — visible when on, offered faintly on the caret's line, and
+ * toggled by click; the advance markers state facts and take no pointer at all.
  *
- * Mousedown is swallowed so the click never moves the caret out of the text; the
+ * Mousedown on the wait is swallowed so the click never moves the caret; the
  * keyboard route to the same toggle is on the line node itself.
  */
 import { Extension } from '@tiptap/core';
@@ -40,7 +36,7 @@ import type { EditorView } from '@tiptap/pm/view';
 const kIconPx = 12;
 const kWaitOn = 'Ends the box here — the player presses a button to go on. Click to remove.';
 const kWaitOff = 'Click to end the box here, so the player presses a button before the next line.';
-const kScroll = 'The box scrolls up a line before the next line is written.';
+const kScroll = 'The box scrolls up a line to make room for the next one.';
 
 /** One advance marker: how it is drawn, what it says, and which symbol it takes. */
 type AdvanceMarker = { className: string; title: string; icon: string; key: string };
@@ -78,6 +74,14 @@ const markerDom = (className: string, title: string, iconName: string): HTMLElem
   return element;
 };
 
+/** The fixed slot with nothing in it: present, invisible, holding the width. */
+const emptyDom = (): HTMLElement => {
+  const element = document.createElement('span');
+  element.className = 'line-end line-end--empty';
+  element.contentEditable = 'false';
+  return element;
+};
+
 const waitDom = (view: EditorView, pos: number, on: boolean): HTMLElement => {
   const element = markerDom(
     `line-end line-end--wait${on ? ' line-end--on' : ' line-end--off'}`,
@@ -100,28 +104,25 @@ const decorationsFor = (state: EditorState): DecorationSet => {
   const decorations: Decoration[] = [];
 
   lines.forEach((line, index) => {
-    // Inside the paragraph, after its last child — so the marker reads as part
+    // Inside the paragraph, after its last child — so the markers read as part
     // of the line rather than as the start of the next one.
     const end = line.pos + line.node.nodeSize - 1;
-    const on = endsBoxOfAttrs(line.node.attrs);
-
-    if (on || isActive(state, line)) {
-      decorations.push(Decoration.widget(
-        end,
-        (view) => waitDom(view, line.pos, on),
-        { side: 1, key: `wait-${line.pos}-${on ? 'on' : 'off'}` },
-      ));
-    }
 
     const next = lines[index + 1];
     const marker = next === undefined ? null : advanceMarkerFor(advanceOfAttrs(next.node.attrs));
-    if (marker !== null) {
-      decorations.push(Decoration.widget(
-        end,
-        () => markerDom(marker.className, marker.title, marker.icon),
-        { side: 1, key: `${marker.key}-${line.pos}` },
-      ));
-    }
+    decorations.push(Decoration.widget(
+      end,
+      marker === null ? emptyDom : () => markerDom(marker.className, marker.title, marker.icon),
+      { side: 1, key: `adv-${marker?.key ?? 'none'}-${line.pos}` },
+    ));
+
+    const on = endsBoxOfAttrs(line.node.attrs);
+    const offered = on || isActive(state, line);
+    decorations.push(Decoration.widget(
+      end,
+      offered ? (view) => waitDom(view, line.pos, on) : emptyDom,
+      { side: 1, key: `wait-${line.pos}-${on ? 'on' : offered ? 'off' : 'none'}` },
+    ));
   });
 
   return DecorationSet.create(state.doc, decorations);

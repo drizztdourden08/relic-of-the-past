@@ -22,7 +22,10 @@
  * vertical arrows are deliberately not bound.
  */
 import { Paragraph } from '@tiptap/extension-paragraph';
+import { chainCommands } from '@tiptap/pm/commands';
 import { keymap } from '@tiptap/pm/keymap';
+import { lineNodeView } from './line-node-view';
+import { deleteMergedPairBackward, deleteMergedPairForward } from './delete-merged-pair';
 import { mergeLineBackward, mergeLineForward } from './merge-lines';
 import { splitLine } from './split-line';
 import { stepCaretLeft, stepCaretRight } from './step-caret';
@@ -70,13 +73,19 @@ const DialogueLine = Paragraph.extend({
     endsBox: endsBoxAttr,
   }),
 
+  // The line draws its own row gutter beside its text — see line-node-view.ts.
+  addNodeView: () => ({ node }) => lineNodeView(node),
+
   addProseMirrorPlugins: () => [
     keymap({
       'Enter': splitLine,
       'Shift-Enter': splitLine,
       'Mod-Enter': toggleWaitHere,
-      'Backspace': mergeLineBackward,
-      'Delete': mergeLineForward,
+      // A merged picture goes first: it is one character, so one press takes both
+      // of its halves. Declining falls through to the line merge, then to the
+      // base keymap's ordinary delete.
+      'Backspace': chainCommands(deleteMergedPairBackward, mergeLineBackward),
+      'Delete': chainCommands(deleteMergedPairForward, mergeLineForward),
       'ArrowRight': stepCaretRight,
       'ArrowLeft': stepCaretLeft,
     }),
