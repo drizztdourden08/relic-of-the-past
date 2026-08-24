@@ -53,9 +53,29 @@ bool GbaAlttp_IsPalaceActive(void) {
   return player_is_indoors && GbaAlttp_IsPalaceRoom(dungeon_room_index);
 }
 
+bool GbaAlttp_IsBankRoom(uint16 room) {
+  enum { kBankFirstRoom = 0x140, kBankEndRoom = 0x280 };
+  return GbaAlttp_IsAvailable() && room >= kBankFirstRoom && room < kBankEndRoom;
+}
+
+/**
+ * The room a stray edge transition lands in: bank slots the dungeon does not own.
+ *
+ * Floor zero, layout zero, three empty object sections. Its own derived collision seals it -
+ * nothing registers, nothing is walkable beyond the edges - so wandering off the dungeon's
+ * boundary parks the player in a dead room instead of a base-game one. The base grid can no
+ * longer be reached from the bank at all.
+ */
+static const uint8 kVoidRoomStream[] = { 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
+static const uint8 kVoidRoomHeader[14];
+
+const uint8 *GbaAlttp_VoidRoomStream(void) { return kVoidRoomStream; }
+
 const uint8 *GbaAlttp_GetRoomHeader(uint16 room) {
   int index = GbaAlttpFindRoom(room);
-  return index < 0 ? NULL : FindIndexInMemblk(GbaAlttpAsset(kGbaAssetRoomHeaders), index).ptr;
+  if (index >= 0)
+    return FindIndexInMemblk(GbaAlttpAsset(kGbaAssetRoomHeaders), index).ptr;
+  return GbaAlttp_IsBankRoom(room) ? kVoidRoomHeader : NULL;
 }
 
 /**
@@ -70,7 +90,7 @@ const uint8 *GbaAlttp_GetRoomHeader(uint16 room) {
 const uint16 *GbaAlttp_GetRoomDoors(uint16 room) {
   int index = GbaAlttpFindRoom(room);
   if (index < 0)
-    return NULL;
+    return GbaAlttp_IsBankRoom(room) ? kNoDoors : NULL;
   MemBlk doors = FindIndexInMemblk(GbaAlttpAsset(kGbaAssetRoomDoors), (size_t)index);
   return doors.size >= sizeof(uint16) ? (const uint16 *)doors.ptr : kNoDoors;
 }
@@ -82,17 +102,20 @@ const uint16 *GbaAlttp_GetRoomDoors(uint16 room) {
  * terminator — so this is a pointer swap, not a conversion. NULL for any other room, which is
  * what makes the caller fall through to the base table.
  */
+static const uint8 kNoSprites[] = { 0x00, 0xff };
+static const uint8 kNoSecrets[] = { 0xff, 0xff };
+
 const uint8 *GbaAlttp_GetRoomSprites(uint16 room) {
   int index = GbaAlttpFindRoom(room);
-  if (index < 0 || !GbaAlttp_IsPalaceRoom(room))
-    return NULL;
-  return FindIndexInMemblk(GbaAlttpAsset(kGbaAssetRoomEntities), index).ptr;
+  if (index >= 0)
+    return FindIndexInMemblk(GbaAlttpAsset(kGbaAssetRoomEntities), index).ptr;
+  return GbaAlttp_IsBankRoom(room) ? kNoSprites : NULL;
 }
 
 /** This dungeon's secret/pot-drop list. Native format too, so also a pointer swap. */
 const uint8 *GbaAlttp_GetRoomSecrets(uint16 room) {
   int index = GbaAlttpFindRoom(room);
-  if (index < 0 || !GbaAlttp_IsPalaceRoom(room))
-    return NULL;
-  return FindIndexInMemblk(GbaAlttpAsset(kGbaAssetRoomSecrets), index).ptr;
+  if (index >= 0)
+    return FindIndexInMemblk(GbaAlttpAsset(kGbaAssetRoomSecrets), index).ptr;
+  return GbaAlttp_IsBankRoom(room) ? kNoSecrets : NULL;
 }

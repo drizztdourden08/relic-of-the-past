@@ -1,5 +1,6 @@
 /* @layer core-game-hooks @kind native */
 #include "game_hooks_internal.h"
+#include "gba_alttp.h"
 
 // Room-addressable state queries for the gameplay simulator. Each export packs a
 // count-prefixed record list into a static buffer and returns its address; the TS
@@ -123,7 +124,7 @@ int WasmGetRoomChests(int room_id) {
   uint8 scan_rows[6] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
   int drawn = current ? (int)(dung_num_chests_x2 >> 1)
                       : SimRoomScanChests(room_id, scan_cols, scan_rows);
-  uint16 sram = save_dung_info[room_id];
+  uint16 sram = (*SaveDungInfoFor(room_id));
   const uint8 *cd = kDungeonRoomChests;
   uint8 count = 0;
   for (int i = 0; i < (int)kDungeonRoomChests_SIZE && count < 6; i += 3, cd += 3) {
@@ -243,7 +244,7 @@ int WasmGetRoomDoorInfo(int room_id) {
   g_sim_doors_buf[0] = 1;
 
   int current = SimIsCurrentRoom(room_id);
-  uint16 open_bits = current ? dung_door_opened : (save_dung_info[room_id] & 0xf000);
+  uint16 open_bits = current ? dung_door_opened : ((*SaveDungInfoFor(room_id)) & 0xf000);
   const uint16 *dp = GetRoomDoorInfo(room_id);
   uint8 count = 0;
   for (int i = 0; dp[i] != 0xffff && count < 16; i++) {

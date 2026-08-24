@@ -6,6 +6,7 @@ import type { RomData } from './rom/rom-types';
 import { compressStrings } from './text/dialogue-encoder';
 import { EXTRA_DUNGEON_PALINFO } from './extensions/second-cartridge-palette';
 import { doorListFor } from './extensions/second-cartridge-doors';
+import { bankedRoomId } from './extensions/second-cartridge-bank';
 import {
   AUX_TILE_THEME,
   GBA_ALTTP_ASSET_MANIFEST,
@@ -152,7 +153,7 @@ const compileGbaAlttpSupplement = (
   // not the order these are declared below — decides call order, so inserting
   // or reordering an asset only ever means editing asset-manifest.ts.
   const builders: Record<string, () => void> = {
-    kGbaPalaceRoomIds: () => assets.addUint16('kGbaPalaceRoomIds', rooms.map(room => room.id)),
+    kGbaPalaceRoomIds: () => assets.addUint16('kGbaPalaceRoomIds', rooms.map(room => bankedRoomId(room.id))),
     kGbaPalaceRoomHeaders: () => assets.addPacked('kGbaPalaceRoomHeaders', rooms.map(room => nativeHeaderBytes(room, roomIds))),
     kGbaPalaceRoomEntities: () => assets.addPacked('kGbaPalaceRoomEntities', rooms.map(serializeEntityList)),
     kGbaPalaceRoomSecrets: () => assets.addPacked('kGbaPalaceRoomSecrets', rooms.map(serializeSecretList)),
@@ -168,8 +169,8 @@ const compileGbaAlttpSupplement = (
     kGbaPalaceSpritePalettes: () => assets.addPacked('kGbaPalaceSpritePalettes', spritePalettes.map(palette => palette.bgr555)),
     kGbaPalaceTileAttributes: () => assets.addUint8('kGbaPalaceTileAttributes', [...source.dungeonTileAttributes(rooms[0].header.blockset)]),
     kGbaPalaceTopology: () => assets.addUint16('kGbaPalaceTopology', topology.flatMap(edge => [
-      edge.fromRoomId,
-      edge.toRoomId,
+      bankedRoomId(edge.fromRoomId),
+      bankedRoomId(edge.toRoomId),
       edge.quadrant,
       edge.kind === 'hole' ? 0 : edge.slot + 1,
     ])),

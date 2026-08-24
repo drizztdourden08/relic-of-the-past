@@ -21,6 +21,13 @@ bool GbaAlttp_IsPalaceRoom(uint16 room);
 const uint8 *GbaAlttp_GetRoomHeader(uint16 room);
 const uint16 *GbaAlttp_GetRoomDoors(uint16 room);
 const uint8 *GbaAlttp_GetRoomLayout(uint16 room);
+
+/* Bank 1 of the room grid (ids 0x140-0x27F): the extra dungeon's own address space. */
+bool GbaAlttp_IsBankRoom(uint16 room);
+/* Per-room save word, bank-aware; bank-0 ids resolve to the original array. */
+uint16 *SaveDungInfoFor(int room);
+void GameHook_BankSaveStore(int sram_offset);
+void GameHook_BankSaveLoad(int sram_offset);
 void GbaAlttp_ApplyDungeonGraphics(void);
 void GbaAlttp_SelectDungeonSpriteSheets(uint8 *slot0, uint8 *slot1, uint8 *slot2, uint8 *slot3);
 

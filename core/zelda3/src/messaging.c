@@ -1,4 +1,5 @@
 #include "messaging.h"
+#include "gba_alttp.h"
 #include "zelda_rtl.h"
 #include "variables.h"
 #include "snes/snes_regs.h"
@@ -269,6 +270,7 @@ void SaveGameFile() {  // 80894a
   int offs = ((srm_var1 >> 1) - 1) * 0x500;
   memcpy(g_zenv.sram + offs, save_dung_info, 0x500);
   memcpy(g_zenv.sram + offs + 0xf00, save_dung_info, 0x500);
+  GameHook_BankSaveStore(offs);
   uint16 t = 0x5a5a;
   for (int i = 0; i < 0x4fe; i += 2)
     t -= *(uint16 *)((char *)save_dung_info + i);
@@ -2114,6 +2116,7 @@ void CopySaveToWRAM() {  // 8ccfbb
   birdtravel_var1[k] = 0;
 
   memcpy(save_dung_info, &g_zenv.sram[WORD(g_ram[0])], 0x500);
+  GameHook_BankSaveLoad(WORD(g_ram[0]));
 
   bg_tile_animation_countdown = 7;
   word_7EC013 = 7;

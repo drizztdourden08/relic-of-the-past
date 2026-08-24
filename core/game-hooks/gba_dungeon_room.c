@@ -19,14 +19,16 @@
  * to handing the engine a different pointer. Everything after that is the engine's own code path
  * for every other room in the game, unmodified.
  */
+extern const uint8 *GbaAlttp_VoidRoomStream(void);
+
 const uint8 *GbaAlttp_GetRoomLayout(uint16 room) {
-  if (!GbaAlttp_IsPalaceRoom(room))
-    return NULL;
   int index = GbaAlttpFindRoom(room);
-  if (index < 0)
-    return NULL;
-  MemBlk layout = FindIndexInMemblk(GbaAlttpAsset(kGbaAssetRoomLayouts), index);
-  return layout.size > 2 ? layout.ptr : NULL;
+  if (index >= 0) {
+    MemBlk layout = FindIndexInMemblk(GbaAlttpAsset(kGbaAssetRoomLayouts), index);
+    if (layout.size > 2)
+      return layout.ptr;
+  }
+  return GbaAlttp_IsBankRoom(room) ? GbaAlttp_VoidRoomStream() : NULL;
 }
 
 /**

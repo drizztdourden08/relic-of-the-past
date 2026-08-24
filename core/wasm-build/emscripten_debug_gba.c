@@ -42,7 +42,7 @@ int WasmDebugEnterGbaPalace(void) {
   link_player_handler_state = 0;
   printf("[GBA ALttP] Debug entrance room=%04x active=%d\n",
          dungeon_room_index, GbaAlttp_IsPalaceActive());
-  return GbaAlttp_IsPalaceRoom(dungeon_room_index) && dungeon_room_index == 0x88;
+  return GbaAlttp_IsPalaceRoom(dungeon_room_index);
 }
 
 EMSCRIPTEN_KEEPALIVE

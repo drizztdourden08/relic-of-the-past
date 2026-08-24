@@ -23,6 +23,7 @@
  */
 
 import { MAIN_TILE_THEME } from '../sources/gba-alttp/blockset-identity';
+import { bankedRoomId } from './second-cartridge-bank';
 import { EXTRA_DUNGEON_PALACE } from './second-cartridge-map';
 
 /** The base game's Pyramid opening: overworld cell (col 14, row 27) on area 0x5b. */
@@ -39,8 +40,8 @@ const PIXEL_DELTA = CELL_DELTA * 16;
 /** The room the Pyramid opening leads to — the exit record we clone is keyed on it. */
 const PYRAMID_ROOM = 0x10;
 
-/** The extra dungeon's entrance chamber. */
-const EXTRA_DUNGEON_ROOM = 0x88;
+/** The extra dungeon's entrance chamber, in its own room bank. */
+const EXTRA_DUNGEON_ROOM = bankedRoomId(0x88);
 
 /**
  * The base game ships 133 entrance records, so the next free id is 133. Asserted at append

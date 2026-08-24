@@ -1465,7 +1465,7 @@ non_submerged:
     RoomDraw_4x4(src, dst);
     break;
   case 0x33:       // 33 -  Stairs Submerged [N](layer)
-    if (dung_hdr_tag[1] == 27 && !(save_dung_info[dungeon_room_index] & 0x100)) {
+    if (dung_hdr_tag[1] == 27 && !((*SaveDungInfoFor(dungeon_room_index)) & 0x100)) {
       dung_hdr_bg2_properties = 0;
       src = SrcPtr(0x10C8);
       goto non_submerged;
@@ -1478,7 +1478,7 @@ non_submerged:
     }
     break;
   case 0x35:  // 35 -  Water Ladder
-    if (dung_hdr_tag[1] == 27 && !(save_dung_info[dungeon_room_index] & 0x100))
+    if (dung_hdr_tag[1] == 27 && !((*SaveDungInfoFor(dungeon_room_index)) & 0x100))
       goto inactive_water_ladder;
     dung_stairs_table_1[dung_num_activated_water_ladders >> 1] = dsto;
     dung_num_activated_water_ladders += 2;
@@ -1619,7 +1619,7 @@ void LoadType1ObjectSubtype3(uint8 idx, uint16 *dst, uint16 dsto) {
   switch (idx) {
   case 0x00:  // 00 -  Water Face Closed
     if (dung_hdr_tag[1] == 27) {
-      if (save_dung_info[dungeon_room_index] & 0x100)
+      if ((*SaveDungInfoFor(dungeon_room_index)) & 0x100)
         goto water_face_open;
     } else if (dung_hdr_tag[1] == 25) {
       if (dung_savegame_state_bits & 0x800)
@@ -1904,7 +1904,7 @@ door28:
     break;
   case 0x33:  // 33 -  Stairs Submerged [S](layer)
     if (dung_hdr_tag[1] == 27) {
-      if (!(save_dung_info[dungeon_room_index] & 0x100)) {
+      if (!((*SaveDungInfoFor(dungeon_room_index)) & 0x100)) {
         dung_hdr_bg2_properties = 0;
         goto stairs_wet;
       }
@@ -2068,7 +2068,7 @@ void Dungeon_StartInterRoomTrans_Left() {
     RoomBounds_SubB(&room_bounds_x);
     BYTE(dungeon_room_index_prev) = dungeon_room_index;
     if ((link_tile_below & 0xcf) == 0x89) {
-      dungeon_room_index = dung_hdr_travel_destinations[3];
+      BYTE(dungeon_room_index) = dung_hdr_travel_destinations[3];
       Dungeon_AdjustForTeleportDoors(dungeon_room_index + 1, 0xff);
     } else {
       if ((uint8)dungeon_room_index != (uint8)dungeon_room_index2) {
@@ -3735,7 +3735,7 @@ void Dungeon_LoadHeader() {  // 81b564
   dung_overlay_to_load = 0;
   dung_index_x3 = dungeon_room_index * 3;
 
-  uint16 x = save_dung_info[dungeon_room_index];
+  uint16 x = (*SaveDungInfoFor(dungeon_room_index));
   dung_door_opened = x & 0xf000;
   dung_door_opened_incl_adjacent = dung_door_opened | 0xf00;
   dung_savegame_state_bits = (x & 0xff0) << 4;
@@ -3803,7 +3803,7 @@ void Dungeon_CheckAdjacentRoomsForOpenDoors(int idx, int room) {  // 81b759
 
 void Dungeon_LoadAdjacentRoomDoors(int room) {  // 81b7ef
   const uint16 *dp = GetRoomDoorInfo(room);
-  adjacent_doors_flags = (save_dung_info[room] & 0xf000) | 0xf00;
+  adjacent_doors_flags = ((*SaveDungInfoFor(room)) & 0xf000) | 0xf00;
   for (int i = 0; ; i++) {
     uint16 a = dp[i];
     adjacent_doors[i] = a;
@@ -7993,7 +7993,7 @@ void Dungeon_StartInterRoomTrans_Right() {  // 82b63a
     RoomBounds_AddB(&room_bounds_x);
     BYTE(dungeon_room_index_prev) = dungeon_room_index;
     if ((link_tile_below & 0xcf) == 0x89) {
-      dungeon_room_index = dung_hdr_travel_destinations[4];
+      BYTE(dungeon_room_index) = dung_hdr_travel_destinations[4];
       Dungeon_AdjustForTeleportDoors(dungeon_room_index - 1, 1);
     } else {
       if ((uint8)dungeon_room_index != (uint8)dungeon_room_index2) {
@@ -8039,11 +8039,11 @@ void AdjustQuadrantAndCamera_right() {  // 82b8bd
 
 void SetAndSaveVisitedQuadrantFlags() {  // 82b8cb
   dung_quadrants_visited |= kQuadrantVisitingFlags[(quadrant_fullsize_y << 2) + (quadrant_fullsize_x << 1) + link_quadrant_y + link_quadrant_x];
-  save_dung_info[dungeon_room_index] |= dung_quadrants_visited;
+  (*SaveDungInfoFor(dungeon_room_index)) |= dung_quadrants_visited;
 }
 
 void SaveQuadrantsToSram() {  // 82b8e5
-  save_dung_info[dungeon_room_index] |= dung_quadrants_visited;
+  (*SaveDungInfoFor(dungeon_room_index)) |= dung_quadrants_visited;
 }
 
 void AdjustQuadrantAndCamera_left() {  // 82b8f9
@@ -8073,7 +8073,7 @@ void Dungeon_FlagRoomData_Quadrants() {  // 82b929
 }
 
 void Dung_SaveDataForCurrentRoom() {  // 82b947
-  save_dung_info[dungeon_room_index] =
+  (*SaveDungInfoFor(dungeon_room_index)) =
     (dung_savegame_state_bits >> 4) |
     (dung_door_opened & 0xf000) |
     dung_quadrants_visited;
@@ -8221,7 +8221,7 @@ void DungeonTransition_FindSubtileLanding() {  // 82c110
   Dungeon_ResetTorchBackgroundAndPlayerInner();
   SubtileTransitionCalculateLanding();
   subsubmodule_index++;
-  save_dung_info[dungeon_room_index] |= dung_quadrants_visited;
+  (*SaveDungInfoFor(dungeon_room_index)) |= dung_quadrants_visited;
 }
 
 void SubtileTransitionCalculateLanding() {  // 82c12c
