@@ -17,9 +17,11 @@ interface SlotInfo {
 }
 
 interface DialogState {
-  type: 'overwrite' | 'delete' | 'create' | null;
+  type: 'overwrite' | 'delete' | 'create' | 'import-sram' | 'import-sram-invalid' | null;
   targetId?: string;
   targetName?: string;
+  pendingBytes?: Uint8Array;
+  detail?: string;
 }
 
 export type { HomeTabProps, SlotInfo, DialogState };

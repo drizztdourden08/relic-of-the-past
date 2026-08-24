@@ -16,8 +16,18 @@ enum {
 
 // Bit assignment within g_host_gates[0]. No master switch like CheatGate's kFeatures3_CheatsEnabled —
 // each bit names an independent host-only subsystem, not a user-facing cheat category.
+//
+// The two external-sound bits do NOT map one-to-one onto the three sound channels: ambient
+// (kSoundChannel_Ambient / APUI01) has its own bit, while the two one-shot channels
+// (kSoundChannel_Sfx1 / kSoundChannel_Sfx2, APUI02 / APUI03) share kHostGate_ExternalSfx. The game
+// picks between those two by whichever is free, not by kind of sound, so they are one switch to a
+// user and splitting them would only produce a setting that half-works. The mapping itself lives in
+// kSoundChannelGate (sound_hooks.c).
 enum {
   kHostGate_SimulatorSupport = 1,
+  kHostGate_ExternalMusic = 2,
+  kHostGate_ExternalAmbient = 4,
+  kHostGate_ExternalSfx = 8,
 };
 
 extern uint32 g_host_gates[kHostGateWordCount];

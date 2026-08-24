@@ -84,12 +84,16 @@ const DEFAULT_SETTINGS: GameSettings = {
   musicMuted: false,
   sfxVolume: 100,
   sfxMuted: false,
+  ambientVolume: 100,
+  ambientMuted: false,
   audioFreq: 44100,
   audioChannels: 2,
   audioSamples: 2048,
+  msuConfigMode: 'auto',
   enableMSU: 'false',
   resumeMSU: true,
-  msuVolume: 100,
+  packReplaceAmbient: true,
+  packReplaceSfx: true,
 
   // Post-Processing
   overworldEdgeEffect: true,
@@ -232,7 +236,7 @@ AudioChannels = ${settings.audioChannels}
 AudioSamples = ${settings.audioSamples}
 EnableMSU = ${msuEnabledIni}
 ResumeMSU = ${boolToIni(settings.resumeMSU)}
-MSUVolume = ${settings.msuVolume}
+MSUVolume = ${settings.musicVolume}
 PerGroupVolume = ${boolToIni(settings.perGroupVolume)}
 ${msuPathIni ? `MSUPath = ${msuPathIni}
 ` : ''}
@@ -372,6 +376,24 @@ const mergeSettings = (partial: Partial<GameSettings>): GameSettings => {
   if (!('perGroupVolume' in raw)) {
     merged.perGroupVolume = merged.musicVolume !== 100 || merged.sfxVolume !== 100 || merged.musicMuted || merged.sfxMuted;
   }
+
+  // msuVolume was a separate dial; MSU replaces the music channel rather than running alongside it, so it
+  // folds into musicVolume. Only migrate when the profile hasn't already got an explicit musicVolume from
+  // this same partial (an old profile's musicVolume default of 100 is not itself a signal to overwrite).
+  const legacyMsuVolume = raw.msuVolume;
+  if (typeof legacyMsuVolume === 'number' && !('musicVolume' in raw)) {
+    merged.musicVolume = legacyMsuVolume;
+  }
+  delete (merged as Record<string, unknown>).msuVolume;
+
+  if (!('msuConfigMode' in raw)) {
+    merged.msuConfigMode = 'auto';
+  }
+
+  // Both default on: a pack only replaces what it actually authors, so a profile saved before
+  // these existed behaves identically either way.
+  if (!('packReplaceAmbient' in raw)) merged.packReplaceAmbient = true;
+  if (!('packReplaceSfx' in raw)) merged.packReplaceSfx = true;
 
   return merged;
 };

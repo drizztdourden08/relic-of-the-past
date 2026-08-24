@@ -1,0 +1,53 @@
+/* @layer renderer-components @kind style */
+
+.home-tab-dialogs__callout {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  line-height: var(--leading-tight);
+  margin: 0 0 var(--space-md);
+}
+
+.home-tab-dialogs__callout--ok {
+  background: var(--c-green-dim);
+  border: 1px solid var(--c-green);
+  color: var(--c-green-bright);
+}
+
+.home-tab-dialogs__callout--bad {
+  background: var(--c-danger-dim);
+  border: 1px solid var(--c-danger);
+  color: var(--c-danger);
+}
+
+.home-tab-dialogs__callout-icon {
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.home-tab-dialogs__warning {
+  margin: 0 0 var(--space-md);
+  color: var(--c-text);
+}
+
+.home-tab-dialogs__warning strong {
+  font-weight: var(--weight-semi);
+}
+
+.home-tab-dialogs__hint {
+  margin: 0 0 var(--space-sm);
+  color: var(--c-text-dim);
+  font-size: var(--text-sm);
+}
+
+.home-tab-dialogs__confirm-word {
+  font-family: var(--font-mono);
+  background: var(--c-gold-dim);
+  color: var(--c-gold-bright);
+  padding: 0.1em 0.5em;
+  border-radius: var(--radius-sm);
+  font-weight: var(--weight-medium);
+}

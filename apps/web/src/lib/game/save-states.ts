@@ -10,6 +10,7 @@ import { getModule, getProfileId } from './wasm-bridge';
 import { pollInventoryState } from './tracker';
 import { reassertLiveFlagsAfterLoad } from './live-settings';
 import { captureGameFrameBlob } from './capture-frame';
+import { saveMusicPosition, restoreMusicPosition } from './msu-save-glue';
 
 const saveState = async (slot: number): Promise<boolean> => {
   const mod = getModule();
@@ -39,6 +40,11 @@ const saveState = async (slot: number): Promise<boolean> => {
     log.app(`[SaveState] Sending ${ab.byteLength} bytes to main process (profileId=${profileId}, slot=${slot})...`);
     await savesStore.writeState(profileId, slot, ab);
     log.app(`[SaveState] Slot ${slot} persisted to disk ✓`);
+
+    // The music position lives beside the snapshot, not inside it: the core's snapshot layout
+    // is fixed and must not grow. Written unconditionally so overwriting a slot never leaves
+    // the previous save's music position behind.
+    await saveMusicPosition(profileId, 'quick', slot);
 
     try {
       const blob = await captureGameFrameBlob();
@@ -99,6 +105,10 @@ const loadState = async (slot: number): Promise<boolean> => {
 
     // Re-assert all WASM flags that state load resets
     reassertLiveFlagsAfterLoad();
+
+    // A save written before music positions were recorded has no sidecar; restoring null
+    // simply starts its track from the beginning.
+    await restoreMusicPosition(profileId, 'quick', slot);
 
     // Force inventory poll so tracker reflects the loaded state
     pollInventoryState(true);

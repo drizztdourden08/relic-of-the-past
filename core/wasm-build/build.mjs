@@ -43,8 +43,6 @@ const snesSrcs = [
   'dma', 'dsp', 'ppu',
 ].map((f) => z('snes', `${f}.c`));
 
-const opusSrc = [z('third_party', 'opus-1.3.1-stripped', 'opus_decoder_amalgam.c')];
-
 const hookSrcs = [
   'game_hooks', 'state_queries', 'state_queries_sprites', 'state_queries_grids',
   'state_queries_room_grid',
@@ -52,11 +50,14 @@ const hookSrcs = [
   'state_queries_room_objects', 'attr_grid_state', 'gated_empty', 'receive_counters',
   'sim_queries', 'sim_triggers', 'item_overrides', 'check_triggers', 'ui_state', 'cheats', 'haptic_events',
   'player_sprite', 'transition_events', 'state_queries_combat', 'state_queries_oam',
-  'host_gates', 'hud_override', 'running_man',
+  'host_gates', 'hud_override', 'running_man', 'music_hooks', 'sound_hooks',
 ].map((f) => h(`${f}.c`));
 
 // Our Emscripten entry points (replace the native main.c). Resolved from this dir.
-const emMain = ['emscripten_main.c', 'emscripten_sdl.c', 'emscripten_api.c', 'emscripten_io.c', 'emscripten_pacing.c'].map((f) => join(here, f));
+const emMain = [
+  'emscripten_main.c', 'emscripten_sdl.c', 'emscripten_api.c', 'emscripten_io.c',
+  'emscripten_pacing.c', 'emscripten_sound_preview.c', 'emscripten_volumes.c',
+].map((f) => join(here, f));
 
 const cflags = [
   '-O2', '-g2',
@@ -90,7 +91,6 @@ const run = () => {
     ...emMain,
     ...gameSrcs,
     ...snesSrcs,
-    ...opusSrc,
     ...hookSrcs,
     '-o', join(outputDir, 'zelda3.js'),
     ...emflags,

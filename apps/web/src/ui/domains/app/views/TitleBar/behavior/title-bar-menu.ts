@@ -60,9 +60,9 @@ const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
         { key: 'profiles', icon: '👤', label: 'Profiles', onClick: () => { closeMenu(); onShowDataManager('profiles'); } },
         { key: 'roms', icon: '🎮', label: 'ROMs', onClick: () => { closeMenu(); onShowDataManager('roms'); } },
         { key: 'languages', icon: '🌐', label: 'Language Studio', onClick: () => { closeMenu(); onShowDataManager('languages'); } },
-        { key: 'msu', icon: '🎵', label: 'MSU', onClick: () => { closeMenu(); onShowDataManager('msu'); } },
+        { key: 'msu', icon: '🎵', label: 'MSU Studio', onClick: () => { closeMenu(); onShowDataManager('msu'); } },
         { key: 'sprites', icon: '🖼️', label: 'Sprites', onClick: () => { closeMenu(); onShowDataManager('sprites'); } },
-        { key: 'player-sprites', icon: '🧝', label: 'Player Sprites', onClick: () => { closeMenu(); onShowDataManager('linkSprites'); } },
+        { key: 'player-sprites', icon: '🧝', label: 'Character Studio', onClick: () => { closeMenu(); onShowDataManager('linkSprites'); } },
       ],
     },
     {

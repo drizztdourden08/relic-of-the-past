@@ -14,6 +14,7 @@
 
 import type { GameSettings } from '@shared/types/settings';
 import { getModule } from './wasm-bridge';
+import { msuSyncVolume } from './msu-session';
 import { setMasterVolume } from './audio-volume';
 import { updateHapticBridgeSettings, updateHapticsProfileEnabled } from '../input/haptic-bridge';
 import { DEFAULT_SETTINGS } from './settings';
@@ -33,10 +34,18 @@ let lastPauseHidden = false;
 // Track the last-pushed volume values so we can re-assert after state loads
 let lastMasterVolume = 100;
 let lastMusicVol = 128; // 0-128 WASM scale
+let lastAmbientVol = 128; // 0-128 WASM scale
 let lastSfxVol = 128;  // 0-128 WASM scale
 // Last full settings pushed, so a live override (e.g. the simulator's auto-skip-dialog force) can
 // recompute and re-push the features word without the caller holding the settings object.
 let lastSettings: GameSettings | null = null;
+
+/**
+ * The settings as they are NOW, or null before anything was pushed. For long-lived closures that
+ * must follow the sliders — a snapshot captured at profile load reads its boot-time values
+ * forever, which is exactly how the replacement audio's volumes came to ignore every slider.
+ */
+const liveSettingsNow = (): GameSettings | null => lastSettings;
 
 const pushLiveSettings = (settings: GameSettings): boolean => {
   const mod = getModule();
@@ -69,11 +78,17 @@ const pushLiveSettings = (settings: GameSettings): boolean => {
       mod.ccall('WasmSetAppMasterVolume', null, ['number'], [masterWasm]);
     } catch { /* WASM not rebuilt yet */ }
 
-    // Sub-volumes via WASM DSP (0-100 → 0-128 scale)
+    // Sub-volumes via WASM DSP (0-100 → 0-128 scale). Ambient is its own DSP group: the chip's
+    // bed voices are allocated by its effects engine, and without the third group they rode the
+    // SFX slider while the replacement bed rode the ambience one.
     const musicVol = settings.musicMuted ? 0 : Math.round(settings.musicVolume * 1.28);
+    const ambientVol = settings.ambientMuted ? 0 : Math.round(settings.ambientVolume * 1.28);
     const sfxVol = settings.sfxMuted ? 0 : Math.round(settings.sfxVolume * 1.28);
     try { mod.ccall('WasmSetMusicVolume', null, ['number'], [musicVol]); lastMusicVol = musicVol; } catch {}
+    try { mod.ccall('WasmSetAmbientVolume', null, ['number'], [ambientVol]); lastAmbientVol = ambientVol; } catch {}
     try { mod.ccall('WasmSetSfxVolume', null, ['number'], [sfxVol]); lastSfxVol = sfxVol; } catch {}
+    // Replacement music is mixed in the app, not the sound chip, so it needs the same push.
+    msuSyncVolume();
 
     // FPS display toggle (guard: function may not exist in older WASM builds)
     try {
@@ -138,6 +153,7 @@ const reassertVolumes = (): void => {
   setMasterVolume(lastMasterVolume);
   tryVoidCcall('WasmSetAppMasterVolume', Math.round(lastMasterVolume * 1.28));
   tryVoidCcall('WasmSetMusicVolume', lastMusicVol);
+  tryVoidCcall('WasmSetAmbientVolume', lastAmbientVol);
   tryVoidCcall('WasmSetSfxVolume', lastSfxVol);
 };
 
@@ -223,4 +239,4 @@ const primeLiveSettings = (settings: GameSettings): void => {
   lastSfxVol = settings.sfxMuted ? 0 : Math.round(settings.sfxVolume * 1.28);
 };
 
-export { LIVE_SETTINGS, pushLiveSettings, reassertFeatureWords, reassertBackdropBlack, reassertVsync, reassertHudHidden, reassertPauseHidden, reassertVolumes, reassertLiveFlagsAfterLoad, reassertFeatureFlags, reassertGateWord3, primeLiveSettings };
+export { LIVE_SETTINGS, liveSettingsNow, pushLiveSettings, reassertFeatureWords, reassertBackdropBlack, reassertVsync, reassertHudHidden, reassertPauseHidden, reassertVolumes, reassertLiveFlagsAfterLoad, reassertFeatureFlags, reassertGateWord3, primeLiveSettings };

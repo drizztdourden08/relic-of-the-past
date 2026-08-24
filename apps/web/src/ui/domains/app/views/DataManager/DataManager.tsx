@@ -6,7 +6,7 @@ import { RomManager } from './sub-components/RomManager';
 import { LanguageManager } from './sub-components/LanguageManager';
 import { MsuManager } from './sub-components/MsuManager';
 import { SpriteManager } from './sub-components/SpriteManager';
-import { PlayerSpriteManager } from './sub-components/PlayerSpriteManager';
+import { PlayerSpriteStudio } from '../PlayerSpriteStudio';
 import { Spinner } from '../../../../design-system/primitives/Spinner';
 import { Box } from '../../../../design-system/primitives/Box';
 import { NavRail } from '../../../../design-system/composites/NavRail';
@@ -47,9 +47,9 @@ const DataManager = (props: DataManagerProps) => {
     { id: 'profiles', icon: '👤', label: 'Profiles' },
     { id: 'roms', icon: '🎮', label: 'ROMs' },
     { id: 'sprites', icon: '🖼️', label: 'Sprites' },
-    { id: 'linkSprites', icon: '🧝', label: 'Player Sprites' },
+    { id: 'linkSprites', icon: '🧝', label: 'Character Studio' },
     { id: 'languages', icon: '🌐', label: 'Language Studio' },
-    { id: 'msu', icon: '🎵', label: 'MSU' },
+    { id: 'msu', icon: '🎵', label: 'MSU Studio' },
   ];
 
   return (
@@ -107,7 +107,12 @@ const DataManager = (props: DataManagerProps) => {
               romStatuses={romStatuses}
             />
           )}
-          {activeTab === 'linkSprites' && <PlayerSpriteManager onDeleteConfirm={onDeleteConfirm} />}
+          {activeTab === 'linkSprites' && (
+            <PlayerSpriteStudio
+              romStatuses={romStatuses}
+              onDeleteConfirm={onDeleteConfirm}
+            />
+          )}
         </Box>
       </Box>
     </Box>

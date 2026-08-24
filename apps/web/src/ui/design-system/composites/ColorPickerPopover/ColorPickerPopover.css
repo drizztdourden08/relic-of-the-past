@@ -1,0 +1,5 @@
+/* @layer renderer-components @kind style */
+.color-picker-popover {
+  position: fixed;
+  pointer-events: auto;
+}

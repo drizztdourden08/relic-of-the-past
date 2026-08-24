@@ -19,7 +19,7 @@ const eventStub = (): (() => void) => () => {};
 // Invoke methods whose callers expect an array; everything else resolves to null.
 const EMPTY_ARRAY_METHODS = new Set<string>([
   'listProfiles', 'listRoms', 'listRomsWithStatus', 'listStates', 'listSessions',
-  'listMsuPacks', 'getMsuTrackList', 'listLanguages', 'listNormalSaves',
+  'listMsuPacks', 'getMsuTrackList', 'listMsuAudioFiles', 'listLanguages', 'listNormalSaves',
   'listAutoSaves', 'getSlotInfos', 'listControllers', 'listHidDevices',
 ]);
 

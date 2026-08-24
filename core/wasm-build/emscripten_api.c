@@ -68,6 +68,35 @@ uint32_t WasmGetHostGateWord(int index) {
   return HostGates_GetWord(index);
 }
 
+// Which sound ids the host can play on one channel, as a bitmask pair (ids 0-31 in |low|, 32-63 in
+// |high|). A claimed id is reported to the host and never written to the chip; everything else plays
+// natively. Paired with the kHostGate_ExternalAmbient / kHostGate_ExternalSfx bits above.
+EMSCRIPTEN_KEEPALIVE
+void WasmSetSoundClaim(int channel, uint32_t low, uint32_t high) {
+  GameHook_SetSoundClaim(channel, low, high);
+}
+
+// Hands music back to the sound chip. Paired with clearing the external-music gate.
+EMSCRIPTEN_KEEPALIVE
+void WasmRestoreMusic(void) {
+  GameHook_MusicRestore();
+}
+
+// The reverse: once the host's handlers are armed, re-report what the game is playing so a host
+// that attached late (or after a boot-time state load) starts in step with it.
+EMSCRIPTEN_KEEPALIVE
+void WasmAnnounceMusic(void) {
+  GameHook_MusicAnnounce();
+}
+
+// Which entrances the host's extended pack has a track for, 32 per word (5 words). Lets the core hand
+// back a selectable indoor song for entrances the game would otherwise only duck or carry an overworld
+// song into — see GameHook_EntranceMusic.
+EMSCRIPTEN_KEEPALIVE
+void WasmSetDeluxeEntrances(int index, uint32_t bits) {
+  GameHook_SetDeluxeEntrances(index, bits);
+}
+
 // The three original per-word entry points, kept as adapters onto the same array so every existing
 // caller keeps working unchanged. Prefer WasmSetGateWord for anything new.
 EMSCRIPTEN_KEEPALIVE
@@ -178,6 +207,23 @@ void WasmSetMusicVolume(int volume) {
     dsp_setMusicVolume(g_zenv.player->dsp, v);
   else
     g_pending_music_volume = v;
+}
+
+// Which voices the chip's ambient system owns right now (0 = no native bed sounding). A state
+// query for verification and diagnostics: "is the chip producing a bed" is otherwise inaudible
+// to automation, and the double-bed class of bug is exactly the one ears catch and tests miss.
+EMSCRIPTEN_KEEPALIVE
+int WasmGetChipAmbientVoices(void) {
+  return g_zenv.player ? g_zenv.player->port1_active : 0;
+}
+
+EMSCRIPTEN_KEEPALIVE
+void WasmSetAmbientVolume(int volume) {
+  uint8_t v = (uint8_t)clampi(volume, 0, 128);
+  if (g_zenv.player && g_zenv.player->dsp)
+    dsp_setAmbientVolume(g_zenv.player->dsp, v);
+  else
+    g_pending_ambient_volume = v;
 }
 
 EMSCRIPTEN_KEEPALIVE

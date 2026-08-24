@@ -73,6 +73,8 @@ const createFilePicker = (): FilePickerPort => ({
     const picked = await window.api.pickFile(opts?.extensions ?? []);
     return picked ? { name: picked.name, bytes: new Uint8Array(picked.data) } : null;
   },
+  saveFile: ({ name, bytes, extensions }) =>
+    window.api.saveFile(name, toArrayBuffer(bytes), extensions ?? []),
 });
 
 // Raw HID enumeration/read/write went away with node-hid — SDL3 claims every
