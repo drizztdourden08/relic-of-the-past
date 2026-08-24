@@ -22,13 +22,15 @@
 extern const uint8 *GbaAlttp_VoidRoomStream(void);
 
 const uint8 *GbaAlttp_GetRoomLayout(uint16 room) {
+  if (!GbaAlttp_IsBankRoom(room))
+    return NULL;
   int index = GbaAlttpFindRoom(room);
   if (index >= 0) {
     MemBlk layout = FindIndexInMemblk(GbaAlttpAsset(kGbaAssetRoomLayouts), index);
     if (layout.size > 2)
       return layout.ptr;
   }
-  return GbaAlttp_IsBankRoom(room) ? GbaAlttp_VoidRoomStream() : NULL;
+  return GbaAlttp_VoidRoomStream();
 }
 
 /**

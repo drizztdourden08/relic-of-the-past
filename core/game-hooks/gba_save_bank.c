@@ -33,7 +33,10 @@ enum {
 };
 
 uint16 *SaveDungInfoFor(int room) {
-  if (room >= kBankFirstRoom && room < kBankEndRoom)
+  // Gated on the same predicate as every bank behaviour: with the dungeon absent or disabled,
+  // every id - including glitched out-of-range ones - indexes the original array exactly as
+  // vanilla does, out-of-bounds quirks and all.
+  if (GbaAlttp_IsBankRoom((uint16)room))
     return &save_dung_info_bank1[room - kBankFirstRoom];
   return &save_dung_info[room];
 }
@@ -47,10 +50,12 @@ static int BankRoomList(const uint16 **rooms) {
 }
 
 void GameHook_BankSaveStore(int sram_offset) {
+  // Fully inert when the dungeon is absent or disabled: no write anywhere, so a vanilla
+  // profile's SRAM image is byte-identical to one produced without this code.
+  if (!GbaAlttp_IsBankRoom(kBankFirstRoom))
+    return;
   uint8 *dst = g_zenv.sram + kBankSramBase + (sram_offset / 0x500) * kBankSramSlotStride;
   memset(dst, 0, kBankSramSlotStride);
-  if (!GbaAlttp_IsAvailable())
-    return;
   const uint16 *rooms;
   int count = BankRoomList(&rooms);
   for (int i = 0; i < count; i++) {
@@ -61,11 +66,11 @@ void GameHook_BankSaveStore(int sram_offset) {
 }
 
 void GameHook_BankSaveLoad(int sram_offset) {
+  if (!GbaAlttp_IsBankRoom(kBankFirstRoom))
+    return;
   /* The whole bank clears first: a slot that never visited the dungeon must not inherit
      another slot's progress through leftover WRAM. */
   memset(save_dung_info_bank1, 0, kBankRooms * sizeof(uint16));
-  if (!GbaAlttp_IsAvailable())
-    return;
   const uint8 *src = g_zenv.sram + kBankSramBase + (sram_offset / 0x500) * kBankSramSlotStride;
   const uint16 *rooms;
   int count = BankRoomList(&rooms);

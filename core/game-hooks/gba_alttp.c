@@ -53,9 +53,18 @@ bool GbaAlttp_IsPalaceActive(void) {
   return player_is_indoors && GbaAlttp_IsPalaceRoom(dungeon_room_index);
 }
 
+/**
+ * The gate for every behavioural difference the room bank introduces.
+ *
+ * All three conditions matter: the supplement must be present, the profile's setting must be
+ * on, and the id must be in the bank. Vanilla behaviour — including its overflow quirks,
+ * which the glitch community relies on — is preserved bit-exactly whenever any of them is
+ * false, so a profile without the dungeon can never observe a difference, glitched states
+ * included.
+ */
 bool GbaAlttp_IsBankRoom(uint16 room) {
   enum { kBankFirstRoom = 0x200, kBankEndRoom = 0x300 };
-  return GbaAlttp_IsAvailable() && room >= kBankFirstRoom && room < kBankEndRoom;
+  return GbaAlttp_IsAvailable() && g_extra_dungeon_enabled && room >= kBankFirstRoom && room < kBankEndRoom;
 }
 
 /**
@@ -72,10 +81,12 @@ static const uint8 kVoidRoomHeader[14];
 const uint8 *GbaAlttp_VoidRoomStream(void) { return kVoidRoomStream; }
 
 const uint8 *GbaAlttp_GetRoomHeader(uint16 room) {
+  if (!GbaAlttp_IsBankRoom(room))
+    return NULL;
   int index = GbaAlttpFindRoom(room);
   if (index >= 0)
     return FindIndexInMemblk(GbaAlttpAsset(kGbaAssetRoomHeaders), index).ptr;
-  return GbaAlttp_IsBankRoom(room) ? kVoidRoomHeader : NULL;
+  return kVoidRoomHeader;
 }
 
 /**
@@ -88,9 +99,11 @@ const uint8 *GbaAlttp_GetRoomHeader(uint16 room) {
  * work on the cartridge, it moves into this list as data.
  */
 const uint16 *GbaAlttp_GetRoomDoors(uint16 room) {
+  if (!GbaAlttp_IsBankRoom(room))
+    return NULL;
   int index = GbaAlttpFindRoom(room);
   if (index < 0)
-    return GbaAlttp_IsBankRoom(room) ? kNoDoors : NULL;
+    return kNoDoors;
   MemBlk doors = FindIndexInMemblk(GbaAlttpAsset(kGbaAssetRoomDoors), (size_t)index);
   return doors.size >= sizeof(uint16) ? (const uint16 *)doors.ptr : kNoDoors;
 }
@@ -106,16 +119,16 @@ static const uint8 kNoSprites[] = { 0x00, 0xff };
 static const uint8 kNoSecrets[] = { 0xff, 0xff };
 
 const uint8 *GbaAlttp_GetRoomSprites(uint16 room) {
+  if (!GbaAlttp_IsBankRoom(room))
+    return NULL;
   int index = GbaAlttpFindRoom(room);
-  if (index >= 0)
-    return FindIndexInMemblk(GbaAlttpAsset(kGbaAssetRoomEntities), index).ptr;
-  return GbaAlttp_IsBankRoom(room) ? kNoSprites : NULL;
+  return index >= 0 ? FindIndexInMemblk(GbaAlttpAsset(kGbaAssetRoomEntities), index).ptr : kNoSprites;
 }
 
 /** This dungeon's secret/pot-drop list. Native format too, so also a pointer swap. */
 const uint8 *GbaAlttp_GetRoomSecrets(uint16 room) {
+  if (!GbaAlttp_IsBankRoom(room))
+    return NULL;
   int index = GbaAlttpFindRoom(room);
-  if (index >= 0)
-    return FindIndexInMemblk(GbaAlttpAsset(kGbaAssetRoomSecrets), index).ptr;
-  return GbaAlttp_IsBankRoom(room) ? kNoSecrets : NULL;
+  return index >= 0 ? FindIndexInMemblk(GbaAlttpAsset(kGbaAssetRoomSecrets), index).ptr : kNoSecrets;
 }

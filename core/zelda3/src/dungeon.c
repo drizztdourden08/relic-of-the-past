@@ -2068,7 +2068,10 @@ void Dungeon_StartInterRoomTrans_Left() {
     RoomBounds_SubB(&room_bounds_x);
     BYTE(dungeon_room_index_prev) = dungeon_room_index;
     if ((link_tile_below & 0xcf) == 0x89) {
-      BYTE(dungeon_room_index) = dung_hdr_travel_destinations[3];
+      if (GbaAlttp_IsBankRoom(dungeon_room_index))
+        BYTE(dungeon_room_index) = dung_hdr_travel_destinations[3];
+      else
+        dungeon_room_index = dung_hdr_travel_destinations[3];
       Dungeon_AdjustForTeleportDoors(dungeon_room_index + 1, 0xff);
     } else {
       if ((uint8)dungeon_room_index != (uint8)dungeon_room_index2) {
@@ -7942,6 +7945,9 @@ void Dungeon_AdjustAfterSpiralStairs() {  // 82a2f0
 }
 
 void Dungeon_AdjustForTeleportDoors(uint16 room, uint8 flag) {  // 82a37c
+  bool extended = GbaAlttp_IsBankRoom(room);
+  if (!extended)
+    room &= 0xff;
   dungeon_room_index2 = room;
   dungeon_room_index_prev = room;
 
@@ -7953,10 +7959,11 @@ void Dungeon_AdjustForTeleportDoors(uint16 room, uint8 flag) {  // 82a37c
   room_bounds_x.a0 += (xx << 8);
   room_bounds_x.b0 += (xx << 8);
 
-  // Rooms are two 256px pages tall and the player keeps their position within the page, so
-  // the destination page must keep the half the player left from - an east/west teleport door
-  // sits at one physical row. Base-game pairs sit in the upper half, where the term is zero.
-  xx = (((room & 0xff0) >> 3) | ((link_y_coord >> 8) & 1)) - (link_y_coord >> 8);
+  // Rooms are two 256px pages tall and an east/west teleport door sits at one physical row,
+  // so the extended world keeps the half the player left from. The vanilla expression stays
+  // byte-for-byte on the vanilla side of the gate, overflow quirks included.
+  xx = (extended ? (((room & 0xff0) >> 3) | ((link_y_coord >> 8) & 1))
+                 : ((room & 0xf0) >> 3)) - (link_y_coord >> 8);
   link_y_coord += (xx << 8);
   BG2VOFS_copy2 += (xx << 8);
   room_bounds_y.a1 += (xx << 8);
@@ -7996,7 +8003,10 @@ void Dungeon_StartInterRoomTrans_Right() {  // 82b63a
     RoomBounds_AddB(&room_bounds_x);
     BYTE(dungeon_room_index_prev) = dungeon_room_index;
     if ((link_tile_below & 0xcf) == 0x89) {
-      BYTE(dungeon_room_index) = dung_hdr_travel_destinations[4];
+      if (GbaAlttp_IsBankRoom(dungeon_room_index))
+        BYTE(dungeon_room_index) = dung_hdr_travel_destinations[4];
+      else
+        dungeon_room_index = dung_hdr_travel_destinations[4];
       Dungeon_AdjustForTeleportDoors(dungeon_room_index - 1, 1);
     } else {
       if ((uint8)dungeon_room_index != (uint8)dungeon_room_index2) {
