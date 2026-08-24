@@ -1,0 +1,40 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * The tab fills the detail pane; only the card list scrolls, so the search box
+ * and filters stay put while a translator works down the set.
+ */
+
+.dialogue-tab {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+  gap: var(--space-2xs);
+}
+
+.dialogue-tab__filters {
+  padding: 0 var(--space-2xs) var(--space-2xs);
+}
+
+/*
+ * The list is the QUERY CONTAINER for its rows. Every row carries the same fixed
+ * fact columns, so whether there is room left for the line's own words is a
+ * property of the list's width and not of any one row — see
+ * `EntryCardCollapsed.css`.
+ */
+.dialogue-tab__scroll {
+  container: entry-list / inline-size;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-2xs);
+}
+
+.dialogue-tab__hint {
+  padding: var(--space-2xs) var(--space-xs);
+  color: var(--c-text-dim);
+}

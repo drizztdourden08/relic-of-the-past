@@ -171,6 +171,21 @@ const CREDITS: CreditCategory[] = [
     ],
   },
   {
+    id: 'fonts',
+    title: 'Fonts',
+    entries: [
+      {
+        name: 'Patrick H. Lauke',
+        project: 'The Legend of Zelda: A Link to the Past (Ext)',
+        description: 'A FontStruct recreation of the game\'s dialogue face, extended with accented characters.',
+        usage: 'assets-direct',
+        usageNote: 'Used as-is in the translation editor so a line is written in the shape it takes on screen. Attribution required by license; the font ships with its own LICENSE.txt and README.txt.',
+        url: 'https://fontstruct.com/fontstructions/show/1534358',
+        license: 'CC BY 3.0',
+      },
+    ],
+  },
+  {
     id: 'randomizer',
     title: 'Randomizer Logic',
     entries: [

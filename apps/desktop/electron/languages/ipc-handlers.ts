@@ -10,6 +10,12 @@ import { fail, errMessage } from '../lib/result';
 import { makeImportReporter } from '../lib/import-progress';
 import { extractLanguagePack, listLanguageSummaries, readLanguagePack } from './language-pack';
 import { recompileAllAssets } from '../assets/compile-rom-assets';
+import { createNodeFileStore } from '../lib/node-file-store';
+import { createSet, duplicateSet, getSet, list, saveSet } from '@shared/storage/languages';
+import type { NewSetParams } from '@shared/storage/languages';
+import type { LanguageSet } from '@shared/game/language';
+
+const files = createNodeFileStore();
 
 type ExtractResult = { success: boolean; error?: string };
 
@@ -82,6 +88,27 @@ const registerLanguageHandlers = () => {
   });
 
   handle('languages:getLanguage', (_event, langCode: string) => readLanguagePack(langCode));
+
+  handle('languages:listSets', () => list(files));
+
+  handle('languages:getSet', (_event, id: string) => getSet(files, id));
+
+  handle('languages:saveSet', async (_event, set: LanguageSet) => {
+    await saveSet(files, set);
+    await recompileAllAssets();
+  });
+
+  handle('languages:createSet', async (_event, params: NewSetParams) => {
+    const set = await createSet(files, params);
+    await recompileAllAssets();
+    return set;
+  });
+
+  handle('languages:duplicateSet', async (_event, sourceId: string, id: string, name: string) => {
+    const set = await duplicateSet(files, sourceId, id, name);
+    await recompileAllAssets();
+    return set;
+  });
 };
 
 export { registerLanguageHandlers };

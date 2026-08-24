@@ -9,6 +9,7 @@ import * as profileStore from '../../lib/storage/profile-store';
 import * as romsStore from '../../lib/storage/roms-store';
 import * as assetsStore from '../../lib/storage/assets-store';
 import { loadInputProfile, loadMsuPack, loadPlayerSprite } from './load-profile-helpers';
+import { useReloadTarget } from './useReloadTarget';
 
 const useProfileManagement = (params: {
   showDialog: (config: ConfirmDialog) => void;
@@ -104,6 +105,8 @@ const useProfileManagement = (params: {
     }
     setLoadingProfile(null);
   }, [onGameClear, onProfileLoaded]);
+
+  useReloadTarget(activeProfile, loadProfileForGame);
 
   const handleSelectProfile = useCallback(async (profile: Profile) => {
     setActiveProfile(profile);

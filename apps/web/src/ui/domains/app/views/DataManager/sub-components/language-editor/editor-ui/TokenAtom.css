@@ -1,0 +1,157 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * The inline token chip. It sits in a run of typed text on a row whose height is
+ * FIXED — the gutter beside it counts on that — so the chip must read as one
+ * character-sized object and must not be able to grow the line: no wrapping
+ * inside it, no vertical padding, and a height it inherits rather than sets.
+ */
+
+.token-atom {
+  /*
+   * An atomic inline box: it lays its own contents out in a row, and to the line
+   * around it it is one object of a measured width. The line itself is an
+   * ordinary block, so the chip must not be allowed to wrap or to grow the row —
+   * the width it reserves is a measurement, and a box the browser reflows would
+   * report a width the game will not honour.
+   */
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  height: 1em;
+  padding: 0 var(--space-2xs);
+  border: var(--border-width-thin) solid var(--color-border-default);
+  border-radius: var(--r-sm);
+  background: var(--c-surface);
+  vertical-align: text-bottom;
+  white-space: nowrap;
+  cursor: default;
+}
+
+/*
+ * The pane opts every descendant into selection so a press can start one (see
+ * LanguageEditor.css); a chip is not text, so it opts back out — from a selector
+ * specific enough to win against that blanket rule.
+ */
+.dialogue-editor .token-atom {
+  user-select: none;
+}
+
+/* Families, told apart by hue AND border so colour is never the only signal. */
+.token-atom--cmd {
+  border-color: var(--c-gold);
+  background: var(--c-gold-dim);
+}
+
+.token-atom--break {
+  border-style: dashed;
+  border-color: var(--color-border-strong);
+}
+
+.token-atom--var {
+  border-color: var(--c-info);
+  background: var(--c-info-dim);
+}
+
+.token-atom--ref {
+  border-color: var(--c-green);
+  background: var(--c-green-dim);
+}
+
+/*
+ * The editor's own selection ring. An atom is selected whole, so the ring goes
+ * round the chip rather than through it.
+ */
+.token-atom--selected,
+.token-atom.ProseMirror-selectednode {
+  outline: var(--border-width-thick) solid var(--c-gold-bright);
+  outline-offset: var(--border-width-thin);
+}
+
+.token-atom__icon {
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-text-secondary);
+}
+
+.token-atom--cmd .token-atom__icon { color: var(--c-gold); }
+.token-atom--var .token-atom__icon { color: var(--c-info); }
+.token-atom--ref .token-atom__icon { color: var(--c-green); }
+
+/*
+ * The chip's name is OURS — a plain-language label out of the catalog, not text
+ * the game will draw — so it is set in the interface face. Keeping it out of the
+ * game face is also what stops a chip from being mistaken for typed letters.
+ */
+.token-atom__label {
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  line-height: 1;
+}
+
+.token-atom__value {
+  padding: 0 var(--space-2xs);
+  border-radius: var(--r-sm);
+  background: var(--c-hover);
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+/*
+ * A picture character is not a chip: it is one of the line's characters. The
+ * wrapper contributes nothing but the atom's selection ring.
+ */
+.token-atom--glyph {
+  height: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+
+/*
+ * A substitution is a TAG that reserves the room its value will need: the chip's
+ * width is the widest the substitution can ever draw, in game pixels, so it sits
+ * in the line's arithmetic rather than beside it. The width itself arrives as an
+ * inline length off the pack's width table — the same worst case the row
+ * measurement charges — and `border-box` is what makes the chip's whole footprint
+ * that number instead of that number plus its own frame.
+ *
+ * An atomic box: its own inline-flex row of cells, with the line's font size and
+ * leading rather than the chip's, so it cannot grow the row it sits in. Atomic is
+ * also what lets the caret treat the chip as one character.
+ */
+.token-atom--substitution {
+  display: inline-flex;
+  box-sizing: border-box;
+  align-items: baseline;
+  gap: 0;
+  height: 1em;
+  padding: 0;
+
+  /* It stands in the line, so it takes the line's own size, not the chip's. */
+  font-size: inherit;
+  line-height: inherit;
+  vertical-align: baseline;
+}
+
+/*
+ * One character of the stand-in, billed the same advance the widest character of
+ * this language is. Ink is left to overflow it, exactly as a typed character's
+ * cell does: the advance is what the row is measured in.
+ *
+ * Two selectors deep, so it beats the text primitive's own 13px size and leading
+ * — which rendered a substitution small and grew the row's line box past its
+ * fixed height.
+ */
+.token-atom--substitution .token-atom__stands-for {
+  display: inline-block;
+  flex: none;
+  overflow: visible;
+  font-size: inherit;
+  line-height: inherit;
+}

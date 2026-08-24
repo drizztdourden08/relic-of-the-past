@@ -1,0 +1,25 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * One row of equal icon buttons along the top of the editor card. It does not
+ * wrap: eight small buttons and three rules fit any pane the editor itself fits
+ * in, and a row that reflows moves a button out from under the pointer.
+ *
+ * `overflow: visible` is load-bearing — every card is anchored inside this row
+ * and would be clipped by anything else.
+ */
+
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  padding: var(--space-2xs) var(--space-xs);
+  border-bottom: var(--border-width-thin) solid var(--color-border-subtle);
+  overflow: visible;
+}
+
+/* A hairline between groups: shorter than the row, so it reads as a pause. */
+.editor-toolbar__split {
+  height: var(--space-md);
+  margin: 0 var(--space-2xs);
+}

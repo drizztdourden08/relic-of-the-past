@@ -44,6 +44,12 @@
 |-----|---------|-----|---------|
 | **Lorc, Delapouite & contributors** | [game-icons.net](https://game-icons.net) | Assets Used Directly — entrance/map icons (door, cave, dungeon, fairy, shop…) via `@iconify-icons/game-icons` | CC BY 3.0 |
 
+## Fonts
+
+| Who | Project | Use | License |
+|-----|---------|-----|---------|
+| **Patrick H. Lauke** | [The Legend of Zelda: A Link to the Past (Ext)](https://fontstruct.com/fontstructions/show/1534358) | Assets Used Directly — the dialogue face, used in the translation editor so a line is written in the shape it takes on screen | CC BY 3.0 |
+
 ## Randomizer Logic
 
 | Who | Project | Use | License |

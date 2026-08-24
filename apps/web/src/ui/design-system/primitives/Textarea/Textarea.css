@@ -18,5 +18,5 @@
 }
 
 .textarea::placeholder {
-  color: var(--c-text-faint);
+  color: var(--c-text-muted);
 }
