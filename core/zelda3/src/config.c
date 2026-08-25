@@ -522,6 +522,10 @@ static bool HandleIniConfig(int section, const char *key, char *value) {
       return ParseBoolBit(value, &g_config.features0, kFeatures0_Haptics);
     } else if (StringEqualsNoCase(key, "DeveloperTools")) {
       return ParseBoolBit(value, &g_config.features0, kFeatures0_DeveloperTools);
+    } else if (StringEqualsNoCase(key, "DevNavigationData")) {
+      return ParseBoolBit(value, &g_config.features3, kFeatures3_NavigationQueries);
+    } else if (StringEqualsNoCase(key, "TrackerEnabled")) {
+      return ParseBoolBit(value, &g_config.features3, kFeatures3_TrackerQueries);
     } else if (StringEqualsNoCase(key, "CheatsEnabled")) {
       // Only the master toggle; the four cheat-category permission bits are derived from this at boot
       // (emscripten_main.c) rather than parsed, so a fresh launch grants the same permissions a live

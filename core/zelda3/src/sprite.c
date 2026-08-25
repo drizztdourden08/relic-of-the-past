@@ -3704,8 +3704,12 @@ void Garnish02_MothulaBeamTrail(int k) {  // 89b6e1
   }
 }
 
-void Dungeon_ResetSprites() {  // 89c114
-  Dungeon_CacheTransSprites();
+static void Dungeon_ResetSpritesInner() {
+  // Bank rooms carry per-room sprite sheets, and the new set is already in VRAM by the time
+  // the pan starts - cached leaving-room sprites would render from it as garbage. They
+  // despawn at the transition instead; the arriving room's sprites are correct from frame one.
+  if (!GbaAlttp_IsBakedRoomActive())
+    Dungeon_CacheTransSprites();
   link_picking_throw_state = 0;
   link_state_bits = 0;
   Sprite_DisableAll();
@@ -3720,6 +3724,10 @@ void Dungeon_ResetSprites() {  // 89c114
     if (blk != 0xffff)
       sprite_where_in_room[blk] = 0;
   }
+}
+
+void Dungeon_ResetSprites() {  // 89c114
+  Dungeon_ResetSpritesInner();
   Dungeon_LoadSprites();
 }
 

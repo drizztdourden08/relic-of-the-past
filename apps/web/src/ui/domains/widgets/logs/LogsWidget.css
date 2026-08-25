@@ -1,7 +1,22 @@
 /* @layer renderer-widgets @kind style */
 
-.logs-widget-content {
+.logs-widget {
   height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.logs-widget__toolbar {
+  display: flex;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  border-bottom: var(--border-width-thin) solid var(--c-border);
+  flex-shrink: 0;
+}
+
+.logs-widget-content {
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
   padding: var(--space-sm) var(--space-md);
   display: flex;
@@ -23,6 +38,17 @@
 
 .logs-widget-content .log-entry:hover {
   background: var(--c-hover);
+}
+
+/* Selection is by whole line, so a report copies exactly what the widget shows. */
+.logs-widget-content .log-entry {
+  cursor: default;
+  user-select: none;
+}
+
+.logs-widget-content .log-entry--selected,
+.logs-widget-content .log-entry--selected:hover {
+  background: var(--c-selected);
 }
 
 .logs-widget-content .log-entry__time {

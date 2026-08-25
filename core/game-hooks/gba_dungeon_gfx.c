@@ -4,6 +4,9 @@
 #include <string.h>
 
 #include "src/variables.h"
+#include "src/load_gfx.h"
+#include "src/sprite.h"
+#include "src/assets.h"
 #include "src/dungeon.h"
 
 /**
@@ -22,6 +25,14 @@ bool GbaAlttp_ApplyDungeonTileAttr(void) {
   if (bank.size != 0x80)
     return false;
   memcpy(&attributes_for_tile[0x140], bank.ptr, 0x80);
+  /* Per-tile corrections outside the aux region: ids the port re-drew whose vanilla
+     attributes no longer describe the art (walkable gaps in what is now a wall). */
+  MemBlk fixes = GbaAlttpAsset(kGbaAssetTileAttrOverrides);
+  for (size_t at = 0; at + 3 <= fixes.size; at += 3) {
+    uint16 tile = (uint16)(fixes.ptr[at] | (fixes.ptr[at + 1] << 8));
+    if (tile < 0x200)
+      attributes_for_tile[tile] = fixes.ptr[at + 2];
+  }
   return true;
 }
 

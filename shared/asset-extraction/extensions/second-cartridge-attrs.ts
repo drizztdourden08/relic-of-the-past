@@ -18,6 +18,32 @@ interface AttrOverlayCell {
 }
 
 const WALL = 0x02;
+
+/**
+ * Tile-level attribute corrections, applied to attributes_for_tile for every bank room.
+ * The port re-drew these ids as wall crenellation, but their vanilla attributes (which the
+ * engine's per-tile table still carries outside the aux region) are walkable - measured as
+ * pass-through gaps in the hub's and chamber's outer walls.
+ */
+const WALL_ART_TILES = [
+  0x15,
+  0x90, 0x91, 0x92, 0x93, 0x94, 0x96, 0x97, 0x9e,
+  0xa2, 0xa3, 0xa4, 0xa5, 0xa6,
+  0x100, 0x101, 0x110, 0x111, 0x112, 0x113, 0x11c,
+  0x12c, 0x18e, 0x18f, 0x19e, 0x19f,
+];
+
+const TILE_ATTR_OVERRIDES: readonly { tile: number; attr: number }[] =
+  WALL_ART_TILES.map(tile => ({ tile, attr: WALL }));
+
+const tileAttrOverridesRecord = (): Buffer => {
+  const record = Buffer.alloc(TILE_ATTR_OVERRIDES.length * 3);
+  TILE_ATTR_OVERRIDES.forEach(({ tile, attr }, i) => {
+    record.writeUInt16LE(tile, i * 3);
+    record[i * 3 + 2] = attr;
+  });
+  return record;
+};
 const DOORWAY_STRIPE = 0x8e;
 
 /** The entrance chamber: side walls the conversion leaves walkable, and the south exit stripe. */
@@ -34,7 +60,20 @@ const entranceChamberOverlay = (): AttrOverlayCell[] => {
   return cells;
 };
 
+/**
+ * The hub: its north-wall door art has no door record and no room behind it - walking the
+ * passage would edge-transition into the sealed void. Close the alcove at the wall line.
+ */
+const hubOverlay = (): AttrOverlayCell[] => {
+  const cells: AttrOverlayCell[] = [];
+  for (let row = 4; row <= 6; row++) {
+    for (let col = 30; col <= 33; col++) cells.push({ layer: 0, cell: row * 64 + col, attr: WALL });
+  }
+  return cells;
+};
+
 const OVERLAYS: Readonly<Record<number, () => AttrOverlayCell[]>> = {
+  0x78: hubOverlay,
   0x88: entranceChamberOverlay,
 };
 
@@ -51,5 +90,5 @@ const attrOverlayRecord = (gbaRoomId: number): Buffer => {
   return record;
 };
 
-export { attrOverlayRecord };
+export { attrOverlayRecord, tileAttrOverridesRecord };
 export type { AttrOverlayCell };

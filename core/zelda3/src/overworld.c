@@ -2407,7 +2407,7 @@ uint16 *BufferAndBuildMap16Stripes_X(uint16 *dst) {  // 82f3b9
     dst++;
     for (int j = 0; j < 16; j++) {
       int k = *tmp++;
-      assert(k < 0xea8);
+      assert(k < (int)(kMap16ToMap8_SIZE / (4 * sizeof(uint16))));
       const uint16 *s = map8 + k * 4;
       dst[0] = s[0];
       dst[33] = s[1];
@@ -2438,7 +2438,7 @@ uint16 *BufferAndBuildMap16Stripes_Y(uint16 *dst) {  // 82f482
     *dst++ = r0;
     for (int j = 0; j < 16; j++) {
       int k = *tmp++;
-      assert(k < 0xea8);
+      assert(k < (int)(kMap16ToMap8_SIZE / (4 * sizeof(uint16))));
       const uint16 *s = map8 + k * 4;
       dst[0] = s[0];
       dst[32] = s[2];

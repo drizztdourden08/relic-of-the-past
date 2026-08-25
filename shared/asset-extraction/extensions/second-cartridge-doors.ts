@@ -35,7 +35,11 @@ const EXTRA_DUNGEON_DOORS: Readonly<Record<number, readonly number[]>> = {
   // No north record: the top-centre is the staircase to the east wing, and the door-shaped
   // frame around it pattern-matched as a door. Drawing one there registers it, and its transit
   // strip overwrites the staircase's slot attribute - measured through the engine.
-  0x78: [0x0071, 0x1022, 0x0023],
+  // The east record was 0x0023 (position 2), which the engine places mid-room - the centre
+  // platform's frame art had pattern-matched as a door, and it drew AND registered there as
+  // a working exit. The real east door is on the east wall at the lower position, mirroring
+  // the east neighbour's own west record at the same height.
+  0x78: [0x0071, 0x1022, 0x0083],
   0x79: [0x3660, 0x0001, 0x0022],
   0x88: [0x0010, 0x0a71],
   0x9a: [0x0020, 0x0071],

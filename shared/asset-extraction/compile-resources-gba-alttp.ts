@@ -6,7 +6,7 @@ import type { RomData } from './rom/rom-types';
 import { compressStrings } from './text/dialogue-encoder';
 import { EXTRA_DUNGEON_PALINFO } from './extensions/second-cartridge-palette';
 import { doorListFor } from './extensions/second-cartridge-doors';
-import { attrOverlayRecord } from './extensions/second-cartridge-attrs';
+import { attrOverlayRecord, tileAttrOverridesRecord } from './extensions/second-cartridge-attrs';
 import { occluderCells } from './extensions/second-cartridge-occluders';
 import { bankedRoomId } from './extensions/second-cartridge-bank';
 import {
@@ -133,6 +133,12 @@ const nativeHeaderBytes = (room: DungeonRoomRecord, rooms: ReadonlySet<number>):
   // meaning is measured on hardware.
   if (bytes[EFFECT_BYTE] >= ENGINE_EFFECT_COUNT) bytes[EFFECT_BYTE] = 0;
 
+  // Header bits 5-7 drive the engine's screen designation through kSpiralTab1: only value 3
+  // shows the upper layer opaque on the main screen. The port ships 0 there — its engine
+  // composites layers its own way — which left this engine never displaying the top layer at
+  // all (door frames, wall caps, occluders). Rooms that declare a translucency mode keep it.
+  if ((bytes[0] >> 5) === 0) bytes[0] = (bytes[0] & 0x1f) | (3 << 5);
+
   bytes[1] = EXTRA_DUNGEON_PALINFO;
   bytes[2] = AUX_TILE_THEME;
   assertTravelStaysInDungeon(bytes, room.id, rooms);
@@ -206,17 +212,20 @@ const compileGbaAlttpSupplement = (rom: GbaRomReader, snes: RomData): Buffer => 
     // genuinely clamped.
     kGbaPalaceCameraBounds: () => assets.addPacked('kGbaPalaceCameraBounds', rooms.map(() => Buffer.alloc(0))),
     kGbaPalaceRoomLayersSnes: () => assets.addPacked('kGbaPalaceRoomLayersSnes', rooms.flatMap(room => {
-      // The bottom layer carries the priority bit on the cells the port occludes with sprites.
-      const priority = occluderCells(room);
+      // The cells the port occludes with sprites move onto the TOP layer, which the loader
+      // composites onto BG1 with the priority bit - the only background that renders above
+      // the player's sprite priority indoors. High-priority BG2 does not.
+      const occluders = occluderCells(room);
       return room.layers.map((layer, n) => {
-        if (n !== 0 || priority.size === 0) return wordsToBuffer(layer.snesWords);
+        if (n !== 2 || occluders.size === 0) return wordsToBuffer(layer.snesWords);
         const words = Uint16Array.from(layer.snesWords);
-        for (const cell of priority) words[cell] |= 0x2000;
+        for (const cell of occluders) words[cell] = room.layers[0].snesWords[cell];
         return wordsToBuffer(words);
       });
     })),
     kGbaPalaceRoomCollision: () => assets.addPacked('kGbaPalaceRoomCollision', layerBuffers(rooms, layer => Buffer.from(layer.collision))),
     kGbaPalaceAttrOverlays: () => assets.addPacked('kGbaPalaceAttrOverlays', rooms.map(room => attrOverlayRecord(room.id))),
+    kGbaPalaceTileAttrOverrides: () => assets.addUint8('kGbaPalaceTileAttrOverrides', [...tileAttrOverridesRecord()]),
   };
 
   if (Object.keys(builders).length !== GBA_ALTTP_ASSET_MANIFEST.length) {

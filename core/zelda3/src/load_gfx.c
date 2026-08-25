@@ -618,23 +618,26 @@ void Gfx_LoadSpritesInner(uint8 *dst) {  // 80d706
   const uint8 *p = kSpriteTilesets[sprite_graphics_index];
   int len;
 
+  if (p[0])
+    sprite_gfx_subset_0 = p[0];
+  if (p[1])
+    sprite_gfx_subset_1 = p[1];
+  if (p[2])
+    sprite_gfx_subset_2 = p[2];
+  if (p[3])
+    sprite_gfx_subset_3 = p[3];
+  // After the tileset table, matching InitializeTilesets: the hook must have the last word,
+  // or a transition decompresses the vanilla sheets and every sprite garbles until the next
+  // full load puts the right ones back.
   GbaAlttp_SelectDungeonSpriteSheets(&sprite_gfx_subset_0, &sprite_gfx_subset_1,
                                      &sprite_gfx_subset_2, &sprite_gfx_subset_3);
 
-  if (p[0])
-    sprite_gfx_subset_0 = p[0];
   len = Decomp_spr(dst, sprite_gfx_subset_0);
   assert(len == 0x600);
-  if (p[1])
-    sprite_gfx_subset_1 = p[1];
   len = Decomp_spr(dst + 0x600, sprite_gfx_subset_1);
   assert(len == 0x600);
-  if (p[2])
-    sprite_gfx_subset_2 = p[2];
   len = Decomp_spr(dst + 0x600*2, sprite_gfx_subset_2);
   assert(len == 0x600);
-  if (p[3])
-    sprite_gfx_subset_3 = p[3];
   len = Decomp_spr(dst + 0x600*3, sprite_gfx_subset_3);
   assert(len == 0x600);
   incremental_counter_for_vram = 0;
@@ -815,6 +818,23 @@ void LoadNewSpriteGFXSet() {  // 80e031
     Do3To4High16Bit(&g_ram[0x11800], &g_ram[0x8a00], 0x40);
   else
     Do3To4Low16Bit(&g_ram[0x11800], &g_ram[0x8a00], 0x40);
+}
+
+/* The sprite half of InitializeTilesets, callable on its own: table, selection hook, then
+   a direct load into VRAM and the decomp caches. Used when a transition deferred its sheet
+   swap to the settle frame. */
+void Gfx_ReloadSpriteSheetsImmediate(void) {
+  const uint8 *p = kSpriteTilesets[sprite_graphics_index];
+  if (p[0]) sprite_gfx_subset_0 = p[0];
+  if (p[1]) sprite_gfx_subset_1 = p[1];
+  if (p[2]) sprite_gfx_subset_2 = p[2];
+  if (p[3]) sprite_gfx_subset_3 = p[3];
+  GbaAlttp_SelectDungeonSpriteSheets(&sprite_gfx_subset_0, &sprite_gfx_subset_1,
+                                     &sprite_gfx_subset_2, &sprite_gfx_subset_3);
+  LoadSpriteGraphics(&g_zenv.vram[0x5000], sprite_gfx_subset_0, &g_ram[0x7800]);
+  LoadSpriteGraphics(&g_zenv.vram[0x5400], sprite_gfx_subset_1, &g_ram[0x7e00]);
+  LoadSpriteGraphics(&g_zenv.vram[0x5800], sprite_gfx_subset_2, &g_ram[0x8400]);
+  LoadSpriteGraphics(&g_zenv.vram[0x5c00], sprite_gfx_subset_3, &g_ram[0x8a00]);
 }
 
 void InitializeTilesets() {  // 80e19b

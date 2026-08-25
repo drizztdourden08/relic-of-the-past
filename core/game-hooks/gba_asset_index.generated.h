@@ -36,6 +36,7 @@ enum {
   kGbaAssetRoomLayersSnes,  // kGbaPalaceRoomLayersSnes — Baked tilemap words per room layer (three layers per room), translated to SNES layout.
   kGbaAssetRoomCollision,  // kGbaPalaceRoomCollision — Per-layer collision attribute bytes per room, as the port ships them.
   kGbaAssetAttrOverlays,  // kGbaPalaceAttrOverlays — Per-room attribute corrections applied after collision installs: layer, cell, attribute records.
+  kGbaAssetTileAttrOverrides,  // kGbaPalaceTileAttrOverrides — Per-tile attribute corrections for ids the port re-drew: tile word, attribute byte records.
   kGbaAlttpAssetCount,
 };
 

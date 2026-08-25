@@ -1,5 +1,6 @@
 /* @layer renderer-app @kind component */
 import { useEffect, useMemo } from 'react';
+import { subscribeGameState } from '@app/lib/game/wasm-bridge';
 import { Box, Image } from '@ds/primitives';
 import { WidgetManager, useWidgetLayout } from '@ds/composites/Widget';
 import { Dialog } from '@ds/composites/Dialog';
@@ -107,6 +108,10 @@ const AppMain = () => {
   // A music pack opened from the desktop imports itself.
   useMsulOpen();
   useAppMainEffects({ isGameRunning: game.isRunning, activePage: nav.activePage, openNavWidget: () => widgets.open('navigation') });
+  // A core crash surfaces its own evidence: the logs widget opens on the spot.
+  useEffect(() => subscribeGameState((state) => {
+    if (state.status === 'error') widgets.open('logs');
+  }), [widgets.open]);
 
   // Default notch mode until a profile loads (keeps startup windows clear of a cutout).
   useEffect(() => { applyNotchMode(true); }, []);

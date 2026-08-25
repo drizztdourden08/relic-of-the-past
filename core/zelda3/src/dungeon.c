@@ -2678,6 +2678,14 @@ void Dungeon_LoadRoom() {  // 81873a
   dung_load_ptr_offs = 0x120;
 }
 
+/* Full row-pointer init for a draw outside the stream path (the baked-room door pass):
+   offsets AND bank bytes, exactly as the stream draw sets them before its lower sections.
+   Selecting only the bank bytes leaves whatever offsets history put there, and a door then
+   draws and registers at garbage positions. */
+void Dungeon_PrepDoorDrawLayer(void) {
+  memcpy(&dung_line_ptrs_row0, kDungeon_DrawObjectOffsets_BG1, 33);
+}
+
 void RoomDraw_DrawAllObjects(const uint8 *level_data) {  // 8188e4
   for (;;) {
     dung_draw_width_indicator = dung_draw_height_indicator = 0;
@@ -3833,6 +3841,7 @@ void Dungeon_LoadAttribute_Selectable() {  // 81b8b4
     break;
   case 3:
     Dungeon_LoadDoorAttribute();
+    GbaAlttp_ApplyBakedAttrOverlay();
     break;
   case 4:
     overworld_map_state = 5;
@@ -6713,7 +6722,14 @@ void Module07_02_00_InitializeTransition() {  // 828a4f
 void Module07_02_01_LoadNextRoom() {  // 828a5b
   Dungeon_LoadRoom();
   ResetStarTileGraphics();
-  LoadTransAuxGFX_sprite();
+  // Bank rooms carry a sprite-sheet set per room, and the incremental mid-scroll upload
+  // garbles whatever is on screen. This is the one moment with no sprites visible (the old
+  // room's are disabled just below, the new room's not yet spawned), so their sheets load
+  // in full right here; the spawn keeps vanilla timing and renders correct from frame one.
+  if (GbaAlttp_IsBakedRoomActive())
+    Gfx_ReloadSpriteSheetsImmediate();
+  else
+    LoadTransAuxGFX_sprite();
   subsubmodule_index++;
   overworld_map_state = 0;
   BYTE(dungeon_room_index2) = BYTE(dungeon_room_index);
@@ -6727,6 +6743,9 @@ void Dungeon_InterRoomTrans_State3() {  // 828a87
   if (dung_want_lights_out | dung_want_lights_out_copy)
     TS_copy = 0;
   Dungeon_AdjustForRoomLayout();
+  // Runs for bank rooms too: the incremental NMI uploader copies this staging into sprite
+  // VRAM regardless, so it must hold the sprite sheets - gating it left our background
+  // patch in the staging and the uploader wrote tiles over every sprite sheet.
   LoadNewSpriteGFXSet();
   MirrorBg1Bg2Offs();
   WaterFlood_BuildOneQuadrantForVRAM();
@@ -6817,6 +6836,8 @@ void Dungeon_InterRoomTrans_State7() {  // 828b2e
 
   if (dungeon_room_index != 54 && dungeon_room_index != 56) {
     uint16 y = kSpiralTab1[dung_hdr_bg2_properties] ? 0x116 : 0x16;
+    if (GbaAlttp_IsBakedRoomActive() && sign8(kSpiralTab1[dung_hdr_bg2_properties]))
+      y = 0x17;  // opaque upper layer stays on the main screen through the scroll
     if (y != (TM_copy | TS_copy << 8) && (TM_copy == 0x17 || (TM_copy | TS_copy) != 0x17))
       TM_copy = y, TS_copy = y >> 8;
   }
@@ -6979,6 +7000,8 @@ void Dungeon_InitializeRoomFromSpecial() {  // 828ce2
 }
 
 void DungeonTransition_LoadSpriteGFX() {  // 828d10
+  if (GbaAlttp_IsBakedRoomActive())
+    Gfx_ReloadSpriteSheetsImmediate();
   LoadNewSpriteGFXSet();
   Dungeon_ResetSprites();
   DungeonTransition_RunFiltering();

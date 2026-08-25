@@ -25,11 +25,6 @@
 
 enum { kCellsPerLayer = 4096, kLayerBytes = 0x2000, kAttrBytes = 0x1000, kLayersPerRoom = 3 };
 enum { kAttrSolid = 0x01, kPriority = 0x2000 };
-/* The row-pointer block the drawing routines resolve destinations through: eleven three-byte
-   pointers whose bank byte selects the lower (0x20) or upper (0x40) tilemap, mirrored from the
-   engine's own tables. 33 bytes exactly - the joypad mirrors live just past this block. */
-enum { kRowPointerBase = 0xbf, kRowPointerBytes = 33, kRowPointerStride = 3 };
-
 bool GbaAlttp_IsBakedRoomActive(void) {
   return player_is_indoors && GbaAlttp_IsBankRoom(dungeon_room_index);
 }
@@ -54,12 +49,6 @@ static bool TileHasVisiblePixels(uint16 map_word) {
       return true;
   }
   return false;
-}
-
-static void SelectLowerLayer(void) {
-  uint8 *block = &g_ram[kRowPointerBase];
-  for (int i = 1; i < kRowPointerBytes; i += kRowPointerStride)
-    block[i] = (uint8)((block[i] & 0x0f) | 0x20);
 }
 
 static void InstallVoidRoom(void) {
@@ -90,7 +79,7 @@ static void RegisterDoors(uint16 room) {
   const uint16 *doors = GbaAlttp_GetRoomDoors(room);
   if (!doors)
     return;
-  SelectLowerLayer();
+  Dungeon_PrepDoorDrawLayer();
   for (int i = 0; doors[i] != 0xffff; i++)
     RoomData_DrawObject_Door(doors[i]);
   Dungeon_LoadDoorAttribute();

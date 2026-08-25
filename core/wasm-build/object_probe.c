@@ -272,6 +272,14 @@ int WasmProbeReloadAttrs(void) {
   return 0;
 }
 
+/* One 32-byte background tile from live VRAM, for diffing against the shipped block. */
+EMSCRIPTEN_KEEPALIVE
+int WasmProbeVramTile(int tile) {
+  static uint8 buf[32];
+  memcpy(buf, &g_zenv.vram[0x2000 + tile * 16], 32);
+  return (int)buf;
+}
+
 /* The attribute tables as the game last derived them, for verifying the real load path. */
 EMSCRIPTEN_KEEPALIVE
 int WasmProbeLiveAttrs(void) {

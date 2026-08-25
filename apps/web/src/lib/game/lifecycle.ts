@@ -5,6 +5,7 @@
  */
 
 import { log } from '../log-bus';
+import { writeCrashDump } from '../crash-dump';
 import * as savesStore from '../storage/saves-store';
 import type { EmscriptenModule } from './types';
 import { writeBootFiles } from './boot-files';
@@ -160,6 +161,8 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
     if (event.filename) {
       log.error(`  at ${event.filename}:${event.lineno}:${event.colno}`);
     }
+    // After the stack lines above, so the dump's log buffer carries them too.
+    void writeCrashDump(err.message, err.stack);
   };
 
   try {

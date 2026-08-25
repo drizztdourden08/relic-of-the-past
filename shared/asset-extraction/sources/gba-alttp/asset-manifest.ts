@@ -53,6 +53,7 @@ const GBA_ALTTP_ASSET_MANIFEST: readonly GbaAlttpAssetManifestEntry[] = [
   { name: 'kGbaPalaceRoomLayersSnes', description: 'Baked tilemap words per room layer (three layers per room), translated to SNES layout.' },
   { name: 'kGbaPalaceRoomCollision', description: 'Per-layer collision attribute bytes per room, as the port ships them.' },
   { name: 'kGbaPalaceAttrOverlays', description: 'Per-room attribute corrections applied after collision installs: layer, cell, attribute records.' },
+  { name: 'kGbaPalaceTileAttrOverrides', description: 'Per-tile attribute corrections for ids the port re-drew: tile word, attribute byte records.' },
 ];
 
 const GBA_ALTTP_ASSET_INDEX: Readonly<Record<string, number>> = Object.fromEntries(
