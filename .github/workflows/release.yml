@@ -227,6 +227,32 @@ jobs:
         if: matrix.platform == 'win' || matrix.platform == 'linux'
         run: dotnet tool install -g vpk --version 1.2.110-ge826545
 
+      # The record dataset lives in the private companion repo, not this one, so a
+      # plain checkout builds an app with an EMPTY dataset: no sprite definitions,
+      # no screens, no checks. Every consumer reads it through a Vite glob that
+      # falls back to empty, which is right for a clone and wrong for a release —
+      # v0.17.0 through v0.18.0 shipped that way, green, with sprite extraction
+      # silently writing zero files.
+      #
+      # After npm install on purpose: postinstall runs the two-way vault sync, and
+      # it must not find a vault to write back to. By here it has already run and
+      # skipped, so this pull is the only direction that happens.
+      - name: Fetch the private dataset
+        shell: bash
+        env:
+          VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${VAULT_TOKEN}@github.com/drizztdourden08/rotp-vault.git" \
+            ../rotp-vault
+          node scripts/vault/sync.mjs --force-pull
+
+      # The one place an empty dataset is an error rather than a normal state.
+      # Without it, a lapsed token ships another hollow release instead of failing.
+      - name: Verify the dataset landed
+        shell: bash
+        run: node scripts/vault/check-dataset.mjs
+
       - name: Build & Package
         shell: bash
         env:
@@ -384,6 +410,20 @@ jobs:
       # directly keeps the Android build independent of that.
       - name: Fetch the pinned SDL3 source
         run: node scripts/build/fetch-sdl3.mjs
+
+      # Same reasoning as the desktop job above: without this the APK ships an
+      # empty dataset. See the comment there.
+      - name: Fetch the private dataset
+        env:
+          VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${VAULT_TOKEN}@github.com/drizztdourden08/rotp-vault.git" \
+            ../rotp-vault
+          node scripts/vault/sync.mjs --force-pull
+
+      - name: Verify the dataset landed
+        run: node scripts/vault/check-dataset.mjs
 
       - name: Build web bundle + sync into the Android project
         run: npm run cap:sync
