@@ -21,6 +21,38 @@ const OUT_DIR = join(root, 'apps', 'web', 'public', 'logos', 'generated');
 // Windows .ico wants the whole ladder; the small sizes are what actually show in a file list.
 const ICO_SIZES = [16, 24, 32, 48, 64, 128, 256];
 
+/**
+ * macOS icon slots, as OSType plus the pixel size to fill it with. The repeats are
+ * deliberate: the second 256 and 512 are the retina variants of 128 and 256, and a
+ * pack file shows the wrong one if only the plain slot is filled.
+ *
+ * Nothing here is upscaled — the source logo is 512, which is why there is no 1024
+ * slot (ic10). electron-builder only needs a valid file, not a complete ladder.
+ */
+const ICNS_SLOTS = [
+  ['ic11', 32], ['ic12', 64], ['ic07', 128],
+  ['ic13', 256], ['ic08', 256], ['ic14', 512], ['ic09', 512],
+];
+
+/**
+ * An .icns is a magic word, a total length, then one length-prefixed chunk per slot.
+ * Since 10.7 each chunk may hold a PNG verbatim, so the images need no re-encoding and
+ * this needs no dependency: the sizes are already composed above.
+ */
+const buildIcns = (entries) => {
+  const chunks = entries.map(([type, png]) => {
+    const header = Buffer.alloc(8);
+    header.write(type, 0, 4, 'ascii');
+    header.writeUInt32BE(png.length + 8, 4);
+    return Buffer.concat([header, png]);
+  });
+  const body = Buffer.concat(chunks);
+  const header = Buffer.alloc(8);
+  header.write('icns', 0, 4, 'ascii');
+  header.writeUInt32BE(body.length + 8, 4);
+  return Buffer.concat([header, body]);
+};
+
 /** A music note, drawn rather than shipped as an asset so there is nothing extra to keep in sync. */
 const badgeSvg = (size) => {
   const stroke = Math.max(2, Math.round(size * 0.055));
@@ -60,7 +92,18 @@ const main = async () => {
   await writeFile(join(OUT_DIR, 'msul-512.png'), await compose(512));
   await writeFile(join(OUT_DIR, 'msul.ico'), await pngToIco(pngs));
 
-  console.log(`[msul-icon] wrote msul.ico, msul-256.png, msul-512.png to ${OUT_DIR}`);
+  // electron-builder takes the configured .ico path and swaps the extension per
+  // platform, so the macOS build looks for msul.icns beside it and fails outright
+  // when it is absent. Composed per distinct size, then shared between the slots
+  // that want the same pixels.
+  const bySize = new Map();
+  for (const [, size] of ICNS_SLOTS) {
+    if (!bySize.has(size)) bySize.set(size, await compose(size));
+  }
+  const icns = buildIcns(ICNS_SLOTS.map(([type, size]) => [type, bySize.get(size)]));
+  await writeFile(join(OUT_DIR, 'msul.icns'), icns);
+
+  console.log(`[msul-icon] wrote msul.ico, msul.icns, msul-256.png, msul-512.png to ${OUT_DIR}`);
 };
 
 main().catch((err) => {
