@@ -265,6 +265,14 @@ int WasmProbeStreamAttrs(void) {
 EMSCRIPTEN_KEEPALIVE
 int WasmProbeStreamMaps(void) { return (int)g_probe_maps; }
 
+/* The maps as the game itself last drew them, for verifying the real load path. */
+EMSCRIPTEN_KEEPALIVE
+int WasmProbeLiveMaps(void) {
+  memcpy(g_probe_maps, &g_ram[kLowerBase], 0x2000);
+  memcpy(g_probe_maps + 0x2000, &g_ram[kUpperBase], 0x2000);
+  return (int)g_probe_maps;
+}
+
 /**
  * Headless frame stepping, so a crash can be reproduced and dissected outside the app.
  *
@@ -277,4 +285,14 @@ int WasmProbeRunFrames(int frames, int input_mask) {
   for (int i = 0; i < frames; i++)
     ZeldaRunFrame(input_mask);
   return frames;
+}
+
+/* One real rendered frame, through the same draw path the app uses, for headless inspection.
+   RGBA rows at a fixed 1024-pixel pitch; the caller reads width/height from the PPU config. */
+static uint8 g_probe_frame[1024 * 512 * 4];
+
+EMSCRIPTEN_KEEPALIVE
+int WasmProbeRenderFrame(void) {
+  ZeldaDrawPpuFrame(g_probe_frame, 1024 * 4, 0);
+  return (int)g_probe_frame;
 }

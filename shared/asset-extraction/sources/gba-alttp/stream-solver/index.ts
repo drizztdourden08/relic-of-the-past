@@ -14,7 +14,8 @@ import { MEASURED_STAIR_SLOTS } from '../../../extensions/second-cartridge-stair
 import { orderStairsToMeasuredSlots } from './stair-slots';
 import { readFloorPatterns } from './base-map';
 import { createEngineProbe } from './probe-host';
-import { buildBytes } from './room-attempt';
+import { buildBytes, replay } from './room-attempt';
+import { planRawRuns } from './raw-runs';
 import { solveRoom } from './solve-room';
 import { WORD_MASK, buildDoorCatalogue, buildStampCatalogue, buildTemplates } from './stamp-catalogue';
 import type { DungeonRoomRecord } from '../../../dungeon/model';
@@ -32,7 +33,9 @@ const FIRST_STAIR_BYTE = 10;
 interface SolvedStreams {
   /** The recovered stream per room id, as the bytes the engine reads. */
   streams: Map<number, Buffer>;
-  /** Residual cell count per room id — cells the stream cannot reproduce, for the log. */
+  /** The raw-run blob per room id, consumed by the reserved drawing object. */
+  rawRuns: Map<number, Buffer>;
+  /** Cells per room id still unreproducible after raw runs (art absent), for the log. */
   residuals: Map<number, number>;
 }
 
@@ -80,6 +83,7 @@ const solveGbaRoomStreams = async (
   const dungeonRooms: ReadonlySet<number> = new Set(rooms.map(room => room.id));
 
   const streams = new Map<number, Buffer>();
+  const rawRuns = new Map<number, Buffer>();
   const residuals = new Map<number, number>();
   for (const room of rooms) {
     const { tw, care } = roomTargets(room);
@@ -101,10 +105,15 @@ const solveGbaRoomStreams = async (
       solved.sections = ordered.sections;
       solved.mism = ordered.mism;
     }
-    streams.set(room.id, Buffer.from(buildBytes(st, solved.combo, solved.sections)));
-    residuals.set(room.id, solved.mism);
+    // What the stream still cannot express is written by raw runs: rectangles of literal
+    // words drawn by the reserved object, consuming the room's run blob in draw order.
+    const replayMap = replay(st, floors, templates, solved.combo, solved.sections);
+    const plan = planRawRuns(buildBytes(st, solved.combo, solved.sections), tw, care, replayMap);
+    streams.set(room.id, plan.stream);
+    rawRuns.set(room.id, plan.runBlob);
+    residuals.set(room.id, plan.residual);
   }
-  return { streams, residuals };
+  return { streams, rawRuns, residuals };
 };
 
 export { solveGbaRoomStreams };

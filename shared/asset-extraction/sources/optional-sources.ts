@@ -16,7 +16,7 @@ const OPTIONAL_SOURCES: OptionalSource[] = [
         throw new Error(sources.gbaStreamsError
           ?? 'The second cartridge needs its room streams solved first; no engine was available to solve them');
       }
-      return compileGbaAlttpSupplement(sources.gbaAlttp, sources.snes, sources.gbaStreams);
+      return compileGbaAlttpSupplement(sources.gbaAlttp, sources.snes, sources.gbaStreams.streams, sources.gbaStreams.rawRuns);
     },
   },
 ];

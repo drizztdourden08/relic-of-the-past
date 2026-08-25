@@ -61,7 +61,6 @@ const runAssets = async (
     gbaAlttp: gbaRom,
   }, { extraLanguages }, gbaRom && bundle
     ? (base) => solveGbaRoomStreams(bundle, base, new GbaAlttpDungeonSource(gbaRom).palaceRooms())
-        .then(solved => solved.streams)
     : undefined);
 
   return {

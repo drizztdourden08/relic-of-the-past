@@ -11,6 +11,7 @@
 #include <emscripten.h>
 
 #include "src/types.h"
+#include "snes/ppu.h"
 #include "src/variables.h"
 #include "src/zelda_rtl.h"
 #include "src/dungeon.h"
@@ -111,6 +112,16 @@ int WasmDebugGetRuntimeState(int index) {
   case 41: return dung_num_inroom_southdown_stairs;
   case 42: return subsubmodule_index;
   case 43: return overworld_screen_transition;
+  case 44: return room_bounds_x.v[0];
+  case 45: return room_bounds_x.v[1];
+  case 46: return room_bounds_x.v[2];
+  case 47: return room_bounds_x.v[3];
+  case 48: return quadrant_fullsize_x;
+  case 49: return BG2HOFS_copy2;
+  case 50: return (int)g_zenv.ppu->extraLeftCur;
+  case 51: return (int)g_zenv.ppu->extraRightCur;
+  case 52: return room_bounds_y.v[0];
+  case 53: return room_bounds_y.v[3];
   default: return -1;
   }
 }

@@ -6,6 +6,7 @@ import type { RomData } from './rom/rom-types';
 import { compressStrings } from './text/dialogue-encoder';
 import { EXTRA_DUNGEON_PALINFO } from './extensions/second-cartridge-palette';
 import { doorListFor } from './extensions/second-cartridge-doors';
+import { cameraBoundsRecord } from './extensions/second-cartridge-camera';
 import { bankedRoomId } from './extensions/second-cartridge-bank';
 import {
   AUX_TILE_THEME,
@@ -129,7 +130,7 @@ const nativeHeaderBytes = (room: DungeonRoomRecord, rooms: ReadonlySet<number>):
  * caller hosts; this compile stays a pure synchronous function of its inputs.
  */
 const compileGbaAlttpSupplement = (
-  rom: GbaRomReader, snes: RomData, streams: ReadonlyMap<number, Buffer>,
+  rom: GbaRomReader, snes: RomData, streams: ReadonlyMap<number, Buffer>, rawRuns: ReadonlyMap<number, Buffer>,
 ): Buffer => {
   const source = new GbaAlttpDungeonSource(rom);
   const rooms = source.palaceRooms();
@@ -197,6 +198,8 @@ const compileGbaAlttpSupplement = (
       return stream;
     })),
     kGbaAlttpRoomTagHandlers: () => assets.addUint8('kGbaAlttpRoomTagHandlers', [...uint32Buffer(roomTagHandlers.map(handler => handler.thumbAddress))]),
+    kGbaPalaceRoomRawRuns: () => assets.addPacked('kGbaPalaceRoomRawRuns', rooms.map(room => rawRuns.get(room.id) ?? Buffer.alloc(0))),
+    kGbaPalaceCameraBounds: () => assets.addPacked('kGbaPalaceCameraBounds', rooms.map(room => cameraBoundsRecord(room))),
   };
 
   if (Object.keys(builders).length !== GBA_ALTTP_ASSET_MANIFEST.length) {

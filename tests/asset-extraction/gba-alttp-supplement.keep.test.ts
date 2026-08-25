@@ -92,8 +92,8 @@ integration('extracts and compiles every Palace room from the validated ROM', as
   expect(text[0x1a5].plainText.replace(/\s+/g, ' ')).toContain('only true heroes can enter this palace');
   expect(text[0x1b2].plainText).toContain('Spin like a tornado');
   const snes = loadRomFromBuffer(readFileSync(snesPath));
-  const { streams } = await solveGbaRoomStreams(engineBundle(), compileResources(snes), rooms);
-  expect(compileGbaAlttpSupplement(rom, snes, streams).length).toBeGreaterThan(100_000);
+  const { streams, rawRuns } = await solveGbaRoomStreams(engineBundle(), compileResources(snes), rooms);
+  expect(compileGbaAlttpSupplement(rom, snes, streams, rawRuns).length).toBeGreaterThan(100_000);
 }, 1_800_000);
 
 const savePath = resolve('test-roms', 'Legend of Zelda, The - A Link to the Past & Four Swords (USA).sav');

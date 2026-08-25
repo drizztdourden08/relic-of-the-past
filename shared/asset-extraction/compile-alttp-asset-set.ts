@@ -23,7 +23,10 @@ const reasonOf = (error: unknown): string => (error instanceof Error ? error.mes
  * by the caller because it needs a live engine instance, which only the caller can host —
  * the extraction worker fetches the engine build, a test reads it from disk.
  */
-type SolveStreams = (base: Buffer) => Promise<ReadonlyMap<number, Buffer>>;
+type SolveStreams = (base: Buffer) => Promise<{
+  streams: ReadonlyMap<number, Buffer>;
+  rawRuns: ReadonlyMap<number, Buffer>;
+}>;
 
 const compileAlttpAssetSet = async (
   sources: AlttpAssetSources,

@@ -19,11 +19,54 @@
  * to handing the engine a different pointer. Everything after that is the engine's own code path
  * for every other room in the game, unmodified.
  */
+/**
+ * Raw tile runs: the cells no object in the vocabulary can express.
+ *
+ * The cartridge re-baked some room art with arrangements the drawing language cannot
+ * produce - the recovered stream covers everything structural, and what remains is written
+ * by this object, implemented in the drawing switch's reserved empty slot the way the
+ * original game would have added one. Each use consumes the next run from the room's data:
+ * a width, a height, then width*height tile words, drawn at the object's own position
+ * through the same destination pointer every other object writes through.
+ *
+ * The cursor arms when the room's stream is fetched, which happens exactly once per room
+ * load; with the dungeon absent or disabled the slot stays the no-op it always was.
+ */
+static const uint8 *g_raw_runs;
+static const uint8 *g_raw_runs_end;
+
+static void BeginRoomRawRuns(uint16 room) {
+  g_raw_runs = g_raw_runs_end = NULL;
+  int index = GbaAlttpFindRoom(room);
+  if (index < 0)
+    return;
+  MemBlk runs = FindIndexInMemblk(GbaAlttpAsset(kGbaAssetRoomRawRuns), index);
+  g_raw_runs = runs.ptr;
+  g_raw_runs_end = runs.ptr + runs.size;
+}
+
+void GbaAlttp_DrawRawRun(uint16 *dst) {
+  enum { kMapStride = 64 };
+  if (!g_raw_runs || g_raw_runs + 2 > g_raw_runs_end)
+    return;
+  int width = g_raw_runs[0], height = g_raw_runs[1];
+  g_raw_runs += 2;
+  for (int y = 0; y < height; y++) {
+    for (int x = 0; x < width; x++) {
+      if (g_raw_runs + 2 > g_raw_runs_end)
+        return;
+      dst[y * kMapStride + x] = (uint16)(g_raw_runs[0] | (g_raw_runs[1] << 8));
+      g_raw_runs += 2;
+    }
+  }
+}
+
 extern const uint8 *GbaAlttp_VoidRoomStream(void);
 
 const uint8 *GbaAlttp_GetRoomLayout(uint16 room) {
   if (!GbaAlttp_IsBankRoom(room))
     return NULL;
+  BeginRoomRawRuns(room);
   int index = GbaAlttpFindRoom(room);
   if (index >= 0) {
     MemBlk layout = FindIndexInMemblk(GbaAlttpAsset(kGbaAssetRoomLayouts), index);

@@ -665,7 +665,10 @@ void LoadType1ObjectSubtype1(uint8 idx, uint16 *dst, uint16 dsto) {
     dst[XY(0, 1)] = src[0];
     dst[XY(1, 1)] = src[1];
     break;
-  case 0x31: case 0x32:  // 31 -  Unused -empty
+  case 0x31:  // 31 -  Unused in the base game; the extra dungeon's raw-run object
+    GbaAlttp_DrawRawRun(dst);
+    break;
+  case 0x32:  // 32 -  Unused -empty
   case 0x35: case 0x54: case 0x57:case 0x58:case 0x59:case 0x5A:
     break;
   case 0x33:  // 33 -  Red Carpet Floor [L-R]
