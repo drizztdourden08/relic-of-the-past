@@ -23,7 +23,7 @@
 
 .section-header__subtitle {
   font-size: var(--text-xs);
-  color: var(--c-text-faint);
+  color: var(--c-text-muted);
 }
 
 .section-header__action {

@@ -40,7 +40,7 @@
 
 .data-home__hint {
   font-size: var(--text-xs);
-  color: var(--c-text-faint);
+  color: var(--c-text-muted);
   white-space: nowrap;
 }
 
@@ -79,7 +79,7 @@
 
 .data-home__card-size {
   font-size: var(--text-xs);
-  color: var(--c-text-faint);
+  color: var(--c-text-muted);
 }
 
 .data-home__loading {

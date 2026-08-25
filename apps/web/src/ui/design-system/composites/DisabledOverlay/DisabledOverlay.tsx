@@ -42,7 +42,9 @@ const DisabledOverlay = (props: DisabledOverlayProps) => {
       </Box>
       <Box className="disabled-overlay__scrim">
         <Text className="disabled-overlay__message">{message}</Text>
-        <Button variant="secondary" size="sm" onClick={onOpenSettings}>{actionLabel}</Button>
+        {onOpenSettings && (
+          <Button variant="secondary" size="sm" onClick={onOpenSettings}>{actionLabel}</Button>
+        )}
       </Box>
     </Box>
   );

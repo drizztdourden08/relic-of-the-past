@@ -32,11 +32,15 @@ const writeAndPrune = (outputDir: string, result: ReturnType<typeof extractSprit
   }
   const expected = new Set(result.buffers.map((b) => b.name));
   let removedStale = 0;
-  try {
-    for (const f of readdirSync(outputDir).filter((f) => f.endsWith('.png'))) {
-      if (!expected.has(f)) { unlinkSync(join(outputDir, f)); removedStale += 1; }
-    }
-  } catch { /* outputDir may not exist on first run */ }
+  // Writing nothing means the definitions were absent, never that every file on
+  // disk went stale. Pruning against an empty set would empty the whole folder.
+  if (expected.size > 0) {
+    try {
+      for (const f of readdirSync(outputDir).filter((f) => f.endsWith('.png'))) {
+        if (!expected.has(f)) { unlinkSync(join(outputDir, f)); removedStale += 1; }
+      }
+    } catch { /* outputDir may not exist on first run */ }
+  }
   return { total: result.buffers.length, counts: result.counts, errors: result.errors, removedStale };
 };
 

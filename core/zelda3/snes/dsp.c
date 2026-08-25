@@ -17,6 +17,11 @@
 // sizeof(Dsp)-offsetof(ram)), which silently breaks every existing save state. There is a single DSP, so a
 // module-level flag is equivalent and keeps the save format stable. Resynced from settings each frame.
 static bool g_perGroupVolumeEnabled;
+// The ambient bed's own group. Statics rather than Dsp fields on purpose: the Dsp struct is
+// snapshot-serialized from `ram` onward and must not change size, and these are live settings the
+// same way the gate above is, not chip state a snapshot should carry.
+static uint8_t g_ambientVolume = 128;
+static uint8_t g_ambientChannelMask;
 
 static const int rateValues[32] = {
   0, 2048, 1536, 1280, 1024, 768, 640, 512,
@@ -146,7 +151,11 @@ void dsp_cycle(Dsp* dsp) {
     dsp_cycleChannel(dsp, i);
     if (g_perGroupVolumeEnabled) {
       // Apply sub-volume to sampleOut directly so it affects both main mix and echo input
-      uint8_t groupVol = (dsp->sfxChannelMask & (1 << i)) ? dsp->sfxVolume : dsp->musicVolume;
+      // Ambient first: the bed's voices are allocated by the effects engine, so the sfx mask
+      // covers them too — checked second, sfx would swallow the bed and the ambience slider
+      // would read as doing nothing while the effects slider moved the rain.
+      uint8_t groupVol = (g_ambientChannelMask & (1 << i)) ? g_ambientVolume
+                       : (dsp->sfxChannelMask & (1 << i)) ? dsp->sfxVolume : dsp->musicVolume;
       if (groupVol < 128) {
         dsp->channel[i].sampleOut = (dsp->channel[i].sampleOut * groupVol) >> 7;
       }
@@ -686,6 +695,16 @@ void dsp_setSfxVolume(Dsp* dsp, uint8_t volume) {
 // Per-group volume gate, pushed from the game side (kFeatures0_PerGroupVolume) so this audio core never
 // reads game RAM. false => stock DSP mix (bit-exact). Driven from the per-frame feature sync so a live
 // toggle takes effect immediately, not only on the next volume change.
+void dsp_setAmbientVolume(Dsp* dsp, uint8_t volume) {
+  (void)dsp;
+  g_ambientVolume = volume > 128 ? 128 : volume;
+}
+
+// Which voices the ambient system owns right now, synced per generation pass beside the sfx mask.
+void dsp_setAmbientChannelMask(uint8_t mask) {
+  g_ambientChannelMask = mask;
+}
+
 void dsp_setPerGroupVolumeEnabled(Dsp* dsp, bool enabled) {
   (void)dsp;
   g_perGroupVolumeEnabled = enabled;

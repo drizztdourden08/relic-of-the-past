@@ -13,3 +13,5 @@
 @import url('./motion.css');
 @import url('./z-index.css');
 @import url('./opacity.css');
+@import url('./game-text.css');
+@import url('../fonts/game-font.css');

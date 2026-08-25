@@ -24,8 +24,10 @@ html.booting .fullscreen-layer {
   height: 90%;
   display: flex;
   flex-direction: column;
-  background: var(--c-glass);
-  backdrop-filter: blur(16px);
+
+  /* Opaque on purpose: a translucent card takes its real colour from the game
+     behind it, and no text on it can be guaranteed readable. */
+  background: var(--c-layer);
   border: 1px solid var(--c-hairline);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-3);

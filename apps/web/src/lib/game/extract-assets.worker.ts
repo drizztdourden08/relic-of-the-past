@@ -6,19 +6,22 @@
  */
 import { loadRomFromBuffer } from '@shared/asset-extraction/rom/rom-loader';
 import { loadGbaAlttpRomFromBuffer } from '@shared/asset-extraction/rom/gba-rom';
+import {
+  decodeCredits, decodeEndingCaptions, decodeMenuText,
+} from '@shared/asset-extraction/text/menu-text';
 import { compileAlttpAssetSet } from '@shared/asset-extraction/compile-alttp-asset-set';
-import { buildPackedEntry, extractLangEntry } from '@shared/asset-extraction/text/build-language-entry';
-import { dialogueTexts } from '@shared/asset-extraction/text/parse-dialogue-text';
+import { extractLangEntry } from '@shared/asset-extraction/text/build-language-entry';
+import { compileSets } from '@shared/game/language';
+import type { SetBakeInput } from '@shared/game/language';
 import { extractSpriteBuffers, type SpriteDef } from '@shared/asset-extraction/item-sprites/extract-items';
-import { GbaAlttpDungeonSource } from '@shared/asset-extraction/sources/gba-alttp';
 import type { AssetSourceId } from '@shared/asset-extraction/sources/source-ids';
 
-interface LangInput { code: string; dialogueText: string; fontData: Uint8Array; fontWidth: Uint8Array }
 type SupplementRoms = Partial<Record<AssetSourceId, Uint8Array>>;
 type Req =
-  | { op: 'assets'; romBytes: Uint8Array; supplementRoms?: SupplementRoms; languages: LangInput[] }
+  | { op: 'assets'; romBytes: Uint8Array; supplementRoms?: SupplementRoms; languages: SetBakeInput[] }
   | { op: 'language'; romBytes: Uint8Array; code: string }
-  | { op: 'sprites'; romBytes: Uint8Array; defs: SpriteDef[] };
+  | { op: 'sprites'; romBytes: Uint8Array; defs: SpriteDef[] }
+  | { op: 'menu-text'; romBytes: Uint8Array };
 
 interface AssetsResult {
   base: Uint8Array;
@@ -36,16 +39,9 @@ const ctx = self as unknown as {
 // alongside it and drifted — it learned about the second cartridge while this one, the path
 // the app actually runs, did not. Keep it that way: one compile, every platform.
 const runAssets = async (
-  romBytes: Uint8Array, supplementRoms: SupplementRoms, languages: LangInput[],
+  romBytes: Uint8Array, supplementRoms: SupplementRoms, languages: SetBakeInput[],
 ): Promise<AssetsResult> => {
-  const extraLanguages = languages.map((l) => buildPackedEntry({
-    code: l.code,
-    texts: dialogueTexts(l.dialogueText),
-    fontData: Buffer.from(l.fontData),
-    fontWidth: Buffer.from(l.fontWidth),
-    index: 1,
-  }));
-
+  const extraLanguages = compileSets(languages, (message) => console.warn(`[assets] ${message}`));
   const gbaBytes = supplementRoms['gba-alttp'];
   const gbaRom = gbaBytes ? loadGbaAlttpRomFromBuffer(Buffer.from(gbaBytes)) : undefined;
   const set = await compileAlttpAssetSet({
@@ -82,11 +78,32 @@ const runLanguage = (romBytes: Uint8Array, code: string) => {
 const runSprites = (romBytes: Uint8Array, defs: SpriteDef[]) =>
   extractSpriteBuffers(loadRomFromBuffer(Buffer.from(romBytes)), defs);
 
+/*
+ * The menu, credits and closing captions. The extractor copies these bodies
+ * into the blob without decoding them, so the studio reads them straight from
+ * the player's own file — here, off the UI thread, because reaching them means
+ * parsing a whole ROM.
+ */
+const runMenuText = (romBytes: Uint8Array) => {
+  const rom = loadRomFromBuffer(Buffer.from(romBytes), true);
+  // Decoded through the ROM'S OWN alphabet, never a requested one: reading these
+  // glyphs against the wrong language yields nonsense rather than nothing. The
+  // caller is told which language answered and decides what to do about it.
+  const code = rom.language;
+  return {
+    language: code,
+    menu: decodeMenuText(rom, code),
+    credits: [...decodeCredits(rom), ...decodeEndingCaptions(rom)],
+  };
+};
+
 ctx.onmessage = (e) => {
   const respond = async (): Promise<unknown> => {
     const req = e.data;
     if (req.op === 'assets') return runAssets(req.romBytes, req.supplementRoms ?? {}, req.languages);
-    return req.op === 'language' ? runLanguage(req.romBytes, req.code) : runSprites(req.romBytes, req.defs);
+    if (req.op === 'language') return runLanguage(req.romBytes, req.code);
+    if (req.op === 'menu-text') return runMenuText(req.romBytes);
+    return runSprites(req.romBytes, req.defs);
   };
   respond()
     .then(result => ctx.postMessage({ ok: true, result }))

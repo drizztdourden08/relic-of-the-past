@@ -2,12 +2,19 @@
 .toast-container {
   position: fixed;
   bottom: var(--space-lg);
-  right: var(--space-lg);
   display: flex;
   flex-direction: column-reverse;
   gap: var(--space-sm);
   pointer-events: none;
   z-index: var(--z-toast);
+}
+
+.toast-container--bottom-right {
+  right: var(--space-lg);
+}
+
+.toast-container--bottom-left {
+  left: var(--space-lg);
 }
 
 .toast {
@@ -40,6 +47,12 @@
   background: color-mix(in srgb, var(--c-info) 12%, var(--c-surface));
   border: 1px solid color-mix(in srgb, var(--c-info) 40%, transparent);
   color: var(--c-info);
+}
+
+.toast--success {
+  background: var(--c-green-dim);
+  border: 1px solid var(--c-green);
+  color: var(--c-green-bright);
 }
 
 .toast__message {

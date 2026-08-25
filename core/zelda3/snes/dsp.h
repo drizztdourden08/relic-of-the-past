@@ -106,6 +106,8 @@ void dsp_getSamples(Dsp* dsp, int16_t* sampleData, int samplesPerFrame, int numC
 void dsp_saveload(Dsp *dsp, SaveLoadFunc *func, void *ctx);
 void dsp_setMusicVolume(Dsp* dsp, uint8_t volume);
 void dsp_setSfxVolume(Dsp* dsp, uint8_t volume);
+void dsp_setAmbientVolume(Dsp* dsp, uint8_t volume);
+void dsp_setAmbientChannelMask(uint8_t mask);
 void dsp_setPerGroupVolumeEnabled(Dsp* dsp, bool enabled);
 bool dsp_getPerGroupVolumeEnabled(void);
 

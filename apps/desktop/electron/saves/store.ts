@@ -1,5 +1,6 @@
 import { join } from 'path';
-import { readFile, mkdir, writeFile, readdir, stat, rename as fsRename } from 'fs/promises';
+import { readFile, mkdir, writeFile, readdir, stat, unlink, rename as fsRename } from 'fs/promises';
+import { MSU_SIDECAR_SUFFIX } from '@shared/storage/save-paths';
 import { getUserDataPath } from '../lib/paths';
 import { statSaveSlot } from './save-slot';
 
@@ -62,10 +63,13 @@ const readSramFile = async (profileId: string): Promise<Buffer | null> => {
 
 // ─── Quick Save States (slots 0-11) ───
 
+// A quick slot is written over in place, so its music-resume sidecar goes with the
+// state it described. A caller with a fresh snapshot writes it after this call.
 const writeQuickState = async (profileId: string, slot: number, data: Buffer): Promise<void> => {
   const quickDir = getQuickSavesDir(profileId);
   await mkdir(quickDir, { recursive: true });
   await writeFile(join(quickDir, `save${slot}.sav`), data);
+  try { await unlink(join(quickDir, `save${slot}${MSU_SIDECAR_SUFFIX}`)); } catch { /* none to clear */ }
 };
 
 const readQuickState = async (profileId: string, slot: number): Promise<Buffer | null> => {

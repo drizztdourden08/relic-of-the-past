@@ -1,0 +1,72 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * The metadata list for one open entry.
+ *
+ * Auto-fill columns rather than a fixed number: the panel sits in a detail pane
+ * that a user resizes, and a two-column grid pinned at two columns either wastes
+ * half a wide pane or crushes both halves in a narrow one. Every row keeps its
+ * label above its value, so a column can be as narrow as it likes without the
+ * two ever colliding.
+ */
+
+.entry-meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  border-radius: var(--r-sm);
+  background: var(--c-sunken);
+}
+
+.entry-meta__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--open-entry-width), 1fr));
+  gap: var(--space-xs) var(--space-md);
+}
+
+.entry-meta__row {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+}
+
+.entry-meta__label {
+  color: var(--c-text-dim);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.entry-meta__value {
+  color: var(--c-text);
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}
+
+/* An identifier, a citation, a count — set in mono so it reads as a value. */
+.entry-meta__value--mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * States an absence, not a fact. Dimmed and italic so "not recorded" can never
+ * be read as the answer.
+ */
+.entry-meta__value--absent {
+  color: var(--c-text-dim);
+  font-style: italic;
+}
+
+.entry-meta__issues {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.entry-meta__fit {
+  padding-top: var(--space-xs);
+  border-top: var(--border-width-thin) solid var(--c-border);
+}

@@ -1,0 +1,118 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * The drawn box and everything inside it: the row slots, the selection cursor,
+ * the blinking wait marker, and the brief upward shift a new box arrives with.
+ */
+
+.preview-box {
+  /*
+   * CONTENT-BOX, against the app-wide border-box default. `--game-row-width` is
+   * the row's real interior — 21 cells — so it has to be the width the rows get,
+   * not the width the frame and its padding are cut out of. Measured: with
+   * border-box the interior came out 316px against a 336px row, which would have
+   * made every row look 20px roomier than it is.
+   */
+  position: relative;
+  box-sizing: content-box;
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  width: var(--game-row-width);
+  padding: var(--space-sm);
+  border: var(--border-width-thick) solid var(--game-stroke);
+  border-radius: var(--r-sm);
+  background: var(--game-ground);
+}
+
+/*
+ * The row stack. Clipped vertically so the arrival shift stays inside the box,
+ * while a row overrunning the interior still draws past the RIGHT edge — that
+ * overrun is the defect the preview exists to show.
+ */
+.preview-box__rows {
+  display: flex;
+  flex-direction: column;
+  overflow: visible clip;
+}
+
+/* A new box's rows shift up into place, the way the box scrolls text in. */
+.preview-box__rows--scrolled {
+  animation: preview-scroll-up var(--duration-normal) var(--ease-emphasized);
+}
+
+@keyframes preview-scroll-up {
+  from { transform: translateY(var(--game-line-h)); }
+  to { transform: translateY(0); }
+}
+
+/* One slot of the box, anchoring the cursor to its row's first cell. */
+.preview-box__slot {
+  position: relative;
+  height: var(--game-line-h);
+}
+
+/*
+ * One row of the box: exactly one cell tall, never wrapped. The engine writes
+ * past the interior rather than wrapping, so a row wide enough to overrun has to
+ * be allowed to draw past this edge — that overrun is the defect being looked
+ * for, and hiding it would hide the bug.
+ */
+.preview-row {
+  display: flex;
+  overflow: visible;
+  align-items: flex-start;
+  height: var(--game-line-h);
+  white-space: nowrap;
+}
+
+/*
+ * Pixels that were already standing before this box drew anything. Dimmed, not
+ * removed: nothing ever clears them, so they are genuinely on screen.
+ */
+.preview-row--carried {
+  opacity: var(--opacity-muted);
+}
+
+/* The selection cursor, in the first cell the cursor frames reserve for it. */
+.preview-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-flex;
+  width: var(--game-advance);
+  height: var(--game-line-h);
+  color: var(--game-ink);
+
+  /* Paints OVER the cell, as the cursor frames do over the stored text. */
+  background: var(--game-ground);
+}
+
+/* An option row the cursor is not on: the frame paints a space there. */
+.preview-cursor--blank {
+  color: transparent;
+}
+
+/* The wait marker: the box is holding for a press. Blinks in hard steps. */
+.preview-box__wait {
+  position: absolute;
+  bottom: var(--space-2xs);
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--game-ink);
+  font-size: var(--game-advance);
+  line-height: 1;
+  animation: preview-wait-blink 1s steps(2, jump-none) infinite;
+}
+
+@keyframes preview-wait-blink {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preview-box__rows--scrolled,
+  .preview-box__wait {
+    animation: none;
+  }
+}

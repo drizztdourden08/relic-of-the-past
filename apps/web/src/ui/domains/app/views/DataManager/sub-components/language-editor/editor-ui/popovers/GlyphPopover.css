@@ -1,0 +1,25 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * A grid of pictures, scrolling once the alphabet carries more than a few rows
+ * of them. Auto-fill rather than a fixed column count, so the same card suits an
+ * alphabet with six characters and one with forty.
+ */
+
+.glyph-popover__grid {
+  display: grid;
+  max-height: var(--panel-w-sm);
+  overflow-y: auto;
+  gap: var(--space-2xs);
+  grid-template-columns: repeat(auto-fill, minmax(var(--control-h-sm), 1fr));
+}
+
+/*
+ * A cell draws a real game character, but here it stands in for an icon, so it
+ * takes the icon's size rather than the text's. Keeping the cell's 1:2
+ * proportion is what stops the picture looking stretched.
+ */
+.glyph-popover__cell .glyph-char {
+  --glyph-cell-h: var(--text-lg);
+  --glyph-cell-w: calc(var(--text-lg) / 2);
+}

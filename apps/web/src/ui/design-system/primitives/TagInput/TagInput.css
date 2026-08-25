@@ -85,7 +85,7 @@
 }
 
 .tag-input__entry::placeholder {
-  color: var(--c-text-faint);
+  color: var(--c-text-muted);
 }
 
 .tag-input__entry:disabled {
@@ -161,7 +161,7 @@
   font-size: var(--text-xs);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--c-text-faint);
+  color: var(--c-text-muted);
 }
 
 .tag-input__create-value {
@@ -173,6 +173,6 @@
 .tag-input__empty {
   padding: var(--space-md);
   font-size: var(--text-sm);
-  color: var(--c-text-faint);
+  color: var(--c-text-muted);
   text-align: center;
 }

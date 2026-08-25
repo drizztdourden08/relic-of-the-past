@@ -3,13 +3,11 @@
 
 #include "types.h"
 
-// Things for msu
+// Music control
 bool ZeldaIsPlayingMusicTrack(uint8 track);
 bool ZeldaIsPlayingMusicTrackWithBug(uint8 track);
 void ZeldaPlayMsuAudioTrack(uint8 track);
 bool ZeldaIsMusicPlaying();
-
-void ZeldaEnableMsu(uint8 enable);
 
 void ZeldaRenderAudio(int16 *audio_buffer, int samples, int channels);
 void ZeldaDiscardUnusedAudioFrames();

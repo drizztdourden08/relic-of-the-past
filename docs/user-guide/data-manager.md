@@ -23,9 +23,10 @@ inspect the item-to-sprite mapping. See [Sprite Tools](sprite-tools.md).
 Extract translations from a ROM, a file, or a URL and manage language packs such as English and French.
 The selected language drives in-game dialogue.
 
-### MSU (music)
-Import [MSU-1](audio-msu.md) music packs from a file or URL, browse the track listing, check file count
-and size, and delete packs. Attach a pack to a profile to replace the SPC soundtrack.
+### MSU Studio
+Import [MSU-1](audio-msu.md) music packs from a file or URL, then build and edit them: every music slot,
+the ambient beds and both effect channels, each with layers you can shape. Manage the pack's audio files
+and convert them to one format. Attach a pack to a profile to replace the original soundtrack.
 
 ## Where it lives
 

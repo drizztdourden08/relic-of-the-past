@@ -5,6 +5,8 @@
   message: string;
   confirmLabel?: string;
   cancelLabel?: string;
+  confirmDisabled?: boolean;
+  hideCancel?: boolean;
   variant?: 'danger' | 'default';
   onConfirm: () => void;
   onCancel: () => void;

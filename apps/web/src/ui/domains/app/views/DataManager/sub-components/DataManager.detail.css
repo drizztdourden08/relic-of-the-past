@@ -35,7 +35,7 @@
 }
 
 .import-form__url-input::placeholder {
-  color: var(--c-text-faint);
+  color: var(--c-text-muted);
 }
 
 .import-form__download-btn {
@@ -63,7 +63,7 @@
 .import-form__divider {
   text-align: center;
   font-size: var(--text-xs);
-  color: var(--c-text-faint);
+  color: var(--c-text-muted);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -149,7 +149,7 @@
 }
 
 .track-list__num {
-  color: var(--c-text-faint);
+  color: var(--c-text-muted);
   font-variant-numeric: tabular-nums;
   min-width: 28px;
 }

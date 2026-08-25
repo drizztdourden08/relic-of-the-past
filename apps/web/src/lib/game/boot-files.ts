@@ -1,18 +1,16 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Writes every boot input into the Emscripten MEMFS during preRun: game assets, the INI, SRAM, MSU tracks,
+ * Writes every boot input into the Emscripten MEMFS during preRun: game assets, the INI, SRAM
  * and the custom player sprite. Extracted from lifecycle.ts so each stays small and single-purpose.
  */
 import { log } from '../log-bus';
 import type { EmscriptenModule } from './types';
 import { DEFAULT_ZELDA3_INI } from './config';
-import type { MsuTrackData } from './lifecycle';
 
 interface BootFiles {
   assetData: Uint8Array;
   configIni?: string;
   sramData?: Uint8Array | null;
-  msu: MsuTrackData[] | null;
   linkSprite: Uint8Array | null;
 }
 
@@ -27,11 +25,6 @@ const writeBootFiles = (mod: EmscriptenModule, f: BootFiles): void => {
   mod.FS.writeFile('/zelda3.ini', ini);
   try { mod.FS.mkdir('/saves'); } catch { /* may exist */ }
   if (f.sramData) mod.FS.writeFile('/saves/sram.dat', f.sramData);
-  if (f.msu && f.msu.length > 0) {
-    try { mod.FS.mkdir('/msu'); } catch { /* may exist */ }
-    for (const t of f.msu) mod.FS.writeFile(`/msu/${t.num}.${t.ext}`, t.data);
-    log.app(`[MSU] Wrote ${f.msu.length} tracks to MEMFS`);
-  }
   // Custom player sprite: the INI's LinkGraphics key points here (serializeToIni → ApplyCustomLinkGraphics).
   if (f.linkSprite) mod.FS.writeFile('/link_sprite.zspr', f.linkSprite);
 };

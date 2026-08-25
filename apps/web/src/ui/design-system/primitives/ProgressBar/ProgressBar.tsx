@@ -5,9 +5,13 @@ import type { ProgressBarProps } from './ProgressBar.type';
 const pct = (value: number, max: number): string => `${Math.max(0, Math.min(100, (value / max) * 100))}%`;
 
 const ProgressBar = (props: ProgressBarProps) => {
-  const { value, max = 100, variant = 'gold', secondaryValue, className = '' } = props;
+  const { value, max = 100, variant = 'gold', secondaryValue, live = false, className = '' } = props;
   return (
-    <div className={`progress-bar${className ? ` ${className}` : ''}`} data-variant={variant}>
+    <div
+      className={`progress-bar${className ? ` ${className}` : ''}`}
+      data-variant={variant}
+      data-live={live ? 'yes' : undefined}
+    >
       {secondaryValue != null && (
         <div className="progress-bar__fill progress-bar__fill--secondary" style={{ width: pct(secondaryValue, max) }} />
       )}

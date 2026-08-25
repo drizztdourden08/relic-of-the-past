@@ -1,0 +1,40 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * The variable list: a filter over a scrolling column of plain rows. No kind
+ * chips and no counts — the label is what a translator is looking for, and
+ * anything beside it competes with the word itself.
+ */
+
+.variable-popover__filter {
+  width: 100%;
+}
+
+.variable-popover__list {
+  display: flex;
+  max-height: var(--panel-w-sm);
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.variable-popover__row {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--space-2xs);
+  text-align: left;
+}
+
+.variable-popover__row-label {
+  overflow: hidden;
+  flex: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The game owns this value: readable, never loud. */
+.variable-popover__row-lock {
+  flex: none;
+  color: var(--color-text-secondary);
+}

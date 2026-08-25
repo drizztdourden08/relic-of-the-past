@@ -2,7 +2,7 @@
 /**
  * Asset blob (.dat) storage over FileStore + the inputs the extraction Worker needs.
  * The compile itself runs in a renderer Worker (Node-Buffer pipeline); this module
- * only does the FileStore I/O (read ROMs + language packs, write the containers).
+ * only does the FileStore I/O (read ROMs + language sets, write the containers).
  *
  * The base blob and each optional supplement are stored as SEPARATE files and joined
  * into one buffer only when loading. That separation is the point: the engine wants a
@@ -13,14 +13,9 @@
 import { SUPPLEMENT_IDS } from '@shared/asset-extraction/sources/source-ids';
 import type { AssetSourceId } from '@shared/asset-extraction/sources/source-ids';
 import type { FileStore } from '@shared/platform';
+import type { SetBakeInput } from '@shared/game/language';
+import { getSet, getSetFont, list as listSets } from './languages';
 import { ROM_KINDS } from './rom-kinds';
-
-interface LanguageInput {
-  code: string;
-  dialogueText: string;
-  fontData: Uint8Array;
-  fontWidth: Uint8Array;
-}
 
 const datName = (romFile: string): string => romFile.replace(/\.(sfc|smc)$/i, '.dat');
 const sidecarName = (romFile: string, id: AssetSourceId): string =>
@@ -104,17 +99,21 @@ const readSupplementRoms = async (files: FileStore): Promise<Partial<Record<Asse
   return out;
 };
 
-// Every complete language pack's raw inputs, ready to bake into the asset blob.
-const readLanguageInputs = async (files: FileStore): Promise<LanguageInput[]> => {
-  const out: LanguageInput[] = [];
-  for (const code of await files.list('languages')) {
-    const meta = await files.readText(`languages/${code}/meta.json`);
-    if (meta == null) continue; // incomplete pack
-    const dialogueText = await files.readText(`languages/${code}/dialogue.txt`);
-    const fontData = await files.readBytes(`languages/${code}/font.bin`);
-    const fontWidth = await files.readBytes(`languages/${code}/font-width.bin`);
-    if (dialogueText == null || !fontData || !fontWidth) continue;
-    out.push({ code, dialogueText, fontData, fontWidth });
+/**
+ * Every stored language set, with the font pair it bakes with — the extras for
+ * one asset recompile, in the order the set list reports. Reads the EDITED set
+ * files, so a translator's saved changes are what lands in the blob; a folder
+ * missing either the set payload or its font pair is skipped as incomplete.
+ * Compiling them is the caller's job (`compileSets`), since that runs off this
+ * thread in the renderer.
+ */
+const readLanguageSets = async (files: FileStore): Promise<SetBakeInput[]> => {
+  const out: SetBakeInput[] = [];
+  for (const { id } of await listSets(files)) {
+    const set = await getSet(files, id);
+    const font = await getSetFont(files, id);
+    if (!set || !font) continue;
+    out.push({ set, fontData: font.fontData, fontWidth: font.fontWidth });
   }
   return out;
 };
@@ -123,7 +122,7 @@ export {
   check,
   datName,
   load,
-  readLanguageInputs,
+  readLanguageSets,
   readRomBytes,
   readSupplementRoms,
   removeSidecar,
@@ -132,4 +131,3 @@ export {
   writeDat,
   writeSidecar,
 };
-export type { LanguageInput };

@@ -1,14 +1,15 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import { Box } from '../../../../../../design-system/primitives/Box';
-import { IconButton } from '../../../../../../design-system/primitives/IconButton';
-import { EmptyState } from '../../../../../../design-system/primitives/EmptyState';
-import { ListItemRow } from '../../../../../../design-system/composites/ListItemRow';
-import { formatBytes } from '../../../../../../../utils/formatBytes';
-import type { MsuPack } from './msu.type';
+import { Box } from '@ds/primitives/Box';
+import { Badge } from '@ds/primitives/Badge';
+import { IconButton } from '@ds/primitives/IconButton';
+import { EmptyState } from '@ds/primitives/EmptyState';
+import { ListItemRow } from '@ds/composites/ListItemRow';
+import { formatBytes } from '@app/utils/formatBytes';
+import type { MsuPackRow } from './msu.type';
 
 interface MsuPackListProps {
-  packs: MsuPack[];
+  packs: MsuPackRow[];
   selected: string | null;
   onSelect: (name: string) => void;
   onDelete: (name: string) => void;
@@ -25,7 +26,7 @@ const MsuPackList = (props: MsuPackListProps) => {
   if (packs.length === 0) {
     return (
       <Box className="data-list">
-        <EmptyState message="No MSU packs imported yet" />
+        <EmptyState message="No music packs yet — create an empty one or import a pack" />
       </Box>
     );
   }
@@ -37,7 +38,14 @@ const MsuPackList = (props: MsuPackListProps) => {
           key={pack.name}
           icon="🎵"
           name={pack.name}
-          meta={`${pack.fileCount} track${pack.fileCount !== 1 ? 's' : ''} · ${formatBytes(pack.totalSize)}`}
+          meta={
+            <>
+              {`${pack.fileCount} file${pack.fileCount !== 1 ? 's' : ''} · ${formatBytes(pack.totalSize)} · `}
+              <Badge variant={pack.format === 'layered' ? 'success' : 'neutral'}>
+                {pack.format === 'layered' ? 'Layered' : 'Classic'}
+              </Badge>
+            </>
+          }
           selected={selected === pack.name}
           onClick={() => onSelect(pack.name)}
           action={

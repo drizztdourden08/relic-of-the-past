@@ -1,0 +1,186 @@
+/* @layer renderer-components @kind style */
+
+.preview-readout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin: var(--space-2xs) 0 var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--c-inset);
+  border: 1px solid var(--c-border);
+  border-left: 2px solid var(--c-gold);
+  border-radius: var(--radius-md);
+}
+
+.preview-readout__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.preview-readout__title {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semi);
+  color: var(--c-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.preview-readout__clock {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--c-text-muted);
+}
+
+/* Pushed against the clock rather than centred, so the head reads title … note clock. */
+.preview-readout__detail {
+  margin-inline-start: auto;
+  color: var(--c-gold);
+}
+
+/* ─── One layer's live line ─── */
+
+.layer-meter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.layer-meter__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+
+/* Sounding-or-not is carried by this dot, so the state reads without parsing any text. */
+.layer-meter__pulse {
+  flex: 0 0 auto;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: var(--radius-xl);
+  background: var(--c-text-faint);
+  transition: background var(--transition-fast);
+}
+
+.layer-meter[data-sounding='yes'] .layer-meter__pulse {
+  background: var(--c-green-bright);
+  animation: layer-meter-pulse var(--duration-slow) ease-in-out infinite alternate;
+}
+
+.layer-meter__name {
+  flex: 0 0 auto;
+  max-width: 10rem;
+  overflow: hidden;
+  font-size: var(--text-xs);
+  color: var(--c-text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.layer-meter__mode {
+  flex: 0 0 auto;
+  padding: 0 var(--space-xs);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  background: var(--c-hover);
+  border-radius: var(--radius-sm);
+}
+
+/* A layer shows a row per audible sound plus its countdown, stacked under the one head line. */
+.layer-meter__rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.layer-meter__gauge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding-left: var(--space-md);
+}
+
+/* Names the row after the file it is playing, so stacked rows are never ambiguous. */
+.layer-meter__caption {
+  flex: 0 0 auto;
+  width: 11rem;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The countdown is a word, not a file — kept as a label so it never reads as one of the sounds. */
+.layer-meter__gauge[data-kind='next'] .layer-meter__caption {
+  color: var(--c-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.layer-meter__bar {
+  flex: 1 1 auto;
+  min-width: 4rem;
+  max-width: 22rem;
+}
+
+.layer-meter__label {
+  flex: 0 0 auto;
+  min-width: 6rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--c-text-dim);
+}
+
+/* No bar drawn: the wording takes the space the bar would have had, so rows stay aligned. */
+.layer-meter__gauge[data-bar='no'] .layer-meter__label {
+  flex: 1 1 auto;
+  color: var(--c-text-muted);
+}
+
+/* ─── The fade marker at the end of a sounding row ─── */
+
+.layer-meter__fade {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: var(--space-2xs);
+  padding: 0 var(--space-xs);
+  background: var(--c-hover);
+  border-radius: var(--radius-sm);
+}
+
+.layer-meter__fade-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--c-gold);
+  white-space: nowrap;
+}
+
+/* A pass on its way in is arriving, so it takes the sounding colour; one on its way out keeps
+   the gold of something being waited on. Direction then reads without the words. */
+.layer-meter__fade[data-fade='in'] .layer-meter__fade-label {
+  color: var(--c-green-bright);
+}
+
+/* Short on purpose: it measures the fade, not the file, and must not rival the position bar. */
+.layer-meter__fade-bar {
+  flex: 0 0 auto;
+  width: 3rem;
+}
+
+@keyframes layer-meter-pulse {
+  from { opacity: var(--opacity-muted); }
+  to   { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .layer-meter[data-sounding='yes'] .layer-meter__pulse { animation: none; }
+}

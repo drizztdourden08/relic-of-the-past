@@ -1,0 +1,120 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * The one substitution list, and the row shape it shares with nothing else.
+ *
+ * A grid, so key / kind / value / count / lock line up down the whole list — the
+ * lock column especially, since "which of these can I change" is the question the
+ * list is scanned for. The lock and remove slots are always present, empty when
+ * they have nothing to show, so a locked row and an editable one are the same
+ * shape and the columns never shift.
+ */
+
+.variables-table {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.variables-table__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.variables-table__rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+
+.variable-row {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 16ch)   /* key */
+    auto              /* kind */
+    minmax(0, 1fr)    /* value or note */
+    4ch               /* used */
+    auto              /* lock */
+    auto;             /* remove */
+
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-2xs) var(--space-xs);
+  border-radius: var(--r-sm);
+}
+
+.variable-row:hover {
+  background: var(--c-hover);
+}
+
+.variable-row__key {
+  overflow: hidden;
+  color: var(--c-text-dim);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-overflow: ellipsis;
+}
+
+.variable-row__kind {
+  background: transparent;
+  border: var(--border-width-thin) solid var(--c-border);
+  color: var(--c-text-dim);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+
+.variable-row__value {
+  min-width: 0;
+}
+
+/*
+ * Stands where the field would be on an editable row. Italic, so it reads as an
+ * explanation of why there is nothing to type rather than as a value.
+ */
+.variable-row__note {
+  overflow: hidden;
+  color: var(--c-text-dim);
+  font-size: var(--text-sm);
+  font-style: italic;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.variable-row__used {
+  color: var(--c-text-dim);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* Fixed slot: an unlocked row reserves it, so no column ever shifts. */
+.variable-row__locked {
+  min-width: var(--space-2xl);
+  white-space: nowrap;
+}
+
+.variable-row__spacer {
+  min-width: var(--control-h-sm);
+}
+
+.variables-table__add {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding-top: var(--space-sm);
+  border-top: var(--border-width-thin) solid var(--c-border);
+}
+
+.variables-table__add-key {
+  flex: 1 1 30%;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.variables-table__add-value {
+  flex: 1 1 50%;
+}

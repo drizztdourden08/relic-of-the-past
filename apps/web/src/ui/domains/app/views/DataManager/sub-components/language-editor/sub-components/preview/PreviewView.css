@@ -1,0 +1,90 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * The preview: the box as a button, the instruction line under it, and the
+ * sample values beside it. The box's own geometry lives in PreviewBox.css.
+ *
+ * Every line of chrome here is set in `--c-text`, `--c-text-dim` or `--c-gold`,
+ * never a muted tone: the caption variant's default is too faint for text a
+ * reader is meant to act on.
+ */
+
+.preview-view {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-lg);
+  padding: var(--space-sm) 0;
+}
+
+.preview-view__stage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+/* The drawn box is the button: pointer on hover, a gold ring when keyboard-focused. */
+.preview-view__advance {
+  display: inline-flex;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  user-select: none;
+}
+
+.preview-view__advance:focus-visible {
+  outline: var(--border-width-thick) solid var(--c-gold);
+  outline-offset: var(--space-2xs);
+}
+
+.preview-prompt {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.preview-prompt__count {
+  color: var(--c-text-dim);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.preview-prompt__closed {
+  color: var(--c-text-dim);
+  font-style: italic;
+}
+
+/* What moves the preview, in the accent so it cannot be overlooked. */
+.preview-prompt__action {
+  color: var(--c-gold);
+  font-weight: var(--weight-semi);
+}
+
+.preview-view__samples {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-width: var(--open-entry-width);
+}
+
+.preview-view__samples-title {
+  color: var(--c-text-dim);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.preview-view__sample {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.preview-view__sample-label {
+  color: var(--c-text-dim);
+}
+
+.preview-view__digit {
+  width: var(--space-2xl);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}

@@ -7,7 +7,7 @@
  * the only thing the rest of the dataset layer imports from.
  */
 import { all } from '../registry';
-import { rebuildActorIndex, actorByGameId } from './actor';
+import { rebuildActorIndex, actorByGameId, actorsByGameSpriteType } from './actor';
 import { rebuildCheckIndex, checkByGameId } from './check';
 import { rebuildDungeonIndex, dungeonByGameId } from './dungeon';
 import { rebuildItemIndex, itemByGameId } from './item';
@@ -22,5 +22,6 @@ const rebuild = (): void => {
 };
 
 export {
-  actorByGameId, checkByGameId, dungeonByGameId, itemByGameId, rebuild, screenByGameId,
+  actorByGameId, actorsByGameSpriteType, checkByGameId, dungeonByGameId, itemByGameId, rebuild,
+  screenByGameId,
 };

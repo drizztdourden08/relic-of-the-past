@@ -1,0 +1,33 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * A warning strip, not a card: it sits above the set it is about, and the
+ * warning tone carries it rather than a heavy fill.
+ */
+.stale-game-notice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-xs) var(--space-sm);
+  border: var(--border-width-thin) solid var(--c-warning);
+  border-left-width: var(--border-width-thick);
+  border-radius: var(--r-sm);
+  background: var(--c-warning-dim);
+}
+
+.stale-game-notice__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+
+.stale-game-notice__title {
+  color: var(--c-warning);
+  font-weight: var(--weight-semi);
+}
+
+.stale-game-notice__detail {
+  color: var(--c-text);
+}

@@ -1231,6 +1231,7 @@ void SpcPlayer_GenerateSamples(SpcPlayer *p) {
   // this audio-core file needn't reach into game RAM — dsp.c sets it from kFeatures0_PerGroupVolume)
   if (dsp_getPerGroupVolumeEnabled())
     p->dsp->sfxChannelMask = p->is_chan_on;
+    dsp_setAmbientChannelMask(p->port1_active);
 
   for (;;) {
     if (p->timer_cycles >= 64) {
@@ -1240,6 +1241,7 @@ void SpcPlayer_GenerateSamples(SpcPlayer *p) {
       // Re-sync after SPC tick may have changed channel allocation
       if (dsp_getPerGroupVolumeEnabled())
         p->dsp->sfxChannelMask = p->is_chan_on;
+    dsp_setAmbientChannelMask(p->port1_active);
     }
 
     // sample rate 32000

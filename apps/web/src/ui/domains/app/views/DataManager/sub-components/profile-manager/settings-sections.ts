@@ -42,9 +42,10 @@ const SETTINGS_SECTIONS: Array<{ title: string; keys: Array<{ key: string; label
     title: 'Audio',
     keys: [
       { key: 'masterVolume', label: 'Master Volume', format: (v) => `${v ?? 100}%` },
+      { key: 'musicVolume', label: 'Music Volume', format: (v) => `${v ?? 100}%` },
+      { key: 'msuConfigMode', label: 'MSU Configuration', format: (v) => v === 'manual' ? 'Manual' : 'Auto' },
       { key: 'enableMSU', label: 'MSU Audio', format: (v) => v === 'false' || !v ? 'Off' : String(v) },
       { key: 'resumeMSU', label: 'Resume MSU' },
-      { key: 'msuVolume', label: 'MSU Volume', format: (v) => `${v ?? 100}%` },
       { key: 'audioFreq', label: 'Audio Frequency', format: (v) => `${v ?? 44100} Hz` },
       { key: 'audioChannels', label: 'Audio Channels', format: (v) => v === 1 ? 'Mono' : 'Stereo' },
       { key: 'audioSamples', label: 'Audio Samples', format: (v) => String(v ?? 2048) },

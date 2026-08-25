@@ -30,12 +30,13 @@ describe('sprites store (over FileStore)', () => {
 });
 
 describe('languages store (over FileStore)', () => {
-  it('writes a pack and lists it', async () => {
+  it('writes a pack and lists it as a set', async () => {
     const f = createMemFileStore();
     await languages.writePack(f, {
       code: 'fr', description: 'France', dialogue: '1: bonjour\n',
       fontData: bytes(16), fontWidth: bytes(4), glyphCount: 4, lineCount: 1, encoder: 'org', flags: 1,
     });
-    expect((await languages.list(f))[0]).toMatchObject({ code: 'fr', glyphCount: 4, lineCount: 1 });
+    expect((await languages.listPacks(f))[0]).toMatchObject({ code: 'fr', glyphCount: 4, lineCount: 1 });
+    expect((await languages.list(f))[0]).toMatchObject({ id: 'fr', base: 'fr', origin: 'rom', lineCount: 1 });
   });
 });

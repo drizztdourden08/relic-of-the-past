@@ -8,13 +8,12 @@ import type { FileStore } from '@shared/platform';
 import type { NormalSaveInfo, AutoSaveInfo, QuickSaveSlotInfo } from '@shared/types/saves';
 import { newId } from './id';
 import { createManifestSaves } from './save-manifest';
+import { deleteMsuResume } from './msu-resume';
+import { quickDir, savesDir } from './save-paths';
 
 const QUICK_SLOTS = 12;
 const AUTO_DEFAULT_MAX = 5;
 const AUTO_ABS_MAX = 20;
-
-const savesDir = (p: string): string => `profiles/${p}/saves`;
-const quickDir = (p: string): string => `${savesDir(p)}/quick`;
 
 // ── SRAM (with single-backup rotation) ──
 const writeSram = async (files: FileStore, p: string, data: Uint8Array): Promise<void> => {
@@ -25,8 +24,12 @@ const writeSram = async (files: FileStore, p: string, data: Uint8Array): Promise
 const readSram = (files: FileStore, p: string): Promise<Uint8Array | null> => files.readBytes(`${savesDir(p)}/sram.dat`);
 
 // ── Quick states (slots 0-11) ──
-const writeState = (files: FileStore, p: string, slot: number, data: Uint8Array): Promise<void> =>
-  files.writeBytes(`${quickDir(p)}/save${slot}.sav`, data);
+// A quick slot is written over in place, so its music-resume sidecar has to go with
+// the state it described. A caller with a fresh snapshot writes it after this call.
+const writeState = async (files: FileStore, p: string, slot: number, data: Uint8Array): Promise<void> => {
+  await files.writeBytes(`${quickDir(p)}/save${slot}.sav`, data);
+  await deleteMsuResume(files, p, 'quick', slot);
+};
 const readState = (files: FileStore, p: string, slot: number): Promise<Uint8Array | null> =>
   files.readBytes(`${quickDir(p)}/save${slot}.sav`);
 const writeScreenshot = (files: FileStore, p: string, slot: number, data: Uint8Array): Promise<void> =>

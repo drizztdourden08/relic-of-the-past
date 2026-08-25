@@ -1,0 +1,40 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * A small floating card, anchored under the toolbar button that opened it.
+ * Absolute rather than portalled: it belongs to its button, and staying in the
+ * same stacking context means it follows the toolbar with no measuring.
+ *
+ * The width band is deliberately narrow. One popover does one thing, so a card
+ * wide enough to need scanning would be a card doing too much.
+ */
+
+.popover-shell {
+  position: absolute;
+  z-index: var(--z-popover);
+  top: calc(100% + var(--space-2xs));
+  display: flex;
+  min-width: var(--panel-w-sm);
+  max-width: var(--panel-w-md);
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-xs);
+  border: var(--border-width-thin) solid var(--color-border-strong);
+  border-radius: var(--r-md);
+  background: var(--c-surface);
+  box-shadow: var(--shadow-dropdown);
+}
+
+.popover-shell--start {
+  left: 0;
+}
+
+/* The row's last buttons open leftward, so the card stays inside the pane. */
+.popover-shell--end {
+  right: 0;
+}
+
+.popover-shell__empty {
+  padding: var(--space-2xs);
+  color: var(--color-text-secondary);
+}

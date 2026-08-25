@@ -88,6 +88,17 @@ const createFilePicker = (): FilePickerPort => ({
     };
     input.click();
   }),
+  // A browser cannot tell whether the download completed, so a started download is
+  // reported as saved. There is no cancel signal to distinguish.
+  saveFile: async ({ name, bytes }) => {
+    const url = URL.createObjectURL(new Blob([bytes as BlobPart], { type: 'application/octet-stream' }));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = name;
+    link.click();
+    URL.revokeObjectURL(url);
+    return { saved: true, name };
+  },
 });
 
 const createControllerHost = (): ControllerHost => ({

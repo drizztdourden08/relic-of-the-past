@@ -17,6 +17,7 @@ import {
   extractReceipt, extractReceiptRecolor,
   type SpritePalettes, type ReceiptSheets,
 } from './receipt-decoder';
+import { extractDialogueGlyph, loadDialogueFont } from './dialogue-glyph-decoder';
 import {
   loadDropSheets,
   extractDropStandard, extractDropNumbered,
@@ -36,6 +37,10 @@ interface SpriteExtractDef {
   palette?: number;
   group?: number;
   sheet?: number;
+  /** Dialogue-font character index (its position in the language's alphabet). */
+  glyph?: number;
+  /** Second character, paired to the right of `glyph` to form one picture. */
+  glyphRight?: number;
 }
 
 interface SpriteDef {
@@ -52,6 +57,7 @@ interface ExtractionContext {
   spritePalettes: SpritePalettes;
   receiptSheets: ReceiptSheets;
   dropSheets: DropSheets;
+  dialogueFont: Buffer;
 }
 
 type Extractor = (def: SpriteExtractDef, ctx: ExtractionContext) => ImageBuffer | null;
@@ -62,6 +68,7 @@ const EXTRACTORS: Record<string, Extractor> = {
   'hud-single': (def, ctx) => extractHudSingle(def.tiles![0], ctx.hudSheets, ctx.hudPalette),
   'hud-strip': (def, ctx) => extractHudStrip(def.tiles!, ctx.hudSheets, ctx.hudPalette, def.width),
   'hud-vstrip': (def, ctx) => extractHudVStrip(def.tiles!, ctx.hudSheets, ctx.hudPalette),
+  'dialogue-glyph': (def, ctx) => extractDialogueGlyph(def.glyph!, def.glyphRight, ctx.dialogueFont),
   'receipt': (def, ctx) => extractReceipt(def.receiptId!, ctx.rom, ctx.receiptSheets, ctx.spritePalettes),
   'receipt-recolor': (def, ctx) => extractReceiptRecolor(def.receiptId!, def.palette!, ctx.rom, ctx.receiptSheets, ctx.spritePalettes),
   'drop-standard': (def, ctx) => extractDropStandard(def.spriteType!, def.palette!, ctx.spritePalettes, ctx.dropSheets),
@@ -92,6 +99,7 @@ const extractSpriteBuffers = (rom: RomData, allSprites: SpriteDef[]): SpriteBuff
     spritePalettes: loadSpritePalettes(rom),
     receiptSheets: loadReceiptSheets(rom),
     dropSheets: loadDropSheets(rom),
+    dialogueFont: loadDialogueFont(rom),
   };
 
   const counts: SpriteCounts = { hud: 0, 'hud-pause': 0, 'hud-item': 0, fonts: 0, receipt: 0, drop: 0 };

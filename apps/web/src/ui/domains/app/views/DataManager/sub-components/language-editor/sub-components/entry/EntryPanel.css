@@ -1,0 +1,52 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * The open entry.
+ *
+ * A card rather than a row, and marked at its left edge, so an open entry is
+ * unmistakably a different state from the rows around it — a translator scrolling
+ * a long list should never have to work out which one they opened.
+ */
+
+.entry-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  border-left: var(--border-width-thick) solid var(--c-gold);
+}
+
+.entry-panel__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.entry-panel__collapse {
+  flex: none;
+}
+
+.entry-panel__id {
+  color: var(--c-gold);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.entry-panel__who {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--c-text);
+  font-weight: var(--weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The switch travels at the far end, so it lands in one place on every panel. */
+.entry-panel__modes {
+  margin-left: auto;
+}
+
+.entry-panel__view {
+  min-width: 0;
+}

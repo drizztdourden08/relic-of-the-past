@@ -185,5 +185,68 @@ bool GameHook_RunningManExtendRun(int k);
 // (back to idle, in place) at a world-distance cap or the moment he collides with solid geometry,
 // so a wide view never shows him stuck against the fence/forest bounding the Kakariko race track.
 void GameHook_RunningManOverrun(int k, bool running);
+// ─── Music (music_hooks.c) ───
+
+// Called on every write the game makes to the SPC music-control port. Reports the raw control byte
+// plus the location context a host player needs to resolve which music it actually means (the module,
+// the entrance, and the overworld area). Gated on kHostGate_ExternalMusic: zero host-calls when off.
+void GameHook_MusicCtrl(uint8 music_ctrl);
+
+// True while the host owns music playback, so the core keeps its own music channel silent.
+bool GameHook_MusicExternal(void);
+
+// Re-announces the current track so the sound chip resumes its own music. Call BEFORE clearing
+// the external-music gate: the control port is held paused while the host plays, and nothing
+// else would write it again until the music happened to change.
+void GameHook_MusicRestore(void);
+
+// Re-reports the track and the ambient bed the game is currently playing, for a host that attached
+// after they were selected. Silences the chip's own copies on the way. Gated the same as MusicCtrl.
+void GameHook_MusicAnnounce(void);
+
+// Which entrances an extended pack gives a track of their own, as 5 words of 32 bits (133 entrances).
+void GameHook_SetDeluxeEntrances(int index, uint32 bits);
+
+// Re-raises the ambient bed a restored snapshot was playing and, when the host claims it, silences
+// the chip's own resumed copy — the two would otherwise sound together. Call with the APU locked.
+void GameHook_AmbientAfterLoad(uint8 last_ambient);
+
+// Whether |track|, after the host's remapping, is the music already playing: 1/0, or -1 when the
+// host cannot say and the caller should use the vanilla compare.
+int GameHook_MusicIsPlayingRemapped(uint8 track);
+
+// The music byte a death/save-quit respawn should queue, given the starting-point table's own
+// |vanilla| byte. Resolves the spawn room to its entrance so the remap that follows is keyed to
+// the right interior rather than to the door used before dying. Identity unless external music.
+uint8 GameHook_StartingPointMusic(int starting_point, uint8 vanilla);
+
+// The music byte the game should use for |entrance|, given the table's own |vanilla| byte. Hands back
+// a real indoor song in place of a duck or an overworld song when the host's pack has a track for
+// that entrance, so the host's remap can reach it. Identity unless external music is on.
+uint8 GameHook_EntranceMusic(int entrance, uint8 vanilla);
+
+// ─── Sound (sound_hooks.c) ───
+
+// The three sound-effect ports the audio NMI writes, in the order it writes them. Ambient (APUI01)
+// carries the looping environment sound; the two sfx channels (APUI02/APUI03) carry one-shots and the
+// game picks whichever is free. An id means a different sound per channel, so a claim is per channel.
+enum {
+  kSoundChannel_Ambient = 0,
+  kSoundChannel_Sfx1 = 1,
+  kSoundChannel_Sfx2 = 2,
+  kSoundChannel_Count = 3,
+};
+
+// Record which of the 64 sound ids the host can play on |channel|, as a bitmask pair (ids 0-31 in
+// |low|, 32-63 in |high|). Out-of-range channels are ignored.
+void GameHook_SetSoundClaim(int channel, uint32 low, uint32 high);
+
+// Report one sound the game wants played, and answer whether the host took it. True means the host
+// has claimed this id — which is also the signal NOT to write the port, so the chip stays silent for
+// it. Gated on kHostGate_ExternalAmbient / kHostGate_ExternalSfx: zero host-calls when off.
+bool GameHook_Sound(int channel, uint8 raw);
+
+// Whether the host claims |id| on |channel|. The predicate alone — no report, no gate check.
+bool GameHook_SoundClaimed(int channel, uint8 id);
 
 #endif // GAME_HOOKS_H

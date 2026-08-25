@@ -21,6 +21,7 @@ import { useConfirmDialog } from '@app/App/behavior/useConfirmDialog';
 import { useDisplaySettings } from '@app/App/behavior/useDisplaySettings';
 import { useGameLifecycle } from '@app/App/behavior/useGameLifecycle';
 import { useIpcLogBridge } from '@app/App/behavior/useIpcLogBridge';
+import { useMsulOpen } from '@app/App/behavior/useMsulOpen';
 import { useKeyboardShortcuts } from '@app/App/behavior/useKeyboardShortcuts';
 import { useProfileManagement } from '@app/App/behavior/useProfileManagement';
 import { useSaveOverlay } from '@app/App/behavior/useSaveOverlay';
@@ -103,6 +104,8 @@ const AppMain = () => {
   useWasmWarmup();
   useDebugLaunchHooks({ activeProfile: profileMgmt.activeProfile, loadProfileForGame: profileMgmt.loadProfileForGame, openNavWidget: () => widgets.open('navigation') });
   useIpcLogBridge();
+  // A music pack opened from the desktop imports itself.
+  useMsulOpen();
   useAppMainEffects({ isGameRunning: game.isRunning, activePage: nav.activePage, openNavWidget: () => widgets.open('navigation') });
 
   // Default notch mode until a profile loads (keeps startup windows clear of a cutout).

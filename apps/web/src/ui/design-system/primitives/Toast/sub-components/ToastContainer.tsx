@@ -4,13 +4,13 @@ import { Toast } from '../Toast';
 import type { ToastContainerProps } from '../Toast.type';
 
 const ToastContainer = (props: ToastContainerProps) => {
-  const { toasts, onDismiss } = props;
+  const { toasts, onDismiss, position = 'bottom-right' } = props;
 
   if (toasts.length === 0) return null;
 
   return (
     <Portal layer="toast">
-      <div className="toast-container">
+      <div className={`toast-container toast-container--${position}`}>
         {toasts.map((t) => (
           <Toast key={t.id} item={t} onDismiss={onDismiss} />
         ))}

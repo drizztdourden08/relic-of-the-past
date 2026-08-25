@@ -8,7 +8,7 @@ import { pushLiveSettings, LIVE_SETTINGS, getInputManager, applyPlayerSprite, cl
 import { useHudSettingsStore } from '../../../../../../stores/hud-settings-store';
 import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
 import { writeConfig } from '../../../../../../lib/storage/profile-store';
-import { readLinkSprite } from '../../../../../../lib/storage/link-sprites-store';
+import { readSpriteAsZspr } from '../../../../../../lib/game/player-sheet/load-sheet';
 
 // Apply a sprite choice to the running core and re-stage it for the next boot. Staging matters even
 // when the live swap succeeds: the core re-reads the staged bytes when the game restarts.
@@ -18,7 +18,7 @@ const swapPlayerSprite = async (name: string | null): Promise<void> => {
     clearPlayerSprite();
     return;
   }
-  const bytes = await readLinkSprite(name);
+  const bytes = await readSpriteAsZspr(name);
   setLinkSpriteData(bytes ?? null);
   if (bytes) applyPlayerSprite(bytes);
 };

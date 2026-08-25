@@ -12,6 +12,7 @@ import { getModule, setModule, setProfileId, getProfileId, setState, setInput, g
 import { startSramSync, stopSramSync } from './sram-sync';
 import { startAutoSave, stopAutoSave, saveOnQuit } from './auto-save';
 import { resetMasterVolume } from './audio-volume';
+import { resetHostGates } from './bridge/host-gates';
 import { reassertLiveFlagsAfterLoad } from './live-settings';
 import { initTrackerBridge, destroyTrackerBridge } from './tracker';
 import { initTransitionEventsBridge, destroyTransitionEventsBridge } from './events/transition-events';
@@ -29,19 +30,6 @@ import { loadGlueScript } from './wasm-warmup';
 import { getPlatform } from '../../platform/get-platform';
 
 declare function Zelda3(config: Record<string, unknown>): Promise<EmscriptenModule>;
-
-// ─── MSU data staging ───
-interface MsuTrackData {
-  num: number;
-  ext: string;
-  data: Uint8Array;
-}
-
-let pendingMsuData: MsuTrackData[] | null = null;
-
-const setMsuData = (data: MsuTrackData[] | null): void => {
-  pendingMsuData = data;
-};
 
 // Custom player sprite (.zspr) staged for the next boot — written to MEMFS where ApplyCustomLinkGraphics reads it.
 let pendingLinkSprite: Uint8Array | null = null;
@@ -124,6 +112,10 @@ const resetGame = async (): Promise<void> => {
   setModule(null);
   setProfileId(null);
   (window as any).__zelda3Module = null;
+  // A fresh core starts with every host gate clear. The bridge keeps a mirror of that word and
+  // skips pushing a value it believes is already set, so a stale mirror would make the next
+  // arming a silent no-op — the takeover simply would not engage. Drop it with the module.
+  resetHostGates();
   setState({ status: 'idle', error: null });
 };
 
@@ -201,8 +193,7 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
       canvas,
       instantiateWasm,
       preRun: [(mod: EmscriptenModule) => {
-        writeBootFiles(mod, { assetData, configIni, sramData, msu: pendingMsuData, linkSprite: pendingLinkSprite });
-        pendingMsuData = null; // free staging memory
+        writeBootFiles(mod, { assetData, configIni, sramData, linkSprite: pendingLinkSprite });
         pendingLinkSprite = null;
       }],
       print: (text: string) => {
@@ -279,5 +270,5 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
   }
 };
 
-export { resetGame, setAutoSaveConfig, setMsuData, setLinkSpriteData, startGame };
-export type { AutoSaveConfig, MsuTrackData };
+export { resetGame, setAutoSaveConfig, setLinkSpriteData, startGame };
+export type { AutoSaveConfig };

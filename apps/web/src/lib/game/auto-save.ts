@@ -6,6 +6,7 @@
 
 import { log } from '../log-bus';
 import * as savesStore from '../storage/saves-store';
+import { saveMusicPosition } from './msu-save-glue';
 import { getModule, getProfileId } from './wasm-bridge';
 import { captureGameFrameBlob } from './capture-frame';
 
@@ -42,7 +43,8 @@ const performAutoSave = async (trigger: 'timer' | 'quit'): Promise<boolean> => {
     const screenshot = await captureScreenshot();
 
     // Send to main process
-    await savesStore.createAutoSave(profileId, trigger, ab, screenshot);
+    const created = await savesStore.createAutoSave(profileId, trigger, ab, screenshot);
+    if (created?.id) await saveMusicPosition(profileId, 'auto', created.id);
     log.app(`[AutoSave] ${trigger} auto-save created (${(ab.byteLength / 1024).toFixed(0)} KB)`);
 
     // Clean up MEMFS temp file

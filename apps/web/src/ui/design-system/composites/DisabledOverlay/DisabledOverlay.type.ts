@@ -14,8 +14,10 @@ interface DisabledOverlayProps {
   /** Label for the action that deep-links back to the setting that caused the lock. */
   actionLabel?: string;
   /** Invoked when the action is activated. The caller owns navigation — this component
-   *  never imports a store or router, it only ever fires the callback it's given. */
-  onOpenSettings: () => void;
+   *  never imports a store or router, it only ever fires the callback it's given.
+   *  OMIT it for a lock nothing can undo from here: the scrim then states the cause
+   *  without offering an action that would go nowhere. */
+  onOpenSettings?: () => void;
   children: ReactNode;
   className?: string;
 }

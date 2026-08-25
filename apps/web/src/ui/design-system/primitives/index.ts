@@ -69,3 +69,5 @@ export type { ProgressRingProps } from './ProgressRing';
 export { Canvas } from './Canvas';
 export type { CanvasProps } from './Canvas';
 export { Svg, SvgLine, SvgCircle, SvgRect, SvgPath, SvgText, SvgPolygon, SvgGroup } from './Svg';
+export { ColorSwatch } from './ColorSwatch';
+export type { ColorSwatchProps } from './ColorSwatch';

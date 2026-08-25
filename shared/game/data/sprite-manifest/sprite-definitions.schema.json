@@ -29,7 +29,7 @@
         },
         "category": {
           "type": "string",
-          "enum": ["hud", "drop", "receipt"],
+          "enum": ["hud", "hud-pause", "hud-item", "fonts", "drop", "receipt"],
           "description": "Sprite category determining extraction pipeline."
         },
         "extract": { "$ref": "#/definitions/ExtractConfig" }
@@ -40,6 +40,7 @@
       "oneOf": [
         { "$ref": "#/definitions/HudTilesExtract" },
         { "$ref": "#/definitions/HudSpecialExtract" },
+        { "$ref": "#/definitions/DialogueGlyphExtract" },
         { "$ref": "#/definitions/DropStandardExtract" },
         { "$ref": "#/definitions/DropNumberedExtract" },
         { "$ref": "#/definitions/DropRupeeExtract" },
@@ -78,6 +79,26 @@
           "type": "string",
           "enum": ["8x16-centered"],
           "description": "Tile layout strategy."
+        }
+      },
+      "additionalProperties": false
+    },
+    "DialogueGlyphExtract": {
+      "type": "object",
+      "required": ["method", "glyph"],
+      "properties": {
+        "method": { "type": "string", "const": "dialogue-glyph" },
+        "glyph": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 127,
+          "description": "Dialogue-font character index (its position in the language's alphabet)."
+        },
+        "glyphRight": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 127,
+          "description": "Second character, paired to the right of `glyph` to form one 16x16 picture."
         }
       },
       "additionalProperties": false

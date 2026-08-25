@@ -6,6 +6,7 @@ import { HeroSaveCard } from '../../../compounds/HeroSaveCard';
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Button } from '../../../../../design-system/primitives/Button';
 import { Text } from '../../../../../design-system/primitives/Text';
+import { ToastContainer } from '../../../../../design-system/primitives/Toast';
 import { formatRelativeTime } from './home-tab/home-tab-helpers';
 import { useHomeTabSaves } from './home-tab/useHomeTabSaves';
 import { HomeTabColumns } from './home-tab/HomeTabColumns';
@@ -19,7 +20,7 @@ const CAPITALIZE: CSSProperties = { textTransform: 'capitalize' };
 const HomeTab = (props: HomeTabProps) => {
   const { profileId, romFile, isGameRunning, onStartGame, lastPlayed, created, windowMode } = props;
   const saves = useHomeTabSaves({ profileId, isGameRunning, onStartGame });
-  const { heroSave, normalScreenshots, busyNormal, handleLoadNormal } = saves;
+  const { heroSave, normalScreenshots, busyNormal, handleLoadNormal, handleImportSram, toasts, dismissToast } = saves;
   const { storage, capabilities } = usePlatform();
 
   const handleOpenFolder = useCallback(async () => {
@@ -65,6 +66,16 @@ const HomeTab = (props: HomeTabProps) => {
             Open profile folder
           </Button>
         )}
+        <Button
+          variant="secondary"
+          size="sm"
+          className="home-tab__import-save-btn"
+          icon="📥"
+          onClick={() => void handleImportSram()}
+          title="Import a raw SRAM save (.srm) from another emulator"
+        >
+          Import save
+        </Button>
       </Box>
 
       {/* Hero card — last normal save */}
@@ -80,6 +91,7 @@ const HomeTab = (props: HomeTabProps) => {
 
       <HomeTabColumns saves={saves} isGameRunning={isGameRunning} />
       <HomeTabDialogs saves={saves} />
+      <ToastContainer toasts={toasts} onDismiss={dismissToast} position="bottom-left" />
     </Box>
   );
 };

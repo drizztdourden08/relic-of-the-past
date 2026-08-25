@@ -46,6 +46,21 @@ jobs:
         # and writes into apps/web/public/wasm — which cap:sync bundles into the APK.
         run: node core/wasm-build/build.mjs
 
+      # The record dataset is vault-only, so a plain checkout builds an APK with an
+      # empty dataset. Runs after npm install so the two-way postinstall sync has
+      # already skipped and cannot write back. See release.yml for the full note.
+      - name: Fetch the private dataset
+        env:
+          VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${VAULT_TOKEN}@github.com/drizztdourden08/rotp-vault.git" \
+            ../rotp-vault
+          node scripts/vault/sync.mjs --force-pull
+
+      - name: Verify the dataset landed
+        run: node scripts/vault/check-dataset.mjs
+
       - name: Build web bundle + sync into the Android project
         run: npm run cap:sync
 

@@ -1,0 +1,288 @@
+/* @layer renderer-components @kind style */
+.sprite-studio {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  min-width: 0;
+}
+
+.sprite-studio__status {
+  font-size: var(--text-sm);
+  color: var(--c-green-bright);
+}
+
+/* ── library column ── */
+.sprite-library__create {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding-bottom: var(--space-sm);
+}
+
+.sprite-library__hint,
+.state-preview__note {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+.sprite-library__thumb {
+  width: 24px;
+  height: 36px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+/* ── toolbar ── */
+.studio-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--c-border);
+}
+
+.studio-toolbar__row {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.studio-toolbar__name { width: 14rem; }
+.studio-toolbar__author { width: 10rem; }
+
+.studio-toolbar__hint {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  max-width: 46ch;
+}
+
+/* ── wearing + controls ── */
+.wearing-bar,
+.sprite-studio__controls {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.wearing-bar {
+  padding: var(--space-sm);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+}
+
+.wearing-bar__label,
+.sprite-studio__control-label {
+  font-size: var(--text-sm);
+  color: var(--c-text-dim);
+  white-space: nowrap;
+}
+
+.sprite-studio__controls .range-input { width: 8rem; }
+
+/* ── body: state list beside the stage ── */
+.sprite-studio__body {
+  display: flex;
+  gap: var(--space-md);
+  align-items: flex-start;
+  min-height: 0;
+}
+
+.sprite-studio__stage {
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+/* ── state list ── */
+.state-list {
+  width: 13rem;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.state-list__scroll {
+  max-height: 26rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.state-list__group {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--c-text-muted);
+  padding: var(--space-sm) 0 var(--space-xs);
+}
+
+.state-list__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-sm);
+  width: 100%;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  text-align: left;
+}
+
+.state-list__item:hover { background: var(--c-hover); }
+
+.state-list__item--active {
+  background: var(--c-selected);
+  color: var(--c-gold-bright);
+}
+
+.state-list__count {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+/* ── previews ── */
+.pose-canvas {
+  image-rendering: pixelated;
+  background:
+    linear-gradient(45deg, var(--c-sunken) 25%, transparent 25% 75%, var(--c-sunken) 75%),
+    linear-gradient(45deg, var(--c-sunken) 25%, transparent 25% 75%, var(--c-sunken) 75%);
+  background-color: var(--c-bg);
+  background-size: 16px 16px;
+  background-position: 0 0, 8px 8px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+}
+
+.state-preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.state-preview__head,
+.state-preview__row {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.state-preview__title {
+  font-size: var(--text-base);
+  color: var(--c-gold);
+}
+
+.state-preview__from {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+.state-preview__cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.state-preview__label {
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.state-preview__count { color: var(--c-text-muted); }
+
+.contact-sheet {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(max(5rem, var(--contact-sheet-cell-min, 0px)), 1fr));
+  gap: var(--space-sm);
+}
+
+.contact-sheet__cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.contact-sheet__cell:hover {
+  border-color: var(--c-border-strong);
+  background: var(--c-hover);
+}
+
+.contact-sheet__label {
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  text-align: center;
+}
+
+.sheet-browser {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.sheet-browser__meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+.sheet-browser__canvas {
+  image-rendering: pixelated;
+  background: var(--c-sunken);
+  border: 1px solid var(--c-border);
+}
+
+/* ── palette: a right-hand sidebar, level with the stage, so it never scrolls out of
+   view under a tall zoomed-in state or contact sheet ── */
+.palette-editor {
+  width: 14rem;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  padding-left: var(--space-md);
+  border-left: 1px solid var(--c-border);
+}
+
+.palette-editor__scroll {
+  max-height: 26rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* Stacked, not inline: the sidebar is too narrow to sit a label and its hint side by
+   side without both wrapping mid-phrase. */
+.palette-editor__title {
+  font-size: var(--text-sm);
+  color: var(--c-text-dim);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.palette-editor__hint {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+.palette-editor__grid {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}

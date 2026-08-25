@@ -5,6 +5,7 @@
  * saves (mirrors the Electron manifest-store, now platform-neutral).
  */
 import type { FileStore } from '@shared/platform';
+import { msuSidecarPath } from './save-paths';
 
 interface ManifestEntry {
   id: string;
@@ -14,6 +15,7 @@ interface ManifestEntry {
 const createManifestSaves = <T extends ManifestEntry>(files: FileStore, dir: string) => {
   const sav = (id: string): string => `${dir}/${id}.sav`;
   const png = (id: string): string => `${dir}/${id}.png`;
+  const msu = (id: string): string => msuSidecarPath(dir, id);
   const manifestPath = `${dir}/manifest.json`;
 
   const readManifest = async (): Promise<T[]> => {
@@ -25,9 +27,13 @@ const createManifestSaves = <T extends ManifestEntry>(files: FileStore, dir: str
   const writeManifest = (entries: T[]): Promise<void> =>
     files.writeText(manifestPath, JSON.stringify(entries, null, 2));
 
+  // Writing over a save invalidates its music-resume sidecar: the position belonged
+  // to the state that was there before. A caller with a fresh snapshot writes it
+  // after this call, never before.
   const writePair = async (id: string, data: Uint8Array, screenshot?: Uint8Array): Promise<void> => {
     await files.writeBytes(sav(id), data);
     if (screenshot) await files.writeBytes(png(id), screenshot);
+    await files.remove(msu(id));
   };
 
   const append = async (entry: T, data: Uint8Array, screenshot?: Uint8Array): Promise<void> => {
@@ -57,9 +63,10 @@ const createManifestSaves = <T extends ManifestEntry>(files: FileStore, dir: str
     await writeManifest(manifest.filter((e) => e.id !== id));
     await files.remove(sav(id));
     await files.remove(png(id));
+    await files.remove(msu(id)); // the music-resume sidecar dies with its save
   };
 
-  return { sav, png, readManifest, writeManifest, writePair, append, valid, load, loadScreenshot, remove };
+  return { sav, png, msu, readManifest, writeManifest, writePair, append, valid, load, loadScreenshot, remove };
 };
 
 export { createManifestSaves };

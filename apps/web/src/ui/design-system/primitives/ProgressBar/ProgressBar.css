@@ -16,6 +16,9 @@
   transition: width var(--transition-normal);
 }
 
+/* A continuously sampled bar: the value is the position, so easing towards it only adds lag. */
+.progress-bar[data-live='yes'] .progress-bar__fill { transition: none; }
+
 .progress-bar[data-variant='gold'] .progress-bar__fill { background: var(--c-gold); }
 .progress-bar[data-variant='green'] .progress-bar__fill { background: var(--c-green); }
 .progress-bar[data-variant='danger'] .progress-bar__fill { background: var(--c-danger); }
