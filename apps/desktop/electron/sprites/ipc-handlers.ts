@@ -20,6 +20,16 @@ const registerSpriteHandlers = (): void => {
     const outDir = spriteDir(romFile);
     const report = makeImportReporter('sprite', basename(romFile, extname(romFile)));
 
+    // A build without the extraction definitions can produce nothing at all, and
+    // reporting success for zero files reads as "this ROM has no sprites" rather
+    // than "this build cannot do it". Say which one it is.
+    if (SPRITE_DEFINITIONS.length === 0) {
+      const msg = 'This build carries no sprite definitions, so there is nothing to extract.';
+      logToRenderer('error', 'error', `Sprite extraction failed: ${msg}`);
+      report('error', undefined, undefined, msg);
+      return { success: false, error: msg };
+    }
+
     try {
       await access(localRomPath);
     } catch {
