@@ -253,6 +253,15 @@ jobs:
         shell: bash
         run: node scripts/vault/check-dataset.mjs
 
+      # The .msul document icon is generated from the committed logo, not checked in,
+      # and the npm prebuild hooks that generate it are not on this path — the release
+      # calls electron-vite and electron-builder directly. Without it the macOS build
+      # fails outright looking for msul.icns, and Windows quietly ships a pack file
+      # with no document icon, which is the worse of the two.
+      - name: Generate the document icon
+        shell: bash
+        run: node scripts/build/make-msul-icon.mjs
+
       - name: Build & Package
         shell: bash
         env:
