@@ -12,11 +12,7 @@ const OPTIONAL_SOURCES: OptionalSource[] = [
     id: 'gba-alttp',
     compile: (sources: AlttpAssetSources) => {
       if (!sources.gbaAlttp) return null;
-      if (!sources.gbaStreams) {
-        throw new Error(sources.gbaStreamsError
-          ?? 'The second cartridge needs its room streams solved first; no engine was available to solve them');
-      }
-      return compileGbaAlttpSupplement(sources.gbaAlttp, sources.snes, sources.gbaStreams.streams, sources.gbaStreams.rawRuns);
+      return compileGbaAlttpSupplement(sources.gbaAlttp, sources.snes);
     },
   },
 ];

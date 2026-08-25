@@ -20,7 +20,6 @@ bool GbaAlttp_IsPalaceActive(void);
 bool GbaAlttp_IsPalaceRoom(uint16 room);
 const uint8 *GbaAlttp_GetRoomHeader(uint16 room);
 const uint16 *GbaAlttp_GetRoomDoors(uint16 room);
-const uint8 *GbaAlttp_GetRoomLayout(uint16 room);
 
 /* The dungeon page of the room grid (ids 0x200-0x2FF): its own address space. */
 bool GbaAlttp_IsBankRoom(uint16 room);
@@ -29,8 +28,11 @@ uint16 *SaveDungInfoFor(int room);
 void GameHook_BankSaveStore(int sram_offset);
 void GameHook_BankSaveLoad(int sram_offset);
 void GbaAlttp_PatchTransAuxStaging(void);
-void GbaAlttp_DrawRawRun(uint16 *dst);
 void GbaAlttp_PinCameraBounds(void);
+bool GbaAlttp_LoadBakedRoom(void);
+bool GbaAlttp_IsBakedRoomActive(void);
+bool GbaAlttp_SkipAttrLoadForVoidRoom(void);
+void GbaAlttp_ApplyBakedAttrOverlay(void);
 void GbaAlttp_ApplyDungeonGraphics(void);
 void GbaAlttp_SelectDungeonSpriteSheets(uint8 *slot0, uint8 *slot1, uint8 *slot2, uint8 *slot3);
 

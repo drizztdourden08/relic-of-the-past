@@ -265,6 +265,20 @@ int WasmProbeStreamAttrs(void) {
 EMSCRIPTEN_KEEPALIVE
 int WasmProbeStreamMaps(void) { return (int)g_probe_maps; }
 
+/* Re-runs the engine's attribute pass on the current room, for bisecting load-order bugs. */
+EMSCRIPTEN_KEEPALIVE
+int WasmProbeReloadAttrs(void) {
+  Dungeon_LoadAttributeTable();
+  return 0;
+}
+
+/* The attribute tables as the game last derived them, for verifying the real load path. */
+EMSCRIPTEN_KEEPALIVE
+int WasmProbeLiveAttrs(void) {
+  memcpy(g_probe_attrs, dung_bg2_attr_table, sizeof(g_probe_attrs));
+  return (int)g_probe_attrs;
+}
+
 /* The maps as the game itself last drew them, for verifying the real load path. */
 EMSCRIPTEN_KEEPALIVE
 int WasmProbeLiveMaps(void) {

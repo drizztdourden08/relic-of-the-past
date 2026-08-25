@@ -70,6 +70,11 @@ EMSCRIPTEN_KEEPALIVE
 int WasmDebugGetOverworldBaseY(void) { return overworld_offset_base_y; }
 
 EMSCRIPTEN_KEEPALIVE
+int WasmDebugPeekRam(int addr) {
+  return (addr >= 0 && addr < 131072) ? g_ram[addr] : -1;
+}
+
+EMSCRIPTEN_KEEPALIVE
 int WasmDebugGetRuntimeState(int index) {
   switch (index) {
   case 0: return player_is_indoors;

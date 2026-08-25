@@ -67,18 +67,7 @@ bool GbaAlttp_IsBankRoom(uint16 room) {
   return GbaAlttp_IsAvailable() && g_extra_dungeon_enabled && room >= kBankFirstRoom && room < kBankEndRoom;
 }
 
-/**
- * The room a stray edge transition lands in: bank slots the dungeon does not own.
- *
- * Floor zero, layout zero, three empty object sections. Its own derived collision seals it -
- * nothing registers, nothing is walkable beyond the edges - so wandering off the dungeon's
- * boundary parks the player in a dead room instead of a base-game one. The base grid can no
- * longer be reached from the bank at all.
- */
-static const uint8 kVoidRoomStream[] = { 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
 static const uint8 kVoidRoomHeader[14];
-
-const uint8 *GbaAlttp_VoidRoomStream(void) { return kVoidRoomStream; }
 
 const uint8 *GbaAlttp_GetRoomHeader(uint16 room) {
   if (!GbaAlttp_IsBankRoom(room))

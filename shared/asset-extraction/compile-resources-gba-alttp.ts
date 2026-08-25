@@ -6,7 +6,8 @@ import type { RomData } from './rom/rom-types';
 import { compressStrings } from './text/dialogue-encoder';
 import { EXTRA_DUNGEON_PALINFO } from './extensions/second-cartridge-palette';
 import { doorListFor } from './extensions/second-cartridge-doors';
-import { cameraBoundsRecord } from './extensions/second-cartridge-camera';
+import { attrOverlayRecord } from './extensions/second-cartridge-attrs';
+import { occluderCells } from './extensions/second-cartridge-occluders';
 import { bankedRoomId } from './extensions/second-cartridge-bank';
 import {
   AUX_TILE_THEME,
@@ -44,6 +45,21 @@ const serializeSecretList = (room: DungeonRoomRecord): Buffer => Buffer.concat([
   ...room.secrets.map(secret => Buffer.from(secret.nativeBytes)),
   Buffer.from([0xff, 0xff]),
 ]);
+
+const wordsToBuffer = (words: Uint16Array): Buffer => {
+  const result = Buffer.alloc(words.length * 2);
+  for (let i = 0; i < words.length; i++) result.writeUInt16LE(words[i], i * 2);
+  return result;
+};
+
+/** One buffer per layer per room, room-major — the C side indexes them as room*3+layer. */
+const layerBuffers = (
+  rooms: readonly DungeonRoomRecord[], select: (layer: NativeDungeonLayer) => Buffer,
+): Buffer[] => {
+  const result: Buffer[] = [];
+  for (const room of rooms) for (const layer of room.layers) result.push(select(layer));
+  return result;
+};
 
 const uint32Buffer = (values: readonly number[]): Buffer => {
   const result = Buffer.alloc(values.length * 4);
@@ -123,15 +139,7 @@ const nativeHeaderBytes = (room: DungeonRoomRecord, rooms: ReadonlySet<number>):
   return bytes;
 };
 
-/**
- * `streams` is the per-room object stream recovered by the stream solver — the engine's own
- * room format, solved from the cartridge's baked maps through the engine itself. It is an
- * input rather than computed here because solving needs a live engine instance, which the
- * caller hosts; this compile stays a pure synchronous function of its inputs.
- */
-const compileGbaAlttpSupplement = (
-  rom: GbaRomReader, snes: RomData, streams: ReadonlyMap<number, Buffer>, rawRuns: ReadonlyMap<number, Buffer>,
-): Buffer => {
+const compileGbaAlttpSupplement = (rom: GbaRomReader, snes: RomData): Buffer => {
   const source = new GbaAlttpDungeonSource(rom);
   const rooms = source.palaceRooms();
   const paletteIds = [...new Set(rooms.map(room => room.header.palette))].sort((a, b) => a - b);
@@ -192,14 +200,23 @@ const compileGbaAlttpSupplement = (
     kGbaAlttpEntityHandlers: () => assets.addUint8('kGbaAlttpEntityHandlers', [...uint32Buffer(handlers.map(handler => handler.thumbAddress))]),
     kGbaAlttpRoomTagHandlerTags: () => assets.addUint8('kGbaAlttpRoomTagHandlerTags', roomTagHandlers.map(handler => handler.tag)),
     kGbaPalaceRoomDoors: () => assets.addPacked('kGbaPalaceRoomDoors', rooms.map(room => doorListFor(room.id))),
-    kGbaPalaceRoomLayouts: () => assets.addPacked('kGbaPalaceRoomLayouts', rooms.map(room => {
-      const stream = streams.get(room.id);
-      if (!stream || stream.length <= 2) throw new Error(`No solved stream for room 0x${room.id.toString(16)}`);
-      return stream;
-    })),
     kGbaAlttpRoomTagHandlers: () => assets.addUint8('kGbaAlttpRoomTagHandlers', [...uint32Buffer(roomTagHandlers.map(handler => handler.thumbAddress))]),
-    kGbaPalaceRoomRawRuns: () => assets.addPacked('kGbaPalaceRoomRawRuns', rooms.map(room => rawRuns.get(room.id) ?? Buffer.alloc(0))),
-    kGbaPalaceCameraBounds: () => assets.addPacked('kGbaPalaceCameraBounds', rooms.map(room => cameraBoundsRecord(room))),
+    // Empty on purpose: hardware pans these rooms in full, and the grey backdrop beyond the
+    // walls is real map content. The pin machinery stays for a future room that measures as
+    // genuinely clamped.
+    kGbaPalaceCameraBounds: () => assets.addPacked('kGbaPalaceCameraBounds', rooms.map(() => Buffer.alloc(0))),
+    kGbaPalaceRoomLayersSnes: () => assets.addPacked('kGbaPalaceRoomLayersSnes', rooms.flatMap(room => {
+      // The bottom layer carries the priority bit on the cells the port occludes with sprites.
+      const priority = occluderCells(room);
+      return room.layers.map((layer, n) => {
+        if (n !== 0 || priority.size === 0) return wordsToBuffer(layer.snesWords);
+        const words = Uint16Array.from(layer.snesWords);
+        for (const cell of priority) words[cell] |= 0x2000;
+        return wordsToBuffer(words);
+      });
+    })),
+    kGbaPalaceRoomCollision: () => assets.addPacked('kGbaPalaceRoomCollision', layerBuffers(rooms, layer => Buffer.from(layer.collision))),
+    kGbaPalaceAttrOverlays: () => assets.addPacked('kGbaPalaceAttrOverlays', rooms.map(room => attrOverlayRecord(room.id))),
   };
 
   if (Object.keys(builders).length !== GBA_ALTTP_ASSET_MANIFEST.length) {

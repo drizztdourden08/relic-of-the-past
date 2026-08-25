@@ -10,10 +10,7 @@ import {
   decodeGbaPacked4bppTile,
 } from '../../shared/asset-extraction/graphics/gba-native';
 import { loadGbaAlttpRomFromBuffer } from '../../shared/asset-extraction/rom/gba-rom';
-import { createRequire } from 'module';
 import { loadRomFromBuffer } from '../../shared/asset-extraction/rom/rom-loader';
-import { compileResources } from '../../shared/asset-extraction/compile-resources';
-import { solveGbaRoomStreams } from '../../shared/asset-extraction/sources/gba-alttp/stream-solver';
 import {
   GbaAlttpDungeonSource,
   PALACE_ROOM_IDS,
@@ -45,18 +42,9 @@ const snesFixture = existsSync('test-roms')
   ? readdirSync('test-roms').find(name => name.endsWith('(USA).sfc'))
   : undefined;
 const snesPath = snesFixture ? resolve('test-roms', snesFixture) : '';
-const gluePath = resolve('apps', 'web', 'public', 'wasm', 'zelda3.js');
-const wasmPath = resolve('apps', 'web', 'public', 'wasm', 'zelda3.wasm');
-const engineReady = existsSync(gluePath) && existsSync(wasmPath);
 
 /** The engine build, for solving the room streams the compile now requires. */
-const engineBundle = () => ({
-  glueSource: readFileSync(gluePath, 'utf8'),
-  wasmBinary: readFileSync(wasmPath),
-  hostRequire: createRequire(import.meta.url),
-  hostDirname: resolve('apps', 'web', 'public', 'wasm'),
-});
-const integration = existsSync(romPath) && snesPath !== '' && engineReady ? it : it.skip;
+const integration = existsSync(romPath) && snesPath !== '' ? it : it.skip;
 
 integration('extracts and compiles every Palace room from the validated ROM', async () => {
   const rom = loadGbaAlttpRomFromBuffer(readFileSync(romPath));
@@ -92,8 +80,7 @@ integration('extracts and compiles every Palace room from the validated ROM', as
   expect(text[0x1a5].plainText.replace(/\s+/g, ' ')).toContain('only true heroes can enter this palace');
   expect(text[0x1b2].plainText).toContain('Spin like a tornado');
   const snes = loadRomFromBuffer(readFileSync(snesPath));
-  const { streams, rawRuns } = await solveGbaRoomStreams(engineBundle(), compileResources(snes), rooms);
-  expect(compileGbaAlttpSupplement(rom, snes, streams, rawRuns).length).toBeGreaterThan(100_000);
+  expect(compileGbaAlttpSupplement(rom, snes).length).toBeGreaterThan(100_000);
 }, 1_800_000);
 
 const savePath = resolve('test-roms', 'Legend of Zelda, The - A Link to the Past & Four Swords (USA).sav');

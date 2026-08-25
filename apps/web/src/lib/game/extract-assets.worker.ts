@@ -11,15 +11,12 @@ import { buildPackedEntry, extractLangEntry } from '@shared/asset-extraction/tex
 import { dialogueTexts } from '@shared/asset-extraction/text/parse-dialogue-text';
 import { extractSpriteBuffers, type SpriteDef } from '@shared/asset-extraction/item-sprites/extract-items';
 import { GbaAlttpDungeonSource } from '@shared/asset-extraction/sources/gba-alttp';
-import { solveGbaRoomStreams } from '@shared/asset-extraction/sources/gba-alttp/stream-solver';
 import type { AssetSourceId } from '@shared/asset-extraction/sources/source-ids';
-import type { EngineBundle } from '@shared/asset-extraction/sources/gba-alttp/stream-solver/probe.type';
 
 interface LangInput { code: string; dialogueText: string; fontData: Uint8Array; fontWidth: Uint8Array }
 type SupplementRoms = Partial<Record<AssetSourceId, Uint8Array>>;
-interface EngineFiles { glueSource: string; wasmBinary: Uint8Array }
 type Req =
-  | { op: 'assets'; romBytes: Uint8Array; supplementRoms?: SupplementRoms; languages: LangInput[]; engine?: EngineFiles }
+  | { op: 'assets'; romBytes: Uint8Array; supplementRoms?: SupplementRoms; languages: LangInput[] }
   | { op: 'language'; romBytes: Uint8Array; code: string }
   | { op: 'sprites'; romBytes: Uint8Array; defs: SpriteDef[] };
 
@@ -39,7 +36,7 @@ const ctx = self as unknown as {
 // alongside it and drifted — it learned about the second cartridge while this one, the path
 // the app actually runs, did not. Keep it that way: one compile, every platform.
 const runAssets = async (
-  romBytes: Uint8Array, supplementRoms: SupplementRoms, languages: LangInput[], engine?: EngineFiles,
+  romBytes: Uint8Array, supplementRoms: SupplementRoms, languages: LangInput[],
 ): Promise<AssetsResult> => {
   const extraLanguages = languages.map((l) => buildPackedEntry({
     code: l.code,
@@ -51,17 +48,10 @@ const runAssets = async (
 
   const gbaBytes = supplementRoms['gba-alttp'];
   const gbaRom = gbaBytes ? loadGbaAlttpRomFromBuffer(Buffer.from(gbaBytes)) : undefined;
-  // Solving the second cartridge's room streams needs a live engine instance; the renderer
-  // passed the engine build in, and the solve runs here against the fresh base container.
-  const bundle: EngineBundle | undefined = engine
-    ? { glueSource: engine.glueSource, wasmBinary: engine.wasmBinary }
-    : undefined;
   const set = await compileAlttpAssetSet({
     snes: loadRomFromBuffer(Buffer.from(romBytes)),
     gbaAlttp: gbaRom,
-  }, { extraLanguages }, gbaRom && bundle
-    ? (base) => solveGbaRoomStreams(bundle, base, new GbaAlttpDungeonSource(gbaRom).palaceRooms())
-    : undefined);
+  }, { extraLanguages });
 
   return {
     base: new Uint8Array(set.base),
@@ -95,7 +85,7 @@ const runSprites = (romBytes: Uint8Array, defs: SpriteDef[]) =>
 ctx.onmessage = (e) => {
   const respond = async (): Promise<unknown> => {
     const req = e.data;
-    if (req.op === 'assets') return runAssets(req.romBytes, req.supplementRoms ?? {}, req.languages, req.engine);
+    if (req.op === 'assets') return runAssets(req.romBytes, req.supplementRoms ?? {}, req.languages);
     return req.op === 'language' ? runLanguage(req.romBytes, req.code) : runSprites(req.romBytes, req.defs);
   };
   respond()

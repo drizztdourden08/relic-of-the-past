@@ -49,9 +49,10 @@ const GBA_ALTTP_ASSET_MANIFEST: readonly GbaAlttpAssetManifestEntry[] = [
   { name: 'kGbaAlttpRoomTagHandlerTags', description: 'Room tag byte per entry in the room-tag handler table.' },
   { name: 'kGbaAlttpRoomTagHandlers', description: 'Room-tag handler THUMB entry-point addresses, packed as uint32.' },
   { name: 'kGbaPalaceRoomDoors', description: 'Per-room native door records, sentinel-terminated.' },
-  { name: 'kGbaPalaceRoomLayouts', description: 'Per-room object stream in the native room format: floor byte, layout byte, then object and door sections.' },
-  { name: 'kGbaPalaceRoomRawRuns', description: 'Per-room raw tile runs consumed by the reserved drawing object: width, height, then width*height tile words each.' },
   { name: 'kGbaPalaceCameraBounds', description: 'Per-room camera pin: flags word, then camera min and max X, for rooms whose baked sides are padding.' },
+  { name: 'kGbaPalaceRoomLayersSnes', description: 'Baked tilemap words per room layer (three layers per room), translated to SNES layout.' },
+  { name: 'kGbaPalaceRoomCollision', description: 'Per-layer collision attribute bytes per room, as the port ships them.' },
+  { name: 'kGbaPalaceAttrOverlays', description: 'Per-room attribute corrections applied after collision installs: layer, cell, attribute records.' },
 ];
 
 const GBA_ALTTP_ASSET_INDEX: Readonly<Record<string, number>> = Object.fromEntries(

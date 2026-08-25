@@ -32,9 +32,10 @@ enum {
   kGbaAssetRoomTagHandlerTags,  // kGbaAlttpRoomTagHandlerTags — Room tag byte per entry in the room-tag handler table.
   kGbaAssetRoomTagHandlers,  // kGbaAlttpRoomTagHandlers — Room-tag handler THUMB entry-point addresses, packed as uint32.
   kGbaAssetRoomDoors,  // kGbaPalaceRoomDoors — Per-room native door records, sentinel-terminated.
-  kGbaAssetRoomLayouts,  // kGbaPalaceRoomLayouts — Per-room object stream in the native room format: floor byte, layout byte, then object and door sections.
-  kGbaAssetRoomRawRuns,  // kGbaPalaceRoomRawRuns — Per-room raw tile runs consumed by the reserved drawing object: width, height, then width*height tile words each.
   kGbaAssetCameraBounds,  // kGbaPalaceCameraBounds — Per-room camera pin: flags word, then camera min and max X, for rooms whose baked sides are padding.
+  kGbaAssetRoomLayersSnes,  // kGbaPalaceRoomLayersSnes — Baked tilemap words per room layer (three layers per room), translated to SNES layout.
+  kGbaAssetRoomCollision,  // kGbaPalaceRoomCollision — Per-layer collision attribute bytes per room, as the port ships them.
+  kGbaAssetAttrOverlays,  // kGbaPalaceAttrOverlays — Per-room attribute corrections applied after collision installs: layer, cell, attribute records.
   kGbaAlttpAssetCount,
 };
 

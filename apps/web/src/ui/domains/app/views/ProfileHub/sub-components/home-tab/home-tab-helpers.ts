@@ -1,8 +1,11 @@
 /* @layer renderer-components @kind logic */
 /** Shared helpers for the Home tab: time formatting, game-ready wait, canvas screenshot. */
-import { subscribeGameState, captureGameFrameBlob } from '../../../../../../../lib/game';
+import { getGameState, isCoreReady, whenCoreReady, captureGameFrameBlob } from '../../../../../../../lib/game';
 
 const QUICK_SAVE_SLOTS = 12;
+
+/** Ceiling on waiting out a boot — a first run extracts assets before the core starts. */
+const BOOT_WAIT_MS = 120_000;
 
 const formatRelativeTime = (ts: number | undefined): string => {
   if (!ts) return 'Never';
@@ -23,18 +26,20 @@ const defaultSaveName = (): string => {
   })}`;
 };
 
-/** If the game isn't running, start it and resolve once it reaches running/error. */
-const ensureGameRunning = async (isGameRunning: boolean, onStartGame: () => void): Promise<void> => {
-  if (isGameRunning) return;
-  onStartGame();
-  await new Promise<void>((resolve) => {
-    const unsub = subscribeGameState((state) => {
-      if (state.status === 'running' || state.status === 'error') {
-        unsub();
-        resolve();
-      }
-    });
-  });
+/**
+ * Resolve once the core can take a command, booting it first if nothing is on its way.
+ *
+ * `isGameRunning` is the caller's view flag — it says the game view has its asset blob, which
+ * happens about two seconds before the core exists. Trusting it was what let a load fire into
+ * a null module and be dropped, so the boot went ahead with no state loaded. The bridge's own
+ * state decides here; the flag only answers "has a boot already been asked for", so this does
+ * not kick off a second one on top of it.
+ */
+const ensureGameRunning = async (isGameRunning: boolean, onStartGame: () => void): Promise<boolean> => {
+  if (isCoreReady()) return true;
+  if (!isGameRunning && getGameState().status === 'idle') onStartGame();
+  // Long enough to cover a first boot that has to extract assets before the core even starts.
+  return whenCoreReady(BOOT_WAIT_MS);
 };
 
 /** Capture the currently-rendered game frame as a PNG ArrayBuffer, same path quick-saves use. */

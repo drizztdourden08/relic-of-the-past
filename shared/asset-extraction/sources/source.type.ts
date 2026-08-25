@@ -18,12 +18,7 @@ interface AlttpAssetSources {
    * live engine instance, so the caller performs it (against the freshly-compiled base) and
    * hands the result in; the compile itself stays synchronous and pure.
    */
-  gbaStreams?: {
-    streams: ReadonlyMap<number, Buffer>;
-    rawRuns: ReadonlyMap<number, Buffer>;
-  };
   /** Why solving the streams failed, when it was attempted and did not produce a map. */
-  gbaStreamsError?: string;
 }
 
 type SourceOutcome =

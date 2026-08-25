@@ -665,10 +665,7 @@ void LoadType1ObjectSubtype1(uint8 idx, uint16 *dst, uint16 dsto) {
     dst[XY(0, 1)] = src[0];
     dst[XY(1, 1)] = src[1];
     break;
-  case 0x31:  // 31 -  Unused in the base game; the extra dungeon's raw-run object
-    GbaAlttp_DrawRawRun(dst);
-    break;
-  case 0x32:  // 32 -  Unused -empty
+  case 0x31: case 0x32:  // 31 -  Unused -empty
   case 0x35: case 0x54: case 0x57:case 0x58:case 0x59:case 0x5A:
     break;
   case 0x33:  // 33 -  Red Carpet Floor [L-R]
@@ -2282,8 +2279,7 @@ const uint8 *GetDefaultRoomLayout(int i) {
 }
 
 const uint8 *GetDungeonRoomLayout(int i) {
-  const uint8 *extra = GbaAlttp_GetRoomLayout((uint16)i);
-  return extra ? extra : kDungeonRoom + kDungeonRoomOffs[i];
+  return kDungeonRoom + kDungeonRoomOffs[i];
 }
 
 static inline void WriteAttr1(int j, uint16 attr) {
@@ -2622,6 +2618,9 @@ void Dungeon_LoadRoom() {  // 81873a
     dung_object_pos_in_objdata[i] = 0;
     dung_object_tilemap_pos[i] = 0;
   }
+
+  if (GbaAlttp_LoadBakedRoom())
+    return;
 
   const uint8 *cur_p0 = GetDungeonRoomLayout(dungeon_room_index);
   dung_load_ptr_offs = 0;
@@ -3847,10 +3846,13 @@ void Dungeon_LoadAttribute_Selectable() {  // 81b8b4
 }
 
 void Dungeon_LoadAttributeTable() {  // 81b8bf
+  if (GbaAlttp_SkipAttrLoadForVoidRoom())
+    return;
   dung_draw_width_indicator = dung_draw_height_indicator = 0;
   Dungeon_LoadBasicAttribute_full(0x1000);
   Dungeon_LoadObjectAttribute();
   Dungeon_LoadDoorAttribute();
+  GbaAlttp_ApplyBakedAttrOverlay();
   if (orange_blue_barrier_state)
     Dungeon_FlipCrystalPegAttribute();
   overworld_map_state = 0;

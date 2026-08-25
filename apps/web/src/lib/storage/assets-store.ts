@@ -45,8 +45,7 @@ const runExtraction = async (
   supplementRoms: Partial<Record<AssetSourceId, Uint8Array>>,
   languages: LanguageInput[],
 ): Promise<AssetsResult> => {
-  const engine = supplementRoms['gba-alttp'] ? await fetchEngineFiles() : undefined;
-  return runOnWorker<AssetsResult>({ op: 'assets', romBytes, supplementRoms, languages, engine });
+  return runOnWorker<AssetsResult>({ op: 'assets', romBytes, supplementRoms, languages });
 };
 
 const checkAssets = (romFile: string): Promise<boolean> => assets.check(files(), romFile);
