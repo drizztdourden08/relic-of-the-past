@@ -38,6 +38,7 @@ enum {
   kGbaAssetAttrOverlays,  // kGbaPalaceAttrOverlays — Per-room attribute corrections applied after collision installs: layer, cell, attribute records.
   kGbaAssetTileAttrOverrides,  // kGbaPalaceTileAttrOverrides — Per-tile attribute corrections for ids the port re-drew: tile word, attribute byte records.
   kGbaAssetObjPalettes,  // kGbaPalaceObjPalettes — Hardware-captured sprite palette rows: row byte then sixteen BGR555 colors per record.
+  kGbaAssetAnimatedTiles,  // kGbaPalaceAnimatedTiles — Hardware-captured animated background tiles: three frames of 32 tiles, in cycle order.
   kGbaAlttpAssetCount,
 };
 

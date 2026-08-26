@@ -514,6 +514,7 @@ void DecompressAnimatedDungeonTiles(uint8 a) {  // 80d337
     WORD(p[0x1E80]) = WORD(p[0x1A80]);
     WORD(p[0x1A80]) = x;
   }
+  GbaAlttp_ApplyAnimatedTiles();
   animated_tile_vram_addr = 0x3b00;
 }
 

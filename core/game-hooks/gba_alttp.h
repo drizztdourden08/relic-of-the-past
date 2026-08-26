@@ -55,6 +55,7 @@ const uint8 *GbaAlttp_GetRoomSecrets(uint16 room);
 
 // INTERIM. Stamps the entrance chamber's transit strip, which a door record would otherwise
 // stamp. Goes away with the interim doorway it exists for.
+void GbaAlttp_ApplyAnimatedTiles(void);
 void GbaAlttp_ApplyDungeonPalette(void);
 bool GbaAlttp_RoomHasFixtures(void);
 void GbaAlttp_ApplyPyramidEntrance();

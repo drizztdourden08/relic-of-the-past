@@ -55,6 +55,7 @@ const GBA_ALTTP_ASSET_MANIFEST: readonly GbaAlttpAssetManifestEntry[] = [
   { name: 'kGbaPalaceAttrOverlays', description: 'Per-room attribute corrections applied after collision installs: layer, cell, attribute records.' },
   { name: 'kGbaPalaceTileAttrOverrides', description: 'Per-tile attribute corrections for ids the port re-drew: tile word, attribute byte records.' },
   { name: 'kGbaPalaceObjPalettes', description: 'Hardware-captured sprite palette rows: row byte then sixteen BGR555 colors per record.' },
+  { name: 'kGbaPalaceAnimatedTiles', description: 'Hardware-captured animated background tiles: three frames of 32 tiles, in cycle order.' },
 ];
 
 const GBA_ALTTP_ASSET_INDEX: Readonly<Record<string, number>> = Object.fromEntries(

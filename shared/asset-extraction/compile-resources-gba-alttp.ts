@@ -8,6 +8,8 @@ import { EXTRA_DUNGEON_PALINFO } from './extensions/second-cartridge-palette';
 import { doorListFor } from './extensions/second-cartridge-doors';
 import { attrOverlayRecord, tileAttrOverridesRecord } from './extensions/second-cartridge-attrs';
 import { extendedPaletteRecord, objPaletteRecords } from './extensions/second-cartridge-palettes';
+import { ANIMATED_TILES_GBA_4BPP } from './extensions/second-cartridge-animated-tiles';
+import { convertGbaSheetToSnes4bpp } from './graphics/gba-native';
 import { occluderCells } from './extensions/second-cartridge-occluders';
 import { bankedRoomId } from './extensions/second-cartridge-bank';
 import {
@@ -256,6 +258,8 @@ const compileGbaAlttpSupplement = (rom: GbaRomReader, snes: RomData): Buffer => 
     kGbaPalaceAttrOverlays: () => assets.addPacked('kGbaPalaceAttrOverlays', rooms.map(room => attrOverlayRecord(room.id))),
     kGbaPalaceTileAttrOverrides: () => assets.addUint8('kGbaPalaceTileAttrOverrides', [...tileAttrOverridesRecord()]),
     kGbaPalaceObjPalettes: () => assets.addUint8('kGbaPalaceObjPalettes', [...objPaletteRecords()]),
+    kGbaPalaceAnimatedTiles: () => assets.addUint8('kGbaPalaceAnimatedTiles',
+      [...convertGbaSheetToSnes4bpp(ANIMATED_TILES_GBA_4BPP)]),
   };
 
   if (Object.keys(builders).length !== GBA_ALTTP_ASSET_MANIFEST.length) {

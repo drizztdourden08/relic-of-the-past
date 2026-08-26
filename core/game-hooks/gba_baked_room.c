@@ -264,6 +264,10 @@ bool GbaAlttp_LoadBakedRoom(void) {
     }
   }
 
+  /* The engine only refreshes the animated tile frames on a full dungeon load, while a room
+     transition leaves the base game's frames sitting in the window this dungeon draws from. */
+  GbaAlttp_ApplyAnimatedTiles();
+
   /* Layout 7 is a full-size 512x512 room to the quadrant camera (kLayoutQuadrantFlags);
      anything narrower makes the camera treat the room as 256px pages and refuse to pan. */
   dung_layout_and_starting_quadrant = 7 << 2;

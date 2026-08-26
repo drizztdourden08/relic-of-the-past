@@ -57,6 +57,27 @@ void GbaAlttp_PatchTransAuxStaging(void) {
   memcpy(&g_ram[kStaging], g_gba_alttp_asset_ptrs[kGbaAssetBgGfxSnes4bpp] + kAuxByteOffset, kAuxBytes);
 }
 
+/**
+ * Install this dungeon's animated background tiles.
+ *
+ * The engine keeps three frames of one background tile window in memory and uploads the
+ * current one every frame, which is how the base game's water moves. This dungeon's rooms
+ * reference tiles inside that window, so without its own frames there the base game's
+ * animation simply overwrites them - the art is in the shipped sheet, uploaded correctly,
+ * and then replaced a frame later. Writing the frames into the same buffers hands the whole
+ * mechanism, cycling included, back to the engine.
+ */
+void GbaAlttp_ApplyAnimatedTiles(void) {
+  enum { kFrameBase = 0xa680, kFrameBytes = 0x400, kFrames = 3 };
+  if (!GbaAlttp_IsPalaceActive())
+    return;
+  MemBlk frames = GbaAlttpAsset(kGbaAssetAnimatedTiles);
+  if (frames.size != kFrames * kFrameBytes)
+    return;
+  for (int frame = 0; frame < kFrames; frame++)
+    memcpy(&g_ram[kFrameBase + frame * kFrameBytes], frames.ptr + frame * kFrameBytes, kFrameBytes);
+}
+
 void GbaAlttp_ApplyDungeonPalette(void) {
   // Indoors-gated: this runs at the tail of the shared palette load, which also feeds the
   // overworld, and the room id still reads as ours after leaving — so a room-only test would
