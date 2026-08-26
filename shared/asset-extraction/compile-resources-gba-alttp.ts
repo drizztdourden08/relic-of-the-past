@@ -93,6 +93,8 @@ const HEADER_LIGHTS_OUT = 0x01;
 /** Header byte 4 is the layer effect; the engine's dispatch table defines eight. */
 const EFFECT_BYTE = 4;
 const ENGINE_EFFECT_COUNT = 8;
+// The engine's flowing-water layer effect; a hook gives it this dungeon's direction.
+const ENGINE_EFFECT_FLOWING_WATER = 3;
 
 /** Header bytes 9 to 13: where a hole drops to, then the four staircase destinations. */
 const FIRST_TRAVEL_BYTE = 9;
@@ -138,7 +140,7 @@ const nativeHeaderBytes = (room: DungeonRoomRecord, rooms: ReadonlySet<number>):
   // designation 3 (opaque upper layer); other unknown effects become "none" until measured.
   const nativeEffect = bytes[EFFECT_BYTE];
   if (nativeEffect === 8) {
-    bytes[EFFECT_BYTE] = 0;
+    bytes[EFFECT_BYTE] = ENGINE_EFFECT_FLOWING_WATER;
     bytes[0] = (bytes[0] & 0x1f) | (4 << 5);
   } else {
     if (nativeEffect >= ENGINE_EFFECT_COUNT) bytes[EFFECT_BYTE] = 0;
@@ -255,7 +257,7 @@ const compileGbaAlttpSupplement = (rom: GbaRomReader, snes: RomData): Buffer => 
       });
     })),
     kGbaPalaceRoomCollision: () => assets.addPacked('kGbaPalaceRoomCollision', layerBuffers(rooms, layer => Buffer.from(layer.collision))),
-    kGbaPalaceAttrOverlays: () => assets.addPacked('kGbaPalaceAttrOverlays', rooms.map(room => attrOverlayRecord(room.id))),
+    kGbaPalaceAttrOverlays: () => assets.addPacked('kGbaPalaceAttrOverlays', rooms.map(room => attrOverlayRecord(room))),
     kGbaPalaceTileAttrOverrides: () => assets.addUint8('kGbaPalaceTileAttrOverrides', [...tileAttrOverridesRecord()]),
     kGbaPalaceObjPalettes: () => assets.addUint8('kGbaPalaceObjPalettes', [...objPaletteRecords()]),
     kGbaPalaceAnimatedTiles: () => assets.addUint8('kGbaPalaceAnimatedTiles',

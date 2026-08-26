@@ -40,6 +40,9 @@ bool GbaAlttp_TeleportLandingSnap(void);
 bool GbaAlttp_TeleportWalkTarget(uint8 *target);
 void GbaAlttp_TeleportArrivalDone(void);
 uint8 GbaAlttp_AdjustSpriteOamFlags(uint8 charnum, uint8 flags);
+void GbaAlttp_FilterRoomTags(uint8 *first, uint8 *second);
+bool GbaAlttp_ApplyWaterCurrent(void);
+void GbaAlttp_CarrySwimmer(void);
 void GbaAlttp_ApplyDungeonGraphics(void);
 void GbaAlttp_SelectDungeonSpriteSheets(uint8 *slot0, uint8 *slot1, uint8 *slot2, uint8 *slot3);
 

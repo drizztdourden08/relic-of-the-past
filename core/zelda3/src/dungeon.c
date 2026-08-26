@@ -3733,8 +3733,7 @@ void Dungeon_LoadHeader() {  // 81b564
   dung_hdr_collision_2 = hdr_ptr[4];
   dung_hdr_tag[0] = hdr_ptr[5];
   dung_hdr_tag[1] = hdr_ptr[6];
-  if (GbaAlttp_IsPalaceActive())
-    dung_hdr_tag[0] = dung_hdr_tag[1] = 0;
+  GbaAlttp_FilterRoomTags(&dung_hdr_tag[0], &dung_hdr_tag[1]);
   dung_hdr_hole_teleporter_plane = hdr_ptr[7] & 3;
   dung_hdr_staircase_plane[0] = (hdr_ptr[7] >> 2) & 3;
   dung_hdr_staircase_plane[1] = (hdr_ptr[7] >> 4) & 3;
@@ -8801,6 +8800,8 @@ void LayerEffect_Ganon() {  // 8affa4
 }
 
 void LayerEffect_WaterRapids() {  // 8affde
+  if (GbaAlttp_ApplyWaterCurrent())
+    return;
   int t;
   dung_some_subpixel[1] = t = dung_some_subpixel[1] + 0x80;
   dung_floor_x_vel = -(t >> 8);

@@ -214,6 +214,72 @@ uint8 GbaAlttp_AdjustSpriteOamFlags(uint8 charnum, uint8 flags) {
   return (uint8)((flags & ~kOamPriorityMask) | (priority << kOamPriorityShift));
 }
 
+/**
+ * Let this dungeon's room tags run, minus the ones this engine has no handler for.
+ *
+ * Tags drive a room's behaviour - prize doors, switch-held doors, heart rewards - and the
+ * cartridge stores them in the engine's own numbering, so they can be passed straight
+ * through. Its own additions sit past the end of the handler table, where the vanilla
+ * dispatch would read off the end of the array, so those are dropped instead.
+ */
+void GbaAlttp_FilterRoomTags(uint8 *first, uint8 *second) {
+  enum { kTagHandlerCount = 64 };
+  if (!GbaAlttp_IsBankRoom(dungeon_room_index))
+    return;
+  if (*first >= kTagHandlerCount)
+    *first = 0;
+  if (*second >= kTagHandlerCount)
+    *second = 0;
+}
+
+/**
+ * The water current, and the torch that stops it.
+ *
+ * The cartridge marks these rooms with a layer effect of its own, which the extraction maps
+ * onto this engine's flowing-water effect. Two differences: the channel runs top to bottom
+ * rather than sideways, and lighting the room's torch stills the water. Returning true means
+ * the vanilla sideways rapids must not also run.
+ */
+static uint16 g_water_current_step;
+
+bool GbaAlttp_ApplyWaterCurrent(void) {
+  enum { kCurrentStep = 0x100 };
+  if (!GbaAlttp_IsBakedRoomActive())
+    return false;
+  dung_floor_x_vel = 0;
+  if (dung_num_lit_torches != 0) {
+    dung_floor_y_vel = 0;
+    return true;
+  }
+  int subpixel = dung_some_subpixel[1] + kCurrentStep;
+  dung_some_subpixel[1] = (uint8)subpixel;
+  /* Carries anything walking the flowing floor, the way the vanilla effect does. */
+  g_water_current_step = (uint16)(subpixel >> 8);
+  dung_floor_y_vel = g_water_current_step;
+  return true;
+}
+
+/**
+ * Carry a swimmer downstream, once the frame's own movement has resolved.
+ *
+ * Swimming owns its movement completely: it clears the velocity whenever the stick is idle
+ * and settles the position through its own collision, so a current added anywhere inside
+ * that path is overwritten before it reaches the screen. Applied at the end of the frame it
+ * survives, and the step only lands on a cell that is still water, so the current can never
+ * push the player through a wall or up onto the bank.
+ */
+void GbaAlttp_CarrySwimmer(void) {
+  enum { kPlayerSwimming = 4, kDeepWater = 0x08, kFeetOffset = 8 };
+  if (g_water_current_step == 0 || link_player_handler_state != kPlayerSwimming)
+    return;
+  if (!GbaAlttp_IsBakedRoomActive() || dung_num_lit_torches != 0)
+    return;
+  uint16 next = link_y_coord + g_water_current_step;
+  int cell = (((next + kFeetOffset) & 0x1f8) << 3) | (((link_x_coord + kFeetOffset) & 0x1f8) >> 3);
+  if (dung_bg2_attr_table[cell] == kDeepWater)
+    link_y_coord = next;
+}
+
 static void RegisterDoors(uint16 room) {
   const uint16 *doors = GbaAlttp_GetRoomDoors(room);
   if (!doors)
