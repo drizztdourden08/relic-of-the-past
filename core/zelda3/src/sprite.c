@@ -3857,7 +3857,13 @@ void Sprite_ResetAll() {  // 89c44e
   Sprite_ResetAll_noDisable();
 }
 
+// Lattice rect covered by the last Sprite_ActivateWithinViewRect sweep, and whether it can be trusted.
+// Invalid means "sweep the whole rect": nothing was swept yet, or the loaded bitmap was just wiped.
+static struct { int x0, y0, x1, y1; } g_sprite_view_rect;
+static bool g_sprite_view_rect_valid;
+
 void Sprite_ResetAll_noDisable() {  // 89c452
+  g_sprite_view_rect_valid = false;  // the loaded bitmap is cleared below, so the rect must be re-swept whole
   byte_7E0FDD = 0;
   sprite_alert_flag = 0;
   byte_7E0FFD = 0;
@@ -3921,20 +3927,65 @@ void Sprite_ActivateAllProxima() {  // 89c55e
   BG2HOFS_copy2 = bak0;
 }
 
-// Phase 2: spawn every sprite whose true world position lies in the rendered view rectangle (game camera ±
-// the camera-lock shift ± the wide/tall budget), regardless of distance to Link — so nothing in a wide /
+// Phase 2: spawn sprites by their true world position within the rendered view rectangle (game camera ±
+// the camera-lock shift ± the wide/tall budget) rather than by distance to Link, so nothing in a wide /
 // locked multi-screen view is missing or pops in as the camera nears. Supersedes the old camera-anchored
 // edge + lock-band scans. Sprite_Overworld_ProximityMotivatedLoad bounds-checks the area and dedups via the
 // loaded bitmap, so out-of-area cells and already-resident sprites are cheap no-ops. The 16-slot cap still
-// applies (a very dense area can exceed it — Phase 3 lifts it); the sweep is row-major (top-left first).
-static void Sprite_ActivateWithinViewRect() {
+// applies (a very dense area can exceed it — Phase 3 lifts it); each band is swept row-major, top-left first.
+static bool g_sprite_view_rect_alloc_full;  // a load in this sweep found no free slot; don't advance the rect
+
+// The swept region, snapped down to the 16px block lattice the loader resolves to, so a sub-block camera
+// step leaves it unchanged. Both margins pad the view by the worst-case sprite extent and both must stay
+// INSIDE the keep-alive window of Sprite_PrepOamCoordOrDoubleRet (-0x40 - 2*budget .. 0x130 + 2*budget).
+// The vertical one used to be 0x30, which put the bottom row exactly ON the kill line whenever the tall
+// budget was 0 (the shipped default, tall render being gated separately): that row spawned a sprite and
+// killed it the same frame. 0x20 leaves the same 16px margin the stock scans keep by stopping at +0x120.
+static void Sprite_ViewRect(int *x0, int *y0, int *x1, int *y1) {
   int wb = (int)g_oam_wide_budget, tb = (int)g_oam_tall_budget;
   int vx = (int)BG2HOFS_copy2 - g_camera_lock_shift_x;  // clamped (rendered) view origin = game cam - shift
   int vy = (int)BG2VOFS_copy2 - g_camera_lock_shift_y;
-  int x1 = vx + 0x100 + wb + 0x20, y1 = vy + 0x100 + tb + 0x30;  // +margin for sprite extent
-  for (int y = vy - tb - 0x30; y <= y1; y += 16)
-    for (int x = vx - wb - 0x20; x <= x1; x += 16)
+  *x0 = (vx - wb - 0x20) & ~15;
+  *y0 = (vy - tb - 0x30) & ~15;
+  *x1 = (vx + 0x100 + wb + 0x20) & ~15;
+  *y1 = (vy + 0x100 + tb + 0x20) & ~15;
+}
+
+static void Sprite_SweepViewBand(int x0, int y0, int x1, int y1) {
+  for (int y = y0; y <= y1; y += 16)
+    for (int x = x0; x <= x1; x += 16)
       Sprite_Overworld_ProximityMotivatedLoad((uint16)x, (uint16)y);
+}
+
+// Sweep only what the view rect newly covers. The stock scans read a single leading edge and only while the
+// camera is moving, so a block deep inside the view is never re-armed: a sprite that removed itself by
+// running off screen (the grove animals, which flee on cue) stays gone until its home block leaves and
+// re-enters the loading region. Sweeping the whole rect every frame broke that, because Sprite_KillSelf
+// frees the home block on the way out, so the next frame spawned a replacement, and the next, without end.
+// The four bands below are that leading edge generalized to a 2D rect, so a wide / locked view still
+// populates fully without re-arming anything already inside it.
+static void Sprite_ActivateWithinViewRect() {
+  int x0, y0, x1, y1;
+  Sprite_ViewRect(&x0, &y0, &x1, &y1);
+  g_sprite_view_rect_alloc_full = false;
+  if (!g_sprite_view_rect_valid ||
+      x0 > g_sprite_view_rect.x1 || x1 < g_sprite_view_rect.x0 ||
+      y0 > g_sprite_view_rect.y1 || y1 < g_sprite_view_rect.y0) {
+    Sprite_SweepViewBand(x0, y0, x1, y1);  // first sweep, or a jump with nothing to reuse (warp, mirror)
+  } else {
+    if (x0 < g_sprite_view_rect.x0) Sprite_SweepViewBand(x0, y0, g_sprite_view_rect.x0 - 16, y1);
+    if (x1 > g_sprite_view_rect.x1) Sprite_SweepViewBand(g_sprite_view_rect.x1 + 16, y0, x1, y1);
+    if (y0 < g_sprite_view_rect.y0) Sprite_SweepViewBand(x0, y0, x1, g_sprite_view_rect.y0 - 16);
+    if (y1 > g_sprite_view_rect.y1) Sprite_SweepViewBand(x0, g_sprite_view_rect.y1 + 16, x1, y1);
+  }
+  // A band is swept once, so a load that lost the race for the last of the 16 slots would just be dropped.
+  // Hold the rect where it is instead: the same bands are re-swept, plus whatever the camera has covered
+  // since, until a sweep places everything it found. The overlap is never re-swept either way.
+  if (g_sprite_view_rect_alloc_full)
+    return;
+  g_sprite_view_rect.x0 = x0, g_sprite_view_rect.y0 = y0;
+  g_sprite_view_rect.x1 = x1, g_sprite_view_rect.y1 = y1;
+  g_sprite_view_rect_valid = true;
 }
 
 void Sprite_ProximityActivation() {  // 89c58f
@@ -3942,6 +3993,7 @@ void Sprite_ProximityActivation() {  // 89c58f
     Sprite_ActivateWithinViewRect();
     return;
   }
+  g_sprite_view_rect_valid = false;  // stock path ran: the rect no longer describes what has been swept
   if (submodule_index != 0) {
     Sprite_ActivateWhenProximal();
     Sprite_ActivateWhenProximalBig();
@@ -4029,8 +4081,10 @@ void Overworld_LoadProximaSpriteIfAlive(uint16 blk) {  // 89c739
   if (sprite_to_spawn >= 0xf4) {
     // load overlord
     int k = AllocOverlord();
-    if (k < 0)
+    if (k < 0) {
+      g_sprite_view_rect_alloc_full = true;
       return;
+    }
     *loadedp |= loadedmask;
     overlord_offset_sprite_pos[k] = blk;
     overlord_type[k] = sprite_to_spawn - 0xf3;
@@ -4046,8 +4100,10 @@ void Overworld_LoadProximaSpriteIfAlive(uint16 blk) {  // 89c739
   } else {
     // load regular sprite
     int k = Overworld_AllocSprite(sprite_to_spawn);
-    if (k < 0)
+    if (k < 0) {
+      g_sprite_view_rect_alloc_full = true;
       return;
+    }
     *loadedp |= loadedmask;
 
     sprite_N_word[k] = blk;
