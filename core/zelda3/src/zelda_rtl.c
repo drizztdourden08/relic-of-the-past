@@ -13,6 +13,7 @@
 #include "util.h"
 #include "audio.h"
 #include "assets.h"
+#include "gba_alttp.h"
 #include "game_hooks.h"
 ZeldaEnv g_zenv;
 uint8 g_ram[131072];
@@ -246,6 +247,121 @@ static void BuildTransitionWorldTilemap(int destArea) {
   bg->useWorld = true;
 }
 
+// Snapshot of the room being left, taken at inter-room transition start (before the target's
+// layers overwrite the live buffers), so the transition can keep the previous screen drawn.
+static uint16 g_dun_src_bg2[4096], g_dun_src_bg1[4096];
+static int g_dun_src_shift_x, g_dun_src_shift_y;
+static bool g_dun_src_valid;
+// Dissolve state: the incoming room fades in from the void at transition start, and the room
+// just left fades back to the void once the transition completes.
+enum { kDunFadeFrames = 24, kDunDitherFull = 17 };
+static int g_dun_fade_in, g_dun_fade_out;
+
+void ZeldaSnapshotDungeonTransitionSource(void) {
+  g_dun_src_valid = false;
+  if (!(enhanced_features0 & kFeatures0_SmoothTransitions) || !GbaAlttp_IsBakedRoomActive())
+    return;
+  memcpy(g_dun_src_bg2, dung_bg2, sizeof(g_dun_src_bg2));
+  memcpy(g_dun_src_bg1, dung_bg1, sizeof(g_dun_src_bg1));
+  int st = overworld_screen_transition;
+  g_dun_src_shift_x = st == 2 ? -512 : st == 3 ? 512 : 0;
+  g_dun_src_shift_y = st == 0 ? -512 : st == 1 ? 512 : 0;
+  g_dun_src_valid = true;
+  g_dun_fade_in = 0;
+  g_dun_fade_out = 0;
+}
+
+// 64x64-word room layer into the world tilemap at a tile offset, through an ordered-dither
+// mask: cells whose threshold is below `level` (0..17) show the room, the rest keep the void
+// already in the buffer - level 17 shows everything, 0 nothing.
+static void BlitRoomWords(uint16 *world, int worldW, int worldH, const uint16 *room,
+                          int offX, int offY, int level) {
+  static const uint8 kBayer[16] = { 0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5 };
+  if (level <= 0)
+    return;
+  for (int ry = 0; ry < 64; ry++) {
+    int by = offY + ry;
+    if ((unsigned)by >= (unsigned)worldH)
+      continue;
+    uint16 *dst = world + (size_t)by * worldW + offX;
+    const uint16 *src = room + ry * 64;
+    if (level >= kDunDitherFull - 1) {
+      memcpy(dst, src, 64 * sizeof(uint16));
+    } else {
+      const uint8 *brow = &kBayer[(ry & 3) * 4];
+      for (int rx = 0; rx < 64; rx++) {
+        if (brow[rx & 3] < level)
+          dst[rx] = src[rx];
+      }
+    }
+  }
+}
+
+// The margin ring around the rooms, wide enough to cover any horizontal budget the build allows.
+enum { kDunWorldMarginTiles = kPpuExtraLeftRight / 8 };
+// Beyond the room the lower layer continues the grey stipple void the rooms already use for
+// their own margins; the upper layer continues with its transparent filler tile.
+enum { kDunVoidWordBg2 = 0x1c15, kDunVoidWordBg1 = 0x01ec };
+
+// World tilemap for the bank rooms: the current room (and, mid-transition, the room being
+// left at its visual position) ringed by the stipple void, so the widescreen band always
+// renders real content — no black bar at a room edge, no wrapped fetch leaking the wrong
+// half, and the previous screen stays drawn until a transition completes.
+static bool BuildDungeonWorldTilemap(bool in_transition) {
+  // The room being left dissolves back to the void after the transition; the incoming room
+  // dissolves in from it while the transition runs. The live buffers hold the incoming room
+  // only once the transition's room load has run (subsubmodule 2+); before that the target
+  // area stays void, which also covers the trigger frame that has no snapshot yet.
+  if (in_transition) {
+    if (!g_dun_src_valid && subsubmodule_index == 0)
+      ZeldaSnapshotDungeonTransitionSource();
+    if (subsubmodule_index >= 2 || g_dun_fade_in > 0)
+      g_dun_fade_in++;
+    g_dun_fade_out = kDunFadeFrames;
+  } else if (g_dun_fade_out > 0) {
+    if (--g_dun_fade_out == 0)
+      g_dun_src_valid = false;
+  }
+  bool with_source = g_dun_src_valid && (in_transition || g_dun_fade_out > 0);
+  int src_level = in_transition ? kDunDitherFull : kDunDitherFull * g_dun_fade_out / kDunFadeFrames;
+  int target_level = in_transition ? kDunDitherFull * g_dun_fade_in / kDunFadeFrames : kDunDitherFull;
+  int targetX = (dungeon_room_index & 0xf) << 9;
+  int targetY = (dungeon_room_index & 0xff0) << 5;
+  int srcX = targetX, srcY = targetY;
+  if (with_source)
+    srcX += g_dun_src_shift_x, srcY += g_dun_src_shift_y;
+  int m = kDunWorldMarginTiles * 8;
+  int left = IntMin(targetX, srcX) - m, top = IntMin(targetY, srcY) - m;
+  int w = (IntMax(targetX, srcX) + 512 + m - left) >> 3;
+  int h = (IntMax(targetY, srcY) + 512 + m - top) >> 3;
+  if (w > kPpuWorldTiles || h > kPpuWorldTiles)
+    return false;
+  const uint16 *live[2] = { dung_bg2, dung_bg1 };
+  const uint16 *snap[2] = { g_dun_src_bg2, g_dun_src_bg1 };
+  const uint16 fill[2] = { kDunVoidWordBg2, kDunVoidWordBg1 };
+  bool ok = false;
+  for (int li = 0; li < 2; li++) {
+    BgLayer *bg = &g_zenv.ppu->bgLayer[li == 0 ? 1 : 0];
+    if (!PpuEnsureWorldTilemap(bg)) {
+      bg->worldW = bg->worldH = 0;
+      bg->useWorld = false;
+      continue;
+    }
+    for (int i = 0, n = w * h; i < n; i++)
+      bg->world[i] = fill[li];
+    if (with_source)
+      BlitRoomWords(bg->world, w, h, snap[li], (srcX - left) >> 3, (srcY - top) >> 3, src_level);
+    BlitRoomWords(bg->world, w, h, live[li], (targetX - left) >> 3, (targetY - top) >> 3,
+                  with_source ? target_level : kDunDitherFull);
+    bg->worldW = w, bg->worldH = h;
+    bg->worldOffX = ((int)BG2HOFS_copy2 & ~0x3ff) - left;
+    bg->worldOffY = ((int)BG2VOFS_copy2 & ~0x3ff) - top;
+    bg->useWorld = true;
+    ok = true;
+  }
+  return ok;
+}
+
 // Last stationary (submodule 0) camera-lock state. A scroll transition always moves the camera exactly one
 // 256px screen to the adjacent area, so we interpolate the lock shift from this saved value to its negation
 // as the camera crosses — the view pans smoothly across the seam instead of jumping when the lock hands off.
@@ -278,6 +394,7 @@ static void ConfigurePpuSideSpace() {
   // Let PPU impl know about the maximum allowed extra space on the sides and bottom
   int extra_right = 0, extra_left = 0, extra_bottom = 0, extra_top = 0;
   g_zenv.ppu->bgLayer[1].useWorld = false;  // re-enabled per-frame only for outdoor areas (below)
+  g_zenv.ppu->bgLayer[0].useWorld = false;  // re-enabled per-frame only by the dungeon transition build
   g_zenv.ppu->cameraLockShiftX = g_zenv.ppu->cameraLockShiftY = 0;  // set only by the stationary overworld lock branch
 //  printf("main %d, sub %d  (%d, %d, %d)\n", main_module_index, submodule_index, BG2HOFS_copy2, room_bounds_x.v[2 | (quadrant_fullsize_x >> 1)], quadrant_fullsize_x >> 1);
   int mod = main_module_index;
@@ -427,6 +544,22 @@ static void ConfigurePpuSideSpace() {
     // tall: rows above the camera, bounded by the room's top edge (mirror of extra_bottom). The room's
     // tilemap is fully resident, so the stock vertical fetch represents it without wrap.
     extra_top = IntMax(BG2VOFS_copy2 - room_bounds_y.v[qy], 0);
+    // Bank rooms render over the world tilemap whenever the wide view is on: stationary frames
+    // get the room ringed by its stipple void (no black bar at a room edge), and an inter-room
+    // scroll adds the room being left at its visual position so the previous screen stays drawn
+    // until the transition completes — the same opt-in as the overworld's smooth transitions.
+    if (GbaAlttp_IsBakedRoomActive() && g_oam_wide_budget != 0
+        && !(hdr_dungeon_dark_with_lantern && TS_copy != 0)) {
+      bool inTrans = submodule_index == 2;
+      bool smooth = (enhanced_features0 & kFeatures0_SmoothTransitions) != 0;
+      if ((!inTrans || smooth) && BuildDungeonWorldTilemap(inTrans && smooth)) {
+        extra_left = extra_right = (int)g_oam_wide_budget;
+        // The vertical bands fetch from the same ring: the tall budget when configured, and
+        // the legacy 16-row extend-y band at the bottom otherwise (harmless at 224 lines).
+        extra_top = (int)g_oam_tall_budget;
+        extra_bottom = g_oam_tall_budget != 0 ? (int)g_oam_tall_budget : 16;
+      }
+    }
   } else if (mod == 20 || mod == 0 || mod == 1) {
     extra_left = kPpuExtraLeftRight, extra_right = kPpuExtraLeftRight;
     extra_bottom = 16;

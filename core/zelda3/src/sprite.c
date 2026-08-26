@@ -1523,7 +1523,7 @@ void Sprite_PrepAndDrawSingleLargeNoPrep(int k, PrepOamCoordsRet *info) {  // 86
   OamSetY(oam, info->y);
   if (oam->y != 0xf0) {
     oam->charnum = kSprite_PrepAndDrawSingleLarge_Tab2[kSprite_PrepAndDrawSingleLarge_Tab1[sprite_type[k]] + sprite_graphics[k]];
-    oam->flags = info->flags;
+    oam->flags = GbaAlttp_AdjustSpriteOamFlags(oam->charnum, info->flags);
   }
   // bit 8 of the 9-bit OAM X. Stock used (x >= 256), which only equals bit 8 for x < 512; in a wide view a
   // sprite at screen-x >= 512 needs the true (x>>8)&1 or its body splits 256px from its shadow (SetOamHelper1).

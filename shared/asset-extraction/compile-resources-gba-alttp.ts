@@ -7,6 +7,7 @@ import { compressStrings } from './text/dialogue-encoder';
 import { EXTRA_DUNGEON_PALINFO } from './extensions/second-cartridge-palette';
 import { doorListFor } from './extensions/second-cartridge-doors';
 import { attrOverlayRecord, tileAttrOverridesRecord } from './extensions/second-cartridge-attrs';
+import { extendedPaletteRecord, objPaletteRecords } from './extensions/second-cartridge-palettes';
 import { occluderCells } from './extensions/second-cartridge-occluders';
 import { bankedRoomId } from './extensions/second-cartridge-bank';
 import {
@@ -128,21 +129,49 @@ const nativeHeaderBytes = (room: DungeonRoomRecord, rooms: ReadonlySet<number>):
   const bytes = Buffer.from(room.header.nativeBytes);
   bytes[0] &= ~HEADER_LIGHTS_OUT;
   // The layer-effect byte indexes an engine dispatch table with eight defined entries; the
-  // cartridge uses values past it for effects of its own (the west chamber carries 8), and an
-  // out-of-range value dispatches a null pointer. Unknown effects become "none" until their
-  // meaning is measured on hardware.
-  if (bytes[EFFECT_BYTE] >= ENGINE_EFFECT_COUNT) bytes[EFFECT_BYTE] = 0;
-
-  // Header bits 5-7 drive the engine's screen designation through kSpiralTab1: only value 3
-  // shows the upper layer opaque on the main screen. The port ships 0 there — its engine
-  // composites layers its own way — which left this engine never displaying the top layer at
-  // all (door frames, wall caps, occluders). Rooms that declare a translucency mode keep it.
-  if ((bytes[0] >> 5) === 0) bytes[0] = (bytes[0] & 0x1f) | (3 << 5);
+  // cartridge uses values past it for effects of its own. Its effect 8 is the water rooms:
+  // measured on hardware, those rooms alpha-blend the middle layer half over the floor -
+  // this engine's translucent designation 4 renders the same thing (the lower layer blends
+  // half with the sub-screen upper layer), so effect 8 maps onto it. Every other room gets
+  // designation 3 (opaque upper layer); other unknown effects become "none" until measured.
+  const nativeEffect = bytes[EFFECT_BYTE];
+  if (nativeEffect === 8) {
+    bytes[EFFECT_BYTE] = 0;
+    bytes[0] = (bytes[0] & 0x1f) | (4 << 5);
+  } else {
+    if (nativeEffect >= ENGINE_EFFECT_COUNT) bytes[EFFECT_BYTE] = 0;
+    bytes[0] = (bytes[0] & 0x1f) | (3 << 5);
+  }
 
   bytes[1] = EXTRA_DUNGEON_PALINFO;
   bytes[2] = AUX_TILE_THEME;
   assertTravelStaysInDungeon(bytes, room.id, rooms);
   return bytes;
+};
+
+/**
+ * Palette ids past the base dungeon-palette table read as empty from the fixed base address;
+ * a room whose extracted record is mostly zero borrows the palette of the first room with a
+ * complete record, so every emitted record is usable. The rooms concerned keep their real
+ * palette id in the header for the day those extended entries are captured from hardware.
+ */
+const roomPaletteRecord = (rom: GbaRomReader, room: DungeonRoomRecord, rooms: readonly DungeonRoomRecord[]): Buffer => {
+  const captured = extendedPaletteRecord(room.header.palette);
+  if (captured) return captured;
+  const nonzeroCount = (record: Buffer): number => {
+    let count = 0;
+    for (let at = 0; at < record.length; at += 2) {
+      if ((record.readUInt16LE(at) & 0x7fff) !== 0) count++;
+    }
+    return count;
+  };
+  const own = extractDungeonPalette(rom, room.header.palette);
+  if (nonzeroCount(own) >= own.length / 4) return own;
+  for (const donor of rooms) {
+    const record = extractDungeonPalette(rom, donor.header.palette);
+    if (nonzeroCount(record) >= record.length / 4) return record;
+  }
+  return own;
 };
 
 const compileGbaAlttpSupplement = (rom: GbaRomReader, snes: RomData): Buffer => {
@@ -184,7 +213,7 @@ const compileGbaAlttpSupplement = (rom: GbaRomReader, snes: RomData): Buffer => 
     kGbaPalaceRoomSecrets: () => assets.addPacked('kGbaPalaceRoomSecrets', rooms.map(serializeSecretList)),
     kGbaPalaceBgGfxSnes4bpp: () => assets.addUint8('kGbaPalaceBgGfxSnes4bpp', [...bgTiles]),
     kGbaPalacePaletteIds: () => assets.addUint8('kGbaPalacePaletteIds', paletteIds),
-    kGbaPalaceBgPalettes: () => assets.addPacked('kGbaPalaceBgPalettes', rooms.map(room => extractDungeonPalette(rom, room.header.palette))),
+    kGbaPalaceBgPalettes: () => assets.addPacked('kGbaPalaceBgPalettes', rooms.map(room => roomPaletteRecord(rom, room, rooms))),
     kGbaPalaceEnemyBlocksets: () => assets.addUint8('kGbaPalaceEnemyBlocksets', spriteGraphics.tilesets.map(tileset => tileset.enemyBlockset)),
     kGbaPalaceSpriteTilesets: () => assets.addPacked('kGbaPalaceSpriteTilesets',
       spriteGraphics.tilesets.map(tileset => Buffer.from(tileset.sheetIds))),
@@ -226,6 +255,7 @@ const compileGbaAlttpSupplement = (rom: GbaRomReader, snes: RomData): Buffer => 
     kGbaPalaceRoomCollision: () => assets.addPacked('kGbaPalaceRoomCollision', layerBuffers(rooms, layer => Buffer.from(layer.collision))),
     kGbaPalaceAttrOverlays: () => assets.addPacked('kGbaPalaceAttrOverlays', rooms.map(room => attrOverlayRecord(room.id))),
     kGbaPalaceTileAttrOverrides: () => assets.addUint8('kGbaPalaceTileAttrOverrides', [...tileAttrOverridesRecord()]),
+    kGbaPalaceObjPalettes: () => assets.addUint8('kGbaPalaceObjPalettes', [...objPaletteRecords()]),
   };
 
   if (Object.keys(builders).length !== GBA_ALTTP_ASSET_MANIFEST.length) {

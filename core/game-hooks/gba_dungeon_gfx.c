@@ -73,6 +73,17 @@ void GbaAlttp_ApplyDungeonPalette(void) {
     return;
   memcpy(main_palette_buffer + 32, palette.ptr, palette.size);
   memcpy(aux_palette_buffer + 32, palette.ptr, palette.size);
+  /* The fixtures' sprite rows, captured from the cartridge alongside the background rows. */
+  MemBlk objs = GbaAlttp_RoomHasFixtures() ? GbaAlttpAsset(kGbaAssetObjPalettes)
+                                           : (MemBlk){ 0, 0 };
+  for (size_t at = 0; at + 33 <= objs.size; at += 33) {
+    int row = 8 + (objs.ptr[at] & 7);
+    memcpy(main_palette_buffer + row * 16, objs.ptr + at + 1, 32);
+    memcpy(aux_palette_buffer + row * 16, objs.ptr + at + 1, 32);
+  }
+  /* Rooms of this dungeon can differ in palette; the engine never pushes the buffers to the
+     palette memory on a same-dungeon transition because base rooms never change sets. */
+  flag_update_cgram_in_nmi = 1;
 }
 
 /**

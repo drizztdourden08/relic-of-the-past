@@ -37,6 +37,7 @@ enum {
   kGbaAssetRoomCollision,  // kGbaPalaceRoomCollision — Per-layer collision attribute bytes per room, as the port ships them.
   kGbaAssetAttrOverlays,  // kGbaPalaceAttrOverlays — Per-room attribute corrections applied after collision installs: layer, cell, attribute records.
   kGbaAssetTileAttrOverrides,  // kGbaPalaceTileAttrOverrides — Per-tile attribute corrections for ids the port re-drew: tile word, attribute byte records.
+  kGbaAssetObjPalettes,  // kGbaPalaceObjPalettes — Hardware-captured sprite palette rows: row byte then sixteen BGR555 colors per record.
   kGbaAlttpAssetCount,
 };
 

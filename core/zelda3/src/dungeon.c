@@ -6714,6 +6714,7 @@ void Module07_02_SupertileTransition() {  // 828a26
 }
 
 void Module07_02_00_InitializeTransition() {  // 828a4f
+  ZeldaSnapshotDungeonTransitionSource();
   uint8 bak = hdr_dungeon_dark_with_lantern;
   ResetTransitionPropsAndAdvanceSubmodule();
   hdr_dungeon_dark_with_lantern = bak;
@@ -6730,6 +6731,7 @@ void Module07_02_01_LoadNextRoom() {  // 828a5b
     Gfx_ReloadSpriteSheetsImmediate();
   else
     LoadTransAuxGFX_sprite();
+  GbaAlttp_PlaceTeleportArrival();
   subsubmodule_index++;
   overworld_map_state = 0;
   BYTE(dungeon_room_index2) = BYTE(dungeon_room_index);
@@ -7999,6 +8001,7 @@ void Dungeon_AdjustForTeleportDoors(uint16 room, uint8 flag) {  // 82a37c
   room_bounds_y.b1 += (xx << 8);
   room_bounds_y.a0 += (xx << 8);
   room_bounds_y.b0 += (xx << 8);
+  GbaAlttp_ArmTeleportArrival(flag == 0xff);
 
   for (int i = 0; i < 20; i++)
     tagalong_y_hi[i] = link_y_coord >> 8;
@@ -8228,11 +8231,11 @@ void DungeonTransition_ScrollRoom() {  // 82be03
 
   if (i >= 2) {
     t = BG1HOFS_copy2 = BG2HOFS_copy2 = (BG2HOFS_copy2 + kStaircaseTab3[i]) & ~1;
-    if (transition_counter >= kStaircaseTab4[i])
+    if (transition_counter >= kStaircaseTab4[i] && !GbaAlttp_TeleportArrivalHoldsPlayer())
       link_x_coord += kStaircaseTab3[i];
   } else {
     t = BG1VOFS_copy2 = BG2VOFS_copy2 = (BG2VOFS_copy2 + kStaircaseTab3[i]) & ~1;
-    if (transition_counter >= kStaircaseTab4[i])
+    if (transition_counter >= kStaircaseTab4[i] && !GbaAlttp_TeleportArrivalHoldsPlayer())
       link_y_coord += kStaircaseTab3[i];
   }
 
@@ -8267,6 +8270,8 @@ void DungeonTransition_FindSubtileLanding() {  // 82c110
 }
 
 void SubtileTransitionCalculateLanding() {  // 82c12c
+  if (GbaAlttp_TeleportLandingSnap())
+    return;
   int st = overworld_screen_transition;
   int a = CalculateTransitionLanding();
   if (a == 2)
@@ -8294,6 +8299,7 @@ void Dungeon_IntraRoomTrans_State5() {  // 82c170
   Link_HandleMovingAnimation_FullLongEntry();
   if (!DungeonTransition_MoveLinkOutDoor())
     return;
+  GbaAlttp_TeleportArrivalDone();
   if (byte_7E004E == 2 || byte_7E004E == 4)
     is_standing_in_doorway = 0;
   // todo: write to tiledetect_diag_state
@@ -8305,6 +8311,7 @@ void Dungeon_IntraRoomTrans_State5() {  // 82c170
 
 bool DungeonTransition_MoveLinkOutDoor() {  // 82c191
   uint8 x = kStaircaseTab2[byte_7E004E + overworld_screen_transition * 5];
+  GbaAlttp_TeleportWalkTarget(&x);
   int r0 = overworld_screen_transition & 1 ? -2 : 2;
   if ((overworld_screen_transition & 2) == 0) {
     link_y_coord += r0;

@@ -19,6 +19,7 @@
 #include "src/variables.h"
 #include "src/zelda_rtl.h"
 #include "src/dungeon.h"
+#include "snes/ppu.h"
 
 /** Both layers in full — the widest objects fill a whole room, so nothing is truncated. */
 enum { kMaxProbeCells = 0x2000 };
@@ -280,6 +281,24 @@ int WasmProbeVramTile(int tile) {
   return (int)buf;
 }
 
+/* Headless never configures the wide view; the frame audit sets a budget explicitly. */
+EMSCRIPTEN_KEEPALIVE
+int WasmProbeSetWideView(int budget) {
+  if (budget < 0) budget = 0;
+  if (budget > kPpuExtraLeftRight) budget = kPpuExtraLeftRight;
+  g_zenv.ppu->extraLeftRight = (uint16)budget;
+  g_oam_wide_budget = (uint16)budget;
+  return budget;
+}
+
+/* The palette memory as currently loaded, for diagnosing blacked-out arrivals. */
+EMSCRIPTEN_KEEPALIVE
+int WasmProbeCgram(void) {
+  static uint16 buf[256];
+  memcpy(buf, g_zenv.ppu->cgram, sizeof(buf));
+  return (int)buf;
+}
+
 /* The attribute tables as the game last derived them, for verifying the real load path. */
 EMSCRIPTEN_KEEPALIVE
 int WasmProbeLiveAttrs(void) {
@@ -315,6 +334,6 @@ static uint8 g_probe_frame[1024 * 512 * 4];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmProbeRenderFrame(void) {
-  ZeldaDrawPpuFrame(g_probe_frame, 1024 * 4, 0);
+  ZeldaDrawPpuFrame(g_probe_frame, 1024 * 4, kPpuRenderFlags_NewRenderer | kPpuRenderFlags_Height240);
   return (int)g_probe_frame;
 }

@@ -33,6 +33,13 @@ bool GbaAlttp_LoadBakedRoom(void);
 bool GbaAlttp_IsBakedRoomActive(void);
 bool GbaAlttp_SkipAttrLoadForVoidRoom(void);
 void GbaAlttp_ApplyBakedAttrOverlay(void);
+void GbaAlttp_ArmTeleportArrival(uint8 entering_left);
+void GbaAlttp_PlaceTeleportArrival(void);
+bool GbaAlttp_TeleportArrivalHoldsPlayer(void);
+bool GbaAlttp_TeleportLandingSnap(void);
+bool GbaAlttp_TeleportWalkTarget(uint8 *target);
+void GbaAlttp_TeleportArrivalDone(void);
+uint8 GbaAlttp_AdjustSpriteOamFlags(uint8 charnum, uint8 flags);
 void GbaAlttp_ApplyDungeonGraphics(void);
 void GbaAlttp_SelectDungeonSpriteSheets(uint8 *slot0, uint8 *slot1, uint8 *slot2, uint8 *slot3);
 
@@ -49,6 +56,7 @@ const uint8 *GbaAlttp_GetRoomSecrets(uint16 room);
 // INTERIM. Stamps the entrance chamber's transit strip, which a door record would otherwise
 // stamp. Goes away with the interim doorway it exists for.
 void GbaAlttp_ApplyDungeonPalette(void);
+bool GbaAlttp_RoomHasFixtures(void);
 void GbaAlttp_ApplyPyramidEntrance();
 
 // The engine recognises an overworld doorway by the pair of lower 8x8 tiles in the cell at

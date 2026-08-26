@@ -9,6 +9,7 @@
 #include "game_hooks.h"
 #include "player.h"
 #include "misc.h"
+#include "gba_alttp.h"
 
 #define byte_7FFE01 (*(uint8*)(g_ram+0x1FE01))
 static const int8 kSpriteKeese_Tab2[16] = {0, 8, 11, 14, 16, 14, 11, 8, 0, -8, -11, -14, -16, -14, -11, -8};
@@ -2412,11 +2413,12 @@ void SpikeRoller_Draw(int k) {  // 858ee3
 
   for (int i = sprite_ai_state[k] ? 7 : 3; i >= 0; i--, oam++) {
     int j = g * 8 + i;
+    uint8 charnum = chr ? chr : kSpikeRoller_Draw_Char[j];
     SetOamHelper0(oam,
                   info.x + kSpikeRoller_Draw_X[j],
                   info.y + kSpikeRoller_Draw_Y[j],
-                  chr ? chr : kSpikeRoller_Draw_Char[j],
-                  kSpikeRoller_Draw_Flags[j] | info.flags, 2);
+                  charnum,
+                  GbaAlttp_AdjustSpriteOamFlags(charnum, kSpikeRoller_Draw_Flags[j] | info.flags), 2);
     chr = 0;
   }
 }

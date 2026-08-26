@@ -17,7 +17,9 @@ interface AttrOverlayCell {
   attr: number;
 }
 
-const WALL = 0x02;
+// 0x01, not 0x02: the engine's simplified sprite tile table treats 0x02 as passable, so a
+// 0x02 wall blocks the player but lets most enemies walk straight through it.
+const WALL = 0x01;
 
 /**
  * Tile-level attribute corrections, applied to attributes_for_tile for every bank room.

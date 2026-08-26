@@ -75,6 +75,145 @@ void GbaAlttp_ApplyBakedAttrOverlay(void) {
   }
 }
 
+/**
+ * Landing for teleport-door travel between non-adjacent rooms.
+ *
+ * The engine's transition treats every horizontal crossing as an adjacent seam: the player
+ * keeps the seam offset (the room's far margin), rides the camera, then snaps to a landing
+ * table keyed off the attribute under them - all derived from geometry these doors don't
+ * have. Instead the arrival stands in the destination door mouth, holds still through the
+ * pan, and steps out just clear of the door frame, which is where the original game leaves
+ * the player.
+ */
+enum {
+  kTeleportEnterRight = 2, kTeleportEnterLeft = 3,
+  kTeleportWestMouthX = 3 * 8, kTeleportWestStop = 0x14,
+  kTeleportEastMouthX = 61 * 8, kTeleportEastStop = 0xdc,
+};
+static uint8 g_teleport_arrival;
+
+void GbaAlttp_ArmTeleportArrival(uint8 entering_left) {
+  if (!GbaAlttp_IsBakedRoomActive())
+    return;
+  g_teleport_arrival = entering_left ? kTeleportEnterLeft : kTeleportEnterRight;
+}
+
+void GbaAlttp_PlaceTeleportArrival(void) {
+  if (!g_teleport_arrival)
+    return;
+  uint16 mouth = g_teleport_arrival == kTeleportEnterRight ? kTeleportWestMouthX : kTeleportEastMouthX;
+  /* Anchor to the room's own column base: entering rightward the coordinate still sits in
+     the 512px block west of the boundary, so masking the current position picks that block. */
+  link_x_coord = (uint16)((dungeon_room_index & 0xf) << 9) | mouth;
+}
+
+bool GbaAlttp_TeleportArrivalHoldsPlayer(void) {
+  return g_teleport_arrival != 0;
+}
+
+bool GbaAlttp_TeleportLandingSnap(void) {
+  if (!g_teleport_arrival)
+    return false;
+  uint8 stop = g_teleport_arrival == kTeleportEnterRight ? kTeleportWestStop : kTeleportEastStop;
+  BYTE(link_x_coord) = g_teleport_arrival == kTeleportEnterRight ? stop - 8 : stop + 8;
+  link_visibility_status = 0;
+  return true;
+}
+
+bool GbaAlttp_TeleportWalkTarget(uint8 *target) {
+  if (!g_teleport_arrival)
+    return false;
+  *target = g_teleport_arrival == kTeleportEnterRight ? kTeleportWestStop : kTeleportEastStop;
+  return true;
+}
+
+void GbaAlttp_TeleportArrivalDone(void) {
+  g_teleport_arrival = 0;
+}
+
+/**
+ * Whether this room spawns the fixtures whose palettes differ from the base game's.
+ *
+ * The adjustment belongs only to those rooms: applied everywhere it would recolour other
+ * rooms' enemies, which share the same characters.
+ */
+bool GbaAlttp_RoomHasFixtures(void) {
+  static uint16 cached_room = 0xffff;
+  static bool cached_result;
+  if (!GbaAlttp_IsPalaceActive())
+    return false;
+  if (dungeon_room_index != cached_room) {
+    cached_room = dungeon_room_index;
+    cached_result = false;
+    const uint8 *src = GbaAlttp_GetRoomSprites(dungeon_room_index);
+    if (src) {
+      for (src++; *src != 0xff; src += 3) {
+        uint8 type = src[2];
+        if (type == 0x5d || type == 0x66 || type == 0x67) {
+          cached_result = true;
+          break;
+        }
+      }
+    }
+  }
+  return cached_result;
+}
+
+/**
+ * Palettes for the dungeon's fixtures.
+ *
+ * Their art is already in the room's own sheets and the engine names the right characters
+ * for it; what the cartridge does differently is the palette each one draws with, read from
+ * its live object attribute memory in the room itself. The cannons also rise to the top
+ * object priority: on the cartridge they draw in front of the covering layer (objects win
+ * priority ties there), and this engine's equivalent is the priority level that beats a
+ * priority-promoted upper layer.
+ */
+enum {
+  kOamPaletteMask = 0x0e, kOamPaletteShift = 1,
+  kOamPriorityMask = 0x30, kOamPriorityShift = 4,
+  kPriorityOverCover = 3,  /* for the fixtures mounted on the covering layer */
+  kPriorityOverFloor = 2,  /* above the floor and the water, below the covering layer */
+  kCannonCharClosed = 0x2e, kCannonCharOpen = 0x0e, kBallChar = 0x24,
+  kRollerCharFirst = 0x88, kRollerCharLast = 0x9e,
+  kCannonPalette = 6, kBallPalette = 4, kRollerPalette = 6,
+  kNoPalette = 0xff,
+};
+
+/**
+ * Palette and depth for one fixture character.
+ *
+ * Depth needs translating, not copying: on the cartridge these objects sit in front of every
+ * background but the topmost, while the level this engine gives them draws behind even plain
+ * floor - which is why a roller could damage the player without ever appearing.
+ */
+static uint8 FixturePalette(uint8 charnum, uint8 *priority) {
+  if (charnum == kCannonCharClosed || charnum == kCannonCharOpen) {
+    *priority = kPriorityOverCover;
+    return kCannonPalette;
+  }
+  if (charnum == kBallChar) {
+    *priority = kPriorityOverCover;
+    return kBallPalette;
+  }
+  if (charnum >= kRollerCharFirst && charnum <= kRollerCharLast) {
+    *priority = kPriorityOverFloor;
+    return kRollerPalette;
+  }
+  return kNoPalette;
+}
+
+uint8 GbaAlttp_AdjustSpriteOamFlags(uint8 charnum, uint8 flags) {
+  if (!GbaAlttp_RoomHasFixtures())
+    return flags;
+  uint8 priority = 0;
+  uint8 palette = FixturePalette(charnum, &priority);
+  if (palette == kNoPalette)
+    return flags;
+  flags = (uint8)((flags & ~kOamPaletteMask) | (palette << kOamPaletteShift));
+  return (uint8)((flags & ~kOamPriorityMask) | (priority << kOamPriorityShift));
+}
+
 static void RegisterDoors(uint16 room) {
   const uint16 *doors = GbaAlttp_GetRoomDoors(room);
   if (!doors)
@@ -103,13 +242,26 @@ bool GbaAlttp_LoadBakedRoom(void) {
   }
 
   memcpy(dung_bg2, bottom.ptr, kLayerBytes);
+  const uint16 *bottom_words = (const uint16 *)bottom.ptr;
   const uint16 *middle_words = (const uint16 *)middle.ptr;
   const uint16 *top_words = (const uint16 *)top.ptr;
-  for (int i = 0; i < kCellsPerLayer; i++) {
-    /* The port's top layer draws in front of the player wholesale; this engine carries that
-       per tile, so a visible top tile arrives with its priority bit set. */
-    bool top_visible = TileHasVisiblePixels(top_words[i]);
-    dung_bg1[i] = top_visible ? (uint16)(top_words[i] | kPriority) : middle_words[i];
+  const uint8 *header = GbaAlttp_GetRoomHeader(dungeon_room_index);
+  if (header && (header[0] >> 5) == 4) {
+    /* Water mode, matching the cartridge's own blend registers: the middle layer is the
+       half-transparent water surface, which the engine's translucent screen mode renders
+       from the upper layer, and the covering pieces of the top layer fold into the lower
+       one - they are opaque, so nothing behind them ever shows anyway. */
+    for (int i = 0; i < kCellsPerLayer; i++) {
+      dung_bg2[i] = TileHasVisiblePixels(top_words[i]) ? top_words[i] : bottom_words[i];
+      dung_bg1[i] = middle_words[i];
+    }
+  } else {
+    for (int i = 0; i < kCellsPerLayer; i++) {
+      /* The port's top layer draws in front of the player wholesale; this engine carries
+         that per tile, so a visible top tile arrives with its priority bit set. */
+      bool top_visible = TileHasVisiblePixels(top_words[i]);
+      dung_bg1[i] = top_visible ? (uint16)(top_words[i] | kPriority) : middle_words[i];
+    }
   }
 
   /* Layout 7 is a full-size 512x512 room to the quadrant camera (kLayoutQuadrantFlags);
