@@ -63,6 +63,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   secondaryItemSlots: false,
   autoSkipDialog: false,
   turnWhileDashing: false,
+  allowDiving: false,
   mirrorToDarkworld: false,
   collectItemsWithSword: false,
   breakPotsWithSword: false,
@@ -250,6 +251,7 @@ InventoryReorder = ${boolToIni(settings.inventoryReorder)}
 SecondaryItemSlots = ${boolToIni(settings.secondaryItemSlots)}
 AutoSkipDialog = ${boolToIni(settings.autoSkipDialog)}
 TurnWhileDashing = ${boolToIni(settings.turnWhileDashing)}
+AllowDiving = ${boolToIni(settings.allowDiving || settings.extraDungeon)}
 MirrorToDarkworld = ${boolToIni(settings.mirrorToDarkworld)}
 CollectItemsWithSword = ${boolToIni(settings.collectItemsWithSword)}
 BreakPotsWithSword = ${boolToIni(settings.breakPotsWithSword)}

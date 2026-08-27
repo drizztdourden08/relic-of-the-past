@@ -38,6 +38,7 @@ const FEATURE_FLAGS = {
   secondaryItemSlots:     268435456,
   autoSkipDialog:         536870912,
   developerTools:         1073741824,
+  allowDiving:            2147483648,
 } as const;
 
 // When non-null, forces the auto-skip-dialog bit to this value in the pushed features word regardless of
@@ -196,6 +197,11 @@ const buildFeatureFlags = (s: GameSettings): number => {
   if (!s.vanillaSafe && s.itemSwitchLR) flags |= FEATURE_FLAGS.switchLR;
   if (!s.vanillaSafe && s.itemSwitchLRLimit) flags |= FEATURE_FLAGS.switchLRLimit;
   if (!s.vanillaSafe && s.turnWhileDashing) flags |= FEATURE_FLAGS.turnWhileDashing;
+  // The extra dungeon's water room cannot be crossed as designed without the dive, so turning the
+  // dungeon on turns the ability on. Neither answers to Vanilla Safe: added content is already a
+  // departure from the cartridge, and stripping the ability out from under it would only leave the
+  // room unplayable.
+  if (s.allowDiving || s.extraDungeon) flags |= FEATURE_FLAGS.allowDiving;
   if (!s.vanillaSafe && s.mirrorToDarkworld) flags |= FEATURE_FLAGS.mirrorToDarkworld;
   if (!s.vanillaSafe && s.collectItemsWithSword) flags |= FEATURE_FLAGS.collectItemsWithSword;
   if (!s.vanillaSafe && s.breakPotsWithSword) flags |= FEATURE_FLAGS.breakPotsWithSword;

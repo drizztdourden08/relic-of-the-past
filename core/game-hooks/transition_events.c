@@ -23,7 +23,6 @@ void GameHook_ModuleFrameEnd(void) {
   // whose baked side columns are padding. No-op everywhere else.
   GbaAlttp_PinCameraBounds();
   // Also every frame, after the player's own movement has settled: the water current.
-  GbaAlttp_CarrySwimmer();
   const uint8 mod = main_module_index;
   const uint8 sub = submodule_index;
   const uint8 prev_module = s_prev_module;

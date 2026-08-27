@@ -60,6 +60,7 @@ const SECTIONS: Section[] = [
           { key: 'turnWhileDashing', label: 'Turn While Dashing', description: 'Change direction while using the Pegasus Boots dash', keywords: 'dash turn pegasus boots direction' },
           { key: 'mirrorToDarkworld', label: 'Mirror to Dark World', description: 'The Magic Mirror can warp you to the Dark World from the Light World', keywords: 'mirror warp dark world light world' },
           { key: 'cancelBirdTravel', label: 'Cancel Bird Travel', description: 'Cancel duck flight in progress by pressing the X button', keywords: 'bird duck cancel fly' },
+          { key: 'allowDiving', label: 'Allow Diving with Flippers', description: 'Press B while swimming to duck under for a moment, out of reach of anything that would hit you. Turned on automatically by the extra dungeon, whose water room needs it.', keywords: 'dive diving swim underwater flippers b button dodge' },
         ],
       },
     ],

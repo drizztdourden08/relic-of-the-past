@@ -56,6 +56,7 @@ const GBA_ALTTP_ASSET_MANIFEST: readonly GbaAlttpAssetManifestEntry[] = [
   { name: 'kGbaPalaceTileAttrOverrides', description: 'Per-tile attribute corrections for ids the port re-drew: tile word, attribute byte records.' },
   { name: 'kGbaPalaceObjPalettes', description: 'Hardware-captured sprite palette rows: row byte then sixteen BGR555 colors per record.' },
   { name: 'kGbaPalaceAnimatedTiles', description: 'Hardware-captured animated background tiles: three frames of 32 tiles, in cycle order.' },
+  { name: 'kGbaPalaceTorches', description: "The dungeon's lightable-torch entries, appended to the engine's torch table: room, positions, terminator." },
 ];
 
 const GBA_ALTTP_ASSET_INDEX: Readonly<Record<string, number>> = Object.fromEntries(

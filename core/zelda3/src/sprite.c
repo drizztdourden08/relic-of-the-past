@@ -2644,6 +2644,12 @@ bool Sprite_CheckDamageToLink_same_layer(int k) {  // 86f154
 
 bool Sprite_CheckDamageToLink_ignore_layer(int k) {  // 86f15c
   uint8 carry, t;
+  // Under the surface nothing can reach the player: this is the one point every contact test
+  // funnels through, so refusing here withholds the shove and the recoil as well as the damage.
+  // The timer only ever leaves zero behind kFeatures0_AllowDiving, so this reads as vanilla with
+  // the setting off.
+  if (g_ram[kRam_DiveTimer])
+    return false;
   if (sprite_flags4[k]) {
     SpriteHitBox hitbox;
     Link_SetupHitBox(&hitbox);
@@ -2826,7 +2832,11 @@ void Sprite_AttemptDamageToLinkWithCollisionCheck(int k) {  // 86f3ca
 }
 
 void Sprite_AttemptDamageToLinkPlusRecoil(int k) {  // 86f3db
-  if (countdown_for_blink | link_disable_sprite_damage | Sprite_BandSuppressed(k))
+  // The second way a sprite arrives at the player, and it tests its own hitboxes rather than going
+  // through the check above, so a diving player has to be refused here as well. This is the path
+  // that carries the shove: it sets the recoil before the damage, so a sprite that could not hurt
+  // the player could still throw them across the room.
+  if (countdown_for_blink | link_disable_sprite_damage | Sprite_BandSuppressed(k) || g_ram[kRam_DiveTimer])
     return;
   link_incapacitated_timer = 19;
   Sprite_ApplyRecoilToLink(k, 24);

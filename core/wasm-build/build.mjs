@@ -52,6 +52,7 @@ const hookSrcs = [
   'player_sprite', 'transition_events', 'state_queries_combat', 'state_queries_oam',
   'host_gates', 'hud_override', 'running_man', 'music_hooks', 'sound_hooks',
   'gba_alttp', 'gba_dungeon_room', 'gba_dungeon_gfx', 'gba_pyramid_entrance', 'gba_save_bank', 'gba_camera_bounds', 'gba_baked_room',
+  'gba_torches', 'gba_dive_tint',
 ].map((f) => h(`${f}.c`));
 
 // Our Emscripten entry points (replace the native main.c). Resolved from this dir.

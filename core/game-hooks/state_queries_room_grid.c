@@ -1,5 +1,6 @@
 /* @layer core-game-hooks @kind native */
 #include "game_hooks_internal.h"
+#include "gba_alttp.h"
 
 // ─── Indoor Room Collision Grid (room-addressable) ───
 // Rebuilds any dungeon room's 64×64 collision attr grid from ROM data, for rooms the
@@ -91,6 +92,12 @@ int WasmBuildRoomAttrGrid(int room_id) {
   // Apply object and door collision overrides
   Dungeon_LoadObjectAttribute();
   Dungeon_LoadDoorAttribute();
+
+  // The same per-room corrections the live table gets, in the same place Dungeon_LoadAttributeTable
+  // applies them. Without this the rebuild describes a different room than the one being played:
+  // the second cartridge's rooms keep whatever the base game's tile attributes happen to say, so
+  // its water reads as a ring of ledges and navigation plans jumps off every edge of it.
+  GbaAlttp_ApplyBakedAttrOverlay();
 
   // Mirrors Dungeon_LoadAttributeTable: with the barrier switched, the two barrier
   // colours swap which one is solid. Without this a rebuilt room reports the wrong

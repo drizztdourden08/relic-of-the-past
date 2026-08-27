@@ -7,6 +7,7 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'itemSwitchLR',
   'itemSwitchLRLimit',
   'turnWhileDashing',
+  'allowDiving',
   'mirrorToDarkworld',
   'collectItemsWithSword',
   'breakPotsWithSword',

@@ -17,6 +17,7 @@
 #include "attract.h"
 #include "snes/snes_regs.h"
 #include "assets.h"
+#include "gba_alttp.h"
 
 static void KillAgahnim_LoadMusic();
 static void KillAghanim_Init();
@@ -424,7 +425,8 @@ void NMI_PrepareSprites() {  // 8085fc
   dma_source_addr_15 = dma_source_addr_10 + 0x100;
 
   if (--bg_tile_animation_countdown == 0) {
-    bg_tile_animation_countdown = (BYTE(overlay_index) == 0xb5 || BYTE(overlay_index) == 0xbc) ? 0x17 : 9;
+    bg_tile_animation_countdown = GbaAlttp_AnimationPeriod(
+        (BYTE(overlay_index) == 0xb5 || BYTE(overlay_index) == 0xbc) ? 0x17 : 9);
 
     uint16 t = word_7EC00F + 0x400;
     if (t == 0xc00)

@@ -4,6 +4,8 @@
 #include "snes/snes_regs.h"
 #include "player.h"
 #include "misc.h"
+#include "features.h"
+#include "gba_alttp.h"
 
 static const int8 kPlayerOam_StairsOffsY[] = {
   0, -2, -3, 0, -2, -3, 0, 0, 0, 0, 0, 0, 0, -2, -3, 0,
@@ -965,30 +967,34 @@ continue_after_set:
       uint8 bank1 = kPlayerOam_Spr1Bank[j];
       if (bank1 != 0xff) {
         link_dma_var1 = bank1 * 2;
-        int oam_pos = ((scratch_0_var ? kPlayerOam_Tab19B : kPlayerOam_Tab19A)[r4loc] + sort_sprites_offset_into_oam_buffer) >> 2;
-        uint8 zt = ((int16)link_z_coord >= 0 || BYTE(link_z_coord) < 0xf0) ? BYTE(link_z_coord) : 0;
-        oam_buf[oam_pos].y = kPlayerOam_Spr1Y[j] + ycoord - zt;
-        oam_buf[oam_pos].x = kPlayerOam_Spr1X[j] + xcoord;
-        uint16 q = WORD(kPlayerOam_Prio[bank1 >> 1]);
-        q = (bank1 & 1) ? q << 4 : q;
-        WORD(oam_buf[oam_pos].charnum) = (q & 0xc000) | oam_priority_value | link_palette_bits_of_oam | 4;
-        bytewise_extended_oam[oam_pos] = 0;
-        g_oam_player[oam_pos] = 1;
+        {
+          int oam_pos = ((scratch_0_var ? kPlayerOam_Tab19B : kPlayerOam_Tab19A)[r4loc] + sort_sprites_offset_into_oam_buffer) >> 2;
+          uint8 zt = ((int16)link_z_coord >= 0 || BYTE(link_z_coord) < 0xf0) ? BYTE(link_z_coord) : 0;
+          oam_buf[oam_pos].y = kPlayerOam_Spr1Y[j] + ycoord - zt;
+          oam_buf[oam_pos].x = kPlayerOam_Spr1X[j] + xcoord;
+          uint16 q = WORD(kPlayerOam_Prio[bank1 >> 1]);
+          q = (bank1 & 1) ? q << 4 : q;
+          WORD(oam_buf[oam_pos].charnum) = (q & 0xc000) | oam_priority_value | link_palette_bits_of_oam | 4;
+          bytewise_extended_oam[oam_pos] = 0;
+          g_oam_player[oam_pos] = 1;
+        }
       }
     }
 
     uint8 bank2 = kPlayerOam_Spr2Bank[j];
     if (bank2 != 0xff) {
       link_dma_var2 = bank2 * 2;
-      int oam_pos = ((scratch_0_var ? kPlayerOam_Tab20B : kPlayerOam_Tab20A)[r4loc] + sort_sprites_offset_into_oam_buffer) >> 2;
-      uint8 zt = ((int16)link_z_coord >= 0 || BYTE(link_z_coord) < 0xf0) ? BYTE(link_z_coord) : 0;
-      oam_buf[oam_pos].y = kPlayerOam_Spr2Y[j] + ycoord - zt;
-      oam_buf[oam_pos].x = kPlayerOam_Spr2X[j] + xcoord;
-      uint16 q = WORD(kPlayerOam_Prio[bank2 >> 1]);
-      q = (bank2 & 1) ? q << 4 : q;
-      WORD(oam_buf[oam_pos].charnum) = (q & 0xc000) | oam_priority_value | link_palette_bits_of_oam | 0x14;
-      bytewise_extended_oam[oam_pos] = 0;
-      g_oam_player[oam_pos] = 1;
+      {
+        int oam_pos = ((scratch_0_var ? kPlayerOam_Tab20B : kPlayerOam_Tab20A)[r4loc] + sort_sprites_offset_into_oam_buffer) >> 2;
+        uint8 zt = ((int16)link_z_coord >= 0 || BYTE(link_z_coord) < 0xf0) ? BYTE(link_z_coord) : 0;
+        oam_buf[oam_pos].y = kPlayerOam_Spr2Y[j] + ycoord - zt;
+        oam_buf[oam_pos].x = kPlayerOam_Spr2X[j] + xcoord;
+        uint16 q = WORD(kPlayerOam_Prio[bank2 >> 1]);
+        q = (bank2 & 1) ? q << 4 : q;
+        WORD(oam_buf[oam_pos].charnum) = (q & 0xc000) | oam_priority_value | link_palette_bits_of_oam | 0x14;
+        bytewise_extended_oam[oam_pos] = 0;
+        g_oam_player[oam_pos] = 1;
+      }
     }
   }
   SwordResult sr;

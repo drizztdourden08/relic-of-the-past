@@ -39,6 +39,7 @@ enum {
   kGbaAssetTileAttrOverrides,  // kGbaPalaceTileAttrOverrides — Per-tile attribute corrections for ids the port re-drew: tile word, attribute byte records.
   kGbaAssetObjPalettes,  // kGbaPalaceObjPalettes — Hardware-captured sprite palette rows: row byte then sixteen BGR555 colors per record.
   kGbaAssetAnimatedTiles,  // kGbaPalaceAnimatedTiles — Hardware-captured animated background tiles: three frames of 32 tiles, in cycle order.
+  kGbaAssetTorches,  // kGbaPalaceTorches — The dungeon's lightable-torch entries, appended to the engine's torch table: room, positions, terminator.
   kGbaAlttpAssetCount,
 };
 

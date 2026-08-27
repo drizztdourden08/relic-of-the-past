@@ -12,6 +12,7 @@ import { ANIMATED_TILES_GBA_4BPP } from './extensions/second-cartridge-animated-
 import { convertGbaSheetToSnes4bpp } from './graphics/gba-native';
 import { occluderCells } from './extensions/second-cartridge-occluders';
 import { bankedRoomId } from './extensions/second-cartridge-bank';
+import { torchTableRecord } from './extensions/second-cartridge-torches';
 import {
   AUX_TILE_THEME,
   GBA_ALTTP_ASSET_MANIFEST,
@@ -262,6 +263,8 @@ const compileGbaAlttpSupplement = (rom: GbaRomReader, snes: RomData): Buffer => 
     kGbaPalaceObjPalettes: () => assets.addUint8('kGbaPalaceObjPalettes', [...objPaletteRecords()]),
     kGbaPalaceAnimatedTiles: () => assets.addUint8('kGbaPalaceAnimatedTiles',
       [...convertGbaSheetToSnes4bpp(ANIMATED_TILES_GBA_4BPP)]),
+    kGbaPalaceTorches: () => assets.addUint8('kGbaPalaceTorches',
+      [...torchTableRecord(rom, snes, new Set(rooms.map(room => room.id)))]),
   };
 
   if (Object.keys(builders).length !== GBA_ALTTP_ASSET_MANIFEST.length) {

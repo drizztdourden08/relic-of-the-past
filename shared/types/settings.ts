@@ -122,6 +122,9 @@ interface GameSettings {
   // Render dialog instantly and auto-advance message-box waits; choice prompts stay interactive. Non-vanilla.
   autoSkipDialog: boolean;
   turnWhileDashing: boolean;
+  // Press B while swimming to duck under for a moment, as the handheld port allows. Non-vanilla.
+  // Forced on by the extra dungeon, whose water room is built around it.
+  allowDiving: boolean;
   mirrorToDarkworld: boolean;
   collectItemsWithSword: boolean;
   breakPotsWithSword: boolean;

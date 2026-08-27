@@ -215,6 +215,11 @@ skip_damage:;
   }
   if (link_player_handler_state)
     Player_CheckHandleCapeStuff();
+  // A dive belongs to the swim it started in. Anything that ends the swim ends it too, or the
+  // countdown would keep the player unseen and untouchable after they were back on dry land.
+  if (link_player_handler_state != kPlayerState_Swimming)
+    g_ram[kRam_DiveTimer] = 0;
+  GbaAlttp_SyncDiveTint();
   kPlayerHandlers[link_player_handler_state]();
 }
 
@@ -1677,6 +1682,41 @@ void HandleDungeonLandingFromPit() {  // 879520
   }
 }
 
+/**
+ * The handheld port's dive: B takes the player under for a moment.
+ *
+ * A press starts it and nothing interrupts it - it is short by design and runs itself out. The
+ * countdown is the whole state, and everything that has to know the player is under reads it
+ * directly, so there is no second flag to keep in step with it.
+ */
+static void Link_HandleDiving() {
+  enum { kDiveFrames = 32 };  /* measured off the cartridge: 12 of 13 captured dives ran 32 frames */
+  if (!(enhanced_features0 & kFeatures0_AllowDiving))
+    return;
+  if (g_ram[kRam_DiveTimer])
+    g_ram[kRam_DiveTimer]--;
+  else if (filtered_joypad_H & kJoypadH_B) {
+    g_ram[kRam_DiveTimer] = kDiveFrames;
+    /* The burst the cartridge throws up as he goes under. It stays over the water while he
+       passes beneath it, which is the engine's own splash behaviour already. */
+    AncillaAdd_Splash(0x15, 0);
+  }
+}
+
+/**
+ * Which buttons drive the hard stroke.
+ *
+ * A and B land on the same bit once the two joypad halves are combined, so handing B to the dive
+ * means taking it out of the high half BEFORE the halves are merged - masking afterwards would
+ * take A away with it and leave the stroke on Y alone.
+ */
+static uint8 Link_SwimStrokeButtons() {
+  uint8 high = filtered_joypad_H;
+  if (enhanced_features0 & kFeatures0_AllowDiving)
+    high &= ~kJoypadH_B;
+  return ((filtered_joypad_L & kJoypadL_A) | high) & 0xc0;
+}
+
 void PlayerHandler_04_Swimming() {  // 87963b
   if (link_auxiliary_state) {
     link_player_handler_state = kPlayerState_RecoilWall;
@@ -1698,6 +1738,8 @@ void PlayerHandler_04_Swimming() {  // 87963b
   if (!link_item_flippers)
     return;
 
+  Link_HandleDiving();
+
   if (!(swimcoll_var7[0] | swimcoll_var7[1])) {
     if ((uint8)swimcoll_var5[0] != 2 && (uint8)swimcoll_var5[1] != 2)
       ResetAllAcceleration();
@@ -1717,7 +1759,7 @@ void PlayerHandler_04_Swimming() {  // 87963b
 
   if (!link_swim_hard_stroke) {
     uint8 t;
-    if (!(swimcoll_var7[0] | swimcoll_var7[1]) || (t = ((filtered_joypad_L & kJoypadL_A) | filtered_joypad_H) & 0xc0) == 0) {
+    if (!(swimcoll_var7[0] | swimcoll_var7[1]) || (t = Link_SwimStrokeButtons()) == 0) {
       Link_HandleSwimMovements();
       return;
     }
@@ -5933,11 +5975,12 @@ void Player_SomethingWithVelocity_TiredOrSwim(uint16 xvel, uint16 yvel) {  // 87
 }
 
 void Link_HandleMovingFloor() {  // 87e595
-  if (!dung_hdr_collision)
+  bool carried = GbaAlttp_WaterCurrentCarries();
+  if (!carried && !dung_hdr_collision)
     return;
   if (BYTE(link_z_coord) != 0 && BYTE(link_z_coord) != 255)
     return;
-  if (((byte_7E0322) & 3) != 3)
+  if (!carried && ((byte_7E0322) & 3) != 3)
     return;
   if (link_player_handler_state == 19) // hookshot
     return;

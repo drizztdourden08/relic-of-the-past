@@ -37,8 +37,21 @@ const WALL_ART_TILES = [
   0x12c, 0x18e, 0x18f, 0x19e, 0x19f,
 ];
 
+/**
+ * The banks and edges of the dungeon's water, and the same problem again.
+ *
+ * The base game's table calls these four a ledge, which is what the art used to be, and a ledge
+ * is a thing the player is thrown over: swimming into one hops him out of the water wherever he
+ * happens to be touching it, and against a wall that lands him somewhere he should never be.
+ *
+ * They are the pool's rim, so they are wall. Making them merely walkable was tried and is worse
+ * than the ledge was - it opens the whole rim, and a swimmer can push through it onto the floor.
+ * The way out of the water is the ladder run below, and nowhere else.
+ */
+const WATER_RIM_TILES = [0x43, 0x50, 0x51, 0x53];
+
 const TILE_ATTR_OVERRIDES: readonly { tile: number; attr: number }[] =
-  WALL_ART_TILES.map(tile => ({ tile, attr: WALL }));
+  [...WALL_ART_TILES, ...WATER_RIM_TILES].map(tile => ({ tile, attr: WALL }));
 
 const tileAttrOverridesRecord = (): Buffer => {
   const record = Buffer.alloc(TILE_ATTR_OVERRIDES.length * 3);
@@ -62,34 +75,65 @@ const WATER_TILE_LAST = 0x1b9;
  * room rather than listed by hand. Without it the surface is plain floor: the player walks
  * across it, and the room's current has nothing to carry.
  */
-/**
- * Where the water can be climbed out of, as column/row pairs on the water's own cells.
- *
- * Only these spots: the rest of the bank is scenery the player swims past, so a rule derived
- * from the surrounding floor turns the whole pool into something walkable instead.
- */
-const WATER_LADDERS: Readonly<Record<number, readonly (readonly [number, number])[]>> = {
-  // The pool's south bank, at the head of the staircase.
-  0xdd: [[38, 53], [39, 53]],
-};
-
 const waterOverlay = (room: DungeonRoomRecord): AttrOverlayCell[] => {
   const surface = room.layers[1];
   const floor = room.layers[0];
   if (!surface || !floor) return [];
-  const isWater = (cell: number): boolean => {
-    if (cell < 0 || cell >= surface.snesWords.length) return false;
-    const tile = surface.snesWords[cell] & 0x3ff;
-    return tile >= WATER_TILE_FIRST && tile <= WATER_TILE_LAST;
-  };
-  const ladders = WATER_LADDERS[room.id] ?? [];
   const cells: AttrOverlayCell[] = [];
   for (let cell = 0; cell < surface.snesWords.length; cell++) {
-    if (!isWater(cell)) continue;
-    const climbOut = ladders.some(([column, row]) => row * 64 + column === cell);
-    cells.push({ layer: 0, cell, attr: climbOut ? WATER_LADDER : DEEP_WATER });
+    const tile = surface.snesWords[cell] & 0x3ff;
+    if (tile < WATER_TILE_FIRST || tile > WATER_TILE_LAST) continue;
+    cells.push({ layer: 0, cell, attr: DEEP_WATER });
   }
   return cells;
+};
+
+/**
+ * Where a swimmer can climb back out, as column/row pairs on the bank.
+ *
+ * Indoors there is no general way out of deep water: the engine's probe reports a normal
+ * tile for plain floor only outdoors, so the hop out is driven by the short water ladder
+ * (or a staircase) and nothing else.
+ *
+ * The run is wider than the ledge looks. A vertical move probes three points across the
+ * player's 16-pixel width (+0, +8, +15), all three of which must read the ladder, so a pair
+ * of cells only lets the hop fire on an exact 8-pixel alignment. One cell of margin either
+ * side turns that into a landing window the player can actually hit.
+ */
+const WATER_LEDGES: Readonly<Record<number, readonly (readonly [number, number])[]>> = {
+  // Two of them, both at a staircase: the pool's south bank, and the foot of the north stair.
+  // The columns are the port's own: its collision array marks each run's two ends with a code of
+  // its own (cols 47-50 south, 41-44 north), which is how the north one was found at all.
+  //
+  // Only the middle pair of each run is the way up. The ends are the stair's own sides, and left
+  // open they are a hole in the rim wide enough to push through and end up walking on the floor
+  // of the pool, so they are closed below.
+  0xdd: [
+    [48, 54], [49, 54],
+    [42, 12], [43, 12],
+  ],
+};
+
+/** The sides of each stair: rim, not opening. */
+const WATER_LEDGE_SIDES: Readonly<Record<number, readonly (readonly [number, number])[]>> = {
+  0xdd: [
+    [47, 54], [50, 54],
+    [41, 12], [44, 12],
+  ],
+};
+
+/**
+ * Both layers, because a swimmer reads the lower one: the engine moves the player there the
+ * moment all four of its probes read deep water. The room's two levels are kept in step
+ * anyway, so this is belt and braces rather than the only thing carrying the ledge across.
+ */
+const ledgeOverlay = (room: DungeonRoomRecord): AttrOverlayCell[] => {
+  const cell = (column: number, row: number, attr: number): AttrOverlayCell[] =>
+    ([0, 1] as const).map(layer => ({ layer, cell: row * 64 + column, attr }));
+  return [
+    ...(WATER_LEDGES[room.id] ?? []).flatMap(([column, row]) => cell(column, row, WATER_LADDER)),
+    ...(WATER_LEDGE_SIDES[room.id] ?? []).flatMap(([column, row]) => cell(column, row, WALL)),
+  ];
 };
 
 /** The entrance chamber: side walls the conversion leaves walkable, and the south exit stripe. */
@@ -125,7 +169,7 @@ const OVERLAYS: Readonly<Record<number, () => AttrOverlayCell[]>> = {
 
 const attrOverlayRecord = (room: DungeonRoomRecord): Buffer => {
   const build = OVERLAYS[room.id];
-  const cells = [...(build ? build() : []), ...waterOverlay(room)];
+  const cells = [...(build ? build() : []), ...waterOverlay(room), ...ledgeOverlay(room)];
   if (cells.length === 0) return Buffer.alloc(0);
   const record = Buffer.alloc(cells.length * 4);
   cells.forEach(({ layer, cell, attr }, i) => {

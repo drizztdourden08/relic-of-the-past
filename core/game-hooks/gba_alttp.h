@@ -33,6 +33,7 @@ bool GbaAlttp_LoadBakedRoom(void);
 bool GbaAlttp_IsBakedRoomActive(void);
 bool GbaAlttp_SkipAttrLoadForVoidRoom(void);
 void GbaAlttp_ApplyBakedAttrOverlay(void);
+void GbaAlttp_MirrorWaterRoomCollision(void);
 void GbaAlttp_ArmTeleportArrival(uint8 entering_left);
 void GbaAlttp_PlaceTeleportArrival(void);
 bool GbaAlttp_TeleportArrivalHoldsPlayer(void);
@@ -42,7 +43,7 @@ void GbaAlttp_TeleportArrivalDone(void);
 uint8 GbaAlttp_AdjustSpriteOamFlags(uint8 charnum, uint8 flags);
 void GbaAlttp_FilterRoomTags(uint8 *first, uint8 *second);
 bool GbaAlttp_ApplyWaterCurrent(void);
-void GbaAlttp_CarrySwimmer(void);
+bool GbaAlttp_WaterCurrentCarries(void);
 void GbaAlttp_ApplyDungeonGraphics(void);
 void GbaAlttp_SelectDungeonSpriteSheets(uint8 *slot0, uint8 *slot1, uint8 *slot2, uint8 *slot3);
 
@@ -59,6 +60,20 @@ const uint8 *GbaAlttp_GetRoomSecrets(uint16 room);
 // INTERIM. Stamps the entrance chamber's transit strip, which a door record would otherwise
 // stamp. Goes away with the interim doorway it exists for.
 void GbaAlttp_ApplyAnimatedTiles(void);
+
+/* Splice this dungeon's torch entries onto the engine's torch table, then register a baked
+   room's torches from it - the object pass the baked path returns before ever reaching. */
+void GbaAlttp_AppendTorchData(void);
+void GbaAlttp_RegisterBakedTorches(uint16 room);
+uint16 GbaAlttp_TorchDataOffset(uint16 offset);
+
+/* Is one of the loaded room's torches burning, and how fast its water animates as a result. */
+bool GbaAlttp_RoomTorchLit(void);
+uint8 GbaAlttp_AnimationPeriod(uint8 vanilla);
+bool GbaAlttp_IsWaterRoom(void);
+
+/* Shade the player while he is under; a no-op the rest of the time. */
+void GbaAlttp_SyncDiveTint(void);
 void GbaAlttp_ApplyDungeonPalette(void);
 bool GbaAlttp_RoomHasFixtures(void);
 void GbaAlttp_ApplyPyramidEntrance();

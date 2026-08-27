@@ -6117,7 +6117,7 @@ void Dungeon_ExtinguishTorch() {  // 81f4a6
 
   uint16 r8 = (dung_object_tilemap_pos[y >> 1] &= 0x7fff);
 
-  dung_torch_data[(dung_object_pos_in_objdata[y >> 1] & 0xff) >> 1] = r8;
+  dung_torch_data[GbaAlttp_TorchDataOffset(dung_object_pos_in_objdata[y >> 1]) >> 1] = r8;
 
   r8 &= 0x3fff;
   RoomDraw_AdjustTorchLightingChange(r8, 0xec2, r8);
@@ -8490,6 +8490,7 @@ void Dungeon_LoadEntrance() {  // 82d8b3
   memcpy(&movable_block_datas[99], kTorchDataInit, 116); // junk
   memcpy(dung_torch_data, kTorchDataInit, kTorchDataInit_SIZE);
   memcpy(&dung_torch_data[144], kTorchDataJunk, kTorchDataJunk_SIZE);
+  GbaAlttp_AppendTorchData();
 
   memset(memorized_tile_addr, 0, 0x100);
   memset(pots_revealed_in_room, 0, 0x280);
