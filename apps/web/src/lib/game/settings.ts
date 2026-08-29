@@ -67,7 +67,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   collectItemsWithSword: false,
   breakPotsWithSword: false,
   disableLowHealthBeep: false,
-  skipIntroOnKeypress: false,
+  skipIntroOnKeypress: true,
   disableTelepathy: false,
   showMaxItemsInYellow: false,
   moreActiveBombs: false,
