@@ -61,6 +61,14 @@ uint8 GameHook_ApplyExtraArmor(uint8 dmg);
 // overwrites that byte along with the rest of WRAM) never leaves a stale value behind.
 uint8 GameHook_GetWantedIgnoreCollision(void);
 
+// ─── View gates (view_gates.c) ───
+
+// True while the lamp's light-cone mask is on the subscreen, so the extended view must collapse to
+// the base frame: the mask only covers 256 pixels and its tilemap wraps, so any extra width samples
+// a second, undarkened copy of the cone. Covers the room-transition frames where the game clears
+// hdr_dungeon_dark_with_lantern while the mask is still being drawn. Wide view only.
+bool GameHook_LightConeSuppressesExtraWidth(void);
+
 // ─── Custom player sprite sheets (player_sprite.c) ───
 
 // Overwrite the player gfx asset from a ZSPR sheet and take its palette into the PPU's private player
