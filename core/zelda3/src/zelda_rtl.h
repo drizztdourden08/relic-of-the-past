@@ -49,6 +49,8 @@ void ZeldaReset(bool preserve_sram);
 void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags);
 void ZeldaRunFrameInternal(uint16 input, int run_what);
 bool ZeldaRunFrame(int input_state);
+// Write one cheat-owned WRAM byte: on mismatch only, and recorded so a replay reproduces it.
+void ZeldaWriteCheatByte(uint16 addr, uint8 value);
 void LoadSongBank(const uint8 *p);
 void ZeldaApuLock();
 void ZeldaApuUnlock();
