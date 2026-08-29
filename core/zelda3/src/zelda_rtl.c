@@ -1110,13 +1110,19 @@ static const CheatWramSlot kCheatWramSlots[] = {
 // clobber the byte and the very next frame writes it right back — nothing "reapplies cheats on load"
 // as a special case, because there is no load-specific code path here at all.
 static void SyncCheatWram(void) {
-  for (int i = 0; i < (int)(sizeof(kCheatWramSlots) / sizeof(kCheatWramSlots[0])); i++) {
-    uint8 *byte = &g_ram[kCheatWramSlots[i].addr];
-    uint8 wanted = kCheatWramSlots[i].wanted();
-    if (*byte == wanted) continue;
-    *byte = wanted;
-    StateRecorder_RecordPatchByte(&state_recorder, kCheatWramSlots[i].addr, byte, 1);
-  }
+  for (int i = 0; i < (int)(sizeof(kCheatWramSlots) / sizeof(kCheatWramSlots[0])); i++)
+    ZeldaWriteCheatByte(kCheatWramSlots[i].addr, kCheatWramSlots[i].wanted());
+}
+
+// The single write primitive every cheat-owned WRAM byte goes through, whether it comes from the
+// table above or from a hook that has to decide more than one byte at a time (game-hooks'
+// CheatLighting_Sync). Writes only on mismatch and records the patch, so a replay reproduces the
+// same bytes frame-for-frame and an unchanged byte costs nothing.
+void ZeldaWriteCheatByte(uint16 addr, uint8 value) {
+  uint8 *byte = &g_ram[addr];
+  if (*byte == value) return;
+  *byte = value;
+  StateRecorder_RecordPatchByte(&state_recorder, addr, byte, 1);
 }
 
 // Copy each changed gate word into WRAM, mirror it into the emulator's RAM, and record the patch in the
@@ -1192,6 +1198,8 @@ bool ZeldaRunFrame(int inputs) {
       SyncCheatWram();
       // Same ordering requirement: reads the HUD-override gate SyncGateWords() just latched.
       HudOverride_Sync();
+      // Same again: the dark-room lighting cheat tests the master cheat switch this frame.
+      CheatLighting_Sync();
     }
   }
 

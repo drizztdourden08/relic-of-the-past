@@ -114,6 +114,13 @@ void HudOverride_Sync(void);
 
 void HudOverride_Restore(void);
 
+// ─── Dark-room lighting cheat (cheat_lighting.c) ───
+
+// Re-assert (or take back down) the lamp cone in a dark room the player has no lamp for. Runs every
+// frame after SyncGateWords/SyncCheatWram, and is a no-op unless the cheat is armed or a cone it
+// raised is still standing.
+void CheatLighting_Sync(void);
+
 // ─── Receive counters (receive_counters.c) ───
 
 // Tally an item grant against its call site, so a check granted twice is visible rather than inferred.

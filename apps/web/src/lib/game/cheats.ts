@@ -124,6 +124,19 @@ const cheatSetIgnoreCollision = (on: boolean): void => {
 
 const getIgnoreCollisionEnabled = (): boolean => ignoreCollisionEnabled;
 
+// ─── Lighting ───
+
+// Same local-state reasoning as ignore-collision above: the widget's toggle reads this instead of
+// polling the module. The core applies it on the next frame boundary, not at this call.
+let illuminateDarkRoomsEnabled = false;
+
+const cheatSetIlluminateDarkRooms = (on: boolean): void => {
+  illuminateDarkRoomsEnabled = on;
+  voidCall('WasmCheatSetIlluminateDarkRooms', numArgs(on ? 1 : 0));
+};
+
+const getIlluminateDarkRoomsEnabled = (): boolean => illuminateDarkRoomsEnabled;
+
 // ─── Combat ───
 
 const cheatKillAllEnemies = (): void => voidCall('WasmCheatKillAllEnemies');
@@ -136,5 +149,5 @@ const cheatSetExtraArmorPct = (pct: number): void =>
 
 const cheatStartTrace = (frames = 120): void => voidCall('WasmCheatStartTrace', numArgs(frames));
 
-export { BottleContents, cheatGiveItem, cheatTriggerCheck, cheatTriggerNpcCheck, cheatSetHealth, cheatSetMaxHealth, cheatSetRupees, cheatSetBombs, cheatSetArrows, cheatRefillMagic, cheatFillBottle, cheatSetIgnoreCollision, getIgnoreCollisionEnabled, cheatKillAllEnemies, cheatSetDamageMultiplier, cheatSetExtraArmorPct, cheatStartTrace };
+export { BottleContents, cheatGiveItem, cheatTriggerCheck, cheatTriggerNpcCheck, cheatSetHealth, cheatSetMaxHealth, cheatSetRupees, cheatSetBombs, cheatSetArrows, cheatRefillMagic, cheatFillBottle, cheatSetIgnoreCollision, getIgnoreCollisionEnabled, cheatSetIlluminateDarkRooms, getIlluminateDarkRoomsEnabled, cheatKillAllEnemies, cheatSetDamageMultiplier, cheatSetExtraArmorPct, cheatStartTrace };
 export type { BottleContentsValue };

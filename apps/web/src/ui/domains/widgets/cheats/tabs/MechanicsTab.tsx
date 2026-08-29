@@ -1,6 +1,7 @@
 /* @layer renderer-widgets @kind component */
 /**
- * MechanicsTab — Kill enemies, damage multiplier, extra armor reduction, ignore collision.
+ * MechanicsTab — Kill enemies, damage multiplier, extra armor reduction, ignore collision,
+ * dark-room lighting.
  */
 import { useState } from 'react';
 import { Box, Text, Button } from '../../../../design-system/primitives';
@@ -8,6 +9,7 @@ import { Toggle } from '../../../../design-system/primitives/Toggle';
 import {
   cheatKillAllEnemies, cheatSetDamageMultiplier, cheatSetExtraArmorPct,
   cheatSetIgnoreCollision, getIgnoreCollisionEnabled,
+  cheatSetIlluminateDarkRooms, getIlluminateDarkRoomsEnabled,
 } from '../../../../../lib/game';
 
 const DAMAGE_OPTIONS = [
@@ -31,6 +33,7 @@ const MechanicsTab = () => {
   const [damageMult, setDamageMult] = useState(1);
   const [extraArmor, setExtraArmor] = useState(0);
   const [ignoreCollision, setIgnoreCollision] = useState(getIgnoreCollisionEnabled());
+  const [illuminate, setIlluminate] = useState(getIlluminateDarkRoomsEnabled());
 
   const handleDamage = (value: number) => {
     setDamageMult(value);
@@ -47,12 +50,20 @@ const MechanicsTab = () => {
     cheatSetIgnoreCollision(on);
   };
 
+  const handleIlluminate = (on: boolean) => {
+    setIlluminate(on);
+    cheatSetIlluminateDarkRooms(on);
+  };
+
   return (
     <Box className="cheats-tab-mechanics">
       <Box className="cheats-section">
         <Box className="cheats-section__title">Mechanics</Box>
         <Box className="cheats-row">
           <Toggle label="Ignore movement restriction/collision" checked={ignoreCollision} onChange={handleIgnoreCollision} />
+        </Box>
+        <Box className="cheats-row">
+          <Toggle label="Always illuminate dark room" checked={illuminate} onChange={handleIlluminate} />
         </Box>
       </Box>
 
