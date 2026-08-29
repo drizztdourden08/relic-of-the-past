@@ -437,7 +437,7 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
     origin: 'snesrev',
     flag: 'kFeatures0_SkipIntroOnKeypress',
     bit: 128,
-    default: false,
+    default: true,
     requires: [],
     affectsVanillaParity: true,
     live: true,

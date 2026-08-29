@@ -504,9 +504,22 @@ void Polyhedral_InitializeThread() {  // 89f7de
 }
 
 void Module00_Intro() {  // 8cc120
-  uint8 skip_at = enhanced_features0 & kFeatures0_SkipIntroOnKeypress ? 4 : 8;
+  static uint8 skip_pending;
+  bool skip_early = (enhanced_features0 & kFeatures0_SkipIntroOnKeypress) != 0;
+  // Submodule 2 is the earliest frame the sequence can be abandoned safely: the 1kb-block clear of
+  // WRAM and the tileset load both finish as submodule 1 ends. Vanilla waits for 8 instead, by
+  // which point the whole logo animation has played out.
+  uint8 skip_at = skip_early ? 2 : 8;
+  bool pressed = ((filtered_joypad_L & 0xc0 | filtered_joypad_H) & 0xd0) != 0;
 
-  if (submodule_index >= skip_at && ((filtered_joypad_L & 0xc0 | filtered_joypad_H) & 0xd0)) {
+  if (submodule_index == 0)
+    skip_pending = 0;
+  // Remembering the press means a button mashed during those first frames still counts, instead of
+  // being swallowed for landing a few frames before the skip became safe.
+  if (skip_early && pressed)
+    skip_pending = 1;
+  if ((skip_early ? skip_pending : pressed) && submodule_index >= skip_at) {
+    skip_pending = 0;
     FadeMusicAndResetSRAMMirror();
     return;
   }

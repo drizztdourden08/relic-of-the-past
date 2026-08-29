@@ -415,8 +415,9 @@ static void ConfigurePpuSideSpace() {
       }
     }
   } else if (mod == 7) {
-    // indoors, except when the light cone is in use
-    if (!(hdr_dungeon_dark_with_lantern && TS_copy != 0)) {
+    // indoors, except when the light cone is in use — including the room-transition frames where the
+    // game has cleared hdr_dungeon_dark_with_lantern but the cone mask is still on the subscreen.
+    if (!GameHook_LightConeSuppressesExtraWidth()) {
       int qm = quadrant_fullsize_x >> 1;
       extra_left = IntMax(BG2HOFS_copy2 - room_bounds_x.v[qm], 0);
       extra_right = IntMax(room_bounds_x.v[qm + 2] - BG2HOFS_copy2, 0);
