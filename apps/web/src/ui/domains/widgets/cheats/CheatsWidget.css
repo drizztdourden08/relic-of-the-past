@@ -1,5 +1,8 @@
 /* @layer renderer-widgets @kind style */
 .cheats-widget {
+  /* Label gutter shared by every stat row and its step row, so the two columns stay aligned. */
+  --cheats-label-w: 70px;
+
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -35,7 +38,7 @@
 }
 
 .cheats-row__label {
-  flex: 0 0 70px;
+  flex: 0 0 var(--cheats-label-w);
   font-size: var(--text-sm);
   color: var(--c-text-dim);
 }
@@ -50,6 +53,22 @@
 .cheats-stat-val {
   font-size: var(--text-sm);
   min-width: 30px;
+}
+
+/* One property: the value row, then its quarter-step row. */
+.cheats-stat {
+  margin-bottom: var(--space-sm);
+}
+
+.cheats-stat .cheats-row {
+  margin-bottom: var(--space-xs);
+}
+
+/* Indented to the same column as the value row's controls, so the steps read as belonging to it. */
+.cheats-stat__steps {
+  display: flex;
+  gap: var(--space-xs);
+  margin-left: calc(var(--cheats-label-w) + var(--space-sm));
 }
 
 .cheats-note {

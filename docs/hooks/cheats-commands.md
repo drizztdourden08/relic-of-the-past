@@ -30,7 +30,10 @@ power the delivery queue and randomizer. Most are `void` and take effect on the 
 | `WasmCheatSetRupees` | `void(int value)` | Sets the rupee goal (the counter animates), clamped `[0, 999]`. |
 | `WasmCheatSetBombs` | `void(int value)` | Clamped `[0, 99]`. |
 | `WasmCheatSetArrows` | `void(int value)` | Clamped `[0, 99]`. |
-| `WasmCheatRefillMagic` | `void(void)` | Magic to full (`0x80`). |
+| `WasmCheatSetMagic` | `void(int value)` | Magic meter, clamped `[0, 0x80]`; cancels a pending refill. The meter capacity is fixed, so there is no max-magic setter. |
+| `WasmCheatRefillMagic` | `void(void)` | Magic to full (`0x80`) — `WasmCheatSetMagic(0x80)`. |
+| `WasmCheatSetMaxBombs` | `void(int capacity)` | Bomb capacity. Takes a wanted count and snaps to the nearest upgrade tier (10/15/20/25/30/35/40/50); trims the carried count to the new cap. |
+| `WasmCheatSetMaxArrows` | `void(int capacity)` | Arrow capacity, same contract as `WasmCheatSetMaxBombs` (tiers 30/35/40/45/50/55/60/70). |
 | `WasmCheatFillBottle` | `void(int slot, int contents)` | `slot` 0–3. contents: `0x02` empty, `0x03/04/05` red/green/blue potion, `0x06` fairy, `0x07` bee, `0x08` good bee. |
 | `WasmCheatKillAllEnemies` | `void(void)` | Kills active/stunned hostile sprites; skips friendlies and fully-immune sprites. |
 | `WasmCheatSetDamageMultiplier` | `void(int mult)` | Outgoing damage ×`mult`, clamped `[1, 255]`. Read back in `sprite.c` via `GameHook_GetDamageMultiplier`. |

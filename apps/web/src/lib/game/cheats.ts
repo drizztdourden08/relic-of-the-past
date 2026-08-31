@@ -103,7 +103,15 @@ const cheatSetBombs = (count: number): void => voidCall('WasmCheatSetBombs', num
 
 const cheatSetArrows = (count: number): void => voidCall('WasmCheatSetArrows', numArgs(count));
 
+const cheatSetMagic = (value: number): void => voidCall('WasmCheatSetMagic', numArgs(value));
+
 const cheatRefillMagic = (): void => voidCall('WasmCheatRefillMagic');
+
+// Capacity setters take a wanted count, not the tier index the core stores — it snaps to the
+// nearest legal upgrade tier, so a percentage of MAGIC_FULL/BOMB_CAPACITY_MAX is a valid argument.
+const cheatSetMaxBombs = (capacity: number): void => voidCall('WasmCheatSetMaxBombs', numArgs(capacity));
+
+const cheatSetMaxArrows = (capacity: number): void => voidCall('WasmCheatSetMaxArrows', numArgs(capacity));
 
 // ─── Bottles ───
 
@@ -149,5 +157,5 @@ const cheatSetExtraArmorPct = (pct: number): void =>
 
 const cheatStartTrace = (frames = 120): void => voidCall('WasmCheatStartTrace', numArgs(frames));
 
-export { BottleContents, cheatGiveItem, cheatTriggerCheck, cheatTriggerNpcCheck, cheatSetHealth, cheatSetMaxHealth, cheatSetRupees, cheatSetBombs, cheatSetArrows, cheatRefillMagic, cheatFillBottle, cheatSetIgnoreCollision, getIgnoreCollisionEnabled, cheatSetIlluminateDarkRooms, getIlluminateDarkRoomsEnabled, cheatKillAllEnemies, cheatSetDamageMultiplier, cheatSetExtraArmorPct, cheatStartTrace };
+export { BottleContents, cheatGiveItem, cheatTriggerCheck, cheatTriggerNpcCheck, cheatSetHealth, cheatSetMaxHealth, cheatSetRupees, cheatSetBombs, cheatSetArrows, cheatSetMaxBombs, cheatSetMaxArrows, cheatSetMagic, cheatRefillMagic, cheatFillBottle, cheatSetIgnoreCollision, getIgnoreCollisionEnabled, cheatSetIlluminateDarkRooms, getIlluminateDarkRoomsEnabled, cheatKillAllEnemies, cheatSetDamageMultiplier, cheatSetExtraArmorPct, cheatStartTrace };
 export type { BottleContentsValue };

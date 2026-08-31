@@ -16,7 +16,7 @@ const SHORTCUT_ACTIONS = [
 ] as const;
 
 const CHEAT_ACTIONS = [
-  'cheat-health', 'cheat-ignore-collision', 'cheat-kill-enemies', 'cheat-restore-magic',
+  'cheat-health', 'cheat-max-health', 'cheat-ignore-collision', 'cheat-kill-enemies', 'cheat-restore-magic',
 ] as const;
 
 const FUNCTION_ACTIONS = [...SHORTCUT_ACTIONS, ...CHEAT_ACTIONS] as const;
@@ -55,6 +55,7 @@ const FUNCTION_ACTION_LABELS: Record<FunctionAction, string> = {
   'profile-next': 'Next Input Profile',
   'profile-prev': 'Previous Input Profile',
   'cheat-health': 'Restore Full Health',
+  'cheat-max-health': 'Raise Maximum Health',
   'cheat-ignore-collision': 'Ignore movement restriction/collision',
   'cheat-kill-enemies': 'Kill All Enemies',
   'cheat-restore-magic': 'Restore All Magic',
@@ -104,6 +105,7 @@ const DEFAULT_FUNCTION_MAPPINGS: FunctionMapping[] = [
   { action: 'profile-next', binding: { type: 'none' }, icon: null },
   { action: 'profile-prev', binding: { type: 'none' }, icon: null },
   { action: 'cheat-health', binding: { type: 'none' }, icon: null },
+  { action: 'cheat-max-health', binding: { type: 'none' }, icon: null },
   { action: 'cheat-ignore-collision', binding: { type: 'none' }, icon: null },
   { action: 'cheat-kill-enemies', binding: { type: 'none' }, icon: null },
   { action: 'cheat-restore-magic', binding: { type: 'none' }, icon: null },

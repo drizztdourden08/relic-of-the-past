@@ -21,7 +21,8 @@ export { initMasterVolume, setMasterVolume, suspendAudio, resumeAudio } from './
 export { getFps } from './fps';
 export {
   cheatGiveItem, cheatTriggerCheck, cheatTriggerNpcCheck,
-  cheatSetHealth, cheatSetMaxHealth, cheatSetRupees, cheatSetBombs, cheatSetArrows, cheatRefillMagic,
+  cheatSetHealth, cheatSetMaxHealth, cheatSetRupees, cheatSetBombs, cheatSetArrows,
+  cheatSetMaxBombs, cheatSetMaxArrows, cheatSetMagic, cheatRefillMagic,
   cheatFillBottle, cheatSetIgnoreCollision, getIgnoreCollisionEnabled,
   cheatSetIlluminateDarkRooms, getIlluminateDarkRoomsEnabled,
   cheatKillAllEnemies, cheatSetDamageMultiplier, cheatSetExtraArmorPct,
