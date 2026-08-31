@@ -34,6 +34,26 @@ static bool g_wanted_ignore_collision = false;
 // ─── Local helpers ───
 // clampi() comes from num_util.h (shared with the volume setters).
 
+// A full magic meter. Named because the setter and the refill shortcut both spell it.
+#define kMagicFull 0x80
+
+// Number of capacity-upgrade tiers behind kMaxBombsForLevel / kMaxArrowsForLevel.
+#define kUpgradeLevels 8
+
+// Pick the upgrade tier whose capacity sits closest to `wanted`. The tiers are unevenly spaced
+// (10/15/20/25/30/35/40/50), so rounding a percentage straight into an index would land on the
+// wrong count — this search always yields a legal capacity for any input.
+static int NearestUpgradeLevel(const uint8 *tiers, int wanted) {
+  int best = 0;
+  for (int i = 1; i < kUpgradeLevels; i++) {
+    int diff = tiers[i] > wanted ? tiers[i] - wanted : wanted - tiers[i];
+    int best_diff = tiers[best] > wanted ? tiers[best] - wanted : wanted - tiers[best];
+    if (diff < best_diff)
+      best = i;
+  }
+  return best;
+}
+
 // True when the engine is in normal interactive gameplay (overworld or indoor).
 // Includes the overworld-special-area flavor of MODULE_FALLING_ENTRANCE — see
 // GameHook_IsOverworldSpecialArea.
@@ -144,13 +164,47 @@ void WasmCheatSetArrows(int value) {
   printf("[Cheat] SetArrows: %d\n", capped);
 }
 
+// Set the current magic meter. 0x80 is a full meter, and the meter's capacity is fixed, so a full
+// fill IS the maximum — there is no companion "max magic" setter the way health has one.
+EMSCRIPTEN_KEEPALIVE
+void WasmCheatSetMagic(int value) {
+  if (!CheatGate(kFeatures3_CheatStats)) return;
+  uint8 capped = (uint8)clampi(value, 0, kMagicFull);
+  link_magic_power = capped;
+  link_magic_filler = 0;  // Cancel any pending refill animation
+  printf("[Cheat] SetMagic: %d/%d\n", capped, kMagicFull);
+}
+
 // Refill magic to full.
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatRefillMagic(void) {
+  WasmCheatSetMagic(kMagicFull);
+}
+
+// Set the bomb capacity. Takes the WANTED capacity rather than the tier index the game actually
+// stores, so callers work in plain counts (or a percentage of the maximum) and stay free of the
+// encoding; the nearest legal tier wins.
+EMSCRIPTEN_KEEPALIVE
+void WasmCheatSetMaxBombs(int capacity) {
   if (!CheatGate(kFeatures3_CheatStats)) return;
-  link_magic_power = 0x80;
-  link_magic_filler = 0;
-  printf("[Cheat] RefillMagic\n");
+  int level = NearestUpgradeLevel(kMaxBombsForLevel, capacity);
+  uint8 cap = kMaxBombsForLevel[level];
+  link_bomb_upgrades = (uint8)level;
+  if (link_item_bombs > cap)
+    link_item_bombs = cap;
+  printf("[Cheat] SetMaxBombs: capacity=%d (tier %d)\n", cap, level);
+}
+
+// Set the arrow capacity. Same wanted-capacity contract as SetMaxBombs above.
+EMSCRIPTEN_KEEPALIVE
+void WasmCheatSetMaxArrows(int capacity) {
+  if (!CheatGate(kFeatures3_CheatStats)) return;
+  int level = NearestUpgradeLevel(kMaxArrowsForLevel, capacity);
+  uint8 cap = kMaxArrowsForLevel[level];
+  link_arrow_upgrades = (uint8)level;
+  if (link_num_arrows > cap)
+    link_num_arrows = cap;
+  printf("[Cheat] SetMaxArrows: capacity=%d (tier %d)\n", cap, level);
 }
 
 // Fill a specific bottle slot (0-3) with contents.
