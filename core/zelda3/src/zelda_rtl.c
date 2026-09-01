@@ -157,22 +157,20 @@ static uint16 g_ow_src_map16[0x1000];  // copy of dung_bg2 (64x64 map16) for the
 static int g_ow_src_xs, g_ow_src_xe, g_ow_src_ys, g_ow_src_ye, g_ow_src_area;
 
 // Blit one overworld area's map16 (64-wide) into the linear world buffer as map8 tiles, at tile offset
-// (offX, offY). Tiles falling outside the buffer are skipped (the caller clears it first for the gaps).
+// (offX, offY). The offset may be NEGATIVE (the map starts before the buffer), so the source range is
+// clamped up front rather than tested per cell; tiles outside the buffer are simply never visited, and
+// the caller clears the buffer first wherever gaps can remain.
 static void BlitAreaMap16(uint16 *world, int worldW, int worldH, const uint16 *map16,
                           int areaWt, int areaHt, int offX, int offY, const uint16 *map8) {
-  for (int ay = 0; ay < areaHt; ay++) {
-    int by = offY + ay;
-    if ((unsigned)by >= (unsigned)worldH)
-      continue;
+  int ay0 = IntMax(0, -offY), ay1 = IntMin(areaHt, worldH - offY);
+  int ax0 = IntMax(0, -offX), ax1 = IntMin(areaWt, worldW - offX);
+  for (int ay = ay0; ay < ay1; ay++) {
     const uint16 *m16row = map16 + (size_t)(ay >> 1) * 64;
-    uint16 *dst = world + (size_t)by * worldW;
+    uint16 *dst = world + (size_t)(offY + ay) * worldW;
     int suby = ay & 1;
-    for (int ax = 0; ax < areaWt; ax++) {
-      int bx = offX + ax;
-      if ((unsigned)bx >= (unsigned)worldW)
-        continue;
+    for (int ax = ax0; ax < ax1; ax++) {
       const uint16 *s = map8 + (size_t)m16row[ax >> 1] * 4;  // 2x2 sub-tiles: TL=s[0] TR=s[1] BL=s[2] BR=s[3]
-      dst[bx] = s[suby * 2 + (ax & 1)];
+      dst[offX + ax] = s[suby * 2 + (ax & 1)];
     }
   }
 }
@@ -188,20 +186,28 @@ static void BuildOverworldWorldTilemap() {
   int h = (((int)ow_scroll_vars0.yend - originY) >> 3) + 32;
   w = IntMax(0, IntMin(w, kPpuWorldTiles));
   h = IntMax(0, IntMin(h, kPpuWorldTiles));
-  // dung_bg2 is a 64x64 map16 = at most 128x128 map8 tiles. The special overworld's scroll range
-  // overshoots that (yend 0x320 + the 256px view = 132 tile rows), and blitting the overshoot would read
-  // past the map16 (see the same note in BuildTransitionWorldTilemap), so only the real extent is blitted.
-  int bw = IntMin(w, 128), bh = IntMin(h, 128);
-  if (bw < w || bh < h)
+  // Where dung_bg2's tile (0,0) actually sits in world pixels. For a normal area that IS the scroll
+  // range's origin, but the overworld special areas pack several sub-locations into one map16 and give
+  // each its own camera bounds, so the two diverge there by whole screens. Blitting at (0,0) regardless
+  // made such a sub-location draw the tiles of whichever one sits at the map origin, while collision and
+  // every other lookup — which all go through this same origin — kept using the right ones.
+  int offX = ((((int)overworld_offset_base_x) << 3) - originX) >> 3;
+  int offY = (((int)overworld_offset_base_y) - originY) >> 3;
+  // dung_bg2 is a 64x64 map16 = 128x128 map8 tiles, and that is its whole extent: blitting further would
+  // read past it (the special overworld's scroll range alone reaches 132 tile rows).
+  int bw = 128, bh = 128;
+  if (offX > 0 || offY > 0 || offX + bw < w || offY + bh < h)
     memset(bg->world, 0, (size_t)w * h * sizeof(uint16));
-  BlitAreaMap16(bg->world, w, h, dung_bg2, bw, bh, 0, 0, GetMap16toMap8Table());
+  BlitAreaMap16(bg->world, w, h, dung_bg2, bw, bh, offX, offY, GetMap16toMap8Table());
   // Repeat the last real row over the vertical overshoot instead of leaving it a no-data gap. The camera
   // range genuinely allows one row more than the area owns: the bottom scanline samples vScroll + 224, so
   // at the range's lowest camera (yend) that is row 1024 of a 1024-row area. Left as a gap it rendered as
   // a hard coloured line across the foot of the screen; repeating the row above makes it continue the
   // terrain, which is what the hardware's overscan hid.
-  for (int ry = bh; ry < h; ry++)
-    memcpy(bg->world + (size_t)ry * w, bg->world + (size_t)(bh - 1) * w, (size_t)w * sizeof(uint16));
+  int lastRow = offY + bh - 1;
+  if (lastRow >= 0)
+    for (int ry = lastRow + 1; ry < h; ry++)
+      memcpy(bg->world + (size_t)ry * w, bg->world + (size_t)lastRow * w, (size_t)w * sizeof(uint16));
   bg->worldW = w, bg->worldH = h;
   // The overworld BG scroll wraps at the 1024px tilemap, so the PPU hScroll/vScroll carry only the low 10
   // bits. worldOff re-adds the 1024-aligned high part minus the area origin, so the fetch's local (x,y)
