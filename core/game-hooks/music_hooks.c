@@ -27,6 +27,17 @@ static int EffectiveEntrance(void) {
 }
 
 void GameHook_MusicCtrl(uint8 music_ctrl) {
+  // Diagnostics first, and independent of who owns music: the debugger wants every control write,
+  // including the ones the chip is about to play itself. Reports whether the host owns music so
+  // the feed can say which player this write went to. Zero host-calls while the gate is off.
+  if (HostGate(kHostGate_SoundTrace)) {
+    EM_ASM({
+      if (typeof window !== 'undefined' && window.__onMusicTrace) {
+        window.__onMusicTrace($0, $1, $2);
+      }
+    }, music_ctrl, main_module_index, GameHook_MusicExternal() ? 1 : 0);
+  }
+
   // Off by default: makes zero host-calls until the host claims music.
   if (!GameHook_MusicExternal())
     return;
@@ -92,8 +103,11 @@ void GameHook_MusicAnnounce(void) {
   // The id the game is playing as ambience. A claimed one is diverted to the host, and the game
   // is asked to raise the clear so the chip's own copy stops; an unclaimed one no-ops here, which
   // is right — the chip is already producing it.
-  if (sound_effect_ambient_last != 0 && GameHook_Sound(kSoundChannel_Ambient, sound_effect_ambient_last))
+  if (sound_effect_ambient_last != 0 && GameHook_Sound(kSoundChannel_Ambient, sound_effect_ambient_last)) {
+    // Ours, not the game's — the host must not hear it and stop the bed it was just handed.
+    GameHook_MarkSelfRaisedAmbientClear();
     sound_effect_ambient = kAmbientClearId;
+  }
   ZeldaApuUnlock();
 }
 
@@ -184,6 +198,11 @@ void GameHook_AmbientAfterLoad(uint8 last_ambient) {
   // state with no bed, or with one the pack has nothing for, has to stop whatever the host was
   // playing, or the old state's rain keeps falling in the new state's silence.
   uint8 id = last_ambient & 0x3f;
+  // Traced like any other raise: this is the one report that does not pass through GameHook_Sound,
+  // and a debugger that missed the bed a state load restored would be lying about the loudest
+  // thing in the room.
+  GameHook_TraceSound(kSoundChannel_Ambient, id, last_ambient & 0xc0,
+                      GameHook_SoundClaimed(kSoundChannel_Ambient, id));
   EM_ASM({
     if (typeof window !== 'undefined' && window.__onGameSound) {
       window.__onGameSound($0, $1, $2);
@@ -192,8 +211,11 @@ void GameHook_AmbientAfterLoad(uint8 last_ambient) {
   // A claimed bed is the host's to produce, so the chip's restored copy stops — by asking the
   // game to raise the clear, since the snapshot restored the chip mid-note. An unclaimed one is
   // the chip's, and the report above already stopped the host's.
-  if (id != 0 && GameHook_SoundClaimed(kSoundChannel_Ambient, id))
+  if (id != 0 && GameHook_SoundClaimed(kSoundChannel_Ambient, id)) {
+    // Ours, same as the announce path above.
+    GameHook_MarkSelfRaisedAmbientClear();
     sound_effect_ambient = kAmbientClearId;
+  }
 }
 
 // ─── Music at a respawn ───

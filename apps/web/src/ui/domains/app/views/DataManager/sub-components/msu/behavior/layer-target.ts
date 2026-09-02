@@ -20,6 +20,13 @@ interface LayerTarget {
   label: string;
   read: (manifest: MsuPackManifest) => MsuLayer[];
   write: (base: MsuPackManifest, layers: MsuLayer[]) => MsuPackManifest;
+  /**
+   * True where the game fires this as a one-shot: the two effect channels. A looping layer there
+   * has nothing to end it, so it plays until the pack is unloaded — which reads as a sound that
+   * follows the player around, long after the moment that raised it. Music and the bed are the
+   * opposite: they are meant to keep going.
+   */
+  oneShot: boolean;
 }
 
 const trackTarget = (trackNum: number): LayerTarget => ({
@@ -27,6 +34,7 @@ const trackTarget = (trackNum: number): LayerTarget => ({
   label: `slot ${trackNum}`,
   read: (manifest) => layersOfTrack(manifest, trackNum),
   write: (base, layers) => withTrackLayers(base, trackNum, layers),
+  oneShot: false,
 });
 
 const soundTarget = (channel: SoundChannel, soundId: number): LayerTarget => ({
@@ -34,6 +42,7 @@ const soundTarget = (channel: SoundChannel, soundId: number): LayerTarget => ({
   label: soundTitle(channel, soundId),
   read: (manifest) => layersOfSound(manifest, channel, soundId),
   write: (base, layers) => withSoundLayers(base, channel, soundId, layers),
+  oneShot: channel !== 'ambient',
 });
 
 export { trackTarget, soundTarget };

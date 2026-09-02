@@ -39,7 +39,9 @@ const useLayerEditor = (params: LayerEditorState) => {
     setError(null);
   }, []);
 
-  const addLayer = useCallback(() => { mutate((current) => [...current, createLayer(current)]); }, [mutate]);
+  const addLayer = useCallback(() => {
+    mutate((current) => [...current, createLayer(current, target.oneShot)]);
+  }, [mutate, target.oneShot]);
 
   const removeLayer = useCallback((id: string) => {
     mutate((current) => current.filter((layer) => layer.id !== id));

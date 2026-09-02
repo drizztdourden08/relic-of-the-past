@@ -12,7 +12,7 @@ import { getModule, setModule, setProfileId, getProfileId, setState, setInput, g
 import { startSramSync, stopSramSync } from './sram-sync';
 import { startAutoSave, stopAutoSave, saveOnQuit } from './auto-save';
 import { resetMasterVolume } from './audio-volume';
-import { resetHostGates } from './bridge/host-gates';
+import { reassertHostGates, resetHostGates } from './bridge/host-gates';
 import { reassertLiveFlagsAfterLoad } from './live-settings';
 import { initTrackerBridge, destroyTrackerBridge } from './tracker';
 import { initTransitionEventsBridge, destroyTransitionEventsBridge } from './events/transition-events';
@@ -204,6 +204,9 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
     });
 
     setModule(module);
+    // Gate bits armed while no module existed (a debugger opened before the game) were mirrored
+    // but never delivered; the core has just booted with every gate clear, so send them now.
+    reassertHostGates();
     setProfileId(profileId ?? null);
     // Debug-only handle for devtools inspection; the canonical module ref is
     // wasm-bridge's `currentModule` (set via setModule above) — never read this in code.

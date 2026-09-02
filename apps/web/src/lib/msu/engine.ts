@@ -18,6 +18,7 @@ import { SOUND_CHANNELS } from './sound-claim';
 import type { LayerReport } from './channel';
 import type { LoadBytes } from './track-loader';
 import { applyFade, isFadeControl } from './fade';
+import { createTitleReset } from './title-reset';
 
 interface MsuEngineOptions {
   ctx: BaseAudioContext;
@@ -41,7 +42,14 @@ interface MsuEngineOptions {
    * Omitted for one-off uses like previewing a track, which should always start clean.
    */
   resumeEnabled?: () => boolean;
+  /**
+   * Whether reaching the title screen forgets those positions again, so the opening plays with
+   * its animation and the next run starts its music from the top. Read per event, same as above.
+   */
+  resetAtTitle?: () => boolean;
   onError?: (message: string) => void;
+  /** Reported when a return to the title actually dropped something. */
+  onReset?: () => void;
   /** Reports each track that starts, for diagnostics — how many layers actually decoded. */
   onTrack?: (trackNum: number, layerCount: number, resumed: boolean) => void;
   /** The same, for the ambient bed. Effects are far too frequent to report one at a time. */
@@ -58,7 +66,8 @@ interface TrackReport {
 const createMsuEngine = (options: MsuEngineOptions) => {
   const {
     ctx, destination, manifest, loadBytes, isDeluxe,
-    musicVolume, sfxVolume, ambientVolume, resumeEnabled, onError, onTrack, onAmbient,
+    musicVolume, sfxVolume, ambientVolume, resumeEnabled, resetAtTitle, onError, onReset,
+    onTrack, onAmbient,
   } = options;
 
   const readSfxVolume = sfxVolume ?? musicVolume;
@@ -82,6 +91,7 @@ const createMsuEngine = (options: MsuEngineOptions) => {
   const music = channels.music;
   const ambient = channels.ambient;
   const all = [music, ambient, channels.sfx1, channels.sfx2];
+  const titleReset = createTitleReset(channels, resetAtTitle, onReset);
 
   /**
    * The game's music-control byte. Values below 0xf0 select a track (0 = silence), 0xf1..0xf3
@@ -92,7 +102,9 @@ const createMsuEngine = (options: MsuEngineOptions) => {
   // would make it skip the re-select that is the only thing that brings the sound back.
   let fadedToZero = false;
 
-  const onMusicCtrl = (ctrl: number, _module: number, entrance: number, overworldArea: number): void => {
+  const onMusicCtrl = (ctrl: number, module: number, entrance: number, overworldArea: number): void => {
+    // Ahead of the select below, so the track this event starts is the one that begins fresh.
+    titleReset(module);
     if (isFadeControl(ctrl)) {
       if (ctrl === 0xf1) fadedToZero = true;
       if (ctrl === 0xf3) fadedToZero = false;

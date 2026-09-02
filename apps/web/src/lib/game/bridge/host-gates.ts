@@ -16,6 +16,9 @@ const HOST_GATE_EXTERNAL_AMBIENT = 4;
 // One bit for both effect channels: a pack claims individual ids per channel, so the two are
 // never armed separately — the claim masks are what decide which sounds the host takes over.
 const HOST_GATE_EXTERNAL_SFX = 8;
+// Diagnostics: report every sound the game raises, claimed or not, without moving any of them
+// off the sound chip. Never on in normal play — see setSoundTrace.
+const HOST_GATE_SOUND_TRACE = 16;
 
 let word = 0;
 
@@ -54,7 +57,23 @@ const setExternalAmbient = (on: boolean): void => setBit(HOST_GATE_EXTERNAL_AMBI
 /** The same for both effect channels, which share one bit — see the constant above. */
 const setExternalSfx = (on: boolean): void => setBit(HOST_GATE_EXTERNAL_SFX, on);
 
+/**
+ * Turn the sound trace on. Purely observational: it changes which sounds are REPORTED, never
+ * which of them the chip still plays, so a traced session sounds exactly like an untraced one.
+ */
+const setSoundTrace = (on: boolean): void => setBit(HOST_GATE_SOUND_TRACE, on);
+
 /** A fresh core starts with every gate clear; drop the mirror so it cannot go stale. */
 const resetHostGates = (): void => { word = 0; };
 
-export { setSimulatorSupport, setExternalMusic, setExternalAmbient, setExternalSfx, resetHostGates };
+/**
+ * Push the mirror onto the core as it is, dedupe or not. A bit set BEFORE the module existed —
+ * a debugger opened ahead of the game — was mirrored but never delivered, and setBit's dedupe
+ * would then treat every later arming of it as already done. Call once the module is installed.
+ */
+const reassertHostGates = (): void => { if (word !== 0) push(); };
+
+export {
+  setSimulatorSupport, setExternalMusic, setExternalAmbient, setExternalSfx, setSoundTrace,
+  resetHostGates, reassertHostGates,
+};

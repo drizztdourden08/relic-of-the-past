@@ -40,15 +40,19 @@ const emit = (channel: LogChannel, level: LogLevel, message: string): void => {
     }
   }
 
-  // Dev-only: mirror into the native console so main-process file logging
+  // Mirrored into the native console so main-process file logging
   // (apps/desktop/electron/lib/dev-file-logger.ts) captures this app's own
   // structured log channels too, not just ad-hoc console.* calls.
-  if (import.meta.env.DEV) {
-    const line = `[${channel}] ${message}`;
-    if (level === 'error') console.error(line);
-    else if (level === 'warn') console.warn(line);
-    else console.log(line);
-  }
+  //
+  // Unconditional on purpose. This used to be behind `import.meta.env.DEV`, which is decided when
+  // the bundle is BUILT, while the file logger on the other side is attached on `is.dev`, which is
+  // decided when the app RUNS. Any unpackaged run of a production bundle therefore opened the log
+  // files and then wrote no channel line to them at all, which is the one case a crash log is for.
+  // Nothing consumes the console in a packaged build, so mirroring there costs a call and no more.
+  const line = `[${channel}] ${message}`;
+  if (level === 'error') console.error(line);
+  else if (level === 'warn') console.warn(line);
+  else console.log(line);
 };
 
 const log = {

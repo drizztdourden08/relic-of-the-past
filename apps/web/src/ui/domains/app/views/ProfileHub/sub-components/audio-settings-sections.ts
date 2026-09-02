@@ -43,6 +43,7 @@ const SECTIONS: Section[] = [
           { key: 'msuConfigMode', label: 'Configuration', description: 'Auto reads the assigned pack and sets its format, sample rate, channels and buffer to match. Manual unlocks all of them.', keywords: 'auto manual automatic config msu pack' },
           { key: 'enableMSU', label: 'Pack Format', description: 'MSU, Deluxe, OPUZ or Deluxe OPUZ — read from the pack in Auto, chosen by hand in Manual. Packs are imported and assigned in the Data Manager.', keywords: 'msu music cd replacement deluxe opuz pack format' },
           { key: 'resumeMSU', label: 'Resume Tracks', description: 'Returning to an area picks its music up where it left off instead of restarting. Save states remember the position too.', keywords: 'resume position continue' },
+          { key: 'resetMSUAtTitle', label: 'Reset At Title Screen', description: 'Reaching the title screen forgets every remembered position, so the opening plays from its start alongside the animation and a new run begins with fresh music rather than picking up the last one midway.', keywords: 'reset title intro restart new game fresh resume position' },
         ],
       },
       {

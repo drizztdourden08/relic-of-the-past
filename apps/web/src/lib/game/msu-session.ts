@@ -9,7 +9,7 @@
  */
 import type { MsuPackManifest, MsuResumeState } from '@shared/types/msu-manifest';
 import { createMsuEngine } from '../msu/engine';
-import type { MsuEngine } from '../msu/engine';
+import type { ChannelReport, MsuChannelName, MsuEngine } from '../msu/engine';
 import type { LoadBytes } from '../msu/track-loader';
 import { getMasterAudioTarget } from './audio-volume';
 import { announceCoreMusic } from './bridge/announce-music';
@@ -29,6 +29,8 @@ interface MsuSessionOptions {
   /** The bed's own slider — a storm sits under quiet music without touching either. */
   ambientVolume: () => number;
   resumeEnabled: () => boolean;
+  /** Whether returning to the title forgets those positions, so the next run starts clean. */
+  resetAtTitle: () => boolean;
   /**
    * Whether the pack may replace the ambient bed and the sound effects. Read once, here, because
    * the claim masks and gate bits are published to the core at session start — flipping either
@@ -70,7 +72,9 @@ const build = (options: MsuSessionOptions): boolean => {
     sfxVolume: options.sfxVolume,
     ambientVolume: options.ambientVolume,
     resumeEnabled: options.resumeEnabled,
+    resetAtTitle: options.resetAtTitle,
     onError: (message) => log.error(`[MSU] ${message}`),
+    onReset: () => log.app('[MSU] Back at the title — bed and effects stopped, positions cleared'),
     onTrack: (trackNum, layerCount, resumed) =>
       log.app(`[MSU] Track ${trackNum} playing — ${layerCount} layer(s)${resumed ? ', resumed' : ''}`),
     onAmbient: (soundId, layerCount, resumed) =>
@@ -146,7 +150,11 @@ const msuRestore = (state: MsuResumeState | null): void => { engine?.restore(sta
 
 const msuSyncVolume = (): void => { engine?.syncVolume(); };
 
+/** One channel's live state, for the music debugger's meters. Null when silent or no session. */
+const msuChannelReport = (name: MsuChannelName): ChannelReport | null =>
+  engine?.reportChannel(name) ?? null;
+
 const isMsuSessionActive = (): boolean => engine !== null;
 
-export { startMsuSession, stopMsuSession, msuSnapshot, msuRestore, msuSyncVolume, isMsuSessionActive };
+export { startMsuSession, stopMsuSession, msuSnapshot, msuRestore, msuSyncVolume, msuChannelReport, isMsuSessionActive };
 export type { MsuSessionOptions };

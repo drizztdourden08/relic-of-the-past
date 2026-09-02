@@ -6,3 +6,4 @@ export { DebugWidgetContent } from './debug';
 export { NavigationWidgetContent, LiveDataInspectorContent } from './navigation';
 export { CheatsWidgetContent } from './cheats';
 export { SimulatorWidgetContent } from './simulator';
+export { MusicWidgetContent } from './music';

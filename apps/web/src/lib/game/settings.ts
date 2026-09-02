@@ -92,6 +92,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   msuConfigMode: 'auto',
   enableMSU: 'false',
   resumeMSU: true,
+  resetMSUAtTitle: true,
   packReplaceAmbient: true,
   packReplaceSfx: true,
 

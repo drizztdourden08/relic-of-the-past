@@ -121,6 +121,11 @@ interface SoundChannelApi {
   snapshot: () => ChannelResume | null;
   /** Pick playback up from a snapshot. A no-op on an additive channel: effects are not resumed. */
   restore: (state: ChannelResume | null) => void;
+  /**
+   * Drop every remembered position, so the next selection of any id starts it from the top.
+   * A no-op on an additive channel, which remembers nothing in the first place.
+   */
+  forget: () => void;
   report: () => ChannelReport | null;
   stop: () => void;
   dispose: () => void;

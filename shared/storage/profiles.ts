@@ -7,7 +7,7 @@
  * is read unchanged.
  */
 import type { FileStore } from '@shared/platform';
-import type { Profile, AppState } from '@shared/types/profile';
+import type { Profile, ProfilePatch, AppState } from '@shared/types/profile';
 
 const APP_STATE = 'app.json';
 const profileFile = (id: string): string => `profiles/${id}/profile.json`;
@@ -60,12 +60,12 @@ const createProfile = async (files: FileStore, name: string, romFile: string, la
   return profile;
 };
 
-const updateProfile = async (files: FileStore, id: string, patch: Partial<Profile>): Promise<Profile | null> => {
+const updateProfile = async (files: FileStore, id: string, patch: ProfilePatch): Promise<Profile | null> => {
   const profile = await loadProfile(files, id);
   if (!profile) return null;
-  if (patch.name !== undefined) profile.name = patch.name;
-  if (patch.language !== undefined) profile.language = patch.language;
-  if (patch.msuPack !== undefined) profile.msuPack = patch.msuPack;
+  if (patch.name != null) profile.name = patch.name;
+  if (patch.language !== undefined) profile.language = patch.language ?? undefined;
+  if (patch.msuPack !== undefined) profile.msuPack = patch.msuPack ?? undefined;
   await writeJson(files, profileFile(id), profile);
   return profile;
 };

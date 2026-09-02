@@ -21,6 +21,7 @@ interface TitleBarProps {
   onShowConnectionDebug: () => void;
   onToggleDataset: () => void;
   onToggleSimulator: () => void;
+  onToggleMusic: () => void;
   onShowShadowEditor: () => void;
   onShowAbout: () => void;
   onShowBugReport: () => void;

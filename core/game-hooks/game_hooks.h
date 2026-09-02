@@ -226,6 +226,15 @@ void GameHook_SetDeluxeEntrances(int index, uint32 bits);
 // the chip's own resumed copy — the two would otherwise sound together. Call with the APU locked.
 void GameHook_AmbientAfterLoad(uint8 last_ambient);
 
+// Marks the ambient clear the hook layer is about to raise as OURS, so the report below skips it.
+//
+// The clear id does two unrelated jobs. The game raises it to mean "the bed ends here", which the
+// host has to hear. The hook layer raises the SAME id to silence the chip's copy of a bed it just
+// handed to the host — and if the host heard that one it would stop the bed it was just given, which
+// is precisely how a state load came to restore its music and its thunder but no rain. One flag,
+// consumed by the next report, keeps the two apart.
+void GameHook_MarkSelfRaisedAmbientClear(void);
+
 // Whether |track|, after the host's remapping, is the music already playing: 1/0, or -1 when the
 // host cannot say and the caller should use the vanilla compare.
 int GameHook_MusicIsPlayingRemapped(uint8 track);
@@ -263,5 +272,10 @@ bool GameHook_Sound(int channel, uint8 raw);
 
 // Whether the host claims |id| on |channel|. The predicate alone — no report, no gate check.
 bool GameHook_SoundClaimed(int channel, uint8 id);
+
+// Diagnostics only: report one raise to the host's sound trace, gated on kHostGate_SoundTrace.
+// Never changes what plays. GameHook_Sound calls it for every raise it sees; the after-load bed
+// report calls it itself because it never goes through GameHook_Sound.
+void GameHook_TraceSound(int channel, uint8 id, uint8 pan, bool claimed);
 
 #endif // GAME_HOOKS_H

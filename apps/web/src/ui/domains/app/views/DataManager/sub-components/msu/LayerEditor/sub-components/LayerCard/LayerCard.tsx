@@ -75,6 +75,22 @@ const LayerCard = (props: LayerCardProps) => {
         onChange={(volume) => onChange({ volume })}
       />
 
+      {/* Rolled each time the layer starts, so on a one-shot effect this is a per-trigger chance.
+          The game raises some effects on a fixed cycle, which a real recording turns into a
+          metronome; thinning them here keeps them tied to the moment the game means. */}
+      <Slider
+        label="Chance"
+        description="How often this layer actually sounds when it starts. 100% is every time."
+        value={layer.chance ?? 100}
+        min={1}
+        max={100}
+        step={1}
+        disabled={disabled}
+        showValue
+        formatValue={(value) => `${value}%`}
+        onChange={(chance) => onChange({ chance: chance >= 100 ? undefined : chance })}
+      />
+
       <PlayModeFields
         mode={layer.mode}
         layerId={layer.id}

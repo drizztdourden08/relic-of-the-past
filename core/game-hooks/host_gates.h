@@ -28,6 +28,9 @@ enum {
   kHostGate_ExternalMusic = 2,
   kHostGate_ExternalAmbient = 4,
   kHostGate_ExternalSfx = 8,
+  // Diagnostics only: report EVERY sound the game raises, claimed or not, without changing which
+  // of them the chip still plays. Off, not one extra host-call is made.
+  kHostGate_SoundTrace = 16,
 };
 
 extern uint32 g_host_gates[kHostGateWordCount];

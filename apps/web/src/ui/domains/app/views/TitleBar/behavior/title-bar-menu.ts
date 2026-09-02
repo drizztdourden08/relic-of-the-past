@@ -10,7 +10,7 @@ type MenuItems = Parameters<typeof DropdownMenu>[0]['items'];
 type MenuBuilderDeps = Pick<TitleBarProps,
   'activeProfile' | 'gameRunning' | 'onShowProfile' | 'onToggleSaveStates' | 'onShowDataManager'
   | 'onToggleInventory' | 'onToggleChecks' | 'onToggleCheats' | 'onShowLogs' | 'onToggleDebug'
-  | 'onShowConnectionDebug' | 'onToggleDataset' | 'onToggleSimulator' | 'onShowInputTester' | 'onShowSpriteDebug' | 'onShowDataInspector'
+  | 'onShowConnectionDebug' | 'onToggleDataset' | 'onToggleSimulator' | 'onToggleMusic' | 'onShowInputTester' | 'onShowSpriteDebug' | 'onShowDataInspector'
   | 'onShowShadowEditor' | 'onCheckForUpdates' | 'onShowCredits' | 'onShowDesignGallery' | 'onShowAbout'
   | 'widgetVisibility' | 'developerToolsEnabled'
 > & { closeMenu: () => void; win: WindowControlsPort };
@@ -19,7 +19,7 @@ const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
   const {
     closeMenu, win, activeProfile, gameRunning,
     onShowProfile, onToggleSaveStates, onShowDataManager, onToggleInventory, onToggleChecks,
-    onToggleCheats, onShowLogs, onToggleDebug, onShowConnectionDebug, onToggleDataset, onToggleSimulator,
+    onToggleCheats, onShowLogs, onToggleDebug, onShowConnectionDebug, onToggleDataset, onToggleSimulator, onToggleMusic,
     onShowInputTester, onShowSpriteDebug, onShowDataInspector, onShowShadowEditor, onCheckForUpdates, onShowCredits, onShowDesignGallery, onShowAbout,
     widgetVisibility = {}, developerToolsEnabled = false,
   } = deps;
@@ -33,6 +33,7 @@ const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
     { key: 'navigation', icon: '🔗', label: 'Location & Navigation', checked: widgetVisibility.navigation, onClick: () => { closeMenu(); onShowConnectionDebug(); } },
     { key: 'dataset', icon: '📊', label: 'Live Data Inspector', checked: widgetVisibility.dataset, onClick: () => { closeMenu(); onToggleDataset(); } },
     { key: 'simulator', icon: '🤖', label: 'Simulator', checked: widgetVisibility.simulator, onClick: () => { closeMenu(); onToggleSimulator(); } },
+    { key: 'music', icon: '🎵', label: 'Music Debugger', checked: widgetVisibility.music, onClick: () => { closeMenu(); onToggleMusic(); } },
   ].filter((item) => developerToolsEnabled || !getWidgetDefinition(item.key)?.devOnly);
 
   return [
