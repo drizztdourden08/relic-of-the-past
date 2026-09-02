@@ -10,7 +10,11 @@
  *    A manifest still naming `foo.pcm` after `foo.flac` appeared silences every slot built on
  *    it, so the write happens per file rather than once at the end: an interrupted run leaves a
  *    pack that is consistent as far as it got.
- * 3. Originals are KEPT. This converts and stops; throwing the superseded files out is a
+ * 3. RECONCILE once the last file lands. Every reference to a superseded original — one whose
+ *    stem the pack now holds in the target format — is moved to the converted file, whether it
+ *    was missed above (a name the manifest spells in another case) or left over from an earlier
+ *    run. The per-file re-point is the fast path; this is the guarantee.
+ * 4. Originals are KEPT. This converts and stops; throwing the superseded files out is a
  *    separate, confirmed action on the pack's files.
  *
  * A pack with no manifest is PROMOTED to one before anything is converted, rather than refused.
@@ -25,6 +29,7 @@ import { rm, stat } from 'fs/promises';
 import type { OptimizeConversion, OptimizeRunResult } from '@shared/types/msu-optimize';
 import type { MsuPackManifest } from '@shared/types/msu-manifest';
 import { withFileRenamed, withLoopSampleCarried } from '@shared/storage/msu-layer-edit';
+import { withSupersededRepointed } from '@shared/storage/msu-superseded';
 import { errMessage } from '../../lib/result';
 import { synthesizeClassicManifest } from '@shared/storage/msu-classic-manifest';
 import { trackNumberOf } from '@shared/storage/msu-paths';
@@ -33,7 +38,7 @@ import { describeSource } from './audio-source';
 import { encodeToTarget } from './flac-encode';
 import { readLoopSample } from './loop-point';
 import type { ProgressReporter } from './analyze';
-import { freeTargetName, isTargetFormat, listPackAudio } from './pack-audio';
+import { freeTargetName, listPackAudio, pendingConversions } from './pack-audio';
 
 interface RunRequest {
   pack: string;
@@ -87,9 +92,13 @@ const manifestToEdit = async (pack: string, names: string[]): Promise<MsuPackMan
 const convertPack = async (request: RunRequest): Promise<OptimizeRunResult> => {
   const { pack, ffmpegPath, fileNames, report } = request;
 
-  const sizes = new Map((await listPackAudio(pack)).map((file) => [file.name, file.sizeBytes]));
+  const audio = await listPackAudio(pack);
+  const sizes = new Map(audio.map((file) => [file.name, file.sizeBytes]));
   const manifest = await manifestToEdit(pack, [...sizes.keys()]);
-  const wanted = fileNames.filter((name) => sizes.has(name) && !isTargetFormat(name));
+  // A name the preview listed but a previous run already covered is skipped, not re-encoded:
+  // the reconciliation at the end moves its reference onto the copy that exists.
+  const pending = new Set(pendingConversions(audio).map((file) => file.name));
+  const wanted = fileNames.filter((name) => pending.has(name));
   const taken = new Set(sizes.keys());
 
   const { manifest: carriedManifest, carried } = await carryLoopPoints(pack, wanted, manifest);
@@ -121,6 +130,10 @@ const convertPack = async (request: RunRequest): Promise<OptimizeRunResult> => {
       failed.push({ name, reason: errMessage(err) });
     }
   }
+
+  // Step 3: whatever the per-file re-point missed, the pack's own file list settles.
+  const reconciled = withSupersededRepointed(working, [...taken]);
+  if (reconciled !== working) await writePackManifest(pack, reconciled);
 
   return { converted, failed, loopPointsCarried: carried };
 };

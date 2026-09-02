@@ -29,10 +29,28 @@ interface MsulExportProgress {
 
 interface ExportMsulParams {
   manifest: MsuPackManifest;
-  /** Reads one file named by the manifest. null means missing, and aborts the export. */
+  /**
+   * Every file the pack folder holds, wired or not. The archive stores ALL of it: a pack is its
+   * folder, and an export that followed the references alone left an unwired bed behind. A
+   * reference the manifest carries that is not in this list is still read, so a missing one
+   * aborts here with its name rather than importing as silence.
+   */
+  fileNames: string[];
+  /** Reads one file by name. null means missing, and aborts the export. */
   loadBytes: LoadBytes;
   onProgress?: (progress: MsulExportProgress) => void;
 }
+
+/**
+ * Referenced names first, then the rest of the folder. Dedupe keeps the FIRST name it meets for a
+ * given content, so this order is what keeps a wired file stored under its own name when an unwired
+ * copy of the same bytes sits beside it — the copy is what gets dropped, never the reference.
+ */
+const namesToStore = (manifest: MsuPackManifest, fileNames: string[]): string[] => {
+  const referenced = referencedFiles(manifest);
+  const seen = new Set(referenced);
+  return [...referenced, ...fileNames.filter((name) => !seen.has(name))];
+};
 
 /**
  * Written by hand rather than through storage's serializeManifest, which stamps `modifiedAt`
@@ -43,18 +61,22 @@ const serializeForExport = (manifest: MsuPackManifest): Uint8Array =>
   new TextEncoder().encode(`${JSON.stringify(manifest, null, 2)}\n`);
 
 const exportMsulPack = async (params: ExportMsulParams): Promise<Uint8Array> => {
-  const { manifest, loadBytes, onProgress } = params;
+  const { manifest, fileNames, loadBytes, onProgress } = params;
 
   // TODO(opus): a later pass transcodes here — per-layer Opus presets (bitrate/channels chosen
   // per layer kind: full bitrate for a music body, a low-bitrate mono for an ambient one) would
   // slot in between dedupe and entry construction, replacing `bytes` and the file extension.
   // Dedupe has to stay ahead of it so identical sources are encoded once, and the encoded name
   // then feeds the same `canonical` map, which keeps the manifest rewrite below unchanged.
-  const { entries: files, canonical } = await dedupeByContent(referencedFiles(manifest), loadBytes);
+  const { entries: files, canonical } = await dedupeByContent(namesToStore(manifest, fileNames), loadBytes);
 
   // Rewriting through the very map dedupe produced is what keeps the manifest resolvable: a
-  // reference to a dropped duplicate now names the copy that was actually stored.
-  const stored = remapManifestFiles(manifest, canonical);
+  // reference to a dropped duplicate now names the copy that was actually stored. The inventory
+  // is the archive's own entry list, so a reader can check the pack is whole from its head.
+  const stored: MsuPackManifest = {
+    ...remapManifestFiles(manifest, canonical),
+    files: files.map((file) => file.name).sort((a, b) => a.localeCompare(b)),
+  };
 
   const entries: ZipEntry[] = [
     { name: MSUL_MANIFEST_NAME, bytes: serializeForExport(stored), store: false },

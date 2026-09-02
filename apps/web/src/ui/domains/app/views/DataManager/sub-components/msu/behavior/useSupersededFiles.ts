@@ -10,34 +10,35 @@
  * Same stem, not "was converted": there is no record of a past run, and there does not need to
  * be. A file sitting next to a same-stem one in the target format is superseded whichever way
  * round the two arrived.
+ *
+ * Removing them re-points the manifest FIRST. A reference the conversion did not move — a name
+ * spelled in another case, a manifest saved over from a stale copy — would otherwise go down
+ * with the original and leave its slot silent. Moving it onto the converted file before the
+ * delete is what makes throwing the originals out safe by construction.
  */
 import { useCallback, useMemo, useState } from 'react';
-import { OPTIMIZE_TARGET_EXTENSION } from '@shared/types/msu-optimize';
+import type { MsuPackManifest } from '@shared/types/msu-manifest';
+import { supersededMap, withSupersededRepointed } from '@shared/storage/msu-superseded';
 import * as msuStore from '@app/lib/storage/msu-store';
-import { extensionOf, stemOf } from './track-file-name';
 import { failure } from './usePackList';
 import type { ActionResult, MsuFile } from '../msu.type';
 
 interface SupersededParams {
   pack: string;
   files: MsuFile[];
+  /** What the re-point WRITES into. Null for a classic pack, whose filenames are its wiring. */
+  saveBase: MsuPackManifest | null;
   reload: () => void;
 }
 
-const supersededNames = (names: string[]): Set<string> => {
-  const covered = new Set(
-    names.filter((name) => extensionOf(name) === OPTIMIZE_TARGET_EXTENSION).map(stemOf),
-  );
-  return new Set(names.filter(
-    (name) => extensionOf(name) !== OPTIMIZE_TARGET_EXTENSION && covered.has(stemOf(name)),
-  ));
-};
+const supersededNames = (names: string[]): Set<string> => new Set(supersededMap(names).keys());
 
 const useSupersededFiles = (params: SupersededParams) => {
-  const { pack, files, reload } = params;
+  const { pack, files, saveBase, reload } = params;
   const [removing, setRemoving] = useState(false);
 
-  const superseded = useMemo(() => supersededNames(files.map((file) => file.name)), [files]);
+  const names = useMemo(() => files.map((file) => file.name), [files]);
+  const superseded = useMemo(() => supersededNames(names), [names]);
 
   const totalBytes = useMemo(
     () => files.reduce((sum, file) => (superseded.has(file.name) ? sum + file.size : sum), 0),
@@ -51,6 +52,10 @@ const useSupersededFiles = (params: SupersededParams) => {
     if (doomed.length === 0) return { success: false, message: 'Nothing is superseded.' };
     setRemoving(true);
     try {
+      if (saveBase !== null) {
+        const repointed = withSupersededRepointed(saveBase, names);
+        if (repointed !== saveBase) await msuStore.writeMsuManifest(pack, repointed);
+      }
       for (const name of doomed) await msuStore.deleteMsuTrackFile(pack, name);
       const plural = doomed.length === 1 ? '' : 's';
       return { success: true, message: `Removed ${doomed.length} superseded original${plural}` };
@@ -60,7 +65,7 @@ const useSupersededFiles = (params: SupersededParams) => {
       setRemoving(false);
       reload();
     }
-  }, [pack, superseded, reload]);
+  }, [pack, names, saveBase, superseded, reload]);
 
   return { superseded, count: superseded.size, totalBytes, removing, removeAll };
 };

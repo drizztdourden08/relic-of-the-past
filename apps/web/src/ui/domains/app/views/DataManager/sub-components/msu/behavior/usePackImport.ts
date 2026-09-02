@@ -28,7 +28,12 @@ const usePackImport = (params: PackImportParams) => {
       const result = await installMsulPack(bytes, desiredName || stemOf(file.name));
       await refresh();
       onImported(result.pack);
-      return { success: true, message: `Imported "${result.pack}" — ${result.fileCount} files, ${result.trackCount} slots` };
+      // A pack that lists more than it holds is worth saying at once, by name, while the source
+      // archive is still to hand.
+      const missing = result.missingFiles.length > 0
+        ? ` — the archive was missing ${result.missingFiles.length}: ${result.missingFiles.join(', ')}`
+        : '';
+      return { success: true, message: `Imported "${result.pack}" — ${result.fileCount} files, ${result.trackCount} slots${missing}` };
     } catch (err) {
       const outcome = failure(err, 'Could not read that pack');
       publishImportProgress({ kind: 'msu', id: 'msu', phase: 'error', message: outcome.message });

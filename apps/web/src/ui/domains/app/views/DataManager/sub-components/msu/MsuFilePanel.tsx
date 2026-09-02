@@ -60,7 +60,7 @@ const MsuFilePanel = (props: MsuFilePanelProps) => {
   const panel = useFilePanel({ pack, files, saveBase, reload: onReload });
   const audition = useFileAudition(pack, files);
   const usage = useFileUsage(manifest);
-  const covered = useSupersededFiles({ pack, files, reload: onReload });
+  const covered = useSupersededFiles({ pack, files, saveBase, reload: onReload });
   const { metadata, rows, deleteFile, report } = panel;
   const [supersededOnly, setSupersededOnly] = useState(false);
   const [optimizing, setOptimizing] = useState(false);
@@ -87,13 +87,14 @@ const MsuFilePanel = (props: MsuFilePanelProps) => {
     );
   }, [usage, onDeleteConfirm, deleteFile]);
 
-  // Same care in bulk: a converted pack re-points its manifest, so these are normally orphans —
-  // but one still named by a slot would take that slot's audio with it, and that is worth saying.
+  // Same care in bulk: a converted pack re-points its manifest, so these are normally orphans.
+  // One still named by a slot is moved onto its converted file before the delete, and the
+  // confirmation says so rather than leaving a reader to wonder what happens to that slot.
   const confirmRemoveSuperseded = useCallback(() => {
     const doomed = [...covered.superseded];
     const stillNamed = doomed.filter((name) => (usage.get(name) ?? NO_USES).length > 0);
     const played = stillNamed.length > 0
-      ? ` ${stillNamed.length} of them is still named by a slot or sound, which will be left with nothing to play.`
+      ? ` ${stillNamed.length} of them ${stillNamed.length === 1 ? 'is' : 'are'} still named by a slot or sound, which will play the converted file instead.`
       : '';
     onDeleteConfirm(
       'Remove Superseded Originals',

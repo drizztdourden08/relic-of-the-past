@@ -11,9 +11,10 @@
  * never drift on what a `pack.json` is.
  */
 import { dirname, join } from 'path';
-import { mkdir, readFile, stat, writeFile } from 'fs/promises';
+import { mkdir, readFile, readdir, stat, writeFile } from 'fs/promises';
 import type { MsuPackManifest } from '@shared/types/msu-manifest';
 import { MSUL_MANIFEST_NAME } from '@shared/types/msu-manifest';
+import { isInventoryName, sortInventory } from '@shared/storage/msu-inventory';
 import { isSafeName } from '@shared/storage/msu-paths';
 import { parseManifest, serializeManifest } from '@shared/storage/msu-edit';
 import { getUserDataPath } from '../lib/paths';
@@ -42,10 +43,23 @@ const readPackText = async (path: string): Promise<string | null> => {
 const readPackManifest = async (pack: string): Promise<MsuPackManifest | null> =>
   parseManifest(await readPackText(manifestPath(pack)));
 
+/** Same rule as the FileStore side (shared/storage/msu-inventory): regular files, manifest excepted. */
+const packInventory = async (pack: string): Promise<string[]> => {
+  const dir = packPath(pack);
+  const out: string[] = [];
+  for (const name of await readdir(dir).catch(() => [] as string[])) {
+    if (!isInventoryName(name)) continue;
+    try { if ((await stat(join(dir, name))).isFile()) out.push(name); } catch { /* vanished mid-listing */ }
+  }
+  return sortInventory(out);
+};
+
+/** The inventory is read from the folder at write time, for the reason given beside writeManifest. */
 const writePackManifest = async (pack: string, manifest: MsuPackManifest): Promise<void> => {
   const path = manifestPath(pack);
   await mkdir(dirname(path), { recursive: true });
-  await writeFile(path, serializeManifest(manifest), 'utf-8');
+  const files = await packInventory(pack);
+  await writeFile(path, serializeManifest({ ...manifest, files }), 'utf-8');
 };
 
 export {

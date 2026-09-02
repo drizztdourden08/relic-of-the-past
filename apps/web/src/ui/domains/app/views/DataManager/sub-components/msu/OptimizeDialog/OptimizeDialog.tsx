@@ -23,16 +23,12 @@ import type { OptimizeDialogProps } from './OptimizeDialog.type';
 
 const OptimizeDialog = (props: OptimizeDialogProps) => {
   const { open, pack, onClose, onConverted } = props;
-  const optimize = useOptimize({ pack, open });
+  // The pack is re-read the moment a run settles, not on the way out — see useOptimize for why
+  // the studio must never hold a stale manifest while this dialog is still open.
+  const optimize = useOptimize({ pack, open, onRunSettled: onConverted });
   const { step, tool, analysis, progress, result, error, convertibleCount } = optimize;
 
-  // Every way out goes through here, the backdrop and Escape included: a run that converted
-  // something has changed what is on disk, and leaving by the wrong door must not be the
-  // difference between the files list knowing that and not.
-  const handleClose = (): void => {
-    if (result !== null && result.converted.length > 0) onConverted();
-    onClose();
-  };
+  const handleClose = (): void => { onClose(); };
 
   const body = (
     <>

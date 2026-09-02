@@ -57,11 +57,20 @@ import { registerGithubHandlers } from './github/ipc-handlers';
 import { registerFfmpegHandlers } from './tools/ipc-handlers';
 import { emit } from './lib/ipc/handle';
 import { installDevFileLogging } from './lib/dev-file-logger';
+import { registerMsulAssociation, unregisterMsulAssociation } from './msu/msul-association';
 
 // Velopack's startup logic, before anything else runs. It handles the hooks fired
 // during install, update and uninstall, and may restart the process to do so, which
 // is why nothing of ours may happen first.
-VelopackApp.build().run();
+//
+// The `.msul` document type rides on those hooks: registered on install and again after
+// every update (which is also how an install made before this existed picks it up), and
+// removed before uninstall. Windows only — the other platforms get it from the package.
+VelopackApp.build()
+  .onAfterInstallFastCallback(registerMsulAssociation)
+  .onAfterUpdateFastCallback(registerMsulAssociation)
+  .onBeforeUninstallFastCallback(unregisterMsulAssociation)
+  .run();
 
 // A copy carrying its own `data` folder keeps everything there. This runs before any
 // path is read, because every other location is derived from userData. An explicit

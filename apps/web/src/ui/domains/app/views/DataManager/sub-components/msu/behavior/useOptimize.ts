@@ -10,6 +10,12 @@
  * The measure runs on its own the moment the tool is available, so an installed setup opens
  * straight onto the numbers. A missing tool stops at its own step instead, and the same
  * automatic measure picks up once the install finishes.
+ *
+ * The pack is re-read the moment a run SETTLES, not when the dialog closes, and on a failure as
+ * much as on a success. A run rewrites the manifest as it goes, so from its first file onward the
+ * studio's copy is stale — and any edit saved from a stale copy would write the old references
+ * straight back over the new ones. Re-reading at once closes that window before anyone can act
+ * in it.
  */
 import { useCallback, useEffect, useState } from 'react';
 import type { OptimizeAnalysis, OptimizeProgress, OptimizeRunResult } from '@shared/types/msu-optimize';
@@ -22,6 +28,8 @@ interface OptimizeParams {
   pack: string;
   /** False tears the flow back down, so re-opening starts from the tool check again. */
   open: boolean;
+  /** Fired once a run has settled, success or failure, so the pack's files and manifest are re-read. */
+  onRunSettled: () => void;
 }
 
 const messageOf = (err: unknown, fallback: string): string =>
@@ -32,7 +40,7 @@ const convertibleNames = (analysis: OptimizeAnalysis | null): string[] =>
   (analysis?.candidates ?? []).filter((row) => row.excludedBecause === null).map((row) => row.name);
 
 const useOptimize = (params: OptimizeParams) => {
-  const { pack, open } = params;
+  const { pack, open, onRunSettled } = params;
   const tool = useFfmpegInstall(open);
   const [step, setStep] = useState<OptimizeStep>('checking');
   const [analysis, setAnalysis] = useState<OptimizeAnalysis | null>(null);
@@ -85,8 +93,11 @@ const useOptimize = (params: OptimizeParams) => {
     } catch (err) {
       setError(messageOf(err, 'Could not convert this pack.'));
       setStep('error');
+    } finally {
+      // A failed run may still have converted part of the pack, so the re-read is unconditional.
+      onRunSettled();
     }
-  }, [analysis, pack]);
+  }, [analysis, pack, onRunSettled]);
 
   return {
     step,

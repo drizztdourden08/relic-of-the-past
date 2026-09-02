@@ -53,18 +53,23 @@ const buildIcns = (entries) => {
   return Buffer.concat([header, body]);
 };
 
-/** A music note, drawn rather than shipped as an asset so there is nothing extra to keep in sync. */
-const badgeSvg = (size) => {
-  const stroke = Math.max(2, Math.round(size * 0.055));
-  return Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 100 100">
-    <circle cx="50" cy="50" r="46" fill="#12100e" stroke="#e8a33d" stroke-width="${stroke}"/>
-    <g fill="#e8a33d">
-      <ellipse cx="36" cy="68" rx="13" ry="10" transform="rotate(-20 36 68)"/>
-      <rect x="45" y="26" width="7" height="44" rx="3"/>
-      <path d="M45 26 L74 18 L74 33 L45 41 Z"/>
-    </g>
+/**
+ * The badge: a ring holding Lucide's `music` icon (ISC licence, lucide.dev), reproduced from its
+ * source rather than redrawn — a note people already recognise from every other app beats one
+ * drawn here by hand.
+ *
+ * The ring is inset from the canvas: its outer edge stops at 44.5 of 50, so nothing is clipped at
+ * the badge's own bounds. The 24-unit icon is scaled to 54 and centred, which leaves a clear margin
+ * inside the ring on every side. Stroke-drawn, so the widths scale with the badge.
+ */
+const LUCIDE_MUSIC = '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>';
+
+const badgeSvg = (size) =>
+  Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 100 100">
+    <circle cx="50" cy="50" r="42" fill="#12100e" stroke="#e8a33d" stroke-width="5"/>
+    <g transform="translate(23 23) scale(2.25)" fill="none" stroke="#e8a33d" stroke-width="2"
+       stroke-linecap="round" stroke-linejoin="round">${LUCIDE_MUSIC}</g>
   </svg>`);
-};
 
 /** Logo scaled into a square canvas with the badge overlaid bottom-right. */
 const compose = async (size) => {
