@@ -85,6 +85,7 @@ const createAdditiveChannel = (options: ChannelOptions): SoundChannelApi => {
     const startedAt = ctx.currentTime;
     const layers = startLayers({
       ctx,
+      channel: name,
       destination: out,
       program,
       loaded,
@@ -143,6 +144,8 @@ const createAdditiveChannel = (options: ChannelOptions): SoundChannelApi => {
     // Effects are deliberately not part of a save's audio position.
     snapshot: () => null,
     restore: () => {},
+    // Nothing is remembered here, so there is never anything to forget.
+    forget: () => {},
     report,
     stop,
     dispose,

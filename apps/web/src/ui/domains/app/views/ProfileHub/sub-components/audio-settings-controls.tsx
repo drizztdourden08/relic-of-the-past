@@ -149,7 +149,7 @@ const renderControl = (
 };
 
 /** The switches that only mean something while a pack is playing at all. */
-const PACK_DEPENDENT_KEYS = ['resumeMSU', 'packReplaceAmbient', 'packReplaceSfx'];
+const PACK_DEPENDENT_KEYS = ['resumeMSU', 'resetMSUAtTitle', 'packReplaceAmbient', 'packReplaceSfx'];
 
 const isDisabled = (key: string, settings: GameSettings): boolean => {
   // Only Manual mode's own switch can turn these off: in Auto, whether a pack plays is decided

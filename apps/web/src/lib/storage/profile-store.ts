@@ -4,7 +4,7 @@
  * FileStore. Same surface the renderer previously called on window.api, now
  * routed through the platform layer so it works on desktop and mobile alike.
  */
-import type { Profile, AppState } from '@shared/types/profile';
+import type { Profile, ProfilePatch, AppState } from '@shared/types/profile';
 import * as store from '@shared/storage/profiles';
 import { getPlatform } from '@app/platform/get-platform';
 import { isAutomationLaunch } from '@app/lib/instance';
@@ -14,7 +14,7 @@ const files = () => getPlatform().files;
 const listProfiles = (): Promise<Profile[]> => store.listProfiles(files());
 const createProfile = (name: string, romFile: string, language?: string, msuPack?: string): Promise<Profile> =>
   store.createProfile(files(), name, romFile, language, msuPack);
-const updateProfile = (id: string, patch: Partial<Profile>): Promise<Profile | null> => store.updateProfile(files(), id, patch);
+const updateProfile = (id: string, patch: ProfilePatch): Promise<Profile | null> => store.updateProfile(files(), id, patch);
 const deleteProfile = (id: string): Promise<void> => store.deleteProfile(files(), id);
 // app.json decides which profile opens by default, and it is shared by every launch.
 // loadProfileForGame() writes it on each run, so ANY automated launch — not only a named

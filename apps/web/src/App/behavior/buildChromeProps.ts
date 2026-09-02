@@ -56,6 +56,7 @@ const buildChromeProps = (deps: ChromePropsDeps): TitleBarProps => {
     onShowConnectionDebug: () => widgets.toggle('navigation'),
     onToggleDataset: () => widgets.toggle('dataset'),
     onToggleSimulator: () => widgets.toggle('simulator'),
+    onToggleMusic: () => widgets.toggle('music'),
     onShowShadowEditor: handleShowShadowEditor,
     onShowAbout: () => nav.setActivePage('about'),
     onShowBugReport: () => setShowBugReportDialog(true),

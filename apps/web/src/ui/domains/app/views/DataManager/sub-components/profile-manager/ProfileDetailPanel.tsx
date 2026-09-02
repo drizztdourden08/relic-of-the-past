@@ -11,6 +11,7 @@ import { Select } from '../../../../../../design-system/primitives/Select';
 import { Button } from '../../../../../../design-system/primitives/Button';
 import { formatRelativeTime } from '../../../../../../../utils';
 import { updateProfile } from '../../../../../../../lib/storage/profile-store';
+import { reloadMsuForProfile } from '@app/lib/game/msu-pack-loader';
 import { languageLabel } from '../language-names';
 
 const IL: Record<string, CSSProperties> = {
@@ -47,7 +48,7 @@ const ProfileDetailPanel = (props: ProfileDetailPanelProps) => {
           <Select
             value={profile.language || ''}
             onChange={async (val) => {
-              await window.api.updateProfile(profile.id, { language: val || undefined });
+              await updateProfile(profile.id, { language: val || null });
               onRefresh();
             }}
             options={[
@@ -62,7 +63,10 @@ const ProfileDetailPanel = (props: ProfileDetailPanelProps) => {
           <Select
             value={profile.msuPack || ''}
             onChange={async (val) => {
-              await window.api.updateProfile(profile.id, { msuPack: val || undefined });
+              await updateProfile(profile.id, { msuPack: val || null });
+              // Audible now rather than at the next boot. A no-op unless this profile is the one
+              // currently playing, so editing another profile's pack never disturbs it.
+              await reloadMsuForProfile(profile.id);
               onRefresh();
             }}
             options={[

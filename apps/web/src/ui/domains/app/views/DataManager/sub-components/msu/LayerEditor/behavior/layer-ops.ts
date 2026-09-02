@@ -37,11 +37,15 @@ const MODE_LABELS: Record<PlayModeKind, string> = {
   once: 'Once', loop: 'Loop', random: 'Random', interval: 'Interval',
 };
 
-const createLayer = (existing: MsuLayer[]): MsuLayer => ({
+/**
+ * A new layer, in the mode its channel can actually end in. An effect channel gets `once`: it is
+ * fired at a moment and is over, and a loop there would still be playing long after that moment.
+ */
+const createLayer = (existing: MsuLayer[], oneShot = false): MsuLayer => ({
   id: newId(),
   name: `Layer ${existing.length + 1}`,
   files: [],
-  mode: DEFAULT_MODES.loop,
+  mode: oneShot ? DEFAULT_MODES.once : DEFAULT_MODES.loop,
   volume: 100,
 });
 

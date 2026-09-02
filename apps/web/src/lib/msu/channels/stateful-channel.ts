@@ -67,6 +67,7 @@ const createStatefulChannel = (options: ChannelOptions): SoundChannelApi => {
     const startedAt = ctx.currentTime;
     const layers = startLayers({
       ctx,
+      channel: name,
       destination: fadeGain,
       program,
       loaded,
@@ -132,6 +133,13 @@ const createStatefulChannel = (options: ChannelOptions): SoundChannelApi => {
     void start(id, carried ?? (resumeEnabled?.() ? resumeById.get(id) ?? null : null));
   };
 
+  /**
+   * Forget every position this channel has recorded. What is sounding now is left alone — this
+   * only decides where the NEXT selection of an id begins, which is what makes a fresh run start
+   * its music at the top rather than halfway through the last one.
+   */
+  const forget = (): void => { resumeById.clear(); };
+
   const restore = (state: ChannelResume | null): void => {
     generation += 1;
     stopActive();
@@ -173,6 +181,7 @@ const createStatefulChannel = (options: ChannelOptions): SoundChannelApi => {
     activeId: () => active?.id ?? null,
     snapshot,
     restore,
+    forget,
     report,
     stop,
     dispose,

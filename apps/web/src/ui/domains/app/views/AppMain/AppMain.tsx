@@ -3,7 +3,7 @@ import { useEffect, useMemo } from 'react';
 import { Box, Image } from '@ds/primitives';
 import { WidgetManager, useWidgetLayout } from '@ds/composites/Widget';
 import { Dialog } from '@ds/composites/Dialog';
-import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent, DebugWidgetContent, NavigationWidgetContent, LiveDataInspectorContent, CheatsWidgetContent, SimulatorWidgetContent } from '@domains/widgets';
+import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent, DebugWidgetContent, NavigationWidgetContent, LiveDataInspectorContent, CheatsWidgetContent, SimulatorWidgetContent, MusicWidgetContent } from '@domains/widgets';
 import { loadTrackerStateBlob, saveTrackerStateBlob } from '@app/lib/tracker-state-io';
 import { primeLiveSettings } from '@app/lib/game';
 import { useExclusiveInsetsStore } from '@app/stores/exclusive-insets-store';
@@ -188,6 +188,7 @@ const AppMain = () => {
             dataset: <LiveDataInspectorContent />,
             cheats: <CheatsWidgetContent />,
             simulator: <SimulatorWidgetContent />,
+            music: <MusicWidgetContent />,
           }}
         </WidgetManager>
 

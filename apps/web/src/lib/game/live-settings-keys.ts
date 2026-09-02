@@ -100,6 +100,10 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   // same as those settings do on their own.
   // Player sprite sheet (swapped in place via WasmApplyPlayerSpriteFile)
   'linkSprite',
+  // Replacement-music position handling. Both are read by the running engine on every music
+  // event rather than captured at session start, so a change applies to the very next one.
+  'resumeMSU',
+  'resetMSUAtTitle',
 ]);
 
 export { LIVE_SETTINGS };

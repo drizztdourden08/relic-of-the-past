@@ -9,6 +9,7 @@
  */
 import type { LayerResume, MsuLayer } from '@shared/types/msu-manifest';
 import { createScheduler } from '../schedulers/create-scheduler';
+import { publishMsuDebug } from '../debug-bus';
 import type { LoadedLayer } from '../track-loader';
 import { MSU1_SAMPLE_RATE } from '../decode/parse-msu1';
 import { createVoice } from '../voice';
@@ -22,19 +23,40 @@ import type { ActiveLayer, ChannelResume, LayerReport, SoundProgram } from './ch
  */
 type ResumeFor = (layer: MsuLayer, fileCount: number) => LayerResume | null;
 
+/**
+ * Whether this start of the layer sounds at all. `chance` absent, or any value at or above 100,
+ * always sounds — which is every layer authored before the field existed. Every actual roll is
+ * published to the debug bus: a lost roll starts nothing, so this is the only record of it.
+ */
+const layerSounds = (channel: string, programId: number, layer: MsuLayer): boolean => {
+  const chance = layer.chance;
+  if (chance === undefined || chance >= 100) return true;
+  const passed = chance > 0 && Math.random() * 100 < chance;
+  publishMsuDebug({
+    kind: 'roll', channel, programId,
+    layerId: layer.id, layerName: layer.name, chance, passed,
+  });
+  return passed;
+};
+
 const startLayers = (params: {
   ctx: BaseAudioContext;
   destination: AudioNode;
+  /** The channel these layers sound on — carried only so a chance roll can name it. */
+  channel: string;
   program: SoundProgram;
   loaded: LoadedLayer[];
   elapsedSeconds: () => number;
   resumeFor: ResumeFor;
 }): ActiveLayer[] => {
-  const { ctx, destination, program, loaded, elapsedSeconds, resumeFor } = params;
+  const { ctx, destination, channel, program, loaded, elapsedSeconds, resumeFor } = params;
   const layers: ActiveLayer[] = [];
 
   for (const entry of loaded) {
     const layer = program.layers[entry.layerIndex];
+    // A thinned layer is skipped outright rather than started silent: a scheduler that is never
+    // created cannot hold a voice, keep a timer, or turn up in the studio's readout as sounding.
+    if (!layerSounds(channel, program.id, layer)) continue;
     // Volume first, then the layer's effects, then the channel: the chain is where one recording
     // becomes its indoor or distant version, so it sits on the layer and not on the channel.
     const effects = buildEffectChain(ctx, destination, layer.effects);

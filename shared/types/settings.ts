@@ -166,6 +166,10 @@ interface GameSettings {
   // what each slot plays rather than one file per slot.
   enableMSU: 'false' | 'true' | 'deluxe' | 'opuz' | 'deluxe-opuz' | 'msul';
   resumeMSU: boolean;
+  // Whether reaching the title screen forgets every remembered position. Resuming is meant for a
+  // run in progress; carried across runs it starts the opening in the middle of itself instead of
+  // with its animation, and drops a fresh file into the last file's music.
+  resetMSUAtTitle: boolean;
   // A pack may replace the game's ambient beds and sound effects as well as its music. Each
   // group is its own switch because they are separate decisions: someone may want an authored
   // rain bed while keeping every native effect. Off means the core never even reports those

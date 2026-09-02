@@ -87,6 +87,15 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     requiresSetting: 'cheatsEnabled',
   },
   {
+    id: 'music',
+    label: 'Music Debugger',
+    defaultVisibility: 'game-only' as WidgetVisibility,
+    defaultSide: 'right' as SnapSide,
+    defaultDockedSize: 360,
+    defaultFloatingSize: { width: 380, height: 560 },
+    devOnly: true,
+  },
+  {
     id: 'simulator',
     label: 'Simulator',
     defaultVisibility: 'game-only' as WidgetVisibility,

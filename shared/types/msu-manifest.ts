@@ -78,6 +78,18 @@ interface MsuLayer {
   /** 0-100, relative to the profile's music volume. */
   volume: number;
   /**
+   * How likely this layer is to sound at all, 1-100. Rolled once each time the layer STARTS, so
+   * on a one-shot effect it is a per-trigger chance and on a bed it decides whether that bed
+   * carries the layer this time round.
+   *
+   * The game raises some effects far more often than a replacement wants to be heard — the storm's
+   * thunder fires on a fixed frame cycle, which a real recording turns into a metronome. Thinning
+   * it here keeps the sound tied to the moment the game means it, which a free-running random
+   * layer cannot do. Absent means 100: every start sounds, the behaviour of every pack written
+   * before this existed.
+   */
+  chance?: number;
+  /**
    * Loop restart point, in samples at 44100 Hz. Carried through to the MSU-1 loop-point
    * field on export. Undefined = restart at the beginning.
    */
