@@ -10,6 +10,7 @@
 import type { FileStore } from '@shared/platform';
 import type { MsuPackManifest, MsuPackMeta } from '@shared/types/msu-manifest';
 import { MSUL_MANIFEST_NAME } from '@shared/types/msu-manifest';
+import { listPackEntries } from './msu-inventory';
 import { assertSafeName, packDir, packFile } from './msu-paths';
 
 const manifestPath = (pack: string): string => `${packDir(pack)}/${MSUL_MANIFEST_NAME}`;
@@ -76,9 +77,16 @@ const newManifest = (pack: string, meta?: Partial<MsuPackMeta>): MsuPackManifest
 const readManifest = async (files: FileStore, pack: string): Promise<MsuPackManifest | null> =>
   parseManifest(await files.readText(manifestPath(pack)));
 
-const writeManifest = (files: FileStore, pack: string, manifest: MsuPackManifest): Promise<void> => {
+/**
+ * The inventory is taken from the folder at the moment of writing, never from the caller: a
+ * manifest handed in from memory can only know the files it was read with, and the folder has
+ * moved on since (a drop, a delete, a conversion landing). Reading it here is what keeps the
+ * list a record of the pack rather than a claim about it.
+ */
+const writeManifest = async (files: FileStore, pack: string, manifest: MsuPackManifest): Promise<void> => {
   assertSafeName(pack);
-  return files.writeText(manifestPath(pack), serializeManifest(manifest));
+  const inventory = await listPackEntries(files, pack);
+  await files.writeText(manifestPath(pack), serializeManifest({ ...manifest, files: inventory }));
 };
 
 const createPack = async (files: FileStore, pack: string, meta?: Partial<MsuPackMeta>): Promise<void> => {

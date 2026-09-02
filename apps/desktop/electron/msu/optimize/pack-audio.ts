@@ -9,6 +9,7 @@
 import { join } from 'path';
 import { readdir, stat } from 'fs/promises';
 import { isAudioFile } from '@shared/storage/msu-paths';
+import { supersededMap } from '@shared/storage/msu-superseded';
 import { OPTIMIZE_TARGET_EXTENSION } from '@shared/types/msu-optimize';
 import { packPath } from '../pack-fs';
 import { extensionOf } from './audio-source';
@@ -33,6 +34,20 @@ const listPackAudio = async (pack: string): Promise<PackAudioFile[]> => {
 /** True for a file already in the format the pack is being normalised to. */
 const isTargetFormat = (name: string): boolean => extensionOf(name) === OPTIMIZE_TARGET_EXTENSION;
 
+/**
+ * The files a run would really convert: not yet in the target format, and not already
+ * superseded by a same-stem file that is.
+ *
+ * A superseded original is exactly what a previous run left behind, kept on purpose until it is
+ * thrown out. Converting it AGAIN would encode it a second time under a suffixed name, move the
+ * manifest onto that copy, and orphan the first — every run would double the pack. Its reference
+ * is re-pointed at the copy that already exists instead, with nothing encoded.
+ */
+const pendingConversions = (audio: PackAudioFile[]): PackAudioFile[] => {
+  const covered = supersededMap(audio.map((file) => file.name));
+  return audio.filter((file) => !isTargetFormat(file.name) && !covered.has(file.name));
+};
+
 const stemOf = (name: string): string => name.replace(/\.[^.]*$/, '');
 
 /**
@@ -51,5 +66,5 @@ const freeTargetName = (name: string, taken: Set<string>): string => {
   return `${stem}-${suffix}.${OPTIMIZE_TARGET_EXTENSION}`;
 };
 
-export { freeTargetName, isTargetFormat, listPackAudio, stemOf };
+export { freeTargetName, isTargetFormat, listPackAudio, pendingConversions, stemOf };
 export type { PackAudioFile };

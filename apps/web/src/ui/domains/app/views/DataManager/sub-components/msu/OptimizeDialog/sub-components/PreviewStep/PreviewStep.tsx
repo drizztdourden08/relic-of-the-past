@@ -44,7 +44,7 @@ const PreviewStep = (props: PreviewStepProps) => {
         <Text className="detail-panel__label">Converts</Text>
         <Text className="detail-panel__value">
           {convertibleCount} file{convertibleCount === 1 ? '' : 's'}
-          {analysis.alreadyTargetCount > 0 && ` · ${analysis.alreadyTargetCount} already in the target format`}
+          {analysis.alreadyTargetCount > 0 && ` · ${analysis.alreadyTargetCount} already held in the target format`}
         </Text>
 
         {totals.growingCount > 0 && (

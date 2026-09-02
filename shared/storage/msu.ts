@@ -186,6 +186,7 @@ export {
 };
 export type { MsuFileMetadata };
 export { isAudioFile } from './msu-paths';
+export { listPackEntries } from './msu-inventory';
 export {
   readManifest, writeManifest, createPack, renamePack, writeTrackFile, deleteTrackFile, renameTrackFile,
 } from './msu-edit';

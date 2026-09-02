@@ -35,14 +35,21 @@ const mapLayers = (manifest: MsuPackManifest, transform: LayerTransform): MsuPac
 });
 
 /**
+ * Case-insensitive, because a manifest written by hand can spell a name in a case the disk does
+ * not and still play on a case-insensitive filesystem. A rename keyed on the exact string would
+ * skip such a reference and leave it on a file that is about to be gone.
+ */
+const sameName = (a: string, b: string): boolean => a.toLowerCase() === b.toLowerCase();
+
+/**
  * One filename swapped for another everywhere the manifest names it.
  *
  * Storage renames the bytes and nothing else, so without this a layered pack goes on pointing
  * at the old name and every slot built on that file falls silent.
  */
 const withFileRenamed = (manifest: MsuPackManifest, from: string, to: string): MsuPackManifest =>
-  mapLayers(manifest, (layer) => (layer.files.includes(from)
-    ? { ...layer, files: layer.files.map((file) => (file === from ? to : file)) }
+  mapLayers(manifest, (layer) => (layer.files.some((file) => sameName(file, from))
+    ? { ...layer, files: layer.files.map((file) => (sameName(file, from) ? to : file)) }
     : layer));
 
 /**
@@ -56,7 +63,7 @@ const withFileRenamed = (manifest: MsuPackManifest, from: string, to: string): M
 const withLoopSampleCarried = (
   manifest: MsuPackManifest, fileName: string, loopSample: number,
 ): MsuPackManifest =>
-  mapLayers(manifest, (layer) => (layer.loopSample === undefined && layer.files.includes(fileName)
+  mapLayers(manifest, (layer) => (layer.loopSample === undefined && layer.files.some((file) => sameName(file, fileName))
     ? { ...layer, loopSample }
     : layer));
 

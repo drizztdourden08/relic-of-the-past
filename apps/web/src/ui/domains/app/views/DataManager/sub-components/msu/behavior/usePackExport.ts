@@ -11,7 +11,7 @@ import type { MsuPackManifest } from '@shared/types/msu-manifest';
 import { exportMsulPack } from '@app/lib/msu/export/export-msul';
 import { exportMsu1Pack } from '@app/lib/msu/export/export-msu1';
 import { decodeAudioFile } from '@app/lib/msu/decode/decode-audio-file';
-import { readMsuTrackFile } from '@app/lib/storage/msu-store';
+import { listMsuPackEntries, readMsuTrackFile } from '@app/lib/storage/msu-store';
 import { saveBytesAsFile } from './save-bytes';
 import { failure } from './usePackList';
 import type { ActionResult } from '../msu.type';
@@ -33,8 +33,10 @@ const usePackExport = (pack: string | null, manifest: MsuPackManifest) => {
     setProgress(null);
     try {
       if (format === 'msul') {
+        // Read at export time, not from the studio's copy: the archive is the folder as it is now.
         const bytes = await exportMsulPack({
           manifest,
+          fileNames: await listMsuPackEntries(pack),
           loadBytes,
           onProgress: (p) => setProgress(`Packing ${p.done}/${p.total} — ${p.fileName}`),
         });

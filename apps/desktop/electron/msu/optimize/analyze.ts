@@ -16,7 +16,7 @@ import { join } from 'path';
 import type { OptimizeAnalysis, OptimizeProgress } from '@shared/types/msu-optimize';
 import { packFilePath } from '../pack-fs';
 import { measureCandidate } from './measure';
-import { isTargetFormat, listPackAudio } from './pack-audio';
+import { listPackAudio, pendingConversions } from './pack-audio';
 
 type ProgressReporter = (progress: OptimizeProgress) => void;
 
@@ -29,7 +29,9 @@ interface AnalyzeRequest {
 const analyzePack = async (request: AnalyzeRequest): Promise<OptimizeAnalysis> => {
   const { pack, ffmpegPath, report } = request;
   const audio = await listPackAudio(pack);
-  const pending = audio.filter((file) => !isTargetFormat(file.name));
+  // Not "everything outside the target format": an original a previous run already converted
+  // sits beside its copy until it is thrown out, and measuring it would promise a second encode.
+  const pending = pendingConversions(audio);
   // One scratch directory for the whole pass, removed whatever happens — a slice is a
   // throwaway measurement and must never be left behind in temp.
   const tempDir = await mkdtemp(join(tmpdir(), 'msu-optimize-'));

@@ -45,9 +45,15 @@ interface OptimizeCandidate {
 
 interface OptimizeAnalysis {
   pack: string;
-  /** Every audio file not already in the target format, in the order the pack lists them. */
+  /**
+   * Every audio file the pack does not yet hold in the target format, in the order the pack
+   * lists them. An original a previous run already converted is not one: its copy exists.
+   */
   candidates: OptimizeCandidate[];
-  /** Files already in the target format — counted so the preview can say the pack is part-way there. */
+  /**
+   * Files whose audio the pack already holds in the target format — the file itself, or a
+   * converted copy beside it. Counted so the preview can say the pack is part-way there.
+   */
   alreadyTargetCount: number;
 }
 

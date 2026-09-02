@@ -46,6 +46,8 @@ const listMsuPacks = () => msu.listPacks(files());
 const getMsuPackFiles = (pack: string) => msu.getPackFiles(files(), pack);
 const getMsuTrackList = (pack: string) => msu.getTrackList(files(), pack);
 const listMsuAudioFiles = (pack: string) => msu.listAudioFiles(files(), pack);
+/** Every file in the pack folder, audio or not, the manifest excepted — what an export stores. */
+const listMsuPackEntries = (pack: string) => msu.listPackEntries(files(), pack);
 // Passed unconditionally: the probe answers null when no decoder is installed, so the
 // encoded rows simply stay unfilled rather than the caller branching on availability.
 const getMsuFileMetadata = (pack: string) => msu.packFileMetadata(files(), pack, probeAudioFile);
@@ -89,7 +91,7 @@ const importMsu = async (pack: string, url: string): Promise<MsuResult> => {
 };
 
 export {
-  listMsuPacks, getMsuPackFiles, getMsuTrackList, listMsuAudioFiles, getMsuFileMetadata,
+  listMsuPacks, getMsuPackFiles, getMsuTrackList, listMsuAudioFiles, listMsuPackEntries, getMsuFileMetadata,
   readMsuLoopSample, deleteMsuPack, readMsuTrackFile,
   importMsuFile, importMsu,
   readMsuManifest, writeMsuManifest, createMsuPack, renameMsuPack, renameMsuTrackFile, deleteMsuTrackFile,

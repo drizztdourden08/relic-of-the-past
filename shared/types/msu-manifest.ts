@@ -148,6 +148,12 @@ interface MsuPackManifest {
    * existed expects.
    */
   sounds?: Partial<Record<SoundChannel, MsuSoundDef[]>>;
+  /**
+   * Every file the pack folder holds, the manifest itself excepted, sorted by name — wired or
+   * not. Stamped on every save from the folder itself, so it is a record rather than a claim, and
+   * an exported archive carries this exact list. Absent on a manifest written before this existed.
+   */
+  files?: string[];
 }
 
 /** Where one layer was when playback stopped — the unit the resume snapshot is built from. */
