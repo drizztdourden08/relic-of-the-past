@@ -17,8 +17,8 @@ const createProfile = (name: string, romFile: string, language?: string, msuPack
 const updateProfile = (id: string, patch: ProfilePatch): Promise<Profile | null> => store.updateProfile(files(), id, patch);
 const deleteProfile = (id: string): Promise<void> => store.deleteProfile(files(), id);
 // app.json decides which profile opens by default, and it is shared by every launch.
-// loadProfileForGame() writes it on each run, so ANY automated launch — not only a named
-// instance — is prevented from repointing it, or the user's next normal launch resumes an
+// loadProfileForGame() writes it on each run, so ANY automated launch, not only a named
+// instance, is prevented from repointing it, or the user's next normal launch resumes an
 // agent's profile. Gated here, at the single seam, so no call site can forget.
 const setLastProfile = (id: string): Promise<void> =>
   isAutomationLaunch() ? Promise.resolve() : store.setLastProfile(files(), id);
@@ -27,7 +27,7 @@ const getAppState = (): Promise<AppState> => store.getAppState(files());
 const readConfig = (id: string): Promise<Record<string, unknown> | null> => store.readConfig(files(), id);
 const writeConfig = (id: string, settings: Record<string, unknown>): Promise<void> => store.writeConfig(files(), id, settings);
 
-// Merge-write the active input profile id without clobbering other settings — used
+// Merge-write the active input profile id without clobbering other settings. Used
 // when the profile-cycle shortcut switches profiles outside the settings screen.
 const updateActiveInputProfileId = async (id: string, activeInputProfileId: string): Promise<void> => {
   const current = (await store.readConfig(files(), id)) ?? {};

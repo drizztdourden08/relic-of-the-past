@@ -2,14 +2,13 @@
 /**
  * The music debugger: everything the game's audio is doing, live, in one place.
  *
- * Three sections answer three different questions. LIVE is the engine's own state — every session
- * channel with the studio's meters, progress, loops, waits and fades included. COUNTS turns the
- * feed into rates, which is what makes a probability layer testable: authored odds against
- * measured odds, on one line. EVENTS is the feed of raises and rolls, each tagged MSU / CHIP /
- * SKIP, so a stray sound names the exact id and owner.
+ * LIVE is the engine's own state: every session channel with the studio's meters, progress,
+ * loops, waits and fades. COUNTS turns the feed into rates, so authored odds and measured odds
+ * sit on one line. EVENTS is the feed of raises and rolls, each tagged MSU / CHIP / SKIP, so a
+ * stray sound names the exact id and owner.
  *
- * Mounting the widget arms the core-side traces; closing it disarms them. While armed the traces
- * are purely observational — nothing about what actually plays changes.
+ * Mounting the widget arms the core-side traces; closing it disarms them. The traces are
+ * observational only; nothing about what plays changes.
  */
 import { Box, Button, EmptyState, SectionHeader } from '@ds/primitives';
 import { useLiveChannels } from './behavior/useLiveChannels';
@@ -29,7 +28,7 @@ const MusicWidgetContent = () => {
         <SectionHeader title="Replacement audio" subtitle="What the pack's engine is playing right now" />
         {sessionActive
           ? channels.map((channel) => <ChannelLive key={channel.name} channel={channel} />)
-          : <EmptyState message="No music pack session — the sound chip owns everything." />}
+          : <EmptyState message="No music pack session. The sound chip owns everything." />}
       </Box>
 
       <Box className="music-widget__section">

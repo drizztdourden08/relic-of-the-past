@@ -51,7 +51,7 @@ interface Params {
 
 /**
  * Owns which version the picker has selected. The list is loaded when the dialog
- * opens rather than up front, and the newest release is preselected so the common
+ * opens, not up front, and the newest release is preselected so the common
  * case stays one press.
  */
 const useVersionChoice = ({ open, state, loadVersions }: Params) => {
@@ -66,7 +66,7 @@ const useVersionChoice = ({ open, state, loadVersions }: Params) => {
     else if (!selected && state.versions.length) setSelected(state.versions[0].version);
   }, [selected, state.info, state.versions]);
 
-  // One list, newest first, with pre-releases marked in the row rather than split into
+  // One list, newest first, with pre-releases marked in the row instead of split into
   // their own section: the toggle above already says whether they are being offered,
   // and a selected pre-release warns for itself.
   const groups = useMemo<SelectGroup[]>(() => {

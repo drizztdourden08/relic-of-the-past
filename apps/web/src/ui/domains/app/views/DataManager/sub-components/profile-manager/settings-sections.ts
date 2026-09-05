@@ -1,7 +1,4 @@
 /* @layer renderer-components @kind logic */
-/**
- * Settings section definitions for profile detail display.
- */
 
 const SETTINGS_SECTIONS: Array<{ title: string; keys: Array<{ key: string; label: string; format?: (v: unknown) => string }> }> = [
   {
@@ -32,7 +29,7 @@ const SETTINGS_SECTIONS: Array<{ title: string; keys: Array<{ key: string; label
     title: 'Graphics',
     keys: [
       { key: 'newRenderer', label: 'New Renderer' },
-      { key: 'enhancedMode7', label: 'Enhanced Mode 7' },
+      { key: 'enhancedMode7', label: 'HD Mode 7' },
       { key: 'noSpriteLimits', label: 'No Sprite Limits' },
       { key: 'linearFiltering', label: 'Linear Filtering' },
       { key: 'dimFlashes', label: 'Dim Flashes' },
@@ -68,7 +65,7 @@ const SETTINGS_SECTIONS: Array<{ title: string; keys: Array<{ key: string; label
       { key: 'moreActiveBombs', label: 'More Active Bombs' },
       { key: 'carryMoreRupees', label: 'Carry More Rupees' },
       { key: 'miscBugFixes', label: 'Misc Bug Fixes' },
-      { key: 'gameChangingBugFixes', label: 'Game-Changing Bug Fixes' },
+      { key: 'gameChangingBugFixes', label: 'Gameplay-altering bug fixes' },
       { key: 'cancelBirdTravel', label: 'Cancel Bird Travel' },
     ],
   },
@@ -77,7 +74,7 @@ const SETTINGS_SECTIONS: Array<{ title: string; keys: Array<{ key: string; label
 const formatSettingValue = (value: unknown, format?: (v: unknown) => string): string => {
   if (format) return format(value);
   if (typeof value === 'boolean') return value ? 'Yes' : 'No';
-  if (value == null) return '—';
+  if (value == null) return '-';
   return String(value);
 };
 

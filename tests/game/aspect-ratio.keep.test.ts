@@ -8,14 +8,14 @@ describe('validateCustomRatio', () => {
   it('accepts ratios from 4:3 up to the wide ceiling', () => {
     expect(validateCustomRatio(4, 3).valid).toBe(true);
     expect(validateCustomRatio(16, 9).valid).toBe(true);
-    expect(validateCustomRatio(32, 9).valid).toBe(true); // 3.56 — within the ~4.27 (1024px linear-world) cap
+    expect(validateCustomRatio(32, 9).valid).toBe(true); // 3.56, still within the ~4.27 (1024px linear-world) cap
   });
 
   it('accepts tall (taller-than-4:3) ratios down to the portrait floor', () => {
     expect(validateCustomRatio(5, 4).valid).toBe(true); // 1.25
     expect(validateCustomRatio(1, 1).valid).toBe(true); // square
     expect(validateCustomRatio(3, 4).valid).toBe(true); // 0.75 portrait
-    expect(validateCustomRatio(9, 16).valid).toBe(true); // 0.5625 — within the 256/480 floor
+    expect(validateCustomRatio(9, 16).valid).toBe(true); // 0.5625, still within the 256/480 floor
   });
 
   it('rejects ratios taller than the portrait floor', () => {
@@ -50,7 +50,7 @@ describe('detectScreenRatio', () => {
   });
 
   it('renders a 5:4 screen at its own (mildly tall) ratio', () => {
-    vi.stubGlobal('window', { screen: { width: 1280, height: 1024 } }); // 1.25 — now filled, not clamped to 4:3
+    vi.stubGlobal('window', { screen: { width: 1280, height: 1024 } }); // 1.25, now filled instead of clamped to 4:3
     expect(detectScreenRatio()).toEqual({ w: 5, h: 4 });
   });
 
@@ -61,7 +61,7 @@ describe('detectScreenRatio', () => {
   });
 });
 
-describe('mergeSettings — 18:9 migration', () => {
+describe('mergeSettings and the 18:9 migration', () => {
   it('rewrites a stored 18:9 screen ratio to custom 18:9', () => {
     const m = mergeSettings({ aspectRatio: '18:9' } as unknown as Partial<GameSettings>);
     expect(m.aspectRatio).toBe('custom');

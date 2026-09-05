@@ -1,8 +1,7 @@
 /* @layer renderer-components @kind style */
 
-/* The detail pane (.master-detail__detail) is already the bounded overflow-y:auto
-   scroll container, so this content just flows naturally and the pane scrolls —
-   no nested heights/scroll regions that would squeeze the glyph canvas. */
+/* The detail pane (.master-detail__detail) is already the scroll container, so
+   no nested heights or scroll regions here; they would squeeze the glyph canvas. */
 .language-detail {
   display: flex;
   flex-direction: column;

@@ -83,7 +83,7 @@ const useSimulatorRun = () => {
       state = nextState;
       const screenChanged = nextState.virtual.screenId !== previousScreen;
       if (screenChanged) recordTransition(recorder, previousScreen, nextState.virtual.screenId);
-      // A check can flip the game's progress phase — surface it as a Sequence marker.
+      // A check can flip the game's progress phase, so surface it as a Sequence marker.
       const seqChange = sequenceEvent(sequenceLabel, nextState.step);
       if (seqChange) {
         sequenceLabel = seqChange.msg.slice('Sequence '.length);
@@ -92,7 +92,7 @@ const useSimulatorRun = () => {
       // Re-flood on entering a new screen OR after an unlock re-seeds the frontier
       // (epoch bump), so the "Reset:" line is followed by the new reachability.
       // Never after the stop target hit / run end, and never on BACKTRACK
-      // pass-through hops (phase stays 'traversing' — explored ground).
+      // pass-through hops, where the phase stays 'traversing' over explored ground.
       if ((screenChanged || nextState.epoch > previousEpoch) && nextState.phase !== 'traversing' && !nextState.stopHit && !nextState.outcome) {
         const followups: SimEvent[] = [];
         const floodEvent = screenFloodEvent(nextState, detectCache);
@@ -128,20 +128,15 @@ const useSimulatorRun = () => {
     // The run drives real checks; pause SRAM disk sync so no 5s tick persists
     // half-simulated state to sram.dat mid-run. Resumed in the finally below.
     pauseSramSync();
-    // Arms the WasmSim* mutators (kHostGate_SimulatorSupport) for this run's duration — without
-    // it every door-unlock/kill-drop/cell-lock trigger silently no-ops. Dropped in the finally
-    // below so a crashed or stopped run can never leave it armed against a live session.
+    // Arms the WasmSim* mutators (kHostGate_SimulatorSupport) for this run; without it every
+    // door-unlock/kill-drop/cell-lock trigger silently no-ops. Dropped in the finally below.
     port.setSimulatorSupport(true);
     port.setAutoSkipDialog(true);
-    // The simulation reads the game's combat tables to work out which of a room's
-    // enemies actually gate it, and those queries sit behind the developer-tools
-    // switch. Without this the tables answer empty, every room reads as having no
-    // gating enemy, and a kill-gated room's shutters never reopen — the run walks
-    // into the first one, is sealed in, and the frontier dies with everything past
-    // it unreachable. The headless runner has always done this; the widget did not.
-    // The gate is read-only instrumentation and the run is itself a developer tool,
-    // so it may hold the switch for its own duration and must drop it afterwards,
-    // which the finally below does. Never touches the user's persisted setting.
+    // The combat-table queries that decide which enemies gate a room sit behind the
+    // developer-tools switch. Without it every room reads as ungated, a kill-gated
+    // room's shutters never reopen, and the run is sealed in the first one. The gate
+    // is read-only instrumentation and the run is a developer tool, so it holds the
+    // switch for its own duration (dropped in the finally). Never touches the user's setting.
     port.setDeveloperTools(true);
     // A features word set here is only WANTED until the core latches it on its next
     // frame (zelda_rtl.c:989), so give it frames before anything reads the tables.

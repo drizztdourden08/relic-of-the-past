@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-/** Numeric stepper — text field with explicit −/+ buttons. Avoids the native
+/** Numeric stepper: a text field with explicit −/+ buttons. Avoids the native
  *  <input type="number"> spinner, whose auto-repeat runs away when a re-render
  *  swallows the mouseup. */
 import './Stepper.css';

@@ -14,7 +14,7 @@ const systemSection = ({ os, versions }: SystemDiagnostics): DebugSection => sec
 ]);
 
 const hardwareSection = ({ cpu, memory }: SystemDiagnostics): DebugSection => section('CPU & memory', [
-  `CPU: ${cpu.model} — ${cpu.logicalCores} logical cores @ ${ghz(cpu.speedMhz)} (${cpu.arch})`,
+  `CPU: ${cpu.model}, ${cpu.logicalCores} logical cores @ ${ghz(cpu.speedMhz)} (${cpu.arch})`,
   `RAM: ${gib(memory.totalBytes)} total, ${gib(memory.freeBytes)} free`,
   memory.swapTotalBytes !== null
     && `Swap: ${gib(memory.swapTotalBytes)} total, ${gib(memory.swapFreeBytes ?? 0)} free`,

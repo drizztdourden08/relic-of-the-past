@@ -21,9 +21,9 @@ interface VersionOption {
   /** Bytes of the full package. */
   size: number;
   /**
-   * Bytes this choice would actually download from where the app is now: the sum of the
-   * deltas in between when moving forward, the full package when going back, when
-   * reinstalling, or when the delta chain is unusable. This is the number worth showing.
+   * Bytes this choice would download from where the app is now. An upgrade sums the deltas.
+   * Going back, reinstalling, or an unusable delta chain costs the full package.
+   * The number worth showing.
    */
   downloadSize: number;
   prerelease: boolean;
@@ -39,7 +39,7 @@ interface VersionOption {
 interface UpdaterCapabilities {
   /** Worth asking whether a newer version exists. */
   canCheck: boolean;
-  /** Able to download and apply it, rather than sending the user to the release page. */
+  /** Able to download and apply it instead of sending the user to the release page. */
   canInstall: boolean;
 }
 

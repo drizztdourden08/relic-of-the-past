@@ -9,10 +9,10 @@ import { SearchResultList } from './sub-components/SearchResultList';
 import './SearchPalette.css';
 
 /**
- * Global search — a single fixed element that morphs pill ⇄ panel (Jex's CommandSurface
+ * A single fixed element that morphs pill ⇄ panel (Jex's CommandSurface
  * technique): always mounted as a zero-size seed at top-center, it CSS-transitions its own
  * width/height/radius when `.is-open` is added, so the palette physically grows out of the
- * title-bar icon's summon point rather than cross-fading two separate widgets. Opened by
+ * title-bar icon's summon point instead of cross-fading two separate widgets. Opened by
  * the title-bar search icon or Ctrl+K; closed by Escape or the scrim.
  */
 interface SearchPaletteProps {

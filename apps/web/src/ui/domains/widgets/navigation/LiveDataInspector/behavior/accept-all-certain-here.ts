@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind logic */
 /**
- * "Accept every certain finding on this screen" — a thin wrapper, not a
+ * "Accept every certain finding on this screen". A thin wrapper, not a
  * reimplementation. `acceptAllCertain` (the Data Inspector's own batch
  * runner) is already a generic function over `entries` + an `accept`
  * callback with no page state behind it, so this only supplies that

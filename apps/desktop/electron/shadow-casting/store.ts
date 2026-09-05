@@ -5,7 +5,7 @@ import { EMPTY_SHADOW_PROJECT } from '@shared/types/shadow-casting';
 import { readJson, writeJson } from '../lib/json-store';
 
 // Shadow data is a committed source asset (not per-user state), so it lives under
-// public/data rather than userData. Writes are dev-only (see ipc-handlers); in dev
+// public/data, not userData. Writes are dev-only (see ipc-handlers); in dev
 // __dirname resolves into the build output beside the bundled public dir.
 const getDataPath = (): string =>
   join(__dirname, '..', '..', 'public', 'data', 'shadow-casting.json');

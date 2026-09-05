@@ -66,7 +66,7 @@ const useHidCalibration = (props: UseHidCalibrationProps) => {
   const [gyroChangedBytes, setGyroChangedBytes] = useState<Set<number>>(new Set());
   const [log, setLog] = useState<string[]>([]);
   // What SDL3's own already-decoded state reports for these same live bytes
-  // — not a re-guess.
+  // and not a re-guess.
   const [liveParsedState, setLiveParsedState] = useState<ControllerInputState | null>(null);
 
   // ── Refs ── (declared in useCalibrationRefs.ts for file-size compliance)
@@ -84,7 +84,7 @@ const useHidCalibration = (props: UseHidCalibrationProps) => {
   const setActiveIndex = (i: number) => { activeIdxRef.current = i; _setActiveIndex(i); };
   const setCaptureState = (s: CaptureState) => { captureStateRef.current = s; _setCaptureState(s); };
   const setAxisSubStep = (s: AxisSubStep) => { axisSubStepRef.current = s; _setAxisSubStep(s); };
-  // The ref is updated here, at call time, rather than inside the updater React
+  // The ref is updated here, at call time, not inside the updater React
   // runs later. Everything in this wizard reads itemsRef, including the byte
   // status computation that finalizers call on the line after setItems, so
   // assigning it late made those read one capture behind: the byte a capture
@@ -147,8 +147,8 @@ const useHidCalibration = (props: UseHidCalibrationProps) => {
   // Skips the profile-picker screen when a host already resolved a device
   // and profile itself (see HidCalibrationWizardProps.initialProfileId).
   // detectedProfile resolves asynchronously (it reads the live capability
-  // list), so this waits for it rather than firing off selectedProfileId
-  // alone — that state is set synchronously from initialProfileId and would
+  // list), so this waits for it instead of firing off selectedProfileId
+  // alone, since that state is set synchronously from initialProfileId and would
   // otherwise race handleProfileConfirm into bailing on a still-null profile,
   // permanently, since autoConfirmedRef only ever tries once.
   // useLayoutEffect so the picker never paints even for a single frame.
@@ -160,7 +160,7 @@ const useHidCalibration = (props: UseHidCalibrationProps) => {
   }, [phase, detectedProfile, actions]);
 
   // Populates identity directly from the chosen device as soon as it's known,
-  // rather than only from getDevicesThatHaveReported() on a raw report: that list
+  // and not only from getDevicesThatHaveReported() on a raw report. That list
   // is gamepad-level, so a device captured with SDL's hold released (the
   // diagnostics wizard's byte-capture step) never appears in it, which left
   // vendorId/productId stuck at 0 for that entire capture.

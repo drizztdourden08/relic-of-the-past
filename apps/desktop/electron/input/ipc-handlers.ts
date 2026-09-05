@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 /**
- * Input IPC handlers — registers all input-related IPC handlers on the main process.
+ * Registers the input IPC handlers on the main process.
  */
 
 import type { BrowserWindow } from 'electron';

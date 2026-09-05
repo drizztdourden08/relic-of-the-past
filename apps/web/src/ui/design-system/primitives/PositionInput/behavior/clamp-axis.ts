@@ -22,14 +22,14 @@ const isWithinAxis = (value: number, axis: PositionAxis = {}): boolean => {
   return true;
 };
 
-/** True when the value is a real number AND inside the bounds — what onChange requires. */
+/** True when the value is a real number AND inside the bounds, which is what onChange requires. */
 const isValidForAxis = (value: number, axis: PositionAxis = {}): boolean =>
   Number.isFinite(value) && isWithinAxis(value, axis);
 
 /**
  * Pulls a value inside the axis. Anything that is not a real number falls back
- * to `fallback` (the last value known to be good), and to the floor — or zero —
- * when that is not a real number either.
+ * to `fallback` (the last value known to be good). If that is not a real number
+ * either, it falls back to the floor, or to zero when there is no floor.
  */
 const clampAxis = (value: number, axis: PositionAxis = {}, fallback = 0): number => {
   const { min, max } = axis;
@@ -41,7 +41,7 @@ const clampAxis = (value: number, axis: PositionAxis = {}, fallback = 0): number
 };
 
 /**
- * Both axes at once — for a caller holding a stored pair that may predate the
+ * Both axes at once, for a caller holding a stored pair that may predate the
  * bounds it is now being edited under.
  */
 const clampPosition = (

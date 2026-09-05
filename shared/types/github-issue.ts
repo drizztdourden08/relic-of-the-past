@@ -1,6 +1,6 @@
 /* @layer shared-types @kind types */
 interface ControllerReportPayload {
-  /** Best display name we resolved for the device — hand-coded preset, SDL name, or "Unrecognized controller". */
+  /** Best display name we resolved for the device: a hand-coded preset, the SDL name, or "Unrecognized controller". */
   detectedName: string;
   /** Name of the closest SDL_GameControllerDB entry for this VID:PID, or null if none exists. */
   sdlMatch: string | null;

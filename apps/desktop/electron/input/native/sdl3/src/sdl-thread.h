@@ -1,14 +1,8 @@
 /* @layer electron-main @kind native */
-// SDL3 gamepad lifecycle owned by a single dedicated thread. This class
-// knows nothing about any specific controller: it only forwards SDL3 calls
-// and packages the plain data SDL already reports (buttons, axes, ids,
-// strings) for the JS side to interpret. Init, device open/close, polling,
-// and rumble all happen inside Run(), which executes exclusively on the
-// thread this class spawns. Every public method callable from the JS
-// thread touches only a mutex-guarded command queue or a mutex-guarded
-// cross-thread cache, with one class of documented exception: calls SDL
-// states as safe from any thread (the mapping calls, EnumerateHid,
-// MappingForGuid) run inline rather than round-tripping through the queue.
+// SDL3 gamepad lifecycle on one dedicated thread. Init, open/close, polling and
+// rumble all happen inside Run(). Public methods called from the JS thread touch
+// only a mutex-guarded command queue or cache, except calls SDL states as safe
+// from any thread (mapping calls, EnumerateHid, MappingForGuid), which run inline.
 #pragma once
 
 #include <napi.h>
@@ -30,9 +24,8 @@
 #include "sdl-joystick-types.h"
 #include "sdl-raw-capture.h"
 
-// A single event bound for the JS callback. Built entirely from plain data
-// on the SDL thread; the matching JS object is constructed later, on the
-// JS thread, inside the ThreadSafeFunction callback in addon.cc.
+// One event for the JS callback. Plain data built on the SDL thread; the JS
+// object is built later inside the ThreadSafeFunction callback in addon.cc.
 struct GamepadEvent {
   enum class Kind { kAdded, kRemoved, kState, kError };
 
@@ -44,14 +37,11 @@ struct GamepadEvent {
   std::string guid;
   bool hasRumble = false;
   bool hasGyro = false;
-  // 'wired'/'wireless' straight from SDL_GetJoystickConnectionState; 'unknown'
-  // when SDL can't tell (SDL_JOYSTICK_CONNECTION_UNKNOWN/INVALID). This is a
-  // bus-agnostic wired/wireless read, never a USB-vs-Bluetooth answer. SDL
-  // does not report bus type for an XInput-backed pad.
+  // 'wired'/'wireless' from SDL_GetJoystickConnectionState; 'unknown' when SDL
+  // can't tell. Bus-agnostic: never a USB-vs-Bluetooth answer (SDL does not
+  // report bus type for an XInput-backed pad).
   std::string connectionState = "unknown";
-  // Fixed-length, positional. Every SDL_GamepadButton index is emitted so
-  // the JS side can index by the same enum SDL uses; SDL_GamepadHasButton
-  // is not consulted here.
+  // Positional by SDL_GamepadButton index; SDL_GamepadHasButton is not consulted.
   std::array<bool, SDL_GAMEPAD_BUTTON_COUNT> buttons{};
   // [LEFTX, LEFTY, RIGHTX, RIGHTY, LEFT_TRIGGER, RIGHT_TRIGGER].
   std::array<float, 6> axes{};
@@ -71,14 +61,11 @@ struct GamepadEvent {
   std::string message;
 };
 
-// A request queued from the JS thread for the SDL thread to execute on its
-// next tick. `kind` picks which fields are meaningful: rumble uses
-// gamepadId/lowFrequency/highFrequency/durationMs, rescan/releaseGamepads/
-// restoreGamepads use none of them, kHidCaptureOpen uses hidVendorId/
-// hidProductId, kJoystickCaptureStart uses joystickId. Most of these are
-// fire-and-forget, and nothing waits on the result, except kHidCaptureOpen,
-// whose caller blocks on rawCapture_'s condition variable for the
-// RawCaptureResult (see StartRawCapture).
+// A request queued from the JS thread for the SDL thread's next tick. `kind`
+// picks the meaningful fields: rumble uses gamepadId/lowFrequency/highFrequency/
+// durationMs, kHidCaptureOpen uses hidVendorId/hidProductId, kJoystickCaptureStart
+// uses joystickId, the rest use none. All fire-and-forget except kHidCaptureOpen,
+// whose caller blocks on rawCapture_'s condition variable (see StartRawCapture).
 struct SdlCommand {
   enum class Kind {
     kRumble,
@@ -101,11 +88,10 @@ struct SdlCommand {
   int32_t joystickId = 0;
 };
 
-// One HID device reported by SDL_hid_enumerate, already filtered to the
-// generic desktop usage page's joystick/gamepad/multi-axis usages (HID spec
-// constants — see SdlThread::EnumerateHid). Reported whether or not SDL
-// could claim the device as a gamepad, so the caller can tell "connected but
-// held by another application" apart from "not plugged in".
+// One HID device from SDL_hid_enumerate, filtered to the generic desktop page's
+// joystick/gamepad/multi-axis usages (see SdlThread::EnumerateHid). Reported
+// whether or not SDL could claim it, so "held by another app" is tellable
+// apart from "not plugged in".
 struct HidDeviceInfo {
   int32_t vendorId = 0;
   int32_t productId = 0;
@@ -139,80 +125,57 @@ class SdlThread {
   // the SDL thread isn't running to drain it.
   bool QueueRumble(int32_t gamepadId, float low, float high, uint32_t durationMs);
 
-  // Runs SDL_AddGamepadMapping inline on the calling thread. SDL documents
-  // this as safe from any thread; queueing it instead would block the JS
-  // thread on a promise the SDL thread may never fulfil if shutdown races.
-  // Returns false when SDL isn't initialized or the mapping is rejected.
+  // Runs SDL_AddGamepadMapping inline (SDL: safe from any thread). Queueing it
+  // would block the JS thread on a promise the SDL thread may never fulfil if
+  // shutdown races. False when SDL isn't initialized or the mapping is rejected.
   bool AddMapping(const std::string& mapping);
 
-  // Runs SDL_AddGamepadMappingsFromFile inline, same reasoning as above.
-  // Returns the number of mappings added, or -1 when SDL isn't initialized
-  // or the file could not be read.
+  // Inline like AddMapping. Returns the count added, or -1 when SDL isn't
+  // initialized or the file could not be read.
   int32_t AddMappingsFromFile(const std::string& path);
 
-  // Runs SDL_hid_enumerate inline on the calling thread rather than through
-  // the command queue: this call must return synchronously, and queueing it
-  // would mean blocking the JS thread on a promise the SDL thread might
-  // never fulfil if shutdown races (the same hazard AddMapping documents).
-  // SDL_hid_init() is called once when the SDL thread starts (see Run())
-  // specifically so this is safe to run concurrently with whatever hidapi
-  // work the SDL thread's own gamepad backend is doing — see the
-  // SDL_hid_init doc comment on why that matters with concurrent threads.
-  // Filtered to HID spec usage-page/usage constants only, never a
-  // VID/PID list — reported whether or not SDL could claim the device.
+  // Runs SDL_hid_enumerate inline (must return synchronously; same shutdown
+  // hazard as AddMapping). SDL_hid_init() runs once at SDL thread start (Run())
+  // so this is safe alongside the gamepad backend's own hidapi work. Filtered
+  // by HID usage-page/usage only, never a VID/PID list.
   std::vector<HidDeviceInfo> EnumerateHid();
 
-  // Queues a subsystem rescan; returns false without queueing anything if
-  // the SDL thread isn't running to drain it. Fire-and-forget: the
-  // removed/added events it produces are the observable result.
+  // Queues a subsystem rescan; false if the SDL thread isn't running.
+  // Fire-and-forget: the removed/added events are the observable result.
   bool QueueRescan();
 
   // Queues closing every open gamepad+joystick and quitting the gamepad
-  // subsystem, so a raw HID open on the same device can succeed afterward.
-  // The SDL thread and SDL_hid_* stay alive; only the gamepad backend's
-  // exclusive claim is released. Returns false without queueing anything
-  // if the SDL thread isn't running. Fire-and-forget: watch for `removed`
-  // events and a `gamepad-hold` event with held=true.
+  // subsystem so a raw HID open on the same device can succeed. The SDL thread
+  // and SDL_hid_* stay alive. False if the SDL thread isn't running.
+  // Fire-and-forget: watch for `removed` events and `gamepad-hold` held=true.
   bool QueueReleaseGamepads();
 
-  // Queues restoring the gamepad subsystem after QueueReleaseGamepads and
-  // replaying every mapping this addon has added. Sufficient on its own:
-  // it does not require QueueReleaseGamepads to have run first. Returns
-  // false without queueing anything if the SDL thread isn't running.
-  // Fire-and-forget: SDL re-synthesizes `added` events for whatever it can
-  // reclaim, and a `gamepad-hold` event with held=false follows.
+  // Queues restoring the gamepad subsystem and replaying every added mapping.
+  // Does not require QueueReleaseGamepads first. False if the SDL thread isn't
+  // running. Fire-and-forget: `added` events and `gamepad-hold` held=false follow.
   bool QueueRestoreGamepads();
 
-  // Queues a raw HID open on the SDL thread through the command queue
-  // (never opened inline) and blocks the calling JS thread on a bounded
-  // wait for the outcome. Bounded rather than indefinite so a caller can
-  // never hang forever if something upstream goes wrong; the SDL thread's
-  // ~16ms tick means a normal open resolves almost instantly. Only one
-  // capture runs at a time, so a second call closes whatever was open first.
+  // Queues a raw HID open (never inline) and blocks the JS thread on a bounded
+  // wait so a caller can never hang forever; the ~16ms tick means a normal open
+  // resolves almost instantly. One capture at a time: a second call closes the first.
   RawCaptureResult StartRawCapture(int32_t vendorId, int32_t productId);
 
-  // Queues closing the raw HID capture, if any. Fire-and-forget like
-  // QueueRescan: nothing about closing needs to reach back to the caller.
+  // Queues closing the raw HID capture, if any. Fire-and-forget.
   void StopRawCapture();
 
-  // Queues switching the joystick-level capture to `joystickId`. Returns
-  // false without queueing anything if the SDL thread isn't running.
-  // Fire-and-forget: the `joystick` events it produces are the observable
-  // result, same reasoning as QueueRescan.
+  // Queues switching the joystick-level capture to `joystickId`. False if the
+  // SDL thread isn't running. Fire-and-forget: `joystick` events follow.
   bool StartJoystickCapture(int32_t joystickId);
 
   // Queues clearing the joystick-level capture, if any.
   void StopJoystickCapture();
 
-  // Snapshot of every joystick SDL currently has open, whether or not it
-  // also has a gamepad mapping. Reads a mutex-guarded cache the SDL thread
-  // keeps current, so this never blocks on the command queue.
+  // Every joystick SDL has open, gamepad-mapped or not. Reads a mutex-guarded
+  // cache, so it never blocks on the command queue.
   std::vector<JoystickInfo> ListJoysticks();
 
-  // Runs SDL_GetGamepadMappingForGUID inline, same reasoning as AddMapping:
-  // SDL documents it as safe from any thread, and queueing it would risk a
-  // hang instead of a slow call. Returns std::nullopt when SDL isn't
-  // initialized or no mapping exists for this GUID.
+  // Runs SDL_GetGamepadMappingForGUID inline, same reasoning as AddMapping.
+  // std::nullopt when SDL isn't initialized or no mapping exists for this GUID.
   std::optional<std::string> MappingForGuid(const std::string& guid);
 
  private:
@@ -220,15 +183,11 @@ class SdlThread {
   void PumpCommands();
   void ApplyRumble(const SdlCommand& command);
   void ApplyRescan();
-  // Split out of ApplyRescan so a caller can hold gamepads released for
-  // just a raw HID capture instead of a full rescan. Both are idempotent:
-  // ApplyReleaseGamepads is a no-op while already released, and
-  // ApplyRestoreGamepads is a no-op while not released, so Stop() racing
-  // either one never double-quits or double-inits the subsystem.
+  // Split out of ApplyRescan so a raw HID capture can hold gamepads released.
+  // Both are idempotent, so Stop() racing either never double-quits/double-inits.
   void ApplyReleaseGamepads();
   void ApplyRestoreGamepads();
-  // Applies every mapping recorded so far and returns how many took. Run once
-  // after SDL_Init, so mappings requested before the thread was up still land,
+  // Applies every recorded mapping and returns how many took. Run after SDL_Init
   // and again after a subsystem restore, which clears SDL's mapping table.
   int32_t ApplyPendingMappings();
   void EmitGamepadHold(bool held);
@@ -256,11 +215,9 @@ class SdlThread {
   void ApplyJoystickCaptureStart(const SdlCommand& command);
   void ApplyJoystickCaptureStop();
   void FlushJoystickCaptureState();
-  // Builds a JoystickStateEvent for `id` from joysticks_ and emits it
-  // unconditionally. Shared by ApplyJoystickCaptureStart, which emits an
-  // initial sample synchronously rather than waiting for the next dirty
-  // JOYSTICK_UPDATE_COMPLETE (a genuinely idle device may never send one),
-  // and FlushJoystickCaptureState, which is dirty-gated.
+  // Emits a JoystickStateEvent for `id` unconditionally. ApplyJoystickCaptureStart
+  // uses it for an initial sample (an idle device may never send a dirty
+  // JOYSTICK_UPDATE_COMPLETE); FlushJoystickCaptureState is dirty-gated.
   void EmitCurrentJoystickState(int32_t id);
   void EmitJoystickState(JoystickStateEvent* event);
 
@@ -272,14 +229,9 @@ class SdlThread {
   std::mutex commandMutex_;
   std::deque<SdlCommand> commands_;
 
-  // Mirrors every mapping successfully added through AddMapping/
-  // AddMappingsFromFile, purely so ApplyRescan can replay them: tearing the
-  // gamepad subsystem down for a rescan also drops SDL's own mapping table
-  // (SDL_QuitSubSystem(SDL_INIT_GAMEPAD) quits the joystick subsystem
-  // underneath it, which clears mappings). Written from the JS thread
-  // inside AddMapping/AddMappingsFromFile, read from the SDL thread inside
-  // ApplyRescan — guarded by mappingsMutex_ rather than commandMutex_ since
-  // it is unrelated data.
+  // Every mapping added so far, so ApplyRescan can replay them: quitting the
+  // gamepad subsystem clears SDL's mapping table. Written from the JS thread,
+  // read from the SDL thread; own mutex since it is unrelated to the queue.
   std::mutex mappingsMutex_;
   std::vector<std::string> mappingStrings_;
   std::vector<std::string> mappingFiles_;
@@ -287,18 +239,14 @@ class SdlThread {
   std::unordered_map<SDL_JoystickID, SDL_Gamepad*> gamepads_;
   std::unordered_set<SDL_JoystickID> dirtyIds_;
 
-  // Guards ApplyReleaseGamepads/ApplyRestoreGamepads idempotency. SDL-
-  // thread-confined, same as gamepads_ above: only ever read or written
-  // from inside Run()'s own call chain.
+  // Guards ApplyReleaseGamepads/ApplyRestoreGamepads idempotency. SDL-thread-confined.
   bool gamepadsReleased_ = false;
 
   RawCaptureState rawCapture_;
 
-  // joysticks_ is SDL-thread-confined, same as gamepads_. joysticksSnapshot_
-  // is the cross-thread mirror ListJoysticks() reads, guarded by its own
-  // mutex rather than commandMutex_ since it is unrelated data, the same
-  // reasoning mappingsMutex_ already documents above, just in the other
-  // direction (written by the SDL thread, read by the JS thread).
+  // joysticks_ is SDL-thread-confined. joysticksSnapshot_ is the cross-thread
+  // mirror ListJoysticks() reads, under its own mutex (written by the SDL
+  // thread, read by the JS thread).
   std::unordered_map<SDL_JoystickID, SDL_Joystick*> joysticks_;
   std::mutex joysticksSnapshotMutex_;
   std::vector<JoystickInfo> joysticksSnapshot_;
@@ -307,7 +255,6 @@ class SdlThread {
 };
 
 // Loads libusb from beside this addon so SDL's later by-name request resolves.
-// Must be called before SDL initializes. See libusb-preload.cc for why the OS
-// search path does not find it on its own. Returns false if it could not be
+// Call before SDL initializes; see libusb-preload.cc. False if it could not be
 // loaded, which costs only the devices that require it.
 bool PreloadLibusb();

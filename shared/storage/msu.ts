@@ -45,7 +45,7 @@ const getTrackList = async (files: FileStore, pack: string): Promise<{ fileName:
   return out;
 };
 
-// Every audio file in the pack, whatever its name — a layered pack's files are
+// Every audio file in the pack, whatever its name. A layered pack's files are
 // arbitrary (wind-loop.flac), so the numbered getTrackList above cannot see them.
 const listAudioFiles = async (files: FileStore, pack: string): Promise<{ name: string; size: number }[]> => {
   const out: { name: string; size: number }[] = [];
@@ -67,10 +67,9 @@ const installTracks = async (files: FileStore, pack: string, tracks: { name: str
 
 
 /**
- * What is known about one pack file. Free for MSU-1 `.pcm` — the format is raw samples at a fixed
- * rate, so duration follows from the byte count and nothing is opened. For an encoded file the same
- * facts live inside the codec, so they are filled in only when a decoder is on hand to be asked and
- * stay null otherwise; they are never guessed at.
+ * What is known about one pack file. Free for MSU-1 `.pcm`: raw samples at a fixed rate, so
+ * duration follows from the byte count. For an encoded file the facts live inside the codec, so
+ * they are filled in only when a decoder is on hand and stay null otherwise, never guessed.
  */
 type MsuFileMetadata = {
   name: string;
@@ -110,26 +109,18 @@ const baseMetadata = (name: string, bytes: number): MsuFileMetadata => {
 };
 
 /**
- * What each file in a pack is.
+ * What each file in a pack is. The base pass is arithmetic on the directory listing (MSU-1 fixes
+ * rate and channels, so a `.pcm`'s duration follows from its byte count), which keeps a
+ * multi-gigabyte pack affordable. `probe` is optional and only asked about ENCODED files; without
+ * it those rows keep their nulls.
  *
- * The base pass is arithmetic on the directory listing, which is what makes it affordable for a
- * pack of a hundred files totalling a couple of gigabytes: MSU-1 fixes the sample rate and channel
- * count, so a `.pcm`'s duration follows from its byte count alone and no file is opened.
- *
- * `probe` is optional and only ever asked about an ENCODED file, whose figures arithmetic cannot
- * reach. Without it — no decoder installed, or a platform that has none — those rows keep their
- * nulls and the `.pcm` rows are unaffected either way. Probes run one at a time on purpose: each is
- * a separate process, and a hundred at once would cost more than the listing it is annotating.
- *
- * The loop point is the one thing that needs the file itself, and it is deliberately NOT read here.
- * It lives in the first eight bytes, but a FileStore reads whole files, so collecting it for a
- * listing would pull the entire pack through memory to look at 8 bytes each. `readMsu1LoopSample`
- * fetches it for the one file that is actually being looked at.
+ * The loop point is deliberately NOT read here: it sits in the first eight bytes, but a FileStore
+ * reads whole files, so a listing would pull the entire pack through memory. `readMsu1LoopSample`
+ * fetches it for the one file being looked at.
  */
 /**
- * How many probes run at once. A probe is a process launch, and a converted pack has a hundred
- * files to ask about; one at a time made the list take as long as the slowest hundred launches
- * laid end to end. A few in flight keeps a disk busy without a hundred processes fighting for it.
+ * Probes in flight at once. A probe is a process launch and a converted pack has a hundred files;
+ * one at a time was too slow, a hundred at once fight for the disk.
  */
 const PROBE_CONCURRENCY = 4;
 
@@ -165,10 +156,7 @@ const packFileMetadata = async (
   return rows.filter((row): row is MsuFileMetadata => row !== null);
 };
 
-/**
- * The loop point a `.pcm` declares in its header, or null for any other format (no other format
- * here can carry one) and for a file that is not a valid MSU-1.
- */
+/** The loop point a `.pcm` declares in its header; null for any other format and for an invalid MSU-1 file. */
 const readMsu1LoopSample = async (
   files: FileStore, pack: string, fileName: string,
 ): Promise<number | null> => {

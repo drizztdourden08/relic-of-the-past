@@ -2,7 +2,7 @@
 /**
  * Whether a block is a choice prompt, and which of its rows hold the options.
  *
- * A choice command draws no pixels of its own — the option text is ordinary
+ * A choice command draws no pixels of its own. The option text is ordinary
  * rows of the same entry, and the selection cursor comes from the structural
  * cursor-frame entries (`codes/structural-entries.ts`), each of which parks a
  * `>` in column 0 of one fixed row. Which rows those frames target is decided
@@ -11,7 +11,7 @@
  * - `Choose` loads the frames for rows 2 and 3 (a question on row 1, two
  *   options under it).
  * - `Choose2` loads the frames for rows 1 and 2.
- * - `Choose3` loads one frame per row — all three rows are options.
+ * - `Choose3` loads one frame per row, so all three rows are options.
  *
  * So the option rows are a fixed property of the variant, read here straight
  * off the command token wherever it appears in the block's lines.

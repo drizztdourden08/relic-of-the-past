@@ -2,10 +2,9 @@
  * @layer tooling-scripts
  * @kind config
  *
- * Per-kind policy (Strategy table). Baseline cap is 200 code lines; documented
- * variances live here. `max: null` = exempt from the line cap (still classified
- * and, where a linter applies, still linted). `linters` lists which adapters a
- * kind must satisfy.
+ * Per-kind policy. Baseline cap is 200 code lines; variances live here. `max: null`
+ * exempts a kind from the cap (still classified and linted). `linters` lists the
+ * adapters a kind must satisfy.
  */
 const BASELINE = 200;
 

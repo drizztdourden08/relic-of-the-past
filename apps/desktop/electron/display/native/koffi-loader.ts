@@ -2,13 +2,13 @@
 /**
  * Lazy, cached koffi load.
  *
- * Required with a runtime require rather than a static import so that a missing or
+ * Required at runtime instead of imported statically, so that a missing or
  * unloadable binding degrades to "this setting is unavailable" instead of taking the whole
  * app down at startup. koffi is Node-API based, so it loads under Electron's ABI without a
  * rebuild (verified against Electron 42 / Node 24).
  *
- * Only ever reached from the main process — it is native code and has no business in the
- * renderer or in the mobile bundle.
+ * Only ever reached from the main process. This is native code and has no business in
+ * the renderer or in the mobile bundle.
  */
 
 // Untyped on purpose: we use a narrow slice of koffi's dynamic FFI surface, where the shapes

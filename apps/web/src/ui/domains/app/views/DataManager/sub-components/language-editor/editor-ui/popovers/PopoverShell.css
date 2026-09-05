@@ -2,7 +2,7 @@
 
 /*
  * A small floating card, anchored under the toolbar button that opened it.
- * Absolute rather than portalled: it belongs to its button, and staying in the
+ * Absolute, not portalled: it belongs to its button, and staying in the
  * same stacking context means it follows the toolbar with no measuring.
  *
  * The width band is deliberately narrow. One popover does one thing, so a card

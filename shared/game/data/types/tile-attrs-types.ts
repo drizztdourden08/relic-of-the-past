@@ -1,28 +1,18 @@
 /* @layer shared-game @kind types */
-/**
- * Tile attribute type definitions — shared by the attr maps and helpers.
- * Derived from zelda3 source: tile_detect.c TileDetect_ExecuteInner().
- */
+/** Derived from tile_detect.c TileDetect_ExecuteInner(). */
 
-/**
- * Equipment requirement keys.
- * Modify this union to add/remove supported requirements —
- * the compiler will flag all incomplete consumers.
- */
+/** Equipment requirement keys. Editing this union makes the compiler flag every incomplete consumer. */
 type TileReq =
-  | 'lift.1'     // bare hands — bush, pot, sign
-  | 'lift.2'     // Power Glove — light rocks
-  | 'lift.3'     // Titan's Mitt — dark rocks
-  | 'hammer'     // Magic Hammer — pegs
-  | 'boots'      // Pegasus Boots — bonk rocks
-  | 'flippers'   // the swimming item — deep water
-  | 'hookshot'   // Hookshot — grapple across gaps (hookshot posts)
-  | 'bombs';     // Bombs — blast open cracked/bombable walls
+  | 'lift.1'     // bare hands, for bush, pot, sign
+  | 'lift.2'     // glove tier 1: light rocks
+  | 'lift.3'     // glove tier 2: dark rocks
+  | 'hammer'     // hammer: pegs
+  | 'boots'      // dash boots: bonk rocks
+  | 'flippers'   // the swimming item, for deep water
+  | 'hookshot'   // grapple across gaps (hookshot posts)
+  | 'bombs';     // blast open cracked/bombable walls
 
-/**
- * Semantic labels — exhaustive set describing what a tile "is" or "does".
- * A single tile byte can map to multiple labels (equivalences).
- */
+/** What a tile "is" or "does". A single tile byte can map to several labels (equivalences). */
 type TileLabel =
   // Ground / walkable
   | 'ground' | 'floor' | 'stair' | 'outdoor ground'
@@ -77,7 +67,7 @@ interface TileAttrDef {
   pass: TilePass;
   /** Equipment needed to traverse (only when pass !== 'free') */
   req?: TileReq;
-  /** Human-readable names — first is primary, rest are equivalences */
+  /** Human-readable names. The first is primary, the rest are equivalences */
   labels: [TileLabel, ...TileLabel[]];
   /** Semantic category for grouping */
   cat: TileCat;
@@ -86,10 +76,9 @@ interface TileAttrDef {
 }
 
 /**
- * Mechanical consequence of a tile, one member per case in
- * TileDetect_ExecuteInner (core/zelda3/src/tile_detect.c:261-526). The names
- * ARE the engine's own TileBehavior_* comment names, so a reader can check
- * conformance against that switch by eye.
+ * Mechanical consequence of a tile, one member per case in TileDetect_ExecuteInner
+ * (core/zelda3/src/tile_detect.c:261-526). The names ARE the engine's own
+ * TileBehavior_* comment names, so conformance can be checked by eye.
  */
 type TileBehavior =
   | 'nothing' | 'standard-collision'
@@ -97,10 +86,9 @@ type TileBehavior =
   | 'moving-floor' | 'spike-floor' | 'ganon-ice' | 'palace-ice'
   | 'slope' | 'slope-outer' | 'water-staircase'
   | 'stairs-single-layer' | 'stairs-swap-layer' | 'stairs-visible'
-  // The switch has a FIFTH staircase case (TileHandlerIndoor_3E, tile_detect.c:366)
-  // with no name of its own; it raises the in-room staircase flag in the high nibble,
-  // which sends the player to a different submodule than 'stairs-single-layer' does.
-  // Named after the handler, the same way 'indoor-door-80'/'indoor-door-82' are.
+  // A FIFTH staircase case (TileHandlerIndoor_3E, tile_detect.c:366) with no name of
+  // its own: it raises the in-room staircase flag in the high nibble, which routes
+  // to a different submodule than 'stairs-single-layer'. Named after the handler.
   | 'indoor-stairs-3e'
   | 'pit' | 'hookshottable'
   | 'ledge-north' | 'ledge-south' | 'ledge-east-west'
@@ -117,10 +105,9 @@ type TileBehavior =
   | 'lightable-torch' | 'flaggable-door';
 
 /**
- * Descriptive identity — what a tile IS, for the label a person reads. Kept
- * separate from TileBehavior on purpose: two tiles can share a behavior and
- * look nothing alike, and a readable label must never pass itself off as the
- * engine's own classification.
+ * What a tile IS, for the label a person reads. Separate from TileBehavior on
+ * purpose: two tiles can share a behavior and look nothing alike, and a
+ * readable label must never pass for the engine's own classification.
  */
 type TileVisual =
   | 'ground' | 'floor' | 'stair-steps' | 'thick-grass' | 'shallow-water' | 'deep-water'

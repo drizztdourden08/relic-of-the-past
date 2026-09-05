@@ -6,8 +6,8 @@
  * A blur handler cannot do this job here: the toolbar deliberately swallows
  * mousedown so that focus never leaves the text being edited, which means none
  * of its buttons ever receive or lose focus from the pointer. A document-level
- * press listener is what is left, and it is also the more honest test — "did the
- * press land outside me" rather than "did something else take focus".
+ * press listener is what is left, and it is also the more honest test. It asks
+ * "did the press land outside me", not "did something else take focus".
  *
  * The listener is attached only while the panel is open, and in the CAPTURE
  * phase, so it still sees the press the toolbar is about to swallow.

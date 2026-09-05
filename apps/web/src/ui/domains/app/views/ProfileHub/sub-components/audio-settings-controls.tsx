@@ -55,7 +55,7 @@ const stepToBuffer = (step: number): number => {
 };
 
 /** Note appended to a control whose value Auto is choosing, so a locked row explains itself. */
-const AUTO_NOTE = 'Set automatically from the assigned pack — switch Configuration to Manual to change it.';
+const AUTO_NOTE = 'Set automatically from the assigned pack. Switch Configuration to Manual to change it.';
 
 const renderControl = (
   key: string,
@@ -64,10 +64,10 @@ const renderControl = (
   pack?: MsuPackProfile | null,
 ): ReactNode | null => {
   const auto = settings.msuConfigMode === 'auto';
-  // What will actually be used, so a locked control shows the real value rather than a stale one.
+  // What will actually be used, so a locked control shows the real value, not a stale one.
   const resolved = resolveAudioConfig(settings, pack ?? null);
 
-  // Master, Music, Ambience and SFX are plain sliders with one shape — they render in their own file.
+  // Master, Music, Ambience and SFX are plain sliders with one shape, so they render in their own file.
   const volumeSlider = renderVolumeSlider(key, settings, onChange);
   if (volumeSlider) return volumeSlider;
 
@@ -121,7 +121,7 @@ const renderControl = (
       return (
         <SegmentedControl
           label="Configuration"
-          description="Auto reads the pack assigned to this profile and sets the format, sample rate, channels and buffer to match — there is only one right answer and nothing to match up by hand. Manual unlocks all of them."
+          description="Auto reads the pack assigned to this profile and sets the format, sample rate, channels and buffer to match. There is only one right answer and nothing to match up by hand. Manual unlocks all of them."
           value={settings.msuConfigMode}
           options={MODE_OPTIONS}
           onChange={(v) => onChange({ msuConfigMode: v as GameSettings['msuConfigMode'] })}
@@ -137,7 +137,7 @@ const renderControl = (
           value={settings.enableMSU}
           options={MSU_OPTIONS}
           onChange={(v) => onChange({ enableMSU: v as GameSettings['enableMSU'] })}
-          // Replacement music has no gate-word bit of its own — Vanilla Safe suppresses it in the
+          // Replacement music has no gate-word bit of its own, so Vanilla Safe suppresses it in the
           // playback plan regardless of this control, so lock it the way a registered feature is.
           disabled={settings.vanillaSafe}
         />

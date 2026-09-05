@@ -2,7 +2,7 @@ blank_issues_enabled: false
 contact_links:
   - name: ROM / asset requirement & disclaimer
     url: https://github.com/drizztdourden08/relic-of-the-past#readme
-    about: This is an unofficial project that ships no game data — you must provide your own legally obtained ROM.
+    about: This is an unofficial project. It ships no game data, so you must provide your own legally obtained ROM.
   - name: Report a security vulnerability
     url: https://github.com/drizztdourden08/relic-of-the-past/security/advisories/new
     about: Please report security issues privately, not as public issues.

@@ -11,18 +11,18 @@ interface ScrollPosition {
 }
 
 interface ScrollAreaProps extends Omit<ComponentPropsWithRef<'div'>, 'onScroll'> {
-  /** Defaults to `'y'` — the common case of a tall list in a fixed-height shell. */
+  /** Defaults to `'y'`, the common case of a tall list in a fixed-height shell. */
   axis?: ScrollAxis;
   /**
    * Fires with the node's current offsets on a real, user-driven scroll.
    * Does NOT fire for the echo of a `scrollTo` this component applied itself
-   * (see the guard in behavior/create-scroll-guard.ts) — otherwise two
+   * (see the guard in behavior/create-scroll-guard.ts). Otherwise two
    * `ScrollArea`s wired to mirror each other would ping-pong forever.
    */
   onScroll?: (position: ScrollPosition) => void;
   /**
-   * Imperatively scrolls the node whenever the given field(s) change — e.g.
-   * to drive a second `ScrollArea` to the same offset as a first. An omitted
+   * Imperatively scrolls the node whenever the given field(s) change. One use is
+   * driving a second `ScrollArea` to the same offset as a first. An omitted
    * field keeps its current value; passing the same values twice is a no-op.
    */
   scrollTo?: Partial<ScrollPosition>;

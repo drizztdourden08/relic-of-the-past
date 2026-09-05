@@ -7,11 +7,9 @@ import { discoverTargets, hasReachableOpenTile } from '../../shared/game/simulat
 import { emptySnapshot } from '../../shared/game/simulation/detect/flag-snapshot';
 import { describeDataset } from '../dataset-guard';
 
-// A chest is a solid 2x2 (16px) block anchored at its top-left 8px tile; the game
-// opens it only from the walkable tile directly below the footprint (two rows
-// below the anchor), facing up. These cover the Link's House Lamp chest: stored
-// at (54,56), footprint rows 54-55 both flood to blocked, and the open-from tile
-// is (56,56) — not the (53,56) tile above, which is the wrong side.
+// A chest is a solid 2x2 block anchored at its top-left tile; the game opens it
+// only from the tile directly below the footprint, facing up. Lamp chest at
+// (54,56): rows 54-55 flood to blocked, open-from tile is (56,56), not (53,56).
 
 const CHEST_ROOM = 0x104;
 
@@ -61,9 +59,9 @@ describeDataset('hasReachableOpenTile', () => {
 
   it('is false when only a wrong-side neighbor (above/beside) is reachable', () => {
     // Tile above the chest and the chest body rows are reachable/blocked, but the
-    // open-from row below is not — the chest must NOT count as openable.
+    // open-from row below is not, so the chest must NOT count as openable.
     const flood = floodFrom([
-      [0, 1, 0], // row above the anchor is reachable — wrong side
+      [0, 1, 0], // row above the anchor is reachable, but that is the wrong side
       [0, 0, 0], // anchor row
       [0, 0, 0], // chest body row
       [0, 0, 0], // open-from row: blocked
@@ -72,7 +70,7 @@ describeDataset('hasReachableOpenTile', () => {
   });
 });
 
-describeDataset('discoverTargets — chest reachability uses the open-from tile below', () => {
+describeDataset('discoverTargets reads chest reachability off the open-from tile below', () => {
   it('discovers a chest when the tile two rows below its anchor is reachable', () => {
     const flood = openBelowLeft(0, 0);
     const state = freshState();
@@ -85,7 +83,7 @@ describeDataset('discoverTargets — chest reachability uses the open-from tile 
 
   it('drops a chest when only the tile above it is reachable (wrong side)', () => {
     const flood = floodFrom([
-      [0, 1, 0], // above the anchor — the wrong side, Link cannot open facing down
+      [0, 1, 0], // above the anchor is the wrong side, so Link cannot open facing down
       [0, 0, 0], // anchor row
       [0, 0, 0], // chest body row
       [0, 0, 0], // open-from row below: blocked
@@ -114,14 +112,11 @@ describeDataset('discoverTargets — chest reachability uses the open-from tile 
   });
 });
 
-// ─── NPC room-aware matching + presence gating ─────────────────────────────────
-// Sprites map to a check-giving NPC via CHECK_NPC_FLAGS by sprite type. A config
-// that pins a `room` binds only in that room, so a type spawning in two rooms is
-// disambiguated: sprite 0x73 = Link's Uncle, pinned to the secret passage 0x55 —
-// the same 0x73 in Link's house intro room 0x104 must NOT match. Room-less
-// configs match by type in any room and still honor their presence condition:
-// 0x52 = a conditional NPC (present iff the swimming item is unowned), 0x16 = the first sage
-// (unconditional), 0xEE = not a check NPC.
+// NPC room-aware matching + presence gating. A CHECK_NPC_FLAGS config that pins
+// a `room` binds only there: sprite 0x73 in the secret passage 0x55 matches, the
+// same 0x73 in the intro room 0x104 must NOT. Room-less configs match by type
+// anywhere and still honor their presence condition: 0x52 = conditional NPC
+// (present iff the swimming item is unowned), 0x16 = the first sage, 0xEE = not a check NPC.
 
 const HOUSE_ROOM = 0x104;
 const PASSAGE_ROOM = 0x55;
@@ -147,11 +142,11 @@ const makeSprite = (spriteType: number, kind: SimSprite['kind'], roomId: number)
   roomId,
   spriteType,
   tile: { row: 0, col: 0 },
-  posKnown: false, // coarse reachability — matching/presence, not tiles, is under test
+  posKnown: false, // coarse reachability, since matching and presence are under test, not tiles
   kind,
 });
 
-describeDataset('discoverTargets — NPC room-aware matching', () => {
+describeDataset('discoverTargets and NPC room-aware matching', () => {
   it('matches Link\'s Uncle (0x73) in the secret passage room 0x55', () => {
     const obs = spriteObs(makeSprite(0x73, 'npc', PASSAGE_ROOM), presenceWith());
     expect(discoverTargets(freshState(), obs, null)).toHaveLength(1);
@@ -163,7 +158,7 @@ describeDataset('discoverTargets — NPC room-aware matching', () => {
   });
 });
 
-describeDataset('discoverTargets — NPC presence gating', () => {
+describeDataset('discoverTargets and NPC presence gating', () => {
   it('discovers a conditional room-less NPC when its condition holds (King Zora, no Flippers)', () => {
     const obs = spriteObs(makeSprite(0x52, 'npc', 0x181), presenceWith());
     expect(discoverTargets(freshState(), obs, null)).toHaveLength(1);
@@ -193,12 +188,9 @@ describeDataset('discoverTargets — NPC presence gating', () => {
   });
 });
 
-// ─── Overworld sprites resolved to their true screen ───────────────────────
-// A big (2x2) overworld area returns its whole sprite table however one of
-// its screens is queried, each spawn already resolved to the screen it
-// actually sits on (see getOverworldSprites / resolveAreaSprite). A target
-// must be judged against the flood of the screen it is actually on, and must
-// never be offered for a screen it does not belong to.
+// Overworld sprites resolved to their true screen. A 2x2 area returns its whole
+// sprite table for any of its screens, each spawn resolved to the screen it sits
+// on. A target must be judged against that screen's flood, never another's.
 
 const HEAD_SCREEN = 24;
 const SOUTH_SCREEN = HEAD_SCREEN + 8;
@@ -229,14 +221,14 @@ const owState = (owScreenIndex: number) =>
 const allReachable = (rows: number, cols: number): boolean[][] =>
   Array.from({ length: rows }, () => new Array(cols).fill(true));
 
-describeDataset('discoverTargets — overworld sprites resolved to their true screen', () => {
+describeDataset('discoverTargets resolves overworld sprites to their true screen', () => {
   it('discovers a sprite normally when it belongs to the observed screen', () => {
     const obs = owObs(HEAD_SCREEN, [owSprite(HEAD_SCREEN, { row: 20, col: 12 })]);
     expect(discoverTargets(owState(HEAD_SCREEN), obs, allReachable(64, 64))).toHaveLength(1);
   });
 
   it('does not offer a sprite resolved to a neighbouring screen as a target for the observed one', () => {
-    // Resolved to the screen one row south of the head — belongs to SOUTH_SCREEN,
+    // Resolved to the screen one row south of the head, so it belongs to SOUTH_SCREEN,
     // not the head screen this observation is for. The flood is fully
     // reachable, so only the screen mismatch can be excluding it.
     const obs = owObs(HEAD_SCREEN, [owSprite(SOUTH_SCREEN, { row: 20, col: 12 })]);
@@ -249,7 +241,7 @@ describeDataset('discoverTargets — overworld sprites resolved to their true sc
   });
 });
 
-describeDataset('discoverTargets — posKnown === false fallback', () => {
+describeDataset('discoverTargets falls back when posKnown === false', () => {
   it('discovers an unknown-position interactable regardless of a real, unrelated flood grid', () => {
     const sprite: SimSprite = {
       roomId: 0x181,

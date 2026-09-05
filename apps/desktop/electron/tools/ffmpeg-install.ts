@@ -1,11 +1,8 @@
 /* @layer electron-main @kind logic */
 /**
  * Install the optional ffmpeg tool on request: download the pinned archive, verify it,
- * keep the two binaries, discard everything else.
- *
- * The order is the security property — the checksum is checked while the download is
- * still an inert file in temp, so nothing unverified is ever unpacked into a directory
- * we later execute from.
+ * keep the two binaries. The order is the security property: the checksum is checked
+ * while the download is still an inert file in temp.
  */
 import { rm } from 'fs/promises';
 import type { FfmpegState } from '@shared/types/ffmpeg-tool';
@@ -57,8 +54,7 @@ const runInstall = async (report: StateReporter): Promise<FfmpegState> => {
   }
 };
 
-// One install at a time: a second request joins the first rather than racing it into the
-// same destination directory.
+// One install at a time: a second request joins the first.
 let pending: Promise<FfmpegState> | null = null;
 
 const installFfmpeg = (report: StateReporter): Promise<FfmpegState> => {

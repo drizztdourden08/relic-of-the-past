@@ -32,14 +32,14 @@ const SpriteLibraryList = (props: SpriteLibraryListProps) => {
         </Button>
         {!canCreate && (
           <Text className="sprite-library__hint">
-            Needs a ROM with compiled assets — the stock sheet is read from it.
+            Needs a ROM with compiled assets, because the stock sheet is read from it.
           </Text>
         )}
       </Box>
       <ImportForm
         kind="linkSprite"
         accept={['.zspr', '.rsp']}
-        placeholder="Paste .zspr or .rsp URL…"
+        placeholder="Paste .zspr or .rsp URL..."
         dropLabel="Drop a player sprite here"
         dropHint=".zspr or .rsp"
         onUrlImport={onUrlImport}

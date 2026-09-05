@@ -20,12 +20,12 @@ import type { MsuChannelName, SoundChannelApi } from './channel';
  * (`kMainRouting`), the same set `lib/game/ui-bridge-parser.ts` reads as the `title` UI mode.
  */
 const TITLE_MODULES: ReadonlySet<number> = new Set([
-  0,  // Module00_Intro — the opening animation
+  0,  // Module00_Intro, the opening animation
   1,  // Module01_FileSelect
   2,  // Module02_CopyFile
   3,  // Module03_KILLFile
   4,  // Module04_NameFile
-  20, // Module14_Attract — the legend demo the title loops into
+  20, // Module14_Attract, the legend demo the title loops into
 ]);
 
 /**

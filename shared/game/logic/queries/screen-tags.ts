@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-/** Screen tag query helpers — moved from data/screens/tags.ts (logic split out of data). */
+/** Screen tag query helpers, moved from data/screens/tags.ts when logic split out of data. */
 import type { ScreenTag } from '../../data';
 
 const hasAllTags = (screenTags: readonly ScreenTag[], required: ScreenTag[]): boolean =>

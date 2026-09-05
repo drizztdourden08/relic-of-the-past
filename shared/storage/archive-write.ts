@@ -1,17 +1,11 @@
 /* @layer shared-storage @kind logic */
 /**
- * ZIP creation via jszip — the write counterpart to ./archive, kept in its own module so the
- * read path stays a pure reader.
- *
- * Two deliberate choices, both about very large audio packs:
- *
- * - STORE is the default. A pack is gigabytes of Opus or raw PCM, neither of which deflates
- *   usefully, so compressing it burns minutes to save nothing. Text entries (a manifest) pass
- *   `store: false` and get DEFLATE, which is where the ratio actually pays.
- * - Entries keep the order they were given, and every entry is stamped with one fixed
- *   timestamp. Together those make the output byte-identical across runs, so re-exporting an
- *   unchanged pack produces an unchanged file — and a reader can sniff the first entry
- *   (a manifest, when the caller puts it first) without scanning the whole archive.
+ * ZIP creation via jszip, the write counterpart to ./archive. Two choices, both about very
+ * large audio packs:
+ * - STORE is the default: gigabytes of Opus or raw PCM do not deflate, so compressing burns
+ *   minutes to save nothing. Text entries (a manifest) pass `store: false` and get DEFLATE.
+ * - Entries keep their given order and one fixed timestamp, so the output is byte-identical
+ *   across runs and a reader can sniff the first entry (a manifest, when put first).
  */
 import JSZip from 'jszip';
 
@@ -28,10 +22,7 @@ interface ZipOptions {
   store?: boolean;
 }
 
-/**
- * The earliest instant a ZIP timestamp can hold. Any fixed date would do — the point is that
- * it does not come from the clock, so two exports of the same pack agree byte for byte.
- */
+/** The earliest instant a ZIP timestamp can hold. Any fixed date would do; the point is that two exports of the same pack agree byte for byte. */
 const ZIP_FIXED_DATE = new Date(Date.UTC(1980, 0, 1, 0, 0, 0));
 
 const methodFor = (store: boolean): 'STORE' | 'DEFLATE' => (store ? 'STORE' : 'DEFLATE');

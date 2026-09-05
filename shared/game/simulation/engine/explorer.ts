@@ -1,14 +1,8 @@
 /* @layer shared-game @kind logic */
 /**
- * Virtual-player bookkeeping: inventory → reach tokens, consumable dungeon keys,
- * events, and the unlock-reset epoch rule. When a verified check hands over a
- * traversal-affecting item or flag, the epoch advances and the frontier resets
- * so reachability re-floods from the current virtual position.
- *
- * Dungeon identity is a `DungeonId`. It used to be a slug this file produced by
- * lower-casing and hyphenating a display name — sometimes a location's, sometimes
- * one parsed out of an item's parenthetical — so a run credited its keys to a
- * string that existed nowhere in the dataset and could not be joined back to it.
+ * Virtual-player bookkeeping: inventory -> reach tokens, consumable dungeon
+ * keys, events, and the unlock-reset epoch rule. Dungeon identity is a
+ * `DungeonId`, never a slug derived from a display name.
  */
 import type { DetectedCheck, SimEvent } from '../types';
 import type { DungeonId, ItemId } from '../../data';
@@ -62,10 +56,9 @@ const addKey = (state: EngineState, dungeon: DungeonId): void => {
 /**
  * Fold a received item into inventory + key/big-key tracking. The game grants a
  * generic small/big key with no dungeon attached, so `dungeon` (from the matched
- * check, else from where the run is standing) is what attributes it — a key with
- * no dungeon to credit is dropped rather than guessed at. Returns the requirement
- * tokens this grant satisfies, for the dungeon ledger's reopen check (see
- * `reopenLedgersFor`) — the same vocabulary `requirements-map` evaluates.
+ * check, else where the run stands) attributes it; a key with no dungeon to
+ * credit is dropped, not guessed. Returns the requirement tokens this grant
+ * satisfies, for `reopenLedgersFor`.
  */
 const applyItem = (state: EngineState, itemId: ItemId, dungeon?: DungeonId): string[] => {
   const keyKind = keyKindOf(itemId);
@@ -84,10 +77,9 @@ const applyItem = (state: EngineState, itemId: ItemId, dungeon?: DungeonId): str
 };
 
 /**
- * Localized refresh after an in-room unlock/kill: new epoch (fresh detects),
- * but ONLY the current screen loses its visited mark — the run re-floods it in
- * place instead of resetting the whole exploration. progressSinceEpoch stays
- * set so the exhaustion pass still sweeps everything once at the end.
+ * Localized refresh after an in-room unlock/kill: new epoch, but ONLY the
+ * current screen loses its visited mark. progressSinceEpoch stays set so the
+ * exhaustion pass still sweeps everything once at the end.
  */
 const localRefresh = (state: EngineState): void => {
   state.epoch += 1;
@@ -99,10 +91,9 @@ const localRefresh = (state: EngineState): void => {
 };
 
 /**
- * Refresh after a change that alters reachability in OTHER screens — the
+ * Refresh after a change that alters reachability in OTHER screens (the
  * follower tagging along opens the throne room's push-wall passage, far from
- * where she was rescued. Every screen but the current one becomes re-explorable
- * (unlike localRefresh, which only re-floods the room the player stands in).
+ * where she was rescued). Every screen but the current one becomes re-explorable.
  */
 const globalRefresh = (state: EngineState): void => {
   state.epoch += 1;
@@ -113,14 +104,13 @@ const globalRefresh = (state: EngineState): void => {
   state.progressSinceEpoch = true;
 };
 
-/** Reset the frontier and bump the epoch — reachability re-floods from here. */
+/** Reset the frontier and bump the epoch, so reachability re-floods from here. */
 const resetFrontier = (state: EngineState): void => {
   state.epoch += 1;
   state.frontier = [];
   state.route = [];
   state.progressSinceEpoch = false;
-  // Re-explore everything from the current position: previously visited screens
-  // may now expose newly reachable tiles/targets after this unlock.
+  // Visited screens may expose new tiles/targets after this unlock.
   state.visited = new Set();
   // Failed triggers get one retry per epoch.
   state.failed = new Set();
@@ -132,17 +122,15 @@ const markDoneAndContinue = (state: EngineState, check: DetectedCheck): void => 
 };
 
 /**
- * The loop the whole feature hinges on: a traversal-affecting unlock resets the
- * frontier and advances the epoch; anything else simply marks the check done.
- * `events` is optional only so existing direct-call tests need no changes —
- * the live engine always passes it, since a reopened dungeon group is only
- * reviewable through the narrative log.
+ * A traversal-affecting unlock resets the frontier and advances the epoch;
+ * anything else marks the check done. `events` is optional only for direct-call
+ * tests; the live engine always passes it, since a reopened dungeon group is
+ * only reviewable through the narrative log.
  */
 const onCheckVerified = (state: EngineState, check: DetectedCheck, events: SimEvent[] = []): void => {
   if (check.itemReceived) {
-    // Attribute dungeon-less key grants to the matched check's dungeon, or —
-    // for unmatched grants like an enemy's key drop — to the dungeon the run is
-    // standing in. Both are already DungeonIds; nothing is derived from a name.
+    // Attribute dungeon-less key grants to the matched check's dungeon, or, for
+    // unmatched grants like an enemy's key drop, to the dungeon the run stands in.
     const dungeon = check.matched?.dungeonId ?? dungeonForScreen(state.virtual.screenId) ?? undefined;
     const gained = applyItem(state, check.itemReceived, dungeon);
     reopenLedgersFor(state, gained, getItem(check.itemReceived).randomizerName, events);

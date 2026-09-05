@@ -1,11 +1,8 @@
 /* @layer tests @kind test */
 /**
- * The Secret Passage case: the uncle blocks the corridor, the flood stops at him,
- * and the chest behind him must NOT read as an available check.
- *
- * The subtlety is that a feature's own tile is usually solid — a chest is a wall
- * tile, a door is the doorway — so reachability has to be judged from the tiles
- * around it, or every annotation would look unreachable.
+ * The Secret Passage case: the uncle blocks the corridor, so the chest behind
+ * him must NOT read as available. A feature's own tile is usually solid (a
+ * chest is a wall tile), so reachability is judged from the tiles around it.
  */
 import { describe, it, expect } from 'vitest';
 import type { ScreenAnnotation } from '../../shared/game/simulation';
@@ -56,7 +53,7 @@ describe('annotation reachability', () => {
     expect(items[0].detail).toBe('unreachable');
   });
 
-  it('appends to an existing detail rather than replacing it', () => {
+  it('appends to an existing detail instead of replacing it', () => {
     const items = [at('shutter', 18, 5, { state: 'shut', detail: 'closes behind Link' })];
     markUnreachable(items, gridBlockedBelow(10));
     expect(items[0].detail).toBe('closes behind Link · unreachable');

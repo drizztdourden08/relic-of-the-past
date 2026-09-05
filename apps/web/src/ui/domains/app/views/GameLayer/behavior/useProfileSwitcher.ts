@@ -1,10 +1,5 @@
 /* @layer renderer-components @kind hook */
-/**
- * useProfileSwitcher — drives the on-canvas profile switcher drawer. Opens when the
- * active profile is cycled (the profile-next/prev shortcuts fire onActiveProfileChange),
- * tracks the active id, and auto-hides after a short idle. No-op with a single profile
- * (cycling can't change anything, so it never fires).
- */
+// Opens on onActiveProfileChange and auto-hides. No-op with a single profile, since cycling never fires.
 
 import { useState, useEffect, useRef } from 'react';
 import { getInputManager } from '../../../../../../lib/game';

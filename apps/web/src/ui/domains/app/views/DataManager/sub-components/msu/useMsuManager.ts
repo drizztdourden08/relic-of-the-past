@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind hook */
-/**
- * The pack studio's one wiring point: it owns nothing itself, it composes the focused hooks in
- * ./behavior and gives the panel a single flat surface. Each action funnels its outcome into
- * one status line, so every storage failure is something the user sees rather than a console log.
- */
+// Composes the hooks in ./behavior into one flat surface. Every action's outcome lands in one status line.
 import { useCallback, useMemo, useState } from 'react';
 import * as msuStore from '@app/lib/storage/msu-store';
 import { usePackList } from './behavior/usePackList';
@@ -16,16 +12,12 @@ import { usePackExport } from './behavior/usePackExport';
 import { usePackImport, isMsulName } from './behavior/usePackImport';
 import type { ActionResult, PackFormat } from './msu.type';
 
-/**
- * What an import left out, said plainly. Both kinds are normal for a pack that ships extras, but
- * silence about them reads as "everything came in" — and the files it skipped are exactly the ones
- * that would otherwise have fought the real tracks for a slot.
- */
+// Both kinds of skip are normal for a pack that ships extras, but silence reads as "everything came in".
 const skipNote = (result: { skippedNested?: number; skippedDuplicate?: number }): string => {
   const parts: string[] = [];
   if (result.skippedNested) parts.push(`${result.skippedNested} in subfolders (alternates and extras)`);
   if (result.skippedDuplicate) parts.push(`${result.skippedDuplicate} already claimed by another file`);
-  return parts.length === 0 ? '' : ` — skipped ${parts.join(', ')}`;
+  return parts.length === 0 ? '' : ` (skipped ${parts.join(', ')})`;
 };
 
 const useMsuManager = (onRefresh: () => void) => {
@@ -105,7 +97,7 @@ const useMsuManager = (onRefresh: () => void) => {
 
   const handleFileImport = useCallback(async (dropped: File[]): Promise<ActionResult> => {
     if (dropped.length === 0) return { success: false, message: 'No file selected' };
-    // A .msul carries its own manifest, so it becomes a layered pack rather than a raw copy.
+    // A .msul carries its own manifest, so it becomes a layered pack, not a raw copy.
     if (isMsulName(dropped[0].name)) {
       const result = await importMsul(dropped[0], newPackName.trim());
       if (result.success) setNewPackName('');

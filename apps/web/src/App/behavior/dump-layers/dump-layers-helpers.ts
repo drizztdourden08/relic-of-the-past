@@ -45,7 +45,7 @@ const findSplitTiles = (grids: DualLayerGrids): Array<{ col: number; row: number
 /**
  * BFS from (row,col) through connected `0x00` tiles on layer1. Returns true when
  * the connected region does NOT touch the grid boundary (i.e. layer1 is an
- * enclosed, reachable interior rather than open to the edge).
+ * enclosed, reachable interior instead of open to the edge).
  */
 const isLayer1Reachable = (grids: DualLayerGrids, row: number, col: number): boolean => {
   const visited = new Set<string>([`${row},${col}`]);

@@ -1,8 +1,8 @@
 /* @layer shared-input @kind logic */
 /**
- * Haptic Feedback Service — maps game events to vibration patterns.
- * Pattern definitions live in ./data/haptics; event enums + pattern selectors in
- * ./haptic-events. This module handles dispatch, cooldowns, delays, settings gating.
+ * Maps game events to vibration patterns, and handles dispatch, cooldowns, delays and
+ * settings gating. Pattern definitions live in ./data/haptics, event enums and pattern
+ * selectors in ./haptic-events.
  */
 
 import type { VibrationSegment } from './vibration-segment.type';

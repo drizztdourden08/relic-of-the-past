@@ -5,8 +5,8 @@
  * never throw, and never silently produce an empty table.
  *
  * The filter prune also revalidates each operator against the field's CURRENT
- * kind — a field inferred as an enum last week and a string today would
- * otherwise carry an `anyOf` clause nothing can evaluate any more.
+ * kind. A field inferred as an enum last week and a string today would otherwise
+ * carry an `anyOf` clause nothing can evaluate any more.
  */
 import type { SchemaLike } from '../schema/build-schema';
 import { toSchemaIndex } from '../schema/build-schema';

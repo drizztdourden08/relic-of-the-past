@@ -3,7 +3,7 @@
  * "Find hardcoded names": every place the set spells a name out instead of
  * referencing the variable for it, offered as one decision per name.
  *
- * A variable only earns its keep once the lines that say it point AT it — a
+ * A variable only earns its keep once the lines that say it point AT it. A
  * reference follows a later rename, literal text does not. The scan itself
  * reports and changes nothing; this dialog is the deliberate step, which is why
  * it opens with everything unticked and states its totals before applying.
@@ -12,8 +12,8 @@
  * ignored, and swapping one for a reference would recase a line somebody wrote
  * that way on purpose.
  *
- * The only state held here is which rows are ticked — a selection, thrown away
- * when the dialog closes. Both the scan and the apply belong to the caller.
+ * The only state held here is which rows are ticked. That selection is thrown
+ * away when the dialog closes. Both the scan and the apply belong to the caller.
  */
 import { useCallback, useMemo, useState } from 'react';
 import { Box, Button, EmptyState, Text } from '@ds/primitives';

@@ -1,7 +1,4 @@
 /* @layer renderer-components @kind hook */
-/**
- * State and logic hook for ProfileManager.
- */
 
 import { useState, useEffect, useCallback } from 'react';
 import { readConfig } from '../../../../../../../lib/storage/profile-store';

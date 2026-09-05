@@ -1,9 +1,9 @@
 /* @layer shared-game @kind data */
 /**
  * A native item id no `ItemRecord.gameId.receiveItemId` covers, from the
- * three places the game says so. Each gets its OWN `SetProbe` rather than one
+ * three places the game says so. Each gets its OWN `SetProbe` instead of one
  * probe folding all three together, because `SetProbe.confidence`/`.source`
- * are fixed per probe, not per live item — and these three genuinely differ
+ * are fixed per probe, not per live item, and these three differ
  * in both: the room's own chest table needs nothing to have happened
  * (`certain`, `native:room-chests`), a direct native receive-count tally is
  * likewise enumerable (`certain`, `native:receive-count`), but a grant sourced
@@ -13,15 +13,15 @@
  * one confidence and one evidence source, silently overstating the weaker two.
  *
  * All three share `item-lookup.ts`'s join (same key space, same placeholder),
- * so a `create` proposed by any of them is identical in shape — only the
+ * so a `create` proposed by any of them is identical in shape. Only the
  * evidence differs. Registered in this file's priority order (chest, then
  * native receive, then tracker delta) in `item.strategy.ts`'s `sets` array:
  * when more than one fires for the SAME id in one pass, `runDetection`'s own
  * id-based dedup (`registry.ts`) keeps whichever draft was produced FIRST,
  * so the enumerable source wins a tie against a grant, and a native tally
- * wins a tie against a delta — reproducing `item-grants.ts`'s own priority
+ * wins a tie against a delta. That reproduces `item-grants.ts`'s own priority
  * ("Chests first, so the enumerable source wins a tie against a grant")
- * without a bespoke dedup map of this strategy's own.
+ * without a custom dedup map of this strategy's own.
  *
  * `removable: false` on every one: none of these tables ever prove an
  * EXISTING `ItemRecord` wrong to exist, only that a new one is missing.

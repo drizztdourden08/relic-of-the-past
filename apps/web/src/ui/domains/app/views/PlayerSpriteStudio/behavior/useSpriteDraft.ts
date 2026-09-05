@@ -2,13 +2,13 @@
 /**
  * The working sheet: what is open, what has been changed, and how it gets written back.
  *
- * The draft keeps the sheet's two palette layers rather than a mutable palette plus a copy
+ * The draft keeps the sheet's two palette layers, not a mutable palette plus a copy
  * of the old one. `original` is never written to, so Revert is dropping the override and
- * `dirty` is asking whether the override holds anything — no flag to keep in sync.
+ * `dirty` is asking whether the override holds anything, so there is no flag to keep in sync.
  *
  * Saving also pushes the sheet at a running game. That only lands when the core's override
  * gate is open, which the renderer opens for the active profile's own selection, so the
- * result is reported back rather than assumed.
+ * result is reported back, not assumed.
  */
 import { useState, useCallback, useMemo } from 'react';
 import type { OutfitId, PlayerSheet, SheetPalette } from '@shared/game/data/player-sheet/types';
@@ -31,7 +31,7 @@ interface OpenDraft {
  * Whether this file is the sheet the running game is actually wearing.
  *
  * The core's override gate opens for the active profile having SOME selection, not for
- * the one the studio happens to have open — so pushing on every save would drop an
+ * the one the studio happens to have open, so pushing on every save would drop an
  * unselected sheet into the running game, and the next boot would stage the real
  * selection and silently swap it back. Editing one sprite must not repaint the player
  * with a different one.

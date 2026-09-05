@@ -1,9 +1,8 @@
 /* @layer tests @kind test */
 /**
- * The create-flow's write half: one adapter per collection's own `Allocate*`
- * shape, all ending the same way — fold the allocated record into the live
- * registry, publish it as an id-ref option, and rebuild the collection's
- * `CollectionSource` so the table can show it without a reload.
+ * The create-flow's write half: one adapter per collection's `Allocate*`
+ * shape. Each folds the record into the live registry, publishes it as an
+ * id-ref option, and rebuilds the `CollectionSource`.
  */
 import {
   afterEach, beforeEach, describe, expect, it, vi,

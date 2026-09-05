@@ -64,9 +64,8 @@ const runCheck = async (mainWindow: BrowserWindow): Promise<UpdateInfo | null> =
       return null;
     }
 
-    // AllowVersionDowngrade lets the picker install an older build on purpose, but it
-    // also makes this check answer with one, so a machine already on the newest release
-    // was being told an earlier version "is available". An update has to be newer.
+    // AllowVersionDowngrade also makes this check answer with an older build, so a
+    // machine on the newest release was told an earlier version "is available".
     const target = found.TargetFullRelease;
     if (compareVersions(target.Version, currentVersion()) <= 0) {
       available = null;
@@ -75,14 +74,12 @@ const runCheck = async (mainWindow: BrowserWindow): Promise<UpdateInfo | null> =
       return null;
     }
 
-    // The notes travel with the release, so the dialog needs no second request. The
-    // version list is fetched alongside so the picker is populated when it opens.
+    // The version list is fetched alongside so the picker is populated when it opens.
     available = {
       version: target.Version,
       releaseNotes: target.NotesMarkdown ?? '',
       releaseDate: '',
-      // Velopack's own result carries no asset list, so compatibility is unknown until
-      // the release listing below fills it in. Unverifiable is the honest placeholder.
+      // Velopack's result carries no asset list; the release listing below fills it in.
       saveStates: { kind: 'unverifiable', why: 'not-published' },
     };
     await refreshVersions();
@@ -127,12 +124,10 @@ const registerUpdaterHandlers = (): void => {
   });
 
   handle('updater:listVersions', async () => {
-    // Choosing a version only means something when this build can install one — or when
-    // the harness is up, where the whole point is to look at the choices.
+    // Only meaningful when this build can install, or the harness is up to look at choices.
     if (!canSelfUpdate() && !isUpdateHarness()) return [];
     const list = await refreshVersions();
-    // The plan holds feed entries, which are main-process detail. The renderer picks by
-    // version string and reads the plan's total through downloadSize.
+    // The plan is main-process detail; the renderer picks by version string.
     return list.map(({ plan: _plan, ...rest }) => rest);
   });
 
@@ -147,8 +142,7 @@ const registerUpdaterHandlers = (): void => {
   handle('updater:apply', async (_event, version: string | null) => {
     try {
       if (!canSelfUpdate()) throw new Error('This build cannot install updates itself');
-      // null means the newest, which is resolved from the same list the picker shows
-      // rather than by asking Velopack to decide a second time.
+      // null means the newest, resolved from the same list the picker shows.
       const list = versions.length ? versions : await refreshVersions();
       const option = version
         ? list.find((v) => v.version === version)

@@ -1,8 +1,8 @@
 /* @layer electron-main @kind logic */
 /**
  * Language pack persistence. A pack lives in userData/Data/languages/<code>/ and
- * holds everything needed to (a) bake the language into an asset blob and (b) show
- * it in the inspector UI — without needing the source ROM again:
+ * holds everything needed to bake the language into an asset blob and show it in
+ * the inspector UI, without the source ROM:
  *
  *   dialogue.txt    decoded strings ("N: text"), source for re-compression + UI
  *   font.bin        raw 2bpp glyph sheet (256 tiles x 16 bytes)
@@ -59,7 +59,7 @@ const listLanguageCodes = async (): Promise<string[]> => {
       try {
         await readFile(metaPath(e.name));
         codes.push(e.name);
-      } catch { /* incomplete pack — skip */ }
+      } catch { /* skip incomplete packs */ }
     }
     return codes;
   } catch {

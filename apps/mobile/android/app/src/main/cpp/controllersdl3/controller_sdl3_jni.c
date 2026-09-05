@@ -1,20 +1,15 @@
 /*
  * JNI bridge behind com.relicofthepast.app.controllersdl3.Sdl3Bridge. Mirrors
- * the desktop Node-API addon's event shape (apps/desktop/electron/input/native/
- * sdl3/src/sdl-thread-lifecycle.cc + sdl-thread-emit.cc) so both platforms hand
- * the renderer the same Sdl3Event JSON (see sdl3.type.ts): "added"/"removed"/
- * "state" objects, one array per nativePollEvents() call.
+ * the desktop addon's event shape (apps/desktop/electron/input/native/sdl3/src/
+ * sdl-thread-lifecycle.cc) so both platforms hand the renderer the same
+ * Sdl3Event JSON (see sdl3.type.ts), one array per nativePollEvents() call.
  *
- * Unlike the desktop addon (its own thread, blocking SDL_WaitEventTimeout loop,
- * pushed to JS via a ThreadSafeFunction), this runs synchronously on whatever
- * thread calls nativePollEvents() — Sdl3Bridge.java drives it from a Handler
- * posting every ~16ms, matching the desktop addon's poll cadence without needing
- * a second native thread attached to the JVM.
+ * Unlike the desktop addon's own thread, this runs synchronously on whatever
+ * thread calls nativePollEvents(); Sdl3Bridge.java drives it from a Handler
+ * every ~16ms, so no second native thread is attached to the JVM.
  *
- * Does not implement joystick-level capture, raw HID capture, or mapping-file
- * loading — those are diagnostics-wizard features with no Android UI path yet.
- * SDL_AddGamepadMapping is still wired since a user-submitted mapping string is
- * plain data, no capture involved.
+ * No joystick-level capture, raw HID capture, or mapping-file loading: those
+ * are diagnostics-wizard features with no Android UI path yet.
  */
 #include <jni.h>
 #include <SDL3/SDL.h>
@@ -207,11 +202,9 @@ Java_com_relicofthepast_app_controllersdl3_Sdl3Bridge_nativeStart(JNIEnv *env, j
     return JNI_TRUE;
   }
   memset(g_gamepads, 0, sizeof(g_gamepads));
-  // Every pad here arrives as a system input device, which SDL reads directly,
-  // so its separate USB HID backend is turned off rather than left to compete
-  // for the same hardware. That backend cannot drive a pad whose driver needs
-  // libusb (compiled out on this platform) yet still claims it, and claiming an
-  // interface detaches the driver that was presenting the pad, so an enabled
+  // Every pad arrives as a system input device SDL reads directly. The USB HID
+  // backend cannot drive a pad whose driver needs libusb (compiled out here) yet
+  // still claims it, which detaches the driver presenting the pad, so an enabled
   // backend can take a working controller away. One path, no prompts.
   SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI, "0");
   if (!SDL_Init(SDL_INIT_GAMEPAD)) {

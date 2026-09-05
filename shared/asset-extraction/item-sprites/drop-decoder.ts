@@ -1,10 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
-/**
- * Droppable sprite decoder — orchestrates extraction of item drop sprites.
- *
- * Uses pre-loaded sprite sheets and lookup tables from the game ROM to decode
- * standard drop sprites, numbered sprites, rupees, big keys, shields, and bombs.
- */
+/** Decodes item drop sprites from pre-loaded sheets and ROM lookup tables. */
 import type { RomData } from '../rom/rom-types';
 import type { RGBA } from '../graphics/palette';
 import type { SpritePalettes, ReceiptSheets } from './receipt-decoder';

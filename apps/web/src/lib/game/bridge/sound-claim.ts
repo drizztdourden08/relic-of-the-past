@@ -13,7 +13,7 @@ import { voidCall } from './wasm-call';
 
 /**
  * Publish one channel's mask. `voidCall` swallows a missing export, so an older core that has
- * no WasmSetSoundClaim yet simply never claims anything rather than taking the renderer down.
+ * no WasmSetSoundClaim yet never claims anything instead of taking the renderer down.
  */
 const setSoundClaim = (channel: SoundChannel, claim: SoundClaim): void => {
   voidCall('WasmSetSoundClaim', {
@@ -22,7 +22,7 @@ const setSoundClaim = (channel: SoundChannel, claim: SoundClaim): void => {
   });
 };
 
-/** Claim nothing on any channel — the state a session must leave the core in. */
+/** Claim nothing on any channel. This is the state a session must leave the core in. */
 const clearSoundClaims = (): void => {
   for (const channel of SOUND_CHANNELS) setSoundClaim(channel, EMPTY_SOUND_CLAIM);
 };

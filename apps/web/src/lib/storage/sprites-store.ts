@@ -26,7 +26,7 @@ const extractSprites = async (romFile: string): Promise<{ success: boolean; coun
   try {
     const romBytes = await files().readBytes(`roms/${romFile}`);
     if (!romBytes) return { success: false, error: `ROM file not found: ${romFile}` };
-    publishImportProgress({ kind: 'sprite', id: romFile, phase: 'decode', message: 'Extracting sprites…' });
+    publishImportProgress({ kind: 'sprite', id: romFile, phase: 'decode', message: 'Extracting sprites...' });
     const result = await runOnWorker<{ buffers: SpriteBuffer[]; errors: string[] }>({ op: 'sprites', romBytes, defs: DEFS });
     await sprites.writeSprites(files(), romFile, result.buffers);
     publishImportProgress({ kind: 'sprite', id: romFile, phase: 'done' });

@@ -1,11 +1,5 @@
 /* @layer renderer-components @kind component */
-/**
- * Traversal arrows — the moves the flood makes that are not a plain walk.
- *
- * Its own box rather than a section inside the dot legend: an arrow is a different
- * kind of mark from a dot (an edge between two tiles, not a property of one), and
- * splitting it keeps each panel short enough to collapse usefully.
- */
+// Its own box, not a section of the dot legend: an arrow is an edge between tiles, not a property of one.
 import type { CSSProperties } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { Text } from '@ds/primitives/Text';

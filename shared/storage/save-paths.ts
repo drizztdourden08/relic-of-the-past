@@ -2,8 +2,8 @@
 /**
  * The save-folder layout, in one place: the three save kinds and the sidecar files
  * that sit next to a save. Quick slots are bare `save{N}.sav` with no manifest,
- * normal/auto saves are `{id}.sav` tracked in `manifest.json` — so anything stored
- * per save (the music-resume snapshot) has to key off a name, not a manifest entry.
+ * normal/auto saves are `{id}.sav` tracked in `manifest.json`. Anything stored per save,
+ * like the music-resume snapshot, therefore keys off a name and not a manifest entry.
  */
 
 type SaveKind = 'quick' | 'normal' | 'auto';

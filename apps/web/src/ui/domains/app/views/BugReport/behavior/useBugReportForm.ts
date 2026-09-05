@@ -2,7 +2,7 @@
 import { useCallback, useState } from 'react';
 import { useDebugTextBuilder, useDebugText } from '@app/lib/diagnostics';
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // an @ and a dot with an extension — nothing stricter
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // only requires an @ and a dot with an extension
 
 type SubmitStatus = 'idle' | 'submitting' | 'done' | 'error';
 

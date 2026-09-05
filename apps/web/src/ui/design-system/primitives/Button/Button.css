@@ -92,7 +92,7 @@
   color: var(--c-bg);
 }
 
-/* ─── Tile (square, stacks icon/sprite over label — e.g. item-give buttons) ─── */
+/* ─── Tile (square, stacks icon/sprite over label, e.g. item-give buttons) ─── */
 .btn--tile {
   flex-direction: column;
   align-items: center;
@@ -112,7 +112,7 @@
   color: var(--c-text);
 }
 
-/* ─── Bare (unstyled <button> shell for clickable containers — look comes from className) ─── */
+/* ─── Bare (unstyled <button> shell for clickable containers, styled by className) ─── */
 .btn--bare {
   display: block;
   gap: 0;

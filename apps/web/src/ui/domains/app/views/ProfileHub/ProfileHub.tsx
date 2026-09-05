@@ -30,7 +30,7 @@ const ProfileHub = (props: ProfileHubProps) => {
   useEffect(() => { applyNotchMode(settings.renderIntoNotch); }, [settings.renderIntoNotch]);
 
   // Search palette bridge: while this profile's hub is mounted, it's the sole read/write
-  // owner of GameSettings — register so the palette can show and flip inline toggles.
+  // owner of GameSettings, so register and let the palette show and flip inline toggles.
   const registerSettings = useSearchStore((s) => s.registerSettings);
   const clearSettings = useSearchStore((s) => s.clearSettings);
   useEffect(() => { registerSettings(settings, handleSettingsChange); }, [settings, handleSettingsChange, registerSettings]);
@@ -57,7 +57,7 @@ const ProfileHub = (props: ProfileHubProps) => {
 
   return (
     <Box className="profile-hub">
-      {/* Profile Header — always visible */}
+      {/* Profile Header, always visible */}
       <Box className="profile-hub__header">
         <Box className="profile-hub__title-row">
           <Text as="h1" className="profile-hub__name">{profile.name}</Text>
@@ -70,7 +70,7 @@ const ProfileHub = (props: ProfileHubProps) => {
                   {gamePaused ? '▶ Resume' : '⏸ Pause'}
                 </Button>
                 <Button variant="danger" size="md" onClick={handleStop} disabled={stopping}>
-                  {stopping ? <><Spinner size="sm" /> Stopping…</> : '■ Stop'}
+                  {stopping ? <><Spinner size="sm" /> Stopping...</> : '■ Stop'}
                 </Button>
                 <Button variant="tertiary" size="md" onClick={onResetGame} disabled={stopping}>↻ Reset</Button>
               </>

@@ -102,19 +102,19 @@ const LanguageManager = (props: LanguageManagerProps) => {
             value={extractLang}
             onChange={(val) => setExtractLang(val)}
             options={[
-              { value: '', label: 'Select language…' },
+              { value: '', label: 'Select language...' },
               ...Object.entries(LANGUAGE_NAMES).map(([code, name]) => ({
                 value: code,
                 label: `${name} (${code})`,
               })),
             ]}
-            placeholder="Select language…"
+            placeholder="Select language..."
           />
         </Field>
       </Box>
       <ImportForm
         kind="language"
-        placeholder="Paste ROM download URL…"
+        placeholder="Paste ROM download URL..."
         accept={['.sfc', '.smc', '.zip', '.7z', '.rar']}
         dropLabel="Drop a ROM file to extract language"
         dropHint="The ROM is used temporarily and not saved"

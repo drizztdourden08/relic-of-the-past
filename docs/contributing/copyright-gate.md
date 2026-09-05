@@ -14,8 +14,8 @@ It runs in two places, sharing one engine in `scripts/copyright-gate/`:
 
 It only looks at changed files and added lines:
 
-- **Media files** — any added or modified file with an image, audio, video, font, or ROM extension. These are blocked until approved; files already committed are never re-scanned.
-- **Nintendo references** — trademarked terms such as Zelda, Hyrule, Ganon, Triforce, Master Sword, and Nintendo in added text. Paths that legitimately use these names are skipped, including `docs/`, `*.md`, `shared/game/data/`, `shared/input/data/`, `shared/credits.ts`, `LICENSE`, and the gate itself. The lists live in `scripts/copyright-gate/patterns.mjs`.
+- **Media files:** any added or modified file with an image, audio, video, font, or ROM extension. These are blocked until approved; files already committed are never re-scanned.
+- **Nintendo references:** trademarked terms such as Zelda, Hyrule, Ganon, Triforce, Master Sword, and Nintendo in added text. Paths that legitimately use these names are skipped, including `docs/`, `*.md`, `shared/game/data/`, `shared/input/data/`, `shared/credits.ts`, `LICENSE`, and the gate itself. The lists live in `scripts/copyright-gate/patterns.mjs`.
 
 ## Approving
 

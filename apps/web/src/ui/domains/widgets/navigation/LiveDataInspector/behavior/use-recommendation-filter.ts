@@ -1,13 +1,12 @@
 /* @layer renderer-widgets @kind hook */
 /**
- * Classifies open findings by what accepting them would DO to the dataset —
- * change a property, add a missing record, drop an extra one — which is the
+ * Classifies open findings by what accepting them would DO to the dataset
+ * (change a property, add a missing record, drop an extra one), which is the
  * axis a reviewer triages on, not the confidence badge already on each card.
  *
  * The active filter is derived, not stored-and-synced: if the screen changes
- * under the player and the selected tab's own count drops to zero, the very
- * next render already reports "all" rather than needing an effect to notice
- * the tab vanished and correct the state after the fact.
+ * and the selected tab's count drops to zero, the next render already reports
+ * "all" with no effect needed to correct the state after the fact.
  */
 import { useMemo, useState } from 'react';
 import type { Recommendation, RecommendationAction } from '@shared/game/recommendations';

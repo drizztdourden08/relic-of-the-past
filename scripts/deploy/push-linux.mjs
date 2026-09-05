@@ -1,7 +1,7 @@
 /* @layer tooling-scripts @kind script */
 /**
  * Build the Linux app directly inside the VirtualBox test VM and launch it.
- * No WSL build step — the VM is both the build machine and the test target.
+ * No WSL build step, because the VM is both the build machine and the test target.
  *
  *   npm run push:linux                  build, push test-roms, launch on VM
  *   npm run push:linux -- --build-only  build only (no launch)
@@ -11,7 +11,7 @@
  *
  * Flow:
  *   1. Mount Windows source tree into the VM via a transient VirtualBox shared folder.
- *   2. SSH → rsync shared folder to ~/relic (local VM copy — avoids building over slow vboxsf).
+ *   2. SSH → rsync shared folder to ~/relic (a local VM copy, which avoids building over slow vboxsf).
  *   3. SSH → build: npm install + electron-builder → AppImage staged to ~/rotp-linux.AppImage.incoming.
  *   4. Mount test-roms shared folder in VM.
  *   5. SSH → vm-launch.sh: atomic swap + launch.
@@ -62,7 +62,7 @@ const mountShare = (vmName, shareName, hostPath, sshArgs, target, mountPoint) =>
 };
 
 const syncFromShare = (sshArgs, target) => {
-  log('Syncing source tree from shared folder → ~/relic…');
+  log('Syncing source tree from shared folder → ~/relic...');
   run('ssh', [
     ...sshArgs,
     target,
@@ -71,7 +71,7 @@ const syncFromShare = (sshArgs, target) => {
 };
 
 const buildInVm = (sshArgs, target) => {
-  log('Building Linux app in VM…');
+  log('Building Linux app in VM...');
   run('ssh', [
     ...sshArgs,
     target,
@@ -117,9 +117,9 @@ const main = () => {
   run('ssh', [...sshArgs, target, 'mkdir', '-p', '.local/share/icons', '.local/share/applications']);
   run('scp', [...scpArgs, installer, `${target}:vm-install-desktop.sh`]);
   run('scp', [...scpArgs, icon, `${target}:.local/share/icons/relic-of-the-past.png`]);
-  log('Installing dock entry…');
+  log('Installing dock entry...');
   run('ssh', [...sshArgs, target, 'bash', 'vm-install-desktop.sh']);
-  log('Launching on the VM…');
+  log('Launching on the VM...');
   run('ssh', [...sshArgs, target, 'bash', 'vm-launch.sh']);
   log('Pushed and launched on the VM.');
 };

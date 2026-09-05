@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * FPS — read the current frame rate from the running WASM module.
+ * Read the current frame rate from the running WASM module.
  */
 
 import { getModule } from './wasm-bridge';

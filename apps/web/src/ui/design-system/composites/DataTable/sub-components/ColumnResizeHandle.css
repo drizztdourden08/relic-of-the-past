@@ -1,21 +1,10 @@
 /* @layer renderer-components @kind style */
 
-/*
- * A strip filling the gutter between one header and the next, so it reads as
- * the line between two columns rather than as part of either. It has to be its
- * own element rather than a ::after on the cell: this is a pointer target, and
- * it must not be part of what the cell's own drag picks up. `touch-action`
- * keeps a touch pull from being handed to the scroller instead of to us.
- *
- * It covers the gutter EXACTLY — the grid's own `gap`, offset by that same
- * gap. Half-covering it left a bare sliver of grid between every pair of
- * columns, which belongs to the row and answers a drag with nothing: a column
- * carried across it got the browser's "cannot drop here" cursor and the header
- * never heard that the cursor had moved on. The strip is also centred on the
- * visible seam this way, which is where it always looked like it was.
- *
- * It hangs off `.data-table__header-cell`'s `position: relative`.
- */
+/* A strip over the gutter between two headers. Its own element, not a ::after:
+   it is a pointer target and must not be part of the cell's drag. `touch-action`
+   keeps a touch pull from the scroller. It covers the gutter exactly: a bare
+   sliver of grid between columns refuses a column drag and the header never
+   hears the cursor move on. Hangs off the cell's `position: relative`. */
 .data-table__resize {
   position: absolute;
   top: 0;
@@ -26,20 +15,8 @@
   touch-action: none;
 }
 
-/*
- * The line itself is thinner than its target: easy to hit, quiet to look at.
- *
- * It is drawn AT REST, not only under the cursor — a column boundary is a
- * standing fact about the table, so the reader should never have to go looking
- * for where one header stops and the next begins. Hover and drag then
- * INTENSIFY the same line rather than conjuring a second one.
- *
- * One element draws both states on purpose. The quiet boundary and the grab
- * target are the same seam, centred in the same gutter, and splitting them
- * into two elements would mean two copies of that placement — which drift the
- * first time the gutter changes, leaving the resting line beside the line the
- * cursor lights up instead of under it.
- */
+/* The line is thinner than its target and drawn at rest; hover and drag
+   intensify it. One element draws both states so the placement cannot drift. */
 .data-table__resize::after {
   content: '';
   position: absolute;
@@ -59,12 +36,8 @@
   background: var(--c-gold-bright);
 }
 
-/*
- * The seam of a column that is currently in the air stays a drop target — see
- * DataTable.css — but stops drawing itself, at rest as much as under the
- * cursor: there is nothing there to resize, and a line down the middle of the
- * hole the column left says a boundary is still standing where it is not.
- */
+/* The seam of a column in the air stays a drop target (see DataTable.css) but
+   stops drawing itself: there is nothing there to resize. */
 .data-table__header-cell--dragging .data-table__resize::after,
 .data-table__header-cell--vacated .data-table__resize::after {
   background: transparent;

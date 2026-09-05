@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Tracker Bridge — connects WASM item/check notifications to the tracker.
+ * Connects WASM item/check notifications to the tracker.
  * Manages window.__onItemReceived callback and inventory state polling.
  * Polls room flags, overworld flags, and NPC progress flags for check completion.
  */
@@ -12,7 +12,6 @@ import type { CheckId, ItemId } from '@shared/game/data';
 import { parseInventoryBuffer, inventoryToItemSet, setsEqual } from './inventory';
 import { readCompletedChecks } from './flag-polling';
 
-// ─── Listener types ───
 
 /**
  * A delivered item, as its dataset id plus the native index the game reported.
@@ -25,7 +24,6 @@ type UnknownItemEntry = { id: number; method: number; timestamp: number };
 type UnknownItemListener = (items: UnknownItemEntry[]) => void;
 type CompletedChecksListener = (checks: Set<CheckId>) => void;
 
-// ─── Module state ───
 
 const itemListeners = new Set<ItemReceivedListener>();
 const inventoryListeners = new Set<InventoryChangedListener>();
@@ -36,7 +34,6 @@ let currentCompletedChecks = new Set<CheckId>();
 let unknownItems: UnknownItemEntry[] = [];
 let pollIntervalId: ReturnType<typeof setInterval> | null = null;
 
-// ─── Public API ───
 
 const onItemReceived = (fn: ItemReceivedListener): () => void => {
   itemListeners.add(fn);
@@ -152,7 +149,7 @@ const initTrackerBridge = (): void => {
         try { fn(unknownItems); } catch { /* ignore */ }
       }
     }
-    // Defer poll to next microtask — avoids re-entrant WASM calls
+    // Defer poll to next microtask to avoid re-entrant WASM calls
     // (this callback fires via EM_ASM while WasmCheatGiveItem is still on the WASM stack)
     queueMicrotask(() => pollInventoryState());
   };

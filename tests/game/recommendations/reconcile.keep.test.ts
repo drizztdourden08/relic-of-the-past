@@ -1,8 +1,5 @@
 /* @layer test @kind test */
-/**
- * Reconciliation is what stops the store duplicating findings and what makes a
- * dismissal stick. Both failures are silent in the UI, so they are pinned here.
- */
+/** Reconciliation stops duplicate findings and makes a dismissal stick. Both failures are silent in the UI. */
 import { describe, it, expect } from 'vitest';
 import { reconcile, scopedToPass, recommendationId } from '@shared/game/recommendations';
 import type { DraftRecommendation, Recommendation } from '@shared/game/recommendations';
@@ -101,7 +98,7 @@ describe('reconcile', () => {
     expect(twice[0].state).toBe('dismissed');
   });
 
-  it('reopens a resolved finding that comes back — resolved is a state, not a verdict', () => {
+  it('reopens a resolved finding that comes back, because resolved is a state, not a verdict', () => {
     const previous = [entryFrom(draft(), { state: 'resolved', decidedAt: 1500 })];
     const next = reconcile(previous, [draft()], { now: 2000 });
 
@@ -117,7 +114,7 @@ describe('reconcile', () => {
     expect(next[0].decidedAt).toBe(1500);
   });
 
-  it('adds a genuinely new finding as open, stamped now', () => {
+  it('adds a new finding as open, stamped now', () => {
     const next = reconcile([], [draft()], { now: 2000 });
 
     expect(next).toHaveLength(1);

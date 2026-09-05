@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * Global Flood Fill — Orchestrates BFS across all overworld screens.
+ * Orchestrates BFS across all overworld screens.
  *
  * Runs the single-screen flood fill for every screen in the world,
  * collecting reachable tile counts per requirement set.
@@ -45,14 +45,14 @@ const runGlobalFlood = (options: GlobalFloodOptions): GlobalFloodResult => {
       continue;
     }
 
-    // BFS with no items — free tile count
+    // BFS with no items, for the free tile count
     const freeResult = floodFillScreen(grid, screenIndex, {
       indoors,
       inventory: emptyInventory,
     });
     floodResults.set(screenIndex, freeResult);
 
-    // BFS with all items — max reachable count
+    // BFS with all items, for the max reachable count
     const fullResult = floodFillScreen(grid, screenIndex, {
       indoors,
       inventory: fullInventory,

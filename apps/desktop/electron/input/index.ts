@@ -1,6 +1,6 @@
 /* @layer electron-main @kind barrel */
 /**
- * Input subsystem — main process entry point.
+ * Input subsystem entry point for the main process.
  */
 
 export { registerInputHandlers, stopInputHandlers } from './ipc-handlers';

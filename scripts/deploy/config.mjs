@@ -16,7 +16,7 @@ const DEFAULTS = {
   wslWorkdir: '~/relic',
   avdName: 'rotp_test',
   vmName: 'Linux-rotp-test', // VirtualBox VM name (for sharedfolder commands)
-  vm: null, // { host, user, identityFile? } — required for the VM hop
+  vm: null, // { host, user, identityFile? }, required for the VM hop
 };
 
 const loadConfig = () => {

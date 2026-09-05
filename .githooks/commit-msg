@@ -7,12 +7,12 @@ if ! grep -qi '\[allow-copyright\]' "$1"; then
   if command -v node >/dev/null 2>&1; then
     node scripts/copyright-gate/scan.mjs --staged || exit 1
   else
-    echo "copyright-gate: node not found — skipping local check (CI will enforce)."
+    echo "copyright-gate: node not found. Skipping the local check (CI will enforce)."
   fi
 fi
 
-# ai-config / vault drift gate (local-only — .claude/ and .vault/ are
-# gitignored, so nothing else ever re-checks this). Blocks a commit that
+# ai-config / vault drift gate. This one is local-only, since .claude/ and
+# .vault/ are gitignored and nothing else ever re-checks them. Blocks a commit that
 # would leave local-only work behind, unless acknowledged with [sync-ack].
 if ! grep -qi '\[sync-ack\]' "$1"; then
   if command -v node >/dev/null 2>&1; then

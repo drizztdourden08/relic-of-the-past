@@ -2,7 +2,7 @@
 /**
  * Personal curation layer over the dataset facade: a status pill, a free-text
  * note, and two timestamps, kept ONE JSON file per collection
- * (`Data/review/<kind>.json`, in the app's own data directory) — never inside
+ * (`Data/review/<kind>.json`, in the app's own data directory), never inside
  * the committed dataset (`shared/game/data/**`).
  *
  * `status` is a value from the `review-status` Enumeration category (see
@@ -15,9 +15,9 @@ import type { ReviewStatus } from '../data/enumeration/generated-types';
 interface ReviewEntry {
   status: ReviewStatus;
   note: string;
-  /** Epoch ms — when a human last judged this record's status or note. */
+  /** Epoch ms of when a human last judged this record's status or note. */
   reviewedAt: number | null;
-  /** Epoch ms — stamped by the dataset write path on a real save; never set by editing the note. */
+  /** Epoch ms stamped by the dataset write path on a real save. Editing the note never sets it. */
   updatedAt: number | null;
 }
 

@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 /**
  * The one place FloodFillOptions gets assembled. Five call sites used to build
- * it by hand and no two passed the same set — the engine's own flood omitted
+ * it by hand and no two passed the same set. The engine's own flood omitted
  * entrances, the exit-screen map, blockers AND the start layer, while the
  * offline dumper hard-coded an interior context and an EMPTY inventory. Same
  * core BFS, four different answers.
@@ -20,7 +20,7 @@ import { deriveStartLayer } from './start-layer';
 
 interface FloodRequest {
   location: SimLocation;
-  /** Traversal tokens the player holds (lift.N, boots, flippers, hookshot, hammer…). */
+  /** Traversal tokens the player holds (lift.N, boots, flippers, hookshot, hammer). */
   items: TileReq[];
   /** Where the walk starts; omitted means "let the BFS pick a start". */
   startPos?: GridPos;

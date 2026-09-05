@@ -2,7 +2,7 @@
 /**
  * Capacitor file picker via @capawesome/capacitor-file-picker (reads bytes as base64).
  *
- * Saving goes to the device's Documents directory rather than through a share sheet: this
+ * Saving goes to the device's Documents directory, not through a share sheet. This
  * project does not depend on @capacitor/share, and a file written where the user's own file
  * manager can reach it needs no extra plugin.
  */

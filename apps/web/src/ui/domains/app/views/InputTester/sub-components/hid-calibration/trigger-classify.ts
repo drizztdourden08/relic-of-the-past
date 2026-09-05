@@ -2,7 +2,7 @@
 /**
  * Is a trigger an axis or a switch?
  *
- * Both kinds exist across pads, so the answer has to be measured rather than
+ * Both kinds exist across pads, so the answer has to be measured, not
  * assumed. Range alone cannot tell them apart: a switch reported as one bit of
  * a shared button byte moves that byte by the bit's own value, so a high bit
  * looks exactly as wide as a real analog sweep.

@@ -1,12 +1,5 @@
 /* @layer renderer-components @kind component */
-/**
- * What a reachability dot means, in its own box beside the annotation legend.
- *
- * Two independent channels on the same dot: the RING says which layer(s) the flood
- * reached the tile on, the FILL says what kind of result that was. Split out of
- * OverlayLegend because stacking both in one panel made a column tall enough to
- * cover a meaningful slice of the game view.
- */
+// The RING says which layer(s) the flood reached the tile on, the FILL says what kind of result that was.
 import type { CSSProperties, ReactNode } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { Text } from '@ds/primitives/Text';
@@ -36,16 +29,16 @@ const Row = ({ children }: { children: ReactNode }) => <Box style={S.row}>{child
 const DotLegend = () => {
   return (
     <CollapsiblePanel title="dots">
-      <Text style={S.head}>ring — layer</Text>
+      <Text style={S.head}>ring shows the layer</Text>
       <Row><Swatch color="var(--c-info)" ring /><Text style={S.dim}>ground</Text></Row>
       <Row><Swatch color="var(--c-gold)" ring /><Text style={S.dim}>above</Text></Row>
       <Row><Swatch color="#000" ring /><Text style={S.dim}>both layers</Text></Row>
 
-      <Text style={S.head}>fill — flood result</Text>
+      <Text style={S.head}>fill shows the flood result</Text>
       <Row><Swatch color="rgba(80,200,255,0.6)" /><Text style={S.dim}>reachable</Text></Row>
       <Row><Swatch color="rgba(255,100,180,0.35)" /><Text style={S.dim}>needs an item</Text></Row>
       <Row><Swatch color="#000" halo="#fff" /><Text style={S.dim}>flood start</Text></Row>
-      <Text style={S.note}>no dot — unreachable, or an arrow instead</Text>
+      <Text style={S.note}>no dot means unreachable, or an arrow instead</Text>
     </CollapsiblePanel>
   );
 };

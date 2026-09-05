@@ -1,6 +1,6 @@
 /* @layer shared-game-data @kind data */
 /**
- * Deluxe track remapping — transcribed from the game's own tables.
+ * Deluxe track remapping. Transcribed from the game's own tables.
  *
  * The vanilla game has 36 music slots. "Deluxe" packs extend that: a slot that vanilla
  * reuses across many places is redirected to a per-area or per-entrance track (slots 37+),
@@ -51,7 +51,7 @@ const NO_REPLACEMENT = 242;
 /**
  * The entrance table with the sentinel resolved: the dedicated track per entrance, or null where
  * the entrance keeps whatever the vanilla byte selects. What the core is told about, so it can
- * make those entrances select a track at all — see bridge/deluxe-entrances.
+ * make those entrances select a track at all (see bridge/deluxe-entrances).
  */
 const DELUXE_ENTRANCE_TRACKS: ReadonlyArray<number | null> =
   ENTRANCE_TRACKS.map((track) => (track === NO_REPLACEMENT ? null : track));
@@ -66,7 +66,7 @@ interface RemapContext {
 /**
  * Every track number the Deluxe tables can actually ask for.
  *
- * Derived from the tables rather than written out, so it cannot fall out of step with them. A pack
+ * Derived from the tables instead of written out, so it cannot fall out of step with them. A pack
  * is free to ship a file for any number it likes, but a number neither table names is one the game
  * has no way to reach: it would sit in the studio looking like a slot to fill and would never play.
  */

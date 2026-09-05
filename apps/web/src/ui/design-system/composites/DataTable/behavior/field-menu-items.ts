@@ -1,16 +1,7 @@
 /* @layer renderer-components @kind logic */
 /**
- * The field tree, expressed as menu entries.
- *
- * Adapter, plain and simple: `buildPickerNodes` already walks a schema into the
- * shape a chooser needs, and `DropdownMenu` already nests entries that carry
- * children. This maps one onto the other, so "add a column" can live INSIDE a
- * column's ⋯ menu as a submenu instead of floating a second panel of its own —
- * and so neither the walk nor the menu learns about the other.
- *
- * A branch becomes a submenu and is not itself clickable; a leaf becomes an
- * acting entry. Empty in means one disabled entry out rather than a submenu
- * that opens onto nothing.
+ * Adapter from `buildPickerNodes` to `DropdownMenu` entries. A branch becomes
+ * a submenu, a leaf an acting entry, an empty list one disabled entry.
  */
 import type { PickerNode } from './field-picker-nodes';
 import type { MenuItem } from '../../DropdownMenu';

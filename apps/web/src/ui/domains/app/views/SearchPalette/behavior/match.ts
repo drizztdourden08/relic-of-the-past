@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-/** Ranked substring matcher — no dependency. Every query token must match somewhere in an
+/** Ranked substring matcher with no dependencies. Every query token must match somewhere in an
  *  entry (AND across tokens); per-token scores sum across fields, label weighted highest,
  *  ties break on shorter label. Tuned so "sprite" surfaces the Graphics setting, the Data
  *  Manager tab, and the "Add a ROM" action together, ranked by relevance. */
@@ -40,7 +40,7 @@ const scoreToken = (entry: SearchEntry, token: string): number => Math.max(
   scoreField(entry.breadcrumb.join(' '), token, BREADCRUMB_WEIGHTS),
 );
 
-/** Returns null when the entry doesn't match every token — excluded by the caller. */
+/** Returns null when the entry doesn't match every token, so the caller excludes it. */
 const scoreEntry = (entry: SearchEntry, tokens: string[]): number | null => {
   let total = KIND_BOOST[entry.kind];
   for (const token of tokens) {

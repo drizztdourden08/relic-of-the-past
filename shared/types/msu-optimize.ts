@@ -3,16 +3,13 @@
  * Normalising a pack to one audio format: what the measured preview promises, and what a
  * run reports back.
  *
- * EVERY audio file the pack holds is a candidate, an already-compressed one included. The
- * point is a pack in one format, so an mp3 is decoded once and stored exactly — lossless,
- * but bigger, and the preview says so with a negative saving rather than hiding it in the
- * total. A file already in the target format is not a candidate: there is nothing to
- * normalise about it. The only thing that takes a file OUT of the list is a probe that
- * cannot read it at all, which is what `excludedBecause` records.
+ * EVERY audio file is a candidate, already-compressed ones included: an mp3 is decoded once and
+ * stored exactly (lossless but bigger, shown as a negative saving). A file already in the target
+ * format is not a candidate. Only a probe that cannot read a file takes it OUT of the list
+ * (`excludedBecause`).
  *
- * The estimate is MEASURED, never a flat ratio: FLAC on 16-bit stereo lands anywhere from
- * 40% to 70% depending on the material, so a fixed percentage would be a guess dressed up
- * as a number. A short slice is really encoded and the real ratio is scaled up.
+ * The estimate is MEASURED, never a flat ratio: FLAC on 16-bit stereo lands anywhere from 40%
+ * to 70% depending on the material. A short slice is really encoded and the ratio scaled up.
  */
 
 /** The one format a pack is normalised to. Lossless, so no candidate loses a generation. */
@@ -28,32 +25,24 @@ interface OptimizeCandidate {
   name: string;
   currentBytes: number;
   /**
-   * What the target format is measured to cost for this file, or null when nothing could be
-   * measured (excluded, or a source whose duration is unknown so the slice cannot be scaled).
-   * BIGGER than `currentBytes` is a normal answer for an already-compressed source.
+   * Measured cost of the target format for this file, or null when nothing could be measured
+   * (excluded, or unknown duration). BIGGER than `currentBytes` is normal for a compressed source.
    */
   estimatedBytes: number | null;
   excludedBecause: OptimizeExclusion | null;
   /**
-   * The repeat point that has to move into the manifest before this file's format changes,
-   * or null when there is none to move. It lives in the MSU-1 header and dies with the
-   * container, so a run writes it into the layer's `loopSample` FIRST — an intro-then-loop
-   * track whose point is lost silently starts repeating from zero.
+   * The repeat point to move into the manifest before this file's format changes, or null. It
+   * lives in the MSU-1 header and dies with the container, so a run writes it into the layer's
+   * `loopSample` FIRST; an intro-then-loop track that loses it silently repeats from zero.
    */
   carryLoopSample: number | null;
 }
 
 interface OptimizeAnalysis {
   pack: string;
-  /**
-   * Every audio file the pack does not yet hold in the target format, in the order the pack
-   * lists them. An original a previous run already converted is not one: its copy exists.
-   */
+  /** Every audio file not yet held in the target format, in pack order. An original already converted by a previous run is not one. */
   candidates: OptimizeCandidate[];
-  /**
-   * Files whose audio the pack already holds in the target format — the file itself, or a
-   * converted copy beside it. Counted so the preview can say the pack is part-way there.
-   */
+  /** Files already held in the target format (the file itself, or a converted copy beside it), so the preview can say the pack is part-way there. */
   alreadyTargetCount: number;
 }
 

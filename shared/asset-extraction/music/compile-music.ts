@@ -1,8 +1,7 @@
 /* @layer shared-asset-extraction @kind logic */
 /**
- * Music compiler — orchestrator that compiles extracted music text back to SPC sound bank binary.
- *
- * Ported from: upstream's compile_music.py
+ * Compiles extracted music text back to SPC sound bank binary.
+ * Ported from upstream's compile_music.py.
  */
 import * as yaml from 'js-yaml';
 import type { CompiledSong, CompiledSoundBank, MusicCompileInput } from './compile-types';

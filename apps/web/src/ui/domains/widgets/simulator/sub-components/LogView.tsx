@@ -55,7 +55,7 @@ const LogView = (props: LogViewProps) => {
           const idx = first + i;
           const { kind, tag } = classifyEvent(event);
           const lvl = indents[idx];
-          // Position rows: the tag already says START/END — show just "at x,y".
+          // Position rows: the tag already says START/END, so show only "at x,y".
           const msg = kind === 'pos' ? event.msg.replace(/^(START|END) /, '') : event.msg;
           return (
             <Box key={`${event.step}-${idx}`} className="sim-log__row">

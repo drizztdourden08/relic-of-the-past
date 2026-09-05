@@ -1,17 +1,14 @@
 /* @layer renderer-app @kind style */
 
-/* ─── App Layout ─── */
-
 .app {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-/* Notch "usable space" mode — inset the whole app (UI + game canvas) away from the
-   camera cutout / rounded corners. Padding goes on .app (the flex parent) so the
-   absolutely-positioned layers inside .app__content shrink with it. Default mode
-   (notch-fill) renders edge-to-edge under the cutout, so no padding here. */
+/* Notch "usable space" mode: inset the whole app away from the camera cutout.
+   Padding goes on .app (the flex parent) so the absolutely-positioned layers inside
+   .app__content shrink with it. Default mode (notch-fill) renders edge-to-edge. */
 html.notch-safe .app {
   padding: var(--sai-top) var(--sai-right) var(--sai-bottom) var(--sai-left);
 }

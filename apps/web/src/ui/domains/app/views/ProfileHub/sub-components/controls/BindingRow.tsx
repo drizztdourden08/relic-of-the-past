@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 /**
- * BindingRow — a single input mapping row (SNES buttons, shortcuts, cheats).
+ * A single input mapping row (SNES buttons, shortcuts, cheats).
  * Shows: action label | optional middle icon | optional middle label | binding icon | binding label
  * Entire row is clickable to initiate rebinding.
  */
@@ -20,7 +20,7 @@ interface BindingRowProps {
   binding: InputBinding;
   bindingIcon?: ButtonIcon | null;
   /** Which controller this binding came from, shown only when the profile
-   *  mixes more than one — a lone controller needs no such disambiguation. */
+   *  mixes more than one, since a lone controller needs no such disambiguation. */
   deviceIconUrl?: string | null;
   onRebind: () => void;
   onClear?: () => void;

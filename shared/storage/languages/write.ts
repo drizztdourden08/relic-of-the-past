@@ -2,7 +2,7 @@
 /**
  * Persisting a language set. `saveSet` is a whole-set overwrite of the JSON
  * payloads and never touches the font binaries (those are written once by an
- * extraction or copied by a create/duplicate) — and never bumps `version`,
+ * extraction or copied by a create/duplicate). It never bumps `version` either,
  * which is the caller's call.
  *
  * Everything but the dialogue and the non-dialogue overrides is the current set

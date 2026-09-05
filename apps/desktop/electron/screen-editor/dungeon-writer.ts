@@ -3,8 +3,8 @@
  * Creating, rewriting and removing a dungeon record.
  *
  * The two dungeon files were split by size alone, so a new record always goes
- * to the second — there is nothing on a dungeon that says which half it belongs
- * to, and inventing a balancing rule for a collection of thirteen would be more
+ * to the second. Nothing on a dungeon says which half it belongs to, and
+ * inventing a balancing rule for a collection of thirteen would be more
  * machinery than the problem. An existing record is found by id across both.
  */
 

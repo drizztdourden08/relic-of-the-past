@@ -21,7 +21,7 @@ const run = (rawAttr: number[][]): { grid: TilePassability[][]; ledges: LedgeTra
   return { grid, ledges };
 };
 
-describe('processStraightCliffs (indoor) — 2-wide same-direction rule', () => {
+describe('processStraightCliffs (indoor) and the 2-wide same-direction rule', () => {
   it('drops a lone trigger beside a staircase whose neighbor infers the opposite direction', () => {
     const rawAttr = emptyAttr();
     // Lobby pattern around the stairs: row 22 triggers at cols 12-13; col 12 is walled

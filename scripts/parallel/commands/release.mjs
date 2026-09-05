@@ -1,13 +1,8 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * `wt release <name>` — hand a worktree back to the pool.
- *
- * Releasing never requires the lease to belong to this session: a lease left behind by
- * a session that ended abruptly has to be clearable, or the worktree is stranded until
- * its TTL runs out. A mismatch is reported rather than refused.
- *
- * The checkout, the branch and the notes are all left intact — this frees the lease,
- * nothing else. Removal is `wt clean`.
+ * `wt release <name>`: free the lease, nothing else. A holder mismatch is reported,
+ * not refused, or a lease left by a dead session would strand the worktree until its
+ * TTL ran out. Removal is `wt clean`.
  */
 import { updateRegistry, findRecord } from '../registry.mjs';
 import { currentHolder, isHeld } from '../lease.mjs';

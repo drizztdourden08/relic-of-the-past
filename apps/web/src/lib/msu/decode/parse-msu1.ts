@@ -26,7 +26,7 @@ const hasMsu1Magic = (bytes: Uint8Array): boolean =>
 
 /**
  * Decodes a `.pcm` body into planar float channels. Raw PCM needs no codec, so this is a
- * straight conversion — the reason `.pcm` playback works identically everywhere.
+ * straight conversion, which is why `.pcm` playback works identically everywhere.
  */
 const parseMsu1 = (bytes: Uint8Array): Msu1Audio => {
   if (!hasMsu1Magic(bytes)) throw new Error('Not an MSU-1 file: missing MSU1 magic');

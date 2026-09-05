@@ -1,12 +1,7 @@
 /* @layer renderer-components @kind data */
 /**
- * TriggerCalibrationWizard — 2-step analog trigger calibration UI.
- *
- * Steps:
- *   1. Rest:  Leave trigger released → record idle base value
- *   2. Max:   Fully press trigger → record max value, test live output
- *
- * Saves per-axis trigger calibration (base, max, deadzone).
+ * 2-step analog trigger calibration UI: record the idle base value, then the
+ * fully pressed max. Saves per-axis calibration (base, max, deadzone).
  */
 
 import type { CSSProperties } from 'react';
@@ -84,7 +79,7 @@ const TriggerCalibrationWizard = (props: Props) => {
       {cal.step === 'rest' && (
         <Box>
           <Text as="p" style={S.para}>
-            <Text as="strong">Leave the {label} fully released</Text> — don't touch it. Recording the idle rest position.
+            <Text as="strong">Leave the {label} fully released</Text>. Don't touch it. Recording the idle rest position.
           </Text>
 
           {!cal.restDone ? (

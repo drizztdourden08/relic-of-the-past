@@ -3,8 +3,8 @@
  * Reverse references for the six collections that gained a delete path.
  *
  * Same bargain as reference-index.ts's two originals: read off the registry
- * rather than off a second hand-maintained list, so this stays correct as the
- * data changes. Every field a real record carries TODAY is walked — including
+ * instead of off a second hand-maintained list, so this stays correct as the
+ * data changes. Every field a real record carries TODAY is walked, including
  * the ones buried in a Requirement or a presence condition, which is exactly
  * where a dangling reference would otherwise hide from a delete-guard.
  *

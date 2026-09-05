@@ -1,7 +1,5 @@
 /* @layer shared-asset-extraction @kind data */
-/**
- * Dungeon entrance data compilation — entrance positions, cameras, blocksets, starting points.
- */
+/** Dungeon entrance data compilation: entrance positions, cameras, blocksets, starting points. */
 import type { RomData } from './rom/rom-types';
 import type { AssetBuilder } from './asset-builder';
 

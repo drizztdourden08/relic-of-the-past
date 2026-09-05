@@ -110,7 +110,7 @@ const useProfileSettings = (props: ProfileHubProps) => {
           onShadowCastingChange?.(merged.postProcessingShadows);
           onPixelPerfectChange?.(merged.pixelPerfect);
           getInputManager().setFunctionMappings(merged.functionMappings ?? DEFAULT_FUNCTION_MAPPINGS);
-          // Always attempt to push — if module isn't running yet, it's a no-op.
+          // Always attempt to push. If the module isn't running yet, it's a no-op.
           pushLiveSettings(merged);
         }
       } catch { /* use defaults */ }

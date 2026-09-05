@@ -1,28 +1,19 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * Writes install.json, the recipe the downloader stub reads before it installs
- * anything.
+ * Writes install.json, the recipe the downloader stub reads from
+ * `releases/latest/download/install.json`: which setup to fetch, how to run it,
+ * its hash, and whether the stub is new enough. URLs are absolute because routine
+ * releases ship only the update package, so the setup usually lives on an earlier
+ * release; without one here, the previous manifest's URLs are carried forward.
  *
  *   node scripts/build/make-install-manifest.mjs --dir release/win --tag v0.16.0
- *
- * The stub only ever knows one URL, `releases/latest/download/install.json`, so this
- * file has to answer every question it could have: which setup to fetch, how to run
- * it, what it should hash to, and whether the stub is even new enough to be reading
- * these instructions.
- *
- * URLs are absolute rather than bare asset names on purpose. Routine releases ship
- * only the update package, so the setup they point at usually lives on an EARLIER
- * release, and a name alone could not express that. When this release has no setup of
- * its own, the previous manifest's URLs are carried forward.
  */
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-/**
- * Raised only when a new stub gains an ability older ones lack. An older stub reading
- * a higher number fetches the newer stub and hands over to it.
- */
+// Raised only when a new stub gains an ability older ones lack; an older stub
+// reading a higher number fetches the newer stub and hands over.
 const STUB_VERSION = 1;
 
 const REPO = 'https://github.com/drizztdourden08/relic-of-the-past';
@@ -36,9 +27,8 @@ const arg = (name, fallback = null) => {
 const root = process.cwd();
 const dir = arg('dir', join('release', 'win'));
 const tag = arg('tag');
-// Points the recipe somewhere other than the release page, which is how the whole
-// download-and-install path gets exercised against a local server before anything
-// is published: --base http://localhost:8000
+// --base http://localhost:8000 exercises the download-and-install path against a
+// local server before anything is published.
 const base = arg('base');
 if (!tag && !base) throw new Error('--tag is required, e.g. --tag v0.16.0');
 
@@ -68,9 +58,8 @@ const previousManifest = async () => {
 
 const previous = await previousManifest();
 
-// rotp-windows-setup.exe is the stub: the small download the site links. The payload
-// is what the stub then fetches and runs silently, and the zip is what it unzips for
-// an install into a chosen directory. Neither of those two is offered as a download.
+// rotp-windows-setup.exe is the stub the site links; the payload and zip are what it
+// fetches, and neither is offered as a download.
 const setup = entryFor('rotp-windows-payload.exe', { args: ['--silent'] }) ?? previous?.setup ?? null;
 const portable = entryFor('rotp-windows-directory.zip') ?? previous?.portable ?? null;
 const stub = entryFor('rotp-windows-setup.exe') ?? previous?.stub ?? null;
@@ -82,8 +71,7 @@ if (!setup) {
   );
 }
 
-// Stated rather than parsed out of a URL: a manifest pointed at a local server for
-// testing has no release tag in its paths to read a version from.
+// Stated, not parsed from a URL: a local-server manifest has no release tag in its paths.
 const appVersion = JSON.parse(readFileSync(join(root, 'package.json'), 'utf-8')).version;
 const manifest = { stubVersion: STUB_VERSION, version: appVersion, stub, setup, portable };
 const out = join(dir, 'install.json');

@@ -1,8 +1,7 @@
 /* @layer renderer-components @kind hook */
 /**
- * useEnhancedSaveSlot — state machine for the enhanced save slot shortcut flow.
+ * State machine for the enhanced save slot shortcut flow.
  *
- * Flow:
  *  1. First press of ANY load/save key → opens overlay, highlights that slot.
  *  2. Press a DIFFERENT slot key while open → switches highlight to that slot.
  *  3. Press the SAME slot key a second time:

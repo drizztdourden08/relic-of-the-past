@@ -21,7 +21,7 @@
   padding: var(--space-sm);
 }
 
-/* Contrasty filter — sits darker than the translucent card around it. */
+/* Contrasty filter, darker than the translucent card around it. */
 .side-nav__search .text-input {
   background: var(--c-sunken);
   border-color: var(--c-border);

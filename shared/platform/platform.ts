@@ -3,7 +3,7 @@
  * Platform facade + composition root. resolvePlatform() is the single Strategy
  * selection point: detect the host once, instantiate that host's factory, and
  * assemble the facade the app consumes. The facade deliberately does NOT expose
- * the legacy window.api — not-yet-ported call sites keep using it directly.
+ * the legacy window.api, which not-yet-ported call sites keep using directly.
  */
 import type { PlatformInfo, Capabilities, HostShell } from './types';
 import type { WindowControlsPort } from './ports/window-controls';

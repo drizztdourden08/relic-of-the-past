@@ -1,22 +1,9 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * THE flood. One screen, and one area of screens, for every caller.
- *
- * The nav widget and the simulator used to run the same core BFS through two
- * different setups: the widget assembled FloodFillOptions by hand and read its
- * solid-sprite blockers from the LIVE sprite list, while the simulator went
- * through buildFloodOptions and the addressable spawn table. Live reads only
- * describe the screen the game is standing on, so the two disagreed about which
- * tiles were blocked the moment you looked at anywhere else — and a widget that
- * cannot be trusted to report what the simulator sees is a widget you cannot
- * troubleshoot the simulator with.
- *
- * So both now come through here. `floodOneScreen` is the single-screen unit and
- * `propagateArea` chains it across a big screen's sub-screens. The ONLY thing a
- * caller varies is where the walk starts: the widget pools every seed an area's
- * crossings hand it and floods each screen once, while the simulator floods per
- * arrival from the one tile it actually arrived on. Same grids, same options,
- * same numbers for the same seeds.
+ * THE flood, for every caller (widget and simulator), so the widget can be trusted to report
+ * what the simulator sees. `floodOneScreen` is the single-screen unit; `propagateArea` chains
+ * it across a big screen's sub-screens. The ONLY thing a caller varies is where the walk
+ * starts. Same grids, same options, same numbers for the same seeds.
  */
 import type { ConnectionInfo, FloodFillResult, GridPos, OverworldEntrance } from '@shared/game/navigation';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
@@ -34,13 +21,13 @@ interface ScreenFloodRequest {
   items: TileReq[];
   /** Where the walk starts; omitted lets the BFS pick. */
   startPos?: GridPos;
-  /** Further BFS seeds — crossings propagating in from an adjacent screen. */
+  /** Further BFS seeds. These are crossings propagating in from an adjacent screen. */
   extraSeeds?: GridPos[];
   /** True when startPos is the player's real position in the loaded screen. */
   atPlayer?: boolean;
   /** Entrances to report against. `findEntrancePositions` filters this to the
    *  screen itself, so passing the whole enriched list is the same as passing
-   *  one screen's worth — neither seeds the BFS. */
+   *  one screen's worth. Neither seeds the BFS. */
   entrances: OverworldEntrance[];
   /** Intra-room scroll boundaries of a 2x2 room (indoor only). */
   intraEdges?: EdgeName[];
@@ -77,23 +64,16 @@ interface AreaFloodRequest extends ScreenFloodRequest {
  *  than a real limit on how far seeds travel. */
 const MAX_ITERATIONS = 12;
 
-/** Rooms discovered indoors are bounded — a dungeon's connected-room graph can
- *  run far deeper than the local area a flood is meant to describe. This is
- *  the same order of size as an overworld big-screen group (usually 1-4
- *  screens) while still covering a short indoor chain like the first castle's
- *  entrance hall (West/Main/East Entrance). */
+/** Bound on rooms discovered indoors: a dungeon's room graph runs far deeper than the
+ *  local area a flood describes. Same order as a big-screen group (1-4 screens), still
+ *  covering a short chain like the first castle's entrance hall. */
 const MAX_INDOOR_ROOMS = 8;
 
 /**
- * Flood a whole big screen: the primary sub-screen from the player's position,
- * then each neighbour its crossings reach, seeded with every tile those
- * crossings land on.
- *
- * Indoors this starts from the primary room and grows through its stairs and
- * walk-through boundaries (capped by MAX_INDOOR_ROOMS): each connected room's
- * OWN grid is rebuilt addressably by getScreenGrids exactly like the simulator
- * already does for any room the player isn't standing in — never through the
- * destructive Dungeon_LoadRoom, which only the LIVE room ever goes through.
+ * Flood a whole big screen: the primary sub-screen from the player's position, then each
+ * neighbour its crossings reach, seeded with the landing tiles. Indoors it grows through
+ * stairs and walk-through boundaries (capped by MAX_INDOOR_ROOMS); each room's grid is
+ * rebuilt addressably by getScreenGrids, never through the destructive Dungeon_LoadRoom.
  */
 const propagateArea = (req: AreaFloodRequest): ScreenFloodResult[] => {
   const { isIndoors, primaryScreenIndex, startPos, ...shared } = req;
@@ -102,10 +82,8 @@ const propagateArea = (req: AreaFloodRequest): ScreenFloodResult[] => {
     ? { isIndoors: true, roomId: screenIndex, owScreenIndex: 0 }
     : { isIndoors: false, roomId: 0, owScreenIndex: screenIndex };
 
-  // Indoors, only the primary room's entrances were computed by the caller (the
-  // widget only ever calls roomEntrances() for the room the player occupies); a
-  // newly discovered room needs its OWN list so its stairs/boundaries can be
-  // found too, or propagation could only ever reach one room deep.
+  // Indoors the caller only computed the primary room's entrances; a newly discovered room
+  // needs its OWN list or propagation could only reach one room deep.
   const entranceCache = new Map<number, OverworldEntrance[]>();
   const entrancesFor = (screenIndex: number): OverworldEntrance[] => {
     if (!isIndoors || screenIndex === primaryScreenIndex) return shared.entrances;
@@ -121,11 +99,9 @@ const propagateArea = (req: AreaFloodRequest): ScreenFloodResult[] => {
   let dirty = new Set<number>([primaryScreenIndex]);
 
   /**
-   * Offer a crossing's landing tile to the screen it lands on. Queues that
-   * screen for a (re)flood only when the tile is genuinely new AND its last
-   * flood could not already walk there — so a crossing into ground already
-   * covered costs nothing, and the passes converge instead of ping-ponging.
-   * Reads `dirty` at call time, which is the set for the NEXT pass.
+   * Offer a crossing's landing tile to the screen it lands on. Queues a (re)flood only when
+   * the tile is new AND the last flood could not already walk there, so the passes converge
+   * instead of ping-ponging. Reads `dirty` at call time (the set for the NEXT pass).
    */
   const offerSeed = (screenIndex: number, tile: GridPos): void => {
     if (!allowed.has(screenIndex)) return;
@@ -140,10 +116,8 @@ const propagateArea = (req: AreaFloodRequest): ScreenFloodResult[] => {
     dirty = new Set();
     for (const screenIndex of batch) {
       const isPrimary = screenIndex === primaryScreenIndex;
-      // The primary keeps the player's own position as its start; every other
-      // screen starts on the first crossing that reached it. Either way the
-      // REST of the accumulated seeds ride along, so a screen re-run after a
-      // neighbour opened a second way in floods from both at once.
+      // The primary starts at the player's position; every other screen starts on the first
+      // crossing that reached it. The REST of the accumulated seeds ride along either way.
       const known = ledger.list(screenIndex);
       const start = isPrimary && startPos ? startPos : known[0];
       const extra = isPrimary && startPos ? known : known.slice(1);
@@ -159,10 +133,8 @@ const propagateArea = (req: AreaFloodRequest): ScreenFloodResult[] => {
       analyzed.set(screenIndex, entry);
       for (const t of entry.result.transitions) {
         if (t.edge === 'entrance') {
-          // Room-stair/walk-boundary ids (>= STAIR_ID_BASE) name a destination
-          // room to grow into; anything below that (a real overworld door, or a
-          // fall-hole id) leaves the indoor room graph entirely and is reported
-          // as an exit, not propagated.
+          // Room-stair/walk-boundary ids (>= STAIR_ID_BASE) name a room to grow into; anything
+          // below leaves the indoor graph and is reported as an exit, not propagated.
           if (!isIndoors || t.entranceIdx == null || t.entranceIdx < STAIR_ID_BASE) continue;
           const destRoom = entrancesFor(screenIndex).find((e) => e.id === t.entranceIdx)?.roomId;
           if (!destRoom || destRoom === screenIndex) continue;

@@ -1,22 +1,17 @@
 /* @layer tests @kind test */
 /**
- * Pins `cur_palace_index_x2` → the dungeon record it names, and that record's
- * destination file stem.
+ * Pins `cur_palace_index_x2` → dungeon record → destination file stem.
  *
- * The values are the game's own, doubled: its dungeon tables are indexed by
- * `cur_palace_index_x2 >> 1`. The ground truth here is the ROM's dungeon-map
- * floor-layout table (pointers at SNES $8AF605 — 14 entries, one per dungeon, each
- * listing that dungeon's room numbers), corroborated by `kDungeonCrystalPendantBit`.
+ * The values are the game's own, doubled (its tables index by
+ * `cur_palace_index_x2 >> 1`). Ground truth: the ROM's dungeon-map floor-layout
+ * table (SNES $8AF605, 14 entries), corroborated by `kDungeonCrystalPendantBit`.
  *
- * This mapping drifted once already: it had been shifted by one dungeon from 0x08
- * up, which cost every affected screen its exact `palace:room` key and left the
- * room-only palace-scan fallback quietly carrying nine dungeons. The editor picks
- * the destination FILE from the resolved dungeon's `fileStem`, so a shifted table
- * writes screens into the wrong dungeon file. Pinning all 14 palace values keeps
- * the data and the resolution in lockstep.
+ * This drifted once: shifted by one dungeon from 0x08 up, which cost every
+ * affected screen its exact `palace:room` key and left the palace-scan
+ * fallback silently carrying nine dungeons. The editor picks the destination
+ * FILE from `fileStem`, so a shifted table writes screens into the wrong file.
  *
- * Note the two palace values for the first castle: it has ONE dungeon record, and
- * both values must resolve to it.
+ * The first castle has ONE dungeon record and two palace values; both resolve to it.
  */
 import { describe, it, expect } from 'vitest';
 import { getPalaceName, isDungeonPalace } from '../../../shared/game/logic/queries/dungeon-values';

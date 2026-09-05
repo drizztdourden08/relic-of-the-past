@@ -31,7 +31,7 @@ const classifyEvent = (event: SimEvent): LogStyle => {
   if (/^Reset/i.test(m)) return { kind: 'reset', tag: 'RESET' };
   if (/^Unlock|^Defeated |^Shutter door|^Pulled |^The follower is tagging along/.test(m)) return { kind: 'unlock', tag: 'UNLK' };
   if (/^Running |^→/.test(m)) return { kind: 'move', tag: 'MOVE' };
-  if (/^Got ["“]/.test(m)) return { kind: 'item', tag: 'ITEM' };
+  if (/^Got "/.test(m)) return { kind: 'item', tag: 'ITEM' };
   if (/^Found |^discovered/.test(m)) return { kind: 'discover', tag: 'FIND' };
   if (/^Opening |^Talking to |^Triggering |^Defeating |^Bombing |^Unlocking |^Walking into |^Pulling |^Rescuing |^Bringing |^Verified/.test(m)) return { kind: 'check', tag: 'CHECK' };
   if (/^flood |reachable|\bedges\b|\bentrances\b/i.test(m)) return { kind: 'flood', tag: 'FLOOD' };
@@ -57,7 +57,7 @@ const computeIndents = (events: SimEvent[]): number[] => {
   });
 };
 
-/** All kinds in display order, with human labels — drives the show/hide filter. */
+/** All kinds in display order, with human labels. Drives the show/hide filter. */
 const ALL_KINDS: LogKind[] = ['seq', 'area', 'screen', 'pos', 'backtrack', 'flood', 'reset', 'check', 'item', 'discover', 'move', 'unlock', 'outcome', 'info', 'debug'];
 
 const KIND_LABEL: Record<LogKind, string> = {

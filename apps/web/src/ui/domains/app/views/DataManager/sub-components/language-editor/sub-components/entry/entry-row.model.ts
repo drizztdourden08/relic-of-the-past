@@ -8,7 +8,7 @@
  * component down to layout, and keeps the wording testable without a browser.
  *
  * The excerpt is last on purpose. It is the only part that can be long, so it
- * takes whatever room is left rather than pushing the facts off the row.
+ * takes whatever room is left instead of pushing the facts off the row.
  */
 import { contextFor } from '@shared/game/data/dialogue-context';
 import type { DialogueChoice, DialogueTrigger } from '@shared/game/data/dialogue-context';
@@ -34,7 +34,7 @@ const TRIGGER_WORDS: Record<DialogueTrigger, string> = {
 
 type EntryRowModel = {
   id: number;
-  /** `#023` — fixed width, so the column stays a column. */
+  /** `#023`, at a fixed width so the column stays a column. */
   idLabel: string;
   /**
    * Who or what opens it. For a source keyed by a PLACE or a ROOM this is the
@@ -57,7 +57,7 @@ type EntryRowModel = {
   issues: string[];
 };
 
-/** Short, human wording for one issue — a row has no space for a sentence. */
+/** Short, human wording for one issue. A row has no space for a sentence. */
 const issueWords = (issue: EntryIssue): string => (
   issue.kind === 'char-not-in-alphabet'
     ? `"${issue.ch}" has no glyph`

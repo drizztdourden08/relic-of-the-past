@@ -54,7 +54,7 @@ const makeTables = (overrides: Partial<CombatTables> = {}): CombatTables => ({
   ...overrides,
 });
 
-describeDataset('evaluateRoomThreat — line of fire', () => {
+describeDataset('evaluateRoomThreat and the line of fire', () => {
   it('is blocked by a wall between the only standable tile and the target', () => {
     const enemy = { row: 10, col: 10 };
     const reached = emptyGrid();
@@ -80,7 +80,7 @@ describeDataset('evaluateRoomThreat — line of fire', () => {
   });
 });
 
-describeDataset('evaluateRoomThreat — zero damage class', () => {
+describeDataset('evaluateRoomThreat on a zero damage class', () => {
   it('reads not killable when the only weapon on hand deals zero damage to this sprite', () => {
     const enemy = { row: 5, col: 5 };
     const threat = evaluateRoomThreat({
@@ -117,11 +117,11 @@ describeDataset('evaluateRoomThreat — zero damage class', () => {
   });
 });
 
-describeDataset('evaluateRoomThreat — unbounded beam reach', () => {
+describeDataset('evaluateRoomThreat with unbounded beam reach', () => {
   it('kills an enemy only reachable from far away with an unbounded weapon', () => {
     const enemy = { row: 15, col: 15 };
     const reached = emptyGrid();
-    stamp2x2(reached, { row: 15, col: 0 }); // 15 tiles west — out of sword/bomb contact range
+    stamp2x2(reached, { row: 15, col: 0 }); // 15 tiles west, which is out of sword/bomb contact range
     const ancillaDamageClass = new Array(57).fill(0);
     ancillaDamageClass[0x02] = 4; // Fire Rod
     const damageByClass = new Array(16).fill(0);
@@ -142,7 +142,7 @@ describeDataset('evaluateRoomThreat — unbounded beam reach', () => {
   });
 });
 
-describeDataset('evaluateRoomThreat — room-clear-exempt sprites', () => {
+describeDataset('evaluateRoomThreat on room-clear-exempt sprites', () => {
   it('excludes a sprite whose flags4 carries the room-clear-exempt bit from gating', () => {
     const sprite = makeSprite({ row: 5, col: 5 });
     const threat = evaluateRoomThreat({
@@ -158,7 +158,7 @@ describeDataset('evaluateRoomThreat — room-clear-exempt sprites', () => {
   });
 });
 
-describeDataset('evaluateRoomThreat — multi-section room', () => {
+describeDataset('evaluateRoomThreat in a multi-section room', () => {
   const SECTION_GRID_SIZE = 64;
   const wideOpenAttrGrid = (): number[][] => Array.from({ length: SECTION_GRID_SIZE }, () => new Array<number>(SECTION_GRID_SIZE).fill(0));
   const wideReached = (): boolean[][] => Array.from({ length: SECTION_GRID_SIZE }, () => new Array<boolean>(SECTION_GRID_SIZE).fill(true));
@@ -192,7 +192,7 @@ describeDataset('evaluateRoomThreat — multi-section room', () => {
   });
 });
 
-describeDataset('evaluateRoomThreat — combat reasoning unavailable', () => {
+describeDataset('evaluateRoomThreat when combat reasoning is unavailable', () => {
   it('reads every sprite as not killable when the developer-tools combat gate is off', () => {
     const sprite = makeSprite({ row: 5, col: 5 });
     const threat = evaluateRoomThreat({

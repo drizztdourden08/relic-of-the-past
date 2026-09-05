@@ -1,13 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * GLSL shader sources for the shadow-casting post-processing pipeline.
- *
- * Passes:
- *   1. Heightmap: Render heightmap elements into a single-channel texture
- *   2. Shadow: Ray-march from sun/lights through heightmap to compute occlusion
- *   3. Blur: Soften shadow edges based on shadowSoftness
- *   4. Composite: Multiply shadow texture over game frame (darken in shadow, brighten from lights)
- */
+// Shadow-casting passes: heightmap (single-channel texture) -> shadow (ray-march from sun/lights)
+// -> blur (shadowSoftness) -> composite (multiply over the game frame).
 
 /** Fullscreen quad vertex shader (shared across all passes) */
 const FULLSCREEN_VERT = /* glsl */ `
@@ -20,11 +13,7 @@ void main() {
 }
 `;
 
-/**
- * Shadow computation fragment shader.
- * Takes a heightmap texture and computes shadow occlusion based on
- * directional (sun) light and point/shape lights.
- */
+/** Shadow fragment shader: occlusion from the heightmap for the sun and point/shape lights. */
 const SHADOW_FRAG = /* glsl */ `
 precision mediump float;
 varying vec2 v_uv;
@@ -164,7 +153,7 @@ void main() {
     float edgeV = abs(hU - hD);
     float edge = clamp((edgeH + edgeV) * 8.0, 0.0, 1.0);
 
-    // Red = heightmap value (shape interior — should be solid with hard edges)
+    // Red = heightmap value (shape interior; solid with hard edges)
     // Green = edge detection (shape boundary)
     // Blue tint = in shadow (ground pixels that are shadowed)
     float inShadow = (h < 0.01) ? sunShadow : 0.0;
@@ -188,7 +177,7 @@ void main() {
 }
 `;
 
-/** Shadow blur pass — Height-aware Gaussian blur for soft shadow edges.
+/** Shadow blur pass: height-aware Gaussian blur for soft shadow edges.
  *  Skips samples inside shapes (height > 0) so shadow stays tight at shape edges. */
 const BLUR_FRAG = /* glsl */ `
 precision mediump float;
@@ -201,7 +190,7 @@ uniform vec2 u_direction; // (1,0) for horizontal, (0,1) for vertical
 
 void main() {
   // If this pixel is inside a shape, it must NEVER receive shadow from blur.
-  // The shape is a hard mask — output the unblurred center value directly.
+  // The shape is a hard mask, so output the unblurred center value directly.
   float centerH = texture2D(u_heightmap, vec2(v_uv.x, 1.0 - v_uv.y)).r;
   if (centerH > 0.02) {
     gl_FragColor = texture2D(u_texture, v_uv);
@@ -215,7 +204,7 @@ void main() {
   for (float i = -12.0; i <= 12.0; i += 1.0) {
     float offset = i * u_radius / 12.0;
     vec2 sampleUV = v_uv + texel * offset;
-    // Skip samples inside a shape — only blur ground-to-ground
+    // Skip samples inside a shape so only ground-to-ground blurs
     float h = texture2D(u_heightmap, vec2(sampleUV.x, 1.0 - sampleUV.y)).r;
     if (h > 0.02) continue;
     float weight = exp(-0.5 * (i / 5.0) * (i / 5.0));
@@ -231,7 +220,7 @@ void main() {
 }
 `;
 
-/** Composite pass — output light map only (CSS mix-blend-mode: multiply combines with game) */
+/** Composite pass that outputs the light map only (CSS mix-blend-mode: multiply combines with game) */
 const COMPOSITE_FRAG = /* glsl */ `
 precision mediump float;
 varying vec2 v_uv;

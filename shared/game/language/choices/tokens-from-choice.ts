@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * A ChoiceShape back to one token stream — the exact inverse of
+ * A ChoiceShape back to one token stream. The exact inverse of
  * `choiceShapeOf`.
  *
  * The question slice is emitted verbatim, each option contributes its own

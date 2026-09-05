@@ -12,7 +12,7 @@ const resolveRoomContext = (indoors: boolean, rawPalaceIndexX2: number): RoomCon
 });
 
 /**
- * Display wording only — never invents a room kind the game does not have.
+ * Display wording only. Never invents a room kind the game does not have.
  * There is deliberately no cave-vs-house distinction: the game has no such field.
  */
 const roomTypeLabel = (room: RoomContext): string => {

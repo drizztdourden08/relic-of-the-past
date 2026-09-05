@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * ZSPR — the community custom-sprite container — read into a PlayerSheet.
+ * Reads ZSPR, the community custom-sprite container, into a PlayerSheet.
  *
  * Header, 29 bytes: `"ZSPR"`, a version byte, a four-byte checksum, then (offset, length)
  * for the tile block and for the palette block, a sprite-type word, and six reserved bytes.

@@ -2,8 +2,8 @@
 /**
  * The items referenced anywhere in the check/connection requirement graph
  * (`CheckRecord.requirements` + `ConnectionRecord.requirements`). Receiving one
- * of these can change whether a gated check becomes triggerable — boss gates,
- * medallion checks, pendant/crystal counts — so picking it up must trigger a
+ * of these can change whether a gated check becomes triggerable, as with boss
+ * gates, medallion checks and pendant/crystal counts, so picking it up must trigger a
  * reach re-flood even when the item carries no direct traversal token.
  *
  * The requirement graph is id-based and so is this set. It used to resolve every

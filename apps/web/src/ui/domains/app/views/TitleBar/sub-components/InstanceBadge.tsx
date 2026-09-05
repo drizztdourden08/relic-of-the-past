@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind component */
 /**
- * Marks the window as a named instance — an automated launch running beside the
+ * Marks the window as a named instance, an automated launch running beside the
  * user's own app. Presentational: the name is supplied by the view.
  *
- * The name is the identifier, so it is shown verbatim rather than abbreviated.
+ * The name is the identifier, so it is shown verbatim, not abbreviated.
  */
 import { Text } from '../../../../../design-system/primitives/Text';
 

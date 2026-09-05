@@ -1,8 +1,5 @@
 /* @layer renderer-components @kind logic */
-/**
- * Split a dialogue string into plain-text runs and bracketed control tokens
- * (e.g. [Scroll], [Name], [Speed 00]) so a line can render codes as chips.
- */
+/** Splits a dialogue string into plain-text runs and bracketed control tokens like [Speed 00]. */
 import type { DialogueToken } from '../language-detail.type';
 
 const TOKEN_RE = /\[[^\]]*\]/g;

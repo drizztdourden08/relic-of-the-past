@@ -16,7 +16,7 @@ applies them for you, and only the parts that changed come down.
    seconds, and the app comes back on the new version
 
 After the first update, only the difference between your version and the new one is
-downloaded, so a typical update is a few MB rather than the whole app.
+downloaded, so a typical update is a few MB, not the whole app.
 
 ---
 

@@ -1,24 +1,14 @@
 /* @layer renderer-components @kind logic */
 /**
- * Plays one file from the pack, on its own, straight from its bytes.
- *
- * Deliberately simple next to the pack engine: no layers, no schedule, no volume shaping — the
- * point of auditioning a file from the pool is hearing the file, not hearing what some slot would
- * make of it. That also means it needs nothing from a manifest, so it works on a file nothing plays
- * yet, which is the case someone reaches for this in.
- *
- * ONE plays at a time, and that is enforced here rather than by whoever calls it: the context and
- * the source node are module state, so a second press silences the first no matter which row or
- * which panel asked. Two files at once would be noise, not a comparison.
- *
- * The loop point comes back from the decode rather than from a second read. A `.pcm` carries it in
- * its own header, which the decoder has already parsed by the time it hands back a buffer — so the
- * one thing that needs the whole file is paid for once, by the press that plays it.
+ * Plays one file from the pack straight from its bytes: no layers, no schedule, no manifest, so it
+ * works on a file nothing plays yet. ONE plays at a time, enforced here via module state so any
+ * row or panel's press silences the last. The loop point comes back from the decode, which has
+ * already parsed the `.pcm` header, so the whole-file read is paid for once.
  */
 import { decodeAudioFile } from '@app/lib/msu/decode/decode-audio-file';
 
 interface Audition {
-  /** Seconds into the file, read from the audio clock — safe to sample every frame. */
+  /** Seconds into the file, read from the audio clock. Safe to sample every frame. */
   positionSeconds: () => number;
   durationSeconds: number;
   /** Where the file repeats from, or null when it declares no point of its own. */
@@ -46,11 +36,8 @@ const stopFileAudition = (): void => {
 
 /**
  * Decode `bytes` and start playing them, replacing anything already sounding. `onEnded` fires when
- * the file runs out on its own, so a caller's "playing" state can clear itself.
- *
- * The silence happens twice on purpose — once before the decode so a long file does not keep the
- * previous one going while it works, and once after, so of two presses racing on their decodes the
- * one that finishes last is the one left playing.
+ * the file runs out on its own. Silenced twice on purpose: before the decode so a long file does
+ * not keep the previous one going, and after, so of two racing presses the last to finish plays.
  */
 const startFileAudition = async (
   fileName: string,

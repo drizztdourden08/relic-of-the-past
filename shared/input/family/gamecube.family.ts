@@ -1,21 +1,15 @@
 /* @layer shared-input @kind data */
 /**
- * GameCube family display metadata: the wireless GameCube controller
- * report. Icons and console defaults only; no parsing and no decision about
- * what a device has.
+ * GameCube family display metadata (wireless GameCube controller report). Icons and console
+ * defaults only; no parsing.
  *
- * Measured from a real pad (057e:2073, sdlType 'gamecube'): 16 buttons,
- * namely SOUTH/EAST/WEST/NORTH, GUIDE, START, LEFT_SHOULDER/RIGHT_SHOULDER,
- * the d-pad, and MISC1-4, plus 6 axes including LEFT_TRIGGER/RIGHT_TRIGGER.
- * There is no BACK (a GameCube pad has no Select) and no stick-click buttons,
- * so neither gets metadata here.
+ * Measured from a real pad (057e:2073, sdlType 'gamecube'): 16 buttons (SOUTH/EAST/WEST/NORTH,
+ * GUIDE, START, LEFT_SHOULDER/RIGHT_SHOULDER, d-pad, MISC1-4) and 6 axes including the triggers.
+ * No BACK (no Select) and no stick clicks, so neither gets metadata.
  *
- * RIGHT_SHOULDER is the Z button, not a right bumper. LEFT_SHOULDER is the
- * ordinary L shoulder and needs no override. MISC1 is Capture, MISC2 is the
- * C button. MISC3/MISC4 are the digital clicks at the bottom of the L/R
- * trigger's analog travel, the same physical pull that also drives
- * LEFT_TRIGGER/RIGHT_TRIGGER as an axis, so they are labelled and iconed to
- * read as that click, not as two more mystery buttons.
+ * RIGHT_SHOULDER is the Z button, not a right bumper. MISC1 is Capture, MISC2 the C button.
+ * MISC3/MISC4 are the digital clicks at the bottom of the L/R triggers' analog travel (the same
+ * pull that drives LEFT_TRIGGER/RIGHT_TRIGGER), so they are labelled and iconed as that click.
  */
 
 import { registerFamily } from './family-registry';
@@ -69,10 +63,8 @@ const GAMECUBE_FAMILY: FamilyMetadata = {
     MISC3: 'gc-l',
     MISC4: 'gc-r',
   },
-  // LEFT_X/LEFT_Y (and RIGHT_X/RIGHT_Y, the C-stick) share one base icon key
-  // per stick. The four direction glyphs and the neutral pose are inferred
-  // from the live axis pair at render time (see resolveStickDirectionIcon),
-  // never configured per direction here.
+  // One base icon key per stick (the right stick is the C-stick); direction glyphs and the
+  // neutral pose are inferred at render time (resolveStickDirectionIcon).
   axisIcons: {
     LEFT_X: 'gc-stick-l',
     LEFT_Y: 'gc-stick-l',
@@ -81,11 +73,9 @@ const GAMECUBE_FAMILY: FamilyMetadata = {
     LEFT_TRIGGER: 'gc-l',
     RIGHT_TRIGGER: 'gc-r',
   },
-  // SNES L/R land on the digital clicks at the bottom of the analog
-  // triggers' travel (MISC3/MISC4), not on LEFT_SHOULDER/RIGHT_SHOULDER —
-  // RIGHT_SHOULDER is the Z button on this pad, and binding SNES R there
-  // would put Z where the player expects the trigger's own click. Z stays
-  // unbound by default.
+  // SNES L/R land on the trigger clicks (MISC3/MISC4), not on LEFT_SHOULDER/RIGHT_SHOULDER:
+  // RIGHT_SHOULDER is Z on this pad, and the player expects R on the trigger's own click.
+  // Z stays unbound by default.
   consoleDefaults: {
     SOUTH: 'A',
     EAST: 'B',
@@ -99,11 +89,10 @@ const GAMECUBE_FAMILY: FamilyMetadata = {
     DPAD_LEFT: 'Left',
     DPAD_RIGHT: 'Right',
   },
-  // A licensed wireless GameCube-style pad uses an ERM motor with real mechanical
-  // spin-up lag, unlike the Switch Pro's HD-rumble LRA, which responds to a pulse
-  // almost instantly. A short authored burst can end before the motor has finished
-  // accelerating, so it plays as barely perceptible even at full amplitude. Stretch
-  // it out (see minDurationMs below) rather than only pushing amplitude higher.
+  // A licensed wireless GameCube-style pad uses an ERM motor with real spin-up lag (unlike
+  // the Switch Pro's near-instant LRA), so a short burst can end before the motor has
+  // accelerated and plays as barely perceptible. Stretch it out (minDurationMs below), not
+  // only boost amplitude.
   minDurationMs: 90,
 };
 

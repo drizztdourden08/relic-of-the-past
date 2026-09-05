@@ -1,14 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Serialize a PlayerSheet back to ZSPR.
- *
- * Used twice: by the studio's export, and by the boot path — the core only ever reads a
- * ZSPR, so a sheet held in any other container has to be flattened to this before it can
- * be staged into MEMFS.
- *
- * The override layer is folded onto the original here, which is what makes the export
- * lossy in the honest sense: the file carries one palette, so whichever layer the caller
- * asks for is the one that survives.
+ * Serialize a PlayerSheet back to ZSPR, for the studio's export and for the boot path (the
+ * core only reads ZSPR). The override layer is folded onto the original: the file carries one
+ * palette, so whichever layer the caller asks for is the one that survives.
  */
 import { SHEET_BYTES, COLORS_PER_OUTFIT, OUTFIT_IDS } from '@shared/game/data/player-sheet/types';
 import type { SheetPalette, PlayerSheet } from '@shared/game/data/player-sheet/types';
@@ -18,7 +12,7 @@ import { flattenPalette } from './player-sheet/flatten-palette';
 const SPRITE_TYPE_PLAYER = 1;
 const ZSPR_VERSION = 1;
 
-/** NUL-terminated UTF-16LE — the display name and the author. */
+/** NUL-terminated UTF-16LE for the display name and the author. */
 const utf16z = (text: string): Uint8Array => {
   const out = new Uint8Array(text.length * 2 + 2);
   for (let i = 0; i < text.length; i++) {
@@ -29,7 +23,7 @@ const utf16z = (text: string): Uint8Array => {
   return out;
 };
 
-/** NUL-terminated ASCII — the third string, a short credit line. */
+/** NUL-terminated ASCII for the third string, a short credit line. */
 const asciiz = (text: string): Uint8Array => {
   const out = new Uint8Array(text.length + 1);
   for (let i = 0; i < text.length; i++) out[i] = text.charCodeAt(i) & 0x7f;
@@ -53,12 +47,9 @@ const paletteToBytes = (palette: SheetPalette): Uint8Array => {
 };
 
 /**
- * The spec's checksum: a 16-bit sum of every byte, followed by `0xFFFF - sum` so the two
- * halves always add to 0xFFFF. The four checksum bytes are themselves summed as the seed
- * value `FF FF 00 00` rather than as zero or as whatever they end up holding — which is
- * what makes the result reproduce byte for byte against sheets other tools wrote.
- *
- * Nothing in this project validates it, but a file handed elsewhere should be well formed.
+ * The spec's checksum: a 16-bit sum of every byte, followed by `0xFFFF - sum`. The four
+ * checksum bytes are summed as the seed value `FF FF 00 00`, not zero, which is what
+ * reproduces other tools' output byte for byte. Nothing here validates it.
  */
 const CHECKSUM_AT = 5;
 const CHECKSUM_SEED = [0xff, 0xff, 0x00, 0x00];

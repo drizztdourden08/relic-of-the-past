@@ -2,7 +2,7 @@
 
 /*
  * One column of label-and-value rows, then the structure chooser under a rule.
- * The label sits above its list rather than beside it: the card is narrow, and a
+ * The label sits above its list, not beside it: the card is narrow, and a
  * two-column row would squeeze the values into something unreadable.
  */
 

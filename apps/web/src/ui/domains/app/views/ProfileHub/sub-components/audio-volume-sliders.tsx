@@ -3,7 +3,7 @@
  * The volume-group sliders for the Audio settings tab: master, music, ambience and SFX.
  *
  * Master always applies; the three group sliders only do anything once the independent-mix
- * toggle is on, so they render disabled until then. Ambience is app-mixed only — the sound
+ * toggle is on, so they render disabled until then.  Ambience is app-mixed only, and the sound
  * chip cannot split its own ambience out of its mix, so that slider governs the replacement
  * ambient bed a pack plays, never the original audio.
  */
@@ -21,7 +21,7 @@ const renderVolumeSlider = (
       return (
         <Slider
           label="Master Volume"
-          description="Controls the overall game volume — affects all audio output"
+          description="Controls the overall game volume, so it affects all audio output"
           value={settings.masterVolume ?? 100}
           min={0}
           max={100}
@@ -35,7 +35,7 @@ const renderVolumeSlider = (
       return (
         <Slider
           label="Music Volume"
-          description="Sets the music level — the original soundtrack and any music pack alike, since a pack plays in place of it rather than alongside it"
+          description="Sets the music level for the original soundtrack and any music pack alike, since a pack plays in place of it, not alongside it"
           value={settings.musicVolume ?? 100}
           min={0}
           max={100}
@@ -51,7 +51,7 @@ const renderVolumeSlider = (
       return (
         <Slider
           label="Ambience Volume"
-          description="Sets the replacement ambient-bed level — rain, waterfalls, wind played by a pack. The sound chip cannot split its own ambience, so this governs replacement audio only"
+          description="Sets the replacement ambient-bed level for rain, waterfalls and wind played by a pack. The sound chip cannot split its own ambience, so this governs replacement audio only"
           value={settings.ambientVolume ?? 100}
           min={0}
           max={100}

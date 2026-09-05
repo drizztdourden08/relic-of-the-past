@@ -1,9 +1,7 @@
 /* @layer shared-asset-extraction @kind logic */
 /**
- * Compile resources — produces zelda3_assets.dat from ROM data.
- * This is the final pipeline stage that assembles all game assets into a binary file.
- *
- * Ported from: upstream's compile_resources.py
+ * Final pipeline stage. Assembles every game asset into zelda3_assets.dat from ROM data.
+ * Ported from upstream's compile_resources.py.
  */
 import type { RomData } from './rom/rom-types';
 import { AssetBuilder } from './asset-builder';

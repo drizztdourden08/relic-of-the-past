@@ -40,7 +40,7 @@
   padding: var(--space-md) 0;
 }
 
-/* Covers the step, rather than replacing it, so the choice stays visible
+/* Covers the step instead of replacing it, so the choice stays visible
    behind the read and the dialog does not jump size mid-transition. */
 .diagnostics-wizard__overlay {
   position: absolute;

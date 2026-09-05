@@ -1,12 +1,7 @@
 /* @layer tests @kind test */
 /**
- * The TagInput's decisions, tested where they live: as plain functions.
- *
- * There is no jsdom or testing-library in this repo, so the keystrokes
- * themselves cannot be dispatched. Every rule a keystroke resolves to IS
- * covered here — what Enter commits, what Backspace removes, what the panel
- * offers — and the wiring from key to rule is the one line each case that a
- * browser would have to confirm.
+ * The TagInput's decisions as plain functions. No jsdom, so keystrokes cannot
+ * be dispatched; every rule a keystroke resolves to is covered here.
  */
 import { describe, it, expect } from 'vitest';
 import {
@@ -35,7 +30,7 @@ const VOCABULARY = [
 const filter = (query: string, selected: readonly string[] = [], limit?: number) =>
   filterSuggestions({ suggestions: VOCABULARY, query, selected, limit });
 
-describe('filterSuggestions — searching what already exists', () => {
+describe('filterSuggestions searches what already exists', () => {
   it('offers everything when nothing has been typed', () => {
     expect(filter('')).toEqual([...VOCABULARY]);
   });
@@ -75,7 +70,7 @@ describe('filterSuggestions — searching what already exists', () => {
   });
 });
 
-describe('isNewValue — is the typed text something the vocabulary lacks', () => {
+describe('isNewValue asks whether the vocabulary lacks the typed text', () => {
   it('is false for a value already on offer, whatever the casing', () => {
     expect(isNewValue('env:outdoor', VOCABULARY)).toBe(false);
     expect(isNewValue('ENV:OUTDOOR', VOCABULARY)).toBe(false);
@@ -92,7 +87,7 @@ describe('isNewValue — is the typed text something the vocabulary lacks', () =
   });
 });
 
-describe('resolveCommit — what Enter on the raw text actually adds', () => {
+describe('what resolveCommit adds when Enter lands on the raw text', () => {
   it('creates the trimmed text when it matches no existing value', () => {
     expect(resolveCommit('  ctx:entrance  ', VOCABULARY)).toBe('ctx:entrance');
   });
@@ -111,7 +106,7 @@ describe('resolveCommit — what Enter on the raw text actually adds', () => {
   });
 });
 
-describe('addTag — appending, and the two things it declines to do', () => {
+describe('addTag appends, and declines two things', () => {
   it('appends to the end and leaves the original alone', () => {
     const value = ['env:outdoor'];
     expect(addTag(value, 'role:boss')).toEqual(['env:outdoor', 'role:boss']);
@@ -135,7 +130,7 @@ describe('addTag — appending, and the two things it declines to do', () => {
   });
 });
 
-describe('removeAt / removeLast — taking chips off', () => {
+describe('removeAt / removeLast take chips off', () => {
   it('removes the chip at an index', () => {
     expect(removeAt(['a', 'b', 'c'], 1)).toEqual(['a', 'c']);
   });
@@ -146,7 +141,7 @@ describe('removeAt / removeLast — taking chips off', () => {
     expect(removeAt(value, 2)).toBe(value);
   });
 
-  it('drops the last chip — what Backspace on an empty entry does', () => {
+  it('drops the last chip when Backspace lands on an empty entry', () => {
     expect(removeLast(['env:outdoor', 'role:boss'])).toEqual(['env:outdoor']);
     expect(removeLast(['env:outdoor'])).toEqual([]);
   });
@@ -158,12 +153,12 @@ describe('removeAt / removeLast — taking chips off', () => {
 });
 
 describe('normalizeTag', () => {
-  it('is a trim, and nothing more — casing and inner spacing are the value', () => {
+  it('is a trim and nothing more, because casing and inner spacing are the value', () => {
     expect(normalizeTag('  Env:Two Words  ')).toBe('Env:Two Words');
   });
 });
 
-describe('the convention check — advisory, never blocking', () => {
+describe('the convention check is advisory, never blocking', () => {
   it('accepts namespace:value', () => {
     expect(followsConvention('env:outdoor')).toBe(true);
     expect(followsConvention('role:pre-boss')).toBe(true);
@@ -203,7 +198,7 @@ describe('the convention check — advisory, never blocking', () => {
     expect(adviseTag('anything', () => false)).toEqual({ ok: false, message: null });
   });
 
-  it('never stops the value being added — that is addTag\'s call, and it says yes', () => {
+  it('never stops the value being added, because that is addTag\'s call and it says yes', () => {
     const strict = () => 'Not how we write tags';
     expect(adviseTag('lonely', strict).ok).toBe(false);
     expect(addTag([], 'lonely')).toEqual(['lonely']);

@@ -5,20 +5,17 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { ReferencedBy } from '../../apps/web/src/ui/design-system/composites/RecordEditor';
 import type { ReferencedByHit } from '../../apps/web/src/ui/design-system/composites/RecordEditor';
 
-// SSR smoke tests: they prove the empty-state copy shows with no hits, and
-// that a populated list groups by kind with the right counts. Each group
-// starts COLLAPSED (a compact summary first — a heavily-referenced record can
-// carry hundreds of hits), so the actual referencing rows, and the id-ref
-// navigation attributes they carry, only exist in the DOM after a click one
-// needs a browser to make; that interaction is NOT covered here.
+// SSR smoke tests: the empty-state copy with no hits, and grouping by kind
+// with counts. Groups start COLLAPSED (a record can carry hundreds of hits), so
+// the referencing rows only exist after a click; not covered here.
 
 const EMPTY_TEXT = 'Not referenced anywhere.';
 
 const render = (hits: readonly ReferencedByHit[]): string =>
   renderToStaticMarkup(createElement(ReferencedBy, { hits }));
 
-describe('ReferencedBy — empty state', () => {
-  it('shows the empty-state copy rather than a blank panel', () => {
+describe('ReferencedBy in the empty state', () => {
+  it('shows the empty-state copy instead of a blank panel', () => {
     const markup = render([]);
     expect(markup).toContain(EMPTY_TEXT);
   });
@@ -29,7 +26,7 @@ describe('ReferencedBy — empty state', () => {
   });
 });
 
-describe('ReferencedBy — populated state', () => {
+describe('ReferencedBy in the populated state', () => {
   const hits: readonly ReferencedByHit[] = [
     { kind: 'screen', id: 'screen-001', field: 'tags', label: 'A Real Screen' },
     { kind: 'screen', id: 'screen-002', field: 'tags', label: 'Another Screen' },
@@ -46,7 +43,7 @@ describe('ReferencedBy — populated state', () => {
     expect(markup).toContain('check (1)');
   });
 
-  it('starts collapsed — no referencing row or its id-ref attributes render until asked for', () => {
+  it('starts collapsed, so no referencing row or its id-ref attributes render until asked for', () => {
     const markup = render(hits);
     expect(markup).not.toContain('data-id-ref');
     expect(markup).not.toContain('A Real Screen');

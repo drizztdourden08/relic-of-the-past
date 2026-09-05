@@ -4,9 +4,9 @@
  * voice: rise from silence over `fadeInSeconds`, then fall to silence over `fadeOutSeconds`
  * starting `fadeOutAfterSeconds` after the source began.
  *
- * It is a deliberate duplicate of that envelope rather than a shared helper, because the two run
- * against different clocks — a live voice always starts at `currentTime`, an offline source starts
- * at a time computed ahead of it — and the ramp maths is the whole point of the match. Any change
+ * It is a deliberate duplicate of that envelope, not a shared helper, because the two run
+ * against different clocks (a live voice always starts at `currentTime`, an offline source starts
+ * at a time computed ahead of it) and the ramp maths is the whole point of the match. Any change
  * to voice.ts's envelope has to be mirrored here or an exported pack stops sounding like its
  * preview.
  */
@@ -19,7 +19,7 @@ interface FadeEnvelope {
   fadeOutSeconds?: number;
 }
 
-/** Whether a fade is actually asked for — voice.ts inserts no gain node when nothing fades. */
+/** Whether a fade is actually asked for. voice.ts inserts no gain node when nothing fades. */
 const hasFade = (fade: FadeEnvelope): boolean => {
   const { fadeInSeconds = 0, fadeOutAfterSeconds, fadeOutSeconds = 0 } = fade;
   return fadeInSeconds > 0 || (fadeOutAfterSeconds !== undefined && fadeOutSeconds > 0);
@@ -27,7 +27,7 @@ const hasFade = (fade: FadeEnvelope): boolean => {
 
 /**
  * Builds a gain node carrying the envelope, connected to `destination`. `startedAt` is when the
- * source it belongs to starts, which offline is a scheduled time rather than "now".
+ * source it belongs to starts, which offline is a scheduled time, not "now".
  */
 const createFadeNode = (ctx: BaseAudioContext, destination: AudioNode,
   startedAt: number, fade: FadeEnvelope): GainNode => {

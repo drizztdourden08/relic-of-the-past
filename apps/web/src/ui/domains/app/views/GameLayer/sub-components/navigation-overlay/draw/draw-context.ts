@@ -39,9 +39,8 @@ const buildDrawContext = (ctx: CanvasRenderingContext2D, vp: ViewportInfo, width
   const camY = vp.cameraY;
   const snesW = vp.snesWidth;
   const snesH = vp.snesHeight;
-  // The wide/tall camera lock shifts the rendered view by cameraLockShift (rendered view = camera − shift),
-  // so the canvas origin is the game camera minus the lock shift minus the side budget. Subtract it or
-  // world-anchored overlay elements drift and appear to follow the player as the view re-centers.
+  // The camera lock shifts the rendered view (view = camera - shift). Subtract it or world-anchored
+  // overlay elements drift as the view re-centers.
   const viewLeft = camX - vp.cameraLockShiftX - vp.extraLeftRight;
   const viewTop = camY - vp.cameraLockShiftY;
   const scaleX = width / snesW;
@@ -54,14 +53,9 @@ const buildDrawContext = (ctx: CanvasRenderingContext2D, vp: ViewportInfo, width
   const TILE_PX = 8;
   const dotRadius = Math.max(2.5, 4 * Math.min(scaleX, scaleY));
 
-  // Indoors, the room the player physically occupies uses the live-derived origin
-  // (screenWorldX/Y above); any OTHER room drawn in the same batch — a connected
-  // room the multi-room flood also covers — has no live position to derive from,
-  // so it falls back to its own roomOrigin(screenIndex). The two agree for the
-  // primary room (roomOrigin is exactly how the entrance/stair tile math built its
-  // own coordinates — see room-entrances.ts), so this only changes behavior for
-  // non-primary rooms, which previously always drew at the primary room's origin
-  // and landed every one of their markers a full room-width off.
+  // Indoors, the occupied room uses the live-derived origin; any OTHER room in the batch has no
+  // live position and falls back to roomOrigin(screenIndex) (see room-entrances.ts). Non-primary
+  // rooms used to draw at the primary room's origin, a full room-width off.
   const getScreenWorldOrigin = (screenIndex: number) => {
     if (isIndoors) {
       return screenIndex === result.screenIndex ? { x: screenWorldX, y: screenWorldY } : roomOrigin(screenIndex);

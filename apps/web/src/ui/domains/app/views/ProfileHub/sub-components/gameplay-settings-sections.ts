@@ -30,7 +30,7 @@ const SAVE_SECTION: Section = {
 };
 
 const SECTIONS: Section[] = [
-  // Save states live here rather than in a tab of their own: they are part of how the game is
+  // Save states live here instead of in a tab of their own. They are part of how the game is
   // played, not a property of the host.
   SAVE_SECTION,
   {
@@ -131,7 +131,7 @@ const SECTIONS: Section[] = [
         id: 'vanilla-safe-options',
         title: 'Options',
         items: [
-          { key: 'vanillaSafe', label: 'Vanilla Safe', description: 'Forces every non-stock behavior off — every feature, quality-of-life flag, bug fix, cheat, item override, custom player sprite, and HUD override — so the game matches the original cartridge exactly. Harmless, low-risk divergences are included too; there are no exemptions.', keywords: 'vanilla safe parity original cartridge stock speedrun race lock' },
+          { key: 'vanillaSafe', label: 'Vanilla Safe', description: 'Forces off every feature, quality-of-life flag, bug fix, cheat, item override, custom player sprite and HUD override, so the game matches the original cartridge exactly. Harmless, low-risk divergences are included too; there are no exemptions.', keywords: 'vanilla safe parity original cartridge stock speedrun race lock' },
         ],
       },
     ],

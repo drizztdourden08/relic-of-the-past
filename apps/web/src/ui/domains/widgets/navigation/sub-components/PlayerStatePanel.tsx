@@ -26,10 +26,10 @@ const PlayerStatePanel = (props: Props) => {
         <DescRow label="Relative" desc="The player's position relative to the current 512×512 screen/room origin in pixels.">
           <Text style={S.valPos}>({playerDebug.relX}, {playerDebug.relY})</Text>
         </DescRow>
-        <DescRow label="Sub-tile" desc="The 8×8 tile range the player's hitbox currently overlaps. Row and column are in tile coordinates (0–63 per screen).">
-          <Text style={S.valPos}>r{playerDebug.tileMinRow}–{playerDebug.tileMaxRow} c{playerDebug.tileMinCol}–{playerDebug.tileMaxCol}</Text>
+        <DescRow label="Sub-tile" desc="The 8×8 tile range the player's hitbox currently overlaps. Row and column are in tile coordinates (0-63 per screen).">
+          <Text style={S.valPos}>r{playerDebug.tileMinRow}-{playerDebug.tileMaxRow} c{playerDebug.tileMinCol}-{playerDebug.tileMaxCol}</Text>
         </DescRow>
-        <DescRow label="Map16" desc="The 16×16 metatile coordinate the player occupies. Map16 tiles are the collision unit — each contains four 8×8 sub-tiles.">
+        <DescRow label="Map16" desc="The 16×16 metatile coordinate the player occupies. Map16 tiles are the collision unit. Each contains four 8×8 sub-tiles.">
           <Text style={S.valPos}>({playerDebug.map16Row}, {playerDebug.map16Col})</Text>
         </DescRow>
         {!isIndoors && (
@@ -52,7 +52,7 @@ const PlayerStatePanel = (props: Props) => {
           </DescRow>
         )}
         {isIndoors && (
-          <DescRow label="Doorway" desc="Doorway state, both values LATCHED rather than per-frame. Neither is safe to treat as 'is this happening right now'. The first is the orientation of the doorway the player occupies (is_standing_in_doorway): set on entering a room through a doorway, cleared only on certain intra-room transitions. 'Anim' is the door animation step (door_animation_step_indicator, 0-16): it is left at 16 once a door finishes opening rather than returning to 0.">
+          <DescRow label="Doorway" desc="Doorway state, both values LATCHED, not per-frame. Neither is safe to treat as 'is this happening right now'. The first is the orientation of the doorway the player occupies (is_standing_in_doorway): set on entering a room through a doorway, cleared only on certain intra-room transitions. 'Anim' is the door animation step (door_animation_step_indicator, 0-16): it stays at 16 once a door finishes opening instead of returning to 0.">
             <Text style={S.valInfo}>
               {playerDebug.inDoorway === 0 ? 'no' : `0x${playerDebug.inDoorway.toString(16).toUpperCase()}`}
               {playerDebug.doorAnimStep > 0 && <Text style={S.valWarning}> · anim {playerDebug.doorAnimStep}</Text>}

@@ -1,11 +1,8 @@
 /* @layer tests @kind test */
 /**
- * The shape of what the screen editor sends to `screenEditor:writeScreen`.
- *
- * This is the one piece of real persistence the dataset tooling has — it writes
- * a generated record into a source file — so the payload is pinned here rather
- * than left to a click-through. Every assertion is about the record `handleWrite`
- * passes to the IPC call, not about how the form collects it.
+ * The payload the screen editor sends to `screenEditor:writeScreen`. This is
+ * the one piece of real persistence the dataset tooling has (it writes a
+ * record into a source file), so the record `handleWrite` passes is pinned.
  */
 import { describe, it, expect } from 'vitest';
 import { tagIdsForKeys } from '@shared/game/data';
@@ -32,7 +29,7 @@ const draft = (over: Partial<ScreenDraft>): ScreenDraft => ({
   ...over,
 });
 
-describe('buildScreenRecord — the native id the record carries', () => {
+describe('buildScreenRecord and the native id the record carries', () => {
   it('a dungeon room is addressed by room index plus palace index', () => {
     const { record } = buildScreenRecord(draft({}));
     expect(record?.gameId).toEqual({ roomIndex: 0x80, palaceIndex: 2 });
@@ -54,7 +51,7 @@ describe('buildScreenRecord — the native id the record carries', () => {
   });
 });
 
-describe('buildScreenRecord — position and defaults', () => {
+describe('buildScreenRecord position and defaults', () => {
   it('carries a floor only alongside a grid position', () => {
     expect(buildScreenRecord(draft({})).record?.position).toEqual({ gridX: 1, gridY: 2, floor: 0 });
     expect(buildScreenRecord(draft({ floor: undefined })).record?.position)
@@ -76,13 +73,13 @@ describe('buildScreenRecord — position and defaults', () => {
     for (const id of record?.tags ?? []) expect(id).toMatch(/^tag-\d+$/);
   });
 
-  it('drops a term the vocabulary does not hold rather than writing it raw', () => {
+  it('drops a term the vocabulary does not hold instead of writing it raw', () => {
     const tags = ['nonsense:not-a-real-term'] as ScreenDraft['tags'];
     expect(buildScreenRecord(draft({ tags })).record?.tags).toEqual([]);
   });
 });
 
-describe('buildScreenRecord — what it refuses to invent', () => {
+describe('buildScreenRecord and what it refuses to invent', () => {
   const blockersFor = (over: Partial<ScreenDraft>): readonly string[] =>
     buildScreenRecord(draft(over)).blockers;
 
@@ -109,7 +106,7 @@ describe('buildScreenRecord — what it refuses to invent', () => {
   });
 });
 
-describe('buildScreenRecord — fields the form does not own', () => {
+describe('buildScreenRecord on fields the form does not own', () => {
   it('carries them across from the record being edited instead of dropping them', () => {
     const existing = {
       id: 'screen-183',

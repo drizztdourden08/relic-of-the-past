@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 /**
- * The filter strip above the finding list — which action a tab stands for is
+ * The filter strip above the finding list. Which action a tab stands for is
  * `useRecommendationFilter`'s concern; this only turns that into `TabBar`
  * tabs, badge-per-count, the same primitive `CollectionTabs` already uses
  * below for the record collections.

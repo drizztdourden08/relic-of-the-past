@@ -6,7 +6,7 @@
  * gives it its own SpcPlayer), but it reads the sound banks out of the parsed assets, and those are
  * only parsed once a core has booted. Auditioning a sound in the pack studio should not require
  * starting the game first, so when there is no game module this boots one that never runs the game:
- * `noInitialRun` skips `main`, so no SDL, no canvas, no frame loop — just the assets in memory and
+ * `noInitialRun` skips `main`, so no SDL, no canvas, no frame loop, just the assets in memory and
  * the preview export reading them.
  *
  * It is a second WebAssembly instance of the same compiled module, which costs its own heap. That is
@@ -69,7 +69,7 @@ const bootStandalone = async (): Promise<EmscriptenModule | null> => {
       printErr: (text: string) => log.core(text, 'error'),
     });
     // Parses zelda3_assets.dat and sets the core up without SDL, which is what makes the sound
-    // banks readable. Whatever else it initialises simply goes unused here.
+    // banks readable. Whatever else it initialises goes unused here.
     module.ccall('WasmInitHeadless', null, [], []);
     standaloneRom = romFile;
     log.app('Sound preview: core loaded for auditioning original sounds');

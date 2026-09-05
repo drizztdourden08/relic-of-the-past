@@ -2,16 +2,13 @@
 /**
  * How one pack file is handed to the encoder, and how long it is.
  *
- * The two answers travel together because they come from the same place. An MSU-1 `.pcm`
- * has no container at all — the format FIXES the rate, the channel count and the sample
- * format, so the decoder has to be told all three, and the duration follows from the byte
- * count without opening the file. Everything else carries its own container, so a probe
- * both identifies it and reports its duration, and a probe that comes back empty is the
- * definition of a file this operation cannot touch.
+ * An MSU-1 `.pcm` has no container: the format FIXES rate, channels and sample format,
+ * so the decoder is told all three and the duration follows from the byte count.
+ * Everything else carries a container, so a probe identifies it and reports duration;
+ * an empty probe is a file this operation cannot touch.
  *
- * The eight-byte MSU-1 header is skipped rather than decoded. It is two whole sample frames,
- * so leaving it in would not shift the channels — it would just put one click of the magic
- * text and the repeat point at the very start of the audio.
+ * The eight-byte MSU-1 header is skipped. It is two whole sample frames, so leaving it
+ * in would not shift the channels, just put one click at the very start.
  */
 import type { ProbedAudio } from '@shared/types/audio-probe';
 import {
@@ -53,7 +50,7 @@ const probedSource = (probed: ProbedAudio): AudioSource => ({
   carriesLoopPoint: false,
 });
 
-/** null for a file nothing here can read — the one thing that takes a file out of a run. */
+/** null for a file nothing here can read. That is the only thing that drops a file from a run. */
 const describeSource = async (
   filePath: string, fileName: string, sizeBytes: number,
 ): Promise<AudioSource | null> => {

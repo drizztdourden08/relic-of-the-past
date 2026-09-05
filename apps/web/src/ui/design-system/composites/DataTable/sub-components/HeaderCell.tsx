@@ -1,37 +1,12 @@
 /* @layer renderer-components @kind component */
 /**
- * One column header: a drag handle, a sort caret, the ⋯ menu and, on its
- * trailing edge, the seam that resizes it.
- *
- * Two gestures live on this one cell and must never be confused for each other:
- * dragging the cell REORDERS (native HTML5 drag), dragging the seam RESIZES
- * (pointer events). The seam swallows its own pointer events and the cell drops
- * its `draggable` flag while a resize is running.
- *
- * The caret and the menu do deliberately different things. Clicking the caret
- * REPLACES the whole sort with this column (asc → desc → none); the menu names
- * a direction and ADDS a level for it, which is the only route to a
- * multi-column sort. Renaming happens inline here because a dropdown cannot
- * hold a text field — the menu only flips this cell into its editing state.
- *
- * Both controls are hover-revealed, because both are offers rather than
- * information — with one exception: a column that is actually sorted keeps its
- * caret showing at rest, since the direction the rows are in is not chrome.
- *
- * They also sit OUTSIDE the cell's flow, in their own overlay cluster pinned
- * to the trailing edge, so the label lays out against the full header width
- * and shortens only when the column itself is too narrow for it — never
- * because two buttons happen to be standing there. See `data-table__header-
- * chrome` in the sheet for how the text is kept readable underneath them.
- *
- * While a drag is on, this cell is one of three things: the slot the carried
- * column left, a cell stepping aside to open the gap it will land in, or the
- * cell whose edge that gap is against. None of it changes the column list —
- * that happens on the drop and nowhere else.
- *
- * Stepping aside is the one part that is not a class: the distance is the
- * carried column's own width, which has to be measured, and it applies to this
- * column's body cells as much as to its header. See `useColumnShift`.
+ * One column header. Two gestures live on it: dragging the cell reorders
+ * (HTML5 drag), dragging the seam resizes (pointer events); the seam swallows
+ * its pointer events and the cell drops `draggable` during a resize. The caret
+ * replaces the whole sort (asc, desc, none); the menu adds a level, the only
+ * route to multi-column sort. Renaming is inline because a dropdown cannot
+ * hold a text field. Stepping aside during a drag is measured, not a class;
+ * see `useColumnShift`.
  */
 import { useRef, useState } from 'react';
 import { Box } from '../../../primitives/Box';
@@ -66,24 +41,14 @@ interface HeaderCellProps {
   resolveTargetFields?: IdRefTargetFieldResolver;
   actions: ColumnActions;
   drag: ColumnDragBinding;
-  /**
-   * The rows the offscreen ghost shows values from. Every header holds one
-   * ready — which column is picked up is not known until it already has been.
-   */
+  /** The rows the offscreen ghost shows values from. Every header holds one ready. */
   ghostRows: readonly unknown[];
   /** Total rows in the table, so the ghost can say how many it left out. */
   rowTotal: number;
 }
 
-/*
- * The SMALL triangles, not the full-size ones. A sorted column carries its
- * caret permanently, and the caret now sits ON the label rather than beside
- * it, so every unit of width the glyph takes is a unit of the name it covers.
- * The small variants keep the footprint down without giving back any
- * legibility, which is the one thing shrinking the font-size instead would
- * have cost in exact proportion. The unsorted marker is a single double-headed
- * arrow rather than a stacked pair, for the same reason.
- */
+/* The small triangles: the caret sits on the label, so every unit of glyph
+   width is a unit of name covered. */
 const CARETS = { asc: '▴', desc: '▾', none: '↕' } as const;
 
 const HeaderCell = (props: HeaderCellProps) => {
@@ -105,9 +70,8 @@ const HeaderCell = (props: HeaderCellProps) => {
   const placement = { index, from: drag.draggingIndex, over: drag.overIndex };
   const shift = columnDragShift(placement);
   const edge = dropEdgeAt(placement);
-  /* Once the others have stepped aside, the gap they opened says where the
-     column lands; a marker on the slot it left would say it a second time, in
-     the wrong place, and from under whichever column has slid over it. */
+  /* Once the others have stepped aside, a marker on the slot the column left
+     would point at the wrong place. */
   const vacated = isDragging && drag.overIndex !== drag.draggingIndex;
   useColumnShift({ cellRef, path: column.path, shift, carriedPath: drag.draggingPath });
 
@@ -125,12 +89,9 @@ const HeaderCell = (props: HeaderCellProps) => {
     'data-table__header-cell',
     isDragging && `data-table__header-cell--${vacated ? 'vacated' : 'dragging'}`,
     edge && `data-table__header-cell--drop-${edge}`,
-    /* The menu is portalled, so the cursor leaves this cell to reach it. Its
-       trigger has to stay shown for as long as what it opened is on screen. */
+    /* The menu is portalled, so the trigger must stay shown while it is open. */
     menu.open && 'data-table__header-cell--menu-open',
-    /* The caret that stays showing at rest, and the backing it needs to stay
-       readable over a long name. Both are the CELL's business: the backing is
-       the caret's own sibling, and no selector reaches sideways from a child. */
+    /* On the cell, not the caret: no selector reaches sideways to the backing. */
     sortDir && 'data-table__header-cell--sorted',
   ].filter(Boolean).join(' ');
 

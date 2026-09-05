@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * PresenceGameState — the read-only snapshot of live game state that
+ * PresenceGameState is the read-only snapshot of live game state that
  * `evaluatePresence` reads to decide whether a check-giving NPC is spawned.
  * Every field is sourced from a raw game read; the live port fills it each
  * observe via `buildPresenceState`. Plain scalars + array-likes keep it cheap

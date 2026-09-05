@@ -3,13 +3,13 @@
  * The four things a translator puts INTO a line that are not typed letters: a
  * variable, a pause, a change of text speed, a picture character.
  *
- * They travel together because they are the same gesture — pick a thing, place
- * it at the caret — and each one opens a card of its own doing exactly that one
+ * They travel together because they are the same gesture: pick a thing, place it
+ * at the caret. Each one opens a card of its own doing exactly that one
  * thing. Nothing is decided here: the variables arrive from the set, the two
  * codes' values from what this language can bake, and the characters from its
  * own alphabet.
  *
- * A button with nothing to offer is disabled rather than opening on an empty
+ * A button with nothing to offer is disabled instead of opening on an empty
  * card, which happens when an encoder refuses a code outright or an alphabet
  * carries no picture characters at all.
  */

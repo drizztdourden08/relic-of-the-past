@@ -5,15 +5,14 @@ interface DebugInfoPreviewProps {
   text: string | null;
 }
 
-/** Collapsed by default, shown for transparency — debug info is always attached,
- *  there is no way to opt out, this just lets the player see what's being sent. */
+/** Debug info is always attached; this only lets the player see what is being sent. */
 const DebugInfoPreview = (props: DebugInfoPreviewProps) => {
   const { text } = props;
 
   return (
     <Box as="details" className="bug-report__debug-info">
       <Box as="summary">Debug info (attached automatically)</Box>
-      <Text as="pre" className="bug-report__debug-info-text">{text ?? 'Collecting…'}</Text>
+      <Text as="pre" className="bug-report__debug-info-text">{text ?? 'Collecting...'}</Text>
     </Box>
   );
 };

@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind logic */
 /**
  * What clicking a segment resolves to. Re-clicking the already-active segment
- * only clears the field when the caller wired a deselect handler — its mere
- * presence is the opt-in, so a required field (no handler passed) keeps
+ * only clears the field when the caller wired a deselect handler. Its presence
+ * is the opt-in, so a required field (no handler passed) keeps
  * calling onChange with the value it already holds, exactly as before.
  */
 type ClickOutcome<T extends string> =

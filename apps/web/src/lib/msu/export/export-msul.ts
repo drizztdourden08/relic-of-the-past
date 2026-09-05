@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 /**
- * Exports a pack as `.msul` — our own container, and the only format that keeps a pack whole:
+ * Exports a pack as `.msul`, our own container and the only format that keeps a pack whole:
  * layers, play modes, per-layer volumes, loop points and pack metadata all survive it.
  *
  * It is deliberately a plain ZIP under a different extension. A user can rename it to `.zip`,
@@ -33,7 +33,7 @@ interface ExportMsulParams {
    * Every file the pack folder holds, wired or not. The archive stores ALL of it: a pack is its
    * folder, and an export that followed the references alone left an unwired bed behind. A
    * reference the manifest carries that is not in this list is still read, so a missing one
-   * aborts here with its name rather than importing as silence.
+   * aborts here with its name instead of importing as silence.
    */
   fileNames: string[];
   /** Reads one file by name. null means missing, and aborts the export. */
@@ -44,7 +44,7 @@ interface ExportMsulParams {
 /**
  * Referenced names first, then the rest of the folder. Dedupe keeps the FIRST name it meets for a
  * given content, so this order is what keeps a wired file stored under its own name when an unwired
- * copy of the same bytes sits beside it — the copy is what gets dropped, never the reference.
+ * copy of the same bytes sits beside it. The copy is what gets dropped, never the reference.
  */
 const namesToStore = (manifest: MsuPackManifest, fileNames: string[]): string[] => {
   const referenced = referencedFiles(manifest);
@@ -53,7 +53,7 @@ const namesToStore = (manifest: MsuPackManifest, fileNames: string[]): string[] 
 };
 
 /**
- * Written by hand rather than through storage's serializeManifest, which stamps `modifiedAt`
+ * Written by hand, not through storage's serializeManifest, which stamps `modifiedAt`
  * with the current time. Export must be reproducible and lossless, so the manifest goes out
  * exactly as it came in.
  */
@@ -63,7 +63,7 @@ const serializeForExport = (manifest: MsuPackManifest): Uint8Array =>
 const exportMsulPack = async (params: ExportMsulParams): Promise<Uint8Array> => {
   const { manifest, fileNames, loadBytes, onProgress } = params;
 
-  // TODO(opus): a later pass transcodes here — per-layer Opus presets (bitrate/channels chosen
+  // TODO(opus): a later pass transcodes here. Per-layer Opus presets (bitrate/channels chosen
   // per layer kind: full bitrate for a music body, a low-bitrate mono for an ambient one) would
   // slot in between dedupe and entry construction, replacing `bytes` and the file extension.
   // Dedupe has to stay ahead of it so identical sources are encoded once, and the encoded name

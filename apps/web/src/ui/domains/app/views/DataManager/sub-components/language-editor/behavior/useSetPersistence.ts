@@ -1,20 +1,10 @@
 /* @layer renderer-components @kind hook */
 /**
- * Debounced whole-set persistence for the translation editor.
- *
- * IMPORTANT: a write is expensive. Saving a set rewrites its JSON payloads and
- * then recompiles every cached asset blob so the change reaches what the core
- * reads at boot — on the desktop host that recompile happens in the main
- * process. Nowhere near cheap enough for a keystroke, so an edit only records a
- * snapshot here and the write waits for SAVE_DEBOUNCE_MS of quiet.
- *
- * Two counters keep a slow write from losing or clobbering an edit: `revision`
- * counts every edit, `persisted` records the revision the last completed write
- * carried. They differ exactly when unsaved work exists, so an edit that lands
- * mid-write is noticed after the await and re-armed, instead of being silently
- * overwritten by the older snapshot's completion. `epoch` does the same job for
- * a set swap: a write that finishes after the editor moved to another set
- * reports nothing and touches no counter.
+ * Debounced whole-set persistence. A write is expensive (it recompiles every
+ * cached asset blob), so an edit only records a snapshot and the write waits
+ * for SAVE_DEBOUNCE_MS of quiet. `revision` counts edits and `persisted` holds
+ * the revision the last completed write carried, so an edit landing mid-write
+ * is re-armed instead of clobbered. `epoch` does the same for a set swap.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { LanguageSet } from '@shared/game/language';
@@ -67,7 +57,7 @@ const useSetPersistence = () => {
     }
     inFlight.current = false;
 
-    // A different set was loaded while this write ran — its result is not ours.
+    // A different set was loaded while this write ran, so its result is not ours.
     if (epoch.current !== era) return;
     if (live.current) setSaving(false);
     if (failure !== null) {
@@ -108,11 +98,7 @@ const useSetPersistence = () => {
     setSaveError(null);
   }, [cancelTimer]);
 
-  /**
-   * Explicit flush. When a write is already in flight this returns as soon as
-   * the debounce is cancelled — that write, or the re-arm it triggers, still
-   * carries the newest snapshot.
-   */
+  /** Explicit flush. With a write already in flight this returns at once; that write, or its re-arm, carries the newest snapshot. */
   const saveNow = useCallback(async (): Promise<void> => {
     cancelTimer();
     await run();

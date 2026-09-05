@@ -1,12 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * State rules driven by live player-state bytes: what the player is doing, and the
- * named story bits in `sram_progress_flags`.
- *
- * Wording is the point here. `link_player_handler_state = 22` means nothing to a
- * reader, and `player_sleep_in_bed_state` is a step counter that is ZERO while
- * the player is actually asleep — so "asleep" is derived from the handler state and the
- * counter only refines it ("waking up").
+ * State rules driven by live player-state bytes: what the player is doing, and the named story
+ * bits in `sram_progress_flags`. `player_sleep_in_bed_state` is a step counter that is ZERO
+ * while asleep, so "asleep" comes from the handler state and the counter only refines it.
  */
 import type { PlayerStateInfo } from './bridge/player-state';
 import type { ActiveState } from './active-states';
@@ -54,11 +50,7 @@ const HANDLER_LABELS: Readonly<Record<number, string>> = {
   [PlayerState.spinAttackMotion]: 'Spin attack follow-through',
 };
 
-/**
- * `sram_progress_flags` bits, named from the routine that sets each one in the
- * decompilation. The mask travels as a tooltip hint, so a label a reader doubts
- * can be traced back to the byte it came from.
- */
+/** `sram_progress_flags` bits, named from the routine that sets each. The mask travels as a tooltip hint so a doubted label can be traced to its byte. */
 const PROGRESS_BITS: ReadonlyArray<{ mask: number; label: string }> = [
   { mask: 0x01, label: 'Uncle gave the sword' },
   { mask: 0x02, label: 'Sanctuary priest scene seen' },
@@ -67,7 +59,7 @@ const PROGRESS_BITS: ReadonlyArray<{ mask: number; label: string }> = [
   { mask: 0x20, label: 'Desert sage spoken to' },
 ];
 
-/** What the player is doing, when it is worth saying. */
+/** What the player is doing, when that is worth saying. */
 const playerActivity = (info: PlayerStateInfo): ActiveState | null => {
   // Asleep is a handler state; the step counter says how far into waking he is.
   if (info.handlerState === PlayerState.asleepInBed) {
@@ -82,13 +74,13 @@ const playerActivity = (info: PlayerStateInfo): ActiveState | null => {
   return null;
 };
 
-/** Dashing is its own fact — the boots change what the player can cross. */
+/** Dashing is its own fact because the boots change what the player can cross. */
 const dashState = (info: PlayerStateInfo): ActiveState | null => (info.isRunning
   ? { id: 'dashing', label: 'Dashing (boots)', gating: true }
   : null);
 
 const bunnyState = (info: PlayerStateInfo): ActiveState | null => (info.isBunny
-  ? { id: 'bunny', label: 'Bunny — cannot use items', gating: true }
+  ? { id: 'bunny', label: 'Bunny - cannot use items', gating: true }
   : null);
 
 const waterState = (info: PlayerStateInfo): ActiveState | null => (info.inDeepWater
@@ -106,8 +98,7 @@ const stunnedState = (info: PlayerStateInfo): ActiveState | null => (info.incapa
 const progressBitStates = (info: PlayerStateInfo): ActiveState[] =>
   PROGRESS_BITS
     .filter((bit) => (info.progressFlags & bit.mask) !== 0)
-    // The mask is provenance, not information the reader needs on the chip — it
-    // rides in the tooltip so an uncertain label can still be checked.
+    // The mask is provenance, not chip text; it rides in the tooltip.
     .map((bit) => ({ id: `progress-flag-${bit.mask}`, label: bit.label, hint: `sram_progress_flags 0x${bit.mask.toString(16).padStart(2, '0')}` }));
 
 /** Every state these bytes imply, in reading order. */

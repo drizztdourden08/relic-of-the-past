@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Heightmap Builder — Rasterizes HeightmapElement shapes into a pixel buffer
+ * Rasterizes HeightmapElement shapes into a pixel buffer
  * that gets uploaded as a texture to the shadow shader.
  */
 
@@ -27,7 +27,7 @@ const rasterizeElement = (buffer: Uint8Array, bufWidth: number, bufHeight: numbe
     points: shape.points?.map(p => ({ x: p.x - offsetX, y: p.y - offsetY })),
   };
 
-  // Compute bounding box for the shape (no margin needed — hard edges)
+  // Compute bounding box for the shape (no margin needed for hard edges)
   const halfW = localShape.width / 2;
   const halfH = localShape.height / 2;
 
@@ -41,7 +41,7 @@ const rasterizeElement = (buffer: Uint8Array, bufWidth: number, bufHeight: numbe
       const dist = distanceToShape(px, py, localShape);
 
       if (dist <= 0) {
-        // Inside shape — hard edge, full height
+        // Inside shape, so hard edge and full height
         const idx = py * bufWidth + px;
         const byteVal = Math.round(height * 255);
         if (byteVal > buffer[idx]) {

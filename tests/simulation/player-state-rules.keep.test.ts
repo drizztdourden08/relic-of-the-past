@@ -1,12 +1,9 @@
 /* @layer tests @kind test */
 /**
- * The live-player-state chips. Wording is the deliverable here — the raw bytes are
- * meaningless to a reader — so these tests assert the STRINGS, not the numbers.
- *
- * The sleep case is the one that bit us: `player_sleep_in_bed_state` is a step
- * counter INSIDE the sleeping handler and reads 0 while Link is actually asleep, so
- * an earlier version reported "Asleep in bed" in every save. Asleep now comes from
- * the handler state, and the counter only distinguishes waking from sleeping.
+ * The live-player-state chips. These assert STRINGS, not bytes. The sleep case
+ * bit us: `player_sleep_in_bed_state` is a step counter INSIDE the sleeping
+ * handler and reads 0 while asleep, so an earlier version reported "Asleep in
+ * bed" in every save. Asleep comes from the handler state now.
  */
 import { describe, it, expect } from 'vitest';
 import { playerStates, PlayerState } from '../../apps/web/src/lib/game/player-state-rules';
@@ -52,7 +49,7 @@ describe('player activity states', () => {
     expect(labels(info({ handlerState: PlayerState.holdUpItem }))).toEqual(['Holding an item overhead']);
   });
 
-  it('stays quiet for an unnamed handler state rather than printing a number', () => {
+  it('stays quiet for an unnamed handler state instead of printing a number', () => {
     expect(labels(info({ handlerState: 99 }))).toEqual([]);
   });
 });
@@ -65,7 +62,7 @@ describe('traversal-affecting states', () => {
   });
 
   it('explains what bunny form costs instead of just naming it', () => {
-    expect(labels(info({ isBunny: true }))).toEqual(['Bunny — cannot use items']);
+    expect(labels(info({ isBunny: true }))).toEqual(['Bunny - cannot use items']);
   });
 
   it('reports deep water and wall grabbing', () => {
@@ -100,7 +97,7 @@ describe('progress flag bits', () => {
 });
 
 describe('no player state available', () => {
-  it('returns an empty list rather than throwing when the module is not running', () => {
+  it('returns an empty list instead of throwing when the module is not running', () => {
     expect(playerStates(null)).toEqual([]);
   });
 });

@@ -1,6 +1,6 @@
 /* @layer renderer-design-system @kind style */
 
-/* Motion — durations, easings, and the composed transition shorthands. */
+/* Motion: durations, easings, and the composed transition shorthands. */
 :root {
   --duration-fast:   0.1s;
   --duration-normal: 0.15s;

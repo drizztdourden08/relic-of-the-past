@@ -19,11 +19,9 @@ import type {
   ColumnActions, TableActions,
 } from '../../apps/web/src/ui/design-system/composites/DataTable/DataTable.type';
 
-// The parts of the table's chrome that are pure functions: what a column's ⋯
-// menu offers, what the footer's does, and how a nested group row is
-// identified. The field tree those menus open is asserted next door, in
-// data-table-field-tree.test.ts; rendering and interaction are covered (as far
-// as they can be without a browser) in data-table-render.test.ts.
+// The pure-function parts of the table chrome: the column ⋯ menu, the footer
+// menu, and nested group row identity. The field tree is in
+// data-table-field-tree.test.ts; rendering in data-table-render.test.ts.
 
 const field = (path: string, kind: FieldDescriptor['kind'], children?: FieldDescriptor[]): FieldDescriptor => {
   const descriptor: FieldDescriptor = { path, label: path, kind, optional: false };
@@ -68,7 +66,7 @@ const menu = (overrides: Partial<Parameters<typeof buildColumnMenuItems>[0]> = {
   return { actions, entries, byKey: entryLookup(entries), onClose, onStartRename };
 };
 
-describe('ColumnMenu — the entry list', () => {
+describe('the ColumnMenu entry list', () => {
   it('offers the two adds, remove, rename, the four moves, group, sort and the two sizings', () => {
     expect(menu().entries.map((entry) => entry.key)).toEqual([
       'add-before', 'add-after', 'remove', 'rename',
@@ -77,7 +75,7 @@ describe('ColumnMenu — the entry list', () => {
     ]);
   });
 
-  it('carries nothing table-wide — those live once, in the footer menu', () => {
+  it('carries nothing table-wide, because those live once, in the footer menu', () => {
     const keys = menu().entries.map((entry) => entry.key);
     expect(keys).not.toContain('clear-sort');
     expect(keys).not.toContain('clear-group');
@@ -119,7 +117,7 @@ describe('ColumnMenu — the entry list', () => {
     expect(menu({ grouped: true }).entries.map((entry) => entry.key)).not.toContain('group');
   });
 
-  it('adds a level rather than replacing — the only route to a multi-column sort', () => {
+  it('adds a level instead of replacing: the only route to a multi-column sort', () => {
     const { actions, byKey } = menu();
     byKey('sort-asc').onClick?.();
     expect(actions.onSortDir).toHaveBeenCalledWith('kind', 'asc');
@@ -174,7 +172,7 @@ describe('ColumnMenu — the entry list', () => {
     expect(actions.onRemove).toHaveBeenCalledWith('kind');
   });
 
-  it('hands renaming back to the header cell rather than doing it itself', () => {
+  it('hands renaming back to the header cell instead of doing it itself', () => {
     const { actions, byKey, onStartRename } = menu();
     byKey('rename').onClick?.();
     expect(onStartRename).toHaveBeenCalled();
@@ -192,12 +190,12 @@ const leafAt = (items: readonly MenuItem[], key: string): MenuItem => {
   return found;
 };
 
-describe('ColumnMenu — adding a column before or after this one', () => {
+describe('ColumnMenu adding a column before or after this one', () => {
   const nodes = buildPickerNodes(NESTED, ['id']);
   const addMenu = (overrides: Partial<Parameters<typeof buildColumnMenuItems>[0]> = {}) =>
     menu({ fieldNodes: nodes, ...overrides });
 
-  it('offers both, each opening the field tree as a submenu rather than a panel', () => {
+  it('offers both, each opening the field tree as a submenu instead of a panel', () => {
     const { byKey } = addMenu();
     expect(byKey('add-before').children?.map((child) => child.key)).toEqual(['outer', 'tags']);
     expect(byKey('add-after').children?.map((child) => child.key)).toEqual(['outer', 'tags']);
@@ -234,7 +232,7 @@ describe('ColumnMenu — adding a column before or after this one', () => {
     expect(onClose).toHaveBeenCalled();
   });
 
-  it('says so, greyed, rather than opening onto nothing when every field is shown', () => {
+  it('says so, greyed, instead of opening onto nothing when every field is shown', () => {
     const [empty] = menu({ fieldNodes: [] }).byKey('add-before').children ?? [];
     expect(empty.disabled).toBe(true);
     expect(empty.onClick).toBeUndefined();
@@ -256,17 +254,14 @@ const tableMenu = (overrides: Partial<Parameters<typeof buildTableMenuItems>[0]>
   return { actions, entries, byKey: entryLookup(entries), onClose };
 };
 
-describe('the footer menu — what belongs to the table rather than a column', () => {
+describe('the footer menu: what belongs to the table instead of a column', () => {
   it('holds the three that used to be repeated in every column, the fit-all and one add', () => {
     expect(tableMenu().entries.map((entry) => entry.key))
       .toEqual(['add-column', 'clear-sort', 'clear-group', 'fit-all', 'reset']);
   });
 
-  /*
-   * Placing a column is a column's own business — before this one, after this
-   * one. This entry exists for the two cases no column menu can serve: not
-   * caring where it lands, and a table with no columns left to open a menu on.
-   */
+  // Placing a column is the column menu's job. This entry covers the two cases
+  // it cannot: not caring where it lands, and a table with no columns left.
   it('appends the field it is given, since it has no column to place it against', () => {
     const { actions, entries } = tableMenu({ fieldNodes: buildPickerNodes(NESTED, ['id']) });
     const add = entries.find((entry) => entry.key === 'add-column');
@@ -291,7 +286,7 @@ describe('the footer menu — what belongs to the table rather than a column', (
     expect(actions.onFitAllToContent).toHaveBeenCalledTimes(1);
   });
 
-  it('never greys the fit-all out — there is always something to fit', () => {
+  it('never greys the fit-all out, because there is always something to fit', () => {
     expect(tableMenu().byKey('fit-all').disabled).toBeUndefined();
   });
 
@@ -302,7 +297,7 @@ describe('the footer menu — what belongs to the table rather than a column', (
     expect(tableMenu({ groupActive: true }).byKey('clear-group').disabled).toBe(false);
   });
 
-  it('never greys out the reset — a layout can always go back to its default', () => {
+  it('never greys out the reset, because a layout can always go back to its default', () => {
     expect(tableMenu().byKey('reset').disabled).toBeUndefined();
   });
 

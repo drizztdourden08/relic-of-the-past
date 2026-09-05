@@ -8,7 +8,7 @@
 //
 // The request and the gate therefore cannot be resolved at call time. WasmSetHudHidden runs when the
 // renderer pushes settings, while the gate lives in a WRAM word SyncGateWords() only latches once per
-// frame — so at boot the request arrives first, gets refused, and nothing ever asks again. That is the
+// frame. At boot the request therefore arrives first, gets refused, and nothing ever asks again. That is the
 // doubled HUD. The request is kept here as host-side WANTED state and reconciled against the gate every
 // frame instead (HudOverride_Sync, alongside SyncCheatWram), which is order-independent by construction
 // and also repaints correctly when the gate opens or closes mid-session.
@@ -60,6 +60,6 @@ void HudOverride_SetWantedPauseHidden(bool on) {
 
 void HudOverride_Restore(void) {
   // Reached from GateWordSideEffects once the bit already reads clear, so the shared reconcile resolves
-  // to "not hidden" on its own — no second copy of that logic to drift from this one.
+  // to "not hidden" on its own, with no second copy of that logic to drift from this one.
   HudOverride_Sync();
 }

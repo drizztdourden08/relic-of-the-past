@@ -4,7 +4,7 @@ import type { ColorPickerProps } from '../ColorPicker';
 
 interface ColorPickerPopoverProps extends Omit<ColorPickerProps, 'onClose'> {
   open: boolean;
-  /** The trigger to float beside — set to whichever swatch was last clicked. */
+  /** The trigger to float beside. Set it to whichever swatch was last clicked. */
   anchorRef: RefObject<HTMLElement | null>;
   onClose: () => void;
 }

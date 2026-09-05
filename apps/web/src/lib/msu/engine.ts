@@ -1,14 +1,10 @@
 /* @layer renderer-lib @kind logic */
 /**
- * The single entry point for replacement audio. Everything above it (the bridge, the widget,
- * the pack previewer) talks to this and never touches an audio node directly.
- *
- * Four channels: music and the ambient bed replace what is playing when a new id arrives; the
- * two effect channels layer each trigger over the last. See `channel.ts` for that split.
- *
- * Gain chain, outermost last: per-layer volume → the game's own fades → the volume group
- * (music/ambient follow the music slider, effects follow the SFX one) → the shared output.
- * Keeping the stages separate means a fade cannot clobber a user setting and vice versa.
+ * The single entry point for replacement audio; nothing above it touches an audio node.
+ * Four channels: music and ambient replace on a new id, the two effect channels layer (see
+ * `channel.ts`). Gain chain, outermost last: per-layer volume -> the game's own fades -> the
+ * volume group (music/ambient follow the music slider, effects the SFX one) -> shared output.
+ * Separate stages so a fade cannot clobber a user setting and vice versa.
  */
 import type { MsuPackManifest, MsuResumeState } from '@shared/types/msu-manifest';
 import { remapDeluxeTrack } from '@shared/game/data/msu-deluxe-remap';
@@ -29,28 +25,18 @@ interface MsuEngineOptions {
   isDeluxe: boolean;
   /** Current music volume, 0-100. Read on each change so a live slider applies at once. */
   musicVolume: () => number;
-  /**
-   * Current SFX volume, 0-100. Replacement effects are effects, so they follow that slider
-   * rather than the music one. Omitted (previewing a single track) means "the music volume".
-   */
+  /** Current SFX volume, 0-100; replacement effects follow this slider, not the music one. Omitted (single-track preview) means the music volume. */
   sfxVolume?: () => number;
   /** The ambient bed's own slider; falls back to the music one where the setting is absent. */
   ambientVolume?: () => number;
-  /**
-   * Whether re-entering an area picks its music up where it left off. Read per track change
-   * rather than captured, so toggling the setting mid-session takes effect immediately.
-   * Omitted for one-off uses like previewing a track, which should always start clean.
-   */
+  /** Whether re-entering an area resumes its music. Read per track change, so a mid-session toggle applies at once. Omitted for one-off previews. */
   resumeEnabled?: () => boolean;
-  /**
-   * Whether reaching the title screen forgets those positions again, so the opening plays with
-   * its animation and the next run starts its music from the top. Read per event, same as above.
-   */
+  /** Whether reaching the title screen forgets those positions, so the next run starts from the top. Read per event. */
   resetAtTitle?: () => boolean;
   onError?: (message: string) => void;
   /** Reported when a return to the title actually dropped something. */
   onReset?: () => void;
-  /** Reports each track that starts, for diagnostics — how many layers actually decoded. */
+  /** Reports each track that starts, for diagnostics: how many layers decoded. */
   onTrack?: (trackNum: number, layerCount: number, resumed: boolean) => void;
   /** The same, for the ambient bed. Effects are far too frequent to report one at a time. */
   onAmbient?: (soundId: number, layerCount: number, resumed: boolean) => void;
@@ -93,13 +79,10 @@ const createMsuEngine = (options: MsuEngineOptions) => {
   const all = [music, ambient, channels.sfx1, channels.sfx2];
   const titleReset = createTitleReset(channels, resetAtTitle, onReset);
 
-  /**
-   * The game's music-control byte. Values below 0xf0 select a track (0 = silence), 0xf1..0xf3
-   * are volume transitions, and anything else in the 0xf0 range only concerns the sound chip.
-   */
-  // Whether the music has been faded to silence and not brought back. Part of the "is playing"
-  // answer below: a faded track is still active in the graph, but telling the game it is playing
-  // would make it skip the re-select that is the only thing that brings the sound back.
+  /** The game's music-control byte: below 0xf0 selects a track (0 = silence), 0xf1..0xf3 are volume transitions, the rest of 0xf0.. only concerns the chip. */
+  // Whether the music has been faded to silence and not brought back. A faded track is still
+  // active in the graph, but reporting it as playing would make the game skip the re-select
+  // that is the only thing that brings the sound back.
   let fadedToZero = false;
 
   const onMusicCtrl = (ctrl: number, module: number, entrance: number, overworldArea: number): void => {
@@ -117,11 +100,10 @@ const createMsuEngine = (options: MsuEngineOptions) => {
   };
 
   /**
-   * The game's "is this track playing" question, answered the way this engine plays it: the
-   * track is remapped first, so two areas sharing one vanilla byte compare as different music
-   * where the pack gives them different tracks — which is what makes the music change at plain
-   * screen edges. Audibility counts: a track faded to silence answers no, so the re-select that
-   * follows a fade is never skipped.
+   * The game's "is this track playing" question. The track is remapped first, so two areas
+   * sharing one vanilla byte compare as different music where the pack differs (music changes
+   * at plain screen edges). A track faded to silence answers no, so the post-fade re-select is
+   * never skipped.
    */
   const isPlayingTrack = (ctrl: number, entrance: number, overworldArea: number): boolean => {
     if (fadedToZero) return false;
@@ -129,11 +111,7 @@ const createMsuEngine = (options: MsuEngineOptions) => {
     return music.report()?.id === target;
   };
 
-  /**
-   * A sound the core has handed over, on the channel index it reports (0 ambient, 1 sfx1,
-   * 2 sfx2). Only claimed ids ever arrive here, so an unknown channel is the only thing to
-   * guard: an id with no program is the channel's own business.
-   */
+  /** A sound the core handed over, on its channel index (0 ambient, 1 sfx1, 2 sfx2). Only claimed ids arrive, so an unknown channel is the only guard. */
   const onGameSound = (channel: number, id: number, pan: number): void => {
     const name = SOUND_CHANNELS[channel];
     if (!name) return;
@@ -146,10 +124,7 @@ const createMsuEngine = (options: MsuEngineOptions) => {
     sfxGain.gain.value = readSfxVolume() / 100;
   };
 
-  /**
-   * Live positions for a save's metadata: the music, plus the bed playing alongside it. Effects
-   * are deliberately absent — a one-shot has no position to return to.
-   */
+  /** Live positions for a save's metadata: music plus the bed alongside it. Effects are absent (a one-shot has no position). */
   const snapshot = (): MsuResumeState | null => {
     const track = music.snapshot();
     if (!track) return null;
@@ -168,15 +143,15 @@ const createMsuEngine = (options: MsuEngineOptions) => {
     return { trackNum: state.id, elapsedSeconds: state.elapsedSeconds, layers: state.layers };
   };
 
-  /** The same, for any channel — how the studio watches the beds and the effects. */
+  /** The same for any channel. This is how the studio watches the beds and the effects. */
   const reportChannel = (name: MsuChannelName): ChannelReport | null => channels[name].report();
 
   /** Resume the audio a loaded save was playing. */
   const restore = (state: MsuResumeState | null): void => {
     music.restore(state ? { id: state.trackNum, layers: state.layers } : null);
     // `undefined` is a snapshot taken before beds were resumable: it says nothing about the
-    // ambient channel, so leave it alone rather than silencing a bed the core just re-announced.
-    // `null` is a save that genuinely had none.
+    // ambient channel, so leave it alone instead of silencing a bed the core just re-announced.
+    // `null` is a save that had none.
     if (state?.ambient === undefined) return;
     ambient.restore(state.ambient ? { id: state.ambient.soundId, layers: state.ambient.layers } : null);
   };

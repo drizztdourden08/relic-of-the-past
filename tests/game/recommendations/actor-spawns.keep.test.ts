@@ -1,15 +1,9 @@
 /* @layer test @kind test */
 /**
  * The `actor` strategy's spawns set probe: a live sprite spawn with no
- * ActorRecord covering its sprite type at all.
- *
- * Ported from the hand-written `actor-spawns` detector (deleted) onto the
- * declarative comparison engine — `strategy:actor` is the detector id now
- * (see `actor-combat.keep.test.ts` for why the two share one detector), and
- * the finding's `key` changed shape from `spriteType:<n>` to `spawn:<n>`
- * (the set probe's own `noun` + `liveKey`, per `compare/detector-from-
- * strategy.ts`'s `key = \`${noun}:${liveKey}\`` convention) — still uniquely
- * keyed by the sprite type, just under the engine's own naming.
+ * ActorRecord for its sprite type. The finding's `key` is `spawn:<n>` (the set
+ * probe's `noun` + `liveKey`, per `compare/detector-from-strategy.ts`), where
+ * the deleted detector used `spriteType:<n>`.
  */
 import { describe, it, expect } from 'vitest';
 import { all } from '@shared/game/data';
@@ -56,7 +50,7 @@ describeDataset('actor strategy (spawns probe)', () => {
     expect(draft.key).toBe(`spawn:${UNCATALOGUED}`);
     expect(draft.proposed).not.toHaveProperty('id');
     expect((draft.proposed as { gameId: { spriteType: number } }).gameId.spriteType).toBe(UNCATALOGUED);
-    // No native combat row was supplied, so 'object' is the classification —
+    // No native combat row was supplied, so 'object' is the classification and
     // never a guessed 'enemy'/'npc'/'boss'.
     expect((draft.proposed as { kind: string }).kind).toBe('object');
   });

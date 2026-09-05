@@ -1,12 +1,9 @@
 /* @layer tests @kind test */
 /**
- * The tag collection, and the migration that produced it.
- *
- * Two things are pinned here. First, the seed is COMPLETE and LOSSLESS: every
- * term the two taxonomy tables define has exactly one record, under the same
- * label, and every record maps back to a term. Second, every reference the
- * migrated screen and connection records now hold resolves — a dropped or
- * mistyped term would show up as a dangling id, and there are none.
+ * The tag collection and the migration that produced it. Pinned: the seed is
+ * COMPLETE and LOSSLESS (every taxonomy term has exactly one record under the
+ * same label, and back), and every reference the migrated screen and
+ * connection records hold resolves.
  */
 import { describe, it, expect } from 'vitest';
 import {
@@ -73,7 +70,7 @@ describeDataset('the seed, term by term', () => {
     }
   });
 
-  it('invents nothing — every record maps back to a seeded term', () => {
+  it('invents nothing, because every record maps back to a seeded term', () => {
     const seeded = new Set(SEED.map(entry => entry.id));
     for (const tag of ALL_TAGS) expect(seeded.has(tag.name), tag.name).toBe(true);
   });
@@ -92,7 +89,7 @@ describeDataset('the seed, term by term', () => {
     expect(tagKeysOf(tagIdsForKeys(keys))).toEqual(keys);
   });
 
-  it('drops what it cannot resolve rather than passing it through', () => {
+  it('drops what it cannot resolve instead of passing it through', () => {
     expect(tagIdsForKeys(['env:outdoor', 'nonsense:nope'])).toEqual([tagIdForKey('env:outdoor')]);
     expect(tagKeysOf(['tag-001', 'tag-999'])).toEqual(['env:outdoor']);
   });

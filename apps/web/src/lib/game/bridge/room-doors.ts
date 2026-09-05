@@ -16,7 +16,7 @@ interface RoomStairInfo {
   row: number;
   col: number;
   direction: 'up' | 'down';
-  /** Attr page the stair tile sits on (0 = BG2, 1 = BG1) — arrival layer. */
+  /** Attr page the stair tile sits on (0 = BG2, 1 = BG1), which is the arrival layer. */
   layer: 0 | 1;
 }
 
@@ -44,12 +44,10 @@ const wasmGetRoomDoorBoundaryTiles = (): DoorBoundaryTile[] =>
   }));
 
 /**
- * The header stores a staircase destination as ONE BYTE, and the game writes it
- * with `BYTE(dungeon_room_index) = ...` (dungeon.c:4339) — the low byte only, so
- * the room's own high byte carries over and a staircase never leaves its bank of
- * 256 rooms. Reading the byte as the whole room index silently sent every stair
- * in the 0x1xx caves to a dungeon room: the village hideout's stair to 0x119
- * read as 0x19, so nothing led into it and its five chests were unreachable.
+ * The header stores a staircase destination as ONE BYTE, written with
+ * `BYTE(dungeon_room_index) = ...` (dungeon.c:4339): the room's high byte carries over, so
+ * a staircase never leaves its bank of 256 rooms. Reading the byte as the whole index sent
+ * every 0x1xx cave stair to a dungeon room (0x119 read as 0x19).
  */
 const stairDest = (destByte: number, fromRoom: number): number => (fromRoom & 0xff00) | destByte;
 
@@ -58,7 +56,7 @@ const decodeStairs = (heap: Uint8Array, o: number, fromRoom: number): RoomStairI
   row: heap[o + 1],
   col: heap[o + 2],
   direction: (heap[o + 3] & 4) !== 0 ? 'down' : 'up',
-  /** Attr page the stair tile sits on — taking it lands the player on that layer. */
+  /** Attr page the stair tile sits on. Taking it lands the player on that layer. */
   layer: (heap[o + 3] & 1) as 0 | 1,
 });
 
@@ -68,7 +66,7 @@ const wasmGetRoomStairInfo = (): RoomStairInfo[] => {
     (heap, o) => decodeStairs(heap, o, here));
 };
 
-/** Room-addressable inter-room stairs — works for any room, not just the loaded
+/** Room-addressable inter-room stairs. Works for any room, not just the loaded
  *  one (rebuilds that room's attr table + header as a side effect). */
 const wasmGetRoomStairInfoFor = (roomId: number): RoomStairInfo[] =>
   decodeTable('WasmGetRoomStairInfoFor', { countBytes: 1, dataStart: 2, stride: 4, maxCount: 4 },
@@ -84,7 +82,7 @@ const decodeWalkBoundary = (heap: Uint8Array, o: number): RoomWalkBoundary => ({
 const wasmGetRoomWalkBoundaries = (): RoomWalkBoundary[] =>
   decodeTable('WasmGetRoomWalkBoundaries', { countBytes: 1, dataStart: 2, stride: 4, maxCount: 4 }, decodeWalkBoundary);
 
-/** Room-addressable walk-through boundaries — any room, not just the loaded one. */
+/** Room-addressable walk-through boundaries for any room, not just the loaded one. */
 const wasmGetRoomWalkBoundariesFor = (roomId: number): RoomWalkBoundary[] =>
   decodeTable('WasmGetRoomWalkBoundariesFor', { countBytes: 1, dataStart: 2, stride: 4, maxCount: 4 }, decodeWalkBoundary, { argTypes: ['number'], args: [roomId] });
 
@@ -103,12 +101,12 @@ const wasmGetRoomTravelDestinations = (): number[] | null =>
     return [heap[ptr], heap[ptr + 1], heap[ptr + 2], heap[ptr + 3], heap[ptr + 4]];
   });
 
-/** Room-addressable header TAG bytes ([tag1, tag2]) — scripted room effects. */
+/** Room-addressable header TAG bytes ([tag1, tag2]) that drive scripted room effects. */
 const wasmGetRoomTagsFor = (roomId: number): [number, number] =>
   callPtr('WasmGetRoomTagsFor', (mod, ptr) => [mod.HEAPU8[ptr], mod.HEAPU8[ptr + 1]] as [number, number],
     { argTypes: ['number'], args: [roomId] }) ?? [0, 0];
 
-/** Room-addressable travel destinations — any room, not just the loaded one. */
+/** Room-addressable travel destinations for any room, not just the loaded one. */
 const wasmGetRoomTravelDestinationsFor = (roomId: number): number[] | null =>
   callPtr('WasmGetRoomTravelDestinationsFor', (mod, ptr) => {
     const heap = mod.HEAPU8;

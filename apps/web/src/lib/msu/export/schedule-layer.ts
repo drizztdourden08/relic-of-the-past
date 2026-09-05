@@ -3,7 +3,7 @@
  * Places one layer's sources on an offline render timeline, reproducing what its live
  * scheduler (../schedulers/*) would have done over the same stretch of time.
  *
- * The live schedulers are event-driven — a timer fires, a voice starts. Offline there is no
+ * The live schedulers are event-driven, so a timer fires and a voice starts. Offline there is no
  * clock, so the same rules are unrolled ahead of time into `start(when)` calls. Each mode is
  * matched deliberately: `random` uses a gap-then-fire order (the live one waits before its
  * first event), and `interval` walks its offsets as a cycle whose length is the last offset,

@@ -1,11 +1,8 @@
 /* @layer renderer-lib @kind types */
 /**
- * The seam between the engine and one sound-chip channel.
- *
- * The game has four things the app can replace — music, the ambient bed, and two effect
- * channels — and they split into exactly two behaviors, which is what `ChannelKind` names.
- * Everything else about them (layers, play modes, volumes, reporting) is identical, so they
- * share one interface and the engine never branches on which channel it is holding.
+ * The seam between the engine and one sound-chip channel. The four replaceable things (music,
+ * ambient bed, two effect channels) split into exactly two behaviors (`ChannelKind`); everything
+ * else is identical, so the engine never branches on which channel it holds.
  */
 import type { LayerResume, MsuLayer, SoundChannel } from '@shared/types/msu-manifest';
 import type { EffectChain } from '../layer-effects';
@@ -16,25 +13,17 @@ import type { LoadBytes } from '../track-loader';
 type MsuChannelName = 'music' | SoundChannel;
 
 /**
- * How a channel treats a new id.
- *
- * `stateful` (music, ambient) — the new id REPLACES what is sounding, and what it replaced had
- * a position worth resuming later.
- *
- * `additive` (sfx1, sfx2) — the new id LAYERS another set of voices over whatever is already
- * sounding, so ten triggers in a row are ten overlapping sounds. There is nothing to resume,
- * and stopping the previous set would make rapid effects cut each other off.
+ * How a channel treats a new id. `stateful` (music, ambient): the new id REPLACES what is
+ * sounding, and the old one keeps a resumable position. `additive` (sfx1, sfx2): the new id
+ * LAYERS over what is sounding, so rapid effects never cut each other off; nothing to resume.
  */
 type ChannelKind = 'stateful' | 'additive';
 
-/**
- * One playable id, reduced to what a music track and a claimed sound both carry. Keeping the
- * two shapes apart all the way down would duplicate every channel for no behavioral difference.
- */
+/** One playable id, reduced to what a music track and a claimed sound both carry. */
 interface SoundProgram {
   id: number;
   layers: MsuLayer[];
-  /** Programs sharing a group hand playback across on a switch — see MsuSoundDef.syncGroup. */
+  /** Programs sharing a group hand playback across on a switch. See MsuSoundDef.syncGroup. */
   group?: string;
 }
 
@@ -56,7 +45,7 @@ interface LayerReport extends LayerActivity {
   modeKind: string;
 }
 
-/** A stateful channel's position — what music's resume map and the ambient snapshot both hold. */
+/** A stateful channel's position, which music's resume map and the ambient snapshot both hold. */
 interface ChannelResume {
   id: number;
   layers: Record<string, LayerResume>;
@@ -70,7 +59,7 @@ interface ChannelReport {
   id: number;
   elapsedSeconds: number;
   layers: LayerReport[];
-  /** How many trigger sets are sounding at once — always 1 for a stateful channel. */
+  /** How many trigger sets are sounding at once. Always 1 for a stateful channel. */
   setCount: number;
   /** The ceiling `setCount` is held under, or null when the kind has no ceiling. */
   voiceCap: number | null;
@@ -86,33 +75,26 @@ interface ChannelOptions {
   loadBytes: LoadBytes;
   /** How many decoded programs to keep; effects are small enough to keep many more than music. */
   cacheLimit?: number;
-  /**
-   * Whether re-selecting an id picks it up where it left off. Read per selection rather than
-   * captured, so toggling the setting mid-session takes effect immediately. Stateful only.
-   */
+  /** Whether re-selecting an id resumes it. Read per selection, so a mid-session toggle applies at once. Stateful only. */
   resumeEnabled?: () => boolean;
   /**
-   * Whether selecting the id already playing starts it again. Off, a repeat is a no-op — the
-   * chip's own behaviour for a port rewritten with the value it holds, and what the ambient bed
-   * needs. On, it restarts, which is what music needs after a fade to zero. Stateful only.
+   * Whether selecting the id already playing restarts it. Off, a repeat is a no-op (the chip's
+   * behaviour for a port rewritten with its own value; what the ambient bed needs). On, it
+   * restarts, which music needs after a fade to zero. Stateful only.
    */
   restartOnRepeat?: boolean;
   onError?: (message: string) => void;
-  /** Reports each id that starts, for diagnostics — how many layers actually decoded. */
+  /** Reports each id that starts, for diagnostics: how many layers decoded. */
   onStart?: (id: number, layerCount: number, resumed: boolean) => void;
 }
 
 interface SoundChannelApi {
   kind: ChannelKind;
-  /**
-   * The gain node the game's own volume transitions act on. Only the music channel is ever sent
-   * one; the others hold it at full so every channel has the same three-stage gain chain.
-   */
+  /** The gain node the game's own volume transitions act on. Only music is ever sent one; the others hold it at full so every channel has the same three-stage gain chain. */
   fadeNode: GainNode;
   /**
-   * Play an id. `pan` is the game's two pan bits (0 centre, 0x80 left, 0x40 right) and is
-   * honored by additive channels only — a bed re-panned mid-loop would need its graph rebuilt,
-   * and music never carries pan at all.
+   * Play an id. `pan` is the game's two pan bits (0 centre, 0x80 left, 0x40 right), honored by
+   * additive channels only (a bed re-panned mid-loop would need its graph rebuilt).
    */
   trigger: (id: number, pan?: number) => void;
   /** The sounding id, or the last one triggered for an additive channel. Null when silent. */
@@ -121,10 +103,7 @@ interface SoundChannelApi {
   snapshot: () => ChannelResume | null;
   /** Pick playback up from a snapshot. A no-op on an additive channel: effects are not resumed. */
   restore: (state: ChannelResume | null) => void;
-  /**
-   * Drop every remembered position, so the next selection of any id starts it from the top.
-   * A no-op on an additive channel, which remembers nothing in the first place.
-   */
+  /** Drop every remembered position so the next selection starts from the top. No-op on additive channels. */
   forget: () => void;
   report: () => ChannelReport | null;
   stop: () => void;

@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 /**
  * Push a window to the BOTTOM of the OS z-order (behind other apps) without
- * activating it — used by --no-focus launches so the test/automation window never
+ * activating it. Used by --no-focus launches so the test/automation window never
  * covers what the user is working on. Electron's showInactive() only avoids focus;
  * on Windows a newly shown window still lands on top of the z-order, so we call
  * Win32 SetWindowPos(HWND_BOTTOM) on the native handle. No-op off Windows (macOS

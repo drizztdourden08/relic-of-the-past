@@ -76,8 +76,8 @@ const initMasterVolume = (volume: number): void => {
     return;
   }
 
-  // Ensure a suspended context gets resumed (immediately if allowed, else on the next
-  // user gesture). Idempotent — duplicate listeners are de-duped by identity.
+  // Resume a suspended context (immediately if allowed, else on the next
+  // user gesture). Idempotent because duplicate listeners are de-duped by identity.
   armGestureResume();
   handleResumeGesture();
 
@@ -113,11 +113,11 @@ const getPendingVolume = (): number | null => {
 /**
  * The node replacement music should feed into, plus the context to build its nodes on.
  *
- * The master gain is CREATED here if it does not exist yet, rather than falling back to the raw
+ * The master gain is CREATED here if it does not exist yet, instead of falling back to the raw
  * destination. The fallback looked honest and was a trap: a caller that connected to the
  * destination stayed connected to it, so replacement audio attached early enough escaped the
  * master volume slider for the rest of the session. Null only while SDL2 has not created its
- * audio context — the caller should retry after boot.
+ * audio context, so the caller should retry after boot.
  */
 const getMasterAudioTarget = (): { ctx: AudioContext; node: AudioNode } | null => {
   const sdl2 = getSDL2Audio();

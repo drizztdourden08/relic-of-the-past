@@ -52,7 +52,7 @@ const PlayerSpriteStudio = (props: PlayerSpriteStudioProps) => {
   const state = useMemo(() => stateFor(action), [action]);
   const row = useMemo(() => (sheet ? resolvePalette(sheet, wearing.wearing) : null), [sheet, wearing.wearing]);
 
-  // Selecting the bunny art without its own palette reads as a bug rather than a choice,
+  // Selecting the bunny art without its own palette reads as a bug, not a choice,
   // so picking that state moves the outfit with it.
   useEffect(() => {
     if (action === 0x21) wearing.setOutfit('bunny');

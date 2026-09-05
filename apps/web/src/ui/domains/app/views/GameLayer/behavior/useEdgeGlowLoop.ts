@@ -17,7 +17,7 @@ interface EdgeGlowLoopParams {
   setBufSize: (s: { w: number; h: number }) => void;
 }
 
-const FADE_SPEED = 4.0; // per second (0→1 in 250ms)
+const FADE_SPEED = 4.0; // per second (0 to 1 in 250ms)
 
 interface FadeState {
   prevBlackLeft: number;
@@ -55,8 +55,7 @@ const useEdgeGlowLoop = (params: EdgeGlowLoopParams): void => {
       // Query WASM for precise viewport info
       const vp = wasmGetViewportInfo();
       if (vp) {
-        // Use locationModule (physical location, unaffected by text/menu overlays)
-        // so effects persist during telepathy, NPC dialogue, etc.
+        // locationModule is the physical location, unaffected by text/menu overlays.
         const hasExtended = vp.extraLeftRight > 0 || vp.extraTopBottom > 0 || (vp.snesHeight === 240);
         const isOverworld = vp.locationModule === 9;
         if (isOverworld && hasExtended && edgeEffectRef.current) {
@@ -64,7 +63,7 @@ const useEdgeGlowLoop = (params: EdgeGlowLoopParams): void => {
         } else if (!edgeEffectRef.current || !isOverworld) {
           renderer.setEnabled(false);
         }
-        // Only update bounds when on overworld — freeze during text/events
+        // Only update bounds on the overworld; freeze during text/events.
         if (isOverworld) {
           renderer.setBlackBounds(vp.blackLeft, vp.blackRight, vp.blackBottom);
           const maxBottom = vp.extraTopBottom > 0 ? vp.extraTopBottom : (vp.snesHeight === 240 ? 16 : 0);
@@ -105,8 +104,7 @@ const useEdgeGlowLoop = (params: EdgeGlowLoopParams): void => {
       const cleanResult = vp?.isGameplay ? wasmRenderCleanFrame() : null;
       renderer.render(gameCanvas, time, cleanResult ?? null);
 
-      // Fulfill any pending save-state screenshot from this just-rendered, visible
-      // frame (same turn → no async/hidden-canvas readback quirks).
+      // Pending save-state screenshot from this visible frame (same turn: no hidden-canvas readback quirks).
       fulfillFrameCapture(fxCanvas);
     },
   });

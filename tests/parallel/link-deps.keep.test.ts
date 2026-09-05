@@ -1,19 +1,13 @@
 /* @layer test @kind test */
 /**
  * Regression test for the most dangerous operation in the worktree tooling.
+ * A worktree shares the record dataset with the main repo through a junction,
+ * and `git worktree remove --force` walks INTO a junction and deletes what it
+ * points at (it emptied the real .claude once). Links must be detached first,
+ * WITHOUT touching contents.
  *
- * A worktree shares the record dataset with the main repo through a directory junction.
- * `git worktree remove --force` walks INTO a junction and deletes what it points at:
- * verified, it emptied the real .claude (skills, tools, settings) back when that was
- * linked too. So the links must be detached first, and detaching must remove the link
- * WITHOUT touching its contents.
- *
- * .claude is COPIED now, precisely because of that incident, so it is no longer the
- * subject here. This exercises whatever LINKED_DIRS actually holds, which is the record
- * dataset; pointing the test at a directory the tooling no longer links would leave the
- * dangerous operation untested while still looking green.
- *
- * These tests use a throwaway target; they never point a link at a real repo directory.
+ * .claude is COPIED now because of that incident. This exercises whatever
+ * LINKED_DIRS holds (the record dataset), with a throwaway target.
  */
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { mkdirSync, writeFileSync, existsSync, rmSync, readdirSync, symlinkSync } from 'node:fs';

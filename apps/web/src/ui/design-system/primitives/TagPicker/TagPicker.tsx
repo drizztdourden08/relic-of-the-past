@@ -27,7 +27,7 @@ interface TagPickerProps<T extends string = string> {
    * One pick at a time: choosing replaces instead of adding, so the array that
    * comes back holds at most one value and the chips behave as radios. The
    * value stays an array either way, which is what keeps this one component
-   * rather than two that look alike.
+   * instead of two that look alike.
    */
   single?: boolean;
 }

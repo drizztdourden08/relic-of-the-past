@@ -1,15 +1,9 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * Takes a new worktree from `git worktree add` to launchable.
- *
- * Each worktree is fully self-contained: its own node_modules, its own WASM core, its
- * own dist. Nothing about a build is shared, so one agent editing C can never affect
- * another's running app.
- *
- * The one exception is the WASM step, which is serialised across worktrees by a
- * lockfile: parallel emcc runs share the emsdk cache under $EMSDK, and a cold cache
- * lets two compilers race on the same sysroot artifacts. npm installs still overlap
- * freely — only the compiler is one-at-a-time.
+ * Takes a new worktree from `git worktree add` to launchable. Each worktree has its
+ * own node_modules, WASM core and dist. Only the WASM step is serialised across
+ * worktrees (lockfile): parallel emcc runs share the emsdk cache under $EMSDK, and a
+ * cold cache lets two compilers race on the same sysroot artifacts.
  */
 import { execFileSync } from 'node:child_process';
 import { writeFileSync, rmSync, existsSync, statSync } from 'node:fs';
@@ -22,7 +16,7 @@ const WASM_LOCK_POLL_MS = 2000;
 const sleep = (ms) => new Promise((done) => setTimeout(done, ms));
 
 const runIn = (cwd, command, args, label) => {
-  console.log(`\n[wt] ${label}…`);
+  console.log(`\n[wt] ${label}...`);
   execFileSync(command, args, { cwd, stdio: 'inherit', shell: process.platform === 'win32' });
 };
 
@@ -41,7 +35,7 @@ const buildWasmExclusively = async (cwd) => {
   let waited = false;
   while (wasmLockHeld()) {
     if (!waited) {
-      console.log('[wt] Another worktree is building the WASM core — waiting (the emsdk cache is shared).');
+      console.log('[wt] Another worktree is building the WASM core. Waiting (the emsdk cache is shared).');
       waited = true;
     }
     await sleep(WASM_LOCK_POLL_MS);
@@ -55,18 +49,13 @@ const buildWasmExclusively = async (cwd) => {
   }
 };
 
-/**
- * Prepare `worktree` for use. Returns the build timestamps for the registry so `list`
- * can show which worktrees are actually ready to run.
- */
+/** Prepare `worktree` for use. Returns the build timestamps for the registry. */
 const bootstrapWorktree = async ({ worktree, skipBuild }) => {
   console.log('\n[wt] Supplying the files git does not carry:');
   linkGitignoredDeps(worktree);
 
-  // Report only. The record tree is junctioned from the main checkout just above, so a
-  // worktree shares it and has nothing of its own to sync — syncing here would write
-  // through the junction and commit to the vault from a worktree, which is never wanted.
-  // Additive either way: no vault access prints a notice and exits 0.
+  // Report only: the record tree is junctioned from the main checkout, so a real sync
+  // here would write through the junction and commit to the vault from a worktree.
   runIn(worktree, 'node', ['scripts/vault/sync.mjs', '--status'], 'Checking vault material');
 
   if (skipBuild) {
@@ -80,7 +69,7 @@ const bootstrapWorktree = async ({ worktree, skipBuild }) => {
   await buildWasmExclusively(worktree);
   const wasmAt = new Date().toISOString();
 
-  // electron-vite build directly, NOT `npm run build` — that one deletes dist/ at the end.
+  // electron-vite build directly, not `npm run build`: that one deletes dist/ at the end.
   runIn(worktree, 'npx', ['electron-vite', 'build'], 'Building the app');
   const distAt = new Date().toISOString();
 

@@ -1,13 +1,10 @@
 /* @layer tests @kind test */
 /**
  * Tag inference for a real crossing the dataset does not map. Used to test
- * `connection-audit-resolve.ts`'s `inferTagsForDetected` (over a
- * `DetectedConnection`'s `type`); that function was removed in phase 4,
- * part 2 along with the `connection-add`/`connection-remove` detectors it
- * backed. Its replacement, `points.set.ts`'s `inferTags`, does the same job
- * over an `ObservedTransition`'s `source` instead (the `SetProbe`'s own live
- * item shape) — updated here rather than deleted, since the underlying
- * behaviour (what tags a given native crossing implies) is unchanged.
+ * `connection-audit-resolve.ts`'s `inferTagsForDetected` (removed in phase 4,
+ * part 2); its replacement, `points.set.ts`'s `inferTags`, does the same job
+ * over an `ObservedTransition`'s `source`. Updated, not deleted, since the
+ * behaviour is unchanged.
  */
 import { describe, it, expect } from 'vitest';
 import type { ObservedTransition } from '@shared/game/recommendations';
@@ -15,7 +12,7 @@ import { inferTags } from '../../../apps/web/src/ui/domains/widgets/navigation/r
 
 const transitionOf = (source: string): ObservedTransition => ({ source, kind: 'room', index: 0x55 });
 
-describe('inferTags — tag inference for a detected-but-unmapped transition', () => {
+describe('inferTags on a detected-but-unmapped transition', () => {
   it('tags an exit (the overworld screen a room exits to) as a door', () => {
     expect(inferTags(transitionOf('exit'))).toEqual(['transit:door', 'ctx:entrance']);
   });

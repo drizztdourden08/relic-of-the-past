@@ -1,18 +1,18 @@
 /* @layer shared-game @kind logic */
 /**
- * Slots for every named thing in the record dataset — places, rooms, pickups,
+ * Slots for every named thing in the record dataset, covering places, rooms, pickups,
  * chests and the structures that hold them.
  *
  * Read through the dataset facade the caller hands in, which is the only door
  * into the records, so this list follows whatever the registry holds. That
  * dataset is
- * synced in from a private companion repo and is simply ABSENT in a plain
+ * synced in from a private companion repo and is ABSENT in a plain
  * clone: the registry then holds nothing, every lookup returns an empty list,
- * and this builder yields `[]` rather than failing. That is a supported state,
+ * and this builder yields `[]` instead of failing. That is a supported state,
  * not an error case.
  *
  * These names are drawn with the set's own glyph sheet and are laid out by the
- * dialogue system rather than a fixed-cell surface, so they carry no length cap
+ * dialogue system, not a fixed-cell surface, so they carry no length cap
  * of their own.
  */
 import type { TextSlot } from '../types';
@@ -26,10 +26,10 @@ const NAMED_KINDS: NamedKind[] = ['screen', 'check', 'item', 'location', 'area',
 type NamedRecord = { id: string; randomizerName: string; vanillaName?: string };
 
 /**
- * How the caller reaches the records. Handed in rather than imported: this
+ * How the caller reaches the records. Handed in, not imported: this
  * module is re-exported from the language barrel, which the storage layer
  * imports, so a direct dataset import would pull the record loaders into every
- * bundle that touches storage — the desktop main process included.
+ * bundle that touches storage, the desktop main process included.
  */
 type RecordSource = (kind: NamedKind) => readonly NamedRecord[];
 

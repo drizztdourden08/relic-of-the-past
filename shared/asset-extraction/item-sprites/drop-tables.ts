@@ -1,7 +1,5 @@
 /* @layer shared-asset-extraction @kind data */
-/**
- * Sprite lookup tables from extract-item-sprites.py — used by drop decoder.
- */
+/** Sprite lookup tables ported from extract-item-sprites.py, read by the drop decoder. */
 
 const kTab1Sprite = [
   200, 0, 107, 0, 0, 0, 0, 0, 0, 203, 0, 8, 10, 11, 0, 0,

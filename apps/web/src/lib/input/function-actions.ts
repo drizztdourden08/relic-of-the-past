@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 /**
- * Function Actions — manages shortcut/cheat key bindings and fires callbacks
+ * Manages shortcut/cheat key bindings and fires callbacks
  * on rising-edge detection from keyboard, gamepad, and HID sources.
  */
 
@@ -104,7 +104,7 @@ class FunctionActionEngine {
   }
 
   /**
-   * Check HID buttons against function mappings each frame (SDL3 — every
+   * Check HID buttons against function mappings each frame (SDL3 covers every
    * gamepad, the browser Gamepad API path having been removed).
    * Fires callbacks on rising edge, fires keyUp listeners on falling edge.
    */
@@ -115,7 +115,6 @@ class FunctionActionEngine {
     }
   }
 
-  // ─── Private ───
 
   /** Run rising/falling-edge detection over one device's buttons + axes. */
   private processDeviceState(deviceKey: string, buttons: readonly boolean[], axes: readonly number[]): void {

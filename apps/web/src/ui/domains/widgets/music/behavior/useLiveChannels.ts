@@ -3,8 +3,8 @@
  * A frame-rate feed of every session channel, for the debugger's meters.
  *
  * The same store-per-readout arrangement the studio's preview uses, one per channel: the poll
- * runs on animation frames, each store deduplicates to the precision its meters actually draw,
- * and only the readout that changed redraws. The key is the CHANNEL name, not the sounding id,
+ * runs on animation frames, each store deduplicates to the precision its meters draw, and
+ * only the readout that changed redraws. Stores are keyed by CHANNEL name, not the sounding id,
  * so one readout per channel stays subscribed across track changes instead of unmounting at
  * exactly the moment worth watching.
  */
@@ -35,7 +35,7 @@ const useLiveChannels = () => {
     name, title: CHANNEL_TITLES[name], store: createPreviewReportStore(),
   })), []);
   // The session comes and goes with the profile and the pack, usually after this widget is
-  // already mounted, so it is polled with the channels rather than read once.
+  // already mounted, so it is polled with the channels instead of read once.
   const [sessionActive, setSessionActive] = useState(isMsuSessionActive);
 
   useEffect(() => {

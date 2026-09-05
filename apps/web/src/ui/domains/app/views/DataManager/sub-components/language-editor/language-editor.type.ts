@@ -39,7 +39,7 @@ type LanguageEditorActions = {
   /**
    * One variable's literal text. Routed to whichever table the variable is
    * projected from; an engine-owned variable has no stored value, so a write to
-   * one is ignored rather than landing where nothing would read it.
+   * one is ignored instead of landing where nothing would read it.
    */
   setVariableValue: (variable: Variable, value: string) => void;
   /** Replaces several entries' streams in one pass (the hardcoded-name apply). */
@@ -52,7 +52,7 @@ type LanguageEditorActions = {
 type LanguageEditorState = LanguageEditorActions & {
   set: LanguageSet | null;
   loading: boolean;
-  /** Load failure — a missing set id, or an unreadable payload. */
+  /** Load failure, such as a missing set id or an unreadable payload. */
   error: string | null;
   /** Edits exist that the debounced write has not persisted yet. */
   dirty: boolean;

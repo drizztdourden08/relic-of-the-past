@@ -47,7 +47,7 @@ const stateChanged = (a: GameUIState, b: GameUIState): boolean => {
   const as_ = a.saveMenu, bs = b.saveMenu;
   if (as_.cursorPosition !== bs.cursorPosition || as_.sourceModule !== bs.sourceModule) return true;
 
-  // Inventory items — check array equality
+  // Check array equality for inventory items
   for (let i = 0; i < 20; i++) {
     if (a.inventory.items[i] !== b.inventory.items[i]) return true;
   }

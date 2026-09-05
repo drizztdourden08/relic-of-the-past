@@ -3,7 +3,7 @@
  * Player-pose atlas: the generated table, plus the few lookups callers actually need.
  *
  * The JSON is a transcription of six tables in the decompilation (player_oam.c and misc.c)
- * — regenerate it rather than editing it. Facing indices follow the engine's own
+ * so regenerate it instead of editing it. Facing indices follow the engine's own
  * `link_direction_facing >> 1`, so 0 is up, 1 down, 2 left, 3 right.
  */
 import atlasJson from './player-pose-atlas.json';
@@ -19,7 +19,7 @@ const FACING_LABELS: Record<Facing, string> = { 0: 'Up', 1: 'Down', 2: 'Left', 3
 const stateFor = (action: number): PoseState | null =>
   POSE_ATLAS.states.find((s) => s.action === action) ?? null;
 
-/** The facings a state actually distinguishes — one entry when it has no facing variation. */
+/** The facings a state distinguishes. One entry when it has no facing variation. */
 const facingsOf = (state: PoseState): readonly Facing[] => (state.perFacing ? FACINGS : [0]);
 
 /** Frames of one state and facing, in play order. Empty when the state has no such facing. */

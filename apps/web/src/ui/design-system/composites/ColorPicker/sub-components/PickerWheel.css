@@ -5,8 +5,8 @@
   gap: var(--space-sm);
 }
 
-/* Saturation renders absolutely positioned to fill this box — it needs an
-   explicit height and a positioned ancestor, which is all this wrapper is for. */
+/* Saturation fills this box with absolute positioning, so the box needs an
+   explicit height and must be a positioned ancestor. */
 .picker-wheel__saturation {
   position: relative;
   height: 130px;

@@ -1,23 +1,16 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * Creates the game profile an instance launches into, under the shared user-data
- * folder. The profile id IS the worktree name, so `--instance=big-key` finds
- * `Data/profiles/big-key` with no lookup table.
+ * Creates the game profile an instance launches into. The profile id IS the worktree
+ * name, so `--instance=big-key` finds `Data/profiles/big-key` with no lookup table.
  *
- * Seeding the keyboard mapping is MANDATORY, not a convenience. Game input is built
- * from the active profile's own mappings (rebuildMaps in lib/input), and InputManager
- * starts with `activeProfile = null` — so a profile with no input profile receives no
- * key events at all, arrow keys included.
+ * Seeding the keyboard mapping is mandatory: InputManager starts with
+ * `activeProfile = null`, so a profile with no input profile receives no key events.
  *
- * The mappings come from the real preset rather than a copy, so a change there reaches
- * agent profiles too. A bare `import()` of the `.ts` file relies on Node's
- * detect-and-reparse fallback for an ambiguous extension (no "type": "module" at the
- * repo root) — reliable from a plain `node` invocation, but NOT from inside a test
- * runner that registers its own module hooks (Playwright's `.ts` transform swallows
- * it: "Unexpected token 'export'"). Reading the source and stripping its types
- * ourselves, then importing the plain-JS result from a data: URL, sidesteps whichever
- * loader is active — keyboard.ts carries only `import type`, which strips to nothing,
- * so there is no relative import left to resolve.
+ * The mappings are read from the real preset. A bare `import()` of the `.ts` file works
+ * from plain `node` but not inside a test runner with its own module hooks (Playwright's
+ * `.ts` transform fails with "Unexpected token 'export'"), so the source is type-stripped
+ * here and imported from a data: URL. keyboard.ts carries only `import type`, so no
+ * relative import is left to resolve.
  */
 import { mkdirSync, writeFileSync, existsSync, readdirSync, readFileSync, cpSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -47,7 +40,7 @@ const readJson = (path, fallback) => {
   }
 };
 
-/** Every existing profile, newest-played first — the source for sensible defaults. */
+/** Every existing profile, newest-played first: the source for defaults. */
 const existingProfiles = () => {
   const dir = gameDataPath('profiles');
   if (!existsSync(dir)) return [];
@@ -67,36 +60,25 @@ const defaultRom = () => {
     ? readdirSync(romDir).find((f) => ROM_EXTENSIONS.some((ext) => f.toLowerCase().endsWith(ext)))
     : null;
   if (!found) {
-    throw new Error('No ROM found in the user-data folder — import one in the app before provisioning a profile.');
+    throw new Error('No ROM found in the user-data folder. Import one in the app before provisioning a profile.');
   }
   return found;
 };
 
-/**
- * A profile's `romFile` is just a filename, resolved against the shared `Data/roms/`
- * folder at launch time. Inheriting that filename from another profile (the normal
- * path) says nothing about whether the file is still there — it could have been
- * renamed or removed since that profile last played. Failing here, with the exact
- * filename and folder, beats the app failing later with an opaque "pick a ROM" prompt.
- */
+// An inherited `romFile` may have been renamed or removed since that profile last
+// played. Failing here with the filename beats the app's opaque "pick a ROM" prompt.
 const assertRomExists = (romFile) => {
   const path = gameDataPath('roms', romFile);
   if (!existsSync(path)) {
-    throw new Error(`ROM "${romFile}" is not in ${gameDataPath('roms')} — the file this profile inherited is missing.`);
+    throw new Error(`ROM "${romFile}" is not in ${gameDataPath('roms')}. The file this profile inherited is missing.`);
   }
 };
 
 /**
- * Copy the source profile's NAMED manual saves into the new profile.
- *
- * Without these, `--auto-state=test-jail-cell` has nothing to load and the app boots to
- * the title screen instead — verified. Manual save names are stable and quick-save can
- * never overwrite them, which is exactly why automation and the nav baselines pin to
- * them, so an agent profile is useless for testing until it has them.
- *
- * Only `normal/` is copied. `quick/` and `auto/` are volatile (and 21 MB), and the
- * battery save (sram.dat) is deliberately left out so an agent starts from the same
- * baselines rather than inheriting in-game progress.
+ * Copy the source profile's named manual saves; without them `--auto-state=<name>`
+ * has nothing to load. Only `normal/` is copied: `quick/` and `auto/` are volatile
+ * (21 MB), and sram.dat is left out so an agent starts from the baselines instead of
+ * inheriting in-game progress.
  */
 const copyManualSaves = (sourceId, name) => {
   if (!sourceId) return 0;
@@ -108,17 +90,11 @@ const copyManualSaves = (sourceId, name) => {
 };
 
 /**
- * Copy one quick-save slot (0-based, matching `--auto-state=<number>`) from the source
- * profile into the new one, for reproducing a bug tied to a specific in-progress state.
- * Quick slots are `saveN.sav`/`saveN.png` with no manifest — unlike manual saves, a
- * quick slot has no stable name, so the caller must know which index holds the state.
+ * Copy one quick-save slot (0-based, matching `--auto-state=<number>`). Quick slots are
+ * `saveN.sav`/`saveN.png` with no manifest, so the caller must know the index.
  *
- * Skips (does not overwrite) if the destination slot already has a save — provisionProfile
- * is meant to be safely re-runnable against an EXISTING, already-in-use profile (that's the
- * whole point of its idempotency elsewhere), so a second run must never clobber a quick save
- * someone has since made by playing in that profile. This silently destroyed a user's live
- * test save once already: re-provisioning an instance the user was actively testing in
- * overwrote their fresh save0.sav/save1.sav with stale copies from the source profile.
+ * Never overwrites an existing destination slot: re-provisioning an instance in use once
+ * clobbered the user's fresh save0.sav/save1.sav with stale copies.
  */
 const copyQuickSave = (sourceId, name, slot) => {
   if (!sourceId || slot == null) return false;
@@ -128,7 +104,7 @@ const copyQuickSave = (sourceId, name, slot) => {
   const destPath = join(toDir, `save${slot}.sav`);
   if (existsSync(destPath)) return false;
   if (!existsSync(savPath)) {
-    throw new Error(`Quick slot ${slot} has no save${slot}.sav under ${fromDir} — nothing to copy.`);
+    throw new Error(`Quick slot ${slot} has no save${slot}.sav under ${fromDir}. Nothing to copy.`);
   }
   mkdirSync(toDir, { recursive: true });
   cpSync(savPath, destPath);
@@ -154,27 +130,20 @@ const keyboardInputProfile = async (now) => {
 
 /**
  * Provision (or repair) the profile for `name`. Idempotent: an existing profile keeps
- * its saves and is only topped up with anything missing, so re-running never destroys
- * an agent's state.
+ * its saves and is only topped up with what is missing.
  *
- * `seedFixtureSaves` (default true) merges the `tests/fixtures/save-states/` regression
- * fixtures into the profile's named saves, additive to whatever `copyManualSaves` already
- * pulled from a human profile — a no-op, not an error, when no vault checkout is found.
- *
- * `seedCheats` (default true) turns `cheatsEnabled` on in a freshly written config.json,
- * only at creation time. The four cheat category bits (item grant, stats, combat,
- * ignore-collision) are all granted automatically alongside the master switch by
- * buildFeatureWord3 (apps/web/src/lib/game/live-settings-flags.ts) — nothing else to set.
+ * `seedFixtureSaves` (default true) merges `tests/fixtures/save-states/` into the named
+ * saves; a no-op when no vault checkout is found. `seedCheats` (default true) sets
+ * `cheatsEnabled` in a freshly written config.json only; the cheat category bits follow
+ * from the master switch in buildFeatureWord3 (apps/web/src/lib/game/live-settings-flags.ts).
  */
 const provisionProfile = async ({ name, romFile, inheritConfigFrom, quickSlot, seedFixtureSaves: withFixtures = true, seedCheats = true }) => {
   const now = Date.now();
   const dir = gameDataPath('profiles', name);
 
-  // Resolve what to inherit BEFORE writing anything. The new profile's lastPlayed is
-  // "now", so once it exists it sorts first and the profile would inherit from itself.
-  //
-  // Prefer a real (non-agent) profile: seeding from another agent profile would chain
-  // one agent's settings into the next, so provisioning would stop being repeatable.
+  // Resolve what to inherit before writing anything, or the new profile (lastPlayed =
+  // now) sorts first and inherits from itself. Prefer a non-agent profile so agent
+  // settings do not chain into the next one.
   const others = existingProfiles().filter((p) => p.id !== name);
   const human = others.filter((p) => !String(p.name ?? '').startsWith('agent/'));
   const candidates = human.length > 0 ? human : others;
@@ -188,8 +157,7 @@ const provisionProfile = async ({ name, romFile, inheritConfigFrom, quickSlot, s
   const profilePath = join(dir, 'profile.json');
   if (!existsSync(profilePath)) {
     const profile = { id: name, name: `agent/${name}`, romFile: rom, created: now, lastPlayed: now, automation: true };
-    // Language is per-profile and picks which asset blob loads; inherit it so an agent
-    // run renders the same text the user sees.
+    // Language picks which asset blob loads; inherit it so an agent sees the same text.
     if (source?.language) profile.language = source.language;
     writeJson(profilePath, profile);
   }
@@ -203,8 +171,7 @@ const provisionProfile = async ({ name, romFile, inheritConfigFrom, quickSlot, s
 
   const configPath = join(dir, 'config.json');
   if (!existsSync(configPath)) {
-    // Start from the user's own settings (aspect ratio, renderer flags) so an agent
-    // screenshot matches what they would see, then pin the keyboard input profile.
+    // Start from the user's own settings so an agent screenshot matches theirs.
     const config = { ...sourceConfig, activeInputProfileId: keyboard.id };
     if (seedCheats) config.cheatsEnabled = true;
     writeJson(configPath, config);

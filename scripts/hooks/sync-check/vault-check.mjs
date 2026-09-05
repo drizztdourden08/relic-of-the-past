@@ -1,33 +1,16 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * Read-only: is the vault checkout carrying work that has not been shared?
- * Plain `git status --porcelain` plus an ahead-count against its own upstream —
- * no fetch, no network.
+ * Read-only: is the vault checkout carrying unshared work? `git status --porcelain`
+ * plus an ahead-count against its upstream; no fetch. Uncommitted files block the
+ * commit (they can be lost outright). Unpushed commits are reported but do not block:
+ * every `vault:sync` leaves commits here, so blocking would fail every commit until
+ * the vault was pushed.
  *
- * The vault is a sibling checkout now, not a clone inside this tree, so it is
- * found the same way the sync finds it rather than at a fixed path. Pointed at
- * the old `.vault/` this check reported "unmanaged" and silently stopped
- * watching anything at all.
+ * Committing from a git worktree sets GIT_DIR (and friends) to that worktree's git-dir,
+ * and `-C <dir>` does not clear it, so they are stripped or git would diff the vault
+ * against the caller's index and report every vault file as modified.
  *
- * Two different risks, kept apart because they are not equally bad:
- *
- * - UNCOMMITTED files can be lost outright — an edit nothing holds a record of.
- *   That still blocks the commit, exactly as it did before.
- * - UNPUSHED commits are already in git and recoverable, just not shared yet.
- *   Those are reported and do NOT block: `npm run vault:sync` commits everything
- *   it writes, so any sync leaves commits here, and blocking on that would fail
- *   every commit in this repo until the vault had been pushed.
- *
- * Committing from a git WORKTREE runs this hook with GIT_DIR (and friends) set to
- * that worktree's private git-dir. `-C <dir>` only changes the child's cwd — it
- * does not clear an inherited GIT_DIR — so without stripping it, git would ignore
- * the vault's own repo entirely and diff its files against the caller's index
- * instead, reporting every single file in the vault as modified.
- *
- * Scoped to relevance first, on top of that: a commit that doesn't touch any
- * vault-managed path makes zero git calls into the vault and reports nothing, no
- * matter what state the vault happens to be in — its own unrelated notes/exports
- * are its business, not a reason to block work here.
+ * A commit that touches no vault-managed path makes zero git calls into the vault.
  */
 import { execFileSync } from 'node:child_process';
 import { locateVault, MANAGED_ROOTS } from '../../vault/locate.mjs';
@@ -48,8 +31,7 @@ const git = (dir, args) => {
   }
 };
 
-/** True when the commit about to land touches a path the vault mirrors. No -C — this
- *  deliberately reads the calling repo's own staged diff, not the vault's. */
+/** True when the staged commit touches a vault-mirrored path. No -C: reads the calling repo's own diff. */
 const stagedTouchesVault = () => {
   const staged = execFileSync('git', ['diff', '--cached', '--name-only'], { encoding: 'utf8' })
     .split('\n').filter(Boolean);
@@ -69,8 +51,7 @@ const checkVault = () => {
 
   const files = git(dir, ['status', '--porcelain']).split('\n').filter(Boolean).map(line => line.slice(3));
 
-  // No upstream configured counts as zero rather than as a guess — an
-  // unpublished branch is a deliberate choice, not something to nag about.
+  // No upstream counts as zero: an unpublished branch is a choice, not something to nag about.
   const ahead = Number(git(dir, ['rev-list', '--count', '@{u}..HEAD']).trim()) || 0;
 
   return { status: files.length ? 'dirty' : 'clean', dir, files, ahead };

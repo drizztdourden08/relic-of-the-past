@@ -1,11 +1,8 @@
 /* @layer electron-main @kind logic */
 /**
- * Opacity ramp for a BrowserWindow — the only animation in the boot sequence.
- *
- * setOpacity needs a compositing window manager. Where there is none (a bare X11
- * session), it is a no-op and the window simply appears at its final opacity. That is
- * an acceptable degradation: the fade is polish over a boot sequence that is already
- * correct without it, so nothing downstream may depend on the ramp actually running.
+ * Opacity ramp for a BrowserWindow. setOpacity is a no-op without a compositing
+ * window manager (a bare X11 session), so nothing downstream may depend on the
+ * ramp running.
  */
 import type { BrowserWindow } from 'electron';
 

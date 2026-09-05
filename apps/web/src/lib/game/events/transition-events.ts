@@ -4,7 +4,7 @@
  *
  * The core fires this once per frame that a module or dungeon-submodule transition has just
  * finished, gated on the Developer Tools setting. Subscribing while that setting is off is
- * harmless: the core simply never calls in, so the callback never fires.
+ * harmless: the core never calls in, so the callback never fires.
  */
 import { classifyTransition } from './classify-transition';
 import type { TransitionListener, TransitionSettled } from './transition-events.type';

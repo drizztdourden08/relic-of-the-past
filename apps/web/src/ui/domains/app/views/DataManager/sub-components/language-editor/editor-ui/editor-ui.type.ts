@@ -2,7 +2,7 @@
 /**
  * Presentation types for the dialogue editor's chrome. Every field is something
  * a translator sees; nothing here decides which codes exist or which values are
- * legal — the catalog and the language's own encoder settle that upstream, and
+ * legal. The catalog and the language's own encoder settle that upstream, and
  * these shapes only carry the answer to a button or a legend row.
  */
 import type { IconifyIcon } from '@iconify/types';
@@ -20,9 +20,9 @@ type GlyphFont = {
  *
  * The editor's node view is built once per extension list and closes over
  * whatever it was given, so a font handed over by value would be the font as it
- * was at that moment — null, while the pack's own bytes are still being read.
- * Reading `current` at the node view's own render time is what lets a character
- * be drawn with a font that arrived afterwards.
+ * was at that moment. That font is null while the pack's own bytes are still
+ * being read. Reading `current` at the node view's own render time is what lets
+ * a character be drawn with a font that arrived afterwards.
  */
 type GlyphFontHandle = {
   current: GlyphFont;
@@ -44,7 +44,7 @@ type ToolbarItem = {
   needsChoice: boolean;
   choices: InsertChoice[];
   /**
-   * The tokens this button adds, in order. Almost always one — a picture the
+   * The tokens this button adds, in order. Almost always one. A picture the
    * alphabet spells as a PAIR of entries is inserted as both at once, because it
    * is one character to the author and half of one is nonsense on screen.
    */

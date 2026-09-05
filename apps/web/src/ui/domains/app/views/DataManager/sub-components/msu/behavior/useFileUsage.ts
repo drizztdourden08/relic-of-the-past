@@ -1,19 +1,10 @@
 /* @layer renderer-components @kind hook */
-/**
- * Which places in the pack name each file.
- *
- * Both halves of the manifest count: a file is in use if any music slot's layer OR any sound
- * channel's layer lists it, and one file can serve several of them at once. A file nothing names
- * is unused — it still sits in the pack and still costs its bytes, but nothing will ever play it.
- *
- * The map is keyed by filename so a row can ask about itself; building it once per manifest is
- * what keeps a hundred rows from each scanning the whole manifest.
- */
+// Filename -> the slots and sounds that name it. Built once per manifest so rows do not each scan it.
 import { useMemo } from 'react';
 import type { MsuPackManifest, SoundChannel } from '@shared/types/msu-manifest';
 import { soundTitle } from '../sound-labels';
 
-/** Filename → the places that name it, in the wording the studio uses for them elsewhere. */
+/** Filename -> the places that name it, in the wording the studio uses elsewhere. */
 type FileUsageMap = Map<string, string[]>;
 
 const useFileUsage = (manifest: MsuPackManifest): FileUsageMap => useMemo(() => {

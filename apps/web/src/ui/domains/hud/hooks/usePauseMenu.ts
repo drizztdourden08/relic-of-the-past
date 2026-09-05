@@ -1,7 +1,7 @@
 /* @layer renderer-hud @kind hook */
 /**
- * usePauseMenu — provides pause menu state from the game UI store.
- * Mirrors useHud pattern: extracts relevant data, provides sprite config.
+ * Provides pause menu state from the game UI store.
+ * Mirrors useHud: extracts the data it needs and provides the sprite config.
  */
 import { useGameUIStore } from '../../../../stores/game-ui-store';
 import { getSpritesBase } from '@shared/game/logic/queries/item-sprites';

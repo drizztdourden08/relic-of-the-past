@@ -21,7 +21,7 @@ const codeInfoFor = (name: string): CodeInfo | null => CATALOG_BY_NAME.get(name)
 /**
  * The `org` encoder (`orgEncoder` in dialogue-encoder.ts) writes any param
  * byte verbatim once the command occupies a two-byte slot in the language's
- * own `commandNames`/`commandLengths` — there is no narrower validation.
+ * own `commandNames`/`commandLengths`. There is no narrower validation.
  */
 const orgEncodableParams = (name: string, cfg: LanguageConfig): number[] | null => {
   const index = cfg.commandNames.indexOf(name);
@@ -31,7 +31,7 @@ const orgEncodableParams = (name: string, cfg: LanguageConfig): number[] | null 
 
 /**
  * The `new` encoder (`newEncoder`) never consults the language config at
- * all — it looks `name` up in the global `kCmdInfo` table, whose per-param
+ * all. It looks `name` up in the global `kCmdInfo` table, whose per-param
  * map can map a value to `null` (present but not actually encodable, e.g.
  * `Window`'s 0, or `ScrollSpd`'s 0). Those are filtered out.
  */

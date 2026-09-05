@@ -24,7 +24,7 @@ const toHex4 = (n: number): string => n.toString(16).padStart(4, '0');
  * Resolves one snapshot entry. An 'unavailable' entry was never opened by
  * SDL, so it carries no hasButton/hasAxis/buttonLabels; those default to
  * empty arrays here, which resolveDeviceControls turns into an empty
- * control list rather than a guess.
+ * control list, not a guess.
  */
 const resolveDeviceFromEntry = (entry: DeviceEntry): ResolvedDevice => {
   const vendorId = toHex4(entry.vendorId);

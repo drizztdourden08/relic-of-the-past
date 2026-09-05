@@ -29,7 +29,7 @@ controllers come through the standard gamepad layer (buttons, axes, basic rumble
 | Switch / NSO controller init | ✅ | ✅ | ⚠️ udev | ✅ | ❌ |
 | Stick / trigger calibration | ✅ | ✅ | ✅ | ✅ | ✅ |
 
-On Linux, the ⚠️ features need the controller udev rules — see [linux-setup.md](linux-setup.md).
+On Linux, the ⚠️ features need the controller udev rules from [linux-setup.md](linux-setup.md).
 The `.deb` installs them automatically.
 
 ## By controller
@@ -52,9 +52,9 @@ The `.deb` installs them automatically.
   ([linux-setup.md](linux-setup.md)).
 - **Android Bluetooth** delivers only standard gamepad input (buttons, axes, basic
   rumble). Raw HID, advanced haptics, output writes, and the Switch/NSO init are not
-  available over Bluetooth — Android gives apps no raw Bluetooth-HID access.
+  available over Bluetooth, because Android gives apps no raw Bluetooth-HID access.
 - **Switch Pro Controller 2** and **NSO GameCube** need a vendor init sequence over a raw
   connection before they send input. On desktop this works over USB and Bluetooth; on
-  Android it works over **USB-OTG only**. Over Bluetooth they don't work — use the
+  Android it works over **USB-OTG only**. Over Bluetooth they don't work, so use the
   on-screen touch controls instead.
 - **iOS** is not a supported target yet.

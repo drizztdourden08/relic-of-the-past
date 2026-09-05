@@ -1,33 +1,24 @@
 /* @layer tests @kind test */
 /**
- * PERMANENT (`.keep.spec.ts`) — do not delete with the scratch specs.
+ * PERMANENT (`.keep.spec.ts`). Do not delete with the scratch specs.
  *
- * Ledges are the easiest part of the flood to break without noticing, because a
- * wrong one still produces a plausible number. Every kind exists across these four
- * states, so they pin all of them at once:
+ * Ledges are easy to break without noticing: a wrong one still produces a
+ * plausible number. Four states pin every kind:
  *
  *   test-cliffs-uncle-west       straight north and south, plus all four diagonals
  *   test-cliffs-uncle-east       the same, and the widest ledge count on one screen
- *   test-cliffs-haunted-terrace  the screen whose diagonals used to read as
- *                                north-to-south, which let the run walk onto a
- *                                mirror-only ledge and take `Cave 45`
- *   test-castle-bridge           the ONLY dual-layer (indoor) case: a bridge crossing
- *                                a room splits the upper floor into three regions —
- *                                the deck itself and a void gap either side that reads
- *                                identical (bare 0x00 on both layers) but is not a
- *                                surface, because nothing supports it. Treating the
- *                                gaps as floor put a column of phantom jump arrows
- *                                down the middle of the room.
+ *   test-cliffs-haunted-terrace  diagonals used to read as north-to-south, which
+ *                                let the run take `Cave 45` via a mirror-only ledge
+ *   test-castle-bridge           the ONLY dual-layer (indoor) case: the void gap
+ *                                either side of the bridge deck reads as bare 0x00
+ *                                on both layers but is not a surface. Treating it
+ *                                as floor drew a column of phantom jump arrows.
  *
- * The counts below are the blessed reference. Each is asserted by DIRECTION, not
- * just as a total, because the bugs this guards against move a jump from one
- * direction to another while leaving the total alone — south-west produced nothing
- * at all for a long time, north-east jumps were being emitted with landings that
- * pointed south-west, and the castle bridge's phantom column was a run of "e"/"w"
- * hops that should never have existed at all.
+ * Counts are asserted by DIRECTION, not total, because these bugs move a jump
+ * between directions: south-west produced nothing for a long time, north-east
+ * landings pointed south-west, and the bridge's phantom column was "e"/"w" hops.
  *
- * Requires the private vault for the `.sav` fixtures; without them each case skips
- * rather than fails, so a public checkout stays green.
+ * Requires the private vault; without it each case skips.
  */
 import { test, expect } from '@playwright/test';
 import { _electron as electron } from 'playwright';
@@ -41,7 +32,7 @@ const DUMP_PATH = join(PROJECT_ROOT, 'debug-output', 'dump-nav.json');
 
 interface Expected {
   state: string;
-  /** Which field of the dump identifies the location — overworld screen or indoor room. */
+  /** Which dump field identifies the location, either overworld screen or indoor room. */
   location: { field: 'overworldScreenIndexHex'; hex: string } | { field: 'roomIndexHex'; hex: string };
   reachable: number;
   ledges: number;
@@ -104,7 +95,7 @@ const dumpFor = async (state: string): Promise<Record<string, unknown>> => {
 };
 
 for (const expected of CASES) {
-  test(`ledge baseline — ${expected.state}`, async () => {
+  test(`ledge baseline: ${expected.state}`, async () => {
     test.setTimeout(300_000);
     const fixture = join(PROJECT_ROOT, 'tests', 'fixtures', 'save-states', `${expected.state}.sav`);
     if (!existsSync(fixture)) {
@@ -129,11 +120,9 @@ for (const expected of CASES) {
     expect(byDir).toEqual(expected.byDir);
 
     // A diagonal hop is NOT 45 degrees: LinkHop_FindLandingSpotDiagonallyDown
-    // (player.c:1115) steps x by 8 pixels and y by 9, so it travels slightly
-    // steeper than the diagonal and the row delta can exceed the column delta by
-    // one. What must hold is that it stays a diagonal and stays short — a hop
-    // spanning many columns means the landing came from running ALONG the face
-    // instead of across it.
+    // (player.c:1115) steps x by 8 and y by 9, so the row delta can exceed the
+    // column delta by one. A hop spanning many columns means the landing came
+    // from running ALONG the face.
     for (const l of dump.floodFill.ledges) {
       const d = directionOf(l);
       if (d.length !== 2) continue;

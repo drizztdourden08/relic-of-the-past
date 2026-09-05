@@ -2,7 +2,7 @@
 /**
  * The sprite library: what is on disk, and the operations that change it.
  *
- * Thumbnails are rendered once per refresh rather than per render, because decoding tiles
+ * Thumbnails are rendered once per refresh, not per render, because decoding tiles
  * for every entry is the expensive part of showing the list. A ROM with compiled assets is
  * needed to create a sprite from scratch, so the hook reports whether one is available
  * instead of leaving the caller to work it out.
@@ -17,7 +17,7 @@ import { renderThumbnail } from '@app/lib/game/player-sheet/thumbnail';
 import { isRspName } from '@app/lib/game/rsp';
 
 interface LibraryEntry {
-  /** File name including extension — the key everything else uses. */
+  /** File name including extension. This is the key everything else uses. */
   name: string;
   label: string;
   container: 'zspr' | 'rsp';

@@ -5,7 +5,7 @@
  * wrap: eight small buttons and three rules fit any pane the editor itself fits
  * in, and a row that reflows moves a button out from under the pointer.
  *
- * `overflow: visible` is load-bearing — every card is anchored inside this row
+ * `overflow: visible` is load-bearing. Every card is anchored inside this row
  * and would be clipped by anything else.
  */
 

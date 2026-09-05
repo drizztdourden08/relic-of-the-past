@@ -3,7 +3,7 @@
  * Device safe-area (notch / display-cutout) insets, in CSS px.
  *
  * The Android shell runs edge-to-edge and *consumes* window insets so the WebView
- * fills the whole screen — which zeroes the page's env(safe-area-inset-*). So the
+ * fills the whole screen. That zeroes the page's env(safe-area-inset-*), so the
  * native side forwards the cutout sizes as CSS custom properties on <html>
  * (--sai-top/right/bottom/left) and fires a `rotpinsets` event. We read those here.
  * On hosts that don't inject them the values are 0 (no notch).

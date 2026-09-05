@@ -3,9 +3,9 @@
  * The variable list: everything a line can hold that stands in for text the set
  * does not spell out.
  *
- * A filter rather than sections. A set can carry a hundred menu names, and a
- * translator reaching for one knows its word, not which family it belongs to —
- * so the field takes focus on open and typing narrows the list. Enter takes the
+ * A filter, not sections. A set can carry a hundred menu names, and a
+ * translator reaching for one knows its word, not which family it belongs to.
+ * The field therefore takes focus on open and typing narrows the list. Enter takes the
  * first row, which is the whole gesture for a name that is already unique.
  *
  * Which token a row inserts is not decided here: a variable the engine owns has
@@ -57,7 +57,7 @@ const VariablePopover = (props: VariablePopoverProps) => {
       <TextInput
         className="variable-popover__filter"
         value={query}
-        placeholder="Filter…"
+        placeholder="Filter..."
         aria-label="Filter variables"
         autoFocus
         onChange={handleQuery}

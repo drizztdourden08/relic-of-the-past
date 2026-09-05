@@ -2,7 +2,7 @@
 /**
  * Single registry of every ProfileHub tab: icon, label, and (when the tab is a
  * SettingsLayout screen) the function that builds its Section[] from current settings.
- * A `Record<ProfileHubTab, …>` — adding a tab to the union without describing it here is a
+ * A `Record<ProfileHubTab, ...>`. Adding a tab to the union without describing it here is a
  * compile error, which is what keeps this in sync with ProfileHubBody's NavRail and the
  * search catalog's settings-source with no manual bookkeeping.
  */
@@ -31,7 +31,7 @@ interface ProfileHubTabSpec {
 
 // buildPerformanceSection normally takes the live-detected refresh rate + synced-rate status
 // (from hooks, not settings). The search catalog only needs the section's labels/keywords for
-// indexing, so it's built with a neutral placeholder rather than threading live display state
+// indexing, so it's built with a neutral placeholder instead of threading live display state
 // through the catalog.
 const NEUTRAL_SYNCED_RATE: SyncedRateStatus = {
   supported: true, unsupportedReason: '', availableRates: [], currentHz: null, activeHz: null, bestHz: null, lastError: '',

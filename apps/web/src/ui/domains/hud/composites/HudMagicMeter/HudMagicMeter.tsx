@@ -17,7 +17,7 @@ const MAGIC_GREEN = '#00d800';
 const MAGIC_WHITE = '#f8f8f8';
 
 /**
- * HudMagicMeter — 3 tiles wide × 6 tiles tall (matches SNES tilemap exactly).
+ * 3 tiles wide × 6 tiles tall (matches SNES tilemap exactly).
  *
  *   Row 0: TL  | Top    | TR
  *   Row 1: Left| fill[0]| Right
@@ -142,7 +142,7 @@ const MagicAccurate = (props: { tile: number; scale: number; spritesBase: string
 
   return (
     <>
-      {/* Frame border tiles (z:2 — above black bg and green fill) */}
+      {/* Frame border tiles at z-index 2, above the black bg and green fill */}
       <HudBox style={{ position: 'absolute', inset: 0, zIndex: 2, filter: outlineFilter(scale) }}>
         <HudImage src={`${spritesBase}hud-magic-tl.png`} width={tile} height={tile}
           style={{ position: 'absolute', left: 0, top: 0, imageRendering: 'pixelated' }} />
@@ -166,7 +166,7 @@ const MagicAccurate = (props: { tile: number; scale: number; spritesBase: string
           style={{ position: 'absolute', left: tile * 2, top: tile * 5, imageRendering: 'pixelated' }} />
       </HudBox>
 
-      {/* Green fill — percentage-based, grows from bottom */}
+      {/* Green fill grows from the bottom by percentage */}
       {fillFraction > 0 && (
         <HudBox style={{
           position: 'absolute',

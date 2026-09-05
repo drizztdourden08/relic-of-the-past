@@ -33,7 +33,7 @@ const onlineDevices = () =>
 
 const deviceSerial = () => {
   const online = onlineDevices().map((line) => line.split(/\s+/)[0]);
-  // Honor ANDROID_SERIAL when it names an online device — lets you target a real
+  // Honor ANDROID_SERIAL when it names an online device, so you can target a real
   // phone (e.g. 192.168.2.31:5555) while an emulator is also connected.
   const preferred = process.env.ANDROID_SERIAL;
   if (preferred && online.includes(preferred)) return preferred;
@@ -46,7 +46,7 @@ const waitForBoot = () => {
     try {
       if (capture(adb, ['shell', 'getprop', 'sys.boot_completed']) === '1') return;
     } catch {
-      // device not answering yet — keep polling
+      // device not answering yet, so keep polling
     }
     sleep(1000);
   }
@@ -54,7 +54,7 @@ const waitForBoot = () => {
 };
 
 const bootEmulator = (avd) => {
-  log(`Booting AVD "${avd}"…`);
+  log(`Booting AVD "${avd}"...`);
   const child = spawn(emulatorBin, ['-avd', avd, '-no-snapshot', '-no-boot-anim'], {
     detached: true,
     stdio: 'ignore',
@@ -68,10 +68,10 @@ const pushRoms = (serial) => {
   const local = join(process.cwd(), 'test-roms');
   mkdirSync(local, { recursive: true });
   if (readdirSync(local).length === 0) {
-    warn(`${local} is empty — add ROMs there to push them to the device.`);
+    warn(`No ROMs in ${local}. Add some there to push them to the device.`);
     return;
   }
-  log('Pushing test-roms -> /sdcard/Download/test-roms…');
+  log('Pushing test-roms -> /sdcard/Download/test-roms...');
   run(adb, ['-s', serial, 'push', local, '/sdcard/Download/']);
   // Register the files in MediaStore so they appear in the file picker.
   run(
@@ -90,15 +90,15 @@ const pushRoms = (serial) => {
 const deployCapacitor = (serial) => {
   const pkg = JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf8'));
   if (!pkg.scripts?.['cap:sync']) {
-    fail('No "cap:sync" script — set up the Capacitor project. See docs/contributing/testing-linux-and-android.md.');
+    fail('No "cap:sync" script. Set up the Capacitor project first. See docs/contributing/testing-linux-and-android.md.');
   }
   run('npm', ['run', 'cap:sync'], { shell: true });
   const android = join(process.cwd(), 'apps', 'mobile', 'android');
   const gradlew = join(android, process.platform === 'win32' ? 'gradlew.bat' : 'gradlew');
-  log('Building debug APK…');
+  log('Building debug APK...');
   run(gradlew, ['assembleDebug'], { cwd: android, shell: true });
   const apk = join(android, 'app', 'build', 'outputs', 'apk', 'debug', 'app-debug.apk');
-  log(`Installing + launching on ${serial}…`);
+  log(`Installing + launching on ${serial}...`);
   run(adb, ['-s', serial, 'install', '-r', apk]);
   // Force-stop first so a still-running instance reloads the freshly-installed web
   // bundle instead of keeping the old one in its WebView.
@@ -119,7 +119,7 @@ const main = () => {
   try {
     capture(adb, ['version']);
   } catch {
-    fail('adb not found. Install the Android SDK + set ANDROID_HOME — see docs/contributing/testing-linux-and-android.md.');
+    fail('adb not found. Install the Android SDK and set ANDROID_HOME. See docs/contributing/testing-linux-and-android.md.');
   }
 
   if (onlineDevices().length === 0) {

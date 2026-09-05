@@ -9,15 +9,14 @@ import {
 import { DEFAULT_SETTINGS, serializeToIni } from '../../apps/web/src/lib/game/settings';
 import { buildFeatureFlags } from '../../apps/web/src/lib/game/live-settings-flags';
 
-// Haptics has two gate layers that must both pass for an in-game event to rumble:
-//   1. The C master gate (enhanced_features0 & kFeatures0_Haptics) — off ⇒ zero JS host-calls.
-//      Its bit reaches the core via the boot INI (Haptics key) and the live push (buildFeatureFlags).
-//   2. Seven JS granular gates in the haptic service — one per event category — that drop an event
-//      when its toggle is off even though the C hook fired.
-// This locks both layers: the master bit is wired on both paths, and each granular gate blocks its
-// own category while enabled, and only its own.
+// Two gate layers must both pass for an in-game event to rumble:
+//   1. The C master gate (enhanced_features0 & kFeatures0_Haptics), reached via
+//      the boot INI (Haptics key) and the live push (buildFeatureFlags).
+//   2. Seven JS granular gates in the haptic service, one per event category.
+// This locks both: the master bit on both paths, and each granular gate
+// blocking only its own category.
 
-const HAPTICS_BIT = 1048576; // kFeatures0_Haptics — must match features.h / live-settings-flags.ts
+const HAPTICS_BIT = 1048576; // kFeatures0_Haptics, which must match features.h / live-settings-flags.ts
 
 const settings = (over: Partial<HapticSettings> = {}): HapticSettings => ({
   enabled: true, intensity: 100,
@@ -27,7 +26,7 @@ const settings = (over: Partial<HapticSettings> = {}): HapticSettings => ({
 });
 
 // Advance the clock a long way on every read so per-pattern cooldowns (module-level state that
-// persists across cases) never block a fresh fire — we assert gating, not debounce timing.
+// persists across cases) never block a fresh fire. We assert gating, not debounce timing.
 let clock = 0;
 vi.spyOn(performance, 'now').mockImplementation(() => (clock += 100_000));
 
@@ -70,7 +69,7 @@ describe('haptics master gate (C-side kFeatures0_Haptics)', () => {
   });
 });
 
-describe('haptics granular gates — each blocks only its own category', () => {
+describe('haptics granular gates each block only their own category', () => {
   it('sword swing', () => {
     updateHapticSettings(settings({ swordSwing: false }));
     handleHapticEvent(HapticEventType.SWORD_SWING, 0);

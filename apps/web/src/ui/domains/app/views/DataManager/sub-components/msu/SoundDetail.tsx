@@ -1,11 +1,5 @@
 /* @layer renderer-components @kind component */
-/**
- * The block that opens under a sound: drop audio into the pack, then shape what that audio does.
- *
- * The drop zone is not tied to this sound the way a music slot's is — a sound's layers choose
- * from every file in the pack — so what lands here is simply available, and the editor below is
- * where it gets used.
- */
+// The drop zone adds to the pack's pool, not to this sound; the editor below is where a file gets used.
 import { Box } from '@ds/primitives/Box';
 import { DropZone } from '@ds/primitives/DropZone';
 import { Text } from '@ds/primitives/Text';
@@ -37,19 +31,18 @@ const SoundDetail = (props: SoundDetailProps) => {
     <Box className="msu-track-detail">
       {unclaimed && (
         <Text variant="caption">
-          This sound still plays from the sound chip. Add a layer with audio and save — that is
-          what hands it over to the pack.
+          This sound still plays from the sound chip. Add a layer with audio and save to hand it
+          over to the pack.
         </Text>
       )}
       <DropZone
         accept={AUDIO_ACCEPT}
-        label={uploading ? 'Adding audio…' : 'Drop audio into this pack'}
+        label={uploading ? 'Adding audio...' : 'Drop audio into this pack'}
         hint={AUDIO_ACCEPT_HINT}
         disabled={uploading}
         onDrop={onUpload}
       />
-      {/* Sound-level, so it sits beside the editor rather than inside it. Meaningless until the
-          sound is claimed: with no definition there is nothing to hand playback across from. */}
+      {/* Sound-level, so it sits beside the editor. Meaningless until the sound is claimed. */}
       {!unclaimed && (
         <SoundGroupField
           pack={pack}

@@ -1,14 +1,9 @@
 /* @layer renderer-components @kind hook */
 /**
- * The translation editor's data layer: loads one language set by id, holds it
- * in memory while it is edited, validates it live, and persists it on a
- * debounce.
- *
- * Reads and writes go through the renderer languages store rather than
- * window.api, which is the convention every other data view here follows: the
- * store is bound to the platform FileStore, so the same call works on the
- * desktop host and on the portable/browser host (where window.api is only a
- * boot-safe stub).
+ * The translation editor's data layer: loads one set, holds it while edited,
+ * validates it live, persists on a debounce. Reads and writes go through the
+ * renderer languages store, not window.api, so the same call works on the
+ * desktop host and the browser host (where window.api is only a stub).
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type {
@@ -113,21 +108,13 @@ const useLanguageEditor = (id: string | null): LanguageEditorState => {
     apply((from) => withTextValue(from, group, key, value));
   }, [apply]);
 
-  /*
-   * The stored pair, folded into the one list the UI edits. `mergeVariableMeta`
-   * carries over the fields the pair cannot hold (a label, a note on a menu
-   * name), exactly as the write path does, so what is shown here is what a save
-   * will persist.
-   */
+  // The stored pair folded into the one list the UI edits, the same way the
+  // write path does, so what is shown is what a save will persist.
   const glossary = set?.glossary;
   const names = set?.names;
   const stored = set?.variables;
-  /*
-   * Keyed on the three fields it is built from, NOT on the set. Every dialogue
-   * edit produces a new set while leaving these three untouched, and a new
-   * variable list on each keystroke would invalidate the layout cache for the
-   * whole set — a few hundred entries re-measured per character typed.
-   */
+  // Keyed on the three fields, not the set: a new variable list per keystroke
+  // would invalidate the layout cache for the whole set.
   const variables = useMemo(
     () => (glossary === undefined || names === undefined
       ? NO_VARIABLES

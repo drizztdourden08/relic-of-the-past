@@ -6,7 +6,7 @@
 const STICK_IDS = new Set(['leftX', 'leftY', 'rightX', 'rightY']);
 const TRIGGER_IDS = new Set(['leftTrigger', 'rightTrigger']);
 
-/** Minimum byte delta to consider a change "analog" rather than digital */
+/** Minimum byte delta to consider a change "analog" and not digital */
 const ANALOG_THRESHOLD_DELTA = 30;
 
 const STICK_RANGE_THRESHOLD = 60;

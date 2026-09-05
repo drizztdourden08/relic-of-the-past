@@ -1,15 +1,12 @@
 /* @layer tests @kind test */
 /**
- * PERMANENT (`.keep.spec.ts`) — do not delete with the scratch specs.
+ * PERMANENT (`.keep.spec.ts`). Do not delete with the scratch specs.
  *
  * `test-throne-room` is the only place the follower gate is testable: the push
- * wall behind the throne is `nativeType 0x14`, and it opens only while a follower
- * is in tow. The state is deliberately saved WITHOUT one, so the gate is shut.
- *
- * That pairing is the whole point, and it is easy to break from either side — a
- * save state that gained a follower, or a gate that stops checking. So this spec
- * asserts both halves: the gate reads shut AND there is no follower chip. If a
- * later change made the gate open by default, the 1320-tile count would jump.
+ * wall (`nativeType 0x14`) opens only while a follower is in tow, and the state
+ * is saved WITHOUT one. Both halves are asserted, the gate reads shut AND
+ * there is no follower chip, since either side can break it. A gate open by
+ * default would jump the 1320-tile count.
  */
 import { test, expect } from '@playwright/test';
 import { withState } from './state-harness';

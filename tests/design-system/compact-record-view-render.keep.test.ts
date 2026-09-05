@@ -9,12 +9,9 @@ import { defaultIdRefDisplay } from '../../apps/web/src/ui/domains/app/views/Dat
 import type { FieldDescriptor, FieldKind, SchemaConfig } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
 import { describeDataset } from '../dataset-guard';
 
-// There is no jsdom or testing-library in this repo, so these are SSR smoke
-// tests, matching RecordEditor's and the field kits' own render tests: they
-// prove the view builds and shows the right text for every field kind, for
-// real records of several shapes, and that the optional allow-list actually
-// narrows what shows. Hover/tooltip content and clicking an id-ref (which
-// needs a browser) are NOT covered here — see the Playwright check instead.
+// SSR smoke tests (no jsdom): the view builds and shows the right text per
+// field kind, and the allow-list narrows what shows. Hover and clicking an
+// id-ref need a browser (see the Playwright check).
 
 const field = (kind: FieldKind, extra: Partial<FieldDescriptor> = {}): FieldDescriptor => ({
   path: extra.path ?? 'sample', label: 'Sample', kind, optional: false, ...extra,
@@ -23,7 +20,7 @@ const field = (kind: FieldKind, extra: Partial<FieldDescriptor> = {}): FieldDesc
 const render = (record: unknown, schema: readonly FieldDescriptor[], groups?: readonly string[]): string =>
   renderToStaticMarkup(createElement(CompactRecordView, { record, schema, groups }));
 
-describeDataset('CompactRecordView — one row per field kind', () => {
+describeDataset('CompactRecordView renders one row per field kind', () => {
   const record = {
     title: 'a piece of free text',
     count: 42,
@@ -60,14 +57,14 @@ describeDataset('CompactRecordView — one row per field kind', () => {
     expect(markup).toContain('Odd');
   });
 
-  it('shows the string, number and array kits’ own compact text', () => {
+  it('shows the string, number and array kits\' own compact text', () => {
     const markup = render(record, schema);
     expect(markup).toContain('a piece of free text');
     expect(markup).toContain('42');
     expect(markup).toContain('first, second, third');
   });
 
-  it('shows the boolean and enum kits’ own badge text', () => {
+  it('shows the boolean and enum kits\' own badge text', () => {
     const markup = render(record, schema);
     expect(markup).toContain('Yes');
     expect(markup).toContain('north');
@@ -86,14 +83,14 @@ describeDataset('CompactRecordView — one row per field kind', () => {
 
   it('falls back to the flattened summary for an object/union field with no children described', () => {
     const markup = render(record, schema);
-    // No `children` on either descriptor, so neither nests here — both are
+    // No `children` on either descriptor, so neither nests here. Both are
     // leaves rendered by the structured kit's own one-line summary.
     expect(markup).toContain('x: 1, y: 2');
     expect(markup).not.toContain('compact-record-view__nest"');
   });
 });
 
-describeDataset('CompactRecordView — resolveIdRefDisplay, this view\'s one lookup', () => {
+describeDataset('CompactRecordView calls resolveIdRefDisplay, this view\'s one lookup', () => {
   const record = {
     title: 'Jail Cell',
     screenId: 'screen-183',
@@ -146,7 +143,7 @@ describeDataset('CompactRecordView — resolveIdRefDisplay, this view\'s one loo
   });
 });
 
-describeDataset('CompactRecordView — resolveIdRefDisplay, a real collection join', () => {
+describeDataset('CompactRecordView calls resolveIdRefDisplay across a real collection join', () => {
   it('resolves a real screen\'s areaId to the area\'s own name, via defaultIdRefDisplay', () => {
     const rows = all('screen');
     const withArea = rows.find((row) => typeof row.areaId === 'string');
@@ -162,7 +159,7 @@ describeDataset('CompactRecordView — resolveIdRefDisplay, a real collection jo
   });
 });
 
-describeDataset('CompactRecordView — the optional groups/field allow-list', () => {
+describeDataset('CompactRecordView with the optional groups/field allow-list', () => {
   const record = { fromScreenId: 'screen-001', toScreenId: 'screen-002', direction: 'north', tags: ['a'] };
   const schema: readonly FieldDescriptor[] = [
     field('idRef', { path: 'fromScreenId', label: 'From Screen Id', targetKind: 'screen' }),
@@ -189,8 +186,8 @@ describeDataset('CompactRecordView — the optional groups/field allow-list', ()
     const markup = renderToStaticMarkup(createElement(CompactRecordView, {
       record, schema, config, groups: ['ends'],
     }));
-    // Only one group survives the filter, so — same rule as with no filter at
-    // all — its label stays off; a single set never needs a heading.
+    // Only one group survives the filter, so its label stays off, the same rule
+    // as with no filter at all. A single set never needs a heading.
     expect(markup).toContain('From Screen Id');
     expect(markup).toContain('To Screen Id');
     expect(markup).not.toContain('Meta');
@@ -216,7 +213,7 @@ describeDataset('CompactRecordView — the optional groups/field allow-list', ()
   });
 });
 
-describeDataset('CompactRecordView — an array of idRef elements', () => {
+describeDataset('CompactRecordView given an array of idRef elements', () => {
   const record = { title: 'A Shop', tags: ['tag-001', 'tag-002'] };
   const schema: readonly FieldDescriptor[] = [
     field('string', { path: 'title', label: 'Title' }),
@@ -250,7 +247,7 @@ describeDataset('CompactRecordView — an array of idRef elements', () => {
   });
 });
 
-describeDataset('CompactRecordView — real records from several collections', () => {
+describeDataset('CompactRecordView on real records from several collections', () => {
   const COLLECTIONS = [
     { kind: 'screen' as const, rows: all('screen') },
     { kind: 'connection' as const, rows: all('connection') },
@@ -271,7 +268,7 @@ describeDataset('CompactRecordView — real records from several collections', (
 
   it('recurses one level into a nested object field, then falls back for what is nested past it', () => {
     // Placement is a plain object now (form/rect/tiles), not the old
-    // discriminated `{ at: 'side' | 'area', ... }` union — see the
+    // discriminated `{ at: 'side' | 'area', ... }` union. See the
     // connection-model migration report.
     const rows = all('connection');
     const withRect = rows.find((row) => row.placement.form === 'area') ?? rows[0];
@@ -281,7 +278,7 @@ describeDataset('CompactRecordView — real records from several collections', (
     expect(markup).toContain('title="placement"');
     expect(markup).toContain('title="placement.form"');
     expect(markup).toContain('title="placement.rect"');
-    // What is nested past that (depth 2) does not get its own row — it is
+    // What is nested past that (depth 2) does not get its own row and is
     // folded into `rect`'s own one-line summary instead.
     expect(markup).not.toContain('title="placement.rect.x"');
   });

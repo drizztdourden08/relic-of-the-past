@@ -1,24 +1,12 @@
 /* @layer tooling-scripts @kind build */
 /**
- * Build a flat, GitHub-Wiki-compatible copy of docs/.
- *
- * GitHub wikis only render pages at the repository root: a page in a
- * subdirectory is redirected to its raw blob and 404s. docs/ is organised into
- * folders, so this script flattens every page to a root-level slug and rewrites
- * intra-doc links to match. A page's wiki title is its slug with hyphens shown
- * as spaces, so slugs are chosen to read well:
- *   - by default, the folder path is Title-Cased with an acronym map
- *     ("user-guide/audio-msu" -> "User-Guide-Audio-MSU" -> "User Guide Audio MSU")
- *   - a page may override this with `<!-- @wiki-title: My Title -->` near the top,
- *     which becomes the slug verbatim (spaces -> "-"). This decouples the title
- *     from the folder, so files can be grouped however the sidebar needs.
- *
- * Docs in EXCLUDE stay in the repo for CLAUDE.md and the skills but are not
- * published to the human wiki. Any link to an unpublished page is downgraded to
- * plain text, so the wiki never carries a dead link.
- *
- * Input:  docs/        (source of truth — never modified)
- * Output: .wiki-build/ (flat; consumed by the docs-wiki-sync workflow)
+ * Build a flat, GitHub-Wiki-compatible copy of docs/ in .wiki-build/ (consumed by
+ * the docs-wiki-sync workflow). GitHub wikis only render root-level pages, so every
+ * page is flattened to a slug and intra-doc links are rewritten. The slug is the
+ * Title-Cased folder path with an acronym map ("user-guide/audio-msu" ->
+ * "User-Guide-Audio-MSU"), or `<!-- @wiki-title: My Title -->` near the top of the
+ * page, verbatim (spaces -> "-"). Docs in EXCLUDE are not published; links to them
+ * become plain text.
  */
 import { readdirSync, readFileSync, writeFileSync, mkdirSync, rmSync, statSync } from 'node:fs';
 import { join, relative, sep, posix } from 'node:path';

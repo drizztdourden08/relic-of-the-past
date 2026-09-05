@@ -15,7 +15,7 @@ import type { SdlAxisName, SdlButtonName, SdlGamepadType } from '../sdl-buttons'
 // -- SDL's device and positional vocabulary (mirrors the native contract) --
 
 /** The console button union this layer's console defaults point at, reused
- *  from the existing SNES button type rather than redeclared. */
+ *  from the existing SNES button type, not redeclared. */
 type ConsoleButton = SnesButton;
 
 // -- Display metadata a family (or a single device) can answer with --

@@ -1,17 +1,7 @@
 /* @layer renderer-components @kind logic */
 /**
- * The footer menu as data — the same pure-builder shape as the column menu next
- * door, for the actions that are about the table rather than about a column.
- *
- * These three used to be repeated, identically, in every column's ⋯ menu, where
- * "Clear all sorting" read as if it belonged to whichever column you happened to
- * have opened. There is one table, so there is one place to say it.
- *
- * Adding a column belongs to a column — before this one, after this one — and
- * lives in the ⋯ menus for that reason. It is offered ONCE more here, appending
- * at the end, for the two cases a column's own menu cannot serve: not caring
- * where the column lands, and a table whose columns have all been removed,
- * where there is no ⋯ menu left to open.
+ * The footer menu as data, for table-wide actions. Adding a column is offered
+ * here once more (appending) for a table whose columns have all been removed.
  */
 import { buildFieldMenuItems } from './field-menu-items';
 import type { MenuEntry } from '../../DropdownMenu';
@@ -19,7 +9,7 @@ import type { PickerNode } from './field-picker-nodes';
 import type { TableActions } from '../DataTable.type';
 
 interface TableMenuInput {
-  /** Anything at all is sorted / grouped — not necessarily any one column. */
+  /** True when anything is sorted or grouped, not necessarily any one column. */
   sortActive: boolean;
   groupActive: boolean;
   /** The addable field tree, already stripped of the columns on screen. */
@@ -30,7 +20,7 @@ interface TableMenuInput {
 
 const buildTableMenuItems = (input: TableMenuInput): MenuEntry[] => {
   const { sortActive, groupActive, fieldNodes = [], actions, onClose } = input;
-  /** Every action closes the menu first — a menu that lingers over the change it made reads as broken. */
+  /** Every action closes the menu first. */
   const act = (run: () => void) => () => {
     onClose();
     run();
@@ -62,11 +52,6 @@ const buildTableMenuItems = (input: TableMenuInput): MenuEntry[] => {
       onClick: act(actions.onClearGroupBy),
     },
     'separator',
-    /*
-     * Sizing every column one ⋯ menu at a time is the same click over and over,
-     * and it is the whole table's layout that is being tidied — so it belongs
-     * beside the reset rather than repeated in each column.
-     */
     {
       key: 'fit-all',
       icon: '↔',

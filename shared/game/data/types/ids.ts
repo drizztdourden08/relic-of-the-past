@@ -23,33 +23,23 @@ type LocationId = `location-${string}`;
 type ActorId = `actor-${string}`;
 type TagId = `tag-${string}`;
 
-/**
- * A graphics reference, NOT an entity id — it names an extracted PNG (see
- * sprite-manifest/). "sprite" means pixels and nothing else; every living or
- * interactive game entity is an `actor`.
- */
+/** A graphics reference, NOT an entity id: it names an extracted PNG (see
+ *  sprite-manifest/). "sprite" means pixels; every game entity is an `actor`. */
 type SpriteId = `sprite-${string}`;
 
-/** A named item-group record's id (data/item-groups/) — the leaf of a count Requirement. */
+/** A named item-group record's id (data/item-groups/). Used as the leaf of a count Requirement. */
 type ItemGroupId = `ig-${string}`;
 
 /** An enumeration entry's id (data/enumeration/). */
 type EnumerationId = `enum-${string}`;
 
-/**
- * Real entity counts in the game — the biggest one sets the shared zero-pad
- * width. `actor` is a provisional first-pass count (real, sourced entries mined
- * from the decompilation — see data/actors/**), not yet an exhaustive census;
- * refine when the full research pass reaches it.
- */
+/** Real entity counts in the game; the biggest one sets the shared zero-pad
+ *  width. `actor` is a provisional count (see data/actors/**), not a full census. */
 const ENTITY_COUNTS: Record<EntityKind, number> = {
-  // STALE ON PURPOSE: the connection-points migration turned one crossing into
-  // two one-sided records (screenId/toConnectionId/canExit), so the real count
-  // is ~1610, not 896. Left at 896 deliberately — bumping it would push
-  // `ID_PAD_WIDTH` (the max across every kind) from 3 digits to 4 and re-pad
-  // every OTHER kind's future minted ids too. A newly minted connection id is
-  // simply longer than 3 digits now (`connection-1621` etc.), which `makeId`
-  // already handles fine (`padStart` never truncates) — see the migration report.
+  // STALE ON PURPOSE: the real count is ~1610 since the connection-points
+  // migration. Bumping it would push `ID_PAD_WIDTH` from 3 digits to 4 and
+  // re-pad every OTHER kind's future ids. `makeId` handles the longer ids
+  // (`padStart` never truncates).
   connection: 896,
   screen: 486,
   check: 265,
@@ -57,7 +47,7 @@ const ENTITY_COUNTS: Record<EntityKind, number> = {
   actor: 271,                // 14 npc + 9 obstacle + 33 trigger + 84 enemy + 14 boss + 117 object (Phase 8 census;
                               // +4 trigger appended for the clear-room family widening, actor-268..271)
   tag: 84,                   // 40 screen terms + 40 crossing terms + 4 check content terms, derived from the taxonomy tables
-                              // (the dir:one-way/dir:two-way pair was retired — direction is derived from `canExit`)
+                              // (the dir:one-way/dir:two-way pair was retired, since direction comes from `canExit`)
   location: 31,
   area: 17,
   dungeon: 13,               // verified via generate-ids.ts against the real dungeon field values
@@ -69,11 +59,8 @@ const ENTITY_COUNTS: Record<EntityKind, number> = {
 const ID_PAD_WIDTH = Math.max(...Object.values(ENTITY_COUNTS)).toString().length;
 
 /**
- * The id prefix each kind mints under — equal to the kind name for every kind
- * except the two whose `EntityKind` string is not what the id itself reads:
- * an `item-group` record mints as `ig-NNN` and an `enumeration` record as
- * `enum-NNN`, so anything that needs a raw id's own kind (rather than the
- * kind's display name) reads this table instead of assuming `${kind}-`.
+ * The id prefix each kind mints under: the kind name, except `item-group`
+ * (`ig-NNN`) and `enumeration` (`enum-NNN`). Read this instead of assuming `${kind}-`.
  */
 const KIND_ID_PREFIXES: Record<EntityKind, string> = {
   screen: 'screen',

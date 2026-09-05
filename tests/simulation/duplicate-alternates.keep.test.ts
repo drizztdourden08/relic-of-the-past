@@ -1,9 +1,8 @@
 /* @layer tests @kind test */
 /**
- * The duplicate-item rule has to give the SAME answer to the simulator's
- * delivery, the sim log and the overlay annotation. It previously lived inside
- * the trigger, so the overlay promised a Lamp in a room where the run would hand
- * over 5 Rupees — these tests pin the shared rule those consumers now share.
+ * The duplicate-item rule must give the SAME answer to the simulator's
+ * delivery, the sim log and the overlay. It used to live inside the trigger,
+ * so the overlay promised a Lamp where the run would hand over 5 Rupees.
  */
 import { describe, it, expect } from 'vitest';
 import { resolveDuplicate, isDuplicated, itemLabel } from '../../shared/game/logic/queries/item-duplicates';
@@ -40,7 +39,7 @@ describeDataset('duplicate item alternates', () => {
     expect(isDuplicated(0x12, EMPTY)).toBe(false);
   });
 
-  it('names an unmapped id by hex rather than returning undefined', () => {
+  it('names an unmapped id by hex instead of returning undefined', () => {
     expect(itemLabel(0xdd)).toBe('item 0xdd');
   });
 });

@@ -2,7 +2,7 @@
 /**
  * WASM instantiation override that avoids WebAssembly.instantiateStreaming. That
  * path SEGFAULTs the Electron renderer (0xC0000005) while compiling this module,
- * black-screening the game the moment it starts — observed both over http:// (dev)
+ * black-screening the game the moment it starts. Seen both over http:// (dev)
  * and file:// (the built app) on recent Chromium. We always use the non-streaming
  * WebAssembly.instantiate instead.
  *

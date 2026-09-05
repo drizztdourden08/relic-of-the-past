@@ -1,16 +1,10 @@
 /* @layer test @kind test */
 /**
- * The `dungeon` strategy's room-screens field probe: the loaded room
- * resolves to a dungeon whose roomScreenIds does not list this screen.
- *
- * Ported from the hand-written `dungeon-rooms` detector (deleted) onto the
- * declarative comparison engine — `strategy:dungeon` is the detector id now.
- * The probe's live value is "the screen we are currently on", which a
- * `FieldProbe` can only read off `observations.match?.screen.id` (see
- * `rooms.probe.ts`'s own header for why), so unlike the original detector's
- * bare `screenId` context argument, `contextFor` here also builds a matching
- * `ScreenMatchResult` — exactly what production always carries in lockstep
- * with `context.screenId` (`use-screen-observations.ts`).
+ * The `dungeon` strategy's room-screens probe: the loaded room resolves to a
+ * dungeon whose roomScreenIds does not list this screen. The probe reads
+ * "the screen we are on" off `observations.match?.screen.id` (see
+ * `rooms.probe.ts`), so `contextFor` builds a matching `ScreenMatchResult`,
+ * as production does (`use-screen-observations.ts`).
  */
 import { describe, it, expect } from 'vitest';
 import { all, getScreen } from '@shared/game/data';

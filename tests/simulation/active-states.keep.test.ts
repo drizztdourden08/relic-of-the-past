@@ -1,11 +1,9 @@
 /* @layer tests @kind test */
 /**
- * The widget's "States" row. Several states hold at once, so the registry must
- * return a LIST — the original code answered one boolean question ("is the
- * princess following") and nothing else was visible.
- *
- * Names come from the routine that sets each tagalong id in the decompilation; an
- * id with no confirmed source must be reported by number, never guessed at.
+ * The widget's "States" row. Several states hold at once, so the registry
+ * returns a LIST (the original answered one boolean, "is the princess
+ * following"). Names come from the decompilation routine that sets each
+ * tagalong id; an id with no confirmed source is reported by number.
  */
 import { describe, it, expect } from 'vitest';
 import { activeStates, SLOT } from '../../apps/web/src/lib/game/active-states';
@@ -42,14 +40,14 @@ describe('active game states', () => {
     expect(state.detail).toBe('unmapped tagalong id');
   });
 
-  it('holds several states at once — the whole point of a list', () => {
+  it('holds several states at once, which is the whole point of a list', () => {
     // Progress BITS come from the live player-state bytes, not this buffer, so
     // they are asserted in player-state-rules.test.ts instead.
     const s = snap({ [SLOT.progressIndicator]: 2, [SLOT.bigKey]: 1, [SLOT.smallKeys]: 3 }, 1);
     expect(ids(s)).toEqual(['follower', 'progress-2', 'big-key', 'small-keys']);
   });
 
-  it('pluralises the key count rather than saying "1 small keys"', () => {
+  it('pluralises the key count instead of saying "1 small keys"', () => {
     expect(labels(snap({ [SLOT.smallKeys]: 1 }))).toContain('1 small key');
     expect(labels(snap({ [SLOT.smallKeys]: 4 }))).toContain('4 small keys');
   });

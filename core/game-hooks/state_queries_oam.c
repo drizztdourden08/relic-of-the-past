@@ -1,13 +1,13 @@
 /* @layer core-game-hooks @kind native */
 /**
- * OAM snapshot query — reads back the sprite table exactly as the PPU will see it this frame,
+ * OAM snapshot query that reads back the sprite table exactly as the PPU will see it this frame,
  * including the two wide/tall side channels that carry coordinate bits the stock 9-bit OAM X and
  * 8-bit OAM Y cannot hold. A screen coordinate that looks correct in the game's own variables can
  * still reach the PPU wrong if the entry's high bits disagree, and that mismatch is invisible in a
  * screenshot: this is the read that tells the two apart.
  *
- * Gated on the developer-tools bit, the same contract the combat and transition queries use — off
- * means the export returns 0 and touches nothing.
+ * Gated on the developer-tools bit, the same contract the combat and transition queries use. When
+ * it is off, the export returns 0 and touches nothing.
  */
 
 #include "game_hooks_internal.h"
@@ -134,7 +134,7 @@ void GameHook_CaptureOamFrame(void) {
   if (!(enhanced_features0 & kFeatures0_DeveloperTools))
     return;
   // The renderer can draw the same game frame more than once (display refresh above 60Hz). Capture only
-  // the first draw of each game frame, so the ring holds distinct frames rather than repeats of a third
+  // the first draw of each game frame, so the ring holds distinct frames instead of repeats of a third
   // as many.
   static uint16 last_frame = 0xffff;
   if ((uint16)frame_counter == last_frame)

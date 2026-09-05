@@ -25,17 +25,16 @@ interface DetectedDevice {
   productId: string | null;
   deviceFamily: DeviceFamily;
   displayName: string;      // Resolved: "Xbox Series X|S Controller"
-  /** SDL's own gamepad type (see shared/input/sdl-buttons SdlGamepadType),
-   *  kept as a plain string here rather than importing that type, so this
-   *  file does not depend on shared/input. The keyboard entry uses the
-   *  sentinel 'keyboard', never null — everything here has a real value. */
+  /** SDL's own gamepad type (shared/input/sdl-buttons SdlGamepadType), kept a plain string so
+   *  this file does not depend on shared/input. The keyboard entry uses the sentinel
+   *  'keyboard', never null. */
   sdlType: string | null;
   connected: boolean;       // HID-level connected (physical presence)
   activated: boolean;       // Web Gamepad API active (button pressed at least once)
   brandLogoKey: string | null;
   inputApi: InputApi;       // Which API this controller uses for input reading
-  /** Real capability reported by SDL3 (controller:added) — false, not just
-   *  unknown, when this device wasn't detected through that surface. */
+  /** Real capability reported by SDL3 (controller:added); false, not unknown, when this
+   *  device wasn't detected through that surface. */
   hasRumble: boolean;
   hasGyro: boolean;
 }

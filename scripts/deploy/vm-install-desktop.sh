@@ -2,7 +2,7 @@
 # @layer tooling-scripts @kind script
 # Runs on the test VM (scp'd by push-linux). Installs a desktop entry for the pushed
 # AppImage and pins it to the GNOME dash (dock) so the app is discoverable instead of
-# only launchable over ssh. Idempotent — safe to run on every deploy. Expects the
+# only launchable over ssh. Idempotent, so it is safe to run on every deploy. Expects the
 # icon at ~/.local/share/icons/relic-of-the-past.png (push-linux scp's it).
 set -u
 

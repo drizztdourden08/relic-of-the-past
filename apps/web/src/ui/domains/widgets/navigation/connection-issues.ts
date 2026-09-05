@@ -2,14 +2,13 @@
 /**
  * Per-connection completeness checks for the connection editor. Returns a list
  * of human-readable warnings instead of letting the editor silently render
- * nothing — so a manual reviewer can see exactly what a connection is missing.
+ * nothing, so a manual reviewer can see exactly what a connection is missing.
  *
  * `tileDesc` is the already-resolved crossing description (persisted nav, else
  * live flood); a null/empty value means there is no tile data to show.
  *
- * The messages are named constants because a second reader now matches on them:
- * the shape detector turns the ones it can fix into real record edits, and
- * matching on a loose substring would break the moment the wording improved.
+ * The messages are named constants because a second reader matches on them:
+ * the shape detector turns the ones it can fix into real record edits.
  */
 
 import { findOne } from '@shared/game/data';
@@ -30,7 +29,7 @@ const unknownScreen = (id: string): string => `⚠ unknown screen: ${id}`;
 
 const screenExists = (id: string): boolean => findOne('screen', s => s.id === id) != null;
 
-/** Direction is no longer a tag to check for — it is `canExit`, a required
+/** Direction is no longer a tag to check for. It is `canExit`, a required
  *  field the type system already guarantees is present (see `data/connections/derive.ts`). */
 const connectionIssues = (conn: ConnectionIssueInput, tileDesc: string | null): string[] => {
   const issues: string[] = [];

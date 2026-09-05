@@ -2,7 +2,7 @@
 /**
  * The two SimEvent constructors, split out on their own so a module that only
  * needs to log (the dungeon ledger, in particular) never has to import the
- * rest of step-helpers.ts — which itself pulls in explorer.ts, and a ledger
+ * rest of step-helpers.ts, which itself pulls in explorer.ts, and a ledger
  * module that explorer.ts calls into cannot import back through that chain.
  */
 import type { SimEvent } from '../types';

@@ -1,14 +1,7 @@
 /* @layer renderer-components @kind hook */
 /**
- * The optional audio tool, as a step the user can complete.
- *
- * The tool is not bundled — it is a large download fetched on request and kept under the
- * app's own data root — so anything that needs it has to be able to ask for it, watch it
- * arrive, and carry on. The install reports every state it passes through on an event, so
- * the download and the verify are followed rather than polled.
- *
- * Nothing is fetched until `install` is called: merely opening something that COULD use the
- * tool must never start a download.
+ * The optional audio tool: a large download kept under the app's data root, followed by event,
+ * not polled. Nothing is fetched until `install` is called.
  */
 import { useCallback, useEffect, useState } from 'react';
 import type { FfmpegState } from '@shared/types/ffmpeg-tool';
@@ -28,8 +21,7 @@ const useFfmpegInstall = (active: boolean) => {
 
   useEffect(() => (active ? window.api.onFfmpegProgress(setState) : undefined), [active]);
 
-  // Resolves with the final state rather than only setting it, so a caller can decide what to
-  // do next without waiting for a re-render to tell it whether the install worked.
+  // Resolves with the final state so a caller need not wait for a re-render to learn the outcome.
   const install = useCallback(async (): Promise<FfmpegState> => {
     setInstalling(true);
     try {

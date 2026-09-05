@@ -1,7 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
-/**
- * AssetBuilder — accumulates named assets and serializes to zelda3_assets.dat format.
- */
+/** Accumulates named assets and serializes to zelda3_assets.dat format. */
 import { createHash } from 'crypto';
 import type { RomData } from './rom/rom-types';
 import { decompress as lzDecompress } from './compression/lz-decompress';

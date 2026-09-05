@@ -2,10 +2,10 @@
 /**
  * Auto-detects the connected controller's SDL type and builds the
  * DeviceProfile checklist the wizard calibrates against, straight from SDL's
- * own live capability report (hasButton/hasAxis/buttonLabels) — no per-model
+ * own live capability report (hasButton/hasAxis/buttonLabels), with no per-model
  * database is consulted any more. The manual override list is the small,
- * finite set of SDL gamepad families rather than a list of named models,
- * since that is genuinely everything left to choose between.
+ * finite set of SDL gamepad families, not a list of named models,
+ * since that is everything left to choose between.
  */
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { listControllerDevices } from '../../../../../../../../lib/input/controller-devices-store';
@@ -23,7 +23,7 @@ const toHex4 = (n: number): string => n.toString(16).padStart(4, '0');
 const familyFor = (sdlType: SdlGamepadType): DeviceFamily =>
   (resolveBrandLogoKey(buildDisplayContext({ sdlType })) || 'generic') as DeviceFamily;
 
-/** Builds a DeviceProfile from a live entry's own hasButton/hasAxis — only
+/** Builds a DeviceProfile from a live entry's own hasButton/hasAxis. Only
  *  positions this specific unit actually reports appear. */
 const profileFromEntry = (entry: DeviceEntry): DeviceProfile => {
   const sdlType = (entry.sdlType ?? 'unknown') as SdlGamepadType;
@@ -47,7 +47,7 @@ const profileFromSdlType = (sdlType: SdlGamepadType): DeviceProfile => {
 /**
  * `initialProfileId`/`initialHasGyro`, when given, are a host's own already-
  * resolved device+profile id (see HidCalibrationWizardProps.initialProfileId
- * — the diagnostics wizard passes its own live-resolved sdlType here).
+ * the diagnostics wizard passes its own live-resolved sdlType here).
  * `deviceKey` lets this hook still build the precise, live-capability
  * DeviceProfile in that case instead of falling back to the synthetic
  * "assume everything" one; auto-detect from the connected key list only
@@ -97,7 +97,7 @@ const useDeviceAutoDetect = (addLog: (msg: string) => void, initialProfileId?: s
       if (!entry) return;
       const vidPid = entry.deviceKey;
       if (!entry.sdlType) {
-        addLog(`No SDL type known yet for ${vidPid} — pick manually or use Generic`);
+        addLog(`No SDL type known yet for ${vidPid}. Pick manually or use Generic`);
         return;
       }
       setSelectedSdlVidPid(vidPid);
@@ -105,7 +105,7 @@ const useDeviceAutoDetect = (addLog: (msg: string) => void, initialProfileId?: s
       const profile = profileFromEntry(entry);
       setSelectedProfileId(profile.id);
       setDetectedProfile(profile);
-      addLog(`SDL match: ${profile.name} (${vidPid})${entry.hasGyro ? ' [gyro]' : ''} — ${profile.buttons.length} buttons, ${profile.axes.length} axes`);
+      addLog(`SDL match: ${profile.name} (${vidPid})${entry.hasGyro ? ' [gyro]' : ''} with ${profile.buttons.length} buttons, ${profile.axes.length} axes`);
     }).catch(() => { addLog('Failed to read live device capabilities'); });
   }, [addLog, initialProfile, initialProfileId]);
 

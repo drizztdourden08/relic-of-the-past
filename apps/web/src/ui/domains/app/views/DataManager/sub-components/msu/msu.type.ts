@@ -80,19 +80,14 @@ interface TrackRowProps {
   onToggleLayers: (trackNum: number) => void;
 }
 
-/**
- * One row in a sound channel's list: the catalogue entry crossed with what the pack authors.
- *
- * `label` is present for only the ids whose purpose is unambiguous, so `triggers` — the game's
- * own function names — is the description for every other row.
- */
+/** One row in a sound channel's list. `label` exists only for unambiguous ids; `triggers` describes the rest. */
 interface SoundRowData {
   soundId: number;
   /** The id as the studio shows it, e.g. `0x0C`. */
   hex: string;
   label: string | null;
   triggers: string[];
-  /** How many places raise it — a rough measure of how often it is heard. */
+  /** How many places raise it. Roughly, how often it is heard. */
   sites: number;
   /** 0 while the pack leaves this sound to the sound chip. */
   layerCount: number;
@@ -107,10 +102,7 @@ interface SoundRowData {
 interface SoundRowProps {
   row: SoundRowData;
   channel: SoundChannel;
-  /**
-   * Tags the row with its channel. Set wherever one list holds more than one channel — an id
-   * alone does not say which channel it belongs to, and the channels do not share id spaces.
-   */
+  /** Tags the row with its channel. Set wherever one list holds more than one; the channels do not share id spaces. */
   showChannel?: boolean;
   /** True while this sound is the one the preview session belongs to. */
   playing: boolean;
@@ -129,11 +121,7 @@ interface SoundRowProps {
   onStopReplacing: (soundId: number) => void;
 }
 
-/**
- * One channel's wiring, handed around whole. `useSoundPanel` builds it; a list that shows more
- * than one channel keeps one per channel and picks by row, which is how a single list drives two
- * id spaces without either channel knowing the other is on screen.
- */
+/** One channel's wiring, handed around whole. A list showing two channels keeps one each and picks by row. */
 type SoundPanelController = ReturnType<typeof useSoundPanel>;
 
 interface SoundListItemProps {
@@ -146,7 +134,7 @@ interface SoundListItemProps {
   saveBase: MsuPackManifest;
   availableFiles: string[];
   isLayered: boolean;
-  /** Tags the row with its channel — set wherever one list holds more than one. */
+  /** Tags the row with its channel. Set wherever one list holds more than one. */
   showChannel?: boolean;
   onPreview: (channel: SoundChannel, soundId: number) => void;
   onPlayOriginal: (channel: SoundChannel, soundId: number) => void;

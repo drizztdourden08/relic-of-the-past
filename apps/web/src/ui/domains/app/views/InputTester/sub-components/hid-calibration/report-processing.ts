@@ -93,7 +93,7 @@ const processStickFrame = (bytes: Uint8Array, refs: StickRefs, onLiveInfo: (info
   } else if (top2.length === 1) {
     onLiveInfo(`byte[${top2[0].idx}] range=${top2[0].range}  |  waiting for 2nd axis...`);
   } else {
-    onLiveInfo('No candidates yet — keep rotating...');
+    onLiveInfo('No candidates yet. Keep rotating...');
   }
 
   const key = top2.map(c => `${c.idx}`).join(',');
@@ -155,7 +155,7 @@ const processTriggerFrame = (bytes: Uint8Array, refs: TriggerRefs, onLiveInfo: (
   const top1 = candidates[0] ?? null;
 
   if (!top1) {
-    onLiveInfo('No candidates yet — press and release the trigger...');
+    onLiveInfo('No candidates yet. Press and release the trigger...');
     refs.triggerStableCountRef.current = 0;
     refs.triggerLastTopRef.current = '';
     return;
@@ -163,8 +163,8 @@ const processTriggerFrame = (bytes: Uint8Array, refs: TriggerRefs, onLiveInfo: (
 
   const verdict = classifyTriggerByte(refs.triggerBufferRef.current, refs.baselineRef.current, top1.idx);
   onLiveInfo(verdict.kind === 'digital'
-    ? `byte[${top1.idx}] bit 0x${verdict.bitMask.toString(16)} — switch, ${verdict.uniqueCount} value(s)`
-    : `byte[${top1.idx}] range=${top1.range} (${top1.min}..${top1.max}) — ${verdict.uniqueCount} value(s)`);
+    ? `byte[${top1.idx}] bit 0x${verdict.bitMask.toString(16)} is a switch with ${verdict.uniqueCount} value(s)`
+    : `byte[${top1.idx}] range=${top1.range} (${top1.min}..${top1.max}) with ${verdict.uniqueCount} value(s)`);
 
   // The kind is part of the stability key: a byte that changes its mind about
   // what it is has not settled, whatever its range is doing.

@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
 /**
- * Polling Engine — computes the SNES bitmask each frame by reading
- * keyboard state and HID device state (SDL3 — the sole controller transport
+ * Computes the SNES bitmask each frame by reading
+ * keyboard state and HID device state (SDL3 is the sole controller transport
  * now; the browser Gamepad API path has been removed).
  */
 
@@ -37,7 +37,7 @@ const applyDeviceState = (mask: number, deviceKey: string, buttons: readonly boo
 const computeBitmask = (keyStates: Map<string, boolean>, keyboardMap: Map<string, SnesButton>, gamepadButtonMap: DeviceScopedMap<number, SnesButton>, gamepadAxisMap: DeviceScopedMap<string, SnesButton>, hidStates: Map<string, { buttons: boolean[]; axes: number[] }>, allowed: AllowedDevices): number => {
   let mask = 0;
 
-  // Keyboard — only when the active profile actually binds keyboard keys
+  // Keyboard, only when the active profile actually binds keyboard keys
   if (allowed.keyboard) {
     for (const [code, pressed] of keyStates) {
       if (pressed) {
@@ -49,7 +49,7 @@ const computeBitmask = (keyStates: Map<string, boolean>, keyboardMap: Map<string
     }
   }
 
-  // HID input (SDL3 — every gamepad) — only devices in the profile's map
+  // HID input (SDL3 covers every gamepad), only devices in the profile's map
   for (const [deviceKey, state] of hidStates) {
     if (!allowed.gamepadKeys.has(deviceKey)) continue;
     mask = applyDeviceState(mask, deviceKey, state.buttons, state.axes, gamepadButtonMap, gamepadAxisMap);

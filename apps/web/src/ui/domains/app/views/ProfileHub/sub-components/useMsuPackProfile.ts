@@ -2,8 +2,8 @@
 /**
  * Detects the assigned MSU pack's contents for the Audio settings tab's Auto mode.
  *
- * Reads the profile fresh from storage rather than trusting the profile object passed
- * down from the app shell — that object is a snapshot from profile-load time, and a pack
+ * Reads the profile fresh from storage instead of trusting the profile object passed
+ * down from the app shell, because that object is a snapshot from profile-load time and a pack
  * assigned in Data Manager afterwards never reaches it. AudioSettings remounts on every
  * tab activation, so a fresh read here is current whenever the tab is opened.
  */
@@ -23,7 +23,7 @@ const useMsuPackProfile = (profileId: string) => {
       const profile = (await profileStore.listProfiles()).find((p) => p.id === profileId);
       const msuPack = profile?.msuPack;
       if (!msuPack) { if (!cancelled) { setPack(null); setPackName(null); } return; }
-      // The manifest is what makes a pack layered, so it has to be read here too — track names
+      // The manifest is what makes a pack layered, so it has to be read here too. Track names
       // alone cannot tell a layered pack from a classic one.
       const [tracks, manifest] = await Promise.all([
         msuStore.getMsuTrackList(msuPack),

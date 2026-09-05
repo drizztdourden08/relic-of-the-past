@@ -1,8 +1,8 @@
 /* @layer shared-game @kind logic */
 /**
- * Accumulates what a run observed in-game — check positions discovered,
- * screen transitions traversed, and door gates seen — so dataset-updates can
- * turn disagreements with the static data into suggestions.
+ * Accumulates what a run observed in-game: check positions discovered,
+ * screen transitions traversed and door gates seen. dataset-updates then
+ * turns disagreements with the static data into suggestions.
  */
 import type { GridPos } from '../../navigation/types';
 import type { CheckId } from '../../data';
@@ -10,7 +10,7 @@ import type { SimDoor } from '../types';
 import type { TraversalId } from '../traversal-id';
 
 interface ObservedCheck {
-  /** Which check this was, or null when the diff matched none — an unmatched
+  /** Which check this was, or null when the diff matched none. An unmatched
    *  observation is exactly what becomes a dataset suggestion. */
   checkId: CheckId | null;
   screenId: TraversalId;
@@ -41,7 +41,7 @@ const createRecorder = (): RecorderState => ({ checks: [], transitions: [], door
 /**
  * Dedupe by identity + location, not identity alone: every unmatched observation
  * has a null checkId, so an identity-only key would collapse all of them in a run
- * into one — and they are the ones worth reporting individually.
+ * into one, and they are the ones worth reporting individually.
  */
 const recordCheck = (rec: RecorderState, check: ObservedCheck): void => {
   if (!rec.checks.some(c => c.checkId === check.checkId && c.roomId === check.roomId && c.screenId === check.screenId)) {

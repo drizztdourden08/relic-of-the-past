@@ -1,16 +1,8 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * `wt clean` — remove worktrees that are finished with.
- *
- * Deliberately hard to misuse, because the failure mode is destroying work:
- *   - it is a DRY RUN unless --yes is passed;
- *   - anything holding uncommitted or unlanded commits is refused outright, never
- *     "cleaned anyway" — landing or discarding that work is a person's decision;
- *   - a leased worktree is left alone;
- *   - it prints exactly what would go, including the save data, before doing it.
- *
- * Removing a worktree also removes its game profile, and with it that profile's save
- * states. The user's own profiles are never candidates — only ids in the registry.
+ * `wt clean`: remove finished worktrees. Dry run unless --yes; refuses anything
+ * holding uncommitted or unlanded work; leaves leased worktrees alone. Also removes
+ * the worktree's game profile and its save states. Only registry ids are candidates.
  */
 import { rmSync, existsSync, readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
@@ -50,7 +42,7 @@ const selectTargets = ({ entries, name, merged, staleMs, now }) => {
     }
     // With no selector at all, only obviously-finished worktrees are offered.
     if (!name && !merged && staleMs === null && assessment.verdict === VERDICTS.READY) {
-      spared.push({ entry, why: 'unused and ready — keeping it warm in the pool' });
+      spared.push({ entry, why: 'unused and ready, so it stays warm in the pool' });
       continue;
     }
     chosen.push(entry);
@@ -69,20 +61,18 @@ const describe = ({ record, status, assessment }) => {
 
 const removeWorktree = (record) => {
   if (existsSync(record.path)) {
-    // Detach the junctions FIRST, and refuse to go further if any survives. A recursive
-    // delete walks into a junction and destroys the main repo's directory instead of the
-    // link — with .claude linked, that empties the real skills, tools and settings.
+    // Detach the junctions first and refuse to go further if any survives: a recursive
+    // delete walks into a junction and empties the main repo's directory.
     unlinkSharedDirs(record.path);
     assertNoSharedLinks(record.path);
 
-    // git does NOT do the deleting. `git worktree remove` runs its own recursive delete,
-    // and on Windows that walks into a junction and empties what it points at — proven,
-    // and it cost the main repo's .claude and record tree once already. removeTreeSafely
+    // Not `git worktree remove`: on Windows its recursive delete follows junctions
+    // (it emptied the main repo's .claude and record tree once). removeTreeSafely
     // unlinks reparse points instead of descending through them.
     const links = removeTreeSafely(record.path);
     if (links > 0) console.log(`  [wt] unlinked ${links} link(s) without following them`);
     if (existsSync(record.path)) {
-      console.warn(`  [wt] ${record.path} did not delete completely — inspect it by hand.`);
+      console.warn(`  [wt] ${record.path} did not delete completely. Inspect it by hand.`);
     }
   }
   execFileSync('git', ['worktree', 'prune'], { cwd: repoRoot, stdio: 'ignore' });
@@ -93,12 +83,9 @@ const removeWorktree = (record) => {
     console.warn(`  [wt] Branch ${record.branch} was left in place (delete it by hand if unwanted).`);
   }
 
-  // The profile id is the worktree name, so this only ever touches an agent profile — but
-  // that's an inference from the registry, not a fact about the profile itself. Belt and
-  // suspenders: a profile explicitly stamped automation:false (a real profile that happens
-  // to share a worktree's name) is refused outright. A profile with no `automation` field
-  // at all predates this marker, so it's still trusted the old way — only an EXPLICIT false
-  // blocks the delete; missing or true both proceed.
+  // A profile stamped automation:false (a real profile sharing a worktree's name) is
+  // refused. A missing `automation` field predates the marker, so only an explicit
+  // false blocks the delete.
   const profileDir = gameDataPath('profiles', record.name);
   const profilePath = `${profileDir}/profile.json`;
   if (existsSync(profilePath)) {
@@ -109,7 +96,7 @@ const removeWorktree = (record) => {
       automation = undefined;
     }
     if (automation === false) {
-      console.warn(`  [wt] Profile at ${profileDir} is explicitly marked automation:false — refusing to delete it.`);
+      console.warn(`  [wt] Profile at ${profileDir} is explicitly marked automation:false. Refusing to delete it.`);
       return;
     }
   }
@@ -127,7 +114,7 @@ const run = async ({ positional, options }) => {
 
   const entries = surveyAll(now);
   if (entries.length === 0) {
-    console.log('[wt] Nothing to clean — the pool is empty.');
+    console.log('[wt] The pool is empty, so there is nothing to clean.');
     return;
   }
 
@@ -139,7 +126,7 @@ const run = async ({ positional, options }) => {
 
   if (chosen.length === 0) {
     console.log('\n[wt] Nothing selected for removal.');
-    if (name) console.log(`"${name}" is either leased or holds work — see the reason above.`);
+    if (name) console.log(`"${name}" is either leased or holds work. See the reason above.`);
     return;
   }
 
@@ -156,25 +143,23 @@ const run = async ({ positional, options }) => {
     return;
   }
 
-  // Snapshot first. Everything below deletes, and the one thing that must never happen is
-  // discovering afterwards that something irreplaceable went with it.
+  // Snapshot first: everything below deletes.
   const snapshot = createSnapshot('wt-clean');
   console.log(`\n[wt] Safety snapshot ${snapshot.ref}`);
 
   for (const entry of chosen) {
-    console.log(`\n[wt] Removing ${entry.record.name}…`);
+    console.log(`\n[wt] Removing ${entry.record.name}...`);
     removeWorktree(entry.record);
   }
 
   // The worktrees sit outside the main checkout, so nothing protected should have moved.
-  // If something did, say so loudly and point at the way back instead of finishing quietly.
   const check = verifyAgainst(snapshot.ref);
   if (check.ok) {
     console.log('\n[wt] Verified: no protected file went missing.');
   } else {
-    console.error(`\n[wt] STOP — ${check.missing.length} protected file(s) disappeared during this removal:`);
+    console.error(`\n[wt] STOP. This removal made ${check.missing.length} protected file(s) disappear:`);
     for (const path of check.missing.slice(0, 10)) console.error(`       ${path}`);
-    if (check.missing.length > 10) console.error(`       …and ${check.missing.length - 10} more`);
+    if (check.missing.length > 10) console.error(`       ...and ${check.missing.length - 10} more`);
     console.error(`\n       Restore them with:  npm run safety -- restore ${snapshot.ref}\n`);
     process.exitCode = 1;
   }

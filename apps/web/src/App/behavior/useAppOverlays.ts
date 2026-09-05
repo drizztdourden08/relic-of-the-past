@@ -1,6 +1,6 @@
 /* @layer renderer-appshell @kind hook */
 /** App-level overlay/dialog UI state: update dialog, about, shadow editor.
- *  (Sprite Debug is a nav page — see PageRouter / useKeyboardShortcuts.) */
+ *  (Sprite Debug is a nav page, handled in PageRouter / useKeyboardShortcuts.) */
 import { useState, useCallback } from 'react';
 import { useShadowEditorStore } from '../../stores/shadow-editor-store';
 import type { ConfirmDialog } from '../types';
@@ -19,7 +19,7 @@ const useAppOverlays = ({ showDialog, dismissDialog }: AppOverlaysParams) => {
   const handleShowShadowEditor = useCallback(() => {
     if (!shadowEditorWarningShown) {
       showDialog({
-        title: 'Shadow Editor — Developer Tool',
+        title: 'Shadow Editor (Developer Tool)',
         message: 'This tool modifies shadow casting data that is committed directly to the project source code. Any changes you make here will affect the game\'s lighting for ALL builds.\n\nThis tool is only available in development mode.',
         confirmLabel: 'I understand, open editor',
         variant: 'default',

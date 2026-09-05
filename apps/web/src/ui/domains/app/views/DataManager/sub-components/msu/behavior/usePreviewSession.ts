@@ -1,20 +1,10 @@
 /* @layer renderer-components @kind hook */
 /**
- * The audio session an audition runs in: one AudioContext, one engine, one polling loop.
- *
- * The preview owns its OWN AudioContext rather than borrowing the game's: the pack editor is
- * usable with no game running, and a shared context would let a preview outlive the panel. One
- * context and one engine exist at a time, and starting a second audition or leaving the panel
- * tears the previous pair down, because a leaked context keeps playing with nothing to stop it.
- *
- * While something is playing, the engine is asked what it is doing once per animation frame, and
- * the answer goes into a store rather than into state — see `preview-report-store`. The loop
- * exists only while a session does: it ends itself the moment there is nothing to poll, so an
- * idle studio schedules no frames at all.
- *
- * What is auditioned is entirely the caller's business — it supplies the cut-down manifest, the
- * call that starts the audio, and the reader that turns the engine's answer into a report. That
- * is what lets a music slot and a claimed sound share this whole mechanism.
+ * One AudioContext, one engine, one polling loop. The preview owns its OWN context (the editor
+ * works with no game running, and a shared context could outlive the panel); a second audition
+ * or leaving the panel tears the pair down. The engine is polled once per animation frame into
+ * `preview-report-store`, and the loop ends itself when there is nothing to poll. The caller
+ * supplies the manifest, the start call and the reader, so slots and sounds share this.
  */
 import { useCallback, useRef, useState } from 'react';
 import type { MsuPackManifest } from '@shared/types/msu-manifest';
@@ -100,10 +90,7 @@ const usePreviewSession = (pack: string | null) => {
     return true;
   }, [pack, stop, startPolling]);
 
-  /**
-   * Fires again into the session already running, for an additive channel where each press is
-   * meant to ADD a sound rather than restart one. False when there is no live session to fire at.
-   */
+  /** Fires again into the running session (additive channels ADD a sound per press). False with no live session. */
   const retrigger = useCallback((fire: (engine: MsuEngine) => void): boolean => {
     const session = sessionRef.current;
     if (!session) return false;

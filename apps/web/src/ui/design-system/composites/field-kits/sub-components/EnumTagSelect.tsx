@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 /**
- * The chip row a closed set is EDITED with — the same visual language the
+ * The chip row a closed set is EDITED with, in the same visual language the
  * hand-built forms use for their tags, reached from a schema instead of from a
  * hand-written group list.
  *
@@ -13,12 +13,12 @@ import { TagPicker } from '../../../primitives/TagPicker';
 import type { TagPickerGroup } from '../../../primitives/TagPicker';
 
 interface EnumTagSelectProps {
-  /** Group identity — the field path, so two sets on one form stay distinct. */
+  /** Group identity: the field path, so two sets on one form stay distinct. */
   id: string;
   options: readonly string[];
   selected: readonly string[];
   onChange: (selected: readonly string[]) => void;
-  /** One pick at a time, for a field that holds a value rather than a set. */
+  /** One pick at a time, for a field that holds a value instead of a set. */
   single?: boolean;
   disabled?: boolean;
 }

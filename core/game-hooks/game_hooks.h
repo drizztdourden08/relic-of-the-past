@@ -32,16 +32,16 @@ void GameHook_TriggerOverworldCheck(uint8 screen, uint8 mask, uint8 item_id);
 
 // True while `effectiveModule` is MODULE_FALLING_ENTRANCE (11) via the vanilla overworld
 // special-switch-area path (one of 3 locked-view locations reached by walking onto a
-// switch tile) rather than an actual dungeon pit-fall. Both reuse the same module;
+// switch tile) and not an actual dungeon pit-fall. Both reuse the same module;
 // overworld_screen_index staying >= 128 is what's unique to the special-area flavor.
 // Use this form once a menu-overlay remap has already been resolved (main_module_index
-// == 14, the real module in saved_module_for_menu) — passing the raw main_module_index
+// == 14, the real module in saved_module_for_menu), because passing the raw main_module_index
 // there would stop recognizing the special area the instant the pause menu opens over it.
 bool GameHook_IsOverworldSpecialAreaFor(int effectiveModule);
 
 // Raw-module form: true while main_module_index itself is the special-area flavor.
 // Anything gating on "is this normal interactive gameplay right now" (accepting live
-// input) should use this — it correctly excludes the paused/menu-overlay state, matching
+// input) should use this, because it excludes the paused/menu-overlay state, matching
 // how a normal overworld location already behaves while paused.
 bool GameHook_IsOverworldSpecialArea(void);
 
@@ -72,7 +72,7 @@ bool GameHook_LightConeSuppressesExtraWidth(void);
 // ─── Custom player sprite sheets (player_sprite.c) ───
 
 // Overwrite the player gfx asset from a ZSPR sheet and take its palette into the PPU's private player
-// bank. |push_live| lands the colors straight away — pass false before the core is initialized.
+// bank. |push_live| lands the colors straight away, so pass false before the core is initialized.
 // Returns false (assets untouched) if the sheet is malformed.
 bool PlayerSprite_Apply(const uint8 *data, size_t len, bool push_live);
 
@@ -100,7 +100,7 @@ bool HudOverride_Allowed(void);
 
 // Force the native HUD and pause menu fully back on screen. Called the instant kFeatures3_HudOverride
 // reads clear on gate word 3 (Vanilla Safe engaging, the enhanced-HUD setting turning off, or a future
-// embedder) — mirrors PlayerSprite_Restore undoing the sprite override on the same trigger. A safe
+// embedder), mirroring PlayerSprite_Restore undoing the sprite override on the same trigger. A safe
 // no-op when neither is currently hidden.
 // Record whether the host WANTS the native HUD / pause menu hidden. The gate is applied by
 // HudOverride_Sync, not at this call, so a request made before the gate word reaches WRAM still takes
@@ -123,7 +123,7 @@ void CheatLighting_Sync(void);
 
 // ─── Receive counters (receive_counters.c) ───
 
-// Tally an item grant against its call site, so a check granted twice is visible rather than inferred.
+// Tally an item grant against its call site, so a check granted twice is visible instead of inferred.
 void SimCountReceive(uint8 site, uint8 item_id);
 
 // ─── Gated empty region (gated_empty.c) ───
@@ -191,8 +191,8 @@ void GameHook_RunningManStayActive(int k);
 // Called at the point the scripted right-side leg sequence (right, down, right) would normally
 // hand him back to idle. Vanilla's script is a fixed handful of frames tuned to end past a 256px
 // screen, which falls well short of a wide view. Returns false (vanilla ends the flee, unchanged)
-// unless a wide/tall view is active; when it returns true, the caller must skip that transition —
-// this call has already re-armed him to keep running the same direction.
+// unless a wide/tall view is active; when it returns true, the caller must skip that transition,
+// because this call has already re-armed him to keep running the same direction.
 bool GameHook_RunningManExtendRun(int k);
 
 // Called each frame Sprite_RunningMan is in a run leg. No-op unless a wide/tall view is active
@@ -223,14 +223,14 @@ void GameHook_MusicAnnounce(void);
 void GameHook_SetDeluxeEntrances(int index, uint32 bits);
 
 // Re-raises the ambient bed a restored snapshot was playing and, when the host claims it, silences
-// the chip's own resumed copy — the two would otherwise sound together. Call with the APU locked.
+// the chip's own resumed copy, which would otherwise sound together with the host's. Call with the APU locked.
 void GameHook_AmbientAfterLoad(uint8 last_ambient);
 
 // Marks the ambient clear the hook layer is about to raise as OURS, so the report below skips it.
 //
 // The clear id does two unrelated jobs. The game raises it to mean "the bed ends here", which the
 // host has to hear. The hook layer raises the SAME id to silence the chip's copy of a bed it just
-// handed to the host — and if the host heard that one it would stop the bed it was just given, which
+// handed to the host. If the host heard that one it would stop the bed it was just given, which
 // is precisely how a state load came to restore its music and its thunder but no rain. One flag,
 // consumed by the next report, keeps the two apart.
 void GameHook_MarkSelfRaisedAmbientClear(void);
@@ -241,7 +241,7 @@ int GameHook_MusicIsPlayingRemapped(uint8 track);
 
 // The music byte a death/save-quit respawn should queue, given the starting-point table's own
 // |vanilla| byte. Resolves the spawn room to its entrance so the remap that follows is keyed to
-// the right interior rather than to the door used before dying. Identity unless external music.
+// the right interior and not to the door used before dying. Identity unless external music.
 uint8 GameHook_StartingPointMusic(int starting_point, uint8 vanilla);
 
 // The music byte the game should use for |entrance|, given the table's own |vanilla| byte. Hands back
@@ -266,11 +266,11 @@ enum {
 void GameHook_SetSoundClaim(int channel, uint32 low, uint32 high);
 
 // Report one sound the game wants played, and answer whether the host took it. True means the host
-// has claimed this id — which is also the signal NOT to write the port, so the chip stays silent for
+// has claimed this id, and that is also the signal NOT to write the port, so the chip stays silent for
 // it. Gated on kHostGate_ExternalAmbient / kHostGate_ExternalSfx: zero host-calls when off.
 bool GameHook_Sound(int channel, uint8 raw);
 
-// Whether the host claims |id| on |channel|. The predicate alone — no report, no gate check.
+// Whether the host claims |id| on |channel|. The predicate alone, with no report and no gate check.
 bool GameHook_SoundClaimed(int channel, uint8 id);
 
 // Diagnostics only: report one raise to the host's sound trace, gated on kHostGate_SoundTrace.

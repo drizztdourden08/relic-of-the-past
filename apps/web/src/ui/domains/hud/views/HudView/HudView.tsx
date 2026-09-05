@@ -23,7 +23,7 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
     const w = el.clientWidth;
     if (h <= 0 || w <= 0) return;
 
-    // Scale derived from height — uses canvas native height to respect extendY (240-line mode)
+    // Scale derived from height, using canvas native height to respect extendY (240-line mode)
     const canvas = document.getElementById('canvas') as HTMLCanvasElement | null;
     const nativeH = canvas ? canvas.height / 2 : SNES_HEIGHT;
     const newScale = h / nativeH;
@@ -32,7 +32,7 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
     // Determine HUD content width based on chosen ratio
     const numericRatio = aspectRatioValue(hudRatio, customW, customH);
     if (numericRatio <= 0) {
-      // 'match' — use full container width
+      // 'match': use full container width
       setHudWidth(undefined);
     } else {
       // Clamp: HUD ratio can't be wider than the screen
@@ -59,7 +59,7 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
   const showKeys = data.keys !== 255 && data.keys !== 0xFF;
   // Rupee counter needs a 4th digit once the "Larger Wallet" cap raises it past 999.
   const rupeeDigits = data.maxRupees > 999 ? 4 : 3;
-  // Bow value >= 3 means Silver Arrows have been obtained — mirrors hud.c's Hud_Update_Inventory.
+  // Bow value >= 3 means Silver Arrows have been obtained. Mirrors hud.c's Hud_Update_Inventory.
   const hasSilverArrows = data.items[0] >= 3;
 
   const counts = (
@@ -97,7 +97,7 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
         transition: slideTransition,
       }}
     >
-      {/* HUD content — centered at chosen ratio width */}
+      {/* HUD content centered at the chosen ratio width */}
       <HudBox style={{
         position: 'relative',
         display: 'flex',

@@ -8,7 +8,7 @@
 .preview-box {
   /*
    * CONTENT-BOX, against the app-wide border-box default. `--game-row-width` is
-   * the row's real interior — 21 cells — so it has to be the width the rows get,
+   * the row's real interior of 21 cells, so it has to be the width the rows get,
    * not the width the frame and its padding are cut out of. Measured: with
    * border-box the interior came out 316px against a 336px row, which would have
    * made every row look 20px roomier than it is.
@@ -27,7 +27,7 @@
 
 /*
  * The row stack. Clipped vertically so the arrival shift stays inside the box,
- * while a row overrunning the interior still draws past the RIGHT edge — that
+ * while a row overrunning the interior still draws past the RIGHT edge. That
  * overrun is the defect the preview exists to show.
  */
 .preview-box__rows {
@@ -54,8 +54,8 @@
 
 /*
  * One row of the box: exactly one cell tall, never wrapped. The engine writes
- * past the interior rather than wrapping, so a row wide enough to overrun has to
- * be allowed to draw past this edge — that overrun is the defect being looked
+ * past the interior instead of wrapping, so a row wide enough to overrun has to
+ * be allowed to draw past this edge. That overrun is the defect being looked
  * for, and hiding it would hide the bug.
  */
 .preview-row {
@@ -68,7 +68,7 @@
 
 /*
  * Pixels that were already standing before this box drew anything. Dimmed, not
- * removed: nothing ever clears them, so they are genuinely on screen.
+ * removed: nothing ever clears them, so they are still on screen.
  */
 .preview-row--carried {
   opacity: var(--opacity-muted);

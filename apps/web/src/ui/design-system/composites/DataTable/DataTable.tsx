@@ -1,14 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * The presentational half of the headless-hook pair: it renders what
- * `useDataTable` produced and binds each control back onto it. No sorting,
- * grouping or column transform is reimplemented here — every action below is a
- * one-line call into the hook, and `useViewState` owns whether any of it is
- * remembered.
- *
- * Give it a `viewKey` and the layout survives a restart; leave it off and the
- * table is exactly as usable, purely in memory.
- */
 import { useMemo } from 'react';
 import { Box } from '../../primitives/Box';
 import { Text } from '../../primitives/Text';
@@ -50,11 +40,7 @@ const DataTable = <T,>(props: DataTableProps<T>) => {
   const drag = useColumnDrag(table.reorderColumn);
   const sizing = useColumnSizing({ columns: table.columns, onResize: table.resizeColumn });
 
-  /*
-   * The addable fields, walked once and handed to every menu that offers them:
-   * each column's ⋯ (before / after) and the footer's (append). The columns on
-   * screen are what it leaves out, so the tree narrows as the table fills up.
-   */
+  /* Addable fields, walked once and shared by every menu that offers them. */
   const fieldNodes = useMemo(
     () => buildPickerNodes(schema, table.columns.map((column) => column.path)),
     [schema, table.columns],
@@ -77,7 +63,7 @@ const DataTable = <T,>(props: DataTableProps<T>) => {
     onSetDisplayField: table.setDisplayField,
   }), [table, sizing.previewWidth]);
 
-  /* Table-wide, so they appear once in the footer rather than in every column. */
+  /* Table-wide, so they appear once in the footer. */
   const tableActions: TableActions = useMemo(() => ({
     onAddColumn: table.addColumn,
     onClearSort: table.clearSort,
@@ -87,14 +73,10 @@ const DataTable = <T,>(props: DataTableProps<T>) => {
   }), [table]);
 
   /*
-   * One track list for the header and every row, published as a custom property
-   * they all inherit. A resize drag writes the same property straight onto this
-   * element while it runs, which is why it can preview without a render.
-   *
-   * Both fallbacks ride along rather than being folded into the column list: a
-   * grow column with no slack to take renders at its content width and stays a
-   * grow column, so it fills again by itself the moment slack comes back; a
-   * fit column renders at whatever it last measured and stays a fit column.
+   * One track list for the header and every row, as a custom property. A resize
+   * drag writes the same property straight onto this element, so it previews
+   * without a render. The fallbacks ride along instead of being folded into the
+   * column list, so a grow or fit column stays one and recovers by itself.
    */
   const gridStyle = useMemo(
     () => ({
@@ -103,10 +85,7 @@ const DataTable = <T,>(props: DataTableProps<T>) => {
     [table.columns, sizing.growFallback, sizing.fitFallback],
   );
 
-  /*
-   * Sampled here, once, rather than per header: the rows are the same for every
-   * column and the ghosts have to be standing by before a drag can start.
-   */
+  /* Sampled once, not per header: the ghosts must be standing by before a drag starts. */
   const ghostRows = useMemo(
     () => ghostRowSample({
       nodes: table.groupedRows, isExpanded: groups.isExpanded, limit: GHOST_ROW_LIMIT,
@@ -114,8 +93,7 @@ const DataTable = <T,>(props: DataTableProps<T>) => {
     [table.groupedRows, groups.isExpanded],
   );
 
-  /* The table's sort/group summary (for the footer) and the carried column's
-     own name (for the drop target), both spelled with any rename applied. */
+  /* Footer summary and the carried column's name, with any rename applied. */
   const { summary, carriedLabel } = columnLabelsOf({
     columns: table.columns, schema: index, sort: table.sort, groupBy: table.groupBy,
     draggingPath: drag.draggingPath,
@@ -130,11 +108,8 @@ const DataTable = <T,>(props: DataTableProps<T>) => {
     onSelect,
     isExpanded: groups.isExpanded,
     onToggleGroup: groups.toggle,
-    /*
-     * Both are stable for the length of a drag — the hovered index deliberately
-     * does not travel down here, so a body-cell dragover updates the header
-     * chrome without re-rendering a single row.
-     */
+    /* Stable for the length of a drag; the hovered index deliberately stays out
+       so a body-cell dragover never re-renders a row. */
     onCellDragOver: drag.onDragOver,
     onCellDrop: drag.onDrop,
     resolveIdRefDisplay,
@@ -146,9 +121,8 @@ const DataTable = <T,>(props: DataTableProps<T>) => {
 
   return (
     <Box className="data-table">
-      {/* The scroller is the drag's backstop: every cell in it names a column,
-          and the bare grid between them — the gap the displaced columns open —
-          would otherwise refuse the release outright. See `onSurfaceHover`. */}
+      {/* The scroller is the drag's backstop: the bare grid between cells would
+          otherwise refuse the release. See `onSurfaceHover`. */}
       <Box
         ref={sizing.rootRef}
         className="data-table__scroll"
@@ -173,8 +147,7 @@ const DataTable = <T,>(props: DataTableProps<T>) => {
         <RowTree nodes={table.groupedRows} parentUid="" context={context} />
         {rows.length === 0 && <Text className="data-table__empty">{emptyMessage}</Text>}
       </Box>
-      {/* A plain child of this same container, absolutely positioned rather
-          than portalled — see `ColumnDropTrash` for why. */}
+      {/* Absolutely positioned, not portalled; see `ColumnDropTrash`. */}
       <ColumnDropTrash
         draggingPath={drag.draggingPath}
         label={carriedLabel}

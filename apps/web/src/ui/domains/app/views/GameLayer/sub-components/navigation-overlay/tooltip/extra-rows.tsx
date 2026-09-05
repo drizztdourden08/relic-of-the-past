@@ -15,12 +15,7 @@ const isAnyLayerReachable = (tooltip: TooltipData): boolean => {
     : layers.primary.reach !== 0;
 };
 
-/**
- * Rows below the layer block(s) — unchanged in meaning from before this
- * refactor: path requirements (only shown once a layer is actually reached),
- * the live sprite count, whether the BFS marked this tile blocked on its last
- * run, and the raw per-sprite debug lines.
- */
+// Path requirements show only once a layer is reached.
 const TooltipExtraRows = ({ tooltip }: ExtraRowsProps) => (
   <>
     {isAnyLayerReachable(tooltip) && (

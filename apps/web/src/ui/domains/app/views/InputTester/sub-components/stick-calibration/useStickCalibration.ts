@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 /**
- * useStickCalibration — state machine hook for 3-step stick calibration.
+ * State machine hook for 3-step stick calibration.
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';

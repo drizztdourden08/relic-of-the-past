@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind component */
 /**
- * PauseMenuView — Enhanced pause menu rendering using extracted sprite tiles.
+ * Pause menu rendering using extracted sprite tiles.
  *
  * Uses CSS Grid to lay out 5 panels matching the SNES BG3 tilemap.
  * Grid structure (in SNES tiles, with 24px BG3 scroll offset):
@@ -31,9 +31,8 @@ import { wrapName } from './behavior/wrap-name';
 const MENU_H = 224;
 
 /**
- * Grid slot → save RAM index (kHudItemToItemOrg from hud.c).
- * Maps the pause menu cursor position to the inventory save data index.
- * Used for cursor navigation logic, NOT for visual display order.
+ * Grid slot → save RAM index (kHudItemToItemOrg from hud.c). Used for cursor
+ * navigation, NOT for visual display order.
  */
 const GRID_TO_SAVE = [0, 3, 2, 14, 1, 10, 5, 6, 15, 16, 17, 9, 4, 8, 7, 12, 11, 18, 13, 19];
 
@@ -67,7 +66,7 @@ const PauseMenuView = ({ slideTransform, slideTransition }: { slideTransform?: s
   const { data, config } = usePauseMenu(scale);
   const { spritesBase } = config;
 
-  // Build display items array — replace bottle slot with actual bottle content
+  // Slot 15 holds a bottle index, so swap in the bottle's own content for display.
   const displayItems = [...data.items];
   if (displayItems[15] > 0) {
     displayItems[15] = data.bottles[displayItems[15] - 1] ?? 0;

@@ -1,9 +1,8 @@
 /* @layer test @kind test */
 /**
- * The registry barrel installs the built-ins, and a pass through the store
- * scopes reconciliation to what actually ran. The scoping is the part worth
- * pinning: without it a pass on one screen resolves every finding about every
- * other one, which looks like the store working and is the opposite.
+ * The registry barrel installs the built-ins, and a pass scopes reconciliation
+ * to what ran. Without the scoping a pass on one screen resolves every finding
+ * about every other one, which looks like the store working.
  */
 import { describe, it, expect, beforeEach } from 'vitest';
 import { all, find } from '@shared/game/data';
@@ -16,7 +15,7 @@ import type { DetectionContext, ObservedTransition, ScreenObservations } from '@
 import '@app/ui/domains/widgets/navigation/recommendations/strategies/connection';
 import '@shared/game/recommendations/strategies/screen';
 import '@shared/game/recommendations/strategy-detectors';
-// Must come after `strategy-detectors` — see `wire-detector.ts`'s own header.
+// Must come after `strategy-detectors`. See `wire-detector.ts`'s own header.
 import '@app/ui/domains/widgets/navigation/recommendations/strategies/connection/wire-detector';
 import { describeDataset } from '../../dataset-guard';
 
@@ -35,13 +34,10 @@ const observations = (overrides: Partial<ScreenObservations> = {}): ScreenObserv
 });
 
 /**
- * A screen with auditable outgoing edges, plus a transition that backs none
- * of them. `existingConnections` is populated straight from the real dataset
- * registry, the same way `use-screen-observations.ts` populates it in
- * production (`useConnectionStatus`'s `find('connection', ...)`) — the
- * `strategy:connection` detector's `SetProbe`s read `observations
- * .existingConnections`, not the registry directly, unlike the deleted
- * `buildBadFindings`/`buildAddFindings` this test used to exercise.
+ * A screen with auditable outgoing edges plus a transition that backs none.
+ * `existingConnections` comes straight from the dataset registry, as
+ * `use-screen-observations.ts` does; the `strategy:connection` `SetProbe`s
+ * read `observations.existingConnections`, not the registry.
  */
 const auditableScreen = () => {
   const screen = all('screen').find(s =>
@@ -58,14 +54,10 @@ const contextFor = (screenId: ScreenId, realTransitions: ObservedTransition[], e
 
 describeDataset('the detector barrel', () => {
   it('installs a detector for both kinds it covers', () => {
-    // `connection-shape`/`screen-identity` were replaced by the `connection`/
-    // `screen` comparison strategies (`strategy:connection`, `strategy:screen`).
-    // The former `connection-add`/`connection-remove` pair was folded into
-    // `strategy:connection` itself in phase 4, part 2, once the connection
-    // `SetProbe`s replaced their hand-rolled comparison. The hand-written
-    // `connection-direction-tag` detector that used to ride alongside it is
-    // gone along with the whole `dir:*` tag namespace it backfilled — the
-    // connection-model migration derives direction from `canExit` instead.
+    // `connection-shape`/`screen-identity` became `strategy:connection` and
+    // `strategy:screen`; `connection-add`/`connection-remove` folded into
+    // `strategy:connection` (phase 4, part 2). The direction-tag detector is
+    // gone with the `dir:*` namespace; direction derives from `canExit`.
     expect(detectorsFor('connection').map(d => d.id).sort())
       .toEqual(['strategy:connection']);
     expect(detectorsFor('screen').map(d => d.id)).toEqual(['strategy:screen']);
@@ -134,7 +126,7 @@ describeDataset('the recommendation store', () => {
     expect(after.entries.every(e => e.state === 'resolved')).toBe(true);
   });
 
-  it('carries a record, not a code string — the whole point of the unification', async () => {
+  it('carries a record, not a code string, which was the whole point of the unification', async () => {
     const context = contextFor(screenId, realTransitions, existingConnections);
     const run = runDetection('connection', context);
     const { entries } = await store.applyPass('connection', context, run.detectorIds, run.drafts, 1000);

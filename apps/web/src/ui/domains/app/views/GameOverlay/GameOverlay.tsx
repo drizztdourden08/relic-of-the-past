@@ -1,13 +1,5 @@
 /* @layer renderer-components @kind component */
-/**
- * GameOverlay — sized to match the game canvas exactly.
- * pointer-events: none so it doesn't interfere with input.
- * Renders the HUD replacement when enhanced mode is active.
- * Handles the pause menu slide transition (483ms linear, matching vanilla).
- *
- * Hierarchy: OverlayRoot > (PauseMenuView | HudView | LocationNotification)
- * Each view is absolutely positioned and uses translateY for the slide animation.
- */
+// Sized to the game canvas, pointer-events: none. Pause menu slide is 483ms linear, matching vanilla.
 
 import { useEffect, useRef, useState } from 'react';
 import { Box } from '../../../../design-system/primitives/Box';
@@ -43,23 +35,20 @@ const GameOverlay = ({ width, height }: GameOverlayProps) => {
   // The sprite HUD can only render when the Vanilla style is paired with
   // extracted sprites for the active ROM; otherwise we show an HTML notice.
   const spriteHudRenderable = hudStyle === 'vanilla' && spritesAvailable;
-  // Gate the main overlay on the live game mode — only present during gameplay
-  // and dialogue (see hud-visibility), never the intro, maps, or other menus.
+  // Gated on the live game mode: gameplay and dialogue only (see hud-visibility).
   const showMainSlot = isEnhanced && enhancedParts.includes('main') && isMainHudVisibleForMode(gameMode);
   const showPauseMenu = isEnhanced && enhancedParts.includes('pause') && spriteHudRenderable;
   const [menuPhase, setMenuPhase] = useState<MenuPhase>('gameplay');
   const rafRef = useRef<number>(0);
 
-  // Subscribe to map changes → fire location notifications
   useLocationNotification();
 
-  // Subscribe delivery queue → zustand store sync
   useEffect(() => {
     const unsub = deliveryQueue.subscribe(useDeliveryQueueStore.getState()._sync);
     return unsub;
   }, []);
 
-  // Poll WASM menu state each frame — active whenever enhanced mode is on
+  // Poll WASM menu state each frame while enhanced mode is on.
   useEffect(() => {
     if (!isEnhanced) return;
     const poll = () => {
@@ -76,7 +65,6 @@ const GameOverlay = ({ width, height }: GameOverlayProps) => {
     return () => cancelAnimationFrame(rafRef.current);
   }, [isEnhanced]);
 
-  // Determine slide position
   const isMenuVisible = menuPhase === 'opening' || menuPhase === 'open';
   const isTransitioning = menuPhase === 'opening' || menuPhase === 'closing';
   const transition = isTransitioning ? `transform ${MENU_TRANSITION_MS}ms linear` : 'none';
@@ -95,14 +83,14 @@ const GameOverlay = ({ width, height }: GameOverlayProps) => {
         overflow: 'hidden',
       }}
     >
-      {/* Pause menu — slides down from above */}
+      {/* Pause menu slides down from above. */}
       {showPauseMenu && (
         <PauseMenuView
           slideTransform={isMenuVisible ? 'translateY(0)' : 'translateY(-100%)'}
           slideTransition={transition}
         />
       )}
-      {/* HUD — slides down when menu opens. Falls back to an HTML notice when the
+      {/* HUD slides down when the menu opens. Falls back to an HTML notice when the
           sprite HUD can't render (Modern style, or Vanilla without sprites). */}
       {showMainSlot && (
         spriteHudRenderable ? (

@@ -8,11 +8,8 @@
 import fs from 'fs';
 import path from 'path';
 
-// third_party holds dependency source fetched at install time (SDL3 and its own
-// deps) plus whatever those builds leave behind. It is someone else's code, held
-// to someone else's standards, and it is not committed here, so measuring it
-// against this project's policies only produces noise that drowns the findings
-// that are actually ours.
+// third_party holds dependency source fetched at install time (SDL3 and its deps):
+// not our code, not committed, and measuring it only produces noise.
 const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', 'release', 'coverage', '.vite', 'out', 'build-output', 'saves', 'test-roms', 'assets', 'temp-scripts', 'worktrees', 'third_party']);
 // Native prebuilds are copied in at install time, so they are not ours either.
 const SKIP_REL = [
@@ -21,8 +18,7 @@ const SKIP_REL = [
   '.claude/worktrees',
   'apps/desktop/electron/input/native/sdl3/prebuilds',
 ];
-// Compiled binaries have no source lines to measure, and a heuristic that reads
-// one as a logic file reports nonsense (a shared object "over the 200 line cap").
+// Compiled binaries have no source lines; classified as logic they report nonsense.
 const SKIP_FILE =
   /(\.jsonl|\.bmp|\.map|\.csv|\.lock|package-lock\.json|\.so(\.\d+)*|\.dylib|\.dll|\.node|\.a|\.lib|\.obj|\.pdb|\.exe)$/i;
 

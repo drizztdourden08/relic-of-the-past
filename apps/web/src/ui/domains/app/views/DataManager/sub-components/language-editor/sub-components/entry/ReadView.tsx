@@ -4,9 +4,9 @@
  *
  * No gutter, no markers, no chips, no pixel face. Structure and fit are what the
  * other two views are for, and both of those crowd out the one question this
- * view answers — does this read well in the target language. So the control
- * codes are gone, the substitutions are already standing in for their values,
- * and the line is set in the app's own face at a comfortable measure.
+ * view answers, which is whether this reads well in the target language. So the
+ * control codes are gone, the substitutions are already standing in for their
+ * values, and the line is set in the app's own face at a comfortable measure.
  *
  * The text is selectable and copyable, because passing a line to a dictionary or
  * a colleague is the commonest thing done from here.

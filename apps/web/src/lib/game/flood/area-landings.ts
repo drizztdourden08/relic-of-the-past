@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Where a crossing PUTS the player — the two "and then you are standing here"
+ * Where a crossing PUTS the player. These are the two "and then you are standing here"
  * answers `propagateArea` needs to seed the screen on the far side of a
  * crossing. Split out of flood-area.ts so the propagation loop itself stays
  * readable; both are pure lookups with no flood state of their own.
@@ -12,9 +12,9 @@ type EdgeName = 'north' | 'south' | 'east' | 'west';
 
 /**
  * The DESTINATION room's own stair/walk-boundary record leading back to
- * `fromRoom` — where Link actually lands after crossing. Mirrors
+ * `fromRoom` gives where the player actually lands after crossing. Mirrors
  * apps/web/src/lib/game/simulator/room-exits.ts's stairLandingTile; kept as a
- * separate copy rather than imported since that file depends on the flood
+ * separate copy instead of an import, since that file depends on the flood
  * (via floodRoomRun) and importing it back would make the dependency circular.
  */
 const roomLandingTile = (destRoom: number, fromRoom: number): GridPos | undefined => {

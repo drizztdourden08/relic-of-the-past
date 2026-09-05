@@ -1,14 +1,9 @@
 /* @layer renderer-app @kind logic */
 /**
- * One delegated listener for every id reference on the screen, wherever it was
- * rendered — a table cell, a nested fallback in the editor. Delegation rather
- * than a per-cell handler is what lets the generic composites stay ignorant of
- * navigation: they publish an attribute, this reads it.
- *
- * It listens on the CAPTURE phase deliberately. A row's own click selects that
- * row, and a click on a reference inside it means "open what this points at",
- * not "select the row I am in" — capturing lets this run first and stop the
- * event before the row ever sees it.
+ * One delegated listener for every id reference on the screen, so the generic
+ * composites stay ignorant of navigation: they publish an attribute, this
+ * reads it. Capture phase on purpose: a click on a reference must open its
+ * target, not select the row, so this runs first and stops the event.
  */
 import { useCallback } from 'react';
 import { resolveIdRef } from './id-ref-target';

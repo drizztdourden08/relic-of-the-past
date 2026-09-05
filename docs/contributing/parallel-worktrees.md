@@ -1,7 +1,7 @@
 <!-- @layer docs @kind doc -->
 # Working on the project in parallel
 
-Several people — or several automated sessions — can work this repo at the same time,
+Several people and several automated sessions can work this repo at the same time,
 each in a separate checkout with its own build, and each able to run the app without
 disturbing anyone else's game data.
 
@@ -25,7 +25,7 @@ directory, then hand it back:
 npm run wt -- release <name>
 ```
 
-If the pool has nothing free, create a worktree — this takes a few minutes and about
+If the pool has nothing free, create a worktree. This takes a few minutes and about
 800 MB, which is why reusing one is preferred:
 
 ```bash
@@ -41,7 +41,7 @@ npm run wt -- new <name>
 | `wt release <name>` | Return it to the pool. Leaves the checkout, branch and notes alone. |
 | `wt new <name>` | Create a worktree, its branch and its game profile, then build it. |
 | `wt refresh <name>` | Fetch and rebase onto the base branch. `--all` for every worktree. |
-| `wt note <name> "…"` | Record what a session worked on. |
+| `wt note <name> "..."` | Record what a session worked on. |
 | `wt pr <name> <url>` | Record the PR opened from the worktree. |
 | `wt launch <name>` | Run the built app from the worktree as a named instance. |
 | `wt clean` | Remove finished worktrees. Dry run unless `--yes`. |
@@ -60,34 +60,34 @@ Each worktree has its **own** checkout, branch, `node_modules`, WASM core, `dist
 `debug-output/` and screenshots. Nothing about one worktree's build can affect another's.
 
 Each also gets its **own game profile**, named after the worktree, holding its own save
-states and quick-save slots. Your default profile is never touched — with two instances
-running at once, each writes only its own profile, including the game's battery save.
+states and quick-save slots. Your default profile is never touched, and with two
+instances running at once each writes only its own profile, including the game's battery save.
 
 The new profile starts with a **copy of your named save states**, so
 `--auto-state=test-jail-cell` and the other baselines work in it immediately. Quick saves
 and auto-saves are not copied, and neither is the battery save, so an agent starts from
-the same baselines rather than inheriting in-game progress.
+the same baselines instead of inheriting in-game progress.
 
 Shared, because it is read far more than written: the ROMs, extracted assets, sprites and
 language packs in the user-data folder.
 
 Two files in that folder belong to whoever is at the keyboard, and a named instance never
-writes them — your window position (`config/window-state.json`) and your last-used profile
+writes them: your window position (`config/window-state.json`) and your last-used profile
 (`app.json`). Close an agent's window and your own next launch is exactly as you left it.
 
 ### A new worktree needs files git does not carry
 
 `git worktree add` produces tracked files only, and several things this project needs are
 deliberately git-ignored: `CLAUDE.md`, `.claude/`, the record dataset at
-`shared/game/data/records/`, `test-roms/` and the asset blob. `wt new` supplies them —
+`shared/game/data/records/`, `test-roms/` and the asset blob. `wt new` supplies them:
 `.claude/` and the record dataset as directory links so a change reaches every worktree
 at once, everything else copied.
 
 ## Mandatory: automation never runs on the default profile
 
 > **Every automated launch must pass `--instance=NAME`.** The profile that opens by
-> default belongs to the person at the keyboard — they rely on it for their own testing,
-> and an automated run must never use it, change its saves, or change which profile opens
+> default belongs to the person at the keyboard, who relies on it for their own testing.
+> An automated run must never use it, change its saves, or change which profile opens
 > next time.
 
 The app enforces the second half: any launch carrying an automation flag is read-only for
@@ -104,13 +104,13 @@ name.
 
 The window title is held deliberately: the game core sets its own SDL window title, which
 would otherwise replace ours as soon as the game starts. On Windows an instance also takes
-its own taskbar identity, so it groups separately from your app rather than merging with it.
+its own taskbar identity, so it groups separately from your app instead of merging with it.
 
 ```bash
 npx electron dist/electron/main.js --no-focus --muted --instance=big-key
 ```
 
-`--no-focus --muted` keep the window inactive and silent — always use them for an
+`--no-focus --muted` keep the window inactive and silent. Always use them for an
 automated launch. Pass `--profile=<name|id>` to run an instance against a different
 profile, and add the usual automation flags (`--auto-state`, `--screenshot`,
 `--dump-nav`, `--sim-run`) as normal.
@@ -123,14 +123,14 @@ Without `--instance`, nothing changes: the app looks and behaves exactly as it a
 
 | Status | Meaning |
 |---|---|
-| `ready` | Clean, unused, nothing unmerged — claim it. |
+| `ready` | Clean, unused, nothing unmerged. Claim it. |
 | `spent` | Used before, and its work has landed. Safe to reuse or remove. |
 | `leased` | A session holds it. A lease has an expiry, so an abandoned one frees itself. |
 | `holds-work` | Uncommitted changes, or commits not yet on the base branch. |
 | `missing` | The checkout is gone; `wt doctor` drops the record. |
 
 A worktree counts as finished when every commit on its branch is already on the base
-branch — the same condition as its pull request having been merged. Nothing has to be
+branch, which is the same condition as its pull request having been merged. Nothing has to be
 marked done by hand.
 
 `wt clean` will not touch a `holds-work` or `leased` worktree, prints exactly what it
@@ -151,5 +151,5 @@ All worktrees share one `.git`, so a single `git fetch` in any of them updates
 same branch out twice, so two sessions cannot collide on one branch.
 
 `wt claim` refreshes automatically when the tree is clean and behind. It never rebases a
-dirty tree — it reports and leaves the work alone. Nothing in `wt` pushes, opens a PR or
+dirty tree, so it just reports and leaves the work alone. Nothing in `wt` pushes, opens a PR or
 merges anything.

@@ -12,7 +12,7 @@ import type { MsuLayer, MsuTrackDef } from '@shared/types/msu-manifest';
 
 interface ResolvedLayer {
   layer: MsuLayer;
-  /** Position in the track's layer list — the PRNG stream is derived from it. */
+  /** Position in the track's layer list. The PRNG stream is derived from it. */
   index: number;
   /** Decoded buffers in the layer's own file order. Files that failed to load are dropped. */
   buffers: AudioBuffer[];
@@ -27,12 +27,12 @@ const totalSeconds = (buffers: AudioBuffer[]): number =>
 const longestSeconds = (buffers: AudioBuffer[]): number =>
   buffers.reduce((max, b) => Math.max(max, b.duration), 0);
 
-/** Sorted, de-duplicated interval offsets — the same normalisation the interval scheduler does. */
+/** Sorted, de-duplicated interval offsets, the same normalisation the interval scheduler does. */
 const intervalPoints = (atSeconds: number[]): number[] =>
   [...new Set(atSeconds.filter((s) => Number.isFinite(s) && s >= 0))].sort((a, b) => a - b);
 
 /**
- * The crossfade a `loop` layer asked for, floored at zero and otherwise taken as written — the
+ * The crossfade a `loop` layer asked for, floored at zero and otherwise taken as written. The
  * same reading ../schedulers/loop-scheduler.ts does. MAX_CROSSFADE_SECONDS is the author-facing
  * ceiling the editor validates against, deliberately not re-applied here: clamping a manifest the
  * live engine would honour as-is is exactly how a render stops matching its preview.
@@ -51,7 +51,7 @@ const crossfadeWindowSeconds = (durationSeconds: number, crossfade: number): num
  * One full pass of a `loop` layer's pool: a single file's length, or every file back to back.
  *
  * With a crossfade the passes overlap, so a cycle is SHORTER than the sum of its files by one
- * window per file — each pass hands over `window` seconds before it ends. Getting this wrong
+ * window per file, so each pass hands over `window` seconds before it ends. Getting this wrong
  * would leave the render window longer than a cycle, and the flattened stream would then repeat
  * material that the loop point has already brought back around.
  */
@@ -82,7 +82,7 @@ const spanSeconds = (resolved: ResolvedLayer): number => {
 
 /**
  * The loop layer whose pass is longest. It is the one whose own loop point can survive the
- * flatten (see flatten-track), so it is picked out rather than just measured.
+ * flatten (see flatten-track), so it is picked out instead of just measured.
  */
 const dominantLoopLayer = (layers: ResolvedLayer[]): ResolvedLayer | null => {
   let best: ResolvedLayer | null = null;

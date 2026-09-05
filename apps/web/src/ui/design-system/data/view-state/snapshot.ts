@@ -3,14 +3,14 @@
  * Memento: a plain, serialisable snapshot of everything a user arranged, and
  * the reverse translation back into the state the table and filter bar accept.
  *
- * Plain data in, plain data out — nothing here knows a disk or a store exists.
+ * Plain data in, plain data out. Nothing here knows a disk or a store exists.
  * Binding a snapshot to storage is somebody else's job, which is what keeps the
  * composites reusable in a surface that wants purely-ephemeral layout.
  */
 import type { FilterClause } from '../filter/clause';
 import type { SortEntry, TableColumn, TableState } from '../table/types';
 
-/** Bump to discard stale snapshots rather than migrate them. */
+/** Bump to discard stale snapshots instead of migrating them. */
 const SNAPSHOT_VERSION = 1;
 
 type DetailTab = 'json' | 'ts' | 'editor';
@@ -22,7 +22,7 @@ interface ViewSnapshot {
   groupBy: readonly string[];
   filters: readonly FilterClause[];
   tab?: DetailTab;
-  /** Whether this collection's detail pane is folded away — see CollapsibleDetail. */
+  /** Whether this collection's detail pane is folded away. See CollapsibleDetail. */
   collapsed?: boolean;
 }
 
@@ -86,7 +86,7 @@ const isArrayOfObjects = (value: unknown): boolean =>
 
 /**
  * Snapshots arrive from untrusted JSON, and a wrong-shaped one must be dropped
- * rather than crash a screen. A version mismatch fails here by design.
+ * instead of crashing a screen. A version mismatch fails here by design.
  */
 const isViewSnapshot = (value: unknown): value is ViewSnapshot => {
   if (typeof value !== 'object' || value === null) return false;

@@ -3,7 +3,7 @@
  * Decides which sprites gating the current room's clear can be killed with
  * the inventory on hand. A sprite gates the clear unless its flags4 carries
  * the room-clear-exempt bit (Sprite_CheckIfRoomIsClear, sprite.c). Damage
- * class 0 is a REAL class resolved through damageByClass like any other — a
+ * class 0 is a REAL class resolved through damageByClass like any other. A
  * weapon whose damage class happens to read 0 there is not automatically
  * harmless, and one whose class reads nonzero is not automatically lethal;
  * both are runtime lookups, never assumed.
@@ -41,7 +41,7 @@ interface RoomThreat {
   clearable: boolean;
 }
 
-/** Column/row that splits a room's quadrant grid — every indoor room screen is
+/** Column/row that splits a room's quadrant grid. Every indoor room screen is
  *  32x32 tiles, and the game never divides one anywhere else. */
 const SECTION_SPLIT_LINE = 32;
 
@@ -57,7 +57,7 @@ const SECTION_SPLIT_LINE = 32;
  * neither guard can be struck from the other side.
  *
  * Sprites are counted per section, not per room slot. Inside a section the rule
- * stays absolute — every gating sprite there has to be killable, so this cannot
+ * stays absolute: every gating sprite there has to be killable, so this cannot
  * clear a room off one convenient kill while another enemy stands beside it.
  *
  * `split` missing, or split on neither axis (a plain single-section room), means
@@ -97,7 +97,7 @@ const evaluateSprite = (
  * For every sprite that gates the current room's clear, decide whether the
  * inventory can kill it from a standable tile. `combat` missing, or carrying
  * null tables, means combat reasoning is unavailable (the developer-tools
- * combat gate is off) — every gating sprite then reads as not killable.
+ * combat gate is off), and every gating sprite then reads as not killable.
  */
 const evaluateRoomThreat = (params: {
   sprites: SimSprite[];

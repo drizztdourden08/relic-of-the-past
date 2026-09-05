@@ -1,10 +1,8 @@
 /* @layer renderer-components @kind style */
 
-/*
- * Settings content panel. The chrome (sidebar + search + scroll panel) is now
- * the shared SettingsShell + SideNav composites — these styles only cover the
- * section / subsection / option-group content rendered inside the panel.
- */
+/* Settings content panel. The chrome (sidebar + search + scroll panel) is the shared
+   SettingsShell + SideNav composites; these styles only cover the section / subsection /
+   option-group content inside the panel. */
 
 .settings-layout__sections {
   display: flex;
@@ -62,8 +60,8 @@
   overflow: hidden;
 }
 
-/* Every direct slot in the group — a plain row, or a run of locked rows wrapped in one
-   DisabledOverlay — gets the same divider rhythm regardless of which it is. */
+/* Every direct slot in the group (a plain row, or a run of locked rows wrapped in one
+   DisabledOverlay) gets the same divider rhythm. */
 .settings-layout__group > * + * {
   border-top: 1px solid var(--c-border);
 }
@@ -72,13 +70,13 @@
   padding: var(--space-md) var(--space-lg);
 }
 
-/* Dividers between rows stacked *inside* a locked run (same class, deeper nesting) — the
+/* Dividers between rows stacked *inside* a locked run (same class, deeper nesting). The
    `> * + *` rule above only sees the run's own wrapper as one top-level slot. */
 .settings-layout__row + .settings-layout__row {
   border-top: 1px solid var(--c-border);
 }
 
-/* Search-palette deep-link landing — a brief gold pulse on the row it jumped to. */
+/* Search-palette deep-link landing pulses gold briefly on the row it jumped to. */
 .is-search-hit {
   animation: settings-search-hit 1.2s ease-out;
 }

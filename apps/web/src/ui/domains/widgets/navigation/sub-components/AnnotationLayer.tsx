@@ -28,7 +28,7 @@ const IL: Record<string, CSSProperties> = {
  * The minimap half of ScreenAnnotations: a dot per annotated tile plus the check
  * tally for the screen, so the small map shows the same mechanics as the overlay
  * instead of only reachability. Screen-wide kinds (room tags) have no tile and
- * are skipped — they live in the widget panel.
+ * are skipped, since they live in the widget panel.
  */
 const AnnotationLayer = ({ annotations, cellLeft, cellTop, cellW, cellH }: Props) => {
   const hiddenKinds = useNavigationOverlayStore((s) => s.hiddenKinds);
@@ -45,7 +45,7 @@ const AnnotationLayer = ({ annotations, cellLeft, cellTop, cellW, cellH }: Props
         return (
           <Box
             key={`anno-${i}-${item.kind}`}
-            title={`${item.label}${item.detail ? ` — ${item.detail}` : ''}`}
+            title={`${item.label}${item.detail ? ` - ${item.detail}` : ''}`}
             style={{
               position: 'absolute',
               left: cellLeft + (item.tile.col / 64) * cellW - size / 2,

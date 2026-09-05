@@ -2,7 +2,7 @@
 /**
  * Covers the step while its controller's layout is being read. The read needs
  * SDL brought back up and taken down again, which takes long enough to notice,
- * so each stage is named rather than left as an unexplained wait.
+ * so each stage is named, not left as an unexplained wait.
  */
 import { Box } from '../../../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../../../design-system/primitives/Text';

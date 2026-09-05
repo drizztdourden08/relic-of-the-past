@@ -20,8 +20,8 @@
 /*
  * The list is the QUERY CONTAINER for its rows. Every row carries the same fixed
  * fact columns, so whether there is room left for the line's own words is a
- * property of the list's width and not of any one row — see
- * `EntryCardCollapsed.css`.
+ * property of the list's width and not of any one row (see
+ * `EntryCardCollapsed.css`).
  */
 .dialogue-tab__scroll {
   container: entry-list / inline-size;

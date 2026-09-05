@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind hook */
 /**
- * useDeviceSync — detect and track connected input devices.
+ * Detect and track connected input devices.
  *
- * `devices`/`filteredDevices` stay sourced from InputManager unchanged —
- * drag/drop preset assignment, haptics, and the display-mappings lookup all
+ * `devices`/`filteredDevices` stay sourced from InputManager unchanged, because
+ * drag/drop preset assignment, haptics and the display-mappings lookup all
  * key off that shape. `controllerGroups` is the newer, additional SDL3
  * device-list surface the device column now renders gamepads from (ready/
  * unavailable status, adapter grouping, capabilities), sourced separately

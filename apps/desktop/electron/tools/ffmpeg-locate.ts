@@ -1,11 +1,8 @@
 /* @layer electron-main @kind logic */
 /**
- * Find a usable ffmpeg/ffprobe pair without installing anything.
- *
- * Two places are searched, in order of ownership: the managed install under the app's
- * data root, then — on a platform we do not download for — whatever is already on PATH.
- * A system copy is used as-is and never verified against a pinned checksum, because it
- * is the user's own (or their distro's) and we did not fetch it.
+ * Find a usable ffmpeg/ffprobe pair without installing anything: the managed install
+ * under the app's data root, then (on a platform we do not download for) PATH. A
+ * system copy is never checksum-verified; it is the user's own and we did not fetch it.
  */
 import { access } from 'fs/promises';
 import { constants } from 'fs';
@@ -27,7 +24,7 @@ const isExecutable = async (path: string): Promise<boolean> => {
 const bothExecutable = async (bins: FfmpegBinaries): Promise<boolean> =>
   (await isExecutable(bins.ffmpegPath)) && (await isExecutable(bins.ffprobePath));
 
-/** First PATH entry holding BOTH binaries — a dir with only one of them is no use. */
+/** First PATH entry holding BOTH binaries. A dir with only one of them is no use. */
 const findOnPath = async (): Promise<FfmpegBinaries | null> => {
   for (const dir of (process.env.PATH ?? '').split(delimiter).filter(Boolean)) {
     const bins = {

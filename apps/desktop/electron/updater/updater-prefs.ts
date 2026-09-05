@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 /**
- * The one updater preference: whether pre-releases are offered. App-level rather than
+ * The one updater preference is whether pre-releases are offered. It is app-level, not
  * per-profile, because it decides what the app installs, not how it plays.
  */
 import { readFileSync, writeFileSync, mkdirSync } from 'fs';

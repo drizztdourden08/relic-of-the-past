@@ -1,12 +1,9 @@
 /* @layer tests @kind test */
 /**
- * Editing a tag record's own fields has no consistency check beyond the
- * "mint a new tag from a picker" shortcut's — `create-tag.ts`'s
- * `isTagKey` gate never runs against a straight edit of an existing
- * `TagRecord`'s `namespace`/`value`/`name`. `writeTag` (`record-writers.ts`)
- * is the one save path every tag edit funnels through, so the check belongs
- * there: `name` must read `namespace:value`, matching this record's own two
- * halves, or the save is refused before it ever reaches the write channel.
+ * `create-tag.ts`'s `isTagKey` gate never runs against a straight edit of a
+ * `TagRecord`. `writeTag` (`record-writers.ts`) is the one save path every tag
+ * edit goes through, so the check lives there: `name` must read
+ * `namespace:value`, or the save is refused before the write channel.
  */
 import {
   afterEach, beforeEach, describe, expect, it, vi,

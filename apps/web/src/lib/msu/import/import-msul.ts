@@ -1,10 +1,10 @@
 /* @layer renderer-lib @kind logic */
 /**
- * Reads a `.msul` pack back into a manifest and its files — the exact inverse of
+ * Reads a `.msul` pack back into a manifest and its files, the exact inverse of
  * ../export/export-msul, so a pack exported and re-imported is the pack you started with.
  *
  * Every failure here is something a user did (picked the wrong file, hand-edited a manifest,
- * carries a pack from a newer build), so each one throws a message written for them rather than
+ * carries a pack from a newer build), so each one throws a message written for them instead of one written
  * for a log. The validation is spelled out instead of delegated to storage's `parseManifest`,
  * which collapses every cause into null and could only produce one generic message.
  */
@@ -32,7 +32,7 @@ const parsePackJson = (text: string): MsuPackManifest => {
   try {
     parsed = JSON.parse(text);
   } catch {
-    throw new Error(`This pack's ${MSUL_MANIFEST_NAME} is not valid JSON — the file may be damaged.`);
+    throw new Error(`This pack's ${MSUL_MANIFEST_NAME} is not valid JSON. The file may be damaged.`);
   }
 
   const version = (parsed as { version?: unknown } | null)?.version;
@@ -49,14 +49,14 @@ const parsePackJson = (text: string): MsuPackManifest => {
 
 const readMsulPack = async (bytes: Uint8Array): Promise<MsulPack> => {
   if (!isZip(bytes)) {
-    throw new Error('That file is not a layered MSU pack — a .msul file is an archive, and this one is not.');
+    throw new Error('That file is not a layered MSU pack. A .msul file is an archive, and this one is not.');
   }
 
   let entries: ArchiveEntry[];
   try {
     entries = await unzip(bytes);
   } catch {
-    throw new Error('This pack could not be opened — the archive appears to be incomplete or damaged.');
+    throw new Error('This pack could not be opened. The archive appears to be incomplete or damaged.');
   }
 
   const manifestEntry = entries.find((entry) => entry.name === MSUL_MANIFEST_NAME);

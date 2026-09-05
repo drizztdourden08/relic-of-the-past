@@ -31,10 +31,10 @@ const resolveRomBytes = async (bytes: Uint8Array): Promise<Uint8Array> => {
 
 const extractFromBytes = async (romBytes: Uint8Array, code: string): Promise<Result> => {
   try {
-    emit('decode', undefined, undefined, 'Decoding dialogue…');
+    emit('decode', undefined, undefined, 'Decoding dialogue...');
     const pack = await runOnWorker<ExtractedPack>({ op: 'language', romBytes, code });
     await languages.writePack(files(), pack);
-    emit('extract', undefined, undefined, 'Baking into assets…');
+    emit('extract', undefined, undefined, 'Baking into assets...');
     await recompileAll();
     emit('done');
     return { success: true };
@@ -71,7 +71,7 @@ const deleteLanguage = async (code: string): Promise<void> => { await languages.
 const getLanguageSet = (id: string): Promise<LanguageSet | null> => languages.getSet(files(), id);
 
 // A whole-set overwrite, then a rebake so the edit reaches the blob the core
-// reads at boot — expensive, so callers debounce rather than save per keystroke.
+// reads at boot are expensive, so callers debounce instead of saving per keystroke.
 const saveLanguageSet = async (set: LanguageSet): Promise<void> => {
   await languages.saveSet(files(), set);
   await recompileAll();
@@ -79,8 +79,8 @@ const saveLanguageSet = async (set: LanguageSet): Promise<void> => {
 
 const listLanguageSets = (): Promise<LanguageSetSummary[]> => languages.list(files());
 
-// The set's glyph tiles plus its per-glyph advance table. A read-only lookup —
-// nothing here rebakes, so a preview can ask for it freely.
+// The set's glyph tiles plus its per-glyph advance table. Nothing here rebakes,
+// so a preview can ask for it freely.
 const getLanguageSetFont = (id: string): Promise<SetFontBytes | null> => languages.getSetFont(files(), id);
 
 // Creating and duplicating both add a set the core can select, so both rebake.

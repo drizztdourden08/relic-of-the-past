@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 /**
- * BottlesTab — Manage 4 bottle slots with content selection.
+ * Manage 4 bottle slots with content selection.
  */
 import { useState } from 'react';
 import { Select, Box, Text, Button } from '../../../../design-system/primitives';

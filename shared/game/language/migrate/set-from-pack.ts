@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
  * Legacy `LanguagePack` (shared/types/language.ts) to editable `LanguageSet`
- * migration — the one-time conversion a translation-studio session runs when
+ * migration. The one-time conversion a translation-studio session runs when
  * it opens a language that was only ever extracted, never edited. Pure: no
  * file I/O, no ROM access. The caller (the storage layer) owns reading the
  * pack in and writing the resulting set out.
@@ -15,7 +15,7 @@ const kPauseLabelKeys: PauseLabelKey[] = [
   'item', 'equipment', 'dungeon-item', 'crystals', 'pendants', 'do',
 ];
 
-/** `'dungeon-item'` -> `'DUNGEON ITEM'` — a placeholder until real data seeds it. */
+/** `'dungeon-item'` -> `'DUNGEON ITEM'`, a placeholder until real data seeds it. */
 const defaultLabel = (key: PauseLabelKey): string => key.replace(/-/g, ' ').toUpperCase();
 
 /**

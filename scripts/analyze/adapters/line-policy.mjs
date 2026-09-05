@@ -2,8 +2,8 @@
  * @layer tooling-scripts
  * @kind logic
  *
- * Universal per-kind line-count policy — the one rule that applies to EVERY
- * language (CSS, C, TS, …), not just eslint-able files. Reads caps from policy.mjs.
+ * Per-kind line-count policy, applied to every language (CSS, C, TS, ...), not just
+ * eslint-able files. Reads caps from policy.mjs.
  */
 import { capFor } from '../policy.mjs';
 

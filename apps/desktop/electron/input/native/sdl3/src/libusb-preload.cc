@@ -1,21 +1,14 @@
 /* @layer electron-main @kind native */
 // Makes SDL able to find libusb at runtime.
 //
-// SDL loads libusb lazily, by bare filename, through SDL_LoadObject. On
-// Windows that becomes a plain LoadLibrary, which searches the directory of
-// the running EXECUTABLE plus the system paths. It does not search the
-// directory a dynamically loaded module was itself loaded from. Our library
-// ships next to this addon, not next to electron.exe, so SDL never found it.
+// SDL loads libusb lazily by bare filename (SDL_LoadObject). On Windows that is
+// LoadLibrary, which searches the EXECUTABLE's directory, not the directory a
+// loaded module came from. Our library ships beside this addon, not beside
+// electron.exe, so SDL never found it and silently ignored every device that
+// needs libusb; those then look held by another application.
 //
-// The consequence was silent and expensive: with no libusb, SDL takes its
-// "libusb unavailable" branch and ignores every device that requires libusb
-// to talk to. Those devices then appear nowhere at all, neither as gamepads
-// nor in SDL_hid_enumerate, and the failure looks exactly like the device
-// being held by another application.
-//
-// Loading it once here by absolute path fixes it: the OS keeps modules in a
-// table keyed by name, so SDL's later by-name request resolves to the module
-// we already loaded. This must run before SDL initializes anything.
+// Loading it once here by absolute path fixes it: the OS keys loaded modules by
+// name, so SDL's later by-name request resolves. Must run before SDL initializes.
 #include "sdl-thread.h"
 
 #ifdef _WIN32
@@ -29,9 +22,8 @@
 namespace {
 
 #ifndef _WIN32
-// Directory this addon binary was loaded from, found by asking the loader
-// which file a symbol inside us came from. The process path would name the
-// host executable instead, which is somewhere else entirely.
+// Directory this addon was loaded from, via a symbol inside us. The process
+// path would name the host executable instead.
 bool OwnModuleDirectoryPosix(std::string* out) {
   Dl_info info = {};
   if (dladdr(reinterpret_cast<const void*>(&OwnModuleDirectoryPosix), &info) == 0 || info.dli_fname == nullptr) {
@@ -48,9 +40,8 @@ bool OwnModuleDirectoryPosix(std::string* out) {
 #endif
 
 #ifdef _WIN32
-// Directory this addon binary was loaded from. Derived from an address inside
-// our own module rather than from the process path, which would point at the
-// host executable instead.
+// Directory this addon was loaded from, via an address inside our own module.
+// The process path would point at the host executable instead.
 bool OwnModuleDirectory(std::wstring* out) {
   HMODULE self = nullptr;
   if (!GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
@@ -77,10 +68,8 @@ bool OwnModuleDirectory(std::wstring* out) {
 
 }  // namespace
 
-// Returns false when the library could not be loaded from beside the addon.
-// That is not fatal: SDL still runs, and every controller that speaks plain
-// HID keeps working. Only the devices needing a bulk-endpoint handshake are
-// lost, so the caller reports it rather than refusing to start.
+// False when the library could not be loaded. Not fatal: plain HID controllers
+// keep working, only bulk-endpoint devices are lost, so the caller reports it.
 bool PreloadLibusb() {
 #ifdef _WIN32
   std::wstring directory;
@@ -90,12 +79,9 @@ bool PreloadLibusb() {
   const std::wstring candidate = directory + L"libusb-1.0.dll";
   return LoadLibraryW(candidate.c_str()) != nullptr;
 #else
-  // The addon's own RPATH does not help here: SDL is the one calling dlopen,
-  // so the loader consults SDL's search path, not ours, and SDL sits in this
-  // directory without an RPATH of its own. Loading the file by absolute path
-  // first is what makes SDL's later by-name request resolve, exactly as on
-  // Windows. Once loaded, the loader matches the request against the library
-  // already in memory under that name.
+  // The addon's RPATH does not help: SDL calls dlopen, so the loader consults
+  // SDL's search path, and SDL has no RPATH of its own. Loading by absolute path
+  // first makes the later by-name request resolve, exactly as on Windows.
   std::string directory;
   if (!OwnModuleDirectoryPosix(&directory)) {
     return false;
@@ -105,8 +91,7 @@ bool PreloadLibusb() {
 #else
   const std::string candidate = directory + "libusb-1.0.so.0";
 #endif
-  // RTLD_GLOBAL so the symbols are available to SDL when it resolves them
-  // against this image rather than loading a second copy.
+  // RTLD_GLOBAL so SDL resolves symbols against this image instead of a second copy.
   return dlopen(candidate.c_str(), RTLD_LAZY | RTLD_GLOBAL) != nullptr;
 #endif
 }

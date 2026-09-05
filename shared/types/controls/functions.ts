@@ -69,10 +69,10 @@ interface FunctionMapping {
   sourcePid?: string | null;
 }
 
-// Every default is deliberately unbound ({ type: 'none' }): the project no longer inherits snesrev's
-// legacy defaults, so every binding is user-assigned through the controls UI. This also fixes a real
-// collision — cheat-health used to default to KeyW, the same physical key the keyboard gameplay preset
-// assigns to the SNES Y button.
+// Every default is deliberately unbound ({ type: 'none' }). The project no longer inherits snesrev's
+// legacy defaults, so every binding is user-assigned through the controls UI. That also fixes a real
+// collision, because cheat-health used to default to KeyW, the same physical key the keyboard
+// gameplay preset assigns to the SNES Y button.
 const DEFAULT_FUNCTION_MAPPINGS: FunctionMapping[] = [
   { action: 'save-state-1', binding: { type: 'none' }, icon: null },
   { action: 'save-state-2', binding: { type: 'none' }, icon: null },

@@ -1,11 +1,11 @@
 <!-- @layer docs @kind doc -->
 # Quick Start
 
-Get playing in about five minutes. You'll need your own legally obtained US copy of *A Link to the Past* — the app ships no game data.
+Get playing in about five minutes. You'll need your own legally obtained US copy of *A Link to the Past*. The app ships no game data.
 
 ## 1 · Install
 
-Download the latest build for your platform from the [Releases](https://github.com/drizztdourden08/relic-of-the-past/releases) page — Windows portable or installer `.exe`, macOS `.dmg`, or Linux `.AppImage`/`.deb` — and launch it.
+Download the latest build for your platform from the [Releases](https://github.com/drizztdourden08/relic-of-the-past/releases) page (Windows portable or installer `.exe`, macOS `.dmg`, or Linux `.AppImage`/`.deb`) and launch it.
 
 Full details: [Installation](installation.md).
 
@@ -17,7 +17,7 @@ More on this: [Importing a ROM & Assets](importing-a-rom.md).
 
 ## 3 · Create a profile
 
-Choose **Create Profile**, give it a name, pick your ROM, and choose a language — optionally an MSU-1 music pack too. A profile is a self-contained space for your saves, settings, and controls.
+Choose **Create Profile**, give it a name, pick your ROM, choose a language, and optionally add an MSU-1 music pack. A profile is a self-contained space for your saves, settings, and controls.
 
 More on this: [Profiles](../user-guide/profiles.md).
 
@@ -29,9 +29,9 @@ Hit **Play**. The game runs right in the app window.
 |--------|-----|
 | Reveal the title bar | hover the top edge; it auto-hides while you play |
 | Open the menu | the hamburger icon, or `Escape` |
-| Quick save | hold the save button (Select by default) — see [Save States](../user-guide/save-states.md) |
+| Quick save | hold the save button (Select by default), covered in [Save States](../user-guide/save-states.md) |
 | Mute | the speaker icon in the title bar |
-| Open a widget | menu → Widgets — see the [overview](../widgets/overview.md) |
+| Open a widget | menu → Widgets, listed in the [overview](../widgets/overview.md) |
 
 ## Next steps
 

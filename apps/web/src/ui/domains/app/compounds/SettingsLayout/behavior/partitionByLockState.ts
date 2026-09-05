@@ -2,7 +2,7 @@
 /**
  * Splits a subsection's items into contiguous runs of locked vs. unlocked, so a block of
  * neighbouring locked items gets ONE overlay (one message, one "Open Settings" button) instead
- * of each item wearing its own — a lone locked item between unlocked ones still gets its own
+ * of each item wearing its own. A lone locked item between unlocked ones still gets its own
  * small overlay, but a whole locked block reads as a single covered region.
  */
 import type { SettingItem } from '../SettingsLayout.type';

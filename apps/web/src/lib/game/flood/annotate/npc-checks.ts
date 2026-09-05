@@ -11,7 +11,7 @@ import { npcConfigForSprite } from '@shared/game/simulation';
 import type { CheckId } from '@shared/game/data';
 
 interface NpcCheck {
-  /** Which check this is — the identity; `name` is for drawing only. */
+  /** Which check this is, the identity. `name` is for drawing only. */
   checkId: CheckId;
   name: string;
   done: boolean;
@@ -22,7 +22,7 @@ interface NpcCheck {
  * Which check this sprite gives, using the SAME matcher the simulator triggers
  * through. This had its own copy of the rule, so once the simulator learned that
  * a sprite type is not unique across the two worlds the widget would have gone on
- * labelling the light-world flute boy as the dark-world stump — showing a check
+ * labelling the light-world flute boy as the dark-world stump, showing a check
  * the run correctly refuses to take, which is the one thing the widget must never
  * do.
  */

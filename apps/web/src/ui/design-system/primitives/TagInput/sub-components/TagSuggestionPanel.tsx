@@ -4,7 +4,7 @@
  * while the typed text matches nothing, commits it as a brand-new one.
  *
  * Every row swallows its own mousedown so the click never blurs the entry
- * first — the panel's outside-click guard reads mousedown too, and losing focus
+ * first. The panel's outside-click guard reads mousedown too, and losing focus
  * mid-click would close the list out from under the pointer.
  */
 import { Portal } from '../../Portal';

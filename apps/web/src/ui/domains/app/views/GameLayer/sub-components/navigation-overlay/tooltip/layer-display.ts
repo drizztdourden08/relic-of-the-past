@@ -14,15 +14,8 @@ const getLockedLayer = (result: FloodFillResult): 0 | 1 => {
 };
 
 /**
- * The layer a ONE-COLUMN tooltip is describing.
- *
- * The reader needs this on every tile, not only where both layers happen to
- * carry content: "free and reachable" means something different on a walkway
- * than on the floor beneath it, and without the label a single-column tooltip
- * silently drops the distinction. A tile reached on exactly one layer is
- * described by that layer; anything else falls back to the layer the room
- * itself starts on, which is also the only sensible answer for a surface with
- * no second layer at all.
+ * The layer a ONE-COLUMN tooltip describes. A tile reached on exactly one layer is described by
+ * that layer; anything else falls back to the layer the room starts on.
  */
 const getSingleLayer = (
   result: FloodFillResult,
@@ -32,8 +25,7 @@ const getSingleLayer = (
     if (reach.layer0Reach && !reach.layer1Reach) return 0;
     if (reach.layer1Reach && !reach.layer0Reach) return 1;
   }
-  // Outdoors there is one surface and it is the ground, whatever the walk's
-  // internal start layer happens to be numbered.
+  // Outdoors the one surface is the ground, whatever the walk's start layer is numbered.
   if (!result.indoors) return 1;
   return result.startLayer ?? 0;
 };

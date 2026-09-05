@@ -1,10 +1,5 @@
 /* @layer renderer-app @kind component */
-/**
- * DesignGallery — a custom in-app "storybook", built FROM the design system:
- * the chrome is the real SettingsShell + SideNav, and every story renders the
- * actual DS primitives/composites with example usage. Reachable from the
- * title-bar Advanced menu.
- */
+// In-app "storybook" built FROM the design system; reachable from the title-bar Advanced menu.
 import { useState, useMemo } from 'react';
 import { Box, Text } from '../../../../design-system/primitives';
 import { SettingsShell } from '../../../../design-system/composites/SettingsShell';
@@ -27,7 +22,7 @@ const DesignGallery = () => {
   const header = <Text className="dg-brand">Design Language</Text>;
 
   return (
-    <SettingsShell className="dg-shell" nav={{ groups: navGroups, activeId, onSelect: setActiveId, searchable: true, searchPlaceholder: 'Filter…', header }}>
+    <SettingsShell className="dg-shell" nav={{ groups: navGroups, activeId, onSelect: setActiveId, searchable: true, searchPlaceholder: 'Filter...', header }}>
       <Box className="dg-canvas-head">
         <Text className="dg-canvas-head__group">{active.group}</Text>
         <Text as="h1" className="dg-canvas-head__title">{active.label}</Text>

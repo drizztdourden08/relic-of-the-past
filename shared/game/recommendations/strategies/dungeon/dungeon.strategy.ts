@@ -1,11 +1,11 @@
 /* @layer shared-game @kind logic */
 /**
- * The `dungeon` comparison strategy — replaces the `dungeon-rooms.ts`
+ * The `dungeon` comparison strategy. It replaces the `dungeon-rooms.ts`
  * detector (deleted): the loaded room resolves to a dungeon whose
  * `roomScreenIds` does not list this screen.
  *
  * `subjects` resolves to at most the ONE dungeon the currently loaded room's
- * own palace index names — no other dungeon record has anything to say about
+ * own palace index names. No other dungeon record has anything to say about
  * this room, so there is nothing else to compare. No new observation was
  * needed for this: the live palace index the game reports is already carried
  * on `liveGameId` (screen-identity's own ground truth for the same fact).

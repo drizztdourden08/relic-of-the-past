@@ -1,9 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * ControllerDisconnectOverlay — shown when a device the active profile maps
- * disconnects (or is missing at startup). Blocks input and shows how to recover,
- * with the actual bound shortcuts rendered as icons. Double-click resumes.
- */
 
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../design-system/primitives/Text';

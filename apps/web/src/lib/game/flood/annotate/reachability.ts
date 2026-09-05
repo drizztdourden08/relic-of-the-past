@@ -5,7 +5,7 @@
  * The Secret Passage is the case that forced this: the uncle stands in the
  * corridor, the flood correctly stops at him, but the chest behind him was still
  * listed as an available check. A thing the run cannot reach must not read as
- * available — the panel now says so instead of silently promising it.
+ * available, so the panel now says so instead of silently promising it.
  *
  * A feature's own tile is often solid (a chest IS a wall tile, a door IS the
  * doorway), so reachability is judged over the tiles AROUND it, not the tile
@@ -19,7 +19,7 @@ const TOUCH = 2;
 
 /**
  * Screen-wide facts carry a placeholder tile (0,0) because they describe the whole
- * room, so reachability says nothing about them — judging them would label every
+ * room, so reachability says nothing about them. Judging them would label every
  * kill-gate room "unreachable" purely because tile 0,0 is a wall.
  */
 const SCREEN_WIDE: ReadonlySet<ScreenAnnotation['kind']> = new Set(['kill-trigger']);
@@ -43,8 +43,8 @@ const reachableNear = (reachable: readonly ReachState[][], row: number, col: num
 
 /**
  * Rewrites `state` to 'blocked' for anything the flood cannot touch. Physical
- * kinds keep their open/shut state — a shut door being unreachable is already
- * implied — but checks flip to 'blocked' so the tally and the panel agree.
+ * kinds keep their open/shut state, since a shut door being unreachable is already
+ * implied, but checks flip to 'blocked' so the tally and the panel agree.
  */
 const markUnreachable = (items: ScreenAnnotation[], reachable?: readonly ReachState[][]): void => {
   if (!reachable) return;

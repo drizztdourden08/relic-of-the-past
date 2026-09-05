@@ -6,7 +6,7 @@
 - Node.js ≥ 24 (see [`.nvmrc`](https://github.com/drizztdourden08/relic-of-the-past/blob/master/.nvmrc)).
 - A legally obtained *A Link to the Past* ROM, supplied at runtime and kept out of commits.
 - Emscripten SDK (Windows; the repo expects it at `E:\GameProjects\emsdk` or `$EMSDK`). The WASM core
-  is gitignored rather than committed. `npm run dev` / `npm run build` auto-build it on first run, and
+  is gitignored, not committed. `npm run dev` / `npm run build` auto-build it on first run, and
   again whenever C under `core/` changes, via the `ensure-wasm` pre-step. See
   [Building the WASM Core](building-wasm.md).
 
@@ -15,13 +15,13 @@
 ```bash
 npm install          # install deps; auto-fetches the Electron binary (ensure-electron)
 npm run dev          # electron-vite dev server + Electron (auto-builds WASM if missing/stale)
-npm run build        # production build (electron-vite) — also auto-builds WASM
+npm run build        # production build (electron-vite), auto-builds WASM too
 npm run build:win    # packaged build (see package.json for :mac / :linux)
 ```
 
 `npm install` runs `ensure-electron` (re-fetches Electron's native binary if a bare `node_modules`
-left it out), and `dev`/`build` run `ensure-wasm` first — a fast mtime check that rebuilds the WASM
-core only when it's missing or a C source changed. Force a WASM rebuild with `npm run ensure-wasm`.
+left it out), and `dev`/`build` run `ensure-wasm` first. That is a fast mtime check, and it rebuilds the
+WASM core only when it's missing or a C source changed. Force a WASM rebuild with `npm run ensure-wasm`.
 
 For testing, always launch so the app never steals focus or makes noise:
 
@@ -79,7 +79,7 @@ repository and are copied into place on demand.
 
 The private repository is a **sibling checkout**, not something this repository clones.
 Put it beside this one as `../rotp-vault`, or point `ROTP_VAULT_DIR` at it. Inside it,
-one folder — `tree/` — mirrors this repository's own paths, so a file at
+the `tree/` folder mirrors this repository's own paths, so a file at
 `tree/shared/game/data/records/areas.ts` lands at `shared/game/data/records/areas.ts`.
 The path is the whole mapping; there is nothing else to configure, and anything the
 vault keeps outside `tree/` is never touched.
@@ -92,11 +92,11 @@ Sync runs **both ways**. It indexes both sides by content, compares them against
 state recorded by the last run, and applies every change that is unambiguous: a file
 edited only here is written to the vault, a file edited only there is written to your
 checkout, and a deletion on either side is carried across. Anything edited on *both*
-sides since the last sync is a conflict — reported, and left alone. Writes into the
+sides since the last sync is a conflict, so it is reported and left alone. Writes into the
 vault are committed there on its current branch; pushing them onward is left to you.
 
 It also runs automatically after `npm install`, and is a no-op with a single line of
-output when you have no access — it never fails a build. To see what would change
+output when you have no access, and it never fails a build. To see what would change
 without writing anything:
 
 ```bash

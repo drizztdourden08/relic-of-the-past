@@ -1,16 +1,10 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Per-record native-fact tests — whether a single CheckRecord's own `gameId`
- * reads as complete from the live WASM heap. Polling drives every detection
- * mode straight off the record's own fields, so a native fact shared by two
- * records (a boss and its prize flip the identical room bit; a couple of
- * standing/event pairs share a byte) resolves both — each record is tested
- * on its own, with no reverse lookup that could only hand back one winner.
- *
- * The one fact with no record-owned address at all is the "out of bed" read:
- * a direct WRAM offset used before the progress buffer is populated. That is
- * a genuine native-fact -> id translation with nothing to iterate, which is
- * exactly what the facade's reverse index stays for.
+ * Per-record native-fact tests: whether a CheckRecord's own `gameId` reads as complete from the
+ * live WASM heap. Each record is tested on its own fields, so a fact shared by two records (a
+ * boss and its prize flip the same room bit) resolves both; no reverse lookup that could only
+ * hand back one winner. The one fact with no record-owned address is the "out of bed" read (a
+ * direct WRAM offset), which is what the facade's reverse index stays for.
  */
 import { getCheckByGameId } from '@shared/game/data';
 import type { CheckGameId, CheckId } from '@shared/game/data';
@@ -28,7 +22,7 @@ const thresholdMet = (val: number, compare: 'gte' | 'eq' | 'any-of', value: numb
   return false;
 };
 
-/** Chest slot or direct room-mask bit — whichever the record's own gameId carries. */
+/** Chest slot or direct room-mask bit, whichever the record's own gameId carries. */
 const isRoomFactMet = (gameId: CheckGameId, readRoomWord: (roomId: number) => number): boolean => {
   const { roomId, chestIndex, mask } = gameId;
   if (roomId === undefined) return false;
@@ -43,7 +37,7 @@ const isOverworldFactMet = (gameId: CheckGameId, readOwByte: (owScreen: number) 
   return owScreen !== undefined && mask !== undefined && (readOwByte(owScreen) & mask) !== 0;
 };
 
-/** NPC progress-buffer bit or event threshold — whichever the record's own gameId carries. */
+/** NPC progress-buffer bit or event threshold, whichever the record's own gameId carries. */
 const isProgressFactMet = (gameId: CheckGameId, readProgByte: (bufferIndex: number) => number): boolean => {
   const { bufferIndex, mask, compare, value } = gameId;
   if (bufferIndex === undefined) return false;
@@ -52,19 +46,11 @@ const isProgressFactMet = (gameId: CheckGameId, readProgByte: (bufferIndex: numb
   return false;
 };
 
-/**
- * A save loaded past the first gift is out of bed even if the bed-state byte
- * no longer says so, so the progress indicator (buffer index 0) answers for
- * it too. True only for the one record that owns BED_STATE_BUFFER_INDEX.
- */
+/** A save loaded past the first gift is out of bed even if the bed-state byte no longer says so, so the progress indicator (buffer index 0) answers too. Only for the record owning BED_STATE_BUFFER_INDEX. */
 const isOutOfBedFallbackMet = (gameId: CheckGameId, readProgByte: (bufferIndex: number) => number): boolean =>
   gameId.bufferIndex === BED_STATE_BUFFER_INDEX && readProgByte(0) >= 1;
 
-/**
- * The out-of-bed CheckId, resolved from the raw native fact — this read has
- * no record-owned address (see file header), so it is the one legitimate use
- * of the reverse index left in polling.
- */
+/** The out-of-bed CheckId, resolved from the raw native fact: the one legitimate use of the reverse index left in polling (see file header). */
 const outOfBedCheckId = (): CheckId | undefined =>
   getCheckByGameId({ bufferIndex: BED_STATE_BUFFER_INDEX, compare: 'gte', value: 2 })?.id;
 

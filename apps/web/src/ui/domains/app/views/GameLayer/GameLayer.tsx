@@ -46,15 +46,12 @@ const GameLayer = (props: GameLayerProps) => {
   const [bufSize, setBufSize] = useState({ w: 512, h: 448 });
   const shadowDebugMode = useShadowEditorStore((s) => s.debugMode);
 
-  // Exclusive insets from widget layout (shrink game area when docked widgets claim space)
+  // Docked widgets shrink the game area.
   const exclusiveInsets = useExclusiveInsetsStore((s) => s.insets);
 
-  // Compute fitted size using shared hook (same formula for canvas + overlay)
   const fitSize = useCanvasFit({ containerRef, bufW: bufSize.w, bufH: bufSize.h, stretch, pixelPerfect });
 
-  // Apply fitted size to canvases (they need direct DOM style manipulation).
-  // Depends on `status` because SDL/Emscripten removes inline styles during
-  // WASM initialization — we must re-apply after it transitions to 'running'.
+  // Depends on `status`: SDL/Emscripten removes inline styles during WASM init, so re-apply once 'running'.
   useEffect(() => {
     const applyStyles = () => {
       const canvas = canvasRef.current;
@@ -74,7 +71,7 @@ const GameLayer = (props: GameLayerProps) => {
       }
     };
     applyStyles();
-    // Re-apply after a frame to override any SDL style manipulation during init
+    // Re-apply after a frame to override any SDL style manipulation during init.
     if (status === 'running') {
       const id = requestAnimationFrame(applyStyles);
       return () => cancelAnimationFrame(id);
@@ -93,7 +90,7 @@ const GameLayer = (props: GameLayerProps) => {
     return () => cancelAnimationFrame(id);
   }, [status, canvasKey]);
 
-  // Edge-glow + shadow-casting shader render loops (extracted to focused hooks)
+
   useEdgeGlowLoop({ status, canvasKey, canvasRef, fxCanvasRef, glowRendererRef, edgeEffectRef, setBufSize });
   useShadowCastingLoop({ status, canvasKey, canvasRef, shadowCanvasRef, shadowRendererRef, shadowProjectRef, shadowCastingRef });
 
@@ -104,15 +101,13 @@ const GameLayer = (props: GameLayerProps) => {
     }
   }, [assetData, status, start, configIni, profileId, canvasKey]);
 
-  // Force a new canvas element when returning to idle AFTER a game has run.
-  // Skip the initial mount — only needed after crash/reset.
+  // A new canvas element when returning to idle AFTER a game has run (crash/reset), not on first mount.
   useEffect(() => {
     if (status === 'idle' && hasStartedRef.current) {
       setCanvasKey((k) => k + 1);
     }
   }, [status]);
 
-  // ─── Controller disconnect pause/resume ───
   useEffect(() => {
     if (status !== 'running') return;
     const inputMgr = getInputManager();

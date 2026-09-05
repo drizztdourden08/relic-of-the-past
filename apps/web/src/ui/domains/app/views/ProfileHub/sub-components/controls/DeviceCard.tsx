@@ -1,10 +1,10 @@
 /* @layer renderer-components @kind data */
 /**
- * DeviceCard — shows a detected input device (gamepad or keyboard).
+ * Shows a detected input device (gamepad or keyboard).
  * Two-column layout: left = controller icon (acts as status light + click to
  * assign), right = label + capabilities. An unavailable gamepad shows the
  * same explain+remedy notice as the Input Calibration page, and can't be
- * dragged or clicked to assign — SDL3 never opened it, so there's no preset
+ * dragged or clicked to assign. SDL3 never opened it, so there's no preset
  * to bind against yet.
  */
 

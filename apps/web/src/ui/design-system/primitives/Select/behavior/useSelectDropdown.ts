@@ -9,7 +9,7 @@ const ROOM_FOR_DROP_DOWN = 200;
 /** Breathing space between the trigger and the panel. */
 const TRIGGER_GAP = 4;
 
-/** A narrow trigger still gets a readable list — mirrors `.select-content`'s min-width. */
+/** A narrow trigger still gets a readable list, mirroring `.select-content`'s min-width. */
 const MIN_PANEL_WIDTH = 180;
 
 const selectPositionFor = (rect: DOMRect) =>

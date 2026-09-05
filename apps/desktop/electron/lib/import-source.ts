@@ -1,8 +1,7 @@
 /* @layer electron-main @kind logic */
 /**
- * Resolve an import source (a local file path or a remote URL) to the set of
- * matching files inside it — transparently handling direct files, archives
- * (.zip/.7z/.rar) and URL downloads — and hand back a cleanup() for any temps.
+ * Resolve an import source (a local path or a URL) to the matching files inside it,
+ * handling direct files, archives (.zip/.7z/.rar) and downloads, plus a cleanup() for temps.
  */
 import { extname } from 'path';
 import { rm } from 'fs/promises';
@@ -59,8 +58,7 @@ const resolveSourceFiles = async (source: ImportSource, matchExtensions: Set<str
       temps.push(dir);
       return { files: await walkFiles(dir, matchExtensions), extractedArchive: true, downloadedPath, cleanup };
     } catch (err) {
-      // A URL that isn't an archive at all: leave files empty and flag it so the
-      // caller can fall back to treating downloadedPath as a raw file.
+      // A URL that isn't an archive: the caller may treat downloadedPath as a raw file.
       if (source.kind === 'url') return { files: [], extractedArchive: false, downloadedPath, cleanup };
       await cleanup();
       throw err;

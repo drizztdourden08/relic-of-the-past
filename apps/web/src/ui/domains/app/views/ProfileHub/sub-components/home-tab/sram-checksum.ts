@@ -16,7 +16,7 @@ const slotChecksumValid = (bytes: Uint8Array, offset: number): boolean => {
   return (sum & 0xffff) === VALID_CHECKSUM;
 };
 
-// A slot counts as valid if either its primary copy or its 0xf00 backup checksums correctly —
+// A slot counts as valid if either its primary copy or its 0xf00 backup checksums correctly,
 // the same fallback the game itself uses (Intro_ValidateSram).
 const validSramSlots = (bytes: Uint8Array): number[] => {
   const slots: number[] = [];

@@ -5,7 +5,7 @@
 
 // dungeon_room_index values Overworld_CheckSpecialSwitchArea assigns for the 3 special-
 // switch locations (overworld.c's kSpecialSwitchArea_Exit table: 0x180, 0x181, 0x182,
-// 0x189) — set in the SAME call that flips main_module_index to 11, so unlike
+// 0x189), set in the SAME call that flips main_module_index to 11, so unlike
 // overworld_screen_index (which only reaches its special-area value a few frames later,
 // once Overworld_EnterSpecialArea/LoadOverworldFromSpecialOverworld actually runs), this
 // is already correct on the very first frame of the transition.
@@ -14,8 +14,8 @@ static bool IsKnownSpecialAreaRoomIndex(uint16 idx) {
 }
 
 // Sticky across a whole module-11 episode: overworld_screen_index and dungeon_room_index
-// each independently have a brief window — a few frames, both on entering and (especially)
-// on leaving — where neither confirms the special-area flavor even though we're still
+// each independently have a brief window of a few frames, both on entering and (especially)
+// on leaving, where neither confirms the special-area flavor even though we're still
 // mid-transition, because the game hasn't finished updating them relative to the module
 // flip. Latching on any positive signal and holding it for as long as main_module_index
 // stays MODULE_FALLING_ENTRANCE closes that gap instead of the widescreen view (and the
@@ -23,11 +23,11 @@ static bool IsKnownSpecialAreaRoomIndex(uint16 idx) {
 static bool s_stickySpecialArea = false;
 
 // The parameterized version a caller uses once it has already resolved a menu-overlay
-// remap (main_module_index==14, the real module sitting in saved_module_for_menu) —
-// otherwise the special area silently stops being recognized the instant the player
+// remap (main_module_index==14, the real module sitting in saved_module_for_menu).
+// Otherwise the special area silently stops being recognized the instant the player
 // opens the pause menu over it, since main_module_index reads 14 there, not 11. This is
-// also the only form that updates the latch above — see GameHook_IsOverworldSpecialArea
-// for why the raw form must not.
+// also the only form that updates the latch above. GameHook_IsOverworldSpecialArea says
+// why the raw form must not.
 bool GameHook_IsOverworldSpecialAreaFor(int effectiveModule) {
   if (effectiveModule != MODULE_FALLING_ENTRANCE) {
     s_stickySpecialArea = false;
@@ -153,7 +153,7 @@ int WasmGetOverworldFlags(void) {
 //   [18] save_dung_info[0x11E] high byte
 // A room word's chest/item bits span the full 16 bits (CHEST_OPEN_MASKS runs up
 // to 0x400), so the three tracked rooms each carry both the low byte (already
-// here) and a high byte appended at the end, rather than widening [9]-[11] in
+// here) and a high byte appended at the end, instead of widening [9]-[11] in
 // place and reshuffling every other index in this buffer.
 static uint8 g_progress_buf[21];
 
@@ -210,17 +210,17 @@ int WasmGetViewportInfo(void) {
   g_viewport_buf[11] = (uint8)g_zenv.ppu->extraTopCur;     // vertical content rows above base (tall); [11] was unused
 
   // locationModule: the player's physical location regardless of UI overlays.
-  // The menu / spotlight modules are transient overlays — the player hasn't
+  // The menu / spotlight modules are transient overlays where the player hasn't
   // moved, so report saved_module_for_menu instead. Guard: if
   // saved_module_for_menu is 0 while in the menu module, this is a real menu
-  // screen (file select etc), not a gameplay overlay — report the actual module.
+  // screen (file select etc), not a gameplay overlay, so report the actual module.
   uint8 mod = main_module_index;
   if ((mod == MODULE_MENU || mod == MODULE_SPOTLIGHT_CLOSE || mod == MODULE_SPOTLIGHT_OPEN) &&
       saved_module_for_menu != 0) {
     mod = saved_module_for_menu;
   }
   // The overworld-special-area flavor of MODULE_FALLING_ENTRANCE is normal outdoor
-  // gameplay — report it as such so consumers keyed on locationModule === MODULE_OVERWORLD
+  // gameplay, so report it as such and consumers keyed on locationModule === MODULE_OVERWORLD
   // (the edge-glow effect) still engage there. Checked against `mod` (already
   // menu-remapped above), not the raw module, so this still holds while paused.
   if (GameHook_IsOverworldSpecialAreaFor(mod)) {
@@ -259,7 +259,7 @@ int WasmGetViewportInfo(void) {
   // Doorway/door debug state, surfaced for display only (the Navigation widget's Player
   // State panel). Both are LATCHED, not per-frame: is_standing_in_doorway is set on
   // entering a room through a doorway and cleared only on certain intra-room transitions;
-  // door_animation_step_indicator is left at 16 once a door finishes opening rather than
+  // door_animation_step_indicator is left at 16 once a door finishes opening instead of
   // returning to 0. Neither is safe to use as a "is this happening right now" gate.
   g_viewport_buf[30] = is_standing_in_doorway;
   g_viewport_buf[31] = (uint8)door_animation_step_indicator;  // 0..16

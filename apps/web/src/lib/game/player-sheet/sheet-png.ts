@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 /**
- * Render a whole sheet as one PNG — the full 16x56 tile grid, 128x448 pixels.
+ * Render a whole sheet as one PNG covering the full 16x56 tile grid, 128x448 pixels.
  *
  * Two callers: the tile-sheet view, which is how a pose can be checked against the raw art,
  * and the courtesy preview inside a pack so the file shows something in an image viewer.

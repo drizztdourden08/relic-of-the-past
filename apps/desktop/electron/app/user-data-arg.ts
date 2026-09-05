@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 /**
- * `--user-data=<dir>` — point this launch's user data at an explicit folder.
+ * `--user-data=<dir>` points this launch's user data at an explicit folder.
  *
  * Everything the app stores (profiles, saves, ROMs, extracted assets, config) derives
  * from Electron's userData path, so redirecting it here isolates a launch completely:

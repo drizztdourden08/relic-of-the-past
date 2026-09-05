@@ -1,42 +1,27 @@
 /* @layer tests @kind test */
 /**
- * Every permanent e2e spec launches into ONE dedicated automation profile, isolated
- * from whatever profile the maintainer is actually playing on — no automated launch
- * may read or write the profile that opens by default (docs/contributing/testing.md,
- * "Mandatory: an automated launch always names its own profile").
+ * Every permanent e2e spec launches into ONE dedicated automation profile. No
+ * automated launch may touch the profile that opens by default
+ * (docs/contributing/testing.md, "Mandatory: an automated launch always names
+ * its own profile").
  *
- * `provisionProfile` is the exact mechanism `npm run wt -- new <name>` already uses to
- * seed a worktree's instance profile: idempotent create-or-repair, and if the profile
- * doesn't exist yet, it is created from the seed — a copy of the maintainer's own named
- * manual saves (which the private vault restores into their profile), so
- * `--auto-state=test-jail-cell` and the other baselines work in it immediately. Reused
- * here rather than duplicated.
- *
- * That seed copies whichever manual saves the maintainer's OWN most-recently-played
- * profile happens to hold — real for the common baselines, but a fixture the vault
- * restored into `tests/fixtures/save-states/` and never got manually re-saved into a
- * live profile (the three cliff-ledge states, at the time this was written) is simply
- * absent there too, and `--auto-state=<name>` fails outright rather than skipping. So
- * on top of `provisionProfile`'s seed, this also restores directly from the checked-in
- * fixture folder — the one place every named baseline is guaranteed to exist — filling
- * in only what copying from a live profile missed.
+ * `provisionProfile` is what `npm run wt -- new <name>` uses: idempotent
+ * create-or-repair, seeded from the maintainer's own named manual saves. That
+ * seed only holds what the maintainer's live profile holds, so a fixture the
+ * vault restored into `tests/fixtures/save-states/` but never re-saved (the
+ * three cliff-ledge states) would be missing and `--auto-state=<name>` would
+ * fail. This also restores directly from the checked-in fixture folder.
  */
 const TEST_INSTANCE = 'e2e-tests';
 
 let provisioned: Promise<unknown> | null = null;
 
 /**
- * Safe to call before every launch — only the first call in a process does any
- * work.
+ * Safe to call before every launch; only the first call in a process does work.
  *
- * The `.mjs` tooling module is loaded via a genuine dynamic `import()`, not a
- * static one. Playwright's own transform compiles this file to CJS, and a
- * static `import` of a real ESM module gets rewritten to a plain `require()`
- * at bundle time — which then runs the `.mjs` file's `export`/`import.meta`
- * syntax inside a CJS wrapper that has no `exports` binding
- * ("exports is not defined in ES module scope"). A dynamic `import()` is left
- * alone by the transform and resolved by Node's own loader at runtime, which
- * handles the interop correctly.
+ * The `.mjs` module is loaded via a dynamic `import()`: Playwright compiles this
+ * file to CJS and rewrites a static import to `require()`, which breaks on the
+ * `.mjs` file's `import.meta` ("exports is not defined in ES module scope").
  */
 const ensureTestProfile = (): Promise<unknown> => {
   provisioned ??= (async () => {

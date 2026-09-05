@@ -11,12 +11,8 @@ interface TileTooltipContentProps {
 }
 
 /**
- * ONE canonical tooltip layout, identical in single/dual/locked-layer modes:
- * a tile header (coords left, room type right — a room-level fact, never
- * repeated per layer) over one or two layer blocks, over the unchanged extra
- * rows. Each mode differs only in how many `LayerBlock`s it renders and how
- * they're arranged — never in the block's own row list, which lives once in
- * classification-rows.tsx.
+ * ONE tooltip layout for single/dual/locked modes: header, one or two layer blocks, extra rows.
+ * Modes differ only in how many `LayerBlock`s render; the row list lives in classification-rows.tsx.
  */
 const TileTooltipContent = ({ tooltip }: TileTooltipContentProps) => {
   const { layers } = tooltip;

@@ -2,9 +2,9 @@
 /**
  * Upgrade-on-read: a folder holding only the legacy extraction payload
  * (`dialogue.txt`, no `set.json`) is converted to a set the first time it is
- * listed or opened, and the new files are written alongside the old ones —
- * nothing is deleted, so a rollback keeps working and the asset recompile
- * still finds what it reads.
+ * listed or opened. The new files are written alongside the old ones and nothing
+ * is deleted, so a rollback keeps working and the asset recompile still finds
+ * what it reads.
  *
  * Idempotent by construction: the presence of `set.json` ends it, so a second
  * pass is a single `exists` check and never overwrites edited content.

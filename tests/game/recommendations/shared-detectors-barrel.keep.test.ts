@@ -1,12 +1,9 @@
 /* @layer test @kind test */
 /**
- * The shared `detectors/` barrel this file used to test was deleted in
- * phase 5 — every kind it covered (`actor`, `check`, `dungeon`, `item`) is a
- * comparison strategy now, not a hand-written detector. Importing each
- * strategy's own barrel, followed by `strategy-detectors` (which turns every
- * registered strategy into a detector — see that module's own header),
- * installs a `strategy:<kind>` detector for each one, the same way the
- * deleted barrel used to install a hand-written id per kind.
+ * The shared `detectors/` barrel was deleted in phase 5; every kind (`actor`,
+ * `check`, `dungeon`, `item`) is a comparison strategy now. Importing each
+ * strategy's barrel, then `strategy-detectors`, installs a `strategy:<kind>`
+ * detector per kind.
  */
 import { describe, it, expect } from 'vitest';
 import { detectorsFor } from '@shared/game/recommendations';

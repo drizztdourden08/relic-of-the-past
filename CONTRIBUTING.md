@@ -6,8 +6,8 @@ conventions we follow. By participating you agree to keep interactions respectfu
 
 > [!IMPORTANT]
 > This is an unofficial fan-made/open-source project, not affiliated with Nintendo. **Never commit
-> copyrighted game assets, ROMs, or extracted data.** The app ships no game data — contributors and
-> users provide their own legally obtained ROM. PRs that add such material will be rejected.
+> copyrighted game assets, ROMs, or extracted data.** The app ships no game data, so contributors and
+> users bring their own legally obtained ROM. PRs that add such material will be rejected.
 
 ## Prerequisites
 
@@ -30,17 +30,17 @@ See the [Quick Start](docs/getting-started/quick-start.md) for first-run details
 
 A three-layer architecture (C → WASM bridge → React/Electron). Read these before diving in:
 
-- [CLAUDE.md](CLAUDE.md) — the project guide and architecture overview
-- [docs/architecture/overview.md](docs/architecture/overview.md) — zone map and dependency invariants
-- [docs/contributing/design-system.md](docs/contributing/design-system.md) — component tiers and design tokens
+- [CLAUDE.md](CLAUDE.md) is the project guide and architecture overview
+- [docs/architecture/overview.md](docs/architecture/overview.md) has the zone map and dependency invariants
+- [docs/contributing/design-system.md](docs/contributing/design-system.md) covers component tiers and design tokens
 
 ## Coding standards (enforced)
 
-Standards are **mechanically enforced** — see [docs/contributing/coding-standards.md](docs/contributing/coding-standards.md).
+Standards are **mechanically enforced**. The full set is in [docs/contributing/coding-standards.md](docs/contributing/coding-standards.md).
 The highlights:
 
 - **≤ 200 lines per file**, one thing per file, deep logical folders
-- **Arrow functions only**; exports grouped at the end; `import type { … }` for type-only imports
+- **Arrow functions only**; exports grouped at the end; `import type { ... }` for type-only imports
 - No raw hex/colors in component CSS; no raw HTML outside design-system primitives
 - Every file is tagged (`@layer`/`@kind`) and analyzed
 
@@ -51,29 +51,29 @@ npm run ci    # tsc + eslint + repo analysis
 ```
 
 If you change C code in `core/`, rebuild the WASM. New `Wasm*` exports only need
-the `EMSCRIPTEN_KEEPALIVE` tag (which exports them) — there is no `EXPORTED_FUNCTIONS`
+the `EMSCRIPTEN_KEEPALIVE` tag (which exports them), so there is no `EXPORTED_FUNCTIONS`
 list to maintain in `build.bat`/`Makefile`.
 
 ## Copyright / media gate
 
 An automatic gate flags any **media** (images, audio, video, music, fonts, ROM/asset binaries) or
-**Nintendo trademark reference** you add — locally via a `commit-msg` hook and on GitHub via the
-**Copyright Gate** check. The project ships no game assets, so anything flagged needs explicit
+**Nintendo trademark reference** you add. It runs locally via a `commit-msg` hook and on GitHub
+via the **Copyright Gate** check. The project ships no game assets, so anything flagged needs explicit
 approval: add `[allow-copyright]` to your commit message, or (for PRs) a maintainer applies the
 `copyright-ok` label. Full details: [docs/contributing/copyright-gate.md](docs/contributing/copyright-gate.md).
 
 ## Tests
 
 Automated tests are intentionally minimal. Playwright is available as a **tool**, not a committed
-suite — write throwaway specs in `tests/scratch/` (gitignored), run, then delete. The only permanent
+suite, so write throwaway specs in `tests/scratch/` (gitignored), run them, then delete them. The only permanent
 spec is `tests/snapshot.spec.ts` (the visual-snapshot harness). Prefer the app's built-in automation
-flags (`--auto-state`, `--screenshot`, `--dump-layers`, `--dump-nav`) — see
+flags (`--auto-state`, `--screenshot`, `--dump-layers`, `--dump-nav`). They are documented in
 [docs/contributing/testing.md](docs/contributing/testing.md).
 
 ## Commits & pull requests
 
 - Use [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `chore:`,
-  `refactor:`, `docs:`…), scoped where helpful (e.g. `fix(design): …`).
+  `refactor:`, `docs:`, and so on), scoped where helpful (e.g. `fix(design): ...`).
 - Branch from `master`; keep PRs focused and small.
 - Fill out the PR template and make sure `npm run ci` passes.
 - Update relevant docs when behavior changes.

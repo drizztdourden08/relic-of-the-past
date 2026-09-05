@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
  * The selection cursor on one option row: the pack's own `>` character, drawn
- * in the first cell — the column the game's cursor frames reserve for it.
+ * in the first cell, which is the column the game's cursor frames reserve for it.
  *
  * The glyph comes from the same matcher and painter every previewed character
  * goes through, so the cursor is the exact pixels the cursor frames draw. Only

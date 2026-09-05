@@ -12,7 +12,7 @@ const useAboutInfo = (): { rows: AboutRow[]; buildDebugText: () => Promise<strin
   const { buildDebugText, version, runtime, engine, osLabel } = useDebugTextBuilder();
 
   const rows: AboutRow[] = [
-    { label: 'Version', value: version || '—' },
+    { label: 'Version', value: version || '-' },
     { label: 'Runtime', value: runtime },
     { label: 'Engine', value: engine },
     { label: 'Platform', value: osLabel },

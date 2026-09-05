@@ -42,7 +42,7 @@
   gap: var(--space-md);
 }
 
-/* Yellow rather than red: a pre-release is a choice with a caveat, not an error. */
+/* Yellow, not red: a pre-release is a choice with a caveat, not an error. */
 .update-dialog__warning {
   padding: var(--space-sm) var(--space-md);
   border: 1px solid var(--c-gold);

@@ -1,17 +1,12 @@
 /* @layer shared-ipc @kind types */
 /**
- * The dev editor's write contract.
+ * The dev editor's write contract. Two rules are enforced by these types:
  *
- * Two rules are enforced by these types rather than by review:
- *
- *  1. A caller never supplies an id for a NEW record. Every "create" payload
- *     below carries the record shape minus its id; the main process allocates the
- *     next free `<kind>-NNN` and stamps it. `Allocated<T>` is nominal — a renderer
- *     cannot produce one without a round trip through the allocator, so an id
- *     invented from a name, a hex index or a slug has nowhere to go.
- *  2. A caller never supplies record TEXT. The payload is the record itself, and
- *     the main process serializes it with the dataset's own emitter, so the shape
- *     written to disk is whatever the record interface currently says it is.
+ *  1. A caller never supplies an id for a NEW record. "Create" payloads carry the record
+ *     minus its id; the main process allocates the next free `<kind>-NNN`. `Allocated<T>`
+ *     is nominal, so an id invented in the renderer has nowhere to go.
+ *  2. A caller never supplies record TEXT. The main process serializes the record with the
+ *     dataset's own emitter, so the shape on disk is whatever the record interface says.
  */
 import type {
   AreaId, AreaRecord, ConnectionId, EntityKind, EnumerationCategory, EnumerationEntry, EnumerationId, ItemGroupId,
@@ -27,7 +22,7 @@ declare const ALLOCATED: unique symbol;
 /** A value that came back from the id allocator, and therefore cannot be invented. */
 type Allocated<T> = T & { readonly [ALLOCATED]: true };
 
-/** New geography, named for display only — the id comes back allocated. */
+/** New geography. The name is for display only, and the id comes back allocated. */
 type AllocateGeographyArgs =
   | { kind: 'area'; randomizerName: string; world: AreaRecord['world'] }
   | { kind: 'location'; randomizerName: string; areaId: AreaId };
@@ -38,11 +33,9 @@ type AllocateGeographyResult =
   | { success: false; error: string };
 
 /**
- * A new vocabulary term. The caller supplies the KEY and the collections it
- * belongs on, and nothing else: the two levels are split from the key, the
- * labels default to the key's own parts, and the id comes back allocated. A key
- * without a separator is rejected — a term with no namespace has no place in
- * the hierarchy the vocabulary is built on.
+ * A new vocabulary term. The caller supplies only the KEY and the collections it belongs on:
+ * the levels are split from the key, labels default to its parts, the id comes back allocated.
+ * A key without a separator is rejected (no namespace, no place in the hierarchy).
  */
 interface AllocateTagArgs {
   /** `namespace:value`. */
@@ -60,7 +53,7 @@ type AllocateTagResult =
 
 /** Insert a new screen (`replaceId: null`) or rewrite an existing one in place. */
 interface WriteScreenArgs {
-  /** Relative to shared/game/data/ — derived from ids by record-file-targets.ts. */
+  /** Relative to shared/game/data/. record-file-targets.ts derives it from ids. */
   filePath: string;
   record: PendingScreenRecord;
   replaceId: ScreenId | null;
@@ -76,12 +69,10 @@ type WriteRecordResult =
   | { success: false; error: string };
 
 /**
- * Minting a brand-new crossing that has no existing partner to link to (see
- * `pendingPartnerId` in `data/connections/pending-partner.ts`). Both halves are
- * allocated on ONE `withAllocatedIds` turn and written before either id is
- * observable, so nothing can see a `toConnectionId` naming a partner that was
- * never actually written. The two halves commonly belong to different
- * screens, hence two independent file targets rather than one.
+ * Minting a new crossing with no existing partner (see `pendingPartnerId` in
+ * `data/connections/pending-partner.ts`). Both halves are allocated on ONE `withAllocatedIds`
+ * turn and written before either id is observable, so no `toConnectionId` can name a partner
+ * that was never written. The halves often sit on different screens, hence two file targets.
  */
 interface WriteConnectionPairArgs {
   near: { filePath: string; record: PendingConnectionRecord };
@@ -93,10 +84,8 @@ type WriteConnectionPairResult =
   | { success: false; error: string };
 
 /**
- * Relabelling or reshaping a tag already on file. There is no insert variant
- * here — a brand-new term is minted through `allocateTag`, which owns id
- * allocation and the convention check; this only ever replaces an id the
- * renderer already has open in the editor.
+ * Relabelling or reshaping a tag already on file. No insert variant: new terms go through
+ * `allocateTag`; this only replaces an id the renderer already has open.
  */
 interface WriteTagArgs {
   tagId: TagId;
@@ -109,10 +98,8 @@ interface DeleteTagArgs {
 }
 
 /**
- * A brand-new item group. `ITEM_GROUP_IDS` still names the seven groups that
- * pre-date this path, but it is no longer a ceiling — any number of groups is
- * a normal, writable collection, and the id comes back allocated like any
- * other new record.
+ * A new item group. `ITEM_GROUP_IDS` still names the seven groups that pre-date this path,
+ * but it is no longer a ceiling; the id comes back allocated like any other new record.
  */
 interface AllocateItemGroupArgs {
   label: string;
@@ -123,10 +110,7 @@ type AllocateItemGroupResult =
   | { success: true; record: Allocated<ItemGroupRecord> }
   | { success: false; error: string };
 
-/**
- * Relabelling or reshaping an item group already on file — same "replace an id
- * already open, never mint one" bargain as `WriteTagArgs`.
- */
+/** Relabelling or reshaping an item group already on file; same "replace, never mint" rule as `WriteTagArgs`. */
 interface WriteItemGroupArgs {
   groupId: ItemGroupId;
   record: PendingItemGroupRecord;
@@ -136,10 +120,7 @@ interface DeleteItemGroupArgs {
   groupId: ItemGroupId;
 }
 
-/**
- * A brand-new closed-set label row. The category names which existing group of
- * values this joins; the id comes back allocated like any other new record.
- */
+/** A new closed-set label row. The category names the group it joins; the id comes back allocated. */
 interface AllocateEnumerationArgs {
   category: EnumerationCategory;
   value: string;
@@ -162,17 +143,10 @@ interface DeleteEnumerationArgs {
 }
 
 /**
- * The three payloads every remaining collection's write path shares.
- *
- * Screen, connection, tag and item group each grew their own argument shape
- * before the record facade existed, and each carries something of its own (a
- * caller-derived file path, a key to split, a closed id set). The six that came
- * after carry none of that: a record in, an id back, nothing kind-specific in
- * between. So they share one generic trio rather than eighteen near-identical
- * interfaces, and a collection wired up later needs no new shape at all.
- *
- * The same two rules still hold — `Unnumbered<T>` is the only thing a caller may
- * send for something new, and `Allocated<T>` is the only thing that comes back.
+ * The three payloads every remaining collection's write path shares. Screen, connection, tag
+ * and item group pre-date the record facade and carry something kind-specific; the six that
+ * came after are record in, id back, so they share one generic trio. The same two rules hold:
+ * `Unnumbered<T>` is all a caller may send for something new, `Allocated<T>` is all that comes back.
  */
 interface AllocateRecordArgs<T extends { id: string }> {
   record: Unnumbered<T>;
@@ -182,7 +156,7 @@ type AllocateRecordResult<T> =
   | { success: true; record: Allocated<T> }
   | { success: false; error: string };
 
-/** Replacing a record already on file — the renderer already has its id open. */
+/** Replaces a record already on file, whose id the renderer already has open. */
 interface WriteRecordArgs<T extends { id: string }> {
   id: T['id'];
   record: Unnumbered<T>;

@@ -7,7 +7,7 @@ import type { PageId } from '@app/App/types';
 
 type SearchKind = 'screen' | 'action' | 'setting' | 'tab';
 
-/** Declarative destination — resolved by run-target.ts against the app's own nav setters. */
+/** Declarative destination, resolved by run-target.ts against the app's own nav setters. */
 interface SearchTarget {
   page: PageId;
   tab?: ProfileHubTab;
@@ -25,32 +25,32 @@ interface SearchEntry {
   breadcrumb: string[];
   description?: string;
   keywords?: string;
-  /** Set when the entry's value is a top-level boolean GameSettings key — enables the
+  /** Set when the entry's value is a top-level boolean GameSettings key. Enables the
    *  row's inline Toggle. Dotted paths (haptics.*) are intentionally excluded. */
   settingKey?: keyof GameSettings;
-  /** The setting's current boolean value, read at catalog-build time — only meaningful
+  /** The setting's current boolean value, read at catalog-build time. Only meaningful
    *  alongside settingKey. Lets the row render the switch without needing live settings. */
   toggleValue?: boolean;
   disabled?: boolean;
-  /** Mirrors a MenuItem's checked flag (widgets) — rendered as a small indicator, not editable. */
+  /** Mirrors a MenuItem's checked flag (widgets), rendered as a small indicator and not editable. */
   checked?: boolean;
   /** Declarative nav (settings + tab entries). */
   target?: SearchTarget;
-  /** Imperative command (menu-derived screen/action entries) — runs the exact same callback
+  /** Imperative command (menu-derived screen/action entries). Runs the exact same callback
    *  the title-bar menu itself would call. */
   run?: () => void;
 }
 
 /** Everything a catalog source needs to build its entries for the current app state. */
 interface SearchContext {
-  /** The same prop bag TitleBar/MobileChrome already consume — reused so menu-derived
+  /** The same prop bag TitleBar/MobileChrome already consume, reused so menu-derived
    *  entries call the real navigation callbacks, not a re-implementation of them. */
   navProps: TitleBarProps;
   win: WindowControlsPort;
-  /** null when no profile is active — settings entries and the settings bridge are empty. */
+  /** null when no profile is active. Settings entries and the settings bridge are empty. */
   settings: GameSettings | null;
   isMobile: boolean;
-  /** Closes the palette — wired as `closeMenu` when reusing buildTitleBarMenuItems, so
+  /** Closes the palette. Wired as `closeMenu` when reusing buildTitleBarMenuItems, so
    *  selecting a menu-derived result dismisses the palette exactly like the real menu does. */
   closePalette: () => void;
 }

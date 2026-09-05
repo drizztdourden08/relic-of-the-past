@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * The `screen` comparison strategy — replaces the app-layer `screen-identity.ts`
+ * The `screen` comparison strategy. It replaces the app-layer `screen-identity.ts`
  * detector (deleted) and drops its dependency on `screenDataStatus`: every
  * field here reads `ScreenObservations` directly, which is the entire point.
  * See `game-id.probes.ts` for why a WRONG value (not just a missing one) is
@@ -19,9 +19,9 @@ import { SPAWNS_PROBE } from './spawns.set';
 
 /**
  * The current screen plus every screen a recorded palace mismatch names,
- * deduped by id — the palace probe is the only one that needs the extras, but
+ * deduped by id. The palace probe is the only one that needs the extras, but
  * every probe runs over whatever `subjects` returns, so the dedup happens
- * here once rather than in each probe.
+ * here once instead of in each probe.
  */
 const subjectsFor = (observations: ScreenObservations, _screenId: ScreenId | null): readonly ScreenRecord[] => {
   const byId = new Map<string, ScreenRecord>();

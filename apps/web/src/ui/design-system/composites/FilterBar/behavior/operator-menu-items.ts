@@ -1,22 +1,9 @@
 /* @layer renderer-components @kind logic */
 /**
- * What the operator dropdown offers for one clause: every operator its field
- * kind supports, plus — for text only — a "match case" modifier below a
- * separator.
- *
- * The modifier lives in the same menu as the operators because it is the same
- * question ("how should this clause compare?") and a filter row is one line
- * tall, with no room for a second control. It is a toggle rather than a choice,
- * so it is marked with the menu's own check mark and the operators keep their
- * exclusive selection above it.
- *
- * Only the text kind gets it. Closed sets and id references match exactly by
- * design (both kits say so in their own doc comments), numbers and booleans
- * have no case, and the kinds left over compare existence only — offering the
- * modifier there would promise something no tester honours.
- *
- * Pure, and free of JSX, so the menu's contents are unit tested without
- * opening a real dropdown.
+ * The operator dropdown's entries: every operator the kind supports, plus a
+ * "match case" toggle for text only. Other kinds match exactly or compare
+ * existence, so the modifier would promise something no tester honours. Pure,
+ * so the menu is testable without a dropdown.
  */
 import { operatorsFor } from '../../../data/filter/operators';
 import { glyphForOperatorIcon } from '../sub-components/operator-icon-glyphs';

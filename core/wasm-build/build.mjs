@@ -9,12 +9,12 @@
  * Linux/macOS CI via emscripten-core/setup-emsdk).
  *
  * Prerequisite: the Emscripten SDK must be activated so `emcc` resolves.
- * Output: apps/web/public/wasm/zelda3.{js,wasm} — the path the renderer, the
+ * Output: apps/web/public/wasm/zelda3.{js,wasm}, the path the renderer, the
  * electron build, and `cap sync` (Android) all consume.
  *
  * NOTE: there is no EXPORTED_FUNCTIONS list of Wasm* exports. Every JS-callable
  * function is tagged EMSCRIPTEN_KEEPALIVE in its .c file, which both retains and
- * exports the symbol — that attribute is the single source of truth. Only the
+ * exports the symbol, so that attribute is the single source of truth. Only the
  * runtime entry points JS calls directly are listed in EXPORTED_FUNCTIONS below.
  */
 import { spawnSync } from 'node:child_process';
@@ -38,7 +38,7 @@ const gameSrcs = [
 
 // The hardware the decompiled game still writes registers to: the graphics chip
 // (our renderer), the register-transfer unit, and the audio sample mixer. No CPU
-// is emulated — the game's own processor code is what was decompiled into C.
+// is emulated, because the game's own processor code is what was decompiled into C.
 const snesSrcs = [
   'dma', 'dsp', 'ppu',
 ].map((f) => z('snes', `${f}.c`));
@@ -69,7 +69,7 @@ const cflags = [
   '-Wno-unused-variable',
 ];
 
-// Wider widescreen frames overflow the default stack — STACK_SIZE must stay in
+// Wider widescreen frames overflow the default stack, so STACK_SIZE must stay in
 // lockstep with kPpuExtraLeftRight in core/zelda3/src/types.h.
 const emflags = [
   '-sUSE_SDL=2',
@@ -121,11 +121,11 @@ const run = () => {
   console.log('============================================');
 
   // The save state layout can only have moved if the core was just rebuilt, so the probe
-  // rides along here. This is what keeps the format id computed rather than declared:
-  // every path that rebuilds the core — dev, ensure-wasm, the release job — re-derives it.
+  // rides along here. This is what keeps the format id computed instead of declared:
+  // every path that rebuilds the core (dev, ensure-wasm, the release job) re-derives it.
   const probe = spawnSync(process.execPath, [join(here, 'layout-probe.mjs')], { stdio: 'inherit' });
   if (probe.status !== 0) {
-    console.error('\nSave state layout probe FAILED — the format id was not refreshed.');
+    console.error('\nSave state layout probe FAILED. The format id was not refreshed.');
     process.exit(probe.status ?? 1);
   }
 };

@@ -1,9 +1,6 @@
 /* @layer renderer-lib @kind logic */
-/**
- * Graphics-stack probe. Prefers a WebGL2 context so the reported limits match what
- * the game canvas actually gets, and unmasks the real adapter string through the
- * debug-renderer extension rather than the generic "WebKit WebGL" placeholder.
- */
+// Graphics-stack probe. Prefers WebGL2 so the limits match the game canvas, and unmasks the real
+// adapter string through the debug-renderer extension.
 import type { WebglDiagnostics } from './types';
 
 type AnyGl = WebGLRenderingContext | WebGL2RenderingContext;
@@ -19,7 +16,7 @@ const createContext = (): { gl: AnyGl; version: 1 | 2 } | null => {
 const unmasked = (gl: AnyGl, masked: number, unmaskedName: 'UNMASKED_VENDOR_WEBGL' | 'UNMASKED_RENDERER_WEBGL'): string => {
   const ext = gl.getExtension('WEBGL_debug_renderer_info');
   const value = ext ? gl.getParameter(ext[unmaskedName]) : null;
-  return String(value ?? gl.getParameter(masked) ?? '—');
+  return String(value ?? gl.getParameter(masked) ?? '-');
 };
 
 const probeWebgl = (): WebglDiagnostics | null => {
@@ -33,16 +30,15 @@ const probeWebgl = (): WebglDiagnostics | null => {
       version,
       vendor: unmasked(gl, gl.VENDOR, 'UNMASKED_VENDOR_WEBGL'),
       renderer: unmasked(gl, gl.RENDERER, 'UNMASKED_RENDERER_WEBGL'),
-      glVersion: String(gl.getParameter(gl.VERSION) ?? '—'),
-      shadingLanguage: String(gl.getParameter(gl.SHADING_LANGUAGE_VERSION) ?? '—'),
+      glVersion: String(gl.getParameter(gl.VERSION) ?? '-'),
+      shadingLanguage: String(gl.getParameter(gl.SHADING_LANGUAGE_VERSION) ?? '-'),
       maxTextureSize: Number(gl.getParameter(gl.MAX_TEXTURE_SIZE) ?? 0),
-      maxViewport: viewport ? `${viewport[0]}×${viewport[1]}` : '—',
+      maxViewport: viewport ? `${viewport[0]}x${viewport[1]}` : '-',
       maxRenderBufferSize: Number(gl.getParameter(gl.MAX_RENDERBUFFER_SIZE) ?? 0),
       antialias: attributes?.antialias === true,
       failIfMajorPerformanceCaveat: attributes?.failIfMajorPerformanceCaveat === true,
     };
-    // Release the probe context immediately — browsers cap live WebGL contexts and
-    // the game canvas needs one of them.
+    // Browsers cap live WebGL contexts and the game canvas needs one, so release the probe now.
     gl.getExtension('WEBGL_lose_context')?.loseContext();
     return info;
   } catch {

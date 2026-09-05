@@ -36,7 +36,7 @@ const PositionalCaptureStep = (props: PositionalCaptureStepProps) => {
     <>
       <HoldStatusLine
         status={restoreStatus}
-        pendingText="Restoring the hold on every controller…"
+        pendingText="Restoring the hold on every controller..."
         doneText="The hold is back. This controller reads normally again."
         errorText="Couldn't restore the hold. The capture below may not receive anything."
       />

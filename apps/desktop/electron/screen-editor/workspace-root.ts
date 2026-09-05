@@ -1,11 +1,8 @@
 /* @layer electron-main @kind logic */
 /**
- * Locates the repo root the editor writes into.
- *
- * Walks up looking for the ancestor that contains shared/game/data. A fixed
- * relative depth from __dirname breaks as soon as the bundler changes how many
- * directories deep this file lands — dev, the electron-vite production build and
- * a packaged app all bundle at different depths.
+ * Locates the repo root the editor writes into by walking up to the ancestor that
+ * contains shared/game/data. A fixed depth from __dirname breaks because dev, the
+ * production build and a packaged app all bundle at different depths.
  */
 
 import { existsSync } from 'fs';
@@ -24,9 +21,8 @@ const findRepoRoot = (start: string): string | null => {
 };
 
 /**
- * Falls back to the process working directory (the app is always launched from
- * the repo root), which covers a bundle that landed outside the source tree
- * entirely. Cached — it never changes for the lifetime of the process.
+ * Falls back to cwd (the app is always launched from the repo root) for a bundle
+ * outside the source tree. Cached for the lifetime of the process.
  */
 const getWorkspaceRoot = (): string => {
   if (cached) return cached;

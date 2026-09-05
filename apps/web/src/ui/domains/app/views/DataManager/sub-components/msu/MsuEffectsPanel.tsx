@@ -1,19 +1,9 @@
 /* @layer renderer-components @kind component */
 /**
- * Both effect channels as ONE list.
- *
- * They are the same kind of thing — one-shot effects, each trigger layering over whatever is still
- * sounding — and asking someone to guess which of two lists holds the bonk they are after was the
- * whole problem with keeping them apart. So there is one search box, and it searches everything.
- *
- * The channels are still separate id spaces: 0x12 on the first port and 0x12 on the second are
- * different sounds. That is carried by the row itself — every row leads with its port — rather
- * than by splitting the list, so the ids can sit next to each other and be compared. Sorting by id
- * first and port second is what puts them next to each other.
- *
- * Each channel keeps its own controller because each is its own id space with its own audition and
- * its own writes. This component's job is to hand them one query, pick the right one per row, and
- * keep them from both making a sound at once.
+ * Both effect channels as ONE list with one search box: guessing which of two lists held a sound
+ * was the problem. The channels stay separate id spaces (0x12 differs per port), carried by each
+ * row leading with its port. Each channel keeps its own controller; this component hands them one
+ * query, picks the right one per row, and keeps them from sounding at once.
  */
 import { useCallback, useMemo, useState } from 'react';
 import type { SoundChannel } from '@shared/types/msu-manifest';
@@ -35,14 +25,13 @@ import type { MsuEffectsPanelProps } from './msu.type';
 const [FIRST, SECOND] = EFFECT_CHANNELS;
 
 const EFFECTS_SUBTITLE = 'The sound chip raises one-shot effects on two ports, each numbering its'
-  + ' sounds from scratch — so the same id is a different sound on each. Every row leads with the'
+  + ' sounds from scratch, so the same id is a different sound on each. Every row leads with the'
   + ' port it belongs to.';
 
 const MsuEffectsPanel = (props: MsuEffectsPanelProps) => {
   const { pack, manifest, saveBase, files, isLayered, onDeleteConfirm, onReload } = props;
   const [filter, setFilter] = useState('');
-  // `sfx2` in the box means the port, not text to find — so it is taken out before the channels
-  // are asked, and applied to the merged list instead.
+  // `sfx2` in the box means the port, not text to find, so it is applied to the merged list instead.
   const query = parseEffectQuery(filter);
   const shared = {
     pack, manifest, saveBase, files, filter: query.text, showUnreachable: false, reload: onReload,
@@ -69,8 +58,7 @@ const MsuEffectsPanel = (props: MsuEffectsPanelProps) => {
   ].sort((a, b) => a.row.soundId - b.row.soundId || a.channel.localeCompare(b.channel)),
   [first.rows, second.rows, wanted]);
 
-  // Each channel silences its own audition but knows nothing of the other's, so the list has to
-  // stop the other one itself — otherwise two sounds run at once and both rows light up.
+  // Each channel silences only its own audition, so the list stops the other one itself.
   const play = useCallback((channel: SoundChannel, soundId: number) => {
     otherOf(channel).stop();
     panelOf(channel).play(channel, soundId);
@@ -108,7 +96,7 @@ const MsuEffectsPanel = (props: MsuEffectsPanelProps) => {
   return (
     <Box className="msu-panel">
       <SectionHeader
-        title={`Effects — ${replaced} of ${total} replaced`}
+        title={`Effects · ${replaced} of ${total} replaced`}
         subtitle={EFFECTS_SUBTITLE}
         action={sounding ? <Button variant="tertiary" size="sm" onClick={stopAll}>Stop preview</Button> : null}
       />

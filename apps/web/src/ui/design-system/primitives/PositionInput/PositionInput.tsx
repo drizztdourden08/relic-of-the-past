@@ -3,18 +3,16 @@
  * A two-axis position, edited as one control.
  *
  * The pair is bounded by the caller: each axis takes its own floor, ceiling and
- * step, and nothing here assumes what a coordinate means — a tile on a grid, a
- * corner of a rectangle, an offset in pixels are all the same two numbers with
- * different limits. Bounds are enforced, not decorative: onChange is never
- * called with NaN or with a value outside the range the caller declared.
+ * step, and nothing here assumes what a coordinate means. Bounds are enforced,
+ * not decorative: onChange is never called with NaN or with a value outside the
+ * range the caller declared.
  *
  * Scoped to the pair on purpose. A position-plus-size rectangle is four numbers,
- * but the extra two are extents rather than coordinates — they carry a different
- * floor (an empty rectangle is usually meaningless), they want a two-by-two
- * layout rather than a row, and they bring a cross-field rule this control
- * deliberately does not have: the far edge has to stay inside the same space the
- * near corner is bounded by. A sibling built on the same AxisField and the same
- * clamp helpers is the honest way to cover that, not a fourth optional axis here.
+ * but the extra two are extents, not coordinates: a different floor, a
+ * two-by-two layout, and a cross-field rule this control does not have (the far
+ * edge has to stay inside the space the near corner is bounded by). A sibling
+ * built on the same AxisField and clamp helpers covers that, not a fourth
+ * optional axis here.
  */
 import './PositionInput.css';
 import { useCallback } from 'react';

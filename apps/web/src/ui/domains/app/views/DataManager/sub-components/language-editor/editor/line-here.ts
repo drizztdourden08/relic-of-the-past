@@ -2,9 +2,9 @@
 /**
  * Where the caret is, in LINES.
  *
- * Every line command needs the same three facts — which paragraph holds the
- * caret, where that paragraph starts, and which line number it is — and getting
- * any of them slightly wrong moves an edit onto the wrong row. One locator, used
+ * Every line command needs the same three facts: which paragraph holds the
+ * caret, where that paragraph starts, and which line number it is. Getting any
+ * of them slightly wrong moves an edit onto the wrong row. One locator, used
  * by all of them.
  *
  * Depth 1 is the paragraph: the document holds only paragraphs and a paragraph
@@ -17,7 +17,7 @@ import type { EditorState } from '@tiptap/pm/state';
 /** The line the caret sits in. */
 type LineHere = {
   node: ProseMirrorNode;
-  /** Position immediately BEFORE the paragraph — what `setNodeMarkup` takes. */
+  /** Position immediately BEFORE the paragraph, which is what `setNodeMarkup` takes. */
   pos: number;
   /** 0-based index among the document's paragraphs. */
   index: number;

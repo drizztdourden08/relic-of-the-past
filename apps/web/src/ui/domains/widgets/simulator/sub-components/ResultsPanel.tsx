@@ -32,7 +32,7 @@ const bannerFor = (outcome: SimOutcome, stopAtCheckId: CheckId | ''): { tone: Ba
     case 'stopped-at-check':
       return { tone: 'success', icon: '✓', title: 'Success', detail: `Reached ${resolveStopName(stopAtCheckId)}` };
     case 'completed':
-      return { tone: 'success', icon: '✓', title: 'Success', detail: 'All checks complete — goal reached' };
+      return { tone: 'success', icon: '✓', title: 'Success', detail: 'All checks complete and the goal reached' };
     case 'not-completable':
       return { tone: 'danger', icon: '✕', title: 'Not completable', detail: 'The frontier exhausted with checks still blocked' };
   }
@@ -65,7 +65,7 @@ const ResultsPanel = (props: ResultsPanelProps) => {
             <Text className="simulator__banner-detail">{banner.detail}</Text>
           </Box>
         </Box>
-        {/* Reveals the run's JSONL on disk — distinct from the in-app log dialog. */}
+        {/* Reveals the run's JSONL on disk, which is not the in-app log dialog. */}
         <Button size="sm" variant="tertiary" onClick={onOpenLog}>Reveal log file</Button>
       </Box>
 

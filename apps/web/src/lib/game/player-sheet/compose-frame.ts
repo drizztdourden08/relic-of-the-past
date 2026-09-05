@@ -3,8 +3,8 @@
  * Draw one atlas frame into an RGBA buffer.
  *
  * A frame is up to two 16x16 halves, each a 2x2 block of tiles read from its own sheet
- * offset — the halves are not adjacent on the sheet, which is why they have to be composed
- * rather than blitted as one rectangle. Quads are drawn in atlas order so the lower half
+ * offset. The halves are not adjacent on the sheet, which is why they have to be composed
+ * instead of blitted as one rectangle. Quads are drawn in atlas order so the lower half
  * lands over the upper where they overlap, matching the OAM order the engine writes.
  */
 import { POSE_ATLAS } from '@shared/game/data/native-tables/player-pose-atlas';

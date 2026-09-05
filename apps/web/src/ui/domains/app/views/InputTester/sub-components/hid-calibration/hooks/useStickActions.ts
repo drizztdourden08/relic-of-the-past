@@ -19,7 +19,7 @@ const useStickActions = (d: ActionDeps) => {
 
   /**
    * Reads the stick where it sits, on demand. Started by the user because only
-   * they know the stick is actually free, and it keeps the extremes rather than
+   * they know the stick is actually free, and it keeps the extremes instead of
    * waiting for stillness, so a stick that drifts still produces an answer.
    */
   const handleStickIdle = useCallback((side: StickSide) => {

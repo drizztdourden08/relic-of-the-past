@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 /**
- * TriggerBar — vertical fill bar showing analog trigger value.
+ * Vertical fill bar showing analog trigger value.
  */
 
 import type { CSSProperties } from 'react';

@@ -36,11 +36,11 @@ const getAdjacentScreen = (screenIdx: number, edge: 'north' | 'south' | 'east' |
 
 const has2TileClearance = (row: number, col: number, dr: number, dc: number, isPassable: (r: number, c: number) => boolean): boolean => {
   if (dr !== 0) {
-    // Moving vertically — check horizontal clearance
+    // Moving vertically, so check horizontal clearance
     if (col > 0 && isPassable(row, col - 1)) return true;
     if (col < GRID_SIZE - 1 && isPassable(row, col + 1)) return true;
   } else {
-    // Moving horizontally — check vertical clearance
+    // Moving horizontally, so check vertical clearance
     if (row > 0 && isPassable(row - 1, col)) return true;
     if (row < GRID_SIZE - 1 && isPassable(row + 1, col)) return true;
   }

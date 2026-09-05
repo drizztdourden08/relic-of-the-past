@@ -2,7 +2,7 @@
 /**
  * One open finding on this screen: what kind it is, how sure the detector
  * was, and the one-line reason. Clicking it opens the Data Inspector's own
- * comparison view at this exact finding — the card never shows a diff
+ * comparison view at this exact finding. The card never shows a diff
  * itself, so there is only ever one place a finding's current/proposed pair
  * is rendered.
  */

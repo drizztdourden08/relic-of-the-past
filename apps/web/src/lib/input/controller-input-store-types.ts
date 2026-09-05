@@ -18,7 +18,7 @@ interface ControllerInputState {
   reportId?: number;
 }
 
-/** Raw HID report emitted for calibration — unprocessed bytes */
+/** Raw HID report emitted for calibration, unprocessed bytes */
 interface HidRawReportEvent {
   deviceKey: string;
   reportId: number;

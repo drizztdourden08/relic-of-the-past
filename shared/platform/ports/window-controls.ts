@@ -1,6 +1,6 @@
 /* @layer shared-platform @kind logic */
 /**
- * Window-control port — the first carved capability. Covers exactly the window
+ * Window-control port, the first carved capability. It covers exactly the window
  * surface the titlebar uses today (min/max/close/fullscreen/always-on-top + the
  * maximized/fullscreen state and their change events). Electron fulfills it via
  * window.api; mobile hosts return no-ops.

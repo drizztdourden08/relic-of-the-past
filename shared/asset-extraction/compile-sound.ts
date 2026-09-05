@@ -1,7 +1,4 @@
 /* @layer shared-asset-extraction @kind logic */
-/**
- * Sound bank asset compilation — extract and compile music/SFX data.
- */
 import type { RomData } from './rom/rom-types';
 import type { AssetBuilder } from './asset-builder';
 import { bufToArr } from './asset-builder';

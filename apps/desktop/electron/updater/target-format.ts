@@ -2,14 +2,12 @@
 /**
  * Whether a version being offered reads the save states this build writes.
  *
- * The id travels in the ASSET FILENAME — `state-format-<id>.json` — which means the
- * release listing the updater already fetches answers the question for every version in
- * the picker at once, with no extra request per row. The file's contents are there for a
- * human reading the release page; nothing here needs them. Same trick the SDL3 addon
- * asset uses to encode its build key.
+ * The id travels in the ASSET FILENAME (`state-format-<id>.json`), so the release
+ * listing the updater already fetches answers for every version at once. The file's
+ * contents are for a human reading the release page.
  *
- * A version that publishes no such asset is UNVERIFIABLE, never "compatible". Guessing
- * optimistically here is exactly how save states would be lost without warning.
+ * A version that publishes no such asset is UNVERIFIABLE, never "compatible":
+ * guessing optimistically is how save states get lost without warning.
  */
 import { BASELINE, compareTargetFormat } from '@shared/game/save-state';
 import type { TargetCompat } from '@shared/game/save-state';
@@ -28,9 +26,8 @@ const declaredFormatId = (assets: AssetLike[] | undefined): string | null => {
 };
 
 /**
- * Releases from before the id was ever published are not unknown — no build that could
- * have produced them wrote anything but the baseline format. Without this every
- * historical version would show a warning for a difference that does not exist.
+ * Releases from before the id was published are not unknown: every build then wrote
+ * the baseline format. Without this every historical version would show a warning.
  */
 const isPreBaseline = (version: string): boolean =>
   compareVersions(version, BASELINE.upToVersion) <= 0;

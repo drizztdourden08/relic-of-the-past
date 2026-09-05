@@ -35,7 +35,7 @@ const ringTop = logoTop + LOGO + GAP;
 const ringLeft = Math.round((W - RING) / 2);
 
 // The gold quarter, centred on twelve o'clock, drawn as an arc so it matches the
-// CSS border-top-color trick rather than approximating it.
+// CSS border-top-color trick instead of approximating it.
 const arcPath = () => {
   const c = RING / 2;
   const r = (RING - STROKE) / 2;
@@ -84,8 +84,8 @@ const stacked = Buffer.concat(frames);
 await sharp(stacked, {
   raw: { width: W, height: H * FRAMES, channels: 4, pageHeight: H },
 })
-    // Full palette and no dithering: the mark is a smooth gold gradient, and dither
-  // turns that into speckle. Zero interframe error keeps the ring crisp per frame.
+  // No dithering: the mark is a smooth gold gradient, and dither turns it into
+  // speckle. Zero interframe error keeps the ring crisp per frame.
   .gif({
     loop: 0,
     delay: new Array(FRAMES).fill(DELAY_MS),

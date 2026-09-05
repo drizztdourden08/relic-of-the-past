@@ -1,13 +1,7 @@
 /* @layer tooling-scripts @kind logic */
-/**
- * One short report to stderr — silent when both mirrors are clean/unmanaged,
- * specific about what to do when they aren't.
- *
- * Not everything reported here blocks. An unpushed vault commit is worth saying
- * out loud but is recoverable, so the bypass line only appears when something
- * actually stands in the way — otherwise it reads as an instruction to silence a
- * warning that was never stopping anything.
- */
+// One short report to stderr, silent when both mirrors are clean. The bypass line
+// only appears when something blocks, or it reads as an instruction to silence a
+// warning that was never stopping anything.
 import { join } from 'node:path';
 import { locateAiConfigRepo } from './locate-ai-config-repo.mjs';
 
@@ -16,7 +10,7 @@ const printReport = ({ ai, vault, blocking }) => {
 
   if (ai.status === 'drift') {
     const repo = locateAiConfigRepo();
-    lines.push('ai-config: local edits differ from the last render — these live only in the');
+    lines.push('ai-config: local edits differ from the last render. These live only in the');
     lines.push('gitignored .claude/ and will be OVERWRITTEN by the next bootstrap render:');
     ai.edits.forEach((p) => lines.push(`  ${p}`));
     lines.push('  -> fold the edit back into the claude-config source, commit + push it there');

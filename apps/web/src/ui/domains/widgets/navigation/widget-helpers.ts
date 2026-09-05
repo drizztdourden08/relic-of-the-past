@@ -56,7 +56,7 @@ const enrichEntrances = (): OverworldEntrance[] => {
     const resolved = resolveToSubScreen(e.area, bigRow, bigCol);
     return { area: resolved.area, pos: e.pos, id: e.id, gridRow: resolved.gridRow, gridCol: resolved.gridCol, roomId: rooms?.[e.id] ?? 0 };
   });
-  // Merge fall holes (pits that lead to rooms) — id offset 200+ to avoid collision.
+  // Merge fall holes (pits that lead to rooms), offsetting ids by 200+ to avoid collision.
   // Fall hole pos stores row offset by -8; add 8 back.
   for (const h of holes) {
     const bigRow = ((h.pos >> 7) + 8) * 2;

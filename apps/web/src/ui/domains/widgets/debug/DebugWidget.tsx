@@ -1,8 +1,7 @@
 /* @layer renderer-widgets @kind component */
 /**
- * GameStateContent — a live, categorized view of every game-hook-synced state
- * value (mode, HUD, equipment, inventory, dungeon progress, text, map, …).
- * Rendered inside the widget frame.
+ * A live, categorized view of every game-hook-synced state value (mode, HUD,
+ * equipment, inventory, dungeon progress, text, map). Rendered inside the widget frame.
  */
 import { Box, Button } from '../../../design-system/primitives';
 import { useGameUIStore } from '../../../../stores/game-ui-store';

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-/** Mobile tab — mobile/device-specific display options. */
+/** Mobile and device-specific display options. */
 import type { GameSettings } from '@shared/types/settings';
 import { SettingsLayout, type Section } from '../../../compounds/SettingsLayout';
 import { openVanillaSafeSettings } from '@app/stores/search-store';

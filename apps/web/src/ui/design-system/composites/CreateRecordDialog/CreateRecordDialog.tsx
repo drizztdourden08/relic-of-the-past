@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
  * A brand-new record, filled in with the same field-kit rendering machinery
- * `RecordEditor` uses to edit one — `EditorGroup`/`EditorRow` recurse through
+ * `RecordEditor` uses to edit one. `EditorGroup`/`EditorRow` recurse through
  * the schema exactly as they do there, so a dropdown, an idRef picker or a
  * requirement editor looks and behaves identically whether the record already
  * exists or is being created right now.
@@ -25,7 +25,7 @@ import './CreateRecordDialog.css';
 
 const CANCEL = 'Cancel';
 const CREATE = 'Create';
-const CREATING = 'Creating…';
+const CREATING = 'Creating...';
 const NO_FIELDS = 'This record has no fields to fill in.';
 const NOT_DIRTY = () => false;
 

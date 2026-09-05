@@ -4,15 +4,15 @@
  *
  * Width comes from `measureRows`, so a line here is sized by the same walk that
  * audits a whole entry and the two can never disagree. A line holds no advance
- * code, so that walk closes exactly one run and its width IS the line's width —
- * which is also why a line is measured alone rather than inheriting whatever an
+ * code, so that walk closes exactly one run and its width IS the line's width.
+ * That is also why a line is measured alone instead of inheriting whatever an
  * earlier line left standing further right: a row marker starts a fresh run.
  *
  * The character count is deliberately NOT the glyph total. A gutter is there to
  * tell an author how much room is left, and a substitution or a bracketed
  * picture glyph is one thing they typed, so each counts once however many glyphs
  * it draws. Text that no glyph matches still counts, so a mistyped bracket run
- * shows up as content rather than vanishing.
+ * shows up as content instead of vanishing.
  */
 import { resolveRefs } from '../glossary/resolve-refs';
 import type { GlossaryTerm, Token } from '../types';
@@ -30,8 +30,8 @@ type LineMetrics = {
 };
 
 /**
- * True when a bracketed name is spelled by the alphabet itself — a picture
- * glyph rather than a control code. The whole name must be consumed, otherwise
+ * True when a bracketed name is spelled by the alphabet itself, making it a
+ * picture glyph and not a control code. The whole name must be consumed, otherwise
  * the alphabet only matched a prefix and this is a real command.
  */
 const isGlyphName = (name: string, metrics: GlyphMetrics): boolean => {

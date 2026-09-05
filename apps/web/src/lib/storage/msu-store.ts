@@ -12,7 +12,7 @@ import { isZip, unzip } from '@shared/storage/archive';
 import { getPlatform } from '@app/platform/get-platform';
 import { publishImportProgress } from './import-progress-bus';
 import { probeAudioFile } from './audio-probe';
-// The one shape, so the renderer cannot quietly fall behind what an import actually reports.
+// The one shape, so the renderer cannot silently fall behind what an import actually reports.
 import type { MsuResult } from '@shared/ipc/msu-contract';
 
 const files = () => getPlatform().files;
@@ -46,15 +46,15 @@ const listMsuPacks = () => msu.listPacks(files());
 const getMsuPackFiles = (pack: string) => msu.getPackFiles(files(), pack);
 const getMsuTrackList = (pack: string) => msu.getTrackList(files(), pack);
 const listMsuAudioFiles = (pack: string) => msu.listAudioFiles(files(), pack);
-/** Every file in the pack folder, audio or not, the manifest excepted — what an export stores. */
+/** Every file in the pack folder, audio or not, the manifest excepted. This is what an export stores. */
 const listMsuPackEntries = (pack: string) => msu.listPackEntries(files(), pack);
 // Passed unconditionally: the probe answers null when no decoder is installed, so the
-// encoded rows simply stay unfilled rather than the caller branching on availability.
+// encoded rows stay unfilled instead of the caller branching on availability.
 const getMsuFileMetadata = (pack: string) => msu.packFileMetadata(files(), pack, probeAudioFile);
 const readMsuLoopSample = (pack: string, fileName: string) => msu.readMsu1LoopSample(files(), pack, fileName);
 const deleteMsuPack = (pack: string) => msu.deletePack(files(), pack);
 
-// ── Pack editing (.msul manifest + per-file operations) ──
+// Pack editing: .msul manifest plus per-file operations.
 const readMsuManifest = (pack: string) => msu.readManifest(files(), pack);
 const writeMsuManifest = (pack: string, manifest: MsuPackManifest) => msu.writeManifest(files(), pack, manifest);
 const createMsuPack = (pack: string, meta?: Partial<MsuPackMeta>) => msu.createPack(files(), pack, meta);
@@ -64,7 +64,7 @@ const deleteMsuTrackFile = (pack: string, fileName: string) => msu.deleteTrackFi
 const writeMsuTrackFile = (pack: string, fileName: string, data: ArrayBuffer) =>
   msu.writeTrackFile(files(), pack, fileName, new Uint8Array(data));
 
-// ── Per-save music-resume sidecars ──
+// Per-save music-resume sidecars.
 const writeMsuResume = (profile: string, kind: SaveKind, id: string | number, state: MsuResumeState) =>
   resume.writeMsuResume(files(), profile, kind, id, state);
 const readMsuResume = (profile: string, kind: SaveKind, id: string | number) =>

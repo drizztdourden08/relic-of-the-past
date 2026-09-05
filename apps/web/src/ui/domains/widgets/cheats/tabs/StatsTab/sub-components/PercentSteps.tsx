@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 /**
- * The quarter-step row under a stat control. Presentational — it knows the fractions, nothing about
+ * The quarter-step row under a stat control. It knows the fractions and nothing about
  * what is being filled.
  */
 import { Box, Button } from '@ds/primitives';

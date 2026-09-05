@@ -1,20 +1,8 @@
 /* @layer renderer-components @kind component */
 /**
- * A list whose elements are plain records: each one opened as its own small
- * form, with the same add, remove and reorder the list of values gets.
- *
- * The original reason a list of records stayed read-only was about VARIANTS —
- * no element form, no stable identity, no answer to "add what" when the element
- * could be any of several shapes. None of that holds for one well-defined
- * shape: the form is the element's own children, "add what" is a blank of that
- * shape, and identity is the index, exactly as it already is for a list of
- * values. A list of variants, of lists, or of nothing described keeps the
- * summary, because for those the original reasoning still stands.
- *
- * Rows recurse through `EditorRow`, so an element's fields are edited by the
- * very same controls they would get at the top level — a reference inside an
- * element gets the real picker, a number gets the real bounds — rather than by
- * a second, lesser set of controls maintained here.
+ * A list of plain records, each opened as its own small form with add, remove
+ * and reorder. Rows recurse through `EditorRow`, so an element's fields get
+ * the same controls they would at the top level.
  */
 import { Box } from '../../../primitives/Box';
 import { Button } from '../../../primitives/Button';

@@ -1,13 +1,9 @@
 /* @layer tests @kind test */
 /**
  * The delete-guard's reverse index for the six record-facade collections.
- *
- * Every case is picked off the LIVE dataset rather than hardcoded, so a
- * renumbering or a re-file cannot quietly turn an assertion into a tautology:
- * the test finds a record that really carries the reference, then demands the
- * index report exactly that record and that field. What is being pinned is that
- * a delete of any of these six cannot be shown as unreferenced while something
- * still points at it — which is the whole reason the guard exists.
+ * Every case is picked off the LIVE dataset, not hardcoded, so a renumbering
+ * cannot turn an assertion into a tautology: find a record that carries the
+ * reference, then demand the index report exactly that record and field.
  */
 import { describe, expect, it } from 'vitest';
 import { all } from '@shared/game/data';

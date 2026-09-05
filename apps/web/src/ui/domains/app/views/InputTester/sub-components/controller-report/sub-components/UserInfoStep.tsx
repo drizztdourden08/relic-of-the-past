@@ -7,7 +7,7 @@ type UserInfoStepProps = Pick<
   'email' | 'setEmail' | 'emailTouched' | 'emailValid' | 'name' | 'setName' | 'additionalInfo' | 'setAdditionalInfo' | 'debugText'
 >;
 
-/** Step 2 — contact info plus the same auto-collected debug info the bug report attaches. */
+/** Step 2 collects contact info plus the same auto-collected debug info the bug report attaches. */
 const UserInfoStep = (props: UserInfoStepProps) => {
   const { email, setEmail, emailTouched, emailValid, name, setName, additionalInfo, setAdditionalInfo, debugText } = props;
 
@@ -28,7 +28,7 @@ const UserInfoStep = (props: UserInfoStepProps) => {
       <Text as="p" className="controller-report__hint">
         The same app/OS/hardware debug info attached to normal bug reports is included automatically.
       </Text>
-      <Text as="pre" className="controller-report__section-text">{debugText ?? 'Collecting…'}</Text>
+      <Text as="pre" className="controller-report__section-text">{debugText ?? 'Collecting...'}</Text>
     </>
   );
 };

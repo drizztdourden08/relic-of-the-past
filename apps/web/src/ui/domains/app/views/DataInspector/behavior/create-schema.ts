@@ -1,20 +1,10 @@
 /* @layer renderer-app @kind logic */
 /**
- * The schema a create dialog actually offers, per collection.
- *
- * The id is never one of them — it comes back allocated, on every collection
- * alike. A handful of collections also derive a field their `Allocate*` write
- * path has nowhere to put: a tag's `name` is computed from its namespace and
- * value rather than entered (`allocateTag` takes the combined key), and an
- * area/location's `vanillaName` has no slot in `AllocateGeographyArgs`. Every
- * other collection's create channel takes the whole record (minus id), so
- * nothing else needs trimming.
- *
- * These are dropped entirely rather than merely hidden: a dropped field is
- * never seeded by `blankRecordFor` either, so the draft that reaches the wire
- * never carries a stray value for something the write path cannot accept —
- * carrying even a blank `id` through would let it collide with the one the
- * allocator mints.
+ * The schema a create dialog offers, per collection. The id is allocated, never
+ * entered. A tag's `name` is computed from namespace and value (`allocateTag`
+ * takes the combined key), and area/location `vanillaName` has no slot in
+ * `AllocateGeographyArgs`. Dropped, not hidden, so `blankRecordFor` never seeds
+ * them and a blank `id` cannot collide with the allocated one.
  */
 import { IDENTITY_PATH } from '@ds/composites/RecordEditor';
 import type { EntityKind } from '@shared/game/data';

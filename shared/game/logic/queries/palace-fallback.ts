@@ -1,16 +1,16 @@
 /* @layer shared-game @kind logic */
 /**
  * The palace-scan safety net for indoor screen detection. Moved from
- * data/screens/palace-fallback.ts — logic unchanged, ScreenDefinition →
- * ScreenRecord.
+ * data/screens/palace-fallback.ts with the logic unchanged: ScreenDefinition
+ * became ScreenRecord.
  *
  * A dungeon screen is keyed by `palaceIndex:roomIndex`, so a screen whose dataset
  * `palaceIndex` disagrees with the live `cur_palace_index_x2` misses the exact key.
- * Rather than report "unknown screen", detection falls back to matching on the room
- * number alone — which finds the right screen, because room numbers are unique
+ * Instead of reporting "unknown screen", detection falls back to matching on the room
+ * number alone, which finds the right screen, because room numbers are unique
  * across dungeons.
  *
- * That is a genuine safety net and it stays. What it must NOT do is hide the
+ * That is a real safety net and it stays. What it must NOT do is hide the
  * mislabel: every fallback hit is recorded here, so a wrong `palaceIndex` can be
  * reported instead of silently costing the exact key. `describePalaceMismatch`
  * turns one into a developer-facing line; the renderer logs it.
@@ -42,7 +42,7 @@ const hex = (n: number): string => `0x${n.toString(16).padStart(2, '0')}`;
 /** A developer-facing one-liner naming the room, both palaces and the screen to fix. */
 const describePalaceMismatch = ({ expected, actual, room, screenId }: PalaceMismatch): string =>
   `[screens] palace mismatch: room ${hex(room)} reports palace ${hex(actual)} but "${screenId}" is ` +
-  `tagged palace ${hex(expected)} — resolved by room scan; fix that screen's dungeon.palaceIndex.`;
+  `tagged palace ${hex(expected)}. Resolved by room scan; fix that screen's dungeon.palaceIndex.`;
 
 /**
  * Finds a dungeon screen by room number alone, ignoring the palace.
@@ -61,7 +61,7 @@ const scanForRoom = (byDungeonRoom: Map<string, ScreenRecord>, room: number, act
 /** Every palace mismatch seen so far, keyed by `livePalace:room`. */
 const getPalaceMismatches = (): ReadonlyMap<string, PalaceMismatch> => seen;
 
-/** Clears the recorded mismatches — for tests that assert on a clean slate. */
+/** Clears the recorded mismatches, for tests that assert on a clean slate. */
 const clearPalaceMismatches = (): void => { seen.clear(); };
 
 export { scanForRoom, getPalaceMismatches, clearPalaceMismatches, describePalaceMismatch };

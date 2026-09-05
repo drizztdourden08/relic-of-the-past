@@ -1,11 +1,5 @@
 /* @layer renderer-components @kind component */
-/**
- * The selected pack's identity row: rename it, read what it is, send it out.
- *
- * "Standard" / "Extended" is the wording the audio settings already use for the same fact, so
- * the app names it once; "Layered" / "Classic" is the separate question of whether the pack
- * carries a manifest, and the two are shown side by side rather than blended into one label.
- */
+// "Standard"/"Extended" matches the audio settings wording; "Layered"/"Classic" is whether a manifest exists.
 import { useEffect, useState } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
@@ -67,10 +61,10 @@ const MsuPackHeader = (props: MsuPackHeaderProps) => {
 
       <ButtonRow align="start">
         <Button variant="secondary" size="sm" disabled={busy} onClick={() => onExport('msul')}>
-          {exporting === 'msul' ? 'Exporting…' : 'Export .msul'}
+          {exporting === 'msul' ? 'Exporting...' : 'Export .msul'}
         </Button>
         <Button variant="tertiary" size="sm" disabled={busy} onClick={() => onExport('msu1')}>
-          {exporting === 'msu1' ? 'Exporting…' : 'Export MSU-1'}
+          {exporting === 'msu1' ? 'Exporting...' : 'Export MSU-1'}
         </Button>
       </ButtonRow>
     </Box>

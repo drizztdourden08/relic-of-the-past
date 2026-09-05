@@ -10,7 +10,7 @@ import { resolveGates } from '@shared/features/resolve-gates';
 
 // Registered features0-bit ids whose GameSettings field shares the id's name and is requested
 // unconditionally (any extra condition, e.g. "only when the ratio is actually wide", is applied by the
-// caller on top of effectiveFeatureIds — the resolver only owns the requires/vanillaSafe cascade).
+// caller on top of effectiveFeatureIds, since the resolver only owns the requires/vanillaSafe cascade).
 const RAW_FEATURE_KEYS = [
   'extendedRendering', 'linearWorldTilemap', 'ultrawideRendering', 'tallRendering',
   'widescreenSprites', 'widescreenVisualFixes', 'cameraLockToViewport', 'smoothTransitions',
@@ -22,7 +22,7 @@ const requestedFeatureIds = (s: GameSettings): string[] => {
   const ids: string[] = RAW_FEATURE_KEYS.filter((key) => Boolean(s[key]));
   for (const fix of BUNDLE_FIXES) {
     // Matches the legacy-bundle fallback in buildFeatureWords: an unset granular toggle inherits the
-    // bundle master it was split from (WidescreenVisualFixes-origin fixes also need a genuinely wide ratio).
+    // bundle master it was split from (WidescreenVisualFixes-origin fixes also need a wide ratio).
     const legacy =
       fix.bundleOrigin === 'GameChangingBugFixes'
         ? s.gameChangingBugFixes

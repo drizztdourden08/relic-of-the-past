@@ -1,13 +1,11 @@
 /* @layer renderer-widgets @kind hook */
 /**
- * `liveSprites`/`spriteCombat` for the current screen — the actor-facing half
- * of `ScreenObservations`. Read directly off the room-addressable simulator
- * queries (`wasmGetRoomSpriteSpawns`/`wasmGetOverworldSpriteSpawns`), which
- * already report `{spriteType, col, row, floor}` per spawn — the same shape
- * `LiveSpriteObservation` wants, so the raw rows pass straight through.
- * `spriteCombat` resolves one native row per DISTINCT sprite type spawned
- * here, never per spawn instance, keeping the wasm call count bounded by how
- * many kinds of actor share the room rather than how many copies are on it.
+ * `liveSprites`/`spriteCombat` for the current screen, which is the actor-facing half
+ * of `ScreenObservations`. The room-addressable simulator queries
+ * (`wasmGetRoomSpriteSpawns`/`wasmGetOverworldSpriteSpawns`) already report the
+ * `LiveSpriteObservation` shape per spawn, so the raw rows pass straight through.
+ * `spriteCombat` resolves one native row per DISTINCT sprite type, never per
+ * spawn instance, so the wasm call count is bounded by kinds of actor, not copies.
  */
 import { useMemo } from 'react';
 import { wasmGetRoomSpriteSpawns, wasmGetOverworldSpriteSpawns, wasmGetSpriteCombat } from '@app/lib/game';

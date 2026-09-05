@@ -1,10 +1,8 @@
 /* @layer renderer-components @kind component */
 /**
- * Renders a language's dialogue font. The font is 256 8x8 2bpp tiles that pair up
- * into 128 characters of 8x16 (top tile + bottom tile). For character c:
- *   topTile = (c >> 4) * 32 + (c & 15),  bottomTile = topTile + 16
- * (16 chars per row; each char-row spans two tile-rows). We decode both halves and
- * paint them stacked, using the element's themed `color`.
+ * The font is 256 8x8 2bpp tiles pairing into 128 characters of 8x16. For
+ * character c: topTile = (c >> 4) * 32 + (c & 15), bottomTile = topTile + 16
+ * (16 chars per row; each char-row spans two tile-rows).
  */
 import { useRef, useEffect } from 'react';
 import { Canvas } from '../../../../../../../design-system/primitives/Canvas';

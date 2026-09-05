@@ -21,10 +21,8 @@ const useControllerReportForm = (deviceKey: string) => {
   const detection = useDetectionContext(deviceKey);
   const { buildDebugText } = useDebugTextBuilder();
   const { debugText } = useDebugText(buildDebugText);
-  // The run stays open through the review step, not just while its own steps
-  // are on screen. Closing it there and opening it again on the way back would
-  // re-run the wizard's first step, which releases the hold, while the wizard
-  // sat on its summary — and only the positional-capture step ever restores it.
+  // The run stays open through the review step. Closing and reopening it would re-run the
+  // wizard's first step, which releases the hold, and only the positional-capture step restores it.
   const diagnosticsOpen = step === 'diagnostics' || step === 'confirm';
   const { wizard, diagnosticsReport } = useReportDiagnostics(deviceKey, diagnosticsOpen);
   const calibrationMap = wizard.byteCapture;
@@ -42,10 +40,7 @@ const useControllerReportForm = (deviceKey: string) => {
   const goToStep = useCallback((to: ReportStep) => setStep(to), []);
   const finishDiagnostics = useCallback(() => setStep('confirm'), []);
 
-  // Returns to the run where it was left, on its summary, with both captures
-  // and the restored hold intact. Nothing is re-run, so a reviewer who only
-  // wanted another look at the results does not have to redo the whole
-  // capture to get back here.
+  // Returns to the run's summary with both captures and the restored hold intact; nothing is re-run.
   const backToDiagnostics = useCallback(() => setStep('diagnostics'), []);
 
   const submit = useCallback(async () => {
@@ -55,8 +50,7 @@ const useControllerReportForm = (deviceKey: string) => {
       const { url } = await window.api.createGithubIssue({
         email,
         title: `Controller report: ${detection.detectedName} (${detection.vendorId}:${detection.productId})`,
-        // Only what the reporter actually wrote. Every captured artefact goes
-        // through controllerReport below, so the issue body has one shape.
+        // Only what the reporter wrote; every captured artefact goes through controllerReport below.
         message: [
           name.trim() ? `Reported by: ${name.trim()}` : null,
           additionalInfo.trim() || '_No additional info provided._',

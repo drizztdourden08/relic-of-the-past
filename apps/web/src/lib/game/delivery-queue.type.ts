@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind types */
-/** Types for the delivery queue — item deliveries that wait until the player can receive them. */
+/** Types for the delivery queue, which holds item deliveries that wait until the player can receive them. */
 
 interface DeliveryEntry {
   id: string;

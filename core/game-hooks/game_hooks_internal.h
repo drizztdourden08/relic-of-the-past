@@ -33,8 +33,8 @@ static inline bool CheatGate(uint32 bit) {
 }
 
 // The simulator's read side: developer mode alone. The Location & Navigation widget inspects sim
-// state (chests, doors, sprite spawns, cell locks) outside of a run as well as during one, so this
-// cannot also require kHostGate_SimulatorSupport — that bit is armed only for the run's lifetime.
+// state (chests, doors, sprite spawns, cell locks) outside of a run and during one, so this
+// cannot also require kHostGate_SimulatorSupport, which is armed only for the run's lifetime.
 static inline bool SimQueryGate(void) {
   return (enhanced_features0 & kFeatures0_DeveloperTools) != 0;
 }
@@ -49,22 +49,22 @@ static inline bool SimMutateGate(void) {
 
 // Check-trigger grants answer to TWO callers holding different permissions: the cheat UI, and the
 // simulator walking a route headlessly. On the cheat bit alone a sim run silently produced wrong
-// results whenever cheats were off — grants no-opped while the run still reported success. Resolved
-// once here so each call site stays a single condition. The simulator half is SimMutateGate rather
-// than a bare HostGate check so a check-trigger grant answers to the same dev-mode + run-scope
+// results whenever cheats were off: grants no-opped while the run still reported success. Resolved
+// once here so each call site stays a single condition. The simulator half is SimMutateGate and not
+// a bare HostGate check so a check-trigger grant answers to the same dev-mode + run-scope
 // requirement as every other WasmSim* mutator, now that the simulator sits behind developer mode.
 static inline bool TriggerGrantAllowed(void) {
   return CheatGate(kFeatures3_CheatItemGrant) || SimMutateGate();
 }
 
 // ─── Host-data gates ───
-// Exports that feed a HOST system rather than the game. None of them changes what the game computes,
+// Exports that feed a HOST system instead of the game. None of them changes what the game computes,
 // but "it only reads" is not a reason to skip a gate: each is a host feature consuming emulated state,
-// so each answers to its own bit. Keeping them separate is what makes the granularity real — turning
-// the tracker off must not take navigation down with it.
+// so each answers to its own bit. Keeping them separate is what makes the granularity real, because
+// turning the tracker off must not take navigation down with it.
 //
 // Every one of these is a plain single-bit test, so a call site stays one condition. Where a query
-// genuinely serves two systems the OR lives HERE, in a named helper, never at the call site.
+// serves two systems the OR lives HERE, in a named helper, never at the call site.
 
 static inline bool TrackerQueryGate(void) {
   return (enhanced_features3 & kFeatures3_TrackerQueries) != 0;
@@ -86,7 +86,7 @@ static inline bool DeliveryQueryGate(void) {
   return (enhanced_features3 & kFeatures3_DeliveryQueries) != 0;
 }
 
-// The save-flag reads (progress, room, overworld) genuinely serve two masters: the tracker polls them
+// The save-flag reads (progress, room, overworld) serve two masters: the tracker polls them
 // for the player's checklist, and the simulator reads them while walking a route. Gating them on the
 // simulator's half alone would silently kill the tracker for every player, which is the trap this
 // helper exists to make impossible to fall into at a call site.

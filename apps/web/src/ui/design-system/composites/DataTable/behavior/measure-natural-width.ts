@@ -1,34 +1,16 @@
 /* @layer renderer-components @kind logic */
 /**
- * How wide an element's content WANTS to be, told apart from how wide its box
- * happens to be right now.
- *
- * A clipped element cannot answer that about itself. `scrollWidth` only rises
- * above the box once the content is genuinely spilling out of it; while the
- * content fits, it hands the box straight back. So asking a comfortably sized
- * cell how much room it needs returns the room it already has, and a fit built
- * on that can hold a column where it is or push it wider, but never bring it in.
- *
- * The way out is to measure the element somewhere nothing is holding it: a copy
- * of it, sized to `max-content`, inside a hidden host parked off the top of the
- * viewport. A COPY rather than the element itself because the real one is a grid
- * item — letting go of it would resize the tracks around it. The real node
- * cloned rather than its text run through a canvas because a cell is not always
- * text: a badge, a linked id in a mono face and a muted placeholder each render
- * as something with a size of its own, and only the browser laying the actual
- * thing out gets all of them right.
- *
- * Everything asked for in one call is measured in one pass — the clones go up
- * together, the widths come back together, the host comes down — so a column is
- * one layout rather than one per row.
+ * How wide an element's content wants to be. `scrollWidth` only exceeds the box
+ * once content spills, so a clipped cell cannot be asked directly. Instead a
+ * clone sized to `max-content` is measured in a hidden host off the viewport: a
+ * clone because the real node is a grid item, a clone (not canvas text) because
+ * a cell may be a badge or a mono id. One pass per call, so a column is one layout.
  */
 
 /**
- * Parked out of sight the same way the drag ghost is: it has to be laid out for
- * anything to be read off it, so it can be moved away but not hidden. `fixed`
- * keeps it out of the table scroller's overflow, and the host sits on the
- * document body so no ancestor transform can become its containing block and
- * cap what `max-content` is allowed to reach.
+ * The host must be laid out to be read, so it is moved away, not hidden. `fixed`
+ * keeps it out of the scroller's overflow; on the body, no ancestor transform
+ * can cap `max-content`.
  */
 const HOST_STYLE = [
   'position: fixed',
@@ -39,11 +21,9 @@ const HOST_STYLE = [
 ].join('; ');
 
 /**
- * The copy, let go of: no track to fill, no box to fit inside, and sized to
- * exactly what it holds. Replacing the style attribute outright rather than
- * adding to it also drops any transform the original was carrying, which would
- * otherwise land in the measurement. `display: block` because the original may
- * be an inline label, and width means nothing on an inline box.
+ * The copy, sized to what it holds. Replacing the style attribute outright also
+ * drops any transform the original carried. `display: block` because width means
+ * nothing on an inline box.
  */
 const CLONE_STYLE = [
   'position: static',
@@ -55,10 +35,7 @@ const CLONE_STYLE = [
   'transform: none',
 ].join('; ');
 
-/**
- * The natural width of every element handed in, in the order they were handed
- * in. Nothing to measure touches no DOM at all.
- */
+/** Natural width of every element, in order. An empty list touches no DOM. */
 const naturalContentWidths = (elements: readonly HTMLElement[]): number[] => {
   const [first] = elements;
   if (!first) return [];

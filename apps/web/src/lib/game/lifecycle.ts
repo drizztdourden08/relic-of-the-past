@@ -1,8 +1,4 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Game Lifecycle — startGame / resetGame orchestration.
- * Composes wasm-bridge, sram-sync, save-states, and randomizer.
- */
 
 import { log } from '../log-bus';
 import * as savesStore from '../storage/saves-store';
@@ -31,14 +27,14 @@ import { getPlatform } from '../../platform/get-platform';
 
 declare function Zelda3(config: Record<string, unknown>): Promise<EmscriptenModule>;
 
-// Custom player sprite (.zspr) staged for the next boot — written to MEMFS where ApplyCustomLinkGraphics reads it.
+// Custom player sprite (.zspr) staged for the next boot in MEMFS, where ApplyCustomLinkGraphics reads it.
 let pendingLinkSprite: Uint8Array | null = null;
 
 const setLinkSpriteData = (data: Uint8Array | null): void => {
   pendingLinkSprite = data;
 };
 
-// ─── Auto-save config (set before game start, used during stop) ───
+// Auto-save config, set before game start and used during stop.
 interface AutoSaveConfig {
   enabled: boolean;
   intervalSeconds: number;
@@ -70,7 +66,7 @@ const resetGame = async (): Promise<void> => {
         }
       }
     } catch {
-      // Best-effort — don't block shutdown
+      // Best-effort so shutdown is not blocked
     }
   }
 
@@ -104,7 +100,7 @@ const resetGame = async (): Promise<void> => {
     if (sdl2?.capture?.scriptProcessorNode) sdl2.capture.scriptProcessorNode.disconnect();
     if (sdl2?.audioContext) sdl2.audioContext.close().catch(() => {});
 
-    // Free GPU resources — safe because the FX renderer guards with isContextLost().
+    // Free GPU resources, which is safe because the FX renderer guards with isContextLost().
     // The game canvas is WebGL1 (see startGame), so probe just that.
     const canvas = (mod as any).canvas as HTMLCanvasElement | undefined;
     canvas?.getContext('webgl')?.getExtension('WEBGL_lose_context')?.loseContext();
@@ -114,20 +110,19 @@ const resetGame = async (): Promise<void> => {
   (window as any).__zelda3Module = null;
   // A fresh core starts with every host gate clear. The bridge keeps a mirror of that word and
   // skips pushing a value it believes is already set, so a stale mirror would make the next
-  // arming a silent no-op — the takeover simply would not engage. Drop it with the module.
+  // arming a silent no-op. Drop it with the module.
   resetHostGates();
   setState({ status: 'idle', error: null });
 };
 
 const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, configIni?: string, profileId?: string): Promise<void> => {
-  // Re-entry guard MUST be synchronous (no await before setState('loading') below),
-  // or React StrictMode's rapid double-invoke in dev clears the guard twice before
-  // either sets 'loading' → two WASM loads → renderer crash / black screen. getGameState
-  // is statically imported (not awaited) precisely so this check can't yield first.
+  // Re-entry guard MUST be synchronous (no await before setState('loading')), or React
+  // StrictMode's double-invoke in dev passes the guard twice -> two WASM loads -> renderer
+  // crash. getGameState is statically imported so this check can't yield first.
   const currentState = getGameState();
 
   if (currentState.status === 'loading' || currentState.status === 'running') {
-    log.wasm('Game already running — ignoring start request');
+    log.wasm('Game already running, so the start request is ignored');
     return;
   }
 
@@ -175,18 +170,16 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
       }
     }
 
-    // Ensure the Emscripten glue is present before calling Zelda3() — the glue is
-    // now loaded lazily by the background warmup, which may not have finished yet.
+    // The glue is loaded lazily by the background warmup, which may not have finished.
     await loadGlueScript();
 
     const instantiateWasm = createInstantiateWasm();
 
     // preserveDrawingBuffer=true lets the edge-glow renderer cross-read the canvas on
     // Linux (native GL clears the backbuffer after SDL_RenderPresent); Emscripten reuses
-    // this same-type context. MUST be 'webgl' (WebGL1) — SDL2's Emscripten renderer is
-    // GLES2/WebGL1 (build sets no MAX_WEBGL_VERSION). A 'webgl2' context here makes SDL's
-    // getContext('webgl') null → accelerated renderer fails → software fallback's
-    // getContext('2d') is null too → "createImageData of null" (crashed Android's WebView).
+    // this same-type context. MUST be 'webgl' (WebGL1) because SDL2's Emscripten renderer is
+    // GLES2/WebGL1. A 'webgl2' context makes SDL's getContext('webgl') null, then the
+    // software fallback's getContext('2d') is null too ("createImageData of null" on Android).
     canvas.getContext('webgl', { preserveDrawingBuffer: true });
 
     const module: EmscriptenModule = await Zelda3({
@@ -209,7 +202,7 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
     reassertHostGates();
     setProfileId(profileId ?? null);
     // Debug-only handle for devtools inspection; the canonical module ref is
-    // wasm-bridge's `currentModule` (set via setModule above) — never read this in code.
+    // wasm-bridge's `currentModule` (set via setModule above). Never read this in code.
     (window as any).__zelda3Module = module;
     // Debug-only handle for the OAM snapshot query; gated on the developer-tools setting in C, so it
     // returns null when that is off. Lets a diagnostic read the sprite table as the PPU sees it,
@@ -222,34 +215,25 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
     log.wasm('WASM module running');
     canvas.focus();
 
-    // ─── Apply saved live flags (HUD/pause/backdrop hide, volumes) immediately ───
-    // A freshly-loaded module starts with every flag at default, so push the primed
-    // values now — otherwise the native HUD-hide flag stays off and the original HUD
-    // renders alongside the enhanced overlay.
+    // A fresh module starts with every live flag at default; push the primed values now or
+    // the native HUD renders alongside the enhanced overlay.
     reassertLiveFlagsAfterLoad();
 
-    // ─── Input manager: wire JS-driven input to WASM ───
     const inputMgr = getInputManager();
     inputMgr.setWasmBridge(setInput);
     inputMgr.start();
 
-    // ─── Tracker bridge: wire up item/inventory notifications ───
     initTrackerBridge();
 
-    // ─── Haptic bridge: wire up vibration feedback for game events ───
     initHapticBridge(DEFAULT_SETTINGS.haptics);
 
-    // ─── Transition events bridge: wire up window.__onTransitionSettled ───
     initTransitionEventsBridge();
 
-    // ─── Device lifecycle: hold the screen awake; save when backgrounded (mobile) ───
     getPlatform().device.keepAwake();
     appPauseUnsub = getPlatform().device.onAppPause(() => { void saveOnQuit(); });
 
-    // ─── UI bridge: start rAF polling for React overlay state ───
     initUIBridge(useGameUIStore.getState()._setState);
 
-    // ─── Delivery queue: start processing pending item deliveries ───
     deliveryQueue.startProcessing();
 
     if (getProfileId()) {

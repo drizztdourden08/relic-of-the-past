@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 /**
- * InputManager — Orchestrator for the renderer input engine.
+ * Orchestrator for the renderer input engine.
  *
  * Delegates to focused sub-modules (PauseManager, FunctionActionEngine,
  * RawInputDispatcher, polling-engine, profile-utils) and to
@@ -8,7 +8,7 @@
  * key handlers, and the per-frame poll loop.
  *
  * Fields are intentionally non-private so the lifecycle/events helpers can operate
- * on the instance (compile-time only — no runtime effect).
+ * on the instance (compile-time only, no runtime effect).
  *
  * Lifecycle: create → start() → stop() → start() → ...
  */
@@ -38,7 +38,7 @@ class InputManager {
   // All saved input profiles, kept in sync so the profile-cycle shortcut can switch
   // the active one during gameplay (settings screen not required).
   profiles: InputProfile[] = [];
-  // Devices the active profile's map references — the input gate whitelists these.
+  // Devices the active profile's map references. The input gate whitelists these.
   allowed: AllowedDevices = { keyboard: false, gamepadKeys: new Set() };
   activeProfileListeners = new Set<ActiveProfileListener>();
   persistActiveProfileId: ((id: string) => void) | null = null;
@@ -48,7 +48,7 @@ class InputManager {
   setInputFn: ((mask: number) => void) | null = null;
   running = false;
 
-  // Binding lookup maps — the gamepad ones are scoped by owning device (see
+  // Binding lookup maps. The gamepad ones are scoped by owning device (see
   // device-scoped-map.ts), so a binding recorded from one pad never fires from another.
   keyboardMap = new Map<string, SnesButton>();
   gamepadButtonMap: DeviceScopedMap<number, SnesButton> = new Map();
@@ -79,7 +79,6 @@ class InputManager {
   // Input suppression (menu/UI is open)
   inputSuppressed = false;
 
-  // ─── Sub-modules ───
   readonly pauseManager = new PauseManager();
   readonly functionActions = new FunctionActionEngine();
   readonly rawDispatcher = new RawInputDispatcher();
@@ -99,13 +98,12 @@ class InputManager {
     wireCheatActions(this);
   }
 
-  // ─── Event handler fields (stable identity for add/removeEventListener) ───
+  // Event handler fields, with stable identity for add/removeEventListener.
   guardEmscriptenKeys = (e: KeyboardEvent): void => guardKeys(this, e);
   onKeyDown = (e: KeyboardEvent): void => keyDown(this, e);
   onKeyUp = (e: KeyboardEvent): void => keyUp(this, e);
   pollLoop = (): void => pollFrame(this);
 
-  // ─── Public API ───
 
   setInputSuppressed(suppressed: boolean): void {
     this.inputSuppressed = suppressed;
@@ -233,7 +231,6 @@ class InputManager {
     return controllerInputStore.isConnected();
   }
 
-  // ─── Lifecycle / device refresh (delegated) ───
 
   start(): void {
     startInput(this);
@@ -248,7 +245,6 @@ class InputManager {
   }
 }
 
-// ─── Singleton ───
 
 let instance: InputManager | null = null;
 

@@ -1,9 +1,9 @@
 /* @layer renderer-other @kind logic */
 /**
- * Capacitor DevicePort — keep-awake during gameplay (@capacitor-community/keep-awake),
- * device haptics (@capacitor/haptics — the phone buzzes on game events, since most
- * Bluetooth pads expose no rumble through the WebView), and an app-backgrounded hook
- * (@capacitor/app appStateChange) used for save-on-background.
+ * Capacitor DevicePort: keep-awake during gameplay (@capacitor-community/keep-awake),
+ * device haptics (@capacitor/haptics), and an app-backgrounded hook (@capacitor/app
+ * appStateChange) used for save-on-background. Haptics buzz the phone on game events,
+ * since most Bluetooth pads expose no rumble through the WebView.
  */
 import { KeepAwake } from '@capacitor-community/keep-awake';
 import { Haptics } from '@capacitor/haptics';

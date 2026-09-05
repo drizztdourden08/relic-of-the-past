@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 /**
- * CheatsWidget — Widget content providing cheat controls for the game.
+ * Widget content providing cheat controls for the game.
  * Tabs: Items, Stats, Mechanics, Bottles
  */
 import { useState } from 'react';

@@ -1,17 +1,9 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Raw inventory slot values → dataset `ItemId`s.
- *
- * The tracker reads bytes out of WRAM; every one of them is answered with an id,
- * never a display name. Two sources, and nothing else:
- *   - the game's own `Link_ReceiveItem` index, resolved through the facade, so
- *     the dataset owns the join and a renamed record cannot break the tracker;
- *   - an explicit id constant for the handful of items that HAVE no receive
- *     index, because they are SRAM bits rather than pickups (pendants, crystals).
- *
- * Resolution is deliberately lazy (per poll, not at module load): a published
- * dataset bundle can replace the records after import, and a snapshot taken at
- * import time would pin the pre-bundle ids.
+ * Raw inventory slot values -> dataset `ItemId`s, never display names. Two sources only: the
+ * game's `Link_ReceiveItem` index resolved through the facade (the dataset owns the join), and
+ * an explicit id for items with no receive index (pendants, crystals: SRAM bits, not pickups).
+ * Resolution is lazy (per poll) because a published dataset bundle can replace the records.
  */
 import { getItemByGameId } from '@shared/game/data';
 import type { ItemId } from '@shared/game/data';
@@ -20,9 +12,8 @@ import type { ItemId } from '@shared/game/data';
 const idOf = (receiveItemId: number): ItemId | undefined => getItemByGameId({ receiveItemId })?.id;
 
 /**
- * Progression ladders as native receive indices, weakest rung first. The raw
- * slot byte counts how many rungs are held, and every rung below it is held too
- * — a top-tier sword still answers "do you have a sword at all".
+ * Progression ladders as native receive indices, weakest rung first. The raw slot byte counts
+ * rungs held, and every rung below is held too (a top-tier sword still answers "any sword").
  */
 const LADDERS = {
   sword: [73, 1, 2, 3],
@@ -33,10 +24,7 @@ const LADDERS = {
   bow: [11, 59],
 } as const;
 
-/**
- * Slots where the raw byte SELECTS one item instead of climbing a ladder, as
- * `value → native receive index`.
- */
+/** Slots where the raw byte SELECTS one item instead of climbing a ladder: `value -> native receive index`. */
 const BY_VALUE = {
   boomerang: { 1: 12, 2: 42 },
   mushroom: { 1: 41, 2: 13 },
@@ -48,12 +36,8 @@ const BY_VALUE = {
 /** Slots that are a plain held / not-held byte, as `native receive index`. */
 const SIMPLE = {
   hookshot: 10,
-  /**
-   * No record expresses bomb CAPACITY — the dataset only has the pickups — so
-   * the standard bomb pickup stands in for "carries bombs". See the id-purity
-   * report: this is the same gap that leaves `ITEM_TO_TOKEN`'s bomb key
-   * matching no record.
-   */
+  // No record expresses bomb CAPACITY (the dataset only has pickups), so the standard bomb
+  // pickup stands in for "carries bombs". Same gap leaves `ITEM_TO_TOKEN`'s bomb key unmatched.
   bombs: 40,
   fireRod: 7,
   iceRod: 8,
@@ -74,22 +58,15 @@ const SIMPLE = {
 
 /** An empty bottle, whatever the slot holds. */
 const BOTTLE_SLOT = 22;
-/** Held at slot value 2 — value 1 is the un-upgraded mirror scroll. */
+/** Held at slot value 2. Value 1 is the un-upgraded mirror scroll. */
 const MIRROR = 26;
 
 /**
- * SRAM bit → id for the items with no receive index at all. These are the
- * progression pendants and crystals, which the game records as bits in a single
- * byte rather than granting through `Link_ReceiveItem`, so the facade has no
- * native fact to resolve them by and the id is stated outright.
- *
- * The pendants point at `item-056/057/058`, which is the trio the `Pendants`
- * item group (`ITEM_GROUP_IDS.Pendants`) names, and the sage's own
- * `presence`/`requirements` name. The dataset also holds
- * `item-109/110/111` — a second record per pendant, same display name — and this
- * used to grant those instead. Nothing noticed while the consumers compared names,
- * because both spell "Green Pendant"; the moment the inventory became a set of ids
- * the sage's condition stopped matching what the tracker granted.
+ * SRAM bit -> id for the items with no receive index (pendants, crystals: bits in one byte,
+ * never granted through `Link_ReceiveItem`). The pendants must point at `item-056/057/058`,
+ * the trio the `Pendants` group and the sage's `presence`/`requirements` name; the dataset
+ * also holds `item-109/110/111` (same display names), and granting those broke the sage's
+ * condition once inventory became a set of ids.
  */
 const PENDANT_BITS: readonly (readonly [number, ItemId])[] = [
   [0x04, 'item-056'], [0x02, 'item-057'], [0x01, 'item-058'],

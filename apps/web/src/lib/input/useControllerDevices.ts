@@ -7,7 +7,7 @@
  *
  * No loading flag: the main process now serves `controller:list` from a
  * cache it keeps current on connect/disconnect/rescan (see sdl3-source.ts),
- * so the initial fetch resolves in well under a millisecond — a spinner for
+ * so the initial fetch resolves in well under a millisecond, and a spinner for
  * it would only ever flash for a single frame.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -15,7 +15,7 @@ import type { DeviceEntry } from '@shared/ipc';
 import { groupControllerDevices } from './controller-device-groups';
 import { addControllerMapping, listControllerDevices, onControllerDevicesSnapshot, rescanControllerDevices } from './controller-devices-store';
 
-/** Longest a rescan spinner spins before giving up on hearing back — a
+/** Longest a rescan spinner spins before giving up on hearing back. A
  *  teardown+repopulate cycle should land well inside this. */
 const RESCAN_TIMEOUT_MS = 3000;
 

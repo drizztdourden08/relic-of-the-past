@@ -3,7 +3,7 @@
 /*
  * The one substitution list, and the row shape it shares with nothing else.
  *
- * A grid, so key / kind / value / count / lock line up down the whole list — the
+ * A grid, so key / kind / value / count / lock line up down the whole list. The
  * lock column especially, since "which of these can I change" is the question the
  * list is scanned for. The lock and remove slots are always present, empty when
  * they have nothing to show, so a locked row and an editable one are the same
@@ -73,7 +73,7 @@
 
 /*
  * Stands where the field would be on an editable row. Italic, so it reads as an
- * explanation of why there is nothing to type rather than as a value.
+ * explanation of why there is nothing to type, not as a value.
  */
 .variable-row__note {
   overflow: hidden;

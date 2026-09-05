@@ -1,13 +1,13 @@
 /* @layer renderer-components @kind component */
 /**
- * The set's substitution list — ONE list, in place of the glossary and the menu
+ * The set's substitution list. ONE list, in place of the glossary and the menu
  * name table that came before it.
  *
  * The two old tables looked alike, could not reach each other, and forced a
  * translator to know which of them a given piece of text lived in before they
  * could change it. Everything that varies in shown text is now one row here,
- * whether it is theirs to change or the game's, and `kind` is a filter rather
- * than a second table.
+ * whether it is theirs to change or the game's, and `kind` is a filter, not
+ * a second table.
  *
  * Presentational. The rows arrive already filtered and counted; every edit,
  * addition, removal and the scan are reported upward.
@@ -23,7 +23,7 @@ import type { VariableFilter } from './variable-groups';
 import './VariablesTable.css';
 
 type VariablesTableProps = {
-  /** The whole list, unfiltered — the filter lives here. */
+  /** The whole list, unfiltered, since the filter lives here. */
   variables: Variable[];
   /** Already-filtered rows to draw. */
   rows: Variable[];
@@ -76,7 +76,7 @@ const VariablesTable = (props: VariablesTableProps) => {
   }, [canAdd, draftKey, draftValue, onAddTerm]);
 
   const search = (
-    <TextInput value={query} onChange={handleQuery} placeholder="Search variables…" />
+    <TextInput value={query} onChange={handleQuery} placeholder="Search variables..." />
   );
 
   return (
@@ -86,7 +86,7 @@ const VariablesTable = (props: VariablesTableProps) => {
       <Box className="variables-table__controls">
         <SegmentedControl options={options} value={filter} onChange={onFilterChange} />
         <Button variant="secondary" size="sm" onClick={onFindHardcoded}>
-          Find hardcoded names…
+          Find hardcoded names...
         </Button>
       </Box>
 

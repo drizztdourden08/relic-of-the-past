@@ -4,13 +4,13 @@
  * beside deduped files still resolves.
  *
  * This is the half of dedupe that is easy to get wrong: miss one reference site and the pack
- * imports but a layer plays silence. There are exactly two sites — a layer's `files` list and
- * the cover image — and both are handled here, unconditionally, rather than at the call site.
+ * imports but a layer plays silence. There are exactly two sites, a layer's `files` list and
+ * the cover image, and both are handled here, unconditionally, instead of at the call site.
  *
  * Layers live in BOTH halves of a manifest: the music slots and the sound channels. The walk goes
  * through `mapLayers`, the one place that knows both, because an export that listed only the
- * tracks' files really did ship packs whose ambient bed named a file that was never written — the
- * pack imported cleanly and the rain played nothing.
+ * tracks' files really did ship packs whose ambient bed named a file that was never written. The
+ * pack imported and the rain played nothing.
  */
 import type { MsuPackManifest } from '@shared/types/msu-manifest';
 import { mapLayers } from '@shared/storage/msu-layer-edit';

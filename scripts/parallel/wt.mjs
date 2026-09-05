@@ -1,17 +1,8 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * `wt` — the agent-worktree pool CLI.
- *
- *   npm run wt:list
- *   npm run wt -- claim --any --ttl 4h
- *   npm run wt -- new <name>
- *   npm run wt -- note <name> "<the chat prompt>"
- *
- * A dispatcher only: every verb is its own module under commands/, each exporting
- * `{ summary, usage, run }` (a Command). Adding a verb is adding a file — this file
- * never grows a switch, and no single file carries the whole CLI.
- *
- * Full workflow: docs/contributing/parallel-worktrees.md
+ * `wt`: the agent-worktree pool CLI. A dispatcher only: every verb is a module under
+ * commands/ exporting `{ summary, usage, run }`. Full workflow:
+ * docs/contributing/parallel-worktrees.md
  */
 import { parseArgs } from './args.mjs';
 

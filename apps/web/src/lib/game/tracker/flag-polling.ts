@@ -1,13 +1,13 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Flag Polling — reads WASM memory to determine which game checks are
+ * Reads WASM memory to determine which game checks are
  * completed. Pure computation: takes heap + pointers, returns a `Set<CheckId>`.
  *
  * Detection is driven by each `CheckRecord`'s own `gameId`, not by a
  * name-keyed table: every record in `all('check')` is tested against the
  * live heap using whichever of its own fields describe a detection mode
  * (chest slot, direct room mask, overworld mask, progress-buffer bit or
- * threshold) — see check-facts.ts. A record's id is its own identity from
+ * threshold). See check-facts.ts. A record's id is its own identity from
  * the start, so nothing here ever resolves a name.
  */
 import { all } from '@shared/game/data';

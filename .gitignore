@@ -1,7 +1,7 @@
 # Implementation plans (working docs, never committed)
 /plans
 
-# MCP config (contains secrets — bot tokens, API keys)
+# MCP config (contains bot tokens and API keys)
 .mcp.json
 
 # Dependencies
@@ -11,8 +11,8 @@ node_modules/
 dist/
 out/
 # electron-builder reads `build/` as buildResources, so it holds packaging SOURCES
-# (the installer splash) as well as output. The pattern has to match the contents
-# rather than the directory, or git never descends far enough to see the exception.
+# (the installer splash) and output. The pattern has to match the contents
+# instead of the directory, or git never descends far enough to see the exception.
 /build/*
 !/build/installer-splash.gif
 *.tsbuildinfo
@@ -21,14 +21,13 @@ out/
 # WASM build artifacts
 core/wasm-build/output/
 
-# Downloaded native build dependencies (SDL3, libusb) — fetched by
-# scripts/build/fetch-sdl3.mjs, never committed.
+# Downloaded native build dependencies (SDL3, libusb). Fetched by
+# scripts/build/fetch-sdl3.mjs and never committed.
 third_party/
 
-# SDL3 native controller-input addon build output. build/ was previously
-# ignored only by accident (release/ below matches Release/ case-insensitively
-# on Windows) — spelled out explicitly so it's not an accident. prebuilds/ is
-# scripts/ensure-sdl3.mjs's downloaded-or-locally-built payload.
+# SDL3 native controller-input addon build output. build/ is listed on purpose
+# (release/ below only matches Release/ case-insensitively on Windows). prebuilds/
+# is scripts/ensure-sdl3.mjs's downloaded-or-locally-built payload.
 apps/desktop/electron/input/native/sdl3/build/
 apps/desktop/electron/input/native/sdl3/prebuilds/
 
@@ -50,15 +49,14 @@ apps/mobile/android/local.properties
 apps/mobile/android/.idea/
 apps/mobile/android/capacitor-cordova-android-plugins/
 # Launcher icons + splash are generated at build time from apps/mobile/assets/logo.png
-# by `@capacitor/assets` (npm run cap:sync) — the source is committed, the output is not.
+# by `@capacitor/assets` (npm run cap:sync). Only the source is committed.
 apps/mobile/android/app/src/main/res/mipmap-*/ic_launcher*.png
 apps/mobile/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher*.xml
 apps/mobile/android/app/src/main/res/drawable*/splash.png
-# SDL's own Java classes are staged into the build dir straight from the pinned
-# SDL3 source (app/build.gradle: stageSdlJava), never copied into this repo. A
-# copy here would be someone else's code to maintain by hand and could silently
-# fall out of step with the native library it pairs with — so if one ever
-# appears, it is a mistake, and this keeps it from being committed.
+# SDL's own Java classes are staged into the build dir from the pinned SDL3
+# source (app/build.gradle: stageSdlJava), never copied into this repo. A copy
+# here would drift from the native library it pairs with, so one appearing is a
+# mistake and must not be committed.
 apps/mobile/android/app/src/main/java/org/
 
 # Assets (user-provided)
@@ -83,7 +81,7 @@ test-roms/
 .env.local
 .env.*.local
 
-# Local deploy target config (VM SSH details — per machine, never committed)
+# Per-machine deploy target config (VM SSH details), never committed
 scripts/deploy/vm.json
 # Local push SSH public key (per machine, never committed)
 scripts/deploy/*.pub
@@ -103,9 +101,9 @@ playwright-report/
 test-results/
 tests/test-results/
 tests/screenshots/
-# Ephemeral Playwright specs (write, run, delete — never committed)
+# Ephemeral Playwright specs (write, run, delete). Never committed.
 tests/scratch/
-# Ephemeral Vitest tests — throwaway by default, same as Playwright specs above.
+# Ephemeral Vitest tests, throwaway by default like the Playwright specs above.
 # A permanent one carries a .keep.test.ts suffix instead of .test.ts and is
 # excepted below. See docs/contributing/testing.md.
 tests/**/*.test.ts
@@ -128,11 +126,11 @@ scripts/analyze/report.json
 # Loop scheduler transient lock
 .claude/scheduled_tasks.lock
 
-# Claude config — managed in the private claude-config repo, never committed here
+# Claude config lives in the private claude-config repo and is never committed here
 .claude/
 CLAUDE.md
 
-# AI config — managed in the private ai-config repo, never committed here
+# AI config lives in the private ai-config repo and is never committed here
 .ai-config.json
 .ai/
 AGENTS.md
@@ -146,13 +144,13 @@ AGENTS.md
 # scripts/vault/sync.mjs. None of it is ever committed here. A clone WITHOUT
 # vault access still builds, lints and passes the unit tests.
 #
-# The vault is a sibling checkout, not a clone inside this tree — its `tree/`
-# folder mirrors the paths below, which is the whole mapping.
+# The vault is a sibling checkout, not a clone inside this tree. Its `tree/`
+# folder mirrors the paths below, and that is the whole mapping.
 shared/game/data/records/
 tests/fixtures/save-states/
 .claude/nav-baselines/
 
-# Merge base for the two-sided sync — local state, never shared.
+# Merge base for the two-sided sync. It is local state and never shared.
 .vault-state.json
 
 # Derived .msul document icon (built by scripts/build/make-msul-icon.mjs)

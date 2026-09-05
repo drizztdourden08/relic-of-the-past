@@ -1,8 +1,8 @@
 /* @layer test @kind test */
 /**
- * The verdict rules decide whether an agent worktree may be handed to another session
- * or deleted, so the case that matters most is the refusal: anything holding
- * uncommitted or unlanded work must never come out claimable or deletable.
+ * The verdict rules decide whether an agent worktree may be handed over or
+ * deleted. The case that matters is the refusal: uncommitted or unlanded work
+ * must never come out claimable or deletable.
  */
 import { describe, it, expect } from 'vitest';
 // @ts-expect-error -- plain .mjs tooling module, no type declarations by design
@@ -45,7 +45,7 @@ describe('verdictFor', () => {
     expect(assess(stale, status(), NOW).staleLease).toBe(true);
   });
 
-  it('a held lease outranks unmerged work — someone is in there', () => {
+  it('a held lease outranks unmerged work, because someone is in there', () => {
     const held = record({ lease: { holder: 'other', at: inHours(-1), expiresAt: inHours(3) } });
     expect(verdictFor(held, status({ ahead: 3, merged: false }), NOW)).toBe(VERDICTS.LEASED);
   });

@@ -1,40 +1,12 @@
 /* @layer renderer-components @kind component */
 /**
- * One filter clause: the field's name as a caption, and the comparison itself
- * directly under it. Nothing is drawn around the pair — no box, no fill, no
- * padding — because the control already has its own edges and a second set
- * around them only costs room. Clauses are narrow and wrap (see FilterBar.css),
- * so several filters read as several small things side by side rather than one
- * full-width line each.
- *
- * The comparison is one merged control strip: the enable box, the operator
- * button and the field kind's own filter control are three segments of a
- * single bordered group — no gap, rounding only on the outer corners.
- *
- * The field's name is written once, in the caption. The enable box carries no
- * visible text of its own because of that, and keeps the name in its
- * accessible label instead: on its own it is a tick with nothing to say.
- *
- * Removing acts on the whole clause rather than on the comparison, so it is
- * not given a segment of its own: it is pinned to the strip's top-right corner
- * (positioned by FilterBar.css, which is why it is the strip's last child) and
- * stays out of sight until the clause is hovered or something in it takes
- * focus. Last child also means last tab stop, so the destructive control is
- * not the first thing keyboard focus lands on.
- *
- * A clause stays in the list when disabled — see FilterClause.enabled — so
- * unchecking never loses it. Disabling greys the comparison and leaves it
- * editable: a clause you switched off is usually one you mean to switch
- * back on, and setting up a filter before arming it is a normal thing to do.
- * Only the enable box stays at full strength, since it is the way back.
- *
- * The control region collapses when the current operator's arity is 'none'
- * (e.g. boolean's isTrue/isFalse, or object/union's isEmpty/isNotEmpty): those
- * operators take no operand, so there is nothing for a control to edit. This
- * is decided here rather than trusted to each kit, because at least one kit
- * (array, for its own isEmpty/isNotEmpty) does not yet collapse on its own —
- * and the operator button has to know, since without a control it is the
- * segment that ends the strip.
+ * One filter clause: a caption and a merged control strip (enable box,
+ * operator button, the kind's filter control). The remove badge is the strip's
+ * last child so FilterBar.css can pin it to the corner and so it is the last
+ * tab stop. A disabled clause stays in the list and stays editable. The
+ * control collapses when the operator's arity is 'none'; decided here, not by
+ * each kit, because the array kit does not collapse on its own and the
+ * operator button must know it ends the strip.
  */
 import { Box } from '../../../primitives/Box';
 import { Checkbox } from '../../../primitives/Checkbox';

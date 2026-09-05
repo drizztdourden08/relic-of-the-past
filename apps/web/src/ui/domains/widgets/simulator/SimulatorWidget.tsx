@@ -1,8 +1,8 @@
 /* @layer renderer-widgets @kind component */
 /**
- * SimulatorWidgetContent — the view-tier host for the gameplay simulator. Owns
- * the runner and dataset-apply hooks and composes the run controls, live
- * progress, narrative feed and finished-run results.
+ * The view-tier host for the gameplay simulator. Owns the runner and
+ * dataset-apply hooks and composes the run controls, live progress, narrative
+ * feed and finished-run results.
  */
 import { Box } from '@ds/primitives';
 import { useSimulatorStore } from '@app/stores/simulator-store';

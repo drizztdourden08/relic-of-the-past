@@ -2,9 +2,10 @@
 /**
  * Paints one character of a language pack's own font into a canvas.
  *
- * The pixels are the pack's `font.bin` — the same bytes the game draws from —
- * decoded here rather than fetched as a picture, so a picture character shows up
- * for every pack there is, with nothing to extract or install first.
+ * The pixels come from the pack's `font.bin`, which is the same data the game
+ * draws from. They are decoded here, not fetched as a picture, so a picture
+ * character shows up for every pack there is, with nothing to extract or
+ * install first.
  *
  * Two sizes are in play and they are kept apart on purpose. The CSS size belongs
  * to the stylesheet, where one cell of the line is defined; the BACKING STORE is
@@ -60,8 +61,8 @@ const paintTile = (
 
 /**
  * The bitmap size the canvas needs, read from its laid-out box at the display's
- * pixel ratio. Null when the box has no size yet — a cell in a container that
- * has not been laid out would otherwise be baked at one pixel square and never
+ * pixel ratio. Null when the box has no size yet. A cell in a container that has
+ * not been laid out would otherwise be baked at one pixel square and never
  * corrected.
  *
  * A READ only: it forces layout, so a caller painting many cells measures them
@@ -79,9 +80,9 @@ const measureStore = (canvas: HTMLCanvasElement, ratio: number): Store | null =>
 
 /**
  * Draw character `glyph` of `tiles` into a canvas sized to `store`, filling it
- * exactly. False means nothing was drawn — an index the sheet cannot spell, or
- * no 2d context — and the caller leaves the cell empty rather than showing
- * something that is not the character.
+ * exactly. False means nothing was drawn, either because the sheet cannot spell
+ * the index or because there is no 2d context. The caller then leaves the cell
+ * empty instead of showing something that is not the character.
  */
 const paintGlyphCell = (
   canvas: HTMLCanvasElement,

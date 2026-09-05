@@ -1,11 +1,5 @@
 /* @layer renderer-components @kind logic */
-/**
- * m:ss — how the studio reads any position or length inside a file.
- *
- * One spelling for all of them: a live playhead, a file's length and the point it repeats from are
- * the same kind of number, and reading two of them side by side in different formats is how a
- * comparison goes wrong.
- */
+/** m:ss, the one spelling for every position or length in the studio. */
 
 const clock = (seconds: number): string => {
   const whole = Math.max(0, Math.floor(seconds));

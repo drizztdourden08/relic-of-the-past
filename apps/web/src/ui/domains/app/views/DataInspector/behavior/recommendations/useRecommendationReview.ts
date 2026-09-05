@@ -1,18 +1,10 @@
 /* @layer renderer-app @kind logic */
 /**
- * The comparison view's own state: which finding is open, what its proposal has
- * been edited to, and what the three verdicts do.
- *
- * The edited proposal lives HERE and nowhere else until an accept succeeds.
- * That is what makes Revert cheap and total — it drops a local value, it does
- * not undo anything — and it is why the store never sees a half-reviewed
- * proposal: what a detector suggested stays exactly as it was recorded until
- * somebody applies it, so re-running detection still reconciles onto the same
- * entry rather than colliding with a reviewer's draft.
- *
- * Every decision advances to the next open finding rather than closing the
- * panel. Working through a pass is the whole point of the screen, and landing
- * on an empty pane after each verdict would make it a screen you leave.
+ * The comparison view's state: which finding is open, its edited proposal, and
+ * the three verdicts. The edited proposal lives only here until an accept
+ * succeeds, so Revert drops a local value and the store never sees a
+ * half-reviewed proposal. Every decision advances to the next open finding
+ * instead of closing the panel.
  */
 import { useCallback, useMemo, useState } from 'react';
 import { acceptAllCertain } from './accept-all-certain';
@@ -30,7 +22,7 @@ interface ReviewParams {
 }
 
 const BATCH_FAILURES = (count: number): string =>
-  `${count} finding${count === 1 ? '' : 's'} could not be written — they are still open.`;
+  `${count} finding${count === 1 ? '' : 's'} could not be written. They are still open.`;
 
 /** The one after it in pass order, or the one before when it was last. */
 const neighbourOf = (order: readonly Recommendation[], id: string): string | null => {
@@ -92,7 +84,7 @@ const useRecommendationReview = (params: ReviewParams) => {
     settle(next);
   }, [selected, order, settle]);
 
-  /** Every certain finding currently listed, one at a time — see accept-all-certain.ts. */
+  /** Every certain finding currently listed, one at a time (see accept-all-certain.ts). */
   const acceptAll = useCallback(async () => {
     setBusy(true);
     setError(null);
@@ -102,8 +94,7 @@ const useRecommendationReview = (params: ReviewParams) => {
     );
     setBusy(false);
     setError(result.failures.length ? BATCH_FAILURES(result.failures.length) : null);
-    // Lands on the first thing the batch could NOT write, which is the only
-    // part of the run still needing a person.
+    // Lands on the first finding the batch could not write.
     settle(result.failures[0]?.id ?? null);
   }, [order, settle]);
 

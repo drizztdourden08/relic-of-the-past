@@ -22,19 +22,19 @@ const MEDIA_EXT = new Set([
 // High-signal Nintendo / ALttP trademarks (matched in ADDED lines only).
 const TRADEMARK_RE = /\b(nintendo|the legend of zelda|a link to the past|hyrule|hylian|ganon(dorf)?|triforce|master sword|sheikah|sahasrahla|zelda)\b/i;
 
-// Paths where these names legitimately appear — excluded from the trademark rule.
+// Paths where these names legitimately appear, so the trademark rule skips them.
 //
 // `shared/game/data/` used to be here because the record dataset lived there and
 // the gate was expected to be signed off for it. The dataset moved to the private
 // companion repo and its destination is gitignored, so nothing the gate can see
-// under that path needs the exemption any more — while leaving it would let a
+// under that path needs the exemption any more, and leaving it would let a
 // trademark land unnoticed in the schema, the aggregators or the facade, which is
 // code and is supposed to stay clean.
 const TEXT_SKIP_PREFIXES = [
   'docs/', 'shared/input/data/',
   'scripts/copyright-gate/', '.github/', '.githooks/',
 ];
-// Files whose whole point is to NAME the rights holder. Nominative use — removing
+// Files whose whole point is to NAME the rights holder. This is nominative use, and removing
 // the trademark would make the text meaningless, so the gate must not block edits
 // to them.
 const TEXT_SKIP_EXACT = new Set([

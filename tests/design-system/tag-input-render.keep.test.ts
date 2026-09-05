@@ -1,13 +1,8 @@
 /* @layer tests @kind test */
 /**
- * SSR smoke tests, matching tests/design-system/record-editor-render.test.ts:
- * there is no jsdom or testing-library here, so these prove the control builds
- * and renders in its three resting states — empty, holding chips, disabled.
- *
- * NOT covered, because they need a browser: the portal panel's position
- * (Portal reads `document`, so the open state cannot be rendered here at all),
- * typing, clicking a row, and arrow-key navigation. Their underlying rules are
- * covered as plain functions in tests/design-system/tag-input-values.test.ts.
+ * SSR smoke tests (no jsdom): the control renders empty, holding chips, and
+ * disabled. The portal panel (reads `document`), typing and keys need a
+ * browser; their rules are covered in tag-input-values.test.ts.
  */
 import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';
@@ -25,18 +20,18 @@ const render = (props: Partial<TagInputProps> = {}): string =>
     ...props,
   }));
 
-describe('TagInput — the empty state', () => {
+describe('TagInput in the empty state', () => {
   it('renders the field and an entry, with no chips', () => {
-    const markup = render({ placeholder: 'Add a tag…' });
+    const markup = render({ placeholder: 'Add a tag...' });
     expect(markup).toContain('tag-input__field');
     expect(markup).toContain('tag-input__entry');
     expect(markup).not.toContain('tag-input__chip');
   });
 
   it('shows the placeholder only while there is nothing applied', () => {
-    expect(render({ placeholder: 'Add a tag…' })).toContain('placeholder="Add a tag…"');
-    expect(render({ placeholder: 'Add a tag…', value: ['env:outdoor'] }))
-      .not.toContain('placeholder="Add a tag…"');
+    expect(render({ placeholder: 'Add a tag...' })).toContain('placeholder="Add a tag..."');
+    expect(render({ placeholder: 'Add a tag...', value: ['env:outdoor'] }))
+      .not.toContain('placeholder="Add a tag..."');
   });
 
   it('is a closed combobox until something opens it', () => {
@@ -54,7 +49,7 @@ describe('TagInput — the empty state', () => {
   });
 });
 
-describe('TagInput — holding several chips', () => {
+describe('TagInput holding several chips', () => {
   const value = ['env:outdoor', 'role:boss', 'hazard:pits'];
 
   it('renders one removable chip per value, in order', () => {
@@ -87,7 +82,7 @@ describe('TagInput — holding several chips', () => {
   });
 });
 
-describe('TagInput — disabled', () => {
+describe('TagInput when disabled', () => {
   const markup = render({ value: ['env:outdoor', 'role:boss'], disabled: true });
 
   it('marks the root and disables the entry', () => {
@@ -105,7 +100,7 @@ describe('TagInput — disabled', () => {
   });
 });
 
-describe('TagInput — rendering does not throw on the awkward inputs', () => {
+describe('TagInput rendering does not throw on the awkward inputs', () => {
   it('takes no suggestions at all', () => {
     expect(() => render({ suggestions: undefined })).not.toThrow();
   });

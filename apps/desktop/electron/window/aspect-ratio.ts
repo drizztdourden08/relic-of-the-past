@@ -55,7 +55,7 @@ const registerAspectRatioHandlers = (): void => {
         targetW = Math.round(contentH * lockedRatio);
         targetH = newBounds.height;
       } else {
-        // Corner drag — fit within proposed bounds, never exceed either dimension
+        // Corner drag fits within the proposed bounds, never exceeding either dimension
         const contentH = newBounds.height - lockedExtraHeight;
         const wForH = Math.round(contentH * lockedRatio);
         const hForW = Math.round(newBounds.width / lockedRatio) + lockedExtraHeight;

@@ -32,7 +32,7 @@ const buildBorders = (transitions: TransitionPoint[], reachable: ReachState[][],
     if (reachable[t.row][t.col] >= 2) continue;
     const attr = grid.rawAttr[t.row]?.[t.col] ?? 0;
     // Door passage tiles (0x80-0x8F) at room edges are valid inter-room transitions.
-    // BFS doesn't propagate past the grid boundary — these just get reported as exits.
+    // BFS doesn't propagate past the grid boundary, so these get reported as exits.
     const pos = t.edge === 'north' || t.edge === 'south' ? t.col : t.row;
     const unmet = unmetRequirements(t.requirements, inv);
     if (unmet.length === 0) {

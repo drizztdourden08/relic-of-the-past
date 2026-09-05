@@ -8,7 +8,7 @@ import type { LayerResume } from '@shared/types/msu-manifest';
 import type { LayerActivity, LayerContext, LayerScheduler, SoundingVoice } from './scheduler.type';
 import type { Voice } from '../voice';
 
-/** Live sounds, oldest first, each with its own position and fade — one preview row apiece. */
+/** Live sounds, oldest first, each with its own position and fade. One preview row apiece. */
 const soundingVoices = (
   entries: { voice: Voice; fileIndex: number }[], names: string[],
 ): SoundingVoice[] => entries.map((e) => ({

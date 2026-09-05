@@ -4,7 +4,7 @@
  * characters the panel can actually draw, then breaks it onto the panel's fixed
  * column grid.
  *
- * GLYPH COVERAGE LIMIT — the panel composes text from one extracted sprite per
+ * GLYPH COVERAGE LIMIT: the panel composes text from one extracted sprite per
  * character, and only A-Z, 0-9, space and '&' have a sprite (see the panel's
  * Glyph). Anything else would draw as an empty gap, so a translated string is
  * folded to that set first: a letter carrying a diacritic degrades to its base
@@ -24,8 +24,8 @@ const AMPERSAND_COLS = 2;
  */
 const NAME_PANEL_GRID = { maxCols: 8, maxLines: 2 };
 
-/** Characters that read as a word separator rather than a letter. */
-const SEPARATORS = new Set(['-', '‐', '‑', '‒', '–', '—', '_', '/', '\\', '·']);
+/** Characters that read as a word separator, not a letter. */
+const SEPARATORS = new Set(['-', '\u2010', '\u2011', '\u2012', '\u2013', '\u2014', '_', '/', '\\', '·']);
 
 /**
  * Letters with no canonical decomposition, so stripping combining marks alone
@@ -61,7 +61,7 @@ const columnsOf = (text: string): number =>
 /**
  * Splits one unbroken run of characters across the available rows. Reached only
  * by a word too wide to read even at the panel's shrink (see wrapName), never by
- * a word that merely overflows a row — breaking those mid-word is the exact
+ * a word that merely overflows a row. Breaking those mid-word is the exact
  * defect the hand-placed breaks used to work around.
  */
 const hardBreak = (word: string, maxLines: number): string[] => {

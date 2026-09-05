@@ -1,13 +1,9 @@
 /* @layer renderer-app @kind logic */
 /**
- * The recommendations pseudo-collection expressed as the same
- * `CollectionSource` the eleven real ones implement, so the existing generic
- * table renders it with nothing added: rows and a schema are the whole contract.
- *
- * It deliberately declares no `serialize` and no `onSave`. A finding is not a
- * record — there is no emitter that writes one to the dataset and no file it
- * belongs in — and the writing that a finding leads to happens to the record it
- * PROPOSES, through that collection's own writer (see accept-recommendation.ts).
+ * The recommendations pseudo-collection as a `CollectionSource`, so the generic
+ * table renders it with nothing added. No `serialize` and no `onSave` on
+ * purpose: a finding is not a record, and the write it leads to happens to the
+ * record it proposes, through that collection's writer (accept-recommendation.ts).
  */
 import { RECOMMENDATIONS_KIND, RECOMMENDATIONS_NAV_ITEM } from '../../DataInspector.constants';
 import { recommendationRows } from './recommendation-rows';
@@ -33,11 +29,7 @@ const RECOMMENDATION_SCHEMA: SchemaConfig = {
   defaultColumns: ['kind', 'action', 'targetId', 'reason', 'confidence', 'screenId', 'firstSeenAt'],
 };
 
-/**
- * Built per entry list rather than cached like the real collections: those read
- * a dataset that only a write changes, this one re-reads whenever a pass or a
- * verdict lands, which is exactly when the rows have to change.
- */
+/** Built per entry list, not cached: the rows change whenever a pass or a verdict lands. */
 const recommendationSource = (entries: readonly Recommendation[]): InspectorSource => ({
   id: RECOMMENDATIONS_KIND,
   label: RECOMMENDATIONS_NAV_ITEM.label,

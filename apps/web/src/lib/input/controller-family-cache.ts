@@ -2,7 +2,7 @@
 /**
  * SDL gamepad type for every controller seen this session, recorded from the
  * controller snapshot and kept live by controller:added (see
- * seed-device-cache.ts) rather than that one-shot event alone. Family display
+ * seed-device-cache.ts), not that one-shot event alone. Family display
  * metadata (icons, labels, console defaults) is keyed entirely by this type,
  * so this is the only way to resolve it for a saved binding or a
  * drag-and-drop payload whose device is not currently plugged in.

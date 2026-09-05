@@ -2,7 +2,7 @@
 /**
  * Loads and decodes the audio a single track or claimed sound needs, on demand.
  *
- * Per-id rather than per-pack on purpose: a real pack is well over a gigabyte of raw PCM, and
+ * Per-id, not per-pack, on purpose: a real pack is well over a gigabyte of raw PCM, and
  * only a few ids sound at a time. Decoded audio is cached so re-entering an area (or firing the
  * same effect again) does not decode twice, with the cache capped so a long session cannot grow
  * without bound. One loader per channel, so a busy effect channel cannot evict the music.
@@ -48,7 +48,7 @@ const createTrackLoader = (
     const layers: LoadedLayer[] = [];
     for (const [layerIndex, layer] of trackLayers.entries()) {
       const decoded = await Promise.all(layer.files.map(decodeOne));
-      // A layer whose files all failed is dropped rather than left to play silence. Names are
+      // A layer whose files all failed is dropped instead of left to play silence. Names are
       // filtered alongside so the two arrays stay index-aligned.
       const kept = decoded.map((d, i) => ({ d, name: layer.files[i] })).filter((e): e is { d: DecodedAudio; name: string } => e.d !== null);
       if (kept.length > 0) {

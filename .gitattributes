@@ -8,7 +8,7 @@
 *.gif binary
 *.ico binary
 
-# Ensure consistent line endings
+# Keep line endings consistent
 *.ts text eol=lf
 *.tsx text eol=lf
 *.js text eol=lf
@@ -21,6 +21,6 @@
 *.yaml text eol=lf
 # Git hooks must stay LF (CRLF breaks the #!/bin/sh shebang) and executable
 .githooks/** text eol=lf
-# Shell scripts + udev rules ship to Linux — CRLF breaks the shebang / parsing
+# Shell scripts + udev rules ship to Linux, where CRLF breaks the shebang / parsing
 *.sh text eol=lf
 *.rules text eol=lf

@@ -15,7 +15,7 @@ const modeForModule = (mainModule: number): UIMode => {
 describe('deriveUIMode (via parseGameUIBuffer)', () => {
   it('maps the intro attract demo and file-select menus to title (HUD hidden)', () => {
     // Module14_Attract (20) is the intro "video"; 2-4 are the file copy/erase/
-    // name submenus. None are gameplay — the main HUD must not leak into them.
+    // name submenus. None are gameplay, so the main HUD must not leak into them.
     for (const mainModule of [0, 1, 2, 3, 4, 20]) {
       expect(modeForModule(mainModule)).toBe('title');
       expect(isMainHudVisibleForMode(modeForModule(mainModule))).toBe(false);

@@ -33,9 +33,9 @@ type EntryListItemProps = {
   issues?: EntryIssue[];
   open: boolean;
   mode: EntryViewMode;
-  /** The editing surface, built by the tab — absent unless this entry is editing. */
+  /** The editing surface, built by the tab. Absent unless this entry is editing. */
   editor?: ReactNode;
-  /** The box preview, built by the tab — absent unless this entry is previewing. */
+  /** The box preview, built by the tab. Absent unless this entry is previewing. */
   preview?: ReactNode;
   onOpen: (id: number) => void;
   onClose: (id: number) => void;

@@ -6,7 +6,7 @@ import { handle, on } from '../lib/ipc/handle';
 const registerWindowHandlers = (): void => {
   const win = () => getMainWindow();
 
-  // The renderer's UI has settled and painted — hand over from the splash window.
+  // The renderer's UI has settled and painted, so hand over from the splash window.
   on('window:shellReady', () => revealMainWindow());
 
   // Window controls

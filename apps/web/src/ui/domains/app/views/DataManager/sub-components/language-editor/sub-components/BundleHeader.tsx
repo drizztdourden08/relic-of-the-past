@@ -3,9 +3,9 @@
  * Identity card for the language set being edited: what it is called, what it
  * was made from, how big it is, and whether the last edit reached disk.
  *
- * A translator can have several sets open over a session — one from a ROM, a
- * duplicate they are reworking — so the set's name and origin stay on screen
- * rather than being implied by whatever is highlighted in the list.
+ * A translator can have several sets open over a session, one from a ROM and a
+ * duplicate they are reworking, so the set's name and origin stay on screen
+ * instead of being implied by whatever is highlighted in the list.
  */
 import { useMemo } from 'react';
 import { Box, Text, Badge, Button } from '@ds/primitives';
@@ -53,7 +53,7 @@ const BundleHeader = (props: BundleHeaderProps) => {
 
       <Box className="bundle-header__state">
         {saveError && <Badge variant="danger">{saveError}</Badge>}
-        {!saveError && saving && <Badge variant="neutral">Saving…</Badge>}
+        {!saveError && saving && <Badge variant="neutral">Saving...</Badge>}
         {!saveError && !saving && dirty && <Badge variant="warning">Not saved yet</Badge>}
         {!saveError && !saving && !dirty && <Badge variant="success">Saved</Badge>}
         {onSaveNow && (

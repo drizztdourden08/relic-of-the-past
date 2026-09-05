@@ -3,13 +3,13 @@
  * What the player actually sees, box by box.
  *
  * The engine clears the message's pixel buffer EXACTLY ONCE, when the message
- * opens, and no later handler clears it again — not a wait, not a row marker. So
- * a box is never a blank slate: it is whatever the boxes before it left standing,
- * with this box's own rows painted over the top. A preview that redraws each box
- * from its own text alone is not the game; it is the one thing this view exists
- * to stop someone believing.
+ * opens, and no later handler clears it again, not at a wait and not at a row
+ * marker. So a box is never a blank slate: it is whatever the boxes before it
+ * left standing, with this box's own rows painted over the top. A preview that
+ * redraws each box from its own text alone is not the game. It is the one thing
+ * this view exists to stop someone believing.
  *
- * `resolveInherited` already answers that question — it walks the whole message
+ * `resolveInherited` already answers that question. It walks the whole message
  * through the shared pen in the ENGINE's mode and reports, per box, the rows
  * still on screen when that box begins. Which means the rows on screen while the
  * player reads box N are the rows the NEXT box inherits. So the walk is run over
@@ -65,8 +65,8 @@ type ScreenParams = {
 
 /**
  * The message as screens. Empty when the entry holds a reference the set cannot
- * expand — the expansion refuses loudly rather than drawing a lie, and the
- * caller shows the validation problem instead.
+ * expand. The expansion refuses loudly instead of drawing a lie, and the caller
+ * shows the validation problem.
  */
 const previewScreens = (params: ScreenParams): PreviewScreen[] => {
   const { doc, metrics, terms, opts } = params;

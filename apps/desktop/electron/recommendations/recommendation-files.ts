@@ -1,20 +1,14 @@
 /* @layer electron-main @kind logic */
 /**
- * The disk adapter behind the recommendation engine's storage PORT
- * (`RecommendationStorage`), one file per collection under the same
- * `getUserDataPath` root the review layer resolves from — `Data/recommendations/
- * <kind>.json`. The relative path comes from `recommendationFile` rather than
- * being spelled again here, so the engine stays the single source of truth for
- * where a collection lives.
+ * Disk adapter behind `RecommendationStorage`: one file per collection at
+ * `Data/recommendations/<kind>.json` under `getUserDataPath`. The relative path
+ * comes from `recommendationFile` so the engine stays the single source of truth.
  *
- * Same-kind operations are serialized behind a per-kind queue, exactly as
- * `review-files.ts` does and for the same reason: every operation the store
- * performs is a read-modify-write of the whole file, so two overlapping calls
- * would let the second one's read miss the first one's write and clobber it.
- * The queue wraps the WHOLE store call rather than just the write half —
- * queueing only the save would still let two decisions read the same snapshot
- * and each save its own edit over the other's. That is what makes a batch
- * accept — several decisions fired back to back at one collection — safe.
+ * Same-kind operations are serialized behind a per-kind queue, as in
+ * `review-files.ts`: every operation is a read-modify-write of the whole file.
+ * The queue wraps the WHOLE store call, not just the save, or two decisions
+ * could read the same snapshot and clobber each other. That is what makes a
+ * batch accept safe.
  */
 import { recommendationFile } from '@shared/game/recommendations';
 import { getUserDataPath } from '../lib/paths';

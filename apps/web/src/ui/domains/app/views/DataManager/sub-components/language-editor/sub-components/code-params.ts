@@ -5,10 +5,10 @@
  * Two different limits have to agree before a value is safe to show. What the
  * language can actually bake comes from `encodableParams`; what a translator
  * can reason about comes from the catalog's documented practical range. The raw
- * `org` encoder accepts any of 256 bytes, which is a byte editor rather than a
+ * `org` encoder accepts any of 256 bytes, which is a byte editor, not a
  * menu, so the catalog range narrows it whenever the catalog publishes one.
  *
- * `null` means the code takes no parameter at all — a one-click insert.
+ * `null` means the code takes no parameter at all, so the insert is one click.
  */
 import { codeInfoFor, encodableParams } from '@shared/game/language';
 import type { LanguageConfig } from '@shared/asset-extraction/text/data/language-data';

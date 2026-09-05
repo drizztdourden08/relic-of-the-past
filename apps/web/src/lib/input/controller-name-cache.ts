@@ -2,7 +2,7 @@
 /**
  * Names for every controller seen this session, recorded from the
  * controller snapshot and kept live by controller:added (see
- * seed-device-cache.ts) rather than from that one-shot event alone: a device
+ * seed-device-cache.ts), not from that one-shot event alone: a device
  * already connected before this module's subscription existed announces
  * itself exactly once, at connect, so an event-only listener never learns
  * its name at all.
@@ -69,7 +69,7 @@ const startControllerNameCache = (): (() => void) => {
   return () => { /* deliberately never torn down; the cache outlives any screen */ };
 };
 
-// Begin recording as soon as this module is reachable, rather than waiting for
+// Begin recording as soon as this module is reachable, instead of waiting for
 // a caller. Nothing here polls or holds a device; it only listens.
 if (typeof window !== 'undefined') {
   startControllerNameCache();

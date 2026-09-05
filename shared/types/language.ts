@@ -1,7 +1,7 @@
 /* @layer shared-types @kind logic */
 /**
- * Language pack types — shared between the extraction pipeline, the Electron
- * language store, and the renderer's language inspector UI.
+ * Language pack types. The extraction pipeline, the Electron language store, and the
+ * renderer's language inspector UI all share them.
  */
 
 interface LanguageMeta {

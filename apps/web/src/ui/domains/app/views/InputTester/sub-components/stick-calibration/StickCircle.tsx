@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind data */
 /**
- * StickCircle — SVG analog stick position visualizer.
+ * SVG analog stick position visualizer.
  */
 
 import type { CSSProperties } from 'react';

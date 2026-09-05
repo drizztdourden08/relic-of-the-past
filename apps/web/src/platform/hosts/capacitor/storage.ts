@@ -1,7 +1,7 @@
 /* @layer renderer-other @kind logic */
 /**
- * Capacitor StoragePort — app-private location + per-domain usage via the
- * Filesystem plugin. No "reveal" on mobile (revealDataFolder is false); the home
+ * Capacitor StoragePort, giving an app-private location and per-domain usage
+ * via the Filesystem plugin. No "reveal" on mobile (revealDataFolder is false); the home
  * page shows the path read-only.
  */
 import { Filesystem, Directory } from '@capacitor/filesystem';

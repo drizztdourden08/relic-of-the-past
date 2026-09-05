@@ -1,11 +1,7 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Maps a TriggerAction onto the delivery queue and resolves once the queued
- * delivery has FULLY completed (the queue's per-entry onComplete callback fires
- * when the game consumed the item and is ready again, not merely when the flag
- * was written). This paces the runner off real pickup completion so it doesn't
- * step the engine while the item is still incoming / the item-get dialog animates.
- */
+// Maps a TriggerAction onto the delivery queue and resolves once the delivery has FULLY completed
+// (onComplete fires when the game consumed the item, not when the flag was written), so the
+// runner never steps the engine while the item-get dialog animates.
 import type { TriggerAction } from '@shared/game/simulation';
 import { itemLabel, resolveDuplicate } from '@shared/game/logic/queries/item-duplicates';
 import { enqueue } from '../delivery-queue';
@@ -18,11 +14,7 @@ import { markBombed } from '../flood';
 
 const SOURCE = 'simulator';
 
-/**
- * The records describing one PHYSICAL doorway: the room's own [roomId, index]
- * plus, for an outer-wall door, the adjacent room's matching record (a shared
- * doorway is listed in both door tables).
- */
+/** The records describing one PHYSICAL doorway: the room's own [roomId, index] plus, for an outer-wall door, the adjacent room's matching record. */
 const doorRecordPair = (roomId: number, doorIndex: number): [number, number][] => {
   const out: [number, number][] = [[roomId, doorIndex]];
   const door = (wasmGetRoomDoorInfo(roomId) ?? [])[doorIndex];
@@ -65,7 +57,7 @@ const trigger = (action: TriggerAction): Promise<void> =>
       }
       case 'npc':
         // The engine's npc action carries only the flag payload; sprite 0xFF means
-        // no in-game sprite transition and no id-specific side effects — pure flag + item.
+        // no in-game sprite transition and no id-specific side effects, just a flag plus item.
         enqueue(labelFor(action.itemId), SOURCE,
           { type: 'trigger_npc_check', flagType: action.flagType, flagMask: action.flagMask, itemId: action.itemId, spriteType: 0xff, postGfx: 0 },
           resolve);
@@ -86,7 +78,7 @@ const trigger = (action: TriggerAction): Promise<void> =>
         }
         return;
       case 'door':
-        // No item pickup involved — write the bits directly (no queue). A cell
+        // No item pickup involved, so write the bits directly (no queue). A cell
         // lock's "index" is its chest slot, not a door-table slot. Bombable
         // walls blow open without consuming a key; big keys are never consumed.
         if (action.cellLock) wasmSimOpenCellLock(action.roomId, action.doorIndex);
@@ -108,7 +100,7 @@ const trigger = (action: TriggerAction): Promise<void> =>
         return;
       }
       case 'progress':
-        // Scripted rescue progression — pure state writes, no item pickup.
+        // Scripted rescue progression, pure state writes with no item pickup.
         if (action.step === 'follower-join') wasmSimFollowerAttach();
         else if (action.step === 'shelf-push') wasmSimPushMantle();
         else if (action.step === 'sage-quest') wasmSimMarkMapIcons();
@@ -123,16 +115,15 @@ const trigger = (action: TriggerAction): Promise<void> =>
           if (doors[i].kind === 4 && !doors[i].isOpen) unlockDoorBothSides(action.roomId, i, false);
         }
         // A drain switch writes the same overworld event byte its room's tag
-        // routine would, for real — no item, just the flag the game itself reads.
+        // routine would, for real. No item, just the flag the game itself reads.
         if (action.drain) wasmTriggerOverworldCheck(action.drain.screen, action.drain.mask, 0xff);
         resolve();
         return;
       }
       case 'bombWall': {
-        // A blast turns the cracked patch into floor for the rest of the run. There
-        // is no addressable game write for this — the real tilemap swap happens in
-        // the explosion path — so the opened state lives in the flood facade and
-        // every later grid build stamps it. See flood/bombed-walls.ts.
+        // A blast turns the cracked patch into floor for the rest of the run. No addressable
+        // game write exists for this, so the opened state lives in the flood facade and every
+        // later grid build stamps it. See flood/bombed-walls.ts.
         markBombed(action.roomId, action.tile);
         resolve();
         return;

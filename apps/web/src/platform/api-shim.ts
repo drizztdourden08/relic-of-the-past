@@ -4,10 +4,7 @@
  * where no preload injects window.api. Generated from the IPC channel maps so
  * every method exists: events return a no-op unsubscribe, sends are no-ops, and
  * invokes resolve to a benign empty ([] for known list queries, otherwise null).
- *
- * This lets the renderer mount and land on the ROM picker (useStartup catches the
- * empties) instead of crashing. Real per-capability implementations replace these
- * as ports are ported; the exact empties are refined by booting on a device.
+ * Real per-capability implementations replace these as ports are ported.
  */
 import type { IpcApi, ScreenEditorApi } from '@shared/ipc';
 import { INVOKE_MAP, SEND_MAP, EVENT_MAP } from '@shared/ipc';
@@ -25,7 +22,7 @@ const EMPTY_ARRAY_METHODS = new Set<string>([
 
 // Invoke methods whose callers immediately read a property of the result; a bare
 // null would throw on access. These return a contract-shaped empty object so the
-// renderer boots cleanly (matches the contract in shared/ipc/invoke-contract.ts).
+// renderer boots (matches the contract in shared/ipc/invoke-contract.ts).
 const STUB_RETURNS: Record<string, () => unknown> = {
   getAppState: () => ({ lastProfileId: null }),
   getTestArgs: () => ({ autoState: null, screenshot: null }),
@@ -33,9 +30,9 @@ const STUB_RETURNS: Record<string, () => unknown> = {
 
 /**
  * Editing the dataset needs a repo on disk, so every editor channel refuses here
- * rather than silently reporting success. Spelled out one name per entry, and
- * typed against `ScreenEditorApi` rather than built from a name list, so a
- * channel added to the contract fails to compile until it refuses here too.
+ * instead of silently reporting success. Spelled out one name per entry, and
+ * typed against `ScreenEditorApi`, so a channel added to the contract fails to
+ * compile until it refuses here too.
  */
 const refuseEdit = async (): Promise<{ success: false; error: string }> =>
   ({ success: false, error: 'The dataset editor needs the desktop app.' });

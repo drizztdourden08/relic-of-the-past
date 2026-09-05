@@ -74,7 +74,7 @@ std::optional<std::string> SdlThread::MappingForGuid(const std::string& guid) {
   // that subsystem is quit, which a diagnostics run does deliberately while it
   // reads a controller directly. Querying it in that window reads freed state:
   // usually it appears to work, sometimes it takes the process down. Ask SDL
-  // whether the subsystem is actually up rather than tracking it separately,
+  // whether the subsystem is up instead of tracking it separately,
   // since this runs on the caller's thread and a local flag could be stale.
   if (SDL_WasInit(SDL_INIT_GAMEPAD) == 0) {
     return std::nullopt;

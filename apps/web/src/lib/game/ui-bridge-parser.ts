@@ -15,7 +15,7 @@ import type {
 } from '@shared/game/types';
 
 // Module 0x0E (Interface) sub-module → UI mode. Data-driven lookup instead of a
-// nested switch; missing entries fall back to 'gameplay' (potions etc — overlay).
+// nested switch; missing entries fall back to 'gameplay' (potions etc. are overlay).
 const INTERFACE_SUBMODULE_MODES: Record<number, UIMode> = {
   1: 'paused_menu',
   2: 'text',
@@ -25,7 +25,7 @@ const INTERFACE_SUBMODULE_MODES: Record<number, UIMode> = {
   11: 'save_menu',
 };
 
-// Module 11 (MODULE_FALLING_ENTRANCE) floor for overworld_screen_index — mirrors
+// Module 11 (MODULE_FALLING_ENTRANCE) floor for overworld_screen_index, mirroring
 // OVERWORLD_SPECIAL_AREA_SCREEN_MIN in core/game-hooks/game_constants.h. Real overworld
 // screens (light or dark world) are always 0-127.
 const OVERWORLD_SPECIAL_AREA_SCREEN_MIN = 128;
@@ -39,7 +39,7 @@ const deriveUIMode = (
     case 2: // Module02_CopyFile
     case 3: // Module03_EraseFile
     case 4: // Module04_NameFile
-    case 20: // Module14_Attract — the intro "video" / legend demo
+    case 20: // Module14_Attract runs the intro "video" / legend demo
       return 'title';
     case 5:
     case 6:
@@ -49,15 +49,13 @@ const deriveUIMode = (
     case 16:
       return 'loading';
     case 11:
-      // Module 11 is the dungeon pit-fall transition, but the engine also reuses it,
-      // unchanged, for the 3 vanilla overworld locations reached by walking onto a switch
-      // tile — normal interactive gameplay even though the module never returns to 9.
-      // overworld_screen_index stays >= 128 only in that flavor; an actual pit-fall into a
-      // dungeon room never reaches it that high.
+      // Module 11 is the dungeon pit-fall transition, but the engine reuses it for the 3
+      // overworld switch-tile locations (normal gameplay, module never returns to 9).
+      // Only that flavor keeps overworld_screen_index >= 128; a real pit-fall never does.
       return overworldScreenIndex >= OVERWORLD_SPECIAL_AREA_SCREEN_MIN ? 'gameplay' : 'loading';
     case 7:
     case 9:
-      // Active gameplay — check floor indicator
+      // Active gameplay, so check the floor indicator
       if (floorTimer > 0) return 'gameplay'; // floor indicator is just a HUD element during gameplay
       return 'gameplay';
     case 14: // Module0E_Interface
@@ -75,12 +73,12 @@ const parseGameUIBuffer = (heap: Uint8Array, ptr: number): GameUIState => {
   const b = heap;
   const p = ptr;
 
-  // Game mode (bytes 0–2)
+  // Game mode (bytes 0-2)
   const mainModule = b[p + 0];
   const subModule = b[p + 1];
   const subSubModule = b[p + 2];
 
-  // HUD vitals (bytes 3–17)
+  // HUD vitals (bytes 3-17)
   const healthCurrent = b[p + 3];
   const healthCapacity = b[p + 4];
   const magicPower = b[p + 5];
@@ -95,20 +93,20 @@ const parseGameUIBuffer = (heap: Uint8Array, ptr: number): GameUIState => {
   const equippedL = b[p + 16];
   const equippedR = b[p + 17];
 
-  // Animated fillers (bytes 18–21)
+  // Animated fillers (bytes 18-21)
   const heartsFiller = b[p + 18];
   const magicFiller = b[p + 19];
   const bombFiller = b[p + 20];
   const arrowFiller = b[p + 21];
 
-  // Item slots (bytes 22–41)
+  // Item slots (bytes 22-41)
   const items: number[] = [];
   for (let i = 0; i < 20; i++) items.push(b[p + 22 + i]);
 
-  // Bottles (bytes 42–45)
+  // Bottles (bytes 42-45)
   const bottles: number[] = [b[p + 42], b[p + 43], b[p + 44], b[p + 45]];
 
-  // Equipment (bytes 46–52)
+  // Equipment (bytes 46-52)
   const sword = b[p + 46];
   const shield = b[p + 47];
   const armor = b[p + 48];
@@ -117,14 +115,14 @@ const parseGameUIBuffer = (heap: Uint8Array, ptr: number): GameUIState => {
   const flippers = b[p + 51];
   const moonPearl = b[p + 52];
 
-  // Dungeon progress (bytes 53–60)
+  // Dungeon progress (bytes 53-60)
   const pendants = b[p + 53];
   const crystals = b[p + 54];
   const maps = b[p + 55] | (b[p + 56] << 8);
   const compasses = b[p + 57] | (b[p + 58] << 8);
   const bigKeys = b[p + 59] | (b[p + 60] << 8);
 
-  // Text/Dialogue (bytes 61–68)
+  // Text/Dialogue (bytes 61-68)
   const messageId = b[p + 61] | (b[p + 62] << 8);
   const messagingModule = b[p + 63];
   const renderPhase = b[p + 64];
@@ -132,7 +130,7 @@ const parseGameUIBuffer = (heap: Uint8Array, ptr: number): GameUIState => {
   const choice = b[p + 66];
   const waitTimer = b[p + 67] | (b[p + 68] << 8);
 
-  // Map state (bytes 69–79)
+  // Map state (bytes 69-79)
   const overworldMapState = b[p + 69];
   const dungeonFloor = b[p + 70] | (b[p + 71] << 8);
   const dungeonIdx = b[p + 72] | (b[p + 73] << 8);
@@ -141,32 +139,32 @@ const parseGameUIBuffer = (heap: Uint8Array, ptr: number): GameUIState => {
   const roomIndex = b[p + 77] | (b[p + 78] << 8);
   const currentFloor = b[p + 79];
 
-  // Floor indicator / ability flags (bytes 80–81)
+  // Floor indicator / ability flags (bytes 80-81)
   const floorTimer = b[p + 80];
   const abilityFlags = b[p + 81];
 
-  // Save menu (bytes 82–83)
+  // Save menu (bytes 82-83)
   const sourceModule = b[p + 82];
   const progressIndicator = b[p + 83];
 
-  // Inventory order (bytes 84–107)
+  // Inventory order (bytes 84-107)
   const order: number[] = [];
   for (let i = 0; i < 24; i++) order.push(b[p + 84 + i]);
 
-  // Location state (bytes 109–114)
+  // Location state (bytes 109-114)
   const overworldScreenIndex = b[p + 109] | (b[p + 110] << 8);
   const isIndoors = b[p + 111] !== 0;
   const isDarkWorld = b[p + 112] !== 0;
   const overworldAreaIndex = b[p + 113];
   const heartPieces = b[p + 114];
 
-  // Extended location (bytes 119–124)
+  // Extended location (bytes 119-124)
   const whichEntrance = b[p + 119];
   const linkLayer = b[p + 120];
   const linkX = b[p + 121] | (b[p + 122] << 8);
   const linkY = b[p + 123] | (b[p + 124] << 8);
 
-  // Current resource caps (bytes 125–128)
+  // Current resource caps (bytes 125-128)
   const maxBombs = b[p + 125];
   const maxArrows = b[p + 126];
   const maxRupees = b[p + 127] | (b[p + 128] << 8);

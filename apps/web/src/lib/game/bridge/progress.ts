@@ -23,7 +23,7 @@ interface GameProgressInfo {
 const PHASE_LABELS = ['intro', 'rain (pre-Sanctuary)', 'post-Sanctuary', 'post-Agahnim'];
 
 /**
- * Read the game's progress indicator from WRAM — works indoors or outdoors.
+ * Read the game's progress indicator from WRAM. Works indoors or outdoors.
  * Returns null only when game is not running.
  */
 const wasmGetProgressIndicator = (): GameProgressInfo | null =>

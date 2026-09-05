@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind style */
 
-/* Matches the app-wide scrollbar set in tokens/reset.css — same size, same
-   colours — and adds the smooth behaviour and thin Firefox styling on top. */
+/* Matches the app-wide scrollbar set in tokens/reset.css, same size and colours,
+   then adds the smooth behaviour and thin Firefox styling on top. */
 .scroll-area {
   scroll-behavior: smooth;
   overscroll-behavior: contain;

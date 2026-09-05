@@ -1,11 +1,7 @@
 /* @layer renderer-components @kind data */
 /**
- * StickCalibrationWizard — 3-step analog stick calibration orchestrator.
- *
- * Steps:
- *   1. Center:  Leave sticks at rest → record center offsets
- *   2. Range:   Rotate sticks fully → record per-axis min/max
- *   3. Review:  Adjust deadzones, test live output, save
+ * 3-step analog stick calibration: record centre offsets at rest, then per-axis
+ * min/max from a full rotation, then adjust deadzones and save.
  */
 
 import type { CSSProperties } from 'react';
@@ -70,7 +66,7 @@ const StickCalibrationWizard = (props: StickCalibrationWizardProps) => {
       {step === 'center' && (
         <Box>
           <Text as="p" style={S.para}>
-            <Text as="strong">Leave {target ? `the ${target} stick` : 'both sticks'} at rest</Text> — don't touch {target ? 'it' : 'them'}. The software will record the idle center position.
+            <Text as="strong">Leave {target ? `the ${target} stick` : 'both sticks'} at rest</Text>. Don't touch {target ? 'it' : 'them'}. The software will record the idle center position.
           </Text>
           {!centerDone ? (
             <Box>
@@ -112,15 +108,15 @@ const StickCalibrationWizard = (props: StickCalibrationWizardProps) => {
             {calibrateLeft && (
               <Box>
                 <Box style={S.stickHead}>Left Stick</Box>
-                <Box>X: {rangeMinMax.lxMin} — {rangeMinMax.lxMax} (Δ{rangeMinMax.lxMax - rangeMinMax.lxMin})</Box>
-                <Box>Y: {rangeMinMax.lyMin} — {rangeMinMax.lyMax} (Δ{rangeMinMax.lyMax - rangeMinMax.lyMin})</Box>
+                <Box>X: {rangeMinMax.lxMin} to {rangeMinMax.lxMax} (Δ{rangeMinMax.lxMax - rangeMinMax.lxMin})</Box>
+                <Box>Y: {rangeMinMax.lyMin} to {rangeMinMax.lyMax} (Δ{rangeMinMax.lyMax - rangeMinMax.lyMin})</Box>
               </Box>
             )}
             {calibrateRight && (
               <Box>
                 <Box style={S.stickHead}>Right Stick</Box>
-                <Box>X: {rangeMinMax.rxMin} — {rangeMinMax.rxMax} (Δ{rangeMinMax.rxMax - rangeMinMax.rxMin})</Box>
-                <Box>Y: {rangeMinMax.ryMin} — {rangeMinMax.ryMax} (Δ{rangeMinMax.ryMax - rangeMinMax.ryMin})</Box>
+                <Box>X: {rangeMinMax.rxMin} to {rangeMinMax.rxMax} (Δ{rangeMinMax.rxMax - rangeMinMax.rxMin})</Box>
+                <Box>Y: {rangeMinMax.ryMin} to {rangeMinMax.ryMax} (Δ{rangeMinMax.ryMax - rangeMinMax.ryMin})</Box>
               </Box>
             )}
           </Box>
@@ -150,7 +146,7 @@ const StickCalibrationWizard = (props: StickCalibrationWizardProps) => {
       {step === 'review' && previewL && previewR && (
         <Box>
           <Text as="p" style={S.para}>
-            <Text as="strong">Test the calibrated output</Text> — sticks should be centered at rest and reach the edge evenly. Adjust deadzones if needed.
+            <Text as="strong">Test the calibrated output</Text>. Sticks should be centered at rest and reach the edge evenly. Adjust deadzones if needed.
           </Text>
           <Box style={S.dzGrid}>
             <Text as="label" style={S.dzLabel}>

@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
  * Lookup into the trigger-source dataset. Ids are 1-based, matching the editor's
- * entry numbering — see ./context.ts for the convention.
+ * entry numbering (see ./context.ts for the convention).
  */
 import type { TriggerSourceRow } from './types';
 import { triggerSourceRows } from './trigger-source';

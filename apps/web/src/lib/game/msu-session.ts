@@ -1,12 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Binds the replacement-audio engine to a running game: builds it against the game's own audio
- * context, receives the core's music-control and sound events, and arms the host gates that
- * make the core stop producing those sounds itself.
- *
- * One session per profile load. Nothing here decides what to play — that is the engine's job;
- * this only owns the lifetime, the wiring, and what the core is allowed to hand over.
- */
+// One replacement-audio session per profile load. Owns lifetime, wiring and host gates only;
+// the engine decides what to play.
 import type { MsuPackManifest, MsuResumeState } from '@shared/types/msu-manifest';
 import { createMsuEngine } from '../msu/engine';
 import type { ChannelReport, MsuChannelName, MsuEngine } from '../msu/engine';
@@ -26,15 +20,15 @@ interface MsuSessionOptions {
   musicVolume: () => number;
   /** Replacement effects are effects: they follow the SFX slider, not the music one. */
   sfxVolume: () => number;
-  /** The bed's own slider — a storm sits under quiet music without touching either. */
+  /** The bed's own slider, so a storm sits under quiet music without touching either. */
   ambientVolume: () => number;
   resumeEnabled: () => boolean;
   /** Whether returning to the title forgets those positions, so the next run starts clean. */
   resetAtTitle: () => boolean;
   /**
-   * Whether the pack may replace the ambient bed and the sound effects. Read once, here, because
-   * the claim masks and gate bits are published to the core at session start — flipping either
-   * setting takes effect on the next profile load, the same as the pack choice itself.
+   * Whether the pack may replace the ambient bed and the sound effects. Read once at session
+   * start (claim masks and gate bits are published then), so a flip takes effect on the next
+   * profile load, same as the pack choice.
    */
   replaceAmbient: boolean;
   replaceSfx: boolean;
@@ -74,11 +68,11 @@ const build = (options: MsuSessionOptions): boolean => {
     resumeEnabled: options.resumeEnabled,
     resetAtTitle: options.resetAtTitle,
     onError: (message) => log.error(`[MSU] ${message}`),
-    onReset: () => log.app('[MSU] Back at the title — bed and effects stopped, positions cleared'),
+    onReset: () => log.app('[MSU] Back at the title. Bed and effects stopped, positions cleared'),
     onTrack: (trackNum, layerCount, resumed) =>
-      log.app(`[MSU] Track ${trackNum} playing — ${layerCount} layer(s)${resumed ? ', resumed' : ''}`),
+      log.app(`[MSU] Track ${trackNum} playing with ${layerCount} layer(s)${resumed ? ', resumed' : ''}`),
     onAmbient: (soundId, layerCount, resumed) =>
-      log.app(`[MSU] Ambient ${soundId} playing — ${layerCount} layer(s)${resumed ? ', resumed' : ''}`),
+      log.app(`[MSU] Ambient ${soundId} playing with ${layerCount} layer(s)${resumed ? ', resumed' : ''}`),
   });
 
   window.__onMusicCtrl = (ctrl, module, entrance, overworldArea) => {
@@ -94,22 +88,19 @@ const build = (options: MsuSessionOptions): boolean => {
   const claimed = publishSoundClaims(options.manifest, {
     ambient: options.replaceAmbient, sfx: options.replaceSfx,
   });
-  // Only now is anything listening. Whatever the game selected before this point — at boot, or
-  // through a state loaded on the way in — was reported to nobody, and the core will not repeat
-  // it on its own, so ask. Has to follow the gate AND the claims: the core checks both.
+  // Only now is anything listening. Whatever the game selected before this point (at boot, or
+  // through a loaded state) was reported to nobody and the core will not repeat it, so ask.
+  // Has to follow the gate AND the claims: the core checks both.
   announceCoreMusic();
   log.app(`[MSU] Engine attached (${options.manifest.tracks.length} tracks${options.isDeluxe ? ', deluxe' : ''})`);
   const sounds = claimed.ambient + claimed.sfx1 + claimed.sfx2;
   if (sounds > 0) {
-    log.app(`[MSU] Claimed ${sounds} sound(s) — ${claimed.ambient} ambient, ${claimed.sfx1 + claimed.sfx2} effect(s)`);
+    log.app(`[MSU] Claimed ${sounds} sound(s): ${claimed.ambient} ambient, ${claimed.sfx1 + claimed.sfx2} effect(s)`);
   }
   return true;
 };
 
-/**
- * Start a session. SDL2 creates its audio context during boot, so when the context is not up
- * yet this waits for it rather than losing the session.
- */
+/** Start a session. SDL2 creates its audio context during boot; if it is not up yet, wait for it. */
 const startMsuSession = (options: MsuSessionOptions): void => {
   stopMsuSession();
   if (build(options)) return;
@@ -131,7 +122,7 @@ const stopMsuSession = (): void => {
   window.__onGameSound = undefined;
   window.__msuIsPlaying = undefined;
   // Order matters: the core holds its music port paused while the host owns music, and only
-  // rewrites it when the music CHANGES — which it will not, because the track it wants is the
+  // rewrites it when the music CHANGES. It will not, because the track it wants is the
   // one it thinks is already playing. Re-announce it while the gate is still on, then release.
   restoreCoreMusic();
   setExternalMusic(false);
@@ -139,10 +130,7 @@ const stopMsuSession = (): void => {
   withdrawSoundClaims();
 };
 
-/**
- * Live music position, and the ambient bed playing with it, for embedding in a save's metadata.
- * Null when no session is playing. Effects are deliberately absent — nothing to resume.
- */
+/** Live music position and ambient bed for a save's metadata; null when nothing plays. Effects are deliberately absent (nothing to resume). */
 const msuSnapshot = (): MsuResumeState | null => engine?.snapshot() ?? null;
 
 /** Resume the music a loaded save was playing. A null state stops music, matching a save with none. */

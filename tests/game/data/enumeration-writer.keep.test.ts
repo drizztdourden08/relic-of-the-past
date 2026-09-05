@@ -1,16 +1,12 @@
 /* @layer tests @kind test */
 /**
- * The enumeration writer's create/update/delete round trip, run against a
- * throwaway workspace rather than the real dataset — the same "shaped like
- * the real tree" bargain `item-group-writer.test.ts` and
- * `dataset-record-writers.test.ts` make, so the allocator's file scan and the
- * array-splice both exercise real code paths.
+ * The enumeration writer's create/update/delete round trip in a throwaway
+ * workspace shaped like the real tree (as `item-group-writer.test.ts` and
+ * `dataset-record-writers.test.ts` do).
  *
- * `allocateEnumeration`/`writeEnumeration`/`deleteEnumeration` also regenerate
- * `enumeration/generated-types.ts` from the REAL repo's `ALL_ENUMERATION` as a
- * side effect (`generate-enum-types.mjs` reads a hardcoded path, not the
- * workspace root under test) — harmless here since this test never touches
- * the real `enumeration.ts`, so that regeneration is a same-content no-op.
+ * The writers also regenerate `enumeration/generated-types.ts` from the REAL
+ * repo's `ALL_ENUMERATION` (`generate-enum-types.mjs` reads a hardcoded path).
+ * Harmless here: this never touches the real `enumeration.ts`, so it is a no-op.
  */
 import { mkdtemp, mkdir, readFile, rm, writeFile } from 'fs/promises';
 import { tmpdir } from 'os';
@@ -59,7 +55,7 @@ describe('allocateEnumeration', () => {
     expect(source).toContain("label: 'Both Worlds'");
   });
 
-  it('refuses a blank value rather than minting an id', async () => {
+  it('refuses a blank value instead of minting an id', async () => {
     const result = await allocateEnumeration(root, { category: 'world', value: '  ', label: 'x', appliesTo: ['screen'] });
     expect(result).toEqual({ success: false, error: 'An enumeration entry needs a value.' });
   });

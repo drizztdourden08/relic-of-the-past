@@ -1,11 +1,8 @@
 /* @layer electron-main @kind logic */
 /**
- * Creating, rewriting and removing an actor record.
- *
- * A new record is filed by KIND — the split the committed files really do
- * follow — landing in the last file of its kind's own size-split group. An
- * existing record is edited or removed where it already sits, found by id, so
- * the earlier files in a group stay reachable.
+ * Creating, rewriting and removing an actor record. A new record is filed by
+ * KIND into the last file of its size-split group; an existing one is edited
+ * where it sits, found by id.
  */
 
 import { serializeActorRecord } from '@shared/game/data/record-codegen';

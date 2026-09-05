@@ -1,10 +1,10 @@
 /* @layer shared-game @kind logic */
 /**
- * evaluatePresence — pure evaluation of a declarative PresenceCondition against
+ * Pure evaluation of a declarative PresenceCondition against
  * a PresenceGameState snapshot. This is the sim's ONE sanctioned data read: the
  * transcribed spawn conditions live as data on the checks (see
  * CheckRecord.presence) and this function reads them. An absent condition means
- * "always present". An `itemId` leaf is asked of the inventory directly — it used
+ * "always present". An `itemId` leaf is asked of the inventory directly. It used
  * to resolve to a display name first, purely because the engine's inventory was a
  * name set.
  */

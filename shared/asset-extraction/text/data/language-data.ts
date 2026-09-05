@@ -1,10 +1,5 @@
 /* @layer shared-asset-extraction @kind data */
-/**
- * Language definitions for the game's text compression/decompression.
- * Data-driven — each language is a config object, not a class.
- *
- * Ported from: upstream's text_compression.py
- */
+/** Language definitions for the game's text compression/decompression, one config object per language. Ported from upstream's text_compression.py. */
 
 interface LanguageConfig {
   id: string;

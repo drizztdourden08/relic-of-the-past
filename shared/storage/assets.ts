@@ -20,7 +20,7 @@ const writeDat = (files: FileStore, romFile: string, dat: Uint8Array): Promise<v
 const readRomBytes = (files: FileStore, romFile: string): Promise<Uint8Array | null> => files.readBytes(`roms/${romFile}`);
 
 /**
- * Every stored language set, with the font pair it bakes with — the extras for
+ * Every stored language set, with the font pair it bakes with. These are the extras for
  * one asset recompile, in the order the set list reports. Reads the EDITED set
  * files, so a translator's saved changes are what lands in the blob; a folder
  * missing either the set payload or its font pair is skipped as incomplete.

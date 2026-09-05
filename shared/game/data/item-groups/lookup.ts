@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * Reads over the item-group collection — replaces the old direct
+ * Reads over the item-group collection. These replace the old direct
  * `ITEM_GROUPS[groupId]` indexing into the bare taxonomy table.
  */
 import { replaceAll } from '../registry';
@@ -12,13 +12,13 @@ const byId = new Map<string, ItemGroupRecord>(ALL_ITEM_GROUPS.map(group => [grou
 
 const itemGroupById = (id: string): ItemGroupRecord | undefined => byId.get(id);
 
-/** The item ids in this group — an empty array (never undefined) for an unknown group id. */
+/** The item ids in this group. An unknown group id gives an empty array, never undefined. */
 const membersOf = (id: ItemGroupId): readonly ItemId[] => byId.get(id)?.memberIds ?? [];
 
 /**
  * Adds a group the allocator minted after seeding, so the session answers for
- * it without a reload — the same bargain `registerTag` makes on the tag side.
- * Ignored when the id is already registered, which a genuinely new allocation
+ * it without a reload. `registerTag` makes the same bargain on the tag side.
+ * Ignored when the id is already registered, which a new allocation
  * never is.
  */
 const registerItemGroupRecord = (record: ItemGroupRecord): boolean => {
@@ -31,8 +31,8 @@ const registerItemGroupRecord = (record: ItemGroupRecord): boolean => {
 
 /**
  * Folds an edited record back in once its write has already landed on disk, so
- * a relabel resolves in the session without a reload — the same bargain
- * `registerTag` makes on the tag side. Only ever replaces an id already known;
+ * a relabel resolves in the session without a reload. `registerTag` makes the
+ * same bargain on the tag side. Only ever replaces an id already known;
  * minting a brand-new group is `registerItemGroupRecord`'s job above.
  */
 const replaceItemGroupRecord = (record: ItemGroupRecord): boolean => {

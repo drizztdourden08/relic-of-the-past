@@ -15,7 +15,7 @@ type MsuImportResult = {
   success: boolean;
   fileCount?: number;
   error?: string;
-  /** Audio the archive kept below the pack's own level — alternates and extras, not tracks. */
+  /** Alternates and extras the archive kept below the pack's own level, never tracks. */
   skippedNested?: number;
   /** Audio dropped because an earlier file already claimed its track number. */
   skippedDuplicate?: number;
@@ -43,7 +43,7 @@ const installMsuTracks = async (source: ImportSource, packName: string): Promise
       report('error', undefined, undefined, error);
       return { success: false, error };
     }
-    // Extras in subfolders are not tracks, and two files cannot share a slot — see selectPackFiles.
+    // Extras in subfolders are not tracks, and two files cannot share a slot (see selectPackFiles).
     const selected = selectPackFiles(resolved.files);
     const msuDir = getMsuDir(packName);
     await mkdir(msuDir, { recursive: true });
@@ -123,9 +123,8 @@ const registerMsuHandlers = (): void => {
     } catch { return []; }
   });
 
-  // A pack file the app was opened with (file association). Scoped to the one extension on
-  // purpose: this reads a path chosen outside the app's own storage, so it must not become a
-  // general-purpose file reader for the renderer.
+  // Scoped to the one extension: this reads a path outside the app's own storage, so it
+  // must not become a general-purpose file reader for the renderer.
   handle('msu:readMsulFile', async (_event, filePath: string) => {
     if (!filePath.toLowerCase().endsWith('.msul')) throw new Error('Not a music-pack file');
     return toArrayBuffer(await readFile(filePath));

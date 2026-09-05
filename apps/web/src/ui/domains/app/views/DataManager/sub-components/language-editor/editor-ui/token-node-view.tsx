@@ -2,13 +2,13 @@
 /**
  * Attaches this folder's chip to the token node defined in `editor/`.
  *
- * The node — its name, its attributes, how it parses and serialises — belongs to
- * the document model and is not touched here. What is added is purely how it
+ * The node is not touched here. Its name, its attributes, and how it parses and
+ * serialises all belong to the document model. What is added is purely how it
  * DRAWS, which is presentation and therefore ours: the extension list comes in,
  * the one member named `dialogueToken` comes back out with a React node view
  * bound to it, and everything else passes through untouched.
  *
- * The picture-character set is closed over rather than read from a module-level
+ * The picture-character set is closed over, not read from a module-level
  * global, so two editors on two different language sets never see each other's
  * alphabet.
  *

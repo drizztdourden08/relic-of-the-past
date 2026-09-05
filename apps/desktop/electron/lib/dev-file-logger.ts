@@ -1,9 +1,8 @@
 /* @layer electron-main @kind logic */
 /**
- * Dev-only: mirrors main-process console output and renderer console output to
- * disk continuously, so a hard crash still leaves the last thing that happened
- * on disk to read back — terminal scrollback isn't searchable and may not have
- * been visible when the crash happened. Never wired up in a packaged build.
+ * Dev-only: mirrors main and renderer console output to disk continuously, so a
+ * hard crash leaves the last thing that happened on disk. Never wired up in a
+ * packaged build.
  */
 import { appendFile, writeFile, mkdir } from 'fs/promises';
 import { dirname } from 'path';
@@ -13,7 +12,7 @@ import { getUserDataPath } from './paths';
 const timestamp = (): string => new Date().toISOString();
 
 const appendLine = (file: string, line: string): void => {
-  // Best-effort — a logging failure must never break the app it's logging.
+  // A logging failure must never break the app it's logging.
   appendFile(file, `${line}\n`, 'utf-8').catch(() => {});
 };
 
@@ -34,16 +33,14 @@ const installMainConsoleMirror = (mainLogPath: string): void => {
   }
 };
 
-/** Renderer console output reaches the main process via the existing
- *  console-message event — no renderer-side code changes needed. */
+/** Renderer console output arrives via the console-message event; no renderer changes. */
 const installRendererConsoleMirror = (mainWindow: BrowserWindow, rendererLogPath: string): void => {
   mainWindow.webContents.on('console-message', (event) => {
     appendLine(rendererLogPath, `[${timestamp()}] [${event.level}] ${event.message} (${event.sourceId}:${event.lineNumber})`);
   });
 };
 
-// getUserDataPath() is only resolved once initPaths() has run (see main.ts), so
-// these are computed lazily here — never at module load time.
+// getUserDataPath() only resolves once initPaths() has run, so never at module load.
 const installDevFileLogging = async (mainWindow: BrowserWindow): Promise<void> => {
   const mainLogPath = getUserDataPath('debug', 'main-console.log');
   const rendererLogPath = getUserDataPath('debug', 'renderer-console.log');

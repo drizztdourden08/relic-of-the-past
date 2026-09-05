@@ -17,13 +17,10 @@ import type {
 } from '../../apps/web/src/ui/design-system/composites/DataTable/behavior/overflow-probe';
 import type { TableColumn } from '../../apps/web/src/ui/design-system/data/table/types';
 
-// Three columns' worth of sizing, none of which needs a browser: the delta a
-// seam drag turns into a width, the width "fit to content" picks out of a set
-// of measurements, and the grid track each of the three width modes emits.
-// What CANNOT be checked here is the gesture and the measuring themselves —
-// one needs a pointer, the other needs laid-out text.
+// Sizing as pure functions: seam delta to width, fit-to-content, and the grid
+// track per width mode. The gesture and the measuring need a browser.
 
-describe('dragging the seam — delta to width', () => {
+describe('dragging the seam turns a delta into a width', () => {
   const drag = (startWidth: number, delta: number): number =>
     widthFromDrag({ startWidth, startX: 100, clientX: 100 + delta });
 
@@ -44,7 +41,7 @@ describe('dragging the seam — delta to width', () => {
     expect(drag(600, 5000)).toBe(MAX_COLUMN_WIDTH);
   });
 
-  it('lands on whole pixels — a fractional grid track is a blurry edge', () => {
+  it('lands on whole pixels, because a fractional grid track is a blurry edge', () => {
     expect(widthFromDrag({ startWidth: 200.4, startX: 0, clientX: 10.2 })).toBe(211);
   });
 
@@ -53,7 +50,7 @@ describe('dragging the seam — delta to width', () => {
   });
 });
 
-describe('fit to content — the widest thing measured, plus room to breathe', () => {
+describe('fit to content takes the widest thing measured, plus room to breathe', () => {
   it('fits the widest value it was given', () => {
     expect(fitColumnWidth([120, 300, 90])).toBe(316);
   });
@@ -62,11 +59,11 @@ describe('fit to content — the widest thing measured, plus room to breathe', (
     expect(fitColumnWidth([4, 9])).toBe(MIN_COLUMN_WIDTH);
   });
 
-  it('caps a runaway value rather than sizing a column off the screen', () => {
+  it('caps a runaway value instead of sizing a column off the screen', () => {
     expect(fitColumnWidth([9000])).toBe(MAX_COLUMN_WIDTH);
   });
 
-  it('keeps the minimum when nothing could be measured, rather than collapsing', () => {
+  it('keeps the minimum when nothing could be measured, instead of collapsing', () => {
     expect(fitColumnWidth([])).toBe(MIN_COLUMN_WIDTH);
   });
 
@@ -76,7 +73,7 @@ describe('fit to content — the widest thing measured, plus room to breathe', (
   });
 });
 
-describe('width modes — what each one emits as a grid track', () => {
+describe('width modes and what each one emits as a grid track', () => {
   it('leaves an untouched column on the automatic track', () => {
     expect(trackFor({ path: 'id' })).toBe(AUTO_TRACK);
   });
@@ -103,7 +100,7 @@ describe('width modes — what each one emits as a grid track', () => {
     expect(trackFor({ path: 'id', fit: true })).toBe(AUTO_TRACK);
   });
 
-  it('does not give a fit column the trailing cell\'s slack — it is not a grow column', () => {
+  it('does not give a fit column the trailing cell\'s slack, because it is not a grow column', () => {
     const columns: readonly TableColumn[] = [{ path: 'id' }, { path: 'kind', fit: true }];
     expect(trackList(columns)).toBe(`${AUTO_TRACK} ${AUTO_TRACK} ${TRAILING_TRACK}`);
   });
@@ -113,7 +110,7 @@ describe('width modes — what each one emits as a grid track', () => {
 // overflow condition to decide whether to act, so its fallback is consulted
 // unconditionally the moment a measurement has landed.
 
-describe('a fit column — always at its own measured width', () => {
+describe('a fit column stays at its own measured width', () => {
   const columns: readonly TableColumn[] = [{ path: 'id' }, { path: 'kind', fit: true }];
   const measured: GrowFallback = new Map([['kind', 220]]);
 
@@ -126,7 +123,7 @@ describe('a fit column — always at its own measured width', () => {
     expect(trackFor(columns[0], undefined, measured)).toBe(AUTO_TRACK);
   });
 
-  it('is a render override only — the column list still says the column is in fit mode', () => {
+  it('is a render override only, so the column list still says the column is in fit mode', () => {
     expect(trackList(columns, undefined, measured)).not.toBe(trackList(columns));
     expect(columns[1]).toEqual({ path: 'kind', fit: true });
     expect(columns[1].width).toBeUndefined();
@@ -142,11 +139,8 @@ describe('a fit column — always at its own measured width', () => {
   });
 });
 
-// "Take the space that is left over" only means anything while there IS space
-// left over. Once the table needs to scroll sideways there is none, so a grow
-// column sizes itself to its content instead — and goes back to filling by
-// itself once the space returns. Whether it currently has any is one comparison,
-// asserted here on numbers a browser would otherwise have to supply.
+// A grow column only fills while there is space left over. Once the table
+// scrolls sideways it sizes to content, and fills again when space returns.
 
 describe('is there any space left over', () => {
   const probe = (over: Partial<OverflowProbe> = {}): OverflowProbe => ({
@@ -165,17 +159,13 @@ describe('is there any space left over', () => {
     expect(isOverflowing(probe({ scrollWidth: 1000 }))).toBe(false);
   });
 
-  it('forgives a sub-pixel spill, which is layout rounding rather than overflow', () => {
+  it('forgives a sub-pixel spill, which is layout rounding, not overflow', () => {
     expect(isOverflowing(probe({ scrollWidth: 1000.5 }))).toBe(false);
     expect(isOverflowing(probe({ scrollWidth: 1004 }))).toBe(true);
   });
 
-  /*
-   * The one that matters: a table already showing a filled column measures wide
-   * BECAUSE it is filled. Putting the flexible columns back at content width
-   * first is what makes the answer the same in either mode — without it the two
-   * modes would each report the condition that switches the other one on.
-   */
+  // A table already showing a filled column measures wide BECAUSE it is filled.
+  // Flexible columns go back to content width first so both modes agree.
   it('asks what the table needs, not what a filled column stretched it to', () => {
     const filled = probe({ scrollWidth: 1000, flexibleRendered: 500, flexibleFitted: 200 });
     expect(naturalWidth(filled)).toBe(700);
@@ -212,12 +202,8 @@ describe('a grow column while there is nothing left over', () => {
     expect(trackList(columns, fallen)).toBe(`${AUTO_TRACK} ${growFitTrack(180)} ${TRAILING_MIN_TRACK}`);
   });
 
-  /*
-   * The floor stays in FRONT of the measured width, so the fallback can never
-   * come out narrower than the grow track it stands in for. A narrower fallback
-   * could un-overflow the table, which would restore the fill, which would
-   * overflow it again.
-   */
+  // The floor sits in front of the measured width. A narrower fallback could
+  // un-overflow the table, restore the fill, and overflow it again.
   it('never falls back to less than the grow track would have taken', () => {
     expect(growFitTrack(70)).toBe(`minmax(${TRACK_FLOOR}, 70px)`);
     expect(GROW_TRACK).toBe(`minmax(${TRACK_FLOOR}, 1fr)`);
@@ -233,7 +219,7 @@ describe('a grow column while there is nothing left over', () => {
     expect(trackList(columns, new Map())).toBe(trackList(columns));
   });
 
-  it('keeps the trailing cell out of the slack — the column is still a grow column', () => {
+  it('keeps the trailing cell out of the slack while the column is still a grow column', () => {
     expect(trackList(columns, fallen).endsWith(TRAILING_MIN_TRACK)).toBe(true);
   });
 
@@ -242,12 +228,8 @@ describe('a grow column while there is nothing left over', () => {
       .toBe(`200px ${growFitTrack(180)} ${TRAILING_MIN_TRACK}`);
   });
 
-  /*
-   * The whole point of the fallback riding alongside the list rather than being
-   * folded into it: ONE list renders both ways, so nothing had to be written to
-   * make the column narrow and nothing has to be written to let it fill again.
-   */
-  it('is a render override only — the column list still says the column grows', () => {
+  // The fallback rides alongside the list, so ONE list renders both ways.
+  it('is a render override only: the column list still says the column grows', () => {
     const rendered = [trackList(columns, fallen), trackList(columns, null)];
     expect(rendered[0]).not.toBe(rendered[1]);
     expect(columns[1]).toEqual({ path: 'kind', grow: true });
@@ -262,7 +244,7 @@ describe('a grow column while there is nothing left over', () => {
   });
 });
 
-describe('fit all to content — the same fit, once per column', () => {
+describe('fit all to content runs the same fit once per column', () => {
   const widths: Record<string, number[]> = { id: [90, 120], kind: [300], note: [8] };
   const measured = (path: string): readonly number[] => widths[path] ?? [];
 
@@ -293,7 +275,7 @@ describe('fit all to content — the same fit, once per column', () => {
   });
 });
 
-// A seam drag never goes through state while it runs — it writes this list, and
+// A seam drag never goes through state while it runs. It writes this list, and
 // only the width it ended on is committed. So the preview and the commit have
 // to agree, which is what these check.
 

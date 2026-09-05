@@ -1,9 +1,5 @@
 /* @layer tests @kind test */
-/**
- * There is no jsdom or testing-library in this repo (see
- * enum-kit-tiering.test.ts), so this is an SSR smoke test: it proves the
- * `highlightedLines` diff is purely additive by comparing markup strings.
- */
+/** SSR smoke test (no jsdom): the `highlightedLines` diff is purely additive, compared as markup strings. */
 import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -14,12 +10,12 @@ const CODE = 'const a = 1;\nconst b = 2;\nconst c = 3;';
 const render = (highlightedLines?: readonly number[]): string =>
   renderToStaticMarkup(createElement(CodeBlock, { code: CODE, language: 'typescript', highlightedLines }));
 
-/** Splits rendered markup into one chunk per source line, in order — every
+/** Splits rendered markup into one chunk per source line, in order. Every
  * line div is a sibling with no nested divs (tokens render as spans), so this
  * split is exact. */
 const lineChunksOf = (markup: string): string[] => markup.split('<div class="code-block__line').slice(1);
 
-describe('CodeBlock — highlightedLines', () => {
+describe('CodeBlock highlightedLines', () => {
   it('adds no modifier class when the prop is omitted', () => {
     const markup = render();
     expect(markup).not.toContain('code-block__line--changed');
@@ -41,7 +37,7 @@ describe('CodeBlock — highlightedLines', () => {
     expect(lineChunksOf(render([99])).every((chunk) => !chunk.slice(0, 60).includes('--changed'))).toBe(true);
   });
 
-  it('changes nothing else in the markup — stripping the modifier class recovers the unhighlighted render', () => {
+  it('changes nothing else in the markup, so stripping the modifier class recovers the unhighlighted render', () => {
     const withHighlight = render([2]);
     const without = render();
     expect(withHighlight.replaceAll(' code-block__line--changed', '')).toBe(without);

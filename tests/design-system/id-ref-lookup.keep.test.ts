@@ -11,10 +11,8 @@ import type { IdRefOption, IdRefOptionResolver } from '../../apps/web/src/ui/des
 import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
 import { describeDataset } from '../dataset-guard';
 
-// SSR smoke tests: they prove which control an id reference is offered as, and
-// that the injected lookup reaches it with real rows behind it. Opening the
-// dropdown, typing in its search box and clicking a result need a browser and
-// are NOT covered here.
+// SSR smoke tests: which control an id reference is offered as, and that the
+// injected lookup reaches it with real rows. Opening and typing need a browser.
 
 const INPUT = '<input';
 const DROPDOWN = 'class="select-trigger';
@@ -41,7 +39,7 @@ const fieldAt = (rows: readonly unknown[], path: string): FieldDescriptor => {
   return field;
 };
 
-describeDataset('id reference editor — the fallback chain', () => {
+describeDataset('the id reference editor fallback chain', () => {
   it('stays a plain input with no resolver wired at all', () => {
     const markup = renderRefEditor(refField({ targetKind: 'screen' }), 'screen-1');
     expect(markup).toContain(INPUT);
@@ -101,13 +99,13 @@ describeDataset('the real lookup, over the real collections', () => {
     }
   });
 
-  it('resolves a display name rather than echoing the id back', () => {
+  it('resolves a display name instead of echoing the id back', () => {
     const field = fieldAt(all('connection'), 'screenId');
     const options = resolveIdRefOptionsFor('screen', field);
     expect(options.some((option) => option.label !== option.value)).toBe(true);
   });
 
-  it('offers nothing for a record\'s own key — that is identity, not a reference', () => {
+  it('offers nothing for a record\'s own key, because that is identity, not a reference', () => {
     const field = fieldAt(all('screen'), 'id');
     expect(field.kind).toBe('idRef');
     expect(resolveIdRefOptionsFor('screen', field)).toHaveLength(0);

@@ -1,12 +1,11 @@
 /* @layer renderer-stores @kind logic */
 /**
- * Simulator run state — status, progress, the full narrative event list, and the
+ * Simulator run state: status, progress, the full narrative event list, and the
  * finished-run artefacts (outcome, dataset suggestions, softlock report). The
  * runner (useSimulatorRun) writes here; the widget sub-components read.
  *
- * Events are kept in FULL: a long run's early history is exactly what makes a
- * log worth reading, and a capped tail silently hides it. The dialog windows
- * the list instead of trimming it (see LogView).
+ * Events are kept in FULL: a long run's early history is what makes a log
+ * worth reading. The dialog windows the list instead of trimming it (see LogView).
  */
 import { create } from 'zustand';
 import type {
@@ -19,7 +18,7 @@ import type {
 
 type RunStatus = 'idle' | 'running' | 'paused' | 'done';
 
-/** One screen the run entered, in order — the route it actually walked. */
+/** One screen the run entered, in the order it actually walked the route. */
 interface TrailStop {
   screenId: string;
   /** Epoch the run was on when it arrived. */
@@ -78,7 +77,7 @@ const useSimulatorStore = create<SimulatorStore>()((set) => ({
   beginRun: (runId) => set({
     status: 'running',
     runId,
-    phaseLabel: 'Starting …',
+    phaseLabel: 'Starting...',
     outcome: null,
     progress: emptyProgress(),
     events: [],
@@ -89,7 +88,7 @@ const useSimulatorStore = create<SimulatorStore>()((set) => ({
   setStatus: (status) => set({ status }),
   setPhaseLabel: (phaseLabel) => set({ phaseLabel }),
   pushEvents: (incoming) => set((s) => ({ events: [...s.events, ...incoming] })),
-  // The trail is derived here rather than pushed separately: the engine's own
+  // The trail is derived here, not pushed separately: the engine's own
   // currentScreen is the single source, so the route cannot drift from the run.
   setProgress: (progress) => set((s) => {
     const last = s.trail[s.trail.length - 1];

@@ -2,9 +2,8 @@
  * @layer tooling-scripts
  * @kind logic
  *
- * Stylelint adapter (CSS/SCSS quality). Uses the stylelint Node API rather than
- * the CLI — the CLI's default string formatter pulls a broken transitive dep
- * (table → slice-ansi → astral-regex); the API avoids it.
+ * Stylelint adapter (CSS/SCSS). Uses the Node API, not the CLI: the CLI's default
+ * formatter pulls a broken transitive dep (table → slice-ansi → astral-regex).
  */
 const run = async (records, ctx) => {
   const { root } = ctx;

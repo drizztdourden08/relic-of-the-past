@@ -1,18 +1,8 @@
 /* @layer renderer-components @kind hook */
 /**
- * The files tab, wired: what each file in the pack is, the filter over them, and the edits that
- * change the pack's contents.
- *
- * The metadata is a second read rather than something derived from the file listing, because the
- * listing carries only names and sizes. Format, length, rate and channels come from
- * `packFileMetadata`, which is arithmetic on the same directory entries and opens no file — so a
- * pack of a hundred files costs one listing, not a hundred reads.
- *
- * A repeat point is NOT read here. It is the one thing that needs the file itself — the format
- * holds it in a header, but a header is only reachable by reading the bytes — so collecting them
- * for the whole list would pull a multi-gigabyte pack through memory to look at eight bytes each.
- * Auditioning a file pays that cost anyway, so the decode reports it and `useFileAudition` keeps
- * it.
+ * The files tab, wired. Metadata comes from `packFileMetadata`, which opens no file. A repeat
+ * point is NOT read here: it needs the file's bytes, and a whole list would pull gigabytes through
+ * memory. `useFileAudition` learns it on play.
  */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { MsuPackManifest } from '@shared/types/msu-manifest';
@@ -46,15 +36,11 @@ const formatCounts = (metadata: MsuFileMetadata[]): FormatCount[] => {
     .sort((a, b) => b.count - a.count || a.ext.localeCompare(b.ext));
 };
 
-/**
- * Why this new name cannot be used, or null when it can. The extension is held fixed: it is what
- * says how the audio is encoded, and in a pack without a manifest the name is also the wiring, so
- * a rename is allowed to retitle a file and nothing else.
- */
+// Why this new name cannot be used, or null. The extension is held fixed: it says how the audio is encoded.
 const renameProblem = (from: string, to: string, taken: Set<string>): string | null => {
   if (to.length === 0) return 'Give the file a name.';
   if (to !== sanitizeFileName(to)) return 'That name has characters a file name cannot hold.';
-  if (extensionOf(to) !== extensionOf(from)) return 'Keep the extension — it says how the audio is encoded.';
+  if (extensionOf(to) !== extensionOf(from)) return 'Keep the extension, because it says how the audio is encoded.';
   if (taken.has(to)) return `The pack already has a file called "${to}".`;
   return null;
 };
@@ -62,17 +48,14 @@ const renameProblem = (from: string, to: string, taken: Set<string>): string | n
 const useFilePanel = (params: FilePanelParams) => {
   const { pack, files, saveBase, reload } = params;
   const [metadata, setMetadata] = useState<MsuFileMetadata[]>([]);
-  // Which pack the metadata has settled FOR. Until the first read of the current pack lands, the
-  // list has nothing truthful to say — so the panel shows nothing rather than a false empty state.
+  // Which pack the metadata has settled FOR. Until then the panel shows nothing, not a false empty state.
   const [settledPack, setSettledPack] = useState<string | null>(null);
   const [filter, setFilter] = useState('');
   const [working, setWorking] = useState(false);
   const [status, setStatus] = useState<ActionResult | null>(null);
   const { upload, uploading } = useSoundUpload({ pack, files, reload });
 
-  // `files` is re-fetched by the pack's own reload, so its identity changing is the signal that
-  // what is on disk has moved on. The previous metadata stays up while the re-read is in flight,
-  // so a reload swaps rows in place instead of blanking the list.
+  // `files` changing identity means disk moved on. Previous metadata stays up during the re-read.
   useEffect(() => {
     if (files.length === 0) { setMetadata([]); setSettledPack(pack); return undefined; }
     let live = true;
@@ -133,8 +116,7 @@ const useFilePanel = (params: FilePanelParams) => {
     void upload(dropped).then(setStatus);
   }, [upload]);
 
-  // Lets an action owned by the panel above — a bulk removal, say — land in the same status
-  // line as the ones owned here, rather than growing a second place the user has to look.
+  // Lets an action owned by the panel above (a bulk removal, say) land in the same status line.
   const report = useCallback((result: ActionResult) => { setStatus(result); }, []);
 
   return {

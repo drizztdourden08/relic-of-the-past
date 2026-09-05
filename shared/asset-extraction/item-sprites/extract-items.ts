@@ -1,8 +1,7 @@
 /* @layer shared-asset-extraction @kind logic */
 /**
- * Item sprite extraction core — pure (no fs). Produces PNG byte buffers per sprite
- * so it runs in the renderer/Worker as well as Node. File writing + ROM-from-path
- * live in extract-items-node.ts.
+ * Item sprite extraction core, pure (no fs): produces PNG byte buffers per sprite so it runs in
+ * the renderer/Worker and Node. File writing and ROM-from-path live in extract-items-node.ts.
  */
 import type { RomData } from '../rom/rom-types';
 import type { ImageBuffer } from '../graphics/png-writer';

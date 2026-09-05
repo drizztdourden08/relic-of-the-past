@@ -1,14 +1,14 @@
 /* @layer shared @kind types */
 /**
- * Single source of truth for every enhancement that diverges from vanilla zelda3.
- * One FeatureDef per toggle; the C flag (features.h), INI key (config.c), TS flag map,
- * settings UI, and dependency rules are all derived from these — see plans/zelda3-settings-plan.md.
+ * Single source of truth for every enhancement that diverges from vanilla zelda3. One FeatureDef
+ * per toggle; the C flag, INI key, TS flag map, settings UI and dependency rules derive from these
+ * (plans/zelda3-settings-plan.md).
  */
 
 /** How the feature is enforced in the engine. */
 type FeatureKind =
   | 'features0-bit' // a bit in enhanced_features0 (or features1 once we overflow uint32)
-  | 'render-geometry' // a g_config value (e.g. extended_aspect_ratio) — restart-time
+  | 'render-geometry' // a g_config value (e.g. extended_aspect_ratio) applied at restart
   | 'ppu-render-flag' // a ppu->renderFlags bit
   | 'host-event' // gated host callback (haptics)
   | 'cheat' // neutral-by-default cheat
@@ -32,7 +32,7 @@ interface FeatureDef {
   id: string;
   label: string;
   description: string;
-  /** In-settings copy shown to the user — states requirements and any parity disclaimer. */
+  /** In-settings copy shown to the user: requirements and any parity disclaimer. */
   userMessage: string;
   group: FeatureGroup;
   kind: FeatureKind;
@@ -46,9 +46,9 @@ interface FeatureDef {
   /** Bit value (1 << n) within its word for features*-bit kinds (the registry owns allocation). */
   bit?: number;
   default: boolean;
-  /** Hard dependencies — the resolver disables this feature unless all are enabled. */
+  /** The resolver disables this feature unless every one of these hard dependencies is enabled. */
   requires: string[];
-  /** Soft companions — offered (not forced) in the suggestion card when this is turned on. */
+  /** Soft companions the suggestion card offers, but does not force, when this is turned on. */
   suggests?: string[];
   /** True ⇒ shifts render output / RAM when on; gets the "leave off for vanilla/speedrun parity" disclaimer. */
   affectsVanillaParity: boolean;

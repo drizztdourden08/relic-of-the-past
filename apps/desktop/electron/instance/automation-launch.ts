@@ -1,24 +1,18 @@
 /* @layer electron-main @kind logic */
 /**
- * Is this launch automation rather than a person playing?
+ * Is this launch automation, not a person playing?
  *
- * An automated launch is READ-ONLY with respect to the shared configuration. Anything
- * every launch shares belongs to the person at the keyboard, and an agent run must never
- * change it:
+ * An automated launch is READ-ONLY for the shared configuration, which belongs to the
+ * person at the keyboard:
  *   config/window-state.json   the window's size, position and mode
- *   app.json → lastProfileId   which profile opens by default next time
+ *   app.json -> lastProfileId   which profile opens by default next time
  *
- * The rule is enforced here rather than trusted to callers: an agent that forgets
- * --instance still cannot repoint the default profile or move the window. Instructions
- * say what to do; this makes the damage impossible either way.
- *
- * Any of the test/automation flags is enough of a signal. --no-focus is included because
- * every automated launch is required to pass it (docs/contributing/testing.md), so it is
- * the broadest catch for a run that forgot the rest.
+ * Enforced here, not trusted to callers: an agent that forgets --instance still cannot
+ * repoint the default profile or move the window. --no-focus counts because every
+ * automated launch must pass it (docs/contributing/testing.md).
  */
 
-// Flags that mark a launch as automation. Matched as a bare flag or with a `=value`,
-// so both `--window-size` and `--window-size=1280x800` count.
+// Matched as a bare flag or with `=value`, so `--window-size=1280x800` counts too.
 const AUTOMATION_FLAGS = [
   '--instance',
   '--profile',
@@ -38,19 +32,15 @@ const isAutomationLaunch = (): boolean =>
     AUTOMATION_FLAGS.some((flag) => arg === flag || arg.startsWith(`${flag}=`)),
   );
 
-// Flags that mean "run with no human watching" — everything in AUTOMATION_FLAGS except
-// --instance/--profile, which only select an identity/profile and say nothing about
-// whether anyone is meant to see the window. A bare `--instance=NAME` launch (the
-// collaborative-testing case: a tagged, independent, but human-usable window) must stay
-// visible; `--instance=NAME --no-focus` (a real automated run) must still go headless.
+// "No human watching": everything except --instance/--profile, which only select an
+// identity. A bare `--instance=NAME` launch (a tagged but human-usable window) stays
+// visible; `--instance=NAME --no-focus` still goes headless.
 const HEADLESS_FLAGS = AUTOMATION_FLAGS.filter((flag) => flag !== '--instance' && flag !== '--profile');
 
 /**
- * `--visible` is the explicit handover override: a launch that pins a state for the
- * person to look at (`--auto-state=… --visible`) is a handover, not an unattended run,
- * and the explicit word must beat the heuristic. Without it, any state-pinned launch
- * was forced headless no matter what the caller intended — so a "visible" handover
- * produced no window at all, silently.
+ * `--visible` is the explicit handover override (`--auto-state=... --visible` pins a
+ * state for a person to look at) and beats the heuristic. Without it every state-pinned
+ * launch was forced headless and a "visible" handover produced no window at all.
  */
 const isHeadlessLaunch = (): boolean => {
   if (process.argv.includes('--visible')) return false;

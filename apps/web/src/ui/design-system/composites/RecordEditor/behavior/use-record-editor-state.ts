@@ -1,16 +1,9 @@
 /* @layer renderer-components @kind hook */
 /**
- * The working copy, the dirty question and the save flow — the two pieces of
- * real logic in this composite, kept out of the components that render it.
- *
- * Edits never touch the record that was passed in. Every write goes through
- * `setPath`, which returns a new record cloned along the written path only, so
- * the original stays intact for the dirty comparison and untouched branches stay
- * shared rather than copied.
- *
- * A successful save adopts the working copy as the new baseline. The caller
- * usually hands back a fresh record afterwards, but it does not have to, and a
- * form that stayed dirty after a save that worked would be a lie.
+ * The working copy, the dirty question and the save flow. Edits never touch
+ * the record passed in: `setPath` clones along the written path only. A
+ * successful save adopts the working copy as the new baseline, so the form
+ * does not stay dirty when the caller hands back no fresh record.
  */
 import { useCallback, useEffect, useState } from 'react';
 import { setPath } from '../../../data/schema/path';
@@ -32,8 +25,7 @@ const useRecordEditorState = <T,>(params: RecordEditorStateParams<T>) => {
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
 
-  // A different record means a different subject — drop the draft and the error
-  // with it rather than carrying either across.
+  // A different record is a different subject: drop the draft and the error.
   useEffect(() => {
     setBaseline(record);
     setWorking(record);

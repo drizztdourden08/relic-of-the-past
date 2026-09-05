@@ -1,8 +1,5 @@
 /* @layer test @kind test */
-/**
- * Disconnect pause — the game pauses the moment ANY device in the active profile's
- * map goes missing from the connected set, not just the single assigned device.
- */
+/** Disconnect pause: the game pauses when ANY device in the active profile's map goes missing, not just the assigned one. */
 
 import { describe, it, expect } from 'vitest';
 import type { InputProfile, ButtonMapping, DetectedDevice, AssignedDevice } from '@shared/types/controls';

@@ -11,7 +11,7 @@
 interface FilterSuggestionsParams {
   suggestions: readonly string[];
   query: string;
-  /** Values already applied — never worth offering a second time. */
+  /** Values already applied, never worth offering a second time. */
   selected: readonly string[];
   limit?: number;
 }
@@ -41,7 +41,7 @@ const isNewValue = (raw: string, suggestions: readonly string[]): boolean => {
 };
 
 /**
- * What the typed text should actually commit as. An existing value wins
+ * What the typed text commits as. An existing value wins
  * whenever the two differ only in case, so the vocabulary does not grow a
  * near-duplicate of a tag it already holds. Null when there is nothing to add.
  */

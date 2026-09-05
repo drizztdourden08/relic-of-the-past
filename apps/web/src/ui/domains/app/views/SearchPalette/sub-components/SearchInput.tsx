@@ -22,7 +22,7 @@ const SearchInput = (props: SearchInputProps) => {
       <TextInput
         ref={inputRef}
         className="search-palette__input"
-        placeholder="Search settings, screens, anything…"
+        placeholder="Search settings, screens, anything..."
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={onKeyDown}

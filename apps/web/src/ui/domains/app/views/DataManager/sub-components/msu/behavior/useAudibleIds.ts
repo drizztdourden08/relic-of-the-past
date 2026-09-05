@@ -1,23 +1,15 @@
 /* @layer renderer-components @kind hook */
 /**
- * Which ids on a channel the sound chip actually makes a sound for.
- *
- * The list shows every id a channel can carry, because the goal is that nothing in the game is
- * unreachable — the catalogue of named sounds is built by reading the game's own source and it
- * cannot see an id chosen from a table at runtime, so trusting it for completeness would quietly
- * hide sounds. The cost of listing everything is a tail of ids the game never uses, and this is
- * what tells them apart: each is rendered once and asked whether anything came out.
- *
- * Deferred a tick past mount so opening a tab paints first. The scan is a few hundred milliseconds
- * for a whole channel, plus a one-off core load when no game is running — which is also what makes
- * the play buttons on the tab ready by the time anyone reaches for one.
+ * Which ids on a channel the sound chip makes a sound for. The list shows every id (the catalogue
+ * cannot see ids picked from a table at runtime), so each is rendered once to tell the dead tail
+ * apart. Deferred a tick past mount so the tab paints first; the scan also warms the core load.
  */
 import { useEffect, useState } from 'react';
 import { probeAudibleIds } from '@app/lib/game/original-sound';
 import type { PreviewTarget } from '@app/lib/game/original-sound';
 
 interface AudibleScan {
-  /** Null until the scan has run — rows show no verdict rather than a wrong one. */
+  /** Null until the scan has run; rows show no verdict instead of a wrong one. */
   audible: Set<number> | null;
 }
 

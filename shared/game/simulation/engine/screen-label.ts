@@ -1,12 +1,12 @@
 /* @layer shared-game @kind logic */
 /**
- * `screen-183 (Uncle Estate)` for the run's log. Display only — traversal never
+ * `screen-183 (Uncle Estate)` for the run's log. Display only, since traversal never
  * consults the dataset.
  *
  * The lookup has to be able to answer "nothing", because most ids reaching here
  * are TraversalIds (`room:80`) which are not dataset keys at all. The dataset
  * getters answer a miss with a structurally-valid stand-in record instead, and the
- * old test for a miss — `label === id` — only worked while that stand-in echoed
+ * old test for a miss, `label === id`, only worked while that stand-in echoed
  * the id back as its name; the moment it stopped, every traversal id started
  * rendering the stand-in's placeholder as though it were real data.
  *

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 /**
- * Flattens the title-bar dropdown menu into search entries — screens (Home, Data Manager's
+ * Flattens the title-bar dropdown menu into search entries: screens (Home, Data Manager's
  * tabs, widgets, Credits/About/Quit) and dev-only advanced commands. This is already the
  * app's cross-platform nav manifest (the mobile drawer reuses it verbatim), and every item
  * carries its own live onClick, so this source needs no upkeep as the menu grows: a new

@@ -2,7 +2,7 @@
 /**
  * The music debugger's data: every sound event in one ordered feed, with running counts.
  *
- * Three sources land here. The core's sound trace reports every id the game raises — claimed or
+ * Three sources land here. The core's sound trace reports every id the game raises, claimed or
  * not, so the feed shows what the chip is playing next to what the pack replaced. The core's
  * music trace does the same for the music-control port, fades included, even when no pack owns
  * music. The engine's debug bus adds the one thing neither can see: chance rolls, where a layer
@@ -102,7 +102,7 @@ subscribeMsuDebug((event) => {
   const outcome = event.passed ? 'played' : 'skipped';
   push({
     channel,
-    detail: `roll ${event.chance}% → ${outcome} — ${event.layerName}`,
+    detail: `roll ${event.chance}% → ${outcome} - ${event.layerName}`,
     owner: event.passed ? 'pack' : 'skipped',
   });
   count(`roll:${event.channel}:${event.programId}:${event.layerId}`, channel,
@@ -111,7 +111,7 @@ subscribeMsuDebug((event) => {
 });
 
 /**
- * Whether a debugger wants the traces on. Kept here rather than trusting the gate mirror: every
+ * Whether a debugger wants the traces on. Kept here instead of trusting the gate mirror: every
  * game boot starts from a cleared gate word (resetGame wipes the mirror, then the core comes up
  * with nothing set), so an arming made before or across a boot has to be applied AGAIN once the
  * new core is running. The subscription below does that for as long as a debugger is armed.

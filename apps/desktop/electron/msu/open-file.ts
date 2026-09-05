@@ -1,15 +1,12 @@
 /* @layer electron-main @kind logic */
 /**
- * Opening a `.msul` music pack from the desktop.
+ * Opening a `.msul` music pack from the desktop. Windows and Linux pass the path in
+ * argv, macOS delivers an `open-file` event; both funnel into one notification to the
+ * renderer, which owns the import.
  *
- * The path arrives differently per platform: Windows and Linux pass it in argv, macOS delivers
- * an `open-file` event instead. Both funnel into one notification to the renderer, which owns
- * the import itself.
- *
- * This app deliberately holds no single-instance lock (a person's own session and an automated
- * one must coexist), so a launch from a file association is simply a new process that happens
- * to start with a path — there is no running instance to hand it to, and no attempt is made to
- * find one.
+ * No single-instance lock (a person's session and an automated one must coexist), so a
+ * file-association launch is a new process that starts with a path. No attempt is made
+ * to find a running instance.
  */
 import { app } from 'electron';
 import type { BrowserWindow } from 'electron';

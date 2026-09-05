@@ -1,15 +1,11 @@
 /* @layer tests @kind test */
 /**
  * The one field that REFUSES a value, and every field that still does not.
+ * Enforcement exists for a single case: a tag list whose values are references,
+ * where inventing a term means minting a record. Everywhere else stays advisory;
+ * an opt-in that silently became the default would break every other tag entry.
  *
- * Enforcement was added for a single case: a tag list whose values are
- * references, where inventing a term means minting a record that has to be
- * filed under a namespace. Everywhere else the advisory bargain stands, and
- * that is the half most worth pinning — an opt-in that quietly became the
- * default would break every other tag entry in the app.
- *
- * There is no jsdom here, so the keystroke cannot be dispatched. The decision a
- * keystroke resolves to is a pure function and is covered directly.
+ * No jsdom, so the decision a keystroke resolves to is covered as a pure function.
  */
 import { describe, it, expect } from 'vitest';
 import {
@@ -43,7 +39,7 @@ describe('an enforcing entry', () => {
   it('never refuses a value the vocabulary already holds, convention or not', () => {
     expect(decide('env:outdoor', true)).toBe(false);
     expect(decide('legacy-untagged', true)).toBe(false);
-    // Case is not what makes it new — the entry resolves to the existing value.
+    // Case is not what makes it new, because the entry resolves to the existing value.
     expect(decide('LEGACY-UNTAGGED', true)).toBe(false);
   });
 
@@ -51,7 +47,7 @@ describe('an enforcing entry', () => {
     expect(decide('', true)).toBe(false);
   });
 
-  it('defers to a caller-supplied check rather than the built-in one', () => {
+  it('defers to a caller-supplied check instead of the built-in one', () => {
     const onlyEnv = (raw: string): boolean => raw.startsWith('env:');
     expect(blocksCreate({ raw: 'role:new', isNew: true, enforce: true, validate: onlyEnv })).toBe(true);
     expect(blocksCreate({ raw: 'env:new', isNew: true, enforce: true, validate: onlyEnv })).toBe(false);
@@ -65,7 +61,7 @@ describe('every entry that is not enforcing', () => {
     expect(decide('', false)).toBe(false);
   });
 
-  it('still SAYS the value is off-convention — the advice never went away', () => {
+  it('still SAYS the value is off-convention, because the advice never went away', () => {
     expect(adviseTag('outdoor').ok).toBe(false);
     expect(adviseTag('outdoor').message).not.toBeNull();
     expect(adviseTag('env:outdoor').ok).toBe(true);

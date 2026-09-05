@@ -1,27 +1,20 @@
 /* @layer renderer-widgets @kind data */
 /**
- * Field probe that fills in `placement.tiles` — the migration codemod left
- * ~700 points with an empty tile list because a static rewrite has no way to
- * read the room's own geometry (see the connection-model migration report).
- * The live pass can: indoors, `wasmGetRoomWalkBoundaries` enumerates every
- * walk-boundary TILE together with the room it leads to (`destRoom`), so
- * every tile sharing this point's destination room IS its footprint. The
- * table enumerates the whole wall, so an empty result is proof, not silence
- * — this grades `certain`, same as `indoor-edge.set.ts`'s own read of the
- * identical table.
+ * Field probe that fills in `placement.tiles`. The migration codemod left
+ * ~700 points with an empty tile list because a static rewrite cannot read
+ * the room's geometry. Indoors, `wasmGetRoomWalkBoundaries` enumerates every
+ * walk-boundary TILE with the room it leads to (`destRoom`), so every tile
+ * sharing this point's destination room IS its footprint. The table
+ * enumerates the whole wall, so an empty result is proof, not silence; this
+ * grades `certain`, same as `indoor-edge.set.ts`.
  *
  * Gated on BOTH `walkBoundaries` AND `doorBoundaries` being present, mirroring
  * `indoor-edge.set.ts`: the two tables are read together for one room, so
- * either both were queried this pass or neither was — `doorBoundaries` is
- * still not consulted for identity here (it carries no destination of its
- * own), only as that same completeness gate.
+ * either both were queried this pass or neither was.
  *
  * Only applies to a point anchored on the CURRENTLY LOADED room: the walk
- * table is a live read of whichever room is loaded right now, so it can only
- * speak for a point whose own `screenId` resolves to that room, never for
- * the arriving side of a crossing that happens to also show up in
- * `existingConnections` (see that field's own comment on why both sides land
- * there).
+ * table is a live read of that room, so it cannot speak for the arriving side
+ * of a crossing that also shows up in `existingConnections`.
  */
 import { getScreen } from '@shared/game/data';
 import { toScreenIdOf } from '@shared/game/data/connections/derive';

@@ -2,7 +2,7 @@
 /**
  * The game-driven traversal graph: revealed screen by screen, each visited
  * screen's flood contributing the exits it actually detected (border
- * connections, doors, holes, stairs). No requirement gating — the flood already
+ * connections, doors, holes, stairs). No requirement gating, because the flood already
  * ran with the current inventory, so every recorded edge is passable right now.
  */
 import type { SimExit } from '../types';
@@ -51,7 +51,7 @@ const findDiscoveredPath = (graph: DiscoveredGraph, from: string, to: string): s
 /**
  * The exit record for a `from → to` hop (carries the landing tile).
  *
- * `wantSig` pins WHICH exit when several lead to the same screen — a screen can
+ * `wantSig` pins WHICH exit when several lead to the same screen. A screen can
  * be entered by more than one crossing and they need not land in the same place,
  * so a job that exists to try one of them must not be satisfied by another.
  */
@@ -67,11 +67,11 @@ const discoveredExitFor = (graph: DiscoveredGraph, from: string, to: string, wan
 /**
  * Record a screen's flood-detected exits. Keeps previously-known edges the new
  * flood didn't re-detect (synthetic reverse edges), and mirrors every two-way
- * border crossing as a reverse edge — so a dead-end room you walked into never
+ * border crossing as a reverse edge, so a dead-end room you walked into never
  * strands the BFS: the way you came in stays walkable back out.
  */
 /**
- * Overworld screen indices 0x40 and up are the second world — a GAME fact, not a
+ * Overworld screen indices 0x40 and up are the second world. That is a GAME fact, not a
  * dataset one, so it holds for synthetic `ow:N` ids too. Undefined for interiors,
  * whose world only their palace context knows.
  */

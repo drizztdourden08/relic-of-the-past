@@ -10,9 +10,9 @@
  * would stay soft until an unrelated edit happened to redraw it.
  *
  * A media query is the only thing that reports that change, and a query only ever
- * matches the ratio it was built with — so the ratio is held in state, which both
- * re-arms the query and drives the repaint. Same approach as the game canvas's own
- * fit hook, for the same reason.
+ * matches the ratio it was built with. The ratio is therefore held in state,
+ * which both re-arms the query and drives the repaint. Same approach as the game
+ * canvas's own fit hook, for the same reason.
  */
 import { useEffect, useRef, useState } from 'react';
 import type { RefObject } from 'react';
@@ -25,9 +25,8 @@ type PaintJob = { canvas: HTMLCanvasElement; tiles: Uint8Array; glyph: number; r
 /*
  * Paints are BATCHED per animation frame: every cell mounted in one commit
  * queues here, then the frame measures all of them before resizing any. A cell
- * that measured and resized itself in its own effect forced a reflow per
- * glyph — a three-row box is sixty reflows, which is what made opening the
- * preview lag.
+ * that measured and resized itself in its own effect forced a reflow per glyph.
+ * A three-row box is sixty reflows, which is what made opening the preview lag.
  */
 let pending: PaintJob[] = [];
 let frame: number | null = null;
@@ -51,7 +50,7 @@ const queuePaint = (job: PaintJob): void => {
 /**
  * `tiles` is the pack's glyph sheet and `glyph` the character to draw; either
  * being absent leaves the canvas untouched, which shows an empty cell of the
- * right size rather than a character that is not the right one.
+ * right size, not a character that is not the right one.
  */
 const useGlyphCanvas = (
   tiles: Uint8Array | null,

@@ -26,7 +26,7 @@ const SummaryStep = (props: SummaryStepProps) => {
         <Text as="h4">Byte capture</Text>
         {!hasByteCapability ? (
           <Text as="p" className="diagnostics-wizard__summary-empty">
-            This controller reports through XInput rather than HID, so the byte-capture step
+            This controller reports through XInput and not HID, so the byte-capture step
             was skipped for it.
           </Text>
         ) : byteCapture ? (

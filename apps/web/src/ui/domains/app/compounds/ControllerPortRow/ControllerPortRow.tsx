@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind component */
 /**
- * ControllerPortRow — one port of an adapter card: its number, ready/
- * unavailable status, and capabilities. An empty port renders exactly like
- * an occupied one, since whether the two look different hasn't been
- * measured, and a wrong guess would hide a working port.
+ * One port of an adapter card: its number, ready/unavailable status, and
+ * capabilities. An empty port renders exactly like an occupied one, since
+ * whether the two look different hasn't been measured, and a wrong guess
+ * would hide a working port.
  */
 import { Box } from '../../../../design-system/primitives/Box';
 import { Text } from '../../../../design-system/primitives/Text';

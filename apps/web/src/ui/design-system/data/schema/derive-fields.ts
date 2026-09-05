@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind logic */
 /**
  * Derivation half of the schema Builder: walk every row and describe what is
- * actually there. Objects recurse through their own keys, arrays through their
+ * there. Objects recurse through their own keys, arrays through their
  * elements. Nothing here reads the config except forced kinds, which must be
- * honoured DURING the walk — a path forced to `string` must not then have its
+ * honoured DURING the walk, so a path forced to `string` does not then have its
  * children derived as if it were an object.
  */
 import type { FieldDescriptor, FieldKind } from './field-descriptor';
@@ -16,7 +16,7 @@ interface DeriveContext {
   kinds?: Record<string, FieldKind>;
 }
 
-/** `roomIndex` reads as `Room index` — generic humanisation, no domain knowledge. */
+/** `roomIndex` reads as `Room index`: generic humanisation, no domain knowledge. */
 const labelFor = (segment: string): string => {
   const spaced = segment.replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/[_-]+/g, ' ').trim();
   return spaced.charAt(0).toUpperCase() + spaced.slice(1);

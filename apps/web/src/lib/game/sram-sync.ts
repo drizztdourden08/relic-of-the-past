@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * SRAM Sync — periodic persistence of SRAM from WASM MEMFS to disk.
+ * Periodic persistence of SRAM from WASM MEMFS to disk.
  */
 
 import { log } from '../log-bus';
@@ -26,7 +26,7 @@ const syncSramToDisk = async (): Promise<void> => {
     mod.ccall('WasmSaveSram', null, [], []);
     const { exists } = mod.FS.analyzePath('/saves/sram.dat');
     if (!exists) {
-      log.app('[SRAM] /saves/sram.dat does not exist in MEMFS — skipping sync');
+      log.app('[SRAM] /saves/sram.dat does not exist in MEMFS, skipping sync');
       return;
     }
     const data = mod.FS.readFile('/saves/sram.dat');
@@ -36,7 +36,7 @@ const syncSramToDisk = async (): Promise<void> => {
     await savesStore.writeSram(profileId, (data.buffer as ArrayBuffer).slice(data.byteOffset, data.byteOffset + data.byteLength));
     log.app(`[SRAM] Synced ${data.byteLength} bytes to disk (hash=${hash})`);
   } catch {
-    // Silently ignore — may happen during shutdown
+    // Silently ignore, may happen during shutdown
   }
 };
 
@@ -71,7 +71,7 @@ const pauseSramSync = (): void => {
 };
 
 const resumeSramSync = (): void => {
-  if (sramSyncInterval) return; // already running — nothing to restart
+  if (sramSyncInterval) return; // already running, nothing to restart
   armInterval();
 };
 

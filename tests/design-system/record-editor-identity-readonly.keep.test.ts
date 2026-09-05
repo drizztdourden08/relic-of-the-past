@@ -8,13 +8,10 @@ import { RecordEditor } from '../../apps/web/src/ui/design-system/composites/Rec
 import { resolveIdRefOptionsFor } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/id-ref-options';
 import { describeDataset } from '../dataset-guard';
 
-// SSR smoke tests proving the identity field ("id") stays read-only even on an
-// otherwise writable record — the fix for the rename-then-clobber bug on
-// screen/connection/tag/item-group (record-writers.ts uses the EDITED id as
-// the file-search key) and, for item-group specifically, the sibling-id
-// picker footgun: its 7 rows make `id` infer as an enum (see infer-kind.ts),
-// which without this fix rendered a live dropdown offering another record's
-// id as a one-click choice.
+// The identity field ("id") stays read-only on a writable record: the fix for
+// the rename-then-clobber bug (record-writers.ts uses the EDITED id as the
+// file-search key) and, for item-group, the sibling-id footgun (7 rows make
+// `id` infer as an enum, rendering a dropdown of other records' ids).
 
 const noop = async (): Promise<void> => undefined;
 
@@ -30,7 +27,7 @@ const buttonTagFor = (markup: string, text: string): string => {
   return match[0];
 };
 
-describeDataset('RecordEditor — the identity field stays read-only', () => {
+describeDataset('RecordEditor keeps the identity field read-only', () => {
   it('disables the id control on a writable tag record while a sibling field stays editable', () => {
     const rows = all('tag');
     const record = rows[0];
@@ -75,7 +72,7 @@ describeDataset('RecordEditor — the identity field stays read-only', () => {
     // The sibling's id still appears as an option (it is a real enum value),
     // but the button for it must be disabled, so it can no longer be picked.
     expect(buttonTagFor(markup, String(sibling?.id))).toContain('disabled=""');
-    // A sibling field on the same record — one of its members — stays editable.
+    // A sibling member field on the same record stays editable.
     // (`label` is not used for this check: with only 7 rows it infers as its
     // own enum, same as `id`, so it is not a representative "ordinary" field.)
     expect(inputTagFor(markup, String(record.memberIds[0]))).not.toContain('disabled=""');

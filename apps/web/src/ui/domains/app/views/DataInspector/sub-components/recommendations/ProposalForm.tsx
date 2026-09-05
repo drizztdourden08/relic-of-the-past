@@ -1,16 +1,10 @@
 /* @layer renderer-app @kind component */
 /**
- * The editor tab of a comparison pane.
- *
- * It is `RecordEditor` with the same lookups the normal editor injects, minus
- * the two capabilities that would write to the dataset from inside a review:
- * there is no delete guard (nothing here deletes) and no tag creator (minting a
- * vocabulary term is a record write, and a proposal has not been accepted yet).
- * `onCommit` is what makes a pane editable at all — omitted, every control
- * renders disabled, which is exactly what the current side wants.
- *
- * Saving here commits to the reviewer's DRAFT, not to disk. The dataset write
- * happens once, on Accept.
+ * The editor tab of a comparison pane: `RecordEditor` with the normal lookups
+ * minus the two that would write to the dataset mid-review (no delete guard,
+ * no tag creator). Without `onCommit` every control renders disabled, which is
+ * what the current side wants. Saving commits to the reviewer's draft, not to
+ * disk; the dataset write happens once, on Accept.
  */
 import { RecordEditor } from '@ds/composites';
 import { resolveIdRefOptionsFor } from '../../behavior/id-ref-options';
@@ -27,7 +21,7 @@ interface ProposalFormProps {
   record: InspectorRow;
   /** Where the proposal differs from what the dataset holds. */
   changedPaths: readonly string[];
-  /** Omitted, the form is a reader — which is what the current side is. */
+  /** Omitted when the form is a reader, which is what the current side is. */
   onCommit?: (next: InspectorRow) => Promise<void>;
 }
 

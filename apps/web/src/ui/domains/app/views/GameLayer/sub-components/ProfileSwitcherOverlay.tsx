@@ -1,9 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * ProfileSwitcherOverlay — transient drawer on the left of the game canvas that
- * appears while cycling input profiles (PageUp/PageDown by default). Lists the
- * profiles with the active one highlighted; auto-hides. Presentational.
- */
 
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../design-system/primitives/Text';

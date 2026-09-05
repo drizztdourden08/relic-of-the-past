@@ -1,29 +1,19 @@
 /* @layer electron-main @kind logic */
 /**
- * The conversion itself, in the one order that keeps a pack playable.
+ * The conversion, in the one order that keeps a pack playable.
  *
- * 1. REPEAT POINTS FIRST. An MSU-1 file states where it loops from in its own header, and that
- *    header dies with the container. So every point is read and written into the layer that
- *    plays it, and the manifest is saved, BEFORE a single byte is encoded — get the order wrong
- *    and every intro-then-loop track silently starts repeating from zero.
- * 2. Encode one file at a time, and RE-POINT the manifest at the new name as each one lands.
- *    A manifest still naming `foo.pcm` after `foo.flac` appeared silences every slot built on
- *    it, so the write happens per file rather than once at the end: an interrupted run leaves a
- *    pack that is consistent as far as it got.
- * 3. RECONCILE once the last file lands. Every reference to a superseded original — one whose
- *    stem the pack now holds in the target format — is moved to the converted file, whether it
- *    was missed above (a name the manifest spells in another case) or left over from an earlier
- *    run. The per-file re-point is the fast path; this is the guarantee.
- * 4. Originals are KEPT. This converts and stops; throwing the superseded files out is a
- *    separate, confirmed action on the pack's files.
+ * 1. Repeat points first. An MSU-1 header dies with the container, so every loop point is
+ *    written into the manifest BEFORE any byte is encoded, or intro-then-loop tracks restart
+ *    from zero.
+ * 2. Encode one file at a time and re-point the manifest at the new name as each lands, so an
+ *    interrupted run leaves a pack that is consistent as far as it got.
+ * 3. Reconcile at the end: every reference to a superseded original (a name spelled in another
+ *    case, or left over from an earlier run) moves to the converted file.
+ * 4. Originals are kept. Deleting them is a separate, confirmed action.
  *
- * A pack with no manifest is PROMOTED to one before anything is converted, rather than refused.
- * Its filenames are its wiring, and the wiring is what a format change disturbs — so the
- * synthesized view of it (one slot per numbered file, the same view the player already uses) is
- * written down first. After that the pack has a real manifest, the repeat points have somewhere to
- * live, and the rename is a manifest edit like any other. Refusing instead would leave the one
- * kind of pack most worth converting, a folder of uncompressed audio, as the one kind that cannot
- * be.
+ * A pack with no manifest is promoted to one first (the same synthesized view the player
+ * uses), so the loop points have somewhere to live and the rename is a manifest edit like
+ * any other. Refusing would exclude the packs most worth converting.
  */
 import { rm, stat } from 'fs/promises';
 import type { OptimizeConversion, OptimizeRunResult } from '@shared/types/msu-optimize';
@@ -53,9 +43,7 @@ const NO_MANIFEST = 'Nothing in this pack is wired to a slot, so there is nothin
 
 /**
  * Step 1: every repeat point moved into the manifest, before any format changes.
- *
- * The header magic is the format check — a file that does not carry one answers null, so an
- * encoded source simply has nothing to move.
+ * A file without the header magic answers null, so an encoded source has nothing to move.
  */
 const carryLoopPoints = async (
   pack: string, fileNames: string[], manifest: MsuPackManifest,
@@ -72,11 +60,8 @@ const carryLoopPoints = async (
 };
 
 /**
- * The pack's manifest, writing one down first if it has none.
- *
- * The synthesized manifest is the same one the player builds for a classic pack at load time, so
- * promoting changes nothing about how the pack sounds — it only gives the conversion a place to
- * record what it learns.
+ * The pack's manifest, synthesized first if it has none. The synthesized one is what the
+ * player builds for a classic pack at load time, so promoting changes nothing audible.
  */
 const manifestToEdit = async (pack: string, names: string[]): Promise<MsuPackManifest> => {
   const existing = await readPackManifest(pack);

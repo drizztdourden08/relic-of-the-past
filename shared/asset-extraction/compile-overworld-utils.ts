@@ -1,7 +1,4 @@
 /* @layer shared-asset-extraction @kind logic */
-/**
- * Shared utilities for overworld compilation — area head detection and sub-area propagation.
- */
 import type { RomData } from './rom/rom-types';
 
 interface OverworldContext {

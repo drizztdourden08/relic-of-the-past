@@ -10,14 +10,14 @@
  * model could express: a term returns as a term, a menu name returns to the
  * same slot it came from. Only the fields the old model had no room for
  * (`label`, `locked`, `maxGlyphs`, and a note on a menu name) are regenerated
- * rather than recovered — a caller that wants to keep an edited label carries
+ * instead of recovered. A caller that wants to keep an edited label carries
  * it over itself (see `./merge-meta`).
  *
  * KEY SHAPES. An item keeps the key it already had (`<item-record-id>-<tier>`),
  * so nothing that references one has to be rewritten. The other two slots had
  * no key shape of their own, so they take a prefix that cannot collide with an
  * item key: `bottle-<content>` and `label-<section>`. Reversal never guesses
- * from the key alone — `kind` says which table an entry belongs to first.
+ * from the key alone. `kind` says which table an entry belongs to first.
  *
  * `maxGlyphs` for a literal value counts its characters. A bracketed
  * pseudo-glyph spelling therefore over-counts, which keeps a fit verdict on the
@@ -30,7 +30,7 @@ import type { Variable } from './types';
 
 /**
  * The pair the pre-variables model persisted, and still the shape every current
- * reader expects. Produced from a variable list rather than stored beside it.
+ * reader expects. Produced from a variable list instead of stored beside it.
  */
 type LegacyNameData = {
   glossary: GlossaryTerm[];
@@ -45,7 +45,7 @@ const withNote = <T extends object>(base: T, note: string | undefined): T => (
   note === undefined ? base : { ...base, note }
 );
 
-/** The value reads better in a picker than the key; the key is the fallback. */
+/** The value reads better in a picker than the key, which is the fallback. */
 const labelFor = (key: string, value: string): string => (value.length > 0 ? value : key);
 
 const literalVariable = (

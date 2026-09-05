@@ -1,10 +1,7 @@
 /* @layer renderer-components @kind hook */
 /**
- * Sends a pack out in one of the two formats that matter: `.msul`, which keeps the pack whole,
- * and MSU-1, which keeps it playable in other emulators at the cost of flattening the layers.
- *
- * MSU-1 export decodes through an OfflineAudioContext on purpose — it needs a decoder, not an
- * output device, and an ordinary context would hold the sound card open for the whole export.
+ * Export as `.msul` (whole) or MSU-1 (flattened, playable elsewhere). MSU-1 decodes through an
+ * OfflineAudioContext: an ordinary context would hold the sound card open for the whole export.
  */
 import { useCallback, useState } from 'react';
 import type { MsuPackManifest } from '@shared/types/msu-manifest';
@@ -38,7 +35,7 @@ const usePackExport = (pack: string | null, manifest: MsuPackManifest) => {
           manifest,
           fileNames: await listMsuPackEntries(pack),
           loadBytes,
-          onProgress: (p) => setProgress(`Packing ${p.done}/${p.total} — ${p.fileName}`),
+          onProgress: (p) => setProgress(`Packing ${p.fileName} (${p.done}/${p.total})`),
         });
         saveBytesAsFile(`${pack}.msul`, bytes);
         return { success: true, message: `Exported "${pack}.msul" with layering intact` };
@@ -53,10 +50,10 @@ const usePackExport = (pack: string | null, manifest: MsuPackManifest) => {
           if (!raw) return null;
           try { return (await decodeAudioFile(decoder, fileName, raw)).buffer; } catch { return null; }
         },
-        onProgress: (p) => setProgress(`Flattening slot ${p.trackNum} — ${p.done}/${p.total}`),
+        onProgress: (p) => setProgress(`Flattening slot ${p.trackNum} (${p.done}/${p.total})`),
       });
       saveBytesAsFile(`${pack}-msu1.zip`, bytes);
-      return { success: true, message: `Exported "${pack}-msu1.zip" — layers flattened for MSU-1 players` };
+      return { success: true, message: `Exported "${pack}-msu1.zip" with layers flattened for MSU-1 players` };
     } catch (err) {
       return failure(err, 'Export failed');
     } finally {

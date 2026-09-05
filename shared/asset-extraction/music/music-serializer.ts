@@ -1,7 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
-/**
- * MusicSerializer — writes compiled music entities into SPC memory layout.
- */
+/** Writes compiled music entities into SPC memory layout. */
 import type {
   CompiledPattern,
   CompiledPhrase,
@@ -122,7 +120,7 @@ class MusicSerializer {
           }
         } else {
           if (lineCmd === '.') {
-            // rest/tie — no extra byte
+            // rest/tie needs no extra byte
           } else {
             this.write([kKeysDict.get(lineCmd)! | 0x80]);
           }

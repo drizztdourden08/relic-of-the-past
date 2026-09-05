@@ -37,9 +37,9 @@ interface TravelDest {
 interface FloodFillDump {
   reachableCount: number;
   totalTiles: number;
-  /** 64 rows of 64 base-36 chars — one ReachState digit per tile (0 = unreachable). */
+  /** 64 rows of 64 base-36 chars, with one ReachState digit per tile (0 = unreachable). */
   reachableRows: string[];
-  /** Per-layer reachability (dual-layer rooms only) — reveals tiles reached on both layers. */
+  /** Per-layer reachability for dual-layer rooms. Reveals tiles reached on both layers. */
   reachableByLayer?: { layer0: string[]; layer1: string[] };
   /** One-way ledge traversals produced by cliff preprocessing (start → landing). */
   ledges: Array<{ startRow: number; startCol: number; endRow: number; endCol: number }>;

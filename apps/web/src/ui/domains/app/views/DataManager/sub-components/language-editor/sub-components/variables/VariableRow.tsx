@@ -5,8 +5,8 @@
  *
  * LOCKED means the game owns the value, not that the variable is unavailable.
  * The engine substitutes a save file's name field and one digit of a live
- * counter itself, so there is nothing to translate — but a line may still
- * reference either, and the picker still offers both. So the row shows the note
+ * counter itself, so there is nothing to translate. A line may still reference
+ * either, and the picker still offers both. So the row shows the note
  * instead of a field, marks itself locked, and stays exactly as insertable as
  * every other row. Hiding it would only make a translator wonder where the
  * player's name went.

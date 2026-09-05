@@ -4,7 +4,7 @@
  *
  * Asks the platform for a refresh rate that divides evenly into the game's 60 frames a second.
  * Android decides whether to honour it, so nothing here reports the display as definitely
- * changed — only what was requested and what the display says it is doing.
+ * changed. It reports only what was requested and what the display says it is doing.
  */
 import { registerPlugin } from '@capacitor/core';
 

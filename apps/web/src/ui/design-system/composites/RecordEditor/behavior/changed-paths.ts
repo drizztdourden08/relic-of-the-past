@@ -1,12 +1,7 @@
 /* @layer renderer-components @kind logic */
 /**
- * Turns a list of changed LEAF paths into the set of paths the form can mark.
- *
- * A caller reports where two records actually differ, which is always a leaf —
- * `gameId.roomIndex`, `tags[2]`. The form, though, renders containers too, and a
- * nested row that showed nothing while one of its children had moved would hide
- * the change behind a fold. So every ancestor of a changed leaf is marked as
- * well, computed once rather than by re-scanning the list per row.
+ * Turns changed leaf paths into the set of paths the form marks. Every
+ * ancestor of a changed leaf is marked too, or a fold would hide the change.
  */
 const ancestorsOf = (path: string, into: Set<string>): void => {
   let probe = path;

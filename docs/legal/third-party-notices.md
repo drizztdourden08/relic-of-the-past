@@ -38,7 +38,7 @@ freely, subject to the following restrictions:
 ## libusb
 
 - **What it is:** the low-level USB access library SDL3 uses (as an optional backend) to
-  reach controllers that need it, most notably newer Nintendo pads.
+  reach controllers that need it, mainly newer Nintendo pads.
 - **License:** GNU Lesser General Public License, version 2.1 (LGPL-2.1).
 - **How it's shipped:** **unmodified**, as a separate dynamic library that SDL3 loads at
   runtime, alongside the app's controller support on every desktop platform:

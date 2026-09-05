@@ -2,8 +2,8 @@
 /**
  * Resolves whether a widget should render behind a DisabledOverlay, and why: either Vanilla
  * Safe forcing off a readsGameData widget, or the widget's own requiresSetting gate being off.
- * When both apply, Vanilla Safe wins — it's the less obvious cause (a user who flipped their
- * own requiresSetting off already knows why; a Vanilla Safe cascade is the surprising one).
+ * When both apply, Vanilla Safe wins, because it is the less obvious cause: a user who
+ * flipped their own requiresSetting off already knows why.
  */
 import type { GameSettings } from '@shared/types/settings';
 import { DISABLED_SETTING_MESSAGES } from '../../DisabledOverlay';

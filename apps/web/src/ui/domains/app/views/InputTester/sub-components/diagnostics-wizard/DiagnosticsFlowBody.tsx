@@ -1,11 +1,5 @@
 /* @layer renderer-components @kind component */
-/**
- * The content for whichever of the five diagnostic sub-steps is active,
- * plus the layout-capture overlay that can cover any of them. Shared by the
- * standalone diagnostics dialog and the controller report's embedded run,
- * so the two hosts render the exact same step components rather than each
- * keeping their own copy of this switch.
- */
+// Shared by the standalone diagnostics dialog and the controller report, so both render the same steps.
 import type { RefObject } from 'react';
 import { Box } from '@ds/primitives';
 import type { HidWizardHandle } from '../HidCalibrationWizard';

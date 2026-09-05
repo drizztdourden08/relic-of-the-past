@@ -1,6 +1,6 @@
 /* @layer electron-main @kind types */
 /**
- * A device found by enumeration alone — no opening, reading, or writing.
+ * A device found by enumeration alone, with no opening, reading, or writing.
  * See device-lister.ts for how the active source(s) are selected.
  */
 interface ListedDevice {

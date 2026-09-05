@@ -1,19 +1,19 @@
 /* @layer renderer-components @kind component */
 /**
- * One file in the pack: what it is, what plays it, and its name — editable here because in a pack
- * without a manifest the name IS the wiring, and everywhere else it is the only handle the layer
- * editor gives you for picking a file.
+ * One file in the pack: what it is, what plays it, and its name. The name is editable here because
+ * in a pack without a manifest the name IS the wiring, and everywhere else it is the only handle
+ * the layer editor gives you for picking a file.
  *
  * A rename commits when the field is left, never per keystroke: every commit copies the bytes to
  * the new name and re-points the manifest, which is not something to do once per letter.
  *
  * The card is the entry and the grid row is only its top line, so the player opens INSIDE the file
- * it belongs to rather than under it. Every cell sits in the column template the list declares, so
+ * it belongs to instead of under it. Every cell sits in the column template the list declares, so
  * a row cannot lay itself out and drift out of line with the header.
  *
  * Length, rate and channels are known for MSU-1 pcm alone. That format fixes the rate and the
  * channel count, so all three follow from the byte count; an encoded file would have to be decoded
- * to answer, so it reads as unknown rather than as zero. A repeat point needs the file itself, so
+ * to answer, so it reads as unknown, not as zero. A repeat point needs the file itself, so
  * it appears once the file has been played and not before.
  */
 import { useEffect, useRef, useState } from 'react';
@@ -47,7 +47,7 @@ interface FileRowProps {
   onDelete: (fileName: string) => void;
 }
 
-const UNKNOWN = '—';
+const UNKNOWN = '-';
 
 const channelName = (channels: number): string =>
   (channels === 1 ? 'mono' : channels === 2 ? 'stereo' : `${channels} ch`);
@@ -102,7 +102,7 @@ const FileRow = (props: FileRowProps) => {
         ) : (
           <Text
             className="msu-file-row__name"
-            title={`${file.name} — click to rename`}
+            title={`${file.name} (click to rename)`}
             onClick={() => setEditing(true)}
           >
             {file.name}

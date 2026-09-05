@@ -5,12 +5,12 @@
  * The snapshot inside a .sav is written as an ordered walk of fixed-size regions.
  * Passing a counting callback through that same walk records the SEQUENCE of region
  * lengths, which is the thing that actually decides whether one build can read
- * another's save states. A sequence rather than a sum, so reordering two regions of
+ * another's save states. A sequence and not a sum, so reordering two regions of
  * equal size still changes the answer.
  *
  * The callback records lengths and never dereferences the data pointer, so the walk
  * runs against zeroed dummy structs. That is what lets this run on a machine with no
- * ROM, no assets and no booted game — a release runner, for instance.
+ * ROM, no assets and no booted game, such as a release runner.
  *
  * Built and run by layout-probe.mjs, which turns the printed sequence into the
  * generated format id. Not part of the app build.
@@ -33,7 +33,7 @@ typedef struct {
 
 static void CountRegion(void *ctx, void *data, size_t size) {
   LayoutWalk *walk = (LayoutWalk *)ctx;
-  (void)data; /* deliberately unread — see the file comment */
+  (void)data; /* deliberately unread, as the file comment explains */
   if (walk->count >= MAX_REGIONS) {
     walk->overflowed = 1;
     return;
@@ -41,7 +41,7 @@ static void CountRegion(void *ctx, void *data, size_t size) {
   walk->sizes[walk->count++] = (uint32_t)size;
 }
 
-/* Static rather than local: the snapshot structs are hundreds of kilobytes between
+/* Static and not local: the snapshot structs are hundreds of kilobytes between
    them, which is more than the probe's stack should be asked to hold. */
 static Dsp probe_dsp;
 static Dma probe_dma;
@@ -81,7 +81,7 @@ int main(void) {
   WalkSnapshotRegions(&walk);
 
   if (walk.overflowed) {
-    fprintf(stderr, "state-layout-probe: more than %d regions — raise MAX_REGIONS\n", MAX_REGIONS);
+    fprintf(stderr, "state-layout-probe: more than %d regions, raise MAX_REGIONS\n", MAX_REGIONS);
     return 1;
   }
 

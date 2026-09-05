@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Randomizer — JS-side item override hooks that talk to the WASM core.
+ * JS-side item override hooks that talk to the WASM core.
  */
 
 import { log } from '../log-bus';
@@ -14,7 +14,7 @@ const setItemOverride = (roomId: number, originalItem: number, newItem: number):
     log.error('[Randomizer] setItemOverride called with no active module');
     return;
   }
-  // Arm kFeatures3_ItemOverrides before writing the table — WasmSetItemOverride itself is gated
+  // Arm kFeatures3_ItemOverrides before writing the table, because WasmSetItemOverride itself is gated
   // on this bit (item_overrides.c), and the gate stays open only while the table has entries (see
   // the note on itemOverridesActive in live-settings-flags.ts), so no leftover table can silently
   // reapply outside an active randomizer session.
@@ -28,7 +28,7 @@ const clearItemOverrides = (): void => {
   const mod = getModule();
   if (!mod) return;
   // Clear the table while the gate is still open (WasmClearItemOverrides is gated the same way),
-  // then close it — the table is empty either way, but closing the gate keeps it from reopening
+  // then close it. The table is empty either way, but closing the gate keeps it from reopening
   // for stale data if something else re-populates it without going through setItemOverride.
   mod.ccall('WasmClearItemOverrides', null, [], []);
   setItemOverridesActive(false);

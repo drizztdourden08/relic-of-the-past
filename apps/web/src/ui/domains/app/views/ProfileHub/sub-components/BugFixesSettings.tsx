@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-/** Bug Fixes tab — the bundle masters + the 42 split per-fix toggles. */
+/** The bundle masters plus the 42 split per-fix toggles. */
 import { useMemo } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { SettingsLayout, type Section } from '../../../compounds/SettingsLayout';

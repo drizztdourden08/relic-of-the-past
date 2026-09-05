@@ -35,7 +35,7 @@ const BugReportDialog = (props: BugReportDialogProps) => {
           </>
         }
       >
-        <Text as="p">Thanks — your report was filed.</Text>
+        <Text as="p">Thanks! Your report was filed.</Text>
         <Text as="p" className="bug-report__result-url">{form.resultUrl}</Text>
       </DialogShell>
     );
@@ -51,7 +51,7 @@ const BugReportDialog = (props: BugReportDialogProps) => {
         <>
           <Button variant="secondary" onClick={closeForm}>Cancel</Button>
           <Button variant="primary" onClick={form.submit} disabled={!form.canSubmit}>
-            {form.status === 'submitting' ? 'Submitting…' : 'Submit'}
+            {form.status === 'submitting' ? 'Submitting...' : 'Submit'}
           </Button>
         </>
       }
@@ -86,7 +86,7 @@ const BugReportDialog = (props: BugReportDialogProps) => {
 
       {form.status === 'error' && (
         <Text className="bug-report__status bug-report__status--error">
-          Couldn't file the report — try again in a moment.
+          Couldn't file the report. Try again in a moment.
         </Text>
       )}
     </DialogShell>

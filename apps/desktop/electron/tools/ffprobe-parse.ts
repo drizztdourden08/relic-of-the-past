@@ -1,11 +1,8 @@
 /* @layer electron-main @kind logic */
 /**
- * Read ffprobe's JSON report into the fields we keep.
- *
- * ffprobe emits numbers as strings, and reports "N/A" for anything the container did not
- * state, so every value goes through one coercion that yields null rather than NaN. The
- * per-stream figure is preferred over the container's, and the container's is the
- * fallback — a stream that omits its own duration or bit rate is common in VBR files.
+ * Read ffprobe's JSON report into the fields we keep. ffprobe emits numbers as strings
+ * and "N/A" for anything unstated, so every value coerces to null, never NaN. The
+ * per-stream figure wins, the container's is the fallback (VBR streams often omit theirs).
  */
 import type { ProbedAudio } from '@shared/types/audio-probe';
 

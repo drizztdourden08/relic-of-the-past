@@ -4,12 +4,12 @@
  * contents, the six panel headings and the six ability words.
  *
  * The first three come straight from the shipped name table, so the keys here
- * ARE that table's keys — `<record-id>-<tier>` for an item, the raw bottle
- * content value, the panel key — and an override can be folded back onto it
+ * ARE that table's keys: `<record-id>-<tier>` for an item, the raw bottle
+ * content value, the panel key. An override can be folded back onto it
  * without a translation step. The ability words have no data home yet (they are
  * still an array inside the drawing component), so they are restated here.
  *
- * Every one of these surfaces draws from a fixed A-Z ramp rather than the set's
+ * Every one of these surfaces draws from a fixed A-Z ramp, not the set's
  * glyph sheet, hence `latin-caps` throughout.
  */
 import { defaultPauseNames } from '@shared/game/data/pause-names';
@@ -31,7 +31,7 @@ const PANEL_LABEL_KEYS: PauseLabelKey[] = [
 /**
  * The six ability words, copied from the hardcoded `abilityGrid` array in
  * apps/web/src/ui/domains/hud/compounds/PauseAbilitiesPanel/PauseAbilitiesPanel.tsx.
- * Restated rather than imported: nothing under shared/ may reach into apps/.
+ * Restated instead of imported: nothing under shared/ may reach into apps/.
  */
 const ABILITY_WORDS = ['LIFT', 'READ', 'TALK', 'PULL', 'RUN', 'SWIM'];
 

@@ -26,7 +26,7 @@ const MsuPackList = (props: MsuPackListProps) => {
   if (packs.length === 0) {
     return (
       <Box className="data-list">
-        <EmptyState message="No music packs yet — create an empty one or import a pack" />
+        <EmptyState message="No music packs yet. Create an empty one or import a pack" />
       </Box>
     );
   }

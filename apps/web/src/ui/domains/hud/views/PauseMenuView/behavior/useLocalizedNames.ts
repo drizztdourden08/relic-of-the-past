@@ -5,7 +5,7 @@
  *
  * English is the floor: every lookup falls back, per key, to the built-in
  * defaults whenever the set is absent, still loading, missing that key, or
- * holding an empty string for it — a half-translated set shows its translated
+ * holding an empty string for it. A half-translated set shows its translated
  * entries and English for the rest, never a blank panel.
  */
 import { useCallback, useEffect, useState } from 'react';
@@ -25,7 +25,7 @@ const pick = (value: string | undefined, fallback: string): string =>
   (value && value.trim() ? value : fallback);
 
 const useLocalizedNames = (): LocalizedNames => {
-  // Read at render rather than subscribed to: the id is set when a game starts,
+  // Read at render, not subscribed to: the id is set when a game starts,
   // and the menu only exists while one is running, so it cannot change under a
   // mounted menu without the game (and this view) being torn down first.
   const profileId = getActiveProfileId();

@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind data */
 /**
- * PauseBottlePanel — shown when cursor is on the bottle slot.
+ * Shown when the cursor is on the bottle slot.
  * Replaces the progress + equipment panels on the right side.
  * Yellow-bordered panel displaying all 4 bottle slots vertically.
  */

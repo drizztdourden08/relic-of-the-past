@@ -1,16 +1,8 @@
 /* @layer renderer-app @kind data */
 /**
- * The per-collection diffs over the derived schema — and only where derivation
- * genuinely needs a nudge.
- *
- * Four collections are deliberately absent. Areas and locations derive three
- * top-level fields each, all of them meaningful in a cell and already in a
- * sensible order, so a config for them would restate what derivation said and
- * then have to be maintained alongside it. Item-group and enumeration are the
- * same story: item-group's three fields (`id`, `label`, `memberIds`) and
- * enumeration's five (`id`, `category`, `value`, `label`, `appliesTo`) already
- * derive in the exact shape and order a browsing session wants. A missing
- * entry here is a statement that the auto-layout was right, not an omission.
+ * Per-collection diffs over the derived schema. Area, location, item-group and
+ * enumeration are absent on purpose: their derived layout is already right,
+ * and a config would only restate it.
  */
 import type { EntityKind } from '@shared/game/data';
 import type { SchemaConfig } from '@ds/data';

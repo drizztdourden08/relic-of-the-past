@@ -1,25 +1,9 @@
 /* @layer renderer-components @kind component */
 /**
- * Add, remove and reorder for a list whose ELEMENTS are single values.
- *
- * That restriction is the whole scope decision, and it is deliberate. A list of
- * single values has a complete editor in a handful of controls: the element kit
- * already knows how to edit one, and every structural operation is one immutable
- * rewrite of the array. A list of nested records does not — it needs an element
- * form, identity that survives reordering, and an "add what exactly" answer for
- * a variant element — so those stay on the read-only summary the element kit
- * already renders, which is honest, rather than a form that half works.
- *
- * Every operation writes the WHOLE array through the field's own path, so the
- * record is rebuilt by `setPath` exactly as any other edit is.
- *
- * Two element kinds opt out of the rows entirely. A list drawn from a closed
- * set is a SELECTION, not a sequence: every row would offer the same dropdown,
- * order carries no meaning, and "add" cannot say which value it is adding. That
- * reads far better as one chip row where the whole set is visible and picking
- * is the edit. A list of TAGS is the same argument with an open set behind it,
- * so it goes to the tag entry instead. Every other element kind keeps the rows,
- * where order and free values both matter.
+ * Add, remove and reorder for a list of single values. Every operation writes
+ * the whole array through the field's path. Two element kinds opt out of the
+ * rows: a closed set is a selection, not a sequence, so it gets one chip row;
+ * a tag list is the same with an open set, so it goes to the tag entry.
  */
 import { Button } from '../../../primitives/Button';
 import { Flex } from '../../../primitives/Flex';
@@ -41,7 +25,7 @@ const DOWN = '↓';
 const REMOVE = '×';
 const ADD = '+ Add';
 
-/** A closed set with something in it — the one case the chip row can serve. */
+/** A closed set with something in it. The chip row serves only that case. */
 const closedSetOf = (element: FieldDescriptor): readonly string[] | undefined =>
   element.kind === 'enum' && element.options?.length ? element.options : undefined;
 

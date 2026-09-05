@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
  * Shows what SDL3's own already-decoded state reports for the exact same
- * live bytes the byte grid below is diffing — ground truth from the actual
+ * live bytes the byte grid below is diffing. Ground truth from the actual
  * transport, not a second guess.
  */
 import { Box, Text } from '../../../../../../../design-system/primitives';
@@ -27,7 +27,7 @@ const LiveParserOutput = (props: LiveParserOutputProps) => {
 
   return (
     <Box className="hid-cal__step hid-cal__live-parser">
-      <Box className="hid-cal__step-title">Live parser output — {profile?.name ?? 'matched controller'}</Box>
+      <Box className="hid-cal__step-title">Live parser output for {profile?.name ?? 'matched controller'}</Box>
       <Box className="hid-cal__live-parser-row">
         {state.buttons.map((pressed, i) => {
           // Every positional slot the device reports gets shown, not only the

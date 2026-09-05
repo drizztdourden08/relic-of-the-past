@@ -7,7 +7,7 @@ import { ChannelInput } from './ChannelInput';
 import { hexToRgb, rgbToHex } from '../behavior/color-math';
 
 interface ColorFieldsProps {
-  /** Current colour, `#rrggbb` — the source for the R/G/B fields. */
+  /** Current colour, `#rrggbb`. The R/G/B fields read from it. */
   value: string;
   onChange: (hex: string) => void;
   /** Hex field text, held as a buffer by the parent so typing is not fought. */
@@ -25,8 +25,8 @@ const ColorFields = (props: ColorFieldsProps) => {
   const { value, onChange, hexInput, onHexInput, alpha, onAlphaChange, disableAlpha } = props;
   const rgb = hexToRgb(value);
 
-  // Re-read the colour at commit time rather than closing over `rgb`: two channels can be
-  // edited in the same tick, and a stale capture would drop the earlier one.
+  // Re-read the colour at commit time instead of closing over `rgb`: two
+  // channels can be edited in the same tick.
   const commitChannel = useCallback((key: Channel) => (n: number) => {
     onChange(rgbToHex({ ...hexToRgb(value), [key]: n }));
   }, [onChange, value]);

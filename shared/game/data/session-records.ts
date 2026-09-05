@@ -9,13 +9,13 @@
  * the gameId indexes derived from it. So one set of generic helpers covers them
  * all, and a kind wired up later needs nothing new here.
  *
- * All three run AFTER the write they depend on has landed on disk — this only
+ * All three run AFTER the write they depend on has landed on disk. That only
  * saves the session from reading a record it just changed as it stood at seed
  * time. The gameId indexes are rebuilt either way: a record whose native values
  * moved (or that is gone entirely) would otherwise keep answering a reverse
  * lookup out of the old table.
  *
- * The record is taken as `{ id: string }` rather than as the kind's own type.
+ * The record is taken as `{ id: string }`, not as the kind's own type.
  * These are session bookkeeping, called from an editor that holds a row, not a
  * typed record; pairing the two at the call site would only add a cast there
  * instead of here, and the store is keyed by id either way.

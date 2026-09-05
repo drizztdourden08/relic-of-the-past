@@ -2,7 +2,7 @@
 /**
  * Holds the layer list being edited and writes it back to `pack.json`.
  *
- * The draft is seeded once, on mount — the editor is mounted with a key of pack + target, so
+ * The draft is seeded once, on mount. The editor is mounted with a key of pack + target, so
  * switching slots or sounds gives a fresh draft and an in-progress edit is never overwritten by
  * a background reload of the pack.
  *
@@ -21,7 +21,7 @@ interface LayerEditorState {
   target: LayerTarget;
   /** Seeds the draft: the merged view, so a classic slot shows the layer it plays today. */
   manifest: MsuPackManifest;
-  /** Written to disk — see LayerEditorProps.saveBase for why this is not the merged view. */
+  /** Written to disk (see LayerEditorProps.saveBase for why this is not the merged view). */
   saveBase: MsuPackManifest;
   onSaved: () => void;
 }

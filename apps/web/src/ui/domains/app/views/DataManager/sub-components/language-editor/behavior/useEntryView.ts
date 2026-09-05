@@ -1,20 +1,9 @@
 /* @layer renderer-components @kind hook */
 /**
- * Which entries are open, and which of the three views each one is showing.
- *
- * A set is a few hundred entries, so the list is a list of CLOSED rows and
- * opening one is the deliberate act. Openness is per entry rather than one at a
- * time: comparing two lines is a real task, and a list that closes one row to
- * open another cannot do it.
- *
- * The mode is per entry too, and remembered while the entry stays open, so
- * flipping between reading and editing does not reset every other row. It
- * defaults to reading, because that is what opening a row is usually for and
- * because the editor is the one view that can change the set.
- *
- * Nothing here knows about drafts. Whether a switch INTO the editor is allowed
- * is the draft's business — it holds the unsaved work — so the caller asks it
- * first and only reports the answer here.
+ * Which entries are open, and which view each shows. Openness is per entry,
+ * not one at a time, so two lines can be compared. The mode is per entry too,
+ * remembered while open, and defaults to reading. Nothing here knows about
+ * drafts; that is `useEntryDraft`'s business.
  */
 import { useCallback, useMemo, useState } from 'react';
 

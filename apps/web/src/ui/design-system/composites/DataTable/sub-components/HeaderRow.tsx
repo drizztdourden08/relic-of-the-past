@@ -1,15 +1,5 @@
 /* @layer renderer-components @kind component */
-/**
- * The sticky header: one cell per visible column, plus a trailing cell that
- * holds nothing. Adding a column is offered by each column's own ⋯ menu, as
- * "before" and "after" — which is where the position comes from — and once
- * more in the footer's menu, which appends. The trailing cell stays as the
- * track that soaks up the row's leftover width; see `trackList`.
- *
- * The remove target used to render here too, detached and pinned to the
- * viewport. It is now a sibling of the whole table rather than of this row —
- * see `ColumnDropTrash` and `DataTable.tsx`.
- */
+/** The sticky header: one cell per visible column, plus an empty trailing cell that soaks up leftover width (see `trackList`). */
 import { Box } from '../../../primitives/Box';
 import { HeaderCell } from './HeaderCell';
 import type { SchemaIndex } from '../../../data/schema/build-schema';
@@ -25,11 +15,11 @@ interface HeaderRowProps {
   fieldNodes: readonly PickerNode[];
   sort: readonly SortEntry[];
   groupBy: readonly string[];
-  /** Injected, and only relevant to reference columns — see "Display as…". */
+  /** Injected, and only relevant to reference columns (the "Display as" submenu). */
   resolveTargetFields?: IdRefTargetFieldResolver;
   actions: ColumnActions;
   drag: ColumnDragBinding;
-  /** A few rows off the top of the rendered order — what each cell's ghost shows. */
+  /** A few rows off the top of the rendered order. Each cell's ghost shows them. */
   ghostRows: readonly unknown[];
   rowTotal: number;
 }

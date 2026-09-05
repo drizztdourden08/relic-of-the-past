@@ -1,13 +1,8 @@
 /* @layer renderer-app @kind component */
 /**
- * BootProgressBar — fixed bottom bar showing the background game-core warmup.
- * Observes boot-progress-store. The gold fill grows L→R over a dark track; the
- * centered message is white over the dark track and flips to black over the gold
- * fill via a clipped duplicate label (see BootProgressBar.css).
- *
- * A minimum on-screen time keeps the bar readable when the core warms almost
- * instantly (warm cache / dev) instead of flashing by; this is purely cosmetic and
- * never gates readiness. Once that time has passed after 'ready', it fades + unmounts.
+ * The label flips from white to black over the gold fill via a clipped duplicate
+ * label (see BootProgressBar.css). The minimum on-screen time is cosmetic only and
+ * never gates readiness.
  */
 import { useEffect, useState } from 'react';
 import { Box } from '@ds/primitives';

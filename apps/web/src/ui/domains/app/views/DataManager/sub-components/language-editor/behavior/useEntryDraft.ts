@@ -1,17 +1,9 @@
 /* @layer renderer-components @kind hook */
 /**
- * Unsaved edits, one draft per entry.
- *
- * Nothing a translator types reaches the stored set until they commit it: the
- * set is written once per commit rather than once per keystroke (every write
- * also rebakes the asset blobs), and an abandoned edit leaves no trace.
- *
- * A draft belongs to its entry and stays until that entry is saved or
- * cancelled — switching the card to reading or preview, opening another entry,
- * or closing the card never touches it. Every other view of an entry that holds
- * a draft shows the DRAFT, so what the preview draws is what will be saved. No
- * request here is ever refused: an Edit button that does nothing is a bug, not
- * a policy.
+ * Unsaved edits, one draft per entry. Nothing reaches the stored set until
+ * commit (every write rebakes the asset blobs). A draft stays until its entry
+ * is saved or cancelled; switching views, opening another entry or closing the
+ * card never touches it, and every view of that entry shows the draft.
  */
 import { useCallback, useMemo, useState } from 'react';
 import type { DialogueEntry, Token } from '@shared/game/language';

@@ -2,13 +2,12 @@
 /**
  * macOS refresh-rate driver, via CoreGraphics + CoreFoundation through koffi.
  *
- * CGDisplayModeGetRefreshRate returns 0 for displays that do not report a rate, so a 0 means
- * "unknown" and is filtered out rather than offered as a switch target.
+ * CGDisplayModeGetRefreshRate returns 0 for displays that do not report a rate, so a 0
+ * means "unknown" and is filtered out.
  *
- * NOT VERIFIED ON HARDWARE. Written from the documented CoreGraphics surface. The API is
- * struct-free (opaque handles only), which keeps it low-risk, and every path reports failure
- * softly — so the worst case on an untested Mac is the setting declaring itself unavailable
- * rather than anything breaking.
+ * NOT VERIFIED ON HARDWARE. Written from the documented CoreGraphics surface (opaque
+ * handles only), and every path reports failure softly, so the worst case on an untested
+ * Mac is the setting declaring itself unavailable.
  */
 import type { DisplayModeDriver } from './types';
 import { loadKoffi } from './koffi-loader';
@@ -65,9 +64,8 @@ const getBindings = (): MacBindings | null => {
 };
 
 /**
- * Run `fn` against the modes matching the current resolution, then release what CoreFoundation
- * handed us. The two Copy calls transfer ownership, so skipping the release would leak on
- * every poll.
+ * Run `fn` against the modes matching the current resolution, then release: the two Copy
+ * calls transfer ownership, so skipping it would leak on every poll.
  */
 const withModes = <T>(fn: (api: MacBindings, modes: unknown[], current: unknown) => T, fallback: T): T => {
   const api = getBindings();

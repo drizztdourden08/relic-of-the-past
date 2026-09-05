@@ -32,7 +32,7 @@ interface ProfileHubBodyProps {
 const ProfileHubBody = (props: ProfileHubBodyProps) => {
   const { activeTab, setActiveTab, settings, onChange, profile, isGameRunning, onStartGame } = props;
   const { info } = usePlatform();
-  // Mobile options live in their own tab, always pinned to the very bottom — shown only on mobile.
+  // Mobile options live in their own tab, always pinned to the very bottom, and shown only on mobile.
   const tabs = useMemo(
     () => (Object.entries(PROFILE_HUB_TABS) as [ProfileHubTab, typeof PROFILE_HUB_TABS[ProfileHubTab]][])
       .filter(([, spec]) => !spec.mobileOnly || info.formFactor === 'mobile')

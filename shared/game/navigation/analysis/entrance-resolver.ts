@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * Entrance Resolver — Maps WASM entrance tables to connection points.
+ * Maps WASM entrance tables to connection points.
  *
  * Uses WASM entrance positions + exit screen map to identify which
  * ConnectionPointData corresponds to which game entrance ID.

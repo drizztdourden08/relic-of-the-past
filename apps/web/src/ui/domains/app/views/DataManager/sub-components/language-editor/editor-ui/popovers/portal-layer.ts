@@ -3,7 +3,7 @@
  * Whether a design-system dropdown is currently showing.
  *
  * A `Select` draws its list through a PORTAL, so the list is not a descendant of
- * the card that holds the select — which makes a press on one of its values look
+ * the card that holds the select. A press on one of its values therefore looks
  * like a press outside the card, and would close the card before the value could
  * be taken. Asking whether the portal's popover layer holds anything is how a
  * card tells "someone pressed elsewhere" apart from "someone is choosing a value

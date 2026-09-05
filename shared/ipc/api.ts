@@ -1,8 +1,8 @@
 /* @layer shared-types @kind logic */
 /**
- * `IpcApi` — the renderer-facing `window.api` surface, DERIVED from the channel
- * contracts + join maps. Flat invoke/send/event methods carry exactly their
- * contract signature (no hand-written duplication); nested namespaces and the
+ * `IpcApi` is the renderer-facing `window.api` surface, DERIVED from the channel
+ * contracts and join maps. Flat invoke/send/event methods carry exactly their
+ * contract signature, so nothing is hand-written twice. Nested namespaces and the
  * few non-IPC helpers are spelled out.
  */
 import type { InvokeContract } from './invoke-contract';

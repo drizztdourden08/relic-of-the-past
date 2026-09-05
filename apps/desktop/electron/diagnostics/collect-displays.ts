@@ -27,7 +27,7 @@ const describeDisplay = (display: Display, primaryId: number): DisplayDiagnostic
   workArea: { ...display.workArea },
   scaleFactor: display.scaleFactor,
   rotation: display.rotation,
-  // 0 means "the platform did not report one" rather than a real 0 Hz.
+  // 0 means "the platform did not report one", not a real 0 Hz.
   refreshHz: display.displayFrequency || null,
   colorDepth: display.colorDepth,
   depthPerComponent: display.depthPerComponent,
@@ -41,7 +41,7 @@ const collectDisplays = (): DisplayDiagnostics[] => {
   try {
     primaryId = screen.getPrimaryDisplay().id;
   } catch {
-    // no display server (headless CI) — every entry just reports primary: false
+    // No display server, as in headless CI. Every entry then reports primary: false.
   }
   try {
     return screen.getAllDisplays().map((display) => describeDisplay(display, primaryId));

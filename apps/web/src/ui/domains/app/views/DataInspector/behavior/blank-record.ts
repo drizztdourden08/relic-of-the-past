@@ -1,12 +1,8 @@
 /* @layer renderer-app @kind logic */
 /**
- * A blank starting record for the create dialog, shaped by the collection's
- * own schema: every required field seeded, every optional one left absent.
- *
- * `blankValue` already applies exactly that rule recursively to one array
- * element's shape (see `RecordEditor/behavior/array-elements.ts`); this only
- * wraps the schema's top-level fields as if they were one object's children,
- * so the same rule builds a whole record instead of one element.
+ * Blank record for the create dialog: required fields seeded, optional ones
+ * absent. Wraps the top-level fields as one object so `blankValue`
+ * (`RecordEditor/behavior/array-elements.ts`) builds the whole record.
  */
 import { blankValue } from '@ds/composites/RecordEditor';
 import type { FieldDescriptor } from '@ds/data';

@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind component */
-/**
- * One layer, presented for editing: what it is called, how loud it is, how it is scheduled, and
- * which files it draws from. Purely presentational — every edit leaves as a patch, so the card
- * never has to know whether the change is savable.
- */
+// Presentational: every edit leaves as a patch, so the card never knows whether it is savable.
 import { Box } from '@ds/primitives/Box';
 import { Card } from '@ds/primitives/Card';
 import { Flex } from '@ds/primitives/Flex';
@@ -75,9 +71,8 @@ const LayerCard = (props: LayerCardProps) => {
         onChange={(volume) => onChange({ volume })}
       />
 
-      {/* Rolled each time the layer starts, so on a one-shot effect this is a per-trigger chance.
-          The game raises some effects on a fixed cycle, which a real recording turns into a
-          metronome; thinning them here keeps them tied to the moment the game means. */}
+      {/* Rolled each time the layer starts. Some effects fire on a fixed cycle, which a real
+          recording turns into a metronome; thinning them here breaks that up. */}
       <Slider
         label="Chance"
         description="How often this layer actually sounds when it starts. 100% is every time."
@@ -98,8 +93,7 @@ const LayerCard = (props: LayerCardProps) => {
         onChange={changeMode}
       />
 
-      {/* Only the one order that repeats a single file reaches that file's own end; every other
-          order moves on to the next file, which starts from its top. */}
+      {/* Only the single-file order ever reaches a file's own end. */}
       {single && (
         <LoopPointField
           loopSample={layer.loopSample}

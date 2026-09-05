@@ -19,13 +19,13 @@ interface ItemRecord {
   randomizerName: string;
   /** Per-dungeon maps/compasses/keys point at their dungeon by id. */
   dungeonId?: DungeonId;
-  /** Progression level — sword/shield/glove/mail tier. Real, reverse-engineered — see combat.ts. */
+  /** Progression level for the sword/shield/glove/mail tier. Reverse-engineered (see combat.ts). */
   tier?: number;
   /** Combat facts, weapon items only. */
   weapon?: WeaponProfile;
   /** Folds in the old duplicate-alternates.ts table. */
   aliasOf?: ItemId;
-  /** Graphics only — the extracted PNG for this item. */
+  /** Graphics only. The extracted PNG for this item. */
   spriteId?: SpriteId;
 }
 

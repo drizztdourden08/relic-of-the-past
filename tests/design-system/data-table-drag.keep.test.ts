@@ -38,18 +38,16 @@ import type {
 } from '../../apps/web/src/ui/design-system/composites/DataTable/DataTable.type';
 import type { GroupedRow, TableColumn } from '../../apps/web/src/ui/design-system/data/table/types';
 
-// The drag gesture itself needs a browser, and there is no DOM here. What CAN
-// be pinned down is the rule the chrome is drawn from: which cells step aside
-// while a column is carried over them, and which way. The second block below
-// checks that rule against the reorder it is previewing, so the gap can never
-// open on the side the column does not land on.
+// The gesture needs a browser. Pinned here: which cells step aside while a
+// column is carried over them, and which way, checked against the reorder
+// being previewed.
 
 const COLUMNS: readonly TableColumn[] = ['a', 'b', 'c', 'd', 'e'].map((path) => ({ path }));
 
 const shiftsFor = (from: number, over: number): string[] =>
   COLUMNS.map((_, index) => columnDragShift({ index, from, over }));
 
-describe('column drag — which cells step aside', () => {
+describe('column drag and which cells step aside', () => {
   it('moves nothing while the cursor is still over the column being carried', () => {
     expect(shiftsFor(2, 2)).toEqual(['none', 'none', 'none', 'none', 'none']);
   });
@@ -67,7 +65,7 @@ describe('column drag — which cells step aside', () => {
     expect(shiftsFor(3, 1)).toEqual(['none', 'right', 'right', 'none', 'none']);
   });
 
-  it('never displaces the carried column itself — it is the hole, not a neighbour', () => {
+  it('never displaces the carried column itself because it is the hole, not a neighbour', () => {
     expect(columnDragShift({ index: 1, from: 1, over: 4 })).toBe('none');
     expect(columnDragShift({ index: 4, from: 4, over: 0 })).toBe('none');
   });
@@ -123,10 +121,8 @@ describe('the preview tells the truth about the reorder it previews', () => {
   });
 });
 
-// What the cursor carries is a strip of the column: its name over a few real
-// values. Which values those are is a pure choice over the rendered tree, so it
-// is pinned down here; how Chromium then photographs the strip is not testable
-// anywhere, in this suite or with a screenshot.
+// The cursor carries a strip of the column: its name over a few real values.
+// Which values is a pure choice, pinned here; how Chromium draws it is not testable.
 
 interface Sample { id: string }
 
@@ -157,7 +153,7 @@ describe('what the drag ghost samples out of the column', () => {
       .toEqual(['a', 'b']);
   });
 
-  it('samples nothing at all rather than one row when the cap is zero', () => {
+  it('samples nothing at all instead of one row when the cap is zero', () => {
     expect(ghostRowSample({ nodes: flat, isExpanded: ALWAYS, limit: 0 })).toEqual([]);
   });
 
@@ -167,7 +163,7 @@ describe('what the drag ghost samples out of the column', () => {
       .toEqual(['a', 'b', 'c']);
   });
 
-  it('skips a collapsed branch — a row nobody can see is not a sample of the screen', () => {
+  it('skips a collapsed branch because a row nobody can see is not a sample of the screen', () => {
     const grouped = [branch('one', [leaf('a'), leaf('b')]), branch('two', [leaf('c')])];
     const openOnly = (uid: string): boolean => uid === groupUid('', 'kind', 'two');
     expect(idsOf(ghostRowSample({ nodes: grouped, isExpanded: openOnly, limit: 6 })))
@@ -196,15 +192,13 @@ describe('the drag ghost shows the column, not just its name', () => {
     expect(renderGhost()).not.toContain('data-table__drag-ghost-rest');
   });
 
-  it('is decorative — nothing in it is announced or reachable', () => {
+  it('is decorative, so nothing in it is announced or reachable', () => {
     expect(renderGhost()).toContain('aria-hidden="true"');
   });
 });
 
-// The drop zone is the whole column, header AND body. The gesture needs a
-// browser, but WHICH index a body cell answers with does not: a row builds one
-// cell per column, and each one carries its own position, so the same drop that
-// the header would perform happens from anywhere down the column.
+// The drop zone is the whole column, header AND body: each body cell carries
+// its own position, so the drop works from anywhere down the column.
 
 interface Record3 { id: string; name: string; size: number }
 
@@ -266,12 +260,9 @@ describe('a column is droppable down its whole body, not only on its header', ()
   });
 });
 
-// The one strip of the header that is NOT the header cell: the seam sits over
-// the gutter between two columns, which is the ground a cursor carrying a
-// column crosses on its way from one column to the next. A hole there and the
-// header never hears that the cursor moved on, so the seam answers the drag
-// itself with its own column's index rather than trusting the event to reach
-// the cell behind it.
+// The seam sits over the gutter between columns, which a carried column
+// crosses. A hole there and the header never hears the cursor moved on, so the
+// seam answers the drag with its own column's index.
 
 const IDLE_RESIZE: ColumnResizeBinding = {
   resizing: false,
@@ -325,10 +316,8 @@ describe('the remove target only exists mid-drag', () => {
     expect(markup).toBe('');
   });
 
-  // It used to escape through the shared overlay portal, which needs a
-  // document this suite does not have — proving anything about its markup
-  // mid-drag was out of reach here. Absolutely positioned in the table's own
-  // tree instead, plain SSR can see it directly.
+  // Used to escape through the shared overlay portal, which needs a document.
+  // Absolutely positioned in the table's own tree, plain SSR can see it.
   it('renders the drop target once a column is in the air', () => {
     const markup = renderToStaticMarkup(createElement(ColumnDropTrash, {
       draggingPath: 'kind', label: 'Kind', onRemove: () => {}, onDragEnd: () => {},

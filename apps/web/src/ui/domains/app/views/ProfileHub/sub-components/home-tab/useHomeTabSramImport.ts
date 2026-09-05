@@ -7,8 +7,8 @@ import { log } from '../../../../../../../lib/log-bus';
 import type { DialogState } from './home-tab.type';
 import { validSramSlots } from './sram-checksum';
 
-const SRAM_BYTES = 8192; // core/zelda3/src/zelda_rtl.c:1345 — the cartridge's fixed SRAM size
-const IMPORT_CONFIRM_WORD = 'import'; // typed, not the filename — a deliberate action, not a memory test
+const SRAM_BYTES = 8192; // core/zelda3/src/zelda_rtl.c:1345, the cartridge's fixed SRAM size
+const IMPORT_CONFIRM_WORD = 'import'; // typed, not the filename, so it is a deliberate action and not a memory test
 
 const useHomeTabSramImport = (params: {
   profileId: string;
@@ -28,7 +28,7 @@ const useHomeTabSramImport = (params: {
       setDialog({
         type: 'import-sram-invalid',
         targetName: picked.name,
-        detail: `"${picked.name}" is ${picked.bytes.byteLength} bytes — a raw SRAM save is always exactly ${SRAM_BYTES} bytes.`,
+        detail: `"${picked.name}" is ${picked.bytes.byteLength} bytes. A raw SRAM save is always exactly ${SRAM_BYTES} bytes.`,
       });
       return;
     }
@@ -38,7 +38,7 @@ const useHomeTabSramImport = (params: {
       setDialog({
         type: 'import-sram-invalid',
         targetName: picked.name,
-        detail: `"${picked.name}" is the right size, but none of its 3 save slots pass the game's own checksum — this isn't a valid ALttP save file.`,
+        detail: `"${picked.name}" is the right size, but none of its 3 save slots pass the game's own checksum, so this isn't a valid save file for the game.`,
       });
       return;
     }
@@ -63,7 +63,7 @@ const useHomeTabSramImport = (params: {
     setImportConfirmText('');
     if (!pendingBytes) return;
     await savesStore.writeSram(profileId, pendingBytes.buffer as ArrayBuffer);
-    log.app(`Imported SRAM save from "${targetName}" — takes effect next time this profile loads`);
+    log.app(`Imported SRAM save from "${targetName}". It takes effect next time this profile loads`);
     showToast(`Save imported from "${targetName}"`);
   }, [profileId, dialog, setDialog, showToast]);
 

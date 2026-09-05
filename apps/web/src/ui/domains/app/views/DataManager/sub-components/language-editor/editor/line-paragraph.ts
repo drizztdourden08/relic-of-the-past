@@ -3,7 +3,7 @@
  * The block a line occupies: an ordinary paragraph that also remembers which
  * code put the pen on its row and whether a wait follows it.
  *
- * The keys are bound as a plain ProseMirror keymap rather than through the
+ * The keys are bound as a plain ProseMirror keymap instead of through the
  * editor framework's shortcut layer, for one reason: each of these commands
  * builds and dispatches its own transaction, and the framework's wrapper
  * dispatches a transaction of its own around whatever a handler does, which
@@ -13,8 +13,8 @@
  *
  * The priority is raised so this keymap is consulted before the editor's base
  * bindings. Enter must not fall through to the generic block split, which would
- * make a paragraph with default attributes — a line with no advance code in the
- * middle of an entry, which the engine has no way to draw.
+ * make a paragraph with default attributes. That is a line with no advance code
+ * in the middle of an entry, which the engine has no way to draw.
  *
  * The two bare arrows are taken for the same reason in reverse: left to the
  * browser they step by DOM position, and a line has more of those than it has
@@ -34,7 +34,7 @@ import { toggleWaitHere } from './toggle-wait';
 /** Ahead of the base keymap, which would otherwise claim Enter first. */
 const kKeymapPriority = 1000;
 
-/** Absent fields are left off the element rather than written as "null". */
+/** Absent fields are left off the element, not written as "null". */
 const renderIf = (dataName: string, value: unknown): Record<string, string> => (
   value === null || value === undefined || value === false ? {} : { [dataName]: String(value) }
 );
@@ -73,7 +73,7 @@ const DialogueLine = Paragraph.extend({
     endsBox: endsBoxAttr,
   }),
 
-  // The line draws its own row gutter beside its text — see line-node-view.ts.
+  // The line draws its own row gutter beside its text (see line-node-view.ts).
   addNodeView: () => ({ node }) => lineNodeView(node),
 
   addProseMirrorPlugins: () => [

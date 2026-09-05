@@ -2,8 +2,8 @@
 /**
  * The wearing selector: which outfit and glove level the preview renders with.
  *
- * Outfit and gloves are independent in the engine — the glove colour is written over one
- * row entry whatever outfit is loaded — so they stay two separate controls rather than a
+ * Outfit and gloves are independent in the engine, since the glove colour is written over one
+ * row entry whatever outfit is loaded, so they stay two separate controls, not a
  * flat list of combinations. The bunny outfit is offered alongside the three mails because
  * from the palette's point of view that is exactly what it is, even though its art differs.
  */

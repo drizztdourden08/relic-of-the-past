@@ -1,17 +1,17 @@
 /* @layer renderer-design-system @kind style */
 
-/* Fixed sizes — control heights, chrome dimensions. */
+/* Fixed sizes: control heights, chrome dimensions. */
 :root {
   --titlebar-height: 38px;
   --titlebar-btn-width: 46px;
   --scrollbar-size: 6px;
 
-  /* One compact control row — the small tier the icon button and the small
+  /* One compact control row, the small tier the icon button and the small
      dropdown trigger already draw themselves at. */
   --control-h-sm: 26px;
 
   /* The inline entry a closed-set control offers for a value its option list
-     has never seen — wide enough for a short identifier, free to grow. */
+     has never seen. Wide enough for a short identifier, free to grow. */
   --open-entry-width: 140px;
 
   /* One filter clause: narrow enough that several sit side by side, and a
@@ -22,7 +22,7 @@
 
   /* The box a sort-direction glyph is centred in. Fixing it is what keeps the
      indicator's footprint the same however wide the fallback font draws the
-     character — every pixel not spent here goes to the column's own label. */
+     character. Every pixel not spent here goes to the column's own label. */
   --sort-caret-width: 8px;
 
   /* The ⋯ trigger beside it. Fixed for the same reason and one more: the

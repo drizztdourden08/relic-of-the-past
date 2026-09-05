@@ -1,10 +1,8 @@
 /* @layer shared-ipc @kind types */
 /**
- * The MSU invoke channels: import, pack listing, pack editing (the `.msul` manifest
- * and per-file operations), and the per-save music-resume sidecars. Split out of
- * invoke-contract.ts's single `InvokeContract` (which extends this) purely to keep
- * that file under the line cap — this is still the one source of truth for these
- * signatures.
+ * The MSU invoke channels: import, pack listing, pack editing (the `.msul` manifest and per-file
+ * operations), and the per-save music-resume sidecars. Split out of `InvokeContract` (which
+ * extends this) only for the line cap. Still the one source of truth.
  */
 import type { MsuPackManifest, MsuPackMeta, MsuResumeState } from '@shared/types/msu-manifest';
 import type { OptimizeAnalysis, OptimizeRunResult } from '@shared/types/msu-optimize';
@@ -14,7 +12,7 @@ type MsuResult = {
   success: boolean;
   fileCount?: number;
   error?: string;
-  /** Audio the archive kept below the pack's own level — alternates and extras, not tracks. */
+  /** Audio the archive kept below the pack's own level, meaning alternates and extras, not tracks. */
   skippedNested?: number;
   /** Audio dropped because an earlier file already claimed its track number. */
   skippedDuplicate?: number;
@@ -35,13 +33,13 @@ interface MsuInvokeContract {
   'msu:readMsulFile': (filePath: string) => Promise<ArrayBuffer>;
 
   // ── Pack editing ──
-  /** Every audio file in the pack, whatever its name — a layered pack's files are
+  /** Every audio file in the pack, whatever its name. A layered pack's files are
    *  arbitrary, so `msu:getTrackList` (numbered MSU tracks only) cannot see them. */
   'msu:listAudioFiles': (packName: string) => Promise<MsuFileEntry[]>;
   /** null for a classic pack (no manifest) and for a version this build cannot read. */
   'msu:readManifest': (packName: string) => Promise<MsuPackManifest | null>;
   'msu:writeManifest': (packName: string, manifest: MsuPackManifest) => Promise<void>;
-  /** Rejects when the pack already exists, rather than merging into it. */
+  /** Rejects when the pack already exists instead of merging into it. */
   'msu:createPack': (packName: string, meta?: Partial<MsuPackMeta>) => Promise<void>;
   'msu:renamePack': (from: string, to: string) => Promise<void>;
   'msu:renameTrackFile': (packName: string, from: string, to: string) => Promise<void>;
@@ -53,7 +51,7 @@ interface MsuInvokeContract {
    *  One encoder run per file, reported on `msu:optimize:progress`. */
   'msu:optimize:analyze': (packName: string) => Promise<OptimizeAnalysis>;
   /** Moves repeat points into the manifest FIRST, then encodes and re-points it at the new
-   *  names. Originals are kept — removing them is a separate action. */
+   *  names. Originals are kept, and removing them is a separate action. */
   'msu:optimize:run': (packName: string, fileNames: string[]) => Promise<OptimizeRunResult>;
 
   // ── Per-save music-resume sidecars (`{save}.msu.json`, beside the save) ──

@@ -62,13 +62,13 @@ const barrierTagsToRequirements = (tags: readonly ConnectionTag[]): RequirementS
 };
 
 /**
- * `bigkey:*` is UNSATISFIABLE here, on purpose, and that is a known defect rather
- * than a rule: the barrier tag says "this crossing wants the big key" without
+ * `bigkey:*` is UNSATISFIABLE here, on purpose, and that is a known defect, not
+ * a rule: the barrier tag says "this crossing wants the big key" without
  * saying whose, and a wildcard big key has no meaning for a per-dungeon set. It
  * used to read `bigKeys.has('*')`, which is the same answer written as if it were
  * a lookup; typing the set by `DungeonId` is what makes it impossible to write
  * that line without admitting it. The 12 connections tagged `barrier:big-key` are
- * therefore impassable on the STATIC graph — unchanged from before this re-typing,
+ * therefore impassable on the STATIC graph. That is unchanged from before this re-typing,
  * and deliberately not "fixed" here, because unblocking them changes what the
  * simulator can reach and belongs in its own verified change. Note the engine's
  * own big-key DOOR handling is already coarse (`bigKeys.size === 0` in

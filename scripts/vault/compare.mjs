@@ -1,24 +1,16 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * The whole sync decision: local vs remote vs the base recorded by the last
- * successful sync.
- *
- * Two sides alone cannot tell "added here" from "deleted there" — both look like
- * "present on one side only". The base is what disambiguates them, which is the
- * same reason git keeps a merge base rather than diffing two trees. Without it
- * every deletion would be undone by the next sync, forever.
- *
- * A file that changed on BOTH sides since the base is a conflict, and a conflict
- * is never resolved automatically: the two versions are both someone's work, and
- * picking one silently is how work disappears.
+ * The sync decision: local vs remote vs the base recorded by the last sync. Two
+ * sides alone cannot tell "added here" from "deleted there"; the base disambiguates,
+ * as a git merge base does. A file changed on both sides is a conflict and is never
+ * resolved automatically.
  */
 
 /** Every state a path can be in. `same` covers "absent on both sides" too. */
 const classify = ({ local, remote, base }) => {
   if (local === remote) return 'same';
 
-  // Never recorded before. Present on one side only is unambiguous — it is new
-  // there. Present on both with different content is a genuine collision.
+  // Never recorded before: present on one side only is new there.
   if (base === null || base === undefined) {
     if (local && remote) return 'conflict';
     return local ? 'local-only' : 'remote-only';
@@ -45,10 +37,7 @@ const DIRECTIONS = {
 
 const directionOf = (status) => DIRECTIONS[status] ?? null;
 
-/**
- * Compare two indexes against a base, returning one entry per path either side
- * knows about, sorted so output is stable between runs.
- */
+/** One entry per path either side knows about, sorted so output is stable between runs. */
 const compareTrees = ({ local, remote, base }) => {
   const paths = [...new Set([...Object.keys(local), ...Object.keys(remote), ...Object.keys(base)])].sort();
 

@@ -1,11 +1,11 @@
 /* @layer renderer-design-system @kind style */
 
 /*
- * Color tokens — now ALIASES to the canonical design-language tokens (--c-*,
+ * Color tokens, now ALIASES to the canonical design-language tokens (--c-*,
  * defined in canonical.css). The whole app references these legacy --color-*
  * names, so aliasing them re-skins everything onto the one canonical palette:
  * ONE background family, gold=primary / green=secondary / grey=tertiary.
- * (HUD is unaffected — it uses its own SNES palette, not these.)
+ * (HUD is unaffected. It uses its own SNES palette, not these.)
  */
 :root {
   /* ─── Surfaces (collapse 4 levels → one bg + one raised surface) ─── */

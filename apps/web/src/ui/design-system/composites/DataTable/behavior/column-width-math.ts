@@ -1,13 +1,5 @@
 /* @layer renderer-components @kind logic */
-/**
- * The arithmetic behind both ways a column gets a pixel width: a pointer drag
- * on the seam between two headers, and "fit to content" over the widths that
- * were actually measured off the screen.
- *
- * Both are pure so they can be asserted without a browser — the gesture that
- * feeds the first and the DOM that feeds the second cannot be, and each is a
- * thin wrapper next door.
- */
+/** The arithmetic behind a seam drag and "fit to content". Pure, so it is testable without a browser. */
 
 /** Narrow enough to shrink a column to nothing useful is not a column. */
 const MIN_COLUMN_WIDTH = 64;
@@ -34,11 +26,7 @@ const clampWidth = (width: number): number =>
 const widthFromDrag = ({ startWidth, startX, clientX }: DragWidthInput): number =>
   clampWidth(startWidth + (clientX - startX));
 
-/**
- * The width that fits every content width handed in. An empty list keeps the
- * minimum rather than collapsing: nothing measurable is not the same as nothing
- * there, and a column that vanished on a menu click reads as a bug.
- */
+/** The width that fits every content width handed in. An empty list keeps the minimum instead of collapsing. */
 const fitColumnWidth = (contentWidths: readonly number[]): number =>
   clampWidth(Math.max(0, ...contentWidths) + FIT_PADDING);
 
@@ -48,14 +36,7 @@ interface ColumnWidth {
   width: number;
 }
 
-/**
- * Fitting the whole table is fitting one column, repeated — the widths come out
- * of the SAME rule a single column's fit uses, so the footer's "fit all" and a
- * column's own can never disagree about the same column.
- *
- * The measuring is handed in because it is the one part that needs a screen;
- * the loop and the rule do not, and stay assertable here.
- */
+/** Fit-all is a single column's fit, repeated, so the two never disagree. Measuring is handed in because it needs a screen. */
 const fitAllWidths = (
   paths: readonly string[],
   contentWidthsOf: (path: string) => readonly number[],

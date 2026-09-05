@@ -18,7 +18,7 @@ const toGrid64 = (flat: Uint8Array): number[][] => {
   return grid;
 };
 
-/** An all-zero grid — the fallback when an attr table can't be built. */
+/** An all-zero grid. Used as the fallback when an attr table can't be built. */
 const emptyGrid64 = (): number[][] =>
   Array.from({ length: GRID_SIZE }, () => new Array<number>(GRID_SIZE).fill(0));
 

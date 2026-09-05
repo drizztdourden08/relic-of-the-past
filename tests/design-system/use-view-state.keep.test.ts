@@ -12,16 +12,13 @@ import type { UseViewStateResult } from '../../apps/web/src/ui/design-system/dat
 import type * as UseViewStateModule from '../../apps/web/src/ui/design-system/data/view-state/use-view-state';
 import type { TableColumn } from '../../apps/web/src/ui/design-system/data/table/types';
 
-// useViewState is a thin composition over lib/storage/ui-views (durable) and
-// stores/data-view-store (session) — see that file's own tests for the parts
-// it delegates to. What matters HERE is the contract: no key means no IPC and
-// no store, ever, so a composite works with zero persistence setup; a real
-// key means a loaded snapshot is pruned against the current schema before a
-// caller ever sees it.
+// useViewState composes lib/storage/ui-views (durable) and
+// stores/data-view-store (session). The contract HERE: no key means no IPC and
+// no store, ever; a real key means a loaded snapshot is pruned against the
+// current schema before a caller sees it.
 //
-// The module is dynamically re-imported per test (after `window` is stubbed)
-// because it transitively imports lib/storage/ui-views -> log-bus, which
-// touches `window.addEventListener` at module load time.
+// Re-imported per test after `window` is stubbed: ui-views -> log-bus touches
+// `window.addEventListener` at module load.
 
 const ROWS = [
   { id: 'item-001', name: 'alpha' },
@@ -54,7 +51,7 @@ afterEach(() => {
 const idColumn: readonly TableColumn[] = [{ path: 'id', fit: true }];
 const idNameColumns: readonly TableColumn[] = [{ path: 'id', fit: true }, { path: 'name', fit: true }];
 
-describe('restoreDurableSnapshot — prune on restore', () => {
+describe('restoreDurableSnapshot prunes on restore', () => {
   it('prunes a loaded snapshot against the current schema', () => {
     const stale: ViewSnapshot = { ...emptySnapshot(), columns: [{ path: 'id' }, { path: 'gone' }] };
     expect(restoreDurableSnapshot(stale, schema, idColumn).columns.map((c) => c.path)).toEqual(['id']);
@@ -76,7 +73,7 @@ describe('restoreDurableSnapshot — prune on restore', () => {
   });
 });
 
-describe('useViewState — no-key passthrough', () => {
+describe('useViewState no-key passthrough', () => {
   const renderHarness = (key: Parameters<typeof useViewState>[0]): UseViewStateResult => {
     let captured: UseViewStateResult | undefined;
     const Harness = (): null => {
@@ -110,14 +107,10 @@ describe('useViewState — no-key passthrough', () => {
   });
 
   it('is silent by construction, not by luck: a real key would load via an effect SSR never runs', async () => {
-    // renderToStaticMarkup never commits, so useEffect bodies never fire — the
-    // no-key assertions above hold regardless of whether a key was passed, which
-    // would make them vacuous if that were the only coverage. The durable load
-    // path itself (an effect firing, prune-on-restore, debounce/coalesce) is
-    // exercised directly in lib/storage/ui-views.test.ts and the pure
-    // restoreDurableSnapshot tests above, and the load-versus-edit race in
-    // view-state-load-race.test.ts; this just documents why a keyed render
-    // here still shows zero calls.
+    // renderToStaticMarkup never commits, so effects never fire and the no-key
+    // assertions above hold regardless of key. The durable load path is covered
+    // in lib/storage/ui-views.test.ts and view-state-load-race.test.ts; this
+    // only documents why a keyed render shows zero calls.
     load.mockResolvedValue({ 'surface:collection': { ...emptySnapshot(), columns: [{ path: 'name' }] } });
     renderHarness('surface:collection');
     expect(load).not.toHaveBeenCalled();

@@ -2,16 +2,14 @@
 /**
  * Prism theme built from this project's own design tokens (color.css /
  * canonical.css) instead of a foreign Prism stylesheet. Each entry's color is
- * the literal CSS custom-property string (e.g. `'var(--c-gold-bright)'`) —
- * prism-react-renderer applies these as inline `style` per token, and the
- * browser resolves the variable at paint time, so a token span stays
- * theme-aware across light/dark exactly the way ordinary component CSS does
- * here (no `getComputedStyle` needed).
+ * the literal CSS custom-property string (e.g. `'var(--c-gold-bright)'`).
+ * prism-react-renderer applies these inline per token and the browser resolves
+ * the variable at paint time, so a token span stays theme-aware without
+ * `getComputedStyle`.
  *
- * Prism's token categories don't map 1:1 onto the app's semantic palette, so
- * this groups them onto the closest existing accent: gold for keywords/tags,
- * green for strings, amber (warning) for numeric/boolean literals, blue
- * (info) for names, and the neutral text tiers for everything structural.
+ * Prism's categories don't map 1:1 onto the app's palette, so this groups them
+ * onto the closest accent: gold for keywords/tags, green for strings, amber for
+ * numeric/boolean literals, blue for names, neutral text tiers for structure.
  */
 import type { PrismTheme } from 'prism-react-renderer';
 

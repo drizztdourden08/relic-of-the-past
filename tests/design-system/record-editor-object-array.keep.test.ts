@@ -12,10 +12,9 @@ import { numberBoundsResolverFor } from '../../apps/web/src/ui/domains/app/views
 import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
 import { describeDataset } from '../dataset-guard';
 
-// SSR smoke tests plus unit tests over the two helpers a list of records needs.
-// They prove an element's fields get the same real controls a top-level field
-// gets. Clicking add, dragging an element and choosing from the open dropdown
-// need a browser and are NOT covered here.
+// SSR smoke tests plus unit tests over the two helpers: an element's fields
+// get the same real controls a top-level field gets. Add, drag and dropdown
+// need a browser.
 
 const PICKER = 'class="select-trigger';
 
@@ -85,7 +84,7 @@ describeDataset('what a freshly added element starts as', () => {
     expect(blankValue(spawns.of as FieldDescriptor)).toEqual({ actorId: '', tile: { x: 0, y: 0 } });
   });
 
-  it('leaves an optional child absent rather than inventing a value for it', () => {
+  it('leaves an optional child absent instead of inventing a value for it', () => {
     const shape: FieldDescriptor = {
       path: 'p', label: 'P', kind: 'object', optional: false,
       children: [
@@ -107,7 +106,7 @@ describeDataset('what a freshly added element starts as', () => {
     expect(blankValue(of('enum', { options: ['first', 'second'] }))).toBe('first');
   });
 
-  it('stops at a sensible depth rather than following a pathological shape', () => {
+  it('stops at a sensible depth instead of following a pathological shape', () => {
     const deep = (level: number): FieldDescriptor => ({
       path: `l${level}`, label: `L${level}`, kind: 'object', optional: false,
       children: level > 8 ? [] : [deep(level + 1)],

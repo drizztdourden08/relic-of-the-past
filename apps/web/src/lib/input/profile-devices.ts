@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 /**
- * Profile Devices — resolves the set of physical devices a profile's map actually
+ * Resolves the set of physical devices a profile's map actually
  * references. This is the whitelist the input engine gates on: only a keyboard (when
  * the map has keyboard bindings) and gamepads whose vid:pid appears in the map may
  * drive the game. A connected-but-unmapped controller contributes nothing.

@@ -3,8 +3,8 @@
 /*
  * The open entry.
  *
- * A card rather than a row, and marked at its left edge, so an open entry is
- * unmistakably a different state from the rows around it — a translator scrolling
+ * A card, not a row, and marked at its left edge, so an open entry is
+ * unmistakably a different state from the rows around it. A translator scrolling
  * a long list should never have to work out which one they opened.
  */
 

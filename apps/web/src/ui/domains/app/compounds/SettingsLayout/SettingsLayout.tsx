@@ -15,10 +15,9 @@ import { type SettingItem, type SettingsLayoutProps } from './SettingsLayout.typ
 const SettingsLayout = (props: SettingsLayoutProps) => {
   const { sections, settings, onChange, renderControl, isDisabled, onOpenVanillaSafeSettings } = props;
   // A control is locked when Vanilla Safe is on AND the setting behind it stops working. That comes
-  // from two places, because only some settings are gate-word features: the registry flag covers those,
-  // and vanilla-safe-settings.ts covers the rest (cheats, MSU, the custom sprite, the enhanced HUD, the
-  // two hand-gated renderer effects), which Vanilla Safe forces off in the INI or the PPU flags without
-  // any FeatureDef to say so. Leaving those enabled made the panel claim they still did something.
+  // from two places: the registry flag covers gate-word features, and vanilla-safe-settings.ts covers
+  // the rest (cheats, MSU, the custom sprite, the overlay HUD, the two hand-gated renderer effects),
+  // which Vanilla Safe forces off in the INI or the PPU flags without any FeatureDef to say so.
   const isVanillaSafeLocked = useCallback(
     (key: string) =>
       settings.vanillaSafe === true &&
@@ -86,7 +85,7 @@ const SettingsLayout = (props: SettingsLayoutProps) => {
     activeId,
     onSelect: scrollTo,
     searchable: true,
-    searchPlaceholder: 'Search settings…',
+    searchPlaceholder: 'Search settings...',
     query: filter,
     onQueryChange: setFilter,
   };

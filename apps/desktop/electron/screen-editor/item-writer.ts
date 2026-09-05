@@ -2,9 +2,9 @@
 /**
  * Creating, rewriting and removing an item record.
  *
- * A new record is filed by CATEGORY, one canonical file each — a deliberate
- * simplification of a committed split that has no category rule to recover, and
- * documented as such in record-file-targets.ts. Existing records are never
+ * A new record is filed by CATEGORY, one canonical file each. That is a
+ * deliberate simplification of a committed split with no category rule to
+ * recover, and record-file-targets.ts documents it as such. Existing records are never
  * moved: an edit or a removal finds the record where it already sits, by id.
  */
 

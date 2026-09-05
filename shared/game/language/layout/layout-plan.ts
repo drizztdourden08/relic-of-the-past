@@ -9,7 +9,7 @@
  * - The player-name substitution draws 1..6 glyphs (the entry field holds six
  *   characters and trailing spaces are trimmed), and every one of them counts
  *   toward the row exactly like literal text. With no sample supplied the plan
- *   assumes the WORST CASE — six of the widest glyph in the language's table —
+ *   assumes the WORST CASE of six of the widest glyph in the language's table,
  *   so a row reported safe is safe for every name a player can enter. Pass
  *   `nameSample` to measure one concrete name instead, for a preview that
  *   matches what a given save would show.
@@ -58,7 +58,7 @@ const digitGlyphs = (metrics: GlyphMetrics): number[] => kDigits.flatMap(digit =
   return match === null ? [] : [match.index];
 });
 
-/** Six of the widest glyph — the longest, widest name the field can hold. */
+/** Six of the widest glyph, the longest and widest name the field can hold. */
 const worstCaseName = (metrics: GlyphMetrics): number[] => {
   const widest = widestOf(everyGlyph(metrics), metrics);
   return Array.from({ length: MAX_NAME_GLYPHS }, () => widest);

@@ -3,7 +3,7 @@
 /*
  * One slot row, and the column shape the whole list shares.
  *
- * A grid, so name / field / original / fit line up down the list — the fit
+ * A grid, so name / field / original / fit line up down the list. The fit
  * column especially, since "does what I wrote still fit" is the question these
  * rows are scanned for. The fit slot is always present, empty for a slot with no
  * stated budget, so a metered row and an unmetered one are the same shape and
@@ -47,7 +47,8 @@
 
 /*
  * The original stands in for words nobody has written yet, so it has to be as
- * readable as a typed value — not the primitive's faint placeholder grey.
+ * readable as a typed value, so it does not take the primitive's faint
+ * placeholder grey.
  */
 .text-slot-row__input::placeholder {
   color: var(--c-text-dim);
@@ -105,7 +106,7 @@
 
 /*
  * The slot's own caveat. Italic, so it reads as a standing fact about the slot
- * rather than as something that just happened to what was typed.
+ * and not as something that just happened to what was typed.
  */
 .text-slot-row__note {
   grid-column: 1 / -1;

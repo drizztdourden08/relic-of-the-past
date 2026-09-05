@@ -6,7 +6,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  pointer-events: auto; /* opt in — Portal layer is click-through */
+  pointer-events: auto; /* opt in, because the Portal layer is click-through */
 }
 
 .binding-listener {

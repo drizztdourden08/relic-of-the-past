@@ -69,7 +69,7 @@ const createFileStore = (): FileStore => ({
 });
 
 // No OS-level source in a browser: there is no standard refresh-rate API, so the renderer's
-// frame-timing measurement is the only signal and this reports nothing rather than guessing.
+// frame-timing measurement is the only signal and this reports nothing instead of guessing.
 const createDisplay = (): DisplayPort => ({
   getRefreshRate: async () => ({ reportedHz: null, measuredHz: null, modes: [] }),
   getSyncedRateStatus: async () => UNSUPPORTED_SYNCED_RATE,

@@ -58,16 +58,16 @@ const main = () => {
   }
   for (const f of findings) {
     const where = f.line ? `${f.file}:${f.line}` : f.file;
-    console.error(`  [${f.rule}] ${where}${f.match ? ` — "${f.match}"` : ''}`);
+    console.error(`  [${f.rule}] ${where}${f.match ? `: "${f.match}"` : ''}`);
     console.error(`      ${f.hint}`);
   }
   if (isApproved(spec)) {
-    console.log("\n✓ owner-approved ([allow-copyright] / 'copyright-ok' label) — allowing.");
+    console.log("\n✓ owner-approved ([allow-copyright] / 'copyright-ok' label), so the change is allowed.");
     return;
   }
   const blocking = findings.filter((f) => f.severity === 'block' || (f.severity === 'text' && TEXT_RULE_BLOCKS));
   if (!blocking.length) {
-    console.log('\n⚠ copyright gate: warnings only — allowing.');
+    console.log('\n⚠ copyright gate: warnings only, so the change is allowed.');
     return;
   }
   console.error(`\n✗ copyright gate blocked: ${blocking.length} item(s) need owner approval.`);

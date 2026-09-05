@@ -1,11 +1,9 @@
 /* @layer tooling-scripts @kind build */
 /**
- * Trigger the GitHub "Release" workflow (workflow_dispatch) from the terminal, so
- * a local release uses the EXACT same path and params as the GitHub UI button:
- * a version and an optional "publish as latest" flag.
- *
- * The workflow itself does the version bump, the "release: vX.Y.Z" commit on
- * master, the tag, and the build — nothing is committed or tagged locally here.
+ * Trigger the GitHub "Release" workflow (workflow_dispatch) from the terminal, with
+ * the same params as the UI button. The workflow does the version bump, the
+ * "release: vX.Y.Z" commit, the tag and the build; nothing is committed or tagged
+ * locally here.
  *
  * Usage (the version can be positional or a flag; a leading "v" is optional):
  *   npm run release -- 0.9.0            # positional
@@ -84,7 +82,7 @@ const run = () => {
   const notes = `release-notes/${tag}.md`;
 
   if (!existsSync(notes)) {
-    fail(`Missing ${notes}. Create and commit the release notes first — they are the source of truth for the release body.`);
+    fail(`Missing ${notes}. Create and commit the release notes first. The release body comes from them.`);
   }
 
   const tagExists = spawnSync('git', ['rev-parse', '-q', '--verify', `refs/tags/${tag}`]).status === 0;

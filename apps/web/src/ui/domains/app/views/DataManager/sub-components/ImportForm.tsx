@@ -9,7 +9,7 @@ import { useImportProgress } from '@app/hooks/useImportProgress';
 import type { ImportKind } from '@app/hooks/useImportProgress';
 
 interface ImportFormProps {
-  /** Which import this form drives — scopes the progress events it listens to. */
+  /** Which import this form drives. It scopes the progress events the form listens to. */
   kind: ImportKind;
   placeholder?: string;
   accept?: string[];
@@ -23,7 +23,7 @@ interface ImportFormProps {
 const ImportForm = (props: ImportFormProps) => {
   const {
     kind,
-    placeholder = 'Paste download URL…',
+    placeholder = 'Paste download URL...',
     accept = ['.zip'],
     dropLabel = 'Drop files here',
     dropHint,
@@ -46,7 +46,7 @@ const ImportForm = (props: ImportFormProps) => {
       return;
     }
     setBusy(true);
-    setStatus({ message: 'Downloading…', variant: '' });
+    setStatus({ message: 'Downloading...', variant: '' });
     try {
       const result = await onUrlImport(trimmed);
       setStatus({ message: result.message, variant: result.success ? 'success' : 'error' });
@@ -61,7 +61,7 @@ const ImportForm = (props: ImportFormProps) => {
   const handleDrop = useCallback(async (files: File[]) => {
     if (files.length === 0) return;
     setBusy(true);
-    setStatus({ message: 'Importing…', variant: '' });
+    setStatus({ message: 'Importing...', variant: '' });
     try {
       const result = await onFileImport(files);
       setStatus({ message: result.message, variant: result.success ? 'success' : 'error' });
@@ -96,7 +96,7 @@ const ImportForm = (props: ImportFormProps) => {
           onClick={handleDownload}
           disabled={isDisabled || !url.trim()}
         >
-          {busy ? '…' : 'Download'}
+          {busy ? '...' : 'Download'}
         </Button>
       </Box>
       <Box className="import-form__divider">or</Box>

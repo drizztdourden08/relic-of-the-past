@@ -1,12 +1,9 @@
 /* @layer tests @kind test */
 /**
  * What the migration from string tags to tag references has to keep true.
- *
- * Nothing here reads the old data — it is gone. What it checks instead is the
- * property the migration was FOR: every tag a record holds is a reference that
- * resolves, to a term the collection is allowed to carry, with no raw term left
- * behind and no id pointing at nothing. A value silently dropped or a key that
- * failed to map would land here as a dangling or malformed reference.
+ * The old data is gone; this checks the property the migration was FOR: every
+ * tag a record holds resolves to a term the collection may carry, with no raw
+ * term left and no id pointing at nothing.
  */
 import { describe, it, expect } from 'vitest';
 import { all, CONNECTION_TAG_METADATA, tagById, tagKeysOf, TAG_METADATA } from '@shared/game/data';

@@ -78,7 +78,7 @@ const HomeTab = (props: HomeTabProps) => {
         </Button>
       </Box>
 
-      {/* Hero card — last normal save */}
+      {/* Hero card for the last normal save */}
       {heroSave && (
         <HeroSaveCard
           name={heroSave.name}

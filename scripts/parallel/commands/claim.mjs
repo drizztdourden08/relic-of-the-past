@@ -1,14 +1,9 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * `wt claim <name>` / `wt claim --any` — take a worktree for this session.
- *
- * `--any` is the path an agent should normally use: it picks the least-drifted free
- * worktree, brings it up to date, leases it and prints the launch command. That is
- * seconds of work, against ~5 minutes for `wt new` — which is the whole reason the
- * pool exists rather than creating a worktree per task.
- *
- * A worktree that holds uncommitted or unlanded work is never handed out, and a dirty
- * tree is never rebased — claiming must not touch work it did not create.
+ * `wt claim <name>` / `wt claim --any`: take a worktree for this session. `--any`
+ * picks the least-drifted free worktree, refreshes it, leases it and prints the
+ * launch command (seconds, against ~5 minutes for `wt new`). A worktree holding
+ * uncommitted or unlanded work is never handed out, and a dirty tree is never rebased.
  */
 import { updateRegistry, findRecord } from '../registry.mjs';
 import { surveyAll } from '../survey.mjs';
@@ -31,7 +26,7 @@ const refuse = (name, verdict) => {
     throw new Error(`"${name}" is leased by another session. Use --any, or wait for the lease to expire.`);
   }
   if (verdict === VERDICTS.HOLDS_WORK) {
-    throw new Error(`"${name}" holds uncommitted or unlanded work — land or discard it first, by hand.`);
+    throw new Error(`"${name}" holds uncommitted or unlanded work. Land or discard it first, by hand.`);
   }
   if (verdict === VERDICTS.MISSING) {
     throw new Error(`"${name}" has no checkout on disk. Run: npm run wt -- doctor`);
@@ -48,7 +43,7 @@ const pickTarget = (positional, options) => {
       throw new Error(
         entries.length === 0
           ? 'The pool is empty. Create one with: npm run wt -- new <name>'
-          : 'No free worktree. See: npm run wt:list — then either wait, or npm run wt -- new <name>',
+          : 'No free worktree. Check the pool with: npm run wt:list. Then wait, or create one with: npm run wt -- new <name>',
       );
     }
     return best;
@@ -80,7 +75,7 @@ const run = async ({ positional, options }) => {
 
   console.log(`[wt] Claimed ${record.name} for ${currentHolder()} until ${lease.expiresAt}`);
   if (assessment.verdict === VERDICTS.SPENT) {
-    console.log('[wt] This one has been used before — its previous work has landed.');
+    console.log('[wt] This one has been used before and its previous work has landed.');
   }
 
   if (!flag(options, 'no-refresh')) refreshWorktree(record);

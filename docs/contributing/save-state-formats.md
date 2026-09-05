@@ -13,7 +13,7 @@ update.
 The snapshot is written as an ordered walk of fixed-size regions. The **sequence** of those
 region lengths is the format's identity, hashed down to a short id like `6895039d1993`.
 
-A sequence rather than a total, because two different layouts can add up to the same number
+A sequence, not a total, because two different layouts can add up to the same number
 of bytes; reordering two regions of equal size has to change the answer, and with a sum it
 would not.
 
@@ -24,14 +24,14 @@ same compiler and headers the real build uses, runs it, and writes
 `shared/game/save-state/current-format.generated.ts`.
 
 The probe records region lengths through a callback that never reads the data pointer, so it
-works against zeroed structs — no ROM, no assets, no booted game. That is what lets it run on
+works against zeroed structs: no ROM, no assets, no booted game. That is what lets it run on
 a release runner.
 
 It runs automatically at the end of every WASM build, so any path that rebuilds the core
 refreshes the id.
 
 The generated file is **committed**. `npm run ci` does not build wasm, so a gitignored module
-would break typecheck on a fresh clone — and committing it means a layout change shows up as a
+would break typecheck on a fresh clone. Committing it also means a layout change shows up as a
 one-line diff in review instead of a surprise during a release.
 
 ## What you do when the layout changes
@@ -44,7 +44,7 @@ You will find out on your own: the next build regenerates the id, and the diff a
    picks it up on its next update check.
 
 If you skip step 1, `npm run state-format` fails and so does the release. The gate is not
-asking you to predict the id — it already has it. It is refusing to publish a change nobody
+asking you to predict the id, since it already has it. It is refusing to publish a change nobody
 described.
 
 ## How an older build finds out
@@ -66,8 +66,8 @@ an update replaces the installed application, while save states live in the user
 directory and are never touched by one.
 
 Releases up to and including the `BASELINE` version in `formats.ts` predate the published
-asset. Their format is not a guess — no build that could have produced them wrote anything
-else — so they are treated as known rather than unverifiable.
+asset. Their format is not a guess, because no build that could have produced them wrote anything
+else. So they are treated as known, not unverifiable.
 
 ## What each save records
 

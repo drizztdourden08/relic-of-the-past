@@ -3,18 +3,16 @@ import { describe, it, expect } from 'vitest';
 import { constrainVoidTiles } from '../../../shared/game/navigation/flood-fill/screen-prep';
 import { GRID_SIZE } from '../../../shared/game/navigation/types';
 
-// Regression for room 0x72 (East Corridor): the lower floor on layer 1 reaches the grid
-// edge through an OPEN south passage (bare 0x00 corridor flanked by walls — no 0x80 door
-// attrs stamped). The void flood used to seed from every boundary 0x00, walk up that
-// corridor and wall the entire floor (309 tiles) — BFS from the lower layer found ~0
-// tiles and upper-layer stair/ledge crosses had no landing. Doorway-shaped boundary gaps
-// (narrow, wall-flanked) are walkable exits and must not seed the void flood; wide open
-// spans are structural void and must.
+// Regression for room 0x72 (East Corridor): the lower floor on layer 1 reaches
+// the grid edge through an OPEN south passage (bare 0x00 corridor flanked by
+// walls). The void flood used to seed from every boundary 0x00, walk up that
+// corridor and wall the entire floor (309 tiles). Doorway-shaped boundary gaps
+// (narrow, wall-flanked) are exits and must not seed the void; wide spans must.
 
 const grid = (fill: number): number[][] =>
   Array.from({ length: GRID_SIZE }, () => new Array<number>(GRID_SIZE).fill(fill));
 
-describe('constrainVoidTiles — doorway gaps do not seed the void flood', () => {
+describe('constrainVoidTiles keeps doorway gaps from seeding the void flood', () => {
   // Model of 0x72's layer 1: void ocean everywhere, a walled floor region in the south
   // half (rows 40-58, cols 10-35), and a 4-wide exit corridor from the floor to the south
   // edge (rows 59-63, cols 20-23) flanked by 0x02 walls.

@@ -7,7 +7,7 @@
  *
  *  1. A finding that reproduces collapses onto its existing entry. Same content,
  *     same id, so it updates in place instead of arriving as a second row.
- *  2. An `open` finding that no longer reproduces becomes `resolved` — the
+ *  2. An `open` finding that no longer reproduces becomes `resolved`. The
  *     dataset was fixed, or the game says something different now.
  *  3. A decision is FINAL. `accepted` and `dismissed` are the only two states a
  *     person put there, and neither re-detection nor disappearance moves them.
@@ -16,7 +16,7 @@
  *     suggestion list worth ignoring.
  *
  * A `resolved` entry is not a decision, so it DOES reopen if the thing comes
- * back — that is the difference between "no longer reproduces" and "reviewed".
+ * back. That is the difference between "no longer reproduces" and "reviewed".
  */
 import type { EntityKind } from '../data/types';
 import { recommendationId } from './id';
@@ -30,7 +30,7 @@ interface ReconcileOptions {
    * fresh drafts say nothing about anything else. Without a scope, folding that
    * pass in would read every entry about every other screen as "no longer
    * reproduces" and resolve the lot. Defaults to "everything", which is correct
-   * only for a pass that really did re-derive the whole collection — use
+   * only for a pass that really did re-derive the whole collection. Use
    * `scopedToPass` for the normal case.
    */
   inScope?: (recommendation: Recommendation) => boolean;
@@ -51,7 +51,7 @@ const scopedToPass = (
   return (recommendation) => owners.has(recommendation.detector) && recommendation.screenId === screenId;
 };
 
-/** The payload half of an entry — everything a fresh pass is allowed to refresh. */
+/** The payload half of an entry, meaning everything a fresh pass may refresh. */
 const payloadOf = <K extends EntityKind>(draft: DraftRecommendation<K>) => ({
   kind: draft.kind,
   action: draft.action,

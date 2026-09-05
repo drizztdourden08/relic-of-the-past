@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind style */
 
-/* Wide, scrollable wizard panel — overrides DialogShell's narrow .dialog box.
+/* Wide, scrollable wizard panel, overriding DialogShell's narrow .dialog box.
    Higher specificity (.dialog.wizard-dialog) so it wins regardless of import order. */
 .dialog.wizard-dialog {
   max-width: 600px;

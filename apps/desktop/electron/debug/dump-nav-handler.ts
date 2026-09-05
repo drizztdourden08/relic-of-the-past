@@ -2,9 +2,9 @@
 /**
  * Debug CLI: --dump-nav=N|NAME
  *
- * Loads a save state — a number is a quick-save slot, a string is a MANUAL
- * (normal) save's name — dumps navigation widget state (entrances, screen
- * detection, transitions) to debug-output/dump-nav.json, then exits.
+ * Loads a save state, dumps navigation widget state (entrances, screen
+ * detection, transitions) to debug-output/dump-nav.json, then exits. A number
+ * names a quick-save slot, a string names a MANUAL (normal) save.
  *
  * Usage:
  *   npx electron dist/electron/main.js --muted --dump-nav=1

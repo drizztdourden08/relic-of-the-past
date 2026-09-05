@@ -1,7 +1,4 @@
 /* @layer bridge-wasm @kind data */
-/**
- * Game Settings — defaults, serialization to INI, and merge logic.
- */
 
 import type { GameSettings, OffscreenAiMode } from '@shared/types/settings';
 import { effectiveCustomRatio, detectScreenRatio, detectViewportRatio } from './aspect-ratio';
@@ -151,18 +148,17 @@ const boolToIni = (v: boolean): string => {
 
 // Anyone who explicitly turned the old pause setting ON keeps 'paused'. Everyone else, including
 // profiles carrying the old default of false, moves to the new 'idle' default, because false was
-// the absence of a choice rather than a choice.
+// the absence of a choice, not a choice.
 const offscreenAiMode = (s: GameSettings): OffscreenAiMode => {
   return s.offscreenAI ?? (s.pauseOffscreenAI === true ? 'paused' : 'idle');
 };
 
 const serializeToIni = (settings: GameSettings, msuPath?: string, language?: string): string => {
-  // ExtendedAspectRatio now carries ONLY the ratio value (+ extend_y). Every rendering companion is an
-  // individual [Features] key below (positive naming), so INI ↔ bridge ↔ registry stay aligned.
-  // When extendedRendering is off the engine always gets vanilla 4:3 — no extra columns, no flags.
-  // aspectRatio/extendY are baked at boot from this INI, not carried in the recorded gate words, so
-  // SyncGateWords' kGateWordParityMask can never reach them — Vanilla Safe has to force `er` off here
-  // instead, which collapses every dependent render-flag below (wide/LinearWorldTilemap/etc.) with it.
+  // ExtendedAspectRatio carries ONLY the ratio value (+ extend_y); every rendering companion is its own
+  // [Features] key below. With extendedRendering off the engine gets vanilla 4:3, no flags.
+  // aspectRatio/extendY are baked at boot from this INI, not carried in the gate words, so the C-side
+  // parity mask can't reach them: Vanilla Safe must force `er` off here, which collapses every
+  // dependent render flag below with it.
   const er = !settings.vanillaSafe && settings.extendedRendering;
   const parts: string[] = [];
   if (er) {
@@ -184,7 +180,7 @@ const serializeToIni = (settings: GameSettings, msuPath?: string, language?: str
   }
   const aspectValue = parts.join(', ');
 
-  // Rendering feature flags — mirror buildFeatureFlags (live bridge) so boot config and live push agree.
+  // Rendering feature flags mirror buildFeatureFlags (live bridge) so boot config and live push agree.
   const wide = er && settings.aspectRatio !== '4:3';
   const renderFlags = {
     ExtendedRendering: er,
@@ -201,15 +197,14 @@ const serializeToIni = (settings: GameSettings, msuPath?: string, language?: str
     .map(([k, v]) => `${k} = ${boolToIni(v)}`)
     .join('\n');
 
-  // Custom MSU music is a divergence from the cartridge with no gate-word bit of its own (it's a pure
-  // Electron/renderer + config.c toggle, never read by the emulated CPU) — Vanilla Safe has to force it
-  // off at the INI boundary instead of relying on SyncGateWords.
+  // Custom MSU music has no gate-word bit (a pure Electron/renderer + config.c toggle, never read by
+  // the emulated CPU), so Vanilla Safe has to force it off at the INI boundary.
   const msuEnabledIni = settings.vanillaSafe ? 'false' : settings.enableMSU;
   const msuPathIni = settings.vanillaSafe ? undefined : msuPath;
 
-  // Custom player sprite is also a boot-config divergence with no gate-word bit until config.features3
-  // reflects it (see ApplyConfiguredPlayerSprite in emscripten_main.c) — presence of this key is what the
-  // boot path treats as "the override should be on", so it must not be written under Vanilla Safe.
+  // Custom player sprite has no gate-word bit until config.features3 reflects it (see
+  // ApplyConfiguredPlayerSprite in emscripten_main.c); the boot path treats this key's presence as
+  // "override on", so it must not be written under Vanilla Safe.
   const linkGraphicsIni = !settings.vanillaSafe && settings.linkSprite ? 'LinkGraphics = /link_sprite.zspr\n' : '';
 
   return `[General]
@@ -273,10 +268,9 @@ ${renderFlagsIni}
 const mergeSettings = (partial: Partial<GameSettings>): GameSettings => {
   const merged = { ...DEFAULT_SETTINGS, ...partial };
 
-  // Tall rendering forces the enhanced HUD. The native HUD is a fixed 4:3 tile strip with no concept
-  // of the extended vertical band, so under tall it is not merely unstyled but wrong. Forcing it here
-  // rather than in the settings UI keeps it true for profiles saved before tall existed, and for every
-  // consumer at once — the INI, the live push and the HUD gate word all read this same merged value.
+  // Tall rendering forces the enhanced HUD: the native HUD is a fixed 4:3 tile strip, wrong under tall.
+  // Forcing it here (not in the settings UI) covers profiles saved before tall existed and every
+  // consumer at once: INI, live push and HUD gate word all read this merged value.
   if (merged.tallRendering) {
     merged.hudMode = 'enhanced';
     if (!merged.hudEnhancedParts.includes('main'))
@@ -320,7 +314,7 @@ const mergeSettings = (partial: Partial<GameSettings>): GameSettings => {
   delete (merged as Record<string, unknown>).ignoreAspectRatio;
   delete (merged as Record<string, unknown>).lockToGameRatio;
 
-  // Ensure masterVolume has a valid value (old configs won't have it)
+  // Old configs won't have masterVolume
   if (merged.masterVolume == null || typeof merged.masterVolume !== 'number') {
     merged.masterVolume = 100;
   }
@@ -378,9 +372,8 @@ const mergeSettings = (partial: Partial<GameSettings>): GameSettings => {
     merged.perGroupVolume = merged.musicVolume !== 100 || merged.sfxVolume !== 100 || merged.musicMuted || merged.sfxMuted;
   }
 
-  // msuVolume was a separate dial; MSU replaces the music channel rather than running alongside it, so it
-  // folds into musicVolume. Only migrate when the profile hasn't already got an explicit musicVolume from
-  // this same partial (an old profile's musicVolume default of 100 is not itself a signal to overwrite).
+  // msuVolume was a separate dial; MSU replaces the music channel, so it folds into musicVolume. Only
+  // migrate when this partial has no explicit musicVolume (an old default of 100 is not a signal).
   const legacyMsuVolume = raw.msuVolume;
   if (typeof legacyMsuVolume === 'number' && !('musicVolume' in raw)) {
     merged.musicVolume = legacyMsuVolume;

@@ -13,7 +13,7 @@ The top of the screen shows the profile's key details:
 - When it was **created**.
 - Its current **window mode**.
 
-The title bar carries the play controls — **Play**, **Stop**, **Reset**, and **Pause** — so you can start or stop the game from anywhere in the profile.
+The title bar carries the play controls (**Play**, **Stop**, **Reset**, and **Pause**) so you can start or stop the game from anywhere in the profile.
 
 ## Saves
 

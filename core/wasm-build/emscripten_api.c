@@ -27,20 +27,20 @@
 static bool g_force_backdrop_black = false;
 
 // ---------------------------------------------------------------------------
-// Live settings — callable from JS while game is running
+// Live settings, callable from JS while the game is running
 // ---------------------------------------------------------------------------
 
 // ─── Gate words ───
 // A gate bit is one bit of one 32-bit word. Words 0-5 are recorded WRAM (features.h) and so are part of
 // save states and replays; the host-gate words are plain globals for gates the game core cannot observe.
-// Indices are frozen — see the note on kGateWordCount.
+// Indices are frozen, as the note on kGateWordCount explains.
 EMSCRIPTEN_KEEPALIVE
 void WasmSetGateWord(int index, uint32_t value) {
   if ((unsigned)index < (unsigned)kGateWordCount)
     g_wanted_gate_words[index] = value;
 }
 
-// Returns what was last REQUESTED for this word, before any masking (e.g. Vanilla Safe) is applied —
+// Returns what was last REQUESTED for this word, before any masking (e.g. Vanilla Safe) is applied.
 // useSimRun.ts's readWantedFeatures() relies on seeing this immediately, before the request has even
 // latched into WRAM on the next SyncGateWords(). Callers that need to know what the core will actually
 // honour (e.g. "is this cheat allowed to fire right now") want WasmGetEffectiveGateWord instead.
@@ -49,7 +49,7 @@ uint32_t WasmGetGateWord(int index) {
   return (unsigned)index < (unsigned)kGateWordCount ? g_wanted_gate_words[index] : 0;
 }
 
-// The value actually landed in WRAM as of the last SyncGateWords() — i.e. after the Vanilla Safe mask,
+// The value actually landed in WRAM as of the last SyncGateWords(), so after the Vanilla Safe mask,
 // unlike WasmGetGateWord which can disagree with this the instant a bit gets stripped before it ever
 // reaches WRAM. Reads 0 before the very first simulated frame, since WRAM starts zeroed and nothing has
 // synced into it yet: the honest answer for "what is in effect" is nothing.
@@ -91,7 +91,7 @@ void WasmAnnounceMusic(void) {
 
 // Which entrances the host's extended pack has a track for, 32 per word (5 words). Lets the core hand
 // back a selectable indoor song for entrances the game would otherwise only duck or carry an overworld
-// song into — see GameHook_EntranceMusic.
+// song into. GameHook_EntranceMusic does the work.
 EMSCRIPTEN_KEEPALIVE
 void WasmSetDeluxeEntrances(int index, uint32_t bits) {
   GameHook_SetDeluxeEntrances(index, bits);
@@ -145,7 +145,7 @@ void WasmSetHudHidden(int hidden) {
   HudOverride_SetWantedHudHidden(hidden != 0);
 }
 
-// See WasmSetHudHidden above — same gate, same deferred reconcile.
+// Same gate and same deferred reconcile as WasmSetHudHidden above.
 EMSCRIPTEN_KEEPALIVE
 void WasmSetPauseHidden(int hidden) {
   HudOverride_SetWantedPauseHidden(hidden != 0);
@@ -192,7 +192,7 @@ int WasmGetVsync(void) {
 }
 
 // ---------------------------------------------------------------------------
-// Volume — masters the SDL audio mixer + per-channel DSP volumes
+// Volume masters the SDL audio mixer + per-channel DSP volumes
 // ---------------------------------------------------------------------------
 EMSCRIPTEN_KEEPALIVE
 void WasmSetAppMasterVolume(int volume) {
@@ -236,7 +236,7 @@ void WasmSetSfxVolume(int volume) {
 }
 
 // ---------------------------------------------------------------------------
-// Game commands — callable from JavaScript for pause, reset, cheats
+// Game commands, callable from JavaScript for pause, reset, cheats
 // ---------------------------------------------------------------------------
 EMSCRIPTEN_KEEPALIVE
 void WasmSetPaused(int paused) {
@@ -259,11 +259,11 @@ void WasmReset(int warm) {
 }
 
 // Legacy single-letter cheat command (health/magic fill, ammo/rupee fill, key grant, ignore-collision
-// toggle) — forwards straight to vendored PatchCommand, which writes through StateRecoderMultiPatch and
+// toggle). Forwards straight to vendored PatchCommand, which writes through StateRecoderMultiPatch and
 // so lands in the replay log. No renderer caller exists (the TS cheat surface goes through the typed
 // WasmCheatSet*/WasmCheatGive* exports in cheats.c instead), but the symbol stays reachable from the
 // console or any future embedder, so it needs the same permission any other mutating cheat export
-// requires rather than acting on every request unconditionally.
+// requires instead of acting on every request unconditionally.
 EMSCRIPTEN_KEEPALIVE
 void WasmCheat(int cmd) {
   if (!CheatGate(kFeatures3_CheatStats)) return;

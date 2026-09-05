@@ -1,16 +1,11 @@
 /* @layer renderer-app @kind data */
-/**
- * Why this override exists: the largest collection (~1600 one-sided points)
- * and the one whose derived order reads worst — `placement` / `requirements`
- * are deep unions that swamp a row. `defaultColumns` leads with the point's
- * own screen and its partner; the groups keep the deep unions below the
- * fields that identify the record.
- */
+/** The largest collection (~1600 points). `placement` / `requirements` are deep
+ *  unions that swamp a row, so the groups keep them below the identifying fields. */
 import type { SchemaConfig } from '@ds/data';
 
 const CONNECTION_CONFIG: SchemaConfig = {
   defaultColumns: ['id', 'kind', 'screenId', 'toConnectionId', 'canExit', 'dungeonId'],
-  // Same hex convention as SCREEN_CONFIG — none of these is a room id, so hex2.
+  // Same hex convention as SCREEN_CONFIG. None of these is a room id, so hex2.
   formats: {
     'gameId.entranceId': 'hex2',
     'gameId.stairIndex': 'hex2',

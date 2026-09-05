@@ -39,7 +39,7 @@ interface ButtonMappingProps {
    *  sticks/triggers in this same one-by-one list. */
   includeStickTriggerIds?: boolean;
   /** Hides the "[1/2 positive]" / "[2/2 negative]" sub-step hint for axis
-   *  items. Byte-capture's axis capture is genuinely two-part (positive then
+   *  items. Byte-capture's axis capture is two-part (positive then
    *  negative extreme); positional-capture asks about an axis in one shot,
    *  so that hint would be misleading there. */
   showAxisSubStep?: boolean;

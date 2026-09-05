@@ -2,7 +2,7 @@
 /**
  * IPC handlers for the recommendation store.
  *
- * The store itself lives here rather than in the renderer because both of its
+ * The store itself lives here, not in the renderer, because both of its
  * mutating operations are read-modify-write over a whole collection file, and
  * splitting them across an IPC round trip would put the read and the write on
  * opposite sides of a boundary two callers can interleave on. Keeping the

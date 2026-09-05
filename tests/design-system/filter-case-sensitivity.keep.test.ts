@@ -21,7 +21,7 @@ const stringTest = (value: unknown, op: string, operand: unknown, caseSensitive?
   return tester.test(value, op, operand, { caseSensitive });
 };
 
-describe('string matching — the case modifier is off by default', () => {
+describe('string matching leaves the case modifier off by default', () => {
   it('folds case in every text operator when the flag is absent', () => {
     expect(stringTest('Upper Ledge', 'contains', 'ledge')).toBe(true);
     expect(stringTest('Upper Ledge', 'startsWith', 'upp')).toBe(true);
@@ -48,7 +48,7 @@ describe('string matching — the case modifier is off by default', () => {
     expect(stringTest('Upper Ledge', 'eq', 'Upper Ledge', true)).toBe(true);
   });
 
-  it('leaves the emptiness operators alone — they never looked at case', () => {
+  it('leaves the emptiness operators alone, because they never looked at case', () => {
     expect(stringTest('   ', 'isEmpty', null, true)).toBe(true);
     expect(stringTest('A', 'isNotEmpty', null, true)).toBe(true);
   });
@@ -91,7 +91,7 @@ describe('the flag threads from the clause down to the match', () => {
   });
 });
 
-describe('operatorMenuItems — the modifier is offered where it means something', () => {
+describe('operatorMenuItems offers the modifier where it means something', () => {
   const noop = (): void => undefined;
 
   const entries = (kind: FieldKind, op: string, caseSensitive?: boolean) =>

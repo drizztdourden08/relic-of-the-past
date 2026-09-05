@@ -1,12 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
- * WidgetManager — Layout engine for all widgets.
- *
- * Responsibilities:
- *  - Compute positions for docked widgets (stacked vertically on left/right, horizontally on top/bottom)
- *  - Render floating widgets at their absolute position
- *  - Filter widgets by visibility mode vs current app state (game-only vs always)
- *  - Provide update/close callbacks that propagate to store
+ * Layout engine for all widgets: docked stacking on each side, floating placement,
+ * visibility filtering against the current app state.
  */
 import { useMemo, useEffect } from 'react';
 import type { GameSettings } from '@shared/types/settings';
@@ -30,14 +25,14 @@ interface WidgetManagerProps {
   children: Record<string, React.ReactNode>;
   /** Map of widget ID → settings content React node (optional, for widget-specific settings) */
   settingsContent?: Record<string, React.ReactNode>;
-  /** Master gate for `devOnly` widgets (Widget.constants.ts) — hides them entirely when off. */
+  /** Master gate for `devOnly` widgets (Widget.constants.ts). Hides them entirely when off. */
   developerToolsEnabled?: boolean;
-  /** Widget ids force-opened via the `--widgets=` startup flag — always shown regardless of
+  /** Widget ids force-opened via the `--widgets=` startup flag, always shown regardless of
    *  developerToolsEnabled, so the CLI-driven e2e baselines (tests/e2e/*.keep.spec.ts) that
    *  rely on it keep working in a fresh profile with dev tools off. */
   startupForcedWidgetIds?: string[];
   /** When true, `readsGameData` widgets (Widget.constants.ts) render behind a
-   *  DisabledOverlay instead of their normal content — visible but non-interactive. */
+   *  DisabledOverlay instead of their normal content, visible but non-interactive. */
   vanillaSafe?: boolean;
   /** Full settings snapshot, used to evaluate a widget's `requiresSetting` gate. */
   settings?: GameSettings | null;
@@ -52,7 +47,6 @@ const WidgetManager = (props: WidgetManagerProps) => {
     developerToolsEnabled = false, startupForcedWidgetIds = [],
     vanillaSafe = false, settings = null, onOpenSettings = () => {},
   } = props;
-  // Filter: only show widgets that are visible AND match the current visibility mode
   const activeWidgets = useMemo(() => {
     return layout.widgets.filter((w) => {
       if (!w.visible) return false;
@@ -62,7 +56,6 @@ const WidgetManager = (props: WidgetManagerProps) => {
     });
   }, [layout.widgets, gameRunning, developerToolsEnabled, startupForcedWidgetIds]);
 
-  // Compute docked layout positions + exclusive insets
   const { styles: dockedStyles, exclusiveInsets } = useMemo(() => computeDockedStyles(activeWidgets), [activeWidgets]);
 
   // Publish exclusive insets upward so a view can broadcast them (e.g. to GameLayer).

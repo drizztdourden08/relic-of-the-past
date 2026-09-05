@@ -5,7 +5,7 @@
  * remaining tables will be added as other extraction modules are ported.
  */
 
-/** Compressed sprite sheet pointers — SNES addresses of LZ-compressed tileset data */
+/** SNES addresses of the LZ-compressed sprite sheet tileset data */
 const kCompSpritePtrs: readonly number[] = [
   0x10f000, 0x10f600, 0x10fc00, 0x118200, 0x118800, 0x118e00, 0x119400, 0x119a00,
   0x11a000, 0x11a600, 0x11ac00, 0x11b200, 0x14fffc, 0x1585d4, 0x158ab6, 0x158fbe,

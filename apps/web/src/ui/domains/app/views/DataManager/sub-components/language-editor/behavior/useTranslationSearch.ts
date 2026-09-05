@@ -1,13 +1,8 @@
 /* @layer renderer-components @kind hook */
 /**
- * Full-set search for the translation editor: dialogue text and notes, control
- * and reference chips, glossary keys and values, and every name-table value.
- *
- * Case-insensitive substring matching. The typed query is debounced before it
- * reaches the (memoized) scan, so typing stays smooth across a few hundred
- * entries and the scan re-runs only when the applied query or the set itself
- * actually changes. Nothing here touches storage — it is pure derivation from
- * the set the editor already has in memory.
+ * Full-set search: dialogue text and notes, chips, glossary keys and values,
+ * and every name-table value. Case-insensitive substring matching; the query
+ * is debounced before it reaches the memoized scan.
  */
 import { useEffect, useMemo, useState } from 'react';
 import type { LanguageSet } from '@shared/game/language';

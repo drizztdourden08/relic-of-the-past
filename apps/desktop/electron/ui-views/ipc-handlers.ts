@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 /**
- * Data Inspector / table view state — a whole-file, app-level JSON map, the
- * same shape and location precedent as connection-review.json and
+ * Data Inspector / table view state, held as a whole-file, app-level JSON map.
+ * It follows the shape and location precedent of connection-review.json and
  * nav-review.json (getUserDataPath, NOT under profiles/). The renderer
  * debounces before calling, so this handler is a plain read/write.
  */

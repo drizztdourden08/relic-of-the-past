@@ -1,15 +1,9 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * THE grid source. Every flood — widget, simulator and the offline dumper — gets
- * its collision grids here, so they cannot disagree about what a screen looks
- * like. Grid acquisition varies by LOCATION, not by caller: the room the player
- * currently occupies has live tables (runtime door state, staircase kind, tile
- * context), while any other room is rebuilt addressably from ROM data. Callers
- * used to hard-code one or the other — the widget "live room only", the
- * simulator "always addressable", the dumper both in a fragile order.
- *
- * Blocker footprints are stamped in here, into every layer, so no consumer can
- * forget them (see blockers.ts for why that mattered).
+ * THE grid source for every flood (widget, simulator, offline dumper). Acquisition varies by
+ * LOCATION, not by caller: the occupied room has live tables (runtime door state, staircase
+ * kind, tile context); any other room is rebuilt addressably from ROM data. Blocker footprints
+ * are stamped here into every layer so no consumer can forget them (see blockers.ts).
  */
 import type { SimLocation, ScreenGridBundle } from '@shared/game/simulation';
 import {
@@ -44,12 +38,9 @@ const overworldBundle = (owScreenIndex: number): ScreenGridBundle => {
 };
 
 /**
- * The occupied room is READ from the live tables; any other room is rebuilt from ROM.
- *
- * A rebuild derives collision from room data, which throws away exactly the runtime state
- * that makes the answer correct: an opened doorway's transit tiles, the cleared tile
- * under a lifted pot, a pushed block. So the live room must never be rebuilt, however
- * cheap it looks.
+ * The occupied room is READ from the live tables; any other room is rebuilt from ROM. A
+ * rebuild throws away runtime state (opened doorway transit tiles, a lifted pot, a pushed
+ * block), so the live room must never be rebuilt.
  */
 const indoorAttrGrid = (roomId: number, live: boolean): number[][] => {
   if (live) return wasmGetIndoorLayer0Grid() ?? emptyGrid64();
@@ -71,12 +62,12 @@ const indoorBundle = (roomId: number): ScreenGridBundle => {
     const staircase = wasmGetStaircaseType();
     if (staircase != null && staircase >= 0) bundle.staircaseType = staircase;
   } else {
-    // Remote rooms build BOTH layers addressably — split-level rooms (the castle
+    // Remote rooms build BOTH layers addressably. Split-level rooms (the castle
     // basements) keep their walkable floor on BG1 and flood as solid otherwise.
     const dual = wasmBuildRoomDualLayerGrids(roomId);
     if (dual) bundle.dualLayerGrids = { layer0: dual.layer0, layer1: dual.layer1 };
   }
-  // The dual-layer flood reads the layer grids, not rawAttrGrid — stamp them all.
+  // The dual-layer flood reads the layer grids, not rawAttrGrid, so stamp them all.
   const grids = [bundle.rawAttrGrid, ...(bundle.dualLayerGrids ? [bundle.dualLayerGrids.layer0, bundle.dualLayerGrids.layer1] : [])];
   stampIndoorBlockers(roomId, grids, live);
   // Walls the run has already blown open read as floor from here on.

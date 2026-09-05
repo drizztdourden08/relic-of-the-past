@@ -2,19 +2,15 @@
 /**
  * Registering the `.msul` document type with Windows, and taking it back out.
  *
- * The packaging config declares the association, but electron-builder only writes it into the
- * registry through its NSIS or MSI installers, and Windows ships through Velopack from a plain
- * directory build. Velopack registers no file types of its own. So until this existed, a pack
- * file had no icon and no "open with" anywhere, even though the app already imported one passed
- * on its command line.
+ * electron-builder only writes the association through its NSIS/MSI installers, and Windows
+ * ships through Velopack from a plain directory build, which registers no file types.
  *
- * Written under the current user's classes, which needs no elevation and is where a per-user
- * install belongs. Everything goes through `reg.exe` with an argument array rather than a native
- * binding, so it costs no dependency and no shell quoting.
+ * Written under HKCU classes (no elevation, right for a per-user install) via `reg.exe` with
+ * an argument array: no dependency, no shell quoting.
  *
- * Runs inside Velopack's fast callbacks, which exit the process the moment the callback returns,
- * so the work is synchronous on purpose. A failure is logged and swallowed: an association that
- * did not register must never turn into an install that did not complete.
+ * Runs inside Velopack's fast callbacks, which exit the process the moment the callback
+ * returns, so the work is synchronous on purpose. A failure is logged and swallowed: it must
+ * never turn into an install that did not complete.
  */
 import { execFileSync } from 'child_process';
 import { join } from 'path';
@@ -25,7 +21,7 @@ const CLASSES = 'HKCU\\Software\\Classes';
 const PROG_KEY = `${CLASSES}\\${PROG_ID}`;
 const EXT_KEY = `${CLASSES}\\${EXTENSION}`;
 
-/** Ships as an extra resource — see the electron-builder config. */
+/** Shipped as an extra resource. See the electron-builder config. */
 const iconPath = (): string => join(process.resourcesPath, 'msul.ico');
 
 const reg = (args: string[]): void => {
@@ -42,10 +38,9 @@ const deleteKey = (key: string): void => {
 };
 
 /**
- * Tells the shell the associations changed. Without this a running Explorer keeps the type it
- * resolved before the keys existed — "MSUL File", blank icon — until it is restarted, which was
- * verified rather than assumed. There is no Node binding for the call, so it goes through a
- * one-line PowerShell; best effort, because the keys are already written by the time it runs.
+ * Tells the shell the associations changed. Without this a running Explorer keeps showing
+ * "MSUL File" with a blank icon until restarted (verified). No Node binding exists, so it goes
+ * through a one-line PowerShell; best effort, the keys are already written by then.
  */
 const NOTIFY_SCRIPT = 'Add-Type -MemberDefinition \'[DllImport("shell32.dll")] public static extern void SHChangeNotify(int e, uint f, IntPtr a, IntPtr b);\' -Name N -Namespace W; [W.N]::SHChangeNotify(0x08000000, 0x1000, [IntPtr]::Zero, [IntPtr]::Zero)';
 

@@ -2,7 +2,7 @@
 /**
  * The instruction line under the box: where the reader is, and what moves it.
  *
- * The box above IS the button, so this line does not need to be pressed — it
+ * The box above IS the button, so this line does not need to be pressed. It
  * states the position and names the actions, and the action text carries the
  * accent colour so a first-time reader cannot miss that the preview moves.
  * A choice prompt adds the arrow-key hint, and the last box swaps the advance

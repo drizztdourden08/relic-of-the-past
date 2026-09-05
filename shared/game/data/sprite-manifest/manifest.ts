@@ -8,7 +8,7 @@
  * extraction finds no definitions and the sprite views list nothing, which is the
  * same state as a user who has not supplied a ROM.
  *
- * The schema beside this file stays here — it describes the shape, which is ours.
+ * The schema beside this file stays here, because it describes the shape, which is ours.
  */
 
 type SpriteCategory = 'hud' | 'hud-pause' | 'hud-item' | 'fonts' | 'receipt' | 'drop';
@@ -27,7 +27,7 @@ interface SpriteDefinition extends SpriteManifestEntry {
   extract: unknown;
 }
 
-// A glob rather than an import: the file is not in this repository, and a static
+// A glob instead of an import: the file is not in this repository, and a static
 // import of an absent path fails the build instead of yielding nothing.
 const modules = import.meta.glob<{ default: { sprites?: SpriteDefinition[] } }>(
   '../records/sprite-manifest/definitions.json',

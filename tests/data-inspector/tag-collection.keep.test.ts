@@ -1,12 +1,8 @@
 /* @layer tests @kind test */
 /**
- * The tag collection as the inspector sees it.
- *
- * Being browsable is the whole reason the vocabulary became records, so what is
- * pinned here is the wiring that makes it so: it appears as its own collection,
- * its rows derive a schema with the hierarchy on it, and a `tags` field on any
- * OTHER collection now reads as a reference pointing at it — which is what puts
- * the real picker behind an edit that used to be free text.
+ * The tag collection as the inspector sees it: its own collection, a schema
+ * with the hierarchy on it, and a `tags` field on any OTHER collection reading
+ * as a reference to it (what puts the real picker behind a former free-text edit).
  */
 import { describe, it, expect } from 'vitest';
 import { all } from '@shared/game/data';
@@ -48,7 +44,7 @@ describeDataset('tags are a collection of their own', () => {
     }
   });
 
-  it('opens on the hierarchy rather than on key-insertion order', () => {
+  it('opens on the hierarchy instead of on key-insertion order', () => {
     expect(COLLECTION_SOURCES.tag.config?.defaultColumns).toEqual(
       ['id', 'namespace', 'value', 'label', 'appliesTo'],
     );

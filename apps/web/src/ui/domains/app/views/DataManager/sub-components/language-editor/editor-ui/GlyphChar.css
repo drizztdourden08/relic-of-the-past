@@ -16,10 +16,10 @@
  * when it is painted, which is what keeps the pixel art sharp on a scaled display
  * instead of being stretched up from a smaller bitmap.
  *
- * The ink box is stated as two custom properties rather than as `width`/`height`
- * directly, so a view that sets the game face at its own size — the read-only
- * card and the toolbar both do — overrides the box and not the geometry that
- * follows from it.
+ * The ink box is stated as two custom properties, not as `width`/`height`
+ * directly, so a view that sets the game face at its own size overrides the box
+ * and not the geometry that follows from it. The read-only card and the toolbar
+ * both do that.
  */
 
 .glyph-char {
@@ -35,7 +35,7 @@
 
 /*
  * Two alphabet entries spelling one picture: two ink boxes side by side in a
- * single cell. Without a stated advance the cell is simply both boxes wide, which
+ * single cell. Without a stated advance the cell is both boxes wide, which
  * is what the toolbar and the legend want.
  */
 .glyph-char--pair {
@@ -51,7 +51,7 @@
 
 /*
  * The fallback: the bracketed name, in the game's face, tinted so it reads as
- * "this alphabet has no character for this" rather than as typed text.
+ * "this alphabet has no character for this", not as typed text.
  */
 .glyph-char__name {
   border-radius: var(--r-sm);

@@ -47,7 +47,7 @@
 }
 
 /* Compact viewport (< --bp-compact): a tall drop target wastes scarce vertical
-   space on phones — shrink the padding and icon. */
+   space on phones, so shrink the padding and icon. */
 @media (width <= 820px) {
   .dropzone {
     gap: var(--space-xs);

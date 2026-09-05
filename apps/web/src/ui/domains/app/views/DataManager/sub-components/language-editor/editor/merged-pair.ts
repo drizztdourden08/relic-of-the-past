@@ -2,12 +2,12 @@
 /**
  * Where the two halves of a merged picture character sit in the document.
  *
- * The model keeps both halves — they are two alphabet entries and the stored
- * entry must round-trip byte for byte — but every gesture treats them as one
- * character: the caret steps across the pair in one press, and one Backspace
+ * The model keeps both halves, because they are two alphabet entries and the
+ * stored entry must round-trip byte for byte. Every gesture still treats them as
+ * one character: the caret steps across the pair in one press, and one Backspace
  * takes both away. Everything that needs to know "is this position in the middle
  * of a picture" asks here, so the answer is derived once from the pairing the
- * sprite manifest already records rather than restated per command.
+ * sprite manifest already records, not restated per command.
  *
  * Positions are DOCUMENT positions. Each half is an inline leaf of size one, so a
  * pair occupies `from`..`from + 2` and the position between the halves is the one

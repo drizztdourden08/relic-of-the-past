@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * Seed NameTable for the enhanced pause menu — the English display strings
+ * Seed NameTable for the pause menu. These are the English display strings
  * currently hardcoded in PauseMenuView, reattached to their ItemRecord ids so
  * a language set can retitle them. Item keys are `<item-record-id>-<tier>`
  * (tier is 1-based; tier 1 = the base pickup). Multi-word values are stored

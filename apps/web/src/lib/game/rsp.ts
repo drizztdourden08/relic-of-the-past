@@ -3,10 +3,10 @@
  * Read and write a Relic Sprite Pack.
  *
  * A zip, so the contents stay inspectable with ordinary tools and the format can grow an
- * entry without breaking readers that ignore it. The tiles go in raw rather than as a PNG:
+ * entry without breaking readers that ignore it. The tiles go in raw, not as a PNG:
  * the sheet is 4bpp indexed data, and a PNG round trip would mean re-deriving indices from
  * colours. A PNG is written alongside anyway, purely so the file previews in an image
- * viewer — it is never read back.
+ * viewer, and it is never read back.
  */
 import JSZip from 'jszip';
 import { SHEET_BYTES } from '@shared/game/data/player-sheet/types';
@@ -29,7 +29,7 @@ const manifestOf = (sheet: PlayerSheet, source?: RspSource, extras?: RspExtras):
 interface RspWriteOptions {
   source?: RspSource;
   extras?: RspExtras;
-  /** Skip the courtesy PNG — it costs a render, which a boot-time flatten does not want. */
+  /** Skip the courtesy PNG. It costs a render, which a boot-time flatten does not want. */
   withPreview?: boolean;
 }
 

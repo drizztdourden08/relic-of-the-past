@@ -1,10 +1,9 @@
 /* @layer electron-main @kind logic */
 /**
- * Generic manifest-backed save store. Each entry is a `{id}.sav` + optional
- * `{id}.png` pair in a per-profile directory, tracked by a `manifest.json`.
- * Shared mechanics for the normal + auto save stores (Template Method — callers
- * supply directory resolution and the entry→info mapping; the bespoke ops like
- * overwrite/rename/prune compose the returned primitives).
+ * Generic manifest-backed save store: `{id}.sav` + optional `{id}.png` pairs in
+ * a per-profile directory, tracked by `manifest.json`. Shared by the normal and
+ * auto save stores, which supply directory resolution and the entry-to-info
+ * mapping and compose overwrite/rename/prune from the returned primitives.
  */
 import { join } from 'path';
 import { writeFile, readFile, unlink, mkdir } from 'fs/promises';
@@ -28,7 +27,7 @@ const createManifestStore = <TEntry extends ManifestEntry, TInfo>(config: Manife
   const savPaths = (dir: string, id: string): { sav: string; png: string } =>
     ({ sav: join(dir, `${id}.sav`), png: join(dir, `${id}.png`) });
 
-  /** The save's music-resume sidecar — written by the audio engine, owned by the save. */
+  /** The save's music-resume sidecar. The audio engine writes it, the save owns it. */
   const msuPath = (dir: string, id: string): string => join(dir, `${id}${MSU_SIDECAR_SUFFIX}`);
 
   const manifestPath = (profileId: string): string => join(getDir(profileId), 'manifest.json');
@@ -64,7 +63,7 @@ const createManifestStore = <TEntry extends ManifestEntry, TInfo>(config: Manife
     for (const entry of manifest) {
       const { sav, png } = savPaths(dir, entry.id);
       const slot = await statSaveSlot(sav, png);
-      if (slot) valid.push({ entry, slot }); // file missing — skip orphaned manifest entry
+      if (slot) valid.push({ entry, slot }); // missing file: orphaned manifest entry, skipped
     }
     valid.sort((a, b) => b.entry.timestamp - a.entry.timestamp); // newest first
     return valid.map(({ entry, slot }) => toInfo(entry, slot));

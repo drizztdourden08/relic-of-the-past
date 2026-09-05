@@ -119,7 +119,7 @@
   border-color: var(--c-gold);
 }
 
-/* Toolbar wraps — never produces a horizontal scrollbar in a narrow widget. */
+/* Toolbar wraps, so it never produces a horizontal scrollbar in a narrow widget. */
 .tracker-filters__controls {
   display: flex;
   flex-wrap: wrap;

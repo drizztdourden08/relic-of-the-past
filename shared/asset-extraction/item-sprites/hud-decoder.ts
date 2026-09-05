@@ -1,6 +1,6 @@
 /* @layer shared-asset-extraction @kind logic */
 /**
- * HUD tile decoder — extracts 2bpp HUD item graphics.
+ * Extracts 2bpp HUD item graphics.
  *
  * HUD items use tile IDs that encode:
  * - bits [9:0] = tile number (0-1023)

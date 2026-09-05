@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 /**
  * IPC handlers for the review layer. Plain read/write, same as
- * `ui-views/ipc-handlers.ts` — the renderer debounces before calling
+ * `ui-views/ipc-handlers.ts`. The renderer debounces before calling
  * `review:save` (see the DataInspector behavior's review store), so this
  * handler does no debouncing of its own; it only serializes same-kind writes
  * (see `review-files.ts`).

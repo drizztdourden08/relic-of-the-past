@@ -2,7 +2,7 @@
 /**
  * Static-sprite type → SimSprite kind. NPCs that hand out a check are 'npc' (the trigger planner then resolves their flag payload from
  * CHECK_NPC_FLAGS by sprite type); everything else falls back to 'other', which
- * is non-triggerable and simply feeds coarse reachability. The union has no
+ * is non-triggerable and feeds coarse reachability. The union has no
  * 'enemy'/'item' member, so 'other' is the neutral default here. This map starts
  * small and grows as vanilla runs surface more check-giving NPC ids.
  */
@@ -23,7 +23,7 @@ const SPRITE_KINDS: Record<number, SimSprite['kind']> = {
   0x75: 'npc', // Bottle Merchant
   0xad: 'npc', // Old Man (Death Mountain)
   0xbb: 'npc', // Shopkeeper dispatch (subtype2 selects role; the cave gift-giver is one)
-  // Standing items — collected by walking onto them, not by talking. The pair
+  // Standing items, collected by walking onto them, not by talking. The pair
   // that matters before the first dungeon: the fungus in the woods and the
   // loose heart pieces (`Sprite_E7_*` / `Sprite_HeartPiece`, sprite_main.c:705).
   0xe7: 'standing',

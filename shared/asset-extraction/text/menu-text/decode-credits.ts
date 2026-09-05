@@ -11,8 +11,8 @@
  * back to back and several rows share the same offset, so the offset table is
  * the only reliable way in.
  *
- * Large characters. A large 8x16 character occupies two scroll rows — the upper
- * halves on one row, the lower halves on the next. A row made up purely of upper
+ * Large characters. A large 8x16 character occupies two scroll rows, with the upper
+ * halves on one row and the lower halves on the next. A row made up purely of upper
  * halves is dropped and the following row is emitted instead, because the lower
  * row is the one that carries the whole line: on the play-count rows it also
  * carries a small-font prefix that never appears on the upper row.

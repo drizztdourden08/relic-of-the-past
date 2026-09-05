@@ -28,7 +28,7 @@ const testBetween = (subject: number, operand: unknown): boolean => {
 };
 
 /**
- * A row with no number here matches only `is not` — "does not hold 5" is true of
+ * A row with no number here matches only `is not`: "does not hold 5" is true of
  * a row that holds nothing, while "is greater than 5" is not.
  */
 const test = (value: unknown, op: string, operand: unknown): boolean => {
@@ -64,7 +64,7 @@ const HEX_WIDTH: Record<'hex2' | 'hex4', number> = { hex2: 2, hex4: 4 };
 
 /**
  * `field.format` reinterprets a raw game index the way the live Game State
- * panel already shows it (`0x` + uppercase, zero-padded) — see
+ * panel already shows it (`0x` + uppercase, zero-padded). See
  * `GameStatePanel.tsx`. Both bases travel in the title so the decimal a filter
  * or a saved value uses is never more than a hover away.
  */
@@ -90,9 +90,9 @@ const FilterControl = (props: FilterControlProps) => {
 };
 
 /**
- * Stays decimal even when `field.format` asks for a hex cell — hex is a
- * reading aid for comparing against the live Game State panel, not an input
- * convention we want to make the user learn just to edit a value.
+ * Stays decimal even when `field.format` asks for a hex cell. Hex is a reading
+ * aid for comparing against the live Game State panel, not an input convention
+ * the user should have to learn to edit a value.
  */
 const EditorControl = (props: EditorControlProps) => {
   const { field, value, onChange, disabled, bounds } = props;
