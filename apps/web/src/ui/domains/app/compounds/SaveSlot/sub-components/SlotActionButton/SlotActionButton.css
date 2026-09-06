@@ -1,0 +1,102 @@
+/* @layer renderer-components @kind style */
+
+/* ─── Slot action, one half of the card's Load | Save bar ───
+   No colour, filter or mask reaches the glyph: the emoji keeps its own
+   palette, and only the half behind it tints on hover, focus and arming. */
+.slot-action {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--c-text);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.slot-action--load {
+  border-right: 1px solid var(--c-border-strong);
+}
+
+.slot-action--load:hover:not(:disabled),
+.slot-action--load:focus-visible {
+  background: var(--c-info-soft);
+  color: var(--c-info);
+}
+
+.slot-action--save:hover:not(:disabled),
+.slot-action--save:focus-visible {
+  background: var(--c-green-soft);
+  color: var(--c-green-bright);
+}
+
+.slot-action:focus-visible {
+  outline: none;
+}
+
+.slot-action:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Glyph anchor: its own stacking context, so the glow sits behind the emoji
+   yet above the button's tinted background. */
+.slot-action__glyph {
+  position: relative;
+  display: inline-flex;
+  isolation: isolate;
+  line-height: 1;
+}
+
+/* ─── Armed: the first click landed, the next one confirms ───
+   The emoji bobs while a green-and-gold halo wanders behind it. */
+.slot-action--armed,
+.slot-action--armed:hover:not(:disabled) {
+  background: var(--c-gold-soft);
+}
+
+.slot-action--armed .slot-action__emoji {
+  animation: slot-action-float var(--duration-float) var(--ease-standard) infinite alternate;
+}
+
+.slot-action--armed .slot-action__glyph::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 40% 40%,
+    var(--c-green-bright) 0%,
+    var(--c-gold-bright) 55%,
+    transparent 75%
+  );
+  opacity: var(--opacity-glow);
+  filter: blur(var(--blur-glow));
+  animation: slot-action-glow-drift var(--duration-glow-drift) var(--ease-standard) infinite alternate;
+}
+
+@keyframes slot-action-float {
+  from { transform: translateY(6%); }
+  to { transform: translateY(-14%); }
+}
+
+@keyframes slot-action-glow-drift {
+  from {
+    transform: translate(-8%, -6%) scale(0.95);
+    filter: blur(var(--blur-glow)) hue-rotate(-12deg);
+  }
+
+  to {
+    transform: translate(8%, 6%) scale(1.05);
+    filter: blur(var(--blur-glow)) hue-rotate(16deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slot-action--armed .slot-action__emoji,
+  .slot-action--armed .slot-action__glyph::before {
+    animation: none;
+  }
+}

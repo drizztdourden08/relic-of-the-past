@@ -41,6 +41,11 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'inventoryReorder',
   'secondaryItemSlots',
   'autoSkipDialog',
+  // World-item presentation (synced every frame via features3, same path as cheatsEnabled)
+  'coloredRupees',
+  'itemSheen',
+  // The archery host's refusal (features3, same path again)
+  'archeryNeedsBow',
   // Per-group volume enable gate (DSP flag pushed live)
   'perGroupVolume',
   // Window settings (Electron-managed, no WASM restart needed)

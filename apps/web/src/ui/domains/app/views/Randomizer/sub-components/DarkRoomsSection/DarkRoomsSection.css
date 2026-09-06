@@ -1,0 +1,41 @@
+/* @layer renderer-components @kind style */
+
+/* The dark-room section: the caption, the requirement row on the panel's own
+   grid, then the tiles under their label with the lines they need beneath.
+   Everything but the row keeps the section's inset, so the tiles and the text
+   line up under the heading rather than stepping in and out. */
+
+.dark-rooms {
+  gap: var(--space-xs);
+  padding-top: var(--space-md);
+}
+
+.dark-rooms__label {
+  color: var(--c-text-muted);
+  font-size: var(--text-xs);
+  padding: var(--space-2xs) var(--space-sm) 0;
+  text-transform: uppercase;
+}
+
+/* Wraps rather than scrolling: the panel lives in a split pane and is dragged
+   narrow, and four fixed squares are better stacked than cut off. */
+.dark-rooms__tiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  padding: var(--space-2xs) var(--space-sm) var(--space-xs);
+}
+
+/* Only the inset: the banner's own look is the shared one. */
+.dark-rooms__banner {
+  margin: var(--space-2xs) var(--space-sm) var(--space-xs);
+}
+
+/* Why a tile is held off: the blocking colour, the same sentence colour the
+   overruled rows of the list wear, so one reading serves both. */
+.dark-rooms__reason {
+  color: var(--c-danger);
+  font-size: var(--text-xs);
+  line-height: var(--leading-tight);
+  padding: 0 var(--space-sm);
+}

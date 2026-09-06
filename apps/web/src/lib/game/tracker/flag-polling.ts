@@ -1,18 +1,18 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Reads WASM memory to determine which game checks are
+ * Flag Polling: reads WASM memory to determine which game checks are
  * completed. Pure computation: takes heap + pointers, returns a `Set<CheckId>`.
  *
  * Detection is driven by each `CheckRecord`'s own `gameId`, not by a
- * name-keyed table: every record in `all('check')` is tested against the
- * live heap using whichever of its own fields describe a detection mode
- * (chest slot, direct room mask, overworld mask, progress-buffer bit or
- * threshold). See check-facts.ts. A record's id is its own identity from
- * the start, so nothing here ever resolves a name.
+ * name-keyed table: this module only builds the live heap readers (with the
+ * loaded room's live bits folded in) and hands them to the shared sweep
+ * (completed-checks-core.ts), which the offline battery-save reader feeds
+ * with file-backed readers of the same shape.
  */
-import { all } from '@shared/game/data';
+import { isCheckPhysicallyArmed } from '../randomizer-client/override-fire-registry';
+import { computeCompletedChecks } from './completed-checks-core';
+import { outOfBedCheckId } from './check-facts';
 import type { CheckId } from '@shared/game/data';
-import { isOutOfBedFallbackMet, isOverworldFactMet, isProgressFactMet, isRoomFactMet, outOfBedCheckId } from './check-facts';
 
 interface WasmModule {
   ccall(name: string, returnType: string, argTypes: string[], args: unknown[]): unknown;
@@ -50,21 +50,11 @@ const readCompletedChecks = (mod: WasmModule): Set<CheckId> | null => {
   const progPtr = mod.ccall('WasmGetProgressFlags', 'number', [], []) as number;
 
   const words = roomPtr ? roomWordReader(heap, roomPtr, livePtr) : null;
-  const readRoomWord = (roomId: number): number => (words ? words.read(roomId) : 0);
-  const readOwByte = (owScreen: number): number => (owPtr ? heap[owPtr + owScreen] : 0);
-  const readProgByte = (bufferIndex: number): number => (progPtr ? heap[progPtr + bufferIndex] : 0);
-
-  const newCompleted = new Set<CheckId>();
-  for (const check of all('check')) {
-    const { gameId } = check;
-    if (roomPtr && isRoomFactMet(gameId, readRoomWord)) {
-      newCompleted.add(check.id);
-    } else if (owPtr && isOverworldFactMet(gameId, readOwByte)) {
-      newCompleted.add(check.id);
-    } else if (progPtr && (isProgressFactMet(gameId, readProgByte) || isOutOfBedFallbackMet(gameId, readProgByte))) {
-      newCompleted.add(check.id);
-    }
-  }
+  const newCompleted = computeCompletedChecks({
+    readRoomWord: words ? words.read : null,
+    readOwByte: owPtr ? (owScreen: number): number => heap[owPtr + owScreen] : null,
+    readProgByte: progPtr ? (bufferIndex: number): number => heap[progPtr + bufferIndex] : null,
+  }, isCheckPhysicallyArmed);
 
   // Direct read of the bed state, for the window before the progress buffer is
   // populated: save_dung_info sits at g_ram + 0xF000, so the base comes off it.

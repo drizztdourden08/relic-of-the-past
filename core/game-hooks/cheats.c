@@ -109,6 +109,8 @@ void WasmCheatGiveItem(int item_id) {
     return;
   }
   item_receipt_method = 0;
+  // A cheat grant means exactly the picked item. The npc-override seam stays out of it.
+  GameHook_NpcOverrideBypassOnce();
   Link_ReceiveItem((uint8)item_id, 0);
   printf("[Cheat] GiveItem: item=0x%02x\n", item_id);
 }
@@ -138,9 +140,10 @@ void WasmCheatSetMaxHealth(int value) {
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatSetRupees(int value) {
   if (!CheatGate(kFeatures3_CheatStats)) return;
-  // Cap tracks the real current max, 9999 with the "Larger Wallet" feature on and 999 otherwise.
-  // Same condition as hud.c's MaxRupees() (that helper has internal linkage, so duplicated here).
-  int max = (enhanced_features0 & kFeatures0_CarryMoreRupees) ? 9999 : 999;
+  // Cap tracks the real current max: 9999 with the "Larger Wallet" feature on, 999 otherwise,
+  // the same ceiling expression as hud.c's MaxRupees() (that helper has internal linkage), routed
+  // through the same wallet-ladder hook so the cheat can never exceed what the HUD drain allows.
+  int max = GameHook_WalletMax((enhanced_features0 & kFeatures0_CarryMoreRupees) ? 9999 : 999);
   uint16 capped = (uint16)clampi(value, 0, max);
   link_rupees_goal = capped;
   printf("[Cheat] SetRupees: %d\n", capped);
@@ -164,15 +167,17 @@ void WasmCheatSetArrows(int value) {
   printf("[Cheat] SetArrows: %d\n", capped);
 }
 
-// Set the current magic meter. 0x80 is a full meter, and the meter's capacity is fixed, so a full
-// fill IS the maximum, and there is no companion "max magic" setter the way health has one.
+// Set the current magic meter. 0x80 is a full meter and the only "max magic" there is: no
+// companion setter the way health has one, except under the capacity profile, where the meter's
+// empty rung holds nothing (GameHook_MagicCapacity, 0x80 whenever that profile is off).
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatSetMagic(int value) {
   if (!CheatGate(kFeatures3_CheatStats)) return;
-  uint8 capped = (uint8)clampi(value, 0, kMagicFull);
+  uint8 cap = GameHook_MagicCapacity();
+  uint8 capped = (uint8)clampi(value, 0, cap);
   link_magic_power = capped;
   link_magic_filler = 0;  // Cancel any pending refill animation
-  printf("[Cheat] SetMagic: %d/%d\n", capped, kMagicFull);
+  printf("[Cheat] SetMagic: %d/%d\n", capped, cap);
 }
 
 // Refill magic to full.
@@ -190,6 +195,7 @@ void WasmCheatSetMaxBombs(int capacity) {
   int level = NearestUpgradeLevel(kMaxBombsForLevel, capacity);
   uint8 cap = kMaxBombsForLevel[level];
   link_bomb_upgrades = (uint8)level;
+  GameHook_CapacityLeaveEmptyRung(0);
   if (link_item_bombs > cap)
     link_item_bombs = cap;
   printf("[Cheat] SetMaxBombs: capacity=%d (tier %d)\n", cap, level);
@@ -202,6 +208,7 @@ void WasmCheatSetMaxArrows(int capacity) {
   int level = NearestUpgradeLevel(kMaxArrowsForLevel, capacity);
   uint8 cap = kMaxArrowsForLevel[level];
   link_arrow_upgrades = (uint8)level;
+  GameHook_CapacityLeaveEmptyRung(1);
   if (link_num_arrows > cap)
     link_num_arrows = cap;
   printf("[Cheat] SetMaxArrows: capacity=%d (tier %d)\n", cap, level);
@@ -307,6 +314,16 @@ int WasmCanReceiveItem(void) {
     return 0;
   // Must not be mid-item-use
   if (link_item_in_hand)
+    return 0;
+  // Must not be running an item-use handler. link_item_in_hand only covers carried
+  // objects; the rod/cane/net/etc. handlers instead hold link_position_mode nonzero for
+  // the duration of their windup animation while leaving link_item_in_hand at 0 and
+  // link_player_handler_state at Ground. Delivering into that window drops a hold-up
+  // receipt + item-get message on top of the still-running handler; the receipt itself
+  // recovers, but the message box will not advance while the player keeps holding the
+  // item button, so it reads as a soft-lock (see the barrier/cane report). Wait for the
+  // handler to finish.
+  if (link_position_mode)
     return 0;
   return 1;
 }

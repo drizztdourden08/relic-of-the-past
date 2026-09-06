@@ -14,6 +14,8 @@ interface SendContract {
   'window:setAspectRatioLock': (ratio: number, extraHeight: number) => void;
   /** UI shell settled AND painted, so the main window may be revealed. */
   'window:shellReady': () => void;
+  /** Batched, pre-formatted renderer log lines for Data/debug/session.log. */
+  'debug:appendSessionLog': (lines: string[]) => void;
 }
 
 export type { SendContract };

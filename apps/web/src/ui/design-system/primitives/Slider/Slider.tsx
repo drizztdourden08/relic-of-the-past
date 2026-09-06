@@ -20,7 +20,10 @@ const Slider = (props: SliderProps) => {
     onMuteToggle,
   } = props;
 
-  const pct = ((value - min) / (max - min)) * 100;
+  // A range with no span has no fill to compute; without this the gradient
+  // stop would be written as NaN% and the track would silently lose its fill.
+  const span = max - min;
+  const pct = span > 0 ? ((value - min) / span) * 100 : 0;
   const prevVolumeRef = useRef(value || 100);
 
   // Track previous non-zero value for unmute restore

@@ -4,6 +4,7 @@
 :root {
   --font-sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono:  'Consolas', 'Courier New', monospace;
+  --font-emoji: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
   --text-xs:    10px;
   --text-sm:    11px;
   --text-base:  13px;

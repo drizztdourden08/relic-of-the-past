@@ -98,6 +98,13 @@ const DEFAULT_SETTINGS: GameSettings = {
   postProcessingShadows: false,
   forceBackdropBlack: false,
 
+  // World item presentation
+  coloredRupees: true,
+  itemSheen: false,
+
+  // Minigames
+  archeryNeedsBow: false,
+
   // HUD
   hudMode: 'original',
   hudStyle: 'vanilla',

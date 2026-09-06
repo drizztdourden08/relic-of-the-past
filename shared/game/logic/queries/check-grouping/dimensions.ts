@@ -7,7 +7,7 @@
  */
 import type { CheckRecord } from '../../../data';
 import { getArea, getDungeon, getScreen, hasTagKey, labelOf } from '../../../data';
-import type { GroupDimension, GroupDimensionDef } from './types';
+import type { GroupDimension, GroupDimensionDef, RunContext } from './types';
 
 const GROUP_DIMENSIONS: GroupDimensionDef[] = [
   { id: 'world', label: 'World', description: 'Light World / Dark World' },
@@ -18,6 +18,16 @@ const GROUP_DIMENSIONS: GroupDimensionDef[] = [
   { id: 'type', label: 'Check Type', description: 'Chest, NPC, Key Drop, Boss, etc.' },
   { id: 'content', label: 'Content', description: 'Key, Map/Compass, Boss Item, etc.' },
 ];
+
+/**
+ * Only meaningful with a run loaded, so it is NOT in the base catalog. A
+ * caller that has spheres appends it, and the widget without a run never
+ * offers a dimension that would bucket everything under "outside the sweep".
+ */
+const SPHERE_DIMENSION: GroupDimensionDef =
+  { id: 'sphere', label: 'Sphere', description: 'How deep into the seed the check first becomes reachable' };
+
+const OUTSIDE_SWEEP = 'Outside the sweep';
 
 /** Death Mountain (area-008) is the one area that spans both worlds, so the check's own screen breaks the tie. */
 const areaLabel = (check: CheckRecord): string => {
@@ -31,7 +41,7 @@ const areaLabel = (check: CheckRecord): string => {
   return 'Other';
 };
 
-const getGroupValue = (check: CheckRecord, dimension: GroupDimension): string => {
+const getGroupValue = (check: CheckRecord, dimension: GroupDimension, run?: RunContext): string => {
   const screen = check.screenId ? getScreen(check.screenId) : undefined;
   switch (dimension) {
     case 'world':
@@ -59,7 +69,11 @@ const getGroupValue = (check: CheckRecord, dimension: GroupDimension): string =>
       if (hasTagKey(tags, 'content:boss-item')) return 'Boss Items';
       return 'Other';
     }
+    case 'sphere': {
+      const sphere = run?.spheres?.get(check.id);
+      return sphere === undefined ? OUTSIDE_SWEEP : `Sphere ${sphere}`;
+    }
   }
 };
 
-export { GROUP_DIMENSIONS, getGroupValue };
+export { GROUP_DIMENSIONS, OUTSIDE_SWEEP, SPHERE_DIMENSION, getGroupValue };

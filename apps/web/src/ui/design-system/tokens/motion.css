@@ -7,6 +7,8 @@
   --duration-slow:   0.26s;
   --duration-drawer: 0.38s;   /* pill ⇄ panel morph */
   --duration-twinkle: 3.5s;   /* search-icon sparkle cycle */
+  --duration-float:   1.6s;   /* armed glyph bob, one half-cycle */
+  --duration-glow-drift: 2.6s; /* armed glow wander, one half-cycle */
   --ease-standard:    ease;
   --ease-emphasized:  cubic-bezier(0.16, 1, 0.3, 1);
   --transition-fast:   0.1s ease;

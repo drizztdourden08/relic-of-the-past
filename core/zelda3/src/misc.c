@@ -583,7 +583,7 @@ void Module05_LoadFile() {  // 828136
       LoadDungeonRoomRebuildHUD();
       return;
     }
-    dialogue_message_index = (link_item_mirror == 2) ? 0x185 : 0x184;
+    dialogue_message_index = GameHook_MountainSpawnUnlocked() ? 0x185 : 0x184;
     Main_ShowTextMessage();
     Dungeon_LoadPalettes();
     INIDISP_copy = 15;
@@ -726,9 +726,9 @@ void AncillaAdd_ItemReceipt(uint8 ain, uint8 yin, int chest_pos) {  // 8985e8
   }
 
   uint8 v = kValueToGiveItemTo[j];
-  uint8 *p = &g_ram[kMemoryLocationToGiveItemTo[j]];
+  uint8 *p = GameHook_ReceiptTargetByte(j, &g_ram[kMemoryLocationToGiveItemTo[j]]);
   if (!sign8(v))
-    *p = v;
+    *p = GameHook_ReceiptPayout(j, v);
 
   if (j == 0x1f)
     link_is_bunny = 0;
@@ -746,7 +746,7 @@ void AncillaAdd_ItemReceipt(uint8 ain, uint8 yin, int chest_pos) {  // 8985e8
     if (*p == 0)
       *p = 1;
   } else if (j == 0x25 || j == 0x32 || j == 0x33) {
-    WORD(*p) |= 0x8000 >> (BYTE(cur_palace_index_x2) >> 1);
+    WORD(*p) |= GameHook_DungeonItemBit(0x8000 >> (BYTE(cur_palace_index_x2) >> 1));
   } else if (j == 0x3e) {
     if (link_state_bits & 0x80)
       link_picking_throw_state = 2;
@@ -772,7 +772,7 @@ void AncillaAdd_ItemReceipt(uint8 ain, uint8 yin, int chest_pos) {  // 8985e8
       Hud_RefreshIcon();
     }
   } else if ((t = 1, j == 0x24) || item_receipt_method != 2 && (j == 0x27 || (t = 3, j == 0x28) || (t = 10, j == 0x31))) {
-    *p += t;
+    *p += GameHook_ReceiptPayout(j, t);
     if (*p > 99)
       *p = 99;
     Hud_RefreshIcon();
@@ -793,6 +793,7 @@ void AncillaAdd_ItemReceipt(uint8 ain, uint8 yin, int chest_pos) {  // 8985e8
     Palette_Load_Shield();
   }
   DecodeAnimatedSpriteTile_variable(gfx);
+  GameHook_ReceiptTilesDecoded((uint8)j);
 
   if ((gfx == 6 || gfx == 0x18) && j != 0) {
     DecompressSwordGraphics();
@@ -842,6 +843,9 @@ void AncillaAdd_ItemReceipt(uint8 ain, uint8 yin, int chest_pos) {  // 8985e8
     y = method ? kReceiveItem_Tab2[j] : -14;
     y += link_y_coord + ((method == 2) ? -8 : 0);
   }
+  GameHook_QuiverSpawnOffset((uint8)j, &x, &y);
+  GameHook_UpgradeIconSpawnOffset((uint8)j, &x, &y);
+  GameHook_RupeeGemSpawnOffset((uint8)j, &x, &y);
   Ancilla_SetXY(ancilla, x, y);
 }
 

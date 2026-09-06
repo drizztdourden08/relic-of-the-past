@@ -1,0 +1,87 @@
+/* @layer renderer-components @kind style */
+
+/* The checks tracker's summary bar, read for a fill: a thin grey track of
+   every spot, filled left to right in placement order — items in pool,
+   upgrades, filler, then the spots settled before the shuffle. The legend
+   repeats each colour as a swatch beside its count. */
+
+.pool-fill {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+
+.pool-fill__bar {
+  display: flex;
+  height: 6px;
+  border-radius: var(--r-sm);
+  background: var(--c-hover);
+  overflow: hidden;
+}
+
+.pool-fill__seg {
+  height: 100%;
+  flex-shrink: 0;
+  transition: width var(--transition-normal);
+}
+
+.pool-fill__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs) var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.pool-fill__stat {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  white-space: nowrap;
+  color: var(--c-text-dim);
+}
+
+.pool-fill__stat + .pool-fill__stat::before {
+  content: "·";
+  margin-right: var(--space-2xs);
+  color: var(--c-text-faint);
+}
+
+.pool-fill__swatch {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--r-sm);
+  background: var(--c-hover);
+}
+
+.pool-fill__stat-label {
+  color: var(--c-text-muted);
+}
+
+/* One colour per segment: the bar fill and the legend swatch share it, the count reads it as text. */
+.pool-fill__seg--items,
+.pool-fill__swatch--items { background: var(--c-green); }
+
+.pool-fill__seg--upgrades,
+.pool-fill__swatch--upgrades { background: var(--c-upgrade); }
+
+.pool-fill__seg--filler,
+.pool-fill__swatch--filler { background: var(--c-warning); }
+
+.pool-fill__seg--fixed,
+.pool-fill__swatch--fixed { background: var(--c-danger); }
+
+.pool-fill__count--items { color: var(--c-green); }
+.pool-fill__count--upgrades { color: var(--c-upgrade); }
+.pool-fill__count--filler { color: var(--c-warning); }
+.pool-fill__count--fixed { color: var(--c-danger); }
+.pool-fill__count--spots { color: var(--c-text); }
+
+.pool-fill__error {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-warning);
+}

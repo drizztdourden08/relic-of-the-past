@@ -1329,7 +1329,7 @@ void Sprite_EE_MovableMantle(int k) {
   Sprite_NullifyHookshotDrag();
   Sprite_RepelDash();
 
-  if (follower_indicator != 1 || !link_item_torch || link_is_running || sprite_G[k] == 0x90 || sign8(link_actual_vel_x - 24))
+  if (follower_indicator != 1 || !GameHook_MantleRequirementSatisfied() || link_is_running || sprite_G[k] == 0x90 || sign8(link_actual_vel_x - 24))
     return;
 
   which_starting_point = 4;
@@ -1592,12 +1592,12 @@ void SpritePrep_MedallionTable(int k) {
   sprite_ignore_projectile[k]++;
   if (BYTE(overworld_screen_index) != 3) {
     sprite_x_lo[k] += 8;
-    if (link_item_bombos_medallion) {
+    if (GameHook_GiftGateClosed(0x0f, link_item_bombos_medallion)) {
       sprite_graphics[k] = 4;
       sprite_ai_state[k] = 3;
     }
   } else {
-    if (link_item_ether_medallion) {
+    if (GameHook_GiftGateClosed(0x10, link_item_ether_medallion)) {
       sprite_graphics[k] = 4;
       sprite_ai_state[k] = 3;
     }
@@ -1810,14 +1810,14 @@ void ArcheryGame_Host(int k) {  // 858217
     break;
   case 1:
   case 3:
-    if (!choice_in_multiselect_box && link_rupees_goal >= 20) {
+    if (GameHook_ArcheryHostAccepts(!choice_in_multiselect_box && link_rupees_goal >= 20)) {
       sprite_head_dir[k] = 0;
       byte_7E0B88 = 0;
       sprite_ai_state[k] = 2;
       ArcheryGameGuy_ShowMsg(k, 0x86);
     } else {
       sprite_ai_state[k] = 0;
-      ArcheryGameGuy_ShowMsg(k, 0x87);
+      ArcheryGameGuy_ShowMsg(k, GameHook_ArcheryRefusalMessage(0x87));
     }
     break;
   case 2:
@@ -2080,7 +2080,7 @@ void MasterSword_Main(int k) {  // 8588d6
     sprite_state[k] = 0;
     return;
   }
-  if (sprite_ai_state[k] != 5)
+  if (sprite_ai_state[k] != 5 && !GameHook_DrawPedestalItemOverride(k))
     MasterSword_Draw(k);
   switch (sprite_ai_state[k]) {
   case 0:  // waiting
@@ -6372,7 +6372,7 @@ void Zelda_AtSanctuary(int k) {  // 85ee0c
 }
 
 void SpritePrep_Mushroom(int k) {  // 85ee53
-  if (link_item_mushroom >= 2) {
+  if (GameHook_GiftGateClosed(0x29, link_item_mushroom >= 2)) {
     sprite_state[k] = 0;
   } else {
     sprite_graphics[k] = 0;
@@ -6382,7 +6382,7 @@ void SpritePrep_Mushroom(int k) {  // 85ee53
 }
 
 void Sprite_E7_Mushroom(int k) {  // 85ee78
-  SpriteDraw_SingleLarge(k);
+  if (!GameHook_DrawWorldItemOverride(k, 0x29)) SpriteDraw_SingleLarge(k);
   if (Sprite_CheckIfLinkIsBusy())
     return;
 
@@ -6436,7 +6436,7 @@ void Sprite_HeartContainer(int k) {  // 85ef47
 
   if (BYTE(dungeon_room_index2) == 6 && !sprite_z[k])
     SpriteDraw_WaterRipple_WithOamAdjust(k);
-  SpriteDraw_SingleLarge(k);
+  if (!(sprite_A[k] && GameHook_DrawWorldItemOverride(k, 0x3e))) SpriteDraw_SingleLarge(k);
   if (Sprite_ReturnIfInactive(k))
     return;
   sprite_z_vel[k] -= 2;
@@ -6478,7 +6478,7 @@ void Sprite_HeartPiece(int k) {  // 85f020
     if (!sprite_state[k])
       return;
   }
-  SpriteDraw_SingleLarge(k);
+  if (!GameHook_DrawStandingOverride(k)) SpriteDraw_SingleLarge(k);
   if (Sprite_ReturnIfInactive(k))
     return;
   if (Sprite_CheckIfLinkIsBusy())
@@ -6499,6 +6499,7 @@ void Sprite_HeartPiece(int k) {  // 85f020
   if (sprite_delay_aux4[k] || !Sprite_CheckDamageToLink_same_layer(k))
     return;
 
+  if (GameHook_OverrideStandingAbsorption(k)) return;
   link_heart_pieces = link_heart_pieces + 1 & 3;
   if (link_heart_pieces == 0) {
     Link_CancelDash();
@@ -6567,7 +6568,7 @@ void Sasha_Idle(int k) {  // 85f160
   if (!(link_which_pendants & 4)) {
     if (Sprite_ShowSolicitedMessage(k, 0x32) & 0x100)
       sprite_ai_state[k] = 1;
-  } else if (!link_item_boots) {
+  } else if (!GameHook_GiftGateClosed(0x4b, link_item_boots)) {
     int m = (savegame_map_icons_indicator >= 3) ? 0x38 : 0x39;
     if (Sprite_ShowSolicitedMessage(k, m) & 0x100)
       sprite_ai_state[k] = 2;
@@ -6683,7 +6684,7 @@ void BombosTablet(int k) {  // 85f355
     player_handler_timer = 0;
     link_position_mode = 32;
     sound_effect_1 = 0;
-    if (!sign8(link_sword_type) && link_sword_type >= 2) {
+    if (GameHook_TabletActivator()) {
       sprite_ai_state[k]++;
       BombosTablet_StartCutscene();
       sprite_delay_main[k] = 64;
@@ -6709,7 +6710,7 @@ void EtherTablet(int k) {  // 85f3c4
     player_handler_timer = 0;
     link_position_mode = 32;
     sound_effect_1 = 0;
-    if (!sign8(link_sword_type) && link_sword_type >= 2) {
+    if (GameHook_TabletActivator()) {
       sprite_ai_state[k]++;
       EtherTablet_StartCutscene();
       sprite_delay_main[k] = 64;
@@ -6781,6 +6782,7 @@ void MagicShopAssistant_SpawnRedCauldron(int k) {  // 85f5f0
 }
 
 void Sprite_E9_PotionShop(int k) {  // 85f633
+  if (GameHook_OverrideShopCauldron(k)) return;
   switch(sprite_subtype2[k]) {
   case 0: Sprite_MagicShopAssistant_Main(k); return;
   case 1: Sprite_BagOfPowder(k); return;
@@ -6983,7 +6985,7 @@ void Sprite_DashItem(int k) {  // 85fbf7
 }
 
 void Sprite_BonkKey(int k) {  // 85fc04
-  Sprite_DrawThinAndTall(k);
+  if (!GameHook_DrawStandingOverride(k)) Sprite_DrawThinAndTall(k);
   if (Sprite_ReturnIfInactive(k))
     return;
   if (Sprite_CheckDamageToLink_same_layer(k))
@@ -7015,6 +7017,7 @@ void Sprite_BonkKey(int k) {  // 85fc04
       sprite_floor[k] = link_is_on_lower_level;
     break;
   case 3:  // give to player
+    if (GameHook_OverrideBonkKeyGrant(k)) break;
     link_num_keys++;
     sprite_state[k] = 0;
     dung_savegame_state_bits |= (sprite_die_action[k] ? 0x2000 : 0x4000);
@@ -7024,7 +7027,7 @@ void Sprite_BonkKey(int k) {  // 85fc04
 }
 
 void Sprite_BookOfMudora(int k) {  // 85fc9e
-  SpriteDraw_SingleLarge(k);
+  if (!GameHook_DrawWorldItemOverride(k, 0x1d)) SpriteDraw_SingleLarge(k);
   if (Sprite_ReturnIfInactive(k))
     return;
   if (Sprite_CheckDamageToLink_same_layer(k))
@@ -7730,7 +7733,7 @@ void SpritePrep_BonkItem(int k) {  // 868cf2
   }
   sprite_floor[k] = 2;
   if (dungeon_room_index == 0x107) {
-    if (link_item_book_of_mudora)
+    if (GameHook_GiftGateClosed(0x1d, link_item_book_of_mudora))
       sprite_state[k] = 0;
     else
       DecodeAnimatedSpriteTile_variable(0xe);
@@ -7765,7 +7768,7 @@ void SpritePrep_Locksmith(int k) {  // 868d59
 }
 
 void SpritePrep_SickKid(int k) {  // 868d7f
-  if (link_item_bug_net)
+  if (GameHook_GiftGateClosed(0x21, link_item_bug_net))
     sprite_ai_state[k] = 3;
   sprite_ignore_projectile[k]++;
 }
@@ -7904,7 +7907,7 @@ void SpritePrep_FallingIce(int k) {  // 868f08
 }
 
 void SpritePrep_KingZora(int k) {  // 868f0f
-  if (link_item_flippers)
+  if (GameHook_GiftGateClosed(0x1e, link_item_flippers))
     sprite_state[k] = 0;
   else
     sprite_ignore_projectile[k]++;
@@ -10165,7 +10168,7 @@ void Smithy_Main(int k) {  // 86b34e
     break;
   case 2:  // HandleTemperingChoice
     if (choice_in_multiselect_box == 0) {
-      if (link_sword_type < 3) {
+      if (!GameHook_GiftGateClosed(0x02, link_sword_type >= 3)) {
         Sprite_ShowMessageUnconditional(0xda);
         sprite_ai_state[k] = 3;
       } else {
@@ -10942,7 +10945,7 @@ void SpritePrep_OldMan_bounce(int k) {  // 86bff9
     return;
   }
   if (follower_indicator == 0) {
-    if (link_item_mirror == 2)
+    if (GameHook_GiftGateClosed(0x1a, link_item_mirror == 2))
       sprite_state[k] = 0;
     follower_indicator = 4;
     LoadFollowerGraphics();
@@ -11086,6 +11089,8 @@ void Sprite_3A_MagicBat(int k) {  // 86c044
   Sprite_MoveZ(k);
   switch(sprite_ai_state[k]) {
   case 0:  // wait for summon
+    if (GameHook_BatGrantTaken())
+      return;
     if (link_magic_consumption >= 2)
       return;
     if (!Sprite_CheckDamageToLink_same_layer(k))
@@ -11133,6 +11138,7 @@ void Sprite_3A_MagicBat(int k) {  // 86c044
   }
   case 3:  // DoublePlayerMagicPower
     if (!sprite_delay_aux1[k]) {
+      if (GameHook_OverrideBatGrant(k)) return;
       Sprite_ShowMessageUnconditional(0x111);
       Palette_Restore_BG_And_HUD();
       flag_update_cgram_in_nmi++;
@@ -11427,12 +11433,12 @@ void Sprite_HappinessPond(int k) {  // 86c44c
       int i = (link_bomb_upgrades | link_arrow_upgrades) != 0;
       sprite_graphics[k] = i * 2;
       WORD(dialogue_number[0]) = WORD(kHappinessPondCostHex[i * 2]);
-      Sprite_ShowMessageUnconditional(0x14e);
+      if (!GameHook_PondPromptOverride()) Sprite_ShowMessageUnconditional(0x14e);
       sprite_ai_state[k] = 2;
       flag_is_link_immobilized = 1;
     } else {
 show_later_msg:
-      Sprite_ShowMessageUnconditional(0x14c);
+      Sprite_ShowMessageUnconditional((uint16)GameHook_PondLaterMessage(0x14c));
       sprite_ai_state[k] = 0;
       sprite_delay_main[k] = 255;
     }
@@ -11440,21 +11446,22 @@ show_later_msg:
   case 2: {
     int i = sprite_graphics[k] + choice_in_multiselect_box;
     dialogue_number[1] = kHappinessPondCostHex[i];
-    if (link_rupees_goal < kHappinessPondCost[i]) {
+    int cost = GameHook_PondThrowCost(kHappinessPondCost[i]);
+    if (link_rupees_goal < cost) {
       goto show_later_msg;
     } else {
-      sprite_D[k] = kHappinessPondCost[i];
+      sprite_D[k] = (uint8)cost;
       sprite_head_dir[k] = i;
       sprite_ai_state[k] = 3;
     }
     break;
   }
   case 3: {
-    sprite_delay_main[k] = 80;
-    int i = sprite_D[k];
+    sprite_delay_main[k] = GameHook_PondTossDelay(80);
+    int i = GameHook_PondThrowAmount(sprite_D[k]);
     link_rupees_goal -= i;
-    link_rupees_in_pond += i;
-    AddHappinessPondRupees(sprite_head_dir[k]);
+    link_rupees_in_pond += GameHook_PondPoolAdd(i);
+    if (!GameHook_PondTossRupees(i)) AddHappinessPondRupees(sprite_head_dir[k]);
     if (link_rupees_in_pond >= 100) {
       link_rupees_in_pond -= 100;
       sprite_ai_state[k] = 5;
@@ -11507,6 +11514,7 @@ show_later_msg:
       sprite_ai_state[k] = 12;
     break;
   case 8: {
+    if (GameHook_OverrideCapacityGrant(0)) { sprite_ai_state[k] = 9; break; }
     static const uint8 kMaxBombsForLevelHex[8] = {0x10, 0x15, 0x20, 0x25, 0x30, 0x35, 0x40, 0x50};
     int i = link_bomb_upgrades + 1;
     if (i != 8) {
@@ -11544,6 +11552,7 @@ show_later_msg:
     sprite_delay_main[k] = 255;
     break;
   case 12: {
+    if (GameHook_OverrideCapacityGrant(1)) { sprite_ai_state[k] = 9; break; }
     static const uint8 kMaxArrowsForLevelHex[8] = {0x30, 0x35, 0x40, 0x45, 0x50, 0x55, 0x60, 0x70};
     int i = link_arrow_upgrades + 1;
     if (i != 8) {
@@ -11844,7 +11853,7 @@ void Sprite_E3_Fairy(int k) {  // 86cf94
     if (!sprite_delay_aux4[k]) {
       if (Sprite_CheckDamageToLink(k)) {
         Sprite_HandleAbsorptionByPlayer(k);
-      } else if (Sprite_CheckDamageFromLink(k) & kCheckDamageFromPlayer_Ne) {
+      } else if ((Sprite_CheckDamageFromLink(k) & kCheckDamageFromPlayer_Ne) && GameHook_NetCatchesFairies()) {
         sprite_ai_state[k]++;
         Sprite_ShowMessageUnconditional(0xc9);
         return;
@@ -17405,7 +17414,7 @@ void Thief_SpillItems(int k) {  // 9dcb30
     byte_7E0FB6 = GetRandomNumber() & 3;
     int j;
     if (byte_7E0FB6 == 1) {
-      j = link_num_arrows;
+      j = GameHook_StealableArrows();
     } else if (byte_7E0FB6 == 2) {
       j = link_item_bombs;
     } else {
@@ -18225,7 +18234,7 @@ void Sprite_Catfish_QuakeMedallion(int k) {  // 9ddf54
   }
   if (sprite_delay_aux3[k])
     Oam_AllocateFromRegionC(8);
-  SpriteDraw_SingleLarge(k);
+  if (!GameHook_DrawWorldItemOverride(k, sprite_A[k])) SpriteDraw_SingleLarge(k);
   if (Sprite_ReturnIfInactive(k))
     return;
   Sprite_MoveXYZ(k);
@@ -18310,11 +18319,11 @@ void Catfish_BigFish(int k) {  // 9ddfd1
         Catfish_SpawnPlop(k);
       } else if (j == 96) {
         flag_is_link_immobilized = 0;
-        dialogue_message_index = link_item_quake_medallion ? 0x12b : 0x12a;
+        dialogue_message_index = GameHook_GiftGateClosed(0x11, link_item_quake_medallion) ? 0x12b : 0x12a;
         Sprite_ShowMessageMinimal();
         return;
       } else if (j == 80) {
-        if (link_item_quake_medallion) {
+        if (GameHook_GiftGateClosed(0x11, link_item_quake_medallion)) {
           if (GetRandomNumber() & 1)
             Sprite_SpawnBomb(k);
           else
@@ -18797,7 +18806,7 @@ void Sprite_EvilBarrier(int k) {  // 9df06b
   sprite_graphics[k] = frame_counter >> 1 & 3;
   if (Sprite_ReturnIfInactive(k))
     return;
-  if (Sprite_CheckDamageFromLink(k) && link_sword_type < 2) {
+  if (Sprite_CheckDamageFromLink(k) && GameHook_TowerSealRepels()) {
     sprite_hit_timer[k] = 0;
     Sprite_AttemptDamageToLinkPlusRecoil(k);
     if (!countdown_for_blink)
@@ -19910,7 +19919,7 @@ void Sprite_AA_Pikit(int k) {  // 9e8bbf
         else
           sprite_G[k] = 0;
       } else if (j == 2) {
-        if (link_num_arrows)
+        if (GameHook_StealableArrows())
           link_num_arrows--;
         else
           sprite_G[k] = 0;
@@ -24256,6 +24265,7 @@ void Sprite_B4_PurpleChest(int k) {  // 9ee0dd
 }
 
 void Sprite_B5_BombShop(int k) {  // 9ee111
+  if (GameHook_OverrideShopBombSlot(k)) return;
   switch (sprite_subtype2[k]) {
   case 0: Sprite_BombShop_Clerk(k); break;
   case 1: Sprite_BombShop_Bomb(k); break;
@@ -24296,7 +24306,7 @@ void Sprite_BombShop_Bomb(int k) {  // 9ee190
   if (!ShopItem_CheckForAPress(k))
     return;
 
-  if (link_item_bombs != kMaxBombsForLevel[link_bomb_upgrades]) {
+  if (link_item_bombs != GameHook_CapacityMax(0, link_bomb_upgrades)) {
     if (!ShopItem_HandleCost(100)) {
       Sprite_ShowMessageUnconditional(0x17c);
       ShopItem_PlayBeep(k);
@@ -25003,6 +25013,8 @@ void Sprite_BA_Whirlpool(int k) {  // 9eee5a
 }
 
 void Sprite_BB_Shopkeeper(int k) {  // 9eeeef
+  if (GameHook_OverrideShopItem(k)) return;
+  if (GameHook_RetroShopItem(k)) return;
   switch (sprite_subtype2[k]) {
   case 0: Shopkeeper_StandardClerk(k); break;
   case 1: ChestGameGuy(k); break;
@@ -25282,7 +25294,7 @@ void ShopItem_Arrows(int k) {  // 9ef2af
     return;
   Sprite_BehaveAsBarrier(k);
   if (ShopItem_CheckForAPress(k)) {
-    if (link_num_arrows == kMaxArrowsForLevel[link_arrow_upgrades]) {
+    if (link_num_arrows == GameHook_CapacityMax(1, link_arrow_upgrades)) {
       Sprite_ShowSolicitedMessage(k, 0x16e);
       ShopItem_PlayBeep(k);
     } else if (ShopItem_HandleCost(30)) {
@@ -25301,7 +25313,7 @@ void ShopItem_Bombs(int k) {  // 9ef2f0
     return;
   Sprite_BehaveAsBarrier(k);
   if (ShopItem_CheckForAPress(k)) {
-    if (link_item_bombs == kMaxBombsForLevel[link_bomb_upgrades]) {
+    if (link_item_bombs == GameHook_CapacityMax(0, link_bomb_upgrades)) {
       Sprite_ShowSolicitedMessage(k, 0x16e);
       ShopItem_PlayBeep(k);
     } else if (ShopItem_HandleCost(50)) {

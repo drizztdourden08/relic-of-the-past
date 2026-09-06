@@ -1,5 +1,6 @@
 /* @layer core-game-hooks @kind native */
 #include "game_hooks_internal.h"
+#include "sprite_art_slots.h"
 
 // ─── Transition Settled Events ───
 //
@@ -29,9 +30,33 @@ void GameHook_ModuleFrameEnd(void) {
   s_prev_module = mod;
   s_prev_submodule = sub;
 
+  // Pure C-side repair under its own gate (kFeatures3_ReceiptMessages) — runs even
+  // when developer tools are off, ahead of the host-call gate below.
+  GameHook_ReceiptPoseGfxGuard();
+  // The coloured gem over a wide rupee receipt's hold-up (kFeatures3_ColoredRupees), ahead
+  // of the capacity icon repair so a wallet upgrade presenting as the 50 keeps its icon.
+  GameHook_RupeeGemHoldUpFrameEnd();
+  // Same discipline for the capacity upgrade icon (kFeatures3_CapacityProfile).
+  GameHook_UpgradeIconFrameEnd();
+  // And for the capacity pickup bonus (kFeatures5_CapacityBonus): an arm whose receipt is
+  // gone is dropped here.
+  GameHook_UpgradeBonusFrameEnd();
+  // And for the quiver's picture under the retro bow (kFeatures3_RetroBow).
+  GameHook_QuiverIconFrameEnd();
+  // The glint over the held-up item (kFeatures3_ItemSheen), after every other repaint of
+  // the decode slot above, so the sweep is the last write before the NMI upload.
+  GameHook_ItemSheenHoldUpFrameEnd();
+  // The module has finished drawing and the NMI upload has not run yet: the one point at
+  // which each substituted sprite's own tiles can be written (sprite_art_slots.c). A no-op
+  // on every frame no gated seam claimed a block, which is every frame with them off.
+  GameHook_SpriteArtFrameEnd();
+
   // Off by default: makes zero host-calls, same contract as haptics.
   if (!(enhanced_features0 & kFeatures0_DeveloperTools))
     return;
+
+  // Per-frame record of what the player draw resolved to this frame (pose ring, its own export).
+  GameHook_CapturePoseFrame();
 
   const bool entered = IsGameplayModule(mod) && !IsGameplayModule(prev_module);
   const bool settled = IsGameplayModule(mod) && prev_submodule != 0 && sub == 0;

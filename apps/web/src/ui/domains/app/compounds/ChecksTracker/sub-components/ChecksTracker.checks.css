@@ -1,0 +1,194 @@
+/* @layer renderer-components @kind style */
+
+/* ═══════════════════════════════════════════════════════════════
+   GROUP TREE — structure lives in @ds/composites/GroupTree; only what a
+   CHECK group counts in its header is a tracker concern, so only that is here.
+   ═══════════════════════════════════════════════════════════════ */
+
+.tracker-groups {
+  padding: 0;
+}
+
+/* Header counts inside the shared group tree's meta slot. Three bare numbers
+   said nothing about which was which, so each carries its own word. */
+.tracker-group__counts {
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.tracker-group__count--completed { color: var(--c-green); }
+.tracker-group__count--reachable { color: var(--c-warning); }
+.tracker-group__count--blocked { color: var(--c-text-dim); }
+.tracker-group__count-sep { color: var(--c-text-faint); }
+
+/* ═══════════════════════════════════════════════════════════════
+   CHECK ROWS (compact & detailed)
+   ═══════════════════════════════════════════════════════════════ */
+
+.tracker-checks--list {
+  padding-left: var(--space-sm);
+}
+
+.tracker-check {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md) var(--space-xs) var(--space-xl);
+  font-size: var(--text-xs);
+}
+
+.tracker-check__icon {
+  width: 14px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.tracker-check__name {
+  flex: 1;
+}
+
+.tracker-check__item {
+  color: var(--c-info);
+  font-size: var(--text-xs);
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-style: italic;
+}
+
+.tracker-check__type {
+  color: var(--c-text-dim);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+}
+
+.tracker-check--completed {
+  color: var(--c-green);
+  opacity: 0.6;
+}
+
+.tracker-check--reachable { color: var(--c-warning); }
+.tracker-check--blocked { color: var(--c-text-dim); }
+
+/* ═══════════════════════════════════════════════════════════════
+   VISUAL CHECK CARDS
+   ═══════════════════════════════════════════════════════════════ */
+
+.tracker-checks--visual {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+}
+
+.tracker-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--r-sm);
+  border-left: 3px solid transparent;
+  background: var(--c-hover);
+  transition: border-color 0.2s, opacity 0.2s;
+  min-width: 0;
+}
+
+.tracker-card--completed {
+  border-left-color: var(--c-green);
+  background: var(--c-green-soft);
+}
+
+.tracker-card--reachable {
+  border-left-color: var(--c-warning);
+  background: var(--c-warning-soft);
+}
+
+.tracker-card--blocked {
+  border-left-color: var(--c-text-muted);
+  opacity: 0.45;
+}
+
+.tracker-card__sprite {
+  width: 24px;
+  height: 24px;
+  image-rendering: pixelated;
+  flex-shrink: 0;
+}
+
+.tracker-card__sprite-placeholder {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  background: var(--c-hover);
+  border-radius: var(--r-sm);
+}
+
+.tracker-card__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: var(--space-xs);
+}
+
+.tracker-card__item-name {
+  font-size: var(--text-xs);
+  color: var(--c-text);
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.tracker-card__check-name {
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LEGACY (kept for TrackerRegionSection if still referenced)
+   ═══════════════════════════════════════════════════════════════ */
+
+.tracker-area__header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: var(--space-xs) var(--space-md);
+  background: none;
+  border: none;
+  color: var(--c-text);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: var(--text-sm);
+  text-align: left;
+}
+
+.tracker-area__header:hover { background: var(--c-hover); }
+
+.tracker-area__chevron {
+  width: 16px;
+  flex-shrink: 0;
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+}
+
+.tracker-area__name {
+  flex: 1;
+  font-weight: var(--weight-semi);
+}
+
+.tracker-area__counts {
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+}
+.tracker-area__count--completed { color: var(--c-green); }
+.tracker-area__count--reachable { color: var(--c-warning); }
+.tracker-area__checks { padding-left: var(--space-md); }

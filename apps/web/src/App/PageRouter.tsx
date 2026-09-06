@@ -8,9 +8,11 @@ import { DesignGallery } from '../ui/domains/app/views/DesignGallery';
 import { SpriteDebug } from '../ui/domains/app/views/SpriteDebug';
 import { DataInspector } from '../ui/domains/app/views/DataInspector';
 import { About } from '../ui/domains/app/views/About';
+import { Randomizer } from '../ui/domains/app/views/Randomizer';
 import { FullScreenLayer } from '../ui/design-system/composites/FullScreenLayer';
 import type { PageId, RomDisplayInfo } from './types';
 import type { GameSettings } from '@shared/types/settings';
+import type { CreateProfileOptions, CreateProfileResult } from '@shared/types/profile';
 import type { ProfileHubTab } from '../ui/domains/app/views/ProfileHub/ProfileHub.type';
 
 interface PageRouterProps {
@@ -28,7 +30,7 @@ interface PageRouterProps {
     loadProfileForGame: (profile: Profile) => Promise<void>;
     refreshProfilesAndRoms: () => Promise<unknown>;
     handleSelectProfile: (profile: Profile) => Promise<void>;
-    handleCreateProfile: (name: string, romFile: string, language?: string, msuPack?: string) => Promise<void>;
+    handleCreateProfile: (opts: CreateProfileOptions) => Promise<CreateProfileResult>;
     handleDeleteProfile: (id: string) => void;
     handleImportRom: () => Promise<void>;
     handleExtractAssets: (romFile: string) => Promise<void>;
@@ -86,7 +88,12 @@ const PageRouter = (props: PageRouterProps) => {
           profiles={profileMgmt.profiles}
           romStatuses={profileMgmt.romDisplayInfos}
           onSelectProfile={(p: Profile) => { profileMgmt.handleSelectProfile(p); nav.setActivePage('profile'); }}
-          onCreateProfile={(name: string, rom: string, lang?: string, msu?: string) => { profileMgmt.handleCreateProfile(name, rom, lang, msu); nav.setActivePage('profile'); }}
+          onCreateProfile={async (opts: CreateProfileOptions) => {
+            const result = await profileMgmt.handleCreateProfile(opts);
+            // Only leave the form on success. A failure keeps it open to show the error.
+            if (result.success) nav.setActivePage('profile');
+            return result;
+          }}
           onDeleteProfile={profileMgmt.handleDeleteProfile}
           onImportRom={profileMgmt.handleImportRom}
           onExtractAssets={profileMgmt.handleExtractAssets}
@@ -130,6 +137,12 @@ const PageRouter = (props: PageRouterProps) => {
     otherPage = (
       <FullScreenLayer onClose={nav.closePage} title="About">
         <About />
+      </FullScreenLayer>
+    );
+  } else if (nav.activePage === 'randomizer') {
+    otherPage = (
+      <FullScreenLayer onClose={nav.closePage} title="Randomizer">
+        <Randomizer activeProfile={profileMgmt.activeProfile} />
       </FullScreenLayer>
     );
   }

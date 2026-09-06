@@ -7,6 +7,7 @@ type UsageLevel =
   | 'data-direct'
   | 'assets-direct'
   | 'assets-modified'
+  | 'logic-port'
   | 'logic-reference'
   | 'reference'
   | 'inspiration';
@@ -33,6 +34,7 @@ const USAGE_LABELS: Record<UsageLevel, string> = {
   'data-direct': 'Data Used Directly',
   'assets-direct': 'Assets Used Directly',
   'assets-modified': 'Assets Modified',
+  'logic-port': 'Logic Ported',
   'logic-reference': 'Logic Reference',
   'reference': 'Reference',
   'inspiration': 'Inspiration',
@@ -190,8 +192,8 @@ const CREDITS: CreditCategory[] = [
         name: 'Archipelago',
         project: 'Archipelago Multiworld',
         description: 'Cross-game randomizer and multiworld system with ALttP support.',
-        usage: 'logic-reference',
-        usageNote: 'Ruleset, region structure, check flags, and entrance naming studied and reimplemented in TypeScript; no code copied directly.',
+        usage: 'logic-port',
+        usageNote: 'Randomizer logic (regions, access rules, item pool, fill validity) ported to TypeScript from the MIT-licensed ALttP world implementation; location and item naming follows its conventions. Generated seeds are validated against spoiler logs produced by the original.',
         url: 'https://archipelago.gg',
         license: 'MIT',
       },

@@ -1,0 +1,32 @@
+/* @layer renderer-components @kind style */
+
+.retro-bow-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  min-width: 0;
+  padding-top: var(--space-md);
+}
+
+/* Indented under the switch they answer to, so the pair reads as its
+   consequence rather than as two more settings beside it. */
+.retro-bow-block__caption {
+  color: var(--c-text-dim);
+  font-size: var(--text-xs);
+  padding: 0 var(--space-sm);
+}
+
+.retro-bow-block__prices {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding-left: var(--space-md);
+  border-left: var(--border-width-thin) solid var(--c-border);
+}
+
+/* Where the two tops come from, said once under both sliders. */
+.retro-bow-block__ceiling {
+  color: var(--c-text-dim);
+  font-size: var(--text-xs);
+  font-style: italic;
+}

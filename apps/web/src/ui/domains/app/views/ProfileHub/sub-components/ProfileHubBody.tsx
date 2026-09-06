@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { Box } from '../../../../../design-system/primitives/Box';
 import { NavRail } from '../../../../../design-system/composites/NavRail';
+import { RandomizerLockContext } from '../../../compounds/SettingsLayout';
 import { HomeTab } from './HomeTab';
 import { SettingsView } from './SettingsView';
 import { GraphicsSettings } from './GraphicsSettings';
@@ -40,41 +41,51 @@ const ProfileHubBody = (props: ProfileHubBodyProps) => {
     [info.formFactor],
   );
 
-  return (
-    <Box className="profile-hub__body">
-      <NavRail
-        className="profile-hub__tabs"
-        items={tabs}
-        activeId={activeTab}
-        onSelect={(id) => setActiveTab(id as ProfileHubTab)}
-      />
+  // Keys the profile's randomizer config pins; SettingsLayout locks these controls.
+  const randomizerFrozenKeys = useMemo(
+    () => Object.keys(profile.randomizer?.frozenSettings ?? {}),
+    [profile.randomizer],
+  );
 
-      <Box className="profile-hub__content">
-        {activeTab === 'home' && (
-          <HomeTab
-            profileId={profile.id}
-            romFile={profile.romFile}
-            isGameRunning={isGameRunning}
-            onStartGame={onStartGame}
-            lastPlayed={profile.lastPlayed}
-            created={profile.created}
-            windowMode={settings.windowMode}
-          />
-        )}
-        {activeTab === 'settings' && <SettingsView settings={settings} onChange={onChange} />}
-        {activeTab === 'graphics' && <GraphicsSettings settings={settings} onChange={onChange} />}
-        {activeTab === 'audio' && <AudioSettings settings={settings} onChange={onChange} profileId={profile.id} />}
-        {activeTab === 'gameplay' && <GameplaySettings settings={settings} onChange={onChange} />}
-        {activeTab === 'bugfixes' && <BugFixesSettings settings={settings} onChange={onChange} />}
-        {activeTab === 'hud' && <HudSettings settings={settings} onChange={onChange} />}
-        {activeTab === 'controls' && (
-          <ControlsSettings settings={settings} onChange={onChange} profileId={profile.id} />
-        )}
-        {activeTab === 'haptics' && <HapticsSettings settings={settings} onChange={onChange} />}
-        {activeTab === 'developer' && <DeveloperSettings settings={settings} onChange={onChange} />}
-        {activeTab === 'mobile' && <MobileSettings settings={settings} onChange={onChange} />}
+  return (
+    <RandomizerLockContext.Provider value={randomizerFrozenKeys}>
+      <Box className="profile-hub__body">
+        <NavRail
+          className="profile-hub__tabs"
+          items={tabs}
+          activeId={activeTab}
+          onSelect={(id) => setActiveTab(id as ProfileHubTab)}
+        />
+
+        <Box className="profile-hub__content">
+          {activeTab === 'home' && (
+            <HomeTab
+              profileId={profile.id}
+              romFile={profile.romFile}
+              isGameRunning={isGameRunning}
+              onStartGame={onStartGame}
+              lastPlayed={profile.lastPlayed}
+              created={profile.created}
+              windowMode={settings.windowMode}
+              randomizer={profile.randomizer}
+              vanillaSafe={settings.vanillaSafe}
+            />
+          )}
+          {activeTab === 'settings' && <SettingsView settings={settings} onChange={onChange} />}
+          {activeTab === 'graphics' && <GraphicsSettings settings={settings} onChange={onChange} />}
+          {activeTab === 'audio' && <AudioSettings settings={settings} onChange={onChange} profileId={profile.id} />}
+          {activeTab === 'gameplay' && <GameplaySettings settings={settings} onChange={onChange} />}
+          {activeTab === 'bugfixes' && <BugFixesSettings settings={settings} onChange={onChange} />}
+          {activeTab === 'hud' && <HudSettings settings={settings} onChange={onChange} />}
+          {activeTab === 'controls' && (
+            <ControlsSettings settings={settings} onChange={onChange} profileId={profile.id} />
+          )}
+          {activeTab === 'haptics' && <HapticsSettings settings={settings} onChange={onChange} />}
+          {activeTab === 'developer' && <DeveloperSettings settings={settings} onChange={onChange} />}
+          {activeTab === 'mobile' && <MobileSettings settings={settings} onChange={onChange} />}
+        </Box>
       </Box>
-    </Box>
+    </RandomizerLockContext.Provider>
   );
 };
 

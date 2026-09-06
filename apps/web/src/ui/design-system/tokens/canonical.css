@@ -9,7 +9,7 @@
  * Rules in one line:
  *   ONE background family · ONE blur · THREE action tiers side by side.
  *   GOLD = primary (& selection/active) · GREEN = secondary · GREY = tertiary/ghost ·
- *   red=danger · amber=warning · blue=info-text-only.
+ *   red=danger · amber=warning · blue=info-text-only · purple=upgrade (data only).
  */
 :root {
   /* ─── ONE background family for every surface (depth via border + shadow, not hue) ─── */
@@ -61,6 +61,9 @@
   --c-info:          #5b9bd5;            /* info TEXT/icon only. Never a selection state */
   --c-info-dim:      #15212e;            /* dark blue fill */
   --c-info-soft:     rgb(91 155 213 / 0.14);
+  --c-upgrade:       #9b7fd6;            /* capacity-upgrade DATA only (pool bar, legends) — never a state or action */
+  --c-upgrade-dim:   #221a2e;            /* dark purple fill */
+  --c-upgrade-soft:  rgb(155 127 214 / 0.14);
 
   /* ─── Elevation: 3 shadows + ONE blur ─── */
   --shadow-1:        0 2px 8px rgb(0 0 0 / 0.4);

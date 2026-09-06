@@ -1,0 +1,44 @@
+/* @layer renderer-components @kind style */
+
+/* The Shops tab above the prices: the mode, then the cards under a heading
+   per half of the map, then the two counted controls on their own plate under
+   a hairline, so the reading order (what the seed may take, which spots it
+   may take it from, how many) is visible rather than implied. */
+
+.shop-slots-block {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.shop-slots-block__mode,
+.shop-slots-block__slots {
+  gap: var(--space-xs);
+  padding-top: var(--space-md);
+}
+
+/* The dropdown sits on the same indent the cards and the sliders keep, so the
+   three of them line up under their headings rather than stepping in and out. */
+.shop-slots-block__mode-control {
+  padding: var(--space-2xs) var(--space-sm) var(--space-xs);
+}
+
+.shop-slots-block__note {
+  color: var(--c-text-muted);
+  font-size: var(--text-xs);
+  padding: 0 var(--space-sm) var(--space-xs);
+}
+
+.shop-slots-block__controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  border-top: var(--border-width-thin) solid var(--c-hairline);
+}
+
+.shop-slots-block__total {
+  color: var(--c-text);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+}

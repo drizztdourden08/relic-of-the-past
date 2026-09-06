@@ -25,6 +25,11 @@ import {
   extractFollowerBomb,
   type DropSheets,
 } from './drop-decoder';
+import { artImage } from './art-picture';
+import { extractUpgradeComposite } from './upgrade-composite';
+import { extractPaletteSwap, type ColorSwap } from './palette-swap';
+import { buildInGameBinaries } from './in-game-binaries';
+import { extractionStampBuffer } from './extraction-stamp';
 
 interface SpriteExtractDef {
   method: string;
@@ -40,6 +45,14 @@ interface SpriteExtractDef {
   glyph?: number;
   /** Second character, paired to the right of `glyph` to form one picture. */
   glyphRight?: number;
+  /** upgrade-composite, palette-swap: file name of the definition whose picture is the base. */
+  baseFile?: string;
+  /** art, and upgrade-composite: one of our own drawings (art/art-library.ts). */
+  art?: string;
+  /** upgrade-composite: the drawing stamped bottom-right. */
+  badge?: string;
+  /** palette-swap: the base's colours and what each becomes. */
+  colors?: ColorSwap[];
 }
 
 interface SpriteDef {
@@ -57,9 +70,25 @@ interface ExtractionContext {
   receiptSheets: ReceiptSheets;
   dropSheets: DropSheets;
   dialogueFont: Buffer;
+  /** Every definition by file name, so a composite can build on another's picture. */
+  byFile: ReadonlyMap<string, SpriteExtractDef>;
+  /** Files whose extraction is in progress, to refuse a composite that loops back on itself. */
+  resolving: Set<string>;
 }
 
 type Extractor = (def: SpriteExtractDef, ctx: ExtractionContext) => ImageBuffer | null;
+
+const extractByFile = (file: string, ctx: ExtractionContext): ImageBuffer | null => {
+  const def = ctx.byFile.get(file);
+  if (!def) throw new Error(`no definition named ${file}`);
+  if (ctx.resolving.has(file)) throw new Error(`${file} is its own base`);
+  ctx.resolving.add(file);
+  try {
+    return extractOne(def, ctx);
+  } finally {
+    ctx.resolving.delete(file);
+  }
+};
 
 const EXTRACTORS: Record<string, Extractor> = {
   'hud-tiles': (def, ctx) => extractHudStandard(def.tiles!, ctx.hudSheets, ctx.hudPalette),
@@ -77,6 +106,15 @@ const EXTRACTORS: Record<string, Extractor> = {
   'drop-shield-fighters': (def, ctx) => extractDropShieldFighters(def.sheet!, def.tiles!, def.palette!, ctx.spritePalettes, ctx.dropSheets),
   'drop-shield-fire': (def, ctx) => extractDropShieldFire(def.sheet!, def.tiles!, def.palette!, ctx.spritePalettes, ctx.dropSheets),
   'follower-bomb': (def, ctx) => extractFollowerBomb(def.palette!, ctx.rom, ctx.spritePalettes),
+  // A sprite that is entirely our own drawing: an item the game never had a
+  // picture for, so there is nothing in the ROM to decode and the art IS the
+  // sprite. No ctx at all, which is what makes it the one method that works
+  // the same whatever ROM is loaded.
+  'art': (def) => artImage(def.art!),
+  'upgrade-composite': (def, ctx) =>
+    extractUpgradeComposite({ baseFile: def.baseFile, art: def.art, badge: def.badge! }, (file) => extractByFile(file, ctx)),
+  'palette-swap': (def, ctx) =>
+    extractPaletteSwap({ baseFile: def.baseFile!, colors: def.colors! }, (file) => extractByFile(file, ctx)),
 };
 
 const extractOne = (def: SpriteExtractDef, ctx: ExtractionContext): ImageBuffer | null => {
@@ -99,16 +137,22 @@ const extractSpriteBuffers = (rom: RomData, allSprites: SpriteDef[]): SpriteBuff
     receiptSheets: loadReceiptSheets(rom),
     dropSheets: loadDropSheets(rom),
     dialogueFont: loadDialogueFont(rom),
+    byFile: new Map(allSprites.map((sprite) => [sprite.file, sprite.extract])),
+    resolving: new Set(),
   };
 
   const counts: SpriteCounts = { hud: 0, 'hud-pause': 0, 'hud-item': 0, fonts: 0, receipt: 0, drop: 0 };
   const errors: string[] = [];
-  const buffers: SpriteBuffer[] = [];
+  // The stamp names the definitions and code this set comes from, so a set whose
+  // files are all present but whose bytes predate the current code is refreshed.
+  const buffers: SpriteBuffer[] = [extractionStampBuffer(allSprites)];
+  const pictures = new Map<string, ImageBuffer>();
 
   for (const spriteDef of allSprites) {
     try {
-      const img = extractOne(spriteDef.extract, ctx);
+      const img = extractByFile(spriteDef.file, ctx);
       if (!img) { errors.push(`${spriteDef.file}: extraction returned null`); continue; }
+      pictures.set(spriteDef.file, img);
       const scaled = img.scale(2); // 16×16 → 32×32
       buffers.push({ name: `${spriteDef.file}.png`, bytes: new Uint8Array(scaled.toPngBuffer()) });
       counts[spriteDef.category] += 1;
@@ -116,6 +160,12 @@ const extractSpriteBuffers = (rom: RomData, allSprites: SpriteDef[]): SpriteBuff
       errors.push(`${spriteDef.file}: ${e instanceof Error ? e.message : String(e)}`);
     }
   }
+
+  // The in-game binaries ride along with the PNGs, each one whenever the set
+  // defines every picture it is built from (in-game-binaries.ts).
+  const binaries = buildInGameBinaries(pictures, new Set(ctx.byFile.keys()), ctx.spritePalettes.palettes);
+  buffers.push(...binaries.buffers);
+  errors.push(...binaries.errors);
 
   return { buffers, counts, errors };
 };

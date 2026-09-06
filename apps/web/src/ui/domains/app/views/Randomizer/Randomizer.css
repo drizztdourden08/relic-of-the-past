@@ -1,0 +1,178 @@
+/* @layer renderer-components @kind style */
+
+/* One column: the tab bar, then whichever tab body is active filling the rest
+   of the page at full width. */
+.randomizer-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  gap: var(--space-sm);
+}
+
+/* The tab body — the only part of the left column that scrolls. */
+.randomizer-page__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding-right: var(--space-xs);
+}
+
+.randomizer-page__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  background: var(--c-sunken);
+}
+
+.randomizer-page__panel-title {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.randomizer-page__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.randomizer-page__profile-name {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semi);
+  color: var(--c-text);
+}
+
+.randomizer-page__status-chip {
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  padding: 0 var(--space-xs);
+  border-radius: var(--radius-sm);
+  background: var(--c-surface);
+  color: var(--c-text-muted);
+}
+
+.randomizer-page__status-chip--active { color: var(--c-green-bright); }
+.randomizer-page__status-chip--starting { color: var(--c-gold-bright); }
+.randomizer-page__status-chip--error { color: var(--c-danger); }
+
+/* Label-over-value facts, wrapping as a row of small blocks. */
+.randomizer-page__facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: var(--space-sm);
+}
+
+.randomizer-page__facts--counters {
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--c-border);
+}
+
+.randomizer-page__fact {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.randomizer-page__fact-label {
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.randomizer-page__fact-value {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--c-text);
+  overflow-wrap: anywhere;
+}
+
+.randomizer-page__seed-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.randomizer-page__seed-row .text-input {
+  flex: 1;
+}
+
+.randomizer-page__summary {
+  font-size: var(--text-sm);
+  font-family: var(--font-mono);
+  color: var(--c-text);
+}
+
+.randomizer-page__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.randomizer-page__hint {
+  font-size: var(--text-sm);
+  color: var(--c-text-muted);
+}
+
+/* ── Activity log palette ──
+   Kinds come from behavior/randomizer-log-style.ts; the panel owns everything
+   structural. A clock gutter needs more room than a line number. */
+.randomizer-log {
+  --log-gutter-w: 8ch;
+  --log-tag-w: 8ch;
+}
+
+.randomizer-log .log-panel__tag--session { color: var(--c-gold-bright); }
+
+.randomizer-log .log-panel__msg--session {
+  color: var(--c-gold-bright);
+  font-weight: var(--weight-semi);
+}
+
+.randomizer-log .log-panel__tag--plan     { color: var(--c-info); }
+.randomizer-log .log-panel__msg--plan     { color: var(--c-info); }
+.randomizer-log .log-panel__tag--override { color: var(--c-text-muted); }
+.randomizer-log .log-panel__msg--override { color: var(--c-text-dim); }
+.randomizer-log .log-panel__tag--deliver  { color: var(--c-gold-bright); }
+.randomizer-log .log-panel__msg--deliver  { color: var(--c-gold); }
+.randomizer-log .log-panel__tag--check    { color: var(--c-green); }
+.randomizer-log .log-panel__msg--check    { color: var(--c-text); }
+.randomizer-log .log-panel__tag--receipt  { color: var(--c-text-faint); }
+.randomizer-log .log-panel__msg--receipt  { color: var(--c-text-dim); }
+.randomizer-log .log-panel__tag--online   { color: var(--c-info); }
+.randomizer-log .log-panel__msg--online   { color: var(--c-text); }
+.randomizer-log .log-panel__tag--info     { color: var(--c-text-muted); }
+.randomizer-log .log-panel__msg--info     { color: var(--c-text); }
+.randomizer-log .log-panel__tag--warn     { color: var(--c-warning); }
+.randomizer-log .log-panel__msg--warn     { color: var(--c-warning); }
+.randomizer-log .log-panel__tag--error    { color: var(--c-danger); }
+.randomizer-log .log-panel__msg--error    { color: var(--c-danger); }
+
+/* ── Spoiler tab ──
+   The tracker compound, given the room the widget never has: its own scroller,
+   and a check list that grows into the pane instead of a fixed-height box. */
+.spoiler-tracker {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.spoiler-tracker .tracker-view__checks {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
+  overflow-y: auto;
+  border: 1px solid var(--c-hairline);
+  border-radius: var(--radius-md);
+  background: var(--c-sunken);
+}

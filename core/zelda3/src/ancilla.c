@@ -552,7 +552,7 @@ void Ancilla_CheckDamageToSprite(int k, uint8 type) {  // 86ecb7
 
 void Ancilla_CheckDamageToSprite_aggressive(int k, uint8 type) {  // 86ecbd
   uint8 dmg = kAncilla_Damage[type];
-  if (dmg == 6 && link_item_bow >= 3) {
+  if (dmg == 6 && link_item_bow >= 3 && GameHook_SilverArrowsBite(k)) {
     if (sprite_type[k] == 0xd7)
       sprite_delay_aux4[k] = 32;
     dmg = 9;
@@ -3506,7 +3506,7 @@ endif_11:
   } else if (a == 0x42) {
     link_hearts_filler += 8;
   } else if (a == 0x45) {
-    link_magic_filler += 16;
+    link_magic_filler += GameHook_ReceiptPayout(a, 16);
   } else if (a == 0x22 || a == 0x23) {
     Palette_Load_LinkArmorAndGloves();
   }
@@ -3541,6 +3541,7 @@ endif_6:
     else
       msg = kReceiveItemMsgs[ancilla_item_to_link[k]];
   }
+  msg = GameHook_ReceiptMessageOverride(ancilla_item_to_link[k], msg);
   if (msg != -1) {
     dialogue_message_index = msg;
     if (msg == 0x70)
@@ -3602,12 +3603,12 @@ OamEnt *Ancilla_ReceiveItem_Draw(int k, int x, int y) {  // 88c690
   OamEnt *oam = GetOamCurPtr();
   int j = ancilla_item_to_link[k];
   oam->charnum = 0x24;
-  uint8 a = kWishPond2_OamFlags[j];
+  uint8 a = GameHook_QuiverPalette(j, GameHook_ReceiptPalette(j, GameHook_RupeeGemPalette(j, kWishPond2_OamFlags[j])));
   if (sign8(a))
     a = ancilla_arr4[k];
-  Ancilla_SetOam(oam, x, y, 0x24, a * 2 | 0x30, kReceiveItem_Tab1[j]);
+  Ancilla_SetOam(oam, x, y, 0x24, a * 2 | 0x30, GameHook_QuiverShape(j, GameHook_ReceiptShape(j, GameHook_RupeeGemShape(j, kReceiveItem_Tab1[j]))));
   oam++;
-  if (kReceiveItem_Tab1[j] == 0) {
+  if (GameHook_RupeeGemShape(j, kReceiveItem_Tab1[j]) == 0) {
     Ancilla_SetOam(oam, x, y + 8, 0x34, a * 2 | 0x30, 0);
     oam++;
   }
@@ -3669,6 +3670,7 @@ void Ancilla42_HappinessPondRupees(int k) {  // 88c7de
     if (happiness_pond_arr1[i])
       return;
   }
+  if (GameHook_PondTossNextVolley()) return;
   ancilla_type[k] = 0;
 }
 
@@ -3853,7 +3855,8 @@ void Ancilla29_MilestoneItemReceipt(int k) {  // 88ca8c
 
   Point16U pt;
   Ancilla_PrepAdjustedOamCoord(k, &pt);
-  OamEnt *oam = Ancilla_ReceiveItem_Draw(k, pt.x, pt.y - ancilla_z[k]);
+  OamEnt *oam = GameHook_DrawFallingPrizeOverride(k, pt.x, pt.y - ancilla_z[k]);
+  if (!oam) oam = Ancilla_ReceiveItem_Draw(k, pt.x, pt.y - ancilla_z[k]);
 
   if (sign8(--ancilla_aux_timer[k])) {
     ancilla_aux_timer[k] = 9;
@@ -3891,7 +3894,7 @@ void Ancilla_RisingCrystal(int k) {  // 88cbf2
   if (y < 0x49) {
     Ancilla_SetY(k, 0x49 + BG2VOFS_copy);
     if (!submodule_index) {
-      link_has_crystals |= kDungeonCrystalPendantBit[BYTE(cur_palace_index_x2) >> 1];
+      link_has_crystals |= GameHook_CrystalPrizeBit(kDungeonCrystalPendantBit[BYTE(cur_palace_index_x2) >> 1]);
       submodule_index = 0x18;
       subsubmodule_index = 0;
       memset(aux_palette_buffer + 0x20, 0, sizeof(uint16) * 0x60);
@@ -4091,7 +4094,8 @@ void Ancilla36_Flute(int k) {  // 88cfaa
   Point16U pt;
   Ancilla_PrepAdjustedOamCoord(k, &pt);
   OamEnt *oam = GetOamCurPtr();
-  Ancilla_SetOam(oam, pt.x, pt.y - (int8)ancilla_z[k], 0x24, HIBYTE(oam_priority_value) | 4, 2);
+  if (!GameHook_DrawDugUpItemOverride(k, pt.x, pt.y - (int8)ancilla_z[k]))
+    Ancilla_SetOam(oam, pt.x, pt.y - (int8)ancilla_z[k], 0x24, HIBYTE(oam_priority_value) | 4, 2);
   if (oam->y == 0xf0)
     ancilla_type[k] = 0;
 }
@@ -4556,7 +4560,7 @@ kill_me:
       link_give_damage = 0;
       return;
     }
-    link_disable_sprite_damage = 1;
+    link_disable_sprite_damage = GameHook_ByrnaBarrierGuard();
     if (!--ancilla_aux_timer[k]) {
       ancilla_aux_timer[k] = 1;
       uint8 r0 = kCaneSpark_Magic[link_magic_consumption];
@@ -7021,7 +7025,7 @@ bool Ancilla_AddRupees(int k) {  // 89ad6c
   if (a == 0x34 || a == 0x35 || a == 0x36) {
     link_rupees_goal += kGiveRupeeGift_Tab[a - 0x34];
   } else if (a == 0x40 || a == 0x41) {
-    link_rupees_goal += kGiveRupeeGift_Tab[a - 0x40 + 3];
+    link_rupees_goal += GameHook_ReceiptPayout(a, kGiveRupeeGift_Tab[a - 0x40 + 3]);
   } else if (a == 0x46) {
     link_rupees_goal += 300;
   } else if (a == 0x47) {

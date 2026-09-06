@@ -32,7 +32,7 @@ const COMPARISON = 'Comparison';
 const DataInspector = () => {
   const {
     kind, showKind, source, schema, rows, entries,
-    clauses, setClauses, tab, setTab,
+    clauses, setClauses, search, setSearch, tab, setTab,
     selectedId, record, selectRecord, selectRecommendation, clearSelection, openIdRef,
     detailCollapsed, toggleDetail,
   } = useDataInspector();
@@ -49,7 +49,15 @@ const DataInspector = () => {
   const list = (
     <>
       <Box className="data-inspector__list-actions">
-        <FilterBar schema={schema} clauses={clauses} onChange={setClauses} />
+        <FilterBar
+          schema={schema}
+          clauses={clauses}
+          onChange={setClauses}
+          search={search}
+          onSearchChange={setSearch}
+          searchPlaceholder="Search records..."
+          searchLabel="Search records"
+        />
         {/* A finding is minted by a detection pass, never created by hand. */}
         {isCollection && (
           <CreateRecordButton kind={kind} label={source.label} schema={schema} onCreated={selectRecord} />

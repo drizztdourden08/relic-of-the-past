@@ -1,6 +1,6 @@
 /* @layer shared-game @kind types */
 import type { ActorId, CheckId, DungeonId, ItemGroupId, ItemId, ScreenId, TagId } from './ids';
-import type { CheckKind } from '../enumeration/generated-types';
+import type { CheckKind, ReviewStatus } from '../enumeration/generated-types';
 
 interface CheckGameId {
   /** Chest checks (save_dung_info[roomId], CHEST_OPEN_MASKS[chestIndex]). */
@@ -82,6 +82,8 @@ interface CheckRecord {
   visualNote?: string;
   /** Source function in sprite_main.c (debug/documentation only). */
   sourceFunc?: string;
+  /** Certification verdict, set by the data-certification pipeline; generation refuses checks below 'accepted'. */
+  review?: ReviewStatus;
 }
 
 export type { BitState, CheckGameId, CheckKind, CheckRecord, PresenceCondition, Requirement };

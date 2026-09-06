@@ -1,0 +1,39 @@
+/* @layer renderer-components @kind style */
+
+/* Fixed square slot — image and fallback chip share the exact footprint, so
+   swapping one for the other never shifts the layout around it. */
+.mode-badge {
+  width: var(--mode-badge-d);
+  height: var(--mode-badge-d);
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background: var(--c-sunken);
+  border: 1px solid var(--c-border);
+  padding: var(--space-sm);
+  box-sizing: border-box;
+}
+
+/* The art fills the slot inside its padding, letterboxed rather than stretched. */
+.mode-badge__img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: auto;
+}
+
+.mode-badge__monogram {
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semi);
+  letter-spacing: 0.5px;
+  user-select: none;
+}
+
+/* Per-mode fallback tint; the art carries its own color once it exists. */
+.mode-badge--vanilla .mode-badge__monogram { color: var(--c-text-dim); }
+.mode-badge--vanilla-safe .mode-badge__monogram { color: var(--c-green-bright); }
+.mode-badge--randomizer .mode-badge__monogram { color: var(--c-gold-bright); }
+.mode-badge--randomizer-online .mode-badge__monogram { color: var(--c-info); }

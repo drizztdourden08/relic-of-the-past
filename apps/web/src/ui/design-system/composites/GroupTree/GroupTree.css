@@ -1,0 +1,80 @@
+/* @layer renderer-components @kind style */
+
+/* Collapsible nested sections. Structure only — a caller styles its own leaf
+   rows, and puts whatever it wants in the header's meta slot. */
+
+.group-tree {
+  padding: 0;
+}
+
+.group-tree--empty {
+  padding: var(--space-md);
+  font-size: var(--text-sm);
+  color: var(--c-text-faint);
+}
+
+.group-tree__group {
+  border-bottom: 1px solid var(--c-hover);
+}
+
+.group-tree__header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: var(--space-xs) var(--space-md);
+  background: none;
+  border: none;
+  color: var(--c-text);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: var(--text-sm);
+  text-align: left;
+}
+
+.group-tree__header:hover {
+  background: var(--c-hover);
+}
+
+.group-tree__group--depth-1 .group-tree__header {
+  padding-left: var(--space-md);
+  font-size: var(--text-sm);
+}
+
+.group-tree__group--depth-2 .group-tree__header {
+  padding-left: var(--space-xl);
+  font-size: var(--text-sm);
+}
+
+.group-tree__group--depth-3 .group-tree__header {
+  padding-left: var(--space-2xl);
+  font-size: var(--text-sm);
+}
+
+.group-tree__group--depth-4 .group-tree__header {
+  padding-left: var(--space-2xl);
+  font-size: var(--text-xs);
+}
+
+.group-tree__chevron {
+  width: 14px;
+  flex-shrink: 0;
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+}
+
+.group-tree__name {
+  flex: 1;
+  min-width: 0;
+  font-weight: var(--weight-semi);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The meta slot carries the counts; it never gives way to a long group name. */
+.group-tree__meta {
+  flex-shrink: 0;
+  padding-left: var(--space-sm);
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+}

@@ -1,0 +1,338 @@
+/* @layer renderer-components @kind style */
+
+/* ═══════════════════════════════════════════════════════════════
+   SUMMARY BAR
+   ═══════════════════════════════════════════════════════════════ */
+
+.tracker-summary {
+  container-type: inline-size;
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--c-border);
+  flex-shrink: 0;
+}
+
+.tracker-summary__bar {
+  display: flex;
+  height: 6px;
+  border-radius: var(--r-sm);
+  background: var(--c-hover);
+  overflow: hidden;
+  margin-bottom: var(--space-xs);
+}
+
+.tracker-summary__fill {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.tracker-summary__fill--completed { background: var(--c-green); }
+.tracker-summary__fill--reachable { background: var(--c-warning); }
+
+.tracker-summary__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  font-size: var(--text-xs);
+}
+
+.tracker-summary__stat {
+  white-space: nowrap;
+}
+
+.tracker-summary__stat--completed { color: var(--c-green); }
+.tracker-summary__stat--reachable { color: var(--c-warning); }
+.tracker-summary__stat--blocked { color: var(--c-text-dim); }
+.tracker-summary__stat--total { color: var(--c-text); }
+
+.tracker-summary__stat--pct {
+  color: var(--c-text-dim);
+  margin-left: auto;
+}
+
+/* Labels by default; swap to compact icons when the widget gets narrow. */
+.tracker-summary__stat-icon { display: none; }
+
+@container (max-width: 340px) {
+  .tracker-summary__stat-label { display: none; }
+  .tracker-summary__stat-icon { display: inline; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FILTERS & CONTROLS
+   ═══════════════════════════════════════════════════════════════ */
+
+.tracker-filters {
+  padding: var(--space-xs) var(--space-md);
+  border-bottom: 1px solid var(--c-border);
+  flex-shrink: 0;
+}
+
+.tracker-filters__search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.tracker-filters__input {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--c-sunken);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-sm);
+  color: var(--c-text);
+  font-family: inherit;
+  font-size: var(--text-xs);
+  outline: none;
+}
+
+.tracker-filters__toggle {
+  flex-shrink: 0;
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--c-sunken);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-sm);
+  color: var(--c-text-dim);
+  font-size: var(--text-xs);
+  font-family: inherit;
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.tracker-filters__toggle:hover {
+  background: var(--c-hover);
+  color: var(--c-text);
+}
+
+.tracker-filters__toggle--active {
+  background: var(--c-selected);
+  border-color: var(--c-gold);
+  color: var(--c-gold-bright);
+}
+
+.tracker-filters__input::placeholder {
+  color: var(--c-text-muted);
+}
+
+.tracker-filters__input:focus {
+  border-color: var(--c-gold);
+}
+
+/* Toolbar wraps — never produces a horizontal scrollbar in a narrow widget. */
+.tracker-filters__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* ─── Connected segmented groups (view modes + status) ─── */
+.tracker-filters__view-modes,
+.tracker-filters__status-group {
+  display: inline-flex;
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-sm);
+  background: var(--c-sunken);
+  overflow: hidden;
+}
+
+.tracker-filters__mode-btn,
+.tracker-filters__status-btn {
+  padding: var(--space-xs) var(--space-sm);
+  background: transparent;
+  border: none;
+  border-right: 1px solid var(--c-border);
+  color: var(--c-text-dim);
+  font-size: var(--text-sm);
+  font-family: inherit;
+  cursor: pointer;
+  min-width: 28px;
+  text-align: center;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.tracker-filters__mode-btn:last-child,
+.tracker-filters__status-btn:last-child {
+  border-right: none;
+}
+
+.tracker-filters__mode-btn:hover,
+.tracker-filters__status-btn:hover {
+  background: var(--c-hover);
+  color: var(--c-text);
+}
+
+.tracker-filters__mode-btn--active,
+.tracker-filters__status-btn--active {
+  background: var(--c-selected);
+  color: var(--c-gold-bright);
+}
+
+/* Status actives keep their semantic colour (override the gold default) */
+.tracker-filters__status-btn--reachable.tracker-filters__status-btn--active {
+  background: var(--c-warning-soft);
+  color: var(--c-warning);
+}
+
+.tracker-filters__status-btn--completed.tracker-filters__status-btn--active {
+  background: var(--c-green-soft);
+  color: var(--c-green-bright);
+}
+
+.tracker-filters__status-btn--blocked.tracker-filters__status-btn--active {
+  background: var(--c-border-strong);
+  color: var(--c-text);
+}
+
+/* ─── Standalone toggle buttons (Tags, Group) ─── */
+.tracker-filters__btn {
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--c-sunken);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-sm);
+  color: var(--c-text-dim);
+  font-size: var(--text-xs);
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.tracker-filters__btn:hover {
+  background: var(--c-hover);
+  color: var(--c-text);
+}
+
+.tracker-filters__btn--active {
+  background: var(--c-selected);
+  border-color: var(--c-gold);
+  color: var(--c-gold-bright);
+}
+
+/* ─── Tag filter panel ─── */
+.tracker-filters__tags-panel {
+  margin-top: var(--space-sm);
+  padding: var(--space-sm);
+  background: var(--c-inset);
+  border: 1px solid var(--c-hairline);
+  border-radius: var(--r-sm);
+}
+
+.tracker-filters__tag-mode {
+  display: flex;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-sm);
+}
+
+.tracker-filters__tag-mode button {
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--c-sunken);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-sm);
+  color: var(--c-text-dim);
+  font-size: var(--text-xs);
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.tracker-filters__tag-group {
+  margin-bottom: var(--space-xs);
+}
+
+.tracker-filters__tag-group-label {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semi);
+  text-transform: uppercase;
+  color: var(--c-text-dim);
+  display: block;
+  margin-bottom: var(--space-xs);
+}
+
+.tracker-filters__tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.tracker-filters__tag {
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--text-xs);
+  background: var(--c-sunken);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-pill);
+  color: var(--c-text-dim);
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.tracker-filters__tag--active {
+  background: var(--c-selected);
+  border-color: var(--c-gold);
+  color: var(--c-gold-bright);
+}
+
+/* ─── Grouping config panel ─── */
+.tracker-filters__group-panel {
+  margin-top: var(--space-sm);
+  padding: var(--space-sm);
+  background: var(--c-inset);
+  border: 1px solid var(--c-hairline);
+  border-radius: var(--r-sm);
+}
+
+.tracker-filters__group-current {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-sm);
+}
+
+.tracker-filters__group-empty {
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  font-style: italic;
+}
+
+.tracker-filters__group-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--c-selected);
+  border: 1px solid var(--c-gold);
+  border-radius: var(--r-pill);
+  font-size: var(--text-xs);
+  color: var(--c-gold-bright);
+}
+
+.tracker-filters__group-remove {
+  background: none;
+  border: none;
+  color: var(--c-gold-bright);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.tracker-filters__group-add {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.tracker-filters__group-add-btn {
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--text-xs);
+  background: var(--c-sunken);
+  border: 1px dashed var(--c-border-strong);
+  border-radius: var(--r-pill);
+  color: var(--c-text-dim);
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.tracker-filters__group-add-btn:hover {
+  background: var(--c-hover);
+  border-color: var(--c-gold);
+  color: var(--c-text);
+}

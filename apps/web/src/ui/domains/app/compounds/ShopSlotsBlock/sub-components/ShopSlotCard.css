@@ -1,0 +1,110 @@
+/* @layer renderer-components @kind style */
+
+/* One shop card. Three faces, carried on data-state so the card never needs a
+   class list built in the component:
+     on       — at least one slot ticked: raised surface, normal contrast.
+     off      — nothing ticked: dimmed, so the grid reads at a glance as
+                "these are the ones in play".
+     disabled — vanilla mode or the frozen Run tab: flattened onto the page
+                background and stripped of the raised surface, so the card
+                reads as inert rather than merely unticked. No dim here — the
+                ticks inside already carry the disabled opacity, and dimming
+                the card on top of that would push its text under contrast. */
+
+.shop-slot-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  min-width: 0;
+  padding: var(--space-md);
+  background: var(--c-surface);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-lg);
+}
+
+.shop-slot-card[data-state='off'] {
+  opacity: var(--opacity-muted);
+}
+
+.shop-slot-card[data-state='disabled'] {
+  background: var(--c-bg);
+}
+
+/* Nothing ticked, in EITHER state. The dim above only lands on the live face,
+   so the reading is carried here on the outline and the title instead: those
+   survive the inert face without stacking a second transparency on ticks that
+   already carry the disabled one. */
+
+.shop-slot-card[data-empty] {
+  border-style: dashed;
+}
+
+.shop-slot-card[data-empty] .shop-slot-card__title {
+  color: var(--c-text-muted);
+}
+
+.shop-slot-card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.shop-slot-card__title {
+  color: var(--c-text);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-tight);
+  overflow-wrap: anywhere;
+}
+
+.shop-slot-card[data-state='disabled'] .shop-slot-card__title {
+  color: var(--c-text-muted);
+}
+
+.shop-slot-card__badge {
+  flex: 0 0 auto;
+  padding: 0 var(--space-xs);
+  font-size: var(--text-xs);
+  background: var(--c-hover);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--r-pill);
+}
+
+.shop-slot-card__stock {
+  color: var(--c-text-dim);
+  font-size: var(--text-xs);
+  line-height: var(--leading-tight);
+  overflow-wrap: anywhere;
+}
+
+/* THREE fixed tracks, not a row of flexing boxes: the boxes are then the same
+   size in every card, and the one-slot shop draws its single box at that size
+   in the first track instead of stretching across the whole card. */
+.shop-slot-card__slots {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-xs);
+}
+
+/* Squared off rather than pill-shaped — a box that reads as a cell of the
+   shelf it stands for. The height is fixed so a long single-slot label
+   wrapping onto a second line does not make its box taller than the three it
+   sits beside in the next card along. */
+.shop-slot-card__slot {
+  gap: var(--space-xs);
+  justify-content: center;
+  min-height: var(--shop-slot-box-h);
+  min-width: 0;
+  padding: var(--space-xs);
+  text-align: center;
+  background: var(--c-bg);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-sm);
+  overflow-wrap: anywhere;
+}
+
+.shop-slot-card[data-state='disabled'] .shop-slot-card__slot {
+  background: transparent;
+}

@@ -17,6 +17,7 @@ export type { OperatorIcon, OperatorSpec } from './filter/operators';
 export {
   clearFieldTesters, getFieldTester, hasFieldTester, registerFieldTester,
 } from './filter/tester-registry';
+export { compileTextSearch } from './filter/text-search';
 export type { FieldTester, FilterTestOptions } from './filter/tester-registry';
 
 export {

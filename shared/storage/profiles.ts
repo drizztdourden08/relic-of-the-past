@@ -7,7 +7,7 @@
  * is read unchanged.
  */
 import type { FileStore } from '@shared/platform';
-import type { Profile, ProfilePatch, AppState } from '@shared/types/profile';
+import type { Profile, ProfilePatch, AppState, CreateProfileOptions } from '@shared/types/profile';
 
 const APP_STATE = 'app.json';
 const profileFile = (id: string): string => `profiles/${id}/profile.json`;
@@ -48,18 +48,21 @@ const listProfiles = async (files: FileStore): Promise<Profile[]> => {
 const loadProfile = (files: FileStore, id: string): Promise<Profile | null> =>
   readJson<Profile | null>(files, profileFile(id), null);
 
-const createProfile = async (files: FileStore, name: string, romFile: string, language?: string, msuPack?: string): Promise<Profile> => {
+const createProfile = async (files: FileStore, opts: CreateProfileOptions): Promise<Profile> => {
+  const { name, romFile, language, msuPack, randomizer } = opts;
   const id = newId();
   const now = Date.now();
   const profile: Profile = { id, name, romFile, created: now, lastPlayed: now };
   if (language) profile.language = language;
   if (msuPack) profile.msuPack = msuPack;
+  if (randomizer) profile.randomizer = randomizer;
   await files.mkdir(`profiles/${id}/saves`);
   await writeJson(files, profileFile(id), profile);
   await writeJson(files, configFile(id), {});
   return profile;
 };
 
+// Whitelist by design: `randomizer` is deliberately not patchable. It is frozen at creation.
 const updateProfile = async (files: FileStore, id: string, patch: ProfilePatch): Promise<Profile | null> => {
   const profile = await loadProfile(files, id);
   if (!profile) return null;

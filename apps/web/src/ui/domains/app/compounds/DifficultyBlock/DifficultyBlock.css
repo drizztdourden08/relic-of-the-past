@@ -1,0 +1,32 @@
+/* @layer renderer-components @kind style */
+
+.difficulty-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  min-width: 0;
+  padding-top: var(--space-md);
+}
+
+/* The five family sliders read as one question asked five times, so they are
+   indented together under their heading rather than sitting flush with the
+   heart ceiling below them. */
+.difficulty-block__copies {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding-left: var(--space-md);
+  border-left: var(--border-width-thin) solid var(--c-border);
+}
+
+.difficulty-block__caption {
+  color: var(--c-text-dim);
+  font-size: var(--text-xs);
+  padding: 0 var(--space-sm);
+}
+
+.difficulty-block__heading {
+  color: var(--c-text-muted);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+}

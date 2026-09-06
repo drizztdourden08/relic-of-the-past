@@ -149,41 +149,39 @@ void WasmTriggerCheck(int room_id, int chest_index, int item_id) {
 
 // ─── NPC Check Trigger ───
 
-void GameHook_TriggerNpcCheck(uint8 flag_type, uint8 flag_mask, uint8 item_id,
-                              uint8 sprite_type_id, uint8 post_gfx) {
+// |assigned| tells the npc-override seam who is granting: false replays the giver's own
+// vanilla grant (the substitution table applies, matched by item since the trigger
+// already names the check), true delivers an item the host already assigned (the table
+// must not re-substitute it). Either one-shot arms right beside the grant call, so a
+// refused or itemless trigger leaves nothing armed.
+static void TriggerNpcCheckImpl(uint8 flag_type, uint8 flag_mask, uint8 item_id,
+                                uint8 sprite_type_id, uint8 post_gfx, bool assigned) {
+  (void)post_gfx;
   if (!TriggerGrantAllowed()) return;
-  switch (flag_type) {
-    case 0:
-      sram_progress_flags |= flag_mask;
-      printf("[GameHook] TriggerNpcCheck: sram_progress_flags |= 0x%02x → 0x%02x, item=0x%02x\n",
-             flag_mask, sram_progress_flags, item_id);
-      break;
-    case 1:
-      sram_progress_indicator |= flag_mask;
-      printf("[GameHook] TriggerNpcCheck: sram_progress_indicator |= 0x%02x → 0x%02x, item=0x%02x\n",
-             flag_mask, sram_progress_indicator, item_id);
-      break;
-    case 2:
-      sram_progress_indicator_3 |= flag_mask;
-      printf("[GameHook] TriggerNpcCheck: sram_progress_indicator_3 |= 0x%02x → 0x%02x, item=0x%02x\n",
-             flag_mask, sram_progress_indicator_3, item_id);
-      break;
-    default:
-      printf("[GameHook] TriggerNpcCheck: invalid flag_type %d\n", flag_type);
-      return;
+  // Already granted? The flag write is idempotent but Link_ReceiveItem is NOT (the
+  // same guard the chest and overworld triggers carry) — a replayed trigger for a
+  // flag that is already set must not hand the item over a second time.
+  uint8 *flags = flag_type == 0 ? &sram_progress_flags
+               : flag_type == 1 ? &sram_progress_indicator
+               : flag_type == 2 ? &sram_progress_indicator_3 : NULL;
+  if (flags == NULL) {
+    printf("[GameHook] TriggerNpcCheck: invalid flag_type %d\n", flag_type);
+    return;
   }
+  if (flag_mask != 0 && (*flags & flag_mask) == flag_mask) {
+    printf("[GameHook] TriggerNpcCheck: flag_type %d mask 0x%02x already set, no re-grant\n",
+           flag_type, flag_mask);
+    return;
+  }
+  *flags |= flag_mask;
+  printf("[GameHook] TriggerNpcCheck: flag_type %d |= 0x%02x → 0x%02x, item=0x%02x\n",
+         flag_type, flag_mask, *flags, item_id);
 
-  if (sprite_type_id != 0xFF) {
-    for (int k = 15; k >= 0; k--) {
-      if (sprite_state[k] != 0 && sprite_type[k] == sprite_type_id) {
-        sprite_ai_state[k] = 2;
-        sprite_graphics[k] = post_gfx;
-        printf("[GameHook] Sprite slot %d (type=0x%02x): ai_state→2, graphics→%d\n",
-               k, sprite_type_id, post_gfx);
-        break;
-      }
-    }
-  }
+  // NOTE: this trigger deliberately does NOT touch the giver sprite's ai state. The
+  // old "post-grant pose" poke set ai_state 2 on the named sprite type — and for
+  // several givers ai 2 IS the granting state, so the poke replayed the giver's own
+  // vanilla grant right after the delivery (the double-bottle bug). Visual post-grant
+  // state now comes only from the giver's own script or from the flags above.
 
   if (sprite_type_id == SPRITE_UNCLE_PRIEST) {
     which_starting_point = 3;
@@ -197,7 +195,11 @@ void GameHook_TriggerNpcCheck(uint8 flag_type, uint8 flag_mask, uint8 item_id,
   if (item_id != 0xFF) {
     SimCountReceive(1, item_id);
     if (item_id == 0x17) SimGiveHeartPiece();
-    else Link_ReceiveItem(item_id, 0);
+    else {
+      if (assigned) GameHook_NpcOverrideBypassOnce();
+      else GameHook_NpcOverrideMatchAnywhereOnce();
+      Link_ReceiveItem(item_id, 0);
+    }
   }
 
   if (sprite_type_id == 0x28) {
@@ -207,11 +209,25 @@ void GameHook_TriggerNpcCheck(uint8 flag_type, uint8 flag_mask, uint8 item_id,
   }
 }
 
+void GameHook_TriggerNpcCheck(uint8 flag_type, uint8 flag_mask, uint8 item_id,
+                              uint8 sprite_type_id, uint8 post_gfx) {
+  TriggerNpcCheckImpl(flag_type, flag_mask, item_id, sprite_type_id, post_gfx, false);
+}
+
 EMSCRIPTEN_KEEPALIVE
 void WasmTriggerNpcCheck(int flag_type, int flag_mask, int item_id,
                          int sprite_type_id, int post_gfx) {
-  GameHook_TriggerNpcCheck((uint8)flag_type, (uint8)flag_mask, (uint8)item_id,
-                           (uint8)sprite_type_id, (uint8)post_gfx);
+  TriggerNpcCheckImpl((uint8)flag_type, (uint8)flag_mask, (uint8)item_id,
+                      (uint8)sprite_type_id, (uint8)post_gfx, false);
+}
+
+// The delivery queue's form: |item_id| is the host-assigned item for the check, granted
+// exactly as passed — the npc-override seam is bypassed for this one receipt.
+EMSCRIPTEN_KEEPALIVE
+void WasmTriggerNpcCheckAssigned(int flag_type, int flag_mask, int item_id,
+                                 int sprite_type_id, int post_gfx) {
+  TriggerNpcCheckImpl((uint8)flag_type, (uint8)flag_mask, (uint8)item_id,
+                      (uint8)sprite_type_id, (uint8)post_gfx, true);
 }
 
 // ─── Overworld Check Trigger ───

@@ -6,7 +6,7 @@
 import { useState, useEffect } from 'react';
 import { onInventoryChanged, getCurrentInventory } from '../../../../lib/game';
 import type { ItemId } from '@shared/game/data';
-import { TrackerInventory } from '../../app/views/TrackerView/sub-components/TrackerInventory';
+import { TrackerInventory } from '@domains/app/compounds/TrackerInventory';
 import { useInventoryViewMode } from './behavior/useInventoryViewMode';
 
 const InventoryWidgetContent = () => {

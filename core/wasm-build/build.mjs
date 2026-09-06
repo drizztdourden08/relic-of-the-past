@@ -18,7 +18,8 @@
  * runtime entry points JS calls directly are listed in EXPORTED_FUNCTIONS below.
  */
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, existsSync } from 'node:fs';
+import { mkdirSync, existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 
 const here = import.meta.dirname;
@@ -45,13 +46,25 @@ const snesSrcs = [
 
 const hookSrcs = [
   'game_hooks', 'state_queries', 'state_queries_sprites', 'state_queries_grids',
-  'state_queries_room_grid',
+  'state_queries_room_grid', 'state_queries_progress',
   'state_queries_tables', 'state_queries_rooms', 'state_queries_room_exits',
   'state_queries_room_objects', 'attr_grid_state', 'gated_empty', 'receive_counters',
   'sim_queries', 'sim_triggers', 'item_overrides', 'check_triggers', 'ui_state', 'cheats', 'haptic_events',
+  'receipt_grant', 'receipt_messages', 'receipt_gfx_guard', 'npc_overrides', 'drop_overrides',
+  'standing_overrides', 'shop_overrides', 'shop_table', 'shop_payment', 'shop_refusal', 'shop_draw', 'world_item_draws', 'receipt_sprite_draw', 'receipt_ancilla_draws',
+  'sprite_art_slots', 'shop_symbols',
+  'rupee_gem_draw', 'rupee_holdup_draw', 'item_sheen', 'item_sheen_holdup', 'session_dialogue',
+  'upgrade_grants', 'progressive_grants', 'scripted_grants', 'pond_plan', 'pond_toss_draw', 'pond_probes',
+  'capacity_profile', 'wallet_grants',
+  'capacity_progressive', 'capacity_fixed_lines', 'capacity_probes', 'upgrade_icon', 'upgrade_bonus', 'gear_icon',
+  'prize_grants', 'prize_probes',
+  'dungeon_item_grants', 'dungeon_item_probes',
   'player_sprite', 'transition_events', 'state_queries_combat', 'state_queries_oam',
+  'state_queries_pose',
+  'item_power', 'swordless_paths', 'retro_bow', 'retro_drops', 'retro_shelf', 'retro_quiver_icon', 'archery_host',
+  'dark_room_lights',
   'host_gates', 'hud_override', 'running_man', 'music_hooks', 'sound_hooks', 'view_gates',
-  'cheat_lighting',
+  'cheat_lighting', 'cheat_wallet', 'dev_frame_dump',
 ].map((f) => h(`${f}.c`));
 
 // Our Emscripten entry points (replace the native main.c). Resolved from this dir.
@@ -101,14 +114,25 @@ const run = () => {
   console.log('Building zelda3 WASM...');
   console.log('============================================');
 
+  // The whole argument list rides in a response file: ~80 absolute source paths exceed the
+  // 8191-character command line cmd.exe allows once the checkout sits under a worktree path.
+  // Quoting mirrors emcc's own response-file writer (shlex rules: escape \ " ' and quote spaces).
+  const rspDir = mkdtempSync(join(tmpdir(), 'zelda3-emcc-'));
+  const rsp = join(rspDir, 'args.rsp.utf-8');
+  const escapeArg = (a) => {
+    const escaped = a.replace(/[\\"']/g, (c) => `\\${c}`);
+    return escaped.includes(' ') ? `"${escaped}"` : escaped;
+  };
+  writeFileSync(rsp, args.map(escapeArg).join('\n') + '\n');
+
   // emcc is a .bat on Windows (not directly executable by CreateProcess), so go
-  // through cmd there; PATH-resolved binary everywhere else. No shell on POSIX,
-  // so the bracketed flag values pass through literally without re-quoting.
+  // through cmd there; PATH-resolved binary everywhere else.
   const isWin = process.platform === 'win32';
   const cmd = isWin ? process.env.COMSPEC || 'cmd.exe' : 'emcc';
-  const spawnArgs = isWin ? ['/c', 'emcc', ...args] : args;
+  const spawnArgs = isWin ? ['/c', 'emcc', `@${rsp}`] : [`@${rsp}`];
 
   const result = spawnSync(cmd, spawnArgs, { stdio: 'inherit' });
+  rmSync(rspDir, { recursive: true, force: true });
   if (result.status !== 0) {
     console.error('\nBUILD FAILED');
     process.exit(result.status ?? 1);

@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind types */
+import type { ProfileRandomizerConfig } from '@shared/types/profile';
 
 interface HomeTabProps {
   profileId: string;
@@ -8,6 +9,28 @@ interface HomeTabProps {
   lastPlayed?: number;
   created?: number;
   windowMode?: string;
+  /** Frozen at profile creation; presence marks a randomized playthrough. */
+  randomizer?: ProfileRandomizerConfig;
+  vanillaSafe: boolean;
+}
+
+/** One label/value cell of the home summary panel. */
+interface SummaryFact {
+  label: string;
+  value: string;
+  /** Full value for the hover tooltip when the cell truncates. */
+  title?: string;
+  mono?: boolean;
+  capitalize?: boolean;
+}
+
+/** Offline checks readout for one battery-save file (label = slot + 1). */
+interface SaveFileChecks {
+  slot: number;
+  taken: number;
+  available: number;
+  left: number;
+  total: number;
 }
 
 interface SlotInfo {
@@ -24,4 +47,4 @@ interface DialogState {
   detail?: string;
 }
 
-export type { HomeTabProps, SlotInfo, DialogState };
+export type { HomeTabProps, SaveFileChecks, SlotInfo, DialogState, SummaryFact };

@@ -1,0 +1,106 @@
+/* @layer renderer-components @kind style */
+
+/* The card is drawn at the width of what it holds, never at the width of the
+   panel: a family with two rungs is a narrow card beside the four-rung one,
+   which is the whole point of a card standing for a family. It may still be
+   squeezed by a pane narrower than its rung row, which is what keeps a narrow
+   pane from scrolling sideways. */
+.progressive-tier-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  min-width: 0;
+  max-width: 100%;
+  padding: var(--space-md);
+  background: var(--c-surface);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-lg);
+}
+
+.progressive-tier-card[data-state='off'] { opacity: var(--opacity-muted); }
+.progressive-tier-card[data-state='disabled'] { background: var(--c-bg); }
+
+/* A family with nothing ticked is not in the seed at all, so its card is drawn
+   as an outline rather than as a filled one that happens to be empty. */
+.progressive-tier-card[data-empty] { border-style: dashed; }
+.progressive-tier-card[data-empty] .progressive-tier-card__title { color: var(--c-text-muted); }
+.progressive-tier-card[data-state='disabled'] .progressive-tier-card__title { color: var(--c-text-muted); }
+
+.progressive-tier-card__title {
+  color: var(--c-text);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-tight);
+  overflow-wrap: anywhere;
+}
+
+.progressive-tier-card__count {
+  color: var(--c-text-dim);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ONE ROW per family, centred, each box only as wide as the tick and name it
+   holds. A family's rungs are a ladder, so they read across; a track grid gave
+   every box the same stretched width and made a two-rung family as wide as the
+   panel it sat in.
+
+   Wrapping is the responsive half: a row too long for the card drops its last
+   boxes onto a second line, and only a box wider than the card itself is
+   allowed to shrink, at which point its name folds rather than overflowing. */
+.progressive-tier-card__tiers {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-xs);
+}
+
+/* Squared off rather than pill-shaped — a box that reads as one rung of the
+   ladder it stands for. The tick sits BESIDE its name on one line, the way a
+   tick and its label read everywhere else. Written through the card so it
+   outranks the checkbox's own single-class rules whatever order the two
+   sheets land in.
+
+   The height is a floor rather than a measured fit, so every box in every card
+   comes out level — and with the name on one line it is now the height of that
+   line, not of two. */
+.progressive-tier-card .progressive-tier-card__tier {
+  flex: 0 1 auto;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--space-xs);
+  min-height: var(--tier-box-h);
+  min-width: 0;
+  max-width: 100%;
+  padding: var(--space-xs);
+  text-align: left;
+  background: var(--c-bg);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-sm);
+}
+
+/* The tick keeps its own size whatever the name beside it does — a flex row
+   would otherwise squeeze the input before the text. */
+.progressive-tier-card .progressive-tier-card__tier .checkbox__input {
+  flex: none;
+}
+
+/* The name at the box's own size: smaller than a list label because several of
+   them share a card's width. It stays on one line while the card can hold it,
+   and folds only once the box has been squeezed by a pane narrower than the
+   name itself. */
+.progressive-tier-card .progressive-tier-card__tier .checkbox__label {
+  font-size: var(--text-xs);
+  line-height: var(--leading-tight);
+  overflow-wrap: anywhere;
+}
+
+.progressive-tier-card[data-state='disabled'] .progressive-tier-card__tier { background: transparent; }
+
+/* The order question, kept at the foot and set off by a hairline: it is about
+   the whole family rather than about any one box above it. */
+.progressive-tier-card__mode {
+  padding-top: var(--space-xs);
+  border-top: var(--border-width-thin) solid var(--c-border);
+}
