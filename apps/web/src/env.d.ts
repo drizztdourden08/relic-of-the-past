@@ -93,6 +93,7 @@ interface Profile {
   language?: string;
   msuPack?: string;
   automation?: boolean;
+  randomizer?: import('@shared/types/profile').ProfileRandomizerConfig;
 }
 
 interface AppState {

@@ -16,6 +16,23 @@
 static bool g_wanted_hud_hidden;
 static bool g_wanted_pause_hidden;
 
+// Per-category masks for a headless harness. The renderer only ever asks for all-or-nothing, so
+// the per-category tables in nmi.c are otherwise unreachable and untestable from a probe. -1 means
+// "not overriding" and the reconcile below runs exactly as it always has; the setter is gated on
+// the REQUESTED developer-tools bit like WasmDevRunFrame, so with the bit clear these stay -1 and
+// nothing here changes. The renderer never calls it.
+static int g_dev_hud_mask = -1;
+static int g_dev_pause_mask = -1;
+
+EMSCRIPTEN_KEEPALIVE
+int WasmDevSetHudHideMasks(int hud, int pause) {
+  if (!(g_wanted_gate_words[0] & kFeatures0_DeveloperTools)) return 0;
+  g_dev_hud_mask = hud;
+  g_dev_pause_mask = pause;
+  HudOverride_Sync();
+  return 1;
+}
+
 bool HudOverride_Allowed(void) {
   return (enhanced_features3 & kFeatures3_HudOverride) != 0;
 }
@@ -37,13 +54,17 @@ void HudOverride_Sync(void) {
   // g_hud_hide_mask only filters the HUD tile copy during the next NMI (nmi.c), so a change in either
   // direction needs the copy forced to actually repaint what the mask stopped or resumed filtering.
   uint8 hud = (g_wanted_hud_hidden && allowed) ? HUD_HIDE_ALL : 0;
+  if (g_dev_hud_mask >= 0) hud = (uint8)g_dev_hud_mask;
   if (hud != g_hud_hide_mask) {
     g_hud_hide_mask = hud;
     flag_update_hud_in_nmi++;
   }
 
   uint8 pause = (g_wanted_pause_hidden && allowed) ? PAUSE_HIDE_ALL : 0;
-  bool newly_hidden = pause && !g_pause_hide_mask;
+  if (g_dev_pause_mask >= 0) pause = (uint8)g_dev_pause_mask;
+  // A partial mask under test must leave the untargeted tiles alone, so the wholesale blank only
+  // applies to the renderer's own all-or-nothing request.
+  bool newly_hidden = pause && !g_pause_hide_mask && g_dev_pause_mask < 0;
   g_pause_hide_mask = pause;
   if (newly_hidden) BlankLivePauseTiles();
 }

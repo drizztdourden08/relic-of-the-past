@@ -4459,7 +4459,7 @@ void RoomTag_RoomTrigger_BlockDoor(int k) {  // 81c4e7
 // Used for bosses
 void RoomTag_PrizeTriggerDoorDoor(int k) {  // 81c508
   int t = savegame_is_darkworld ? link_has_crystals : link_which_pendants;
-  if (t & kDungeonCrystalPendantBit[BYTE(cur_palace_index_x2) >> 1]) {
+  if (GameHook_DungeonPrizeTaken(t & kDungeonCrystalPendantBit[BYTE(cur_palace_index_x2) >> 1])) {
     dung_flag_trapdoors_down = 0;
     dung_cur_door_pos = 0;
     door_animation_step_indicator = 0;
@@ -4585,7 +4585,7 @@ void RoomTag_GetHeartForPrize(int k) {  // 81c709
   if (!(dung_savegame_state_bits & 0x8000))
     return;
   int t = savegame_is_darkworld ? link_has_crystals : link_which_pendants;
-  if (!(t & kDungeonCrystalPendantBit[BYTE(cur_palace_index_x2) >> 1])) {
+  if (!GameHook_DungeonPrizeTaken(t & kDungeonCrystalPendantBit[BYTE(cur_palace_index_x2) >> 1])) {
     byte_7E04C2 = 128;
     if (Ancilla_SpawnFallingPrize(kBossFinishedFallingItem[BYTE(cur_palace_index_x2) >> 1]) < 0)
       return; // Zelda bugfix. Price won't spawn if we're out of ancillas
@@ -5120,11 +5120,10 @@ not_openable:
     }
   }
 
-  if (!(button_mask_b_y & 0x80) || button_b_frames != 4)
+  if (!GameHook_CurtainSequenceRuns())
     return;
 
-  int pos = ((link_y_coord + (int8)player_oam_y_offset) & 0x1f8) << 3;
-  pos |= ((link_x_coord + (int8)player_oam_x_offset) & 0x1f8) >> 3;
+  int pos = GameHook_CurtainSequenceAnchor();
   uint8 attr, y;
 
 #define is_6c_fx(yv,x) (y=yv, ((attr = (dung_bg2_attr_table[x] & 0xfc)) == 0x6c || (attr & 0xf0) == 0xf0))
@@ -5907,7 +5906,7 @@ uint8 OpenMiniGameChest(int *chest_position) {  // 81edab
         dung_savegame_state_bits |= 0x4000;
       }
     }
-    rv = kDungeon_MinigameChestPrizes1[t];
+    rv = GameHook_OverrideMinigamePrize(GameHook_RetroMinigamePrize(kDungeon_MinigameChestPrizes1[t]), t);
   }
   some_menu_ctr = t;
   nmi_load_bg_from_vram = 1;

@@ -1380,6 +1380,7 @@ void Sprite_CheckAbsorptionByPlayer(int k) {  // 86d116
 }
 
 void Sprite_HandleAbsorptionByPlayer(int k) {  // 86d13c
+  if (GameHook_OverrideDropAbsorption(k)) return;
   sprite_state[k] = 0;
   int t = sprite_type[k] - 0xd8;
   SpriteSfx_QueueSfx3WithPan(k, kAbsorptionSfx[t]);
@@ -1446,6 +1447,7 @@ bool SpriteDraw_AbsorbableTransient(int k, bool transient) {  // 86d22f
       sprite_B[k] = 0;
     return true;
   }
+  if (GameHook_DrawDropOverride(k)) return false;
   uint8 j = sprite_type[k];
   assert(j >= 0xd8 && j < 0xd8 + 19);
   uint8 a = kAbsorbable_Tab2[j - 0xd8];
@@ -2401,7 +2403,7 @@ void Sprite_GiveDamage(int k, uint8 dmg, uint8 r0_hit_timer) {  // 86edc5
     }
   }
   if (dmg == 249) {
-    Sprite_Func18(k, 0xe3);
+    Sprite_Func18(k, GameHook_PowderTransmuteType(0xe3));
     return;
   }
   if (dmg == 250) {
@@ -2754,7 +2756,7 @@ uint8 Sprite_CheckDamageFromLink(int k) {  // 86f2b4
     return kCheckDamageFromPlayer_Carry | kCheckDamageFromPlayer_Ne;
 
   if (link_item_in_hand & 10) {
-    if (sprite_type[k] >= 0xd6)
+    if (sprite_type[k] >= 0xd6 && !GameHook_HammerReachesLastFight())
       return 0;
     if (sprite_state[k] == 11 && sprite_unk5[k] != 0) {
       sprite_state[k] = 2;
@@ -3106,7 +3108,7 @@ void ForcePrizeDrop(int k, uint8 prize, uint8 slot) {  // 86f9bc
 }
 
 void PrepareEnemyDrop(int k, uint8 item) {  // 86f9d1
-  sprite_type[k] = item;
+  sprite_type[k] = GameHook_RetroPrizeType(item);
   if (item == 0xe5)
     SpritePrep_BigKey_load_graphics(k);
   else if (item == 0xe4)
@@ -4518,7 +4520,7 @@ int Sprite_SpawnDynamically(int k, uint8 what, SpriteSpawnInfo *info) {  // 9df6
 int Sprite_SpawnDynamicallyEx(int k, uint8 what, SpriteSpawnInfo *info, int j) {  // 9df65f
   do {
     if (sprite_state[j] == 0) {
-      sprite_type[j] = what;
+      sprite_type[j] = GameHook_RetroPrizeType(what);
       sprite_state[j] = 9;
       info->r0_x = Sprite_GetX(k);
       info->r2_y = Sprite_GetY(k);

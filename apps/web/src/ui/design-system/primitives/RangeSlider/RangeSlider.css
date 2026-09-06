@@ -1,0 +1,107 @@
+/* @layer renderer-components @kind style */
+
+/* Two native range inputs share one track: the inputs are transparent and
+   inert, only their thumbs take the pointer, and the gold fill between the
+   thumbs is painted by the track from the two percentages the component sets. */
+
+.range-slider {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+
+.range-slider--disabled {
+  opacity: var(--opacity-disabled);
+  pointer-events: none;
+}
+
+.range-slider__track {
+  position: relative;
+  height: var(--space-lg);
+  display: flex;
+  align-items: center;
+}
+
+.range-slider__track::before {
+  content: '';
+  position: absolute;
+  inset: auto 0;
+  height: var(--space-xs);
+  border-radius: var(--radius-sm);
+  background: linear-gradient(
+    to right,
+    var(--c-surface) 0%,
+    var(--c-surface) var(--range-lo),
+    var(--c-gold) var(--range-lo),
+    var(--c-gold) var(--range-hi),
+    var(--c-surface) var(--range-hi),
+    var(--c-surface) 100%
+  );
+}
+
+.range-slider__input {
+  appearance: none;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  margin: 0;
+  background: transparent;
+  pointer-events: none;
+  outline: none;
+  z-index: var(--z-base);
+}
+
+.range-slider__input--top {
+  z-index: calc(var(--z-base) + 1);
+}
+
+.range-slider__input::-webkit-slider-thumb {
+  appearance: none;
+  width: var(--space-lg);
+  height: var(--space-lg);
+  border-radius: 50%;
+  background: var(--c-gold-bright);
+  border: var(--border-width-thick) solid var(--c-bg);
+  box-shadow: var(--shadow-1);
+  pointer-events: auto;
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+.range-slider__input::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.range-slider__input:focus-visible::-webkit-slider-thumb {
+  outline: var(--border-width-thick) solid var(--c-gold);
+  outline-offset: var(--space-2xs);
+}
+
+.range-slider__ticks {
+  position: relative;
+  height: var(--text-xs);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-faint);
+  line-height: 1;
+}
+
+.range-slider__tick {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.range-slider__tick:first-child {
+  transform: none;
+}
+
+.range-slider__tick:last-child {
+  transform: translateX(-100%);
+}
+
+.range-slider__tick--in {
+  color: var(--c-text-dim);
+}

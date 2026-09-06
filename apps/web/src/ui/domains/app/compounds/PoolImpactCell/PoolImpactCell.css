@@ -1,0 +1,20 @@
+/* @layer renderer-components @kind style */
+
+/* Fixed track, right-aligned, tabular digits: the text may change width,
+   the cell may not. Anything wider than the track ellipsizes. */
+
+.pool-impact-cell {
+  min-width: 0;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--c-gold);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pool-impact-cell--muted {
+  color: var(--c-text-muted);
+}

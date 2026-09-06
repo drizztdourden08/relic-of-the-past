@@ -6,6 +6,7 @@
 #include "overworld.h"
 #include "messaging.h"
 #include "sprite.h"
+#include "game_hooks.h"
 
 #define selectfile_R16 g_ram[0xc8]
 #define selectfile_R17 g_ram[0xc9]
@@ -866,6 +867,7 @@ void NameFile_DoTheNaming() {  // 8cda4d
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0xf8, 0, 0,
   };
   memcpy(sram + 0x340, kSramInit_Normal, 60);
+  GameHook_InitNewFileCounters(sram + 0x340);
   Intro_FixCksum(sram);
   ZeldaWriteSram();
   ReturnToFileSelect();

@@ -30,6 +30,7 @@ import { useStartup } from '@app/App/behavior/useStartup';
 import { useShellReady } from '@app/App/behavior/useShellReady';
 import { useWasmWarmup } from '@app/App/behavior/useWasmWarmup';
 import { useDebugLaunchHooks } from '@app/App/behavior/useDebugLaunchHooks';
+import { useRandomizerBoot } from '@app/App/behavior/useRandomizerBoot';
 import { useAppMainEffects } from '@app/App/behavior/useAppMainEffects';
 import { useCapability } from '@app/platform';
 import { TitleBar } from '../TitleBar';
@@ -103,13 +104,11 @@ const AppMain = () => {
   const startup = useStartup(profileMgmt, nav);
   useWasmWarmup();
   useDebugLaunchHooks({ activeProfile: profileMgmt.activeProfile, loadProfileForGame: profileMgmt.loadProfileForGame, openNavWidget: () => widgets.open('navigation') });
+  useRandomizerBoot(profileMgmt.activeProfile?.id ?? null);
   useIpcLogBridge();
   // A music pack opened from the desktop imports itself.
   useMsulOpen();
   useAppMainEffects({ isGameRunning: game.isRunning, activePage: nav.activePage, openNavWidget: () => widgets.open('navigation') });
-
-  // Default notch mode until a profile loads (keeps startup windows clear of a cutout).
-  useEffect(() => { applyNotchMode(true); }, []);
 
   // Splash window → main window: reveal only once startup has settled and painted,
   // so the first frame the user sees is the finished shell (electron only).

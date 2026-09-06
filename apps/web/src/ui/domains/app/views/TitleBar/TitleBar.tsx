@@ -50,6 +50,7 @@ const TitleBar = (props: TitleBarProps) => {
     onToggleMusic,
     onShowShadowEditor,
     onShowAbout,
+    onShowRandomizer,
     onShowBugReport,
     activeProfile,
     gameRunning,
@@ -129,7 +130,7 @@ const TitleBar = (props: TitleBarProps) => {
     closeMenu, win, activeProfile, gameRunning,
     onShowProfile, onToggleSaveStates, onShowDataManager, onToggleInventory, onToggleChecks,
     onToggleCheats, onShowLogs, onToggleDebug, onShowConnectionDebug, onToggleDataset, onToggleSimulator, onToggleMusic,
-    onShowInputTester, onShowSpriteDebug, onShowDataInspector, onShowShadowEditor, onCheckForUpdates, onShowCredits, onShowDesignGallery, onShowAbout,
+    onShowInputTester, onShowSpriteDebug, onShowDataInspector, onShowShadowEditor, onCheckForUpdates, onShowCredits, onShowDesignGallery, onShowAbout, onShowRandomizer,
     widgetVisibility, developerToolsEnabled,
   });
 

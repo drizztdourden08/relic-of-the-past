@@ -55,7 +55,7 @@ tracing behavior, but you don't register anything for them.
 
 | Callback | Called from | Purpose |
 |----------|-------------|---------|
-| `GameHook_OverrideChestItem(room, orig)` | chest-open in `player.c` | Returns the randomizer replacement item (see [Item Overrides](item-overrides.md)). |
+| `GameHook_OverrideChestItem(room, slot, orig)` | chest-open in `player.c` | Returns the randomizer replacement item for the chest slot (see [Item Overrides](item-overrides.md)). |
 | `GameHook_GetDamageMultiplier()` | `sprite.c` damage calc | Returns the cheat outgoing-damage multiplier. |
 | `GameHook_GetExtraArmorPct()` | `player.c` damage reduction | Returns the cheat extra-armor %. |
 | `GameHook_TriggerCheck(room, chest, item)` | `WasmTriggerCheck` wrapper | Marks a chest check + delivers the item. |

@@ -9,17 +9,21 @@ import { TextInput } from '../../../../../design-system/primitives/TextInput';
 import { Field } from '../../../../../design-system/primitives/Field';
 import { EmptyState } from '../../../../../design-system/primitives/EmptyState';
 import { ButtonRow } from '../../../../../design-system/primitives/ButtonRow';
+import { SegmentedControl } from '../../../../../design-system/primitives/SegmentedControl';
 import { MasterDetailLayout } from '../../../../../design-system/composites/MasterDetailLayout';
 import { ListItemRow } from '../../../../../design-system/composites/ListItemRow';
 import { formatRelativeTime } from '../../../../../../utils';
+import type { CreateProfileOptions, CreateProfileResult } from '@shared/types/profile';
 import { useProfileManager } from './profile-manager/useProfileManager';
 import { ProfileDetailPanel } from './profile-manager/ProfileDetailPanel';
+import { RandomizerFields } from './profile-manager/RandomizerFields';
+import { RandomizerOptionsPanel } from './profile-manager/RandomizerOptionsPanel';
 
 interface ProfileManagerProps {
   profiles: Profile[];
   romStatuses: RomDisplayInfo[];
   onSelectProfile: (profile: Profile) => void;
-  onCreateProfile: (name: string, romFile: string, language?: string, msuPack?: string) => void;
+  onCreateProfile: (opts: CreateProfileOptions) => Promise<CreateProfileResult>;
   onDeleteProfile: (id: string) => void;
   onRefresh: () => void;
   isGameRunning: boolean;
@@ -35,12 +39,16 @@ const ProfileManager = (props: ProfileManagerProps) => {
     formRom, setFormRom,
     formLang, setFormLang,
     formMsu, setFormMsu,
+    formRandomizer, setFormRandomizer,
+    formPreset,
+    formError, setFormError,
     languages, msuPacks,
     settings,
     readyRoms,
     selectedProfile,
     handleCreate,
     handleKeyDown,
+    handlePickPreset,
   } = useProfileManager({ profiles, romStatuses, onCreateProfile, onRefresh });
 
   const list = (
@@ -58,6 +66,15 @@ const ProfileManager = (props: ProfileManagerProps) => {
               placeholder="Select ROM..."
             />
           </Field>
+          <SegmentedControl
+            label="Preset"
+            value={formPreset}
+            onChange={handlePickPreset}
+            options={[
+              { value: 'vanilla', label: 'Vanilla' },
+              { value: 'enhanced', label: 'Enhanced' },
+            ]}
+          />
           <Field label="Language">
             <Select
               value={formLang}
@@ -80,14 +97,16 @@ const ProfileManager = (props: ProfileManagerProps) => {
               placeholder="None"
             />
           </Field>
+          <RandomizerFields value={formRandomizer} onChange={setFormRandomizer} />
+          {formError && <Text variant="caption" className="profile-form__error">{formError}</Text>}
           <ButtonRow>
             <Button variant="ghost" size="sm" onClick={() => setCreating(false)}>Cancel</Button>
-            <Button variant="primary" size="sm" onClick={handleCreate} disabled={!formName.trim() || !formRom}>Create</Button>
+            <Button variant="primary" size="sm" onClick={() => void handleCreate()} disabled={!formName.trim() || !formRom}>Create</Button>
           </ButtonRow>
         </Box>
       ) : (
         readyRoms.length > 0 && (
-          <Button variant="primary" fullWidth icon="+" onClick={() => setCreating(true)}>
+          <Button variant="primary" fullWidth icon="+" onClick={() => { setFormError(null); setCreating(true); }}>
             New Profile
           </Button>
         )
@@ -120,7 +139,21 @@ const ProfileManager = (props: ProfileManagerProps) => {
     </>
   );
 
-  const detail = !selectedProfile ? (
+  // While the creation form has the randomizer enabled, the option catalog
+  // takes over the whole detail pane, so the form keeps the fixed-width list
+  // column and the options get the remaining side with their own scroll.
+  const showOptionsPane = creating && formRandomizer.enabled;
+
+  const detail = showOptionsPane ? (
+    <RandomizerOptionsPanel
+      romFile={formRom}
+      // The form state IS the choices plus the connection fields, so it is
+      // handed over whole: re-listing the option fields here is the second
+      // list that forgets a row the catalog gained.
+      value={formRandomizer}
+      onChange={(next) => setFormRandomizer({ ...formRandomizer, ...next })}
+    />
+  ) : !selectedProfile ? (
     <Text>Select a profile to view details · Double-click to open</Text>
   ) : (
     <ProfileDetailPanel
@@ -134,7 +167,14 @@ const ProfileManager = (props: ProfileManagerProps) => {
     />
   );
 
-  return <MasterDetailLayout list={list} detail={detail} detailEmpty={!selectedProfile} />;
+  return (
+    <MasterDetailLayout
+      className={showOptionsPane ? 'master-detail--rand-options' : ''}
+      list={list}
+      detail={detail}
+      detailEmpty={!showOptionsPane && !selectedProfile}
+    />
+  );
 };
 
 export { ProfileManager };

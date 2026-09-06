@@ -7,7 +7,7 @@ is the short version GitHub surfaces, and points here.
 
 > [!IMPORTANT]
 > This is an unofficial fan project, not affiliated with Nintendo. Keep ROMs and other
-> user-provided game assets out of commits — they're gitignored and never committed.
+> user-provided game assets out of commits, since they're gitignored and never committed.
 
 ## Start here
 

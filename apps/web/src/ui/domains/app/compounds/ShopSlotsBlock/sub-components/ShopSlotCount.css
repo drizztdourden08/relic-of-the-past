@@ -1,0 +1,21 @@
+/* @layer renderer-components @kind style */
+
+/* The read-out face of the count. It stands where the slider stands and keeps
+   the slider's own type scale for its description, so switching modes changes
+   what the control IS without the row moving or changing weight. The inert
+   dim matches the slider's, for the same reason. */
+
+.shop-slot-count {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.shop-slot-count[data-inert] {
+  opacity: var(--opacity-faint);
+}
+
+.shop-slot-count__description {
+  color: var(--c-text-dim);
+  font-size: var(--text-sm);
+}

@@ -421,19 +421,19 @@ static void ConfigurePpuSideSpace() {
       }
     }
   } else if (mod == 7) {
-    // indoors, except when the light cone is in use — including the room-transition frames where the
+    // indoors, except when the light cone is in use, including the room-transition frames where the
     // game has cleared hdr_dungeon_dark_with_lantern but the cone mask is still on the subscreen.
     if (!GameHook_LightConeSuppressesExtraWidth()) {
       int qm = quadrant_fullsize_x >> 1;
       extra_left = IntMax(BG2HOFS_copy2 - room_bounds_x.v[qm], 0);
       extra_right = IntMax(room_bounds_x.v[qm + 2] - BG2HOFS_copy2, 0);
-    }
 
-    int qy = quadrant_fullsize_y >> 1;
-    extra_bottom = IntMax(room_bounds_y.v[qy + 2] - BG2VOFS_copy2, 0);
-    // tall: rows above the camera, bounded by the room's top edge (mirror of extra_bottom). The room's
-    // tilemap is fully resident, so the stock vertical fetch represents it without wrap.
-    extra_top = IntMax(BG2VOFS_copy2 - room_bounds_y.v[qy], 0);
+      int qy = quadrant_fullsize_y >> 1;
+      extra_bottom = IntMax(room_bounds_y.v[qy + 2] - BG2VOFS_copy2, 0);
+      // tall: rows above the camera, bounded by the room's top edge (mirror of extra_bottom). The room's
+      // tilemap is fully resident, so the stock vertical fetch represents it without wrap.
+      extra_top = IntMax(BG2VOFS_copy2 - room_bounds_y.v[qy], 0);
+    }
   } else if (mod == 20 || mod == 0 || mod == 1) {
     extra_left = kPpuExtraLeftRight, extra_right = kPpuExtraLeftRight;
     extra_bottom = 16;
@@ -1052,11 +1052,23 @@ static const uint32 kGateWordParityMask[kGateWordCount] = {
   // enable bit would be self-defeating.
   kFeatures3_CheatsEnabled | kFeatures3_CheatIgnoreCollision | kFeatures3_CheatItemGrant |
   kFeatures3_CheatStats | kFeatures3_CheatCombat | kFeatures3_ItemOverrides |
-  kFeatures3_TrackerNotifications | kFeatures3_PlayerSpriteOverride | kFeatures3_HudOverride,
+  kFeatures3_TrackerNotifications | kFeatures3_PlayerSpriteOverride | kFeatures3_HudOverride |
+  kFeatures3_ReceiptExport | kFeatures3_ReceiptMessages | kFeatures3_NpcOverrides |
+  kFeatures3_DropOverrides | kFeatures3_StandingOverrides | kFeatures3_ScriptedGrants | kFeatures3_CapacityProfile |
+  kFeatures3_ColoredRupees | kFeatures3_ItemSheen | kFeatures3_PrizeShuffle | kFeatures3_ShopOverrides |
+  kFeatures3_PondPlan | kFeatures3_GearArt | kFeatures3_DungeonItemGrants | kFeatures3_RetroBow |
+  kFeatures3_ArcheryNeedsBow,
 
-  // features4 / features5: reserved — no bits allocated yet.
-  0,
-  0,
+  // features4 — the item-power switches. Every bit is a divergence from the unmodified game, so all of
+  // them are stripped by Vanilla Safe.
+  kFeatures4_NoFairyCatching | kFeatures4_NoByrnaBarrierGuard | kFeatures4_CapeDoubleMagic |
+  kFeatures4_SilverArrowsBossOnly | kFeatures4_NoPowderFairy | kFeatures4_HammerWakesTablets |
+  kFeatures4_SwordlessMedallions | kFeatures4_PullableCurtains | kFeatures4_HammerHurtsLastFight |
+  kFeatures4_HammerBreaksSeal | kFeatures4_RodLightsDarkRoom | kFeatures4_MedallionLightsDarkRoom |
+  kFeatures4_RedCaneLightsDarkRoom,
+
+  // features5: the capacity pickup bonus rewrites what a borrowed receipt pays out, so Vanilla Safe strips it.
+  kFeatures5_CapacityBonus,
 };
 
 // Host-side reactions that must fire the instant a gate word changes, keyed by gate-word index. Kept

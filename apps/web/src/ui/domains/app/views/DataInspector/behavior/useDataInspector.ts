@@ -7,7 +7,7 @@
  * source is chosen, not looked up.
  */
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { buildSchema, capture, compile, useViewState } from '@ds/data';
+import { buildSchema, capture, compile, compileTextSearch, useViewState } from '@ds/data';
 import { useDataViewStore } from '@app/stores/data-view-store';
 import { COLLECTION_SOURCES } from './collection-sources';
 import { RECOMMENDATIONS_KIND, isEntityKind, queryViewKey } from '../DataInspector.constants';
@@ -53,7 +53,15 @@ const useDataInspector = () => {
     : snapshot.tab ?? DEFAULT_TAB;
   const detailCollapsed = snapshot.collapsed ?? false;
 
-  const rows = useMemo(() => source.rows.filter(compile(clauses, schema)), [source, clauses, schema]);
+  // The free-text query stays transient where the clauses are durable: a
+  // search is a moment's question, and reopening the screen to old query text
+  // silently hiding rows would read as data loss.
+  const [search, setSearch] = useState('');
+  const rows = useMemo(() => {
+    const matched = source.rows.filter(compile(clauses, schema));
+    const test = compileTextSearch(search);
+    return test ? matched.filter(test) : matched;
+  }, [source, clauses, schema, search]);
 
   // Looked up in the whole collection, not in `rows`: following a reference
   // must open the record it points at even when the active filter hides it.
@@ -120,7 +128,7 @@ const useDataInspector = () => {
 
   return {
     kind, showKind, source, schema, rows, entries,
-    clauses, setClauses, tab, setTab,
+    clauses, setClauses, search, setSearch, tab, setTab,
     selectedId, record, selectRecord, selectRecommendation, clearSelection, openIdRef,
     detailCollapsed, toggleDetail,
   };

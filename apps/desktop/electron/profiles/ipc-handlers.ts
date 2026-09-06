@@ -1,14 +1,14 @@
 /* @layer electron-main @kind logic */
 import { handle } from '../lib/ipc/handle';
-import type { Profile, ProfilePatch } from '@shared/types/profile';
+import type { Profile, ProfilePatch, CreateProfileOptions } from '@shared/types/profile';
 import { listProfiles, createProfile, loadProfile, updateProfile, deleteProfile } from './store';
 import { loadAppState, saveAppState } from './app-state';
 
 const registerProfileHandlers = (): void => {
   handle('profiles:list', () => listProfiles());
 
-  handle('profiles:create', async (_event, name: string, romFile: string, language?: string, msuPack?: string) => {
-    const profile = await createProfile(name, romFile, language, msuPack);
+  handle('profiles:create', async (_event, opts: CreateProfileOptions) => {
+    const profile = await createProfile(opts);
     const appState = await loadAppState();
     appState.lastProfileId = profile.id;
     await saveAppState(appState);
@@ -40,6 +40,7 @@ const registerProfileHandlers = (): void => {
     }
   });
 
+  // Whitelist by design: `randomizer` is deliberately not patchable. It is frozen at creation.
   // A patch distinguishes three things, and the middle one used to be unreachable: a key that is
   // ABSENT leaves the field alone, a key holding NULL clears it, and a key holding a value sets it.
   // Clearing was written as `undefined`, which is indistinguishable from absent once the patch has

@@ -104,6 +104,12 @@ const cheatSetMaxBombs = (capacity: number): void => voidCall('WasmCheatSetMaxBo
 
 const cheatSetMaxArrows = (capacity: number): void => voidCall('WasmCheatSetMaxArrows', numArgs(capacity));
 
+// The wallet has no native tiers: the core lands the wanted ceiling on the nearest rung of the
+// hook-owned ladder (0, 99, 199 ... 9999) and refuses when no Custom wallet is armed, since the
+// native ceiling is a feature setting, not a cheat.
+const cheatSetMaxWallet = (capacity: number): void => voidCall('WasmCheatSetMaxWallet', numArgs(capacity));
+
+// ─── Bottles ───
 
 const cheatFillBottle = (slot: 0 | 1 | 2 | 3, contents: BottleContentsValue): void =>
   voidCall('WasmCheatFillBottle', numArgs(slot, contents));
@@ -121,6 +127,7 @@ const cheatSetIgnoreCollision = (on: boolean): void => {
 
 const getIgnoreCollisionEnabled = (): boolean => ignoreCollisionEnabled;
 
+// ─── Lighting ───
 
 // Same local-state reasoning as ignore-collision above: the widget's toggle reads this instead of
 // polling the module. The core applies it on the next frame boundary, not at this call.
@@ -133,6 +140,7 @@ const cheatSetIlluminateDarkRooms = (on: boolean): void => {
 
 const getIlluminateDarkRoomsEnabled = (): boolean => illuminateDarkRoomsEnabled;
 
+// ─── Combat ───
 
 const cheatKillAllEnemies = (): void => voidCall('WasmCheatKillAllEnemies');
 
@@ -144,5 +152,5 @@ const cheatSetExtraArmorPct = (pct: number): void =>
 
 const cheatStartTrace = (frames = 120): void => voidCall('WasmCheatStartTrace', numArgs(frames));
 
-export { BottleContents, cheatGiveItem, cheatTriggerCheck, cheatTriggerNpcCheck, cheatSetHealth, cheatSetMaxHealth, cheatSetRupees, cheatSetBombs, cheatSetArrows, cheatSetMaxBombs, cheatSetMaxArrows, cheatSetMagic, cheatRefillMagic, cheatFillBottle, cheatSetIgnoreCollision, getIgnoreCollisionEnabled, cheatSetIlluminateDarkRooms, getIlluminateDarkRoomsEnabled, cheatKillAllEnemies, cheatSetDamageMultiplier, cheatSetExtraArmorPct, cheatStartTrace };
+export { BottleContents, cheatGiveItem, cheatTriggerCheck, cheatTriggerNpcCheck, cheatSetHealth, cheatSetMaxHealth, cheatSetRupees, cheatSetBombs, cheatSetArrows, cheatSetMaxBombs, cheatSetMaxArrows, cheatSetMaxWallet, cheatSetMagic, cheatRefillMagic, cheatFillBottle, cheatSetIgnoreCollision, getIgnoreCollisionEnabled, cheatSetIlluminateDarkRooms, getIlluminateDarkRoomsEnabled, cheatKillAllEnemies, cheatSetDamageMultiplier, cheatSetExtraArmorPct, cheatStartTrace };
 export type { BottleContentsValue };

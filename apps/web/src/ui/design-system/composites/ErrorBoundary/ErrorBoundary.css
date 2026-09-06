@@ -1,0 +1,31 @@
+/* @layer renderer-components @kind style */
+
+/* The notice stands where the broken section stood: a danger-tinted card
+   with the headline, the thrown message in mono under it, and the way out. */
+
+.error-boundary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  border: var(--border-width-thin) solid var(--color-danger-border-dim);
+  border-left: var(--border-width-thick) solid var(--color-danger-border);
+  border-radius: var(--radius-md);
+  background: var(--color-danger-surface);
+}
+
+.error-boundary__label {
+  font-size: var(--text-sm);
+  color: var(--color-danger-text);
+}
+
+.error-boundary__detail {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.error-boundary__action {
+  padding-top: var(--space-2xs);
+}

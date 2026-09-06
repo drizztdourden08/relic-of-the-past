@@ -15,7 +15,7 @@
  */
 import { log } from '../log-bus';
 import * as assetsStore from '../storage/assets-store';
-import * as profileStore from '../storage/profile-store';
+import { activeRomFile } from './active-rom-file';
 import { writeBootFiles } from './boot-files';
 import { createInstantiateWasm } from './instantiate-wasm';
 import { loadGlueScript } from './wasm-warmup';
@@ -28,23 +28,6 @@ let standalone: EmscriptenModule | null = null;
 /** The ROM whose assets the standalone core holds, so switching profile rebuilds it. */
 let standaloneRom: string | null = null;
 let booting: Promise<EmscriptenModule | null> | null = null;
-
-/**
- * The ROM to read sound banks from: the one the active profile would boot. Falls back to the first
- * profile that has one, so a fresh install with a single profile works before anything is played.
- */
-const activeRomFile = async (): Promise<string | null> => {
-  try {
-    const [state, profiles] = await Promise.all([
-      profileStore.getAppState(),
-      profileStore.listProfiles(),
-    ]);
-    const active = profiles.find((p) => p.id === state.lastProfileId);
-    return active?.romFile ?? profiles.find((p) => p.romFile)?.romFile ?? null;
-  } catch {
-    return null;
-  }
-};
 
 const bootStandalone = async (): Promise<EmscriptenModule | null> => {
   const romFile = await activeRomFile();

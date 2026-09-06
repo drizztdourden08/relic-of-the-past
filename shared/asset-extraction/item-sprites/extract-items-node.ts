@@ -32,9 +32,10 @@ const writeAndPrune = (outputDir: string, result: ReturnType<typeof extractSprit
   }
   const expected = new Set(result.buffers.map((b) => b.name));
   let removedStale = 0;
-  // Writing nothing means the definitions were absent, never that every file on
-  // disk went stale. Pruning against an empty set would empty the whole folder.
-  if (expected.size > 0) {
+  // Writing no picture means the definitions were absent, never that every file
+  // on disk went stale. Pruning against an empty set would empty the whole folder.
+  // Only PNGs are pruned: the stamp and the icon binary beside them stay.
+  if (result.buffers.some((b) => b.name.endsWith('.png'))) {
     try {
       for (const f of readdirSync(outputDir).filter((f) => f.endsWith('.png'))) {
         if (!expected.has(f)) { unlinkSync(join(outputDir, f)); removedStale += 1; }

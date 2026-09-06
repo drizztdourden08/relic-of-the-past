@@ -1,41 +1,32 @@
 /* @layer renderer-widgets @kind component */
 /**
- * Content for the Checks widget.
- * Wraps TrackerSummary + TrackerFilters + TrackerGroupTree with data subscriptions.
+ * ChecksWidget: the Checks widget's content. The shared ChecksTracker
+ * compound, wired to the live tracker data. With a randomizer session loaded
+ * the same component shows each check's ACTUAL contents, which is what the
+ * randomizer page's spoiler tab shows too.
  */
-import { Box } from '../../../design-system/primitives/Box';
-import { Text } from '../../../design-system/primitives/Text';
-import { TrackerSummary } from '../../app/views/TrackerView/sub-components/TrackerSummary';
-import { TrackerFilters } from '../../app/views/TrackerView/sub-components/TrackerFilters';
-import { TrackerGroupTree } from '../../app/views/TrackerView/sub-components/TrackerGroupTree';
-import { useChecksData } from './behavior/useChecksData';
+import { ChecksTracker } from '@domains/app/compounds/ChecksTracker';
+import { useTrackerData } from '../../../../hooks/useTrackerData';
 
 const ChecksWidgetContent = () => {
-  const { viewMode, setViewMode, grouping, setGrouping, filter, setFilter, snapshot, stats, groupTree } = useChecksData();
+  const {
+    viewMode, setViewMode, grouping, setGrouping, filter, setFilter, snapshot, stats, groupTree, run,
+  } = useTrackerData();
 
   return (
-    <Box className="checks-widget-content">
-      <TrackerSummary {...stats} />
-      <TrackerFilters
-        filter={filter}
-        onFilterChange={setFilter}
-        grouping={grouping}
-        onGroupingChange={setGrouping}
-        viewMode={viewMode}
-        onViewModeChange={setViewMode}
-      />
-      {(filter.searchQuery || filter.activeFacets.length > 0 || (filter.itemFilter && filter.itemFilter !== 'all') || (filter.statusFilter && filter.statusFilter !== 'all')) && (
-        <Box className="tracker-view__filtered-stats">
-          Showing {groupTree.stats.total} checks:
-          <Text className="tracker-summary__stat--completed"> {groupTree.stats.completed} done</Text>,
-          <Text className="tracker-summary__stat--reachable"> {groupTree.stats.reachable} available</Text>,
-          <Text className="tracker-summary__stat--blocked"> {groupTree.stats.blocked} blocked</Text>
-        </Box>
-      )}
-      <Box className="tracker-view__checks">
-        <TrackerGroupTree node={groupTree} statuses={snapshot} viewMode={viewMode} />
-      </Box>
-    </Box>
+    <ChecksTracker
+      className="checks-widget-content"
+      stats={stats}
+      filter={filter}
+      onFilterChange={setFilter}
+      grouping={grouping}
+      onGroupingChange={setGrouping}
+      viewMode={viewMode}
+      onViewModeChange={setViewMode}
+      groupTree={groupTree}
+      statuses={snapshot}
+      run={run}
+    />
   );
 };
 

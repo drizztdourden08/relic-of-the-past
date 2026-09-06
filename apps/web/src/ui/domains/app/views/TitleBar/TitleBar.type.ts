@@ -24,6 +24,7 @@ interface TitleBarProps {
   onToggleMusic: () => void;
   onShowShadowEditor: () => void;
   onShowAbout: () => void;
+  onShowRandomizer: () => void;
   onShowBugReport: () => void;
   activeProfile: Profile | null;
   gameRunning: boolean;

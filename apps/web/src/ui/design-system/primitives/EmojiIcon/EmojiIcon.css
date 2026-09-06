@@ -1,0 +1,25 @@
+/* @layer renderer-components @kind style */
+
+/* ─── Emoji Icon ───
+   A colour glyph drawn by the platform emoji font. Inherits no colour and
+   takes no filter or mask, so it keeps its own palette inside any control. */
+.emoji-icon {
+  display: inline-block;
+  font-family: var(--font-emoji);
+  font-style: normal;
+  line-height: 1;
+  user-select: none;
+  pointer-events: none;
+}
+
+.emoji-icon--sm {
+  font-size: var(--text-base);
+}
+
+.emoji-icon--md {
+  font-size: var(--text-lg);
+}
+
+.emoji-icon--lg {
+  font-size: var(--text-xl);
+}

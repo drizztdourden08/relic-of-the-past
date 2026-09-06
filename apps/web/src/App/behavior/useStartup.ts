@@ -1,7 +1,6 @@
 /* @layer renderer-appshell @kind hook */
 import { useEffect, useState } from 'react';
 import { log } from '../../lib/log-bus';
-import { applySpritesForRom } from '../../lib/sprites/apply-sprites-for-rom';
 import { getAppState } from '../../lib/storage/profile-store';
 import { instanceProfile } from '../../lib/instance';
 import type { PageId } from '../types';
@@ -47,7 +46,6 @@ const useStartup = (
           }
           log.app(`Instance profile: ${pinned.name}`);
           profileMgmt.setActiveProfile(pinned);
-          void applySpritesForRom(pinned.romFile);
           return;
         }
 
@@ -57,7 +55,6 @@ const useStartup = (
         } else if (profileList.length === 1) {
           log.app('Single profile found, showing profile page...');
           profileMgmt.setActiveProfile(profileList[0]);
-          void applySpritesForRom(profileList[0].romFile);
           if (!isAutoTest) nav.setActivePage('profile');
         } else {
           const lastProfile = appState.lastProfileId
@@ -66,7 +63,6 @@ const useStartup = (
           if (lastProfile) {
             log.app(`Resuming last profile: ${lastProfile.name}`);
             profileMgmt.setActiveProfile(lastProfile);
-            void applySpritesForRom(lastProfile.romFile);
             if (!isAutoTest) nav.setActivePage('profile');
           } else {
             nav.setActivePage('data');

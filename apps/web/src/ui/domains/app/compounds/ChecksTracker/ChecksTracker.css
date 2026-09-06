@@ -1,0 +1,306 @@
+/* @layer renderer-components @kind style */
+
+/* Pull in the split-out sections so any importer of this stylesheet gets the
+   whole tracker. Class sets are disjoint, so cascade order is unaffected. */
+@import url('./sub-components/ChecksTracker.filters.css');
+@import url('./sub-components/ChecksTracker.checks.css');
+
+/* ─── Tracker panel (legacy overlay frame) ─── */
+
+.tracker-panel {
+  --tracker-frame-opacity: 1;
+
+  position: fixed;
+  top: 38px; /* below titlebar */
+  bottom: 0;
+  width: 380px;
+  color: var(--c-text);
+  display: flex;
+  flex-direction: column;
+  z-index: var(--z-panel);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  overflow: hidden;
+  background: rgb(14 14 18 / calc(0.96 * var(--tracker-frame-opacity))); /* stylelint-disable-line function-disallowed-list */
+  border-color: rgb(255 255 255 / calc(0.08 * var(--tracker-frame-opacity))); /* stylelint-disable-line function-disallowed-list */
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Docked sides */
+.tracker-panel--docked.tracker-panel--right {
+  right: 0;
+  border-left: 1px solid rgb(255 255 255 / calc(0.08 * var(--tracker-frame-opacity))); /* stylelint-disable-line function-disallowed-list */
+}
+
+.tracker-panel--docked.tracker-panel--left {
+  left: 0;
+  border-right: 1px solid rgb(255 255 255 / calc(0.08 * var(--tracker-frame-opacity))); /* stylelint-disable-line function-disallowed-list */
+}
+
+/* Floating mode */
+.tracker-panel--floating {
+  top: auto;
+  bottom: auto;
+  right: auto;
+  border: 1px solid rgb(255 255 255 / calc(0.12 * var(--tracker-frame-opacity))); /* stylelint-disable-line function-disallowed-list */
+  border-radius: var(--r-lg);
+  box-shadow: 0 8px 32px rgb(0 0 0 / calc(0.6 * var(--tracker-frame-opacity))); /* stylelint-disable-line function-disallowed-list */
+  resize: both;
+  min-width: 280px;
+  min-height: 200px;
+  max-width: 90vw;
+  max-height: 90vh;
+}
+
+/* Compact variant (inventory-only panel when split) */
+.tracker-panel--compact {
+  width: auto;
+  min-width: 200px;
+  max-width: 420px;
+  bottom: auto;
+}
+
+/* ─── Panel Header ─── */
+
+.tracker-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-sm);
+  border-bottom: 1px solid rgb(255 255 255 / calc(0.08 * var(--tracker-frame-opacity))); /* stylelint-disable-line function-disallowed-list */
+  flex-shrink: 0;
+  gap: var(--space-sm);
+  user-select: none;
+}
+
+.tracker-panel--floating .tracker-panel__header {
+  cursor: grab;
+}
+
+.tracker-panel--floating .tracker-panel__header:active {
+  cursor: grabbing;
+}
+
+.tracker-panel__title {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semi);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.tracker-panel__controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex: 1;
+  justify-content: flex-end;
+}
+
+/* Compact SegmentedControl in tracker header */
+.tracker-panel__controls .segmented {
+  gap: 0;
+}
+
+.tracker-panel__controls .segmented__track {
+  padding: var(--space-xs);
+}
+
+.tracker-panel__controls .segmented__btn {
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--text-sm);
+}
+
+/* Compact Slider in tracker header */
+.tracker-panel__controls .slider {
+  max-width: 60px;
+  gap: 0;
+}
+
+.tracker-panel__controls .slider__input {
+  height: 4px;
+}
+
+.tracker-panel__icon-btn {
+  background: none;
+  border: 1px solid transparent;
+  color: var(--c-text-dim);
+  font-size: var(--text-base);
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  padding: 0;
+}
+
+.tracker-panel__icon-btn:hover {
+  background: var(--c-hover);
+  color: var(--c-text);
+}
+
+/* ─── The tracker itself: summary, filters, then the tree in a scroller ─── */
+
+.checks-tracker {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* ─── Checks scrollable area ─── */
+
+.tracker-view__checks {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-xs) 0;
+}
+
+/* ─── Filtered stats line ─── */
+
+.tracker-view__filtered-stats {
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  border-bottom: 1px solid var(--c-border);
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   VISUAL INVENTORY
+   ═══════════════════════════════════════════════════════════════ */
+
+.tracker-inventory {
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--c-border);
+  flex-shrink: 0;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.tracker-inventory__category {
+  margin-bottom: var(--space-sm);
+}
+
+.tracker-inventory__category-label {
+  display: block;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semi);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--c-text-dim);
+  margin-bottom: var(--space-xs);
+}
+
+.tracker-inventory__grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.tracker-inventory__slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 40px;
+  padding: var(--space-xs) var(--space-xs);
+  border-radius: var(--r-sm);
+  transition: opacity 0.2s;
+}
+
+.tracker-inventory__slot--obtained {
+  opacity: 1;
+}
+
+.tracker-inventory__slot--missing {
+  opacity: 0.25;
+  filter: grayscale(1);
+}
+
+.tracker-inventory__sprite {
+  width: 24px;
+  height: 24px;
+  image-rendering: pixelated;
+}
+
+.tracker-inventory__name {
+  font-size: var(--text-xs);
+  text-align: center;
+  color: var(--c-text-dim);
+  line-height: 1.1;
+  margin-top: var(--space-xs);
+  max-width: 40px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ─── In-game layout ─── */
+
+.tracker-inventory--ingame {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  gap: var(--space-sm);
+  max-height: none;
+}
+
+.tracker-inventory__ingame-main {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.tracker-inventory__ingame-row {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.tracker-inventory__ingame-side {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding-left: var(--space-sm);
+  border-left: 1px solid var(--c-border);
+}
+
+.tracker-inventory__ingame-bottom {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: flex;
+  gap: var(--space-xs);
+  padding-top: var(--space-xs);
+  border-top: 1px solid var(--c-border);
+}
+
+/* ─── Compact layout ─── */
+
+.tracker-inventory--compact {
+  max-height: none;
+}
+
+.tracker-inventory__grid--compact {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 36px);
+  gap: var(--space-xs);
+}
+
+.tracker-inventory--compact .tracker-inventory__slot {
+  width: 36px;
+  padding: var(--space-xs) var(--space-xs);
+}
+
+.tracker-inventory--compact .tracker-inventory__sprite {
+  width: 20px;
+  height: 20px;
+}
+
+.tracker-inventory--compact .tracker-inventory__name {
+  font-size: var(--text-xs);
+  max-width: 36px;
+}
+

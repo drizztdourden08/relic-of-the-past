@@ -1,12 +1,12 @@
 /* @layer renderer-components @kind data */
 import { Box } from '../../../../design-system/primitives/Box';
-import { Button } from '../../../../design-system/primitives/Button';
 import { Text } from '../../../../design-system/primitives/Text';
 import { Image } from '../../../../design-system/primitives/Image';
-import { Icon } from '../../../../design-system/primitives/Icon';
 import { Spinner } from '../../../../design-system/primitives/Spinner';
 import './SaveSlot.css';
-import { SAVE_ICON_PATHS, LOAD_ICON_PATHS } from './SaveSlot.constants';
+import { LOAD_GLYPH, SAVE_GLYPH, ARM_TIMEOUT_MS } from './SaveSlot.constants';
+import { useArmedAction } from './behavior/useArmedAction';
+import { SlotActionButton } from './sub-components/SlotActionButton';
 import { type SaveSlotProps } from './SaveSlot.type';
 
 const SaveSlot = (props: SaveSlotProps) => {
@@ -25,6 +25,10 @@ const SaveSlot = (props: SaveSlotProps) => {
     onLoad,
   } = props;
 
+  const slotNumber = slot + 1;
+  const resetKey = `${screenshotUrl ?? ''}|${timestamp}|${isEmpty}|${busy}`;
+  const { armed, press, disarm } = useArmedAction({ timeoutMs: ARM_TIMEOUT_MS, resetKey });
+
   const cardClass = [
     'save-slot__card',
     highlighted ? 'save-slot__card--highlighted' : '',
@@ -34,7 +38,7 @@ const SaveSlot = (props: SaveSlotProps) => {
     <Box className={`save-slot ${busy ? 'save-slot--busy' : ''}`}>
       <Box className={cardClass}>
         {screenshotUrl ? (
-          <Image src={screenshotUrl} alt={`Slot ${slot + 1}`} className="save-slot__img" />
+          <Image src={screenshotUrl} alt={`Slot ${slotNumber}`} className="save-slot__img" />
         ) : (
           <Box className="save-slot__empty" />
         )}
@@ -42,32 +46,35 @@ const SaveSlot = (props: SaveSlotProps) => {
         {holdProgress != null && holdProgress > 0 && (
           <Box className="save-slot__fill" style={{ height: `${holdProgress * 100}%` }} />
         )}
-        <Text className="save-slot__num">{slot + 1}</Text>
+        <Text className="save-slot__num">{slotNumber}</Text>
         {shortcutKey && <Text className="save-slot__key">{shortcutKey}</Text>}
-        {/* Split action bar on the bottom half of the card, always visible over the shot */}
+        {/* Split action bar, bottom slice of the card, always visible over the shot.
+            Load sits on the left and Save on the right, in DOM order too, so the
+            tab sequence matches what is drawn. Each takes one click to arm and a
+            second click to confirm. */}
         <Box className="save-slot__actions">
-          <Button
-            variant="bare"
-            className="save-slot__action save-slot__action--save"
-            onClick={() => onSave(slot)}
-            disabled={busy || disableSave}
-            title={shortcutKey ? `Save (Shift+${shortcutKey})` : 'Save state'}
-            aria-label={`Save slot ${slot + 1}`}
-          >
-            <Icon paths={SAVE_ICON_PATHS} size={16} />
-          </Button>
-          <Button
-            variant="bare"
-            className="save-slot__action save-slot__action--load"
-            onClick={() => onLoad(slot)}
+          <SlotActionButton
+            action="load"
+            glyph={LOAD_GLYPH}
+            label={`Load slot ${slotNumber}`}
+            shortcutHint={shortcutKey}
             disabled={isEmpty || busy || disableLoad}
-            title={shortcutKey ? `Load (${shortcutKey})` : 'Load state'}
-            aria-label={`Load slot ${slot + 1}`}
-          >
-            <Icon paths={LOAD_ICON_PATHS} size={16} />
-          </Button>
+            armed={armed === 'load'}
+            onPress={() => press('load', () => onLoad(slot))}
+            onDisarm={disarm}
+          />
+          <SlotActionButton
+            action="save"
+            glyph={SAVE_GLYPH}
+            label={`Save to slot ${slotNumber}`}
+            shortcutHint={shortcutKey ? `Shift+${shortcutKey}` : undefined}
+            disabled={busy || disableSave}
+            armed={armed === 'save'}
+            onPress={() => press('save', () => onSave(slot))}
+            onDisarm={disarm}
+          />
         </Box>
-        {/* Busy spinner gives feedback while saving/loading (screenshot capture + reload). */}
+        {/* Busy spinner: feedback while saving/loading (screenshot capture + reload). */}
         {busy && (
           <Box className="save-slot__spinner">
             <Spinner />

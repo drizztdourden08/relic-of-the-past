@@ -14,6 +14,7 @@ import { SpriteGrid } from './SpriteGrid';
 import { ImportProgress } from './ImportProgress';
 import { useImportProgress } from '@app/hooks/useImportProgress';
 import * as spritesStore from '@app/lib/storage/sprites-store';
+import { useSpriteAvailabilityStore } from '@app/stores/sprite-availability-store';
 import './SpriteManager.css';
 
 interface SpriteManagerProps {
@@ -40,7 +41,10 @@ const SpriteManager = (props: SpriteManagerProps) => {
     setExtractedMap(Object.fromEntries(entries));
   }, [romsWithAssets]);
 
-  useEffect(() => { refreshExtracted(); }, [refreshExtracted]);
+  // Also re-read when the background extraction for the active ROM lands, so a set
+  // that appeared on its own moves from "available" to "imported" without a remount.
+  const spritesAvailable = useSpriteAvailabilityStore((s) => s.available);
+  useEffect(() => { refreshExtracted(); }, [refreshExtracted, spritesAvailable]);
 
   const importedRoms = useMemo(
     () => romsWithAssets.filter(r => extractedMap[r.romFile]?.extracted),

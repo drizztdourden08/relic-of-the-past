@@ -41,7 +41,7 @@ describe('roms store (over FileStore)', () => {
   it('delete cascades to profiles using the ROM', async () => {
     const f = createMemFileStore();
     await roms.importBytes(f, 'game.sfc', new Uint8Array(4));
-    await profiles.createProfile(f, 'P', 'game.sfc');
+    await profiles.createProfile(f, { name: 'P', romFile: 'game.sfc' });
     await roms.deleteRom(f, 'game.sfc');
     expect(await roms.listRoms(f)).toEqual([]);
     expect(await profiles.listProfiles(f)).toHaveLength(0);

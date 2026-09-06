@@ -36,8 +36,8 @@ const memFiles = (): FileStore => {
 describe('shared profile store (over FileStore)', () => {
   it('creates, lists, loads and patches profiles', async () => {
     const files = memFiles();
-    const a = await createProfile(files, 'Alpha', 'alttp.sfc', 'us');
-    const b = await createProfile(files, 'Beta', 'alttp.sfc');
+    const a = await createProfile(files, { name: 'Alpha', romFile: 'alttp.sfc', language: 'us' });
+    const b = await createProfile(files, { name: 'Beta', romFile: 'alttp.sfc' });
 
     const list = await listProfiles(files);
     expect(list).toHaveLength(2);
@@ -53,7 +53,7 @@ describe('shared profile store (over FileStore)', () => {
 
   it('round-trips per-profile config (empty on create)', async () => {
     const files = memFiles();
-    const p = await createProfile(files, 'Cfg', 'alttp.sfc');
+    const p = await createProfile(files, { name: 'Cfg', romFile: 'alttp.sfc' });
     expect(await readConfig(files, p.id)).toEqual({});
     await writeConfig(files, p.id, { aspectRatio: '16:9' });
     expect(await readConfig(files, p.id)).toEqual({ aspectRatio: '16:9' });
@@ -61,7 +61,7 @@ describe('shared profile store (over FileStore)', () => {
 
   it('tracks last profile and clears it on delete', async () => {
     const files = memFiles();
-    const p = await createProfile(files, 'Last', 'alttp.sfc');
+    const p = await createProfile(files, { name: 'Last', romFile: 'alttp.sfc' });
     await setLastProfile(files, p.id);
     expect((await getAppState(files)).lastProfileId).toBe(p.id);
 

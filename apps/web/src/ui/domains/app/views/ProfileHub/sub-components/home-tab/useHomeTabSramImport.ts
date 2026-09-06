@@ -5,7 +5,7 @@ import type { FilePickerPort } from '@shared/platform';
 import * as savesStore from '@app/lib/storage/saves-store';
 import { log } from '../../../../../../../lib/log-bus';
 import type { DialogState } from './home-tab.type';
-import { validSramSlots } from './sram-checksum';
+import { validSramSlots } from '@app/lib/game/save-file/sram-slots';
 
 const SRAM_BYTES = 8192; // core/zelda3/src/zelda_rtl.c:1345, the cartridge's fixed SRAM size
 const IMPORT_CONFIRM_WORD = 'import'; // typed, not the filename, so it is a deliberate action and not a memory test

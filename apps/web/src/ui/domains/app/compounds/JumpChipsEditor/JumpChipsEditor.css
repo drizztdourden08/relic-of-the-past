@@ -1,0 +1,33 @@
+/* @layer renderer-components @kind style */
+
+/* Editable jump chips in a wrapping row, the Σ readout under them. */
+
+.jump-chips {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+
+.jump-chips__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.jump-chips__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.jump-chips__sum {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-green);
+}
+
+.jump-chips__sum--invalid {
+  color: var(--c-warning);
+}

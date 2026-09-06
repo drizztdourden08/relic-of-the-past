@@ -40,6 +40,7 @@ import { registerDumpLayersHandler } from './debug/dump-layers-handler';
 import { registerDumpNavHandler } from './debug/dump-nav-handler';
 import { registerSimRunHandler } from './debug/sim-run-handler';
 import { registerSimLogHandlers } from './debug/sim-log-handler';
+import { registerSessionLogHandler, rotateSessionLog } from './debug/session-log-handler';
 import { registerConnectionHandlers } from './connections/ipc-handlers';
 import { registerScreenEditorHandlers } from './screen-editor/ipc-handlers';
 import { registerShadowCastingHandlers } from './shadow-casting';
@@ -56,6 +57,7 @@ import { registerGithubHandlers } from './github/ipc-handlers';
 import { registerFfmpegHandlers } from './tools/ipc-handlers';
 import { emit } from './lib/ipc/handle';
 import { installDevFileLogging } from './lib/dev-file-logger';
+import { installCrashForensics } from './diagnostics/crash-forensics';
 import { registerMsulAssociation, unregisterMsulAssociation } from './msu/msul-association';
 
 // Velopack first: its install/update/uninstall hooks may restart the process, so
@@ -96,6 +98,7 @@ const IPC_HANDLERS: Array<{ register: () => void; devOnly?: boolean }> = [
   { register: registerDumpNavHandler },
   { register: registerSimRunHandler },
   { register: registerSimLogHandlers },
+  { register: registerSessionLogHandler },
   { register: registerConnectionHandlers },
   { register: registerUiViewsHandlers },
   { register: registerReviewHandlers },
@@ -115,6 +118,11 @@ const IPC_HANDLERS: Array<{ register: () => void; devOnly?: boolean }> = [
 
 // Same userData path in dev and production.
 app.setName('relic-of-the-past');
+
+// Crash forensics: process/child deaths, quit paths and a memory heartbeat into
+// Data/debug/main-console.log, plus local minidumps. After the userData decisions
+// above (the crash-dump folder derives from userData), before any child process.
+installCrashForensics();
 
 // Must run before the first window exists. No-op on a normal launch.
 applyInstanceIdentity(parseInstanceConfig().name);
@@ -146,6 +154,9 @@ app.whenReady().then(async () => {
   initPaths(dataPath);
   await migrateDataFolder();
   await ensureDataDirectories();
+  // Always-on: keep the previous session.log as session-1.log and start fresh,
+  // so the renderer's session-log batches land in a file scoped to this launch.
+  await rotateSessionLog();
 
   // Register all IPC handlers (see IPC_HANDLERS above)
   for (const { register, devOnly } of IPC_HANDLERS) {

@@ -10,7 +10,8 @@ import { setMasterVolume } from './audio-volume';
 import { updateHapticBridgeSettings, updateHapticsProfileEnabled } from '../input/haptic-bridge';
 import { DEFAULT_SETTINGS } from './settings';
 import { log } from '../log-bus';
-import { buildFeatureFlags, buildFeatureWord3, buildPpuFlags, buildFeatureWords } from './live-settings-flags';
+import { buildFeatureFlags, buildFeatureWord3, buildFeatureWords } from './live-settings-flags';
+import { buildPpuFlags } from './live-settings-ppu-flags';
 import { LIVE_SETTINGS } from './live-settings-keys';
 
 // Track the last-pushed forceBackdropBlack value so we can re-assert after state loads

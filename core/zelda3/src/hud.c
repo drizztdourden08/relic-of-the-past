@@ -3,6 +3,7 @@
 
 #include "variables.h"
 #include "messaging.h"
+#include "game_hooks.h"
 
 uint8 g_hud_hide_mask;
 uint8 g_pause_hide_mask;
@@ -368,15 +369,15 @@ remove:
 }
 
 static int MaxRupees() {
-  return enhanced_features0 & kFeatures0_CarryMoreRupees ? 9999 : 999;
+  return GameHook_WalletMax(enhanced_features0 & kFeatures0_CarryMoreRupees ? 9999 : 999);
 }
 
 void Hud_RefillLogic() {  // 8ddb92
   if (overworld_map_state)
     return;
   if (link_magic_filler) {
-    if (link_magic_power >= 128) {
-      link_magic_power = 128;
+    if (link_magic_power >= GameHook_MagicCapacity()) {
+      link_magic_power = GameHook_MagicCapacity();
       link_magic_filler = 0;
     } else {
       link_magic_filler--;
@@ -409,13 +410,13 @@ void Hud_RefillLogic() {  // 8ddb92
 
   if (link_bomb_filler) {
     link_bomb_filler--;
-    if (link_item_bombs != kMaxBombsForLevel[link_bomb_upgrades])
+    if (link_item_bombs != GameHook_CapacityMax(0, link_bomb_upgrades))
       link_item_bombs++;
   }
 
   if (link_arrow_filler) {
     link_arrow_filler--;
-    if (link_num_arrows != kMaxArrowsForLevel[link_arrow_upgrades])
+    if (link_num_arrows != GameHook_CapacityMax(1, link_arrow_upgrades))
       link_num_arrows++;
     if (link_item_bow && (link_item_bow & 1) == 1) {
       link_item_bow++;
@@ -1337,14 +1338,14 @@ void Hud_AnimateHeartRefill() {  // 8df14f
 }
 
 bool Hud_RefillMagicPower() {  // 8df1b3
-  if (link_magic_power >= 0x80)
+  if (link_magic_power >= GameHook_MagicCapacity())
     return true;
   link_magic_filler = 0x80;
   return false;
 }
 
 void Hud_RestoreTorchBackground() {  // 8dfa33
-  if (!link_item_torch || !dung_want_lights_out || hdr_dungeon_dark_with_lantern ||
+  if (!GameHook_CarriesDarkRoomLight() || !dung_want_lights_out || hdr_dungeon_dark_with_lantern ||
       dung_num_lit_torches)
     return;
   hdr_dungeon_dark_with_lantern = 1;
@@ -1446,12 +1447,12 @@ static void Hud_Update_Inventory() {  // 8dfc09
   dst[HUDXY(2, 1)] = base_tile | d[3];
 
   Hud_IntToDecimal(link_item_bombs, d);
-  base_tile = base_tiles[link_item_bombs == kMaxBombsForLevel[link_bomb_upgrades]];
+  base_tile = base_tiles[link_item_bombs == GameHook_CapacityMax(0, link_bomb_upgrades)];
   dst[HUDXY(4, 1)] = base_tile | d[2];
   dst[HUDXY(5, 1)] = base_tile | d[3];
 
   Hud_IntToDecimal(link_num_arrows, d);
-  base_tile = base_tiles[link_num_arrows == kMaxArrowsForLevel[link_arrow_upgrades]];
+  base_tile = base_tiles[link_num_arrows == GameHook_CapacityMax(1, link_arrow_upgrades)];
   dst[HUDXY(7, 1)] = base_tile | d[2];
   dst[HUDXY(8, 1)] = base_tile | d[3];
 

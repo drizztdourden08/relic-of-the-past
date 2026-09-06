@@ -1,0 +1,186 @@
+/* @layer shared-game @kind data */
+/**
+ * Dungeon definitions ported 1:1 from Archipelago worlds/alttp/Dungeons.py
+ * create_dungeons (open mode, since the inverted tower variants are out of scope).
+ * smallKeyCount is the number of small keys the python source creates for the
+ * dungeon, i.e. the key-drop-shuffle-ON total; with key drops off, one key
+ * per key-drop location (special-locations.data.ts) stays out of the pool.
+ * Vanilla bosses come from each make_dungeon call's default_boss argument;
+ * prize locations are the crystal-flagged rows of the python location_table.
+ */
+import type { ApDungeonDef } from './region.type';
+
+const AP_DUNGEONS: readonly ApDungeonDef[] = [
+  {
+    name: 'Hyrule Castle',
+    regions: ['Hyrule Castle', 'Sewers', 'Sewer Drop', 'Sewers (Dark)', 'Sanctuary'],
+    bigKey: 'Big Key (Hyrule Castle)',
+    smallKey: 'Small Key (Hyrule Castle)',
+    smallKeyCount: 4,
+    map: 'Map (Hyrule Castle)',
+    compass: null,
+    boss: null,
+    prizeLocation: null,
+  },
+  {
+    name: 'Eastern Palace',
+    regions: ['Eastern Palace'],
+    bigKey: 'Big Key (Eastern Palace)',
+    smallKey: 'Small Key (Eastern Palace)',
+    smallKeyCount: 2,
+    map: 'Map (Eastern Palace)',
+    compass: 'Compass (Eastern Palace)',
+    boss: 'Armos Knights',
+    prizeLocation: 'Eastern Palace - Prize',
+  },
+  {
+    name: 'Desert Palace',
+    regions: ['Desert Palace North', 'Desert Palace Main (Inner)', 'Desert Palace Main (Outer)', 'Desert Palace East'],
+    bigKey: 'Big Key (Desert Palace)',
+    smallKey: 'Small Key (Desert Palace)',
+    smallKeyCount: 4,
+    map: 'Map (Desert Palace)',
+    compass: 'Compass (Desert Palace)',
+    boss: 'Lanmolas',
+    prizeLocation: 'Desert Palace - Prize',
+  },
+  {
+    name: 'Tower of Hera',
+    regions: ['Tower of Hera (Bottom)', 'Tower of Hera (Basement)', 'Tower of Hera (Top)'],
+    bigKey: 'Big Key (Tower of Hera)',
+    smallKey: 'Small Key (Tower of Hera)',
+    smallKeyCount: 1,
+    map: 'Map (Tower of Hera)',
+    compass: 'Compass (Tower of Hera)',
+    boss: 'Moldorm',
+    prizeLocation: 'Tower of Hera - Prize',
+  },
+  {
+    name: 'Agahnims Tower',
+    regions: ['Agahnims Tower', 'Agahnim 1'],
+    bigKey: null,
+    smallKey: 'Small Key (Agahnims Tower)',
+    smallKeyCount: 4,
+    map: null,
+    compass: null,
+    boss: 'Agahnim',
+    prizeLocation: null,
+  },
+  {
+    name: 'Palace of Darkness',
+    regions: [
+      'Palace of Darkness (Entrance)', 'Palace of Darkness (Center)', 'Palace of Darkness (Big Key Chest)',
+      'Palace of Darkness (Bonk Section)', 'Palace of Darkness (North)', 'Palace of Darkness (Maze)',
+      'Palace of Darkness (Harmless Hellway)', 'Palace of Darkness (Final Section)',
+    ],
+    bigKey: 'Big Key (Palace of Darkness)',
+    smallKey: 'Small Key (Palace of Darkness)',
+    smallKeyCount: 6,
+    map: 'Map (Palace of Darkness)',
+    compass: 'Compass (Palace of Darkness)',
+    boss: 'Helmasaur King',
+    prizeLocation: 'Palace of Darkness - Prize',
+  },
+  {
+    name: 'Thieves Town',
+    regions: ['Thieves Town (Entrance)', 'Thieves Town (Deep)', 'Blind Fight'],
+    bigKey: 'Big Key (Thieves Town)',
+    smallKey: 'Small Key (Thieves Town)',
+    smallKeyCount: 3,
+    map: 'Map (Thieves Town)',
+    compass: 'Compass (Thieves Town)',
+    boss: 'Blind',
+    prizeLocation: "Thieves' Town - Prize",
+  },
+  {
+    name: 'Skull Woods',
+    regions: [
+      'Skull Woods Final Section (Entrance)', 'Skull Woods First Section', 'Skull Woods Second Section',
+      'Skull Woods Second Section (Drop)', 'Skull Woods Final Section (Mothula)', 'Skull Woods First Section (Right)',
+      'Skull Woods First Section (Left)', 'Skull Woods First Section (Top)',
+    ],
+    bigKey: 'Big Key (Skull Woods)',
+    smallKey: 'Small Key (Skull Woods)',
+    smallKeyCount: 5,
+    map: 'Map (Skull Woods)',
+    compass: 'Compass (Skull Woods)',
+    boss: 'Mothula',
+    prizeLocation: 'Skull Woods - Prize',
+  },
+  {
+    name: 'Swamp Palace',
+    regions: [
+      'Swamp Palace (Entrance)', 'Swamp Palace (First Room)', 'Swamp Palace (Starting Area)',
+      'Swamp Palace (West)', 'Swamp Palace (Center)', 'Swamp Palace (North)',
+    ],
+    bigKey: 'Big Key (Swamp Palace)',
+    smallKey: 'Small Key (Swamp Palace)',
+    smallKeyCount: 6,
+    map: 'Map (Swamp Palace)',
+    compass: 'Compass (Swamp Palace)',
+    boss: 'Arrghus',
+    prizeLocation: 'Swamp Palace - Prize',
+  },
+  {
+    name: 'Ice Palace',
+    regions: [
+      'Ice Palace (Entrance)', 'Ice Palace (Second Section)', 'Ice Palace (Main)', 'Ice Palace (East)',
+      'Ice Palace (East Top)', 'Ice Palace (Kholdstare)',
+    ],
+    bigKey: 'Big Key (Ice Palace)',
+    smallKey: 'Small Key (Ice Palace)',
+    smallKeyCount: 6,
+    map: 'Map (Ice Palace)',
+    compass: 'Compass (Ice Palace)',
+    boss: 'Kholdstare',
+    prizeLocation: 'Ice Palace - Prize',
+  },
+  {
+    name: 'Misery Mire',
+    regions: [
+      'Misery Mire (Entrance)', 'Misery Mire (Main)', 'Misery Mire (West)', 'Misery Mire (Final Area)',
+      'Misery Mire (Vitreous)',
+    ],
+    bigKey: 'Big Key (Misery Mire)',
+    smallKey: 'Small Key (Misery Mire)',
+    smallKeyCount: 6,
+    map: 'Map (Misery Mire)',
+    compass: 'Compass (Misery Mire)',
+    boss: 'Vitreous',
+    prizeLocation: 'Misery Mire - Prize',
+  },
+  {
+    name: 'Turtle Rock',
+    regions: [
+      'Turtle Rock (Entrance)', 'Turtle Rock (First Section)', 'Turtle Rock (Chain Chomp Room)',
+      'Turtle Rock (Pokey Room)', 'Turtle Rock (Second Section)', 'Turtle Rock (Big Chest)',
+      'Turtle Rock (Crystaroller Room)', 'Turtle Rock (Dark Room)', 'Turtle Rock (Eye Bridge)',
+      'Turtle Rock (Trinexx)',
+    ],
+    bigKey: 'Big Key (Turtle Rock)',
+    smallKey: 'Small Key (Turtle Rock)',
+    smallKeyCount: 6,
+    map: 'Map (Turtle Rock)',
+    compass: 'Compass (Turtle Rock)',
+    boss: 'Trinexx',
+    prizeLocation: 'Turtle Rock - Prize',
+  },
+  {
+    name: 'Ganons Tower',
+    regions: [
+      'Ganons Tower (Entrance)', 'Ganons Tower (Tile Room)', 'Ganons Tower (Compass Room)',
+      'Ganons Tower (Hookshot Room)', 'Ganons Tower (Map Room)', 'Ganons Tower (Firesnake Room)',
+      'Ganons Tower (Teleport Room)', 'Ganons Tower (Bottom)', 'Ganons Tower (Top)',
+      'Ganons Tower (Before Moldorm)', 'Ganons Tower (Moldorm)', 'Agahnim 2',
+    ],
+    bigKey: 'Big Key (Ganons Tower)',
+    smallKey: 'Small Key (Ganons Tower)',
+    smallKeyCount: 8,
+    map: 'Map (Ganons Tower)',
+    compass: 'Compass (Ganons Tower)',
+    boss: 'Agahnim2',
+    prizeLocation: null,
+  },
+];
+
+export { AP_DUNGEONS };

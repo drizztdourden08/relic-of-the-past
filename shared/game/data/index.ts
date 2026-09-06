@@ -8,6 +8,44 @@ export {
   getTag,
 } from './facade';
 export * from './types';
+export { NATIVE_RECEIVE_TABLE_SIZE, asNativeReceiveId, isNativeReceiveId } from './native-receive-id';
+export {
+  UPGRADE_VIRT_FIRST, UPGRADE_VIRT_LAST, WALLET_VIRT_FIRST, WALLET_VIRT_LAST,
+  isGrantableReceiveId, isUpgradeReceiveId, isWalletReceiveId, upgradeFamilyOfReceiveId,
+  upgradeItemNameOfReceiveId, upgradeJumpOfReceiveId, upgradeReceiveIdOf, upgradeReceiveIdOfItem,
+  upgradeReceiveIdOfName, walletSlotOfReceiveId,
+} from './upgrade-receive-id';
+export {
+  capacityFamilyOfItemName, isCapacityUpgradeItemName, maxUpgradeJumpOf, upgradeItemName, upgradeItemOfName,
+} from './capacity-upgrade-item';
+export {
+  isProgressiveCapacityItemName, progressiveCapacityFamilyOf, progressiveCapacityItemName,
+} from './capacity-progressive-item';
+export {
+  PROGRESSIVE_CAPACITY_VIRT_FIRST, PROGRESSIVE_CAPACITY_VIRT_LAST, isProgressiveCapacityReceiveId,
+  progressiveCapacityFamilyOfReceiveId, progressiveCapacityItemNameOfReceiveId, progressiveCapacityReceiveIdOf,
+  progressiveCapacityReceiveIdOfName,
+} from './capacity-progressive-receive-id';
+export type { CapacityUpgradeItem } from './capacity-upgrade-item';
+export {
+  CAPACITY_FAMILY_IDS, CAPACITY_PROGRESSIVE_NAMES, CAPACITY_RECEIPT_LABELS, CAPACITY_UPGRADE_NAMES,
+} from './capacity-upgrade-names.data';
+export type { CapacityFamilyId, StepFamilyId } from './capacity-family.type';
+export {
+  WALLET_SLOT_COUNT, walletJumpOfSlot, walletJumpTableOf, walletSlotOfJump,
+} from './wallet-jump-table';
+export {
+  isProgressiveReceiveId, progressiveReceiveIdOfItem, progressiveReceiveIdOfName,
+} from './progressive-receive-id';
+export {
+  isPrizeReceiveId, prizeReceiveIdOfItem, prizeReceiveIdOfName, vanillaPrizeGrantIdOfName,
+} from './prize-receive-id';
+export {
+  DUNGEON_ITEM_NATIVE_IDS, DUNGEON_ITEM_PALACE_COUNT, DUNGEON_ITEM_VIRT_FIRST, DUNGEON_ITEM_VIRT_LAST,
+  dungeonItemKindOfReceiveId, dungeonItemNativeIdOfReceiveId, dungeonItemPalaceOfReceiveId,
+  dungeonItemReceiveIdOf, isDungeonItemReceiveId,
+} from './dungeon-item-receive-id';
+export { dungeonItemReceiveIdOfName, dungeonItemReceiveIdOfRecord } from './dungeon-item-target';
 export { registerRecord, replaceRecord, unregisterRecord } from './session-records';
 export {
   ALL_TAGS, checkTagKeysOf, connectionTagKeysOf, hasTagKey, isTagKey, registerTag, replaceTagRecord,

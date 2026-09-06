@@ -3,7 +3,7 @@
  * Request/response IPC channels: `ipcRenderer.invoke` ↔ `ipcMain.handle`. The single source
  * of truth for every invoke channel's signature; preload and main handlers are checked against it.
  */
-import type { Profile, AppState } from '@shared/types/profile';
+import type { Profile, AppState, CreateProfileOptions } from '@shared/types/profile';
 import type { NormalSaveInfo, AutoSaveInfo, QuickSaveSlotInfo } from '@shared/types/saves';
 import type { PlaySession } from '@shared/types/session';
 import type { ShadowCastingProject, ScreenShadowData } from '@shared/types/shadow-casting';
@@ -85,7 +85,7 @@ interface InvokeContract extends
 
   // Profiles
   'profiles:list': () => Promise<Profile[]>;
-  'profiles:create': (name: string, romFile: string, language?: string, msuPack?: string) => Promise<Profile>;
+  'profiles:create': (opts: CreateProfileOptions) => Promise<Profile>;
   'profiles:delete': (id: string) => Promise<void>;
   'profiles:setLast': (id: string) => Promise<void>;
   'profiles:getAppState': () => Promise<AppState>;

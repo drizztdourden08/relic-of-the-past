@@ -1,3 +1,4 @@
 /* @layer renderer-components @kind barrel */
 export { FilterBar } from './FilterBar';
-export type { FilterBarProps } from './FilterBar.type';
+export { FacetPicker } from './sub-components/FacetPicker';
+export type { FilterBarProps, FilterFacet, FilterFacetOption } from './FilterBar.type';

@@ -7,7 +7,7 @@
 
 static uint8 g_ui_state_buf[256];
 
-// Overlay mode bitmask that controls native rendering suppression (future use)
+// Overlay mode bitmask: controls native rendering suppression (future use)
 static uint8 g_ui_overlay_mode = 0;
 
 EMSCRIPTEN_KEEPALIVE
@@ -140,11 +140,11 @@ int WasmGetGameUIState(void) {
   PutU16(b, 123, link_y_coord);
 
   // ─── Bytes 125-128: Current Resource Caps (for "indicate max resources") ───
-  // Rupee cap mirrors hud.c's static MaxRupees(), duplicated here because that helper has internal
-  // linkage. The underlying condition (enhanced_features0 & kFeatures0_CarryMoreRupees) is the same.
-  b[125] = kMaxBombsForLevel[link_bomb_upgrades];
-  b[126] = kMaxArrowsForLevel[link_arrow_upgrades];
-  PutU16(b, 127, (enhanced_features0 & kFeatures0_CarryMoreRupees) ? 9999 : 999);
+  // Rupee cap mirrors hud.c's static MaxRupees(), the same ceiling expression (that helper has
+  // internal linkage) routed through the same wallet-ladder hook, so the three answers never disagree.
+  b[125] = (uint8)GameHook_CapacityMax(0, link_bomb_upgrades);
+  b[126] = (uint8)GameHook_CapacityMax(1, link_arrow_upgrades);
+  PutU16(b, 127, GameHook_WalletMax((enhanced_features0 & kFeatures0_CarryMoreRupees) ? 9999 : 999));
 
   return (int)g_ui_state_buf;
 }

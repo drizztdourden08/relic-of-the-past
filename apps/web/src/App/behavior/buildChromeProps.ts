@@ -58,6 +58,7 @@ const buildChromeProps = (deps: ChromePropsDeps): TitleBarProps => {
     onToggleMusic: () => widgets.toggle('music'),
     onShowShadowEditor: handleShowShadowEditor,
     onShowAbout: () => nav.setActivePage('about'),
+    onShowRandomizer: () => nav.setActivePage('randomizer'),
     onShowBugReport: () => setShowBugReportDialog(true),
     activeProfile: profileMgmt.activeProfile,
     widgetVisibility,

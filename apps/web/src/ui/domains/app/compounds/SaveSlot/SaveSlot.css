@@ -79,7 +79,7 @@
   height: 100%;
 }
 
-/* Overlaid slot number at top left */
+/* Overlaid slot number, top left */
 .save-slot__num {
   position: absolute;
   top: 3px;
@@ -92,7 +92,7 @@
   pointer-events: none;
 }
 
-/* Overlaid shortcut key at top right */
+/* Overlaid shortcut key, top right */
 .save-slot__key {
   position: absolute;
   top: 3px;
@@ -108,8 +108,8 @@
   pointer-events: none;
 }
 
-/* Split action bar. The bottom slice of the card, blackened so it stays legible
-   over the screenshot and split into two flush halves (Save | Load). */
+/* Split action bar: the bottom slice of the card, blackened so it stays legible
+   over the screenshot, split into two flush halves (Load | Save), see SlotActionButton. */
 .save-slot__actions {
   position: absolute;
   left: 0;
@@ -120,43 +120,6 @@
   min-height: 24px;
   z-index: var(--z-base);
   background: var(--c-scrim);
-}
-
-.save-slot__action {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background: transparent;
-  color: var(--c-text);
-  cursor: pointer;
-  transition: background var(--transition-fast), color var(--transition-fast);
-}
-
-.save-slot__action--save {
-  border-right: 1px solid var(--c-border-strong);
-}
-
-.save-slot__action--save:hover:not(:disabled),
-.save-slot__action--save:focus-visible {
-  background: var(--c-gold-soft);
-  color: var(--c-gold-bright);
-}
-
-.save-slot__action--load:hover:not(:disabled),
-.save-slot__action--load:focus-visible {
-  background: var(--c-green-soft);
-  color: var(--c-green-bright);
-}
-
-.save-slot__action:focus-visible {
-  outline: none;
-}
-
-.save-slot__action:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
 }
 
 /* Timestamp below card */

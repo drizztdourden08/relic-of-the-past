@@ -1,27 +1,38 @@
 /* @layer renderer-components @kind component */
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { usePlatform } from '@app/platform';
 import { log } from '@app/lib/log-bus';
 import { HeroSaveCard } from '../../../compounds/HeroSaveCard';
 import { Box } from '../../../../../design-system/primitives/Box';
-import { Button } from '../../../../../design-system/primitives/Button';
-import { Text } from '../../../../../design-system/primitives/Text';
 import { ToastContainer } from '../../../../../design-system/primitives/Toast';
-import { formatRelativeTime } from './home-tab/home-tab-helpers';
 import { useHomeTabSaves } from './home-tab/useHomeTabSaves';
+import { useHomeRandomizerStatus } from './home-tab/useHomeRandomizerStatus';
+import { useHomeSaveFileChecks } from './home-tab/useHomeSaveFileChecks';
+import { deriveProfileMode } from './home-tab/derive-profile-mode';
+import { buildProfileFacts, buildRandomizerFacts } from './home-tab/build-summary-facts';
+import { HomeTabSummary } from './home-tab/HomeTabSummary';
 import { HomeTabColumns } from './home-tab/HomeTabColumns';
 import { HomeTabDialogs } from './home-tab/HomeTabDialogs';
 import type { HomeTabProps } from './home-tab/home-tab.type';
-import type { CSSProperties } from 'react';
 import './HomeTab.css';
 
-const CAPITALIZE: CSSProperties = { textTransform: 'capitalize' };
-
 const HomeTab = (props: HomeTabProps) => {
-  const { profileId, romFile, isGameRunning, onStartGame, lastPlayed, created, windowMode } = props;
+  const { profileId, romFile, isGameRunning, onStartGame, lastPlayed, created, windowMode, randomizer, vanillaSafe } = props;
   const saves = useHomeTabSaves({ profileId, isGameRunning, onStartGame });
   const { heroSave, normalScreenshots, busyNormal, handleLoadNormal, handleImportSram, toasts, dismissToast } = saves;
   const { storage, capabilities } = usePlatform();
+  const randomizerStatus = useHomeRandomizerStatus();
+  const saveFileChecks = useHomeSaveFileChecks(profileId, randomizer !== undefined, isGameRunning);
+
+  const mode = deriveProfileMode(randomizer, vanillaSafe);
+  const facts = useMemo(
+    () => buildProfileFacts({ mode, romFile, lastPlayed, created, windowMode }),
+    [mode, romFile, lastPlayed, created, windowMode],
+  );
+  const randomizerFacts = useMemo(
+    () => buildRandomizerFacts(randomizer, randomizerStatus),
+    [randomizer, randomizerStatus],
+  );
 
   const handleOpenFolder = useCallback(async () => {
     try {
@@ -34,49 +45,15 @@ const HomeTab = (props: HomeTabProps) => {
 
   return (
     <Box className="home-tab">
-      {/* Info cards */}
-      <Box className="home-tab__info-cards">
-        <Box className="home-tab__info-card">
-          <Text className="home-tab__info-label">ROM</Text>
-          <Text className="home-tab__info-value">{romFile.replace(/\.(sfc|smc)$/i, '')}</Text>
-        </Box>
-        <Box className="home-tab__info-card">
-          <Text className="home-tab__info-label">Last Played</Text>
-          <Text className="home-tab__info-value">{formatRelativeTime(lastPlayed)}</Text>
-        </Box>
-        <Box className="home-tab__info-card">
-          <Text className="home-tab__info-label">Created</Text>
-          <Text className="home-tab__info-value">{formatRelativeTime(created)}</Text>
-        </Box>
-        {windowMode && (
-          <Box className="home-tab__info-card">
-            <Text className="home-tab__info-label">Window</Text>
-            <Text className="home-tab__info-value" style={CAPITALIZE}>{windowMode}</Text>
-          </Box>
-        )}
-        {capabilities.revealDataFolder && (
-          <Button
-            variant="secondary"
-            size="sm"
-            className="home-tab__folder-btn"
-            icon="📂"
-            onClick={() => void handleOpenFolder()}
-            title="Open this profile's folder in the system file manager"
-          >
-            Open profile folder
-          </Button>
-        )}
-        <Button
-          variant="secondary"
-          size="sm"
-          className="home-tab__import-save-btn"
-          icon="📥"
-          onClick={() => void handleImportSram()}
-          title="Import a raw SRAM save (.srm) from another emulator"
-        >
-          Import save
-        </Button>
-      </Box>
+      <HomeTabSummary
+        mode={mode}
+        facts={facts}
+        randomizerFacts={randomizerFacts}
+        saveFileChecks={saveFileChecks}
+        canRevealFolder={capabilities.revealDataFolder}
+        onOpenFolder={() => void handleOpenFolder()}
+        onImportSram={() => void handleImportSram()}
+      />
 
       {/* Hero card for the last normal save */}
       {heroSave && (

@@ -10,6 +10,9 @@
  *
  * The schema beside this file stays here, because it describes the shape, which is ours.
  */
+import { RANDOMIZER_SPRITE_DEFINITIONS } from './randomizer-sprites';
+import { RUPEE_SPRITE_DEFINITIONS } from './rupee-sprites';
+import { UPGRADE_SPRITE_DEFINITIONS } from './upgrade-sprites';
 
 type SpriteCategory = 'hud' | 'hud-pause' | 'hud-item' | 'fonts' | 'receipt' | 'drop';
 
@@ -34,8 +37,20 @@ const modules = import.meta.glob<{ default: { sprites?: SpriteDefinition[] } }>(
   { eager: true },
 );
 
-const SPRITE_DEFINITIONS: readonly SpriteDefinition[] =
+const VAULT_DEFINITIONS: readonly SpriteDefinition[] =
   Object.values(modules)[0]?.default?.sprites ?? [];
+
+// Our own definitions ride on the vault set: the capacity-upgrade composites are
+// stamped onto its sprites and the recoloured gems are derived from one, so
+// without it they have nothing to stand on and the list stays empty, which keeps
+// "no definitions" meaning exactly that. The drawn sprites need nothing from the
+// ROM at all, but they ride along too: extraction only ever runs with one loaded,
+// and a set that appears with the others missing would read as a broken set.
+const SPRITE_DEFINITIONS: readonly SpriteDefinition[] =
+  VAULT_DEFINITIONS.length === 0 ? [] : [
+    ...VAULT_DEFINITIONS, ...UPGRADE_SPRITE_DEFINITIONS, ...RUPEE_SPRITE_DEFINITIONS,
+    ...RANDOMIZER_SPRITE_DEFINITIONS,
+  ];
 
 const SPRITE_MANIFEST: SpriteManifestEntry[] = SPRITE_DEFINITIONS.map(sprite => ({
   file: sprite.file,

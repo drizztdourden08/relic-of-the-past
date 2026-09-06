@@ -1,0 +1,1558 @@
+﻿Archipelago Version 0.6.8  -  Seed: 7710
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            A Link to the Past
+Location Count:                  226
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Plando Connections:              
+Plando Texts:                    {}
+Start Inventory from Pool:       
+Goal:                            Ganon
+Mode:                            Standard
+Glitches Required:               No Glitches
+Dark Room Logic:                 Lamp
+Open Pyramid Hole:               Goal
+Crystals for GT:                 7
+Crystals for Ganon:              7
+Triforce Pieces Mode:            Available
+Triforce Pieces Percentage:      150
+Triforce Pieces Required:        20
+Triforce Pieces Available:       30
+Triforce Pieces Extra:           10
+Entrance Shuffle:                Vanilla
+Entrance Shuffle Seed:           random
+Big Key Shuffle:                 Original Dungeon
+Small Key Shuffle:               Original Dungeon
+Key Drop Shuffle:                No
+Compass Shuffle:                 Original Dungeon
+Map Shuffle:                     Original Dungeon
+Prevent Dungeon Item on Boss:    No
+Item Pool:                       Normal
+Item Functionality:              Normal
+Enemy Health:                    Default
+Enemy Damage:                    Default
+Progressive Items:               On
+Swordless:                       No
+Dungeon Counters:                Pickup
+Retro Bow:                       No
+Retro Caves:                     No
+Hints:                           On
+Scams:                           Off
+Boss Shuffle:                    None
+Pot Shuffle:                     No
+Enemy Shuffle:                   No
+Killable Thieves:                No
+Bush Shuffle:                    No
+Available Shop Slots:            0
+Randomize Shop Inventories:      Default
+Shuffle Shop Inventories:        No
+Include Witch's Hut:             No
+Randomize Shop Prices:           No
+Randomize Cost Types:            No
+Shop Price Modifier:             100
+Shuffle Capacity Upgrades:       Off
+Bombless Start:                  No
+Shuffle Prizes:                  General
+Tile Shuffle:                    No
+Misery Mire Medallion:           Quake
+Turtle Rock Medallion:           Quake
+Glitched Starting Boots:         Yes
+Beemizer Total Chance:           0
+Beemizer Trap Chance:            60
+Timer:                           None
+Countdown Start Time:            10
+Red Clock Time:                  -2
+Blue Clock Time:                 2
+Green Clock Time:                4
+Death Link:                      No
+Allow Collection of checks for other players:Yes
+Overworld Palette:               Default
+Underworld Palette:              Default
+Menu Palette:                    Default
+Sword Palette:                   Default
+Shield Palette:                  Default
+Heart Beep Rate:                 Normal
+Heart Color:                     Red
+L/R Quickswapping:               Yes
+Menu Speed:                      Normal
+Play music:                      Yes
+Reduce Screen Flashes:           Yes
+Display Method for Triforce Hunt:Normal
+
+
+Entrances:
+
+Links House <=> Links House Exit
+Links House <= Chris Houlihan Room Exit
+
+Medallions:
+
+Misery Mire (Oracle): Quake
+Turtle Rock (Oracle): Quake
+
+Fairy Fountain Bottle Fill:
+
+Pyramid Fairy (Oracle): Bottle (Bee)
+Waterfall Fairy (Oracle): Bottle (Red Potion)
+
+Shops:
+
+Cave Shop (Dark Death Mountain) [Shop]
+    Red Potion - 150 Rupees
+    Small Heart - 10 Rupees
+    Bombs (10) - 50 Rupees
+Red Shield Shop [Shop]
+    Red Shield - 500 Rupees
+    Bee - 10 Rupees
+    Arrows (10) - 30 Rupees
+Dark Lake Hylia Shop [Shop]
+    Red Potion - 150 Rupees
+    Blue Shield - 50 Rupees
+    Bombs (10) - 50 Rupees
+Dark World Lumberjack Shop [Shop]
+    Red Potion - 150 Rupees
+    Blue Shield - 50 Rupees
+    Bombs (10) - 50 Rupees
+Village of Outcasts Shop [Shop]
+    Red Potion - 150 Rupees
+    Blue Shield - 50 Rupees
+    Bombs (10) - 50 Rupees
+Dark World Potion Shop [Shop]
+    Red Potion - 150 Rupees
+    Blue Shield - 50 Rupees
+    Bombs (10) - 50 Rupees
+Light World Death Mountain Shop [Shop]
+    Red Potion - 150 Rupees
+    Small Heart - 10 Rupees
+    Bombs (10) - 50 Rupees
+Kakariko Shop [Shop]
+    Red Potion - 150 Rupees
+    Small Heart - 10 Rupees
+    Bombs (10) - 50 Rupees
+Cave Shop (Lake Hylia) [Shop]
+    Red Potion - 150 Rupees
+    Small Heart - 10 Rupees
+    Bombs (10) - 50 Rupees
+Potion Shop [Shop]
+    Red Potion - 120 Rupees
+    Green Potion - 60 Rupees
+    Blue Potion - 160 Rupees
+Capacity Upgrade [Shop]
+    Bomb Upgrade (+5) - 100 Rupees x 7
+    Arrow Upgrade (+5) - 100 Rupees x 7
+
+
+Locations:
+
+Mushroom: Arrows (10)
+Bottle Merchant: Hookshot
+Flute Spot: Rupees (20)
+Sunken Treasure: Progressive Sword
+Purple Chest: Pegasus Boots
+Flute Activation Spot: Activated Flute
+Blind's Hideout - Top: Book of Mudora
+Blind's Hideout - Left: Rupees (50)
+Blind's Hideout - Right: Hammer
+Blind's Hideout - Far Left: Shovel
+Blind's Hideout - Far Right: Piece of Heart
+Link's Uncle: Progressive Sword
+Secret Passage: Bottle (Fairy)
+King Zora: Lamp
+Zora's Ledge: Rupees (50)
+Waterfall Fairy - Left: Rupee (1)
+Waterfall Fairy - Right: Arrows (10)
+King's Tomb: Magic Mirror
+Floodgate: Open Floodgate
+Floodgate Chest: Arrows (10)
+Link's House: Rupees (20)
+Kakariko Tavern: Rupees (5)
+Chicken House: Progressive Shield
+Aginah's Cave: Arrows (10)
+Sahasrahla's Hut - Left: Rupees (20)
+Sahasrahla's Hut - Middle: Rupees (20)
+Sahasrahla's Hut - Right: Rupees (50)
+Sahasrahla: Magic Powder
+Kakariko Well - Top: Bombs (3)
+Kakariko Well - Left: Piece of Heart
+Kakariko Well - Middle: Quake
+Kakariko Well - Right: Rupees (50)
+Kakariko Well - Bottom: Rupees (20)
+Blacksmith: Bombs (3)
+Missing Smith: Return Smith
+Magic Bat: Rupees (20)
+Sick Kid: Rupees (20)
+Hobo: Ice Rod
+Lost Woods Hideout: Piece of Heart
+Lumberjack Tree: Piece of Heart
+Cave 45: Rupees (20)
+Graveyard Cave: Piece of Heart
+Checkerboard Cave: Progressive Mail
+Mini Moldorm Cave - Far Left: Progressive Bow
+Mini Moldorm Cave - Left: Single Arrow
+Mini Moldorm Cave - Right: Rupees (20)
+Mini Moldorm Cave - Far Right: Boss Heart Container
+Mini Moldorm Cave - Generous Guy: Rupees (300)
+Ice Rod Cave: Piece of Heart
+Bonk Rock Cave: Rupees (300)
+Library: Rupee (1)
+Potion Shop: Rupees (20)
+Lake Hylia Island: Boss Heart Container
+Capacity Upgrade Shop: Capacity Upgrade Shop
+Maze Race: Rupees (50)
+Desert Ledge: Boss Heart Container
+Desert Palace - Big Chest: Small Key (Desert Palace)
+Desert Palace - Torch: Piece of Heart
+Desert Palace - Map Chest: Big Key (Desert Palace)
+Desert Palace - Compass Chest: Compass (Desert Palace)
+Desert Palace - Big Key Chest: Arrows (10)
+Desert Palace - Desert Tiles 1 Pot Key: Small Key (Desert Palace)
+Desert Palace - Beamos Hall Pot Key: Small Key (Desert Palace)
+Desert Palace - Desert Tiles 2 Pot Key: Small Key (Desert Palace)
+Desert Palace - Boss: Map (Desert Palace)
+Desert Palace - Prize: Crystal 3
+Eastern Palace - Compass Chest: Big Key (Eastern Palace)
+Eastern Palace - Big Chest: Magic Upgrade (1/2)
+Eastern Palace - Cannonball Chest: Piece of Heart
+Eastern Palace - Dark Square Pot Key: Small Key (Eastern Palace)
+Eastern Palace - Dark Eyegore Key Drop: Small Key (Eastern Palace)
+Eastern Palace - Big Key Chest: Compass (Eastern Palace)
+Eastern Palace - Map Chest: Map (Eastern Palace)
+Eastern Palace - Boss: Flippers
+Eastern Palace - Prize: Crystal 4
+Master Sword Pedestal: Rupees (20)
+Hyrule Castle - Boomerang Chest: Small Key (Hyrule Castle)
+Hyrule Castle - Map Chest: Arrows (10)
+Hyrule Castle - Zelda's Chest: Bombs (3)
+Hyrule Castle - Map Guard Key Drop: Small Key (Hyrule Castle)
+Hyrule Castle - Boomerang Guard Key Drop: Small Key (Hyrule Castle)
+Hyrule Castle - Big Key Drop: Big Key (Hyrule Castle)
+Sewers - Dark Cross: Bottle
+Sewers - Key Rat Key Drop: Small Key (Hyrule Castle)
+Sewers - Secret Room - Left: Boss Heart Container
+Sewers - Secret Room - Middle: Progressive Glove
+Sewers - Secret Room - Right: Rupees (20)
+Sanctuary: Map (Hyrule Castle)
+Castle Tower - Room 03: Small Key (Agahnims Tower)
+Castle Tower - Dark Maze: Small Key (Agahnims Tower)
+Castle Tower - Dark Archer Key Drop: Small Key (Agahnims Tower)
+Castle Tower - Circle of Pots Key Drop: Small Key (Agahnims Tower)
+Agahnim 1: Beat Agahnim 1
+Old Man: Piece of Heart
+Spectacle Rock Cave: Progressive Glove
+Paradox Cave Lower - Far Left: Rupees (100)
+Paradox Cave Lower - Left: Bombs (3)
+Paradox Cave Lower - Right: Cape
+Paradox Cave Lower - Far Right: Rupees (20)
+Paradox Cave Lower - Middle: Piece of Heart
+Paradox Cave Upper - Left: Moon Pearl
+Paradox Cave Upper - Right: Bombs (10)
+Spiral Cave: Bombos
+Ether Tablet: Arrows (10)
+Spectacle Rock: Arrows (10)
+Tower of Hera - Basement Cage: Small Key (Tower of Hera)
+Tower of Hera - Map Chest: Sanctuary Heart Container
+Tower of Hera - Big Key Chest: Big Key (Tower of Hera)
+Tower of Hera - Compass Chest: Compass (Tower of Hera)
+Tower of Hera - Big Chest: Map (Tower of Hera)
+Tower of Hera - Boss: Arrows (10)
+Tower of Hera - Prize: Crystal 1
+Pyramid: Rupees (20)
+Catfish: Piece of Heart
+Stumpy: Bombs (3)
+Digging Game: Piece of Heart
+Bombos Tablet: Rupees (20)
+Hype Cave - Top: Blue Boomerang
+Hype Cave - Middle Right: Bombs (3)
+Hype Cave - Middle Left: Arrows (10)
+Hype Cave - Bottom: Rupees (20)
+Hype Cave - Generous Guy: Boss Heart Container
+Frog: Get Frog
+Dark Blacksmith Ruins: Pick Up Purple Chest
+Peg Cave: Fire Rod
+Pyramid Fairy - Left: Bombs (3)
+Pyramid Fairy - Right: Ether
+Brewery: Progressive Shield
+C-Shaped House: Rupees (20)
+Chest Game: Rupees (20)
+Bumper Cave Ledge: Bottle (Red Potion)
+Mire Shed - Left: Rupees (50)
+Mire Shed - Right: Progressive Mail
+Superbunny Cave - Top: Flute
+Superbunny Cave - Bottom: Progressive Bow
+Spike Cave: Boss Heart Container
+Hookshot Cave - Top Right: Cane of Somaria
+Hookshot Cave - Top Left: Progressive Sword
+Hookshot Cave - Bottom Right: Rupees (20)
+Hookshot Cave - Bottom Left: Bombs (3)
+Floating Island: Red Boomerang
+Mimic Cave: Piece of Heart
+Swamp Palace - Entrance: Small Key (Swamp Palace)
+Swamp Palace - Map Chest: Cane of Byrna
+Swamp Palace - Pot Row Pot Key: Small Key (Swamp Palace)
+Swamp Palace - Trench 1 Pot Key: Small Key (Swamp Palace)
+Swamp Palace - Big Chest: Map (Swamp Palace)
+Swamp Palace - Compass Chest: Rupees (20)
+Swamp Palace - Hookshot Pot Key: Small Key (Swamp Palace)
+Swamp Palace - Trench 2 Pot Key: Small Key (Swamp Palace)
+Swamp Palace - Big Key Chest: Piece of Heart
+Swamp Palace - West Chest: Piece of Heart
+Swamp Palace - Flooded Room - Left: Rupees (300)
+Swamp Palace - Flooded Room - Right: Compass (Swamp Palace)
+Swamp Palace - Waterway Pot Key: Small Key (Swamp Palace)
+Swamp Palace - Waterfall Room: Big Key (Swamp Palace)
+Swamp Palace - Boss: Piece of Heart
+Swamp Palace - Prize: Crystal 7
+Thieves' Town - Big Key Chest: Progressive Sword
+Thieves' Town - Map Chest: Rupees (20)
+Thieves' Town - Compass Chest: Small Key (Thieves Town)
+Thieves' Town - Ambush Chest: Big Key (Thieves Town)
+Thieves' Town - Attic: Rupees (300)
+Thieves' Town - Big Chest: Map (Thieves Town)
+Thieves' Town - Hallway Pot Key: Small Key (Thieves Town)
+Thieves' Town - Spike Switch Pot Key: Small Key (Thieves Town)
+Thieves' Town - Blind's Cell: Piece of Heart
+Thieves' Town - Boss: Compass (Thieves Town)
+Thieves' Town - Prize: Crystal 5
+Skull Woods - Map Chest: Piece of Heart
+Skull Woods - Pinball Room: Small Key (Skull Woods)
+Skull Woods - Compass Chest: Map (Skull Woods)
+Skull Woods - Pot Prison: Small Key (Skull Woods)
+Skull Woods - Big Chest: Small Key (Skull Woods)
+Skull Woods - Big Key Chest: Big Key (Skull Woods)
+Skull Woods - West Lobby Pot Key: Small Key (Skull Woods)
+Skull Woods - Bridge Room: Piece of Heart
+Skull Woods - Spike Corner Key Drop: Small Key (Skull Woods)
+Skull Woods - Boss: Compass (Skull Woods)
+Skull Woods - Prize: Crystal 2
+Ice Palace - Jelly Key Drop: Small Key (Ice Palace)
+Ice Palace - Compass Chest: Big Key (Ice Palace)
+Ice Palace - Conveyor Key Drop: Small Key (Ice Palace)
+Ice Palace - Freezor Chest: Map (Ice Palace)
+Ice Palace - Many Pots Pot Key: Small Key (Ice Palace)
+Ice Palace - Big Chest: Rupees (5)
+Ice Palace - Iced T Room: Piece of Heart
+Ice Palace - Spike Room: Compass (Ice Palace)
+Ice Palace - Big Key Chest: Small Key (Ice Palace)
+Ice Palace - Map Chest: Piece of Heart
+Ice Palace - Hammer Block Key Drop: Small Key (Ice Palace)
+Ice Palace - Boss: Small Key (Ice Palace)
+Ice Palace - Prize: Red Pendant
+Misery Mire - Big Chest: Small Key (Misery Mire)
+Misery Mire - Map Chest: Map (Misery Mire)
+Misery Mire - Main Lobby: Small Key (Misery Mire)
+Misery Mire - Bridge Chest: Big Key (Misery Mire)
+Misery Mire - Spike Chest: Compass (Misery Mire)
+Misery Mire - Spikes Pot Key: Small Key (Misery Mire)
+Misery Mire - Fishbone Pot Key: Small Key (Misery Mire)
+Misery Mire - Conveyor Crystal Key Drop: Small Key (Misery Mire)
+Misery Mire - Compass Chest: Bottle (Red Potion)
+Misery Mire - Big Key Chest: Piece of Heart
+Misery Mire - Boss: Small Key (Misery Mire)
+Misery Mire - Prize: Green Pendant
+Turtle Rock - Compass Chest: Small Key (Turtle Rock)
+Turtle Rock - Roller Room - Left: Rupees (20)
+Turtle Rock - Roller Room - Right: Small Key (Turtle Rock)
+Turtle Rock - Pokey 1 Key Drop: Small Key (Turtle Rock)
+Turtle Rock - Chain Chomps: Big Key (Turtle Rock)
+Turtle Rock - Big Key Chest: Rupees (20)
+Turtle Rock - Pokey 2 Key Drop: Small Key (Turtle Rock)
+Turtle Rock - Big Chest: Bug Catching Net
+Turtle Rock - Crystaroller Room: Small Key (Turtle Rock)
+Turtle Rock - Eye Bridge - Bottom Left: Compass (Turtle Rock)
+Turtle Rock - Eye Bridge - Bottom Right: Rupees (50)
+Turtle Rock - Eye Bridge - Top Left: Map (Turtle Rock)
+Turtle Rock - Eye Bridge - Top Right: Small Key (Turtle Rock)
+Turtle Rock - Boss: Boss Heart Container
+Turtle Rock - Prize: Crystal 6
+Palace of Darkness - Shooter Room: Small Key (Palace of Darkness)
+Palace of Darkness - The Arena - Bridge: Small Key (Palace of Darkness)
+Palace of Darkness - Stalfos Basement: Small Key (Palace of Darkness)
+Palace of Darkness - Big Key Chest: Big Key (Palace of Darkness)
+Palace of Darkness - The Arena - Ledge: Rupees (5)
+Palace of Darkness - Map Chest: Small Key (Palace of Darkness)
+Palace of Darkness - Compass Chest: Small Key (Palace of Darkness)
+Palace of Darkness - Dark Basement - Left: Boss Heart Container
+Palace of Darkness - Dark Basement - Right: Small Key (Palace of Darkness)
+Palace of Darkness - Dark Maze - Top: Bombs (3)
+Palace of Darkness - Dark Maze - Bottom: Mushroom
+Palace of Darkness - Big Chest: Map (Palace of Darkness)
+Palace of Darkness - Harmless Hellway: Boss Heart Container
+Palace of Darkness - Boss: Compass (Palace of Darkness)
+Palace of Darkness - Prize: Blue Pendant
+Ganons Tower - Bob's Torch: Big Key (Ganons Tower)
+Ganons Tower - Hope Room - Left: Bombs (3)
+Ganons Tower - Hope Room - Right: Small Key (Ganons Tower)
+Ganons Tower - Conveyor Cross Pot Key: Small Key (Ganons Tower)
+Ganons Tower - Tile Room: Piece of Heart
+Ganons Tower - Compass Room - Top Left: Piece of Heart
+Ganons Tower - Compass Room - Top Right: Arrows (10)
+Ganons Tower - Compass Room - Bottom Left: Bombs (3)
+Ganons Tower - Compass Room - Bottom Right: Bombs (3)
+Ganons Tower - Conveyor Star Pits Pot Key: Small Key (Ganons Tower)
+Ganons Tower - DMs Room - Top Left: Small Key (Ganons Tower)
+Ganons Tower - DMs Room - Top Right: Boss Heart Container
+Ganons Tower - DMs Room - Bottom Left: Rupees (20)
+Ganons Tower - DMs Room - Bottom Right: Rupees (20)
+Ganons Tower - Double Switch Pot Key: Small Key (Ganons Tower)
+Ganons Tower - Map Chest: Bombs (3)
+Ganons Tower - Firesnake Room: Bombs (3)
+Ganons Tower - Randomizer Room - Top Left: Compass (Ganons Tower)
+Ganons Tower - Randomizer Room - Top Right: Rupees (300)
+Ganons Tower - Randomizer Room - Bottom Left: Bombs (3)
+Ganons Tower - Randomizer Room - Bottom Right: Progressive Shield
+Ganons Tower - Bob's Chest: Map (Ganons Tower)
+Ganons Tower - Big Chest: Rupees (20)
+Ganons Tower - Big Key Room - Left: Bombs (3)
+Ganons Tower - Big Key Room - Right: Rupees (20)
+Ganons Tower - Big Key Chest: Arrows (10)
+Ganons Tower - Mini Helmasaur Room - Left: Small Key (Ganons Tower)
+Ganons Tower - Mini Helmasaur Room - Right: Small Key (Ganons Tower)
+Ganons Tower - Pre-Moldorm Chest: Rupees (5)
+Ganons Tower - Mini Helmasaur Key Drop: Small Key (Ganons Tower)
+Ganons Tower - Validation Chest: Rupees (20)
+Agahnim 2: Beat Agahnim 2
+Ganon: Triforce
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Hyrule Castle - Map Guard Key Drop: Small Key (Hyrule Castle)
+  Link's Uncle: Progressive Sword
+}
+2: {
+  Hyrule Castle - Boomerang Chest: Small Key (Hyrule Castle)
+  Hyrule Castle - Boomerang Guard Key Drop: Small Key (Hyrule Castle)
+}
+3: {
+  Hyrule Castle - Big Key Drop: Big Key (Hyrule Castle)
+}
+4: {
+  Sewers - Key Rat Key Drop: Small Key (Hyrule Castle)
+}
+5: {
+  Blind's Hideout - Right: Hammer
+  Blind's Hideout - Top: Book of Mudora
+  Bottle Merchant: Hookshot
+  Eastern Palace - Compass Chest: Big Key (Eastern Palace)
+  Floodgate: Open Floodgate
+  Kakariko Well - Middle: Quake
+  Mini Moldorm Cave - Far Left: Progressive Bow
+  Sewers - Secret Room - Middle: Progressive Glove
+}
+6: {
+  Desert Palace - Desert Tiles 1 Pot Key: Small Key (Desert Palace)
+  Desert Palace - Map Chest: Big Key (Desert Palace)
+  King Zora: Lamp
+  Sunken Treasure: Progressive Sword
+}
+7: {
+  Desert Palace - Big Chest: Small Key (Desert Palace)
+  Eastern Palace - Dark Eyegore Key Drop: Small Key (Eastern Palace)
+  Eastern Palace - Dark Square Pot Key: Small Key (Eastern Palace)
+  Paradox Cave Lower - Right: Cape
+  Paradox Cave Upper - Left: Moon Pearl
+  Spectacle Rock Cave: Progressive Glove
+  Tower of Hera - Basement Cage: Small Key (Tower of Hera)
+}
+8: {
+  Desert Palace - Beamos Hall Pot Key: Small Key (Desert Palace)
+  Eastern Palace - Boss: Flippers
+  Eastern Palace - Prize: Crystal 4
+  Frog: Get Frog
+  Hookshot Cave - Top Right: Cane of Somaria
+  Peg Cave: Fire Rod
+  Skull Woods - Big Key Chest: Big Key (Skull Woods)
+  Skull Woods - Pinball Room: Small Key (Skull Woods)
+  Skull Woods - Pot Prison: Small Key (Skull Woods)
+  Skull Woods - West Lobby Pot Key: Small Key (Skull Woods)
+  Superbunny Cave - Bottom: Progressive Bow
+  Thieves' Town - Ambush Chest: Big Key (Thieves Town)
+  Thieves' Town - Compass Chest: Small Key (Thieves Town)
+  Tower of Hera - Big Key Chest: Big Key (Tower of Hera)
+}
+9: {
+  Desert Palace - Desert Tiles 2 Pot Key: Small Key (Desert Palace)
+  Hobo: Ice Rod
+  Missing Smith: Return Smith
+  Skull Woods - Big Chest: Small Key (Skull Woods)
+  Thieves' Town - Hallway Pot Key: Small Key (Thieves Town)
+  Thieves' Town - Spike Switch Pot Key: Small Key (Thieves Town)
+  Tower of Hera - Prize: Crystal 1
+  Turtle Rock - Compass Chest: Small Key (Turtle Rock)
+  Turtle Rock - Roller Room - Right: Small Key (Turtle Rock)
+}
+10: {
+  Dark Blacksmith Ruins: Pick Up Purple Chest
+  Desert Palace - Prize: Crystal 3
+  Skull Woods - Spike Corner Key Drop: Small Key (Skull Woods)
+  Thieves' Town - Prize: Crystal 5
+  Turtle Rock - Chain Chomps: Big Key (Turtle Rock)
+  Turtle Rock - Pokey 1 Key Drop: Small Key (Turtle Rock)
+}
+11: {
+  Purple Chest: Pegasus Boots
+  Skull Woods - Prize: Crystal 2
+  Turtle Rock - Crystaroller Room: Small Key (Turtle Rock)
+  Turtle Rock - Pokey 2 Key Drop: Small Key (Turtle Rock)
+}
+12: {
+  King's Tomb: Magic Mirror
+  Turtle Rock - Eye Bridge - Top Right: Small Key (Turtle Rock)
+}
+13: {
+  Swamp Palace - Entrance: Small Key (Swamp Palace)
+  Turtle Rock - Prize: Crystal 6
+}
+14: {
+  Swamp Palace - Pot Row Pot Key: Small Key (Swamp Palace)
+}
+15: {
+  Swamp Palace - Trench 1 Pot Key: Small Key (Swamp Palace)
+}
+16: {
+  Swamp Palace - Hookshot Pot Key: Small Key (Swamp Palace)
+  Swamp Palace - Trench 2 Pot Key: Small Key (Swamp Palace)
+}
+17: {
+  Swamp Palace - Waterway Pot Key: Small Key (Swamp Palace)
+}
+18: {
+  Swamp Palace - Prize: Crystal 7
+}
+19: {
+  Ganons Tower - Bob's Torch: Big Key (Ganons Tower)
+  Ganons Tower - Conveyor Cross Pot Key: Small Key (Ganons Tower)
+  Ganons Tower - DMs Room - Top Left: Small Key (Ganons Tower)
+  Ganons Tower - Double Switch Pot Key: Small Key (Ganons Tower)
+  Ganons Tower - Hope Room - Right: Small Key (Ganons Tower)
+}
+20: {
+  Ganons Tower - Mini Helmasaur Key Drop: Small Key (Ganons Tower)
+  Ganons Tower - Mini Helmasaur Room - Left: Small Key (Ganons Tower)
+  Ganons Tower - Mini Helmasaur Room - Right: Small Key (Ganons Tower)
+}
+21: {
+  Ganons Tower - Conveyor Star Pits Pot Key: Small Key (Ganons Tower)
+}
+22: {
+  Agahnim 2: Beat Agahnim 2
+}
+23: {
+  Ganon: Triforce
+}
+
+Paths:
+
+Agahnim 2
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Death Mountain Entrance Rock
+   =>   Death Mountain Entrance -> Old Man Cave (West)
+   =>   Old Man Cave -> Old Man Cave Exit (East)
+   =>   Death Mountain -> Broken Bridge (West)
+   =>   East Death Mountain (Bottom) -> Paradox Cave (Middle)
+   =>   Paradox Cave -> Paradox Cave Exit (Top)
+   =>   East Death Mountain (Top) -> Turtle Rock Teleporter
+   =>   Turtle Rock (Top) -> Turtle Rock Drop
+   =>   Dark Death Mountain (Top) -> Ganons Tower
+   =>   Ganons Tower (Entrance) -> Ganons Tower Big Key Door
+   =>   Ganons Tower (Top) -> Ganons Tower Torch Rooms
+   =>   Ganons Tower (Before Moldorm) -> Ganons Tower Moldorm Door
+   =>   Ganons Tower (Moldorm) -> Ganons Tower Moldorm Gap
+   =>   Agahnim 2
+Blind's Hideout - Right
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Blinds Hideout
+   =>   Blinds Hideout
+Blind's Hideout - Top
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Blinds Hideout
+   =>   Blinds Hideout
+Bottle Merchant
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World
+Dark Blacksmith Ruins
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Kakariko Teleporter
+   =>   West Dark World -> Village of Outcasts Eastern Rocks
+   =>   Hammer Peg Area
+Desert Palace - Beamos Hall Pot Key
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Desert Palace Stairs
+   =>   Desert Palace Stairs -> Desert Palace Entrance (South)
+   =>   Desert Palace Main (Inner) -> Desert Palace Pots (Inner)
+   =>   Desert Palace Main (Outer) -> Desert Palace Exit (West)
+   =>   Desert Ledge -> Desert Palace Entrance (North) Rocks
+   =>   Desert Palace Entrance (North) Spot -> Desert Palace Entrance (North)
+   =>   Desert Palace North
+Desert Palace - Big Chest
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Desert Palace Stairs
+   =>   Desert Palace Stairs -> Desert Palace Entrance (South)
+   =>   Desert Palace Main (Inner) -> Desert Palace Pots (Inner)
+   =>   Desert Palace Main (Outer)
+Desert Palace - Desert Tiles 1 Pot Key
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Desert Palace Stairs
+   =>   Desert Palace Stairs -> Desert Palace Entrance (South)
+   =>   Desert Palace Main (Inner) -> Desert Palace Pots (Inner)
+   =>   Desert Palace Main (Outer) -> Desert Palace Exit (West)
+   =>   Desert Ledge -> Desert Palace Entrance (North) Rocks
+   =>   Desert Palace Entrance (North) Spot -> Desert Palace Entrance (North)
+   =>   Desert Palace North
+Desert Palace - Desert Tiles 2 Pot Key
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Desert Palace Stairs
+   =>   Desert Palace Stairs -> Desert Palace Entrance (South)
+   =>   Desert Palace Main (Inner) -> Desert Palace Pots (Inner)
+   =>   Desert Palace Main (Outer) -> Desert Palace Exit (West)
+   =>   Desert Ledge -> Desert Palace Entrance (North) Rocks
+   =>   Desert Palace Entrance (North) Spot -> Desert Palace Entrance (North)
+   =>   Desert Palace North
+Desert Palace - Map Chest
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Desert Palace Stairs
+   =>   Desert Palace Stairs -> Desert Palace Entrance (South)
+   =>   Desert Palace Main (Inner) -> Desert Palace Pots (Inner)
+   =>   Desert Palace Main (Outer)
+Desert Palace - Prize
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Desert Palace Stairs
+   =>   Desert Palace Stairs -> Desert Palace Entrance (South)
+   =>   Desert Palace Main (Inner) -> Desert Palace Pots (Inner)
+   =>   Desert Palace Main (Outer) -> Desert Palace Exit (West)
+   =>   Desert Ledge -> Desert Palace Entrance (North) Rocks
+   =>   Desert Palace Entrance (North) Spot -> Desert Palace Entrance (North)
+   =>   Desert Palace North
+Eastern Palace - Boss
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Eastern Palace
+   =>   Eastern Palace
+Eastern Palace - Compass Chest
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Eastern Palace
+   =>   Eastern Palace
+Eastern Palace - Dark Eyegore Key Drop
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Eastern Palace
+   =>   Eastern Palace
+Eastern Palace - Dark Square Pot Key
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Eastern Palace
+   =>   Eastern Palace
+Eastern Palace - Prize
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Eastern Palace
+   =>   Eastern Palace
+Floodgate
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Dam
+   =>   Dam
+Frog
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Kakariko Teleporter
+   =>   West Dark World
+Ganon
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> East Hyrule Teleporter
+   =>   East Dark World -> Pyramid Hole
+   =>   Pyramid
+Ganons Tower - Bob's Torch
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Death Mountain Entrance Rock
+   =>   Death Mountain Entrance -> Old Man Cave (West)
+   =>   Old Man Cave -> Old Man Cave Exit (East)
+   =>   Death Mountain -> Broken Bridge (West)
+   =>   East Death Mountain (Bottom) -> Paradox Cave (Middle)
+   =>   Paradox Cave -> Paradox Cave Exit (Top)
+   =>   East Death Mountain (Top) -> Turtle Rock Teleporter
+   =>   Turtle Rock (Top) -> Turtle Rock Drop
+   =>   Dark Death Mountain (Top) -> Ganons Tower
+   =>   Ganons Tower (Entrance)
+Ganons Tower - Conveyor Cross Pot Key
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Death Mountain Entrance Rock
+   =>   Death Mountain Entrance -> Old Man Cave (West)
+   =>   Old Man Cave -> Old Man Cave Exit (East)
+   =>   Death Mountain -> Broken Bridge (West)
+   =>   East Death Mountain (Bottom) -> Paradox Cave (Middle)
+   =>   Paradox Cave -> Paradox Cave Exit (Top)
+   =>   East Death Mountain (Top) -> Turtle Rock Teleporter
+   =>   Turtle Rock (Top) -> Turtle Rock Drop
+   =>   Dark Death Mountain (Top) -> Ganons Tower
+   =>   Ganons Tower (Entrance)
+Ganons Tower - Conveyor Star Pits Pot Key
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Death Mountain Entrance Rock
+   =>   Death Mountain Entrance -> Old Man Cave (West)
+   =>   Old Man Cave -> Old Man Cave Exit (East)
+   =>   Death Mountain -> Broken Bridge (West)
+   =>   East Death Mountain (Bottom) -> Paradox Cave (Middle)
+   =>   Paradox Cave -> Paradox Cave Exit (Top)
+   =>   East Death Mountain (Top) -> Turtle Rock Teleporter
+   =>   Turtle Rock (Top) -> Turtle Rock Drop
+   =>   Dark Death Mountain (Top) -> Ganons Tower
+   =>   Ganons Tower (Entrance) -> Ganons Tower (Tile Room)
+   =>   Ganons Tower (Tile Room) -> Ganons Tower (Tile Room) Key Door
+   =>   Ganons Tower (Compass Room)
+Ganons Tower - DMs Room - Top Left
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Death Mountain Entrance Rock
+   =>   Death Mountain Entrance -> Old Man Cave (West)
+   =>   Old Man Cave -> Old Man Cave Exit (East)
+   =>   Death Mountain -> Broken Bridge (West)
+   =>   East Death Mountain (Bottom) -> Paradox Cave (Middle)
+   =>   Paradox Cave -> Paradox Cave Exit (Top)
+   =>   East Death Mountain (Top) -> Turtle Rock Teleporter
+   =>   Turtle Rock (Top) -> Turtle Rock Drop
+   =>   Dark Death Mountain (Top) -> Ganons Tower
+   =>   Ganons Tower (Entrance) -> Ganons Tower (Hookshot Room)
+   =>   Ganons Tower (Hookshot Room)
+Ganons Tower - Double Switch Pot Key
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Death Mountain Entrance Rock
+   =>   Death Mountain Entrance -> Old Man Cave (West)
+   =>   Old Man Cave -> Old Man Cave Exit (East)
+   =>   Death Mountain -> Broken Bridge (West)
+   =>   East Death Mountain (Bottom) -> Paradox Cave (Middle)
+   =>   Paradox Cave -> Paradox Cave Exit (Top)
+   =>   East Death Mountain (Top) -> Turtle Rock Teleporter
+   =>   Turtle Rock (Top) -> Turtle Rock Drop
+   =>   Dark Death Mountain (Top) -> Ganons Tower
+   =>   Ganons Tower (Entrance) -> Ganons Tower (Hookshot Room)
+   =>   Ganons Tower (Hookshot Room)
+Ganons Tower - Hope Room - Right
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Death Mountain Entrance Rock
+   =>   Death Mountain Entrance -> Old Man Cave (West)
+   =>   Old Man Cave -> Old Man Cave Exit (East)
+   =>   Death Mountain -> Broken Bridge (West)
+   =>   East Death Mountain (Bottom) -> Paradox Cave (Middle)
+   =>   Paradox Cave -> Paradox Cave Exit (Top)
+   =>   East Death Mountain (Top) -> Turtle Rock Teleporter
+   =>   Turtle Rock (Top) -> Turtle Rock Drop
+   =>   Dark Death Mountain (Top) -> Ganons Tower
+   =>   Ganons Tower (Entrance)
+Ganons Tower - Mini Helmasaur Key Drop
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Death Mountain Entrance Rock
+   =>   Death Mountain Entrance -> Old Man Cave (West)
+   =>   Old Man Cave -> Old Man Cave Exit (East)
+   =>   Death Mountain -> Broken Bridge (West)
+   =>   East Death Mountain (Bottom) -> Paradox Cave (Middle)
+   =>   Paradox Cave -> Paradox Cave Exit (Top)
+   =>   East Death Mountain (Top) -> Turtle Rock Teleporter
+   =>   Turtle Rock (Top) -> Turtle Rock Drop
+   =>   Dark Death Mountain (Top) -> Ganons Tower
+   =>   Ganons Tower (Entrance) -> Ganons Tower Big Key Door
+   =>   Ganons Tower (Top) -> Ganons Tower Torch Rooms
+   =>   Ganons Tower (Before Moldorm)
+Ganons Tower - Mini Helmasaur Room - Left
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Death Mountain Entrance Rock
+   =>   Death Mountain Entrance -> Old Man Cave (West)
+   =>   Old Man Cave -> Old Man Cave Exit (East)
+   =>   Death Mountain -> Broken Bridge (West)
+   =>   East Death Mountain (Bottom) -> Paradox Cave (Middle)
+   =>   Paradox Cave -> Paradox Cave Exit (Top)
+   =>   East Death Mountain (Top) -> Turtle Rock Teleporter
+   =>   Turtle Rock (Top) -> Turtle Rock Drop
+   =>   Dark Death Mountain (Top) -> Ganons Tower
+   =>   Ganons Tower (Entrance) -> Ganons Tower Big Key Door
+   =>   Ganons Tower (Top) -> Ganons Tower Torch Rooms
+   =>   Ganons Tower (Before Moldorm)
+Ganons Tower - Mini Helmasaur Room - Right
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Death Mountain Entrance Rock
+   =>   Death Mountain Entrance -> Old Man Cave (West)
+   =>   Old Man Cave -> Old Man Cave Exit (East)
+   =>   Death Mountain -> Broken Bridge (West)
+   =>   East Death Mountain (Bottom) -> Paradox Cave (Middle)
+   =>   Paradox Cave -> Paradox Cave Exit (Top)
+   =>   East Death Mountain (Top) -> Turtle Rock Teleporter
+   =>   Turtle Rock (Top) -> Turtle Rock Drop
+   =>   Dark Death Mountain (Top) -> Ganons Tower
+   =>   Ganons Tower (Entrance) -> Ganons Tower Big Key Door
+   =>   Ganons Tower (Top) -> Ganons Tower Torch Rooms
+   =>   Ganons Tower (Before Moldorm)
+Hobo
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Hobo Bridge
+   =>   Hobo Bridge
+Hookshot Cave - Top Right
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Death Mountain Entrance Rock
+   =>   Death Mountain Entrance -> Old Man Cave (West)
+   =>   Old Man Cave -> Old Man Cave Exit (East)
+   =>   Death Mountain -> Broken Bridge (West)
+   =>   East Death Mountain (Bottom) -> Paradox Cave (Middle)
+   =>   Paradox Cave -> Paradox Cave Exit (Top)
+   =>   East Death Mountain (Top) -> Turtle Rock Teleporter
+   =>   Turtle Rock (Top) -> Turtle Rock Drop
+   =>   Dark Death Mountain (Top) -> Hookshot Cave
+   =>   Hookshot Cave
+Hyrule Castle - Big Key Drop
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle
+Hyrule Castle - Boomerang Chest
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle
+Hyrule Castle - Boomerang Guard Key Drop
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle
+Hyrule Castle - Map Guard Key Drop
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle
+Kakariko Well - Middle
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Kakariko Well Drop
+   =>   Kakariko Well (top)
+King Zora
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Zoras River
+   =>   Zoras River
+King's Tomb
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Kings Grave Outer Rocks
+   =>   Kings Grave Area -> Kings Grave
+   =>   Kings Grave
+Link's Uncle
+        Hyrule Castle Secret Entrance
+Mini Moldorm Cave - Far Left
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Mini Moldorm Cave
+   =>   Mini Moldorm Cave
+Missing Smith
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Blacksmiths Hut
+   =>   Blacksmiths Hut
+Paradox Cave Lower - Right
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Death Mountain Entrance Rock
+   =>   Death Mountain Entrance -> Old Man Cave (West)
+   =>   Old Man Cave -> Old Man Cave Exit (East)
+   =>   Death Mountain -> Broken Bridge (West)
+   =>   East Death Mountain (Bottom) -> Paradox Cave (Middle)
+   =>   Paradox Cave -> Paradox Cave Drop
+   =>   Paradox Cave Chest Area
+Paradox Cave Upper - Left
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Death Mountain Entrance Rock
+   =>   Death Mountain Entrance -> Old Man Cave (West)
+   =>   Old Man Cave -> Old Man Cave Exit (East)
+   =>   Death Mountain -> Broken Bridge (West)
+   =>   East Death Mountain (Bottom) -> Paradox Cave (Middle)
+   =>   Paradox Cave -> Paradox Cave Drop
+   =>   Paradox Cave Chest Area
+Peg Cave
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Kakariko Teleporter
+   =>   West Dark World -> Village of Outcasts Eastern Rocks
+   =>   Hammer Peg Area -> Dark World Hammer Peg Cave
+   =>   Dark World Hammer Peg Cave
+Purple Chest
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World
+Sewers - Key Rat Key Drop
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark)
+Sewers - Secret Room - Middle
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sewers Secret Room
+   =>   Sewers Secret Room
+Skull Woods - Big Chest
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Kakariko Teleporter
+   =>   West Dark World -> Skull Woods Forest
+   =>   Skull Woods Forest -> Skull Woods First Section Hole (North)
+   =>   Skull Woods First Section (Top)
+Skull Woods - Big Key Chest
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Kakariko Teleporter
+   =>   West Dark World -> Skull Woods Forest
+   =>   Skull Woods Forest -> Skull Woods Second Section Door (East)
+   =>   Skull Woods Second Section
+Skull Woods - Pinball Room
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Kakariko Teleporter
+   =>   West Dark World -> Skull Woods Forest
+   =>   Skull Woods Forest -> Skull Woods First Section Hole (East)
+   =>   Skull Woods First Section (Right)
+Skull Woods - Pot Prison
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Kakariko Teleporter
+   =>   West Dark World -> Skull Woods Forest
+   =>   Skull Woods Forest -> Skull Woods First Section Hole (West)
+   =>   Skull Woods First Section (Left)
+Skull Woods - Prize
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Kakariko Teleporter
+   =>   West Dark World -> Skull Woods Forest
+   =>   Skull Woods Forest -> Skull Woods Second Section Door (East)
+   =>   Skull Woods Second Section -> Skull Woods Second Section Exit (West)
+   =>   Skull Woods Forest (West) -> Skull Woods Final Section
+   =>   Skull Woods Final Section (Entrance) -> Skull Woods Torch Room
+   =>   Skull Woods Final Section (Mothula)
+Skull Woods - Spike Corner Key Drop
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Kakariko Teleporter
+   =>   West Dark World -> Skull Woods Forest
+   =>   Skull Woods Forest -> Skull Woods Second Section Door (East)
+   =>   Skull Woods Second Section -> Skull Woods Second Section Exit (West)
+   =>   Skull Woods Forest (West) -> Skull Woods Final Section
+   =>   Skull Woods Final Section (Entrance) -> Skull Woods Torch Room
+   =>   Skull Woods Final Section (Mothula)
+Skull Woods - West Lobby Pot Key
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Kakariko Teleporter
+   =>   West Dark World -> Skull Woods Forest
+   =>   Skull Woods Forest -> Skull Woods Second Section Door (East)
+   =>   Skull Woods Second Section
+Spectacle Rock Cave
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Death Mountain Entrance Rock
+   =>   Death Mountain Entrance -> Old Man Cave (West)
+   =>   Old Man Cave -> Old Man Cave Exit (East)
+   =>   Death Mountain -> Spectacle Rock Cave
+   =>   Spectacle Rock Cave (Top)
+Sunken Treasure
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World
+Superbunny Cave - Bottom
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Death Mountain Entrance Rock
+   =>   Death Mountain Entrance -> Old Man Cave (West)
+   =>   Old Man Cave -> Old Man Cave Exit (East)
+   =>   Death Mountain -> Broken Bridge (West)
+   =>   East Death Mountain (Bottom) -> East Death Mountain Teleporter
+   =>   Dark Death Mountain (East Bottom) -> Superbunny Cave (Bottom)
+   =>   Superbunny Cave (Bottom) -> Superbunny Cave Climb
+   =>   Superbunny Cave (Top)
+Swamp Palace - Entrance
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> South Hyrule Teleporter
+   =>   South Dark World -> Swamp Palace
+   =>   Swamp Palace (Entrance) -> Swamp Palace Moat
+   =>   Swamp Palace (First Room)
+Swamp Palace - Hookshot Pot Key
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> South Hyrule Teleporter
+   =>   South Dark World -> Swamp Palace
+   =>   Swamp Palace (Entrance) -> Swamp Palace Moat
+   =>   Swamp Palace (First Room) -> Swamp Palace Small Key Door
+   =>   Swamp Palace (Starting Area) -> Swamp Palace (Center)
+   =>   Swamp Palace (Center)
+Swamp Palace - Pot Row Pot Key
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> South Hyrule Teleporter
+   =>   South Dark World -> Swamp Palace
+   =>   Swamp Palace (Entrance) -> Swamp Palace Moat
+   =>   Swamp Palace (First Room) -> Swamp Palace Small Key Door
+   =>   Swamp Palace (Starting Area)
+Swamp Palace - Prize
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> South Hyrule Teleporter
+   =>   South Dark World -> Swamp Palace
+   =>   Swamp Palace (Entrance) -> Swamp Palace Moat
+   =>   Swamp Palace (First Room) -> Swamp Palace Small Key Door
+   =>   Swamp Palace (Starting Area) -> Swamp Palace (Center)
+   =>   Swamp Palace (Center) -> Swamp Palace (North)
+   =>   Swamp Palace (North)
+Swamp Palace - Trench 1 Pot Key
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> South Hyrule Teleporter
+   =>   South Dark World -> Swamp Palace
+   =>   Swamp Palace (Entrance) -> Swamp Palace Moat
+   =>   Swamp Palace (First Room) -> Swamp Palace Small Key Door
+   =>   Swamp Palace (Starting Area)
+Swamp Palace - Trench 2 Pot Key
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> South Hyrule Teleporter
+   =>   South Dark World -> Swamp Palace
+   =>   Swamp Palace (Entrance) -> Swamp Palace Moat
+   =>   Swamp Palace (First Room) -> Swamp Palace Small Key Door
+   =>   Swamp Palace (Starting Area) -> Swamp Palace (Center)
+   =>   Swamp Palace (Center)
+Swamp Palace - Waterway Pot Key
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> South Hyrule Teleporter
+   =>   South Dark World -> Swamp Palace
+   =>   Swamp Palace (Entrance) -> Swamp Palace Moat
+   =>   Swamp Palace (First Room) -> Swamp Palace Small Key Door
+   =>   Swamp Palace (Starting Area) -> Swamp Palace (Center)
+   =>   Swamp Palace (Center) -> Swamp Palace (North)
+   =>   Swamp Palace (North)
+Thieves' Town - Ambush Chest
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Kakariko Teleporter
+   =>   West Dark World -> Thieves Town
+   =>   Thieves Town (Entrance)
+Thieves' Town - Compass Chest
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Kakariko Teleporter
+   =>   West Dark World -> Thieves Town
+   =>   Thieves Town (Entrance)
+Thieves' Town - Hallway Pot Key
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Kakariko Teleporter
+   =>   West Dark World -> Thieves Town
+   =>   Thieves Town (Entrance) -> Thieves Town Big Key Door
+   =>   Thieves Town (Deep)
+Thieves' Town - Prize
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Kakariko Teleporter
+   =>   West Dark World -> Thieves Town
+   =>   Thieves Town (Entrance) -> Thieves Town Big Key Door
+   =>   Thieves Town (Deep) -> Blind Fight
+   =>   Blind Fight
+Thieves' Town - Spike Switch Pot Key
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Kakariko Teleporter
+   =>   West Dark World -> Thieves Town
+   =>   Thieves Town (Entrance) -> Thieves Town Big Key Door
+   =>   Thieves Town (Deep)
+Tower of Hera - Basement Cage
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Death Mountain Entrance Rock
+   =>   Death Mountain Entrance -> Old Man Cave (West)
+   =>   Old Man Cave -> Old Man Cave Exit (East)
+   =>   Death Mountain -> Broken Bridge (West)
+   =>   East Death Mountain (Bottom) -> Paradox Cave (Middle)
+   =>   Paradox Cave -> Paradox Cave Exit (Top)
+   =>   East Death Mountain (Top) -> Death Mountain (Top)
+   =>   Death Mountain (Top) -> Tower of Hera
+   =>   Tower of Hera (Bottom)
+Tower of Hera - Big Key Chest
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Death Mountain Entrance Rock
+   =>   Death Mountain Entrance -> Old Man Cave (West)
+   =>   Old Man Cave -> Old Man Cave Exit (East)
+   =>   Death Mountain -> Broken Bridge (West)
+   =>   East Death Mountain (Bottom) -> Paradox Cave (Middle)
+   =>   Paradox Cave -> Paradox Cave Exit (Top)
+   =>   East Death Mountain (Top) -> Death Mountain (Top)
+   =>   Death Mountain (Top) -> Tower of Hera
+   =>   Tower of Hera (Bottom) -> Tower of Hera Small Key Door
+   =>   Tower of Hera (Basement)
+Tower of Hera - Prize
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Death Mountain Entrance Rock
+   =>   Death Mountain Entrance -> Old Man Cave (West)
+   =>   Old Man Cave -> Old Man Cave Exit (East)
+   =>   Death Mountain -> Broken Bridge (West)
+   =>   East Death Mountain (Bottom) -> Paradox Cave (Middle)
+   =>   Paradox Cave -> Paradox Cave Exit (Top)
+   =>   East Death Mountain (Top) -> Death Mountain (Top)
+   =>   Death Mountain (Top) -> Tower of Hera
+   =>   Tower of Hera (Bottom) -> Tower of Hera Big Key Door
+   =>   Tower of Hera (Top)
+Turtle Rock - Chain Chomps
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Death Mountain Entrance Rock
+   =>   Death Mountain Entrance -> Old Man Cave (West)
+   =>   Old Man Cave -> Old Man Cave Exit (East)
+   =>   Death Mountain -> Broken Bridge (West)
+   =>   East Death Mountain (Bottom) -> Paradox Cave (Middle)
+   =>   Paradox Cave -> Paradox Cave Exit (Top)
+   =>   East Death Mountain (Top) -> Turtle Rock Teleporter
+   =>   Turtle Rock (Top) -> Turtle Rock Drop
+   =>   Dark Death Mountain (Top) -> Turtle Rock
+   =>   Turtle Rock (Entrance) -> Turtle Rock Entrance Gap
+   =>   Turtle Rock (First Section) -> Turtle Rock Entrance to Pokey Room
+   =>   Turtle Rock (Pokey Room) -> Turtle Rock (Pokey Room) (North)
+   =>   Turtle Rock (Chain Chomp Room)
+Turtle Rock - Compass Chest
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Death Mountain Entrance Rock
+   =>   Death Mountain Entrance -> Old Man Cave (West)
+   =>   Old Man Cave -> Old Man Cave Exit (East)
+   =>   Death Mountain -> Broken Bridge (West)
+   =>   East Death Mountain (Bottom) -> Paradox Cave (Middle)
+   =>   Paradox Cave -> Paradox Cave Exit (Top)
+   =>   East Death Mountain (Top) -> Turtle Rock Teleporter
+   =>   Turtle Rock (Top) -> Turtle Rock Drop
+   =>   Dark Death Mountain (Top) -> Turtle Rock
+   =>   Turtle Rock (Entrance) -> Turtle Rock Entrance Gap
+   =>   Turtle Rock (First Section)
+Turtle Rock - Crystaroller Room
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Death Mountain Entrance Rock
+   =>   Death Mountain Entrance -> Old Man Cave (West)
+   =>   Old Man Cave -> Old Man Cave Exit (East)
+   =>   Death Mountain -> Broken Bridge (West)
+   =>   East Death Mountain (Bottom) -> Paradox Cave (Middle)
+   =>   Paradox Cave -> Paradox Cave Exit (Top)
+   =>   East Death Mountain (Top) -> Turtle Rock Teleporter
+   =>   Turtle Rock (Top) -> Turtle Rock Drop
+   =>   Dark Death Mountain (Top) -> Turtle Rock
+   =>   Turtle Rock (Entrance) -> Turtle Rock Entrance Gap
+   =>   Turtle Rock (First Section) -> Turtle Rock Entrance to Pokey Room
+   =>   Turtle Rock (Pokey Room) -> Turtle Rock (Pokey Room) (North)
+   =>   Turtle Rock (Chain Chomp Room) -> Turtle Rock (Chain Chomp Room) (North)
+   =>   Turtle Rock (Second Section) -> Turtle Rock Big Key Door
+   =>   Turtle Rock (Crystaroller Room)
+Turtle Rock - Eye Bridge - Top Right
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Death Mountain Entrance Rock
+   =>   Death Mountain Entrance -> Old Man Cave (West)
+   =>   Old Man Cave -> Old Man Cave Exit (East)
+   =>   Death Mountain -> Broken Bridge (West)
+   =>   East Death Mountain (Bottom) -> Paradox Cave (Middle)
+   =>   Paradox Cave -> Paradox Cave Exit (Top)
+   =>   East Death Mountain (Top) -> Turtle Rock Teleporter
+   =>   Turtle Rock (Top) -> Turtle Rock Drop
+   =>   Dark Death Mountain (Top) -> Turtle Rock
+   =>   Turtle Rock (Entrance) -> Turtle Rock Entrance Gap
+   =>   Turtle Rock (First Section) -> Turtle Rock Entrance to Pokey Room
+   =>   Turtle Rock (Pokey Room) -> Turtle Rock (Pokey Room) (North)
+   =>   Turtle Rock (Chain Chomp Room) -> Turtle Rock (Chain Chomp Room) (North)
+   =>   Turtle Rock (Second Section) -> Turtle Rock Big Key Door
+   =>   Turtle Rock (Crystaroller Room) -> Turtle Rock Dark Room Staircase
+   =>   Turtle Rock (Dark Room) -> Turtle Rock (Dark Room) (South)
+   =>   Turtle Rock (Eye Bridge)
+Turtle Rock - Pokey 1 Key Drop
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Death Mountain Entrance Rock
+   =>   Death Mountain Entrance -> Old Man Cave (West)
+   =>   Old Man Cave -> Old Man Cave Exit (East)
+   =>   Death Mountain -> Broken Bridge (West)
+   =>   East Death Mountain (Bottom) -> Paradox Cave (Middle)
+   =>   Paradox Cave -> Paradox Cave Exit (Top)
+   =>   East Death Mountain (Top) -> Turtle Rock Teleporter
+   =>   Turtle Rock (Top) -> Turtle Rock Drop
+   =>   Dark Death Mountain (Top) -> Turtle Rock
+   =>   Turtle Rock (Entrance) -> Turtle Rock Entrance Gap
+   =>   Turtle Rock (First Section) -> Turtle Rock Entrance to Pokey Room
+   =>   Turtle Rock (Pokey Room)
+Turtle Rock - Pokey 2 Key Drop
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Death Mountain Entrance Rock
+   =>   Death Mountain Entrance -> Old Man Cave (West)
+   =>   Old Man Cave -> Old Man Cave Exit (East)
+   =>   Death Mountain -> Broken Bridge (West)
+   =>   East Death Mountain (Bottom) -> Paradox Cave (Middle)
+   =>   Paradox Cave -> Paradox Cave Exit (Top)
+   =>   East Death Mountain (Top) -> Turtle Rock Teleporter
+   =>   Turtle Rock (Top) -> Turtle Rock Drop
+   =>   Dark Death Mountain (Top) -> Turtle Rock
+   =>   Turtle Rock (Entrance) -> Turtle Rock Entrance Gap
+   =>   Turtle Rock (First Section) -> Turtle Rock Entrance to Pokey Room
+   =>   Turtle Rock (Pokey Room) -> Turtle Rock (Pokey Room) (North)
+   =>   Turtle Rock (Chain Chomp Room) -> Turtle Rock (Chain Chomp Room) (North)
+   =>   Turtle Rock (Second Section)
+Turtle Rock - Prize
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Death Mountain Entrance Rock
+   =>   Death Mountain Entrance -> Old Man Cave (West)
+   =>   Old Man Cave -> Old Man Cave Exit (East)
+   =>   Death Mountain -> Broken Bridge (West)
+   =>   East Death Mountain (Bottom) -> Paradox Cave (Middle)
+   =>   Paradox Cave -> Paradox Cave Exit (Top)
+   =>   East Death Mountain (Top) -> Turtle Rock Teleporter
+   =>   Turtle Rock (Top) -> Turtle Rock Drop
+   =>   Dark Death Mountain (Top) -> Turtle Rock
+   =>   Turtle Rock (Entrance) -> Turtle Rock Entrance Gap
+   =>   Turtle Rock (First Section) -> Turtle Rock Entrance to Pokey Room
+   =>   Turtle Rock (Pokey Room) -> Turtle Rock (Pokey Room) (North)
+   =>   Turtle Rock (Chain Chomp Room) -> Turtle Rock (Chain Chomp Room) (North)
+   =>   Turtle Rock (Second Section) -> Turtle Rock Big Key Door
+   =>   Turtle Rock (Crystaroller Room) -> Turtle Rock Dark Room Staircase
+   =>   Turtle Rock (Dark Room) -> Turtle Rock (Dark Room) (South)
+   =>   Turtle Rock (Eye Bridge) -> Turtle Rock (Trinexx)
+   =>   Turtle Rock (Trinexx)
+Turtle Rock - Roller Room - Right
+        Hyrule Castle Secret Entrance -> Hyrule Castle Secret Entrance Exit
+   =>   Hyrule Castle Courtyard -> Hyrule Castle Entrance (South)
+   =>   Hyrule Castle -> Throne Room
+   =>   Sewers (Dark) -> Sewers Door
+   =>   Sewers -> Sanctuary Push Door
+   =>   Sanctuary -> Sanctuary Exit
+   =>   Light World -> Death Mountain Entrance Rock
+   =>   Death Mountain Entrance -> Old Man Cave (West)
+   =>   Old Man Cave -> Old Man Cave Exit (East)
+   =>   Death Mountain -> Broken Bridge (West)
+   =>   East Death Mountain (Bottom) -> Paradox Cave (Middle)
+   =>   Paradox Cave -> Paradox Cave Exit (Top)
+   =>   East Death Mountain (Top) -> Turtle Rock Teleporter
+   =>   Turtle Rock (Top) -> Turtle Rock Drop
+   =>   Dark Death Mountain (Top) -> Turtle Rock
+   =>   Turtle Rock (Entrance) -> Turtle Rock Entrance Gap
+   =>   Turtle Rock (First Section)

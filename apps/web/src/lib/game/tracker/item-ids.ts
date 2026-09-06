@@ -68,8 +68,11 @@ const MIRROR = 26;
  * also holds `item-109/110/111` (same display names), and granting those broke the sage's
  * condition once inventory became a set of ids.
  */
+// Bit order follows the core's own kDungeonCrystalPendantBit (zelda_rtl.c) read
+// against the receive id each boss grants (kBossFinishedFallingItem ->
+// kFallingItem_Type): 0x04/0x37 green, 0x02/0x39 blue, 0x01/0x38 red.
 const PENDANT_BITS: readonly (readonly [number, ItemId])[] = [
-  [0x04, 'item-056'], [0x02, 'item-057'], [0x01, 'item-058'],
+  [0x04, 'item-056'], [0x02, 'item-058'], [0x01, 'item-057'],
 ];
 const CRYSTAL_BITS: readonly (readonly [number, ItemId])[] = [
   [0x02, 'item-112'], [0x10, 'item-113'], [0x40, 'item-114'], [0x20, 'item-115'],

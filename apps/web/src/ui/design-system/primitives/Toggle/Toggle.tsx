@@ -1,11 +1,16 @@
 /* @layer renderer-components @kind data */
 ﻿import './Toggle.css';
+import { useId } from 'react';
 import { type ToggleProps } from './Toggle.type';
 
 
 const Toggle = (props: ToggleProps) => {
   const { checked, onChange, label, description, disabled = false, id, link } = props;
-  const toggleId = id ?? `toggle-${label?.replace(/\s+/g, '-').toLowerCase() ?? 'unnamed'}`;
+  // Per-instance fallback id: a shared fallback (or two toggles with the same
+  // label) makes every wrapping label's htmlFor resolve to the FIRST matching
+  // input in the document, so clicking one toggle silently flips another.
+  const generatedId = useId();
+  const toggleId = id ?? `toggle-${generatedId}`;
 
   return (
     <label className={`toggle ${disabled ? 'toggle--disabled' : ''}`} htmlFor={toggleId}>

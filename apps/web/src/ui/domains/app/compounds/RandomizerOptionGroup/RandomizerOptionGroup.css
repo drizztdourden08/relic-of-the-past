@@ -1,0 +1,47 @@
+/* @layer renderer-components @kind style */
+
+/* A titled section: the gold title, brighter when the section is live, and
+   the folding variant's button with its chevron and count. */
+
+.rand-opt-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.rand-opt-group__title {
+  font-size: var(--text-xs);
+  color: var(--c-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-bottom: var(--space-xs);
+}
+
+.rand-opt-group--live .rand-opt-group__title {
+  color: var(--c-gold-bright);
+}
+
+.rand-opt-group__toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  width: 100%;
+  padding: var(--space-xs) 0;
+  text-align: left;
+}
+
+.rand-opt-group__toggle .rand-opt-group__title {
+  padding-bottom: 0;
+}
+
+.rand-opt-group__chevron {
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+}
+
+.rand-opt-group__count {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-faint);
+}

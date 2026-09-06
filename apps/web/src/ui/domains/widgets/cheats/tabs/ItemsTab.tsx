@@ -114,6 +114,7 @@ const ItemsTab = () => {
                   {items.map(item => {
                     const nativeId = item.gameId?.receiveItemId ?? 0;
                     const sprite = getItemSprite(item.id);
+                    const emptyIcon = <Box as="span" className="cheats-item-btn__icon cheats-item-btn__icon--empty">?</Box>;
                     return (
                       <Button
                         variant="tile"
@@ -123,8 +124,8 @@ const ItemsTab = () => {
                         title={`${item.randomizerName} · 0x${nativeId.toString(16).padStart(2, '0')}`}
                       >
                         {sprite
-                          ? <Image className="cheats-item-btn__icon" src={sprite} alt="" draggable={false} />
-                          : <Box as="span" className="cheats-item-btn__icon cheats-item-btn__icon--empty">?</Box>}
+                          ? <Image className="cheats-item-btn__icon" src={sprite} alt="" draggable={false} fallback={emptyIcon} />
+                          : emptyIcon}
                         <Text className="cheats-item-btn__label">{item.randomizerName}</Text>
                       </Button>
                     );
