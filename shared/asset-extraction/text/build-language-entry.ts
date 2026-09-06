@@ -15,6 +15,7 @@ import { decodeStrings } from './dialogue-decoder';
 import { compressStrings, encodeDictionary } from './dialogue-encoder';
 import { kLanguages, usesNewFormat } from './data/language-data';
 import { kFontTypes, FONT_TILE_BYTES } from './data/font-data';
+import { RANDOMIZER_MSG_BASE, randomizerTemplateTexts } from './data/randomizer-templates';
 
 /** Extra control string the US ROM omits; inserted at index 4 to reach 397 strings. */
 const EXTRA_STRING = '[Speed 00]0- [Number 00]. 1- [Number 01][2]2- [Number 02]. 3- [Number 03]';
@@ -51,8 +52,17 @@ const normalizeTexts = (texts: string[]): string[] => {
 };
 
 const buildLangData = (texts: string[], code: string): Buffer => {
+  // Append the randomizer template lines after the canonical vanilla lines, bake-time
+  // only — dialogue.txt, meta.json and the Language Studio all keep seeing 397 lines.
+  // The core addresses the templates as fixed message ids (kReceiptMsg_* in
+  // core/game-hooks/game_hooks.h), so the vanilla count must be exact before appending.
+  const vanilla = normalizeTexts(texts);
+  if (vanilla.length !== RANDOMIZER_MSG_BASE) {
+    throw new Error(`buildLangData: expected ${RANDOMIZER_MSG_BASE} vanilla dialogue lines for "${code}", got ${vanilla.length}`);
+  }
+  const all = [...vanilla, ...randomizerTemplateTexts(code)];
   const dictPacked = packArrays(encodeDictionary(code).map((d) => Buffer.from(d)));
-  const dialoguePacked = packArrays(compressStrings(texts, code).map((c) => Buffer.from(c)));
+  const dialoguePacked = packArrays(compressStrings(all, code).map((c) => Buffer.from(c)));
   return packArrays([dictPacked, dialoguePacked]);
 };
 

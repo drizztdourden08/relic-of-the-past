@@ -48,7 +48,10 @@
         { "$ref": "#/definitions/DropShieldFightersExtract" },
         { "$ref": "#/definitions/DropShieldFireExtract" },
         { "$ref": "#/definitions/FollowerBombExtract" },
-        { "$ref": "#/definitions/ReceiptExtract" }
+        { "$ref": "#/definitions/ReceiptExtract" },
+        { "$ref": "#/definitions/ArtExtract" },
+        { "$ref": "#/definitions/UpgradeCompositeExtract" },
+        { "$ref": "#/definitions/PaletteSwapExtract" }
       ]
     },
     "HudTilesExtract": {
@@ -187,6 +190,77 @@
       "properties": {
         "method": { "type": "string", "const": "receipt" },
         "receiptId": { "type": "integer", "description": "Receipt animation ID." }
+      },
+      "additionalProperties": false
+    },
+    "ArtExtract": {
+      "type": "object",
+      "required": ["method", "art"],
+      "properties": {
+        "method": { "type": "string", "const": "art" },
+        "art": {
+          "type": "string",
+          "enum": [
+            "quiver",
+            "currency-rupee", "currency-arrow", "currency-bomb", "currency-heart",
+            "currency-red-potion", "currency-green-potion", "currency-blue-potion",
+            "currency-fairy", "currency-bee"
+          ],
+          "description": "One of the app's own drawings, used whole as the sprite."
+        }
+      },
+      "additionalProperties": false
+    },
+    "UpgradeCompositeExtract": {
+      "type": "object",
+      "required": ["method", "badge"],
+      "oneOf": [
+        { "required": ["baseFile"] },
+        { "required": ["art"] }
+      ],
+      "properties": {
+        "method": { "type": "string", "const": "upgrade-composite" },
+        "baseFile": {
+          "type": "string",
+          "description": "File name of the definition whose extracted picture is the base."
+        },
+        "art": {
+          "type": "string",
+          "enum": ["wallet"],
+          "description": "One of the app's own drawings as the base, when no extracted sprite fits."
+        },
+        "badge": {
+          "type": "string",
+          "enum": ["arrow-up"],
+          "description": "The app's own drawing stamped onto the base, bottom-right."
+        }
+      },
+      "additionalProperties": false
+    },
+    "PaletteSwapExtract": {
+      "type": "object",
+      "required": ["method", "baseFile", "colors"],
+      "properties": {
+        "method": { "type": "string", "const": "palette-swap" },
+        "baseFile": {
+          "type": "string",
+          "description": "File name of the definition whose extracted picture is recoloured."
+        },
+        "colors": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ColorSwap" },
+          "minItems": 1,
+          "description": "Exact colour replacements applied to the base picture; every other pixel is copied as is."
+        }
+      },
+      "additionalProperties": false
+    },
+    "ColorSwap": {
+      "type": "object",
+      "required": ["from", "to"],
+      "properties": {
+        "from": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$", "description": "A colour of the base, matched exactly." },
+        "to": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$", "description": "The colour it becomes." }
       },
       "additionalProperties": false
     }

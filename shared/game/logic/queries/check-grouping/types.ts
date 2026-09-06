@@ -1,7 +1,19 @@
 /* @layer shared-game @kind types */
-import type { CheckRecord } from '../../../data';
+import type { CheckRecord, ItemId } from '../../../data';
 
-type GroupDimension = 'world' | 'area' | 'location' | 'dungeon' | 'screen' | 'type' | 'content';
+type GroupDimension = 'world' | 'area' | 'location' | 'dungeon' | 'screen' | 'type' | 'content' | 'sphere';
+
+/**
+ * What a randomized RUN adds to grouping, filtering and display: what each
+ * check actually holds this seed, and which sweep sphere reached it. Absent on
+ * a vanilla profile, where every check simply shows its own contents.
+ */
+interface RunContext {
+  /** check id → the item record actually placed there. */
+  placedItems?: ReadonlyMap<string, ItemId>;
+  /** check id → verification-sweep sphere. */
+  spheres?: ReadonlyMap<string, number>;
+}
 
 interface GroupDimensionDef {
   id: GroupDimension;
@@ -35,6 +47,7 @@ interface FilterState {
 
 export type {
   FilterState,
+  RunContext,
   GroupDimension,
   GroupDimensionDef,
   GroupNode,

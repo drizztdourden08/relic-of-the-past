@@ -5,8 +5,8 @@
  */
 import type { CheckRecord } from '../../../data';
 import type { CheckStatus } from '../../eval';
-import type { GroupDimension, GroupNode } from './types';
-import { getGroupValue } from './dimensions';
+import type { GroupDimension, GroupNode, RunContext } from './types';
+import { getGroupValue, OUTSIDE_SWEEP } from './dimensions';
 
 const computeStats = (checks: CheckRecord[], statuses: Map<string, CheckStatus>): GroupNode['stats'] => {
   let completed = 0, reachable = 0, blocked = 0;
@@ -19,11 +19,16 @@ const computeStats = (checks: CheckRecord[], statuses: Map<string, CheckStatus>)
   return { total: checks.length, completed, reachable, blocked };
 };
 
+/** Spheres are an ordered sequence, so they sort by number, not alphabetically. */
+const sphereRank = (label: string): number =>
+  label === OUTSIDE_SWEEP ? Number.MAX_SAFE_INTEGER : Number(label.slice('Sphere '.length));
+
 const groupRecursive = (
   checks: CheckRecord[],
   dimensions: GroupDimension[],
   depth: number,
-  statuses: Map<string, CheckStatus>
+  statuses: Map<string, CheckStatus>,
+  run?: RunContext
 ): GroupNode[] => {
   if (depth >= dimensions.length) return [];
 
@@ -31,7 +36,7 @@ const groupRecursive = (
   const buckets = new Map<string, CheckRecord[]>();
 
   for (const check of checks) {
-    const value = getGroupValue(check, dim);
+    const value = getGroupValue(check, dim, run);
     if (!buckets.has(value)) buckets.set(value, []);
     buckets.get(value)!.push(check);
   }
@@ -42,12 +47,17 @@ const groupRecursive = (
       key: `${dim}:${label}`,
       label,
       children: depth + 1 < dimensions.length
-        ? groupRecursive(groupChecks, dimensions, depth + 1, statuses)
+        ? groupRecursive(groupChecks, dimensions, depth + 1, statuses, run)
         : [],
       checks: depth + 1 >= dimensions.length ? groupChecks : [],
       stats: computeStats(groupChecks, statuses),
     };
     nodes.push(node);
+  }
+
+  if (dim === 'sphere') {
+    nodes.sort((a, b) => sphereRank(a.label) - sphereRank(b.label));
+    return nodes;
   }
 
   // Sort groups alphabetically, but put "Other" / "Overworld" last.
@@ -63,7 +73,8 @@ const groupRecursive = (
 const buildGroupTree = (
   checks: CheckRecord[],
   statuses: Map<string, CheckStatus>,
-  dimensions: GroupDimension[]
+  dimensions: GroupDimension[],
+  run?: RunContext
 ): GroupNode => {
   const root: GroupNode = {
     key: 'root',
@@ -79,7 +90,7 @@ const buildGroupTree = (
     return root;
   }
 
-  root.children = groupRecursive(checks, dimensions, 0, statuses);
+  root.children = groupRecursive(checks, dimensions, 0, statuses, run);
   root.stats = computeStats(checks, statuses);
   return root;
 };

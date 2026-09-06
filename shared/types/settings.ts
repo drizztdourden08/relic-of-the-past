@@ -180,6 +180,16 @@ interface GameSettings {
   postProcessingShadows: boolean;
   forceBackdropBlack: boolean;
 
+  // ─── World item presentation ───
+  // Draw a rupee reward lying in the world as the plain coloured gem, not the
+  // game's numbered picture, and sweep a slow glint across a world item's pixels.
+  coloredRupees: boolean;
+  itemSheen: boolean;
+
+  // ─── Minigames ───
+  // Let the archery host refuse the fee when the shots it buys could not be fired.
+  archeryNeedsBow: boolean;
+
   // ─── HUD ───
   hudMode: 'original' | 'enhanced';
   hudStyle: 'vanilla' | 'modern';

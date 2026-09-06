@@ -121,7 +121,7 @@ const LOCATION_SPEC: FieldSpec<LocationRecord> = {
 
 const CHECK_FIELDS = [
   'id', 'gameId', 'kind', 'screenId', 'dungeonId', 'vanillaName', 'randomizerName',
-  'vanillaItemIds', 'tags', 'actorId', 'requirements', 'presence', 'visualNote', 'sourceFunc',
+  'vanillaItemIds', 'tags', 'actorId', 'requirements', 'presence', 'visualNote', 'sourceFunc', 'review',
 ] as const satisfies readonly (keyof CheckRecord)[];
 
 const ITEM_FIELDS = [

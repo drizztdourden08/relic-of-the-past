@@ -1,0 +1,4744 @@
+{
+ "generatedAt": "2026-08-26T03:06:52.923Z",
+ "pipeline": "S1 rom-census + S2 ap-source + S3 web batches (P1-P4, all controls passed) + decomp id-space ruling",
+ "method": "position and vanilla-item fixes are mechanically double-sourced (S1 census x S2 reference crosswalk); S3 web batches were AI-sampled corroboration, not exhaustive; review stamps: verified = untouched and comparator-ok, accepted = fixed this pass or name-covered key drop, needs-work = open question below",
+ "keyCitations": [
+  "https://github.com/sporchia/alttp_vt_randomizer (region location tables)",
+  "Dessyreqt alttprandomizer Docs/chest_notes.txt",
+  "https://gamefaqs.gamespot.com/snes/588436-the-legend-of-zelda-a-link-to-the-past/faqs/77032 (treasure guide)",
+  "https://strategywiki.org/wiki/The_Legend_of_Zelda:_A_Link_to_the_Past",
+  "https://www.thonky.com/zelda-link-to-the-past/pieces-of-heart",
+  "https://alttpr.com/en/updates",
+  "kwhazit randomizer overview",
+  "https://archipelago.gg tracker (no-apostrophe dungeon spelling evidence)"
+ ],
+ "openQuestions": [
+  "check-009 / check-011 / check-025: event checks with no bufferIndex - no live detection path defined yet",
+  "per-dungeon map/compass item records (item-136..item-161) now carry the generic receive ids (map 0x33, compass 0x25): grants are palace-scoped by the engine and the items are dungeon-local, so the generic grant lands on the owning dungeon; vanilla chests still grant the generic records (item-052/item-038)",
+  "item-041 is itself the 3-bombs pack (receive 0x28); requirements use it as the bomb-capability proxy and chests grant it directly - no aliasOf needed, but a real capability item remains future work",
+  "mail tiers stamped 2 (blue) / 3 (red): the base mail is built-in tier 1 with no item record, so the family covers tiers 1-3 with records at 2 and 3",
+  "big-key receive-id stamping covered all twelve per-dungeon big keys (item-084..item-095), not only the nine referenced by requirements: two further dungeons have big-key chests with no requirements reference yet, and the first castle grants its big key via a key drop",
+  "resolved 2026-08-30 (vanilla-lock elimination pass): the former open questions on check-021/022 (pond gameIds), check-046/061/135 (standing masks), check-047/054 (room-292 collision), check-070/071 (ow3:m64 collision) and check-088 (roomFlag collision) are closed by the ledger entries of that pass; check-009 gained a certified standing detection. Still open from the original list: check-011 / check-025 event checks with no live detection path"
+ ],
+ "entryCount": 268,
+ "entries": [
+  {
+   "checkId": "check-074",
+   "standardName": "Mimic Cave",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-075",
+   "standardName": "Spike Cave",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-091",
+   "standardName": "Superbunny Cave - Top",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-041",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-092",
+   "standardName": "Superbunny Cave - Bottom",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-093",
+   "standardName": "Hookshot Cave - Top Right",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-094",
+   "standardName": "Hookshot Cave - Top Left",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-095",
+   "standardName": "Hookshot Cave - Bottom Right",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "gameId.roomId/chestIndex",
+     "from": "(60, 2)",
+     "to": "(60, 3)",
+     "evidence": "S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-096",
+   "standardName": "Hookshot Cave - Bottom Left",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "gameId.roomId/chestIndex",
+     "from": "(60, 3)",
+     "to": "(60, 2)",
+     "evidence": "S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-089",
+   "standardName": "Mire Shed - Left",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-090",
+   "standardName": "Mire Shed - Right",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-084",
+   "standardName": "Hype Cave - Top",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-066",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-085",
+   "standardName": "Hype Cave - Middle Right",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-086",
+   "standardName": "Hype Cave - Middle Left",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-087",
+   "standardName": "Hype Cave - Bottom",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-112",
+   "standardName": "Castle Tower - Room 03",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-053",
+     "to": "item-037",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-113",
+   "standardName": "Castle Tower - Dark Maze",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "gameId.roomId/chestIndex",
+     "from": "(64, 0)",
+     "to": "(208, 0)",
+     "evidence": "S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census"
+    },
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-053",
+     "to": "item-037",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-114",
+   "standardName": "Castle Tower - Dark Archer Key Drop",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-115",
+   "standardName": "Castle Tower - Circle of Pots Key Drop",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-125",
+   "standardName": "Desert Palace - Big Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "gameId.roomId/chestIndex",
+     "from": "(99, 0)",
+     "to": "(115, 0)",
+     "evidence": "S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-127",
+   "standardName": "Desert Palace - Map Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "gameId.roomId/chestIndex",
+     "from": "(115, 0)",
+     "to": "(116, 0)",
+     "evidence": "S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-128",
+   "standardName": "Desert Palace - Compass Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "gameId.roomId/chestIndex",
+     "from": "(117, 0)",
+     "to": "(133, 0)",
+     "evidence": "S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-129",
+   "standardName": "Desert Palace - Big Key Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "gameId.roomId/chestIndex",
+     "from": "(116, 0)",
+     "to": "(117, 0)",
+     "evidence": "S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census"
+    },
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-051",
+     "to": "item-093",
+     "evidence": "census byte 0x32 (big key) + the dungeon's requirements reference the per-dungeon big-key item; that item now carries receiveItemId 0x32 and the owning dungeonId"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-132",
+   "standardName": "Desert Palace - Desert Tiles 1 Pot Key",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-133",
+   "standardName": "Desert Palace - Beamos Hall Pot Key",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-134",
+   "standardName": "Desert Palace - Desert Tiles 2 Pot Key",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-116",
+   "standardName": "Eastern Palace - Compass Chest",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-117",
+   "standardName": "Eastern Palace - Big Chest",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-118",
+   "standardName": "Eastern Palace - Cannonball Chest",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-119",
+   "standardName": "Eastern Palace - Big Key Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-051",
+     "to": "item-094",
+     "evidence": "census byte 0x32 (big key) + the dungeon's requirements reference the per-dungeon big-key item; that item now carries receiveItemId 0x32 and the owning dungeonId"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-120",
+   "standardName": "Eastern Palace - Map Chest",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-123",
+   "standardName": "Eastern Palace - Dark Square Pot Key",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-124",
+   "standardName": "Eastern Palace - Dark Eyegore Key Drop",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-236",
+   "standardName": "Ganons Tower - Hope Room - Left",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-237",
+   "standardName": "Ganons Tower - Hope Room - Right",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-069",
+     "to": "item-041",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-238",
+   "standardName": "Ganons Tower - Tile Room",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-239",
+   "standardName": "Ganons Tower - Compass Room - Top Left",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-240",
+   "standardName": "Ganons Tower - Compass Room - Top Right",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-050",
+     "to": "item-053",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-241",
+   "standardName": "Ganons Tower - Compass Room - Bottom Left",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-069",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-242",
+   "standardName": "Ganons Tower - Compass Room - Bottom Right",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-243",
+   "standardName": "Ganons Tower - DMs Room - Top Left",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "gameId.roomId/chestIndex",
+     "from": "(124, 0)",
+     "to": "(123, 0)",
+     "evidence": "S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census"
+    },
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-050",
+     "to": "item-041",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-244",
+   "standardName": "Ganons Tower - DMs Room - Top Right",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "gameId.roomId/chestIndex",
+     "from": "(124, 1)",
+     "to": "(123, 1)",
+     "evidence": "S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-245",
+   "standardName": "Ganons Tower - DMs Room - Bottom Left",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "gameId.roomId/chestIndex",
+     "from": "(124, 2)",
+     "to": "(123, 2)",
+     "evidence": "S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census"
+    },
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-050",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-246",
+   "standardName": "Ganons Tower - DMs Room - Bottom Right",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "gameId.roomId/chestIndex",
+     "from": "(124, 3)",
+     "to": "(123, 3)",
+     "evidence": "S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census"
+    },
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-069",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-247",
+   "standardName": "Ganons Tower - Map Chest",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-248",
+   "standardName": "Ganons Tower - Firesnake Room",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-249",
+   "standardName": "Ganons Tower - Randomizer Room - Top Left",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "gameId.roomId/chestIndex",
+     "from": "(123, 0)",
+     "to": "(124, 0)",
+     "evidence": "S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census"
+    },
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-050",
+     "to": "item-069",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-250",
+   "standardName": "Ganons Tower - Randomizer Room - Top Right",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "gameId.roomId/chestIndex",
+     "from": "(123, 1)",
+     "to": "(124, 1)",
+     "evidence": "S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-251",
+   "standardName": "Ganons Tower - Randomizer Room - Bottom Left",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "gameId.roomId/chestIndex",
+     "from": "(123, 2)",
+     "to": "(124, 2)",
+     "evidence": "S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census"
+    },
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-050",
+     "to": "item-041",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-252",
+   "standardName": "Ganons Tower - Randomizer Room - Bottom Right",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "gameId.roomId/chestIndex",
+     "from": "(123, 3)",
+     "to": "(124, 3)",
+     "evidence": "S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census"
+    },
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-069",
+     "to": "item-041",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-253",
+   "standardName": "Ganons Tower - Bob's Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "gameId.roomId/chestIndex",
+     "from": "(140, 4)",
+     "to": "(140, 3)",
+     "evidence": "S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-254",
+   "standardName": "Ganons Tower - Big Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "gameId.roomId/chestIndex",
+     "from": "(140, 3)",
+     "to": "(140, 0)",
+     "evidence": "S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-255",
+   "standardName": "Ganons Tower - Big Key Room - Left",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-050",
+     "to": "item-069",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-256",
+   "standardName": "Ganons Tower - Big Key Room - Right",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-050",
+     "to": "item-041",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-257",
+   "standardName": "Ganons Tower - Big Key Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-051",
+     "to": "item-084",
+     "evidence": "census byte 0x32 (big key) + the dungeon's requirements reference the per-dungeon big-key item; that item now carries receiveItemId 0x32 and the owning dungeonId"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-258",
+   "standardName": "Ganons Tower - Mini Helmasaur Room - Left",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-040",
+     "to": "item-041",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-259",
+   "standardName": "Ganons Tower - Mini Helmasaur Room - Right",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-069",
+     "to": "item-041",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-260",
+   "standardName": "Ganons Tower - Pre-Moldorm Chest",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-261",
+   "standardName": "Ganons Tower - Validation Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-071",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-262",
+   "standardName": "Ganons Tower - Conveyor Cross Pot Key",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-263",
+   "standardName": "Ganons Tower - Double Switch Pot Key",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-264",
+   "standardName": "Ganons Tower - Conveyor Star Pits Pot Key",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-265",
+   "standardName": "Ganons Tower - Mini Helmasaur Key Drop",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-100",
+   "standardName": "Hyrule Castle - Boomerang Chest",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-101",
+   "standardName": "Hyrule Castle - Map Chest",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-102",
+   "standardName": "Hyrule Castle - Zelda's Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-054",
+     "to": "item-019",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-103",
+   "standardName": "Sewers - Dark Cross",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-054",
+     "to": "item-037",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-104",
+   "standardName": "Sewers - Secret Room - Left",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-040",
+     "to": "item-041",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-105",
+   "standardName": "Sewers - Secret Room - Middle",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-106",
+   "standardName": "Sewers - Secret Room - Right",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-107",
+   "standardName": "Sanctuary",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-039",
+     "to": "item-064",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-108",
+   "standardName": "Hyrule Castle - Map Guard Key Drop",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-109",
+   "standardName": "Hyrule Castle - Boomerang Guard Key Drop",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-110",
+   "standardName": "Sewers - Key Rat Key Drop",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-111",
+   "standardName": "Hyrule Castle - Big Key Drop",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-195",
+   "standardName": "Ice Palace - Compass Chest",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-196",
+   "standardName": "Ice Palace - Freezor Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-066",
+     "to": "item-041",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-197",
+   "standardName": "Ice Palace - Big Chest",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-198",
+   "standardName": "Ice Palace - Iced T Room",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-054",
+     "to": "item-037",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-199",
+   "standardName": "Ice Palace - Spike Room",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "gameId.roomId/chestIndex",
+     "from": "(94, 0)",
+     "to": "(95, 0)",
+     "evidence": "S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census"
+    },
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-037",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-200",
+   "standardName": "Ice Palace - Big Key Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-051",
+     "to": "item-088",
+     "evidence": "census byte 0x32 (big key) + the dungeon's requirements reference the per-dungeon big-key item; that item now carries receiveItemId 0x32 and the owning dungeonId"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-201",
+   "standardName": "Ice Palace - Map Chest",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-204",
+   "standardName": "Ice Palace - Jelly Key Drop",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-205",
+   "standardName": "Ice Palace - Conveyor Key Drop",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-206",
+   "standardName": "Ice Palace - Hammer Block Key Drop",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-207",
+   "standardName": "Ice Palace - Many Pots Pot Key",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-208",
+   "standardName": "Misery Mire - Big Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "gameId.roomId/chestIndex",
+     "from": "(195, 1)",
+     "to": "(195, 0)",
+     "evidence": "S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-209",
+   "standardName": "Misery Mire - Map Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "gameId.roomId/chestIndex",
+     "from": "(195, 0)",
+     "to": "(195, 1)",
+     "evidence": "S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-210",
+   "standardName": "Misery Mire - Main Lobby",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-211",
+   "standardName": "Misery Mire - Bridge Chest",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-212",
+   "standardName": "Misery Mire - Spike Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-066",
+     "to": "item-037",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-213",
+   "standardName": "Misery Mire - Compass Chest",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-214",
+   "standardName": "Misery Mire - Big Key Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-051",
+     "to": "item-090",
+     "evidence": "census byte 0x32 (big key) + the dungeon's requirements reference the per-dungeon big-key item; that item now carries receiveItemId 0x32 and the owning dungeonId"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-217",
+   "standardName": "Misery Mire - Spikes Pot Key",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-218",
+   "standardName": "Misery Mire - Fishbone Pot Key",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-219",
+   "standardName": "Misery Mire - Conveyor Crystal Key Drop",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-142",
+   "standardName": "Palace of Darkness - Shooter Room",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-143",
+   "standardName": "Palace of Darkness - The Arena - Bridge",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-144",
+   "standardName": "Palace of Darkness - Stalfos Basement",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-145",
+   "standardName": "Palace of Darkness - Big Key Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-051",
+     "to": "item-091",
+     "evidence": "census byte 0x32 (big key) + the dungeon's requirements reference the per-dungeon big-key item; that item now carries receiveItemId 0x32 and the owning dungeonId"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-146",
+   "standardName": "Palace of Darkness - The Arena - Ledge",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-147",
+   "standardName": "Palace of Darkness - Map Chest",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-148",
+   "standardName": "Palace of Darkness - Compass Chest",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-149",
+   "standardName": "Palace of Darkness - Dark Basement - Left",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-069",
+     "to": "item-068",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-150",
+   "standardName": "Palace of Darkness - Dark Basement - Right",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-151",
+   "standardName": "Palace of Darkness - Dark Maze - Top",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-040",
+     "to": "item-041",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-152",
+   "standardName": "Palace of Darkness - Dark Maze - Bottom",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-153",
+   "standardName": "Palace of Darkness - Big Chest",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-154",
+   "standardName": "Palace of Darkness - Harmless Hellway",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-184",
+   "standardName": "Skull Woods - Compass Chest",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-185",
+   "standardName": "Skull Woods - Map Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "gameId.roomId/chestIndex",
+     "from": "(88, 0)",
+     "to": "(88, 1)",
+     "evidence": "S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-186",
+   "standardName": "Skull Woods - Big Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "gameId.roomId/chestIndex",
+     "from": "(88, 1)",
+     "to": "(88, 0)",
+     "evidence": "S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-187",
+   "standardName": "Skull Woods - Pot Prison",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "gameId.roomId/chestIndex",
+     "from": "(87, 0)",
+     "to": "(87, 1)",
+     "evidence": "S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census"
+    },
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-054",
+     "to": "item-037",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-188",
+   "standardName": "Skull Woods - Pinball Room",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-189",
+   "standardName": "Skull Woods - Big Key Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "gameId.roomId/chestIndex",
+     "from": "(87, 1)",
+     "to": "(87, 0)",
+     "evidence": "S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census"
+    },
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-051",
+     "to": "item-089",
+     "evidence": "census byte 0x32 (big key) + the dungeon's requirements reference the per-dungeon big-key item; that item now carries receiveItemId 0x32 and the owning dungeonId"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-190",
+   "standardName": "Skull Woods - Bridge Room",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-193",
+   "standardName": "Skull Woods - West Lobby Pot Key",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-194",
+   "standardName": "Skull Woods - Spike Corner Key Drop",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-157",
+   "standardName": "Swamp Palace - Entrance",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-158",
+   "standardName": "Swamp Palace - Map Chest",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-159",
+   "standardName": "Swamp Palace - Big Chest",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-160",
+   "standardName": "Swamp Palace - Compass Chest",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-161",
+   "standardName": "Swamp Palace - Big Key Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-051",
+     "to": "item-092",
+     "evidence": "census byte 0x32 (big key) + the dungeon's requirements reference the per-dungeon big-key item; that item now carries receiveItemId 0x32 and the owning dungeonId"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-162",
+   "standardName": "Swamp Palace - West Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-163",
+   "standardName": "Swamp Palace - Flooded Room - Left",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-164",
+   "standardName": "Swamp Palace - Flooded Room - Right",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-165",
+   "standardName": "Swamp Palace - Waterfall Room",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-168",
+   "standardName": "Swamp Palace - Pot Row Pot Key",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-169",
+   "standardName": "Swamp Palace - Trench 1 Pot Key",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-170",
+   "standardName": "Swamp Palace - Hookshot Pot Key",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-171",
+   "standardName": "Swamp Palace - Trench 2 Pot Key",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-172",
+   "standardName": "Swamp Palace - Waterway Pot Key",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-173",
+   "standardName": "Thieves' Town - Big Key Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-051",
+     "to": "item-086",
+     "evidence": "census byte 0x32 (big key) + the dungeon's requirements reference the per-dungeon big-key item; that item now carries receiveItemId 0x32 and the owning dungeonId"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-174",
+   "standardName": "Thieves' Town - Map Chest",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-175",
+   "standardName": "Thieves' Town - Compass Chest",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-176",
+   "standardName": "Thieves' Town - Ambush Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-177",
+   "standardName": "Thieves' Town - Attic",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-037",
+     "to": "item-041",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-178",
+   "standardName": "Thieves' Town - Big Chest",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-179",
+   "standardName": "Thieves' Town - Blind's Cell",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-037",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-182",
+   "standardName": "Thieves' Town - Hallway Pot Key",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-183",
+   "standardName": "Thieves' Town - Spike Switch Pot Key",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-135",
+   "standardName": "Tower of Hera - Basement Cage",
+   "verdict": "needs-work",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "no reference chest-table address",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "kind",
+     "from": "chest",
+     "to": "standing",
+     "evidence": "S1 census has no chest-table entry at the recorded position; basement cage standing item; chestIndex removed, standing mask unverified"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-136",
+   "standardName": "Tower of Hera - Map Chest",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-137",
+   "standardName": "Tower of Hera - Big Key Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-051",
+     "to": "item-087",
+     "evidence": "census byte 0x32 (big key) + the dungeon's requirements reference the per-dungeon big-key item; that item now carries receiveItemId 0x32 and the owning dungeonId"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-138",
+   "standardName": "Tower of Hera - Compass Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "gameId.roomId/chestIndex",
+     "from": "(39, 0)",
+     "to": "(39, 1)",
+     "evidence": "S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-139",
+   "standardName": "Tower of Hera - Big Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "gameId.roomId/chestIndex",
+     "from": "(39, 1)",
+     "to": "(39, 0)",
+     "evidence": "S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-220",
+   "standardName": "Turtle Rock - Compass Chest",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-221",
+   "standardName": "Turtle Rock - Roller Room - Left",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-037",
+     "to": "item-052",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-222",
+   "standardName": "Turtle Rock - Roller Room - Right",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-223",
+   "standardName": "Turtle Rock - Chain Chomps",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-069",
+     "to": "item-037",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-224",
+   "standardName": "Turtle Rock - Big Key Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-051",
+     "to": "item-085",
+     "evidence": "census byte 0x32 (big key) + the dungeon's requirements reference the per-dungeon big-key item; that item now carries receiveItemId 0x32 and the owning dungeonId"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-225",
+   "standardName": "Turtle Rock - Big Chest",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-226",
+   "standardName": "Turtle Rock - Crystaroller Room",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-227",
+   "standardName": "Turtle Rock - Eye Bridge - Bottom Left",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-228",
+   "standardName": "Turtle Rock - Eye Bridge - Bottom Right",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-054",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-229",
+   "standardName": "Turtle Rock - Eye Bridge - Top Left",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-054",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-230",
+   "standardName": "Turtle Rock - Eye Bridge - Top Right",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-052",
+     "to": "item-053",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-233",
+   "standardName": "Turtle Rock - Pokey 1 Key Drop",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-234",
+   "standardName": "Turtle Rock - Pokey 2 Key Drop",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "datapackage location name (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-061",
+   "standardName": "Spectacle Rock Cave",
+   "verdict": "needs-work",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "no reference chest-table address",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "kind",
+     "from": "chest",
+     "to": "standing",
+     "evidence": "S1 census has no chest-table entry at the recorded position; standing item cave; chestIndex removed, standing mask unverified"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-062",
+   "standardName": "Paradox Cave Lower - Far Left",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-063",
+   "standardName": "Paradox Cave Lower - Left",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-064",
+   "standardName": "Paradox Cave Lower - Right",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-065",
+   "standardName": "Paradox Cave Lower - Far Right",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-066",
+   "standardName": "Paradox Cave Lower - Middle",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-067",
+   "standardName": "Paradox Cave Upper - Left",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-069",
+     "to": "item-041",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-068",
+   "standardName": "Paradox Cave Upper - Right",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-069",
+   "standardName": "Spiral Cave",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-029",
+   "standardName": "Aginah's Cave",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-047",
+   "standardName": "Checkerboard Cave",
+   "verdict": "needs-work",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "no reference chest-table address",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-021",
+   "standardName": "Waterfall Fairy - Left",
+   "verdict": "needs-work",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "no reference chest-table address",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "kind",
+     "from": "chest",
+     "to": "npc",
+     "evidence": "S1 census has no chest-table entry at the recorded position; reference-randomizer-added chest absent from the vanilla ROM; needs an NPC-gift detection path"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-022",
+   "standardName": "Waterfall Fairy - Right",
+   "verdict": "needs-work",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "no reference chest-table address",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "kind",
+     "from": "chest",
+     "to": "npc",
+     "evidence": "S1 census has no chest-table entry at the recorded position; reference-randomizer-added chest absent from the vanilla ROM; needs an NPC-gift detection path"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-023",
+   "standardName": "King's Tomb",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-030",
+   "standardName": "Sahasrahla's Hut - Left",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-031",
+   "standardName": "Sahasrahla's Hut - Middle",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-040",
+     "to": "item-041",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-032",
+   "standardName": "Sahasrahla's Hut - Right",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-046",
+   "standardName": "Graveyard Cave",
+   "verdict": "needs-work",
+   "sources": {
+    "s1": "not chest-table-verifiable (mask/npc/standing checks)",
+    "s2": "no reference chest-table address",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "kind",
+     "from": "chest",
+     "to": "standing",
+     "evidence": "S1 census has no chest-table entry at the recorded position; standing item cave; chestIndex removed, standing mask unverified"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-018",
+   "standardName": "Secret Passage",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-054",
+     "to": "item-019",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-012",
+   "standardName": "Blind's Hideout - Top",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-013",
+   "standardName": "Blind's Hideout - Left",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-014",
+   "standardName": "Blind's Hideout - Right",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-015",
+   "standardName": "Blind's Hideout - Far Left",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-016",
+   "standardName": "Blind's Hideout - Far Right",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-027",
+   "standardName": "Kakariko Tavern",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-028",
+   "standardName": "Chicken House",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-050",
+     "to": "item-013",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-034",
+   "standardName": "Kakariko Well - Top",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-035",
+   "standardName": "Kakariko Well - Left",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-036",
+   "standardName": "Kakariko Well - Middle",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-037",
+   "standardName": "Kakariko Well - Right",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-038",
+   "standardName": "Kakariko Well - Bottom",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-040",
+     "to": "item-041",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-053",
+   "standardName": "Ice Rod Cave",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-024",
+   "standardName": "Floodgate Chest",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-041",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-026",
+   "standardName": "Link's House",
+   "verdict": "verified",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-048",
+   "standardName": "Mini Moldorm Cave - Far Left",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-066",
+     "to": "item-041",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-049",
+   "standardName": "Mini Moldorm Cave - Left",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-072",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-050",
+   "standardName": "Mini Moldorm Cave - Right",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-050",
+     "to": "item-055",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-051",
+   "standardName": "Mini Moldorm Cave - Far Right",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-066",
+     "to": "item-069",
+     "evidence": "S1 census item byte at the certified position == receive-item id (decomp id-space ruling)"
+    }
+   ],
+   "batchCitations": [
+    "S3 batch P1-P4 (see header keyCitations)"
+   ]
+  },
+  {
+   "checkId": "check-054",
+   "standardName": "Bonk Rock Cave",
+   "verdict": "needs-work",
+   "sources": {
+    "s1": "rom chest-table census (mechanical)",
+    "s2": "reference location table address crosswalk (mechanical)",
+    "s3": "web batches P1-P4, AI-sampled spot checks with citations"
+   },
+   "fixes": [],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-096",
+   "standardName": "Small Key (Hyrule Castle)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": 160,
+     "to": 36,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-097",
+   "standardName": "Small Key (Eastern Palace)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": 162,
+     "to": 36,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-098",
+   "standardName": "Small Key (Desert Palace)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": 163,
+     "to": 36,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-099",
+   "standardName": "Small Key (Agahnims Tower)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": 164,
+     "to": 36,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-100",
+   "standardName": "Small Key (Swamp Palace)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": 165,
+     "to": 36,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-101",
+   "standardName": "Small Key (Palace of Darkness)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": 166,
+     "to": 36,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-102",
+   "standardName": "Small Key (Misery Mire)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": 167,
+     "to": 36,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-103",
+   "standardName": "Small Key (Skull Woods)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": 168,
+     "to": 36,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-104",
+   "standardName": "Small Key (Ice Palace)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": 169,
+     "to": 36,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-105",
+   "standardName": "Small Key (Tower of Hera)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": 170,
+     "to": 36,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-106",
+   "standardName": "Small Key (Thieves Town)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": 171,
+     "to": 36,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-107",
+   "standardName": "Small Key (Turtle Rock)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": 172,
+     "to": 36,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-108",
+   "standardName": "Small Key (Ganons Tower)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": 173,
+     "to": 36,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-078",
+   "standardName": "Silver Arrows",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": 88,
+     "to": 59,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-079",
+   "standardName": "Progressive Sword",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": 94,
+     "to": null,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-080",
+   "standardName": "Progressive Shield",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": 95,
+     "to": null,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-081",
+   "standardName": "Progressive Mail",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": 96,
+     "to": null,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-082",
+   "standardName": "Progressive Glove",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": 97,
+     "to": null,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-083",
+   "standardName": "Progressive Bow",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": 100,
+     "to": null,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-077",
+   "standardName": "Magic Upgrade (1/2)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": 78,
+     "to": null,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-136",
+   "standardName": "Map (Hyrule Castle)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 51,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-137",
+   "standardName": "Map (Agahnims Tower)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 51,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-138",
+   "standardName": "Map (Eastern Palace)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 51,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-139",
+   "standardName": "Map (Desert Palace)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 51,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-140",
+   "standardName": "Map (Tower of Hera)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 51,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-141",
+   "standardName": "Map (Palace of Darkness)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 51,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-142",
+   "standardName": "Map (Swamp Palace)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 51,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-143",
+   "standardName": "Map (Skull Woods)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 51,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-144",
+   "standardName": "Map (Thieves Town)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 51,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-145",
+   "standardName": "Map (Ice Palace)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 51,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-146",
+   "standardName": "Map (Misery Mire)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 51,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-147",
+   "standardName": "Map (Turtle Rock)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 51,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-148",
+   "standardName": "Map (Ganons Tower)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 51,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-149",
+   "standardName": "Compass (Hyrule Castle)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 37,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-150",
+   "standardName": "Compass (Agahnims Tower)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 37,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-151",
+   "standardName": "Compass (Eastern Palace)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 37,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-152",
+   "standardName": "Compass (Desert Palace)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 37,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-153",
+   "standardName": "Compass (Tower of Hera)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 37,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-154",
+   "standardName": "Compass (Palace of Darkness)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 37,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-155",
+   "standardName": "Compass (Swamp Palace)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 37,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-156",
+   "standardName": "Compass (Skull Woods)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 37,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-157",
+   "standardName": "Compass (Thieves Town)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 37,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-158",
+   "standardName": "Compass (Ice Palace)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 37,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-159",
+   "standardName": "Compass (Misery Mire)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 37,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-160",
+   "standardName": "Compass (Turtle Rock)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 37,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-161",
+   "standardName": "Compass (Ganons Tower)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 37,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-162",
+   "standardName": "Big Key (Agahnims Tower)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 50,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "itemId": "item-163",
+   "standardName": "Small Key (Universal)",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.receiveItemId",
+     "from": null,
+     "to": 36,
+     "evidence": "native tables are 76 entries; chest path bails on sign8"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-072",
+   "standardName": "Master Sword Pedestal",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
+    "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
+   },
+   "fixes": [
+    {
+     "field": "vanillaItemIds[0]",
+     "from": "item-079",
+     "to": "item-002",
+     "evidence": "native tables are 76 entries; chest path bails on sign8 — the progressive record no longer carries a receive id, and the pedestal physically grants the tier-2 sword (receive 0x01)"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-009",
+   "standardName": "Sunken Treasure",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
+    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
+   },
+   "fixes": [
+    {
+     "field": "kind",
+     "from": "event",
+     "to": "standing",
+     "evidence": "the row is the standing prize sprite 0xEB at OW area 0x3B (ROM OW sprite census stage1/2); grant crosses Sprite_HeartPiece sprite_main.c:6473-6514"
+    },
+    {
+     "field": "review",
+     "from": "needs-work",
+     "to": "accepted",
+     "evidence": "HeartUpgrade_SetObtainedFlag sprite_main.c:6516-6523: outdoors save_ow_event_info[screen] |= 0x40; owScreen 59 mask 64 matches the census sprite at area 0x3B"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-272",
+   "standardName": "Bumper Cave Ledge",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
+    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
+   },
+   "fixes": [
+    {
+     "field": "record",
+     "from": "absent",
+     "to": "created (standing, owScreen 74, mask 64, vanilla item-024)",
+     "evidence": "ROM OW sprite census: sprite 0xEB at area 0x4A stage2; HeartUpgrade_SetObtainedFlag sprite_main.c:6516-6523: outdoors save_ow_event_info[screen] |= 0x40; AP Regions.py 'Bumper Cave Ledge' (0x180146, dw region); receive id 0x17 = item-024 (misc.c:67/:88 heart-piece row)"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-071",
+   "standardName": "Spectacle Rock",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
+    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
+   },
+   "fixes": [
+    {
+     "field": "review",
+     "from": "needs-work",
+     "to": "accepted",
+     "evidence": "ROM OW sprite census: the ONLY 0xEB on area 0x03 is the rock-top piece at (x=34,y=22); HeartUpgrade_SetObtainedFlag sprite_main.c:6516-6523: outdoors save_ow_event_info[screen] |= 0x40 - ow3:m64 belongs to this row alone"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-070",
+   "standardName": "Ether Tablet",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
+    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
+   },
+   "fixes": [
+    {
+     "field": "gameId",
+     "from": "{ owScreen: 3, mask: 64 }",
+     "to": "{ bufferIndex: 22, mask: 2 }",
+     "evidence": "the tablet handlers write NO overworld event bit (EtherTablet sprite_main.c:6727-6752; only writers of ow|=0x40 are sprite_main.c:2129/6468/6518) - the old claim collided with check-071's real bit; the mountain tablet's substitution-completion bit is byte 1 mask 0x02 (npc_overrides.c kSubstitutionBits), progress buffer [22]"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-080",
+   "standardName": "Bombos Tablet",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
+    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
+   },
+   "fixes": [
+    {
+     "field": "gameId",
+     "from": "{ owScreen: 108, mask: 64 }",
+     "to": "{ bufferIndex: 22, mask: 1 }",
+     "evidence": "same evidence as check-070 (no tablet ow-bit writer; no 0xEB sprite on area 0x6C in the OW census); desert tablet substitution bit is byte 1 mask 0x01 (npc_overrides.c), progress buffer [22]"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-061",
+   "standardName": "Spectacle Rock Cave",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
+    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.roomId",
+     "from": 250,
+     "to": 234,
+     "evidence": "room 0xFA (250) is only the cave's entrance room (EntranceShuffle.py 'Spectacle Rock Cave' tuple; its sprite list holds three 0xE3 fairies, no prize); the piece's 0xEB sprite is in room 0xEA (234) at x=11 (ROM room sprite census), reached from area 0x03 entrance 35 (ROM entrance table)"
+    },
+    {
+     "field": "gameId.mask",
+     "from": null,
+     "to": 1024,
+     "evidence": "HeartUpgrade_SetObtainedFlag sprite_main.c:6519-6521: indoors dung_savegame_state_bits |= (x_hi&1 ? 0x2000 : 0x4000); Dung_SaveDataForCurrentRoom dungeon.c:8060-8065 flushes >>4, so the saved word carries 0x400 (left/even) / 0x200 (right/odd); x=11 < 16 = left half -> saved 0x400 (1024)"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-046",
+   "standardName": "Graveyard Cave",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
+    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.mask",
+     "from": null,
+     "to": 512,
+     "evidence": "HeartUpgrade_SetObtainedFlag sprite_main.c:6519-6521: indoors dung_savegame_state_bits |= (x_hi&1 ? 0x2000 : 0x4000); Dung_SaveDataForCurrentRoom dungeon.c:8060-8065 flushes >>4, so the saved word carries 0x400 (left/even) / 0x200 (right/odd); room 0x11B holds two 0xEB sprites - (x=24,y=9) north cave = this row, right half -> saved 0x200 (512); (x=5,y=22) is check-045's left-half piece, matching its existing mask 1024"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-047",
+   "standardName": "Checkerboard Cave",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
+    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
+   },
+   "fixes": [
+    {
+     "field": "kind",
+     "from": "chest",
+     "to": "standing",
+     "evidence": "AP location address 0x180005 is a custom expanded-ROM slot (not the native chest table); the vanilla item is the standing 0xEB piece"
+    },
+    {
+     "field": "gameId",
+     "from": "{ roomId: 292, chestIndex: 0 }",
+     "to": "{ roomId: 294, mask: 512 }",
+     "evidence": "ROM entrance table: desert-ledge area 0x30 entrance 114 -> room 0x126 (294), matching EntranceShuffle.py 'Checkerboard Cave' (0x0126, 0x30); room 0x126 sprite census: 0xEB at x=28 right half -> saved 0x200 (512). Room 292 c0 is Bonk Rock Cave's chest (the old collision)"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-054",
+   "standardName": "Bonk Rock Cave",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
+    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
+   },
+   "fixes": [
+    {
+     "field": "review",
+     "from": "needs-work",
+     "to": "accepted",
+     "evidence": "native chest table idx 155 = room 0x124 (292) item 0x17 ordinal 0 (ROM census), crosswalking AP address 0xeb3f exactly ((0xeb3f-0xe96e)/3=155); entrance: area 0x13 entrance 110 -> room 0x124 = EntranceShuffle.py 'Bonk Rock Cave' (0x0124, 0x13)"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-135",
+   "standardName": "Tower of Hera - Basement Cage",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
+    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.mask",
+     "from": null,
+     "to": 1024,
+     "evidence": "the cage key is the freestanding key sprite 0xE4 (room 0x87 sprite census, single instance at x=8); absorption writes dung_savegame_state_bits |= kAbsorbBigKey[sprite_die_action]<<8 = 0x4000 for slot 0 (sprite.c:1413-1421, kAbsorbBigKey sprite.c:518) -> saved 0x400 (1024) after the >>4 flush (dungeon.c:8060)"
+    },
+    {
+     "field": "physical class",
+     "from": "none (locked)",
+     "to": "drop override (room 135, small)",
+     "evidence": "the same absorption seam is already intercepted by GameHook_OverrideDropAbsorption (sprite.c:1383, drop_overrides.c) and 0xE4 is DROP_SPRITE_SMALL; room 0x87 holds no other small drop"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-088",
+   "standardName": "Hype Cave - Generous Guy",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
+    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
+   },
+   "fixes": [
+    {
+     "field": "gameId.itemId",
+     "from": 255,
+     "to": 70,
+     "evidence": "NiceThiefWithGift sprite_main.c:25100-25104 calls ShopItem_HandleReceipt(k, 0x46); 0x46 grants 300 rupees (ancilla.c:7028-7029)"
+    },
+    {
+     "field": "gameId.roomFlag.chestIndex",
+     "from": 2,
+     "to": 6,
+     "evidence": "the giver's once-only gate writes dung_savegame_state_bits |= 0x4000 (sprite_main.c:25101-25102) -> saved 0x400 = chest-bit index 6 (0x10<<6), the same shape as certified sibling check-052"
+    },
+    {
+     "field": "gameId.bufferIndex/mask",
+     "from": "11/64",
+     "to": "18/4",
+     "evidence": "progress buffer [18] is save_dung_info[0x11E] high byte (state_queries.c); saved 0x400 >> 8 = mask 4 - matching sibling check-052's [17]/4 for room 0x123"
+    },
+    {
+     "field": "gameId.spriteType + actorId + sourceFunc",
+     "from": "40 / actor-165 / Sprite_28_DarkWorldHintNPC",
+     "to": "187 / actor-230 / NiceThiefWithGift",
+     "evidence": "the giver is sprite 0xBB subtype 2 (Sprite_BB_Shopkeeper dispatch sprite_main.c:25007; NiceThiefWithGift sprite_main.c:25090); Hype Cave room is 0x11E (EntranceShuffle.py 'Hype Cave' 0x011e)"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-268",
+   "standardName": "Brewery",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
+    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
+   },
+   "fixes": [
+    {
+     "field": "record",
+     "from": "absent",
+     "to": "created (chest, room 262, chestIndex 0, vanilla item-043)",
+     "evidence": "native chest table idx 42 = room 0x106 item 0x2A ordinal 0 (ROM census), crosswalking AP address 0xe9ec ((0xe9ec-0xe96e)/3=42); 0x2A = red boomerang (misc.c:72/:93); entrance: area 0x58 entrances 71/72 -> room 0x106 = EntranceShuffle.py 'Brewery' (0x0106, 0x58)"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-269",
+   "standardName": "C-Shaped House",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
+    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
+   },
+   "fixes": [
+    {
+     "field": "record",
+     "from": "absent",
+     "to": "created (chest, room 284, chestIndex 0, vanilla item-071)",
+     "evidence": "native chest table idx 43 = room 0x11C item 0x46 ordinal 0 (ROM census), crosswalking AP address 0xe9ef; 0x46 = 300 rupees (ancilla.c:7028-7029); entrance: area 0x58 entrance 84 -> room 0x11C = EntranceShuffle.py 'C-Shaped House' (0x011c, 0x58)"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-270",
+   "standardName": "Chest Game",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
+    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
+   },
+   "fixes": [
+    {
+     "field": "record",
+     "from": "absent",
+     "to": "created (npc, roomFlag {262, 6}, vanilla item-024)",
+     "evidence": "the top prize is OpenMiniGameChest dungeon.c:5829: heart piece 0x17 at slot t==7 (kDungeon_MinigameChestPrizes1 dungeon.c:117-118), once-only via dung_savegame_state_bits |= 0x4000 (dungeon.c:5903-5908) -> saved 0x400 = chest-bit 6; the game room is 0x106 (EntranceShuffle.py 'Chest Game' (0x0106, 0x58)); receive flows through Link_PerformOpenChest with item_receipt_method=1 (player.c:3859), so substitution is the dedicated minigame seam (dungeon.c:5910 call-site)"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-271",
+   "standardName": "Peg Cave",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
+    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
+   },
+   "fixes": [
+    {
+     "field": "record",
+     "from": "absent",
+     "to": "created (standing, room 295, mask 1024, vanilla item-024)",
+     "evidence": "ROM entrance table: DW area 0x62 entrance 131 -> room 0x127 (295) = EntranceShuffle.py 'Dark World Hammer Peg Cave' (0x0127, 0x62); room sprite census: single 0xEB at x=7 left half -> saved 0x400 (1024); HeartUpgrade_SetObtainedFlag sprite_main.c:6519-6521: indoors dung_savegame_state_bits |= (x_hi&1 ? 0x2000 : 0x4000); Dung_SaveDataForCurrentRoom dungeon.c:8060-8065 flushes >>4, so the saved word carries 0x400 (left/even) / 0x200 (right/odd). The vanilla item is a Piece of Heart, completing the 24-piece census (9 OW + 7 indoor standing + 6 chest + dig + minigame) - the scope table's old 'Rupees (20)' value was corrected to match"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-021",
+   "standardName": "Waterfall Fairy - Left",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
+    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
+   },
+   "fixes": [
+    {
+     "field": "gameId",
+     "from": "{}",
+     "to": "{ bufferIndex: 22, mask: 8, flagType: 2, flagMask: 0, itemId: 42, room: 276, spriteType: 114, postGfx: 0 }",
+     "evidence": "Sprite_WishPond3 grant: sprite_main.c:1264-1268 item_receipt_method=2 + Link_ReceiveItem(sprite_graphics[k]); upgrade ids chosen at sprite_main.c:1210-1241 (light pond: 0x0C->0x2A boomerang, 0x04->0x05 shield; dark pond: 0x02->0x03 blade, 0x3A->0x3B bow); pond rooms: EntranceShuffle.py 'Waterfall of Wishing' room 0x0114, 'Pyramid Fairy' room 0x0116, confirmed by ROM entrance table + sprite 0x72 in both rooms; completion via substitution bits byte 1 masks 0x08/0x10/0x20/0x40 (npc_overrides.c allocation), progress buffer [22]"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-022",
+   "standardName": "Waterfall Fairy - Right",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
+    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
+   },
+   "fixes": [
+    {
+     "field": "gameId",
+     "from": "{}",
+     "to": "{ bufferIndex: 22, mask: 16, flagType: 2, flagMask: 0, itemId: 5, room: 276, spriteType: 114, postGfx: 0 }",
+     "evidence": "Sprite_WishPond3 grant: sprite_main.c:1264-1268 item_receipt_method=2 + Link_ReceiveItem(sprite_graphics[k]); upgrade ids chosen at sprite_main.c:1210-1241 (light pond: 0x0C->0x2A boomerang, 0x04->0x05 shield; dark pond: 0x02->0x03 blade, 0x3A->0x3B bow); pond rooms: EntranceShuffle.py 'Waterfall of Wishing' room 0x0114, 'Pyramid Fairy' room 0x0116, confirmed by ROM entrance table + sprite 0x72 in both rooms; completion via substitution bits byte 1 masks 0x08/0x10/0x20/0x40 (npc_overrides.c allocation), progress buffer [22]"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-266",
+   "standardName": "Pyramid Fairy - Left",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
+    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
+   },
+   "fixes": [
+    {
+     "field": "record",
+     "from": "absent",
+     "to": "created (npc, room 278, itemId 3, vanilla item-004)",
+     "evidence": "Sprite_WishPond3 grant: sprite_main.c:1264-1268 item_receipt_method=2 + Link_ReceiveItem(sprite_graphics[k]); upgrade ids chosen at sprite_main.c:1210-1241 (light pond: 0x0C->0x2A boomerang, 0x04->0x05 shield; dark pond: 0x02->0x03 blade, 0x3A->0x3B bow); pond rooms: EntranceShuffle.py 'Waterfall of Wishing' room 0x0114, 'Pyramid Fairy' room 0x0116, confirmed by ROM entrance table + sprite 0x72 in both rooms; completion via substitution bits byte 1 masks 0x08/0x10/0x20/0x40 (npc_overrides.c allocation), progress buffer [22]"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-267",
+   "standardName": "Pyramid Fairy - Right",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
+    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
+   },
+   "fixes": [
+    {
+     "field": "record",
+     "from": "absent",
+     "to": "created (npc, room 278, itemId 59, vanilla item-060)",
+     "evidence": "Sprite_WishPond3 grant: sprite_main.c:1264-1268 item_receipt_method=2 + Link_ReceiveItem(sprite_graphics[k]); upgrade ids chosen at sprite_main.c:1210-1241 (light pond: 0x0C->0x2A boomerang, 0x04->0x05 shield; dark pond: 0x02->0x03 blade, 0x3A->0x3B bow); pond rooms: EntranceShuffle.py 'Waterfall of Wishing' room 0x0114, 'Pyramid Fairy' room 0x0116, confirmed by ROM entrance table + sprite 0x72 in both rooms; completion via substitution bits byte 1 masks 0x08/0x10/0x20/0x40 (npc_overrides.c allocation), progress buffer [22]"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-040",
+   "standardName": "Magic Bat",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
+    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
+   },
+   "fixes": [
+    {
+     "field": "review",
+     "from": null,
+     "to": "accepted",
+     "evidence": "Sprite_3A_MagicBat sprite_main.c:11077: the grant is a bare link_magic_consumption = 1 write (sprite_main.c:11142), no receive seam, re-offer gated only by consumption >= 2 (sprite_main.c:11089); detection stays the possession proxy (progress buffer [8] = link_magic_consumption) and armed sessions read the real substitution bit (byte 2 mask 0x04, buffer [25]); substitution is the dedicated bat seam (sprite_main.c call-sites in case 0 and case 3)"
+    },
+    {
+     "field": "pool item item-077",
+     "from": "no receive id (unresolvable)",
+     "to": "virtual receive id 0x60 (upgrade-receive-id contract)",
+     "evidence": "the meter upgrade has no native receive id; the reserved virtual range resolves at every grant seam into the arithmetic + presentation 0x45 magic refill (upgrade_grants.c)"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-273",
+   "standardName": "Capacity Upgrade Left",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
+    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
+   },
+   "fixes": [
+    {
+     "field": "record",
+     "from": "absent",
+     "to": "created (npc, bufferIndex 23 gte 1, vanilla item-132)",
+     "evidence": "Sprite_HappinessPond room gate sprite_main.c:11407 (room 21); explosives purchase ai state 8 writes link_bomb_upgrades (sprite_main.c:11511-11523), persisted at g_ram+0xF370 in the save block (variables.h:1103), exposed as progress buffer [23]; no other persistence exists (nothing else in the handler writes the save block beyond the deposit accumulator); substitution is the dedicated pond seam (call-site at case 8)"
+    }
+   ],
+   "batchCitations": []
+  },
+  {
+   "checkId": "check-274",
+   "standardName": "Capacity Upgrade Right",
+   "verdict": "accepted",
+   "sources": {
+    "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
+    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
+   },
+   "fixes": [
+    {
+     "field": "record",
+     "from": "absent",
+     "to": "created (npc, bufferIndex 24 gte 1, vanilla item-129)",
+     "evidence": "same handler, projectiles purchase ai state 12 writes link_arrow_upgrades (sprite_main.c:11548-11560), g_ram+0xF371 (variables.h:1104), progress buffer [24]; substitution at the case-12 call-site"
+    }
+   ],
+   "batchCitations": []
+  }
+ ]
+}
