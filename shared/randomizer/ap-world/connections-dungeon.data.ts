@@ -1,0 +1,63 @@
+/* @layer shared-game @kind data */
+/**
+ * Ported from tests/fixtures/ap-source/EntranceShuffle.py —
+ * default_dungeon_connections (vanilla dungeon entrance/exit wiring).
+ */
+import type { ApConnection } from './region.type';
+
+const DEFAULT_DUNGEON_CONNECTIONS: readonly ApConnection[] = [
+  ['Desert Palace Entrance (South)', 'Desert Palace Main (Inner)'],
+  ['Desert Palace Entrance (West)', 'Desert Palace Main (Outer)'],
+  ['Desert Palace Entrance (North)', 'Desert Palace North'],
+  ['Desert Palace Entrance (East)', 'Desert Palace Main (Outer)'],
+  ['Desert Palace Exit (South)', 'Desert Palace Stairs'],
+  ['Desert Palace Exit (West)', 'Desert Ledge'],
+  ['Desert Palace Exit (East)', 'Desert Palace Lone Stairs'],
+  ['Desert Palace Exit (North)', 'Desert Palace Entrance (North) Spot'],
+  ['Eastern Palace', 'Eastern Palace'],
+  ['Eastern Palace Exit', 'Light World'],
+  ['Tower of Hera', 'Tower of Hera (Bottom)'],
+  ['Tower of Hera Exit', 'Death Mountain (Top)'],
+  ['Hyrule Castle Entrance (South)', 'Hyrule Castle'],
+  ['Hyrule Castle Entrance (West)', 'Hyrule Castle'],
+  ['Hyrule Castle Entrance (East)', 'Hyrule Castle'],
+  ['Hyrule Castle Exit (South)', 'Hyrule Castle Courtyard'],
+  ['Hyrule Castle Exit (West)', 'Hyrule Castle Ledge'],
+  ['Hyrule Castle Exit (East)', 'Hyrule Castle Ledge'],
+  ['Agahnims Tower', 'Agahnims Tower'],
+  ['Agahnims Tower Exit', 'Hyrule Castle Ledge'],
+  ['Thieves Town', 'Thieves Town (Entrance)'],
+  ['Thieves Town Exit', 'West Dark World'],
+  ['Skull Woods First Section Hole (East)', 'Skull Woods First Section (Right)'],
+  ['Skull Woods First Section Hole (West)', 'Skull Woods First Section (Left)'],
+  ['Skull Woods First Section Hole (North)', 'Skull Woods First Section (Top)'],
+  ['Skull Woods First Section Door', 'Skull Woods First Section'],
+  ['Skull Woods First Section Exit', 'Skull Woods Forest'],
+  ['Skull Woods Second Section Hole', 'Skull Woods Second Section (Drop)'],
+  ['Skull Woods Second Section Door (East)', 'Skull Woods Second Section'],
+  ['Skull Woods Second Section Door (West)', 'Skull Woods Second Section'],
+  ['Skull Woods Second Section Exit (East)', 'Skull Woods Forest'],
+  ['Skull Woods Second Section Exit (West)', 'Skull Woods Forest (West)'],
+  ['Skull Woods Final Section', 'Skull Woods Final Section (Entrance)'],
+  ['Skull Woods Final Section Exit', 'Skull Woods Forest (West)'],
+  ['Ice Palace', 'Ice Palace (Entrance)'],
+  ['Ice Palace Exit', 'Dark Lake Hylia Central Island'],
+  ['Misery Mire', 'Misery Mire (Entrance)'],
+  ['Misery Mire Exit', 'Dark Desert'],
+  ['Palace of Darkness', 'Palace of Darkness (Entrance)'],
+  ['Palace of Darkness Exit', 'East Dark World'],
+  ['Swamp Palace', 'Swamp Palace (Entrance)'],
+  ['Swamp Palace Exit', 'South Dark World'],
+  ['Turtle Rock', 'Turtle Rock (Entrance)'],
+  ['Turtle Rock Exit (Front)', 'Dark Death Mountain (Top)'],
+  ['Turtle Rock Ledge Exit (West)', 'Dark Death Mountain Ledge'],
+  ['Turtle Rock Ledge Exit (East)', 'Dark Death Mountain Ledge'],
+  ['Dark Death Mountain Ledge (West)', 'Turtle Rock (Second Section)'],
+  ['Dark Death Mountain Ledge (East)', 'Turtle Rock (Big Chest)'],
+  ['Turtle Rock Isolated Ledge Exit', 'Dark Death Mountain Isolated Ledge'],
+  ['Turtle Rock Isolated Ledge Entrance', 'Turtle Rock (Eye Bridge)'],
+  ['Ganons Tower', 'Ganons Tower (Entrance)'],
+  ['Ganons Tower Exit', 'Dark Death Mountain (Top)'],
+];
+
+export { DEFAULT_DUNGEON_CONNECTIONS };
