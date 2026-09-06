@@ -48,9 +48,7 @@ const treeDirOf = (vaultDir) => join(vaultDir, TREE);
  * what arrives); it is what lets an empty `tree/` be populated the first time.
  */
 const MANAGED_ROOTS = [
-  'shared/game/data/records',
   'tests/fixtures/save-states',
-  '.claude/nav-baselines',
 ];
 
 export { ROOT, TREE, MANAGED_ROOTS, locateVault, mainCheckout, treeDirOf, candidates };

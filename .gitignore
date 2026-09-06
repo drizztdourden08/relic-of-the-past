@@ -140,15 +140,15 @@ AGENTS.md
 .codex/config.toml
 
 # ── Private vault (rotp-vault) ──
-# Game-derived material lives in a private companion repo and is synced in by
-# scripts/vault/sync.mjs. None of it is ever committed here. A clone WITHOUT
-# vault access still builds, lints and passes the unit tests.
+# Only ROM-derived binary fixtures live in the private companion repo now, synced in
+# by scripts/vault/sync.mjs. The transcribed dataset (shared/game/data/records/) and
+# nav baselines are plain text and are tracked directly in this repo instead.
+# A clone WITHOUT vault access still builds, lints and passes the unit tests; only the
+# save-state-backed tests skip.
 #
 # The vault is a sibling checkout, not a clone inside this tree. Its `tree/`
 # folder mirrors the paths below, and that is the whole mapping.
-shared/game/data/records/
 tests/fixtures/save-states/
-.claude/nav-baselines/
 
 # Merge base for the two-sided sync. It is local state and never shared.
 .vault-state.json
