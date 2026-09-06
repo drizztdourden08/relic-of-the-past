@@ -1,7 +1,7 @@
 /* @layer shared-game @kind data */
 /**
  * Standard-mode escape assurance tables, transcribed from
- * tests/fixtures/ap-source/ItemPool.py generate_itempool 294-317: with no
+ * Archipelago worlds/alttp/ItemPool.py generate_itempool 294-317: with no
  * starting melee weapon (the baseline has no precollected items), the
  * mentor check must hold a weapon the escape can be fought with. The scan
  * lists mirror the source exactly — one sword tier (first found), one bow

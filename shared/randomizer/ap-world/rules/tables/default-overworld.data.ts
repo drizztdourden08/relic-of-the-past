@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * Overworld rows of tests/fixtures/ap-source/Rules.py default_rules
+ * Overworld rows of Archipelago worlds/alttp/Rules.py default_rules
  * (lines 623-734, non-inverted) merged with the no_glitches_rules overworld
  * rows (lines 910-919) that set_rule the same names afterwards — only the
  * surviving final rule is kept, both line numbers cited. Dungeon-entrance

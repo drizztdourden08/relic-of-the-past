@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * The outcast-village hideout, from tests/fixtures/ap-source/Rules.py:
+ * The outcast-village hideout, from Archipelago worlds/alttp/Rules.py:
  * the pull entrance (default_rules 693), global_rules 412-423 (vanilla boss
  * → the fight door needs keys and bombs, 413-414) and the boss defeat rule.
  * The big-chest self-allowance (key-drop off only) lives in the item-rules

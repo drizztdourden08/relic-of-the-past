@@ -4,7 +4,7 @@
  * explicit always-open lists. Everything the graph evaluates must appear
  * either in a rule table or here; the registration pass registers anything
  * else as blocked and reports it, so a forgotten rule can never silently
- * open. Derived by elimination against tests/fixtures/ap-source/Rules.py
+ * open. Derived by elimination against Archipelago worlds/alttp/Rules.py
  * (no set_rule/add_rule row targets these under the baseline options) and
  * pinned by tests/randomizer/ap-world-rules.test.ts.
  */

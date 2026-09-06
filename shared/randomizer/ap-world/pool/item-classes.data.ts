@@ -1,7 +1,7 @@
 /* @layer shared-game @kind data */
 /**
  * Classification of the pool item names, transcribed from
- * tests/fixtures/ap-source/Items.py item_table (the ItemClassification
+ * Archipelago worlds/alttp/Items.py item_table (the ItemClassification
  * column): progression / useful / everything-else-is-filler. Only names the
  * pool can contain are listed. The explosives and projectiles upgrades are
  * progression in item_table (lines 113-121) — they only ever enter the pool

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * The castle tower, from tests/fixtures/ap-source/Rules.py: the barrier
+ * The castle tower, from Archipelago worlds/alttp/Rules.py: the barrier
  * entrance (default_rules 662), the tower climb (global_rules 314-326) and
  * the first tower fight's defeat rule (dungeon_boss_rules 176-197). Lamp
  * requirements come from the lamp table.

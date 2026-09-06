@@ -2,7 +2,7 @@
 /**
  * Region reachability sweep — port of the reference generator's
  * update_reachable_regions / can_reach semantics (python BaseClasses, as
- * exercised by tests/fixtures/ap-source/Regions.py). The sweep starts from
+ * exercised by Archipelago worlds/alttp/Regions.py). The sweep starts from
  * the start region and repeats full passes until no new region is admitted:
  * a rule may read the partially built reachable set (event logic), and the
  * retry passes mirror the python blocked-connection retries. Rules are

@@ -1,7 +1,7 @@
 /* @layer shared-game @kind data */
 /**
  * The dark spots of the world — every exit and location the reference gates
- * on light, ported from tests/fixtures/ap-source/Rules.py
+ * on light, ported from Archipelago worlds/alttp/Rules.py
  * add_conditional_lamps (lines 989-1037, non-inverted spots) under the
  * baseline: neither light cone is set, so every conditional spot is listed.
  *

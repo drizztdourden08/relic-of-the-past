@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
  * Port of the reference generator's collection state as consumed by
- * tests/fixtures/ap-source/StateHelpers.py (python CollectionState:
+ * Archipelago worlds/alttp/StateHelpers.py (python CollectionState:
  * prog_items multiset, has/count/has_any/count_group, reachable-region
  * cache invalidated by every collect/remove). Progressive base items also
  * grant their concrete tier on collect, per Items.py progression_mapping.

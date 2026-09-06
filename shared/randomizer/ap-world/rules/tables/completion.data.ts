@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * Goal wiring for the boss-defeat baseline, from tests/fixtures/ap-source/
+ * Goal wiring for the boss-defeat baseline, from Archipelago worlds/alttp/
  * Rules.py: the final fight's rule (611 GanonDefeatRule, 95-97 the second
  * tower fight, 616-617 the seven-crystal requirement), the drop into the
  * fight (618), the pyramid opening (734 — open_pyramid resolves 'goal' →

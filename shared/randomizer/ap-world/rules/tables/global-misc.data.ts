@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * Non-dungeon rows of tests/fixtures/ap-source/Rules.py global_rules
+ * Non-dungeon rows of Archipelago worlds/alttp/Rules.py global_rules
  * (lines 200-303, 620), baseline options: enemy shuffle off, enemy health
  * default, pot shuffle off, can_take_damage true. Constant sub-terms the
  * fixed options force true are collapsed with a citation.

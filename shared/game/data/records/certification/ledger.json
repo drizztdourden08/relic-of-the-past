@@ -4280,7 +4280,7 @@
    "verdict": "accepted",
    "sources": {
     "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
-    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s2": "AP source fixtures (Archipelago worlds/alttp: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
     "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
    },
    "fixes": [
@@ -4305,7 +4305,7 @@
    "verdict": "accepted",
    "sources": {
     "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
-    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s2": "AP source fixtures (Archipelago worlds/alttp: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
     "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
    },
    "fixes": [
@@ -4324,7 +4324,7 @@
    "verdict": "accepted",
    "sources": {
     "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
-    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s2": "AP source fixtures (Archipelago worlds/alttp: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
     "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
    },
    "fixes": [
@@ -4343,7 +4343,7 @@
    "verdict": "accepted",
    "sources": {
     "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
-    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s2": "AP source fixtures (Archipelago worlds/alttp: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
     "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
    },
    "fixes": [
@@ -4362,7 +4362,7 @@
    "verdict": "accepted",
    "sources": {
     "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
-    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s2": "AP source fixtures (Archipelago worlds/alttp: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
     "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
    },
    "fixes": [
@@ -4381,7 +4381,7 @@
    "verdict": "accepted",
    "sources": {
     "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
-    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s2": "AP source fixtures (Archipelago worlds/alttp: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
     "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
    },
    "fixes": [
@@ -4406,7 +4406,7 @@
    "verdict": "accepted",
    "sources": {
     "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
-    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s2": "AP source fixtures (Archipelago worlds/alttp: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
     "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
    },
    "fixes": [
@@ -4425,7 +4425,7 @@
    "verdict": "accepted",
    "sources": {
     "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
-    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s2": "AP source fixtures (Archipelago worlds/alttp: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
     "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
    },
    "fixes": [
@@ -4450,7 +4450,7 @@
    "verdict": "accepted",
    "sources": {
     "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
-    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s2": "AP source fixtures (Archipelago worlds/alttp: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
     "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
    },
    "fixes": [
@@ -4469,7 +4469,7 @@
    "verdict": "accepted",
    "sources": {
     "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
-    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s2": "AP source fixtures (Archipelago worlds/alttp: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
     "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
    },
    "fixes": [
@@ -4494,7 +4494,7 @@
    "verdict": "accepted",
    "sources": {
     "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
-    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s2": "AP source fixtures (Archipelago worlds/alttp: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
     "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
    },
    "fixes": [
@@ -4531,7 +4531,7 @@
    "verdict": "accepted",
    "sources": {
     "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
-    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s2": "AP source fixtures (Archipelago worlds/alttp: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
     "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
    },
    "fixes": [
@@ -4550,7 +4550,7 @@
    "verdict": "accepted",
    "sources": {
     "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
-    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s2": "AP source fixtures (Archipelago worlds/alttp: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
     "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
    },
    "fixes": [
@@ -4569,7 +4569,7 @@
    "verdict": "accepted",
    "sources": {
     "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
-    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s2": "AP source fixtures (Archipelago worlds/alttp: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
     "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
    },
    "fixes": [
@@ -4588,7 +4588,7 @@
    "verdict": "accepted",
    "sources": {
     "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
-    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s2": "AP source fixtures (Archipelago worlds/alttp: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
     "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
    },
    "fixes": [
@@ -4607,7 +4607,7 @@
    "verdict": "accepted",
    "sources": {
     "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
-    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s2": "AP source fixtures (Archipelago worlds/alttp: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
     "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
    },
    "fixes": [
@@ -4626,7 +4626,7 @@
    "verdict": "accepted",
    "sources": {
     "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
-    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s2": "AP source fixtures (Archipelago worlds/alttp: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
     "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
    },
    "fixes": [
@@ -4645,7 +4645,7 @@
    "verdict": "accepted",
    "sources": {
     "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
-    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s2": "AP source fixtures (Archipelago worlds/alttp: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
     "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
    },
    "fixes": [
@@ -4664,7 +4664,7 @@
    "verdict": "accepted",
    "sources": {
     "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
-    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s2": "AP source fixtures (Archipelago worlds/alttp: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
     "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
    },
    "fixes": [
@@ -4683,7 +4683,7 @@
    "verdict": "accepted",
    "sources": {
     "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
-    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s2": "AP source fixtures (Archipelago worlds/alttp: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
     "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
    },
    "fixes": [
@@ -4708,7 +4708,7 @@
    "verdict": "accepted",
    "sources": {
     "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
-    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s2": "AP source fixtures (Archipelago worlds/alttp: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
     "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
    },
    "fixes": [
@@ -4727,7 +4727,7 @@
    "verdict": "accepted",
    "sources": {
     "s1": "US ROM census (chest table 0xe96e; room sprite lists via $09D62E pointers; OW sprite stages 0x89c881/0x89c901/0x89ca21; entrance tables 0x82c813 + 0x9bb96f)",
-    "s2": "AP source fixtures (tests/fixtures/ap-source: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
+    "s2": "AP source fixtures (Archipelago worlds/alttp: Regions.py location_table addresses, EntranceShuffle.py door_addresses room/area tuples)",
     "s3": "decomp cross-check (core/zelda3/src, file:line cited per fix)"
    },
    "fixes": [

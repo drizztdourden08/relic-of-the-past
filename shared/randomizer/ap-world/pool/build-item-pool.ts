@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
  * Assembles the baseline item pool from the transcribed composition rows —
- * the port of tests/fixtures/ap-source/ItemPool.py get_pool_core +
+ * the port of Archipelago worlds/alttp/ItemPool.py get_pool_core +
  * generate_itempool for the fixed baseline options (normal pool, standard
  * mode, boss-defeat goal, no timer, progressive on, retro off, shops off).
  * Dungeon-restricted items never enter the global pool: under the baseline

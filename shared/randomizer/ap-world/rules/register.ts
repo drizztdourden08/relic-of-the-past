@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
  * The rule registration pass — the port of the reference's set_rules driver
- * (tests/fixtures/ap-source/Rules.py 31-126) for the fixed baseline
+ * (Archipelago worlds/alttp/Rules.py 31-126) for the fixed baseline
  * options. Tables apply their rows in source order ('set' replaces, 'add'
  * AND-composes); the transform-suppression rules attach last, exactly as in
  * the reference. Afterwards coverage is made total: any name in neither a

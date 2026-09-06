@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
  * World-zone marking — port of mark_light_world_regions from
- * tests/fixtures/ap-source/Regions.py. Two rule-free sweeps: one from every
+ * Archipelago worlds/alttp/Regions.py. Two rule-free sweeps: one from every
  * first-world overworld region that refuses to enter second-world overworld
  * regions (setting isLightWorld), and the mirror sweep for isDarkWorld.
  * Cross-world interiors may end up marked as both — the transform-suppression

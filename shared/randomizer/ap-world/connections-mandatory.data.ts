@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * Ported from tests/fixtures/ap-source/EntranceShuffle.py — mandatory_connections
+ * Ported from Archipelago worlds/alttp/EntranceShuffle.py — mandatory_connections
  * (interior wiring applied in every non-inverted layout), plus the three fixed
  * links from link_entrances lines 12-13 (home + the hidden duplicate room exit),
  * plus the standard-mode start connection Rules.py standard_rules adds

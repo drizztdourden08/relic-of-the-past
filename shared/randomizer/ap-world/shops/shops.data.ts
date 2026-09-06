@@ -3,7 +3,7 @@
  * Every shop the seed may stock, and the slots each of them holds.
  *
  * The reference project's own shop file is NOT part of the vendored drop
- * (tests/fixtures/ap-source carries 13 modules; Shops.py is not one of them),
+ * (Archipelago worlds/alttp carries 13 modules; Shops.py is not one of them),
  * so the vanilla inventory and its prices are transcribed from the GAME
  * instead — SpritePrep_Shopkeeper's per-room spawn table and the seven
  * ShopItem_* handlers it spawns, plus the cauldron and bomb-counter handlers

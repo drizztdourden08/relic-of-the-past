@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * The desert palace, from tests/fixtures/ap-source/Rules.py: the book
+ * The desert palace, from Archipelago worlds/alttp/Rules.py: the book
  * entrance and outer rocks (default_rules 640, 659-660), the interior
  * (global_rules 360-372; the reward-placement guard 370-372 is asked of the
  * world, since it exists only while a key family is still pinned to its own

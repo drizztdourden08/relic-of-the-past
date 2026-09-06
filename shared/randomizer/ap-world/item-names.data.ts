@@ -2,7 +2,7 @@
 /**
  * Item names the ported logic helpers reference, keyed neutrally so the
  * logic files never spell a game name. Ported from
- * tests/fixtures/ap-source/Items.py (item_table, item_name_groups,
+ * Archipelago worlds/alttp/Items.py (item_table, item_name_groups,
  * progression_mapping) and the names StateHelpers.py checks with state.has.
  */
 

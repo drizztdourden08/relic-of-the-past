@@ -1,7 +1,7 @@
 /* @layer shared-game @kind data */
 /**
  * The five tiered families, their pool item and the concrete tiers each copy
- * hands over, transcribed from tests/fixtures/ap-source/Items.py
+ * hands over, transcribed from Archipelago worlds/alttp/Items.py
  * (progression_mapping, lines 230-242) and ItemPool.py difficulties['normal']
  * (lines 99-130), which is the row set this app's pool is pinned to. The mail
  * family has no progression_mapping entry because its tiers are classed

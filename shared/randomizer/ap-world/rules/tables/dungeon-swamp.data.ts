@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * The swamp palace, from tests/fixtures/ap-source/Rules.py: global_rules
+ * The swamp palace, from Archipelago worlds/alttp/Rules.py: global_rules
  * 390-410 (pot shuffle off → 396-398 and 408-410 skipped) plus the moat
  * mirror requirement (109-110: the swamp was not moved, entrance shuffle is
  * vanilla) and the boss defeat rule. The big-key forbid and self-allowance

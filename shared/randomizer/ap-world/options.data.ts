@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * Full option catalog transcribed from tests/fixtures/ap-source/Options.py —
+ * Full option catalog transcribed from Archipelago worlds/alttp/Options.py —
  * every option of the reference project's ALTTPOptions dataclass that is a
  * question about the SEED, in dataclass order, with the source default
  * (apDefault), the value this app hard-sets

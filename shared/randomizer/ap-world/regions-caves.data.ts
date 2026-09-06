@@ -1,7 +1,7 @@
 /* @layer shared-game @kind data */
 /**
  * Cave and house interior regions (python create_cave_region calls).
- * Ported 1:1 from tests/fixtures/ap-source/Regions.py (create_regions, open
+ * Ported 1:1 from Archipelago worlds/alttp/Regions.py (create_regions, open
  * mode). Names are the AP originals — this is transcribed game data.
  */
 import { POND_PRIZE_LOCATIONS } from './pond/pond-locations.data';

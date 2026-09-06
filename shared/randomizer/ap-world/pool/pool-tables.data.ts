@@ -1,7 +1,7 @@
 /* @layer shared-game @kind data */
 /**
  * Item-pool composition rows for the baseline seed — ported from
- * tests/fixtures/ap-source/ItemPool.py, normal difficulty only
+ * Archipelago worlds/alttp/ItemPool.py, normal difficulty only
  * (difficulties['normal'], lines 99-130) with the fixed baseline choices:
  * mode standard, goal ganon, no timer, retro off, swordless off, progressive ON
  * (the reference's want_progressives coin-flip pinned to true, per the

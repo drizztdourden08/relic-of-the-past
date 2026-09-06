@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * The transform-suppression lists, from tests/fixtures/ap-source/Rules.py
+ * The transform-suppression lists, from Archipelago worlds/alttp/Rules.py
  * set_bunny_rules: the multi-entrance interiors the transformed state cannot
  * pass (1663-1666), the locations it can still pick up (1668-1673), and the
  * one specially handled shop region (1769-1771).

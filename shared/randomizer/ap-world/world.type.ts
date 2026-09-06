@@ -4,7 +4,7 @@
  * (phase P2) and the access rules that attach to it (phase P3). Rules are
  * looked up by exit/location name through getRule/getLocationRule; an absent
  * rule means unconditional access, mirroring the reference generator's
- * default access_rule (tests/fixtures/ap-source/generic-Rules.py set_rule
+ * default access_rule (Archipelago worlds/generic/Rules.py set_rule
  * semantics). The rule registration pass (rules/register.ts) makes absence
  * explicit: every name ends up either ruled or listed always-open, and
  * anything else is registered blocked. placedItems is the fill seam — the

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * The mountain shell dungeon, from tests/fixtures/ap-source/Rules.py:
+ * The mountain shell dungeon, from Archipelago worlds/alttp/Rules.py:
  * the medallion entrance (default_rules 732), global_rules 490-515
  * (fix_trock_doors is false for vanilla entrances + open mode, so the
  * bomb-wall rows 511-515 apply) and set_trock_key_rules 1136-1234. Under

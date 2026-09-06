@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * Event location → event item pairs, ported from tests/fixtures/ap-source/
+ * Event location → event item pairs, ported from Archipelago worlds/alttp/
  * ItemPool.py generate_itempool (event_pairs, lines 264-278) plus the goal
  * item pushed onto the final fight's location (lines 249-250). The prize
  * pool is the ten crystal/pendant items placed on the ten dungeon prize

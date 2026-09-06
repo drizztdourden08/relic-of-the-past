@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * Location metadata ported from tests/fixtures/ap-source/Regions.py:
+ * Location metadata ported from Archipelago worlds/alttp/Regions.py:
  * key_drop_data (locations that exist only with key_drop_shuffle, each
  * holding its dungeon key in vanilla), the event locations (address None in
  * location_table — they carry logic events, never pool items), and the

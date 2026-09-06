@@ -1,7 +1,7 @@
 /* @layer shared-game @kind types */
 /**
  * Where a dungeon's own items may end up — the four `DungeonItem` choices of
- * tests/fixtures/ap-source/Options.py 170-213, one setting per family.
+ * Archipelago worlds/alttp/Options.py 170-213, one setting per family.
  *
  * The names are the source's own option keys, so a snapshot value maps across
  * with no translation table. Not every value is reachable here: the catalog

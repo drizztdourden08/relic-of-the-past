@@ -11,7 +11,7 @@
  *   receive id the boss hands over: 0x37 / 0x39 / 0x38 for the three pendants,
  *   0x20 for a crystal.
  * - `kDungeonCrystalPendantBit` (zelda_rtl.c) is the flag bit that grant sets.
- *   The reference project's item table (tests/fixtures/ap-source/Items.py)
+ *   The reference project's item table (Archipelago worlds/alttp/Items.py)
  *   carries the same bit as the first element of every 'Crystal'-class item's
  *   code tuple, which is what names the bit.
  *

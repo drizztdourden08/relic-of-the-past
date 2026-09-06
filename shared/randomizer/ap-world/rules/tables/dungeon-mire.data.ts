@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * The swamp-of-despair dungeon, from tests/fixtures/ap-source/Rules.py:
+ * The swamp-of-despair dungeon, from Archipelago worlds/alttp/Rules.py:
  * the medallion entrance (default_rules 716 — sword required to cast, the
  * per-seed medallion resolved through the world options), global_rules
  * 463-488 (can_take_damage true keeps the hearts alternative live) and the

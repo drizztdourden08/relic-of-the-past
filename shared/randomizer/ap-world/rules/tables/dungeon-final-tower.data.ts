@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * The final tower, from tests/fixtures/ap-source/Rules.py: the crystal gate
+ * The final tower, from Archipelago worlds/alttp/Rules.py: the crystal gate
  * (122 — the earlier lock at 114-118 is immediately re-set and dead),
  * global_rules 543-609 (enemy shuffle off → the big-key door needs arrows,
  * 597-599; the double-switch row at 552 is re-set by 564 and only the key

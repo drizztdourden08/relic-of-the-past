@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
  * The standard-mode starting-weapon assurance — the port of
- * tests/fixtures/ap-source/ItemPool.py generate_itempool 294-318 for the
+ * Archipelago worlds/alttp/ItemPool.py generate_itempool 294-318 for the
  * fixed baseline (no precollected melee weapon, bombless start off). The
  * candidate list is built by one pass over the assembled pool in pool
  * order, exactly as the source scans it: the first sword tier found, the

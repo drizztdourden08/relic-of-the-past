@@ -1,7 +1,7 @@
 /* @layer shared-game @kind types */
 /**
  * How much of a seed has to be reachable for it to count as valid — the
- * source's `accessibility` choice (tests/fixtures/ap-source/Options.py, and
+ * source's `accessibility` choice (Archipelago worlds/alttp/Options.py, and
  * BaseClasses.MultiWorld.fulfills_accessibility, which is what the three
  * values actually mean):
  *

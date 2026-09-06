@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * Standard-mode rules, ported from tests/fixtures/ap-source/Rules.py
+ * Standard-mode rules, ported from Archipelago worlds/alttp/Rules.py
  * standard_rules (lines 1090-1121) for the fixed baseline (small keys stay
  * in their own dungeon, never universal, so the 1099-1116 branch applies;
  * enemy health is default, so the guarded chest's kill clause collapses to

@@ -4,7 +4,7 @@
  * something real rather than invented here.
  *
  * THE COPY MULTIPLES, 1 / 2 / 3. One is the reference pool
- * (tests/fixtures/ap-source/ItemPool.py difficulties['normal']), two is what
+ * (Archipelago worlds/alttp/ItemPool.py difficulties['normal']), two is what
  * its easy step does to every tiered family at once, and three is one step
  * past it — as far as the shape stays honest, since a copy past a family's top
  * rung already resolves to a rupee pickup rather than to nothing

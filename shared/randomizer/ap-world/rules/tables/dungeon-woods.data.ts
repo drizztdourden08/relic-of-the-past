@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * The forest dungeon, from tests/fixtures/ap-source/Rules.py: the entrance
+ * The forest dungeon, from Archipelago worlds/alttp/Rules.py: the entrance
  * rows (default_rules 694-695, 715), global_rules 425-435 (all first-section
  * doors cost the full key count, 425-429), the glitch-jump lockout
  * (forbid_bomb_jump_requirements 961) and the boss defeat rule. The

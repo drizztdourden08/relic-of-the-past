@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * The eastern second-world palace, from tests/fixtures/ap-source/Rules.py:
+ * The eastern second-world palace, from Archipelago worlds/alttp/Rules.py:
  * the toll entrance (default_rules 681), global_rules 517-541 (enemy
  * shuffle off → the bonk wall needs arrows, 519-520; pot shuffle off →
  * 527-529 skipped) and the boss defeat rule. Lamp rows come from the lamp

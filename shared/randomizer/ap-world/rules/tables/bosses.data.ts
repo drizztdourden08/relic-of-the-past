@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * Boss defeat rules, ported from tests/fixtures/ap-source/Bosses.py
+ * Boss defeat rules, ported from Archipelago worlds/alttp/Bosses.py
  * (each *DefeatRule, lines 36-157), specialized to the baseline: swordless
  * OFF (the swordless branches drop), glitches no_glitches (the final
  * fight's silverless branch drops). Boss placement is vanilla (boss shuffle

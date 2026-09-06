@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
  * S2 source — parses the reference randomizer project's published data
- * fixtures (tests/fixtures/ap-source) as plain text/JSON. The Python file
+ * fixtures (Archipelago worlds/alttp) as plain text/JSON. The Python file
  * is treated strictly as text and extracted with regexes; nothing is ever
  * executed.
  */

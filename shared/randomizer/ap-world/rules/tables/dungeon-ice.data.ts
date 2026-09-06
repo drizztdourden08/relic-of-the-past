@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * The lake-island dungeon, from tests/fixtures/ap-source/Rules.py
+ * The lake-island dungeon, from Archipelago worlds/alttp/Rules.py
  * global_rules 437-461 (swordless off; can_take_damage true collapses the
  * spike-crossing clause of the east door, 459-460) plus the boss defeat
  * rule.

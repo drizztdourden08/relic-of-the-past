@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * The eastern palace, from tests/fixtures/ap-source/Rules.py global_rules
+ * The eastern palace, from Archipelago worlds/alttp/Rules.py global_rules
  * 327-358 (enemy shuffle off → the boss needs arrows, 348-350; enemy health
  * default → the pot-kill block 352-358 is skipped). Lamp requirements come
  * from the lamp table; the big-key self-allowance lives in the item-rules

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * World/combat helpers ported from tests/fixtures/ap-source/StateHelpers.py
+ * World/combat helpers ported from Archipelago worlds/alttp/StateHelpers.py
  * (python is_not_bunny, can_bomb_clip, has_crystals, has_triforce_pieces,
  * can_activate_crystal_switch, can_kill_most_things, can_kill_standard_start,
  * can_get_good_bee, can_retrieve_tablet, has_misery_mire_medallion,

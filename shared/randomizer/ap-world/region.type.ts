@@ -1,7 +1,7 @@
 /* @layer shared-game @kind types */
 /**
  * Types of the ported world graph. The raw *Def shapes mirror the rows
- * transcribed from the reference generator (tests/fixtures/ap-source/
+ * transcribed from the reference generator (Archipelago worlds/alttp/
  * Regions.py `create_regions`, Dungeons.py `create_dungeons`); the resolved
  * shapes are what the wiring in build-world produces and the graph sweep
  * walks. Name strings live in the *.data.ts files, never here.

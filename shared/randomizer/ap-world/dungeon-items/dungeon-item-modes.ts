@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
  * What each dungeon-item mode means to the fill, transcribed from
- * tests/fixtures/ap-source/Options.py 170-213 and the generate_early block
+ * Archipelago worlds/alttp/Options.py 170-213 and the generate_early block
  * that reads them (worlds/alttp/__init__.py):
  *
  *   for dungeon_item in (small_key_shuffle, big_key_shuffle,

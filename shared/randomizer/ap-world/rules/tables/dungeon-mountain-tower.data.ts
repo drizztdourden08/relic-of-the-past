@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * The mountaintop tower, from tests/fixtures/ap-source/Rules.py global_rules
+ * The mountaintop tower, from Archipelago worlds/alttp/Rules.py global_rules
  * 374-388 (enemy shuffle off → the big-key door needs a real weapon,
  * 380-384) plus the boss defeat rule from dungeon_boss_rules. The small-key
  * self-allowance lives in the item-rules table.

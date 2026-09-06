@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * Equipment/capacity helpers ported from tests/fixtures/ap-source/
+ * Equipment/capacity helpers ported from Archipelago worlds/alttp/
  * StateHelpers.py (python has_sword, has_beam_sword, has_melee_weapon,
  * can_lift_rocks, can_lift_heavy_rocks, has_fire_source, can_melt_things,
  * can_shoot_arrows, can_hold_arrows, can_use_bombs, can_bomb_or_bonk,
