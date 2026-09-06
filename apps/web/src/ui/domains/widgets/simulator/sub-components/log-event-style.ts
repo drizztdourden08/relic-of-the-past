@@ -82,7 +82,7 @@ const KIND_LABEL: Record<LogKind, string> = {
 /**
  * Adapts a run's events into the neutral rows LogPanel renders. Line numbers are
  * the event's real position in the run (1..N), NOT the engine step (which
- * repeats). Position rows drop the redundant START/END prefix — the tag says it.
+ * repeats). Position rows drop the redundant START/END prefix, since the tag says it.
  */
 const toLogRows = (events: SimEvent[]): LogRow[] => {
   const indents = computeIndents(events);

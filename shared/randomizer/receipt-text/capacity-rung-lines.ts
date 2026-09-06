@@ -6,7 +6,7 @@
  * Custom family, in plan order, and the core picks line k when the k-th
  * pickup resolves. Each line carries the climb's numbers: the tiers jumped,
  * the capacity before and after, and the plan's final maximum
- * (capacity-rung-values.ts) — the from and to values of rung k are the plan's
+ * (capacity-rung-values.ts), where the from and to values of rung k are the plan's
  * cumulative rungs k and k+1.
  */
 import { FAMILIES } from '../ap-world/capacity/capacity-family';
@@ -17,7 +17,7 @@ import type { ReceiptLine } from './receipt-line.type';
 
 interface CapacityRungLines {
   family: CapacityFamilyId;
-  /** One line per planned jump, in plan order — index k is the k-th pickup's line. */
+  /** One line per planned jump, in plan order: index k is the k-th pickup's line. */
   lines: readonly ReceiptLine[];
 }
 

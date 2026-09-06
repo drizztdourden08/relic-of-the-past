@@ -34,7 +34,7 @@ interface CurrencyRowModel {
   currency: ShopCountedCurrency;
   /** The currency in the player's own words. */
   label: string;
-  /** Its opt-in key, and the two ends of its range — what an edit writes. */
+  /** Its opt-in key, and the two ends of its range: what an edit writes. */
   key: string;
   minKey: string;
   maxKey: string;

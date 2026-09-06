@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * The free sequence — the user's own jumps, typed as "4,2,1". Valid when
+ * The free sequence: the user's own jumps, typed as "4,2,1". Valid when
  * every entry is a positive integer no larger than the family's biggest item
  * and the sum is exactly the span; the length is then the count. An invalid
  * sequence never reaches the pool: the caller falls back to the equal curve

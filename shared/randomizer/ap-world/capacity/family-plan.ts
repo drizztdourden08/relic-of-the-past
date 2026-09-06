@@ -4,12 +4,12 @@
  * Vanilla contributes nothing (the preview shows the native ladder from the
  * vanilla rung, sold at the pond); Vanilla in pool ships the reference jumps
  * from that rung; Custom cuts the span between start and max with its curve
- * — start may be rung 0, the empty tier — under the family's item cap (no
+ * (start may be rung 0, the empty tier) under the family's item cap (no
  * jump above maxJump). items.length is the In Pool number:
  * N for Custom, 7 / 7 / 1 for Vanilla in pool, 0 for Vanilla. A Custom plan
  * under the progressive option ships N copies of the family's one
  * progressive name instead of N fixed-jump names: the jumps are the same,
- * taken in plan order at grant time rather than carried by the item.
+ * taken in plan order at grant time instead of carried by the item.
  */
 import { jumpsOf } from './curves/jumps-of';
 import { ladderOf } from './curves/ladder-of';
@@ -56,7 +56,7 @@ const maxTierOf = (capacityFamily: CapacityFamily, setting: FamilySetting | unde
 
 /**
  * Pool arithmetic of a profile. `checkSpots` is the number of family spots
- * that are checks in this fill (0 … 3: the two fairy slots and the bat).
+ * that are checks in this fill (0 ... 3: the two fairy slots and the bat).
  */
 const capacityPoolCountsOf = (profile: CapacityProfile, checkSpots: number): CapacityPoolCounts => {
   const plans = capacityPlansOf(profile);

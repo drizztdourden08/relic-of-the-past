@@ -6,7 +6,7 @@
  * standard-mode escape). Completed checks crosswalk to placement locations
  * by their community-standard name; a check whose name is not a location of
  * this placement (event and prize slots, dataset gaps) can never inflate
- * availability — it reports blocked unless the player actually completed it.
+ * availability, so it reports blocked unless the player actually completed it.
  */
 import { computePlacementAvailability } from '@shared/randomizer/placement-availability';
 import { standardCheckName } from './check-names';

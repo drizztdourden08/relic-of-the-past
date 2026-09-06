@@ -4,14 +4,14 @@
  * a native chest-table chest nor a key drop, split by nature:
  *
  * - NPC_SCOPE_LOCATIONS (`include_npc_checks`): scripted givers and event-ish
- *   spots — NPC gifts, boss heart containers, the fairy ponds, and the
+ *   spots: NPC gifts, boss heart containers, the fairy ponds, and the
  *   handful of chest-table slots the app has no physical check record for.
  * - WORLD_ITEM_SCOPE_LOCATIONS (`include_world_items`): standing in-world
- *   items — the overworld prize ledges/islands, dig and dash prizes, the
+ *   items: the overworld prize ledges/islands, dig and dash prizes, the
  *   tablets, the pedestal, and the in-dungeon standing keys.
  *
  * With its toggle OFF, a set's locations are pre-placed LOCKED with the
- * vanilla item listed here and excluded from fill — the exact mechanism the
+ * vanilla item listed here and excluded from fill, the exact mechanism the
  * key-drop option uses for its drop locations.
  *
  * Values are POOL item names (the fill removes each one from the item pool),

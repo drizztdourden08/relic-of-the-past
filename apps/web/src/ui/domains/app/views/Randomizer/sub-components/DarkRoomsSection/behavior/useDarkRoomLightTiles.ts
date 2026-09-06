@@ -5,7 +5,7 @@
  * rewritten in place is served under new URLs, so the memo has to be recomputed
  * or the tiles keep the sources that failed while the folder was being written.
  *
- * The flag is read for no ROM in particular — as recorded — rather than asked
+ * The flag is read for no ROM in particular (as recorded) instead of asked
  * for one: the app points the set at a ROM from startup on (spriteRomOf, the
  * active profile's or a ready one), and the creation form re-points it at the
  * ROM the person picks, so asking again here would only re-run that

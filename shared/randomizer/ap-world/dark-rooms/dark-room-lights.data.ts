@@ -10,7 +10,7 @@
  * and the running game can only ever say the same thing.
  *
  * REFERENCE is the reference's own reading: light is required, and the lamp
- * alone provides it — the rule every seed rolled before this option existed
+ * alone provides it, the rule every seed rolled before this option existed
  * was generated under, and what an absent row still means. DEFAULT is where a
  * NEW profile starts: light required, and all four lights provide it.
  */
@@ -22,7 +22,7 @@ const DARK_ROOM_LIGHT_FIELDS: readonly DarkRoomLightField[] = ['lamp', 'fireRod'
 
 /**
  * Of the two canes the red one is the cane that lays blocks, not the cane that
- * raises the blue barrier — the art on the tile is the same lookup, so the
+ * raises the blue barrier, and the art on the tile is the same lookup, so the
  * name here is what decides which colour the row shows.
  */
 const DARK_ROOM_LIGHT_ITEMS: Readonly<Record<DarkRoomLightField, string>> = {

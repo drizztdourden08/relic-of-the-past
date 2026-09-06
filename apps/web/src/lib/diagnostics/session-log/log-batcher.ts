@@ -1,8 +1,8 @@
 /* @layer renderer-lib @kind logic */
 /**
  * Line batcher for the session log: buffers pushed lines and hands them to
- * `send` as one batch — after `flushMs` of quiet, or immediately once
- * `maxLines` are buffered — so logging never costs one IPC round per line.
+ * `send` as one batch: after `flushMs` of quiet, or immediately once
+ * `maxLines` are buffered, so logging never costs one IPC round per line.
  * `send` failures are swallowed: the batcher must never throw into app code.
  */
 type LogBatcherOptions = {

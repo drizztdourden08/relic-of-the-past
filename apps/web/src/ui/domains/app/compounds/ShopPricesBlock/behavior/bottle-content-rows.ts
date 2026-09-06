@@ -5,7 +5,7 @@
  *
  * The rule is read ONCE, here, and each content is answered for on its own
  * line. That is the whole point: a cauldron blocks its OWN content and nothing
- * else, so a row carries its own blocked flag and its own sentence rather than
+ * else, so a row carries its own blocked flag and its own sentence instead of
  * the block carrying a list of sentences underneath five rows that all look
  * alike. Ticking the red cauldron greys the red row, says why on that row, and
  * leaves blue and green exactly as they were.
@@ -23,7 +23,7 @@ interface BottleContentRowModel {
   content: ShopBottleContent;
   /** The content in the player's own words. */
   label: string;
-  /** Its catalog key — what an edit on this row writes. */
+  /** Its catalog key: what an edit on this row writes. */
   key: string;
   checked: boolean;
   /** Its cauldron went to the shuffle: the row is greyed and cannot be ticked. */

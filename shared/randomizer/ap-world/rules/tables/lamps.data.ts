@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * The dark spots of the world — every exit and location the reference gates
+ * The dark spots of the world: every exit and location the reference gates
  * on light, ported from Archipelago worlds/alttp/Rules.py
  * add_conditional_lamps (lines 989-1037, non-inverted spots) under the
  * baseline: neither light cone is set, so every conditional spot is listed.
@@ -16,7 +16,7 @@
  * is the one deliberate divergence, and it goes the strict way: they are the
  * rooms a player is most often left feeling through, so they answer to the
  * same switch as every other dark spot. With the requirement on, a light is
- * guaranteed before them — the fill has only the handful of rooms ahead of
+ * guaranteed before them, since the fill has only the handful of rooms ahead of
  * the escape to place one in, and it does. With it off they open exactly as
  * the original does, and the opening is walked unlit.
  *

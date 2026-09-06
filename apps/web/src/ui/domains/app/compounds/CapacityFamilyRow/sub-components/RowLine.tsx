@@ -4,7 +4,7 @@
  * controls beside it, and an optional note under them. Every line of the
  * row (range, items, jumps, bonus, ladder) sits on this same grid, so the
  * labels line up down the family and the eye reads the family as a list of
- * named facts rather than a stack of captioned controls.
+ * named facts instead of a stack of captioned controls.
  */
 import { Box, Text } from '@ds/primitives';
 import type { ReactNode } from 'react';

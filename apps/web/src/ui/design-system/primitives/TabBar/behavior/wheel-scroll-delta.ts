@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 /**
- * How far a wheel gesture over the strip should move it sideways — or null,
+ * How far a wheel gesture over the strip should move it sideways, or null,
  * meaning the gesture is not ours and belongs to whatever the strip sits in.
  *
  * Answering null is the important half: a strip that swallowed every wheel

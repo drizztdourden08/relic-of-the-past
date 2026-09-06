@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
  * The Custom-mode lines of a capacity family, one fact per line: the range
- * (the start–max thumbs on the family's legal tiers, the readout beside them,
+ * (the start-max thumbs on the family's legal tiers, the readout beside them,
  * the floor the final max may not stop below as the line's note); the items
  * (the count between the floor the item cap sets and the ceiling the pool
  * allows, with the curve dropdown beside it, presets under a divider); and,

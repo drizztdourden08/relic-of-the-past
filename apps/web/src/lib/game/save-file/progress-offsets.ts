@@ -11,7 +11,7 @@
  * fallback (check-facts.ts), which reads index 0.
  *
  * The rows sourced from a HOOK-OWNED byte come from `hook-save-bytes.ts`
- * rather than a literal, so this table cannot drift from the registry in
+ * instead of a literal, so this table cannot drift from the registry in
  * core/game-hooks/save_bytes.h. The rest are vanilla variables.h addresses.
  */
 import {
@@ -22,7 +22,7 @@ import {
   blockOffsetOf,
 } from './hook-save-bytes';
 
-/** Per-room 16-bit flag words — the block starts with them. */
+/** Per-room 16-bit flag words, which the block starts with. */
 const ROOM_FLAGS_BASE = 0x000;
 
 /** Per-screen overworld event bytes. */
@@ -41,7 +41,7 @@ const PROGRESS_OFFSETS: ReadonlyArray<number | null> = [
   0x212, // [9]  room 0x109 flag word, low byte
   0x246, // [10] room 0x123 flag word, low byte
   0x23c, // [11] room 0x11E flag word, low byte
-  null, //  [12] sleep step counter — live WRAM only, no offline source
+  null, //  [12] sleep step counter, live WRAM only, no offline source
   0x3cc, // [13] tagalong id
   0x36f, // [14] small key count
   0x366, // [15] big-key word, low byte

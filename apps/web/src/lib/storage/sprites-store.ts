@@ -36,7 +36,7 @@ const readSpritesVersion = (romFile: string): Promise<string | null> => sprites.
 const expectedSpriteFiles = (): string[] => sprites.extractedFileNames(DEFS);
 
 /**
- * Whether the extracted set predates the current extraction — the rule itself
+ * Whether the extracted set predates the current extraction, with the rule itself
  * lives in the shared store (sprites.isStale); this only supplies what THIS
  * build emits. A build with no definitions extracts nothing, so it can never
  * call a set stale.

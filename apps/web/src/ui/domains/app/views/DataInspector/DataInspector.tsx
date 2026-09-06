@@ -55,7 +55,7 @@ const DataInspector = () => {
           onChange={setClauses}
           search={search}
           onSearchChange={setSearch}
-          searchPlaceholder="Search records…"
+          searchPlaceholder="Search records..."
           searchLabel="Search records"
         />
         {/* A finding is minted by a detection pass, never created by hand. */}

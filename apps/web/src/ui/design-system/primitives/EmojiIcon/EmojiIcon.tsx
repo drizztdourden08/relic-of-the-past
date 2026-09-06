@@ -2,7 +2,7 @@
 import './EmojiIcon.css';
 import type { EmojiIconProps } from './EmojiIcon.type';
 
-/** Colour emoji glyph. Decorative by default — the control that wraps it carries the accessible name. */
+/** Colour emoji glyph. Decorative by default, so the control that wraps it carries the accessible name. */
 const EmojiIcon = (props: EmojiIconProps) => {
   const { glyph, size = 'md', className = '', ...rest } = props;
   return (

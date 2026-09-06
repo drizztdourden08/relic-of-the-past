@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Check detection — derives, from a check record's own gameId, the live-memory
+ * Check detection: derives, from a check record's own gameId, the live-memory
  * read that proves the check completed: a persisted room-flag bit (chest slot,
  * direct mask, or an NPC's room-recorded chest bit), an overworld event bit,
  * or a progress-buffer byte (bit mask or threshold). Mirrors the tracker's

@@ -3,10 +3,10 @@
  * The spoiler tab: the SAME checks tracker the Checks widget renders, given
  * the room to be read properly. It shows every check holding what this seed
  * actually put there, counted as taken / available / left, and adds the one
- * grouping axis only a run can offer — the sweep sphere.
+ * grouping axis only a run can offer: the sweep sphere.
  *
  * Locations the placement carries but this app's check dataset does not are
- * reported rather than dropped: a spoiler that quietly omits rows is worse
+ * reported instead of dropped: a spoiler that omits rows is worse
  * than one that says how many it could not place.
  */
 import { useMemo } from 'react';
@@ -34,7 +34,7 @@ const SpoilerPanel = () => {
         className="randomizer-page__hint"
         title={[...unmatchedLocations, ...unmatchedItems].join('\n')}
       >
-        {parts.join(' · ')} — not shown below.
+        {parts.join(' · ')}, not shown below.
       </Text>
     );
   }, [placementView]);

@@ -1,13 +1,13 @@
 /* @layer shared-game @kind logic */
 /**
- * Vanilla-item side of the comparator — resolves a check's declared vanilla
+ * Vanilla-item side of the comparator: resolves a check's declared vanilla
  * item to a native receive-item id and judges it against the census byte.
  *
  * Decomp ruling (established): the chest-table item byte and the receive-item
  * index are the SAME id space (identity pass-through; the owned-duplicate
  * alternates 0x0C→0x44, 0x12→0x35, 0x2A→0x46 apply only when already owned).
  * A dataset check whose resolved receive id differs from the census byte at
- * its position is therefore a dataset-side vanilla-item error — unless it is
+ * its position is therefore a dataset-side vanilla-item error, unless it is
  * exactly the alternate pair of the byte, which is still wrong for override
  * matching but is classified separately as 'vanilla-alt-id'.
  */

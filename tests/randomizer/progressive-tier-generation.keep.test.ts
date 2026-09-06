@@ -8,8 +8,8 @@
  * The sets that cannot be rolled are pinned just as hard, because that is the
  * point of the guard: a rung that is load-bearing under the rules this app
  * transcribes leaves a seed with no ending, and the generator must say so up
- * front, naming the rung, rather than hand over a placement nobody can finish.
- * The blade rungs used to be on that list and no longer are — the core grew
+ * front, naming the rung, instead of handing over a placement nobody can finish.
+ * The blade rungs used to be on that list and no longer are, because the core grew
  * the stand-ins the reference's swordless mode has, so a file with no blade in
  * it reaches the ending on the hammer and a pulled-down cloth door.
  */
@@ -118,7 +118,7 @@ describe('generation over representative tier tick sets', () => {
 });
 
 describe('an unticked rung leaves the pool the same size', () => {
-  it('swaps the copy for the reference own stand-in rather than shrinking the pool', () => {
+  it('swaps the copy for the reference own stand-in instead of shrinking the pool', () => {
     const full = shuffledScopePoolOf(ALL_ON);
     const trimmed = shuffledScopePoolOf(NO_GOLD_SWORD);
     expect(trimmed.length).toBe(full.length);

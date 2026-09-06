@@ -2,7 +2,7 @@
 /**
  * Headless core probe for the rupee pond's seams: the built wasm is loaded in
  * node with the user's asset blob, a save-state fixture puts the game in a
- * room, and the seams are exercised with the pond gate ON and then OFF —
+ * room, and the seams are exercised with the pond gate ON and then OFF:
  *   the price, the amount taken, what the bank receives and how long the
  *   purchase waits are the plan's values with the gate on and the vendored
  *   expression's own values with it off;
@@ -10,15 +10,15 @@
  *   a prize is handed over exactly once and an exhausted pond names a price no
  *   wallet holds;
  *   a purchase that sells a capacity level climbs the tier, and at the ceiling
- *   it hands back NOTHING — the vanilla hundred-rupee refund would make a
+ *   it hands back NOTHING, since the vanilla hundred-rupee refund would make a
  *   cheap pond a money press;
  *   a losing gamble throw hands back exactly its refund, which is below its
  *   price, so it cannot be farmed either;
  *   the gems a throw shows are the decomposition of the amount paid;
  *   the plan's own lines replace the vanilla wording only where one was
- *   composed, and only an EXHAUSTED pond takes the closing line — a wallet too
+ *   composed, and only an EXHAUSTED pond takes the closing line, so a wallet too
  *   light for the current price keeps the vanilla come-back-later refusal.
- * Skips when the wasm, the asset blob or the vault fixture is absent — a
+ * Skips when the wasm, the asset blob or the vault fixture is absent, so a
  * clone without them has to stay green.
  */
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
@@ -43,7 +43,7 @@ const WRAM = {
   pondThrows: SRM_POND_THROWS,
 };
 
-/** The price an exhausted pond names — above any wallet, so the handler closes it. */
+/** The price an exhausted pond names: above any wallet, so the handler closes it. */
 const CLOSED_COST = 0x7fff;
 
 const assetBlobPath = (): string | undefined => {
@@ -169,7 +169,7 @@ describeCore('pond seams in the built core (headless)', () => {
     expect(seam(0)).toBe(1);
     expect(get8(WRAM.bombTier)).toBe(1);
     expect(get16(WRAM.rupeesGoal)).toBe(500);
-    // At the ceiling the same sale hands back nothing — the vanilla branch
+    // At the ceiling the same sale hands back nothing, so the vanilla branch
     // refunds a hundred here, which a cheap pond could farm.
     set8(WRAM.pondThrows, 1);
     set8(WRAM.bombTier, 7);

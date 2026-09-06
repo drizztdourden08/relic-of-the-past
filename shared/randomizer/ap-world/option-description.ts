@@ -2,7 +2,7 @@
 /**
  * Reading a description in either shape. The listed form is what a panel
  * renders line by line; the flattened form is the single string every plain
- * consumer needs — a caption, a tooltip, a stored value, a screen reader
+ * consumer needs: a caption, a tooltip, a stored value, a screen reader
  * following the rows. Both come off the same entry, so the wording is
  * written once and can never drift into two versions of itself.
  */
@@ -15,7 +15,7 @@ const detailsOf = (description: OptionDescription): readonly OptionDetail[] | un
 /**
  * The whole description as one string, "term: detail" per line. Every detail
  * is written as a finished sentence, so the joined reading is a paragraph
- * rather than a run-on.
+ * instead of a run-on.
  */
 const plainTextOf = (description: OptionDescription): string =>
   (typeof description === 'string'

@@ -1,10 +1,10 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Message text preparation — makes an arbitrary rendered line encodable and
+ * Message text preparation: makes an arbitrary rendered line encodable and
  * displayable: characters outside the active language's alphabet are mapped
  * to shared equivalents (or dropped), and the text is word-wrapped against
  * the real per-glyph pixel widths into the text box's line commands ([2] and
- * [3] for rows two and three, [Scroll] for every row past the visible three —
+ * [3] for rows two and three, [Scroll] for every row past the visible three,
  * the engine renders variable-width glyphs and never wraps on its own).
  */
 
@@ -24,8 +24,8 @@ const SCROLL_COMMAND = '[Scroll]';
 
 /** Substitutions for characters most alphabets lack but can approximate. */
 const REPLACEMENTS: ReadonlyMap<string, string> = new Map([
-  ['—', '-'], ['–', '-'], [':', ' -'], [';', ','],
-  ['‘', "'"], ['’', "'"], ['“', '"'], ['”', '"'],
+  ['—', '-'], ['–', '-'], [':', ' -'], [';', ','], // eslint-disable-line local/no-em-dash -- the characters ARE the mapping
+  ['‘', "'"], ['’', "'"], ['“', '"'], ['”', '"'], // eslint-disable-line local/no-smart-punctuation -- the characters ARE the mapping
   ['&', 'and'], ['>', ' to '],
 ]);
 

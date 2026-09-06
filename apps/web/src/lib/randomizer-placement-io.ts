@@ -1,11 +1,11 @@
 /* @layer renderer-lib @kind logic */
 /**
  * Typed wrapper around the per-profile randomizer-placement store
- * (profiles/<id>/randomizer.json). Writes the v2 shape — the ApPlacement
- * under an explicit schema stamp — and reads BOTH generations back as an
+ * (profiles/<id>/randomizer.json). Writes the v2 shape, the ApPlacement
+ * under an explicit schema stamp, and reads BOTH generations back as an
  * ApPlacement: a v2 file loads directly, a legacy v1 Placement (dataset
  * check/item ids) is lifted through the adapter so old profiles keep
- * playing. Callers get an ApPlacement or null — never a half-parsed blob.
+ * playing. Callers get an ApPlacement or null, never a half-parsed blob.
  */
 import type { ApPlacement } from '@shared/randomizer/ap-world/fill/ap-placement.type';
 import type { Placement } from '@shared/randomizer/placement.type';

@@ -9,7 +9,7 @@
  * fill must never touch: event items, (key drops off) the vanilla drop keys,
  * the locked npc-scope locations' vanilla items (the whole scope table with
  * the option off, the physically undeliverable remainder with it on), and
- * the capacity spots the profile locks — a vanilla meter's giver, and every
+ * the capacity spots the profile locks: a vanilla meter's giver, and every
  * present fairy slot not proven deliverable.
  */
 import { buildWorld } from '../build-world';
@@ -45,7 +45,7 @@ const NO_SHOP_PRICES: ShopPriceView = {};
 
 /**
  * One scope table's locked subset: the whole table with its toggle off, the
- * remainder outside the caller's deliverable set with it on — items must
+ * remainder outside the caller's deliverable set with it on, because items must
  * never be shuffled onto a location the app cannot physically grant them
  * from. On mode with NO set keeps the fully-shuffleable world the parity
  * oracles pin.

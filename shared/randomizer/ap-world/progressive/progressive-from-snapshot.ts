@@ -2,7 +2,7 @@
 /**
  * The tier rows ⇄ the setting they stand for, both directions in one file so
  * the reading the generator uses and the writing the creation form freezes can
- * never spell the same option two ways — the dark-room module's contract.
+ * never spell the same option two ways, the dark-room module's contract.
  *
  * A snapshot frozen before these rows existed carries none of them, and an
  * absent key falls back to TICKED. That is the reference pool every stored
@@ -28,7 +28,7 @@ const progressiveSettingOfValues = (values: Values): ProgressiveSetting =>
 const progressiveSettingFromSnapshot = (snapshot: RandomizerOptionsSnapshot): ProgressiveSetting =>
   progressiveSettingOfValues(snapshot.values);
 
-/** The rows a setting freezes — what the creation form hands the catalog. */
+/** The rows a setting freezes: what the creation form hands the catalog. */
 const progressiveValuesOf = (setting: ProgressiveSetting): Record<string, ApOptionValue> =>
   Object.fromEntries(PROGRESSIVE_FAMILIES.flatMap((family) =>
     family.tiers.map((_tier, index): [string, ApOptionValue] => [
@@ -36,7 +36,7 @@ const progressiveValuesOf = (setting: ProgressiveSetting): Record<string, ApOpti
       setting[family.id][index] ?? true,
     ])));
 
-/** True while every family still carries every tier — the reference pool. */
+/** True while every family still carries every tier: the reference pool. */
 const isReferenceProgressiveSetting = (setting: ProgressiveSetting): boolean =>
   PROGRESSIVE_FAMILIES.every((family) =>
     family.tiers.every((_tier, index) => setting[family.id][index] !== false));

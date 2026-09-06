@@ -1,7 +1,7 @@
 /* @layer shared-asset-extraction @kind data */
 /**
  * Randomizer template lines, appended after the 397 canonical vanilla dialogue lines at
- * BAKE time (build-language-entry.ts) — never persisted into a pack's dialogue.txt, so
+ * BAKE time (build-language-entry.ts), never persisted into a pack's dialogue.txt, so
  * every language entry gains them on its next compile regardless of when the pack was
  * extracted. The first five are the receipt classes; the rest belong to whichever seam
  * names them.
@@ -13,11 +13,11 @@
  *
  * The game's text engine has no runtime string substitution (only the player-name and
  * preloaded-digit commands), so these are fixed context-class lines, not per-item text.
- * Character set is restricted to letters, digits, space and .,!? — the intersection of
- * every language's alphabet (language-data.ts) — so the same fallback text encodes
- * cleanly under every encoder when a language has no translation of its own. [1]/[2]/[3]
+ * Character set is restricted to letters, digits, space and .,!?, the intersection of
+ * every language's alphabet (language-data.ts), so the same fallback text encodes
+ * under every encoder when a language has no translation of its own. [1]/[2]/[3]
  * select the box's three lines and are commands both encoders share, so a line long
- * enough to wrap says where it breaks rather than trusting the box to do it.
+ * enough to wrap says where it breaks instead of trusting the box to do it.
  */
 
 /** First appended line's dialogue message id (= the canonical vanilla line count). */
@@ -25,11 +25,11 @@ const RANDOMIZER_MSG_BASE = 397;
 
 /** English fallback templates, in kReceiptMsg_* order. */
 const RANDOMIZER_DIALOGUE_TEMPLATES: readonly string[] = [
-  'A shuffled treasure!',      // generic — an overridden chest with no richer class
-  'Your equipment improves!',  // progressive — one tier of a multi-tier family
-  'A tool of this palace!',    // dungeon item — key, big key, palace-bitmask trio
-  'A delivery arrives!',       // delivered — granted by the delivery queue
-  'A gift from another land!', // online — sent by another player in a shared game
+  'A shuffled treasure!',      // generic: an overridden chest with no richer class
+  'Your equipment improves!',  // progressive: one tier of a multi-tier family
+  'A tool of this palace!',    // dungeon item: key, big key, palace-bitmask trio
+  'A delivery arrives!',       // delivered: granted by the delivery queue
+  'A gift from another land!', // online: sent by another player in a shared game
   // The archery host, refusing a fee for a game that could not be played (archery_host.c).
   'You have no bow and[2]arrows to play with!',
   // A shelf refusing a price the player cannot pay, one line per non-rupee currency
@@ -78,7 +78,7 @@ const RANDOMIZER_SEAM_MSG = {
  */
 const TEMPLATE_TRANSLATIONS: Readonly<Record<string, readonly string[]>> = {};
 
-/** The template lines to append for |code| — its translation, or the fallback. */
+/** The template lines to append for |code|: its translation, or the fallback. */
 const randomizerTemplateTexts = (code: string): readonly string[] => {
   const translated = TEMPLATE_TRANSLATIONS[code];
   if (translated && translated.length === RANDOMIZER_DIALOGUE_TEMPLATES.length) return translated;

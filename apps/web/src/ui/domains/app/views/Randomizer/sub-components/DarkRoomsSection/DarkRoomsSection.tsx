@@ -13,7 +13,7 @@
  * allowed, but it leaves the requirement above asking for something nothing
  * can meet, so the rule reads unlit rooms as passable and the seed rolls
  * blind: that is not an error, it is a consequence, so it is stated in a
- * banner rather than flagged on a control. The setting handed back on every edit is the STORED one,
+ * banner instead of flagged on a control. The setting handed back on every edit is the STORED one,
  * the mask living in the tiles, so lifting it returns the player's own answer.
  *
  * The run view shares this section, so a stored snapshot reads the same way.

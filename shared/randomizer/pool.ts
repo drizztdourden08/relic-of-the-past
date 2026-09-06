@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
  * Builds the randomizer's item pool and open-check list from the dataset
- * facade. Conservation invariant: |poolItemIds| === |checks| — the pool is
+ * facade. Conservation invariant: |poolItemIds| === |checks|, so the pool is
  * exactly the multiset of first vanilla items of the included checks.
  */
 import { all, getItem } from '@shared/game/data';
@@ -27,7 +27,7 @@ type ItemClass = 'progression' | 'useful' | 'junk';
 const PROGRESSION_CATEGORIES: ReadonlySet<string> = new Set(['weapon', 'equipment', 'medallion', 'key', 'crystal', 'bottle']);
 const JUNK_CATEGORIES: ReadonlySet<string> = new Set(['junk', 'upgrade']);
 
-/** Resolves an item to a grantable record — itself, or its alias target (one hop) — requiring a native receive index. */
+/** Resolves an item to a grantable record (itself, or its alias target, one hop) requiring a native receive index. */
 const resolveReceivable = (itemId: string): ItemRecord | null => {
   const record = getItem(itemId);
   if (record.gameId?.receiveItemId !== undefined) return record;
@@ -77,7 +77,7 @@ const isProgressionItem = (itemId: string): boolean => classifyItem(itemId) === 
 
 /**
  * Pool items bound to a dungeon (keys, big keys, maps, compasses) grouped by
- * their dungeon id — a later fill step must place these only inside their own
+ * their dungeon id, so a later fill step must place these only inside their own
  * dungeon.
  */
 const dungeonLocalItems = (checks: readonly CheckRecord[]): Map<string, string[]> => {

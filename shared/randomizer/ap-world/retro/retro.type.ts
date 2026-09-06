@@ -3,12 +3,12 @@
  * The retro bow setting: the bow stops eating ammunition and starts eating
  * money.
  *
- * What the reference project's `retro_bow` really is (Options.py RetroBow —
+ * What the reference project's `retro_bow` really is (Options.py RetroBow,
  * "Zelda-1 like mode. You have to purchase an arrow to shoot arrows using
- * rupees"), read off its own patcher rather than off the name:
+ * rupees"), read off its own patcher instead of off the name:
  *
  *  - Rom.py 1452-1454 turns on the rupee bow and writes TWO costs into the
- *    patched game — 0x180176, the plain arrow at 10 rupees, and 0x180178, the
+ *    patched game: 0x180176, the plain arrow at 10 rupees, and 0x180178, the
  *    silver one at 50. Every shot is paid for at the moment it is fired;
  *  - Rom.py 1455-1459 takes arrows out of the world: the pot and fish prizes
  *    become rupees, the thief and the pikit steal rupees, the chest game hands
@@ -32,7 +32,7 @@ interface RetroBowSetting {
   enabled: boolean;
   /** Rupees one plain shot takes out of the wallet. */
   woodArrowCost: number;
-  /** Rupees one silver shot takes — dearer, as the reference has it. */
+  /** Rupees one silver shot takes, dearer, as the reference has it. */
   silverArrowCost: number;
 }
 

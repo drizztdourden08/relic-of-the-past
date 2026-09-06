@@ -74,7 +74,7 @@ const mothulaDefeat: Rule = anyOf(
 /** Bosses.py 95-96. */
 const blindDefeat: Rule = anyOf(hasMeleeWeapon, hasItem('Cane of Somaria'), hasItem('Cane of Byrna'));
 
-/** Bosses.py 99-118 — swordless off, so only the sworded branches remain. */
+/** Bosses.py 99-118: swordless off, so only the sworded branches remain. */
 const kholdstareDefeat: Rule = allOf(
   anyOf(hasItem('Fire Rod'), allOf(hasItem('Bombos'), hasSword)),
   anyOf(hasMeleeWeapon, allOf(hasItem('Fire Rod'), (state) => canExtendMagic(state, 20))),
@@ -101,18 +101,18 @@ const trinexxDefeat: Rule = allOf(
   ),
 );
 
-/** Bosses.py 135-136 — both tower fights share it. */
+/** Bosses.py 135-136: both tower fights share it. */
 const agahnimDefeat: Rule = anyOf(hasSword, hasItem('Hammer'), hasItem('Bug Catching Net'));
 
 /**
  * The last fight takes a hammer while that switch is on, which is the reference's own
- * swordless branch — see item-power/ and the core hook behind it.
+ * swordless branch, see item-power/ and the core hook behind it.
  */
 const lastFightTakesHammer: Rule = (state) =>
   itemPowerOf(state.world).hammerLastFight && state.has(ITEM.hammer);
 
 /**
- * Bosses.py 139-156 — no_glitches: the strict silvers path, with the swordless branch.
+ * Bosses.py 139-156: no_glitches, the strict silvers path, with the swordless branch.
  * The reference asks for arrows and stops; the last phase takes the final fight's
  * silver shots back to back (final-fight.data.ts), so the arrow capacity has to hold that many
  * at once, and under retro the wallet has to (retro/retro-logic.ts reads the same count).
@@ -150,7 +150,7 @@ const dungeonBossDefeat = (dungeonName: string): Rule => {
   return rule;
 };
 
-/** Dungeons.py 169-171 — the fixed sub-boss trio of the final tower. */
+/** Dungeons.py 169-171: the fixed sub-boss trio of the final tower. */
 const FINAL_TOWER_SUB_BOSSES = {
   bottom: armosDefeat,
   middle: lanmolasDefeat,

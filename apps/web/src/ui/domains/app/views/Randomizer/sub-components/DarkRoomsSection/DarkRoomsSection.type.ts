@@ -13,7 +13,7 @@ interface DarkRoomsSectionProps {
    * and inert with the sentence under the row, the stored answer kept.
    */
   forced?: ReadonlyMap<DarkRoomLightField, string>;
-  /** Absent renders the whole section frozen — the run view's read-only face. */
+  /** Absent renders the whole section frozen: the run view's read-only face. */
   onChange?: (next: DarkRoomSetting) => void;
 }
 

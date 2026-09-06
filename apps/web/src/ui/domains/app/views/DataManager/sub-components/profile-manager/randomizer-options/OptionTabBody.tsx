@@ -7,7 +7,7 @@
  * under it.
  *
  * The capacity families and the wishing pond share the same physical slots,
- * so those two tabs render the pair the RULE allows rather than the raw
+ * so those two tabs render the pair the RULE allows instead of the raw
  * choices: an edit on either side re-points the other. The pond tab opens
  * with that pair read back as plain sentences, derived on every render.
  *

@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Capacity arming for a session — translates the profile a placement was
+ * Capacity arming for a session: translates the profile a placement was
  * generated with into the exact core writes: one WasmSetCapacityProfile per
  * family (custom flag, start and final tier indices) and the wallet jump
  * table (sorted distinct jumps of the wallet plan, slot = position), plus the
@@ -33,7 +33,7 @@ import type { CapacityBonusSetting, CapacityFamilyId, CapacityProfile } from '@s
 import type { CapacityFamilyArm } from '../capacity-profile';
 import type { CapacityLineMessages } from './capacity-rung-messages';
 
-/** One Custom family's planned jumps, in plan order — what a progressive pickup climbs by. */
+/** One Custom family's planned jumps, in plan order: what a progressive pickup climbs by. */
 interface CapacityLadderArm {
   family: CapacityFamilyId;
   jumps: readonly number[];
@@ -45,7 +45,7 @@ interface CapacitySessionPlan {
   families: readonly CapacityFamilyArm[];
   /** Slot → rungs; [] when the wallet stays vanilla. */
   walletTable: readonly number[];
-  /** True when at least one family is Custom — the only case the core is armed. */
+  /** True when at least one family is Custom, the only case the core is armed. */
   armed: boolean;
   /** The Custom families' jump sequences; written to the core only under `progressive`. */
   ladders: readonly CapacityLadderArm[];
@@ -113,7 +113,7 @@ const armCapacitySession = async (
   primeCapacitySession(plan);
   armCapacityProfile(plan, tag, lines);
   // The pickup bonus answers to a virtual grant, which an in-pool family hands out even
-  // with no Custom family armed, so it follows the pool rather than the profile.
+  // with no Custom family armed, so it follows the pool, not the profile.
   if (plan.bonusArmed) setCapacityBonus(plan.bonus);
   // The hold-up icons answer to the same gate. A session whose families all stay on
   // the native grid raises it for them alone: nothing is armed in the core, so every

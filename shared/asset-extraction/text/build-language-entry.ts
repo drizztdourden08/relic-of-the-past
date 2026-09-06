@@ -53,7 +53,7 @@ const normalizeTexts = (texts: string[]): string[] => {
 
 const buildLangData = (texts: string[], code: string): Buffer => {
   // Append the randomizer template lines after the canonical vanilla lines, bake-time
-  // only — dialogue.txt, meta.json and the Language Studio all keep seeing 397 lines.
+  // only. dialogue.txt, meta.json and the Language Studio all keep seeing 397 lines.
   // The core addresses the templates as fixed message ids (kReceiptMsg_* in
   // core/game-hooks/game_hooks.h), so the vanilla count must be exact before appending.
   const vanilla = normalizeTexts(texts);

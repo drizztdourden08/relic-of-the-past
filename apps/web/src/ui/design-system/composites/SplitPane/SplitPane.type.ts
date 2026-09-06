@@ -10,7 +10,7 @@ interface SplitPaneProps {
   /** Share of the width the START pane opens at, 0..1. */
   defaultRatio?: number;
   /**
-   * Drag a pane below this share and it collapses entirely rather than
+   * Drag a pane below this share and it collapses entirely instead of
    * shrinking into uselessness. Dragging back out past it restores the pane.
    */
   snapAt?: number;

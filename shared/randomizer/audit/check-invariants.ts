@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * Mechanical-invariant audit over the check dataset — composes every rule
+ * Mechanical-invariant audit over the check dataset: composes every rule
  * module into one pure pass. Findings are returned, never thrown: this feeds
  * the data-certification pipeline's discovery run.
  */

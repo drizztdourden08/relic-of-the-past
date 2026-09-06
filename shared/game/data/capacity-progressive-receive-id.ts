@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * Virtual receive ids of the progressive capacity items — the TS half of the
+ * Virtual receive ids of the progressive capacity items: the TS half of the
  * contract in core/game-hooks/capacity_progressive.c. One id per family,
  * ABOVE the wallet slots, so a progressive copy rides every override table
  * and the receipt export unresolved and the core climbs to the NEXT planned
@@ -23,7 +23,7 @@ const PROGRESSIVE_CAPACITY_VIRT_LAST = PROGRESSIVE_CAPACITY_VIRT_FIRST + CAPACIT
 const isProgressiveCapacityReceiveId = (id: number): boolean =>
   Number.isInteger(id) && id >= PROGRESSIVE_CAPACITY_VIRT_FIRST && id <= PROGRESSIVE_CAPACITY_VIRT_LAST;
 
-/** The family's progressive id — the core's family order (explosives, projectiles, meter, wallet). */
+/** The family's progressive id, in the core's family order (explosives, projectiles, meter, wallet). */
 const progressiveCapacityReceiveIdOf = (family: CapacityFamilyId): number =>
   PROGRESSIVE_CAPACITY_VIRT_FIRST + CAPACITY_FAMILY_IDS.indexOf(family);
 

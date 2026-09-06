@@ -3,7 +3,7 @@
  * One enumerated facet: a trigger button and a portalled panel of checkboxes,
  * one per option, each toggling that option in or out of the caller's hidden
  * set. Anchored the same way the add-filter field picker is, so the panel
- * follows the bar as anything scrolls under it — and end-aligned, because a
+ * follows the bar as anything scrolls under it, and end-aligned, because a
  * facet trigger tends to sit near the right edge of whatever row it is in.
  */
 import { Box } from '../../../primitives/Box';

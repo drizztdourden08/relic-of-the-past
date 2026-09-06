@@ -4,7 +4,7 @@
  * the wallet contribute their plan's items on top of the reference rows; a
  * fairy slot that exists but is locked vanilla keeps its vanilla one-tier
  * item, so one such item leaves the family's items when it holds one (the
- * npc-scope mechanism) — when it holds none the locked slot simply delivers
+ * npc-scope mechanism); when it holds none the locked slot delivers
  * its vanilla upgrade for free and the items stay. The meter's first items
  * REPLACE the reference's fixed magic row (pool-tables.data.ts), padded back
  * to its length so the 153-item invariant holds; every further meter item
@@ -24,7 +24,7 @@ type Plans = Readonly<Record<CapacityFamilyId, FamilyPlan>>;
 interface MeterPoolItems {
   /** Exactly the reference row's length: the plan's first items, padded with the row's filler. */
   magicRow: string[];
-  /** The plan's remaining items — each displaces one filler, like an explosives or wallet item. */
+  /** The plan's remaining items: each displaces one filler, like an explosives or wallet item. */
   overflow: string[];
 }
 
@@ -51,7 +51,7 @@ const capacityPoolItems = (plans: Plans, lockedSpots: ReadonlySet<string>): stri
 /**
  * The meter plan's items split between the magic row and the overflow. A
  * locked meter spot keeps its vanilla half-meter item, which must be present
- * for the scope lock to remove — appended when the plan carries none.
+ * for the scope lock to remove, appended when the plan carries none.
  */
 const meterPoolItemsOf = (meterItems: readonly string[], meterSpotLocked: boolean): MeterPoolItems => {
   const [vanillaItem, padding] = MAGIC_ITEMS;

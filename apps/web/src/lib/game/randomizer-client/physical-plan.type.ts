@@ -1,11 +1,11 @@
 /* @layer bridge-wasm @kind types */
 /**
- * The physical plan — the bridge's answer to "what does this placement mean
+ * The physical plan: the bridge's answer to "what does this placement mean
  * in the running game". Every planned location falls in exactly one class:
  * an in-core chest override, an in-core scripted-grant (npc) override, a
  * poll-and-deliver grant, or a generation-locked vanilla location (no
  * physical action, still reported). A non-locked location with no physical
- * path is a plan ERROR, never a silent skip — a session must refuse to start
+ * path is a plan ERROR, never a silent skip, so a session must refuse to start
  * on any.
  */
 import type { CheckDetection } from './check-detection';
@@ -22,7 +22,7 @@ interface PlanNpcGrant {
   postGfx: number;
 }
 
-/** In-core scripted-grant substitution target — present exactly for 'override-npc'. */
+/** In-core scripted-grant substitution target, present exactly for 'override-npc'. */
 interface PlanNpcOverride {
   /** The giver's indoor room index, or null to match by item or sprite. */
   roomId: number | null;
@@ -33,7 +33,7 @@ interface PlanNpcOverride {
   targetLocalId: number;
 }
 
-/** In-core standing-prize substitution target — present exactly for 'override-standing'. */
+/** In-core standing-prize substitution target, present exactly for 'override-standing'. */
 interface PlanStandingOverride {
   /** Overworld screen index (outdoor) or room index (indoor). */
   area: number;
@@ -45,13 +45,13 @@ interface PlanStandingOverride {
   targetLocalId: number;
 }
 
-/** In-core scripted-grant slot — present exactly for 'override-scripted'. */
+/** In-core scripted-grant slot, present exactly for 'override-scripted'. */
 interface PlanScriptedOverride {
   target: ScriptedGrantSurface;
   targetLocalId: number;
 }
 
-/** In-core shelf-slot substitution target — present exactly for 'override-shop'. */
+/** In-core shelf-slot substitution target, present exactly for 'override-shop'. */
 interface PlanShopOverride {
   /** The slot's stable id across every shop, which keys its sold counter. */
   slotIndex: number;
@@ -79,7 +79,7 @@ interface PlanShopOverride {
   targetLocalId: number;
 }
 
-/** In-core key-drop substitution target — present exactly for 'override-drop'. */
+/** In-core key-drop substitution target, present exactly for 'override-drop'. */
 interface PlanDropOverride {
   /** The drop's indoor room index. */
   roomId: number;
@@ -96,21 +96,21 @@ interface PlanEntry {
   planClass: PlanClass;
   /** How completion is observed live; absent = poll-blind (locked only). */
   detection?: CheckDetection;
-  /** Override target — present exactly for 'override' entries. */
+  /** Override target, present exactly for 'override' entries. */
   target?: { roomId: number; chestIndex: number; targetLocalId: number };
-  /** Native receive id of the assigned item — present for 'deliver' entries. */
+  /** Native receive id of the assigned item, present for 'deliver' entries. */
   targetLocalId?: number;
   /** Present when the deliver should run the NPC trigger, not the queue grant. */
   npcGrant?: PlanNpcGrant;
-  /** In-core substitution key — present exactly for 'override-npc' entries. */
+  /** In-core substitution key, present exactly for 'override-npc' entries. */
   npcOverride?: PlanNpcOverride;
-  /** In-core substitution key — present exactly for 'override-drop' entries. */
+  /** In-core substitution key, present exactly for 'override-drop' entries. */
   dropOverride?: PlanDropOverride;
-  /** In-core substitution key — present exactly for 'override-standing' entries. */
+  /** In-core substitution key, present exactly for 'override-standing' entries. */
   standingOverride?: PlanStandingOverride;
-  /** In-core substitution slot — present exactly for 'override-scripted' entries. */
+  /** In-core substitution slot, present exactly for 'override-scripted' entries. */
   scriptedOverride?: PlanScriptedOverride;
-  /** In-core substitution key — present exactly for 'override-shop' entries. */
+  /** In-core substitution key, present exactly for 'override-shop' entries. */
   shopOverride?: PlanShopOverride;
 }
 
@@ -129,7 +129,7 @@ interface PlanCounts {
   overrideShop: number;
   deliver: number;
   vanillaLocked: number;
-  /** Locked locations with no usable detection — reported never, logged once. */
+  /** Locked locations with no usable detection, reported never, logged once. */
   pollBlind: number;
   errors: number;
 }

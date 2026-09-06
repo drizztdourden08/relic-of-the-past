@@ -25,7 +25,7 @@ import type { CollectionState } from './collection-state';
 const isNotBunny = (state: CollectionState, region: ApRegion): boolean =>
   state.has(ITEM.moonPearl) || region.isLightWorld;
 
-/** Glitch helper — unused under no-glitches; ported for table completeness. */
+/** Glitch helper, unused under no-glitches; ported for table completeness. */
 const canBombClip = (state: CollectionState, region: ApRegion): boolean =>
   canUseBombs(state) && isNotBunny(state, region) && state.has(ITEM.pegasusBoots);
 
@@ -97,7 +97,7 @@ const hasMireMedallion = (state: CollectionState): boolean =>
 const hasTurtleRockMedallion = (state: CollectionState): boolean =>
   state.has(state.world.options.medallions.turtleRock);
 
-/** Glitch helpers — unused under no-glitches; ported for table completeness. */
+/** Glitch helpers, unused under no-glitches; ported for table completeness. */
 const canBootsClipLw = (state: CollectionState): boolean => state.has(ITEM.pegasusBoots);
 
 const canBootsClipDw = (state: CollectionState): boolean =>

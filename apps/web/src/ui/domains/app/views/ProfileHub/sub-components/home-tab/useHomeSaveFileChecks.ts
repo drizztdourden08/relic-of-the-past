@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 /**
  * Per-save-file checks readout for the home header, computed OFFLINE from
- * the profile's battery save on disk — no running game required, so it can
+ * the profile's battery save on disk, with no running game required, so it can
  * never show the live subscription's false zero. One row per save file that
  * holds a valid game, with the same taken / available / left semantics the
  * Checks widget derives for a randomized profile (the shared availability

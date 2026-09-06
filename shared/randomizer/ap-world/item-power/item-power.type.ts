@@ -1,6 +1,6 @@
 /* @layer shared-game @kind types */
 /**
- * How helpful the items are — the questions inside the reference project's
+ * How helpful the items are: the questions inside the reference project's
  * single four-step Item Functionality choice (Options.py ItemFunctionality:
  * easy / normal / hard / expert), asked one at a time.
  *
@@ -11,7 +11,7 @@
  * writes eight separate bytes per step), so this app exposes the switches and
  * lets the bundle be a preset the player can build for themselves.
  *
- * Every default here is the NORMAL step — the unmodified game — so a profile
+ * Every default here is the NORMAL step (the unmodified game), so a profile
  * that touches none of these rows plays exactly as it always did.
  */
 
@@ -24,11 +24,11 @@ interface ItemPowerSetting {
   capeDoubleMagic: boolean;
   /** Silver arrows keep their extra bite outside the last fight. */
   silverArrowsAnywhere: boolean;
-  /** The powder turns an enemy into a fairy rather than into the lesser prize. */
+  /** The powder turns an enemy into a fairy, not into the lesser prize. */
   powderFairy: boolean;
   /**
    * The hammer wakes the two tablets, so the book alone is enough beside it.
-   * Reads as ON whenever no beam blade can be found at all — a requirement
+   * Reads as ON whenever no beam blade can be found at all, a requirement
    * nothing in the seed could meet is a dead end, not a rule.
    */
   hammerTablets: boolean;
@@ -38,7 +38,7 @@ interface ItemPowerSetting {
    */
   swordlessMedallions: boolean;
   /**
-   * A hanging cloth door comes down when it is grabbed and pulled, as well as
+   * A hanging cloth door comes down when it is grabbed and pulled, and
    * when it is cut. Reads as ON whenever no blade at all can be found.
    */
   pullableCurtains: boolean;

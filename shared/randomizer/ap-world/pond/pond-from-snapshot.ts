@@ -7,8 +7,8 @@
  * sequence that does not sum to the span degrades to the equal curve. Every
  * fallback is reported so the panel can say so.
  *
- * A snapshot with NO pond row at all — every profile written before the
- * option existed — reads as the legacy pond, so a stored placement keeps
+ * A snapshot with NO pond row at all (every profile written before the
+ * option existed) reads as the legacy pond, so a stored placement keeps
  * meaning exactly what it meant when it was generated.
  *
  * Every active reading is then held to the wallet the same snapshot
@@ -115,7 +115,7 @@ const parsePondSetting = (values: Values): ParsedPondSetting => {
 const pondSettingFromSnapshot = (snapshot: RandomizerOptionsSnapshot): PondSetting =>
   parsePondSetting(snapshot.values).setting;
 
-/** The rows a setting writes — the inverse of parsePondSetting (unused fields keep their default). */
+/** The rows a setting writes: the inverse of parsePondSetting (unused fields keep their default). */
 const pondValuesOf = (setting: PondSetting): Record<string, ApOptionValue> => {
   const custom = setting.mode === 'custom' ? setting : undefined;
   const items = setting.mode === 'capacity' ? DEFAULT_POND_ITEMS : setting.items;

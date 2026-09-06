@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * The post-fill accessibility verdict — the single-world reading of
+ * The post-fill accessibility verdict: the single-world reading of
  * BaseClasses.MultiWorld.fulfills_accessibility (Archipelago main, quoted in
  * accessibility.type.ts). The source walks only the locations it calls
  * RELEVANT and stops as soon as every one of them that has to be COLLECTED
@@ -10,14 +10,14 @@
  *   location_condition(loc) = loc.player in full  or  loc.item.player not in minimal
  *
  * With one player that collapses to a table:
- *   full    — every location relevant, every one required
- *   items   — only advancement-item locations relevant, all of them required
- *   minimal — only advancement-item locations relevant, NONE required
+ *   full:    every location relevant, every one required
+ *   items:   only advancement-item locations relevant, all of them required
+ *   minimal: only advancement-item locations relevant, NONE required
  * and in every mode the goal must be reachable.
  *
- * The caller's sweep runs to a fixpoint over the whole world rather than
+ * The caller's sweep runs to a fixpoint over the whole world instead of
  * stopping early, which can only collect MORE than the source's walk, so the
- * missing set below is a subset of the source's — a seed this accepts is one
+ * missing set below is a subset of the source's, so a seed this accepts is one
  * the source accepts.
  */
 import { EVENT_ITEMS, PRIZE_ITEMS } from '../pool/event-items.data';
@@ -30,7 +30,7 @@ const AUTO_ADVANCEMENT: ReadonlySet<string> = new Set([...PRIZE_ITEMS, ...EVENT_
 /**
  * python Item.advancement for the names this world can place: the pool's
  * progression partition (progression-class.ts, which the fill itself uses),
- * plus the dungeon rewards and the event items — both advancement in
+ * plus the dungeon rewards and the event items, both advancement in
  * Items.py, and neither one ever sits in the shuffled pool.
  */
 const advancementItemsOf = (capacity: CapacityProfile): ((itemName: string) => boolean) => {

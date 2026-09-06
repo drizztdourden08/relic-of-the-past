@@ -83,7 +83,7 @@ const attemptGeneration = (seed: string, attemptSeed: string, options: Randomize
 };
 
 /**
- * The snapshot-driven entry — the ported reference pipeline. The optional
+ * The snapshot-driven entry: the ported reference pipeline. The optional
  * sets name the npc-scope locations and capacity slots the app proved
  * physically deliverable; with the matching option on, only those shuffle
  * and the rest stay locked vanilla (absent counts as empty, so library
@@ -97,7 +97,7 @@ const generateFromSnapshot = (
   generateApPlacement(seed, snapshot, deliverableNpcLocations, deliverableCapacityLocations,
     deliverableWorldLocations);
 
-/** @deprecated Legacy dataset-driven facade — use generateFromSnapshot. */
+/** @deprecated Legacy dataset-driven facade, use generateFromSnapshot. */
 const generatePlacement = (seed: string, options: RandomizerOptions = DEFAULT_OPTIONS, stats?: GenerateStats): Placement => {
   let lastMessage = '';
   for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt += 1) {
@@ -111,7 +111,7 @@ const generatePlacement = (seed: string, options: RandomizerOptions = DEFAULT_OP
       lastMessage = error.message;
     }
   }
-  throw new Error(`placement generation failed for seed "${seed}" after ${MAX_ATTEMPTS} attempts — last failure: ${lastMessage}`);
+  throw new Error(`placement generation failed for seed "${seed}" after ${MAX_ATTEMPTS} attempts, last failure: ${lastMessage}`);
 };
 
 export { generateFromSnapshot, generatePlacement, MAX_ATTEMPTS };

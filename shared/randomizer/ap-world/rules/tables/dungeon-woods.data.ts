@@ -38,7 +38,7 @@ const WOODS_RULES: readonly RuleEntry[] = [
     kind: 'location', name: 'Skull Woods - Big Chest', mode: 'set',
     rule: allOf(hasItem('Big Key (Skull Woods)'), (state: CollectionState) => canUseBombs(state)),
   },
-  // 433: the hanging cloth door needs a blade to cut — unless the switch that lets it be
+  // 433: the hanging cloth door needs a blade to cut, unless the switch that lets it be
   // pulled down instead is on, which is the reference's own swordless branch.
   {
     kind: 'exit', name: 'Skull Woods Torch Room', mode: 'set',

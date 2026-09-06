@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * The assumed-state sweep the fill runs before every placement — the port of
+ * The assumed-state sweep the fill runs before every placement: the port of
  * the reference's sweep_from_pool + sweep_for_advancements: start from the
  * assumed inventory (the still-unplaced pool), then repeatedly collect the
  * items sitting on already-placed locations that are collectable, in sphere

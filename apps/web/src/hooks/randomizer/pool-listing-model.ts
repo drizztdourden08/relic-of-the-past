@@ -2,13 +2,13 @@
 /**
  * The pool builder's own partition as list groups: the global pool by its
  * classification (progression, useful, filler), the assured starting
- * weapon, the per-dungeon restricted sets, the prizes and the event items —
+ * weapon, the per-dungeon restricted sets, the prizes and the event items,
  * each a name → count multiset, largest count first. The categories are
  * read off the built pool, never re-derived here. Art comes from the
  * extracted sprite set: a capacity-upgrade name resolves to its family's
  * stamped upgrade sprite, any other name goes through its item record, and a
  * name still without art gets no sprite. While the set is not extracted yet,
- * no row carries a sprite at all — the listing shows placeholders instead of
+ * no row carries a sprite at all, so the listing shows placeholders instead of
  * asking for files that are not on disk.
  */
 import { capacityFamilyOfItemName } from '@shared/game/data';

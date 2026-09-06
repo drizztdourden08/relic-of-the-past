@@ -3,7 +3,7 @@
  * The In Pool column, live: the real pool accounting of a snapshot and the
  * per-option cell, worded, memoized per snapshot (a full pass is a few
  * milliseconds, so every edit recomputes). The deliverable sets come from
- * the capability probes — the same sets generation uses, so the column
+ * the capability probes, the same sets generation uses, so the column
  * shows exactly what the seed will carry. A pool that cannot be built (more
  * upgrades than the filler can absorb) reports its reason instead.
  */

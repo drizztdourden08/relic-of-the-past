@@ -2,7 +2,7 @@
 /**
  * Live-verified crosswalk anchors: reference-project location names paired
  * with the (roomId, chestIndex) each one was confirmed to occupy in the
- * native chest table. Data file — location names are transcribed game data
+ * native chest table. Data file: location names are transcribed game data
  * and stay out of logic/test code, which imports them from here.
  */
 interface AnchorCheck {

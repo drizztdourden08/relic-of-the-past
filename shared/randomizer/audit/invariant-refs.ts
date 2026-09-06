@@ -2,11 +2,11 @@
 /**
  * Reference integrity rules.
  *
- * A4-item — every vanillaItemIds entry must resolve to a real item record,
+ * A4-item: every vanillaItemIds entry must resolve to a real item record,
  * and for physically granted kinds the resolved item (one aliasOf hop) must
  * carry a native receive id.
  *
- * A5-dungeon — a check claiming a dungeon must sit on one of that dungeon's
+ * A5-dungeon: a check claiming a dungeon must sit on one of that dungeon's
  * room screens, and any dungeon-bound vanilla item must belong to the same
  * dungeon as the check.
  */

@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Session dialogue — owns the per-session pool of pre-rendered contextual
+ * Session dialogue: owns the per-session pool of pre-rendered contextual
  * receipt lines and pushes them into the core's live dialogue memory. The
  * composed blob is the active language's baked bytes verbatim (dictionary and
  * every baked line, class templates included) plus one compressed line per

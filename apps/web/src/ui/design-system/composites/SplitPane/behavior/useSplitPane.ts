@@ -2,7 +2,7 @@
 /**
  * Drag state for a two-pane split. The ratio is the START pane's share of the
  * track; dragging below the snap threshold on either side collapses that pane
- * instead of squeezing it, and dragging back past the threshold restores it —
+ * instead of squeezing it, and dragging back past the threshold restores it,
  * so the divider never has to be released in an unusable position.
  *
  * Pointer capture keeps the drag alive when the cursor leaves the divider,
@@ -23,7 +23,7 @@ const useSplitPane = (defaultRatio: number, snapAt: number, defaultCollapsed: Co
   const [collapsed, setCollapsed] = useState<CollapsedSide>(defaultCollapsed);
   const [dragging, setDragging] = useState(false);
 
-  /** Applies a proposed ratio, collapsing rather than shrinking past the snap. */
+  /** Applies a proposed ratio, collapsing instead of shrinking past the snap. */
   const apply = useCallback((next: number) => {
     if (next < snapAt) {
       setCollapsed('start');

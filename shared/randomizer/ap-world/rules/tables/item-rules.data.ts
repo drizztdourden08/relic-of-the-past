@@ -29,7 +29,7 @@ const buildItemRuleEntries = (world: ApWorld): ItemRuleEntry[] => {
       allowed: (item) => PRIZE_SET.has(item),
     })),
   ];
-  // 404-405: guarded by `not small_key_shuffle` — a Choice is falsy only at
+  // 404-405: guarded by `not small_key_shuffle`, and a Choice is falsy only at
   // value 0, so the forbid exists exactly while the small keys stay pinned to
   // their own dungeon. (The glitch half of the guard is fixed at no_glitches.)
   const smallKeys = (world.options.dungeonItems ?? DEFAULT_DUNGEON_ITEM_SETTING).smallKey;
@@ -94,7 +94,7 @@ const buildAlwaysAllowEntries = (world: ApWorld): AlwaysAllowEntry[] => {
 
 /**
  * The always-allow rows the reference keeps when accessibility is FULL: only
- * the unconditional Rules.py 327-328 row survives — every other row above is
+ * the unconditional Rules.py 327-328 row survives, since every other row above is
  * guarded by `accessibility != 'full'` (387, 401, 419, 431, 533, 538, 1232).
  * The fill-facing world builder prunes the registry down to this set, because
  * the generator's validity contract is full accessibility.

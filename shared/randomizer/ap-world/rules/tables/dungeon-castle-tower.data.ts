@@ -19,7 +19,7 @@ import type { RuleEntry } from '../rule-entry.type';
 
 const kill = (enemies: number) => (state: CollectionState): boolean => canKillMostThings(state, enemies);
 
-/** The seal takes a hammer while that switch is on — see item-power/ and the core hook behind it. */
+/** The seal takes a hammer while that switch is on, see item-power/ and the core hook behind it. */
 const sealTakesHammer = (state: CollectionState): boolean =>
   itemPowerOf(state.world).hammerTowerSeal && state.has(ITEM.hammer);
 
@@ -27,7 +27,7 @@ const sealTakesHammer = (state: CollectionState): boolean =>
 const bladelessSeed = (state: CollectionState): boolean => isSwordless(state.world);
 
 const CASTLE_TOWER_RULES: readonly RuleEntry[] = [
-  // default_rules 662: the barrier falls to the cape, a beam sword, or the win — and, on the
+  // default_rules 662: the barrier falls to the cape, a beam sword, or the win, and, on the
   // switch the swordless branch arms, to the hammer.
   {
     kind: 'exit', name: 'Agahnims Tower', mode: 'set',

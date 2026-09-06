@@ -4,7 +4,7 @@
  * draws the mentor check's weapon at random from the assembled pool
  * (ItemPool.py 294-318: the first sword tier found, the first bow, each
  * arsenal item, the bomb pack), so the group names the whole candidate set
- * — exactly one of these leaves the pool for that check — instead of a
+ * (exactly one of these leaves the pool for that check) instead of a
  * single stand-in pick, which would advertise a weapon the seed may never
  * grant. Rows follow the reference's own list order (swords, bows, arsenal,
  * bombs), not the pool scan order.

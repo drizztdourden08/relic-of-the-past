@@ -22,7 +22,7 @@ interface TrackerGroupTreeProps {
   run?: RunContext;
 }
 
-/** taken / available / still to find — the same three the summary bar counts. */
+/** taken / available / still to find: the same three the summary bar counts. */
 const GroupCounts = ({ stats }: { stats: GroupNode['stats'] }) => (
   <Box as="span" className="tracker-group__counts" title="taken / available / left">
     <Text className="tracker-group__count--completed">{stats.completed}</Text>

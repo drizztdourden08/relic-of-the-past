@@ -7,10 +7,10 @@
  * The rung boxes are the only tick control here. A family is in the seed
  * because something is ticked and out of it because nothing is, so a
  * whole-family tick would be a second way of saying what the boxes already
- * say — and a card with nothing ticked wears a dashed edge instead, because
+ * say, and a card with nothing ticked wears a dashed edge instead, because
  * "this family is gone" otherwise looks like a card that failed to draw.
  *
- * The order control sits below the boxes rather than above them because it
+ * The order control sits below the boxes instead of above them because it
  * only means anything once something is ticked: with the family emptied out it
  * has no copies to order, so it draws inert.
  *
@@ -27,7 +27,7 @@ import './ProgressiveTierCard.css';
 
 interface ProgressiveTierCardProps {
   card: ProgressiveCardModel;
-  /** A read-only render — every control draws inert. */
+  /** A read-only render: every control draws inert. */
   disabled: boolean;
   onTierChange?: (index: number, checked: boolean) => void;
   onModeChange?: (mode: ProgressiveFamilyMode) => void;

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * The shop-price rows of the option catalog — synthetic, unlocked, group
+ * The shop-price rows of the option catalog: synthetic, unlocked, group
  * 'shops'. One opt-in per currency plus the two ends of the range a roll is
  * drawn from, and the bottle set as an opt-in plus one row per content it
  * may demand. The panel renders each currency as ONE row (a checkbox and a
@@ -13,7 +13,7 @@
  * what the unmodified game charges.
  *
  * The reference's own price percentage rides in the same block but not in the
- * same list — it is a source option, so it keeps its catalog place and only
+ * same list, since it is a source option, so it keeps its catalog place and only
  * its key and bounds are named at the foot of this file.
  */
 import type { ApOptionDef } from '../options.type';
@@ -82,7 +82,7 @@ const SHOP_PRICE_OPTION_KEYS: readonly string[] = SHOP_PRICE_OPTION_SEEDS.map((s
 /**
  * The reference's own percentage on top of the rolled prices. It is NOT one of
  * the seeds above: it is a real source option and keeps its place in the
- * catalog's dataclass order, so only its key and its bounds are named here —
+ * catalog's dataclass order, so only its key and its bounds are named here,
  * beside the rows it scales, because that is what reads it.
  */
 const SHOP_PRICE_MODIFIER_KEY = 'shop_price_modifier';
@@ -91,7 +91,7 @@ const SHOP_PRICE_MODIFIER_MAX = 400;
 /** A hundred per cent: the ranges above, exactly as they were set. */
 const SHOP_PRICE_MODIFIER_DEFAULT = 100;
 
-/** Every key the price block renders — the panel skips all of them in the plain list. */
+/** Every key the price block renders: the panel skips all of them in the plain list. */
 const SHOP_PRICE_BLOCK_KEYS: readonly string[] = [...SHOP_PRICE_OPTION_KEYS, SHOP_PRICE_MODIFIER_KEY];
 
 const isShopPriceOptionKey = (key: string): boolean => SHOP_PRICE_BLOCK_KEYS.includes(key);

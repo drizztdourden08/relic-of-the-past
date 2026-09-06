@@ -5,15 +5,15 @@
  * ladder the profile and the collected upgrades reach. Applied AFTER coverage
  * is closed and AND-composed onto whatever the reference registered, so the
  * source's rule / always-open partition (and its pinned counts) is untouched
- * and a vanilla wallet — 999, above every price — changes nothing. A row
+ * and a vanilla wallet (999, above every price) changes nothing. A row
  * naming a fairy slot absent from this world (its family is vanilla) is
  * skipped; any other unknown name is a porting error.
  *
  * The pond is the one priced surface whose price is not fixed: under a
  * non-legacy mode its plan says what each throw costs, so the plan's own
  * price replaces the table's hundred for every prize slot. That price is the
- * GUARANTEED WORST CASE — the dearest single throw that must be paid to reach
- * this prize — so a gamble is read from its schedule, never from its odds.
+ * GUARANTEED WORST CASE: the dearest single throw that must be paid to reach
+ * this prize, so a gamble is read from its schedule, never from its odds.
  */
 import { CAPACITY_UPGRADE_LOCATIONS } from '../special-locations.data';
 import { POND_LOCATION_SET } from '../pond/pond-locations.data';
@@ -38,7 +38,7 @@ const pondPricesOf = (world: ApWorld): ReadonlyMap<string, number> => {
 
 /**
  * The shelf slots this world opened, each charging its own vanilla price. A
- * restocked slot charges that price AGAIN rather than a multiple of it: what
+ * restocked slot charges that price AGAIN instead of a multiple of it: what
  * these rules express is that the wallet can HOLD the price, and rupees are
  * farmable between purchases, so a slot's third item needs the same wallet
  * rung as its first.
@@ -71,7 +71,7 @@ const registerPriceRules = (world: ApWorld): void => {
     const afford = canAfford(POND_LOCATION_SET.has(name) ? pondPrices.get(name) ?? price : price);
     registry.set(name, (state) => existing(state) && afford(state));
   }
-  // The prize slots the table does not list at all — everything past the
+  // The prize slots the table does not list at all: everything past the
   // reference's two names, which exist only under a non-legacy pond.
   for (const [name, price] of pondPrices) {
     if (PRICED_ENTRIES.some((entry) => entry.name === name)) continue;

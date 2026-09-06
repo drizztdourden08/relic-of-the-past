@@ -14,7 +14,7 @@ interface OracleSphere {
 
 interface OracleSpoiler {
   medallions: { mire: string; turtleRock: string };
-  /** Every line of the Locations section — locked and event slots included. */
+  /** Every line of the Locations section: locked and event slots included. */
   placements: Map<string, string>;
   spheres: OracleSphere[];
 }

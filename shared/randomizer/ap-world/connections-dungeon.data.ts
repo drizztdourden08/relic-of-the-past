@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * Ported from Archipelago worlds/alttp/EntranceShuffle.py —
+ * Ported from Archipelago worlds/alttp/EntranceShuffle.py:
  * default_dungeon_connections (vanilla dungeon entrance/exit wiring).
  */
 import type { ApConnection } from './region.type';

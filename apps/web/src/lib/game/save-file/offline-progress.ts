@@ -4,7 +4,7 @@
  * slot block to the same three readers the live poller feeds the shared
  * sweep, so both paths agree byte-for-byte on what "done" means. The live
  * folding of the currently loaded room and the live-WRAM sleep byte have no
- * offline counterpart — a save on disk has no loaded room, and the sleep
+ * offline counterpart, because a save on disk has no loaded room, and the sleep
  * check resolves through the progress-indicator fallback instead.
  */
 import { computeCompletedChecks } from '../tracker/completed-checks-core';

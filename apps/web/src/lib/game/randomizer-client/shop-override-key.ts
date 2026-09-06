@@ -2,10 +2,10 @@
 /**
  * The in-core substitution key of a shop-slot location.
  *
- * Shop slots have no check record — the app has never had a physical record
+ * Shop slots have no check record, because the app has never had a physical record
  * for a shelf, because in the unmodified game a shelf is not a check at all,
  * it is a repeatable purchase. So this key is derived from the shop dataset
- * rather than looked up: the shelf's room, the entrance that disambiguates a
+ * instead of looked up: the shelf's room, the entrance that disambiguates a
  * shared room, and the shelf sprite's own subtype, which is unique inside
  * any one shop. Together those name exactly one shelf in the running game.
  *

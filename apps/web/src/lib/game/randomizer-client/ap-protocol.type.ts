@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind types */
 /**
- * Multiworld protocol types — the typed subset of the Archipelago network
+ * Multiworld protocol types: the typed subset of the Archipelago network
  * protocol the online session speaks: JSON arrays of packets over a WebSocket,
  * each packet discriminated on `cmd`. Server commands outside this subset fall
  * through unhandled (see the closed `Unknown` arm).

@@ -2,7 +2,7 @@
 /**
  * What the file assumes about an unlit room. The reference project asks this
  * as one three-way choice (Options.py DarkRoomLogic: lamp / torches / none),
- * which conflates two separate questions — must a room be lit at all, and
+ * which conflates two separate questions: must a room be lit at all, and
  * which items count as a light. This app asks them apart, because only the
  * second one is a matter of taste: a player who accepts feeling their way
  * through the dark wants that said once, not spelled into every item list.

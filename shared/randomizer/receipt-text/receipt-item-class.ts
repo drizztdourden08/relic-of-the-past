@@ -1,14 +1,14 @@
 /* @layer shared-game @kind logic */
 /**
- * Receipt item classification — sorts a community-standard item name into the
+ * Receipt item classification: sorts a community-standard item name into the
  * contextual message class its receipt line is rendered from. Progressive and
  * dungeon-restricted items are recognized from the standard name's own shape;
  * a capacity upgrade is recognized from the name tables (the name carries its
- * family and jump, so no session table is needed here) — a progressive
+ * family and jump, so no session table is needed here), a progressive
  * capacity item before the progressive-equipment prefix, since its name
  * starts the same way but its jump is the plan's, not the name's; junk is
  * everything the reference item table classifies as filler (neither
- * progression nor useful — item-classes.data.ts).
+ * progression nor useful, see item-classes.data.ts).
  */
 
 import { upgradeItemOfName } from '@shared/game/data/capacity-upgrade-item';

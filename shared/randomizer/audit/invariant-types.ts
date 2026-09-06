@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
  * Shared shapes for the mechanical-invariant audit. Each rule module receives
- * the full dataset input and returns findings — never throws.
+ * the full dataset input and returns findings, and never throws.
  */
 import type { CheckRecord, DungeonRecord, ItemRecord, ScreenRecord } from '../../game/data/types';
 

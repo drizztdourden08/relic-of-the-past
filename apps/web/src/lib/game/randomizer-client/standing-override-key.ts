@@ -1,14 +1,14 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Substitution keys for standing in-world items — decides, per check record,
+ * Substitution keys for standing in-world items: decides, per check record,
  * how the in-core standing table (or the plain grant seam) can identify the
  * pickup. Three certified shapes, all from the decomp audit:
- * - the standing prize sprite (the quarter-heart pickup) — keyed by overworld
+ * - the standing prize sprite (the quarter-heart pickup), keyed by overworld
  *   screen outdoors, by room (plus which horizontal half of the room, the same
  *   bit its own obtained flag uses) indoors;
- * - the dash-item dungeon key — keyed by room, in the two audited key rooms;
+ * - the dash-item dungeon key, keyed by room, in the two audited key rooms;
  * - the receive-crossing world grants (the fungus, the book, the dug-up
- *   instrument, the two tablets, the ceremonial sword) — their pickups cross
+ *   instrument, the two tablets, the ceremonial sword), whose pickups cross
  *   the plain receive seam with a vanilla item unique across roomless givers,
  *   so they key by item alone in the npc table.
  */
@@ -69,7 +69,7 @@ const standingOverrideKeyOf = (checkId: CheckId): StandingOverrideTarget | null 
  * Native receive ids of the world items whose pickup crosses the plain
  * Link_ReceiveItem seam (decomp-audited), so an item-alone npc-table entry
  * substitutes them: the fungus, the book, the dug-up instrument, the two
- * tablets (receipt method 3 — the seam still applies), the ceremonial sword.
+ * tablets (receipt method 3, where the seam still applies), the ceremonial sword.
  */
 const RECEIVE_CROSSING_WORLD_IDS: ReadonlySet<number> = new Set([41, 29, 20, 15, 16, 1]);
 

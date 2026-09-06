@@ -34,10 +34,10 @@ interface ComparatorInput {
   checks: readonly CheckRecord[];
   items: readonly ItemRecord[];
   census: RomCensus;
-  /** The native chest table in table order — room ids drive the per-room ordinal join. */
+  /** The native chest table in table order: room ids drive the per-room ordinal join. */
   flatTable: readonly { roomId: number }[];
   apLocations: readonly ApLocation[];
-  /** Datapackage location-name → id map — keydrop coverage is judged against it. */
+  /** Datapackage location-name → id map: keydrop coverage is judged against it. */
   apLocationIds: Record<string, number>;
   /** Builds the reference project's standard name for a dataset check. */
   nameOf: (check: CheckRecord) => string;

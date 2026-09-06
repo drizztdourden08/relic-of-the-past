@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Standing overrides — JS-side arming for the in-core standing-prize
+ * Standing overrides: JS-side arming for the in-core standing-prize
  * substitution table (core/game-hooks/standing_overrides.c), mirroring the
  * drop table's contract in drop-overrides.ts: the write only records, the
  * gate bit is requested alongside it, and it stays open only while the table
@@ -28,7 +28,7 @@ interface StandingOverrideTarget {
 // host-assigned completion id reported when the entry substitutes, or -1 for none.
 const setStandingOverride = (target: StandingOverrideTarget, newItem: number, messageId = -1, fireId = -1): void => {
   const { area, indoors, sprite, half } = target;
-  // The id indexes the 76-entry native grant tables — an out-of-range one would
+  // The id indexes the 76-entry native grant tables, so an out-of-range one would
   // corrupt the receipt, so refuse it here like the other override setters do.
   if (!isGrantableReceiveId(newItem)) {
     log.error(`[Randomizer] Standing override refused: item 0x${newItem.toString(16)} `
@@ -40,7 +40,7 @@ const setStandingOverride = (target: StandingOverrideTarget, newItem: number, me
     log.error('[Randomizer] setStandingOverride called with no active module');
     return;
   }
-  // Arm kFeatures3_StandingOverrides alongside writing the table — the write itself is
+  // Arm kFeatures3_StandingOverrides alongside writing the table. The write itself is
   // ungated (record-only), but the gate must be requested here so it has latched into
   // WRAM (SyncGateWords, next frame) by the time a pickup applies the table.
   setStandingOverridesActive(true);
@@ -55,7 +55,7 @@ const setStandingOverride = (target: StandingOverrideTarget, newItem: number, me
 const clearStandingOverrides = (): void => {
   const mod = getModule();
   if (!mod) return;
-  // Empty the table, then close the gate — same double lock as clearItemOverrides.
+  // Empty the table, then close the gate, same double lock as clearItemOverrides.
   mod.ccall('WasmClearStandingOverrides', null, [], []);
   setStandingOverridesActive(false);
   reassertGateWord3();

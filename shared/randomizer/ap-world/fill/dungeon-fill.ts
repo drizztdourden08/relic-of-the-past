@@ -1,23 +1,23 @@
 /* @layer shared-game @kind logic */
 /**
- * Restrictive prefill of the dungeon-restricted items into the dungeons — the
+ * Restrictive prefill of the dungeon-restricted items into the dungeons: the
  * port of Dungeons.py fill_dungeons_restrictive (197-270): one location list
  * pooled across every dungeon and shuffled, items sorted so big keys place
  * first, then small keys, then maps/compasses (the source's ascending sort
  * popped from the end of the deque), the placement restriction the shuffle
  * modes decide, and an assumed inventory of the entire non-dungeon pool
  * (all_state_base collects the full item pool, 237-252). Locked vanilla drop
- * keys are NOT assumed — the source removes them from the base state
- * (258-267) so they only enter through the placement sweep — which is
+ * keys are NOT assumed, because the source removes them from the base state
+ * (258-267) so they only enter through the placement sweep, which is
  * exactly how the fill world models them (pre-placed, swept when reachable).
  * The source's goal-item removal (253-256) is skipped: no ported access rule
  * reads the goal item, only the completion check does.
  *
  * The restriction follows the source's two name sets (Dungeons.py 199-223):
  * everything reaching this pass is dungeon_local (a family that left the
- * dungeons never arrives here at all — build-item-pool.ts puts it in the
+ * dungeons never arrives here at all, because build-item-pool.ts puts it in the
  * shuffled pool instead), and only the families in dungeon_specific_item_names
- * — the original_dungeon ones — are additionally pinned to the dungeon that
+ * (the original_dungeon ones) are additionally pinned to the dungeon that
  * owns them. The sort's `+5` for a dungeon-specific item is the source's own
  * (231-232): those are the hardest to place, so they go first. It is a
  * constant across every item under the baseline, which leaves the order the

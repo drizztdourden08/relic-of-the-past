@@ -13,7 +13,7 @@ const POND_FIELDS: readonly PondField[] = ['mode', 'start', 'max', 'throws', 'it
 
 const pondKeyOf = (field: PondField): string => `pond_${field}`;
 
-/** The mode row — the one pond row shown among the player's choices. */
+/** The mode row: the one pond row shown among the player's choices. */
 const POND_MODE_KEY = pondKeyOf('mode');
 
 const POND_OPTION_KEYS: readonly string[] = POND_FIELDS.map(pondKeyOf);

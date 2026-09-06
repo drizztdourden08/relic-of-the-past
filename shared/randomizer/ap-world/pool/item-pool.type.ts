@@ -3,7 +3,7 @@
  * The assembled baseline item pool. `pool` is the 153-item shuffled-anywhere
  * multiset (ItemPool.py total_items_to_place); dungeonItems are the
  * dungeon-restricted set that never enters the global pool (keys, big keys,
- * maps, compasses per dungeon — the reference pre-fills these inside their
+ * maps, compasses per dungeon: the reference pre-fills these inside their
  * own dungeon under the baseline shuffle options); prizes fill the ten prize
  * locations; eventItems sit locked on the event locations. startInventory is
  * the reference's precollected list (empty for the baseline).

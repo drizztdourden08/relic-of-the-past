@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * Sprites for the items this app invented, drawn rather than extracted.
+ * Sprites for the items this app invented, drawn instead of extracted.
  *
  * An item the game never had has nothing in the ROM to cut a picture from, so
  * its sprite is one of our own drawings (asset-extraction/item-sprites/art/)

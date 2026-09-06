@@ -1,13 +1,13 @@
 /* @layer shared-game @kind logic */
 /**
  * An amount of rupees as the gems that depict it. Plain greedy over the six
- * denominations, largest first — the fewest gems that add up exactly, and the
+ * denominations, largest first: the fewest gems that add up exactly, and the
  * reading a player does at a glance: 300 is one gold; 427 is one gold, one
  * silver, one red, one blue and two greens.
  *
  * The gems then leave in VOLLEYS. The game decodes one sprite sheet at a time
- * for a group of flying receipts, so gems that need different sheets — or,
- * with coloured rupees on, different recolours of the shared gem sheet —
+ * for a group of flying receipts, so gems that need different sheets (or,
+ * with coloured rupees on, different recolours of the shared gem sheet)
  * cannot be in the air together. Consecutive gems with the same decode key
  * travel together, at most one pond slot-full each, so the same amount always
  * decomposes and always leaves the same way whichever setting is on.
@@ -42,7 +42,7 @@ const rupeeVolleysOf = (amount: number): RupeeDenomination[][] => {
   return volleys;
 };
 
-/** "1 gold, 1 silver, 1 red, 1 blue, 2 green" — the readout the panel and the logs show. */
+/** "1 gold, 1 silver, 1 red, 1 blue, 2 green": the readout the panel and the logs show. */
 const describeRupees = (amount: number): string => {
   const counts = new Map<string, number>();
   for (const gem of decomposeRupees(amount)) counts.set(gem.colour, (counts.get(gem.colour) ?? 0) + 1);

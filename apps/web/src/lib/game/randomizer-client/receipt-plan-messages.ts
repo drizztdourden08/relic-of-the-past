@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Plan receipt texts — renders one contextual receipt line per planned grant
+ * Plan receipt texts: renders one contextual receipt line per planned grant
  * of a physical plan (chest override, scripted-giver override, queue
  * delivery) from the frozen placement and the seed's found/total numbers,
  * and records the baked class-template id each grant falls back to when the
@@ -10,7 +10,7 @@
  * (capacity-rung-lines.ts), a fixed-jump placement one line per (jump,
  * starting rung) (capacity-fixed-lines.ts), so the core can show the climb a
  * pickup actually applied. The pond's own three situations follow last (the
- * price of a toss, a throw that won nothing, an emptied pond —
+ * price of a toss, a throw that won nothing, an emptied pond,
  * pond-lines.ts): one line per distinct price and per distinct refund of its
  * plan, so a toss announces its real amount instead of a native line that
  * names amounts no plan charges.
@@ -39,7 +39,7 @@ interface PlanFixedLine {
   index: number;
 }
 
-/** Where the pond's own lines landed in the pool — the arming looks them up by amount. */
+/** Where the pond's own lines landed in the pool, which the arming looks up by amount. */
 interface PlanPondLines {
   /** throw price → index into |lines|. */
   byPrice: ReadonlyMap<number, number>;
@@ -64,7 +64,7 @@ interface PlanReceiptTexts {
   pondLines: PlanPondLines;
 }
 
-/** The empty pond allocation — a legacy pond speaks with its own native lines. */
+/** The empty pond allocation: a legacy pond speaks with its own native lines. */
 const NO_POND_LINES: PlanPondLines = { byPrice: new Map(), byRefund: new Map(), closed: -1 };
 
 /**

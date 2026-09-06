@@ -13,11 +13,11 @@ import { getEntries, subscribe as subscribeLog } from '../../../../../../lib/log
 import type { LogEntry } from '../../../../../../lib/log-bus';
 
 // The panel windows its own rows, so the feed keeps as much history as the bus
-// itself does — a full plan application logs ~500 entries, and truncating to a
+// itself does, since a full plan application logs ~500 entries, and truncating to a
 // screenful threw away the arm-time detail that is the whole point of reading it.
 const MAX_LOG_ENTRIES = 1000;
 
-// The activity panel shows the randomizer's own channel plus the error channel — a session
+// The activity panel shows the randomizer's own channel plus the error channel, so a session
 // failure that surfaces as a global error (a bad ccall, an unhandled rejection) must be
 // visible on the page that caused it, not only in the Logs widget.
 const isActivityEntry = (entry: LogEntry): boolean =>

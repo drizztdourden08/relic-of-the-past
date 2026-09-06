@@ -4,7 +4,7 @@
  * modes that take a number out of the ticked set, a plain labelled figure in
  * the ones where the ticks alone decide it.
  *
- * Presentational only — which of the two it is arrives already decided
+ * Presentational only: which of the two it is arrives already decided
  * (behavior/shop-count-control.ts), so this file is the two shapes and
  * nothing else.
  */
@@ -16,7 +16,7 @@ import './ShopSlotCount.css';
 
 interface ShopSlotCountProps {
   summary: ShopScopeSummary;
-  /** Vanilla mode or a read-only render — both faces draw inert. */
+  /** Vanilla mode or a read-only render: both faces draw inert. */
   disabled: boolean;
   /** Absent renders the control frozen; only the slider face ever calls it. */
   onChange?: (slotCount: number) => void;

@@ -3,7 +3,7 @@
  * Location metadata ported from Archipelago worlds/alttp/Regions.py:
  * key_drop_data (locations that exist only with key_drop_shuffle, each
  * holding its dungeon key in vanilla), the event locations (address None in
- * location_table — they carry logic events, never pool items), and the
+ * location_table, since they carry logic events, never pool items), and the
  * boss-prize locations (crystal flag True in location_table).
  */
 const KEY_DROP_LOCATIONS: ReadonlyMap<string, string> = new Map([
@@ -44,7 +44,7 @@ const KEY_DROP_LOCATIONS: ReadonlyMap<string, string> = new Map([
 
 /**
  * The two capacity-fairy slots (datapackage ids 4194334/4194335), existing
- * only while their family is not vanilla — each holding the upgrade the
+ * only while their family is not vanilla, each holding the upgrade the
  * fairy sells there in vanilla (the reference models them as the capacity
  * shop's two inventory slots: bomb upgrade left, arrow upgrade right).
  */

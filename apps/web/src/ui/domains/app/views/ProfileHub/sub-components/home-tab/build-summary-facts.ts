@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 /**
  * Assembles the home summary panel's fact rows: the profile row (mode, ROM,
- * dates, window) and — for a randomized profile only — the run row (seed,
+ * dates, window) and, for a randomized profile only, the run row (seed,
  * connection, session status; the per-save-file strips render beside it).
  */
 import { MODE_BADGE_LABELS } from '../../../../compounds/ModeBadge';

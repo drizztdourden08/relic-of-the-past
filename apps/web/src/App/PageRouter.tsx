@@ -90,7 +90,7 @@ const PageRouter = (props: PageRouterProps) => {
           onSelectProfile={(p: Profile) => { profileMgmt.handleSelectProfile(p); nav.setActivePage('profile'); }}
           onCreateProfile={async (opts: CreateProfileOptions) => {
             const result = await profileMgmt.handleCreateProfile(opts);
-            // Only leave the form on success — a failure keeps it open to show the error.
+            // Only leave the form on success. A failure keeps it open to show the error.
             if (result.success) nav.setActivePage('profile');
             return result;
           }}

@@ -5,9 +5,9 @@
  * In Pool column and the seed can never disagree about what a snapshot asks
  * for.
  *
- * A missing tick row reads as its own baseline rather than as off, so a
+ * A missing tick row reads as its own baseline instead of as off, so a
  * snapshot written before a shop was added still opens what that shop's
- * default says — the same tolerance every other row of the catalog gets.
+ * default says, the same tolerance every other row of the catalog gets.
  */
 import { CANONICAL_SLOTS, clampDepth } from './shop-slots';
 import { isShopShuffleMode, normalizeEnabled } from './shop-scope';
@@ -20,7 +20,7 @@ import type { ShopScope, ShopShuffleMode } from './shop-scope.type';
 
 type Values = Readonly<Record<string, ApOptionValue>>;
 
-/** The scope that opens nothing — a placement frozen before shops existed. */
+/** The scope that opens nothing: a placement frozen before shops existed. */
 const NO_SHOP_SCOPE: ShopScope = { mode: 'vanilla', enabled: [], slotCount: 0, depth: 1, seed: '' };
 
 const numberAt = (values: Values, key: string, fallback: number): number =>
@@ -48,7 +48,7 @@ const shopScopeOfValues = (values: Values, seed = ''): ShopScope => ({
   seed,
 });
 
-/** The catalog values a scope stands for — the panel's write direction. */
+/** The catalog values a scope stands for: the panel's write direction. */
 const shopScopeValues = (scope: ShopScope): Readonly<Record<string, ApOptionValue>> => {
   const ticked = new Set(scope.enabled);
   return {
@@ -68,7 +68,7 @@ const defaultShopScope = (): ShopScope => ({
   seed: '',
 });
 
-/** Slot count of the whole canonical list — the ceiling any control may offer. */
+/** Slot count of the whole canonical list: the ceiling any control may offer. */
 const TOTAL_SHOP_SLOTS = CANONICAL_SLOTS.length;
 
 export {

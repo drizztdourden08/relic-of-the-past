@@ -140,7 +140,7 @@ const ProfileManager = (props: ProfileManagerProps) => {
   );
 
   // While the creation form has the randomizer enabled, the option catalog
-  // takes over the whole detail pane — the form keeps the fixed-width list
+  // takes over the whole detail pane, so the form keeps the fixed-width list
   // column and the options get the remaining side with their own scroll.
   const showOptionsPane = creating && formRandomizer.enabled;
 
@@ -149,7 +149,7 @@ const ProfileManager = (props: ProfileManagerProps) => {
       romFile={formRom}
       // The form state IS the choices plus the connection fields, so it is
       // handed over whole: re-listing the option fields here is the second
-      // list that quietly forgets a row the catalog gained.
+      // list that forgets a row the catalog gained.
       value={formRandomizer}
       onChange={(next) => setFormRandomizer({ ...formRandomizer, ...next })}
     />

@@ -2,7 +2,7 @@
 /**
  * Generation with the pond in the shuffle: every mode beatable over many
  * seeds, the prize slots really carrying pool items, the wallet rule really
- * gating them — and, at the legacy default, a world and a placement identical
+ * gating them, and, at the legacy default, a world and a placement identical
  * to the one built before the option existed.
  */
 import { describe, expect, it } from 'vitest';

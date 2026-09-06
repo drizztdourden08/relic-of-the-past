@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Legacy placement adapter — lifts a v1 Placement (dataset check/item ids)
+ * Legacy placement adapter: lifts a v1 Placement (dataset check/item ids)
  * into the ApPlacement shape sessions consume, so profiles generated before
  * the ported pipeline keep playing. The nameView is rebuilt through the
  * certified name join (standardCheckName) and the dataset's item names; the
@@ -25,7 +25,7 @@ const adaptLegacyPlacement = (placement: Placement): ApPlacement => {
   }));
   return {
     seed: placement.seed,
-    // The legacy pipeline had no medallion roll — the entrances stay vanilla.
+    // The legacy pipeline had no medallion roll, so the entrances stay vanilla.
     medallions: { mire: 'Ether', turtleRock: 'Quake' },
     nameView,
     spheres,

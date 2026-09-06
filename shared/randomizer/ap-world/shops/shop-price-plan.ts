@@ -6,13 +6,13 @@
  * A roll is CLAMPED to what the profile can ever pay (shop-price-ceilings):
  * a price above the highest rung a family's ladder reaches could never be
  * afforded, and under full accessibility an unaffordable shelf would make
- * the seed ungeneratable rather than merely hard. Both ends of a range are
- * brought down to the ceiling, the minimum included — a range whose floor
+ * the seed ungeneratable instead of merely hard. Both ends of a range are
+ * brought down to the ceiling, the minimum included, so a range whose floor
  * stands above what the profile can hold rolls the ceiling itself rather
  * than dropping the currency the player ticked.
  *
  * With no currency ticked nothing is rolled and the caller keeps the shelf's
- * own vanilla price, so the baseline snapshot is the unmodified game — and a
+ * own vanilla price, so the baseline snapshot is the unmodified game, and a
  * percentage applied to nothing is still nothing.
  *
  * The reference's price percentage is folded in HERE, into each range, rather
@@ -21,7 +21,7 @@
  * once at the range keeps a single place where a price can be made dearer:
  * the clamp still has the last word, so a percentage turned all the way up
  * piles prices against what the profile can pay instead of past it, and the
- * access rules — which read the rolled price back off the placement — see
+ * access rules (which read the rolled price back off the placement), see
  * the scaled number with nothing to re-derive.
  *
  * Two refusals are made from the snapshot alone, whatever the rows say. A
@@ -29,7 +29,7 @@
  * to the shuffle (potion-price/), and the arrows currency is refused when
  * retro bow has taken arrows out of the world (shop-price-currency-rule).
  * The panel already switches those rows off, so for a snapshot this app
- * wrote neither refusal changes anything — they are here for the one it did
+ * wrote neither refusal changes anything, since they are here for the one it did
  * not write, because a rolled price the file can never pay is unpayable and
  * the row is only a flag.
  */
@@ -62,7 +62,7 @@ const numberAt = (values: Values, key: string, fallback: number): number =>
 
 /**
  * The percentage every counted range is scaled by, read off the snapshot and
- * held inside the source's own bounds — a snapshot this app did not write
+ * held inside the source's own bounds, and a snapshot this app did not write
  * cannot widen them by storing a number outside them.
  */
 const modifierOf = (values: Values): number => {
@@ -70,7 +70,7 @@ const modifierOf = (values: Values): number => {
   return Math.min(SHOP_PRICE_MODIFIER_MAX, Math.max(SHOP_PRICE_MODIFIER_MIN, Math.round(asked)));
 };
 
-/** One end of a range, scaled. Whole currency only — half a rupee is not a price. */
+/** One end of a range, scaled. Whole currency only, since half a rupee is not a price. */
 const scaledBy = (amount: number, modifier: number): number => Math.floor((amount * modifier) / 100);
 
 const settingOf = (
@@ -105,7 +105,7 @@ const shopPricePlanOf = (values: Values): ShopPricePlan => {
   };
 };
 
-/** The currencies this plan may draw from — every ticked one, none dropped for its range. */
+/** The currencies this plan may draw from: every ticked one, none dropped for its range. */
 const drawableOf = (plan: ShopPricePlan): ShopCountedCurrency[] =>
   CURRENCY_ROWS.filter((row) => plan[row.currency].enabled).map((row) => row.currency);
 

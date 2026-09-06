@@ -144,7 +144,7 @@ const capacityProgressiveOf = (values: Values): boolean => values[CAPACITY_PROGR
 const capacityProgressiveFromSnapshot = (snapshot: RandomizerOptionsSnapshot): boolean =>
   capacityProgressiveOf(snapshot.values);
 
-/** The rows a profile writes — the inverse of parseCapacityProfile (unknown fields keep the family default). */
+/** The rows a profile writes: the inverse of parseCapacityProfile (unknown fields keep the family default). */
 const capacityValuesOf = (profile: CapacityProfile): Record<string, ApOptionValue> => {
   const values: Record<string, ApOptionValue> = {};
   for (const capacityFamily of FAMILIES) {

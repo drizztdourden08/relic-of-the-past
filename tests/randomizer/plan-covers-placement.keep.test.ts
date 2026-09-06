@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 /**
  * No-silent-drop guard: every location a generated placement names must show
- * up in the physical plan — as an entry (a class the session acts on or
+ * up in the physical plan, as an entry (a class the session acts on or
  * reports) or as an explicit error. Only the event slots may be absent; they
  * are logic constructs with no spot in the game. A location that is neither
  * planned nor reported is exactly the failure that let the shuffled dungeon

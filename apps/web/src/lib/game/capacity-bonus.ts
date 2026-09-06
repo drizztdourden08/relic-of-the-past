@@ -1,12 +1,12 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Capacity pickup bonus — JS-side arming of the per-family bonus table the
+ * Capacity pickup bonus: JS-side arming of the per-family bonus table the
  * core's upgrade resolvers read (core/game-hooks/upgrade_bonus.c) and of gate
  * word 5 (features.h kFeatures5_CapacityBonus), the word that says a borrowed
- * receipt pays the profile's bonus rather than its native goods. Same shape as
+ * receipt pays the profile's bonus, not its native goods. Same shape as
  * the item-power word: nothing else in the app writes word 5, so a session
  * owns it outright and writes the whole word; the table writes are record-only,
- * and clearing both is a complete disarm — every payout seam is back on its
+ * and clearing both is a complete disarm, so every payout seam is back on its
  * vendored expression, byte for byte.
  */
 
@@ -16,7 +16,7 @@ import { CAPACITY_FAMILY_INDEX } from './capacity-profile.constants';
 import { getModule } from './wasm-bridge';
 import type { CapacityBonusSetting } from '@shared/randomizer/ap-world/capacity';
 
-/** features.h kFeatures5_CapacityBonus — keep in lockstep with that enum. */
+/** features.h kFeatures5_CapacityBonus: keep in lockstep with that enum. */
 const CAPACITY_BONUS_BIT = 1;
 const GATE_WORD = 5;
 
@@ -24,7 +24,7 @@ const writeGateWord = (word: number): void => {
   const mod = getModule();
   if (!mod) return;
   // Guarded like every other gate-word write: a core built before this word
-  // carried bits simply has no export to call.
+  // carried bits has no export to call.
   try {
     mod.ccall('WasmSetGateWord', null, ['number', 'number'], [GATE_WORD, word]);
   } catch {

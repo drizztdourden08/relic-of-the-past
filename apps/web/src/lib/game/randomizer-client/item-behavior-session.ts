@@ -12,7 +12,7 @@
  * rod actually light the room, and skipping the arm would leave the seed's own
  * rules describing a game that is not being played.
  *
- * The item-power pair the tier ticks decide is derived HERE rather than read
+ * The item-power pair the tier ticks decide is derived HERE instead of read
  * from the stats, by the same function the logic uses (item-power-rule.ts). A
  * seed with no beam blade in it needs the hammer to wake the tablets, and one
  * with no blade at all needs the medallion doors to take none; freezing that
@@ -20,8 +20,8 @@
  * disagree the day the derivation changes, so the derivation runs on both
  * sides instead.
  *
- * A placement with neither field — every seed rolled before these rows existed
- * — arms nothing at all: the full ladder and the unmodified game, which is what
+ * A placement with neither field (every seed rolled before these rows existed)
+ * arms nothing at all: the full ladder and the unmodified game, which is what
  * it was generated against.
  */
 
@@ -55,9 +55,9 @@ import type {
 
 interface ItemBehaviorPlan {
   tiers: ProgressiveSetting;
-  /** How each family's copies arrive — in order, or the rungs themselves. */
+  /** How each family's copies arrive: in order, or the rungs themselves. */
   modes: ProgressiveModeSetting;
-  /** The setting after the tier-derived fallbacks — what the core is armed with. */
+  /** The setting after the tier-derived fallbacks: what the core is armed with. */
   itemPower: ItemPowerSetting;
   /** Which items the seed counted as a light, and so which the core must light with. */
   darkRooms: DarkRoomSetting;

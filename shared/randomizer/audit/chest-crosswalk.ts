@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
  * Crosswalk between the reference project's location addresses and the
- * native chest table (linear offset 0xe96e, 168 entries, 3 bytes each —
+ * native chest table (linear offset 0xe96e, 168 entries, 3 bytes each,
  * same table the S1 census reads).
  *
  * Empirically validated against the live-verified anchors in

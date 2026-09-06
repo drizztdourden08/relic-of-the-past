@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * The two retro shot-cost rows of the option catalog — synthetic, unlocked,
+ * The two retro shot-cost rows of the option catalog: synthetic, unlocked,
  * group 'items', so they sit under the retro switch they qualify. The switch
  * itself is the reference's own `retro_bow` row and stays where the dataclass
  * puts it (options.data.ts); only the two costs are this app's own question,
@@ -39,7 +39,7 @@ const RETRO_OPTION_SEEDS: readonly Seed[] = [
   costSeed(RETRO_SILVER_COST_KEY, 'A silver shot costs', RETRO_SILVER_ARROW_COST),
 ];
 
-/** Every key these rows own — the panel renders them inside the retro block. */
+/** Every key these rows own: the panel renders them inside the retro block. */
 const RETRO_OPTION_KEYS: readonly string[] = RETRO_OPTION_SEEDS.map((seed) => seed.key);
 
 const isRetroOptionKey = (key: string): boolean => RETRO_OPTION_KEYS.includes(key);

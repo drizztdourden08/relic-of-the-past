@@ -3,7 +3,7 @@
  * Which pond prize slots exist as locations. In the legacy mode nothing
  * changes: the pond's two slots are the capacity families' own spots and
  * capacity-spots.ts decides, exactly as before. In the other three modes the
- * pond's plan decides — one location per prize it carries — and the whole set
+ * pond's plan decides (one location per prize it carries), and the whole set
  * needs the pond's physical seam proven deliverable first, because a prize
  * slot past the reference's two has no vanilla item to fall back to and so
  * cannot be locked the way a fairy slot is.
@@ -16,7 +16,7 @@ import type { PondSetting } from './pond-profile.type';
 
 const POND_EXTRA_SET: ReadonlySet<string> = new Set(POND_EXTRA_LOCATIONS);
 
-/** The reference's own two names — what the capability probe can actually certify. */
+/** The reference's own two names: what the capability probe can actually certify. */
 const POND_CERTIFIED_SPOTS: readonly string[] = POND_PRIZE_LOCATIONS.slice(0, 2);
 
 /** True when the probe proved the pond's substitution seam on both reference slots. */
@@ -36,7 +36,7 @@ const presentPondLocations = (
   return [...pondPlanOf(setting, seed).locations];
 };
 
-/** A prize slot the reference does not name — present only under a non-legacy pond. */
+/** A prize slot the reference does not name, present only under a non-legacy pond. */
 const isPondExtraLocation = (name: string): boolean => POND_EXTRA_SET.has(name);
 
 export { POND_CERTIFIED_SPOTS, isPondDeliverable, isPondExtraLocation, presentPondLocations };

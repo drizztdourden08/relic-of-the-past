@@ -4,8 +4,8 @@
  * says exactly what the C header says.
  *
  * The C header (core/game-hooks/save_bytes.h) is the source of truth and carries
- * its own _Static_asserts, but those only fire when the core is rebuilt — and they
- * cannot see the TS side at all. This test PARSES the header rather than generating
+ * its own _Static_asserts, but those only fire when the core is rebuilt, and they
+ * cannot see the TS side at all. This test PARSES the header instead of generating
  * the TS from it: the header is a flat list of `#define NAME 0xHEX` lines, so the
  * parse is unambiguous, and nothing has to stay regenerated. A generated file would
  * only move the drift one step, from "two hand-written tables" to "a table and a

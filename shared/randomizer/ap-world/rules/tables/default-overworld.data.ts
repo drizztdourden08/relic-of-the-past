@@ -2,7 +2,7 @@
 /**
  * Overworld rows of Archipelago worlds/alttp/Rules.py default_rules
  * (lines 623-734, non-inverted) merged with the no_glitches_rules overworld
- * rows (lines 910-919) that set_rule the same names afterwards — only the
+ * rows (lines 910-919) that set_rule the same names afterwards, so only the
  * surviving final rule is kept, both line numbers cited. Dungeon-entrance
  * rows live in the per-dungeon tables; the goal/pyramid rows in the
  * completion table.

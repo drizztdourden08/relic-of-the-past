@@ -104,7 +104,7 @@ const installGlobalHandlers = (): void => {
 
 installGlobalHandlers();
 
-// Expose getEntries + subscribe for Playwright / devtools access — the ring
+// Expose getEntries + subscribe for Playwright / devtools access. The ring
 // keeps only the last 200 entries, so a burst-safe capture needs a listener.
 (window as any).__logEntries = getEntries;
 (window as any).__logSubscribe = subscribe;

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * Full option catalog transcribed from Archipelago worlds/alttp/Options.py —
+ * Full option catalog transcribed from Archipelago worlds/alttp/Options.py,
  * every option of the reference project's ALTTPOptions dataclass that is a
  * question about the SEED, in dataclass order, with the source default
  * (apDefault), the value this app hard-sets
@@ -13,7 +13,7 @@
  * already owns per profile, and a seed option screen is not where a player
  * should look for them. Absent for a second reason: the rows this app now asks
  * under a control of its own. A question offered twice is a duplicate, so the
- * source's bundled spelling of it is deleted rather than kept as a signpost:
+ * source's bundled spelling of it is deleted instead of kept as a signpost:
  * the guard test lists them and proves each really is in the dataclass and
  * really is out of the catalog. Two rows are gone for a plainer reason: the
  * per-family order controls answer the tier-order question, and this app has
@@ -148,8 +148,8 @@ const seeds: readonly Seed[] = [
     // the ten reward slots (Rules.py 204-211 restricts those slots to reward items), with
     // no switch. This app needs the switch, because a placement generated before the core
     // could substitute a boss reward must keep playing as it was generated. The
-    // reference's own `shuffle_prizes` is a different feature entirely — the enemy,
-    // tree-pull and bonk DROP packs — and stays locked below.
+    // reference's own `shuffle_prizes` is a different feature entirely: the enemy,
+    // tree-pull and bonk DROP packs, and stays locked below.
     key: 'dungeon_prize_shuffle',
     displayName: 'Shuffle Dungeon Prizes',
     group: 'dungeon-items',
@@ -187,7 +187,7 @@ const seeds: readonly Seed[] = [
   ), 'no_glitches'),
   // The source asks the dark-room requirement as one three-way choice; this app
   // asks the two questions inside it apart, as rows the player owns
-  // (dark-rooms/), so the source's own row is gone rather than duplicated.
+  // (dark-rooms/), so the source's own row is gone instead of duplicated.
   ...DARK_ROOM_OPTION_SEEDS,
   lockedChoice('open_pyramid', 'Open Pyramid Hole', 'world', 'vanilla-fixed',
     choices(['closed', 0], ['open', 1], ['goal', 2], ['auto', 3]), 'goal'),
@@ -221,21 +221,21 @@ const seeds: readonly Seed[] = [
   lockedToggle('restrict_dungeon_item_on_boss', 'Prevent Dungeon Item on Boss', 'dungeon-items', 'vanilla-fixed'),
   // The source bundles two unrelated questions into one four-step pool choice:
   // its generous step DUPLICATES a family's copies while its mean steps lower
-  // the ceiling. Both are asked apart here — the copies as a multiple per
+  // the ceiling. Both are asked apart here: the copies as a multiple per
   // family and the hearts as their own ceiling (difficulty/), with which rungs
-  // exist already answered by the tier ticks — so the bundled row is gone
-  // rather than duplicated.
+  // exist already answered by the tier ticks, so the bundled row is gone
+  // instead of duplicated.
   ...DIFFICULTY_OPTION_SEEDS,
   // The source bundles several unrelated switches into one four-step choice;
   // this app asks them apart, as rows the player owns (item-power/), so the
-  // source's own bundled row is gone rather than duplicated.
+  // source's own bundled row is gone instead of duplicated.
   ...ITEM_POWER_OPTION_SEEDS,
   lockedChoice('enemy_health', 'Enemy Health', 'enemies', 'not-implemented', ENEMY_TIER, 'default'),
   lockedChoice('enemy_damage', 'Enemy Damage', 'enemies', 'not-implemented',
     choices(['default', 0], ['shuffled', 2], ['chaos', 3]), 'default'),
   // The source asks the blade family as one toggle; this app asks it per rung
   // (progressive/), and unticking every blade rung IS that setting, so the
-  // source's own row is gone rather than duplicated.
+  // source's own row is gone instead of duplicated.
   ...PROGRESSIVE_OPTION_SEEDS,
   // The reference asks the whole seed one question about tier order; this app
   // asks it per family (progressive/progressive-mode-options.data.ts), which
@@ -273,7 +273,7 @@ const seeds: readonly Seed[] = [
   // stops at 30 because it counts ten shelf shops of three; this app also
   // offers the potion seller's three cauldrons and the bomb counter's one
   // purchase, so the ceiling here is the whole canonical list. The control
-  // itself never offers more than the player has ticked — the panel takes its
+  // itself never offers more than the player has ticked, since the panel takes its
   // maximum from the ticked set (shops/shop-scope.ts), never from this number.
   {
     key: 'shop_item_slots',
@@ -291,7 +291,7 @@ const seeds: readonly Seed[] = [
   ...SHOP_PRICE_OPTION_SEEDS,
   // Live now: the percentage every rolled price is scaled by before it is
   // clamped to what the profile can ever pay (shops/shop-price-plan.ts). The
-  // reference's own range and its own reading — a hundred changes nothing.
+  // reference's own range and its own reading, where a hundred changes nothing.
   unlocked(lockedRange('shop_price_modifier', 'Shop Price Modifier', 'shops', 'active',
     SHOP_PRICE_MODIFIER_MIN, SHOP_PRICE_MODIFIER_MAX, SHOP_PRICE_MODIFIER_DEFAULT)),
   // The reference's single capacity toggle is gone: this app makes the same
@@ -319,7 +319,7 @@ const seeds: readonly Seed[] = [
   lockedRange('red_clock_time', 'Red Clock Time', 'timers', 'not-implemented', -60, 60, -2, 0),
   lockedRange('blue_clock_time', 'Blue Clock Time', 'timers', 'not-implemented', -60, 60, 2, 0),
   lockedRange('green_clock_time', 'Green Clock Time', 'timers', 'not-implemented', -60, 60, 4, 0),
-  // The two rows that describe a session shared with other players rather than
+  // The two rows that describe a session shared with other players instead of
   // the seed's own shape. They ride along on the world tab, which opens the
   // panel, because neither belongs to a subject the other tabs own.
   lockedToggle('death_link', 'Death Link', 'session', 'not-implemented'),

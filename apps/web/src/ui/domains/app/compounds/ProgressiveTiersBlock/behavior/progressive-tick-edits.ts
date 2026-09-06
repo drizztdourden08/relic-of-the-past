@@ -2,7 +2,7 @@
 /**
  * One rung ticked or unticked, and one family's order question answered, each
  * as a whole new setting. Written as pure edits so the block stays
- * presentational and the panel above it owns the values — the same contract
+ * presentational and the panel above it owns the values, the same contract
  * the shop scope's edits follow.
  */
 import type {

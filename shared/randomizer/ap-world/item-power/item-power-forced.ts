@@ -1,19 +1,19 @@
 /* @layer shared-game @kind logic */
 /**
  * Which item-power rows the blade ticks have taken out of the player's hands,
- * and the one sentence that says why — the reading a panel shows, off exactly the
+ * and the one sentence that says why: the reading a panel shows, off exactly the
  * same condition the generator and the core arm from (item-power-rule.ts).
  *
  * The rule is already a MASK: five switches read as on the moment the blade
  * family can no longer meet the requirement they stand for, and the player's
  * own answer is kept untouched underneath so ticking a rung back on gives it
  * straight back. This file only names the masked rows so the panel can stop
- * showing a switch that says off while the seed is built with it on — a
+ * showing a switch that says off while the seed is built with it on, which is a
  * control that lies about the seed is worse than no control at all.
  *
- * Two conditions, because they are genuinely different: no blade AT ALL, and
- * no blade that throws a BEAM. The second is the wider one — the first rung
- * scores nothing against the seal or the last fight — so a file stuck on rung
+ * Two conditions, because they are different: no blade AT ALL, and
+ * no blade that throws a BEAM. The second is the wider one, since the first rung
+ * scores nothing against the seal or the last fight, so a file stuck on rung
  * one is walled off by three of the five while the other two still answer to
  * the player.
  */

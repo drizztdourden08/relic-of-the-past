@@ -1,8 +1,8 @@
 /* @layer shared-game @kind data */
 /**
- * The 22 capacity rows of the option catalog — synthetic, unlocked, group
+ * The 22 capacity rows of the option catalog: synthetic, unlocked, group
  * 'items': one generator per family (mode · start · max · count · curve ·
- * jumps; the meter has no curve rows) — behind the master switch that turns
+ * jumps; the meter has no curve rows), behind the master switch that turns
  * the whole feature off, plus the one progressive switch
  * over every Custom family (on for a new profile). The four *_mode rows
  * are what the creation panel renders; the value rows sit behind them. Baselines are the

@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
  * One titled section of an options panel. The title is the section's only
- * chrome: gold for every group, brighter for a live one — a section whose
+ * chrome: gold for every group, brighter for a live one, so a section whose
  * rows the player can still change. Given `onToggle`, the group folds: the
  * title becomes a button with a chevron and the row count, and the rows
  * render only while open.

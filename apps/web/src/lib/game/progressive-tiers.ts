@@ -1,13 +1,13 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Progressive tier masks — JS-side arming of which rungs of each tiered family
+ * Progressive tier masks: JS-side arming of which rungs of each tiered family
  * exist in this seed (core/game-hooks/progressive_grants.c). One bit per rung,
  * bit 0 the first; a pickup climbs to the lowest rung still present at or above
  * the tier already held, so an unticked middle rung shortens the ladder rather
  * than leaving a hole in it. Record-only writes, the same contract as the
  * capacity plan; the read side sits inside the gated grant seams.
  *
- * The family ORDER is the core's, not the catalog's — the core numbers armour
+ * The family ORDER is the core's, not the catalog's. The core numbers armour
  * after the gloves and this map is the one place that difference is written
  * down. Clearing disarms every family, which gives each one its whole ladder
  * back: that is what a session which never speaks gets, and it is byte for byte
@@ -30,7 +30,7 @@ const CORE_FAMILY_INDEX: Readonly<Record<ProgressiveFamilyId, number>> = {
 const maskOf = (ticks: readonly boolean[]): number =>
   ticks.reduce((mask, ticked, index) => (ticked ? mask | (1 << index) : mask), 0);
 
-/** True while every family still carries every rung, in order — nothing to arm. */
+/** True while every family still carries every rung, in order, with nothing to arm. */
 const isFullLadder = (
   setting: ProgressiveSetting, modes: ProgressiveModeSetting = DEFAULT_PROGRESSIVE_MODES,
 ): boolean =>

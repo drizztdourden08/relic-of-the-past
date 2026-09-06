@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * The seven item-power rows of the option catalog — synthetic, unlocked, group
+ * The seven item-power rows of the option catalog: synthetic, unlocked, group
  * 'items'. They replace the reference's single four-step Item Functionality
  * choice, which stays in the catalog, locked, as the transcription of its
  * dataclass. Every baseline is the normal step, so a fresh profile plays the

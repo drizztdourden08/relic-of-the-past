@@ -8,12 +8,12 @@
  *    (a first run, or a launch whose pinned profile was not found) and before a
  *    ROM has been picked in the form. Nothing else activates a set in that
  *    state, so the shared base kept its built-in default and the availability
- *    flag stayed false — every row a placeholder. spriteRomOf is the answer:
+ *    flag stayed false, so every row a placeholder. spriteRomOf is the answer:
  *    a ready ROM stands in until a real one is known.
  *
  * 2. WHICH FILE a row asks for. Every sprite an item record names has to be one
  *    the current extraction actually writes, or the row resolves to a URL that
- *    404s over app-sprite:// and falls back to the same placeholder — a failure
+ *    404s over app-sprite:// and falls back to the same placeholder, a failure
  *    that looks identical to hop 1 on screen. The capacity families' stamped
  *    upgrade art goes through a different function and is checked beside them.
  */

@@ -1,8 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Capacity profile — JS-side arming for the in-core capacity profile
- * (core/game-hooks/capacity_profile.c: starting rungs for a new file — rung 0 is
- * the empty tier below the native grid — the rung a family may reach, the wallet
+ * Capacity profile: JS-side arming for the in-core capacity profile
+ * (core/game-hooks/capacity_profile.c: starting rungs for a new file, where rung 0 is
+ * the empty tier below the native grid, the rung a family may reach, the wallet
  * ladder cap) and the wallet jump table
  * (wallet_grants.c: slot -> ladder rungs). Same contract as the override bridges:
  * every write only records, the gate bit is requested alongside it, and it stays
@@ -84,7 +84,7 @@ const setWalletJumpTable = (rungsBySlot: readonly number[]): void => {
 const clearCapacityProfile = (): void => {
   const mod = getModule();
   if (!mod) return;
-  // Empty the profile and the table, then close the gate — the same double lock as
+  // Empty the profile and the table, then close the gate, the same double lock as
   // the override tables.
   mod.ccall('WasmClearCapacityProfile', null, [], []);
   mod.ccall('WasmClearWalletJumpTable', null, [], []);

@@ -18,11 +18,11 @@ interface CurvePreset {
 }
 
 const CURVE_PRESETS: readonly CurvePreset[] = [
-  // One tier per item — the reference ladder, exact. Hidden on the wallet (no reference ladder).
+  // One tier per item: the reference ladder, exact. Hidden on the wallet (no reference ladder).
   { id: 'reference', label: 'Reference', curve: 'equal', countFor: (span) => span },
   { id: 'quick-start', label: 'Quick start', curve: 'front', countFor: (span) => Math.min(span, 4) },
   { id: 'slow-burn', label: 'Slow burn', curve: 'ramp', countFor: (span) => Math.min(span, 5) },
-  // 1 2 4 … fits exactly when span = 2^k − 1.
+  // 1 2 4 ... fits exactly when span = 2^k − 1.
   {
     id: 'halves',
     label: 'Halves',

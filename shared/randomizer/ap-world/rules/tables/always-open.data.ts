@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * Names the reference generator leaves without any access rule — the
+ * Names the reference generator leaves without any access rule: the
  * explicit always-open lists. Everything the graph evaluates must appear
  * either in a rule table or here; the registration pass registers anything
  * else as blocked and reports it, so a forgotten rule can never silently
@@ -222,7 +222,7 @@ const ALWAYS_OPEN_LOCATIONS: readonly string[] = [
   'Bottle Merchant',
   'Bumper Cave Ledge',
   'Capacity Upgrade Left',
-  // The pond's own prize slots (pond/pond-locations.data.ts) — reachable
+  // The pond's own prize slots (pond/pond-locations.data.ts), reachable
   // exactly when the pond is, so the wallet overlay is their only gate.
   ...POND_EXTRA_LOCATIONS,
   'Capacity Upgrade Right',

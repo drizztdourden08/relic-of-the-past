@@ -9,14 +9,14 @@
  * beyond this component) draws inert. Then the cards, split into the two
  * halves of the map and one per shop, because the ticks are what every mode
  * draws from; then the count, whose MAXIMUM is the size of the ticked set
- * rather than a number typed here, so the control can never offer a slot that
+ * instead of a number typed here, so the control can never offer a slot that
  * does not exist; then the depth and what the two of them cost the seed.
  *
  * The count control and the total sentence read the SAME number off the
  * summary (the slots this scope really opens), so they can never disagree,
  * and a mode that ignores the stored count (custom opens exactly what is
  * ticked) still shows the count it is really running. That mode gets a
- * read-out rather than a slider, because a track whose value is its own
+ * read-out instead of a slider, because a track whose value is its own
  * maximum can only ever draw full (sub-components/ShopSlotCount).
  *
  * Shared by the creation panel and the frozen Run tab; no handler renders the

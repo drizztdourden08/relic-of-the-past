@@ -26,12 +26,12 @@ interface ApPlacementStats {
   includeNpcChecks: boolean;
   /**
    * Whether the standing world items were shuffleable. Absent on placements
-   * persisted before the scope split — those followed includeNpcChecks.
+   * persisted before the scope split, which followed includeNpcChecks.
    */
   includeWorldItems?: boolean;
   /**
    * Whether the ten dungeon prizes were shuffled over the ten prize slots.
-   * Absent on placements persisted before the option existed — those hold
+   * Absent on placements persisted before the option existed, which hold
    * each dungeon's vanilla prize and must keep being played that way.
    */
   shufflePrizes?: boolean;
@@ -55,19 +55,19 @@ interface ApPlacementStats {
   capacityDeliverableCount?: number;
   /**
    * The capacity profile this seed was generated with. Absent on placements
-   * persisted before the profile existed — those follow capacityShuffle
+   * persisted before the profile existed, which follow capacityShuffle
    * (placement-capacity.ts).
    */
   capacity?: CapacityProfile;
   /**
    * Whether the Custom families' items were progressive (one name per family,
    * pickups climb the plan in order). Absent on placements persisted before
-   * the switch existed — those hold fixed-jump items (false).
+   * the switch existed, which hold fixed-jump items (false).
    */
   capacityProgressive?: boolean;
   /**
    * What a capacity pickup handed over beside its ceiling, per family. Absent
-   * on placements persisted before the rows existed — those read as the
+   * on placements persisted before the rows existed, which read as the
    * baselines, which reproduce the goods a pickup gave then.
    */
   capacityBonus?: CapacityBonusSetting;
@@ -75,13 +75,13 @@ interface ApPlacementStats {
   capacityCounts?: CapacityPoolCounts;
   /**
    * The shelf scope this seed was generated with. Absent on placements
-   * persisted before shops existed — those opened no slot, so the bridge
+   * persisted before shops existed, which opened no slot, so the bridge
    * reads an absent value as a scope of zero and every shop stays vanilla.
    */
   shops?: ShopScope;
   /**
    * What the rupee pond sold for this seed. Absent on placements persisted
-   * before the option existed — those keep the legacy pond, whose two slots
+   * before the option existed, which keep the legacy pond, whose two slots
    * answer to the capacity families alone. The throw schedule is not stored:
    * it is re-derived from this setting and the placement's own seed, so a
    * spoiler, the logic and the running game always read the same one.
@@ -89,32 +89,32 @@ interface ApPlacementStats {
   pond?: PondSetting;
   /**
    * Which tiers of each progressive family this seed was rolled with. Absent on
-   * placements persisted before the rows existed — those carry every tier, so
+   * placements persisted before the rows existed, which carry every tier, so
    * the session arms the full ladder and the placement keeps its meaning.
    */
   progressiveTiers?: ProgressiveSetting;
   /**
    * How each family's copies arrived: nameless steps up the ladder, or the
    * rungs themselves in any order. Absent on placements persisted before the
-   * rows existed — those are in order, which is what the session arms.
+   * rows existed, which are in order, and that is what the session arms.
    */
   progressiveModes?: ProgressiveModeSetting;
   /**
-   * Whether the bow was fed rupees rather than arrows, and what a shot cost.
-   * Absent on placements persisted before the option existed — those found
+   * Whether the bow was fed rupees, not arrows, and what a shot cost.
+   * Absent on placements persisted before the option existed, which found
    * arrows in the world and must keep being played that way.
    */
   retroBow?: RetroBowSetting;
   /**
    * How helpful the items were for this seed, AS ASKED FOR: the two derived
-   * fallbacks are recomputed from the tier ticks at arming time rather than
+   * fallbacks are recomputed from the tier ticks at arming time instead of
    * frozen, so a stored placement and a live one always agree. Absent means the
-   * reference's normal step — the unmodified game.
+   * reference's normal step, the unmodified game.
    */
   itemPower?: ItemPowerSetting;
   /**
    * Which items this seed counted as a light in an unlit room. Absent on
-   * placements persisted before the rows existed — those were rolled with the
+   * placements persisted before the rows existed, which were rolled with the
    * lamp as the only light, which is what the unmodified game does anyway, so
    * an absent value arms nothing and the seed keeps its meaning.
    */
@@ -123,13 +123,13 @@ interface ApPlacementStats {
   pondPrizeCount?: number;
   /**
    * Where each dungeon-item family was allowed to end up. Absent on placements
-   * persisted before the rows were read — those were rolled with every family
+   * persisted before the rows were read, which were rolled with every family
    * pinned to its own dungeon.
    */
   dungeonItems?: DungeonItemSetting;
   /**
    * The accessibility contract this seed was verified against. Absent on
-   * placements persisted before the row was read — those were all verified at
+   * placements persisted before the row was read, which were all verified at
    * `full`.
    */
   accessibility?: AccessibilityMode;
@@ -148,7 +148,7 @@ interface ApPlacement {
   /**
    * Shelf location → the price it charges, rolled once from this seed. Absent
    * on placements from before shop prices existed, and empty whenever no
-   * currency was ticked — both mean every shelf charges its vanilla rupees.
+   * currency was ticked: both mean every shelf charges its vanilla rupees.
    */
   shopPrices?: ShopPriceView;
   spheres: PlacementSphere[];

@@ -22,7 +22,7 @@ const PROGRESSIVE_MODE_LABELS: Readonly<Record<ProgressiveFamilyMode, string>> =
   random: 'Any order',
 };
 
-/** The reference reading for every family — what an absent row means. */
+/** The reference reading for every family: what an absent row means. */
 const DEFAULT_PROGRESSIVE_MODES: ProgressiveModeSetting = Object.fromEntries(
   PROGRESSIVE_FAMILIES.map((family) => [family.id, 'progressive' as ProgressiveFamilyMode]),
 ) as unknown as ProgressiveModeSetting;

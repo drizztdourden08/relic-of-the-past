@@ -12,8 +12,8 @@
  *
  * The tier ladder a pickup climbs is the world's, not a constant: a seed whose
  * tier ticks left a rung out hands over the next rung that is still there
- * (progressive/progressive-reach.ts). Every rung ticked — the default, and what
- * a world built before the rows existed reads as — gives the reference map back
+ * (progressive/progressive-reach.ts). Every rung ticked, which is the default, and what
+ * a world built before the rows existed reads as, gives the reference map back
  * unchanged.
  */
 import { updateReachableRegions } from './graph';

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * Item-pool composition rows for the baseline seed — ported from
+ * Item-pool composition rows for the baseline seed, ported from
  * Archipelago worlds/alttp/ItemPool.py, normal difficulty only
  * (difficulties['normal'], lines 99-130) with the fixed baseline choices:
  * mode standard, goal ganon, no timer, retro off, swordless off, progressive ON
@@ -19,10 +19,10 @@ const ALWAYS_ITEMS: readonly string[] = [
   'Cane of Byrna', 'Blue Boomerang', 'Red Boomerang',
 ];
 
-/** ItemPool.py 29 — progressive on. */
+/** ItemPool.py 29: progressive on. */
 const GLOVE_ITEMS: readonly string[] = ['Progressive Glove', 'Progressive Glove'];
 
-/** ItemPool.py 31 — entrance shuffle is not insanity_legacy, so both pool. */
+/** ItemPool.py 31: entrance shuffle is not insanity_legacy, so both pool. */
 const LEGACY_INSANITY_ITEMS: readonly string[] = ['Magic Mirror', 'Moon Pearl'];
 
 /** ItemPool.py 46-47 (normalbaseitems). */
@@ -41,16 +41,16 @@ const BASE_ITEMS: readonly string[] = [
  */
 const BOTTLE_COUNT = 4;
 
-/** ItemPool.py 104, 107, 109, 113 — progressive on rows. */
+/** ItemPool.py 104, 107, 109, 113: progressive on rows. */
 const SHIELD_ITEMS: readonly string[] = Array<string>(3).fill('Progressive Shield');
 const ARMOR_ITEMS: readonly string[] = Array<string>(2).fill('Progressive Mail');
 const MAGIC_ITEMS: readonly string[] = ['Magic Upgrade (1/2)', 'Rupees (300)'];
 const BOW_ITEMS: readonly string[] = Array<string>(2).fill('Progressive Bow');
 
-/** ItemPool.py 111 — progressive on, swordless off. */
+/** ItemPool.py 111: progressive on, swordless off. */
 const SWORD_ITEMS: readonly string[] = Array<string>(4).fill('Progressive Sword');
 
-/** ItemPool.py 48-52 — the five normal-difficulty extras blocks, in order. */
+/** ItemPool.py 48-52: the five normal-difficulty extras blocks, in order. */
 const EXTRA_ITEMS: readonly string[] = [
   // normalfirst15extra
   'Rupees (100)', 'Rupees (300)', 'Rupees (50)',
@@ -74,7 +74,7 @@ const EXTRA_ITEMS: readonly string[] = [
   ...Array<string>(2).fill('Rupees (5)'),
 ];
 
-/** ItemPool.py 64 — the fixed non-dungeon pool size. */
+/** ItemPool.py 64: the fixed non-dungeon pool size. */
 const TOTAL_ITEMS_TO_PLACE = 153;
 
 export {

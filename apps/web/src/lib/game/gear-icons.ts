@@ -2,7 +2,7 @@
 /**
  * The in-game gear pictures: the 1024 B binary the sprite extraction emits beside the
  * PNGs (gear-icons.4bpp, one 4bpp picture per affected receipt id), handed to the core
- * when a randomizer session arms — written to MEMFS and applied with
+ * when a randomizer session arms, written to MEMFS and applied with
  * WasmApplyGearIconsFile, the upgrade-icons pattern. The core draws those tiles for a
  * substituted world blade or shield under kFeatures3_GearArt, so a shelf shows the item
  * it is selling instead of the gear the player happens to carry; a set extracted before

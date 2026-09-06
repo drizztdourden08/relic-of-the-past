@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Native grant ids — what the game's own script passes to the plain receive
+ * Native grant ids: what the game's own script passes to the plain receive
  * seam when a check's vanilla grant fires, per check kind. The npc-kind id
  * comes from the record itself; the boss prize always grants the ceremonial
  * heart (decomp: the arena pickup's receive call); world items resolve their
@@ -25,7 +25,7 @@ const nativeGrantIdOf = (check: CheckRecord): number | undefined => {
     return itemId <= MAX_NATIVE_GRANT_ID ? itemId : undefined;
   }
   if (kind === 'boss') return BOSS_PRIZE_GRANT_ID;
-  // A dungeon reward: the falling ancilla carries the id the boss's own script grants —
+  // A dungeon reward: the falling ancilla carries the id the boss's own script grants,
   // the dungeon's vanilla pendant, or the one shared crystal id. The record's vanilla item
   // names it; its own gameId cannot, because the crystal-category records carry none.
   if (kind === 'prize') {

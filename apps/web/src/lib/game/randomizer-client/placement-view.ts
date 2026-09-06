@@ -4,10 +4,10 @@
  * shown holding what THIS run put there instead of its vanilla contents.
  *
  * Two lookups, both by community-standard name: the location name gives the
- * check id, the item name gives the item record. Either can miss — the ported
- * world carries slots this app's dataset does not model, and vice versa — so
- * misses are counted and reported rather than silently dropped: a spoiler that
- * quietly omits ten locations is worse than one that says it did.
+ * check id, the item name gives the item record. Either can miss, because the ported
+ * world carries slots this app's dataset does not model, and vice versa, so
+ * misses are counted and reported instead of silently dropped: a spoiler that
+ * omits ten locations is worse than one that says it did.
  */
 import { checkIdByStandardName } from './check-names';
 import { itemIdByStandardName } from './item-lookup';

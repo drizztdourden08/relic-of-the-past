@@ -1,12 +1,12 @@
 /* @layer shared-game @kind logic */
 /**
  * The found/total numbers of a seed's countable items. A count class groups
- * the copies of one thing the player collects several of — a palace's small
- * keys, the heart pieces, the bottles, the crystals — and the seed's own
+ * the copies of one thing the player collects several of (a palace's small
+ * keys, the heart pieces, the bottles, the crystals) and the seed's own
  * placement fixes the total per class. "Found so far" is a tracker fact: the
  * completed locations, whichever copies they held. The ordinal of a location
  * is one more than the OTHER completed locations of its class, so a line
- * reads the same before and after its own location completes — the renderer
+ * reads the same before and after its own location completes, so the renderer
  * re-composes on every tracker change without ever showing k+1 for the copy
  * being received. Key drops count only under key-drop shuffle: with it off
  * they stay vanilla pickups the tracker never sees.

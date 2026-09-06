@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * Whether an owned item can be USED under the world's capacity profile —
+ * Whether an owned item can be USED under the world's capacity profile,
  * the one gate the collection state consults before answering has/hasAny.
  * A meter-consuming item (magic-items.data.ts) is usable only while the
  * meter family stands above its empty rung; every other item is always

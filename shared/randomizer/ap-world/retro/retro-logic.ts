@@ -6,10 +6,10 @@
  * HOW THE QUIVER IS HELD depends on the shops. With them shuffled it is an
  * ordinary pool item, so the question is the item itself and nothing else:
  * the fill placed it somewhere reachable or the seed does not verify. With
- * them vanilla it is not in the pool at all, it is stock on one shelf
+ * them vanilla it is stock on one shelf
  * (retro-shops.ts), so the question is that shelf reached and its 80 rupees
  * affordable. Getting this wrong decides beatability, which is why the two
- * readings are spelled out separately rather than folded into one.
+ * readings are spelled out separately instead of folded into one.
  *
  * The reference only ever asks the shop half (StateHelpers.py
  * can_shoot_arrows to can_buy('Single Arrow'), which is "a shop that stocks it

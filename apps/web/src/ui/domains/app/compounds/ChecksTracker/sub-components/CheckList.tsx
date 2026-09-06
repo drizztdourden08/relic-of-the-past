@@ -3,7 +3,7 @@
  * The leaves of the check tree, in the three view modes.
  *
  * A check with several vanilla items expands to one entry per item in the
- * modes that show the item — but only WITHOUT a run: once a seed has placed
+ * modes that show the item, but only WITHOUT a run: once a seed has placed
  * something there, the check holds exactly one thing, so it collapses back to
  * a single row showing that.
  */

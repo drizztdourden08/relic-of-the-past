@@ -3,7 +3,7 @@
  * The preview: cumulative ladder values, one entry per jump after the start.
  * Walks the family's own ladder, so every value shown is a legal tier. A
  * clamp at the top means a surplus step (the reference's two-tier item at
- * the end of its ladder pays the pond consolation) — a Custom ladder never
+ * the end of its ladder pays the pond consolation), so a Custom ladder never
  * clamps because its jumps sum exactly to the span.
  */
 

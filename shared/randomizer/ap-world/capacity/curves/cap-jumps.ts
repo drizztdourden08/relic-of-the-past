@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
  * The item cap on a jump. A family's name table (and its virtual id space)
- * carries jumps of 1 … maxJump only, so a plan may never ask for a bigger
+ * carries jumps of 1 ... maxJump only, so a plan may never ask for a bigger
  * one. minCountFor is the fewest jumps that cover a span under the cap;
  * capJumps re-splits a generated sequence so no jump exceeds it. A sequence
  * already under the cap comes back unchanged, so every plan that was legal

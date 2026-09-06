@@ -3,14 +3,14 @@
  * Tracker-facing availability over a frozen placement. The player's logical
  * inventory is the multiset of items sitting at the locations they have
  * already completed (per the placement's nameView), plus every event and
- * dungeon-prize slot whose location is in logic for that inventory — the
+ * dungeon-prize slot whose location is in logic for that inventory, the
  * reference sweep's semantics: an in-logic slot's content counts because the
  * player can go take it. A location is available when its region and access
  * rule pass under that state and it is not already completed.
  *
  * The world is rebuilt from the placement's own frozen record (the key-drop
  * option, the capacity profile, the medallion pair) and the nameView is loaded over the
- * fill seam, the same replay idiom the standard-mode verification uses — so
+ * fill seam, the same replay idiom the standard-mode verification uses, so
  * availability always answers for THIS seed under the ported rules, never
  * the hand-authored vanilla dataset.
  */

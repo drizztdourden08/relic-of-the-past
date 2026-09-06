@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 /**
- * The pool against the spots of the world as one segmented bar — the checks
+ * The pool against the spots of the world as one segmented bar: the checks
  * tracker's summary bar, read for a fill. The track is every spot; it fills
  * left to right with the items in the pool (green), the capacity upgrades
  * (purple), the filler (yellow) and the spots settled before the shuffle

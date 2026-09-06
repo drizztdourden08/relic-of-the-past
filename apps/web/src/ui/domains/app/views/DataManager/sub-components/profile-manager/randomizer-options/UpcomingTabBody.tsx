@@ -3,7 +3,7 @@
  * A tab whose whole subject is still to be built. Whatever rows the catalog
  * already carries for it are shown under the one heading, locked and
  * disabled exactly as the catalog defines them; a tab with no rows yet is
- * that heading on its own, an honest empty page rather than a heading over
+ * that heading on its own, an honest empty page instead of a heading over
  * nothing.
  */
 import { Text } from '@ds/primitives';

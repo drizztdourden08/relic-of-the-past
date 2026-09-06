@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind data */
 /**
  * Mode badge asset contract. Art lives in apps/web/src/assets/mode-badges/ as
- * mode-<id>.png — 128x128 transparent square (the source art trimmed, squared and
+ * mode-<id>.png: 128x128 transparent square (the source art trimmed, squared and
  * downscaled with a quality filter), rendered smoothly at --mode-badge-d. The glob resolves to an empty map
  * until the files exist, so dropping the PNGs in flips the badge from its
  * labeled fallback chip to the image with no code change.

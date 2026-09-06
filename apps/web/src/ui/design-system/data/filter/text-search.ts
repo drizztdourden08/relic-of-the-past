@@ -3,11 +3,11 @@
  * The free-text half of filtering, compiled the same way clause lists are:
  * FilterBar reports the query as plain state and whoever renders the rows
  * turns it into a predicate here (see clause.ts's `compile` for the clause
- * half). A blank query compiles to null rather than an always-true test, so a
+ * half). A blank query compiles to null instead of an always-true test, so a
  * caller can skip the row walk entirely when nothing is being searched.
  *
- * The match is deliberately broad — any string, number or boolean anywhere in
- * the row, case-folded — because the search box sits beside structured clause
+ * The match is deliberately broad: any string, number or boolean anywhere in
+ * the row, case-folded, because the search box sits beside structured clause
  * filters that already cover the precise cases. Depth is capped the way the
  * schema walk caps its own recursion, so a cyclic or very deep record cannot
  * hang the filter.

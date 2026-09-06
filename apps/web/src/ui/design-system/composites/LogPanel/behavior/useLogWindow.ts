@@ -3,7 +3,7 @@
  * Windowed rendering for a log panel. A long run keeps every row (the early
  * history is the interesting part), which is far more than the DOM should hold,
  * so only the NEWEST chunk is mounted and older slices load on demand. Rows
- * wrap, so their heights vary — fixed-height virtualisation would mis-measure
+ * wrap, so their heights vary, and fixed-height virtualisation would mis-measure
  * them; windowing keeps wrapping intact.
  *
  * Loading older rows prepends content, so the scroll offset is restored after

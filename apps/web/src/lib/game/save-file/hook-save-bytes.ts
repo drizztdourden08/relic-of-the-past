@@ -18,28 +18,28 @@ const SAVE_BLOCK_BASE = 0xf000;
 const HOOK_SAVE_FIRST = 0xf406;
 const HOOK_SAVE_LAST = 0xf4fd;
 
-/** npc_overrides.c — substitution-completion bits, one bit per possession-gated giver. */
+/** npc_overrides.c: substitution-completion bits, one bit per possession-gated giver. */
 const SRM_SUBSTITUTION_TAKEN = 0xf410;
 const SRM_SUBSTITUTION_TAKEN_COUNT = 3;
 
-/** capacity_profile.c — the wallet ladder rung this file has climbed to. */
+/** capacity_profile.c: the wallet ladder rung this file has climbed to. */
 const SRM_WALLET_LADDER_INDEX = 0xf413;
 
-/** capacity_profile.c — one empty-rung flag per counted family (explosives, projectiles, meter). */
+/** capacity_profile.c: one empty-rung flag per counted family (explosives, projectiles, meter). */
 const SRM_EMPTY_RUNG = 0xf414;
 const SRM_EMPTY_RUNG_COUNT = 3;
 
-/** prize_grants.c — one bit per palace index: this dungeon's falling reward was handed over. */
+/** prize_grants.c: one bit per palace index, this dungeon's falling reward was handed over. */
 const SRM_PRIZE_TAKEN = 0xf417;
 const SRM_PRIZE_TAKEN_COUNT = 2;
 
-/** prize_grants.c — the crystal bit the receipt in flight must bank, 0 for none. */
+/** prize_grants.c: the crystal bit the receipt in flight must bank, 0 for none. */
 const SRM_PENDING_CRYSTAL = 0xf419;
 
-/** pond_plan.c — how many throws of the planned sequence have been paid for. */
+/** pond_plan.c: how many throws of the planned sequence have been paid for. */
 const SRM_POND_THROWS = 0xf41a;
 
-/** shop_table.c — one byte per canonical shop slot: armed steps already bought. */
+/** shop_table.c: one byte per canonical shop slot, armed steps already bought. */
 const SRM_SHOP_SOLD = 0xf420;
 const SRM_SHOP_SOLD_COUNT = 31;
 

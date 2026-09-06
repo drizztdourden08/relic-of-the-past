@@ -4,7 +4,7 @@
  * and dropdown choices (a preset is a choice of its own); the setting is what
  * the snapshot stores. A preset choice writes curve + count and nothing
  * else, and reads back as the preset whenever (curve, count) still equals
- * what it would write — editing either detaches it.
+ * what it would write, and editing either detaches it.
  */
 import {
   CURVE_PRESETS, FAMILIES, NO_WALLET_FLOOR, capacityFieldsOf, clampCount, heldMaxRungOf, maxSpanOf, planOf,
@@ -108,7 +108,7 @@ const detachedFromReading = (
 /**
  * One row edit applied to the profile. Switching the curve to "free" seeds
  * the chips from the jumps the current curve produces, so the editor starts
- * from a valid sequence rather than from nothing.
+ * from a valid sequence instead of from nothing.
  */
 const applyRowChange = (
   profile: CapacityProfile, family: CapacityFamilyId, next: CapacityRowState,

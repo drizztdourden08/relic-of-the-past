@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
- * Strategy: four families behind one interface — the ladder, the rung a
- * vanilla file stands on, the reference jumps, the item carrying a jump — so
+ * Strategy: four families behind one interface, covering the ladder, the rung a
+ * vanilla file stands on, the reference jumps, the item carrying a jump, so
  * the derivation, the pool builder, the logic helpers and the In Pool model
  * never branch on the family. Every ladder opens with rung 0, the empty tier
  * (capacity-ladders.data.ts); the reference pool is six one-tier items and
@@ -75,7 +75,7 @@ const FAMILY_BY_ID: Readonly<Record<CapacityFamilyId, CapacityFamily>> = {
 
 const familyById = (id: CapacityFamilyId): CapacityFamily => FAMILY_BY_ID[id];
 
-/** The whole ladder as steps — the largest span (and count) the family admits. */
+/** The whole ladder as steps: the largest span (and count) the family admits. */
 const maxSpanOf = (capacityFamily: CapacityFamily): number => capacityFamily.ladder.length - 1;
 
 export { EXPLOSIVES, FAMILIES, METER, PROJECTILES, WALLET, familyById, maxSpanOf };

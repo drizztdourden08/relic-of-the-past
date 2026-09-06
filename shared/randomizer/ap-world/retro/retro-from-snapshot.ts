@@ -2,7 +2,7 @@
 /**
  * The retro rows ⇄ the setting they stand for, both directions in one file so
  * the reading the generator uses and the writing the creation form freezes can
- * never spell the same option two ways — the contract every other block here
+ * never spell the same option two ways, the contract every other block here
  * keeps.
  *
  * A snapshot frozen before these rows existed carries none of them: the switch
@@ -11,7 +11,7 @@
  *
  * A cost is read under the wallet the same snapshot describes
  * (retro-cost-ceiling.ts): a stored number above what that wallet can hold at
- * once is held at the ceiling rather than left to make the seed refuse, so the
+ * once is held at the ceiling instead of left to make the seed refuse, so the
  * reading the generator uses is always one the sliders would have offered.
  */
 import { parseCapacityProfile } from '../capacity/capacity-profile-from-snapshot';
@@ -44,9 +44,9 @@ const retroBowFromSnapshot = (snapshot: RandomizerOptionsSnapshot): RetroBowSett
   retroBowOfValues(snapshot.values);
 
 /**
- * The rows a setting freezes — what the creation form hands the catalog. A
+ * The rows a setting freezes: what the creation form hands the catalog. A
  * setting the choices never carried writes its keys with nothing behind them
- * rather than with the defaults, for the same reason the mode rows do: the
+ * instead of with the defaults, for the same reason the mode rows do: the
  * wiring guard reads the frozen map by value and an unwired field has to show
  * there.
  */

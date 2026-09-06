@@ -2,12 +2,12 @@
 /**
  * What a shelf charges. A price is rolled once, at generation time, from the
  * seed's own rng and recorded on the placement, so the spoiler, the access
- * rules and the running game all read the same number — a price is part of
+ * rules and the running game all read the same number, since a price is part of
  * the seed, never re-derived later.
  *
  * Four counted currencies carry an amount; a bottle price carries a content
  * instead and no amount at all, because the shelf demands one bottle of that
- * thing rather than a quantity of it.
+ * thing, not a quantity of it.
  */
 
 type ShopCountedCurrency = 'rupees' | 'arrows' | 'bombs' | 'hearts';
@@ -46,7 +46,7 @@ interface ShopPricePlan {
   arrows: ShopCurrencySetting;
   bombs: ShopCurrencySetting;
   hearts: ShopCurrencySetting;
-  /** Bottle prices carry no range — only which contents a shelf may demand. */
+  /** Bottle prices carry no range, only which contents a shelf may demand. */
   bottle: { enabled: boolean; contents: readonly ShopBottleContent[] };
   /**
    * The most hearts a price may ask for: the seed's own heart ceiling less

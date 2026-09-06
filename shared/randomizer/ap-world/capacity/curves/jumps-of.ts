@@ -4,7 +4,7 @@
  * [minCountFor(span, maxJump), span] (a ladder cannot be cut finer than one
  * step per item, nor coarser than the family's largest item), runs the
  * generator through the scaler and the cap, or takes a valid free sequence
- * as-is — an invalid one degrades to the equal curve at the clamped count.
+ * as-is, and an invalid one degrades to the equal curve at the clamped count.
  */
 import { CURVES } from './curves.data';
 import { scaleToSpan } from './scale-to-span';

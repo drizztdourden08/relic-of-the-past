@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
 /**
  * Extracts a ROM's sprite set in the background when it is missing or predates
- * the current definitions — the sprite counterpart of the asset blob's
+ * the current definitions, the sprite counterpart of the asset blob's
  * extract-if-missing at boot, so a user who never pressed "Extract sprites"
  * still gets item art. Runs at most once per ROM per session: the in-flight
  * promise is shared by concurrent callers (startup, profile select and boot all

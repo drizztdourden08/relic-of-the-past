@@ -1,13 +1,13 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * The armed state of every gate a randomizer session opens and closes — one
+ * The armed state of every gate a randomizer session opens and closes, one
  * record instead of a dozen module-level booleans.
  *
  * All of them share one contract, which is why they share one home: the host
  * arms a gate when it has something for the core to apply (a table with entries
  * in it, a profile, a plan, a live session) and disarms it when that thing goes
  * away, then re-pushes features word 3 so the bit latches into WRAM. Nothing
- * here decides what a gate MEANS — live-settings-flags.ts still maps each one to
+ * here decides what a gate MEANS. live-settings-flags.ts still maps each one to
  * its features.h bit and still strips every one of them under Vanilla Safe.
  *
  * Kept out of live-settings-flags.ts because each gate arrived there as its own

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * The eight pickup-bonus rows of the option catalog — synthetic, unlocked,
+ * The eight pickup-bonus rows of the option catalog: synthetic, unlocked,
  * group 'items', two per family: the percentage a capacity upgrade hands over
  * beside the ceiling it raises, and the switch that says what the percentage
  * is of. Rendered on each family's own row in the capacity block, never as

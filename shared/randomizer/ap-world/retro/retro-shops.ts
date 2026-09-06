@@ -10,7 +10,7 @@
  * (StateHelpers.py can_shoot_arrows). Bought once, it is what lets the bow
  * fire at all; every shot after it is paid for in rupees as it is fired.
  *
- * WHICH shelf is read from the shop dataset rather than named here, so a shop
+ * WHICH shelf is read from the shop dataset instead of named here, so a shop
  * added there brings its slot with it: every shelf that sold arrows in the
  * unmodified game is an arrow shelf, and the FIRST of them in canonical order
  * is the quiver's. In the unmodified game there is exactly one, the right

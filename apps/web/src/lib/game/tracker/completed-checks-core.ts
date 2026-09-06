@@ -5,7 +5,7 @@
  * check record is tested against whichever of its own gameId fields describe
  * a detection mode. A null reader stands for a source that is not available
  * (a gated live query, the offline path's missing live-WRAM byte) and skips
- * its modes rather than reading zeros — zero can satisfy an equality
+ * its modes instead of reading zeros, since zero can satisfy an equality
  * threshold, so a fabricated read is not a safe "no".
  */
 import { all } from '@shared/game/data';

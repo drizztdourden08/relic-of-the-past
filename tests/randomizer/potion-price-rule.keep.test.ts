@@ -3,7 +3,7 @@
  * Guard: no shelf is ever priced in something the file cannot buy back.
  *
  * The hut's three cauldrons are the only repeatable source of potions, and a
- * bottle price CONSUMES its content — a restocked shelf asks again. So a
+ * bottle price CONSUMES its content, so a restocked shelf asks again. So a
  * cauldron handed to the shuffle takes its potion out of the game, and any
  * shelf priced in that potion becomes unpayable. This walks every reachable
  * pairing of the shop scope and the price rows and proves the hole is closed
@@ -134,7 +134,7 @@ describe('a cauldron given to the shuffle takes its potion off the price list', 
     expect(blockedSeen).toBeGreaterThan(0);
   });
 
-  it('leaves the caught contents alone — a fairy and a bee are never blocked', () => {
+  it('leaves the caught contents alone, so a fairy and a bee are never blocked', () => {
     const catchable: readonly ShopBottleContent[] = ['fairy', 'bee'];
     for (const { scope } of combinations()) {
       const blocked = blockedContentsOf(scope);
@@ -207,7 +207,7 @@ describe('each cauldron answers for its own content alone', () => {
       const own = rows.find((row) => row.content === cauldron.content)!;
       expect(own.blocked, cauldron.content).toBe(false);
       expect(own.checked).toBe(true);
-      // Row order is the price list's, not the cauldron list's — compare sets.
+      // Row order is the price list's, not the cauldron list's, so compare sets.
       expect(new Set(rows.filter((row) => row.blocked).map((row) => row.content)))
         .toEqual(new Set(others.map(contentOf)));
     }
@@ -223,7 +223,7 @@ describe('each cauldron answers for its own content alone', () => {
 });
 
 describe('a snapshot this app did not write', () => {
-  it('is refused by the roll rather than trusted', () => {
+  it('is refused by the roll instead of trusted', () => {
     const honest = valuesOf({ scope: BLOCKED_SCOPE, prices: ALL_PRICES });
     // Hand-edited: the blocked row flipped back on behind the panel's back.
     const tampered = { ...honest, [bottleContentKeyOf(CAULDRON.content)]: true };
@@ -242,7 +242,7 @@ describe('paying a bottle price needs a source to buy the content back from', ()
     canReachRegion: (name: string) => atSeller && name === REGION_NAME.potionSeller,
   } as unknown as CollectionState);
 
-  it('asks a potion price for the hut as well as the bottle', () => {
+  it('asks a potion price for the hut and the bottle', () => {
     const rule = ruleForPrice({ currency: 'bottle', content: CAULDRON.content });
     expect(rule(stateWith(true, true))).toBe(true);
     expect(rule(stateWith(true, false))).toBe(false);

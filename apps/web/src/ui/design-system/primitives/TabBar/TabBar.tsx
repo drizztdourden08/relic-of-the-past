@@ -23,7 +23,7 @@ const TabBar = (props: TabBarProps) => {
 
   // The arrows / Home / End move along the strip and take the selection with
   // them, so the strip is operable without a pointer. Moving the focus is what
-  // brings the tab into view — the browser's own focus scroll is suppressed so
+  // brings the tab into view, and the browser's own focus scroll is suppressed so
   // the strip's smooth one is the only movement.
   const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number): void => {
     const next = tabIndexForKey(event.key, index, tabs.length);

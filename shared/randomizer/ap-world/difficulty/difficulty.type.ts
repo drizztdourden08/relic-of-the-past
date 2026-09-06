@@ -5,8 +5,8 @@
  * The reference project asks this as ONE four-step choice (Options.py
  * ItemPool: easy / normal / hard / expert), and that choice bundles two
  * questions that have nothing to do with each other. Its easy step DUPLICATES
- * copies — eight blades where normal has four, six shields where normal has
- * three — while its hard and expert steps LOWER THE CEILING, stopping a family
+ * copies (eight blades where normal has four, six shields where normal has
+ * three) while its hard and expert steps LOWER THE CEILING, stopping a family
  * short of its best rung and thinning the hearts. A player who wants twice as
  * many blades to find has no way to say so without also being handed twice as
  * many shields, twice as much armour and twice the bottles.
@@ -32,7 +32,7 @@ import type { ProgressiveFamilyId } from '../progressive/progressive.type';
 /** How many times over a family's copies are put in the seed. */
 type CopyMultiplier = 1 | 2 | 3;
 
-/** One multiplier per tiered family — the whole copies half of the setting. */
+/** One multiplier per tiered family: the whole copies half of the setting. */
 type CopyMultiplierSetting = Readonly<Record<ProgressiveFamilyId, CopyMultiplier>>;
 
 /** The whole difficulty setting a seed is generated under. */

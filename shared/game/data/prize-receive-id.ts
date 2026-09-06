@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * Receive ids for the ten dungeon prizes — the TS half of the contract in
+ * Receive ids for the ten dungeon prizes: the TS half of the contract in
  * core/game-hooks/prize_grants.c.
  *
  * The three pendants need nothing special: each has its own native receive id
@@ -8,7 +8,7 @@
  * wherever it is placed (0x37 green, 0x38 red, 0x39 blue).
  *
  * All seven crystals share one native id (0x20), and which crystal it banks
- * comes from the room the player is standing in, not from the id — so an
+ * comes from the room the player is standing in, not from the id, so an
  * assigned crystal would bank whichever one the boss room names. The id space
  * 0x7B-0x81, ABOVE the progressive-capacity range that ends at 0x7A, is
  * reserved so a crystal rides every override table unresolved; the core banks
@@ -20,7 +20,7 @@
  *
  * The dataset carries two records per pendant name (a junk-category one with
  * the native id and a crystal-category one without), so a name lookup over the
- * records alone is ambiguous — these tables are the single answer for a prize.
+ * records alone is ambiguous, and these tables are the single answer for a prize.
  */
 
 const PRIZE_VIRT_FIRST = 0x7b;
@@ -55,7 +55,7 @@ const PRIZE_RECEIVE_ID_BY_ITEM: ReadonlyMap<string, number> = new Map([
 ]);
 
 /**
- * The NATIVE receive id a boss's own script hands over for this prize — what the falling
+ * The NATIVE receive id a boss's own script hands over for this prize: what the falling
  * ancilla carries and therefore the key a substitution table matches on. All seven
  * crystals share one id (0x20); the pendants keep their own.
  */

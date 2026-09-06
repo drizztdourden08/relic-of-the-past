@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * Targeted receive ids for the four dungeon-flavoured families — the TS half
+ * Targeted receive ids for the four dungeon-flavoured families: the TS half
  * of the contract in core/game-hooks/dungeon_item_ids.h.
  *
  * Every record of a family shares ONE native receive id (small key 36, big key
@@ -26,7 +26,7 @@
 
 const DUNGEON_ITEM_VIRT_FIRST = 0xc0;
 const DUNGEON_ITEM_VIRT_LAST = 0xfd;
-/** Palace indices 0-13 — the whole range the core's own halved index can name. */
+/** Palace indices 0-13: the whole range the core's own halved index can name. */
 const DUNGEON_ITEM_PALACE_COUNT = 14;
 
 /** The native receive id of each kind, in the core's kind order. */

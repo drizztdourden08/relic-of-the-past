@@ -12,7 +12,7 @@ interface OptionTabBodyProps {
   groups: UnlockedGroupsByTab;
   /** The fixed sections each tab that shows some owns, already split. */
   lockedGroups: LockedGroupsByTab;
-  /** The snapshot these choices would freeze — what the keyed blocks read. */
+  /** The snapshot these choices would freeze: what the keyed blocks read. */
   values: Readonly<Record<string, ApOptionValue>>;
   valueOf: (option: ApOptionDef) => ApOptionValue;
   cellOf: (key: string) => ImpactCell;

@@ -2,7 +2,7 @@
 /**
  * Bridge between the fill algorithms and the logic engine. The engine keeps
  * ITEM ids and CHECK ids in two separate sets (eval.ts's inventory /
- * completedChecks pair) — everything here mirrors that convention exactly.
+ * completedChecks pair), and everything here mirrors that convention exactly.
  * A check with no screenId is location-unconstrained: only its requirements
  * gate it (the fill's convention for pure progress events).
  */
@@ -14,12 +14,12 @@ import type { SpoilerSphere } from '../placement.type';
 interface SphereWalkInput {
   /** CheckId -> the item the fill has assigned there. */
   assignments: ReadonlyMap<CheckId, ItemId>;
-  /** The full walk list — every check that can grant items or progress flags. */
+  /** The full walk list: every check that can grant items or progress flags. */
   checks: readonly CheckRecord[];
   startInventory: ReadonlySet<ItemId>;
   rules: ResolvedRules;
   /**
-   * Ids whose vanilla contents are replaced by the fill — an unassigned one
+   * Ids whose vanilla contents are replaced by the fill, where an unassigned one
    * grants nothing when collected. Defaults to the assignment keys.
    */
   randomizedIds?: ReadonlySet<CheckId>;
@@ -36,7 +36,7 @@ interface SphereWalkResult {
 const effectiveRequirement = (check: CheckRecord, rules: ResolvedRules): Requirement | undefined =>
   rules.checkOverrides[check.id] ?? check.requirements;
 
-/** Screen reachable (or no screen) and requirements satisfied — collectable in the current pass. */
+/** Screen reachable (or no screen) and requirements satisfied: collectable in the current pass. */
 const isCollectable = (
   check: CheckRecord,
   reachable: ReadonlySet<string>,
@@ -50,7 +50,7 @@ const isCollectable = (
 };
 
 /**
- * Sphere-aware "collectable right now" — the item inventory is FIXED, but
+ * Sphere-aware "collectable right now": the item inventory is FIXED, but
  * collected check ids feed back into the reachability fixpoint (progress
  * events unlock edges and other checks' requirements).
  */

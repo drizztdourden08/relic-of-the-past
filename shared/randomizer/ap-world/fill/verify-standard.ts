@@ -5,8 +5,8 @@
  * so a stored placement violating them was generated under different rules
  * and is unplayable: the escape must be fought with whatever the mentor
  * check grants, before any other check is reachable, and the in-game start
- * carries no bombs — the reachability sweep's ammo assumptions hold only
- * once that check yields a member of the assurance set — one the capacity
+ * carries no bombs, because the reachability sweep's ammo assumptions hold only
+ * once that check yields a member of the assurance set, one the capacity
  * profile, when given, leaves usable at the start (uncle-usability.ts).
  * Returns problems; an empty list means the placement honors the
  * standard-mode guarantee.

@@ -1,13 +1,13 @@
 /* @layer shared-game @kind logic */
 /**
- * The wallet's slot table — the TS half of the contract in
+ * The wallet's slot table: the TS half of the contract in
  * core/game-hooks/wallet_grants.c. The wallet ladder has 100 steps, so a
  * step-per-id scheme would need 100 ids; instead the sixteen virtual ids
  * 0x67-0x76 are SLOTS into a per-session table of jump sizes. The table is
  * deterministic from the pool's wallet jumps (sorted distinct sizes), so
  * the host, the receipt export and the core can never disagree: any of
  * them rebuilds it from the same plan. A partition of 100 admits at most 13
- * distinct sizes (1 + 2 + … + 13 = 91; adding 14 exceeds 100), so sixteen
+ * distinct sizes (1 + 2 + ... + 13 = 91; adding 14 exceeds 100), so sixteen
  * slots cover every generator output and every valid free sequence.
  */
 

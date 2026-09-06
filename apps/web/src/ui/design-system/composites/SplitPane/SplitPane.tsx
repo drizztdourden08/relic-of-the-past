@@ -5,7 +5,7 @@
  * either side can be read at full width.
  *
  * A collapsed pane leaves the divider behind as a labelled rail: clicking it
- * brings the pane back, and so does dragging it out — the divider is the only
+ * brings the pane back, and so does dragging it out, so the divider is the only
  * control, so there is nothing to hunt for once a pane is gone.
  */
 import { Box, Text } from '../../primitives';

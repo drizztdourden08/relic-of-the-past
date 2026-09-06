@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Pond arming for a session — turns the pond setting a placement was generated
+ * Pond arming for a session: turns the pond setting a placement was generated
  * with into the core's throw table. The throw schedule is NOT stored on the
  * placement: it is re-derived from the setting and the placement's own seed
  * (pondPlanOf), so the spoiler, the logic and the running game always read the
@@ -9,7 +9,7 @@
  * are the only impure steps.
  *
  * Each row also carries the two pre-rendered lines that belong to its amounts
- * — the price the toss announces, and the consolation a losing throw pays —
+ * (the price the toss announces, and the consolation a losing throw pays)
  * looked up by amount in the session's composed pool (pond-lines.ts). The
  * emptied-pond line is armed once alongside them. A composition that was
  * refused hands back -1 for every line, which the core reads as "keep the
@@ -26,7 +26,7 @@ import type { ApPlacement } from '@shared/randomizer/ap-world/fill/ap-placement.
 import type { PondThrowArm } from '../pond-plan';
 import type { PondMessageIds } from './receipt-text-refresh';
 
-/** No composed pool at all — every pond line keeps the game's native wording. */
+/** No composed pool at all, so every pond line keeps the game's native wording. */
 const NO_POND_MESSAGES: PondMessageIds = {
   priceMessageOf: () => -1,
   refundMessageOf: () => -1,
@@ -38,7 +38,7 @@ interface PondSessionPlan {
   throws: readonly PondThrowArm[];
   /** True when the core has anything to arm. */
   armed: boolean;
-  /** Prize slots the plan carries — the pond locations of this placement. */
+  /** Prize slots the plan carries: the pond locations of this placement. */
   prizeCount: number;
   /** The line an emptied pond shows, or -1 to keep the native refusal. */
   closedMessageId: number;

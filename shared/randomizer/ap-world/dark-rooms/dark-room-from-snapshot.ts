@@ -6,7 +6,7 @@
  *
  * A snapshot frozen before these rows existed carries none of them, and an
  * absent key falls back to the reference reading (light required, lamp only)
- * — the rule every stored placement was generated under, so an old profile
+ * the rule every stored placement was generated under, so an old profile
  * keeps playing exactly as it was rolled.
  *
  * The reading is masked by the scope switch (dark-room-forced.ts): a light
@@ -39,7 +39,7 @@ const darkRoomSettingOfValues = (values: Values): DarkRoomSetting => {
 const darkRoomSettingFromSnapshot = (snapshot: RandomizerOptionsSnapshot): DarkRoomSetting =>
   darkRoomSettingOfValues(snapshot.values);
 
-/** The rows a setting freezes — what the creation form hands the catalog. */
+/** The rows a setting freezes: what the creation form hands the catalog. */
 const darkRoomValuesOf = (setting: DarkRoomSetting): Record<string, ApOptionValue> => ({
   [DARK_ROOM_REQUIRED_KEY]: setting.requireLight,
   ...Object.fromEntries(DARK_ROOM_LIGHT_FIELDS.map((field) =>

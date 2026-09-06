@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Scope locking — which planned locations the session treats as locked
+ * Scope locking: which planned locations the session treats as locked
  * vanilla, and the vanilla item a capability-locked location must still
  * hold. Four lock sources: an option toggled off locks its whole scope
  * table (key drops / npc gifts / world items), with a toggle on the
@@ -48,7 +48,7 @@ interface ScopeFlags {
   capacityStartTiers?: ReadonlyMap<string, number>;
   /**
    * The shelf scope the placement was generated with. A placement from
-   * before shops existed carries none, which reads as no slot open — every
+   * before shops existed carries none, which reads as no slot open, so every
    * shop then behaves exactly as it does with the option off.
    */
   shops: ShopScope;

@@ -19,7 +19,7 @@
  * option does: OFF pre-places the npc-scope locations' vanilla items,
  * locked and fill-excluded, and removes them from the pool (fill-world +
  * scope-subtraction); ON opens only the scope locations the caller proved
- * physically deliverable and locks the rest the same way — an absent
+ * physically deliverable and locks the rest the same way, so an absent
  * capability set counts as empty, so a caller with no physical probe still
  * always produces a valid (fully locked-scope) seed. The capacity profile
  * follows the same capability-locked mechanism for the fairy slots of its
@@ -169,7 +169,7 @@ const generateApPlacement = (
   deliverableCapacityLocations?: ReadonlySet<string>,
   deliverableWorldLocations?: ReadonlySet<string>,
 ): ApPlacement => {
-  // A tick set that closed a load-bearing rung is said so here rather than
+  // A tick set that closed a load-bearing rung is said so here instead of
   // twenty attempts later as "the goal is not reachable" - the caller gets the
   // rung to tick back on instead of a seed that cannot be finished.
   assertRollableTickSet(progressiveSettingFromSnapshot(snapshot));
@@ -189,7 +189,7 @@ const generateApPlacement = (
     }
   }
   throw new Error(
-    `generation failed for seed "${seed}" after ${MAX_AP_ATTEMPTS} attempts — last: ${lastMessage}`,
+    `generation failed for seed "${seed}" after ${MAX_AP_ATTEMPTS} attempts, last: ${lastMessage}`,
   );
 };
 

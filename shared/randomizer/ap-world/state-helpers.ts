@@ -48,7 +48,7 @@ const canMeltThings = (state: CollectionState): boolean =>
 
 /**
  * Shop purchases are out of scope for the baseline (no shop pool). The
- * python can_buy/can_buy_unlimited walk the shop objects — anything that
+ * python can_buy/can_buy_unlimited walk the shop objects, so anything that
  * reaches for them here is a porting error until shops are modeled.
  */
 const canBuy = (): boolean => {
@@ -98,14 +98,14 @@ const hasHearts = (state: CollectionState, count: number): boolean => heartCount
 /**
  * Total magic meter check (python can_extend_magic, StateHelpers.py 70-84).
  * The purchase branch (77-83): with an unlimited green/blue potion seller
- * reachable, each carried bottle refills the meter — under normal item
+ * reachable, each carried bottle refills the meter, under normal item
  * functionality that multiplies base magic by bottle count regardless of the
  * fullrefill flag (the hard/expert reductions are off-baseline). The only
  * such seller under default shop inventories is the one shop region named in
  * the data table, so can_buy_unlimited reduces to reaching it.
  */
 const canExtendMagic = (state: CollectionState, smallmagic = 16): boolean => {
-  // 8 at full cost, 16 at half, 32 at quarter — the meter level doubles it; 0 without magic.
+  // 8 at full cost, 16 at half, 32 at quarter, and the meter level doubles it; 0 without magic.
   let basemagic = 8 * meterUsesMultiplier(state);
   if (state.canReachRegion(REGION_NAME.potionSeller)) {
     basemagic += basemagic * bottleCount(state);

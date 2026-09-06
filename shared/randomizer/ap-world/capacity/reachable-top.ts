@@ -3,7 +3,7 @@
  * The top rung a family can ever stand on under a profile: the vanilla rung
  * for a family left alone, or the Custom start plus every planned jump,
  * clamped to the ladder's end. Every ceiling that follows the profile reads
- * it from here — a rupee price, a retro shot cost, the pond's dearest throw —
+ * it from here (a rupee price, a retro shot cost, the pond's dearest throw)
  * so no two of them can disagree about what a wallet holds.
  */
 import { planOf, startTierOf } from './family-plan';

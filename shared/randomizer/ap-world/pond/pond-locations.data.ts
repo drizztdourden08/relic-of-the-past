@@ -18,14 +18,14 @@
  */
 import { POND_MAX_ITEMS } from './pond-ladder.data';
 
-/** Prize 1 and 2 as the reference names them; 3 … 20 on the same prefix. */
+/** Prize 1 and 2 as the reference names them; 3 ... 20 on the same prefix. */
 const POND_PRIZE_LOCATIONS: readonly string[] = [
   'Capacity Upgrade Left',
   'Capacity Upgrade Right',
   ...Array.from({ length: POND_MAX_ITEMS - 2 }, (_, index) => `Capacity Upgrade Pond ${index + 3}`),
 ];
 
-/** The prize slots the reference does NOT name — ours, and never present in the legacy mode. */
+/** The prize slots the reference does NOT name: ours, and never present in the legacy mode. */
 const POND_EXTRA_LOCATIONS: readonly string[] = POND_PRIZE_LOCATIONS.slice(2);
 
 const POND_LOCATION_SET: ReadonlySet<string> = new Set(POND_PRIZE_LOCATIONS);

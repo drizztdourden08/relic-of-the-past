@@ -6,17 +6,17 @@
  * spot can be left behind on a hardcoded item check.
  *
  * Three readings collapse into it, in this order:
- *  - light not required — the room is passable in the dark, so the rule is
+ *  - light not required: the room is passable in the dark, so the rule is
  *    open and the seed may send the player through blind;
- *  - light required but no light accepted — a requirement nothing can ever
+ *  - light required but no light accepted: a requirement nothing can ever
  *    meet would leave the rooms behind it unreachable and no seed could be
- *    rolled, so an empty set reads as "no light required" rather than as a
+ *    rolled, so an empty set reads as "no light required" instead of as a
  *    dead end. It is a mask, not a rewrite: ticking a light back on gives
  *    the requirement straight back;
- *  - otherwise — one accepted light has to be CARRIED. Nothing more.
+ *  - otherwise, one accepted light has to be CARRIED. Nothing more.
  *
  * Carried is the whole test for all four, which is why this reads the raw
- * count rather than state.has. The core lights a room on possession alone
+ * count instead of state.has. The core lights a room on possession alone
  * (core/game-hooks/dark_room_lights.c hooks the game's own lamp-ownership
  * seam), so no light costs the meter and none of them is withheld on the
  * meter's empty rung. A rule that asked for usability here would be stricter

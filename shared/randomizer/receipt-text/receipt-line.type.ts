@@ -4,7 +4,7 @@
  * single text, or a list of candidates from the fullest wording down to the
  * shortest. The text box shows three rows of a fixed pixel width and the
  * composer is the only place the real glyph widths are known, so it keeps
- * the first candidate that fits the box and falls back down the list — a
+ * the first candidate that fits the box and falls back down the list, so a
  * long location name costs the source clause, never the numbers.
  */
 

@@ -11,7 +11,7 @@
  * set, so the value equals the maximum by definition: the bar sits hard
  * against the end however many slots are ticked, and unticking one drops the
  * number while the fill does not move at all. Vanilla opens nothing and reads
- * nothing. Both of those are a read-out — the same label, the same sentence,
+ * nothing. Both of those are a read-out: the same label, the same sentence,
  * the same figure, without a control that cannot be moved and a bar that
  * cannot be wrong in an interesting way.
  */
@@ -32,7 +32,7 @@ interface ShopCountSlider {
 /** The ticks alone decide the count: a static figure, no track at all. */
 interface ShopCountReadout {
   kind: 'readout';
-  /** The opened set against the ticked one, spelled out rather than drawn. */
+  /** The opened set against the ticked one, spelled out instead of drawn. */
   value: string;
   description: string;
 }

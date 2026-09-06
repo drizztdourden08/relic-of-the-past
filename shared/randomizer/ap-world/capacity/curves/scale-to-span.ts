@@ -4,10 +4,10 @@
  *   1. scale the weights to the span;
  *   2. floor, then hand the missing units to the largest remainders (ties →
  *      the earliest jump);
- *   3. the last jump absorbs any residual (a float guard — a no-op by
+ *   3. the last jump absorbs any residual (a float guard, a no-op by
  *      construction);
  *   4. every jump ≥ 1: a zero takes one unit from the largest jump (the
- *      nearest on ties) — always possible because the caller clamped
+ *      nearest on ties), always possible because the caller clamped
  *      n ≤ span.
  * The preview, the pool builder and the receipt export all call this one
  * function on the same inputs, so they can never disagree.

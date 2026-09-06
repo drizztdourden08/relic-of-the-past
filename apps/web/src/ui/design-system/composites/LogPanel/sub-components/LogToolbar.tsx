@@ -2,7 +2,7 @@
 /**
  * The panel's header strip: how many rows are in view, the standard FilterBar
  * (its built-in free-text search plus a show/hide type facet), copy-all, and a
- * caller slot. Every control is optional — a panel given none of them renders
+ * caller slot. Every control is optional, so a panel given none of them renders
  * no toolbar at all.
  */
 import { useCallback, useMemo, useState } from 'react';
@@ -59,7 +59,7 @@ const LogToolbar = (props: LogToolbarProps) => {
           className="log-panel__filter-bar"
           search={search ?? ''}
           onSearchChange={onSearchChange}
-          searchPlaceholder="Filter…"
+          searchPlaceholder="Filter..."
           searchLabel="Filter the log"
           facets={facets}
         />

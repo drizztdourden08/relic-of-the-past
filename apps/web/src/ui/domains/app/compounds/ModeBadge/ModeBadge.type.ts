@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind types */
 
-/** The kinds of playthrough a profile can be — one badge each. */
+/** The kinds of playthrough a profile can be, one badge each. */
 type ProfileModeId = 'vanilla' | 'vanilla-safe' | 'randomizer' | 'randomizer-online';
 
 interface ModeBadgeProps {

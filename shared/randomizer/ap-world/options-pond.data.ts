@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * The seven pond rows of the option catalog — synthetic, unlocked, group
+ * The seven pond rows of the option catalog: synthetic, unlocked, group
  * 'items'. Only `pond_mode` is meant to be read on its own; the six value
  * rows sit behind it and the pond block renders them. Every baseline is a row
  * DEFAULT_POND_SETTING writes through the one writer the creation form uses,

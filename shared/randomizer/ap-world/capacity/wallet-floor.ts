@@ -7,7 +7,7 @@
  * Same shape as the projectiles floor next door (max-floor.ts) and there for
  * the same reason. A cap below what the seed will charge leaves a check nobody
  * can pay for, and under full accessibility the generator then refuses every
- * seed rather than handing over a hard one. The editor snaps the max thumb
+ * seed instead of handing over a hard one. The editor snaps the max thumb
  * onto this rung and the snapshot reader raises a stored cap onto it with a
  * note, so a profile written before the floor existed rolls instead of failing.
  *
@@ -25,7 +25,7 @@
  *     the cap the profile reaches (shops/shop-price-plan.ts), so a roll can
  *     never ask for more than the wallet holds;
  *   - the pond, held to the wallet the same way (pond/pond-wallet-top.ts)
- *     rather than the wallet being held to it.
+ *     instead of the wallet being held to it.
  *
  * The paid-shot costs are read as STORED, not as the reader hands them back.
  * They are held down to the wallet on read (retro/retro-cost-ceiling.ts), so

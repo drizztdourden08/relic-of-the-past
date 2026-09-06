@@ -4,7 +4,7 @@
  * each direction, and how far one press of a paging control should take it.
  *
  * Kept apart from the DOM so the arithmetic can be read (and checked) on its
- * own — the hook beside it only supplies the three measurements.
+ * own, and the hook beside it only supplies the three measurements.
  */
 
 /** Sub-pixel layout widths otherwise leave a control flickering at rest. */
@@ -12,7 +12,7 @@ const EDGE_EPSILON = 1;
 
 /**
  * One press moves nearly a full strip-width, leaving a slice of what was on
- * screen behind so the eye can follow — a per-tab nudge would take eleven
+ * screen behind so the eye can follow, since a per-tab nudge would take eleven
  * presses to cross a strip that wide.
  */
 const PAGE_FRACTION = 0.8;

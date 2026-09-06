@@ -1,7 +1,7 @@
 /* @layer shared-asset-extraction @kind logic */
 /**
  * The in-game capacity upgrade icons: the four composited upgrade sprites, quantized
- * to one sprite palette row and encoded as SNES 4bpp tiles — 128 B per icon (top-left,
+ * to one sprite palette row and encoded as SNES 4bpp tiles: 128 B per icon (top-left,
  * top-right, bottom-left, bottom-right tile), 512 B in all, emitted next to the PNGs
  * as `capacity-icons.4bpp`. The core copies one over the receipt decode slot and draws
  * the receipt with that row (core/game-hooks/upgrade_icon.c), so no palette is written.
@@ -11,7 +11,7 @@
  * nearest of the row's colours.
  *
  * The quantizer and the 4bpp encoder are shared with the gear pictures (gear-icons.ts)
- * and live in fixed-row-tiles.ts — both binaries are the same idea applied to a
+ * and live in fixed-row-tiles.ts, since both binaries are the same idea applied to a
  * different set of pictures.
  */
 import type { ImageBuffer } from '../graphics/png-writer';

@@ -3,24 +3,24 @@
  * The settings screens' own name lookup: an internal identity in, the name the
  * player knows out.
  *
- * The randomizer options were written with neutral wording — "Lift", "Red
- * cane", "Plain" — because the code they live in may not spell the game's own
+ * The randomizer options were written with neutral wording ("Lift", "Red
+ * cane", "Plain") because the code they live in may not spell the game's own
  * terms. The terms themselves are legitimate DATA, and this project already
  * transcribes them once, per item, in the record set the private companion
  * repo ships (`shared/game/data/records/items/**`, field `randomizerName`).
  * So there is no second dictionary here: this module indexes THAT one and
  * answers from it.
  *
- * A checkout without the records is the reason for the fallback rather than a
+ * A checkout without the records is the reason for the fallback instead of a
  * throw. `shared/game/data/items` globs its record modules, which resolves to
  * an empty registry when the folder is absent, so `known` is empty and every
  * caller keeps the neutral wording it passed in. The screens stay readable and
- * nothing fails — the same contract every other reader of that registry keeps.
+ * nothing fails, the same contract every other reader of that registry keeps.
  *
  * The lookup is by IDENTITY, not by translation table: the identities the
  * generator uses are the reference project's own item names, which is exactly
  * what `randomizerName` holds. Asking the registry therefore answers one
- * question — is this a name the dataset sanctions? — and returns it when it is.
+ * question (is this a name the dataset sanctions?) and returns it when it is.
  */
 import { ALL_ITEMS } from '@shared/game/data/items';
 
@@ -29,7 +29,7 @@ const SANCTIONED_ITEM_NAMES: ReadonlySet<string> = new Set(
   ALL_ITEMS.map((item) => item.randomizerName).filter((name) => typeof name === 'string' && name.length > 0),
 );
 
-/** Whether the dictionary is on disk at all — false in a checkout without the dataset. */
+/** Whether the dictionary is on disk at all: false in a checkout without the dataset. */
 const hasItemDictionary = (): boolean => SANCTIONED_ITEM_NAMES.size > 0;
 
 /**

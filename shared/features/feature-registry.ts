@@ -469,7 +469,7 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
     id: 'capacityProfile',
     label: 'Randomizer capacity profile',
     description:
-      'Starting tiers for a new file, the tier a counted family may reach, and the wallet ladder cap — armed by a randomizer session from its seed, never a user toggle.',
+      'Starting tiers for a new file, the tier a counted family may reach, and the wallet ladder cap, armed by a randomizer session from its seed, never a user toggle.',
     userMessage:
       'Set by a randomized profile: a new file starts at the chosen capacity tiers and the pond and wallet stop at the chosen maximums. Changes save bytes and economy limits, so Vanilla Safe strips it.',
     group: 'Quality of life',
@@ -520,7 +520,7 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
     id: 'retroBow',
     label: 'Randomizer retro bow',
     description:
-      'The bow stops eating ammunition and starts eating money: the shot branch of the bow handler pays for each shot out of the wallet at the moment it is fired — one cost for a plain shot, a dearer one for a silver shot — and refuses the shot outright when the wallet cannot pay, spending nothing. No save byte: the two costs are session state. Armed by a randomizer session from its seed, never a user toggle.',
+      'The bow stops eating ammunition and starts eating money: the shot branch of the bow handler pays for each shot out of the wallet at the moment it is fired (one cost for a plain shot, a dearer one for a silver shot), and refuses the shot outright when the wallet cannot pay, spending nothing. No save byte: the two costs are session state. Armed by a randomizer session from its seed, never a user toggle.',
     userMessage:
       'Set by a randomized profile playing retro: arrows are never found or carried, and every shot costs rupees. Changes what firing the bow does, so Vanilla Safe strips it.',
     group: 'Quality of life',
@@ -571,7 +571,7 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
     id: 'coloredRupees',
     label: 'Coloured rupees',
     description:
-      'A rupee reward lying in the world draws as the plain coloured gem — one colour per value — instead of the numbered hold-up picture. Draw-only: the same gem art, a different palette row, no new graphics and no palette written.',
+      'A rupee reward lying in the world draws as the plain coloured gem, one colour per value, instead of the numbered hold-up picture. Draw-only: the same gem art, a different palette row, no new graphics and no palette written.',
     userMessage:
       'Shows rupees waiting in the world as plain coloured gems, a colour for each value, instead of the picture with the amount written beside it. Only changes how they look, never what you get. On by default; not in the original game, so turn it off for vanilla parity.',
     group: 'Quality of life',
@@ -588,9 +588,9 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
     id: 'itemSheen',
     label: 'Item sheen',
     description:
-      'Sweeps a one-pixel bright diagonal across a drawn world item, and across the item held up on receipt, roughly once a second, in the lightest colour of the palette row it drew with. Repaints the decode slot only — no extra sprite entry, no shadow or palette change.',
+      'Sweeps a one-pixel bright diagonal across a drawn world item, and across the item held up on receipt, roughly once a second, in the lightest colour of the palette row it drew with. Repaints the decode slot only, with no extra sprite entry, no shadow or palette change.',
     userMessage:
-      'Makes items waiting in the world catch the light every second or so, so a pickup on the floor stands out from the scenery. Purely a visual effect. Not in the original game — leave off for vanilla parity.',
+      'Makes items waiting in the world catch the light every second or so, so a pickup on the floor stands out from the scenery. Purely a visual effect. Not in the original game, so leave off for vanilla parity.',
     group: 'Quality of life',
     kind: 'features0-bit',
     origin: 'relic',

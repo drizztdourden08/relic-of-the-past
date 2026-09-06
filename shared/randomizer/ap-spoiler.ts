@@ -3,7 +3,7 @@
  * Renders an ApPlacement's spoiler as readable text: the seed line, the two
  * rolled medallions, then the verification sweep's spheres with each
  * location's assigned item looked up in the name view. Names are already the
- * community-standard strings, so no resolver is needed — the legacy
+ * community-standard strings, so no resolver is needed, and the legacy
  * Placement shape keeps its own renderer in spoiler.ts.
  */
 import type { ApPlacement } from './ap-world/fill/ap-placement.type';

@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Shelf-slot overrides — JS-side arming for the in-core substitution table
+ * Shelf-slot overrides: JS-side arming for the in-core substitution table
  * that turns a shop shelf into a randomizer location
  * (core/game-hooks/shop_overrides.c). One entry per purchase: a slot stocked
  * to depth N is armed as N entries sharing a shelf key and differing only in
@@ -25,7 +25,7 @@ interface ShopSlotTarget {
   entrance: number;
   /** Overworld area of the shop's own door, telling shared doors apart, or -1 for any. */
   owArea: number;
-  /** The selling sprite's subtype — one purchasable spot inside the shop. */
+  /** The selling sprite's subtype: one purchasable spot inside the shop. */
   subtype: number;
   /** Which purchase of the slot this is; the shelf sells 0 first. */
   depthIndex: number;
@@ -69,7 +69,7 @@ const setShopSlotOverride = (
 const clearShopSlotOverrides = (): void => {
   const mod = getModule();
   if (!mod) return;
-  // Empty the table, then close the gate — same double lock as the other tables.
+  // Empty the table, then close the gate, same double lock as the other tables.
   mod.ccall('WasmClearShopSlotOverrides', null, [], []);
   setShopOverridesActive(false);
   reassertGateWord3();

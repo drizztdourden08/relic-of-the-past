@@ -3,7 +3,7 @@
  * Two-thumb range over a discrete list of stops. Two native range inputs are
  * stacked on one track (so focus, arrows, Home/End and screen readers come
  * for free); only their thumbs take the pointer. The low thumb can never
- * pass the high one — a move that would cross is clamped to the other thumb.
+ * pass the high one, so a move that would cross is clamped to the other thumb.
  * When the two thumbs share a stop, the one last moved (or focused) stays on
  * top, so the drag that brought them together can be pulled back; at either
  * end of the track the only thumb that can still move is the one on top.

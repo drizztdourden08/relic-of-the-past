@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind types */
 /**
- * Randomizer session contract — the surface a session mode exposes to the
+ * Randomizer session contract: the surface a session mode exposes to the
  * location poller and the UI. A local session resolves a reported check from
  * its own placement table; an online session forwards it to the server.
  */

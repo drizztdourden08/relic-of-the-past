@@ -3,10 +3,10 @@
  * The card model the shop grid renders: one card per shop, its slots already
  * grouped, labelled and matched against the scope's ticked set.
  *
- * Every derivation lives here rather than in the card. The card is handed a
+ * Every derivation lives here instead of in the card. The card is handed a
  * name, a line of text and a list of toggles, and knows nothing about
  * canonical indices, which shops start unticked or how a shelf position turns
- * into a label — so it stays a presentational unit and this file stays the one
+ * into a label, so it stays a presentational unit and this file stays the one
  * place the dataset is read.
  *
  * The name is the SHORT one: the grid is headed by world, so a card repeating
@@ -28,13 +28,13 @@ interface ShopSlotToggleModel {
 }
 
 interface ShopCardModel {
-  /** The shop's full name — unique, so it identifies the card in a list. */
+  /** The shop's full name, unique, so it identifies the card in a list. */
   id: string;
   /** The shop's own name, less the world words its section already says. */
   name: string;
   /** Which section lists it. */
   world: ShopWorld;
-  /** What the unmodified shop sells, in shelf order — the card's caption line. */
+  /** What the unmodified shop sells, in shelf order: the card's caption line. */
   stock: string;
   /** This shop's slots start unticked, and the card says so on its face. */
   offByDefault: boolean;
@@ -43,7 +43,7 @@ interface ShopCardModel {
   noneOn: boolean;
 }
 
-/** Reads as one sentence of stock rather than a list of separate things. */
+/** Reads as one sentence of stock instead of a list of separate things. */
 const STOCK_SEPARATOR = ' · ';
 
 /**

@@ -15,8 +15,8 @@
  * money for the same number of upgrades.
  *
  * Gamble sells twelve chances at a rising price. A losing throw hands back
- * half of what it cost — always strictly less than the price, so the pond can
- * never be farmed — and the pond closes for good once the twelfth chance is
+ * half of what it cost, always strictly less than the price, so the pond can
+ * never be farmed, and the pond closes for good once the twelfth chance is
  * spent.
  */
 
@@ -33,7 +33,7 @@ const POND_MAX_ITEMS = 20;
 const POND_VANILLA_PRICE = 100;
 const POND_VANILLA_THROWS = 14;
 
-/** Gamble: twelve chances at 20, 40, 60 … 240, half the price back on a loss. */
+/** Gamble: twelve chances at 20, 40, 60 ... 240, half the price back on a loss. */
 const POND_GAMBLE_CHANCES = 12;
 const POND_GAMBLE_PRICE_STEP = 20;
 

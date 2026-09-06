@@ -5,7 +5,7 @@
  * (fix_trock_doors is false for vanilla entrances + open mode, so the
  * bomb-wall rows 511-515 apply) and set_trock_key_rules 1136-1234. Under
  * vanilla wiring the locked-door probe resolves to: front reachable, middle
- * / big-chest / back unreachable — so the not-can_reach_back branch applies
+ * / big-chest / back unreachable, so the not-can_reach_back branch applies
  * (1183-1208), no forbids fire (1211 needs an unreachable front), and the
  * self-allowance (1232-1234) lives in the item-rules table. Dark-room lamp
  * rows come from the lamp table.

@@ -70,7 +70,7 @@ const probeOnlineServer = (config: ProbeConfig): Promise<ProbeResult> =>
           finish({ ok: false, reason: `connection refused: ${packet.errors.join(', ')}` });
           break;
         default:
-          break; // Unrelated server chatter — ignored, the handshake decides.
+          break; // Unrelated server chatter is ignored, and the handshake decides.
       }
     };
 

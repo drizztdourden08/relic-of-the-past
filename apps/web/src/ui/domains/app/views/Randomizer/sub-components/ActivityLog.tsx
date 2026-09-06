@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 /**
- * The randomizer page's activity feed — randomizer-channel and error-channel
+ * The randomizer page's activity feed: randomizer-channel and error-channel
  * entries, newest at the bottom, rendered through the shared LogPanel so it
  * gets the same windowing, search, copy and type filter the simulation log has.
  */

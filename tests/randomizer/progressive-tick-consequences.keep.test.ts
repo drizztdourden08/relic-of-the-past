@@ -6,7 +6,7 @@
  * The lines are the panel's live reading of `derivedItemPower`, so the load-
  * bearing assertion here is the lockstep one: for any tick set, the switches
  * the derivation masks on are exactly the switches the visible lines stand
- * for. Everything else is the plain contract — nothing while the ladder is
+ * for. Everything else is the plain contract: nothing while the ladder is
  * whole, the beam-only three while the first rung alone is ticked.
  */
 import { describe, expect, it } from 'vitest';

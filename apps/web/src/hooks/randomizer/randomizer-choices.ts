@@ -6,7 +6,7 @@
  * and by the profile writer that freezes the same snapshot onto disk.
  *
  * Keeping both on this module is the point. When each built its own override
- * list, a row added to one and forgotten in the other froze silently — the
+ * list, a row added to one and forgotten in the other froze silently. The
  * control moved, the snapshot kept the baseline, and nothing downstream ever
  * saw the change. For the same reason the plain scalar rows are declared as
  * ONE key → field map that drives both directions: the panel reads a row's
@@ -48,7 +48,7 @@ interface RandomizerOptionChoices {
   includeWorldItems: boolean;
   /**
    * How far each dungeon-flavoured family may travel. One field per family
-   * rather than one object: the four are separate catalog rows the player sets
+   * instead of one object: the four are separate catalog rows the player sets
    * apart, and each reaches the generator through its own source key.
    */
   bigKeyShuffle: DungeonItemMode;
@@ -59,10 +59,10 @@ interface RandomizerOptionChoices {
    * What the shops are asked for: the shuffle mode, which slots may be
    * shuffled, how many of them a counted mode opens, and how deep each stocks.
    * One field for the whole shop scope, so its ~34 catalog rows are wired here
-   * in ONE line rather than listed twice.
+   * in ONE line instead of listed twice.
    */
   shops: ShopScope;
-  /** The shop-price rows, by catalog key — the block owns their whole set. */
+  /** The shop-price rows, by catalog key. The block owns their whole set. */
   shopPrices: Readonly<Record<string, ApOptionValue>>;
   shufflePrizes: boolean;
   /** The master switch: off leaves all four families vanilla and the pond native. */
@@ -76,13 +76,13 @@ interface RandomizerOptionChoices {
   pond: PondSetting;
   /**
    * Which tiers of each progressive family exist. One field for the whole set,
-   * so its thirteen catalog rows are wired here in ONE line rather than listed
-   * twice — and unticking every blade rung is what the retired swordless row
+   * so its thirteen catalog rows are wired here in ONE line instead of listed
+   * twice, and unticking every blade rung is what the retired swordless row
    * used to say.
    */
   progressiveTiers: ProgressiveSetting;
   /**
-   * How each family's copies arrive — in order, or the rungs themselves in any
+   * How each family's copies arrive: in order, or the rungs themselves in any
    * order. One field for all five rows, on the same terms as the ticks above.
    */
   progressiveModes: ProgressiveModeSetting;
@@ -91,7 +91,7 @@ interface RandomizerOptionChoices {
   /**
    * How many copies of each tiered family the seed carries, and how high the
    * hearts climb. One field for all six rows, on the same terms as the ticks:
-   * the block owns them, so they are wired here once rather than listed twice.
+   * the block owns them, so they are wired here once instead of listed twice.
    */
   difficulty: DifficultySetting;
   /** The seven item-power switches, one field for the whole set. */
@@ -138,7 +138,7 @@ const PLAIN_FIELD_BY_KEY: Readonly<Record<string, ChoiceField>> = {
 
 /**
  * The numeric fields, so a slider row writes a number and a toggle row a
- * boolean. Empty while every plain row is a toggle — the shop sliders moved
+ * boolean. Empty while every plain row is a toggle, because the shop sliders moved
  * into the shop block, which writes their values through the scope.
  */
 const NUMERIC_FIELDS: ReadonlySet<ChoiceField> = new Set([]);
@@ -169,11 +169,11 @@ const plainOverrides = (choices: RandomizerOptionChoices): Record<string, ApOpti
 
 /**
  * Every catalog key these choices decide, with the value chosen for it. Two
- * dependency rules run here rather than at the controls, so a pair the panel
+ * dependency rules run here instead of at the controls, so a pair the panel
  * somehow left contradicting each other still freezes as a playable seed: the
  * capacity families and the pond are settled together (the upgrades always
  * exist somewhere), and a bottle content whose cauldron went to the shuffle
- * is masked off the player's own price rows. Both are masks, not rewrites —
+ * is masked off the player's own price rows. Both are masks, not rewrites,
  * the choices keep what the player asked for, so untying either dependency
  * gives their setting straight back.
  */
@@ -200,7 +200,7 @@ const randomizerChoiceOverrides = (
   };
 };
 
-/** The snapshot these choices freeze — what the panel reads and the profile stores. */
+/** The snapshot these choices freeze: what the panel reads and the profile stores. */
 const snapshotOfChoices = (choices: RandomizerOptionChoices): RandomizerOptionsSnapshot =>
   buildOptionsSnapshot(randomizerChoiceOverrides(choices));
 

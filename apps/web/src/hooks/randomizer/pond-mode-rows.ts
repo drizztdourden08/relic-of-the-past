@@ -2,8 +2,8 @@
 /**
  * The pond tab's own reading of the catalog's `pond_mode` row: the same entry
  * with its choice list narrowed to the modes the capacity/pond rule still
- * allows. Narrowing the DROPDOWN rather than refusing the pick afterwards is
- * the point — a mode that cannot be honoured is never offered, and the note
+ * allows. Narrowing the DROPDOWN instead of refusing the pick afterwards is
+ * the point: a mode that cannot be honoured is never offered, and the note
  * beside the row says why it is missing.
  */
 import { POND_MODE_KEY } from '@shared/randomizer/ap-world/pond/pond-option-keys';

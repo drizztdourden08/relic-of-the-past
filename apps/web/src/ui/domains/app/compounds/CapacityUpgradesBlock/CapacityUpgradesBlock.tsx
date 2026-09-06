@@ -6,7 +6,7 @@
  * plain option row, one CapacityFamilyRow per family, and the notes (every
  * fallback the profile reader applied, plus whatever the pond rule is
  * forcing) underneath. With the master switch off everything below it greys
- * out and freezes — the families are not the player's to set while the
+ * out and freezes, because the families are not the player's to set while the
  * feature is out. Shared by the creation panel and the Run tab; the rows
  * arrive derived, edits leave keyed by family.
  */

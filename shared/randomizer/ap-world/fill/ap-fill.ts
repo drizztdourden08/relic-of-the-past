@@ -4,13 +4,13 @@
  * path): pop one item at a time off the end of the pool, compute the maximum
  * exploration state assuming everything still unplaced, place at the first
  * candidate in the (caller-shuffled) location list that accepts it, and on a
- * miss try the swap pass — displace an earlier placement whose slot accepts
+ * miss try the swap pass: displace an earlier placement whose slot accepts
  * this item, requeueing the displaced item to be placed last. Documented
  * simplifications against the source, none of which can deadlock the
  * baseline because the caller retries with a fresh seed on failure:
  * - the swap's reachable-location-count non-decrease guard is skipped (the
  *   final full-accessibility sweep rejects any bad outcome instead);
- * - a placement miss after the swap pass throws immediately rather than
+ * - a placement miss after the swap pass throws immediately instead of
  *   parking the item in unplaced_items (the source raises at the end anyway
  *   when unplaced items remain and partial fills are not allowed);
  * - progression balancing is not ported (it redistributes valid placements,
@@ -33,7 +33,7 @@ class ApFillError extends Error {
 
 /**
  * python Location.can_fill: item rule, then always_allow OR reachability.
- * |checkAccess| is the source's own `check_access` argument — false drops the
+ * |checkAccess| is the source's own `check_access` argument, where false drops the
  * reachability half entirely, which is what minimal accessibility asks for
  * once the goal is already reachable (Fill.py, perform_access_check).
  */
@@ -49,9 +49,9 @@ const canFillLocation = (
 
 interface FillRestrictiveInput {
   world: ApWorld;
-  /** Consumed from the end (mutated) — shuffle before calling. */
+  /** Consumed from the end (mutated), so shuffle before calling. */
   items: string[];
-  /** Candidate locations in scan order (mutated) — shuffle before calling. */
+  /** Candidate locations in scan order (mutated), so shuffle before calling. */
   locations: string[];
   /** Items assumed owned throughout, on top of the still-unplaced ones. */
   assumedItems?: readonly string[];
@@ -59,7 +59,7 @@ interface FillRestrictiveInput {
   allowedAt?: (itemName: string, locationName: string) => boolean;
   /**
    * Minimal accessibility: once the assumed state already beats the game, the
-   * source stops requiring a spot to be reachable (Fill.py — "if minimal
+   * source stops requiring a spot to be reachable (Fill.py, "if minimal
    * accessibility, only check whether location is reachable if game not
    * beatable"). Absent keeps the check on for every placement, which is what
    * the other two contracts ask for.

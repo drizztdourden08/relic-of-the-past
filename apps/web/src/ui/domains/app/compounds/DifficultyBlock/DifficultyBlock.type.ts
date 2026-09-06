@@ -7,7 +7,7 @@ interface DifficultyBlockProps {
   /**
    * The tier ticks standing above this block. A family with no rung left
    * carries no copy at all, so its multiple has nothing to act on and its
-   * control is shown inert with the reason on it — the same reading the
+   * control is shown inert with the reason on it, the same reading the
    * item-power rows take from the same ticks.
    */
   tiers: ProgressiveSetting;

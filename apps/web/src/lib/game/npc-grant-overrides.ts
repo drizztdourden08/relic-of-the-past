@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Npc grant overrides — JS-side arming for the in-core scripted-grant
+ * Npc grant overrides: JS-side arming for the in-core scripted-grant
  * substitution table (core/game-hooks/npc_overrides.c), mirroring the chest
  * table's contract in randomizer.ts: the write only records, the gate bit is
  * requested alongside it, and it stays open only while the table has entries.
@@ -16,7 +16,7 @@ import { reassertGateWord3 } from './live-settings';
 const ROOM_ANY = -1;
 
 const refuse = (vanillaItem: number, newItem: number, where: string): boolean => {
-  // Both ids index the 76-entry native grant tables — an out-of-range one would
+  // Both ids index the 76-entry native grant tables, so an out-of-range one would
   // corrupt the receipt, so refuse it here like the chest-table setter does.
   if (isNativeReceiveId(vanillaItem) && isGrantableReceiveId(newItem)) return false;
   log.error(`[Randomizer] Npc override refused: item pair 0x${vanillaItem.toString(16)} -> `
@@ -24,7 +24,7 @@ const refuse = (vanillaItem: number, newItem: number, where: string): boolean =>
   return true;
 };
 
-// Arm kFeatures3_NpcOverrides alongside writing the table — the write itself is
+// Arm kFeatures3_NpcOverrides alongside writing the table. The write itself is
 // ungated (record-only), but the gate must be requested here so it has latched into
 // WRAM (SyncGateWords, next frame) by the time a giver's grant applies the table.
 const armGate = (): ReturnType<typeof getModule> => {
@@ -67,7 +67,7 @@ const setNpcGrantSpriteOverride = (spriteType: number, vanillaItem: number, newI
 const clearNpcGrantOverrides = (): void => {
   const mod = getModule();
   if (!mod) return;
-  // Empty the table, then close the gate — same double lock as clearItemOverrides.
+  // Empty the table, then close the gate, same double lock as clearItemOverrides.
   mod.ccall('WasmClearNpcGrantOverrides', null, [], []);
   setNpcOverridesActive(false);
   reassertGateWord3();

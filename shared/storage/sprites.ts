@@ -64,8 +64,8 @@ const readStampVersion = async (files: FileStore, romFile: string): Promise<stri
  * `expectedVersion`: a file that extraction writes is absent while others are
  * there, or the stamp is missing or names another version (the definitions, a
  * drawing or the decoders changed since). A set holding NONE of the expected
- * files is NOT stale — that is the plain "never extracted" case, which the
- * caller answers by extracting rather than by refreshing.
+ * files is NOT stale. That is the plain "never extracted" case, which the
+ * caller answers by extracting instead of by refreshing.
  */
 const isStale = async (
   files: FileStore, romFile: string, expected: readonly string[], expectedVersion: string,

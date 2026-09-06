@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Capacity fixed lines — JS-side arming of the (family, starting rung, jump)
+ * Capacity fixed lines: JS-side arming of the (family, starting rung, jump)
  * → receipt-line table the core's fixed-jump resolvers read
  * (core/game-hooks/capacity_fixed_lines.c): when a fixed item lands, the
  * core looks up the line pre-rendered for the rung it climbed from and shows

@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Plan arming — pushes a physical plan's override entries into the in-core
+ * Plan arming: pushes a physical plan's override entries into the in-core
  * substitution tables (chest / npc / drop / standing), wiring each physical
  * entry's contextual message and completion fire id, and derives the poll
  * list: physical override rows report from the substitution seam (the fire
@@ -27,7 +27,7 @@ type MessageIdOf = (locationName: string) => number;
 const applyOverrides = (plan: PhysicalPlan, messageIdOf: MessageIdOf, tag: string): void => {
   // A boss reward substitutes through the npc table like any other scripted grant, but
   // the core also has to stop reading the dungeon's own pendant/crystal bit as "reward
-  // claimed" — so the reward gate is requested exactly when such a row is armed.
+  // claimed", so the reward gate is requested exactly when such a row is armed.
   if (plan.entries.some((entry) =>
     entry.planClass === 'override-npc' && PRIZE_LOCATIONS.has(entry.locationName))) {
     armPrizeShuffle();
@@ -70,7 +70,7 @@ const applyOverrides = (plan: PhysicalPlan, messageIdOf: MessageIdOf, tag: strin
 const pollEntriesOf = (plan: PhysicalPlan, tag: string): PollEntry[] => {
   const entries: PollEntry[] = [];
   for (const entry of plan.entries) {
-    // Physical override rows report from the substitution seam — polling them
+    // Physical override rows report from the substitution seam, so polling them
     // would misfire on possession-style detections and adds nothing else.
     if (FIRE_REPORTED_CLASSES.has(entry.planClass)) continue;
     if (entry.detection === undefined) {

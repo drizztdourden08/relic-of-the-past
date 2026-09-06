@@ -6,7 +6,7 @@ interface RangeSliderProps {
   value: readonly [number, number];
   onChange: (next: [number, number]) => void;
   disabled?: boolean;
-  /** Keyboard step in stops (default 1) — a long ladder moves in coarser strides. */
+  /** Keyboard step in stops (default 1), so a long ladder moves in coarser strides. */
   step?: number;
   /** Show a tick label every N stops; the first and last stop are always labelled. */
   labelEvery?: number;

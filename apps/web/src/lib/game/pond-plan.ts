@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Pond plan — JS-side arming for the in-core rupee-pond plan
+ * Pond plan: JS-side arming for the in-core rupee-pond plan
  * (core/game-hooks/pond_plan.c): one row per throw (its price, the prize
  * ordinal it hands over or -1, the consolation it pays back, the pre-rendered
  * lines announcing the price and the consolation) and one row per prize slot
@@ -91,7 +91,7 @@ const setPondClosedMessage = (messageId: number): void => {
   log.randomizer(`[Randomizer] Pond closing line -> msg ${messageId}`);
 };
 
-/** Throws taken on the live file — what the probes and the tracker read back. */
+/** Throws taken on the live file: what the probes and the tracker read back. */
 const pondThrowsTaken = (): number => {
   const mod = getModule();
   return mod ? (mod.ccall('WasmPondThrowsTaken', 'number', [], []) as number) : 0;
@@ -100,7 +100,7 @@ const pondThrowsTaken = (): number => {
 const clearPondPlan = (): void => {
   const mod = getModule();
   if (!mod) return;
-  // Empty the plan, then close the gate — the same double lock as the other tables.
+  // Empty the plan, then close the gate, the same double lock as the other tables.
   mod.ccall('WasmClearPondPlan', null, [], []);
   setPondPlanActive(false);
   reassertGateWord3();

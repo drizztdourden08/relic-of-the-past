@@ -2,7 +2,7 @@
 /**
  * The pond's fixed settings. LEGACY is the mode every snapshot written
  * before the pond option means: the pond keeps its native purchase loop and
- * its two slots answer to the capacity families alone — byte for byte the
+ * its two slots answer to the capacity families alone, byte for byte the
  * behaviour that shipped. DEFAULT is where a NEW profile starts: a Custom
  * pond that sells ten pool items from free up to four hundred over ten
  * throws. The Custom-shaped defaults under it are what a mode starts from
@@ -11,7 +11,7 @@
 import { POND_PRICE_LADDER } from './pond-ladder.data';
 import type { PondCustomSetting, PondSetting } from './pond-profile.type';
 
-/** The pond as it has always behaved — an absent snapshot row means exactly this. */
+/** The pond as it has always behaved: an absent snapshot row means exactly this. */
 const LEGACY_POND_SETTING: PondSetting = { mode: 'capacity' };
 
 /** Today's two pond checks: what a mode offers before the player moves the slider. */

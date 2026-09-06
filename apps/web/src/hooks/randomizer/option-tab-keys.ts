@@ -1,10 +1,10 @@
 /* @layer renderer-hooks @kind constants */
 /**
- * The option keys a tab claims by NAME rather than by catalog section. The
- * reference project files these rows under sections this app does not follow —
+ * The option keys a tab claims by NAME, not by catalog section. The
+ * reference project files these rows under sections this app does not follow,
  * the traps sit in its item section, the scenery shuffles in its enemy one,
  * and the doorways, the trick knowledge and the two entrance requirements all
- * sit in its single world one — so the tab that owns each subject names its
+ * sit in its single world one, so the tab that owns each subject names its
  * rows here instead of inheriting a section that would scatter them.
  *
  * Every set is read by one rule (option-tab-model.ts) and nothing else, so a
@@ -47,7 +47,7 @@ const GLITCH_KEYS: ReadonlySet<string> = new Set(['glitches_required', 'glitch_b
 /**
  * What the player already holds when the game begins, and what the pool
  * therefore stops holding. The reference files it with the plando rows because
- * all three are written out rather than chosen, but the question it asks is
+ * all three are written out instead of chosen, but the question it asks is
  * about ITEMS, so the items tab claims it by name.
  */
 const ITEM_KEYS: ReadonlySet<string> = new Set(['start_inventory_from_pool']);

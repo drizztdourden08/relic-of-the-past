@@ -1,11 +1,11 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Override-fired events — the C→JS completion signal for physical overrides.
+ * Override-fired events: the C→JS completion signal for physical overrides.
  * When an in-core substitution table (npc / drop / standing) applies an entry,
  * the check that entry stands for is by definition completed at that instant;
  * the core reports the host-assigned fire id the arming call carried
  * (GameHook_NotifyOverrideFired → window.__onOverrideFired). Sessions use this
- * instead of save-flag or possession polling for their physical rows — several
+ * instead of save-flag or possession polling for their physical rows, because several
  * giver checks have no reliable flag, and possession reads false-fire when the
  * vanilla item arrives from elsewhere.
  */

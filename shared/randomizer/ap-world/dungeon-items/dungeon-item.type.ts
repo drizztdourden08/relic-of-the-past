@@ -1,6 +1,6 @@
 /* @layer shared-game @kind types */
 /**
- * Where a dungeon's own items may end up — the four `DungeonItem` choices of
+ * Where a dungeon's own items may end up: the four `DungeonItem` choices of
  * Archipelago worlds/alttp/Options.py 170-213, one setting per family.
  *
  * The names are the source's own option keys, so a snapshot value maps across

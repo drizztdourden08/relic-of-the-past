@@ -4,8 +4,8 @@
  * jump label and a cumulative chip per pool item. Dim in Vanilla (the native
  * ladder, nothing in the pool); the last chip is flagged when its jump ran
  * past the top of the ladder; an ordered ladder numbers its jumps (1st,
- * 2nd …) because pickups take them in that order. Values arrive formatted
- * — the compound only lays them out.
+ * 2nd ...) because pickups take them in that order. Values arrive formatted
+ * and the compound only lays them out.
  */
 import { Box, Text } from '@ds/primitives';
 import type { LadderPreviewProps } from './LadderPreview.type';

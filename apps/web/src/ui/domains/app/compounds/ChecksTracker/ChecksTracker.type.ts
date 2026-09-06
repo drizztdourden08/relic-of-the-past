@@ -28,7 +28,7 @@ interface ChecksTrackerProps {
   run?: RunContext;
   /** Grouping axes the config panel offers. Defaults to the base catalog. */
   dimensions?: readonly GroupDimensionDef[];
-  /** Rendered between the filters and the tree — a caveat, a count, a warning. */
+  /** Rendered between the filters and the tree: a caveat, a count, a warning. */
   notice?: ReactNode;
   className?: string;
 }

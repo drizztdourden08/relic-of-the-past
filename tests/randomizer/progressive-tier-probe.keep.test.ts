@@ -5,7 +5,7 @@
  * a session arms it (WasmSetProgressiveTiers), and the family's virtual id is
  * resolved through the grant resolver exactly as a seam would. Pinned: a copy
  * hands over the LOWEST rung still present at or above the tier already held,
- * so unticking a middle rung shortens the ladder rather than leaving a hole;
+ * so unticking a middle rung shortens the ladder instead of leaving a hole;
  * an unarmed family walks the full ladder, which is the arithmetic the core had
  * before the masks existed.
  *
@@ -109,7 +109,7 @@ describeCore('progressive tier masks in the built core (headless)', () => {
     }
   });
 
-  it('an unticked middle rung shortens the ladder rather than leaving a hole in it', () => {
+  it('an unticked middle rung shortens the ladder instead of leaving a hole in it', () => {
     // Rungs 0, 2, 3 present: the second copy skips straight past the missing one.
     call('WasmSetProgressiveTiers', FAMILY.sword, 0b1101);
     expect(grantAt(ID.sword, WRAM.swordType, 0)).toBe(SWORD_TIER_ID[0]);

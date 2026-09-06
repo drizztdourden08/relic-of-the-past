@@ -2,7 +2,7 @@
 /**
  * Classifies a log-bus entry into a display kind + short tag, the same way the
  * simulation log classifies its events. Session lines are already prefixed and
- * structured ("[Local] Overrode …"), so they carry real types — flattening them
+ * structured ("[Local] Overrode ..."), so they carry real types, and flattening them
  * into one grey stream throws away the only structure the feed has.
  *
  * Level wins over content: an error stays an error whatever it says.
@@ -54,7 +54,7 @@ const formatTime = (timestamp: number): string =>
   new Date(timestamp).toLocaleTimeString(undefined, { hour12: false });
 
 /**
- * The session prefix is the tag's job, so it is stripped from the message —
+ * The session prefix is the tag's job, so it is stripped from the message,
  * repeating "[Local]" on every one of ~500 arm-time lines is pure noise.
  */
 const stripPrefix = (message: string): string => message.replace(/^\[[^\]]+]\s*/, '');

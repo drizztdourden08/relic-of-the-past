@@ -6,7 +6,7 @@
  * vanilla family keeps the reference's fixed-option arithmetic
  * (StateHelpers.py can_use_bombs / can_hold_arrows with the capacity shuffle
  * off: the vanilla rung, plus the whole grid once the shop event is reached);
- * a family in the pool counts its items instead and gets no shop bonus — the
+ * a family in the pool counts its items instead and gets no shop bonus, the
  * reference's own on-mode divergence. A progressive item is one step of
  * the family's plan: k copies collected reach the plan's cumulative rung k,
  * whatever the fill order (the jumps come from the same planOf the pool
@@ -25,7 +25,7 @@ import type { CollectionState } from './collection-state';
 const settingOf = (state: CollectionState, capacityFamily: CapacityFamily): FamilySetting =>
   (state.world.options.capacity ?? REFERENCE_CAPACITY_PROFILE)[capacityFamily.id];
 
-/** The plan's jumps per setting object — the rules ask on every evaluation, the plan never changes. */
+/** The plan's jumps per setting object: the rules ask on every evaluation, the plan never changes. */
 const PLAN_JUMPS = new WeakMap<FamilySetting, readonly number[]>();
 
 const planJumpsOf = (capacityFamily: CapacityFamily, setting: FamilySetting): readonly number[] => {

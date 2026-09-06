@@ -10,8 +10,8 @@
  * the reference partition is unchanged. A progressive item is classed by
  * its family exactly like the fixed-jump items of that family.
  *
- * The dungeon keys answer here too: Items.py classes every `Small Key (…)`
- * and `Big Key (…)` as progression and every `Map (…)` / `Compass (…)` as
+ * The dungeon keys answer here too: Items.py classes every `Small Key (...)`
+ * and `Big Key (...)` as progression and every `Map (...)` / `Compass (...)` as
  * filler. They only ever reach the global pool when their family's shuffle
  * mode takes them out of the dungeon prefill (dungeon-items/), so under the
  * baseline this branch is never taken and the reference partition stands.

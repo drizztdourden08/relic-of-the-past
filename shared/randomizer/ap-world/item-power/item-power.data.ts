@@ -2,7 +2,7 @@
 /**
  * The catalog keys the item-power switches occupy, and the reading each one
  * has under the reference's four steps (Rom.py patch_rom 817-870, 1045-1047).
- * The default row IS the normal step — the unmodified game.
+ * The default row IS the normal step, the unmodified game.
  *
  * What each of the four steps really did is written down where a reader will
  * look for it: on the locked transcription row's own description, beside the
@@ -25,7 +25,7 @@ const ITEM_POWER_KEY = {
 
 const ITEM_POWER_OPTION_KEYS: readonly string[] = Object.values(ITEM_POWER_KEY);
 
-/** Rom.py 862-868 — the normal step, which is the unmodified game. */
+/** Rom.py 862-868: the normal step, which is the unmodified game. */
 const DEFAULT_ITEM_POWER: ItemPowerSetting = {
   catchFairies: true,
   byrnaInvulnerable: true,

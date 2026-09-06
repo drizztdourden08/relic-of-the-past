@@ -12,7 +12,7 @@
  *   retro bow on   ⇒ arrows cannot be a price
  *   retro bow off  ⇒ the arrows row is the player's own again
  *
- * The follow is a MASK rather than an overwrite, the way the potion rule
+ * The follow is a MASK, not an overwrite, the way the potion rule
  * (potion-price/) treats a cauldron handed to the shuffle: the player's own
  * tick stays in the choices and comes back the moment retro is switched
  * off. The panel greys the row and says why on it; the plan refuses the
@@ -29,7 +29,7 @@ type Values = Readonly<Record<string, ApOptionValue>>;
 /** One line under the arrows row while retro holds it off. */
 const RETRO_ARROWS_NOTE = 'Off while retro bow is on: there are no arrows to pay with';
 
-/** The currencies this snapshot has nothing of — what the roll must refuse. */
+/** The currencies this snapshot has nothing of: what the roll must refuse. */
 const blockedCurrenciesOfValues = (values: Values): readonly ShopCountedCurrency[] =>
   (retroBowOfValues(values).enabled ? ['arrows'] : []);
 

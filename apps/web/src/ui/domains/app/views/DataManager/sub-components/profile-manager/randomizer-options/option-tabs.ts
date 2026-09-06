@@ -3,7 +3,7 @@
  * The tab strip of the options panel: the faces in the order they are
  * shown, each wearing the number of its rows that sit off the baseline. A tab
  * with nothing changed wears nothing, so the badge only ever means "there is
- * a setting in here you moved" — the answer to a screen too long to scroll
+ * a setting in here you moved", the answer to a screen too long to scroll
  * hiding a choice behind a tab the eye skipped.
  *
  * The order is the MODEL's, so a tab cannot exist in one and be missing from

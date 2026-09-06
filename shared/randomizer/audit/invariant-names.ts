@@ -1,9 +1,9 @@
 /* @layer shared-game @kind logic */
 /**
- * A6-name — every check names itself for the randomizer, and no two checks
+ * A6-name: every check names itself for the randomizer, and no two checks
  * within the same dungeon scope (or both scope-less) share that name.
  *
- * SRC-func — a check citing a source function must point at text that really
+ * SRC-func: a check citing a source function must point at text that really
  * exists in the core sprite source; only runs when that text is supplied.
  */
 import type { InvariantFinding, InvariantInput } from './invariant-types';

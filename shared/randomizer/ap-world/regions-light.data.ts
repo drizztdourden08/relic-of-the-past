@@ -2,7 +2,7 @@
 /**
  * Overworld regions of the first world (python create_lw_region calls).
  * Ported 1:1 from Archipelago worlds/alttp/Regions.py (create_regions).
- * Names are the AP originals — this is transcribed game data. The start
+ * Names are the AP originals, since this is transcribed game data. The start
  * region carries the extra standard-mode exit Rules.py standard_rules adds
  * (line 1091, add_connection 'Uncle S&Q').
  */

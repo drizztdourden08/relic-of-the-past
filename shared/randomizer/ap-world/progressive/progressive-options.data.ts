@@ -1,12 +1,12 @@
 /* @layer shared-game @kind data */
 /**
- * The thirteen tier rows of the option catalog — synthetic, unlocked, group
+ * The thirteen tier rows of the option catalog: synthetic, unlocked, group
  * 'items', so they list beside the other item settings and each wears an
  * ordinary toggle. Together they replace the reference's swordless switch,
  * which is not in the catalog at all: unticking every blade row IS that
  * switch, so the question is asked here once instead of in two places.
  *
- * Every baseline is TICKED — the reference pool — so a fresh profile rolls the
+ * Every baseline is TICKED (the reference pool), so a fresh profile rolls the
  * seed it always rolled, and a snapshot frozen before these rows existed reads
  * the same way.
  */
@@ -30,7 +30,7 @@ const base = {
 };
 
 /**
- * Titled from the dataset rather than from wording written here
+ * Titled from the dataset instead of from wording written here
  * (progressive-display-names.ts): the record set knows what a family and each
  * of its rungs is called, and a checkout without it keeps the short neutral
  * words the family table carries.

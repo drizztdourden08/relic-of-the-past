@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * The five dark-room rows of the option catalog — synthetic, unlocked, group
+ * The five dark-room rows of the option catalog: synthetic, unlocked, group
  * 'world', so they list beside the other world settings on the general tab
  * and wear the same row as every other toggle. They replace the reference's
  * single three-way choice (which stays in the catalog, locked, as the
@@ -32,7 +32,7 @@ const base = {
 /**
  * The wording a row falls back to when the record set is not on disk. With it
  * there, the row is titled with the item's own name instead
- * (display-names/) — the same lookup the tiles under the row already use, so
+ * (display-names/), the same lookup the tiles under the row already use, so
  * the heading and the art can never disagree about what a light is called.
  */
 const NEUTRAL_LIGHT_NAMES: Readonly<Record<DarkRoomLightField, string>> = {

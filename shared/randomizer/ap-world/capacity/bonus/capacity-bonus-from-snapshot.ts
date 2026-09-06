@@ -37,7 +37,7 @@ const capacityBonusOfValues = (values: Values): CapacityBonusSetting => Object.f
 const capacityBonusFromSnapshot = (snapshot: RandomizerOptionsSnapshot): CapacityBonusSetting =>
   capacityBonusOfValues(snapshot.values);
 
-/** The rows a setting freezes — what the creation form hands the catalog. */
+/** The rows a setting freezes: what the creation form hands the catalog. */
 const capacityBonusValuesOf = (setting: CapacityBonusSetting): Record<string, ApOptionValue> => {
   const values: Record<string, ApOptionValue> = {};
   for (const family of CAPACITY_FAMILY_IDS) {

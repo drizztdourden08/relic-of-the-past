@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * A2-unique — no two checks may claim the same physical save bit. A room bit
+ * A2-unique: no two checks may claim the same physical save bit. A room bit
  * is keyed by roomId plus its chest index or mask; an overworld bit by its
  * screen plus mask; a roomFlag occupies a chest bit like a chest does.
  *

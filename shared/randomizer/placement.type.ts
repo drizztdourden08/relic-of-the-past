@@ -1,6 +1,6 @@
 /* @layer shared-game @kind types */
 /**
- * The randomizer's output contract — a Placement is the full, serializable
+ * The randomizer's output contract: a Placement is the full, serializable
  * result of one seed: which item sits at which check, plus the spoiler spheres.
  */
 
@@ -8,9 +8,9 @@
 type RandomizedKind = 'chest' | 'keyDrop';
 
 interface RandomizerOptions {
-  /** World state — fixed to standard (the vanilla escape sequence intro). */
+  /** World state, fixed to standard (the vanilla escape sequence intro). */
   mode: 'standard';
-  /** Reachability guarantee — 'items' means every item must be collectable. */
+  /** Reachability guarantee: 'items' means every item must be collectable. */
   accessibility: 'items';
   randomizedKinds: readonly RandomizedKind[];
 }
@@ -33,7 +33,7 @@ interface Placement {
   assignments: Record<string, string>;
   /**
    * Standard location name -> standard item name. Filled by a later
-   * integration step — the generator leaves it {} for now.
+   * integration step, and the generator leaves it {} for now.
    */
   nameView: Record<string, string>;
   spoiler: SpoilerSphere[];

@@ -18,7 +18,7 @@
  * not an extra item: the shelf it used to be locked to opens as an ordinary
  * shuffled slot in the same breath, and a slot the fill can use is worth
  * exactly one pool item. So the quiver is counted as one of the shop
- * backfills the opened slots earn rather than as an addition to them, and the
+ * backfills the opened slots earn instead of as an addition to them, and the
  * pool still holds one item per open location (pool/build-item-pool.ts).
  */
 import { RETRO_ARROW_PICKUPS, RETRO_QUIVER_ITEM, RETRO_REPLACEMENT_ITEM } from './retro-bow.data';

@@ -1,8 +1,8 @@
 /* @layer renderer-hooks @kind logic */
 /**
  * The option catalog, sorted into the tabs an options panel shows. Pure and
- * data-driven: a row lands on a tab from its own catalog entry — its group, or
- * one of the key sets beside this file (option-tab-keys.ts) — so a catalog
+ * data-driven: a row lands on a tab from its own catalog entry, its group, or
+ * one of the key sets beside this file (option-tab-keys.ts), so a catalog
  * change moves it on its own with nothing to keep in sync here.
  *
  * The same rule answers every question a tabbed panel asks: which live groups
@@ -15,7 +15,7 @@
  * string where the catalog spells it as a number.
  *
  * The world tab is the fallback for both, live and fixed alike: a row no
- * subject tab claims lands there rather than on a tab of its own. It held two
+ * subject tab claims lands there instead of on a tab of its own. It held two
  * switches once and read as a shrug of a first page, so the subject that
  * describes the world now opens the panel and takes them with it.
  */
@@ -45,7 +45,7 @@ type ListTabId = (typeof LIST_TABS)[number];
  * The tabs that show fixed rows. Every subject keeps its own fixed rows on its
  * own tab, so everything about that subject is one place to look. There is no
  * catch-all: the rows that used to need one were each a second spelling of a
- * control standing above them, and they are gone from the catalog rather than
+ * control standing above them, and they are gone from the catalog instead of
  * filed away.
  *
  * The items tab keeps exactly ONE fixed row: the starting inventory, because
@@ -72,7 +72,7 @@ const EMPTY_COUNTS: ChangedCounts =
 /**
  * Which tab owns a catalog row: the one rule every split and the count read.
  * Locked and live rows follow the same path, so the settings this version
- * fixes sit beside the ones it offers rather than being filed away elsewhere.
+ * fixes sit beside the ones it offers instead of being filed away elsewhere.
  */
 const tabOfOption = (option: ApOptionDef): OptionTabId => {
   if (option.group === 'dungeon-items' || MEDALLION_KEYS.has(option.key)) return 'dungeon';
@@ -93,8 +93,8 @@ const tabOfOption = (option: ApOptionDef): OptionTabId => {
   if (option.group === 'enemies') return 'enemies';
   if (option.group === 'timers') return 'timer';
   // The rows about a session shared with other players. They describe how the
-  // seed is PLAYED rather than what is in it, so they ride on the tab that
-  // opens the panel rather than earning one of their own.
+  // seed is PLAYED, not what is in it, so they ride on the tab that
+  // opens the panel instead of earning one of their own.
   if (option.group === 'session') return 'world';
   if (option.group === 'goal') return 'goal';
   if (option.group === 'world') return 'world';
@@ -126,7 +126,7 @@ const emptyGroups = <T extends string>(tabs: readonly T[]): Record<T, LockedOpti
 /**
  * Splits the bubbled-up live groups across the tabs that show them, keeping
  * each row under its own catalog heading. A group whose rows all moved
- * elsewhere is dropped rather than left as an empty heading.
+ * elsewhere is dropped instead of left as an empty heading.
  */
 const splitUnlockedGroups = (groups: readonly LockedOptionGroup[]): UnlockedGroupsByTab => {
   const byTab = emptyGroups(LIST_TABS);

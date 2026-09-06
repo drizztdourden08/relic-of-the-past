@@ -2,17 +2,17 @@
 /**
  * What a profile asks of the shops. The scope is self-contained on purpose:
  * it is frozen onto the placement and read back at session time, and both
- * readings have to name the SAME slots without consulting anything else — so
- * the seed the random mode draws from rides along inside it rather than being
+ * readings have to name the SAME slots without consulting anything else, so
+ * the seed the random mode draws from rides along inside it instead of being
  * passed beside it.
  */
 
 /**
  * How the opened slots are chosen out of the ticked ones.
- * - `vanilla` — nothing is shuffled; every shop behaves as it always has.
- * - `sequential` — the first `slotCount` ticked slots, in canonical order.
- * - `random` — `slotCount` ticked slots drawn from `seed`.
- * - `custom` — exactly the ticked slots; the count is not consulted at all.
+ * - `vanilla`: nothing is shuffled; every shop behaves as it always has.
+ * - `sequential`: the first `slotCount` ticked slots, in canonical order.
+ * - `random`: `slotCount` ticked slots drawn from `seed`.
+ * - `custom`: exactly the ticked slots; the count is not consulted at all.
  */
 type ShopShuffleMode = 'vanilla' | 'sequential' | 'random' | 'custom';
 

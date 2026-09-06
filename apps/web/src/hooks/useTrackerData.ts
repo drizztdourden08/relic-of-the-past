@@ -2,7 +2,7 @@
 /**
  * Everything the checks tracker needs, subscribed live: the player's
  * inventory, the checks they have completed, the derived reachability
- * snapshot, and — when a randomizer session is loaded — what each check
+ * snapshot, and, when a randomizer session is loaded, what each check
  * actually holds this seed plus the sphere it belongs to.
  *
  * One hook for both surfaces (the Checks widget and the randomizer page's
@@ -10,8 +10,8 @@
  *
  * Reachability depends on the session kind. A vanilla profile evaluates the
  * hand-authored rule set as before. A randomized profile evaluates the ported
- * rule engine over the frozen placement instead — collected placed items,
- * standard-mode escape gating and per-dungeon key counts included — because
+ * rule engine over the frozen placement instead: collected placed items,
+ * standard-mode escape gating and per-dungeon key counts included, because
  * the vanilla dataset models neither the seed nor the escape sequence.
  */
 import { useEffect, useMemo, useState } from 'react';

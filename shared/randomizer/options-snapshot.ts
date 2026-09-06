@@ -3,7 +3,7 @@
  * The frozen option snapshot recorded on a randomized profile, and the
  * tolerance layer around it. buildOptionsSnapshot freezes the whole catalog
  * (baselines plus the caller's unlocked choices); normalizeRandomizerOptions
- * accepts the v2 snapshot, the v1 snapshot (one capacity toggle — adapted
+ * accepts the v2 snapshot, the v1 snapshot (one capacity toggle, adapted
  * onto the Custom values that reproduce its pool exactly, so a live seed
  * regenerates its placement) and the pre-snapshot config shape
  * ({ mode, accessibility, randomizedKinds }) that older profiles carry;
@@ -65,7 +65,7 @@ const isLegacyOptionsSnapshot = (raw: unknown): boolean => isSnapshotOf(raw, LEG
 /**
  * Scope-split migration: a snapshot frozen before include_world_items
  * existed used include_npc_checks for BOTH surfaces, so the missing key
- * follows the npc toggle — a live profile keeps its exact scope.
+ * follows the npc toggle, so a live profile keeps its exact scope.
  */
 const withScopeSplit = (values: Values, raw: Values): Values => {
   if ('include_world_items' in raw) return values;
@@ -75,8 +75,8 @@ const withScopeSplit = (values: Values, raw: Values): Values => {
 /**
  * A snapshot frozen before the shuffle mode existed asked for its shop slots
  * in ONE way: the first N of the fifteen shelf slots that shipped then. So the
- * missing mode key reads as Sequential, and every slot added since — the split
- * doors, the hut, the bomb counter — reads as unticked, whatever its own
+ * missing mode key reads as Sequential, and every slot added since (the split
+ * doors, the hut, the bomb counter) reads as unticked, whatever its own
  * baseline says. The stored count then opens exactly the slots it always
  * opened, and the placement stays valid.
  */

@@ -3,13 +3,13 @@
  * The capacity/pond rule, applied to the creation form's whole choices object.
  * Two readings, both pure:
  *
- *   withCapacityPondRule — an edit has just landed, so the side the player
+ *   withCapacityPondRule: an edit has just landed, so the side the player
  *                          moved keeps its value and the other is re-pointed.
  *                          A family a sibling setting pinned (retro bow and
  *                          the projectiles) keeps its STORED setting in the
  *                          choices: the rule masks it on the way to the
  *                          snapshot, and switching retro off hands it back.
- *   capacityPondStateOf  — what the panel renders: the notes binding on the
+ *   capacityPondStateOf: what the panel renders, with the notes binding on the
  *                          current pair, whether each tab is editable, and the
  *                          pond modes its dropdown may offer. The choices are
  *                          already reconciled by the time they are stored, so

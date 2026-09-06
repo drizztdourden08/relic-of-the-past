@@ -2,7 +2,7 @@
 /**
  * The mode rows ⇄ the setting they stand for, both directions in one file so
  * the reading the generator uses and the writing the creation form freezes can
- * never spell the same option two ways — the same contract the tier ticks and
+ * never spell the same option two ways, the same contract the tier ticks and
  * the dark-room rows keep.
  *
  * A snapshot frozen before these rows existed carries none of them, and an
@@ -30,12 +30,12 @@ const progressiveModesFromSnapshot = (snapshot: RandomizerOptionsSnapshot): Prog
   progressiveModesOfValues(snapshot.values);
 
 /**
- * The rows a setting freezes — what the creation form hands the catalog.
+ * The rows a setting freezes: what the creation form hands the catalog.
  *
  * A family the setting says nothing about writes its key with NOTHING behind
- * it rather than with the default. That is deliberate: the wiring guard reads
+ * it instead of with the default. That is deliberate: the wiring guard reads
  * the frozen map by value, so a mode field left off the choices has to show up
- * as an unwired row there rather than quietly freezing as the reference
+ * as an unwired row there instead of freezing as the reference
  * reading. Absent on the way BACK IN is what means "in order"
  * (progressiveModesOfValues above), and that is the only place it should mean
  * anything.

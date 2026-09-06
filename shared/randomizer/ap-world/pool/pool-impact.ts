@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
  * The In Pool column: what one option contributes to the fill. Facade over
- * the pool builder — for a plain option the impact is the diff of the real
+ * the pool builder: for a plain option the impact is the diff of the real
  * accounting between the snapshot and the same snapshot with the option at
  * its neutral value (the value at which it adds nothing to the pool), so
  * there is no second bookkeeping to keep in sync. A capacity row reports
@@ -28,7 +28,7 @@ interface PoolImpact {
   note: string;
 }
 
-/** The value at which the option adds nothing to the pool — its "off" for the diff. */
+/** The value at which the option adds nothing to the pool: its "off" for the diff. */
 const NEUTRAL_VALUE: Readonly<Record<string, ApOptionValue>> = {
   key_drop_shuffle: false,
   include_npc_checks: false,
@@ -40,9 +40,9 @@ const NEUTRAL_VALUE: Readonly<Record<string, ApOptionValue>> = {
   [SHOP_MODE_KEY]: 'vanilla',
   shop_item_slots: 0,
   shop_slot_depth: 1,
-  // The legacy pond. Listed so the row is genuinely MEASURED rather than
+  // The legacy pond. Listed so the row is MEASURED instead of
   // falling through to the no-impact default: the pond changes which spots
-  // are locked vanilla, so a diff of zero here is an answer, not a shrug —
+  // are locked vanilla, so a diff of zero here is an answer, not a shrug,
   // and the day a mode does open a fill spot, the cell says so on its own.
   [POND_MODE_KEY]: 'capacity',
 };

@@ -3,8 +3,8 @@
  * What a tick list actually reaches, asked in one place.
  *
  * A copy of a family's pool item hands over the NEXT TICKED tier, so unticking
- * a middle rung closes a hole rather than leaving one: the ladder is simply
- * shorter. Everything downstream follows from that one reading — the tier map
+ * a middle rung closes a hole instead of leaving one: the ladder is
+ * shorter. Everything downstream follows from that one reading: the tier map
  * the collection state expands a pickup through, and the two questions the
  * rules ask about blades:
  *
@@ -14,7 +14,7 @@
  *  - can a BEAM blade ever be held? The second rung and up throw the beam, and
  *    a few rules ask for nothing less: the tablets, the drop into the final
  *    fight, the fight itself. With the first rung alone ticked the reference
- *    has nothing to say — its switch is all-or-nothing — but the file would be
+ *    has nothing to say (its switch is all-or-nothing) but the file would be
  *    stuck behind rules it can never meet, so those three relax onto the hammer
  *    exactly as the reference's swordless branch does. It is a mask, not a
  *    rewrite: ticking a beam rung back on gives every requirement straight back.

@@ -2,8 +2,8 @@
 /**
  * Log renderer styled like a code editor: a fixed gutter column, then an
  * indentable content block (type tag + message). Structure and behaviour live
- * here; COLOUR does not — a caller passes a scoping `className` and styles its
- * own `kind` slugs through it (`.sim-log .log-panel__tag--seq { … }`), so each
+ * here; COLOUR does not. A caller passes a scoping `className` and styles its
+ * own `kind` slugs through it (`.sim-log .log-panel__tag--seq { ... }`), so each
  * log keeps a palette that means something in its own domain.
  *
  * Only the newest slice is mounted (useLogWindow); older rows load on demand,

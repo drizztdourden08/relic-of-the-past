@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
  * Seeded deterministic PRNG for the randomizer. A seed STRING hashes to a u32
- * (FNV-1a) which seeds a mulberry32 stream — the same seed string produces the
+ * (FNV-1a) which seeds a mulberry32 stream, so the same seed string produces the
  * same sequence forever, on every platform (all math is u32 via Math.imul).
  * The determinism contract is pinned by tests/randomizer/rng.test.ts.
  */
@@ -11,7 +11,7 @@ interface Rng {
   next(): number;
   /** Uniform integer in [0, maxExclusive). */
   int(maxExclusive: number): number;
-  /** Fisher-Yates shuffle — returns a NEW array, input untouched. */
+  /** Fisher-Yates shuffle: returns a NEW array, input untouched. */
   shuffle<T>(arr: readonly T[]): T[];
 }
 

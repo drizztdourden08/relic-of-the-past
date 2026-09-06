@@ -40,7 +40,7 @@ const METER_UPGRADE_NAMES: readonly string[] = [
   'Magic Upgrade (1/4)',
 ];
 
-/** 100 steps of the 0 … 9999 ladder: "Wallet Upgrade (+100)" … "(+10000)" (the first rung is 99). */
+/** 100 steps of the 0 ... 9999 ladder: "Wallet Upgrade (+100)" ... "(+10000)" (the first rung is 99). */
 const WALLET_UPGRADE_NAMES: readonly string[] =
   Array.from({ length: 100 }, (_, index) => `Wallet Upgrade (+${(index + 1) * 100})`);
 

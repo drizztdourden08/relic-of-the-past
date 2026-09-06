@@ -25,7 +25,7 @@ const DARK_ROOM_OPTION_KEYS: readonly string[] = [DARK_ROOM_REQUIRED_KEY, ...DAR
 
 const DARK_ROOM_KEY_SET: ReadonlySet<string> = new Set(DARK_ROOM_OPTION_KEYS);
 
-/** True for a row the dark-room section owns — the requirement and its four lights. */
+/** True for a row the dark-room section owns: the requirement and its four lights. */
 const isDarkRoomOptionKey = (key: string): boolean => DARK_ROOM_KEY_SET.has(key);
 
 export {

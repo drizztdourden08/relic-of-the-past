@@ -3,8 +3,8 @@
  * A 16×16 picture as the four SNES 4bpp tiles of the core's animated-tile decode slot,
  * quantized to ONE fixed sprite palette row.
  *
- * Both in-game binaries the extraction emits are built this way — the capacity upgrade
- * icons (capacity-icons.ts) and the gear pictures (gear-icons.ts) — because both solve
+ * Both in-game binaries the extraction emits are built this way: the capacity upgrade
+ * icons (capacity-icons.ts) and the gear pictures (gear-icons.ts), because both solve
  * the same problem the same way: the core copies the tiles over the decode slot at
  * 0xBD40 and forces the draw's OAM palette row to the row they were quantized to, so
  * nothing writes CGRAM and the picture cannot pick up whatever the row happens to hold.
@@ -26,7 +26,7 @@ const SLOT_BYTES = 4 * TILE_BYTES;
 interface QuantizedIcon {
   /** 16×16 palette indices, row-major; 0 = transparent. */
   indices: Uint8Array;
-  /** Mean squared RGB distance per opaque pixel — how well the row fits the picture. */
+  /** Mean squared RGB distance per opaque pixel: how well the row fits the picture. */
   error: number;
 }
 

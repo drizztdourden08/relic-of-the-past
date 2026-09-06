@@ -4,7 +4,7 @@
  * tables → wired regions, resolved locations, dungeons, and an empty rule
  * registry (rules attach in P3). Ports the standard-mode path of
  * Archipelago worlds/alttp/Regions.py create_regions + EntranceShuffle.py
- * link_entrances (entrance shuffle 'vanilla' — mode-independent there) with
+ * link_entrances (entrance shuffle 'vanilla', mode-independent there) with
  * the standard start connection from Rules.py standard_rules 1091. Wiring errors throw: a
  * connection naming an unknown exit or region is a porting bug, not data.
  */

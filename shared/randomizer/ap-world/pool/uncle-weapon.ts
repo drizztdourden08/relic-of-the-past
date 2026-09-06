@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * The standard-mode starting-weapon assurance — the port of
+ * The standard-mode starting-weapon assurance: the port of
  * Archipelago worlds/alttp/ItemPool.py generate_itempool 294-318 for the
  * fixed baseline (no precollected melee weapon, bombless start off). The
  * candidate list is built by one pass over the assembled pool in pool
@@ -8,7 +8,7 @@
  * first bow found, each arsenal item once, the bomb pack once. The chosen
  * weapon leaves the pool and the caller locks it onto the mentor check.
  * Skipped entirely when that check is already pre-placed (the source's
- * placed_items guard, line 295 — here: the location is scope-locked to its
+ * placed_items guard, line 295. Here the location is scope-locked to its
  * vanilla sword). A usability filter (uncle-usability.ts) drops the
  * candidates a capacity profile makes useless at the start.
  */
@@ -21,7 +21,7 @@ type WeaponFilter = (itemName: string) => boolean;
 
 const everyWeapon: WeaponFilter = () => true;
 
-/** ItemPool.py 296-313 — the possible_weapons scan, in pool order, over the usable candidates. */
+/** ItemPool.py 296-313: the possible_weapons scan, in pool order, over the usable candidates. */
 const uncleWeaponCandidates = (pool: readonly string[], isUsable: WeaponFilter = everyWeapon): string[] => {
   const candidates: string[] = [];
   let foundSword = false;

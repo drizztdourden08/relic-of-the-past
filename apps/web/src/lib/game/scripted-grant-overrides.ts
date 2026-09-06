@@ -1,9 +1,9 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Scripted-grant overrides — JS-side arming for the in-core substitution
+ * Scripted-grant overrides: JS-side arming for the in-core substitution
  * slots covering scripted grants that never cross the receive seam (the
  * upgrade pond's two capacity purchases, the cave bat's meter upgrade, the
- * prize minigame's once-only top prize — core/game-hooks/scripted_grants.c).
+ * prize minigame's once-only top prize, see core/game-hooks/scripted_grants.c).
  * Same contract as the other override bridges: the write only records, the
  * gate bit is requested alongside it, and it stays open only while armed.
  */
@@ -17,9 +17,9 @@ import { reassertGateWord3 } from './live-settings';
 
 /**
  * The certified scripted-grant surfaces. The pond variant is the odd one out:
- * it is armed through the pond plan's own table (pond-plan.ts) rather than the
+ * it is armed through the pond plan's own table (pond-plan.ts) instead of the
  * three slots here, because under a plan the pond hands over a numbered
- * sequence of prizes instead of one purchase per family — but it stays the
+ * sequence of prizes instead of one purchase per family, but it stays the
  * same PLAN CLASS, so the classifier, the fire registry and the poller keep
  * one path for every scripted grant.
  */
@@ -80,7 +80,7 @@ const setScriptedGrantOverride = (target: ScriptedGrantSurface, newItem: number,
 const clearScriptedGrantOverrides = (): void => {
   const mod = getModule();
   if (!mod) return;
-  // Empty the slots, then close the gate — same double lock as the other tables.
+  // Empty the slots, then close the gate, same double lock as the other tables.
   mod.ccall('WasmClearScriptedGrantOverrides', null, [], []);
   setScriptedGrantsActive(false);
   reassertGateWord3();

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * A1-shape — every check's gameId must carry the physical keys its kind
+ * A1-shape: every check's gameId must carry the physical keys its kind
  * demands, and nothing contradictory. A check with no physical identity at
  * all is flagged unless its kind legitimately has none.
  */
@@ -20,7 +20,7 @@ const hasRoomBit = (g: CheckGameId): boolean =>
 const hasOwBit = (g: CheckGameId): boolean => g.owScreen !== undefined && g.mask !== undefined;
 
 /**
- * A progress-buffer bit — the detection of the receive-crossing standing
+ * A progress-buffer bit: the detection of the receive-crossing standing
  * grants (the two tablets) whose only persisted completion fact is their
  * substitution-completion bit exposed through the progress buffer.
  */

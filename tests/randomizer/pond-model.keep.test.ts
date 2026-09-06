@@ -2,8 +2,8 @@
 /**
  * The pond model: the rupee decomposition, the three modes' schedules, the
  * snapshot adapter (a snapshot with no pond row means the legacy pond), the
- * wallet reading of a prize, and the pond's own three receipt lines — the
- * price of a toss, a throw that won nothing, an emptied pond — which have to
+ * wallet reading of a prize, and the pond's own three receipt lines: the
+ * price of a toss, a throw that won nothing, an emptied pond, which have to
  * quote the plan's real amounts, because every vanilla line they replace
  * names an amount no plan charges.
  */

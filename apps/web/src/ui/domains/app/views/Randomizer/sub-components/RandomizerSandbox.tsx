@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 /**
- * Dev-only sandbox — the old generate/start workflow, kept behind a collapsed
+ * Dev-only sandbox: the old generate/start workflow, kept behind a collapsed
  * section for testing. Sessions started here carry the 'manual' source and run
  * through the same shared session store as profile-tied ones. The seed and the
  * generated placement live at module level so closing and reopening the page

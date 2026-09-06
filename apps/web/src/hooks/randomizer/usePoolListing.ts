@@ -2,12 +2,12 @@
 /**
  * The item pool of a snapshot as list groups, memoized per snapshot like the
  * impacts: the same fill world the accounting reads, built with the same
- * scope, so the listing is the multiset the generator would shuffle — never a
+ * scope, so the listing is the multiset the generator would shuffle, never a
  * placement. A pool that cannot be built lists nothing;
  * the accounting beside it carries the reason. Sprites join the rows only
  * once the set of the ROM the listing is for (the creation form's pick, ahead
  * of any active profile) is extracted, so the listing re-renders with art the
- * moment the background extraction lands — and again, with fresh URLs, when
+ * moment the background extraction lands, and again, with fresh URLs, when
  * that extraction rewrote a set the rows were already drawing.
  */
 import { useMemo } from 'react';

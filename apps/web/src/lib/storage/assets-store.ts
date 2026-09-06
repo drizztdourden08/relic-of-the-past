@@ -24,7 +24,7 @@ const checkAssets = (romFile: string): Promise<boolean> => assets.check(files(),
 
 /**
  * Whether the cached blob was baked by an older pipeline (bake-version.ts). A missing
- * blob is NOT stale — the missing-file path already recompiles; this only answers for
+ * blob is NOT stale. The missing-file path already recompiles; this only answers for
  * a blob that exists but predates the current bake format.
  */
 const checkAssetsStale = async (romFile: string): Promise<boolean> => {

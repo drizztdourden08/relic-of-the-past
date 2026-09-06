@@ -1,10 +1,10 @@
 /* @layer shared-game @kind logic */
 /**
- * World-zone marking — port of mark_light_world_regions from
+ * World-zone marking: port of mark_light_world_regions from
  * Archipelago worlds/alttp/Regions.py. Two rule-free sweeps: one from every
  * first-world overworld region that refuses to enter second-world overworld
  * regions (setting isLightWorld), and the mirror sweep for isDarkWorld.
- * Cross-world interiors may end up marked as both — the transform-suppression
+ * Cross-world interiors may end up marked as both, and the transform-suppression
  * logic in the helpers handles that case, per the python comment.
  */
 import type { ApRegion } from './region.type';

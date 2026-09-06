@@ -1,7 +1,7 @@
 /* @layer shared-game @kind data */
 /**
  * Dungeon definitions ported 1:1 from Archipelago worlds/alttp/Dungeons.py
- * create_dungeons (open mode — the inverted tower variants are out of scope).
+ * create_dungeons (open mode, since the inverted tower variants are out of scope).
  * smallKeyCount is the number of small keys the python source creates for the
  * dungeon, i.e. the key-drop-shuffle-ON total; with key drops off, one key
  * per key-drop location (special-locations.data.ts) stays out of the pool.

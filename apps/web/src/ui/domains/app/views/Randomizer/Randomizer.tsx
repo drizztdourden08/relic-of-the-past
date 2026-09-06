@@ -1,11 +1,11 @@
 /* @layer renderer-components @kind component */
 /**
- * Randomizer page — one column, three tabs, each taking the full width: the
+ * Randomizer page. One column, three tabs, each taking the full width: the
  * run and its frozen options, the live activity feed, and the spoiler (the
  * same checks tracker the widget renders).
  *
  * Sessions are owned by the shared session store and start automatically with
- * the game — nothing here starts one except the dev-only sandbox.
+ * the game, and nothing here starts one except the dev-only sandbox.
  */
 import { useMemo, useState } from 'react';
 import { Box, TabBar } from '@ds/primitives';

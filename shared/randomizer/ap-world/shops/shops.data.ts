@@ -5,7 +5,7 @@
  * The reference project's own shop file is NOT part of the vendored drop
  * (Archipelago worlds/alttp carries 13 modules; Shops.py is not one of them),
  * so the vanilla inventory and its prices are transcribed from the GAME
- * instead — SpritePrep_Shopkeeper's per-room spawn table and the seven
+ * instead: SpritePrep_Shopkeeper's per-room spawn table and the seven
  * ShopItem_* handlers it spawns, plus the cauldron and bomb-counter handlers
  * (core/zelda3/src/sprite_main.c). Location NAMES come from the reference,
  * verified against the datapackage ids 0x400000-0x40001a.
@@ -14,8 +14,8 @@
  * stand in the unmodified world. Nine of them sell from a shelf served by the
  * shopkeeper sprite, but a building is only a door: the interior it opens is
  * an indoor room, and one room is reused by several doors. Read from the
- * game's own tables — the overworld door list (area/position/entrance id), the
- * entrance list (entrance id -> room) and each room's sprite list — the nine
+ * game's own tables: the overworld door list (area/position/entrance id), the
+ * entrance list (entrance id -> room) and each room's sprite list, the nine
  * shelf buildings resolve to FIVE shelf rooms:
  *
  *   room 0x0112 <- entrance 0x58 <- 2 doors (lake shop, dark mountain shop)
@@ -32,10 +32,10 @@
  * indoor visit. `owArea` records it per shop, and the in-core seam matches on
  * it, so two doors onto one shelf serve two different shops.
  *
- * The remaining two buildings sell from their own sprites rather than a
+ * The remaining two buildings sell from their own sprites instead of a
  * shelf and need their own seams: the potion seller's hut (three cauldrons,
- * room 0x0109) and the bomb shop's counter (one refill, room 0x011C — its
- * second sprite is the story bomb, an event rather than a purchase, and is
+ * room 0x0109) and the bomb shop's counter (one refill, room 0x011C, whose
+ * second sprite is the story bomb, an event and not a purchase, and is
  * never a slot).
  *
  * A shop is therefore keyed by (room, entrance, overworld area), and a slot
@@ -60,7 +60,7 @@ type ShopKind = 'shelf' | 'cauldron' | 'bomb';
 
 /**
  * Which half of the overworld the shop's door stands in. Recorded per shop
- * rather than derived from `owArea`, because three shops have no overworld
+ * instead of derived from `owArea`, because three shops have no overworld
  * door of their own and would otherwise have no answer.
  */
 type ShopWorld = 'light' | 'dark';
@@ -69,7 +69,7 @@ interface ShopSlotDef {
   position: ShopSlotPosition;
   /** What the unmodified shop sells here, for the report and the spoiler. */
   vanillaItem: string;
-  /** Rupees the unmodified shop charges — the price a purchase keeps costing. */
+  /** Rupees the unmodified shop charges: the price a purchase keeps costing. */
   price: number;
   /**
    * The sprite's own subtype, which is what the running game keys its handler
@@ -99,7 +99,7 @@ interface ShopDef {
   /** Vanilla entrance value, or null when the room alone identifies the shop. */
   entrance: number | null;
   /**
-   * Overworld area of the door that opens onto this shop — the value
+   * Overworld area of the door that opens onto this shop, the value
    * `overworld_area_index_exit` holds for the whole visit. null when no
    * overworld door reaches it (an inner stair does), and the room then
    * identifies the shop on its own.
@@ -139,7 +139,7 @@ const RARE_SLOTS: readonly ShopSlotDef[] = [
 
 /**
  * The hut's three cauldrons, in the subtype order Sprite_E9_PotionShop
- * dispatches them — 2 green, 3 blue, 4 red — with the rupee literal each
+ * dispatches them (2 green, 3 blue, 4 red) with the rupee literal each
  * handler subtracts. Position here is that dispatch order, not a claim about
  * where each pot stands on screen.
  */
@@ -150,9 +150,9 @@ const CAULDRON_SLOTS: readonly ShopSlotDef[] = [
 ];
 
 /**
- * The bomb counter's single purchase — subtype 1, the refill Sprite_BombShop_Bomb
+ * The bomb counter's single purchase: subtype 1, the refill Sprite_BombShop_Bomb
  * charges 100 for. Subtype 2 is the story bomb: it starts a follower and a
- * cutscene rather than handing an item over, so it is deliberately not a slot.
+ * cutscene instead of handing an item over, so it is deliberately not a slot.
  */
 const BOMB_SLOTS: readonly ShopSlotDef[] = [
   slot('Single', 'Bombs (10)', 100, 1),
@@ -161,7 +161,7 @@ const BOMB_SLOTS: readonly ShopSlotDef[] = [
 /**
  * In the reference's own key order (datapackage id order) for the five rooms
  * that shipped first, then the four doors those rooms share, then the two
- * shops with seams of their own. Appending rather than interleaving is what
+ * shops with seams of their own. Appending instead of interleaving is what
  * keeps a stored placement's canonical indices meaning what they meant.
  */
 const SHOP_DEFS: readonly ShopDef[] = [
@@ -265,7 +265,7 @@ const SHOP_DEFS: readonly ShopDef[] = [
     name: 'Potion Shop',
     world: 'light',
     // Shares its bare name with the dark-world shelf shop, and is the odd one
-    // out twice over: cauldrons rather than a shelf, and off by default.
+    // out twice over: cauldrons instead of a shelf, and off by default.
     listName: "Potion Seller's Hut",
     region: 'Potion Shop',
     kind: 'cauldron',
@@ -286,13 +286,13 @@ const SHOP_DEFS: readonly ShopDef[] = [
   },
 ];
 
-/** Slots that shipped before the doors were split — canonical indices 0-14. */
+/** Slots that shipped before the doors were split: canonical indices 0-14. */
 const LEGACY_SHOP_SLOT_COUNT = 15;
 
 /** Every canonical slot there is: the ceiling of the whole shop surface. */
 const STANDARD_SHOP_SLOT_COUNT = SHOP_DEFS.reduce((sum, shop) => sum + shop.slots.length, 0);
 
-/** The hut is supported but off by default — its slots are ticked by hand. */
+/** The hut is supported but off by default, so its slots are ticked by hand. */
 const DEFAULT_OFF_SHOPS: readonly string[] = ['Potion Shop'];
 
 /** What a list headed by world calls each half. */
@@ -304,14 +304,14 @@ const SHOP_WORLD_LABELS: Readonly<Record<ShopWorld, string>> = {
 /**
  * The words a world-titled heading already says, so a name listed under one
  * does not repeat them. Applied anywhere in the name, because one shop wears
- * its half inside a parenthesis rather than in front.
+ * its half inside a parenthesis instead of in front.
  */
 const WORLD_WORDS_PATTERN = /\b(?:Light World|Dark World|Light|Dark)\s+/g;
 
 /**
  * The name a shop is listed under inside its own world's section: its own
  * `listName` where it carries one, otherwise its full name with those words
- * taken out. Derived rather than stored for all but the one exception, so a
+ * taken out. Derived instead of stored for all but the one exception, so a
  * shop added above brings its short name with it, and the qualifier that
  * tells two same-named shops apart (the parenthesised area) survives
  * untouched.

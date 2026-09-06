@@ -25,7 +25,7 @@ const FREESTANDING_KEY_BY_CHECK: ReadonlyMap<string, FreestandingKeyDrop> = new 
 const freestandingKeyDropOf = (checkId: CheckId): FreestandingKeyDrop | null => {
   const target = FREESTANDING_KEY_BY_CHECK.get(checkId);
   if (target === undefined) return null;
-  getCheck(checkId); // throws on an unknown id — the table stays honest with the dataset
+  getCheck(checkId); // throws on an unknown id, so the table stays honest with the dataset
   return target;
 };
 

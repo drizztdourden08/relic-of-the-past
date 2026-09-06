@@ -1,6 +1,6 @@
 /* @layer shared-game @kind types */
 /**
- * Types for the reference randomizer's option catalog — the full, transcribed
+ * Types for the reference randomizer's option catalog: the full, transcribed
  * option surface shown (mostly frozen) in the profile-creation UI, plus the
  * snapshot shape stored on a profile's randomizer config.
  */
@@ -11,16 +11,16 @@ type ApOptionKind = 'choice' | 'range' | 'toggle' | 'text';
 
 /**
  * Honest audit of what this app's generation engine does with the option:
- * 'active' — the engine varies or genuinely enforces the shown value;
- * 'vanilla-fixed' — a real gameplay option pinned to its vanilla/off value,
+ * 'active': the engine varies or enforces the shown value;
+ * 'vanilla-fixed': a real gameplay option pinned to its vanilla/off value,
  *   and the engine actually produces that behavior;
- * 'not-implemented' — the feature does not exist in this engine at all (the
+ * 'not-implemented': the feature does not exist in this engine at all (the
  *   shown value is the off/vanilla value, so nothing is promised);
- * 'not-applicable' — the option asks a question this app never asks, so no
+ * 'not-applicable': the option asks a question this app never asks, so no
  *   value of it could mean anything here.
  *
  * A row whose capability this app offers under a control of its own is not in
- * the catalog at all — the question is asked once, by the control that answers
+ * the catalog at all, because the question is asked once, by the control that answers
  * it, so there is no class for a superseded row to carry.
  */
 type ApOptionImplementation = 'active' | 'vanilla-fixed' | 'not-implemented' | 'not-applicable';
@@ -71,7 +71,7 @@ interface ApOptionDef {
   choices?: readonly ApOptionChoice[];
   range?: ApOptionRange;
   /**
-   * The whole description as one string — the plain reading a caption, a
+   * The whole description as one string: the plain reading a caption, a
    * tooltip or a screen reader gets. Derived from the description entry, so a
    * listed one arrives here already flattened to "term: detail" per line.
    * Empty when the label already says everything the row does.
@@ -79,7 +79,7 @@ interface ApOptionDef {
   description: string;
   /** The same description as lines, when it was written as a list. */
   details?: readonly OptionDetail[];
-  /** What this app's engine actually does with the option — see the type doc. */
+  /** What this app's engine actually does with the option, see the type doc. */
   implementation: ApOptionImplementation;
   /** The source project's own default for this option. */
   apDefault: ApOptionValue;
@@ -87,7 +87,7 @@ interface ApOptionDef {
   baseline: ApOptionValue;
   /** True for every option the player may not change at creation time. */
   locked: boolean;
-  /** True for options this app defines itself — not part of the source set. */
+  /** True for options this app defines itself, not part of the source set. */
   synthetic?: boolean;
 }
 

@@ -1,15 +1,15 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Capability probes — decide, per capability-gated location, whether the app
+ * Capability probes: decide, per capability-gated location, whether the app
  * can physically play a shuffled item there. A location is serviceable when
  * it resolves to a check record, its nominal vanilla item resolves to a
  * native receive id, and it has EITHER a physical substitution key (npc /
- * standing / drop tables — those report completion from the substitution
+ * standing / drop tables, since those report completion from the substitution
  * seam itself, no flag needed) OR a certified live detection for the
  * deliver path. The resulting sets feed generation (only these locations
  * enter the shuffle) and the bridge (the rest classify vanilla-locked), so
  * a plan error on a probed location is structurally impossible for fresh
- * seeds. Data-driven and stable per build — cached after the first walk.
+ * seeds. Data-driven and stable per build, cached after the first walk.
  * The capacity probe runs the same test over the fairy-slot table; its
  * slots carry scripted-grant keys (the pond's own handler seam), like the
  * cave bat and the prize minigame.

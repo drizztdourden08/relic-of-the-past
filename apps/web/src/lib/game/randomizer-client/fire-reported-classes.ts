@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 /**
  * The physical plan classes whose completion arrives from the substitution
- * seam (a fire id is allocated when they are armed — apply-overrides.ts),
+ * seam (a fire id is allocated when they are armed, see apply-overrides.ts),
  * never from polling. Shared by live arming and the offline reader's
  * armed-check mirror, so the routing can never drift between the two.
  */

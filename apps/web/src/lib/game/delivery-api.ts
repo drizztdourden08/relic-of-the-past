@@ -32,7 +32,7 @@ const deliverItem = (itemId: number, message?: string, source = 'randomizer', me
   if (!isGrantable(itemId) || !isReady()) return null;
   // Sessions arm the receipt gates at start (receipt-grants.ts); arming again at enqueue
   // covers grants fired outside a session, and the WRAM latch (next frame) still lands
-  // before the queue's readiness poll can execute — the arm-with-the-write pattern.
+  // before the queue's readiness poll can execute, the arm-with-the-write pattern.
   armReceiptGates();
   const action: DeliveryAction = { type: 'give_item', itemId, receiptExport: true, messageId };
   const label = message ?? itemName(itemId);
@@ -49,7 +49,7 @@ const deliverCheck = (roomId: number, chestIndex: number, itemId: number, messag
 const deliverNpcCheck = (flagType: number, flagMask: number, itemId: number, spriteType: number, postGfx: number, message?: string, source = 'randomizer', messageId?: number): string | null => {
   if (!isGrantable(itemId) || !isReady()) return null;
   // assigned: itemId here is the session's final answer for the check, never the
-  // giver's vanilla item — the npc-override seam must not re-substitute it.
+  // giver's vanilla item, so the npc-override seam must not re-substitute it.
   const action: DeliveryAction = { type: 'trigger_npc_check', flagType, flagMask, itemId, spriteType, postGfx, assigned: true, messageId };
   const label = message ?? itemName(itemId);
   return enqueue(label, source, action);

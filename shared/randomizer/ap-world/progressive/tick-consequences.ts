@@ -12,15 +12,15 @@
  * paragraph that is wrong for most tick sets.
  *
  * The two conditions are the ones `derivedItemPower` hangs off:
- *  - no blade at all can be found — the reference's swordless setting, arrived
+ *  - no blade at all can be found, the reference's swordless setting, arrived
  *    at from the ticks;
  *  - no blade that throws a beam can be found, which the first rung alone also
  *    fails, because it scores nothing against the seal or the last fight.
  *
  * A line is a CONSEQUENCE, not advice: it appears only while its condition
- * holds, so the default tick set — every rung on — produces none at all. The
+ * holds, so the default tick set (every rung on) produces none at all. The
  * `field` on each row is the switch it stands in lockstep with, so a change to
- * the derivation is caught against this table rather than drifting from it.
+ * the derivation is caught against this table instead of drifting from it.
  */
 import { beamSwordReachable, swordReachable } from './progressive-reach';
 import type { ItemPowerSetting } from '../item-power/item-power.type';

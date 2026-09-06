@@ -6,9 +6,9 @@
  * random pick out of a short list of shop staples (Shops.py set_up_shops,
  * replacement_items: the three potions, bombs, the blue shield, a heart). This
  * app takes one of them, the red potion refill, and sells it at the shelf's
- * OWN vanilla price rather than the reference's, so a shelf that charged 30
+ * OWN vanilla price, not the reference's, so a shelf that charged 30
  * for arrows charges 30 for the refill. The pick is an assumption written
- * down here rather than a rule the reference states; change the name and every
+ * down here instead of a rule the reference states; change the name and every
  * arrow shelf follows.
  */
 

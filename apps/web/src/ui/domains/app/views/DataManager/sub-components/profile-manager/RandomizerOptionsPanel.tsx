@@ -2,16 +2,16 @@
 /**
  * The complete option catalog of the randomizer, rendered next to the creation
  * form when the randomizer is enabled, split beside the item pool it produces.
- * The catalog outgrew one column, so it is dealt into tabs by subject — the
+ * The catalog outgrew one column, so it is dealt into tabs by subject: the
  * world, the ending it is played to, the items, the shop block, the in-dungeon
  * items, the capacity families, the wishing pond, the subjects this version
- * has yet to build, and everything else it fixes — each keeping the
+ * has yet to build, and everything else it fixes, each keeping the
  * panel's own order inside it: the live sections first, still under their real
  * catalog headings, then the block that tab exists for. A tab wears the number
  * of its rows moved off the baseline, so a changed setting is never lost behind
  * a tab nobody opened. A subject tab may also keep the FIXED rows of its own
  * subject, which is why the locked catalog is split the same way the live one
- * is rather than handed whole to the catch-all tab.
+ * is instead of handed whole to the catch-all tab.
  *
  * What does NOT move with the tabs is the feedback: the pool total sits under
  * the tab strip as the options column's own footer, and the item pool keeps
@@ -64,8 +64,8 @@ const CAPTION = 'The settings, by subject. A number on a tab counts the rows ins
 
 /**
  * The value a row shows. The master switch and the pond mode are read off the
- * SNAPSHOT rather than the raw choices, because the snapshot is the pair after
- * the capacity/pond rule has settled it — the row has to say what the seed
+ * SNAPSHOT instead of the raw choices, because the snapshot is the pair after
+ * the capacity/pond rule has settled it, so the row has to say what the seed
  * will be built from, not what was asked for before the rule answered.
  */
 const valueFor = (
@@ -101,7 +101,7 @@ const RandomizerOptionsPanel = (props: RandomizerOptionsPanelProps) => {
     const field = PLAIN_FIELD_BY_KEY[key];
     if (field === undefined) return;
     // A select row writes the catalog's own key, a slider a number, a toggle a
-    // boolean — coercing a chosen key to Boolean would store `true` for every
+    // boolean, because coercing a chosen key to Boolean would store `true` for every
     // value the row offers.
     if (CHOICE_FIELDS.has(field)) {
       onChange({ ...value, [field]: String(next) } as RandomizerOptionChoices);

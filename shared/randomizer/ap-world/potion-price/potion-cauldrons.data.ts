@@ -1,9 +1,9 @@
 /* @layer shared-game @kind data */
 /**
  * The hut's cauldrons paired with the bottle content each one sells, derived
- * from the shop dataset rather than restated here: a cauldron shop's slot
+ * from the shop dataset instead of restated here: a cauldron shop's slot
  * whose stock names a bottle content IS that content's only repeatable
- * source. A cauldron selling something else (were one ever added) simply
+ * source. A cauldron selling something else (were one ever added)
  * pairs with nothing and the rule ignores it.
  *
  * The pairing is by canonical slot index, which is what the scope ticks, so
@@ -20,7 +20,7 @@ interface PotionCauldron {
   content: ShopBottleContent;
   /** The content in the player's words, for the note. */
   label: string;
-  /** Rupees the cauldron charges — what a wallet must hold to buy the content back. */
+  /** Rupees the cauldron charges: what a wallet must hold to buy the content back. */
   price: number;
 }
 
@@ -47,7 +47,7 @@ const POTION_CAULDRONS: readonly PotionCauldron[] = CANONICAL_SLOTS.flatMap((can
     }];
 });
 
-/** The contents a cauldron is the source of — the only ones this rule can ever block. */
+/** The contents a cauldron is the source of: the only ones this rule can ever block. */
 const CAULDRON_CONTENTS: readonly ShopBottleContent[] = POTION_CAULDRONS.map((row) => row.content);
 
 /** What a cauldron charges for its content; undefined for a content nobody sells. */

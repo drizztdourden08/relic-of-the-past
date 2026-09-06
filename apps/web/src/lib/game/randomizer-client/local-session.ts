@@ -1,12 +1,12 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Local randomizer session — plays a generated placement against the live
+ * Local randomizer session: plays a generated placement against the live
  * core with no server. start() classifies the placement into the physical
  * plan (ap-bridge), refuses loudly when the plan carries errors, applies the
  * chest, npc-grant and key-drop overrides in-core, and arms the poller over
  * every detectable planned location. Reports: overrides (chest, npc, drop) and
  * vanilla-locked locations are log-only (the game grants the item
- * physically), deliver entries route through the delivery queue — the NPC
+ * physically), deliver entries route through the delivery queue, so the NPC
  * trigger when the check's gameId carries one, the plain item grant
  * otherwise.
  */
@@ -48,7 +48,7 @@ import type { RandomizerSession, SessionStatusListener } from './session.type';
 interface LocalSession extends RandomizerSession {
   readonly kind: 'local';
   onStatusChange(listener: SessionStatusListener): () => void;
-  /** Arm-time plan counts, populated by start() — the status view reads these. */
+  /** Arm-time plan counts, populated by start(), which the status view reads. */
   readonly stats: PlanCounts;
 }
 
@@ -128,7 +128,7 @@ const createLocalSession = (placement: ApPlacement): LocalSession => {
       if (receiptTexts.composed) {
         log.randomizer('[Local] Receipt text: contextual message lines composed and armed, following the tracker');
       } else {
-        log.randomizer('[Local] Receipt text: session dialogue unavailable — baked class templates in use', 'warn');
+        log.randomizer('[Local] Receipt text: session dialogue unavailable, baked class templates in use', 'warn');
       }
       // Receipt gates arm with the session, not with the first delivery: an overridden
       // chest substitutes its item (and its contextual message) fully natively, so the
@@ -164,38 +164,38 @@ const createLocalSession = (placement: ApPlacement): LocalSession => {
     reportCheck(locationName) {
       const entry = byLocation.get(locationName);
       if (!entry) {
-        log.randomizer(`[Local] Check completed: ${locationName} (not in plan — nothing to do)`, 'warn');
+        log.randomizer(`[Local] Check completed: ${locationName} (not in plan, nothing to do)`, 'warn');
         return;
       }
       if (entry.planClass === 'override') {
-        log.randomizer(`[Local] Check completed: ${locationName} — "${entry.itemName}" granted physically`);
+        log.randomizer(`[Local] Check completed: ${locationName}: "${entry.itemName}" granted physically`);
         return;
       }
       if (entry.planClass === 'override-npc') {
-        log.randomizer(`[Local] Check completed: ${locationName} — "${entry.itemName}" granted natively by the giver`);
+        log.randomizer(`[Local] Check completed: ${locationName}: "${entry.itemName}" granted natively by the giver`);
         return;
       }
       if (entry.planClass === 'override-drop') {
-        log.randomizer(`[Local] Check completed: ${locationName} — "${entry.itemName}" granted physically by the drop`);
+        log.randomizer(`[Local] Check completed: ${locationName}: "${entry.itemName}" granted physically by the drop`);
         return;
       }
       if (entry.planClass === 'override-standing') {
-        log.randomizer(`[Local] Check completed: ${locationName} — "${entry.itemName}" granted physically by the pickup`);
+        log.randomizer(`[Local] Check completed: ${locationName}: "${entry.itemName}" granted physically by the pickup`);
         return;
       }
       if (entry.planClass === 'override-scripted') {
-        log.randomizer(`[Local] Check completed: ${locationName} — "${entry.itemName}" granted by the scripted giver`);
+        log.randomizer(`[Local] Check completed: ${locationName}: "${entry.itemName}" granted by the scripted giver`);
         return;
       }
       if (entry.planClass === 'override-shop') {
-        log.randomizer(`[Local] Check completed: ${locationName} — "${entry.itemName}" bought from the shelf`);
+        log.randomizer(`[Local] Check completed: ${locationName}: "${entry.itemName}" bought from the shelf`);
         return;
       }
       if (entry.planClass === 'vanilla-locked') {
-        log.randomizer(`[Local] Check completed: ${locationName} — vanilla "${entry.itemName}" (locked, no action)`);
+        log.randomizer(`[Local] Check completed: ${locationName}: vanilla "${entry.itemName}" (locked, no action)`);
         return;
       }
-      log.randomizer(`[Local] Check completed: ${locationName} — delivering "${entry.itemName}"`);
+      log.randomizer(`[Local] Check completed: ${locationName}: delivering "${entry.itemName}"`);
       deliverEntry(entry, messageIdOf(locationName));
     },
 
@@ -215,11 +215,11 @@ const createLocalSession = (placement: ApPlacement): LocalSession => {
       clearGearIcons();
       clearQuiverIcon();
       clearCurrencySymbols();
-      // Drop still-queued deliveries with the session — a stopped session must not
+      // Drop still-queued deliveries with the session, because a stopped session must not
       // leave receipt entries retrying forever (clear() resolves completions safely).
       clearDeliveryQueue();
       disarmReceiptGates();
-      // Restore the baked dialogue blob — the session's pre-rendered lines go with it.
+      // Restore the baked dialogue blob, since the session's pre-rendered lines go with it.
       receiptTexts?.stop();
       receiptTexts = null;
       clearSessionDialogue();

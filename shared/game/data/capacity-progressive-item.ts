@@ -3,8 +3,8 @@
  * The progressive capacity items: one pool name per family
  * (capacity-upgrade-names.data.ts) whose every pickup climbs to the NEXT rung
  * of the family's planned ladder, in plan order, whatever the shuffle did
- * with the copies. The name carries the family and nothing else — the jump
- * is decided at grant time from the rung already reached — so this is the
+ * with the copies. The name carries the family and nothing else, because the jump
+ * is decided at grant time from the rung already reached, so this is the
  * only place a progressive name is tied to its family.
  */
 import { CAPACITY_FAMILY_IDS, CAPACITY_PROGRESSIVE_NAMES } from './capacity-upgrade-names.data';

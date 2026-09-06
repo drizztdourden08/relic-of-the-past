@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 /**
  * Always-on session log sink. The renderer batches its structured log-bus lines
- * (every channel, game-core stdout included — see the renderer's session-log
+ * (every channel, game-core stdout included, see the renderer's session-log
  * tap) and fires them here over one fire-and-forget channel per batch; each
  * batch is appended to Data/debug/session.log. At startup the previous file is
  * rotated to session-1.log, so the last two sessions stay readable after the
@@ -32,7 +32,7 @@ const rotateSessionLog = async (): Promise<void> => {
   try {
     await mkdir(dirname(currentLogPath()), { recursive: true });
     await rm(previousLogPath(), { force: true });
-    // First launch has nothing to rotate — that miss is fine.
+    // First launch has nothing to rotate, and that miss is fine.
     await rename(currentLogPath(), previousLogPath()).catch(() => {});
     await writeFile(currentLogPath(), `[${new Date().toISOString()}] [info] [app] session log started\n`, 'utf-8');
   } catch {

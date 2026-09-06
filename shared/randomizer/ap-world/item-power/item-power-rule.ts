@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
  * THE item-power reading, asked in one place: what is actually in force for
- * this world? Two of the eight switches are read rather than obeyed, because
+ * this world? Two of the eight switches are read, not obeyed, because
  * a tier tick can make the requirement they stand for unmeetable:
  *
  *  - no beam blade can be found anywhere in the seed, so a rule that insists
@@ -28,7 +28,7 @@ const requestedItemPowerOf = (world: ApWorld): ItemPowerSetting =>
 /**
  * The derivation off a setting/tier pair, for the session arming and the panel.
  *
- * The two hammer stand-ins hang off the BEAM reading rather than the blade one: the
+ * The two hammer stand-ins hang off the BEAM reading, not the blade one: the
  * first rung scores nothing at all against either the seal or the last fight (both
  * carry a zero in that damage column), so a file stuck on it is walled off exactly as
  * a bladeless one is, and needs the hammer just the same.

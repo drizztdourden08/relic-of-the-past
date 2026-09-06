@@ -2,8 +2,8 @@
 /**
  * The receipt lines of a FIXED-JUMP capacity plan (the progressive switch
  * off). A fixed item carries its jump, but the capacity it climbs from is
- * only known in the core at grant time — the shuffle decides the order the
- * copies are found in — so the session pre-renders one line per (item jump,
+ * only known in the core at grant time, since the shuffle decides the order the
+ * copies are found in, so the session pre-renders one line per (item jump,
  * possible starting rung) and the core selects by the live rung when the
  * grant resolves (capacity_fixed_lines.c). The counted families and the
  * meter can stand on any rung below their top (a locked pond's native step

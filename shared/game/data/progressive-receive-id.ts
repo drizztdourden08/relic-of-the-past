@@ -1,9 +1,9 @@
 /* @layer shared-game @kind logic */
 /**
- * Virtual receive ids for the progressive equipment families — the TS half of
+ * Virtual receive ids for the progressive equipment families: the TS half of
  * the contract in core/game-hooks/progressive_grants.c. The pool carries N
  * copies of one "Progressive X" item per family, but the native receive
- * routine SETS a tier rather than incrementing it, so a copy resolved to a
+ * routine SETS a tier instead of incrementing it, so a copy resolved to a
  * fixed native id at session-arm time re-set the same tier on every grant.
  * The id space 0x62-0x66, ABOVE the upgrade range 0x50-0x61, is reserved so
  * a copy rides every override table and the receipt export unresolved; the

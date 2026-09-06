@@ -14,7 +14,7 @@ interface DeliveryEntry {
   /**
    * Times the core synchronously refused this entry's receipt grant (status 0 from
    * WasmGrantItemWithReceipt). Maintained by the queue; a refused entry stays at the
-   * front and retries — it is never dropped and never completed as delivered.
+   * front and retries, so it is never dropped and never completed as delivered.
    */
   refusals?: number;
   /**
@@ -32,7 +32,7 @@ type DeliveryAction =
     itemId: number;
     /**
      * True routes the grant through the receipt export (WasmGrantItemWithReceipt,
-     * gated by kFeatures3_ReceiptExport) — the randomizer delivery path
+     * gated by kFeatures3_ReceiptExport), the randomizer delivery path
      * (delivery-api.ts) sets it. Absent/false keeps the cheat export
      * (WasmCheatGiveItem): the cheats UI and the simulator run under the cheat/sim
      * gates and must not silently move to a gate their sessions never arm.

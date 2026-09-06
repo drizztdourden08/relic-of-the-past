@@ -1,13 +1,13 @@
 /* @layer shared-game @kind logic */
 /**
- * Virtual receive ids for the counter upgrades — the TS half of the contract
+ * Virtual receive ids for the counter upgrades: the TS half of the contract
  * in core/game-hooks/upgrade_grants.c and wallet_grants.c. The native grant
  * tables carry no id for the capacity/meter/wallet upgrades (their vanilla
  * grants are silent counter bumps inside scripted handlers), so an id space
  * ABOVE the native table is reserved for them: the core resolves such an id
  * at every substitution/receipt seam into the upgrade arithmetic plus a
  * native presentation item. A virtual id is grantable through every
- * override table and the receipt export, but is NOT a native id — keep the
+ * override table and the receipt export, but is NOT a native id, so keep the
  * two guards distinct where the difference matters.
  *
  *   0x50-0x57  explosives, jump of 1-8 tiers      (id = 0x50 + jump − 1)
@@ -19,7 +19,7 @@
  *
  * The three counted families keep a step per id (a jump never exceeds their
  * eight-rung span); the wallet's 100-rupee ladder needs jumps up to 100,
- * which a step-per-id scheme cannot hold below 0x80 — hence the slot table.
+ * which a step-per-id scheme cannot hold below 0x80, hence the slot table.
  */
 import { isNativeReceiveId } from './native-receive-id';
 import { isProgressiveReceiveId } from './progressive-receive-id';

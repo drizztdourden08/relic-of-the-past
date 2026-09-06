@@ -3,17 +3,17 @@
  * Paying for a shelf is a requirement like any other. The wallet overlay
  * already gates a rupee price by the wallet that can HOLD it; these rules
  * extend the same idea to the other currencies, so a progression item behind
- * a price the file can never pay is simply out of logic and the fill puts
+ * a price the file can never pay is out of logic and the fill puts
  * something else there.
  *
  * What each currency asks for:
- *   rupees  — a wallet rung that holds the price at once (rupees are farmable
+ *   rupees:  a wallet rung that holds the price at once (rupees are farmable
  *             between purchases, so holding it once is the real constraint);
- *   arrows  — an arrow capacity that holds the price, which on the empty rung is none;
- *   bombs   — a bomb bag that holds the price, same reading;
- *   hearts  — enough heart containers to pay and still be alive, so the price
+ *   arrows:  an arrow capacity that holds the price, which on the empty rung is none;
+ *   bombs:   a bomb bag that holds the price, same reading;
+ *   hearts:  enough heart containers to pay and still be alive, so the price
  *             plus one;
- *   bottle  — a bottle to carry the demanded content in, AND, for a potion,
+ *   bottle:  a bottle to carry the demanded content in, AND, for a potion,
  *             the hut that sells it. Paying hands the content over, and a
  *             restocked shelf asks for it again, so a repeated price needs a
  *             repeatable source: a fairy and a bee are caught in the world
@@ -21,7 +21,7 @@
  *             one hut, and a file that cannot reach it can pay such a price
  *             at most once. The scope rule (potion-price/) has already made
  *             sure the content is still on sale at all; this is the second
- *             half of the same reading — that the seller can be got to.
+ *             half of the same reading, that the seller can be got to.
  */
 import { ITEM, REGION_NAME } from '../item-names.data';
 import { explosivesCapacity, projectilesCapacity, walletCapacity } from '../state-helpers-capacity';
@@ -46,8 +46,8 @@ const hasAnyBottle = (state: CollectionState): boolean =>
   BOTTLE_ITEMS.some((name) => state.has(name));
 
 /**
- * A bottle price: the vessel, plus — for a content that is BOUGHT rather than
- * caught — the seller, reachable and affordable. Reaching the seller is the
+ * A bottle price: the vessel, plus, for a content that is BOUGHT and not
+ * caught, the seller, reachable and affordable. Reaching the seller is the
  * same reading the meter rules already make of that region
  * (state-helpers.ts), so the two agree by construction; the wallet reading is
  * the same one every rupee price gets, since a cauldron charges rupees like

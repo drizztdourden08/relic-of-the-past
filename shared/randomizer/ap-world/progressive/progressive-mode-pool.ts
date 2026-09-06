@@ -13,7 +13,7 @@
  * are nameless steps and always resolve to the lowest rung not yet held, so
  * leaving the LOW rungs to them and putting the HIGH ones in the pool as
  * themselves means the two readings can never hand over the same rung twice.
- * With the whole family shuffled — every copy in the pool — that is simply
+ * With the whole family shuffled (every copy in the pool) that is
  * every rung, once each.
  */
 import { PROGRESSIVE_FAMILIES } from './progressive-families.data';
@@ -31,7 +31,7 @@ const positionsOf = (pool: readonly string[], name: string): number[] => {
 /**
  * In place: each remaining copy of a random-order family's pool item becomes
  * one of that family's ticked rungs, highest first. A family the shuffle
- * carries no copy of is left alone — there is nothing to name.
+ * carries no copy of is left alone, since there is nothing to name.
  */
 const applyProgressiveModes = (
   pool: string[], setting: ProgressiveSetting, modes: ProgressiveModeSetting,

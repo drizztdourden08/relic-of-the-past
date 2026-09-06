@@ -2,13 +2,13 @@
 /**
  * The real fill accounting of a snapshot: every number comes from the
  * FillWorld the generator itself builds (fill-world.ts), never from a
- * second bookkeeping — locations in the world, the spots an item can sit
+ * second bookkeeping: locations in the world, the spots an item can sit
  * in, the ones open to the fill, the items the fill will place (global pool
  * plus the dungeon sets, equal to the open count by the fill invariant), the
  * spots settled before the shuffle, and the locations locked to their
- * vanilla item. Pure: no rng — the mentor-check assurance runs with a fixed
+ * vanilla item. Pure: no rng, since the mentor-check assurance runs with a fixed
  * picker so the count matches what the generator will do, and the bottle
- * and filler picks are deterministic — so it is cheap enough for a live
+ * and filler picks are deterministic, so it is cheap enough for a live
  * panel.
  */
 import { capacityPlansOf } from '../capacity/family-plan';
@@ -26,13 +26,13 @@ interface PoolAccounting {
   /** Every location of the world, events and prizes included. */
   locations: number;
   /**
-   * Every location an item can sit in — not an event slot, not a prize slot.
+   * Every location an item can sit in, not an event slot, not a prize slot.
    * The ceiling of the fill; a new kind of spot (grass, pots) raises it.
    */
   spots: number;
   /** Locations the fill may place into. */
   open: number;
-  /** Global pool + dungeon sets — equals `open` by the fill invariant. */
+  /** Global pool + dungeon sets, which equals `open` by the fill invariant. */
   items: number;
   /** Spots settled before the shuffle: the locked vanilla items plus the assured starting weapon. */
   fixed: number;
@@ -40,11 +40,11 @@ interface PoolAccounting {
   lockedVanilla: number;
   /** Filler items still in the global pool (what more upgrades could displace). */
   filler: number;
-  /** The capacity families' items in the global pool — each one took a filler's place. */
+  /** The capacity families' items in the global pool: each one took a filler's place. */
   upgrades: number;
 }
 
-/** The items the profile's family plans put in the pool, by name — the meter's row included. */
+/** The items the profile's family plans put in the pool, by name, the meter's row included. */
 const planItemsOf = (fillWorld: FillWorld): ReadonlySet<string> =>
   new Set(Object.values(capacityPlansOf(fillWorld.capacity, fillWorld.capacityProgressive)).flatMap((plan) => plan.items));
 

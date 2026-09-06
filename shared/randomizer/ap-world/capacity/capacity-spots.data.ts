@@ -2,7 +2,7 @@
 /**
  * The spot of each counted family: the two fairy slots
  * (special-locations.data.ts) for explosives and projectiles, and the
- * meter's giver, which is a row of the NPC scope (scope-vanilla.data.ts) —
+ * meter's giver, which is a row of the NPC scope (scope-vanilla.data.ts),
  * a vanilla meter locks it explicitly, the other modes leave it to that
  * scope switch. The wallet has no spot.
  */

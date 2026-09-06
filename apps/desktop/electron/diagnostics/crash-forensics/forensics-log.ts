@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 /**
  * The one write path for crash-forensics lines. The terminal is written directly
- * rather than through console: the dev file logger wraps console to mirror it, so
+ * instead of through console: the dev file logger wraps console to mirror it, so
  * going through it would put every line in main-console.log twice. `sync` is for
  * handlers that may be the last thing to run before the process dies; `terminal`
  * off keeps a periodic line out of the dev terminal while it still reaches the file.

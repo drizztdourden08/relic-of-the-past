@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 /**
  * The one line under the sliders: what the shops cost the seed, spelled out as
- * slots × items = locations. A sentence rather than three numbers, because the
+ * slots × items = locations. A sentence instead of three numbers, because the
  * multiplication is the part a player is deciding about.
  */
 import { VANILLA_TOTAL } from '../ShopSlotsBlock.constants';

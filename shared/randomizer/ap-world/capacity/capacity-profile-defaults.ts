@@ -2,7 +2,7 @@
 /**
  * The two fixed profiles. REFERENCE is the reference randomizer's own
  * baseline (its single half-meter item at the bat, nothing else in the
- * pool, no fairy-slot locations) — the world every oracle and existing view
+ * pool, no fairy-slot locations): the world every oracle and existing view
  * was built on, and what an absent profile means everywhere. LEGACY_SHUFFLE_ON
  * is the Custom shape that reproduces the pre-v2 "shuffle capacity
  * upgrades" pool byte-for-byte: one one-tier item per fairy slot, so a live
@@ -25,7 +25,7 @@ const REFERENCE_CAPACITY_PROFILE: CapacityProfile = {
 };
 
 /**
- * Every family untouched — what the master switch means when it is off. The
+ * Every family untouched: what the master switch means when it is off. The
  * reference profile is NOT this: it pools the single half-cost upgrade, so a
  * feature switched off entirely needs a profile of its own.
  */

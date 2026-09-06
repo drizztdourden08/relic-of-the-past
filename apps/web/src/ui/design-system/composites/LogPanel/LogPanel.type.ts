@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 /**
  * The neutral row model every log source is adapted into. The panel knows
- * nothing about simulation events or log-bus entries — a caller classifies its
+ * nothing about simulation events or log-bus entries, so a caller classifies its
  * own records into rows, and styles its own `kind` slugs through a scoping
  * `className` (see LogPanel.css).
  */
@@ -9,7 +9,7 @@ import type { ReactNode } from 'react';
 
 interface LogRow {
   id: string;
-  /** Left gutter: a line number, a clock time — whatever the source counts by. */
+  /** Left gutter: a line number, a clock time, whatever the source counts by. */
   gutter: string;
   /** Short type marker rendered in its own column. */
   tag: string;
@@ -28,7 +28,7 @@ interface LogKindDef {
 
 interface LogPanelProps {
   /**
-   * Rows to render, ALREADY filtered by `hidden` — kind filtering belongs to the
+   * Rows to render, ALREADY filtered by `hidden`. Kind filtering belongs to the
    * caller because hiding a row can change how the rows under it are indented,
    * which only the caller's classifier knows. The panel applies `search` only.
    */

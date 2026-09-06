@@ -1,13 +1,13 @@
 /* @layer shared-game @kind logic */
 /**
  * What one capacity climb reads as on the receipt. The numbers are the whole
- * point — tiers jumped, the capacity before and after, and where the family
- * is eventually headed — but they are carried by a sentence the game would
+ * point (tiers jumped, the capacity before and after, and where the family
+ * is eventually headed) but they are carried by a sentence the game would
  * say, not a status line: "Your bomb bag swells 2 tiers. 10 > 20. 50 is the
  * ceiling." A rung reads as the family's own ladder entry
  * (capacity-ladders.data.ts); the meter is the exception, because its bar
- * never grows — its rungs are the cost tiers the game has, so a meter climb
- * names those (none, normal, half, quarter) rather than an amount. The wallet
+ * never grows, since its rungs are the cost tiers the game has, so a meter climb
+ * names those (none, normal, half, quarter) instead of an amount. The wallet
  * counts in rupee caps. The ceiling sentence names the plan's FINAL rung, not
  * the next one (a phrase like "on the way to" read as the next pickup's rung,
  * which it never was); on the last rung it says the climb has arrived. The
@@ -37,7 +37,7 @@ const VALUE_UNIT: Readonly<Partial<Record<CapacityFamilyId, string>>> = {
 const capacityRungText = (family: CapacityFamilyId, rung: number): string =>
   (family === 'meter' ? METER_LEVEL_LABELS[rung] : String(familyById(family).ladder[rung]));
 
-/** "1 tier" · "3 tiers" — every family climbs in tiers on the receipt. */
+/** "1 tier" · "3 tiers": every family climbs in tiers on the receipt. */
 const capacityTierText = (tiers: number): string => `${tiers} tier${tiers === 1 ? '' : 's'}`;
 
 /** The label opens a possessive clause, so it reads as speech and not as a heading. */
@@ -67,7 +67,7 @@ const renderCapacityStep = (
   return [`${climb}${aheadText(family, toRung, maxRung)}`, `${climb}.`];
 };
 
-/** The climb with no values behind it — the location's own line, when no rung line exists. */
+/** The climb with no values behind it: the location's own line, when no rung line exists. */
 const capacityGrowthLine = (family: CapacityFamilyId, tiers: number): string =>
   `${ownedLabel(family)} ${GROWTH_VERB[family]} ${capacityTierText(tiers)}.`;
 

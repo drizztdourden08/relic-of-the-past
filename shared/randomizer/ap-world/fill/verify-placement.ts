@@ -3,7 +3,7 @@
  * Verification sweep over a completed placement: from an empty inventory,
  * repeatedly collect every collectable location's item in sphere batches
  * until a fixpoint. What the sweep REPORTS is the same in every accessibility
- * contract — the spheres, and the locations it never reached; which of those
+ * contract: the spheres, and the locations it never reached; which of those
  * locations actually invalidate the seed is the contract's question, and the
  * caller asks it of accessibility/accessibility-check.ts. The batches double
  * as the placement's spoiler spheres.

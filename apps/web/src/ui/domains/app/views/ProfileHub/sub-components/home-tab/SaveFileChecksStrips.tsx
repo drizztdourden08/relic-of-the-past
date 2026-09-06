@@ -2,7 +2,7 @@
 /**
  * Compact per-save-file checks strips for the home summary's run row: one
  * thin segmented bar per save file that holds a game, using the Checks
- * widget's own palette — green taken, yellow available now, grey left.
+ * widget's own palette: green taken, yellow available now, grey left.
  */
 import { Box } from '../../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../../design-system/primitives/Text';

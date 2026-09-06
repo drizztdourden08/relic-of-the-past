@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Online handshake helpers — pure builders for the client packets the online
+ * Online handshake helpers: pure builders for the client packets the online
  * session sends while connecting, and the parser that turns a raw socket
  * message into typed server packets.
  */

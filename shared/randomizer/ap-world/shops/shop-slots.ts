@@ -9,8 +9,8 @@
  *
  * DEPTH. The depth option multiplies each opened slot: at depth N the slot
  * restocks N times, so it carries N locations bought in a fixed order. The
- * first keeps the reference's own name — at depth 1 the whole naming is
- * byte-for-byte the community standard — and each restock appends an
+ * first keeps the reference's own name (at depth 1 the whole naming is
+ * byte-for-byte the community standard) and each restock appends an
  * ordinal, e.g. "Kakariko Shop Left (2nd)". The reference has no convention
  * for a repeated slot (it has no repeats), so this suffix is ours.
  *
@@ -33,7 +33,7 @@ interface CanonicalShopSlot {
   slot: ShopSlotDef;
   /** 0-based position within its own shop, the order the game spawns its sprites. */
   slotIndex: number;
-  /** 0-based index across every shop — the slot's stable id and its sold counter. */
+  /** 0-based index across every shop: the slot's stable id and its sold counter. */
   canonicalIndex: number;
 }
 
@@ -49,8 +49,8 @@ const nameOf = (shop: ShopDef, slot: ShopSlotDef, depthIndex: number): string =>
 };
 
 /**
- * Every canonical slot, in canonical order — the list every mode draws from.
- * Built by walking the shops rather than by looking a slot up: four shops
+ * Every canonical slot, in canonical order: the list every mode draws from.
+ * Built by walking the shops instead of by looking a slot up: four shops
  * share one inventory array, so a slot object cannot say which shop it is in.
  */
 const CANONICAL_SLOTS: readonly CanonicalShopSlot[] = SHOP_DEFS.flatMap((shop, shopIndex) =>
@@ -77,7 +77,7 @@ const shopSlotLocationsOf = (scope: ShopScope): readonly ShopSlotLocation[] => {
   return rows;
 };
 
-/** Every name a shop slot could ever take, at any depth — the membership set. */
+/** Every name a shop slot could ever take, at any depth: the membership set. */
 const ALL_SHOP_SLOT_LOCATIONS: ReadonlyMap<string, ShopSlotLocation> = new Map(
   CANONICAL_SLOTS.flatMap((canonical) =>
     Array.from({ length: MAX_SHOP_SLOT_DEPTH }, (_unused, depthIndex): [string, ShopSlotLocation] => [

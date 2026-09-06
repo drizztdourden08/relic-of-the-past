@@ -20,7 +20,7 @@ const anyOf = (...rules: readonly Rule[]): Rule => (state) => rules.some((rule) 
 const hasItem = (name: string, count = 1): Rule => (state) => state.has(name, count);
 const hasAnyItem = (names: readonly string[]): Rule => (state) => state.hasAny(names);
 
-/** python state._lttp_has_key — baseline path is a plain progressive count. */
+/** python state._lttp_has_key: baseline path is a plain progressive count. */
 const hasKeys = (name: string, count = 1): Rule => (state) => state.has(name, count);
 
 const canReach = (regionName: string): Rule => (state) => state.canReachRegion(regionName);

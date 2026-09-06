@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * The value ladders of the four capacity families — mirrors of the core's
+ * The value ladders of the four capacity families: mirrors of the core's
  * tier tables and rung convention (core/game-hooks/capacity_tiers.h). Every
  * ladder opens with RUNG 0, the empty tier below the native grid: no
  * explosives or projectiles at all, an unusable meter, a zero wallet. Rung
@@ -24,12 +24,12 @@ const METER_TIERS: readonly number[] = [0, 1, 2, 3];
 
 /**
  * The meter rungs named as the game names them: its cost tiers. The meter is a
- * fixed bar, so a rung is not an amount it holds — it is what one use costs.
+ * fixed bar, so a rung is not an amount it holds. It is what one use costs.
  * Rung 0 is the empty tier below the native grid, where nothing can be cast.
  */
 const METER_LEVEL_LABELS: readonly string[] = ['none', 'normal', 'half', 'quarter'];
 
-/** Index 0 ⇒ 0; index i ≥ 1 ⇒ 100 · i − 1, i = 1 … 100 (rung 10 = 999, rung 100 = 9999). */
+/** Index 0 ⇒ 0; index i ≥ 1 ⇒ 100 · i − 1, i = 1 ... 100 (rung 10 = 999, rung 100 = 9999). */
 const WALLET_LADDER_LAST = 100;
 const WALLET_LADDER: readonly number[] =
   Array.from({ length: WALLET_LADDER_LAST + 1 }, (_, index) => (index === 0 ? 0 : 100 * index - 1));

@@ -3,9 +3,9 @@
  * Whether a tick set can be rolled at all, checked BEFORE any fill runs.
  *
  * Two rungs are load-bearing under the rules this app transcribes, and
- * unticking one leaves a seed with no ending rather than a harder one. The
- * fill would find that out on its own — twenty attempts later, and only as
- * "the goal is not reachable" — so it is said here instead, once, naming the
+ * unticking one leaves a seed with no ending instead of a harder one. The
+ * fill would find that out on its own, twenty attempts later, and only as
+ * "the goal is not reachable", so it is said here instead, once, naming the
  * rung to tick back on. That is the honest failure: no seed is handed over
  * that cannot be finished.
  *
@@ -29,7 +29,7 @@ interface RequiredRung {
 
 const REQUIRED_RUNGS: readonly RequiredRung[] = [
   // The blade rung used to be listed here. It no longer is: the two places that asked for a
-  // beam blade — the seal outside the tower and the last fight — now take the hammer instead
+  // beam blade (the seal outside the tower and the last fight) now take the hammer instead
   // whenever no beam blade is reachable, and a hanging cloth door can be pulled down as well
   // as cut. Those three stand-ins are armed from the tick set itself (item-power-rule.ts), so
   // a file with no blade rung ticked at all still reaches the ending. The hammer is a plain

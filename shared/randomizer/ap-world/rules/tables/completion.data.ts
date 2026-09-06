@@ -3,7 +3,7 @@
  * Goal wiring for the boss-defeat baseline, from Archipelago worlds/alttp/
  * Rules.py: the final fight's rule (611 GanonDefeatRule, 95-97 the second
  * tower fight, 616-617 the seven-crystal requirement), the drop into the
- * fight (618), the pyramid opening (734 — open_pyramid resolves 'goal' →
+ * fight (618), the pyramid opening (734, where open_pyramid resolves 'goal' →
  * closed for this goal, leaving only the second tower fight), and the
  * bomb-delivery fairy (1354 + 1397-1401: the delivery shop sits at its
  * vanilla entrance, one of the southern second-world doors).
@@ -29,10 +29,10 @@ const COMPLETION_RULES: readonly RuleEntry[] = [
   { kind: 'location', name: 'Ganon', mode: 'set', rule: ganonDefeat },
   { kind: 'location', name: 'Ganon', mode: 'add', rule: hasItem('Beat Agahnim 2') },
   { kind: 'location', name: 'Ganon', mode: 'add', rule: (state: CollectionState) => hasCrystals(state, 7) },
-  // 618 — the drop asks for a blow the last fight will feel, so the hammer stands in for the
+  // 618: the drop asks for a blow the last fight will feel, so the hammer stands in for the
   // beam blade on the same switch the fight itself reads.
   { kind: 'exit', name: 'Ganon Drop', mode: 'set', rule: anyOf(hasBeamSword, lastFightTakesHammer) },
-  // 734 — open_pyramid 'goal' is false for the plain boss-defeat goal.
+  // 734: open_pyramid 'goal' is false for the plain boss-defeat goal.
   { kind: 'exit', name: 'Pyramid Hole', mode: 'set', rule: hasItem('Beat Agahnim 2') },
   // 1354 + 1397-1401 (southern second-world entrance branch).
   {

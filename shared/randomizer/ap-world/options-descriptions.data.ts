@@ -107,7 +107,7 @@ const AP_OPTION_DESCRIPTIONS: Readonly<Record<string, OptionDescription>> = {
 
   // ─── Locked rows: what the setting would do ───
   plando_connections: 'Hand-written entrance connections, set before the seed rolls.',
-  start_inventory_from_pool: 'Items you begin with are taken out of the pool rather than added to it.',
+  start_inventory_from_pool: 'Items you begin with are taken out of the pool instead of added to it.',
   goal: 'What ends the seed and what it asks of you first.',
   mode: [
     line('Standard', 'the seed opens with the rescue.'),

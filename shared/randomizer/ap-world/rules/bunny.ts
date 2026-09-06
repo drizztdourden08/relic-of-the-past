@@ -1,9 +1,9 @@
 /* @layer shared-game @kind logic */
 /**
- * Transform-suppression rules — port of the reference's set_bunny_rules
+ * Transform-suppression rules: port of the reference's set_bunny_rules
  * (Archipelago worlds/alttp/Rules.py 1659-1788, non-inverted, no-glitches
  * branch only). A region is affected when it carries the second-world flag;
- * a region carrying only that flag simply requires the suppression item,
+ * a region carrying only that flag requires the suppression item,
  * while a region flagged for both worlds gets the option search: reach it
  * through a chain of affected regions from a first-world-only region,
  * carrying every crossed entrance's access rule (get_rule_to_add,

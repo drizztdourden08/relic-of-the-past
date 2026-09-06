@@ -5,9 +5,9 @@
  * Two rules do all the work. The TICKED SET is the only thing a mode may draw
  * from, so no mode can ever open a slot the player switched off; and the count
  * is clamped to the size of that set, so the slider can never promise more
- * slots than exist. Everything downstream — the locations, the pool
- * accounting, the slider's own maximum in the panel — reads those two rules
- * from here rather than restating them.
+ * slots than exist. Everything downstream (the locations, the pool
+ * accounting, the slider's own maximum in the panel) reads those two rules
+ * from here instead of restating them.
  *
  * The random mode draws from the scope's own seed, so the same profile always
  * opens the same shelves: the placement is re-read at session time and has to
@@ -25,10 +25,10 @@ const COUNTED_MODES: ReadonlySet<ShopShuffleMode> = new Set<ShopShuffleMode>(['s
 const isShopShuffleMode = (value: unknown): value is ShopShuffleMode =>
   SHOP_SHUFFLE_MODES.includes(value as ShopShuffleMode);
 
-/** Whether this mode consults the slot count at all — the slider's enabled test. */
+/** Whether this mode consults the slot count at all: the slider's enabled test. */
 const usesSlotCount = (mode: ShopShuffleMode): boolean => COUNTED_MODES.has(mode);
 
-/** Ticked indices, deduplicated, in range and ascending — the canonical spelling of the set. */
+/** Ticked indices, deduplicated, in range and ascending: the canonical spelling of the set. */
 const normalizeEnabled = (enabled: Iterable<number>): number[] =>
   [...new Set(enabled)]
     .filter((index) => Number.isInteger(index) && index >= 0 && index < STANDARD_SHOP_SLOT_COUNT)

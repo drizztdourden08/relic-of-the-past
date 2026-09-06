@@ -1,12 +1,12 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Online override plumbing — builds the scout plan for every detectable
+ * Online override plumbing: builds the scout plan for every detectable
  * location, classifies scout answers through the bridge classifier (the
  * scouted item stands in for the nameView item), arms in-core overrides for
  * the override class, and delivers server-sent items that no override covers.
  *
  * Scout-first dedup: every scouted location id joins `overriddenLocationIds`
- * BEFORE the scout is sent — a reconnect replays already-collected items via
+ * BEFORE the scout is sent, because a reconnect replays already-collected items via
  * ReceivedItems before LocationInfo answers, and those must not be delivered
  * twice. A location leaves the set only when its scout answer classifies as
  * anything but an armed override (deliver-class, locked, or a plan error),
@@ -45,7 +45,7 @@ interface ScoutMaps {
 }
 
 /**
- * Online scouts the whole shuffleable surface — nothing is generation-locked.
+ * Online scouts the whole shuffleable surface, so nothing is generation-locked.
  * Shelf slots are the one exception: a server's shop locations have no scout
  * mapping here yet, so no shelf opens and every shop behaves as it always has.
  */
@@ -93,8 +93,8 @@ const classMsgOf = (itemName: string): number => {
 
 /**
  * Pre-render the contextual line for a scouted physical grant. Online has no
- * frozen placement, so no small-key totals — the dungeon-item line renders
- * without a count rather than with a wrong one.
+ * frozen placement, so no small-key totals, and the dungeon-item line renders
+ * without a count instead of with a wrong one.
  */
 const scoutedOverrideMsg = (locationName: string, itemName: string): number => {
   const text = renderReceiptMessage({ kind: 'physical', itemName, locationName });
@@ -111,7 +111,7 @@ const applyScoutedLocations = (
     if (name === undefined) continue;
     const itemName = itemNameById.get(entry.item);
     if (itemName === undefined) {
-      log.randomizer(`[Online] Unmapped scouted item ${entry.item} at ${name} — receive path stays open`, 'warn');
+      log.randomizer(`[Online] Unmapped scouted item ${entry.item} at ${name}, receive path stays open`, 'warn');
       maps.overriddenLocationIds.delete(entry.location);
       continue;
     }
@@ -123,10 +123,10 @@ const applyScoutedLocations = (
       continue;
     }
     // Scouted npc checks substitute in-core like chests: the giver's own cutscene hands
-    // over the scouted item, so the location stays in the dedup set — a replayed
+    // over the scouted item, so the location stays in the dedup set, and a replayed
     // ReceivedItems entry for it must not deliver the item a second time. Completion
     // comes from the substitution seam (fire id), so polling is suppressed for the
-    // row — its detection may be possession-based and would misreport.
+    // row, because its detection may be possession-based and would misreport.
     if (!isPlanError(row) && row.planClass === 'override-npc' && row.npcOverride !== undefined) {
       const { roomId, vanillaItemId, spriteType, targetLocalId } = row.npcOverride;
       const messageId = scoutedOverrideMsg(name, itemName);
@@ -165,7 +165,7 @@ const applyScoutedLocations = (
     }
     maps.overriddenLocationIds.delete(entry.location);
     const why = isPlanError(row) ? row.reason : `${row.planClass} class`;
-    log.randomizer(`[Online] No override for ${name} (${itemName}, ${why}) — receive path stays open`);
+    log.randomizer(`[Online] No override for ${name} (${itemName}, ${why}), receive path stays open`);
   }
 };
 
@@ -176,7 +176,7 @@ const deliverReceivedItems = (
 ): void => {
   for (const item of items) {
     if (overriddenLocationIds.has(item.location)) {
-      log.randomizer(`[Online] Skipping receive for location ${item.location} — the chest grants it in-world`);
+      log.randomizer(`[Online] Skipping receive for location ${item.location}, the chest grants it in-world`);
       continue;
     }
     const itemName = itemNameById.get(item.item);
@@ -186,7 +186,7 @@ const deliverReceivedItems = (
       continue;
     }
     // Online context beats the core's item-class default: this item was sent by
-    // another player, so the receipt shows the online line — pre-rendered with the
+    // another player, so the receipt shows the online line, pre-rendered with the
     // finder's slot when the session dialogue is live, the class template otherwise.
     const messageId = appendSessionReceiptMessage(renderOnline(`Player ${item.player}`, itemName))
       ?? RANDOMIZER_RECEIPT_MSG.online;

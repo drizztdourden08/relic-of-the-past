@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 /**
  * Substitution keys for the scripted grants that never cross the receive
- * seam — the certified surfaces of core/game-hooks/scripted_grants.c. Each
+ * seam: the certified surfaces of core/game-hooks/scripted_grants.c. Each
  * is a singular, decomp-audited grant moment: the upgrade pond's two
  * capacity purchases (its handler's own once-per-level counter bumps), the
  * cave bat's meter write, and the prize minigame's once-only top roll (its
@@ -28,7 +28,7 @@ const SCRIPTED_SURFACE_BY_CHECK: ReadonlyMap<string, ScriptedGrantSurface> = new
 const scriptedOverrideKeyOf = (checkId: CheckId): ScriptedGrantSurface | null => {
   const surface = SCRIPTED_SURFACE_BY_CHECK.get(checkId);
   if (surface === undefined) return null;
-  getCheck(checkId); // throws on an unknown id — the table stays honest with the dataset
+  getCheck(checkId); // throws on an unknown id, so the table stays honest with the dataset
   return surface;
 };
 

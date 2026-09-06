@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 /**
  * A preset pick, applied to the creation form: only the profile's own config.
- * The randomizer stays a separate choice on the form — a preset never
+ * The randomizer stays a separate choice on the form, so a preset never
  * touches it.
  */
 import type { GameSettings } from '@shared/types/settings';

@@ -6,8 +6,8 @@
  * content checkboxes in as children and they sit in the same place.
  *
  * A row a rule elsewhere on the panel has taken away is BLOCKED: its tick is
- * inert as well as off, and the one line saying why takes the range's place,
- * so the greying reads as a consequence of another setting rather than as
+ * inert and off, and the one line saying why takes the range's place,
+ * so the greying reads as a consequence of another setting instead of as
  * this row's own choice.
  */
 import { Box, Checkbox, RangeSlider, Text } from '@ds/primitives';

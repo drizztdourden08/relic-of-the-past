@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
  * One light as a tile: the item's own sprite, and a box saying whether the
- * setting accepts it. Nothing else — the art is the label, so four tiles fit
+ * setting accepts it. Nothing else, because the art is the label, so four tiles fit
  * in a row instead of four sentences repeating what the pictures already say.
  *
  * The name is not lost with the words: it is the tile's tooltip and the box's
@@ -18,7 +18,7 @@ import './DarkRoomLightTile.css';
 
 interface DarkRoomLightTileProps {
   tile: DarkRoomLightTileModel;
-  /** No light is asked for, or a read-only render — the tile draws inert. */
+  /** No light is asked for, or a read-only render: the tile draws inert. */
   disabled: boolean;
   onChange?: (checked: boolean) => void;
 }

@@ -2,7 +2,7 @@
 /**
  * The difficulty rows ⇄ the setting they stand for, both directions in one
  * file so the reading the generator uses and the writing the creation form
- * freezes can never spell the same option two ways — the contract every other
+ * freezes can never spell the same option two ways, the contract every other
  * block here keeps.
  *
  * A snapshot frozen before these rows existed carries none of them. Every
@@ -45,9 +45,9 @@ const difficultyFromSnapshot = (snapshot: RandomizerOptionsSnapshot): Difficulty
   difficultyOfValues(snapshot.values);
 
 /**
- * The rows a setting freezes — what the creation form hands the catalog. A
+ * The rows a setting freezes: what the creation form hands the catalog. A
  * setting the choices never carried writes its keys with nothing behind them
- * rather than with the defaults, for the same reason the retro rows do: the
+ * instead of with the defaults, for the same reason the retro rows do: the
  * wiring guard reads the frozen map by value and an unwired field has to show
  * there.
  */

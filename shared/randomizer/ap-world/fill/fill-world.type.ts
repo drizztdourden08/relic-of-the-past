@@ -5,7 +5,7 @@
  * region-view tests), the fill world ALWAYS carries the full location graph:
  * with the option off, the drop locations stay in the world, are excluded
  * from fill, and sit pre-placed with their vanilla keys (the reference locks
- * them via place_locked_item — ItemPool.py 349-369). lockedVanilla records
+ * them via place_locked_item, ItemPool.py 349-369). lockedVanilla records
  * exactly those pre-placements.
  */
 import type { MedallionName } from '../item-names.data';
@@ -29,20 +29,20 @@ import type { ShopPriceView } from '../shops/shop-price.type';
 
 interface FillWorldOptions {
   keyDropShuffle: boolean;
-  /** Absent means true — the fully-shuffleable world the oracles pin. */
+  /** Absent means true: the fully-shuffleable world the oracles pin. */
   includeNpcChecks?: boolean;
-  /** Absent mirrors includeNpcChecks — the pre-split synthetic toggle covered both. */
+  /** Absent mirrors includeNpcChecks, since the pre-split synthetic toggle covered both. */
   includeWorldItems?: boolean;
   /**
    * With the npc option ON: the scope locations proven physically deliverable
-   * by the app's capability probe — only these enter the shuffle, the rest of
+   * by the app's capability probe, so only these enter the shuffle, the rest of
    * the scope set stays locked vanilla. Absent keeps the fully-shuffleable
    * oracle view; the generation entry point always passes a concrete set.
    */
   deliverableNpcLocations?: ReadonlySet<string>;
   /** Same probe contract, over the world-item scope table. */
   deliverableWorldLocations?: ReadonlySet<string>;
-  /** Absent means the reference profile — no fairy slot exists. */
+  /** Absent means the reference profile: no fairy slot exists. */
   capacity?: CapacityProfile;
   /** Custom families as progressive items (absent: fixed-jump items). */
   capacityProgressive?: boolean;
@@ -50,14 +50,14 @@ interface FillWorldOptions {
   capacityBonus?: CapacityBonusSetting;
   /**
    * For the families whose fairy slot exists: the slots proven physically
-   * deliverable by the app's capability probe — only these enter the
+   * deliverable by the app's capability probe, so only these enter the
    * shuffle. Absent locks every present slot to its vanilla upgrade (unlike
    * the npc set there is no fully-shuffleable oracle view to preserve).
    */
   deliverableCapacityLocations?: ReadonlySet<string>;
   /**
    * How many shelf slots open as locations and how deep each one stocks.
-   * Absent means no shop location exists — the world the oracles pin.
+   * Absent means no shop location exists, the world the oracles pin.
    */
   shops?: ShopScope;
   /** Prices rolled for the opened shelves; absent keeps every vanilla price. */
@@ -76,34 +76,34 @@ interface FillWorldOptions {
   darkRooms?: DarkRoomSetting;
   /**
    * Which tiers of each progressive family exist (progressive/). Absent means
-   * every tier — the reference pool every earlier placement was built from.
+   * every tier: the reference pool every earlier placement was built from.
    */
   progressiveTiers?: ProgressiveSetting;
   /**
    * How each family's copies arrive (progressive/). Absent means every family
-   * in order — the reference reading every earlier placement was built from.
+   * in order: the reference reading every earlier placement was built from.
    */
   progressiveModes?: ProgressiveModeSetting;
   /**
    * How many copies of each tiered family the seed carries, and how high the
-   * hearts climb (difficulty/). Absent means the reference pool — one copy per
-   * rung and the game's own twenty-heart ceiling — which the oracles pin.
+   * hearts climb (difficulty/). Absent means the reference pool: one copy per
+   * rung and the game's own twenty-heart ceiling, which the oracles pin.
    */
   difficulty?: DifficultySetting;
   /**
-   * Whether the bow is fed rupees rather than arrows, and what a shot costs
+   * Whether the bow is fed rupees, not arrows, and what a shot costs
    * (retro/). Absent means off, which is the pool and the rules the oracles pin.
    */
   retroBow?: RetroBowSetting;
   /**
    * How helpful the items are (item-power/). Absent means the reference's
-   * normal step — the unmodified game every earlier placement was rolled
+   * normal step, the unmodified game every earlier placement was rolled
    * against.
    */
   itemPower?: ItemPowerSetting;
   /**
    * Where each dungeon-item family may end up (dungeon-items/). Absent means
-   * the reference baseline — every family pinned to its own dungeon — which is
+   * the reference baseline (every family pinned to its own dungeon), which is
    * what every placement rolled before the rows were read.
    */
   dungeonItems?: DungeonItemSetting;
@@ -113,7 +113,7 @@ interface FillWorldOptions {
    * registry that goes with it.
    */
   accessibility?: AccessibilityMode;
-  /** Parity seam for the reference-oracle harness — see ApWorldOptions. */
+  /** Parity seam for the reference-oracle harness, see ApWorldOptions. */
   unlitEscapeExempt?: boolean;
   medallions: {
     mire: MedallionName;
@@ -124,7 +124,7 @@ interface FillWorldOptions {
   /**
    * Standard-mode starting-weapon picker (ItemPool.py 294-318). Present:
    * the assurance runs and the chosen weapon is locked onto the mentor
-   * check. Absent: no assurance — the parity path, which loads a finished
+   * check. Absent: no assurance, the parity path, which loads a finished
    * placement over the world.
    */
   pickWeapon?: WeaponPicker;
@@ -134,7 +134,7 @@ interface FillWorldOptions {
 
 interface FillWorld {
   world: ApWorld;
-  /** The requested option — world.options.keyDropShuffle is always true here. */
+  /** The requested option: world.options.keyDropShuffle is always true here. */
   keyDropShuffle: boolean;
   /** The requested npc-scope option (true = those locations are fillable). */
   includeNpcChecks: boolean;
@@ -146,7 +146,7 @@ interface FillWorld {
   capacityProgressive: boolean;
   /** What a capacity pickup hands over beside its ceiling, recorded so the session arms the seed's own. */
   capacityBonus: CapacityBonusSetting;
-  /** The shop scope the world was built for — no slots means shops stayed vanilla. */
+  /** The shop scope the world was built for: no slots means shops stayed vanilla. */
   shops: ShopScope;
   /** What each opened shelf charges; empty means every shelf kept its vanilla price. */
   shopPrices: ShopPriceView;
@@ -158,11 +158,11 @@ interface FillWorld {
   darkRooms: DarkRoomSetting;
   /** The tier ticks the world and pool were built for. */
   progressiveTiers: ProgressiveSetting;
-  /** How each family's copies arrive — in order, or the rungs themselves. */
+  /** How each family's copies arrive: in order, or the rungs themselves. */
   progressiveModes: ProgressiveModeSetting;
   /** How many copies each tiered family carries, and the ceiling on the hearts. */
   difficulty: DifficultySetting;
-  /** Whether arrows are bought rather than found, and what they cost. */
+  /** Whether arrows are bought, not found, and what they cost. */
   retroBow: RetroBowSetting;
   /** How helpful the items are in this world (as asked for, before the masks). */
   itemPower: ItemPowerSetting;

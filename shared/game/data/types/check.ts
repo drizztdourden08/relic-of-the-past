@@ -82,7 +82,7 @@ interface CheckRecord {
   visualNote?: string;
   /** Source function in sprite_main.c (debug/documentation only). */
   sourceFunc?: string;
-  /** Certification verdict — set by the data-certification pipeline; generation refuses checks below 'accepted'. */
+  /** Certification verdict, set by the data-certification pipeline; generation refuses checks below 'accepted'. */
   review?: ReviewStatus;
 }
 

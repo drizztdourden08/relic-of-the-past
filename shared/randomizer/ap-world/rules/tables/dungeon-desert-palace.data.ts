@@ -59,7 +59,7 @@ const DESERT_PALACE_RULES: readonly RuleEntry[] = [
   { kind: 'location', name: 'Desert Palace - Boss', mode: 'add', rule: bossAccess },
   { kind: 'location', name: 'Desert Palace - Prize', mode: 'add', rule: bossAccess },
   // 370-372: the prize must not lock the keys needed to reach it. Guarded by
-  // `not (small_key_shuffle and big_key_shuffle)` — a Choice is falsy only at
+  // `not (small_key_shuffle and big_key_shuffle)`: a Choice is falsy only at
   // value 0, so the guard drops only once BOTH key families have left their own
   // dungeon, at which point neither key can be locked behind this prize.
   {

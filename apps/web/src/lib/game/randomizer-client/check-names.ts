@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Check names — maps a check id to its community-standard display name:
+ * Check names, mapping a check id to its community-standard display name:
  * `<dungeon> - <check>` when the check belongs to a dungeon, else the check's
  * own name, with a small data-file override table for the sub-areas whose
  * standard prefix differs from their dungeon.

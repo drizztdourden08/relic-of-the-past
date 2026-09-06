@@ -1,11 +1,11 @@
 /* @layer shared-game @kind logic */
 /**
  * The tier ticks applied to an assembled pool. Two things make this a pass over
- * the finished pool rather than a shorter row at the start.
+ * the finished pool instead of a shorter row at the start.
  *
  * The pool keeps its transcribed SIZE whatever the ticks say: an unticked rung
  * leaves the reference's own stand-in behind (ItemPool.py 76, the swordless row
- * of four twenty-rupee pickups) rather than shrinking the row. That is what
+ * of four twenty-rupee pickups) instead of shrinking the row. That is what
  * keeps the fixed 153-item total (ItemPool.py total_items_to_place) true for
  * every tick set, so the fill still has exactly one item per open location and
  * nothing downstream has to learn a second arithmetic.
@@ -14,7 +14,7 @@
  * locked-vanilla scope has been subtracted. A profile that leaves the character
  * and world checks out of the shuffle has already taken those locations' items
  * off the pool, and those locations go on handing them over in game whatever a
- * tick says — so a tick that tried to remove one of them would be removing a
+ * tick says, so a tick that tried to remove one of them would be removing a
  * copy that is not there, and the subtraction would fail. Running after it
  * means a tick only ever removes a copy that was really going to be shuffled.
  *

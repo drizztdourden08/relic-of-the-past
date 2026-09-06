@@ -15,7 +15,7 @@ const WALLET_STEP_RUPEES = 100;
 
 const plural = (count: number, unit: string): string => `${count} ${unit}${count === 1 ? '' : 's'}`;
 
-/** "2 tiers" · "1 level" · "500 rupees" — the size of one upgrade item's jump. */
+/** "2 tiers" · "1 level" · "500 rupees": the size of one upgrade item's jump. */
 const capacityJumpText = (family: CapacityFamilyId, jump: number): string => {
   if (family === 'wallet') return `${jump * WALLET_STEP_RUPEES} rupees`;
   if (family === 'meter') return plural(jump, 'level');

@@ -8,7 +8,7 @@
  *
  * Each row is a name, the catalog's short line when it has one, and a slider.
  * A family whose rungs were all unticked above carries no copy at all, so its
- * control is shown inert with the reason on it rather than live and
+ * control is shown inert with the reason on it instead of live and
  * pointless, the same rule the retro costs follow under their own switch.
  *
  * Presentational only: the setting comes in as a prop and every edit leaves as

@@ -2,7 +2,7 @@
 /**
  * Which tab a key press moves to, following the standard tab-strip keys:
  * the arrows step and wrap, Home and End jump to the ends. Any other key
- * answers null and is left to the browser — a plain tab button already
+ * answers null and is left to the browser, since a plain tab button already
  * activates on Enter and Space on its own.
  */
 

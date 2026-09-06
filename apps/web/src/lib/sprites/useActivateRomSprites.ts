@@ -4,7 +4,7 @@
  * the one seam every path that sets the active profile passes through (startup
  * with a pinned or last profile, creation, selection, load for play), so no
  * call site has to remember it. That seam resolves the ROM through spriteRomOf,
- * which stands a ready ROM in when no profile is active — so the base and the
+ * which stands a ready ROM in when no profile is active, so the base and the
  * availability flag are set from startup on, and a view that draws item art
  * before any profile exists (the creation form's randomizer panel) is never
  * left showing placeholders over a set that is on disk. Only a library with no

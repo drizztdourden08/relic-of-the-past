@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * The scope flags of a persisted placement — what generation locked, derived
+ * The scope flags of a persisted placement: what generation locked, derived
  * again from the same stats so the bridge and the fill always name the same
  * rows. Option toggles lock whole scope tables; a toggle on locks the
  * capability probe's undeliverable remainder. The capacity spots follow the

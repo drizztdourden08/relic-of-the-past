@@ -3,7 +3,7 @@
  * Each dungeon's vanilla boss prize, keyed by its prize location
  * (PRIZE_LOCATIONS in special-locations.data.ts).
  *
- * Transcribed from the game core's own tables — both indexed by palace index
+ * Transcribed from the game core's own tables, both indexed by palace index
  * (`cur_palace_index_x2 >> 1`), and cross-checked against each other:
  *
  * - `kBossFinishedFallingItem` (dungeon.c, the boss room tag) selects a
@@ -28,7 +28,7 @@
  * |      7 | 0x01 | 0x20       | Crystal 6     |
  * |     12 | 0x08 | 0x20       | Crystal 7     |
  *
- * Generation places these rather than shuffling, because nothing can yet
+ * Generation places these instead of shuffling, because nothing can yet
  * substitute a boss prize: the vanilla grant writes the dungeon's own bit into
  * the pendant/crystal field and clears the room tag, so a shuffled assignment
  * would be handed out as the vanilla prize regardless. Placing the truth keeps

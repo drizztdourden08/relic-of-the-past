@@ -2,10 +2,10 @@
 /**
  * The dark-room pair of the creation form's choices, read and written as the
  * one setting the section edits. The five fields stay exactly where they were
- * on the choices object — this only gathers them, so the wiring through
+ * on the choices object. This only gathers them, so the wiring through
  * randomizer-choices (and the snapshot it freezes) is untouched.
  *
- * Both directions are spelled out field by field rather than derived from the
+ * Both directions are spelled out field by field instead of derived from the
  * key map, so a renamed field fails to compile here instead of resolving to
  * undefined at runtime and freezing a light the player never unticked.
  */

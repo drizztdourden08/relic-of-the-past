@@ -2,7 +2,7 @@
 /**
  * A short definition list: one line per entry, the term leading in gold and
  * the detail following it in the surrounding text colour. A real `dl`, so a
- * reader hears "term: detail" once per line instead of one long paragraph —
+ * reader hears "term: detail" once per line instead of one long paragraph,
  * the colon is in the markup, not in a pseudo-element, for exactly that
  * reason. Size and colour of the detail are inherited, so the caller's own
  * class decides how big the block is.

@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
  * What the pond will actually do in play, said in plain sentences and read
- * off the live pair rather than kept as a hand-written note somewhere. Two
+ * off the live pair instead of kept as a hand-written note somewhere. Two
  * readings, because the tab has two questions:
  *
  *   1. what the pond sells or hands out, and what it costs;
@@ -48,7 +48,7 @@ const nativeSentence = (capacity: CapacityProfile): string => {
   return allVanilla ? `${base}.` : `${base}; a family moved off Vanilla gets a shuffled item in its slot.`;
 };
 
-/** What the pond sells, what it costs, and how much of it is worth finding. */
+/** What the pond sells, what it costs, and how much of it repays the search. */
 const sellingSentence = (pond: PondSetting, capacity: CapacityProfile, seed: string): string => {
   if (pond.mode === 'capacity') return nativeSentence(capacity);
   const plan = pondPlanOf(pond, seed);

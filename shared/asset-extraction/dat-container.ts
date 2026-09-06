@@ -1,8 +1,8 @@
 /* @layer shared-asset-extraction @kind logic */
 /**
- * Read-only view over a serialized zelda3_assets.dat blob — the exact inverse
+ * Read-only view over a serialized zelda3_assets.dat blob, the exact inverse
  * of AssetBuilder.serialize(). Buffer-free (plain Uint8Array), so it runs in
- * the renderer as well as in Node.
+ * the renderer and in Node.
  *
  * Layout: 48-byte signature, 32 reserved bytes, u32 asset count, u32 key-sig
  * length, then count*4 asset sizes, the NUL-separated name list, and each

@@ -16,7 +16,7 @@ const matchesSearch = (check: CheckRecord, query: string, run?: RunContext): boo
   }
   if (check.dungeonId && getDungeon(check.dungeonId).randomizerName.toLowerCase().includes(query)) return true;
   // With a run loaded, the item a reader searches for is the one actually
-  // there — matching the vanilla contents instead would answer the wrong
+  // there, since matching the vanilla contents instead would answer the wrong
   // question ("where WAS the lamp", not "where IS it").
   const placed = run?.placedItems?.get(check.id);
   if (placed !== undefined) return getItem(placed).randomizerName.toLowerCase().includes(query);

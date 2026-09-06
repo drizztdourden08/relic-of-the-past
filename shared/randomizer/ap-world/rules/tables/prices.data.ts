@@ -28,7 +28,7 @@ const PRICED_ENTRIES: readonly PricedEntry[] = [
   { kind: 'exit', name: 'Pyramid Fairy', price: 100 },
 ];
 
-/** The priciest gate on the way to the goal — the wallet rung the fill must be able to reach. */
+/** The priciest gate on the way to the goal: the wallet rung the fill must be able to reach. */
 const MAX_PRICE = Math.max(...PRICED_ENTRIES.map((entry) => entry.price));
 
 export { MAX_PRICE, PRICED_ENTRIES };

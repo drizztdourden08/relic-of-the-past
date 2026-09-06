@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind hook */
 /**
- * The four capacity family rows of a profile, derived once per input — the
+ * The four capacity family rows of a profile, derived once per input. The
  * creation panel and the Run tab both render them through
  * CapacityUpgradesBlock. `forced` carries the sentence a sibling setting put
  * on a family's card (the rule's own reading), so a row the player cannot set

@@ -24,7 +24,7 @@ const THIEVES_DEN_RULES: readonly RuleEntry[] = [
     kind: 'exit', name: 'Blind Fight', mode: 'set',
     rule: allOf(hasKeys('Small Key (Thieves Town)', 3), (state: CollectionState) => canUseBombs(state)),
   },
-  // 415-416 — the reference's operator precedence: 3keys OR (self-placed AND 2keys), AND hammer.
+  // 415-416: the reference's operator precedence: 3keys OR (self-placed AND 2keys), AND hammer.
   {
     kind: 'location', name: 'Thieves\' Town - Big Chest', mode: 'set',
     rule: allOf(

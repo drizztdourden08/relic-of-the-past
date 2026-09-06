@@ -10,7 +10,7 @@
  * pair never has that hole, it is stable (settling again changes nothing),
  * and every control the panel still OFFERS from it leads to another pair
  * without the hole. That last case is what makes the enumeration a proof
- * about reachable states rather than about one screen.
+ * about reachable states instead of about one screen.
  *
  * Retro bow is walked alongside: with every shot paid for the projectiles
  * family needs no source and reads as Vanilla, and the pond is judged on the

@@ -5,7 +5,7 @@
  * ONE number drives both the count control and the total sentence: `opened`,
  * the size of the set this scope really opens (shop-scope.ts). That is what
  * the counted modes take out of the ticked set, and in the custom mode it IS
- * the ticked set — so a control fed the stored `slotCount` instead would sit
+ * the ticked set, so a control fed the stored `slotCount` instead would sit
  * still while the ticks moved, and its fill would even climb as the ceiling
  * under it dropped. The stored count is still re-clamped after every edit, so
  * the value the counted modes read can never outrun a ticked set the player
@@ -16,7 +16,7 @@ import { clampDepth } from '@shared/randomizer/ap-world/shops/shop-slots';
 import type { ShopScope, ShopShuffleMode } from '@shared/randomizer/ap-world/shops/shop-scope.type';
 
 interface ShopScopeSummary {
-  /** Slots ticked — the ceiling every mode draws from, and the count's maximum. */
+  /** Slots ticked: the ceiling every mode draws from, and the count's maximum. */
   ticked: number;
   /**
    * Slots this scope actually opens: the count control's displayed value in
@@ -33,7 +33,7 @@ interface ShopScopeSummary {
   active: boolean;
 }
 
-/** Re-clamps the count to the ticked set — run after every edit, not just the slider's. */
+/** Re-clamps the count to the ticked set, run after every edit, not just the slider's. */
 const reclamped = (scope: ShopScope): ShopScope =>
   ({ ...scope, slotCount: clampCount(scope.slotCount, maxSlotCountOf(scope)) });
 

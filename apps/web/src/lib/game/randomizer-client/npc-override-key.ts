@@ -1,12 +1,12 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Substitution keys for scripted (npc) grants — decides, per check record,
+ * Substitution keys for scripted (npc) grants: decides, per check record,
  * how the in-core npc-override table can identify the giver's grant at the
  * plain receive seam. Indoor givers key by (room, vanilla item); the boss
  * prize keys by its arena room and the ceremonial heart grant. A giver with
- * no room keys by vanilla item alone — allowed only while that item id is
+ * no room keys by vanilla item alone, allowed only while that item id is
  * unique across every roomless giver (certified here over both scope
- * surfaces) — or, for the audited givers whose shared vanilla item makes
+ * surfaces), or, for the audited givers whose shared vanilla item makes
  * that impossible (the three bottle givers), by the giver's own SPRITE TYPE:
  * the decomp audit certifies each one's grant executes inside its own sprite
  * handler frame, so the executing sprite identifies the giver exactly.
@@ -31,7 +31,7 @@ interface NpcOverrideKey {
 /**
  * Sprite types certified by the decomp audit to grant INSIDE their own
  * handler frame (the bottle seller, the sleeping man under the bridge, the
- * chest-carrying locksmith) — the sprite executing at the receive seam is
+ * chest-carrying locksmith), because the sprite executing at the receive seam is
  * the giver itself, so the entry can key on it.
  */
 const SPRITE_KEY_CERTIFIED: ReadonlySet<number> = new Set([117, 43, 57]);
@@ -41,7 +41,7 @@ const giverRoomOf = (check: CheckRecord): number | null => {
   if (room !== undefined) return room;
   if (roomFlag !== undefined) return roomFlag.roomId;
   // The boss prize's arena room pins its ceremonial grant, and the dungeon reward's the
-  // falling one — both rows carry the arena room and nothing else.
+  // falling one, since both rows carry the arena room and nothing else.
   if ((check.kind === 'boss' || check.kind === 'prize') && roomId !== undefined) return roomId;
   if (check.screenId === undefined) return null;
   const screen = getScreen(check.screenId);
@@ -51,7 +51,7 @@ const giverRoomOf = (check: CheckRecord): number | null => {
 
 /**
  * Vanilla grant ids carried by two or more ROOMLESS givers across both scope
- * surfaces (npc gifts AND world items that key by item alone) — those cannot
+ * surfaces (npc gifts AND world items that key by item alone), which cannot
  * key by item alone. Room-keyed duplicates stay allowed: the room
  * disambiguates them at the seam. Computed once over the scope tables.
  */
@@ -88,7 +88,7 @@ const ambiguousRoomlessIds = (): ReadonlySet<number> => {
 /**
  * The substitution key for one npc/boss check, or null when its grant cannot
  * be keyed (no native grant id, or an uncertified roomless giver of an
- * ambiguous item — the caller falls back to the delivery path).
+ * ambiguous item, so the caller falls back to the delivery path).
  */
 const npcOverrideKeyOf = (checkId: CheckId): NpcOverrideKey | null => {
   const check = getCheck(checkId);

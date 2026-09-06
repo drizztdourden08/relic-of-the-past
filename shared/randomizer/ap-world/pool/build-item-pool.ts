@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * Assembles the baseline item pool from the transcribed composition rows —
+ * Assembles the baseline item pool from the transcribed composition rows,
  * the port of Archipelago worlds/alttp/ItemPool.py get_pool_core +
  * generate_itempool for the fixed baseline options (normal pool, standard
  * mode, boss-defeat goal, no timer, progressive on, retro off, shops off).
@@ -8,12 +8,12 @@
  * shuffle options every key/big-key/map/compass is dungeon-local and
  * pre-filled inside its dungeon. With the key-drop option OFF the reference
  * locks each drop location's vanilla key onto it and removes it from the
- * dungeon set (generate_itempool lines 350-370) — mirrored here by
+ * dungeon set (generate_itempool lines 350-370), mirrored here by
  * subtracting the drop table's items per dungeon. The synthetic npc-scope
  * option reuses the same arithmetic per LOCKED LOCATION: each locked
- * location's vanilla item leaves the global pool — in-dungeon standing keys
+ * location's vanilla item leaves the global pool: in-dungeon standing keys
  * leave their dungeon sets instead (scope-subtraction.ts). The capacity
- * profile adds its families' upgrade items (capacity-pool-items.ts — the
+ * profile adds its families' upgrade items (capacity-pool-items.ts, the
  * meter's first items take the reference's magic row, the rest join the
  * other families' items) and trims one filler per item past the spots that
  * became checks (balance-filler.ts), keeping the fill one item per open
@@ -100,7 +100,7 @@ const dungeonItemsOf = (
 /**
  * ItemPool.py 347-348: only the families still named in dungeon_local_item_names
  * stay out of the global pool. A family whose mode has left the dungeons goes
- * into `escaped`, joins the shuffled pool, and stops being prefilled — which
+ * into `escaped`, joins the shuffled pool, and stops being prefilled, which
  * frees exactly one dungeon location per item, so the fill stays balanced with
  * no filler arithmetic. Under the baseline every family stays in, `escaped` is
  * empty and the pool is byte-identical to what it always was.
@@ -197,14 +197,14 @@ const buildItemPool = (
   // Then the copy multiples, LAST of the three passes over a tiered family, so
   // they multiply the names the ticks and the order pass have already settled
   // (difficulty/difficulty-copies-pool.ts). This one grows the pool, so its
-  // count joins the capacity upgrades' filler arithmetic below rather than
+  // count joins the capacity upgrades' filler arithmetic below instead of
   // getting one of its own.
   const extraCopies = applyCopyMultipliers(pool, modes, difficulty.copies);
   balanceFiller(
     pool, upgrades.length - openCapacitySpots(world, lockedCapacityLocations) + extraCopies, pickFiller);
   // A shelf slot the profile opened is one more spot, so the pool gains one
   // more item for it. The reference backfills a freed slot with rupees
-  // rather than putting the shop's own stock in the pool (ItemPool.py
+  // instead of putting the shop's own stock in the pool (ItemPool.py
   // 399-411, beemizer off and the 100-rupee roll's chance at zero under
   // these options), and each restock is one more spot on the same terms.
   //
@@ -219,7 +219,7 @@ const buildItemPool = (
 
   // ItemPool.py 294-318, standard mode: assure the mentor check a usable
   // weapon. Skipped when that check is pre-placed (scope-locked to its
-  // vanilla sword — the source's placed_items guard) or when the caller
+  // vanilla sword, the source's placed_items guard) or when the caller
   // supplies no picker (parity worlds load a finished placement instead).
   const uncleWeapon = pickWeapon !== undefined && !lockedScope.has(UNCLE_LOCATION)
     ? takeUncleWeapon(pool, pickWeapon, uncleWeaponUsableAtStart(capacity, retro?.enabled === true))
@@ -228,7 +228,7 @@ const buildItemPool = (
   // Appended LAST, after every pass that reshapes the pool (the scope
   // subtraction, the tier ticks, the filler balance, the shop backfill and the
   // starting-weapon draw), so a family leaving its dungeons cannot perturb any
-  // of them — the baseline pool is the same array it has always been, with
+  // of them: the baseline pool is the same array it has always been, with
   // nothing after it.
   const dungeonItems = new Map<string, readonly string[]>();
   const escaped: string[] = [];

@@ -6,7 +6,7 @@
 import type { LogChannel, LogEntry } from '../../log-bus';
 
 // The 'core' channel carries the game core's stdout/stderr (the Module print
-// handlers route it there), so those lines are tagged [wasm] in the file —
+// handlers route it there), so those lines are tagged [wasm] in the file,
 // one greppable tag for everything coming out of the compiled core.
 const FILE_TAGS: Partial<Record<LogChannel, string>> = { core: 'wasm' };
 

@@ -17,7 +17,7 @@ const RAW_FEATURE_KEYS = [
   'widescreenSprites', 'widescreenVisualFixes', 'cameraLockToViewport', 'smoothTransitions',
   'pauseOffscreenAI', 'perGroupVolume', 'inventoryReorder', 'secondaryItemSlots', 'autoSkipDialog',
   // World-item presentation, and the archery host's refusal. Their bits live in features3
-  // rather than features0, but the resolver only cares about ids, so they cascade and strip
+  // instead of features0, but the resolver only cares about ids, so they cascade and strip
   // like everything else here.
   'coloredRupees', 'itemSheen', 'archeryNeedsBow',
 ] as const satisfies readonly (keyof GameSettings)[];

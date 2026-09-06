@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * S2 source — parses the reference randomizer project's published data
+ * S2 source: parses the reference randomizer project's published data
  * fixtures (Archipelago worlds/alttp) as plain text/JSON. The Python file
  * is treated strictly as text and extracted with regexes; nothing is ever
  * executed.
@@ -16,7 +16,7 @@ interface ApDataPackage {
   itemNameToId: Record<string, number>;
 }
 
-/** Parser drift guard — the table holds roughly 250 entries; far fewer means the regex broke. */
+/** Parser drift guard: the table holds roughly 250 entries; far fewer means the regex broke. */
 const MIN_EXPECTED_LOCATIONS = 200;
 const TABLE_START_MARKER = 'location_table: typing.Dict';
 const TABLE_END_MARKER = 'lookup_id_to_name';
@@ -33,7 +33,7 @@ const ENTRY_PATTERN =
 const unquote = (quoted: string): string =>
   quoted.slice(1, -1).replace(/\\(['"\\])/g, '$1');
 
-/** First integer of `None`, an int literal, or an int list — null for None/empty. */
+/** First integer of `None`, an int literal, or an int list; null for None/empty. */
 const firstInt = (raw: string): number | null => {
   const match = raw.match(/0x[0-9a-fA-F]+|\d+/);
   return match === null ? null : Number(match[0]);
@@ -58,7 +58,7 @@ const parseApLocationTable = (regionsPyText: string): ApLocation[] => {
 
   if (locations.length < MIN_EXPECTED_LOCATIONS) {
     throw new Error(
-      `ap-source: parsed only ${locations.length} locations (expected >= ${MIN_EXPECTED_LOCATIONS}) — parser drift`,
+      `ap-source: parsed only ${locations.length} locations (expected >= ${MIN_EXPECTED_LOCATIONS}), parser drift`,
     );
   }
   return locations;

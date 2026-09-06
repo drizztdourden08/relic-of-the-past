@@ -1,10 +1,10 @@
 /* @layer shared-game @kind logic */
 /**
- * S1 census — reads the ROM's native chest table and produces the physical
+ * S1 census: reads the ROM's native chest table and produces the physical
  * ground truth used to verify the dataset's check records.
  *
  * Table layout (same parse as asset-extraction/compile-dungeon-rooms.ts):
- * base SNES address 0x81e96e, 168 entries, 3 bytes each — a little-endian
+ * base SNES address 0x81e96e, 168 entries, 3 bytes each, a little-endian
  * room word at +0 (bit 15 = big-chest flag, low 15 bits = room id) and an
  * item byte at +2. A chest's index is its order among the chests of its own
  * room in table order, matching the save bit assignment (0x10 << index).
@@ -25,7 +25,7 @@ interface RomChest {
 
 interface RomCensus {
   chestsByRoom: Map<number, RomChest[]>;
-  /** All entries in native table order — the order the address crosswalk indexes into. */
+  /** All entries in native table order: the order the address crosswalk indexes into. */
   flat: RomChest[];
   totalChests: number;
 }
@@ -80,7 +80,7 @@ const readRomCensus = (romBytes: Uint8Array): RomCensus => {
   return { chestsByRoom, flat, totalChests };
 };
 
-/** Cross-check dataset chest checks against the census. Pure — no I/O, no logging. */
+/** Cross-check dataset chest checks against the census. Pure: no I/O, no logging. */
 const censusFindings = (
   census: RomCensus,
   checks: readonly CheckRecord[],

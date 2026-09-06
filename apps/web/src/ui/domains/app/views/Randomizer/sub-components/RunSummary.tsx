@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind component */
 /**
  * The facts of the run: which profile it belongs to, the seed it was generated
- * from, the live session state out of the shared store, and — once a local
- * session has armed — the plan counters it armed with. The frozen option
+ * from, the live session state out of the shared store, and, once a local
+ * session has armed, the plan counters it armed with. The frozen option
  * catalog is RunOptions' job; the placement is the spoiler tab's.
  */
 import { Box, Text } from '@ds/primitives';
@@ -25,7 +25,7 @@ interface Fact {
 
 /**
  * Nicer wording for the counters we know about. Anything not listed still
- * shows, humanized from its key — the plan's classes are actively being
+ * shows, humanized from its key, while the plan's classes are actively being
  * reworked (drop and standing overrides, deliver rows converting to physical
  * ones), and a hardcoded list silently omits whichever one lands next. This
  * one already drifted once.

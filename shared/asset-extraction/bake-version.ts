@@ -38,7 +38,7 @@ const stampBakeVersion = (dat: Buffer): void => {
   dat.writeUInt32LE(CURRENT_BAKE_VERSION, VERSION_OFFSET);
 };
 
-/** The blob's stamped bake version — 0 for blobs baked before stamping existed. */
+/** The blob's stamped bake version, 0 for blobs baked before stamping existed. */
 const readBakeVersion = (dat: Uint8Array): number => {
   if (dat.length < HEADER_MIN_BYTES) return 0;
   for (let i = 0; i < STAMP_MAGIC.length; i++) {

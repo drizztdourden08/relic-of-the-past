@@ -4,7 +4,7 @@
  * session material in the session store's pending slot; when the game reaches
  * 'running' with a pending entry for the current profile, the matching session
  * starts with no user action. When the game leaves 'running' the active
- * session stops with it — a randomized session never outlives its game.
+ * session stops with it, so a randomized session never outlives its game.
  * Restart-safe: every gated boot re-parks a pending entry, and the started
  * flag re-arms as soon as the game stops.
  */

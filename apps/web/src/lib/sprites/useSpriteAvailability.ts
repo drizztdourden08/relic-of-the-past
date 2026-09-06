@@ -1,12 +1,12 @@
 /* @layer renderer-lib @kind hook */
 /**
  * Whether the extracted sprite set of `romFile` can be shown right now. A view
- * drawing art for a ROM asks here rather than reading the flag raw: while the
+ * drawing art for a ROM asks here instead of reading the flag raw: while the
  * store knows nothing about that ROM, or still says its set is missing, the
  * disk is asked once more (which also starts the background extraction), so a
- * set that IS on disk is never hidden behind a stale "unavailable" — the
+ * set that IS on disk is never hidden behind a stale "unavailable", and the
  * creation form lists the pool before any profile is active, and a switch to
- * another profile mid-form must not blank it either. A set that is truly
+ * another profile mid-form must not blank it either. A set that is
  * missing keeps answering false, asked once per ROM, until the extraction
  * lands and flips the flag. No ROM given: the flag as recorded.
  */

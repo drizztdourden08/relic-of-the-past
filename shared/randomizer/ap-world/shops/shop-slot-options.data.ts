@@ -63,7 +63,7 @@ const shopSlotLabelOf = (shop: ShopDef, slot: ShopSlotDef): string =>
 /**
  * What the shelf normally sells, named the way the dataset names it
  * (display-names/). Most of the stock is in the record set and comes back
- * verbatim; the few pieces that are shop-only — the potions, the bee — are not
+ * verbatim; the few pieces that are shop-only (the potions, the bee) are not
  * records, so they keep the transcribed name the shop table already carries.
  */
 const stockNameOf = (slot: ShopSlotDef): string => itemDisplayName(slot.vanillaItem, slot.vanillaItem);
@@ -78,13 +78,13 @@ interface ShopSlotRow {
   slot: ShopSlotDef;
   key: string;
   label: string;
-  /** Baseline of this row's toggle — what an absent value reads as. */
+  /** Baseline of this row's toggle: what an absent value reads as. */
   defaultOn: boolean;
   /** The slot's stable id: its index across every shop, in canonical order. */
   canonicalIndex: number;
 }
 
-/** Every canonical slot's row, in canonical order — the block renders them shop by shop. */
+/** Every canonical slot's row, in canonical order: the block renders them shop by shop. */
 const SHOP_SLOT_ROWS: readonly ShopSlotRow[] = SHOP_DEFS.flatMap((shop, shopIndex) =>
   shop.slots.map((slot, slotIndex) => ({
     shop,
@@ -136,7 +136,7 @@ const SHOP_SLOT_DESCRIPTIONS: Readonly<Record<string, string>> = Object.fromEntr
   SHOP_SLOT_ROWS.map(({ slot, key }) => [key, shopSlotDescriptionOf(slot)]),
 );
 
-/** Keys of the tick rows alone — the set the block owns and the plain list skips. */
+/** Keys of the tick rows alone: the set the block owns and the plain list skips. */
 const SHOP_SLOT_OPTION_KEYS: readonly string[] = SHOP_SLOT_ROWS.map((row) => row.key);
 
 /** Every key the shop-scope block renders, ticks and counted rows alike. */
@@ -148,7 +148,7 @@ const isShopScopeOptionKey = (key: string): boolean => SHOP_SCOPE_OPTION_KEYS.in
 
 /**
  * The tick rows of the slots that did NOT exist when the shop option shipped
- * — the split doors, the hut and the bomb counter. A snapshot frozen before
+ * (the split doors, the hut and the bomb counter). A snapshot frozen before
  * the mode row existed is read with exactly these forced off, so its stored
  * slot count still opens the slots it always opened.
  */

@@ -13,19 +13,19 @@
  *               dungeon_specific_item_names |= group
  *
  * `in_dungeon` is values {0, 1} (Options.py 181-183), so:
- * - original_dungeon — the family is prefilled inside dungeons AND pinned to
+ * - original_dungeon: the family is prefilled inside dungeons AND pinned to
  *   the dungeon that owns each item (the restrictive prefill's own-dungeon
  *   rule). This is the baseline every stored placement was rolled under.
- * - own_dungeons — still prefilled inside dungeons, but any dungeon will do.
- * - own_world / any_world — the family leaves the dungeon prefill and joins
+ * - own_dungeons: still prefilled inside dungeons, but any dungeon will do.
+ * - own_world / any_world: the family leaves the dungeon prefill and joins
  *   the global pool; in a one-world game those two are the same question, and
  *   `local_items` is what "own world" already means here.
- * - different_world — asks for the item to be placed in ANOTHER player's
+ * - different_world: asks for the item to be placed in ANOTHER player's
  *   world. There is no other world here, so the value is unsatisfiable
  *   (REFUSED_MODES).
- * - start_with — the item is precollected and a junk item takes its slot; this
+ * - start_with: the item is precollected and a junk item takes its slot; this
  *   app has no starting-inventory delivery at all, so it is refused.
- * - universal (small keys only) — every key becomes one shared currency bought
+ * - universal (small keys only): every key becomes one shared currency bought
  *   from a shop, which needs the retro shop stock and a universal-key item the
  *   core has no grant for; refused.
  */
@@ -35,7 +35,7 @@ import type {
 
 const DUNGEON_ITEM_FAMILIES: readonly DungeonItemFamily[] = ['bigKey', 'smallKey', 'compass', 'map'];
 
-/** Catalog key per family — the source's own dataclass field names. */
+/** Catalog key per family: the source's own dataclass field names. */
 const DUNGEON_ITEM_OPTION_KEYS: Readonly<Record<DungeonItemFamily, string>> = {
   bigKey: 'big_key_shuffle',
   smallKey: 'small_key_shuffle',
@@ -52,8 +52,8 @@ const DEFAULT_DUNGEON_ITEM_SETTING: DungeonItemSetting = {
 };
 
 /**
- * Values this engine will not roll, and why — read by the option reader, which
- * falls back to the baseline rather than producing a seed that cannot be
+ * Values this engine will not roll, and why. Read by the option reader, which
+ * falls back to the baseline instead of producing a seed that cannot be
  * played. Each one is also still locked in the catalog.
  */
 const REFUSED_MODES: Readonly<Record<string, string>> = {
@@ -66,7 +66,7 @@ const REFUSED_MODES: Readonly<Record<string, string>> = {
 const staysInDungeons = (mode: DungeonItemMode): boolean =>
   mode === 'original_dungeon' || mode === 'own_dungeons';
 
-/** Only original_dungeon joins dungeon_specific_item_names — the own-dungeon pin. */
+/** Only original_dungeon joins dungeon_specific_item_names: the own-dungeon pin. */
 const staysInOwnDungeon = (mode: DungeonItemMode): boolean => mode === 'original_dungeon';
 
 /** True while every family is where the reference baseline puts it. */

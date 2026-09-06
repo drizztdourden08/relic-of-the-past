@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Location poller — watches live memory for newly-completed planned checks
+ * Location poller: watches live memory for newly-completed planned checks
  * and reports each one, once, to the active randomizer session. Polls ONLY
  * what the session's plan includes, over the three detection modes the plan
  * can carry: persisted room-flag words (with the loaded room's live bits
@@ -95,7 +95,7 @@ const pollOnce = (session: ReportingSession, entries: readonly PollEntry[]): voi
 
 /**
  * Take a location out of polling's reporting (e.g. an armed physical override
- * whose completion arrives from the substitution seam instead — a possession
+ * whose completion arrives from the substitution seam instead, a possession
  * detection would false-fire when the vanilla item arrives from elsewhere).
  */
 const suppressLocationReport = (key: string): void => {

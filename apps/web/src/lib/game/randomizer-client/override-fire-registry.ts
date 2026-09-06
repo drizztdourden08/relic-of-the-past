@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Fire-id registry — the session-side half of the override-fired completion
+ * Fire-id registry: the session-side half of the override-fired completion
  * channel. Each armed physical override entry carries a fire id allocated
  * here; when the core reports a substitution (override-fired.ts) the id maps
  * back to its location and the session reports the check, once. Sessions

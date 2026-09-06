@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Capacity plan — JS-side arming of the per-family jump sequence the core's
+ * Capacity plan: JS-side arming of the per-family jump sequence the core's
  * progressive climb reads (core/game-hooks/capacity_progressive.c): entry k
  * is the k-th pickup's jump in rungs and, when the session pre-rendered one,
  * the message id of its receipt line. Record-only writes, the same contract
@@ -20,7 +20,7 @@ const NO_MESSAGE = -1;
 
 // Arm one family's sequence: |jumps[k]| rungs for the k-th pickup, |messageIds[k]| its
 // receipt line (absent entries fall back). The whole ladder is bounded by the family's
-// rung count, so a sequence longer than that is refused rather than truncated in C.
+// rung count, so a sequence longer than that is refused, not truncated in C.
 const setCapacityPlanJumps = (
   family: CapacityFamilyId, jumps: readonly number[], messageIds: readonly number[] = [],
 ): void => {

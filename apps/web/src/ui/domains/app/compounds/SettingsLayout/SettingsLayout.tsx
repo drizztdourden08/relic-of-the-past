@@ -26,7 +26,7 @@ const SettingsLayout = (props: SettingsLayoutProps) => {
       (FEATURES_BY_ID[key]?.affectsVanillaParity === true || isVanillaSafeLockedSetting(key)),
     [settings.vanillaSafe],
   );
-  // A profile with randomizer config pins the keys in its frozen set — those controls lock
+  // A profile with randomizer config pins the keys in its frozen set, so those controls lock
   // for the profile's whole life, so their overlay states the cause and offers no way out.
   const randomizerFrozenKeys = useContext(RandomizerLockContext);
   const isRandomizerLocked = useCallback(

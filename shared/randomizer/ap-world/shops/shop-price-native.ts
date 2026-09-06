@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
  * A price in the terms the running game understands: a currency tag and one
- * number. The counted currencies pass their amount straight through — hearts
+ * number. The counted currencies pass their amount straight through, and hearts
  * in WHOLE hearts, which the core multiplies by the eight units a heart is
  * worth. A bottle price passes the byte the game itself stores in a bottle
  * slot, so the core compares against the player's own bottles with no table

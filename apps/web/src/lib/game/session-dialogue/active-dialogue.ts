@@ -1,10 +1,10 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Active-language dialogue view — reads the asset blob and INI back from the
+ * Active-language dialogue view: reads the asset blob and INI back from the
  * running module's virtual FS and extracts, at the byte level, exactly what
  * the session-dialogue composer needs: the active language's code, its packed
  * dictionary, its per-line compressed chunks, and its per-glyph pixel widths.
- * Byte-level reuse means the vanilla lines are never re-encoded — the composed
+ * Byte-level reuse means the vanilla lines are never re-encoded, so the composed
  * blob carries them bit-identical to the bake.
  */
 

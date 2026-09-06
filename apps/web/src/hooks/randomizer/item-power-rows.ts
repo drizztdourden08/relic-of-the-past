@@ -4,7 +4,7 @@
  * ticks have already decided, and what the seed will really be built with.
  *
  * The rule that decides them is the generator's own (item-power/), not a copy
- * written here — the same function the fill and the running game are armed
+ * written here, the same function the fill and the running game are armed
  * from, so a switch can never show one thing while the seed does another. A
  * masked row is shown ON and inert with the reason beside it, and the player's
  * stored answer is left exactly where it was: unticking is what gives the

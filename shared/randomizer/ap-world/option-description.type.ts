@@ -1,8 +1,8 @@
 /* @layer shared-game @kind types */
 /**
  * How an option explains itself. A setting with one thing to say says it in a
- * sentence. A setting whose behaviour splits — a mode per value, a rule per
- * currency — says it as a list instead: one line per point, each line opening
+ * sentence. A setting whose behaviour splits (a mode per value, a rule per
+ * currency) says it as a list instead: one line per point, each line opening
  * with the short term it is about and then plain text saying what happens.
  *
  * Both shapes are DATA. Nothing here knows about markup: a panel decides how

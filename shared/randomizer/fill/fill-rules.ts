@@ -22,13 +22,13 @@ interface EntranceGate {
   requirements: Requirement;
 }
 
-/** Every canExit connection touching a dungeon-kind screen — exactly the set the tracker graph leaves out. */
+/** Every canExit connection touching a dungeon-kind screen: exactly the set the tracker graph leaves out. */
 const dungeonConnections = (): ReachConnection[] =>
   find('connection', (c) => c.canExit
     && (getScreen(c.screenId).kind === 'dungeon' || getScreen(toScreenIdOf(c)).kind === 'dungeon'))
     .map((c) => ({ from: c.screenId, to: toScreenIdOf(c), requirements: c.requirements }));
 
-/** The config-driven entrance gates the tracker resolver could not attach — mirrored from resolver.ts. */
+/** The config-driven entrance gates the tracker resolver could not attach, mirrored from resolver.ts. */
 const entranceGates = (config: LogicConfig): EntranceGate[] => [
   { // dungeon-011's entrance (connection-730)
     from: 'screen-250',
@@ -49,7 +49,7 @@ const entranceGates = (config: LogicConfig): EntranceGate[] => [
 
 /**
  * Item ids the rules demand but NOTHING in the current dataset can grant (no
- * check's vanilla contents contain them — e.g. the dungeon big-key records and
+ * check's vanilla contents contain them, e.g. the dungeon big-key records and
  * the bomb-capability proxy, both flagged data gaps). They are granted as
  * start inventory so their locations stay live instead of permanently dead;
  * getBlockingItems follows satisfied anyOf branches, so an id with a real

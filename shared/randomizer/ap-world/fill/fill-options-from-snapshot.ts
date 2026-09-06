@@ -92,18 +92,18 @@ const fillFlagsOf = (snapshot: RandomizerOptionsSnapshot, seed = ''): SnapshotFi
     capacityBonus: capacityBonusFromSnapshot(snapshot),
     shops: withRetroArrowSlots(shopScopeOfValues(snapshot.values, seed), retroBow),
     retroBow,
-    // No pond row at all — every profile written before the option existed —
+    // No pond row at all (every profile written before the option existed)
     // reads as the legacy pond, so a stored placement keeps its meaning.
     pond: pondSettingFromSnapshot(snapshot),
-    // No dark-room row at all — every profile written before the settings
-    // existed — reads as the reference rule, so a stored placement keeps its
+    // No dark-room row at all, every profile written before the settings
+    // existed, reads as the reference rule, so a stored placement keeps its
     // meaning: light required, the lamp alone providing it.
     darkRooms: darkRoomSettingFromSnapshot(snapshot),
-    // No difficulty row at all — every profile written before they existed —
+    // No difficulty row at all (every profile written before they existed)
     // reads as the reference pool: one copy per rung and the game's own
     // twenty-heart ceiling, which is what it was rolled from.
     difficulty: difficultyFromSnapshot(snapshot),
-    // No tier row at all — every profile written before they existed — reads
+    // No tier row at all (every profile written before they existed) reads
     // as every tier ticked, which is the reference pool it was rolled from.
     progressiveTiers: progressiveSettingFromSnapshot(snapshot),
     // No mode row at all reads as every family in order, which is the pool a
@@ -112,11 +112,11 @@ const fillFlagsOf = (snapshot: RandomizerOptionsSnapshot, seed = ''): SnapshotFi
     // No item-power row at all reads as the reference's normal step, so a
     // stored placement keeps the game it was rolled against.
     itemPower: itemPowerFromSnapshot(snapshot),
-    // No dungeon-item rows at all — every profile frozen before the engine
-    // read them — reads as the reference baseline: each family pinned to the
+    // No dungeon-item rows at all, every profile frozen before the engine
+    // read them, reads as the reference baseline: each family pinned to the
     // dungeon that owns it, which is how those placements were rolled.
     dungeonItems: dungeonItemSettingFromSnapshot(snapshot),
-    // No accessibility row at all reads as this app's baseline, `full` — the
+    // No accessibility row at all reads as this app's baseline, `full`, the
     // contract every stored placement was verified against.
     accessibility: accessibilityFromSnapshot(snapshot),
   };
@@ -124,7 +124,7 @@ const fillFlagsOf = (snapshot: RandomizerOptionsSnapshot, seed = ''): SnapshotFi
 
 /**
  * Whether the ten dungeon rewards are shuffled over the ten reward slots. Read here
- * rather than in the generator so every consumer of a snapshot reads the option once, the
+ * instead of in the generator so every consumer of a snapshot reads the option once, the
  * same rule the flags above follow. Absent (any snapshot predating the option) is OFF, so
  * a stored placement keeps the vanilla rewards it was generated with.
  */

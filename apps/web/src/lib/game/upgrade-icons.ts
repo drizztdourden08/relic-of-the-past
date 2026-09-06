@@ -2,7 +2,7 @@
 /**
  * The in-game capacity upgrade icons: the 512 B binary the sprite extraction emits
  * beside the PNGs (capacity-icons.4bpp, one 4bpp icon per family), handed to the core
- * when a randomizer session arms — written to MEMFS and applied with
+ * when a randomizer session arms, written to MEMFS and applied with
  * WasmApplyUpgradeIconsFile, the player-sprite pattern. The core shows an icon over a
  * capacity upgrade's hold-up receipt under kFeatures3_CapacityProfile; a set extracted
  * before the binary existed, or no running module, leaves the refill art in place.

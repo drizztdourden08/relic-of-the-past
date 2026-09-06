@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 /**
- * Pixel-art play-mode badge — one glance says what kind of playthrough this
+ * Pixel-art play-mode badge: one glance says what kind of playthrough this
  * profile is. Renders the mode's art when the asset exists, otherwise a
  * same-footprint labeled chip, so nothing shifts when the art arrives.
  */

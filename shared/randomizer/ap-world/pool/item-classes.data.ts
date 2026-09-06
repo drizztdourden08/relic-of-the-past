@@ -4,7 +4,7 @@
  * Archipelago worlds/alttp/Items.py item_table (the ItemClassification
  * column): progression / useful / everything-else-is-filler. Only names the
  * pool can contain are listed. The explosives and projectiles upgrades are
- * progression in item_table (lines 113-121) — they only ever enter the pool
+ * progression in item_table (lines 113-121), so they only ever enter the pool
  * while their family is shuffled, so listing every jump size here is the
  * "progression when in pool" rule; the wallet items are this app's own and
  * stay filler. Note ItemPool.py 496-509 promotes ONE Boss Heart Container
@@ -16,7 +16,7 @@ import { EXPLOSIVES_UPGRADE_NAMES, PROJECTILES_UPGRADE_NAMES } from '@shared/gam
 import { RETRO_QUIVER_ITEM } from '../retro/retro-bow.data';
 
 const PROGRESSION_ITEMS: ReadonlySet<string> = new Set([
-  // alwaysitems — every one is IC.progression in item_table
+  // alwaysitems: every one is IC.progression in item_table
   'Bombos', 'Book of Mudora', 'Cane of Somaria', 'Ether', 'Fire Rod', 'Flippers', 'Flute', 'Hammer',
   'Hookshot', 'Ice Rod', 'Lamp', 'Cape', 'Magic Powder', 'Mushroom', 'Pegasus Boots', 'Quake',
   'Shovel', 'Bug Catching Net', 'Cane of Byrna', 'Blue Boomerang', 'Red Boomerang',
@@ -47,7 +47,7 @@ const USEFUL_ITEMS: ReadonlySet<string> = new Set([
   'Boss Heart Container',
   'Piece of Heart',
   'Progressive Mail',
-  // The armour rungs as themselves — useful in item_table, like the copies they replace.
+  // The armour rungs as themselves: useful in item_table, like the copies they replace.
   'Blue Mail', 'Red Mail',
 ]);
 

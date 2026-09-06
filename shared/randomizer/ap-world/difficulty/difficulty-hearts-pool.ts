@@ -7,7 +7,7 @@
  * (core/zelda3/src/ancilla.c 3494), so the only way to land under that is for
  * the seed not to hold the pickups. A pickup the ceiling takes out is
  * CONVERTED IN PLACE to the twenty-rupee stand-in the reference uses for a
- * copy that is not there, exactly as an unticked rung is — so the pool keeps
+ * copy that is not there, exactly as an unticked rung is, so the pool keeps
  * its size, the fill stays one item per open location, and no filler
  * arithmetic is needed.
  *
@@ -15,7 +15,7 @@
  * only once no set is left. Two reasons, both real: four pieces and one
  * container are worth the same heart, so taking the pieces first removes the
  * most pickups whose loss the player will not feel, and it keeps a container
- * in the seed at almost every ceiling — which is the pickup the reference
+ * in the seed at almost every ceiling, which is the pickup the reference
  * promotes to progression for its hearts-as-requirement branch
  * (pool/item-classes.data.ts). A part-set of pieces left behind by a set-sized
  * step is left alone: it was already worth nothing before the ceiling was
@@ -25,7 +25,7 @@
  * Nothing in the access rules is stranded by this. The two rules that read
  * hearts (the spike room and the long magic cape crossing) each offer them as
  * ONE alternative beside items every seed carries, so even a ceiling of three
- * — no growth at all — leaves both satisfiable.
+ * (no growth at all) leaves both satisfiable.
  */
 import { ITEM } from '../item-names.data';
 import { REPLACEMENT_ITEM } from '../progressive/progressive-families.data';
@@ -57,7 +57,7 @@ const convertPieceSet = (pool: string[]): boolean => {
 
 /**
  * In place: heart pickups are converted until the pool can no longer carry the
- * file past |cap| hearts. Returns how many hearts of growth were taken out —
+ * file past |cap| hearts. Returns how many hearts of growth were taken out,
  * zero at the default ceiling, where the pool is left byte-identical.
  */
 const applyHeartCap = (pool: string[], cap: number): number => {

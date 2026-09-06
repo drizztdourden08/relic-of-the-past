@@ -4,17 +4,17 @@
  * for the generator, the logic rules, the core arming and the panel, so they
  * can never disagree.
  *
- *   capacity     — nothing: the pond keeps its native purchase loop and its
+ *   capacity:     nothing. The pond keeps its native purchase loop and its
  *                  two slots answer to the capacity families alone.
- *   vanilla-cost — fourteen throws of a hundred (the native economy: seven
+ *   vanilla-cost: fourteen throws of a hundred (the native economy: seven
  *                  upgrades per counted family at a hundred each). The first
  *                  `items` throws hand over a pool item, the rest climb the
  *                  family the player picked, exactly as vanilla does.
- *   custom       — the capacity curve machinery over the PRICE ladder: the
+ *   custom:       the capacity curve machinery over the PRICE ladder: the
  *                  span between the start and the final price, cut into one
  *                  jump per further throw, so the cumulative ladder IS the
  *                  price list. The first `items` throws hand over a pool item.
- *   gamble       — twelve chances at a rising price; `items` of them win,
+ *   gamble:       twelve chances at a rising price; `items` of them win,
  *                  drawn ONCE from the seed and then fixed. A losing throw
  *                  hands back half its price and nothing else.
  *
@@ -24,7 +24,7 @@
  *
  * The gamble draw is the only seeded step, and it is a plain sorted sample of
  * distinct indices, so a spoiler states the truth and the logic reads the
- * schedule rather than a probability: prize k sits at a known throw, every
+ * schedule, not a probability: prize k sits at a known throw, every
  * earlier throw must be paid to reach it, and the wallet reading below is
  * that guaranteed worst case.
  */
@@ -76,7 +76,7 @@ const throwsOf = (prices: readonly number[], prizeAt: ReadonlyMap<number, number
     refund: gamble && !prizeAt.has(index) ? gambleRefundOf(price) : 0,
   }));
 
-/** The first `count` throws win, in order — the schedule of every non-gamble mode. */
+/** The first `count` throws win, in order: the schedule of every non-gamble mode. */
 const leadingPrizes = (count: number, throwCount: number): Map<number, number> => {
   const prizeAt = new Map<number, number>();
   for (let index = 0; index < Math.min(count, throwCount); index += 1) prizeAt.set(index, index);

@@ -15,11 +15,11 @@ import { removeOnce } from './remove-once';
 interface DungeonPrefillInput {
   /** DungeonId -> the items that must stay inside that dungeon. */
   localItems: ReadonlyMap<string, readonly string[]>;
-  /** Full walk list — reachability needs every check. */
+  /** Full walk list: reachability needs every check. */
   checks: readonly CheckRecord[];
   /** The randomized domain (pool check ids). */
   randomizedIds: ReadonlySet<CheckId>;
-  /** The complete progression pool — the assumed complement is derived from it. */
+  /** The complete progression pool: the assumed complement is derived from it. */
   progressionItemIds: readonly ItemId[];
   rules: ResolvedRules;
   rng: Rng;

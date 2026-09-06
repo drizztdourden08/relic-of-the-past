@@ -4,7 +4,7 @@
  *
  * The creation panel and the profile writer once built their catalog
  * overrides separately, so a row wired into one and forgotten in the other
- * froze silently — the control moved, the snapshot kept the baseline, and
+ * froze silently: the control moved, the snapshot kept the baseline, and
  * the pool, the totals and the seed never saw it. Both now read
  * randomizerChoiceOverrides, and the first case below walks the WHOLE
  * catalog against it, so the next unwired option fails here instead of
@@ -70,11 +70,11 @@ const BASE: RandomizerOptionChoices = {
 const NO_DELIVERABLE = {};
 
 describe('every unlocked catalog row reaches the generator', () => {
-  it('covers the whole catalog — an unwired row would freeze silently', () => {
+  it('covers the whole catalog, since an unwired row would freeze silently', () => {
     // The price block hands its whole key set through verbatim, so the choice
     // that exercises the coverage is one carrying all of them.
-    // Every key the block owns, the reference's percentage included — that one
-    // is a number, so it is written as one rather than as a tick.
+    // Every key the block owns, the reference's percentage included. That one
+    // is a number, so it is written as one instead of as a tick.
     const everyPrice = Object.fromEntries(SHOP_PRICE_BLOCK_KEYS.map((key) =>
       [key, SHOP_PRICE_OPTION_KEYS.includes(key) ? false : 100]));
     // Read by VALUE, not by key presence: a choice field left off the object
@@ -88,7 +88,7 @@ describe('every unlocked catalog row reaches the generator', () => {
     expect(unwired).toEqual([]);
   });
 
-  it('lists each row once — a row with its own block stays out of the plain list', () => {
+  it('lists each row once, so a row with its own block stays out of the plain list', () => {
     const { unlocked } = partitionCatalogByLock(apOptionCatalog, AP_OPTION_GROUPS);
     const keys = unlocked.map((option) => option.key);
     expect(keys.filter((key) => SHOP_PRICE_BLOCK_KEYS.includes(key))).toEqual([]);
@@ -99,7 +99,7 @@ describe('every unlocked catalog row reaches the generator', () => {
 });
 
 /**
- * The whole shop scope, ticked and shuffled — the choice every case below
+ * The whole shop scope, ticked and shuffled: the choice every case below
  * varies. One purchase per slot, so a slot is one location in the counts; the
  * fresh-profile scope stocks two, which the depth case sets for itself.
  */

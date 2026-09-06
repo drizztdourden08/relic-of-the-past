@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * The first castle + its sewers — the mode-independent rows from
+ * The first castle + its sewers: the mode-independent rows from
  * Archipelago worlds/alttp/Rules.py global_rules 304-312 (the 309
  * universal-key clause is off in the baseline). The 304-305 guard-drop kill
  * rule is later replaced by the standard-mode table (standard.data.ts),

@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Online randomizer session — speaks the multiworld protocol over a WebSocket.
+ * Online randomizer session: speaks the multiworld protocol over a WebSocket.
  * Handshake: RoomInfo → GetDataPackage → DataPackage → Connect → Connected,
  * then scout-first override arming (see online-overrides.ts) and live location
  * polling. Caller-initiated stop routes through socket.close() so both stop
@@ -89,22 +89,22 @@ const createOnlineSession = (config: OnlineSessionConfig): OnlineSession => {
     disarmPrizeShuffle();
     disarmDungeonItemGrants();
     // An online world has no pond option of its own, so a session here always plays
-    // the native pond — but a plan left armed by an earlier local session must not
+    // the native pond, but a plan left armed by an earlier local session must not
     // survive into it.
     disarmPondSession();
     disarmCapacitySession();
     // Same reason as the pond: an online world decides item behaviour on the
-    // server, so this session arms none of its own — but a ladder or an item-power
+    // server, so this session arms none of its own, but a ladder or an item-power
     // word left behind by an earlier local session must not survive into it.
     disarmItemBehavior();
     clearGearIcons();
     clearQuiverIcon();
     clearCurrencySymbols();
-    // Drop still-queued deliveries with the session — a closed session must not
+    // Drop still-queued deliveries with the session, because a closed session must not
     // leave receipt entries retrying forever (clear() resolves completions safely).
     clearDeliveryQueue();
     disarmReceiptGates();
-    // Restore the baked dialogue blob — the scouted and received lines go with it.
+    // Restore the baked dialogue blob, since the scouted and received lines go with it.
     clearSessionDialogue();
     maps.nameByLocationId.clear();
     maps.locationIdByName.clear();
@@ -171,7 +171,7 @@ const createOnlineSession = (config: OnlineSessionConfig): OnlineSession => {
         applyScoutedLocations(packet.locations, itemNameById, maps);
         break;
       default:
-        break; // Unhandled server chatter — ignored by design.
+        break; // Unhandled server chatter, ignored by design.
     }
   };
 
@@ -182,7 +182,7 @@ const createOnlineSession = (config: OnlineSessionConfig): OnlineSession => {
     async start() {
       setStatus('starting');
       // Arm before the socket even opens: scouted chest overrides substitute natively,
-      // so the message gate must be latched before the first chest can open — and the
+      // so the message gate must be latched before the first chest can open, and the
       // handshake takes long enough that one already could. cleanup() disarms on every
       // stop path (including a refused connection), so a failed start leaves no gate open.
       armReceiptGates();

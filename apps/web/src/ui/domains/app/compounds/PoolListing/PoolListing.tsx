@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 /**
- * The item pool of the current options, as the generator would shuffle it —
+ * The item pool of the current options, as the generator would shuffle it,
  * a multiset, not a placement. One compact column: the fill bar in the
  * header (the pool against the spots of the world), then each group of the
  * pool builder's own partition with its items as sprite · name · ×count

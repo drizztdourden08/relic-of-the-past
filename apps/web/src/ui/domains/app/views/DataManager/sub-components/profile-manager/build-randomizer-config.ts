@@ -3,7 +3,7 @@
  * Builds the creation-time ProfileRandomizerConfig from the creation form's
  * randomizer fields. A blank seed becomes a random hex seed HERE, at create
  * time, so the profile always records the exact seed it was generated with.
- * The options field freezes the ENTIRE catalog snapshot (schema v2) —
+ * The options field freezes the ENTIRE catalog snapshot (schema v2),
  * baselines plus the choices the form exposes, read through the ONE
  * choices → overrides reading the live panel also uses, so a row wired into
  * one of them can never be missing from the other. The form STARTS on the
@@ -66,7 +66,7 @@ const EMPTY_RANDOMIZER_FORM: RandomizerFormState = {
   // Every tier of every family ships, and the items behave as they always have.
   progressiveTiers: defaultProgressiveSetting(),
   // Every family climbs its ladder in order, which is how the seed has always
-  // been rolled; arrows are found rather than bought.
+  // been rolled; arrows are found, not bought.
   progressiveModes: defaultProgressiveModes(),
   retroBow: defaultRetroBow(),
   itemPower: DEFAULT_ITEM_POWER,

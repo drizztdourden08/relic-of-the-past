@@ -6,7 +6,7 @@
  *
  * Why they need their own binary. Those eight are the only receipt ids drawn with sprite
  * palette row 5 (kWishPond2_OamFlags), and row 5's indices 9-15 are loaded from the
- * PLAYER's blade and shield level — AncillaAdd_ItemReceipt reloads them for the item it is
+ * PLAYER's blade and shield level, and AncillaAdd_ItemReceipt reloads them for the item it is
  * granting, which is right for the hold-up ceremony and wrong for everything else. A shelf,
  * a drop or a standing pickup showing one of these draws it in whatever gear the player is
  * carrying, and three shelves offering three different blades all come out the same colour
@@ -14,12 +14,12 @@
  *
  * The fix mirrors the capacity icons: each picture is extracted with its OWN correct row-5
  * variant (receipt-decoder's PAL5_CONFIG), re-quantized to one fixed row that is always
- * resident, and emitted as `gear-icons.4bpp` — 128 B per id in the decode slot's tile order,
+ * resident, and emitted as `gear-icons.4bpp`: 128 B per id in the decode slot's tile order,
  * 1024 B in all. The core copies those tiles over the slot after a world draw seam decoded
  * the art there and forces that draw's palette row (core/game-hooks/gear_icon.c). The
  * hold-up is left alone: it already loads the row for the item it is granting.
  *
- * The row is 4 — the same row the capacity icons use, and the best fit of the four
+ * The row is 4, the same row the capacity icons use, and the best fit of the four
  * candidates by mean squared error per opaque pixel (worst id 4119, mean 2066, against
  * 5778 / 5434 / 16859 worst for rows 1, 2 and 3). It is also the only main sprite row
  * whose colours are identical in both world halves, so a shelf reads the same on either
@@ -42,7 +42,7 @@ const GEAR_ICON_PALETTE_ROW = 4;
 /**
  * The affected receipt ids, in the order the binary holds them. Mirrored by kGearReceiptIds
  * in core/game-hooks/gear_icon.c. Derived, not guessed: every id whose kWishPond2_OamFlags
- * entry is row 5 — which is exactly receipt-tables' PAL5_CONFIG, the set the extraction
+ * entry is row 5, which is exactly receipt-tables' PAL5_CONFIG, the set the extraction
  * already had to special-case for the same reason.
  */
 const GEAR_RECEIPT_IDS: readonly number[] = [0, 1, 2, 3, 4, 5, 6, 73];

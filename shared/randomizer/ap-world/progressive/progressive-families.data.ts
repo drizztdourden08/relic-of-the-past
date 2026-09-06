@@ -5,12 +5,12 @@
  * (progression_mapping, lines 230-242) and ItemPool.py difficulties['normal']
  * (lines 99-130), which is the row set this app's pool is pinned to. The mail
  * family has no progression_mapping entry because its tiers are classed
- * useful rather than progression — no rule reads them — so it appears here
+ * useful, not progression (no rule reads them), so it appears here
  * for the pool and the receipt ladder alone.
  *
  * Tier counts ARE the reference's normal-difficulty copy counts: four blades,
  * three shields, two mails, two gloves, two bows. That is why one tick per
- * tier is also one tick per pool copy — the two questions coincide at this
+ * tier is also one tick per pool copy, so the two questions coincide at this
  * difficulty and the tick list can answer both.
  *
  * REPLACEMENT_ITEM is the reference's own stand-in for a copy that is not
@@ -20,7 +20,7 @@
  */
 import type { ProgressiveFamilyDef, ProgressiveFamilyId, ProgressiveSetting } from './progressive.type';
 
-/** ItemPool.py 76 — what a missing copy leaves behind, so the pool size never moves. */
+/** ItemPool.py 76: what a missing copy leaves behind, so the pool size never moves. */
 const REPLACEMENT_ITEM = 'Rupees (20)';
 
 /** In the order the cards are shown. */
@@ -71,7 +71,7 @@ const familyOfId = (id: ProgressiveFamilyId): ProgressiveFamilyDef => {
   return found;
 };
 
-/** Every tier ticked — the reference pool, and what an absent row reads as. */
+/** Every tier ticked: the reference pool, and what an absent row reads as. */
 const DEFAULT_PROGRESSIVE_SETTING: ProgressiveSetting = Object.fromEntries(
   PROGRESSIVE_FAMILIES.map((family) => [family.id, family.tiers.map(() => true)]),
 ) as unknown as ProgressiveSetting;

@@ -2,7 +2,7 @@
 /**
  * The derived half of the section: the four row models of the profile,
  * rendered through CapacityUpgradesBlock. Kept apart from the section so the
- * derivation runs inside its fence — a throw here reaches the boundary, not
+ * derivation runs inside its fence, so a throw here reaches the boundary, not
  * the page.
  */
 import { CapacityUpgradesBlock } from '@domains/app/compounds/CapacityUpgradesBlock';

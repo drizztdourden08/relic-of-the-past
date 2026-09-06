@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Targeted dungeon-item gate — JS-side arming for the in-core receipt seams
+ * Targeted dungeon-item gate: JS-side arming for the in-core receipt seams
  * (core/game-hooks/dungeon_item_grants.c), which redirect a key, big key, map
  * or compass to the dungeon its assigned id names instead of the one the
  * player is standing in.

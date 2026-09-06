@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 /**
  * The placement→game bridge. Classifies every planned location of an
- * ApPlacement (only the event slots are excluded — they are logic
+ * ApPlacement (only the event slots are excluded, because they are logic
  * constructs, not item spots) into the physical plan classes: chest-kind checks with a
  * resolvable item become in-core chest overrides; standing world items with
  * a certified pickup seam become in-core standing overrides (the pickup
@@ -9,11 +9,11 @@
  * the plain receive seam with a usable key (npc gifts, boss prizes, the
  * receive-crossing world items) become in-core npc overrides; key drops
  * become in-core drop overrides; the boss-prize slots have no seam at all
- * and are reported as locked vanilla rather than dropped. Physical classes report completion from
+ * and are reported as locked vanilla, not dropped. Physical classes report completion from
  * the substitution seam itself (override-fired events), so they need no
  * polled detection. Remaining detectable checks are delivered on their flag
  * flip, and generation-locked locations need no action because the game
- * already gives vanilla — they are still polled and reported. Anything else
+ * already gives vanilla, they are still polled and reported. Anything else
  * is a hard plan error the session must refuse on.
  */
 
@@ -52,14 +52,14 @@ const classifyLocation = (
   const detectionField = detection !== null ? { detection } : {};
 
   if (isLockedVanilla(locationName, flags)) {
-    // A locked location must hold its vanilla item — a shuffled item there
+    // A locked location must hold its vanilla item, so a shuffled item there
     // means the placement predates the lock (a stale seed the game cannot
     // honor), which stays a hard refusal.
     const requiredVanilla = capabilityVanillaItemOf(locationName, flags);
     if (requiredVanilla !== undefined && itemName !== requiredVanilla) {
       const reason = PRIZE_LOCATIONS.has(locationName)
-        ? `this seed placed dungeon prizes, which are no longer shuffled — recreate the profile (expected "${requiredVanilla}")`
-        : 'no certified physical path but a shuffled item is placed here (stale placement — recreate the profile)';
+        ? `this seed placed dungeon prizes, which are no longer shuffled. Recreate the profile (expected "${requiredVanilla}")`
+        : 'no certified physical path but a shuffled item is placed here (stale placement, recreate the profile)';
       return { locationName, itemName, reason };
     }
     return {
@@ -72,9 +72,9 @@ const classifyLocation = (
   if (targetLocalId === undefined) {
     return { locationName, itemName, reason: `assigned item is unresolvable: ${itemName}` };
   }
-  // A shelf slot is keyed off the shop dataset, not a check record — the app
+  // A shelf slot is keyed off the shop dataset, not a check record, because the app
   // has none for a shelf, because a shelf is a repeatable purchase in the
-  // unmodified game rather than a one-off check. It reports from its own
+  // unmodified game instead of a one-off check. It reports from its own
   // substitution seam, so it needs no polled detection either.
   const shopKey = shopOverrideKeyOf(locationName, flags.shops, flags.shopPrices);
   if (shopKey !== null) {
@@ -84,8 +84,8 @@ const classifyLocation = (
     };
   }
   // A pond prize slot under a non-legacy pond. The pond's plan hands these over
-  // in prize ORDER from its own table, so they are keyed by ordinal rather than
-  // by a check record — the slots past the reference's two have none. Still the
+  // in prize ORDER from its own table, so they are keyed by ordinal instead of
+  // by a check record, since the slots past the reference's two have none. Still the
   // scripted-grant plan class, so completion reports from the substitution seam
   // exactly as every other pond grant does, and no polled detection is needed
   // (the capacity tier a purchase used to advance no longer moves).
@@ -111,7 +111,7 @@ const classifyLocation = (
     };
   }
   // The certified scripted-grant surfaces (upgrade pond, cave bat, prize
-  // minigame) substitute at their own handler seams — checked before the
+  // minigame) substitute at their own handler seams, checked before the
   // generic keys, since their records carry no receive-seam key at all.
   const scriptedKey = scriptedOverrideKeyOf(checkId as CheckId);
   if (scriptedKey !== null) {
@@ -187,7 +187,7 @@ const buildPhysicalPlan = (placement: ApPlacement): PhysicalPlan => {
     deliver: countOf('deliver'),
     vanillaLocked: countOf('vanilla-locked'),
     // Physical override rows report from the substitution seam, so only a
-    // LOCKED row without a detection is truly invisible to the session.
+    // LOCKED row without a detection is invisible to the session.
     pollBlind: entries.filter((entry) =>
       entry.planClass === 'vanilla-locked' && entry.detection === undefined).length,
     errors: errors.length,

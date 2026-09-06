@@ -1,16 +1,16 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Item power — JS-side arming of gate word 4 (features.h kFeatures4_*), the
+ * Item power: JS-side arming of gate word 4 (features.h kFeatures4_*), the
  * word that says how helpful the items are. Every bit is a DIVERGENCE from the
  * unmodified game, so an all-clear word is the game exactly as it shipped and
  * clearing the word is a complete disarm.
  *
- * It is a WRAM gate word rather than a host gate because the game branches on
+ * It is a WRAM gate word, not a host gate, because the game branches on
  * every one of these: a host gate would be invisible to a save state and would
  * desynchronise a replay. Nothing else in the app writes word 4, so a session
- * owns it outright and can write the whole word rather than a masked update.
+ * owns it outright and can write the whole word instead of a masked update.
  *
- * The dark-room lights live in the same word and are OR'd in here rather than
+ * The dark-room lights live in the same word and are OR'd in here instead of
  * written separately, precisely because of that whole-word write: two writers
  * would each clear the other's half. Their own bits are derived next door
  * (dark-room-lights.ts); this file only writes.
@@ -22,7 +22,7 @@ import { getModule } from './wasm-bridge';
 import type { DarkRoomSetting } from '@shared/randomizer/ap-world/dark-rooms/dark-room.type';
 import type { ItemPowerSetting } from '@shared/randomizer/ap-world/item-power/item-power.type';
 
-/** features.h kFeatures4_* — keep in lockstep with that enum. */
+/** features.h kFeatures4_*: keep in lockstep with that enum. */
 const ITEM_POWER_BIT = {
   noFairyCatching: 1,
   noByrnaBarrierGuard: 2,
@@ -59,7 +59,7 @@ const writeItemPowerWord = (word: number): void => {
     return;
   }
   // Guarded like every other gate-word write: a core built before this word
-  // carried bits simply has no export to call.
+  // carried bits has no export to call.
   try {
     mod.ccall('WasmSetGateWord', null, ['number', 'number'], [4, word]);
   } catch {

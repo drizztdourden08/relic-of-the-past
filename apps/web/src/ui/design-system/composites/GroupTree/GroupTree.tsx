@@ -5,7 +5,7 @@
  * and what a header counts (`node.meta`), so checks and spoiler entries render
  * through the same component without it knowing either shape.
  *
- * A root with no children renders its own items flat — the ungrouped case.
+ * A root with no children renders its own items flat, the ungrouped case.
  */
 import { Box } from '../../primitives';
 import { GroupSection } from './sub-components/GroupSection';

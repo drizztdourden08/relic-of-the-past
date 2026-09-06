@@ -3,8 +3,8 @@
  * The four counter families with a ceiling the randomizer can reshape:
  * explosives and projectiles (an eight-tier native grid each), the meter
  * (three levels) and the wallet (a hook-owned 100-rupee ladder). Every
- * capacity-upgrade surface — names, virtual receive ids, pool items, the
- * option rows — is keyed by this id and never by a game name.
+ * capacity-upgrade surface (names, virtual receive ids, pool items, the
+ * option rows) is keyed by this id and never by a game name.
  */
 
 type CapacityFamilyId = 'explosives' | 'projectiles' | 'meter' | 'wallet';

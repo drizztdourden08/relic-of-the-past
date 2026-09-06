@@ -1,11 +1,11 @@
 /* @layer shared-game @kind types */
 /**
- * The capacity profile — how each counter family with a ceiling is reshaped
+ * The capacity profile: how each counter family with a ceiling is reshaped
  * for a seed. Vanilla leaves the family untouched (its spot sells the native
  * tiers and is not a check); Vanilla in pool ships the reference's ladder as
  * pool items and turns the spot into a check; Custom picks a start and a
- * final value on the family's own ladder — the start may be the empty rung
- * below the native grid (0: no capacity, no magic, a zero wallet) — a count
+ * final value on the family's own ladder. The start may be the empty rung
+ * below the native grid (0: no capacity, no magic, a zero wallet), and a count
  * of pool items and a curve that cuts the climb into exactly that many
  * jumps. Everything derived from
  * a setting (jumps, the preview ladder, the pool items) is a FamilyPlan and
@@ -26,7 +26,7 @@ interface CustomFamilySetting {
   start: number;
   /** Ladder value the family may reach (the pond and the wallet stop here). */
   max: number;
-  /** Pool items — the In Pool number; clamped to [1, span] at derivation. */
+  /** Pool items: the In Pool number; clamped to [1, span] at derivation. */
   count: number;
   shape: CurveShape;
 }
@@ -46,13 +46,13 @@ interface CapacityProfile {
   wallet: WalletSetting;
 }
 
-/** Derived — never stored. What one family contributes, in every mode. */
+/** Derived, never stored. What one family contributes, in every mode. */
 interface FamilyPlan {
   /** [] vanilla · the reference jumps · generated or free. */
   jumps: readonly number[];
   /** Cumulative values for the preview: start, then one entry per jump. */
   ladder: readonly number[];
-  /** Pool item per jump — items.length IS the In Pool number. */
+  /** Pool item per jump: items.length IS the In Pool number. */
   items: readonly string[];
   /** False only for vanilla (or a family without a spot). */
   spotIsCheck: boolean;

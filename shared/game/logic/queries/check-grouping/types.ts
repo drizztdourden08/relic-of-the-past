@@ -6,7 +6,7 @@ type GroupDimension = 'world' | 'area' | 'location' | 'dungeon' | 'screen' | 'ty
 /**
  * What a randomized RUN adds to grouping, filtering and display: what each
  * check actually holds this seed, and which sweep sphere reached it. Absent on
- * a vanilla profile, where every check simply shows its own contents.
+ * a vanilla profile, where every check shows its own contents.
  */
 interface RunContext {
   /** check id → the item record actually placed there. */

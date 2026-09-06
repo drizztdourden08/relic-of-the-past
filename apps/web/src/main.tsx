@@ -12,7 +12,7 @@ import { installSessionLogTap } from './lib/diagnostics/session-log';
 import './ui/design-system/tokens/index.css';
 
 // Every launch: stream the log-bus (ring-evicted entries included) to
-// Data/debug/session.log via the main process — see lib/diagnostics/session-log.
+// Data/debug/session.log via the main process, see lib/diagnostics/session-log.
 installSessionLogTap();
 
 // Expose tracker bridge functions for live integration tests
@@ -21,8 +21,8 @@ installSessionLogTap();
 // delivery and observe its completion instead of poking the core directly.
 // triggerNpcCheck replays a giver's vanilla grant through the queue (the cheat
 // trigger), which is how a live test exercises the npc-override seam.
-// deliverNpcCheck enqueues the assigned-form scripted-giver trigger — the exact
-// action a session's poller enqueues — so a live test can prove the cheatless
+// deliverNpcCheck enqueues the assigned-form scripted-giver trigger, the exact
+// action a session's poller enqueues, so a live test can prove the cheatless
 // delivery path end to end.
 (window as any).__deliveryApi = { deliverItem, deliverNpcCheck, getQueueState: deliveryQueue.getState, triggerNpcCheck: cheatTriggerNpcCheck };
 

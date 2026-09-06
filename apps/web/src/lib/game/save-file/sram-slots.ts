@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Battery-save slot geometry — ports the game's own file layout and checksum
+ * Battery-save slot geometry: ports the game's own file layout and checksum
  * (SaveGameFile, core/zelda3/src/messaging.c; Intro_CheckCksum,
  * core/zelda3/src/select_file.c). The 8 KiB battery save holds three
  * 0x500-byte file blocks at 0x000 / 0x500 / 0xA00, each mirrored 0xF00
@@ -23,7 +23,7 @@ const blockChecksumValid = (bytes: Uint8Array, offset: number): boolean => {
 };
 
 /**
- * The byte offset of one slot's valid file block — the primary copy when it
+ * The byte offset of one slot's valid file block, the primary copy when it
  * checksums, else the 0xF00 backup (the game's own fallback), else null for
  * an empty or corrupt slot.
  */

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * S3 comparator — pure cross-check of every dataset chest check against the
+ * S3 comparator: pure cross-check of every dataset chest check against the
  * ROM census (S1) and the reference project's location table (S2).
  *
  * Per chest check it can emit up to TWO verdicts (position + vanilla item);

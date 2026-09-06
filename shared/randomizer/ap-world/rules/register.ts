@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * The rule registration pass — the port of the reference's set_rules driver
+ * The rule registration pass: the port of the reference's set_rules driver
  * (Archipelago worlds/alttp/Rules.py 31-126) for the fixed baseline
  * options. Tables apply their rows in source order ('set' replaces, 'add'
  * AND-composes); the transform-suppression rules attach last, exactly as in
@@ -117,7 +117,7 @@ const closeCoverage = (
 };
 
 /**
- * A shelf slot asks nothing beyond standing in the shop — the reference's
+ * A shelf slot asks nothing beyond standing in the shop, the reference's
  * can_buy is "the shop's region is reachable". Only the slots the bunny pass
  * has not already ruled are opened here, so a dark-world shelf keeps its
  * transform condition; the price lands on top as a wallet condition in the

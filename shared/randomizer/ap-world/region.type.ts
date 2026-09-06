@@ -17,7 +17,7 @@ interface ApRegionDef {
   exits: readonly string[];
 }
 
-/** One wiring row — python (exitname, regionname): [entranceName, targetRegion]. */
+/** One wiring row, python (exitname, regionname): [entranceName, targetRegion]. */
 type ApConnection = readonly [string, string];
 
 /** A resolved location attached to a region. */
@@ -29,7 +29,7 @@ interface ApLocation {
   /** Exists only when the capacity-upgrade-shuffle option is on (fairy-pond slots). */
   capacityOnly: boolean;
   /**
-   * A prize slot of the rupee pond (pond/pond-locations.data.ts) — present
+   * A prize slot of the rupee pond (pond/pond-locations.data.ts), present
    * only while the pond carries that many prizes. The reference's two names
    * are both this and `capacityOnly`; the rest are ours.
    */

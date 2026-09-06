@@ -22,7 +22,7 @@ interface RupeeDenomination {
   decodeKey: number;
 }
 
-/** Largest first — the order the greedy decomposition walks. */
+/** Largest first: the order the greedy decomposition walks. */
 const RUPEE_DENOMINATIONS: readonly RupeeDenomination[] = [
   { value: 300, receipt: 0x46, colour: 'gold', decodeKey: 300 },
   { value: 100, receipt: 0x40, colour: 'silver', decodeKey: 100 },
@@ -32,7 +32,7 @@ const RUPEE_DENOMINATIONS: readonly RupeeDenomination[] = [
   { value: 1, receipt: 0x34, colour: 'green', decodeKey: 1 },
 ];
 
-/** How many gems the pond can have in the air at once — its own ancilla slots. */
+/** How many gems the pond can have in the air at once: its own ancilla slots. */
 const POND_GEM_SLOTS = 10;
 
 export { POND_GEM_SLOTS, RUPEE_DENOMINATIONS };

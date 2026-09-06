@@ -7,11 +7,11 @@
  * index) pair or a mode the edit helpers turn back into a setting.
  *
  * The count line is the point of the card. A rung is one copy of the family's
- * item in the pool, so "3 of 4" says exactly what unticking did — the fourth
- * copy is a small rupee pickup now — without the player having to know the
+ * item in the pool, so "3 of 4" says exactly what unticking did: the fourth
+ * copy is a small rupee pickup now, without the player having to know the
  * pool arithmetic behind it.
  *
- * Names come from the dataset rather than from wording written here
+ * Names come from the dataset instead of from wording written here
  * (progressive/progressive-display-names.ts): the record set knows what each
  * rung is called, and a checkout without it keeps the short neutral words the
  * family table carries.
@@ -24,7 +24,7 @@ import type {
 } from '@shared/randomizer/ap-world/progressive/progressive.type';
 
 interface ProgressiveTierToggleModel {
-  /** The catalog key this box stands for — also its react key. */
+  /** The catalog key this box stands for, which is also its react key. */
   key: string;
   label: string;
   index: number;
@@ -34,7 +34,7 @@ interface ProgressiveTierToggleModel {
 interface ProgressiveCardModel {
   id: ProgressiveFamilyId;
   name: string;
-  /** "3 of 4 in the pool" — what the ticks add up to. */
+  /** "3 of 4 in the pool": what the ticks add up to. */
   countText: string;
   tiers: ProgressiveTierToggleModel[];
   /** Nothing ticked: the family is out of the seed entirely. */

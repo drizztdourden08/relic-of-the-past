@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * What the final fight asks of the bow, read off the core rather than assumed.
+ * What the final fight asks of the bow, read off the core instead of assumed.
  *
  * The evidence, all in the vendored core (read only, never edited here):
  *

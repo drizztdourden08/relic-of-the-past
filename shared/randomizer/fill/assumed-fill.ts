@@ -2,7 +2,7 @@
 /**
  * Classic assumed fill: place progression items one at a time, assuming every
  * still-unplaced progression item is owned, and restrict each placement to a
- * location that stays collectable under that assumption. Pure — all state
+ * location that stays collectable under that assumption. Pure: all state
  * flows through the input and the returned map.
  */
 import type { CheckId, CheckRecord, ItemId } from '@shared/game/data';
@@ -22,12 +22,12 @@ class FillError extends Error {
 
 interface AssumedFillInput {
   progressionItemIds: readonly ItemId[];
-  /** Full walk list — reachability needs every check, not just the candidates. */
+  /** Full walk list: reachability needs every check, not just the candidates. */
   checks: readonly CheckRecord[];
   rules: ResolvedRules;
   rng: Rng;
   preplaced: ReadonlyMap<CheckId, ItemId>;
-  /** The randomized domain — an unassigned member grants nothing during the walk. */
+  /** The randomized domain: an unassigned member grants nothing during the walk. */
   randomizedIds: ReadonlySet<CheckId>;
   /** Restricts placements to these check ids (dungeon prefill); all randomized checks otherwise. */
   candidateIds?: ReadonlySet<CheckId>;

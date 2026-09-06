@@ -47,7 +47,7 @@ const ITEM = {
   progressiveBow: 'Progressive Bow',
 } as const;
 
-/** python item_name_groups["Bottles"] — every item name containing "Bottle". */
+/** python item_name_groups["Bottles"]: every item name containing "Bottle". */
 const BOTTLE_ITEMS: readonly string[] = [
   'Bottle',
   'Bottle (Red Potion)',
@@ -58,7 +58,7 @@ const BOTTLE_ITEMS: readonly string[] = [
   'Bottle (Good Bee)',
 ];
 
-/** python item_name_groups["Crystals"] — the seven prize crystals. */
+/** python item_name_groups["Crystals"]: the seven prize crystals. */
 const CRYSTAL_ITEMS: readonly string[] = [
   'Crystal 1',
   'Crystal 2',
@@ -69,7 +69,7 @@ const CRYSTAL_ITEMS: readonly string[] = [
   'Crystal 7',
 ];
 
-/** python item_name_groups["Medallions"] — valid entrance medallions. */
+/** python item_name_groups["Medallions"]: valid entrance medallions. */
 const MEDALLION_ITEMS = ['Ether', 'Bombos', 'Quake'] as const;
 type MedallionName = (typeof MEDALLION_ITEMS)[number];
 

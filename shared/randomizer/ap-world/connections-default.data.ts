@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * Ported from Archipelago worlds/alttp/EntranceShuffle.py — default_connections
+ * Ported from Archipelago worlds/alttp/EntranceShuffle.py: default_connections
  * (vanilla overworld↔interior wiring, entrance shuffle off).
  */
 import type { ApConnection } from './region.type';

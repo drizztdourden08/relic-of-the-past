@@ -2,26 +2,26 @@
 /**
  * The copy multiples applied to an assembled pool.
  *
- * This runs LAST of the three passes that reshape a tiered family — after the
- * tier ticks and after the per-family order (progressive/) — and that order is
+ * This runs LAST of the three passes that reshape a tiered family, after the
+ * tier ticks and after the per-family order (progressive/), and that order is
  * the whole design. The ticks decide which rungs exist, the order decides
  * whether the copies are nameless steps or the rungs themselves, and only then
  * is there something to multiply: whatever names the family's copies are
- * wearing by that point are simply put in again, once more per extra multiple.
+ * wearing by that point are put in again, once more per extra multiple.
  * Running earlier would multiply copies the ticks were about to remove, or
  * hand the order pass more copies than it has rungs to name.
  *
  * Unlike those two passes this one GROWS the pool, so it reports how many
  * items it added and the caller displaces exactly that many filler items
- * (pool/balance-filler.ts) — the same arithmetic a capacity upgrade already
+ * (pool/balance-filler.ts), the same arithmetic a capacity upgrade already
  * goes through, so the fill stays one item per open location and nothing
  * downstream learns a second rule.
  *
  * What an extra copy really hands over is already answered by the core rather
  * than here. A surplus progressive copy past the top rung pays the reference's
  * twenty-rupee replacement, and so does a concrete rung that arrives for a tier
- * the file already stands at or above (core/game-hooks/progressive_grants.c) —
- * so a doubled family is never a pickup that quietly does nothing.
+ * the file already stands at or above (core/game-hooks/progressive_grants.c),
+ * so a doubled family is never a pickup that does nothing.
  */
 import { PROGRESSIVE_FAMILIES } from '../progressive/progressive-families.data';
 import { isRandomOrder } from '../progressive/progressive-modes.data';

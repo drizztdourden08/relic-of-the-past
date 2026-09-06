@@ -16,7 +16,7 @@
  * single arrow because a single arrow is the receipt its patched game hands
  * over; this app gives it the name it earns, a QUIVER, and an item record of
  * its own (records/items/randomizer.ts) with its own picture and its own
- * receipt line. Its price stays a constant rather than a slider: the two
+ * receipt line. Its price stays a constant, not a slider: the two
  * costs above are the question a player actually has.
  *
  * The cost ceiling is the vanilla wallet, because a shot that costs more than

@@ -5,7 +5,7 @@
  * freezes can never spell the same option two ways.
  *
  * A snapshot frozen before these rows existed carries none of them, and an
- * absent key falls back to the normal step — the unmodified game every stored
+ * absent key falls back to the normal step, the unmodified game every stored
  * placement was generated under.
  */
 import { DEFAULT_ITEM_POWER, ITEM_POWER_KEY } from './item-power.data';
@@ -34,7 +34,7 @@ const itemPowerOfValues = (values: Values): ItemPowerSetting => ({
 const itemPowerFromSnapshot = (snapshot: RandomizerOptionsSnapshot): ItemPowerSetting =>
   itemPowerOfValues(snapshot.values);
 
-/** The rows a setting freezes — what the creation form hands the catalog. */
+/** The rows a setting freezes: what the creation form hands the catalog. */
 const itemPowerValuesOf = (setting: ItemPowerSetting): Record<string, ApOptionValue> => ({
   [ITEM_POWER_KEY.catchFairies]: setting.catchFairies,
   [ITEM_POWER_KEY.byrnaInvulnerable]: setting.byrnaInvulnerable,

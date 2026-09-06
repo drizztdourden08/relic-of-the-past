@@ -6,7 +6,7 @@
  * The pond is the game's ONLY native source of explosives and projectiles
  * upgrades. So the two features cannot be chosen apart: the moment the pond
  * stops selling capacity levels and starts handing out pool items, a family
- * left on Vanilla has no source left anywhere in the seed — the silent hole
+ * left on Vanilla has no source left anywhere in the seed, which is the silent hole
  * this module exists to make unreachable.
  *
  *   Vanilla         ⇔ pond `capacity`, the only place its upgrades are sold
@@ -145,7 +145,7 @@ const anyInPool = (selection: CapacityPondSelection): boolean =>
   fedFamiliesOf(selection.retroBow).some((family) => isInPool(selection.capacity[family]));
 
 /**
- * The sentences binding on this pair — standing explanations, not one-shot
+ * The sentences binding on this pair: standing explanations, not one-shot
  * toasts. An active pond rules Vanilla out for the families it feeds; a
  * family actually sitting in the pool is what rules the legacy mode out.
  * They are separate now that Custom satisfies neither.

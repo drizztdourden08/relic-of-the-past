@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
  * The checks tracker: summary bar, filters, and the grouped check tree. Bare
- * and presentational — every piece of data arrives as a prop, so the same
+ * and presentational: every piece of data arrives as a prop, so the same
  * component serves the small Checks widget and the full-size spoiler tab, and
  * both show a check the same way.
  *

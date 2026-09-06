@@ -44,7 +44,7 @@ interface ShopPricesBlockProps {
   /** The reconciled capacity profile: what each counted range may climb to. */
   capacity: CapacityProfile;
   /**
-   * One patch per edit, keyed by catalog key. A patch rather than a single
+   * One patch per edit, keyed by catalog key. A patch instead of a single
    * key because the range writes both ends together; two separate calls in
    * the same tick would each build on the pre-edit values and the first end
    * would be lost. Absent renders the section frozen, the Run tab's

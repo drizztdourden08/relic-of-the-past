@@ -2,7 +2,7 @@
 /**
  * The 22 snapshot keys of the capacity profile: six per counted family
  * (mode · start · max · count · curve · jumps), four for the meter (its
- * curve is fixed to equal — one item per level climbed), six for the wallet.
+ * curve is fixed to equal, one item per level climbed), six for the wallet.
  * The mode rows are what the panel renders; the value rows sit behind them.
  */
 import { CAPACITY_FAMILY_IDS } from '@shared/game/data/capacity-upgrade-names.data';
@@ -39,7 +39,7 @@ const LEGACY_CAPACITY_KEY = 'shuffle_capacity_upgrades';
 
 /**
  * The master switch over the whole capacity feature. Off means every family
- * plays vanilla and the pond keeps its native purchase loop — the shape the
+ * plays vanilla and the pond keeps its native purchase loop, the shape the
  * game shipped with. On for a new profile and for every snapshot written
  * before the switch existed, so a stored placement keeps its meaning.
  * Not a family row, so familyOfOptionKey answers undefined for it.

@@ -28,13 +28,13 @@ interface CapacityPondSelection {
  * The control the player just moved, which is the one that keeps its value
  * when the two sides disagree:
  *
- *   'pond'      — the mode dropdown moved, so the families follow it.
- *   a family id — that row's mode moved, so the pond follows IT and the other
+ *   'pond':      the mode dropdown moved, so the families follow it.
+ *   a family id: that row's mode moved, so the pond follows IT and the other
  *                 pond-fed family falls in behind. Naming the row matters: a
  *                 family leaving the pool has to be able to pull the pond back
  *                 to its legacy mode, which reading the profile as a whole
  *                 could never tell apart from the family that stayed.
- *   'capacity'  — the profile changed wholesale (a reset), so the pond follows
+ *   'capacity':  the profile changed wholesale (a reset), so the pond follows
  *                 the profile: legacy unless BOTH pond-fed families are pooled.
  */
 type CapacityPondAuthority = 'pond' | 'capacity' | CapacityFamilyId;

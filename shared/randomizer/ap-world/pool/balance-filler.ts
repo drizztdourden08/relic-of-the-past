@@ -4,9 +4,9 @@
  * upgrades: every upgrade item past the spots that became checks displaces
  * one filler item, so the pool stays exactly one item per open location.
  * Filler is what the reference classifies as neither progression nor useful
- * — never an upgrade item itself, so a wallet item can never be trimmed to
+ * and never an upgrade item itself, so a wallet item can never be trimmed to
  * make room for another. The pool is edited in place; a negative delta
- * (more open spots than items — impossible by construction, kept for the
+ * (more open spots than items, impossible by construction, kept for the
  * reference's symmetry) re-adds the twenty-rupee filler.
  */
 import { isCapacityUpgradeItemName } from '@shared/game/data/capacity-upgrade-item';

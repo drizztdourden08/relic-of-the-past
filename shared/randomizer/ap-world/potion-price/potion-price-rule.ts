@@ -5,7 +5,7 @@
  *
  * The hut is the one repeatable source of potions: each cauldron sells one
  * content, over and over, for rupees. A shelf priced in a bottle content
- * CONSUMES that content when it is paid, and a restocked shelf asks again —
+ * CONSUMES that content when it is paid, and a restocked shelf asks again,
  * so a price is only ever payable while its content can be bought back. Tick
  * a cauldron for shuffling and it holds a shuffled item instead of its
  * potion, which takes that content out of the game for good.
@@ -16,9 +16,9 @@
  * Unlike the capacity/pond pair this one is NOT symmetric, and it would be
  * dishonest to pretend otherwise: a price cannot make a potion purchasable,
  * so the scope is always the authority and the currency rows only ever
- * follow it. The follow is a MASK rather than an overwrite — the player's own
+ * follow it. The follow is a MASK, not an overwrite, so the player's own
  * tick is kept in the choices and comes back the moment the cauldron is
- * unticked — which is the same trick the capacity master switch uses, and it
+ * unticked, which is the same trick the capacity master switch uses, and it
  * is what makes "unticking restores availability" true without storing a
  * second copy of the answer.
  *
@@ -40,7 +40,7 @@ import type { PotionPriceSelection, ReconciledPotionPrice } from './potion-price
 
 type Values = Readonly<Record<string, ApOptionValue>>;
 
-/** The cauldrons this scope may hand over to the shuffle — none while nothing is shuffled. */
+/** The cauldrons this scope may hand over to the shuffle: none while nothing is shuffled. */
 const lostCauldronsOf = (shops: ShopScope) => {
   if (shops.mode === 'vanilla') return [];
   const ticked = new Set(normalizeEnabled(shops.enabled));
@@ -51,7 +51,7 @@ const lostCauldronsOf = (shops: ShopScope) => {
 const blockedContentsOf = (shops: ShopScope): readonly ShopBottleContent[] =>
   lostCauldronsOf(shops).map((row) => row.content);
 
-/** The same answer read straight off a snapshot — what the generator refuses. */
+/** The same answer read straight off a snapshot: what the generator refuses. */
 const blockedContentsOfValues = (values: Values): readonly ShopBottleContent[] =>
   blockedContentsOf(shopScopeOfValues(values));
 

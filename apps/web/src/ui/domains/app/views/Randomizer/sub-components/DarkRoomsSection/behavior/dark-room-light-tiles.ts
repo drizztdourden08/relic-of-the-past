@@ -2,11 +2,11 @@
 /**
  * The four lights as tiles: the item each one stands for, its art from the
  * extracted set, and whether this setting accepts it. Art comes the same way
- * the pool listing gets it — the item's own record through its standard name
- * — so a light shows the very sprite the player will see in their inventory.
+ * the pool listing gets it: the item's own record through its standard name
+ * so a light shows the very sprite the player will see in their inventory.
  *
  * While the set is not extracted yet no tile carries a sprite at all: the row
- * draws placeholders rather than asking for files that are not on disk, and
+ * draws placeholders instead of asking for files that are not on disk, and
  * fills in on its own once the background extraction lands.
  *
  * A tile a sibling setting has masked (dark-rooms/dark-room-forced.ts) shows
@@ -26,7 +26,7 @@ import type {
 
 interface DarkRoomLightTileModel {
   field: DarkRoomLightField;
-  /** The item's own name — the tile's accessible name and its tooltip. */
+  /** The item's own name: the tile's accessible name and its tooltip. */
   name: string;
   /** URL of its extracted sprite; absent draws the neutral placeholder. */
   sprite?: string;

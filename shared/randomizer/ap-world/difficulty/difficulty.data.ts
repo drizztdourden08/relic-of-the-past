@@ -1,17 +1,17 @@
 /* @layer shared-game @kind data */
 /**
  * The numbers the difficulty setting is built from, each one read off
- * something real rather than invented here.
+ * something real instead of invented here.
  *
  * THE COPY MULTIPLES, 1 / 2 / 3. One is the reference pool
  * (Archipelago worlds/alttp/ItemPool.py difficulties['normal']), two is what
  * its easy step does to every tiered family at once, and three is one step
- * past it — as far as the shape stays honest, since a copy past a family's top
- * rung already resolves to a rupee pickup rather than to nothing
+ * past it, as far as the shape stays honest, since a copy past a family's top
+ * rung already resolves to a rupee pickup instead of to nothing
  * (core/game-hooks/progressive_grants.c PROGRESSIVE_CAP_ITEM).
  *
  * THE HEART CEILING, 20. The container receipt refuses to raise capacity past
- * 0xa0 — 160 units, eight per heart (core/zelda3/src/ancilla.c 3494) — so
+ * 0xa0 (160 units, eight per heart, core/zelda3/src/ancilla.c 3494), so
  * twenty is the most the game can hold whatever the pool carries. It is also
  * exactly what the untouched pool adds up to: three to start, one from the
  * fixed container, ten from the boss containers and six more from the
@@ -34,7 +34,7 @@ const COPY_MULTIPLIER_LABELS: Readonly<Record<CopyMultiplier, string>> = {
   3: 'Triple',
 };
 
-/** The reference pool's own multiple — the value at which nothing moves. */
+/** The reference pool's own multiple: the value at which nothing moves. */
 const DEFAULT_COPY_MULTIPLIER: CopyMultiplier = 1;
 
 /** ancilla.c 3494: the container receipt stops at 0xa0, which is twenty hearts. */
@@ -49,7 +49,7 @@ const PIECES_PER_HEART = 4;
 /** The untouched pool's own total, which is also the game's ceiling. */
 const DEFAULT_HEART_CAP = MAX_HEART_CAP;
 
-/** Every family on the reference multiple — what an absent row reads as. */
+/** Every family on the reference multiple: what an absent row reads as. */
 const DEFAULT_COPY_MULTIPLIERS: CopyMultiplierSetting = Object.fromEntries(
   PROGRESSIVE_FAMILIES.map((family) => [family.id, DEFAULT_COPY_MULTIPLIER]),
 ) as unknown as CopyMultiplierSetting;

@@ -1,13 +1,13 @@
 /* @layer shared-game @kind data */
 /**
- * The five per-family mode rows of the option catalog — synthetic, unlocked,
+ * The five per-family mode rows of the option catalog: synthetic, unlocked,
  * group 'items', so they sit with the tier ticks they qualify. The reference
  * project asks this once for the whole seed (Options.py Progressive: off /
  * grouped_random / on), which forces every family to the same answer; this app
  * asks it per family, because "the blades in order, the shields in any order"
  * is a shape a player thinks in and the reference cannot say.
  *
- * Every baseline is the in-order reading — the reference's own `on` — so a
+ * Every baseline is the in-order reading (the reference's own `on`), so a
  * fresh profile rolls the seed it always rolled and a snapshot frozen before
  * these rows existed reads the same way.
  */

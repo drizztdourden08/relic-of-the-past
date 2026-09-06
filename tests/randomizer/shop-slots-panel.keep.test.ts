@@ -3,7 +3,7 @@
  * The numbers and the titles the Shops tab shows for a scope.
  *
  * The count control used to be fed the STORED slot count, which the custom
- * mode never reads — so it sat still while the ticks moved, and its fill
+ * mode never reads, so it sat still while the ticks moved, and its fill
  * climbed as the ceiling under it dropped. Both it and the total sentence now
  * read the opened set's own size.
  *
@@ -119,7 +119,7 @@ describe('the count is drawn as whatever it honestly is', () => {
   /** What the slider's own fill formula would report for a control, 0..1. */
   const fillOf = (value: number, max: number): number => value / max;
 
-  it('reads out rather than sliding in the modes the ticks alone decide', () => {
+  it('reads out instead of sliding in the modes the ticks alone decide', () => {
     for (const mode of ['custom', 'vanilla'] as const) {
       const control = shopCountControlOf(summaryOf(scopeOf({ mode })));
       expect(control.kind, mode).toBe('readout');
@@ -133,7 +133,7 @@ describe('the count is drawn as whatever it honestly is', () => {
     if (control.kind !== 'slider') return;
     expect(control.value).toBe(summary.opened);
     expect(control.max).toBe(summary.ticked);
-    // The whole point of keeping it: the fill is genuinely short of the end.
+    // The whole point of keeping it: the fill is short of the end.
     expect(fillOf(control.value, control.max)).toBeLessThan(1);
   });
 

@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
- * The voice of a found-item receipt. Every line still carries the numbers —
- * they live in the label the caller hands in (numbered-item-label.ts) — but
+ * The voice of a found-item receipt. Every line still carries the numbers,
+ * which live in the label the caller hands in (numbered-item-label.ts), but
  * the sentence around them is written per item class, so a key, a heart and a
  * crystal do not read as one template with the nouns swapped. Each class also
  * answers to WHERE this copy sits in its set: the first of them, the one that
@@ -10,7 +10,7 @@
  * the retro bow's quiver answers for itself, since nothing else in the seed
  * turns a carried weapon from useless into usable.
  * Every class returns candidates, fullest first, and the composer keeps the
- * first that fits the box (receipt-line.type.ts) — so a long location name
+ * first that fits the box (receipt-line.type.ts), so a long location name
  * costs the flavour, then the source, and never the numbers.
  */
 import { RETRO_QUIVER_ITEM } from '../ap-world/retro/retro-bow.data';
@@ -40,7 +40,7 @@ const isFirst = (count: ReceiptCount | undefined): boolean =>
 const isLast = (count: ReceiptCount | undefined): boolean =>
   count !== undefined && count.total > 1 && count.ordinal === count.total;
 
-/** True when this piece is the fourth quarter — a whole heart, whatever the total. */
+/** True when this piece is the fourth quarter: a whole heart, whatever the total. */
 const completesHeart = (count: ReceiptCount | undefined): boolean =>
   count !== undefined && count.ordinal % PIECES_PER_HEART === 0;
 

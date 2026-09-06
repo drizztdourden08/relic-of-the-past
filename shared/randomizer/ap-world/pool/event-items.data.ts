@@ -4,7 +4,7 @@
  * ItemPool.py generate_itempool (event_pairs, lines 264-278) plus the goal
  * item pushed onto the final fight's location (lines 249-250). The prize
  * pool is the ten crystal/pendant items placed on the ten dungeon prize
- * locations (AP world pre_fill in worlds/alttp/__init__.py — not part of
+ * locations (AP world pre_fill in worlds/alttp/__init__.py, not part of
  * the fixture set; transcribed from Items.py item_table's Crystal rows).
  */
 
