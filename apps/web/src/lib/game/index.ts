@@ -15,14 +15,14 @@ export { applyPlayerSprite, clearPlayerSprite } from './player-sprite';
 export type { AutoSaveConfig } from './lifecycle';
 export { saveState, loadState, loadNamedState, loadStateRef, captureStateBuffer, loadStateFromBuffer } from './save-states';
 export { captureGameFrameBlob, fulfillFrameCapture } from './capture-frame';
-export { setItemOverride, clearItemOverrides } from './randomizer';
+export { setChestSlotOverride, clearItemOverrides } from './randomizer';
 export { pushLiveSettings, reassertBackdropBlack, reassertVsync, reassertHudHidden, reassertPauseHidden, reassertVolumes, reassertLiveFlagsAfterLoad, reassertFeatureFlags, primeLiveSettings, LIVE_SETTINGS } from './live-settings';
 export { initMasterVolume, setMasterVolume, suspendAudio, resumeAudio } from './audio-volume';
 export { getFps } from './fps';
 export {
   cheatGiveItem, cheatTriggerCheck, cheatTriggerNpcCheck,
   cheatSetHealth, cheatSetMaxHealth, cheatSetRupees, cheatSetBombs, cheatSetArrows,
-  cheatSetMaxBombs, cheatSetMaxArrows, cheatSetMagic, cheatRefillMagic,
+  cheatSetMaxBombs, cheatSetMaxArrows, cheatSetMaxWallet, cheatSetMagic, cheatRefillMagic,
   cheatFillBottle, cheatSetIgnoreCollision, getIgnoreCollisionEnabled,
   cheatSetIlluminateDarkRooms, getIlluminateDarkRoomsEnabled,
   cheatKillAllEnemies, cheatSetDamageMultiplier, cheatSetExtraArmorPct,
@@ -41,5 +41,6 @@ export {
 export { deliveryQueue } from './delivery-queue';
 export type { DeliveryEntry, DeliveryAction, DeliveryQueueState } from './delivery-queue';
 export { deliverItem, deliverCheck, deliverNpcCheck, deliverCustom } from './delivery-api';
+export { armNextReceiptMessage, grantCapacityUpgrade } from './receipt-grants';
 export type { TransitionKind, TransitionSettled, TransitionListener } from './events';
 export { subscribeTransitionSettled } from './events';

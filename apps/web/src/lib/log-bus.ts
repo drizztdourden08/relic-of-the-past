@@ -12,7 +12,9 @@ interface LogEntry {
 
 type LogListener = (entry: LogEntry) => void;
 
-const MAX_ENTRIES = 200;
+// Large enough to keep a whole randomizer session-start burst (a full plan
+// application logs ~500 entries) readable after the fact.
+const MAX_ENTRIES = 1000;
 
 let nextId = 0;
 const entries: LogEntry[] = [];
@@ -102,8 +104,10 @@ const installGlobalHandlers = (): void => {
 
 installGlobalHandlers();
 
-// Expose getEntries for Playwright / devtools access
+// Expose getEntries + subscribe for Playwright / devtools access — the ring
+// keeps only the last 200 entries, so a burst-safe capture needs a listener.
 (window as any).__logEntries = getEntries;
+(window as any).__logSubscribe = subscribe;
 
 export { log, subscribe, getEntries, CHANNEL_COLORS };
 export type { LogChannel, LogLevel, LogEntry, LogListener };

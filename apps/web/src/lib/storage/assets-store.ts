@@ -8,6 +8,7 @@
  * whole dialogue compression path, which belongs off the UI thread.
  */
 import * as assets from '@shared/storage/assets';
+import { isCurrentBakeVersion } from '@shared/asset-extraction/bake-version';
 import type { SetBakeInput } from '@shared/game/language';
 import { getPlatform } from '@app/platform/get-platform';
 import { runOnWorker } from './extraction-client';
@@ -20,6 +21,16 @@ const runExtraction = (romBytes: Uint8Array, languages: SetBakeInput[]): Promise
   runOnWorker<Uint8Array>({ op: 'assets', romBytes, languages });
 
 const checkAssets = (romFile: string): Promise<boolean> => assets.check(files(), romFile);
+
+/**
+ * Whether the cached blob was baked by an older pipeline (bake-version.ts). A missing
+ * blob is NOT stale — the missing-file path already recompiles; this only answers for
+ * a blob that exists but predates the current bake format.
+ */
+const checkAssetsStale = async (romFile: string): Promise<boolean> => {
+  const bytes = await assets.load(files(), romFile);
+  return bytes !== null && !isCurrentBakeVersion(bytes);
+};
 
 const loadAssets = async (romFile: string): Promise<ArrayBuffer | null> => {
   const bytes = await assets.load(files(), romFile);
@@ -48,4 +59,4 @@ const recompileAll = async (): Promise<void> => {
   }
 };
 
-export { checkAssets, loadAssets, extractAssets, recompileAll };
+export { checkAssets, checkAssetsStale, loadAssets, extractAssets, recompileAll };
