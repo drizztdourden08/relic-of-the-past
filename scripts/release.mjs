@@ -6,12 +6,14 @@
  * locally here.
  *
  * Usage (the version can be positional or a flag; a leading "v" is optional):
- *   npm run release -- 0.9.0            # positional
- *   npm run release -- --version 0.9.0  # long flag (also --version=0.9.0)
- *   npm run release -- -v 0.9.0         # short flag (also -v0.9.0 / --v0.9.0)
- *   npm run release -- 0.9.0 --latest   # publish immediately as the latest release
- *   npm run release:last                # highest release-notes/v*.md, published as latest
- *   npm run release -- --last           # highest release-notes/v*.md (add --latest to publish)
+ *   npm run release -- 0.9.0                # positional
+ *   npm run release -- --version 0.9.0      # long flag (also --version=0.9.0)
+ *   npm run release -- -v 0.9.0             # short flag (also -v0.9.0 / --v0.9.0)
+ *   npm run release -- 0.9.0 --latest       # publish immediately as the latest release
+ *   npm run release -- 0.9.0 --prerelease   # publish for pre-release testers only
+ *   npm run release -- 0.9.0 --full         # also build the installer + portable downloads
+ *   npm run release:last                    # highest release-notes/v*.md, published as latest
+ *   npm run release -- --last               # highest release-notes/v*.md (add --latest to publish)
  *
  * Preconditions (also enforced server-side by the workflow):
  *   - release-notes/v<version>.md exists and is committed/pushed to master
@@ -28,6 +30,8 @@ const parseArgs = (argv) => {
   const rest = argv.slice(2);
   let version;
   let setLatest = false;
+  let prerelease = false;
+  let fullInstaller = false;
 
   let last = false;
 
@@ -35,6 +39,10 @@ const parseArgs = (argv) => {
     const arg = rest[i];
     if (arg === '--latest') {
       setLatest = true;
+    } else if (arg === '--prerelease' || arg === '--pre') {
+      prerelease = true;
+    } else if (arg === '--full' || arg === '--full-installer') {
+      fullInstaller = true;
     } else if (arg === '--last') {
       last = true;
     } else if (/^--?(?:v|version)=/.test(arg)) {
@@ -48,7 +56,7 @@ const parseArgs = (argv) => {
     }
   }
 
-  return { version, setLatest, last };
+  return { version, setLatest, prerelease, fullInstaller, last };
 };
 
 const highestNotesVersion = () => {
@@ -70,12 +78,25 @@ const fail = (message) => {
   process.exit(1);
 };
 
+// What the release will BE, for the confirmation line. A pre-release is published
+// (a draft's assets cannot be downloaded) but never becomes the latest download.
+const modeLabel = ({ setLatest, prerelease, fullInstaller }) => {
+  const mode = prerelease ? 'pre-release' : setLatest ? 'publish as latest' : 'draft';
+  return fullInstaller ? `${mode}, full installer` : mode;
+};
+
 const run = () => {
-  const { version: explicitVersion, setLatest, last } = parseArgs(process.argv);
+  const { version: explicitVersion, setLatest, prerelease, fullInstaller, last } = parseArgs(process.argv);
   const version = last ? highestNotesVersion() : explicitVersion;
 
   if (!version) {
-    fail('Missing version. Examples: npm run release -- 0.9.0   |   npm run release -- --version 0.9.0 [--latest]   |   npm run release:last');
+    fail('Missing version. Examples: npm run release -- 0.9.0   |   npm run release -- 0.9.0 --prerelease   |   npm run release:last');
+  }
+
+  // The workflow would honour both at once and hand GitHub a pre-release marked as
+  // the latest download, which is the one thing a pre-release is meant not to be.
+  if (setLatest && prerelease) {
+    fail('--latest and --prerelease are mutually exclusive. A pre-release never becomes the latest download.');
   }
 
   const tag = `v${version.replace(/^v/, '')}`;
@@ -90,7 +111,7 @@ const run = () => {
     fail(`Tag ${tag} already exists. Pick a new version.`);
   }
 
-  console.log(`Dispatching Release workflow → ${tag}${setLatest ? ' (publish as latest)' : ' (draft)'}\n`);
+  console.log(`Dispatching Release workflow → ${tag} (${modeLabel({ setLatest, prerelease, fullInstaller })})\n`);
 
   execFileSync(
     'gh',
@@ -99,6 +120,8 @@ const run = () => {
       '--ref', REF,
       '-f', `version=${tag}`,
       '-f', `set_latest=${setLatest}`,
+      '-f', `prerelease=${prerelease}`,
+      '-f', `full_installer=${fullInstaller}`,
     ],
     { stdio: 'inherit' },
   );
