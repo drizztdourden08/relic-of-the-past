@@ -78,10 +78,10 @@ writes them: your window position (`config/window-state.json`) and your last-use
 ### A new worktree needs files git does not carry
 
 `git worktree add` produces tracked files only, and several things this project needs are
-deliberately git-ignored: `CLAUDE.md`, `.claude/`, the record dataset at
-`shared/game/data/records/`, `test-roms/` and the asset blob. `wt new` supplies them:
-`.claude/` and the record dataset as directory links so a change reaches every worktree
-at once, everything else copied.
+deliberately git-ignored: `CLAUDE.md`, `.claude/`, `test-roms/` and the asset blob. (The
+record dataset at `shared/game/data/records/` used to be one of these too; it is an
+ordinary tracked directory now, so a new worktree already has its own copy with nothing
+to supply.) `wt new` copies the rest into place.
 
 ## Mandatory: automation never runs on the default profile
 

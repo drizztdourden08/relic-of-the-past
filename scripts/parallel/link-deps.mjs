@@ -13,10 +13,12 @@ import { repoRoot } from './paths.mjs';
 /**
  * Junctioned (shared live). Only regenerable directories belong here: `git worktree
  * remove` follows a junction and deletes the target's contents (see unlinkSharedDirs).
- * The record tree comes back with `npm run vault:sync`. The nested path works because
- * `shared/game/data/` is tracked, so the link's parent already exists.
+ * Empty for now: the record dataset used to be the one entry, but it moved from a
+ * vault-synced, gitignored tree to an ordinary tracked directory, so `git worktree add`
+ * already gives every worktree its own copy with no linking needed. Left in place, not
+ * deleted, for the next gitignored-but-regenerable directory that needs sharing.
  */
-const LINKED_DIRS = ['shared/game/data/records'];
+const LINKED_DIRS = [];
 
 /**
  * Copied: user-provided or irreplaceable, so never exposed to the junction hazard.
@@ -124,8 +126,8 @@ const resyncCopiedFiles = (worktree) => COPIED_FILES.map((name) => copyOne(name,
  * what it points at (it emptied the main repo's .claude once). `rmdir` on Windows and
  * unlink elsewhere remove only the link.
  */
-const unlinkSharedDirs = (worktree) => {
-  for (const name of LINKED_DIRS) {
+const unlinkSharedDirs = (worktree, dirs = LINKED_DIRS) => {
+  for (const name of dirs) {
     const linkPath = join(worktree, name);
     if (!existsSync(linkPath)) continue;
     if (process.platform === 'win32') {
