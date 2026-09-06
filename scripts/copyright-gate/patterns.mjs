@@ -24,14 +24,13 @@ const TRADEMARK_RE = /\b(nintendo|the legend of zelda|a link to the past|hyrule|
 
 // Paths where these names legitimately appear, so the trademark rule skips them.
 //
-// `shared/game/data/` used to be here because the record dataset lived there and
-// the gate was expected to be signed off for it. The dataset moved to the private
-// companion repo and its destination is gitignored, so nothing the gate can see
-// under that path needs the exemption any more, and leaving it would let a
-// trademark land unnoticed in the schema, the aggregators or the facade, which is
-// code and is supposed to stay clean.
+// `shared/game/data/records/` is the transcribed dataset (checks, actors, screens,
+// dungeons, ...) moved back out of the private vault: it's data naming things, not
+// code, so it's exempt the same way `shared/input/data/` is. Scoped to `records/`
+// specifically, not all of `shared/game/data/`, so a trademark landing in a sibling
+// schema, aggregator or facade file next to it still gets caught.
 const TEXT_SKIP_PREFIXES = [
-  'docs/', 'shared/input/data/',
+  'docs/', 'shared/input/data/', 'shared/game/data/records/',
   'scripts/copyright-gate/', '.github/', '.githooks/',
 ];
 // Files whose whole point is to NAME the rights holder. This is nominative use, and removing

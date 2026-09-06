@@ -63,18 +63,17 @@ Path aliases: `@shared/*` → `shared/`, `@app/*` → `apps/web/src/`. See the
 
 ## The private companion repository (optional)
 
-Some material this project uses is derived from the original game and therefore is not
-in this repository: the record dataset (screens, connections, checks, items, actors and
-the rest of `shared/game/data/records/`), the named save states the end-to-end tests
-load, and the blessed navigation baselines. Those live in a separate **private**
-repository and are copied into place on demand.
+Some material this project uses is derived from the original game and is not tracked in
+this repository: the named save states the end-to-end tests load. Those live in a
+separate **private** repository and are copied into place on demand. The record dataset
+itself is not one of them: `shared/game/data/records/` (screens, connections, checks,
+items, actors and the rest) is an ordinary tracked directory in this repository, and
+needs no access to the private one.
 
-**You do not need it.** Without access:
+**You do not need the private repository.** Without access:
 
-- the app builds and runs,
+- the app builds and runs, with the full record dataset already in place,
 - `npm run lint` and the unit tests pass,
-- the dataset is empty, so the map, checks and navigation views have nothing to show,
-- the unit suites that assert on real records report as *skipped*,
 - the end-to-end tests that need a save state report as *skipped*.
 
 The private repository is a **sibling checkout**, not something this repository clones.

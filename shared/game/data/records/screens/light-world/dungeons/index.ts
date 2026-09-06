@@ -1,0 +1,35 @@
+/* @layer shared-game @kind data */
+import type { ScreenRecord } from '@shared/game/data/types';
+import { LW_DUNGEON_CASTLE_TOWER_SCREENS } from './castle-tower';
+import { LW_DUNGEON_DESERT_PALACE_SCREENS_FLOOR_B1 } from './desert-palace-floor-b1';
+import { LW_DUNGEON_DESERT_PALACE_SCREENS_FLOOR_0 } from './desert-palace-floor-0';
+import { LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_1 } from './eastern-palace-floor-1';
+import { LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_0 } from './eastern-palace-floor-0';
+import { LW_DUNGEON_HYRULE_CASTLE_SCREENS_FLOOR_B2 } from './hyrule-castle-floor-b2';
+import { LW_DUNGEON_HYRULE_CASTLE_SCREENS_FLOOR_B1 } from './hyrule-castle-floor-b1';
+import { LW_DUNGEON_HYRULE_CASTLE_SCREENS_FLOOR_0 } from './hyrule-castle-floor-0';
+import { LW_DUNGEON_TOWER_OF_HERA_SCREENS } from './tower-of-hera';
+
+const LW_DUNGEON_DESERT_PALACE_SCREENS: ScreenRecord[] = [
+  ...LW_DUNGEON_DESERT_PALACE_SCREENS_FLOOR_B1,
+  ...LW_DUNGEON_DESERT_PALACE_SCREENS_FLOOR_0,
+];
+const LW_DUNGEON_EASTERN_PALACE_SCREENS: ScreenRecord[] = [
+  ...LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_1,
+  ...LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_0,
+];
+const LW_DUNGEON_HYRULE_CASTLE_SCREENS: ScreenRecord[] = [
+  ...LW_DUNGEON_HYRULE_CASTLE_SCREENS_FLOOR_B2,
+  ...LW_DUNGEON_HYRULE_CASTLE_SCREENS_FLOOR_B1,
+  ...LW_DUNGEON_HYRULE_CASTLE_SCREENS_FLOOR_0,
+];
+
+const LW_DUNGEONS_SCREENS: ScreenRecord[] = [
+  ...LW_DUNGEON_CASTLE_TOWER_SCREENS,
+  ...LW_DUNGEON_DESERT_PALACE_SCREENS,
+  ...LW_DUNGEON_EASTERN_PALACE_SCREENS,
+  ...LW_DUNGEON_HYRULE_CASTLE_SCREENS,
+  ...LW_DUNGEON_TOWER_OF_HERA_SCREENS,
+];
+
+export { LW_DUNGEONS_SCREENS };
