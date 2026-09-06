@@ -2,7 +2,7 @@
 import { join } from 'path';
 import { mkdir, readdir, rm } from 'fs/promises';
 import { randomUUID } from 'crypto';
-import type { Profile } from '@shared/types/profile';
+import type { Profile, CreateProfileOptions } from '@shared/types/profile';
 import { getUserDataPath } from '../lib/paths';
 import { readJson, writeJson } from '../lib/json-store';
 
@@ -28,12 +28,14 @@ const listProfiles = async (): Promise<Profile[]> => {
   return profiles.sort((a, b) => b.lastPlayed - a.lastPlayed);
 };
 
-const createProfile = async (name: string, romFile: string, language?: string, msuPack?: string): Promise<Profile> => {
+const createProfile = async (opts: CreateProfileOptions): Promise<Profile> => {
+  const { name, romFile, language, msuPack, randomizer } = opts;
   const id = randomUUID().slice(0, 8);
   const now = Date.now();
   const profile: Profile = { id, name, romFile, created: now, lastPlayed: now };
   if (language) profile.language = language;
   if (msuPack) profile.msuPack = msuPack;
+  if (randomizer) profile.randomizer = randomizer;
 
   await mkdir(getUserDataPath('profiles', id, 'saves'), { recursive: true });
   await writeJson(profilePath(id), profile);
@@ -45,6 +47,8 @@ const createProfile = async (name: string, romFile: string, language?: string, m
 const loadProfile = (id: string): Promise<Profile | null> =>
   readJson<Profile | null>(profilePath(id), null);
 
+// Whole-profile write; field whitelisting happens in the IPC handler, so `randomizer`
+// stays exactly as loaded and is never patched here.
 const updateProfile = (profile: Profile): Promise<void> =>
   writeJson(profilePath(profile.id), profile);
 

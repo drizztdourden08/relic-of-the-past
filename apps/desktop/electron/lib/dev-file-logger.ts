@@ -7,6 +7,7 @@
 import { appendFile, writeFile, mkdir } from 'fs/promises';
 import { dirname } from 'path';
 import type { BrowserWindow } from 'electron';
+import { appendMainLog, mainLogPath, openMainLog } from './main-log-file';
 import { getUserDataPath } from './paths';
 
 const timestamp = (): string => new Date().toISOString();
@@ -22,13 +23,13 @@ const resetLogFile = async (file: string): Promise<void> => {
 };
 
 /** Wraps console.log/warn/error/info so every call still behaves normally but
- *  also lands in mainLogPath. */
-const installMainConsoleMirror = (mainLogPath: string): void => {
+ *  also lands in main-console.log (see lib/main-log-file). */
+const installMainConsoleMirror = (): void => {
   for (const level of ['log', 'warn', 'error', 'info'] as const) {
     const original = console[level].bind(console);
     console[level] = (...args: unknown[]) => {
       original(...args);
-      appendLine(mainLogPath, `[${timestamp()}] [${level}] ${args.map(String).join(' ')}`);
+      appendMainLog(level, args.map(String).join(' '));
     };
   }
 };
@@ -42,12 +43,12 @@ const installRendererConsoleMirror = (mainWindow: BrowserWindow, rendererLogPath
 
 // getUserDataPath() only resolves once initPaths() has run, so never at module load.
 const installDevFileLogging = async (mainWindow: BrowserWindow): Promise<void> => {
-  const mainLogPath = getUserDataPath('debug', 'main-console.log');
   const rendererLogPath = getUserDataPath('debug', 'renderer-console.log');
-  await Promise.all([resetLogFile(mainLogPath), resetLogFile(rendererLogPath)]);
-  installMainConsoleMirror(mainLogPath);
+  openMainLog();
+  await resetLogFile(rendererLogPath);
+  installMainConsoleMirror();
   installRendererConsoleMirror(mainWindow, rendererLogPath);
-  console.log(`[dev-file-logger] Mirroring console output to ${mainLogPath} and ${rendererLogPath}`);
+  console.log(`[dev-file-logger] Mirroring console output to ${mainLogPath()} and ${rendererLogPath}`);
 };
 
 export { installDevFileLogging };
