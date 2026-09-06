@@ -9,6 +9,46 @@
   padding: var(--space-sm);
 }
 
+/* ─── The permanent search ───
+   Free text is part of the bar itself, not a bolt-on beside it. It shares the
+   small control row every other segment draws at, absorbs whatever width the
+   clauses leave on its line, and, carrying no caption of its own, lines up
+   with the bottom edge of the captioned strips rather than floating at the
+   top of the line, exactly as the add button does. */
+.filter-bar .filter-bar__search {
+  flex: 1 1 var(--open-entry-width);
+  min-width: var(--open-entry-width);
+  align-self: flex-end;
+  height: var(--control-h-sm);
+  padding: 0 var(--space-sm);
+  font-size: var(--text-sm);
+}
+
+/* ─── Enumerated facets ───
+   A closed set of kinds toggled from a dropdown of checkboxes. The trigger is
+   a plain small button held to the same control row as everything else. */
+.filter-bar__facet-trigger {
+  align-self: flex-end;
+  height: var(--control-h-sm);
+}
+
+.filter-bar__facet-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-width: var(--filter-clause-width);
+  padding: var(--space-sm);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-dropdown);
+  z-index: var(--z-modal);
+
+  /* Same opt-in the add picker needs: the portal layer this renders into sets
+     pointer-events: none on itself so an empty overlay never blocks the page. */
+  pointer-events: auto;
+}
+
 /* A caption over a control strip, with no box of its own: the control already
    has edges. The width stays so wrapping means something. */
 .filter-bar__clause {

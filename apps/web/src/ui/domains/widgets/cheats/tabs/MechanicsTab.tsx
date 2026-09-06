@@ -1,5 +1,8 @@
 /* @layer renderer-widgets @kind component */
-/** Kill enemies, damage multiplier, extra armor reduction, ignore collision, dark-room lighting. */
+/**
+ * Kill enemies, damage multiplier, extra armor reduction, ignore collision,
+ * dark-room lighting.
+ */
 import { useState } from 'react';
 import { Box, Text, Button } from '../../../../design-system/primitives';
 import { Toggle } from '../../../../design-system/primitives/Toggle';

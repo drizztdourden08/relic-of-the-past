@@ -1,8 +1,43 @@
 /* @layer renderer-components @kind style */
+
+/* The bar is the frame — the underline that runs the full width, and a pager
+   parked at each end. Only the strip inside it scrolls. */
 .tab-bar {
   display: flex;
+  align-items: stretch;
   gap: 0;
+  min-width: 0;
   border-bottom: 1px solid var(--c-border);
+}
+
+/* Scrolls sideways with no scrollbar of its own: the pagers and the wheel are
+   the affordances, and a bar left visibly scrollbarred under a short row of
+   tabs would be a change in a place nothing asked for one. */
+.tab-bar__strip {
+  display: flex;
+  flex: 1;
+  gap: 0;
+  min-width: 0;
+  overflow: auto hidden;
+  scroll-behavior: smooth;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.tab-bar__strip::-webkit-scrollbar {
+  display: none;
+}
+
+/* Drawn only while the tabs overrun the bar, and kept in place — rather than
+   unmounted — at the end of its own direction, so reaching an end never shifts
+   the tabs sideways under the pointer that was pressing it. */
+.tab-bar__pager {
+  flex: none;
+  align-self: center;
+}
+
+.tab-bar__pager--idle {
+  visibility: hidden;
 }
 
 .tab-bar__tab {
@@ -50,4 +85,13 @@
   color: var(--c-text-dim);
   font-size: var(--text-xs);
   line-height: var(--leading-tight);
+}
+
+/* Every movement here — a pager press, a wheel notch, a tab brought into view
+   by the keyboard — is a programmatic scroll of the strip, so switching the one
+   property switches all three to an instant jump. */
+@media (prefers-reduced-motion: reduce) {
+  .tab-bar__strip {
+    scroll-behavior: auto;
+  }
 }

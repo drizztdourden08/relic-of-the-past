@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { useState, useRef, useCallback, useMemo } from 'react';
+import { useState, useRef, useCallback, useContext, useMemo } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { FEATURES_BY_ID } from '@shared/features/feature-registry';
 import { isVanillaSafeLockedSetting } from '@shared/features/vanilla-safe-settings';
@@ -8,9 +8,11 @@ import { Text } from '../../../../design-system/primitives/Text';
 import { Toggle } from '../../../../design-system/primitives/Toggle';
 import { SettingsShell } from '../../../../design-system/composites/SettingsShell';
 import { DisabledOverlay } from '../../../../design-system/composites/DisabledOverlay';
+import { DISABLED_SETTING_MESSAGES } from '../../../../design-system/composites/DisabledOverlay/DisabledOverlay.constants';
 import { partitionByLockState } from './behavior/partitionByLockState';
+import { RandomizerLockContext } from './randomizer-lock-context';
 import './SettingsLayout.css';
-import { type SettingItem, type SettingsLayoutProps } from './SettingsLayout.type';
+import { type SettingItem, type SettingLockCause, type SettingsLayoutProps } from './SettingsLayout.type';
 
 const SettingsLayout = (props: SettingsLayoutProps) => {
   const { sections, settings, onChange, renderControl, isDisabled, onOpenVanillaSafeSettings } = props;
@@ -23,6 +25,18 @@ const SettingsLayout = (props: SettingsLayoutProps) => {
       settings.vanillaSafe === true &&
       (FEATURES_BY_ID[key]?.affectsVanillaParity === true || isVanillaSafeLockedSetting(key)),
     [settings.vanillaSafe],
+  );
+  // A profile with randomizer config pins the keys in its frozen set — those controls lock
+  // for the profile's whole life, so their overlay states the cause and offers no way out.
+  const randomizerFrozenKeys = useContext(RandomizerLockContext);
+  const isRandomizerLocked = useCallback(
+    (key: string) => randomizerFrozenKeys.includes(key),
+    [randomizerFrozenKeys],
+  );
+  const lockCauseOf = useCallback(
+    (key: string): SettingLockCause | null =>
+      isRandomizerLocked(key) ? 'randomizer' : isVanillaSafeLocked(key) ? 'vanillaSafe' : null,
+    [isRandomizerLocked, isVanillaSafeLocked],
   );
   const [filter, setFilter] = useState('');
   const [activeId, setActiveId] = useState('');
@@ -103,7 +117,7 @@ const SettingsLayout = (props: SettingsLayoutProps) => {
               <Box key={sub.id} className="settings-layout__subsection" data-section={sub.id}>
                 <Text as="h3" className="settings-layout__subsection-title">{sub.title}</Text>
                 <Box className="settings-layout__group">
-                  {partitionByLockState(sub.items, isVanillaSafeLocked).map((run, runIndex) => {
+                  {partitionByLockState(sub.items, lockCauseOf).map((run, runIndex) => {
                     const rows = run.items.map((item) => {
                       const custom = renderControl?.(item.key, settings, onChange);
                       const control = custom ?? renderToggle(item.key, item);
@@ -113,13 +127,16 @@ const SettingsLayout = (props: SettingsLayoutProps) => {
                         </Box>
                       );
                     });
-                    if (!run.locked) return rows;
+                    if (!run.lock) return rows;
+                    // The randomizer lock is permanent for the profile, so it names its cause
+                    // and offers no action; the Vanilla Safe lock keeps its deep-link default.
                     return (
                       <DisabledOverlay
                         key={`locked-${runIndex}`}
                         active
                         contained
-                        onOpenSettings={onOpenVanillaSafeSettings ?? (() => {})}
+                        message={run.lock === 'randomizer' ? DISABLED_SETTING_MESSAGES.randomizer : undefined}
+                        onOpenSettings={run.lock === 'randomizer' ? undefined : (onOpenVanillaSafeSettings ?? (() => {}))}
                       >
                         {rows}
                       </DisabledOverlay>

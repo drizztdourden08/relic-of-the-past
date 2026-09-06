@@ -1,0 +1,120 @@
+/* @layer renderer-components @kind style */
+
+/* The rupee pond: a head line naming the mode, the controls that mode asks
+   for, and the price schedule as a preview. Same tracks and same rhythm as a
+   capacity family row, so the two sections line up. */
+
+.pond-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-sm) 0;
+  border-top: 1px solid var(--c-border);
+  min-width: 0;
+}
+
+.pond-row__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--option-control-w);
+  column-gap: var(--space-md);
+  align-items: center;
+}
+
+.pond-row__label {
+  min-width: 0;
+  font-size: var(--text-sm);
+  color: var(--c-text);
+}
+
+.pond-row__mode {
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--c-gold);
+}
+
+.pond-row__note {
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  line-height: 1.5;
+}
+
+/* A price the wallet could not hold, held down to what it can: the blocking
+   colour, the same sentence colour the overruled rows of the list wear. */
+.pond-row__note--held {
+  color: var(--c-danger);
+}
+
+.pond-row__custom {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding-left: var(--space-md);
+  border-left: var(--border-width-thick) solid var(--c-hairline);
+}
+
+.pond-row__range,
+.pond-row__throws,
+.pond-row__items,
+.pond-row__curve,
+.pond-row__jumps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+
+.pond-row__range-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.pond-row__caption {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pond-row__readout {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--c-gold);
+  white-space: nowrap;
+}
+
+/* Throws and curve side by side while there is room; the curve keeps a fixed
+   share so a long label never squeezes the slider. */
+.pond-row__controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(140px, 36%, 240px);
+  gap: var(--space-md);
+  align-items: start;
+}
+
+.pond-row__preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.pond-row__preview-title {
+  font-size: var(--text-xs);
+  color: var(--c-text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pond-row__footnote {
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  font-style: italic;
+}
+
+@media (width <= 900px) {
+  .pond-row__controls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

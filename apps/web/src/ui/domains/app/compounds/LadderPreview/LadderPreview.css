@@ -1,0 +1,60 @@
+/* @layer renderer-components @kind style */
+
+/* A wrapping row of value chips joined by their jump labels. */
+
+.ladder-preview {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs) var(--space-sm);
+  min-width: 0;
+}
+
+.ladder-preview--dim .ladder-preview__chip {
+  color: var(--c-text-muted);
+  border-color: var(--c-hairline);
+  background: transparent;
+}
+
+.ladder-preview__step {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.ladder-preview__chip {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-gold-bright);
+  padding: var(--space-2xs) var(--space-sm);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  background: var(--c-surface);
+  white-space: nowrap;
+}
+
+.ladder-preview__chip--surplus {
+  color: var(--c-warning);
+  border-color: var(--c-warning-dim);
+}
+
+.ladder-preview__jump {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  white-space: nowrap;
+}
+
+.ladder-preview__ordinal {
+  display: block;
+  font-size: var(--text-xs);
+  color: var(--c-gold-bright);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.ladder-preview__note {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  font-style: italic;
+}

@@ -1,0 +1,30 @@
+/* @layer renderer-components @kind style */
+
+/* One line per entry, with real space between the lines so the block reads as
+   a list rather than a paragraph. The term and its detail sit on the same
+   line and wrap together; the term never breaks away from what it introduces. */
+
+.term-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin: 0;
+  min-width: 0;
+}
+
+.term-list__item {
+  min-width: 0;
+  line-height: var(--leading-normal);
+  overflow-wrap: break-word;
+}
+
+.term-list__term {
+  display: inline;
+  color: var(--c-gold);
+  font-weight: var(--weight-semi);
+}
+
+.term-list__detail {
+  display: inline;
+  margin: 0 0 0 var(--space-xs);
+}

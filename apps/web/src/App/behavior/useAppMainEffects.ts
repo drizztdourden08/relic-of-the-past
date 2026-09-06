@@ -1,6 +1,7 @@
 /* @layer renderer-appshell @kind hook */
 import { useEffect } from 'react';
 import { getInputManager } from '@app/lib/game';
+import { applyNotchMode } from '@app/hooks/useSafeAreaInsets';
 import type { PageId } from '../types';
 
 const useAppMainEffects = (params: {
@@ -9,6 +10,9 @@ const useAppMainEffects = (params: {
   openNavWidget: () => void;
 }) => {
   const { isGameRunning, activePage, openNavWidget } = params;
+
+  // Default notch mode until a profile loads (keeps startup windows clear of a cutout).
+  useEffect(() => { applyNotchMode(true); }, []);
 
   // Auto-open navigation widget when --auto-flood CLI flag is set (once, on mount).
   useEffect(() => {

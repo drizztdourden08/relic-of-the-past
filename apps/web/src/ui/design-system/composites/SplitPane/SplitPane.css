@@ -1,0 +1,124 @@
+/* @layer renderer-components @kind style */
+
+/* Three grid tracks: pane, divider, pane. The panes' shares are set inline
+   because they are a measured, dragged value. */
+.split-pane {
+  display: grid;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+}
+
+.split-pane__pane {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* A collapsed pane keeps its subtree mounted (scroll position, filter text and
+   log window all survive being hidden) but takes no space and no tab stops. */
+.split-pane__pane--hidden {
+  display: none;
+}
+
+.split-pane__divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-md);
+  cursor: col-resize;
+  touch-action: none;
+  user-select: none;
+}
+
+.split-pane__divider:hover .split-pane__grip,
+.split-pane__divider:focus-visible .split-pane__grip {
+  background: var(--c-gold);
+}
+
+.split-pane__divider:focus-visible {
+  outline: 2px solid var(--c-gold);
+  outline-offset: -2px;
+}
+
+/* The grip is the only painted part: a hairline that thickens on approach. */
+.split-pane__grip {
+  width: 2px;
+  height: 100%;
+  border-radius: var(--radius-sm);
+  background: var(--c-border);
+  transition: background var(--transition-normal);
+}
+
+.split-pane--dragging .split-pane__grip {
+  background: var(--c-gold-bright);
+}
+
+/* While dragging, the pointer owns the whole surface — panes must not grab it
+   or hover their own rows under a moving cursor. */
+.split-pane--dragging .split-pane__pane {
+  pointer-events: none;
+}
+
+/* ── Collapsed: the divider becomes the rail that brings the pane back ──
+   The rail is a filled block, not the hairline grip, so it needs a gutter of
+   its own: without one the open pane's content — a full-width bar, a line of
+   text — ends exactly at the rail's edge and reads as running behind it. The
+   gutter is a margin on the divider, so the grid's auto track grows by it and
+   the open pane gives up exactly that width at every split position. */
+.split-pane__divider--start,
+.split-pane__divider--end {
+  width: var(--space-xl);
+  cursor: pointer;
+  background: var(--c-sunken);
+  border-radius: var(--radius-md);
+}
+
+.split-pane__divider--start {
+  margin-inline-end: var(--space-md);
+}
+
+.split-pane__divider--end {
+  margin-inline-start: var(--space-md);
+}
+
+.split-pane__divider--start:hover,
+.split-pane__divider--end:hover {
+  background: var(--c-hover);
+}
+
+.split-pane__rail-label {
+  writing-mode: vertical-rl;
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.split-pane__divider--end .split-pane__rail-label {
+  transform: rotate(180deg);
+}
+
+/* Narrow window: stop splitting, stack the panes and hide the divider. With
+   no rail left to click, a collapsed pane is shown too — stacked, every pane
+   is reachable. */
+@media (width <= 60rem) {
+  .split-pane {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .split-pane__divider {
+    display: none;
+  }
+
+  .split-pane__pane,
+  .split-pane__pane--hidden {
+    display: flex;
+    flex: 1;
+  }
+}

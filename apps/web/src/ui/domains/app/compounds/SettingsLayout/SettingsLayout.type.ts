@@ -2,6 +2,9 @@
 ﻿import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 
+/** Why a settings control is locked — decides the overlay copy and action. */
+type SettingLockCause = 'vanillaSafe' | 'randomizer';
+
 interface SettingItem {
   key: string;
   label: string;
@@ -36,6 +39,7 @@ interface SettingsLayoutProps {
 
 export type {
   SettingItem,
+  SettingLockCause,
   SubSection,
   Section,
   SettingsLayoutProps,

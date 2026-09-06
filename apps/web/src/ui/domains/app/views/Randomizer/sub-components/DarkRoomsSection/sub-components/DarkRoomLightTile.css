@@ -1,0 +1,68 @@
+/* @layer renderer-components @kind style */
+
+/* One light tile. Square and fixed, the same treatment the shop slot boxes
+   wear — flat ground, hairline edge, small radius — so a row of lights reads
+   as another set of slot boxes rather than as a device of its own.
+
+   Three faces, carried on data-state so the tile never needs a class list
+   built in the component:
+     on       — the setting accepts this light: gold edge, full contrast.
+     off      — it does not: dimmed, so the row reads at a glance as the set
+                that counts.
+     forced   a sibling setting holds it off: the blocking edge, full
+                contrast, so the reason under the row is read against it.
+     disabled — no light is asked for, or the run view: flattened onto the
+                page background. No dim here — the box inside already carries
+                the disabled opacity. */
+
+.dark-room-light {
+  display: flex;
+  width: var(--dark-room-tile-d);
+  height: var(--dark-room-tile-d);
+  background: var(--c-bg);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-sm);
+}
+
+.dark-room-light[data-state='on'] {
+  border-color: var(--c-gold);
+}
+
+.dark-room-light[data-state='off'] {
+  opacity: var(--opacity-muted);
+}
+
+.dark-room-light[data-state='forced'] {
+  border-color: var(--c-danger);
+}
+
+.dark-room-light[data-state='disabled'] {
+  background: transparent;
+}
+
+/* The box IS the tile: the label fills the square, so the whole thing is one
+   click target and the tick never sits in a corner of dead space. Reversed so
+   the sprite reads first and its tick sits under it. Written through the tile
+   so it outranks the checkbox's own single-class rules whatever order the two
+   sheets land in. */
+.dark-room-light .dark-room-light__control {
+  flex: 1;
+  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2xs);
+  min-width: 0;
+  padding: var(--space-2xs);
+}
+
+.dark-room-light__sprite {
+  width: var(--dark-room-sprite-d);
+  height: var(--dark-room-sprite-d);
+  image-rendering: pixelated;
+  object-fit: contain;
+}
+
+.dark-room-light__sprite--placeholder {
+  background: var(--c-hover);
+  border-radius: var(--radius-sm);
+}

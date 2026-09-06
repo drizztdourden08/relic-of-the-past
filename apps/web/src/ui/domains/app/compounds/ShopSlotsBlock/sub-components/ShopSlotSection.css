@@ -1,0 +1,20 @@
+/* @layer renderer-components @kind style */
+
+/* A world's section inside the slots group. The whole section is indented by
+   one step, so its heading sits in from the group's own title and reads as a
+   level below it rather than as another one beside it; the grid then gives
+   its left padding back so the cards still start on the block's own margin. */
+
+.shop-slot-section {
+  padding: var(--space-sm) 0 0 var(--space-sm);
+}
+
+/* Auto-fill tracks, not a fixed column count and not a viewport media query:
+   the panel lives in a split pane, so the columns have to follow the GRID's
+   own width. The min() keeps a single column from overflowing a pane narrower
+   than one card. */
+.shop-slot-section__grid {
+  grid-template-columns: repeat(auto-fill, minmax(min(var(--shop-card-w-min), 100%), 1fr));
+  gap: var(--space-md);
+  padding: var(--space-xs) var(--space-sm) var(--space-sm) 0;
+}

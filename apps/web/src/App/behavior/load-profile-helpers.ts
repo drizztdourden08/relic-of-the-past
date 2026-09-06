@@ -1,6 +1,7 @@
 /* @layer renderer-appshell @kind logic */
-/** Async side-effect helpers for loadProfileForGame (input profile + MSU pack). */
+/** Async side-effect helpers for loadProfileForGame (input profile, MSU pack, assets). */
 import { setLinkSpriteData, getInputManager } from '../../lib/game';
+import * as assetsStore from '@app/lib/storage/assets-store';
 import type { mergeSettings } from '../../lib/game/settings';
 import { log } from '../../lib/log-bus';
 import { readInputProfiles } from '@app/lib/storage/profile-data-store';
@@ -43,4 +44,38 @@ const loadPlayerSprite = async (settings: Settings) => {
   }
 };
 
-export { loadInputProfile, loadMsuPack, loadPlayerSprite };
+/**
+ * Extract-if-missing (or if the cached blob predates the current bake format), then
+ * load the cached asset blob for a ROM. Returns null (after logging) when the blob
+ * is missing and extraction fails, so the boot aborts on null. A STALE blob is softer:
+ * it still boots the game, so a failed recompile (e.g. the ROM file is gone) logs an
+ * error and keeps the old blob instead of blocking the boot.
+ */
+const ensureProfileAssets = async (romFile: string): Promise<ArrayBuffer | null> => {
+  const hasAssets = await assetsStore.checkAssets(romFile);
+  if (!hasAssets) {
+    log.app(`No cached assets for ${romFile}, extracting...`);
+    const result = await assetsStore.extractAssets(romFile);
+    if (!result.success) {
+      log.error(`Extraction failed: ${result.error}`);
+      return null;
+    }
+  } else if (await assetsStore.checkAssetsStale(romFile)) {
+    log.app(`Cached assets for ${romFile} predate the current bake format, recompiling...`);
+    const result = await assetsStore.extractAssets(romFile);
+    if (!result.success) {
+      log.error(`Asset recompile failed: ${result.error}. Keeping the previous cached assets`);
+    } else {
+      log.app(`Assets recompiled for ${romFile}`);
+    }
+  }
+  const buffer = await assetsStore.loadAssets(romFile);
+  if (!buffer) {
+    log.error('Failed to load assets after extraction');
+    return null;
+  }
+  log.app(`Loaded assets (${(buffer.byteLength / 1024).toFixed(0)} KB)`);
+  return buffer;
+};
+
+export { ensureProfileAssets, loadInputProfile, loadMsuPack, loadPlayerSprite };

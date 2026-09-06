@@ -11,7 +11,7 @@ type MenuBuilderDeps = Pick<TitleBarProps,
   'activeProfile' | 'gameRunning' | 'onShowProfile' | 'onToggleSaveStates' | 'onShowDataManager'
   | 'onToggleInventory' | 'onToggleChecks' | 'onToggleCheats' | 'onShowLogs' | 'onToggleDebug'
   | 'onShowConnectionDebug' | 'onToggleDataset' | 'onToggleSimulator' | 'onToggleMusic' | 'onShowInputTester' | 'onShowSpriteDebug' | 'onShowDataInspector'
-  | 'onShowShadowEditor' | 'onCheckForUpdates' | 'onShowCredits' | 'onShowDesignGallery' | 'onShowAbout'
+  | 'onShowShadowEditor' | 'onCheckForUpdates' | 'onShowCredits' | 'onShowDesignGallery' | 'onShowAbout' | 'onShowRandomizer'
   | 'widgetVisibility' | 'developerToolsEnabled'
 > & { closeMenu: () => void; win: WindowControlsPort };
 
@@ -20,7 +20,7 @@ const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
     closeMenu, win, activeProfile, gameRunning,
     onShowProfile, onToggleSaveStates, onShowDataManager, onToggleInventory, onToggleChecks,
     onToggleCheats, onShowLogs, onToggleDebug, onShowConnectionDebug, onToggleDataset, onToggleSimulator, onToggleMusic,
-    onShowInputTester, onShowSpriteDebug, onShowDataInspector, onShowShadowEditor, onCheckForUpdates, onShowCredits, onShowDesignGallery, onShowAbout,
+    onShowInputTester, onShowSpriteDebug, onShowDataInspector, onShowShadowEditor, onCheckForUpdates, onShowCredits, onShowDesignGallery, onShowAbout, onShowRandomizer,
     widgetVisibility = {}, developerToolsEnabled = false,
   } = deps;
 
@@ -50,6 +50,12 @@ const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
       label: 'Save States',
       disabled: !gameRunning,
       onClick: () => { closeMenu(); onToggleSaveStates(); },
+    },
+    {
+      key: 'randomizer',
+      icon: '🎲',
+      label: 'Randomizer',
+      onClick: () => { closeMenu(); onShowRandomizer(); },
     },
     'separator',
     {

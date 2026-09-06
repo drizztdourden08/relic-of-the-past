@@ -1,15 +1,15 @@
 /* @layer renderer-widgets @kind component */
-/** Full simulation log in a modal. This is the only place the log is read, so it carries
- *  the whole toolbar: event count, copy-all, and the show/hide type filter, over
- *  a selectable, windowed log container (older rows load on demand). */
-import { useState, useCallback } from 'react';
-import { Box, Text, Button } from '@ds/primitives';
+/** Full simulation log in a modal, the only place the log is read. Adapts the
+ *  run's events into LogPanel rows and hands the panel the toolbar it needs
+ *  (count, copy-all, type filter). Kinds are filtered HERE, before the indents
+ *  are computed, so hiding a marker type re-levels the rows under it. */
+import { useCallback, useMemo, useState } from 'react';
 import type { SimEvent } from '@shared/game/simulation';
 import { DialogShell } from '@ds/composites';
-import { LogView } from './LogView';
-import { LogFilter } from './LogFilter';
-import { eventsToText } from './log-event-style';
+import { LogPanel } from '@ds/composites/LogPanel';
+import { classifyEvent, eventsToText, LOG_KINDS, toLogRows } from './log-event-style';
 import type { LogKind } from './log-event-style';
+import './SimLog.css';
 
 interface LogDialogProps {
   open: boolean;
@@ -20,35 +20,37 @@ interface LogDialogProps {
 const LogDialog = (props: LogDialogProps) => {
   const { open, onClose, events } = props;
   const [hidden, setHidden] = useState<Set<LogKind>>(new Set());
-  const [copied, setCopied] = useState(false);
+  const [search, setSearch] = useState('');
 
-  const toggle = useCallback((kind: LogKind) => {
+  const toggle = useCallback((kind: string) => {
     setHidden((prev) => {
       const next = new Set(prev);
-      if (next.has(kind)) next.delete(kind); else next.add(kind);
+      if (next.has(kind as LogKind)) next.delete(kind as LogKind); else next.add(kind as LogKind);
       return next;
     });
   }, []);
 
-  const copyAll = useCallback(() => {
-    void navigator.clipboard?.writeText(eventsToText(events)).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    });
-  }, [events]);
+  const rows = useMemo(() => {
+    const kept = hidden.size > 0 ? events.filter((e) => !hidden.has(classifyEvent(e).kind)) : events;
+    return toLogRows(kept);
+  }, [events, hidden]);
+
+  const copyText = useCallback(() => eventsToText(events), [events]);
 
   return (
     <DialogShell open={open} onClose={onClose} title="Simulation Log" className="sim-log-dialog">
-      <Box className="sim-log-dialog__toolbar">
-        <Text className="sim-log-dialog__count">{events.length} events</Text>
-        <Button variant="tertiary" size="sm" onClick={copyAll} disabled={events.length === 0}>
-          {copied ? '✓ Copied' : '⧉ Copy all'}
-        </Button>
-        <LogFilter hidden={hidden} onToggle={toggle} />
-      </Box>
-      <Box className="sim-log-dialog__body">
-        <LogView events={events} hidden={hidden} />
-      </Box>
+      <LogPanel
+        className="sim-log"
+        rows={rows}
+        kinds={LOG_KINDS}
+        hidden={hidden}
+        onToggleKind={toggle}
+        search={search}
+        onSearchChange={setSearch}
+        copyText={copyText}
+        countLabel="events"
+        emptyLabel="No events."
+      />
     </DialogShell>
   );
 };

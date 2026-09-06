@@ -29,4 +29,60 @@
      caret is parked in this slot while the trigger is hidden and steps out of
      it when the trigger appears, so the shift is exactly this number. */
   --menu-trigger-width: 18px;
+
+  /* Play-mode badge slot: a fixed square the 128px badge art scales into
+     smoothly (roughly 60% of the summary panel's height). Image and fallback
+     chip share this footprint — swapping one for the other never shifts layout. */
+  --mode-badge-d: 80px;
+
+  /* Widest a single summary-fact value may grow before it ellipsizes — long
+     ROM names and seeds truncate instead of pushing the row apart. */
+  --summary-fact-maxw: 220px;
+
+  /* The option catalog lays every row — a plain option or a capacity family —
+     on the same label | control | impact grid, so a value that changes width
+     ("+33 loc · +33 items" to "0 loc · 0 items") never moves the control next
+     to it. The impact track fits the widest cell in mono at the small size. */
+  --option-control-w: 200px;
+  --option-impact-w: 140px;
+
+  /* A capacity family reads as named lines (range, items, jumps, bonus,
+     ladder): the label track is as wide as the longest of those words in
+     small caps, a slider on a line keeps at least this much before the line
+     wraps, and the curve dropdown holds a fixed share so a long preset label
+     never squeezes the count slider beside it. */
+  --capacity-line-label-w: 56px;
+  --capacity-slider-w-min: 160px;
+  --capacity-curve-w: 200px;
+
+  /* One extracted item sprite in a compact list row. */
+  --item-sprite-d: 24px;
+
+  /* Narrowest a shop card may be drawn before the grid drops a column: wide
+     enough for a two-word shop name and three slot boxes side by side, each
+     holding its own label. The grid tracks are auto-fill minmax on this, so
+     the column count follows the PANE's width rather than the window's — the
+     options panel lives in a split pane and is routinely dragged narrow. */
+  --shop-card-w-min: 260px;
+
+  /* One slot toggle inside a shop card. Fixed so the three boxes of a shelf
+     and the single box of the bomb counter are the same size everywhere,
+     whatever length of label each of them carries. */
+  --shop-slot-box-h: 34px;
+
+  /* One rung toggle inside a family card. A floor on the HEIGHT only: the
+     boxes size themselves to the name each one carries, so the two-rung
+     families draw narrower boxes than the four-rung one, but every box in
+     every card still comes out on the same line height. */
+  --tier-box-h: 28px;
+
+  /* One dark-room light tile: a square holding the item's sprite with its
+     tick under it. Taller than the slot and rung boxes because the art is the
+     label here — there is no text to read the tile by. */
+  --dark-room-tile-d: 64px;
+
+  /* The sprite inside it, at twice its source pixels. A step up from the
+     compact list rows, where a name beside the art carries the identity and
+     24px is enough; here the picture has to be recognised on its own. */
+  --dark-room-sprite-d: 32px;
 }

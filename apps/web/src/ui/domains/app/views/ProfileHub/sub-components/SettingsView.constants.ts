@@ -118,6 +118,21 @@ const ENHANCEMENTS_SECTION: Section = {
       ],
     },
     {
+      id: 'enhancements-items',
+      title: 'Items in the World',
+      items: [
+        { key: 'coloredRupees', label: 'Coloured Rupees', description: 'Show rupees waiting in the world as plain coloured gems, one colour per value, instead of the picture with the amount written beside it', keywords: 'rupee rupees colour color gem gold silver purple money drop' },
+        { key: 'itemSheen', label: 'Item Sheen', description: 'Let items waiting in the world catch the light every second or so, so a pickup on the floor stands out from the scenery', keywords: 'sheen shine glint sparkle shimmer highlight item drop' },
+      ],
+    },
+    {
+      id: 'enhancements-minigames',
+      title: 'Minigames',
+      items: [
+        { key: 'archeryNeedsBow', label: 'Archery Game Asks For A Bow', description: 'Stop the archery game from taking your money when you have nothing to shoot with; the owner tells you why instead', keywords: 'archery shooting gallery target bow arrow minigame game refund fee rupees' },
+      ],
+    },
+    {
       id: 'enhancements-indoor',
       title: 'Indoor / Dungeons',
       items: [
