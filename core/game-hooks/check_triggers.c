@@ -159,7 +159,7 @@ static void TriggerNpcCheckImpl(uint8 flag_type, uint8 flag_mask, uint8 item_id,
   (void)post_gfx;
   if (!TriggerGrantAllowed()) return;
   // Already granted? The flag write is idempotent but Link_ReceiveItem is NOT (the
-  // same guard the chest and overworld triggers carry) — a replayed trigger for a
+  // same guard the chest and overworld triggers carry), so a replayed trigger for a
   // flag that is already set must not hand the item over a second time.
   uint8 *flags = flag_type == 0 ? &sram_progress_flags
                : flag_type == 1 ? &sram_progress_indicator
@@ -178,7 +178,7 @@ static void TriggerNpcCheckImpl(uint8 flag_type, uint8 flag_mask, uint8 item_id,
          flag_type, flag_mask, *flags, item_id);
 
   // NOTE: this trigger deliberately does NOT touch the giver sprite's ai state. The
-  // old "post-grant pose" poke set ai_state 2 on the named sprite type — and for
+  // old "post-grant pose" poke set ai_state 2 on the named sprite type, and for
   // several givers ai 2 IS the granting state, so the poke replayed the giver's own
   // vanilla grant right after the delivery (the double-bottle bug). Visual post-grant
   // state now comes only from the giver's own script or from the flags above.
@@ -222,7 +222,7 @@ void WasmTriggerNpcCheck(int flag_type, int flag_mask, int item_id,
 }
 
 // The delivery queue's form: |item_id| is the host-assigned item for the check, granted
-// exactly as passed — the npc-override seam is bypassed for this one receipt.
+// exactly as passed: the npc-override seam is bypassed for this one receipt.
 EMSCRIPTEN_KEEPALIVE
 void WasmTriggerNpcCheckAssigned(int flag_type, int flag_mask, int item_id,
                                  int sprite_type_id, int post_gfx) {

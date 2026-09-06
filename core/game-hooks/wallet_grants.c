@@ -1,12 +1,12 @@
 /* @layer core-game-hooks @kind native */
 // Virtual receive ids for the wallet upgrades: sixteen SLOTS, 0x67-0x76, into a
-// per-session jump table rather than one id per step — the wallet ladder has a hundred
-// rungs (0, 99, 199 … 9999), which a step-per-id scheme could not hold below 0x80. The host arms the table
+// per-session jump table instead of one id per step: the wallet ladder has a hundred
+// rungs (0, 99, 199 ... 9999), which a step-per-id scheme could not hold below 0x80. The host arms the table
 // from the profile (WasmSetWalletJumpTable, record-only, never persisted, rebuilt at
 // every session start); a grant of slot s climbs the ladder by table[s] rungs up to the
 // profile's final index (capacity_profile.c owns the persisted index and its cap) and
-// presents as the fifty-rupee receipt 0x41. A step with nothing left to climb — the cap
-// reached, or an unarmed slot — is surplus and presents as the reference randomizer's
+// presents as the fifty-rupee receipt 0x41. A step with nothing left to climb (the cap
+// reached, or an unarmed slot) is surplus and presents as the reference randomizer's
 // progressive replacement, the twenty-rupee pickup 0x36, so it is never a silent no-op.
 // Same contract as the other virtual families: reachable only from inside the gated
 // grant seams (GrantSeamOpen, game_hooks_internal.h); the climb itself answers to
@@ -31,7 +31,7 @@ bool GameHook_IsWalletVirtualId(uint8 item) {
 }
 
 // Pure presentation for the draw seams: the fifty-rupee receipt while the slot can still
-// climb, the replacement once it cannot — so a drawn world item always agrees with the
+// climb, the replacement once it cannot, so a drawn world item always agrees with the
 // eventual grant. No arithmetic, no messages.
 uint8 GameHook_WalletPresentationOf(uint8 item) {
   if (!GameHook_IsWalletVirtualId(item)) return item;
@@ -48,7 +48,7 @@ uint8 GameHook_ResolveWalletItem(uint8 item) {
   int slot = item - WALLET_VIRT_FIRST;
   int steps = g_wallet_jumps[slot];
   if (steps == 0)
-    printf("[Randomizer] Wallet slot %d is unarmed — the host skipped the jump table push\n", slot);
+    printf("[Randomizer] Wallet slot %d is unarmed, so the host skipped the jump table push\n", slot);
   // The index before the climb: the fixed line pre-rendered for it names the caps.
   int from = GameHook_WalletLadderIndex();
   GameHook_UpgradeBonusCapture(3);

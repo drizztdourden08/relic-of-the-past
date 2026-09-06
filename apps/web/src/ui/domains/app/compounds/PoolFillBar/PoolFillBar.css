@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind style */
 
 /* The checks tracker's summary bar, read for a fill: a thin grey track of
-   every spot, filled left to right in placement order — items in pool,
+   every spot, filled left to right in placement order: items in pool,
    upgrades, filler, then the spots settled before the shuffle. The legend
    repeats each colour as a swatch beside its count. */
 

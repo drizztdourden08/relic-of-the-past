@@ -1,7 +1,7 @@
 /* @layer core-game-hooks @kind native */
 // Virtual receive ids for the PROGRESSIVE capacity items: one id per family, 0x77-0x7A
 // (capacity_tiers.h), above the wallet slots. A fixed-jump id (0x50-0x61, 0x67-0x76)
-// carries its jump; a progressive id carries none — the pool holds N identical copies per
+// carries its jump; a progressive id carries none, since the pool holds N identical copies per
 // family and every pickup climbs to the NEXT rung of the plan the host armed for the
 // session, in plan order, whatever the shuffle did with the copies. The plan is the
 // family's jump sequence (WasmSetCapacityPlanJump: entry k = the k-th pickup's rungs, plus
@@ -11,8 +11,8 @@
 // The rung a pickup lands on is derived from the save bytes alone (capacity_profile.c
 // owns them: tier byte + empty-rung flag, the wallet's ladder index): the pickup index k
 // is the number of planned rungs already at or below the rung the family stands on, so
-// the climb is to cumulative rung k+1 — a save that moved off-plan (a locked pond's native
-// step) simply lands on the next planned rung ahead of it. Past the last planned rung the
+// the climb is to cumulative rung k+1, so a save that moved off-plan (a locked pond's native
+// step) lands on the next planned rung ahead of it. Past the last planned rung the
 // pickup is surplus and presents exactly like the fixed-jump path: the pond consolation
 // for the counted families, the maxed meter's refill, the wallet's twenty-rupee
 // replacement.

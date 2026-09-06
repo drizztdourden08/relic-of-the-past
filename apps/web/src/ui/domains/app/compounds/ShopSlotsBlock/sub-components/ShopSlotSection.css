@@ -2,7 +2,7 @@
 
 /* A world's section inside the slots group. The whole section is indented by
    one step, so its heading sits in from the group's own title and reads as a
-   level below it rather than as another one beside it; the grid then gives
+   level below it instead of as another one beside it; the grid then gives
    its left padding back so the cards still start on the block's own margin. */
 
 .shop-slot-section {

@@ -14,7 +14,7 @@
 //   0x66  bow     tiers 0x0b / 0x3b                (link_item_bow: 1-2 = first, 3-4 = second)
 // A session may also leave RUNGS OUT of a family. The pool then carries one copy per rung that
 // is still there (the option catalog's tier ticks, shared/randomizer/ap-world/progressive/), and
-// a pickup climbs to the next rung that is still there rather than to the next native tier — so
+// a pickup climbs to the next rung that is still there instead of to the next native tier, so
 // unticking a middle rung shortens the ladder instead of leaving a hole in it. The mask is
 // armed per family at session start (WasmSetProgressiveTiers); an unarmed family, which is every
 // family of every session that never asks, reads as every rung present and the arithmetic below
@@ -26,8 +26,8 @@
 //
 // The second blade tier is the one native id (0x01) whose receipt also starts the
 // pedestal ceremony (misc.c AncillaAdd_ItemReceipt: submodule 43, the flash ancilla, the
-// timer-driven receipt). Submodule 43 has no dungeon handler at all — the dispatch table
-// stops at 30 — so that receipt would crash indoors. The reference randomizer avoids the
+// timer-driven receipt). Submodule 43 has no dungeon handler at all, since the dispatch table
+// stops at 30, so that receipt would crash indoors. The reference randomizer avoids the
 // id with a private "safe" variant; this module instead arms a one-shot the receive seam
 // consumes right after the receipt is added (GameHook_NotifyItemReceived, still inside
 // Link_ReceiveItem, before any frame runs): the ceremony state is put back and the
@@ -58,17 +58,17 @@ static const ProgressiveFamily kFamilies[5] = {
 };
 
 #define PROGRESSIVE_FAMILY_COUNT 5
-// Bit k set: rung k is in this seed. Zero is UNARMED, not "no rungs" — a session that never
+// Bit k set: rung k is in this seed. Zero is UNARMED, not "no rungs": a session that never
 // speaks gets the whole ladder, which is what keeps an unarmed core byte-identical.
 static uint8 g_tier_mask[PROGRESSIVE_FAMILY_COUNT];
-// Bit set: this family's rungs arrive as THEMSELVES rather than as nameless copies (the
+// Bit set: this family's rungs arrive as THEMSELVES instead of as nameless copies (the
 // per-family order setting). Zero is the reference reading, so an unarmed core is
 // byte-identical; the block at the foot of this file says what the flag really does.
 static uint8 g_independent[PROGRESSIVE_FAMILY_COUNT];
 
 // The rung a pickup lands on: the lowest one still present at or above the tier already held.
 // With no mask armed that is |tier| itself, so the lookup is the vendored one. Returns the tier
-// count when nothing is left above — the surplus case the caller replaces with rupees.
+// count when nothing is left above: the surplus case the caller replaces with rupees.
 static int NextPresentTier(int family, int tier) {
   uint8 mask = g_tier_mask[family];
   int count = kFamilies[family].tier_count;
@@ -136,7 +136,7 @@ void GameHook_ProgressiveAfterReceipt(uint8 item) {
     if (ancilla_type[k] != 0x22 || ancilla_item_to_link[k] != PEDESTAL_BLADE_ID) continue;
     // Carry the next blade id: identical art, shape and palette row, but none of the
     // ceremony branches Ancilla22_ItemReceipt keys on id 1. The inventory byte already
-    // holds the second tier — the receipt wrote it before this ran.
+    // holds the second tier, since the receipt wrote it before this ran.
     ancilla_item_to_link[k] = 0x02;
     ancilla_arr3[k] = 9;
     ancilla_timer[k] = 0;
@@ -150,7 +150,7 @@ void GameHook_ProgressiveAfterReceipt(uint8 item) {
 
 // Resolve a progressive id for the receive flow: the next tier's native id, with the
 // ceremony guard armed when that id is the pedestal blade. Refuses (returns the
-// presentation untouched, no guard) unless a grant seam is open — the same belt and
+// presentation untouched, no guard) unless a grant seam is open, the same belt and
 // suspenders as the upgrade resolver.
 uint8 GameHook_ResolveProgressiveItem(uint8 item) {
   uint8 native = GameHook_ProgressivePresentationOf(item);
@@ -180,21 +180,21 @@ void WasmClearProgressiveTiers(void) {
 
 // ─── Families whose rungs arrive as themselves ───
 //
-// A session may put a family's rungs in the pool AS THE RUNGS rather than as nameless
+// A session may put a family's rungs in the pool AS THE RUNGS instead of as nameless
 // copies (the per-family order setting, shared/randomizer/ap-world/progressive/). Those
 // pickups carry the tier's own native id, so they never reach the resolver above and the
 // ladder mask never touches them: finding the top rung first really does hand over the
 // top rung, which is the whole point of the setting.
 //
-// One thing does need saying here. The native receipt SETS a tier rather than raising it
+// One thing does need saying here. The native receipt SETS a tier instead of raising it
 // (kValueToGiveItemTo, misc.c), so a lower rung found after a higher one already held
-// would walk the family back down — a pickup that takes something away. The reference
+// would walk the family back down, a pickup that takes something away. The reference
 // randomizer never has to answer this because it patches the receipt; this module answers
 // it the way it answers a surplus progressive copy, by handing over the twenty-rupee
 // replacement instead. Nothing is ever lost and nothing is silently no-op.
 //
 // Armed per family at session start (WasmSetProgressiveIndependent) and zero otherwise, so
-// a core that is never armed — every session that does not ask — is byte-identical.
+// a core that is never armed (every session that does not ask) is byte-identical.
 
 // The rung a concrete tier id stands for, or -1 when the id is not one of them.
 static int TierOfNativeId(int family, uint8 item) {
@@ -213,7 +213,7 @@ uint8 GameHook_IndependentTierGrantOf(uint8 item) {
     int rung = TierOfNativeId(family, item);
     if (rung < 0) continue;
     // The bow byte counts from one and carries ammo in its low bit, so its rung is the
-    // halved value — the same reading CurrentTier uses.
+    // halved value, the same reading CurrentTier uses.
     if (CurrentTier(family) > rung) return PROGRESSIVE_CAP_ITEM;
     return item;
   }

@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind style */
 
 /* One capacity family: a head line on the catalog's fixed grid (label and
-   caption · mode · In Pool), then one named line per fact under it — range,
-   items, jumps, bonus, ladder — every label in the same narrow track so the
-   family reads as a list rather than a stack of captioned controls. */
+   caption · mode · In Pool), then one named line per fact under it: range,
+   items, jumps, bonus, ladder, every label in the same narrow track so the
+   family reads as a list instead of a stack of captioned controls. */
 
 .capacity-row {
   display: flex;
@@ -148,7 +148,7 @@
 }
 
 /* The ladder is what the player actually gets: its chips sit on the line's
-   own baseline rather than the control height. */
+   own baseline instead of the control height. */
 .capacity-row__ladder .capacity-row__line-label {
   line-height: var(--leading-normal);
   padding-top: var(--space-2xs);

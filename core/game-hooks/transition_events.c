@@ -30,7 +30,7 @@ void GameHook_ModuleFrameEnd(void) {
   s_prev_module = mod;
   s_prev_submodule = sub;
 
-  // Pure C-side repair under its own gate (kFeatures3_ReceiptMessages) — runs even
+  // Pure C-side repair under its own gate (kFeatures3_ReceiptMessages), which runs even
   // when developer tools are off, ahead of the host-call gate below.
   GameHook_ReceiptPoseGfxGuard();
   // The coloured gem over a wide rupee receipt's hold-up (kFeatures3_ColoredRupees), ahead

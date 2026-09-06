@@ -3,7 +3,7 @@
 /* The Shops tab above the prices: the mode, then the cards under a heading
    per half of the map, then the two counted controls on their own plate under
    a hairline, so the reading order (what the seed may take, which spots it
-   may take it from, how many) is visible rather than implied. */
+   may take it from, how many) is visible instead of implied. */
 
 .shop-slots-block {
   display: flex;
@@ -18,7 +18,7 @@
 }
 
 /* The dropdown sits on the same indent the cards and the sliders keep, so the
-   three of them line up under their headings rather than stepping in and out. */
+   three of them line up under their headings instead of stepping in and out. */
 .shop-slots-block__mode-control {
   padding: var(--space-2xs) var(--space-sm) var(--space-xs);
 }

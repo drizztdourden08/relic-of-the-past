@@ -1,6 +1,6 @@
 /* @layer core-game-hooks @kind native */
-// Developer-tools frame dump for a headless harness: renders the current PPU state — every
-// layer and every sprite, unlike WasmRenderCleanFrame — into a buffer the host reads through
+// Developer-tools frame dump for a headless harness: renders the current PPU state (every
+// layer and every sprite, unlike WasmRenderCleanFrame) into a buffer the host reads through
 // HEAPU8 (BGRA, 4 bytes per pixel, row-major). Gated on the developer-tools bit: off means 0
 // and nothing rendered. The renderer never calls this; the main loop owns drawing there.
 #include "game_hooks_internal.h"

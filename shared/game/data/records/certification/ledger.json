@@ -3348,7 +3348,7 @@
    "standardName": "Small Key (Hyrule Castle)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3367,7 +3367,7 @@
    "standardName": "Small Key (Eastern Palace)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3386,7 +3386,7 @@
    "standardName": "Small Key (Desert Palace)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3405,7 +3405,7 @@
    "standardName": "Small Key (Agahnims Tower)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3424,7 +3424,7 @@
    "standardName": "Small Key (Swamp Palace)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3443,7 +3443,7 @@
    "standardName": "Small Key (Palace of Darkness)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3462,7 +3462,7 @@
    "standardName": "Small Key (Misery Mire)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3481,7 +3481,7 @@
    "standardName": "Small Key (Skull Woods)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3500,7 +3500,7 @@
    "standardName": "Small Key (Ice Palace)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3519,7 +3519,7 @@
    "standardName": "Small Key (Tower of Hera)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3538,7 +3538,7 @@
    "standardName": "Small Key (Thieves Town)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3557,7 +3557,7 @@
    "standardName": "Small Key (Turtle Rock)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3576,7 +3576,7 @@
    "standardName": "Small Key (Ganons Tower)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3595,7 +3595,7 @@
    "standardName": "Silver Arrows",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3614,7 +3614,7 @@
    "standardName": "Progressive Sword",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3633,7 +3633,7 @@
    "standardName": "Progressive Shield",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3652,7 +3652,7 @@
    "standardName": "Progressive Mail",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3671,7 +3671,7 @@
    "standardName": "Progressive Glove",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3690,7 +3690,7 @@
    "standardName": "Progressive Bow",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3709,7 +3709,7 @@
    "standardName": "Magic Upgrade (1/2)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3728,7 +3728,7 @@
    "standardName": "Map (Hyrule Castle)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3747,7 +3747,7 @@
    "standardName": "Map (Agahnims Tower)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3766,7 +3766,7 @@
    "standardName": "Map (Eastern Palace)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3785,7 +3785,7 @@
    "standardName": "Map (Desert Palace)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3804,7 +3804,7 @@
    "standardName": "Map (Tower of Hera)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3823,7 +3823,7 @@
    "standardName": "Map (Palace of Darkness)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3842,7 +3842,7 @@
    "standardName": "Map (Swamp Palace)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3861,7 +3861,7 @@
    "standardName": "Map (Skull Woods)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3880,7 +3880,7 @@
    "standardName": "Map (Thieves Town)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3899,7 +3899,7 @@
    "standardName": "Map (Ice Palace)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3918,7 +3918,7 @@
    "standardName": "Map (Misery Mire)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3937,7 +3937,7 @@
    "standardName": "Map (Turtle Rock)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3956,7 +3956,7 @@
    "standardName": "Map (Ganons Tower)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3975,7 +3975,7 @@
    "standardName": "Compass (Hyrule Castle)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -3994,7 +3994,7 @@
    "standardName": "Compass (Agahnims Tower)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -4013,7 +4013,7 @@
    "standardName": "Compass (Eastern Palace)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -4032,7 +4032,7 @@
    "standardName": "Compass (Desert Palace)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -4051,7 +4051,7 @@
    "standardName": "Compass (Tower of Hera)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -4070,7 +4070,7 @@
    "standardName": "Compass (Palace of Darkness)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -4089,7 +4089,7 @@
    "standardName": "Compass (Swamp Palace)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -4108,7 +4108,7 @@
    "standardName": "Compass (Skull Woods)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -4127,7 +4127,7 @@
    "standardName": "Compass (Thieves Town)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -4146,7 +4146,7 @@
    "standardName": "Compass (Ice Palace)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -4165,7 +4165,7 @@
    "standardName": "Compass (Misery Mire)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -4184,7 +4184,7 @@
    "standardName": "Compass (Turtle Rock)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -4203,7 +4203,7 @@
    "standardName": "Compass (Ganons Tower)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -4222,7 +4222,7 @@
    "standardName": "Big Key (Agahnims Tower)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -4241,7 +4241,7 @@
    "standardName": "Small Key (Universal)",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -4260,7 +4260,7 @@
    "standardName": "Master Sword Pedestal",
    "verdict": "accepted",
    "sources": {
-    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c) — mechanical range check",
+    "s1": "decomp grant tables (kReceiveItemMsgs[76], ancilla.c), mechanical range check",
     "s2": "chest-open refusal sentinel (item_overrides.c sign8 pass-through)",
     "s3": "receive-id audit, R4-A (all record ids >= 76 corrected or removed)"
    },
@@ -4269,7 +4269,7 @@
      "field": "vanillaItemIds[0]",
      "from": "item-079",
      "to": "item-002",
-     "evidence": "native tables are 76 entries; chest path bails on sign8 — the progressive record no longer carries a receive id, and the pedestal physically grants the tier-2 sword (receive 0x01)"
+     "evidence": "native tables are 76 entries; chest path bails on sign8, and the progressive record no longer carries a receive id, and the pedestal physically grants the tier-2 sword (receive 0x01)"
     }
    ],
    "batchCitations": []

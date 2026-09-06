@@ -1,5 +1,5 @@
 /* @layer core-game-hooks @kind native */
-// Headless probes for the dungeon prize seams (prize_grants.c) — what a node harness calls
+// Headless probes for the dungeon prize seams (prize_grants.c): what a node harness calls
 // after WasmInitHeadless to prove they behave, gate on and gate off; the renderer never
 // calls them. Gated on the REQUESTED developer-tools bit like capacity_probes.c, because
 // the gate word only lands in WRAM inside the first frame such a harness runs.
@@ -41,7 +41,7 @@ int WasmProbeNpcGrant(int vanilla_item) {
   return ProbeGate() ? GameHook_OverrideNpcGrantItem((uint8)vanilla_item) : -1;
 }
 
-// The draw-side answer for the same context — what the falling reward renders as.
+// The draw-side answer for the same context: what the falling reward renders as.
 EMSCRIPTEN_KEEPALIVE
 int WasmProbePeekNpcGrant(int vanilla_item) {
   return ProbeGate() ? GameHook_PeekNpcGrantItem((uint8)vanilla_item) : -1;

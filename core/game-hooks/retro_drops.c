@@ -13,12 +13,12 @@
 // hand the player a quiver they never bought.
 //
 // This file reaches the same set through the two places every ground prize is given
-// its type, rather than through the tables one by one:
+// its type, instead of through the tables one by one:
 //   - Sprite_SpawnDynamicallyEx, which every dynamic spawn runs through: the pot
 //     secrets, the thief's spill, the merchant's fish, the tree pulls and the crab;
 //   - PrepareEnemyDrop, which every death drop runs through: the prize packs and the
 //     pikit's stolen goods.
-// Plus the two thefts and the chest game's prize roll, which read a value rather than
+// Plus the two thefts and the chest game's prize roll, which read a value instead of
 // spawn a sprite. Gate off, every seam hands back exactly what it was given.
 #include "game_hooks_internal.h"
 #include "src/sprite.h"

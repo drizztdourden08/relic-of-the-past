@@ -7,7 +7,7 @@
 // can never hold a blade is stopped at all three, so each one gets an alternative here.
 //
 // Like the item-power switches beside them, every bit lives in the WRAM gate word kRam_Features4
-// rather than in a host gate, because the GAME branches on all of them: a host gate would be
+// instead of in a host gate, because the GAME branches on all of them: a host gate would be
 // invisible to a save state and would desynchronise a replay (host_gates.h states that rule).
 //
 // Each function below is phrased as a DIVERGENCE, so with features4 clear each one returns
@@ -23,18 +23,18 @@ static bool SwordlessBit(uint32 bit) {
 // ─── A cloth door taken down by pulling it ───────────────────────────────────────────────────
 //
 // dungeon.c Dungeon_ProcessTorchesAndDoors owns the whole sequence that takes one down: it
-// samples an anchor tile, walks the 2x2 block at it for a door attribute, and — when the door
-// there is the cut-open kind — plays the sound, redraws the frame and reloads the attributes.
+// samples an anchor tile, walks the 2x2 block at it for a door attribute, and, when the door
+// there is the cut-open kind, plays the sound, redraws the frame and reloads the attributes.
 // Nothing of that is duplicated here. Only the two things the vendored code asks for are
 // answered differently: WHEN it runs, and WHICH tile it samples.
 //
 // The alternative is the grab the game already has. Facing the door with A held, pulling away
-// from it (kGrabWallDirs, player.c) takes it down. Arming is deliberately strict — the pull
+// from it (kGrabWallDirs, player.c) takes it down. Arming is deliberately strict: the pull
 // must already be under way, the tile faced must carry a door attribute, that door must face
-// the player and must be the cut-open kind — so an armed frame is one the vendored code was
+// the player and must be the cut-open kind, so an armed frame is one the vendored code was
 // always going to act on. Once it acts, the doorway's attributes are rewritten to the open
 // door's and the check below stops matching, which is what makes the pull a single event
-// rather than something that repeats while the button is held.
+// instead of something that repeats while the button is held.
 
 // The anchor an armed pull points the vendored sampler at, or -1 when nothing is armed.
 static int g_pull_anchor = -1;
@@ -82,7 +82,7 @@ static bool CurtainPullArmed(void) {
     return false;
   // link_grabbing_wall is 1 for the wall grab and 2 for the statue drag; only the first is a pull
   // against a doorway. link_var30d counts the pull animation, so a nonzero one means the player
-  // is really hauling rather than merely holding on.
+  // is really hauling instead of merely holding on.
   if (link_grabbing_wall != 1 || link_var30d == 0)
     return false;
   if (!(kPullAwayDirs[link_direction_facing >> 1] & joypad1H_last))
@@ -115,8 +115,8 @@ int GameHook_CurtainSequenceAnchor(void) {
 // ─── The hammer as a weapon where only a blade counted ───────────────────────────────────────
 //
 // Neither of the two below needs the damage subclass table touched. The blob already scores a
-// hammer blow against both sprites — the last fight's standing form takes four units from the
-// hammer column, the tower's seal takes eight — so all that ever stopped a hammer was the test
+// hammer blow against both sprites: the last fight's standing form takes four units from the
+// hammer column, the tower's seal takes eight, so all that ever stopped a hammer was the test
 // in front of the damage, and that is the only thing either bit moves. The fight's second sprite
 // type, the one it wears while it cannot be hurt, has a zero in every column but the silver
 // arrow's, which is why letting a blow reach it changes nothing there.

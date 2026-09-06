@@ -1,11 +1,11 @@
 /* @layer core-game-hooks @kind native */
-// Virtual receive ids for the four DUNGEON-FLAVOURED item families — the encoding shared by
+// Virtual receive ids for the four DUNGEON-FLAVOURED item families: the encoding shared by
 // dungeon_item_grants.c and its probes, mirrored by
 // shared/game/data/dungeon-item-receive-id.ts.
 //
 // WHY AN ID PER (KIND, DUNGEON). Every record of a family shares one native receive id
 // (small key 0x24, big key 0x32, map 0x33, compass 0x25) and the native grant credits the
-// dungeon the player is STANDING IN — misc.c's receipt writes the bitfield bit
+// dungeon the player is STANDING IN, since misc.c's receipt writes the bitfield bit
 // 0x8000 >> (cur_palace_index_x2 >> 1) and bumps the live key count, which the dungeon
 // exit flushes into that dungeon's earned-count byte. So the target has to travel with the
 // grant, and the ONLY channel every delivery path shares is the id itself: six override
@@ -35,7 +35,7 @@
 #define DUNGEON_ITEM_VIRT_FIRST 0xC0
 #define DUNGEON_ITEM_VIRT_LAST 0xFD
 #define DUNGEON_ITEM_KIND_COUNT 4
-// Palace indices 0-13 — the whole range cur_palace_index_x2 >> 1 can name.
+// Palace indices 0-13: the whole range cur_palace_index_x2 >> 1 can name.
 #define DUNGEON_ITEM_PALACE_COUNT 14
 
 // The native receive id each kind presents as, in kind order. These are the ids the vanilla

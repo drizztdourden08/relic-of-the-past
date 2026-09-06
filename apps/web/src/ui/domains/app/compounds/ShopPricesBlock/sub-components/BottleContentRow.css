@@ -3,7 +3,7 @@
 /* One content: the tick, and its reason beside it when the shop scope has
    taken it away. A blocked content takes the whole line so the sentence reads
    as this tick's own, and the marker on the left says the greying came from
-   elsewhere rather than from this row's own setting. */
+   elsewhere instead of from this row's own setting. */
 
 .bottle-content-row {
   display: inline-flex;

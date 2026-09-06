@@ -1,5 +1,5 @@
 /* @layer core-game-hooks @kind native */
-// Headless probes for the capacity seams — what a node harness calls after WasmInitHeadless
+// Headless probes for the capacity seams: what a node harness calls after WasmInitHeadless
 // to prove the seams behave, gate on and gate off; the renderer never calls them. Gated on
 // the REQUESTED developer-tools bit like WasmDevRunFrame (state_queries_pose.c), because
 // the gate word only lands in WRAM inside the first frame such a harness runs. Three are
@@ -10,7 +10,7 @@
 // stops at, and WasmProbeNewFileMagic runs the new-file seam over a sentinel-filled block
 // and hands back the meter byte it leaves (0x55 = the seam left the template's own byte).
 // WasmProbeResolveGrant runs a grant id through GameHook_ResolveGrantItem exactly as a seam
-// would — the arithmetic, the message arm, the icon arm — without the receive flow, and
+// would (the arithmetic, the message arm, the icon arm) without the receive flow, and
 // hands back the presentation item; WasmProbeReceiptMessage reads the armed one-shot.
 #include "game_hooks_internal.h"
 #include "src/player.h"

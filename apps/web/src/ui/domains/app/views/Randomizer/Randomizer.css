@@ -10,7 +10,7 @@
   gap: var(--space-sm);
 }
 
-/* The tab body — the only part of the left column that scrolls. */
+/* The tab body, the only part of the left column that scrolls. */
 .randomizer-page__scroll {
   flex: 1;
   min-height: 0;

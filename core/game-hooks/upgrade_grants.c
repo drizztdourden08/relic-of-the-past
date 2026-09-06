@@ -1,6 +1,6 @@
 /* @layer core-game-hooks @kind native */
 // Virtual receive ids for the counter upgrades (bomb/arrow capacity, magic meter).
-// The native receipt arrays stop at 0x4B and carry no id for these upgrades — their
+// The native receipt arrays stop at 0x4B and carry no id for these upgrades, so their
 // vanilla grants are silent counter bumps inside scripted handlers. This module
 // reserves the id space 0x50-0x61, ABOVE the native table, so an upgrade can ride
 // every substitution table like a normal item:
@@ -10,22 +10,22 @@
 // A step is one ladder RUNG (capacity_tiers.h): under a Custom family it climbs the profile
 // ladder from the empty rung up to the final rung, otherwise the native grid.
 // A virtual id NEVER reaches vendored code: every seam that would hand one to the
-// native receive flow resolves it first — the counter arithmetic runs here (the exact
+// native receive flow resolves it first: the counter arithmetic runs here (the exact
 // per-step arithmetic of the upgrade pond handler / the cave bat's meter write), the
 // pond's own upgrade message is armed, and the matching native REFILL item is returned
 // as the visible presentation (0x31 explosives / 0x44 projectiles / 0x45 magic refill:
 // its receipt art matches the upgrade's nature). The goods that receipt hands over are
-// the profile's pickup bonus (upgrade_bonus.c) — natively they would be the refill's own
+// the profile's pickup bonus (upgrade_bonus.c), since natively they would be the refill's own
 // fixed ten, or 16 of the meter, on top of the pond arithmetic's full refill, none of it
 // scaled to the ceiling.
 //
 // This module also owns the entry points every seam shares for ALL the virtual
-// families — the counter upgrades here, the progressive equipment ids of
+// families: the counter upgrades here, the progressive equipment ids of
 // progressive_grants.c (0x62-0x66), the wallet slots of wallet_grants.c
 // (0x67-0x76) and the progressive capacity ids of capacity_progressive.c
 // (0x77-0x7A): GameHook_IsVirtualGrantId for the bound checks,
 // GameHook_GrantPresentationOf for the draw seams, GameHook_ResolveGrantItem for the
-// grant itself. Gating: no gate of its own — reachable ONLY from inside the already-gated
+// grant itself. Gating: no gate of its own, reachable ONLY from inside the already-gated
 // substitution/receipt seams; the resolvers still refuse their side effects unless one
 // of those seams is open (GrantSeamOpen, game_hooks_internal.h). The tier a counted
 // family may reach answers to kFeatures3_CapacityProfile (capacity_profile.c); with
@@ -51,13 +51,13 @@ bool GameHook_IsUpgradeVirtualId(uint8 item) {
 bool GameHook_IsVirtualGrantId(uint8 item) {
   if (item >= UPGRADE_VIRT_FIRST && item <= UPGRADE_VIRT_LAST) return true;
   // The targeted dungeon-item ids sit above the prize span with a gap between (their
-  // encoding is nibble-aligned — dungeon_item_ids.h), so the answer is a disjunction
-  // rather than one widened bound: widening would swallow the prize ids, which every
+  // encoding is nibble-aligned, see dungeon_item_ids.h), so the answer is a disjunction
+  // instead of one widened bound: widening would swallow the prize ids, which every
   // bound check here deliberately refuses.
   return GameHook_IsDungeonItemGrantId(item);
 }
 
-// Pure presentation lookup for the draw seams — no arithmetic, no messages.
+// Pure presentation lookup for the draw seams: no arithmetic, no messages.
 uint8 GameHook_UpgradePresentationOf(uint8 item) {
   if (!GameHook_IsUpgradeVirtualId(item)) return item;
   if (item >= UPGRADE_VIRT_MAGIC_BASE) return 0x45;
@@ -65,7 +65,7 @@ uint8 GameHook_UpgradePresentationOf(uint8 item) {
 }
 
 // The capacity family a grant id belongs to (0 explosives, 1 projectiles, 2 meter,
-// 3 wallet — capacity_profile.c's order), -1 for any other id. Pure.
+// 3 wallet, capacity_profile.c's order), -1 for any other id. Pure.
 int GameHook_UpgradeFamilyOf(uint8 item) {
   if (GameHook_IsProgressiveCapacityId(item)) return GameHook_ProgressiveCapacityFamilyOf(item);
   if (GameHook_IsWalletVirtualId(item)) return 3;
@@ -89,7 +89,7 @@ uint8 GameHook_GrantPresentationOf(uint8 item) {
 }
 
 // One capacity step, the pond handler's arithmetic per visit: the family climbs one
-// rung (GameHook_CapacityClimb — the profile ladder under a Custom family, the native
+// rung (GameHook_CapacityClimb: the profile ladder under a Custom family, the native
 // level index otherwise), the refill target and the message digits take the new
 // maximum, and a step past the reachable bound pays the pond's 100-rupee consolation
 // instead. Returns true for the consolation.
@@ -106,7 +106,7 @@ bool GameHook_CapacityStep(int kind) {
 // progressive id becomes the next tier's native id (progressive_grants.c); a wallet
 // slot climbs the ladder and becomes its rupee receipt (wallet_grants.c); a virtual
 // upgrade id applies its upgrade steps, arms the pond's own upgrade message (a
-// one-shot contextual line already armed by the caller wins — IfClear contract),
+// one-shot contextual line already armed by the caller wins, the IfClear contract),
 // and returns the native presentation item. Call at the LAST moment before the id
 // enters any vanilla receive path.
 uint8 GameHook_ResolveGrantItem(uint8 item) {

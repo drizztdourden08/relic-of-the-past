@@ -1,18 +1,18 @@
 /* @layer core-game-hooks @kind native */
-// Physical substitution for the things a shop sells — the counterpart of
+// Physical substitution for the things a shop sells: the counterpart of
 // standing_overrides.c for the one surface the game does not treat as a check at all. A
 // shop spot in the unmodified game is a repeatable purchase: it charges its price, hands
 // over its fixed stock, and is back next time the room loads. A randomized spot has to
-// become a FINITE sequence instead — one assigned item per armed step, then an empty spot
+// become a FINITE sequence instead: one assigned item per armed step, then an empty spot
 // that stays empty across a save and a reload.
 //
 // THREE SEAMS, ONE TABLE. Three sprite families sell things, and each wants a different
 // gesture and a different fallback picture, so each gets its own entry point:
-//   - the shelf (Sprite_BB_Shopkeeper, subtypes 7-13) — the nine shelf shops;
-//   - the cauldron (Sprite_E9_PotionShop, subtypes 2-4) — the potion seller's hut;
-//   - the bomb counter (Sprite_B5_BombShop, subtype 1) — the refill, and only that one.
+//   - the shelf (Sprite_BB_Shopkeeper, subtypes 7-13): the nine shelf shops;
+//   - the cauldron (Sprite_E9_PotionShop, subtypes 2-4): the potion seller's hut;
+//   - the bomb counter (Sprite_B5_BombShop, subtype 1): the refill, and only that one.
 //     Subtype 2 of that sprite is the story bomb: it starts a follower and a cutscene
-//     rather than handing an item over, so it is never armed and never reached from here.
+//     instead of handing an item over, so it is never armed and never reached from here.
 // All three read the same armed table (shop_table.c) and share the purchase below, so a
 // price, a refusal and a grant behave identically wherever the player is standing.
 //
@@ -37,7 +37,7 @@
 // "Not enough rupees", the message every vendored spot shows on a failed purchase.
 #define SHOP_MSG_TOO_POOR 0x17c
 
-// Which refusal sound the spot makes — the only thing that differs between the three
+// Which refusal sound the spot makes: the only thing that differs between the three
 // families once the player has pressed A and cannot pay.
 enum { kShopBeep_Shop = 0, kShopBeep_Cauldron = 1 };
 
@@ -51,7 +51,7 @@ static void ShopBeep(int k, uint8 beep) {
 // opened over it, and the receipt cut short so the item comes down when the line is
 // dismissed. The receipt's own message seam never runs in a shop room (the vendored
 // receipt skips it there), so the line is shown from here, and the contextual one-shot
-// armed for this location is taken rather than left standing for the next receipt.
+// armed for this location is taken instead of left standing for the next receipt.
 static void GrantShopSlot(const ShopSlotOverride *entry) {
   if (entry->msg >= 0)
     GameHook_ArmReceiptMessageIfClear(entry->msg);
@@ -111,14 +111,14 @@ static bool ShopGateOpen(void) {
   return (enhanced_features3 & kFeatures3_ShopOverrides) != 0;
 }
 
-// Shelf seam — called at the top of the shopkeeper-family dispatch. True = this sprite is
+// Shelf seam, called at the top of the shopkeeper-family dispatch. True = this sprite is
 // a randomized shelf and has been fully handled; the vendored dispatch is skipped. False
 // for every clerk, minigame and unarmed shelf, which then run untouched.
 //
 // The ENTRY'S OWN id goes to the draw, never a resolved one, exactly as the standing and
 // drop seams pass theirs. Resolving belongs to the purchase: it climbs the ladder, arms
 // the line and banks rupees, so a draw that resolved applied a whole upgrade every frame
-// the shelf was merely on screen — and erased the virtual id the capacity icon and its
+// the shelf was merely on screen, and erased the virtual id the capacity icon and its
 // palette row read the family from.
 bool GameHook_OverrideShopItem(int k) {
   if (!ShopGateOpen()) return false;
@@ -145,9 +145,9 @@ static void DrawVanillaCauldron(int k, uint8 subtype) {
   else RedPotionItem_Draw(k);
 }
 
-// Cauldron seam — called at the top of the potion-shop dispatch. The vendored cauldrons
+// Cauldron seam, called at the top of the potion-shop dispatch. The vendored cauldrons
 // ask for a bottle to pour into and refuse without one; a randomized cauldron is selling
-// an arbitrary item rather than a potion, so it asks for the price and nothing else,
+// an arbitrary item instead of a potion, so it asks for the price and nothing else,
 // exactly as a randomized shelf does.
 bool GameHook_OverrideShopCauldron(int k) {
   if (!ShopGateOpen()) return false;
@@ -170,7 +170,7 @@ bool GameHook_OverrideShopCauldron(int k) {
   return true;
 }
 
-// Bomb-counter seam — called at the top of the bomb-shop dispatch. Only the refill spot is
+// Bomb-counter seam, called at the top of the bomb-shop dispatch. Only the refill spot is
 // ever ours; the clerk, the huff and the story bomb fall straight through to their own
 // vendored handlers.
 bool GameHook_OverrideShopBombSlot(int k) {

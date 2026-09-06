@@ -6,7 +6,7 @@
 // cases and says nothing at all:
 //
 //   - NO BOW. The fee can be paid with an empty bow slot, and the five shots are then
-//     unfirable because the bow cannot even be selected. That is a wart rather than a
+//     unfirable because the bow cannot even be selected. That is a wart, not a
 //     rule, and closing it is a divergence in its own right, so it carries its own gate
 //     (kFeatures3_ArcheryNeedsBow) and applies whether or not retro is on.
 //
@@ -14,7 +14,7 @@
 //     fire at all" flag (retro_bow.c), so a fee paid before that one purchase buys five
 //     shots the shot seam refuses one after another. That hole is retro's own making and
 //     sits behind kFeatures3_RetroBow, which is also why it is asked here as "would the
-//     shot seam refuse", rather than as a second copy of the same condition.
+//     shot seam refuse", not as a second copy of the same condition.
 //
 // The reference randomizer reaches the retro half from the other end: it lets the game
 // start and refunds the fee out of the shot routine (retro.asm ArrowGame). Refusing the

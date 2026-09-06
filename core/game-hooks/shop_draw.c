@@ -3,12 +3,12 @@
 //
 // THE ITEM comes from the shared receipt-art helper, which decodes into the animated
 // tile slot (charnums 0x24/0x34) and spends one or two OAM entries. |grant| is the
-// entry's own id, virtual ids included — the standing and drop seams pass theirs the same
+// entry's own id, virtual ids included, and the standing and drop seams pass theirs the same
 // way, and it is what lets the capacity icon and its palette row find the family. The
 // three repaints then run in the order those seams use: icon, glint, commit.
 //
 // THE PRICE is the hard half. The vendored shelves draw their prices from a static table,
-// and between all seven of them they reference exactly four glyphs — 0, 1, 3 and 5, the
+// and between all seven of them they reference exactly four glyphs: 0, 1, 3 and 5, the
 // only digits the vanilla prices 10/30/50/150/500 ever need. The other six had to be
 // found: the glyphs sit in pairs two rows apart (2,3 then 4,5 then 6,7 then 8,9), with 0
 // and 1 off on their own, so nothing about the four could be extrapolated. The full set
@@ -17,7 +17,7 @@
 //
 // The table stays DATA, settable from the host like every other table here, so a sheet
 // that ever disagrees can be corrected without a rebuild. A price needing a glyph the
-// table does not have draws no digits at all rather than drawing a wrong one.
+// table does not have draws no digits at all instead of drawing a wrong one.
 //
 // THE SYMBOL after the digits names the currency (shop_symbols.c): the price row is the
 // digits, a one-pixel gap, then the drawing, centred as one on the item; a bottle price
@@ -25,7 +25,7 @@
 // at the gap, whatever margin the drawing carries inside its tiles.
 //
 // BUDGET. The shelf sprite carries five OAM entries and no shadow slot, so the item art
-// (1-2) leaves three free — enough for a three-digit price with no growth at all. A
+// (1-2) leaves three free, enough for a three-digit price with no growth at all. A
 // longer price, or the symbol's one or two entries, grows the region the way
 // receipt_sprite_draw.c does, skipping the overflow for the one frame the growth takes
 // to land.
@@ -58,7 +58,7 @@ static uint8 g_digit_tile[10] = {
 };
 
 // Splits |amount| into digits, most significant first. Returns the count, or 0 when any
-// digit it needs has no glyph — the caller then draws the item alone.
+// digit it needs has no glyph, so the caller then draws the item alone.
 static int ShopPriceDigits(uint16 amount, uint8 *out) {
   uint8 reversed[SHOP_MAX_DIGITS];
   int count = 0;
@@ -141,7 +141,7 @@ bool GameHook_DrawShopShelf(int k, uint8 grant, uint8 currency, uint16 amount) {
     if (!GameHook_DrawSpriteAsReceiptItem(k, grant, 0, 0)) return false;
     // A capacity upgrade shows its own icon over the presentation's fresh decode.
     GameHook_WriteUpgradeIconFor(grant);
-    // Last write before the upload, so the glint runs over the icon as well as the art.
+    // Last write before the upload, so the glint runs over the icon and the art.
     // It also consumes the arm the draw above set: left unconsumed it would ride to
     // whichever seam applied the glint next, with this shelf's palette row.
     GameHook_ApplyItemSheen();

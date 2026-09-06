@@ -11,7 +11,7 @@
 // ─── Capacity upgrade icon (upgrade_icon.c) ───
 // One 4bpp icon per family, copied over the animated-tile decode slot (0xBD40) after the
 // presentation item's receipt art was decoded there. kFeatures3_CapacityProfile, and only
-// once WasmApplyUpgradeIconsFile loaded a 512 B file — otherwise nothing is written.
+// once WasmApplyUpgradeIconsFile loaded a 512 B file, and otherwise nothing is written.
 
 // A resolver arms the family (-1 = none) of the grant resolving this frame. Record-only.
 void GameHook_ArmUpgradeIcon(int family);
@@ -35,16 +35,16 @@ void GameHook_WriteUpgradeIcon(int family);
 void GameHook_WriteUpgradeIconFor(uint8 grant_id);
 
 // The OAM palette row a receipt draw uses: the icons' row while the draw shows an icon
-// (gate on, file loaded, a capacity family bound), |native| — the presentation item's own
-// kWishPond2_OamFlags entry — otherwise. The hold-up seam (ancilla.c
+// (gate on, file loaded, a capacity family bound), or |native| (the presentation item's own
+// kWishPond2_OamFlags entry) otherwise. The hold-up seam (ancilla.c
 // Ancilla_ReceiveItem_Draw) asks for |item| against the live receipt's bound family; the
 // sprite-side draw asks for its |grant_id|.
 uint8 GameHook_ReceiptPalette(uint8 item, uint8 native);
 uint8 GameHook_ReceiptPaletteFor(uint8 grant_id, uint8 native);
 
 // The OAM size flag those draws use: a wide receipt's while the draw shows an icon (every
-// icon is 16x16; the meter's presentation is a narrow receipt), |native| — the presentation
-// item's own kReceiveItem_Tab1 entry — otherwise. Same two askers as the palette reads.
+// icon is 16x16; the meter's presentation is a narrow receipt), or |native| (the presentation
+// item's own kReceiveItem_Tab1 entry) otherwise. Same two askers as the palette reads.
 uint8 GameHook_ReceiptShape(uint8 item, uint8 native);
 uint8 GameHook_ReceiptShapeFor(uint8 grant_id, uint8 native);
 
@@ -54,18 +54,18 @@ void GameHook_UpgradeIconSpawnOffset(uint8 item, int *x, int *y);
 
 // ─── Gear art for substituted world items (gear_icon.c) ───
 // The blades and the shields draw with sprite palette row 5, whose upper half the game
-// loads from the PLAYER's equipment — so a substituted one shows the gear being carried
+// loads from the PLAYER's equipment, so a substituted one shows the gear being carried
 // instead of the gear being offered. One 4bpp picture per affected receipt id, quantized
 // to a fixed row, copied over the animated-tile decode slot (0xBD40) after a world draw
 // seam decoded the art there. kFeatures3_GearArt, and only once WasmApplyGearIconsFile
-// loaded a 1024 B file — otherwise nothing is written. The hold-up ceremony is untouched.
+// loaded a 1024 B file, and otherwise nothing is written. The hold-up ceremony is untouched.
 
 // A world draw seam just decoded |item|'s receipt art: its fixed-palette picture when it
 // is one of the affected ids, nothing otherwise.
 void GameHook_WriteGearArt(uint8 item);
 
-// The OAM palette row that draw uses: the pictures' row when |item| shows one, |native| —
-// the item's own kWishPond2_OamFlags entry — otherwise.
+// The OAM palette row that draw uses: the pictures' row when |item| shows one, or |native|,
+// the item's own kWishPond2_OamFlags entry, otherwise.
 uint8 GameHook_GearPalette(uint8 item, uint8 native);
 
 // ─── The quiver picture under the retro bow (retro_quiver_icon.c) ───

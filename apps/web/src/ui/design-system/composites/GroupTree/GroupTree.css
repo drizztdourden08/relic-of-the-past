@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind style */
 
-/* Collapsible nested sections. Structure only — a caller styles its own leaf
+/* Collapsible nested sections. Structure only: a caller styles its own leaf
    rows, and puts whatever it wants in the header's meta slot. */
 
 .group-tree {

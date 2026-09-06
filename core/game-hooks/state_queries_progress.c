@@ -1,6 +1,6 @@
 /* @layer core-game-hooks @kind native */
 // The progress-flags buffer: the save-flag and inventory bytes the checks tracker polls and
-// the simulator reads while walking a route (FlagQueryGate — see game_hooks_internal.h).
+// the simulator reads while walking a route (FlagQueryGate, see game_hooks_internal.h).
 #include "game_hooks_internal.h"
 
 // ─── Progress Flags Query ───
@@ -26,7 +26,7 @@
 //   [18] save_dung_info[0x11E] high byte
 // A room word's chest/item bits span the full 16 bits (CHEST_OPEN_MASKS runs up
 // to 0x400), so the three tracked rooms each carry both the low byte (already
-// here) and a high byte appended at the end, rather than widening [9]-[11] in
+// here) and a high byte appended at the end, instead of widening [9]-[11] in
 // place and reshuffling every other index in this buffer.
 //   [19] which_starting_point
 //   [20] savegame_map_icons_indicator
@@ -75,13 +75,13 @@ int WasmGetProgressFlags(void) {
   // is the map-marker state the eastern sage sets once he has given his errand.
   g_progress_buf[19] = which_starting_point;
   g_progress_buf[20] = savegame_map_icons_indicator;
-  // The persistent substitution-completion bits (see npc_overrides.c) — the real
+  // The persistent substitution-completion bits (see npc_overrides.c): the real
   // "taken" facts for the possession-gated givers a randomizer session substitutes.
   // Zero on any vanilla profile: only a gated substitution ever writes them.
   g_progress_buf[21] = GameHook_SubstitutionTakenByte(0);
   g_progress_buf[22] = GameHook_SubstitutionTakenByte(1);
-  // The upgrade pond's persisted purchase levels — the vanilla-session completion
-  // facts for the two capacity checks — plus the third substitution byte (the
+  // The upgrade pond's persisted purchase levels: the vanilla-session completion
+  // facts for the two capacity checks, plus the third substitution byte (the
   // synthetic-key grants: the pond purchases and the cave bat).
   g_progress_buf[23] = link_bomb_upgrades;
   g_progress_buf[24] = link_arrow_upgrades;
@@ -89,12 +89,12 @@ int WasmGetProgressFlags(void) {
   // The wallet ladder index a Custom wallet profile climbs (the hook-owned save byte).
   g_progress_buf[26] = GameHook_WalletLadderIndex();
   // The empty-rung flags: a Custom family that starts below its native grid stays on rung 0
-  // with its tier byte at 0 until the first climb clears the flag — the completion fact for
+  // with its tier byte at 0 until the first climb clears the flag: the completion fact for
   // a pond purchase from that rung, which the tier byte alone cannot show.
   g_progress_buf[27] = GameHook_CapacityEmptyRungFlag(0);
   g_progress_buf[28] = GameHook_CapacityEmptyRungFlag(1);
   g_progress_buf[29] = GameHook_CapacityEmptyRungFlag(2);
-  // How much of a planned pond this file has already spent — the completion fact for its
+  // How much of a planned pond this file has already spent: the completion fact for its
   // prize slots, which record no substitution bit of their own (the counter never rewinds,
   // so it already says which prizes are gone). Zero on any file that never met a plan.
   g_progress_buf[30] = GameHook_PondThrowsTaken();

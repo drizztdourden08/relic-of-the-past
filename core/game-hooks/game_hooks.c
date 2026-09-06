@@ -21,7 +21,7 @@ void GameHook_NotifyItemReceived(uint8 item_id, uint8 method) {
   }, item_id, method);
 }
 
-// A physical override entry substituted its grant — by definition the check it stands
+// A physical override entry substituted its grant, so by definition the check it stands
 // for is completed this instant, so the host is told directly instead of inferring it
 // from save-flag or possession polling (several giver checks have no reliable flag).
 // |fire_id| is the host-assigned id the arming call carried; -1 means no report.

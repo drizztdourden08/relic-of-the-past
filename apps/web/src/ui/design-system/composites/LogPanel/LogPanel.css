@@ -1,10 +1,10 @@
 /* @layer renderer-components @kind style */
 
 /* Structure only. Per-kind colour belongs to the caller, scoped through the
-   panel's `className` — see LogPanel.tsx. */
+   panel's `className`, see LogPanel.tsx. */
 
 .log-panel {
-  /* Gutter and tag widths are the caller's call — a line number needs 4ch, a
+  /* Gutter and tag widths are the caller's call: a line number needs 4ch, a
      clock time needs 8. Override on the scoping class. */
   --log-gutter-w: 4ch;
   --log-tag-w: 10ch;
@@ -32,7 +32,7 @@
   user-select: text;
 }
 
-/* Force selection on every descendant too — ancestor user-select: none rules
+/* Force selection on every descendant too, since ancestor user-select: none rules
    (body reset, widget frame) otherwise re-resolve `auto` children to none. */
 .log-panel__list * {
   user-select: text;

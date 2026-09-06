@@ -14,4 +14,4 @@ reference's standard mode.)
 
 These are the parity oracle for the TypeScript port in shared/randomizer/ap-world/:
 the port must judge every oracle placement valid and completable and reproduce each
-spoiler's playthrough sphere structure. Data fixtures — never executed, MIT (see ap-source/LICENSE).
+spoiler's playthrough sphere structure. Data fixtures, never executed, MIT (see shared/randomizer/ap-world/LICENSE).

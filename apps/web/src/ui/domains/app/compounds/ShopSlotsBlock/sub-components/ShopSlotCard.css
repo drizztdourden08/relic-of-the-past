@@ -2,12 +2,12 @@
 
 /* One shop card. Three faces, carried on data-state so the card never needs a
    class list built in the component:
-     on       — at least one slot ticked: raised surface, normal contrast.
-     off      — nothing ticked: dimmed, so the grid reads at a glance as
+     on:       at least one slot ticked: raised surface, normal contrast.
+     off:      nothing ticked: dimmed, so the grid reads at a glance as
                 "these are the ones in play".
-     disabled — vanilla mode or the frozen Run tab: flattened onto the page
+     disabled: vanilla mode or the frozen Run tab: flattened onto the page
                 background and stripped of the raised surface, so the card
-                reads as inert rather than merely unticked. No dim here — the
+                reads as inert instead of merely unticked. No dim here, because the
                 ticks inside already carry the disabled opacity, and dimming
                 the card on top of that would push its text under contrast. */
 
@@ -88,7 +88,7 @@
   gap: var(--space-xs);
 }
 
-/* Squared off rather than pill-shaped — a box that reads as a cell of the
+/* Squared off, not pill-shaped: a box that reads as a cell of the
    shelf it stands for. The height is fixed so a long single-slot label
    wrapping onto a second line does not make its box taller than the three it
    sits beside in the next card along. */

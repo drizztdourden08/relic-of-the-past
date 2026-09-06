@@ -1,5 +1,5 @@
 /* @layer core-game-hooks @kind native */
-// Headless probes for the rupee pond's seams (pond_plan.c, pond_toss_draw.c) — what a node
+// Headless probes for the rupee pond's seams (pond_plan.c, pond_toss_draw.c): what a node
 // harness calls after WasmInitHeadless to prove they behave, gate on and gate off; the
 // renderer never calls them. Gated on the REQUESTED developer-tools bit like
 // capacity_probes.c and prize_probes.c, because the gate word only lands in WRAM inside the

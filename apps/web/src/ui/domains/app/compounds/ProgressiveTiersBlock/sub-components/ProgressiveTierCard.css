@@ -21,7 +21,7 @@
 .progressive-tier-card[data-state='disabled'] { background: var(--c-bg); }
 
 /* A family with nothing ticked is not in the seed at all, so its card is drawn
-   as an outline rather than as a filled one that happens to be empty. */
+   as an outline instead of as a filled one that happens to be empty. */
 .progressive-tier-card[data-empty] { border-style: dashed; }
 .progressive-tier-card[data-empty] .progressive-tier-card__title { color: var(--c-text-muted); }
 .progressive-tier-card[data-state='disabled'] .progressive-tier-card__title { color: var(--c-text-muted); }
@@ -47,7 +47,7 @@
 
    Wrapping is the responsive half: a row too long for the card drops its last
    boxes onto a second line, and only a box wider than the card itself is
-   allowed to shrink, at which point its name folds rather than overflowing. */
+   allowed to shrink, at which point its name folds instead of overflowing. */
 .progressive-tier-card__tiers {
   display: flex;
   flex-wrap: wrap;
@@ -55,14 +55,14 @@
   gap: var(--space-xs);
 }
 
-/* Squared off rather than pill-shaped — a box that reads as one rung of the
+/* Squared off, not pill-shaped: a box that reads as one rung of the
    ladder it stands for. The tick sits BESIDE its name on one line, the way a
    tick and its label read everywhere else. Written through the card so it
    outranks the checkbox's own single-class rules whatever order the two
    sheets land in.
 
-   The height is a floor rather than a measured fit, so every box in every card
-   comes out level — and with the name on one line it is now the height of that
+   The height is a floor, not a measured fit, so every box in every card
+   comes out level, and with the name on one line it is now the height of that
    line, not of two. */
 .progressive-tier-card .progressive-tier-card__tier {
   flex: 0 1 auto;
@@ -80,7 +80,7 @@
   border-radius: var(--radius-sm);
 }
 
-/* The tick keeps its own size whatever the name beside it does — a flex row
+/* The tick keeps its own size whatever the name beside it does: a flex row
    would otherwise squeeze the input before the text. */
 .progressive-tier-card .progressive-tier-card__tier .checkbox__input {
   flex: none;
@@ -99,7 +99,7 @@
 .progressive-tier-card[data-state='disabled'] .progressive-tier-card__tier { background: transparent; }
 
 /* The order question, kept at the foot and set off by a hairline: it is about
-   the whole family rather than about any one box above it. */
+   the whole family instead of about any one box above it. */
 .progressive-tier-card__mode {
   padding-top: var(--space-xs);
   border-top: var(--border-width-thin) solid var(--c-border);

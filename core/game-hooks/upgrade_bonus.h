@@ -22,8 +22,8 @@ void GameHook_UpgradeBonusArm(int family, uint8 presentation, bool climbed);
 // ─── Vendored payout seams (misc.c AncillaAdd_ItemReceipt, ancilla.c) ───
 
 // The goods the receipt of |item| pays out: the armed bonus when that receipt is the
-// one a capacity grant is riding (consumed on the first read), |native| — the
-// expression the vendored code wrote — for every other receipt and whenever the gate
+// one a capacity grant is riding (consumed on the first read), or |native| (the
+// expression the vendored code wrote) for every other receipt and whenever the gate
 // is down.
 int GameHook_ReceiptPayout(uint8 item, int native);
 

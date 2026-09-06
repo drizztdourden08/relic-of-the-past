@@ -1,7 +1,7 @@
 /* @layer core-game-hooks @kind native */
 // The one sprite-side receipt draw every physical substitution shares (the standing
 // prizes, the key drops, the receive-crossing world items): sprite |k| rendered as the
-// receipt art of grant id |grant| — a virtual id as its presentation item — with the same
+// receipt art of grant id |grant| (a virtual id as its presentation item) with the same
 // tiles, size flag and palette the hold-up presentation composes in
 // Ancilla_ReceiveItem_Draw, through the shared animated-tile decode slot. The palette
 // answers to the capacity icon (upgrade_icon.c) like the hold-up's does.
@@ -11,7 +11,7 @@
 // (sprite_flags2 & 0x1f) + 1 entries: its body entries, then the one slot
 // SpriteDraw_Shadow writes at the end. Every vanilla draw these seams replace is a single
 // body entry, so a two-tile receipt's bottom tile landed on the shadow slot and was
-// overwritten by the shadow — the item's top half over a blob — or spilled past a
+// overwritten by the shadow (the item's top half over a blob) or spilled past a
 // shadowless sprite's region. The region is grown to fit the shape (the next frame's
 // allocation in Sprite_TimersAndOam reads the count), and the shadow is skipped for the
 // one frame its slot still lies past the region.
@@ -77,8 +77,8 @@ bool GameHook_DrawSpriteAsReceiptItem(int k, int grant, int x_adj, int y_adj) {
   // A virtual id draws as its native presentation item (pure lookup): the upgrade's
   // refill item, or the progressive family's next tier from live inventory.
   uint8 item = GameHook_GrantPresentationOf((uint8)grant);
-  // A rupee reward swaps in the numberless gem's receipt — its art, its 8x16 shape and
-  // its palette row — instead of the numbered picture (rupee_gem_draw.c). Off, or for
+  // A rupee reward swaps in the numberless gem's receipt (its art, its 8x16 shape and
+  // its palette row) instead of the numbered picture (rupee_gem_draw.c). Off, or for
   // anything that is not a rupee, |item| and the palette below are untouched.
   uint8 gem_pal = 0;
   bool gem = GameHook_ColoredRupeeGem(grant, &item, &gem_pal);
@@ -96,7 +96,7 @@ bool GameHook_DrawSpriteAsReceiptItem(int k, int grant, int x_adj, int y_adj) {
   // fails (a shadowless one-entry sprite), this one frame keeps vanilla art.
   if (!fits && (sprite_flags2[k] & 0x1f) < body - 1) return false;
   // Re-decoded every drawn frame, so any other user of the shared slot (a receipt that
-  // just finished, a text box's story-sheet scribble) is repaired the next frame — the
+  // just finished, a text box's story-sheet scribble) is repaired the next frame, so the
   // same per-frame repair pattern as receipt_gfx_guard.c.
   DecodeAnimatedSpriteTile_variable(gfx);
   // The gem's two colour indices, pointed at the pair this denomination reads in.

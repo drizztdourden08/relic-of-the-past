@@ -6,7 +6,7 @@
 // KEYING. The unmodified game does not give every shop its own room, and does not even
 // give every shop its own ENTRANCE: four dark-world doors share entrance 0x60 into room
 // 0x010F, and two cave doors share entrance 0x58 into room 0x0112. What does tell them
-// apart is where the player walked in from — Dungeon_LoadEntrance saves the overworld
+// apart is where the player walked in from: Dungeon_LoadEntrance saves the overworld
 // area into `overworld_area_index_exit` before it zeroes the screen index, and that value
 // stands for the whole indoor visit. So an entry is keyed by
 // (room, entrance, overworld area, subtype), any of the three shop fields being
@@ -17,7 +17,7 @@
 // pinned). So the counters live in the hook-owned span inside the save block that
 // save_bytes.h allocates: SaveGameFile copies and checksums the whole 0x500-byte block,
 // and a save state snapshots all of WRAM, so both carry the counters with NO struct
-// change at all. One byte per canonical slot, so a counter is a plain read rather than a
+// change at all. One byte per canonical slot, so a counter is a plain read, not a
 // bit dance.
 #ifndef GAME_HOOKS_SHOP_TABLE_H
 #define GAME_HOOKS_SHOP_TABLE_H
@@ -46,11 +46,11 @@ typedef struct {
 } ShopSlotOverride;
 
 // One byte per canonical slot: how many of that slot's armed steps have been bought.
-// Address allocated in save_bytes.h — see the header note.
+// Address allocated in save_bytes.h, see the header note.
 #define srm_shop_sold(slot) (*(uint8 *)(g_ram + SRM_SHOP_SOLD + (slot)))
 
 // The armed entry for the spot the player is standing at, or NULL. |sold_out| is set when
-// the table OWNS this spot but every step has already been bought — the caller then
+// the table OWNS this spot but every step has already been bought, so the caller then
 // empties it instead of letting the vendored stock come back.
 const ShopSlotOverride *ShopFindEntry(uint8 subtype, bool *sold_out);
 

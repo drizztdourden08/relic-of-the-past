@@ -1,10 +1,10 @@
 /* @layer core-game-hooks @kind native */
-// Draw-only substitution for the receive-crossing world item SPRITES — the in-world
+// Draw-only substitution for the receive-crossing world item SPRITES: the in-world
 // pickups whose grants already substitute at the native receive seam (npc_overrides.c)
 // but whose on-the-ground art stayed vanilla: the standing fungus, the shelved tome,
 // the thrown/regurgitated reward sprite, and the pedestal blade. Each renders as the
 // item its pickup will actually grant, via the shared sprite-side receipt draw
-// (receipt_sprite_draw.c) — the same draw drop_overrides.c / standing_overrides.c use.
+// (receipt_sprite_draw.c), the same draw drop_overrides.c / standing_overrides.c use.
 //
 // No table and no arming of its own: every decision comes from the armed npc-override
 // entries through GameHook_PeekNpcGrantItem, so the drawn item can never disagree with

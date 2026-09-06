@@ -3,7 +3,7 @@
 // grant borrows a native pickup for the hold-up (ten bombs 0x31, ten arrows 0x44, the
 // magic refill 0x45, fifty rupees 0x41) and, natively, that pickup's goods ride along:
 // the pond arithmetic refills a counted family to its new cap and the receipt adds its
-// ten on top, the refill adds a fixed 16 of the 128 meter, the rupee receipt a flat 50 —
+// ten on top, the refill adds a fixed 16 of the 128 meter, the rupee receipt a flat 50,
 // none of it scaled to the ceiling. This module replaces every one of those with the
 // profile's own reading, per family: a percentage of the NEW ceiling, or, with the
 // family's step base on, of the ceiling GAINED by this pickup. The amount is added to

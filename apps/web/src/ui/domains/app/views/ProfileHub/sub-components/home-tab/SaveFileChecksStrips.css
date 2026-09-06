@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind style */
 
 /* Per-save-file checks strips: the Checks widget's palette on a thin
-   segmented bar — green taken, yellow available now, grey left. */
+   segmented bar: green taken, yellow available now, grey left. */
 .save-checks__rows {
   display: flex;
   flex-direction: column;

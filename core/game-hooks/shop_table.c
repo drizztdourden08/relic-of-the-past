@@ -1,5 +1,5 @@
 /* @layer core-game-hooks @kind native */
-// The armed-shop table and its host exports — see shop_table.h for the keying and the
+// The armed-shop table and its host exports, see shop_table.h for the keying and the
 // counters. Everything here is record-only or a plain read: the gate is enforced at the
 // APPLICATION site in shop_overrides.c, the SyncGateWords latching contract every
 // override table in this tree follows.
@@ -13,8 +13,8 @@ static ShopSlotOverride g_shop_overrides[MAX_SHOP_OVERRIDES];
 static int g_shop_override_count = 0;
 
 // Whether this entry names the spot the game is drawing right now. The three shop fields
-// narrow in order — room, then the entrance walked through, then the overworld area that
-// entrance was taken from — and each may be "any" for a shop the earlier fields already
+// narrow in order (room, then the entrance walked through, then the overworld area that
+// entrance was taken from) and each may be "any" for a shop the earlier fields already
 // pin down on their own.
 static bool EntryKeyMatches(const ShopSlotOverride *entry, uint8 subtype) {
   if (!entry->armed || entry->subtype != subtype) return false;
@@ -30,9 +30,9 @@ const ShopSlotOverride *ShopFindEntry(uint8 subtype, bool *sold_out) {
     const ShopSlotOverride *entry = &g_shop_overrides[i];
     if (!EntryKeyMatches(entry, subtype)) continue;
     owner = entry;
-    // The receipt arrays are exactly 76 entries — anything past them corrupts g_ram (the
+    // The receipt arrays are exactly 76 entries, and anything past them corrupts g_ram (the
     // same bound the drop and standing tables enforce), so an oversized id armed by a
-    // buggy host is ignored rather than sold or drawn. The virtual ids (upgrade, wallet
+    // buggy host is ignored, not sold or drawn. The virtual ids (upgrade, wallet
     // and progressive) are the one sanctioned exception: they resolve to a native item
     // before any array.
     if (entry->new_item >= 76 && !GameHook_IsVirtualGrantId(entry->new_item)) continue;
@@ -89,9 +89,9 @@ int WasmGetShopSlotSold(int slot_index) {
   return srm_shop_sold(slot_index);
 }
 
-// The overworld area the current indoor visit was entered from — the value that tells two
+// The overworld area the current indoor visit was entered from: the value that tells two
 // doors onto one shop apart. Exported so a probe can prove the discriminator is really
-// there rather than trusting the dataset. Ungated: a plain read of one word.
+// there instead of trusting the dataset. Ungated: a plain read of one word.
 EMSCRIPTEN_KEEPALIVE
 int WasmGetEnteredOverworldArea(void) {
   return overworld_area_index_exit;

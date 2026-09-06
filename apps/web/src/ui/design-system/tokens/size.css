@@ -32,14 +32,14 @@
 
   /* Play-mode badge slot: a fixed square the 128px badge art scales into
      smoothly (roughly 60% of the summary panel's height). Image and fallback
-     chip share this footprint — swapping one for the other never shifts layout. */
+     chip share this footprint, so swapping one for the other never shifts layout. */
   --mode-badge-d: 80px;
 
-  /* Widest a single summary-fact value may grow before it ellipsizes — long
+  /* Widest a single summary-fact value may grow before it ellipsizes. Long
      ROM names and seeds truncate instead of pushing the row apart. */
   --summary-fact-maxw: 220px;
 
-  /* The option catalog lays every row — a plain option or a capacity family —
+  /* The option catalog lays every row (a plain option or a capacity family)
      on the same label | control | impact grid, so a value that changes width
      ("+33 loc · +33 items" to "0 loc · 0 items") never moves the control next
      to it. The impact track fits the widest cell in mono at the small size. */
@@ -61,7 +61,7 @@
   /* Narrowest a shop card may be drawn before the grid drops a column: wide
      enough for a two-word shop name and three slot boxes side by side, each
      holding its own label. The grid tracks are auto-fill minmax on this, so
-     the column count follows the PANE's width rather than the window's — the
+     the column count follows the PANE's width, not the window's, so the
      options panel lives in a split pane and is routinely dragged narrow. */
   --shop-card-w-min: 260px;
 
@@ -78,7 +78,7 @@
 
   /* One dark-room light tile: a square holding the item's sprite with its
      tick under it. Taller than the slot and rung boxes because the art is the
-     label here — there is no text to read the tile by. */
+     label here, since there is no text to read the tile by. */
   --dark-room-tile-d: 64px;
 
   /* The sprite inside it, at twice its source pixels. A step up from the

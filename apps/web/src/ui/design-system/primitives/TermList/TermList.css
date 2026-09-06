@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind style */
 
 /* One line per entry, with real space between the lines so the block reads as
-   a list rather than a paragraph. The term and its detail sit on the same
+   a list instead of a paragraph. The term and its detail sit on the same
    line and wrap together; the term never breaks away from what it introduces. */
 
 .term-list {

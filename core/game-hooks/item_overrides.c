@@ -1,6 +1,6 @@
 /* @layer core-game-hooks @kind native */
 // Overrides are keyed by (room, chest slot). The slot is the chest's ordinal within its
-// room — the Nth entry for that room in the native chest table, the same ordinal the
+// room: the Nth entry for that room in the native chest table, the same ordinal the
 // interacting attribute tile encodes (tile - 0x58, dungeon.c:5710). That expression is
 // already in scope at the one vendored call site (player.c, Link_PerformOpenChest), so
 // the hook needs no extra vendored plumbing: the caller passes the slot directly.
@@ -27,7 +27,7 @@ uint8 GameHook_OverrideChestItem(uint16 room_id, int slot, uint8 original_item) 
   // table left over from a prior session can never silently substitute an item while disabled.
   if (!(enhanced_features3 & kFeatures3_ItemOverrides)) return original_item;
   // A refusal sentinel (sign bit set: the chest did not open, e.g. a large-chest lock) must pass
-  // through so the caller's bail-out still fires — an override may never bypass the lock.
+  // through so the caller's bail-out still fires, because an override may never bypass the lock.
   if (sign8(original_item)) return original_item;
   for (int i = 0; i < g_override_count; i++) {
     if (g_overrides[i].room_id == room_id && g_overrides[i].slot == (uint8)slot) {
@@ -36,17 +36,17 @@ uint8 GameHook_OverrideChestItem(uint16 room_id, int slot, uint8 original_item) 
       // An override fires on chest-open with no host in the loop, so the contextual
       // receipt message is armed natively here: the entry's own pre-rendered line
       // when the session assigned one, the item-class template otherwise (a no-op
-      // while kFeatures3_ReceiptMessages is off — see receipt_messages.c).
+      // while kFeatures3_ReceiptMessages is off, see receipt_messages.c).
       if (g_overrides[i].msg >= 0)
         GameHook_ArmReceiptMessageIfClear(g_overrides[i].msg);
       // The returned id flows into the vanilla chest receive path (which indexes the
       // 76-entry owned-duplicate alternates by it), so a virtual id must resolve
-      // HERE — an upgrade's counter arithmetic runs and its native presentation
+      // HERE: an upgrade's counter arithmetic runs and its native presentation
       // item is what the chest visibly grants; a progressive id becomes the next
       // tier's native id from live inventory.
       // The prize resolver composes after it on the same id: the two own disjoint spans
       // and each passes a foreign id through, so a prize crystal in a chest banks its own
-      // bit and hands the chest the native crystal receipt rather than an id past the
+      // bit and hands the chest the native crystal receipt instead of an id past the
       // 76-entry tables.
       uint8 resolved = GameHook_ResolvePrizeItem(GameHook_ResolveGrantItem(g_overrides[i].new_item));
       if (g_overrides[i].msg < 0)
@@ -58,7 +58,7 @@ uint8 GameHook_OverrideChestItem(uint16 room_id, int slot, uint8 original_item) 
 }
 
 // No gate test in either export below: they only RECORD the request, exactly like
-// WasmSetHudHidden/WasmSetPauseHidden (emscripten_api.c) — the gate is enforced at the one
+// WasmSetHudHidden/WasmSetPauseHidden (emscripten_api.c), where the gate is enforced at the one
 // place the table is APPLIED, GameHook_OverrideChestItem above. Testing enhanced_features3
 // here was the same class of bug as the doubled-HUD one: the caller arms the gate and writes
 // the table in one synchronous burst, but the gate word only latches into WRAM at the next
@@ -98,7 +98,7 @@ void WasmClearItemOverrides(void) {
 
 // The sliding shelf that opens the escape passage only moves for a player who owns the
 // light source. Vanilla guarantees that item from the starting house chest before the
-// shelf is ever reached, so the gate is invisible in normal play — but with chest
+// shelf is ever reached, so the gate is invisible in normal play, but with chest
 // contents overridden the guarantee is gone and the escape soft-locks. The reference
 // randomizer removes the requirement from its patched game outright; an armed override
 // session waives it the same way. Vanilla sessions keep the original gate untouched.

@@ -1,8 +1,8 @@
 /* @layer core-game-hooks @kind native */
-// How helpful the items are — the seven switches the reference randomizer bundles into one
+// How helpful the items are: the seven switches the reference randomizer bundles into one
 // four-step "item functionality" choice (its Rom.py patches eight bytes per step; the option
 // catalog's item-power rows ask them apart). Every one of them lives in the WRAM gate word
-// kRam_Features4 rather than in a host gate, because the GAME branches on all of them: a host
+// kRam_Features4 instead of in a host gate, because the GAME branches on all of them: a host
 // gate would be invisible to a save state and to the replay recorder, and flipping one mid-run
 // would desynchronise a replay (host_gates.h states that rule).
 //
@@ -14,7 +14,7 @@
 // Two of the seven are not only the player's to set. A tier tick set with no beam blade in it
 // would leave the tablets behind a requirement nothing in the seed could meet, and one with no
 // blade at all would do the same to the medallion doors, so the session arms those two bits
-// from the tick set as well as from the switch (item-power/item-power-rule.ts derives the pair
+// from the tick set and from the switch (item-power/item-power-rule.ts derives the pair
 // on both sides, so the logic and the running game can never disagree). Nothing here knows
 // that: it reads the bit it was given.
 #include "game_hooks_internal.h"
@@ -24,7 +24,7 @@ static bool ItemPowerBit(uint32 bit) {
 }
 
 // sprite_main.c Sprite_E3_Fairy: swinging the net at a fairy offers to bottle it. Off, the
-// swing is simply not a catch and the fairy goes on behaving as one.
+// swing is not a catch and the fairy goes on behaving as one.
 bool GameHook_NetCatchesFairies(void) {
   return !ItemPowerBit(kFeatures4_NoFairyCatching);
 }
@@ -37,7 +37,7 @@ uint8 GameHook_ByrnaBarrierGuard(void) {
 }
 
 // player.c kCapeDepletionTimers: FRAMES between two meter units, so halving the count is what
-// "drains twice as fast" means. Clamped at one frame — a zero would never reach the decrement.
+// "drains twice as fast" means. Clamped at one frame, since a zero would never reach the decrement.
 uint8 GameHook_CapeDrainRate(uint8 frames) {
   if (!ItemPowerBit(kFeatures4_CapeDoubleMagic)) return frames;
   uint8 halved = (uint8)(frames >> 1);
@@ -53,7 +53,7 @@ bool GameHook_SilverArrowsBite(int k) {
 }
 
 // sprite.c Sprite_GiveDamage: what the magic powder turns an enemy into. Off, the lesser
-// prize — a single heart — takes the fairy's place, which is the reference's own substitution.
+// prize (a single heart) takes the fairy's place, which is the reference's own substitution.
 uint8 GameHook_PowderTransmuteType(uint8 type) {
   return ItemPowerBit(kFeatures4_NoPowderFairy) ? 0xd8 : type;
 }

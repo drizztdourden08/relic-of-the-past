@@ -56,7 +56,7 @@
   background: var(--c-gold-bright);
 }
 
-/* While dragging, the pointer owns the whole surface — panes must not grab it
+/* While dragging, the pointer owns the whole surface, so panes must not grab it
    or hover their own rows under a moving cursor. */
 .split-pane--dragging .split-pane__pane {
   pointer-events: none;
@@ -64,8 +64,8 @@
 
 /* ── Collapsed: the divider becomes the rail that brings the pane back ──
    The rail is a filled block, not the hairline grip, so it needs a gutter of
-   its own: without one the open pane's content — a full-width bar, a line of
-   text — ends exactly at the rail's edge and reads as running behind it. The
+   its own: without one the open pane's content (a full-width bar, a line of
+   text) ends exactly at the rail's edge and reads as running behind it. The
    gutter is a margin on the divider, so the grid's auto track grows by it and
    the open pane gives up exactly that width at every split position. */
 .split-pane__divider--start,
@@ -103,7 +103,7 @@
 }
 
 /* Narrow window: stop splitting, stack the panes and hide the divider. With
-   no rail left to click, a collapsed pane is shown too — stacked, every pane
+   no rail left to click, a collapsed pane is shown too, stacked, every pane
    is reachable. */
 @media (width <= 60rem) {
   .split-pane {

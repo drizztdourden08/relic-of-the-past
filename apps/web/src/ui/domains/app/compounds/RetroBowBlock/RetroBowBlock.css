@@ -9,7 +9,7 @@
 }
 
 /* Indented under the switch they answer to, so the pair reads as its
-   consequence rather than as two more settings beside it. */
+   consequence instead of as two more settings beside it. */
 .retro-bow-block__caption {
   color: var(--c-text-dim);
   font-size: var(--text-xs);

@@ -14,7 +14,7 @@
 }
 
 /* The cards pack across the panel and wrap, each drawn at the width of the
-   rungs it holds rather than stretched to a track: the families do not all
+   rungs it holds instead of stretched to a track: the families do not all
    have the same number of rungs, so a shared track width made every card as
    wide as the widest one and left the two-rung families mostly empty.
 
@@ -42,8 +42,8 @@
   font-size: var(--text-xs);
 }
 
-/* A refusal, not a warning: the seed genuinely will not roll, so it carries the
-   blocking colour rather than the advisory one. */
+/* A refusal, not a warning: the seed will not roll, so it carries the
+   blocking colour instead of the advisory one. */
 .progressive-tiers-block__blocked {
   display: flex;
   flex-direction: column;

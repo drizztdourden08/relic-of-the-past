@@ -22,7 +22,7 @@
 // given, so the vanilla file bytes, the native tables, the cost lookup and MaxRupees's own
 // expression are untouched.
 //
-// Save bytes — addresses allocated in save_bytes.h, THE registry: the wallet ladder index,
+// Save bytes, with addresses allocated in save_bytes.h, THE registry: the wallet ladder index,
 // and one empty-rung flag per counted family (explosives, projectiles, meter). The tier
 // byte and the meter level keep their vanilla meaning (0 = the first native level) and the
 // flag says the family is still BELOW it, so a vanilla read of the same file sees a sane
@@ -127,7 +127,7 @@ void WasmClearCapacityProfile(void) {
 // Custom families are written; the others keep the block's own bytes. A stepped family
 // starts at its rung: the level byte (rung - 1, or 0 with the empty-rung flag raised) and,
 // for the counted families, a full count for that rung (the decimal cap the HUD compares
-// against, kMaxBombsForLevel / kMaxArrowsForLevel — not the display-coded hex grid, which
+// against, kMaxBombsForLevel / kMaxArrowsForLevel, not the display-coded hex grid, which
 // is the message-and-refill encoding; 0 on the empty rung). The meter on its empty rung
 // holds nothing: the shipped block already starts it at 0, written again here so the
 // file opens at 0 whatever the template says. Never runs on a file load.
@@ -155,7 +155,7 @@ bool GameHook_CapacityFamilyCustom(int kind) {
 }
 
 // The cap-table seam (hud.c, sprite_main.c, ui_state.c, cheats.c): the native table entry
-// for |level| — the exact expression the vendored readers wrote — unless the family is
+// for |level|, the exact expression the vendored readers wrote, unless the family is
 // Custom under the gate and stands on the empty rung, where the capacity is 0.
 int GameHook_CapacityMax(int kind, int level) {
   const uint8 *table = kind == kFamily_Explosives ? kMaxBombsForLevel : kMaxArrowsForLevel;
@@ -173,7 +173,7 @@ uint8 GameHook_MagicCost(uint8 cost) {
 
 // The meter capacity seam (hud.c Hud_RefillLogic and Hud_RefillMagicPower, the cheat clamp):
 // the full meter every reader spelled, 0x80, unless a Custom meter under the gate stands on
-// the empty rung, where the meter holds nothing — the refill drain stops at 0 the way the
+// the empty rung, where the meter holds nothing: the refill drain stops at 0 the way the
 // counted drains stop at GameHook_CapacityMax's 0, and a potion or victory refill sees a
 // meter already at capacity.
 uint8 GameHook_MagicCapacity(void) {
@@ -182,7 +182,7 @@ uint8 GameHook_MagicCapacity(void) {
 }
 
 // One rung up for a stepped family. Custom under the gate: up to the profile's final rung.
-// Otherwise the native arithmetic the handlers wrote — level + 1 up to the grid's last
+// Otherwise the native arithmetic the handlers wrote: level + 1 up to the grid's last
 // level, the empty-rung flag ignored. False when nothing is left to climb.
 bool GameHook_CapacityClimb(int kind) {
   if (!IsStepped(kind)) return false;

@@ -3,7 +3,7 @@
 //
 // Vanilla only ever charges 5, 20, 25 or 50 and spawns that many five-rupee gems, all
 // out of one decoded sheet. A plan can charge any amount, so the toss decomposes it
-// greedily over the six denominations — 300, 100, 50, 20, 5, 1 — largest first: 300 is
+// greedily over the six denominations (300, 100, 50, 20, 5, 1) largest first: 300 is
 // one gold gem, 427 is one gold, one silver, one red, one blue and two greens.
 //
 // Only one sprite sheet is decoded at a time, and the coloured-gem hook recolours that
@@ -15,9 +15,9 @@
 // its own. The grouping is identical whether or not coloured rupees are on.
 //
 // Presentation, per volley:
-//   coloured rupees OFF — each gem draws under its own receipt id, so the cartridge's
+//   coloured rupees OFF: each gem draws under its own receipt id, so the cartridge's
 //     own picture for that denomination is what flies in;
-//   coloured rupees ON  — the shared gem sheet is decoded and recoloured once for the
+//   coloured rupees ON:  the shared gem sheet is decoded and recoloured once for the
 //     volley's denomination (GameHook_RecolorRupeeGem), and the gems are drawn under the
 //     small-gem receipt whose palette row is the one that denomination reads in, so the
 //     plain coloured gem flies in instead of the numbered picture.
@@ -40,13 +40,13 @@ static const RupeeGem kRupeeGems[] = {
   {300, 0x46, 3},  // gold
   {100, 0x40, 2},  // silver
   {50, 0x41, 1},   // violet
-  {20, 0x36, 0},   // red    — the three small values share one sheet
+  {20, 0x36, 0},   // red: the three small values share one sheet
   {5, 0x35, 0},    // blue
   {1, 0x34, 0},    // green
 };
 #define RUPEE_GEM_COUNT ((int)(sizeof(kRupeeGems) / sizeof(kRupeeGems[0])))
 
-// The small-gem receipt whose OAM palette row is |row| — how a recoloured gem is given
+// The small-gem receipt whose OAM palette row is |row|: how a recoloured gem is given
 // the row its denomination reads in without touching the shared draw path.
 static uint8 SmallGemForRow(uint8 row) {
   return row == 2 ? 0x35 : row == 1 ? 0x36 : 0x34;
@@ -76,7 +76,7 @@ static int DecomposeRupees(int amount) {
 
 /**
  * The receipt id of gem |index| of the decomposition of |amount|, largest first, or -1
- * past the last gem. Pure — no queue, no spawn — so the probe harness can pin the same
+ * past the last gem. Pure: no queue, no spawn, so the probe harness can pin the same
  * decomposition the toss uses without a pond in front of it.
  */
 int GameHook_PondGemAt(int amount, int index) {

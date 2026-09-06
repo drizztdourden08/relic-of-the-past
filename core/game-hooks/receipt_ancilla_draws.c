@@ -1,8 +1,8 @@
 /* @layer core-game-hooks @kind native */
-// Draw-only substitution for the receive-crossing world item ANCILLAE — the falling
+// Draw-only substitution for the receive-crossing world item ANCILLAE: the falling
 // milestone prize (the two stone-tablet rewards) and the dug-up instrument reveal.
 // Both spawn with the VANILLA item id, fly/fall for many frames drawing vanilla art,
-// and only substitute at pickup (the Link_ReceiveItem seam) — so without this the
+// and only substitute at pickup (the Link_ReceiveItem seam), so without this the
 // player watches the wrong item fall. The ancilla counterpart of world_item_draws.c:
 // no table of its own, every decision comes from the armed npc-override entries via
 // GameHook_PeekNpcGrantItem (gate enforced inside the peek; nothing armed -> the
@@ -40,7 +40,7 @@ static OamEnt *DrawAncillaAsReceiptItem(int k, int item, int x, int y) {
   OamEnt *start = GetOamCurPtr();
   OamEnt *oam = Ancilla_ReceiveItem_Draw(k, x, y);
   // The vendored draw picks its palette row through a read shared with the hold-up
-  // ceremony, which must keep answering natively — so the row for the picture written
+  // ceremony, which must keep answering natively, so the row for the picture written
   // above is applied to the entries it just wrote instead. Palette is bits 1-3 of the
   // OAM flags byte. Asking with an impossible native means the loop only runs for the
   // eight affected ids, and never with the gate down or no file loaded.
@@ -66,7 +66,7 @@ OamEnt *GameHook_DrawFallingPrizeOverride(int k, int x, int y) {
 
 // The dug-up instrument reveal. Its vanilla grant id is 0x14; its vanilla draw is a
 // single fixed animated tile, decoded once at spawn. True when the assigned item was
-// drawn instead — the caller skips its own OAM write but keeps its off-screen check
+// drawn instead: the caller skips its own OAM write but keeps its off-screen check
 // (the receipt draw writes the same first OAM entry with the same clamping).
 bool GameHook_DrawDugUpItemOverride(int k, int x, int y) {
   int item = GameHook_PeekNpcGrantItem(0x14);

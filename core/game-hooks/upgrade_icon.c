@@ -1,13 +1,13 @@
 /* @layer core-game-hooks @kind native */
 // The dedicated hold-up icon of a capacity upgrade. A virtual capacity grant (upgrade
-// 0x50-0x61, wallet 0x67-0x76, progressive 0x77-0x7A) presents as a native refill item — ten bombs, ten arrows,
-// the magic refill, the fifty-rupee receipt — because no native art exists for an
+// 0x50-0x61, wallet 0x67-0x76, progressive 0x77-0x7A) presents as a native refill item: ten bombs, ten arrows,
+// the magic refill, the fifty-rupee receipt, because no native art exists for an
 // upgrade. The host extracts one 16x16 icon per family (explosives, projectiles, meter,
 // wallet) as SNES 4bpp tiles, 128 B each in the order top-left, top-right, bottom-left,
 // bottom-right, every one quantized to sprite palette row ICON_PALETTE_ROW, and hands the
 // 512 B file over through MEMFS (WasmApplyUpgradeIconsFile). An icon is copied over the
-// animated-tile decode slot at 0xBD40 — the 128 B the NMI mirrors into VRAM tiles
-// 0x24/0x25 and 0x34/0x35 — right after the receipt art was decoded there, so the OAM
+// animated-tile decode slot at 0xBD40, the 128 B the NMI mirrors into VRAM tiles
+// 0x24/0x25 and 0x34/0x35, right after the receipt art was decoded there, so the OAM
 // entry the receipt draw already writes shows the icon with no extra OAM; the draw's
 // palette read (GameHook_ReceiptPalette / GameHook_ReceiptPaletteFor) answers with the
 // icon's row instead of the presentation item's own, so no CGRAM is written either.
@@ -22,10 +22,10 @@
 //
 // Repair, not prevention (receipt_gfx_guard.c's discipline): a resolver arms the family
 // when a virtual grant resolves, the hold-up spawn's decode (misc.c) consumes the arm and
-// binds the family to the live receipt, and every frame end — plus the guard's message-box
-// re-decode — writes the icon again while that receipt lives. The drop and standing draw
+// binds the family to the live receipt, and every frame end (plus the guard's message-box
+// re-decode) writes the icon again while that receipt lives. The drop and standing draw
 // seams write it after their own per-frame decode. Gate: kFeatures3_CapacityProfile, and
-// only once a file was applied — with either missing nothing is written and the refill
+// only once a file was applied. With either missing nothing is written and the refill
 // presentation shows, byte for byte. Nothing here touches the save block.
 #include "game_hooks_internal.h"
 #include "src/util.h"
@@ -40,7 +40,7 @@
 #define ANCILLA_ITEM_RECEIPT 0x22
 // The sprite palette row every icon is quantized to. Mirrored by CAPACITY_ICON_PALETTE_ROW
 // in shared/asset-extraction/item-sprites/capacity-icons.ts (the extractor that writes the
-// file): change both together. Row 4 fits all four pictures best — it holds the badge's
+// file): change both together. Row 4 fits all four pictures best, since it holds the badge's
 // green, which the refill receipts' row 2 lacks.
 #define ICON_PALETTE_ROW 4
 // The OAM size flag kReceiveItem_Tab1 gives a wide (16x16) receipt; every icon is one.

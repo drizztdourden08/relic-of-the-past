@@ -1,5 +1,5 @@
 /* @layer core-game-hooks @kind native */
-// THE allocation of the hook-owned save bytes — one registry, no address written twice.
+// THE allocation of the hook-owned save bytes: one registry, no address written twice.
 //
 // WHY THE SPAN EXISTS. Several hooks need a fact to survive a save and a reload, and no
 // saveload struct may grow (the state-layout probe is pinned). The battery block is the
@@ -7,7 +7,7 @@
 // g_ram 0xF000, and a save state snapshots all of WRAM, so a byte placed inside the block
 // is carried by BOTH save paths with no struct change at all. The 0xF406-0xF4FD run is
 // written by nothing else in the entire tree (verified: no g_ram access and no offset
-// table entry reaches it), and reads as zero on a vanilla file — so a vanilla read of a
+// table entry reaches it), and reads as zero on a vanilla file, so a vanilla read of a
 // file we wrote sees bytes it never looks at, and a vanilla file we read hands every hook
 // its own "nothing recorded yet".
 //
@@ -32,19 +32,19 @@
 #define HOOK_SAVE_FIRST 0xF406
 #define HOOK_SAVE_LAST 0xF4FD
 
-// ─── 0xF410-0xF412 — npc_overrides.c — substitution-completion bits ───
+// ─── 0xF410-0xF412: npc_overrides.c, substitution-completion bits ───
 // One bit per substitutable possession-gated giver, keyed by the vanilla receive id its
 // script grants. Byte 0 bits 0-7, byte 1 bits 0-6, byte 2 bits 0-2; the rest reserved.
 // Bytes 0 and 1 are progress-buffer entries [21] and [22], byte 2 is [25].
 #define SRM_SUBSTITUTION_TAKEN 0xF410
 #define SRM_SUBSTITUTION_TAKEN_COUNT 3
 
-// ─── 0xF413 — capacity_profile.c — wallet ladder index ───
+// ─── 0xF413: capacity_profile.c, wallet ladder index ───
 // The rung of the hook-owned wallet ladder (capacity_tiers.h) this file has climbed to;
 // the rupee ceiling follows it. Progress-buffer entry [26].
 #define SRM_WALLET_LADDER_INDEX 0xF413
 
-// ─── 0xF414-0xF416 — capacity_profile.c — empty-rung flags ───
+// ─── 0xF414-0xF416: capacity_profile.c, empty-rung flags ───
 // One flag per counted family, in family order: explosives, projectiles, meter. The
 // family's native byte keeps its vanilla meaning (0 = the first native level) and the
 // flag says the family is still BELOW it, so a vanilla read never sees an out-of-grid
@@ -52,26 +52,26 @@
 #define SRM_EMPTY_RUNG 0xF414
 #define SRM_EMPTY_RUNG_COUNT 3
 
-// ─── 0xF417-0xF418 — prize_grants.c — reward-handed-over bits ───
+// ─── 0xF417-0xF418: prize_grants.c, reward-handed-over bits ───
 // One bit per palace index (0-12): this dungeon's falling reward was handed over. Read
 // alongside the vanilla pendant/crystal expression by the two room tags, so a substituted
 // reward stops respawning and the arena door opens without the inventory bit being faked.
 #define SRM_PRIZE_TAKEN 0xF417
 #define SRM_PRIZE_TAKEN_COUNT 2
 
-// ─── 0xF419 — prize_grants.c — crystal in flight ───
+// ─── 0xF419: prize_grants.c, crystal in flight ───
 // The crystal bit the receipt currently in flight must bank, 0 for none. Banked up front
 // so an interrupted cutscene cannot lose the item; the rising-crystal seam re-ORs it.
 #define SRM_PENDING_CRYSTAL 0xF419
 
-// ─── 0xF41A — pond_plan.c — throws taken ───
+// ─── 0xF41A: pond_plan.c, throws taken ───
 // How many throws of the planned pond sequence have been paid for. Never rewinds, so no
 // prize is handed out twice and the pond cannot be farmed.
 #define SRM_POND_THROWS 0xF41A
 
-// ─── 0xF420-0xF43E — shop_table.c — sold counters ───
+// ─── 0xF420-0xF43E: shop_table.c, sold counters ───
 // One byte per canonical shelf slot: how many of that slot's armed steps have been
-// bought. A plain byte rather than a bit dance, so a counter read is one load.
+// bought. A plain byte, not a bit dance, so a counter read is one load.
 #define SRM_SHOP_SOLD 0xF420
 #define SRM_SHOP_SOLD_COUNT 31
 

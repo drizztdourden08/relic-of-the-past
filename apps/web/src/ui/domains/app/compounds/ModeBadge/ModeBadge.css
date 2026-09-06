@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind style */
 
-/* Fixed square slot — image and fallback chip share the exact footprint, so
+/* Fixed square slot: image and fallback chip share the exact footprint, so
    swapping one for the other never shifts the layout around it. */
 .mode-badge {
   width: var(--mode-badge-d);
@@ -16,7 +16,7 @@
   box-sizing: border-box;
 }
 
-/* The art fills the slot inside its padding, letterboxed rather than stretched. */
+/* The art fills the slot inside its padding, letterboxed instead of stretched. */
 .mode-badge__img {
   width: 100%;
   height: 100%;

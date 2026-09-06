@@ -1,18 +1,18 @@
 /* @layer core-game-hooks @kind native */
-// Physical substitution for standing in-world prizes — the free-standing pickups the
+// Physical substitution for standing in-world prizes: the free-standing pickups the
 // player touches in the world (the overworld race/ledge/island prizes and their indoor
 // cave counterparts). The counterpart of drop_overrides.c for the standing prize
 // sprite: same two seams, same draw discipline.
 //
 // Entries key by (area, sprite type): the overworld screen index for an outdoor prize,
 // the room index for an indoor one. Two indoor prizes can share one room index (the
-// game tells them apart by which horizontal half the sprite stands in — the same bit
+// game tells them apart by which horizontal half the sprite stands in, the same bit
 // its own obtained-flag bookkeeping uses), so an indoor entry also carries that half.
 //
 // - grant: the touch pickup inside the prize sprite's own handler. A matched sprite
 //   skips the vanilla piece-counter grant entirely and receives the ASSIGNED item
 //   through the native receive path (hold-up, receipt art, inventory write), then
-//   writes the vanilla obtained flag byte-for-byte via the game's own helper — so the
+//   writes the vanilla obtained flag byte-for-byte via the game's own helper, so the
 //   prize despawns on revisit and the host's location poller sees the same bit.
 // - draw: the prize renders as the ASSIGNED item via the receipt art pipeline, so what
 //   the player sees standing in the world is what the pickup will grant.
@@ -41,7 +41,7 @@ static StandingOverride g_standing_overrides[MAX_STANDING_OVERRIDES];
 static int g_standing_override_count = 0;
 
 // The armed entry for sprite |k|, or NULL. Gate enforced here, at the application
-// site only (the setters below record blind — the SyncGateWords latching contract).
+// site only (the setters below record blind, the SyncGateWords latching contract).
 static const StandingOverride *FindStandingOverride(int k) {
   if (!(enhanced_features3 & kFeatures3_StandingOverrides)) return NULL;
   uint16 area = player_is_indoors ? dungeon_room_index : (uint16)BYTE(overworld_screen_index);
@@ -51,9 +51,9 @@ static const StandingOverride *FindStandingOverride(int k) {
     if ((entry->indoors != 0) != (player_is_indoors != 0) || entry->area != area) continue;
     if (entry->indoors && entry->half != STANDING_HALF_ANY
         && entry->half != (sprite_x_hi[k] & 1)) continue;
-    // The receipt arrays are exactly 76 entries — anything past them corrupts g_ram
+    // The receipt arrays are exactly 76 entries, and anything past them corrupts g_ram
     // (the same bound the drop table enforces), so an oversized id armed by a buggy
-    // host is ignored rather than granted or drawn. The virtual ids (upgrade and
+    // host is ignored, not granted or drawn. The virtual ids (upgrade and
     // progressive) are the one sanctioned exception: they resolve to a native item
     // before any array.
     if (entry->new_item >= 76 && !GameHook_IsVirtualGrantId(entry->new_item)) return NULL;
@@ -72,7 +72,7 @@ static void GrantStandingEntry(const StandingOverride *entry) {
   if (entry->msg < 0)
     GameHook_ArmReceiptClassMessage(grant, kReceiptMsg_Generic);
   item_receipt_method = 0;
-  // This grant carries an already-assigned item — the npc-override seam inside the
+  // This grant carries an already-assigned item, so the npc-override seam inside the
   // receive path must not re-substitute it.
   GameHook_NpcOverrideBypassOnce();
   Link_ReceiveItem(grant, 0);
@@ -93,7 +93,7 @@ bool GameHook_OverrideStandingAbsorption(int k) {
 }
 
 // Grant seam for the dash-item key (the standing dungeon key knocked down by a dash).
-// Its vanilla pickup crosses no receive seam at all — a silent key-counter bump — so
+// Its vanilla pickup crosses no receive seam at all (a silent key-counter bump) so
 // the interception replaces the whole grant: the vanilla taken-bit is mirrored
 // byte-for-byte from the handler's own write, then the assigned item is received.
 bool GameHook_OverrideBonkKeyGrant(int k) {
@@ -111,7 +111,7 @@ bool GameHook_DrawStandingOverride(int k) {
   bool drawn = GameHook_DrawSpriteAsReceiptItem(k, entry->new_item, 0, 0);
   // A capacity upgrade shows its own icon over the presentation's fresh decode.
   if (drawn) GameHook_WriteUpgradeIconFor(entry->new_item);
-  // Last write before the upload, so the glint runs over the icon as well as the art.
+  // Last write before the upload, so the glint runs over the icon and the art.
   if (drawn) GameHook_ApplyItemSheen();
   // Finished picture into this sprite's own tiles, so a second one drawn later this frame
   // cannot overwrite it (sprite_art_slots.c).

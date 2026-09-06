@@ -1,5 +1,5 @@
 /* @layer core-game-hooks @kind native */
-// Dungeon-item shuffle — the seam that lets a small key, a big key, a map or a compass be
+// Dungeon-item shuffle: the seam that lets a small key, a big key, a map or a compass be
 // granted to a NAMED dungeon instead of the one the player is standing in.
 //
 // Two facts of the vanilla design make this more than a substitution table:
@@ -31,12 +31,12 @@
 #include "dungeon_item_ids.h"
 
 // The target banked by the resolver and consumed by whichever receipt seam owns that
-// family, or -1 for none. A plain static rather than a save byte: arming and consuming
+// family, or -1 for none. A plain static, not a save byte: arming and consuming
 // happen inside ONE synchronous call chain (a seam resolves the id, calls Link_ReceiveItem,
 // which calls AncillaAdd_ItemReceipt), so nothing here has to survive a frame, let alone a
 // save. The native id it was armed for is kept alongside it so a target that was never
-// consumed — the receipt bailed out with no free ancilla slot, the one path that drops a
-// grant — is recognised as stale at the next receipt instead of landing on it.
+// consumed (the receipt bailed out with no free ancilla slot, the one path that drops a
+// grant) is recognised as stale at the next receipt instead of landing on it.
 static int g_pending_palace = -1;
 static uint8 g_pending_native = 0;
 
@@ -61,7 +61,7 @@ static int KeySlotOfPalace(int palace) {
 
 // The bitfield bit(s) a palace index owns in link_bigkey / link_dungeon_map / link_compass.
 // Every read of those fields (the big-key doors, the HUD, the dungeon map screen) tests the
-// LIVE index unfolded, so the first castle's grant sets the bit of each of its two zones —
+// LIVE index unfolded, so the first castle's grant sets the bit of each of its two zones,
 // a big key found above ground still opens the cell reached from the passage, and either way
 // round.
 static int BitsOfPalace(int palace) {
@@ -90,7 +90,7 @@ uint8 GameHook_DungeonItemPresentationOf(uint8 item) {
 // Resolve a grant id for the receive flow: a targeted id banks its dungeon and becomes the
 // family's native receipt, every other id passes through untouched. Composes into
 // GameHook_ResolveGrantItem, so every substitution seam and the delivery export resolve it
-// in the line they already have. With the gate down — or no substitution seam open —
+// in the line they already have. With the gate down, or no substitution seam open,
 // nothing is banked and the caller still gets a valid native id, which the vanilla receipt
 // then credits to the current dungeon exactly as it always did.
 uint8 GameHook_ResolveDungeonItemGrant(uint8 item) {
@@ -114,7 +114,7 @@ uint8 *GameHook_ReceiptTargetByte(int item, uint8 *vanilla) {
   if (g_pending_palace < 0) return vanilla;
   // Gate down, or a receipt that is not the one this target was armed for: the target was
   // dropped by a receipt that never applied (the no-free-ancilla bail-out, the one path
-  // that loses a grant), so it is discarded here rather than left to land on this one.
+  // that loses a grant), so it is discarded here instead of left to land on this one.
   if (!DungeonItemGate() || (uint8)item != g_pending_native) {
     g_pending_palace = -1;
     return vanilla;
@@ -130,7 +130,7 @@ uint8 *GameHook_ReceiptTargetByte(int item, uint8 *vanilla) {
 }
 
 // The bit misc.c's receipt sets for a compass, a big key or a map. |vanilla_bit| is the
-// caller's own 0x8000 >> (cur_palace_index_x2 >> 1) — the correct answer for an unshuffled
+// caller's own 0x8000 >> (cur_palace_index_x2 >> 1), the correct answer for an unshuffled
 // grant and the only answer with the gate down. With a target banked it is that dungeon's
 // bit instead, consumed so the next grant starts clean.
 int GameHook_DungeonItemBit(int vanilla_bit) {
@@ -143,7 +143,7 @@ int GameHook_DungeonItemBit(int vanilla_bit) {
 }
 
 // Read side for the probes: the palace a receipt in flight will credit, -1 for none.
-// Ungated like GameHook_PrizeTakenMask — the target is only ever ARMED under the gate.
+// Ungated like GameHook_PrizeTakenMask: the target is only ever ARMED under the gate.
 int GameHook_PendingDungeonItemPalace(void) {
   return g_pending_palace;
 }

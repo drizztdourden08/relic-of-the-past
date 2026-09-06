@@ -1,5 +1,5 @@
 /* @layer core-game-hooks @kind native */
-// Physical substitution for the scripted grants that never cross the receive seam —
+// Physical substitution for the scripted grants that never cross the receive seam:
 // the counterpart of npc_overrides.c for handlers whose vanilla "grant" is a bare
 // counter write or a special chest path:
 //   - the upgrade pond (ai states 8/12): silent capacity-counter bumps, one per kind;
@@ -59,7 +59,7 @@ static void GrantScriptedSlot(const ScriptedGrantSlot *slot, uint8 subst_key) {
 
 // A purchase under a Custom family climbs the profile ladder through the hook's own step
 // (the empty rung, the final rung) with the pond's own messages and consolation, so the
-// vendored branch — native level arithmetic, its private hex tables, its `i != 8` bound —
+// vendored branch (native level arithmetic, its private hex tables, its `i != 8` bound)
 // is never entered while the profile owns the family. With kFeatures3_CapacityProfile
 // off, or the family left on the native grid, this returns false and that branch runs
 // byte-for-byte.
@@ -93,7 +93,7 @@ static void SellCapacityLevel(int kind) {
 
 // The pond plan's half of the purchase, ahead of every legacy path: the throw that was
 // just paid for is resolved once (pond_plan.c advances its own counter), and what it
-// yields goes out through the SAME substitution the legacy pond slots use — the seed's
+// yields goes out through the SAME substitution the legacy pond slots use: the seed's
 // pool item through the receipt flow, a consolation handed straight back, or a capacity
 // level. A prize can never be handed out twice because the counter never rewinds.
 static bool PondYieldUnderPlan(int kind) {
@@ -119,10 +119,10 @@ static bool PondYieldUnderPlan(int kind) {
   return true;
 }
 
-// Pond seam — called at the top of the upgrade purchase states. True = the vanilla
+// Pond seam, called at the top of the upgrade purchase states. True = the vanilla
 // counter bump and message are skipped; the caller advances to its wrap-up state.
 // The assigned item goes out ONCE: its completion bit closes the slot afterwards, so a
-// second purchase climbs the ladder instead of re-granting the check's item — through
+// second purchase climbs the ladder instead of re-granting the check's item, through
 // the hook under a Custom family, natively (false) otherwise. A pond PLAN takes the
 // purchase before any of that: it owns the whole sequence, prices included.
 bool GameHook_OverrideCapacityGrant(int kind) {
@@ -145,7 +145,7 @@ bool GameHook_BatGrantTaken(void) {
   return GameHook_SubstitutedGiftTaken(SUBST_KEY_BAT);
 }
 
-// Bat seam — called at the grant moment of its cutscene (before the vanilla message
+// Bat seam, called at the grant moment of its cutscene (before the vanilla message
 // and meter write). Replicates the state bookkeeping the vanilla branch performs
 // around the write so the cutscene resolves identically.
 bool GameHook_OverrideBatGrant(int k) {
@@ -159,7 +159,7 @@ bool GameHook_OverrideBatGrant(int k) {
   return true;
 }
 
-// Minigame seam — |t| is the prize roll after the once-only gating; the top slot (7)
+// Minigame seam: |t| is the prize roll after the once-only gating; the top slot (7)
 // is only ever reached on the first win, with the room's own persistence bit already
 // written by the vanilla routine. The substituted id is resolved here because the
 // return value flows straight into the vanilla chest receive path.

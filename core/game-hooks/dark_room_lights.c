@@ -15,7 +15,7 @@
 // means costing nothing.
 //
 // Like the item-power switches beside them, the bits live in the WRAM gate word kRam_Features4
-// rather than in a host gate, because the GAME branches on them: a host gate would be invisible to
+// instead of in a host gate, because the GAME branches on them: a host gate would be invisible to
 // a save state and would desynchronise a replay (host_gates.h states that rule).
 //
 // The one function below is phrased as a DIVERGENCE, so with features4 clear it returns exactly the
@@ -42,7 +42,7 @@ bool GameHook_CarriesDarkRoomLight(void) {
 }
 
 // Headless probe: the vendored seam itself, run on demand. Nothing is staged or read here, so
-// the harness owns both sides of the observation — it writes the room bytes and the inventory it
+// the harness owns both sides of the observation: it writes the room bytes and the inventory it
 // wants to ask about, calls this, and reads the dark-room byte and the subscreen flag the seam
 // left behind. Gated on the REQUESTED developer-tools bit like every other probe
 // (capacity_probes.c), because the gate word only lands in WRAM inside the first frame a harness

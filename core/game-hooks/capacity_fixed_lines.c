@@ -1,14 +1,14 @@
 /* @layer core-game-hooks @kind native */
 // The receipt lines of the FIXED-JUMP capacity items, selected by the live rung. A fixed
 // id (0x50-0x61, 0x67-0x76) carries its jump, but the capacity it climbs from is only known
-// here, when the grant resolves — so the host pre-renders one line per (family, starting
+// here, when the grant resolves, so the host pre-renders one line per (family, starting
 // rung, jump) in the session dialogue and pushes the table below (WasmSetCapacityFixedLine,
 // record-only, never persisted, rebuilt at every session start like the plan and the
 // wallet table). The resolvers (upgrade_grants.c, wallet_grants.c) read the rung off the
 // save bytes before they climb (GameHook_CapacityRungOf / the wallet index) and ask for
 // the line of that rung and the steps they actually climbed; a hit replaces the
 // location's jump-only line (GameHook_ArmReceiptMessageReplace, gated on
-// kFeatures3_ReceiptMessages), a miss — an off-plan rung the host did not pre-render —
+// kFeatures3_ReceiptMessages), a miss (an off-plan rung the host did not pre-render)
 // leaves it standing. Nothing here tests a gate: the read side is reached only from
 // inside the gated grant seams, and the arm answers to the message gate.
 #include "game_hooks_internal.h"

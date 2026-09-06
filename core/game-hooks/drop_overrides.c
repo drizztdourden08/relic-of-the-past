@@ -1,5 +1,5 @@
 /* @layer core-game-hooks @kind native */
-// Physical substitution for the free-standing key drops — the ground counterpart of
+// Physical substitution for the free-standing key drops: the ground counterpart of
 // item_overrides.c (chests) and npc_overrides.c (scripted givers). Entries are keyed by
 // (room, drop size): every certified key-drop check is the only drop of its size in its
 // room, and both the carrier kinds (an enemy-held drop released at death, a drop spawned
@@ -9,8 +9,8 @@
 // - grant: the one absorption handler every free-standing pickup crosses. A matched drop
 //   skips the vanilla grant entirely (the silent counter bump for the small drop, the
 //   native receive call for the large one) and instead grants the assigned item through
-//   the same receive path a scripted giver uses — hold-up animation, contextual receipt
-//   message, inventory write — while still writing the room's vanilla pickup bits, so
+//   the same receive path a scripted giver uses (hold-up animation, contextual receipt
+//   message, inventory write) while still writing the room's vanilla pickup bits, so
 //   the drop despawns on revisit and the host's location poller sees the same flags.
 // - draw: the drop lying/falling on the ground renders as the ASSIGNED item, using the
 //   receipt art pipeline (the shared animated-tile decode slot + the receipt's own OAM
@@ -40,7 +40,7 @@ static DropOverride g_drop_overrides[MAX_DROP_OVERRIDES];
 static int g_drop_override_count = 0;
 
 // The armed entry for sprite |k|, or NULL. Gate enforced here, at the application
-// site only (the setters below record blind — the SyncGateWords latching contract).
+// site only (the setters below record blind, the SyncGateWords latching contract).
 static const DropOverride *FindDropOverride(int k) {
   if (!(enhanced_features3 & kFeatures3_DropOverrides)) return NULL;
   uint8 type = sprite_type[k];
@@ -49,9 +49,9 @@ static const DropOverride *FindDropOverride(int k) {
   uint8 big = type == DROP_SPRITE_LARGE;
   for (int i = 0; i < g_drop_override_count; i++) {
     if (g_drop_overrides[i].room_id != dungeon_room_index || g_drop_overrides[i].big != big) continue;
-    // The receipt arrays are exactly 76 entries — anything past them corrupts g_ram
+    // The receipt arrays are exactly 76 entries, and anything past them corrupts g_ram
     // (the same bound WasmGrantItemWithReceipt enforces), so an oversized id armed by
-    // a buggy host is ignored rather than granted or drawn. The virtual upgrade ids
+    // a buggy host is ignored, not granted or drawn. The virtual upgrade ids
     // are the one sanctioned exception: they resolve to a native item before any array.
     if (g_drop_overrides[i].new_item >= 76
         && !GameHook_IsVirtualGrantId(g_drop_overrides[i].new_item)) return NULL;
@@ -80,7 +80,7 @@ bool GameHook_OverrideDropAbsorption(int k) {
   if (entry->msg < 0)
     GameHook_ArmReceiptClassMessage(grant, kReceiptMsg_Generic);
   item_receipt_method = 0;
-  // This grant carries an already-assigned item — the npc-override seam inside the
+  // This grant carries an already-assigned item, so the npc-override seam inside the
   // receive path must not re-substitute it.
   GameHook_NpcOverrideBypassOnce();
   Link_ReceiveItem(grant, 0);
@@ -97,7 +97,7 @@ bool GameHook_DrawDropOverride(int k) {
   bool drawn = GameHook_DrawSpriteAsReceiptItem(k, entry->new_item, entry->big ? 0 : -4, 0);
   // A capacity upgrade shows its own icon over the presentation's fresh decode.
   if (drawn) GameHook_WriteUpgradeIconFor(entry->new_item);
-  // Last write before the upload, so the glint runs over the icon as well as the art.
+  // Last write before the upload, so the glint runs over the icon and the art.
   if (drawn) GameHook_ApplyItemSheen();
   // Finished picture into this sprite's own tiles, so a second drop drawn later this
   // frame cannot overwrite it (sprite_art_slots.c).

@@ -4,7 +4,7 @@
 // (rupee_gem_draw.c recolours a gem, item_sheen.c sweeps a highlight over it).
 //
 // The slot is the 128 B at 0xBD40 that WriteTo4BPPBuffer_at_7F4000 (load_gfx.c) fills
-// and the NMI mirrors into VRAM tiles 0x24/0x25 (top row) and 0x34/0x35 (bottom row) —
+// and the NMI mirrors into VRAM tiles 0x24/0x25 (top row) and 0x34/0x35 (bottom row),
 // so it is four 32 B tiles in the order top-left, top-right, bottom-left, bottom-right,
 // the same layout the capacity icons are encoded in. Inside a tile, row |r| holds
 // bitplanes 0 and 1 at bytes 2r and 2r+1 and bitplanes 2 and 3 at bytes 16+2r and

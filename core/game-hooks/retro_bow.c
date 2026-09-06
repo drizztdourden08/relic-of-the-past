@@ -24,7 +24,7 @@
 // touched.
 //
 // The wallet is charged through the shelf's own currency helpers (shop_payment.c)
-// rather than by writing the counter here: paying is already a PURE test followed by
+// instead of by writing the counter here: paying is already a PURE test followed by
 // a write that only runs after the test passed, which is precisely the shape a
 // refusal needs. A refused shot spends nothing, and the caller cancels the arrow and
 // plays the same empty-bow sound an out-of-ammunition shot always played.

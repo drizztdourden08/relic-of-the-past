@@ -1,9 +1,9 @@
 /* @layer core-game-hooks @kind native */
-// Contextual receipt messages — a one-shot message slot consumed by the item-receipt
+// Contextual receipt messages: a one-shot message slot consumed by the item-receipt
 // flow. The randomizer arms it (from TS per delivered grant, or natively per applied
 // chest override / receipt-export grant) and the one vendored seam in ancilla.c, where
 // the receipt's message id is chosen, asks GameHook_ReceiptMessageOverride whether to
-// substitute. The setters only RECORD (same contract as item_overrides.c — the gate word
+// substitute. The setters only RECORD (same contract as item_overrides.c: the gate word
 // latches into WRAM a frame after the host writes it, so testing it at record time would
 // silently drop every arm made in the same burst); kFeatures3_ReceiptMessages is
 // enforced at the application site alone.
@@ -24,7 +24,7 @@ static int g_next_receipt_msg = -1;
 static bool g_receipt_msg_claimed = false;
 
 // One tier of a multi-tier upgrade family: blades 0x00-0x03 and the lone first blade
-// 0x49, shields 0x04-0x06, the lift gloves 0x1b/0x1c, the armors 0x22/0x23 — or an
+// 0x49, shields 0x04-0x06, the lift gloves 0x1b/0x1c, the armors 0x22/0x23) or an
 // unresolved progressive virtual id (a seam that arms its class line before resolving).
 // Derivable from the receipt id alone.
 static bool IsProgressiveItem(uint8 item_id) {
@@ -56,7 +56,7 @@ void GameHook_ArmReceiptClassMessage(uint8 item_id, int fallback_msg) {
 }
 
 // The progressive capacity resolver's arm (capacity_progressive.c): REPLACES whatever the
-// seam armed for the location, because the jump — and so the line — is only known once
+// seam armed for the location, because the jump (and so the line) is only known once
 // the pickup resolves. Same gate as the if-clear arm.
 void GameHook_ArmReceiptMessageReplace(int msg) {
   if (!(enhanced_features3 & kFeatures3_ReceiptMessages)) return;
@@ -65,7 +65,7 @@ void GameHook_ArmReceiptMessageReplace(int msg) {
 }
 
 // Link_ReceiveItem ran: the receipt it created owns the armed one-shot. An arm a previous
-// receipt already claimed never reached the seam, so it is dropped here rather than shown
+// receipt already claimed never reached the seam, so it is dropped here instead of shown
 // on this receipt. No gate test: with the gate off nothing is ever armed, so this is a
 // no-op there, and the arm this clears could only exist with the gate on.
 void GameHook_ReceiptMessageClaim(void) {
@@ -97,7 +97,7 @@ int GameHook_ReceiptMessageOverride(uint8 item_id, int vanilla_msg) {
   if (armed < 0) return vanilla_msg;
   if (!(enhanced_features3 & kFeatures3_ReceiptMessages)) return vanilla_msg;
   if (!DialogueLineExists(armed)) {
-    printf("[Randomizer] Receipt message %d not in the dialogue blob (stale assets?) — keeping %d\n",
+    printf("[Randomizer] Receipt message %d not in the dialogue blob (stale assets?), keeping %d\n",
            armed, vanilla_msg);
     return vanilla_msg;
   }

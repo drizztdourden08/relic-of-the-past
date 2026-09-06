@@ -7,7 +7,7 @@
 #include "src/types.h"
 #include "shop_payment.h"
 
-// Draws the shelf as |grant| — the entry's own id, virtual ids included — with |amount|
+// Draws the shelf as |grant| (the entry's own id, virtual ids included) with |amount|
 // of |currency| priced under it. False when the assigned item has no art, leaving the
 // caller to fall back to the vendored draw.
 bool GameHook_DrawShopShelf(int k, uint8 grant, uint8 currency, uint16 amount);

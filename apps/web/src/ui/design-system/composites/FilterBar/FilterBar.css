@@ -13,7 +13,7 @@
    Free text is part of the bar itself, not a bolt-on beside it. It shares the
    small control row every other segment draws at, absorbs whatever width the
    clauses leave on its line, and, carrying no caption of its own, lines up
-   with the bottom edge of the captioned strips rather than floating at the
+   with the bottom edge of the captioned strips instead of floating at the
    top of the line, exactly as the add button does. */
 .filter-bar .filter-bar__search {
   flex: 1 1 var(--open-entry-width);

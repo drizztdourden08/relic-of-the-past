@@ -4,7 +4,7 @@
 // The vendored purchase routine knows exactly one currency: ShopItem_HandleCost tests
 // and subtracts rupees and nothing else. A randomized shelf may ask for arrows, bombs,
 // health or the contents of a bottle instead, so the deduction lives here, split into a
-// PURE test and a write that only ever runs after that test passed — the same shape the
+// PURE test and a write that only ever runs after that test passed, the same shape the
 // vendored shelves use, so a refusal can never leave a half-paid file behind.
 //
 // Two hazards this file exists to avoid:

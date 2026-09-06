@@ -1,6 +1,6 @@
 /* @layer core-game-hooks @kind native */
 /**
- * Player pose ring — one record per game frame of everything that decides which character
+ * Player pose ring: one record per game frame of everything that decides which character
  * tiles are DRAWN: the pose row/step LinkOam_Main resolved, the DMA source indices the NMI
  * uploads from, the handler/timer state that drove that choice, the ancilla slots, and the
  * player's own OAM entries as built this frame. A pose fault shows up here as churn in the
@@ -42,7 +42,7 @@ static uint8 g_pose_ring_head[12];
  *  56  u8[10] ancilla types   66 u8[5] ancilla steps   71 u8 ancilla-to-pick-up
  *  72  u8 picking/throw state   73 u8 receive-item index   74 u8 receipt method   75 u8 button B frames
  *  76  u8 disable sprite damage   77 u8 give damage   78 u8 incapacitated timer   79 u8 recoil timer
- *  80  4 x { u8 x, u8 y, u8 charnum, u8 flags } — the first four OAM slots flagged as the player
+ *  80  4 x { u8 x, u8 y, u8 charnum, u8 flags }: the first four OAM slots flagged as the player
  */
 static void PutPlayerOam(uint8 *p) {
   int n = 0;
@@ -146,7 +146,7 @@ int WasmGetPoseRing(void) {
 /**
  * Headless frame step for a host-side harness: runs exactly one game frame with |inputs| in the
  * WasmSetInput bit layout; returns 1 when the frame ran, 0 when refused. The renderer never calls
- * this; the main loop owns stepping there. Gated on the REQUESTED developer-tools bit rather than
+ * this; the main loop owns stepping there. Gated on the REQUESTED developer-tools bit instead of
  * the WRAM copy, because the gate word only lands in WRAM inside the first frame this call runs.
  */
 EMSCRIPTEN_KEEPALIVE

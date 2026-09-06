@@ -9,7 +9,7 @@
 }
 
 /* The five family sliders read as one question asked five times, so they are
-   indented together under their heading rather than sitting flush with the
+   indented together under their heading instead of sitting flush with the
    heart ceiling below them. */
 .difficulty-block__copies {
   display: flex;

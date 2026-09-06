@@ -1,11 +1,11 @@
 /* @layer core-game-hooks @kind native */
-// Scripted-grant substitution — the NPC counterpart of item_overrides.c. Entries are
+// Scripted-grant substitution: the NPC counterpart of item_overrides.c. Entries are
 // keyed by (room, vanilla item): the room pins the giver's location so two givers of
 // the same item stay distinct, and NPC_OVERRIDE_ROOM_ANY marks an outdoor giver whose
 // vanilla item is unique across the armed set (the host certifies uniqueness before
-// arming such an entry). A third kind keys by the giver's SPRITE TYPE instead — see
+// arming such an entry). A third kind keys by the giver's SPRITE TYPE instead, see
 // the sprite_kind field below. The table is applied at the one seam every scripted grant
-// crosses — the Link_ReceiveItem entry (player.c) — so the giver's own cutscene hands
+// crosses (the Link_ReceiveItem entry, player.c) so the giver's own cutscene hands
 // over the substituted item natively, receipt animation included.
 //
 // Two one-shots keep the seam honest about who is granting, and both are armed by the
@@ -51,16 +51,16 @@ static bool g_match_anywhere_once = false;
 
 // ─── Substitution-completion bits ───
 // Several givers have no real completion flag: their scripts gate on POSSESSION of the
-// vanilla item, which substitution never grants — so the check would re-offer forever
+// vanilla item, which substitution never grants, so the check would re-offer forever
 // and nothing persistent would say it completed. These three bytes are the missing bits.
 //
 // Their addresses, and the reason a save byte can live in the battery block at all, are
-// in save_bytes.h — THE registry, where every hook-owned address is allocated once.
+// in save_bytes.h, THE registry, where every hook-owned address is allocated once.
 // Exposed to the host as progress-buffer bytes [21], [22] and [25] (state_queries.c).
 //
 // One bit per substitutable possession-gated giver, keyed by the VANILLA receive id its
 // script grants (unique per giver). Byte 0 bits 0-7, byte 1 bits 0-6, byte 2 bits 0-2;
-// the rest reserved. Keys 0xF0 and above are SYNTHETIC — allocation handles for grants
+// the rest reserved. Keys 0xF0 and above are SYNTHETIC: allocation handles for grants
 // whose script has no vanilla receive id at all (the upgrade pond's two purchases, the
 // cave bat); they can never collide with a real id at the receive seam and are written
 // via GameHook_MarkSubstitutionKey.
@@ -118,7 +118,7 @@ void GameHook_MarkSubstitutionKey(uint8 key) {
 }
 
 // Read side for the vendored re-offer gates and the host: true once this giver's grant
-// was substituted. Deliberately ungated — the bit is only ever WRITTEN by a substitution
+// was substituted. Deliberately ungated: the bit is only ever WRITTEN by a substitution
 // (which answers to kFeatures3_NpcOverrides), and once a check's item went out, the
 // giver must stay closed even if the session later stops or Vanilla Safe engages.
 bool GameHook_SubstitutedGiftTaken(uint8 vanilla_item) {
@@ -133,14 +133,14 @@ uint8 GameHook_SubstitutionTakenByte(int byte_index) {
 }
 
 // The re-offer gate for every possession-gated giver. The vanilla scripts gate on
-// OWNING the item the script grants (a possession proxy for "check taken") — but with
+// OWNING the item the script grants (a possession proxy for "check taken"), but with
 // grants substituted, possession says nothing about THIS giver: the vanilla item can
 // arrive early from another randomized check, and ORing possession into the gate then
 // closes a check never taken. So while an entry for |vanilla_item| is armed, the gate
 // reads ONLY the substitution-completion bit; with no armed entry (or the gate word
-// down — Vanilla Safe force-clears it), the giver grants real vanilla items again and
+// down, since Vanilla Safe force-clears it), the giver grants real vanilla items again and
 // |vanilla_closed| (the caller's original expression, verbatim) is the correct gate.
-// The scan matches by vanilla item alone — no room or sprite context, so prep-time
+// The scan matches by vanilla item alone, with no room or sprite context, so prep-time
 // and menu callers outside the sprite loop are safe; each of these givers' vanilla
 // items is unique across the armed set.
 bool GameHook_GiftGateClosed(uint8 vanilla_item, bool vanilla_closed) {
@@ -171,7 +171,7 @@ void GameHook_NpcOverrideMatchAnywhereOnce(void) {
 static bool EntryMatchesHere(const NpcGrantOverride *entry, bool anywhere) {
   // A sprite-keyed entry matches ONLY the certified giver's own in-handler grant:
   // the executing sprite slot must hold a live sprite of the entry's type. Never
-  // relaxed by match-anywhere — cur_object_index is stale outside the sprite loop,
+  // relaxed by match-anywhere, since cur_object_index is stale outside the sprite loop,
   // and by-item matching is exactly the ambiguity this entry kind exists to solve.
   if (entry->sprite_kind != NPC_OVERRIDE_SPRITE_NONE) {
     int k = cur_object_index;
@@ -213,7 +213,7 @@ uint8 GameHook_OverrideNpcGrantItem(uint8 item) {
     GameHook_NotifyOverrideFired(g_npc_overrides[i].fire_id);
     // A wish-pond grant (receipt method 2) consumed the thrown gear at toss time and
     // vanilla returns it as the upgraded tier. With the upgrade substituted away, the
-    // player must keep the original piece — the check costs nothing, matching the
+    // player must keep the original piece, so the check costs nothing, matching the
     // reference model of these locations. The pond handler's own scratch (executing
     // sprite frame) still holds the taken slot and its value.
     if (item_receipt_method == 2) {
@@ -235,15 +235,15 @@ uint8 GameHook_OverrideNpcGrantItem(uint8 item) {
 
 // Draw-only peek: the item the receive seam WOULD substitute for a grant of
 // |vanilla_item| in the current context, or -1 with nothing armed. Same gate and
-// matching as GameHook_OverrideNpcGrantItem, but reads only — no one-shot consumed,
-// no message armed, no completion bit written, no report — so the world-item draw
+// matching as GameHook_OverrideNpcGrantItem, but reads only: no one-shot consumed,
+// no message armed, no completion bit written, no report, so the world-item draw
 // overrides can call it every drawn frame and always agree with the eventual grant.
 int GameHook_PeekNpcGrantItem(uint8 vanilla_item) {
   if (!(enhanced_features3 & kFeatures3_NpcOverrides)) return -1;
   for (int i = 0; i < g_npc_override_count; i++) {
     if (g_npc_overrides[i].vanilla_item != vanilla_item) continue;
     if (!EntryMatchesHere(&g_npc_overrides[i], false)) continue;
-    // The receipt arrays are exactly 76 entries — the bound every override table
+    // The receipt arrays are exactly 76 entries, the bound every override table
     // enforces before an armed id may reach the receipt art or grant paths. A virtual
     // id peeks as its native presentation item (draw-only, no arithmetic): the
     // upgrade's refill item, or the progressive family's next tier right now.
@@ -259,7 +259,7 @@ int GameHook_PeekNpcGrantItem(uint8 vanilla_item) {
   return -1;
 }
 
-// Upsert one entry; the key is (room, vanilla item, sprite discriminator).
+// Upsert one entry, keyed by (room, vanilla item, sprite discriminator).
 static void RecordNpcOverride(uint16 room, uint8 vanilla_item, uint8 sprite,
                               uint8 new_item, int16 msg, int16 fire_id) {
   for (int i = 0; i < g_npc_override_count; i++) {
@@ -289,7 +289,7 @@ static void RecordNpcOverride(uint16 room, uint8 vanilla_item, uint8 sprite,
 }
 
 // No gate test in the exports below: they only RECORD, same contract as
-// WasmSetChestSlotOverride — the gate word latches into WRAM a frame after the host
+// WasmSetChestSlotOverride, since the gate word latches into WRAM a frame after the host
 // writes it, so testing it here would silently drop every arm made at session start.
 // |msg| is the entry's contextual receipt-message id, or -1 for the class default;
 // |fire_id| is the host's completion id for this entry, or -1 for no report.
@@ -300,7 +300,7 @@ void WasmSetNpcGrantOverride(int room_id, int vanilla_item, int new_item, int ms
                     (uint8)new_item, (int16)msg, (int16)fire_id);
 }
 
-// The sprite-keyed entry kind — for a roomless giver whose vanilla item is shared
+// The sprite-keyed entry kind, for a roomless giver whose vanilla item is shared
 // with other roomless givers. The host certifies (decomp audit, per sprite type)
 // that the giver's grant executes inside its own sprite handler before arming one.
 EMSCRIPTEN_KEEPALIVE

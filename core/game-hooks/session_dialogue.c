@@ -1,10 +1,10 @@
 /* @layer core-game-hooks @kind native */
-// Session dialogue supplement — swaps the live dialogue blob for a host-composed one.
+// Session dialogue supplement: swaps the live dialogue blob for a host-composed one.
 //
 // The baked asset blob is shared per ROM across every profile, so per-seed receipt
 // text can never live there. Instead the host composes a full dialogue blob at
-// randomizer session start — the active language's baked lines byte-identical, plus
-// one pre-rendered contextual line per planned grant — writes it to the virtual FS,
+// randomizer session start: the active language's baked lines byte-identical, plus
+// one pre-rendered contextual line per planned grant, writes it to the virtual FS,
 // and this file adopts it: g_zenv.dialogue_blk is repointed at a private copy, and
 // restored to the baked blob when the session ends. The blob format is exactly what
 // ZeldaSetLanguage selects (index 0 = dictionary, index 1 = per-line dialogue), so
@@ -18,7 +18,7 @@
 // a live box. The host keeps the pool's size and order, so every armed id stays valid.
 //
 // Ungated by design: the supplement carries the baked lines unchanged, so adopting
-// it is behavior-neutral outside the randomizer's own message ids — and the message
+// it is behavior-neutral outside the randomizer's own message ids, and the message
 // SUBSTITUTION stays gated at its application site (receipt_messages.c).
 #include <stdlib.h>
 #include "game_hooks_internal.h"
@@ -51,7 +51,7 @@ int WasmLoadSessionDialogue(void) {
   }
   MemBlk blob = { data, length };
   if (FindIndexInMemblk(blob, 1).ptr == NULL) {
-    printf("[Randomizer] Session dialogue: malformed blob (%d bytes) — keeping the baked dialogue\n",
+    printf("[Randomizer] Session dialogue: malformed blob (%d bytes), keeping the baked dialogue\n",
            (int)length);
     free(data);
     return 0;
@@ -73,5 +73,5 @@ void WasmClearSessionDialogue(void) {
   if (g_baked_dialogue.ptr != NULL) g_zenv.dialogue_blk = g_baked_dialogue;
   free(g_session_dialogue);
   g_session_dialogue = NULL;
-  printf("[Randomizer] Session dialogue cleared — baked dialogue restored\n");
+  printf("[Randomizer] Session dialogue cleared, baked dialogue restored\n");
 }

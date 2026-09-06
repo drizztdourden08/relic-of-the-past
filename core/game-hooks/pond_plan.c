@@ -5,7 +5,7 @@
 // rise every hundred to sell one capacity level. Under a plan the pond instead sells a
 // numbered SEQUENCE of throws: throw t costs price[t], paid in a single toss, and the
 // fairy rises on every one of them. What the fairy then hands over is the entry's own
-// business — the seed's next pool item, a consolation, or the capacity level the vanilla
+// business: the seed's next pool item, a consolation, or the capacity level the vanilla
 // branch would have sold (scripted_grants.c owns that half, so the substitution keeps
 // going through the one path it always has).
 //
@@ -20,7 +20,7 @@
 // never sell again). Each is a pre-rendered message id or -1, and -1 everywhere leaves
 // the vanilla wording in place, so a plan is playable with no composed dialogue at all.
 //
-// Save bytes — one counter of throws taken, allocated in save_bytes.h (THE registry).
+// Save bytes: one counter of throws taken, allocated in save_bytes.h (THE registry).
 // That single counter is the whole persistence: a prize sits at a known throw index and
 // the counter never rewinds, so no prize can be handed out twice and the pond cannot be
 // farmed. Zero on a vanilla file, and a vanilla read of the same file sees a byte it
@@ -33,7 +33,7 @@
 #define POND_MAX_PRIZES 20
 
 // The price of a throw the pond no longer sells: above any wallet, so the handler takes
-// its own "come back another time" branch and the pond quietly closes. Never charged.
+// its own "come back another time" branch and the pond closes. Never charged.
 #define POND_CLOSED_COST 0x7FFF
 
 // What one throw fills the pond's bank with. The vendored handler compares that bank
@@ -90,7 +90,7 @@ bool GameHook_PondPromptOverride(void) {
 }
 
 // The refusal seam: the line shown when the purchase does not happen. Vanilla has ONE
-// line for both refusals — "come back another time" — which is right for a wallet that
+// line for both refusals ("come back another time") which is right for a wallet that
 // cannot pay yet and wrong for a pond that will never sell again, so only the exhausted
 // case is replaced. |vanilla| back whenever a throw is still on the table.
 int GameHook_PondLaterMessage(int vanilla) {
@@ -109,7 +109,7 @@ int GameHook_PondThrowCost(int vanilla) {
 
 // The payment seam (ai state 3): the amount actually taken from the wallet and shown
 // flying in. The handler stashed the cost in a sprite BYTE, so the price is read back
-// from the plan rather than from that stash; |stored| back when no plan is open.
+// from the plan instead of from that stash; |stored| back when no plan is open.
 int GameHook_PondThrowAmount(int stored) {
   const PondThrow *entry = CurrentThrow();
   return entry == NULL ? stored : entry->price;

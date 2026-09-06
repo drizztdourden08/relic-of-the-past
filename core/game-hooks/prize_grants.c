@@ -1,5 +1,5 @@
 /* @layer core-game-hooks @kind native */
-// Dungeon prize shuffle — the seam that lets a boss's falling reward be any item, and the
+// Dungeon prize shuffle: the seam that lets a boss's falling reward be any item, and the
 // ten rewards themselves be placed like any other item.
 //
 // Two facts of the vanilla design make this more than a substitution table:
@@ -10,8 +10,8 @@
 //    reward never sets that bit, so unfixed the reward respawns forever and the door
 //    never opens. The two states are separated here: a hook-owned save bit records that
 //    THIS dungeon's reward was handed over, and the two room tags read it alongside the
-//    vanilla expression. The pendant/crystal bit stays what it always was — the
-//    inventory record of owning that reward — so it is set only when the reward really
+//    vanilla expression. The pendant/crystal bit stays what it always was, the
+//    inventory record of owning that reward, so it is set only when the reward really
 //    is the item received.
 // 2. A crystal has ONE receive id (0x20) for all seven; which crystal it banks comes from
 //    the room the player is standing in (ancilla.c's rising crystal). An assigned crystal
@@ -34,7 +34,7 @@
 // The native receive id every crystal presents as.
 #define PRIZE_CRYSTAL_ITEM 0x20
 
-// Save bytes — addresses allocated in save_bytes.h, THE registry. Two bytes carrying one
+// Save bytes, with addresses allocated in save_bytes.h, THE registry. Two bytes carrying one
 // bit per palace index (0-12) for "this dungeon's reward was handed over", and one byte
 // naming the crystal the receipt in flight must bank (0 for none). Nothing here reads or
 // writes another owner's byte.
@@ -66,7 +66,7 @@ uint8 GameHook_PrizePresentationOf(uint8 item) {
 }
 
 // Bank crystal |bit| and remember it for the rising-crystal seam. The bit is banked HERE
-// rather than left to that seam so an interrupted cutscene cannot lose the item; the seam
+// instead of left to that seam so an interrupted cutscene cannot lose the item; the seam
 // then re-ORs the same bit, which is idempotent.
 static void BankCrystal(uint8 bit) {
   link_has_crystals |= bit;
@@ -76,7 +76,7 @@ static void BankCrystal(uint8 bit) {
 // Resolve a grant id for the receive flow: a crystal id banks its bit and becomes the
 // native crystal receipt, every other id passes through untouched. Composes after
 // GameHook_ResolveGrantItem (which leaves ids past its own span alone), so a seam resolves
-// both families in one line. With the gate down — or no substitution seam open — nothing is
+// both families in one line. With the gate down, or no substitution seam open, nothing is
 // banked and the caller still gets a valid native id instead of an out-of-range one.
 uint8 GameHook_ResolvePrizeItem(uint8 item) {
   if (!GameHook_IsPrizeGrantId(item)) return item;
@@ -87,7 +87,7 @@ uint8 GameHook_ResolvePrizeItem(uint8 item) {
   return PRIZE_CRYSTAL_ITEM;
 }
 
-// The rising crystal's bit (ancilla.c). |vanilla_bit| is the room's own crystal — the
+// The rising crystal's bit (ancilla.c). |vanilla_bit| is the room's own crystal, the
 // correct answer for an unshuffled reward and the only answer with the gate down. With an
 // assigned crystal in flight it is that one instead, consumed so the next reward starts clean.
 uint8 GameHook_CrystalPrizeBit(uint8 vanilla_bit) {
@@ -123,7 +123,7 @@ bool GameHook_DungeonPrizeTaken(int vanilla_flagged) {
 
 // Record that the reward of the dungeon the player is standing in was handed over. Called
 // from the substitution seam (npc_overrides.c) for every grant it applies: only a falling
-// boss reward qualifies — receipt method 3 carrying one of the four native reward ids —
+// boss reward qualifies (receipt method 3 carrying one of the four native reward ids)
 // so an ordinary gift in the same room can never mark a dungeon cleared.
 void GameHook_NoteDungeonPrizeGrant(uint8 vanilla_item) {
   if (!PrizeGate()) return;
@@ -135,7 +135,7 @@ void GameHook_NoteDungeonPrizeGrant(uint8 vanilla_item) {
 
 // Read side for the host and the probes: the claimed mask (palaces 0-7 low byte, 8-15
 // high) and the crystal a receipt in flight will bank. Ungated like
-// GameHook_SubstitutedGiftTaken — the bytes are only ever WRITTEN under the gate.
+// GameHook_SubstitutedGiftTaken: the bytes are only ever WRITTEN under the gate.
 int GameHook_PrizeTakenMask(void) {
   return srm_prize_taken_lo | (srm_prize_taken_hi << 8);
 }

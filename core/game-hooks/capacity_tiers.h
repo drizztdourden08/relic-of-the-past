@@ -1,6 +1,6 @@
 /* @layer core-game-hooks @kind native */
-// The native tier grids of the capacity families — one definition for every hook that
-// walks them (the upgrade resolver, the receipt export, the new-file seam) — and the
+// The native tier grids of the capacity families: one definition for every hook that
+// walks them (the upgrade resolver, the receipt export, the new-file seam), and the
 // hook-owned wallet ladder, plus the RUNG convention every hook shares.
 //
 // A ladder rung is what the profile counts in. Rung 0 is the empty tier below every
@@ -9,7 +9,7 @@
 // empty rung is a hook-owned save byte per family (capacity_profile.c). The two counted
 // families keep the upgrade pond's own eight levels: display-coded values that double as
 // the [Number] message digits and as the refill target (the HUD drain stops at the level
-// cap, hud.c). The wallet has no native ladder at all — its cap table is ours, in
+// cap, hud.c). The wallet has no native ladder at all, so its cap table is ours, in
 // 100-rupee steps ending in 99 like the vanilla 999, up to the 9999 the CarryMoreRupees
 // ceiling allows.
 #ifndef CAPACITY_TIERS_H

@@ -2,18 +2,18 @@
 // Gear pictures for substituted world items: a blade or a shield lying on a shelf, on the
 // ground or on a pedestal drawn in ITS OWN colours instead of the player's.
 //
-// The fault is in the palette, not the art. Eight receipt ids — the four blades, the three
-// shields, and the duplicate blade id the opening scene uses — are the only ones drawn with
+// The fault is in the palette, not the art. Eight receipt ids (the four blades, the three
+// shields, and the duplicate blade id the opening scene uses) are the only ones drawn with
 // sprite palette row 5 (kWishPond2_OamFlags), and that row's indices 9-15 hold the player's
 // equipped blade and shield colours. AncillaAdd_ItemReceipt (misc.c) reloads them for the
 // item it is granting, which is exactly right for the hold-up ceremony and wrong for every
 // other seam: a world draw decodes the right tiles and then reads them through whatever gear
 // the player happens to carry. Three shelves offering three different blades are the worst
-// case — the three share one picture and differ ONLY by that row, so all three come out
+// case: the three share one picture and differ ONLY by that row, so all three come out
 // identical. CGRAM cannot fix that: one row, three shelves, one frame.
 //
 // So the host does the recolouring instead. The extraction quantizes each of the eight
-// pictures — each built with its own correct row-5 variant — to one fixed row that is always
+// pictures (each built with its own correct row-5 variant) to one fixed row that is always
 // resident, encodes them as the decode slot's four 4bpp tiles (128 B each, 1024 B in all) and
 // hands the file over through MEMFS (WasmApplyGearIconsFile). The shared sprite-side draw
 // copies the tiles over its own fresh decode and answers with the fixed row for its OAM
@@ -23,7 +23,7 @@
 // The hold-up is deliberately NOT covered: it is the game's own ceremony and it already
 // loads the row for the item it is granting.
 //
-// Gate: kFeatures3_GearArt, and only once a 1024 B file was applied — with either missing
+// Gate: kFeatures3_GearArt, and only once a 1024 B file was applied. With either missing
 // nothing is written, no palette row is changed, and the vanilla art shows byte for byte.
 // Nothing here touches the save block.
 #include "game_hooks_internal.h"
@@ -85,7 +85,7 @@ void GameHook_WriteGearArt(uint8 item) {
 }
 
 // The sprite-side draw's palette read: the fixed row when |item| draws as a gear picture,
-// |native| — the item's own kWishPond2_OamFlags entry — otherwise.
+// |native|, the item's own kWishPond2_OamFlags entry, otherwise.
 uint8 GameHook_GearPalette(uint8 item, uint8 native) {
   return GearShown(item) ? GEAR_PALETTE_ROW : native;
 }

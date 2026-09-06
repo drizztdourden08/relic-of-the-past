@@ -4,7 +4,7 @@
    Hosted in the master-detail DETAIL pane, which already draws the surface,
    border and padding. The panel fills it with a split: the catalog on the
    left behind its tab strip, the item pool on the right behind its rail.
-   Only the tab BODY scrolls — the header, the tabs and the pool total stay
+   Only the tab BODY scrolls: the header, the tabs and the pool total stay
    put, so the feedback for an edit never scrolls away with the rows. */
 
 .randomizer-options__split {
