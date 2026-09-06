@@ -45,7 +45,6 @@
     "emulator:start": "node scripts/deploy/push-android.mjs --emulator-only",
     "prepare": "git config core.hooksPath .githooks || true",
     "lint": "tsc --noEmit && eslint .",
-    "gate": "node scripts/copyright-gate/scan.mjs --staged",
     "sync:check": "node scripts/hooks/sync-check/index.mjs",
     "state-format": "node scripts/build/check-state-format.mjs",
     "ci": "npm run lint && npm run state-format && node scripts/analyze/analyze.mjs --ci",

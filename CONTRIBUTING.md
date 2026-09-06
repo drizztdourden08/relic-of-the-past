@@ -54,14 +54,6 @@ If you change C code in `core/`, rebuild the WASM. New `Wasm*` exports only need
 the `EMSCRIPTEN_KEEPALIVE` tag (which exports them), so there is no `EXPORTED_FUNCTIONS`
 list to maintain in `build.bat`/`Makefile`.
 
-## Copyright / media gate
-
-An automatic gate flags any **media** (images, audio, video, music, fonts, ROM/asset binaries) or
-**Nintendo trademark reference** you add. It runs locally via a `commit-msg` hook and on GitHub
-via the **Copyright Gate** check. The project ships no game assets, so anything flagged needs explicit
-approval: add `[allow-copyright]` to your commit message, or (for PRs) a maintainer applies the
-`copyright-ok` label. Full details: [docs/contributing/copyright-gate.md](docs/contributing/copyright-gate.md).
-
 ## Tests
 
 Automated tests are intentionally minimal. Playwright is available as a **tool**, not a committed

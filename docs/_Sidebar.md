@@ -84,7 +84,6 @@
 - [Testing](contributing/testing.md)
 - [Design System](contributing/design-system.md)
 - [Design Language](contributing/design-language.md)
-- [Copyright / Media Gate](contributing/copyright-gate.md)
 
 **Legal**
 

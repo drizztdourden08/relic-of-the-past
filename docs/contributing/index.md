@@ -6,9 +6,8 @@ Thanks for helping improve Relic of the Past! This is the contributor hub; the r
 is the short version GitHub surfaces, and points here.
 
 > [!IMPORTANT]
-> This is an unofficial fan project, not affiliated with Nintendo. Keep ROMs, game assets, and
-> extracted data out of commits. PRs that add such material are rejected, and the
-> [Copyright Gate](copyright-gate.md) flags them automatically.
+> This is an unofficial fan project, not affiliated with Nintendo. Keep ROMs and other
+> user-provided game assets out of commits — they're gitignored and never committed.
 
 ## Start here
 

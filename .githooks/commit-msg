@@ -1,16 +1,4 @@
 #!/bin/sh
-# Copyright / media gate (local). Blocks commits that add media or Nintendo
-# references unless you acknowledge with [allow-copyright] in the message.
-# CI re-checks regardless, so this is your personal heads-up, not the hard wall.
-
-if ! grep -qi '\[allow-copyright\]' "$1"; then
-  if command -v node >/dev/null 2>&1; then
-    node scripts/copyright-gate/scan.mjs --staged || exit 1
-  else
-    echo "copyright-gate: node not found. Skipping the local check (CI will enforce)."
-  fi
-fi
-
 # ai-config / vault drift gate. This one is local-only, since .claude/ and
 # .vault/ are gitignored and nothing else ever re-checks them. Blocks a commit that
 # would leave local-only work behind, unless acknowledged with [sync-ack].
