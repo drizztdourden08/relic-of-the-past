@@ -1,9 +1,8 @@
 /* @layer test @kind test */
 /**
- * Runtime coverage checks for the search catalog. The compile-time guard lives in
- * ProfileHub.constants.ts itself (PROFILE_HUB_TABS: Record<ProfileHubTab, …> fails `tsc`
- * if a tab is added without being described there) — these tests instead verify the
- * catalog actually built from it is internally consistent.
+ * Runtime coverage checks for the search catalog. The compile-time guard is
+ * `PROFILE_HUB_TABS: Record<ProfileHubTab, ...>` in ProfileHub.constants.ts;
+ * these verify the built catalog is internally consistent.
  */
 import { describe, it, expect } from 'vitest';
 import { DEFAULT_SETTINGS } from '@app/lib/game/settings';
@@ -15,7 +14,7 @@ import type { WindowControlsPort } from '@shared/platform';
 import type { SearchContext } from '@app/ui/domains/app/views/SearchPalette/SearchPalette.type';
 
 // buildTitleBarMenuItems (via menuSource) reads window.api.isDev only when actually
-// invoked (inside buildCatalog calls below) — real only in the renderer. vitest's default
+// invoked (inside buildCatalog calls below), and it is real only in the renderer. vitest's default
 // environment is plain Node with no window global, so the calls below need this stub.
 (globalThis as unknown as { window: unknown }).window = { api: { isDev: false } };
 

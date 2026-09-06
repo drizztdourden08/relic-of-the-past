@@ -2,7 +2,7 @@
 /**
  * The route the run actually walked, in order, with the checks each stop earned.
  *
- * The event log answers "what happened"; this answers "where did it go" — the
+ * The event log answers "what happened". This answers "where did it go", the
  * question you ask when a run ends somewhere unexpected. Stops come from the
  * engine's own currentScreen, so the trail cannot disagree with the run.
  */
@@ -14,7 +14,7 @@ import { haulAt } from './trail-haul';
 
 interface RunTrailProps {
   trail: TrailStop[];
-  /** Checks completed at the moment of reading — closes out the last stop. */
+  /** Checks completed at the moment of reading, which closes out the last stop. */
   checksDone: number;
 }
 

@@ -1,7 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * Profile detail panel — right-side display of selected profile info + settings.
- */
 
 import type { CSSProperties } from 'react';
 import { Box } from '../../../../../../design-system/primitives/Box';
@@ -64,8 +61,7 @@ const ProfileDetailPanel = (props: ProfileDetailPanelProps) => {
             value={profile.msuPack || ''}
             onChange={async (val) => {
               await updateProfile(profile.id, { msuPack: val || null });
-              // Audible now rather than at the next boot. A no-op unless this profile is the one
-              // currently playing, so editing another profile's pack never disturbs it.
+              // Audible now, not at the next boot. A no-op unless this profile is the one playing.
               await reloadMsuForProfile(profile.id);
               onRefresh();
             }}

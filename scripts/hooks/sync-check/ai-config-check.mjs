@@ -1,9 +1,6 @@
 /* @layer tooling-scripts @kind logic */
-/**
- * Read-only: does .claude/ (or CLAUDE.md, tools, etc.) differ from what
- * ai-config last rendered? .ai-config.json already records every rendered
- * file's hash, so this is a local hash compare — no clone, no network.
- */
+// Read-only: does .claude/ (or CLAUDE.md, tools, etc.) differ from what ai-config
+// last rendered? .ai-config.json records every rendered file's hash; no network.
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';

@@ -2,8 +2,8 @@
 /**
  * Turns a pack manifest into the four channels the engine drives.
  *
- * Music comes from `tracks`, the other three from `sounds` — and a pack that authors no sounds
- * simply gets three empty channels, which is what every pack written before sound replacement
+ * Music comes from `tracks`, the other three from `sounds`, and a pack that authors no sounds
+ * gets three empty channels, which is what every pack written before sound replacement
  * existed expects.
  */
 import type { MsuPackManifest, SoundChannel } from '@shared/types/msu-manifest';
@@ -14,7 +14,7 @@ import type { LoadBytes } from './track-loader';
 /**
  * How many decoded programs each channel keeps. Music tracks are minutes of PCM, so a handful
  * covers area churn; effects are fractions of a second, and a channel may cycle through dozens
- * of them in a fight, so it is worth keeping far more decoded than re-decoding a bonk per hit.
+ * of them in a fight, so keeping far more decoded beats re-decoding a bonk per hit.
  */
 const SOUND_CACHE_LIMIT = 48;
 

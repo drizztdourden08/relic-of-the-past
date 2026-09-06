@@ -91,7 +91,7 @@
   border-bottom: 1px solid var(--c-hairline);
 }
 
-/* Content stays out of layout/tab-order while collapsed — only opacity animates on the shell. */
+/* Content stays out of layout/tab-order while collapsed, so only opacity animates on the shell. */
 .search-palette:not(.is-open) .search-palette__input-row {
   visibility: hidden;
 }

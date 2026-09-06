@@ -1,15 +1,12 @@
 /* @layer renderer-app @kind style */
 
-/* The foldable detail column mechanism itself (the toggle, the collapsed
-   width, the rotated title) now lives in the shared CollapsibleDetail.css —
-   every collection's detail pane uses it, not just this comparison view. */
+/* The fold mechanism lives in the shared CollapsibleDetail.css. */
 
 /* Two records side by side need more room than the one a collection shows. */
 .data-inspector__master-detail--comparing {
   grid-template-columns: 1fr 1.5fr;
 }
 
-/* ─── The finding, above the panes ─── */
 .rec-detail__body {
   display: flex;
   flex-direction: column;
@@ -69,7 +66,6 @@
   font-size: var(--text-sm);
 }
 
-/* ─── The two panes ─── */
 .rec-detail__panes {
   display: grid;
   grid-template-columns: 1fr 1fr;

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * Token stream to bracket string — the export half of the adapter, and the
+ * Token stream to bracket string. The export half of the adapter, and the
  * exact inverse of `parseTokens` for every string the dialogue decoder can
  * emit. The output feeds the existing compression path, so the shape must match
  * `formatDialogueText` byte for byte: a param is rendered decimal and padded to

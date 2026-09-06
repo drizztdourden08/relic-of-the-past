@@ -1,10 +1,10 @@
 /* @layer renderer-components @kind logic */
 /**
- * Whether a line ends its box — a per-line flag, flipped from the line's end.
+ * Whether a line ends its box. A per-line flag, flipped from the line's end.
  *
  * A wait-for-button is the one control code a player actually experiences: it is
  * the moment the box stops and asks for a press. It cannot occur anywhere but at
- * the end of a line, so it is not something to be inserted at a caret — it is a
+ * the end of a line, so it is not something to be inserted at a caret. It is a
  * property of the line, and turning it on or off is one gesture.
  *
  * Two ways in, the same transaction. `toggleWaitAt` is for the marker drawn at a

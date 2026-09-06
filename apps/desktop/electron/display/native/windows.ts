@@ -6,7 +6,7 @@
  *  - Electron reports DIPs while the OS reports physical pixels (a 4K screen at 200% scaling
  *    is 1920x1080 to Electron and 3840x2160 to user32), so mode matching must use the values
  *    read back from EnumDisplaySettingsW, never Electron's display size.
- *  - Windows rounds rates to whole numbers, reporting 119 and 120 rather than 119.88.
+ *  - Windows rounds rates to whole numbers, reporting 119 and 120 instead of 119.88.
  *
  * CDS_FULLSCREEN asks Windows to treat the change as belonging to this process, so the
  * original mode comes back on its own if we crash instead of leaving the user stranded.
@@ -114,7 +114,7 @@ const listRates = (): number[] => {
   for (let i = 0; i < MAX_MODES; i++) {
     const mode = api.enumDisplaySettings(i);
     if (!mode) break;
-    // Physical pixels on both sides of this comparison — see the header note.
+    // Physical pixels on both sides of this comparison. See the header note.
     if (mode.dmPelsWidth === current.dmPelsWidth && mode.dmPelsHeight === current.dmPelsHeight) {
       rates.add(mode.dmDisplayFrequency);
     }

@@ -15,7 +15,7 @@ Tools for extracting and inspecting a ROM's sprites. These are mostly developer-
 
 Today only HUD, item, and menu sprites are extracted. Link, enemies, NPCs, and overworld and dungeon
 tiles are not. If you need a gameplay sprite that hasn't been extracted, that's a known gap, so flag the
-specific sprite rather than assume it's there.
+specific sprite instead of assuming it's there.
 
 ## For contributors
 

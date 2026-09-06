@@ -1,11 +1,7 @@
 /* @layer renderer-components @kind hook */
 /**
- * Drops audio into the pack without claiming a slot.
- *
- * A sound's layers pick from every file in the pack, so an upload here only has to land the
- * bytes under a safe, unused name. That is why this is not the track upload with a flag: all of
- * that hook's weight is the canonical `<prefix><n>.<ext>` naming a classic music slot depends on,
- * and a sound has no slot to name a file after.
+ * Drops audio into the pack without claiming a slot: only a safe, unused name is needed. Not the
+ * track upload with a flag, because that hook's weight is the `<prefix><n>.<ext>` slot naming.
  */
 import { useCallback, useState } from 'react';
 import * as msuStore from '@app/lib/storage/msu-store';

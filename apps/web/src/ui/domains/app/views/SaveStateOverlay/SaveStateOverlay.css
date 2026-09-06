@@ -23,7 +23,7 @@
   border-radius: 0 0 var(--radius-md) var(--radius-md);
 }
 
-/* Horizontally-scrollable row of slots — never wider than the viewport. */
+/* Horizontally-scrollable row of slots, never wider than the viewport. */
 .save-overlay__track {
   display: flex;
   gap: var(--space-sm);
@@ -102,7 +102,7 @@
   color: var(--c-gold-bright);
 }
 
-/* Icon wrapper — positions the SVG ring around the icon */
+/* Icon wrapper that positions the SVG ring around the icon */
 .save-overlay__hint-icon-wrap {
   position: relative;
   display: inline-flex;

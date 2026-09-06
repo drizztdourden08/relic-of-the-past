@@ -2,12 +2,7 @@
 import type { TileClassification } from '@shared/game/navigation/tile-classification';
 import type { ReachState } from '@shared/game/navigation/types';
 
-/**
- * One layer block's data: its full classification, THIS layer's own reach
- * state, and — only meaningful for a native-attr obstacle — whether the
- * player's current loadout satisfies it. `isAboveLayer` selects the
- * "unsupported" wording over "blocked" in reach-status.ts.
- */
+/** One layer block's data. `canPass` is meaningful only for an obstacle; `isAboveLayer` selects the "unsupported" wording. */
 interface LayerTileData {
   classification: TileClassification;
   reach: ReachState;
@@ -15,11 +10,7 @@ interface LayerTileData {
   isAboveLayer: boolean;
 }
 
-/**
- * Which of the three canonical layouts a tile renders as. Dual falls back to
- * single when either side has no real content (see tile-inspector-classification.ts) —
- * so by the time this reaches the tooltip, the mode IS the layout.
- */
+/** Which layout a tile renders as. Dual falls back to single when either side has no real content. */
 type TooltipLayers =
   | { mode: 'single'; primary: LayerTileData }
   | { mode: 'locked'; lockedLayer: 0 | 1; primary: LayerTileData }

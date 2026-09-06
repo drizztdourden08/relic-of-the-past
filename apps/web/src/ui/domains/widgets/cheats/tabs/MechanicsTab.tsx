@@ -1,8 +1,5 @@
 /* @layer renderer-widgets @kind component */
-/**
- * MechanicsTab — Kill enemies, damage multiplier, extra armor reduction, ignore collision,
- * dark-room lighting.
- */
+/** Kill enemies, damage multiplier, extra armor reduction, ignore collision, dark-room lighting. */
 import { useState } from 'react';
 import { Box, Text, Button } from '../../../../design-system/primitives';
 import { Toggle } from '../../../../design-system/primitives/Toggle';
@@ -63,7 +60,7 @@ const MechanicsTab = () => {
           <Toggle label="Ignore movement restriction/collision" checked={ignoreCollision} onChange={handleIgnoreCollision} />
         </Box>
         <Box className="cheats-row">
-          <Toggle label="Always illuminate dark room" checked={illuminate} onChange={handleIlluminate} />
+          <Toggle label="Always light dark rooms" checked={illuminate} onChange={handleIlluminate} />
         </Box>
       </Box>
 

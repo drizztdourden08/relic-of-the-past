@@ -1,16 +1,8 @@
 /* @layer renderer-components @kind util */
 /**
- * The sentence under a sound channel's title, which has to stay true as the list changes.
- *
- * The effects channels list their whole range, so the honest thing to say is how much of it the
- * game is known to raise. The ambient channel lists only what the game can reach, so what needs
- * saying is how much is being kept out of the way — and that number changes the moment the
- * unreachable ids are shown.
- *
- * The two effects channels share one tab, so their opening lines must not read as the same
- * sentence twice: each names its own port and says outright that the ids below belong to that
- * port alone. Two identical blurbs over two lists of the same ids is how someone replaces 0x12
- * on the wrong channel.
+ * The sentence under a sound channel's title. Effects channels say how much of the range the game
+ * raises; the ambient channel says how much is hidden. Each effects port names itself so two
+ * lists of the same ids do not read as one.
  */
 import type { SoundChannel } from '@shared/types/msu-manifest';
 import { SOUND_CHANNEL_PORTS } from '@shared/game/data/game-sounds';
@@ -21,7 +13,7 @@ const AMBIENT_BLURB =
 const channelBlurb = (channel: SoundChannel): string => {
   if (channel === 'ambient') return AMBIENT_BLURB;
   return `One-shot effects on port ${SOUND_CHANNEL_PORTS[channel]}. Each trigger layers over whatever is`
-    + ' still sounding. These ids are this port\'s own — the same number on the other effects port is a'
+    + ' still sounding. These ids are this port\'s own, so the same number on the other effects port is a'
     + ' different sound.';
 };
 
@@ -31,7 +23,7 @@ interface SubtitleCounts {
   total: number;
   /** Of those, how many the generated catalogue has a call site for. */
   raisedCount: number;
-  /** Of those, how many the game can actually reach — ambient only. */
+  /** Of those, how many the game can actually reach. Ambient only. */
   reachableCount: number;
   /** How many rows the reachable trim is holding back. */
   hiddenCount: number;

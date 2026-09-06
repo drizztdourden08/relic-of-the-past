@@ -3,16 +3,16 @@
  * The text box itself: three rows, always three, at the interior's real width.
  *
  * The height is fixed because the box's is. A preview that shrank to fit one
- * line of text would hide the thing worth seeing — that the other two rows are
- * still carrying whatever an earlier box left there.
+ * line of text would hide the thing worth seeing, which is that the other two
+ * rows are still carrying whatever an earlier box left there.
  *
- * Rows are placed by their own row number rather than in list order, so a box
+ * Rows are placed by their own row number, not in list order, so a box
  * that writes only row 2 draws it in the middle with the real gaps above and
  * below it.
  *
  * Two of the box's own behaviours ride along: a blinking wait marker while the
- * box is holding for a press, and — when `scrolled` — a brief upward shift of
- * the rows as they arrive, keyed on `scrollKey` so each advance replays it.
+ * box is holding for a press, and, when `scrolled` is set, a brief upward shift
+ * of the rows as they arrive, keyed on `scrollKey` so each advance replays it.
  * A choice prompt's selection cursor draws in column 0 of `cursorRow`.
  */
 import { Box } from '@ds/primitives';
@@ -31,8 +31,8 @@ type PreviewBoxProps = {
   cursorRow?: number | null;
   /**
    * Every 1-based option row. The cursor frames repaint column 0 of ALL of
-   * them each frame — the cursor on the selected row, a blank on the others —
-   * so the blank covers whatever cursor glyph the stored text itself carries.
+   * them each frame, drawing the cursor on the selected row and a blank on the
+   * others, so the blank covers whatever cursor glyph the stored text carries.
    */
   optionRows?: readonly number[];
   /** The box is holding for a press, so the wait marker blinks. */

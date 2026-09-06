@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind component */
-/**
- * UnavailableControllerCard — a device the lister sees but SDL3 hasn't
- * claimed. No live data exists for it (it was never opened), so this only
- * shows identification, status, and the two remedies.
- */
+// A device the lister sees but SDL3 has not claimed: no live data, so only identity, status and remedies.
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../design-system/primitives/Text';
 import { Image } from '../../../../../design-system/primitives/Image';

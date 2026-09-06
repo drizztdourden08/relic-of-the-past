@@ -5,7 +5,7 @@
  * capture the gamepad diagnostics wizard currently has open. Desktop-only,
  * same as controller-devices-store.ts next to it: window.api is always
  * present (real preload on Electron, a generated no-op shim elsewhere), so
- * these are thin, direct pass-throughs rather than a cross-platform port.
+ * these are thin, direct pass-throughs, not a cross-platform port.
  */
 import type { ControllerJoystickSample, ControllerRawReport, JoystickInfo, RawCaptureStartResult } from '@shared/ipc';
 

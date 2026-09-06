@@ -1,6 +1,6 @@
 /* @layer renderer-stores @kind logic */
 /**
- * Exclusive insets store — broadcasts the docked-widget insets computed by the
+ * Exclusive insets store, broadcasting the docked-widget insets computed by the
  * Widget layout system to consumers (GameLayer, overlays). The Widget composite
  * stays presentational and emits insets via a callback; views wire that callback
  * to this store, keeping store ownership out of the bare design-system tier.

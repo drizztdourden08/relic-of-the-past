@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Inventory state parsing — reads the 34-byte WASM buffer from
+ * Reads the 34-byte WASM buffer from
  * WasmGetInventoryState() and converts it into a `Set<ItemId>`.
  *
  * The set is keyed by dataset id, never by display name. Names are not unique
@@ -90,7 +90,7 @@ const parseInventoryBuffer = (heapU8: Uint8Array, ptr: number): RawInventoryStat
   };
 };
 
-/** Slot values 1-2 are one rung, 3+ is two — the byte is not a rung count here. */
+/** Slot values 1-2 are one rung, 3+ is two. The byte is not a rung count here. */
 const bowRungs = (bow: number): number => (bow >= 3 ? 2 : bow >= 1 ? 1 : 0);
 
 const addBottles = (items: Set<ItemId>, raw: RawInventoryState): void => {
@@ -121,7 +121,7 @@ const inventoryToItemSet = (raw: RawInventoryState): Set<ItemId> => {
 
   addByValue(items, BY_VALUE.boomerang, raw.boomerang);
   addByValue(items, BY_VALUE.mushroom, raw.mushroom);
-  // The top flute value replaces the plain one rather than stacking on it.
+  // The top flute value replaces the plain one instead of stacking on it.
   addByValue(items, BY_VALUE.flute, Math.min(raw.flute, 3));
 
   addBottles(items, raw);

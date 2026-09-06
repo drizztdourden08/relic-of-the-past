@@ -5,14 +5,14 @@
  *
  * The picture is one character to the author, so removing "the character before
  * the caret" has to mean the whole picture. Left to the ordinary delete, one
- * press took away half of it and left the other half standing — a half picture
- * the alphabet has an entry for, which encodes and bakes perfectly well and draws
- * as nonsense on screen.
+ * press took away half of it and left the other half standing. That half is a
+ * picture the alphabet has an entry for, which encodes and bakes perfectly well
+ * and draws as nonsense on screen.
  *
  * Three ways in, one range. The caret may be after the pair (Backspace), before
- * it (Delete), or the pair may be selected because a click landed on it — a click
+ * it (Delete), or the pair may be selected because a click landed on it. A click
  * always selects one half's node, since that is the object the browser hit, and
- * that selection is widened to the pair here rather than at the click.
+ * that selection is widened to the pair here, not at the click.
  *
  * Both commands decline when the gesture is not over a pair, so an ordinary
  * character, an ordinary atom and a line boundary all keep their own behaviour.

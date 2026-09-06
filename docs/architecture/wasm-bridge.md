@@ -22,8 +22,8 @@ the TS app loads a committed prebuilt module, so day-to-day work needs no Emscri
 
 | Direction | Mechanism | Where |
 |-----------|-----------|-------|
-| JS → C | `mod.ccall('Wasm…', ret, argTypes, args)` | wrappers in `apps/web/src/lib/game/` |
-| C → JS | `EM_ASM(window.__on…(...))` | C in `game-hooks/`, handlers in the renderer |
+| JS → C | `mod.ccall('Wasm...', ret, argTypes, args)` | wrappers in `apps/web/src/lib/game/` |
+| C → JS | `EM_ASM(window.__on...(...))` | C in `game-hooks/`, handlers in the renderer |
 
 The bridge module (`lib/game/`) is a Facade: it's the only TypeScript allowed to touch the WASM
 module. The renderer reaches the game through it, with no raw `ccall`/`HEAPU8` elsewhere, an

@@ -45,7 +45,7 @@ const useReportSubscription = (phase: Phase, deviceKey: string | undefined, refs
       // Every frame, whichever step is running: what counts as restless has to
       // be known before the first capture, not after a stick pass.
       observeFrame(refs.noiseRef.current, bytes);
-      // The report itself already names its device — no need to guess from a
+      // The report itself already names its device, so there is no need to guess from a
       // separately-tracked "connected" set (and reported != connected anyway).
       if (refs.deviceInfoRef.current.vendorId === 0) applyVidPid(refs.deviceInfoRef, deviceKey ?? report.deviceKey);
       refs.deviceInfoRef.current.reportId = report.reportId; refs.deviceInfoRef.current.reportLength = bytes.length;

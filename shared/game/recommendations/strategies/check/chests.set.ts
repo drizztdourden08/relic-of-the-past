@@ -2,23 +2,16 @@
 /**
  * A chest the loaded room draws that no `CheckRecord.gameId` covers.
  *
- * The room's chest table is enumerable and needs nothing to have happened —
- * no chest has to be opened for it to report one — so an absence in the
- * dataset is proven, not inferred: `certain`, the same standing the
- * stair/exit/door tables have. `randomizerName` has no native answer, so
- * this proposes an unmistakable placeholder rather than a guessed real name
- * (the same call `item-grants` makes for an uncatalogued item). The chest's
- * static contents byte, though, lives in the same raw id space as
- * `ItemGameId.receiveItemId`, so `vanillaItemIds` resolves to a real item
- * when the catalogue has it and stays empty rather than invented when it
- * does not.
+ * The room's chest table is enumerable (no chest has to be opened for it to
+ * report one), so an absence in the dataset is proven: `certain`.
+ * `randomizerName` has no native answer, so this proposes an unmistakable
+ * placeholder, not a guessed name. The contents byte is in the same raw id
+ * space as `ItemGameId.receiveItemId`, so `vanillaItemIds` resolves to a real
+ * item when the catalogue has it and stays empty when it does not.
  *
- * `removable: false`: a room's chest table never proves an EXISTING check
- * record wrong to exist (a check carries requirements/presence data the raw
- * chest byte cannot adjudicate), only that a new one is missing. The
- * big-chest-vs-small distinction is deliberately left unimplemented here, as
- * it was in the detector this replaces — no native read distinguishes them
- * yet, so guessing is refused rather than finished.
+ * `removable: false`: the chest table never proves an EXISTING check record
+ * wrong to exist, only that a new one is missing. Big vs small chest is left
+ * unimplemented: no native read distinguishes them yet, so guessing is refused.
  */
 import { find, getDungeonByGameId, getItemByGameId } from '../../../data';
 import type { CheckRecord, ScreenId } from '../../../data';
@@ -36,8 +29,8 @@ interface RoomChest { roomId: number; chest: ChestObservation }
 const readLive = (observations: ScreenObservations, screenId: ScreenId | null): Probe<readonly RoomChest[]> => {
   const { chests } = observations;
   const roomId = roomIdOf(observations);
-  // No chest table, no resolved room, or no screen to attach a proposal to —
-  // stay silent rather than invent a placement for an orphaned chest.
+  // With no chest table, no resolved room, or no screen to attach a proposal to,
+  // stay silent instead of inventing a placement for an orphaned chest.
   if (!chests || roomId == null || !screenId) return unread();
   return { known: true, value: chests.map(chest => ({ roomId, chest })) };
 };
@@ -59,14 +52,14 @@ const toProposed = (item: RoomChest, observations: ScreenObservations, screenId:
   const content = getItemByGameId({ receiveItemId: item.chest.itemId });
   return {
     gameId: { roomId: item.roomId, chestIndex: item.chest.chestIndex },
-    // Proven by the object the room draws — a chest object is what this is.
+    // Proven by the object the room draws.
     kind: 'chest',
     screenId,
     ...(dungeon ? { dungeonId: dungeon.id } : {}),
     // No native answer: an obvious placeholder a reviewer must replace.
     randomizerName: `Unnamed chest ${hex(item.roomId)}#${item.chest.chestIndex}`,
     // The contents byte is a raw receive id: a real item when the catalogue
-    // covers it, empty rather than invented when it does not.
+    // covers it, empty when it does not.
     vanillaItemIds: content ? [content.id] : [],
   };
 };

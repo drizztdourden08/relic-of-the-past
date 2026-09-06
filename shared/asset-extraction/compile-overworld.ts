@@ -1,7 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
-/**
- * Overworld asset compilation — orchestrator for compressed map data, travel tables, entrances, exits, sprites, secrets.
- */
+/** Overworld asset compilation: compressed map data, travel tables, entrances, exits, sprites, secrets. */
 import type { RomData } from './rom/rom-types';
 import type { AssetBuilder } from './asset-builder';
 import { bufToArr, lzDecompressWithLen } from './asset-builder';
@@ -32,7 +30,7 @@ const buildOverworldTables = (rom: RomData, A: AssetBuilder): void => {
   const ctx = buildOverworldContext(rom);
   const { isAreaHead, isSmall, awrite } = ctx;
 
-  // Simple area tables — propagated via awrite
+  // Simple area tables written out through awrite
   const auxTile = new Array(128).fill(0);
   const bgPal = new Array(136).fill(0);
   const signText = new Array(128).fill(0);
@@ -76,7 +74,7 @@ const buildOverworldTables = (rom: RomData, A: AssetBuilder): void => {
   A.addUint16('kOverworld_Entrance_Pos', entPos);
   A.addUint8('kOverworld_Entrance_Id', entId);
 
-  // Fall holes — sort by entrance_id and re-encode position
+  // Fall holes get sorted by entrance_id and their position re-encoded
   const holes: { entrance: number; pos: number; area: number }[] = [];
   for (let i = 0; i < 19; i++) {
     const rawPos = rom.getWord(0x9bb800 + i * 2) + 0x400;
@@ -94,7 +92,7 @@ const buildOverworldTables = (rom: RomData, A: AssetBuilder): void => {
 
   buildOverworldExits(rom, A);
 
-  // Overworld secrets — only process area heads
+  // Overworld secrets, area heads only
   const secretOffs = new Array(128).fill(-1);
   const secrets: number[] = [];
   for (let i = 0; i < 160; i++) {

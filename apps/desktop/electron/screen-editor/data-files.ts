@@ -1,19 +1,12 @@
 /* @layer electron-main @kind logic */
 /**
- * Finding the dataset files a kind's records actually live in.
+ * Finding the dataset files a kind's records live in.
  *
- * A create knows its destination from the record itself (record-file-targets.ts
- * derives one canonical path per kind). An UPDATE or a DELETE does not, and must
- * not assume one: several collections were split by SIZE rather than by anything
- * on the record — junk items span four files, enemies four, one dungeon's checks
- * two — so the file a record was created in is not the file the resolver would
- * pick for it today. Sending an edit to the canonical file would simply fail to
- * find the id, or worse, land a second copy beside the first.
- *
- * So an existing record is located by the id it already carries, scanning the
- * kind's own subtree. The id is the only thing matched on, exactly as in
- * source-writers.ts, and a record found in no file comes back as null rather
- * than as a guessed path.
+ * A create knows its destination (record-file-targets.ts). An update or delete
+ * must not assume one: several collections were split by SIZE (junk items span
+ * four files, one dungeon's checks two), so the canonical file may not hold the
+ * id, or worse, an edit would land a second copy. An existing record is located
+ * by its id across the kind's subtree, and null comes back when no file carries it.
  */
 
 import { readdir, readFile } from 'fs/promises';
@@ -28,7 +21,7 @@ const DATA_SEGMENTS = ['shared', 'game', 'data', 'records'] as const;
 const dataPath = (root: string, relative: string): string =>
   join(root, ...DATA_SEGMENTS, relative);
 
-/** Every `.ts` file under a path — or the path itself when it already names one. */
+/** Every `.ts` file under a path, or that one file when the path already names it. */
 const collectFiles = async (path: string): Promise<string[]> => {
   if (path.endsWith('.ts')) return [path];
   const entries = await readdir(path, { withFileTypes: true });

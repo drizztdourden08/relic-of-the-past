@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 /**
- * Running totals per sound and per roll, most recent first — the "how often" answer the feed's
- * single lines cannot give. A chance layer reads directly as tried-versus-played, so 10% authored
+ * Running totals per sound and per roll, most recent first. This is the "how often" answer the
+ * feed's single lines cannot give. A chance layer reads directly as tried-versus-played, so 10% authored
  * odds landing at 3 of 31 is visible as exactly that.
  */
 import { Box, EmptyState, StatRow } from '@ds/primitives';

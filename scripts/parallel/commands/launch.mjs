@@ -1,10 +1,8 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * `wt launch <name> [-- <app flags>]` — run the app from a worktree as a named instance.
- *
- * Runs the BUILT app (dist/electron/main.js) from the worktree's own directory, so its
- * dist, debug-output and screenshots are all its own. Automation flags after `--` are
- * forwarded: --auto-state, --screenshot, --dump-nav, --sim-run.
+ * `wt launch <name> [-- <app flags>]`: run the built app (dist/electron/main.js) from
+ * the worktree's own directory as a named instance. Flags after `--` are forwarded
+ * (--auto-state, --screenshot, --dump-nav, --sim-run).
  *
  *   npm run wt -- launch big-key -- --auto-state=test-jail-cell --screenshot=check
  */

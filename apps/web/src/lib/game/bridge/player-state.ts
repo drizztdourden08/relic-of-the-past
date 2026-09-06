@@ -8,7 +8,7 @@
  */
 import { callWhenRunning } from './wasm-call';
 
-/** Byte layout — mirrors state_queries.c. */
+/** Byte layout, mirroring state_queries.c. */
 const enum Byte {
   handlerState = 0,
   sleepStep = 1,
@@ -21,7 +21,7 @@ const enum Byte {
 }
 
 interface PlayerStateInfo {
-  /** kPlayerState_* — what the player handler is doing right now. */
+  /** kPlayerState_* says what the player handler is doing right now. */
   handlerState: number;
   /** Step INSIDE the sleeping handler (0 while actually asleep). */
   sleepStep: number;
@@ -30,7 +30,7 @@ interface PlayerStateInfo {
   isBunny: boolean;
   inDeepWater: boolean;
   grabbingWall: boolean;
-  /** sram_progress_flags — the named story bits. */
+  /** sram_progress_flags holds the named story bits. */
   progressFlags: number;
   /** Nonzero while stunned or recoiling. */
   incapacitated: boolean;

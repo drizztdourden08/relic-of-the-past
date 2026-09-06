@@ -45,12 +45,12 @@ void SdlThread::StopJoystickCapture() {
 void SdlThread::ApplyJoystickCaptureStart(const SdlCommand& command) {
   joystickCapture_.targetId = command.joystickId;
   joystickCapture_.dirty = false;
-  // A genuinely idle device may never send a JOYSTICK_UPDATE_COMPLETE at
+  // An idle device may never send a JOYSTICK_UPDATE_COMPLETE at
   // all (that event batches real axis/button/hat activity, so nothing
   // moving means nothing to batch), and waiting on one for the first
   // sample would mean the caller could see no data at all despite a
   // successful capture start. Building and emitting one sample right
-  // here, off the command queue rather than the event loop, sidesteps that.
+  // here, off the command queue instead of the event loop, sidesteps that.
   EmitCurrentJoystickState(joystickCapture_.targetId);
 }
 

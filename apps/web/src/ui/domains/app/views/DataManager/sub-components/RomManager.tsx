@@ -82,7 +82,7 @@ const RomManager = (props: RomManagerProps) => {
     <>
       <ImportForm
         kind="rom"
-        placeholder="Paste ROM download URL…"
+        placeholder="Paste ROM download URL..."
         accept={['.sfc', '.smc', '.zip', '.7z', '.rar']}
         dropLabel="Drop ROM file here"
         dropHint=".sfc, .smc, or compressed archive (.zip, .7z, .rar)"
@@ -102,7 +102,7 @@ const RomManager = (props: RomManagerProps) => {
             meta={
               <>
                 {rom.extractionStatus === 'ready' ? '✓ Assets extracted' :
-                 rom.extractionStatus === 'extracting' ? '⟳ Extracting…' :
+                 rom.extractionStatus === 'extracting' ? '⟳ Extracting...' :
                  rom.extractionStatus === 'failed' ? '✗ Extraction failed' :
                  'No assets'}
                 {rom.assetSize ? ` · ${formatBytes(rom.assetSize)}` : ''}
@@ -124,7 +124,7 @@ const RomManager = (props: RomManagerProps) => {
         {!selected ? (
           <Text>Select a ROM to view details</Text>
         ) : loadingDetail ? (
-          <Text>Loading…</Text>
+          <Text>Loading...</Text>
         ) : detail ? (
           <Box>
             <Text as="h3" className="detail-panel__title">{detail.name}</Text>
@@ -146,7 +146,7 @@ const RomManager = (props: RomManagerProps) => {
                 {selectedRom?.extractionStatus === 'ready' ? (
                   <Text style={IL.green}>✓ Extracted{selectedRom.assetSize ? ` (${formatBytes(selectedRom.assetSize)})` : ''}</Text>
                 ) : selectedRom?.extractionStatus === 'extracting' ? (
-                  <Text style={IL.gold}>⟳ Extracting…</Text>
+                  <Text style={IL.gold}>⟳ Extracting...</Text>
                 ) : (
                   <Button variant="primary" size="sm" onClick={() => selected && onExtractAssets(selected)}>
                     Extract Assets

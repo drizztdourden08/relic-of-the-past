@@ -28,7 +28,7 @@ interface StickCalibrationWizardProps {
   onComplete: (cal: DeviceStickCalibration) => void;
   onCancel: () => void;
   existingCalibration?: DeviceStickCalibration | null;
-  /** Which stick to calibrate — undefined means both */
+  /** Which stick to calibrate. undefined means both */
   target?: 'left' | 'right';
   /** Filter input state to only this device */
   deviceKey?: string;

@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind component */
 /**
- * PauseCrystalIcon — renders a single crystal (empty or filled).
+ * Renders a single crystal, empty or filled.
  * A crystal is 16×8: two tiles side by side, one tile tall. Drawing it square
  * stretches the sprite to double height.
  */

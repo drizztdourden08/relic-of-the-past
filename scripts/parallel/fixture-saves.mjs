@@ -1,18 +1,10 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * Seeds a profile's named saves from the regression fixtures in
- * `tests/fixtures/save-states/` — `test-jail-cell`, `test-intro-bed`, etc. — so
- * `--auto-state=test-jail-cell` works on a freshly provisioned profile with no
- * other setup.
- *
- * The fixtures are stored NAME-keyed (`test-jail-cell.sav`) for readability in
- * the vault repo, but a profile's `saves/normal/` store is ID-keyed
- * (`{id}.sav`, see manifest-store.ts) — the whole job here is that rename,
- * driven by the fixture manifest's own `id` field.
- *
- * Additive and idempotent: merges into whatever `saves/normal/manifest.json`
- * already has (e.g. from copyManualSaves), skipping any name already present
- * rather than overwriting it.
+ * Seeds a profile's named saves from `tests/fixtures/save-states/` so
+ * `--auto-state=test-jail-cell` works on a fresh profile. Fixtures are name-keyed
+ * (`test-jail-cell.sav`); the profile's `saves/normal/` store is id-keyed (`{id}.sav`,
+ * see manifest-store.ts), so the job is that rename. Additive and idempotent: names
+ * already in the manifest are skipped, never overwritten.
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync, cpSync } from 'node:fs';
 import { join } from 'node:path';
@@ -42,8 +34,7 @@ const resolveFixtureDir = (repoRoot) => {
 
 /**
  * Copy every fixture into `name`'s `saves/normal/`, skipping names already present.
- * Returns how many were actually added, or null if no fixture source was found
- * (a clone with no vault access — a normal outcome, not an error).
+ * Returns how many were added, or null when no fixture source exists (no vault access).
  */
 const seedFixtureSaves = (repoRoot, name) => {
   const fixtureDir = resolveFixtureDir(repoRoot);

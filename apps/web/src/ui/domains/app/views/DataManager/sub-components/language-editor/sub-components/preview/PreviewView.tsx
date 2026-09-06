@@ -3,8 +3,8 @@
  * The entry as the player meets it: one real box at a time, drawn with the
  * pack's own pixels, advanced by pressing the box.
  *
- * It holds two pieces of state and nothing else — which box is showing, and the
- * sample values standing in for the engine's own substitutions. The samples are
+ * It holds exactly two pieces of state: which box is showing, and the sample
+ * values standing in for the engine's own substitutions. The samples are
  * editable because they change the answer: a six-glyph name and a one-glyph name
  * are different rows, and "does this fit" is the question this view is being
  * asked. They default to the shared worst-case stand-ins, so the first look is
@@ -42,7 +42,7 @@ type PreviewViewProps = {
 };
 
 const NO_SCREENS_MESSAGE = 'This entry cannot be drawn until its unresolved variables are fixed.';
-const LOADING_MESSAGE = 'Reading this set\'s font…';
+const LOADING_MESSAGE = 'Reading this set\'s font...';
 
 /** The row the cursor sits on for this box and selection, or null without a prompt. */
 const cursorRowOf = (screen: PreviewScreen | undefined, selected: number): number | null => {

@@ -7,19 +7,19 @@
  * whole app onto these and delete the old names.
  *
  * Rules in one line:
- *   ONE background family · ONE blur · THREE action tiers side by side —
+ *   ONE background family · ONE blur · THREE action tiers side by side.
  *   GOLD = primary (& selection/active) · GREEN = secondary · GREY = tertiary/ghost ·
  *   red=danger · amber=warning · blue=info-text-only.
  */
 :root {
-  /* ─── Surfaces — ONE background family (depth via border + shadow, not hue) ─── */
-  --c-bg:            #000;                /* THE background: canvas, pages, panels, docked widgets — pure black */
+  /* ─── ONE background family for every surface (depth via border + shadow, not hue) ─── */
+  --c-bg:            #000;                /* THE background (pure black): canvas, pages, panels, docked widgets */
   --c-surface:       #17171d;            /* one step up: cards, inputs, dialogs, dropdowns, popovers */
   --c-sunken:        #08080b;            /* wells, code blocks, deep insets */
   --c-glass:         rgb(14 14 18 / 0.92); /* floating-over-game panels (+ --blur) */
   --c-layer:         #0e0e12;            /* --c-glass's ground, OPAQUE: full-screen layers whose text must meet AA regardless of the game behind */
 
-  /* ─── Floating panels — translucent cards that let the one bg show through (+ --blur) ─── */
+  /* ─── Floating panels. Translucent cards let the one bg show through (+ --blur) ─── */
   --c-panel:         rgb(23 23 29 / 0.55); /* floating side-nav / content cards */
   --c-inset:         rgb(8 8 11 / 0.45);   /* translucent well inside a floating card */
   --c-hairline:      rgb(255 255 255 / 0.06); /* faint glass edge for floating cards */
@@ -30,7 +30,7 @@
 
   /* ─── State fills ─── */
   --c-hover:         rgb(255 255 255 / 0.05);   /* neutral hover */
-  --c-selected:      rgb(200 168 78 / 0.12);    /* GOLD — selected / active fill */
+  --c-selected:      rgb(200 168 78 / 0.12);    /* GOLD selected / active fill */
 
   /* ─── Text (4 tiers) ─── */
   --c-text:          #e8e8ec;
@@ -44,12 +44,12 @@
   --c-gold-dim:      #2a2418;            /* dim fill bg */
   --c-gold-soft:     rgb(200 168 78 / 0.14);
 
-  /* ─── Accent: GREEN = secondary (positive / success / go — contextual only) ─── */
+  /* ─── Accent: GREEN = secondary, used contextually for positive / success / go ─── */
   --c-green:         #4a9966;
   --c-green-bright:  #5cb87a;
   --c-green-dim:     #1a2a1e;
   --c-green-soft:    rgb(74 153 102 / 0.14);
-  --c-green-scrim:   rgb(74 153 102 / 0.16); /* disabled-state overlay backdrop — content stays legible beneath */
+  --c-green-scrim:   rgb(74 153 102 / 0.16); /* disabled-state overlay backdrop, keeps content legible beneath */
 
   /* ─── Semantics ─── */
   --c-danger:        #e5556e;
@@ -58,7 +58,7 @@
   --c-warning:       #e0b341;
   --c-warning-dim:   #2a2418;
   --c-warning-soft:  rgb(224 179 65 / 0.14);
-  --c-info:          #5b9bd5;            /* info TEXT/icon only — never a selection state */
+  --c-info:          #5b9bd5;            /* info TEXT/icon only. Never a selection state */
   --c-info-dim:      #15212e;            /* dark blue fill */
   --c-info-soft:     rgb(91 155 213 / 0.14);
 
@@ -86,9 +86,9 @@
   --panel-w-lg:  380px;
   --widget-w-min: 240px;
 
-  /* ─── Responsive — breakpoints + fluid page padding ───
+  /* ─── Responsive breakpoints + fluid page padding ───
      @media conditions can't read var(), so these values are also hardcoded in the
-     media/container queries that consume them — these tokens are the canonical source. */
+     media/container queries that consume them. These tokens are the source. */
   --bp-narrow:  600px;   /* below: drop secondary side-navs */
   --bp-compact: 820px;   /* below: collapse nav rails, tighten full-page padding */
   --pad-page:   clamp(var(--space-sm), 2.5vw, var(--space-2xl)); /* tight on phones, roomy on desktop */

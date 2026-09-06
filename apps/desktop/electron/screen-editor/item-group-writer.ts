@@ -2,20 +2,13 @@
 /**
  * Creating, relabelling, or removing an item group.
  *
- * The array these live in (shared/game/data/item-groups/item-groups.ts) writes
- * its `id` field two different ways: the symbolic `ITEM_GROUP_IDS.<Key>` form
- * every entry started out with, or the plain string literal every OTHER
- * writable kind's records already use, which is what a record this path has
- * edited once looks like afterward. `source-writers.ts`'s matcher tries the
- * literal form first and falls back to the symbolic one, so either shape
- * resolves to the right entry; only the write itself ever normalises a row to
- * the literal form, and only the row that was actually touched.
+ * item-groups.ts writes `id` two ways: the symbolic `ITEM_GROUP_IDS.<Key>` form
+ * every entry started with, or the plain literal a row gets once this path has
+ * edited it. The matcher in source-writers.ts tries the literal first and falls
+ * back to the symbolic form; only a write normalises a row, and only that row.
  *
- * Creating an eighth group mints a real `ig-NNN` id through the allocator —
- * the same bargain `allocateTag` makes for a brand-new vocabulary term. The
- * seven-group ceiling this file once enforced is gone: `ITEM_GROUP_IDS` still
- * names the seven groups that pre-date this path, but any number of groups is
- * now a normal, writable collection.
+ * `ITEM_GROUP_IDS` still names the seven groups that pre-date this path, but any
+ * number of groups is a normal writable collection with allocator-minted ids.
  */
 
 import { readFile, writeFile } from 'fs/promises';
@@ -31,7 +24,7 @@ import { insertBeforeArrayClose, removeById, replaceById } from './source-writer
 
 const ITEM_GROUPS_FILE = ['shared', 'game', 'data', 'records', 'item-groups', 'item-groups.ts'] as const;
 
-/** A group already on file, matched on its label — the closest thing this collection has to a key. */
+/** Whether a group is already on file. Labels are the closest thing this collection has to a key. */
 const alreadyPresent = (content: string, label: string): boolean =>
   content.includes(`label: '${label.replace(/'/g, "\\'")}',`);
 

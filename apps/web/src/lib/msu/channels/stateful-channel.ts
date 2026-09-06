@@ -1,11 +1,8 @@
 /* @layer renderer-lib @kind logic */
 /**
- * A channel where a new id REPLACES what is playing — music, and the ambient bed.
- *
- * This is the behavior the engine used to hard-code as "the active track", lifted unchanged:
- * the same generation guard so a slow decode cannot resurrect a superseded id, the same
- * position capture on the way out, the same per-id resume map, the same instant return to full
- * gain when something starts.
+ * A channel where a new id REPLACES what is playing (music, ambient bed): generation guard so a
+ * slow decode cannot resurrect a superseded id, position capture on the way out, per-id resume
+ * map, instant return to full gain when something starts.
  */
 import { restoreFull } from '../fade';
 import { createTrackLoader } from '../track-loader';
@@ -50,10 +47,9 @@ const createStatefulChannel = (options: ChannelOptions): SoundChannelApi => {
     return state;
   };
 
-  // The id being started while its audio still decodes. A repeat of it must be absorbed the same
-  // as a repeat of the active id: the game writes an ambient id in bursts, and a second write
-  // arriving mid-decode would supersede the first start — and with it whatever position the first
-  // was carrying across.
+  // The id being started while its audio still decodes. A repeat must be absorbed like a repeat
+  // of the active id: the game writes ambient ids in bursts, and a second write mid-decode would
+  // supersede the first start and the position it was carrying across.
   let pendingId: number | null = null;
 
   const start = async (id: number, resume: ChannelResume | null): Promise<void> => {
@@ -83,26 +79,18 @@ const createStatefulChannel = (options: ChannelOptions): SoundChannelApi => {
 
   /**
    * Select an id, replacing whatever is playing. 0 means silence, as does an unauthored id.
-   *
-   * What a select of the id ALREADY playing means is the channel's contract, set at build time,
-   * because the two channels built on this differ. The sound chip's ports are edge-triggered:
-   * a port rewritten with the value it already holds does nothing. The game rewrites the ambient
-   * id on every screen transition, so for the bed a repeat has to be a no-op or the rain would
-   * restart at every screen edge. Music is different: the game filters its own repeats, and the
-   * one that still arrives follows a fade to zero — leaving a building fades the music out, then
-   * the overworld selects the same track again — and only a fresh start brings its gain back.
-   * Skipping that one left the music silent outside.
+   * A repeat of the playing id is the channel's build-time contract: the game rewrites the
+   * ambient id on every screen transition, so for the bed a repeat must be a no-op or the rain
+   * restarts at every edge. Music's only repeat follows a fade to zero (leaving a building, then
+   * the overworld re-selects the track), and only a fresh start brings its gain back.
    */
 
   /**
-   * The positions the incoming id should pick up from the outgoing one, when the two share a
-   * sync group — or null when they do not, and the switch is an ordinary restart.
-   *
-   * Layers are matched by what they PLAY — the files and the mode — not by their ids, which are
-   * different between two sound definitions by construction. A matched layer continues from the
-   * outgoing layer's exact position, pending timer included, so a storm crossing a doorway keeps
-   * its rain where it was and its next thunder on schedule; an unmatched layer starts or stops
-   * the ordinary way, which is how one side of the doorway gets a layer the other does not.
+   * The positions the incoming id picks up from the outgoing one when they share a sync group,
+   * or null (ordinary restart). Layers are matched by what they PLAY (files and mode), not by
+   * id. A matched layer continues from the exact position, pending timer included, so a storm
+   * crossing a doorway keeps its rain and its next thunder; an unmatched layer starts or stops
+   * the ordinary way.
    */
   const carriedAcross = (id: number): ChannelResume | null => {
     if (!active) return null;
@@ -133,11 +121,7 @@ const createStatefulChannel = (options: ChannelOptions): SoundChannelApi => {
     void start(id, carried ?? (resumeEnabled?.() ? resumeById.get(id) ?? null : null));
   };
 
-  /**
-   * Forget every position this channel has recorded. What is sounding now is left alone — this
-   * only decides where the NEXT selection of an id begins, which is what makes a fresh run start
-   * its music at the top rather than halfway through the last one.
-   */
+  /** Forget every recorded position. What is sounding now is left alone; only the NEXT selection starts from the top. */
   const forget = (): void => { resumeById.clear(); };
 
   const restore = (state: ChannelResume | null): void => {
@@ -149,10 +133,7 @@ const createStatefulChannel = (options: ChannelOptions): SoundChannelApi => {
     void start(state.id, state);
   };
 
-  /**
-   * What every layer is doing right now. Polled by the studio's preview so a wait the scheduler
-   * chose at random is visible rather than being an unexplained silence.
-   */
+  /** What every layer is doing right now. Polled by the studio's preview so a random scheduler wait is visible, not an unexplained silence. */
   const report = (): ChannelReport | null => {
     if (!active) return null;
     return {

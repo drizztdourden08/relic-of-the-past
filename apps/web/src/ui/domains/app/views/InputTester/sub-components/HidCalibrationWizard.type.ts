@@ -7,31 +7,21 @@ interface HidCalibrationWizardProps {
   onComplete: (map: HidControllerMap) => void;
   onCancel: () => void;
   deviceKey?: string;
-  /** Suppresses the wizard's own Copy/Finish/Cancel row — for a host that renders
-   *  those as its own persistent step-navigation buttons instead (see HidWizardHandle). */
+  /** Suppresses the wizard's own Copy/Finish/Cancel row for a host that renders its own (see HidWizardHandle). */
   hideOwnActions?: boolean;
-  /** Fires whenever capturedCount changes, so a host with hideOwnActions can drive
-   *  its own "Finish"-equivalent button's disabled state. */
+  /** Fires whenever capturedCount changes, so a hideOwnActions host can drive its own Finish button. */
   onCapturedCountChange?: (count: number) => void;
-  /** Skips the built-in profile-picker screen and starts live calibration
-   *  immediately against this profile id, for a host that already resolved
-   *  the device and profile itself (see the diagnostics wizard's choose-a-
-   *  controller step). Leaving this unset keeps the picker screen exactly
-   *  as it is for a host that hasn't resolved a profile yet. */
-  /** A layout already read from the live device. When given it is used as-is,
-   *  since a released device can no longer be asked. */
+  /** A layout already read from the live device, used as-is: a released device can no longer be asked. */
   initialProfile?: DeviceProfile | null;
   /** The device entry that layout was read from, for the report's identity fields. */
   capturedEntry?: DeviceEntry | null;
+  /** Skips the profile picker and starts live calibration against this profile id. */
   initialProfileId?: string;
-  /** Paired with initialProfileId: whether the resolved device reports a
-   *  gyro, so the prereq step knows whether to ask for one. Ignored when
-   *  initialProfileId is unset. */
+  /** Paired with initialProfileId: whether the device reports a gyro. Ignored when initialProfileId is unset. */
   initialHasGyro?: boolean;
 }
 
-/** Imperative surface for a host rendering hideOwnActions — the same actions the
- *  wizard's own header row would otherwise expose as buttons. */
+/** Imperative surface for a hideOwnActions host: the actions the wizard's own header row would expose. */
 interface HidWizardHandle {
   /** Resolves true on success, false on failure (e.g. clipboard write denied). */
   copyJson: () => Promise<boolean>;

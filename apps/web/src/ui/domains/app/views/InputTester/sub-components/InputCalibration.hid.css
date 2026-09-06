@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   HID Calibration Wizard v6
-   ═══════════════════════════════════════════════════════════════════════════ */
-
 .hid-cal {
   background: var(--c-surface);
   border: 2px solid var(--c-info);
@@ -36,8 +32,6 @@
   color: var(--c-text-muted);
   margin: 0 0 var(--space-sm) 0;
 }
-
-/* ── Prereqs (gyro + idle) ── */
 
 .hid-cal__prereqs {
   display: grid;
@@ -78,8 +72,6 @@
   gap: var(--space-xs);
   margin-top: var(--space-sm);
 }
-
-/* ── Steps ── */
 
 .hid-cal__step {
   margin-bottom: var(--space-md);
@@ -191,8 +183,6 @@
   margin-bottom: var(--space-sm);
 }
 
-/* ── Input grid ── */
-
 .hid-cal__input-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -278,8 +268,6 @@
   border-color: var(--c-border-strong);
 }
 
-/* ── Byte grid ── */
-
 .hid-cal__byte-grid {
   display: flex;
   flex-wrap: wrap;
@@ -287,8 +275,7 @@
   margin-bottom: var(--space-sm);
 }
 
-/* The idle read is a real step, so its prompt carries the same weight as
-   the live-capture readout rather than sitting in muted body text. */
+/* The idle read is a real step, so its prompt carries the same weight as the live-capture readout. */
 .hid-cal__stick-idle-prompt {
   margin: var(--space-xs) 0;
   padding: var(--space-xs) var(--space-sm);

@@ -1,10 +1,6 @@
 /* @layer renderer-app @kind component */
-/**
- * What the finding IS, above the two panes: the claim, how sure the detector
- * was, and the facts it looked at. The evidence is shown rather than summarised
- * because it is the only thing on the screen that lets a reviewer disagree with
- * the proposal for a reason other than taste.
- */
+/** The claim, the confidence, and the evidence, above the two panes. Evidence is
+ *  shown in full: it is what lets a reviewer disagree for a reason. */
 import { Badge, Box, Text } from '@ds/primitives';
 import type { Recommendation } from '@shared/game/recommendations';
 

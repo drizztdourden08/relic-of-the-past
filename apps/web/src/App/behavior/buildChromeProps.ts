@@ -1,8 +1,7 @@
 /* @layer renderer-appshell @kind logic */
 /**
- * Builds the prop bag shared by the desktop TitleBar and the touch MobileChrome — same actions,
- * two views. Pure wiring, extracted from AppMain so that component stays about composition
- * rather than a long literal.
+ * Builds the prop bag shared by the desktop TitleBar and the touch MobileChrome. Same actions,
+ * two views. Pure wiring, extracted from AppMain so that component stays about composition.
  */
 import type { TitleBarProps } from '../../ui/domains/app/views/TitleBar/TitleBar.type';
 import type { ProfileHubTab } from '../../ui/domains/app/views/ProfileHub/ProfileHub.type';
@@ -39,7 +38,7 @@ const buildChromeProps = (deps: ChromePropsDeps): TitleBarProps => {
     onSwitchProfile: () => { void handleShowDataManager('profiles'); },
     onShowProfile: () => { void handleShowProfile(); },
     // Deep-links the Display tab, so the incompatible-refresh-rate tag lands on the setting
-    // that explains it rather than the hub's front page.
+    // that explains it instead of the hub's front page.
     onShowDisplaySettings: () => { void handleShowProfile('settings'); },
     onShowLogs: () => widgets.toggle('logs'),
     onToggleSaveStates: saveOverlay.toggle,

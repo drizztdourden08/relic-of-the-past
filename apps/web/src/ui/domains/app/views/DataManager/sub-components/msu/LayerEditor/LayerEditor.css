@@ -42,7 +42,7 @@
 }
 
 /* The two optional scheduling settings. Framed, and inset from the controls above them, so
-   neither is mistaken for another volume-style slider or for body copy — both were. */
+   neither is mistaken for another volume-style slider or for body copy. Both were. */
 .layer-card__crossfade,
 .layer-card__switch {
   padding: var(--space-sm) var(--space-md);

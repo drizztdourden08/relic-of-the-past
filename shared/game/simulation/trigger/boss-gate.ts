@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * Bosses are a position + prerequisite gate — no combat is simulated. A boss
+ * Bosses are a position plus a prerequisite gate. No combat is simulated. A boss
  * is triggerable when its trigger tile is reachable in the flood-fill result
  * and the inventory meets the beatability requirement (from CheckRecord.requirements).
  */

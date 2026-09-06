@@ -8,16 +8,16 @@
  * most-specific first, so a match built from a record's own full gameId
  * resolves through the most reliable mode it has fields for.
  *
- * A few native facts are genuinely shared by two different records — a boss
+ * A few native facts are shared by two different records. A boss
  * kill and its prize both flip the same room-mask bit; CheckGameId carries no
  * field that tells the pair apart. disambiguate() narrows a same-key
  * candidate list by whatever extra identifying field the match supplies
  * (spriteType, room, owWorld); when nothing narrows it further it returns
- * whichever candidate was registered first (source order) — a deliberate,
- * deterministic tie-break, not a guess. For a boss/prize pair specifically,
+ * whichever candidate was registered first (source order). That tie-break is
+ * deliberate and deterministic, not a guess. For a boss/prize pair specifically,
  * DungeonRecord.bossCheckId / prizeCheckId are the reliable way to name each
  * half; a couple of standing-item pairs (see the coverage report) have no
- * such alternate id and stay genuinely tied.
+ * such alternate id and stay tied.
  */
 import type { CheckGameId, CheckRecord } from '../types';
 

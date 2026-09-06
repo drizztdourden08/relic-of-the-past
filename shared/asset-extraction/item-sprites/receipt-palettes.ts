@@ -9,7 +9,7 @@ import {
   ADDR_SHIELD_PALETTE, ADDR_ARMOR_PALETTE,
 } from '../data/constants';
 
-/** Sprite palette state — loaded from ROM, mutated for per-sprite overrides. */
+/** Sprite palette state loaded from ROM, then mutated for per-sprite overrides. */
 interface SpritePalettes {
   palettes: RGBA[][];
 }
@@ -35,7 +35,7 @@ const loadSpritePalettes = (rom: RomData): SpritePalettes => {
     }
   }
 
-  // Palette 6 indices 9-15 (row 6 of kPalette_MiscSprite — light world outdoor default)
+  // Palette 6 indices 9-15 (row 6 of kPalette_MiscSprite, the light world outdoor default)
   for (let i = 0; i < 7; i++) {
     palettes[6][i + 9] = snesToRgba(aux1[6 * 7 + i]);
   }

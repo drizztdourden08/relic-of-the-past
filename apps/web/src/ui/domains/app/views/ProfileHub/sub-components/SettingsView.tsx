@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 /**
- * Display tab — everything about how the game reaches the screen: rendering geometry, camera,
+ * Everything about how the game reaches the screen: rendering geometry, camera,
  * the window it lives in, and the frame pacing between the two. Window and performance used to
  * sit in a separate "System" tab, which split one subject across two places.
  */
@@ -24,7 +24,7 @@ interface SettingsViewProps {
 const REQUIRES_LINEAR = new Set(['21:9']);
 // Wide preset values that additionally require ultrawideRendering
 const REQUIRES_ULTRAWIDE = new Set(['32:9']);
-// Tall preset values — only shown when tallRendering is on
+// Tall preset values, only shown when tallRendering is on
 const TALL_PRESET_VALUES = new Set(['4:5', '3:4']);
 
 const getWidePresets = (s: GameSettings) => {
@@ -54,7 +54,7 @@ const getAspectOptions = (s: GameSettings) => {
   return opts;
 };
 
-// Cascade resets when a capability is disabled: ensure the active ratio is still valid.
+// Cascade resets when a capability is disabled, so the active ratio stays valid.
 const withCascade = (patch: Partial<GameSettings>, current: GameSettings): Partial<GameSettings> => {
   const cascade = { ...patch };
   if ('linearWorldTilemap' in patch && !patch.linearWorldTilemap) {
@@ -79,7 +79,7 @@ const SettingsView = (props: SettingsViewProps) => {
 
   const detectedHz = effectiveHz(useRefreshRate());
   // Pushing the preference here also arms it for the session; the host applies it on the next
-  // fullscreen transition rather than on this call.
+  // fullscreen transition, not on this call.
   const { status: syncedRate } = useSyncedRate(settings.syncedRefreshRate, settings.syncedRefreshRateHz);
 
   const sections = useMemo<Section[]>(() => {

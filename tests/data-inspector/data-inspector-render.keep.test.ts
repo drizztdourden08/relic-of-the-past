@@ -11,16 +11,11 @@ import type * as SchemaModule from '../../apps/web/src/ui/design-system/data/sch
 import type { DetailTab } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
 import { describeDataset } from '../dataset-guard';
 
-// There is no jsdom here, so these are SSR smoke tests. The screen's active
-// collection is React state, and SSR cannot drive state, so "each of the eight
-// kinds" is covered where the kind actually varies: the detail panel is
-// rendered once per collection against that collection's own source, schema and
-// first record, on each of the three tabs. The screen itself is rendered whole
-// on its default collection.
-//
-// What they CANNOT cover, and what is therefore unverified in this pass:
-// clicking a row, clicking an id reference (the delegated capture handler),
-// switching collection in the side rail, and anything portalled.
+// SSR smoke tests (no jsdom). The active collection is React state, which SSR
+// cannot drive, so the detail panel is rendered once per collection against
+// its own source, schema and first record, on each of the three tabs.
+// Not covered: clicking a row or an id reference, switching collection, and
+// anything portalled.
 
 const KINDS = ['screen', 'connection', 'check', 'item', 'dungeon', 'area', 'location', 'actor'] as const;
 const TABS: readonly DetailTab[] = ['json', 'ts', 'editor'];
@@ -117,7 +112,7 @@ describeDataset('DataInspector detail panel', () => {
     }
   });
 
-  it('renders a placeholder rather than a form when nothing is selected', () => {
+  it('renders a placeholder instead of a form when nothing is selected', () => {
     const html = renderDetail('screen', 'editor', false);
     expect(html).toContain('data-inspector__empty');
     expect(html).not.toContain('record-editor');

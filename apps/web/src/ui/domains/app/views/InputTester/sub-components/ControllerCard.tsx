@@ -1,8 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * ControllerCard — Shows a connected controller with buttons, sticks, triggers,
- * vibration controls, calibration wizard, and raw byte debug.
- */
 
 import { useMemo, useState } from 'react';
 import type { CSSProperties } from 'react';
@@ -42,11 +38,8 @@ const ControllerCard = ({ deviceKey, state, resolvedDevice, hasStickCal, existin
     () => resolvedDevice.controls.filter((c) => c.kind === 'button'),
     [resolvedDevice.controls],
   );
-  // A trigger reported as an axis still gets a grid cell alongside the real
-  // buttons, highlighting once its analog travel crosses the same threshold
-  // ControllerAxes' TriggerBar reads (resolveLiveControlState is the single
-  // source for both). Appended after the real buttons so the existing grid
-  // order is untouched.
+  // A trigger reported as an axis still gets a grid cell, lit by the same threshold TriggerBar
+  // reads (resolveLiveControlState is the single source). Appended so the grid order is untouched.
   const triggerButtonControls = useMemo(
     () => resolvedDevice.controls.filter((c) => c.kind === 'axis' && c.category === 'trigger'),
     [resolvedDevice.controls],
@@ -133,7 +126,7 @@ const ControllerCard = ({ deviceKey, state, resolvedDevice, hasStickCal, existin
         </Button>
         <RumbleStrengthControl deviceKey={deviceKey} />
         <Text className="input-cal__debug-state" style={S.debugState}>
-          t={state.timestamp > 0 ? state.timestamp.toFixed(0) : '—'}
+          t={state.timestamp > 0 ? state.timestamp.toFixed(0) : '-'}
           {' '}btn={state.buttons.filter(Boolean).length}/{state.buttons.length}
           {' '}axes={state.axes.map(a => a.toFixed(1)).join(',')}
         </Text>

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 /**
- * One acting row of a menu — the leaf. It is its own component because the
+ * One acting row of a menu, the leaf. It is its own component because the
  * top-level menu and every submenu render exactly the same row, and a second
  * copy of it drifts: an icon added in one place and not the other is how a
  * submenu stops looking like the menu it belongs to.

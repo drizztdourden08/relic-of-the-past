@@ -21,7 +21,7 @@ interface GameSound {
   label: string | null;
   /** Functions that raise this sound, busiest first. */
   triggers: string[];
-  /** How many call sites raise it — a rough measure of how often it is heard. */
+  /** How many call sites raise it. Roughly how often it is heard. */
   sites: number;
 }
 
@@ -159,7 +159,7 @@ const GAME_SOUNDS: readonly RawGameSound[] = [
 const withName = (sound: RawGameSound): GameSound =>
   ({ ...sound, label: soundName(sound.channel, sound.id) });
 
-/** The sounds of one channel, busiest first — the order the studio lists them in. */
+/** The sounds of one channel, busiest first. That is the order the studio lists them in. */
 const soundsOfChannel = (channel: SoundChannel): GameSound[] =>
   GAME_SOUNDS.filter((s) => s.channel === channel).sort((a, b) => b.sites - a.sites).map(withName);
 

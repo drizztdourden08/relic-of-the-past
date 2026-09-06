@@ -1,6 +1,6 @@
 /* @layer shared-game @kind types */
 /**
- * The line-oriented view of one dialogue entry — the editor's model, not a
+ * The line-oriented view of one dialogue entry. The editor's model, not a
  * second layout engine.
  *
  * The engine writes into a three-row box and never wraps, so authored text is
@@ -23,7 +23,7 @@ type LineAdvance =
   | { kind: 'row'; row: 1 | 2 | 3 }
   /** A scroll: the box shifts up a line and the pen parks on the bottom row. */
   | { kind: 'scroll' }
-  /** No code at all — the first line of an entry, or the one after a wait. */
+  /** No code at all, as on the first line of an entry or the one after a wait. */
   | null;
 
 /** One authored line of an entry, with everything a gutter needs to show. */
@@ -36,7 +36,7 @@ type DialogueLineView = {
   row: number;
   /** The code that STARTED this line, preserved exactly as authored. */
   advance: LineAdvance;
-  /** Content tokens only — no advance code, no trailing wait. */
+  /** Content tokens only. No advance code, no trailing wait. */
   tokens: Token[];
   /** True when this line is followed by a wait-for-button. */
   endsBox: boolean;

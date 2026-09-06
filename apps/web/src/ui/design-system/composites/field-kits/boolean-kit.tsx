@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
  * True or false. Both operators take no operand, so the filter row is the
- * operator and nothing else — there is no control to render.
+ * operator and nothing else, with no control to render.
  *
  * Matching is strict: a field that is absent is neither true nor false, and a
  * row that never recorded the flag should not be swept up by `is false`.
@@ -20,7 +20,7 @@ import './field-kits.css';
 
 const YES = 'Yes';
 const NO = 'No';
-const ABSENT = '—';
+const ABSENT = '-';
 
 const test = (value: unknown, op: string): boolean => {
   if (op === 'isTrue') return value === true;

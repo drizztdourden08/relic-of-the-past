@@ -1,5 +1,5 @@
 /* @layer core-wasm-build @kind native */
-// emscripten_main.c — Replaces zelda3's native main.c for WASM builds.
+// Replaces zelda3's native main.c for WASM builds.
 // Provides SDL2 init, the emscripten_set_main_loop frame callback, and main().
 // The SDL renderer/audio/input handlers live in emscripten_sdl.c; asset
 // loading + save/load + input setters in emscripten_io.c; the JS-facing
@@ -36,7 +36,7 @@
 #include "emscripten_internal.h"
 
 // ---------------------------------------------------------------------------
-// Globals — canonical definitions of the engine state shared across the WASM
+// Canonical definitions of the engine state shared across the WASM
 // entry TUs (declared extern in emscripten_internal.h), plus the main-only bits.
 // ---------------------------------------------------------------------------
 static const char kWindowTitle[] = "ALttP WASM";
@@ -73,7 +73,7 @@ void NORETURN Die(const char *error) {
 }
 
 // ---------------------------------------------------------------------------
-// Audio — no mutex needed in single-threaded WASM
+// Audio needs no mutex in single-threaded WASM
 // ---------------------------------------------------------------------------
 void ZeldaApuLock(void) { /* no-op in WASM */ }
 void ZeldaApuUnlock(void) { /* no-op in WASM */ }
@@ -154,11 +154,11 @@ static void MainFrameCallback(void) {
 // Window scale helper (referenced by config.c / HandleCommand but we no-op it)
 // ---------------------------------------------------------------------------
 void ChangeWindowScale(int scale_step) {
-  // No-op in WASM — browser handles sizing
+  // No-op in WASM because the browser handles sizing
 }
 
-// Custom player sprite selected in the profile — main.c's LoadLinkGraphics isn't linked into the WASM
-// build, so read the MEMFS path the bridge wrote (LinkGraphics INI key) and hand it to the sprite
+// Custom player sprite selected in the profile. main.c's LoadLinkGraphics is not linked into the
+// WASM build, so read the MEMFS path the bridge wrote (LinkGraphics INI key) and hand it to the sprite
 // module. No-op when unset. The palette isn't pushed live here: the core isn't initialized yet, and
 // the normal startup sequence samples the patched assets on its own.
 static void ApplyConfiguredPlayerSprite(void) {
@@ -176,7 +176,7 @@ static void ApplyConfiguredPlayerSprite(void) {
 int main(int argc, char **argv) {
   printf("zelda3 WASM starting...\n");
 
-  // Parse config (optional — will use defaults if no file found)
+  // Parse config (optional, defaults are used when no file is found)
   ParseConfigFile(NULL);
 
   // Load game assets
@@ -184,16 +184,16 @@ int main(int argc, char **argv) {
 
   // PlayerSprite_Apply's single gate point reads enhanced_features3 (WRAM 0x664), but that word
   // isn't synced from g_wanted_gate_words[3] until SyncGateWords runs inside the first real
-  // ZeldaRunFrame — well after main() returns control to the browser's event loop. So it always
+  // ZeldaRunFrame. That happens long after main() returns control to the browser's event loop. So it always
   // reads 0 here, and the boot-time apply below would silently skip loading the sheet even when one
   // is configured (the live JS path in emscripten_io.c needs no such handling: by the time it runs,
   // real frames have already synced the gate for real). Config is the only trustworthy signal this
-  // early — LinkGraphics only lands in the INI when the profile has a sprite configured AND Vanilla
-  // Safe is off (see linkGraphicsIni in apps/web/src/lib/game/settings.ts) — so seed the WRAM bit
+  // early, because LinkGraphics only lands in the INI when the profile has a sprite configured AND
+  // Vanilla Safe is off (see linkGraphicsIni in apps/web/src/lib/game/settings.ts). So seed the WRAM bit
   // directly from that instead of consulting the not-yet-synced gate. g_ram is a plain static array
   // (zelda_rtl.c), so this write is safe before WasmZeldaInitialize() runs; Startup_InitializeMemory()
   // zeroes it again on the first real frame regardless, and SyncGateWords re-syncs it correctly from
-  // g_wanted_gate_words[3] (which also carries this bit — see below) from then on.
+  // g_wanted_gate_words[3] (which also carries this bit, as shown below) from then on.
   if (g_config.link_graphics != NULL && !(g_config.features3 & kFeatures3_VanillaSafe))
     enhanced_features3 |= kFeatures3_PlayerSpriteOverride;
 
@@ -217,7 +217,7 @@ int main(int argc, char **argv) {
     g_config.extended_aspect_ratio_vertical = 0;
 
   // Horizontal capability caps (plans/settings-registry-map.md §4). Without the linear world tilemap the
-  // overworld BG2 uses the stock wrapping fetch, which can only represent the 512px SNES tilemap — reading
+  // overworld BG2 uses the stock wrapping fetch, which can only represent the 512px SNES tilemap, so reading
   // wider wraps to stale tiles. So 512px total (128 extra cols/side) is the hard ceiling without it
   // (~19.2:9 at 240 lines, ~20.6:9 at 224). The world tilemap lifts that toward the build cap.
   if (!(g_config.features0 & kFeatures0_LinearWorldTilemap))
@@ -233,7 +233,7 @@ int main(int argc, char **argv) {
   }
 
   // Configure PPU. Clamp the configured extra to the build cap up front so the render buffer width
-  // (g_snes_width) and the PPU's extra columns always agree — a wider buffer would leave an unwritten
+  // (g_snes_width) and the PPU's extra columns always agree, since a wider buffer would leave an unwritten
   // edge, and a view past the 512px BG tilemap wraps to stale tiles (garbage on the sides).
   g_config.extended_aspect_ratio = UintMin(g_config.extended_aspect_ratio, kPpuExtraLeftRight);
   g_zenv.ppu->extraLeftRight = g_config.extended_aspect_ratio;
@@ -260,7 +260,7 @@ int main(int argc, char **argv) {
   // Cheat gate word (features3): boot equivalent of pushLiveSettings' WasmSetGateWord(3, ...), so a
   // profile with CheatsEnabled saved in its INI has working cheats from frame one instead of only after
   // the first settings change (which is the only other thing that ever wrote this word before). The four
-  // per-category permission bits are PERMISSIONS, not independent toggles — CheatGate() requires
+  // per-category permission bits are PERMISSIONS, not independent toggles, and CheatGate() requires
   // CheatsEnabled AND the category bit, so granting all four alongside the master here is the only way
   // any cheat can ever activate; this derivation must mirror buildFeatureWord3() in
   // apps/web/src/lib/game/live-settings-flags.ts exactly, or cheats boot half-on (master set, no category
@@ -287,8 +287,8 @@ int main(int argc, char **argv) {
   }
 
   // Create window (Emscripten maps this to a canvas)
-  // Explicitly set canvas element size — SDL2's emscripten port uses "#canvas"
-  // selector which requires id="canvas" on the HTML element.
+  // Set the canvas element size, because SDL2's emscripten port uses the "#canvas"
+  // selector, which requires id="canvas" on the HTML element.
   emscripten_set_canvas_element_size("#canvas", g_snes_width * 2, g_snes_height * 2);
 
   g_window = SDL_CreateWindow(kWindowTitle,
@@ -340,10 +340,10 @@ int main(int argc, char **argv) {
   printf("zelda3 WASM initialized. Starting main loop.\n");
 
   // Start on the timer schedule (fps > 0), which is what this build has always used. A non-zero fps
-  // makes Emscripten drive the loop from setTimeout rather than the display's vertical blank; that
+  // makes Emscripten drive the loop from setTimeout instead of the display's vertical blank; that
   // keeps the game at ~60 FPS on any monitor, at the cost of drifting against the display's own
-  // clock. SetVsyncMode() swaps to the vblank-driven schedule when the profile asks for it — the
-  // accumulator in StepsOwedThisTick is what keeps the speed correct there, since rAF fires at
+  // clock. SetVsyncMode() swaps to the vblank-driven schedule when the profile asks for it. There
+  // the accumulator in StepsOwedThisTick keeps the speed correct, since rAF fires at
   // whatever the panel runs at. The bridge pushes the profile's choice right after startup.
   emscripten_set_main_loop(MainFrameCallback, 60, 1);
 

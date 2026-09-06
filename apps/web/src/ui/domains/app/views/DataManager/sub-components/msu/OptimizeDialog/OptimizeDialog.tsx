@@ -1,14 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
- * Normalising a pack to one audio format, as a dialog: get the tool, read the measured
- * numbers, convert.
- *
- * It converts and STOPS. The originals stay on disk, because a run that deleted as it went
- * would leave nothing to fall back to if the result was wrong — throwing the superseded halves
- * out is a separate, confirmed action on the pack's files.
- *
- * The run itself cannot be dismissed. It writes the manifest as it goes, and tearing the dialog
- * down mid-write would leave the pack half re-pointed with nothing watching it finish.
+ * Converts and STOPS: originals stay on disk as the fallback, and removing them is a separate
+ * confirmed action. The run cannot be dismissed because it writes the manifest as it goes.
  */
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
@@ -23,8 +16,7 @@ import type { OptimizeDialogProps } from './OptimizeDialog.type';
 
 const OptimizeDialog = (props: OptimizeDialogProps) => {
   const { open, pack, onClose, onConverted } = props;
-  // The pack is re-read the moment a run settles, not on the way out — see useOptimize for why
-  // the studio must never hold a stale manifest while this dialog is still open.
+  // The pack is re-read the moment a run settles, not on the way out; see useOptimize.
   const optimize = useOptimize({ pack, open, onRunSettled: onConverted });
   const { step, tool, analysis, progress, result, error, convertibleCount } = optimize;
 
@@ -35,16 +27,16 @@ const OptimizeDialog = (props: OptimizeDialogProps) => {
       {step === 'tool' && (
         <InstallStep state={tool.state} installing={tool.installing} onInstall={() => { void tool.install(); }} />
       )}
-      {step === 'checking' && <Text className="msu-optimize__note">Checking for the audio tool…</Text>}
+      {step === 'checking' && <Text className="msu-optimize__note">Checking for the audio tool...</Text>}
       {step === 'measuring' && (
         <Box className="msu-optimize__step">
           <Text className="msu-optimize__note">
             {progress === null
-              ? 'Measuring…'
-              : `Measuring ${progress.fileName} — ${progress.index} of ${progress.total}`}
+              ? 'Measuring...'
+              : `Measuring ${progress.fileName} (${progress.index} of ${progress.total})`}
           </Text>
           <Text className="msu-optimize__note msu-optimize__note--faint">
-            A short slice of every file is really encoded, so the estimate is measured rather than assumed.
+            A short slice of every file is really encoded, so the estimate is measured, not assumed.
           </Text>
         </Box>
       )}
@@ -85,7 +77,7 @@ const OptimizeDialog = (props: OptimizeDialogProps) => {
       open={open}
       onClose={handleClose}
       dismissable={step !== 'converting'}
-      title={`Optimize “${pack}”`}
+      title={`Optimize "${pack}"`}
       actions={actions}
       className="msu-optimize"
     >

@@ -1,7 +1,4 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Save States — save/load game state snapshots + screenshot capture.
- */
 
 import { checkLoadable, stripStamp } from '@shared/game/save-state';
 import { log } from '../log-bus';
@@ -15,7 +12,7 @@ import { saveMusicPosition, restoreMusicPosition } from './msu-save-glue';
 const saveState = async (slot: number): Promise<boolean> => {
   const mod = getModule();
   const profileId = getProfileId();
-  log.app(`[SaveState] saveState(${slot}) called — module=${!!mod}, profileId=${profileId}`);
+  log.app(`[SaveState] saveState(${slot}) called with module=${!!mod}, profileId=${profileId}`);
   if (!mod || !profileId) {
     log.app('[SaveState] ABORT: no module or no profileId');
     return false;
@@ -68,7 +65,7 @@ const saveState = async (slot: number): Promise<boolean> => {
 const loadState = async (slot: number): Promise<boolean> => {
   const mod = getModule();
   const profileId = getProfileId();
-  log.app(`[LoadState] loadState(${slot}) called — module=${!!mod}, profileId=${profileId}`);
+  log.app(`[LoadState] loadState(${slot}) called with module=${!!mod}, profileId=${profileId}`);
   if (!mod || !profileId) {
     log.app('[LoadState] ABORT: no module or no profileId');
     return false;
@@ -101,13 +98,13 @@ const loadState = async (slot: number): Promise<boolean> => {
 
     log.app(`[LoadState] Calling ccall('WasmLoadState', slot=${slot})...`);
     mod.ccall('WasmLoadState', null, ['number'], [slot]);
-    log.app(`[LoadState] ccall returned — state loaded ✓`);
+    log.app(`[LoadState] ccall returned; state loaded`);
 
     // Re-assert all WASM flags that state load resets
     reassertLiveFlagsAfterLoad();
 
     // A save written before music positions were recorded has no sidecar; restoring null
-    // simply starts its track from the beginning.
+    // starts its track from the beginning.
     await restoreMusicPosition(profileId, 'quick', slot);
 
     // Force inventory poll so tracker reflects the loaded state
@@ -122,10 +119,8 @@ const loadState = async (slot: number): Promise<boolean> => {
 };
 
 /**
- * Load a NORMAL (manual) save by its name rather than a quick-slot number.
- * Names are stable and quick-save can never overwrite them, so automation and
- * regression baselines pin to a name instead of a slot index. Matching is
- * case-insensitive; the newest save wins if two share a name.
+ * Load a NORMAL (manual) save by name. Names are stable and quick-save never overwrites them,
+ * so automation pins to a name. Case-insensitive; the newest save wins if two share a name.
  */
 const loadNamedState = async (name: string): Promise<boolean> => {
   const profileId = getProfileId();
@@ -149,17 +144,11 @@ const loadNamedState = async (name: string): Promise<boolean> => {
   return loadStateFromBuffer(buffer);
 };
 
-/**
- * Load whichever the CLI asked for: a number is a quick-save slot, a string is
- * a manual save's name. One resolver so every automation flag behaves alike.
- */
+/** Load whichever the CLI asked for: a number is a quick-save slot, a string is a manual save's name. */
 const loadStateRef = (ref: number | string): Promise<boolean> =>
   typeof ref === 'number' ? loadState(ref) : loadNamedState(ref);
 
-/**
- * Capture the current game state into a temp slot and return its raw bytes.
- * Encapsulates the WASM/MEMFS dance so views never touch the module directly.
- */
+/** Capture the current game state into a temp slot and return its raw bytes. */
 const captureStateBuffer = (slot = 98): ArrayBuffer | null => {
   const mod = getModule();
   if (!mod) return null;
@@ -172,10 +161,7 @@ const captureStateBuffer = (slot = 98): ArrayBuffer | null => {
   return ab;
 };
 
-/**
- * Load a previously-captured state buffer, re-asserting live settings and
- * refreshing the tracker. Mirrors loadState() for buffers not on disk.
- */
+/** Load a captured state buffer, re-asserting live settings and refreshing the tracker. Mirrors loadState() for buffers not on disk. */
 const loadStateFromBuffer = (buffer: ArrayBuffer, slot = 98): boolean => {
   const mod = getModule();
   if (!mod) return false;

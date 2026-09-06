@@ -1,30 +1,20 @@
 /* @layer renderer-widgets @kind data */
 /**
- * Fix 5 (phase 4, part 2): the connection add/remove pair expressed as ONE
- * `SetProbe` instead of `connection-audit-core.ts`'s two hand-rolled halves
- * (deleted, along with the `connection-add`/`connection-remove` detectors
- * that wrapped them) — so cardinality (how many live crossings vs. how many
- * the dataset maps) and the missing/unresolvable/unbacked split all fall out
- * of `compareSet`'s own join instead of being hand-written twice.
+ * The connection add/remove pair as ONE `SetProbe`, so cardinality and the
+ * missing/unresolvable/unbacked split fall out of `compareSet`'s join instead
+ * of being hand-written twice.
  *
- * Live set chosen: `observations.realTransitions`, NOT `unmatchedCrossings`.
- * `unmatchedCrossings` is already pre-filtered by `useConnectionStatus`'s own
- * matching (now direction-fixed, see `useDatasetStatus.ts`'s F6 fix), which
- * would make this probe's OWN join redundant with the exact mechanism it
- * exists to replace — the point of a `SetProbe` is that the join decides
- * what's missing, not the caller. `realTransitions` is also the historically
- * MORE complete source (it already folds in the room's travel-destination
- * bytes and the flood on top of the exit/stair/hole tables
- * `detectConnections` reads), and it already tags each entry with a `source`,
- * which is exactly the enumerable/flood split this probe needs.
+ * Live set: `observations.realTransitions`, NOT `unmatchedCrossings`. The
+ * latter is already pre-filtered by `useConnectionStatus`'s matching, which
+ * would make this probe's own join redundant. `realTransitions` is also more
+ * complete (it folds in travel-destination bytes and the flood on top of the
+ * exit/stair/hole tables) and tags each entry with a `source`.
  *
- * Only ENUMERABLE, non-flood entries are used here: `source === 'flood'` is
- * excluded (presence-only, can never back a `certain` removal — matches how
- * `buildAddFindings` never used flood evidence for an add either), and so is
- * `source === 'walk'` (indoor scroll boundaries) — that one gets its own
- * probe (`indoor-edge.set.ts`), because ITS removability depends on whether
- * `walkBoundaries`/`doorBoundaries` were actually read for this room (F3),
- * a different gate than "was this general pass available at all".
+ * Only ENUMERABLE, non-flood entries are used: `source === 'flood'` is
+ * presence-only and can never back a `certain` removal, and `source === 'walk'`
+ * (indoor scroll boundaries) gets its own probe (`indoor-edge.set.ts`) because
+ * its removability depends on whether `walkBoundaries`/`doorBoundaries` were
+ * read for this room (F3).
  */
 import type { ConnectionRecord, ConnectionTag, ScreenId } from '@shared/game/data';
 import { buildConnectionNav } from '@shared/game/navigation/analysis/connection-nav-from-flood';
@@ -36,8 +26,8 @@ import { resolveRealDestId } from '../../../connection-audit-resolve';
 import { findFloodForTarget } from '../../../connection-tile-display';
 import { auditableFromHere, otherEndpoint, transitionKey } from './screen-endpoint';
 
-/** Sources the native room tables enumerate directly — an absence among
- *  these is provable. `flood` and `walk` are excluded; see the file header. */
+/** Sources the native room tables enumerate directly, so an absence among
+ *  them is provable. `flood` and `walk` are excluded; see the file header. */
 const ENUMERABLE_SOURCES: ReadonlySet<string> = new Set(['exit', 'stair', 'travel', 'hole', 'entrance']);
 
 const inferTags = (transition: ObservedTransition): ConnectionTag[] => {
@@ -51,9 +41,8 @@ const inferTags = (transition: ObservedTransition): ConnectionTag[] => {
 
 const readLive = (observations: ScreenObservations): Probe<readonly ObservedTransition[]> => {
   if (!observations.realAvailable) return unread();
-  // Dedupe by resolved key: two sources naming the same destination (e.g. a
-  // stair AND a travel byte both landing on the same room) propose ONE
-  // record, not two — `compareSet`'s own live loop does not dedupe its input.
+  // Dedupe by resolved key: two sources naming the same destination (a stair
+  // AND a travel byte) propose ONE record. `compareSet` does not dedupe its input.
   const seen = new Set<string>();
   const enumerable: ObservedTransition[] = [];
   for (const t of observations.realTransitions) {

@@ -52,7 +52,7 @@ const ByteGrid = (props: ByteGridProps) => {
 
   return (
     <Box className="hid-cal__step">
-      <Box className="hid-cal__step-title">Live Bytes — Report 0x{lastReportId.toString(16)}</Box>
+      <Box className="hid-cal__step-title">Live Bytes for report 0x{lastReportId.toString(16)}</Box>
       <Box className="hid-cal__byte-grid">
         {Array.from(latestBytes).map((b, i) => {
           const colors = getByteColor(i);
@@ -72,12 +72,12 @@ const ByteGrid = (props: ByteGridProps) => {
               boxShadow: isPicked ? '0 0 6px #c084fc88' : undefined,
               opacity: pickHighlight && excludedRef.current.has(i) ? 0.4 : 1,
             }} title={stickPickMode
-              ? `byte[${i}] — click to ${isPicked ? 'deselect' : 'select'} as stick axis`
+              ? `byte[${i}], click to ${isPicked ? 'deselect' : 'select'} as stick axis`
               : triggerPickMode
-              ? `byte[${i}] — click to ${isPicked ? 'deselect' : 'select'} as trigger axis`
+              ? `byte[${i}], click to ${isPicked ? 'deselect' : 'select'} as trigger axis`
               : (inputPhaseActiveRef.current && activeItem?.status === 'active'
-                ? `byte[${i}] = 0x${hex(b)} (${b}) — click to assign to "${activeItem?.label}"`
-                : `byte[${i}] = 0x${hex(b)} (${b}) — ${byteStatuses[i] ?? 'unknown'}\nClick to toggle exclusion`)}
+                ? `byte[${i}] = 0x${hex(b)} (${b}), click to assign to "${activeItem?.label}"`
+                : `byte[${i}] = 0x${hex(b)} (${b}) is ${byteStatuses[i] ?? 'unknown'}\nClick to toggle exclusion`)}
               onClick={() => onByteClick(i)}>
               <ByteChangeDot delta={delta} signed={signed} />
               <Text className="hid-cal__byte-idx">{i}</Text>

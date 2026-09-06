@@ -5,8 +5,8 @@
  * selects one; the bridge stages the chosen file for the core at boot.
  *
  * Two containers live here side by side: `.zspr`, which other tools produce, and `.rsp`,
- * ours. Validation is per-container — a ZSPR by its magic, a pack by being a readable zip
- * with a manifest — so a mislabelled file is rejected on import rather than at boot.
+ * ours. Validation is per-container: a ZSPR by its magic, a pack by being a readable zip
+ * with a manifest, so a mislabelled file is rejected on import instead of at boot.
  */
 import { getPlatform } from '@app/platform/get-platform';
 import { isZspr } from '@app/lib/game/zspr';
@@ -21,7 +21,7 @@ const listLinkSprites = async (): Promise<string[]> => {
   return all.filter((f) => SPRITE_RE.test(f)).sort((a, b) => a.localeCompare(b));
 };
 
-/** Strips the container extension — what the UI shows as the sprite's name. */
+/** Strips the container extension to give what the UI shows as the sprite's name. */
 const spriteStem = (name: string): string => name.replace(SPRITE_RE, '');
 
 const safeFileName = (name: string): string => {

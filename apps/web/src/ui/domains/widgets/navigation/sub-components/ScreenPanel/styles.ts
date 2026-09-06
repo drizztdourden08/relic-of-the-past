@@ -22,7 +22,7 @@ const PS: Record<string, CSSProperties> = {
   groupTitle: { fontSize: 10, color: 'var(--c-text-muted)', letterSpacing: 0.5 },
 
   row: { display: 'flex', alignItems: 'baseline', gap: 5, fontSize: 11 },
-  /** Clicking a row toggles its kind on the overlay — the legend is display-only. */
+  /** Clicking a row toggles its kind on the overlay. The legend is display-only. */
   rowToggle: { cursor: 'pointer' },
   rowOff: { opacity: 0.4 },
   glyph: { width: 12, textAlign: 'center', flexShrink: 0 },

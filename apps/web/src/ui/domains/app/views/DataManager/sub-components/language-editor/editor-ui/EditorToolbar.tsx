@@ -5,17 +5,17 @@
  *
  * Every button is the same size and carries no text, and thin rules separate the
  * four groups, so the row stays one line at any pane width and reads as a tool
- * strip rather than a form.
+ * strip, not a form.
  *
  * At most ONE card is open at a time and the ROW owns that state, so opening a
  * second closes the first. Escape anywhere in the row closes it, as does a press
- * outside the row — which is the honest test here, since the buttons swallow
+ * outside the row. That is the honest test here, since the buttons swallow
  * mousedown to keep the caret alive in the text and so never take focus at all.
  *
  * Each card does ONE thing, and the two of them holding a field or a picker
  * manage their own focus; the rest keep the caret where the insert is aimed.
  *
- * Ending the box is an action rather than a card: there is nothing to choose,
+ * Ending the box is an action, not a card: there is nothing to choose,
  * and the wait lands at the end of the caret's line because that is where a box
  * can actually end.
  */
@@ -50,7 +50,7 @@ type EditorToolbarProps = {
   onUndo: () => void;
   onRedo: () => void;
   onInsert: (tokens: Token[]) => void;
-  /** End the box at the caret's line — an action, with nothing to choose. */
+  /** End the box at the caret's line. It is an action with nothing to choose. */
   onEndBox: () => void;
   onChangeSettings: (next: Token[]) => void;
   onChangeStructureMode: (mode: StructureMode) => void;
@@ -73,9 +73,9 @@ const EditorToolbar = (props: EditorToolbarProps) => {
   const [open, setOpen] = useState<string | null>(null);
 
   /**
-   * A press outside closes the card — unless a select's own list is open, which
-   * is drawn in a portal and so lies outside this row while still belonging to
-   * the card (see `hasOpenDropdown`).
+   * A press outside closes the card, unless a select's own list is open. That
+   * list is drawn in a portal and so lies outside this row while still belonging
+   * to the card (see `hasOpenDropdown`).
    */
   const handleDismiss = useCallback(() => {
     if (hasOpenDropdown()) return;

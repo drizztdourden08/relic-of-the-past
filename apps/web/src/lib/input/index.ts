@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind barrel */
 /**
- * Input engine — public API for the renderer input subsystem.
+ * Public API for the renderer input subsystem.
  */
 
 export { InputManager, getInputManager, profileFromPreset, resolveFunctionMappingIcon } from './input-manager';

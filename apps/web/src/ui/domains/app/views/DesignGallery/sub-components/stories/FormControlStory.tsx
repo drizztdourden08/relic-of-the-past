@@ -25,7 +25,7 @@ const TABS = [
   { id: 'log', label: 'Log' },
 ];
 
-/** Components › selection controls. Active state is always gold. */
+/** Components: selection controls. Active state is always gold. */
 const FormControlStory = () => {
   const [on, setOn] = useState(true);
   const [checked, setChecked] = useState(true);
@@ -39,7 +39,7 @@ const FormControlStory = () => {
       <Specimen label="Toggle"><Toggle checked={on} onChange={setOn} label="Reduced motion" /></Specimen>
       <Specimen label="Checkbox"><Checkbox checked={checked} onChange={setChecked} label="Show completed checks" /></Specimen>
       <Specimen label="RadioGroup" hint="single choice"><RadioGroup value={radio} options={RADIO_OPTIONS} onChange={setRadio} direction="horizontal" /></Specimen>
-      <Specimen label="ToggleGroup" hint="multi-select — selected = gold"><ToggleGroup value={multi} options={TOGGLE_OPTIONS} onChange={setMulti} /></Specimen>
+      <Specimen label="ToggleGroup" hint="multi-select, selected in gold"><ToggleGroup value={multi} options={TOGGLE_OPTIONS} onChange={setMulti} /></Specimen>
       <Specimen label="SegmentedControl" hint="active = gold"><SegmentedControl value={seg} options={SEGMENTS} onChange={setSeg} /></Specimen>
       <Specimen label="TabBar" hint="active = gold underline"><TabBar tabs={TABS} activeTab={tab} onTabChange={setTab} /></Specimen>
     </Box>

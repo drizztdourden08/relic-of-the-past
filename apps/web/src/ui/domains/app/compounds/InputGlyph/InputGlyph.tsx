@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind component */
 /**
- * InputGlyph — presentational badge for a single input: the icon (keyboard key or
- * controller button) with an optional text label. Accepts either a full InputBinding
- * (resolved via the shared binding-display helpers) or a raw button-icon id. Bare/
- * presentational — no data or stores.
+ * Presentational badge for a single input: the icon (keyboard key or controller
+ * button) with an optional text label. Accepts either a full InputBinding
+ * (resolved via the shared binding-display helpers) or a raw button-icon id.
+ * No data or stores.
  */
 
 import { Box } from '../../../../design-system/primitives/Box';

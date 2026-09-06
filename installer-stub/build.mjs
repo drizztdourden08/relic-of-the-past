@@ -38,8 +38,8 @@ const LIBS = [
   'bcrypt.lib',
 ];
 
-// The brand art lives with the app rather than beside the installer, so it is
-// pulled in at build time instead of being duplicated in the tree.
+// The brand art lives with the app, not beside the installer, so it is pulled in
+// at build time instead of being duplicated in the tree.
 const ASSETS = [
   ['apps/web/public/logos/logo-256.png', 'logo-256.png'],
   ['apps/web/public/logos/icon.ico', 'app.ico'],
@@ -69,7 +69,7 @@ const stageAssets = () => {
 /**
  * `--manifest-url <url>` builds a stub that reads its recipe from somewhere other
  * than the release page, so the download-and-install path can be run against a local
- * server. Written as a header rather than a /D define because escaping a wide string
+ * server. It is written as a header, not a /D define, because escaping a wide string
  * literal through cmd is its own small nightmare.
  */
 const manifestOverride = () => {

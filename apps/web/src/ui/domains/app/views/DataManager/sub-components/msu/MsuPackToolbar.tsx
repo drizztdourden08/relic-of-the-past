@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind component */
-/**
- * The name field above the pack list. One field serves both jobs — it names a pack created from
- * nothing, and it names the pack an import lands in — because they are the same question asked
- * at the same moment, and two fields would only invite the user to fill in the wrong one.
- */
+// One name field for both a new empty pack and an import: two fields invite filling in the wrong one.
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
 import { Field } from '@ds/primitives/Field';

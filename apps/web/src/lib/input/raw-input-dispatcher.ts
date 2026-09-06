@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 /**
- * Raw Input Dispatcher — rising-edge detection and event emission
+ * Rising-edge detection and event emission
  * for any button/key/axis press on any device. Used by rebinding UI,
  * input tester, etc.
  */
@@ -8,7 +8,7 @@
 import type { InputBinding } from '@shared/types/controls';
 import { resolveAxisPressThreshold } from './axis-press-threshold';
 
-/** Raw input event — fired when any button/key/axis is pressed on any device */
+/** Raw input event, fired when any button/key/axis is pressed on any device */
 interface RawInputEvent {
   binding: InputBinding;
   sourceDeviceKey: string;
@@ -54,7 +54,7 @@ class RawInputDispatcher {
           this.emit({ type: 'gamepad-button', index: i }, deviceKey, vid, pid);
         }
       }
-      // Axes — rising-edge
+      // Axes, rising-edge
       const prevAxes = this.prevHidAxes.get(deviceKey) ?? [];
       const currAxes: ('+' | '-' | null)[] = [];
       for (let i = 0; i < state.axes.length; i++) {

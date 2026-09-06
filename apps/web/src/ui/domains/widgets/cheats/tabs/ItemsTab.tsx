@@ -1,8 +1,7 @@
 /* @layer renderer-widgets @kind component */
 /**
- * ItemsTab — Give items freely or trigger checks.
- * "Free Give" shows all items grouped by category.
- * "From Check" shows the check list with grant buttons.
+ * Give items freely or trigger checks. "Free Give" shows all items grouped
+ * by category; "From Check" shows the check list with grant buttons.
  */
 import { useState, useMemo, useEffect } from 'react';
 import { TextInput, Box, Text, Image, Button } from '../../../../design-system/primitives';
@@ -23,7 +22,7 @@ type Mode = 'free' | 'checks';
 // silently dropped by a category this list didn't yet know about.
 const CATEGORY_ORDER = ['weapon', 'equipment', 'medallion', 'bottle', 'upgrade', 'key', 'crystal', 'event', 'junk'];
 
-/** Sourced from Enumeration rather than hand-rolled, so a category label can't drift from the canonical one. */
+/** Sourced from Enumeration, not hand-rolled, so a category label can't drift from the canonical one. */
 const CATEGORY_LABELS: Record<string, string> = Object.fromEntries(
   enumerationFor('item-category').map(entry => [entry.value, entry.label]),
 );
@@ -35,7 +34,7 @@ const ItemsTab = () => {
 
   useEffect(() => onCompletedChecksChanged(checks => setCompletedChecks(new Set(checks))), []);
 
-  // Group items by category — native id 0x00-0x4b only (skip events/crystals/randomizer-only ids)
+  // Group items by category, restricted to native ids 0x00-0x4b (skip events/crystals/randomizer-only ids)
   const itemsByCategory = useMemo(() => {
     const map = new Map<string, ItemRecord[]>();
     for (const cat of CATEGORY_ORDER) map.set(cat, []);
@@ -60,8 +59,8 @@ const ItemsTab = () => {
     return itemId ? getItem(itemId).gameId?.receiveItemId ?? 0x17 : 0x17;
   };
 
-  // Screen display label for a check, mirroring the old check.screen slug's role —
-  // a handful of pure progress-buffer events carry no screenId at all.
+  // Screen display label for a check, mirroring the old check.screen slug's role. A
+  // handful of pure progress-buffer events carry no screenId at all.
   const checkScreenLabel = (check: CheckRecord): string => {
     if (!check.screenId) return '';
     const screen = getScreen(check.screenId);

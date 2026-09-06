@@ -4,7 +4,7 @@
  * (or, for chests, `attr - 0x58`); the tile's real identity lives in a live
  * side-table the caller supplies, never in the attribute byte itself. When a
  * family matches but the table has no record for that slot, the tile stays
- * honestly unresolved — asserting a guess is exactly the bug this module
+ * honestly unresolved. Asserting a guess is exactly the bug this module
  * exists to avoid.
  */
 import { MANIPULABLE_NAMES } from '../../data/native-tables';

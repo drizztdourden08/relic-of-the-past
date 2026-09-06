@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 /**
- * Widget Store — localStorage + profile-based persistence for widget layouts.
+ * localStorage plus profile-based persistence for widget layouts.
  *
  * Two layers:
  *  1. localStorage ("widget-layout"): current in-memory layout for fast restore on reload.
@@ -27,7 +27,7 @@ const loadLayoutLocal = (): WidgetLayout => {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed: WidgetLayout = JSON.parse(raw);
-      // Ensure all known widgets exist (handles new widgets added in updates)
+      // Make sure all known widgets exist (handles new widgets added in updates)
       return ensureAllWidgets(parsed);
     }
   } catch { /* corrupt, use defaults */ }
@@ -63,7 +63,7 @@ const saveLayoutForProfile = async (profileId: string, layout: WidgetLayout, io:
 
 // ─── Helpers ───
 
-/** Ensure the layout has entries for all defined widgets (forward-compat). */
+/** Adds entries for any defined widget the layout is missing (forward-compat). */
 const ensureAllWidgets = (layout: WidgetLayout): WidgetLayout => {
   const existing = new Set(layout.widgets.map((w) => w.id));
   const missing = WIDGET_DEFINITIONS.filter((d) => !existing.has(d.id));

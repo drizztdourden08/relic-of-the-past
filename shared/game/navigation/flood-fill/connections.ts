@@ -31,7 +31,7 @@ const getConnections = (result: FloodFillResult, intraEdges?: ('north' | 'south'
 
     if (isIntra) {
       // Intra-room edges: scan the reachable grid at the scroll boundary (row 31↔32 or col 31↔32).
-      // BFS doesn't produce transitions here — these are internal crossings.
+      // BFS doesn't produce transitions here, because these are internal crossings.
       const positions: number[] = [];
       const reachable = result.reachable;
       if (edge === 'south' || edge === 'north') {

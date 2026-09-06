@@ -1,17 +1,8 @@
 /* @layer renderer-components @kind component */
 /**
- * Drop a column here to remove it. It exists only while a column is in the air.
- *
- * It renders as a plain child of the table's own container, absolutely
- * positioned rather than portalled. It used to escape to the shared overlay
- * layer, pinned to the viewport, because the table is its own scroll container
- * and its header slides sideways mid-drag — anything parked in the header row
- * itself could scroll out from under the cursor. Positioned against the
- * table's own box instead, it stays put regardless of how far the header has
- * slid, without needing a portal at all.
- *
- * Hover is local state — nothing outside this element cares whether the cursor
- * is over it, so it never goes near the headless hook.
+ * Drop a column here to remove it. Exists only while a column is in the air.
+ * Absolutely positioned against the table's own box, not portalled, so it stays
+ * put however far the header has slid. Hover is local state.
  */
 import { useState } from 'react';
 import { Box } from '../../../primitives/Box';

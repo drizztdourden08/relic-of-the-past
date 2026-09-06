@@ -1,9 +1,7 @@
 /* @layer shared-types @kind logic */
 /**
- * Request/response IPC channels: `ipcRenderer.invoke` ↔ `ipcMain.handle`.
- * This interface is the SINGLE SOURCE OF TRUTH for every invoke channel's
- * argument + return signature. Both the preload bridge and the main-process
- * handlers are type-checked against it.
+ * Request/response IPC channels: `ipcRenderer.invoke` ↔ `ipcMain.handle`. The single source
+ * of truth for every invoke channel's signature; preload and main handlers are checked against it.
  */
 import type { Profile, AppState } from '@shared/types/profile';
 import type { NormalSaveInfo, AutoSaveInfo, QuickSaveSlotInfo } from '@shared/types/saves';
@@ -44,16 +42,16 @@ interface InvokeContract extends
   // App
   'app:getUserDataPath': () => Promise<string>;
 
-  // Diagnostics — host hardware/OS readout for the About page's debug info
+  // Host hardware/OS readout for the About page's debug info
   'diagnostics:getSystem': () => Promise<SystemDiagnostics>;
 
-  // Storage — data location, reveal in OS file manager, per-domain usage summary
+  // Data location, reveal in OS file manager, and per-domain usage summary
   'storage:getLocation': () => Promise<DataLocation>;
   'storage:reveal': () => Promise<void>;
   'storage:revealProfile': (profileId: string) => Promise<Result>;
   'storage:getSummary': () => Promise<StorageSummary>;
 
-  // Generic file store — POSIX paths relative to the Data root
+  // Generic file store. Paths are POSIX and relative to the Data root.
   'file:readBytes': (path: string) => Promise<ArrayBuffer | null>;
   'file:readText': (path: string) => Promise<string | null>;
   'file:writeBytes': (path: string, data: ArrayBuffer) => Promise<void>;
@@ -64,7 +62,7 @@ interface InvokeContract extends
   'file:mkdir': (dir: string) => Promise<void>;
   'file:stat': (path: string) => Promise<FileStat | null>;
 
-  // WASM core bytes — renderer instantiates non-streaming (file:// can't fetch)
+  // WASM core bytes. The renderer instantiates non-streaming because file:// can't fetch.
   'wasm:readBytes': () => Promise<ArrayBuffer>;
 
   // Window queries
@@ -74,7 +72,7 @@ interface InvokeContract extends
   'window:isAudioMuted': () => Promise<boolean>;
   'window:isFullscreen': () => Promise<boolean>;
 
-  // Display — refresh rate of the screen the window is on
+  // Refresh rate of the screen the window is on
   'display:getRefreshRate': () => Promise<RefreshRateInfo>;
   'display:getSyncedRateStatus': () => Promise<SyncedRateStatus>;
   'display:setSyncedRatePreference': (enabled: boolean, targetHz: number) => Promise<SyncedRateStatus>;
@@ -107,7 +105,7 @@ interface InvokeContract extends
   'assets:load': (romFile: string) => Promise<ArrayBuffer | null>;
   'assets:extract': (romFile: string) => Promise<Result>;
 
-  // Saves — quick states
+  // Quick-state saves
   'saves:writeSram': (profileId: string, data: ArrayBuffer) => Promise<void>;
   'saves:readSram': (profileId: string) => Promise<ArrayBuffer | null>;
   'saves:writeState': (profileId: string, slot: number, data: ArrayBuffer) => Promise<void>;
@@ -117,7 +115,7 @@ interface InvokeContract extends
   'saves:readScreenshot': (profileId: string, slot: number) => Promise<string | null>;
   'saves:getSlotInfos': (profileId: string) => Promise<QuickSaveSlotInfo[]>;
 
-  // Saves — normal (named)
+  // Normal (named) saves
   'saves:normal:create': (profileId: string, name: string, data: ArrayBuffer, screenshot?: ArrayBuffer) => Promise<NormalSaveInfo>;
   'saves:normal:list': (profileId: string) => Promise<NormalSaveInfo[]>;
   'saves:normal:load': (profileId: string, id: string) => Promise<ArrayBuffer | null>;
@@ -126,7 +124,7 @@ interface InvokeContract extends
   'saves:normal:delete': (profileId: string, id: string) => Promise<void>;
   'saves:normal:rename': (profileId: string, id: string, newName: string) => Promise<NormalSaveInfo | null>;
 
-  // Saves — auto
+  // Auto saves
   'saves:auto:create': (profileId: string, trigger: 'timer' | 'quit', data: ArrayBuffer, screenshot?: ArrayBuffer) => Promise<AutoSaveInfo>;
   'saves:auto:list': (profileId: string) => Promise<AutoSaveInfo[]>;
   'saves:auto:load': (profileId: string, id: string) => Promise<ArrayBuffer | null>;
@@ -138,8 +136,8 @@ interface InvokeContract extends
   'config:read': (profileId: string) => Promise<Record<string, unknown> | null>;
   'config:write': (profileId: string, settings: Record<string, unknown>) => Promise<void>;
 
-  // MSU — see shared/ipc/msu-contract.ts
-  // Languages — see shared/ipc/language-contract.ts
+  // MSU lives in shared/ipc/msu-contract.ts
+  // Languages live in shared/ipc/language-contract.ts
 
   // Sessions + tracker
   'sessions:list': (profileId: string) => Promise<PlaySession[]>;
@@ -147,7 +145,7 @@ interface InvokeContract extends
   'tracker:save': (profileId: string, state: unknown) => Promise<void>;
   'tracker:load': (profileId: string) => Promise<unknown>;
 
-  // Input — profiles + calibration + HID
+  // Input profiles, calibration, and HID
   'inputProfiles:read': (profileId: string) => Promise<unknown[]>;
   'inputProfiles:write': (profileId: string, profiles: unknown[]) => Promise<void>;
   'stickCalibration:read': () => Promise<Record<string, unknown>>;
@@ -171,24 +169,22 @@ interface InvokeContract extends
   'navReview:load': () => Promise<unknown>;
   'navReview:save': (data: unknown) => Promise<void>;
 
-  // Data Inspector / table view state — whole-file, app-level (not per profile),
+  // Data Inspector / table view state. Whole-file and app-level, not per profile, and
   // debounced by the renderer repo. See shared/ipc/ui-views-contract.ts.
   'uiViews:load': () => Promise<UiViewsMap>;
   'uiViews:save': (data: UiViewsMap) => Promise<void>;
 
-  // Data Inspector review layer — a personal curation status/note/timestamps
-  // pair per record, one file per collection (Data/review/<kind>.json), never
-  // inside the committed dataset. Generalizes the three legacy single-purpose
-  // files above (spriteReview/connectionReview/navReview, now superseded) to
-  // all eleven collections. The main process merges one entry per call rather
-  // than trusting a whole map from the renderer — see review-contract.ts.
+  // Data Inspector review layer: a personal status/note/timestamps pair per record, one
+  // file per collection (Data/review/<kind>.json), never inside the committed dataset.
+  // Supersedes spriteReview/connectionReview/navReview above. The main process merges
+  // one entry per call instead of trusting a whole map from the renderer; see review-contract.ts.
   'review:load': (kind: EntityKind) => Promise<ReviewFile>;
   'review:save': (kind: EntityKind, id: string, entry: ReviewEntry) => Promise<void>;
 
-  // Recommendation store — one file per collection (Data/recommendations/<kind>.json).
-  // The COLLECTION lives in the main process: folding a pass and recording a verdict
-  // are both read-modify-write over a whole file, and splitting either across an IPC
-  // round trip would let two callers interleave. See recommendation-contract.ts.
+  // Recommendation store, one file per collection (Data/recommendations/<kind>.json).
+  // The collection lives in the main process: folding a pass and recording a verdict are
+  // read-modify-write over a whole file, and an IPC round trip in between would let two
+  // callers interleave. See recommendation-contract.ts.
   'recommendations:load': (kind: EntityKind) => Promise<readonly Recommendation[]>;
   'recommendations:applyPass': (kind: EntityKind, context: DetectionContext,
     detectorIds: readonly string[], drafts: readonly DraftRecommendation[]) => Promise<PassResult>;
@@ -217,9 +213,8 @@ interface InvokeContract extends
   'shadow-casting:save': (data: ShadowCastingProject) => Promise<{ success: boolean }>;
   'shadow-casting:get-screen': (screenId: number) => Promise<ScreenShadowData | null>;
 
-  // Screen editor (dev-only, nested namespace). Record payloads carry no id and
-  // no source text — the main process allocates the id and serializes the record
-  // with the dataset's own emitter. See shared/ipc/screen-editor-contract.ts.
+  // Screen editor (dev-only). Record payloads carry no id and no source text: the main
+  // process allocates the id and serializes with the dataset's own emitter. See screen-editor-contract.ts.
   'screenEditor:writeScreen': (args: WriteScreenArgs) => Promise<WriteRecordResult>;
   'screenEditor:writeConnections': (args: WriteConnectionsArgs) => Promise<WriteRecordResult>;
   'screenEditor:writeConnectionPair': (args: WriteConnectionPairArgs) => Promise<WriteConnectionPairResult>;
@@ -235,10 +230,8 @@ interface InvokeContract extends
   'screenEditor:writeEnumeration': (args: WriteEnumerationArgs) => Promise<WriteRecordResult>;
   'screenEditor:deleteEnumeration': (args: DeleteEnumerationArgs) => Promise<WriteRecordResult>;
 
-  // The six collections that came after the record facade. Uniform by
-  // construction (record in, id back), so they share one generic payload trio.
-  // `writeCheckRecord` carries the suffix its five siblings do because
-  // `writeCheck` above is the older text-based channel and still has callers.
+  // The six collections added after the record facade share one generic payload trio.
+  // `writeCheckRecord` has the suffix because `writeCheck` above (older, text-based) still has callers.
   'screenEditor:allocateCheck': (a: AllocateRecordArgs<CheckRecord>) => Promise<AllocateRecordResult<CheckRecord>>;
   'screenEditor:writeCheckRecord': (args: WriteRecordArgs<CheckRecord>) => Promise<WriteRecordResult>;
   'screenEditor:deleteCheck': (args: DeleteRecordArgs) => Promise<WriteRecordResult>;
@@ -251,14 +244,14 @@ interface InvokeContract extends
   'screenEditor:allocateActor': (a: AllocateRecordArgs<ActorRecord>) => Promise<AllocateRecordResult<ActorRecord>>;
   'screenEditor:writeActorRecord': (args: WriteRecordArgs<ActorRecord>) => Promise<WriteRecordResult>;
   'screenEditor:deleteActor': (args: DeleteRecordArgs) => Promise<WriteRecordResult>;
-  // Area and location already mint through `allocateGeography`, which asks for a
-  // display name rather than a whole record — so they gain only the other two.
+  // Area and location already mint through `allocateGeography` (display name, not a
+  // whole record), so they gain only the other two.
   'screenEditor:writeAreaRecord': (args: WriteRecordArgs<AreaRecord>) => Promise<WriteRecordResult>;
   'screenEditor:deleteArea': (args: DeleteRecordArgs) => Promise<WriteRecordResult>;
   'screenEditor:writeLocationRecord': (args: WriteRecordArgs<LocationRecord>) => Promise<WriteRecordResult>;
   'screenEditor:deleteLocation': (args: DeleteRecordArgs) => Promise<WriteRecordResult>;
 
-  // GitHub bug reporting — anonymous relay, see cloud-functions/report-issue
+  // GitHub bug reporting through an anonymous relay, see cloud-functions/report-issue
   'github:createIssue': (req: CreateIssueRequest) => Promise<CreateIssueResult>;
 
   // Auto-updater (nested namespace)

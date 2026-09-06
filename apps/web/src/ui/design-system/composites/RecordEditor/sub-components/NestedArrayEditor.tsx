@@ -1,14 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
- * A list of lists of plain values — an OR-of-AND requirement set is the case
- * this exists for (`[['sword'], ['boomerang']]` reads "sword OR boomerang"),
- * but the shape itself is generic: any array whose element is ITSELF an array
- * of single values.
- *
- * One inner list per outer entry, laid out the same way `ArrayFieldEditor`
- * lays out a flat list — add and remove at both levels is the whole edit, so
- * there is no reorder here the way the object/variant list editors have: an
- * OR-of-AND set carries no meaning in the order its branches are tried.
+ * A list of lists of plain values, e.g. an OR-of-AND requirement set. Add and
+ * remove at both levels; no reorder, since branch order carries no meaning.
  */
 import { Box } from '../../../primitives/Box';
 import { Button } from '../../../primitives/Button';

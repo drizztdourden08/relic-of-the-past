@@ -3,7 +3,7 @@
  * An entry that opens a panel of its own instead of acting.
  *
  * It RECURSES: a child carrying children of its own is another `SubMenu`, so a
- * menu fed a tree — a field tree, say — nests as deep as its data does. Without
+ * menu fed a tree (a field tree, say) nests as deep as its data does. Without
  * that, a grandchild rendered as a leaf with nothing to click, which is a dead
  * row where a branch should be.
  *
@@ -26,7 +26,7 @@ interface PanelPosition {
 }
 
 /*
- * Opens to the right of its trigger, level with it — and flips to the left, or
+ * Opens to the right of its trigger, level with it. It flips to the left, or
  * rides up, only when that would put it off an edge. The height is estimated
  * from the row count because the panel does not exist yet to be measured.
  */

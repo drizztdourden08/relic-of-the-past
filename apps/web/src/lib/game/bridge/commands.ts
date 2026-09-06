@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-/** Game commands — pause. */
+/** Game pause command. */
 import { voidCall } from './wasm-call';
 
 const boolArg = (b: boolean): { argTypes: string[]; args: unknown[] } => ({ argTypes: ['number'], args: [b ? 1 : 0] });

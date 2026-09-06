@@ -2,10 +2,7 @@
 import { useGameUIStore } from '../../../../stores/game-ui-store';
 import { getSpritesBase } from '@shared/game/logic/queries/item-sprites';
 
-/**
- * SNES native resolution constants.
- * All HUD layout is in SNES pixel units, multiplied by scale.
- */
+/** SNES native resolution. All HUD layout is in SNES pixel units, multiplied by scale. */
 const SNES_WIDTH = 256;
 const SNES_HEIGHT = 224;
 const SNES_TILE = 8;
@@ -22,9 +19,9 @@ interface HudData {
   arrows: number;
   keys: number;
   equippedY: number;
-  /** 20 item slots (inventory.items) — used to pick the equipped item's upgrade-tier sprite. */
+  /** 20 item slots (inventory.items) used to pick the equipped item's upgrade-tier sprite. */
   items: number[];
-  /** Current resource caps — the max a counter can reach right now (accounts for upgrades/settings). */
+  /** The max each counter can reach right now, accounting for upgrades and settings. */
   maxRupees: number;
   maxBombs: number;
   maxArrows: number;

@@ -6,11 +6,11 @@
  * transcribes one `case` group of `TileDetect_ExecuteInner`
  * (core/zelda3/src/tile_detect.c:261-525). Keeping the list at exactly the
  * switch's granularity is the point: it can be diffed against the C by eye, and
- * no entry can quietly claim a distinction the engine does not make. This module
+ * no entry can claim a distinction the engine does not make. This module
  * turns such a list into the two maps consumers read.
  *
  * That dispatcher takes exactly one context input, `bool is_indoors`, so the maps
- * are keyed by (attr, indoors) and nothing else — no palace, theme or entrance.
+ * are keyed by (attr, indoors) and nothing else. No palace, theme or entrance.
  * A group therefore carries an `interior` value only where the switch really
  * branches on that flag.
  */
@@ -18,7 +18,7 @@
 interface AttrGroup<T> {
   /** The bytes this group covers, transcribed from the case list. */
   attrs: readonly number[];
-  /** Value outdoors — and the only value, for a case with no `is_indoors` branch. */
+  /** Value outdoors, and the only value for a case with no `is_indoors` branch. */
   value: T;
   /** Value indoors. Present only for a genuine `is_indoors` branch site. */
   interior?: T;

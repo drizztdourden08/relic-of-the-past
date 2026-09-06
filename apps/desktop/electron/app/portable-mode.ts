@@ -36,9 +36,9 @@ const installRoot = (): string | null => {
 };
 
 /**
- * A portable copy is self-contained from its first launch: the folder is created
- * rather than waited for, so a user who unzips onto a USB key gets travelling data
- * without having to know the convention. An installed copy switches only when
+ * A portable copy is self-contained from its first launch. The folder is created
+ * up front instead of waited for, so a user who unzips onto a USB key gets
+ * travelling data without having to know the convention. An installed copy switches only when
  * someone deliberately creates the folder.
  */
 const resolvePortableData = (): string | null => {

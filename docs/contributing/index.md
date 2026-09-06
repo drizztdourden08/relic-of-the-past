@@ -12,16 +12,16 @@ is the short version GitHub surfaces, and points here.
 
 ## Start here
 
-1. [Build from Source](build-from-source.md) — Node ≥ 24, `npm install`, `npm run dev`. The WASM
+1. [Build from Source](build-from-source.md) needs Node ≥ 24, `npm install`, `npm run dev`. The WASM
    core is committed prebuilt, so you don't need Emscripten for normal work.
-2. [Coding Standards](coding-standards.md) — ≤200 lines/file, arrow functions, exports at end,
+2. [Coding Standards](coding-standards.md) sets ≤200 lines/file, arrow functions, exports at end,
    one-thing-per-file, deep folders. ESLint and hooks enforce all of it.
-3. [File Tagging & Analysis](file-tagging.md) — every file carries `@layer`/`@kind`; `npm run analyze`
+3. Under [File Tagging & Analysis](file-tagging.md), every file carries `@layer`/`@kind`, and `npm run analyze`
    gates changed files. New file → `npm run analyze:tag`.
-4. [Plan Format](plan-format.md) — every implementation plan names its design pattern(s), shows a
+4. Under [Plan Format](plan-format.md), every implementation plan names its design pattern(s), shows a
    CRUD filetree, the data model in TS, and a flow diagram.
 
-## When your change touches…
+## When your change touches
 
 | Area | Read |
 |------|------|
@@ -30,7 +30,7 @@ is the short version GitHub surfaces, and points here.
 | Renderer ↔ main (Electron IPC) | [Adding an IPC Channel](adding-an-ipc-channel.md), [Electron & IPC](../architecture/electron-ipc.md) |
 | Architecture / where code goes | [Architecture overview](../architecture/overview.md) |
 | UI components | [Design System](design-system.md), [Design Language](design-language.md) |
-| Anything user-visible | run the app and verify — [Testing](testing.md) |
+| Anything user-visible | run the app and verify; see [Testing](testing.md) |
 | Linux / Android targets | [Testing on a Linux VM & Android emulator](testing-linux-and-android.md) |
 
 ## Before you open a PR
@@ -39,7 +39,7 @@ is the short version GitHub surfaces, and points here.
 npm run ci    # tsc + eslint + repo analysis
 ```
 
-- [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`…), scoped where helpful.
+- [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`, and so on), scoped where helpful.
 - Branch from `master`, keep PRs small and focused, and fill out the PR template.
 - Update docs in [`docs/`](../README.md) when behavior changes. They're the source of truth and sync to the Wiki.
-- For security-sensitive reports, use private disclosure rather than opening a public issue.
+- For security-sensitive reports, use private disclosure, not a public issue.

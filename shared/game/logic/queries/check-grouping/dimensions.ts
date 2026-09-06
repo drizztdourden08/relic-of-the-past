@@ -2,7 +2,7 @@
 /**
  * Grouping dimension catalog + per-dimension value resolution for a check.
  * World/area/location/dungeon read ScreenRecord/AreaRecord/DungeonRecord
- * directly — they used to go through a precomputed CheckTag, which only ever
+ * directly. They used to go through a precomputed CheckTag, which only ever
  * duplicated these same fields.
  */
 import type { CheckRecord } from '../../../data';
@@ -19,7 +19,7 @@ const GROUP_DIMENSIONS: GroupDimensionDef[] = [
   { id: 'content', label: 'Content', description: 'Key, Map/Compass, Boss Item, etc.' },
 ];
 
-/** Death Mountain (area-008) is the one area that spans both worlds — the check's own screen breaks the tie. */
+/** Death Mountain (area-008) is the one area that spans both worlds, so the check's own screen breaks the tie. */
 const areaLabel = (check: CheckRecord): string => {
   if (check.screenId) {
     const screen = getScreen(check.screenId);

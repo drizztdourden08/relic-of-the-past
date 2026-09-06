@@ -1,15 +1,8 @@
 /* @layer renderer-components @kind component */
 /**
- * The shell every overlay legend box shares: a titled panel with a chevron in its
- * top-right corner that collapses it to just the title bar.
- *
- * These boxes sit on top of the game view, so screen space is the scarce resource —
- * each one collapses independently and remembers nothing, since the useful default
- * is "open" and a collapse is a momentary "get out of the way".
- *
- * The panel itself must accept pointer events for the chevron to be clickable, even
- * though the container it lives in is `pointerEvents: none` so the overlay never
- * eats a game click.
+ * Each legend box collapses independently and remembers nothing: a collapse is a momentary "get
+ * out of the way". The panel must accept pointer events for the chevron even though its container
+ * is `pointerEvents: none`.
  */
 import { useState } from 'react';
 import type { CSSProperties, ReactNode } from 'react';

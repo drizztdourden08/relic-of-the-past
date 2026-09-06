@@ -21,7 +21,7 @@ const useMsulOpen = (): void => {
         try {
           const buffer = await window.api.readMsulFile(filePath);
           const result = await installMsulPack(new Uint8Array(buffer), stemOf(filePath));
-          log.app(`[MSU] Imported "${result.pack}" — ${result.fileCount} files, ${result.trackCount} slots`);
+          log.app(`[MSU] Imported "${result.pack}" with ${result.fileCount} files and ${result.trackCount} slots`);
         } catch (err) {
           log.error(`[MSU] Could not import that pack: ${err instanceof Error ? err.message : err}`);
         }

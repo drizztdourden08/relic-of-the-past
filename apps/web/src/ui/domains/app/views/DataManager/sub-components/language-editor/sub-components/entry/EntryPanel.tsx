@@ -3,8 +3,8 @@
  * One open entry: its identity, its metadata, the view switch, and whichever of
  * the three views is showing.
  *
- * The frame is the same whatever view is active, which is the point — the
- * metadata is true of the entry rather than of a way of looking at it, so it does
+ * The frame is the same whatever view is active, which is the point. The
+ * metadata is true of the entry, not of a way of looking at it, so it does
  * not move or reappear as a translator flips between reading, editing and
  * previewing. Only the panel's last slot changes.
  *

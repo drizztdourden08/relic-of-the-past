@@ -1,10 +1,8 @@
 /* @layer electron-main @kind logic */
 /**
- * The pack's audio as this operation sees it: every file with its size, which of them are
- * already in the target format, and what a converted file gets called.
- *
- * The listing is one directory read plus a stat per entry — no file is opened, so a pack of a
- * hundred tracks totalling gigabytes costs the same as a pack of three.
+ * The pack's audio as this operation sees it: every file with its size, which are already in
+ * the target format, and what a converted file gets called. One readdir plus a stat per entry;
+ * no file is opened.
  */
 import { join } from 'path';
 import { readdir, stat } from 'fs/promises';
@@ -26,7 +24,7 @@ const listPackAudio = async (pack: string): Promise<PackAudioFile[]> => {
     try {
       const entry = await stat(join(dir, name));
       if (entry.isFile()) out.push({ name, sizeBytes: entry.size });
-    } catch { /* vanished between the listing and the stat — nothing to convert */ }
+    } catch { /* vanished between the listing and the stat */ }
   }
   return out;
 };
@@ -35,13 +33,10 @@ const listPackAudio = async (pack: string): Promise<PackAudioFile[]> => {
 const isTargetFormat = (name: string): boolean => extensionOf(name) === OPTIMIZE_TARGET_EXTENSION;
 
 /**
- * The files a run would really convert: not yet in the target format, and not already
- * superseded by a same-stem file that is.
- *
- * A superseded original is exactly what a previous run left behind, kept on purpose until it is
- * thrown out. Converting it AGAIN would encode it a second time under a suffixed name, move the
- * manifest onto that copy, and orphan the first — every run would double the pack. Its reference
- * is re-pointed at the copy that already exists instead, with nothing encoded.
+ * The files a run would convert: not yet in the target format, and not superseded by a
+ * same-stem file that is. Converting a superseded original AGAIN would encode a second
+ * suffixed copy and orphan the first, doubling the pack every run; its reference is
+ * re-pointed at the existing copy instead.
  */
 const pendingConversions = (audio: PackAudioFile[]): PackAudioFile[] => {
   const covered = supersededMap(audio.map((file) => file.name));
@@ -51,11 +46,8 @@ const pendingConversions = (audio: PackAudioFile[]): PackAudioFile[] => {
 const stemOf = (name: string): string => name.replace(/\.[^.]*$/, '');
 
 /**
- * What the converted file is called: the same stem in the target format.
- *
- * A pack can already hold a `foo.flac` next to a `foo.pcm`, and the original is KEPT, so the
- * name is suffixed rather than overwritten — losing an existing file to a rename would be a
- * far worse outcome than an odd name.
+ * The same stem in the target format. A pack can already hold `foo.flac` next to `foo.pcm`,
+ * so the name is suffixed, never overwritten: an odd name beats a lost file.
  */
 const freeTargetName = (name: string, taken: Set<string>): string => {
   const stem = stemOf(name);

@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 /**
- * A channel where every trigger LAYERS over what is already sounding — the two effect channels.
+ * A channel where every trigger LAYERS over what is already sounding, as the two effect channels do.
  *
  * Each trigger spawns its own set of voices and its own gain path, so ten hits in a row are ten
  * overlapping sounds. Reusing the stateful behavior here (stop the previous, start the next)
@@ -15,7 +15,7 @@ import type { ActiveLayer, ChannelOptions, ChannelReport, SoundChannelApi } from
 import { createTriggerPool } from './trigger-pool';
 
 /**
- * How many trigger sets one channel may have sounding at once. Generous on purpose — the sound
+ * How many trigger sets one channel may have sounding at once. Generous on purpose, since the sound
  * chip itself only had eight voices for everything, so a legitimate pack never comes close.
  * The cap exists for the pathological case: a long file authored onto a rapid-fire id would
  * otherwise stack a new set every frame until the audio graph buckles.
@@ -30,7 +30,7 @@ interface LiveSet {
   id: number;
   startedAt: number;
   layers: ActiveLayer[];
-  /** The node this set feeds — a panner of its own, or the channel gain when centred. */
+  /** The node this set feeds, either a panner of its own or the channel gain when centred. */
   out: AudioNode;
 }
 

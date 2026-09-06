@@ -1,14 +1,11 @@
 /* @layer tests @kind test */
 /**
- * `openRecommendation` — the one call anything outside this screen makes to get
- * a finding on screen, and therefore a contract worth pinning.
- *
- * Two halves have to meet for it to work, because neither side can reach the
- * other: the app shell owns page state as local React state, and a widget owns
- * no page state at all. The shell registers how to bring the inspector forward;
- * the caller hands over what to show; the view consumes the request once it has
- * landed. These tests drive the store directly — the registration itself is the
- * app shell's `useAppNavigation` effect.
+ * `openRecommendation` is the one call anything outside this screen makes to get
+ * a finding on screen. Neither side can reach the other: the shell owns page
+ * state as local React state, a widget owns none. The shell registers how to
+ * bring the inspector forward, the caller hands over what to show, the view
+ * consumes the request once landed. The registration itself is the shell's
+ * `useAppNavigation` effect.
  */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useDataViewStore } from '@app/stores/data-view-store';
@@ -73,7 +70,7 @@ describe('openRecommendation', () => {
     expect(useDataViewStore.getState().pendingRecommendation).toBeNull();
   });
 
-  it('replaces an unconsumed request rather than queueing behind it', () => {
+  it('replaces an unconsumed request instead of queueing behind it', () => {
     useDataViewStore.getState().openRecommendation(finding('first'));
     useDataViewStore.getState().openRecommendation(finding('second'));
     expect(useDataViewStore.getState().pendingRecommendation?.id).toBe('second');

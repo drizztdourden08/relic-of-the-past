@@ -4,7 +4,7 @@
  * checking one probe against the live game, before it becomes a recommendation.
  *
  * Kept separate from `probe.types.ts` because a probe describes how to look
- * and a difference describes what was found — a strategy author writes the
+ * and a difference describes what was found. A strategy author writes the
  * former, the engine produces the latter, and nothing else should need to
  * construct one by hand.
  */
@@ -14,8 +14,8 @@ import type { Confidence, ProposedRecord } from '../types';
 /**
  * `mismatch`: both sides have a value and they disagree.
  * `missing-in-dataset`: the game reports something the record does not hold.
- * `unbacked-in-dataset`: the record holds something the game does not confirm
- * — only ever reachable through a `removable` set probe; a field probe never
+ * `unbacked-in-dataset`: the record holds something the game does not confirm.
+ * Only ever reachable through a `removable` set probe. A field probe never
  * produces it, because a field always exists on the record once the record
  * exists (there is no "the dataset has no opinion on this field" for a field).
  */
@@ -35,14 +35,14 @@ interface Difference {
 
 /**
  * `unresolvable` covers a live item with no dataset match AND no way to
- * propose one (`toProposed` returned null — the live evidence alone cannot
+ * propose one (`toProposed` returned null, because the live evidence alone cannot
  * be turned into a valid record, e.g. a crossing whose destination has no
  * screen of its own). It is the case `connection-audit-core.ts` used to drop
  * silently; here it survives as a distinct status instead of vanishing, and
  * carries the original live `item` so a strategy's `onUnresolvable` mapper
- * can act on it directly — the connection strategy's own mapper (phase 4,
+ * can act on it directly. The connection strategy's own mapper (phase 4,
  * part 2) reads a crossing's raw destination index straight off it to
- * propose the missing screen, rather than parsing one back out of `key`.
+ * propose the missing screen, instead of parsing one back out of `key`.
  */
 type SetDifferenceStatus = 'missing-in-dataset' | 'unbacked-in-dataset' | 'unresolvable';
 

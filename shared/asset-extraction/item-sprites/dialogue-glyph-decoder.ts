@@ -1,15 +1,10 @@
 /* @layer shared-asset-extraction @kind logic */
 /**
- * Dialogue-font glyph decoder — cuts the picture characters out of the text font.
- *
- * The dialogue font is 256 tiles of 8x8 2bpp. One character is two stacked tiles
- * making 8x16; for character index `c`:
+ * Cuts the picture characters out of the dialogue font: 256 tiles of 8x8 2bpp, one character
+ * being two stacked tiles (8x16). For character index `c`:
  *   topTile = (c >> 4) * 32 + (c & 15),  bottomTile = topTile + 16
- * (16 characters per row, each character row spanning two tile rows.)
- *
- * Colour is a deliberate reconstruction, NOT ROM data — see `GLYPH_RAMP`, which
- * is shared with anything else that redraws these characters so a cut file and a
- * live redraw cannot drift apart.
+ * Colour is a reconstruction, NOT ROM data: see `GLYPH_RAMP`, shared with every redraw so a cut
+ * file and a live redraw cannot drift apart.
  */
 import type { RomData } from '../rom/rom-types';
 import { decode2bppTile } from '../graphics/bitplane-decoder';
@@ -50,11 +45,7 @@ const paintGlyph = (img: ImageBuffer, font: Buffer, glyph: number, dx: number): 
   paintTile(img, font, topTile + 16, dx, 8);
 };
 
-/**
- * Decode one picture character. `glyphRight` pairs a second character to its
- * right, for the pictures the font splits across two halves — the pair comes out
- * as a single 16x16 image instead of two 8x16 slivers.
- */
+/** Decode one picture character. `glyphRight` pairs the right half of a two-half picture, giving one 16x16 image instead of two 8x16 slivers. */
 const extractDialogueGlyph = (glyph: number, glyphRight: number | undefined, font: Buffer): ImageBuffer => {
   const paired = glyphRight !== undefined;
   const img = new ImageBuffer(paired ? GLYPH_W * 2 : GLYPH_W, GLYPH_H);

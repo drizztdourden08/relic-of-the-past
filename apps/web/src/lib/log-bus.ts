@@ -88,7 +88,7 @@ const CHANNEL_COLORS: Record<LogChannel, string> = {
 const installGlobalHandlers = (): void => {
   window.addEventListener('error', (e) => {
     // WASM RuntimeErrors are handled exclusively by the lifecycle crash handler.
-    // Never log them here — they would flood during the game loop.
+    // Never log them here. They would flood during the game loop.
     if (e.error instanceof WebAssembly.RuntimeError) {
       e.preventDefault();
       return;

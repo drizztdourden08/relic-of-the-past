@@ -1,8 +1,8 @@
 /* @layer tests @kind test */
 /**
- * The route view credits each stop with the checks earned there. The arithmetic
- * is off-by-one-prone (a stop stores the tally on ARRIVAL, so its own haul is the
- * next stop's arrival minus its own), and the last stop has no successor.
+ * The route view credits each stop with the checks earned there. A stop stores
+ * the tally on ARRIVAL, so its haul is the next stop's arrival minus its own,
+ * and the last stop has no successor.
  */
 import { describe, it, expect } from 'vitest';
 import type { TrailStop } from '../../apps/web/src/stores/simulator-store';
@@ -11,7 +11,7 @@ import { haulAt } from '../../apps/web/src/ui/domains/widgets/simulator/sub-comp
 const stop = (screenId: string, checksAt: number): TrailStop => ({ screenId, epoch: 0, checksAt });
 
 describe('run trail haul', () => {
-  // `screenId` carries a TraversalId (shared/game/simulation/traversal-id.ts) — the
+  // `screenId` carries a TraversalId (shared/game/simulation/traversal-id.ts), which is the
   // engine's own `ow:<screenIndex>` / `room:<roomIndex>` identity, not a dataset
   // ScreenId. `haulAt` never inspects the string; these just need to look real.
   const trail = [stop('ow:44', 0), stop('room:260', 1), stop('room:128', 1), stop('room:18', 4)];

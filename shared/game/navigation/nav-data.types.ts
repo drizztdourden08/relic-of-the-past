@@ -112,7 +112,7 @@ interface ConnectionNavData {
   fromPoint?: ConnectionPointData;
 
   /**
-   * For walk connections: overlapping tile positions (0–63) where
+   * For walk connections: overlapping tile positions (0-63) where
    * BOTH screens have reachable border tiles. This is the actual corridor.
    */
   overlapTiles?: number[];
@@ -145,7 +145,7 @@ interface ConnectionPointData {
   direction?: 'n' | 's' | 'e' | 'w';
 
   /**
-   * Tile positions (0–63) in this bundle.
+   * Tile positions (0-63) in this bundle.
    * For N/S edges: column positions. For E/W edges: row positions.
    * Always contiguous (no gaps within one bundle).
    */

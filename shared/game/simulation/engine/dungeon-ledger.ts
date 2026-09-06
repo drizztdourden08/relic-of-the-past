@@ -1,10 +1,10 @@
 /* @layer shared-game @kind logic */
 /**
  * The dungeon ledger: per dungeon-group bookkeeping of what a run still owes
- * there. `complete` is permanent — the group is fully cleared and never
- * reopens. `exhausted` is provisional — nothing owed is actionable right now,
+ * there. `complete` is permanent. The group is fully cleared and never
+ * reopens. `exhausted` is provisional. Nothing owed can be acted on right now,
  * but a listed acquisition (`reopensOn`) can undo it. Keeping the two states
- * distinct (rather than one boolean) is the point: a group can bounce between
+ * distinct (not one boolean) is the point: a group can bounce between
  * exhausted and open again, but never leaves `complete` once it gets there.
  */
 
@@ -12,14 +12,14 @@
 interface OwedCheck {
   checkId: string;
   roomId: number;
-  /** What stopped the run taking it — the missing token, or the gate it could not open. */
+  /** What stopped the run taking it, whether a missing token or a gate it could not open. */
   blockedBy?: string;
 }
 
 interface DungeonLedger {
   group: number;
   owed: OwedCheck[];
-  /** Nothing further is actionable with what is currently held. */
+  /** Nothing further can be done with what is currently held. */
   exhausted: boolean;
   /** Only when `owed` is empty. Closes the group permanently. */
   complete: boolean;

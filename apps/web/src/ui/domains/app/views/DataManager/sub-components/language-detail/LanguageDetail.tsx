@@ -1,8 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * Language inspector — two scrollable tabs: "Font" (glyph sheet + metadata) and
- * "Dialogue" (the full line list). Each tab owns its own scroll region.
- */
 import { useState } from 'react';
 import { Box } from '../../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../../design-system/primitives/Text';
@@ -26,7 +22,7 @@ const LanguageDetail = (props: LanguageDetailProps) => {
   const [tab, setTab] = useState('font');
 
   if (!code) return <Text>Select a language to inspect its font and dialogue</Text>;
-  if (loading) return <Text>Loading…</Text>;
+  if (loading) return <Text>Loading...</Text>;
   if (!pack) return <Text>No data available for this language</Text>;
 
   return (

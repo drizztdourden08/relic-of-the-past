@@ -1,16 +1,8 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * WASM warmup — Facade over the three background load stages so the game core is
- * ready before the player ever hits Play:
- *   1. inject the Emscripten glue <script> (defines window.Zelda3; MODULARIZE, no
- *      side effects until called),
- *   2. fetch the .wasm bytes (streamed with progress over http; one IPC blob over
- *      file://),
- *   3. WebAssembly.compile() them into a cached Module.
- *
- * startGame() reuses the cached compiled Module (see instantiate-wasm), so the
- * fetch+compile cost is paid here in the background, not on the critical path.
- * Progress is reported to the caller (the useWasmWarmup hook → boot-progress-store).
+ * Background WASM warmup: inject the Emscripten glue (defines window.Zelda3; MODULARIZE, no
+ * side effects until called), fetch the .wasm bytes (streamed over http; one IPC blob over
+ * file://), WebAssembly.compile() into a cached Module that startGame() reuses (instantiate-wasm).
  */
 import { log } from '../log-bus';
 
@@ -44,7 +36,7 @@ const loadWasmBytes = async (onProgress?: (ratio: number) => void): Promise<Arra
   if (cachedBytes) return cachedBytes;
 
   if (!isHttpRenderer()) {
-    cachedBytes = await window.api.readWasmBytes(); // file:// — one IPC blob, no progress
+    cachedBytes = await window.api.readWasmBytes(); // file:// gives one IPC blob with no progress
     onProgress?.(1);
     return cachedBytes;
   }
@@ -53,7 +45,7 @@ const loadWasmBytes = async (onProgress?: (ratio: number) => void): Promise<Arra
   const res = await fetch(url);
   const total = Number(res.headers.get('Content-Length')) || 0;
   if (!res.body || !total) {
-    cachedBytes = await res.arrayBuffer(); // no length header — fall back to indeterminate
+    cachedBytes = await res.arrayBuffer(); // no length header, so fall back to indeterminate
     onProgress?.(1);
     return cachedBytes;
   }
@@ -85,14 +77,14 @@ const warmWasmCore = (report: WarmReport): Promise<void> => {
   if (warmPromise) return warmPromise;
   warmPromise = (async () => {
     try {
-      report({ phase: 'glue', message: 'Loading engine…', ratio: null });
+      report({ phase: 'glue', message: 'Loading engine...', ratio: null });
       await loadGlueScript();
 
-      report({ phase: 'fetch', message: 'Loading game core…', ratio: 0 });
+      report({ phase: 'fetch', message: 'Loading game core...', ratio: 0 });
       const bytes = await loadWasmBytes((r) =>
-        report({ ratio: r, message: `Loading game core… ${Math.round(r * 100)}%` }));
+        report({ ratio: r, message: `Loading game core... ${Math.round(r * 100)}%` }));
 
-      report({ phase: 'compile', message: 'Preparing game core…', ratio: null });
+      report({ phase: 'compile', message: 'Preparing game core...', ratio: null });
       compiledModule = await WebAssembly.compile(bytes);
 
       report({ phase: 'ready', message: 'Ready', ratio: 1 });

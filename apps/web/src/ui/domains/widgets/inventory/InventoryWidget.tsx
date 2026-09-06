@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 /**
- * InventoryWidget — Content for the Inventory widget.
+ * Content for the Inventory widget.
  * Wraps TrackerInventory with data subscription + view mode state.
  */
 import { useState, useEffect } from 'react';

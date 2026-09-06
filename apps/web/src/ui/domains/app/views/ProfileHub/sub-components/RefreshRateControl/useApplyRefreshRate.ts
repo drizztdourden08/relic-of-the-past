@@ -21,7 +21,7 @@ const useApplyRefreshRate = (): ApplyRefreshRate => {
     setApplying(true);
     try {
       setResult(await getPlatform().display.applyRefreshRate(hz));
-      // The display is on a different rate now, so every readout of it is stale — the panel's
+      // The display is on a different rate now, so every readout of it is stale. The panel's
       // own "detected" line, the title-bar counter, and its incompatible-rate tag. Re-read once
       // the switch has settled; a mode change is not instant and measuring mid-switch would
       // sample the old rate.

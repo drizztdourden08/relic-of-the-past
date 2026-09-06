@@ -30,7 +30,7 @@ const TrackerGroupTree = (props: TrackerGroupTreeProps) => {
     );
   }
 
-  // Flat mode — render checks directly
+  // Flat mode renders checks directly
   if (node.children.length === 0 && node.checks.length > 0) {
     return (
       <Box className="tracker-groups">

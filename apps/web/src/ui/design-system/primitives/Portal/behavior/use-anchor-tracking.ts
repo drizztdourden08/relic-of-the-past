@@ -2,21 +2,17 @@
 /**
  * Keeps a portalled panel pinned to its anchor for as long as it is open.
  *
- * Positioning a floating panel once, at the moment it opens, only holds while
- * nothing moves: scroll the page or any container between the anchor and the
- * root and the two drift apart. So the position is recomputed on every scroll
- * heard anywhere in the tree. The listener is registered in the capture phase
- * on purpose — scroll events do not bubble, and capture is the only way a
- * window-level listener hears one fired on an inner container.
+ * Positioning once, at open, only holds while nothing moves, so the position is
+ * recomputed on every scroll heard anywhere in the tree. The listener is
+ * registered in the capture phase because scroll events do not bubble and
+ * capture is the only way a window-level listener hears one fired on an inner
+ * container.
  *
- * Following the anchor is only half of it. Once the anchor has scrolled out of
- * the region it is visible through, there is nothing left to point at, and
- * `onOutOfView` fires so the caller can dismiss the panel rather than leave it
- * hanging beside empty space.
+ * Once the anchor has scrolled out of the region it is visible through,
+ * `onOutOfView` fires so the caller can dismiss the panel.
  *
- * Callers supply `compute`, which turns the anchor's current rect into
- * whatever shape they position with; it is read through a ref, so it does not
- * have to be memoised.
+ * Callers supply `compute`, which turns the anchor's rect into whatever shape
+ * they position with. It is read through a ref, so it need not be memoised.
  */
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { clippingAncestorsOf, overlaps, visibleBoundsOf } from './anchor-position';
@@ -28,7 +24,7 @@ interface UseAnchorTrackingParams<T> {
   active: boolean;
   anchorRef: RefObject<HTMLElement | null>;
   compute: (rect: DOMRect) => T;
-  /** Fired when the anchor scrolls out of sight — usually the panel's close handler. */
+  /** Fired when the anchor scrolls out of sight, usually the panel's close handler. */
   onOutOfView?: () => void;
 }
 

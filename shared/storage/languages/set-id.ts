@@ -2,7 +2,7 @@
 /**
  * Set-id validation. An id becomes a folder name and the value the config's
  * language key selects at boot, so it is restricted to lowercase letters,
- * digits and dashes — and must not already be taken.
+ * digits and dashes. It must also not already be taken.
  */
 import type { FileStore } from '@shared/platform';
 import { setDir } from './paths';

@@ -1,30 +1,20 @@
 /* @layer renderer-widgets @kind data */
 /**
- * Fix 3 (phase 4, part 2): `buildBadFindings` (deleted) treated EVERY
- * `kind: 'edge'` connection as flood-only and refused to ever propose
- * removing one — correct for an OUTDOOR scroll edge (the flood proves
- * presence, never absence, and that reasoning is unchanged and must not be
- * weakened), but indoors the room's own walk-boundary table enumerates
- * every wall the room actually scrolls through, so an indoor edge IS
- * provable both ways once that table is read.
+ * An OUTDOOR scroll edge is flood-only: the flood proves presence, never
+ * absence, so it must never be proposed for removal. Indoors the room's own
+ * walk-boundary table enumerates every wall the room scrolls through, so an
+ * indoor edge IS provable both ways once that table is read.
  *
  * Gated on `observations.walkBoundaries` AND `observations.doorBoundaries`
- * BOTH being present, not merely `realAvailable` — these are the two tables
- * this probe's safety depends on, read only for the CURRENT indoor room
- * (`use-screen-observations.ts`). `doorBoundaries` carries no destination of
- * its own (`LiveDoorBoundaryTile` has no `destRoom`), so it is never
- * consulted for identity here — only as a second "this room's exits were
- * actually queried" gate alongside `walkBoundaries`, so a room whose door
- * table was never read gets no removal proposal from this probe even if its
- * walk table happened to come back. This is deliberately conservative: a
- * batch accept is gated on `certain`, and getting this gate wrong would make
- * that unsafe.
+ * BOTH being present, not merely `realAvailable`. `doorBoundaries` carries no
+ * destination (`LiveDoorBoundaryTile` has no `destRoom`) and is only a second
+ * "this room's exits were queried" gate. Deliberately conservative: a batch
+ * accept is gated on `certain`, so getting this gate wrong would make it unsafe.
  *
- * `realTransitions`' own `source: 'walk'` entries come from the SAME native
- * call (`wasmGetRoomWalkBoundaries`) but carry no signal of whether the door
- * table was also read, which is why this probe reads `walkBoundaries`
- * directly rather than reusing those entries — see `points.set.ts`'s header
- * for why that probe excludes `'walk'` sources entirely and leaves them here.
+ * `realTransitions`' own `source: 'walk'` entries come from the same native
+ * call but carry no signal of whether the door table was also read, which is
+ * why this probe reads `walkBoundaries` directly. `points.set.ts` excludes
+ * `'walk'` sources entirely and leaves them here.
  */
 import type { ConnectionRecord, ScreenId } from '@shared/game/data';
 import { unread } from '@shared/game/recommendations/compare';

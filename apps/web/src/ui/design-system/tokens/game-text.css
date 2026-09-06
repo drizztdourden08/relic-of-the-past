@@ -3,9 +3,9 @@
 /*
  * Colours for text the game itself draws, as opposed to app chrome.
  *
- * These are game-accurate values rather than design decisions — the dialogue
- * face is white with a blue edge over a near-black box — so they live here with
- * the other raw values instead of in the component that uses them. Same
+ * These are game-accurate values, not design decisions. The dialogue face is
+ * white with a blue edge over a near-black box, so they live here with the other
+ * raw values instead of in the component that uses them. Same
  * reasoning as the HUD's palette: matching the screen is the requirement, and a
  * themed token would be wrong by definition.
  */
@@ -39,7 +39,7 @@
   --game-line-h: calc(var(--game-cell-h) * var(--game-scale));
   --game-font-size: calc(16px * var(--game-scale));
 
-  /* 21 cells — the usable interior of one row. */
+  /* 21 cells, the usable interior of one row. */
   --game-row-cells: 21;
   --game-row-width: calc(var(--game-row-cells) * var(--game-advance));
 }

@@ -1,17 +1,8 @@
 /* @layer renderer-components @kind logic */
 /**
- * The sort block of a column's ⋯ menu — its own file because it is the one part
- * of that menu whose SHAPE changes with state rather than just its wording.
- *
- * A direction is a choice, not a toggle: offering "ascending" and "descending"
- * as two entries says what each one will do, where a single "sort by" entry
- * only says that something will happen. So an unsorted column offers both, and
- * a sorted one offers the direction it is NOT currently in — the option that is
- * already in effect would be a no-op with a tick beside it.
- *
- * Removing the sort is offered next to it, and only while there is one. The
- * footer's "Clear all sorting" drops every level at once, which is the wrong
- * tool for a column that joined a multi-column sort by mistake.
+ * The sort block of a column's ⋯ menu; its shape changes with state. An
+ * unsorted column offers both directions, a sorted one offers the other
+ * direction plus "remove sort on this column".
  */
 import type { MenuEntry } from '../../DropdownMenu';
 import type { SortEntry } from '../../../data/table/types';

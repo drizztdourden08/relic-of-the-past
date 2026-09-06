@@ -2,7 +2,7 @@
 /**
  * Neighbour-reachability against the detect flood's `reached` grid, shared by
  * every interactable kind whose own tile is solid (a sprite, a door record
- * inside a wall, a cracked-wall marker) — what matters for each is whether the
+ * inside a wall, a cracked-wall marker). What matters for each is whether the
  * player can stand on a tile beside it.
  */
 import type { GridPos } from '../../navigation/types';
@@ -11,8 +11,8 @@ import type { GridPos } from '../../navigation/types';
 type Reached = boolean[][] | undefined;
 
 /**
- * A sprite is interactable when the player can stand NEXT to it — its own tiles are
- * often solid (a blocking NPC like the uncle stamps a 3×3 footprint into the
+ * A sprite is interactable when the player can stand NEXT to it, because its own tiles
+ * are often solid (a blocking NPC like the uncle stamps a 3x3 footprint into the
  * grid, so the spawn tile itself never floods). Any reachable tile within a
  * 2-tile ring around the spawn counts as "can talk to it".
  */

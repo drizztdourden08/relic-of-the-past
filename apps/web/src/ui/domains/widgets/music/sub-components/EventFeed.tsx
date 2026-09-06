@@ -2,7 +2,7 @@
 /**
  * The rolling feed: every raise the core reported and every roll the engine decided, newest at
  * the bottom, each line tagged with who produced it. This is the ground truth for "what just
- * made that sound" — a CHIP line during a storm names the exact id to claim.
+ * made that sound". A CHIP line during a storm names the exact id to claim.
  */
 import { useEffect, useRef } from 'react';
 import { Badge, Box, EmptyState, ScrollArea, Text } from '@ds/primitives';
@@ -28,7 +28,7 @@ const EventFeed = (props: { events: MusicDebugEvent[] }) => {
     bottomRef.current?.scrollIntoView({ block: 'nearest' });
   }, [events]);
 
-  if (events.length === 0) return <EmptyState message="No sound events yet — play, or make some noise." />;
+  if (events.length === 0) return <EmptyState message="No sound events yet. Play, or make some noise." />;
 
   return (
     <ScrollArea className="music-widget__rows music-widget__feed">

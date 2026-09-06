@@ -9,8 +9,8 @@
  *
  * Saving is refused while a row is too long. The engine keeps writing past the
  * edge of the box instead of wrapping, painting over the line below, so an
- * overlong row is a defect that cannot be seen until someone plays that scene —
- * which is exactly the kind of thing an editor should not let out.
+ * overlong row is a defect that cannot be seen until someone plays that scene.
+ * That is exactly the kind of thing an editor should not let out.
  *
  * Message-wide settings and the insert pickers live in the editor's own
  * toolbar now; this wrapper carries only the commit pair and the save gate.
@@ -24,7 +24,7 @@ import type { GlyphMetrics, GlyphSheet, RowFit } from '@shared/game/language/lay
 import './EntryEditor.css';
 
 type EntryEditorProps = {
-  /** The DRAFT tokens — the parent holds the committed entry. */
+  /** The DRAFT tokens. The parent holds the committed entry. */
   tokens: Token[];
   rows: RowFit[];
   cfg: LanguageConfig;

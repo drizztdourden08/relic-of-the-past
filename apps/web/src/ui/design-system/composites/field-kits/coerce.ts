@@ -17,7 +17,7 @@ const toNumber = (value: unknown): number => {
   return NaN;
 };
 
-/** A filter operand the user has not filled in yet — the clause stays inert. */
+/** A filter operand the user has not filled in yet, which leaves the clause inert. */
 const isBlankOperand = (operand: unknown): boolean =>
   isNullish(operand) || (typeof operand === 'string' && operand.trim() === '');
 

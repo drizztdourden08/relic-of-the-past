@@ -1,20 +1,10 @@
 /* @layer renderer-components @kind logic */
 /**
- * Turns accepted occurrences into new token streams — the deliberate half of
- * the hardcoded-name scan.
- *
- * The scan itself reports and changes nothing. This is what a translator's
- * "apply" press does: each accepted run of literal text is cut out of its text
- * token and replaced by a reference, so a later rename of the variable reaches
- * every line that says it.
- *
- * Only runs the scan called EXACT are ever applied. A near miss matched with
- * case ignored, and swapping it for a reference would silently recase a line
- * someone wrote deliberately, so those are reported and left alone.
- *
- * Cuts inside one text token are made left to right with a cursor, so two
- * accepted runs in the same token both survive and an overlapping pair is
- * dropped rather than producing a stream with a phrase half-eaten.
+ * Turns accepted hardcoded-name occurrences into new token streams: each
+ * accepted run of literal text is replaced by a reference. Only exact matches
+ * are applied; a case-insensitive near miss would silently recase a line.
+ * Cuts inside one token go left to right with a cursor, so an overlapping
+ * pair is dropped instead of producing a half-eaten phrase.
  */
 import type { DialogueEntry, Occurrence, Token } from '@shared/game/language';
 
@@ -63,11 +53,7 @@ const rewriteTokens = (tokens: Token[], picks: Occurrence[]): Token[] => {
   });
 };
 
-/**
- * Every entry an accepted set of occurrences changes, with the stream it should
- * be given. An entry with nothing accepted is absent, so a caller writes only
- * what actually changed.
- */
+/** Every entry the accepted occurrences change, with its new stream. Untouched entries are absent. */
 const applyHardcoded = (entries: DialogueEntry[], accepted: Occurrence[]): EntryRewrite[] => {
   const applicable = accepted.filter(isApplicable);
   const byEntry = new Map<number, Occurrence[]>();

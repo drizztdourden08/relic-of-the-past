@@ -2,11 +2,10 @@
  * @layer tooling-scripts
  * @kind logic
  *
- * R12 — per-component folder-structure policy (warn → error). A "component
- * folder" is any folder under ui/ that contains <FolderName>.tsx. Its root may
- * hold ONLY <Name>.{tsx,css,type.ts,constants.ts} + index.ts; everything else
- * belongs under behavior/ or sub-components/. Emits 'warn' so it never gates
- * while the codebase is brought into shape.
+ * R12: per-component folder-structure policy (warn, work toward error). A component
+ * folder is any folder under ui/ containing <FolderName>.tsx; its root may hold only
+ * <Name>.{tsx,css,type.ts,constants.ts} + index.ts, the rest goes under behavior/ or
+ * sub-components/.
  */
 import path from 'path';
 
@@ -32,7 +31,7 @@ const run = async (records) => {
       if (!allowed.has(f)) {
         findings.push({
           path: `${dir}/${f}`, tool: 'structure-policy', rule: 'root-file', severity: 'warn',
-          message: `Unexpected file in component root "${name}/": ${f} — root allows only ${name}.{tsx,css,type.ts,constants.ts} + index.ts (move to behavior/ or sub-components/)`,
+          message: `Unexpected file in component root "${name}/": ${f}. Root allows only ${name}.{tsx,css,type.ts,constants.ts} + index.ts (move to behavior/ or sub-components/)`,
         });
       }
     }
@@ -40,7 +39,7 @@ const run = async (records) => {
       if (sd !== 'behavior' && sd !== 'sub-components') {
         findings.push({
           path: `${dir}/${sd}`, tool: 'structure-policy', rule: 'sub-folder', severity: 'warn',
-          message: `Unexpected subfolder in component "${name}/": ${sd}/ — only behavior/ and sub-components/ allowed`,
+          message: `Unexpected subfolder in component "${name}/": ${sd}/. Only behavior/ and sub-components/ allowed`,
         });
       }
     }

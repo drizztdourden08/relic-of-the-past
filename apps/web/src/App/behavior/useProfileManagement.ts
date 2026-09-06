@@ -46,12 +46,12 @@ const useProfileManagement = (params: {
 
     // Re-read the profile from storage for THIS boot: the caller's object can be a snapshot
     // from an earlier load, and fields edited in Data Manager since (msuPack, language) must
-    // reach the game rather than the values the snapshot was taken with.
+    // reach the game, not the values the snapshot was taken with.
     const profile = (await profileStore.listProfiles()).find((p) => p.id === staleProfile.id) ?? staleProfile;
 
     // Deliberately the CALLER's object, not the re-read one. Automation keys an effect on
     // activeProfile's identity (App/behavior/useAutoTest.ts), so handing back a fresh object
-    // re-runs that effect, whose cleanup cancels the launch already in flight — the run then
+    // re-runs that effect, whose cleanup cancels the launch already in flight. The run then
     // stops before it loads its save state. Nothing needs the fresh object in state: the
     // settings UI reads the pack from storage itself.
     setActiveProfile(staleProfile);

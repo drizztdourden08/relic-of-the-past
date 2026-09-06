@@ -1,15 +1,13 @@
 /* @layer tests @kind test */
 /**
- * PERMANENT (`.keep.spec.ts`) — do not delete with the scratch specs.
+ * PERMANENT (`.keep.spec.ts`). Do not delete with the scratch specs.
  *
- * `test-jail-cell` is the richest single room in the game for our purposes: a cell
- * lock, a big-key carrier, a chest and the princess all in one 64×64 grid. That
- * makes it the indoor navigation baseline, and it is also the room whose count
- * caught the dumper/widget disagreement that `flood-parity.keep.spec.ts` guards.
- *
- * The meaning worth pinning is that the CELL IS STILL LOCKED: both checks sit
- * behind the lock, so both must read unreachable and the flood must stop at 608.
- * A number that drifts up here means something started walking through the lock.
+ * `test-jail-cell` is the richest single room: a cell lock, a big-key carrier,
+ * a chest and the princess in one 64×64 grid. It is the indoor navigation
+ * baseline and the room that caught the dumper/widget disagreement
+ * (`flood-parity.keep.spec.ts`). The CELL IS STILL LOCKED: both checks read
+ * unreachable and the flood stops at 608. A number that drifts up means
+ * something walked through the lock.
  */
 import { test, expect } from '@playwright/test';
 import { withState } from './state-harness';

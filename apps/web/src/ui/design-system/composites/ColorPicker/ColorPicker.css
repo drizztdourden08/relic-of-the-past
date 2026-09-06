@@ -54,8 +54,8 @@
   letter-spacing: 0.06em;
 }
 
-/* The box carries the field chrome so the sigil sits inside the same border as the
-   input, reading as one control rather than a label stuck to its left. */
+/* The box carries the field chrome so the sigil sits inside the same border as
+   the input and reads as one control. */
 .color-picker__hex-box {
   display: flex;
   align-items: center;
@@ -153,10 +153,8 @@
   border-top: 1px solid var(--c-border);
 }
 
-/* One scrollable region for every origin group, so the card's own height stays
-   bounded no matter how many outfits or how large a sheet's palette gets. A full
-   border + a sunken (rather than the card's own surface) background is what marks
-   it as its own bounded, scrollable container rather than more of the card's flow. */
+/* One scrollable region for every origin group, so the card's height stays
+   bounded. The border and sunken background mark it as its own container. */
 .color-picker__quick-assign {
   display: flex;
   flex-direction: column;

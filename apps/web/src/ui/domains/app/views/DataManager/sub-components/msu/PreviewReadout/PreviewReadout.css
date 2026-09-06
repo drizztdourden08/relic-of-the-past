@@ -34,13 +34,11 @@
   color: var(--c-text-muted);
 }
 
-/* Pushed against the clock rather than centred, so the head reads title … note clock. */
+/* Pushed against the clock, not centred, so the head reads title ... note clock. */
 .preview-readout__detail {
   margin-inline-start: auto;
   color: var(--c-gold);
 }
-
-/* ─── One layer's live line ─── */
 
 .layer-meter {
   display: flex;
@@ -116,7 +114,7 @@
   white-space: nowrap;
 }
 
-/* The countdown is a word, not a file — kept as a label so it never reads as one of the sounds. */
+/* The countdown is a word, not a file; styled as a label so it never reads as one of the sounds. */
 .layer-meter__gauge[data-kind='next'] .layer-meter__caption {
   color: var(--c-text-muted);
   text-transform: uppercase;
@@ -143,8 +141,6 @@
   flex: 1 1 auto;
   color: var(--c-text-muted);
 }
-
-/* ─── The fade marker at the end of a sounding row ─── */
 
 .layer-meter__fade {
   display: flex;

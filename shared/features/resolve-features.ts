@@ -1,9 +1,8 @@
 /* @layer shared @kind logic */
 /**
- * WIP scaffolding — NOT yet wired into the runtime UI. The shipping settings screen does its dependency
- * cascade inline (SettingsView.withCascade); this resolver is the more general replacement for it,
- * validated by tests/features/resolve-features.keep.test.ts and consumed only there for now. Kept on purpose
- * (see plans/settings-registry-map.md, the maintained source of truth) — do not flag as dead code.
+ * WIP, not yet wired into the runtime UI. The shipping settings screen cascades inline
+ * (SettingsView.withCascade); this is the general replacement, consumed only by
+ * tests/features/resolve-features.keep.test.ts for now. Not dead code (plans/settings-registry-map.md).
  */
 import type { FeatureDef } from './feature.type'
 import { FEATURES_BY_ID } from './feature-registry'
@@ -11,14 +10,13 @@ import { FEATURES_BY_ID } from './feature-registry'
 interface ResolveResult {
   /** The set that actually applies after pruning anything with unmet requirements. */
   effective: Set<string>
-  /** What got pruned and why — surfaced so the UI can explain the auto-disable. */
+  /** What got pruned and why, so the UI can explain the auto-disable. */
   autoDisabled: { id: string; missing: string[] }[]
 }
 
 /**
- * Prune to a consistent set: a feature stays on only if every id in its `requires` is also on.
- * Runs to a fixpoint because disabling one feature can invalidate a dependent of it.
- * Unknown ids are left untouched (forward-compatible with not-yet-registered toggles).
+ * Prune to a consistent set: a feature stays on only if every id in its `requires` is on. Runs to
+ * a fixpoint since disabling one can invalidate a dependent. Unknown ids are left untouched.
  */
 const resolveFeatures = (enabled: Iterable<string>): ResolveResult => {
   const effective = new Set(enabled)
@@ -42,7 +40,7 @@ const resolveFeatures = (enabled: Iterable<string>): ResolveResult => {
 
 /**
  * Every dependency that turning `id` on would also need to enable (transitive `requires`),
- * limited to those not already enabled — for the "this will also turn on …" confirmation.
+ * limited to those not already enabled (the "this will also turn on ..." confirmation).
  */
 const requirementClosure = (id: string, enabled: ReadonlySet<string>): FeatureDef[] => {
   const out: FeatureDef[] = []

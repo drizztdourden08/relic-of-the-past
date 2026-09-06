@@ -1,21 +1,13 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Renders what the sound chip would play for one sound id, for auditioning the original next to a
- * replacement.
- *
- * The core does this on a private second chip (emscripten_sound_preview.c), so nothing here can
- * disturb the music actually playing or the state a save would capture. It needs a core holding
- * parsed assets but no game in progress at all — see preview-core, which supplies the running
- * game's module when there is one and boots an idle core when there is not.
+ * Renders what the sound chip would play for one sound id, for A/B against a replacement. The
+ * core uses a private second chip (emscripten_sound_preview.c), so nothing here disturbs the
+ * playing music or a save's state. Needs a core with parsed assets; see preview-core.
  */
 import type { SoundChannel } from '@shared/types/msu-manifest';
 import { previewModuleNow } from '../preview-core';
 
-/**
- * What a preview can be asked for: the three sound channels, plus music. Music is not a
- * SoundChannel — nothing claims music per id, it is handed over whole — but it is written to a port
- * like the rest, so rendering it is the same operation.
- */
+/** What a preview can be asked for: the three sound channels, plus music (not a SoundChannel, but written to a port like the rest). */
 type PreviewTarget = SoundChannel | 'music';
 
 /** APU port per target, matching SOUND_CHANNEL_PORTS in the sound catalogue. */
@@ -25,7 +17,7 @@ const PREVIEW_PORT: Record<PreviewTarget, number> = { music: 0, ambient: 1, sfx1
 const FRAMES_PER_SECOND = 60;
 
 interface RenderedSound {
-  /** Interleaved stereo, 16-bit signed — a copy, safe to keep. */
+  /** Interleaved stereo, 16-bit signed. It is a copy, safe to keep. */
   samples: Int16Array;
   sampleRate: number;
   /** Which song bank answered. Only interesting for diagnosing a silent id. */
@@ -43,11 +35,7 @@ const canPreviewOriginals = (): boolean => {
   }
 };
 
-/**
- * Render `seconds` of the chip playing `soundId` on `target`. Returns null when the core cannot
- * do it, and a buffer of digital silence when the id simply has no sound on the chip — those are
- * different answers and the caller reports them differently.
- */
+/** Render `seconds` of the chip playing `soundId` on `target`. Null when the core cannot; digital silence when the id has no sound. The caller reports them differently. */
 const renderOriginalSound = (
   target: PreviewTarget,
   soundId: number,

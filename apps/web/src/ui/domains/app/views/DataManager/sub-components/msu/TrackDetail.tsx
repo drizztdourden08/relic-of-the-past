@@ -1,12 +1,5 @@
 /* @layer renderer-components @kind component */
-/**
- * The block that opens under a slot: shape what the slot's audio does.
- *
- * Deliberately no drop zone. A pack's files are a shared pool that any slot or sound can draw
- * from, so a per-slot target implied a file belonged to the slot it was dropped on — and it put
- * the same control on screen once per expanded row. Adding files is a pack-level action and lives
- * with the pack, once.
- */
+// Deliberately no drop zone: files are a pack-level pool, and a per-slot target implied ownership.
 import { Box } from '@ds/primitives/Box';
 import { LayerEditor } from './LayerEditor';
 import type { LayerEditorProps } from './LayerEditor';

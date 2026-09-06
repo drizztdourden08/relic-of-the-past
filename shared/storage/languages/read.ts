@@ -29,7 +29,7 @@ const readDialogue = (files: FileStore, id: string): Promise<DialogueEntry[]> =>
 
 /**
  * Overrides only, so a folder written before this file existed reads as an
- * empty object — which is exactly "nothing translated yet". The catalog, not
+ * empty object. That is exactly "nothing translated yet". The catalog, not
  * this payload, decides which slots the editor shows.
  */
 const readText = (files: FileStore, id: string): Promise<TextOverrides> =>

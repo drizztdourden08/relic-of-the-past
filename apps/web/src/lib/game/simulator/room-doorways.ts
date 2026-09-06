@@ -1,12 +1,9 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Doorway-object exit detection through a room's OUTER walls. Door records are
- * scanned in BOTH this room's and each neighbour's door tables (a doorway's
- * object may live on either side), and every candidate is validated against the
- * DESTINATION room's own grids: exit doors back to the overworld share the same
- * door-table encoding, so blindly mirroring one into the neighbouring room id
- * fabricates a connection into solid wall (e.g. the castle's front entrance
- * doors "leading" into the basement jail rooms below).
+ * Doorway-object exits through a room's OUTER walls. Door records are scanned in BOTH this
+ * room's and each neighbour's tables (the object may live on either side), and every
+ * candidate is validated against the DESTINATION room's grids: exit doors share the door-table
+ * encoding, so mirroring one blindly fabricates a connection into solid wall.
  */
 import type { GridPos } from '@shared/game/navigation';
 import type { SimExit } from '@shared/game/simulation';
@@ -15,7 +12,7 @@ import { wasmGetRoomDoorInfo, wasmGetRoomTravelDestinationsFor, wasmGetEntranceR
 import { getScreenGrids } from '../flood';
 import { interiorScreenId, usesCachedEntrance } from './screen-resolve';
 
-/** Rooms the game can leave straight to the overworld — see room-exits.ts. */
+/** Rooms the game can leave straight to the overworld. See room-exits.ts. */
 const isStandalone = (roomId: number): boolean =>
   usesCachedEntrance(roomId) || wasmGetExitScreenMap().has(roomId);
 import { doorwayDistance, entryFromEdge, exitFromEdge } from './exit-order';
@@ -31,23 +28,17 @@ const ROOM_EDGE_ADJ: Record<EdgeName, (r: number) => number | null> = {
 const OPPOSITE: Record<EdgeName, EdgeName> = { north: 'south', south: 'north', west: 'east', east: 'west' };
 
 /**
- * Room-to-room plausibility is now decided by GEOMETRY alone — see
- * `doorwayLandingOpen`. This used to ask the dataset whether the neighbour
- * existed and shared a world, which made a table the arbiter of whether the
- * player could walk somewhere; a missing entry silently deleted a real doorway
- * and a shared room index invented one.
+ * Room-to-room plausibility is decided by GEOMETRY alone (`doorwayLandingOpen`). Asking the
+ * dataset instead made a table the arbiter: a missing entry deleted a real doorway and a
+ * shared room index invented one.
  */
 const plausibleRoomNeighbor = (_id: string, _src?: ScreenRecord): boolean => true;
 
 /**
- * Rooms an overworld entrance points at — the MOUTH of a standalone place.
- *
- * Two mouths never scroll into one another: each is the way into a different
- * cave, house or dungeon. `ROOM_EDGE_ADJ` proposes roomId±1/±16 as a neighbour
- * regardless, which is how room 0x10a "scrolled north" into 0xfa and the run
- * walked from the desert to the mountain summit through two unrelated caves.
- * A mouth scrolling INWARD is still fine — that is exactly what a dungeon's
- * entrance hall does — so only a mouth-to-mouth crossing is rejected.
+ * Rooms an overworld entrance points at: the MOUTH of a standalone place. Two mouths never
+ * scroll into one another, but `ROOM_EDGE_ADJ` proposes roomId±1/±16 regardless (room 0x10a
+ * "scrolled north" into 0xfa). A mouth scrolling INWARD is fine (a dungeon's entrance hall),
+ * so only a mouth-to-mouth crossing is rejected.
  */
 let entranceRoomMemo: Set<number> | null = null;
 
@@ -78,10 +69,10 @@ const outerWall = (edge: EdgeName, row: number, col: number): boolean =>
 
 /** Wall-strip attrs that mean "crossing here never scrolls to the adjacent
  *  room": 0x8E = exit-door trigger (walks OUT of the dungeon), 0xF0-0xF7 =
- *  flag-gated door (solid until its story flag — the sanctuary's escape door). */
+ *  flag-gated door, solid until its story flag, as with the sanctuary's escape door. */
 const blockedTriggerAttr = (a: number): boolean => a === 0x8e || (a >= 0xf0 && a <= 0xf7);
 
-/** True when the wall strip at `pos` (±1 tile — notches are 2 wide) carries an
+/** True when the wall strip at `pos` (±1 tile, since notches are 2 wide) carries an
  *  exit-door or flag-gated trigger on any layer. */
 const exitDoorAt = (roomId: number, edge: EdgeName, pos: number): boolean => {
   const bundle = getScreenGrids({ isIndoors: true, roomId, owScreenIndex: 0 });
@@ -99,7 +90,7 @@ const exitDoorAt = (roomId: number, edge: EdgeName, pos: number): boolean => {
 };
 
 /** True when the DESTINATION room has walkable floor (or door passage) behind
- *  this doorway, on any of its layers — the game-derived reality check that
+ *  this doorway, on any of its layers. This is the game-derived reality check that
  *  kills fabricated connections. */
 const doorwayLandingOpen = (adjRoomId: number, edge: EdgeName, pos: number): boolean => {
   const bundle = getScreenGrids({ isIndoors: true, roomId: adjRoomId, owScreenIndex: 0 });
@@ -134,9 +125,8 @@ interface DoorwayScanArgs {
 }
 
 /** kDoorType_WarpRoomDoor: crossing it TELEPORTS to the room header's travel
- *  destination — west door → dests[3], east door → dests[4] (the castle's dark
- *  North Corridor warps; Dungeon_StartInterRoomTrans_Left, dungeon.c:2067).
- *  Never an edge-adjacent doorway. */
+ *  destination (west door -> dests[3], east door -> dests[4]; dungeon.c:2067
+ *  Dungeon_StartInterRoomTrans_Left). Never an edge-adjacent doorway. */
 const WARP_DOOR = 0x46;
 
 /** Scan door tables for passable outer-wall doorways; returns how many exits
@@ -169,7 +159,7 @@ const collectDoorwayExits = ({ roomId, src, dist, push, isExitSpot, cached = '' 
     if (!plausibleRoomNeighbor(to, src)) return;
     if (doorTargets.has(`${edge}:${to}`)) return; // duplicate door records
     if (isExitSpot(edge, pos)) return; // this IS the exit door back outside
-    if (!doorwayLandingOpen(adj, edge, pos)) return; // no floor behind — not a real doorway
+    if (!doorwayLandingOpen(adj, edge, pos)) return; // no floor behind, so not a real doorway
     doorTargets.add(`${edge}:${to}`);
     count += 1;
     push({ to, entryTile: entryFromEdge(edge, pos), fromTile, twoWay: true, origin: 'room-doorway', edgeSig: `d${edge}:${pos}` }, steps);
@@ -189,12 +179,10 @@ const collectDoorwayExits = ({ roomId, src, dist, push, isExitSpot, cached = '' 
       if (door.direction !== OPPOSITE[edge]) continue;
       if (!outerWall(door.direction, door.row, door.col)) continue;
       const pos = edge === 'north' || edge === 'south' ? door.col : door.row;
-      // …but only if it is a doorway INTO us, not the neighbour's own way OUT to
-      // the overworld. Both share the door-table encoding, and mirroring an exit
-      // door invents a room-to-room link: the fairy cave's south exit (room 0xfa)
-      // was mirrored onto the bomb hut's north wall (0x10a = 0xfa + 16), which is
-      // how the desert reached the mountain summit. `isExitSpot` above only tests
-      // THIS room's wall, so the neighbour's needs its own check.
+      // Only if it is a doorway INTO us, not the neighbour's own exit to the overworld:
+      // mirroring an exit door invents a room-to-room link (the fairy cave's south exit,
+      // 0xfa, was mirrored onto the bomb hut's north wall, 0x10a). `isExitSpot` above only
+      // tests THIS room's wall, so the neighbour's needs its own check.
       if (exitDoorAt(adj, door.direction, pos)) continue;
       doorway(edge, pos, exitFromEdge(edge, pos));
     }

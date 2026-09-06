@@ -1,10 +1,8 @@
 /* @layer shared-game @kind logic */
 /**
- * Screen Detection — builds reverse lookup maps from screen records. Given a
- * game index (overworld screen or dungeon room), returns the full screen
- * record. Supports variant resolution: multiple records per roomIndex,
- * differentiated by game state. Moved from data/screens/detection.ts —
- * resolution order unchanged, ScreenDefinition → ScreenRecord.
+ * Reverse lookup maps from screen records: a game index (overworld screen or
+ * dungeon room) resolves to the full screen record, with variant resolution
+ * (several records per roomIndex, told apart by game state).
  */
 import { all } from '../../data';
 import type { ScreenRecord, VariantCondition } from '../../data';
@@ -13,7 +11,7 @@ import { scanForRoom } from './palace-fallback';
 interface VariantGameState {
   /** Set of check ids that have been collected */
   completedChecks?: ReadonlySet<string>;
-  /** WRAM flag reader: (address, bit) → boolean */
+  /** WRAM flag reader: (address, bit) -> boolean */
   readFlag?: (address: number, bit: number) => boolean;
   /** Which entrance was used to enter this room */
   entranceId?: number;
@@ -61,15 +59,15 @@ const resolveVariant = (candidates: ScreenRecord[], state?: VariantGameState): S
 };
 
 interface ScreenLookup {
-  /** Overworld screen index → screen */
+  /** Overworld screen index -> screen */
   byOverworldScreen: Map<number, ScreenRecord>;
-  /** Dungeon room index → screen (keyed by `palaceIndex:roomIndex`) */
+  /** Dungeon room index -> screen (keyed by `palaceIndex:roomIndex`) */
   byDungeonRoom: Map<string, ScreenRecord>;
-  /** Cave/interior room index → screen (first match only — lossy for duplicates) */
+  /** Cave/interior room index -> screen (first match only; lossy for duplicates) */
   byCaveRoom: Map<number, ScreenRecord>;
-  /** Entrance ID → screen (disambiguates caves with shared room indices) */
+  /** Entrance ID -> screen (disambiguates caves with shared room indices) */
   byEntranceId: Map<number, ScreenRecord>;
-  /** Cave room index → all screens sharing that room (for fallback matching) */
+  /** Cave room index -> all screens sharing that room (for fallback matching) */
   byCaveRoomAll: Map<number, ScreenRecord[]>;
 }
 
@@ -134,11 +132,11 @@ const resolveCurrentScreenDetailed = (isIndoors: boolean, palaceIndex: number, r
 
     const dungeonIdx = palaceIndex >> 1;
     if (dungeonIdx <= 12) {
-      // 2. Dungeon lookup — exact palace:room key
+      // 2. Dungeon lookup by exact palace:room key
       const dungeon = lookup.byDungeonRoom.get(`${palaceIndex}:${roomIndex}`);
       if (dungeon) return { screen: dungeon, method: 'exact' };
 
-      // 3. Dungeon fallback — scan all palace variants for this room
+      // 3. Dungeon fallback, scanning all palace variants for this room
       const scanned = scanForRoom(lookup.byDungeonRoom, roomIndex, palaceIndex);
       if (scanned) {
         return {
@@ -149,7 +147,7 @@ const resolveCurrentScreenDetailed = (isIndoors: boolean, palaceIndex: number, r
       }
     }
 
-    // 4. Cave / house — variant-aware resolution
+    // 4. Cave / house, resolved by variant
     const candidates = lookup.byCaveRoomAll.get(roomIndex);
     if (candidates && candidates.length === 1 && !candidates[0].variant) {
       return { screen: candidates[0], method: 'cave-single', progressTier: variantState?.progressTier };
@@ -175,7 +173,7 @@ const resolveCurrentScreenDetailed = (isIndoors: boolean, palaceIndex: number, r
     return null;
   }
 
-  // Overworld — variant-aware (e.g., post-Aga DW access from same screen)
+  // Overworld: variant-aware (e.g. a progress-dependent variant of the same screen)
   const ow = lookup.byOverworldScreen.get(overworldScreenIndex);
   return ow ? { screen: ow, method: 'overworld' } : null;
 };

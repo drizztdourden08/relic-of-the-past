@@ -1,8 +1,4 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Cheats Bridge — typed wrappers for all WasmCheat* exports.
- * Calls into the running WASM module via ccall.
- */
 
 import { getModule, getGameState } from './wasm-bridge';
 import { voidCall } from './bridge/wasm-call';
@@ -18,7 +14,7 @@ if (typeof window !== 'undefined') {
     const mod = getModule();
     if (!mod) { console.warn('WASM not loaded'); return; }
     mod.ccall('WasmCheatStartTrace', null, ['number'], [frames]);
-    console.log(`[Trace] Recording ${frames} frames — check console for [TRACE] output`);
+    console.log(`[Trace] Recording ${frames} frames. Check console for [TRACE] output`);
   };
 }
 
@@ -48,14 +44,10 @@ const GATE_CHEATS_ENABLED = 1;
 const GATE_CHEAT_ITEM_GRANT = 4;
 
 /**
- * Read the gate word actually in effect on the core's WRAM (WasmGetEffectiveGateWord), not just what
- * was last requested — the plain WasmGetGateWord export returns the latter and can disagree with this
- * the instant Vanilla Safe (or any future embedder) masks the bits off before they land in WRAM, so
- * this is the one that cannot drift from what the C side will actually honour. Before the first
- * simulated frame this reads 0, which correctly refuses the grant rather than trusting a request that
- * hasn't taken effect yet. A grant that is gated off is refused HERE instead of being queued: the
- * queue would otherwise accept work the core silently drops, leaving entries the player watches go
- * nowhere.
+ * Read the gate word in effect on the core's WRAM (WasmGetEffectiveGateWord), not the last
+ * request (WasmGetGateWord), which disagrees once Vanilla Safe masks bits off. Before the first
+ * simulated frame this reads 0, which correctly refuses the grant. A gated-off grant is refused
+ * HERE, not queued: the queue would accept work the core silently drops.
  */
 const itemGrantAllowed = (): boolean => {
   const mod = getModule();
@@ -64,11 +56,11 @@ const itemGrantAllowed = (): boolean => {
     const word = mod.ccall('WasmGetEffectiveGateWord', 'number', ['number'], [GATE_WORD_CHEATS]) as number;
     return (word & GATE_CHEATS_ENABLED) !== 0 && (word & GATE_CHEAT_ITEM_GRANT) !== 0;
   } catch {
-    return false; // older core without the export — refuse rather than queue undeliverable work
+    return false; // older core without the export: refuse, don't queue undeliverable work
   }
 };
 
-// ─── Item Giving (routed through delivery queue) ───
+// Item giving, routed through the delivery queue.
 
 const cheatGiveItem = (itemId: number): void => {
   if (!isReady() || !itemGrantAllowed()) return;
@@ -91,7 +83,6 @@ const cheatTriggerNpcCheck = (flagType: number, flagMask: number, itemId: number
   enqueue(name, 'cheat', action);
 };
 
-// ─── Stats ───
 
 const cheatSetHealth = (value: number): void => voidCall('WasmCheatSetHealth', numArgs(value));
 
@@ -107,18 +98,16 @@ const cheatSetMagic = (value: number): void => voidCall('WasmCheatSetMagic', num
 
 const cheatRefillMagic = (): void => voidCall('WasmCheatRefillMagic');
 
-// Capacity setters take a wanted count, not the tier index the core stores — it snaps to the
+// Capacity setters take a wanted count, not the tier index the core stores. It snaps to the
 // nearest legal upgrade tier, so a percentage of MAGIC_FULL/BOMB_CAPACITY_MAX is a valid argument.
 const cheatSetMaxBombs = (capacity: number): void => voidCall('WasmCheatSetMaxBombs', numArgs(capacity));
 
 const cheatSetMaxArrows = (capacity: number): void => voidCall('WasmCheatSetMaxArrows', numArgs(capacity));
 
-// ─── Bottles ───
 
 const cheatFillBottle = (slot: 0 | 1 | 2 | 3, contents: BottleContentsValue): void =>
   voidCall('WasmCheatFillBottle', numArgs(slot, contents));
 
-// ─── Movement ───
 
 // Tracked locally (not read back from WASM) so the Cheats widget's toggle and the
 // cheat-ignore-collision keybind can agree on the current state without either one polling the
@@ -132,7 +121,6 @@ const cheatSetIgnoreCollision = (on: boolean): void => {
 
 const getIgnoreCollisionEnabled = (): boolean => ignoreCollisionEnabled;
 
-// ─── Lighting ───
 
 // Same local-state reasoning as ignore-collision above: the widget's toggle reads this instead of
 // polling the module. The core applies it on the next frame boundary, not at this call.
@@ -145,7 +133,6 @@ const cheatSetIlluminateDarkRooms = (on: boolean): void => {
 
 const getIlluminateDarkRoomsEnabled = (): boolean => illuminateDarkRoomsEnabled;
 
-// ─── Combat ───
 
 const cheatKillAllEnemies = (): void => voidCall('WasmCheatKillAllEnemies');
 

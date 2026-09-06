@@ -3,7 +3,7 @@
  * returns. Not a general-purpose JSON writer: it only knows the handful of shapes
  * controller_sdl3_jni.c needs (Sdl3AddedEvent/Sdl3RemovedEvent/Sdl3StateEvent from
  * sdl3.type.ts), so the field-writing calls stay explicit about what they emit
- * rather than going through some generic value union.
+ * instead of going through a generic value union.
  */
 #ifndef CONTROLLERSDL3_SDL3_JSON_H_
 #define CONTROLLERSDL3_SDL3_JSON_H_

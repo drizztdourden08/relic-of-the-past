@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind logic */
-/**
- * Gizmo system for the shadow editor — hit testing + context building + cursor.
- * Rendering lives in gizmo-render.ts; types in gizmo-types.ts; geometry constants
- * in gizmo-constants.ts. Public barrel re-exports them all.
- */
+// Hit testing, context building and cursor. Rendering lives in gizmo-render.ts.
 import type { GizmoPart, GizmoHit, GizmoContext } from './gizmo-types';
 import { AXIS_LEN, ARROW_SIZE, HANDLE_RADIUS, CROSS_SIZE, CROSS_OFFSET, UNIFORM_OFFSET, ROTATE_OFFSET, CENTER_RADIUS, VERTEX_RADIUS } from './gizmo-constants';
 import { renderGizmo } from './gizmo-render';
@@ -19,48 +15,42 @@ const hitTestGizmo = (mouseX: number, mouseY: number, ctx: GizmoContext): GizmoH
   const lx = dx * cos - dy * sin;
   const ly = dx * sin + dy * cos;
 
-  // ─── Center (move freely) ───
   if (lx * lx + ly * ly < CENTER_RADIUS * CENTER_RADIUS) {
     return { part: 'move-center', cursor: 'move' };
   }
 
-  // ─── Rotation handle ───
   const rotX = AXIS_LEN * ROTATE_OFFSET;
   const rotY = 0;
   if ((lx - rotX) ** 2 + (ly - rotY) ** 2 < (HANDLE_RADIUS + 3) ** 2) {
     return { part: 'rotate', cursor: 'grab' };
   }
 
-  // ─── Resize uniform (diagonal, upper-left direction: -X, -Y) ───
+  // Uniform resize sits on the upper-left diagonal (-X, -Y).
   const uniX = -AXIS_LEN * UNIFORM_OFFSET * 0.707;
   const uniY = -AXIS_LEN * UNIFORM_OFFSET * 0.707;
   if ((lx - uniX) ** 2 + (ly - uniY) ** 2 < (HANDLE_RADIUS + 2) ** 2) {
     return { part: 'resize-uniform', cursor: 'nwse-resize' };
   }
 
-  // ─── Resize-X (cross mark on X axis) ───
   const rxX = AXIS_LEN * CROSS_OFFSET;
   if (Math.abs(lx - rxX) < CROSS_SIZE && Math.abs(ly) < CROSS_SIZE) {
     return { part: 'resize-x', cursor: 'ew-resize' };
   }
 
-  // ─── Resize-Y (cross mark on Y axis) ───
   const ryY = -AXIS_LEN * CROSS_OFFSET;
   if (Math.abs(lx) < CROSS_SIZE && Math.abs(ly - ryY) < CROSS_SIZE) {
     return { part: 'resize-y', cursor: 'ns-resize' };
   }
 
-  // ─── Move-X (along X axis arrow) ───
   if (ly > -6 && ly < 6 && lx > CENTER_RADIUS && lx < AXIS_LEN + ARROW_SIZE) {
     return { part: 'move-x', cursor: 'e-resize' };
   }
 
-  // ─── Move-Y (along Y axis arrow, going UP) ───
+  // Y axis arrow points UP.
   if (lx > -6 && lx < 6 && ly < -CENTER_RADIUS && ly > -(AXIS_LEN + ARROW_SIZE)) {
     return { part: 'move-y', cursor: 'n-resize' };
   }
 
-  // ─── Vertex points ───
   if (ctx.vertices) {
     for (let i = 0; i < ctx.vertices.length; i++) {
       const vx = ctx.vertices[i].x;
@@ -84,7 +74,7 @@ const buildGizmoContext = (shapeX: number, shapeY: number, shapeWidth: number, s
 
   let vertices: { x: number; y: number }[] | undefined;
   if (points && points.length > 0) {
-    // Freehand — explicit vertex positions
+    // Freehand: explicit vertex positions.
     vertices = [];
     for (const p of points) {
       const dp = worldToDisplay(p.x, p.y);
@@ -93,7 +83,7 @@ const buildGizmoContext = (shapeX: number, shapeY: number, shapeWidth: number, s
       }
     }
   } else if (sides && sides > 0) {
-    // Regular polygon — compute vertex positions in display-local coords
+    // Regular polygon: vertex positions in display-local coords.
     const startAngle = -Math.PI / 2 + (sides % 2 === 0 ? Math.PI / sides : 0);
     vertices = [];
     for (let i = 0; i < sides; i++) {

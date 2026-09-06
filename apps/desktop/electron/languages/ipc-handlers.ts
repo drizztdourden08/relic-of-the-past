@@ -23,7 +23,7 @@ const extractDialogueFromRom = async (romAbsPath: string, langCode: string): Pro
   const report = makeImportReporter('language', langCode);
   logToRenderer('app', 'info', `Extracting language '${langCode}'...`);
   try {
-    report('decode', undefined, undefined, 'Decoding dialogue…');
+    report('decode', undefined, undefined, 'Decoding dialogue...');
     const rom = loadRom(romAbsPath, true);
     // The picked code must match the ROM's region, or the font/encoder configs won't line up.
     if (rom.language !== langCode) {
@@ -31,7 +31,7 @@ const extractDialogueFromRom = async (romAbsPath: string, langCode: string): Pro
     }
     const meta = await extractLanguagePack(rom, rom.language);
     logToRenderer('app', 'info', `Language '${rom.language}' extracted (${meta.lineCount} strings, ${meta.glyphCount} glyphs)`);
-    report('extract', undefined, undefined, 'Baking into assets…');
+    report('extract', undefined, undefined, 'Baking into assets...');
     await recompileAllAssets();
     report('done');
     return { success: true };

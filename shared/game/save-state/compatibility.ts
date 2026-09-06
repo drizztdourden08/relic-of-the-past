@@ -2,7 +2,7 @@
 /**
  * The two compatibility questions, kept apart because they are answered differently.
  *
- * A file on disk can be inspected directly. A version being offered cannot — the running
+ * A file on disk can be inspected directly. A version being offered cannot. The running
  * build can only compare against what that version published about itself, which is why
  * 'unverifiable' exists and never collapses into 'compatible'.
  */
@@ -14,8 +14,8 @@ import type { Loadability, StateStamp, TargetCompat } from './types';
 /**
  * Whether this build can load a save state file.
  *
- * An unstamped file predates the stamp, so its format is the baseline one by definition —
- * no build that could have written it produced anything else. Falling back to the
+ * An unstamped file predates the stamp, so its format is the baseline one by definition.
+ * No build that could have written it produced anything else. Falling back to the
  * snapshot total keeps that judgement honest without inventing a stamp for it.
  */
 const checkLoadable = (buffer: ArrayBuffer): Loadability => {
@@ -57,7 +57,7 @@ const compareTargetFormat = (targetId: string): TargetCompat =>
  */
 const describeTargetCompat = (compat: TargetCompat, currentVersion: string): string | null => {
   if (compat.kind === 'compatible') return null;
-  const goBack = `Nothing is deleted either way — reinstalling ${currentVersion} always gets them back.`;
+  const goBack = `Nothing is deleted either way. Reinstalling ${currentVersion} always gets them back.`;
 
   if (compat.kind === 'incompatible') {
     return `This version uses a different save state format, so your existing save states will not load. ${goBack} Your in-game saves are not affected.`;

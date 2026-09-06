@@ -5,14 +5,14 @@
  *
  * A character is two stacked 8x8 tiles making 8x16. The sheet stores 16
  * characters per row and each character row spans TWO tile rows, so a character's
- * halves are sixteen tiles apart rather than adjacent.
+ * halves are sixteen tiles apart, not adjacent.
  *
- * `edgeAt` is the whole reason this is a module rather than three lines inside the
+ * `edgeAt` is the whole reason this is a module instead of three lines inside the
  * painter. Both edges of every source pixel come from the same mapping, so a
  * pixel's rectangle ends exactly where its neighbour's begins: no overlap to
  * darken a seam, no gap to show the ground through. Giving each pixel a width of
  * `span / cells` instead accumulates a fraction of a device pixel per column and
- * frays the far edge — which is what made an earlier version of this look blurry.
+ * frays the far edge. That is what made an earlier version of this look blurry.
  */
 
 /** One character's source size, in game pixels. */

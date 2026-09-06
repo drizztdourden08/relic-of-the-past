@@ -32,7 +32,7 @@ interface ActionDeps {
   selectedProfileId: string;
   /** The resolved DeviceProfile for selectedProfileId, built live from SDL's
    *  own capability report (or a synthetic one for a manual family
-   *  override) — see useDeviceAutoDetect.ts. */
+   *  override). See useDeviceAutoDetect.ts. */
   detectedProfile: DeviceProfile | null;
   profile: DeviceProfile | null;
   idleResults: Record<string, IdleRecordResult>;

@@ -1,14 +1,9 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * Turns a record plus its git status into one word, and into the two decisions that
- * actually matter: may an agent claim this, and may anything delete it.
- *
- * Pure by design — no filesystem, no git, no clock beyond the `now` passed in — so the
- * rules that decide whether work gets thrown away are unit-testable.
- *
- * Priority matters. A held lease outranks everything, because "someone is working
- * here" is true regardless of what the tree contains. Unmerged or uncommitted work
- * outranks every reuse verdict, because losing it is the one unrecoverable outcome.
+ * Turns a record plus its git status into a verdict and two decisions: may an agent
+ * claim this, and may anything delete it. Pure (no filesystem, git, or clock beyond
+ * `now`) so the rules are unit-testable. Priority: a held lease outranks everything;
+ * unmerged or uncommitted work outranks every reuse verdict.
  */
 import { isExpired, isHeld } from './lease.mjs';
 
@@ -30,10 +25,7 @@ const verdictFor = (record, status, now = Date.now()) => {
   return hasHistory(record) ? VERDICTS.SPENT : VERDICTS.READY;
 };
 
-/**
- * The full picture for one worktree. `staleLease` marks a lease that has expired but
- * not been released — the pool reclaims it silently, and the list says so.
- */
+/** `staleLease` marks a lease that expired without release; the pool reclaims it and the list says so. */
 const assess = (record, status, now = Date.now()) => {
   const verdict = verdictFor(record, status, now);
   const reusable = verdict === VERDICTS.READY || verdict === VERDICTS.SPENT;
@@ -47,10 +39,7 @@ const assess = (record, status, now = Date.now()) => {
   };
 };
 
-/**
- * Pick the best worktree to claim. A never-used one wins over a spent one so recycling
- * (which discards its notes) is a last resort; ties break on least catching-up to do.
- */
+/** Best worktree to claim: never-used beats spent (recycling discards notes); ties break on least behind. */
 const bestToClaim = (assessments) => {
   const rank = (a) => (a.assessment.verdict === VERDICTS.READY ? 0 : 1);
   return assessments

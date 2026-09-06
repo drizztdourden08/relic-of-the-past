@@ -1,10 +1,6 @@
 /* @layer renderer-components @kind style */
 
-/*
- * The picker is a bare panel: its chrome comes from whatever floats it, so only
- * scrolling and the row extras live here. Rows themselves reuse the shared
- * dropdown item classes.
- */
+/* A bare panel: chrome comes from whatever floats it. Rows reuse the dropdown item classes. */
 .field-picker {
   max-height: 60vh;
   overflow-y: auto;

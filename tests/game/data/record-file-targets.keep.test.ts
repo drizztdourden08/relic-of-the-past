@@ -1,19 +1,14 @@
 /* @layer tests @kind test */
 /**
- * Where a record is filed, pinned against the real dataset.
+ * Where a record is filed, against the real dataset.
  *
- * The check resolver is held to the strongest claim available: EVERY check
- * record on file must resolve to the file it is actually committed in. That is
- * not a spot check — it is the whole collection asserting that the rule the
- * writer files a new record by is the rule the collection was already built on,
- * so a create can never land a record somewhere its siblings are not.
+ * Checks are held to the strongest claim: EVERY check record must resolve to
+ * the file it is committed in, so a create can never land somewhere its
+ * siblings are not.
  *
- * Item, actor and dungeon are held to a weaker and deliberately different
- * claim. Their committed split follows no rule the record itself carries (see
+ * Item, actor and dungeon follow no rule the record carries (see
  * record-file-targets.ts), so the resolver names ONE canonical destination per
- * category/kind for new records only, and existing records stay where they are.
- * What is pinned there is the canonical choice and the fact that the file it
- * names really exists.
+ * category/kind for new records only. Pinned: that choice, and that the file exists.
  */
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';

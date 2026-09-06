@@ -23,8 +23,8 @@ const MsuManager = (props: MsuManagerProps) => {
   const { selected, setSelected, refresh } = msu;
   const [tab, setTab] = useState<StudioTab>('music');
 
-  // A music audition is owned above the tabs, so leaving the music tab has to silence it — the
-  // sound tabs stop themselves by unmounting.
+  // A music audition is owned above the tabs, so leaving the music tab has to
+  // silence it; the sound tabs stop themselves by unmounting.
   const { onStopPreview } = msu;
   useEffect(() => {
     if (tab !== 'music') onStopPreview();
@@ -55,7 +55,7 @@ const MsuManager = (props: MsuManagerProps) => {
       />
       <ImportForm
         kind="msu"
-        placeholder="Paste pack download URL…"
+        placeholder="Paste pack download URL..."
         accept={['.msul', '.zip', '.7z', '.rar']}
         dropLabel="Drop a pack here"
         dropHint=".msul, or a .zip / .7z / .rar archive of audio"
@@ -87,7 +87,7 @@ const MsuManager = (props: MsuManagerProps) => {
         />
       )}
       {tab === 'effects' && (
-        // Both effect ports, one section each — see MsuEffectsPanel for why they are not merged.
+        // Both effect ports, one section each. See MsuEffectsPanel for why they are not merged.
         <MsuEffectsPanel
           pack={selected}
           manifest={msu.resolved}
@@ -146,7 +146,7 @@ const MsuManager = (props: MsuManagerProps) => {
 
   const detail = selected === null
     ? <Text>Select a music pack to edit its slots, layers and sounds</Text>
-    : msu.loadingFiles ? <Text>Loading…</Text> : studio;
+    : msu.loadingFiles ? <Text>Loading...</Text> : studio;
 
   return <MasterDetailLayout list={list} detail={detail} detailEmpty={!selected} />;
 };

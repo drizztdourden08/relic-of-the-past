@@ -5,9 +5,9 @@
  * everything. In both cases the font pair is copied file-for-file, so the new
  * set bakes without depending on the folder it came from.
  *
- * `base` is always inherited from the source set rather than pointing at it:
- * the bake step resolves the alphabet/dictionary/encoder from that value, so it
- * has to stay a real base language code even when the source is itself custom.
+ * `base` is always inherited from the source set, never a pointer to it. The bake
+ * step resolves the alphabet/dictionary/encoder from that value, so it has to stay
+ * a real base language code even when the source is itself custom.
  */
 import type { FileStore } from '@shared/platform';
 import type { LanguageSet } from '@shared/game/language';

@@ -3,7 +3,7 @@
  * Checksum gate for a downloaded tool archive.
  *
  * This runs BEFORE anything is extracted: an archive we have not verified must never
- * become an executable we then run. It fails closed in both directions — a mismatch and
+ * become an executable we then run. It fails closed in both directions. A mismatch and
  * a not-yet-filled-in pinned checksum are both refusals, never a skip.
  */
 import { createHash } from 'crypto';

@@ -12,7 +12,7 @@
 
 /* The layer the app boots into must be finished before the window is revealed, and a
    200ms entrance means it is not: the reveal lands two frames in, so the screen appears
-   after the window does. During boot the layer is simply present. Set in index.html,
+   after the window does. During boot the layer is present with no entrance. Set in index.html,
    cleared by useShellReady. */
 html.booting .fullscreen-layer {
   animation: none;
@@ -39,7 +39,7 @@ html.booting .fullscreen-layer {
   padding: var(--space-md) var(--space-xl);
 }
 
-/* Window titles read like page titles — bigger than dialog titles. */
+/* Window titles read like page titles, bigger than dialog titles. */
 .fullscreen-layer__header .window-header__title {
   font-size: var(--text-xl);
 }
@@ -65,8 +65,8 @@ html.booting .fullscreen-layer {
   }
 }
 
-/* Mobile platform: the SAME page container as desktop, only made full-screen —
-   drop the outer gap, the border, and the radius (card fills the screen). Header,
+/* Mobile platform: the SAME page container as desktop, only made full-screen.
+   Drop the outer gap, the border, and the radius (card fills the screen). Header,
    inner padding, background, and everything else stay identical to desktop. */
 .platform-mobile .fullscreen-layer {
   padding: 0;

@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Edge Glow Renderer — WebGL post-processing pipeline.
+ * WebGL post-processing pipeline for the edge glow.
  *
  * Strategy: Mirror-reflection + progressive blur + Voronoi noise animation.
  *
@@ -25,7 +25,7 @@ const createEdgeGlowRenderer = (glCanvas: HTMLCanvasElement, options: EdgeGlowOp
   });
 
   if (!glOrNull) {
-    console.warn('[EdgeGlow] WebGL not available — falling back to 2D passthrough');
+    console.warn('[EdgeGlow] WebGL not available, falling back to 2D passthrough');
     return create2DFallbackRenderer(glCanvas);
   }
 
@@ -39,7 +39,6 @@ const createEdgeGlowRenderer = (glCanvas: HTMLCanvasElement, options: EdgeGlowOp
     blurPasses = 3,
   } = options;
 
-  // ─── Compile shaders & link programs ───
 
   const progs = compilePrograms(gl);
   if (!progs) {
@@ -48,11 +47,9 @@ const createEdgeGlowRenderer = (glCanvas: HTMLCanvasElement, options: EdgeGlowOp
   }
   const { mirror: mirrorProg, blurH: blurHProg, blurV: blurVProg, composite: compositeProg } = progs;
 
-  // ─── Uniform locations ───
 
   const { mirror: mirrorUniforms, blurH: blurHUniforms, blurV: blurVUniforms, composite: compositeUniforms } = getUniformLocations(gl, progs);
 
-  // ─── Fullscreen quad geometry ───
 
   const quadBuffer = gl.createBuffer()!;
   gl.bindBuffer(gl.ARRAY_BUFFER, quadBuffer);
@@ -61,7 +58,6 @@ const createEdgeGlowRenderer = (glCanvas: HTMLCanvasElement, options: EdgeGlowOp
     -1, 1, 1, -1, 1, 1,
   ]), gl.STATIC_DRAW);
 
-  // ─── Textures & FBOs ───
 
   let width = glCanvas.width;
   let height = glCanvas.height;
@@ -86,7 +82,6 @@ const createEdgeGlowRenderer = (glCanvas: HTMLCanvasElement, options: EdgeGlowOp
   // Edge-glow draws fullscreen quads as two triangles (6 verts).
   const EDGE_DRAW = { mode: gl.TRIANGLES, count: 6 };
 
-  // ─── Public API ───
 
   const render = (gameCanvas: HTMLCanvasElement, time: number, cleanFrame?: { data: Uint8Array; width: number; height: number } | null): void => {
         if (gl.isContextLost()) return;

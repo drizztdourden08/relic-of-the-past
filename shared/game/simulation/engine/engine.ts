@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
  * The pure step state machine: observing → planning → traversing → triggering →
- * verifying → observing… Steps never mutate their input. Once observations carry
+ * verifying → observing. Steps never mutate their input. Once observations carry
  * flood-detected exits, traversal runs purely on that discovered graph.
  */
 import type { SimObservation, SimEvent, TriggerAction } from '../types';
@@ -48,7 +48,7 @@ const createEngine = ({ adjacency = buildAdjacency(), totalChecks }: EngineDeps 
     if (obs.reached) unionReach(s.regionReach, s.virtual.screenId, obs.reached);
     if (firstVisit) emitEntryTrapSlam(s, obs, events);
 
-    // The detect flood (obs.reached) is the ONLY flood — see discover.ts.
+    // The detect flood (obs.reached) is the ONLY flood (see discover.ts).
     const targets = discoverTargets(s, obs, obs.reached);
     for (const target of targets) {
       if (!s.pending.some(t => t.key === target.key)) {

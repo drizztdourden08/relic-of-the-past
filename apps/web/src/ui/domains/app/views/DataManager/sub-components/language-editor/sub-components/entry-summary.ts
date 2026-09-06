@@ -1,11 +1,11 @@
 /* @layer renderer-components @kind logic */
 /**
  * Pure token-stream summary for the read-only entry card: the short "what is in
- * this line" phrases a translator needs before opening it — a name
- * substitution, runtime digits, glossary references, and the stops the player
- * has to press through.
+ * this line" phrases a translator needs before opening it: a name substitution,
+ * runtime digits, glossary references, and the stops the player has to press
+ * through.
  *
- * Wording comes from the control-code catalog rather than from the bracket
+ * Wording comes from the control-code catalog, not from the bracket
  * names in the stream, so the card says "2 waits for button" where the stored
  * text says `[Waitkey]`. Nothing here reads state or measures anything: tokens
  * in, phrases out.
@@ -64,8 +64,8 @@ const tally = (tokens: Token[]): EntryTally => {
 
 /**
  * The card's "contains" phrases, in reading order. Empty when the stream holds
- * nothing worth mentioning, so the caller can drop the line entirely rather
- * than print a header with nothing after it.
+ * nothing to list, so the caller can drop the line instead of printing a
+ * header with nothing after it.
  */
 const summarizeEntry = (tokens: Token[]): string[] => {
   const { insertsName, digits, terms, waits, pauses } = tally(tokens);

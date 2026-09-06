@@ -111,7 +111,7 @@ const useNavigation = () => {
     }
   }, [activeScreenIndex]);
 
-  // Run flood fill — orchestrates the nav-flood/* helpers.
+  // Runs the flood fill by orchestrating the nav-flood/* helpers.
   const handleRun = useCallback(async () => {
     if (running) return;
 
@@ -209,10 +209,9 @@ const useNavigation = () => {
   // The indoor half of useFloodOnTransition listens for the native transition-settled
   // event, which the core only fires when the developer-tools feature bit is set
   // (core/game-hooks/transition_events.c). That bit defaults off for a normal player, so
-  // without this override indoor auto-reflood (secret passages, dungeon entries) silently
-  // never fires while overworld reflood — driven off live position instead — keeps working.
-  // The gate only unlocks read-only instrumentation, not a gameplay change, so it's safe to
-  // hold for as long as auto mode is on and must be dropped once it isn't.
+  // without this override indoor auto-reflood silently never fires while overworld reflood
+  // (driven off live position) keeps working. The gate only unlocks read-only
+  // instrumentation, so it's safe to hold while auto mode is on and must drop once it isn't.
   useEffect(() => {
     if (!autoRun) return;
     setDeveloperToolsOverride(true);

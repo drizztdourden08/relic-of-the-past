@@ -10,9 +10,9 @@
 import type { ScreenAnnotation, AnnotationKind } from '@shared/game/simulation';
 import type { SimDoor } from '@shared/game/simulation';
 
-/** kDoorType_ThroneRoom — the push wall that needs the follower in tow. */
+/** kDoorType_ThroneRoom is the push wall that needs the follower in tow. */
 const THRONE_DOOR = 0x14;
-/** kDoorType_WarpRoomDoor — crossing teleports to a header travel destination. */
+/** kDoorType_WarpRoomDoor, where crossing teleports to a header travel destination. */
 const WARP_DOOR = 0x46;
 
 const DOOR_KIND: Partial<Record<SimDoor['kind'], AnnotationKind>> = {
@@ -31,7 +31,7 @@ const REQUIRES: Partial<Record<AnnotationKind, string[]>> = {
 interface DoorContext {
   /** The follower is in tow, so the throne push wall will open. */
   followerReady: boolean;
-  /** The room's doors open by clearing it — shutters here are the trap kind. */
+  /** The room's doors open by clearing it, so shutters here are the trap kind. */
   killGated: boolean;
 }
 
@@ -61,7 +61,7 @@ const doorAnnotation = (door: SimDoor, ctx: DoorContext): ScreenAnnotation | nul
     ...base, kind, label: `${kind.replace('-', ' ')} #${door.index}`,
     state: door.opened ? 'open' : 'shut',
     ...(requires ? { requires } : {}),
-    ...(trap ? { detail: 'closes behind you — clear the room to reopen' } : {}),
+    ...(trap ? { detail: 'closes behind you, clear the room to reopen' } : {}),
   };
 };
 

@@ -13,22 +13,19 @@ const toReachConnection = (c: ConnectionRecord): ReachConnection => ({
 });
 
 /**
- * The tracker's reachability graph. Excludes dungeon-kind screens: dungeon
- * interiors have no traversal graph wired in yet (see the mode-overlay
- * comments below), so every edge touching one is left out rather than
- * pretending it's reachable. Also excludes a record that cannot be exited
- * (a `drop`'s landing point, a one-way's receiving end) — a crossing edge now
- * comes from exactly the side that carries `canExit: true`.
+ * The tracker's reachability graph. Excludes dungeon-kind screens (dungeon
+ * interiors have no traversal graph wired in yet, so every edge touching one
+ * is left out) and any record that cannot be exited: a crossing edge comes
+ * from exactly the side that carries `canExit: true`.
  */
 const overworldConnections = (): ReachConnection[] =>
   find('connection', c => c.canExit
     && getScreen(c.screenId).kind !== 'dungeon' && getScreen(toScreenIdOf(c)).kind !== 'dungeon')
     .map(toReachConnection);
 
-// ─── Menu — a virtual BFS root with no ScreenRecord of its own, so its two
-// save-and-quit spawn points can't come from the screen/connection facade.
-// Returns fresh objects every call: the overlays below mutate `.requirements`
-// in place, and these would otherwise be shared, mutable state across calls. ───
+// Menu is a virtual BFS root with no ScreenRecord, so its two save-and-quit
+// spawn points cannot come from the facade. Fresh objects every call: the
+// overlays below mutate `.requirements` in place.
 const menuConnections = (): ReachConnection[] => [
   { from: 'menu', to: 'screen-204' }, // the starting house spawn
   { from: 'menu', to: 'screen-190' }, // the mountain hermit's cave spawn
@@ -47,9 +44,8 @@ const getSQGateRequirement = (dest: ScreenId): Requirement => {
     case 'screen-204': // the starting house
       return { checkId: 'check-004' }; // the princess has been brought to safety
     case 'screen-190': // the mountain hermit's cave
-      // No dedicated "carried him home" event check exists yet — his own
-      // check (granting the light source) completes at the same story beat,
-      // so it's used as the best-available proxy. Flagged in the migration report.
+      // No dedicated "carried him home" event check exists yet; his own check
+      // (granting the light source) completes at the same story beat, so it is the proxy.
       return { checkId: 'check-060' };
     default:
       return { impossible: true };
@@ -69,8 +65,7 @@ const resolveRules = (config: LogicConfig): ResolvedRules => {
   for (const c of connections) byPair.set(`${c.from}|${c.to}`, c);
 
   /** Applies a requirement to an edge already in the graph; a no-op otherwise
-   *  (e.g. dungeon-internal edges, which aren't in the graph until dungeon
-   *  traversal is wired in — matching the pre-migration dormant state). */
+   *  (e.g. dungeon-internal edges, absent until dungeon traversal is wired in). */
   const setRequirementIfPresent = (from: string, to: string, requirement: Requirement | undefined): void => {
     const existing = byPair.get(`${from}|${to}`);
     if (existing) existing.requirements = requirement;
@@ -78,10 +73,9 @@ const resolveRules = (config: LogicConfig): ResolvedRules => {
 
   const checkOverrides: Partial<Record<CheckId, Requirement>> = {};
 
-  // --- Medallion / crystal gates on the real dungeon-entrance connections ---
-  // Dormant today (dungeon screens are excluded from the graph above) but
-  // correctly id-keyed for when dungeon traversal is wired in, instead of the
-  // bare DungeonId strings that never matched anything.
+  // Medallion / crystal gates on the real dungeon-entrance connections. Dormant
+  // today (dungeon screens are excluded above), id-keyed for when dungeon
+  // traversal is wired in.
   setRequirementIfPresent('screen-250', 'screen-406', { // dungeon-011's entrance (connection-730)
     allOf: [hasSword, { itemId: config.medallionRequirements.miseryMire }],
   });
@@ -90,12 +84,10 @@ const resolveRules = (config: LogicConfig): ResolvedRules => {
   });
   setRequirementIfPresent('screen-277', 'screen-407', hasCrystals(config.crystalsForGT)); // dungeon-013's entrance (connection-793)
 
-  // --- Pedestal requirement ---
   checkOverrides['check-072'] = { count: { groupId: ITEM_GROUP_IDS.Pendants, n: config.pendantsForPedestal } };
 
-  // --- S&Q destination gating ---
-  // The hermit's cave has no menu-sourced connection (true before this
-  // migration too — there is no real screen id to gate), so it's intentionally absent.
+  // S&Q destination gating. The hermit's cave has no menu-sourced connection
+  // (there is no real screen id to gate), so it is absent on purpose.
   const sqDestinations: ScreenId[] = ['screen-204', 'screen-190'];
   for (const dest of sqDestinations) {
     if (!config.saveQuitDestinations.includes(dest)) {
@@ -103,7 +95,6 @@ const resolveRules = (config: LogicConfig): ResolvedRules => {
     }
   }
 
-  // --- Vanilla mode: gate progression ---
   if (config.mode === 'vanilla') {
     const intro = byPair.get('menu|screen-204');
     if (intro) {
@@ -115,19 +106,17 @@ const resolveRules = (config: LogicConfig): ResolvedRules => {
     setRequirementIfPresent('screen-227', 'screen-062', { checkId: 'check-002' }); // the rescue has begun
     setRequirementIfPresent('screen-204', 'screen-072', { checkId: 'check-004' }); // the princess has been brought to safety
     // screen-062|screen-106 (the overworld approach to the first tower's
-    // entrance): screen-106 is dungeon-kind, so this edge is excluded from
-    // the graph above and this is dormant today too (same root cause as the
-    // medallion gates) — kept so it activates correctly once dungeon
-    // traversal is wired in.
+    // entrance): screen-106 is dungeon-kind, so this is dormant today too;
+    // kept so it activates once dungeon traversal is wired in.
     setRequirementIfPresent('screen-062', 'screen-106', hasBeamSword);
   }
 
-  // --- Swordless mode: remove the sword requirement on that same approach ---
+  // Swordless: no sword requirement on that same approach.
   if (config.swordMode === 'swordless') {
     setRequirementIfPresent('screen-062', 'screen-106', undefined);
   }
 
-  // --- Open mode: that approach also opens via the cloak item ---
+  // Open mode: that approach also opens via the cloak item.
   if (config.mode === 'open') {
     setRequirementIfPresent('screen-062', 'screen-106', { anyOf: [hasSword, { itemId: 'item-026' }] });
   }

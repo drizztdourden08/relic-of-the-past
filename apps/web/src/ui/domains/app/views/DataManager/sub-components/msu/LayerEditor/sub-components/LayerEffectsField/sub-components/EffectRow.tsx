@@ -1,11 +1,5 @@
 /* @layer renderer-components @kind component */
-/**
- * One effect in a layer's chain: its kind, and the one or three numbers that kind has.
- *
- * Changing the kind starts the effect over at that kind's default rather than carrying numbers
- * across, because a cutoff and a band gain are not the same quantity — a 900 Hz low-pass turned
- * into an EQ has no "900 dB" to keep.
- */
+// Changing the kind resets to that kind's default: a cutoff in Hz has no meaning as a band gain in dB.
 import { Box } from '@ds/primitives/Box';
 import { Flex } from '@ds/primitives/Flex';
 import { IconButton } from '@ds/primitives/IconButton';

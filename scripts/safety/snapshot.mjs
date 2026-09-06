@@ -1,15 +1,10 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * Point-in-time snapshots of the gitignored material, kept as commits in a private ref
- * namespace (refs/safety/*, see roots.mjs) that no push can carry.
- *
- * Built entirely with git plumbing against a TEMPORARY index (GIT_INDEX_FILE), so taking
- * a snapshot never stages anything, never moves HEAD and never touches the working tree.
- * That matters: this runs immediately before destructive operations, and a safety net
- * that disturbs the thing it is protecting is not a safety net.
- *
- * The snapshot commit takes HEAD as its parent purely so it reads as a normal commit in
- * log and diff tools.
+ * Point-in-time snapshots of the gitignored material, kept as commits under
+ * refs/safety/* (see roots.mjs), which no push can carry. Built with git plumbing
+ * against a temporary index (GIT_INDEX_FILE), so a snapshot never stages anything,
+ * moves HEAD or touches the working tree. HEAD is the parent only so the commit reads
+ * normally in log and diff tools.
  */
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
@@ -26,7 +21,7 @@ const git = (args, extraEnv) =>
     env: extraEnv ? { ...process.env, ...extraEnv } : process.env,
   });
 
-/** `YYYYMMDD-HHMMSS` in local time — sorts correctly and reads unambiguously. */
+/** `YYYYMMDD-HHMMSS` in local time, so it sorts correctly and reads unambiguously. */
 const stamp = (now = new Date()) => {
   const p = (n) => String(n).padStart(2, '0');
   return `${now.getFullYear()}${p(now.getMonth() + 1)}${p(now.getDate())}-` +
@@ -34,9 +29,8 @@ const stamp = (now = new Date()) => {
 };
 
 /**
- * Write a tree containing HEAD's tracked content plus the CURRENT on-disk state of every
- * protected root, forced past .gitignore. Uses a throwaway index file so the real one is
- * untouched. Returns the tree sha.
+ * Write a tree of HEAD's tracked content plus the current on-disk state of every
+ * protected root, via a throwaway index. Returns the tree sha.
  */
 const buildTree = () => {
   const indexFile = join(tmpdir(), `rotp-safety-${process.pid}-${Date.now()}.index`);
@@ -45,8 +39,7 @@ const buildTree = () => {
     git(['read-tree', 'HEAD'], env);
     for (const root of PROTECTED_ROOTS) {
       if (!existsSync(join(repoRoot, root))) continue;
-      // -f overrides .gitignore, which is the whole point: these paths are ignored by
-      // design and would otherwise be invisible to the snapshot.
+      // -f overrides .gitignore: these paths are ignored by design.
       git(['add', '-f', '--', root], env);
     }
     return git(['write-tree'], env).trim();
@@ -55,11 +48,8 @@ const buildTree = () => {
   }
 };
 
-/**
- * The stamp is only second-precision, so two snapshots sharing a label within the same
- * second would resolve to one ref and `update-ref` would quietly overwrite the first.
- * Unlikely, and silent if it ever happened, which is the wrong combination for this file.
- */
+// The stamp is second-precision; without this, two snapshots with one label in the
+// same second would resolve to one ref and `update-ref` would overwrite the first.
 const uniqueRef = (base) => {
   const taken = (ref) => {
     try {
@@ -75,10 +65,7 @@ const uniqueRef = (base) => {
   return `${base}-${n}`;
 };
 
-/**
- * Take a snapshot and point `refs/safety/<label>-<stamp>` at it.
- * `label` names the operation being guarded, e.g. `wt-clean` or `vault-sync`.
- */
+/** Take a snapshot and point `refs/safety/<label>-<stamp>` at it. `label` names the guarded operation. */
 const createSnapshot = (label) => {
   const ref = uniqueRef(`${SAFETY_NAMESPACE}/${label}-${stamp()}`);
   const tree = buildTree();
@@ -89,14 +76,9 @@ const createSnapshot = (label) => {
 };
 
 /**
- * Compare a snapshot against what is on disk NOW, restricted to the protected roots.
- *
- * Implemented as a tree-to-tree diff rather than per-file hashing: build a fresh tree the
- * same way, then let git tell us what changed. Two plumbing calls instead of one process
- * per file, and it reuses git's own comparison rather than a hand-rolled one.
- *
- * Returns `{ ok, missing, changed }`. `missing` is what matters — a protected file that
- * was in the snapshot and is no longer on disk is precisely the failure this exists for.
+ * Compare a snapshot against disk now, restricted to the protected roots, as a
+ * tree-to-tree diff. Returns `{ ok, missing, changed }`; `missing` is the failure this
+ * exists for.
  */
 const verifyAgainst = (ref) => {
   const before = git(['rev-parse', `${ref}^{tree}`]).trim();
@@ -115,11 +97,8 @@ const verifyAgainst = (ref) => {
   return { ok: missing.length === 0, missing, changed };
 };
 
-/**
- * Read every blob named by `entries` in ONE `git cat-file --batch` process and write it
- * to disk. The batch stream is `<sha> blob <size>\n<size bytes>\n` per entry, walked as a
- * Buffer rather than a string so ROMs, save states and PNGs survive the trip intact.
- */
+// One `git cat-file --batch` for every blob. The stream is `<sha> blob <size>\n<size bytes>\n`
+// per entry, walked as a Buffer so binary ROMs, saves and PNGs survive intact.
 const writeBlobs = (entries) => {
   const stdout = execFileSync('git', ['cat-file', '--batch'], {
     cwd: repoRoot,
@@ -140,13 +119,10 @@ const writeBlobs = (entries) => {
 };
 
 /**
- * Put protected files back from a snapshot.
- *
- * Deliberately NOT `git checkout <ref> -- <path>`: that stages what it restores, which
- * would quietly start tracking gitignored ROMs and save data. Deliberately not
- * `git archive | tar` either — the pipeline needs a shell, and a Windows path with
- * backslashes reaches tar mangled, which is how the first version of this failed.
- * Reading blobs and writing them ourselves involves neither.
+ * Put protected files back from a snapshot. Not `git checkout <ref> -- <path>`: that
+ * stages what it restores and would start tracking gitignored ROMs. Not
+ * `git archive | tar` either: it needs a shell, and Windows backslash paths reached
+ * tar mangled.
  */
 const restoreFrom = (ref, roots = PROTECTED_ROOTS) => {
   const listing = git(['ls-tree', '-r', '-z', ref, '--', ...roots]);

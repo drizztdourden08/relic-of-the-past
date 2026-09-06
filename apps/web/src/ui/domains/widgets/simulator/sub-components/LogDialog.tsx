@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-/** Full simulation log in a modal — the only place the log is read, so it carries
+/** Full simulation log in a modal. This is the only place the log is read, so it carries
  *  the whole toolbar: event count, copy-all, and the show/hide type filter, over
  *  a selectable, windowed log container (older rows load on demand). */
 import { useState, useCallback } from 'react';

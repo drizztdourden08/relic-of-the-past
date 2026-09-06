@@ -2,7 +2,7 @@
 
 /*
  * A grid of pictures, scrolling once the alphabet carries more than a few rows
- * of them. Auto-fill rather than a fixed column count, so the same card suits an
+ * of them. Auto-fill, not a fixed column count, so the same card suits an
  * alphabet with six characters and one with forty.
  */
 
@@ -16,7 +16,7 @@
 
 /*
  * A cell draws a real game character, but here it stands in for an icon, so it
- * takes the icon's size rather than the text's. Keeping the cell's 1:2
+ * takes the icon's size, not the text's. Keeping the cell's 1:2
  * proportion is what stops the picture looking stretched.
  */
 .glyph-popover__cell .glyph-char {

@@ -72,7 +72,7 @@ const TitleBar = (props: TitleBarProps) => {
   const [hovered, setHovered] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [fps, setFps] = useState(0);
-  // Shown beside the FPS so the two can be compared at a glance — the game runs at 60, and a
+  // Shown beside the FPS so the two can be compared at a glance. The game runs at 60, and a
   // refresh rate that is not a whole multiple of that is what makes scrolling look uneven.
   const refreshHz = effectiveHz(useRefreshRate());
   const titlebarRef = useRef<HTMLDivElement>(null);

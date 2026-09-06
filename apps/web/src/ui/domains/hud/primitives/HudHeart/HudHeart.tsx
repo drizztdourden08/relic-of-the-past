@@ -18,7 +18,7 @@ const SPRITE_MAP: Record<HeartState, string> = {
 };
 
 /**
- * HudHeart — single heart in the life meter.
+ * Single heart in the life meter.
  * Original mode: swap sprites instantly.
  * Smooth mode: crossfade with a centered heartbeat pulse.
  */

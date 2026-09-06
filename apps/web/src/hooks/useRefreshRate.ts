@@ -14,7 +14,7 @@ const useRefreshRate = (): RefreshRateInfo => {
   const info = useRefreshRateStore((s) => s.info);
   const refresh = useRefreshRateStore((s) => s.refresh);
 
-  // Only the first mount actually measures — the store drops overlapping calls, so several
+  // Only the first mount actually measures. The store drops overlapping calls, so several
   // consumers mounting together still produce a single reading.
   useEffect(() => {
     if (info.reportedHz === null && info.measuredHz === null) void refresh();

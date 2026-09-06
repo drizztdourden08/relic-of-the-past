@@ -1,11 +1,11 @@
 /* @layer renderer-components @kind logic */
 /**
- * "Who says this line" — the mined trigger source, joined to the dataset and
- * put into words.
+ * "Who says this line" answered from the mined trigger source, joined to the
+ * dataset and put into words.
  *
  * The source dataset is keyed the way the game core is keyed: a type byte, an
  * area, a room, a receipt index. None of those is readable, so each one is
- * looked up and the RECORD supplies the name. Nothing is named here — where the
+ * looked up and the RECORD supplies the name. Nothing is named here. Where the
  * data has no name, the model reports the bare key instead of filling the gap.
  *
  * Three gaps are real and are reported as gaps:
@@ -28,7 +28,7 @@ type TriggerFacts = {
   by: TriggerSourceRow['by'] | null;
   /** Who or what opens it, named from the data. Empty when the data has no name. */
   who: string;
-  /** Where it happens, when the key is a place or a room. Empty otherwise. */
+  /** Where it happens, for a place or room key. Empty otherwise. */
   where: string;
   /** The native key, spelled as the game spells it. Empty when there is none. */
   nativeKey: string;

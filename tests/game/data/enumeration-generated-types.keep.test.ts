@@ -1,10 +1,8 @@
 /* @layer tests @kind test */
 /**
- * `generated-types.ts` is committed, not built on the fly — so a data edit to
- * `ALL_ENUMERATION` that forgot to run `npm run generate:enum-types` would
- * otherwise go unnoticed until some unrelated field silently accepted (or
- * rejected) a value. This regenerates the source in memory and diffs it
- * against the committed file, byte for byte.
+ * `generated-types.ts` is committed, not built on the fly, so an edit to
+ * `ALL_ENUMERATION` without `npm run generate:enum-types` would go unnoticed.
+ * This regenerates the source in memory and diffs it byte for byte.
  */
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';

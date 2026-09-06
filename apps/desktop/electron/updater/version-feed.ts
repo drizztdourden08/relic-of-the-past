@@ -147,7 +147,7 @@ const listVersions = async (currentVersion: string, allowPrerelease: boolean): P
         prerelease: release.prerelease,
         downgrade: order < 0,
         installed: order === 0,
-        // Read off the release listing already in hand — the id is in the asset's
+        // Read off the release listing already in hand. The id is in the asset's
         // filename, so every row in the picker is answered without another request.
         saveStates: targetCompatFor(asset.Version, release.assets),
         plan,

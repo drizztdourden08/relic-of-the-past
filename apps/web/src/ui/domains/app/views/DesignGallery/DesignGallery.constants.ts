@@ -15,7 +15,7 @@ interface TokenGroup {
 }
 
 const SURFACES: TokenGroup = {
-  title: 'Surfaces — one background family',
+  title: 'Surfaces (one background family)',
   description: 'Depth comes from borders + shadow, not from many background hues.',
   tokens: [
     { name: 'bg', cssVar: '--c-bg', value: '#0e0e12', note: 'canvas · pages · panels · docked widgets' },
@@ -46,7 +46,7 @@ const TEXT: TokenGroup = {
 };
 
 const GOLD: TokenGroup = {
-  title: 'Gold — PRIMARY accent',
+  title: 'Gold (PRIMARY accent)',
   description: 'Selection · active · focus · the primary action · highlights. The default "this matters".',
   tokens: [
     { name: 'gold', cssVar: '--c-gold', value: '#c8a84e' },
@@ -57,7 +57,7 @@ const GOLD: TokenGroup = {
 };
 
 const GREEN: TokenGroup = {
-  title: 'Green — SECONDARY accent (contextual)',
+  title: 'Green (SECONDARY accent, contextual)',
   description: 'Positive / success / go ONLY: success, complete/obtained, live/connected, safe actions (Start, Resume, Connect). Never plain "selected".',
   tokens: [
     { name: 'green', cssVar: '--c-green', value: '#4a9966' },

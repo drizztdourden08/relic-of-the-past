@@ -5,7 +5,7 @@ run-name: Release ${{ inputs.version }}${{ inputs.set_latest == true && ' (lates
 # GitHub UI (Run workflow) or locally with `npm run release -- 0.9.0 [--latest]`.
 # Both routes pass the SAME params. If release-notes/v0.9.0.md exists and the tag
 # does not, this bumps package.json, commits "release: v0.9.0" to master, tags it,
-# and runs the full build — as a draft, or published-as-latest when set_latest is on.
+# and runs the full build, as a draft or published-as-latest when set_latest is on.
 on:
   workflow_dispatch:
     inputs:
@@ -51,7 +51,7 @@ jobs:
           RAW="${{ inputs.version }}"
           TAG="v${RAW#v}"            # accept 0.9.0 or v0.9.0 → v0.9.0
           if [ ! -f "release-notes/$TAG.md" ]; then
-            echo "::error::Missing release-notes/$TAG.md on master. Commit the notes first — they are the source of truth for the release body."
+            echo "::error::Missing release-notes/$TAG.md on master. Commit the notes first, since the release body comes from them."
             exit 1
           fi
           if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
@@ -91,9 +91,9 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add package.json package-lock.json
           # Re-releasing a version that's already bumped (e.g. recovering a failed
-          # run) leaves nothing to commit — that's fine, skip the commit and just tag.
+          # run) leaves nothing to commit. That's fine: skip the commit and just tag.
           if git diff --cached --quiet; then
-            echo "package.json already at $TAG — skipping the release commit."
+            echo "package.json is already at $TAG, so there is nothing to commit."
           else
             git commit -m "release: $TAG"
             git push origin HEAD:master
@@ -143,11 +143,9 @@ jobs:
         with:
           version: 3.1.51
 
-      # Emscripten downloads the SDL2 port on a cold ports cache, and its downloader
-      # does `import requests`, which emsdk's bundled Python does not ship. Runs with a
-      # warm cache never reach that line, which is why this surfaced as an intermittent
-      # Windows failure rather than a permanent one. Best effort: if pip is unavailable
-      # the build still runs and fails loudly on its own.
+      # Emscripten's SDL2 port downloader does `import requests`, which emsdk's bundled
+      # Python lacks. Only a cold ports cache hits it, hence the intermittent Windows
+      # failure. Best effort: without pip the build still runs and fails loudly.
       - name: Give Emscripten's Python its port downloader
         shell: bash
         run: |
@@ -158,7 +156,7 @@ jobs:
 
       - name: Build WASM
         # Shared build script (single source of truth) writes straight into
-        # apps/web/public/wasm — same output the desktop package consumes. It also
+        # apps/web/public/wasm, the same output the desktop package consumes. It also
         # re-runs the save state layout probe, so the format id is this build's own.
         run: node core/wasm-build/build.mjs
         shell: bash
@@ -211,7 +209,7 @@ jobs:
             darwin) LIB="libusb-1.0.0.dylib" ;;
             *) echo "::error::No libusb filename known for ${{ matrix.addonPlatform }}"; exit 1 ;;
           esac
-          test -f "$DIR/$LIB" || { echo "::error::$LIB missing from $DIR — SDL was built without libusb support"; ls -la "$DIR"; exit 1; }
+          test -f "$DIR/$LIB" || { echo "::error::$LIB missing from $DIR, so SDL was built without libusb support"; ls -la "$DIR"; exit 1; }
           echo "$LIB present alongside the addon."
 
       # vpk (the Velopack CLI) is a .NET global tool, and it is what turns the built
@@ -230,7 +228,7 @@ jobs:
       # The record dataset lives in the private companion repo, not this one, so a
       # plain checkout builds an app with an EMPTY dataset: no sprite definitions,
       # no screens, no checks. Every consumer reads it through a Vite glob that
-      # falls back to empty, which is right for a clone and wrong for a release —
+      # falls back to empty. That is right for a clone and wrong for a release, and
       # v0.17.0 through v0.18.0 shipped that way, green, with sprite extraction
       # silently writing zero files.
       #
@@ -247,16 +245,16 @@ jobs:
             ../rotp-vault
           node scripts/vault/sync.mjs --force-pull
 
-      # The one place an empty dataset is an error rather than a normal state.
+      # The one place an empty dataset is an error, not a normal state.
       # Without it, a lapsed token ships another hollow release instead of failing.
       - name: Verify the dataset landed
         shell: bash
         run: node scripts/vault/check-dataset.mjs
 
       # The .msul document icon is generated from the committed logo, not checked in,
-      # and the npm prebuild hooks that generate it are not on this path — the release
+      # and the npm prebuild hooks that generate it are not on this path, because the release
       # calls electron-vite and electron-builder directly. Without it the macOS build
-      # fails outright looking for msul.icns, and Windows quietly ships a pack file
+      # fails outright looking for msul.icns, and Windows silently ships a pack file
       # with no document icon, which is the worse of the two.
       - name: Generate the document icon
         shell: bash
@@ -326,7 +324,7 @@ jobs:
       # One platform only: the format is a property of the core, not of the installer, and
       # a release carries a single copy. Windows is the one that always runs.
       # Lands in the folder the upload glob below already collects, so it becomes a release
-      # asset with no new upload step — and its FILENAME carries the id, which is how an
+      # asset with no new upload step. Its FILENAME carries the id, which is how an
       # older build answers the compatibility question from the release listing alone.
       - name: Publish the save state format
         if: matrix.platform == 'win'
@@ -393,11 +391,9 @@ jobs:
         with:
           version: 3.1.51
 
-      # Emscripten downloads the SDL2 port on a cold ports cache, and its downloader
-      # does `import requests`, which emsdk's bundled Python does not ship. Runs with a
-      # warm cache never reach that line, which is why this surfaced as an intermittent
-      # Windows failure rather than a permanent one. Best effort: if pip is unavailable
-      # the build still runs and fails loudly on its own.
+      # Emscripten's SDL2 port downloader does `import requests`, which emsdk's bundled
+      # Python lacks. Only a cold ports cache hits it, hence the intermittent Windows
+      # failure. Best effort: without pip the build still runs and fails loudly.
       - name: Give Emscripten's Python its port downloader
         shell: bash
         run: |
@@ -514,7 +510,7 @@ jobs:
           # Default (tag push) stays a draft. A manual run with set_latest=true
           # publishes immediately and marks it the latest release.
           # A draft's assets cannot be downloaded, so a pre-release is published
-          # rather than drafted. It simply never becomes the latest download.
+          # instead of drafted. It never becomes the latest download.
           draft: ${{ inputs.set_latest != true && inputs.prerelease != true }}
           prerelease: ${{ inputs.prerelease == true }}
           make_latest: ${{ inputs.set_latest == true }}

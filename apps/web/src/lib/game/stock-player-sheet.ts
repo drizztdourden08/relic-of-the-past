@@ -2,7 +2,7 @@
 /**
  * The sheet the game ships with, for starting a custom sprite from scratch.
  *
- * Both halves come out of a ROM's already-compiled asset blob rather than from the ROM or
+ * Both halves come out of a ROM's already-compiled asset blob, not from the ROM or
  * a running game: the tiles are one named entry, and the gear palette is another. That
  * keeps "create new" available with no game running and no re-extraction, at the cost of
  * needing a ROM whose assets have been built once.

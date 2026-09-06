@@ -28,5 +28,5 @@ runs a WebAssembly game core. Areas of particular interest:
 ## Out of scope
 
 - The vendored upstream decompilation under `core/zelda3/` (report those upstream).
-- Anything requiring the user to supply a malicious ROM they obtained themselves — the app ships no
-  game data and validates ROM checksums on load.
+- Anything requiring the user to supply a malicious ROM they obtained themselves. The app ships no
+  game data, and it validates ROM checksums on load.

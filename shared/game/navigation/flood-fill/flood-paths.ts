@@ -66,8 +66,8 @@ const runDualLayerFlood = (rawAttrGrid: number[][], screenIndex: number, options
   const { reachable, transitions, reachableCount, reqGrid, hookTargets, tileLayer, reachableByLayer } = bfsResult;
 
   // The drawn ledges are the BFS's own real cross-layer landings (dual-layer.ts's
-  // expandLedgeCross), not cliff-preprocessing.ts's single-layer wall-run guess —
-  // that guess only walks layer 0's own CLIFF_WALL tiles and has no idea layer 1
+  // expandLedgeCross), not cliff-preprocessing.ts's single-layer wall-run guess.
+  // That guess only walks layer 0's own CLIFF_WALL tiles and has no idea layer 1
   // exists, so it can land an arrow on more layer-0 ground instead of the real
   // drop. Every recorded crossing is by construction both reachable (the BFS only
   // attempts one from an already-reached cell) and landable, so no extra filter
@@ -116,7 +116,7 @@ const runSingleLayerFlood = (rawAttrGrid: number[][], screenIndex: number, optio
   let bfsResult = runBFS(strategy, start.row, start.col, entrancePositions, inv, singleBounds, seeds.length > 0 ? seeds : undefined);
   // One-way ledge hops: a reachable ledge start drops Link at its landing tile.
   // The BFS walks one tile at a time and can't jump the cliff band, so seed
-  // each newly reachable landing and re-run — repeated for chained plateaus.
+  // each newly reachable landing and re-run, repeated for chained plateaus.
   for (let pass = 0; pass < 4; pass++) {
     const landings = ledges.filter((l) =>
       bfsResult.reachable[l.startRow]?.[l.startCol]

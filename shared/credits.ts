@@ -1,8 +1,5 @@
 /* @layer shared-other @kind data */
-/**
- * Project credits — single source of truth.
- * Keep in sync with CREDITS.md in the repository root.
- */
+/** Project credits, single source of truth. Keep in sync with CREDITS.md in the repository root. */
 
 type UsageLevel =
   | 'original-work'
@@ -101,7 +98,7 @@ const CREDITS: CreditCategory[] = [
         project: 'SDL',
         description: 'Cross-platform library that handles controller input, rumble and motion sensors.',
         usage: 'core-dependency',
-        usageNote: 'The entire controller layer on every platform. Built from SDL\'s official released source: linked as a shared library on desktop, and compiled into the mobile plugin along with SDL\'s own Java classes, which are taken from that same pinned release at build time rather than copied into this repository.',
+        usageNote: 'The entire controller layer on every platform. Built from SDL\'s official released source: linked as a shared library on desktop, and compiled into the mobile plugin along with SDL\'s own Java classes, which are taken from that same pinned release at build time instead of being copied into this repository.',
         url: 'https://github.com/libsdl-org/SDL',
         license: 'Zlib',
       },

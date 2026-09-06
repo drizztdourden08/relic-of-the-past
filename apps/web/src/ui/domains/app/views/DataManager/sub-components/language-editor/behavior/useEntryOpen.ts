@@ -1,21 +1,10 @@
 /* @layer renderer-components @kind hook */
 /**
- * Opening, closing and switching the view of an entry.
- *
- * The two halves are deliberately separate — `useEntryView` knows what is open,
- * `useEntryDraft` knows what is unsaved — and this is the one place that holds
- * both. Entering the editor starts the entry's draft if it has none; leaving it
- * leaves the draft alone, so a card can be read, previewed, closed and reopened
- * with its unsaved words intact. Nothing is ever refused.
- *
- * Committing or cancelling drops the entry back to reading: edit mode with no
- * draft behind it would be a panel with nothing in it, and the reading view is
- * where someone wants to be the moment a line is saved.
- *
- * The handlers close over a live ref rather than the values, so their identity
- * is fixed for the life of the editor. That is what lets the list memoize its
- * few hundred rows: a row re-renders for its own changed facts, not because a
- * keystroke elsewhere re-made every callback.
+ * The one place that holds both `useEntryView` (what is open) and
+ * `useEntryDraft` (what is unsaved). Entering the editor starts a draft if
+ * none exists; leaving it keeps the draft. Commit and cancel drop the entry
+ * back to reading. The handlers close over a live ref, so their identity is
+ * fixed and the list can memoize its few hundred rows.
  */
 import { useCallback, useMemo, useRef } from 'react';
 import { useEntryDraft } from './useEntryDraft';

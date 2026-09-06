@@ -1,10 +1,9 @@
 name: Android APK (manual)
 
-# Ad-hoc, on-demand signed APK build — uploads the APK as a workflow artifact.
-# NOTE: the real release path builds and attaches the APK itself (the build-android
-# job in release.yml), so every release already ships it. This workflow is only for
-# building a one-off APK outside a release (e.g. to test a branch). Signing uses a
-# self-signed keystore stored in repo secrets — see docs/contributing/testing-linux-and-android.md.
+# Ad-hoc, on-demand signed APK build that uploads the APK as a workflow artifact.
+# The release path (build-android in release.yml) already ships the APK; this
+# workflow only builds a one-off APK outside a release (e.g. to test a branch). Signing uses a
+# self-signed keystore stored in repo secrets; see docs/contributing/testing-linux-and-android.md.
 #
 # Required repository secrets:
 #   ANDROID_KEYSTORE_B64       base64 of the release keystore (relic-release.jks)
@@ -43,7 +42,7 @@ jobs:
 
       - name: Build WASM core
         # emcc is on PATH here (setup-emsdk), so the shared build script runs directly
-        # and writes into apps/web/public/wasm — which cap:sync bundles into the APK.
+        # and writes into apps/web/public/wasm, which is where cap:sync picks it up for the APK.
         run: node core/wasm-build/build.mjs
 
       # The record dataset is vault-only, so a plain checkout builds an APK with an

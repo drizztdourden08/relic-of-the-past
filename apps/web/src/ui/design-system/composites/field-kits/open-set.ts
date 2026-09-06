@@ -1,11 +1,11 @@
 /* @layer renderer-components @kind logic */
 /**
- * What a derived option list is actually good for.
+ * What a derived option list is good for.
  *
  * Kind inference reads a closed set off the values it can see, so `options` is
  * a record of what has been WRITTEN, never a statement of what is allowed. A
- * value the list has never seen is therefore still a legal value — and the
- * moment one is entered the control has to show it, or the record reads as
+ * value the list has never seen is therefore still a legal value, and the moment
+ * one is entered the control has to show it, or the record reads as
  * though the field were empty.
  */
 
@@ -18,7 +18,7 @@ const withCurrentValue = (
 
 /**
  * What an entry commits to, or nothing at all. Blank and unchanged both mean
- * no edit — the entry closes either way, so neither needs reporting as one.
+ * no edit. The entry closes either way, so neither needs reporting as one.
  * Clearing a field is the picker's job and stays gated on `optional` there;
  * this hatch only ever writes a value.
  */

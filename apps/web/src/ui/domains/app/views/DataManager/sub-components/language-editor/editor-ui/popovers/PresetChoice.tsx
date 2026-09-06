@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
  * One preset in a value list. Its own component so the click handler is bound
- * once per value rather than rebuilt inline on every render of the list.
+ * once per value, not rebuilt inline on every render of the list.
  */
 import { useCallback } from 'react';
 import { Button } from '@ds/primitives';

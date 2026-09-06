@@ -2,13 +2,13 @@
 /**
  * The weapons a given inventory can bring to bear against a sprite, with each
  * one's ancilla type (or null for the sword, which is not an ancilla), its
- * resolved damage class, and its reach. Thrown bombs are NOT modelled here —
- * their parabolic travel distance was not pinned down; only the placed
+ * resolved damage class, and its reach. Thrown bombs are NOT modelled here,
+ * because their parabolic travel distance was not pinned down; only the placed
  * (contact) bomb is represented.
  *
  * Every match is on an `ItemId`. This used to turn the sword ids into display
  * names and then ask whether any inventory entry CONTAINED one, which meant a
- * renamed record made the run silently swordless — and the reason the substring
+ * renamed record made the run silently swordless. The reason the substring
  * was there (the uncle's gift is a combined sword-and-shield record) had already
  * stopped applying, because the tracker's sword ladder adds every rung below the
  * one held, so the bare tier-1 sword is always in the set.
@@ -25,16 +25,16 @@ const CONTACT_RADIUS = 2;
  *  Swing-timing adjustments on top of these are not modelled. */
 const SWORD_BASE_DAMAGE_CLASS = [1, 2, 3, 4];
 
-/** Sword items in tier order — the dataset's own group, which is already ordered
+/** Sword items in tier order, from the dataset's own group, which is already ordered
  *  weakest-first, so no local copy of the tier list exists to drift from it. */
 const SWORD_TIER_IDS: readonly ItemId[] = membersOf(ITEM_GROUP_IDS.Swords);
 
 /** Ancilla type for the sword beam (needs a sword above tier 1). Its
- *  near-full-health firing condition is not modelled — the beam is offered
+ *  near-full-health firing condition is not modelled, so the beam is offered
  *  whenever the sword requirement is met. */
 const SWORD_BEAM_ANCILLA = 0x0c;
 
-/** The bomb pickup stands in for "carries bombs" — no record expresses bomb
+/** The bomb pickup stands in for "carries bombs", since no record expresses bomb
  *  capacity (same gap the traversal-token table documents). */
 const BOMB_ITEM_ID: ItemId = 'item-041';
 const PLACED_BOMB_ANCILLA = 0x07;
@@ -57,7 +57,7 @@ const ANCILLA_WEAPONS: ReadonlyArray<{ itemId: ItemId; label: string }> = [
 const swordTier = (inventory: ReadonlySet<ItemId>): number =>
   SWORD_TIER_IDS.reduce((tier, id, i) => (inventory.has(id) ? i + 1 : tier), 0);
 
-/** damageByClass is indexed by damage class, not ancilla type — this is the
+/** damageByClass is indexed by damage class, not ancilla type. This is the
  *  ancilla -> damage-class step of the game's two-step lookup. */
 const damageClassFor = (ancillaType: number, tables: CombatTables): number => tables.ancillaDamageClass[ancillaType] ?? 0;
 

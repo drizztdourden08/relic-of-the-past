@@ -2,11 +2,11 @@
 /**
  * The reusable binding: point a composite at a `ViewKey` and it gets durable +
  * session view state for free; omit the key and it gets a purely in-memory,
- * unpersisted snapshot — no IPC call, no store write — which is what lets a
+ * unpersisted snapshot with no IPC call and no store write. That is what lets a
  * composite be used with zero persistence setup outside the inspector.
  *
  * This is the one file under ds/data/ allowed to reach into app-level renderer
- * code (`lib/storage`, `stores`) — see the data-inspector plan §8/§11. Every
+ * code (`lib/storage`, `stores`). See the data-inspector plan §8/§11. Every
  * other module in this folder stays headless and does not know either exists.
  */
 import { useCallback, useEffect, useState } from 'react';
@@ -29,7 +29,7 @@ interface UseViewStateResult {
   sessionView: SessionView;
   /** Updates local state immediately and debounce-saves the durable half. */
   setSnapshot: (next: ViewSnapshot) => void;
-  /** Writes straight to the session store (or local state, keyless) — no debounce. */
+  /** Writes straight to the session store (or local state, keyless) with no debounce. */
   setSessionView: (next: SessionView) => void;
 }
 
@@ -49,7 +49,7 @@ const useViewState = (
   const [loadGuard] = useState(createLoadGuard);
 
   // A constant selector output (DEFAULT_SESSION_VIEW) when there's no key means this
-  // never re-renders off store activity — as inert as not subscribing at all.
+  // never re-renders off store activity. It is as inert as not subscribing.
   const storedSession = useDataViewStore((state) => (key ? state.views[key] ?? DEFAULT_SESSION_VIEW : DEFAULT_SESSION_VIEW));
   const setStoredSession = useDataViewStore((state) => state.setSessionView);
 
@@ -67,7 +67,7 @@ const useViewState = (
       apply: setLocalSnapshot,
     });
     // A new key opens its own generation, so the outgoing one's read can no
-    // longer land — and it starts unwritten, so switching collections still
+    // longer land. It starts unwritten, so switching collections still
     // restores what that collection had saved.
     return () => { loadGuard.cancel(); };
     // Re-running on `key` alone is deliberate: the schema/fallback only matter at

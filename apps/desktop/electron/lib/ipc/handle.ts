@@ -35,8 +35,8 @@ const emit = <K extends keyof EventContract>(
     // The render frame can be mid-disposal during a reload/navigation, which makes
     // webContents.send throw ("Render frame was disposed before WebFrameMain could be
     // accessed"). These are fire-and-forget events and the renderer re-subscribes on
-    // load, so a dropped send during that window is safe to ignore — and avoids the
-    // high-frequency HID forwarder spamming the console.
+    // load, so a dropped send during that window is safe to ignore. It also keeps the
+    // high-frequency HID forwarder from spamming the console.
   }
 };
 

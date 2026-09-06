@@ -1,10 +1,9 @@
 /* @layer tests @kind test */
 /**
- * `entityKindFromId` resolves an id's own kind from its prefix. `item-group`
- * and `enumeration` mint under a prefix that is NOT their own kind name
- * (`ig-NNN` and `enum-NNN` — see `KIND_ID_PREFIXES`), so this pins the
- * explicit prefix→kind lookup those two need, alongside a sanity check that
- * every kind whose prefix already equals its name keeps resolving correctly.
+ * `entityKindFromId` resolves a kind from an id's prefix. `item-group` and
+ * `enumeration` mint under `ig-NNN` and `enum-NNN` (see `KIND_ID_PREFIXES`),
+ * so the explicit prefix→kind lookup is pinned, plus every kind whose prefix
+ * equals its name.
  */
 import { describe, it, expect } from 'vitest';
 import { all } from '@shared/game/data';
@@ -55,7 +54,7 @@ describeDataset('resolveRecordLabel', () => {
   });
 });
 
-describeDataset('defaultIdRefDisplay — the baseline name for a column with no displayField', () => {
+describeDataset('defaultIdRefDisplay names a column that has no displayField', () => {
   it('resolves a hinted kind straight off its own getter', () => {
     const [screen] = all('screen');
     expect(defaultIdRefDisplay(screen.id, 'screen')).toBe(screen.vanillaName ?? screen.randomizerName);
@@ -71,13 +70,8 @@ describeDataset('defaultIdRefDisplay — the baseline name for a column with no 
     expect(defaultIdRefDisplay(dungeon.id, 'nowhere')).toBe(dungeon.randomizerName);
   });
 
-  /**
-   * The Recommendations table's `targetId` column points at a different
-   * collection per row (a `screen` finding, a `connection` finding, an
-   * `actor` finding, …), so it carries no single `targetKind` at all. Each
-   * id still has to resolve correctly on its own — this is the exact case a
-   * MIXED column's per-row fallback exists for.
-   */
+  // The Recommendations `targetId` column points at a different collection per
+  // row, so it has no single `targetKind`; each id resolves on its own.
   it('resolves each id by its OWN kind with no hint, for a column mixing several kinds', () => {
     const [screen] = all('screen');
     const [connection] = all('connection');
@@ -92,7 +86,7 @@ describeDataset('defaultIdRefDisplay — the baseline name for a column with no 
     expect(defaultIdRefDisplay(group.id)).toBe(group.label);
   });
 
-  it('answers undefined — not the id — for something that names no known kind', () => {
+  it('answers undefined for something that names no known kind, never the id', () => {
     expect(defaultIdRefDisplay('not-a-known-kind-42')).toBeUndefined();
   });
 });

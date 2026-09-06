@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 /**
- * ChecksWidget — Content for the Checks widget.
+ * Content for the Checks widget.
  * Wraps TrackerSummary + TrackerFilters + TrackerGroupTree with data subscriptions.
  */
 import { Box } from '../../../design-system/primitives/Box';

@@ -1,14 +1,11 @@
 /*
  * Forwards controller key/motion events from MainActivity into
- * org.libsdl.app.SDLControllerManager. This is the piece SDLActivity would
- * normally own (see its dispatchKeyEvent/onKey and SDLGenericMotionListener in
- * the real SDL3 android-project) — this app never runs SDLActivity itself, so
- * MainActivity calls these two methods directly from its own
- * dispatchKeyEvent()/dispatchGenericMotionEvent() overrides instead.
+ * org.libsdl.app.SDLControllerManager. SDLActivity would normally own this, but
+ * this app never runs SDLActivity, so MainActivity's dispatchKeyEvent()/
+ * dispatchGenericMotionEvent() overrides call these directly.
  *
- * Hotplug (added/removed) does NOT go through here — that is driven entirely by
- * SDL's own periodic InputDevice enumeration inside nativePollEvents(). Only
- * live button/axis state needs this routing.
+ * Hotplug (added/removed) does NOT go through here; SDL's own InputDevice
+ * enumeration inside nativePollEvents() drives it.
  */
 package com.relicofthepast.app.controllersdl3;
 

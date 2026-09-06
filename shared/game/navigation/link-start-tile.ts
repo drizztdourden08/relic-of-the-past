@@ -9,8 +9,9 @@ interface LinkStartTileArgs {
 }
 
 /**
- * Nearest tile of Link's 16×16 collision hitbox (the lower half of the sprite —
- * head skipped, hitbox starts 8px below sprite top), matching the overlay debug footprint.
+ * Nearest tile of the player's 16x16 collision hitbox (the lower half of the sprite,
+ * with the head skipped and the hitbox starting 8px below the sprite top), matching
+ * the overlay debug footprint.
  */
 const linkStartTile = ({ linkX, linkY, screenWorldX, screenWorldY }: LinkStartTileArgs): { row: number; col: number } => {
   const relPixelX = linkX - screenWorldX;

@@ -5,8 +5,8 @@
 
 # Relic of the Past
 
-**A modern, cross-platform desktop launcher for the open-source *A Link to the Past* PC port —
-polished UI, controller support, save profiles, MSU-1 audio, and randomizer tooling.**
+**A modern, cross-platform desktop launcher for the open-source *A Link to the Past* PC port,
+with polished UI, controller support, save profiles, MSU-1 audio, and randomizer tooling.**
 
 [![Website](https://img.shields.io/badge/website-relic--of--the--past.com-c8a84e?logo=googlechrome&logoColor=white)](https://relic-of-the-past.com)
 [![Discord](https://img.shields.io/badge/Discord-join-5865F2?logo=discord&logoColor=white)](https://discord.gg/jBkmwzKHZN)
@@ -16,7 +16,7 @@ polished UI, controller support, save profiles, MSU-1 audio, and randomizer tool
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-blue)](#installation)
 [![Built with](https://img.shields.io/badge/built%20with-Electron%20%2B%20React%20%2B%20WASM-9cf)](#how-it-works)
 
-**Project status:** Pre-release / Beta — actively developed, expect rough edges.
+**Project status:** Pre-release / Beta. Actively developed, expect rough edges.
 
 </div>
 
@@ -26,7 +26,7 @@ polished UI, controller support, save profiles, MSU-1 audio, and randomizer tool
 > **Disclaimer.** This is an unofficial fan-made/open-source project. It is not affiliated with,
 > endorsed by, sponsored by, or approved by Nintendo. Nintendo, The Legend of Zelda, and related
 > names, characters, music, artwork, and assets are trademarks and/or copyrights of Nintendo.
-> **No Nintendo-owned game assets are included in this repository — you must provide your own
+> **No Nintendo-owned game assets are included in this repository. You must provide your own
 > legally obtained ROM.**
 
 ## Community
@@ -101,18 +101,18 @@ The full documentation lives in **[`docs/`](docs/)** (also published to the proj
 - **Start here:** [Quick Start](docs/getting-started/quick-start.md) · [Installation](docs/getting-started/installation.md)
 - **User guide:** [profiles](docs/user-guide/profiles.md), [save states](docs/user-guide/save-states.md), [controllers](docs/user-guide/input-controllers.md), [MSU audio](docs/user-guide/audio-msu.md), [HUD](docs/user-guide/hud.md), and more under [docs/user-guide/](docs/user-guide/)
 - **Architecture:** [overview](docs/architecture/overview.md) · [the WASM bridge](docs/architecture/wasm-bridge.md) · [asset extraction](docs/architecture/asset-extraction.md)
-- **Game hooks reference:** [the C↔JS boundary](docs/hooks/overview.md) — every `Wasm*` export & callback
+- **Game hooks reference:** [the C↔JS boundary](docs/hooks/overview.md), covering every `Wasm*` export & callback
 - **Contributing:** [guide](docs/contributing/index.md) · [coding standards](docs/contributing/coding-standards.md) · [design system](docs/contributing/design-system.md)
 
 ## Credits & license
 
-This project stands on the shoulders of the open-source community — see [CREDITS.md](CREDITS.md).
+This project builds on a lot of open-source work. [CREDITS.md](CREDITS.md) lists all of it.
 Application code is released under the [MIT License](LICENSE).
 
-> **Side note — third-party code & trademarks.** The MIT license covers only the
+> **Side note on third-party code & trademarks.** The MIT license covers only the
 > application code authored in this repository. It does **not** cover the vendored
 > upstream decompilation under `core/zelda3/`, which is distributed under its own
-> license — see [`core/zelda3/LICENSE.txt`](core/zelda3/LICENSE.txt).
+> license, listed in [`core/zelda3/LICENSE.txt`](core/zelda3/LICENSE.txt).
 >
 > This is an unofficial fan-made / open-source project, not affiliated with, endorsed
 > by, sponsored by, or approved by Nintendo. Nintendo, The Legend of Zelda, and related

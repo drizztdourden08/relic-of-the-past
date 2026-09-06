@@ -4,22 +4,14 @@ const fs = require('fs');
 const path = require('path');
 
 /**
- * Electron files this app never loads. They are part of the Electron distribution
- * rather than our own bundle, so `files` cannot filter them out and they have to be
- * removed after packing.
- *
- * Deliberately NOT in this list, despite being large:
- *   vk_swiftshader.dll / vulkan-1.dll  the software renderer, which is what makes the
- *                                      app draw on machines with no usable GPU (VMs)
- *   libGLESv2 / libEGL / d3dcompiler   ANGLE, which is how WebGL reaches the GPU
- *   LICENSES.chromium.html             required attribution, and it compresses well
- *   ffmpeg.dll                         nothing here decodes compressed audio today,
- *                                      but Chromium reaches for it in enough places
- *                                      that 2.9 MB is not worth the risk
+ * Electron distribution files this app never loads; `files` cannot filter them.
+ * Deliberately kept despite their size: vk_swiftshader.dll / vulkan-1.dll (software
+ * renderer for machines with no usable GPU), libGLESv2 / libEGL / d3dcompiler
+ * (ANGLE, how WebGL reaches the GPU), LICENSES.chromium.html (required attribution),
+ * ffmpeg.dll (Chromium reaches for it in enough places that 2.9 MB is not worth the risk).
  */
 const UNUSED_ELECTRON_FILES = [
-  // DirectX shader compiler, used by WebGPU/Dawn. This app has no WebGPU code: the
-  // core renders through WebGL, which uses ANGLE and the D3D compiler above.
+  // DirectX shader compiler for WebGPU/Dawn; the core renders through WebGL.
   'dxcompiler.dll',
   'dxil.dll',
 ];
@@ -35,12 +27,9 @@ const trimUnusedFiles = (appOutDir) => {
   if (saved) console.log(`  • trimmed ${(saved / 1048576).toFixed(1)} MB of unused Electron files`);
 };
 
-/**
- * Velopack ships prebuilt bindings for every platform it supports, about 18 MB of
- * .node files, and a build needs exactly one. This cannot be a `files` filter because
- * that is the same for every platform, and dropping the wrong one leaves the app
- * unable to start: the updater is imported at the top of main.
- */
+// Velopack ships bindings for every platform (~18 MB); a build needs exactly one.
+// Not a `files` filter: that is the same for every platform, and dropping the wrong
+// one leaves the app unable to start (the updater is imported at the top of main).
 const VELOPACK_BINDING = {
   win32: 'velopack_nodeffi_win_x64_msvc.node',
   linux: 'velopack_nodeffi_linux_x64_gnu.node',

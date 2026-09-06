@@ -1,9 +1,6 @@
 /* @layer renderer-components @kind style */
 
-/* ─── The bar: small clauses that wrap ───
-   One clause is one narrow column, not a full-width line, so a handful of
-   filters read as a handful of small things laid side by side and flowing onto
-   the next line once they run out of room. */
+/* One clause is one narrow column, not a full-width line; clauses wrap. */
 .filter-bar {
   display: flex;
   flex-wrap: wrap;
@@ -12,11 +9,8 @@
   padding: var(--space-sm);
 }
 
-/* A clause is a caption over a control strip and nothing else: no box drawn
-   around the pair, no fill, no padding of its own — the control already has
-   its own edges, and a second set around them only costs room. The width stays,
-   because a flex item still has to have one for the tiling and the wrapping to
-   mean anything; it is the chrome that goes, not the layout. */
+/* A caption over a control strip, with no box of its own: the control already
+   has edges. The width stays so wrapping means something. */
 .filter-bar__clause {
   display: flex;
   flex: none;
@@ -25,11 +19,8 @@
   width: var(--filter-clause-width);
 }
 
-/* The field's name, written once per clause. It is a caption over the control
-   rather than a word inside it, so it stays small, dim, on one line, and close
-   enough to the strip to read as belonging to it. The trailing room is for the
-   remove badge, which straddles the strip's top corner just below and would
-   otherwise land on the end of a long name. */
+/* The field's name. The trailing room is for the remove badge, which straddles
+   the strip's top corner just below. */
 .filter-bar__field-label {
   overflow: hidden;
   padding-right: var(--space-lg);
@@ -39,32 +30,12 @@
   text-overflow: ellipsis;
 }
 
-/* ─── Removing a clause ───
-   Removing acts on the whole clause, not on any one segment, so it is pinned
-   to the corner of the strip instead of being given a place in the row: taken
-   out of flow against the strip and pulled out by a quarter of its own width,
-   it straddles the top-right corner of the control it removes and costs the
-   layout nothing. It is the last child of the strip, so it paints over the
-   segment underneath without needing a stacking order.
-
-   Three states, each committing more than the last. At rest it is only a red
-   glyph — no fill, no ring — so a badge sitting on top of another control
-   does not read as a stray smudge until the user is actually doing something
-   with it. Hovering takes the committed look, since hover is the state that
-   is telling the user "this is what clicking will do": a solid fill with the
-   page colour as the glyph, rung in the page colour so its own edge never
-   touches the control it sits on, then a second red ring outside that for
-   the outer border. The press itself steps back to a ring only, nothing
-   filled — the moment of commitment reads as lighter than the anticipation
-   of it, which is what makes the click register as an action rather than a
-   colour staying put. Scoped to the clause so it outweighs the primitive's
-   own single-class sizing and colours whatever order the stylesheets land
-   in.
-
-   Centred exactly on the strip's own corner point, not merely offset from
-   it: the badge is pulled out by half its OWN size on each axis, which is
-   what makes its centre — not its edge — land on the corner, regardless of
-   the badge's own diameter. */
+/* The remove badge acts on the whole clause, so it is pinned out of flow on the
+   strip's top-right corner, centred on the corner point (pulled out by half its
+   own size). Last child of the strip, so it paints over the segment beneath.
+   At rest a bare red glyph; hover takes the filled look; press steps back to a
+   ring. Scoped to the clause to outweigh the primitive's own styling whatever
+   order the stylesheets land in. */
 .filter-bar__clause .filter-bar__remove {
   position: absolute;
   top: calc(var(--badge-d-xs) / -2);
@@ -81,7 +52,7 @@
   transition: opacity var(--transition-fast), border-color var(--transition-fast);
 }
 
-/* Hover: the committed look — this is what clicking will do. */
+/* Hover: the committed look. */
 .filter-bar__clause .filter-bar__remove:hover:not(:disabled) {
   background: var(--c-danger);
   border-color: var(--c-danger);
@@ -90,8 +61,7 @@
   color: var(--c-bg);
 }
 
-/* Pressed (and keyboard focus, which gets no separate mouse-down state to
-   show the pressed look in): a ring only, stepping back from the hover fill. */
+/* Pressed, and keyboard focus: a ring only. */
 .filter-bar__clause .filter-bar__remove:active:not(:disabled),
 .filter-bar__clause .filter-bar__remove:focus-visible:not(:disabled) {
   background: transparent;
@@ -101,35 +71,27 @@
   color: var(--c-bg);
 }
 
-/* Fading with opacity keeps the badge in the layout (nothing shifts) and keeps
-   it reachable by keyboard, since tabbing to it triggers the clause's
-   :focus-within. The trigger is the whole clause, caption included, not just
-   the strip it is pinned to. */
+/* Opacity keeps the badge in the layout and keyboard-reachable. The trigger is
+   the whole clause, caption included. */
 .filter-bar__clause:hover .filter-bar__remove,
 .filter-bar__clause:focus-within .filter-bar__remove {
   opacity: 1;
 }
 
-/* ─── One clause, one control ───
-   [enable][operator][value] are three segments of a single strip rather than
-   three floating widgets: no gap between them, rounding only on the two outer
-   corners, and ONE hairline per seam. The seam is shared by having every
-   segment but the last drop its right border, so the next segment's own left
-   border is the divider — that keeps each control's focus and hover styling
-   working, which stripping the borders and drawing one around the group would
-   not. The strip fixes its height and every segment stretches into it, and it
-   is the frame the remove badge is pinned to. */
+/* [enable][operator][value] are three segments of one strip: no gap, rounding
+   only on the outer corners, one hairline per seam. Every segment but the last
+   drops its right border so the next segment's left border is the divider,
+   which keeps each control's focus and hover styling working. The strip fixes
+   the height and is the frame the remove badge is pinned to. */
 .filter-bar__group {
   position: relative;
   min-width: 0;
   height: var(--control-h-sm);
 }
 
-/* Leading segment. The Checkbox primitive draws no box of its own, so the
-   segment shape is added here; the inset fill separates "is this filter on"
-   from the comparison it is switching. Every segment rule below is scoped to
-   the group so it outweighs the primitive's own single-class styling whatever
-   order the stylesheets happen to land in. */
+/* Leading segment. The Checkbox primitive draws no box of its own. Segment
+   rules are scoped to the group to outweigh the primitive's own styling
+   whatever order the stylesheets land in. */
 .filter-bar__group .filter-bar__check {
   flex: none;
   gap: var(--space-xs);
@@ -152,16 +114,15 @@
   font-size: var(--text-sm);
 }
 
-/* Folding case is the default, so only the opt-in is marked — and with colour
-   rather than a second glyph, which would widen an icon-only button. */
+/* Folding case is the default, so only the opt-in is marked, with colour so
+   the icon-only button does not widen. */
 .filter-bar__group .filter-bar__operator-button--cased,
 .filter-bar__group .filter-bar__operator-button--cased:hover {
   color: var(--c-gold);
 }
 
-/* An operator that takes no operand renders no control, so it ends the strip:
-   it takes back the trailing edge, and the width the control would have had,
-   which is what keeps this clause the same size as the others. */
+/* An operator with no operand renders no control, so the button ends the strip
+   and takes the width the control would have had. */
 .filter-bar__group--no-control .filter-bar__operator-button {
   flex: 1;
   justify-content: center;
@@ -175,10 +136,9 @@
   min-width: 0;
 }
 
-/* Trailing segment: whatever the field kit rendered, which this composite only
-   reshapes from the outside — square on the side that meets the operator, and
-   filling the rest of the strip. The second selector reaches one level deeper
-   for the two-ended controls whose own wrapper carries no border (a range). */
+/* Trailing segment: whatever the field kit rendered, squared where it meets
+   the operator. The second selector reaches one level deeper for a range,
+   whose wrapper carries no border. */
 .filter-bar__group .filter-bar__control > *,
 .filter-bar__group .filter-bar__control > * > :first-child {
   flex: 1;
@@ -187,21 +147,13 @@
   border-bottom-left-radius: 0;
 }
 
-/* ─── One height, whatever the kind ───
-   Kits render whatever control their kind calls for — a text box, a spinner, a
-   dropdown trigger, a two-ended range — and those have different natural
-   heights, which is what made clauses of different kinds sit at different
-   sizes. The strip owns the height instead: every control fills the row
-   exactly and is trimmed to the small metrics to fit it, so two clauses side
-   by side match whatever they are filtering on. */
+/* Kit controls have different natural heights, so the strip owns the height
+   and every control fills it. */
 .filter-bar__group .filter-bar__control > * {
   height: 100%;
 }
 
-/* A two-ended control (a range) keeps both of its ends on the one row: they
-   stretch to the row rather than sitting at their own natural height, and
-   share the row's width, so this clause stays exactly as tall as its
-   neighbours. */
+/* A range keeps both ends stretched to the row. */
 .filter-bar__group .filter-bar__control > .flex {
   align-items: stretch;
 }
@@ -210,9 +162,7 @@
   min-width: 0;
 }
 
-/* The input tier has no small size of its own, so the small metrics are set
-   here, scoped to the strip — the height comes from the row, the padding and
-   the type size have to come from somewhere. */
+/* The input tier has no small size of its own, so the small metrics are set here. */
 .filter-bar__control .text-input,
 .filter-bar__control .number-input__field,
 .filter-bar__control .select-trigger,
@@ -227,17 +177,14 @@
   align-items: center;
 }
 
-/* Switched off: the comparison half reads inactive while the enable box stays
-   at full strength, since it is the way back. Muted rather than the disabled
-   opacity, because these controls really do stay editable — see
-   FilterClauseCard. */
+/* Switched off: the comparison reads inactive, the enable box stays at full
+   strength. Muted, not the disabled opacity, because the controls stay editable. */
 .filter-bar__clause--disabled .filter-bar__operator-button,
 .filter-bar__clause--disabled .filter-bar__control {
   opacity: var(--opacity-muted);
 }
 
-/* The add button carries no caption of its own, so it lines up with the bottom
-   edge of the strips beside it rather than floating at the top of the line. */
+/* No caption of its own, so it lines up with the bottom edge of the strips. */
 .filter-bar__add {
   align-self: flex-end;
 }
@@ -250,8 +197,7 @@
   box-shadow: var(--shadow-dropdown);
   z-index: var(--z-modal);
 
-  /* The portal layer this renders into sets pointer-events: none on itself so an
-     empty overlay never blocks the page underneath — this panel has to opt back in
-     or every click passes through to whatever is rendered behind it. */
+  /* The portal layer sets pointer-events: none on itself; this panel has to opt
+     back in or every click passes through. */
   pointer-events: auto;
 }

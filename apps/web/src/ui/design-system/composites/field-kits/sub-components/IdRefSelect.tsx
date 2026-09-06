@@ -3,12 +3,12 @@
  * The searchable picker an id reference gets once someone has told the kit what
  * the target collection holds.
  *
- * Two things it refuses to do quietly. A value that is in no option would
+ * Two things it refuses to do silently. A value that is in no option would
  * otherwise vanish behind the placeholder and read as "empty", so it is added
- * back as an option of its own — a reference that points at nothing is a fact
- * about the record, not something to hide. And the option list is only ever
+ * back as an option of its own, because a reference that points at nothing is a
+ * fact about the record, not something to hide. And the option list is only ever
  * read, never rebuilt here: the caller owns it, so an 800-row collection costs
- * one mapping there rather than one per keystroke in the search box.
+ * one mapping there instead of one per keystroke in the search box.
  */
 import { useMemo } from 'react';
 import { Select } from '../../../primitives/Select';

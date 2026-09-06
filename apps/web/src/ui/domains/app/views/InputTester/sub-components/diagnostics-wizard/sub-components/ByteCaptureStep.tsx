@@ -3,7 +3,7 @@
  * Step 3: releases the exclusive hold, then runs the byte-level capture body
  * against the controller and profile chosen in step 2. The capture body is
  * the restored HidCalibrationWizard components, driven straight into live
- * calibration via initialProfileId/initialHasGyro rather than through its
+ * calibration via initialProfileId/initialHasGyro instead of through its
  * own picker screen, since step 2 already resolved both.
  */
 import { forwardRef } from 'react';
@@ -35,7 +35,7 @@ const ByteCaptureStep = forwardRef<HidWizardHandle, ByteCaptureStepProps>((props
     <>
       <HoldStatusLine
         status={releaseStatus}
-        pendingText="Releasing the hold on every controller…"
+        pendingText="Releasing the hold on every controller..."
         doneText="The hold on this controller is dropped for the capture below."
         errorText="Couldn't release the hold. The capture below may stay empty."
       />

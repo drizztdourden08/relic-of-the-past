@@ -1,16 +1,16 @@
 /* @layer renderer-components @kind logic */
 /**
- * One entry as ordinary prose — the words, with every substitution standing
+ * One entry as ordinary prose. Just the words, with every substitution standing
  * where it will stand and nothing else.
  *
  * This is the reading view's whole content and the collapsed row's excerpt. It
  * runs the SHARED expansion in preview mode, the same call the fit measurement
- * makes, so the sentence read here is the sentence the box will hold rather than
+ * makes, so the sentence read here is the sentence the box will hold, not
  * a second interpretation of the stream.
  *
- * Expansion is strict by design — it throws on a reference the set has no
- * variable for — and a broken reference is exactly the state a translator needs
- * to see rather than a blank panel. So a failure falls back to a tolerant walk
+ * Expansion is strict by design and throws on a reference the set has no
+ * variable for. A broken reference is exactly the state a translator needs
+ * to see, not a blank panel. So a failure falls back to a tolerant walk
  * that shows the unresolved key in braces and leaves the rest of the line
  * readable. The validation badge is what states the problem; this only refuses
  * to hide the words around it.
@@ -18,8 +18,8 @@
  * Control codes contribute nothing: a pause draws no pixels, and a row marker or
  * a wait is structure, which the reading view deliberately does not show. A
  * bracketed name the catalog does NOT claim is a picture character of the
- * alphabet — it draws real ink, so it survives as its bracketed spelling rather
- * than being dropped with the codes.
+ * alphabet. It draws real ink, so it survives as its bracketed spelling instead
+ * of being dropped with the codes.
  */
 import { codeInfoFor, resolve } from '@shared/game/language';
 import type { Token, VariableIndex } from '@shared/game/language';
@@ -63,7 +63,7 @@ const proseOf = (tokens: Token[], index: VariableIndex): string => {
 /** The same prose, collapsed to one line and cut to `limit` characters. */
 const excerptOf = (tokens: Token[], index: VariableIndex, limit: number): string => {
   const line = proseOf(tokens, index).replace(/\s+/g, ' ').trim();
-  return line.length <= limit ? line : `${line.slice(0, limit).trimEnd()}…`;
+  return line.length <= limit ? line : `${line.slice(0, limit).trimEnd()}...`;
 };
 
 export { excerptOf, proseOf };

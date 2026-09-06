@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Light Calculator — Computes light contribution data for the shadow shader.
+ * Computes light contribution data for the shadow shader.
  * Handles color sampling from the game canvas and prepares uniform arrays.
  */
 

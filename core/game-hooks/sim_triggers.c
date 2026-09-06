@@ -17,7 +17,7 @@ static int SimTrigIsCurrentRoom(int room_id) {
 // ─── Door unlock ───
 // Sets a door's open bit exactly like the game does when the player spends a
 // small key on it: the room's SRAM word slot, plus the live word when the room
-// is loaded. `consume` spends one of the player's keys — the counterpart record
+// is loaded. `consume` spends one of the player's keys, so the counterpart record
 // of the SAME physical doorway in the adjacent room is opened with consume=0.
 EMSCRIPTEN_KEEPALIVE
 void WasmSimUnlockDoor(int room_id, int door_index, int consume) {
@@ -31,7 +31,7 @@ void WasmSimUnlockDoor(int room_id, int door_index, int consume) {
 }
 
 // ─── Door close ───
-// Clears a door's open bit — trap shutters slam shut again behind the player on
+// Clears a door's open bit, so trap shutters slam shut again behind the player on
 // walking into a section that still holds live kill-trigger enemies. Only ever
 // meaningful for shutter (kind 4) doors; key doors stay open once unlocked.
 EMSCRIPTEN_KEEPALIVE
@@ -45,19 +45,19 @@ void WasmSimCloseDoor(int room_id, int door_index) {
 
 // ─── Cell locks (big-key locks) ───
 // Room object 0x18 "Cell Lock" (dungeon.c:1696) is the keyhole plate sealing a
-// jail cell — the captive princess's door. It carries NO door-table record: the
+// jail cell, meaning the captive princess's door. It carries NO door-table record: the
 // drawer records it in dung_chest_locations, and the attr post-pass
 // (dungeon.c:4041) marks it with 0x8000, which is what OpenChestForItem reads to
-// treat the tile as a big-key lock rather than a chest (dungeon.c:5715). Opening
+// treat the tile as a big-key lock instead of a chest (dungeon.c:5715). Opening
 // one needs the dungeon's big key and sets the slot's chest-open bit;
 // `case 0x18` then draws nothing, so the tiles stay plain floor.
 //
-// Slots come from the room's static object data — read exactly like the chest
+// Slots come from the room's static object data, read exactly like the chest
 // scan (sim_queries.c) so remote rooms work and NO loaded-room state is touched;
 // rebuilding a room here would clobber the live dungeon globals every other
 // query reads. A chest bumps both counters (dungeon.c:1710) while a cell lock
 // advances only dung_num_bigkey_locks_x2 (dungeon.c:1697), so both walk one
-// shared slot sequence — mirrored below to recover each lock's slot.
+// shared slot sequence, mirrored below to recover each lock's slot.
 // Layout: status(1) then [count(1), pad(1)] then count records of 4 bytes:
 //   [slot(1), row(1), col(1), opened(1)]
 // Leading status byte: see WasmGetRoomChests in sim_queries.c (1 = gate open and room in range).
@@ -96,7 +96,7 @@ static int SimScanLockObjects(const uint8 *p, int off, int *chests_x2, int *lock
   }
 }
 
-// Gated on developer mode — see WasmGetRoomChests in sim_queries.c: the simulator subsystem sits
+// Gated on developer mode, as WasmGetRoomChests in sim_queries.c explains: the simulator subsystem sits
 // entirely behind dev tools, reads included, so the widget can inspect it outside a run too.
 EMSCRIPTEN_KEEPALIVE
 int WasmGetRoomCellLocks(int room_id) {
@@ -167,8 +167,8 @@ void WasmSimFollowerRescue(void) {
 
 // ─── Enemy-kill trigger ───
 // "Virtually kill" a room's meaningful enemy: marks the room's SRAM word with
-// the drop-taken bit (0x400 — key/big-key drops) or the enemies-cleared bit
-// (0x800 — shutter triggers, item_id 0xff), and grants the drop through the
+// the drop-taken bit (0x400, for key/big-key drops) or the enemies-cleared bit
+// (0x800, for shutter triggers, item_id 0xff), and grants the drop through the
 // normal receive path so counters/flags update exactly like a real kill.
 EMSCRIPTEN_KEEPALIVE
 void WasmSimKillDrop(int room_id, int item_id) {
@@ -183,7 +183,7 @@ void WasmSimKillDrop(int room_id, int item_id) {
 }
 
 // ─── Scripted event triggers ───
-// Two milestones the run reaches by interacting with a sprite rather than by
+// Two milestones the run reaches by interacting with a sprite instead of by
 // opening anything, so nothing else in the save records them.
 
 // The throne room's movable mantle (Sprite_EE_MovableMantle, sprite_main.c:1335)

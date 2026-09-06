@@ -7,8 +7,8 @@ import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/s
 import { describeDataset } from '../dataset-guard';
 
 // Branch detection is only worth anything against the real variants, so these
-// pull the shapes out of the live dataset instead of fixing them in a fixture —
-// if a variant is added or dropped upstream, these tests see it.
+// pull the shapes out of the live dataset instead of fixing them in a fixture.
+// If a variant is added or dropped upstream, these tests see it.
 
 const connections = all('connection');
 const schema = createSchemaIndex(buildSchema(connections));
@@ -36,11 +36,11 @@ const keysShown = (field: FieldDescriptor, value: unknown): string[] =>
     .map((child) => child.path.slice(child.path.lastIndexOf('.') + 1))
     .sort();
 
-describeDataset('union branch detection — a requirement expression', () => {
+describeDataset('union branch detection on a requirement expression', () => {
   const field = fieldAt('requirements');
   const variants = variantsOf('requirements');
 
-  it('is genuinely a union with more than one real branch in the data', () => {
+  it('is a union with more than one real branch in the data', () => {
     expect(field.kind).toBe('union');
     expect(variants.size).toBeGreaterThanOrEqual(2);
     expect([...variants.keys()]).toContain('itemId');
@@ -66,29 +66,21 @@ describeDataset('union branch detection — a requirement expression', () => {
   });
 });
 
-describeDataset('union branch detection — placement is no longer a union', () => {
-  // The connection-model migration replaced the old `{ at: 'side' | 'area', ... }`
-  // discriminated placement with one plain shape (`form`/`rect`/`tiles`, `side`
-  // only on a border point) — a genuine object with an optional field, not a
-  // union of disjoint branches, so `buildSchema` now correctly infers it as
-  // `object` rather than `union` (see infer-kind.ts's isKeySubsetChain, which
-  // exists for exactly this "additive optional fields" shape). Pinned here so
-  // a future placement change that reintroduces real branch disjunction shows
-  // up as a real diff instead of silently staying misclassified.
+describeDataset('union branch detection now that placement is no longer a union', () => {
+  // Placement is one plain shape now (`side` only on a border point): an object
+  // with an optional field, not a union, so `buildSchema` infers `object` (see
+  // infer-kind.ts's isKeySubsetChain). Pinned so a future real disjunction
+  // shows up as a diff.
   it('infers as an object, not a union', () => {
     expect(fieldAt('placement').kind).toBe('object');
   });
 });
 
-describeDataset('union branch detection — the same union shape in another collection', () => {
-  // `check.requirements` is the identical Requirement DSL as `connection.requirements`
-  // (shared/game/data/types/check.ts, types/connection.ts) — a real test that branch
-  // detection isn't accidentally keyed to one collection's derived schema.
-  //
-  // (item.weapon.range was the nested case here before the object-vs-union inference
-  // was tightened — it turned out to be one shape with additive optional fields, a
-  // strict subset chain, not a real union, so it now correctly infers as `object` and
-  // stopped being a union test case. See infer-kind.ts's isKeySubsetChain.)
+describeDataset('union branch detection on the same union shape in another collection', () => {
+  // `check.requirements` is the same Requirement DSL as `connection.requirements`,
+  // so branch detection is not keyed to one collection's schema.
+  // (item.weapon.range was the nested case before the object-vs-union inference
+  // was tightened; it is a subset chain, so it now infers as `object`.)
   const nested = createSchemaIndex(buildSchema(all('check')));
   const field = nested.byPath('requirements');
 
@@ -104,7 +96,7 @@ describeDataset('union branch detection — the same union shape in another coll
   });
 });
 
-describeDataset('union branch detection — where it refuses to guess', () => {
+describeDataset('union branch detection where it refuses to guess', () => {
   const field = fieldAt('requirements');
 
   it('resolves nothing for an absent value', () => {
@@ -122,7 +114,7 @@ describeDataset('union branch detection — where it refuses to guess', () => {
     expect(detectUnionBranch(field, { somethingElse: 1 }).status).toBe('unmatched');
   });
 
-  it('reports keys it does not describe rather than dropping them silently', () => {
+  it('reports keys it does not describe instead of dropping them silently', () => {
     const branch = detectUnionBranch(field, { itemId: 'item-001', future: 7 });
     expect(branch.status).toBe('resolved');
     expect(branch.extraKeys).toEqual(['future']);

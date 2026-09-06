@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind hook */
 /**
- * `grantedItems` for the current pass — every raw item id the native receive
+ * `grantedItems` for the current pass, meaning every raw item id the native receive
  * path has granted this session, resolved against the live receive tally and
  * the tracker's current owned set. `fromInventoryDelta` is always false here:
  * every id in the session set came off the direct receive callback

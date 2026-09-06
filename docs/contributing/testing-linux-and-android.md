@@ -18,8 +18,8 @@ npm run push:android -- --apk <path>  # install a prebuilt APK
 
 Put ROMs in `./test-roms` (gitignored; created automatically). On each deploy:
 
-- **Linux** — mounted into the VM at `~/test-roms`.
-- **Android** — pushed to `/sdcard/Download/test-roms` (open via the in-app file picker).
+- **Linux:** mounted into the VM at `~/test-roms`.
+- **Android:** pushed to `/sdcard/Download/test-roms` (open via the in-app file picker).
 
 ## Set up the Linux VM
 

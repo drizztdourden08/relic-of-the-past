@@ -1,6 +1,6 @@
 /* @layer renderer-other @kind logic */
 /**
- * Capacitor FileStore — app-private storage via the Filesystem plugin
+ * Capacitor FileStore, backed by app-private storage via the Filesystem plugin
  * (Directory.Data). Paths are the same logical paths used on Electron (relative
  * to the data root); binary crosses the bridge as base64.
  */

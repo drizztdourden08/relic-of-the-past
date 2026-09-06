@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
 /**
- * One sounding buffer. Wraps an AudioBufferSourceNode and, crucially, can report how far
- * into the audio it currently is — that read is what makes resume possible, since Web Audio
+ * One sounding buffer. Wraps an AudioBufferSourceNode and can report how far
+ * into the audio it currently is. That read is what makes resume possible, since Web Audio
  * exposes no playback position of its own.
  *
  * A voice asked to fade gets its own gain node, so two passes of a loop can overlap and move
@@ -24,7 +24,7 @@ interface VoiceOptions {
    * `.wav` or `.mp3` layer the intro-then-loop structure only MSU-1 `.pcm` can carry in its own
    * header: the point lives in the manifest instead of the file. Undefined defers to the file.
    *
-   * Seconds rather than samples on purpose. A manifest loop point is defined at 44100 Hz whatever
+   * Seconds, not samples, on purpose. A manifest loop point is defined at 44100 Hz whatever
    * the file's own rate is, while a `.pcm` header's is in that file's rate, so carrying both as
    * "samples" invites converting one against the wrong rate. The caller converts; this just uses it.
    */

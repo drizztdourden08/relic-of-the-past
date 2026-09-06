@@ -1,18 +1,13 @@
 /* @layer shared-input @kind data */
 /**
- * Canonical button indices for the input layer.
+ * Canonical button indices for the input layer. Presets index into the positional button array
+ * the native layer emits: index 4 is the same physical place on every pad, whatever the vendor
+ * prints on it. The previous scheme used bare numbers from two different sources (browser
+ * gamepad order, per-device byte layout), which silently meant different buttons once the
+ * source changed.
  *
- * Every preset's default bindings index into the button array the native input
- * layer emits, and that array is positional: index 4 means the same physical
- * place on every pad, whatever the vendor prints on it. Naming the indices here
- * keeps presets readable and, more importantly, keeps them honest. The previous
- * scheme used bare numbers inherited from two different sources (the browser
- * gamepad ordering for some pads, a per-device byte layout for others), and
- * those numbers silently meant different buttons once the source changed.
- *
- * Positional, not lettered: SOUTH is the bottom face button, EAST the right one,
- * and so on. On one vendor's pad the bottom button is labelled A, on another it
- * is labelled B. Bind by position and both land in the right place.
+ * Positional, not lettered: SOUTH is the bottom face button, EAST the right one, and so on.
+ * One vendor labels the bottom button A, another B; bind by position and both land right.
  */
 
 const SDL_BUTTON = {
@@ -44,10 +39,7 @@ const SDL_BUTTON = {
   MISC6: 25,
 } as const;
 
-/**
- * Trigger axes. Triggers are analog and arrive as axes, not buttons, so a
- * preset binding a trigger uses these rather than a SDL_BUTTON entry.
- */
+/** Trigger axes. Triggers are analog and arrive as axes, not buttons, so a preset binding a trigger uses these, not a SDL_BUTTON entry. */
 const SDL_AXIS = {
   LEFT_X: 0,
   LEFT_Y: 1,
@@ -57,11 +49,7 @@ const SDL_AXIS = {
   RIGHT_TRIGGER: 5,
 } as const;
 
-/**
- * The families the input layer reports, straight from SDL. Declared here with
- * the positions so there is one place that says what a controller can be, and
- * nothing downstream can drift from it.
- */
+/** The families the input layer reports, straight from SDL. Declared beside the positions so one place says what a controller can be. */
 const SDL_GAMEPAD_TYPES = [
   'unknown', 'standard', 'xbox360', 'xboxone',
   'ps3', 'ps4', 'ps5',

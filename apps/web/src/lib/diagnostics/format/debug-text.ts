@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
 /**
  * Assembles the full debug-info block. `system` is null on any host without a main
- * process (web, mobile) — the host sections simply drop out and the renderer-side
+ * process (web, mobile), so the host sections drop out and the renderer-side
  * ones still carry the report.
  */
 import type { SystemDiagnostics } from '@shared/types/diagnostics';

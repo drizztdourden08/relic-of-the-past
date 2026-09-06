@@ -1,13 +1,13 @@
 /* @layer shared-game @kind logic */
 /**
  * Identifies a raw flag diff as one of the known checks, using the check records'
- * own gameId. This is IDENTIFICATION only — detection already happened via
+ * own gameId. This is IDENTIFICATION only. Detection already happened via
  * byte-diffing. A diff that matches no known check yields nothing, so the recorder
  * can propose a dataset fix.
  *
  * Every matcher returns the RECORD, so the caller holds the check's id. They used
  * to return `randomizerName`, which a lookup table then had to turn back into a
- * record — and that table was keyed by id AND name at once, so with 11 dungeons
+ * record. That table was keyed by id AND name at once, so with 11 dungeons
  * each holding a "Big Chest" the later name won and 57 checks became unreachable:
  * one dungeon's chest resolved to another dungeon's record, and its key with it.
  */
@@ -51,7 +51,7 @@ const matchProgress = (diff: FlagDiff): CheckRecord | undefined => {
  * Progression events are THRESHOLD reads of the progress buffer, not bitmasks
  * (sram_progress_indicator 1 = post-uncle, 2 = the rescue completed). A diff
  * names an event only when it CROSSES that threshold, and the highest crossed
- * threshold wins — reaching 2 is the COMPLETED rescue, not the started one.
+ * threshold wins. Reaching 2 is the COMPLETED rescue, not the started one.
  */
 const matchEvent = (diff: FlagDiff): CheckRecord | undefined => {
   const crossed = ALL_CHECKS

@@ -34,9 +34,9 @@ A visual inspector for the game's sprite system:
 
 A controller diagnostic panel, also covered in [Input & Controllers](input-controllers.md):
 
-- **Byte inspector** — raw gamepad input values in real time
-- **Vibration tester** — sends rumble pulses to verify haptics
-- **Input recording** — captures sequences for replay and debugging
+- **Byte inspector:** raw gamepad input values in real time
+- **Vibration tester:** sends rumble pulses to verify haptics
+- **Input recording:** captures sequences for replay and debugging
 
 ---
 

@@ -17,10 +17,8 @@ import {
 } from '../../apps/web/src/ui/design-system/primitives/PositionInput/behavior/draft-rules';
 import type { PositionAxis, PositionInputProps } from '../../apps/web/src/ui/design-system/primitives/PositionInput';
 
-// There is no jsdom or testing-library in this repo, so the interaction rules
-// are tested where they live — as the pure functions the hook is built from —
-// and the markup is covered by SSR smoke tests. Typing, focus and the way the
-// pair looks grouped are NOT covered here and need the running app.
+// No jsdom: the interaction rules are tested as the pure functions the hook is
+// built from, the markup by SSR. Typing and focus need the running app.
 
 const GRID: PositionAxis = { min: 0, max: 63 };
 const SIGNED: PositionAxis = { min: -8, max: 8 };
@@ -37,7 +35,7 @@ const render = (props: Partial<PositionInputProps> = {}): string =>
 
 const attrs = (markup: string): string[] => markup.match(/<input[^>]*>/g) ?? [];
 
-describe('bounds — clamping each end of an axis', () => {
+describe('bounds clamp each end of an axis', () => {
   it('leaves a value inside the range alone', () => {
     expect(clampAxis(12, GRID)).toBe(12);
     expect(clampAxis(0, GRID)).toBe(0);
@@ -84,7 +82,7 @@ describe('bounds — clamping each end of an axis', () => {
   });
 });
 
-describe('bounds — nothing that is not a number gets through', () => {
+describe('bounds let nothing but a number through', () => {
   it('never calls a non-number valid', () => {
     for (const bad of [Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY]) {
       expect(isValidForAxis(bad, GRID)).toBe(false);
@@ -108,14 +106,14 @@ describe('bounds — nothing that is not a number gets through', () => {
   });
 });
 
-describe('typing — what a keystroke does', () => {
+describe('what typing a keystroke does', () => {
   it('sends a value that is already in range straight up', () => {
     expect(resolveTyped(5, GRID)).toEqual({ kind: 'emit', value: 5 });
     expect(resolveTyped(0, GRID)).toEqual({ kind: 'emit', value: 0 });
     expect(resolveTyped(63, GRID)).toEqual({ kind: 'emit', value: 63 });
   });
 
-  it('holds a value past either bound rather than snapping mid-word', () => {
+  it('holds a value past either bound instead of snapping mid-word', () => {
     expect(resolveTyped(64, GRID)).toEqual({ kind: 'hold', draft: 64 });
     expect(resolveTyped(-1, GRID)).toEqual({ kind: 'hold', draft: -1 });
   });
@@ -126,7 +124,7 @@ describe('typing — what a keystroke does', () => {
   });
 });
 
-describe('committing — what leaving the field does', () => {
+describe('what committing does when you leave the field', () => {
   it('does nothing at all when no edit was in flight', () => {
     expect(settleDraft(SETTLED, GRID, 3)).toBe(null);
   });
@@ -147,7 +145,7 @@ describe('committing — what leaving the field does', () => {
   });
 });
 
-describe('display — what the field shows while it is being edited', () => {
+describe('what the field displays while it is being edited', () => {
   it('shows the committed value with no draft in flight', () => {
     expect(displayValue(SETTLED, 4)).toBe(4);
   });
@@ -161,12 +159,12 @@ describe('display — what the field shows while it is being edited', () => {
     expect(displayValue(Number.NaN, 4)).toBe('');
   });
 
-  it('shows nothing rather than NaN when the committed value itself is broken', () => {
+  it('shows nothing instead of NaN when the committed value itself is broken', () => {
     expect(displayValue(SETTLED, Number.NaN)).toBe('');
   });
 });
 
-describe('rendering — the markup a screen binds to', () => {
+describe('rendering the markup a screen binds to', () => {
   it('renders two fields as one labelled group', () => {
     const markup = render({ label: 'Grid position', x: GRID, y: GRID });
     expect(attrs(markup)).toHaveLength(2);
@@ -217,12 +215,12 @@ describe('rendering — the markup a screen binds to', () => {
     expect(second).toContain('value="34"');
   });
 
-  it('renders an empty field rather than NaN for a broken value', () => {
+  it('renders an empty field instead of NaN for a broken value', () => {
     const [first] = attrs(render({ value: { x: Number.NaN, y: 0 } }));
     expect(first).toContain('value=""');
   });
 
-  it('makes both axes inert when disabled — fields and spinners alike', () => {
+  it('makes both axes inert when disabled, including fields and spinners', () => {
     const markup = render({ disabled: true, x: GRID, y: GRID });
     expect(attrs(markup).every((tag) => tag.includes('disabled'))).toBe(true);
     // Two chevrons per axis, all four disabled with the fields.

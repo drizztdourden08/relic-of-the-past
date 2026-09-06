@@ -1,11 +1,8 @@
 /* @layer renderer-components @kind hook */
 /**
- * Lays out entries for preview, on demand and cached.
- *
- * Measuring a line means resolving glossary references and walking every glyph
- * through the language's width table, so it is done once per token array and
- * kept until that array changes. Only the entries a caller asks for are
- * measured, which keeps a set of a few hundred lines cheap to scroll.
+ * Lays out entries for preview, on demand and cached per token array.
+ * Measuring resolves references and walks every glyph through the width table,
+ * so only the entries a caller asks for are measured.
  */
 import { useCallback, useMemo, useRef } from 'react';
 import { measureRows, splitBlocks, splitLines, splitScreens } from '@shared/game/language';
@@ -14,11 +11,7 @@ import type {
 } from '@shared/game/language';
 import type { GlyphMetrics, RowFit, ScreenFit } from '@shared/game/language/layout/types';
 
-/**
- * One entry, measured every way the interface reads it: as rows for the fit
- * verdict, as screens for a box preview, and as the lines and BLOCKS the
- * collapsed row counts and the editor groups by.
- */
+/** One entry measured as rows (fit verdict), screens (box preview), lines and blocks (row counts, editor grouping). */
 type EntryLayout = {
   rows: RowFit[];
   screens: ScreenFit[];
@@ -38,8 +31,7 @@ type LayoutLookup = {
 };
 
 const useEntryLayout = (metrics: GlyphMetrics | null, glossary: GlossaryTerm[]): LayoutLookup => {
-  // Keyed on the token array's identity: every edit produces a new array, so a
-  // stale entry can never be served, and unchanged entries never re-measure.
+  // Keyed on token array identity: every edit produces a new array.
   const cache = useRef(new WeakMap<Token[], EntryLayout>());
 
   // A new glossary or font means every cached measurement is out of date.

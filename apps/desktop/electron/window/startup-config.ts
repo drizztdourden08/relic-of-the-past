@@ -2,21 +2,17 @@
 /**
  * Test/automation startup flags, parsed from process.argv:
  *
- *   --window-size[=WxH]  Open at a fixed size (default 1280x800) instead of the saved
- *                        one, and stay there — the saved geometry is not applied.
- *   --widgets=a,b,c      Open these widgets docked (shrinking the game area) with
- *                        their default side, on top of a clean layout.
- *   --fresh              Ignore the saved widget layout, start with nothing open
- *                        (no home menu), and do NOT persist layout/window changes.
+ *   --window-size[=WxH]  Open at a fixed size (default 1280x800); saved geometry is not applied.
+ *   --widgets=a,b,c      Open these widgets docked on their default side, on a clean layout.
+ *   --fresh              Ignore the saved widget layout, open nothing (no home menu), and
+ *                        do NOT persist layout/window changes.
  *   --muted              Mute the app once it is up, exactly as the speaker button does.
  *   --sound              The opposite signal, for a profile that was left muted.
- *   --auto-start         Boot the game with the active profile and stop there, so the
- *                        game's own title screen comes up and the profile's SRAM files
- *                        are there to continue from. No state is loaded — that is what
- *                        --auto-state is for.
+ *   --auto-start         Boot the game with the active profile to its title screen. No
+ *                        state is loaded; that is what --auto-state is for.
  *
- * Window size is consumed in the main process (create-window); widgets/fresh/muted are
- * forwarded to the renderer via webPreferences.additionalArguments.
+ * Window size is consumed in the main process (create-window); the rest are forwarded
+ * to the renderer via webPreferences.additionalArguments.
  */
 
 import { isAutomationLaunch, parseInstanceConfig } from '../instance';
@@ -51,29 +47,24 @@ const startupRendererArgs = (config: StartupConfig): string[] => {
   const args: string[] = [];
   if (config.fresh) args.push('--startup-fresh');
   if (config.widgets.length > 0) args.push(`--startup-widgets=${config.widgets.join(',')}`);
-  // Muting is the app's own setting, so --muted travels to the renderer like any other
-  // renderer-bound flag rather than being imposed on the window from outside. One
-  // mechanism for every launch shape: the volume the app starts at, which its own
-  // control then owns.
+  // Muting is the app's own setting: --muted sets the starting volume, which the
+  // in-app control then owns, instead of being imposed on the window from outside.
   if (process.argv.includes('--muted')) args.push('--startup-muted');
   if (process.argv.includes('--sound')) args.push('--startup-sound');
-  // Starting the game is a renderer action (it owns the profile and the module), so the
-  // flag travels rather than being acted on here.
+  // Starting the game is a renderer action (it owns the profile and the module).
   if (process.argv.includes('--auto-start')) args.push('--startup-auto-start');
-  // The renderer process does not inherit the main process's argv, so --instance and
-  // --profile have to be forwarded explicitly like every other renderer-bound flag.
+  // The renderer does not inherit main's argv, so --instance and --profile are forwarded.
   const instance = parseInstanceConfig();
   if (instance.name) args.push(`--startup-instance=${instance.name}`);
   if (instance.profile) args.push(`--startup-profile=${instance.profile}`);
-  // The renderer needs the automation verdict too — it owns the app.json write.
+  // The renderer owns the app.json write, so it needs the automation verdict too.
   if (isAutomationLaunch()) args.push('--startup-automation');
   return args;
 };
 
 /**
  * Test/automation launches must not persist window or layout state over the user's.
- * Delegates to the one automation predicate, so every automation flag is covered —
- * not just the two that happened to be checked here first.
+ * Delegates to the one automation predicate so every automation flag is covered.
  */
 const isEphemeralLaunch = (): boolean => isAutomationLaunch();
 

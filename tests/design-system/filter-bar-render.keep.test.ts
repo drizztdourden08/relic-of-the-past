@@ -9,18 +9,12 @@ import { OperatorMenu } from '../../apps/web/src/ui/design-system/composites/Fil
 import type { FieldDescriptor, FieldKind } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
 import type { FilterClause } from '../../apps/web/src/ui/design-system/data/filter/clause';
 
-// There is no jsdom or testing-library in this repo, so these are SSR smoke
-// tests, matching tests/design-system/field-kit-render.test.ts: they prove
-// each composite renders without throwing. Opening the operator dropdown,
-// opening the "+ Add filter" picker, and clicking a real option are NOT
-// covered — there is no browser in this pass.
+// SSR smoke tests (no jsdom in this repo): each composite renders without
+// throwing. Dropdowns, the "+ Add filter" picker and clicks need a browser.
 //
-// FilterBar itself is intentionally NOT imported here: its "+ Add filter"
-// button reuses DataTable's FieldPicker sub-component, which had not landed
-// in this repo at the time this test was written, so importing FilterBar
-// would fail module resolution. FilterClauseCard and OperatorMenu are
-// everything FilterBar assembles other than that one button, and both are
-// covered in full below.
+// FilterBar itself is not imported: its "+ Add filter" button reuses
+// DataTable's FieldPicker, which had not landed when this was written.
+// FilterClauseCard and OperatorMenu are everything else it assembles.
 
 const field = (kind: FieldKind, extra: Partial<FieldDescriptor> = {}): FieldDescriptor => ({
   path: 'sample', label: 'Sample', kind, optional: false, ...extra,
@@ -67,7 +61,7 @@ const renderOperatorMenu = (descriptor: FieldDescriptor, op: string, caseSensiti
     field: descriptor, op, caseSensitive, onChange: () => undefined,
   }));
 
-describe('FilterClauseCard — renders across every field kind', () => {
+describe('FilterClauseCard renders across every field kind', () => {
   for (const kind of KINDS) {
     const descriptor = DESCRIPTORS[kind];
 
@@ -106,11 +100,9 @@ describe('FilterClauseCard — renders across every field kind', () => {
   });
 });
 
-// The merged look itself (one seamless strip, the × fading in on hover, the
-// greyed-out treatment) is CSS, and there is no browser in this pass. What is
-// checkable here is the markup those rules hang off: the classes have to be
-// present, and keyed off the right state.
-describe('FilterClauseCard — the hooks the merged-strip styling needs', () => {
+// The merged look is CSS. What is checkable is the markup those rules hang
+// off: the classes, keyed off the right state.
+describe('FilterClauseCard: the hooks the merged-strip styling needs', () => {
   const descriptor = field('string');
 
   it('wraps the enable box, the operator and the control in one group', () => {
@@ -133,7 +125,7 @@ describe('FilterClauseCard — the hooks the merged-strip styling needs', () => 
       .toContain('filter-bar__clause--disabled');
   });
 
-  it('leaves a disabled clause\'s control in the markup, editable rather than inert', () => {
+  it('leaves a disabled clause\'s control in the markup, editable instead of inert', () => {
     const markup = renderClause(descriptor, {
       ...createClause(descriptor.path, 'contains', 'x'), enabled: false,
     });
@@ -141,18 +133,15 @@ describe('FilterClauseCard — the hooks the merged-strip styling needs', () => 
     expect(markup).not.toContain('disabled=""');
   });
 
-  it('always renders the remove button — hiding it until hover is the stylesheet\'s job', () => {
+  it('always renders the remove button, because hiding it until hover is the stylesheet\'s job', () => {
     expect(renderClause(descriptor, createClause(descriptor.path, 'contains', 'x')))
       .toContain('aria-label="Remove filter on Sample"');
   });
 });
 
-// The layout itself — whether the clauses really wrap, whether the badge fades
-// in on hover and lands on the strip's corner, whether every clause lands at
-// the same height — is CSS, and there is no browser in this pass. What is
-// checkable is that the structure those rules hang off is built the same way
-// for every kind of control, from a plain text box to a two-ended range.
-describe('FilterClauseCard — the compact clause layout', () => {
+// The layout is CSS. What is checkable is that the structure is built the same
+// way for every kind of control, from a text box to a two-ended range.
+describe('FilterClauseCard: the compact clause layout', () => {
   const CARDS: readonly (readonly [string, FieldDescriptor, string])[] = [
     ['text', field('string'), 'contains'],
     ['a number', field('number'), 'eq'],
@@ -192,10 +181,8 @@ describe('FilterClauseCard — the compact clause layout', () => {
       .toContain('aria-label="Apply the Sample filter"');
   });
 
-  // The badge is pinned to the strip's top-right corner by the stylesheet,
-  // which can only reach it from inside the strip — hence the position in the
-  // markup. Being last there is also what puts it on top of the segment it
-  // overlaps without a stacking order, and what keeps it the last tab stop.
+  // The badge is inside the strip so the stylesheet can pin it to the corner.
+  // Being last also puts it on top without a stacking order and last in tab order.
   it('puts the remove badge inside the strip, past the control it sits on', () => {
     const markup = renderRow(field('string'), 'contains');
     const strip = markup.slice(markup.indexOf('filter-bar__group'));
@@ -208,19 +195,19 @@ describe('FilterClauseCard — the compact clause layout', () => {
     expect(strip.indexOf('filter-bar__remove')).toBeGreaterThan(strip.indexOf('filter-bar__group'));
   });
 
-  it('draws the badge with the house close glyph rather than a thin ×', () => {
+  it('draws the badge with the house close glyph instead of a thin ×', () => {
     expect(renderRow(field('string'), 'contains')).toContain('✕');
   });
 });
 
-describe('OperatorMenu — icon-only button, text stays in the dropdown', () => {
+describe('OperatorMenu has an icon-only button, with the text in the dropdown', () => {
   for (const kind of KINDS) {
     it(`${kind}: renders without throwing`, () => {
       expect(() => renderOperatorMenu(DESCRIPTORS[kind], defaultOperatorFor(kind))).not.toThrow();
     });
   }
 
-  it('shows only the glyph as visible content — the label lives in aria-label, not as text', () => {
+  it('shows only the glyph as visible content, so the label lives in aria-label, not as text', () => {
     const markup = renderOperatorMenu(field('number'), 'gte');
     // The label is expected in the accessible name (screen-reader only);
     // the icon-only requirement is about VISIBLE content, so strip that
@@ -236,7 +223,7 @@ describe('OperatorMenu — icon-only button, text stays in the dropdown', () => 
       .toContain('aria-label="Filter operator: starts with"');
   });
 
-  it('marks the button — with a class and in the label — only when case matters', () => {
+  it('marks the button with a class and in the label, but only when case matters', () => {
     const plain = renderOperatorMenu(field('string'), 'contains');
     expect(plain).not.toContain('filter-bar__operator-button--cased');
     expect(plain).toContain('aria-label="Filter operator: contains"');

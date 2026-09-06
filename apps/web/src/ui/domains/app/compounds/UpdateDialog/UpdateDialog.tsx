@@ -48,7 +48,7 @@ const UpdateDialog = (props: UpdateDialogProps) => {
   const notesHtml = useMemo(() => (notes ? renderNotes(notes) : ''), [notes]);
   const busy = status === 'downloading' || status === 'ready';
 
-  // Follows the picker rather than the offered update, so switching rows re-answers it.
+  // Follows the picker, not the offered update, so switching rows re-answers it.
   // Reinstalling the running version is the one case with nothing to say.
   const saveStates = chosen?.saveStates ?? info?.saveStates ?? null;
   const saveStateNote = saveStates && !chosen?.installed

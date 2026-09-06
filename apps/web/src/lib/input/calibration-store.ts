@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 /**
- * Manages HID device calibration data — stick and trigger profiles.
+ * Manages HID device calibration data for stick and trigger profiles.
  */
 
 import type { DeviceStickCalibration, TriggerCalibration } from './stick-calibration';

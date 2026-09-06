@@ -2,16 +2,13 @@
 /**
  * Where a panel sits relative to the element that opens it.
  *
- * A plain function of the anchor's rectangle: hang below it with a gap, or
- * flip above once there is more room up there. Kept apart from the anchor
- * tracker because that is what calls it again on every scroll without any of
- * this needing to know a scroll happened.
+ * A plain function of the anchor's rectangle: hang below it with a gap, or flip
+ * above once there is more room up there. Kept apart from the anchor tracker,
+ * which calls it again on every scroll without this needing to know.
  *
- * The three numbers that make one caller's panel behave differently from
- * another's — how much headroom below is still "enough", the gap to the
- * anchor, and the narrowest the panel is allowed to get — are supplied by the
- * caller rather than hardcoded, so this one function serves every anchored
- * panel in the design system instead of each owning a near-identical copy.
+ * Three numbers vary per caller: how much headroom below is still "enough", the
+ * gap to the anchor, and the narrowest the panel may get. The caller supplies
+ * them, so one function serves every anchored panel in the design system.
  */
 
 interface DropPanelPosition {

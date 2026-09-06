@@ -1,8 +1,8 @@
 /* @layer renderer-widgets @kind component */
 /**
- * Review controls for the record currently shown below the collection tabs —
- * the id and its two timestamps lead, per the plan: a reviewer needs to know
- * WHAT this is and WHEN it was last touched before reading a status pill.
+ * Review controls for the record currently shown below the collection tabs.
+ * The id and its two timestamps lead: a reviewer needs to know WHAT this is
+ * and WHEN it was last touched before reading a status pill.
  */
 import { Box, Select, Text, Textarea } from '@ds/primitives';
 import { enumerationFor } from '@shared/game/data';
@@ -42,7 +42,7 @@ const ReviewControls = (props: ReviewControlsProps) => {
       <Textarea
         value={entry.note}
         onChange={(e) => setReviewNote(recordId, e.target.value)}
-        placeholder="Note…"
+        placeholder="Note..."
         rows={2}
       />
     </Box>

@@ -1,8 +1,8 @@
 /* @layer renderer-hud @kind component */
 /**
- * HudUnavailableNotice — replaces the enhanced main HUD when it can't render its
- * sprites: the Modern style (still WIP) or the Vanilla style without extracted
- * sprites for the active ROM. Plain HTML (no sprites), purely informational.
+ * Replaces the main HUD overlay when it can't render its sprites: the Modern
+ * style (still WIP) or the Vanilla style without extracted sprites for the
+ * active ROM. Plain HTML (no sprites), informational only.
  */
 import { Box } from '../../../../design-system/primitives/Box';
 import { Text } from '../../../../design-system/primitives/Text';

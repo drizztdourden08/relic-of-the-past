@@ -1,20 +1,11 @@
 /* @layer renderer-app @kind logic */
 /**
- * The reading half of the id-reference handoff, and the sibling of
- * `id-ref-options`.
- *
- * A table column can be told to show a field of the record it POINTS AT instead
- * of the id — "Area" reading as a name rather than `area-008`. The table can
- * ask for that and can remember the choice, but it cannot answer either half of
- * it: which fields the other collection has, and what one of its records holds.
- * Both are dataset facts, so both live here and are injected, which is the same
- * bargain the editor's option lookup strikes next door.
- *
- * Two things are kept rather than recomputed. The offerable field list is
- * derived from a collection's rows, and the rows are module-level and never
- * change, so it is built once per collection. The by-id index is the same
- * story, and it matters more: without it every cell in a nine-hundred-row table
- * would scan the whole target collection on every render.
+ * The reading half of the id-reference handoff (sibling of `id-ref-options`).
+ * A table column can show a field of the record it points at instead of the
+ * id; which fields exist and what a record holds are dataset facts, so they
+ * are answered here and injected. Field lists and the by-id index are cached
+ * per collection: the rows never change, and without the index every cell in
+ * a nine-hundred-row table would scan the target collection on every render.
  */
 import { buildSchema, getPath } from '@ds/data';
 import { COLLECTION_SOURCES } from './collection-sources';
@@ -24,7 +15,7 @@ import type { FieldDescriptor } from '@ds/data';
 import type { IdRefTargetField } from '@ds/composites/DataTable';
 import type { InspectorRow } from '../DataInspector.type';
 
-/** Container kinds address nothing on their own — only their leaves do. */
+/** Container kinds address nothing on their own. Only their leaves do. */
 const CONTAINER_KINDS: readonly FieldDescriptor['kind'][] = ['object', 'union', 'array'];
 
 const NO_FIELDS: readonly IdRefTargetField[] = [];
@@ -36,11 +27,7 @@ const rowCache = new Map<EntityKind, ReadonlyMap<string, InspectorRow>>();
 const asEntityKind = (value: string): EntityKind | undefined =>
   ENTITY_KINDS.find(kind => kind === value);
 
-/**
- * Every leaf of the collection's schema, nested ones included: a screen's
- * `gameId.roomIndex` is as legitimate a thing to show as its name, and the
- * paths are already dotted, so the same read works at any depth.
- */
+/** Every leaf of the schema, nested ones included; paths are already dotted. */
 const collectLeaves = (
   fields: readonly FieldDescriptor[],
   into: IdRefTargetField[],
@@ -83,12 +70,8 @@ const resolveIdRefTargetFields = (targetKind: string): readonly IdRefTargetField
   return kind ? fieldsFor(kind) : NO_FIELDS;
 };
 
-/**
- * One referenced record's value at one path, as text. Anything that does not
- * resolve to something readable — an unknown collection, an id the collection
- * does not hold, an absent or structured value — comes back undefined, and the
- * cell falls back to the id it was already showing.
- */
+/** One referenced record's value at one path, as text. Undefined when it does
+ *  not resolve to something readable; the cell then falls back to the id. */
 const resolveIdRefDisplayValue = (
   targetKind: string,
   id: string,

@@ -11,13 +11,13 @@
 // the fade/volume transitions.
 //
 // A track number alone is not enough to pick an audio file, because the same command means
-// different music depending on where the player is — the overworld theme varies by area and
-// the indoor themes vary by entrance. Rather than resolve that here, the raw context the
+// different music depending on where the player is. The overworld theme varies by area and
+// the indoor themes vary by entrance. Instead of resolving that here, the raw context the
 // remapping needs (module, entrance, overworld area) rides along with every event and the
 // host does the lookup. Nothing in this file influences emulated state.
 
-// The entrance the music context should carry. Usually the door the player last used — except
-// right after a death or save-quit respawn, when that door is wherever the player happened to die.
+// The entrance the music context should carry. Usually the door the player last used. The
+// exception is a death or save-quit respawn, when that door is wherever the player happened to die.
 // A respawn names a ROOM (the starting-point table), so the spawn hook below resolves it to that
 // room's own entrance and holds it here until the player next uses a real door.
 static int s_spawn_entrance = -1;
@@ -73,8 +73,8 @@ void GameHook_MusicRestore(void) {
 
 // ─── Announcing on attach ───
 //
-// The mirror image of the restore above. A host that attaches while the game is already running —
-// after a save state was loaded at boot, or simply because its audio context came up late — has
+// The mirror image of the restore above. A host can attach while the game is already running,
+// after a save state was loaded at boot or because its audio context came up late. Such a host has
 // missed every control write so far, and nothing will repeat them: the port is only written when
 // the music CHANGES. So the host asks, once its handlers are armed, and the current track and bed
 // are reported again as if they had just been selected.
@@ -85,11 +85,11 @@ void GameHook_MusicRestore(void) {
 //
 // The chip is silenced on the way: it has been producing the music and the bed up to this moment,
 // and handing them over without stopping it would play both at once.
-// The game's own "no bed" command. RAISED through the game's ambient variable rather than written
+// The game's own "no bed" command. RAISED through the game's ambient variable, not written
 // to the port: the ambient port is guarded by a per-frame handshake that rewrites it while a bed
-// plays, so an injected write is erased before the chip consumes it — deterministically, not as a
-// race. Asking the game to raise the clear itself rides the same path every real ambient rides,
-// and nothing in that path fights it.
+// plays, so an injected write is erased before the chip consumes it. That erasure is
+// deterministic, not a race. Asking the game to raise the clear itself rides the same path
+// every real ambient rides, and nothing in that path fights it.
 enum { kAmbientClearId = 5 };
 
 void GameHook_MusicAnnounce(void) {
@@ -102,9 +102,9 @@ void GameHook_MusicAnnounce(void) {
   }
   // The id the game is playing as ambience. A claimed one is diverted to the host, and the game
   // is asked to raise the clear so the chip's own copy stops; an unclaimed one no-ops here, which
-  // is right — the chip is already producing it.
+  // is right, because the chip is already producing it.
   if (sound_effect_ambient_last != 0 && GameHook_Sound(kSoundChannel_Ambient, sound_effect_ambient_last)) {
-    // Ours, not the game's — the host must not hear it and stop the bed it was just handed.
+    // This clear is ours, so the host must not hear it and stop the bed it was just handed.
     GameHook_MarkSelfRaisedAmbientClear();
     sound_effect_ambient = kAmbientClearId;
   }
@@ -114,15 +114,15 @@ void GameHook_MusicAnnounce(void) {
 // ─── Entrance music for an extended pack ───
 //
 // An extended pack gives some interiors a track of their own, and the host's remap picks it by
-// entrance — but only when the game SELECTS a track on the way in. Two kinds of entrance never do:
+// entrance whenever the game SELECTS a track on the way in. Two kinds of entrance never do:
 // one whose table byte is the duck command (0xf2: keep the overworld music, quieter), and one whose
 // byte is an overworld song carried indoors (the starting house, whose byte is the village theme).
 // Both leave the host remapping by overworld area, so the interior plays the field theme outside.
 //
-// The fix has to be here rather than in the host, because the byte decides the EXIT as well: the
+// The fix has to be here and not in the host, because the byte decides the EXIT as well: the
 // way out fades a real track and re-selects the overworld on arrival, but passes a duck straight
-// through and restores the overworld volume on arrival — which, with a substituted track, would
-// un-duck the interior's music outside. Handing back a real indoor song (16 — remapped by entrance
+// through and restores the overworld volume on arrival. With a substituted track that would
+// un-duck the interior's music outside. Handing back a real indoor song (16, remapped by entrance
 // on the host, and the cave song the game itself substitutes for a duck once the rain is over)
 // makes the way in and the way out agree.
 //
@@ -156,7 +156,7 @@ enum { kProgress_StormOver = 2 };
 // This exists because "is this track playing" is the wrong question for a per-area pack: two
 // neighbouring areas share one vanilla byte and play different tracks, so the game's own compare
 // answers yes at exactly the edges where the music should change. The removed chip-side player
-// had the same problem and the same fix — its version of the compare ran the remap first.
+// had the same problem, and its version of the compare fixed it the same way, by remapping first.
 int GameHook_MusicIsPlayingRemapped(uint8 track) {
   if (!GameHook_MusicExternal())
     return -1;
@@ -169,14 +169,14 @@ int GameHook_MusicIsPlayingRemapped(uint8 track) {
 }
 
 uint8 GameHook_EntranceMusic(int entrance, uint8 vanilla) {
-  // A real door supersedes any spawn override — the door IS the entrance from here on.
+  // A real door supersedes any spawn override, because the door IS the entrance from here on.
   s_spawn_entrance = -1;
   if (!GameHook_MusicExternal() || !DeluxeEntranceHasTrack(entrance))
     return vanilla;
   if (vanilla != 0xf2 && !IsOverworldSong(vanilla))
     return vanilla;
   // During the opening storm every interior keeps the storm, ducked, the way the game already
-  // treats nearly all of them — the one exception being the starting house, whose byte selects the
+  // treats nearly all of them. The exception is the starting house, whose byte selects the
   // village theme outright. The pack's interior tracks are for the game proper; cutting the storm
   // for one of them on the way back in breaks the one scene the game stages as continuous.
   if (sram_progress_indicator < kProgress_StormOver)
@@ -187,13 +187,13 @@ uint8 GameHook_EntranceMusic(int entrance, uint8 vanilla) {
 // ─── The bed after a state load ───
 //
 // A restored snapshot brings the sound chip back mid-note: its RAM held the bed it was playing,
-// so it resumes it on its own. Re-raising the id through the hook is only half the job — when the
-// host claims it, the chip's copy has to STOP, or both play at once. The same clear the announce
+// so it resumes it on its own. Re-raising the id through the hook is only half the job, because
+// when the host claims it, the chip's copy has to STOP, or both play at once. The same clear the announce
 // path uses does it; an unclaimed id changes nothing, and the resumed chip bed is the right sound.
 void GameHook_AmbientAfterLoad(uint8 last_ambient) {
   if (!HostGate(kHostGate_ExternalAmbient))
     return;
-  // Reported UNCONDITIONALLY — zero and unclaimed ids included, which GameHook_Sound never
+  // Reported UNCONDITIONALLY, including zero and unclaimed ids, which GameHook_Sound never
   // passes. The host's bed belongs to the PREVIOUS state until it is told otherwise: a loaded
   // state with no bed, or with one the pack has nothing for, has to stop whatever the host was
   // playing, or the old state's rain keeps falling in the new state's silence.
@@ -208,8 +208,8 @@ void GameHook_AmbientAfterLoad(uint8 last_ambient) {
       window.__onGameSound($0, $1, $2);
     }
   }, kSoundChannel_Ambient, id, last_ambient & 0xc0);
-  // A claimed bed is the host's to produce, so the chip's restored copy stops — by asking the
-  // game to raise the clear, since the snapshot restored the chip mid-note. An unclaimed one is
+  // A claimed bed is the host's to produce, so the chip's restored copy stops when the game is
+  // asked to raise the clear, since the snapshot restored the chip mid-note. An unclaimed one is
   // the chip's, and the report above already stopped the host's.
   if (id != 0 && GameHook_SoundClaimed(kSoundChannel_Ambient, id)) {
     // Ours, same as the announce path above.
@@ -221,14 +221,14 @@ void GameHook_AmbientAfterLoad(uint8 last_ambient) {
 // ─── Music at a respawn ───
 //
 // A death or save-quit respawn selects its music from the starting-point table, which the
-// entrance override above never sees — and worse, `which_entrance` still names the door used
+// entrance override above never sees. Worse, `which_entrance` still names the door used
 // BEFORE dying, so an entrance-remapped song would resolve against the wrong interior entirely.
 // The starting point names a room, and the entrance serving that room is in the game's own
-// entrance table, so the mapping is derived rather than carried as data.
+// entrance table, so the mapping is derived instead of carried as data.
 //
 // The same substitutions as the door path apply, with one difference: the storm case selects the
-// storm outright instead of ducking, because at a respawn there is nothing playing to duck — the
-// death sequence took the music with it, and a duck over silence is just silence.
+// storm outright instead of ducking. The death sequence took the music with it, so at a respawn
+// there is nothing playing to duck, and a duck over silence is just silence.
 static int EntranceForRoom(uint16 room) {
   int count = (int)(kEntranceData_rooms_SIZE / sizeof(uint16));
   for (int i = 0; i < count; i++) {

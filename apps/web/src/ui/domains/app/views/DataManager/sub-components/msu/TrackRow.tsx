@@ -28,7 +28,7 @@ const TrackRow = (props: TrackRowProps) => {
             value={fileName ?? ''}
             onChange={(value) => { onAssign(trackNum, value); setEditing(false); }}
             options={options}
-            placeholder="Select file…"
+            placeholder="Select file..."
             searchable
             size="sm"
           />
@@ -40,7 +40,7 @@ const TrackRow = (props: TrackRowProps) => {
             title={fileName ?? 'Click to assign a file'}
             onClick={() => setEditing(true)}
           >
-            {fileName ?? '—'}
+            {fileName ?? '-'}
           </Text>
           {fileSize != null && <Text className="track-list__size">{formatBytes(fileSize)}</Text>}
         </>

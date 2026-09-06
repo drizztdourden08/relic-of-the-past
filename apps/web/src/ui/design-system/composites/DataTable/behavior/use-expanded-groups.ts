@@ -1,12 +1,8 @@
 /* @layer renderer-components @kind hook */
 /**
- * Collapse state for group rows — session tier only, because where you are in
- * a comparison is a position, not a preference.
- *
- * `SessionView.expanded` holds the nodes that ARE open, and a fresh grouping is
- * seeded with all of them: grouping a table and being shown nothing but a list
- * of headers reads as the table having broken. Re-seeding is keyed on the
- * groupBy signature, so collapsing survives every data change that follows.
+ * Collapse state for group rows, session tier only. `SessionView.expanded`
+ * holds the open nodes; a fresh grouping is seeded with all of them. Re-seeding
+ * is keyed on the groupBy signature, so collapsing survives data changes.
  */
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import type { SessionView } from '@app/stores/data-view-store';

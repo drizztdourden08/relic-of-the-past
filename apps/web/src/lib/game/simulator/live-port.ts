@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * LiveGamePort — the SimulatorPort adapter that drives the real game through the
+ * The SimulatorPort adapter that drives the real game through the
  * wasm bridge + delivery queue. The pure engine only ever speaks to this seam.
  *
  * Runner contract: the engine's verifying phase diffs the flag snapshot AFTER a
@@ -46,18 +46,18 @@ const restoreState = (buf: ArrayBuffer): Promise<void> => {
 /**
  * The tracker has already resolved the native receive index to a record, so the
  * dataset id is what travels. This used to throw the id away and forward the raw
- * native number, which the engine's verify step then looked up again — the same
+ * native number, which the engine's verify step then looked up again. The same
  * join, done twice, with a name in the middle.
  */
 const subscribeItem = (cb: (itemId: ItemId) => void): (() => void) =>
   onItemReceived((itemId) => cb(itemId));
 
-/** The current room's scroll-section split — valid since the player is standing
+/** The current room's scroll-section split, valid since the player is standing
  *  in whatever room this reads (see WasmGetRoomLayoutInfo). */
 const getRoomSectionSplit = (): RoomSectionSplit => roomSectionSplitFrom(wasmGetRoomLayoutInfo());
 
 const createLiveGamePort = (): SimulatorPort => {
-  // The delivery queue drains on its own rAF loop; ensure it is running so
+  // The delivery queue drains on its own rAF loop. Start it here so
   // trigger() completions fire even if the game was started without it.
   deliveryQueue.startProcessing();
   return {

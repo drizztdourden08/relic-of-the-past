@@ -1,15 +1,8 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * `wt doctor` — reconcile the registry with what is actually on disk.
- *
- * Four drifts it repairs, none of which destroy anything:
- *   - records whose checkout is gone           → drop the record (after git worktree prune)
- *   - expired leases still recorded            → release them
- *   - copied config files that have drifted    → re-copy from the main repo
- *   - agent profiles with no registry record   → report only, never delete
- *
- * Dropping a record for a missing checkout is safe: git already lost the tree, so there
- * is no work left to lose. Anything that could destroy work belongs to `wt clean`.
+ * `wt doctor`: reconcile the registry with disk. Drops records whose checkout is gone,
+ * releases expired leases, re-copies drifted config files, and reports (never deletes)
+ * agent profiles with no record. Anything that could destroy work belongs to `wt clean`.
  */
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
@@ -20,13 +13,8 @@ import { resyncCopiedFiles } from '../link-deps.mjs';
 import { gameDataPath, repoRoot, worktreeRoot } from '../paths.mjs';
 import { flag } from '../args.mjs';
 
-/**
- * Agent profiles left behind after their worktree went away — reported, never removed.
- *
- * Identified by the display name the provisioner writes ("agent/<name>"), not by the
- * shape of the id: a user profile's random id looks exactly like a slug, so guessing
- * from the id would flag the user's own profiles as orphans.
- */
+// Orphaned agent profiles, identified by the display name the provisioner writes
+// ("agent/<name>"), not by the id: a user profile's random id looks like a slug too.
 const orphanProfiles = () => {
   const known = new Set(readRegistry().worktrees.map((w) => w.name));
   const dir = gameDataPath('profiles');
@@ -74,7 +62,7 @@ const run = async ({ options }) => {
   const orphans = orphanProfiles();
   if (orphans.length > 0) {
     console.log(`\nProfiles with no registry record: ${orphans.join(', ')}`);
-    console.log('Left in place — remove one by hand if it is not yours:');
+    console.log('Left in place. Remove one by hand if it is not yours:');
     for (const id of orphans) console.log(`  ${gameDataPath('profiles', id)}`);
   }
 

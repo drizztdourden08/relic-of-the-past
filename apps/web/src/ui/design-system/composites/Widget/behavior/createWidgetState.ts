@@ -30,8 +30,8 @@ const createDefaultLayout = (): WidgetLayout => {
   };
 };
 
-/** Ids of every widget gated behind the developerToolsEnabled setting — the single source
- *  of truth consulted by the render filter, the menu builder, and the gate-flip close. */
+/** Ids of every widget gated behind the developerToolsEnabled setting. The render filter,
+ *  the menu builder, and the gate-flip close all read this one list. */
 const getDevOnlyWidgetIds = (): string[] => WIDGET_DEFINITIONS.filter((d) => d.devOnly).map((d) => d.id);
 
 export { createDefaultLayout, createDefaultWidgetState, getDevOnlyWidgetIds, getWidgetDefinition };

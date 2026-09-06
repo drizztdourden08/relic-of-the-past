@@ -23,7 +23,7 @@ type StatusFilter = 'all' | 'completed' | 'reachable' | 'blocked';
 
 interface FilterState {
   searchQuery: string;
-  /** Active ids from CHECK_FACET_DEFS — a world/location/area facet, or a real content TagId key. */
+  /** Active ids from CHECK_FACET_DEFS, either a world/location/area facet or a real content TagId key. */
   activeFacets: string[];
   /** If true, check must match ALL active facets. If false, ANY. */
   tagMode: 'all' | 'any';

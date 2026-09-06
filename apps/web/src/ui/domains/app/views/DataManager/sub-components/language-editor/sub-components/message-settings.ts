@@ -5,9 +5,9 @@
  *
  * The engine consumes these in a pre-pass before it draws anything, so they do
  * not act where they sit: whichever one appears LAST in the message is the one
- * that applies. That makes them settings rather than punctuation, which is why
+ * that applies. That makes them settings, not punctuation, which is why
  * they live here as pure array functions instead of being edited as inline
- * chips — reading is "find the last matching command", writing is "make that
+ * chips. Reading is "find the last matching command", writing is "make that
  * last one the only one".
  *
  * The catalog's `scope` field is deliberately not the filter: it also marks the
@@ -18,7 +18,7 @@
  */
 import type { Token } from '@shared/game/language';
 
-/** Text palette, box frame, box slot — the three the pre-pass reads. */
+/** The three the pre-pass reads: text palette, box frame, box slot. */
 const MESSAGE_SETTING_NAMES = ['Color', 'Window', 'Position'] as const;
 
 type MessageSettingName = typeof MESSAGE_SETTING_NAMES[number];
@@ -34,8 +34,8 @@ const lastIndexOfSetting = (tokens: Token[], name: string): number => {
 
 /**
  * The value in force, or `null` when the entry never sets it (the engine
- * default applies) — or when the last occurrence carries no parameter, which
- * the encoders cannot produce but a hand-edited stream could.
+ * default applies). It is also null when the last occurrence carries no
+ * parameter, which the encoders cannot produce but a hand-edited stream could.
  */
 const readMessageSetting = (tokens: Token[], name: string): number | null => {
   const index = lastIndexOfSetting(tokens, name);

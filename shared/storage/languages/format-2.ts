@@ -1,26 +1,18 @@
 /* @layer shared-storage @kind logic */
 /**
- * Format 2 of a stored language set: one `variables.json` in place of the
- * `glossary.json` + `names.json` pair, plus a `structure` choice, both
- * discriminated by a `format` number in the set header.
+ * Format 2 of a stored language set: one `variables.json` in place of the `glossary.json` +
+ * `names.json` pair, plus a `structure` choice, discriminated by a `format` number in the header.
  *
- * UPGRADE ON READ. A folder written before this format has no `format` field,
- * so it is read as 1: the old pair is loaded and folded into one variable list.
- * Nothing is written at that point, and the old files are never deleted — the
- * next save simply writes format 2, and a leftover `glossary.json` can never be
- * misread because the header says which payload counts. Idempotent by
- * construction: reading a folder that already says 2 skips the fold entirely.
+ * UPGRADE ON READ. A folder with no `format` field reads as 1: the old pair is folded into one
+ * variable list. Nothing is written and the old files are never deleted; the next save writes
+ * format 2, and the header says which payload counts. A folder that already says 2 skips the fold.
  *
- * REBUILD ON WRITE. The set is still edited through its projected glossary and
- * name table (that projection is what the pause menu, the bake step and the
- * editor's tables read), so the variable list is rebuilt from the pair on every
- * save and the previous list is merged back in for the fields the pair cannot
- * carry. That keeps one direction of truth per operation and makes a
- * read-write-read cycle produce byte-identical files.
+ * REBUILD ON WRITE. The set is still edited through its projected glossary and name table, so
+ * the variable list is rebuilt from the pair on every save, with the previous list merged back
+ * for the fields the pair cannot carry. A read-write-read cycle produces byte-identical files.
  *
- * UNKNOWN FIELDS SURVIVE. The header is read back before it is rewritten and
- * the known keys are overlaid on it, so a field written by a newer build (or by
- * another part of the app) is preserved rather than dropped.
+ * UNKNOWN FIELDS SURVIVE. Known keys are overlaid on the header read back from disk, so a field
+ * written by a newer build is preserved.
  */
 import type { FileStore } from '@shared/platform';
 import type {
@@ -45,7 +37,7 @@ type SetContent = {
 
 const kStructures: SetStructure[] = ['continuous', 'block', 'off'];
 
-/** An unrecognised or absent value falls back rather than failing a read. */
+/** An unrecognised or absent value falls back instead of failing a read. */
 const asStructure = (value: unknown): SetStructure => (
   kStructures.includes(value as SetStructure) ? value as SetStructure : DEFAULT_STRUCTURE
 );
@@ -93,7 +85,7 @@ const writeHeader = async (files: FileStore, set: LanguageSet): Promise<void> =>
   });
 };
 
-/** Header plus variable payload — everything format 2 owns. */
+/** Writes the header plus variable payload, which is everything format 2 owns. */
 const writeContent = async (files: FileStore, set: LanguageSet): Promise<void> => {
   await writeHeader(files, set);
   await writeJson(files, variablesPath(set.id), variablesOf(set));

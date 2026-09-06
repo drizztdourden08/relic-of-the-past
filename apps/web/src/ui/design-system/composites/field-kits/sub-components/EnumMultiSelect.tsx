@@ -3,7 +3,7 @@
  * The multi-checkbox dropdown a closed set filters with: a trigger that reads
  * back the current picks, and a checklist that stays open while you tick
  * several. Built on DropdownMenu, whose items already carry a `checked` mark,
- * rather than on the inline tag primitives — a filter row is one line tall and
+ * instead of on the inline tag primitives. A filter row is one line tall and
  * cannot afford to grow a wrapping tag cloud.
  */
 import { Button } from '../../../primitives/Button';

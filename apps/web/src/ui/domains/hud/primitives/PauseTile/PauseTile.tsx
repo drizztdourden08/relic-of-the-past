@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind component */
 /**
- * PauseTile — renders a single 8×8 HUD tile with optional h/v flip.
+ * Renders a single 8×8 HUD tile with optional h/v flip.
  * Base primitive for all pause menu sprite rendering.
  */
 

@@ -1,10 +1,5 @@
 /* @layer renderer-components @kind hook */
-/**
- * useControllerOverlay — resolves the data the disconnect overlay needs: the bound
- * resume (pause) shortcut, the profile prev/next shortcuts, whether more than one
- * profile exists (to offer switching), and a manual-resume handler.
- * Recomputed when `paused` flips so it reflects the current bindings/profiles.
- */
+// Recomputed when `paused` flips so it reflects the current bindings/profiles.
 
 import { useMemo } from 'react';
 import { getInputManager } from '../../../../../../lib/game';

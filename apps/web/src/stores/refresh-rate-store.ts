@@ -1,11 +1,11 @@
 /* @layer renderer-stores @kind logic */
 /**
- * Refresh-rate store — one reading of the display, shared by everything that shows it.
+ * Refresh-rate store. Holds one reading of the display, shared by everything that shows it.
  *
- * A store rather than a hook per consumer because the rate can CHANGE while the app runs: the
- * player switches it from the settings panel, or the OS switches it on entering fullscreen. Two
- * independent hooks would each hold their own stale copy, so the title bar could still be
- * claiming 144 Hz while the settings panel that just changed it says 120.
+ * A store, not a hook per consumer, because the rate can CHANGE while the app runs: the
+ * player switches it from the settings panel, or the OS switches it on entering fullscreen.
+ * Two independent hooks would each hold a stale copy, so the title bar could still claim
+ * 144 Hz while the settings panel that just changed it says 120.
  */
 import { create } from 'zustand';
 import type { RefreshRateInfo } from '@shared/types/display';
@@ -35,7 +35,7 @@ const useRefreshRateStore = create<RefreshRateState>((set, get) => ({
       try {
         hostInfo = await getPlatform().display.getRefreshRate();
       } catch {
-        // Host cannot answer — the measurement below still can.
+        // Host cannot answer, but the measurement below still can.
       }
       set({ info: { ...hostInfo, measuredHz: get().info.measuredHz } });
 

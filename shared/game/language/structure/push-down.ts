@@ -4,9 +4,9 @@
  * to put it where it now sits, and leave every other line exactly as authored.
  *
  * One SEED marks a line the author changed or a line that has just been created.
- * From a seed the walk keeps deriving codes forward — that is what "push the
+ * From a seed the walk keeps deriving codes forward. That is what "push the
  * lines down" means in this model, since inserting a line really does move the
- * rows below it — and the policy decides how far: continuous carries on past a
+ * rows below it. The policy decides how far: continuous carries on past a
  * wait, the other two stop at the end of the box.
  *
  * A line before any seed, and every line when there are no seeds at all, keeps

@@ -2,7 +2,7 @@
 /**
  * The two glove colours, transcribed from the core.
  *
- * Unlike the outfit palettes these are not an extracted asset — the decompilation carries
+ * Unlike the outfit palettes these are not an extracted asset. The decompilation carries
  * them as a literal (`kGlovesColor` in core/zelda3/src/load_gfx.c:12), and the palette
  * loader writes the one the current glove level selects over a single row entry. A sheet
  * that ships no glove words of its own falls back to these, which is what

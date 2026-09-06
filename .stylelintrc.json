@@ -11,7 +11,7 @@
   },
   "overrides": [
     {
-      "comment": "App + design-system CSS must use design tokens only — no raw colors. hex/named/rgb()/rgba()/hsl() are all blocked; use var(--c-*)/var(--color-*). The few dynamic per-instance opacity frames (tracker/widget) opt out per-line with a stylelint-disable comment.",
+      "comment": "App + design-system CSS must use design tokens only. Raw colors are blocked, so hex, named, rgb(), rgba() and hsl() all fail; use var(--c-*)/var(--color-*). The few dynamic per-instance opacity frames (tracker/widget) opt out per-line with a stylelint-disable comment.",
       "files": ["apps/web/src/ui/**/*.css"],
       "rules": {
         "color-no-hex": true,

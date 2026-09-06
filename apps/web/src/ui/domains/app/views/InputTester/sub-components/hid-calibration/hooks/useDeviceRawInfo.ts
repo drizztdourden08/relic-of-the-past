@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind hook */
-/** Fetches SDL-reported device metadata for the active device once — busType
+/** Fetches SDL-reported device metadata for the active device once. busType
  *  is the ground truth for USB vs Bluetooth (see connection-hint.ts), and this
  *  feeds buildCalibrationMap. node-hid is gone, so path/manufacturer/serial
  *  have no source anymore and stay null; product still comes through. */
@@ -22,7 +22,7 @@ const useDeviceRawInfo = (deviceKey?: string): React.MutableRefObject<RawHidInfo
 
   useEffect(() => {
     listControllerDevices().then((devices) => {
-      // Falls back to the first ready device in the live snapshot rather than one
+      // Falls back to the first ready device in the live snapshot, not one
       // that has already reported input, so an untouched pad is still pickable.
       const match = deviceKey
         ? devices.find((d) => d.deviceKey === deviceKey)
@@ -33,7 +33,7 @@ const useDeviceRawInfo = (deviceKey?: string): React.MutableRefObject<RawHidInfo
           busType: match.busType,
         };
       }
-    }).catch(() => { /* best-effort — buildCalibrationMap treats missing info as unknown */ });
+    }).catch(() => { /* best-effort, buildCalibrationMap treats missing info as unknown */ });
   }, [deviceKey]);
 
   return rawInfoRef;

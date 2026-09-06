@@ -3,9 +3,9 @@
  * One fixed slot: what it is called, the translator's words for it, the original
  * beside them, and how much of the slot's room those words take.
  *
- * The ORIGINAL is the field's placeholder as well as the reference beside it, so
- * an untranslated row reads as the words the surface will actually draw rather
- * than as an empty box. Nothing here decides anything: the fit and the caution
+ * The ORIGINAL is both the field's placeholder and the reference beside it, so
+ * an untranslated row reads as the words the surface will actually draw and not
+ * as an empty box. Nothing here decides anything: the fit and the caution
  * are read off the value on the way past, and every keystroke is reported up.
  */
 import { useCallback } from 'react';
@@ -16,8 +16,8 @@ import type { TextSlot } from '@shared/game/language';
 import './TextSlotRow.css';
 
 /*
- * Says what the surface can do, not what the translator did wrong — the typed
- * words are fine, they simply cannot all be drawn here.
+ * Says what the surface can do, not what the translator did wrong. The typed
+ * words are fine, they cannot all be drawn here.
  */
 const ALPHABET_CAUTION = 'This surface draws letters, digits, spaces and & only. Anything else is left out, so keep to those.';
 

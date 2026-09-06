@@ -51,7 +51,7 @@ const About = () => {
       </Box>
 
       <Button variant="secondary" className="about__copy" onClick={handleCopy} disabled={!debugText}>
-        {copied ? '✓ Copied' : debugText ? 'Copy debug info' : 'Collecting…'}
+        {copied ? '✓ Copied' : debugText ? 'Copy debug info' : 'Collecting...'}
       </Button>
 
       <Text as="p" className="about__description">

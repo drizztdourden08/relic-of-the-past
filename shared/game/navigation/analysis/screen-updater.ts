@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * Screen Updater — Writes computed RegionNavData back into screen definitions.
+ * Writes computed RegionNavData back into screen definitions.
  *
  * After analysis completes, this module takes the computed nav data and
  * serializes it into a JSON output file loaded at runtime.

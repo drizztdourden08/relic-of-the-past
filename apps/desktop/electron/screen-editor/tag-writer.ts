@@ -2,16 +2,13 @@
 /**
  * Appends a new vocabulary term to the tag dataset file.
  *
- * The caller supplies a key and the collections it belongs on. Everything else
- * is derived here: the two levels come from the key, the id comes from the
- * allocator, and the record text comes from the dataset's own emitter — so
- * neither a key-derived id nor a stale record shape can reach disk.
+ * The caller supplies a key and the collections it belongs on. The two levels
+ * come from the key, the id from the allocator, the record text from the
+ * dataset's own emitter, so no key-derived id or stale shape can reach disk.
  *
- * The `namespace:value` shape is REQUIRED rather than advised. It is the
- * hierarchy the whole collection is organised by, and a term with no namespace
- * would be a record that cannot be filed, browsed or grouped. The renderer
- * refuses one too; this is the check that actually holds, because it is the one
- * standing between a bad key and the file.
+ * `namespace:value` is REQUIRED: it is the hierarchy the collection is organised
+ * by. The renderer refuses too, but this is the check standing between a bad
+ * key and the file.
  */
 
 import { readFile, writeFile } from 'fs/promises';
@@ -27,7 +24,7 @@ import { insertBeforeArrayClose, removeById, replaceById } from './source-writer
 
 const TAGS_FILE = ['shared', 'game', 'data', 'records', 'tags', 'tags.ts'] as const;
 
-const CONVENTION = 'A tag reads namespace:value — both parts are required.';
+const CONVENTION = 'A tag reads namespace:value. Both parts are required.';
 const NO_SCOPE = 'A tag has to apply to at least one collection.';
 
 /** A term already on file. Matched on the key, which is what a duplicate IS. */
@@ -62,11 +59,7 @@ const allocateTag = async (root: string, args: AllocateTagArgs): Promise<Allocat
   });
 };
 
-/**
- * Relabels a term already on file — the delete-guard feature's other half of
- * write access, alongside minting a brand-new one above. Always a replace: the
- * renderer already has the record open, so there is no id left to allocate.
- */
+/** Relabels a term already on file. Always a replace: the record is already open, no id to allocate. */
 const writeTag = async (root: string, args: WriteTagArgs): Promise<WriteRecordResult> => {
   const path = join(root, ...TAGS_FILE);
   const record: TagRecord = { id: args.tagId, ...args.record };

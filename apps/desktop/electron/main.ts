@@ -3,8 +3,7 @@ import { VelopackApp } from 'velopack';
 import { app, BrowserWindow, Menu, session, protocol, ipcMain } from 'electron';
 import { is } from '@electron-toolkit/utils';
 
-// Earliest main-process timestamp — used by the opt-in --boot-timing diagnostic to
-// report how long the launch → splash-gone path takes. No-op without the flag.
+// Earliest main-process timestamp, for the opt-in --boot-timing diagnostic.
 const BOOT_START = Date.now();
 const BOOT_TIMING = process.argv.includes('--boot-timing');
 const logBoot = (label: string): void => {
@@ -59,28 +58,23 @@ import { emit } from './lib/ipc/handle';
 import { installDevFileLogging } from './lib/dev-file-logger';
 import { registerMsulAssociation, unregisterMsulAssociation } from './msu/msul-association';
 
-// Velopack's startup logic, before anything else runs. It handles the hooks fired
-// during install, update and uninstall, and may restart the process to do so, which
-// is why nothing of ours may happen first.
-//
-// The `.msul` document type rides on those hooks: registered on install and again after
-// every update (which is also how an install made before this existed picks it up), and
-// removed before uninstall. Windows only — the other platforms get it from the package.
+// Velopack first: its install/update/uninstall hooks may restart the process, so
+// nothing of ours may happen before it. The `.msul` document type rides on those
+// hooks (registered after install and every update, removed before uninstall).
+// Windows only; the other platforms get it from the package.
 VelopackApp.build()
   .onAfterInstallFastCallback(registerMsulAssociation)
   .onAfterUpdateFastCallback(registerMsulAssociation)
   .onBeforeUninstallFastCallback(unregisterMsulAssociation)
   .run();
 
-// A copy carrying its own `data` folder keeps everything there. This runs before any
-// path is read, because every other location is derived from userData. An explicit
-// --user-data flag outranks the portable convention, so it is applied second.
+// Portable `data` folder first (every other location derives from userData), then
+// --user-data, which outranks it.
 const portableData = applyPortableMode();
 const userDataOverride = applyUserDataArg();
 
-// Every IPC domain's register fn, gated by environment. ipcMain.handle order is
-// irrelevant, so this list is declarative; window/input/updater wiring that needs
-// the live BrowserWindow stays inline below after createWindow().
+// ipcMain.handle order is irrelevant. Wiring that needs the live BrowserWindow
+// stays inline below after createWindow().
 const IPC_HANDLERS: Array<{ register: () => void; devOnly?: boolean }> = [
   { register: registerWindowHandlers },
   { register: registerAspectRatioHandlers },
@@ -106,8 +100,7 @@ const IPC_HANDLERS: Array<{ register: () => void; devOnly?: boolean }> = [
   { register: registerUiViewsHandlers },
   { register: registerReviewHandlers },
   { register: registerRecommendationHandlers },
-  // Screen editor writes to source files — a dev authoring tool only. Never
-  // register its IPC channel in a packaged build (prevents renderer file writes).
+  // Writes to source files: never registered in a packaged build.
   { register: registerScreenEditorHandlers, devOnly: true },
   { register: registerShadowCastingHandlers },
   { register: registerUpdaterHandlers },
@@ -120,23 +113,19 @@ const IPC_HANDLERS: Array<{ register: () => void; devOnly?: boolean }> = [
   { register: registerFfmpegHandlers },
 ];
 
-// Ensure consistent userData path across dev and production
+// Same userData path in dev and production.
 app.setName('relic-of-the-past');
 
-// A named instance identifies itself to the OS (Windows taskbar grouping, macOS dock),
-// so an automated launch is tellable apart wherever windows are listed. Must run before
-// the first window exists. No-op on a normal launch.
+// Must run before the first window exists. No-op on a normal launch.
 applyInstanceIdentity(parseInstanceConfig().name);
 
-// Register custom protocol for serving sprite images from userData
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app-sprite', privileges: { standard: true, secure: true, supportFetchAPI: true } },
 ]);
 
-// CalculateNativeWinOcclusion: keep rendering (rAF / game loop) alive when the
-// window is occluded — e.g. --no-focus launches sit behind other windows, and
-// Chromium would otherwise pause their frames and stall the headless game loop.
-// (Multiple --disable-features values must share ONE switch, comma-separated.)
+// Keep rAF alive when the window is occluded (e.g. --no-focus launches behind
+// other windows), or Chromium pauses frames and stalls the headless game loop.
+// Multiple --disable-features values must share ONE switch, comma-separated.
 app.commandLine.appendSwitch('disable-features', 'CalculateNativeWinOcclusion');
 
 app.whenReady().then(async () => {
@@ -168,18 +157,15 @@ app.whenReady().then(async () => {
 
   const mainWindow = getMainWindow()!;
 
-  // Dev-only: mirror main + renderer console output to disk, so a hard crash
-  // still leaves the last thing that happened on disk — see lib/dev-file-logger.
+  // Dev-only: mirror console output to disk so a hard crash leaves a trace.
   if (is.dev) {
     await installDevFileLogging(mainWindow);
   }
 
-  // Boot-timing diagnostic (opt-in via --boot-timing): renderer HTML loaded, then
-  // the renderer's shell-ready signal (splash window replaced by the main window).
   logBoot('window created');
   mainWindow.webContents.once('did-finish-load', () => {
     logBoot('renderer did-finish-load');
-    setSplashStatus('Preparing interface…');
+    setSplashStatus('Preparing interface...');
   });
   ipcMain.once('window:shellReady', () => logBoot('shell-ready (reveal)'));
 
@@ -193,8 +179,7 @@ app.whenReady().then(async () => {
     });
   }
 
-  // Initialize input subsystem (HID, USB) — calibration/profile stores resolve
-  // their paths via the shared getUserDataPath (initialized by initPaths above).
+  // After initPaths: calibration/profile stores resolve paths via getUserDataPath.
   registerInputHandlers(mainWindow);
 
   // A .msul pack the app was launched with (file association) reaches the renderer's importer.
@@ -219,8 +204,8 @@ app.whenReady().then(async () => {
   // Forward window state events to renderer
   mainWindow.on('maximize', () => emit(mainWindow, 'window:maximized', true));
   mainWindow.on('unmaximize', () => emit(mainWindow, 'window:maximized', false));
-  // The synced-rate switch rides on these transitions rather than on renderer state, so the
-  // display is always handed back even if the window is closed straight out of fullscreen.
+  // The synced-rate switch rides on these transitions, not renderer state, so the
+  // display is handed back even if the window is closed straight out of fullscreen.
   mainWindow.on('enter-full-screen', () => {
     onFullscreenChange(true);
     emit(mainWindow, 'window:fullscreen', true);
@@ -230,8 +215,7 @@ app.whenReady().then(async () => {
     emit(mainWindow, 'window:fullscreen', false);
   });
 
-  // Persist window size/position/mode on close — except test/automation launches
-  // (--window-size / --fresh), which must not overwrite the user's saved bounds.
+  // Test/automation launches (--window-size / --fresh) must not overwrite saved bounds.
   mainWindow.on('close', () => {
     if (!isEphemeralLaunch()) saveWindowState(mainWindow);
   });

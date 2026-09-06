@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind hook */
 /**
- * Collects the debug-info text once when the caller mounts, rather than on click. The
+ * Collects the debug-info text once when the caller mounts, not on click. The
  * probes are asynchronous (the frame-rate one has to watch real frames), and doing
  * that work inside a click handler would put an await between the user's gesture and
  * the moment the text is ready.

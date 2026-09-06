@@ -1,14 +1,9 @@
 /* @layer electron-main @kind logic */
 /**
- * Resolves the window/taskbar icon.
- *
- * A named instance (an agent launch) gets the bot artwork instead of the normal
- * logo, so a window belonging to automation is recognisable from the taskbar
- * without reading its title. Windows renders a multi-resolution .ico far more
- * cleanly than a downscaled PNG, so it is preferred there.
- *
- * Every candidate is optional: the first file that exists wins and the normal logo
- * is the last resort, so a missing bot asset can never break a launch.
+ * Resolves the window/taskbar icon. A named instance (an agent launch) gets the
+ * bot artwork so it is recognisable from the taskbar. Windows renders a
+ * multi-resolution .ico better than a downscaled PNG. Every candidate is
+ * optional; the normal logo is the last resort, so a missing asset never breaks a launch.
  */
 import { join } from 'path';
 import { existsSync } from 'fs';
@@ -33,7 +28,7 @@ const resolveWindowIcon = (instanceName: string | null): string => {
       const path = logoPath(candidate);
       if (existsSync(path)) return path;
     }
-    console.warn('[instance] No bot icon found — falling back to the default icon.');
+    console.warn('[instance] No bot icon found. Using the default icon.');
   }
   return logoPath(DEFAULT_LOGO);
 };

@@ -1,8 +1,8 @@
 /* @layer renderer-widgets @kind hook */
 /**
  * Builds the stat table the Stats tab renders from. Every player property the cheats can write is
- * described here — bounds, formatting and the write itself — so the controls stay generic and a new
- * property is one entry rather than another hand-built row.
+ * described here (bounds, formatting and the write itself) so the controls stay generic and a new
+ * property is one entry, not another hand-built row.
  *
  * Bounds that the game can raise (health capacity, bomb and arrow caps) come from the live HUD
  * state, so a slider never offers a value the engine would refuse.

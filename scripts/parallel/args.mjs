@@ -1,9 +1,6 @@
 /* @layer tooling-scripts @kind logic */
-/**
- * Minimal argv splitting for the `wt` subcommands: positionals, `--flag` booleans and
- * `--key value` / `--key=value` options. Small on purpose — a dependency-free CLI keeps
- * `wt` usable in a half-bootstrapped worktree, before npm install has finished.
- */
+// Minimal argv splitting: positionals, `--flag` booleans, `--key value` / `--key=value`.
+// Dependency-free so `wt` works in a half-bootstrapped worktree, before npm install.
 
 const parseArgs = (argv) => {
   const positional = [];

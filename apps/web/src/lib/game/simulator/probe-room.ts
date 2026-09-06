@@ -1,14 +1,7 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Indoor counterpart of the `flood=` diagnostic: everything that decides whether
- * a room has a detectable way out, in one report.
- *
- * A room that reads as a dead end strands the run, and the cause is always one of
- * a few tables disagreeing — the entrance list the flood seeds from, the
- * entrance→room mapping, the fall-hole table, and the room→exit-screen table. Put
- * them side by side and the disagreement is obvious; inferring it from a finished
- * run's trail is not.
- */
+// Indoor counterpart of the `flood=` diagnostic: everything that decides whether a room has a
+// detectable way out, side by side, so a table disagreement (entrance list, entrance->room map,
+// fall-hole table, room->exit-screen table) is obvious.
 import { wasmGetEntranceRooms, wasmGetExitScreenMap, wasmGetFallHoles, wasmGetOverworldEntrances, wasmGetEntranceSpawns, wasmGetAreaHeads, wasmGetRoomWalkBoundariesFor, wasmGetRoomStairInfoFor } from '../';
 import { roomEntrances, getScreenGrids } from '../flood';
 import { enrichEntrances } from '@domains/widgets/navigation/widget-helpers';
@@ -27,14 +20,14 @@ interface RoomProbe {
   exitScreen?: number;
   /** Entrance ids whose destination is this room, per the entrance→room table. */
   entranceIds: number[];
-  /** Raw vs enriched entrance rows for those ids — where the game says the door is. */
+  /** Raw vs enriched entrance rows for those ids, showing where the game says the door is. */
   entranceRows: Array<{
     id: number; rawArea: number; rawPos: number; tableIndex: number;
     spawnX?: number; spawnY?: number;
     enrichedArea?: number; gridRow?: number; gridCol?: number;
     areaHead?: number;
   }>;
-  /** Of those, the ones the fall-hole table claims — currently dropped as seeds. */
+  /** Of those, the ones the fall-hole table claims. They are currently dropped as seeds. */
   fallHoleIds: number[];
   /** The seeds the flood actually ran with (id ≥ 1000 stair, ≥ 2000 boundary). */
   seeds: Array<{ id: number; row: number; col: number; dest: number; reached: boolean }>;
@@ -47,29 +40,29 @@ interface RoomProbe {
   gridBuilt: { raw: boolean; dual: boolean };
   /** Chests the room reports, and whether the flood can stand next to each. */
   chests: Array<{ index: number; row: number; col: number; opened: boolean; big: boolean; touchable: boolean; itemId?: number }>;
-  /** Doors the room reports — kind, native type and open state. */
+  /** Doors the room reports: kind, native type and open state. */
   doors: Array<{ index: number; kind: string; nativeType?: number; dir: string; row: number; col: number; opened: boolean }>;
   /** Sprites the room reports, with the kind the simulator assigns them. */
   sprites: Array<{ type: string; row: number; col: number; kind: string; carriesKey?: boolean; carriesBigKey?: boolean }>;
-  /** Raw attrs per layer across the rows where the flood stops — what it thinks is solid. */
+  /** Raw attrs per layer across the rows where the flood stops, showing what it thinks is solid. */
   attrRows: Array<{ row: number; raw: string; l0: string; l1: string; reached: string }>;
   /** Whole-room shape: '.' solid, ' ' floor, 'o' obstacle(req), '#' flooded, '*' flooded obstacle. */
   map: string[];
   /** Whole entrance→room table, so an absent room can be told from a short read. */
   entranceTable: { size: number; rooms: string };
-  /** Entrance ids landing in nearby rooms — finds the door when this room has none. */
+  /** Entrance ids landing in nearby rooms. These find the door when this room has none. */
   neighbourEntrances: Array<{ room: number; ids: number[] }>;
-  /** Open tiles on each outer wall ring. Mostly reads 64 — that ring is the
+  /** Open tiles on each outer wall ring. Mostly reads 64 because that ring is the
    *  supertile's padding, which is what lets a stray flood run a whole perimeter. */
   edgeOpen: { north: number; south: number; east: number; west: number };
-  /** Which of the room's own anchors the flood reached — none means dead space. */
+  /** Which of the room's own anchors the flood reached. None means dead space. */
   anchors?: { total: number; hits: string[]; missed: string[] };
   /** The game's own edge-scroll records, for comparison against what the flood
    *  claims: staircases, and the walk boundaries that name a destination room. */
   scrolls: { boundaries: Array<{ row: number; col: number; destRoom: number }>; stairs: Array<{ row: number; col: number; destRoom: number }> };
-  /** Bounding box of the reached region — shows where the flood actually is. */
+  /** Bounding box of the reached region. */
   bbox?: { minRow: number; maxRow: number; minCol: number; maxCol: number };
-  /** The combat sweep's verdict on this room's gating sprites — see probe-room-threat.ts. */
+  /** The combat sweep's verdict on this room's gating sprites. See probe-room-threat.ts. */
   threat: RoomThreatProbe;
 }
 

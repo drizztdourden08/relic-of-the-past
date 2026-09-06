@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind data */
 /**
- * AssignedDeviceCard — shows the controller assigned to the active profile.
+ * Shows the controller assigned to the active profile.
  * Displays connection/activation status, controller info, and an unassign button.
  */
 
@@ -36,7 +36,7 @@ const AssignedDeviceCard = (props: AssignedDeviceCardProps) => {
     ? 'Disconnected'
     : isActivated
       ? 'Connected'
-      : 'Connected — press a button to activate';
+      : 'Connected. Press a button to activate';
 
   const statusClass = !isConnected
     ? 'assigned-controller__status--disconnected'

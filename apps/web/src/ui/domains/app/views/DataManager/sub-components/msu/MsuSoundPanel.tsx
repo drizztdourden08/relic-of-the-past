@@ -1,12 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
- * One sound channel on its own tab: every id the channel can raise, which of them this pack
- * answers, and the editor for the ones it does.
- *
- * The filter earns its place here rather than on the music tab — a sound channel lists fifty or so
- * ids, and the way anyone arrives at one of them is by remembering the game function that raises
- * it. It is owned here, not in the hook, because a list built from more than one channel has to
- * put one query across all of them.
+ * One sound channel on its own tab. The filter is owned here, not in the hook, because a list
+ * built from more than one channel has to put one query across all of them.
  */
 import { useCallback, useState } from 'react';
 import type { MsuPackManifest, SoundChannel } from '@shared/types/msu-manifest';
@@ -30,7 +25,7 @@ interface MsuSoundPanelProps {
   channel: SoundChannel;
   /** What the rows and the editor SHOW. */
   manifest: MsuPackManifest;
-  /** What a save WRITES into — see LayerEditorProps.saveBase. */
+  /** What a save WRITES into. See LayerEditorProps.saveBase. */
   saveBase: MsuPackManifest;
   files: MsuFile[];
   isLayered: boolean;
@@ -63,7 +58,7 @@ const MsuSoundPanel = (props: MsuSoundPanelProps) => {
   return (
     <Box className="msu-panel">
       <SectionHeader
-        title={`${SOUND_CHANNEL_LABELS[channel]} — ${replacedCount} of ${total} replaced`}
+        title={`${SOUND_CHANNEL_LABELS[channel]} · ${replacedCount} of ${total} replaced`}
         subtitle={soundPanelSubtitle({
           channel,
           total,

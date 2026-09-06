@@ -1,8 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * Profile Manager — list, create, and inspect game profiles.
- */
-
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../design-system/primitives/Text';
 import { Badge } from '../../../../../design-system/primitives/Badge';
@@ -59,7 +55,7 @@ const ProfileManager = (props: ProfileManagerProps) => {
               value={formRom}
               onChange={(val) => setFormRom(val)}
               options={readyRoms.map((r) => ({ value: r.romFile, label: r.romFile }))}
-              placeholder="Select ROM…"
+              placeholder="Select ROM..."
             />
           </Field>
           <Field label="Language">
@@ -98,7 +94,7 @@ const ProfileManager = (props: ProfileManagerProps) => {
       )}
 
       <Box className="data-list">
-        {profiles.length === 0 && <EmptyState message="No profiles yet — import a ROM to get started" />}
+        {profiles.length === 0 && <EmptyState message="No profiles yet. Import a ROM to get started." />}
         {profiles.map((profile) => (
           <ListItemRow
             key={profile.id}

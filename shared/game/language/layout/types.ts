@@ -4,7 +4,7 @@
  *
  * The box interior is fixed at three rows of 21 tiles, and the renderer
  * advances the pen by each glyph's own width without ever checking the row
- * bound — a row authored wider than the interior overruns into the next row's
+ * bound. A row authored wider than the interior overruns into the next row's
  * tiles instead of wrapping. So measuring a line in pixels is the only way to
  * know whether authored text is safe, and every consumer here shares one
  * definition of that measurement.
@@ -50,7 +50,7 @@ type ScreenFit = {
   /** 1-based screen within the message. */
   index: number;
   rows: RowFit[];
-  /** The screen ends by waiting for a button rather than running straight on. */
+  /** The screen ends by waiting for a button instead of running straight on. */
   waitsForButton: boolean;
 };
 

@@ -2,9 +2,7 @@
 /**
  * Ties the usage-overview panel and the delete confirmation together for one
  * open record. A referenced record's delete stops at a dialog naming what
- * still points at it; an unreferenced one deletes the moment it is asked to,
- * with no dialog in the way at all — the "no extra friction" half of the
- * guard is as real a requirement as the friction itself.
+ * points at it; an unreferenced one deletes at once, with no dialog.
  */
 import { useCallback, useMemo, useState } from 'react';
 import { recordDeleterFor } from './delete-record';
@@ -19,12 +17,7 @@ interface DeleteGuardDialogState {
 
 const CLOSED: DeleteGuardDialogState = { open: false, hits: [] };
 
-/**
- * The guard's whole rule, as one pure decision: nothing referencing the record
- * means the delete proceeds with no extra friction, and anything referencing
- * it means confirmation is required first. Pulled out of the hook below so the
- * rule itself — not React's plumbing around it — is what a test pins down.
- */
+/** The guard's whole rule as one pure decision, so a test pins the rule and not React's plumbing. */
 type DeleteRoute =
   | { kind: 'immediate' }
   | { kind: 'confirm'; hits: readonly ReferencedByHit[] };
@@ -65,7 +58,7 @@ const useDeleteGuard = (collectionKind: string, id: string | undefined, onDelete
   const cancelDelete = useCallback(() => setDialog(CLOSED), []);
 
   return {
-    /** Undefined when this collection has no delete write path — omit the button entirely. */
+    /** Undefined when this collection has no delete write path, so the button is omitted. */
     onDelete: deleter ? requestDelete : undefined,
     referencedBy,
     dialogOpen: dialog.open,

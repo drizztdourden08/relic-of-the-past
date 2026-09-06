@@ -31,12 +31,12 @@ static int SimIsCurrentRoom(int room_id) {
 // chestIndex 0-5 = order within the room's chest table (also the open-bit index).
 // Tile position comes from live dung_chest_locations for the occupied room, and
 // from the room's static object data (the chest object's draw position) for any
-// other room — so remote chests are position-known too; col/row index the
+// other room, so remote chests are position-known too. The col/row pair indexes the
 // 64-wide dungeon tilemap (row spans pages for tall rooms).
 //
 // The leading status byte is 1 only when the query actually ran (dev mode on AND
 // room_id in range) and 0 otherwise, so a caller can tell "gate closed" from "this
-// room genuinely has zero chests" instead of reading both as an empty table.
+// room has zero chests" instead of reading both as an empty table.
 static uint8 g_sim_chests_buf[1 + 2 + 6 * 7];
 
 // Walk one room-object list layer starting at byte |off|, counting drawn chest
@@ -53,7 +53,7 @@ static int SimScanChestObjects(const uint8 *p, int off, int *chests, uint8 *cols
     // Subtype-3 dispatch (RoomData_DrawObject dungeon.c:2700-2711): a full-index
     // object ((d & 0xfc) != 0xfc) whose type byte is >= 0xf8 selects
     // LoadType1ObjectSubtype3 with the recomputed sub-index below, where 0x19 is a
-    // chest and 0x31 a big chest (dungeon.c:1706,1886) — the objects that stamp the
+    // chest and 0x31 a big chest (dungeon.c:1706,1886). Those objects stamp the
     // 0x58+ordinal chest tile and bump dung_num_chests_x2.
     uint8 idx = p[off + 2];
     if ((d & 0xfc) != 0xfc && idx >= 0xf8) {
@@ -77,8 +77,8 @@ static int SimScanChestObjects(const uint8 *p, int off, int *chests, uint8 *cols
   }
 }
 
-// Room-addressable scan of the chest objects a room actually draws — count plus
-// each chest's draw-position tile — derived from its static object data. No
+// Room-addressable scan of the chest objects a room actually draws, deriving the count and
+// each chest's draw-position tile from its static object data. No
 // loaded-room state required, so it is valid for remote queries. The room's own
 // objects live in three consecutive layers starting at byte 2 (Dungeon_LoadRoom
 // dungeon.c:2621-2631; byte 0 is the floor, byte 1 the layout); each layer ends
@@ -111,14 +111,14 @@ int WasmGetRoomChests(int room_id) {
   // its ordinal (cases 0x19/0x31, dungeon.c:1709-1710,1887), so table order tracks
   // the slot and open-bit index even past cell locks, which advance the separate
   // dung_num_bigkey_locks_x2 (dungeon.c:1697) and never shift a chest's slot.
-  // Entries beyond |drawn| are vestigial dev leftovers with no chest object drawn
-  // — e.g. room 0x55, the first castle's secret passage (a connector whose layout
-  // draws no chest) still carries a leftover Lamp entry duplicating the player's
+  // Entries beyond |drawn| are vestigial dev leftovers with no chest object drawn.
+  // Room 0x55, the first castle's secret passage (a connector whose layout
+  // draws no chest), still carries a leftover Lamp entry duplicating the player's
   // house (room 0x104). OpenChestForItem yields nothing for them (there is no 0x58+slot
   // chest tile, dungeon.c:5738-5799), so capping at |drawn| drops the phantom.
   // For the loaded room dung_num_chests_x2>>1 is that count directly; remote rooms
   // (the live counter only describes the loaded room) parse the static object data
-  // room-addressably so the cap — and the 0x55 suppression — holds off-screen too.
+  // room-addressably so the cap and the 0x55 suppression both hold off-screen too.
   uint8 scan_cols[6] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
   uint8 scan_rows[6] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
   int drawn = current ? (int)(dung_num_chests_x2 >> 1)
@@ -145,7 +145,7 @@ int WasmGetRoomChests(int room_id) {
         pos_known = 1;
       }
     } else if (scan_cols[count] != 0xFF) {
-      // Remote room: the chest object's draw position (same slot order — each
+      // Remote room: the chest object's draw position (same slot order, since each
       // drawn chest takes slot == its scan ordinal, matching the live decode).
       col = scan_cols[count];
       row = scan_rows[count];
@@ -170,15 +170,15 @@ int WasmGetRoomChests(int room_id) {
 // Layout: status(1) then [count(1), sortSetting(1)] then count records of 4 bytes:
 //   [spriteType(1), col(1), row(1), flags(1)]
 // col/row are 8px-tile positions within the 64x64 room grid. flags: bit0 =
-// floor (y>>7), bit1 = drops a small key on death, bit2 = drops the big key —
+// floor (y>>7), bit1 = drops a small key on death, bit2 = drops the big key, read
 // from the 0xe4/0xfe|0xfd die-action marker that FOLLOWS the carrier's entry
 // (Dungeon_LoadSingleSprite, sprite.c:3662). Overlords (x>=0xe0) and the
-// markers themselves are omitted — only spawn sprites are listed.
+// markers themselves are omitted, so only spawn sprites are listed.
 //
 // Leading status byte: see WasmGetRoomChests above (1 = gate open and room in range).
 static uint8 g_sim_sprites_buf[1 + 2 + 32 * 4];
 
-// Gated on developer mode — see WasmGetRoomChests above.
+// Gated on developer mode, as described at WasmGetRoomChests above.
 EMSCRIPTEN_KEEPALIVE
 int WasmGetRoomSpriteSpawns(int room_id) {
   memset(g_sim_sprites_buf, 0, sizeof(g_sim_sprites_buf));
@@ -228,13 +228,13 @@ static uint8 SimDoorKind(uint8 t) {
 // direction 0=N,1=S,2=W,3=E. col/row index the 64-wide dungeon tilemap.
 // isOpen: door-open bit (slots 0-3) from the live word for the occupied room or
 // the SRAM room word otherwise; always-open doorways (types 0/2) read open.
-// layer: 0 = upper/BG2, 1 = lower/BG1 — door position slots 6-11 are the
+// layer: 0 = upper/BG2, 1 = lower/BG1, and door position slots 6-11 are the
 // lower-layer positions (RoomDraw_NormalRangedDoors_*, dungeon.c:3068).
 //
 // Leading status byte: see WasmGetRoomChests above (1 = gate open and room in range).
 static uint8 g_sim_doors_buf[1 + 2 + 16 * 7];
 
-// Gated on developer mode — see WasmGetRoomChests above.
+// Gated on developer mode, as described at WasmGetRoomChests above.
 EMSCRIPTEN_KEEPALIVE
 int WasmGetRoomDoorInfo(int room_id) {
   memset(g_sim_doors_buf, 0, sizeof(g_sim_doors_buf));
@@ -287,13 +287,13 @@ int WasmGetRoomDoorInfo(int room_id) {
 // GetOverworldSpritePtr (overworld.c:302) selects the beginning (progress 0/1) /
 // first-part (2) / second-part (3) sprite list from the live sram_progress_indicator,
 // so calling it reproduces the loader's table choice exactly. Overlord and marker
-// entries (type >= 0xf3, i.e. spawn id >= 0xf4) are omitted — only real spawn
+// entries (type >= 0xf3, i.e. spawn id >= 0xf4) are omitted, so only real spawn
 // sprites are listed, matching the dungeon query's overlord filter.
 //
 // Leading status byte: see WasmGetRoomChests above (1 = gate open and screen in range).
 static uint8 g_sim_ow_sprites_buf[1 + 2 + 48 * 3];
 
-// Gated on developer mode — see WasmGetRoomChests above.
+// Gated on developer mode, as described at WasmGetRoomChests above.
 EMSCRIPTEN_KEEPALIVE
 int WasmGetOverworldSpriteSpawns(int screen_index) {
   memset(g_sim_ow_sprites_buf, 0, sizeof(g_sim_ow_sprites_buf));

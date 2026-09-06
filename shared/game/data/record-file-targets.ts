@@ -1,14 +1,8 @@
 /* @layer shared-game @kind logic */
 /**
- * Where an edited record belongs on disk — derived from ids only.
- *
- * A dungeon's destination comes from `DungeonRecord.fileStem`, an overworld
- * screen's from its `AreaId`, an interior's from its `interiorKind`. No display
- * name and no slugified string ever picks a path, so renaming a record can never
- * move (or split) the file its records live in.
- *
- * A path that cannot be derived comes back as `relativePath: null` with a reason
- * — the editor shows that instead of guessing a destination.
+ * Where an edited record belongs on disk, derived from ids only (never a
+ * display name, so renaming a record can never move its file). A path that
+ * cannot be derived comes back as `relativePath: null` with a reason.
  */
 import { findOne, getScreen } from './facade';
 import type {
@@ -16,11 +10,8 @@ import type {
 } from './types';
 import type { ItemCategory } from './taxonomy/item-categories';
 
-// Every stem table names files in the record tree, so they all live with it and
-// are all absent without vault access. Each resolver below already had a "no
-// destination could be derived" path for an id it does not recognise; an empty
-// table takes that path for every id, which is correct when there are no record
-// files to write to in the first place.
+// The stem tables live with the record tree and are absent without vault
+// access; an empty table makes every resolver take its "no destination" path.
 const stemModules = import.meta.glob<Partial<StemTables>>('./records/file-stems.ts', { eager: true });
 
 interface StemTables {
@@ -62,16 +53,15 @@ interface ScreenHome {
 }
 
 /**
- * The dungeon a palace index belongs to. Matched on the dungeon's own gameId
- * first, then on the palace index its rooms already carry — which is what
- * resolves the two palace values the first castle reports against its single
- * dungeon record.
+ * The dungeon a palace index belongs to: matched on the dungeon's own gameId
+ * first, then on the palace index its rooms carry, which resolves the two
+ * palace values the first castle reports against its single dungeon record.
  */
 const dungeonForPalaceIndex = (palaceIndex: number): DungeonRecord | undefined =>
   findOne('dungeon', d => d.gameId.palaceIndex === palaceIndex)
   ?? findOne('dungeon', d => d.roomScreenIds.some(id => getScreen(id).gameId.palaceIndex === palaceIndex));
 
-/** The dungeon a room belongs to — by the list it appears in, else by palace index. */
+/** Finds a room's dungeon from the list it appears in, falling back to palace index. */
 const dungeonForScreen = (screen: ScreenHome): DungeonRecord | undefined => {
   const id = screen.id;
   const listed = id ? findOne('dungeon', d => d.roomScreenIds.includes(id)) : undefined;
@@ -87,9 +77,8 @@ const screenBucket = (screen: ScreenHome): FileTarget => {
     return { relativePath: `dungeons/${dungeon.fileStem}` };
   }
   if (screen.kind === 'overworld') {
-    // An overworld screen whose areaId names no real area is not in a geographic
-    // area at all — it belongs with the other placeless screens, which is where
-    // the hierarchy already keeps it.
+    // An overworld screen whose areaId names no real area belongs with the
+    // other placeless screens.
     const stem = AREA_FILE_STEMS[screen.areaId];
     if (stem) return { relativePath: `overworld/${stem}` };
     const placeless = INTERIOR_FILE_STEMS.special;
@@ -108,11 +97,7 @@ const inRoot = (root: 'screens' | 'connections', screen: ScreenHome): FileTarget
 
 const screenRecordFile = (screen: ScreenHome): FileTarget => inRoot('screens', screen);
 
-/**
- * A connection point lives in ITS OWN screen's bucket — unlike the old
- * from/to-endpoint crossing, one record now names exactly one screen, so
- * there is no other endpoint to weigh against it.
- */
+/** A connection point lives in ITS OWN screen's bucket: one record names exactly one screen. */
 const connectionRecordFile = (screenId: ScreenId): FileTarget => {
   const screen = findOne('screen', s => s.id === screenId);
   if (!screen) return { relativePath: null, unresolved: `unknown screen ${screenId}` };
@@ -127,8 +112,8 @@ interface CheckHome {
 
 /**
  * A dungeon check lives with its dungeon, an overworld one with its screen's
- * area. Both sides are derived from ids only — a check with neither, and one
- * whose area has no check file, come back unresolved rather than guessed at.
+ * area. A check with neither, or whose area has no check file, comes back
+ * unresolved, never guessed.
  */
 const checkRecordFile = (check: CheckHome): FileTarget => {
   const dungeonId = check.dungeonId;
@@ -157,11 +142,7 @@ const actorRecordFile = (actor: { kind: ActorKind }): FileTarget => {
   return stem ? { relativePath: `actors/${stem}.ts` } : NO_TREE;
 };
 
-/**
- * The two dungeon files were split by size alone, with nothing on the record
- * deciding which half it belongs to, so a new record always goes to the second
- * — deterministic, and no heuristic to maintain for a collection of thirteen.
- */
+/** The two dungeon files were split by size alone, so a new record always goes to the second. */
 const dungeonRecordFile = (): FileTarget => ({ relativePath: 'dungeons-2.ts' });
 
 const areaRecordFile = (): FileTarget => ({ relativePath: 'areas.ts' });

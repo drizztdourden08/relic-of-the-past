@@ -9,7 +9,7 @@ import type { ClassifyTileParams, TileClassification } from './types';
 /**
  * Joins the five independently-sourced facts about one tile: behavior + visual
  * (native tables keyed by attr/indoors), room context (plain values from the
- * caller), collision (the existing `classifyTileAttr`, reused unmodified — see
+ * caller), collision (the existing `classifyTileAttr`, reused unmodified, from
  * classify-collision.ts) and interactable identity (a live side-table lookup,
  * see resolve-interactable.ts). No dimension here is derived from another; each
  * comes from its own source and this function only joins them.

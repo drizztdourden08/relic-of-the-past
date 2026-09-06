@@ -3,8 +3,8 @@
  * Windowed rendering for the simulation log. A full run keeps every event (the
  * early history is the interesting part), which is far more rows than the DOM
  * should hold, so only the NEWEST chunk is mounted and older slices load on
- * demand. Rows wrap, so their heights vary — fixed-height virtualisation would
- * mis-measure them; windowing keeps wrapping intact.
+ * demand. Rows wrap, so their heights vary. Fixed-height virtualisation would
+ * mis-measure them, while windowing keeps wrapping intact.
  *
  * Loading older rows prepends content, so the scroll offset is restored after
  * paint to keep the reader anchored. New events auto-scroll only while the

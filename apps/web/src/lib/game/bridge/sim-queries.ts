@@ -6,11 +6,11 @@ type SimDoorDirection = 'north' | 'south' | 'west' | 'east';
 
 /** Raw SRAM copies for the simulator's flag diffing (see shared FlagSnapshot). */
 interface SimFlagSnapshot {
-  /** save_dung_info — uint16[320], indexed by room ID. */
+  /** save_dung_info is uint16[320], indexed by room ID. */
   dungInfo: Uint16Array;
-  /** save_ow_event_info — uint8[0x82], indexed by overworld screen. */
+  /** save_ow_event_info is uint8[0x82], indexed by overworld screen. */
   owEventInfo: Uint8Array;
-  /** g_progress_buf — 19-byte progress buffer (see state_queries.c). */
+  /** g_progress_buf is the 19-byte progress buffer (see state_queries.c). */
   progress: Uint8Array;
 }
 
@@ -55,9 +55,8 @@ const DIR_NAMES: SimDoorDirection[] = ['north', 'south', 'west', 'east'];
 const roomArg = (roomId: number) => ({ argTypes: ['number'], args: [roomId] });
 
 /**
- * Room-addressable chest table. Gated on developer mode (core/game-hooks/sim_queries.c) —
- * `null` means the gate is closed, distinct from an empty array (this room genuinely has
- * no chests).
+ * Room-addressable chest table. Gated on developer mode (core/game-hooks/sim_queries.c).
+ * `null` means the gate is closed, distinct from an empty array (room has no chests).
  */
 const wasmGetRoomChests = (roomId: number): SimChestRaw[] | null =>
   decodeGatedTable('WasmGetRoomChests', { countBytes: 1, dataStart: 2, stride: 7, maxCount: 6 }, (heap, o) => ({
@@ -70,7 +69,7 @@ const wasmGetRoomChests = (roomId: number): SimChestRaw[] | null =>
     row: heap[o + 6],
   }), roomArg(roomId));
 
-/** Room-addressable sprite spawns. Gated on developer mode — see wasmGetRoomChests. */
+/** Room-addressable sprite spawns. Gated on developer mode. See wasmGetRoomChests. */
 const wasmGetRoomSpriteSpawns = (roomId: number): SimSpriteRaw[] | null =>
   decodeGatedTable('WasmGetRoomSpriteSpawns', { countBytes: 1, dataStart: 2, stride: 4, maxCount: 32 }, (heap, o) => ({
     spriteType: heap[o + 0],
@@ -92,10 +91,7 @@ const wasmSimKillDrop = (roomId: number, itemId: number): void =>
 const wasmSimUnlockDoor = (roomId: number, doorIndex: number, consume: boolean): void =>
   voidCall('WasmSimUnlockDoor', { argTypes: ['number', 'number', 'number'], args: [roomId, doorIndex, consume ? 1 : 0] });
 
-/**
- * Big-key "Cell Lock" plates (room object 0x18) — `opened` once its bit is set. Gated on
- * developer mode — see wasmGetRoomChests.
- */
+/** Big-key "Cell Lock" plates (room object 0x18); `opened` once its bit is set. Gated like wasmGetRoomChests. */
 const wasmGetRoomCellLocks = (roomId: number): { slot: number; row: number; col: number; opened: boolean }[] | null =>
   decodeGatedTable('WasmGetRoomCellLocks', { countBytes: 1, dataStart: 2, stride: 4, maxCount: 6 }, (heap, o) => ({
     slot: heap[o + 0],
@@ -104,7 +100,7 @@ const wasmGetRoomCellLocks = (roomId: number): { slot: number; row: number; col:
     opened: heap[o + 3] !== 0,
   }), roomArg(roomId));
 
-/** Open a cell lock — sets the slot's chest-open bit, as the game does. */
+/** Open a cell lock by setting the slot's chest-open bit, as the game does. */
 const wasmSimOpenCellLock = (roomId: number, slot: number): void =>
   voidCall('WasmSimOpenCellLock', { argTypes: ['number', 'number'], args: [roomId, slot] });
 
@@ -114,24 +110,24 @@ const wasmSimFollowerAttach = (): void => voidCall('WasmSimFollowerAttach', { ar
 /** The Sanctuary priest scene: progress indicator → 2 (the princess is safe). */
 const wasmSimFollowerRescue = (): void => voidCall('WasmSimFollowerRescue', { argTypes: [], args: [] });
 
-/** Diagnostic tallies of Link_ReceiveItem calls — see SimCountReceive in C. */
+/** Diagnostic tallies of Link_ReceiveItem calls. See SimCountReceive in C. */
 const wasmGetReceiveCount = (itemId: number): number =>
   callWhenRunning(0, (mod) => mod.ccall('WasmGetReceiveCount', 'number', ['number'], [itemId]) as number);
 
 const wasmGetReceiveSite = (site: number): number =>
   callWhenRunning(0, (mod) => mod.ccall('WasmGetReceiveSite', 'number', ['number'], [site]) as number);
 
-/** The throne room shelf sliding aside — checkpoint 4, the run's proof it pushed. */
+/** The throne room shelf sliding aside. Checkpoint 4, the run's proof it pushed. */
 const wasmSimPushMantle = (): void => voidCall('WasmSimPushMantle', { argTypes: [], args: [] });
 
-/** The first sage finishing his errand — the map markers go up. */
+/** The first sage finishing his errand, which puts the map markers up. */
 const wasmSimMarkMapIcons = (): void => voidCall('WasmSimMarkMapIcons', { argTypes: [], args: [] });
 
-/** Clear a door's open bit — a trap shutter slamming shut again behind the player. */
+/** Clear a door's open bit (a trap shutter slamming shut behind the player). */
 const wasmSimCloseDoor = (roomId: number, doorIndex: number): void =>
   voidCall('WasmSimCloseDoor', { argTypes: ['number', 'number'], args: [roomId, doorIndex] });
 
-/** Room-addressable door table. Gated on developer mode — see wasmGetRoomChests. */
+/** Room-addressable door table. Gated on developer mode. See wasmGetRoomChests. */
 const wasmGetRoomDoorInfo = (roomId: number): SimDoorRaw[] | null =>
   decodeGatedTable('WasmGetRoomDoorInfo', { countBytes: 1, dataStart: 2, stride: 7, maxCount: 16 }, (heap, o) => ({
     direction: DIR_NAMES[heap[o + 0]] ?? 'north',
@@ -143,7 +139,7 @@ const wasmGetRoomDoorInfo = (roomId: number): SimDoorRaw[] | null =>
     layer: heap[o + 6] === 1 ? 1 : 0,
   }), roomArg(roomId));
 
-/** Screen-addressable overworld sprite spawns. Gated on developer mode — see wasmGetRoomChests. */
+/** Screen-addressable overworld sprite spawns. Gated on developer mode. See wasmGetRoomChests. */
 const wasmGetOverworldSpriteSpawns = (screenIndex: number): SimSpriteRaw[] | null =>
   decodeGatedTable('WasmGetOverworldSpriteSpawns', { countBytes: 1, dataStart: 2, stride: 3, maxCount: 48 }, (heap, o) => ({
     spriteType: heap[o + 0],
@@ -158,10 +154,7 @@ const wasmGetOverworldSpriteSpawns = (screenIndex: number): SimSpriteRaw[] | nul
 const wasmTriggerOverworldCheck = (screen: number, mask: number, itemId: number): void =>
   voidCall('WasmTriggerOverworldCheck', { argTypes: ['number', 'number', 'number'], args: [screen, mask, itemId] });
 
-/**
- * Copy the three raw SRAM flag buffers the simulator diffs. Returns independent
- * copies (never live views) so the engine can hold a pre-trigger snapshot.
- */
+/** Copy the three raw SRAM flag buffers the simulator diffs. Independent copies, never live views. */
 const wasmReadFlagSnapshot = (): SimFlagSnapshot | null =>
   callWhenRunning<SimFlagSnapshot | null>(null, (mod) => {
     const heap = mod.HEAPU8;

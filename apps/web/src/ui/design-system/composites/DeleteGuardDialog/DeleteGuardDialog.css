@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind style */
 
 /* The reference breakdown sits right under the dialog's own message, in the
-   body `Dialog` already provides — `ReferencedBy`'s own top border reads as
-   the dialog's content divider, so nothing extra is needed here beyond the gap. */
+   body `Dialog` already provides. `ReferencedBy`'s own top border reads as the
+   dialog's content divider, so nothing extra is needed here beyond the gap. */
 
 .delete-guard-dialog__hits {
   margin-top: var(--space-sm);

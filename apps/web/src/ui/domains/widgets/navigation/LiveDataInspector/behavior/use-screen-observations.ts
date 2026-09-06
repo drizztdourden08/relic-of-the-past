@@ -1,10 +1,9 @@
 /* @layer renderer-widgets @kind hook */
 /**
- * The screen/connection half of a live `ScreenObservations` — everything the
- * old Dataset widget read to drive its status badges and connection audit,
- * assembled here instead so a detection pass can read the identical ground
- * truth. `liveSprites`/`spriteCombat`/`grantedItems` are NOT this hook's job;
- * see `use-sprite-observations.ts` and `use-granted-items.ts`.
+ * The screen/connection half of a live `ScreenObservations`. It holds everything the
+ * old Dataset widget read for its status badges and connection audit, so a
+ * detection pass reads the same ground truth. Sprites and granted items live
+ * in `use-sprite-observations.ts` and `use-granted-items.ts`.
  */
 import { useMemo } from 'react';
 import { useGameUIStore } from '@app/stores/game-ui-store';
@@ -99,32 +98,28 @@ const useScreenObservations = (): ScreenLiveObservations => {
 
   const palaceMismatches = useMemo(() => [...getPalaceMismatches().values()], [match]);
 
-  // Room-header tag bytes — meaningless outdoors (no room header to read),
-  // so this stays absent there rather than reading as "no tags".
+  // Room-header tag bytes. Meaningless outdoors (no room header), so absent there, not "no tags".
   const roomTags = useMemo<readonly number[] | undefined>(
     () => (isIndoors ? wasmGetRoomTagsFor(roomIndex) : undefined),
     [isIndoors, roomIndex],
   );
 
-  // Dungeon-map position — same "meaningless outdoors" reasoning as `roomTags`;
-  // the native call itself also answers `found: false` for a house/cave, which
-  // is a resolved negative once read, not a reason to withhold the whole field.
+  // Dungeon-map position: same reasoning as `roomTags`. A `found: false` for a
+  // house/cave is a resolved negative, not a reason to withhold the field.
   const dungeonMapPos = useMemo<LiveDungeonMapPosition | undefined>(
     () => (isIndoors ? wasmGetDungeonMapPosition() ?? undefined : undefined),
     [isIndoors, roomIndex],
   );
 
-  // Entrance id -> spawn tile table. Static and entrance-indexed rather than
-  // room-indexed, like `entranceRooms` above, so it is read the same way —
-  // unconditionally, gated only by whether the module has anything to report.
+  // Entrance id -> spawn tile table. Static and entrance-indexed like
+  // `entranceRooms` above, so it is read unconditionally.
   const entranceSpawns = useMemo<readonly { x: number; y: number }[] | undefined>(
     () => wasmGetEntranceSpawns() ?? undefined,
     [roomIndex],
   );
 
-  // The room's own exit tables — enumerable, so an indoor scroll edge can
-  // finally be judged for removal against them (F3); meaningless outdoors,
-  // same "not read" reasoning as `roomTags`/`dungeonMapPos` above.
+  // The room's own exit tables, so an indoor scroll edge can be judged for
+  // removal (F3). Meaningless outdoors, same as `roomTags`.
   const walkBoundaries = useMemo<readonly LiveWalkBoundary[] | undefined>(
     () => (isIndoors ? wasmGetRoomWalkBoundaries() : undefined),
     [isIndoors, roomIndex],

@@ -62,7 +62,7 @@ const PaletteEditor = (props: PaletteEditorProps) => {
       : `Gloves · ${slot === 'g0' ? 'power' : 'titan'}`;
 
   // Quick-assign: every colour already in this sheet, grouped by exactly where it comes
-  // from — a flat list would make it impossible to tell a green-outfit shadow from a
+  // from. A flat list would make it impossible to tell a green-outfit shadow from a
   // blue-outfit one at a glance, which is the whole point of offering them for reuse.
   const swatchGroups = useMemo<SwatchGroup[]>(() => {
     if (slot === null) return [];
@@ -91,7 +91,7 @@ const PaletteEditor = (props: PaletteEditorProps) => {
               caption={i + 1}
               selected={slot === i}
               edited={colors[i] !== originals[i]}
-              title={`Index ${i + 1}${i + 1 === GLOVES_INDEX ? ' — replaced by the glove colour when gloves are worn' : ''}`}
+              title={`Index ${i + 1}${i + 1 === GLOVES_INDEX ? ' (replaced by the glove colour when gloves are worn)' : ''}`}
               onClick={(e) => openAt(e.currentTarget, i)}
             />
           ))}

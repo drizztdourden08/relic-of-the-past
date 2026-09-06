@@ -1,13 +1,8 @@
 /* @layer renderer-app @kind logic */
 /**
- * The shared tail every record creator ends with: publish the newly minted id
- * as a pickable option and rebuild its collection's `CollectionSource` so the
- * table shows the new row without a reload.
- *
- * Split out of record-creators.ts so `create-connection.ts` (the pair-aware
- * connection creator, which settles TWO ids per accepted create) can share it
- * rather than carrying a second copy of the same two calls that could drift
- * out of step with this one.
+ * The shared tail every record creator ends with: publish the new id as a
+ * pickable option and rebuild the `CollectionSource` so the table shows the
+ * row without a reload. Shared with `create-connection.ts`, which settles two ids.
  */
 import { refreshCollectionSource } from './collection-sources';
 import { registerIdRefOption } from './id-ref-options';

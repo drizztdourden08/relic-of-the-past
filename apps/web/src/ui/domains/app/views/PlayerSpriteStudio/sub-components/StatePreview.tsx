@@ -43,7 +43,7 @@ const StatePreview = (props: StatePreviewProps) => {
         ))}
       </Box>
       <Text className="state-preview__note">
-        Body only — the blade, shield and held items are drawn from other graphics the engine
+        Body only. The blade, shield and held items are drawn from other graphics the engine
         stages separately, so no sprite sheet can supply them.
       </Text>
     </Box>

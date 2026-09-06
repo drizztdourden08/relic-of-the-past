@@ -16,7 +16,7 @@ const wsl = (distro, bashCmd, opts = {}) => run('wsl', ['-d', distro, 'bash', '-
 const wslCapture = (distro, bashCmd, opts = {}) =>
   capture('wsl', ['-d', distro, 'bash', '-lc', bashCmd], opts);
 
-// Synchronous sleep (no busy-wait) — used while polling the emulator boot state.
+// Synchronous sleep (no busy-wait) for polling the emulator boot state.
 const sleep = (ms) => {
   Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
 };

@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind hook */
 /**
  * Headless table state: visible columns, multi-sort, layered grouping, and the
- * rows those produce. The only file in this package that touches React — every
- * transform it calls is a pure function next door, so the behaviour is testable
- * without a renderer.
+ * rows those produce. This is the only file in this package that touches React.
+ * Every transform it calls is a pure function next door, so the behaviour is
+ * testable without a renderer.
  */
 import { useCallback, useMemo, useState } from 'react';
 import type { FieldDescriptor } from '../schema/field-descriptor';
@@ -35,7 +35,7 @@ interface DataTableState<T> extends TableState {
   sortedRows: readonly T[];
   groupedRows: readonly GroupedRow<T>[];
   addColumn: (path: string) => void;
-  /** The same add at a chosen slot — "add a column before / after this one". */
+  /** The same add at a chosen slot, for "add a column before / after this one". */
   insertColumn: (path: string, at: number) => void;
   removeColumn: (path: string) => void;
   moveColumn: (path: string, move: ColumnMove) => void;
@@ -47,7 +47,7 @@ interface DataTableState<T> extends TableState {
   growColumn: (path: string) => void;
   /** Turns on persistent fit-to-content; clears any fixed width or grow flag. */
   fitColumn: (path: string) => void;
-  /** The footer's "fit all to content" — every visible column, at once. */
+  /** The footer's "fit all to content", applied to every visible column at once. */
   fitAllColumns: () => void;
   /**
    * For a reference column: which field of the record it points at to show
@@ -55,9 +55,9 @@ interface DataTableState<T> extends TableState {
    */
   setDisplayField: (path: string, displayField: string | undefined) => void;
   resetColumns: () => void;
-  /** Header click — replaces the whole sort list, cycling asc → desc → none. */
+  /** Header click. Replaces the whole sort list, cycling asc → desc → none. */
   setSingleSort: (path: string) => void;
-  /** Column menu — adds a level in ONE named direction, or rewrites its own. */
+  /** Column menu. Adds a level in ONE named direction, or rewrites its own. */
   setSortDir: (path: string, dir: SortEntry['dir']) => void;
   removeSort: (path: string) => void;
   clearSort: () => void;
@@ -70,7 +70,7 @@ interface DataTableState<T> extends TableState {
 
 /**
  * The schema's visible top level, each column opening in the persistent
- * fit-to-content mode rather than the automatic range — the sizing default
+ * fit-to-content mode instead of the automatic range. This is the sizing default
  * for any column nothing more specific was asked for.
  */
 const defaultColumns = (schema: readonly FieldDescriptor[]): readonly TableColumn[] =>

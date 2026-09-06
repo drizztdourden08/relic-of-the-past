@@ -1,8 +1,6 @@
 /* @layer core-game-hooks @kind native */
 #include "game_hooks_internal.h"
 
-// ─── Always Illuminate Dark Rooms ───
-//
 // A dark room only lights up around the player when the game decides the lamp is in use, and the
 // single thing that decision turns on is whether the item is owned: Hud_RestoreTorchBackground
 // (hud.c) sets hdr_dungeon_dark_with_lantern and puts the mask layer on the subscreen, and bails
@@ -26,7 +24,7 @@ static bool IlluminateArmed(void) {
 
 // Whether this frame's cone state is ours to drive at all. Player in control of a dark indoor room,
 // no torch lit (a lit torch lights the whole room, which is the game's own reason to drop the cone),
-// and crucially no lamp owned: with the item the game already does the right thing every frame and
+// and no lamp owned: with the item the game already does the right thing every frame and
 // fighting it could only ever make things worse. That last clause is also what makes the disarm
 // safe, since a cone standing in a lampless dark room can only be one we raised.
 static bool ConeIsOurs(void) {

@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 /**
- * The engine's own diagnostic feed — the decisions no live report can show.
+ * The engine's own diagnostic feed, holding the decisions no live report can show.
  *
  * A channel report says what IS sounding; the core's sound trace says what the game RAISED. The
  * gap between them is what the engine decided in between, and the chance roll is exactly that:
@@ -13,7 +13,7 @@
 
 interface MsuRollEvent {
   kind: 'roll';
-  /** The channel the program sounds on — 'music', 'ambient', 'sfx1' or 'sfx2'. */
+  /** The channel the program sounds on, one of 'music', 'ambient', 'sfx1' or 'sfx2'. */
   channel: string;
   /** The program the layer belongs to: track number or sound id. */
   programId: number;

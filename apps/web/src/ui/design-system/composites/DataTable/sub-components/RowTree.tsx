@@ -1,12 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
- * Renders exactly what the headless hook produced: a `GroupedRow` tree whose
- * group nodes nest and whose leaves are records. With no grouping the tree is
- * a flat list of leaves, so this one walk covers both cases and the table never
- * has to branch on "grouped or not".
- *
- * A collapsed branch is simply not rendered — the subtree is still in hand,
- * which is why the core hands over a tree rather than a pre-flattened list.
+ * Renders the `GroupedRow` tree. With no grouping it is a flat list of leaves,
+ * so one walk covers both cases. A collapsed branch is not rendered.
  */
 import { Fragment } from 'react';
 import { DataRow } from './DataRow';
@@ -25,12 +20,8 @@ const RowTree = <T,>(props: RowTreeProps<T>) => {
   const { nodes, parentUid, context } = props;
   const { columns, schema, getRowId, isExpanded, onToggleGroup, resolveIdRefDisplay, resolveIdRefDefault } = context;
 
-  /*
-   * A grouping level is a COLUMN's grouping level, so the display choice the
-   * header honours is the one set on that column — looked up by the path the
-   * group node already carries. Grouping by a path with no column on screen
-   * finds nothing and the header reads as the raw key, which is right.
-   */
+  /* The group header honours the display choice set on that column. A path with
+     no column on screen reads as the raw key. */
   const displayFor = (path: string) => ({
     displayField: columns.find((column) => column.path === path)?.displayField,
     resolve: resolveIdRefDisplay,

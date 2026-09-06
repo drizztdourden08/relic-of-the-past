@@ -28,11 +28,9 @@ const api: IpcApi = {
   startup: {
     fresh: process.argv.includes('--startup-fresh'),
     widgets: (process.argv.find((a) => a.startsWith('--startup-widgets='))?.slice('--startup-widgets='.length).split(',').filter(Boolean)) ?? [],
-    // True for any test/automation launch. Such a run must not write the configuration
-    // every launch shares — see lib/instance.ts.
+    // True for any test/automation launch, which must not write shared configuration.
     automation: process.argv.includes('--startup-automation'),
-    // Start with the app's master volume at zero. A launch flag, never a window-level
-    // audio override, so the in-app control still reflects and owns the state.
+    // Starting master volume at zero; the in-app control still owns the state.
     muted: process.argv.includes('--startup-muted'),
     sound: process.argv.includes('--startup-sound'),
     autoStart: process.argv.includes('--startup-auto-start'),
@@ -111,10 +109,8 @@ const api: IpcApi = {
 
 contextBridge.exposeInMainWorld('api', api);
 
-// Dev/test aid (not part of the IpcApi contract): when RELIC_FORCE_ASPECT is set in the environment
-// (e.g. a Playwright launch passing env: { RELIC_FORCE_ASPECT: '16:9' }), the renderer overrides the
-// profile's aspect ratio at boot so the wide/tall camera paths can be exercised without changing it
-// in-app. Null in normal runs — has no effect.
+// Dev/test aid, not part of the IpcApi contract: RELIC_FORCE_ASPECT (e.g. '16:9' from a
+// Playwright launch) overrides the profile's aspect ratio at boot. Null in normal runs.
 contextBridge.exposeInMainWorld('__relicDebug', {
   forceAspect: process.env.RELIC_FORCE_ASPECT || null,
 });

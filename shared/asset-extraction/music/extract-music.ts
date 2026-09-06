@@ -1,9 +1,7 @@
 /* @layer shared-asset-extraction @kind logic */
 /**
- * Music extraction — orchestrator that loads SPC sound banks from ROM,
- * decodes songs/phrases/patterns/SFX, and produces text + sample output.
- *
- * Ported from: upstream's extract_music.py
+ * Loads SPC sound banks from ROM, decodes songs/phrases/patterns/SFX, and produces text
+ * plus sample output. Ported from upstream's extract_music.py.
  */
 import type { RomData } from '../rom/rom-types';
 import type { MusicExtractionResult } from './extract-types';

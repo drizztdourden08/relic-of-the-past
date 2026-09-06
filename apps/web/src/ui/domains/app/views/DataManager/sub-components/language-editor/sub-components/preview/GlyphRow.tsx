@@ -3,9 +3,9 @@
  * One row of a previewed box: the glyphs the layout walk says are standing
  * there, each advanced by its own width out of the pack's table.
  *
- * A row that was already on screen before this box drew is dimmed rather than
- * hidden. It IS on screen — nothing clears it — so removing it would be the lie;
- * showing it at full strength would suggest this box wrote it.
+ * A row that was already on screen before this box drew is dimmed, not
+ * hidden. It IS on screen, because nothing clears it, so removing it would be
+ * the lie. Showing it at full strength would suggest this box wrote it.
  */
 import { Box } from '@ds/primitives';
 import { GlyphCell } from '../../editor-ui';

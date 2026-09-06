@@ -8,8 +8,8 @@
  * one take the whole record, like every other record-facade collection, and go
  * through the shared engine.
  *
- * Both files are flat and singular, so there is no destination to derive —
- * which is the one thing that makes these two the cheapest of the six.
+ * Both files are flat and singular, so there is no destination to derive. That
+ * one thing makes these two the cheapest of the six.
  */
 
 import { readFile, writeFile } from 'fs/promises';

@@ -2,10 +2,10 @@
 /**
  * One-shot migration for item-review verdicts saved under the old display-name
  * keys, back when the item catalog had no stable id to key on. Resolved once
- * on load — the next save persists ids only, so a user's data has nothing left
+ * on load. The next save persists ids only, so a user's data has nothing left
  * to migrate the next time this runs. Dev-tool review data in userData, not
  * dataset content, so an unresolvable legacy key (one of the old orphaned
- * sprite-map entries) is simply dropped rather than preserved.
+ * sprite-map entries) is dropped, not preserved.
  */
 import { find } from '@shared/game/data';
 import type { ReviewData } from '../SpriteDebug.type';

@@ -15,7 +15,7 @@ interface NumberRangeProps {
   onChange: (value: unknown) => void;
 }
 
-/** '' rather than NaN, so a cleared input stays cleared instead of showing NaN. */
+/** '' instead of NaN, so a cleared input stays cleared. */
 const inputValue = (bound: unknown): number | string => {
   const parsed = toNumber(bound);
   return Number.isFinite(parsed) ? parsed : '';
@@ -34,7 +34,7 @@ const NumberRange = (props: NumberRangeProps) => {
         placeholder="from"
         onChange={(entered) => onChange([asBound(entered), high ?? null])}
       />
-      <Text className="field-kit__range-sep">–</Text>
+      <Text className="field-kit__range-sep">-</Text>
       <NumberInput
         value={inputValue(high)}
         placeholder="to"

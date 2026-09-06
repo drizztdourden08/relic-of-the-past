@@ -16,13 +16,13 @@
 #include "game_hooks_internal.h"
 #include "emscripten_internal.h"
 
-// Renderer state — owned here (only the SdlRenderer_* functions touch it).
+// Renderer state, owned here (only the SdlRenderer_* functions touch it).
 static SDL_Renderer *g_renderer;
 static SDL_Texture *g_texture;
 static SDL_Rect g_sdl_renderer_rect;
 
 // ---------------------------------------------------------------------------
-// Audio — no mutex needed in single-threaded WASM
+// Audio needs no mutex in single-threaded WASM
 // ---------------------------------------------------------------------------
 void SDLCALL AudioCallback(void *userdata, Uint8 *stream, int len) {
   while (len != 0) {
@@ -111,7 +111,7 @@ const struct RendererFuncs kSdlRendererFuncs = {
 // When false, SDL keyboard events are used (legacy/fallback).
 // ---------------------------------------------------------------------------
 void HandleInput(int keyCode, bool pressed) {
-  if (g_js_input_mode) return;  // JS is driving input — ignore SDL keys
+  if (g_js_input_mode) return;  // JS is driving input, so ignore SDL keys
   int bit = -1;
   switch (keyCode) {
     case SDLK_UP:     bit = 4; break;  // Up
@@ -145,7 +145,7 @@ void HandleCommand(int keyCode) {
   if (g_js_input_mode) return;  // JS drives commands via Wasm* exports
   switch (keyCode) {
     case SDLK_w:
-      // Same permission WasmCheat requires (emscripten_api.c) — this legacy keyboard path reaches
+      // Same permission WasmCheat requires (emscripten_api.c), because this legacy keyboard path reaches
       // the same vendored PatchCommand and must not act unless a cheat category is actually granted.
       if (!CheatGate(kFeatures3_CheatStats)) break;
       if (SDL_GetModState() & KMOD_SHIFT)

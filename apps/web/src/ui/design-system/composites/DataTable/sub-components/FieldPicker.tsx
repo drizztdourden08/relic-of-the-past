@@ -1,12 +1,8 @@
 /* @layer renderer-components @kind component */
 /**
- * The recursive field tree, generic on purpose: a schema, a pick callback and
- * the paths to leave out. It holds no table state and — just as deliberately —
- * no positioning policy: it renders a bare list, and whoever opens it decides
- * where that list floats. That is what lets the same component serve "add a
- * column" here and "add a filter" in a filter bar, each with its own anchor.
- *
- * Rows carry the shared menu item classes so both surfaces look like one menu.
+ * The recursive field tree. No table state and no positioning policy: it
+ * renders a bare list and whoever opens it decides where it floats, so it
+ * serves both "add a column" and "add a filter".
  */
 import { useMemo } from 'react';
 import { Box } from '../../../primitives/Box';
@@ -20,7 +16,7 @@ import './FieldPicker.css';
 interface FieldPickerProps {
   schema: readonly FieldDescriptor[];
   onPick: (path: string) => void;
-  /** Fields already in use — a column already shown, a field already filtered. */
+  /** Fields already in use, such as a column already shown or a field already filtered. */
   excludePaths?: readonly string[];
   emptyMessage?: string;
 }

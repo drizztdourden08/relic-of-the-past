@@ -11,7 +11,7 @@
  * the end.
  *
  * The repeat point shades the stretch before it on the same bar, so the part that plays once is
- * read against the whole length rather than as a number to compare by hand.
+ * read against the whole length, not as a number to compare by hand.
  */
 import { useEffect, useRef, useState } from 'react';
 import { Box } from '@ds/primitives/Box';

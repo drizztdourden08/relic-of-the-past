@@ -1,20 +1,10 @@
 /* @layer shared-game @kind logic */
 /**
- * Both directions of the tag relationship, as plain maps.
- *
- * Records store TagIds, but every rule in the app is written against the KEY
- * (`barrier:small-key`, `env:outdoor`) — a number carries no meaning to a
- * traversal rule. So the boundary between the two lives here, and nowhere else:
- * a reader converts once as it takes `record.tags`, and a writer converts once
- * as it hands a draft back.
- *
- * Built straight off `ALL_TAGS` rather than off the registry, so this module has
- * no dependency on seeding order and can be imported from anywhere in the
- * dataset, including by the facade itself.
- *
- * An id with no record, or a key with no record, is dropped rather than
- * substituted. A tag that does not resolve carries no meaning, and a
- * stand-in would make a genuine dangling reference look like a real term.
+ * Both directions of the tag relationship. Records store TagIds, but every
+ * rule is written against the KEY (`barrier:small-key`), so the conversion
+ * lives here and nowhere else. Built off `ALL_TAGS`, not the registry, so it
+ * has no dependency on seeding order. An id or key with no record is dropped,
+ * never substituted: a stand-in would make a dangling reference look like a real term.
  */
 import { ALL_TAGS } from './tags';
 import { replaceAll } from '../registry';
@@ -64,13 +54,9 @@ const hasTagKey = (ids: readonly string[], key: string): boolean => {
 
 /**
  * The same read, narrowed to the taxonomy union a rule is written against.
- *
- * The narrowing is asserted rather than proven, and deliberately so: the
- * taxonomy tables SEED the vocabulary, they do not bound it, so a term added
- * after the seed is a real key that no union mentions. Widening the unions to
- * `string` instead would cost every rule its exhaustiveness, for the sake of a
- * term that by definition matches none of them. A test pins the seeded terms to
- * the unions, which is where the guarantee actually belongs.
+ * Asserted, not proven, on purpose: the taxonomy tables SEED the vocabulary
+ * and do not bound it, so a term added later is a real key no union mentions.
+ * A test pins the seeded terms to the unions.
  */
 const screenTagKeysOf = (ids: readonly string[]): readonly ScreenTag[] =>
   tagKeysOf(ids) as readonly ScreenTag[];
@@ -87,10 +73,7 @@ const tagsFor = (kind: EntityKind): readonly TagRecord[] =>
 
 /**
  * Adds a term the allocator minted after seeding, so the maps AND the registry
- * answer for it without a reload. Ignored when the id or the key is already
- * registered — a second record under either would make one of them
- * unreachable. The record is already on disk by the time this runs; this only
- * saves the session from reading a term it just created as a bare id.
+ * answer for it without a reload. Ignored when the id or key already exists. The record is already on disk by the time this runs.
  */
 const registerTag = (record: TagRecord): boolean => {
   if (byId.has(record.id) || byKey.has(record.name)) return false;
@@ -102,11 +85,9 @@ const registerTag = (record: TagRecord): boolean => {
 };
 
 /**
- * Folds an edited record back in after the write it depends on has already
- * landed on disk, so a rename resolves everywhere in the session without a
- * reload — the same bargain `registerTag` makes for a brand-new term. The key
- * can change along with the label, so the old `byKey` entry is dropped rather
- * than left to shadow the new one.
+ * Folds an edited record back in after its write landed on disk, so a rename
+ * resolves everywhere without a reload. The key can change with the label, so
+ * the old `byKey` entry is dropped instead of shadowing the new one.
  */
 const replaceTagRecord = (record: TagRecord): boolean => {
   const existing = byId.get(record.id);
@@ -121,10 +102,7 @@ const replaceTagRecord = (record: TagRecord): boolean => {
   return true;
 };
 
-/**
- * Drops a term from every map, once the delete-guard's own write has already
- * removed it from disk — the sibling of `registerTag` for the other direction.
- */
+/** Drops a term from every map once the delete-guard's write has removed it from disk. */
 const unregisterTag = (id: string): boolean => {
   const existing = byId.get(id);
   if (!existing) return false;

@@ -15,7 +15,7 @@
         height: 100%;
         overflow: hidden;
         background: #000;
-        /* No -webkit-app-region:drag anywhere on this page — a frameless window with no
+        /* No -webkit-app-region:drag anywhere on this page. A frameless window with no
            drag region cannot be moved, which is what a splash should be. */
         user-select: none;
         cursor: default;
@@ -43,10 +43,9 @@
       }
       .splash__status {
         /* Out of flow on purpose: the logo + spinner column stays centred exactly where
-           the installer's splash GIF puts it, whatever the status line says.
-           Being bottom-anchored, it grows UPWARDS, so a long message would climb into
-           the spinner. nowrap keeps it to one line and the ellipsis absorbs the rest,
-           which is what makes the gap below fixed rather than a function of the text. */
+           the installer's splash GIF puts it, whatever the status line says. Being
+           bottom-anchored it grows UPWARDS, so nowrap keeps it to one line and the
+           ellipsis absorbs the rest, keeping the gap below fixed. */
         position: fixed;
         left: 0;
         right: 0;
@@ -82,7 +81,7 @@
   <body>
     <img class="splash__logo" src="./logos/logo-256.png" alt="" />
     <div class="splash__spinner"></div>
-    <p class="splash__status" id="splash-status">Starting…</p>
+    <p class="splash__status" id="splash-status">Starting...</p>
     <span class="splash__version" id="splash-version"></span>
     <script>
       // The main process drives the status line through this one global (see

@@ -21,7 +21,7 @@ interface DungeonRecord {
    * The file stem this dungeon's records live under, in both
    * `screens/<world>-world/dungeons/` and `connections/<world>-world/dungeons/`.
    * Carried on the record so a destination path is selected from a `DungeonId`
-   * and never derived from a display name — a rename must not move a file.
+   * and never derived from a display name, because a rename must not move a file.
    */
   fileStem: string;
   /** The first castle has no boss of its own. */

@@ -27,7 +27,7 @@ const StopAtCheckList = (props: StopAtCheckListProps) => {
         onClick={() => onSelect('')}
       >
         <Text className="stop-picker__row-icon">∞</Text>
-        <Text className="stop-picker__row-name">No stop — full run</Text>
+        <Text className="stop-picker__row-name">No stop (full run)</Text>
       </Button>
 
       {checks.length === 0 && (

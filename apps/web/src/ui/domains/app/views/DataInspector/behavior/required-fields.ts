@@ -1,14 +1,9 @@
 /* @layer renderer-app @kind logic */
 /**
- * Which paths a record must hold a value on before it can be created.
- *
- * A field counts as required exactly when the schema itself says so —
- * `FieldDescriptor.optional` is already exact rather than a guess, because
- * derivation samples every row in the collection (see infer-kind.ts). Nesting
- * is only followed through plain objects: an array or a union's own
- * completeness is a fact about its VALUE (which branch, how many entries),
- * not a fixed shape the schema can name in advance, so neither is walked any
- * further than its own top path.
+ * Which paths a record must hold before it can be created. `optional` is exact
+ * because derivation samples every row (see infer-kind.ts). Only plain objects
+ * are walked: an array's or union's completeness depends on its value, not a
+ * shape the schema can name in advance.
  */
 import type { FieldDescriptor } from '@ds/data';
 

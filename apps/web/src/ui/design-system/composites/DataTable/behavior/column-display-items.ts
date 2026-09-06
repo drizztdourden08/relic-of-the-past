@@ -1,16 +1,8 @@
 /* @layer renderer-components @kind logic */
 /**
- * The "Display as…" block of a reference column's ⋯ menu.
- *
- * Its own file for the same reason the sort block is: it exists conditionally.
- * Only a reference column has anything to substitute, and only a caller that
- * injected a lookup can say what the fields to substitute WITH are — so with
- * either missing this contributes nothing at all rather than a dead entry.
- *
- * The id leads the submenu and is ticked by default, because that is what the
- * column shows until someone chooses otherwise, and because "put it back" has
- * to be as reachable as the choice that moved it. Every other entry is a field
- * of the target collection, ticked when it is the one in effect.
+ * The "Display as" block of a reference column's ⋯ menu. Without a reference
+ * field or an injected lookup it contributes nothing. The id leads the submenu
+ * and is ticked by default, so "put it back" is as reachable as the choice.
  */
 import type { MenuEntry, MenuItem } from '../../DropdownMenu';
 import type { FieldDescriptor } from '../../../data/schema/field-descriptor';
@@ -60,7 +52,7 @@ const buildColumnDisplayItems = (input: ColumnDisplayInput): MenuEntry[] => {
   ];
 
   /* A swap glyph: the column shows one thing in place of another. */
-  return [{ key: 'display-as', icon: '⇄', label: 'Display as…', children }];
+  return [{ key: 'display-as', icon: '⇄', label: 'Display as...', children }];
 };
 
 export { ID_KEY, ID_LABEL, buildColumnDisplayItems };

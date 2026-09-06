@@ -5,19 +5,20 @@
  *
  * A wait, a row return and a scroll are the codes a player actually experiences,
  * and all of them happen at a line's edge, never inside a sentence. So the
- * advance is an icon at the end of the line the box moves on FROM — where a
- * reader experiences it, even though the code belongs to the line below — and
- * the wait is an icon on the line it closes.
+ * advance is an icon at the end of the line the box moves on FROM. That is where
+ * a reader experiences it, even though the code belongs to the line below. The
+ * wait is an icon on the line it closes.
  *
  * They are WIDGET DECORATIONS: no text, no size in the document, nothing the
- * caret can land in or a copy can carry out. Placement is automatic and follows
- * the line structure, so none is ever typed and none has to be found.
+ * caret can land in or a copy can carry out. Placement follows the line
+ * structure, so none is ever typed.
  *
  * Every line gets BOTH slots, in a fixed order, and a slot with nothing to show
- * is hidden rather than omitted: a marker that appears only sometimes used to
+ * is hidden, not omitted: a marker that appears only sometimes used to
  * shunt its neighbour sideways every time the caret moved. The wait slot is the
- * one control here — visible when on, offered faintly on the caret's line, and
- * toggled by click; the advance markers state facts and take no pointer at all.
+ * one control here. It is visible when on, offered faintly on the caret's line,
+ * and toggled by click. The advance markers state facts and take no pointer at
+ * all.
  *
  * Mousedown on the wait is swallowed so the click never moves the caret; the
  * keyboard route to the same toggle is on the line node itself.
@@ -34,7 +35,7 @@ import type { EditorState } from '@tiptap/pm/state';
 import type { EditorView } from '@tiptap/pm/view';
 
 const kIconPx = 12;
-const kWaitOn = 'Ends the box here — the player presses a button to go on. Click to remove.';
+const kWaitOn = 'Ends the box here. The player presses a button to go on. Click to remove.';
 const kWaitOff = 'Click to end the box here, so the player presses a button before the next line.';
 const kScroll = 'The box scrolls up a line to make room for the next one.';
 
@@ -104,8 +105,8 @@ const decorationsFor = (state: EditorState): DecorationSet => {
   const decorations: Decoration[] = [];
 
   lines.forEach((line, index) => {
-    // Inside the paragraph, after its last child — so the markers read as part
-    // of the line rather than as the start of the next one.
+    // Inside the paragraph, after its last child. The markers then read as part
+    // of the line, not as the start of the next one.
     const end = line.pos + line.node.nodeSize - 1;
 
     const next = lines[index + 1];

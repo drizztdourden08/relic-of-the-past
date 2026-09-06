@@ -50,7 +50,7 @@ const SetCreateForm = (props: SetCreateFormProps) => {
     return (
       <Box className="set-create">
         <Button variant="ghost" size="sm" disabled={sets.length === 0} onClick={() => setOpen(true)}>
-          New set…
+          New set...
         </Button>
       </Box>
     );
@@ -63,7 +63,7 @@ const SetCreateForm = (props: SetCreateFormProps) => {
           value={source}
           onChange={setSource}
           options={options}
-          placeholder="Pick a set…"
+          placeholder="Pick a set..."
         />
       </Field>
       <Field label="Id" hint="lowercase letters, digits and dashes">

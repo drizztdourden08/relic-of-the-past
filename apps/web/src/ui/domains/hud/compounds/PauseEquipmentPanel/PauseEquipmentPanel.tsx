@@ -1,11 +1,10 @@
 /* @layer renderer-hud @kind data */
 /**
- * PauseEquipmentPanel — displays equipped sword, shield, armor + heart pieces/dungeon items.
+ * Equipped sword, shield, armor + heart pieces/dungeon items.
  *
  * Game layout: tiles (21,21)→(30,29) = 10×9 tiles (inner 8×7)
- * Layout:
  *   Row 0: "ITEM." label text
- *   Row 1-2: Sword(0,1) Shield(3,1) Armor(6,1)  — each 2×2
+ *   Row 1-2: Sword(0,1) Shield(3,1) Armor(6,1), each 2×2
  *   Row 3: Dashed separator line (8 dots)
  *   Row 4: "EQUIP." label (in dungeon) or blank (overworld)
  *   Row 5-6: Heart pieces (overworld) or Map/Compass/BigKey (dungeon)
@@ -44,7 +43,7 @@ const PauseEquipmentPanel = ({ sword, shield, armor, heartPieces, isInDungeon, b
 
   return (
     <PauseBorderBox color="yellow" cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase} style={style}>
-      {/* "EQUIP" label — aligned left */}
+      {/* Left-aligned "EQUIP" label */}
       <HudBox style={{ position: 'absolute', top: 0, left: 0 }}>
         <PauseLabel name="equipment" tiles={5} scale={scale} spritesBase={spritesBase} />
       </HudBox>
@@ -90,7 +89,7 @@ const PauseEquipmentPanel = ({ sword, shield, armor, heartPieces, isInDungeon, b
         </>
       ) : (
         <>
-          {/* "D.ITEMS" label — only in dungeons, at row 4 */}
+          {/* "D.ITEMS" label at row 4, dungeons only */}
           <HudBox style={{ position: 'absolute', top: tile * 4, left: 0 }}>
             <PauseLabel name="dungeon-item" tiles={7} scale={scale} spritesBase={spritesBase} />
           </HudBox>

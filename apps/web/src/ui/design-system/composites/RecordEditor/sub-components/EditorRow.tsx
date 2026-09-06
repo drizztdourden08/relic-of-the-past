@@ -1,23 +1,11 @@
 /* @layer renderer-components @kind component */
 /**
- * One field. A leaf binds the kit's own editor straight to the path; a nested
- * kind renders its children as rows of their own, so this component calls itself
- * and the form goes as deep as the schema does.
- *
- * The two nested kinds differ in one place only. An object shows all of its
- * children, because there is one shape. A union shows the branch the CURRENT
- * value is in, because the schema's children are every branch merged; when no
- * branch resolves, the row falls back to the same one-line summary the kit's
- * cell renderer produces rather than guessing a form.
- *
- * That is also why an ABSENT object still shows its form while an absent union
- * does not: one shape can be created by filling it in (writing a nested path
- * builds the containers on the way down), and a set of branches cannot be
- * created without first knowing which branch was meant.
- *
- * One object shape is recognised rather than merely recursed into: a grid
- * position is edited as a pair, with whatever it holds BESIDES the pair kept as
- * rows of its own.
+ * One field. A leaf binds the kit's editor to the path; a nested kind renders
+ * its children as rows, recursively. An object shows all children; a union
+ * shows the branch the current value is in, or the kit's summary when none
+ * resolves. An absent object still shows its form (writing a nested path
+ * builds the containers); an absent union cannot, since the branch is unknown.
+ * A grid position is edited as a pair.
  */
 import { Box } from '../../../primitives/Box';
 import { Field } from '../../../primitives/Field';
@@ -44,12 +32,12 @@ const SINGLE_VALUE_KINDS: readonly FieldKind[] = ['string', 'number', 'boolean',
 const MAX_NESTING = 12;
 
 const OPTIONAL = 'optional';
-const NO_FIELDS = 'No fields described — shown as recorded.';
-const TOO_DEEP = 'Nested too deep to lay out — shown as recorded.';
+const NO_FIELDS = 'No fields described. Shown as recorded.';
+const TOO_DEEP = 'Nested too deep to lay out. Shown as recorded.';
 const NO_BRANCH: Record<string, string> = {
-  absent: 'No value set — shown as recorded.',
-  'not-object': 'Not a branch shape — shown as recorded.',
-  unmatched: 'Unrecognised branch — shown as recorded.',
+  absent: 'No value set. Shown as recorded.',
+  'not-object': 'Not a branch shape. Shown as recorded.',
+  unmatched: 'Unrecognised branch. Shown as recorded.',
 };
 
 interface NestedPlan {
@@ -69,7 +57,7 @@ const unionPlan = (field: FieldDescriptor, value: unknown): NestedPlan => {
   return { fields: branch.fields, note: extraNote(branch.extraKeys) };
 };
 
-/** Null for a field that renders as a control rather than as a set of rows. */
+/** Null for a field that renders as a control, not as a set of rows. */
 const nestedPlanFor = (field: FieldDescriptor, value: unknown, depth: number): NestedPlan | null => {
   if (field.kind !== 'object' && field.kind !== 'union') return null;
   if (depth >= MAX_NESTING) return { fields: [], note: TOO_DEEP };
@@ -99,14 +87,12 @@ const arrayControlFor = (
   if (element.kind === 'object' && element.children?.length) {
     return <ObjectArrayEditor field={field} value={value} binding={binding} depth={depth} />;
   }
-  // A list of VARIANT records — each element is one of several branches
-  // (e.g. a requirement expression's `anyOf`/`allOf`) rather than one fixed
-  // shape, so it needs a branch-aware editor instead of the object one above.
+  // A list of variant records (e.g. a requirement's `anyOf`/`allOf`) needs a
+  // branch-aware editor.
   if (element.kind === 'union' && element.children?.length) {
     return <VariantArrayEditor field={field} value={value} binding={binding} depth={depth} />;
   }
-  // A list of lists of plain values (e.g. an OR-of-AND requirement set) —
-  // structurally an array, but one level deeper than the single-value case above.
+  // A list of lists of plain values (e.g. an OR-of-AND requirement set).
   if (element.kind === 'array') {
     return <NestedArrayEditor field={field} value={value} binding={binding} />;
   }
@@ -122,8 +108,7 @@ const controlFor = (
   const asList = arrayControlFor(field, value, binding, depth);
   if (asList) return asList;
   const Control = kitFor(field.kind).EditorControl;
-  // The identity field is forced read-only here regardless of the rest of the
-  // record's editability — see `identity-field.ts` for why.
+  // The identity field is always read-only; see `identity-field.ts`.
   const disabled = binding.disabled || isIdentityField(field.path);
   return (
     <Control

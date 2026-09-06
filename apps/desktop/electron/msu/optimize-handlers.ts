@@ -2,14 +2,12 @@
 /**
  * IPC for normalising a pack to one audio format: measure first, convert second.
  *
- * The two are deliberately separate channels rather than one call with a flag. Measuring
- * really encodes a slice of every candidate, so it is slow enough to want its own progress and
- * its own result — and the whole point of it is that nothing is written until someone has read
- * the numbers and said yes.
+ * Two separate channels, not one call with a flag: measuring encodes a slice of every
+ * candidate, so it wants its own progress and result, and nothing is written until
+ * someone has read the numbers and said yes.
  *
- * Both halves report per-file progress on one event, so a bar can follow either without the
- * renderer polling. Pack and file names arrive from the renderer, so every one of them becomes
- * a path only through ./pack-fs, which refuses a traversal before it joins.
+ * Both report per-file progress on one event. Pack and file names come from the renderer,
+ * so they become paths only through ./pack-fs, which refuses a traversal.
  */
 import type { OptimizeProgress } from '@shared/types/msu-optimize';
 import { emit, handle } from '../lib/ipc/handle';
@@ -25,7 +23,7 @@ const reportProgress = (progress: OptimizeProgress): void => {
   if (win) emit(win, 'msu:optimize:progress', progress);
 };
 
-/** Throws rather than answering null: both operations are meaningless without the encoder. */
+/** Throws, not null: both operations are meaningless without the encoder. */
 const requireEncoder = async (): Promise<string> => {
   const found = await locateFfmpeg();
   if (!found) throw new Error(TOOL_MISSING);

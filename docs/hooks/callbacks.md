@@ -3,7 +3,7 @@
 
 The other direction: functions the game core calls at gameplay events. There are 15
 `GameHook_*` callbacks. Three of them surface to the renderer via `EM_ASM` → a `window.__on*` callback;
-the rest are C→C — engine-internal accessors and the wrappers invoked by the `Wasm*` exports.
+the rest are C→C, meaning engine-internal accessors and the wrappers invoked by the `Wasm*` exports.
 
 **Sources:** `haptic_events.c`, `game_hooks.c`, `check_triggers.c`, `item_overrides.c`, `cheats.c`,
 `transition_events.c`
@@ -21,7 +21,7 @@ drop). `method` distinguishes receipt styles. Drives the inventory/checks tracke
 ### `window.__onHapticEvent(type, param)`
 Fired by the eight haptic hooks in `haptic_events.c`. `type` is the event enum below; `param` carries
 intensity data (damage, item id, swing type) or `0`. The renderer maps these to controller
-rumble — see [Haptics](../user-guide/haptics.md). `type` has to match `HapticEventType` in the JS
+rumble, described in [Haptics](../user-guide/haptics.md). `type` has to match `HapticEventType` in the JS
 `haptics` module.
 
 | `type` | Hook | `param` |
@@ -31,7 +31,7 @@ rumble — see [Haptics](../user-guide/haptics.md). `type` has to match `HapticE
 | 2 | `GameHook_NotifySwordClink` | 0 |
 | 3 | `GameHook_NotifyDamageTaken` | damage amount |
 | 4 | `GameHook_NotifyItemUsed` | item id |
-| 5 | `GameHook_NotifyEnvironmentalEvent` | event subtype (fall, landing, bomb, water, mirror, quake, boss…) |
+| 5 | `GameHook_NotifyEnvironmentalEvent` | event subtype (fall, landing, bomb, water, mirror, quake, boss, and so on) |
 | 6 | `GameHook_NotifyHookshotWall` | 0 |
 | 7 | `GameHook_NotifyBoomerangCatch` | 0 |
 

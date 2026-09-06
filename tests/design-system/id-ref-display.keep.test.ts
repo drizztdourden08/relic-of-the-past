@@ -27,11 +27,9 @@ import type {
 } from '../../apps/web/src/ui/design-system/composites/DataTable/DataTable.type';
 import { describeDataset } from '../dataset-guard';
 
-// "Show me the name, not the id." Asserted over the REAL collections, because
-// the whole point is that a design-system table shows a foreign record's field
-// without ever importing one — a stub resolver would prove only the plumbing.
-// What needs a browser and is NOT covered: opening the ⋯ menu (portalled),
-// hovering into the submenu and clicking a field.
+// Asserted over the REAL collections: the point is that a design-system table
+// shows a foreign record's field without importing one. Opening the ⋯ menu
+// (portalled) and picking a field need a browser.
 
 /** What a generic row looks like once it is through a dot-path read. */
 type InspectorLikeRow = Record<string, unknown>;
@@ -86,7 +84,7 @@ const sample = (() => {
   return { row, id, name: String(area[NAME_PATH]) };
 })();
 
-describeDataset('setDisplayField — the column op', () => {
+describeDataset('the setDisplayField column op', () => {
   const columns: readonly TableColumn[] = [{ path: AREA_PATH }, { path: 'kind', label: 'Sort of' }];
 
   it('records which field of the referenced record the column shows', () => {
@@ -99,7 +97,7 @@ describeDataset('setDisplayField — the column op', () => {
     expect(next[1]).toBe(columns[1]);
   });
 
-  it('drops the key rather than storing an empty one, so a snapshot compares equal', () => {
+  it('drops the key instead of storing an empty one, so a snapshot compares equal', () => {
     const set = columnOps.setDisplayField(columns, AREA_PATH, NAME_PATH);
     expect(columnOps.setDisplayField(set, AREA_PATH, undefined)[0]).toEqual({ path: AREA_PATH });
     expect(columnOps.setDisplayField(set, AREA_PATH, '')[0]).toEqual({ path: AREA_PATH });
@@ -153,7 +151,7 @@ describeDataset('the injected lookup, over the real collections', () => {
   });
 });
 
-describeDataset('substituteDisplay — every missing piece falls back to the id', () => {
+describeDataset('substituteDisplay falls back to the id for every missing piece', () => {
   const field = fieldAt(screens, AREA_PATH);
 
   it('resolves when it has all four', () => {
@@ -180,7 +178,7 @@ const renderCell = (substitution?: Parameters<typeof cellContent>[3]): string =>
     'div', null, cellContent(sample.row, AREA_PATH, fieldAt(screens, AREA_PATH), substitution),
   ));
 
-describeDataset('the cell — what it shows versus what it points at', () => {
+describeDataset('the cell shows one thing and points at another', () => {
   it('shows the raw id until a display field is chosen', () => {
     expect(renderCell()).toContain(`>${sample.id}<`);
   });
@@ -191,11 +189,8 @@ describeDataset('the cell — what it shows versus what it points at', () => {
     expect(markup).not.toContain(`>${sample.id}<`);
   });
 
-  /*
-   * The one thing that must NOT move. Following a reference reads the
-   * attribute, not the text, so a cell reading as a name still opens the same
-   * record — and the tooltip keeps saying which one that is.
-   */
+  // Following a reference reads the attribute, not the text, so a cell shown
+  // as a name still opens the same record.
   it('keeps the real id on the element no matter what is on screen', () => {
     for (const markup of [renderCell(), renderCell(wired())]) {
       expect(markup).toContain(`data-id-ref="${sample.id}"`);
@@ -210,7 +205,7 @@ describeDataset('the cell — what it shows versus what it points at', () => {
   });
 });
 
-describeDataset('the group header — the same substitution, off the same resolver', () => {
+describeDataset('the group header runs the same substitution off the same resolver', () => {
   const field = fieldAt(screens, AREA_PATH);
   const renderKey = (substitution?: Parameters<typeof groupKeyContent>[2]): string =>
     renderToStaticMarkup(createElement('div', null, groupKeyContent(sample.id, field, substitution)));
@@ -225,7 +220,7 @@ describeDataset('the group header — the same substitution, off the same resolv
   });
 
   it('still shows a dash for an absent group value', () => {
-    expect(groupKeyContent('', field, wired())).toBe('—');
+    expect(groupKeyContent('', field, wired())).toBe('-');
   });
 });
 
@@ -248,10 +243,10 @@ const displayMenu = (overrides: Partial<Parameters<typeof buildColumnMenuItems>[
   return { actions, onClose, entry: entries.find((item) => item.key === 'display-as') };
 };
 
-describeDataset('the ⋯ menu — "Display as…"', () => {
+describeDataset('the ⋯ menu: "Display as..."', () => {
   it('opens the target collection\'s fields as a submenu, not a panel', () => {
     const { entry } = displayMenu();
-    expect(entry?.label).toBe('Display as…');
+    expect(entry?.label).toBe('Display as...');
     expect(entry?.onClick).toBeUndefined();
     expect(entry?.children?.map((child) => child.key)).toContain(`display-${NAME_PATH}`);
   });
@@ -296,13 +291,9 @@ const rowContext = (columns: readonly TableColumn[]) => ({
   resolveIdRefDisplay: resolveIdRefDisplayValue,
 });
 
-/*
- * SSR only, so what these prove is that the choice REACHES the row and the
- * group header through the real components. Opening the ⋯ menu, hovering into
- * "Display as…" and picking a field all need a document (the menu is
- * portalled) and are unverified here.
- */
-describeDataset('the rendered table — the choice reaching a row and a group header', () => {
+// SSR only: the choice reaches the row and the group header through the real
+// components. Opening the portalled menu needs a document.
+describeDataset('the rendered table: the choice reaching a row and a group header', () => {
   const configured: readonly TableColumn[] = [{ path: AREA_PATH, displayField: NAME_PATH }];
 
   it('renders the row\'s reference cell as the name, still pointing at the id', () => {
@@ -334,7 +325,7 @@ describeDataset('the rendered table — the choice reaching a row and a group he
   });
 });
 
-describeDataset('the header cell — the trigger that opens "Display as…"', () => {
+describeDataset('the header cell: the trigger that opens "Display as..."', () => {
   it('renders a reference column with the lookup wired, menu closed', () => {
     const schema = createSchemaIndex(buildSchema(screens));
     const markup = renderToStaticMarkup(createElement(HeaderCell, {

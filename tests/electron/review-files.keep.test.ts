@@ -1,12 +1,9 @@
 /* @layer tests @kind test */
 /**
- * The review layer's main-process read/write, run against a throwaway
- * userData root rather than the real app data directory — the same bargain
- * `enumeration-writer.test.ts` makes for the screen-editor writers. Covers
- * the three things the plan calls out: a missing file reads as empty, a
- * saved entry round-trips, and one id's write never clobbers another's in
- * the same kind's file — including under concurrent same-kind saves, which is
- * exactly what the per-kind write queue in `review-files.ts` exists to guard.
+ * The review layer's main-process read/write, against a throwaway userData
+ * root. Covers: a missing file reads as empty, an entry round-trips, and one
+ * id's write never clobbers another's in the same kind's file, including under
+ * concurrent saves (what the per-kind queue in `review-files.ts` guards).
  */
 import { mkdtemp, rm } from 'fs/promises';
 import { tmpdir } from 'os';
@@ -32,7 +29,7 @@ afterEach(async () => {
 });
 
 describe('loadReviewFile', () => {
-  it('reads a missing file as empty rather than throwing', async () => {
+  it('reads a missing file as empty instead of throwing', async () => {
     expect(await loadReviewFile('screen')).toEqual({});
   });
 });

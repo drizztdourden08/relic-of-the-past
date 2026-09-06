@@ -5,11 +5,11 @@
  *
  * The typing face bills one fixed cell per character while the game's font
  * advances 1 to 8 pixels per glyph, which overstated a typical line by about a
- * third: text appeared to run past the 21-cell ruler while the gutter — reading
- * the pack's own width table — reported room to spare. One of the two had to
- * move, and the width table is the source of truth.
+ * third: text appeared to run past the 21-cell ruler while the gutter reported
+ * room to spare, because the gutter reads the pack's own width table. One of the
+ * two had to move, and the width table is the source of truth.
  *
- * It is done with INLINE DECORATIONS rather than by putting anything in the
+ * It is done with INLINE DECORATIONS instead of by putting anything in the
  * document: the decoration wraps a range in a span of its own, so the text a
  * translator types, copies and saves is untouched and nothing new can be typed
  * into existence. Only the open entry is decorated, so the cost is one entry's
@@ -20,8 +20,8 @@
  * pixel numbers stay where they belong.
  *
  * A character the alphabet cannot spell keeps the face's own advance and is
- * called out instead — it is the reason a line will not encode, so it must be
- * visible rather than quietly measured as nothing.
+ * called out instead. It is the reason a line will not encode, so it must be
+ * visible instead of measured as nothing.
  */
 import { Extension } from '@tiptap/core';
 import { Plugin } from '@tiptap/pm/state';
@@ -30,7 +30,7 @@ import { charCells } from './char-cells';
 import type { EditorState } from '@tiptap/pm/state';
 import type { GlyphFontHandle } from './editor-ui.type';
 
-/** Marks a cell as measured, and says what it was billed — the probe reads it. */
+/** Marks a cell as measured, and says what it was billed. The probe reads it. */
 const kAdvanceAttr = 'data-advance-px';
 
 const cellAttrs = (widthPx: number | null): Record<string, string> => (

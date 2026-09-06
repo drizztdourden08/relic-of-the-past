@@ -1,17 +1,15 @@
 /* @layer shared-ipc @kind types */
 /**
- * Wire types for the SDL3 controller transport's IPC channels — the "added"
- * event payload and the device snapshot entry shared by `controller:list`
- * and `controller:devices`. Produced in
+ * Wire types for the SDL3 controller transport's IPC channels: the "added" event payload and
+ * the device snapshot entry shared by `controller:list` and `controller:devices`. Produced in
  * apps/desktop/electron/input/sdl3-source.ts and controller-snapshot.ts.
  */
 
 type ControllerBusType = 'usb' | 'bluetooth' | 'unknown';
 
-/** Bus-agnostic wired/wireless read from SDL's own joystick connection state.
- *  Windows does not report USB-vs-Bluetooth for an XInput-backed pad, so this
- *  is what stands in for that case: never guess a bus type from this value,
- *  and never show both a bus chip and a wired/wireless chip together. */
+/** Bus-agnostic wired/wireless read from SDL's joystick connection state. Windows does not
+ *  report USB-vs-Bluetooth for an XInput pad, so this stands in: never guess a bus type from
+ *  it, and never show a bus chip and a wired/wireless chip together. */
 type ControllerConnectionState = 'wired' | 'wireless' | 'unknown';
 
 /** SDL's own family for the device, lowercased and hyphenated from
@@ -54,18 +52,15 @@ interface ControllerAddedInfo {
   buttonLabels: string[];
 }
 
-/** `'ready'` — SDL currently has the device open. `'unavailable'` — seen by
- *  the device lister but not claimed by SDL (held elsewhere, or filtered by
- *  SDL's own hidapi rules). See device-availability.ts. */
+/** `'ready'`: SDL currently has the device open. `'unavailable'`: seen by the device lister
+ *  but not claimed by SDL (held elsewhere, or filtered by SDL's hidapi rules). See device-availability.ts. */
 type DeviceStatus = 'ready' | 'unavailable';
 
 /**
- * One row of the raw HID enumeration (`controller:list-hid-devices`): every
- * device `SDL_hid_enumerate` currently sees, independent of whether SDL's
- * gamepad backend has claimed it or even can. A controller read through
- * XInput rather than HID (most Xbox-style pads) never appears here, which is
- * exactly the structural signal the gamepad diagnostics wizard uses to tell
- * whether a byte-level capture can work for a given device.
+ * One row of the raw HID enumeration (`controller:list-hid-devices`): every device
+ * `SDL_hid_enumerate` sees, claimed by SDL's gamepad backend or not. A controller read through
+ * XInput instead of HID (most Xbox-style pads) never appears here, which is how the gamepad
+ * diagnostics wizard tells whether a byte-level capture can work for a device.
  */
 interface HidListedDevice {
   vendorId: number;
@@ -75,9 +70,8 @@ interface HidListedDevice {
 }
 
 /**
- * One row of the full controller snapshot. `sdlId`/`guid`/`hasRumble`/
- * `hasGyro` are only present for `'ready'` devices — an `'unavailable'` one
- * was never opened, so SDL never told us any of that.
+ * One row of the full controller snapshot. `sdlId`/`guid`/`hasRumble`/`hasGyro` are only
+ * present for `'ready'` devices; an `'unavailable'` one was never opened.
  */
 interface DeviceEntry {
   deviceKey: string;
@@ -130,7 +124,7 @@ interface ControllerRawReport {
 
 /** One joystick-level state sample: the raw button/axis/hat indices a
  *  gamecontrollerdb mapping line is written in, sized to the device's own
- *  control counts rather than the fixed SDL gamepad layout. */
+ *  control counts, not the fixed SDL gamepad layout. */
 interface ControllerJoystickSample {
   id: number;
   buttons: boolean[];
@@ -150,11 +144,7 @@ interface JoystickInfo {
   hasGamepadMapping: boolean;
 }
 
-/**
- * The controller invoke channels, split out of invoke-contract.ts's single
- * `InvokeContract` (which extends this) purely to keep that file under the
- * line cap — it is still the one source of truth for these signatures.
- */
+/** The controller invoke channels, split out of `InvokeContract` (which extends this) only for the line cap. Still the one source of truth. */
 interface ControllerInvokeContract {
   'controller:list': () => Promise<DeviceEntry[]>;
   /** Every device the raw HID enumeration sees, regardless of SDL claim state
@@ -162,12 +152,12 @@ interface ControllerInvokeContract {
   'controller:list-hid-devices': () => Promise<HidListedDevice[]>;
   'controller:rescan': () => Promise<void>;
   'controller:rumble': (deviceKey: string, low: number, high: number, durationMs: number) => Promise<boolean>;
-  /** Plays a timed sequence of rumble segments — see haptic-pattern-player.ts, which
-   *  owns the sequencing so it runs in the main process instead of a renderer timer. */
+  /** Plays a timed sequence of rumble segments. haptic-pattern-player.ts owns the sequencing
+   *  so it runs in the main process instead of a renderer timer. */
   'controller:vibrate-pattern': (deviceKey: string, pattern: { durationMs: number; intensity: number }[], gapMs: number) => Promise<{ ok: boolean; error?: string }>;
   /** Adds a mapping for the live session AND appends it to the user's mapping db. */
   'controller:add-mapping': (mapping: string) => Promise<boolean>;
-  /** Writes an input-calibration debug capture into userData/Data/debug — returns the full path written. */
+  /** Writes an input-calibration debug capture into userData/Data/debug and returns the full path. */
   'controller:write-debug-capture': (name: string, data: unknown) => Promise<string>;
   /** Opens a diagnostic raw HID capture on vendorId/productId. Bytes arrive as `controller:raw` events. */
   'controller:start-raw-capture': (vendorId: number, productId: number) => Promise<RawCaptureStartResult>;

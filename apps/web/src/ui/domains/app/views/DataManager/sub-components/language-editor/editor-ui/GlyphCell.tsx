@@ -1,12 +1,12 @@
 /* @layer renderer-components @kind component */
 /**
- * One character of the pack's font, addressed by its INDEX rather than by name.
+ * One character of the pack's font, addressed by its INDEX, not by name.
  *
- * `GlyphChar` is the same cell reached the way an editor reaches it — from the
- * bracketed name in a line, which has to be matched against the alphabet first.
- * A laid-out row has already been through that: the layout walk hands back glyph
- * indices, one per drawn character, so a faithful box needs the half of the job
- * that starts where the name lookup ended.
+ * `GlyphChar` is the same cell reached the way an editor reaches it, starting
+ * from the bracketed name in a line, which has to be matched against the
+ * alphabet first. A laid-out row has already been through that: the layout walk
+ * hands back glyph indices, one per drawn character, so a faithful box needs the
+ * half of the job that starts where the name lookup ended.
  *
  * Both share the painter (`useGlyphCanvas`) and the stylesheet, so there is one
  * renderer of the game's pixels and one definition of a cell. The only thing

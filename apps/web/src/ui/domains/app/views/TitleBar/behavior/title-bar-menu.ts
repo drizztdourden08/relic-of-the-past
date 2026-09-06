@@ -77,7 +77,7 @@ const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
       icon: '⚙️',
       label: 'Advanced',
       children: [
-        // Input Calibration and Data Inspector are real user options — always available.
+        // Input Calibration and Data Inspector are real user options, so they are always available.
         // The rest are developer tools, shown only when developerToolsEnabled is on.
         { key: 'input-tester', icon: '🎮', label: 'Input Calibration', onClick: () => { closeMenu(); onShowInputTester(); } },
         { key: 'data-inspector', icon: '🔍', label: 'Data Inspector', onClick: () => { closeMenu(); onShowDataInspector(); } },

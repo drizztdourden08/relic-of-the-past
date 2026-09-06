@@ -1,11 +1,5 @@
 /* @layer renderer-components @kind logic */
-/**
- * Column labels as ONE small surface, computed once at the table level rather
- * than separately wherever a path needs naming. A rename wins over the
- * schema's own wording in all three places that read it: the header cell
- * itself, the carried column's own name while it's in the air over the drop
- * target, and the table's sort/group summary in the footer.
- */
+/** Column labels computed once at the table level. A rename wins over the schema's wording everywhere a path is named. */
 import { summarizeSortGroup } from './sort-group-summary';
 import type { SortGroupSummary } from './sort-group-summary';
 import type { SchemaIndex } from '../../../data/schema/build-schema';
@@ -16,7 +10,7 @@ interface ColumnLabelsInput {
   schema: SchemaIndex;
   sort: readonly SortEntry[];
   groupBy: readonly string[];
-  /** The column currently in the air, if any — named for the drop target. */
+  /** The column currently in the air, if any. It is named for the drop target. */
   draggingPath: string | null;
 }
 

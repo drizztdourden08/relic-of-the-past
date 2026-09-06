@@ -1,11 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * One sprite → one annotation. Key carriers come first: an enemy that drops a
- * key is a lock's key, not scenery, and reads as a trigger.
- *
- * A pull switch says which shutters it serves — on its own a switch marker is
- * just a dot, and the shutter it lowers is the reason the run walks to it.
- */
+// One sprite -> one annotation. Key carriers come first (a lock's key, not scenery). A pull
+// switch says which shutters it serves; the shutter is the reason the run walks to it.
 import type { ScreenAnnotation } from '@shared/game/simulation';
 import type { SimSprite } from '@shared/game/simulation';
 import type { CheckId } from '@shared/game/data';
@@ -16,21 +11,20 @@ import { itemLabel } from '@shared/game/logic/queries/item-duplicates';
 
 /** Sprite_PullSwitch_bounce covers sprite types 0x04-0x07. */
 const isPullSwitch = (t: number): boolean => t >= 0x04 && t <= 0x07;
-/** The captive princess NPC — the follower the throne gate waits on. */
+/** The captive princess NPC. The throne gate waits on this follower. */
 const PRINCESS_SPRITE = 0x76;
 
 interface SpriteContext {
   roomId: number;
   completed: ReadonlySet<CheckId>;
-  /** Shutter doors in this room — what a pull switch here opens. */
+  /** Shutter doors in this room. A pull switch here opens them. */
   shutterCount: number;
 }
 
 /**
- * Which spawn table this sprite was read from. It is not cosmetic: a sprite type
- * is not unique across the two worlds (0x2e is both the light-world flute boy and
- * the dark-world stump), and the overworld table's index IS the screen, which is
- * what settles which of the two it is. Nothing else on the sprite can say.
+ * Which spawn table this sprite was read from. Not cosmetic: a sprite type is not unique
+ * across the two worlds (0x2e is both the flute boy and the stump), and only the overworld
+ * table's index (the screen) settles which it is.
  */
 const sourceNote = (sprite: SimSprite): string =>
   sprite.outdoor ? 'overworld spawn' : 'room spawn';
@@ -53,8 +47,8 @@ const spriteAnnotation = (sprite: SimSprite, ctx: SpriteContext): ScreenAnnotati
   if (sprite.spriteType === PRINCESS_SPRITE) return { kind: 'npc-check', tile, label: 'Princess' };
   if (sprite.kind === 'npc') return { kind: 'npc-check', tile, label: `npc 0x${sprite.spriteType.toString(16)}` };
   if (sprite.kind === 'standing' || sprite.kind === 'overworld') {
-    // Name what it hands over rather than saying 'item' — the simulator resolves
-    // the same id to decide the pickup, so both agree on what is lying there.
+    // Name what it hands over, not 'item'; the simulator resolves the same id to decide
+    // the pickup, so both agree on what is lying there.
     const itemId = standingItemId(sprite.spriteType);
     // A standing item IS a check, resolved from the same flag the pickup writes.
     // Without its id the marker had no identity and always read as available,

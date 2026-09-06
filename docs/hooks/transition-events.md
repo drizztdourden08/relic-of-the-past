@@ -53,7 +53,7 @@ const unsubscribe = subscribeTransitionSettled((event) => {
 
 The bridge installs `window.__onTransitionSettled` once per game session (wired into
 `lifecycle.ts` alongside the tracker and haptic bridges), and fans out to every subscriber.
-Subscribing when the setting is off is harmless: the callback is simply never invoked.
+Subscribing when the setting is off is harmless: the callback is never invoked.
 
 ## Known gap
 

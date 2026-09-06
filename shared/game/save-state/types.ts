@@ -6,7 +6,7 @@
 
 /**
  * A format the project has shipped. The id comes from the generated module; a row here
- * is the human-readable half — what moved, and from which version. The release gate
+ * is the human-readable half, saying what moved and from which version. The release gate
  * refuses to publish an id with no row, which is the only reason this table exists.
  */
 interface KnownFormat {
@@ -31,8 +31,8 @@ interface StateStamp {
 /**
  * Whether a version being offered reads the same format this build writes.
  *
- * 'unverifiable' is a first-class answer rather than an optimistic 'compatible': a
- * target that published nothing, or that could not be reached, is genuinely unknown and
+ * 'unverifiable' is a first-class answer instead of an optimistic 'compatible'. A
+ * target that published nothing, or that could not be reached, is unknown, and
  * saying otherwise is how save states get lost silently.
  */
 type TargetCompat =

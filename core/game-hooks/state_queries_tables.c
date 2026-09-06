@@ -117,7 +117,7 @@ int WasmGetAreaHeads(void) {
 }
 
 // Entrance rooms: entrance ID → dungeon room (uint16 per entry), count prefix.
-// The cap was 133 — the count of front-door entrances — which silently dropped
+// The cap was 133, matching the count of front-door entrances, and it silently dropped
 // every entry past it. The table does not stop there: the secondary entries that
 // follow are the only way into a handful of rooms, so a room like the village
 // hideout (0x11D) had no entrance at all and read as unreachable while every

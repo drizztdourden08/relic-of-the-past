@@ -1,21 +1,16 @@
 /* @layer shared-storage @kind logic */
 /**
- * Originals a converted file has taken over from, and the manifest re-pointed at the converted
- * copies.
+ * Originals a converted file has taken over from, and the manifest re-pointed at the copies.
  *
- * A file is superseded when the pack also holds its stem in the target format, whichever way round
- * the two arrived — there is no record of a past conversion, and there does not need to be. The
- * same rule decides both what the files list offers to throw out and where a reference is moved
- * to, so the two can never disagree about which file a slot ends up playing.
+ * A file is superseded when the pack also holds its stem in the target format, whichever way
+ * round the two arrived; there is no record of a past conversion. The same rule decides what the
+ * files list offers to throw out and where a reference moves, so the two cannot disagree.
  *
- * Matching is by stem, case-insensitively. A manifest written by hand can spell a name in a case
- * the disk does not, and on a case-insensitive filesystem it plays fine that way — so a re-point
- * keyed on the exact string would leave such a reference on the original while the file beside it
- * went unheard.
+ * Matching is by stem, case-insensitively: a hand-written manifest can spell a name in a case
+ * the disk does not and still play, and an exact-string re-point would leave it on the original.
  *
- * Both sides need this: the conversion in the main process reconciles the manifest once the last
- * file lands, and the files list in the renderer moves every remaining reference BEFORE an original
- * is deleted, so removing the superseded halves can never silence a slot.
+ * Both sides need this: main reconciles the manifest once the last converted file lands, and the
+ * renderer moves every reference BEFORE an original is deleted, so removal never silences a slot.
  */
 import type { MsuPackManifest } from '@shared/types/msu-manifest';
 import { OPTIMIZE_TARGET_EXTENSION } from '@shared/types/msu-optimize';
@@ -53,12 +48,9 @@ const supersededMap = (names: string[]): Map<string, string> => {
 };
 
 /**
- * A layer's file list with every superseded reference moved, or null when none was.
- *
- * A reference to a file that is no longer on disk still moves, as long as its stem is: that is a
- * layer left behind by an earlier removal, and re-pointing it is the repair. Two references that
- * land on the same file collapse to one — a layer that named both halves of a pair was only ever
- * playing one body of audio.
+ * A layer's file list with every superseded reference moved, or null when none was. A reference
+ * to a file no longer on disk still moves if its stem is (a layer left behind by an earlier
+ * removal). Two references landing on the same file collapse to one.
  */
 const repointFiles = (files: string[], targets: Map<string, string>): string[] | null => {
   let changed = false;
@@ -73,10 +65,7 @@ const repointFiles = (files: string[], targets: Map<string, string>): string[] |
   return changed ? moved : null;
 };
 
-/**
- * The manifest with every reference to a superseded original moved to its converted file.
- * Answers the very same object when nothing needed moving, so a caller can skip the write.
- */
+/** The manifest with every reference to a superseded original moved to its converted file. Returns the same object when nothing moved, so a caller can skip the write. */
 const withSupersededRepointed = (manifest: MsuPackManifest, names: string[]): MsuPackManifest => {
   const targets = targetsByStem(names);
   if (targets.size === 0) return manifest;

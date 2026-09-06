@@ -15,8 +15,6 @@
   height: 100%;
 }
 
-/* ─── Pack header ─── */
-
 .msu-pack-header {
   display: flex;
   flex-direction: column;
@@ -28,8 +26,6 @@
 .msu-pack-header__name {
   max-width: 28rem;
 }
-
-/* ─── Track rows ─── */
 
 .msu-track-row {
   min-height: 2rem;
@@ -67,8 +63,6 @@
   flex: 0 0 auto;
 }
 
-/* ─── Sound rows ─── */
-
 .msu-sound-row {
   align-items: flex-start;
   min-height: 2.25rem;
@@ -101,9 +95,7 @@
   white-space: nowrap;
 }
 
-/* The channel a row belongs to, shown wherever one list carries more than one of them. Fixed
-   width so the ids beside it still line up, and monospaced so the tag reads as a port name
-   rather than as part of the sound's description. */
+/* Fixed width so the ids beside it line up; monospaced so the tag reads as a port name. */
 .msu-sound-row__channel {
   flex: 0 0 auto;
   width: 2.75rem;
@@ -112,8 +104,6 @@
   color: var(--c-gold);
   letter-spacing: 0.04em;
 }
-
-/* ─── Expanded slot ─── */
 
 .msu-track-detail {
   display: flex;
@@ -136,8 +126,6 @@
   color: var(--c-danger);
 }
 
-/* ─── File rows ─── */
-
 .msu-file-summary {
   display: flex;
   flex-direction: column;
@@ -159,11 +147,7 @@
   min-height: 0;
 }
 
-/*
- * ONE column template for the whole files list, declared here and nowhere else. The header row and
- * every card read it from this custom property, so a column cannot be widened on one of them and
- * drift out of line with the other — which is exactly what happened while each row laid itself out.
- */
+/* ONE column template for the whole files list: header and cards read it, so they cannot drift apart. */
 .msu-file-grid {
   --msu-file-cols:
     minmax(8rem, 1fr) 4rem 5.5rem 4.5rem 9rem 5.5rem minmax(6rem, 11rem) 4.5rem;
@@ -181,11 +165,7 @@
   padding: var(--space-xs) var(--space-sm);
 }
 
-/*
- * A label strip, not a table head: it names the columns and holds its place while the list moves,
- * but carries no rules and no frame of its own, so what sits under it still reads as cards rather
- * than as rows in a grid. Opaque because the cards scroll underneath it, not beside it.
- */
+/* A label strip, not a table head: no rules or frame, so what sits under it still reads as cards. */
 .msu-file-grid__head {
   position: sticky;
   top: 0;
@@ -193,9 +173,7 @@
   padding-bottom: var(--space-2xs);
   background: var(--c-bg);
 
-  /* Matches the card's border so the two share one column origin — without it every heading sits
-     a pixel left of the values under it, which is exactly the kind of drift the shared template is
-     here to prevent. */
+  /* Matches the card's border so the two share one column origin. */
   border: 1px solid transparent;
   border-bottom: none;
 }
@@ -217,14 +195,7 @@
   gap: var(--space-xs);
 }
 
-/*
- * The card is the entry, not the row: the player expands inside it, so a playing file reads as one
- * object rather than as a row with something loose underneath.
- *
- * Every card gets the SAME surface and border. Striping alternate ones would sort the list into a
- * table by eye — the separation here comes from each file being its own object with space around
- * it, and the columns line up because the card reads the list's template, not because it is ruled.
- */
+/* The card is the entry: the player expands inside it. No striping; that would read as a table. */
 .msu-file-entry {
   background: var(--c-surface);
   border: 1px solid var(--c-border);
@@ -280,8 +251,7 @@
   gap: var(--space-2xs);
 }
 
-/* Inside the card, under its row — so a playing file reads as one object rather than as a row with
-   something loose beneath it. */
+/* Inside the card, under its row, so a playing file reads as one object. */
 .msu-file-player {
   display: flex;
   flex-direction: column;

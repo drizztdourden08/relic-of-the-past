@@ -1,15 +1,12 @@
 /* @layer renderer-components @kind component */
 /**
- * ControllerCapabilityBadges — the bus type and haptic/motion capabilities
- * SDL reports directly for a claimed device, replacing the old path-string
- * connection guess. Renders nothing for a fact SDL didn't report (e.g. an
- * unavailable device carries no capability data — it was never opened).
+ * The bus type and haptic/motion capabilities SDL reports for a claimed device,
+ * replacing the old path-string connection guess. Renders nothing for a fact
+ * SDL didn't report (an unavailable device was never opened, so it has none).
  *
- * Icons are the same set ControllerStatusBar uses on the calibration screen,
- * so the two screens read as one system. The bar itself isn't reused here:
- * it carries its own bordered/background chrome meant for a standalone row,
- * which would double-box once nested inside this rail's already-bordered
- * device card — so only the icon set is shared, not the wrapper.
+ * Icons are the same set ControllerStatusBar uses on the calibration screen. The
+ * bar itself isn't reused: its own bordered chrome would double-box inside this
+ * rail's already-bordered device card, so only the icon set is shared.
  */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import usbIcon from '@iconify-icons/lucide/usb';

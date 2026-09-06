@@ -6,15 +6,13 @@ import {
 } from '../../apps/web/src/ui/design-system/data/schema/infer-kind';
 import { describeDataset } from '../dataset-guard';
 
-// Inference is the only genuinely tricky derivation in the package, and every
-// downstream decision (which operators, which control, how it sorts) hangs off
-// getting it right. One constructed case per kind, plus the edges that decide
-// between two neighbouring kinds.
+// Every downstream decision (operators, control, sort) hangs off inference.
+// One case per kind, plus the edges between neighbouring kinds.
 
 const distinct = (count: number): string[] =>
   Array.from({ length: count }, (_, i) => `value-${i}`);
 
-describeDataset('inferKind — one case per kind', () => {
+describeDataset('inferKind with one case per kind', () => {
   it('reads booleans', () => {
     expect(inferKind([true, false, true])).toBe('boolean');
   });
@@ -42,21 +40,21 @@ describeDataset('inferKind — one case per kind', () => {
   });
 
   it('reads variant object shapes as a union', () => {
-    // No shared key at all — two disjoint branches.
+    // No shared key at all, so these are two disjoint branches.
     expect(inferKind([{ itemId: 'item-001' }, { anyOf: [] }])).toBe('union');
     // Same key, primitive on one branch and a container on the other.
     expect(inferKind([{ at: 'edge' }, { at: { x: 1 } }])).toBe('union');
   });
 });
 
-describeDataset('inferKind — the edges', () => {
-  it('calls an all-absent field unknown rather than guessing', () => {
+describeDataset('inferKind at the edges', () => {
+  it('calls an all-absent field unknown instead of guessing', () => {
     expect(inferKind([])).toBe('unknown');
     expect(inferKind([undefined, undefined])).toBe('unknown');
     expect(inferKind([null, null, undefined])).toBe('unknown');
   });
 
-  it('calls a genuinely mixed field unknown', () => {
+  it('calls a mixed field unknown', () => {
     expect(inferKind([1, 'a', true])).toBe('unknown');
     expect(inferKind([{ a: 1 }, 'a'])).toBe('unknown');
     expect(inferKind([[1], { a: 1 }])).toBe('unknown');
@@ -82,7 +80,7 @@ describeDataset('inferKind — the edges', () => {
   });
 });
 
-describeDataset('inferKind — the details a descriptor carries', () => {
+describeDataset('inferKind and the details a descriptor carries', () => {
   it('collects enum options in first-seen order, without duplicates', () => {
     expect(enumOptions(['b', 'a', 'b', null, 'c'])).toEqual(['b', 'a', 'c']);
   });
@@ -96,7 +94,7 @@ describeDataset('inferKind — the details a descriptor carries', () => {
 // Real dataset regression cases for the subset-chain fix: a field that is
 // really one shape with optional keys must NOT be misread as a union just
 // because some sampled objects carry fewer keys than others.
-describeDataset('inferKind — subset-chain regression, real dataset shapes', () => {
+describeDataset('inferKind subset-chain regression on real dataset shapes', () => {
   it('reads screen.position as object: dungeon screens add floor, overworld screens do not', () => {
     const positions = all('screen')
       .map((screen) => screen.position)
@@ -109,12 +107,9 @@ describeDataset('inferKind — subset-chain regression, real dataset shapes', ()
   });
 
   it('reads connection.placement as object: a border point only ADDS `side` on top of an area one', () => {
-    // The connection-model migration replaced the old discriminated
-    // `{ at: 'side' | 'area', ... }` placement (a real union: the two
-    // branches shared no key) with one shape (form/rect/tiles) where a
-    // border point's `side` is an additive optional field — exactly the
-    // subset-chain case this inference fix exists for, so this is now a
-    // POSITIVE regression case for `object` rather than `union`.
+    // The connection-model migration replaced the old discriminated placement
+    // (a real union, no shared key) with one shape where `side` is an additive
+    // optional field: the subset-chain case, so `object`, not `union`.
     const placements = all('connection').map((connection) => connection.placement);
     expect(placements.length).toBeGreaterThan(0);
     expect(placements.some((p) => p.form === 'border')).toBe(true);
@@ -135,8 +130,8 @@ describeDataset('inferKind — subset-chain regression, real dataset shapes', ()
       .map((item) => item.weapon?.range)
       .filter((range): range is NonNullable<typeof range> => range !== undefined);
     expect(ranges.length).toBeGreaterThan(0);
-    // The three branches observed in the real data — {kind} ⊂ {kind,tiles} ⊂
-    // {kind,tiles,sourced} — form a chain rather than diverging, even though
+    // The three branches observed in the real data ({kind} ⊂ {kind,tiles} ⊂
+    // {kind,tiles,sourced}) form a chain instead of diverging, even though
     // the TS type itself is written as a discriminated union.
     expect(ranges.some((r) => r.kind === 'unbounded')).toBe(true);
     expect(ranges.some((r) => r.kind === 'estimated')).toBe(true);

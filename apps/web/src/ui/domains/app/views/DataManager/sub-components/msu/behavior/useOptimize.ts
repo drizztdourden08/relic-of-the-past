@@ -1,21 +1,11 @@
 /* @layer renderer-components @kind hook */
 /**
- * Normalising a pack to one format, as a sequence: get the tool, measure, show the numbers,
- * convert.
+ * Get the tool, measure, show the numbers, convert. Measuring runs on its own once the tool is
+ * available and nothing is written until the numbers are accepted.
  *
- * Measuring is a separate step from converting because it is not free — a slice of every
- * candidate is really encoded — and because that is the whole point: nothing is written until
- * someone has read what it would cost and said yes.
- *
- * The measure runs on its own the moment the tool is available, so an installed setup opens
- * straight onto the numbers. A missing tool stops at its own step instead, and the same
- * automatic measure picks up once the install finishes.
- *
- * The pack is re-read the moment a run SETTLES, not when the dialog closes, and on a failure as
- * much as on a success. A run rewrites the manifest as it goes, so from its first file onward the
- * studio's copy is stale — and any edit saved from a stale copy would write the old references
- * straight back over the new ones. Re-reading at once closes that window before anyone can act
- * in it.
+ * The pack is re-read the moment a run SETTLES (success or failure), not when the dialog closes:
+ * the run rewrites the manifest as it goes, and an edit saved from the stale copy would write the
+ * old references back over the new ones.
  */
 import { useCallback, useEffect, useState } from 'react';
 import type { OptimizeAnalysis, OptimizeProgress, OptimizeRunResult } from '@shared/types/msu-optimize';
@@ -35,7 +25,7 @@ interface OptimizeParams {
 const messageOf = (err: unknown, fallback: string): string =>
   (err instanceof Error && err.message.length > 0 ? err.message : fallback);
 
-/** The candidates a run would actually touch — an unreadable file is not one of them. */
+/** The candidates a run would actually touch. An unreadable file is not one of them. */
 const convertibleNames = (analysis: OptimizeAnalysis | null): string[] =>
   (analysis?.candidates ?? []).filter((row) => row.excludedBecause === null).map((row) => row.name);
 

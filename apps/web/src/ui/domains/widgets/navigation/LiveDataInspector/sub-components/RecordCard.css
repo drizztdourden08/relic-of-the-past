@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind style */
 
-/* One record's own bordered container — same border/background this widget's
-   recommendation cards already use. */
+/* One record's own bordered container, with the same border/background this
+   widget's recommendation cards already use. */
 
 .live-record-card {
   display: flex;

@@ -28,7 +28,7 @@ const CONTROLS_TABS = [
 
 interface ControlsMainProps {
   ctrl: Ctrl;
-  /** Whether the cheats master toggle is on — the bindings below no-op while it's off. */
+  /** Whether the cheats master toggle is on. The bindings below no-op while it's off. */
   cheatsEnabled: boolean;
   /** Deep-links to the Enable Cheats setting. */
   onOpenCheatsSettings: () => void;
@@ -107,7 +107,7 @@ const ControlsMain = ({ ctrl, cheatsEnabled, onOpenCheatsSettings }: ControlsMai
               <Text className="binding-row__binding-label">Binding</Text>
             </Box>
             {/* Reserved system shortcut */}
-            <Box className="binding-row binding-row--reserved" title="Reserved — cannot be rebound">
+            <Box className="binding-row binding-row--reserved" title="Reserved, cannot be rebound">
               <Text className="binding-row__action-label">Open Menu</Text>
               <Box className="binding-row__icon-slot" />
               <Text className="binding-row__snes-label" />

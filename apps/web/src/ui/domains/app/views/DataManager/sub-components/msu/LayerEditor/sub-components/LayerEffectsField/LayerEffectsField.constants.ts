@@ -1,11 +1,7 @@
 /* @layer renderer-components @kind constants */
 /**
- * The effect presets, and the vocabulary of the controls under them.
- *
- * A preset is a starting point, not a mode: choosing one writes its effects onto the layer, and
- * from there every number is the layer's own to change. That is why there is no "custom" entry to
- * pick — a layer becomes custom the moment a number is touched, and the picker simply reads as
- * none of the presets until it matches one again.
+ * A preset is a starting point, not a mode: choosing one writes its effects onto the layer. There
+ * is no "custom" entry; the picker reads as none of the presets until the chain matches one again.
  */
 import type { LayerEffect } from '@shared/types/msu-manifest';
 import type { SelectOption } from '@ds/primitives/Select';
@@ -57,7 +53,7 @@ const EFFECT_KIND_OPTIONS: SelectOption[] = [
   { value: 'eq', label: '3-band EQ', description: 'Low, mid and high, in decibels' },
 ];
 
-/** What a newly added effect of each kind starts as — audible, but not drastic. */
+/** Where a newly added effect of each kind starts, audible but not drastic. */
 const DEFAULT_EFFECT: Record<LayerEffect['kind'], LayerEffect> = {
   lowpass: { kind: 'lowpass', frequencyHz: 1200 },
   highpass: { kind: 'highpass', frequencyHz: 300 },

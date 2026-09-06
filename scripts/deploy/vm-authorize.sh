@@ -8,7 +8,7 @@ set -euo pipefail
 
 DIR="$(cd "$(dirname "$0")" && pwd)"
 PUB="$DIR/rotp-push.pub"
-[ -f "$PUB" ] || { echo "Missing $PUB — re-export it from Windows." >&2; exit 1; }
+[ -f "$PUB" ] || { echo "$PUB is missing. Re-export it from Windows." >&2; exit 1; }
 
 mkdir -p ~/.ssh && chmod 700 ~/.ssh
 touch ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys
@@ -25,4 +25,4 @@ else
 fi
 
 echo "[vm-authorize] listening on :22 ->"
-sudo ss -tlnp | grep ':22' || echo "  (nothing on :22 — run: systemctl status ssh.socket)"
+sudo ss -tlnp | grep ':22' || echo "  (nothing on :22, try: systemctl status ssh.socket)"

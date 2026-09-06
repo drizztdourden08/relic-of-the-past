@@ -14,8 +14,7 @@ const getQuickSavesDir = (profileId: string): string => {
   return join(getProfileSavesDir(profileId), 'quick');
 };
 
-// ─── Migration: move legacy save{N}.sav from root saves/ to saves/quick/ ───
-
+// Moves legacy save{N}.sav from root saves/ to saves/quick/.
 const migrateQuickSaves = async (profileId: string): Promise<void> => {
   const savesDir = getProfileSavesDir(profileId);
   const quickDir = getQuickSavesDir(profileId);
@@ -29,17 +28,15 @@ const migrateQuickSaves = async (profileId: string): Promise<void> => {
       const dest = join(quickDir, file);
       try {
         await stat(dest);
-        // Already exists in quick/ — skip
+        // Skip files already in quick/
       } catch {
         await fsRename(src, dest);
       }
     }
   } catch {
-    // saves dir doesn't exist yet — nothing to migrate
+    // No saves dir yet, so nothing to migrate
   }
 };
-
-// ─── SRAM ───
 
 const writeSramFile = async (profileId: string, data: Buffer): Promise<void> => {
   const savesDir = getProfileSavesDir(profileId);
@@ -60,8 +57,6 @@ const readSramFile = async (profileId: string): Promise<Buffer | null> => {
     return null;
   }
 };
-
-// ─── Quick Save States (slots 0-11) ───
 
 // A quick slot is written over in place, so its music-resume sidecar goes with the
 // state it described. A caller with a fresh snapshot writes it after this call.

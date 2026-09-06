@@ -19,7 +19,7 @@ interface ShadowRenderer {
 }
 
 interface ShadowRendererOptions {
-  /** Override shadow softness (0–1) */
+  /** Override shadow softness (0-1) */
   shadowSoftness?: number;
 }
 

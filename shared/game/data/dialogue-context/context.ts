@@ -1,9 +1,9 @@
 /* @layer shared-game @kind data */
 /**
- * What each dialogue entry IS — the trigger that opens it, and, for a prompt,
- * where its options lead. Assembled from the groups in this folder.
+ * What opens each dialogue entry, and, for a prompt, where its options lead.
+ * Assembled from the groups in this folder.
  *
- * ## INDEX CONVENTION — read this before touching any number here
+ * ## INDEX CONVENTION (read this before touching any number here)
  *
  * Ids are **1-based over the normalized 397-entry array**, exactly matching the
  * `DialogueLine.id` the editor shows. The game core's own counter
@@ -20,8 +20,8 @@
  * Proven three ways against a 397-string ROM whose text was decoded
  * independently of this dataset:
  *  1. array position 4 (id 5) in that ROM is byte-for-byte the string the
- *     pipeline injects when a ROM yields only 396 — so the injection restores a
- *     real entry rather than inserting a synthetic one;
+ *     pipeline injects when a ROM yields only 396, so the injection restores a
+ *     real entry instead of inserting a synthetic one;
  *  2. `misc.c:586` picks index 0x184 normally and 0x185 once a certain upgrade
  *     is held; ids 389 and 390 are the two-option and three-option variants of
  *     the same start-location prompt, in that order;
@@ -40,7 +40,7 @@
  *
  * Four ids carry no entry at all: 1 (the empty leading string), 5 (the control
  * string above, which no call site names), and 39 and 40, whose call path was
- * not found. `contextFor` returns null for those rather than guessing.
+ * not found. `contextFor` returns null for those instead of guessing.
  */
 import type { DialogueContext } from './types';
 import { tableGroups } from './table-groups';

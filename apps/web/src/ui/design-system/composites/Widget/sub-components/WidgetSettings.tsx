@@ -1,8 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
- * WidgetSettings — Settings popover for a widget.
- * Default options (position, opacity) + widget-specific options via children.
- * Rendered as a portal popover anchored below the gear button.
+ * Settings popover for a widget: position and opacity, plus widget-specific
+ * options via children. Portalled and anchored below the gear button.
  */
 import { useRef, useEffect, type ReactNode } from 'react';
 import { Portal, useAnchorTracking } from '../../../primitives/Portal';

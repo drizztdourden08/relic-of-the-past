@@ -13,7 +13,7 @@ type DeviceFamily =
 
 /**
  * Which input API a controller uses for actual button/axis reading:
- *  - 'hid':    Already-decoded state via SDL3 — every gamepad, on every
+ *  - 'hid':    Already-decoded state via SDL3, for every gamepad on every
  *              platform that has SDL3 (desktop only; see the platform hosts).
  *  - 'webapi': The keyboard's own DOM key events.
  */
@@ -55,7 +55,7 @@ type InputBinding = NoneBinding | KeyboardBinding | GamepadButtonBinding | Gamep
 
 interface ButtonIcon {
   key: string;          // e.g. "xbox-a", "ps-cross", "switch-b"
-  path: string | null;  // asset path — null until icons are provided
+  path: string | null;  // asset path, or null until icons are provided
   label: string;        // text fallback: "A", "✕", "B"
 }
 

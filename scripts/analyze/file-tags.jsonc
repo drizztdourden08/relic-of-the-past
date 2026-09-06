@@ -30,7 +30,7 @@
   "**/*.woff2": { "kind": "asset" },
   "**/*.dat":   { "kind": "asset" },
   "**/*.sfc":   { "kind": "asset" },
-  // Emulator save states — test fixtures, cannot carry a header comment.
+  // Emulator save states are test fixtures and cannot carry a header comment.
   "**/*.sav":   { "kind": "asset" },
 
   "apps/web/public/**":   { "kind": "asset" },
@@ -38,11 +38,9 @@
   "apps/desktop/public/wasm/**": { "kind": "asset" },
   // Named save states the tests + nav baselines load; documented in their README.
   "tests/fixtures/save-states/**": { "kind": "asset" },
-  // Kept (permanent) app-driven specs — see tests/e2e/README.md.
+  // Kept (permanent) app-driven specs. Documented in tests/e2e/README.md.
   "tests/e2e/**": { "kind": "test" },
-  // …but the folder's own README is prose, not a spec. Every other README in
-  // the repo is a doc, and the rule above would otherwise size and lint this
-  // one as a test purely because of where it sits.
+  // The folder's own README is prose, or the rule above would lint it as a test.
   "tests/e2e/*.md": { "kind": "doc" },
 
   "shared/game/data/**":      { "kind": "data" },
@@ -62,6 +60,6 @@
   // Git hooks (shell scripts, no extension).
   ".githooks/**":             { "layer": "tooling-scripts", "kind": "logic" },
 
-  // Per-version release notes — source of truth for GitHub release bodies.
+  // Per-version release notes. GitHub release bodies come from these.
   "release-notes/**":         { "layer": "root-config", "kind": "doc" }
 }

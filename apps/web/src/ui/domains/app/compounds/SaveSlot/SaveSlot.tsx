@@ -44,7 +44,7 @@ const SaveSlot = (props: SaveSlotProps) => {
         )}
         <Text className="save-slot__num">{slot + 1}</Text>
         {shortcutKey && <Text className="save-slot__key">{shortcutKey}</Text>}
-        {/* Split action bar — bottom half of the card, always visible over the shot */}
+        {/* Split action bar on the bottom half of the card, always visible over the shot */}
         <Box className="save-slot__actions">
           <Button
             variant="bare"
@@ -67,7 +67,7 @@ const SaveSlot = (props: SaveSlotProps) => {
             <Icon paths={LOAD_ICON_PATHS} size={16} />
           </Button>
         </Box>
-        {/* Busy spinner — feedback while saving/loading (screenshot capture + reload). */}
+        {/* Busy spinner gives feedback while saving/loading (screenshot capture + reload). */}
         {busy && (
           <Box className="save-slot__spinner">
             <Spinner />

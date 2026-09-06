@@ -21,7 +21,7 @@ type LogicMode = 'vanilla' | 'open' | 'inverted' | 'no-logic';
 type SwordMode = 'normal' | 'swordless' | 'assured';
 type Goal = 'final-boss' | 'pedestal' | 'relic-hunt' | 'crystals' | 'bosses';
 
-/** The three medallion items — Bombos (item-016), Ether (item-017), Quake (item-018). */
+/** The three medallion items: Bombos (item-016), Ether (item-017) and Quake (item-018). */
 type MedallionItemId = ItemId;
 
 interface LogicConfig {

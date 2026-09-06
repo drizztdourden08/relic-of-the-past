@@ -1,8 +1,8 @@
 /* @layer shared-game @kind logic */
 /**
  * The verifying phase: diff the flag snapshots around the trigger, name the
- * check, fold in the item, and route the side-effect cycles — door unlocks,
- * shutter clears and trap slams — each of which re-floods the room in place.
+ * check, fold in the item, and route the side-effect cycles for door unlocks,
+ * shutter clears and trap slams, each of which re-floods the room in place.
  */
 import type { SimObservation, SimEvent, DetectedCheck } from '../types';
 import { getItem } from '../../data';
@@ -18,7 +18,7 @@ const verifyStep = (s: EngineState, obs: SimObservation, events: SimEvent[]): vo
   const target = s.currentTarget;
 
   // No flag change → nothing observable; mark failed so this epoch skips it.
-  // A blast changes no game state, so it can never show a diff — settle it first
+  // A blast changes no game state, so it can never show a diff. Settle it first
   // or the no-diff branch below would mark the wall permanently failed.
   if (target?.action.type === 'bombWall') { emitWallBombed(s, events, target.key, target.label); return; }
 
@@ -56,10 +56,10 @@ const verifyStep = (s: EngineState, obs: SimObservation, events: SimEvent[]): vo
   // reopens the trap shutters the game closed behind the player.
   if (target?.action.type === 'kill' && target.action.opensShutters && target.action.itemId !== 0xff) {
     s.trapClosed.delete(target.screenId);
-    events.push(narrative(s, `Defeated ${target.label} — shutter doors reopened`));
+    events.push(narrative(s, `Defeated ${target.label} and the shutter doors reopened`));
   }
   // A traversal-affecting unlock re-seeds the frontier; the runner re-floods after
-  // this. When this check IS the stop target, skip straight to planning — the run
+  // this. When this check IS the stop target, skip straight to planning, because the run
   // must end on the verification, with no reset/re-flood/discovery after it.
   if (s.epoch > epochBefore && !s.stopHit) events.push(narrative(s, 'Reset: restarting from current position with new state'));
 

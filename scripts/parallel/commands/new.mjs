@@ -1,12 +1,9 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * `wt new <name>` — create a worktree, provision its profile, make it launchable.
- *
- * The expensive path (~825 MB, ~5 min). Prefer `wt claim --any`, which reuses a
- * worktree the pool already holds; only reach for this when the pool has none free.
- *
- * `name` is used three ways at once — the worktree directory, the branch suffix
- * (agent/<name>) and the game profile id — so an instance launch needs no lookup.
+ * `wt new <name>` creates a worktree, provisions its profile and makes it launchable.
+ * The expensive path (~825 MB, ~5 min); prefer `wt claim --any` when the pool has a
+ * free one. `name` is the worktree directory, the branch suffix (agent/<name>) and
+ * the game profile id, so an instance launch needs no lookup.
  */
 import { existsSync, mkdirSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
@@ -24,16 +21,12 @@ const NAME_RULE = /^[a-z0-9][a-z0-9-]{0,38}$/;
 const assertName = (name) => {
   if (!name) throw new Error('Usage: npm run wt -- new <name> [--from <ref>] [--rom <file>] [--quick-slot <N>] [--no-build]');
   if (!NAME_RULE.test(name)) {
-    throw new Error(`"${name}" is not a valid name — lowercase letters, digits and dashes, max 39 chars.`);
+    throw new Error(`"${name}" is not a valid name. Use lowercase letters, digits and dashes, max 39 chars.`);
   }
 };
 
-/**
- * `--quick-slot` takes the human "Slot N" number shown in the save UI (1-based) and
- * converts it to the 0-based index `--auto-state=<number>` and the quick-save files
- * (`saveN.sav`) actually use — the same off-by-one every other slot reference in this
- * project has to account for.
- */
+// `--quick-slot` takes the 1-based "Slot N" shown in the save UI and converts it to
+// the 0-based index `--auto-state=<number>` and `saveN.sav` use.
 const resolveQuickSlot = (raw) => {
   if (raw == null) return null;
   const human = Number(raw);
@@ -44,8 +37,7 @@ const resolveQuickSlot = (raw) => {
 };
 
 const assertBranchFree = (branch) => {
-  // git refuses to check one branch out twice, which is a useful guard — but a clearer
-  // message here beats letting `worktree add` fail cryptically.
+  // A clear message here beats letting `worktree add` fail cryptically.
   if (git(['rev-parse', '--verify', branch], repoRoot)) {
     throw new Error(`Branch ${branch} already exists. Pick another name, or: npm run wt -- clean <name>`);
   }
@@ -62,7 +54,7 @@ const addWorktree = (name, from) => {
   fetchBase(repoRoot);
   const base = from ?? baseRef(repoRoot);
 
-  console.log(`[wt] Creating ${path} on ${branch} from ${base}…`);
+  console.log(`[wt] Creating ${path} on ${branch} from ${base}...`);
   execFileSync('git', ['worktree', 'add', '-b', branch, path, base], { cwd: repoRoot, stdio: 'inherit' });
 
   return { path, branch, baseCommit: git(['rev-parse', base], repoRoot) ?? base };
@@ -78,7 +70,7 @@ const run = async ({ positional, options }) => {
   const { path, branch, baseCommit } = addWorktree(name, typeof options.from === 'string' ? options.from : null);
   const build = await bootstrapWorktree({ worktree: path, skipBuild: flag(options, 'no-build') });
 
-  console.log('\n[wt] Provisioning the game profile…');
+  console.log('\n[wt] Provisioning the game profile...');
   const quickSlot = resolveQuickSlot(options['quick-slot']);
   const { romFile, savesCopied, fixturesCopied, quickSaveCopied } = await provisionProfile({
     name,
@@ -87,12 +79,12 @@ const run = async ({ positional, options }) => {
     quickSlot,
   });
   console.log(`  profile ${name} → ${romFile}`);
-  console.log(`  ${savesCopied} named save state(s) copied — what --auto-state=<name> can load`);
+  console.log(`  ${savesCopied} named save state(s) copied (what --auto-state=<name> can load)`);
   if (fixturesCopied != null) {
     console.log(`  ${fixturesCopied} regression fixture(s) merged in from tests/fixtures/save-states/`);
   }
   if (quickSaveCopied) {
-    console.log(`  quick slot ${quickSlot} copied — load it with --auto-state=${quickSlot}`);
+    console.log(`  quick slot ${quickSlot} copied. Load it with --auto-state=${quickSlot}`);
   }
 
   await updateRegistry((registry) => {

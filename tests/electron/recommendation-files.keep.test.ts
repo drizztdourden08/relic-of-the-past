@@ -1,16 +1,12 @@
 /* @layer tests @kind test */
 /**
  * The recommendation store's main-process half, against a throwaway userData
- * root rather than the real app data directory — the same bargain
- * `review-files.test.ts` makes.
+ * root (the same bargain `review-files.test.ts` makes).
  *
- * The interesting property is the per-kind queue. Every operation the engine's
- * store performs is a read-modify-write of a whole collection file, so two
- * overlapping calls would let the second one's read miss the first one's write.
- * The queue has to wrap the WHOLE operation, not just the write half: queueing
- * only the save would still let two decisions read the same snapshot and each
- * save its own edit over the other's. That is what a batch accept — several
- * decisions fired at one collection, back to back — depends on.
+ * The property that matters is the per-kind queue. Every operation is a
+ * read-modify-write of a whole collection file, and the queue must wrap the
+ * WHOLE operation, not just the write: queueing only the save would still let
+ * two decisions read the same snapshot. A batch accept depends on this.
  */
 import { mkdtemp, rm } from 'fs/promises';
 import { tmpdir } from 'os';
@@ -58,7 +54,7 @@ describe('where a collection lives', () => {
     expect(recommendationFilePath('tag')).toBe(join(root, 'Data', 'recommendations', 'tag.json'));
   });
 
-  it('reads a missing file as empty rather than throwing', async () => {
+  it('reads a missing file as empty instead of throwing', async () => {
     expect(await loadRecommendationFile('tag')).toEqual([]);
   });
 });
@@ -95,8 +91,8 @@ describe('two decisions on one collection', () => {
     expect(file.map(item => item.state)).toEqual(['accepted', 'dismissed']);
   });
 
-  // The contrast: the same two operations without the queue cannot keep both —
-  // either the later write overwrites the earlier verdict, or the two writes
+  // The contrast: the same two operations without the queue cannot keep both.
+  // Either the later write overwrites the earlier verdict, or the two writes
   // collide on the file itself and it reads back as nothing.
   it('would lose a verdict without the queue', async () => {
     await recommendationStorage.save('tag', [entry('r-1'), entry('r-2')]);

@@ -3,8 +3,8 @@
  * The metadata for one open entry: a label/value list, with the validation
  * problems underneath.
  *
- * It sits above the three views rather than inside any of them, because it is
- * true of the entry however the entry is being shown — reading, editing or
+ * It sits above the three views, not inside any of them, because it is
+ * true of the entry however the entry is being shown. Reading, editing and
  * previewing all want to know who says the line.
  *
  * Every value comes in already worded (`entry-meta.model.ts`); this is layout

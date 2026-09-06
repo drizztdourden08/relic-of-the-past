@@ -25,8 +25,9 @@ import { adapter as clangFormat } from './adapters/clang-format-adapter.mjs';
 import { adapter as markdownlint } from './adapters/markdownlint-adapter.mjs';
 import { adapter as structurePolicy } from './adapters/structure-policy.mjs';
 import { adapter as deadCssVar } from './adapters/dead-css-var.mjs';
+import { adapter as slop } from './adapters/slop-adapter.mjs';
 
-const ADAPTERS = [linePolicy, eslint, tsc, stylelint, clangFormat, markdownlint, structurePolicy, deadCssVar];
+const ADAPTERS = [linePolicy, eslint, tsc, stylelint, clangFormat, markdownlint, structurePolicy, deadCssVar, slop];
 const ROOT = process.cwd();
 const args = new Set(process.argv.slice(2));
 

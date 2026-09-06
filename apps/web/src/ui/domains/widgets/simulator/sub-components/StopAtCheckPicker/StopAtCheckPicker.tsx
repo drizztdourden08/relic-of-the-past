@@ -1,10 +1,10 @@
 /* @layer renderer-widgets @kind component */
 /**
- * Stop-at-check picker — a checks-widget-style popover over the "Stop at check"
+ * Stop-at-check picker. A checks-widget-style popover over the "Stop at check"
  * control. A trigger button shows the current selection (type icon + name);
  * clicking it opens an anchored panel with the shared search / tag / item /
  * status filters and a scrollable, icon-tagged list of checks. Selecting a row
- * (or the "No stop — full run" row) calls onStopAtChange and closes the panel.
+ * (or the "No stop (full run)" row) calls onStopAtChange and closes the panel.
  */
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { Box, Button, Portal, Text } from '@ds/primitives';
@@ -48,7 +48,7 @@ const StopAtCheckPicker = (props: StopAtCheckPickerProps) => {
 
   const selected = stopAtCheckId ? getCheck(stopAtCheckId) : undefined;
   const triggerIcon = selected ? checkTypeIcon(selected.kind) : '∞';
-  const triggerLabel = selected?.randomizerName ?? 'No stop — full run';
+  const triggerLabel = selected?.randomizerName ?? 'No stop (full run)';
 
   return (
     <>

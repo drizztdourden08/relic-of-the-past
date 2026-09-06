@@ -1,19 +1,15 @@
 /* @layer renderer-lib @kind logic */
 /**
- * How much audio a single Opus packet holds, read from its own first byte.
- *
- * That byte (the "TOC") carries the coding mode and bandwidth in its top five bits and the
- * number of frames in the packet in its bottom two; the multi-frame code puts the frame count
- * in the byte after it. Everything downstream counts in 48 kHz samples — the rate Opus always
- * reports at and the unit Ogg granule positions use — so the tables here are in samples
- * rather than milliseconds.
+ * How much audio a single Opus packet holds, from its TOC byte: coding mode and bandwidth in
+ * the top five bits, frame count in the bottom two (the multi-frame code puts the count in the
+ * next byte). Tables are in 48 kHz samples, the unit Ogg granule positions use.
  */
 
-/** 10 / 20 / 40 / 60 ms — the four frame sizes the speech modes offer. */
+/** The four frame sizes the speech modes offer, 10 / 20 / 40 / 60 ms. */
 const SPEECH_FRAME_SAMPLES = [480, 960, 1920, 2880];
-/** 10 / 20 ms — the mixed speech-plus-music modes. */
+/** The mixed speech-plus-music modes, 10 / 20 ms. */
 const HYBRID_FRAME_SAMPLES = [480, 960];
-/** 2.5 / 5 / 10 / 20 ms — the music-only modes, which is what a music pack uses. */
+/** The music-only modes a music pack uses, 2.5 / 5 / 10 / 20 ms. */
 const MUSIC_FRAME_SAMPLES = [120, 240, 480, 960];
 
 const SPEECH_CONFIGS = 12;

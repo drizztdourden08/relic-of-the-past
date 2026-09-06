@@ -4,8 +4,8 @@
 
 #include "src/types.h"
 
-// Gates for behaviour that never influences emulated state — host-side presentation, instrumentation
-// and diagnostics. They live in a plain global rather than in WRAM, so they cost no save-state bytes
+// Gates for host-side presentation, instrumentation and diagnostics, none of which influences
+// emulated state. They live in a plain global and not in WRAM, so they cost no save-state bytes
 // and generate no replay-recorder traffic, and flipping one can never desynchronise a replay.
 //
 // A gate belongs here ONLY if the game core cannot observe it. Anything the C game code branches on
@@ -14,8 +14,9 @@ enum {
   kHostGateWordCount = 2,
 };
 
-// Bit assignment within g_host_gates[0]. No master switch like CheatGate's kFeatures3_CheatsEnabled —
-// each bit names an independent host-only subsystem, not a user-facing cheat category.
+// Bit assignment within g_host_gates[0]. There is no master switch like CheatGate's
+// kFeatures3_CheatsEnabled, because each bit names an independent host-only subsystem, not a
+// user-facing cheat category.
 //
 // The two external-sound bits do NOT map one-to-one onto the three sound channels: ambient
 // (kSoundChannel_Ambient / APUI01) has its own bit, while the two one-shot channels

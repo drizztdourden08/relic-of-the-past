@@ -1,18 +1,18 @@
 /* @layer shared-game @kind logic */
 /**
- * Bake step — turns an editable LanguageSet into the packed entry the asset
+ * Bake step. Turns an editable LanguageSet into the packed entry the asset
  * blob builder consumes. Resolves every variable reference, serializes the
  * token streams back to the bracket-string format the compression path
  * expects, then delegates the actual packing to
- * shared/asset-extraction's `buildPackedEntry` — the same dictionary/
- * compression logic a ROM-extracted language goes through.
+ * shared/asset-extraction's `buildPackedEntry`, which runs the same dictionary
+ * and compression logic a ROM-extracted language goes through.
  *
  * The compiled entry's language CODE is the SET's id, not its base: `id` is
  * what `kDialogueMap` carries and what the INI `Language` key selects at
  * boot, while `base` only supplies the alphabet/dictionary/encoder this set
  * inherits. `buildPackedEntry` is called with the base code so encoding uses
  * the right config, then the result's `code` is overridden to the set's own
- * id — encoding/dictionary/flags stay derived from the base language.
+ * id. Encoding, dictionary and flags stay derived from the base language.
  *
  * Pure function: no file or ROM I/O.
  */
@@ -43,7 +43,7 @@ const EXPECTED_LINE_COUNT = 397;
 const NON_BASE_INDEX = 1;
 
 /**
- * Persisted font bytes a language set carries alongside its dialogue — the
+ * Persisted font bytes a language set carries alongside its dialogue. The
  * same pair `buildPackedEntry` expects from a ROM extraction: the raw 2bpp
  * glyph sheet and its per-glyph width table.
  */
@@ -80,7 +80,7 @@ const compileSet = (set: LanguageSet, font: SetFont): PackedLangEntry => {
   if (!cfg) throw new Error(`compileSet: unknown base language "${set.base}" for set "${set.id}"`);
 
   // A set read through storage carries `variables`; one built in memory may not,
-  // so fall back to projecting the legacy pair rather than refusing to compile.
+  // so fall back to projecting the legacy pair instead of refusing to compile.
   const vars = buildVariableIndex(set.variables ?? variablesFromLegacy(set.glossary, set.names));
 
   const texts = orderedDialogue(set)

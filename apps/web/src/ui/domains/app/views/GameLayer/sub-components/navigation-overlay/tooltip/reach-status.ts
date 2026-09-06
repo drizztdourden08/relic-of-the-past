@@ -7,13 +7,8 @@ interface ReachStatus {
 }
 
 /**
- * Per-layer reach wording, pinned top-right of that layer's own block (never
- * a single shared status at tooltip level — see TileTooltipContent).
- *
- * An above-layer tile whose own attribute is not a structural wall, yet the
- * BFS never reached it, reads "unsupported" rather than "blocked": the tile
- * is open, nothing carries the player there. Only the above layer gets this
- * wording — a ground-layer tile that the BFS didn't reach is a plain block.
+ * Per-layer reach wording. An unreached above-layer tile that is not a wall reads "unsupported",
+ * not "blocked": the tile is open, nothing carries the player there.
  */
 const reachStatusFor = (reach: ReachState, collision: TilePassability, isAboveLayer: boolean): ReachStatus => {
   if (reach === 1) return { label: '✓ reachable', color: 'var(--c-green-bright)' };

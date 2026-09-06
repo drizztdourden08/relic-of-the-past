@@ -2,7 +2,7 @@
 // Custom player-character sprite sheets in the community ZSPR format: parse, apply, and revert.
 //
 // A sheet carries 0x7000 bytes of 4bpp tiles plus a palette block (4 outfits x 15 colors, then two
-// glove colors). The tiles simply overwrite the player gfx asset. The palette cannot: the gear palette
+// glove colors). The tiles overwrite the player gfx asset. The palette cannot: the gear palette
 // occupies a sprite palette that villagers and followers also draw from, and their art was drawn against
 // the stock outfit colors, so writing a sheet's colors there turns them black or gold to match.
 //
@@ -22,7 +22,7 @@ enum {
   kSheetOutfits = 4,      // a ZSPR carries green/blue/red/bunny, but not the electro palette
   kOutfitBytes = kSheetOutfits * kColorsPerOutfit * 2,
   kGloveBytes = 4,        // 2 colors x 2 bytes
-  kArmorAssetBytes = 150, // the stock armor/gloves asset — 5 outfits x 15 colors
+  kArmorAssetBytes = 150, // the stock armor/gloves asset, 5 outfits x 15 colors
   kHeaderBytes = 27,
   kBankColors = 16,       // the private bank mirrors one full sprite palette
   kGlovesBankIndex = 13,  // the gloves color lands at 0xFD, i.e. index 13 of the row
@@ -41,11 +41,11 @@ static int g_last_outfit = -1;
 static uint32 ReadWord(const uint8 *b) { return b[0] | (b[1] << 8); }
 static uint32 ReadDword(const uint8 *b) { return b[0] | (b[1] << 8) | (b[2] << 16) | (b[3] << 24); }
 
-// The asset layout is a fixed contract; refuse rather than memcpy past an asset that changed size.
+// The asset layout is a fixed contract; refuse instead of memcpy past an asset that changed size.
 static bool AssetsHaveExpectedSize(void) {
   if (kLinkGraphics_SIZE == kSheetBytes && kPalette_ArmorAndGloves_SIZE == kArmorAssetBytes)
     return true;
-  printf("[PlayerSprite] Unexpected asset sizes (gfx=%u pal=%u) — not applying\n",
+  printf("[PlayerSprite] Unexpected asset sizes (gfx=%u pal=%u), not applying\n",
          (unsigned)kLinkGraphics_SIZE, (unsigned)kPalette_ArmorAndGloves_SIZE);
   return false;
 }
@@ -64,7 +64,7 @@ static bool CaptureStock(void) {
 }
 
 // Fill the PPU's private bank from the sheet's outfit |outfit|, and switch the player onto it. A no-op
-// before the core is initialized — the first gear-palette load after startup calls back in and lands it.
+// before the core is initialized, since the first gear-palette load after startup calls back in and lands it.
 static void PushBank(int outfit) {
   Ppu *ppu = g_zenv.ppu;
   if (ppu == NULL || !g_have_sheet_palette || outfit < 0 || outfit >= kSheetOutfits)
@@ -103,7 +103,7 @@ void GameHook_PlayerGlovesColorUpdated(void) {
 }
 
 // Kept for callers that want the player's colors re-landed after a save-state load. The bank lives outside
-// the snapshot, so a load cannot disturb it — but link_armor can differ, so rebuild from what's current.
+// the snapshot, so a load cannot disturb it. link_armor can differ, so rebuild from what's current.
 void PlayerSprite_RefreshPalette(void) {
   if (g_has_custom)
     Palette_Load_LinkArmorAndGloves();
@@ -116,10 +116,10 @@ bool PlayerSprite_HasCustom(void) {
 bool PlayerSprite_Apply(const uint8 *data, size_t len, bool push_live) {
   // Single gate point for the whole feature: every hook below (GameHook_PlayerGearPaletteLoaded,
   // GameHook_PlayerGlovesColorUpdated, PlayerSprite_RefreshPalette, PlayerSprite_Restore) only acts
-  // once g_has_custom is true, and this is the only place that sets it — so refusing here when the
+  // once g_has_custom is true, and this is the only place that sets it, so refusing here when the
   // gate is off keeps the player on the stock sheet/palette everywhere else without duplicating checks.
   if (!(enhanced_features3 & kFeatures3_PlayerSpriteOverride)) {
-    printf("[PlayerSprite] Blocked — player sprite override gate is off\n");
+    printf("[PlayerSprite] Blocked: the player sprite override gate is off\n");
     return false;
   }
   if (data == NULL || len < kHeaderBytes || memcmp(data, "ZSPR", 4) != 0) {
@@ -139,7 +139,7 @@ bool PlayerSprite_Apply(const uint8 *data, size_t len, bool push_live) {
     return false;
 
   memcpy(kLinkGraphics, data + px_off, kSheetBytes);
-  // A sheet may ship pixels only; leave the player on the stock row in that case rather than banking a
+  // A sheet may ship pixels only; leave the player on the stock row in that case instead of banking a
   // partial palette.
   g_have_sheet_palette = false;
   if (pal_len >= kOutfitBytes) {
@@ -167,7 +167,7 @@ void PlayerSprite_Restore(bool push_live) {
   g_has_custom = false;
   g_have_sheet_palette = false;
   g_last_outfit = -1;
-  // Back to the shared row. Nothing to undo there — it held the stock colors the whole time.
+  // Back to the shared row. Nothing to undo there, since it held the stock colors the whole time.
   if (g_zenv.ppu != NULL)
     g_zenv.ppu->playerPalActive = false;
   if (push_live)

@@ -31,7 +31,7 @@ int WasmGetRoomLayoutInfo(void) {
 
 // ─── Dungeon Map Position (room's position in the 5x5 dungeon map grid) ───
 
-// Floor count table per palace (palace index 0–13):
+// Floor count table per palace (palace index 0-13):
 // Low nibble = number of basement floors, bits 4-7 = number of above-ground floors
 static const uint16 kDungFloorInfo[14] = {0x21, 0x23, 0x20, 0x21, 0x70, 0x12, 0x11, 0x212, 2, 0x217, 0x160, 0x12, 0x113, 0x171};
 

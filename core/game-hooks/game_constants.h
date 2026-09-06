@@ -14,14 +14,14 @@
 #define MODULE_MENU             14  // text / inventory / map overlay
 #define MODULE_SPOTLIGHT_CLOSE  15  // transient spotlight (iris closing)
 #define MODULE_SPOTLIGHT_OPEN   16  // transient spotlight (iris opening)
-#define MODULE_FALLING_ENTRANCE 11  // dungeon pit-fall transition — also reused, unchanged, by
+#define MODULE_FALLING_ENTRANCE 11  // dungeon pit-fall transition, also reused unchanged by
                                     // Overworld_CheckSpecialSwitchArea for the 3 vanilla overworld
                                     // locations reached by walking onto a switch tile. Interactive
                                     // gameplay resumes normally in that flavor even though the module
-                                    // never returns to 9 — see GameHook_IsOverworldSpecialArea, the only
+                                    // never returns to 9. GameHook_IsOverworldSpecialArea is the only
                                     // reliable way to tell it apart from an actual, non-interactive
                                     // pit-fall into a dungeon room.
-#define OVERWORLD_SPECIAL_AREA_SCREEN_MIN 128  // overworld_screen_index floor for the flavor above —
+#define OVERWORLD_SPECIAL_AREA_SCREEN_MIN 128  // overworld_screen_index floor for the flavor above, since
                                                 // real overworld screens (light or dark world) are 0-127.
 
 // Sprite type ids referenced by hook branching logic.

@@ -1,12 +1,5 @@
 /* @layer renderer-components @kind component */
-/**
- * The table's own options button, in the footer. Everything it offers applies
- * to the whole table, which is exactly why it is here and not repeated in each
- * column's ⋯ menu.
- *
- * It opens UPWARDS and right-aligned: the trigger sits in the bottom-right
- * corner, so a menu hanging below-left of it would fall off two edges at once.
- */
+/** The table's options button, in the footer. Opens upwards and right-aligned, since the trigger sits in the bottom-right corner. */
 import { Button } from '../../../primitives/Button';
 import { DropdownMenu } from '../../DropdownMenu';
 import { useMenuOpen } from '../../field-kits/behavior/use-menu-open';

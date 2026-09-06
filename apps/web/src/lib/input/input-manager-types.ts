@@ -7,7 +7,7 @@ type DeviceChangeListener = (devices: DetectedDevice[]) => void;
 /** Fires when the active input profile changes (e.g. via the profile-cycle shortcut). */
 type ActiveProfileListener = (profile: InputProfile) => void;
 
-/** Per-frame state listener — for InputCalibration, InputTester visualization */
+/** Per-frame state listener for InputCalibration and InputTester visualization */
 type InputStateListener = (
   hidStates: Map<string, ControllerInputState>,
   pressedKeys: Set<string>,

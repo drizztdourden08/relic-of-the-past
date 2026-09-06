@@ -2,7 +2,7 @@
 /**
  * Starting, stopping and re-starting the replacement-audio session for a profile.
  *
- * Lives here rather than beside the other profile-load helpers because it is not app-shell work:
+ * Lives here, not beside the other profile-load helpers, because it is not app-shell work:
  * it reads storage and drives the engine, with no React in it, and the Data Manager has to be able
  * to re-run it when someone changes the pack on a profile that is already playing.
  */
@@ -81,7 +81,7 @@ const loadMsuPack = async (profile: Profile, settings: Settings) => {
       // the moments before the first live push.
       //
       // Music volume only takes effect once the independent-mix toggle is on, matching the
-      // sound chip's own behavior — otherwise replacement music would obey a slider the
+      // sound chip's own behavior. Otherwise replacement music would obey a slider the
       // original music ignores. Effects and the bed read their sliders on the same terms.
       musicVolume: () => groupVolume(live(), (s) => (s.musicMuted ? 0 : s.musicVolume)),
       sfxVolume: () => groupVolume(live(), (s) => (s.sfxMuted ? 0 : s.sfxVolume)),
@@ -89,11 +89,11 @@ const loadMsuPack = async (profile: Profile, settings: Settings) => {
       resumeEnabled: () => live().resumeMSU,
       resetAtTitle: () => live().resetMSUAtTitle,
       // Vanilla Safe already stops the session from starting at all (resolveMsuPlayback), but a
-      // gate handed to the core is worth denying twice rather than relying on that.
+      // gate handed to the core is worth denying twice instead of relying on that.
       replaceAmbient: settings.packReplaceAmbient && !settings.vanillaSafe,
       replaceSfx: settings.packReplaceSfx && !settings.vanillaSafe,
     });
-    log.app(`[MSU] Pack "${packName}" ready — ${manifest ? `${manifest.tracks.length} authored tracks, ${audioFiles.length} files` : `${tracks.length} tracks`}${plan.isDeluxe ? ', extended numbering' : ''}`);
+    log.app(`[MSU] Pack "${packName}" ready with ${manifest ? `${manifest.tracks.length} authored tracks, ${audioFiles.length} files` : `${tracks.length} tracks`}${plan.isDeluxe ? ', extended numbering' : ''}`);
   } catch (err) {
     log.error(`[MSU] Failed to prepare pack: ${err instanceof Error ? err.message : err}`);
     stopMsuSession();

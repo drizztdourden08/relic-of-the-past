@@ -35,7 +35,7 @@ const LayerEditor = (props: LayerEditorProps) => {
   return (
     <Box className="layer-editor">
       <SectionHeader
-        title={`Layers — ${target.label}`}
+        title={`Layers - ${target.label}`}
         subtitle={
           isLayered
             ? 'Each layer is scheduled on its own; they play together.'
@@ -47,7 +47,7 @@ const LayerEditor = (props: LayerEditorProps) => {
       />
 
       {layers.length === 0 ? (
-        <EmptyState message="No layers yet — add one to give this slot audio" />
+        <EmptyState message="No layers yet. Add one to give this slot audio." />
       ) : (
         layers.map((layer, index) => (
           <LayerCard
@@ -71,7 +71,7 @@ const LayerEditor = (props: LayerEditorProps) => {
 
       <ButtonRow align="start">
         <Button variant="primary" size="sm" disabled={saving || !dirty} onClick={() => void save()}>
-          {saving ? 'Saving…' : 'Save layers'}
+          {saving ? 'Saving...' : 'Save layers'}
         </Button>
         <Button variant="tertiary" size="sm" disabled={saving || !dirty} onClick={revert}>Revert</Button>
         {dirty && !saving && <Text variant="caption">Unsaved changes</Text>}

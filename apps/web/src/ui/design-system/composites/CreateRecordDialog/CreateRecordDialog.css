@@ -5,7 +5,7 @@
   flex-direction: column;
   gap: var(--space-sm);
 
-  /* The dialog shell has no scroll region of its own — a record with a deep
+  /* The dialog shell has no scroll region of its own, and a record with a deep
      schema (a screen, a check) must not push the Cancel / Create buttons off
      screen. */
   max-block-size: 480px;

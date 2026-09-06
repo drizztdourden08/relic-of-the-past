@@ -1,17 +1,10 @@
 /* @layer renderer-app @kind component */
 /**
- * The comparison view: what the dataset holds on the left, what the finding
- * proposes on the right, the same three tabs on both, scrolled together.
- *
- * Both panes read the RECOMMENDATION'S OWN collection, not the pseudo-collection
- * the list is showing — a finding about a connection is compared as a
- * connection, with that collection's schema, config and emitter — which is why
- * the source below is looked up by `entry.kind` rather than passed in.
- *
- * The difference between the two records is computed once, from the records
- * themselves, and then resolved to line numbers per side and per tab (see
- * comparison-lines.ts): the same field does not sit on the same line in two
- * different serialisations, let alone two different records.
+ * The comparison view: current on the left, proposed on the right, the same
+ * tabs on both, scrolled together. Both panes read the recommendation's own
+ * collection (looked up by `entry.kind`), not the pseudo-collection the list
+ * shows. The diff is computed once and resolved to line numbers per side and
+ * per tab (see comparison-lines.ts).
  */
 import { useCallback, useMemo } from 'react';
 import { changedPaths } from '@shared/game/recommendations';
@@ -32,7 +25,7 @@ import type { InspectorRow } from '../../DataInspector.type';
 
 const CURRENT = 'Current';
 const PROPOSED = 'Proposed';
-const NO_CURRENT = 'This record does not exist yet — the finding proposes adding it.';
+const NO_CURRENT = 'This record does not exist yet. The finding proposes adding it.';
 const NO_PROPOSAL = 'This finding carries no proposal.';
 const NOTHING_OPEN = 'Select a finding to compare it against the dataset.';
 

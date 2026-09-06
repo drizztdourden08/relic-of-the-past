@@ -27,7 +27,7 @@ export default defineConfig({
   publicDir: resolve(__dirname, 'public'),
   plugins: [react(), nodePolyfills({ globals: { Buffer: true, process: true } })],
   // The extraction Web Worker is bundled separately and needs the same polyfills,
-  // or `Buffer` is undefined in the packaged build — dev leaks a global, prod doesn't.
+  // or `Buffer` is undefined in the packaged build, since dev leaks a global and prod doesn't.
   worker: {
     plugins: () => [nodePolyfills({ globals: { Buffer: true, process: true } })],
   },

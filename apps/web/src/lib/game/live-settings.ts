@@ -1,16 +1,7 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Live Settings — push settings changes to the running WASM module.
- *
- * Some settings can be changed while the game is running:
- * - Feature flags (gameplay toggles) → written to g_wanted_zelda_features
- * - PPU render flags (noSpriteLimits, newRenderer, enhancedMode7) → written to g_ppu_render_flags
- *
- * Other settings require a game restart:
- * - Aspect ratio, extend_y (baked into canvas/texture dimensions)
- * - Audio settings (SDL audio device opened once)
- * - Linear filtering, ignore aspect ratio (renderer init)
- */
+// Live-pushable: feature flags (g_wanted_zelda_features), PPU render flags (g_ppu_render_flags).
+// Restart-only: aspect ratio / extend_y (texture size), audio (SDL device opened once),
+// linear filtering / ignore aspect ratio (renderer init).
 
 import type { GameSettings } from '@shared/types/settings';
 import { getModule } from './wasm-bridge';
@@ -25,7 +16,7 @@ import { LIVE_SETTINGS } from './live-settings-keys';
 // Track the last-pushed forceBackdropBlack value so we can re-assert after state loads
 let lastBackdropBlack = false;
 // Frame pacing mode. The core boots on the timer schedule and has no INI key for this, so the
-// startup re-assert is what actually applies the profile's choice — not just a post-load repair.
+// startup re-assert is what applies the profile's choice, not only a post-load repair.
 let lastVsync = false;
 // Track the last-pushed hudHidden value so we can re-assert after state loads
 let lastHudHidden = false;
@@ -42,8 +33,8 @@ let lastSettings: GameSettings | null = null;
 
 /**
  * The settings as they are NOW, or null before anything was pushed. For long-lived closures that
- * must follow the sliders — a snapshot captured at profile load reads its boot-time values
- * forever, which is exactly how the replacement audio's volumes came to ignore every slider.
+ * must follow the sliders; a snapshot captured at profile load reads boot-time values forever,
+ * which is how the replacement audio's volumes came to ignore every slider.
  */
 const liveSettingsNow = (): GameSettings | null => lastSettings;
 
@@ -64,7 +55,7 @@ const pushLiveSettings = (settings: GameSettings): boolean => {
     try { mod.ccall('WasmSetFeatures1', null, ['number'], [features1]); } catch { /* WASM not rebuilt yet */ }
     try { mod.ccall('WasmSetFeatures2', null, ['number'], [features2]); } catch { /* WASM not rebuilt yet */ }
 
-    // Cheat gating word (features3) — guarded: older WASM lacks WasmSetGateWord.
+    // Cheat gating word (features3), guarded because older WASM lacks WasmSetGateWord.
     try { mod.ccall('WasmSetGateWord', null, ['number', 'number'], [3, buildFeatureWord3(settings)]); } catch { /* WASM not rebuilt yet */ }
 
     const ppuFlags = buildPpuFlags(settings);
@@ -125,7 +116,7 @@ const pushLiveSettings = (settings: GameSettings): boolean => {
     updateHapticBridgeSettings(settings.haptics ?? DEFAULT_SETTINGS.haptics);
     updateHapticsProfileEnabled(settings.hapticsEnabled ?? DEFAULT_SETTINGS.hapticsEnabled);
 
-    log.app(`Live settings pushed — features: 0x${features.toString(16)}, ppu: 0x${ppuFlags.toString(16)}`);
+    log.app(`Live settings pushed: features 0x${features.toString(16)}, ppu 0x${ppuFlags.toString(16)}`);
     return true;
   } catch (e) {
     log.app(`Live settings push failed: ${e}`, 'error');
@@ -133,11 +124,11 @@ const pushLiveSettings = (settings: GameSettings): boolean => {
   }
 };
 
-/** Guarded one-arg ccall — no-op if the module or export is unavailable. */
+/** Guarded one-arg ccall. No-op if the module or export is unavailable. */
 const tryVoidCcall = (fn: string, value: number): void => {
   const mod = getModule();
   if (!mod) return;
-  try { mod.ccall(fn, null, ['number'], [value]); } catch { /* ignore — WASM may not have this export */ }
+  try { mod.ccall(fn, null, ['number'], [value]); } catch { /* WASM may not have this export */ }
 };
 
 const reassertBackdropBlack = (): void => tryVoidCcall('WasmSetForceBackdropBlack', lastBackdropBlack ? 1 : 0);
@@ -158,19 +149,14 @@ const reassertVolumes = (): void => {
 };
 
 /**
- * Push all three feature words from the last primed/pushed settings.
- *
- * These words have no INI path (config.c parses features0 only), so the core starts with all three at
- * zero and they only ever become non-zero through a ccall. Priming a profile seeds the JS side but
- * cannot ccall, because the module is not running yet; so without this the granular fix words stayed
- * zero for a whole session unless a settings change happened to push them.
+ * Push all three feature words from the last primed/pushed settings. These words have no INI path
+ * (config.c parses features0 only), so they only become non-zero through a ccall; priming cannot
+ * ccall (module not running yet), so without this the granular fix words stayed zero all session.
  */
 const reassertFeatureWords = (): void => {
   const mod = getModule();
-  // Without primed settings there is nothing truthful to send: features0 already carries the boot INI
-  // values, and rebuilding it from DEFAULT_SETTINGS would push a 4:3 non-extended word over them, which
-  // drops flags the INI legitimately set. features1/features2 have no INI path, so skipping costs nothing
-  // that the next real push will not supply.
+  // Without primed settings there is nothing truthful to send: rebuilding features0 from
+  // DEFAULT_SETTINGS would push a 4:3 non-extended word over the boot INI values.
   if (!mod || !lastSettings) return;
   const settings = lastSettings;
   const { features1, features2 } = buildFeatureWords(settings);
@@ -180,11 +166,7 @@ const reassertFeatureWords = (): void => {
 };
 
 /** Re-assert every live flag after a save-state load clobbers WRAM. */
-/**
- * Recompute and re-push only the gate word (features3). Lets a live override (e.g. the
- * randomizer arming its item-override table) reach the core immediately, the same way
- * reassertFeatureFlags does for word 0.
- */
+/** Recompute and re-push only the gate word (features3), so a live override (e.g. the randomizer arming its item-override table) reaches the core immediately. */
 const reassertGateWord3 = (): void => {
   const mod = getModule();
   if (!mod) return;
@@ -197,11 +179,10 @@ const reassertLiveFlagsAfterLoad = (): void => {
   // reasserted the flags without them left every feature in those two words off until a setting was
   // touched. Push all three words, then word 3 below.
   reassertFeatureWords();
-  // Gate words first: the C boot seed (emscripten_main.c) rebuilds word 3 from the INI, which only
-  // carries the cheat bits, so it lands AFTER whatever pushLiveSettings pushed and silently drops
-  // hudOverride/trackerNotifications/playerSpriteOverride. Re-pushing the renderer's value here makes
-  // the TS side authoritative again, and it has to happen before the hide reasserts below so the
-  // requests they make are already permitted when the core reconciles them.
+  // Gate words first: the C boot seed (emscripten_main.c) rebuilds word 3 from the INI (cheat bits
+  // only), landing AFTER pushLiveSettings and dropping hudOverride/trackerNotifications/
+  // playerSpriteOverride. Re-pushing here must precede the hide reasserts below so their requests
+  // are already permitted when the core reconciles them.
   reassertGateWord3();
   reassertBackdropBlack();
   reassertVsync();
@@ -211,11 +192,9 @@ const reassertLiveFlagsAfterLoad = (): void => {
 };
 
 /**
- * Recompute and re-push only the features word. Lets a live feature override
- * (e.g. the simulator forcing auto-skip-dialog on) reach the core immediately.
- * Falls back to DEFAULT_SETTINGS when no settings have been pushed/primed yet, so
- * the override still reaches the core on a fresh session (buildFeatureFlags ORs
- * the override in regardless of the base settings).
+ * Recompute and re-push only the features word, so a live override (e.g. the simulator forcing
+ * auto-skip-dialog on) reaches the core immediately. Falls back to DEFAULT_SETTINGS when nothing
+ * was pushed/primed yet; buildFeatureFlags ORs the override in regardless.
  */
 const reassertFeatureFlags = (): void => {
   const mod = getModule();

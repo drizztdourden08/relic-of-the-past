@@ -10,13 +10,11 @@ import { RecordEditor } from '../../apps/web/src/ui/design-system/composites/Rec
 import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
 import { describeDataset } from '../dataset-guard';
 
-// SSR smoke tests again — there is no jsdom here. They prove WHICH control a
-// closed set is offered as, and that it renders. Clicking a chip, dragging the
-// segmented indicator and keyboard traversal are NOT covered.
+// SSR smoke tests (no jsdom): WHICH control a closed set is offered as, and
+// that it renders. Clicking, dragging and keys are not covered.
 //
-// Every enum editor is now a decorator around its picker (see OpenSetControl),
-// so the picker is the decorator's single child. The prop-level assertions
-// reach through that one hop rather than reading the returned element itself.
+// Every enum editor is a decorator around its picker (see OpenSetControl), so
+// the prop-level assertions reach through that one hop.
 
 const SEGMENTED = 'class="segmented';
 const CHIPS = 'class="tag-picker';
@@ -48,7 +46,7 @@ const controlOf = (markup: string): string => {
   return 'unknown';
 };
 
-describeDataset('enum editor — the control follows the option count', () => {
+describeDataset('the enum editor control follows the option count', () => {
   it('offers a segmented track up to four options', () => {
     for (const count of [1, 2, 3, 4]) {
       expect(controlOf(renderEnumEditor(enumField(count), 'option-1')), `${count} options`)
@@ -75,11 +73,9 @@ describeDataset('enum editor — the control follows the option count', () => {
     expect(chips).toContain('role="radiogroup"');
   });
 
-  // Changed deliberately: this used to assert that a value outside the derived
-  // set showed as no selection at all. The derived set is what has been SEEN,
-  // not what is allowed, so hiding the record's own value made a field that
-  // holds something read as empty — and made a value entered through the
-  // escape hatch vanish the moment it was written.
+  // Changed deliberately: this used to assert a value outside the derived set
+  // showed as no selection. The derived set is what has been SEEN, not what is
+  // allowed, so that hid real values and escape-hatch entries.
   it('shows a value the option list has never seen, and marks it active', () => {
     const markup = renderEnumEditor(enumField(6), 'nothing-like-it');
     expect(markup).toContain('nothing-like-it');
@@ -149,7 +145,7 @@ describeDataset('enum editor — the control follows the option count', () => {
   });
 });
 
-describeDataset('enum editor — against real derived schemas', () => {
+describeDataset('enum editor against real derived schemas', () => {
   const kindOfField = (rows: readonly unknown[], path: string): string => {
     const field = buildSchema(rows).find((entry) => entry.path === path);
     if (!field) throw new Error(`no field at ${path}`);

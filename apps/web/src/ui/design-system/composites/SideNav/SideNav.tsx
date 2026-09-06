@@ -9,7 +9,7 @@ import './SideNav.css';
 
 /** Searchable, grouped left navigation. Active item is gold. */
 const SideNav = (props: SideNavProps) => {
-  const { groups, activeId, onSelect, searchable = false, searchPlaceholder = 'Filter…', header, query, onQueryChange } = props;
+  const { groups, activeId, onSelect, searchable = false, searchPlaceholder = 'Filter...', header, query, onQueryChange } = props;
   const controlled = query !== undefined;
   const [innerQuery, setInnerQuery] = useState('');
   const value = controlled ? query : innerQuery;

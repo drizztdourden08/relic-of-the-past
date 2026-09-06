@@ -1,6 +1,6 @@
 /* @layer shared-game @kind generated */
 /**
- * GENERATED — do not hand-edit. Regenerate with `npm run generate:enum-types`
+ * GENERATED FILE. Do not hand-edit. Regenerate with `npm run generate:enum-types`
  * (scripts/generate-enum-types.mjs), which reads `ALL_ENUMERATION`
  * (../enumeration.ts) and emits one union type per category.
  */

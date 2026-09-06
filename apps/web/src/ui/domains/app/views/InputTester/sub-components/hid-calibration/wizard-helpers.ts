@@ -46,7 +46,7 @@ const getInstructionText = (inputPhaseActive: boolean, items: InputItem[], activ
   if (!inputPhaseActive) return '';
   const item = items[activeIndex];
   if (!item) return '';
-  if (item.status === 'captured') return `"${item.label}" captured — click another button or click a byte to reassign.`;
+  if (item.status === 'captured') return `"${item.label}" captured. Click another button or click a byte to reassign.`;
   if (captureState === 'confirming-press') return `Detecting "${item.label}"...`;
   if (captureState === 'waiting-release') return `Got it! Release "${item.label}"...`;
   if (item.kind === 'button') return `Press "${item.label}" on controller, or click a byte in the grid to assign manually.`;

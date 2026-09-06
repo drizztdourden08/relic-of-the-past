@@ -1,14 +1,11 @@
 /* @layer electron-main @kind logic */
 /**
- * Builds the full controller device snapshot for `controller:list` /
- * `controller:devices` — every SDL-claimed device plus anything the device
- * lister sees that SDL hasn't claimed (see device-availability.ts).
+ * Builds the controller device snapshot for `controller:list` and
+ * `controller:devices`. It holds every SDL-claimed device plus anything the
+ * device lister sees that SDL hasn't claimed (see device-availability.ts).
  *
- * Takes `listed` as a parameter rather than calling the device lister itself:
- * `listDevices()` bottoms out in a synchronous native HID enumeration
- * (measured ~10ms on a 2-device machine), so the caller (sdl3-source.ts)
- * owns a cache of it and refreshes only on connect/disconnect/rescan rather
- * than once per snapshot build.
+ * Takes `listed` as a parameter because `listDevices()` is a synchronous native
+ * HID enumeration (~10ms), so sdl3-source.ts caches it across snapshot builds.
  */
 import { classifyDevices } from './device-availability';
 import { toVidPid } from './sdl3-device-key';
@@ -18,17 +15,15 @@ import type { ControllerConnectionState, ControllerGamepadType, DeviceEntry } fr
 /** The live-device fields sdl3-source.ts tracks per connected joystick. */
 interface LiveDevice {
   deviceKey: string;
-  /** SDL's own name for the device. Carried in the snapshot rather than left
-   *  to the connect event, which fires once and is missed by anything that
-   *  subscribes later or after a deliberate release. */
+  /** SDL's own name. In the snapshot because the connect event fires once and
+   *  is missed by anything that subscribes later or after a release. */
   name: string;
   sdlId: number;
   vendorId: number;
   productId: number;
   guid: string;
-  /** The gamecontrollerdb mapping line for `guid`, resolved once when the
-   *  device was added. A mapping line for a connected GUID never changes, so
-   *  this replaces a native `mappingForGuid` lookup on every snapshot build. */
+  /** The gamecontrollerdb mapping line for `guid`, resolved once on add: it
+   *  never changes while connected, so no native lookup per snapshot. */
   mapping: string | null;
   hasRumble: boolean;
   hasGyro: boolean;
@@ -74,8 +69,7 @@ const unavailableEntry = (device: ListedDevice): DeviceEntry => ({
   status: 'unavailable',
 });
 
-/** `live` — every currently SDL-claimed device, keyed by its deviceKey.
- *  `listed` — the caller's cached OS-level HID listing (see the module doc). */
+/** `live`: every SDL-claimed device by deviceKey. `listed`: the caller's cached HID listing. */
 const buildDeviceSnapshot = (live: ReadonlyMap<string, LiveDevice>, listed: readonly ListedDevice[]): DeviceEntry[] => {
   const claimedVidPids = new Set(Array.from(live.values()).map((d) => toVidPid(d.vendorId, d.productId)));
   const classified = classifyDevices(listed, claimedVidPids);

@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind style */
 
 /*
- * Prose, at a readable measure. The cap is on the TEXT rather than the panel, so
+ * Prose, at a readable measure. The cap is on the TEXT, not the panel, so
  * a wide pane gives the metadata its columns while the sentence still breaks
  * where a sentence should.
  */

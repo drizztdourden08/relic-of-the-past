@@ -1,20 +1,8 @@
 /* @layer renderer-components @kind hook */
 /**
- * Which file in the pool is being auditioned, and the handle on it while it sounds.
- *
- * One at a time, and the engine underneath enforces that rather than this hook — so a press in a
- * filtered list still silences whatever an earlier press started, even if that row is no longer
- * rendered. What this owns is only the NAME of the file playing, which is what the list needs to
- * know to show a stop button and open a player on the right entry.
- *
- * The playhead is deliberately NOT held here. Sampling it into state would re-render the whole
- * list every frame for a readout that belongs to one expanded row, so the audition handle is
- * passed down and the player reads the clock off it itself.
- *
- * Repeat points are learned by playing. Reading one costs the whole file — the format puts it in a
- * header, but a header is only reachable by reading the bytes — and playing pays that cost anyway,
- * so the decode hands it back and it is kept per file. That is why nothing here reads a repeat
- * point on its own: doing it for a list of a hundred files would pull gigabytes through memory.
+ * Owns only the NAME of the file playing; one-at-a-time is enforced by the engine underneath. The
+ * playhead is NOT held here (it would re-render the list every frame); the player reads it off the
+ * handle. Repeat points are learned by playing, since reading one costs the whole file.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import * as msuStore from '@app/lib/storage/msu-store';
@@ -27,18 +15,14 @@ const useFileAudition = (pack: string, files: MsuFile[]) => {
   const [audition, setAudition] = useState<Audition | null>(null);
   const [loading, setLoading] = useState<string | null>(null);
   const [loops, setLoops] = useState<Map<string, number | null>>(new Map());
-  // A press that resolves after a newer one must not take the list over — the engine already
-  // silenced its node, so only the newest press is allowed to publish what is playing.
+  // Only the newest press may publish what is playing; the engine already silenced older nodes.
   const latest = useRef(0);
 
   // Nothing should outlive the tab. Leaving the panel is a clear "stop", not a background player.
   useEffect(() => () => { stopFileAudition(); }, []);
 
-  // `files` changing identity is the pack reporting that what is on disk has moved on. Only what
-  // is no longer there is forgotten: a repeat point is dropped when its name has gone, and the
-  // sounding file is silenced only if it is the one that went. Renaming one file while listening
-  // to another is the ordinary case, and it must not cut the listening short or make every other
-  // file re-learn its repeat point.
+  // `files` changing identity means disk moved on. Only what is gone is forgotten: renaming one
+  // file while listening to another must not cut the listening short or drop other repeat points.
   const shownPack = useRef(pack);
   useEffect(() => {
     // Another pack is another pool entirely, even where two happen to share a filename.

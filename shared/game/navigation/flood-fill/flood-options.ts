@@ -17,7 +17,7 @@ interface FloodFillOptions {
   dualLayerGrids?: { layer0: number[][]; layer1: number[][] };
   /** Override start layer (from live game state). Only used when both layers passable at start. */
   startLayer?: 0 | 1;
-  /** kind_of_in_room_staircase value. When 2, layer changes are blocked — force single-layer BFS on startLayer. */
+  /** kind_of_in_room_staircase value. When 2, layer changes are blocked, so force single-layer BFS on startLayer. */
   staircaseType?: number;
   /** Additional seed positions for BFS (used when propagating from adjacent screens). */
   extraSeeds?: GridPos[];

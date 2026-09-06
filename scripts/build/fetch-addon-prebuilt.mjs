@@ -1,14 +1,9 @@
 /* @layer tooling-scripts @kind build */
 /**
- * Downloads and unpacks a released prebuilt of the native controller-input
- * addon. Split out from ensure-sdl3.mjs so that script stays a readable
- * statement of policy (when to fetch, when to build, when to leave things
- * alone) rather than a mix of policy and transport.
- *
- * Returns a result rather than throwing, and reports "absent" separately from
- * "failed": a release that was never published is the normal state of a
- * platform nobody has cut a build for yet, not an error worth alarming
- * anyone about.
+ * Downloads and unpacks a released prebuilt of the native controller-input addon
+ * (the transport half of ensure-sdl3.mjs). Returns a result instead of throwing,
+ * and reports "absent" separately from "failed": no release for a platform is
+ * the normal state until someone cuts a build for it.
  */
 import { existsSync, mkdirSync, rmSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
@@ -35,19 +30,13 @@ const verifyAgainstSidecar = async (assetUrl, archiveName, archivePath) => {
   }
 };
 
-/**
- * @returns {Promise<'installed' | 'absent' | 'failed'>} `absent` means no such
- * release asset exists, which is expected until a build has been published.
- */
+/** @returns {Promise<'installed' | 'absent' | 'failed'>} `absent`: no such release asset yet. */
 const fetchAddonPrebuilt = async (params) => {
   const { addonVersion, buildKey, platformArch, outDir, tmpDir } = params;
-  // The addon ships as an asset of the app's own latest release (see the
-  // "Package the input addon" step in .github/workflows/release.yml). The
-  // asset name carries the build key, a digest of the addon version plus the
-  // pinned SDL3 and libusb, so a checkout only ever accepts a binary built
-  // from the same three inputs it is pinned to. Any of them moving past what
-  // the latest release carries 404s here, and the caller builds locally
-  // rather than silently installing a mismatched binary.
+  // An asset of the app's latest release ("Package the input addon" in
+  // .github/workflows/release.yml). The name carries the build key (addon version +
+  // pinned SDL3 + libusb), so a moved pin 404s here and the caller builds locally
+  // instead of installing a mismatched binary.
   const archiveName = `sdl3-input-${addonVersion}-${buildKey}-${platformArch}.tar.gz`;
   const assetUrl = `https://github.com/${RELEASE_REPO}/releases/latest/download/${archiveName}`;
   const archivePath = join(tmpDir, archiveName);

@@ -10,8 +10,8 @@
  * A row is OMITTED when the fact does not apply and stated as absent when it
  * applies but is not known. Those are different things: an entry opened by the
  * core has no place, while two entries have no mined source at all and two type
- * bytes carry no record — and printing a plausible guess for either would be
- * worse than printing nothing.
+ * bytes carry no record. Printing a plausible guess for either would be worse
+ * than printing nothing.
  */
 import { summarizeEntry } from '../entry-summary';
 import type { Block, BlockDoc, EntryIssue, Token, VariableIndex } from '@shared/game/language';
@@ -24,7 +24,7 @@ type MetaRow = {
   label: string;
   value: string;
   mono?: boolean;
-  /** True when the value states an absence rather than a fact. */
+  /** True when the value states an absence, not a fact. */
   absent?: boolean;
 };
 
@@ -65,7 +65,7 @@ const whoRow = (facts: TriggerFacts): MetaRow => {
     : {
       key: 'who',
       label: 'triggered by',
-      value: `${facts.nativeKey || 'nothing recorded'} — no record carries this key yet`,
+      value: `${facts.nativeKey || 'nothing recorded'} (no record carries this key yet)`,
       absent: true,
     };
 };

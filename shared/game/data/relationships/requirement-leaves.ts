@@ -9,7 +9,7 @@
  *
  * `PresenceCondition` is walked too, and separately, because it is a different
  * tree with different combinators (`and`/`or`/`not`) that happens to also carry
- * an `itemId` leaf — a check's spawn condition references an item just as
+ * an `itemId` leaf. A check's spawn condition references an item just as
  * really as its requirements do.
  */
 import type { PresenceCondition, Requirement } from '../types';

@@ -1,15 +1,8 @@
 /* @layer renderer-components @kind hook */
 /**
- * Applying a play-mode edit to a layer, guarding the one order that cannot hold what the layer
- * already has: `single` is one track repeating on itself, so a layer holding several files has to
- * give the rest up to take it.
- *
- * The question is asked BEFORE anything moves, and a refusal leaves the order exactly where it
- * was — setting the order first and asking afterwards would leave a layer that says "single" over
- * a list of five files if the answer is no.
- *
- * Files and mode travel out as one patch for the same reason: they are one edit, so a save or a
- * revert cannot catch the layer half-changed.
+ * `single` holds one file, so switching into it drops the rest. The question is asked BEFORE the
+ * order changes (a refusal leaves everything as it was), and files and mode go out as one patch
+ * so a save or revert cannot catch the layer half-changed.
  */
 import { useCallback } from 'react';
 import type { LayerPlayMode, MsuLayer } from '@shared/types/msu-manifest';
@@ -22,7 +15,7 @@ interface ModeChangeParams {
   onChange: (patch: Partial<Omit<MsuLayer, 'id'>>) => void;
 }
 
-/** The one order that plays a lone file rather than moving between several. */
+/** The one order that plays a lone file instead of moving between several. */
 const isSingle = (mode: LayerPlayMode): boolean => mode.kind === 'loop' && mode.order === 'single';
 
 const useModeChange = (params: ModeChangeParams) => {

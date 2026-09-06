@@ -6,16 +6,15 @@ import { getSlotSprite } from '../PauseItemSlot';
 interface HudCurrentItemProps {
   /** equippedY slot ID (1-20) */
   itemId: number;
-  /** The equipped slot's inventory value (upgrade tier) — see getSlotSprite. */
+  /** The equipped slot's inventory value (upgrade tier). See getSlotSprite. */
   itemValue: number;
   scale: number;
   spritesBase: string;
 }
 
 /**
- * HudCurrentItem — the equipped item inside a bordered item box.
- * Renders the 8-tile frame (TL, Top, TR, Left, Right, BL, Bottom, BR)
- * with a black interior and the 16×16 item sprite centered inside.
+ * The equipped item inside a bordered item box: the 8-tile frame (TL, Top, TR,
+ * Left, Right, BL, Bottom, BR) with a black interior and the 16×16 item sprite centered.
  */
 const HudCurrentItem = (props: HudCurrentItemProps) => {
   const { itemId, itemValue, scale, spritesBase } = props;

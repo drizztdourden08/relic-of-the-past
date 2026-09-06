@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind logic */
 /**
- * Backspace at the start of a line, and Delete at the end of one — the inverse
- * of Enter.
+ * Backspace at the start of a line, and Delete at the end of one. Both are the
+ * inverse of Enter.
  *
- * A merge DROPS a code rather than moving one. The line that disappears is the
+ * A merge DROPS a code instead of moving one. The line that disappears is the
  * one whose advance put the pen where it was, and once its text has joined the
  * line above there is nothing left for that code to do; the surviving line keeps
  * its own. This is the only way an authored advance is ever removed, and it
@@ -11,8 +11,8 @@
  *
  * The wait is the opposite: it belongs to whichever line now ENDS the run of
  * text, so it survives from either side. If the line being merged away closed
- * the box, the combined line closes it instead — otherwise deleting a line break
- * would quietly join two boxes into one and change what the player has to press.
+ * the box, the combined line closes it instead. Otherwise deleting a line break
+ * would silently join two boxes into one and change what the player has to press.
  *
  * Both commands decline when they do not apply, so the ordinary keys keep their
  * ordinary behaviour everywhere except a line boundary.

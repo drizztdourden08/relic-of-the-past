@@ -1,7 +1,7 @@
 /* @layer shared-storage @kind types */
 /** Storage-level shapes for language sets: list rows, font payload, extraction input. */
 
-/** One row of the set list — identity plus the one cheap content metric. */
+/** One row of the set list, holding identity plus the one cheap content metric. */
 type LanguageSetSummary = {
   id: string;
   name: string;

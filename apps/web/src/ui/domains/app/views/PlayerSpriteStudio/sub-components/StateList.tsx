@@ -35,7 +35,7 @@ const StateList = (props: StateListProps) => {
       <TextInput
         value={filter}
         onChange={(e) => setFilter(e.target.value)}
-        placeholder={`Filter ${STATE_LABELS.length} states…`}
+        placeholder={`Filter ${STATE_LABELS.length} states...`}
       />
       <Box className="state-list__scroll">
         {grouped.map(({ group, items }) => (

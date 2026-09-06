@@ -2,7 +2,7 @@
 /** The fixed steps of the diagnostics wizard, in order. Byte capture only
  *  shows for a controller the raw HID enumeration can see (see
  *  chooser-devices.ts), so the visible order and labels are computed from
- *  that per run rather than being one static list. */
+ *  that per run instead of being one static list. */
 
 type WizardStep = 'intro' | 'choose-controller' | 'byte-capture' | 'positional-capture' | 'summary';
 

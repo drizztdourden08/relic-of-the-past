@@ -4,10 +4,10 @@ import type { FunctionMapping } from './controls';
 /** How sprites in the wide/tall extra band behave before reaching the stock 4:3 screen. */
 type OffscreenAiMode = 'idle' | 'vanilla' | 'paused';
 
-/** Haptic feedback configuration — controls vibration/rumble for game events */
+/** Haptic feedback configuration: vibration/rumble for game events */
 interface HapticSettings {
   enabled: boolean;
-  intensity: number; // 0–100 global multiplier
+  intensity: number; // 0-100 global multiplier
   swordSwing: boolean;
   swordHitEnemy: boolean;
   swordClink: boolean;
@@ -17,17 +17,17 @@ interface HapticSettings {
   environmentalEffects: boolean;
 }
 
-/** Per-profile game settings — mirrors zelda3 config.h / zelda3.ini fields */
+/** Per-profile game settings. Mirrors zelda3 config.h / zelda3.ini fields. */
 interface GameSettings {
   // ─── General ───
-  autosave: boolean; // Legacy: C-level autosave (slot 0 save/restore) — kept for INI compat
+  autosave: boolean; // Legacy C-level autosave (slot 0 save/restore), kept for INI compat
   autoSaveEnabled: boolean;
   autoSaveIntervalSeconds: number; // 60-1800, default 300
   autoSaveMaxEntries: number; // 1-20, default 5
   saveOnQuit: boolean;
   displayPerfInTitle: boolean;
-  // Legacy: only read by the native SDL main loop, which is not part of the WASM build — kept so
-  // existing profiles and the INI round-trip unchanged. Superseded by `vsync` below.
+  // Legacy: only read by the native SDL main loop (not in the WASM build). Kept so existing
+  // profiles and the INI round-trip unchanged. Superseded by `vsync` below.
   disableFrameDelay: boolean;
   // Drive the core's frame loop from the display's vertical blank (requestAnimationFrame) instead of
   // a free-running timer, and gate the game step on a 60.0988 Hz accumulator so the speed stays right
@@ -38,15 +38,15 @@ interface GameSettings {
   // Only meaningful on desktop, and only where the platform can change modes at all.
   syncedRefreshRate: boolean;
   // Target rate in Hz. 0 means "the highest multiple of 60 this display offers", which is what
-  // a fresh profile gets — a stored rate the display later stops offering falls back to that.
+  // a fresh profile gets. A stored rate the display later stops offering falls back to that.
   syncedRefreshRateHz: number;
 
   // ─── Aspect Ratio & Display ───
-  // Master gate — off: the engine always runs 4:3 vanilla and no sub-settings appear in the UI.
+  // Master gate. Off: the engine always runs 4:3 vanilla and no sub-settings appear in the UI.
   // On: the aspect ratio selector and all extended-rendering options become available.
   extendedRendering: boolean;
   // 'auto' = current app viewport (notch-aware); 'screen' = full device screen; a preset string
-  // ('4:3'…'32:9') = fixed; 'custom' = the W:H below. Re-resolved on every game start.
+  // ('4:3' through '32:9') = fixed; 'custom' = the W:H below. Re-resolved on every game start.
   // Only applied when extendedRendering is true; otherwise the engine always receives 4:3.
   aspectRatio: 'auto' | 'screen' | '4:3' | '3:2' | '16:9' | '16:10' | '21:9' | '32:9' | '4:5' | '3:4' | 'custom';
   customAspectW: number; // ratio width when aspectRatio === 'custom'; 0 = auto-detect from screen
@@ -58,21 +58,21 @@ interface GameSettings {
   // Apply the widescreen graphics corrections (edges/sprites that assume a 4:3 screen). Positive opt-in
   // (replaces the old inverted `noVisualFixes`). Default on; only relevant when wide.
   widescreenVisualFixes: boolean;
-  // Uses a clamped linear BG fetch instead of the wrapping 512px SNES tilemap — prevents tile
+  // Uses a clamped linear BG fetch instead of the wrapping 512px SNES tilemap, which prevents tile
   // garbage at edges in wide views. Required for any ratio above ~19:9. Memory cost: one world
   // tile buffer per BG layer. Default true (auto-enabled with extended rendering).
   linearWorldTilemap?: boolean;
   // Unlocks ratios above 19:9 up to 32:9 (the engine's full 1024px budget).
   // Requires linearWorldTilemap. Default true when linear tilemap is on.
   ultrawideRendering?: boolean;
-  // Allow ratios taller than 4:3 — adds extra rows above/below the game image. Symmetric with
+  // Allow ratios taller than 4:3 (extra rows above/below the game image). Symmetric with
   // wide rendering but independent (a ratio can be both wide and tall). Default false.
   tallRendering?: boolean;
   // Lock the overworld camera to the wide/tall view so its edges stop at the area boundary (no
   // out-of-area black band); Link still walks to the screen edge. Off = original 224x256 camera.
   cameraLockToViewport: boolean;
   // Pan through area transitions via a 2-area world tilemap instead of the wrapping 512px stock
-  // tilemap — removes the wrapped-edge slice at screen seams. Requires cameraLockToViewport.
+  // tilemap, which removes the wrapped-edge slice at screen seams. Requires cameraLockToViewport.
   smoothTransitions?: boolean;
   // Extend hazards, spawns and clear-room checks to the whole wide/tall view instead of just the
   // stock 4:3 area. Off = the extra width is scenery only. Changes gameplay; default off.
@@ -81,7 +81,7 @@ interface GameSettings {
   // (move/animate but cannot act on the player), 'vanilla' (full behavior, matches the original),
   // or 'paused' (frozen). Default 'idle'.
   offscreenAI?: OffscreenAiMode;
-  /** @deprecated Read-only migration source for offscreenAI ('paused' when this was true), never written going forward. */
+  /** @deprecated Read-only migration source for offscreenAI ('paused' when this was true), never written again. */
   pauseOffscreenAI?: boolean;
 
   // ─── Graphics ───
@@ -93,7 +93,7 @@ interface GameSettings {
   linearFiltering: boolean;
   dimFlashes: boolean;
   // Custom Link sprite: id/filename of a sprite in the global library (%AppData%/.../sprites), or null for
-  // the original. Applied at game start — the bridge writes the .zspr to MEMFS and sets the LinkGraphics key.
+  // the original. At game start the bridge writes the .zspr to MEMFS and sets the LinkGraphics key.
   linkSprite: string | null;
   outputMethod: 'SDL' | 'SDL-Software' | 'OpenGL' | 'OpenGL ES'; // legacy, unused in Electron
 
@@ -103,8 +103,8 @@ interface GameSettings {
   viewportConstraint: 'none' | 'fit' | 'fill';
   // Snap the canvas to a whole number of source pixels, measured in DEVICE pixels so display scaling
   // can't reintroduce uneven pixel sizes. Trades a little image size for a scroll that never shimmers.
-  // Renderer-only (not serialized to the INI). Only meaningful when viewportConstraint is 'none' —
-  // the other modes bypass the fit math entirely. Forces linearFiltering off while enabled.
+  // Renderer-only (not serialized to the INI). Only meaningful when viewportConstraint is 'none',
+  // because the other modes bypass the fit math. Forces linearFiltering off while enabled.
   pixelPerfect: boolean;
 
   // ─── Mobile display ───
@@ -131,8 +131,8 @@ interface GameSettings {
   showMaxItemsInYellow: boolean;
   moreActiveBombs: boolean;
   carryMoreRupees: boolean;
-  miscBugFixes: boolean; // legacy bundle master — enables all MiscBugFixes-origin split fixes unless overridden
-  gameChangingBugFixes: boolean; // legacy bundle master — enables GameChangingBugFixes-origin split fixes
+  miscBugFixes: boolean; // legacy bundle master that enables all MiscBugFixes-origin split fixes unless overridden
+  gameChangingBugFixes: boolean; // legacy bundle master that enables GameChangingBugFixes-origin split fixes
   cancelBirdTravel: boolean;
   // Granular per-fix overrides for the 42 split bug-fixes, keyed by feature id (see shared/features).
   // Unset ⇒ inherit the legacy bundle master above; explicit true/false ⇒ override it.
@@ -148,36 +148,32 @@ interface GameSettings {
   musicMuted: boolean;
   sfxVolume: number; // 0-100
   sfxMuted: boolean;
-  /**
-   * The replacement ambient bed's own group. The sound chip cannot split its ambience out of its
-   * mix, so these govern replacement audio only — which is where a bed loud enough to fight the
-   * music comes from in the first place.
-   */
+  // Replacement ambient bed only. The sound chip cannot split its ambience out of its mix, so
+  // these govern replacement audio, which is where a bed loud enough to fight the music comes from.
   ambientVolume: number; // 0-100
   ambientMuted: boolean;
   audioFreq: number;
   audioChannels: 1 | 2;
   audioSamples: number;
   // 'auto' (default): enableMSU/audioFreq/audioChannels are derived from the assigned pack's actual
-  // contents (shared/features/msu-auto-config.ts) rather than user-edited. 'manual': the three below
+  // contents (shared/features/msu-auto-config.ts), not user-edited. 'manual': the three below
   // are free-form, same as before this field existed.
   msuConfigMode: 'auto' | 'manual';
-  // The pack formats, including 'msul' — our own layered container, whose manifest decides
-  // what each slot plays rather than one file per slot.
+  // The pack formats. 'msul' is our own layered container, whose manifest decides
+  // what each slot plays instead of one file per slot.
   enableMSU: 'false' | 'true' | 'deluxe' | 'opuz' | 'deluxe-opuz' | 'msul';
   resumeMSU: boolean;
   // Whether reaching the title screen forgets every remembered position. Resuming is meant for a
   // run in progress; carried across runs it starts the opening in the middle of itself instead of
   // with its animation, and drops a fresh file into the last file's music.
   resetMSUAtTitle: boolean;
-  // A pack may replace the game's ambient beds and sound effects as well as its music. Each
-  // group is its own switch because they are separate decisions: someone may want an authored
-  // rain bed while keeping every native effect. Off means the core never even reports those
-  // sounds to the app, so the group costs nothing when unused.
+  // A pack may replace ambient beds and sound effects, not only music. Separate switches because
+  // someone may want an authored rain bed while keeping every native effect. Off means the core
+  // never reports those sounds to the app, so an unused group costs nothing.
   packReplaceAmbient: boolean;
   packReplaceSfx: boolean;
-  // No separate msuVolume: MSU replaces the music channel rather than running alongside it, so
-  // musicVolume governs both — serializeToIni writes MSUVolume from musicVolume.
+  // No separate msuVolume: MSU replaces the music channel instead of running alongside it, so
+  // musicVolume governs both (serializeToIni writes MSUVolume from musicVolume).
 
   // ─── Post-Processing ───
   overworldEdgeEffect: boolean;
@@ -207,22 +203,20 @@ interface GameSettings {
   haptics: HapticSettings;
   // Whether this profile routes rumble to its own controllers at all. When on,
   // every device the profile uses gets the signal; there is no per-device list
-  // to curate — see allowedDevices in lib/input/profile-devices.ts.
+  // to curate (see allowedDevices in lib/input/profile-devices.ts).
   hapticsEnabled: boolean;
 
   // ─── Cheats ───
-  // Master gate for all cheat effects (stat/item/combat cheats, walk-through-walls, etc). Off by
-  // default: the C side no-ops every cheat call while this is off, same contract as haptics.enabled /
-  // developerToolsEnabled.
+  // Master gate for all cheat effects. Off by default: the C side no-ops every cheat call while
+  // this is off, same contract as haptics.enabled / developerToolsEnabled.
   cheatsEnabled: boolean;
   // When cheats are enabled, keep their effects constrained to changes that stay comparable to a
   // vanilla run (the VanillaSafe bit in kRam_Features3). Off by default alongside cheatsEnabled.
   vanillaSafe: boolean;
 
   // ─── Developer ───
-  // Master gate for developer-only instrumentation (transition-settled events, and any future dev-only
-  // GameHook). Off by default: the C hook that would fire these makes zero host-calls when this is off,
-  // same contract as haptics.enabled. Purely observational, never changes gameplay.
+  // Master gate for developer-only instrumentation (transition-settled events and any future dev-only
+  // GameHook). Off by default: the C hook makes zero host-calls while off. Observational only.
   developerToolsEnabled: boolean;
   // Navigation/room data reads that feed the Location & Navigation widget, the flood fill and the
   // simulator. Separate from developerToolsEnabled so the dev surface can be on while the heaviest
@@ -230,9 +224,8 @@ interface GameSettings {
   devNavigationData: boolean;
 
   // ─── Host systems reading emulated state ───
-  // The checks tracker polls inventory and save flags out of the running game. It changes nothing the
-  // game computes, but it is still a host feature reading emulated state, so it gets its own switch
-  // rather than being implicitly always-on (TrackerQueryGate).
+  // The checks tracker polls inventory and save flags out of the running game. It changes nothing,
+  // but it is a host feature reading emulated state, so it gets its own switch (TrackerQueryGate).
   trackerEnabled: boolean;
 }
 

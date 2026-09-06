@@ -1,10 +1,8 @@
 /* @layer shared-platform @kind logic */
 /**
- * FileStore primitive — the per-OS storage backend abstraction. Paths are POSIX,
- * relative to the platform's Data root. Electron backs this with Node fs under
- * userData; Capacitor with the Filesystem plugin (app-private Directory.Data).
- * Domain logic (profiles, config, saves, …) is expressed on top of this so it runs
- * unchanged on every platform.
+ * The per-OS storage backend. Paths are POSIX, relative to the platform's Data root. Electron
+ * backs this with Node fs under userData; Capacitor with the Filesystem plugin (app-private
+ * Directory.Data). Domain logic (profiles, config, saves) sits on top so it runs everywhere.
  */
 
 interface FileStat {

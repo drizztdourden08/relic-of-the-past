@@ -1,11 +1,11 @@
 /* @layer renderer-lib @kind types */
 /**
- * Relic Sprite Pack — our own container for a player sheet.
+ * The Relic Sprite Pack is our own container for a player sheet.
  *
  * A zip holding a manifest and the raw tiles. It exists for the one thing ZSPR structurally
  * cannot do: keep the original palette and the edits as separate layers, so reverting still
  * works after a file has been closed and reopened, and an export can choose which layer to
- * bake. It also has room for palettes the core does not consume yet, carried rather than
+ * bake. It also has room for palettes the core does not consume yet, carried instead of
  * lost so a future change can pick them up.
  */
 import type { OutfitPalette, SheetPalette, PaletteOverride, SheetMeta } from '@shared/game/data/player-sheet/types';

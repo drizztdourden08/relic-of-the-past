@@ -3,7 +3,7 @@
 /*
  * The metadata list for one open entry.
  *
- * Auto-fill columns rather than a fixed number: the panel sits in a detail pane
+ * Auto-fill columns, not a fixed number: the panel sits in a detail pane
  * that a user resizes, and a two-column grid pinned at two columns either wastes
  * half a wide pane or crushes both halves in a narrow one. Every row keeps its
  * label above its value, so a column can be as narrow as it likes without the
@@ -45,7 +45,7 @@
   overflow-wrap: anywhere;
 }
 
-/* An identifier, a citation, a count — set in mono so it reads as a value. */
+/* An identifier, a citation or a count, set in mono so it reads as a value. */
 .entry-meta__value--mono {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;

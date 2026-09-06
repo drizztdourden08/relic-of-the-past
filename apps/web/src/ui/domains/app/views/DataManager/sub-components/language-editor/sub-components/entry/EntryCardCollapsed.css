@@ -7,8 +7,8 @@
  *
  * A grid, not a flex run: the columns line up down the whole list, so a reader
  * scanning for an index, a speaker or a size follows one straight edge instead of
- * hunting along ragged rows. Only the excerpt is elastic — every fact column has a
- * width of its own and stays where it is. NINE tracks, and both row components draw
+ * hunting along ragged rows. Only the excerpt is elastic. Every fact column has
+ * a width of its own and stays where it is. NINE tracks, and both row components draw
  * nine children whether they have anything in them or not.
  */
 
@@ -17,9 +17,9 @@
   width: 100%;
 
   /*
-   * FIXED TRACKS, and fixed rather than `minmax(0, …)`. Every row is its own grid
+   * FIXED TRACKS, and fixed, not `minmax(0, ...)`. Every row is its own grid
    * container, so a track that sizes to content is sized by THAT row's content
-   * and the columns only line up by luck — measured, the fact columns of a locked
+   * and the columns only line up by luck. Measured, the fact columns of a locked
    * row sat 6px right of an entry row's, drifting further with every column.
    * A bare length is the same width in every row, which is what a column is.
    *
@@ -119,7 +119,7 @@
 }
 
 /*
- * The words, in the app's own face rather than the game's. This row is for
+ * The words, in the app's own face, not the game's. This row is for
  * finding a line; reading it as the box draws it is what opening it is for.
  */
 .entry-row__excerpt {
@@ -129,7 +129,7 @@
 
 /*
  * The locked stand-in: same row, same columns, dashed and dimmed. These entries
- * are control-code scaffolding the choice prompts depend on — the reason is
+ * are control-code scaffolding the choice prompts depend on. The reason is
  * stated as a fact about what the entry is for, not as a warning.
  */
 .entry-row--locked {
@@ -145,7 +145,7 @@
 
 /*
  * THE EXCERPT IS THE FIRST THING TO GO. The facts columns are fixed, so in a
- * narrow detail pane the elastic excerpt is what runs out of room — and two
+ * narrow detail pane the elastic excerpt is what runs out of room. Two
  * characters of a line followed by an ellipsis is worse than no line at all.
  *
  * Hidden by VISIBILITY, not by `display`, and the track is left standing: a grid

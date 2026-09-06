@@ -19,7 +19,7 @@ class DualLayerStrategy implements LayerStrategy {
   private readonly startLayer: 0 | 1;
   private readonly traversedStairTiles: { layer: 0 | 1; row: number; col: number; reqs: Set<string> }[] = [];
   private readonly traversedLedgeTiles: { row: number; col: number; reqs: Set<string> }[] = [];
-  /** Ledge hops the walk actually landed — see ledge-crossings.ts. */
+  /** Ledge hops the walk actually landed (see ledge-crossings.ts). */
   private readonly crossings = createCrossingRecorder();
 
   constructor(
@@ -70,8 +70,8 @@ class DualLayerStrategy implements LayerStrategy {
     if (hitLedge && !ledgeFallMatch) return [];
 
     if (hitLedge && ledgeFallMatch) {
-      // Link's 2-wide leading edge must sit fully on jump tiles pointing the same way —
-      // a 1-wide ledge can't carry his 2x2 body. Checking the whole body at the entry
+      // The player's 2-wide leading edge must sit fully on jump tiles pointing the
+      // same way, since a 1-wide ledge cannot carry the 2x2 body. Checking the whole body at the entry
       // position is wrong: it straddles the trigger line AND the approach floor, which
       // only coincides with ledge tiles when the band happens to be 2+ deep (south fans).
       // 1-deep north/east/west trigger lines must still fire the cross.
@@ -121,7 +121,7 @@ class DualLayerStrategy implements LayerStrategy {
     // 0x90-0xAF which flip Link's layer by design) belongs to its door's
     // layer, and the game's door transit puts Link ON that layer. Stepping
     // onto tiles that are door passages on the OTHER layer continues the walk
-    // there — lower-layer doors (the sewers' BG1 corridors, the sanctuary's
+    // there. Lower-layer doors (the sewers' BG1 corridors, the sanctuary's
     // back door) are unreachable from an upper-layer approach otherwise.
     //
     // Strictly a FALLBACK for a doorway this layer cannot carry you through.
@@ -167,8 +167,8 @@ class DualLayerStrategy implements LayerStrategy {
       // it does not go looking for the nearest scrap of open layer-1 ground
       // wherever that happens to be. Without this cap, a blocked first tile
       // (a wall, more cliff-adjacent solid) sends the search further and
-      // further along the ray until it finds ANY landable tile — which can
-      // connect two genuinely unconnected areas across whatever sits between
+      // further along the ray until it finds ANY landable tile, which can
+      // connect two unconnected areas across whatever sits between
       // them. Mirrors expandStairCross's own landAttempts cap and rationale.
       if (++landAttempts > 4) return [];
 
@@ -221,7 +221,7 @@ class DualLayerStrategy implements LayerStrategy {
 
       // Stairs deposit Link right at their end. If the body can't stand within
       // a few steps of the band (body alignment + landing decor), the cross
-      // FAILS — an unbounded scan would teleport the flood across sealed
+      // FAILS, because an unbounded scan would teleport the flood across sealed
       // regions (0x71's locked corridor seam, ~17 rows away).
       if (++landAttempts > 4) return [];
 

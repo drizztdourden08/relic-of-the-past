@@ -3,7 +3,7 @@
  * Layered grouping: a flat row list plus an ordered groupBy becomes a nested
  * tree of group nodes with row leaves.
  *
- * Nested rather than pre-flattened, because a renderer that owns collapse state
+ * Nested instead of pre-flattened, because a renderer that owns collapse state
  * wants the subtree in hand; flattening a collapsed branch away is trivial from
  * a tree, while rebuilding a tree from a flat list is not.
  *

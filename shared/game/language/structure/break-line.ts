@@ -8,8 +8,8 @@
  * the LAST word boundary whose left side still fits the row.
  *
  * Only a space is a cut point. A cut anywhere else would change what the text
- * says — there is no soft hyphen in this alphabet and inserting a real one puts a
- * character on screen the translator did not write — so a single word wider than
+ * says, because there is no soft hyphen in this alphabet and inserting a real one
+ * puts a character on screen the translator did not write. So a single word wider than
  * a whole row is deliberately left whole and reported as an overrun instead
  * (`overflow` on the line, from `lineMetrics`). Truncating it would lose text and
  * hyphenating it would invent text; refusing does neither, and the author is the
@@ -17,7 +17,7 @@
  *
  * The space itself is dropped, the way any wrap drops it: it was the join
  * between two words, and carrying it onto the next row would show as an indent.
- * Codes and substitutions are never split — they are atoms of a line, and a cut
+ * Codes and substitutions are never split. They are atoms of a line, and a cut
  * lands before or after one.
  */
 import { ROW_WIDTH_PX } from '../layout/types';
@@ -56,7 +56,7 @@ const candidatesOf = (tokens: Token[]): LineBreak[] => {
 /**
  * The widest cut whose head still fits the row, or null when there is none.
  * A head can only grow as the cut moves right, so the first candidate that
- * overruns ends the search. A cut with an empty head is no cut at all — that is
+ * overruns ends the search. A cut with an empty head is no cut at all. That is
  * the over-long single word, and answering null there is what leaves it whole
  * and keeps a caller's loop from spinning on a line it cannot shorten.
  */

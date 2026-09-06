@@ -44,7 +44,7 @@
   align-self: stretch;
 }
 
-/* Two-column layout — collapses to one column when there isn't room for two. */
+/* Two-column layout that collapses to one column when there isn't room for two. */
 .home-tab__columns {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));

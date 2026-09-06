@@ -14,7 +14,7 @@ int g_cheat_trace_frames = 0;
 // this file (driven from the JS cheats UI), never at startup.
 //
 // Audit note: unlike the enhanced_features0 bitmask in features.h, cheat state
-// lives in these file-local statics rather than a unified config/registry. If a
+// lives in these file-local statics instead of a unified config/registry. If a
 // single config audit ever needs to enumerate them, surface them through the
 // existing GameHook_Get* accessors below (the same pattern features expose) so
 // the statics stay the single source of truth.
@@ -25,7 +25,7 @@ static uint8 g_cheat_extra_armor_pct = 0;   // Extra damage reduction % (0-100),
 // Ignore-collision is different from the two statics above: the effect it drives (variables.h
 // cheatWalkThroughWalls, WRAM 0x37F) has to live in WRAM because vendored code reads it directly
 // (tile_detect.c, player.c), and a loaded save state overwrites the whole WRAM blob wholesale. So this
-// bool holds the WANTED state — a plain host static, untouched by any WRAM restore — and
+// bool holds the WANTED state in a plain host static that no WRAM restore touches, and
 // zelda_rtl.c's cheat-WRAM reconcile (SyncCheatWram, run every frame next to SyncGateWords) is the only
 // thing that ever writes the WRAM byte, driven by GameHook_GetWantedIgnoreCollision() below. That
 // mirrors exactly how the gate words themselves self-heal from g_wanted_gate_words.
@@ -42,7 +42,7 @@ static bool g_wanted_ignore_collision = false;
 
 // Pick the upgrade tier whose capacity sits closest to `wanted`. The tiers are unevenly spaced
 // (10/15/20/25/30/35/40/50), so rounding a percentage straight into an index would land on the
-// wrong count — this search always yields a legal capacity for any input.
+// wrong count. Searching for the nearest tier always yields a legal capacity for any input.
 static int NearestUpgradeLevel(const uint8 *tiers, int wanted) {
   int best = 0;
   for (int i = 1; i < kUpgradeLevels; i++) {
@@ -55,7 +55,7 @@ static int NearestUpgradeLevel(const uint8 *tiers, int wanted) {
 }
 
 // True when the engine is in normal interactive gameplay (overworld or indoor).
-// Includes the overworld-special-area flavor of MODULE_FALLING_ENTRANCE — see
+// Includes the overworld-special-area flavor of MODULE_FALLING_ENTRANCE, as decided by
 // GameHook_IsOverworldSpecialArea.
 static inline bool IsInGameplay(void) {
   return main_module_index == MODULE_DUNGEON || main_module_index == MODULE_OVERWORLD || GameHook_IsOverworldSpecialArea();
@@ -63,7 +63,7 @@ static inline bool IsInGameplay(void) {
 
 // ─── Accessors (called from hooks in sprite.c / player.c) ───
 
-// Neutral (1x) when the combat cheat category is off — not just a bare return — so a stale
+// Neutral (1x) when the combat cheat category is off, and never a bare return, so a stale
 // g_cheat_damage_mult from before a toggle-off can never leak into live combat math.
 uint8 GameHook_GetDamageMultiplier(void) {
   if (!CheatGate(kFeatures3_CheatCombat)) return 1;
@@ -91,21 +91,21 @@ uint8 GameHook_ApplyExtraArmor(uint8 dmg) {
 
 // ─── WASM Exports ───
 
-// Give any item by ID — plays standing receipt animation (hold-up), updates inventory.
+// Give any item by ID. Plays the standing receipt animation (hold-up) and updates inventory.
 // Does NOT mark any check as completed.
 // Uses item_receipt_method=0 (standing/NPC style) for natural-looking delivery.
-// NOTE: item_id must be 0–75 (0x4B). The game's item receipt arrays
+// NOTE: item_id must be 0-75 (0x4B). The game's item receipt arrays
 // (kMemoryLocationToGiveItemTo, kValueToGiveItemTo, kReceiveItemGfx, etc.)
 // are exactly 76 entries. IDs >= 76 cause out-of-bounds reads that corrupt g_ram.
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatGiveItem(int item_id) {
   if (!CheatGate(kFeatures3_CheatItemGrant)) return;
   if ((uint8)item_id >= 76) {
-    printf("[Cheat] GiveItem: blocked — item_id 0x%02x exceeds max valid receipt ID (0x4B)\n", item_id);
+    printf("[Cheat] GiveItem blocked: item_id 0x%02x exceeds max valid receipt ID (0x4B)\n", item_id);
     return;
   }
   if (!IsInGameplay()) {
-    printf("[Cheat] GiveItem: blocked — not in gameplay (module=%d)\n", main_module_index);
+    printf("[Cheat] GiveItem blocked: not in gameplay (module=%d)\n", main_module_index);
     return;
   }
   item_receipt_method = 0;
@@ -138,8 +138,8 @@ void WasmCheatSetMaxHealth(int value) {
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatSetRupees(int value) {
   if (!CheatGate(kFeatures3_CheatStats)) return;
-  // Cap tracks the real current max — 9999 with the "Larger Wallet" feature on, 999 otherwise —
-  // same condition as hud.c's MaxRupees() (that helper has internal linkage, so duplicated here).
+  // Cap tracks the real current max, 9999 with the "Larger Wallet" feature on and 999 otherwise.
+  // Same condition as hud.c's MaxRupees() (that helper has internal linkage, so duplicated here).
   int max = (enhanced_features0 & kFeatures0_CarryMoreRupees) ? 9999 : 999;
   uint16 capped = (uint16)clampi(value, 0, max);
   link_rupees_goal = capped;
@@ -165,7 +165,7 @@ void WasmCheatSetArrows(int value) {
 }
 
 // Set the current magic meter. 0x80 is a full meter, and the meter's capacity is fixed, so a full
-// fill IS the maximum — there is no companion "max magic" setter the way health has one.
+// fill IS the maximum, and there is no companion "max magic" setter the way health has one.
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatSetMagic(int value) {
   if (!CheatGate(kFeatures3_CheatStats)) return;
@@ -181,7 +181,7 @@ void WasmCheatRefillMagic(void) {
   WasmCheatSetMagic(kMagicFull);
 }
 
-// Set the bomb capacity. Takes the WANTED capacity rather than the tier index the game actually
+// Set the bomb capacity. Takes the WANTED capacity, not the tier index the game actually
 // stores, so callers work in plain counts (or a percentage of the maximum) and stay free of the
 // encoding; the nearest legal tier wins.
 EMSCRIPTEN_KEEPALIVE
@@ -264,7 +264,7 @@ void WasmCheatSetExtraArmorPct(int pct) {
 }
 
 // Start debug tracing for N frames (output goes to browser console). Doesn't fit any single cheat
-// category below, so this tests only the master switch rather than forcing an arbitrary one.
+// category below, so this tests only the master switch instead of forcing an arbitrary one.
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatStartTrace(int frames) {
   if (!(enhanced_features3 & kFeatures3_CheatsEnabled)) return;
@@ -272,9 +272,9 @@ void WasmCheatStartTrace(int frames) {
   printf("[Cheat] StartTrace: %d frames\n", g_cheat_trace_frames);
 }
 
-// Arm/disarm the ignore-collision cheat. Sets the WANTED state only — never pokes WRAM directly —
+// Arm/disarm the ignore-collision cheat. Sets the WANTED state and never pokes WRAM directly,
 // so zelda_rtl.c's SyncCheatWram() is the single writer of the actual byte (variables.h
-// cheatWalkThroughWalls, WRAM 0x37F — vendored read sites: tile_detect.c:247,258, player.c:2978) and a
+// cheatWalkThroughWalls, WRAM 0x37F, read directly by tile_detect.c:247,258 and player.c:2978) and a
 // save-state restore can never leave it stuck: the next frame's reconcile writes it right back.
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatSetIgnoreCollision(int on) {
@@ -285,7 +285,7 @@ void WasmCheatSetIgnoreCollision(int on) {
 
 // Resolves this frame's desired value for the cheatWalkThroughWalls WRAM byte. Folds the gate check in
 // here (closed gate -> 0) so SyncCheatWram() in zelda_rtl.c stays a pure "write on mismatch" loop with
-// no cheat-specific logic of its own — the same division of labor GateWordSideEffects used to blur.
+// no cheat-specific logic of its own. GateWordSideEffects used to blur that same division of labor.
 // Plain C-to-C hook (no EMSCRIPTEN_KEEPALIVE): called only from zelda_rtl.c, never from JS.
 uint8 GameHook_GetWantedIgnoreCollision(void) {
   return (CheatGate(kFeatures3_CheatIgnoreCollision) && g_wanted_ignore_collision) ? 1 : 0;

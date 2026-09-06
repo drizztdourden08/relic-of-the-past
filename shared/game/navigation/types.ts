@@ -143,7 +143,7 @@ interface FloodFillResult {
 interface ScreenVariant {
   /** sram_progress_indicator: 0=intro, 1=post-mentor, 2=princess-rescued, 3=usurper-defeated */
   progressTier: number;
-  /** save_ow_event_info[screen] & 0x20 — event overlay applied */
+  /** save_ow_event_info[screen] & 0x20, meaning the event overlay is applied */
   eventOverlay: boolean;
   /** Full event flags byte for the screen */
   eventFlags: number;

@@ -1,19 +1,14 @@
 /* @layer renderer-hud @kind logic */
 /**
  * Save-RAM slot → name-record key. The slot/tier rules are the ones the panel
- * has always applied; only the result changed — a record id plus tier, which the
- * name dataset is keyed by, instead of a display string baked into the view.
- * Keeping the names out of here is deliberate: they belong to the data layer, so
- * a language set can retitle them.
+ * has always applied; the result is a record id plus tier, which the name
+ * dataset is keyed by. Names stay in the data layer so a language set can retitle them.
  */
 
 /** A key into the name dataset: `<record-id>-<tier>`, tier 1 = the base pickup. */
 type ItemNameKey = { recordId: string; tier: number };
 
-/**
- * Base record per save-RAM slot (0-19), in save order — the same order the
- * display strings used to sit in.
- */
+/** Base record per save-RAM slot (0-19), in save order. */
 const SLOT_RECORD_IDS = [
   'item-012', 'item-013', 'item-011', 'item-041', 'item-042',
   'item-008', 'item-009', 'item-016', 'item-017', 'item-018',
@@ -23,11 +18,9 @@ const SLOT_RECORD_IDS = [
 
 /**
  * Resolves the record + tier for a slot, or null when the slot is empty.
- *
- * Three slots read their value, matching the rules the view used before:
- * one upgrade is a second tier of the same record, two are a rename to a
- * different record entirely, and the rest only recolour their icon — so those
- * keep the base record at tier 1.
+ * Three slots read their value: one upgrade is a second tier of the same record,
+ * two are a rename to a different record, and the rest only recolour their icon,
+ * so those keep the base record at tier 1.
  */
 const itemNameKeyForSlot = (saveIdx: number, items: number[]): ItemNameKey | null => {
   if (saveIdx < 0 || saveIdx >= SLOT_RECORD_IDS.length) return null;

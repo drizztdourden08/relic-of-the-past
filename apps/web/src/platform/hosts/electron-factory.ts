@@ -1,7 +1,7 @@
 /* @layer renderer-other @kind logic */
 /**
  * Electron host adapter. Fulfills the platform ports by delegating to the
- * existing preload-injected window.api — the proven desktop path, unchanged.
+ * preload-injected window.api.
  */
 import type { PlatformFactory, WindowControlsPort, StoragePort, FileStore, FilePickerPort, ControllerHost, DevicePort, DisplayPort } from '@shared/platform';
 import { osFromProcess } from '@shared/platform';
@@ -77,12 +77,11 @@ const createFilePicker = (): FilePickerPort => ({
     window.api.saveFile(name, toArrayBuffer(bytes), extensions ?? []),
 });
 
-// Raw HID enumeration/read/write went away with node-hid — SDL3 claims every
+// Raw HID enumeration/read/write went away with node-hid. SDL3 claims every
 // controller directly and reports already-decoded state (onControllerState).
 // This host keeps the port's full shape (Capacitor's Android USB-OTG plugin
-// still fulfills it for real) but degrades those methods to the same no-ops
-// the plain-browser host uses; only vibratePattern and onControllerState are
-// real on desktop now.
+// still fulfills it) but degrades those methods to the plain-browser no-ops;
+// only vibratePattern and onControllerState are real on desktop now.
 const createControllerHost = (): ControllerHost => ({
   enumerate: async () => [],
   getOpenKeys: async () => [],

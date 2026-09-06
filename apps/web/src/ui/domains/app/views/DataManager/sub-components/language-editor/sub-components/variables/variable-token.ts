@@ -4,7 +4,7 @@
  *
  * Two shapes, and which one is used is not a style choice. A variable the ENGINE
  * owns has to stay a control code all the way into the packed dialogue, because
- * the game performs that substitution itself at draw time — so it is inserted as
+ * the game performs that substitution itself at draw time. It is inserted as
  * the substitution token the serializer writes back. Everything else is OURS and
  * is inserted as a REFERENCE, which survives a later rename of the variable and
  * is expanded to literal text only at bake time.

@@ -25,13 +25,13 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'newRenderer',
   'enhancedMode7',
   // Extended-rendering feature bits that are pure per-frame flags (no buffer-geometry change, so no
-  // restart). The geometry settings they sit beside — extendedRendering, aspectRatio, ultrawideRendering,
-  // tallRendering, extendY — are baked at init and are deliberately NOT here.
+  // restart). The geometry settings beside them (extendedRendering, aspectRatio, ultrawideRendering,
+  // tallRendering, extendY) are baked at init and are deliberately NOT here.
   'cameraLockToViewport',
   'smoothTransitions',
   'widescreenPlayArea',
   'offscreenAI',
-  // Deprecated migration source for offscreenAI, never written going forward; kept live so any
+  // Deprecated migration source for offscreenAI, never written any more; kept live so any
   // stray legacy write still applies without forcing a restart.
   'pauseOffscreenAI',
   'widescreenSprites',
@@ -49,9 +49,9 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   // Host-side display switch: pushed on change, applied on the next fullscreen transition
   'syncedRefreshRate',
   'syncedRefreshRateHz',
-  // Canvas fit is recomputed from a React prop — no WASM restart needed
+  // Canvas fit is recomputed from a React prop, so no WASM restart is needed
   'pixelPerfect',
-  // Frame pacing (swapped via WasmSetVsync — the main loop's schedule can change mid-run)
+  // Frame pacing, swapped via WasmSetVsync because the main loop's schedule can change mid-run
   'vsync',
   // Audio volume (Web Audio gain, no restart needed)
   'masterVolume',
@@ -60,7 +60,7 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'musicMuted',
   'sfxVolume',
   'sfxMuted',
-  // Ambience is app-mixed only (msuSyncVolume on every push) — the sound chip has no ambient split
+  // Ambience is app-mixed only (msuSyncVolume on every push) because the sound chip has no ambient split
   'ambientVolume',
   'ambientMuted',
   // FPS display (toggled via WasmSetDisplayPerf)
@@ -93,15 +93,13 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'developerToolsEnabled',
   // Cheat gating (synced every frame via features3, same path as developerToolsEnabled)
   'cheatsEnabled',
-  // vanillaSafe is deliberately NOT here: its gate-word masking (SyncGateWords) is instant regardless of
-  // this set — pushLiveSettings runs on every change either way — but flipping it also has to correct
-  // aspectRatio/extendY (baked into the render buffer at init) and MSU (opened once at boot), which are
-  // restart-only. Leaving it off this list makes any vanillaSafe toggle surface the restart toast below,
-  // same as those settings do on their own.
+  // vanillaSafe is deliberately NOT here: its gate-word masking is instant regardless (pushLiveSettings
+  // runs on every change), but flipping it also has to correct aspectRatio/extendY and MSU, which are
+  // restart-only. Leaving it off makes the toggle surface the restart toast.
   // Player sprite sheet (swapped in place via WasmApplyPlayerSpriteFile)
   'linkSprite',
-  // Replacement-music position handling. Both are read by the running engine on every music
-  // event rather than captured at session start, so a change applies to the very next one.
+  // Replacement-music position handling. Both are read on every music event, not captured at
+  // session start, so a change applies to the very next one.
   'resumeMSU',
   'resetMSUAtTitle',
 ]);

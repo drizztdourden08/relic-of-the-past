@@ -8,7 +8,7 @@ import type * as TableViewModule from '../../apps/web/src/ui/design-system/compo
 import type { TableColumn } from '../../apps/web/src/ui/design-system/data/table/types';
 
 // What counts as a layout change, and proof that the table hook and the
-// persisted view snapshot start from the same seed — see data-table-render.test.ts
+// persisted view snapshot start from the same seed. See data-table-render.test.ts
 // for why the render suite (SSR, no effects) cannot prove the latter on its own.
 
 const screens = all('screen') as readonly Record<string, unknown>[];
@@ -36,11 +36,10 @@ afterEach(() => {
 });
 
 describe('the two sides start in sync, so the first render never writes', () => {
-  // The SSR assertions in data-table-render.test.ts cannot prove this on their
-  // own (effects never run in renderToStaticMarkup). What DOES prove it is
-  // that the table hook and the view snapshot are seeded from the same column
-  // list, which makes the capture effect's guard true on the very first pass
-  // — asserted here directly.
+  // The SSR assertions in data-table-render.test.ts cannot prove this (effects
+  // never run). What does: the table hook and the view snapshot are seeded
+  // from the same column list, so the capture effect's guard is true on the
+  // first pass. Asserted here directly.
   const sameSeed = async (initial: readonly TableColumn[]): Promise<boolean> => {
     const { initialState } = await import('../../apps/web/src/ui/design-system/data/table/use-data-table');
     const { emptySnapshot } = await import('../../apps/web/src/ui/design-system/data/view-state/snapshot');
@@ -59,7 +58,7 @@ describe('the two sides start in sync, so the first render never writes', () => 
   });
 });
 
-describe('view signature — what counts as a layout change', () => {
+describe('view signature and what counts as a layout change', () => {
   const base = { columns: [{ path: 'id' }], sort: [], groupBy: [] };
 
   it('ignores an identical layout, so a restore never captures straight back out', () => {

@@ -12,7 +12,7 @@
 import { clampAxis, isValidForAxis } from './clamp-axis';
 import type { PositionAxis } from '../PositionInput.type';
 
-/** No edit in flight — the field shows the committed value. */
+/** No edit in flight, so the field shows the committed value. */
 const SETTLED = null;
 
 type TypedOutcome =

@@ -45,7 +45,7 @@ const printReport = (report) => {
   const cap = violations.slice(0, 40);
   console.log(`\nVIOLATIONS (gating errors): ${violations.length}`);
   for (const v of cap) console.log(`  ${v.tool.padEnd(12)} ${v.rule.padEnd(16)} ${v.path}${v.line ? ':' + v.line : ''}  ${v.message}`);
-  if (violations.length > cap.length) console.log(`  … +${violations.length - cap.length} more`);
+  if (violations.length > cap.length) console.log(`  ... +${violations.length - cap.length} more`);
 };
 
 export { buildReport, printReport };

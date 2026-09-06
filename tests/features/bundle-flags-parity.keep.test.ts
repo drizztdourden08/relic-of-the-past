@@ -5,7 +5,7 @@ import { resolve } from 'node:path';
 import { BUNDLE_FIXES } from '../../shared/features/bundle-fixes.generated';
 
 // The split bug-fix flags are generated into BOTH the C header and the TS registry from one catalog
-// (scripts/build/gen-bundle-flags.mjs). This test fails loudly if the two ever drift — e.g. someone
+// (scripts/build/gen-bundle-flags.mjs). This test fails loudly if the two ever drift, say when someone
 // hand-edits one, or the generator is changed without re-running it everywhere.
 
 const parseCEnums = (src: string): Record<string, number> => {
@@ -27,7 +27,7 @@ describe('split bug-fix flags: C ↔ TS parity', () => {
     }
   });
 
-  it('each flag name encodes its storage word (kFeatures<word>_…)', () => {
+  it('each flag name encodes its storage word (kFeatures<word>_...)', () => {
     for (const fix of BUNDLE_FIXES) {
       expect(fix.flag!.startsWith(`kFeatures${fix.word}_`), `${fix.flag} not in word ${fix.word}`).toBe(true);
     }

@@ -7,7 +7,7 @@
  * take a typed record and allocate the id in the main process; a `DatasetSuggestion`
  * carries a pre-rendered code block instead, which is exactly the pre-migration
  * shape those channels exist to keep out of the dataset. Until the simulator's
- * recorder emits records, those two kinds report that plainly rather than writing
+ * recorder emits records, those two kinds report that plainly instead of writing
  * text of unknown shape.
  */
 import { useCallback, useMemo } from 'react';

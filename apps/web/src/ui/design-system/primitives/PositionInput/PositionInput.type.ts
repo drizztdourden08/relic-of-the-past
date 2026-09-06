@@ -1,13 +1,13 @@
 /* @layer renderer-components @kind types */
 
 /** One bounded numeric axis of a position. Every field is optional: an axis with
- *  nothing set is simply open at both ends and steps by one. */
+ *  nothing set is open at both ends and steps by one. */
 interface PositionAxis {
   /** Lowest value the axis accepts. Omit for an open lower end. */
   min?: number;
   /** Highest value the axis accepts. Omit for an open upper end. */
   max?: number;
-  /** Increment the spinner applies. Defaults to 1 — a grid coordinate moves by whole tiles. */
+  /** Increment the spinner applies. Defaults to 1, so a grid coordinate moves by whole tiles. */
   step?: number;
   /** Short cap shown beside the field. Defaults to "X" / "Y". */
   label?: string;
@@ -21,7 +21,7 @@ interface PositionValue {
 
 interface PositionInputProps {
   value: PositionValue;
-  /** Fires only with a valid pair — never NaN, never outside the bounds given. */
+  /** Fires only with a valid pair: never NaN, never outside the bounds given. */
   onChange: (next: PositionValue) => void;
   /** Bounds for the horizontal axis. The caller supplies the real constraints. */
   x?: PositionAxis;
@@ -33,7 +33,7 @@ interface PositionInputProps {
   className?: string;
 }
 
-/** Internal — one axis of the pair, rendered by the AxisField sub-component. */
+/** Internal: one axis of the pair, rendered by the AxisField sub-component. */
 interface AxisFieldProps {
   axis: PositionAxis;
   axisLabel: string;

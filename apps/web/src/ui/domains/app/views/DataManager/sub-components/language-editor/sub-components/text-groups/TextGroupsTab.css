@@ -52,7 +52,7 @@
   font-size: var(--text-sm);
 }
 
-/* A caveat about the whole group — stated once, above its rows. */
+/* A caveat about the whole group, stated once above its rows. */
 .text-groups-tab__note {
   margin: 0;
   padding: var(--space-2xs) var(--space-xs);

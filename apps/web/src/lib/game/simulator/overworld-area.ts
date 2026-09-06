@@ -3,7 +3,7 @@
  * Resolves an overworld sprite's AREA-relative spawn coordinate to the screen
  * it actually sits on, and its local tile there. A large (2x2) overworld area
  * shares one sprite table across all four of its screens, and the game reports
- * every spawn's position relative to the area's HEAD screen — so a spawn on
+ * every spawn's position relative to the area's HEAD screen, so a spawn on
  * the far half of the area carries a row or column past 63 instead of one
  * clipped to a single screen's 64x64 tile grid.
  */
@@ -31,7 +31,7 @@ const areaHeadOf = (screenIndex: number, heads: Uint8Array): number => {
 
 /**
  * A row or column past 63 belongs to the screen one row down (`head + 8`) or
- * one column right (`head + 1`) — the only two offsets a 2x2 big area can
+ * one column right (`head + 1`), the only two offsets a 2x2 big area can
  * produce. `screenIndex` is whichever of the area's screens the sprite table
  * was queried through; `heads` is the game's area-head table.
  */

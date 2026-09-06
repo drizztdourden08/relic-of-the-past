@@ -2,8 +2,8 @@
 /**
  * The one-chip verdict on how a whole entry fits its box.
  *
- * The engine never wraps or clamps a row — it draws straight past the interior
- * and over the row below — so this is a pass/fail statement, not a percentage.
+ * The engine never wraps or clamps a row. It draws straight past the interior
+ * and over the row below, so this is a pass/fail statement, not a percentage.
  * Three states, and the two that are not "fine" say which row and by how much,
  * because that is the only part a translator can act on.
  *

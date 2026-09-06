@@ -5,7 +5,7 @@
  * here too, backing `connection-audit-core.ts`'s hand-rolled add/remove pair;
  * both were removed in phase 4, part 2 once the connection `SetProbe`s
  * (`recommendations/strategies/connection/points.set.ts`, `indoor-edge.set.ts`)
- * replaced that mechanism — see those files for the tag inference and
+ * replaced that mechanism. See those files for the tag inference and
  * `screen-endpoint.ts` for the direction-aware key this one used to need
  * `screenDestIndex` for.
  */

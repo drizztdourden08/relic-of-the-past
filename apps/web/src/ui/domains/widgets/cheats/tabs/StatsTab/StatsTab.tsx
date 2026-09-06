@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 /**
- * StatsTab — one control per player property (health, magic, bombs, arrows, rupees and the
- * capacities behind them), rendered from the stat table rather than hand-built row by row.
+ * One control per player property (health, magic, bombs, arrows, rupees and the
+ * capacities behind them), rendered from the stat table, not hand-built row by row.
  */
 import { Box } from '@ds/primitives';
 import { useStatSpecs } from './behavior/useStatSpecs';

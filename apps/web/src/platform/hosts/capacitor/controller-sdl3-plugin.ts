@@ -6,7 +6,7 @@
  * id, and listen for the "controllerEvent" notification each added/removed/
  * state event arrives as (see controller-sdl3.type.ts).
  *
- * `start()` resolves `{ ok: false }` rather than throwing when the native
+ * `start()` resolves `{ ok: false }` instead of throwing when the native
  * library can't load (wrong ABI, missing .so) or SDL_Init fails: callers
  * treat that the same way a desktop build with no SDL3 addon behaves:
  * report no controllers, do not crash.

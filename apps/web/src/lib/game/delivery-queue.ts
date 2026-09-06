@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Delivery Queue — manages item deliveries that must wait until the player can receive them.
+ * Manages item deliveries that must wait until the player can receive them.
  * Polls WasmCanReceiveItem each frame; when ready, delivers the next item in FIFO order.
  * Fires callbacks so the UI can display pending/delivered state.
  */
@@ -9,7 +9,6 @@ import { getModule } from './wasm-bridge';
 import { log } from '../log-bus';
 import type { DeliveryEntry, DeliveryAction, DeliveryQueueState, StateListener } from './delivery-queue.type';
 
-// ─── Queue Implementation ───
 
 let queue: DeliveryEntry[] = [];
 let delivering: DeliveryEntry | null = null;
@@ -85,7 +84,7 @@ const tick = (): void => {
     if (!ready) deliveringBecameBusy = true;
     const timedOut = deliveringFrames >= DELIVERY_TIMEOUT_FRAMES;
     // Complete only once the game actually consumed the item (busy → ready), or on timeout so a
-    // stuck delivery can't hang the run. Resolving here — not at execute time — is what makes the
+    // stuck delivery can't hang the run. Resolving here, not at execute time, is what makes the
     // simulator's trigger() wait for the pickup + item-get dialog to fully finish.
     if ((ready && deliveringBecameBusy) || timedOut) {
       const done = delivering;
@@ -110,7 +109,6 @@ const tick = (): void => {
   executeAction(entry.action);
 };
 
-// ─── Public API ───
 
 const enqueue = (message: string, source: string, action: DeliveryAction, onComplete?: () => void): string => {
   const entry: DeliveryEntry = {

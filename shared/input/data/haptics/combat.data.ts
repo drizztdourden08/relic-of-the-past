@@ -1,8 +1,4 @@
 /* @layer shared-input @kind data */
-/**
- * Combat haptic patterns — sword, damage taken, dash.
- */
-
 import type { HapticPatternEntry } from './types';
 import { pulse, doubleTap, fadeOut } from './builders';
 

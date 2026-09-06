@@ -1,18 +1,10 @@
 /* @layer renderer-app @kind logic */
 /**
- * The reviewer's amendment to a proposal, as plain state.
- *
- * A draft carries the id it belongs to, not just a record. That is what makes
- * selecting another finding drop the previous amendment without an effect to
- * clear it — the draft simply stops matching — and it is what makes Revert a
- * single assignment rather than an undo history: discarding the amendment
- * leaves the detector's own proposal showing, because that is what the record
- * falls back to whenever no draft matches.
- *
- * Nothing here writes to the store. The proposal a detection pass recorded is
- * left exactly as recorded until an accept succeeds, so re-running detection
- * still reconciles onto the same entry instead of colliding with a half-made
- * edit.
+ * The reviewer's amendment to a proposal, as plain state. A draft carries the
+ * id it belongs to, so selecting another finding drops it with no effect to
+ * clear it, and Revert is a single assignment. Nothing here writes to the
+ * store: the recorded proposal stays as is until an accept succeeds, so
+ * re-running detection reconciles onto the same entry.
  */
 import type { Recommendation } from '@shared/game/recommendations';
 import type { InspectorRow } from '../../DataInspector.type';

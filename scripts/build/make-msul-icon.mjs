@@ -1,12 +1,8 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * Builds the document icon for `.msul` music packs: the app logo with a music-note badge in
- * the corner, so a pack file reads as "this app's music" at a glance in a file manager.
- *
- * Generated at build time from the committed logo rather than checked in, the same way the
- * launcher icons are, so a logo change never leaves a stale derived icon behind.
- *
- * Run: node scripts/build/make-msul-icon.mjs
+ * Builds the document icon for `.msul` music packs: the app logo with a music-note
+ * badge. Generated at build time from the committed logo, like the launcher icons,
+ * so a logo change never leaves a stale derived icon. Run: node scripts/build/make-msul-icon.mjs
  */
 import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
@@ -21,24 +17,16 @@ const OUT_DIR = join(root, 'apps', 'web', 'public', 'logos', 'generated');
 // Windows .ico wants the whole ladder; the small sizes are what actually show in a file list.
 const ICO_SIZES = [16, 24, 32, 48, 64, 128, 256];
 
-/**
- * macOS icon slots, as OSType plus the pixel size to fill it with. The repeats are
- * deliberate: the second 256 and 512 are the retina variants of 128 and 256, and a
- * pack file shows the wrong one if only the plain slot is filled.
- *
- * Nothing here is upscaled — the source logo is 512, which is why there is no 1024
- * slot (ic10). electron-builder only needs a valid file, not a complete ladder.
- */
+// macOS icon slots (OSType, pixel size). The repeated 256 and 512 are the retina
+// variants of 128 and 256. No 1024 slot (ic10): the source logo is 512 and nothing
+// is upscaled; electron-builder only needs a valid file.
 const ICNS_SLOTS = [
   ['ic11', 32], ['ic12', 64], ['ic07', 128],
   ['ic13', 256], ['ic08', 256], ['ic14', 512], ['ic09', 512],
 ];
 
-/**
- * An .icns is a magic word, a total length, then one length-prefixed chunk per slot.
- * Since 10.7 each chunk may hold a PNG verbatim, so the images need no re-encoding and
- * this needs no dependency: the sizes are already composed above.
- */
+// .icns: magic word, total length, then one length-prefixed chunk per slot. Since
+// 10.7 each chunk may hold a PNG verbatim, so no re-encoding and no dependency.
 const buildIcns = (entries) => {
   const chunks = entries.map(([type, png]) => {
     const header = Buffer.alloc(8);
@@ -53,15 +41,9 @@ const buildIcns = (entries) => {
   return Buffer.concat([header, body]);
 };
 
-/**
- * The badge: a ring holding Lucide's `music` icon (ISC licence, lucide.dev), reproduced from its
- * source rather than redrawn — a note people already recognise from every other app beats one
- * drawn here by hand.
- *
- * The ring is inset from the canvas: its outer edge stops at 44.5 of 50, so nothing is clipped at
- * the badge's own bounds. The 24-unit icon is scaled to 54 and centred, which leaves a clear margin
- * inside the ring on every side. Stroke-drawn, so the widths scale with the badge.
- */
+// The badge: a ring holding Lucide's `music` icon (ISC licence, lucide.dev), verbatim.
+// The ring's outer edge stops at 44.5 of 50 so nothing clips; the 24-unit icon is
+// scaled to 54 and centred. Stroke-drawn, so widths scale with the badge.
 const LUCIDE_MUSIC = '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>';
 
 const badgeSvg = (size) =>
@@ -97,10 +79,8 @@ const main = async () => {
   await writeFile(join(OUT_DIR, 'msul-512.png'), await compose(512));
   await writeFile(join(OUT_DIR, 'msul.ico'), await pngToIco(pngs));
 
-  // electron-builder takes the configured .ico path and swaps the extension per
-  // platform, so the macOS build looks for msul.icns beside it and fails outright
-  // when it is absent. Composed per distinct size, then shared between the slots
-  // that want the same pixels.
+  // electron-builder swaps the configured .ico extension per platform, so the macOS
+  // build fails outright without msul.icns beside it.
   const bySize = new Map();
   for (const [, size] of ICNS_SLOTS) {
     if (!bySize.has(size)) bySize.set(size, await compose(size));

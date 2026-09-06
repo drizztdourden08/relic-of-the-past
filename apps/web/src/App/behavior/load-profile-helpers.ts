@@ -25,7 +25,7 @@ const loadInputProfile = async (profileId: string, settings: Settings) => {
       log.app(`Loaded input profile: ${active.name}`);
     }
   } catch {
-    /* no saved profiles — InputManager stays on keyboard default */
+    /* no saved profiles, so InputManager stays on keyboard default */
   }
 };
 

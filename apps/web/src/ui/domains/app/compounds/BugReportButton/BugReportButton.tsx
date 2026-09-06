@@ -10,7 +10,7 @@ interface BugReportButtonProps {
 }
 
 /**
- * The one bug report button. It lives here rather than in the title bar so every place
+ * The one bug report button. It lives here instead of the title bar so every place
  * that offers to report something is visibly the same control: same icon, same red,
  * same glow. A second hand-built copy would drift.
  */

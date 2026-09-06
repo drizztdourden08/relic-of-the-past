@@ -6,7 +6,7 @@
  *   1. Mirror: reflect game pixels into black bar regions
  *   2. Blur H/V: progressive Gaussian blur on mirrored texture
  *   3. Composite: blend sharp reflection → blurred with Voronoi noise animation
- *      (lives in composite-frag.ts — the largest source — re-exported below)
+ *      (lives in composite-frag.ts, the largest source, re-exported below)
  */
 import { COMPOSITE_FRAG } from './composite-frag';
 

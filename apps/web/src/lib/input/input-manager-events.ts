@@ -7,24 +7,16 @@ import { isAutomationLaunch } from '../instance';
 import type { InputManager } from './input-manager';
 
 /**
- * Is the window eligible to receive game input this frame?
- *
- * Normally this is `document.hasFocus()`, so the game does not swallow keystrokes
- * while the person is typing in another app. An automation launch is the one case
- * where that gate is wrong: its window is deliberately never shown (so the run
- * cannot disturb the user's own fullscreen session), which makes `hasFocus()`
- * permanently false — and then synthesized input silently goes nowhere, looking
- * exactly like a broken input path. There is no human at the keyboard to protect
- * during such a run, so the gate simply does not apply.
+ * Is the window eligible to receive game input this frame? Normally `document.hasFocus()`.
+ * An automation launch never shows its window, so `hasFocus()` is permanently false and
+ * synthesized input would go nowhere; there is no human to protect, so the gate does not apply.
  */
 const inputEligible = (): boolean => document.hasFocus() || isAutomationLaunch();
 
 /**
- * Fresh set of connected pad "vid:pid" keys, from the device snapshot rather than
- * from reported input. SDL emits state on change only, so a mapped pad nobody has
- * touched yet would be invisible to an input-derived set and could wedge a
- * disconnect-pause open forever — the snapshot (hidDeviceCache) is seeded on
- * startup and kept live independently of any button press.
+ * Fresh set of connected pad "vid:pid" keys, from the device snapshot (hidDeviceCache), not
+ * from reported input: SDL emits state on change only, so an untouched pad would be invisible
+ * to an input-derived set and could wedge a disconnect-pause open forever.
  */
 const connectedGamepadKeys = (m: InputManager): Set<string> =>
   new Set(m.hidDeviceCache.filter((d) => d.status === 'ready').map((d) => d.deviceKey));
@@ -59,7 +51,7 @@ const rebuildMaps = (m: InputManager): void => {
 };
 
 const guardKeys = (m: InputManager, e: KeyboardEvent): void => {
-  // Never block Escape — it's handled by the app-level menu toggle
+  // Never block Escape because the app-level menu toggle handles it
   if (e.code === 'Escape') return;
   if (isTextInput(e.target) || m.inputSuppressed) {
     e.stopPropagation();
@@ -68,15 +60,15 @@ const guardKeys = (m: InputManager, e: KeyboardEvent): void => {
 
 const keyDown = (m: InputManager, e: KeyboardEvent): void => {
   if (isTextInput(e.target)) return;
-  // Escape is reserved for app-level menu toggle — never process as game/function input
+  // Escape is reserved for the app-level menu toggle; never process as game/function input
   if (e.code === 'Escape') return;
   m.allPressedKeys.add(e.code);
   m.rawDispatcher.emit({ type: 'keyboard', code: e.code }, 'keyboard');
 
   if (m.inputSuppressed) return;
-  // Ctrl/Cmd chords (copy/paste/select-all…) are never game input — swallowing
-  // them here killed Ctrl+C over hand-selected log text. The modifier key's own
-  // keydown still routes normally in case Ctrl itself is mapped.
+  // Ctrl/Cmd chords (copy/paste/select-all) are never game input; swallowing them here
+  // killed Ctrl+C over hand-selected log text. The modifier key's own keydown still routes
+  // normally in case Ctrl itself is mapped.
   if ((e.ctrlKey || e.metaKey) && !e.code.startsWith('Control') && !e.code.startsWith('Meta')) return;
 
   if (!e.repeat) {

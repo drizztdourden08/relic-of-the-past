@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * The `item` comparison strategy — replaces the `item-grants.ts` detector
+ * The `item` comparison strategy. It replaces the `item-grants.ts` detector
  * (deleted): `grants.set.ts`'s three probes cover a native item id no record
  * catalogues, `alias.probes.ts`'s pair cover an existing record whose
  * `aliasOf` duplicate-swap rule an observed grant contradicts.
@@ -19,7 +19,7 @@ const itemStrategy: ComparisonStrategy<'item'> = {
   subjects: () => all('item'),
   fields: ALIAS_PROBES,
   // Order matters: a tie on the same id is resolved by `runDetection`'s own
-  // id-based dedup keeping whichever draft was produced FIRST — see
+  // id-based dedup keeping whichever draft was produced FIRST. See
   // `grants.set.ts`'s own header for why that reproduces the original
   // priority (chest, then native receive, then tracker delta).
   sets: [CHEST_ITEM_PROBE, RECEIVE_ITEM_PROBE, DELTA_ITEM_PROBE],

@@ -4,10 +4,9 @@ import type { GameSettings } from '@shared/types/settings';
 import { BUNDLE_FIXES } from '@shared/features/bundle-fixes.generated';
 import { buildFeatureFlags, buildFeatureWords, buildPpuFlags } from '../../apps/web/src/lib/game/live-settings-flags';
 
-// The core invariant the whole settings effort protects: with every enhancement off (the default), the
-// bridge must send all-zero feature words so the engine runs the verbatim vanilla path. This is the
-// automated half of the all-off==vanilla guarantee; the C-side off-paths were verified verbatim against
-// 7fea15de by the parity, split, and holistic reviews.
+// With every enhancement off (the default), the bridge must send all-zero
+// feature words so the engine runs the verbatim vanilla path. The C-side
+// off-paths were verified against 7fea15de by the parity, split, and full reviews.
 
 const allOff = {
   aspectRatio: '4:3',

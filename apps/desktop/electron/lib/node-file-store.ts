@@ -1,9 +1,9 @@
 /* @layer electron-main @kind logic */
 /**
  * Node-fs FileStore for the main process itself, rooted at the same Data
- * directory `file-handlers.ts` exposes to the renderer over IPC — but called
- * in-process, so a shared/storage domain module can run directly inside a
- * handler without a renderer round trip.
+ * directory `file-handlers.ts` exposes to the renderer over IPC. This one is
+ * called in-process, so a shared/storage domain module can run directly inside
+ * a handler without a renderer round trip.
  */
 import { readFile, writeFile, readdir, rm, mkdir, stat } from 'fs/promises';
 import { join, dirname } from 'path';

@@ -1,21 +1,18 @@
 /* @layer renderer-components @kind component */
 /**
- * A scrollable region — the design-system's replacement for an ad-hoc
+ * A scrollable region, the design-system's replacement for an ad-hoc
  * `<div style={{ overflow: 'auto' }}>`.
  *
  * Two things come with it that a bare overflow does not: scrolling animates
  * instead of jumping (which also makes `scrollIntoView` on a child glide), and
- * the scrollbar gets the one treatment used everywhere rather than each
- * container inventing its own. Any other div attribute — `role`, a `ref` — passes
- * straight through, and `className` is merged onto the same element, so an
- * existing padding/layout class can stay exactly where it was while the
- * scrolling moves in here.
+ * the scrollbar gets the one treatment used everywhere. Any other div attribute
+ * passes straight through, and `className` is merged onto the same element, so
+ * an existing padding/layout class can stay where it was.
  *
  * `onScroll` and `scrollTo` are the two hooks a parent needs to keep a second
- * `ScrollArea` in lockstep (e.g. a "current vs proposed" diff view) — see
- * behavior/create-scroll-sync-controller.ts for the framework-free mechanism
- * behind them, including why a synced `scrollTo` never echoes back through
- * `onScroll`.
+ * `ScrollArea` in lockstep (e.g. a "current vs proposed" diff view). See
+ * behavior/create-scroll-sync-controller.ts for the mechanism, including why a
+ * synced `scrollTo` never echoes back through `onScroll`.
  */
 import { useEffect, useMemo, useRef } from 'react';
 import { createScrollSyncController } from './behavior/create-scroll-sync-controller';

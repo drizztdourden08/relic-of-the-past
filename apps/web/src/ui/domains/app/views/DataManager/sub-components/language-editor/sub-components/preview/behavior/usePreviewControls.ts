@@ -4,10 +4,10 @@
  * Space or Enter, and moves a choice cursor with the arrow keys.
  *
  * The stage is focused as soon as the preview mounts, so the keys work the
- * moment the mode opens without a click first. Activation restarts rather than
- * advances once the last box is showing, and only a real advance bumps
- * `advanceTick` — the counter the box's scroll animation is keyed on, so a
- * restart snaps back to the first box with no motion.
+ * moment the mode opens without a click first. Activation restarts instead of
+ * advancing once the last box is showing, and only a real advance bumps
+ * `advanceTick`, which is the counter the box's scroll animation is keyed on, so
+ * a restart snaps back to the first box with no motion.
  *
  * The selection cursor is 0-based over the current box's option rows and is
  * reset by every activation: the next box is a different prompt (or none), so

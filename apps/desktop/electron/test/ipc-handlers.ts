@@ -1,14 +1,10 @@
 /* @layer electron-main @kind logic */
 /**
- * ╔══════════════════════════════════════════════════════════╗
- * ║  THIS TEST MUST NEVER BE MODIFIED BY THE AI             ║
- * ╚══════════════════════════════════════════════════════════╝
- *
  * Test automation IPC handlers.
  *
  * CLI args consumed by the renderer:
  *   --auto-state=N    Load quick-save slot N after game starts
- *   --auto-state=NAME Load the MANUAL (normal) save called NAME — names are stable
+ *   --auto-state=NAME Load the MANUAL (normal) save called NAME. Names are stable
  *                     and quick-save can never overwrite them, so automation and
  *                     regression baselines pin to a name instead of a slot index
  *   --screenshot=NAME Capture window to tests/screenshots/{NAME}.png after state load
@@ -53,7 +49,7 @@ const registerTestHandlers = (): void => {
     const image = await win.webContents.capturePage();
     const buffer = image.toPNG();
 
-    // Resolve to project root's tests/screenshots/ — works in both dev and prod
+    // Resolve to the project root's tests/screenshots/, which works in dev and prod
     const appRoot = app.isPackaged
       ? join(app.getAppPath(), '../..')
       : join(__dirname, '../..');

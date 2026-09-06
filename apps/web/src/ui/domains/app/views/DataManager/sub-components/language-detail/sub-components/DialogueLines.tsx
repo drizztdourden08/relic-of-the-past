@@ -25,7 +25,7 @@ const DialogueLines = (props: { lines: DialogueLine[] }) => {
           <TextInput
             value={filter}
             onChange={(e) => setFilter(e.currentTarget.value)}
-            placeholder="Filter…"
+            placeholder="Filter..."
           />
         }
       />

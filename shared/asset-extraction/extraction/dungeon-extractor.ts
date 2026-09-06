@@ -1,8 +1,7 @@
 /* @layer shared-asset-extraction @kind logic */
 /**
- * Dungeon extraction orchestration — extracts all 320 rooms, defaults, overlays, and map32 data.
- *
- * Ported from: upstream's extract_resources.py (dungeon portion)
+ * Extracts all 320 rooms, defaults, overlays, and map32 data.
+ * Ported from upstream's extract_resources.py (dungeon portion).
  */
 import * as yaml from 'js-yaml';
 import type { RomData } from '../rom/rom-types';

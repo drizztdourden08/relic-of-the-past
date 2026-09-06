@@ -1,10 +1,8 @@
 /* @layer renderer-hud @kind hook */
 /**
- * useLocationNotification — subscribes to game-ui-store map changes
- * and fires screen/transition notifications via location-notification-store.
- *
- * Call this once in GameOverlay (or a top-level provider) so the subscription
- * lives for the entire game session.
+ * Subscribes to game-ui-store map changes and fires screen/transition
+ * notifications via location-notification-store. Call once in GameOverlay so
+ * the subscription lives for the entire game session.
  */
 
 import { useEffect, useRef } from 'react';
@@ -17,10 +15,7 @@ import type { ScreenRecord } from '@shared/game/data';
 const SCREEN_DISMISS_MS = 3000;
 const TRANSITION_DISMISS_MS = 2000;
 
-/**
- * Location notifications belong to the in-progress navigation feature.
- * Suppressed for now — flip to true to re-enable when the feature ships.
- */
+/** Location notifications belong to the in-progress navigation feature. Flip to true when it ships. */
 const NOTIFICATIONS_ENABLED: boolean = false;
 
 const useLocationNotification = () => {

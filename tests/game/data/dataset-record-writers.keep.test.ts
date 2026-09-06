@@ -1,15 +1,10 @@
 /* @layer tests @kind test */
 /**
- * The create/update/delete round trip for the six record-facade collections,
- * run against a throwaway workspace rather than the real dataset.
- *
- * Two things are worth naming. The temp tree is shaped like the real one —
- * `shared/game/data/...` — because that shape is what the id allocator scans
- * and what the path resolver refuses to escape, so a test on a flat directory
- * would prove neither. And every kind is given a SPLIT collection (a record in
- * the earlier file of a size-split pair) because that is the case a canonical
- * destination gets wrong: an update that assumed the resolver's file would miss
- * the record entirely, or leave a second copy beside it.
+ * Create/update/delete round trip for the six record-facade collections, in a
+ * throwaway workspace. The temp tree is shaped like `shared/game/data/...`
+ * because the id allocator scans that shape and the path resolver refuses to
+ * escape it. Every kind gets a SPLIT collection (a record in the earlier file
+ * of a size-split pair), the case a canonical destination gets wrong.
  */
 import { mkdtemp, mkdir, readFile, rm, writeFile } from 'fs/promises';
 import { tmpdir } from 'os';
@@ -45,7 +40,7 @@ beforeEach(async () => {
   root = await mkdtemp(join(tmpdir(), 'rotp-writers-'));
 
   // Items: a junk record parked in the EARLIER half of a size split, so an
-  // update has to find it there rather than in the file a create would pick.
+  // update has to find it there instead of in the file a create would pick.
   await seed('items/junk-1.ts', arrayFile('JUNK_1', record(
     "    id: 'item-001',\n    origin: 'vanilla',\n    category: 'junk',\n    randomizerName: 'Blue Rupee',\n",
   )));
@@ -106,7 +101,7 @@ describeDataset('an item record', () => {
     expect(await sourceOf('items/junk-1.ts')).not.toContain("id: 'item-001'");
   });
 
-  it('refuses an id no file carries, rather than writing anywhere', async () => {
+  it('refuses an id no file carries, instead of writing anywhere', async () => {
     const before = await sourceOf('items/junk-1.ts');
     const result = await deleteItem(root, { id: 'item-404' });
     expect(result.success).toBe(false);
@@ -187,7 +182,7 @@ describeDataset('a check record', () => {
     expect(await sourceOf('checks/dungeons/turtle-rock.ts')).not.toContain(`id: '${id}'`);
   });
 
-  it('refuses a check with no destination rather than picking one', async () => {
+  it('refuses a check with no destination instead of picking one', async () => {
     const result = await allocateCheck(root, {
       record: { gameId: {}, kind: 'event', randomizerName: 'Nowhere', vanillaItemIds: [] },
     });

@@ -1,6 +1,6 @@
 /* @layer shared-storage @kind logic */
 /**
- * The legacy `LanguagePack` view of a folder — the raw extraction payload
+ * The legacy `LanguagePack` view of a folder, meaning the raw extraction payload
  * (`dialogue.txt` + `meta.json` + `font.bin`). Two things still need it: the
  * read-only inspector UI, and the asset recompile, which reads those same
  * files. So an extraction keeps writing them next to the new set files, and

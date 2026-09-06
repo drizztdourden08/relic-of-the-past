@@ -40,11 +40,9 @@ const processStraightCliffs = (grid: TilePassability[][], rawAttr: number[][], l
       if (indoorDirs && (HORIZ_LEDGE_ATTRS.has(attr) || VERT_LEDGE_ATTRS.has(attr))) {
         ({ dr, dc, dir } = indoorDirs.get(row * GRID_SIZE + col)!);
 
-        // Link's body is 2 tiles wide, so a jump exists only where an adjacent trigger
-        // jumps the SAME way AND is itself standable: its approach tile — the floor Link
-        // launches from, one step back against the jump direction — must not be a wall.
-        // A same-direction neighbor pinned against a wall holds no part of Link's body,
-        // so it forms no usable pair.
+        // The player's body is 2 tiles wide, so a jump exists only where an adjacent
+        // trigger jumps the SAME way AND is itself standable: its approach tile (one
+        // step back against the jump direction) must not be a wall.
         const [pr, pc] = dr !== 0 ? [0, 1] : [1, 0];
         const pairs = (r2: number, c2: number): boolean => {
           if (indoorDirs.get(r2 * GRID_SIZE + c2)?.dir !== dir) return false;
@@ -83,30 +81,23 @@ const processStraightCliffs = (grid: TilePassability[][], rawAttr: number[][], l
 };
 
 /**
- * Diagonal cliff jumps, mirroring the game's own search rather than guessing at it.
+ * Diagonal cliff jumps, mirroring the game's own search. Every constant is
+ * transcribed from the decompilation; inferring them produced wrong answers.
  *
- * Every constant here is transcribed from the decompilation, because inferring them
- * produced five different wrong answers:
- *
- *   tile_detect.c:355   0x2c/0x2e are ONE bucket (Ledge_NorthDiagonal) and
- *                       0x2d/0x2f another (SouthDiagonal). The tile decides north
- *                       vs south and NOTHING else — the same 0x2e serves a cliff
- *                       facing north-west and one facing north-east.
- *   player.c:4567       the sideways half comes from which corner of Link's body
- *                       touched the trigger, i.e. the side he walked in from.
- *   player.c:1115       LinkHop_FindLandingSpotDiagonallyDown steps x by +/-8 (one
- *                       tile) and y by -/+9 per iteration, unbounded, until the
- *                       landing test passes.
- *   tile_detect.c:35    that test samples THREE points on a single row —
- *                       x+0 (bit 1), x+8 (bit 2), x+15 (bit 4), at y+8 going north
- *                       — and requires mask 6 (middle+right) travelling west or
- *                       3 (left+middle) travelling east: the trailing side of the
- *                       hop, ignoring its leading edge.
- *   player.c:1130       ground that counts is normal tiles, destruction aftermath,
+ *   tile_detect.c:355   0x2c/0x2e are ONE bucket (Ledge_NorthDiagonal), 0x2d/0x2f
+ *                       another. The tile decides north vs south and NOTHING else.
+ *   player.c:4567       the sideways half comes from which corner of the body
+ *                       touched the trigger, i.e. the side walked in from.
+ *   player.c:1115       LinkHop_FindLandingSpotDiagonallyDown steps x by +/-8 and
+ *                       y by -/+9 per iteration, unbounded, until the landing test passes.
+ *   tile_detect.c:35    that test samples THREE points on one row (x+0 bit 1, x+8
+ *                       bit 2, x+15 bit 4, at y+8) and requires mask 6 travelling
+ *                       west or 3 travelling east: the trailing side of the hop.
+ *   player.c:1130       landable ground is normal tiles, destruction aftermath,
  *                       thick grass AND deep water (landing in water starts a swim).
  */
 const processDiagonalCliffs = (grid: TilePassability[][], rawAttr: number[][], ledges: LedgeTraversal[]): void => {
-  /** Vertical half of the hop — all the tile itself decides. */
+  /** Vertical half of the hop. The tile itself decides this much and no more. */
   const VERTICAL: Record<number, -1 | 1> = { 0x2c: -1, 0x2e: -1, 0x2d: 1, 0x2f: 1 };
   const NAME: Record<string, 'ne' | 'nw' | 'se' | 'sw'> = {
     '-1,-1': 'nw', '-1,1': 'ne', '1,-1': 'sw', '1,1': 'se',
@@ -114,7 +105,7 @@ const processDiagonalCliffs = (grid: TilePassability[][], rawAttr: number[][], l
   const TILE = 8;
   /** kDetectTiles_tab1/2/3 for a vertical probe: the three sampled columns. */
   const SAMPLE_DX = [0, 8, 15] as const;
-  /** kDetectTiles_tab0[0] — the sampled row, one tile below the position. */
+  /** The sampled row, one tile below the position (kDetectTiles_tab0[0]). */
   const SAMPLE_DY = 8;
   /** kLink_Ledge_Func1_bits: travelling west needs middle+right, east left+middle. */
   const NEED_WEST = 0b110;
@@ -129,7 +120,7 @@ const processDiagonalCliffs = (grid: TilePassability[][], rawAttr: number[][], l
     const t = grid[r][c].type;
     return t === 'free' || t === 'water';
   };
-  /** Ground Link can be standing on to set a jump off — a trigger tile counts,
+  /** Ground the player can stand on to set a jump off; a trigger tile counts,
    *  since walking onto one is how it fires. */
   const standable = (r: number, c: number): boolean => {
     if (!inGrid(r, c)) return false;
@@ -138,7 +129,7 @@ const processDiagonalCliffs = (grid: TilePassability[][], rawAttr: number[][], l
     const a = rawAttr[r][c];
     return a >= 0x28 && a <= 0x2f;
   };
-  /** Link is 2x2, so any footing needs a body-sized patch. */
+  /** The player is 2x2, so any footing needs a body-sized patch. */
   const bodyOn = (r: number, c: number, ok: (rr: number, cc: number) => boolean): boolean => {
     for (const [br, bc] of [[r, c], [r - 1, c], [r, c - 1], [r - 1, c - 1]]) {
       if (!inGrid(br, bc) || !inGrid(br + 1, bc + 1)) continue;
@@ -161,11 +152,9 @@ const processDiagonalCliffs = (grid: TilePassability[][], rawAttr: number[][], l
       let got = 0;
       SAMPLE_DX.forEach((dx, i) => { if (landable(sr, (x + dx) >> 3)) got |= 1 << i; });
       const arrived = (got & need) === need;
-      // A hop has to CLEAR something. Landing on the very first step means there
-      // was no face in the way, so this is not a jump at all — that is what put a
-      // stray diagonal on the corner tile where a straight cliff meets a diagonal
-      // one: north-west found open ground instantly, on the far side of the
-      // NEIGHBOURING cliff, and so beat the real hop across its own face.
+      // A hop has to CLEAR something. Landing on the very first step means no
+      // face was in the way, so it is not a jump. This once put a stray diagonal
+      // on the corner tile where a straight cliff meets a diagonal one.
       if (arrived) return step === 0 ? null : { row: sr, col: x >> 3 };
     }
     return null;
@@ -174,26 +163,18 @@ const processDiagonalCliffs = (grid: TilePassability[][], rawAttr: number[][], l
   for (const [row, col] of allTiles()) {
     const dv = VERTICAL[rawAttr[row][col]];
     if (dv === undefined) continue;
-    // Both approach sides, because the tile does not say which: a trigger reached
-    // from the west offers the eastward hop and vice versa. Only a side Link can
-    // actually stand on counts.
-    // Both sides are usually standable — a trigger tile is itself walkable — so
-    // footing alone cannot say which way Link came from. Distance can: the game's
-    // search clears a face it crosses in a step or two, while a hop running ALONG
-    // the face has to travel its whole length before anything is landable. Keeping
-    // the shorter of the two drops the parallel one, which is what drew arrows
-    // straight down the edge.
+    // Both approach sides, because the tile does not say which. Both are usually
+    // standable (a trigger tile is walkable), so footing alone cannot say which
+    // way the player came from. Distance can: a hop ACROSS a face lands in a step
+    // or two, a hop ALONG it travels its whole length. Keep the shorter.
     let best: { dh: -1 | 1; row: number; col: number; steps: number; solid: boolean } | null = null;
     for (const dh of [-1, 1] as const) {
       const loose = bodyStands(row, col - dh) || bodyStands(row - dv, col - dh);
       if (!loose) continue;
       const land = findLanding(row, col, dv, dh);
       if (!land) continue;
-      // Footing on OPEN ground outranks footing that is only more cliff. Both
-      // halves are "standable" because a trigger tile is walkable, and where the
-      // two also land the same distance away the tie fell to whichever side was
-      // tested first — which put a stray north-west hop on the corner tile where a
-      // straight cliff meets a diagonal, its only footing being the rock itself.
+      // Footing on OPEN ground outranks footing that is only more cliff; with
+      // equal distances the tie otherwise fell to whichever side was tested first.
       const solid = bodyOn(row, col - dh, landable) || bodyOn(row - dv, col - dh, landable);
       const steps = Math.abs(land.col - col);
       const better = !best
@@ -208,12 +189,9 @@ const processDiagonalCliffs = (grid: TilePassability[][], rawAttr: number[][], l
 
 const processSouthCliffs = (grid: TilePassability[][], rawAttr: number[][], ledges: LedgeTraversal[]): void => {
   // Nothing seeds a south run except a south-facing border below. Only 0x28-0x2f
-  // trigger a jump in the game (tile_detect.c); a cliff FACE is scenery the arc
-  // passes over, and the straight and diagonal passes already extend through one.
-  // Seeding here from a diagonal trigger, or from the west face 0x1a, re-emitted
-  // those tiles as straight north-to-south ledges after the diagonal pass had
-  // already claimed them, which is what made a diagonal cliff read as a drop
-  // straight down.
+  // trigger a jump (tile_detect.c); a cliff FACE is scenery the arc passes over.
+  // Seeding from a diagonal trigger or the west face 0x1a re-emitted tiles the
+  // diagonal pass had already claimed as straight drops.
   const DIAG_EDGE_ATTRS = new Set<number>();
   const CLIFF_BORDER_ATTRS = new Set([0x10, 0x18]);
 

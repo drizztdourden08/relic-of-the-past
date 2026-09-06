@@ -2,8 +2,8 @@
 /**
  * How the one variable list is narrowed and labelled.
  *
- * There used to be two tables — a glossary and a name table — and they could not
- * reach each other: a term could not retitle a menu entry, and a menu entry
+ * There used to be two tables, one a glossary and one a name table. They could
+ * not reach each other: a term could not retitle a menu entry, and a menu entry
  * could not appear in a line. One list fixes that, and `kind` is what is left of
  * the distinction: it says where a value comes from, not which table it lives
  * in. So kind is a FILTER here, never a second list.
@@ -11,7 +11,7 @@
  * The order is deliberate. Engine-owned variables come first because they are the
  * ones a translator cannot change and needs to recognise on sight; the rest
  * follow in the order the set stores them, which keeps a row where it was found
- * rather than resorting under someone's cursor.
+ * instead of resorting under someone's cursor.
  */
 import type { Variable, VariableKind } from '@shared/game/language';
 

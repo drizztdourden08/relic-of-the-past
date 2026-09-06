@@ -4,15 +4,14 @@
  * (registered onto useSearchStore by ProfileHub while it's mounted) and, the moment it goes
  * off, closes every `devOnly` widget (Widget.constants.ts).
  *
- * WidgetManager's render filter only *hides* a devOnly widget while the gate is off — it
- * never clears the widget's persisted `visible: true`, so a widget left open under dev tools
- * would otherwise silently resurrect the next time dev tools are re-enabled. This also sweeps
- * any already-visible devOnly widget left over from a profile saved before this gate existed.
+ * WidgetManager's render filter only *hides* a devOnly widget while the gate is off. It
+ * never clears the widget's persisted `visible: true`, so a widget left open would silently
+ * resurrect the next time dev tools are re-enabled. This also sweeps any devOnly widget
+ * left visible by a profile saved before this gate existed.
  *
  * Startup-forced ids (the `--widgets=` flag) are exempt, matching WidgetManager's render
- * filter. Without that exemption the sweep undoes the flag a frame after it lands: the widget
- * opens, this closes it, and the render filter then drops it for being invisible rather than
- * for being devOnly — which took every CLI-driven baseline spec down with it.
+ * filter. Without that exemption the sweep undoes the flag a frame after it lands, which
+ * took every CLI-driven baseline spec down with it.
  */
 import { useEffect } from 'react';
 import { getDevOnlyWidgetIds } from '@ds/composites/Widget';

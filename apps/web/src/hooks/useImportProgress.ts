@@ -41,7 +41,7 @@ const buildLabel = (progress: ImportProgress, percent: number | null): string =>
   if ((phase === 'copy' || phase === 'extract') && loaded != null && total != null) {
     return `${verb} ${loaded} / ${total}`;
   }
-  return percent != null ? verb : `${verb}…`;
+  return percent != null ? verb : `${verb}...`;
 };
 
 const useImportProgress = (kind: ImportKind): ImportProgressState => {

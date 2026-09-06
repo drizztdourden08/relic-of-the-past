@@ -13,11 +13,9 @@ interface HudLifeProps {
 }
 
 /**
- * HudLife — the full life meter: label + heart grid.
- *
- * Layout assumes max 20 hearts (2 rows of 10) regardless of current capacity.
- * Hearts fill from current health using the game's exact algorithm.
- * Label and text have a 1px bottom drop shadow.
+ * The full life meter: label + heart grid. Layout assumes max 20 hearts (2 rows
+ * of 10) regardless of capacity. Hearts fill from current health using the
+ * game's exact algorithm. Label and text have a 1px bottom drop shadow.
  */
 const HudLife = (props: HudLifeProps) => {
   const { healthCurrent, healthCapacity, heartMode, scale, spritesBase } = props;
@@ -51,7 +49,7 @@ const HudLife = (props: HudLifeProps) => {
 
   return (
     <HudBox style={{ display: 'flex', flexDirection: 'column', width: 10 * tile }}>
-      {/* LIFE label — centered */}
+      {/* Centered LIFE label */}
       <HudBox style={{ display: 'flex', justifyContent: 'center', height: tile + shadow }}>
         <HudImage src={`${spritesBase}hud-life-dash-left.png`} height={tile}
           style={{ imageRendering: 'pixelated', filter: `drop-shadow(0 ${shadow}px 0 black) drop-shadow(${-shadow}px 0 0 black) drop-shadow(${shadow}px 0 0 black)` }} />
@@ -61,7 +59,7 @@ const HudLife = (props: HudLifeProps) => {
           style={{ imageRendering: 'pixelated', filter: `drop-shadow(0 ${shadow}px 0 black) drop-shadow(${-shadow}px 0 0 black) drop-shadow(${shadow}px 0 0 black)` }} />
       </HudBox>
 
-      {/* Hearts — wrap naturally (10 per row at tile width) */}
+      {/* Hearts wrap naturally (10 per row at tile width) */}
       <HudBox style={{ display: 'flex', flexWrap: 'wrap', width: 10 * tile }}>
         {allHearts.map((state, i) => (
           <HudHeart key={i} state={state} mode={heartMode} scale={scale} spritesBase={spritesBase} />

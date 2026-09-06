@@ -8,7 +8,7 @@
  *
  * A binding with no recorded source device (older profiles, and the
  * console-default presets, never stamp one) is filed under ANY_DEVICE and
- * matches every gamepad — treating it as scoped to nothing would silently
+ * matches every gamepad, and treating it as scoped to nothing would silently
  * break every profile that predates per-device binding.
  */
 import { padHex } from './profile-devices';

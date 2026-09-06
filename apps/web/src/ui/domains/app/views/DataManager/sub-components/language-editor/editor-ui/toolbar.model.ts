@@ -2,7 +2,7 @@
 /**
  * The alphabet's picture characters, as the glyph popover offers them.
  *
- * Which bracket names are characters rather than control codes is settled by
+ * Which bracket names are characters and which are control codes is settled by
  * `buildInsertGroups`, which reads the language's own alphabet and the
  * control-code catalog. This file takes that answer's character cluster and
  * presents it; no second list of names is introduced here.
@@ -22,7 +22,7 @@ import type { ToolbarItem } from './editor-ui.type';
 const GLYPH_GROUP = 'icons';
 
 /**
- * A picture character is drawn as itself in the game face rather than as a
+ * A picture character is drawn as itself in the game face, not as a
  * symbol, so it carries `glyph` and no icon. Its label is already the bracketed
  * alphabet entry the language spells it with.
  */
@@ -50,7 +50,7 @@ const pairedWith = (item: ToolbarItem, tail: ToolbarItem): ToolbarItem => ({
 /**
  * The closing half of a two-entry picture gets no item of its own; the opening
  * half's item calls that half's own maker straight after its own, so the token
- * pair is built by the alphabet's makers rather than assembled here.
+ * pair is built by the alphabet's makers, not assembled here.
  */
 const mergePairedGlyphs = (items: ToolbarItem[]): ToolbarItem[] => {
   const byGlyph = new Map(items.map((item) => [bareGlyph(item), item]));
@@ -67,7 +67,7 @@ const mergePairedGlyphs = (items: ToolbarItem[]): ToolbarItem[] => {
 /**
  * The characters this language actually carries, as whole pictures. An alphabet
  * with none of them returns an empty list, and the button that would open the
- * popover is disabled rather than opening on nothing.
+ * popover is disabled instead of opening on nothing.
  */
 const buildGlyphItems = (cfg: LanguageConfig): ToolbarItem[] => {
   const group = buildInsertGroups(cfg, []).find((entry) => entry.id === GLYPH_GROUP);

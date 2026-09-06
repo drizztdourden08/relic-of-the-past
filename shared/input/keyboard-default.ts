@@ -1,9 +1,7 @@
 /* @layer shared-input @kind data */
 /**
- * Keyboard preset — default key mappings for keyboard input. The keyboard
- * has no SDL entry (it is never a gamepad SDL enumerates), so unlike every
- * gamepad default this stays a plain hand-authored mapping rather than
- * something derived from the family layer.
+ * Default key mappings for keyboard input. The keyboard has no SDL entry, so unlike every
+ * gamepad default this stays a plain hand-authored mapping, not one derived from the family layer.
  */
 
 import type { DevicePreset, ButtonMapping } from '../types/controls';

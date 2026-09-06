@@ -1,8 +1,5 @@
 /* @layer renderer-components @kind hook */
-/**
- * useWidgetLayout — React hook that manages widget layout state.
- * Handles local persistence + profile-based save/load.
- */
+/** Widget layout state: local persistence plus profile-based save/load. */
 import { useState, useCallback, useEffect, useRef } from 'react';
 import type { WidgetLayout, WidgetState } from '../Widget.type';
 import { loadLayoutLocal, saveLayoutLocal, loadLayoutForProfile, saveLayoutForProfile, updateWidget } from './widgetStore';
@@ -51,7 +48,7 @@ const useWidgetLayout = (profileId: string | null, io: WidgetPersistenceIO, star
     });
   }, [profileId]);
 
-  // Persist on every change — skipped under --fresh so tests never clobber the
+  // Persist on every change, skipped under --fresh so tests never clobber the
   // user's real saved layout.
   const setLayout = useCallback((updater: (prev: WidgetLayout) => WidgetLayout) => {
     setLayoutRaw((prev) => {
@@ -82,7 +79,7 @@ const useWidgetLayout = (profileId: string | null, io: WidgetPersistenceIO, star
     setLayout((prev) => {
       const w = prev.widgets.find((w) => w.id === id);
       if (!w) {
-        // Widget not in layout yet — create it as visible
+        // Widget not in layout yet, so create it as visible
         const def = getWidgetDefinition(id);
         if (!def) return prev;
         return { widgets: [...prev.widgets, { ...createDefaultWidgetState(def, prev.widgets.length), visible: true }] };

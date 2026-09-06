@@ -20,7 +20,7 @@
   scrollbar-gutter: stable;
 }
 
-/* Unfold toggle — only shown on narrow viewports (see media query below). */
+/* Unfold toggle, shown only on narrow viewports (see media query below). */
 .nav-rail__unfold {
   display: none;
 }
@@ -48,7 +48,7 @@
   color: var(--c-green-bright);
 }
 
-/* Active = gold (primary) — wins over hover */
+/* Active = gold (primary), wins over hover */
 .nav-rail__item--active,
 .nav-rail__item--active:hover {
   border-color: var(--c-gold);

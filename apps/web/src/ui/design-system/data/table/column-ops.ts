@@ -14,12 +14,12 @@ const addColumn = (columns: readonly TableColumn[], path: string): readonly Tabl
   indexOfColumn(columns, path) === -1 ? [...columns, { path, fit: true }] : columns;
 
 /**
- * The same add, at a chosen slot rather than at the end — what "add a column
+ * The same add, at a chosen slot instead of the end. This is what "add a column
  * before / after this one" means. `at` is the index the new column ENDS UP at,
  * so inserting before column N is `at = N` and after it is `at = N + 1`;
  * `at = length` is the plain append.
  *
- * Clamped rather than rejected: a menu built against a column list that has
+ * Clamped, not rejected: a menu built against a column list that has
  * since shrunk should still put the column somewhere sensible.
  */
 const insertColumnAt = (
@@ -88,9 +88,9 @@ const renameColumn = (
 
 /**
  * Which field of the referenced record a reference column shows. An empty or
- * absent choice clears the override and the column goes back to the raw id —
- * the same "unset by writing nothing" rule the rename above follows, and for
- * the same reason: a leftover key would read as a layout change in a snapshot.
+ * absent choice clears the override and the column goes back to the raw id. That
+ * is the same "unset by writing nothing" rule the rename above follows, for the
+ * same reason: a leftover key would read as a layout change in a snapshot.
  */
 const setDisplayField = (
   columns: readonly TableColumn[],
@@ -107,9 +107,9 @@ const setDisplayField = (
 
 /*
  * A width, a grow flag and a fit flag are one setting in three forms, so
- * writing any one of them clears the other two rather than leaving a stale
- * key behind — a snapshot is compared as JSON, and a leftover `grow: false`
- * would read as a layout change.
+ * writing any one of them clears the other two instead of leaving a stale key
+ * behind. A snapshot is compared as JSON, and a leftover `grow: false` would
+ * read as a layout change.
  */
 const withWidth = (column: TableColumn, width: number): TableColumn => {
   const next: TableColumn = { ...column, width };
@@ -125,7 +125,7 @@ const withGrow = (column: TableColumn): TableColumn => {
   return next;
 };
 
-/** "Fit to content" as a MODE: the column keeps re-measuring itself, rather than freezing at one width. */
+/** "Fit to content" as a MODE: the column keeps re-measuring itself instead of freezing at one width. */
 const withFit = (column: TableColumn): TableColumn => {
   const next: TableColumn = { ...column, fit: true };
   delete next.width;
@@ -148,7 +148,7 @@ const growColumn = (columns: readonly TableColumn[], path: string): readonly Tab
 const fitColumn = (columns: readonly TableColumn[], path: string): readonly TableColumn[] =>
   columns.map((column) => (column.path === path ? withFit(column) : column));
 
-/** The footer's "fit all to content" — every visible column, at once. */
+/** The footer's "fit all to content", applied to every visible column at once. */
 const fitAllColumns = (columns: readonly TableColumn[]): readonly TableColumn[] =>
   columns.map(withFit);
 

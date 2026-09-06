@@ -2,30 +2,23 @@
 /**
  * Named-instance startup flags, parsed from process.argv:
  *
- *   --instance=NAME   Mark this launch as a named instance. Identifies the window
+ *   --instance=NAME   Mark this launch as a named instance: identifies the window
  *                     (title, icon, titlebar chip) and selects the game profile of
  *                     the same name, so parallel launches never share save data.
- *   --profile=NAME    Select a game profile explicitly, by id or by display name.
- *                     Defaults to the instance name; pass it to run an instance
- *                     against a different profile.
+ *   --profile=NAME    Select a game profile by id or display name. Defaults to the
+ *                     instance name.
  *
- * A named instance is a WRITE-RESTRICTED launch: two files in the user-data folder
- * are shared by every launch and belong to the person at the keyboard, so an instance
- * must never write them —
+ * A named instance must never write the two files shared by every launch:
  *   config/window-state.json  guarded by isEphemeralLaunch (window/startup-config)
- *   app.json → lastProfileId  guarded in the renderer's profile-store
+ *   app.json -> lastProfileId  guarded in the renderer's profile-store
  *
- * This only sandboxes the game PROFILE (app.getPath('userData') is the same directory
- * for every instance — see lib/paths.ts). A handful of other Data/ files are shared
- * app-wide tool state on purpose (Data Inspector view-state, nav/connection/sprite
- * review progress, stick calibration) and are NOT write-restricted — they're meant to
- * be written, same as a window's size. Don't drive a real UI flow that saves through
- * one of those from an automated instance expecting `--instance` to sandbox it; see
- * docs/contributing/testing.md's "`--instance` sandboxes profile data, not app-wide
- * tool state" section.
+ * This only sandboxes the game PROFILE (userData is the same directory for every
+ * instance, see lib/paths.ts). Other Data/ files are app-wide tool state on purpose
+ * (Data Inspector view-state, review progress, stick calibration) and are NOT
+ * write-restricted; see docs/contributing/testing.md, "`--instance` sandboxes
+ * profile data, not app-wide tool state".
  *
- * The name is a filesystem path segment (it becomes a profile folder), so it is
- * restricted to a slug rather than trusted verbatim.
+ * The name becomes a profile folder, so it is restricted to a slug.
  */
 
 interface InstanceConfig {
@@ -41,12 +34,12 @@ const flagValue = (flag: string): string | null => {
   return raw ? raw : null;
 };
 
-/** Instance names become directory names — reject anything that isn't a plain slug. */
+/** Instance names become directory names, so anything but a plain slug is rejected. */
 const asSlug = (value: string | null): string | null => {
   if (value === null) return null;
   const slug = value.toLowerCase();
   if (SLUG.test(slug)) return slug;
-  console.error(`[instance] Ignoring invalid instance name "${value}" — expected a slug like "big-key".`);
+  console.error(`[instance] Ignoring invalid instance name "${value}". Names must be a slug like "big-key".`);
   return null;
 };
 

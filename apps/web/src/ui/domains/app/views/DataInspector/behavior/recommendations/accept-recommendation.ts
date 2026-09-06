@@ -1,19 +1,12 @@
 /* @layer renderer-app @kind logic */
 /**
- * Accepting a finding: the one place a recommendation turns into a real dataset
- * write.
+ * The one place a recommendation turns into a dataset write. The three actions
+ * reuse `RECORD_CREATORS`, `RECORD_WRITERS` and `recordDeleterFor`, so a
+ * finding goes through the same path as a hand edit; a second write path would
+ * be a second thing to keep in step with the emitters.
  *
- * Nothing new writes here. The three actions map onto the three CRUD verbs the
- * screen already has for every collection — `RECORD_CREATORS`, `RECORD_WRITERS`
- * and `recordDeleterFor` — so a finding is applied by exactly the same code
- * path as the same edit made by hand, through the same channel, into the same
- * file. That is deliberate: a second write path would be a second thing to keep
- * in step with the emitters.
- *
- * The order of the tail matters. `markWritten` stamps the review layer only
- * after the dataset write has actually landed, and the verdict is recorded only
- * after that — a failed write leaves the finding open, which is the honest
- * state for something nobody managed to apply.
+ * Order matters at the tail: `markWritten` and the verdict come only after the
+ * dataset write has landed, so a failed write leaves the finding open.
  */
 import { RECORD_CREATORS } from '../record-creators';
 import { RECORD_WRITERS } from '../record-writers';
@@ -26,7 +19,7 @@ import type { InspectorRow } from '../../DataInspector.type';
 
 interface AcceptOutcome {
   success: boolean;
-  /** The record the write landed on — allocated for a create, the target otherwise. */
+  /** The record the write landed on. A create allocates one, other writes use the target. */
   id?: string;
   error?: string;
 }
@@ -46,11 +39,7 @@ const create = async (kind: EntityKind, proposed: InspectorRow): Promise<AcceptO
   return result.success ? { success: true, id: result.id } : { success: false, error: result.error };
 };
 
-/**
- * The proposal carries whatever id the detector put on it, which for an update
- * is the record's own — but `targetId` is the identity the store reconciles on,
- * so that is what the write is keyed by rather than trusting the payload.
- */
+/** Keyed by `targetId`, the identity the store reconciles on, not the payload's own id. */
 const update = async (kind: EntityKind, id: string, proposed: InspectorRow): Promise<AcceptOutcome> => {
   const writer = RECORD_WRITERS[kind];
   if (!writer) return { success: false, error: NO_PATH(kind, 'write') };
@@ -76,11 +65,7 @@ const applyTo = (
   return update(kind, entry.targetId, proposed);
 };
 
-/**
- * Applies one finding and closes it out. `proposed` is passed in rather than
- * read off the entry so the pane's edited draft — the reviewer's amendment to
- * what the detector suggested — is what gets written.
- */
+/** Applies one finding and closes it out. `proposed` is passed in so the reviewer's edited draft is what gets written. */
 const acceptRecommendation = async (
   entry: Recommendation,
   proposed: InspectorRow,

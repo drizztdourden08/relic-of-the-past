@@ -10,7 +10,7 @@
  */
 import { voidCall } from './wasm-call';
 
-/** Call while the external-music gate is still armed — the core checks it. */
+/** Call while the external-music gate is still armed, since the core checks it. */
 const restoreCoreMusic = (): void =>
   voidCall('WasmRestoreMusic', { argTypes: [], args: [] });
 

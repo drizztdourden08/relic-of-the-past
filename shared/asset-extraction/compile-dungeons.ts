@@ -1,7 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
-/**
- * Dungeon asset compilation — orchestrator for rooms, sprites, secrets, headers, attributes, entrances.
- */
+/** Dungeon asset compilation: rooms, sprites, secrets, headers, attributes, entrances. */
 import type { RomData } from './rom/rom-types';
 import type { AssetBuilder } from './asset-builder';
 import { bufToArr } from './asset-builder';

@@ -1,21 +1,9 @@
 /* @layer renderer-components @kind logic */
 /**
- * Which rows the drag ghost carries with the column.
- *
- * The ghost shows a handful of real values, not the whole column — a table of
- * nine hundred records would otherwise build nine hundred offscreen cells per
- * header, every render, for an image the size of a business card. The cap is
- * the point of this file; the walk below merely picks WHICH ones.
- *
- * It takes them off the TOP of the rendered order, which is the order the rows
- * are actually in and the run sitting right under the sticky header. Collapsed
- * branches are skipped, so a sample never contains a row nobody can see. What
- * it deliberately does NOT do is follow the scroll position: that would mean
- * measuring the scroller and re-rendering every header on every wheel tick, to
- * change values in an image that is only ever a few rows tall anyway.
- *
- * The walk stops as soon as the cap is met, so the cost is the cap, not the
- * table.
+ * Which rows the drag ghost carries: the first few of the rendered order,
+ * skipping collapsed branches. It deliberately does not follow the scroll
+ * position, which would re-render every header per wheel tick. The walk stops
+ * at the cap, so the cost is the cap, not the table.
  */
 import { groupUid } from './group-uid';
 import type { GroupedRow } from '../../../data/table/types';

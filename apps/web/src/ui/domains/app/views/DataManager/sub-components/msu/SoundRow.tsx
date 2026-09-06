@@ -1,20 +1,9 @@
 /* @layer renderer-components @kind component */
 /**
- * One of the game's sounds, and whether this pack answers it.
- *
- * The identity column reads name-then-evidence: the plain-language name on top, the game's own
- * function names beneath it. The name orients you and the functions prove it — which matters
- * because a name for a sound nobody has pinned down is a best guess, while the call sites are not.
- * An id with neither falls back to its function names as the name. The full trigger list stays on
- * the tooltip rather than wrapping the row into a paragraph.
- *
- * The badges carry the two things that decide whether replacing an id is worth doing: its role on
- * the channel, and — for a row only visible because the unreachable ids were asked for — the fact
- * that the game never writes it, so whatever is put there will never be heard.
- *
- * `showChannel` puts the channel in front of the id. It is set wherever one list carries more than
- * one channel, because the channels do NOT share an id space: 0x12 read on its own says nothing
- * about which sound is about to be replaced.
+ * Identity reads name-then-evidence: the catalogue name on top (a best guess) and the game's own
+ * function names beneath (not a guess). An id with no name is named by its functions. The full
+ * trigger list stays on the tooltip. `showChannel` is set wherever one list carries more than one
+ * channel, because the channels do NOT share an id space.
  */
 import { Badge } from '@ds/primitives/Badge';
 import { Box } from '@ds/primitives/Box';
@@ -38,7 +27,7 @@ const SoundRow = (props: SoundRowProps) => {
   const under = label !== null ? summary : `${sites} call site${sites === 1 ? '' : 's'}`;
   // Play never becomes stop on an effects channel: pressing it again is meant to add a sound.
   const stoppable = playing && !additive;
-  // With nothing to replace it, play means the chip's own version — that IS the sound here.
+  // With nothing to replace it, play means the chip's own version, which IS the sound here.
   const playsOriginal = !replaced;
 
   return (

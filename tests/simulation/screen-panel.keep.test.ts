@@ -1,9 +1,8 @@
 /* @layer tests @kind test */
 /**
- * The widget's "On this screen" list must show everything the overlay draws —
- * these tests pin the two places that could silently swallow an item: the
- * grouping (an unmapped kind must land in "Unmapped", not vanish) and the
- * exit/edge parity (which is diagnostics, so it must not invent mismatches).
+ * The "On this screen" list must show everything the overlay draws. Pinned:
+ * grouping (an unmapped kind lands in "Unmapped", not nowhere) and exit/edge
+ * parity (diagnostics must not invent mismatches).
  */
 import { describe, it, expect } from 'vitest';
 import type { ScreenAnnotation } from '../../shared/game/simulation';
@@ -30,7 +29,7 @@ describeDataset('annotation grouping', () => {
     expect(groups.find((g) => g.id === 'other')?.items[0].label).toBe('something new');
   });
 
-  it('drops empty groups rather than rendering headers with nothing under them', () => {
+  it('drops empty groups instead of rendering headers with nothing under them', () => {
     expect(groupAnnotations([at('chest', 'Map Chest')]).map((g) => g.id)).toEqual(['checks']);
     expect(groupAnnotations([])).toEqual([]);
   });
@@ -42,11 +41,9 @@ describeDataset('annotation grouping', () => {
   });
 });
 
-// REAL screen ids — an indoor screen's gameId is keyed by palace+room, so a
-// made-up id resolves to nothing. Using fake ids here is what let the widget
-// ship with every indoor exit missing. 'screen-133' is the real dataset id
-// for the Jail Cell (room 0x80, palace 0x02) — looked up via
-// scripts/generate-ids/output/id-manifest.json.
+// REAL screen ids: an indoor gameId is keyed by palace+room, so a made-up id
+// resolves to nothing, which is how the widget shipped with every indoor exit
+// missing. 'screen-133' is the Jail Cell (room 0x80, palace 0x02).
 describeDataset('exit / edge parity', () => {
   it('reports nothing when the two lists agree', () => {
     const exits = [at('exit', 'Jail Cell', { target: 'screen-133' })];
@@ -63,8 +60,8 @@ describeDataset('exit / edge parity', () => {
     const exits = [at('exit', 'Jail Cell', { target: 'screen-133' })];
     expect(compareExitsToEdges(exits, [], true, 1).exitsWithoutEdge).toEqual(['Jail Cell']);
 
-    // Without the palace, room 0x80 resolves to a CAVE that shares the number —
-    // this is why the palace index is threaded through.
+    // Without the palace, room 0x80 resolves to a CAVE that shares the number.
+    // That is why the palace index is threaded through.
     expect(compareExitsToEdges(exits, [], true).exitsWithoutEdge).not.toEqual(['Jail Cell']);
   });
 
@@ -89,7 +86,7 @@ describeDataset('room tag names', () => {
     expect(roomTagName(0x26)).toBe('kill room → block');
   });
 
-  it('falls back to hex rather than claiming to know an unmapped tag', () => {
+  it('falls back to hex instead of claiming to know an unmapped tag', () => {
     expect(roomTagName(0x35)).toBe('tag 0x35');
   });
 });

@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind hook */
 /**
- * Assembles the live `DetectionContext` for the current screen — the one
+ * Assembles the live `DetectionContext` for the current screen. It is the one
  * piece nothing in the recommendation engine builds for itself, since a
  * detector only ever receives observations, never reads the game.
  *

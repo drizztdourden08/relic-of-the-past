@@ -9,9 +9,9 @@ interface StatusBadgeProps {
   interactive?: boolean;
   onChange?: (status: ScreenStatus) => void;
   /**
-   * Label per status key, injected by the caller — this primitive cannot
-   * import the dataset directly (design-system/domain dependency invariant),
-   * so the canonical `enumerationFor('screen-status')` labels live one layer
+   * Label per status key, injected by the caller. This primitive cannot import
+   * the dataset directly (design-system/domain dependency invariant), so the
+   * canonical `enumerationFor('screen-status')` labels live one layer
    * up, in whatever domain code renders a badge. Missing or omitted keys fall
    * back to `DEFAULT_LABELS`, so the badge still renders standalone.
    */

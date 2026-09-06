@@ -3,9 +3,9 @@
  * Send a sheet out of the app as a file.
  *
  * Serializing and choosing a destination are separate concerns: the container decides the
- * bytes, and the platform decides how a file reaches the user — a save dialog on desktop,
+ * bytes, and the platform decides how a file reaches the user: a save dialog on desktop,
  * a share sheet on mobile, a download in a browser. This hook joins the two and reports
- * what happened, since a cancelled dialog is a normal outcome rather than a failure.
+ * what happened, since a cancelled dialog is a normal outcome, not a failure.
  */
 import { useState, useCallback } from 'react';
 import type { PlayerSheet } from '@shared/game/data/player-sheet/types';

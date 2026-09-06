@@ -1,11 +1,8 @@
 /* @layer shared-storage @kind logic */
 /**
- * Pack editing over FileStore: the `.msul` manifest plus the create/rename/delete
- * operations the pack editor drives. The read-side listing stays in ./msu, which
- * re-exports this file so callers keep a single import site.
- *
- * The three text helpers (parse/serialize/new) are pure so the main-process handlers,
- * which speak Node fs rather than FileStore, share the same format and validation.
+ * Pack editing over FileStore: the `.msul` manifest plus create/rename/delete. The read-side
+ * listing stays in ./msu, which re-exports this file. The three text helpers (parse/serialize/new)
+ * are pure so the main-process handlers, which speak Node fs, share the same format and validation.
  */
 import type { FileStore } from '@shared/platform';
 import type { MsuPackManifest, MsuPackMeta } from '@shared/types/msu-manifest';
@@ -22,11 +19,9 @@ const isManifest = (value: unknown): value is MsuPackManifest => {
 
 /** null for missing text, malformed JSON, or a version this build does not know. */
 /**
- * Rewrites a play mode this build no longer has into its current equivalent.
- *
- * There was briefly a separate `repeat` kind for a single self-looping file, before it turned out to
- * be what `loop` with one file already is. A pack saved while it existed must still open, and it must
- * open as the same thing it sounded like, which is now the `single` order.
+ * Rewrites a play mode this build no longer has. There was briefly a separate `repeat` kind for
+ * a single self-looping file, which is what `loop` with one file already is; a pack saved then
+ * must still open as the same thing, now the `single` order.
  */
 const migrateMode = (mode: { kind?: unknown }): unknown =>
   (mode?.kind === 'repeat' ? { kind: 'loop', order: 'single' } : mode);
@@ -67,7 +62,7 @@ const serializeManifest = (manifest: MsuPackManifest): string => {
   return `${JSON.stringify(stamped, null, 2)}\n`;
 };
 
-/** A fresh v1 manifest for an empty pack — the pack name doubles as the default title. */
+/** A fresh v1 manifest for an empty pack, using the pack name as the default title. */
 const newManifest = (pack: string, meta?: Partial<MsuPackMeta>): MsuPackManifest => {
   const now = Date.now();
   return { version: 1, meta: { name: pack, ...meta, createdAt: now, modifiedAt: now }, tracks: [] };
@@ -78,10 +73,9 @@ const readManifest = async (files: FileStore, pack: string): Promise<MsuPackMani
   parseManifest(await files.readText(manifestPath(pack)));
 
 /**
- * The inventory is taken from the folder at the moment of writing, never from the caller: a
- * manifest handed in from memory can only know the files it was read with, and the folder has
- * moved on since (a drop, a delete, a conversion landing). Reading it here is what keeps the
- * list a record of the pack rather than a claim about it.
+ * The inventory is taken from the folder at write time, never from the caller: a manifest from
+ * memory only knows the files it was read with, and the folder has moved on since. That keeps
+ * the list a record of the pack, not a claim about it.
  */
 const writeManifest = async (files: FileStore, pack: string, manifest: MsuPackManifest): Promise<void> => {
   assertSafeName(pack);

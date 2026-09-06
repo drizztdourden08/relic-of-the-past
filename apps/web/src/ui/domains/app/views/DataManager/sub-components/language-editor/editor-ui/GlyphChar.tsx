@@ -5,16 +5,14 @@
  * A button face, an arrow, a heart: these are characters of the dialogue
  * alphabet, not icons of ours, so a lookalike from an icon set would be a small
  * lie in the middle of a line an author is trying to judge. The pixels come from
- * the language pack's OWN font — every pack carries one, and it is the same data
- * the game draws from — so a picture character shows up with nothing to extract
- * and nothing to install first.
+ * the language pack's OWN font, the same data the game draws from, so a picture
+ * character shows up with nothing to extract or install first.
  *
  * The cell ADVANCES by the character's own width out of the pack's table, exactly
  * as a typed character's cell does. It used to advance a full cell whatever the
  * character was worth, which put the ruler and the gutter's figure into
  * disagreement on any entry holding a picture. The ink keeps its full box and is
- * allowed to overflow the advance, the same trade the letters make: the engine
- * emits the pixels and moves the pen by the table.
+ * allowed to overflow the advance, the same trade the letters make.
  *
  * A pair of alphabet entries that spell ONE picture is drawn as one merged cell:
  * both halves inside a single box that advances by the sum of their widths, and
@@ -23,10 +21,10 @@
  * it (see `merged-glyph.ts`).
  *
  * Two gaps stay honest. While the pack's font is still being read there is no
- * sheet to draw from, so the cell holds its place and stays empty rather than
+ * sheet to draw from, so the cell holds its place and stays empty instead of
  * flashing text that is about to be replaced. And a localized alphabet may name a
- * picture the base one never had: nothing is behind that name at all, so it falls
- * back to the bracketed name in the game's face, which is legible and true.
+ * picture the base one never had: nothing is behind that name, so it falls back
+ * to the bracketed name in the game's face.
  */
 import { Box, Canvas, Text } from '@ds/primitives';
 import { widthOf } from '@shared/game/language';
@@ -48,12 +46,12 @@ type GlyphCharProps = {
 };
 
 /**
- * The cell's advance, as a MULTIPLE of one ink box rather than as a length.
+ * The cell's advance, as a MULTIPLE of one ink box, not as a length.
  *
- * A caller decides how big an ink box is — the line uses the game's own cell, the
- * read-only card and the toolbar set theirs from their own text size — so a
- * length in game pixels would override that choice and size the cell for the
- * wrong surface. A ratio scales with whatever box the caller chose.
+ * A caller decides how big an ink box is, so a length in game pixels would
+ * override that choice and size the cell for the wrong surface. The line uses
+ * the game's own cell, while the read-only card and the toolbar set theirs from
+ * their own text size. A ratio scales with whatever box the caller chose.
  */
 const advanceStyle = (
   glyphs: (number | null)[],
@@ -80,7 +78,7 @@ const GlyphChar = (props: GlyphCharProps) => {
   // this one occupies nothing at all.
   if (isMergedSecond(name)) return null;
 
-  // Metrics in hand and no character behind the name: the alphabet genuinely has
+  // Metrics in hand and no character behind the name: the alphabet has
   // none, and no amount of waiting will produce one.
   if (metrics !== null && glyph === null) {
     return <Text as="span" className="game-text glyph-char__name">{`[${name}]`}</Text>;

@@ -73,7 +73,7 @@ int WasmGetRoomExitDoors(void) {
 // Max 4 inter-room stairs per room.
 // Each entry: [destRoom(1), tileRow(1), tileCol(1), flags(1)]
 // flags: bit 2 = direction (0 up, 4 down, matches attr bit 2), bit 0 = the attr
-// PAGE the stair tile was found on (0 = BG2/upper, 1 = BG1/lower) — taking the
+// PAGE the stair tile was found on (0 = BG2/upper, 1 = BG1/lower). Taking the
 // stair deposits the player on that layer, which decides the destination flood's
 // start layer (the sewers' Behind-Sanctuary alcove is a BG1 arrival).
 // Stair index tiles have attr = 0x30..0x37 where bits 0-1 = stair index, bit 2 = direction.
@@ -134,7 +134,7 @@ int WasmGetRoomStairInfo(void) {
 }
 
 // Room-addressable variant: rebuild the target room's attr table + header
-// (WasmBuildRoomAttrGrid loads both), then run the same stair scan — so the
+// (WasmBuildRoomAttrGrid loads both), then run the same stair scan, so the
 // simulator can discover a remote room's staircases without the player being there.
 EMSCRIPTEN_KEEPALIVE
 int WasmGetRoomStairInfoFor(int room_id) {
@@ -166,7 +166,7 @@ int WasmGetRoomTravelDestinations(void) {
 }
 
 // Room-addressable variant: load the target room's header, then return its
-// 5 travel destination bytes ([0] pit/warp, [1..4] stair/teleport slots —
+// 5 travel destination bytes ([0] pit/warp, [1..4] stair/teleport slots, where
 // warp-room doors teleport to [3] (west) / [4] (east), dungeon.c:2067).
 EMSCRIPTEN_KEEPALIVE
 int WasmGetRoomTravelDestinationsFor(int room_id) {
@@ -246,8 +246,8 @@ int WasmGetRoomWalkBoundaries(void) {
   return SimScanWalkBoundaries(dungeon_room_index);
 }
 
-// Room-addressable room-header TAG bytes ([tag1, tag2]) — the room's scripted
-// effects (kill-enemies-to-open-door, switch doors, moving walls, …).
+// Room-addressable room-header TAG bytes ([tag1, tag2]) holding the room's scripted
+// effects (kill-enemies-to-open-door, switch doors, moving walls and the rest).
 static uint8 g_room_tags_buf[2];
 
 EMSCRIPTEN_KEEPALIVE
@@ -263,7 +263,7 @@ int WasmGetRoomTagsFor(int room_id) {
 }
 
 // Room-addressable variant: rebuild the target room (loads its toggle-palace
-// walk-through positions), then run the same scan — remote rooms included.
+// walk-through positions), then run the same scan, remote rooms included.
 EMSCRIPTEN_KEEPALIVE
 int WasmGetRoomWalkBoundariesFor(int room_id) {
   if (!NavQueryGate()) {
@@ -276,11 +276,11 @@ int WasmGetRoomWalkBoundariesFor(int room_id) {
   return (int)g_walk_bounds_buf;
 }
 
-// Everything a room-addressable query needs that lives in WRAM rather than in the
+// Everything a room-addressable query needs that lives in WRAM instead of in the
 // returned grid: the stair list, the header's travel destinations, the room tags
 // and the walk-through boundaries. WasmBuildRoomAttrGrid puts all of WRAM back
 // before it returns, so these have to be taken while the requested room is still
-// rendered — read afterwards they describe whichever room the game is physically
+// rendered. Read afterwards they describe whichever room the game is physically
 // standing in, which for a headless run is wherever the save happened to start.
 void SimCaptureRoomHeaderState(void) {
   SimScanRoomStairs();

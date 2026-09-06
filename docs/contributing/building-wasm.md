@@ -4,15 +4,15 @@
 > ⚠️ **You only need this when you change the C code.** `npm run dev` and `npm run build` run an
 > `ensure-wasm` step that rebuilds the WASM core automatically whenever it's missing or a C source is
 > newer than the last build, so normal app work needs nothing extra. The build output is gitignored,
-> not committed. C changes under `core/` take effect on the next `dev`/`build` — or run
-> `npm run ensure-wasm` to force a rebuild now.
+> not committed. C changes under `core/` take effect on the next `dev`/`build`. To force a
+> rebuild now, run `npm run ensure-wasm`.
 
 ## Prerequisites
 
 - Emscripten SDK installed (the repo's setup expects it at `E:\GameProjects\emsdk`, providing `emcc`).
-- `emcc` on PATH — which means sourcing the emsdk env in the **same shell** as the build.
+- `emcc` on PATH. Source the emsdk env in the **same shell** as the build.
 
-## Build manually (`build.bat` — what `ensure-wasm` invokes)
+## Build manually (`build.bat`, the script `ensure-wasm` invokes)
 
 `core/wasm-build/build.bat` is a thin wrapper around `build.mjs` (the single source of truth for the
 source list and emcc flags); it writes straight to `apps/web/public/wasm/` (with debug info).
@@ -28,7 +28,7 @@ renderer) to pick up the new module.
 
 ## One build, three entry points
 
-`build.mjs` holds the source list and emcc flags **once** — it is the single source of truth and
+`build.mjs` holds the source list and emcc flags **once**. It is the single source of truth and
 writes to `apps/web/public/wasm/`. Everything else just delegates to it, so the build can never drift
 between platforms:
 
@@ -39,8 +39,8 @@ between platforms:
 | `Makefile` (`make`) | CI / Unix habit | Thin wrapper → `build.mjs`. |
 
 There is no per-function `EXPORTED_FUNCTIONS` list. Every `Wasm*` export is tagged
-`EMSCRIPTEN_KEEPALIVE` in its `.c` file, which both retains *and* exports the symbol — so there is
-nothing to keep in sync and no symbol to add when you write a new export (see
+`EMSCRIPTEN_KEEPALIVE` in its `.c` file, which both retains *and* exports the symbol. Nothing has to be
+kept in sync and no symbol has to be added when you write a new export (see
 [Adding a WASM Function](adding-a-wasm-function.md)). Forget the `KEEPALIVE` tag and the function
 compiles fine but throws at the `ccall` site at runtime.
 
@@ -48,7 +48,7 @@ compiles fine but throws at the `ccall` site at runtime.
 
 - `emscripten_main.c` is the entry point; the app ships through Electron, not an SDL window.
 - `core/zelda3/snes/` builds three units: `ppu.c` (the renderer), `dma.c` and `dsp.c` (audio).
-  Those are the chips the decompiled game still writes registers to. There is no CPU emulation —
+  Those are the chips the decompiled game still writes registers to. There is no CPU emulation, because
   the game's own processor code is what was decompiled into C, which is the point of the port.
-- It's a full recompile of dozens of translation units — expect it to take a while.
+- It's a full recompile of dozens of translation units, so expect it to take a while.
 - The repo's `build-wasm` skill automates this exact flow.

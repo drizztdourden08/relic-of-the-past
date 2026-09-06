@@ -3,7 +3,7 @@
  * The card every toolbar popover is drawn in: anchored under its own button,
  * one column, narrow enough to read at a glance.
  *
- * It floats over what follows rather than growing the toolbar, because a toolbar
+ * It floats over what follows instead of growing the toolbar, because a toolbar
  * that changes height while being used moves the text away from the pointer. The
  * button that opened it is the anchor, so the card travels with the row for free
  * and needs no portal.
@@ -14,7 +14,7 @@
  * or the field could never be typed in. Either way the insert lands correctly:
  * the editor restores its own stored selection before placing a token.
  *
- * Purely presentational, dismissal included — the toolbar owns which card is
+ * Purely presentational, dismissal included. The toolbar owns which card is
  * open and every way of closing it, because that is the element a press or an
  * Escape actually reaches.
  */
@@ -24,7 +24,7 @@ import type { MouseEvent, ReactNode } from 'react';
 import './PopoverShell.css';
 
 type PopoverShellProps = {
-  /** Accessible name — the label of the button that opened it. */
+  /** Accessible name, taken from the button that opened it. */
   label: string;
   /** Which edge the card lines up with. `end` keeps a right-hand button on screen. */
   align?: 'start' | 'end';

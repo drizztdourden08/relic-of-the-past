@@ -3,7 +3,7 @@
  * Flags a display refresh rate the game cannot be shown evenly on.
  *
  * Sits next to the FPS readout because that is where someone looks when the motion feels wrong,
- * and clicking it goes straight to the setting that fixes it — the symptom is baffling on its
+ * and clicking it goes straight to the setting that fixes it. The symptom is baffling on its
  * own, so the tag has to lead somewhere.
  */
 import { Badge } from '../../../../../design-system/primitives/Badge';

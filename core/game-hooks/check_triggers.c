@@ -6,7 +6,7 @@
 // Room-state bits by slot. 0-5 are the chest-open bits; 6 is the OTHER bit a
 // standing heart piece can use. HeartUpgrade_CheckIfAlreadyObtained
 // (sprite_main.c:1311) records an indoor pickup at 0x4000, or 0x2000 when the
-// sprite sits in the room's right half (sprite_x_hi & 1) — and 0x2000 is
+// sprite sits in the room's right half (sprite_x_hi & 1). 0x2000 is
 // already slot 5, so only 0x4000 was missing.
 // A heart piece is not an ordinary receive. Sprite_HeartPiece (sprite_main.c:6493)
 // advances the piece counter FIRST and only hands over a container when it wraps
@@ -85,7 +85,7 @@ static void TryVisualChestOpen(uint16 room_id, uint8 chest_index) {
 }
 
 // Vanilla duplicate-item rule, mirrored from the chest handler (player.c:3850):
-// an item with an alternate swaps to it when the primary is already owned —
+// an item with an alternate swaps to it when the primary is already owned, so
 // e.g. a second Lamp (0x12) becomes 5 Rupees (0x35, the Secret Passage chest).
 static const uint8 kSimReceiveItemAlternates[76] = {
   255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,  68, 255, 255, 255,
@@ -103,7 +103,7 @@ void GameHook_TriggerCheck(uint16 room_id, uint8 chest_index, uint8 item_id) {
   }
 
   // Already collected? Setting the bit again is harmless, but Link_ReceiveItem is
-  // NOT idempotent — granting a second time really does hand over another item.
+  // NOT idempotent, because granting a second time really does hand over another item.
   // A heart piece re-granted this way silently inflated the heart count, since
   // every fourth one converts into a container (sprite_main.c:6493).
   uint16 mask = kChestOpenMasksHook[chest_index];

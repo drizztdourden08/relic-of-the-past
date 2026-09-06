@@ -3,7 +3,7 @@
  * The durable view-state store's wire payload: one whole-file map, keyed by
  * `ViewKey` ('surface:collection'), loaded and saved as a single unit.
  *
- * The main process treats every entry as opaque JSON — it never re-shapes it,
+ * The main process treats every entry as opaque JSON and never re-shapes it,
  * because the real shape (`ViewSnapshot`) is owned by the renderer's
  * design-system data layer, and `shared/` never depends on renderer code
  * (see docs/architecture/overview.md's dependency invariants). The renderer's

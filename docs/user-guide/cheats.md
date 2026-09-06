@@ -7,7 +7,7 @@ The **Cheats widget** is a built-in panel for giving items, editing stats, and t
 
 | Tab | What you can do |
 |-----|-----------------|
-| **Items** | Give any item by id. Delivery is queued and only fires when it's safe, meaning you're in gameplay rather than mid-menu or mid-animation, so it won't corrupt your save. |
+| **Items** | Give any item by id. Delivery is queued and only fires when it's safe, meaning you're in gameplay, not mid-menu or mid-animation, so it won't corrupt your save. |
 | **Stats** | One control per property: health, magic, bombs, arrows, rupees, and the capacities behind them (max hearts, bomb and arrow capacity). Drag the slider and press Set, or use the 25% / 50% / 75% / Full buttons, which apply straight away. |
 | **Mechanics** | Adjust the outgoing damage multiplier and extra armor (damage-reduction %) to make Link hit harder or take less. |
 | **Bottles** | Set the contents of each of the four bottle slots, such as potions, a fairy, or a bee. |
@@ -19,6 +19,6 @@ Giving items does more than poke memory. It runs through a delivery queue that c
 active, no menu is open, and he isn't already mid-receipt. Cheated items play the normal receipt
 animation, but they leave every check unmarked.
 
-> Values are clamped to safe ranges, for example item id 0–75, hearts 1–20, and rupees up to 999. For
+> Values are clamped to safe ranges, for example item id 0-75, hearts 1-20, and rupees up to 999. For
 > the full behavior and ranges, see [Cheats & Commands](../hooks/cheats-commands.md). For widget
 > specifics, see the [Cheats widget](../widgets/cheats.md).

@@ -1,10 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Walk-distance ordering for detected exits: a plain BFS over the flood's
- * reached cells gives the real number of steps from the player's entry tile to each
- * exit, so the simulator always tries the CLOSEST way out first — exactly what
- * a player standing at that spot would do.
- */
+// Walk-distance ordering for detected exits: BFS steps from the entry tile, so the simulator
+// tries the CLOSEST way out first.
 import type { GridPos, LedgeTraversal } from '@shared/game/navigation';
 import type { ReachState } from '@shared/game/navigation/types';
 import type { SimExit } from '@shared/game/simulation';
@@ -12,27 +8,22 @@ import type { SimExit } from '@shared/game/simulation';
 const GRID = 64;
 const UNREACHED = 0xffff;
 /** Steps stamped on tiles the flood reached but the walk-BFS still can't, after
- *  ledge hops have been walked: reachable, distance genuinely unknown. */
+ *  ledge hops have been walked: reachable, distance unknown. */
 const HOP_STEPS = 999;
 /** Exits LEAVING a big multi-sub-screen area sort after every in-area exit, so
  *  the whole big screen gets explored before moving on. */
 const AREA_EXIT_BIAS = 0x1000;
 /**
- * A ledge drop is ONE-WAY: the player cannot climb back. Priced as one move it
- * looked almost free, so the ordering happily dropped off a ledge with work
- * still pending on the footing above — and since the screen it left is then
- * marked visited, that work was stranded for the rest of the run.
- *
- * So a hop costs more than any walk on the current footing can (`HOP_STEPS` is
- * already the ceiling a real distance is assumed to stay under). That makes the
- * order lexicographic — every walkable target first, drops afterwards, deepest
- * last — without forbidding the drop.
+ * A ledge drop is ONE-WAY. Priced as one move, the ordering dropped off ledges with
+ * work still pending above, and the screen left behind was marked visited. So a hop
+ * costs more than any walk on the current footing (`HOP_STEPS` is the ceiling a real
+ * distance stays under): every walkable target first, drops after, deepest last.
  */
 const LEDGE_COST = HOP_STEPS + 1;
 
 /** Steps-to-walk from `start` to every reached cell (UNREACHED elsewhere).
  *  The start itself may sit on a non-reached tile (door thresholds, spawn
- *  markers) — seed from every reached tile in a small ring around it too. */
+ *  markers), so seed from every reached tile in a small ring around it too. */
 const stepDistances = (reachable: ReachState[][], start: GridPos, ledges: readonly LedgeTraversal[] = []): Uint16Array => {
   const dist = new Uint16Array(GRID * GRID).fill(UNREACHED);
   const inGrid = (r: number, c: number) => r >= 0 && r < GRID && c >= 0 && c < GRID;
@@ -86,7 +77,7 @@ const stepDistances = (reachable: ReachState[][], start: GridPos, ledges: readon
     }
   }
   // Flood-reached tiles the walk couldn't touch lie across one-way hops
-  // (ledge drops seed the flood but aren't step-adjacent) — keep them
+  // (ledge drops seed the flood but aren't step-adjacent), so keep them
   // reachable for exit detection, just sorted after every real walk.
   for (let r = 0; r < GRID; r++) {
     for (let c = 0; c < GRID; c++) {
@@ -98,7 +89,7 @@ const stepDistances = (reachable: ReachState[][], start: GridPos, ledges: readon
 };
 
 /** Distance to a tile, tolerating exits whose own tiles are solid (nearest ring).
- *  Radius 4 covers doorway notches — their door tiles run ~4 deep into the wall,
+ *  Radius 4 covers doorway notches, whose door tiles run ~4 deep into the wall,
  *  with the first walkable tile that far from the recorded door position. */
 const distanceAt = (dist: Uint16Array, tile: GridPos): number => {
   let best = UNREACHED;
@@ -114,11 +105,7 @@ const distanceAt = (dist: Uint16Array, tile: GridPos): number => {
   return best;
 };
 
-/**
- * Splits an ordering score back into what it means. The score packs three things
- * — real steps, the out-of-area bias and the unknown-distance sentinel — so it
- * must never be shown to a reader verbatim.
- */
+/** Splits an ordering score (real steps + out-of-area bias + unknown sentinel) back into what it means; never show the raw score. */
 const decodeScore = (score: number): Pick<SimExit, 'steps' | 'stepsNote'> => {
   if (score >= UNREACHED) return {};
   if (score >= AREA_EXIT_BIAS) {
@@ -131,10 +118,9 @@ const decodeScore = (score: number): Pick<SimExit, 'steps' | 'stepsNote'> => {
 };
 
 /**
- * Sort exits by walk-steps from the entry tile. `scores` carries a precomputed
- * score per exit (same array order) — pass REMOTE_SCREEN_PENALTY-based scores
- * for exits that live on other sub-screens of a big area. The score is kept for
- * the log's ordering evidence, but `steps` only ever holds a real distance.
+ * Sort exits by walk-steps from the entry tile. `scores` is one precomputed score per exit
+ * (same order); pass REMOTE_SCREEN_PENALTY-based scores for exits on other sub-screens of a
+ * big area. The score feeds the log; `steps` only ever holds a real distance.
  */
 const sortExitsByDistance = (exits: SimExit[], scores: number[]): SimExit[] =>
   exits
@@ -148,11 +134,9 @@ const sortExitsByDistance = (exits: SimExit[], scores: number[]): SimExit[] =>
 type EdgeName = 'north' | 'south' | 'west' | 'east';
 
 /**
- * Walk-distance to a DOORWAY on a wall: scan inward from the wall at the door
- * position (±4 tiles wide, up to 14 deep — notch depth and the door record's
- * lateral offset both vary) and return the first reached tile's distance.
- * UNREACHED when the doorway's side of the room was never flooded (e.g. it
- * sits behind an internal locked door).
+ * Walk-distance to a DOORWAY on a wall: scan inward from the door position (±4 wide, up to
+ * 14 deep; notch depth and lateral offset vary) and return the first reached tile's distance.
+ * UNREACHED when that side of the room was never flooded (e.g. behind a locked door).
  */
 const doorwayDistance = (dist: Uint16Array, edge: EdgeName, pos: number): number => {
   for (let depth = 0; depth <= 14; depth++) {

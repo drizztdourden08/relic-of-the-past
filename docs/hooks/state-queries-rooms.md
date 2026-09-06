@@ -1,5 +1,5 @@
 <!-- @layer docs @kind doc -->
-# State Queries — Rooms & Collision
+# State Queries for Rooms & Collision
 
 Collision grids, room geometry, doors, stairs, and dungeon-map placement: the data the
 [navigation engine](../architecture/navigation.md) consumes. All return `HEAPU8` pointers.
@@ -12,8 +12,8 @@ Collision grids, room geometry, doors, stairs, and dungeon-map placement: the da
 ## Collision attributes
 
 ### WasmGetIndoorAttrTable
-`int WasmGetIndoorAttrTable(void)` → pointer to `dung_bg2_attr_table` (8 KB). `0x0000–0x0FFF` =
-upper-layer attrs, `0x1000–0x1FFF` = lower-layer attrs (64×64 tiles per layer).
+`int WasmGetIndoorAttrTable(void)` → pointer to `dung_bg2_attr_table` (8 KB). `0x0000-0x0FFF` =
+upper-layer attrs, `0x1000-0x1FFF` = lower-layer attrs (64×64 tiles per layer).
 
 ### WasmGetLinkIsOnLowerLevel
 `int WasmGetLinkIsOnLowerLevel(void)` → `1` if Link is on the lower layer, else `0`.
@@ -24,7 +24,7 @@ upper-layer attrs, `0x1000–0x1FFF` = lower-layer attrs (64×64 tiles per layer
 
 ### WasmGetRoomCollisionTypeForRoom
 `int WasmGetRoomCollisionTypeForRoom(int room_id)` → collision type `(hdr[0] >> 2) & 7` read
-straight from the ROM header for any room id (0–0x127); headless-safe. Returns `-1` if out of range.
+straight from the ROM header for any room id (0-0x127); headless-safe. Returns `-1` if out of range.
 
 ### WasmBuildOverworldAttrGrid
 `int WasmBuildOverworldAttrGrid(int screen_idx)` → builds a 64×64 collision-attr grid for an
@@ -52,9 +52,9 @@ It still answers from **room data, not live state**. For the room the player cur
 
 | Off | Field | Off | Field |
 |----:|-------|----:|-------|
-| 0 | layout index 0–7 | 3 | Link quadrant X (0/1) |
+| 0 | layout index 0-7 | 3 | Link quadrant X (0/1) |
 | 1 | quadrant fullsize X (0=normal, 2=merged) | 4 | Link quadrant Y (0/2) |
-| 2 | quadrant fullsize Y | 5–7 | pad |
+| 2 | quadrant fullsize Y | 5-7 | pad |
 
 ### WasmGetDungeonMapPosition
 `int WasmGetDungeonMapPosition(void)` → 12-byte buffer giving the room's footprint in the 5×5 dungeon
@@ -81,11 +81,11 @@ is the leftmost of the 4-tile opening; for W/E, `tileRow` is the topmost.
 
 ### WasmGetRoomStairInfo
 `int WasmGetRoomStairInfo(void)` → `[count, pad]` then up to 4 × `[destRoom, tileRow, tileCol, direction]`.
-direction: `0`=up, `4`=down (attr bit 2). Found by scanning attr tiles `0x30–0x37` (low 2 bits = stair index).
+direction: `0`=up, `4`=down (attr bit 2). Found by scanning attr tiles `0x30-0x37` (low 2 bits = stair index).
 
 ### WasmGetRoomTravelDestinations
 `int WasmGetRoomTravelDestinations(void)` → **5 bytes** from the room header:
-`[0]`=pit/block destination, `[1..4]`=stair destinations for stair indices 0–3. Zeroed if outdoors.
+`[0]`=pit/block destination, `[1..4]`=stair destinations for stair indices 0-3. Zeroed if outdoors.
 
 ### WasmGetStaircaseType
 `int WasmGetStaircaseType(void)` → `kind_of_in_room_staircase`: `0`=intra-room stairs (layer change +

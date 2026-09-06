@@ -3,10 +3,10 @@
  * One variable's worth of the hardcoded-name scan: the phrase, how many lines
  * spell it out, and a tick to retag them all.
  *
- * The near-miss count sits on the row rather than in a footnote, because it
+ * The near-miss count sits on the row, not in a footnote, because it
  * belongs to this phrase and to no other. Those matched only with case ignored,
- * so they are never retagged — a reference would recase a line someone wrote
- * that way — and saying so per row is what keeps the applied total honest.
+ * so they are never retagged, because a reference would recase a line someone
+ * wrote that way. Saying so per row is what keeps the applied total honest.
  *
  * A row with nothing applicable still appears, with its tick disabled: "nothing
  * to do here, and here is why" is an answer.

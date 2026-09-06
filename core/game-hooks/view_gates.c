@@ -15,10 +15,10 @@
 // control, and nothing else here changes that. It is wrong during a room transition: Module07_02
 // clears the flag at subsubmodule 1 (Module07_02_01_LoadNextRoom) while the mask itself stays on
 // BG1 untouched until subsubmodule 3 turns the subscreen off, so the fade-out frames in between
-// re-open the margins under a mask that is still being drawn — the reported leak. The flag comes
+// re-open the margins under a mask that is still being drawn, which is the reported leak. The flag comes
 // back only at subsubmodule 12, once the destination room is up.
 //
-// Rather than restate when the game does and doesn't clear the flag, latch the answer from the
+// Instead of restating when the game does and doesn't clear the flag, latch the answer from the
 // last frame the player had control and hold it for the transition: a transition that began under
 // the mask stays collapsed until the next room settles, whatever the flag does in between.
 static bool s_cone_held;

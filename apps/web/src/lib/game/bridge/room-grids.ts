@@ -4,7 +4,7 @@ import { callPtr, callWhenRunning, decodeTable, readU16 } from './wasm-call';
 
 /**
  * Read both indoor room collision attr layers (64×64 each) from dung_bg2_attr_table.
- * Layer 0 = offset 0 (upper) — main walkable floor. Layer 1 = offset 0x1000 (lower).
+ * Layer 0 = offset 0 (upper) is the main walkable floor. Layer 1 = offset 0x1000 (lower).
  * Returns raw data with no modifications. Works with live game state.
  */
 type DualLayerGrids = { layer0: number[][]; layer1: number[][]; stairTiles: Array<{ row: number; col: number }> };
@@ -44,7 +44,7 @@ const wasmGetIndoorDualLayerGrids = (): DualLayerGrids | null =>
 /**
  * Build BOTH collision layers for any indoor room (headless, room-addressable).
  * Castle basements and other split-level rooms keep their walkable floor on
- * BG1 (lower layer, table offset +0x1000) — a BG2-only flood renders them as
+ * BG1 (lower layer, table offset +0x1000), so a BG2-only flood renders them as
  * solid wall. Null when the layers are identical.
  */
 const wasmBuildRoomDualLayerGrids = (roomId: number): DualLayerGrids | null =>

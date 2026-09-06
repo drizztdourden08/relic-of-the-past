@@ -1,14 +1,9 @@
 /* @layer renderer-components @kind logic */
 /**
- * Pure full-set text search: walks a loaded language set once and returns every
- * place a lowercased needle occurs. No IPC, no fetching — purely derived from
- * the set the editor already holds.
- *
- * Dialogue is searched on its plain text, i.e. the concatenated `text` runs of
- * a token stream, so a control code sitting mid-sentence never breaks a match.
- * Chips (control-code names, glossary references) are searched separately and
- * reported as their own field, so a translator can find every use of a
- * reference or a command without those names polluting text results.
+ * Pure full-set text search for a lowercased needle. Dialogue is searched on
+ * its concatenated `text` runs, so a control code mid-sentence never breaks a
+ * match; chips (control-code names, references) are searched separately and
+ * reported as their own field.
  */
 import type { DialogueEntry, LanguageSet, Token } from '@shared/game/language';
 import type { SearchHit } from '../language-editor.type';
@@ -33,7 +28,7 @@ const excerpt = (text: string, at: number): string => {
   if (flat.length <= PREVIEW_SPAN) return flat;
   const start = Math.max(0, at - Math.floor(PREVIEW_SPAN / 3));
   const end = Math.min(flat.length, start + PREVIEW_SPAN);
-  return `${start > 0 ? '…' : ''}${flat.slice(start, end)}${end < flat.length ? '…' : ''}`;
+  return `${start > 0 ? '...' : ''}${flat.slice(start, end)}${end < flat.length ? '...' : ''}`;
 };
 
 const hitIn = (text: string, needle: string): number => text.toLowerCase().indexOf(needle);

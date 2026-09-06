@@ -1,15 +1,9 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * Reads and writes registry.json — the shared record of every agent worktree.
- *
- * Several agents run `wt` concurrently, so every mutation happens inside a lock. The
- * lock is an exclusive-create file (atomic on every platform); a lock older than
- * LOCK_STALE_MS is assumed to belong to a crashed process and is broken, so a dead
- * agent can never wedge the pool permanently.
- *
- * Only facts git cannot supply are stored here. Anything derivable — dirty, ahead,
- * behind, merged — is computed on read by git-status.mjs, so the file can never
- * disagree with the repository.
+ * Reads and writes registry.json, the shared record of every agent worktree. Every
+ * mutation runs under an exclusive-create lock file; a lock older than LOCK_STALE_MS
+ * is assumed to belong to a crashed process and is broken. Only facts git cannot
+ * supply are stored; dirty/ahead/behind/merged are computed on read by git-status.mjs.
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync, statSync } from 'node:fs';
 import { registryPath, lockPath, worktreeRoot } from './paths.mjs';
@@ -28,7 +22,7 @@ const readRegistry = () => {
     if (!Array.isArray(parsed.worktrees)) return emptyRegistry();
     return { ...emptyRegistry(), ...parsed };
   } catch {
-    console.warn('[wt] registry.json is unreadable — starting from an empty registry.');
+    console.warn('[wt] registry.json is unreadable. Starting from an empty registry.');
     return emptyRegistry();
   }
 };

@@ -1,8 +1,8 @@
 /* @layer shared-game @kind types */
 /**
  * Scroll-section geometry for a multi-screen indoor room. A room can carry
- * more than one scrolling section, each with its own shutters and sprites —
- * only the section the player currently stands in has its sprites loaded by
+ * more than one scrolling section, each with its own shutters and sprites.
+ * Only the section the player currently stands in has its sprites loaded by
  * the game.
  */
 

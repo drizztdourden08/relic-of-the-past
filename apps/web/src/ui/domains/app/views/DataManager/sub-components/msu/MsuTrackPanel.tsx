@@ -45,7 +45,7 @@ interface MsuTrackPanelProps {
   onRename: (name: string) => void;
   onExport: (format: ExportFormat) => void;
   onDeleteFile: (fileName: string) => void;
-  /** The app's confirm dialog, for a layer edit that discards files — see `LayerEditorProps`. */
+  /** The app's confirm dialog, for a layer edit that discards files. See `LayerEditorProps`. */
   onConfirm: (title: string, message: string, onConfirm: () => void) => void;
   onReload: () => void;
 }
@@ -60,8 +60,7 @@ const MsuTrackPanel = (props: MsuTrackPanelProps) => {
 
   const filled = rows.filter((r) => r.fileName !== null).length;
 
-  // The chip's own music, for hearing a slot as the game plays it. Owned here rather than passed
-  // in: it needs no pack context, only the slot number.
+  // The chip's own music. Owned here, not passed in: it needs only the slot number.
   const original = useOriginalPreview('music');
 
   // One thing sounds at a time, so each start silences the other.
@@ -138,7 +137,7 @@ const MsuTrackPanel = (props: MsuTrackPanelProps) => {
           <Box className="track-list">
             {unusedFiles.map((file) => (
               <Box key={file.name} className="track-list__item">
-                <Text className="track-list__num">—</Text>
+                <Text className="track-list__num">-</Text>
                 <Text className="track-list__name">{file.name}</Text>
                 <Text className="track-list__size">{formatBytes(file.size)}</Text>
                 <IconButton

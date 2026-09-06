@@ -1,18 +1,14 @@
 /* @layer renderer-widgets @kind component */
 /**
- * One record, its own bordered container — the multi-entry shape a
- * collection tab needs once it can hold more than one record for the current
- * screen (several connections, several checks): each gets its own card rather
- * than the widget picking just one and discarding the rest.
+ * One record in its own bordered container: a collection tab can hold more
+ * than one record for the current screen (several connections, several
+ * checks), so each gets its own card instead of the widget picking one.
  *
- * The border/background match `RecommendationCard`'s own look, this widget's
- * existing card convention. The edit button is `IconButton`, the same
- * bare-icon-button primitive `RecordEditor`'s array rows already use, with a
- * `title` alongside its `label` for an immediate hover tooltip on top of the
- * screen-reader text. `ReviewControls` moves in here too, one per record
- * rather than one for whichever record used to be picked — reviewing "this
- * screen's data" always meant reviewing one of several real records, never
- * the collection as a whole.
+ * The border/background match `RecommendationCard`. The edit button is
+ * `IconButton`, the same primitive `RecordEditor`'s array rows use, with a
+ * `title` alongside its `label` for a hover tooltip. `ReviewControls` sits
+ * here too, one per record: reviewing "this screen's data" always meant
+ * reviewing one of several real records, never the collection as a whole.
  */
 import { Box, Flex, IconButton } from '@ds/primitives';
 import { CompactRecordView } from '@ds/composites/CompactRecordView';

@@ -2,7 +2,7 @@
   "name": "relic-of-the-past",
   "version": "0.19.0",
   "private": true,
-  "description": "Relic of the Past – Electron + React + WASM",
+  "description": "Relic of the Past, built with Electron, React and WASM",
   "author": {
     "name": "drizztdourden_",
     "email": "drizztdourden08@users.noreply.github.com"

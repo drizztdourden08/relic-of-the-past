@@ -33,7 +33,7 @@ interface BFSResult {
   tileLayer?: (0 | 1 | 2)[][];
   reachableByLayer?: [ReachState[][], ReachState[][]];
   /** Real cross-layer ledge hops the BFS actually landed, keyed by their true
-   *  destination — only a dual-layer strategy produces these (see dual-layer.ts). */
+   *  destination. Only a dual-layer strategy produces these (see dual-layer.ts). */
   ledges?: LedgeTraversal[];
 }
 

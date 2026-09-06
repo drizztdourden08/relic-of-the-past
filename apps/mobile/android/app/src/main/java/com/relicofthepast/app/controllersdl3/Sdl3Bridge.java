@@ -1,17 +1,14 @@
 /*
  * Owns the controllersdl3 native library and the poll loop that drains it.
- * Mirrors the desktop Node-API addon's Sdl3Input surface (apps/desktop/electron/
- * input/native/sdl3/sdl3.type.ts) as closely as JNI allows: nativePollEvents()
- * returns one JSON array per call, in the exact "added"/"removed"/"state" shape
- * of Sdl3Event, so ControllerSdl3Plugin can forward each array element straight
- * to the renderer without reshaping it.
+ * Mirrors the desktop addon's Sdl3Input surface (apps/desktop/electron/input/
+ * native/sdl3/sdl3.type.ts): nativePollEvents() returns one JSON array per call
+ * in the exact Sdl3Event shape, so ControllerSdl3Plugin forwards each element
+ * to the renderer unchanged.
  *
- * SDLControllerManager (org.libsdl.app, see that package's doc comments) needs
- * its native methods registered before nativeStart() touches SDL_Init, and needs
- * pollInputDevices()/handleJoystickMotionEvent() driven from somewhere — the
- * former happens automatically inside SDL's own joystick-detect poll (triggered
- * by nativePollEvents() calling SDL_PollEvent), the latter needs
- * Sdl3InputRouter wired into the hosting Activity's key/motion dispatch.
+ * SDLControllerManager (org.libsdl.app) needs its native methods registered
+ * before nativeStart() touches SDL_Init. pollInputDevices() runs inside SDL's
+ * own joystick-detect poll (via SDL_PollEvent); handleJoystickMotionEvent()
+ * needs Sdl3InputRouter wired into the Activity's key/motion dispatch.
  */
 package com.relicofthepast.app.controllersdl3;
 
@@ -51,10 +48,8 @@ public class Sdl3Bridge {
         this.listener = listener;
     }
 
-    // Loads the native library the first time any Sdl3Bridge is constructed.
-    // Returns false when the .so is missing (wrong ABI, or not built at all) —
-    // callers should report "no controller support" rather than crash, the same
-    // way a desktop build with no SDL3 addon reports it.
+    // False when the .so is missing (wrong ABI, or not built): callers report
+    // "no controller support" instead of crashing, like the desktop addon.
     public static synchronized boolean ensureLibraryLoaded() {
         if (sLibraryLoadAttempted) return sLibraryLoaded;
         sLibraryLoadAttempted = true;
@@ -73,20 +68,15 @@ public class Sdl3Bridge {
         if (running) return true;
         org.libsdl.app.SDL.setupJNI();
         org.libsdl.app.SDL.initialize();
-        // Must come after initialize(), which sets the context back to null.
-        // SDL's own Java layer calls into this activity while it brings the
-        // joystick backend up, and reaches it through a JNI global that is
-        // otherwise null, which aborts the process rather than failing.
+        // Must come after initialize(), which nulls the context. SDL's Java
+        // layer reaches this activity through a JNI global while bringing the
+        // joystick backend up; null there aborts the process.
         org.libsdl.app.SDL.setContext(activity);
-        // SDL's own USB HID layer is deliberately NOT started here. Every
-        // controller on this platform is already delivered by the system as an
-        // input device, and SDL reads those directly, so the HID layer adds
-        // nothing that path does not already provide. What it does add is harm:
-        // it asks the user for USB permission per device, and opening a device
-        // force-claims its interface, which detaches the very driver that was
-        // presenting the pad, so accepting that prompt makes a working
-        // controller disappear. Leaving it unstarted keeps every pad on one
-        // path, with no prompts.
+        // SDL's USB HID layer is deliberately NOT started. The system already
+        // delivers every controller as an input device SDL reads directly. The
+        // HID layer would prompt for USB permission per device, and opening one
+        // force-claims its interface and detaches the driver presenting the pad,
+        // so accepting the prompt makes a working controller disappear.
         if (!nativeStart()) {
             Log.e(TAG, "SDL_Init(SDL_INIT_GAMEPAD) failed");
             return false;

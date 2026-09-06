@@ -3,7 +3,7 @@ import type { ActorId, AreaId, LocationId, ScreenId, TagId } from './ids';
 import type { RegionNavData } from '../../navigation/nav-data.types';
 import type { InteriorKind, ScreenKind, World } from '../enumeration/generated-types';
 
-/** A screen only ever sits in one world — `'both'` is an area-level concept (e.g. Death Mountain). */
+/** A screen only ever sits in one world; `'both'` is an area-level concept (e.g. the mountain area). */
 type ScreenWorld = Exclude<World, 'both'>;
 
 interface ScreenGameId {
@@ -11,9 +11,9 @@ interface ScreenGameId {
   overworldIndex?: number;
   /** Native dungeon/interior room index. */
   roomIndex?: number;
-  /** Runtime cur_palace_index_x2 — the canonical dungeon identifier. */
+  /** The canonical dungeon identifier, read from runtime cur_palace_index_x2. */
   palaceIndex?: number;
-  /** RAM $010E — disambiguates shared room indices. */
+  /** RAM $010E, which disambiguates shared room indices. */
   entranceId?: number;
 }
 
@@ -50,22 +50,20 @@ interface ScreenRecord {
   kind: ScreenKind;
   world: ScreenWorld;
   interiorKind?: InteriorKind;
-  /** Only set when a real in-game/guide term exists — see the naming policy. */
+  /** Only set when a real in-game/guide term exists (see the naming policy). */
   vanillaName?: string;
-  /** Always present — today's `name`, already ALTTPR-styled. */
+  /** Always present; the randomizer-styled name. */
   randomizerName: string;
   areaId: AreaId;
   locationId: LocationId;
   position?: ScreenPosition;
-  /** References into the tag collection — read the terms back with `tagKeysOf`. */
+  /** Tag collection references. Use `tagKeysOf` to read the terms back. */
   tags: readonly TagId[];
   variant?: ScreenVariantInfo;
-  /** Pre-computed flood-fill navigation facts — tile counts, obstacles, connection points. */
+  /** Pre-computed flood-fill facts. Holds tile counts, obstacles and connection points. */
   nav?: RegionNavData;
-  /**
-   * The room's active tag mechanics — shutters, kill-rooms, switch doors —
-   * from the room header's tag bytes, joined to trigger actors by roomTag.
-   */
+  /** The room's active tag mechanics (shutters, kill-rooms, switch doors) from
+   *  the room header's tag bytes, joined to trigger actors by roomTag. */
   triggerIds?: readonly ActorId[];
   /** The room's static actor spawns, from the per-room sprite table. */
   spawns?: readonly ScreenSpawn[];

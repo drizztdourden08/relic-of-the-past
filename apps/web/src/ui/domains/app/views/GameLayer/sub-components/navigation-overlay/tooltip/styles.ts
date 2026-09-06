@@ -1,11 +1,7 @@
 /* @layer renderer-components @kind data */
 import type { CSSProperties } from 'react';
 
-/**
- * Static style map shared by the tooltip's container, layer blocks and row
- * list — only dynamic/positioned styles (per-tile colors, the tooltip's x/y)
- * stay inline at their call site.
- */
+// Static styles; only per-tile colours and the tooltip's x/y stay inline.
 const S: Record<string, CSSProperties> = {
   container: {
     position: 'absolute',

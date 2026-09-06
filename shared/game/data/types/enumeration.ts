@@ -4,8 +4,8 @@ import type { EntityKind, EnumerationId } from './ids';
 /**
  * The closed-set fields that stay baked into their record as plain literals
  * (a `ScreenRecord.world` is still `'light' | 'dark'`, never a foreign key) but
- * whose display names deserve one shared source instead of being redeclared —
- * and left to drift — at every place that renders one.
+ * whose display names get one shared source instead of being redeclared at
+ * every place that renders one, where they would drift apart.
  */
 type EnumerationCategory =
   | 'world' | 'screen-status' | 'screen-kind' | 'interior-kind'
@@ -16,7 +16,7 @@ type EnumerationCategory =
   // (scripts/generate-enum-types.mjs keeps it out of CATEGORY_TYPE_NAMES for exactly that reason).
   | 'progress-tier';
 
-/** One labeled value of one category — e.g. `{ category: 'world', value: 'light', label: 'Light World' }`. */
+/** One labeled value of one category, such as `{ category: 'world', value: 'light', label: 'Light World' }`. */
 interface EnumerationEntry {
   id: EnumerationId;
   category: EnumerationCategory;

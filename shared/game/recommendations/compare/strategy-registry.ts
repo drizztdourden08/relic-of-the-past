@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
  * Registry of comparison strategies, shaped exactly like `registry.ts`'s
- * detector registry — one kind, one strategy, same reason: adding a kind
+ * detector registry: one kind, one strategy, for the same reason. Adding a kind
  * should be one registration, not an edit in every consumer that walks kinds.
  */
 import type { EntityKind } from '../../data/types';
@@ -14,8 +14,8 @@ import type { ComparisonStrategy } from './probe.types';
  * not a subtype of `ComparisonStrategy<EntityKind>` (and casting between them
  * fails the overlap check). Every strategy came in through `registerStrategy`
  * already checked against its own real `K`, so the map's `any` only ever
- * holds values that were sound at their point of registration — the same
- * trade the `sets` field in `probe.types.ts` makes, for the same reason.
+ * holds values that were sound at their point of registration. The `sets`
+ * field in `probe.types.ts` makes the same trade, for the same reason.
  */
 const strategies = new Map<EntityKind, ComparisonStrategy<any>>();
 
@@ -28,7 +28,7 @@ const strategyFor = (kind: EntityKind): ComparisonStrategy<EntityKind> | undefin
 
 const allStrategies = (): readonly ComparisonStrategy<EntityKind>[] => [...strategies.values()];
 
-/** For tests that need a clean registry rather than whatever a barrel installed. */
+/** For tests that need a clean registry instead of whatever a barrel installed. */
 const clearStrategies = (): void => { strategies.clear(); };
 
 export { allStrategies, clearStrategies, registerStrategy, strategyFor };

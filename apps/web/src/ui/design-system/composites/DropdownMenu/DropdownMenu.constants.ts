@@ -2,8 +2,8 @@
 /**
  * Measurements a submenu needs BEFORE it exists. Where a panel opens has to be
  * decided at the moment the pointer arrives, and a panel that has not been laid
- * out yet cannot be measured — so these mirror the stylesheet's own values and
- * are used for one thing only: flipping a panel that would open off-screen.
+ * out yet cannot be measured. So these mirror the stylesheet's own values, used
+ * for one thing only: flipping a panel that would open off-screen.
  */
 
 /** Mirrors `.dropdown-menu--sub`'s min-width. */

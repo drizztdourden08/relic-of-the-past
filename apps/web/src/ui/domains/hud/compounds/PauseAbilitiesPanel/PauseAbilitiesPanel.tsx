@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind data */
 /**
- * PauseAbilitiesPanel — displays the player's abilities and equipment.
+ * Displays the player's abilities and equipment.
  *
  * Game layout: tiles (1,21)→(19,29) = 19×9 tiles (inner 17×7)
  * Abilities drawn via link_ability_flags in a 3×2 grid:

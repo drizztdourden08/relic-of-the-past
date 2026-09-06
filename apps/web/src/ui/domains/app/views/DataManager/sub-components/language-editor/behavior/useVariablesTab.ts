@@ -1,16 +1,9 @@
 /* @layer renderer-components @kind hook */
 /**
- * The variables tab's own state: how the list is narrowed, how often each
- * variable is used, and the hardcoded-name scan.
- *
- * The SCAN IS LAZY. `findHardcoded` walks every text run of every entry against
- * every candidate phrase, which is far too much work to repeat on each render of
- * a tab nobody has asked to scan — so it runs when the dialog opens and not
- * before.
- *
- * Applying a report is ONE edit, not one per entry: the rewrites are collected
- * and written together, so the debounced save sees a single new set rather than a
- * few dozen half-applied ones.
+ * The variables tab's state: filtering, usage counts, and the hardcoded-name
+ * scan. The scan runs only when the dialog opens; `findHardcoded` walks every
+ * text run against every candidate phrase. Applying a report is one edit, so
+ * the debounced save sees a single new set.
  */
 import { useCallback, useMemo, useState } from 'react';
 import { findHardcoded } from '@shared/game/language';

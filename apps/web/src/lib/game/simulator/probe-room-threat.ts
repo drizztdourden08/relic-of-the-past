@@ -16,7 +16,7 @@ import type { RoomFloodRun } from './flood-room';
 
 interface RoomThreatProbe {
   /** The LIVE tracker inventory at probe time (not a simulated virtual-run
-   *  inventory) — a room probed before picking anything up reads every
+   *  inventory), so a room probed before picking anything up reads every
    *  sprite as `no-weapon` by design. */
   inventory: ItemId[];
   clearable: boolean;
@@ -24,7 +24,7 @@ interface RoomThreatProbe {
 }
 
 /** Combat context for a room's sprites, built the same way the runner's
- *  combatFor does (observe.ts) but reading straight off the bridge — the probe
+ *  combatFor does (observe.ts) but reading straight off the bridge, because the probe
  *  runs without a SimulatorPort. */
 const combatForProbe = (spriteTypes: number[]): CombatContext => {
   const bySpriteType: CombatContext['bySpriteType'] = {};
@@ -33,7 +33,7 @@ const combatForProbe = (spriteTypes: number[]): CombatContext => {
 };
 
 /** The room's section split, only trustworthy when the player is actually
- *  standing in the probed room (the layout read is live-only — see
+ *  standing in the probed room (the layout read is live-only, see
  *  WasmGetRoomLayoutInfo). A remote probe gets no split, so every gating
  *  sprite counts, same as a plain single-section room. */
 const splitForProbe = (roomId: number): RoomSectionSplit | undefined => {

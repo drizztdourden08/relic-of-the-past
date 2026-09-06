@@ -12,7 +12,7 @@ interface StudioToolbarProps {
   dirty: boolean;
   /**
    * The result of the last live push: null = not attempted, true = the running game took
-   * it, false = the core refused. Reporting what actually happened beats predicting it —
+   * it, false = the core refused. Reporting what actually happened beats predicting it, because
    * the gate depends on the running profile's own settings, not on this view's state.
    */
   applied: boolean | null;
@@ -59,7 +59,7 @@ const StudioToolbar = (props: StudioToolbarProps) => {
 
       <Box className="studio-toolbar__row">
         {applied === true && <Badge variant="success">applied to the running game</Badge>}
-        {applied === false && <Badge variant="warning">saved — applies on next boot</Badge>}
+        {applied === false && <Badge variant="warning">saved, applies on next boot</Badge>}
         {applied === null && <Badge variant="neutral">not saved yet</Badge>}
         <Text className="studio-toolbar__hint">
           {applied === false

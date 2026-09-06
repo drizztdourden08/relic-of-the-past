@@ -6,10 +6,10 @@
  * cannot carry a stale shape. The field-order tuples below are checked against
  * `keyof` at compile time: a record kind that gains a field is a BUILD ERROR
  * here until the order lists it, and any key the order does not know throws
- * rather than being silently dropped.
+ * instead of being silently dropped.
  *
- * Output style matches the committed data files — one field per line, nested
- * values collapsed onto one line while they fit.
+ * Output style matches the committed data files, with one field per line and
+ * nested values collapsed onto one line while they fit.
  */
 import type {
   ActorRecord, AreaRecord, CheckRecord, ConnectionRecord, DungeonRecord, EnumerationEntry, ItemGroupRecord, ItemRecord,
@@ -66,7 +66,7 @@ const pretty = (v: unknown, column: number, indent: number): string => {
 };
 
 interface FieldSpec<T> {
-  /** Emission order — follows the interface's own declaration order. */
+  /** Emission order, which follows the interface's own declaration order. */
   order: readonly (keyof T & string)[];
   /** Every field the shape declares, for the stray-key gate. */
   known: Record<keyof T, true>;
@@ -183,16 +183,16 @@ const ACTOR_SPEC: FieldSpec<ActorRecord> = {
   known: Object.fromEntries(ACTOR_FIELDS.map(f => [f, true])) as Record<(typeof ACTOR_FIELDS)[number], true>,
 };
 
-/** A record whose frozen id has not been allocated yet — the allocator adds it. */
+/** A record whose frozen id has not been allocated yet. The allocator adds it. */
 type Unnumbered<T extends { id: unknown }> = Omit<T, 'id'>;
 
 type PendingScreenRecord = Unnumbered<ScreenRecord>;
 type PendingConnectionRecord = Unnumbered<ConnectionRecord>;
-/** A tag or item group being replaced in place — the delete-guard's write path
+/** A tag or item group being replaced in place. The delete-guard's write path
  *  never mints a new id for either, so only the "id already known" shape is needed. */
 type PendingTagRecord = Unnumbered<TagRecord>;
 type PendingItemGroupRecord = Unnumbered<ItemGroupRecord>;
-/** An enumeration entry being created or replaced in place — same "id comes from
+/** An enumeration entry being created or replaced in place, under the same "id comes from
  *  the allocator, never from the caller" bargain as a tag or an item group. */
 type PendingEnumerationRecord = Unnumbered<EnumerationEntry>;
 

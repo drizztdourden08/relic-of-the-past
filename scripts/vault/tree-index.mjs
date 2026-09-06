@@ -1,13 +1,8 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * A content index of one side of the sync: repo-relative path → sha256.
- *
- * Content, not timestamps. The old sync compared mtimes and had to carry a
- * hand-written "refuse to overwrite something newer" rule to avoid reverting a
- * freshly re-blessed baseline — a rule that still could not tell an edit from a
- * touch, or a file added here from a file deleted there. A hash answers the only
- * question that matters (is this the same content?) and costs nothing at this
- * size.
+ * A content index of one side of the sync: repo-relative path → sha256. Content, not
+ * mtimes: the old mtime sync could not tell an edit from a touch, or a file added here
+ * from one deleted there.
  */
 import { createHash } from 'node:crypto';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
@@ -28,21 +23,13 @@ const walk = (dir, base, into) => {
   return into;
 };
 
-/**
- * Index everything under `dir`, keyed by its path relative to `dir`.
- * A missing directory indexes as empty rather than throwing — "this side has
- * nothing" is a state the comparison handles, not an error.
- */
+/** Index everything under `dir`, keyed by relative path. A missing directory indexes as empty. */
 const indexTree = (dir) => {
   if (!existsSync(dir) || !statSync(dir).isDirectory()) return {};
   return walk(dir, dir, {});
 };
 
-/**
- * Index only the paths the vault claims, so a scan of this repo never walks
- * node_modules or the whole working tree. Each entry is a repo-relative path
- * that may name a file or a directory.
- */
+/** Index only the given repo-relative paths (file or directory), never the whole working tree. */
 const indexPaths = (root, paths) => {
   const index = {};
   for (const path of paths) {

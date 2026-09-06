@@ -1,19 +1,11 @@
 /* @layer renderer-app @kind logic */
 /**
- * Core cache + IPC round trip for the personal review layer — one JSON file
- * per collection (`Data/review/<kind>.json`), keyed by record id, entirely
- * separate from the committed dataset (`shared/game/data/**`). Generalizes
- * the `connection-review.json` / `nav-review.json` / `sprite-review.json`
- * precedent (the old Dataset widget's Review block — now superseded) from
- * one fixed file and an untyped 4-state pill to all eleven collections
- * behind a real `ReviewStatus` enum.
- *
- * Plain module functions rather than a hook, so a non-React caller (the
- * collection-sources join) can read a review entry synchronously: `reviewFor`
- * answers from cache immediately — the untouched default before anything has
- * loaded — and `ensureLoaded` kicks off a background IPC read the first time a
- * kind is asked for. `use-review-store.ts` layers subscription/re-render on
- * top of this for components.
+ * Cache and IPC round trip for the personal review layer: one JSON file per
+ * collection (`Data/review/<kind>.json`), keyed by record id, separate from
+ * the committed dataset. Plain module functions so a non-React caller can read
+ * synchronously; `reviewFor` answers from cache (the untouched default before
+ * load) and `ensureLoaded` starts the background read. `use-review-store.ts`
+ * adds subscription for components.
  */
 import type { EntityKind } from '@shared/game/data';
 import type { ReviewEntry, ReviewFile } from '@shared/game/review/types';
@@ -35,7 +27,7 @@ const notify = (kind: EntityKind): void => {
   for (const listener of listeners.get(kind) ?? []) listener();
 };
 
-/** Subscribes to cache changes for one kind — the hook's `useSyncExternalStore` glue. */
+/** Subscribes to cache changes for one kind. */
 const subscribeReview = (kind: EntityKind, listener: () => void): (() => void) => {
   const set = listeners.get(kind) ?? new Set<() => void>();
   set.add(listener);
@@ -86,21 +78,17 @@ const writeEntry = (kind: EntityKind, id: string, entry: ReviewEntry): void => {
   scheduleSave(kind, id, entry);
 };
 
-/** Sets a record's status and stamps `reviewedAt` — a human judged it just now. */
+/** Sets a record's status and stamps `reviewedAt`. */
 const setReviewStatus = (kind: EntityKind, id: string, status: ReviewEntry['status']): void => {
   writeEntry(kind, id, { ...reviewFor(kind, id), status, reviewedAt: Date.now() });
 };
 
-/** Sets a record's note and stamps `reviewedAt` — a human judged it just now. */
+/** Sets a record's note and stamps `reviewedAt`. */
 const setReviewNote = (kind: EntityKind, id: string, note: string): void => {
   writeEntry(kind, id, { ...reviewFor(kind, id), note, reviewedAt: Date.now() });
 };
 
-/**
- * Stamps `updatedAt` only, leaving status/note/reviewedAt untouched — the
- * dataset write path's entry point (a later agent's `accept-recommendation.ts`
- * calls this after a real save), never called by the note/status editors above.
- */
+/** Stamps `updatedAt` only. Called after a real dataset save (`accept-recommendation.ts`), never by the editors above. */
 const markWritten = (kind: EntityKind, id: string): void => {
   writeEntry(kind, id, { ...reviewFor(kind, id), updatedAt: Date.now() });
 };

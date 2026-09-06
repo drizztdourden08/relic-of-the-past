@@ -6,8 +6,7 @@ interface ReportSectionProps {
   text: string;
 }
 
-/** Collapsible text block — same pattern as the bug report's debug-info preview,
- *  reused here so a dense controller report doesn't read as an unreadable wall of text. */
+/** Collapsible text block, the same pattern as the bug report's debug-info preview. */
 const ReportSection = (props: ReportSectionProps) => {
   const { label, text } = props;
 

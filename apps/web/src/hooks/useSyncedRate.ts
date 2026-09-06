@@ -27,7 +27,7 @@ const useSyncedRate = (enabled: boolean, targetHz: number): SyncedRateControl =>
   }, []);
 
   // Re-push whenever the stored preference changes, so the host's copy never drifts from the
-  // profile — including on first mount, which is what arms it for the session.
+  // profile. That includes the first mount, which is what arms it for the session.
   useEffect(() => {
     push(enabled, targetHz);
   }, [push, enabled, targetHz]);

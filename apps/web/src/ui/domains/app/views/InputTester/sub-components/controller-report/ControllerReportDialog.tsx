@@ -18,13 +18,9 @@ import './ControllerReportDialog.css';
 import '../diagnostics-wizard/DiagnosticsWizardDialog.css';
 
 /**
- * One persistent dialog for the whole flow — step content swaps inside a
- * fixed header (title + step strip) / footer (actions) shell, so neither
- * re-mounts between steps. The diagnostic portion (intro through summary)
- * is the same DiagnosticsFlowBody + DiagnosticsStepActions the standalone
- * Gamepad Diagnostics dialog renders, driven by the same
- * useDiagnosticsWizardState machine, so this report can never drift from
- * what that dialog actually does.
+ * One persistent dialog: step content swaps inside a fixed header/footer shell. The diagnostic
+ * portion is the same DiagnosticsFlowBody + DiagnosticsStepActions the standalone dialog renders,
+ * so this report cannot drift from it.
  */
 const ControllerReportDialog = (props: ControllerReportDialogProps) => {
   const { open, onClose, deviceKey } = props;
@@ -92,7 +88,7 @@ const ControllerReportDialog = (props: ControllerReportDialogProps) => {
     <>
       <Button variant="secondary" onClick={form.backToDiagnostics}>Back</Button>
       <Button variant="primary" onClick={form.submit} disabled={!form.canSubmit}>
-        {form.status === 'submitting' ? 'Submitting…' : 'Send report'}
+        {form.status === 'submitting' ? 'Submitting...' : 'Send report'}
       </Button>
     </>
   );
@@ -109,7 +105,7 @@ const ControllerReportDialog = (props: ControllerReportDialogProps) => {
       <Box className="controller-report__body">
         {showResult ? (
           <>
-            <Text as="p">Thanks — your report was filed.</Text>
+            <Text as="p">Thanks, your report was filed.</Text>
             <Text as="p" className="controller-report__result-url">{form.resultUrl}</Text>
           </>
         ) : form.step === 'about' ? (

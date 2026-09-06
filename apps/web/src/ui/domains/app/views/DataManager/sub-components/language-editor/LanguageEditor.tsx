@@ -1,15 +1,8 @@
 /* @layer renderer-components @kind component */
 /**
- * The translation editor: one language set, edited a line at a time.
- *
- * The view tier — it owns the loaded set, the search query, which entries are
- * open and in which view, and the open draft, and hands plain props to the
- * presentational rows, panels and tables below.
- *
- * TWO TABS, not three. The glossary and the menu-name table were two lists that
- * looked alike, could not reach each other, and made a translator work out which
- * of them a piece of text lived in before changing it. They are one Variables
- * tab now, and the same list feeds the editor's insert picker.
+ * The translation editor: one language set, edited a line at a time. The
+ * glossary and the menu-name table are one Variables tab on purpose: as two
+ * lists a translator had to work out which one a piece of text lived in.
  */
 import { useCallback, useMemo, useState } from 'react';
 import { Box, TabBar, EmptyState, Spinner } from '@ds/primitives';

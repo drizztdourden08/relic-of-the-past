@@ -2,21 +2,21 @@
 /**
  * One non-text token as it appears INSIDE a line.
  *
- * Three shapes, decided by what the thing is rather than by how it is spelled. A
+ * Three shapes, decided by what the thing is, not by how it is spelled. A
  * picture character is drawn as the character itself, with the game's own pixels,
  * because that is what the player will see and a chip would only get in the way.
  * A substitution is a tag holding the text it stands for, in the game's face and
  * as wide as that text can ever be, so the space it will really need is on screen
- * rather than implied. A control code or a glossary reference draws nothing at
+ * and not implied. A control code or a glossary reference draws nothing at
  * all in the game, so it is a compact chip: a symbol plus the plain-language name
  * from the catalog, never the engine's bracket name, which a translator has no
  * reason to learn.
  *
  * What no longer reaches here is line structure. A row marker and the wait that
- * closes a box are properties of the LINE now — the gutter says which row a line
- * lands on and a marker at the line's end says where the box stops — so neither
- * is a chip in the run any more. The chip can still draw one, because a paste
- * from elsewhere may carry it, and drawing it is better than dropping it.
+ * closes a box are properties of the LINE now, so neither is a chip in the run
+ * any more. The gutter says which row a line lands on, and a marker at the
+ * line's end says where the box stops. The chip can still draw one, because a
+ * paste from elsewhere may carry it, and drawing it is better than dropping it.
  *
  * The node is an atom, so the editor treats it as one indivisible character: the
  * caret steps over it, a click selects it whole, and Backspace or Delete removes
@@ -98,7 +98,7 @@ const TokenAtom = (props: TokenAtomProps) => {
    * A substitution is a TAG, drawn in the game's face and reserving the widest
    * it could ever be: six of the language's widest characters for a name, one
    * digit for a number. That is exactly what the row measurement charges it, so
-   * what stands on screen accounts for the space the real value will need — a
+   * what stands on screen accounts for the space the real value will need. A
    * chip sized to the letters "PLAYER" would promise room the game may not have.
    *
    * Everything else draws nothing on screen at all, so it stays an icon.

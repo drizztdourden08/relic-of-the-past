@@ -12,7 +12,7 @@ const Select = (props: SelectProps) => {
     onChange,
     options,
     groups,
-    placeholder = 'Select…',
+    placeholder = 'Select...',
     disabled = false,
     searchable = false,
     size = 'md',
@@ -72,7 +72,7 @@ const Select = (props: SelectProps) => {
                   ref={dropdown.searchRef}
                   className="select-search__input"
                   type="text"
-                  placeholder="Search…"
+                  placeholder="Search..."
                   value={dropdown.search}
                   onChange={(e) => { dropdown.setSearch(e.target.value); dropdown.setHighlightIdx(0); }}
                   onKeyDown={dropdown.handleKeyDown}

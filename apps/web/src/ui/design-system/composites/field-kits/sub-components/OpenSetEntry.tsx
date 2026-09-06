@@ -18,7 +18,7 @@ const PLACEHOLDER = 'a value not listed';
 
 interface OpenSetEntryProps {
   draft: string;
-  /** The field's label — names the box for assistive tech. */
+  /** The field's label, which names the box for assistive tech. */
   label: string;
   disabled?: boolean;
   onDraft: (draft: string) => void;

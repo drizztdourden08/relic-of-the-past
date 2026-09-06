@@ -98,7 +98,7 @@
   color: var(--c-warning);
 }
 
-/* Advice the field will act on rather than merely mention. */
+/* Advice the field will act on, not merely mention. */
 .tag-input__hint[data-blocked] {
   color: var(--c-danger);
 }

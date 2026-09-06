@@ -3,9 +3,9 @@ import type { ItemGroupId, ItemId } from './ids';
 
 /**
  * A named set of items a count-based Requirement leaf (`{ count: { groupId, n } }`)
- * counts against — "own N of the Crystals", "own N of the Pendants". Promoted
+ * counts against, such as "own N of the Crystals" or "own N of the Pendants". Promoted
  * out of the old bare `Record<ItemGroupId, ItemId[]>` taxonomy table so the
- * relationship is a real, id-keyed dataset rather than an untyped string key.
+ * relationship is a real, id-keyed dataset instead of an untyped string key.
  */
 interface ItemGroupRecord {
   id: ItemGroupId;

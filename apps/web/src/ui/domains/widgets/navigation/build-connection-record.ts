@@ -3,25 +3,18 @@
  * Editor state → a `ConnectionRecord` minus its id.
  *
  * `kind` and `dungeonId` are DERIVED the same way the dataset's own split
- * derived them, so an edge written from here is indistinguishable from one
- * already in the files. The tags that became a kind are retired from the tag
- * list rather than duplicated. Both endpoints must resolve to real screens —
- * an unresolved crossing comes back as null and is never written.
+ * derived them, so an edge written from here matches one already in the
+ * files. Tags that became a kind are retired from the tag list. Both
+ * endpoints must resolve to real screens; an unresolved crossing comes back
+ * as null and is never written.
  *
  * A connection point ALWAYS needs a real `toConnectionId` partner (see
  * `data/connections/derive.ts`). When the destination screen already has a
- * point aimed back at `from`, this links to it directly. When it does not —
- * a genuinely brand-new crossing the game just showed the player — minting a
- * real partner id needs the allocator round trip only the write path
- * (`record-creators.ts`, via IPC to the Electron main process) can do, which
- * this in-memory proposal builder cannot reach. So it links to
- * `pendingPartnerId(to.id)` instead: a sentinel that reads unmistakably as
- * "needs a real partner minted on this screen" rather than a resolvable id.
- * `createConnection` (`record-creators.ts`) checks every accepted proposal for
- * this sentinel and, when it finds one, mints BOTH halves as a pair rather
- * than inserting this record alone — see `connection-pair-writer.ts` on the
- * main-process side. A proposal never has an unresolved endpoint any other
- * way: both `from` and `to` must already be real screens (checked below).
+ * point aimed back at `from`, this links to it. Otherwise it links to
+ * `pendingPartnerId(to.id)`: minting a real partner id needs the allocator
+ * round trip only the write path (`record-creators.ts`, via IPC) can do.
+ * `createConnection` checks every accepted proposal for that sentinel and
+ * mints BOTH halves as a pair (`connection-pair-writer.ts` on the main side).
  */
 import { findOne, pendingPartnerId, tagIdsForKeys } from '@shared/game/data';
 import { toScreenIdOf } from '@shared/game/data/connections/derive';
@@ -41,12 +34,12 @@ const RETIRED_TRANSIT: ReadonlySet<ConnectionTag> = new Set<ConnectionTag>([
  * The demotion table, in priority order:
  *   1. a fall-through is a hole wherever it leads
  *   2. a warp or portal is a teleport
- *   3. an overworld ↔ non-overworld crossing is an entrance — that IS the kind's
- *      definition, and the ctx:entrance/exit/dungeon-enter tags say the same
+ *   3. an overworld ↔ non-overworld crossing is an entrance (the
+ *      ctx:entrance/exit/dungeon-enter tags say the same)
  *   4. otherwise the physical mechanism names the kind: stairs, door
  *   5. everything left is a scroll across a boundary
  * Approach tags (grave, bomb, bonk, rock, push, hookshot, ledge, waterfall) never
- * name a kind — they describe how you reach or clear the crossing.
+ * name a kind. They describe how you reach or clear the crossing.
  */
 const connectionKindFor = (from: ScreenRecord, to: ScreenRecord, tags: readonly ConnectionTag[]): ConnectionKind => {
   const has = (t: ConnectionTag): boolean => tags.includes(t);
@@ -71,7 +64,7 @@ const dungeonIdFor = (fromScreenId: ScreenId, toScreenId: ScreenId): DungeonId |
 interface ConnectionDraft {
   /** The screen this point sits on. */
   screenId: string;
-  /** The screen the crossing leads to — used only to FIND the existing partner point; never stored. */
+  /** The screen the crossing leads to. Used only to FIND the existing partner point; never stored. */
   toScreenId: string;
   tags: readonly ConnectionTag[];
   nav?: ConnectionNavData;
@@ -92,9 +85,8 @@ const buildConnectionRecord = (draft: ConnectionDraft): PendingConnectionRecord 
     kind: connectionKindFor(from, to, draft.tags),
     screenId: from.id,
     toConnectionId: partner?.id ?? pendingPartnerId(to.id),
-    // A proposal only ever describes a point the live game just showed the
-    // player leaving from, so it can always exit — the crossing's overall
-    // direction is whatever `partner.canExit` already says (see `directionOf`).
+    // A proposal always describes a point the player was just seen leaving, so it
+    // can exit; overall direction is whatever `partner.canExit` says (see `directionOf`).
     canExit: true,
     placement: { form: 'area', rect: { x: 0, y: 0, w: 0, h: 0 }, tiles: [] },
     dungeonId: dungeonIdFor(from.id, to.id),

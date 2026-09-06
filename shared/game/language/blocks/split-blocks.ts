@@ -1,15 +1,15 @@
 /* @layer shared-game @kind logic */
 /**
- * Group lines into blocks — the cut, and nothing else.
+ * Group lines into blocks. The cut, and nothing else.
  *
  * A line already knows whether a wait-for-button follows it (`endsBox`), so the
- * boundary is read off the lines rather than re-derived from tokens: one walk
+ * boundary is read off the lines instead of re-derived from tokens: one walk
  * decides where boxes end, and this step only reads its verdict. Lines are
  * carried through untouched, which is what lets `flattenBlocks` be an exact
  * inverse and keeps an unedited entry serialising byte for byte.
  *
  * Content left after the last wait becomes a final block ending in
- * `message-end` — the player sees it and the message then closes on its own.
+ * `message-end`. The player sees it and the message then closes on its own.
  * No block is ever empty: every line belongs to exactly one, and a stretch
  * between two waits with nothing in it is a single line with no content, not a
  * block with no lines.

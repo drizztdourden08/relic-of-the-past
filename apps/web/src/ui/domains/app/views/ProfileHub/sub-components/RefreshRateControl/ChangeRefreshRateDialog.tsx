@@ -37,13 +37,13 @@ const ChangeRefreshRateDialog = (props: ChangeRefreshRateDialogProps) => {
         <Text className="refresh-rate__dialog-line">
           The change is not permanent in the sense that you are stuck with it. It stays until
           something changes it back, and you can undo it at any time either by picking a different
-          rate here, or from your operating system’s own display settings.
+          rate here, or from the display settings in your operating system.
         </Text>
         <Text className="refresh-rate__dialog-line">
-          If you would rather leave your desktop alone, cancel this and turn on “Set Synced Refresh
-          Rate in full screen” instead. That borrows the rate only while the game is in fullscreen
-          and hands your original rate straight back when you leave it — but it does nothing while
-          you play in a window.
+          To leave your desktop alone, cancel this and turn on &quot;Set Synced Refresh Rate in full
+          screen&quot; instead. That borrows the rate only while the game is in fullscreen and hands
+          your original rate straight back when you leave it. It does nothing while you play in a
+          window.
         </Text>
         <Text className="refresh-rate__dialog-line">
           Other windows and apps may move or resize when the rate changes, and a few displays take

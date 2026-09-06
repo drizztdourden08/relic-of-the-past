@@ -24,7 +24,7 @@ const OFFSCREEN_AI_OPTIONS = [
   { value: 'paused', label: 'Freeze' },
 ];
 
-// Shown under the control for whichever option is selected, so each one explains itself rather than
+// Shown under the control for whichever option is selected, so each one explains itself instead of
 // leaving the player to guess what "Idle" does to an enemy they can see but that is ignoring them.
 const OFFSCREEN_AI_DESCRIPTIONS: Record<string, string> = {
   idle: 'Enemies in the extra width walk and animate normally, but will not chase, shoot or hurt you until they reach the original 4:3 screen. You can still hit them.',
@@ -33,7 +33,7 @@ const OFFSCREEN_AI_DESCRIPTIONS: Record<string, string> = {
 };
 
 const ASPECT_DESCRIPTIONS: Record<string, string> = {
-  auto: 'Matches the window size — adapts to notch, resize, and rotation automatically.',
+  auto: 'Matches the window size, adapting to notch, resize and rotation automatically.',
   screen: 'Matches the full physical screen ratio.',
   wide: 'Choose a standard widescreen preset.',
   tall: 'Choose a tall (portrait-style) preset.',
@@ -65,7 +65,7 @@ const renderDisplayControl = (params: DisplayControlsParams): ReactNode | null =
         tallPresets={tallPresets}
         descriptions={ASPECT_DESCRIPTIONS}
         recommendedValue="auto"
-        recommendedNote="Best for most setups — follows your window and adapts to notch or resize."
+        recommendedNote="Best for most setups. Follows your window and adapts to notch or resize."
         customW={settings.customAspectW}
         customH={settings.customAspectH}
         ratioKey="aspectRatio"

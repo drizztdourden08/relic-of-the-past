@@ -32,8 +32,7 @@
   overflow: hidden;
 }
 
-/* The list takes the width a folded detail column gave up — any collection's
-   plain record view or the recommendation comparison, whichever is open. */
+/* The list takes the width a folded detail column gave up. */
 .data-inspector__master-detail--folded {
   grid-template-columns: 1fr max-content;
 }

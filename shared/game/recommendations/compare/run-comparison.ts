@@ -5,8 +5,8 @@
  * This is the field half of the engine (`compare-sets.ts` is the collection
  * half): for every subject record, every probe either stays silent (does not
  * apply, was not read, or agrees) or produces one `Difference`. It never
- * decides what to DO about a difference — `detector-from-strategy.ts` turns
- * these into drafts — so this file has no opinion about recommendations at all.
+ * decides what to DO about a difference. `detector-from-strategy.ts` turns
+ * these into drafts, so this file has no opinion about recommendations at all.
  */
 import type { EntityKind, EntityRecordMap, ScreenId } from '../../data/types';
 import type { ScreenObservations } from '../detection-types';
@@ -18,8 +18,8 @@ import type { Difference, DifferenceStatus, SubjectComparison } from './differen
 
 /**
  * `hasDataset`/`hasLive` are "is there a value to report", not "is it
- * truthy" — an absent value is what `isAbsent` already normalizes away before
- * this runs, so by the time `classify` sees a `false`, that side genuinely
+ * truthy". An absent value is what `isAbsent` already normalizes away before
+ * this runs, so by the time `classify` sees a `false`, that side really
  * has nothing.
  */
 const classify = (hasDataset: boolean, hasLive: boolean): DifferenceStatus | null => {
@@ -37,8 +37,8 @@ const compareField = <K extends EntityKind>(
   if (probe.applies && !probe.applies(observations, record)) return null;
 
   const reading = probe.read(observations, record);
-  // An unread table proves nothing either way — stay silent rather than
-  // guess at what the game would have said.
+  // An unread table proves nothing either way, so stay silent instead of
+  // guessing at what the game would have said.
   if (!reading.known) return null;
 
   const datasetValue = getPath(record, probe.path);

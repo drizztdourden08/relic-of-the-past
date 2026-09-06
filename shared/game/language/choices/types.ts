@@ -1,6 +1,6 @@
 /* @layer shared-game @kind types */
 /**
- * The decomposed view of a choice prompt — an entry whose final control code
+ * The decomposed view of a choice prompt. An entry whose final control code
  * turns its last lines into a selection menu.
  *
  * `question` is a VERBATIM slice of the original stream (advance codes and
@@ -18,7 +18,7 @@ type ChoiceCode = 'Choose' | 'Choose2' | 'Choose3' | 'Selchg';
 type ChoiceOption = {
   /** The line's opening code, preserved exactly as authored. */
   advance: LineAdvance;
-  /** Content tokens only — no advance code, no prompt code. */
+  /** Content tokens only. No advance code, no prompt code. */
   tokens: Token[];
 };
 

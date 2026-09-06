@@ -14,7 +14,7 @@
   pointer-events: none;
 }
 
-/* Busy spinner — covers the card with a scrim so feedback reads while the
+/* Busy spinner covers the card with a scrim so feedback reads while the
    screenshot is captured and the slots reload. */
 .save-slot__spinner {
   position: absolute;
@@ -53,7 +53,7 @@
   border-color: var(--c-danger);
 }
 
-/* Hold-to-save fill overlay — rises from bottom */
+/* Hold-to-save fill overlay that rises from the bottom */
 .save-slot__fill {
   position: absolute;
   bottom: 0;
@@ -79,7 +79,7 @@
   height: 100%;
 }
 
-/* Overlaid slot number — top left */
+/* Overlaid slot number at top left */
 .save-slot__num {
   position: absolute;
   top: 3px;
@@ -92,7 +92,7 @@
   pointer-events: none;
 }
 
-/* Overlaid shortcut key — top right */
+/* Overlaid shortcut key at top right */
 .save-slot__key {
   position: absolute;
   top: 3px;
@@ -108,8 +108,8 @@
   pointer-events: none;
 }
 
-/* Split action bar — bottom slice of the card, blackened so it stays legible
-   over the screenshot, split into two flush halves (Save | Load). */
+/* Split action bar. The bottom slice of the card, blackened so it stays legible
+   over the screenshot and split into two flush halves (Save | Load). */
 .save-slot__actions {
   position: absolute;
   left: 0;

@@ -1,16 +1,12 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Aspect-ratio math shared by the screen + HUD settings: validation for the custom W:H inputs,
- * device-screen detection for the prefill, and resolution of a ratio setting to a numeric value.
- * The bounds mirror core/zelda3 — MAX_ASPECT tracks kPpuExtraLeftRight so the render buffer can
- * always supply the columns a permitted ratio needs.
- */
+// Aspect-ratio math shared by the screen + HUD settings. The bounds mirror core/zelda3: MAX_ASPECT
+// tracks kPpuExtraLeftRight so the render buffer can always supply the columns a ratio needs.
 
 const BASE_WIDTH = 256;
 const BASE_HEIGHT = 224;
-const MAX_EXTRA = 384; // kPpuExtraLeftRight — 256+2*384 = 1024px = the full big-overworld-area width (~4.0:1 at 240h, ~4.3:1 at 224h), covering 32:9 and any real screen. The PPU linear-world fetch renders past the 512px SNES tilemap with no-wrap clamping; beyond the area the edge-mirror fills it.
-const MAX_EXTRA_VERTICAL = 128; // kPpuExtraTopBottom — 224+2*128 = 480 render rows; the tall (taller-than-4:3) counterpart of MAX_EXTRA. The world fetch clamps vertically just like horizontally.
-const MAX_RENDER_H = 240; // extendY height — the worst case, needs the most columns for a ratio
+const MAX_EXTRA = 384; // kPpuExtraLeftRight: 256+2*384 = 1024px = the full big-overworld-area width (~4.0:1 at 240h, ~4.3:1 at 224h), covering 32:9. The linear-world fetch renders past the 512px tilemap with no-wrap clamping; beyond the area the edge-mirror fills it.
+const MAX_EXTRA_VERTICAL = 128; // kPpuExtraTopBottom: 224+2*128 = 480 render rows; the tall counterpart of MAX_EXTRA. The world fetch clamps vertically too.
+const MAX_RENDER_H = 240; // extendY height, the worst case for how many columns a ratio needs
 
 // Render pixel-aspect bounds. The served W:H is the render width/height (square pixels). > BASE_WIDTH/BASE_HEIGHT
 // gets horizontal extra (wide); < it gets vertical extra (tall). MIN_ASPECT is the tallest the buffer allows.
@@ -53,7 +49,7 @@ const clampAndReduce = (longPx: number, shortPx: number): { w: number; h: number
   const ratio = long / short;
   // Callers pass a landscape-normalized pair (ratio ≥ 1), so only the wide ceiling normally bites; the
   // tall floor is here for completeness if an un-normalized (portrait) pair is ever passed. Ratios in
-  // [MIN_ASPECT, MAX_ASPECT] (incl. 5:4 / square / mild-tall) pass through unclamped — the engine fills them.
+  // [MIN_ASPECT, MAX_ASPECT] (incl. 5:4 / square / mild-tall) pass through unclamped. The engine fills them.
   if (ratio > MAX_ASPECT) {
     long = Math.round(MAX_ASPECT * short);
   } else if (ratio < MIN_ASPECT) {
@@ -83,13 +79,13 @@ const viewportDims = (renderIntoNotch: boolean): { long: number; short: number }
   return { long, short };
 };
 
-/** Physical device SCREEN as a clamped integer ratio (landscape-normalized) — fixed per device. */
+/** Physical device SCREEN as a clamped integer ratio (landscape-normalized). Fixed per device. */
 const detectScreenRatio = (renderIntoNotch = true): { w: number; h: number } => {
   const { long, short } = screenDims(renderIntoNotch);
   return clampAndReduce(long, short);
 };
 
-/** Current APP VIEWPORT as a clamped integer ratio — varies with the window/usable area and, when
+/** Current APP VIEWPORT as a clamped integer ratio. It varies with the window/usable area and, when
  *  renderIntoNotch is false, excludes the camera-cutout insets (so it adapts to the notch, not the screen). */
 const detectViewportRatio = (renderIntoNotch = true): { w: number; h: number } => {
   const { long, short } = viewportDims(renderIntoNotch);

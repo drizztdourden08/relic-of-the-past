@@ -1,19 +1,13 @@
 /* @layer electron-main @kind logic */
 /**
- * The create/update/delete engine the record-facade collections share.
+ * The create/update/delete engine the record-facade collections share. Everything
+ * kind-specific is a `RecordWriterSpec` (kind to allocate under, where a new
+ * record is filed, which emitter serializes it), so the three operations are
+ * written once.
  *
- * Check, item, dungeon, area, location and actor all reached the write path
- * after the record facade existed, so none of them carries a payload of its own:
- * a record goes in, an id comes back, and everything kind-specific is data — the
- * kind to allocate under, where a new record is filed, and which emitter turns
- * it into source text. That data is a `RecordWriterSpec`, and the three
- * operations below are written once against it rather than six times each.
- *
- * The two halves of "which file" are deliberately different. A CREATE uses the
- * spec's canonical destination; an UPDATE or a DELETE locates the record by the
- * id it already carries (data-files.ts), because several of these collections
- * were split by size and a record's real home is not always the one the
- * resolver would pick for it today.
+ * A CREATE uses the spec's canonical destination; an UPDATE or DELETE locates the
+ * record by id (data-files.ts), because several collections were split by size
+ * and a record's real home is not always the one the resolver would pick today.
  */
 
 import { readFile, writeFile } from 'fs/promises';

@@ -3,7 +3,7 @@
  * Assembles the final GamepadDiagnosticsReport from the pieces the wizard
  * gathered along the way: device identity and native-capture status. The
  * captures themselves travel with the report as separate artefacts, each in
- * its own shape, rather than being flattened into this summary.
+ * its own shape, not flattened into this summary.
  */
 import type { DeviceEntry } from '@shared/ipc';
 import type { DevicePreset } from '@shared/types/controls';

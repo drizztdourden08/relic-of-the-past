@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind hook */
-/**
- * Auditions one music slot exactly as the game would hear it — every layer, its play mode, its
- * volume. The session underneath owns the context, the engine and the polling loop; all this
- * adds is which slot is playing and how a music slot is started.
- */
+// Auditions one music slot as the game would hear it. The session underneath owns context, engine and polling.
 import { useCallback, useEffect, useState } from 'react';
 import type { MsuPackManifest } from '@shared/types/msu-manifest';
 import type { MsuEngine } from '@app/lib/msu/engine';

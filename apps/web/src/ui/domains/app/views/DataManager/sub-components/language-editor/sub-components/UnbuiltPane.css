@@ -41,10 +41,10 @@
 
 /*
  * The shared scrim is the vanilla-safe green, which reads as a setting the owner
- * chose. This lock is not a choice — it is work that has not happened — so it
- * takes the warning tone the notice above it already uses.
+ * chose. This lock is not a choice but work that has not happened, so it takes
+ * the warning tone the notice above it already uses.
  *
- * It is also held at the TOP rather than centred: the surface it covers scrolls
+ * It is also held at the TOP, not centred: the surface it covers scrolls
  * to a thousand rows, so the scrim is as tall as the content and a centred
  * message would land far below the fold.
  */

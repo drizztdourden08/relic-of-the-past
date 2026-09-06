@@ -3,9 +3,9 @@
  * One entry at rest: a single dense row.
  *
  * A set is a few hundred entries, so the list's job is FINDING one, not reading
- * all of them. Everything on the row narrows a search — the index, who says it,
+ * all of them. Everything on the row narrows a search: the index, who says it,
  * what opens it, where, how much of it there is, whether it fits, and where a
- * prompt's options lead — with the words themselves last, taking whatever room
+ * prompt's options lead. The words themselves come last, taking whatever room
  * is left.
  *
  * EVERY CELL IS ALWAYS DRAWN, empty when it has nothing to say. The row is a grid
@@ -18,8 +18,7 @@
  * is also why every child is inline: the row is one button, and a button holding
  * blocks is markup a browser is entitled to reflow.
  *
- * Nothing here is editable. A list a reader can change by accident is a list
- * nobody trusts, and scanning a set has to be safe.
+ * Nothing here is editable, so scanning a set is always safe.
  */
 import { useCallback } from 'react';
 import { Badge, Button, Text } from '@ds/primitives';

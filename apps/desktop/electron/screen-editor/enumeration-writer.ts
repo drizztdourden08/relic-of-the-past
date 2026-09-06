@@ -2,17 +2,10 @@
 /**
  * Creating, relabelling, or removing a closed-set enumeration entry.
  *
- * Every row here is plain data — the ten label categories these entries fill
- * in for (world, screen-status, ...) have no writer of their own beyond this
- * one, and no other collection stores a foreign-key reference to an entry's
- * id (see reference-usage.ts), so this is a plain three-op writer with no
- * delete-guard half. New rows mint a real `enum-NNN` id through the
- * allocator, the same bargain `allocateTag`/`allocateItemGroup` make for a
- * brand-new row in their own collections.
- *
- * Every successful write also regenerates `enumeration/generated-types.ts` —
- * the 10 hand-written `World`/`ScreenKind`/... unions are generated from this
- * same file, so an edit made here must not go stale the moment it lands.
+ * No other collection references an entry's id (see reference-usage.ts), so
+ * there is no delete-guard half. Every successful write also regenerates
+ * `enumeration/generated-types.ts`, which the `World`/`ScreenKind`/... unions
+ * come from.
  */
 
 import { readFile, writeFile } from 'fs/promises';
@@ -32,14 +25,10 @@ const ENUMERATION_FILE = ['shared', 'game', 'data', 'records', 'enumeration', 'e
 const escapeRegExp = (s: string): string => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 /**
- * An entry already on file for this category/value pair — the pair that
- * actually keys the vocabulary (two different categories may share a value,
- * e.g. `check-kind:npc` and `actor-kind:npc`, so the value alone cannot be
- * the check). `category` is always emitted immediately before `value`, but
- * NOT always on the same wrap: the committed file's hand-authored rows are one
- * object per line, while `literal()` (this writer's own emitter) puts one
- * field per line — so the gap between them is matched as whitespace of any
- * width rather than a fixed literal string.
+ * Keyed on the category/value pair: two categories may share a value
+ * (`check-kind:npc` and `actor-kind:npc`). `category` always precedes `value`,
+ * but hand-authored rows are one object per line while `literal()` emits one
+ * field per line, so the gap is matched as whitespace of any width.
  */
 const alreadyPresent = (content: string, category: string, value: string): boolean => {
   const cat = escapeRegExp(escapeSingleQuote(category));
@@ -48,20 +37,12 @@ const alreadyPresent = (content: string, category: string, value: string): boole
 };
 
 /**
- * Best-effort — the entry write already succeeded and landed on disk; a
- * regen failure (a locked file, a bad edit shape) is worth logging but must
- * not turn a successful write into a reported failure. The next edit, or a
- * manual `npm run generate:enum-types`, catches it back up.
+ * Best-effort: the entry write already landed, so a regen failure is logged, not
+ * reported. The next edit or `npm run generate:enum-types` catches it up.
  *
- * `root` is passed straight through rather than left for `generateEnumTypes`
- * to guess: its default guess is relative to its OWN file's location, which is
- * only correct for the CLI running from its real, unbundled path. This writer
- * runs from `dist/electron/main.js` in a built app — a different directory
- * depth than the source tree, and a different one again between a dev build,
- * an electron-vite production build and a packaged app — so the guess landed
- * on a nonexistent `dist/shared/...` path and crashed every production launch.
- * `root` here is the same real repo root every other writer in this file
- * already receives, so passing it on is the whole fix.
+ * `root` must be passed: `generateEnumTypes`'s default guess is relative to its
+ * own file, which is wrong from `dist/electron/main.js` and crashed every
+ * production launch on a nonexistent `dist/shared/...` path.
  */
 const regenerateTypes = async (root: string): Promise<void> => {
   try {

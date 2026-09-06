@@ -6,9 +6,9 @@
  * World, location and area facets join directly against ScreenRecord /
  * AreaRecord instead of duplicating them as precomputed tags (the old
  * CheckTag families this replaced). Content facets read the real tags stored
- * on `CheckRecord.tags` — that family was never a pure duplicate, so it stays
- * a genuine tag reference, sourced here straight from the tag collection via
- * `tagsFor('check')` rather than a second hardcoded list.
+ * on `CheckRecord.tags`. That family was never a pure duplicate, so it stays
+ * a real tag reference, sourced here straight from the tag collection via
+ * `tagsFor('check')` instead of a second hardcoded list.
  */
 import { all, getScreen, hasTagKey, tagsFor } from '../../../data';
 import type { CheckRecord, ScreenRecord } from '../../../data';

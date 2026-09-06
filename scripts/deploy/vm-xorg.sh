@@ -11,4 +11,4 @@ if grep -q 'WaylandEnable' "$CONF"; then
 else
   sed -i '/^\[daemon\]/a WaylandEnable=false' "$CONF"
 fi
-echo "[xorg] done — log out and back in"
+echo "[xorg] done, now log out and back in"

@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
  * Shared join/placeholder helpers for `grants.set.ts`'s three uncatalogued-id
- * probes — every one of them keys the same way (the raw native id, in the
+ * probes. Every one of them keys the same way (the raw native id, in the
  * same space `ItemGameId.receiveItemId` occupies) and proposes the same
  * neutral placeholder record when it fires.
  */
@@ -13,8 +13,8 @@ const hex = (n: number): string => `0x${n.toString(16).toUpperCase()}`;
 /**
  * The neutral placeholders a `create` proposes: `category`/`randomizerName`
  * have no native answer (unlike a screen's authoring gaps, `ItemRecord`
- * requires both), so this proposes the dataset's own neutral defaults rather
- * than guessing a real one. `origin: 'vanilla'` IS provable: anything that
+ * requires both), so this proposes the dataset's own neutral defaults instead
+ * of guessing a real one. `origin: 'vanilla'` IS provable: anything that
  * reached this join (a chest's static contents, or the native receive path)
  * is a real in-game item by definition.
  */

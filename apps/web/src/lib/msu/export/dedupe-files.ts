@@ -4,7 +4,7 @@
  *
  * Packs collect duplicates naturally: an author copies `wind.flac` per area, or the same silent
  * stub sits under a dozen names. Those are byte-identical, so storing one copy and pointing every
- * reference at it is free — and on a gigabyte-scale pack it is the difference between an archive
+ * reference at it is free, and on a gigabyte-scale pack it is the difference between an archive
  * a user can share and one they cannot.
  *
  * The output is a name→name map covering EVERY referenced name, not just the deduped ones, so a

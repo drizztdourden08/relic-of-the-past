@@ -1,30 +1,17 @@
 /* @layer renderer-hooks @kind hook */
 /**
- * Positions and dismisses the colour picker as a floating panel anchored to
- * whichever swatch opened it — mirroring the open/outside-click/Escape/anchor-
- * tracking pattern every other anchored panel in this design system already
- * uses (see Select's `useSelectDropdown`). The one difference: a palette has
- * many possible triggers, not one fixed button, so the anchor ref is supplied
- * by the caller (set to whichever swatch was last clicked) rather than owned
- * here the way a single-trigger dropdown owns its own ref.
- *
- * Positioning is two-pass, on BOTH axes. `dropPanelPositionFor` runs first
- * against rough estimates of the panel's size, before it has ever painted, so
- * there is a rect for the very first frame. Once the panel has actually
- * rendered, a second pass re-clamps `top` AND `left` against its real
- * measured box. The estimates exist only to avoid a visible flash on open —
- * they are not trusted for the real placement, because getting either one
- * wrong is exactly what let the panel run off an edge before: the width
- * estimate did not account for `boxSizing: content-box` adding the picker's
- * own padding on top of its content width, and the height estimate did not
- * account for a swatch's own content (whether the "original colour" row is
- * showing, title length).
+ * Positions and dismisses the colour picker as a floating panel, like Select's
+ * `useSelectDropdown`. The anchor ref is supplied by the caller because a
+ * palette has many triggers. Positioning is two-pass on both axes: estimates
+ * give a rect for the first frame, then the real measured box re-clamps `top`
+ * and `left`. The estimates are not trusted; content-box padding and variable
+ * content let the panel run off an edge before.
  */
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { dropPanelPositionFor, useAnchorTracking, viewportBounds } from '@ds/primitives/Portal';
 import type { RefObject } from 'react';
 
-/** First-pass estimates, before the panel has ever painted — corrected below once it has. */
+/** First-pass estimates, before the panel has painted; corrected below once it has. */
 const ESTIMATED_WIDTH = 248;
 const ESTIMATED_HEIGHT = 480;
 const ANCHOR_GAP = 6;

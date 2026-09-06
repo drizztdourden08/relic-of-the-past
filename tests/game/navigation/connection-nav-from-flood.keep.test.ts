@@ -15,7 +15,7 @@ const makeInfo = (over: Partial<ConnectionInfo>): ConnectionInfo => ({
   ...over,
 });
 
-describe('buildConnectionNav — ConnectionInfo → ConnectionNavData', () => {
+describe('buildConnectionNav turns ConnectionInfo into ConnectionNavData', () => {
   it('walk crossing records positions as overlapTiles and distance weight', () => {
     const info = makeInfo({ edge: 'east', positions: [30, 31, 32], requirements: [] });
     const nav = buildConnectionNav(info, ['transit:walk']);
@@ -53,7 +53,7 @@ describe('buildConnectionNav — ConnectionInfo → ConnectionNavData', () => {
   });
 });
 
-describe('serializeConnectionRecord — record emission', () => {
+describe('serializeConnectionRecord emits a record', () => {
   const base = {
     kind: 'edge',
     screenId: 'screen-030',

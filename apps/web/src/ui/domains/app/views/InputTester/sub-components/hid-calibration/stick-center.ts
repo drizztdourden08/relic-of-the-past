@@ -5,10 +5,10 @@
  * Rest is the one thing a sweep cannot show, and it is not a single number:
  * a real stick drifts, so the useful answer is the middle of where it sits
  * plus how far it wanders. Both come from watching for a fixed stretch of
- * time and keeping the extremes, rather than waiting for the values to stop
+ * time and keeping the extremes, instead of waiting for the values to stop
  * changing, which on a drifting stick never happens.
  *
- * Deliberately started by the user rather than inferred: the moment the stick
+ * Deliberately started by the user, not inferred. The moment the stick
  * is actually free is something only they know, and guessing it produced a
  * centre taken while the stick was still being held.
  */

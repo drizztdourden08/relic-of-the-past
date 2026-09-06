@@ -94,7 +94,7 @@ const useDiagnosticsWizardState = (props: UseDiagnosticsWizardStateProps) => {
     [liveDeviceEntry],
   );
 
-  // The calibration profile view for step 2's summary panel — built from the
+  // The calibration profile view for step 2's summary panel, built from the
   // same resolvedDevice, never a per-model database. Null until SDL's live
   // capability report for this device has resolved (see resolvedDevice above).
   const profile: DeviceProfile | null = useMemo(() => {
@@ -144,7 +144,7 @@ const useDiagnosticsWizardState = (props: UseDiagnosticsWizardStateProps) => {
     layoutCapture.reset();
     // Put the hold back before the next run starts. Step 1 snapshots the
     // claimed devices first and can only see what is currently claimed, so
-    // restarting while still released would list nothing and quietly drop
+    // restarting while still released would list nothing and silently drop
     // every capability flag that only a claimed device carries.
     void restoreHold()
       .catch(() => { /* step 1 reports its own failure */ })

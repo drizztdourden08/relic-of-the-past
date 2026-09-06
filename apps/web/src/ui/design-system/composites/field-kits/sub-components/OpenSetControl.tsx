@@ -3,16 +3,13 @@
  * A closed-set control, decorated so the set stays open.
  *
  * A derived option list is what has been seen, not what is permitted, so every
- * picker built from one can only re-offer the past. Where a field happens to
- * carry the same value on every record today it earns a picker with a single
- * choice, already active, and — on a field the schema says cannot be empty —
- * nothing left to do with it at all. That is a dead end produced by the data
- * rather than by the design, and it will happen again on the next field that
- * has only ever been written one way.
+ * picker built from one can only re-offer the past. A field written the same way
+ * on every record earns a picker with one choice, already active, and on a field
+ * the schema says cannot be empty there is nothing left to do with it. That dead
+ * end comes from the data, not the design.
  *
  * So the picker keeps its options and gains one more move: an entry for a value
- * nobody has written yet. It sits beside the control rather than replacing it,
- * because choosing a known value is still the common case and stays one click,
+ * nobody has written yet. It sits beside the control instead of replacing it,
  * and the same toggle opens and closes it so nothing depends on Escape.
  */
 import { useState } from 'react';
@@ -27,7 +24,7 @@ const TOGGLE = '+ Other';
 interface OpenSetControlProps {
   /** The value the record holds; the entry opens prefilled with it. */
   current: string;
-  /** The field's label — names the entry for assistive tech. */
+  /** The field's label, which names the entry for assistive tech. */
   label: string;
   /** Called with a trimmed, non-empty value that differs from the current one. */
   onSubmit: (value: string) => void;
@@ -38,7 +35,7 @@ interface OpenSetControlProps {
 
 const OpenSetControl = (props: OpenSetControlProps) => {
   const { current, label, onSubmit, disabled = false, children } = props;
-  // Closed while null; a string — the empty one included — is an open entry.
+  // Closed while null. Any string, the empty one included, is an open entry.
   const [draft, setDraft] = useState<string | null>(null);
 
   const commit = () => {

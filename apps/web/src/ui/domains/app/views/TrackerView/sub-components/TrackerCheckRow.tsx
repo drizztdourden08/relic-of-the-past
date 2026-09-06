@@ -28,7 +28,7 @@ const TrackerCheckRow = (props: TrackerCheckRowProps) => {
       <Text className="tracker-check__icon">{STATUS_ICONS[status]}</Text>
       <Text className="tracker-check__name">{check.randomizerName}</Text>
       {detailed && (
-        <Text className="tracker-check__item">{displayItem ?? '—'}</Text>
+        <Text className="tracker-check__item">{displayItem ?? '-'}</Text>
       )}
       <Text className="tracker-check__type">{check.kind}</Text>
     </Box>

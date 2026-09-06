@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 /**
- * StepIndicator — numbered step progress for the calibration wizard.
+ * Numbered step progress for the calibration wizard.
  */
 
 import type { CSSProperties } from 'react';

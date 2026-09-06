@@ -1,8 +1,5 @@
 /* @layer renderer-components @kind component */
-/**
- * The list of fixed offsets an interval layer fires at. Kept sorted and de-duplicated on the way
- * in, because two identical offsets would schedule the same sound twice at the same instant.
- */
+// Kept sorted and de-duplicated: two identical offsets would schedule the same sound twice.
 import { useState } from 'react';
 import { Badge } from '@ds/primitives/Badge';
 import { Box } from '@ds/primitives/Box';
@@ -27,7 +24,7 @@ const IntervalTimes = (props: IntervalTimesProps) => {
   return (
     <Box className="layer-card__intervals">
       <Flex gap="xs" align="center" wrap>
-        {atSeconds.length === 0 && <Text variant="caption">No times yet — add one below.</Text>}
+        {atSeconds.length === 0 && <Text variant="caption">No times yet. Add one below.</Text>}
         {atSeconds.map((seconds) => (
           <Flex key={seconds} gap="xs" align="center" className="layer-card__interval">
             <Badge variant="neutral">{seconds}s</Badge>

@@ -29,24 +29,17 @@ const KIND_NAV_ITEMS: { id: EntityKind; icon: string; label: string }[] = [
   { id: 'enumeration', icon: '🔤', label: 'Enumerations' },
 ];
 
-/**
- * The pseudo-collection's own rail entry — permanent, like every real one, so
- * a review pass is reachable directly rather than only by arriving through a
- * jump (see `useDataInspector`'s `pendingRecommendation` handling).
- */
+/** Permanent rail entry, so a review pass is reachable without a jump. */
 const RECOMMENDATIONS_NAV_ITEM = { id: RECOMMENDATIONS_KIND, icon: '⚠️', label: 'Recommendations' };
 
 /** The side menu: the eleven real collections, plus the pseudo-collection at a fixed spot. */
 const NAV_ITEMS: { id: string; icon: string; label: string }[] = [...KIND_NAV_ITEMS, RECOMMENDATIONS_NAV_ITEM];
 
 /**
- * Two keys per collection rather than one, because two independent
- * `useViewState` bindings share this screen: `DataTable` owns its own binding
- * internally (it only takes a `viewKey`), and this screen owns the filter
- * clauses and the detail tab. Pointing both at one key would make each one's
- * write carry the OTHER half as it stood when that binding last loaded, so a
- * column drag would quietly revert a filter and vice versa. Separate keys make
- * each writer the only author of what it stores.
+ * Two keys per collection because two independent `useViewState` bindings share
+ * this screen (`DataTable` owns one internally; this screen owns the filter
+ * clauses and detail tab). Sharing one key would make each write carry the other
+ * half as it stood at load, so a column drag would revert a filter.
  */
 const tableViewKey = (kind: InspectorKind): ViewKey => `data-inspector:${kind}`;
 const queryViewKey = (kind: InspectorKind): ViewKey => `data-inspector-query:${kind}`;

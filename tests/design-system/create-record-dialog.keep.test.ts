@@ -1,14 +1,10 @@
 /* @layer tests @kind test */
 /**
- * `DialogShell` (which `CreateRecordDialog` renders through) mounts a `Portal`
- * unconditionally while open, and `Portal` reaches for `document` with no SSR
- * guard — exactly why no dialog-family composite in this suite is rendered
- * with `renderToStaticMarkup` while open (see `DeleteGuardDialog`'s own tests,
- * which stick to the delete-guard's routing logic for the same reason). So
- * what is pinned here is the real thing an open dialog would show wrong if it
- * were broken: `useCreateFormState`'s own gating rule, exercised through the
- * actual hook rather than a description of it — only the Portal-bound chrome
- * around it is left to the Playwright pass.
+ * `DialogShell` mounts a `Portal` while open, and `Portal` reaches for
+ * `document` with no SSR guard, so no open dialog is rendered with
+ * `renderToStaticMarkup` here (same reason as `DeleteGuardDialog`'s tests).
+ * Pinned instead: `useCreateFormState`'s gating rule, through the actual hook.
+ * The Portal-bound chrome is left to the Playwright pass.
  */
 import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';

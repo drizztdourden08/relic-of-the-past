@@ -13,25 +13,25 @@ it collision data.
 Collision grids and room geometry come from the WASM core on demand:
 
 - `WasmBuildOverworldAttrGrid(screen)` / `WasmBuildRoomAttrGrid(room)` → 64×64 attr grids.
-- `WasmGetRoomDoorBoundaryTiles`, `…StairInfo`, `…ExitDoors`, `…WalkBoundaries`, `…TravelDestinations`.
-- Navigation tables (`WasmGetOverworldEntrances`, `…FallHoles`, `…ExitScreenMap`, `…AreaHeads`,
-  `…EntranceRooms`, `…EntranceSpawns`) — static, fetched once.
-- Sprite blockers (`WasmGetNavigationBlockers`, `…OverworldGuardSpawns`).
+- `WasmGetRoomDoorBoundaryTiles`, `...StairInfo`, `...ExitDoors`, `...WalkBoundaries`, `...TravelDestinations`.
+- Navigation tables (`WasmGetOverworldEntrances`, `...FallHoles`, `...ExitScreenMap`, `...AreaHeads`,
+  `...EntranceRooms`, `...EntranceSpawns`): static, fetched once.
+- Sprite blockers (`WasmGetNavigationBlockers`, `...OverworldGuardSpawns`).
 
 ## The flood facade
 
 `apps/web/src/lib/game/flood/` is the renderer-side facade that pulls those queries through the bridge.
 It is the single source for grids (`screen-grids.ts`), flood options (`flood-options.ts`), the indoor
 entrance list (`room-entrances.ts`), screen origins (`world-origin.ts`) and the screen annotations the
-overlay draws (`annotate-screen.ts`). All three consumers — the navigation widget, the simulator and the
-`--dump-nav` dumper — go through it, which is why they report the same reachability for a given screen.
+overlay draws (`annotate-screen.ts`). All three consumers (the navigation widget, the simulator and the
+`--dump-nav` dumper) go through it, which is why they report the same reachability for a given screen.
 
 ## Modules (`shared/game/navigation/`)
 
 | Path | Role |
 |------|------|
 | `tile-attrs.ts` · `tile-classification/` · `interior-attrs.ts` · `overworld-attrs.ts` | Turn raw attr bytes into walkable/blocked/special tile classes. |
-| `core/` | `bfs-engine`, `priority-queue`, `grid-utils`, `inventory` — the generic traversal primitives. |
+| `core/` | The generic traversal primitives: `bfs-engine`, `priority-queue`, `grid-utils`, `inventory`. |
 | `flood-fill/` | Reachability: single-screen, single/dual-layer, path extraction, entrance usability. |
 | `strategies/` | Layer strategies (single vs dual-layer dungeon rooms). |
 | `screen-data/` | Collision-grid assembly + cliff preprocessing. |
@@ -46,14 +46,14 @@ screen and what state it is in: a list of `{ kind, tile, label, state, detail, r
 items, the check tallies for the minimap badge, and the decoded room tags.
 
 `apps/web/src/lib/game/flood/annotate-screen.ts` derives it from the **same reads the simulator gates
-its targets on** — doors and cell locks, sprites with their key-carrier markers, chests (named after
-what they will actually yield), room tags and detected exits — with per-family mapping in `annotate/`.
+its targets on**: doors and cell locks, sprites with their key-carrier markers, chests (named after
+what they will actually yield), room tags and detected exits. Each family maps through `annotate/`.
 The flood runs first and decides which items are actually touchable, so the overlay, both minimaps and
 the widget's "On this screen" panel cannot disagree with the run.
 
 The annotation kinds are exhaustive by type: `annotation-style.ts` must register a style, glyph and
 legend for every kind in the union, an unmapped kind still draws as a neutral marker, and
-`tests/simulation/annotation-coverage.keep.test.ts` makes a gap a test failure — so a new mechanic cannot
+`tests/simulation/annotation-coverage.keep.test.ts` makes a gap a test failure. A new mechanic cannot
 ship invisible.
 
 ## Renderer side

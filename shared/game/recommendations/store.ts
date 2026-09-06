@@ -4,7 +4,7 @@
  * in.
  *
  * `shared/game/` is a leaf with no Node and no `window`, so the store does not
- * open files — it takes a storage PORT and the host supplies the adapter
+ * open files. It takes a storage PORT and the host supplies the adapter
  * (Electron writes the JSON, a test keeps a Map in memory). All the interesting
  * behaviour is `reconcile`, which is a pure function tested on its own; what is
  * left here is the part that decides the scope of a pass and persists the
@@ -26,7 +26,7 @@ interface RecommendationStorage {
   save: (kind: EntityKind, entries: readonly Recommendation[]) => Promise<void>;
 }
 
-/** An in-memory port — the default, and what a test uses. */
+/** An in-memory port. The default, and what a test uses. */
 const memoryStorage = (seed: Partial<Record<EntityKind, readonly Recommendation[]>> = {}): RecommendationStorage => {
   const held = new Map<EntityKind, readonly Recommendation[]>(
     Object.entries(seed) as [EntityKind, readonly Recommendation[]][],
@@ -48,8 +48,8 @@ const createRecommendationStore = (storage: RecommendationStorage = memoryStorag
   /**
    * Folds one detector run into the stored collection for `kind`.
    *
-   * The scope comes from the pass itself — the detectors that ran and the screen
-   * they ran for — so a pass on one screen can never resolve findings about
+   * The scope comes from the pass itself, from the detectors that ran and the
+   * screen they ran for, so a pass on one screen can never resolve findings about
    * another. `detectorIds` is the set that RAN, not the set that produced
    * output: a detector that ran and found nothing is exactly how a finding
    * stops reproducing, and leaving it out would keep that finding open forever.

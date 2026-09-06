@@ -6,10 +6,10 @@
  * Without this the "Repeat from" field opened at 0 on a track that plainly repeats from 13 seconds:
  * the manifest had no loop point, so the field showed the manifest, while the value actually in
  * force was the one inside the `.pcm` header. Reading it here means the control opens on the
- * effective value, and an author editing it starts from what they can hear rather than from zero.
+ * effective value, and an author editing it starts from what they can hear, not from zero.
  *
- * Takes the whole set rather than one name so the editor can resolve every layer in one hook — one
- * per layer is not something a component can do in a loop. Only `.pcm` costs a read; every other
+ * Takes the whole set instead of one name so the editor can resolve every layer in one hook. One
+ * hook per layer is not something a component can do in a loop. Only `.pcm` costs a read; every other
  * format answers null without being opened.
  */
 import { useEffect, useState } from 'react';

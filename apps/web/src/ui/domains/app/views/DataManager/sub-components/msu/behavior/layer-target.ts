@@ -1,11 +1,7 @@
 /* @layer renderer-components @kind logic */
 /**
- * Where a layer list lives inside a manifest.
- *
- * A music slot and a claimed sound hold the identical layer shape in two different places, so
- * the editor is handed the pair of accessors instead of a slot number (Strategy). One editor,
- * one save path, one live readout — and none of them has to learn which kind it is looking at,
- * which is what keeps a sound's layers from needing a second copy of all of it.
+ * Where a layer list lives inside a manifest. A music slot and a claimed sound hold the same layer
+ * shape in two places, so the editor gets a pair of accessors instead of a slot number (Strategy).
  */
 import type { MsuLayer, MsuPackManifest, SoundChannel } from '@shared/types/msu-manifest';
 import { layersOfTrack, withTrackLayers } from './pack-manifest';
@@ -20,12 +16,7 @@ interface LayerTarget {
   label: string;
   read: (manifest: MsuPackManifest) => MsuLayer[];
   write: (base: MsuPackManifest, layers: MsuLayer[]) => MsuPackManifest;
-  /**
-   * True where the game fires this as a one-shot: the two effect channels. A looping layer there
-   * has nothing to end it, so it plays until the pack is unloaded — which reads as a sound that
-   * follows the player around, long after the moment that raised it. Music and the bed are the
-   * opposite: they are meant to keep going.
-   */
+  /** True on the effect channels, where a looping layer has nothing to end it and would follow the player around. */
   oneShot: boolean;
 }
 

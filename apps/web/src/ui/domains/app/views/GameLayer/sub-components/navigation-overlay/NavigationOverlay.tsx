@@ -14,8 +14,7 @@ import { ArrowLegend } from './ArrowLegend';
 
 const IL: Record<string, CSSProperties> = {
   overlay: { position: 'absolute', inset: 0, zIndex: 6 },
-  // Controls go top-left; the two legends sit side by side bottom-right. Both
-  // containers are pointer-events:none so the overlay never eats a game click —
+  // Both containers are pointer-events:none so the overlay never eats a game click;
   // each panel re-enables pointer events for its own collapse chevron.
   controls: { position: 'absolute', top: 6, left: 6, zIndex: 7, pointerEvents: 'none' },
   legends: {

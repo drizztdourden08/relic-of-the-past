@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
- * Pure byte-diffing of raw SRAM snapshots. This layer never touches check data
- * — it only reports which flag bytes changed and which bits were newly set.
+ * Pure byte-diffing of raw SRAM snapshots. This layer never touches check data.
+ * It only reports which flag bytes changed and which bits were newly set.
  * Naming those changes is the matcher's job.
  */
 import type { FlagSnapshot, FlagDiff } from '../types';

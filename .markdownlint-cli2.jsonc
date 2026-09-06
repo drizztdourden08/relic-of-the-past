@@ -2,15 +2,15 @@
   // Doc quality rules. We keep substantive rules (broken structure, list spacing,
   // trailing punctuation, etc.) and disable the purely-stylistic ones that conflict
   // with this repo's house style. Disabled, with reasons:
-  //   MD013 line-length        — docs intentionally exceed 80 cols
-  //   MD033 inline-HTML         — we use HTML comments for @layer/@kind tags
-  //   MD041 first-line-heading  — many docs start with the @layer/@kind comment
-  //   MD024 duplicate-heading   — common in structured/section-repeated docs
-  //   MD003 heading-style       — mixed atx/setext across authored + bundled skill docs
-  //   MD060 table-column-style  — pedantic table-pipe spacing; zero doc-quality value
-  //   MD040 fenced-code-language— many fences are ASCII diagrams / filetrees, not code
-  //   MD029 ol-prefix           — ordered-list numbering style is left to the author
-  //   MD036 no-emphasis-as-heading — intentional bold "labels" in places
+  //   MD013 line-length: docs intentionally exceed 80 cols
+  //   MD033 inline-HTML: we use HTML comments for @layer/@kind tags
+  //   MD041 first-line-heading: many docs start with the @layer/@kind comment
+  //   MD024 duplicate-heading: common in structured/section-repeated docs
+  //   MD003 heading-style: mixed atx/setext across authored + bundled skill docs
+  //   MD060 table-column-style: pedantic table-pipe spacing with no doc-quality value
+  //   MD040 fenced-code-language: many fences are ASCII diagrams / filetrees, not code
+  //   MD029 ol-prefix: ordered-list numbering style is left to the author
+  //   MD036 no-emphasis-as-heading: intentional bold "labels" in places
   "config": {
     "MD013": false,
     "MD033": false,
@@ -22,6 +22,18 @@
     "MD029": false,
     "MD036": false
   },
+  // AI-writing gate (ROTP001/002/003). Same patterns the local ESLint rules apply
+  // to TS/JS, run over Markdown prose. Code fences and inline code are skipped.
+  // Disable one line: <!-- markdownlint-disable-next-line no-em-dash -->
+  // Allowlist a domain term: add it to DEFAULT_ALLOW in
+  // scripts/lint/slop-patterns.mjs, or per-rule here via { "allow": [...] }.
+  "customRules": ["./scripts/lint/markdown-rules/index.mjs"],
   "globs": ["**/*.md"],
-  "ignores": ["node_modules/**", "dist/**", "release/**", "core/zelda3/**"]
+  // CLAUDE.md and .claude/** are rendered from the private claude-config repo, so a
+  // fix made here is dropped by the next render. Fix those in that repo. The
+  // private-vault docs are NOT ignored: we fix them here and push them to the vault.
+  "ignores": [
+    "node_modules/**", "dist/**", "release/**", "core/zelda3/**",
+    ".claude/**", "CLAUDE.md"
+  ]
 }

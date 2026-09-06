@@ -1,14 +1,10 @@
 /* @layer renderer-app @kind logic */
 /**
- * Keeps the two comparison panes scrolled together.
- *
- * Whichever side the user actually scrolled becomes the leader, and only the
- * OTHER side is driven — the leader is handed no `scrollTo` at all, so nothing
- * ever pushes a pane back to where it already is. That is the same shape
- * `ScrollArea`'s guard exists for (see create-scroll-guard.ts and
- * tests/design-system/scroll-area-sync.keep.test.ts): the follower's programmatic
- * scroll fires a native event, and the guard swallows it rather than letting it
- * come back as a "user scrolled the follower" and bounce the leader.
+ * Keeps the two comparison panes scrolled together. The side the user scrolled
+ * leads and gets no `scrollTo`; only the other side is driven. The follower's
+ * programmatic scroll fires a native event, which `ScrollArea`'s guard swallows
+ * so it cannot bounce the leader (see create-scroll-guard.ts and
+ * tests/design-system/scroll-area-sync.keep.test.ts).
  */
 import { useCallback, useState } from 'react';
 import type { ScrollPosition } from '@ds/primitives';
@@ -17,7 +13,7 @@ type PaneSide = 'current' | 'proposed';
 
 interface PaneScroll {
   onScroll: (position: ScrollPosition) => void;
-  /** Undefined on the side that led the last scroll — it needs no correction. */
+  /** Undefined on the side that led the last scroll, because it needs no correction. */
   scrollTo: Partial<ScrollPosition> | undefined;
 }
 
@@ -31,12 +27,7 @@ interface Lead {
   position: ScrollPosition;
 }
 
-/**
- * What a given side should be driven to: the leader's offset when it is the
- * follower, and nothing at all when it is the leader itself. Pure, so the whole
- * mirroring rule can be checked against a pair of real scroll controllers
- * without a DOM.
- */
+/** The leader's offset for the follower, nothing for the leader. Pure, so it is testable without a DOM. */
 const followerScrollTo = (lead: Lead | null, side: PaneSide): Partial<ScrollPosition> | undefined =>
   (lead && lead.side !== side ? lead.position : undefined);
 

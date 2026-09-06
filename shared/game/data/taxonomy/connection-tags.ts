@@ -1,5 +1,5 @@
 /* @layer shared-game @kind data */
-/** Connection tag taxonomy — ported from data/connections/tags.ts verbatim. */
+/** Connection tag taxonomy, ported verbatim from data/connections/tags.ts. */
 
 type TransitTag =
   | 'transit:door' | 'transit:hole' | 'transit:ledge' | 'transit:stairs'
@@ -17,7 +17,7 @@ type ContextTag =
   | 'ctx:entrance' | 'ctx:exit' | 'ctx:internal' | 'ctx:cross-world'
   | 'ctx:save-quit' | 'ctx:boss' | 'ctx:overworld' | 'ctx:dungeon-enter' | 'ctx:shortcut';
 
-/** Direction is derived from `canExit` now (see `data/connections/derive.ts`) — the
+/** Direction is derived from `canExit` now (see `data/connections/derive.ts`). The
  *  `dir:one-way` / `dir:two-way` tags are retired, not replaced. */
 type ConnectionTag = TransitTag | BarrierTag | ContextTag;
 

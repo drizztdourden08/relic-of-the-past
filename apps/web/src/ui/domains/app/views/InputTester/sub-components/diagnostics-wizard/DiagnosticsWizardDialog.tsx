@@ -1,16 +1,9 @@
 /* @layer renderer-components @kind component */
 /**
- * The gamepad diagnostics run as a modal wizard: an intro that shuts SDL's
- * gamepad backend down (step 1), picking a detected controller from the
- * union chooser-devices.ts builds (step 2), a byte-level capture reusing the
- * restored HidCalibrationWizard capture body for a byte-capable device only
- * (step 3), a one-by-one positional re-capture after the hold is restored
- * (step 4), and a side-by-side summary (step 5). Not dismissable by
- * backdrop click, Escape, or the close button while a run is in progress,
- * since this wizard owns whether SDL is up or down. The only way out is the
- * explicit Cancel/Restart/Close actions in its own footer, which always
- * restore the hold. Chrome follows the same DialogShell + StepIndicator
- * pattern as ControllerReportDialog, reusing that exact StepIndicator.
+ * Gamepad diagnostics as a modal wizard: shut SDL down, pick a controller, byte capture (byte-capable
+ * devices only), positional re-capture after the hold is restored, summary. Not dismissable by
+ * backdrop, Escape or close while a run is in progress, since this wizard owns whether SDL is up;
+ * only its own Cancel/Restart/Close actions, which always restore the hold.
  */
 import { useRef, useState } from 'react';
 import { DialogShell } from '@ds/composites/DialogShell';
@@ -42,9 +35,7 @@ const DiagnosticsWizardDialog = (props: DiagnosticsWizardDialogProps) => {
     wizard.goNext();
   };
 
-  // Cancel appears on every step. The dialog cannot be dismissed any other way,
-  // and the run holds the controllers released, so a step that misbehaves must
-  // never be a dead end. Cancel always restores the hold on its way out.
+  // Cancel appears on every step so a misbehaving step is never a dead end; it always restores the hold.
   const cancel = <Button variant="danger" onClick={handleClose}>Cancel</Button>;
 
   const actions = wizard.step === 'summary' ? (

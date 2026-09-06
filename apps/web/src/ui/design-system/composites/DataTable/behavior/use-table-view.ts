@@ -1,14 +1,9 @@
 /* @layer renderer-components @kind hook */
 /**
- * The Memento round trip, and the only place the table meets persistence: the
- * headless table hook on one side, a keyed view snapshot on the other, and two
- * guarded effects between them.
- *
- * Both effects compare the SAME canonical signature, so they converge after one
- * pass in either direction: a restored snapshot is pushed into the table and
- * then captures back identically, and a user edit captures out and then
- * restores back identically. Without a key `useViewState` is purely in-memory,
- * so this costs nothing and the table still works with zero persistence setup.
+ * The only place the table meets persistence: two guarded effects between the
+ * table hook and a keyed view snapshot. Both compare the same canonical
+ * signature, so they converge after one pass in either direction. Without a
+ * key `useViewState` is in-memory only.
  */
 import { useEffect, useMemo } from 'react';
 import { defaultColumns, useDataTable } from '../../../data/table/use-data-table';
@@ -35,7 +30,7 @@ interface TableView<T> {
   setSessionView: (next: SessionView) => void;
 }
 
-/** Column widths and visual renames count — a snapshot that lost them is not the same layout. */
+/** Column widths and visual renames count. A snapshot that lost them is a different layout. */
 const signatureOf = (state: TableState): string =>
   JSON.stringify([state.columns, state.sort, state.groupBy]);
 
@@ -48,9 +43,7 @@ const useTableView = <T>(input: UseTableViewInput<T>): TableView<T> => {
     [fallbackColumns, schema],
   );
 
-  // Both sides are seeded from the same fallbacks, columns AND grouping, for
-  // the reason above: a default only one of them knew about would read as a
-  // change on the first render and be captured back as one.
+  // Same for grouping: a default only one side knew about would be captured as a change.
   const table = useDataTable({ rows, schema, initial, initialGroupBy: fallbackGroupBy });
   const view = useViewState(viewKey, schema, initial, fallbackGroupBy);
 

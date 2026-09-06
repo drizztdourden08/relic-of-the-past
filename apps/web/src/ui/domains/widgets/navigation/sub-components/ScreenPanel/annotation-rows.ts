@@ -4,7 +4,7 @@
  *
  * Grouping is by the same four semantic families the overlay colours by, so the
  * panel and the canvas tell the same story in the same order. `unknown` rides
- * along in "other" rather than being dropped — an unmapped mechanic must stay
+ * along in "other" instead of being dropped. An unmapped mechanic must stay
  * visible in the list too, not only on the canvas.
  */
 import type { ScreenAnnotation, AnnotationKind } from '@shared/game/simulation';

@@ -1,18 +1,9 @@
 /* @layer renderer-components @kind component */
 /**
- * The clause list for one schema: a FilterClauseCard per clause plus a
- * trailing "+ Add filter" button, laid out as a wrapping row of small cards
- * rather than one full-width line each — a filter is a small thing, and half a
- * dozen of them should read as half a dozen small things.
- *
- * FilterBar only ever produces and consumes
- * plain FilterClause values through onChange — filters are data, and the
- * compiled predicate belongs to whoever renders the filtered rows, one layer
- * up (see data/filter/clause.ts's `compile`).
- *
- * A clause whose path the current schema no longer has (dropped by a schema
- * change) is skipped rather than rendered broken; pruning that clause out of
- * persisted state is a view-state concern, not this component's.
+ * A FilterClauseCard per clause plus "+ Add filter". Filters are data: the
+ * compiled predicate belongs to whoever renders the rows (see `compile` in
+ * data/filter/clause.ts). A clause whose path the schema no longer has is
+ * skipped; pruning it from persisted state is a view-state concern.
  */
 import { useCallback, useMemo } from 'react';
 import { Box } from '../../primitives/Box';

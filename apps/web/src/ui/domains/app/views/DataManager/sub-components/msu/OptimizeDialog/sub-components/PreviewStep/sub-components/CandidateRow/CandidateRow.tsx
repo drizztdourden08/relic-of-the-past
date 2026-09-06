@@ -1,14 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
- * One file in the preview: what it costs now, what it would cost, and the difference.
- *
- * The difference carries its sign because the sign IS the message. A saving reads plain; a file
- * the target format would make bigger reads `+` in the danger colour and stays in the run — the
- * pack ending up in one format is the point, and an already-compressed file pays for that in
- * bytes rather than in quality.
- *
- * The repeat-point mark is on the row rather than in a summary because it is per file: only a
- * container that carries its own loop position has one to move.
+ * A file that would grow reads `+` in the danger colour and stays in the run: one format is the
+ * point, and an already-compressed file pays in bytes, not quality.
  */
 import type { OptimizeCandidate } from '@shared/types/msu-optimize';
 import { Badge } from '@ds/primitives/Badge';
@@ -17,7 +10,7 @@ import { Text } from '@ds/primitives/Text';
 import { formatBytes } from '@app/utils/formatBytes';
 import type { CandidateRowProps } from './CandidateRow.type';
 
-const UNKNOWN = '—';
+const UNKNOWN = '-';
 
 const deltaLabel = (row: OptimizeCandidate): string => {
   if (row.estimatedBytes === null) return UNKNOWN;

@@ -7,7 +7,7 @@
  * catalog, narrowed to what this language's own encoder can bake. So nothing a
  * field offers can fail to compile, and no second catalog exists here.
  *
- * The extra "automatic" entry is a real choice rather than a blank: it means the
+ * The extra "automatic" entry is a real choice, not a blank: it means the
  * entry says nothing at all, and the engine's own default stands.
  */
 import { codeInfoFor } from '@shared/game/language';

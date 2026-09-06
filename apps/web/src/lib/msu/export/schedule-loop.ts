@@ -59,12 +59,12 @@ const scheduleHardCutLoop = (play: PlaySource,
 /**
  * Crossfaded chaining, mirroring that scheduler's `playFaded`: a pass starts `window` seconds
  * before the previous one ends and rises from silence while that one falls to it, so the two
- * genuinely overlap. Three details are the live ones and matter:
+ * overlap. Three details are the live ones and matter:
  *  - the window is clamped per file to half its length, so a file shorter than the crossfade
  *    still completes its rise;
  *  - the outgoing fade lasts the OUTGOING file's window and the incoming rise the incoming
  *    file's, which differ when the two files' lengths straddle the clamp;
- *  - a pass always begins at the top of its file — the crossfaded path gives up native looping,
+ *  - a pass always begins at the top of its file, because the crossfaded path gives up native looping,
  *    so a file's own loop point takes no part in it.
  */
 const scheduleCrossfadedLoop = (play: PlaySource,

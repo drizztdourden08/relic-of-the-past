@@ -24,7 +24,7 @@ void GameHook_ModuleFrameEnd(void) {
   const uint8 prev_submodule = s_prev_submodule;
   // Track every frame regardless of the gate below, so the first frame after dev tools gets turned
   // back on compares against last frame's module/submodule instead of whatever was current the last
-  // time the gate happened to be open — otherwise that comparison can span an arbitrary gap and emit
+  // time the gate happened to be open. Without that, the comparison can span an arbitrary gap and emit
   // a spurious "entered" event for a transition that never actually happened.
   s_prev_module = mod;
   s_prev_submodule = sub;

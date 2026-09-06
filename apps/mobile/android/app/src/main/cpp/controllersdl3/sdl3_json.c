@@ -14,9 +14,9 @@ void Sdl3JsonInit(Sdl3JsonWriter *writer, char *buf, size_t cap) {
 
 void Sdl3JsonRaw(Sdl3JsonWriter *writer, const char *text) {
   size_t textLen = strlen(text);
-  // Leave room for the trailing NUL; silently truncate rather than overrun the
-  // fixed buffer nativePollEvents() hands us. A truncated batch just gets
-  // dropped by the JS-side JSON.parse on the next poll instead of crashing.
+  // Leave room for the trailing NUL; silently truncate instead of overrunning
+  // the fixed buffer nativePollEvents() hands us. A truncated batch gets dropped
+  // by the JS-side JSON.parse on the next poll instead of crashing.
   if (writer->len + textLen + 1 > writer->cap) {
     return;
   }

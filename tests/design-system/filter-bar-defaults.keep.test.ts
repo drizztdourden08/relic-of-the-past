@@ -21,7 +21,7 @@ describe('defaultValueForArity', () => {
   });
 });
 
-describe('createClauseForField — the "+ Add filter" outcome', () => {
+describe('createClauseForField and the "+ Add filter" outcome', () => {
   it('picks the field kind\'s default operator, with a value shaped for its arity', () => {
     const clause = createClauseForField(field('number'));
     expect(clause.op).toBe(defaultOperatorFor('number'));
@@ -55,7 +55,7 @@ describe('createClauseForField — the "+ Add filter" outcome', () => {
   });
 });
 
-describe('valueForOperatorChange — reset only when the shape actually changes', () => {
+describe('valueForOperatorChange resets only when the shape actually changes', () => {
   it('keeps the value when both operators take a single operand', () => {
     const next = valueForOperatorChange({
       kind: 'number', previousOp: 'gt', nextOp: 'lt', currentValue: 5,
