@@ -27,27 +27,29 @@
 .capture-session-picker__list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
-  max-height: 20rem;
+  gap: var(--space-md);
+  max-height: 30rem;
 }
 
 .capture-session-row {
   display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  padding: var(--space-xs) var(--space-sm);
+  flex-direction: column;
+  gap: var(--space-xs);
   border: 1px solid var(--c-border);
   border-radius: var(--radius-md);
   background: var(--c-hover);
+  overflow: hidden;
 }
 
+/* The preview IS the point of this picker - it fills the card, with the checkbox and delete
+   button floating on top of it instead of squeezing it down to make room beside them. */
 .capture-session-row__preview {
-  width: 46px;
-  height: 32px;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
   flex-shrink: 0;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
   background: var(--c-bg);
+  cursor: pointer;
 }
 
 .capture-session-row__media {
@@ -62,11 +64,36 @@
   height: 100%;
 }
 
+.capture-session-row__checkbox {
+  position: absolute;
+  top: var(--space-xs);
+  left: var(--space-xs);
+  padding: var(--space-2xs) var(--space-xs);
+  border-radius: var(--radius-sm);
+  background: var(--c-scrim);
+  cursor: default;
+}
+
+.capture-session-row__delete {
+  position: absolute;
+  top: var(--space-xs);
+  right: var(--space-xs);
+  padding: var(--space-2xs);
+  border-radius: var(--radius-sm);
+  background: var(--c-scrim);
+  color: var(--c-text-muted);
+}
+
+.capture-session-row__delete:hover {
+  color: var(--c-danger);
+}
+
 .capture-session-row__meta {
-  flex: 1;
-  min-width: 0;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: 0 var(--space-sm) var(--space-xs);
 }
 
 .capture-session-row__time {
@@ -80,13 +107,4 @@
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--c-text-muted);
-}
-
-.capture-session-row__delete {
-  flex-shrink: 0;
-  color: var(--c-text-muted);
-}
-
-.capture-session-row__delete:hover {
-  color: var(--c-danger);
 }

@@ -9,7 +9,7 @@
 }
 
 .bug-report--with-capture {
-  width: 56rem;
+  width: 64rem;
 }
 
 .bug-report__body {
@@ -19,8 +19,9 @@
   min-width: 0;
 }
 
+/* The picker's previews are the point of this dialog, so that column gets the bigger share. */
 .bug-report--with-capture .bug-report__body {
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: 0.85fr auto 1.15fr;
 }
 
 .bug-report__form {
