@@ -43,9 +43,9 @@ const filterChecks = (
   }
 
   if (filter.itemFilter === 'rewards') {
-    result = result.filter(c => c.vanillaItemIds.length > 0);
+    result = result.filter(c => c.vanillaItemIds.length > 0 || c.isGuaranteedReward === true);
   } else if (filter.itemFilter === 'non-rewards') {
-    result = result.filter(c => c.vanillaItemIds.length === 0);
+    result = result.filter(c => c.vanillaItemIds.length === 0 && c.isGuaranteedReward !== true);
   }
 
   if (filter.statusFilter && filter.statusFilter !== 'all' && statuses) {
