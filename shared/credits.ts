@@ -199,6 +199,19 @@ const CREDITS: CreditCategory[] = [
       },
     ],
   },
+  {
+    id: 'randomizer-art',
+    title: 'Randomizer Item Icons',
+    entries: [
+      {
+        name: 'Efracrafting',
+        project: 'Randomizer Item Icons',
+        description: 'Pixel artist contributing custom item icons for the randomizer.',
+        usage: 'original-work',
+        usageNote: 'Hand-drew the quiver receipt\'s held-item icon, redrawn to fit the game\'s own sprite palette.',
+      },
+    ],
+  },
 ];
 
 export { CREDITS, getUsageLabel };
