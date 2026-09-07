@@ -12,6 +12,8 @@
  */
 interface PendingReport {
   zip: Buffer;
+  profileId: string;
+  sessionKeys: string[];
   createdAt: number;
 }
 
@@ -19,18 +21,20 @@ const TTL_MS = 30 * 60 * 1000;
 
 const pending = new Map<string, PendingReport>();
 
-const storePendingReport = (reportId: string, zip: Buffer): void => {
-  pending.set(reportId, { zip, createdAt: Date.now() });
+const storePendingReport = (reportId: string, zip: Buffer, profileId: string, sessionKeys: string[]): void => {
+  pending.set(reportId, { zip, profileId, sessionKeys, createdAt: Date.now() });
 };
 
-const getPendingReport = (reportId: string): Buffer | null => {
+// Send needs the sessionKeys and profileId too (to mark them sent on success), not just the
+// zip bytes - so this returns the whole entry instead of adding a second lookup.
+const getPendingReport = (reportId: string): PendingReport | null => {
   const entry = pending.get(reportId);
   if (!entry) return null;
   if (Date.now() - entry.createdAt > TTL_MS) {
     pending.delete(reportId);
     return null;
   }
-  return entry.zip;
+  return entry;
 };
 
 const dropPendingReport = (reportId: string): void => {
@@ -38,3 +42,4 @@ const dropPendingReport = (reportId: string): void => {
 };
 
 export { storePendingReport, getPendingReport, dropPendingReport };
+export type { PendingReport };

@@ -8,6 +8,33 @@
   padding: var(--space-lg);
 }
 
+.bug-report--with-capture {
+  width: 56rem;
+}
+
+.bug-report__body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+  min-width: 0;
+}
+
+.bug-report--with-capture .bug-report__body {
+  grid-template-columns: 1fr auto 1fr;
+}
+
+.bug-report__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  min-width: 0;
+}
+
+.bug-report__divider {
+  width: 1px;
+  background: var(--c-border);
+}
+
 .bug-report__debug-info {
   border: 1px solid var(--c-border);
   border-radius: var(--radius-md);

@@ -18,14 +18,13 @@ interface AppDialogsProps {
   setShowUpdateDialog: (open: boolean) => void;
   showBugReportDialog: boolean;
   setShowBugReportDialog: (open: boolean) => void;
-  debugReportId: string | null;
-  setDebugReportId: (id: string | null) => void;
+  profileId: string | null;
 }
 
 const AppDialogs = (props: AppDialogsProps) => {
   const {
     dialog, dismissDialog, canUpdate, update, showUpdateDialog, setShowUpdateDialog,
-    showBugReportDialog, setShowBugReportDialog, debugReportId, setDebugReportId,
+    showBugReportDialog, setShowBugReportDialog, profileId,
   } = props;
 
   return (
@@ -56,8 +55,8 @@ const AppDialogs = (props: AppDialogsProps) => {
 
       <BugReportDialog
         open={showBugReportDialog}
-        onClose={() => { setShowBugReportDialog(false); setDebugReportId(null); }}
-        debugReportId={debugReportId}
+        onClose={() => setShowBugReportDialog(false)}
+        profileId={profileId}
       />
 
       <BootProgressBar />

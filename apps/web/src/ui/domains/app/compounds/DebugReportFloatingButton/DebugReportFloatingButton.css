@@ -1,25 +1,4 @@
 /* @layer renderer-components @kind style */
 
 /* Base round-button look lives in DebugFloatingControls.css (.debug-round-button), shared
-   with DebugCaptureButton. Only this button's own states live here. */
-.debug-report-floating-button--error {
-  color: var(--c-danger);
-  border-color: var(--c-danger-soft);
-}
-
-.debug-report-floating-button__spinner {
-  position: absolute;
-  inset: -3px;
-  border-radius: 50%;
-  border: 2px solid transparent;
-  border-top-color: var(--c-info);
-  animation: debug-report-spin 0.8s linear infinite;
-}
-
-@keyframes debug-report-spin {
-  to { transform: rotate(360deg); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .debug-report-floating-button__spinner { animation: none; }
-}
+   with DebugCaptureButton. This button has no states of its own. */

@@ -66,6 +66,8 @@ export { Thumbnail } from './Thumbnail';
 export type { ThumbnailProps } from './Thumbnail';
 export { Image } from './Image';
 export type { ImageProps } from './Image';
+export { Video } from './Video';
+export type { VideoProps } from './Video';
 export { Icon } from './Icon';
 export type { IconProps } from './Icon';
 export { EmojiIcon } from './EmojiIcon';

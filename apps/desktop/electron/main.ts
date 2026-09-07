@@ -33,6 +33,7 @@ import { registerSpriteHandlers } from './sprites/ipc-handlers';
 import { registerLanguageHandlers } from './languages/ipc-handlers';
 import { registerSessionHandlers } from './sessions/ipc-handlers';
 import { registerSpriteProtocol } from './protocol/sprite-protocol';
+import { registerDebugCaptureProtocol } from './protocol/debug-capture-protocol';
 import { registerMsulOpenHandler } from './msu/open-file';
 import { registerInputHandlers, stopInputHandlers } from './input';
 import { registerTestHandlers } from './test/ipc-handlers';
@@ -131,6 +132,7 @@ applyInstanceIdentity(parseInstanceConfig().name);
 
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app-sprite', privileges: { standard: true, secure: true, supportFetchAPI: true } },
+  { scheme: 'app-debug-capture', privileges: { standard: true, secure: true, supportFetchAPI: true, stream: true } },
 ]);
 
 // Keep rAF alive when the window is occluded (e.g. --no-focus launches behind
@@ -139,8 +141,9 @@ protocol.registerSchemesAsPrivileged([
 app.commandLine.appendSwitch('disable-features', 'CalculateNativeWinOcclusion');
 
 app.whenReady().then(async () => {
-  // Register protocol handler
+  // Register protocol handlers
   registerSpriteProtocol();
+  registerDebugCaptureProtocol();
 
   // In dev mode, clear HTTP cache so static asset changes are picked up immediately
   if (is.dev) {

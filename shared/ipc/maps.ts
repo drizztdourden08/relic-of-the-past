@@ -169,6 +169,8 @@ const INVOKE_MAP = {
   openSimLog: 'sim:openLog',
   createGithubIssue: 'github:createIssue',
   finalizeDebugCaptureSession: 'debug-capture:finalizeSession',
+  listDebugCaptureSessions: 'debug-capture:listSessions',
+  deleteDebugCaptureSession: 'debug-capture:deleteSession',
   buildDebugReport: 'debug-report:build',
   sendDebugReport: 'debug-report:send',
 } as const satisfies Record<string, keyof InvokeContract>;

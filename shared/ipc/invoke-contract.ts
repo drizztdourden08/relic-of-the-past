@@ -15,6 +15,7 @@ import type { CreateIssueRequest, CreateIssueResult } from '@shared/types/github
 import type {
   DebugReportPackageInput, DebugReportBuildResult, DebugReportUploadResult,
   DebugCaptureFinalizeInput, DebugCaptureFinalizeResult,
+  DebugCaptureSessionSummary, DebugCaptureDeleteSessionResult,
 } from '@shared/types/debug-report';
 import type {
   AllocateEnumerationArgs, AllocateEnumerationResult, AllocateGeographyArgs, AllocateGeographyResult,
@@ -262,11 +263,16 @@ interface InvokeContract extends
   // frames, the position timeline, and an ffmpeg-encoded video all land in their own folder
   // under debug-captures/<profileId>/ right away, never deferred to packaging time.
   'debug-capture:finalizeSession': (input: DebugCaptureFinalizeInput) => Promise<DebugCaptureFinalizeResult>;
-  // Zips the save/settings/randomizer config plus every already-finalized capture session,
-  // see cloud-functions/debug-report-upload. Build is local-only and returns the id of the
-  // zip it's holding in memory, generated before anything uploads so it can be folded into
-  // the GitHub issue body first; send uploads it once the issue is confirmed created, and can
-  // be retried on its own (network failure only) without repeating the local build.
+  // Lists every recorded capture session for the picker (BugReportDialog), and lets it
+  // delete one outright. Listing never mutates anything on disk.
+  'debug-capture:listSessions': (input: { profileId: string }) => Promise<DebugCaptureSessionSummary[]>;
+  'debug-capture:deleteSession': (input: { profileId: string; sessionKey: string }) => Promise<DebugCaptureDeleteSessionResult>;
+  // Zips the save/settings/randomizer config plus whichever capture sessions the picker had
+  // checked, see cloud-functions/debug-report-upload. Build is local-only and returns the id
+  // of the zip it's holding in memory, generated before anything uploads so it can be folded
+  // into the GitHub issue body first; send uploads it once the issue is confirmed created,
+  // and can be retried on its own (network failure only) without repeating the local build.
+  // A session is only marked sent once send() actually succeeds - never at build time.
   'debug-report:build': (input: DebugReportPackageInput) => Promise<DebugReportBuildResult>;
   'debug-report:send': (input: { reportId: string }) => Promise<DebugReportUploadResult>;
 
