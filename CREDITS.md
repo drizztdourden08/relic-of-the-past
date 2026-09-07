@@ -54,10 +54,10 @@
 
 | Who | Project | Use | License |
 |-----|---------|-----|---------|
-| **Archipelago** | [Archipelago Multiworld](https://archipelago.gg) | Logic Reference: ruleset, region structure, check flags, and entrance naming studied and reimplemented in TypeScript; no code copied directly | MIT |
+| **Archipelago** | [Archipelago Multiworld](https://archipelago.gg) | Logic Ported: randomizer logic (regions, access rules, item pool, fill validity) ported to TypeScript from the MIT-licensed ALttP world implementation; location and item naming follows its conventions. Generated seeds are validated against spoiler logs produced by the original | MIT |
 
 ## Randomizer Item Icons
 
 | Who | Project | Use | License |
 |-----|---------|-----|---------|
-| **Efracrafting** | Randomizer Item Icons | Original Work: hand-drew the quiver receipt's held-item icon, redrawn to fit the game's own sprite palette | - |
+| **Efracrafting** | Randomizer Item Icons | Original Work: drew the quiver receipt's held-item icon, in the game's own sprite palette, and the pool icons: one per game a multiworld pool can hold, plus the badge stamped on them | - |

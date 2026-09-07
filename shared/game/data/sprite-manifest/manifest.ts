@@ -10,11 +10,12 @@
  *
  * The schema beside this file stays here, because it describes the shape, which is ours.
  */
+import { POOL_SPRITE_DEFINITIONS } from './pool-sprites';
 import { RANDOMIZER_SPRITE_DEFINITIONS } from './randomizer-sprites';
 import { RUPEE_SPRITE_DEFINITIONS } from './rupee-sprites';
 import { UPGRADE_SPRITE_DEFINITIONS } from './upgrade-sprites';
 
-type SpriteCategory = 'hud' | 'hud-pause' | 'hud-item' | 'fonts' | 'receipt' | 'drop';
+type SpriteCategory = 'hud' | 'hud-pause' | 'hud-item' | 'fonts' | 'receipt' | 'drop' | 'randomizer';
 
 interface SpriteManifestEntry {
   /** Filename without extension (e.g. "hud-bow"). */
@@ -49,7 +50,7 @@ const VAULT_DEFINITIONS: readonly SpriteDefinition[] =
 const SPRITE_DEFINITIONS: readonly SpriteDefinition[] =
   VAULT_DEFINITIONS.length === 0 ? [] : [
     ...VAULT_DEFINITIONS, ...UPGRADE_SPRITE_DEFINITIONS, ...RUPEE_SPRITE_DEFINITIONS,
-    ...RANDOMIZER_SPRITE_DEFINITIONS,
+    ...RANDOMIZER_SPRITE_DEFINITIONS, ...POOL_SPRITE_DEFINITIONS,
   ];
 
 const SPRITE_MANIFEST: SpriteManifestEntry[] = SPRITE_DEFINITIONS.map(sprite => ({
@@ -65,9 +66,11 @@ const CATEGORY_LABELS: Record<SpriteCategory, string> = {
   fonts: 'Fonts',
   receipt: 'Receipt / Chest',
   drop: 'Droppable',
+  randomizer: 'Randomizer',
 };
 
-const CATEGORY_ORDER: SpriteCategory[] = ['hud', 'hud-pause', 'hud-item', 'fonts', 'receipt', 'drop'];
+const CATEGORY_ORDER: SpriteCategory[] =
+  ['hud', 'hud-pause', 'hud-item', 'fonts', 'receipt', 'drop', 'randomizer'];
 
 export { CATEGORY_LABELS, CATEGORY_ORDER, SPRITE_DEFINITIONS, SPRITE_MANIFEST };
 export type { SpriteCategory, SpriteDefinition, SpriteManifestEntry };
