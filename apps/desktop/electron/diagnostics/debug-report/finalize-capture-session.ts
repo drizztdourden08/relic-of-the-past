@@ -2,10 +2,13 @@
 /**
  * Runs the moment a recording stops (see debug-capture-store.ts): writes the raw frames and
  * the position timeline for that one session to their own folder under
- * debug-captures/<profileId>/<sessionKey>/, then encodes them into a video right there, with
- * ffmpeg - all of it immediately, not deferred until a report gets packaged. Encoding is
- * still its own try/catch: a report attaching the raw frames instead of a video beats one
- * that fails outright over a broken ffmpeg install.
+ * profiles/<profileId>/debug-captures/<sessionKey>/ - alongside that profile's saves,
+ * config.json, sessions.json etc, same as every other profile-owned folder - then encodes
+ * them into a video right there, with ffmpeg. All of it immediately, not deferred until a
+ * report gets packaged. Living under the profile means deleting the profile takes its
+ * capture data with it, the same as it already does for saves. Encoding is still its own
+ * try/catch: a report attaching the raw frames instead of a video beats one that fails
+ * outright over a broken ffmpeg install.
  */
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
@@ -14,10 +17,10 @@ import { locateFfmpeg } from '../../tools/ffmpeg-locate';
 import { runTool, ENCODE_TIMEOUT_MS } from '../../tools/ffmpeg-run';
 import type { DebugCaptureFinalizeInput, DebugCaptureFinalizeResult } from '@shared/types/debug-report';
 
-const CAPTURES_ROOT = 'debug-captures';
+const CAPTURES_SUBDIR = 'debug-captures';
 
 const captureSessionDir = (profileId: string, sessionKey: string): string =>
-  getUserDataPath(CAPTURES_ROOT, profileId, sessionKey);
+  getUserDataPath('profiles', profileId, CAPTURES_SUBDIR, sessionKey);
 
 const encodeVideo = async (dir: string, frameCount: number): Promise<void> => {
   const found = await locateFfmpeg().catch(() => null);
@@ -48,4 +51,4 @@ const finalizeCaptureSession = async (input: DebugCaptureFinalizeInput): Promise
   }
 };
 
-export { finalizeCaptureSession, captureSessionDir, CAPTURES_ROOT };
+export { finalizeCaptureSession, captureSessionDir, CAPTURES_SUBDIR };

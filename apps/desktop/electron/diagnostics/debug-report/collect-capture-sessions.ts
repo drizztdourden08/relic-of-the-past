@@ -5,7 +5,7 @@
 import { readdir, readFile, rm } from 'fs/promises';
 import { join } from 'path';
 import { getUserDataPath } from '../../lib/paths';
-import { CAPTURES_ROOT } from './finalize-capture-session';
+import { CAPTURES_SUBDIR } from './finalize-capture-session';
 
 interface CaptureSessionFile {
   name: string;
@@ -18,7 +18,7 @@ interface FinalizedCaptureSession {
 }
 
 const collectCaptureSessions = async (profileId: string): Promise<FinalizedCaptureSession[]> => {
-  const root = getUserDataPath(CAPTURES_ROOT, profileId);
+  const root = getUserDataPath('profiles', profileId, CAPTURES_SUBDIR);
   let entries: string[];
   try {
     entries = (await readdir(root, { withFileTypes: true })).filter((e) => e.isDirectory()).map((e) => e.name);
@@ -39,7 +39,7 @@ const collectCaptureSessions = async (profileId: string): Promise<FinalizedCaptu
 /** Called once a report finished zipping those sessions in, so the same recording never gets
  *  bundled into a second report. */
 const deleteCaptureSessions = async (profileId: string, sessionKeys: string[]): Promise<void> => {
-  const root = getUserDataPath(CAPTURES_ROOT, profileId);
+  const root = getUserDataPath('profiles', profileId, CAPTURES_SUBDIR);
   await Promise.all(sessionKeys.map((key) => rm(join(root, key), { recursive: true, force: true }).catch(() => {})));
 };
 
