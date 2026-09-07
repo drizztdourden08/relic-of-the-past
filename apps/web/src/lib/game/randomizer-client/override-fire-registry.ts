@@ -66,6 +66,18 @@ const onFiredLocation = (listener: FiredLocationListener): () => void => {
   return () => firedListeners.delete(listener);
 };
 
+/**
+ * Backfills a substitution the core already recorded before this boot (a
+ * shelf sold in an earlier session, per its persisted SRAM counter). No fire
+ * id exists for a past purchase, so this bypasses the id ledger and reports
+ * straight to the location set the live path also writes.
+ */
+const markLocationFired = (locationName: string): void => {
+  if (firedLocationNames.has(locationName)) return;
+  firedLocationNames.add(locationName);
+  for (const listener of firedListeners) listener(locationName);
+};
+
 const disarmFireReporting = (): void => {
   disarmOverrideFiredEvents();
   locationByFireId.clear();
@@ -76,5 +88,6 @@ const disarmFireReporting = (): void => {
 };
 
 export {
-  allocateFireId, armFireReporting, disarmFireReporting, firedLocations, isCheckPhysicallyArmed, onFiredLocation,
+  allocateFireId, armFireReporting, disarmFireReporting, firedLocations, isCheckPhysicallyArmed,
+  markLocationFired, onFiredLocation,
 };

@@ -10,6 +10,7 @@
 
 import { getModule } from '../wasm-bridge';
 import { log } from '../../log-bus';
+import { rescanShopCatchUp } from './apply-overrides';
 import type { CheckDetection } from './check-detection';
 import type { RandomizerSession } from './session.type';
 
@@ -78,6 +79,10 @@ const pollOnce = (session: ReportingSession, entries: readonly PollEntry[]): voi
   const mod = getModule();
   if (!mod) return;
   try {
+    // Rechecked every tick, not once at arm time: a shelf armed before the profile's
+    // real SRAM became the active WRAM state (a test harness loading a state into an
+    // already-running module) would otherwise read a stale sold counter forever.
+    rescanShopCatchUp();
     const reads = buildHeapReads(mod);
     if (!reads) return;
     for (const entry of entries) {
