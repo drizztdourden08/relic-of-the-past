@@ -1,12 +1,13 @@
 /* @layer renderer-components @kind style */
 
-/* Covers the gameplay area only (sized by its parent, .app__content). Sits well below any
-   widget's z-index, so a widget occupying part of this space naturally intercepts the pointer
-   before it reaches this zone - hovering a widget never counts as hovering the game section. */
+/* Covers the gameplay area only (sized by its parent, .app__content). No z-index of its own on
+   purpose: a widget (explicit z-index, --z-panel) then always wins the pointer hit-test over
+   this zone wherever they overlap, so hovering a widget never counts as hovering the game
+   section - without trapping the button stack's own (much higher) z-index inside a losing
+   stacking context, which is what made the buttons vanish behind any docked widget. */
 .debug-floating-controls__hover-zone {
   position: absolute;
   inset: 0;
-  z-index: var(--z-sticky);
   pointer-events: auto;
 }
 
@@ -16,7 +17,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-sm);
+  gap: var(--space-lg);
 }
 
 /* Shared round glass base for both buttons in the stack. */

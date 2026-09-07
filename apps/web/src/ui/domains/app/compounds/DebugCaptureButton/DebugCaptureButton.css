@@ -1,51 +1,65 @@
 /* @layer renderer-components @kind style */
 
+/*
+ * The colorful-glow-on-hover technique (codingnepalweb.com/colorful-glowing-effect-on-hover),
+ * copied structurally and recolored to the project's green/gold tokens, state-triggered by
+ * --active instead of :hover: the outer circle and its two same-size span layers all share ONE
+ * background (spans use `background: inherit`), idle dark like every other round button. Active
+ * swaps ONLY the outer's background to the gradient - the spans inherit it and get blurred,
+ * bleeding a colorful halo outward, while the inner button (higher z-index, its own fixed dark
+ * background) stays sharp and unchanged on top.
+ */
 .debug-capture-glow {
   position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--c-glass);
 }
 
-/* The colorful-glow-on-hover technique (codingnepalweb.com), state-triggered instead of
-   hover-triggered: two blurred layers behind the button plus a rotating hue on a green/gold
-   gradient, so "recording" reads as an ambient aurora instead of a plain color swap. */
 .debug-capture-glow__layer {
   position: absolute;
-  inset: -6px;
+  top: 50%;
+  left: 50%;
+  height: 100%;
+  width: 100%;
   border-radius: 50%;
-  opacity: 0;
-  transition: opacity var(--transition-normal);
+  background: inherit;
+  transform: translate(-50%, -50%);
 }
 
-.debug-capture-glow--active {
-  border-radius: 50%;
-  background: linear-gradient(var(--c-green), var(--c-gold-bright), var(--c-green-bright));
-  animation: debug-capture-glow-spin 1.5s linear infinite;
+/* Rendered after the two span layers, so plain DOM order already puts it on top - no z-index needed. */
+.debug-capture-glow .debug-capture-button.debug-round-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .debug-capture-glow--active .debug-capture-glow__layer--1 {
-  opacity: 1;
   filter: blur(7px);
 }
 
 .debug-capture-glow--active .debug-capture-glow__layer--2 {
-  opacity: 1;
   filter: blur(14px);
 }
 
-@keyframes debug-capture-glow-spin {
+.debug-capture-glow--active {
+  background: linear-gradient(var(--c-green), var(--c-gold-bright), var(--c-green-bright));
+  animation: debug-capture-glow-rotate 1.5s linear infinite;
+}
+
+@keyframes debug-capture-glow-rotate {
   0% { filter: hue-rotate(0deg); }
   100% { filter: hue-rotate(360deg); }
 }
 
-.debug-capture-button--active {
-  color: var(--c-gold-bright);
-}
-
 .debug-capture-button__timer {
   position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-top: var(--space-2xs);
+  top: 50%;
+  right: 100%;
+  margin-right: var(--space-sm);
+  transform: translateY(-50%);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-variant-numeric: tabular-nums;
