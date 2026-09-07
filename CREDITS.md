@@ -55,3 +55,9 @@
 | Who | Project | Use | License |
 |-----|---------|-----|---------|
 | **Archipelago** | [Archipelago Multiworld](https://archipelago.gg) | Logic Reference: ruleset, region structure, check flags, and entrance naming studied and reimplemented in TypeScript; no code copied directly | MIT |
+
+## Randomizer Item Icons
+
+| Who | Project | Use | License |
+|-----|---------|-----|---------|
+| **Efracrafting** | Randomizer Item Icons | Original Work: hand-drew the quiver receipt's held-item icon, redrawn to fit the game's own sprite palette | - |
