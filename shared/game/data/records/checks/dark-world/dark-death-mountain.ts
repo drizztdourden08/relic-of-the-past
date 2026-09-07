@@ -67,6 +67,14 @@ const DW_DARK_DEATH_MOUNTAIN_CHECKS: CheckRecord[] = [
     randomizerName: 'Hookshot Cave - Bottom Left',
     vanillaItemIds: ['item-066'],
   },
+  {
+    id: 'check-272',
+    gameId: { owScreen: 74, mask: 64 },
+    kind: 'standing',
+    screenId: 'screen-270',
+    randomizerName: 'Bumper Cave Ledge',
+    vanillaItemIds: ['item-024'],
+  },
 ];
 
 export { DW_DARK_DEATH_MOUNTAIN_CHECKS };
