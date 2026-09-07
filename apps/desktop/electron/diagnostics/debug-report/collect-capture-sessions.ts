@@ -1,11 +1,13 @@
 /* @layer electron-main @kind logic */
-/** Reads every already-finalized capture session (see finalize-capture-session.ts) straight
- *  off disk for a profile - each one's raw frames, position timeline, and video (when ffmpeg
- *  made one) already sit in their own folder, written the moment the recording stopped. */
+/** Reads what a report actually ships for each capture session: the position timeline plus
+ *  whatever finalize-capture-session.ts put in packaged/ (a size-budgeted video, or a PNG
+ *  fallback) - never the unlimited local frames/full video, which stay on disk for review
+ *  regardless of whether a report ever gets sent. A session with no packaged/ folder has
+ *  already been swept into an earlier report and is skipped, not re-shipped. */
 import { readdir, readFile, rm } from 'fs/promises';
 import { join } from 'path';
 import { getUserDataPath } from '../../lib/paths';
-import { CAPTURES_SUBDIR } from './finalize-capture-session';
+import { CAPTURES_SUBDIR, PACKAGED_SUBDIR } from './finalize-capture-session';
 
 interface CaptureSessionFile {
   name: string;
@@ -19,28 +21,38 @@ interface FinalizedCaptureSession {
 
 const collectCaptureSessions = async (profileId: string): Promise<FinalizedCaptureSession[]> => {
   const root = getUserDataPath('profiles', profileId, CAPTURES_SUBDIR);
-  let entries: string[];
+  let sessionKeys: string[];
   try {
-    entries = (await readdir(root, { withFileTypes: true })).filter((e) => e.isDirectory()).map((e) => e.name);
+    sessionKeys = (await readdir(root, { withFileTypes: true })).filter((e) => e.isDirectory()).map((e) => e.name);
   } catch {
     return [];
   }
 
   const sessions: FinalizedCaptureSession[] = [];
-  for (const sessionKey of entries) {
+  for (const sessionKey of sessionKeys) {
     const dir = join(root, sessionKey);
-    const fileNames = await readdir(dir);
-    const files = await Promise.all(fileNames.map(async (name) => ({ name, contents: await readFile(join(dir, name)) })));
+    const packagedDir = join(dir, PACKAGED_SUBDIR);
+    const packagedNames = await readdir(packagedDir).catch(() => null);
+    if (!packagedNames || packagedNames.length === 0) continue;
+
+    const files: CaptureSessionFile[] = [];
+    const snapshotsContents = await readFile(join(dir, 'snapshots.jsonl')).catch(() => null);
+    if (snapshotsContents) files.push({ name: 'snapshots.jsonl', contents: snapshotsContents });
+    for (const name of packagedNames) {
+      files.push({ name, contents: await readFile(join(packagedDir, name)) });
+    }
     sessions.push({ sessionKey, files });
   }
   return sessions;
 };
 
 /** Called once a report finished zipping those sessions in, so the same recording never gets
- *  bundled into a second report. */
+ *  bundled into a second report. Only removes packaged/ - the unlimited local frames and full
+ *  video are kept regardless, for local review. */
 const deleteCaptureSessions = async (profileId: string, sessionKeys: string[]): Promise<void> => {
   const root = getUserDataPath('profiles', profileId, CAPTURES_SUBDIR);
-  await Promise.all(sessionKeys.map((key) => rm(join(root, key), { recursive: true, force: true }).catch(() => {})));
+  await Promise.all(sessionKeys.map((key) =>
+    rm(join(root, key, PACKAGED_SUBDIR), { recursive: true, force: true }).catch(() => {})));
 };
 
 export { collectCaptureSessions, deleteCaptureSessions };
