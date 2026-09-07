@@ -5,7 +5,6 @@ import { usePlatform } from '@app/platform';
 import { DropdownMenu } from '../../../../design-system/composites/DropdownMenu';
 import { IconButton } from '../../../../design-system/primitives/IconButton';
 import { BugReportButton } from '../../compounds/BugReportButton';
-import { DebugCaptureControls } from '../../compounds/DebugCaptureButton';
 import { Box } from '../../../../design-system/primitives/Box';
 import { Button } from '../../../../design-system/primitives/Button';
 import { Text } from '../../../../design-system/primitives/Text';
@@ -177,7 +176,6 @@ const TitleBar = (props: TitleBarProps) => {
           <Text as="span" className="titlebar__search-spark" aria-hidden>✦</Text>
         </IconButton>
         <BugReportButton onClick={onShowBugReport} />
-        <DebugCaptureControls />
         <IconButton
           variant="ghost"
           size="sm"

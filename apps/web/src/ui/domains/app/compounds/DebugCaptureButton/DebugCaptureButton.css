@@ -1,82 +1,59 @@
 /* @layer renderer-components @kind style */
 
-.debug-capture-button-wrap {
+.debug-capture-glow {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-2xs);
 }
 
-.debug-capture-button--idle {
-  color: var(--c-info);
+/* The colorful-glow-on-hover technique (codingnepalweb.com), state-triggered instead of
+   hover-triggered: two blurred layers behind the button plus a rotating hue on a green/gold
+   gradient, so "recording" reads as an ambient aurora instead of a plain color swap. */
+.debug-capture-glow__layer {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity var(--transition-normal);
 }
 
-.debug-capture-button--idle:hover:not(:disabled) {
-  color: var(--c-info-dim);
-  border-color: var(--c-info);
+.debug-capture-glow--active {
+  border-radius: 50%;
+  background: linear-gradient(var(--c-green), var(--c-gold-bright), var(--c-green-bright));
+  animation: debug-capture-glow-spin 1.5s linear infinite;
+}
+
+.debug-capture-glow--active .debug-capture-glow__layer--1 {
+  opacity: 1;
+  filter: blur(7px);
+}
+
+.debug-capture-glow--active .debug-capture-glow__layer--2 {
+  opacity: 1;
+  filter: blur(14px);
+}
+
+@keyframes debug-capture-glow-spin {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
 }
 
 .debug-capture-button--active {
-  position: relative;
-  color: var(--c-danger);
-  border-color: transparent;
-  z-index: 0;
-}
-
-/* A rotating ring floating around the button while recording; the hue-rotate animation drifts
-   the two token colors through the spectrum instead of hardcoding extra stops. */
-.debug-capture-button--active::before {
-  content: '';
-  position: absolute;
-  inset: -5px;
-  border-radius: 50%;
-  background: conic-gradient(from 0deg, var(--c-danger), var(--c-warning), var(--c-danger));
-  filter: blur(3px);
-  z-index: -1;
-  animation: debug-capture-spin 2.2s linear infinite, debug-capture-hue 5s linear infinite;
-}
-
-@keyframes debug-capture-spin {
-  to { transform: rotate(360deg); }
-}
-
-@keyframes debug-capture-hue {
-  to { filter: blur(3px) hue-rotate(360deg); }
-}
-
-.debug-capture-button__icon--pulse {
-  animation: debug-capture-icon-pulse 1s ease-in-out infinite;
-}
-
-@keyframes debug-capture-icon-pulse {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-
-  50% {
-    transform: scale(1.2);
-    opacity: 0.7;
-  }
-
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
+  color: var(--c-gold-bright);
 }
 
 .debug-capture-button__timer {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: var(--space-2xs);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-variant-numeric: tabular-nums;
-  color: var(--c-danger);
+  color: var(--c-gold-bright);
   line-height: 1;
+  white-space: nowrap;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .debug-capture-button--active::before,
-  .debug-capture-button__icon--pulse {
-    animation: none;
-  }
+  .debug-capture-glow--active { animation: none; }
 }

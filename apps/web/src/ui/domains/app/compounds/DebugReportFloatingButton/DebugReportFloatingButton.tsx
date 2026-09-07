@@ -4,27 +4,24 @@ import send from '@iconify-icons/lucide/send';
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
 import { FfmpegRequiredDialog } from '@domains/app/compounds/FfmpegRequiredDialog';
-import { useAllowDebugLogging } from '@app/lib/diagnostics/useAllowDebugLogging';
-import { useDraggablePosition } from './behavior/useDraggablePosition';
 import { useDebugReportCapture } from './behavior/useDebugReportCapture';
 import './DebugReportFloatingButton.css';
 
 interface DebugReportFloatingButtonProps {
-  profileId: string | null;
-  gameRunning: boolean;
+  profileId: string;
+  dragging: boolean;
+  onPointerDown: (e: React.PointerEvent) => void;
+  onPointerMove: (e: React.PointerEvent) => void;
+  onPointerUp: (e: React.PointerEvent) => void;
   onReportPackaged: (reportId: string) => void;
 }
 
-/** Floating, draggable button over the game view: packages every save state (quick/normal/
- *  auto/live) plus the capture recorder's buffer into a debug report and hands the id to the
- *  bug-report dialog. Self-gates on GameSettings.allowDebugLogging so callers can mount it
- *  unconditionally. */
-const DebugReportFloatingButton = ({ profileId, gameRunning, onReportPackaged }: DebugReportFloatingButtonProps) => {
-  const allowDebugLogging = useAllowDebugLogging();
-  const { offset, dragging, onPointerDown, onPointerMove, onPointerUp } = useDraggablePosition();
+/** Packages every save state (quick/normal/auto/live) plus the capture recorder's buffer into
+ *  a debug report and hands the id to the bug-report dialog. Position/drag are owned by the
+ *  parent stack (DebugFloatingControls); this is presentational plus its own send flow. */
+const DebugReportFloatingButton = (props: DebugReportFloatingButtonProps) => {
+  const { profileId, dragging, onPointerDown, onPointerMove, onPointerUp, onReportPackaged } = props;
   const { status, sendReport, showFfmpegPrompt, resolveFfmpegPrompt } = useDebugReportCapture(profileId);
-
-  if (!allowDebugLogging || !gameRunning || !profileId) return null;
 
   const handleClick = async () => {
     if (dragging || status === 'packaging') return;
@@ -41,8 +38,7 @@ const DebugReportFloatingButton = ({ profileId, gameRunning, onReportPackaged }:
     <>
       <Button
         variant="bare"
-        className={`debug-report-floating-button${status === 'error' ? ' debug-report-floating-button--error' : ''}`}
-        style={{ top: offset.top, right: offset.right }}
+        className={`debug-round-button debug-report-floating-button${status === 'error' ? ' debug-report-floating-button--error' : ''}`}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}

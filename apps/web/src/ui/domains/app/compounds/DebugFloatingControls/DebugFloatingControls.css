@@ -1,0 +1,53 @@
+/* @layer renderer-components @kind style */
+
+/* Covers the gameplay area only (sized by its parent, .app__content). Sits well below any
+   widget's z-index, so a widget occupying part of this space naturally intercepts the pointer
+   before it reaches this zone - hovering a widget never counts as hovering the game section. */
+.debug-floating-controls__hover-zone {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-sticky);
+  pointer-events: auto;
+}
+
+.debug-floating-controls__stack {
+  position: fixed;
+  z-index: var(--z-floating);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* Shared round glass base for both buttons in the stack. */
+.debug-round-button {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--c-glass);
+  border: 1px solid var(--c-hairline);
+  color: var(--c-info);
+  backdrop-filter: blur(var(--blur));
+  cursor: grab;
+  touch-action: none;
+  box-shadow: var(--shadow-1);
+  opacity: 0.35;
+  transition: opacity var(--transition-normal), color var(--transition-normal), border-color var(--transition-normal);
+}
+
+.debug-round-button:hover {
+  color: var(--c-info-dim);
+  border-color: var(--c-border-strong);
+}
+
+.debug-round-button:active {
+  cursor: grabbing;
+}
+
+.debug-floating-controls__hover-zone:hover .debug-round-button {
+  opacity: 1;
+}

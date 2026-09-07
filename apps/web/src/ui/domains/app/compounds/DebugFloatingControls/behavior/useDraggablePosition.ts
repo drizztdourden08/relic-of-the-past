@@ -1,10 +1,11 @@
 /* @layer renderer-components @kind hook */
-/** Drag state for the floating debug-report button. Position is stored as an offset from the
- *  top-right corner (its default spot) so it stays sensible across window resizes, and persists
- *  per-viewer in localStorage: a placement convenience, not data anyone else needs to see. */
+/** Drag state for the floating capture/report button stack. Position is stored as an offset
+ *  from the top-right corner (its default spot) so it stays sensible across window resizes,
+ *  and persists per-viewer in localStorage: a placement convenience, not data anyone else
+ *  needs to see. Both buttons share one position - grabbing either drags the whole stack. */
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-const STORAGE_KEY = 'debugReportButton.offset';
+const STORAGE_KEY = 'debugFloatingControls.offset';
 const DEFAULT_OFFSET = { top: 96, right: 24 };
 
 const readStoredOffset = (): { top: number; right: number } => {

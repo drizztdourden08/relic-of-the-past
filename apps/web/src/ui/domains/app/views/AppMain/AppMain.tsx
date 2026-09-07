@@ -38,7 +38,7 @@ import { SearchPalette } from '../SearchPalette';
 import type { TitleBarProps } from '../TitleBar/TitleBar.type';
 import { GameLayer } from '../GameLayer';
 import { SaveStateOverlay } from '../SaveStateOverlay/SaveStateOverlay';
-import { DebugReportFloatingButton } from '../../compounds/DebugReportFloatingButton';
+import { DebugFloatingControls } from '../../compounds/DebugFloatingControls';
 import { AppDialogs } from './sub-components/AppDialogs';
 import './AppMain.css';
 
@@ -190,7 +190,7 @@ const AppMain = () => {
           }}
         </WidgetManager>
 
-        <DebugReportFloatingButton
+        <DebugFloatingControls
           profileId={profileMgmt.activeProfile?.id ?? null}
           gameRunning={game.isRunning}
           onReportPackaged={(reportId) => { setDebugReportId(reportId); setShowBugReportDialog(true); }}
