@@ -53,12 +53,34 @@ interface DebugReportSaveEntry {
 }
 
 /** What the renderer sends to the main process to build (but not yet send) the report.
- *  Capture data isn't part of this: every already-finalized session folder for this profile
- *  gets swept into the zip directly off disk. */
+ *  `sessionKeys` is exactly what the picker had checked - not "every eligible session",
+ *  since which capture sessions ship is now the player's choice. */
 interface DebugReportPackageInput {
   profileId: string;
   saves: DebugReportSaveEntry[];
+  sessionKeys: string[];
 }
+
+/** One recorded capture session as the picker lists it: enough to show a small preview,
+ *  a timestamp, and whether it's already been shipped in an earlier report. `sentAt` comes
+ *  from that profile's capture manifest, not from the session folder itself - deleting
+ *  `packaged/` is no longer how "already sent" gets tracked (see capture-manifest.ts).
+ *  `previewKind: 'images'` (no ffmpeg, PNG fallback) carries every packaged frame in
+ *  `previewFrameUrls` so the picker can cycle through them as a fake video instead of
+ *  freezing on frame one. */
+interface DebugCaptureSessionSummary {
+  sessionKey: string;
+  startedAt: number;
+  sizeBytes: number;
+  previewUrl: string | null;
+  previewFrameUrls: string[];
+  previewKind: 'video' | 'images' | 'none';
+  sentAt: number | null;
+}
+
+type DebugCaptureDeleteSessionResult =
+  | { ok: true }
+  | { error: string };
 
 /** Building is local-only (collect files, zip, sweep in finalized capture sessions) and
  *  never touches the network: it returns the id of the zip the main process is holding in
@@ -80,6 +102,8 @@ export type {
   DebugCaptureFinalizeResult,
   DebugReportSaveEntry,
   DebugReportPackageInput,
+  DebugCaptureSessionSummary,
+  DebugCaptureDeleteSessionResult,
   DebugReportBuildResult,
   DebugReportUploadResult,
 };

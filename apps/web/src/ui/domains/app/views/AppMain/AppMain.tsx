@@ -91,7 +91,6 @@ const AppMain = () => {
   const {
     showUpdateDialog, setShowUpdateDialog,
     showBugReportDialog, setShowBugReportDialog,
-    debugReportId, setDebugReportId,
     handleShowShadowEditor,
   } = useAppOverlays({ showDialog, dismissDialog });
 
@@ -193,7 +192,7 @@ const AppMain = () => {
         <DebugFloatingControls
           profileId={profileMgmt.activeProfile?.id ?? null}
           gameRunning={game.isRunning}
-          onReportBuilt={(reportId) => { setDebugReportId(reportId); setShowBugReportDialog(true); }}
+          onOpenReport={() => setShowBugReportDialog(true)}
         />
       </Box>
 
@@ -206,8 +205,7 @@ const AppMain = () => {
         setShowUpdateDialog={setShowUpdateDialog}
         showBugReportDialog={showBugReportDialog}
         setShowBugReportDialog={setShowBugReportDialog}
-        debugReportId={debugReportId}
-        setDebugReportId={setDebugReportId}
+        profileId={profileMgmt.activeProfile?.id ?? null}
       />
 
       <SearchPalette navProps={chromeProps} navDeps={{ setActivePage: nav.setActivePage, setProfileHubTab }} />

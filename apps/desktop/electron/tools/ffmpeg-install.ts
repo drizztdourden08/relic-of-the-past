@@ -1,29 +1,23 @@
 /* @layer electron-main @kind logic */
 /**
- * Install the optional ffmpeg tool on request: download the pinned archive, verify it,
- * keep the two binaries. The order is the security property: the checksum is checked
- * while the download is still an inert file in temp.
+ * Install the optional ffmpeg tool on request: resolve the current release asset, download
+ * it, verify it, keep the two binaries. The order is the security property: the checksum is
+ * checked while the download is still an inert file in temp.
  */
 import { rm } from 'fs/promises';
 import type { FfmpegState } from '@shared/types/ffmpeg-tool';
-import { PINNED_FFMPEG, ffmpegAssetUrl } from '@shared/types/ffmpeg-tool';
+import { PINNED_FFMPEG } from '@shared/types/ffmpeg-tool';
 import { downloadToTemp } from '../lib/download';
 import { extractEntriesByBasename } from '../lib/archive';
 import { errMessage } from '../lib/result';
 import type { FfmpegBinaries } from './ffmpeg-paths';
 import { canDownload, exeName, ffmpegToolDir, managedBinaries } from './ffmpeg-paths';
 import { ffmpegState, locateFfmpeg } from './ffmpeg-locate';
-import { assertChecksumUsable, verifyDownload } from './ffmpeg-verify';
+import { resolveFfmpegAsset } from './ffmpeg-release';
+import { verifyDownload } from './ffmpeg-verify';
 
 /** Reports each state the install passes through, for a progress bar. */
 type StateReporter = (state: FfmpegState) => void;
-
-const downloadPinned = async (report: StateReporter): Promise<string> => {
-  report({ status: 'downloading', receivedBytes: 0, totalBytes: PINNED_FFMPEG.sizeBytes });
-  return downloadToTemp(ffmpegAssetUrl(PINNED_FFMPEG), '.zip', (received, total) => {
-    report({ status: 'downloading', receivedBytes: received, totalBytes: total ?? PINNED_FFMPEG.sizeBytes });
-  });
-};
 
 /** Keep only the two binaries. Throws when the archive did not carry both. */
 const extractBinaries = async (archivePath: string): Promise<FfmpegBinaries> => {
@@ -40,14 +34,16 @@ const runInstall = async (report: StateReporter): Promise<FfmpegState> => {
   if (existing) return { status: 'ready', ...existing };
   if (!canDownload()) return ffmpegState();
 
-  // Fail closed before spending a 140 MB download on an archive we could not vet.
-  assertChecksumUsable(PINNED_FFMPEG);
+  const asset = await resolveFfmpegAsset(PINNED_FFMPEG);
 
   let archivePath: string | null = null;
   try {
-    archivePath = await downloadPinned(report);
+    report({ status: 'downloading', receivedBytes: 0, totalBytes: asset.sizeBytes });
+    archivePath = await downloadToTemp(asset.downloadUrl, '.zip', (received, total) => {
+      report({ status: 'downloading', receivedBytes: received, totalBytes: total ?? asset.sizeBytes });
+    });
     report({ status: 'verifying' });
-    await verifyDownload(archivePath, PINNED_FFMPEG);
+    await verifyDownload(archivePath, asset.sizeBytes, asset.sha256);
     return { status: 'ready', ...(await extractBinaries(archivePath)) };
   } finally {
     if (archivePath) await rm(archivePath, { force: true }).catch(() => {});

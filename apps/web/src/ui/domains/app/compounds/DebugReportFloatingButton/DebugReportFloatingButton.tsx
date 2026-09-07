@@ -1,77 +1,35 @@
 /* @layer renderer-components @kind component */
-import { useEffect, useState } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import send from '@iconify-icons/lucide/send';
-import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
-import { Text } from '@ds/primitives/Text';
-import { ToastContainer } from '@ds/primitives/Toast';
-import type { ToastItem } from '@ds/primitives/Toast';
-import { useDebugReportCapture } from './behavior/useDebugReportCapture';
 import './DebugReportFloatingButton.css';
 
 interface DebugReportFloatingButtonProps {
-  profileId: string;
   dragging: boolean;
   onPointerDown: (e: React.PointerEvent) => void;
   onPointerMove: (e: React.PointerEvent) => void;
   onPointerUp: (e: React.PointerEvent) => void;
-  onReportBuilt: (reportId: string) => void;
+  onOpenReport: () => void;
 }
 
-/** Packages every save state (quick/normal/auto/live) plus every already-finalized capture
- *  session into a debug report zip and hands the id to the bug-report dialog - local-only,
- *  nothing uploads from here. Position/drag are owned by the parent stack
- *  (DebugFloatingControls); this is presentational plus its own packaging flow. A failure
- *  surfaces as a danger toast (own local queue, same pattern as the Home tab's) - not a
- *  tooltip, which needs a hover to ever be seen. */
+/** Opens the bug-report dialog, where the session picker and save states are packaged into a
+ *  debug report at submit time (see useBugReportForm) - this button no longer packages
+ *  anything itself. Position/drag are owned by the parent stack (DebugFloatingControls). */
 const DebugReportFloatingButton = (props: DebugReportFloatingButtonProps) => {
-  const { profileId, dragging, onPointerDown, onPointerMove, onPointerUp, onReportBuilt } = props;
-  const { status, errorMessage, packageReport } = useDebugReportCapture(profileId);
-  const packaging = status === 'packaging';
-  const [toasts, setToasts] = useState<ToastItem[]>([]);
-
-  useEffect(() => {
-    if (status !== 'error') return;
-    const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-    setToasts((prev) => [...prev, {
-      id, variant: 'danger', duration: 5000,
-      message: errorMessage ?? 'Could not package the report - try again.',
-    }]);
-  }, [status, errorMessage]);
-
-  const dismissToast = (id: string) => setToasts((prev) => prev.filter((t) => t.id !== id));
-
-  const handleClick = async () => {
-    if (dragging || packaging) return;
-    const reportId = await packageReport();
-    if (reportId) onReportBuilt(reportId);
-  };
+  const { dragging, onPointerDown, onPointerMove, onPointerUp, onOpenReport } = props;
 
   return (
-    <>
-      <Button
-        variant="bare"
-        disabled={packaging}
-        className={[
-          'debug-round-button', 'debug-report-floating-button',
-          status === 'error' && 'debug-report-floating-button--error',
-          packaging && 'debug-report-floating-button--busy',
-        ].filter(Boolean).join(' ')}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}
-        onClick={handleClick}
-        title="Package a debug report to attach to a bug report"
-      >
-        <IconifyIcon icon={send} width={16} height={16} />
-        {packaging && <Box as="span" className="debug-report-floating-button__spinner" aria-hidden />}
-        {packaging && (
-          <Text as="span" className="debug-floating-controls__status-label">Packaging...</Text>
-        )}
-      </Button>
-      <ToastContainer toasts={toasts} onDismiss={dismissToast} />
-    </>
+    <Button
+      variant="bare"
+      className="debug-round-button debug-report-floating-button"
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
+      onClick={() => { if (!dragging) onOpenReport(); }}
+      title="Report a bug, with a chance to attach a debug report"
+    >
+      <IconifyIcon icon={send} width={16} height={16} />
+    </Button>
   );
 };
 
