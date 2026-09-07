@@ -6,10 +6,13 @@ import square from '@iconify-icons/lucide/square';
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
 import { Text } from '@ds/primitives/Text';
+import { FfmpegRequiredDialog } from '@domains/app/compounds/FfmpegRequiredDialog';
 import { useDebugCaptureStore } from '@app/stores/debug-capture-store';
+import { useDebugCapture } from './behavior/useDebugCapture';
 import './DebugCaptureButton.css';
 
 interface DebugCaptureButtonProps {
+  profileId: string;
   onPointerDown: (e: React.PointerEvent) => void;
   onPointerMove: (e: React.PointerEvent) => void;
   onPointerUp: (e: React.PointerEvent) => void;
@@ -24,10 +27,12 @@ const formatElapsed = (ms: number): string => {
 
 /** Toggle for the debug-capture recorder, bound through the rebindable function-action system
  *  (Controls settings), default Tab. Only rendered while GameSettings.allowDebugLogging is on;
- *  the caller owns that gate. Position/drag are owned by the parent stack. */
-const DebugCaptureButton = ({ onPointerDown, onPointerMove, onPointerUp }: DebugCaptureButtonProps) => {
-  const isCapturing = useDebugCaptureStore((s) => s.isCapturing);
+ *  the caller owns that gate. Position/drag are owned by the parent stack. Starting checks for
+ *  ffmpeg (a recording gets encoded into a video the moment it stops, not later) and offers
+ *  the install prompt if it's missing; stopping never needs it. */
+const DebugCaptureButton = ({ profileId, onPointerDown, onPointerMove, onPointerUp }: DebugCaptureButtonProps) => {
   const startedAt = useDebugCaptureStore((s) => s.startedAt);
+  const { isCapturing, handleClick, showFfmpegPrompt, resolveFfmpegPrompt } = useDebugCapture(profileId);
   const [elapsedMs, setElapsedMs] = useState(0);
 
   useEffect(() => {
@@ -47,7 +52,7 @@ const DebugCaptureButton = ({ onPointerDown, onPointerMove, onPointerUp }: Debug
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
-        onClick={() => useDebugCaptureStore.getState().toggle()}
+        onClick={() => { void handleClick(); }}
         title={isCapturing ? 'Stop debug capture' : 'Start debug capture'}
         aria-label={isCapturing ? 'Stop debug capture' : 'Start debug capture'}
       >
@@ -56,6 +61,7 @@ const DebugCaptureButton = ({ onPointerDown, onPointerMove, onPointerUp }: Debug
       {isCapturing && (
         <Text as="span" className="debug-floating-controls__status-label">{formatElapsed(elapsedMs)}</Text>
       )}
+      <FfmpegRequiredDialog open={showFfmpegPrompt} onClose={resolveFfmpegPrompt} />
     </Box>
   );
 };

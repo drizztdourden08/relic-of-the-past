@@ -1,20 +1,18 @@
 /* @layer renderer-stores @kind logic */
 /**
- * The debug-capture ring buffer: while running, samples exactly where Link and the game are
+ * The debug-capture recorder: while running, samples exactly where Link and the game are
  * (the same map slice the Navigation widget reads) plus a screenshot, once a second, so a
- * debug report can attach a timeline instead of one instant. Each recording self-stops once
- * IT (not the report as a whole) would exceed a fixed byte budget, so a long session never
- * grows the eventual .zip out of proportion. Toggled by the titlebar button and the
- * rebindable function action (input-manager-debug-capture.ts), both gated on
- * GameSettings.allowDebugLogging by their own callers.
+ * debug report can attach a timeline instead of one instant. A recording self-stops once it
+ * would exceed a fixed byte budget, so a long session never grows out of proportion. Toggled
+ * by the titlebar button and the rebindable function action (input-manager-debug-capture.ts),
+ * both gated on GameSettings.allowDebugLogging by their own callers.
  *
- * Multiple start/stop cycles ACCUMULATE into the same buffer (each tagged with its own
- * `session` number, each with its own budget) instead of the later one replacing the earlier
- * one, so a player who records a bug, stops, repositions, and records again ends up with both
- * recordings in the eventual report. Only drain() (sending the report) clears the buffer -
- * but that alone doesn't bound memory, since nothing forces a drain: TOTAL_BUDGET_BYTES caps
- * the whole undrained buffer regardless of how many sessions were recorded into it, dropping
- * the oldest screenshots once it's hit, so recording repeatedly without ever sending a report
+ * Stopping - whether the user did it or the byte budget did - hands the just-finished session
+ * straight to the main process (finalizeDebugCaptureSession), which writes the raw frames,
+ * the position timeline, and an ffmpeg-encoded video into their own folder under
+ * debug-captures/<profileId>/ immediately, not deferred until a report gets packaged. This
+ * store only ever holds ONE session's worth of data (the one currently recording): nothing
+ * accumulates here across sessions, so recording repeatedly without ever packaging a report
  * can't grow memory without limit.
  */
 import { create } from 'zustand';
@@ -24,28 +22,19 @@ import { captureGameFrameBlob } from '@app/lib/game/capture-frame';
 
 const SAMPLE_INTERVAL_MS = 1000;
 const CAPTURE_BUDGET_BYTES = 2 * 1024 * 1024;
-const TOTAL_BUDGET_BYTES = 10 * 1024 * 1024;
 const MAX_SNAPSHOTS = 2000;
-
-interface DebugCaptureDrain {
-  snapshots: DebugCaptureSnapshot[];
-  screenshots: DebugCaptureScreenshot[];
-}
 
 interface DebugCaptureStore {
   isCapturing: boolean;
   startedAt: number | null;
   session: number;
+  profileId: string | null;
   snapshots: DebugCaptureSnapshot[];
   screenshots: DebugCaptureScreenshot[];
-  /** Bytes added by the CURRENT session only; reset on every start(), checked against
-   *  CAPTURE_BUDGET_BYTES so each recording gets its own budget instead of a shared one
-   *  that an earlier recording could exhaust before a later one gets to run at all. */
   sessionBytes: number;
-  start: () => void;
+  start: (profileId: string) => void;
   stop: () => void;
-  toggle: () => void;
-  drain: () => DebugCaptureDrain;
+  toggle: (profileId: string) => void;
 }
 
 const takeSnapshot = (session: number): DebugCaptureSnapshot => {
@@ -63,19 +52,6 @@ const takeSnapshot = (session: number): DebugCaptureSnapshot => {
     playerX: map.linkX,
     playerY: map.linkY,
   };
-};
-
-/** Drops the oldest screenshots (they're appended in chronological order, so the oldest are
- *  always at the front) until the total is back under budget, regardless of which session(s)
- *  they came from. */
-const trimScreenshots = (screenshots: DebugCaptureScreenshot[]): DebugCaptureScreenshot[] => {
-  let bytes = screenshots.reduce((sum, s) => sum + s.png.byteLength, 0);
-  let start = 0;
-  while (bytes > TOTAL_BUDGET_BYTES && start < screenshots.length) {
-    bytes -= screenshots[start].png.byteLength;
-    start += 1;
-  }
-  return start === 0 ? screenshots : screenshots.slice(start);
 };
 
 let timer: ReturnType<typeof setTimeout> | null = null;
@@ -100,7 +76,7 @@ const tick = async (gen: number): Promise<void> => {
   }
 
   const screenshots = blob
-    ? trimScreenshots([...state.screenshots, { session: state.session, capturedAt: snapshot.capturedAt, png: await blob.arrayBuffer() }])
+    ? [...state.screenshots, { session: state.session, capturedAt: snapshot.capturedAt, png: await blob.arrayBuffer() }]
     : state.screenshots;
   useDebugCaptureStore.setState({
     snapshots: [...state.snapshots, snapshot].slice(-MAX_SNAPSHOTS),
@@ -114,25 +90,32 @@ const useDebugCaptureStore = create<DebugCaptureStore>((set, get) => ({
   isCapturing: false,
   startedAt: null,
   session: 0,
+  profileId: null,
   snapshots: [],
   screenshots: [],
   sessionBytes: 0,
-  start: () => {
+  start: (profileId: string) => {
     if (get().isCapturing) return;
     generation += 1;
-    set((s) => ({ isCapturing: true, startedAt: Date.now(), session: s.session + 1, sessionBytes: 0 }));
+    set((s) => ({
+      isCapturing: true, startedAt: Date.now(), session: s.session + 1, profileId,
+      sessionBytes: 0, snapshots: [], screenshots: [],
+    }));
     scheduleTick(generation);
   },
   stop: () => {
     generation += 1;
     if (timer) { clearTimeout(timer); timer = null; }
-    set({ isCapturing: false });
+    const { snapshots, screenshots, startedAt, profileId } = get();
+    set({ isCapturing: false, snapshots: [], screenshots: [], sessionBytes: 0 });
+    if (!profileId || (snapshots.length === 0 && screenshots.length === 0)) return;
+    const sessionKey = `session-${startedAt ?? Date.now()}`;
+    void window.api.finalizeDebugCaptureSession({ profileId, sessionKey, snapshots, screenshots });
   },
-  toggle: () => { (get().isCapturing ? get().stop : get().start)(); },
-  drain: () => {
-    const { snapshots, screenshots } = get();
-    set({ snapshots: [], screenshots: [], sessionBytes: 0, session: 0 });
-    return { snapshots, screenshots };
+  toggle: (profileId: string) => {
+    const state = get();
+    if (state.isCapturing) state.stop();
+    else state.start(profileId);
   },
 }));
 

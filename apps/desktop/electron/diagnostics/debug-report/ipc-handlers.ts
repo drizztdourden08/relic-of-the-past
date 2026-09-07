@@ -1,34 +1,30 @@
 /* @layer electron-main @kind logic */
 import { randomUUID } from 'crypto';
-import { app } from 'electron';
-import { join } from 'path';
-import { writeFile, mkdir } from 'fs/promises';
 import { handle } from '../../lib/ipc/handle';
-import type { DebugReportBuildResult, DebugReportUploadResult } from '@shared/types/debug-report';
+import type {
+  DebugCaptureFinalizeResult, DebugReportBuildResult, DebugReportUploadResult,
+} from '@shared/types/debug-report';
 import { collectDebugReportFiles } from './collect-files';
+import { collectCaptureSessions, deleteCaptureSessions } from './collect-capture-sessions';
 import { buildDebugReportZip } from './build-zip';
 import { uploadDebugReportZip } from './upload';
+import { finalizeCaptureSession } from './finalize-capture-session';
 import { storePendingReport, getPendingReport, dropPendingReport } from './pending-reports';
 
-// TEMPORARY: mirrors the --dump-nav/--dump-layers convention (debug-output/, gitignored) so a
-// packaged report can be inspected before deciding whether to send it. Remove once done.
-const dumpToDebugOutput = async (reportId: string, zip: Buffer): Promise<void> => {
-  const appRoot = app.isPackaged ? join(app.getAppPath(), '../..') : join(__dirname, '../..');
-  const dir = join(appRoot, 'debug-output');
-  await mkdir(dir, { recursive: true });
-  const outPath = join(dir, `debug-report-${reportId}.zip`);
-  await writeFile(outPath, zip);
-  console.log(`[debug-report] Written to: ${outPath}`);
-};
-
 const registerDebugReportHandlers = (): void => {
+  handle('debug-capture:finalizeSession', async (_event, input): Promise<DebugCaptureFinalizeResult> =>
+    finalizeCaptureSession(input));
+
   handle('debug-report:build', async (_event, input): Promise<DebugReportBuildResult> => {
     try {
-      const files = await collectDebugReportFiles(input.profileId);
-      const zip = await buildDebugReportZip(input, files);
+      const [files, captureSessions] = await Promise.all([
+        collectDebugReportFiles(input.profileId),
+        collectCaptureSessions(input.profileId),
+      ]);
+      const zip = await buildDebugReportZip(input, files, captureSessions);
       const reportId = randomUUID().slice(0, 12);
       storePendingReport(reportId, zip);
-      await dumpToDebugOutput(reportId, zip);
+      await deleteCaptureSessions(input.profileId, captureSessions.map((s) => s.sessionKey));
       return { reportId };
     } catch (err) {
       return { error: err instanceof Error ? err.message : String(err) };

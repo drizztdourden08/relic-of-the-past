@@ -7,7 +7,6 @@ import { Button } from '@ds/primitives/Button';
 import { Text } from '@ds/primitives/Text';
 import { ToastContainer } from '@ds/primitives/Toast';
 import type { ToastItem } from '@ds/primitives/Toast';
-import { FfmpegRequiredDialog } from '@domains/app/compounds/FfmpegRequiredDialog';
 import { useDebugReportCapture } from './behavior/useDebugReportCapture';
 import './DebugReportFloatingButton.css';
 
@@ -20,15 +19,15 @@ interface DebugReportFloatingButtonProps {
   onReportBuilt: (reportId: string) => void;
 }
 
-/** Packages every save state (quick/normal/auto/live) plus the capture recorder's buffer into
- *  a debug report zip and hands the id to the bug-report dialog - local-only, nothing
- *  uploads from here. Position/drag are owned by the parent stack (DebugFloatingControls);
- *  this is presentational plus its own packaging flow. A failure surfaces as a danger toast
- *  (own local queue, same pattern as the Home tab's) - not a tooltip, which needs a hover to
- *  ever be seen. */
+/** Packages every save state (quick/normal/auto/live) plus every already-finalized capture
+ *  session into a debug report zip and hands the id to the bug-report dialog - local-only,
+ *  nothing uploads from here. Position/drag are owned by the parent stack
+ *  (DebugFloatingControls); this is presentational plus its own packaging flow. A failure
+ *  surfaces as a danger toast (own local queue, same pattern as the Home tab's) - not a
+ *  tooltip, which needs a hover to ever be seen. */
 const DebugReportFloatingButton = (props: DebugReportFloatingButtonProps) => {
   const { profileId, dragging, onPointerDown, onPointerMove, onPointerUp, onReportBuilt } = props;
-  const { status, errorMessage, packageReport, showFfmpegPrompt, resolveFfmpegPrompt } = useDebugReportCapture(profileId);
+  const { status, errorMessage, packageReport } = useDebugReportCapture(profileId);
   const packaging = status === 'packaging';
   const [toasts, setToasts] = useState<ToastItem[]>([]);
 
@@ -46,11 +45,6 @@ const DebugReportFloatingButton = (props: DebugReportFloatingButtonProps) => {
   const handleClick = async () => {
     if (dragging || packaging) return;
     const reportId = await packageReport();
-    if (reportId) onReportBuilt(reportId);
-  };
-
-  const handleFfmpegPromptClose = async () => {
-    const reportId = await resolveFfmpegPrompt();
     if (reportId) onReportBuilt(reportId);
   };
 
@@ -76,7 +70,6 @@ const DebugReportFloatingButton = (props: DebugReportFloatingButtonProps) => {
           <Text as="span" className="debug-floating-controls__status-label">Packaging...</Text>
         )}
       </Button>
-      <FfmpegRequiredDialog open={showFfmpegPrompt} onClose={() => { void handleFfmpegPromptClose(); }} />
       <ToastContainer toasts={toasts} onDismiss={dismissToast} />
     </>
   );

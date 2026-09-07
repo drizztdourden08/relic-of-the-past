@@ -42,7 +42,7 @@ const DebugFloatingControls = (props: DebugFloatingControlsProps) => {
         className="debug-floating-controls__stack"
         style={{ top: offset.top + insets.top, right: offset.right + insets.right }}
       >
-        <DebugCaptureButton {...dragHandlers} />
+        <DebugCaptureButton profileId={profileId} {...dragHandlers} />
         <DebugReportFloatingButton
           profileId={profileId}
           dragging={dragging}

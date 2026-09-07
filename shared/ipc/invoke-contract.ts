@@ -12,7 +12,10 @@ import type { DataLocation, StorageSummary, FileStat } from '@shared/platform';
 import type { SystemDiagnostics } from '@shared/types/diagnostics';
 import type { SimRunConfig } from '@shared/game/simulation';
 import type { CreateIssueRequest, CreateIssueResult } from '@shared/types/github-issue';
-import type { DebugReportPackageInput, DebugReportBuildResult, DebugReportUploadResult } from '@shared/types/debug-report';
+import type {
+  DebugReportPackageInput, DebugReportBuildResult, DebugReportUploadResult,
+  DebugCaptureFinalizeInput, DebugCaptureFinalizeResult,
+} from '@shared/types/debug-report';
 import type {
   AllocateEnumerationArgs, AllocateEnumerationResult, AllocateGeographyArgs, AllocateGeographyResult,
   AllocateItemGroupArgs, AllocateItemGroupResult, AllocateRecordArgs, AllocateRecordResult, AllocateTagArgs,
@@ -255,11 +258,15 @@ interface InvokeContract extends
   // GitHub bug reporting through an anonymous relay, see cloud-functions/report-issue
   'github:createIssue': (req: CreateIssueRequest) => Promise<CreateIssueResult>;
 
-  // Debug report tool (Contributor tab): zips the save/screenshot/logs/settings/randomizer
-  // config, see cloud-functions/debug-report-upload. Build is local-only and returns the id
-  // of the zip it's holding in memory, generated before anything uploads so it can be folded
-  // into the GitHub issue body first; send uploads it once the issue is confirmed created,
-  // and can be retried on its own (network failure only) without repeating the local build.
+  // Debug report tool (Contributor tab). A recording finalizes the moment it stops - raw
+  // frames, the position timeline, and an ffmpeg-encoded video all land in their own folder
+  // under debug-captures/<profileId>/ right away, never deferred to packaging time.
+  'debug-capture:finalizeSession': (input: DebugCaptureFinalizeInput) => Promise<DebugCaptureFinalizeResult>;
+  // Zips the save/settings/randomizer config plus every already-finalized capture session,
+  // see cloud-functions/debug-report-upload. Build is local-only and returns the id of the
+  // zip it's holding in memory, generated before anything uploads so it can be folded into
+  // the GitHub issue body first; send uploads it once the issue is confirmed created, and can
+  // be retried on its own (network failure only) without repeating the local build.
   'debug-report:build': (input: DebugReportPackageInput) => Promise<DebugReportBuildResult>;
   'debug-report:send': (input: { reportId: string }) => Promise<DebugReportUploadResult>;
 
