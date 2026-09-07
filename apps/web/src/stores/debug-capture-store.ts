@@ -1,7 +1,7 @@
 /* @layer renderer-stores @kind logic */
 /**
  * The debug-capture recorder: while running, samples exactly where Link and the game are
- * (the same map slice the Navigation widget reads) plus a screenshot, once a second, so a
+ * (the same map slice the Navigation widget reads) plus a screenshot, 4 times a second, so a
  * debug report can attach a timeline instead of one instant. A recording self-stops once it
  * would exceed a fixed byte budget, so a long session never grows out of proportion. Toggled
  * by the titlebar button and the rebindable function action (input-manager-debug-capture.ts),
@@ -9,18 +9,18 @@
  *
  * Stopping - whether the user did it or the byte budget did - hands the just-finished session
  * straight to the main process (finalizeDebugCaptureSession), which writes the raw frames,
- * the position timeline, and an ffmpeg-encoded video into their own folder under
- * debug-captures/<profileId>/ immediately, not deferred until a report gets packaged. This
- * store only ever holds ONE session's worth of data (the one currently recording): nothing
- * accumulates here across sessions, so recording repeatedly without ever packaging a report
- * can't grow memory without limit.
+ * the position timeline, and an ffmpeg-encoded video (16fps, so 4x realtime) into their own
+ * folder under profiles/<profileId>/debug-captures/ immediately, not deferred until a report
+ * gets packaged. This store only ever holds ONE session's worth of data (the one currently
+ * recording): nothing accumulates here across sessions, so recording repeatedly without ever
+ * packaging a report can't grow memory without limit.
  */
 import { create } from 'zustand';
 import type { DebugCaptureSnapshot, DebugCaptureScreenshot } from '@shared/types/debug-report';
 import { useGameUIStore } from './game-ui-store';
 import { captureGameFrameBlob } from '@app/lib/game/capture-frame';
 
-const SAMPLE_INTERVAL_MS = 1000;
+const SAMPLE_INTERVAL_MS = 250;
 const CAPTURE_BUDGET_BYTES = 2 * 1024 * 1024;
 const MAX_SNAPSHOTS = 2000;
 

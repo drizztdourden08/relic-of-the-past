@@ -26,8 +26,10 @@ const encodeVideo = async (dir: string, frameCount: number): Promise<void> => {
   const found = await locateFfmpeg().catch(() => null);
   if (!found) return;
   try {
+    // Captured at 4 shots/sec, played back at 16fps: a 4x speed-up so reviewing a recording
+    // doesn't take as long as making it.
     const args = [
-      '-y', '-framerate', '1', '-i', join(dir, 'frame_%03d.png'),
+      '-y', '-framerate', '16', '-i', join(dir, 'frame_%03d.png'),
       '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '23', join(dir, 'video.mp4'),
     ];
     if (frameCount > 0) await runTool(found.ffmpegPath, args, ENCODE_TIMEOUT_MS);
