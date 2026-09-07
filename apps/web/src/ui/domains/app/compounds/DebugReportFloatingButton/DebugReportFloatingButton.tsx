@@ -38,7 +38,11 @@ const DebugReportFloatingButton = (props: DebugReportFloatingButtonProps) => {
     <>
       <Button
         variant="bare"
-        className={`debug-round-button debug-report-floating-button${status === 'error' ? ' debug-report-floating-button--error' : ''}`}
+        className={[
+          'debug-round-button', 'debug-report-floating-button',
+          status === 'error' && 'debug-report-floating-button--error',
+          status === 'packaging' && 'debug-report-floating-button--busy',
+        ].filter(Boolean).join(' ')}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}

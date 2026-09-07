@@ -43,7 +43,7 @@ const DebugCaptureButton = ({ onPointerDown, onPointerMove, onPointerUp }: Debug
       <Box as="span" className="debug-capture-glow__layer debug-capture-glow__layer--2" aria-hidden />
       <Button
         variant="bare"
-        className="debug-round-button debug-capture-button"
+        className={`debug-round-button debug-capture-button${isCapturing ? ' debug-capture-button--active' : ''}`}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}

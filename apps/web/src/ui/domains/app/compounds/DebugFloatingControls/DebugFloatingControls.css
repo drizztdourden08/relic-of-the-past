@@ -1,10 +1,11 @@
 /* @layer renderer-components @kind style */
 
-/* Covers the gameplay area only (sized by its parent, .app__content). No z-index of its own on
-   purpose: a widget (explicit z-index, --z-panel) then always wins the pointer hit-test over
-   this zone wherever they overlap, so hovering a widget never counts as hovering the game
-   section - without trapping the button stack's own (much higher) z-index inside a losing
-   stacking context, which is what made the buttons vanish behind any docked widget. */
+/* Sized/positioned against the actual game-render rectangle by its caller (exclusiveInsets),
+   not the wider .app__content box. No z-index of its own on purpose: a widget (explicit
+   z-index, --z-panel) then always wins the pointer hit-test over this zone wherever they
+   overlap, so hovering a widget never counts as hovering the game section - without trapping
+   the button stack's own (much higher) z-index inside a losing stacking context, which is
+   what made the buttons vanish behind any docked widget. */
 .debug-floating-controls__hover-zone {
   position: absolute;
   inset: 0;
@@ -20,7 +21,9 @@
   gap: var(--space-lg);
 }
 
-/* Shared round glass base for both buttons in the stack. */
+/* Shared round glass base for both buttons in the stack. Icon color never changes state to
+   state (hover included) - only opacity and, for the capture button, the glow ring communicate
+   state, so the icon itself always stays legible. */
 .debug-round-button {
   position: relative;
   width: 40px;
@@ -37,11 +40,10 @@
   touch-action: none;
   box-shadow: var(--shadow-1);
   opacity: 0.35;
-  transition: opacity var(--transition-normal), color var(--transition-normal), border-color var(--transition-normal);
+  transition: opacity var(--transition-normal), border-color var(--transition-normal);
 }
 
 .debug-round-button:hover {
-  color: var(--c-info-dim);
   border-color: var(--c-border-strong);
 }
 
@@ -50,5 +52,11 @@
 }
 
 .debug-floating-controls__hover-zone:hover .debug-round-button {
+  opacity: 1;
+}
+
+/* Actively doing something (recording, packaging) always reads at full opacity, hover or not. */
+.debug-round-button.debug-capture-button--active,
+.debug-round-button.debug-report-floating-button--busy {
   opacity: 1;
 }

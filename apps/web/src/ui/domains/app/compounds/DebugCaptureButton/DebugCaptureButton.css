@@ -14,7 +14,10 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: var(--c-glass);
+
+  /* Transparent at rest: the layers (background: inherit) stay invisible too, so nothing
+     shows beyond the 40px button itself until --active swaps this to the gradient. */
+  background: transparent;
 }
 
 .debug-capture-glow__layer {
@@ -46,12 +49,14 @@
 
 .debug-capture-glow--active {
   background: linear-gradient(var(--c-green), var(--c-gold-bright), var(--c-green-bright));
-  animation: debug-capture-glow-rotate 1.5s linear infinite;
+  animation: debug-capture-glow-rotate 2.2s ease-in-out infinite alternate;
 }
 
+/* A narrow +/-20deg swing (not the reference's full 360deg spin) so the glow floats between
+   green and gold and never crosses into blue/purple territory. */
 @keyframes debug-capture-glow-rotate {
-  0% { filter: hue-rotate(0deg); }
-  100% { filter: hue-rotate(360deg); }
+  0% { filter: hue-rotate(-20deg); }
+  100% { filter: hue-rotate(20deg); }
 }
 
 .debug-capture-button__timer {
