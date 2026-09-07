@@ -2,7 +2,6 @@
 import { useEffect, useMemo } from 'react';
 import { Box, Image } from '@ds/primitives';
 import { WidgetManager, useWidgetLayout } from '@ds/composites/Widget';
-import { Dialog } from '@ds/composites/Dialog';
 import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent, DebugWidgetContent, NavigationWidgetContent, LiveDataInspectorContent, CheatsWidgetContent, SimulatorWidgetContent, MusicWidgetContent } from '@domains/widgets';
 import { loadTrackerStateBlob, saveTrackerStateBlob } from '@app/lib/tracker-state-io';
 import { primeLiveSettings } from '@app/lib/game';
@@ -38,10 +37,9 @@ import { MobileChrome } from '../MobileChrome';
 import { SearchPalette } from '../SearchPalette';
 import type { TitleBarProps } from '../TitleBar/TitleBar.type';
 import { GameLayer } from '../GameLayer';
-import { BootProgressBar } from '../BootProgressBar';
 import { SaveStateOverlay } from '../SaveStateOverlay/SaveStateOverlay';
-import { UpdateDialog } from '../../compounds/UpdateDialog';
-import { BugReportDialog } from '../BugReport';
+import { DebugReportFloatingButton } from '../../compounds/DebugReportFloatingButton';
+import { AppDialogs } from './sub-components/AppDialogs';
 import './AppMain.css';
 
 // Profile-layout persistence injected into the bare Widget composite (keeps IPC out of it).
@@ -93,6 +91,7 @@ const AppMain = () => {
   const {
     showUpdateDialog, setShowUpdateDialog,
     showBugReportDialog, setShowBugReportDialog,
+    debugReportId, setDebugReportId,
     handleShowShadowEditor,
   } = useAppOverlays({ showDialog, dismissDialog });
 
@@ -191,37 +190,25 @@ const AppMain = () => {
           }}
         </WidgetManager>
 
+        <DebugReportFloatingButton
+          profileId={profileMgmt.activeProfile?.id ?? null}
+          gameRunning={game.isRunning}
+          onReportPackaged={(reportId) => { setDebugReportId(reportId); setShowBugReportDialog(true); }}
+        />
       </Box>
 
-      <Dialog
-        open={dialog != null}
-        title={dialog?.title ?? ''}
-        message={dialog?.message ?? ''}
-        confirmLabel={dialog?.confirmLabel}
-        variant={dialog?.variant}
-        onConfirm={dialog?.onConfirm ?? (() => {})}
-        onCancel={dismissDialog}
+      <AppDialogs
+        dialog={dialog}
+        dismissDialog={dismissDialog}
+        canUpdate={canUpdate}
+        update={update}
+        showUpdateDialog={showUpdateDialog}
+        setShowUpdateDialog={setShowUpdateDialog}
+        showBugReportDialog={showBugReportDialog}
+        setShowBugReportDialog={setShowBugReportDialog}
+        debugReportId={debugReportId}
+        setDebugReportId={setDebugReportId}
       />
-
-      {canUpdate && (
-      <UpdateDialog
-        open={showUpdateDialog}
-        state={update}
-        canInstall={update.canInstall}
-        onApply={update.apply}
-        onOpenReleasePage={update.openReleasePage}
-        onLoadVersions={update.loadVersions}
-        onSetPrefs={update.setPrefs}
-        onReportBug={() => { setShowUpdateDialog(false); setShowBugReportDialog(true); }}
-        onClose={() => setShowUpdateDialog(false)}
-      />
-      )}
-      <BugReportDialog
-        open={showBugReportDialog}
-        onClose={() => setShowBugReportDialog(false)}
-      />
-
-      <BootProgressBar />
 
       <SearchPalette navProps={chromeProps} navDeps={{ setActivePage: nav.setActivePage, setProfileHubTab }} />
     </Box>

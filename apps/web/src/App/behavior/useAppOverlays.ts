@@ -13,6 +13,9 @@ interface AppOverlaysParams {
 const useAppOverlays = ({ showDialog, dismissDialog }: AppOverlaysParams) => {
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
   const [showBugReportDialog, setShowBugReportDialog] = useState(false);
+  // Set by the floating debug-report button before it opens the dialog; cleared whenever the
+  // dialog closes, so a later plain "Report a bug" click doesn't carry a stale id forward.
+  const [debugReportId, setDebugReportId] = useState<string | null>(null);
   const [shadowEditorWarningShown, setShadowEditorWarningShown] = useState(
     () => localStorage.getItem('shadowEditor.warningDismissed') === 'true',
   );
@@ -38,6 +41,7 @@ const useAppOverlays = ({ showDialog, dismissDialog }: AppOverlaysParams) => {
   return {
     showUpdateDialog, setShowUpdateDialog,
     showBugReportDialog, setShowBugReportDialog,
+    debugReportId, setDebugReportId,
     handleShowShadowEditor,
   };
 };

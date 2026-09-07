@@ -1,0 +1,15 @@
+/* @layer renderer-components @kind style */
+
+.debug-capture-button--active {
+  color: var(--c-danger);
+  animation: debug-capture-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes debug-capture-pulse {
+  0%, 100% { filter: drop-shadow(0 0 2px var(--c-danger-soft)); }
+  50% { filter: drop-shadow(0 0 6px var(--c-danger-soft)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .debug-capture-button--active { animation: none; }
+}

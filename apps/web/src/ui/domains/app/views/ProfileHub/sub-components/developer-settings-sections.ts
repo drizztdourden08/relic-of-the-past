@@ -27,6 +27,24 @@ const SECTIONS: Section[] = [
       },
     ],
   },
+  {
+    id: 'developer-debugger-options',
+    title: 'Debugger options',
+    subsections: [
+      {
+        id: 'developer-debugger-options-list',
+        title: 'Debug reporting',
+        items: [
+          {
+            key: 'allowDebugLogging',
+            label: 'Allow debugging logs tracking',
+            description: 'Turns on the same verbose logging this app uses in development (Electron, crash, and performance logs), and adds a titlebar capture button (Tab) plus a floating button for sending a packaged debug report to the team from any save state.',
+            keywords: 'debug logs tracking report crash performance capture titlebar floating button contributor',
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 export { SECTIONS };

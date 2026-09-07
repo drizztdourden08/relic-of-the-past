@@ -6,7 +6,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // only requires an @ and a dot w
 
 type SubmitStatus = 'idle' | 'submitting' | 'done' | 'error';
 
-const useBugReportForm = () => {
+const useBugReportForm = (debugReportId?: string | null) => {
   const [email, setEmailValue] = useState('');
   const [emailTouched, setEmailTouched] = useState(false);
   const [subject, setSubject] = useState('');
@@ -30,15 +30,16 @@ const useBugReportForm = () => {
     if (!canSubmit || debugText === null) return;
     setStatus('submitting');
     try {
+      const fullDebugInfo = debugReportId ? `${debugText}\n\ndebug-report-id: ${debugReportId}` : debugText;
       const { url } = await window.api.createGithubIssue({
-        email, title: subject, message: description, debugInfo: debugText,
+        email, title: subject, message: description, debugInfo: fullDebugInfo,
       });
       setResultUrl(url);
       setStatus('done');
     } catch {
       setStatus('error');
     }
-  }, [canSubmit, email, subject, description, debugText]);
+  }, [canSubmit, email, subject, description, debugText, debugReportId]);
 
   const reset = useCallback(() => {
     setEmailValue('');

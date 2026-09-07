@@ -1,0 +1,51 @@
+/* @layer renderer-components @kind style */
+
+.debug-report-floating-button {
+  position: fixed;
+  z-index: var(--z-floating);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--c-glass);
+  border: 1px solid var(--c-hairline);
+  color: var(--c-info);
+  backdrop-filter: blur(var(--blur));
+  cursor: grab;
+  touch-action: none;
+  box-shadow: var(--shadow-1);
+  transition: color var(--transition-normal), border-color var(--transition-normal);
+}
+
+.debug-report-floating-button:hover {
+  color: var(--c-info-dim);
+  border-color: var(--c-border-strong);
+}
+
+.debug-report-floating-button:active {
+  cursor: grabbing;
+}
+
+.debug-report-floating-button--error {
+  color: var(--c-danger);
+  border-color: var(--c-danger-soft);
+}
+
+.debug-report-floating-button__spinner {
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: var(--c-info);
+  animation: debug-report-spin 0.8s linear infinite;
+}
+
+@keyframes debug-report-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .debug-report-floating-button__spinner { animation: none; }
+}

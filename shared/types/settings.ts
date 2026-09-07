@@ -232,6 +232,10 @@ interface GameSettings {
   // simulator. Separate from developerToolsEnabled so the dev surface can be on while the heaviest
   // per-frame reads are off; both must be on for the core to answer (NavQueryGate).
   devNavigationData: boolean;
+  // Master gate for the debug report tooling: verbose main-process/performance logging, the
+  // titlebar capture recorder (Tab shortcut), and the floating "send debug report" button. Off by
+  // default; none of that code path runs while this is off.
+  allowDebugLogging: boolean;
 
   // ─── Host systems reading emulated state ───
   // The checks tracker polls inventory and save flags out of the running game. It changes nothing,

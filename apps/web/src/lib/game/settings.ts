@@ -144,6 +144,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   // Developer
   developerToolsEnabled: false,
   devNavigationData: true,
+  allowDebugLogging: false,
 
   // Host systems
   trackerEnabled: true,

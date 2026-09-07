@@ -7,8 +7,8 @@ import type { BugReportDialogProps } from './types';
 import './BugReportDialog.css';
 
 const BugReportDialog = (props: BugReportDialogProps) => {
-  const { open, onClose } = props;
-  const form = useBugReportForm();
+  const { open, onClose, debugReportId = null } = props;
+  const form = useBugReportForm(debugReportId);
   const showResult = open && form.status === 'done' && form.resultUrl !== null;
 
   const closeForm = () => {
@@ -81,6 +81,14 @@ const BugReportDialog = (props: BugReportDialogProps) => {
           onChange={(e) => form.setDescription(e.target.value)}
         />
       </Field>
+
+      {debugReportId && (
+        <Field label="Debug Report">
+          <Text as="p" className="bug-report__debug-report-id">
+            A packaged debug report is attached ({debugReportId}).
+          </Text>
+        </Field>
+      )}
 
       <DebugInfoPreview text={form.debugText} />
 
