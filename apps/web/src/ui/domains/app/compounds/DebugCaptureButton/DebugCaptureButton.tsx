@@ -54,7 +54,7 @@ const DebugCaptureButton = ({ onPointerDown, onPointerMove, onPointerUp }: Debug
         <IconifyIcon icon={isCapturing ? square : play} width={14} height={14} />
       </Button>
       {isCapturing && (
-        <Text as="span" className="debug-capture-button__timer">{formatElapsed(elapsedMs)}</Text>
+        <Text as="span" className="debug-floating-controls__status-label">{formatElapsed(elapsedMs)}</Text>
       )}
     </Box>
   );

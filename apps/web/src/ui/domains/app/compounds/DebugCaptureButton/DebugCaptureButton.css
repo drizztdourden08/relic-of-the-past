@@ -59,20 +59,6 @@
   100% { filter: hue-rotate(20deg); }
 }
 
-.debug-capture-button__timer {
-  position: absolute;
-  top: 50%;
-  right: 100%;
-  margin-right: var(--space-sm);
-  transform: translateY(-50%);
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  font-variant-numeric: tabular-nums;
-  color: var(--c-gold-bright);
-  line-height: 1;
-  white-space: nowrap;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .debug-capture-glow--active { animation: none; }
 }
