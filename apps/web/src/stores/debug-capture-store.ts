@@ -21,7 +21,9 @@ import { useGameUIStore } from './game-ui-store';
 import { captureGameFrameBlob } from '@app/lib/game/capture-frame';
 
 const SAMPLE_INTERVAL_MS = 250;
-const CAPTURE_BUDGET_BYTES = 2 * 1024 * 1024;
+// Scales with the sample rate (4x the old 1/sec cadence) so a session still runs about as
+// long in wall-clock time before self-stopping, not 4x shorter for capturing more often.
+const CAPTURE_BUDGET_BYTES = 8 * 1024 * 1024;
 const MAX_SNAPSHOTS = 2000;
 
 interface DebugCaptureStore {
