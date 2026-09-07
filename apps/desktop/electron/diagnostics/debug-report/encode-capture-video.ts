@@ -3,8 +3,9 @@
  * Encodes each capture session's screenshots into a small H.264 MP4 (1fps, matching the
  * capture cadence) instead of shipping dozens of near-identical PNGs: video inter-frame
  * compression crushes near-static frames far better than independent images do (measured
- * ~87% smaller with no visible quality loss). Falls back to null when ffmpeg isn't
- * installed - this is an optimization, never a requirement for a report to send.
+ * ~87% smaller with no visible quality loss). This is strictly an optimization, never a
+ * requirement for a report to send - every step is its own try/catch, because a report that
+ * fails outright over a broken ffmpeg install is worse than one that ships plain PNGs.
  */
 import { mkdtemp, writeFile, readFile, rm } from 'fs/promises';
 import { tmpdir } from 'os';
@@ -25,36 +26,47 @@ const groupBySession = (shots: DebugCaptureScreenshot[]): Map<number, DebugCaptu
 };
 
 const encodeSession = async (ffmpegPath: string, dir: string, shots: DebugCaptureScreenshot[]): Promise<Buffer | null> => {
-  await Promise.all(shots.map((shot, i) =>
-    writeFile(join(dir, `frame_${String(i + 1).padStart(3, '0')}.png`), Buffer.from(shot.png))));
-  const outPath = join(dir, 'out.mp4');
-  const args = [
-    '-y', '-framerate', '1', '-i', join(dir, 'frame_%03d.png'),
-    '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '23', outPath,
-  ];
-  const result = await runTool(ffmpegPath, args, ENCODE_TIMEOUT_MS);
-  if (result.code !== 0) return null;
-  return readFile(outPath);
+  try {
+    await Promise.all(shots.map((shot, i) =>
+      writeFile(join(dir, `frame_${String(i + 1).padStart(3, '0')}.png`), Buffer.from(shot.png))));
+    const outPath = join(dir, 'out.mp4');
+    const args = [
+      '-y', '-framerate', '1', '-i', join(dir, 'frame_%03d.png'),
+      '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '23', outPath,
+    ];
+    const result = await runTool(ffmpegPath, args, ENCODE_TIMEOUT_MS);
+    if (result.code !== 0) return null;
+    return await readFile(outPath);
+  } catch {
+    return null;
+  }
 };
 
-/** One MP4 buffer per session that encoded successfully. Null only when ffmpeg itself isn't
- *  available at all; an empty/partial map otherwise, so the caller can fall back per-session. */
+/** One MP4 buffer per session that encoded successfully. Null when ffmpeg itself isn't
+ *  available (or anything else went wrong finding it); an empty/partial map otherwise, so
+ *  the caller falls back to PNGs per session instead of losing the whole report. */
 const encodeCaptureVideos = async (
   screenshots: DebugCaptureScreenshot[],
 ): Promise<Map<number, Buffer> | null> => {
   if (screenshots.length === 0) return new Map();
-  const found = await locateFfmpeg();
+
+  const found = await locateFfmpeg().catch(() => null);
   if (!found) return null;
 
   const bySession = groupBySession(screenshots);
   const videos = new Map<number, Buffer>();
   for (const [session, shots] of bySession) {
-    const dir = await mkdtemp(join(tmpdir(), 'rotp-debug-capture-'));
+    let dir: string;
+    try {
+      dir = await mkdtemp(join(tmpdir(), 'rotp-debug-capture-'));
+    } catch {
+      continue;
+    }
     try {
       const video = await encodeSession(found.ffmpegPath, dir, shots);
       if (video) videos.set(session, video);
     } finally {
-      await rm(dir, { recursive: true, force: true });
+      await rm(dir, { recursive: true, force: true }).catch(() => {});
     }
   }
   return videos;

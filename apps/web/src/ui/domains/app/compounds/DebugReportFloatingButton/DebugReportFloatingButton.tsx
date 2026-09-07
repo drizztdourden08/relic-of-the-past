@@ -1,9 +1,12 @@
 /* @layer renderer-components @kind component */
+import { useEffect, useState } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import send from '@iconify-icons/lucide/send';
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
 import { Text } from '@ds/primitives/Text';
+import { ToastContainer } from '@ds/primitives/Toast';
+import type { ToastItem } from '@ds/primitives/Toast';
 import { FfmpegRequiredDialog } from '@domains/app/compounds/FfmpegRequiredDialog';
 import { useDebugReportCapture } from './behavior/useDebugReportCapture';
 import './DebugReportFloatingButton.css';
@@ -19,11 +22,25 @@ interface DebugReportFloatingButtonProps {
 
 /** Packages every save state (quick/normal/auto/live) plus the capture recorder's buffer into
  *  a debug report and hands the id to the bug-report dialog. Position/drag are owned by the
- *  parent stack (DebugFloatingControls); this is presentational plus its own send flow. */
+ *  parent stack (DebugFloatingControls); this is presentational plus its own send flow. A
+ *  failure surfaces as a danger toast (own local queue, same pattern as the Home tab's) - not
+ *  a tooltip, which needs a hover to ever be seen. */
 const DebugReportFloatingButton = (props: DebugReportFloatingButtonProps) => {
   const { profileId, dragging, onPointerDown, onPointerMove, onPointerUp, onReportPackaged } = props;
-  const { status, sendReport, showFfmpegPrompt, resolveFfmpegPrompt } = useDebugReportCapture(profileId);
+  const { status, errorMessage, sendReport, showFfmpegPrompt, resolveFfmpegPrompt } = useDebugReportCapture(profileId);
   const packaging = status === 'packaging';
+  const [toasts, setToasts] = useState<ToastItem[]>([]);
+
+  useEffect(() => {
+    if (status !== 'error') return;
+    const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    setToasts((prev) => [...prev, {
+      id, variant: 'danger', duration: 5000,
+      message: errorMessage ?? 'Could not package the report - try again.',
+    }]);
+  }, [status, errorMessage]);
+
+  const dismissToast = (id: string) => setToasts((prev) => prev.filter((t) => t.id !== id));
 
   const handleClick = async () => {
     if (dragging || packaging) return;
@@ -50,7 +67,7 @@ const DebugReportFloatingButton = (props: DebugReportFloatingButtonProps) => {
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onClick={handleClick}
-        title={status === 'error' ? 'Could not package the report - try again' : 'Send a debug report for the current saves'}
+        title="Send a debug report for the current saves"
       >
         <IconifyIcon icon={send} width={16} height={16} />
         {packaging && <Box as="span" className="debug-report-floating-button__spinner" aria-hidden />}
@@ -59,6 +76,7 @@ const DebugReportFloatingButton = (props: DebugReportFloatingButtonProps) => {
         )}
       </Button>
       <FfmpegRequiredDialog open={showFfmpegPrompt} onClose={() => { void handleFfmpegPromptClose(); }} />
+      <ToastContainer toasts={toasts} onDismiss={dismissToast} />
     </>
   );
 };

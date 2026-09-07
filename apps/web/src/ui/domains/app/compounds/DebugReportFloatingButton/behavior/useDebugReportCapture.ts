@@ -11,16 +11,25 @@ import { collectSaveStates } from '@app/lib/diagnostics/collect-save-states';
 
 type CaptureStatus = 'idle' | 'packaging' | 'error';
 
+const messageOf = (err: unknown, fallback: string): string =>
+  (err instanceof Error && err.message.length > 0 ? err.message : fallback);
+
 const useDebugReportCapture = (profileId: string | null) => {
   const [status, setStatus] = useState<CaptureStatus>('idle');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showFfmpegPrompt, setShowFfmpegPrompt] = useState(false);
 
   const packageAndUpload = useCallback(async (): Promise<string | null> => {
     if (!profileId) return null;
     setStatus('packaging');
+    setErrorMessage(null);
     try {
       const saves = await collectSaveStates(profileId);
-      if (saves.length === 0) { setStatus('error'); return null; }
+      if (saves.length === 0) {
+        setStatus('error');
+        setErrorMessage('No save state to attach - save your game first.');
+        return null;
+      }
       const { snapshots, screenshots } = useDebugCaptureStore.getState().drain();
       const result = await window.api.packageDebugReport({
         profileId,
@@ -28,11 +37,16 @@ const useDebugReportCapture = (profileId: string | null) => {
         navCaptures: snapshots,
         captureScreenshots: screenshots,
       });
-      if ('error' in result) { setStatus('error'); return null; }
+      if ('error' in result) {
+        setStatus('error');
+        setErrorMessage(result.error);
+        return null;
+      }
       setStatus('idle');
       return result.reportId;
-    } catch {
+    } catch (err) {
       setStatus('error');
+      setErrorMessage(messageOf(err, 'Could not package the report.'));
       return null;
     }
   }, [profileId]);
@@ -52,7 +66,7 @@ const useDebugReportCapture = (profileId: string | null) => {
     return packageAndUpload();
   }, [packageAndUpload]);
 
-  return { status, sendReport, showFfmpegPrompt, resolveFfmpegPrompt };
+  return { status, errorMessage, sendReport, showFfmpegPrompt, resolveFfmpegPrompt };
 };
 
 export { useDebugReportCapture };
