@@ -19,7 +19,9 @@ const buildDebugReportZip = async (
   zip.file('manifest.json', JSON.stringify(manifest, null, 2));
   zip.file('nav-captures.jsonl', input.navCaptures.map((c) => JSON.stringify(c)).join('\n'));
   zip.file('settings.json', JSON.stringify(files.settingsJson, null, 2));
+  zip.file('profile.json', JSON.stringify(files.profileJson, null, 2));
   zip.file('randomizer.json', JSON.stringify(files.randomizerJson, null, 2));
+  zip.file('input-profiles.json', JSON.stringify(files.inputProfilesJson, null, 2));
 
   for (const save of input.saves) {
     zip.file(`save/${save.kind}-${save.ref}.sav`, Buffer.from(save.buffer));

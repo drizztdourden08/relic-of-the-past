@@ -17,7 +17,9 @@ interface DebugReportLogFile {
 
 interface DebugReportCollectedFiles {
   settingsJson: unknown;
+  profileJson: unknown;
   randomizerJson: unknown;
+  inputProfilesJson: unknown;
   logFiles: DebugReportLogFile[];
 }
 
@@ -41,12 +43,19 @@ const collectLogFiles = async (): Promise<DebugReportLogFile[]> => {
 };
 
 const collectDebugReportFiles = async (profileId: string): Promise<DebugReportCollectedFiles> => {
-  const [settingsJson, profile, logFiles] = await Promise.all([
+  const [settingsJson, profile, inputProfilesJson, logFiles] = await Promise.all([
     readJson<Record<string, unknown>>(getUserDataPath('profiles', profileId, 'config.json'), {}),
     readJson<Profile | null>(getUserDataPath('profiles', profileId, 'profile.json'), null),
+    readJson<unknown>(getUserDataPath('profiles', profileId, 'input-profiles.json'), null),
     collectLogFiles(),
   ]);
-  return { settingsJson, randomizerJson: profile?.randomizer ?? null, logFiles };
+  return {
+    settingsJson,
+    profileJson: profile,
+    randomizerJson: profile?.randomizer ?? null,
+    inputProfilesJson,
+    logFiles,
+  };
 };
 
 export { collectDebugReportFiles };
