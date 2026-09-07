@@ -11,7 +11,11 @@
  * Multiple start/stop cycles ACCUMULATE into the same buffer (each tagged with its own
  * `session` number, each with its own budget) instead of the later one replacing the earlier
  * one, so a player who records a bug, stops, repositions, and records again ends up with both
- * recordings in the eventual report. Only drain() (sending the report) clears the buffer.
+ * recordings in the eventual report. Only drain() (sending the report) clears the buffer -
+ * but that alone doesn't bound memory, since nothing forces a drain: TOTAL_BUDGET_BYTES caps
+ * the whole undrained buffer regardless of how many sessions were recorded into it, dropping
+ * the oldest screenshots once it's hit, so recording repeatedly without ever sending a report
+ * can't grow memory without limit.
  */
 import { create } from 'zustand';
 import type { DebugCaptureSnapshot, DebugCaptureScreenshot } from '@shared/types/debug-report';
@@ -20,6 +24,7 @@ import { captureGameFrameBlob } from '@app/lib/game/capture-frame';
 
 const SAMPLE_INTERVAL_MS = 1000;
 const CAPTURE_BUDGET_BYTES = 2 * 1024 * 1024;
+const TOTAL_BUDGET_BYTES = 10 * 1024 * 1024;
 const MAX_SNAPSHOTS = 2000;
 
 interface DebugCaptureDrain {
@@ -60,6 +65,19 @@ const takeSnapshot = (session: number): DebugCaptureSnapshot => {
   };
 };
 
+/** Drops the oldest screenshots (they're appended in chronological order, so the oldest are
+ *  always at the front) until the total is back under budget, regardless of which session(s)
+ *  they came from. */
+const trimScreenshots = (screenshots: DebugCaptureScreenshot[]): DebugCaptureScreenshot[] => {
+  let bytes = screenshots.reduce((sum, s) => sum + s.png.byteLength, 0);
+  let start = 0;
+  while (bytes > TOTAL_BUDGET_BYTES && start < screenshots.length) {
+    bytes -= screenshots[start].png.byteLength;
+    start += 1;
+  }
+  return start === 0 ? screenshots : screenshots.slice(start);
+};
+
 let timer: ReturnType<typeof setTimeout> | null = null;
 let generation = 0;
 
@@ -82,7 +100,7 @@ const tick = async (gen: number): Promise<void> => {
   }
 
   const screenshots = blob
-    ? [...state.screenshots, { session: state.session, capturedAt: snapshot.capturedAt, png: await blob.arrayBuffer() }]
+    ? trimScreenshots([...state.screenshots, { session: state.session, capturedAt: snapshot.capturedAt, png: await blob.arrayBuffer() }])
     : state.screenshots;
   useDebugCaptureStore.setState({
     snapshots: [...state.snapshots, snapshot].slice(-MAX_SNAPSHOTS),
