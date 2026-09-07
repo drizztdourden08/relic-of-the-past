@@ -1,11 +1,11 @@
 /* @layer renderer-components @kind hook */
-/** Packages whatever save state the player last made (quick, normal, or auto) into a debug
- *  report: gathers it plus the capture recorder's ring buffer, uploads through the main
- *  process, and hands the caller the resulting report id (or an error) to fold into the
- *  bug-report dialog. */
+/** Packages every quick/recent-normal/recent-auto save plus a fresh live capture into a debug
+ *  report, along with the capture recorder's ring buffer, uploads through the main process,
+ *  and hands the caller the resulting report id (or an error) to fold into the bug-report
+ *  dialog. */
 import { useCallback, useState } from 'react';
 import { useDebugCaptureStore } from '@app/stores/debug-capture-store';
-import { getMostRecentSave } from '@app/lib/diagnostics/most-recent-save';
+import { collectSaveStates } from '@app/lib/diagnostics/collect-save-states';
 
 type CaptureStatus = 'idle' | 'packaging' | 'error';
 
@@ -16,14 +16,14 @@ const useDebugReportCapture = (profileId: string | null) => {
     if (!profileId) return null;
     setStatus('packaging');
     try {
-      const recent = await getMostRecentSave(profileId);
-      if (!recent) { setStatus('error'); return null; }
+      const saves = await collectSaveStates(profileId);
+      if (saves.length === 0) { setStatus('error'); return null; }
+      const { snapshots, screenshots } = useDebugCaptureStore.getState().drain();
       const result = await window.api.packageDebugReport({
         profileId,
-        source: recent.source,
-        saveBuffer: recent.buffer,
-        screenshotBase64: recent.screenshotBase64,
-        navCaptures: useDebugCaptureStore.getState().drain(),
+        saves,
+        navCaptures: snapshots,
+        captureScreenshots: screenshots,
       });
       if ('error' in result) { setStatus('error'); return null; }
       setStatus('idle');
