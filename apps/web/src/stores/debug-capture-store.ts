@@ -2,16 +2,16 @@
 /**
  * The debug-capture ring buffer: while running, samples exactly where Link and the game are
  * (the same map slice the Navigation widget reads) plus a screenshot, once a second, so a
- * debug report can attach a timeline instead of one instant. Self-stops once the accumulated
- * data would exceed a fixed byte budget, so a long session never grows the eventual .zip out
- * of proportion. Toggled by the titlebar button and the rebindable function action
- * (input-manager-debug-capture.ts), both gated on GameSettings.allowDebugLogging by their
- * own callers.
+ * debug report can attach a timeline instead of one instant. Each recording self-stops once
+ * IT (not the report as a whole) would exceed a fixed byte budget, so a long session never
+ * grows the eventual .zip out of proportion. Toggled by the titlebar button and the
+ * rebindable function action (input-manager-debug-capture.ts), both gated on
+ * GameSettings.allowDebugLogging by their own callers.
  *
  * Multiple start/stop cycles ACCUMULATE into the same buffer (each tagged with its own
- * `session` number) instead of the later one replacing the earlier one, so a player who
- * records a bug, stops, repositions, and records again ends up with both recordings in the
- * eventual report. Only drain() (sending the report) clears the buffer.
+ * `session` number, each with its own budget) instead of the later one replacing the earlier
+ * one, so a player who records a bug, stops, repositions, and records again ends up with both
+ * recordings in the eventual report. Only drain() (sending the report) clears the buffer.
  */
 import { create } from 'zustand';
 import type { DebugCaptureSnapshot, DebugCaptureScreenshot } from '@shared/types/debug-report';
@@ -33,7 +33,10 @@ interface DebugCaptureStore {
   session: number;
   snapshots: DebugCaptureSnapshot[];
   screenshots: DebugCaptureScreenshot[];
-  estimatedBytes: number;
+  /** Bytes added by the CURRENT session only; reset on every start(), checked against
+   *  CAPTURE_BUDGET_BYTES so each recording gets its own budget instead of a shared one
+   *  that an earlier recording could exhaust before a later one gets to run at all. */
+  sessionBytes: number;
   start: () => void;
   stop: () => void;
   toggle: () => void;
@@ -73,7 +76,7 @@ const tick = async (gen: number): Promise<void> => {
 
   const snapshotBytes = JSON.stringify(snapshot).length;
   const shotBytes = blob?.size ?? 0;
-  if (state.estimatedBytes + snapshotBytes + shotBytes > CAPTURE_BUDGET_BYTES) {
+  if (state.sessionBytes + snapshotBytes + shotBytes > CAPTURE_BUDGET_BYTES) {
     state.stop();
     return;
   }
@@ -84,7 +87,7 @@ const tick = async (gen: number): Promise<void> => {
   useDebugCaptureStore.setState({
     snapshots: [...state.snapshots, snapshot].slice(-MAX_SNAPSHOTS),
     screenshots,
-    estimatedBytes: state.estimatedBytes + snapshotBytes + shotBytes,
+    sessionBytes: state.sessionBytes + snapshotBytes + shotBytes,
   });
   scheduleTick(gen);
 };
@@ -95,11 +98,11 @@ const useDebugCaptureStore = create<DebugCaptureStore>((set, get) => ({
   session: 0,
   snapshots: [],
   screenshots: [],
-  estimatedBytes: 0,
+  sessionBytes: 0,
   start: () => {
     if (get().isCapturing) return;
     generation += 1;
-    set((s) => ({ isCapturing: true, startedAt: Date.now(), session: s.session + 1 }));
+    set((s) => ({ isCapturing: true, startedAt: Date.now(), session: s.session + 1, sessionBytes: 0 }));
     scheduleTick(generation);
   },
   stop: () => {
@@ -110,7 +113,7 @@ const useDebugCaptureStore = create<DebugCaptureStore>((set, get) => ({
   toggle: () => { (get().isCapturing ? get().stop : get().start)(); },
   drain: () => {
     const { snapshots, screenshots } = get();
-    set({ snapshots: [], screenshots: [], estimatedBytes: 0, session: 0 });
+    set({ snapshots: [], screenshots: [], sessionBytes: 0, session: 0 });
     return { snapshots, screenshots };
   },
 }));
