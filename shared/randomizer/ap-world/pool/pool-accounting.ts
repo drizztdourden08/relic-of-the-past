@@ -36,12 +36,16 @@ interface PoolAccounting {
   items: number;
   /** Spots settled before the shuffle: the locked vanilla items plus the assured starting weapon. */
   fixed: number;
+  /** The ten boss-reward slots: pre-placed from their own fixed pool, outside the general fill. */
+  prizes: number;
   /** Locations pre-placed with their vanilla item and excluded from the fill. */
   lockedVanilla: number;
   /** Filler items still in the global pool (what more upgrades could displace). */
   filler: number;
   /** The capacity families' items in the global pool: each one took a filler's place. */
   upgrades: number;
+  /** Pure logic locations (Ganon, Agahnim, the flute spot): a location, but never a reward. */
+  events: number;
 }
 
 /** The items the profile's family plans put in the pool, by name, the meter's row included. */
@@ -52,7 +56,8 @@ const accountingOf = (snapshot: RandomizerOptionsSnapshot, deliverable: Delivera
   const fillWorld = buildFillWorld(fillOptionsFromSnapshot(snapshot, deliverable, { pickWeapon: firstChoice }));
   const { world, pool } = fillWorld;
   const dungeon = [...pool.dungeonItems.values()].reduce((sum, items) => sum + items.length, 0);
-  const spots = [...world.locationsByName.values()].filter((location) => !location.event && !location.prize);
+  const allLocations = [...world.locationsByName.values()];
+  const spots = allLocations.filter((location) => !location.event && !location.prize);
   const planItems = planItemsOf(fillWorld);
   return {
     locations: world.locationsByName.size,
@@ -60,9 +65,11 @@ const accountingOf = (snapshot: RandomizerOptionsSnapshot, deliverable: Delivera
     open: fillEligibleLocations(fillWorld).length,
     items: pool.pool.length + dungeon,
     fixed: spots.filter((location) => world.placedItems.has(location.name)).length,
+    prizes: allLocations.filter((location) => location.prize).length,
     lockedVanilla: fillWorld.lockedVanilla.size,
     filler: fillerCountOf(pool.pool),
     upgrades: pool.pool.filter((name) => planItems.has(name)).length,
+    events: allLocations.filter((location) => location.event).length,
   };
 };
 

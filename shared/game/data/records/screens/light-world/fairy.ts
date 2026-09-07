@@ -22,7 +22,7 @@ const LW_FAIRY_SCREENS: ScreenRecord[] = [
   },
   {
     id: 'screen-217',
-    gameId: { roomIndex: 279 },
+    gameId: { roomIndex: 277 },
     kind: 'interior',
     world: 'light',
     interiorKind: 'fairy',

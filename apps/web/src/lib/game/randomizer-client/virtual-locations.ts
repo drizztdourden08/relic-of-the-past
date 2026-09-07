@@ -9,12 +9,21 @@
  * A virtual record carries no gameId (there is nothing to poll: its status
  * comes from the availability engine and the fire-id ledger, both already
  * keyed by the raw AP location name), and `kind: 'npc'` is a placeholder
- * class for the "type" facet, not a detection claim.
+ * class for the "type" facet, not a detection claim. vanillaItemIds carries
+ * the real vanilla item where one exists (a shop shelf, a key-drop pot);
+ * a pure logic event (special-locations.data.ts) has none and is the only
+ * case the reward filter should read as "no reward". Everything else here
+ * still hands over a real item, so isGuaranteedReward says so even where
+ * there is no vanilla precedent to point vanillaItemIds at (a pond slot
+ * past the reference's two).
  */
 import { SHOP_DEFS } from '@shared/randomizer/ap-world/shops/shops.data';
+import { shopSlotLocationOf } from '@shared/randomizer/ap-world/shops/shop-slots';
+import { EVENT_LOCATIONS, KEY_DROP_LOCATIONS } from '@shared/randomizer/ap-world/special-locations.data';
 import { checkIdByStandardName, standardCheckName } from './check-names';
+import { itemIdByStandardName } from './item-lookup';
 import type { ApPlacement } from '@shared/randomizer/ap-world/fill/ap-placement.type';
-import type { CheckId, CheckRecord, ScreenId } from '@shared/game/data';
+import type { CheckId, CheckRecord, ItemId, ScreenId } from '@shared/game/data';
 
 /** Shop def name -> the screen its building stands on (screens/*\/shops.ts), for world/area grouping. */
 const SHOP_SCREEN_BY_NAME: Readonly<Record<string, ScreenId>> = {
@@ -38,6 +47,14 @@ const shopScreenFor = (locationName: string): ScreenId | undefined => {
 };
 
 const slugOf = (name: string): string => name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+/** A virtual location's own vanilla item, when it has one (a shop shelf or a key-drop pot). */
+const vanillaItemIdsOf = (name: string): ItemId[] => {
+  const standardName = shopSlotLocationOf(name)?.slot.vanillaItem ?? KEY_DROP_LOCATIONS.get(name);
+  if (standardName === undefined) return [];
+  const itemId = itemIdByStandardName(standardName);
+  return itemId !== undefined ? [itemId] : [];
+};
 
 /** The synthetic id a virtual check gets for a given AP location name. Shared
  * with placement-view.ts so a virtual check's row and its placed-item lookup
@@ -64,7 +81,8 @@ const virtualChecksOf = (placement: ApPlacement): CheckRecord[] => {
       kind: 'npc',
       screenId,
       randomizerName: name,
-      vanillaItemIds: [],
+      vanillaItemIds: vanillaItemIdsOf(name),
+      isGuaranteedReward: !EVENT_LOCATIONS.has(name),
     });
   }
   cached = { placement, records };

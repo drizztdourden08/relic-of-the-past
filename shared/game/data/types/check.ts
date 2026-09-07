@@ -71,6 +71,13 @@ interface CheckRecord {
   vanillaName?: string;
   randomizerName: string;
   vanillaItemIds: ItemId[];
+  /**
+   * Set on a virtual location with no vanilla item of its own (a pond slot
+   * past the reference's two): true means the seed still hands over a real
+   * item here, so the reward filter must not read the empty vanillaItemIds
+   * as "no reward". Absent everywhere else; vanillaItemIds alone decides.
+   */
+  isGuaranteedReward?: boolean;
   /** The check's own content (key/big key/map/compass/boss item), as tag collection references. */
   tags?: readonly TagId[];
   /** The actor that grants this check (an NPC or a boss), joined on spriteType. */

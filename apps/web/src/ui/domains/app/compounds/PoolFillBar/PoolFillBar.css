@@ -1,9 +1,10 @@
 /* @layer renderer-components @kind style */
 
 /* The checks tracker's summary bar, read for a fill: a thin grey track of
-   every spot, filled left to right in placement order: items in pool,
-   upgrades, filler, then the spots settled before the shuffle. The legend
-   repeats each colour as a swatch beside its count. */
+   every location this seed generates, filled left to right in placement
+   order: items in pool, upgrades, filler, the spots settled before the
+   shuffle, the boss prizes, then the reward-less events. The legend repeats
+   each colour as a swatch beside its count. */
 
 .pool-fill {
   display: flex;
@@ -74,11 +75,19 @@
 .pool-fill__seg--fixed,
 .pool-fill__swatch--fixed { background: var(--c-danger); }
 
+.pool-fill__seg--prizes,
+.pool-fill__swatch--prizes { background: var(--c-info); }
+
+.pool-fill__seg--events,
+.pool-fill__swatch--events { background: var(--c-border-strong); }
+
 .pool-fill__count--items { color: var(--c-green); }
 .pool-fill__count--upgrades { color: var(--c-upgrade); }
 .pool-fill__count--filler { color: var(--c-warning); }
 .pool-fill__count--fixed { color: var(--c-danger); }
-.pool-fill__count--spots { color: var(--c-text); }
+.pool-fill__count--prizes { color: var(--c-info); }
+.pool-fill__count--events { color: var(--c-text-muted); }
+.pool-fill__count--total { color: var(--c-text); }
 
 .pool-fill__error {
   font-family: var(--font-mono);
