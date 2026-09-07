@@ -28,7 +28,8 @@ import {
   getCompletedChecks, getCurrentInventory, onCompletedChecksChanged, onInventoryChanged,
 } from '../lib/game';
 import {
-  buildPlacementView, computeApTrackerSnapshot, firedLocations, getSessionState, onFiredLocation, subscribeSessionStore,
+  apAlignedCheckRecords, buildPlacementView, computeApTrackerSnapshot, firedLocations, getSessionState,
+  onFiredLocation, subscribeSessionStore,
 } from '../lib/game/randomizer-client';
 import type { PlacementView } from '../lib/game/randomizer-client';
 import type { ViewMode } from '../ui/domains/app/compounds/ChecksTracker';
@@ -57,6 +58,14 @@ const useTrackerData = (options: TrackerDataOptions = {}) => {
   useEffect(() => onFiredLocation(() => setFired(new Set(firedLocations()))), []);
 
   const checkRecords = useMemo(() => find('check', () => true), []);
+  // Every AP location this seed placed an item at, real checks plus the ones no
+  // CheckRecord backs (shop slots at whatever depth this seed opened, chiefly),
+  // so the widget's total always matches what the generator actually produced.
+  // Vanilla profiles carry no placement, so this is just checkRecords for them.
+  const effectiveCheckRecords = useMemo(
+    () => (placement ? apAlignedCheckRecords(checkRecords, placement) : checkRecords),
+    [checkRecords, placement],
+  );
   const resolvedLogic = useMemo(() => resolveRules(VANILLA_CONFIG), []);
   const effectiveInventory = useMemo(() => {
     const merged = new Set(resolvedLogic.startInventory);
@@ -69,8 +78,8 @@ const useTrackerData = (options: TrackerDataOptions = {}) => {
     [effectiveInventory, completedChecks, checkRecords, resolvedLogic],
   );
   const apSnapshot = useMemo(
-    () => (placement ? computeApTrackerSnapshot(placement, completedChecks, checkRecords, fired) : null),
-    [placement, completedChecks, checkRecords, fired],
+    () => (placement ? computeApTrackerSnapshot(placement, completedChecks, effectiveCheckRecords, fired) : null),
+    [placement, completedChecks, effectiveCheckRecords, fired],
   );
   const snapshot = apSnapshot ?? vanillaSnapshot;
 
@@ -93,8 +102,8 @@ const useTrackerData = (options: TrackerDataOptions = {}) => {
   }, [snapshot]);
 
   const filteredChecks = useMemo(
-    () => filterChecks(checkRecords, filter, snapshot, run),
-    [checkRecords, filter, snapshot, run],
+    () => filterChecks(effectiveCheckRecords, filter, snapshot, run),
+    [effectiveCheckRecords, filter, snapshot, run],
   );
   const groupTree = useMemo(
     () => buildGroupTree(filteredChecks, snapshot, grouping, run),

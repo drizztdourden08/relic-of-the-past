@@ -35,4 +35,5 @@ export { buildPlacementView } from './placement-view';
 export type { PlacementView } from './placement-view';
 export { computeApTrackerSnapshot } from './tracker-availability';
 export { firedLocations, onFiredLocation } from './override-fire-registry';
+export { apAlignedCheckRecords, virtualChecksOf } from './virtual-locations';
 export { itemIdByStandardName, resolveLocalItemId } from './item-lookup';

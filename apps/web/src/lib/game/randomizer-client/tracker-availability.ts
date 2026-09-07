@@ -12,6 +12,12 @@
  * never reaches `completedChecks`. firedLocationNames is the session's
  * separate record of those substitutions, folded in here so their items
  * still enter the collected-item state the rule engine evaluates against.
+ *
+ * `checks` carries both real, registered CheckRecords and the virtual ones
+ * virtual-locations.ts synthesizes for every AP location none of those cover
+ * (shop slots, chiefly): a virtual id is never in the live-polled
+ * completedChecks set, so its status reads off completedLocations /
+ * available by its own randomizerName instead of the crosswalk.
  */
 import { computePlacementAvailability } from '@shared/randomizer/placement-availability';
 import { standardCheckName } from './check-names';
@@ -33,11 +39,17 @@ const computeApTrackerSnapshot = (
 
   const snapshot = new Map<CheckId, CheckStatus>();
   for (const check of checks) {
-    if (completedChecks.has(check.id)) {
+    const isVirtual = check.id.startsWith('check-virtual-');
+    if (!isVirtual && completedChecks.has(check.id)) {
       snapshot.set(check.id, 'completed');
       continue;
     }
-    snapshot.set(check.id, available.has(standardCheckName(check.id)) ? 'reachable' : 'blocked');
+    const locationName = isVirtual ? check.randomizerName : standardCheckName(check.id);
+    if (isVirtual && completedLocations.has(locationName)) {
+      snapshot.set(check.id, 'completed');
+      continue;
+    }
+    snapshot.set(check.id, available.has(locationName) ? 'reachable' : 'blocked');
   }
   return snapshot;
 };

@@ -4,13 +4,16 @@
  * shown holding what THIS run put there instead of its vanilla contents.
  *
  * Two lookups, both by community-standard name: the location name gives the
- * check id, the item name gives the item record. Either can miss, because the ported
- * world carries slots this app's dataset does not model, and vice versa, so
- * misses are counted and reported instead of silently dropped: a spoiler that
- * omits ten locations is worse than one that says it did.
+ * check id (a real one, or the virtual id virtual-locations.ts mints for a
+ * slot this app's dataset does not model on its own), the item name gives
+ * the item record. Only the item lookup can still miss (a placed name with
+ * no item record here), and a miss is counted and reported instead of
+ * silently dropped: a spoiler that omits ten items is worse than one that
+ * says it did.
  */
 import { checkIdByStandardName } from './check-names';
 import { itemIdByStandardName } from './item-lookup';
+import { virtualCheckIdOf } from './virtual-locations';
 import type { ApPlacement } from '@shared/randomizer/ap-world/fill/ap-placement.type';
 import type { CheckId, ItemId } from '@shared/game/data';
 
@@ -42,11 +45,10 @@ const buildPlacementView = (placement: ApPlacement | null): PlacementView => {
   }
 
   for (const [location, itemName] of Object.entries(placement.nameView)) {
-    const checkId = checkIdByStandardName(location) as CheckId | undefined;
-    if (checkId === undefined) {
-      view.unmatchedLocations.push(location);
-      continue;
-    }
+    // A location with no real check still gets the exact virtual id
+    // virtualChecksOf mints for it, so its row shows what this seed actually
+    // placed instead of nothing.
+    const checkId = (checkIdByStandardName(location) as CheckId | undefined) ?? virtualCheckIdOf(location);
     const sphere = sphereOfLocation.get(location);
     if (sphere !== undefined) view.sphereByCheck.set(checkId, sphere);
 
