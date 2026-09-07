@@ -23,6 +23,34 @@ const DW_VILLAGE_OF_OUTCASTS_CHECKS: CheckRecord[] = [
     visualNote: 'Sprite disappears (becomes tagalong)',
     sourceFunc: 'Smithy_Frog',
   },
+  {
+    id: 'check-268',
+    gameId: { roomId: 262, chestIndex: 0 },
+    kind: 'chest',
+    screenId: 'screen-473',
+    randomizerName: 'Brewery',
+    vanillaItemIds: ['item-043'],
+  },
+  {
+    id: 'check-269',
+    gameId: { roomId: 284, chestIndex: 0 },
+    kind: 'chest',
+    screenId: 'screen-471',
+    randomizerName: 'C-Shaped House',
+    vanillaItemIds: ['item-071'],
+  },
+  // Shares room 262 with Brewery on purpose: vanilla puts both in one underworld
+  // room, told apart by chest bit (0x10 vs 0x400), never aliasing each other.
+  // The top prize of the once-only minigame roll (OpenMiniGameChest).
+  {
+    id: 'check-270',
+    gameId: { roomId: 262, chestIndex: 6 },
+    kind: 'chest',
+    screenId: 'screen-470',
+    randomizerName: 'Chest Game',
+    vanillaItemIds: ['item-024'],
+    sourceFunc: 'OpenMiniGameChest',
+  },
 ];
 
 export { DW_VILLAGE_OF_OUTCASTS_CHECKS };
