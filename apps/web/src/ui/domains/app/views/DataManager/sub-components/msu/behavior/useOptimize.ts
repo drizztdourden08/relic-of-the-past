@@ -9,7 +9,7 @@
  */
 import { useCallback, useEffect, useState } from 'react';
 import type { OptimizeAnalysis, OptimizeProgress, OptimizeRunResult } from '@shared/types/msu-optimize';
-import { useFfmpegInstall } from './useFfmpegInstall';
+import { useFfmpegInstall } from '@app/hooks/useFfmpegInstall';
 
 /** Where the flow is. `tool` covers both offering the download and watching it arrive. */
 type OptimizeStep = 'checking' | 'tool' | 'measuring' | 'preview' | 'converting' | 'result' | 'error';

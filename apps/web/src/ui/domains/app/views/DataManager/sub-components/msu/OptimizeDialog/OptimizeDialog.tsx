@@ -7,8 +7,8 @@ import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
 import { Text } from '@ds/primitives/Text';
 import { DialogShell } from '@ds/composites/DialogShell';
+import { FfmpegInstallStep } from '@domains/app/compounds/FfmpegInstallStep';
 import { useOptimize } from '../behavior/useOptimize';
-import { InstallStep } from './sub-components/InstallStep';
 import { PreviewStep } from './sub-components/PreviewStep';
 import { RunStep } from './sub-components/RunStep';
 import './OptimizeDialog.css';
@@ -25,7 +25,7 @@ const OptimizeDialog = (props: OptimizeDialogProps) => {
   const body = (
     <>
       {step === 'tool' && (
-        <InstallStep state={tool.state} installing={tool.installing} onInstall={() => { void tool.install(); }} />
+        <FfmpegInstallStep state={tool.state} installing={tool.installing} onInstall={() => { void tool.install(); }} />
       )}
       {step === 'checking' && <Text className="msu-optimize__note">Checking for the audio tool...</Text>}
       {step === 'measuring' && (
