@@ -1,8 +1,11 @@
 /* @layer shared-types @kind logic */
 /** Types for the debug report tool (Contributor tab, gated by GameSettings.allowDebugLogging). */
 
-/** One sample of exactly where Link and the game were, taken while capture is running. */
+/** One sample of exactly where Link and the game were, taken while capture is running.
+ *  `session` numbers which start/stop cycle it belongs to (1, 2, ...): multiple recordings
+ *  in the same report stay distinguishable instead of reading as one continuous session. */
 interface DebugCaptureSnapshot {
+  session: number;
   capturedAt: number;
   screenId: string;
   isIndoors: boolean;
@@ -17,6 +20,7 @@ interface DebugCaptureSnapshot {
 
 /** One frame grabbed alongside a DebugCaptureSnapshot, only while capture is running. */
 interface DebugCaptureScreenshot {
+  session: number;
   capturedAt: number;
   png: ArrayBuffer;
 }

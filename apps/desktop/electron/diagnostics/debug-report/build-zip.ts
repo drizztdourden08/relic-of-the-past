@@ -15,6 +15,7 @@ const buildDebugReportZip = async (
     saves: input.saves.map(({ kind, ref, savedAt }) => ({ kind, ref, savedAt })),
     captureSampleCount: input.navCaptures.length,
     captureScreenshotCount: input.captureScreenshots.length,
+    captureSessionCount: new Set(input.navCaptures.map((c) => c.session)).size,
   };
   zip.file('manifest.json', JSON.stringify(manifest, null, 2));
   zip.file('nav-captures.jsonl', input.navCaptures.map((c) => JSON.stringify(c)).join('\n'));
@@ -27,7 +28,7 @@ const buildDebugReportZip = async (
     zip.file(`save/${save.kind}-${save.ref}.sav`, Buffer.from(save.buffer));
   }
   for (const shot of input.captureScreenshots) {
-    zip.file(`capture/screenshot-${shot.capturedAt}.png`, Buffer.from(shot.png));
+    zip.file(`capture/session-${shot.session}-${shot.capturedAt}.png`, Buffer.from(shot.png));
   }
   for (const log of files.logFiles) zip.file(`logs/${log.name}`, log.contents);
 

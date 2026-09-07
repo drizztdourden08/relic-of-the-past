@@ -7,6 +7,11 @@
  * of proportion. Toggled by the titlebar button and the rebindable function action
  * (input-manager-debug-capture.ts), both gated on GameSettings.allowDebugLogging by their
  * own callers.
+ *
+ * Multiple start/stop cycles ACCUMULATE into the same buffer (each tagged with its own
+ * `session` number) instead of the later one replacing the earlier one, so a player who
+ * records a bug, stops, repositions, and records again ends up with both recordings in the
+ * eventual report. Only drain() (sending the report) clears the buffer.
  */
 import { create } from 'zustand';
 import type { DebugCaptureSnapshot, DebugCaptureScreenshot } from '@shared/types/debug-report';
@@ -25,6 +30,7 @@ interface DebugCaptureDrain {
 interface DebugCaptureStore {
   isCapturing: boolean;
   startedAt: number | null;
+  session: number;
   snapshots: DebugCaptureSnapshot[];
   screenshots: DebugCaptureScreenshot[];
   estimatedBytes: number;
@@ -34,9 +40,10 @@ interface DebugCaptureStore {
   drain: () => DebugCaptureDrain;
 }
 
-const takeSnapshot = (): DebugCaptureSnapshot => {
+const takeSnapshot = (session: number): DebugCaptureSnapshot => {
   const map = useGameUIStore.getState().map;
   return {
+    session,
     capturedAt: Date.now(),
     screenId: map.isIndoors ? `room-0x${map.roomIndex.toString(16)}` : `ow-0x${map.overworldScreenIndex.toString(16)}`,
     isIndoors: map.isIndoors,
@@ -59,20 +66,20 @@ const scheduleTick = (gen: number): void => {
 
 const tick = async (gen: number): Promise<void> => {
   if (gen !== generation) return;
-  const snapshot = takeSnapshot();
+  const state = useDebugCaptureStore.getState();
+  const snapshot = takeSnapshot(state.session);
   const blob = await captureGameFrameBlob();
   if (gen !== generation) return;
 
   const snapshotBytes = JSON.stringify(snapshot).length;
   const shotBytes = blob?.size ?? 0;
-  const state = useDebugCaptureStore.getState();
   if (state.estimatedBytes + snapshotBytes + shotBytes > CAPTURE_BUDGET_BYTES) {
     state.stop();
     return;
   }
 
   const screenshots = blob
-    ? [...state.screenshots, { capturedAt: snapshot.capturedAt, png: await blob.arrayBuffer() }]
+    ? [...state.screenshots, { session: state.session, capturedAt: snapshot.capturedAt, png: await blob.arrayBuffer() }]
     : state.screenshots;
   useDebugCaptureStore.setState({
     snapshots: [...state.snapshots, snapshot].slice(-MAX_SNAPSHOTS),
@@ -85,13 +92,14 @@ const tick = async (gen: number): Promise<void> => {
 const useDebugCaptureStore = create<DebugCaptureStore>((set, get) => ({
   isCapturing: false,
   startedAt: null,
+  session: 0,
   snapshots: [],
   screenshots: [],
   estimatedBytes: 0,
   start: () => {
     if (get().isCapturing) return;
     generation += 1;
-    set({ isCapturing: true, startedAt: Date.now(), snapshots: [], screenshots: [], estimatedBytes: 0 });
+    set((s) => ({ isCapturing: true, startedAt: Date.now(), session: s.session + 1 }));
     scheduleTick(generation);
   },
   stop: () => {
@@ -102,7 +110,7 @@ const useDebugCaptureStore = create<DebugCaptureStore>((set, get) => ({
   toggle: () => { (get().isCapturing ? get().stop : get().start)(); },
   drain: () => {
     const { snapshots, screenshots } = get();
-    set({ snapshots: [], screenshots: [], estimatedBytes: 0 });
+    set({ snapshots: [], screenshots: [], estimatedBytes: 0, session: 0 });
     return { snapshots, screenshots };
   },
 }));
