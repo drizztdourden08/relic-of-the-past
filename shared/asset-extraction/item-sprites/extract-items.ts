@@ -26,6 +26,7 @@ import {
   type DropSheets,
 } from './drop-decoder';
 import { artImage } from './art-picture';
+import { extractArtBadge } from './art-badge';
 import { extractUpgradeComposite } from './upgrade-composite';
 import { extractPaletteSwap, type ColorSwap } from './palette-swap';
 import { buildInGameBinaries } from './in-game-binaries';
@@ -47,9 +48,9 @@ interface SpriteExtractDef {
   glyphRight?: number;
   /** upgrade-composite, palette-swap: file name of the definition whose picture is the base. */
   baseFile?: string;
-  /** art, and upgrade-composite: one of our own drawings (art/art-library.ts). */
+  /** art, upgrade-composite and art-badge: one of our own drawings (art/art-library.ts). */
   art?: string;
-  /** upgrade-composite: the drawing stamped bottom-right. */
+  /** upgrade-composite and art-badge: the drawing stamped bottom-right. */
   badge?: string;
   /** palette-swap: the base's colours and what each becomes. */
   colors?: ColorSwap[];
@@ -58,7 +59,7 @@ interface SpriteExtractDef {
 interface SpriteDef {
   file: string;
   label: string;
-  category: 'hud' | 'hud-pause' | 'hud-item' | 'fonts' | 'receipt' | 'drop';
+  category: 'hud' | 'hud-pause' | 'hud-item' | 'fonts' | 'receipt' | 'drop' | 'randomizer';
   extract: SpriteExtractDef;
 }
 
@@ -111,6 +112,9 @@ const EXTRACTORS: Record<string, Extractor> = {
   // sprite. No ctx at all, which is what makes it the one method that works
   // the same whatever ROM is loaded.
   'art': (def) => artImage(def.art!),
+  // Two of our own drawings composited, with no ROM involvement at all: a
+  // multiworld pool icon is a game's picture with the Archipelago mark on it.
+  'art-badge': (def) => extractArtBadge({ art: def.art!, badge: def.badge! }),
   'upgrade-composite': (def, ctx) =>
     extractUpgradeComposite({ baseFile: def.baseFile, art: def.art, badge: def.badge! }, (file) => extractByFile(file, ctx)),
   'palette-swap': (def, ctx) =>
@@ -123,7 +127,10 @@ const extractOne = (def: SpriteExtractDef, ctx: ExtractionContext): ImageBuffer 
   return extractor(def, ctx);
 };
 
-interface SpriteCounts { hud: number; 'hud-pause': number; 'hud-item': number; fonts: number; receipt: number; drop: number }
+interface SpriteCounts {
+  hud: number; 'hud-pause': number; 'hud-item': number;
+  fonts: number; receipt: number; drop: number; randomizer: number;
+}
 interface SpriteBuffer { name: string; bytes: Uint8Array }
 interface SpriteBuffersResult { buffers: SpriteBuffer[]; counts: SpriteCounts; errors: string[] }
 
@@ -141,7 +148,7 @@ const extractSpriteBuffers = (rom: RomData, allSprites: SpriteDef[]): SpriteBuff
     resolving: new Set(),
   };
 
-  const counts: SpriteCounts = { hud: 0, 'hud-pause': 0, 'hud-item': 0, fonts: 0, receipt: 0, drop: 0 };
+  const counts: SpriteCounts = { hud: 0, 'hud-pause': 0, 'hud-item': 0, fonts: 0, receipt: 0, drop: 0, randomizer: 0 };
   const errors: string[] = [];
   // The stamp names the definitions and code this set comes from, so a set whose
   // files are all present but whose bytes predate the current code is refreshed.

@@ -208,7 +208,8 @@ const CREDITS: CreditCategory[] = [
         project: 'Randomizer Item Icons',
         description: 'Pixel artist contributing custom item icons for the randomizer.',
         usage: 'original-work',
-        usageNote: 'Hand-drew the quiver receipt\'s held-item icon, redrawn to fit the game\'s own sprite palette.',
+        usageNote:
+          'Drew the quiver receipt\'s held-item icon, in the game\'s own sprite palette, and the pool icons: one per game a multiworld pool can hold, plus the badge stamped on them.',
       },
     ],
   },

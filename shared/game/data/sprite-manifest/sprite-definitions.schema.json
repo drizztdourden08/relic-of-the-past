@@ -29,7 +29,7 @@
         },
         "category": {
           "type": "string",
-          "enum": ["hud", "hud-pause", "hud-item", "fonts", "drop", "receipt"],
+          "enum": ["hud", "hud-pause", "hud-item", "fonts", "drop", "receipt", "randomizer"],
           "description": "Sprite category determining extraction pipeline."
         },
         "extract": { "$ref": "#/definitions/ExtractConfig" }
@@ -50,6 +50,7 @@
         { "$ref": "#/definitions/FollowerBombExtract" },
         { "$ref": "#/definitions/ReceiptExtract" },
         { "$ref": "#/definitions/ArtExtract" },
+        { "$ref": "#/definitions/ArtBadgeExtract" },
         { "$ref": "#/definitions/UpgradeCompositeExtract" },
         { "$ref": "#/definitions/PaletteSwapExtract" }
       ]
@@ -204,9 +205,34 @@
             "quiver",
             "currency-rupee", "currency-arrow", "currency-bomb", "currency-heart",
             "currency-red-potion", "currency-green-potion", "currency-blue-potion",
-            "currency-fairy", "currency-bee"
+            "currency-fairy", "currency-bee",
+            "pool-archipelago"
           ],
           "description": "One of the app's own drawings, used whole as the sprite."
+        }
+      },
+      "additionalProperties": false
+    },
+    "ArtBadgeExtract": {
+      "type": "object",
+      "required": ["method", "art", "badge"],
+      "properties": {
+        "method": { "type": "string", "const": "art-badge" },
+        "art": {
+          "type": "string",
+          "enum": [
+            "pool-zelda-1", "pool-zelda-2", "pool-links-awakening",
+            "pool-ocarina-of-time", "pool-majoras-mask",
+            "pool-oracle-of-ages", "pool-oracle-of-seasons",
+            "pool-minish-cap", "pool-wind-waker", "pool-twilight-princess",
+            "pool-skyward-sword", "pool-a-link-between-worlds"
+          ],
+          "description": "One of the app's own free-colour drawings as the base."
+        },
+        "badge": {
+          "type": "string",
+          "enum": ["archipelago-badge"],
+          "description": "The app's own drawing stamped onto the base, bottom-right."
         }
       },
       "additionalProperties": false

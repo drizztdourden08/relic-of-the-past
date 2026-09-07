@@ -9,6 +9,7 @@
  * again instead of keeping the failure it latched during the rewrite.
  */
 import { getItem } from '../../data';
+import { poolIconFileOf } from '../../data/sprite-manifest/pool-game-icons';
 import { rupeeGemSpriteFileOf } from '../../data/sprite-manifest/rupee-gem-files';
 import type { CapacityFamilyId, InventorySlot, ItemId, ItemRecord } from '../../data';
 
@@ -48,6 +49,12 @@ const getItemSprite = (itemId: ItemId): string | undefined => {
   return spriteUrlOf(filename);
 };
 
+/**
+ * The badged icon of a game in a multiworld pool: `pool-<slug>.png`. A game we
+ * hold no drawing for gets the Archipelago mark (pool-game-icons.ts).
+ */
+const getPoolGameSprite = (game: string): string => spriteUrlOf(poolIconFileOf(game));
+
 /** The stamped capacity-upgrade sprite of a family: `upgrade-<family>.png`. */
 const getCapacityUpgradeSprite = (family: CapacityFamilyId): string =>
   spriteUrlOf(`upgrade-${family}`);
@@ -65,6 +72,7 @@ const resolveItemSprite = (slot: InventorySlot, inventory: ReadonlySet<ItemId>):
 export {
   getCapacityUpgradeSprite,
   getItemSprite,
+  getPoolGameSprite,
   getSpritesBase,
   resolveItemSprite,
   setSpritesBase,
