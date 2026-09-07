@@ -15,18 +15,41 @@
  * the hand-authored vanilla dataset.
  */
 import { buildFillWorld } from './ap-world/fill/fill-world';
-import { capacityProfileOfStats, capacityProgressiveOfStats } from './ap-world/fill/placement-capacity';
+import { capacityBonusOfStats, capacityProfileOfStats, capacityProgressiveOfStats } from './ap-world/fill/placement-capacity';
 import { createCollectionState } from './ap-world/collection-state';
 import { canCollectLocation } from './ap-world/rules/collect';
 import type { ApWorld } from './ap-world/world.type';
 import type { CollectionState } from './ap-world/collection-state';
 import type { ApPlacement } from './ap-world/fill/ap-placement.type';
 
+/**
+ * Every setting the fill actually read when it built this placement, so the
+ * rebuild here sees the same world it was generated against. A field left
+ * out silently falls back to buildFillWorld's OWN reference default (the
+ * lamp-only escape, no shops, every progressive tier) instead of the seed's
+ * real one, which is how the escape sequence stayed unreachable for a
+ * player who lit their way with a Fire Rod or Cane of Somaria: the rebuilt
+ * world asked for a Lamp specifically, no matter what the placement recorded.
+ */
 const worldFromPlacement = (placement: ApPlacement): ApWorld => {
+  const { stats } = placement;
   const { world } = buildFillWorld({
-    keyDropShuffle: placement.stats.keyDropShuffle,
-    capacity: capacityProfileOfStats(placement.stats),
-    capacityProgressive: capacityProgressiveOfStats(placement.stats),
+    keyDropShuffle: stats.keyDropShuffle,
+    includeNpcChecks: stats.includeNpcChecks,
+    includeWorldItems: stats.includeWorldItems,
+    capacity: capacityProfileOfStats(stats),
+    capacityProgressive: capacityProgressiveOfStats(stats),
+    capacityBonus: capacityBonusOfStats(stats),
+    shops: stats.shops,
+    shopPrices: placement.shopPrices,
+    pond: stats.pond,
+    darkRooms: stats.darkRooms,
+    progressiveTiers: stats.progressiveTiers,
+    progressiveModes: stats.progressiveModes,
+    retroBow: stats.retroBow,
+    itemPower: stats.itemPower,
+    dungeonItems: stats.dungeonItems,
+    accessibility: stats.accessibility,
     medallions: placement.medallions,
   });
   for (const [location, item] of Object.entries(placement.nameView)) {

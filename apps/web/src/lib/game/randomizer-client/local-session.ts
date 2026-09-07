@@ -31,7 +31,7 @@ import {
 } from '@shared/randomizer/ap-world/fill/placement-capacity';
 import { buildPhysicalPlan, logPlanSummary } from './ap-bridge';
 import { startSessionReceiptTexts } from './receipt-text-refresh';
-import { applyOverrides, pollEntriesOf } from './apply-overrides';
+import { applyOverrides, clearArmedShopEntries, pollEntriesOf } from './apply-overrides';
 import {
   armCapacitySession, capacitySessionOf, disarmCapacitySession, primeCapacitySession,
 } from './capacity-session';
@@ -202,6 +202,7 @@ const createLocalSession = (placement: ApPlacement): LocalSession => {
     stop() {
       stopLocationPolling();
       disarmFireReporting();
+      clearArmedShopEntries();
       clearItemOverrides();
       clearNpcGrantOverrides();
       clearDropOverrides();

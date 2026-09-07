@@ -28,7 +28,7 @@ import {
   getCompletedChecks, getCurrentInventory, onCompletedChecksChanged, onInventoryChanged,
 } from '../lib/game';
 import {
-  buildPlacementView, computeApTrackerSnapshot, getSessionState, subscribeSessionStore,
+  buildPlacementView, computeApTrackerSnapshot, firedLocations, getSessionState, onFiredLocation, subscribeSessionStore,
 } from '../lib/game/randomizer-client';
 import type { PlacementView } from '../lib/game/randomizer-client';
 import type { ViewMode } from '../ui/domains/app/compounds/ChecksTracker';
@@ -46,6 +46,7 @@ const useTrackerData = (options: TrackerDataOptions = {}) => {
   const [inventory, setInventory] = useState<Set<ItemId>>(() => getCurrentInventory());
   const [completedChecks, setCompletedChecks] = useState<Set<CheckId>>(() => getCompletedChecks());
   const [placement, setPlacement] = useState(() => getSessionState().placement);
+  const [fired, setFired] = useState<ReadonlySet<string>>(() => firedLocations());
   const [viewMode, setViewMode] = useState<ViewMode>(initialViewMode);
   const [grouping, setGrouping] = useState<GroupDimension[]>(initialGrouping);
   const [filter, setFilter] = useState<FilterState>(EMPTY_FILTER);
@@ -53,6 +54,7 @@ const useTrackerData = (options: TrackerDataOptions = {}) => {
   useEffect(() => onInventoryChanged((inv) => setInventory(new Set(inv))), []);
   useEffect(() => onCompletedChecksChanged((checks) => setCompletedChecks(new Set(checks))), []);
   useEffect(() => subscribeSessionStore((state) => setPlacement(state.placement)), []);
+  useEffect(() => onFiredLocation(() => setFired(new Set(firedLocations()))), []);
 
   const checkRecords = useMemo(() => find('check', () => true), []);
   const resolvedLogic = useMemo(() => resolveRules(VANILLA_CONFIG), []);
@@ -67,8 +69,8 @@ const useTrackerData = (options: TrackerDataOptions = {}) => {
     [effectiveInventory, completedChecks, checkRecords, resolvedLogic],
   );
   const apSnapshot = useMemo(
-    () => (placement ? computeApTrackerSnapshot(placement, completedChecks, checkRecords) : null),
-    [placement, completedChecks, checkRecords],
+    () => (placement ? computeApTrackerSnapshot(placement, completedChecks, checkRecords, fired) : null),
+    [placement, completedChecks, checkRecords, fired],
   );
   const snapshot = apSnapshot ?? vanillaSnapshot;
 
