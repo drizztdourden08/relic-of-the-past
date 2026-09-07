@@ -45,11 +45,12 @@ interface DebugReportPackageInput {
 }
 
 /** Building is local-only (collect files, zip, encode capture video) and never touches the
- *  network, so it gets its own result type: a token for the zip the main process is holding
- *  in memory, to hand to 'debug-report:send' once, or retry as many times as the upload
- *  itself fails without repeating any of this work. */
+ *  network: it returns the id of the zip the main process is holding in memory, generated
+ *  up front so it can be folded into the GitHub issue body before anything is uploaded.
+ *  'debug-report:send' takes that same id later, once the issue is confirmed created, and
+ *  can be retried against it as many times as the upload itself fails. */
 type DebugReportBuildResult =
-  | { token: string }
+  | { reportId: string }
   | { error: string };
 
 type DebugReportUploadResult =

@@ -19,11 +19,11 @@ import './DebugFloatingControls.css';
 interface DebugFloatingControlsProps {
   profileId: string | null;
   gameRunning: boolean;
-  onReportPackaged: (reportId: string) => void;
+  onReportBuilt: (reportId: string) => void;
 }
 
 const DebugFloatingControls = (props: DebugFloatingControlsProps) => {
-  const { profileId, gameRunning, onReportPackaged } = props;
+  const { profileId, gameRunning, onReportBuilt } = props;
   const allowDebugLogging = useAllowDebugLogging();
   const insets = useExclusiveInsetsStore((s) => s.insets);
   const { offset, dragging, onPointerDown, onPointerMove, onPointerUp } = useDraggablePosition();
@@ -46,7 +46,7 @@ const DebugFloatingControls = (props: DebugFloatingControlsProps) => {
         <DebugReportFloatingButton
           profileId={profileId}
           dragging={dragging}
-          onReportPackaged={onReportPackaged}
+          onReportBuilt={onReportBuilt}
           {...dragHandlers}
         />
       </Box>

@@ -30,6 +30,11 @@
   color: var(--c-danger);
 }
 
+.bug-report__upload-status {
+  font-size: var(--text-sm);
+  color: var(--c-text-dim);
+}
+
 .bug-report__debug-report-id {
   font-family: var(--font-mono);
   font-size: var(--text-sm);

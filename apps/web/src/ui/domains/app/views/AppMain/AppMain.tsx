@@ -193,7 +193,7 @@ const AppMain = () => {
         <DebugFloatingControls
           profileId={profileMgmt.activeProfile?.id ?? null}
           gameRunning={game.isRunning}
-          onReportPackaged={(reportId) => { setDebugReportId(reportId); setShowBugReportDialog(true); }}
+          onReportBuilt={(reportId) => { setDebugReportId(reportId); setShowBugReportDialog(true); }}
         />
       </Box>
 

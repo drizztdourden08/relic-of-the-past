@@ -1,4 +1,5 @@
 /* @layer electron-main @kind logic */
+import { randomUUID } from 'crypto';
 import { handle } from '../../lib/ipc/handle';
 import type { DebugReportBuildResult, DebugReportUploadResult } from '@shared/types/debug-report';
 import { collectDebugReportFiles } from './collect-files';
@@ -11,17 +12,19 @@ const registerDebugReportHandlers = (): void => {
     try {
       const files = await collectDebugReportFiles(input.profileId);
       const zip = await buildDebugReportZip(input, files);
-      return { token: storePendingReport(zip) };
+      const reportId = randomUUID().slice(0, 12);
+      storePendingReport(reportId, zip);
+      return { reportId };
     } catch (err) {
       return { error: err instanceof Error ? err.message : String(err) };
     }
   });
 
-  handle('debug-report:send', async (_event, { token }): Promise<DebugReportUploadResult> => {
-    const zip = getPendingReport(token);
+  handle('debug-report:send', async (_event, { reportId }): Promise<DebugReportUploadResult> => {
+    const zip = getPendingReport(reportId);
     if (!zip) return { error: 'Report expired - package it again.' };
-    const result = await uploadDebugReportZip(zip);
-    if (!('error' in result)) dropPendingReport(token);
+    const result = await uploadDebugReportZip(reportId, zip);
+    if (!('error' in result)) dropPendingReport(reportId);
     return result;
   });
 };

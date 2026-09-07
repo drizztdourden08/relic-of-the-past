@@ -37,6 +37,17 @@ const BugReportDialog = (props: BugReportDialogProps) => {
       >
         <Text as="p">Thanks! Your report was filed.</Text>
         <Text as="p" className="bug-report__result-url">{form.resultUrl}</Text>
+        {debugReportId && form.uploadStatus === 'uploading' && (
+          <Text as="p" className="bug-report__upload-status">Attaching the debug report...</Text>
+        )}
+        {debugReportId && form.uploadStatus === 'error' && (
+          <>
+            <Text as="p" className="bug-report__status bug-report__status--error">
+              Couldn't attach the debug report{form.uploadError ? `: ${form.uploadError}` : ''}.
+            </Text>
+            <Button variant="secondary" onClick={form.retryUpload}>Retry upload</Button>
+          </>
+        )}
       </DialogShell>
     );
   }
@@ -85,7 +96,7 @@ const BugReportDialog = (props: BugReportDialogProps) => {
       {debugReportId && (
         <Field label="Debug Report">
           <Text as="p" className="bug-report__debug-report-id">
-            A packaged debug report is attached ({debugReportId}).
+            A debug report ({debugReportId}) is packaged and will upload once you submit.
           </Text>
         </Field>
       )}

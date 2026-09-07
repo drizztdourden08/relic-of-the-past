@@ -17,20 +17,19 @@ interface DebugReportFloatingButtonProps {
   onPointerDown: (e: React.PointerEvent) => void;
   onPointerMove: (e: React.PointerEvent) => void;
   onPointerUp: (e: React.PointerEvent) => void;
-  onReportPackaged: (reportId: string) => void;
+  onReportBuilt: (reportId: string) => void;
 }
 
 /** Packages every save state (quick/normal/auto/live) plus the capture recorder's buffer into
- *  a debug report and hands the id to the bug-report dialog. Position/drag are owned by the
- *  parent stack (DebugFloatingControls); this is presentational plus its own send flow. A
- *  failure surfaces as a danger toast (own local queue, same pattern as the Home tab's) - not
- *  a tooltip, which needs a hover to ever be seen. */
+ *  a debug report zip and hands the id to the bug-report dialog - local-only, nothing
+ *  uploads from here. Position/drag are owned by the parent stack (DebugFloatingControls);
+ *  this is presentational plus its own packaging flow. A failure surfaces as a danger toast
+ *  (own local queue, same pattern as the Home tab's) - not a tooltip, which needs a hover to
+ *  ever be seen. */
 const DebugReportFloatingButton = (props: DebugReportFloatingButtonProps) => {
-  const { profileId, dragging, onPointerDown, onPointerMove, onPointerUp, onReportPackaged } = props;
-  const { status, errorMessage, sendReport, showFfmpegPrompt, resolveFfmpegPrompt } = useDebugReportCapture(profileId);
+  const { profileId, dragging, onPointerDown, onPointerMove, onPointerUp, onReportBuilt } = props;
+  const { status, errorMessage, packageReport, showFfmpegPrompt, resolveFfmpegPrompt } = useDebugReportCapture(profileId);
   const packaging = status === 'packaging';
-  const sending = status === 'sending';
-  const busy = packaging || sending;
   const [toasts, setToasts] = useState<ToastItem[]>([]);
 
   useEffect(() => {
@@ -45,38 +44,36 @@ const DebugReportFloatingButton = (props: DebugReportFloatingButtonProps) => {
   const dismissToast = (id: string) => setToasts((prev) => prev.filter((t) => t.id !== id));
 
   const handleClick = async () => {
-    if (dragging || busy) return;
-    const reportId = await sendReport();
-    if (reportId) onReportPackaged(reportId);
+    if (dragging || packaging) return;
+    const reportId = await packageReport();
+    if (reportId) onReportBuilt(reportId);
   };
 
   const handleFfmpegPromptClose = async () => {
     const reportId = await resolveFfmpegPrompt();
-    if (reportId) onReportPackaged(reportId);
+    if (reportId) onReportBuilt(reportId);
   };
 
   return (
     <>
       <Button
         variant="bare"
-        disabled={busy}
+        disabled={packaging}
         className={[
           'debug-round-button', 'debug-report-floating-button',
           status === 'error' && 'debug-report-floating-button--error',
-          busy && 'debug-report-floating-button--busy',
+          packaging && 'debug-report-floating-button--busy',
         ].filter(Boolean).join(' ')}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onClick={handleClick}
-        title="Send a debug report for the current saves"
+        title="Package a debug report to attach to a bug report"
       >
         <IconifyIcon icon={send} width={16} height={16} />
-        {busy && <Box as="span" className="debug-report-floating-button__spinner" aria-hidden />}
-        {busy && (
-          <Text as="span" className="debug-floating-controls__status-label">
-            {packaging ? 'Packaging...' : 'Sending...'}
-          </Text>
+        {packaging && <Box as="span" className="debug-report-floating-button__spinner" aria-hidden />}
+        {packaging && (
+          <Text as="span" className="debug-floating-controls__status-label">Packaging...</Text>
         )}
       </Button>
       <FfmpegRequiredDialog open={showFfmpegPrompt} onClose={() => { void handleFfmpegPromptClose(); }} />

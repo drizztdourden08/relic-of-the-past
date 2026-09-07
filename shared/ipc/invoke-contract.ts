@@ -256,11 +256,12 @@ interface InvokeContract extends
   'github:createIssue': (req: CreateIssueRequest) => Promise<CreateIssueResult>;
 
   // Debug report tool (Contributor tab): zips the save/screenshot/logs/settings/randomizer
-  // config, see cloud-functions/debug-report-upload. Build is local-only and returns a token
-  // for the zip it's holding in memory; send uploads it, and can be retried on its own
-  // (network failure only) without repeating the local build.
+  // config, see cloud-functions/debug-report-upload. Build is local-only and returns the id
+  // of the zip it's holding in memory, generated before anything uploads so it can be folded
+  // into the GitHub issue body first; send uploads it once the issue is confirmed created,
+  // and can be retried on its own (network failure only) without repeating the local build.
   'debug-report:build': (input: DebugReportPackageInput) => Promise<DebugReportBuildResult>;
-  'debug-report:send': (input: { token: string }) => Promise<DebugReportUploadResult>;
+  'debug-report:send': (input: { reportId: string }) => Promise<DebugReportUploadResult>;
 
   // Auto-updater (nested namespace)
   /** What this build can do about updates: check only, or check and install. */
