@@ -9,7 +9,6 @@ import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
 import { ProgressBar } from '@ds/primitives/ProgressBar';
 import { Text } from '@ds/primitives/Text';
-import { PINNED_FFMPEG } from '@shared/types/ffmpeg-tool';
 import { formatBytes } from '@app/utils/formatBytes';
 import type { FfmpegInstallStepProps } from './FfmpegInstallStep.type';
 import './FfmpegInstallStep.css';
@@ -58,9 +57,9 @@ const FfmpegInstallStep = (props: FfmpegInstallStepProps) => {
         This needs ffmpeg, which is not shipped with the app.
       </Text>
       <Text className="ffmpeg-install-step__note ffmpeg-install-step__note--faint">
-        A {formatBytes(PINNED_FFMPEG.sizeBytes)} download from the FFmpeg-Builds project, checked
-        against its published checksum before anything is unpacked. It goes in this install&apos;s own
-        data folder and deleting that folder removes it. Nothing outside the app is touched.
+        A one-time download (around 140 MB) from the FFmpeg-Builds project, checked against its
+        published checksum before anything is unpacked. It goes in this install&apos;s own data
+        folder and deleting that folder removes it. Nothing outside the app is touched.
       </Text>
       <Text className="ffmpeg-install-step__note ffmpeg-install-step__note--faint">
         LGPL licensed, and run as a separate program, not built in.

@@ -7,19 +7,26 @@ import { Text } from '@ds/primitives/Text';
 import { Button } from '@ds/primitives/Button';
 import { Image } from '@ds/primitives/Image';
 import { Video } from '@ds/primitives/Video';
+import { useCyclingFrame } from '../behavior/useCyclingFrame';
 import type { CaptureSessionRowProps } from '../CaptureSessionPicker.type';
 import '../CaptureSessionPicker.css';
+
+// Stable reference for a row with no frames to cycle, so useCyclingFrame never sees a fresh
+// array literal on every render.
+const NO_PREVIEW_FRAMES: string[] = [];
 
 const formatTimestamp = (epochMs: number): string =>
   new Date(epochMs).toLocaleString(undefined, {
     month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
   });
 
-/** One recorded session: checkbox, a tiny looping preview, its timestamp, a "Sent" tag once
- *  it's shipped in an earlier report, and a delete button. Purely presentational - the
+/** One recorded session: checkbox, a tiny preview (a looping video, or a cycling slideshow of
+ *  the packaged PNG frames when there's no ffmpeg to encode one), its timestamp, a "Sent" tag
+ *  once it's shipped in an earlier report, and a delete button. Purely presentational - the
  *  checked/deleted/confirmed decisions all come back up through callbacks. */
 const CaptureSessionRow = (props: CaptureSessionRowProps) => {
   const { session, checked, onToggle, onRequestDelete } = props;
+  const cyclingFrameUrl = useCyclingFrame(session.previewKind === 'images' ? session.previewFrameUrls : NO_PREVIEW_FRAMES);
 
   return (
     <Box className="capture-session-row">
@@ -32,8 +39,8 @@ const CaptureSessionRow = (props: CaptureSessionRowProps) => {
         {session.previewKind === 'video' && session.previewUrl && (
           <Video className="capture-session-row__media" src={session.previewUrl} muted loop autoPlay playsInline />
         )}
-        {session.previewKind === 'image' && session.previewUrl && (
-          <Image className="capture-session-row__media" src={session.previewUrl} alt="" />
+        {session.previewKind === 'images' && cyclingFrameUrl && (
+          <Image className="capture-session-row__media" src={cyclingFrameUrl} alt="" />
         )}
         {session.previewKind === 'none' && <Box className="capture-session-row__no-preview" />}
       </Box>

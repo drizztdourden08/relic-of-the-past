@@ -64,13 +64,17 @@ interface DebugReportPackageInput {
 /** One recorded capture session as the picker lists it: enough to show a small preview,
  *  a timestamp, and whether it's already been shipped in an earlier report. `sentAt` comes
  *  from that profile's capture manifest, not from the session folder itself - deleting
- *  `packaged/` is no longer how "already sent" gets tracked (see capture-manifest.ts). */
+ *  `packaged/` is no longer how "already sent" gets tracked (see capture-manifest.ts).
+ *  `previewKind: 'images'` (no ffmpeg, PNG fallback) carries every packaged frame in
+ *  `previewFrameUrls` so the picker can cycle through them as a fake video instead of
+ *  freezing on frame one. */
 interface DebugCaptureSessionSummary {
   sessionKey: string;
   startedAt: number;
   sizeBytes: number;
   previewUrl: string | null;
-  previewKind: 'video' | 'image' | 'none';
+  previewFrameUrls: string[];
+  previewKind: 'video' | 'images' | 'none';
   sentAt: number | null;
 }
 

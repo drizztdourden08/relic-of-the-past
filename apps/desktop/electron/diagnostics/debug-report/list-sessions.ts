@@ -20,14 +20,23 @@ const sumFileSizes = async (dir: string, names: string[]): Promise<number> => {
   return sizes.reduce((sum, size) => sum + size, 0);
 };
 
-const previewFor = (
-  profileId: string, sessionKey: string, hasFullVideo: boolean, packagedNames: string[],
-): { previewUrl: string | null; previewKind: DebugCaptureSessionSummary['previewKind'] } => {
+type PreviewInfo = Pick<DebugCaptureSessionSummary, 'previewUrl' | 'previewFrameUrls' | 'previewKind'>;
+
+const previewFor = (profileId: string, sessionKey: string, hasFullVideo: boolean, packagedNames: string[]): PreviewInfo => {
   const base = `app-debug-capture://captures/${encodeURIComponent(profileId)}/${encodeURIComponent(sessionKey)}`;
-  if (hasFullVideo) return { previewUrl: `${base}/video-full.mp4`, previewKind: 'video' };
-  const firstFrame = packagedNames.filter((n) => n.endsWith('.png')).sort()[0];
-  if (firstFrame) return { previewUrl: `${base}/${PACKAGED_SUBDIR}/${firstFrame}`, previewKind: 'image' };
-  return { previewUrl: null, previewKind: 'none' };
+  if (hasFullVideo) return { previewUrl: `${base}/video-full.mp4`, previewFrameUrls: [], previewKind: 'video' };
+  // No ffmpeg: packaged/ holds the evenly-spread PNG subset itself (see capture-frame-budget.ts)
+  // instead of a video - every one of those frames goes to the picker so it can cycle through
+  // them as a fake video, not just show the first.
+  const frames = packagedNames.filter((n) => n.endsWith('.png')).sort();
+  if (frames.length > 0) {
+    return {
+      previewUrl: null,
+      previewFrameUrls: frames.map((name) => `${base}/${PACKAGED_SUBDIR}/${name}`),
+      previewKind: 'images',
+    };
+  }
+  return { previewUrl: null, previewFrameUrls: [], previewKind: 'none' };
 };
 
 const listCaptureSessions = async (profileId: string): Promise<DebugCaptureSessionSummary[]> => {
@@ -43,13 +52,12 @@ const listCaptureSessions = async (profileId: string): Promise<DebugCaptureSessi
     const packagedNames = await readdir(packagedDir).catch(() => [] as string[]);
     const hasFullVideo = await stat(join(dir, 'video-full.mp4')).then(() => true).catch(() => false);
     const sizeBytes = await sumFileSizes(packagedDir, packagedNames);
-    const { previewUrl, previewKind } = previewFor(profileId, sessionKey, hasFullVideo, packagedNames);
+    const preview = previewFor(profileId, sessionKey, hasFullVideo, packagedNames);
     return {
       sessionKey,
       startedAt: startedAtOf(sessionKey),
       sizeBytes,
-      previewUrl,
-      previewKind,
+      ...preview,
       sentAt: manifest[sessionKey]?.sentAt ?? null,
     };
   }));
