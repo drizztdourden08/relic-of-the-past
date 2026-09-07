@@ -94,7 +94,7 @@ const buildFillWorld = (options: FillWorldOptions): FillWorld => {
     deliverableNpcLocations, deliverableWorldLocations,
     capacity = REFERENCE_CAPACITY_PROFILE, capacityProgressive = false, capacityBonus = LEGACY_CAPACITY_BONUS,
     deliverableCapacityLocations, medallions,
-    shops = NO_SHOP_SCOPE, shopPrices = NO_SHOP_PRICES, pond = LEGACY_POND_SETTING, pondSeed = '',
+    shops = NO_SHOP_SCOPE, shopPrices = NO_SHOP_PRICES, pond = LEGACY_POND_SETTING,
     darkRooms = REFERENCE_DARK_ROOM_SETTING, unlitEscapeExempt,
     progressiveTiers = DEFAULT_PROGRESSIVE_SETTING, progressiveModes = DEFAULT_PROGRESSIVE_MODES,
     itemPower = DEFAULT_ITEM_POWER, retroBow = DEFAULT_RETRO_BOW,
@@ -105,9 +105,9 @@ const buildFillWorld = (options: FillWorldOptions): FillWorld => {
 
   // The legacy pond passes no location list at all, so buildWorld keeps the
   // derivation it has always used and the graph is byte-identical.
-  const pondLocations = presentPondLocations(pond, capacity, pondSeed, deliverableCapacityLocations);
+  const pondLocations = presentPondLocations(pond, capacity, deliverableCapacityLocations);
   const world = buildWorld({
-    keyDropShuffle: true, capacity, medallions, shops, pond, pondSeed, darkRooms, unlitEscapeExempt,
+    keyDropShuffle: true, capacity, medallions, shops, pond, darkRooms, unlitEscapeExempt,
     progressiveTiers, progressiveModes, itemPower, retroBow, dungeonItems, accessibility,
     ...(pond.mode === 'capacity' ? {} : { pondLocations }),
   });
@@ -137,7 +137,7 @@ const buildFillWorld = (options: FillWorldOptions): FillWorld => {
     ...world,
     options: {
       ...world.options, keyDropShuffle, includeNpcChecks, includeWorldItems, capacity, capacityProgressive,
-      shops, pond, pondSeed, progressiveTiers, progressiveModes, itemPower, retroBow,
+      shops, pond, progressiveTiers, progressiveModes, itemPower, retroBow,
       dungeonItems, accessibility, difficulty,
     },
   };
@@ -179,7 +179,7 @@ const buildFillWorld = (options: FillWorldOptions): FillWorld => {
   return {
     world, keyDropShuffle, includeNpcChecks, includeWorldItems, capacity, capacityProgressive, capacityBonus,
     shops, shopPrices,
-    pond, pondSeed, pondLocations, darkRooms, progressiveTiers, progressiveModes, itemPower, retroBow,
+    pond, pondLocations, darkRooms, progressiveTiers, progressiveModes, itemPower, retroBow,
     dungeonItems, accessibility, difficulty,
     capacityCounts: capacityPoolCountsOf(
       capacity, checkSpotCount(capacity, pondLocations, lockedCapacity, lockedScope)),

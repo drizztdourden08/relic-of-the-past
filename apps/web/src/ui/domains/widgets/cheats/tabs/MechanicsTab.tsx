@@ -8,7 +8,7 @@ import { Box, Text, Button } from '../../../../design-system/primitives';
 import { Toggle } from '../../../../design-system/primitives/Toggle';
 import {
   cheatKillAllEnemies, cheatSetDamageMultiplier, cheatSetExtraArmorPct,
-  cheatSetIgnoreCollision, getIgnoreCollisionEnabled,
+  cheatSetIgnoreCollision, getIgnoreCollisionEnabled, cheatUnblockLink,
   cheatSetIlluminateDarkRooms, getIlluminateDarkRoomsEnabled,
 } from '../../../../../lib/game';
 
@@ -64,6 +64,11 @@ const MechanicsTab = () => {
         </Box>
         <Box className="cheats-row">
           <Toggle label="Always light dark rooms" checked={illuminate} onChange={handleIlluminate} />
+        </Box>
+        <Box className="cheats-row">
+          <Button variant="danger" size="sm" onClick={cheatUnblockLink}>
+            Unblock Link
+          </Button>
         </Box>
       </Box>
 

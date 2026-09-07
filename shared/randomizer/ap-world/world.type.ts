@@ -85,8 +85,6 @@ interface ApWorldOptions {
    * every caller that predates the pond builds the same world it always did.
    */
   pondLocations?: readonly string[];
-  /** Seed the pond's gamble schedule was drawn from; '' for every other mode. */
-  pondSeed?: string;
   /**
    * What an unlit room asks for (dark-rooms/). Absent means the reference
    * reading (light required, the lamp alone providing it) which every

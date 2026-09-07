@@ -23,7 +23,7 @@ export {
   cheatGiveItem, cheatTriggerCheck, cheatTriggerNpcCheck,
   cheatSetHealth, cheatSetMaxHealth, cheatSetRupees, cheatSetBombs, cheatSetArrows,
   cheatSetMaxBombs, cheatSetMaxArrows, cheatSetMaxWallet, cheatSetMagic, cheatRefillMagic,
-  cheatFillBottle, cheatSetIgnoreCollision, getIgnoreCollisionEnabled,
+  cheatFillBottle, cheatSetIgnoreCollision, getIgnoreCollisionEnabled, cheatUnblockLink,
   cheatSetIlluminateDarkRooms, getIlluminateDarkRoomsEnabled,
   cheatKillAllEnemies, cheatSetDamageMultiplier, cheatSetExtraArmorPct,
   cheatStartTrace,

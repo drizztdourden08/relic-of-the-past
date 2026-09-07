@@ -3518,7 +3518,7 @@ endif_11:
     PrepareDungeonExitFromBossFight();
   }
 
-  if (ancilla_step[k] != 2)
+  if (ancilla_step[k] != 2 || GameHook_SubstitutedReceiptNeedsUnfreeze())
     flag_is_link_immobilized = 0;
   return;
 

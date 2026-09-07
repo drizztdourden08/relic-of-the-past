@@ -1,20 +1,22 @@
 /* @layer tests @kind test */
 /**
- * The pond model: the rupee decomposition, the three modes' schedules, the
- * snapshot adapter (a snapshot with no pond row means the legacy pond), the
- * wallet reading of a prize, and the pond's own three receipt lines: the
- * price of a toss, a throw that won nothing, an emptied pond, which have to
- * quote the plan's real amounts, because every vanilla line they replace
- * names an amount no plan charges.
+ * The pond model: the rupee decomposition, the modes' schedules, the snapshot
+ * adapter (a snapshot with no pond row means the legacy pond, and so does a
+ * mode the model no longer offers), the wallet reading of a prize, and the
+ * pond's own receipt lines: the price of a toss, a prize award, an emptied
+ * pond, which have to quote the plan's real amounts, because every vanilla
+ * line they replace names an amount no plan charges or asks a question no
+ * plan puts.
  */
 import { describe, expect, it } from 'vitest';
 import { apBaselineValues } from '@shared/randomizer/ap-world/options.data';
 import { parsePondSetting, pondValuesOf } from '@shared/randomizer/ap-world/pond/pond-from-snapshot';
 import { pondPlanOf } from '@shared/randomizer/ap-world/pond/pond-plan';
 import { decomposeRupees, describeRupees, rupeeVolleysOf } from '@shared/randomizer/ap-world/pond/rupee-gems';
-import { POND_GAMBLE_CHANCES, gamblePriceOf } from '@shared/randomizer/ap-world/pond/pond-ladder.data';
 import { DEFAULT_POND_SETTING, LEGACY_POND_SETTING } from '@shared/randomizer/ap-world/pond/pond-profile-defaults';
-import { POND_CLOSED_LINE, pondLinesOf } from '@shared/randomizer/receipt-text/pond-lines';
+import {
+  POND_AWARD_LAST_LINE, POND_AWARD_MORE_LINE, POND_CLOSED_LINE, pondLinesOf,
+} from '@shared/randomizer/receipt-text/pond-lines';
 import { receiptLineCandidates } from '@shared/randomizer/receipt-text/receipt-line.type';
 import type { PondSetting } from '@shared/randomizer/ap-world/pond/pond-profile.type';
 
@@ -54,13 +56,13 @@ describe('rupee decomposition', () => {
 
 describe('pond plan', () => {
   it('leaves the legacy pond with nothing to sell', () => {
-    const plan = pondPlanOf(LEGACY_POND_SETTING, 'seed');
+    const plan = pondPlanOf(LEGACY_POND_SETTING);
     expect(plan.throws).toEqual([]);
     expect(plan.locations).toEqual([]);
   });
 
   it('vanilla cost is fourteen throws of a hundred', () => {
-    const plan = pondPlanOf({ mode: 'vanilla-cost', items: 2 }, 'seed');
+    const plan = pondPlanOf({ mode: 'vanilla-cost', items: 2 });
     expect(plan.throws).toHaveLength(14);
     expect(plan.throws.every((entry) => entry.price === 100)).toBe(true);
     expect(plan.totalPrice).toBe(1400);
@@ -69,35 +71,26 @@ describe('pond plan', () => {
   });
 
   it('custom cuts the price ladder with the curve', () => {
-    const plan = pondPlanOf(CUSTOM, 'seed');
+    const plan = pondPlanOf(CUSTOM);
     expect(plan.throws.map((entry) => entry.price)).toEqual([100, 150, 200, 250, 300]);
     expect(plan.locations).toHaveLength(3);
     expect(plan.worstPriceOfPrize).toEqual([100, 150, 200]);
   });
 
   it('custom with zero items is not a check source', () => {
-    const plan = pondPlanOf({ ...CUSTOM, items: 0 } as PondSetting, 'seed');
+    const plan = pondPlanOf({ ...CUSTOM, items: 0 } as PondSetting);
     expect(plan.locations).toEqual([]);
     expect(plan.throws.every((entry) => entry.prize === -1)).toBe(true);
   });
 
-  it('gamble draws its winners once per seed and never pays back more than it took', () => {
-    const plan = pondPlanOf({ mode: 'gamble', items: 3 }, 'seed-a');
-    expect(plan.throws).toHaveLength(POND_GAMBLE_CHANCES);
-    expect(plan.throws.map((entry) => entry.price)).toEqual(
-      Array.from({ length: POND_GAMBLE_CHANCES }, (_, index) => gamblePriceOf(index)));
-    const winners = plan.throws.flatMap((entry, index) => (entry.prize >= 0 ? [index] : []));
-    expect(winners).toHaveLength(3);
-    expect([...winners].sort((a, b) => a - b)).toEqual(winners);
-    for (const entry of plan.throws) expect(entry.refund).toBeLessThan(entry.price);
-    // Same seed, same schedule; a different seed moves it.
-    expect(pondPlanOf({ mode: 'gamble', items: 3 }, 'seed-a')).toEqual(plan);
-    const other = pondPlanOf({ mode: 'gamble', items: 3 }, 'seed-b');
-    expect(other.throws.map((entry) => entry.prize)).not.toEqual(plan.throws.map((entry) => entry.prize));
+  it('no mode pays a losing throw anything back', () => {
+    for (const setting of [{ mode: 'vanilla-cost', items: 2 }, CUSTOM] as PondSetting[]) {
+      for (const entry of pondPlanOf(setting).throws) expect(entry.refund).toBe(0);
+    }
   });
 
-  it('the wallet reading of a prize is the worst case, never the odds', () => {
-    const plan = pondPlanOf({ mode: 'gamble', items: 3 }, 'seed-a');
+  it('the wallet reading of a prize is the worst case, never the last price', () => {
+    const plan = pondPlanOf(CUSTOM);
     plan.locations.forEach((_, prize) => {
       const at = plan.throws.findIndex((entry) => entry.prize === prize);
       const dearest = Math.max(...plan.throws.slice(0, at + 1).map((entry) => entry.price));
@@ -110,35 +103,36 @@ describe('pond receipt lines', () => {
   /** The longest candidate that still shows without scrolling the box (measured at 164px). */
   const LONGEST_FITTING = 63;
 
-  it('allocates one line per distinct price and per distinct refund, plus the closing line', () => {
+  it('allocates one line per distinct price, then the award and closing lines', () => {
     // Vanilla cost charges the same hundred fourteen times and never pays back.
-    const flat = pondLinesOf(pondPlanOf({ mode: 'vanilla-cost', items: 2 }, 'seed'));
+    const flat = pondLinesOf(pondPlanOf({ mode: 'vanilla-cost', items: 2 }));
     expect(flat.prices).toEqual([100]);
     expect(flat.refunds).toEqual([]);
-    expect(flat.lines).toHaveLength(2);
+    expect(flat.lines).toHaveLength(4);
+    expect(flat.lines[flat.lines.length - 3]).toBe(POND_AWARD_MORE_LINE);
+    expect(flat.lines[flat.lines.length - 2]).toBe(POND_AWARD_LAST_LINE);
     expect(flat.lines[flat.lines.length - 1]).toBe(POND_CLOSED_LINE);
 
-    const custom = pondLinesOf(pondPlanOf(CUSTOM, 'seed'));
+    const custom = pondLinesOf(pondPlanOf(CUSTOM));
     expect(custom.prices).toEqual([100, 150, 200, 250, 300]);
-    expect(custom.lines).toHaveLength(6);
+    expect(custom.lines).toHaveLength(8);
+  });
+
+  it('the award lines differ only in what they say about what is left', () => {
+    const more = receiptLineCandidates(POND_AWARD_MORE_LINE);
+    const last = receiptLineCandidates(POND_AWARD_LAST_LINE);
+    expect(more).toHaveLength(last.length);
+    expect(more.some((candidate) => /more/i.test(candidate))).toBe(true);
+    expect(last.every((candidate) => /last|empty/i.test(candidate))).toBe(true);
   });
 
   it('quotes the amounts of the throws it was built from', () => {
-    const plan = pondPlanOf({ mode: 'gamble', items: 3 }, 'seed-a');
-    const { prices, refunds, lines } = pondLinesOf(plan);
+    const plan = pondPlanOf(CUSTOM);
+    const { prices, lines } = pondLinesOf(plan);
     expect(prices).toEqual(plan.throws.map((entry) => entry.price));
-    // Every losing throw's refund has a line, and every line names its own number.
-    for (const entry of plan.throws) {
-      if (entry.refund > 0) expect(refunds).toContain(entry.refund);
-    }
     prices.forEach((price, index) => {
       for (const candidate of receiptLineCandidates(lines[index])) {
         expect(candidate, `price ${price}`).toContain(String(price));
-      }
-    });
-    refunds.forEach((refund, offset) => {
-      for (const candidate of receiptLineCandidates(lines[prices.length + offset])) {
-        expect(candidate, `refund ${refund}`).toContain(String(refund));
       }
     });
   });
@@ -155,8 +149,8 @@ describe('pond receipt lines', () => {
   it('keeps a shortest candidate the text box can always show', () => {
     // The composer keeps the fullest candidate that fits three rows and falls back down
     // the list, so the LAST one has to fit at every amount the ladder can reach.
-    const plan = pondPlanOf({ mode: 'gamble', items: 3 }, 'seed-a');
-    const lines = [...pondLinesOf(plan).lines, POND_CLOSED_LINE];
+    const plan = pondPlanOf({ ...CUSTOM, start: 0, max: 999, throws: 19 } as PondSetting);
+    const lines = [...pondLinesOf(plan).lines, POND_AWARD_MORE_LINE, POND_AWARD_LAST_LINE, POND_CLOSED_LINE];
     for (const line of lines) {
       const candidates = receiptLineCandidates(line);
       expect(candidates.length).toBeGreaterThan(0);
@@ -177,10 +171,15 @@ describe('pond snapshot adapter', () => {
   });
 
   it('round-trips every mode', () => {
-    for (const setting of [LEGACY_POND_SETTING, { mode: 'vanilla-cost', items: 5 }, CUSTOM,
-      { mode: 'gamble', items: 2 }] as PondSetting[]) {
+    for (const setting of [LEGACY_POND_SETTING, { mode: 'vanilla-cost', items: 5 }, CUSTOM] as PondSetting[]) {
       expect(parsePondSetting(pondValuesOf(setting)).setting).toEqual(setting);
     }
+  });
+
+  it('a mode the model no longer offers reads as the legacy pond, with a note', () => {
+    const parsed = parsePondSetting({ ...pondValuesOf(CUSTOM), pond_mode: 'gamble' });
+    expect(parsed.setting).toEqual(LEGACY_POND_SETTING);
+    expect(parsed.notes).toContain('pond: unknown mode gamble, using the vanilla pond');
   });
 
   it('reports every fallback it applies', () => {
@@ -203,28 +202,21 @@ describe('pond held to the wallet', () => {
     expect(start.setting).toMatchObject({ mode: 'custom', start: 500, max: 500 });
   });
 
-  it('leaves a fixed schedule alone: the wallet floor puts every top above it', () => {
-    // Both fixed schedules top out at 240, and no reachable wallet sits below
-    // 599 (capacity/wallet-floor.ts), so neither can ever be held.
-    const gamble = parsePondSetting({ ...pondValuesOf({ mode: 'gamble', items: 3 }), ...walletTo('599') });
-    expect(gamble.setting).toEqual({ mode: 'gamble', items: 3 });
-    expect(gamble.notes).toEqual([]);
-    const plan = pondPlanOf(gamble.setting, 'seed-a');
-    expect(plan.throws.map((entry) => entry.price)).toEqual([20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240]);
-    for (const entry of plan.throws) expect(entry.refund).toBeLessThan(Math.max(1, entry.price));
+  it('leaves the fixed schedule alone: the wallet floor puts every top above it', () => {
+    // Vanilla cost tops out at a hundred, and no reachable wallet sits below
+    // 599 (capacity/wallet-floor.ts), so it can never be held.
     const vanilla = parsePondSetting({ ...pondValuesOf({ mode: 'vanilla-cost', items: 2 }), ...walletTo('599') });
     expect(vanilla.setting).toEqual({ mode: 'vanilla-cost', items: 2 });
-    expect(pondPlanOf(vanilla.setting, 'seed').totalPrice).toBe(1400);
+    expect(vanilla.notes).toEqual([]);
+    expect(pondPlanOf(vanilla.setting).totalPrice).toBe(1400);
   });
 
   it('leaves every setting untouched under a wallet that reaches its prices', () => {
-    for (const setting of [{ mode: 'vanilla-cost', items: 5 }, { ...CUSTOM, max: 999 },
-      { mode: 'gamble', items: 2 }] as PondSetting[]) {
+    for (const setting of [{ mode: 'vanilla-cost', items: 5 }, { ...CUSTOM, max: 999 }] as PondSetting[]) {
       expect(parsePondSetting({ ...pondValuesOf(setting), ...walletTo('999') }).setting).toEqual(setting);
     }
-    // The two fixed schedules top out at 240 and 100: a 299 wallet reaches both, so no ceiling is written.
-    for (const setting of [{ mode: 'vanilla-cost', items: 5 }, { mode: 'gamble', items: 2 }] as PondSetting[]) {
-      expect(parsePondSetting({ ...pondValuesOf(setting), ...walletTo('299') }).setting).toEqual(setting);
-    }
+    // The fixed schedule tops out at a hundred, which a 299 wallet reaches, so no ceiling is written.
+    expect(parsePondSetting({ ...pondValuesOf({ mode: 'vanilla-cost', items: 5 }), ...walletTo('299') }).setting)
+      .toEqual({ mode: 'vanilla-cost', items: 5 });
   });
 });

@@ -2,7 +2,7 @@
 /**
  * Which pond prize slots exist as locations. In the legacy mode nothing
  * changes: the pond's two slots are the capacity families' own spots and
- * capacity-spots.ts decides, exactly as before. In the other three modes the
+ * capacity-spots.ts decides, exactly as before. In the other two modes the
  * pond's plan decides (one location per prize it carries), and the whole set
  * needs the pond's physical seam proven deliverable first, because a prize
  * slot past the reference's two has no vanilla item to fall back to and so
@@ -29,11 +29,11 @@ const isPondDeliverable = (deliverable: ReadonlySet<string> | undefined): boolea
  * seam is proven).
  */
 const presentPondLocations = (
-  setting: PondSetting, capacity: CapacityProfile, seed: string, deliverable: ReadonlySet<string> | undefined,
+  setting: PondSetting, capacity: CapacityProfile, deliverable: ReadonlySet<string> | undefined,
 ): string[] => {
   if (setting.mode === 'capacity') return presentCapacitySpots(capacity);
   if (!isPondDeliverable(deliverable)) return [];
-  return [...pondPlanOf(setting, seed).locations];
+  return [...pondPlanOf(setting).locations];
 };
 
 /** A prize slot the reference does not name, present only under a non-legacy pond. */

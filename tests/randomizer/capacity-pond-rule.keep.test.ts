@@ -38,7 +38,7 @@ import type { CapacityProfile, FamilySetting } from '@shared/randomizer/ap-world
 import type { PondMode, PondSetting } from '@shared/randomizer/ap-world/pond/pond-profile.type';
 import type { RandomizerOptionChoices } from '@app/hooks/randomizer/randomizer-choices';
 
-const POND_MODES: readonly PondMode[] = ['capacity', 'vanilla-cost', 'custom', 'gamble'];
+const POND_MODES: readonly PondMode[] = ['capacity', 'vanilla-cost', 'custom'];
 const FAMILY_MODES = ['vanilla', 'vanilla-in-pool', 'custom'] as const;
 const AUTHORITIES: readonly CapacityPondAuthority[] = ['pond', 'capacity', 'explosives', 'projectiles', 'meter', 'wallet'];
 
@@ -179,10 +179,10 @@ describe('the rule table, edit by edit', () => {
   const vanillaPair = selectionOf(true, 'capacity', 'vanilla', 'custom');
 
   it('pushes a Vanilla family into the pool when the pond leaves its legacy mode, and leaves Custom alone', () => {
-    const settled = reconcileCapacityPond({ ...vanillaPair, pond: pondSettingForMode('gamble', LEGACY_POND_SETTING) }, 'pond');
+    const settled = reconcileCapacityPond({ ...vanillaPair, pond: pondSettingForMode('custom', LEGACY_POND_SETTING) }, 'pond');
     expect(settled.capacity.explosives.mode).toBe('vanilla-in-pool');
     expect(settled.capacity.projectiles.mode).toBe('custom');
-    expect(settled.pond.mode).toBe('gamble');
+    expect(settled.pond.mode).toBe('custom');
     expect(settled.pondModes).not.toContain('capacity');
     expect(settled.notes.length).toBe(2);
   });
@@ -202,10 +202,10 @@ describe('the rule table, edit by edit', () => {
   it('leaves the pond and the other family alone when a row moves to Custom', () => {
     const pooled = reconcileCapacityPond(
       { ...vanillaPair, capacity: profileOf('vanilla-in-pool', 'vanilla-in-pool'),
-        pond: pondSettingForMode('gamble', LEGACY_POND_SETTING) }, 'pond');
+        pond: pondSettingForMode('custom', LEGACY_POND_SETTING) }, 'pond');
     const capacity = { ...pooled.capacity, explosives: settingFor('custom', 10, 15) };
     const settled = reconcileCapacityPond({ ...pooled, capacity }, 'explosives');
-    expect(settled.pond.mode).toBe('gamble');
+    expect(settled.pond.mode).toBe('custom');
     expect(settled.capacity.projectiles.mode).toBe('vanilla-in-pool');
     expect(settled.pondModes).not.toContain('capacity');
   });
@@ -213,7 +213,7 @@ describe('the rule table, edit by edit', () => {
   it('gives the pond its legacy mode back when the last family leaves the pool', () => {
     const pooled = reconcileCapacityPond(
       { ...vanillaPair, capacity: profileOf('custom', 'vanilla-in-pool'),
-        pond: pondSettingForMode('gamble', LEGACY_POND_SETTING) }, 'pond');
+        pond: pondSettingForMode('custom', LEGACY_POND_SETTING) }, 'pond');
     const capacity = { ...pooled.capacity, projectiles: settingFor('vanilla', 30, 35) };
     const settled = reconcileCapacityPond({ ...pooled, capacity }, 'projectiles');
     expect(settled.pond.mode).toBe('capacity');
@@ -237,15 +237,15 @@ describe('retro bow pins the projectiles family', () => {
   });
 
   it('lets the pond sell throws on the explosives family alone, never pulling the projectiles back in', () => {
-    const settled = reconcileCapacityPond({ ...pair, pond: pondSettingForMode('gamble', LEGACY_POND_SETTING) }, 'pond');
-    expect(settled.pond.mode).toBe('gamble');
+    const settled = reconcileCapacityPond({ ...pair, pond: pondSettingForMode('custom', LEGACY_POND_SETTING) }, 'pond');
+    expect(settled.pond.mode).toBe('custom');
     expect(settled.capacity.explosives.mode).toBe('vanilla-in-pool');
     expect(settled.capacity.projectiles.mode).toBe('vanilla');
     // The explosives family on its own ladder needs nothing from the pond, and
     // the projectiles are out of the pair under retro, so the mode the player
     // picked stands.
     const capacity = { ...settled.capacity, explosives: settingFor('custom', 10, 15) };
-    expect(reconcileCapacityPond({ ...settled, capacity }, 'explosives').pond.mode).toBe('gamble');
+    expect(reconcileCapacityPond({ ...settled, capacity }, 'explosives').pond.mode).toBe('custom');
   });
 
   it('hands the row back when retro goes off', () => {

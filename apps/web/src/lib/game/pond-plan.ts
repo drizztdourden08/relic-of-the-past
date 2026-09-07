@@ -4,8 +4,12 @@
  * (core/game-hooks/pond_plan.c): one row per throw (its price, the prize
  * ordinal it hands over or -1, the consolation it pays back, the pre-rendered
  * lines announcing the price and the consolation) and one row per prize slot
- * (the assigned item, its receipt line, its completion fire id), plus the one
- * line an emptied pond shows. Same contract as the other
+ * (the assigned item, its receipt line, its completion fire id), plus the
+ * lines the pond itself speaks: the two a throw carrying a pool item shows in
+ * place of the native capacity question, one for a water that still holds a
+ * prize and one for the throw that takes the last, and the one an emptied
+ * pond shows.
+ * Same contract as the other
  * override bridges: every write only records, the gate bit is requested
  * alongside it, and it stays open only while a plan is armed. The session
  * layer composes the rows from the placement; this file is the ccall surface
@@ -91,6 +95,24 @@ const setPondClosedMessage = (messageId: number): void => {
   log.randomizer(`[Randomizer] Pond closing line -> msg ${messageId}`);
 };
 
+/**
+ * The two lines a throw carrying a pool item shows in place of the native
+ * question asking which capacity family to climb: |more| while the water still
+ * holds a prize after this one, |last| for the throw that takes the final one.
+ * -1 keeps that question, and with it the two-way choice: the native line is
+ * one box and so is each of these, so the purchase asks for the same
+ * confirmations either way, and an empty seam would drop one.
+ */
+const setPondAwardMessage = (more: number, last: number): void => {
+  const mod = getModule();
+  if (!mod) {
+    log.error('[Randomizer] setPondAwardMessage called with no active module');
+    return;
+  }
+  mod.ccall('WasmSetPondAwardMessage', null, ['number', 'number'], [more, last]);
+  log.randomizer(`[Randomizer] Pond award lines -> msg ${more} (more to come), msg ${last} (the last)`);
+};
+
 /** Throws taken on the live file: what the probes and the tracker read back. */
 const pondThrowsTaken = (): number => {
   const mod = getModule();
@@ -107,5 +129,7 @@ const clearPondPlan = (): void => {
   log.randomizer('[Randomizer] Pond plan cleared');
 };
 
-export { clearPondPlan, pondThrowsTaken, setPondClosedMessage, setPondPrize, setPondThrows };
+export {
+  clearPondPlan, pondThrowsTaken, setPondAwardMessage, setPondClosedMessage, setPondPrize, setPondThrows,
+};
 export type { PondPrizeArm, PondThrowArm };

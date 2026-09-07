@@ -13,7 +13,9 @@
  * price of a toss, a throw that won nothing, an emptied pond,
  * pond-lines.ts): one line per distinct price and per distinct refund of its
  * plan, so a toss announces its real amount instead of a native line that
- * names amounts no plan charges.
+ * names amounts no plan charges. The award line comes in two, one for a water
+ * that still holds a prize and one for the throw that took the last, so a
+ * player always knows whether the pond is worth returning to.
  */
 
 import { RANDOMIZER_RECEIPT_MSG } from '@shared/asset-extraction/text/data/randomizer-templates';
@@ -45,6 +47,10 @@ interface PlanPondLines {
   byPrice: ReadonlyMap<number, number>;
   /** throw refund → index into |lines|. */
   byRefund: ReadonlyMap<number, number>;
+  /** Index of the award line for a water that still holds a prize; -1 for a native pond. */
+  awardMore: number;
+  /** Index of the award line for the throw that took the last prize; -1 for a native pond. */
+  awardLast: number;
   /** Index of the emptied-pond line, or -1 when the pond keeps its native loop. */
   closed: number;
 }
@@ -65,7 +71,9 @@ interface PlanReceiptTexts {
 }
 
 /** The empty pond allocation: a legacy pond speaks with its own native lines. */
-const NO_POND_LINES: PlanPondLines = { byPrice: new Map(), byRefund: new Map(), closed: -1 };
+const NO_POND_LINES: PlanPondLines = {
+  byPrice: new Map(), byRefund: new Map(), awardMore: -1, awardLast: -1, closed: -1,
+};
 
 /**
  * Append the pond's lines and say where each landed. The plan is re-derived
@@ -75,12 +83,14 @@ const NO_POND_LINES: PlanPondLines = { byPrice: new Map(), byRefund: new Map(), 
 const appendPondLines = (placement: ApPlacement, lines: ReceiptLine[]): PlanPondLines => {
   const setting = placement.stats.pond;
   if (setting === undefined || setting.mode === 'capacity') return NO_POND_LINES;
-  const { prices, refunds, lines: pondLines } = pondLinesOf(pondPlanOf(setting, placement.seed));
+  const { prices, refunds, lines: pondLines } = pondLinesOf(pondPlanOf(setting));
   const base = lines.length;
   lines.push(...pondLines);
   return {
     byPrice: new Map(prices.map((price, offset) => [price, base + offset])),
     byRefund: new Map(refunds.map((refund, offset) => [refund, base + prices.length + offset])),
+    awardMore: base + pondLines.length - 3,
+    awardLast: base + pondLines.length - 2,
     closed: base + pondLines.length - 1,
   };
 };

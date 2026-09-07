@@ -10,8 +10,8 @@
  * this module exists to make unreachable.
  *
  *   Vanilla         ⇔ pond `capacity`, the only place its upgrades are sold
- *   Vanilla in pool ⇔ pond `vanilla-cost` / `custom` / `gamble`, so the same
- *                     upgrade is never both sold and shuffled
+ *   Vanilla in pool ⇔ pond `vanilla-cost` / `custom`, so the same upgrade is
+ *                     never both sold and shuffled
  *   Custom          ⇔ either pond: its own ladder is already in the seed, so
  *                     it asks the pond for nothing and the pond asks it for
  *                     nothing back

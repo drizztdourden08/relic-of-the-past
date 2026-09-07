@@ -11432,7 +11432,8 @@ void Sprite_HappinessPond(int k) {  // 86c44c
     if (choice_in_multiselect_box == 0) {
       int i = (link_bomb_upgrades | link_arrow_upgrades) != 0;
       sprite_graphics[k] = i * 2;
-      WORD(dialogue_number[0]) = WORD(kHappinessPondCostHex[i * 2]);
+      dialogue_number[0] = (uint8)GameHook_PondCostDigits(kHappinessPondCostHex[i * 2]);
+      dialogue_number[1] = (uint8)GameHook_PondCostDigits(kHappinessPondCostHex[i * 2 + 1]);
       if (!GameHook_PondPromptOverride()) Sprite_ShowMessageUnconditional(0x14e);
       sprite_ai_state[k] = 2;
       flag_is_link_immobilized = 1;
@@ -11445,7 +11446,7 @@ show_later_msg:
     break;
   case 2: {
     int i = sprite_graphics[k] + choice_in_multiselect_box;
-    dialogue_number[1] = kHappinessPondCostHex[i];
+    dialogue_number[1] = (uint8)GameHook_PondCostDigits(kHappinessPondCostHex[i]);
     int cost = GameHook_PondThrowCost(kHappinessPondCost[i]);
     if (link_rupees_goal < cost) {
       goto show_later_msg;
@@ -11498,7 +11499,7 @@ show_later_msg:
     if (!(frame_counter & 7)) {
       PaletteFilter_SP5F();
       if (!BYTE(palette_filter_countdown)) {
-        Sprite_ShowMessageUnconditional(0x95);
+        if (!GameHook_PondChoiceOverride()) Sprite_ShowMessageUnconditional(0x95);
         Palette_RevertTranslucencySwap();
         TS_copy = 0;
         CGADSUB_copy = 0x20;
@@ -11529,6 +11530,7 @@ show_later_msg:
     break;
   }
   case 9:
+    GameHook_PondHoldPlayer();
     Palette_AssertTranslucencySwap();
     TS_copy = 2;
     CGADSUB_copy = 0x30;
@@ -11536,6 +11538,7 @@ show_later_msg:
     sprite_ai_state[k] = 10;
     break;
   case 10:
+    GameHook_PondHoldPlayer();
     if (!(frame_counter & 7)) {
       PaletteFilter_SP5F();
       if (BYTE(palette_filter_countdown) == 30) {
@@ -17083,7 +17086,7 @@ void Sprite_BigFairy(int k) {  // 9dc4bf
     FaerieCloud_Draw(k);
     sprite_A[k] = 1;
     Sprite_DirectionToFaceLink(k, &pt);
-    if ((uint8)(pt.x + 0x30) < 0x60 && (uint8)(pt.y + 0x30) < 0x60) {
+    if (GameHook_FairyGreetsLink(k, (uint8)(pt.x + 0x30) < 0x60 && (uint8)(pt.y + 0x30) < 0x60)) {
       Link_CancelDash();
       sprite_ai_state[k] = 1;
       dialogue_message_index = 0x15a;
@@ -23345,7 +23348,7 @@ void CrystalMaiden_RunCutscene(int k) {  // 9ece39
     break;
   case 5: { // show message
     static const uint16 kCrystalMaiden_Msgs[9] = {0x133, 0x132, 0x137, 0x134, 0x136, 0x132, 0x135, 0x138, 0x13c};
-    int j = BYTE(cur_palace_index_x2) - 10;
+    int j = GameHook_PrizeCutscenePalaceX2(BYTE(cur_palace_index_x2)) - 10;
     if (j == 2 && savegame_map_icons_indicator < 7)
       savegame_map_icons_indicator = 7;
     if (j == 14 && (link_has_crystals & 0x7f) != 0x7f)

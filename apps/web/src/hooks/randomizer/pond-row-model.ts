@@ -1,9 +1,9 @@
 /* @layer renderer-hooks @kind logic */
 /**
- * The pond row, derived: a setting (and the seed a gamble is drawn from) to
- * everything the row renders. Pure, so the creation panel and the Run tab show
- * the same thing from the same input, and the preview is the plan the seed
- * will actually use, not a second description of it.
+ * The pond row, derived: a setting to everything the row renders. Pure, so
+ * the creation panel and the Run tab show the same thing from the same input,
+ * and the preview is the plan the seed will use, not a second description of
+ * it.
  */
 import { pondPlanOf } from '@shared/randomizer/ap-world/pond/pond-plan';
 import { POND_MAX_ITEMS, POND_MAX_THROWS, POND_PRICE_LADDER } from '@shared/randomizer/ap-world/pond/pond-ladder.data';
@@ -19,7 +19,6 @@ const MODE_LABELS: Readonly<Record<PondSetting['mode'], string>> = {
   capacity: 'Capacity upgrades',
   'vanilla-cost': 'Vanilla cost',
   custom: 'Custom',
-  gamble: 'Gamble',
 };
 
 const PRICE_STOPS: readonly string[] = POND_PRICE_LADDER.map((price) => (price === 0 ? 'free' : String(price)));
@@ -58,12 +57,12 @@ const stateOfSetting = (setting: PondSetting): PondRowState => {
 };
 
 /**
- * Everything the row renders for one setting under one seed. `walletTop` is
- * what the wallet family can hold: the range control offers no stop above
- * it, so the top thumb can never ask for a price the wallet cannot pay.
+ * Everything the row renders for one setting. `walletTop` is what the wallet
+ * family can hold: the range control offers no stop above it, so the top
+ * thumb can never ask for a price the wallet cannot pay.
  */
-const pondRowModelOf = (setting: PondSetting, seed: string, walletTop = POND_PRICE_CEILING): PondRowModel => {
-  const plan = pondPlanOf(setting, seed);
+const pondRowModelOf = (setting: PondSetting, walletTop = POND_PRICE_CEILING): PondRowModel => {
+  const plan = pondPlanOf(setting);
   const state = stateOfSetting(setting);
   const prizeCount = plan.locations.length;
   const dearest = prizeCount === 0 ? 0 : plan.worstPriceOfPrize[prizeCount - 1];

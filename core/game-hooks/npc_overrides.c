@@ -225,6 +225,9 @@ uint8 GameHook_OverrideNpcGrantItem(uint8 item) {
     // item it hands over, so the dungeon's own claimed-bit is written here (prize_grants.c
     // decides what qualifies; every other grant passes through it untouched).
     GameHook_NoteDungeonPrizeGrant(item);
+    // A boss's heart container performs its own unfreeze from the receipt cleanup's id-specific
+    // branch, which stops matching the moment this table substitutes the id (boss_receipt_gate.c).
+    GameHook_MarkSubstitutedBossHeart(item);
     // A virtual id (upgrade, progressive or prize crystal) resolves at this last moment
     // before the receive flow. The two resolvers own disjoint id spans and each passes a
     // foreign id straight through, so composing them handles either family in one line.
@@ -254,6 +257,20 @@ int GameHook_PeekNpcGrantItem(uint8 vanilla_item) {
     if (GameHook_IsPrizeGrantId(g_npc_overrides[i].new_item))
       return GameHook_PrizePresentationOf(g_npc_overrides[i].new_item);
     if (g_npc_overrides[i].new_item >= 76) return -1;
+    return g_npc_overrides[i].new_item;
+  }
+  return -1;
+}
+
+// The RAW assigned id for a grant of |vanilla_item| here, or -1 with nothing armed. Same gate
+// and matching as the peek above, but without its presentation mapping: a caller that needs to
+// know WHICH crystal (or which virtual id of any family) was assigned cannot use a lookup that
+// collapses all seven onto the native crystal. Read-only, like the peek.
+int GameHook_PeekNpcGrantRaw(uint8 vanilla_item) {
+  if (!(enhanced_features3 & kFeatures3_NpcOverrides)) return -1;
+  for (int i = 0; i < g_npc_override_count; i++) {
+    if (g_npc_overrides[i].vanilla_item != vanilla_item) continue;
+    if (!EntryMatchesHere(&g_npc_overrides[i], false)) continue;
     return g_npc_overrides[i].new_item;
   }
   return -1;

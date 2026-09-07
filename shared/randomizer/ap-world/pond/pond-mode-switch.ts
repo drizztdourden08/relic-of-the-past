@@ -2,7 +2,7 @@
 /**
  * The setting a pond MODE change lands on. Picking a mode says nothing about
  * the prices or the item count it should carry, so this is where that is
- * decided, once: the legacy mode drops every value row, the other three keep
+ * decided, once: the legacy mode drops every value row, the other two keep
  * the item count the player already chose (or the default, coming from the
  * legacy pond, which carries none of its own) and Custom starts from the
  * fresh price ladder. Shared by the options panel and by the rule that
@@ -13,7 +13,7 @@ import { DEFAULT_POND_CUSTOM, DEFAULT_POND_ITEMS, LEGACY_POND_SETTING } from './
 import type { PondMode, PondSetting } from './pond-profile.type';
 
 /** Every mode the pond offers, in the order the dropdown lists them. */
-const POND_MODES: readonly PondMode[] = ['capacity', 'vanilla-cost', 'custom', 'gamble'];
+const POND_MODES: readonly PondMode[] = ['capacity', 'vanilla-cost', 'custom'];
 
 const pondSettingForMode = (mode: PondMode, current: PondSetting): PondSetting => {
   if (mode === current.mode) return current;

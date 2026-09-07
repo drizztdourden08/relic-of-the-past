@@ -1,8 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
  * The wishing-pond section of an options panel: the row derived from the
- * setting (and, for a gamble, the seed its winning throws were drawn from),
- * inside an ErrorBoundary so a setting the model cannot plan shows an inline
+ * setting, inside an ErrorBoundary so a setting the model cannot plan shows an inline
  * notice instead of taking the whole options screen down. Shared by the
  * creation panel and the Run tab; the mode dropdown itself lives with the
  * player's other choices, under its own section.
@@ -29,8 +28,6 @@ interface WishingPondSectionProps {
   setting: PondSetting;
   /** The capacity profile the pond is paid from; absent reads as the vanilla wallet. */
   capacity?: CapacityProfile;
-  /** The seed a gamble's winning throws are drawn from; '' before one exists. */
-  seed?: string;
   /** Every fallback the setting reader applied. */
   notes?: readonly string[];
   readOnly?: boolean;
@@ -40,12 +37,12 @@ interface WishingPondSectionProps {
 const NOTICE = 'The wishing pond could not be planned from these settings.';
 
 const WishingPondSection = (props: WishingPondSectionProps) => {
-  const { setting, capacity, seed = '', notes = [], readOnly = false, onChange } = props;
+  const { setting, capacity, notes = [], readOnly = false, onChange } = props;
   const walletTop = useMemo(
     () => (capacity === undefined ? POND_PRICE_CEILING : pondWalletTopOf(capacity)), [capacity],
   );
   const held = useMemo(() => holdPondToWallet(setting, walletTop), [setting, walletTop]);
-  const model = useMemo(() => pondRowModelOf(held.setting, seed, walletTop), [held, seed, walletTop]);
+  const model = useMemo(() => pondRowModelOf(held.setting, walletTop), [held, walletTop]);
 
   const handleChange = onChange === undefined
     ? undefined

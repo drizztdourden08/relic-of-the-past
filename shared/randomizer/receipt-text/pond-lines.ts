@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * The three lines the pond speaks for itself. Every other receipt line
+ * The four lines the pond speaks for itself. Every other receipt line
  * belongs to an ITEM; these belong to the transaction around it, so they are
  * rendered here instead of routed through render-receipt-message.ts:
  *
@@ -11,6 +11,10 @@
  *                 handed back (the vanilla line promises a flat hundred,
  *                 which is a lie under any plan whose refund is half the
  *                 price);
+ *   the award:   a throw carrying a pool item, in place of the vanilla
+ *                 question asking which capacity family to climb, which a
+ *                 pool item does not answer to; one wording for a water that
+ *                 still holds a prize, one for the throw that took the last;
  *   the closing: an emptied pond, in place of the vanilla come-back-later
  *                 refusal, which invites a player back to a pond that has
  *                 nothing left.
@@ -37,6 +41,28 @@ const pondConsolationLine = (refund: number): ReceiptLine => [
   `${refund} rupees back.`,
 ];
 
+/**
+ * A throw whose prize is a pool item. It stands in for the vanilla capacity
+ * question and, like it, shows in ONE box, so the purchase keeps the beat it
+ * always had: the fairy speaks once, then the item arrives on its own line.
+ *
+ * Two versions of the same box, chosen by the plan: whether the water still
+ * holds a prize after this one. Saying it here is the only place it can be
+ * said at all, since a pond with nothing left refuses the throw outright and
+ * speaks the closing line instead.
+ */
+const POND_AWARD_MORE_LINE: ReceiptLine = [
+  'I will make your wish come true. The water still holds more for you.',
+  'I will make your wish come true. The water holds more.',
+  'Your wish is granted. More waits below.',
+];
+
+const POND_AWARD_LAST_LINE: ReceiptLine = [
+  'I will make your wish come true. That was the last the water held.',
+  'I will make your wish come true. The water is empty now.',
+  'Your wish is granted. The water is empty now.',
+];
+
 /** A pond with every throw spent: it is closed for good, not for now. */
 const POND_CLOSED_LINE: ReceiptLine = [
   'The water has nothing left to give you. Keep your rupees.',
@@ -45,16 +71,17 @@ const POND_CLOSED_LINE: ReceiptLine = [
 
 /**
  * The pond's line pool for one plan: one line per distinct price, then one
- * per distinct refund, then the closing line last. The two key arrays say
- * which line each amount landed on, so the arming can look an id up by the
- * price or the refund of the throw it is writing.
+ * per distinct refund, then the award line and the closing line. The two key
+ * arrays say which line each amount landed on, so the arming can look an id
+ * up by the price or the refund of the throw it is writing; the last two sit
+ * at fixed offsets from the end.
  */
 interface PondLineSet {
   /** Distinct prices, in the order their lines sit in `lines`. */
   prices: readonly number[];
   /** Distinct refunds above zero, in the order their lines follow the prices. */
   refunds: readonly number[];
-  /** prices, then refunds, then the closing line: always at least the closing line. */
+  /** prices, refunds, the two award lines, the closing line: always at least those last three. */
   lines: readonly ReceiptLine[];
 }
 
@@ -68,9 +95,14 @@ const pondLinesOf = (plan: PondPlan): PondLineSet => {
   return {
     prices,
     refunds,
-    lines: [...prices.map(pondPriceLine), ...refunds.map(pondConsolationLine), POND_CLOSED_LINE],
+    lines: [
+      ...prices.map(pondPriceLine), ...refunds.map(pondConsolationLine),
+      POND_AWARD_MORE_LINE, POND_AWARD_LAST_LINE, POND_CLOSED_LINE,
+    ],
   };
 };
 
-export { POND_CLOSED_LINE, pondConsolationLine, pondLinesOf, pondPriceLine };
+export {
+  POND_AWARD_LAST_LINE, POND_AWARD_MORE_LINE, POND_CLOSED_LINE, pondConsolationLine, pondLinesOf, pondPriceLine,
+};
 export type { PondLineSet };

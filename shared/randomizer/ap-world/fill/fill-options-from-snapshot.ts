@@ -131,16 +131,11 @@ const fillFlagsOf = (snapshot: RandomizerOptionsSnapshot, seed = ''): SnapshotFi
 const shufflePrizesFromSnapshot = (snapshot: RandomizerOptionsSnapshot): boolean =>
   snapshot.values['dungeon_prize_shuffle'] === true;
 
-/**
- * |seed| is the placement's own seed: the pond's gamble schedule is drawn from
- * it, so the same profile always sells the same winning throws. Every other
- * mode ignores it, which is why the live panel may read a snapshot with none.
- */
+/** |seed| is the placement's own seed, which the rolled flags below are drawn from. */
 const fillOptionsFromSnapshot = (
   snapshot: RandomizerOptionsSnapshot, deliverable: DeliverableSets, pickers: FillPickers = {}, seed = '',
 ): FillWorldOptions => ({
   ...fillFlagsOf(snapshot, seed),
-  pondSeed: seed,
   deliverableNpcLocations: deliverable.npc ?? EMPTY_DELIVERABLE,
   deliverableWorldLocations: deliverable.world ?? EMPTY_DELIVERABLE,
   deliverableCapacityLocations: deliverable.capacity ?? EMPTY_DELIVERABLE,

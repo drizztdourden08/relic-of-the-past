@@ -5,10 +5,10 @@
  * an unreachable prize means no seed rolls at all. So every reading of a pond
  * setting passes through here with the wallet family's reachable top: Custom
  * has its price range pulled down to the highest ladder rung the wallet
- * reaches, and the two fixed schedules (vanilla cost at a hundred a throw,
- * gamble climbing to 240) carry the wallet's top as a ceiling the plan holds
- * every price at. A vanilla wallet holds 999, above everything the pond can
- * ask, so a profile that never touched the wallet reads exactly as before.
+ * reaches, and the fixed schedule (vanilla cost, a hundred a throw) carries
+ * the wallet's top as a ceiling the plan holds every price at. A vanilla
+ * wallet holds 999, above everything the pond can ask, so a profile that
+ * never touched the wallet reads exactly as before.
  *
  * The wallet's top is the same number every other ceiling reads
  * (capacity/reachable-top.ts), so a rupee price, a shot cost and a throw can
@@ -55,10 +55,10 @@ const holdCustom = (setting: PondCustomSetting, walletTop: number): HeldPondSett
 
 /**
  * The setting as the seed reads it under this wallet: the legacy pond
- * untouched, Custom's range pulled down onto the ladder, a fixed schedule
+ * untouched, Custom's range pulled down onto the ladder, the fixed schedule
  * handed back as it stands.
  *
- * The two fixed schedules need no holding. Their dearest throw is 240, and
+ * The fixed schedule needs no holding. Its dearest throw is a hundred, and
  * the wallet floor (capacity/wallet-floor.ts) keeps every reachable top at
  * 599 or above, because a fixed 500-rupee purchase sits in front of the
  * ending. Only a Custom range, which climbs to 999, can still outrun a

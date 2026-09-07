@@ -12,9 +12,17 @@
  *   a purchase that sells a capacity level climbs the tier, and at the ceiling
  *   it hands back NOTHING, since the vanilla hundred-rupee refund would make a
  *   cheap pond a money press;
- *   a losing gamble throw hands back exactly its refund, which is below its
+ *   a throw that wins nothing hands back exactly its refund, which is below its
  *   price, so it cannot be farmed either;
- *   the gems a throw shows are the decomposition of the amount paid;
+ *   the gems a throw shows are the decomposition of the amount paid, and one
+ *   volley carries every denomination sharing its decoded sheet, each under its
+ *   own receipt, so the gems in the air add up to the price;
+ *   the vanilla cost prompt, where it still runs, quotes the plan's price and
+ *   not the two native amounts, up to the two digits that line can hold;
+ *   the award line of a prize throw says whether the water still holds one;
+ *   the purchase holds the player still through the palette fade it ends with,
+ *   which the receipt ceremony a prize rides would otherwise let them walk out
+ *   of, stranding the room's colours in the player's own palette row;
  *   the plan's own lines replace the vanilla wording only where one was
  *   composed, and only an EXHAUSTED pond takes the closing line, so a wallet too
  *   light for the current price keeps the vanilla come-back-later refusal.
@@ -41,7 +49,13 @@ const FEATURES3_POND_PLAN = 67108864;
 const WRAM = {
   module: 0x10, submodule: 0x11, rupeesGoal: 0xf360, bombTier: 0xf370, arrowTier: 0xf371,
   pondThrows: SRM_POND_THROWS,
+  /** The pond's ten flying-gem slots: the receipt each one draws under (variables.h). */
+  pondGemReceipt: 0x1587a,
+  immobilized: 0x2e4,
 };
+
+/** The pond fills its slots from the top down, so gem |index| of a volley lands here. */
+const POND_GEM_SLOT = (index: number): number => WRAM.pondGemReceipt + 9 - index;
 
 /** The price an exhausted pond names: above any wallet, so the handler closes it. */
 const CLOSED_COST = 0x7fff;
@@ -81,8 +95,8 @@ describeCore('pond seams in the built core (headless)', () => {
   const gate3 = (word: number): void => { call('WasmSetGateWord', 3, word); frames(2); };
 
   /**
-   * The three-throw plan every case below reads: a prize, a capacity sale, a losing
-   * gamble. Every host line is left unarmed (-1), so the seams that show a message
+   * The three-throw plan every case below reads: a prize, a capacity sale, a throw
+   * that wins nothing. Every host line is left unarmed (-1), so the seams that show a message
    * show the vanilla one and stay inside the baked dialogue blob; the line seams are
    * pinned on their own, through the read-only probes.
    */
@@ -141,6 +155,75 @@ describeCore('pond seams in the built core (headless)', () => {
     expect([0, 1, 2, 3].map((index) => call('WasmProbePondGemAt', 999, index))).toEqual([0x46, 0x46, 0x46, 0x41]);
   });
 
+  it('a volley carries every colour it holds, not its first one three times', () => {
+    gate3(FEATURES3_POND_PLAN);
+    armPlan();
+    // 75 = 1 violet + 1 red + 1 blue. The violet needs its own decoded sheet, so it leaves
+    // alone; the red and the blue share one and leave TOGETHER, each under its own receipt.
+    expect(call('WasmProbePondSpawnVolley', 75, 0)).toBe(1);
+    expect(get8(POND_GEM_SLOT(0))).toBe(0x41);
+    expect(call('WasmProbePondSpawnVolley', 75, 1)).toBe(2);
+    expect([0, 1].map((index) => get8(POND_GEM_SLOT(index)))).toEqual([0x36, 0x35]);
+    expect(call('WasmProbePondSpawnVolley', 75, 2)).toBe(-1);
+    // 27 = 1 red + 1 blue + 2 green: all four in one volley, all four in their own colour.
+    expect(call('WasmProbePondSpawnVolley', 27, 0)).toBe(4);
+    expect([0, 1, 2, 3].map((index) => get8(POND_GEM_SLOT(index)))).toEqual([0x36, 0x35, 0x34, 0x34]);
+  });
+
+  it('the vanilla cost prompt quotes the price the plan charges', () => {
+    gate3(FEATURES3_POND_PLAN);
+    call('WasmClearPondPlan');
+    call('WasmSetPondThrow', 0, 75, 0, 0, -1, -1);
+    call('WasmSetPondThrow', 1, 400, -1, 0, -1, -1);
+    set8(WRAM.pondThrows, 0);
+    // 0x75 is 75 in the BCD the line's [Number] commands read, not the native 0x50.
+    expect(call('WasmProbePondCostDigits', 0x50)).toBe(0x75);
+    // Two digits is all the baked line has, so a price past 99 leaves them as vanilla wrote
+    // them and the plan's own composed prompt is what states it.
+    set8(WRAM.pondThrows, 1);
+    expect(call('WasmProbePondCostDigits', 0x50)).toBe(0x50);
+    // Exhausted, and with the gate down, the vendored digits stand untouched.
+    set8(WRAM.pondThrows, 2);
+    expect(call('WasmProbePondCostDigits', 0x25)).toBe(0x25);
+    gate3(0);
+    set8(WRAM.pondThrows, 0);
+    expect(call('WasmProbePondCostDigits', 0x25)).toBe(0x25);
+  });
+
+  it('the award line says whether the water still holds a prize', () => {
+    gate3(FEATURES3_POND_PLAN);
+    call('WasmClearPondPlan');
+    call('WasmSetPondThrow', 0, 100, 0, 0, -1, -1);
+    call('WasmSetPondThrow', 1, 100, 1, 0, -1, -1);
+    call('WasmSetPondThrow', 2, 100, -1, 0, -1, -1);
+    call('WasmSetPondAwardMessage', 470, 471);
+    set8(WRAM.pondThrows, 0);
+    expect(call('WasmProbePondAwardMessage')).toBe(470);
+    set8(WRAM.pondThrows, 1);
+    expect(call('WasmProbePondAwardMessage')).toBe(471);
+    // A throw that sells a capacity level keeps the vanilla question: the choice is real.
+    set8(WRAM.pondThrows, 2);
+    expect(call('WasmProbePondAwardMessage')).toBe(-1);
+    // Nothing composed: the vanilla question stands for every throw.
+    call('WasmSetPondAwardMessage', -1, -1);
+    set8(WRAM.pondThrows, 0);
+    expect(call('WasmProbePondAwardMessage')).toBe(-1);
+  });
+
+  it('holds the player still through the palette fade the purchase ends with', () => {
+    gate3(FEATURES3_POND_PLAN);
+    armPlan();
+    // The prize goes out through the receipt ceremony, whose cleanup frees the player, and
+    // the fade that follows is undone by the purchase's own last state alone. Walking out
+    // of it leaves the room's colours in the player's palette row for good.
+    set8(WRAM.immobilized, 0);
+    expect(call('WasmProbePondHoldPlayer')).toBe(1);
+    // An exhausted pond has no purchase to wrap up, but a plan still owns the pond.
+    set8(WRAM.pondThrows, 3);
+    set8(WRAM.immobilized, 0);
+    expect(call('WasmProbePondHoldPlayer')).toBe(1);
+  });
+
   it('resolves the throws in order, once each, then closes the pond', () => {
     gate3(FEATURES3_POND_PLAN);
     armPlan();
@@ -150,7 +233,7 @@ describeCore('pond seams in the built core (headless)', () => {
     // Throw 1 sells a capacity level: no prize, no consolation.
     expect(call('WasmProbePondTakeThrow')).toBe(0);
     expect(get8(WRAM.pondThrows)).toBe(2);
-    // Throw 2 is a losing gamble: no prize, a hundred back out of two hundred.
+    // Throw 2 wins nothing: no prize, a hundred back out of two hundred.
     expect(call('WasmProbePondTakeThrow')).toBe(100);
     expect(get8(WRAM.pondThrows)).toBe(3);
     // Nothing left: the counter stops climbing and the price closes the pond.
@@ -179,7 +262,7 @@ describeCore('pond seams in the built core (headless)', () => {
     expect(get16(WRAM.rupeesGoal)).toBe(500);
   });
 
-  it('a losing gamble throw hands back its refund and never more', () => {
+  it('a throw that wins nothing hands back its refund and never more', () => {
     gate3(FEATURES3_POND_PLAN);
     armPlan();
     set8(WRAM.pondThrows, 2);   // throw 2: 200 rupees, 100 back
@@ -222,6 +305,10 @@ describeCore('pond seams in the built core (headless)', () => {
     expect(call('WasmProbePondPoolAdd', 427)).toBe(427);
     expect(call('WasmProbePondTossDelay', 80)).toBe(80);
     expect(call('WasmProbePondLaterMessage', 0x14c)).toBe(0x14c);
+    expect(call('WasmProbePondCostDigits', 0x25)).toBe(0x25);
+    expect(call('WasmProbePondAwardMessage')).toBe(-1);
+    set8(WRAM.immobilized, 0);
+    expect(call('WasmProbePondHoldPlayer')).toBe(0);
     expect(call('WasmProbePondTakeThrow')).toBe(-1);
     set8(WRAM.pondThrows, 0);
     set8(WRAM.arrowTier, 3);

@@ -28,7 +28,7 @@ const EMPTY: ReadonlySet<string> = new Set();
 
 const SEEDS = Array.from({ length: 40 }, (_, index) => `pond-${index}`);
 
-const MODES = ['vanilla-cost', 'custom', 'gamble'] as const;
+const MODES = ['vanilla-cost', 'custom'] as const;
 
 describe('pond generation', () => {
   for (const mode of MODES) {
@@ -77,7 +77,7 @@ describe('pond generation', () => {
     const fillWorld = buildFillWorld(fillOptionsFromSnapshot(
       snapshot, { capacity: DELIVERABLE }, {}, 'wallet-seed'));
     expect(fillWorld.pond).toMatchObject({ mode: 'custom', start: 500, max: 500 });
-    expect(pondPlanOf(fillWorld.pond, 'wallet-seed').throws.map((entry) => entry.price)).toEqual([500, 500]);
+    expect(pondPlanOf(fillWorld.pond).throws.map((entry) => entry.price)).toEqual([500, 500]);
     // The wallet starts empty and climbs on its one upgrade, so the prizes are
     // out of reach until it is collected and in reach afterwards. That is the
     // property worth pinning: the pond never asks for more than the wallet can
@@ -90,7 +90,7 @@ describe('pond generation', () => {
     // And no throw asks for more than this wallet can ever hold, which is what
     // keeps the prizes reachable once it has climbed.
     const top = reachableTopOf(WALLET, fillWorld.capacity);
-    for (const price of pondPlanOf(fillWorld.pond, 'wallet-seed').worstPriceOfPrize) {
+    for (const price of pondPlanOf(fillWorld.pond).worstPriceOfPrize) {
       expect(price).toBeLessThanOrEqual(top);
     }
   }, 30_000);
@@ -107,7 +107,7 @@ describe('pond generation', () => {
     for (const seed of SEEDS.slice(0, 5)) {
       const placement = generateApPlacement(seed, snapshot, EMPTY, DELIVERABLE, EMPTY);
       expect(placement.stats.pondPrizeCount, seed).toBe(2);
-      expect(pondPlanOf(placement.stats.pond!, placement.seed).throws.map((entry) => entry.price)).toEqual([500, 500]);
+      expect(pondPlanOf(placement.stats.pond!).throws.map((entry) => entry.price)).toEqual([500, 500]);
     }
   }, 60_000);
 
@@ -128,9 +128,9 @@ describe('pond generation', () => {
   }, 30_000);
 
   it('a placement re-derives the same schedule the generator planned', () => {
-    const snapshot = snapshotOf({ pond_mode: 'gamble', pond_items: 3 });
+    const snapshot = snapshotOf({ pond_mode: 'custom', pond_items: 3, pond_throws: 5 });
     const placement = generateApPlacement('pond-derive', snapshot, EMPTY, DELIVERABLE, EMPTY);
-    const plan = pondPlanOf(placement.stats.pond!, placement.seed);
+    const plan = pondPlanOf(placement.stats.pond!);
     expect(plan.locations).toHaveLength(3);
     expect(plan.locations.every((name) => placement.nameView[name] !== undefined)).toBe(true);
   }, 30_000);

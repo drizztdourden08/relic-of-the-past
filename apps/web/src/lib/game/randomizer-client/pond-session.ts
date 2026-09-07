@@ -11,9 +11,10 @@
  * Each row also carries the two pre-rendered lines that belong to its amounts
  * (the price the toss announces, and the consolation a losing throw pays)
  * looked up by amount in the session's composed pool (pond-lines.ts). The
- * emptied-pond line is armed once alongside them. A composition that was
- * refused hands back -1 for every line, which the core reads as "keep the
- * native one", so the pond still runs its plan with the game's own wording.
+ * award line a prize throw shows and the emptied-pond line are armed once
+ * alongside them. A composition that was refused hands back -1 for every
+ * line, which the core reads as "keep the native one", so the pond still runs
+ * its plan with the game's own wording.
  *
  * A legacy pond arms nothing at all: the table stays empty, the gate bit stays
  * down, and the pond's own handler runs exactly as it always has.
@@ -21,7 +22,7 @@
 
 import { pondPlanOf } from '@shared/randomizer/ap-world/pond/pond-plan';
 import { log } from '../../log-bus';
-import { clearPondPlan, setPondClosedMessage, setPondThrows } from '../pond-plan';
+import { clearPondPlan, setPondAwardMessage, setPondClosedMessage, setPondThrows } from '../pond-plan';
 import type { ApPlacement } from '@shared/randomizer/ap-world/fill/ap-placement.type';
 import type { PondThrowArm } from '../pond-plan';
 import type { PondMessageIds } from './receipt-text-refresh';
@@ -30,6 +31,8 @@ import type { PondMessageIds } from './receipt-text-refresh';
 const NO_POND_MESSAGES: PondMessageIds = {
   priceMessageOf: () => -1,
   refundMessageOf: () => -1,
+  awardMoreMessageId: -1,
+  awardLastMessageId: -1,
   closedMessageId: -1,
 };
 
@@ -40,6 +43,10 @@ interface PondSessionPlan {
   armed: boolean;
   /** Prize slots the plan carries: the pond locations of this placement. */
   prizeCount: number;
+  /** The line a prize throw shows while the water still holds one, or -1 for the native question. */
+  awardMoreMessageId: number;
+  /** The line the throw that takes the last prize shows, or -1 for the native question. */
+  awardLastMessageId: number;
   /** The line an emptied pond shows, or -1 to keep the native refusal. */
   closedMessageId: number;
 }
@@ -47,9 +54,11 @@ interface PondSessionPlan {
 const pondSessionOf = (placement: ApPlacement, messages: PondMessageIds = NO_POND_MESSAGES): PondSessionPlan => {
   const setting = placement.stats.pond;
   if (setting === undefined || setting.mode === 'capacity') {
-    return { throws: [], armed: false, prizeCount: 0, closedMessageId: -1 };
+    return {
+      throws: [], armed: false, prizeCount: 0, awardMoreMessageId: -1, awardLastMessageId: -1, closedMessageId: -1,
+    };
   }
-  const plan = pondPlanOf(setting, placement.seed);
+  const plan = pondPlanOf(setting);
   const throws = plan.throws.map((entry): PondThrowArm => ({
     price: entry.price,
     prize: entry.prize,
@@ -61,6 +70,8 @@ const pondSessionOf = (placement: ApPlacement, messages: PondMessageIds = NO_PON
     throws,
     armed: throws.length > 0,
     prizeCount: plan.locations.length,
+    awardMoreMessageId: messages.awardMoreMessageId,
+    awardLastMessageId: messages.awardLastMessageId,
     closedMessageId: messages.closedMessageId,
   };
 };
@@ -71,6 +82,7 @@ const armPondSession = (plan: PondSessionPlan, tag: string): void => {
     return;
   }
   setPondThrows(plan.throws);
+  setPondAwardMessage(plan.awardMoreMessageId, plan.awardLastMessageId);
   setPondClosedMessage(plan.closedMessageId);
   const prizeAt = plan.throws.flatMap((entry, index) => (entry.prize >= 0 ? [index] : []));
   const spoken = plan.throws.filter((entry) => entry.prompt >= 0).length;

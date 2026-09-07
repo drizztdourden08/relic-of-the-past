@@ -25,6 +25,8 @@ interface PollEntry {
 const POLL_INTERVAL_MS = 1000;
 
 let intervalId: ReturnType<typeof setInterval> | null = null;
+let polledEntries: readonly PollEntry[] = [];
+let rebaselinePending = false;
 const reported = new Set<string>();
 
 const thresholdMet = (val: number, compare: 'gte' | 'eq' | 'any-of', value: number | number[] | undefined): boolean => {
@@ -75,6 +77,19 @@ const isDetectionMet = (detection: CheckDetection, reads: HeapReads): boolean =>
   return false;
 };
 
+/**
+ * Adopt the loaded state's own completions as the baseline: everything it already shows as
+ * done counts as reported, everything it does not becomes eligible again. Replaces the set
+ * instead of adding to it, so a state loaded BACKWARDS re-arms the checks it undid.
+ */
+const applyRebaseline = (entries: readonly PollEntry[], reads: HeapReads): void => {
+  reported.clear();
+  for (const entry of entries) {
+    if (isDetectionMet(entry.detection, reads)) reported.add(entry.key);
+  }
+  log.randomizer(`[Poller] Re-baselined after a state load: ${reported.size}/${entries.length} already complete`);
+};
+
 const pollOnce = (session: ReportingSession, entries: readonly PollEntry[]): void => {
   const mod = getModule();
   if (!mod) return;
@@ -85,6 +100,14 @@ const pollOnce = (session: ReportingSession, entries: readonly PollEntry[]): voi
     rescanShopCatchUp();
     const reads = buildHeapReads(mod);
     if (!reads) return;
+    // A pending re-baseline is resolved on a TICK, never at the load call itself: the flag
+    // words the detections read only latch into WRAM a frame after the load re-asserts them,
+    // so reading immediately would see a zeroed buffer and re-arm every check instead.
+    if (rebaselinePending) {
+      rebaselinePending = false;
+      applyRebaseline(entries, reads);
+      return;
+    }
     for (const entry of entries) {
       if (reported.has(entry.key)) continue;
       if (isDetectionMet(entry.detection, reads)) {
@@ -107,6 +130,17 @@ const suppressLocationReport = (key: string): void => {
   reported.add(key);
 };
 
+/**
+ * Called after a save state is loaded. The reported set lives in JS while the completions it
+ * mirrors live in WRAM, and a state load swaps that WRAM wholesale, so without this the poller
+ * reads a stateful of already-collected checks as brand new and reports every one, re-delivering
+ * each deliver-class check the state had already handed over.
+ */
+const requestLocationRebaseline = (): void => {
+  if (intervalId === null) return;
+  rebaselinePending = true;
+};
+
 const stopLocationPolling = (): void => {
   if (intervalId !== null) {
     clearInterval(intervalId);
@@ -114,13 +148,16 @@ const stopLocationPolling = (): void => {
     log.randomizer('[Poller] Location polling stopped');
   }
   reported.clear();
+  polledEntries = [];
+  rebaselinePending = false;
 };
 
 const startLocationPolling = (session: ReportingSession, entries: readonly PollEntry[]): void => {
   stopLocationPolling();
+  polledEntries = entries;
   log.randomizer(`[Poller] Location polling started: ${entries.length} checks (every ${POLL_INTERVAL_MS}ms)`);
-  intervalId = setInterval(() => pollOnce(session, entries), POLL_INTERVAL_MS);
+  intervalId = setInterval(() => pollOnce(session, polledEntries), POLL_INTERVAL_MS);
 };
 
-export { startLocationPolling, stopLocationPolling, suppressLocationReport };
+export { requestLocationRebaseline, startLocationPolling, stopLocationPolling, suppressLocationReport };
 export type { PollEntry };
