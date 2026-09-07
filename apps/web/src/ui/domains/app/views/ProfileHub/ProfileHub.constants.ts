@@ -59,7 +59,7 @@ const PROFILE_HUB_TABS: Record<ProfileHubTab, ProfileHubTabSpec> = {
   hud: { icon: '🖥️', label: 'HUD', sections: () => HUD_SECTIONS },
   controls: { icon: '⌨️', label: 'Controls' },
   haptics: { icon: '📳', label: 'Haptics', sections: () => HAPTICS_SECTIONS },
-  developer: { icon: '🛠️', label: 'Developer', sections: () => DEVELOPER_SECTIONS },
+  developer: { icon: '🛠️', label: 'Contributor', sections: () => DEVELOPER_SECTIONS },
   mobile: { icon: '📱', label: 'Mobile', sections: () => [MOBILE_SECTION], mobileOnly: true },
 };
 

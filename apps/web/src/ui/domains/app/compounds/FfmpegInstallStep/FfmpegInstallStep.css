@@ -1,0 +1,21 @@
+/* @layer renderer-components @kind style */
+
+.ffmpeg-install-step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.ffmpeg-install-step__note {
+  color: var(--c-text-dim);
+  font-size: var(--text-sm);
+}
+
+.ffmpeg-install-step__note--faint {
+  color: var(--c-text-muted);
+  font-size: var(--text-xs);
+}
+
+.ffmpeg-install-step__note--bad {
+  color: var(--c-danger);
+}

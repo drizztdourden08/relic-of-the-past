@@ -2,6 +2,10 @@
 interface BugReportDialogProps {
   open: boolean;
   onClose: () => void;
+  /** Set when opened from the floating debug-report button: the id of the .zip already
+   *  packaged (but not yet uploaded) for the current save state, folded into the issue body
+   *  on submit. The zip itself only uploads after the issue is confirmed created. */
+  debugReportId?: string | null;
 }
 
 export type { BugReportDialogProps };

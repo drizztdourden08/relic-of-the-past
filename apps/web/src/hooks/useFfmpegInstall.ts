@@ -1,7 +1,9 @@
 /* @layer renderer-components @kind hook */
 /**
- * The optional audio tool: a large download kept under the app's data root, followed by event,
- * not polled. Nothing is fetched until `install` is called.
+ * The optional media tool: a large download kept under the app's data root, followed by event,
+ * not polled. Nothing is fetched until `install` is called. Shared by every feature that needs
+ * ffmpeg (MSU audio conversion, debug-report video capture) so there is exactly one download
+ * and one install flow to reason about.
  */
 import { useCallback, useEffect, useState } from 'react';
 import type { FfmpegState } from '@shared/types/ffmpeg-tool';

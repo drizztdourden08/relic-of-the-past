@@ -7,8 +7,8 @@ import type { BugReportDialogProps } from './types';
 import './BugReportDialog.css';
 
 const BugReportDialog = (props: BugReportDialogProps) => {
-  const { open, onClose } = props;
-  const form = useBugReportForm();
+  const { open, onClose, debugReportId = null } = props;
+  const form = useBugReportForm(debugReportId);
   const showResult = open && form.status === 'done' && form.resultUrl !== null;
 
   const closeForm = () => {
@@ -37,6 +37,17 @@ const BugReportDialog = (props: BugReportDialogProps) => {
       >
         <Text as="p">Thanks! Your report was filed.</Text>
         <Text as="p" className="bug-report__result-url">{form.resultUrl}</Text>
+        {debugReportId && form.uploadStatus === 'uploading' && (
+          <Text as="p" className="bug-report__upload-status">Attaching the debug report...</Text>
+        )}
+        {debugReportId && form.uploadStatus === 'error' && (
+          <>
+            <Text as="p" className="bug-report__status bug-report__status--error">
+              Couldn't attach the debug report{form.uploadError ? `: ${form.uploadError}` : ''}.
+            </Text>
+            <Button variant="secondary" onClick={form.retryUpload}>Retry upload</Button>
+          </>
+        )}
       </DialogShell>
     );
   }
@@ -81,6 +92,14 @@ const BugReportDialog = (props: BugReportDialogProps) => {
           onChange={(e) => form.setDescription(e.target.value)}
         />
       </Field>
+
+      {debugReportId && (
+        <Field label="Debug Report">
+          <Text as="p" className="bug-report__debug-report-id">
+            A debug report ({debugReportId}) is packaged and will upload once you submit.
+          </Text>
+        </Field>
+      )}
 
       <DebugInfoPreview text={form.debugText} />
 
