@@ -36,13 +36,21 @@ interface DebugReportSaveEntry {
   buffer: ArrayBuffer;
 }
 
-/** What the renderer sends to the main process to build and upload the report. */
+/** What the renderer sends to the main process to build (but not yet send) the report. */
 interface DebugReportPackageInput {
   profileId: string;
   saves: DebugReportSaveEntry[];
   navCaptures: DebugCaptureSnapshot[];
   captureScreenshots: DebugCaptureScreenshot[];
 }
+
+/** Building is local-only (collect files, zip, encode capture video) and never touches the
+ *  network, so it gets its own result type: a token for the zip the main process is holding
+ *  in memory, to hand to 'debug-report:send' once, or retry as many times as the upload
+ *  itself fails without repeating any of this work. */
+type DebugReportBuildResult =
+  | { token: string }
+  | { error: string };
 
 type DebugReportUploadResult =
   | { reportId: string }
@@ -53,5 +61,6 @@ export type {
   DebugCaptureScreenshot,
   DebugReportSaveEntry,
   DebugReportPackageInput,
+  DebugReportBuildResult,
   DebugReportUploadResult,
 };

@@ -29,6 +29,8 @@ const DebugReportFloatingButton = (props: DebugReportFloatingButtonProps) => {
   const { profileId, dragging, onPointerDown, onPointerMove, onPointerUp, onReportPackaged } = props;
   const { status, errorMessage, sendReport, showFfmpegPrompt, resolveFfmpegPrompt } = useDebugReportCapture(profileId);
   const packaging = status === 'packaging';
+  const sending = status === 'sending';
+  const busy = packaging || sending;
   const [toasts, setToasts] = useState<ToastItem[]>([]);
 
   useEffect(() => {
@@ -43,7 +45,7 @@ const DebugReportFloatingButton = (props: DebugReportFloatingButtonProps) => {
   const dismissToast = (id: string) => setToasts((prev) => prev.filter((t) => t.id !== id));
 
   const handleClick = async () => {
-    if (dragging || packaging) return;
+    if (dragging || busy) return;
     const reportId = await sendReport();
     if (reportId) onReportPackaged(reportId);
   };
@@ -57,11 +59,11 @@ const DebugReportFloatingButton = (props: DebugReportFloatingButtonProps) => {
     <>
       <Button
         variant="bare"
-        disabled={packaging}
+        disabled={busy}
         className={[
           'debug-round-button', 'debug-report-floating-button',
           status === 'error' && 'debug-report-floating-button--error',
-          packaging && 'debug-report-floating-button--busy',
+          busy && 'debug-report-floating-button--busy',
         ].filter(Boolean).join(' ')}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
@@ -70,9 +72,11 @@ const DebugReportFloatingButton = (props: DebugReportFloatingButtonProps) => {
         title="Send a debug report for the current saves"
       >
         <IconifyIcon icon={send} width={16} height={16} />
-        {packaging && <Box as="span" className="debug-report-floating-button__spinner" aria-hidden />}
-        {packaging && (
-          <Text as="span" className="debug-floating-controls__status-label">Packaging...</Text>
+        {busy && <Box as="span" className="debug-report-floating-button__spinner" aria-hidden />}
+        {busy && (
+          <Text as="span" className="debug-floating-controls__status-label">
+            {packaging ? 'Packaging...' : 'Sending...'}
+          </Text>
         )}
       </Button>
       <FfmpegRequiredDialog open={showFfmpegPrompt} onClose={() => { void handleFfmpegPromptClose(); }} />

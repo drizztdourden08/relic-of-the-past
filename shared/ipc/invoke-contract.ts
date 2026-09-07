@@ -12,7 +12,7 @@ import type { DataLocation, StorageSummary, FileStat } from '@shared/platform';
 import type { SystemDiagnostics } from '@shared/types/diagnostics';
 import type { SimRunConfig } from '@shared/game/simulation';
 import type { CreateIssueRequest, CreateIssueResult } from '@shared/types/github-issue';
-import type { DebugReportPackageInput, DebugReportUploadResult } from '@shared/types/debug-report';
+import type { DebugReportPackageInput, DebugReportBuildResult, DebugReportUploadResult } from '@shared/types/debug-report';
 import type {
   AllocateEnumerationArgs, AllocateEnumerationResult, AllocateGeographyArgs, AllocateGeographyResult,
   AllocateItemGroupArgs, AllocateItemGroupResult, AllocateRecordArgs, AllocateRecordResult, AllocateTagArgs,
@@ -256,8 +256,11 @@ interface InvokeContract extends
   'github:createIssue': (req: CreateIssueRequest) => Promise<CreateIssueResult>;
 
   // Debug report tool (Contributor tab): zips the save/screenshot/logs/settings/randomizer
-  // config and uploads it, see cloud-functions/debug-report-upload.
-  'debug-report:package': (input: DebugReportPackageInput) => Promise<DebugReportUploadResult>;
+  // config, see cloud-functions/debug-report-upload. Build is local-only and returns a token
+  // for the zip it's holding in memory; send uploads it, and can be retried on its own
+  // (network failure only) without repeating the local build.
+  'debug-report:build': (input: DebugReportPackageInput) => Promise<DebugReportBuildResult>;
+  'debug-report:send': (input: { token: string }) => Promise<DebugReportUploadResult>;
 
   // Auto-updater (nested namespace)
   /** What this build can do about updates: check only, or check and install. */
