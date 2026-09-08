@@ -135,9 +135,12 @@ const suppressLocationReport = (key: string): void => {
  * mirrors live in WRAM, and a state load swaps that WRAM wholesale, so without this the poller
  * reads a stateful of already-collected checks as brand new and reports every one, re-delivering
  * each deliver-class check the state had already handed over.
+ *
+ * The request latches whether or not polling is running yet. An automation boot loads its state
+ * BEFORE the session connects, so a request that only counted while the interval existed was
+ * dropped on the floor and the first tick after the connect re-delivered the lot.
  */
 const requestLocationRebaseline = (): void => {
-  if (intervalId === null) return;
   rebaselinePending = true;
 };
 
@@ -154,6 +157,11 @@ const stopLocationPolling = (): void => {
 
 const startLocationPolling = (session: ReportingSession, entries: readonly PollEntry[]): void => {
   stopLocationPolling();
+  // The first tick always adopts what is already complete instead of reporting it. Whatever
+  // the state was when polling started is not news, and an automation boot loads its state
+  // around the connect, so waiting for a load's own request to arrive first is a race the
+  // poller loses by re-delivering every check the state had already handed over.
+  rebaselinePending = true;
   polledEntries = entries;
   log.randomizer(`[Poller] Location polling started: ${entries.length} checks (every ${POLL_INTERVAL_MS}ms)`);
   intervalId = setInterval(() => pollOnce(session, polledEntries), POLL_INTERVAL_MS);

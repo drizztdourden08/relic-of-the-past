@@ -9,17 +9,21 @@
  * cannot be locked the way a fairy slot is.
  */
 import { presentCapacitySpots } from '../capacity/capacity-spots';
-import { POND_EXTRA_LOCATIONS, POND_PRIZE_LOCATIONS } from './pond-locations.data';
+import { CAPACITY_SPOT_LOCATIONS } from '../capacity/capacity-spots.data';
+import { POND_EXTRA_LOCATIONS } from './pond-locations.data';
 import { pondPlanOf } from './pond-plan';
 import type { CapacityProfile } from '../capacity/capacity-profile.type';
 import type { PondSetting } from './pond-profile.type';
 
 const POND_EXTRA_SET: ReadonlySet<string> = new Set(POND_EXTRA_LOCATIONS);
 
-/** The reference's own two names: what the capability probe can actually certify. */
-const POND_CERTIFIED_SPOTS: readonly string[] = POND_PRIZE_LOCATIONS.slice(0, 2);
+// The two fairy slots: what the capability probe can actually certify, because they are
+// the only pond grants with a physical seam of their own (the bomb answer and the arrow
+// answer). A prize rung past them rides that same seam, so certifying the two certifies
+// the ladder.
+const POND_CERTIFIED_SPOTS: readonly string[] = CAPACITY_SPOT_LOCATIONS;
 
-/** True when the probe proved the pond's substitution seam on both reference slots. */
+/** True when the probe proved the pond's substitution seam on both fairy slots. */
 const isPondDeliverable = (deliverable: ReadonlySet<string> | undefined): boolean =>
   POND_CERTIFIED_SPOTS.every((name) => deliverable?.has(name) === true);
 

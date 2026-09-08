@@ -4,6 +4,7 @@
  * Ported 1:1 from Archipelago worlds/alttp/Regions.py (create_regions, open
  * mode). Names are the AP originals, since this is transcribed game data.
  */
+import { CAPACITY_SPOT_LOCATIONS } from './capacity/capacity-spots.data';
 import { POND_PRIZE_LOCATIONS } from './pond/pond-locations.data';
 import type { ApRegionDef } from './region.type';
 
@@ -66,9 +67,9 @@ const CAVE_REGIONS: readonly ApRegionDef[] = [
   {
     name: 'Capacity Upgrade',
     type: 'cave',
-    // The pond's prize slots past the reference's two exist only while a
-    // non-legacy pond mode carries that many (pond/pond-spots.ts).
-    locations: ['Capacity Upgrade Shop', ...POND_PRIZE_LOCATIONS],
+    // The two fairy slots are the legacy pond's own locations; the numbered prize
+    // rungs exist only while a non-legacy pond mode carries that many (pond/pond-spots.ts).
+    locations: ['Capacity Upgrade Shop', ...CAPACITY_SPOT_LOCATIONS, ...POND_PRIZE_LOCATIONS],
     exits: [],
   },
   { name: 'Two Brothers House', type: 'cave', locations: [], exits: ['Two Brothers House Exit (East)', 'Two Brothers House Exit (West)'] },

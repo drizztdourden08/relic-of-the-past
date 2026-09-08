@@ -54,7 +54,7 @@ const hookSrcs = [
   'standing_overrides', 'shop_overrides', 'shop_table', 'shop_payment', 'shop_refusal', 'shop_draw', 'world_item_draws', 'receipt_sprite_draw', 'receipt_ancilla_draws',
   'sprite_art_slots', 'shop_symbols',
   'rupee_gem_draw', 'rupee_holdup_draw', 'item_sheen', 'item_sheen_holdup', 'session_dialogue',
-  'upgrade_grants', 'progressive_grants', 'scripted_grants', 'pond_plan', 'pond_toss_draw', 'pond_probes',
+  'upgrade_grants', 'progressive_grants', 'scripted_grants', 'pond_plan', 'pond_toss_draw', 'pond_gem_tiles', 'pond_probes',
   'capacity_profile', 'wallet_grants',
   'capacity_progressive', 'capacity_fixed_lines', 'capacity_probes', 'upgrade_icon', 'upgrade_bonus', 'gear_icon',
   'prize_grants', 'prize_probes', 'boss_receipt_gate', 'prize_presentation', 'fairy_proximity',

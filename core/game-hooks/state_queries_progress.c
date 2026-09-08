@@ -43,7 +43,9 @@
 //   [30] pond throws taken (pond_plan.c, SRM_POND_THROWS in save_bytes.h; 0 on a vanilla
 //        file). A planned pond hands prize k over on a known throw, so the counter is the
 //        completion fact for every prize slot past the two the native tier bytes cover.
-static uint8 g_progress_buf[31];
+//   [31] link_item_flute (1 shovel, 2 flute, 3 flute activated): the flute-activation
+//        check's only observable fact, since releasing the bird writes no flag of its own.
+static uint8 g_progress_buf[32];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetProgressFlags(void) {
@@ -98,5 +100,8 @@ int WasmGetProgressFlags(void) {
   // prize slots, which record no substitution bit of their own (the counter never rewinds,
   // so it already says which prizes are gone). Zero on any file that never met a plan.
   g_progress_buf[30] = GameHook_PondThrowsTaken();
+  // The flute climbs to 3 the moment the bird is released (ancilla.c), which is the whole
+  // of what the activation spot leaves behind: no room flag, no progress bit.
+  g_progress_buf[31] = link_item_flute;
   return (int)g_progress_buf;
 }

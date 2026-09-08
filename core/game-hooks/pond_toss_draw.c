@@ -6,29 +6,21 @@
 // greedily over the six denominations (300, 100, 50, 20, 5, 1) largest first: 300 is
 // one gold gem, 427 is one gold, one silver, one red, one blue and two greens.
 //
-// Only one sprite sheet is decoded at a time, and the coloured-gem hook recolours that
-// one slot, so gems needing different sheets (or different recolours of the shared gem
-// sheet) cannot be in the air together. The decomposition therefore leaves in VOLLEYS:
-// gems sharing a decode key travel as one group, at most a pond slot-full, and the next
-// group is spawned when the previous one has splashed. Each large value needs its own
-// sheet (its own numbered picture) or, with coloured rupees on, its own recolour of the
-// shared one, so it gets a volley to itself; the three small values need neither, so they
-// fly TOGETHER in one mixed volley. The grouping is identical whether or not coloured
-// rupees are on, and four volleys is the floor for an amount that spends all six.
+// Only one sprite sheet is decoded at a time, so gems needing different sheets cannot be in
+// the air together. The decomposition therefore leaves in VOLLEYS: gems sharing a decode key
+// travel as one group, at most a pond slot-full, and the next group is spawned when the
+// previous one has splashed.
 //
-// A volley is mixed because the receipt id is chosen PER GEM, not per volley: the decode
-// and the recolour are shared (every gem in the volley reads the same sheet), while each
-// slot carries its own denomination's receipt, and it is that id the draw reads its OAM
-// palette row from. So a 75-rupee toss shows violet, then red and blue together, instead
-// of quoting the volley's first colour three times over.
+// Every slot carries its own denomination's receipt, and it is that id the draw reads its
+// picture and its OAM palette row from, so a volley is mixed by construction.
 //
 // Presentation, per gem:
-//   coloured rupees OFF: it draws under its own receipt id, so the cartridge's own
-//     picture for that denomination is what flies in;
-//   coloured rupees ON:  the shared gem sheet is decoded (and recoloured once for a large
-//     value, GameHook_RecolorRupeeGem), and the gem is drawn under the small-gem receipt
-//     whose palette row is the one its denomination reads in, so the plain coloured gem
-//     flies in instead of the numbered picture.
+//   coloured rupees OFF: it draws under its own numbered picture, which each large value
+//     has to itself, so it needs a volley to itself; the three small values share a sheet
+//     and fly together;
+//   coloured rupees ON:  the one gem sheet is decoded and pond_gem_tiles.c gives the draw a
+//     picture and a row per denomination out of it, so every value shares a decode key and
+//     the whole amount goes into the water in a single volley.
 //
 // Gate: kFeatures3_PondPlan, checked through GameHook_PondPlanOpen. Off, this spawns
 // nothing and the vendored AddHappinessPondRupees runs byte-for-byte as before.
@@ -54,10 +46,12 @@ static const RupeeGem kRupeeGems[] = {
 };
 #define RUPEE_GEM_COUNT ((int)(sizeof(kRupeeGems) / sizeof(kRupeeGems[0])))
 
-// The small-gem receipt whose OAM palette row is |row|: how a recoloured gem is given
-// the row its denomination reads in without touching the shared draw path.
-static uint8 SmallGemForRow(uint8 row) {
-  return row == 2 ? 0x35 : row == 1 ? 0x36 : 0x34;
+// The sheet a gem of |receipt| is decoded from, as a key gems sharing it can be grouped by.
+// With coloured rupees on every denomination reads the ONE decoded gem sheet, differing by
+// the picture and the row pond_gem_tiles.c hands the draw, so they all share a key and one
+// volley carries the lot. Off, each large value has its own numbered picture and its own key.
+static uint8 DecodeKeyOf(const RupeeGem *gem) {
+  return (enhanced_features3 & kFeatures3_ColoredRupees) ? 0 : gem->decode_key;
 }
 
 // The queue of gems still to leave, and where the next volley starts in it.
@@ -74,7 +68,7 @@ static int DecomposeRupees(int amount) {
   for (int i = 0; i < RUPEE_GEM_COUNT && count < POND_GEM_MAX; i++) {
     while (left >= kRupeeGems[i].value && count < POND_GEM_MAX) {
       g_toss.receipt[count] = kRupeeGems[i].receipt;
-      g_toss.key[count] = kRupeeGems[i].decode_key;
+      g_toss.key[count] = DecodeKeyOf(&kRupeeGems[i]);
       count++;
       left -= kRupeeGems[i].value;
     }
@@ -98,15 +92,6 @@ int GameHook_PondGemAt(int amount, int index) {
   return -1;
 }
 
-// The receipt a gem of denomination |receipt| is DRAWN under: its own art, or, with
-// coloured rupees on, the small-gem receipt whose palette row is the one that denomination
-// reads in. Asked per gem, which is what lets one volley carry every denomination sharing
-// its decoded sheet and still show each of them in its own colour.
-static uint8 DrawnReceipt(uint8 receipt) {
-  uint8 item = receipt, pal = 0;
-  return GameHook_ColoredRupeeGem(receipt, &item, &pal) ? SmallGemForRow(pal) : receipt;
-}
-
 // Fill the pond's slots with the |n| queued gems from |base|, each under its own
 // denomination's receipt, laid out the way the vendored spawn lays out its five-rupee
 // group: the slots count down from the top, the same start position, the same arcs.
@@ -125,7 +110,7 @@ static void SpawnVolley(int base, int n) {
     happiness_pond_z[slot] = 0;
     happiness_pond_step[slot] = 0;
     happiness_pond_timer[slot] = 16;
-    happiness_pond_item_to_link[slot] = DrawnReceipt(g_toss.receipt[base + i]);
+    happiness_pond_item_to_link[slot] = g_toss.receipt[base + i];
     happiness_pond_x_lo[slot] = (uint8)x;
     happiness_pond_x_hi[slot] = (uint8)(x >> 8);
     happiness_pond_y_lo[slot] = (uint8)y;
@@ -133,15 +118,15 @@ static void SpawnVolley(int base, int n) {
   }
 }
 
-// Decode the sheet this volley draws from, and recolour it where the denomination's colour
-// is one the gem art does not paint. Every gem in the volley shares the decode key, so one
-// decode and one recolour answer for all of them, and a mixed volley of the three small
-// values needs no recolour at all: they differ by palette row alone.
+// Decode the sheet this volley draws from. With coloured rupees on that is the one gem sheet
+// for every denomination, and pond_gem_tiles.c then lays the second picture beside it and
+// borrows the violet row, so the whole volley is served by a single decode. Off, the volley
+// is one denomination's own numbered picture, decoded the way the vendored spawn decodes it.
 static void PrepareVolleyArt(uint8 receipt) {
   uint8 item = receipt, pal = 0;
   if (GameHook_ColoredRupeeGem(receipt, &item, &pal)) {
     DecodeAnimatedSpriteTile_variable(kReceiveItemGfx[item]);
-    GameHook_RecolorRupeeGem(receipt);
+    GameHook_PondGemPrepareArt();
     return;
   }
   DecodeAnimatedSpriteTile_variable(kReceiveItemGfx[receipt]);
@@ -203,7 +188,9 @@ bool GameHook_PondTossRupees(int amount) {
  * refill them with the next volley instead of ending. False lets the ancilla end.
  */
 bool GameHook_PondTossNextVolley(void) {
-  return GameHook_PondPlanOpen() && SendNextVolley();
+  if (GameHook_PondPlanOpen() && SendNextVolley()) return true;
+  GameHook_PondGemReleaseArt();
+  return false;
 }
 
 // How many volleys |amount| leaves in: one per run of gems sharing a decode key, split
@@ -214,8 +201,8 @@ static int VolleysOf(int amount) {
   for (int i = 0; i < RUPEE_GEM_COUNT; i++) {
     int n = left / kRupeeGems[i].value;
     left %= kRupeeGems[i].value;
-    // The three small values share a sheet, so they add up into one run of their own.
-    if (kRupeeGems[i].decode_key == 0) small += n;
+    // The values sharing a sheet add up into one run of their own.
+    if (DecodeKeyOf(&kRupeeGems[i]) == 0) small += n;
     else if (n > 0) volleys += (n + POND_GEM_SLOTS - 1) / POND_GEM_SLOTS;
   }
   if (small > 0) volleys += (small + POND_GEM_SLOTS - 1) / POND_GEM_SLOTS;

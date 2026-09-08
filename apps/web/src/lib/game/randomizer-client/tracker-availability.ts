@@ -18,6 +18,11 @@
  * (shop slots, chiefly): a virtual id is never in the live-polled
  * completedChecks set, so its status reads off completedLocations /
  * available by its own randomizerName instead of the crosswalk.
+ *
+ * completedLocations answers for BOTH kinds. A real check whose vanilla detection cannot
+ * fire in this seed is otherwise stuck at reachable forever, which is exactly what the
+ * pond's two named slots do: they poll the capacity counter bytes, and a randomized pond
+ * hands over a pool item without writing either one.
  */
 import { computePlacementAvailability } from '@shared/randomizer/placement-availability';
 import { standardCheckName } from './check-names';
@@ -45,7 +50,12 @@ const computeApTrackerSnapshot = (
       continue;
     }
     const locationName = isVirtual ? check.randomizerName : standardCheckName(check.id);
-    if (isVirtual && completedLocations.has(locationName)) {
+    // A fired location answers for a REAL check too, not only a virtual one. The pond's
+    // first two slots keep the check records the reference's names gave them, and those
+    // records poll the capacity counter bytes a purchase used to write; a randomized pond
+    // hands over a pool item and never touches them, so the seam's own record is the only
+    // thing that knows the slot was taken.
+    if (completedLocations.has(locationName)) {
       snapshot.set(check.id, 'completed');
       continue;
     }

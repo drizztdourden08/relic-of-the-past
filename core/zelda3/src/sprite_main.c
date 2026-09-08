@@ -11473,13 +11473,13 @@ show_later_msg:
     break;
   }
   case 4:
-    if (sprite_delay_main[k] == 0) {
+    if (sprite_delay_main[k] == 0 && !GameHook_PondTossStillFlying()) {
       Sprite_ShowMessageUnconditional(0x94);
       sprite_ai_state[k] = 13;
     }
     break;
   case 5:
-    if (sprite_delay_main[k] == 0) {
+    if (sprite_delay_main[k] == 0 && !GameHook_PondTossStillFlying()) {
       SpriteSpawnInfo info;
       int j = Sprite_SpawnDynamically(k, 0x72, &info);
       assert(j >= 0);

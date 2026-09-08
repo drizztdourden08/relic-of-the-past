@@ -71,4 +71,14 @@ int GameHook_PondGemAt(int amount, int index);
 // gems that volley spawned, or -1 when the amount has no such volley.
 int GameHook_PondSpawnVolley(int amount, int volley);
 
+// Which picture and which palette row a flying pond gem draws with (pond_gem_tiles.c), so
+// one decoded sheet carries all six denominations at once. Every read answers the caller's
+// own value outside a toss or off kFeatures3_ColoredRupees.
+bool GameHook_PondTossStillFlying(void);
+uint8 GameHook_PondGemPalette(uint8 receipt, uint8 native);
+uint8 GameHook_PondGemShape(uint8 receipt, uint8 native);
+uint8 GameHook_PondGemColumn(uint8 receipt);
+void GameHook_PondGemPrepareArt(void);
+void GameHook_PondGemReleaseArt(void);
+
 #endif  // GAME_HOOKS_POND_HOOKS_H

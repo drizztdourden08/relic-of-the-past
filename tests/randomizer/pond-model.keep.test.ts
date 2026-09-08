@@ -66,7 +66,7 @@ describe('pond plan', () => {
     expect(plan.throws).toHaveLength(14);
     expect(plan.throws.every((entry) => entry.price === 100)).toBe(true);
     expect(plan.totalPrice).toBe(1400);
-    expect(plan.locations).toEqual(['Capacity Upgrade Left', 'Capacity Upgrade Right']);
+    expect(plan.locations).toEqual(['Capacity Upgrade Pond 1', 'Capacity Upgrade Pond 2']);
     expect(plan.throws.map((entry) => entry.prize).slice(0, 3)).toEqual([0, 1, -1]);
   });
 
