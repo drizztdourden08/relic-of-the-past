@@ -10,6 +10,7 @@
  */
 import { useMemo, useState } from 'react';
 import type { Recommendation, RecommendationAction } from '@shared/game/recommendations';
+import { useWidgetPref } from '@app/hooks/useWidgetPref';
 
 type RecommendationFilter = 'all' | RecommendationAction;
 
@@ -51,7 +52,7 @@ const filterEntries = (
   filter === 'all' ? entries : entries.filter(entry => entry.action === filter);
 
 const useRecommendationFilter = (entries: readonly Recommendation[]): UseRecommendationFilterResult => {
-  const [filter, setFilter] = useState<RecommendationFilter>('all');
+  const [filter, setFilter] = useWidgetPref<RecommendationFilter>('dataset', 'recFilter', 'all');
 
   const tabs = useMemo(() => buildFilterTabs(entries), [entries]);
 

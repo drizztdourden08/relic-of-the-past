@@ -14,13 +14,19 @@ interface StartupOverride {
 
 /**
  * Force the requested widgets open + docked (shrinking the game) on their default
- * side. `visibility: 'always'` so they render even when no game is running yet.
+ * side.
+ *
+ * It deliberately does NOT touch `visibility`. Writing 'always' here was persisted,
+ * so one `--widgets=` screenshot run permanently converted those widgets into ones
+ * that never leave the screen, in a profile the flag was never meant to change.
+ * WidgetManager exempts the forced ids from the game-only filter instead, which is
+ * where a render-time override belongs.
  */
 const applyStartupWidgets = (layout: WidgetLayout, ids: string[]): WidgetLayout => {
   if (ids.length === 0) return layout;
   return {
     widgets: layout.widgets.map((w) => (ids.includes(w.id)
-      ? { ...w, visible: true, mode: 'docked', exclusive: true, visibility: 'always', side: getWidgetDefinition(w.id)?.defaultSide ?? w.side }
+      ? { ...w, visible: true, mode: 'docked', exclusive: true, side: getWidgetDefinition(w.id)?.defaultSide ?? w.side }
       : w)),
   };
 };

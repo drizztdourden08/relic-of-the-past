@@ -21,6 +21,14 @@ interface GroupTreeProps<T> {
   renderItems: (items: T[]) => ReactNode;
   /** Sections at a depth below this mount expanded. 0 (default) = all collapsed. */
   expandToDepth?: number;
+  /**
+   * Controlled expansion: the keys currently open, plus the toggle. Supply both
+   * and the caller owns which sections are open, so the set can outlive the tree
+   * being unmounted. Omit both and each section keeps its own state, which is
+   * what a surface with nothing to remember wants.
+   */
+  expandedKeys?: readonly string[];
+  onToggleKey?: (key: string) => void;
   className?: string;
   emptyLabel?: string;
 }

@@ -7,14 +7,17 @@
  *
  * A root with no children renders its own items flat, the ungrouped case.
  */
+import { useMemo } from 'react';
 import { Box } from '../../primitives';
 import { GroupSection } from './sub-components/GroupSection';
 import type { GroupTreeProps } from './GroupTree.type';
 import './GroupTree.css';
 
 const GroupTree = <T,>(props: GroupTreeProps<T>) => {
-  const { root, renderItems, expandToDepth = 0, className, emptyLabel = 'Nothing to show.' } = props;
+  const { root, renderItems, expandToDepth = 0, className, emptyLabel = 'Nothing to show.', expandedKeys, onToggleKey } = props;
   const classes = `group-tree${className ? ` ${className}` : ''}`;
+  // undefined, not an empty set, is what tells a section it owns its own state.
+  const openKeys = useMemo(() => (expandedKeys ? new Set(expandedKeys) : undefined), [expandedKeys]);
 
   if (root.children.length > 0) {
     return (
@@ -26,6 +29,8 @@ const GroupTree = <T,>(props: GroupTreeProps<T>) => {
             depth={1}
             expandToDepth={expandToDepth}
             renderItems={renderItems}
+            expandedKeys={openKeys}
+            onToggle={onToggleKey}
           />
         ))}
       </Box>

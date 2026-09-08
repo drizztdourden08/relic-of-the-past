@@ -11,7 +11,7 @@ import { useInventoryViewMode } from './behavior/useInventoryViewMode';
 
 const InventoryWidgetContent = () => {
   const [inventory, setInventory] = useState<Set<ItemId>>(() => getCurrentInventory());
-  const viewMode = useInventoryViewMode();
+  const [viewMode] = useInventoryViewMode();
 
   useEffect(() => onInventoryChanged((inv) => setInventory(new Set(inv))), []);
 

@@ -12,7 +12,8 @@ import { useStickyHeader } from './behavior/useStickyHeader';
 const ChecksWidgetContent = () => {
   const {
     viewMode, setViewMode, grouping, setGrouping, filter, setFilter, snapshot, stats, groupTree, run,
-  } = useTrackerData();
+    panels, setPanels, expandedGroups, toggleGroup,
+  } = useTrackerData({ prefKey: 'checks' });
   const stickyHeader = useStickyHeader();
 
   return (
@@ -28,6 +29,10 @@ const ChecksWidgetContent = () => {
       groupTree={groupTree}
       statuses={snapshot}
       run={run}
+      panels={panels}
+      onPanelsChange={setPanels}
+      expandedGroups={expandedGroups}
+      onToggleGroup={toggleGroup}
       stickyHeader={stickyHeader}
     />
   );

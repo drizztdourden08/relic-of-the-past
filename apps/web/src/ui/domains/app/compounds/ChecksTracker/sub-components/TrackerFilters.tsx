@@ -18,6 +18,16 @@ import { CheckStatusIcon } from './CheckStatusIcon';
 import { TrackerFilterPanels } from './TrackerFilterPanels';
 import '../ChecksTracker.css';
 
+/** Which disclosure panels are open. Small enough to travel as one value, which
+ *  keeps the controlled form to a single prop pair. */
+interface TrackerPanels {
+  filters: boolean;
+  groupConfig: boolean;
+  tags: boolean;
+}
+
+const CLOSED_PANELS: TrackerPanels = { filters: false, groupConfig: false, tags: false };
+
 interface TrackerFiltersProps {
   filter: FilterState;
   onFilterChange: (filter: FilterState) => void;
@@ -27,6 +37,13 @@ interface TrackerFiltersProps {
   onViewModeChange: (mode: ViewMode) => void;
   /** Grouping axes the config panel offers. Defaults to the base catalog. */
   dimensions?: readonly GroupDimensionDef[];
+  /**
+   * Controlled disclosure state. Supply both and the caller owns which panels are
+   * open, so they survive this component being unmounted. Omit both and the panels
+   * keep their own state, closed on every mount.
+   */
+  panels?: TrackerPanels;
+  onPanelsChange?: (next: TrackerPanels) => void;
 }
 
 const VIEW_MODE_OPTIONS: SegmentOption<ViewMode>[] = [
@@ -49,10 +66,14 @@ const STATUS_OPTIONS: SegmentOption<StatusFilter>[] = [
 ];
 
 const TrackerFilters = (props: TrackerFiltersProps) => {
-  const { filter, onFilterChange, grouping, onGroupingChange, viewMode, onViewModeChange, dimensions } = props;
-  const [showFilters, setShowFilters] = useState(false);
-  const [showGroupConfig, setShowGroupConfig] = useState(false);
-  const [showTagFilter, setShowTagFilter] = useState(false);
+  const { filter, onFilterChange, grouping, onGroupingChange, viewMode, onViewModeChange, dimensions, panels, onPanelsChange } = props;
+  const [localPanels, setLocalPanels] = useState<TrackerPanels>(CLOSED_PANELS);
+  const open = panels ?? localPanels;
+  const setOpen = (next: TrackerPanels) => {
+    if (panels && onPanelsChange) onPanelsChange(next);
+    else setLocalPanels(next);
+  };
+  const { filters: showFilters, groupConfig: showGroupConfig, tags: showTagFilter } = open;
 
   const itemFilter = filter.itemFilter ?? 'all';
   const statusFilter = filter.statusFilter ?? 'all';
@@ -78,7 +99,7 @@ const TrackerFilters = (props: TrackerFiltersProps) => {
             active={showFilters}
             label="Filters and view options"
             title="Filters and view options"
-            onClick={() => setShowFilters(v => !v)}
+            onClick={() => setOpen({ ...open, filters: !showFilters })}
           >
             <Icon paths={FUNNEL_PATHS} size={13} />
           </IconButton>
@@ -106,7 +127,7 @@ const TrackerFilters = (props: TrackerFiltersProps) => {
             size="sm"
             active={filter.activeFacets.length > 0}
             icon={<Icon paths={TAG_PATHS} size={12} />}
-            onClick={() => setShowTagFilter(!showTagFilter)}
+            onClick={() => setOpen({ ...open, tags: !showTagFilter })}
           >
             Tags{filter.activeFacets.length > 0 ? ` (${filter.activeFacets.length})` : ''}
           </Button>
@@ -115,7 +136,7 @@ const TrackerFilters = (props: TrackerFiltersProps) => {
             size="sm"
             active={grouping.length > 0}
             icon={<Icon paths={NESTED_PATHS} size={12} />}
-            onClick={() => setShowGroupConfig(!showGroupConfig)}
+            onClick={() => setOpen({ ...open, groupConfig: !showGroupConfig })}
           >
             Group{grouping.length > 0 ? ` (${grouping.length})` : ''}
           </Button>
@@ -138,3 +159,5 @@ const TrackerFilters = (props: TrackerFiltersProps) => {
 };
 
 export { TrackerFilters };
+export { CLOSED_PANELS };
+export type { TrackerPanels };

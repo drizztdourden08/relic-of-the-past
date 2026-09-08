@@ -14,7 +14,7 @@
  * standard-mode escape gating and per-dungeon key counts included, because
  * the vanilla dataset models neither the seed nor the escape sequence.
  */
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { computeTrackerSnapshot } from '@shared/game/logic/eval';
 import { resolveRules } from '@shared/game/logic/resolver';
 import { VANILLA_CONFIG } from '@shared/game/data/presets';
@@ -33,24 +33,47 @@ import {
 } from '../lib/game/randomizer-client';
 import type { PlacementView } from '../lib/game/randomizer-client';
 import type { ViewMode } from '../ui/domains/app/compounds/ChecksTracker';
+import { CLOSED_PANELS } from '../ui/domains/app/compounds/ChecksTracker';
+import type { TrackerPanels } from '../ui/domains/app/compounds/ChecksTracker';
+import { useWidgetPref } from './useWidgetPref';
 
 interface TrackerDataOptions {
   initialGrouping?: GroupDimension[];
   initialViewMode?: ViewMode;
+  /**
+   * Widget id the view settings belong to. With one, everything the user arranged
+   * (grouping, view mode, filter, which panels are open, which groups are expanded)
+   * is remembered by the profile and survives the widget being unmounted by an open
+   * screen. Without one (the randomizer page's spoiler tab) it is plain local state,
+   * as before.
+   */
+  prefKey?: string;
 }
 
 const EMPTY_FILTER: FilterState = { searchQuery: '', activeFacets: [], tagMode: 'any' };
+/** Module-level so an unset pref hands back the same array every render, and the
+ *  group tree below is not rebuilt on each one. */
+const DEFAULT_GROUPING: GroupDimension[] = ['world', 'dungeon'];
+const NO_GROUPS: readonly string[] = [];
 
 const useTrackerData = (options: TrackerDataOptions = {}) => {
-  const { initialGrouping = ['world', 'dungeon'], initialViewMode = 'visual' } = options;
+  const { initialGrouping = DEFAULT_GROUPING, initialViewMode = 'visual', prefKey = null } = options;
 
   const [inventory, setInventory] = useState<Set<ItemId>>(() => getCurrentInventory());
   const [completedChecks, setCompletedChecks] = useState<Set<CheckId>>(() => getCompletedChecks());
   const [placement, setPlacement] = useState(() => getSessionState().placement);
   const [fired, setFired] = useState<ReadonlySet<string>>(() => firedLocations());
-  const [viewMode, setViewMode] = useState<ViewMode>(initialViewMode);
-  const [grouping, setGrouping] = useState<GroupDimension[]>(initialGrouping);
-  const [filter, setFilter] = useState<FilterState>(EMPTY_FILTER);
+  const [viewMode, setViewMode] = useWidgetPref<ViewMode>(prefKey, 'viewMode', initialViewMode);
+  const [grouping, setGrouping] = useWidgetPref<GroupDimension[]>(prefKey, 'grouping', initialGrouping);
+  const [filter, setFilter] = useWidgetPref<FilterState>(prefKey, 'filter', EMPTY_FILTER);
+  const [panels, setPanels] = useWidgetPref<TrackerPanels>(prefKey, 'panels', CLOSED_PANELS);
+  const [expandedGroups, setExpandedGroups] = useWidgetPref<readonly string[]>(prefKey, 'expanded', NO_GROUPS);
+
+  const toggleGroup = useCallback((key: string) => {
+    setExpandedGroups(expandedGroups.includes(key)
+      ? expandedGroups.filter((k) => k !== key)
+      : [...expandedGroups, key]);
+  }, [expandedGroups, setExpandedGroups]);
 
   useEffect(() => onInventoryChanged((inv) => setInventory(new Set(inv))), []);
   useEffect(() => onCompletedChecksChanged((checks) => setCompletedChecks(new Set(checks))), []);
@@ -114,6 +137,8 @@ const useTrackerData = (options: TrackerDataOptions = {}) => {
     viewMode, setViewMode,
     grouping, setGrouping,
     filter, setFilter,
+    panels, setPanels,
+    expandedGroups, toggleGroup,
     snapshot, stats, groupTree,
     placement, placementView, run,
   };
