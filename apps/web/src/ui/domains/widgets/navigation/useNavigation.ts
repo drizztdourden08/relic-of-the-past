@@ -5,6 +5,8 @@ import { usableEntrances } from '@shared/game/navigation';
 import { annotateFlooded } from './nav-flood/annotate-flooded';
 import { liveGameStates } from '../../../../lib/game/live-game-states';
 import { useNavigationOverlayStore } from '../../../../stores/navigation-overlay-store';
+import { useWidgetUiStore } from '../../../../stores/widget-ui-store';
+import { useWidgetPref } from '../../../../hooks/useWidgetPref';
 import type { NavMode } from '../../../../stores/navigation-overlay-store';
 import type { ConnectionInfo } from '@shared/game/navigation';
 import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetProgressIndicator, wasmGetIndoorLayer0Grid, wasmGetLinkLayer, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetEntranceSpawns, wasmGetRoomLayoutInfo, wasmGetDungeonMapPosition } from '../../../../lib/game';
@@ -22,6 +24,10 @@ import { useNavConnections } from './nav-flood/use-nav-connections';
 /** Set once per app run, so remounting the widget cannot re-apply the --auto-flood flag. */
 let didApplyAutoFloodFlag = false;
 
+/** Same reasoning for the saved mode: it is restored the first time the widget mounts in
+ *  this run, and after that the overlay store is the live value the pref follows. */
+let didRestoreSavedMode = false;
+
 /** All Navigation-widget state, data acquisition, and flood-fill orchestration. */
 const useNavigation = () => {
   const { overworldScreenIndex, roomIndex, isIndoors, isDarkWorld, palaceIndex, whichEntrance, linkX: playerX, linkY: playerY } = useGameUIStore(s => s.map);
@@ -34,6 +40,12 @@ const useNavigation = () => {
   const { result, connections, screenBundle, respawnEntIds, mode, setScreenBundle } = overlayStore;
   const fallHoleLandings = overlayStore.fallHoleSpawns;
   const autoRun = mode === 'auto';
+
+  // Manual/auto is remembered by the profile. The overlay store stays the live value,
+  // because auto mode has to survive the widget unmounting mid-run; the pref is the copy
+  // that survives the app closing.
+  const [savedMode, setSavedMode] = useWidgetPref<NavMode>('navigation', 'mode', 'manual');
+  const prefsHydrated = useWidgetUiStore(s => s.hydrated);
 
   const [running, setRunning] = useState(false);
   const [variant, setVariant] = useState<OverworldVariantInfo | null>(null);
@@ -195,6 +207,14 @@ const useNavigation = () => {
 
   handleRunRef.current = handleRun;
 
+  // Restore the saved mode once, and only after the profile's prefs have landed: before
+  // that the pref reads as the 'manual' fallback, which would overwrite a real 'auto'.
+  useEffect(() => {
+    if (!prefsHydrated || didRestoreSavedMode) return;
+    didRestoreSavedMode = true;
+    if (savedMode !== mode) overlayStore.setMode(savedMode);
+  }, [prefsHydrated, savedMode, mode]);
+
   // Auto-flood CLI flag: put the widget in auto mode and take the first flood once the
   // active screen is known. The guard is module-level, not a ref: a ref resets when the
   // hub unmounts the widget, which would force auto back on after the user chose manual.
@@ -249,8 +269,9 @@ const useNavigation = () => {
   /** Switching to auto floods straight away, so the overlay matches the mode you just picked. */
   const setMode = useCallback((next: NavMode) => {
     overlayStore.setMode(next);
+    setSavedMode(next);
     if (next === 'auto' && !running) handleRunRef.current?.();
-  }, [running]);
+  }, [running, setSavedMode]);
 
   // Derived: classify connections as internal vs external (with dedup).
   const { externalConnections, internalConnections } = useNavConnections(connections, screenBundle, isIndoors);

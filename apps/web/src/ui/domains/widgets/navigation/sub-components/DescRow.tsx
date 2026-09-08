@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
-import { useState } from 'react';
 import type { ReactNode, CSSProperties } from 'react';
+import { useWidgetPref } from '@app/hooks/useWidgetPref';
 import { Box, Text } from '../../../../design-system/primitives';
 import { S } from '../styles';
 
@@ -11,11 +11,12 @@ const IL: Record<string, CSSProperties> = {
 
 /** A clickable info-row label that expands an inline description. */
 const DescRow = ({ label, desc, children }: { label: string; desc: string; children: ReactNode }) => {
-  const [open, setOpen] = useState(false);
+  // Keyed by label so each row remembers itself, not the last one opened.
+  const [open, setOpen] = useWidgetPref<boolean>('navigation', `desc:${label}`, false);
   return (
     <Box>
       <Box style={S.infoRow}>
-        <Text style={{ ...S.infoLabel, cursor: 'pointer', textDecoration: 'underline', textDecorationStyle: 'dotted', textUnderlineOffset: '2px' } as CSSProperties} onClick={() => setOpen(o => !o)}>{label}</Text>
+        <Text style={{ ...S.infoLabel, cursor: 'pointer', textDecoration: 'underline', textDecorationStyle: 'dotted', textUnderlineOffset: '2px' } as CSSProperties} onClick={() => setOpen(!open)}>{label}</Text>
         <Text style={IL.valueRow}>{children}</Text>
       </Box>
       {open && (

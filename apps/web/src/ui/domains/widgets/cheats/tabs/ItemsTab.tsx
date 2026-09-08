@@ -14,6 +14,7 @@ import {
   cheatGiveItem, cheatTriggerCheck, cheatTriggerNpcCheck,
   getCompletedChecks, onCompletedChecksChanged,
 } from '../../../../../lib/game';
+import { useWidgetPref } from '@app/hooks/useWidgetPref';
 
 type Mode = 'free' | 'checks';
 
@@ -28,8 +29,8 @@ const CATEGORY_LABELS: Record<string, string> = Object.fromEntries(
 );
 
 const ItemsTab = () => {
-  const [mode, setMode] = useState<Mode>('free');
-  const [search, setSearch] = useState('');
+  const [mode, setMode] = useWidgetPref<Mode>('cheats', 'itemsMode', 'free');
+  const [search, setSearch] = useWidgetPref<string>('cheats', 'itemsSearch', '');
   const [completedChecks, setCompletedChecks] = useState<Set<CheckId>>(() => getCompletedChecks());
 
   useEffect(() => onCompletedChecksChanged(checks => setCompletedChecks(new Set(checks))), []);

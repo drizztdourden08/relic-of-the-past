@@ -14,17 +14,26 @@ interface GroupSectionProps<T> {
   depth: number;
   expandToDepth: number;
   renderItems: (items: T[]) => ReactNode;
+  /** Present when the caller owns expansion (see GroupTreeProps.expandedKeys). */
+  expandedKeys?: ReadonlySet<string>;
+  onToggle?: (key: string) => void;
 }
 
 const MAX_DEPTH_CLASS = 4;
 
 const GroupSection = <T,>(props: GroupSectionProps<T>) => {
-  const { node, depth, expandToDepth, renderItems } = props;
-  const [expanded, setExpanded] = useState(depth <= expandToDepth);
+  const { node, depth, expandToDepth, renderItems, expandedKeys, onToggle } = props;
+  const [localExpanded, setLocalExpanded] = useState(depth <= expandToDepth);
+  const controlled = expandedKeys !== undefined;
+  const expanded = controlled ? expandedKeys.has(node.key) : localExpanded;
+  const toggle = () => {
+    if (controlled) onToggle?.(node.key);
+    else setLocalExpanded((v) => !v);
+  };
 
   return (
     <Box className={`group-tree__group group-tree__group--depth-${Math.min(depth, MAX_DEPTH_CLASS)}`}>
-      <Button variant="bare" className="group-tree__header" onClick={() => setExpanded(!expanded)}>
+      <Button variant="bare" className="group-tree__header" onClick={toggle}>
         <Text className="group-tree__chevron">{expanded ? '▼' : '▶'}</Text>
         <Text className="group-tree__name">{node.label}</Text>
         {node.meta !== undefined && <Text className="group-tree__meta">{node.meta}</Text>}
@@ -39,6 +48,8 @@ const GroupSection = <T,>(props: GroupSectionProps<T>) => {
                 depth={depth + 1}
                 expandToDepth={expandToDepth}
                 renderItems={renderItems}
+                expandedKeys={expandedKeys}
+                onToggle={onToggle}
               />
             ))
             : renderItems(node.items)}

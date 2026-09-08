@@ -3,7 +3,7 @@
  * Widget content providing cheat controls for the game.
  * Tabs: Items, Stats, Mechanics, Bottles
  */
-import { useState } from 'react';
+import { useWidgetPref } from '@app/hooks/useWidgetPref';
 import { Box } from '../../../design-system/primitives/Box';
 import { TabBar } from '../../../design-system/primitives/TabBar';
 import { ItemsTab } from './tabs/ItemsTab';
@@ -22,7 +22,7 @@ const TABS = [
 ];
 
 const CheatsWidgetContent = () => {
-  const [tab, setTab] = useState<CheatTab>('stats');
+  const [tab, setTab] = useWidgetPref<CheatTab>('cheats', 'tab', 'stats');
 
   return (
     <Box className="cheats-widget">

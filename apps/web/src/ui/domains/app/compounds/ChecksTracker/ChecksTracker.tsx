@@ -26,6 +26,7 @@ const ChecksTracker = (props: ChecksTrackerProps) => {
   const {
     stats, filter, onFilterChange, grouping, onGroupingChange, viewMode, onViewModeChange,
     groupTree, statuses, run, dimensions, notice, className,
+    panels, onPanelsChange, expandedGroups, onToggleGroup,
   } = props;
 
   return (
@@ -39,6 +40,8 @@ const ChecksTracker = (props: ChecksTrackerProps) => {
         viewMode={viewMode}
         onViewModeChange={onViewModeChange}
         dimensions={dimensions}
+        panels={panels}
+        onPanelsChange={onPanelsChange}
       />
       {isNarrowed(filter) && (
         <Box className="tracker-view__filtered-stats">
@@ -50,7 +53,14 @@ const ChecksTracker = (props: ChecksTrackerProps) => {
       )}
       {notice}
       <Box className="tracker-view__checks">
-        <TrackerGroupTree node={groupTree} statuses={statuses} viewMode={viewMode} run={run} />
+        <TrackerGroupTree
+          node={groupTree}
+          statuses={statuses}
+          viewMode={viewMode}
+          run={run}
+          expandedGroups={expandedGroups}
+          onToggleGroup={onToggleGroup}
+        />
       </Box>
     </Box>
   );

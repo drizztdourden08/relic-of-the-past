@@ -14,7 +14,7 @@
  * `useComparison` feeds each card its own record's live differences, keyed by
  * id, so a wrong field shows inline where it lives.
  */
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Box, EmptyState, ScrollArea } from '@ds/primitives';
 import { buildSchema } from '@ds/data';
 import { COLLECTION_SOURCES } from '@app/ui/domains/app/views/DataInspector/behavior/collection-sources';
@@ -22,6 +22,7 @@ import { openInPassOrder, useRecommendations } from '@app/ui/domains/app/views/D
 import { defaultIdRefDisplay } from '@app/ui/domains/app/views/DataInspector/behavior/record-links';
 import { useIdRefNavigation } from '@app/ui/domains/app/views/DataInspector/behavior/useIdRefNavigation';
 import { useDataViewStore } from '@app/stores/data-view-store';
+import { useWidgetPref } from '@app/hooks/useWidgetPref';
 import type { EntityKind } from '@shared/game/data';
 import { DEFAULT_KIND } from './LiveDataInspector.constants';
 import { useComparison } from './behavior/use-comparison';
@@ -46,7 +47,7 @@ const LiveDataInspectorContent = () => {
   useDetectionPass(context);
   const diffsByRecord = useComparison(context);
 
-  const [kind, setKind] = useState<EntityKind>(DEFAULT_KIND);
+  const [kind, setKind] = useWidgetPref<EntityKind>('dataset', 'tab', DEFAULT_KIND);
   const allEntries = useRecommendations();
   const screenEntries = useMemo(
     () => openInPassOrder(allEntries.filter(entry => entry.screenId === context.screenId)),

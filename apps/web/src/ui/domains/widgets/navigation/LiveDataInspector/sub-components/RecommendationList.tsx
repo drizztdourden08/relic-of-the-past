@@ -18,6 +18,7 @@ import { RecommendationCard } from './RecommendationCard';
 import { RecommendationTabs } from './RecommendationTabs';
 import type { Recommendation } from '@shared/game/recommendations';
 import './RecommendationList.css';
+import { useWidgetPref } from '@app/hooks/useWidgetPref';
 
 const MIN_BATCH = 2;
 
@@ -27,7 +28,7 @@ interface RecommendationListProps {
 
 const RecommendationList = (props: RecommendationListProps) => {
   const { entries } = props;
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useWidgetPref<boolean>('dataset', 'recCollapsed', false);
   const [busy, setBusy] = useState(false);
   const { tabs, filter, setFilter, filtered } = useRecommendationFilter(entries);
   const certainCount = certainOnly(filtered).length;

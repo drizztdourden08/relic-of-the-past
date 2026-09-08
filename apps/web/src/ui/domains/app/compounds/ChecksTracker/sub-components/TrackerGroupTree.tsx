@@ -20,6 +20,9 @@ interface TrackerGroupTreeProps {
   statuses: Map<string, CheckStatus>;
   viewMode: ViewMode;
   run?: RunContext;
+  /** Controlled expansion, passed straight through to GroupTree. */
+  expandedGroups?: readonly string[];
+  onToggleGroup?: (key: string) => void;
 }
 
 /** taken / available / still to find: the same three the summary bar counts. */
@@ -43,7 +46,7 @@ const toTreeNode = (node: GroupNode): TreeNode<CheckRecord> => ({
 });
 
 const TrackerGroupTree = (props: TrackerGroupTreeProps) => {
-  const { node, statuses, viewMode, run } = props;
+  const { node, statuses, viewMode, run, expandedGroups, onToggleGroup } = props;
 
   const root = useMemo(() => toTreeNode(node), [node]);
   const renderItems = useCallback(
@@ -53,7 +56,13 @@ const TrackerGroupTree = (props: TrackerGroupTreeProps) => {
 
   return (
     <Box className="tracker-groups">
-      <GroupTree root={root} renderItems={renderItems} emptyLabel="No checks match." />
+      <GroupTree
+        root={root}
+        renderItems={renderItems}
+        emptyLabel="No checks match."
+        expandedKeys={expandedGroups}
+        onToggleKey={onToggleGroup}
+      />
     </Box>
   );
 };

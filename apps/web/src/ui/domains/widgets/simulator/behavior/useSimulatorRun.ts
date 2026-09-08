@@ -18,6 +18,7 @@ import { useSimulatorStore } from '@app/stores/simulator-store';
 import { buildObservation, fanOutEvents, waitAfterTrigger, screenFloodEvent, exitsEvent, sequenceEvent } from './runner-loop';
 import type { DetectCache } from './runner-loop';
 import { computeProgress, buildRunResults } from './run-results';
+import { useWidgetPref } from '@app/hooks/useWidgetPref';
 
 const SAFETY_CAP = 50_000;
 
@@ -29,8 +30,8 @@ interface Control {
 const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
 
 const useSimulatorRun = () => {
-  const [stopAtCheckId, setStopAtCheckId] = useState<CheckId | ''>('');
-  const [screenLimit, setScreenLimit] = useState<number | null>(null);
+  const [stopAtCheckId, setStopAtCheckId] = useWidgetPref<CheckId | ''>('simulator', 'stopAtCheckId', '');
+  const [screenLimit, setScreenLimit] = useWidgetPref<number | null>('simulator', 'screenLimit', null);
   const [canRestore, setCanRestore] = useState(false);
   const screenLimitRef = useRef<number | null>(null);
   screenLimitRef.current = screenLimit;

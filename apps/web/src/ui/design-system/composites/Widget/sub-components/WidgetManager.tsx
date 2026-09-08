@@ -16,7 +16,11 @@ import { resolveWidgetDisabledState } from '../behavior/resolveWidgetDisabledSta
 
 interface WidgetManagerProps {
   layout: WidgetLayout;
+  /** The game core is running. Says nothing about what the user is looking at. */
   gameRunning: boolean;
+  /** A full-window page is covering the game. A game-only widget steps aside for it,
+   *  which is what Escape-to-home does, and no startup flag overrides that. */
+  pageOpen?: boolean;
   onUpdate: (id: string, patch: Partial<WidgetState>) => void;
   onClose: (id: string) => void;
   /** Notified when docked-widget exclusive insets change (wired to a store by a view). */
@@ -43,18 +47,24 @@ interface WidgetManagerProps {
 
 const WidgetManager = (props: WidgetManagerProps) => {
   const {
-    layout, gameRunning, onUpdate, onClose, onInsetsChange, children, settingsContent,
+    layout, gameRunning, pageOpen = false, onUpdate, onClose, onInsetsChange, children, settingsContent,
     developerToolsEnabled = false, startupForcedWidgetIds = [],
     vanillaSafe = false, settings = null, onOpenSettings = () => {},
   } = props;
   const activeWidgets = useMemo(() => {
     return layout.widgets.filter((w) => {
       if (!w.visible) return false;
-      if (w.visibility === 'game-only' && !gameRunning) return false;
-      if (getWidgetDefinition(w.id)?.devOnly && !developerToolsEnabled && !startupForcedWidgetIds.includes(w.id)) return false;
+      // A startup-forced id is exempt from the no-game and dev gates, so the
+      // `--widgets=` baselines can run with no game and dev tools off, and the flag
+      // never has to write anything into the profile's saved layout. It is NOT
+      // exempt from the open-page gate: a game-only widget always steps aside.
+      const forced = startupForcedWidgetIds.includes(w.id);
+      if (w.visibility === 'game-only' && pageOpen) return false;
+      if (w.visibility === 'game-only' && !gameRunning && !forced) return false;
+      if (getWidgetDefinition(w.id)?.devOnly && !developerToolsEnabled && !forced) return false;
       return true;
     });
-  }, [layout.widgets, gameRunning, developerToolsEnabled, startupForcedWidgetIds]);
+  }, [layout.widgets, gameRunning, pageOpen, developerToolsEnabled, startupForcedWidgetIds]);
 
   const { styles: dockedStyles, exclusiveInsets } = useMemo(() => computeDockedStyles(activeWidgets), [activeWidgets]);
 

@@ -11,7 +11,8 @@ import { useTrackerData } from '../../../../hooks/useTrackerData';
 const ChecksWidgetContent = () => {
   const {
     viewMode, setViewMode, grouping, setGrouping, filter, setFilter, snapshot, stats, groupTree, run,
-  } = useTrackerData();
+    panels, setPanels, expandedGroups, toggleGroup,
+  } = useTrackerData({ prefKey: 'checks' });
 
   return (
     <ChecksTracker
@@ -26,6 +27,10 @@ const ChecksWidgetContent = () => {
       groupTree={groupTree}
       statuses={snapshot}
       run={run}
+      panels={panels}
+      onPanelsChange={setPanels}
+      expandedGroups={expandedGroups}
+      onToggleGroup={toggleGroup}
     />
   );
 };

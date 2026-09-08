@@ -3,10 +3,11 @@ import { useEffect, useMemo } from 'react';
 import { Box, Image } from '@ds/primitives';
 import { WidgetManager, useWidgetLayout } from '@ds/composites/Widget';
 import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent, DebugWidgetContent, NavigationWidgetContent, LiveDataInspectorContent, CheatsWidgetContent, SimulatorWidgetContent, MusicWidgetContent } from '@domains/widgets';
-import { loadTrackerStateBlob, saveTrackerStateBlob } from '@app/lib/tracker-state-io';
+import { widgetLayoutIO } from '@app/lib/storage/widget-state';
 import { primeLiveSettings } from '@app/lib/game';
 import { useExclusiveInsetsStore } from '@app/stores/exclusive-insets-store';
 import { useDevToolsWidgetGate } from '@app/App/behavior/useDevToolsWidgetGate';
+import { useWidgetPrefs } from '@app/App/behavior/useWidgetPrefs';
 import { useWidgetDisabledGate } from '@app/App/behavior/useWidgetDisabledGate';
 import { applyNotchMode } from '@app/hooks/useSafeAreaInsets';
 import { useAutoUpdate } from '@app/hooks/useAutoUpdate';
@@ -42,9 +43,6 @@ import { DebugFloatingControls } from '../../compounds/DebugFloatingControls';
 import { AppDialogs } from './sub-components/AppDialogs';
 import './AppMain.css';
 
-// Profile-layout persistence injected into the bare Widget composite (keeps IPC out of it).
-const widgetIO = { load: loadTrackerStateBlob, save: saveTrackerStateBlob };
-
 const AppMain = () => {
   const windowChrome = useCapability('windowChrome');
   const canUpdate = useCapability('selfUpdate');
@@ -77,7 +75,9 @@ const AppMain = () => {
     onGameClear: () => game.clearGame(),
   });
   const nav = useAppNavigation({ activeProfile: profileMgmt.activeProfile, refreshLists: profileMgmt.refreshProfilesAndRoms });
-  const widgets = useWidgetLayout(profileMgmt.activeProfile?.id ?? null, widgetIO, window.api.startup);
+  // Layout and content prefs share one debounced, flushed writer (lib/storage/widget-state).
+  const widgets = useWidgetLayout(profileMgmt.activeProfile?.id ?? null, widgetLayoutIO, window.api.startup);
+  useWidgetPrefs(profileMgmt.activeProfile?.id ?? null);
   // Master gate for developer-only UI (widgets, dev pages, shadow editor); also closes
   // devOnly widgets the moment it flips off.
   const developerToolsEnabled = useDevToolsWidgetGate(widgets.layout, widgets.close, window.api.startup.widgets);
@@ -165,7 +165,8 @@ const AppMain = () => {
 
         <WidgetManager
           layout={widgets.layout}
-          gameRunning={game.isRunning && nav.activePage === 'none'}
+          gameRunning={game.isRunning}
+          pageOpen={nav.activePage !== 'none'}
           onUpdate={widgets.update}
           onClose={widgets.close}
           onInsetsChange={setExclusiveInsets}
