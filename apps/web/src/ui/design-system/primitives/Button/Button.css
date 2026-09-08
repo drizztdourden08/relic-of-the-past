@@ -147,3 +147,22 @@
 @keyframes btn-spin {
   to { transform: rotate(360deg); }
 }
+
+/* ─── Active / toggled-on (gold), wins over any variant ─── */
+.btn--active {
+  background: var(--c-selected);
+  border-color: var(--c-gold);
+  color: var(--c-gold-bright);
+}
+
+.btn--active:hover:not(:disabled) {
+  background: var(--c-gold-soft);
+  border-color: var(--c-gold-bright);
+  color: var(--c-gold-bright);
+}
+
+/* A small button's icon sits next to the label, so it takes the label's size. */
+.btn--sm .btn__icon {
+  width: auto;
+  font-size: inherit;
+}

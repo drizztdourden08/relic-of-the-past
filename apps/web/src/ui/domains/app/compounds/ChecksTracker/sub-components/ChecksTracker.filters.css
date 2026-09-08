@@ -6,55 +6,53 @@
 
 .tracker-summary {
   container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
   padding: var(--space-sm) var(--space-md);
   border-bottom: 1px solid var(--c-border);
   flex-shrink: 0;
 }
 
-.tracker-summary__bar {
+.tracker-summary__meter {
   display: flex;
-  height: 6px;
-  border-radius: var(--r-sm);
-  background: var(--c-hover);
-  overflow: hidden;
-  margin-bottom: var(--space-xs);
+  align-items: center;
+  gap: var(--space-sm);
 }
 
-.tracker-summary__fill {
-  height: 100%;
-  transition: width 0.3s ease;
+.tracker-summary__pct {
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
 }
-
-.tracker-summary__fill--completed { background: var(--c-green); }
-.tracker-summary__fill--reachable { background: var(--c-warning); }
 
 .tracker-summary__stats {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-sm);
+  gap: var(--space-xs) var(--space-md);
   font-size: var(--text-xs);
 }
 
 .tracker-summary__stat {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
   white-space: nowrap;
-}
-
-.tracker-summary__stat--completed { color: var(--c-green); }
-.tracker-summary__stat--reachable { color: var(--c-warning); }
-.tracker-summary__stat--blocked { color: var(--c-text-dim); }
-.tracker-summary__stat--total { color: var(--c-text); }
-
-.tracker-summary__stat--pct {
   color: var(--c-text-dim);
-  margin-left: auto;
 }
 
-/* Labels by default; swap to compact icons when the widget gets narrow. */
-.tracker-summary__stat-icon { display: none; }
+.tracker-summary__stat-value {
+  color: var(--c-text);
+  font-variant-numeric: tabular-nums;
+}
 
-@container (max-width: 340px) {
+.tracker-summary__stat--completed .tracker-summary__stat-value { color: var(--c-green); }
+.tracker-summary__stat--reachable .tracker-summary__stat-value { color: var(--c-warning); }
+
+/* The word is the first thing to go when the widget cannot fit the row. */
+@container (max-width: 320px) {
   .tracker-summary__stat-label { display: none; }
-  .tracker-summary__stat-icon { display: inline; }
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -62,61 +60,52 @@
    ═══════════════════════════════════════════════════════════════ */
 
 .tracker-filters {
-  padding: var(--space-xs) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
   border-bottom: 1px solid var(--c-border);
   flex-shrink: 0;
 }
 
 .tracker-filters__search {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  margin-bottom: var(--space-sm);
 }
 
+.tracker-filters__search-icon {
+  position: absolute;
+  left: var(--space-sm);
+  color: var(--c-text-muted);
+  pointer-events: none;
+}
+
+/* Room for the leading icon, and a row height that matches the 26px buttons. */
 .tracker-filters__input {
   flex: 1;
   min-width: 0;
-  padding: var(--space-xs) var(--space-sm);
-  background: var(--c-sunken);
-  border: 1px solid var(--c-border);
-  border-radius: var(--r-sm);
-  color: var(--c-text);
-  font-family: inherit;
-  font-size: var(--text-xs);
-  outline: none;
+  padding: var(--space-xs) var(--space-sm) var(--space-xs) var(--space-xl);
+  font-size: var(--text-sm);
 }
 
 .tracker-filters__toggle {
+  position: relative;
+  display: inline-flex;
   flex-shrink: 0;
-  padding: var(--space-xs) var(--space-sm);
-  background: var(--c-sunken);
-  border: 1px solid var(--c-border);
-  border-radius: var(--r-sm);
-  color: var(--c-text-dim);
+}
+
+/* A corner count, so the funnel keeps its square footprint. */
+.tracker-filters__count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  pointer-events: none;
   font-size: var(--text-xs);
-  font-family: inherit;
-  cursor: pointer;
-  transition: background var(--transition-fast), color var(--transition-fast);
-}
-
-.tracker-filters__toggle:hover {
-  background: var(--c-hover);
-  color: var(--c-text);
-}
-
-.tracker-filters__toggle--active {
-  background: var(--c-selected);
-  border-color: var(--c-gold);
-  color: var(--c-gold-bright);
-}
-
-.tracker-filters__input::placeholder {
-  color: var(--c-text-muted);
-}
-
-.tracker-filters__input:focus {
-  border-color: var(--c-gold);
+  padding: 0 var(--space-2xs);
+  min-width: 13px;
+  text-align: center;
 }
 
 /* Toolbar wraps, and never produces a horizontal scrollbar in a narrow widget. */
@@ -127,163 +116,28 @@
   gap: var(--space-sm);
 }
 
-/* ─── Connected segmented groups (view modes + status) ─── */
-.tracker-filters__view-modes,
-.tracker-filters__status-group {
-  display: inline-flex;
-  border: 1px solid var(--c-border);
-  border-radius: var(--r-sm);
-  background: var(--c-sunken);
-  overflow: hidden;
-}
-
-.tracker-filters__mode-btn,
-.tracker-filters__status-btn {
-  padding: var(--space-xs) var(--space-sm);
-  background: transparent;
-  border: none;
-  border-right: 1px solid var(--c-border);
-  color: var(--c-text-dim);
-  font-size: var(--text-sm);
-  font-family: inherit;
-  cursor: pointer;
-  min-width: 28px;
-  text-align: center;
-  transition: background var(--transition-fast), color var(--transition-fast);
-}
-
-.tracker-filters__mode-btn:last-child,
-.tracker-filters__status-btn:last-child {
-  border-right: none;
-}
-
-.tracker-filters__mode-btn:hover,
-.tracker-filters__status-btn:hover {
-  background: var(--c-hover);
-  color: var(--c-text);
-}
-
-.tracker-filters__mode-btn--active,
-.tracker-filters__status-btn--active {
-  background: var(--c-selected);
-  color: var(--c-gold-bright);
-}
-
-/* Status actives keep their semantic colour (override the gold default) */
-.tracker-filters__status-btn--reachable.tracker-filters__status-btn--active {
-  background: var(--c-warning-soft);
-  color: var(--c-warning);
-}
-
-.tracker-filters__status-btn--completed.tracker-filters__status-btn--active {
-  background: var(--c-green-soft);
-  color: var(--c-green-bright);
-}
-
-.tracker-filters__status-btn--blocked.tracker-filters__status-btn--active {
-  background: var(--c-border-strong);
-  color: var(--c-text);
-}
-
-/* ─── Standalone toggle buttons (Tags, Group) ─── */
-.tracker-filters__btn {
-  padding: var(--space-xs) var(--space-sm);
-  background: var(--c-sunken);
-  border: 1px solid var(--c-border);
-  border-radius: var(--r-sm);
-  color: var(--c-text-dim);
-  font-size: var(--text-xs);
-  font-family: inherit;
-  cursor: pointer;
-}
-
-.tracker-filters__btn:hover {
-  background: var(--c-hover);
-  color: var(--c-text);
-}
-
-.tracker-filters__btn--active {
-  background: var(--c-selected);
-  border-color: var(--c-gold);
-  color: var(--c-gold-bright);
-}
-
-/* ─── Tag filter panel ─── */
-.tracker-filters__tags-panel {
-  margin-top: var(--space-sm);
-  padding: var(--space-sm);
-  background: var(--c-inset);
-  border: 1px solid var(--c-hairline);
-  border-radius: var(--r-sm);
-}
-
-.tracker-filters__tag-mode {
+/* An icon segment is square; the text ones keep the control's own padding. */
+.tracker-filters__controls .segmented__btn {
   display: flex;
-  gap: var(--space-xs);
-  margin-bottom: var(--space-sm);
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2xs) var(--space-sm);
+  min-height: 20px;
 }
 
-.tracker-filters__tag-mode button {
-  padding: var(--space-xs) var(--space-sm);
-  background: var(--c-sunken);
-  border: 1px solid var(--c-border);
-  border-radius: var(--r-sm);
-  color: var(--c-text-dim);
-  font-size: var(--text-xs);
-  font-family: inherit;
-  cursor: pointer;
-}
+/* ─── Drawer panels (tags, grouping) ─── */
 
-.tracker-filters__tag-group {
-  margin-bottom: var(--space-xs);
-}
-
-.tracker-filters__tag-group-label {
-  font-size: var(--text-xs);
-  font-weight: var(--weight-semi);
-  text-transform: uppercase;
-  color: var(--c-text-dim);
-  display: block;
-  margin-bottom: var(--space-xs);
-}
-
-.tracker-filters__tag-list {
+.tracker-filters__panel {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-xs);
-}
-
-.tracker-filters__tag {
-  padding: var(--space-xs) var(--space-sm);
-  font-size: var(--text-xs);
-  background: var(--c-sunken);
-  border: 1px solid var(--c-border);
-  border-radius: var(--r-pill);
-  color: var(--c-text-dim);
-  font-family: inherit;
-  cursor: pointer;
-}
-
-.tracker-filters__tag--active {
-  background: var(--c-selected);
-  border-color: var(--c-gold);
-  color: var(--c-gold-bright);
-}
-
-/* ─── Grouping config panel ─── */
-.tracker-filters__group-panel {
-  margin-top: var(--space-sm);
+  flex-direction: column;
+  gap: var(--space-sm);
   padding: var(--space-sm);
-  background: var(--c-inset);
-  border: 1px solid var(--c-hairline);
-  border-radius: var(--r-sm);
 }
 
 .tracker-filters__group-current {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-xs);
-  margin-bottom: var(--space-sm);
 }
 
 .tracker-filters__group-empty {
@@ -295,44 +149,23 @@
 .tracker-filters__group-chip {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-xs);
-  padding: var(--space-xs) var(--space-sm);
-  background: var(--c-selected);
+  gap: var(--space-2xs);
+  padding: var(--space-2xs) var(--space-2xs) var(--space-2xs) var(--space-sm);
+  background: var(--c-gold-soft);
   border: 1px solid var(--c-gold);
-  border-radius: var(--r-pill);
+  border-radius: var(--radius-sm);
   font-size: var(--text-xs);
   color: var(--c-gold-bright);
 }
 
 .tracker-filters__group-remove {
-  background: none;
-  border: none;
+  width: 16px;
+  height: 16px;
   color: var(--c-gold-bright);
-  font-size: var(--text-sm);
-  cursor: pointer;
-  padding: 0;
-  line-height: 1;
 }
 
 .tracker-filters__group-add {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-xs);
-}
-
-.tracker-filters__group-add-btn {
-  padding: var(--space-xs) var(--space-sm);
-  font-size: var(--text-xs);
-  background: var(--c-sunken);
-  border: 1px dashed var(--c-border-strong);
-  border-radius: var(--r-pill);
-  color: var(--c-text-dim);
-  font-family: inherit;
-  cursor: pointer;
-}
-
-.tracker-filters__group-add-btn:hover {
-  background: var(--c-hover);
-  border-color: var(--c-gold);
-  color: var(--c-text);
 }

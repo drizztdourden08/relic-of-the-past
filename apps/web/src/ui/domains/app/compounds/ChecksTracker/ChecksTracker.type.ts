@@ -4,7 +4,10 @@ import type { CheckStatus } from '@shared/game/logic/eval';
 import type {
   FilterState, GroupDimension, GroupDimensionDef, GroupNode, RunContext,
 } from '@shared/game/logic/queries/check-grouping';
-import type { TrackerPanels, ViewMode } from './sub-components/TrackerFilters';
+import type { TrackerPanels } from './sub-components/TrackerFilters';
+
+/** How a check leaf is drawn: a bare row, a row with its item, or an item card. */
+type ViewMode = 'compact' | 'detailed' | 'visual';
 
 interface TrackerStats {
   completed: number;
@@ -37,7 +40,13 @@ interface ChecksTrackerProps {
   onToggleGroup?: (key: string) => void;
   /** Rendered between the filters and the tree: a caveat, a count, a warning. */
   notice?: ReactNode;
+  /**
+   * Pins the summary and filters, leaving the check list as the only thing that
+   * scrolls. Off, the whole tracker scrolls as one and the header goes with it,
+   * which is what a short widget wants when the list is the point.
+   */
+  stickyHeader?: boolean;
   className?: string;
 }
 
-export type { ChecksTrackerProps, TrackerStats };
+export type { ChecksTrackerProps, TrackerStats, ViewMode };

@@ -57,7 +57,7 @@ const DEFAULT_GROUPING: GroupDimension[] = ['world', 'dungeon'];
 const NO_GROUPS: readonly string[] = [];
 
 const useTrackerData = (options: TrackerDataOptions = {}) => {
-  const { initialGrouping = DEFAULT_GROUPING, initialViewMode = 'compact', prefKey = null } = options;
+  const { initialGrouping = DEFAULT_GROUPING, initialViewMode = 'visual', prefKey = null } = options;
 
   const [inventory, setInventory] = useState<Set<ItemId>>(() => getCurrentInventory());
   const [completedChecks, setCompletedChecks] = useState<Set<CheckId>>(() => getCompletedChecks());

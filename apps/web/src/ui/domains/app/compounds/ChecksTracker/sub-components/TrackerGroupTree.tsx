@@ -11,7 +11,7 @@ import type { TreeNode } from '@ds/composites/GroupTree';
 import type { CheckRecord } from '@shared/game/data';
 import type { CheckStatus } from '@shared/game/logic/eval';
 import type { GroupNode, RunContext } from '@shared/game/logic/queries/check-grouping';
-import type { ViewMode } from './TrackerFilters';
+import type { ViewMode } from '../ChecksTracker.type';
 import { CheckList } from './CheckList';
 import '../ChecksTracker.css';
 

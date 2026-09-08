@@ -2,7 +2,7 @@
 import { useEffect, useMemo } from 'react';
 import { Box, Image } from '@ds/primitives';
 import { WidgetManager, useWidgetLayout } from '@ds/composites/Widget';
-import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent, DebugWidgetContent, NavigationWidgetContent, LiveDataInspectorContent, CheatsWidgetContent, SimulatorWidgetContent, MusicWidgetContent } from '@domains/widgets';
+import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, ChecksWidgetSettings, LogsWidgetContent, DebugWidgetContent, NavigationWidgetContent, LiveDataInspectorContent, CheatsWidgetContent, SimulatorWidgetContent, MusicWidgetContent } from '@domains/widgets';
 import { widgetLayoutIO } from '@app/lib/storage/widget-state';
 import { primeLiveSettings } from '@app/lib/game';
 import { useExclusiveInsetsStore } from '@app/stores/exclusive-insets-store';
@@ -170,7 +170,7 @@ const AppMain = () => {
           onUpdate={widgets.update}
           onClose={widgets.close}
           onInsetsChange={setExclusiveInsets}
-          settingsContent={{ inventory: <InventoryWidgetSettings /> }}
+          settingsContent={{ inventory: <InventoryWidgetSettings />, checks: <ChecksWidgetSettings /> }}
           developerToolsEnabled={developerToolsEnabled}
           startupForcedWidgetIds={window.api.startup.widgets}
           vanillaSafe={vanillaSafe}

@@ -6,18 +6,19 @@ import { type ButtonVariant, type ButtonSize, type ButtonProps } from './Button.
 
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
-  const { variant = 'tertiary', size = 'md', fullWidth = false, icon, children, className = '', ...rest } = props;
+  const { variant = 'tertiary', size = 'md', fullWidth = false, active = false, icon, children, className = '', ...rest } = props;
 
   const cls = [
     'btn',
     `btn--${variant}`,
     `btn--${size}`,
     fullWidth && 'btn--full',
+    active && 'btn--active',
     className,
   ].filter(Boolean).join(' ');
 
   return (
-    <button ref={ref} className={cls} {...rest}>
+    <button ref={ref} className={cls} aria-pressed={active || undefined} {...rest}>
       {icon && <span className="btn__icon">{icon}</span>}
       {children}
     </button>

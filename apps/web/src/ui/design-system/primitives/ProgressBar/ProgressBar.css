@@ -26,3 +26,9 @@
 .progress-bar__fill--secondary {
   opacity: var(--opacity-faint);
 }
+
+/* A secondary with a colour of its own is a second reading, not a faded first one. */
+.progress-bar[data-secondary-variant] .progress-bar__fill--secondary { opacity: 1; }
+.progress-bar[data-secondary-variant='gold'] .progress-bar__fill--secondary { background: var(--c-gold); }
+.progress-bar[data-secondary-variant='green'] .progress-bar__fill--secondary { background: var(--c-green); }
+.progress-bar[data-secondary-variant='danger'] .progress-bar__fill--secondary { background: var(--c-danger); }

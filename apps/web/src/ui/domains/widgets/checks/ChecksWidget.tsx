@@ -7,12 +7,14 @@
  */
 import { ChecksTracker } from '@domains/app/compounds/ChecksTracker';
 import { useTrackerData } from '../../../../hooks/useTrackerData';
+import { useStickyHeader } from './behavior/useStickyHeader';
 
 const ChecksWidgetContent = () => {
   const {
     viewMode, setViewMode, grouping, setGrouping, filter, setFilter, snapshot, stats, groupTree, run,
     panels, setPanels, expandedGroups, toggleGroup,
   } = useTrackerData({ prefKey: 'checks' });
+  const stickyHeader = useStickyHeader();
 
   return (
     <ChecksTracker
@@ -31,6 +33,7 @@ const ChecksWidgetContent = () => {
       onPanelsChange={setPanels}
       expandedGroups={expandedGroups}
       onToggleGroup={toggleGroup}
+      stickyHeader={stickyHeader}
     />
   );
 };
