@@ -9,6 +9,8 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   fullWidth?: boolean;
+  /** Toggled-on state, given the same gold treatment IconButton uses. */
+  active?: boolean;
   icon?: ReactNode;
 }
 
