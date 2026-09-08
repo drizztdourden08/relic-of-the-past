@@ -4,6 +4,7 @@ import type { CheckRecord, ItemId } from '@shared/game/data';
 import { getItem } from '@shared/game/data';
 import type { CheckStatus } from '@shared/game/logic/eval';
 import type { RunContext } from '@shared/game/logic/queries/check-grouping';
+import { CheckStatusIcon } from './CheckStatusIcon';
 import '../ChecksTracker.css';
 
 interface TrackerCheckRowProps {
@@ -16,19 +17,13 @@ interface TrackerCheckRowProps {
   run?: RunContext;
 }
 
-const STATUS_ICONS: Record<CheckStatus, string> = {
-  completed: '✓',
-  reachable: '●',
-  blocked: '○',
-};
-
 const TrackerCheckRow = (props: TrackerCheckRowProps) => {
   const { check, status, detailed, itemOverride, run } = props;
   const itemId = itemOverride ?? run?.placedItems?.get(check.id) ?? check.vanillaItemIds[0];
   const displayItem = itemId ? getItem(itemId).randomizerName : undefined;
   return (
     <Box className={`tracker-check tracker-check--${status}`}>
-      <Text className="tracker-check__icon">{STATUS_ICONS[status]}</Text>
+      <CheckStatusIcon status={status} size={11} />
       <Text className="tracker-check__name">{check.randomizerName}</Text>
       {detailed && (
         <Text className="tracker-check__item">{displayItem ?? '-'}</Text>
@@ -36,6 +31,6 @@ const TrackerCheckRow = (props: TrackerCheckRowProps) => {
       <Text className="tracker-check__type">{check.kind}</Text>
     </Box>
   );
-}
+};
 
 export { TrackerCheckRow };

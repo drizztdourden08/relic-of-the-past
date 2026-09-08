@@ -14,7 +14,7 @@ import type { CheckStatus } from '@shared/game/logic/eval';
 import type { RunContext } from '@shared/game/logic/queries/check-grouping';
 import { getItemSprite } from '@shared/game/logic/queries/item-sprites';
 import { TrackerCheckRow } from './TrackerCheckRow';
-import type { ViewMode } from './TrackerFilters';
+import type { ViewMode } from '../ChecksTracker.type';
 import '../ChecksTracker.css';
 
 interface CheckListProps {

@@ -167,11 +167,7 @@
   gap: var(--space-sm);
 }
 
-.spoiler-tracker .tracker-view__checks {
-  flex: 1;
-  min-height: 0;
-  max-height: none;
-  overflow-y: auto;
+.spoiler-tracker .checks-tracker__list {
   border: 1px solid var(--c-hairline);
   border-radius: var(--radius-md);
   background: var(--c-sunken);

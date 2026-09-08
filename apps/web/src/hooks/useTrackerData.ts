@@ -42,7 +42,7 @@ interface TrackerDataOptions {
 const EMPTY_FILTER: FilterState = { searchQuery: '', activeFacets: [], tagMode: 'any' };
 
 const useTrackerData = (options: TrackerDataOptions = {}) => {
-  const { initialGrouping = ['world', 'dungeon'], initialViewMode = 'compact' } = options;
+  const { initialGrouping = ['world', 'dungeon'], initialViewMode = 'visual' } = options;
 
   const [inventory, setInventory] = useState<Set<ItemId>>(() => getCurrentInventory());
   const [completedChecks, setCompletedChecks] = useState<Set<CheckId>>(() => getCompletedChecks());

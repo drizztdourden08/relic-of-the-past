@@ -5,7 +5,7 @@ import {
   INVENTORY_LAYOUT, INGAME_ITEMS_GRID, INGAME_EQUIPMENT, INGAME_PASSIVES, COMPACT_LAYOUT,
 } from '@shared/game/data';
 import { resolveItemSprite, getSpritesBase } from '@shared/game/logic/queries/item-sprites';
-import '../ChecksTracker/ChecksTracker.css';
+import './TrackerInventory.css';
 
 interface TrackerInventoryProps {
   inventory: ReadonlySet<ItemId>;
