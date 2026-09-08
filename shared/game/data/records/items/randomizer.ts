@@ -59,6 +59,40 @@ const RANDOMIZER_ITEMS: ItemRecord[] = [
     randomizerName: 'Progressive Bow (Alt)',
     spriteId: 'sprite-receipt-bow',
   },
+  // The four progressive capacity pool items (capacity-upgrade-names.data.ts). A progressive
+  // plan ships ONE name per family and the core picks the jump from live inventory, so unlike
+  // the fixed-jump upgrades beside them these carry no receive id here at all
+  // (capacity-progressive-receive-id.ts owns that). Without a record a seed that places one
+  // has nothing to show for it: a virtual slot renders "???", and a real check falls back to
+  // its own vanilla contents and names the wrong item with no sign anything went missing.
+  {
+    id: 'item-175',
+    origin: 'randomizer',
+    category: 'upgrade',
+    randomizerName: 'Progressive Bomb Capacity',
+    spriteId: 'sprite-upgrade-explosives',
+  },
+  {
+    id: 'item-176',
+    origin: 'randomizer',
+    category: 'upgrade',
+    randomizerName: 'Progressive Arrow Capacity',
+    spriteId: 'sprite-upgrade-projectiles',
+  },
+  {
+    id: 'item-177',
+    origin: 'randomizer',
+    category: 'upgrade',
+    randomizerName: 'Progressive Magic Capacity',
+    spriteId: 'sprite-upgrade-meter',
+  },
+  {
+    id: 'item-178',
+    origin: 'randomizer',
+    category: 'upgrade',
+    randomizerName: 'Progressive Wallet',
+    spriteId: 'sprite-upgrade-wallet',
+  },
 ];
 
 export { RANDOMIZER_ITEMS };

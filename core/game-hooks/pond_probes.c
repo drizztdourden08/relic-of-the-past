@@ -87,3 +87,35 @@ EMSCRIPTEN_KEEPALIVE
 int WasmProbePondGemAt(int amount, int index) {
   return ProbeGate() ? GameHook_PondGemAt(amount, index) : -2;
 }
+
+// Fill the pond's flying-gem slots with volley |volley| of |amount| and hand back how many
+// gems it spawned (-1 past the last volley). The receipts themselves come back through
+// WRAM (happiness_pond_item_to_link), which is how the harness sees that a volley carries
+// each of its denominations instead of repeating its first one.
+EMSCRIPTEN_KEEPALIVE
+int WasmProbePondSpawnVolley(int amount, int volley) {
+  return ProbeGate() ? GameHook_PondSpawnVolley(amount, volley) : -2;
+}
+
+// Run the wrap-up seam and hand back the immobilize flag it left, so the harness sees that
+// a plan holds the player through the palette fade and that the gate down writes nothing.
+EMSCRIPTEN_KEEPALIVE
+int WasmProbePondHoldPlayer(void) {
+  if (!ProbeGate()) return -2;
+  GameHook_PondHoldPlayer();
+  return flag_is_link_immobilized;
+}
+
+// The digits the vanilla cost prompt quotes, |vanilla| being the BCD byte the vendored
+// line would have shown; the plan's own price when it fits the line's two digits.
+EMSCRIPTEN_KEEPALIVE
+int WasmProbePondCostDigits(int vanilla) {
+  return ProbeGate() ? GameHook_PondCostDigits(vanilla) : -2;
+}
+
+// The award line a prize throw would show: the "more to come" one or the "that was the
+// last" one, or -1 when the throw keeps the vanilla capacity question.
+EMSCRIPTEN_KEEPALIVE
+int WasmProbePondAwardMessage(void) {
+  return ProbeGate() ? GameHook_PondAwardMessage() : -2;
+}

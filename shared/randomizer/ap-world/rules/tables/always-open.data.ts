@@ -221,11 +221,11 @@ const ALWAYS_OPEN_LOCATIONS: readonly string[] = [
   'Bonk Rock Cave',
   'Bottle Merchant',
   'Bumper Cave Ledge',
-  'Capacity Upgrade Left',
+  'Arrow Capacity Upgrade',
+  'Bomb Capacity Upgrade',
   // The pond's own prize slots (pond/pond-locations.data.ts), reachable
   // exactly when the pond is, so the wallet overlay is their only gate.
   ...POND_EXTRA_LOCATIONS,
-  'Capacity Upgrade Right',
   'Capacity Upgrade Shop',
   'Cave 45',
   'Checkerboard Cave',

@@ -3,19 +3,17 @@
  * The pond profile: what the rupee pond hands out, and what it charges.
  * Capacity (the legacy default) leaves the pond exactly as the capacity
  * families describe it: its two slots sell the native tiers and become
- * checks only when their family is not vanilla. The other three modes turn
+ * checks only when their family is not vanilla. The other two modes turn
  * the pond into a sequence of THROWS: throw t costs price[t] rupees, paid in
  * one toss, and hands over either the next pool item or a climb of the
  * family the player picked. Vanilla cost reproduces the native economy (one
  * hundred rupees per upgrade, fourteen upgrades); Custom cuts a price ladder
- * with the capacity curves; Gamble sells a fixed number of chances whose
- * winning throws are drawn once from the seed. Everything derived from a
- * setting (the prices, the prize schedule, the locations) is a PondPlan and
- * is never stored.
+ * with the capacity curves. Everything derived from a setting (the prices,
+ * the prize schedule, the locations) is a PondPlan and is never stored.
  */
 import type { CurveShape } from '../capacity/capacity-profile.type';
 
-type PondMode = 'capacity' | 'vanilla-cost' | 'custom' | 'gamble';
+type PondMode = 'capacity' | 'vanilla-cost' | 'custom';
 
 interface PondCustomSetting {
   mode: 'custom';
@@ -32,18 +30,17 @@ interface PondCustomSetting {
 
 /**
  * A mode whose prices are a fixed schedule, not a stored range. It
- * needs no wallet ceiling: the dearest throw either schedule sells is 240,
- * and the wallet floor keeps every reachable top well above that.
+ * needs no wallet ceiling: the dearest throw it sells is a hundred, and the
+ * wallet floor keeps every reachable top well above that.
  */
 interface PondFixedSetting {
-  mode: 'vanilla-cost' | 'gamble';
+  mode: 'vanilla-cost';
   items: number;
 }
 
 type PondSetting =
   | { mode: 'capacity' }
-  | (PondFixedSetting & { mode: 'vanilla-cost' })
-  | (PondFixedSetting & { mode: 'gamble' })
+  | PondFixedSetting
   | PondCustomSetting;
 
 /** One purchase at the pond. */
@@ -52,7 +49,11 @@ interface PondThrow {
   price: number;
   /** Prize ordinal handed over, or -1 when the throw climbs capacity instead. */
   prize: number;
-  /** Rupees handed back when the throw wins nothing (Gamble only; always below `price`). */
+  /**
+   * Rupees handed back when the throw wins nothing; always below `price`. No
+   * shipped mode pays one, so this is 0 throughout: the core keeps the channel
+   * (pond_plan.c), and a future mode that sells losing throws fills it in.
+   */
   refund: number;
 }
 

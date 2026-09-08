@@ -45,12 +45,14 @@ const KEY_DROP_LOCATIONS: ReadonlyMap<string, string> = new Map([
 /**
  * The two capacity-fairy slots (datapackage ids 4194334/4194335), existing
  * only while their family is not vanilla, each holding the upgrade the
- * fairy sells there in vanilla (the reference models them as the capacity
- * shop's two inventory slots: bomb upgrade left, arrow upgrade right).
+ * fairy sells there in vanilla. The reference models them as a shop's two
+ * inventory slots and names them left and right; they are the two answers to
+ * the pond's question, so they are named for the family each one grows
+ * (capacity/capacity-spots.data.ts holds the mapping back).
  */
 const CAPACITY_UPGRADE_LOCATIONS: ReadonlyMap<string, string> = new Map([
-  ['Capacity Upgrade Left', 'Bomb Upgrade (+5)'],
-  ['Capacity Upgrade Right', 'Arrow Upgrade (+5)'],
+  ['Bomb Capacity Upgrade', 'Bomb Upgrade (+5)'],
+  ['Arrow Capacity Upgrade', 'Arrow Upgrade (+5)'],
 ]);
 
 const EVENT_LOCATIONS: ReadonlySet<string> = new Set([

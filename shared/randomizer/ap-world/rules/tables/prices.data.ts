@@ -23,8 +23,8 @@ const PRICED_ENTRIES: readonly PricedEntry[] = [
   { kind: 'location', name: 'Digging Game', price: 80 },
   { kind: 'location', name: 'Blacksmith', price: 10 },
   { kind: 'location', name: 'Capacity Upgrade Shop', price: 100 },
-  { kind: 'location', name: 'Capacity Upgrade Left', price: 100 },
-  { kind: 'location', name: 'Capacity Upgrade Right', price: 100 },
+  { kind: 'location', name: 'Bomb Capacity Upgrade', price: 100 },
+  { kind: 'location', name: 'Arrow Capacity Upgrade', price: 100 },
   { kind: 'exit', name: 'Pyramid Fairy', price: 100 },
 ];
 

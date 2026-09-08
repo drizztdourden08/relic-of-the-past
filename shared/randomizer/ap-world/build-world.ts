@@ -57,7 +57,10 @@ const buildLocation = (name: string, region: string): ApLocation => {
     region,
     kdsOnly: KEY_DROP_LOCATIONS.has(name),
     capacityOnly: CAPACITY_UPGRADE_LOCATIONS.has(name),
-    pondSlot: POND_LOCATION_SET.has(name),
+    // Both kinds of pond slot: the two fairy slots a legacy pond hands over, and the
+    // numbered prize rungs every other mode replaces them with. Never both at once, which
+    // is what isPondSlotPresent decides.
+    pondSlot: POND_LOCATION_SET.has(name) || CAPACITY_UPGRADE_LOCATIONS.has(name),
     prize: PRIZE_LOCATIONS.has(name),
     event: EVENT_LOCATIONS.has(name),
     ...(vanillaItem !== undefined ? { vanillaItem } : {}),

@@ -1,8 +1,7 @@
 /* @layer shared-game @kind barrel */
 /** Barrel for the pond model (modes, price ladder, plan, prize slots, rupee gems). */
 export {
-  POND_GAMBLE_CHANCES, POND_GAMBLE_PRICE_STEP, POND_MAX_ITEMS, POND_MAX_THROWS, POND_PRICE_LADDER,
-  POND_VANILLA_PRICE, POND_VANILLA_THROWS, gamblePriceOf, gambleRefundOf,
+  POND_MAX_ITEMS, POND_MAX_THROWS, POND_PRICE_LADDER, POND_VANILLA_PRICE, POND_VANILLA_THROWS,
 } from './pond-ladder.data';
 export { POND_EXTRA_LOCATIONS, POND_LOCATION_SET, POND_PRIZE_LOCATIONS } from './pond-locations.data';
 export {
@@ -12,7 +11,7 @@ export {
 export { POND_MODES, pondSettingForMode } from './pond-mode-switch';
 export { POND_FIELDS, POND_MODE_KEY, POND_OPTION_KEYS, isPondValueKey, pondKeyOf } from './pond-option-keys';
 export type { PondField } from './pond-option-keys';
-export { customPricesOf, gambleWinnersOf, pondPlanOf, rungOf } from './pond-plan';
+export { customPricesOf, pondPlanOf, rungOf } from './pond-plan';
 export { parsePondSetting, pondSettingFromSnapshot, pondValuesOf } from './pond-from-snapshot';
 export type { ParsedPondSetting } from './pond-from-snapshot';
 export {

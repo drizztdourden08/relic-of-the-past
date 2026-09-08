@@ -5,6 +5,10 @@
  */
 
 const CHECK_NAME_OVERRIDES: Record<string, string> = {
+  // The first tier of each pond family IS the AP world's fairy slot for it, so it answers
+  // to the bare family name; tiers 2-7 have no location and keep their numbered name.
+  'Bomb Capacity Upgrade 1': 'Bomb Capacity Upgrade',
+  'Arrow Capacity Upgrade 1': 'Arrow Capacity Upgrade',
   'Hyrule Castle - Dark Cross': 'Sewers - Dark Cross',
   'Hyrule Castle - Secret Room - Left': 'Sewers - Secret Room - Left',
   'Hyrule Castle - Secret Room - Middle': 'Sewers - Secret Room - Middle',

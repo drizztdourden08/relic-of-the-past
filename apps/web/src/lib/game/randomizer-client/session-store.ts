@@ -98,8 +98,25 @@ const setPendingBoot = (next: PendingBoot): void => { pendingBoot = next; };
 const getPendingBoot = (): PendingBoot | null => pendingBoot;
 const clearPendingBoot = (): void => { pendingBoot = null; };
 
+/**
+ * Back to no session at all: what a profile load runs before it gates, so nothing of the
+ * profile that came before survives into it.
+ *
+ * The placement is the part that used to: stopActive releases the session but leaves it
+ * standing, since a stopped session should still be able to show its spoiler. Nothing ever
+ * cleared it, so it outlived its own profile, and the tracker went on listing a seed's
+ * locations for a vanilla profile that has none.
+ */
+const resetSession = (): void => {
+  clearPendingBoot();
+  stopActive();
+  if (placement === null) return;
+  placement = null;
+  notify();
+};
+
 export {
-  clearPendingBoot, getPendingBoot, getSessionState, setPendingBoot,
+  clearPendingBoot, getPendingBoot, getSessionState, resetSession, setPendingBoot,
   startLocalFromPlacement, startOnline, stopActive, subscribeSessionStore,
 };
 export type { ActiveSession, PendingBoot, SessionSource, SessionStoreState };

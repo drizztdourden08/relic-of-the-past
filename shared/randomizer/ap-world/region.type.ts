@@ -29,9 +29,10 @@ interface ApLocation {
   /** Exists only when the capacity-upgrade-shuffle option is on (fairy-pond slots). */
   capacityOnly: boolean;
   /**
-   * A prize slot of the rupee pond (pond/pond-locations.data.ts), present
-   * only while the pond carries that many prizes. The reference's two names
-   * are both this and `capacityOnly`; the rest are ours.
+   * A slot of the rupee pond: one of the two fairy slots a legacy pond hands over (both
+   * this and `capacityOnly`), or one of the numbered prize rungs
+   * (pond/pond-locations.data.ts) every other mode replaces them with, present only while
+   * the pond carries that many prizes.
    */
   pondSlot: boolean;
   /** Boss prize slot (crystal flag in the python location_table), never a pool item. */

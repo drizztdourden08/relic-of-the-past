@@ -49,13 +49,9 @@ const nativeSentence = (capacity: CapacityProfile): string => {
 };
 
 /** What the pond sells, what it costs, and how much of it repays the search. */
-const sellingSentence = (pond: PondSetting, capacity: CapacityProfile, seed: string): string => {
+const sellingSentence = (pond: PondSetting, capacity: CapacityProfile): string => {
   if (pond.mode === 'capacity') return nativeSentence(capacity);
-  const plan = pondPlanOf(pond, seed);
-  if (pond.mode === 'gamble') {
-    return `${countOf(plan.throws.length, 'chance')} ${priceClause(plan)}. ${prizeClause(plan, 'win')}, `
-      + `the rest refund half. ${plan.totalPrice} rupees for every chance.`;
-  }
+  const plan = pondPlanOf(pond);
   return `${countOf(plan.throws.length, 'throw')} ${priceClause(plan)}. ${prizeClause(plan, 'hand over')}. `
     + `${plan.totalPrice} rupees to empty it.`;
 };
@@ -89,8 +85,8 @@ const familiesSentence = (selection: CapacityPondSelection): string => {
  * families make of it. Pure, so the panel re-reads it on every edit and the
  * sentences follow the settings with nothing to keep in step by hand.
  */
-const pondStatusOf = (selection: CapacityPondSelection, seed = ''): readonly string[] => [
-  sellingSentence(selection.pond, selection.capacity, seed),
+const pondStatusOf = (selection: CapacityPondSelection): readonly string[] => [
+  sellingSentence(selection.pond, selection.capacity),
   familiesSentence(selection),
 ];
 

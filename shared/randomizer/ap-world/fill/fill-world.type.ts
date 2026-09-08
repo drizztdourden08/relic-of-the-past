@@ -67,8 +67,6 @@ interface FillWorldOptions {
    * slots answer to the capacity families alone, exactly as before.
    */
   pond?: PondSetting;
-  /** Seed the pond's gamble schedule is drawn from; only Gamble reads it. */
-  pondSeed?: string;
   /**
    * What an unlit room asks for (dark-rooms/). Absent means the reference
    * reading the oracles pin: light required, the lamp alone providing it.
@@ -170,8 +168,6 @@ interface FillWorld {
   dungeonItems: DungeonItemSetting;
   /** How much of this world has to be reachable for the seed to be valid. */
   accessibility: AccessibilityMode;
-  /** The seed the pond's gamble schedule was drawn from. */
-  pondSeed: string;
   /** The pond prize slots that exist here, in prize order. */
   pondLocations: readonly string[];
   /** Pool built for the REQUESTED option (dungeon sets shrink when off). */

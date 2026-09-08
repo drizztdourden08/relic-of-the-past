@@ -13,6 +13,7 @@ import * as romsStore from '../../lib/storage/roms-store';
 import * as assetsStore from '../../lib/storage/assets-store';
 import { ensureProfileAssets, loadInputProfile, loadMsuPack, loadPlayerSprite } from './load-profile-helpers';
 import { gateRandomizerBoot } from './randomizer-boot-gate';
+import { resetSession } from '../../lib/game/randomizer-client';
 import { useReloadTarget } from './useReloadTarget';
 
 const useProfileManagement = (params: {
@@ -94,6 +95,12 @@ const useProfileManagement = (params: {
       setLoadingProfile(null);
       return;
     }
+
+    // Whatever the profile before this one left behind goes now, ahead of the gate that may
+    // park new material. Its placement is what the tracker builds its roster from, and
+    // nothing used to clear it, so a vanilla profile loaded after a randomized one went on
+    // listing the seed's locations instead of the game in front of the player.
+    resetSession();
 
     // Randomizer gate: a randomized profile only boots when its session can
     // actually start afterwards (placement on disk / server reachable).

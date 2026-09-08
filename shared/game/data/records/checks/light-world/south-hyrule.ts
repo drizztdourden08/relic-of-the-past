@@ -21,7 +21,10 @@ const LW_SOUTH_HYRULE_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-025',
-    gameId: {},
+    // RoomTag_WaterGate (dungeon.c) sets dung_savegame_state_bits 0x800 when the lever
+    // drains the swamp, and Dung_SaveDataForCurrentRoom persists that word shifted right
+    // by four, so the saved bit is 0x80 on room 85, the dam.
+    gameId: { roomId: 85, mask: 128 },
     kind: 'event',
     screenId: 'screen-170',
     randomizerName: 'Floodgate',

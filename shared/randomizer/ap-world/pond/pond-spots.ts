@@ -2,24 +2,28 @@
 /**
  * Which pond prize slots exist as locations. In the legacy mode nothing
  * changes: the pond's two slots are the capacity families' own spots and
- * capacity-spots.ts decides, exactly as before. In the other three modes the
+ * capacity-spots.ts decides, exactly as before. In the other two modes the
  * pond's plan decides (one location per prize it carries), and the whole set
  * needs the pond's physical seam proven deliverable first, because a prize
  * slot past the reference's two has no vanilla item to fall back to and so
  * cannot be locked the way a fairy slot is.
  */
 import { presentCapacitySpots } from '../capacity/capacity-spots';
-import { POND_EXTRA_LOCATIONS, POND_PRIZE_LOCATIONS } from './pond-locations.data';
+import { CAPACITY_SPOT_LOCATIONS } from '../capacity/capacity-spots.data';
+import { POND_EXTRA_LOCATIONS } from './pond-locations.data';
 import { pondPlanOf } from './pond-plan';
 import type { CapacityProfile } from '../capacity/capacity-profile.type';
 import type { PondSetting } from './pond-profile.type';
 
 const POND_EXTRA_SET: ReadonlySet<string> = new Set(POND_EXTRA_LOCATIONS);
 
-/** The reference's own two names: what the capability probe can actually certify. */
-const POND_CERTIFIED_SPOTS: readonly string[] = POND_PRIZE_LOCATIONS.slice(0, 2);
+// The two fairy slots: what the capability probe can actually certify, because they are
+// the only pond grants with a physical seam of their own (the bomb answer and the arrow
+// answer). A prize rung past them rides that same seam, so certifying the two certifies
+// the ladder.
+const POND_CERTIFIED_SPOTS: readonly string[] = CAPACITY_SPOT_LOCATIONS;
 
-/** True when the probe proved the pond's substitution seam on both reference slots. */
+/** True when the probe proved the pond's substitution seam on both fairy slots. */
 const isPondDeliverable = (deliverable: ReadonlySet<string> | undefined): boolean =>
   POND_CERTIFIED_SPOTS.every((name) => deliverable?.has(name) === true);
 
@@ -29,11 +33,11 @@ const isPondDeliverable = (deliverable: ReadonlySet<string> | undefined): boolea
  * seam is proven).
  */
 const presentPondLocations = (
-  setting: PondSetting, capacity: CapacityProfile, seed: string, deliverable: ReadonlySet<string> | undefined,
+  setting: PondSetting, capacity: CapacityProfile, deliverable: ReadonlySet<string> | undefined,
 ): string[] => {
   if (setting.mode === 'capacity') return presentCapacitySpots(capacity);
   if (!isPondDeliverable(deliverable)) return [];
-  return [...pondPlanOf(setting, seed).locations];
+  return [...pondPlanOf(setting).locations];
 };
 
 /** A prize slot the reference does not name, present only under a non-legacy pond. */

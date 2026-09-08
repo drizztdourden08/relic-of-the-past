@@ -6,6 +6,7 @@ import * as savesStore from '../storage/saves-store';
 import { getModule, getProfileId } from './wasm-bridge';
 import { pollInventoryState } from './tracker';
 import { reassertLiveFlagsAfterLoad } from './live-settings';
+import { requestLocationRebaseline } from './randomizer-client/location-poller';
 import { captureGameFrameBlob } from './capture-frame';
 import { saveMusicPosition, restoreMusicPosition } from './msu-save-glue';
 
@@ -102,6 +103,9 @@ const loadState = async (slot: number): Promise<boolean> => {
 
     // Re-assert all WASM flags that state load resets
     reassertLiveFlagsAfterLoad();
+    // The loaded state's completions are the poller's new baseline, not a burst of fresh
+    // checks to report (and re-deliver).
+    requestLocationRebaseline();
 
     // A save written before music positions were recorded has no sidecar; restoring null
     // starts its track from the beginning.
@@ -178,6 +182,7 @@ const loadStateFromBuffer = (buffer: ArrayBuffer, slot = 98): boolean => {
   mod.FS.writeFile(savePath, new Uint8Array(stripStamp(buffer)));
   mod.ccall('WasmLoadState', null, ['number'], [slot]);
   reassertLiveFlagsAfterLoad();
+  requestLocationRebaseline();
   pollInventoryState(true);
   try { mod.FS.unlink(savePath); } catch { /* ignore */ }
   return true;

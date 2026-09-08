@@ -65,7 +65,9 @@ const LW_CENTRAL_HYRULE_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-011',
-    gameId: {},
+    // link_item_flute counts up 1 shovel, 2 flute, 3 flute activated (ancilla.c sets 3 when
+    // the bird is released), so reaching 3 is the activation itself.
+    gameId: { bufferIndex: 31, compare: 'gte', value: 3 },
     kind: 'event',
     screenId: 'screen-026',
     randomizerName: 'Flute Activation Spot',

@@ -40,7 +40,7 @@ import { usePoolTotals } from '../../../../../../hooks/randomizer/usePoolTotals'
 interface RunOptionsProps {
   /** The profile's stored options: a snapshot, or a pre-snapshot config shape. */
   options: unknown;
-  /** The seed this run was generated with; a gamble's winning throws come from it. */
+  /** The seed this run was generated with; a random shop scope was drawn from it. */
   seed?: string;
 }
 
@@ -97,7 +97,6 @@ const RunOptions = ({ options, seed = '' }: RunOptionsProps) => {
       <WishingPondSection
         setting={pond.setting}
         capacity={parsed.profile}
-        seed={seed}
         notes={[...pond.notes, ...rule.notes]}
         readOnly
       />

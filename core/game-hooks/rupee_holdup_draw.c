@@ -26,6 +26,10 @@
 // A capacity upgrade presenting as the 50 receipt keeps its icon: every answer here is
 // native while the capacity icon shows for the live receipt.
 //
+// The palette and shape reads are the shared receipt-draw seams, and a gem flying into the
+// pond comes through the same draw, so those two ask pond_gem_tiles.c first: it owns the
+// answers for a toss, this file owns them for a hold-up, and neither is ever live at once.
+//
 // Gate: kFeatures3_ColoredRupees. Off, every read answers |native|, nothing is decoded
 // and the spawn spot is untouched: the numbered art draws byte for byte as before.
 #include "game_hooks_internal.h"
@@ -67,6 +71,8 @@ static bool HoldUpGemShown(uint8 item) {
 // |native| (the item's own kWishPond2_OamFlags entry) otherwise.
 uint8 GameHook_RupeeGemPalette(uint8 item, uint8 native) {
   uint8 gem_item, row;
+  uint8 flying = GameHook_PondGemPalette(item, 0xff);
+  if (flying != 0xff) return flying;
   if (!HoldUpGemShown(item) || !GameHook_ColoredRupeeGem(item, &gem_item, &row)) return native;
   return row;
 }
@@ -74,7 +80,8 @@ uint8 GameHook_RupeeGemPalette(uint8 item, uint8 native) {
 // The OAM size flag that draw uses, and whether it writes the second stacked entry: a
 // narrow receipt's while the gem shows, |native| (kReceiveItem_Tab1) otherwise.
 uint8 GameHook_RupeeGemShape(uint8 item, uint8 native) {
-  return HoldUpGemShown(item) ? GEM_OAM_SIZE : native;
+  if (HoldUpGemShown(item)) return GEM_OAM_SIZE;
+  return GameHook_PondGemShape(item, native);
 }
 
 // The hold-up spawn of |item| computed a wide receipt's spot: moved to a narrow one's

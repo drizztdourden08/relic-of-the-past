@@ -3518,7 +3518,7 @@ endif_11:
     PrepareDungeonExitFromBossFight();
   }
 
-  if (ancilla_step[k] != 2)
+  if (ancilla_step[k] != 2 || GameHook_SubstitutedReceiptNeedsUnfreeze())
     flag_is_link_immobilized = 0;
   return;
 
@@ -3606,10 +3606,11 @@ OamEnt *Ancilla_ReceiveItem_Draw(int k, int x, int y) {  // 88c690
   uint8 a = GameHook_QuiverPalette(j, GameHook_ReceiptPalette(j, GameHook_RupeeGemPalette(j, kWishPond2_OamFlags[j])));
   if (sign8(a))
     a = ancilla_arr4[k];
-  Ancilla_SetOam(oam, x, y, 0x24, a * 2 | 0x30, GameHook_QuiverShape(j, GameHook_ReceiptShape(j, GameHook_RupeeGemShape(j, kReceiveItem_Tab1[j]))));
+  uint8 col = GameHook_PondGemColumn(j);
+  Ancilla_SetOam(oam, x, y, 0x24 + col, a * 2 | 0x30, GameHook_QuiverShape(j, GameHook_ReceiptShape(j, GameHook_RupeeGemShape(j, kReceiveItem_Tab1[j]))));
   oam++;
   if (GameHook_RupeeGemShape(j, kReceiveItem_Tab1[j]) == 0) {
-    Ancilla_SetOam(oam, x, y + 8, 0x34, a * 2 | 0x30, 0);
+    Ancilla_SetOam(oam, x, y + 8, 0x34 + col, a * 2 | 0x30, 0);
     oam++;
   }
   return oam;

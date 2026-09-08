@@ -260,6 +260,42 @@ bool GameHook_DeliverPrizeItem(uint8 item);
 int GameHook_PrizeTakenMask(void);
 uint8 GameHook_PendingPrizeCrystal(void);
 
+// ─── Prize presentation (prize_presentation.c) ───
+// Every seam here answers with the caller's own vanilla expression when the gate is down or
+// when this room's prize slot carries no assignment.
+
+// The raw assigned id for a grant of |vanilla_item| here, or -1 (npc_overrides.c). Unlike the
+// presentation peek it does not collapse the seven crystals onto the native crystal id.
+int GameHook_PeekNpcGrantRaw(uint8 vanilla_item);
+
+// The kind Ancilla_SpawnFallingPrize drops, so an assigned crystal falls as a crystal even in a
+// dungeon whose own prize is a pendant.
+uint8 GameHook_FallingPrizeKind(uint8 vanilla_kind);
+
+// The kCrystal_Tab0 slot the rising-crystal cutscene draws from, kept in range for a crystal
+// assigned to a dungeon that has no crystal layout of its own.
+int GameHook_CrystalCutsceneSlot(int vanilla_slot);
+
+// The palace index the maiden's message is chosen from, following the assigned crystal.
+int GameHook_PrizeCutscenePalaceX2(int vanilla_x2);
+
+// ─── Fairy proximity (fairy_proximity.c) ───
+
+// Whether the great fairy should greet the player. |vanilla_near| is the caller's own 8-bit
+// proximity test, returned verbatim with the gate down; gate up it must also hold against the
+// true 16-bit distance, so a player exactly one screen away no longer reads as adjacent.
+bool GameHook_FairyGreetsLink(int k, bool vanilla_near);
+
+// ─── Substituted boss-reward unfreeze (boss_receipt_gate.c) ───
+
+// Armed by the substitution seam (npc_overrides.c) when the item being substituted is the boss
+// heart container (0x3e), whose receipt cleanup performs its own unfreeze in vanilla.
+void GameHook_MarkSubstitutedBossHeart(uint8 vanilla_item);
+
+// The receipt cleanup's (ancilla.c) extra unfreeze condition, consumed once per armed grant.
+// False with the gate down or nothing armed, so the vendored expression stands alone.
+bool GameHook_SubstitutedReceiptNeedsUnfreeze(void);
+
 // ─── Dungeon-item shuffle (dungeon_item_grants.c) ───
 
 // The targeted dungeon-item ids (0xC0-0xFD, one per kind and palace index, see
@@ -434,50 +470,9 @@ void GameHook_MarkSubstitutionKey(uint8 key);
 // was substituted. The caller skips the vanilla counter bump and its message.
 bool GameHook_OverrideCapacityGrant(int kind);
 
-// The rupee pond's plan (pond_plan.c). Under a plan the pond sells a numbered sequence
-// of throws instead of its native purchase loop: each hook below answers to
-// kFeatures3_PondPlan and, with the gate down or nothing armed, hands back exactly the
-// value the vendored expression already computed.
-//
-//   GameHook_PondPlanOpen        true while a plan owns the pond.
-//   GameHook_PondThrowIndex      the throw about to be paid for, or -1.
-//   GameHook_PondPromptOverride  cost-prompt seam: the plan announced its own price, so
-//                                the vanilla two-choice line is skipped.
-//   GameHook_PondThrowCost       affordability seam: what this throw costs (an exhausted
-//                                pond names a price no wallet holds, closing it).
-//   GameHook_PondLaterMessage    refusal seam: an exhausted pond's own closing line; a
-//                                wallet too light for the price keeps the vanilla one.
-//   GameHook_PondThrowAmount     payment seam: the rupees actually taken and shown.
-//   GameHook_PondPoolAdd         what the throw puts in the pond's own bank.
-//   GameHook_PondTakeThrow       resolve the paid throw and advance the counter.
-//   GameHook_PondConsolationMessage  that throw's consolation line, without resolving it.
-//   GameHook_PondPrizeSlot       the grant armed for one prize ordinal.
-//   GameHook_PondThrowsTaken     the raw counter, for the progress buffer and the probes.
-bool GameHook_PondPlanOpen(void);
-int GameHook_PondThrowIndex(void);
-bool GameHook_PondPromptOverride(void);
-int GameHook_PondThrowCost(int vanilla);
-int GameHook_PondLaterMessage(int vanilla);
-int GameHook_PondThrowAmount(int stored);
-int GameHook_PondPoolAdd(int amount);
-bool GameHook_PondTakeThrow(int *prize, int *refund, int *msg);
-int GameHook_PondConsolationMessage(void);
-bool GameHook_PondPrizeSlot(int prize, int *new_item, int *msg, int *fire_id);
-uint8 GameHook_PondThrowsTaken(void);
-
-// The gems a plan throw sends into the pond (pond_toss_draw.c): the amount decomposed
-// over the six denominations and spawned in volleys, one decoded sheet at a time.
-// GameHook_PondTossRupees is false with no plan open, so the vendored five-rupee spawn
-// runs instead; GameHook_PondTossNextVolley refills the pond's slots with the next
-// volley when they are all spent, and GameHook_PondTossDelay stretches the purchase
-// wait to cover them.
-bool GameHook_PondTossRupees(int amount);
-bool GameHook_PondTossNextVolley(void);
-int GameHook_PondTossDelay(int vanilla);
-
-// The receipt id of gem |index| of |amount|'s decomposition, largest first; -1 past the
-// last gem. Pure. The probe harness pins the decomposition through it.
-int GameHook_PondGemAt(int amount, int index);
+// The rupee pond's plan and its flying gems (pond_plan.c, pond_toss_draw.c):
+// pond_hooks.h.
+#include "pond_hooks.h"
 
 // Whether the cave bat's grant was already substituted (ungated read of the
 // completion bit: once the check's item went out, the bat stays closed).

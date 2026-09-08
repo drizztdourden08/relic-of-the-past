@@ -2,9 +2,14 @@
 import { Box } from '../../../../design-system/primitives/Box';
 import { Text } from '../../../../design-system/primitives/Text';
 import { Image } from '../../../../design-system/primitives/Image';
+import { Icon } from '../../../../design-system/primitives/Icon';
 import { Spinner } from '../../../../design-system/primitives/Spinner';
 import './SaveSlot.css';
-import { LOAD_GLYPH, SAVE_GLYPH, ARM_TIMEOUT_MS } from './SaveSlot.constants';
+import {
+  LOAD_GLYPH, SAVE_GLYPH, ARM_TIMEOUT_MS,
+  NO_SCREENSHOT_FRAME_PATHS, NO_SCREENSHOT_FRAME_CIRCLES,
+  NO_SCREENSHOT_CANCEL_PATHS, NO_SCREENSHOT_CANCEL_CIRCLES,
+} from './SaveSlot.constants';
 import { useArmedAction } from './behavior/useArmedAction';
 import { SlotActionButton } from './sub-components/SlotActionButton';
 import { type SaveSlotProps } from './SaveSlot.type';
@@ -37,10 +42,40 @@ const SaveSlot = (props: SaveSlotProps) => {
   return (
     <Box className={`save-slot ${busy ? 'save-slot--busy' : ''}`}>
       <Box className={cardClass}>
-        {screenshotUrl ? (
+        {screenshotUrl && (
           <Image src={screenshotUrl} alt={`Slot ${slotNumber}`} className="save-slot__img" />
-        ) : (
-          <Box className="save-slot__empty" />
+        )}
+        {/* Only a slot that HOLDS a save but has no screenshot gets the placeholder. A slot with
+            nothing in it stays bare. */}
+        {!screenshotUrl && !isEmpty && (
+          <Box className="save-slot__empty">
+            <Box className="save-slot__empty-badge">
+              <Icon
+                className="save-slot__badge-frame"
+                paths={NO_SCREENSHOT_FRAME_PATHS}
+                circles={NO_SCREENSHOT_FRAME_CIRCLES}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.1}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <Icon
+                className="save-slot__badge-cancel"
+                paths={NO_SCREENSHOT_CANCEL_PATHS}
+                circles={NO_SCREENSHOT_CANCEL_CIRCLES}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.3}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </Box>
+            {/* Relative src: the renderer is served from file:// in the packaged app,
+                where a leading slash resolves to the filesystem root. Same form the
+                title bar and the About view use for these logos. */}
+            <Image src="./logos/logo-bot-trimmed.png" alt="" className="save-slot__empty-mascot" />
+          </Box>
         )}
         {/* Hold-to-save fill overlay */}
         {holdProgress != null && holdProgress > 0 && (

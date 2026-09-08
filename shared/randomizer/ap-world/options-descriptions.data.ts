@@ -100,7 +100,7 @@ const AP_OPTION_DESCRIPTIONS: Readonly<Record<string, OptionDescription>> = {
 
   pond_mode: [
     line('Vanilla cost', 'the same throws and prices, but the first few hand over a shuffled item.'),
-    line('Gamble', 'rising prices; some throws win a shuffled item, the rest refund half.'),
+    line('Custom', 'your own price ladder; the first few throws hand over a shuffled item.'),
   ],
   pond_items: 'Zero leaves the pond out of the shuffle.',
   pond_jumps: JUMPS,

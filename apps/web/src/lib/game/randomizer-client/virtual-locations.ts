@@ -11,11 +11,14 @@
  * keyed by the raw AP location name), and `kind: 'npc'` is a placeholder
  * class for the "type" facet, not a detection claim. vanillaItemIds carries
  * the real vanilla item where one exists (a shop shelf, a key-drop pot);
- * a pure logic event (special-locations.data.ts) has none and is the only
- * case the reward filter should read as "no reward". Everything else here
- * still hands over a real item, so isGuaranteedReward says so even where
- * there is no vanilla precedent to point vanillaItemIds at (a pond slot
- * past the reference's two).
+ * everything here still hands over a real item, so isGuaranteedReward says so
+ * even where there is no vanilla precedent to point vanillaItemIds at (a pond
+ * prize rung).
+ *
+ * The reference's logic events stay: beating Agahnim, opening the floodgate,
+ * getting the frog and the rest are things the player DOES, the game writes a
+ * flag for each, and every one has a check record of its own here.
+ * UNTRACKED_LOCATIONS is the exception that has none.
  */
 import { SHOP_DEFS } from '@shared/randomizer/ap-world/shops/shops.data';
 import { shopSlotLocationOf } from '@shared/randomizer/ap-world/shops/shop-slots';
@@ -46,6 +49,17 @@ const shopScreenFor = (locationName: string): ScreenId | undefined => {
   return def ? SHOP_SCREEN_BY_NAME[def.name] : undefined;
 };
 
+/**
+ * Placement locations the tracker does not list, because there is nothing at them to track.
+ *
+ * "Capacity Upgrade Shop" is Archipelago's own event (its spoilers carry it), but unlike
+ * every other event it stands for no act of the player and the game writes no flag for it:
+ * it fires on reaching the pond's room, and the token only tells the fill's solver that a
+ * vanilla capacity family can be bought up from there (state-helpers-capacity.ts). It is
+ * the one event with no check record here, for exactly that reason.
+ */
+const UNTRACKED_LOCATIONS: ReadonlySet<string> = new Set(['Capacity Upgrade Shop']);
+
 const slugOf = (name: string): string => name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
 /** A virtual location's own vanilla item, when it has one (a shop shelf or a key-drop pot). */
@@ -73,7 +87,7 @@ const virtualChecksOf = (placement: ApPlacement): CheckRecord[] => {
   if (cached?.placement === placement) return cached.records;
   const records: CheckRecord[] = [];
   for (const name of Object.keys(placement.nameView)) {
-    if (checkIdByStandardName(name) !== undefined) continue;
+    if (UNTRACKED_LOCATIONS.has(name) || checkIdByStandardName(name) !== undefined) continue;
     const screenId = shopScreenFor(name);
     records.push({
       id: virtualCheckIdOf(name),

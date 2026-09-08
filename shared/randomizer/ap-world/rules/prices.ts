@@ -13,7 +13,7 @@
  * non-legacy mode its plan says what each throw costs, so the plan's own
  * price replaces the table's hundred for every prize slot. That price is the
  * GUARANTEED WORST CASE: the dearest single throw that must be paid to reach
- * this prize, so a gamble is read from its schedule, never from its odds.
+ * this prize, every earlier throw included.
  */
 import { CAPACITY_UPGRADE_LOCATIONS } from '../special-locations.data';
 import { POND_LOCATION_SET } from '../pond/pond-locations.data';
@@ -28,10 +28,10 @@ const canAfford = (price: number): Rule => (state) => walletCapacity(state) >= p
 
 /** Location name → the price the pond charges for it; empty under the legacy pond. */
 const pondPricesOf = (world: ApWorld): ReadonlyMap<string, number> => {
-  const { pond, pondSeed } = world.options;
+  const { pond } = world.options;
   const prices = new Map<string, number>();
   if (pond === undefined || pond.mode === 'capacity') return prices;
-  const plan = pondPlanOf(pond, pondSeed ?? '');
+  const plan = pondPlanOf(pond);
   plan.locations.forEach((name, index) => prices.set(name, plan.worstPriceOfPrize[index]));
   return prices;
 };

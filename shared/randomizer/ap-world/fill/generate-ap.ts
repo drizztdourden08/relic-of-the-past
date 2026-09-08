@@ -59,8 +59,8 @@ const attemptApPlacement = (
   deliverable: Required<DeliverableSets>,
 ): ApPlacement => {
   const rng = createRng(attemptSeed);
-  // The pond's schedule is drawn from the SEED, never the attempt seed, so a
-  // retry never moves a gamble's winning throws.
+  // The rolled flags are drawn from the SEED, never the attempt seed, so a
+  // retry never moves what the profile already settled.
   const fillOptions = fillOptionsFromSnapshot(snapshot, deliverable, {
     pickBottle: (choices) => choices[rng.int(choices.length)],
     pickFiller: (count) => rng.int(count),

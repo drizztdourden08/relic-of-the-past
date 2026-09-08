@@ -21,7 +21,6 @@ const POND_MODE_CHOICES: readonly ApOptionChoice[] = [
   { value: 'capacity', apValue: 0, label: 'Capacity upgrades' },
   { value: 'vanilla-cost', apValue: 1, label: 'Vanilla cost' },
   { value: 'custom', apValue: 2, label: 'Custom' },
-  { value: 'gamble', apValue: 3, label: 'Gamble' },
 ];
 
 const POND_CURVE_CHOICES: readonly ApOptionChoice[] = (

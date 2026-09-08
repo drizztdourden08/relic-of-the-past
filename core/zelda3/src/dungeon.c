@@ -4587,7 +4587,7 @@ void RoomTag_GetHeartForPrize(int k) {  // 81c709
   int t = savegame_is_darkworld ? link_has_crystals : link_which_pendants;
   if (!GameHook_DungeonPrizeTaken(t & kDungeonCrystalPendantBit[BYTE(cur_palace_index_x2) >> 1])) {
     byte_7E04C2 = 128;
-    if (Ancilla_SpawnFallingPrize(kBossFinishedFallingItem[BYTE(cur_palace_index_x2) >> 1]) < 0)
+    if (Ancilla_SpawnFallingPrize(GameHook_FallingPrizeKind(kBossFinishedFallingItem[BYTE(cur_palace_index_x2) >> 1])) < 0)
       return; // Zelda bugfix. Price won't spawn if we're out of ancillas
   }
   dung_hdr_tag[k] = 0;
@@ -7703,7 +7703,7 @@ void Module07_18_RescuedMaiden() {  // 82980a
     PaletteFilter_Crystal();
     TS_copy = 1;
     flag_is_link_immobilized = 2;
-    int j = FindInWordArray(kBossRooms, dungeon_room_index, countof(kBossRooms)) - 4;
+    int j = GameHook_CrystalCutsceneSlot(FindInWordArray(kBossRooms, dungeon_room_index, countof(kBossRooms)) - 4);
     uint16 *dst = &dung_bg1[kCrystal_Tab0[j] >> 1];
     for (int n = 0, t = 0; n != 4; n++) {
       for (int i = 0; i != 8; i++, t++) {

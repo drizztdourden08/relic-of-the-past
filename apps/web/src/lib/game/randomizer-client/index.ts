@@ -5,7 +5,7 @@ export type { LocalSession } from './local-session';
 export { createOnlineSession } from './online-session';
 export type { OnlineSession, OnlineSessionConfig } from './online-session';
 export {
-  clearPendingBoot, getPendingBoot, getSessionState, setPendingBoot,
+  clearPendingBoot, getPendingBoot, getSessionState, resetSession, setPendingBoot,
   startLocalFromPlacement, startOnline, stopActive, subscribeSessionStore,
 } from './session-store';
 export type { ActiveSession, PendingBoot, SessionSource, SessionStoreState } from './session-store';
