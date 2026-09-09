@@ -40,16 +40,53 @@ const EXTRA_DUNGEON_DOORS: Readonly<Record<number, readonly number[]>> = {
   // a working exit. The real east door is on the east wall at the lower position, mirroring
   // the east neighbour's own west record at the same height.
   0x78: [0x0071, 0x1022, 0x0083],
-  0x79: [0x3660, 0x0001, 0x0022],
+  // North position 0, answering room 0x69's south edge door at the same column group. The three
+  // pairs below are the same defect the miniboss room had: the room BELOW carries an outer-edge
+  // record and this one carried only its own inner wall's two faces, so the transition started
+  // and found nothing to arrive at. Plain rather than the neighbour's shutter type - a shutter
+  // needs the room's own tag to reopen it, and until each of these rooms has that, a shutter here
+  // is a way to be sealed in. Appended, never inserted.
+  0x79: [0x3660, 0x0001, 0x0022, 0x0000],
   0x88: [0x0010, 0x0a71],
   0x9a: [0x0020, 0x0071],
   0xad: [0x3680, 0x0021, 0x1881],
-  0xbd: [0x3680, 0x0021, 0x0083],
-  0xcd: [0x3680, 0x0021],
-  0xdd: [0x1083],
+  // North position 2, answering room 0xad's south edge door at the same column group. The three
+  // pairs below are the same defect the miniboss room had: the room BELOW carries an outer-edge
+  // record and this one carried only its own inner wall's two faces, so the transition started
+  // and found nothing to arrive at. Plain rather than the neighbour's shutter type - a shutter
+  // needs the room's own tag to reopen it, and until each of these rooms has that, a shutter here
+  // is a way to be sealed in. Appended, never inserted.
+  0xbd: [0x3680, 0x0021, 0x0083, 0x0020],
+  // South position 8, the room's own south edge, which is where the engine puts that position -
+  // positions 0-2 are the INNER wall between this room's two halves, and both records above are
+  // already that wall's two faces. Without an edge record the room had no way in at all: the water
+  // room's north door starts the transition, the engine finds nothing to arrive at, and it aborts
+  // partway - dropping the player deep into the room with the scroll left mid-move. The art here
+  // is the port's own shutter, which this engine's door drawer cannot reproduce, so the record is
+  // reasoned from the geometry rather than matched against the tilemap: it answers the water
+  // room's north door at the same columns, which is the cross-boundary agreement the rest of this
+  // table is built on. Appended, never inserted - slots are handed out in list order.
+  //
+  // A shutter, like the same edge in the dungeon's three other arenas: all four rooms carry the
+  // boss tag pair, and the three whose record survived give this edge the shutter type. It is
+  // safe to shut the player in only because that tag pair is remapped to open on a cleared room
+  // (GbaAlttp_FilterRoomTags) - the crystal it otherwise waits on is one this dungeon never gets.
+  0xcd: [0x3680, 0x0021, 0x1881],
+  // North position 2, read off the room's own art: the opening sits at columns 46-49 on rows 4-6,
+  // which is where the engine places that position. Appended, never inserted - slots are handed
+  // out in list order and anything ahead of the teleport record renumbers it out from under the
+  // teleport handling. An earlier attempt used position 8, which the engine puts mid-room, and
+  // that is what drew doors in the middle of the water.
+  0xdd: [0x1083, 0x0020],
   0xe9: [0x0022, 0x0083],
   0xec: [0x3660, 0x0001, 0x1861],
-  0xfc: [0x3660, 0x0001, 0x0022],
+  // North position 0, answering room 0xec's south edge door at the same column group. The three
+  // pairs below are the same defect the miniboss room had: the room BELOW carries an outer-edge
+  // record and this one carried only its own inner wall's two faces, so the transition started
+  // and found nothing to arrive at. Plain rather than the neighbour's shutter type - a shutter
+  // needs the room's own tag to reopen it, and until each of these rooms has that, a shutter here
+  // is a way to be sealed in. Appended, never inserted.
+  0xfc: [0x3660, 0x0001, 0x0022, 0x0000],
 };
 
 /** Every room this dungeon owns; a plain door may only lead to one of them. */

@@ -150,6 +150,9 @@ void WasmLoadState(int slot) {
   // GBA entrance after restoring WRAM; the vanilla Pyramid event remains intact.
   if (GbaAlttp_IsAvailable() && !player_is_indoors && BYTE(overworld_screen_index) == 0x5b)
     GbaAlttp_ApplyPyramidEntrance();
+  // A snapshot taken before the extra dungeon's per-room save block was written can carry every
+  // room marked finished, which is how a boss came back dead in a room nobody had cleared.
+  GbaAlttp_SanitizeSaveBank();
   // A snapshot carries the palette buffers that were live when it was recorded, so a state saved
   // under a different sheet reinstates that sheet's colors — the selected one would sit unused in
   // the assets until some in-game event happened to reload gear palettes. Re-push it here.

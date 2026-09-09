@@ -29,7 +29,15 @@ enum {
   /* Per-slot extension block in the SRAM tail, past the third slot's mirror. */
   kBankSramBase = 0x1E00,
   kBankSramSlotStride = 0x40,
-  kBankSavedRoomsMax = kBankSramSlotStride / 2,
+  /* Written at the head of a block this code has actually stored, and checked before the block
+     is believed. Save RAM that nothing has written reads as 0xff throughout, and a room word of
+     0xffff does not decode as an empty room - it decodes as a finished one, every door opened,
+     every chest taken and the boss dead. A dungeon whose bank had never been stored therefore
+     came up already completed: bosses despawned on the frame they spawned, and the shutters they
+     were meant to open were open on arrival. There is no format migration to do, because a block
+     without this word is one nothing ever wrote. */
+  kBankStoredMagic = 0x5242,
+  kBankSavedRoomsMax = (kBankSramSlotStride - 2) / 2,
 };
 
 uint16 *SaveDungInfoFor(int room) {
@@ -56,12 +64,14 @@ void GameHook_BankSaveStore(int sram_offset) {
     return;
   uint8 *dst = g_zenv.sram + kBankSramBase + (sram_offset / 0x500) * kBankSramSlotStride;
   memset(dst, 0, kBankSramSlotStride);
+  dst[0] = (uint8)kBankStoredMagic;
+  dst[1] = (uint8)(kBankStoredMagic >> 8);
   const uint16 *rooms;
   int count = BankRoomList(&rooms);
   for (int i = 0; i < count; i++) {
     uint16 word = *SaveDungInfoFor(rooms[i]);
-    dst[i * 2] = (uint8)word;
-    dst[i * 2 + 1] = (uint8)(word >> 8);
+    dst[2 + i * 2] = (uint8)word;
+    dst[3 + i * 2] = (uint8)(word >> 8);
   }
 }
 
@@ -72,8 +82,28 @@ void GameHook_BankSaveLoad(int sram_offset) {
      another slot's progress through leftover WRAM. */
   memset(save_dung_info_bank1, 0, kBankRooms * sizeof(uint16));
   const uint8 *src = g_zenv.sram + kBankSramBase + (sram_offset / 0x500) * kBankSramSlotStride;
+  if ((uint16)(src[0] | (src[1] << 8)) != kBankStoredMagic)
+    return;  /* nothing ever stored this slot's bank, so the cleared array is the truth */
   const uint16 *rooms;
   int count = BankRoomList(&rooms);
   for (int i = 0; i < count; i++)
-    *SaveDungInfoFor(rooms[i]) = (uint16)(src[i * 2] | (src[i * 2 + 1] << 8));
+    *SaveDungInfoFor(rooms[i]) = (uint16)(src[2 + i * 2] | (src[3 + i * 2] << 8));
+}
+
+/**
+ * Undo the same reading of unwritten memory inside an already-recorded snapshot.
+ *
+ * A save state carries the bank as it stood in WRAM, so one taken while the all-0xff block was
+ * being believed has the finished-dungeon words baked into it, and loading it brings them back
+ * however the block itself is fixed. A word of 0xffff is not a room anyone can be standing in -
+ * it claims every door open and every chest taken in a room whose quadrants were never even
+ * entered - so it is read here as the absence of a record rather than as a record.
+ */
+void GbaAlttp_SanitizeSaveBank(void) {
+  if (!GbaAlttp_IsBankRoom(kBankFirstRoom))
+    return;
+  for (int i = 0; i < kBankRooms; i++) {
+    if (save_dung_info_bank1[i] == 0xffff)
+      save_dung_info_bank1[i] = 0;
+  }
 }

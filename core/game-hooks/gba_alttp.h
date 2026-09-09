@@ -27,6 +27,7 @@ bool GbaAlttp_IsBankRoom(uint16 room);
 uint16 *SaveDungInfoFor(int room);
 void GameHook_BankSaveStore(int sram_offset);
 void GameHook_BankSaveLoad(int sram_offset);
+void GbaAlttp_SanitizeSaveBank(void);
 void GbaAlttp_PatchTransAuxStaging(void);
 void GbaAlttp_PinCameraBounds(void);
 bool GbaAlttp_LoadBakedRoom(void);

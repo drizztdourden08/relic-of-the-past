@@ -30,13 +30,28 @@ const args = parseArguments();
 const snesPath = resolve(args.snes ?? 'test-roms/Legend of Zelda, The - A Link to the Past (USA).sfc');
 const gbaPath = resolve(args.gba ?? 'test-roms/Legend of Zelda, The - A Link to the Past & Four Swords (USA).gba');
 const outputPath = resolve(args.out ?? 'core/wasm-build/assets/zelda3_assets.dat');
-const set = compileAlttpAssetSet({
-  snes: loadRomFromBuffer(readFileSync(snesPath)),
-  gbaAlttp: loadGbaAlttpRomFromBuffer(readFileSync(gbaPath)),
-});
-if (!set.gbaSupplement) throw new Error('The GBA supplement was not produced');
 
-mkdirSync(dirname(outputPath), { recursive: true });
-writeFileSync(outputPath, Buffer.concat([set.base, set.gbaSupplement]));
-console.log(`Built playable SNES + GBA ALttP assets at ${outputPath}`);
+const build = async (): Promise<void> => {
+  const set = await compileAlttpAssetSet({
+    snes: loadRomFromBuffer(readFileSync(snesPath)),
+    gbaAlttp: loadGbaAlttpRomFromBuffer(readFileSync(gbaPath)),
+  });
+
+  // Each optional cartridge carries its own error boundary, so a failure here names a container
+  // that could not be read instead of a missing file. Reporting the reason is the whole point of
+  // that boundary: silence would look identical to "this ROM has no supplement".
+  for (const outcome of set.supplements) {
+    if (!outcome.ok) throw new Error(`The ${outcome.id} supplement was not produced: ${outcome.reason}`);
+  }
+  const containers = set.supplements.flatMap(outcome => (outcome.ok ? [Buffer.from(outcome.container)] : []));
+
+  mkdirSync(dirname(outputPath), { recursive: true });
+  writeFileSync(outputPath, Buffer.concat([set.base, ...containers]));
+  console.log(`Built playable SNES + GBA ALttP assets at ${outputPath}`);
+};
+
+build().catch((error: unknown) => {
+  console.error(error instanceof Error ? error.message : String(error));
+  process.exit(1);
+});
 

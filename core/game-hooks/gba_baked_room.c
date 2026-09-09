@@ -242,14 +242,39 @@ uint8 GbaAlttp_AdjustSpriteOamFlags(uint8 charnum, uint8 flags) {
  * through. Its own additions sit past the end of the handler table, where the vanilla
  * dispatch would read off the end of the array, so those are dropped instead.
  */
+enum {
+  kTagHandlerCount = 64,
+  /* Opens a boss room's shutter once this palace's crystal is held. */
+  kTagBossPrizeDoor = 21,
+  /* Opens the same shutter once every sprite in the room is dead. */
+  kTagRoomClearDoor = 10,
+};
+
+/**
+ * One tag, translated into what this engine can actually carry out.
+ *
+ * The prize-door tag asks whether the player holds this palace's crystal, and reads the bit to
+ * test from a fifteen-entry table indexed by the palace. This dungeon's index lands on an entry
+ * that is zero, so the test is false however the fight goes and the shutter can never reopen -
+ * a room the player would be walked into and left in. Its partner, the tag that hands out the
+ * prize, is worse than useless: it ends the dungeon through an exit table this dungeon has no
+ * row in, and the engine asserts on the lookup.
+ *
+ * The room-clear tag opens that same shutter on the condition this room actually expresses -
+ * everything in it is dead - so the fight, the shutter and the way onward all work, and none of
+ * it is a second mechanism running alongside the engine's own.
+ */
+static uint8 RemapRoomTag(uint8 tag) {
+  if (tag >= kTagHandlerCount)
+    return 0;
+  return tag == kTagBossPrizeDoor ? kTagRoomClearDoor : tag;
+}
+
 void GbaAlttp_FilterRoomTags(uint8 *first, uint8 *second) {
-  enum { kTagHandlerCount = 64 };
   if (!GbaAlttp_IsBankRoom(dungeon_room_index))
     return;
-  if (*first >= kTagHandlerCount)
-    *first = 0;
-  if (*second >= kTagHandlerCount)
-    *second = 0;
+  *first = RemapRoomTag(*first);
+  *second = RemapRoomTag(*second);
 }
 
 /**
