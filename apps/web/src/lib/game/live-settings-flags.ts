@@ -40,6 +40,7 @@ const FEATURE_FLAGS = {
   secondaryItemSlots:     268435456,
   autoSkipDialog:         536870912,
   developerTools:         1073741824,
+  prefillFileName:        2147483648,
 } as const;
 
 // When non-null, forces the auto-skip-dialog bit to this value in the pushed features word regardless of
@@ -323,6 +324,7 @@ const buildFeatureFlags = (s: GameSettings): number => {
   if (isOn('secondaryItemSlots')) flags |= FEATURE_FLAGS.secondaryItemSlots;
   if (autoSkipDialogOverride === null ? isOn('autoSkipDialog') : autoSkipDialogOverride)
     flags |= FEATURE_FLAGS.autoSkipDialog;
+  if (isOn('prefillFileName')) flags |= FEATURE_FLAGS.prefillFileName;
   // Not yet registered as FeatureDefs (the 16 snesrev quality-of-life flags: see feature-registry.ts),
   // so the resolver can't reach them; gated inline until that follow-up pass lands. The un-bypassable
   // C-side mask (zelda_rtl.c kGateWordParityMask) already covers every one of these regardless.
@@ -361,7 +363,8 @@ const buildFeatureFlags = (s: GameSettings): number => {
   const devWanted = developerToolsOverride === null ? s.developerToolsEnabled : developerToolsOverride;
   if (devWanted && !s.vanillaSafe)
     flags |= FEATURE_FLAGS.developerTools;
-  return flags;
+  // Bit 31 makes a JS bitwise OR negative; hand the word over as the unsigned value it is.
+  return flags >>> 0;
 };
 
 // The 42 split bug-fix toggles live in two extra bitmask words (features1/features2). Each fix is on when
