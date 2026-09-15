@@ -14,8 +14,8 @@ const LW_DESERT_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-047',
-    gameId: { roomId: 292, chestIndex: 0 },
-    kind: 'chest',
+    gameId: { roomId: 294, mask: 512 },
+    kind: 'standing',
     screenId: 'screen-168',
     randomizerName: 'Checkerboard Cave',
     vanillaItemIds: ['item-024'],
@@ -30,7 +30,7 @@ const LW_DESERT_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-080',
-    gameId: { owScreen: 108, mask: 64 },
+    gameId: { bufferIndex: 22, mask: 1 },
     kind: 'standing',
     screenId: 'screen-002',
     randomizerName: 'Bombos Tablet',

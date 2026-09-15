@@ -155,6 +155,9 @@ extern const uint16 kOverworld_Size2[2];  // area camera X span (small/big); use
 // partway through the transition, so we must keep our own copy of the source.
 static uint16 g_ow_src_map16[0x1000];  // copy of dung_bg2 (64x64 map16) for the source area
 static int g_ow_src_xs, g_ow_src_xe, g_ow_src_ys, g_ow_src_ye, g_ow_src_area;
+// First scroll-chain submodule a frame can report with the destination map in dung_bg2: submodule 3
+// (Module09_LoadNewMapAndGFX) decompresses it and advances to 4 before the frame is drawn.
+enum { kOwSubmoduleDestMapLoaded = 4 };
 
 // Blit one overworld area's map16 (64-wide) into the linear world buffer as map8 tiles, at tile offset
 // (offX, offY). The offset may be NEGATIVE (the map starts before the buffer), so the source range is
@@ -178,7 +181,7 @@ static void BlitAreaMap16(uint16 *world, int worldW, int worldH, const uint16 *m
 // Expand the resident overworld map16 (dung_bg2 — the full current area) into the BG2 layer's linear
 // "world" tilemap so the widescreen view can extend past the 512px SNES tilemap into real map instead of
 // wrapping. Out-of-area columns clamp to transparent (edge-mirror). Also snapshots the area for transitions.
-static void BuildOverworldWorldTilemap() {
+static void BuildOverworldWorldTilemap(bool specialArea) {
   BgLayer *bg = &g_zenv.ppu->bgLayer[1];  // BG2 carries the overworld terrain (dung_bg2)
   if (!PpuEnsureWorldTilemap(bg)) { bg->worldW = bg->worldH = 0; bg->useWorld = false; return; }  // OOM: stock path
   int originX = ow_scroll_vars0.xstart, originY = ow_scroll_vars0.ystart;
@@ -186,13 +189,24 @@ static void BuildOverworldWorldTilemap() {
   int h = (((int)ow_scroll_vars0.yend - originY) >> 3) + 32;
   w = IntMax(0, IntMin(w, kPpuWorldTiles));
   h = IntMax(0, IntMin(h, kPpuWorldTiles));
-  // Where dung_bg2's tile (0,0) actually sits in world pixels. For a normal area that IS the scroll
-  // range's origin, but the overworld special areas pack several sub-locations into one map16 and give
-  // each its own camera bounds, so the two diverge there by whole screens. Blitting at (0,0) regardless
-  // made such a sub-location draw the tiles of whichever one sits at the map origin, while collision and
-  // every other lookup — which all go through this same origin — kept using the right ones.
-  int offX = ((((int)overworld_offset_base_x) << 3) - originX) >> 3;
-  int offY = (((int)overworld_offset_base_y) - originY) >> 3;
+  // Where dung_bg2's tile (0,0) actually sits in world pixels. The overworld special areas pack several
+  // sub-locations into one map16 and give each its own camera bounds, so the map's origin and the scroll
+  // range's origin are different values there. Blitting at (0,0) regardless made such a sub-location draw
+  // the tiles of whichever one sits at the map origin, while collision and every other lookup, which all
+  // go through this same origin, kept using the right ones.
+  //
+  // A normal area has the two equal by construction: Overworld_SetCameraBoundaries and
+  // Overworld_LoadGFXAndScreenSize read the same kOverworld_OffsetBase* entry. So the offset is zero
+  // there, and consulting the base can only do harm, because the two are updated at different moments.
+  // A crossing repoints the base at the destination area as it starts, while the camera bounds keep
+  // describing the area still on screen until the scroll lands. Between those two moments the pair names
+  // two different areas, the offset comes out one whole area wide, and the blit lands outside the buffer
+  // entirely, so every visible frame of the crossing draws the no-data gap instead of terrain.
+  int offX = 0, offY = 0;
+  if (specialArea) {
+    offX = ((((int)overworld_offset_base_x) << 3) - originX) >> 3;
+    offY = (((int)overworld_offset_base_y) - originY) >> 3;
+  }
   // dung_bg2 is a 64x64 map16 = 128x128 map8 tiles, and that is its whole extent: blitting further would
   // read past it (the special overworld's scroll range alone reaches 132 tile rows).
   int bw = 128, bh = 128;
@@ -226,7 +240,7 @@ static void BuildOverworldWorldTilemap() {
 // Build a world tilemap spanning the source area (from the snapshot) AND the destination area (live
 // dung_bg2, loaded partway through the transition), so the camera-locked wide/tall view pans smoothly
 // across the seam with real content on both sides — no 512px wrap, no black, at any aspect ratio.
-static void BuildTransitionWorldTilemap(int destArea) {
+static void BuildTransitionWorldTilemap(int destArea, bool destMapLoaded) {
   BgLayer *bg = &g_zenv.ppu->bgLayer[1];
   if (!PpuEnsureWorldTilemap(bg)) { bg->worldW = bg->worldH = 0; bg->useWorld = false; return; }  // OOM: stock path
   // Blit each area's ACTUAL map16 extent (32x32 small / 64x64 large = 64/128 map8 tiles per side), NOT the
@@ -244,8 +258,11 @@ static void BuildTransitionWorldTilemap(int destArea) {
   memset(bg->world, 0, (size_t)w * h * sizeof(uint16));  // gaps / out-of-area = transparent
   BlitAreaMap16(bg->world, w, h, g_ow_src_map16, srcTiles, srcTiles,
                 (g_ow_src_xs - left) >> 3, (g_ow_src_ys - top) >> 3, map8);
-  BlitAreaMap16(bg->world, w, h, dung_bg2, destTiles, destTiles,
-                (destXs - left) >> 3, (destYs - top) >> 3, map8);
+  // Until the destination is decompressed, dung_bg2 still holds the source. Blitting it at the
+  // destination origin drew the source's own terrain across the seam as if it were the next area.
+  if (destMapLoaded)
+    BlitAreaMap16(bg->world, w, h, dung_bg2, destTiles, destTiles,
+                  (destXs - left) >> 3, (destYs - top) >> 3, map8);
   bg->worldW = w, bg->worldH = h;
   bg->worldOffX = ((int)BG2HOFS_copy2 & ~0x3ff) - left;
   bg->worldOffY = ((int)BG2VOFS_copy2 & ~0x3ff) - top;
@@ -340,7 +357,7 @@ static void ConfigurePpuSideSpace() {
           g_lock_last_shift_y = g_zenv.ppu->cameraLockShiftY;
           g_lock_last_cam_x = BG2HOFS_copy2;
           g_lock_last_cam_y = BG2VOFS_copy2;
-          BuildOverworldWorldTilemap();
+          BuildOverworldWorldTilemap(isSpecialArea);
         }
       } else {
         // Non-stationary outdoor sub-states. A screen-to-screen scroll transition (the submodule 1-8 chain)
@@ -388,11 +405,34 @@ static void ConfigurePpuSideSpace() {
             int destShiftY = destCamY - CameraLockClamp(destCamY, destYs, destYe, (int)g_oam_tall_budget);
             g_zenv.ppu->cameraLockShiftX = g_lock_last_shift_x + (destShiftX - g_lock_last_shift_x) * num / den;
             g_zenv.ppu->cameraLockShiftY = g_lock_last_shift_y + (destShiftY - g_lock_last_shift_y) * num / den;
-            // Render the full wide/tall view: the two-area world tilemap (below) supplies real content on
-            // both sides of the seam; no-data gaps fall through to the black backdrop in PpuDrawBackground.
-            extra_left = extra_right = (int)g_oam_wide_budget;
-            extra_top = extra_bottom = (int)g_oam_tall_budget;
-            BuildTransitionWorldTilemap(destArea);
+            // The margins come from the map bounds this frame's view shows, measured from the rendered
+            // camera exactly as the stationary branch does, so a margin exists only past the map and
+            // carries straight across the crossing. A frame can only show an area whose map is loaded.
+            // Submodule 3 decompresses the destination into dung_bg2 and advances to 4 within the same
+            // frame, so a frame that reports 1-3 still holds the source there: the view shows the source
+            // alone, exactly like the stationary frame before it, and the destination is not blitted.
+            // From 4 to 6 both maps are real, so the bounds are their union. Once the scroll has landed
+            // (7-8) the live scroll bounds already name the arrival area, and the frames match the
+            // stationary one that follows. PpuSetExtraSideSpace caps each side to its budget, so a side
+            // deep inside the map renders its full budget. No-data gaps inside the union still fall
+            // through to the black backdrop.
+            bool destMapLoaded = submodule_index >= kOwSubmoduleDestMapLoaded;
+            int viewH = (int)BG2HOFS_copy2 - g_zenv.ppu->cameraLockShiftX;
+            int viewV = (int)BG2VOFS_copy2 - g_zenv.ppu->cameraLockShiftY;
+            int shownXs = (int)ow_scroll_vars0.xstart, shownXe = (int)ow_scroll_vars0.xend;
+            int shownYs = (int)ow_scroll_vars0.ystart, shownYe = (int)ow_scroll_vars0.yend;
+            if (!destMapLoaded) {
+              shownXs = g_ow_src_xs, shownXe = g_ow_src_xe;
+              shownYs = g_ow_src_ys, shownYe = g_ow_src_ye;
+            } else if (submodule_index <= 6) {
+              shownXs = IntMin(g_ow_src_xs, destXs), shownXe = IntMax(g_ow_src_xe, destXe);
+              shownYs = IntMin(g_ow_src_ys, destYs), shownYe = IntMax(g_ow_src_ye, destYe);
+            }
+            extra_left = IntMax(0, viewH - shownXs);
+            extra_right = IntMax(0, shownXe - viewH);
+            extra_top = IntMax(0, viewV - shownYs);
+            extra_bottom = IntMax(0, shownYe - viewV);
+            BuildTransitionWorldTilemap(destArea, destMapLoaded);
             // The full-width pan exposes the no-data gaps; PpuDrawBackground paints them with a sentinel that
             // BlackBackdrop renders black, matching the letterboxed margins — while the real green backdrop that
             // shows through transparent terrain (tree bases, doorways) is left untouched. (PpuBeginDrawing
@@ -408,7 +448,7 @@ static void ConfigurePpuSideSpace() {
             extra_right = (int)ow_scroll_vars0.xend - clampedH;
             extra_top = IntMax(0, clampedV - (int)ow_scroll_vars0.ystart);
             extra_bottom = (int)ow_scroll_vars0.yend - clampedV;
-            BuildOverworldWorldTilemap();
+            BuildOverworldWorldTilemap(isSpecialArea);
           }
         }
         if (!g_zenv.ppu->bgLayer[1].useWorld) {

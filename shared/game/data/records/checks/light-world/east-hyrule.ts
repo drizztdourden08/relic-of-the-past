@@ -95,8 +95,8 @@ const LW_EAST_HYRULE_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-046',
-    gameId: { roomId: 283, chestIndex: 0 },
-    kind: 'chest',
+    gameId: { roomId: 283, mask: 512 },
+    kind: 'standing',
     screenId: 'screen-172',
     randomizerName: 'Graveyard Cave',
     vanillaItemIds: ['item-024'],

@@ -28,7 +28,7 @@ void GameHook_ReceiptPoseGfxGuard(void) {
     uint8 gfx = (item >= 0x34 && item <= 0x36) ? (uint8)(0x24 + ancilla_arr1[k])
                                                : kReceiveItemGfx[item];
     if (gfx != 0xff)
-      DecodeAnimatedSpriteTile_variable(gfx);
+      GameHook_DecodeReceiptTiles(gfx);
     // A capacity upgrade's icon rides the same slot; put it back over the fresh decode.
     GameHook_RepairUpgradeIcon();
     return;

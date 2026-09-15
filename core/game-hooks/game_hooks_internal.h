@@ -33,6 +33,9 @@ bool GameHook_DrawSpriteAsReceiptItem(int k, int grant, int x_adj, int y_adj);
 // True while a hold-up receipt lives: the decode slot is the held-up item's, and a shop
 // spot ignores a press until the ceremony is over.
 bool GameHook_HoldUpReceiptLive(void);
+// DecodeAnimatedSpriteTile_variable with the tilemap upload's destination table at 0x14000
+// kept intact (receipt_tile_decode.c). Every hook-side receipt decode goes through this.
+void GameHook_DecodeReceiptTiles(uint8 gfx);
 // The memo of |k|'s picture: kept from the decode slot once the caller has committed this
 // frame's finished picture for |grant|, and drawn back, without any decode, for the frames
 // the hold-up owns the slot. The draw is false when no memo of |grant| stands for |k|.

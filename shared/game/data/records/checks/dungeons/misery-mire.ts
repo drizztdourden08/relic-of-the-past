@@ -6,7 +6,7 @@ import { hasFireSource } from '@shared/game/data/requirements/helpers';
 const DUNGEON_MISERY_MIRE_CHECKS: CheckRecord[] = [
   {
     id: 'check-208',
-    gameId: { roomId: 195, chestIndex: 1 },
+    gameId: { roomId: 195, chestIndex: 0 },
     kind: 'chest',
     screenId: 'screen-436',
     dungeonId: 'dungeon-011',
@@ -16,7 +16,7 @@ const DUNGEON_MISERY_MIRE_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-209',
-    gameId: { roomId: 195, chestIndex: 0 },
+    gameId: { roomId: 195, chestIndex: 1 },
     kind: 'chest',
     screenId: 'screen-436',
     dungeonId: 'dungeon-011',

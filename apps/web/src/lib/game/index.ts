@@ -30,6 +30,8 @@ export {
   BottleContents,
 } from './cheats';
 export type { BottleContentsValue } from './cheats';
+export { grantFromCheck, planCheckGrant } from './cheat-check-grant';
+export type { CheckGrantPlan } from './cheat-check-grant';
 export { getInputManager, resolveFunctionMappingIcon } from '../input/input-manager';
 export type { UnknownItemEntry } from './tracker';
 export {

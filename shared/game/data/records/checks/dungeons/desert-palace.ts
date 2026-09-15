@@ -6,7 +6,7 @@ import { canKillMostThings } from '@shared/game/data/requirements/helpers';
 const DUNGEON_DESERT_PALACE_CHECKS: CheckRecord[] = [
   {
     id: 'check-125',
-    gameId: { roomId: 99, chestIndex: 0 },
+    gameId: { roomId: 115, chestIndex: 0 },
     kind: 'chest',
     screenId: 'screen-125',
     dungeonId: 'dungeon-004',
@@ -27,7 +27,7 @@ const DUNGEON_DESERT_PALACE_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-127',
-    gameId: { roomId: 115, chestIndex: 0 },
+    gameId: { roomId: 116, chestIndex: 0 },
     kind: 'chest',
     screenId: 'screen-129',
     dungeonId: 'dungeon-004',
@@ -37,7 +37,7 @@ const DUNGEON_DESERT_PALACE_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-128',
-    gameId: { roomId: 117, chestIndex: 0 },
+    gameId: { roomId: 133, chestIndex: 0 },
     kind: 'chest',
     screenId: 'screen-131',
     dungeonId: 'dungeon-004',
@@ -47,7 +47,7 @@ const DUNGEON_DESERT_PALACE_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-129',
-    gameId: { roomId: 116, chestIndex: 0 },
+    gameId: { roomId: 117, chestIndex: 0 },
     kind: 'chest',
     screenId: 'screen-130',
     dungeonId: 'dungeon-004',

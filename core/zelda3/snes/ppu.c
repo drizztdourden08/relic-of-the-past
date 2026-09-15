@@ -631,8 +631,17 @@ static void PpuDrawBackground_4bpp_mosaic(Ppu *ppu, uint y, bool sub, uint layer
         for (int q = 0; q < w; q++) { if (dstz[q] == 0x0500) dstz[q] = kPpuWorldGapPixel; }
       }
       dstz += w, x += w;
-      for (; x >= 8; x -= 8)
-        tp = (tp != tp_last) ? tp + 1 : tp_next;
+      // Crossing into the other half of the 2-screen tilemap has to re-arm both bounds, the way NEXT_TP
+      // does in the unmosaicked fetch. Stepping to tp_next alone left tp_last on the half already passed,
+      // so a run longer than one half past the seam read on past the row's 64 tiles. A 256px view never
+      // runs that far, but the wide view does, and on the tilemap's last row the overrun reads tile
+      // graphics as tilemap entries. The linear world row is gathered to its full run length up front and
+      // never reaches tp_last, so it keeps the plain step.
+      for (; x >= 8; x -= 8) {
+        if (tp != tp_last) tp += 1;
+        else if (useWorld) tp = tp_next;
+        else tp = tp_next, tp_next = tp_last - 31, tp_last = tp + 31;
+      }
       w = ppu->mosaicSize;
     } while (dstz_end - dstz != 0);
   }

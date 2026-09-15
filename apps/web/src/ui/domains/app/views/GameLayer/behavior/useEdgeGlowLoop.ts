@@ -22,12 +22,13 @@ const FADE_SPEED = 4.0; // per second (0 to 1 in 250ms)
 interface FadeState {
   prevBlackLeft: number;
   prevBlackRight: number;
+  prevBlackBottom: number;
   fadeOpacity: number;
   fadeTarget: number;
   lastTime: number;
 }
 
-const initialFade = (): FadeState => ({ prevBlackLeft: -1, prevBlackRight: -1, fadeOpacity: 1.0, fadeTarget: 1.0, lastTime: 0 });
+const initialFade = (): FadeState => ({ prevBlackLeft: -1, prevBlackRight: -1, prevBlackBottom: -1, fadeOpacity: 1.0, fadeTarget: 1.0, lastTime: 0 });
 
 const useEdgeGlowLoop = (params: EdgeGlowLoopParams): void => {
   const { status, canvasKey, canvasRef, fxCanvasRef, glowRendererRef, edgeEffectRef, setBufSize } = params;
@@ -70,11 +71,15 @@ const useEdgeGlowLoop = (params: EdgeGlowLoopParams): void => {
           renderer.setMaxBounds(vp.extraLeftRight, vp.extraLeftRight, maxBottom);
         }
 
-        // Detect screen transition: bounds jump by >10px ONLY during overworld movement
+        // Detect screen transition: bounds jump by >10px ONLY during overworld movement.
+        // The bottom bound counts too. A crossing between two areas of equal width moves
+        // neither horizontal bound, so an up or down crossing never tripped this and the
+        // glow kept compositing the departing screen's edge straight through it.
         if (s.prevBlackLeft >= 0 && isOverworld) {
           const leftDelta = Math.abs(vp.blackLeft - s.prevBlackLeft);
           const rightDelta = Math.abs(vp.blackRight - s.prevBlackRight);
-          if (leftDelta > 10 || rightDelta > 10) {
+          const bottomDelta = Math.abs(vp.blackBottom - s.prevBlackBottom);
+          if (leftDelta > 10 || rightDelta > 10 || bottomDelta > 10) {
             s.fadeTarget = 0;
             s.fadeOpacity = 0; // instant hide on transition
           }
@@ -82,6 +87,7 @@ const useEdgeGlowLoop = (params: EdgeGlowLoopParams): void => {
         if (isOverworld) {
           s.prevBlackLeft = vp.blackLeft;
           s.prevBlackRight = vp.blackRight;
+          s.prevBlackBottom = vp.blackBottom;
         }
 
         // If just came back and stable, fade in

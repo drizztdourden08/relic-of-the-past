@@ -21,6 +21,7 @@ import { pondPlanOf } from '../pond/pond-plan';
 import { walletCapacity } from '../state-helpers-capacity';
 import { PRICED_ENTRIES } from './tables/prices.data';
 import { shopSlotLocationOf } from '../shops/shop-slots';
+import { selfLockRuleOf } from '../shops/shop-self-lock';
 import { ruleForPrice } from './shop-prices';
 import type { ApWorld, Rule } from '../world.type';
 
@@ -37,11 +38,15 @@ const pondPricesOf = (world: ApWorld): ReadonlyMap<string, number> => {
 };
 
 /**
- * The shelf slots this world opened, each charging its own vanilla price. A
- * restocked slot charges that price AGAIN instead of a multiple of it: what
- * these rules express is that the wallet can HOLD the price, and rupees are
- * farmable between purchases, so a slot's third item needs the same wallet
- * rung as its first.
+ * The shelf slots this world opened, each charging the price the seed rolled
+ * for it, or its own vanilla price when nothing was rolled. A restocked slot
+ * charges that price AGAIN instead of a multiple of it: what these rules
+ * express is that the wallet can HOLD the price, and rupees are farmable
+ * between purchases, so a slot's third item needs the same wallet rung as its
+ * first.
+ *
+ * The price also decides what the slot may HOLD: a shelf never sells the
+ * capacity its own price is counted in (shops/shop-self-lock.ts).
  */
 const registerShopPriceRules = (world: ApWorld): void => {
   const rolled = world.options.shopPrices;
@@ -55,6 +60,11 @@ const registerShopPriceRules = (world: ApWorld): void => {
     const price = rolled?.[name] ?? { currency: 'rupees' as const, amount: row.slot.price };
     const afford = ruleForPrice(price);
     world.locationRules.set(name, (state) => existing(state) && afford(state));
+    // The shelf may not sell what its own price is counted in (shop-self-lock).
+    const selfLock = selfLockRuleOf(price);
+    if (selfLock === undefined) continue;
+    const allowed = world.getItemRule(name);
+    world.itemRules.set(name, (itemName) => allowed(itemName) && selfLock(itemName));
   }
 };
 

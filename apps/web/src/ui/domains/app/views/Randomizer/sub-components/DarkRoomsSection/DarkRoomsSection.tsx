@@ -33,9 +33,9 @@ const DarkRoomsSection = (props: DarkRoomsSectionProps) => {
   const { setting, impact, forced, onChange } = props;
   const readOnly = onChange === undefined;
   const tiles = useDarkRoomLightTiles(setting.lights, forced);
-  const lightsInert = readOnly || !setting.requireLight;
-  // A held-off tile only has something to say while a light is asked for at all.
-  const reasons = setting.requireLight ? tiles.filter((tile) => tile.reason !== undefined) : [];
+  // The requirement only shapes the seed logic. A ticked light lights rooms
+  // either way, so the tiles stay editable and keep their values when it is off.
+  const reasons = tiles.filter((tile) => tile.reason !== undefined);
   // Asked for a light with none left to count: the seed is rolled blind.
   const blind = setting.requireLight && tiles.every((tile) => !tile.checked);
 
@@ -57,7 +57,7 @@ const DarkRoomsSection = (props: DarkRoomsSectionProps) => {
           <DarkRoomLightTile
             key={tile.field}
             tile={tile}
-            disabled={lightsInert}
+            disabled={readOnly}
             onChange={readOnly ? undefined : (checked) => onChange({
               ...setting, lights: { ...setting.lights, [tile.field]: checked },
             })}

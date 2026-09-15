@@ -14,6 +14,10 @@
  * any meter, exactly as the lamp does (core/game-hooks/dark_room_lights.c).
  * That is why there is no cost, mode or amount to arm here, only the set.
  *
+ * "Dark rooms need a light" is not read here. It tells the fill whether a
+ * dark room needs a light, and turning it off never puts out a ticked light:
+ * lighting a room the rules already treat as passable can only help a seed.
+ *
  * The word itself is written by item-power.ts, which owns word 4 outright; the
  * two halves are OR'd there so a session makes one write.
  */
@@ -29,9 +33,8 @@ const DARK_ROOM_LIGHT_BIT = {
 
 /** The bits a setting asks for; zero leaves the lamp as the only light. */
 const darkRoomLightWordOf = (setting: DarkRoomSetting): number => {
-  // With no light required at all the seed never asked for one, so the core is
-  // left exactly as the game shipped and the player carries the lamp or not.
-  if (!setting.requireLight) return 0;
+  // The requirement is read by the seed logic alone. A ticked light lights a
+  // room with it on or off, so only the ticks decide the bits.
   let word = 0;
   if (setting.lights.fireRod) word |= DARK_ROOM_LIGHT_BIT.rod;
   if (setting.lights.bombos) word |= DARK_ROOM_LIGHT_BIT.medallion;

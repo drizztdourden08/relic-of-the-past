@@ -95,7 +95,7 @@ const DUNGEON_GANONS_TOWER_CHECKS_1: CheckRecord[] = [
   },
   {
     id: 'check-243',
-    gameId: { roomId: 124, chestIndex: 0 },
+    gameId: { roomId: 123, chestIndex: 0 },
     kind: 'chest',
     screenId: 'screen-391',
     dungeonId: 'dungeon-013',
@@ -104,7 +104,7 @@ const DUNGEON_GANONS_TOWER_CHECKS_1: CheckRecord[] = [
   },
   {
     id: 'check-244',
-    gameId: { roomId: 124, chestIndex: 1 },
+    gameId: { roomId: 123, chestIndex: 1 },
     kind: 'chest',
     screenId: 'screen-391',
     dungeonId: 'dungeon-013',
@@ -113,7 +113,7 @@ const DUNGEON_GANONS_TOWER_CHECKS_1: CheckRecord[] = [
   },
   {
     id: 'check-245',
-    gameId: { roomId: 124, chestIndex: 2 },
+    gameId: { roomId: 123, chestIndex: 2 },
     kind: 'chest',
     screenId: 'screen-391',
     dungeonId: 'dungeon-013',
@@ -122,7 +122,7 @@ const DUNGEON_GANONS_TOWER_CHECKS_1: CheckRecord[] = [
   },
   {
     id: 'check-246',
-    gameId: { roomId: 124, chestIndex: 3 },
+    gameId: { roomId: 123, chestIndex: 3 },
     kind: 'chest',
     screenId: 'screen-391',
     dungeonId: 'dungeon-013',
@@ -151,7 +151,7 @@ const DUNGEON_GANONS_TOWER_CHECKS_1: CheckRecord[] = [
   },
   {
     id: 'check-249',
-    gameId: { roomId: 123, chestIndex: 0 },
+    gameId: { roomId: 124, chestIndex: 0 },
     kind: 'chest',
     screenId: 'screen-390',
     dungeonId: 'dungeon-013',

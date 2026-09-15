@@ -11,6 +11,12 @@
  * the option off, the physically undeliverable remainder with it on), and
  * the capacity spots the profile locks: a vanilla meter's giver, and every
  * present fairy slot not proven deliverable.
+ *
+ * The rolled shelf prices are handed STRAIGHT THROUGH to the graph builder,
+ * because the access rules read them back off world.options (rules/prices.ts).
+ * Keeping them here priced every shelf at its vanilla rupees in logic while
+ * the running game charged the rolled price, which shipped seeds whose one
+ * bomb bag stood behind a five-bomb shelf (issue #219).
  */
 import { buildWorld } from '../build-world';
 import { registerRules } from '../rules/register';
@@ -107,7 +113,7 @@ const buildFillWorld = (options: FillWorldOptions): FillWorld => {
   // derivation it has always used and the graph is byte-identical.
   const pondLocations = presentPondLocations(pond, capacity, deliverableCapacityLocations);
   const world = buildWorld({
-    keyDropShuffle: true, capacity, medallions, shops, pond, darkRooms, unlitEscapeExempt,
+    keyDropShuffle: true, capacity, medallions, shops, shopPrices, pond, darkRooms, unlitEscapeExempt,
     progressiveTiers, progressiveModes, itemPower, retroBow, dungeonItems, accessibility,
     ...(pond.mode === 'capacity' ? {} : { pondLocations }),
   });

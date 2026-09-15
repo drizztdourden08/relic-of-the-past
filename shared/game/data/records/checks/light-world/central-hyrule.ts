@@ -35,7 +35,7 @@ const LW_CENTRAL_HYRULE_CHECKS: CheckRecord[] = [
   {
     id: 'check-009',
     gameId: { owScreen: 59, mask: 64 },
-    kind: 'event',
+    kind: 'standing',
     screenId: 'screen-026',
     randomizerName: 'Sunken Treasure',
     vanillaItemIds: ['item-024'],

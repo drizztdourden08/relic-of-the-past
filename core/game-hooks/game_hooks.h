@@ -296,6 +296,17 @@ void GameHook_MarkSubstitutedBossHeart(uint8 vanilla_item);
 // False with the gate down or nothing armed, so the vendored expression stands alone.
 bool GameHook_SubstitutedReceiptNeedsUnfreeze(void);
 
+// ─── Substituted milestone boss-exit exemption (boss_exit_gate.c) ───
+
+// The vanilla receive id of the receipt in flight, recorded by the substitution seam
+// (npc_overrides.c) before any table lookup, substituted or not.
+void GameHook_NoteReceiptVanillaId(uint8 vanilla_item);
+
+// The receipt cleanup's (ancilla.c) extra boss-exit exemption: true when the vanilla id of
+// this receipt was one of the four the vendored test names. False with the gate down, so the
+// vendored expression stands alone.
+bool GameHook_SubstitutedReceiptSkipsBossExit(void);
+
 // ─── Dungeon-item shuffle (dungeon_item_grants.c) ───
 
 // The targeted dungeon-item ids (0xC0-0xFD, one per kind and palace index, see
@@ -590,6 +601,11 @@ bool GameHook_OverrideShopBombSlot(int k);
 // Programmatically trigger a chest check: sets room flag, gives the item,
 // plays the hold-up animation, and fires the JS notification.
 void GameHook_TriggerCheck(uint16 room_id, uint8 chest_index, uint8 item_id);
+
+// The cheat console's form (WasmCheatTriggerCheck is its only caller): 0xFF records the chest with
+// nothing handed over, the loaded room also requires the player indoors, only a small chest has its
+// tiles stored, and a virtual id resolves through GameHook_ResolveGrantItem.
+void GameHook_TriggerCheckFromConsole(uint16 room_id, uint8 chest_index, uint8 item_id);
 
 // Programmatically trigger an NPC-type check (Uncle, the village elder, etc.)
 void GameHook_TriggerNpcCheck(uint8 flag_type, uint8 flag_mask, uint8 item_id,

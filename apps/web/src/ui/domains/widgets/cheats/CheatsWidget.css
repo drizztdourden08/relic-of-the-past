@@ -301,3 +301,23 @@
   color: var(--c-text);
   font-size: var(--text-sm);
 }
+
+/* ─── Check row: name over what the grant will hand out ─── */
+
+.cheats-checks__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.cheats-checks__gives {
+  display: block;
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cheats-checks__gives--blocked {
+  color: var(--c-warning);
+}

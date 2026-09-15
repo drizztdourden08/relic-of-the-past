@@ -28,7 +28,15 @@ const isGrantable = (itemId: number): boolean => {
   return false;
 };
 
-const deliverItem = (itemId: number, message?: string, source = 'randomizer', messageId?: number): string | null => {
+/**
+ * |onComplete| runs once the core has finished handing the item over, for work that must follow the
+ * pickup without sitting behind it as a second queue entry the player can see. The queue also fires
+ * it for an entry it DROPS (clear() on a session stop), so a caller that must tell the two apart
+ * checks something of its own.
+ */
+const deliverItem = (
+  itemId: number, message?: string, source = 'randomizer', messageId?: number, onComplete?: () => void,
+): string | null => {
   if (!isGrantable(itemId) || !isReady()) return null;
   // Sessions arm the receipt gates at start (receipt-grants.ts); arming again at enqueue
   // covers grants fired outside a session, and the WRAM latch (next frame) still lands
@@ -36,7 +44,7 @@ const deliverItem = (itemId: number, message?: string, source = 'randomizer', me
   armReceiptGates();
   const action: DeliveryAction = { type: 'give_item', itemId, receiptExport: true, messageId };
   const label = message ?? itemName(itemId);
-  return enqueue(label, source, action);
+  return enqueue(label, source, action, onComplete);
 };
 
 const deliverCheck = (roomId: number, chestIndex: number, itemId: number, message?: string, source = 'randomizer'): string | null => {

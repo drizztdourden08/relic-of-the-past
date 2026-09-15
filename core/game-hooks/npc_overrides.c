@@ -188,6 +188,9 @@ uint8 GameHook_OverrideNpcGrantItem(uint8 item) {
   bool anywhere = g_match_anywhere_once;
   g_bypass_once = false;
   g_match_anywhere_once = false;
+  // The receipt cleanup tests the id it ends up holding, so the id it was MEANT to test is
+  // recorded here, before any table lookup can replace it (boss_exit_gate.c).
+  GameHook_NoteReceiptVanillaId(item);
   // Neutral when the gate is off, so a populated table left over from a prior session
   // can never substitute while disabled (same rule as GameHook_OverrideChestItem).
   if (!(enhanced_features3 & kFeatures3_NpcOverrides)) return item;
