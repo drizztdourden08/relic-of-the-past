@@ -53,7 +53,7 @@ const DW_DARK_DEATH_MOUNTAIN_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-095',
-    gameId: { roomId: 60, chestIndex: 2 },
+    gameId: { roomId: 60, chestIndex: 3 },
     kind: 'chest',
     screenId: 'screen-464',
     randomizerName: 'Hookshot Cave - Bottom Right',
@@ -61,7 +61,7 @@ const DW_DARK_DEATH_MOUNTAIN_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-096',
-    gameId: { roomId: 60, chestIndex: 3 },
+    gameId: { roomId: 60, chestIndex: 2 },
     kind: 'chest',
     screenId: 'screen-464',
     randomizerName: 'Hookshot Cave - Bottom Left',

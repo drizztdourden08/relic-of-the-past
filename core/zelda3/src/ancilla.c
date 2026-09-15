@@ -3514,7 +3514,8 @@ endif_11:
   ancilla_type[k] = 0;
   flag_unk1 = 0;
   a = ancilla_item_to_link[k];
-  if (ancilla_step[k] == 3 && a != 0x10 && a != 0x26 && a != 0xf && a != 0x20) {
+  if (ancilla_step[k] == 3 && a != 0x10 && a != 0x26 && a != 0xf && a != 0x20 &&
+      !GameHook_SubstitutedReceiptSkipsBossExit()) {
     PrepareDungeonExitFromBossFight();
   }
 

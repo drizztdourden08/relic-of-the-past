@@ -107,7 +107,7 @@ void GameHook_RupeeGemHoldUpFrameEnd(void) {
       ancilla_arr1[k] = (uint8)((ancilla_arr1[k] + 1) % GEM_SHEET_COUNT);
       ancilla_arr3[k] = kGemGlintHold[ancilla_arr1[k]];
     }
-    DecodeAnimatedSpriteTile_variable((uint8)(GEM_SHEET_FIRST + ancilla_arr1[k]));
+    GameHook_DecodeReceiptTiles((uint8)(GEM_SHEET_FIRST + ancilla_arr1[k]));
     GameHook_RecolorRupeeGem(item);
     return;
   }

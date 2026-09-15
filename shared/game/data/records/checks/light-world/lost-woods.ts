@@ -26,7 +26,7 @@ const LW_LOST_WOODS_CHECKS: CheckRecord[] = [
     kind: 'standing',
     screenId: 'screen-036',
     randomizerName: 'Master Sword Pedestal',
-    vanillaItemIds: ['item-079'],
+    vanillaItemIds: ['item-002'],
     requirements: { count: { groupId: ITEM_GROUP_IDS.Pendants, n: 3 } },
   },
 ];

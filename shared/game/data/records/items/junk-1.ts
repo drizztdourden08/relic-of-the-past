@@ -9,6 +9,7 @@ const JUNK_ITEMS_1: ItemRecord[] = [
     origin: 'vanilla',
     category: 'junk',
     randomizerName: 'Bombs (3)',
+    spriteId: 'sprite-receipt-bomb-3',
   },
   {
     id: 'item-001',

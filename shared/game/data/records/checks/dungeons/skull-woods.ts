@@ -16,7 +16,7 @@ const DUNGEON_SKULL_WOODS_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-185',
-    gameId: { roomId: 88, chestIndex: 0 },
+    gameId: { roomId: 88, chestIndex: 1 },
     kind: 'chest',
     screenId: 'screen-371',
     dungeonId: 'dungeon-008',
@@ -26,7 +26,7 @@ const DUNGEON_SKULL_WOODS_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-186',
-    gameId: { roomId: 88, chestIndex: 1 },
+    gameId: { roomId: 88, chestIndex: 0 },
     kind: 'chest',
     screenId: 'screen-371',
     dungeonId: 'dungeon-008',
@@ -36,7 +36,7 @@ const DUNGEON_SKULL_WOODS_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-187',
-    gameId: { roomId: 87, chestIndex: 0 },
+    gameId: { roomId: 87, chestIndex: 1 },
     kind: 'chest',
     screenId: 'screen-370',
     dungeonId: 'dungeon-008',
@@ -55,7 +55,7 @@ const DUNGEON_SKULL_WOODS_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-189',
-    gameId: { roomId: 87, chestIndex: 1 },
+    gameId: { roomId: 87, chestIndex: 0 },
     kind: 'chest',
     screenId: 'screen-370',
     dungeonId: 'dungeon-008',

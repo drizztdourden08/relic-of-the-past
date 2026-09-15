@@ -45,7 +45,7 @@ const DUNGEON_ICE_PALACE_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-199',
-    gameId: { roomId: 94, chestIndex: 0 },
+    gameId: { roomId: 95, chestIndex: 0 },
     kind: 'chest',
     screenId: 'screen-377',
     dungeonId: 'dungeon-010',
