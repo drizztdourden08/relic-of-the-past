@@ -1026,7 +1026,8 @@ static const uint32 kGateWordParityMask[kGateWordCount] = {
   kFeatures0_DimFlashes | kFeatures0_DisableTelepathy | kFeatures0_CameraLockToViewport |
   kFeatures0_PerGroupVolume | kFeatures0_PauseOffscreenAI | kFeatures0_ExtendedRendering |
   kFeatures0_LinearWorldTilemap | kFeatures0_Ultrawide | kFeatures0_TallRender | kFeatures0_SmoothTransitions |
-  kFeatures0_InventoryReorder | kFeatures0_SecondaryItemSlots | kFeatures0_AutoSkipDialog,
+  kFeatures0_InventoryReorder | kFeatures0_SecondaryItemSlots | kFeatures0_AutoSkipDialog |
+  kFeatures0_PrefillFileName,
 
   // features1: all 32 split bug-fix bits (features_bugfixes.h) are affectsVanillaParity: true in
   // bundle-fixes.generated.ts and the word is fully packed with no unused bits, so the mask is total.

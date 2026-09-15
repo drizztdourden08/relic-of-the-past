@@ -41,6 +41,7 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'inventoryReorder',
   'secondaryItemSlots',
   'autoSkipDialog',
+  'prefillFileName',
   // World-item presentation (synced every frame via features3, same path as cheatsEnabled)
   'coloredRupees',
   'itemSheen',

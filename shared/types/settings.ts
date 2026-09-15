@@ -121,6 +121,8 @@ interface GameSettings {
   secondaryItemSlots: boolean;
   // Render dialog instantly and auto-advance message-box waits; choice prompts stay interactive. Non-vanilla.
   autoSkipDialog: boolean;
+  // A new file is named Link with the naming strip parked on End. Non-vanilla.
+  prefillFileName: boolean;
   turnWhileDashing: boolean;
   mirrorToDarkworld: boolean;
   collectItemsWithSword: boolean;

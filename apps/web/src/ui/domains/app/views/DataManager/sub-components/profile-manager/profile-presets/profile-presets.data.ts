@@ -42,6 +42,7 @@ const ENHANCED_CONFIG_OVERRIDES: Partial<GameSettings> = {
   gameChangingBugFixes: true,
   itemSheen: true,
   archeryNeedsBow: true,
+  prefillFileName: true,
   hudMode: 'enhanced',
   hudHeartMode: 'smooth',
   hudMagicMode: 'accurate',

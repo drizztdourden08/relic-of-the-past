@@ -59,6 +59,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   inventoryReorder: false,
   secondaryItemSlots: false,
   autoSkipDialog: false,
+  prefillFileName: false,
   turnWhileDashing: false,
   mirrorToDarkworld: false,
   collectItemsWithSword: false,
@@ -250,6 +251,7 @@ ItemSwitchLRLimit = ${boolToIni(settings.itemSwitchLRLimit)}
 InventoryReorder = ${boolToIni(settings.inventoryReorder)}
 SecondaryItemSlots = ${boolToIni(settings.secondaryItemSlots)}
 AutoSkipDialog = ${boolToIni(settings.autoSkipDialog)}
+PrefillFileName = ${boolToIni(settings.prefillFileName)}
 TurnWhileDashing = ${boolToIni(settings.turnWhileDashing)}
 MirrorToDarkworld = ${boolToIni(settings.mirrorToDarkworld)}
 CollectItemsWithSword = ${boolToIni(settings.collectItemsWithSword)}

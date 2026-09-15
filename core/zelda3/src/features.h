@@ -98,6 +98,10 @@ enum {
   // dev-only GameHook). Off = zero GameHook host-calls, same contract as kFeatures0_Haptics. Purely
   // observational; never changes gameplay, so it carries no vanilla-parity note.
   kFeatures0_DeveloperTools = 1073741824,
+
+  // A new file's naming screen opens named Link with the strip parked on End
+  // (core/game-hooks/file_name_prefill.c). Off: six blank boxes with the strip on A. The last free bit.
+  kFeatures0_PrefillFileName = 2147483648u,
 };
 
 // The 42 split bug-fix toggles (kFeatures1_* / kFeatures2_*) — generated from the Wave-1b catalog.
