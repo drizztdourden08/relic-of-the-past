@@ -751,9 +751,11 @@ void NameFile_EraseSave() {  // 8cd89c
   memset(g_zenv.sram + offs, 0, 0x500);
   uint16 *name = (uint16 *)(g_zenv.sram + offs + kSrmOffs_Name);
   name[0] = name[1] = name[2] = name[3] = name[4] = name[5] = 0xa9;
+  GameHook_ArmFileNamePrefill();
 }
 
 void NameFile_DoTheNaming() {  // 8cda4d
+  GameHook_PrefillFileName();
   static const int16 kNamePlayer_Tab1[26] = {
     -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1,
     -2, 2, -2, 2, -2, 2, -2, 2, -4, 4,

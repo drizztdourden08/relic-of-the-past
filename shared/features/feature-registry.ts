@@ -665,6 +665,21 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
     affectsVanillaParity: true,
     live: true,
   },
+  {
+    id: 'prefillFileName',
+    label: 'Prefill file name',
+    description: 'A new file opens its naming screen named Link, with the character strip parked on End.',
+    userMessage: 'New files start named Link, with the cursor on End.',
+    group: 'Quality of life',
+    kind: 'features0-bit',
+    origin: 'relic',
+    flag: 'kFeatures0_PrefillFileName',
+    bit: 2147483648,
+    default: false,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
 ]
 
 // Legacy bundle masters: no active C read sites, behavior moved to features1/2 gates.

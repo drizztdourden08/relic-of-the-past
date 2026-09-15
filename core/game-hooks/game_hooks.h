@@ -343,6 +343,15 @@ int GameHook_PendingDungeonItemPalace(void);
 // pond's consolation instead. Side effects: callers hold an open grant seam.
 bool GameHook_CapacityStep(int kind);
 
+// ─── Prefilled file name (file_name_prefill.c) ───
+
+// select_file.c NameFile_EraseSave, after the blank name is written: the next naming frame is
+// this screen's first.
+void GameHook_ArmFileNamePrefill(void);
+// select_file.c NameFile_DoTheNaming, first statement: on the armed frame, with
+// kFeatures0_PrefillFileName set, names the file Link, draws it and parks the strip on End.
+void GameHook_PrefillFileName(void);
+
 // ─── Capacity profile (capacity_profile.c) ───
 
 // New-file seam (select_file.c, right after the kSramInit_Normal memcpy): seed |block|
