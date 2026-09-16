@@ -18,7 +18,7 @@ static bool IsKnownSpecialAreaRoomIndex(uint16 idx) {
 // on leaving) where neither confirms the special-area flavor even though we're still
 // mid-transition, because the game hasn't finished updating them relative to the module
 // flip. Latching on any positive signal and holding it for as long as main_module_index
-// stays MODULE_FALLING_ENTRANCE closes that gap instead of the widescreen view (and the
+// stays MODULE_OVERWORLD_SPECIAL_AREA closes that gap instead of the widescreen view (and the
 // HUD/cheat gates) flashing back to collapsed for those few frames every single crossing.
 static bool s_stickySpecialArea = false;
 
@@ -29,7 +29,7 @@ static bool s_stickySpecialArea = false;
 // also the only form that updates the latch above, see GameHook_IsOverworldSpecialArea
 // for why the raw form must not.
 bool GameHook_IsOverworldSpecialAreaFor(int effectiveModule) {
-  if (effectiveModule != MODULE_FALLING_ENTRANCE) {
+  if (effectiveModule != MODULE_OVERWORLD_SPECIAL_AREA) {
     s_stickySpecialArea = false;
     return false;
   }
@@ -47,7 +47,7 @@ bool GameHook_IsOverworldSpecialAreaFor(int effectiveModule) {
 // one immediately, but there is no reason to let a pure input-gate query mutate location
 // state that ConfigurePpuSideSpace/WasmGetViewportInfo are the source of truth for).
 bool GameHook_IsOverworldSpecialArea(void) {
-  return main_module_index == MODULE_FALLING_ENTRANCE && s_stickySpecialArea;
+  return main_module_index == MODULE_OVERWORLD_SPECIAL_AREA && s_stickySpecialArea;
 }
 
 // ─── Inventory State Query ───
@@ -159,8 +159,8 @@ int WasmGetViewportInfo(void) {
       saved_module_for_menu != 0) {
     mod = saved_module_for_menu;
   }
-  // The overworld-special-area flavor of MODULE_FALLING_ENTRANCE is normal outdoor
-  // gameplay, so report it as such so consumers keyed on locationModule === MODULE_OVERWORLD
+  // MODULE_OVERWORLD_SPECIAL_AREA is normal outdoor gameplay, so report it as such so
+  // consumers keyed on locationModule === MODULE_OVERWORLD
   // (the edge-glow effect) still engage there. Checked against `mod` (already
   // menu-remapped above), not the raw module, so this still holds while paused.
   if (GameHook_IsOverworldSpecialAreaFor(mod)) {

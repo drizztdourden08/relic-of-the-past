@@ -14,13 +14,18 @@
 #define MODULE_MENU             14  // text / inventory / map overlay
 #define MODULE_SPOTLIGHT_CLOSE  15  // transient spotlight (iris closing)
 #define MODULE_SPOTLIGHT_OPEN   16  // transient spotlight (iris opening)
-#define MODULE_FALLING_ENTRANCE 11  // dungeon pit-fall transition, also reused unchanged by
-                                    // Overworld_CheckSpecialSwitchArea for the 3 vanilla overworld
+#define MODULE_PIT_FALL_ENTRANCE 17  // Module11_DungeonFallingEntrance: the crossing a hole in the
+                                     // overworld hands control to, from the palette bounce over the
+                                     // departure screen to the landing in the room below. A wallmaster
+                                     // sending the player back to the last entrance reuses it unchanged,
+                                     // starting from indoors; player_is_indoors tells the two halves
+                                     // apart, which is what GameHook_PitFallViewModule reads.
+#define MODULE_OVERWORLD_SPECIAL_AREA 11  // Module09_Overworld's second table entry, which
+                                    // Overworld_CheckSpecialSwitchArea hands the 3 vanilla overworld
                                     // locations reached by walking onto a switch tile. Interactive
-                                    // gameplay resumes normally in that flavor even though the module
-                                    // never returns to 9. GameHook_IsOverworldSpecialArea is the only
-                                    // reliable way to tell it apart from an actual, non-interactive
-                                    // pit-fall into a dungeon room.
+                                    // gameplay resumes normally here even though the module never
+                                    // returns to 9, so GameHook_IsOverworldSpecialArea exists to tell
+                                    // it apart from the plain outdoor module for the view gates.
 #define OVERWORLD_SPECIAL_AREA_SCREEN_MIN 128  // overworld_screen_index floor for the flavor above, since
                                                 // real overworld screens (light or dark world) are 0-127.
 

@@ -306,13 +306,17 @@ static void ConfigurePpuSideSpace() {
   int mod = main_module_index;
   if (mod == 14)
     mod = saved_module_for_menu;
-  // The overworld-special-area flavor of MODULE_FALLING_ENTRANCE is normal interactive
-  // outdoor gameplay even though the module never returns to 9. Checked against `mod`
+  // MODULE_OVERWORLD_SPECIAL_AREA is normal interactive outdoor gameplay even though the
+  // module never returns to 9. Checked against `mod`
   // (already menu-remapped above) via the *For() form, not GameHook_IsOverworldSpecialArea()
   // — that reads the raw module and would miss this case the instant the pause menu opens
   // over it (main_module_index is 14 then, not 11, even though the location hasn't
   // changed), collapsing the view back to the base 256x224 frame on every pause.
   bool isSpecialArea = GameHook_IsOverworldSpecialAreaFor(mod);
+  // The pit-fall crossing is its own module and shows no scene of its own: it renders the departure
+  // area, then the room below. Reading it as whichever of those two it is currently showing carries
+  // the wide/tall view through the crossing instead of collapsing to the base frame for its duration.
+  mod = GameHook_PitFallViewModule(mod);
   if (mod == 9 || isSpecialArea) {
     if (main_module_index == 14 && submodule_index == 7 && overworld_map_state >= 4) {
       // World map
