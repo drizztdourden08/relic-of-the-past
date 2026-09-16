@@ -66,6 +66,7 @@ const setDeveloperToolsOverride = (on: boolean | null): void => {
 const FEATURES2_FLAGS = {
   widescreenPlayArea: 16777216, // kFeatures2_WidescreenPlayArea = 1 << 24
   widescreenIdleAI: 33554432, // kFeatures2_WidescreenIdleAI = 1 << 25
+  widePitFallTransition: 67108864, // kFeatures2_WidePitFallTransition = 1 << 26
 } as const;
 
 // Word 3 (features3) bit values. Must match kRam_Features3 in features.h. The four category bits
@@ -388,6 +389,7 @@ const buildFeatureWords = (s: GameSettings): { features1: number; features2: num
   if (wide) {
     if (effective.has('widescreenPlayArea')) f2 |= FEATURES2_FLAGS.widescreenPlayArea;
     if (effective.has('offscreenAI') && offscreenAiMode(s) === 'idle') f2 |= FEATURES2_FLAGS.widescreenIdleAI;
+    if (effective.has('widePitFallTransition')) f2 |= FEATURES2_FLAGS.widePitFallTransition;
   }
   return { features1: f1, features2: f2 };
 };

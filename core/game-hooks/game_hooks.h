@@ -617,10 +617,9 @@ void GameHook_TriggerOverworldCheck(uint8 screen, uint8 mask, uint8 item_id);
 
 // ─── State Queries (state_queries.c) ───
 
-// True while `effectiveModule` is MODULE_FALLING_ENTRANCE (11) via the vanilla overworld
-// special-switch-area path (one of 3 locked-view locations reached by walking onto a
-// switch tile) and not an actual dungeon pit-fall. Both reuse the same module;
-// overworld_screen_index staying >= 128 is what's unique to the special-area flavor.
+// True while `effectiveModule` is MODULE_OVERWORLD_SPECIAL_AREA (11), the module the
+// vanilla special-switch-area path hands one of 3 locked-view locations reached by walking
+// onto a switch tile. overworld_screen_index staying >= 128 is what's unique to it.
 // Use this form once a menu-overlay remap has already been resolved (main_module_index
 // == 14, the real module in saved_module_for_menu), because passing the raw main_module_index
 // there would stop recognizing the special area the instant the pause menu opens over it.
@@ -655,6 +654,12 @@ uint8 GameHook_GetWantedIgnoreCollision(void);
 // a second, undarkened copy of the cone. Covers the room-transition frames where the game clears
 // hdr_dungeon_dark_with_lantern while the mask is still being drawn. Wide view only.
 bool GameHook_LightConeSuppressesExtraWidth(void);
+
+// The module whose geometry describes what MODULE_PIT_FALL_ENTRANCE is actually showing this frame:
+// MODULE_OVERWORLD while the departure screen is still up, MODULE_DUNGEON once the room below is
+// loaded. Any other module comes back unchanged, and so does the pit-fall one with the gate off, so
+// the caller's branch selection is exactly what it was.
+int GameHook_PitFallViewModule(int effectiveModule);
 
 // ─── Custom player sprite sheets (player_sprite.c) ───
 

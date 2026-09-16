@@ -37,3 +37,26 @@ bool GameHook_LightConeSuppressesExtraWidth(void) {
   // is the plain live test, so a 4:3 (or vertical-only) configuration behaves exactly as before.
   return Wide_Active() && s_cone_held;
 }
+
+// ─── Pit-Fall Transition View Gate ───
+//
+// A hole in the overworld hands the crossing to its own module, which runs from the palette bounce over
+// the departure screen to the landing in the room below. ConfigurePpuSideSpace describes the outdoor
+// module and the indoor one and nothing else, so every frame of that crossing fell through to a zero
+// budget: the picture snapped in to 4:3 for about two seconds and back out on arrival, even though each
+// of those frames shows a scene one of the two branches already knows how to measure.
+//
+// player_is_indoors splits the crossing exactly where the picture changes. Dungeon_LoadEntrance sets it
+// inside the force-blank frame that swaps the overworld for the room, so a frame before it still shows
+// the departure area (camera and scroll bounds untouched, submodule 0, the same stationary case as the
+// last frame of play) and a frame after it already shows the destination room with its bounds loaded.
+// Reporting the module that owns the visible scene is all this does; the crossing's own logic, the
+// camera and the fade are untouched.
+//
+// A wallmaster sending the player back to the last entrance reuses the same module from indoors, where
+// player_is_indoors is already set, so that crossing reads as the room it is throughout.
+int GameHook_PitFallViewModule(int effectiveModule) {
+  if (effectiveModule != MODULE_PIT_FALL_ENTRANCE || !(enhanced_features2 & kFeatures2_WidePitFallTransition))
+    return effectiveModule;
+  return player_is_indoors ? MODULE_DUNGEON : MODULE_OVERWORLD;
+}

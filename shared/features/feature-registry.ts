@@ -174,6 +174,23 @@ const DISPLAY_FEATURES: FeatureDef[] = [
     live: true,
   },
   {
+    id: 'widePitFallTransition',
+    label: 'Keep the wide view through hole falls',
+    description: 'Renders the pit-fall crossing as the scene it shows (departure screen, then the room below) instead of collapsing to the base 4:3 frame.',
+    userMessage:
+      'Keeps the picture at your aspect ratio while you fall through a hole in the overworld. Off, that crossing drops to 4:3 until you land.',
+    group: 'Display / Aspect',
+    kind: 'features0-bit',
+    origin: 'relic',
+    flag: 'kFeatures2_WidePitFallTransition',
+    word: 2,
+    bit: 67108864,
+    default: true,
+    requires: ['extendedRendering'],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
     id: 'widescreenPlayArea',
     label: 'Extend the play area to the full view',
     description:

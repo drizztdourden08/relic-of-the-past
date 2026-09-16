@@ -55,8 +55,7 @@ static int NearestUpgradeLevel(const uint8 *tiers, int wanted) {
 }
 
 // True when the engine is in normal interactive gameplay (overworld or indoor).
-// Includes the overworld-special-area flavor of MODULE_FALLING_ENTRANCE, as decided by
-// GameHook_IsOverworldSpecialArea.
+// Includes MODULE_OVERWORLD_SPECIAL_AREA, as decided by GameHook_IsOverworldSpecialArea.
 static inline bool IsInGameplay(void) {
   return main_module_index == MODULE_DUNGEON || main_module_index == MODULE_OVERWORLD || GameHook_IsOverworldSpecialArea();
 }
