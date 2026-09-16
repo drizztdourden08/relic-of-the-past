@@ -9,10 +9,11 @@ import { Slider } from '../../../../../design-system/primitives/Slider';
 interface TurboSpeedControlProps {
   value: number;
   onChange: (speed: number) => void;
+  disabled?: boolean;
 }
 
 const TurboSpeedControl = (props: TurboSpeedControlProps) => {
-  const { value, onChange } = props;
+  const { value, onChange, disabled } = props;
   return (
     <Slider
       label="Turbo Speed"
@@ -23,6 +24,7 @@ const TurboSpeedControl = (props: TurboSpeedControlProps) => {
       step={1}
       onChange={(index) => onChange(turboSpeedAt(index))}
       formatValue={(index) => formatTurboSpeed(turboSpeedAt(index))}
+      disabled={disabled}
     />
   );
 };

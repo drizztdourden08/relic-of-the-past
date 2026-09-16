@@ -2,11 +2,14 @@
 /** Section config for the Gameplay settings tab. */
 import type { Section } from '../../../compounds/SettingsLayout';
 
-// Save-state management lives in the System tab now (it's app/host scope, not gameplay behavior).
-// Exported here because its controls are rendered by gameplay-settings-controls (shared renderer).
-const SAVE_SECTION: Section = {
-  id: 'save-states',
-  title: 'Save States',
+const TURBO_KEYWORDS = 'turbo fast forward speed up faster skip hold multiplier speedrun grind';
+
+// Save states and turbo share a section: both act on the running game from outside its own
+// rules, one moving where you resume, the other how fast it runs. Exported because its
+// controls are rendered by gameplay-settings-controls.
+const GAME_FLOW_SECTION: Section = {
+  id: 'game-flow',
+  title: 'Game Flow',
   subsections: [
     {
       id: 'save-auto',
@@ -26,13 +29,21 @@ const SAVE_SECTION: Section = {
         { key: 'saveHoldDuration', label: 'Hold to Save Duration', description: 'How long to hold the key to save (seconds)', keywords: 'save hold duration time seconds' },
       ],
     },
+    {
+      id: 'turbo',
+      title: 'Turbo',
+      items: [
+        { key: 'turboEnabled', label: 'Turbo', description: 'Run the game faster than normal while the Turbo shortcut is held. Bind the shortcut under Controls. Music keeps its own tempo; everything else moves at the chosen speed.', keywords: TURBO_KEYWORDS },
+        { key: 'turboSpeed', label: 'Turbo Speed', description: 'How much faster the game runs while the shortcut is held, from 1.25x up to 10x.', keywords: TURBO_KEYWORDS },
+      ],
+    },
   ],
 };
 
 const SECTIONS: Section[] = [
   // Save states live here instead of in a tab of their own. They are part of how the game is
   // played, not a property of the host.
-  SAVE_SECTION,
+  GAME_FLOW_SECTION,
   {
     id: 'items',
     title: 'Items',
@@ -97,4 +108,4 @@ const SECTIONS: Section[] = [
   },
 ];
 
-export { SECTIONS, SAVE_SECTION };
+export { SECTIONS, GAME_FLOW_SECTION };

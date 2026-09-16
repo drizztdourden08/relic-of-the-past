@@ -28,10 +28,6 @@ The widescreen options give you two more toggles. **Unchanged Sprites** keeps th
 
 **Set Synced Refresh Rate in full screen:** a toggle, off by default. While in fullscreen it switches the display to a refresh rate that divides evenly into the game's 60 frames a second, and puts your original rate back when you leave. Desktop only.
 
-**Turbo:** a toggle, off by default. While it is on, holding the Turbo shortcut runs the game faster than normal. Bind the shortcut under [Input & Controllers](input-controllers.md). Music keeps its own tempo; everything else moves at the chosen speed.
-
-**Turbo Speed:** a slider from 1.25x to 10x (default 2x), shown once Turbo is on. It sets how much faster the game runs while the shortcut is held.
-
 ## Rendering
 
 **Optimized PPU:** a toggle, on by default. It uses a faster rewritten pixel pipeline that looks identical to the accurate SNES PPU but runs much faster.

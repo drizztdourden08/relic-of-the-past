@@ -4,12 +4,14 @@ import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { Toggle } from '../../../../../design-system/primitives/Toggle';
 import { Slider } from '../../../../../design-system/primitives/Slider';
+import { TurboSpeedControl } from './TurboSpeedControl';
 
 const isDisabled = (key: string, settings: GameSettings): boolean => {
   if (key === 'itemSwitchLRLimit') return !settings.itemSwitchLR;
   if (key === 'saveHoldDuration') return !settings.enhancedSaveSlotShortcut;
   if (key === 'autoSaveIntervalSeconds') return !settings.autoSaveEnabled;
   if (key === 'autoSaveMaxEntries') return !settings.autoSaveEnabled;
+  if (key === 'turboSpeed') return !settings.turboEnabled;
   return false;
 };
 
@@ -86,6 +88,15 @@ const renderControl = (key: string, settings: GameSettings, onChange: (patch: Pa
         formatValue={(v) => `${v}s`}
         onChange={(v) => onChange({ saveHoldDuration: v })}
         disabled={!settings.enhancedSaveSlotShortcut}
+      />
+    );
+  }
+  if (key === 'turboSpeed') {
+    return (
+      <TurboSpeedControl
+        value={settings.turboSpeed}
+        onChange={(speed) => onChange({ turboSpeed: speed })}
+        disabled={!settings.turboEnabled}
       />
     );
   }
