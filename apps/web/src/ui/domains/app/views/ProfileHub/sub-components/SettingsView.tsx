@@ -9,7 +9,7 @@ import type { GameSettings } from '@shared/types/settings';
 import { SettingsLayout, type Section } from '../../../compounds/SettingsLayout';
 import { openVanillaSafeSettings } from '@app/stores/search-store';
 import { buildDisplaySection, buildCameraSection } from './SettingsView.display';
-import { buildWindowSection, buildPerformanceSection } from './SettingsView.constants';
+import { buildWindowSection, buildPerformanceSection, buildTurboSection } from './SettingsView.constants';
 import { renderDisplayControl } from './SettingsView.controls';
 import { useRefreshRate } from '../../../../../../hooks/useRefreshRate';
 import { useSyncedRate } from '../../../../../../hooks/useSyncedRate';
@@ -88,7 +88,8 @@ const SettingsView = (props: SettingsViewProps) => {
       buildDisplaySection(settings),
       ...(camera ? [camera] : []),
       buildWindowSection(settings),
-      buildPerformanceSection(detectedHz, syncedRate, settings),
+      buildPerformanceSection(detectedHz, syncedRate),
+      buildTurboSection(settings),
     ];
   }, [settings, detectedHz, syncedRate]);
 

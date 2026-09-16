@@ -9,6 +9,9 @@ interface SideNavItem {
 
 interface SideNavGroup {
   title?: string;
+  /** Present when the group heading is itself a target: it renders as a button and
+   *  reports this id through onSelect, so a group with no child items is still reachable. */
+  id?: string;
   items: SideNavItem[];
 }
 

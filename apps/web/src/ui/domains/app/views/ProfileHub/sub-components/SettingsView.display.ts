@@ -23,7 +23,7 @@ const buildDisplaySection = (s: GameSettings): Section => {
   const items: SettingItem[] = [EXTENDED_TOGGLE];
 
   if (!s.extendedRendering) {
-    return { id: 'display', title: 'Display', subsections: [{ id: 'display-main', title: 'Rendering', items }] };
+    return { id: 'display', title: 'Display', items };
   }
 
   // 1. Capability toggles, which unlock options in the picker below
@@ -98,7 +98,7 @@ const buildDisplaySection = (s: GameSettings): Section => {
     keywords: 'sprite AI pause idle freeze off screen wide guard enemy alarm',
   });
 
-  return { id: 'display', title: 'Display', subsections: [{ id: 'display-main', title: 'Rendering', items }] };
+  return { id: 'display', title: 'Display', items };
 };
 
 const buildCameraSection = (s: GameSettings): Section | null => {
@@ -122,7 +122,7 @@ const buildCameraSection = (s: GameSettings): Section | null => {
     });
   }
 
-  return { id: 'camera', title: 'Camera', subsections: [{ id: 'camera-main', title: 'Behaviour', items }] };
+  return { id: 'camera', title: 'Camera', items };
 };
 
 export { buildDisplaySection, buildCameraSection };

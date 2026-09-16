@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind data */
 import type { GameSettings } from '@shared/types/settings';
-import type { Section, SettingItem, SubSection } from '../../../compounds/SettingsLayout';
+import type { Section, SettingItem } from '../../../compounds/SettingsLayout';
 import { bestSyncedRate, isSyncedRate } from '@shared/display/refresh-rate';
 import type { SyncedRateStatus } from '@shared/types/display';
 
@@ -21,7 +21,7 @@ const buildWindowSection = (s: GameSettings): Section => {
 
   if (s.viewportConstraint === 'none') items.push(PIXEL_PERFECT_ITEM);
 
-  return { id: 'window', title: 'Window', subsections: [{ id: 'window-mode', title: 'Mode', items }] };
+  return { id: 'window', title: 'Window', items };
 };
 
 const VSYNC_DESCRIPTION = 'Pace the game against the refresh rate of your display instead of an internal timer. Smooths scrolling on 60 Hz displays where the two clocks would otherwise drift apart. Game speed stays correct on any refresh rate.';
@@ -58,18 +58,18 @@ const syncedRateDescription = (status: SyncedRateStatus): string => {
 
 const TURBO_KEYWORDS = 'turbo fast forward speed up faster skip hold multiplier speedrun grind';
 
-/** The speed slider only appears once turbo is on, like the refresh-rate picker below. */
-const buildTurboSubsection = (s: GameSettings): SubSection => {
+/** The speed slider only appears once turbo is on, like the refresh-rate picker above. */
+const buildTurboSection = (s: GameSettings): Section => {
   const items: SettingItem[] = [
     { key: 'turboEnabled', label: 'Turbo', description: 'Run the game faster than normal while the Turbo shortcut is held. Bind the shortcut under Controls. Music keeps its own tempo; everything else moves at the chosen speed.', keywords: TURBO_KEYWORDS },
   ];
   if (s.turboEnabled) {
     items.push({ key: 'turboSpeed', label: 'Turbo Speed', description: 'How much faster the game runs while the shortcut is held, from 1.25x up to 10x.', keywords: TURBO_KEYWORDS });
   }
-  return { id: 'performance-turbo', title: 'Turbo', items };
+  return { id: 'turbo', title: 'Turbo', items };
 };
 
-const buildPerformanceSection = (refreshHz: number | null, syncedRate: SyncedRateStatus, s: GameSettings): Section => {
+const buildPerformanceSection = (refreshHz: number | null, syncedRate: SyncedRateStatus): Section => {
   const items: SettingItem[] = [
     { key: 'displayPerfInTitle', label: 'Show FPS', description: 'Display the current frames per second, and the refresh rate of your display, in the title bar while the game is running', keywords: 'fps performance frame rate counter refresh rate hz' },
     { key: 'vsync', label: 'V-Sync', description: VSYNC_DESCRIPTION + refreshAdvisory(refreshHz), keywords: 'vsync v-sync tearing judder stutter frame pacing refresh rate smooth scrolling 60hz' },
@@ -91,11 +91,7 @@ const buildPerformanceSection = (refreshHz: number | null, syncedRate: SyncedRat
     });
   }
 
-  return {
-    id: 'performance',
-    title: 'Performance',
-    subsections: [{ id: 'performance-options', title: 'Options', items }, buildTurboSubsection(s)],
-  };
+  return { id: 'performance', title: 'Performance', items };
 };
 
 const RENDERING_SECTION: Section = {
@@ -168,8 +164,8 @@ const NOTCH_ITEM = {
 
 const MOBILE_SECTION: Section = {
   id: 'mobile',
-  title: 'Mobile',
-  subsections: [{ id: 'mobile-display', title: 'Display', items: [NOTCH_ITEM] }],
+  title: 'Display',
+  items: [NOTCH_ITEM],
 };
 
-export { buildWindowSection, buildPerformanceSection, RENDERING_SECTION, ENHANCEMENTS_SECTION, MOBILE_SECTION };
+export { buildWindowSection, buildPerformanceSection, buildTurboSection, RENDERING_SECTION, ENHANCEMENTS_SECTION, MOBILE_SECTION };

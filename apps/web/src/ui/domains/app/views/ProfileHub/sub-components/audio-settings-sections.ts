@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 /**
- * Section/subsection config for the Audio settings tab.
+ * Section config for the Audio settings tab.
  *
  * Ordered by what a person actually reaches for: levels first, then the music pack, and the
  * device settings last, because those three are derived from the pack in Auto, so they are the ones a
@@ -12,24 +12,12 @@ const SECTIONS: Section[] = [
   {
     id: 'volume',
     title: 'Volume',
-    subsections: [
-      {
-        id: 'volume-master',
-        title: 'Master',
-        items: [
-          { key: 'masterVolume', label: 'Master Volume', description: 'Controls the overall game volume, so it affects all audio output', keywords: 'volume master level loud quiet' },
-        ],
-      },
-      {
-        id: 'volume-channels',
-        title: 'Music and effects',
-        items: [
-          { key: 'perGroupVolume', label: 'Independent Music / SFX', description: 'Mix music and sound effects separately. Off keeps the original audio mix exactly, and the sliders below do nothing until this is on.', keywords: 'split independent music sfx mix per group separate volume' },
-          { key: 'musicVolume', label: 'Music Volume', description: 'Sets the music level for the original soundtrack and any music pack alike, since a pack plays in place of it, not alongside it', keywords: 'volume music bgm background msu pack' },
-          { key: 'ambientVolume', label: 'Ambience Volume', description: 'Sets the replacement ambient-bed level for rain, waterfalls and wind played by a pack. The sound chip cannot split its own ambience, so this governs replacement audio only', keywords: 'volume ambience ambient bed rain water background loop pack replacement' },
-          { key: 'sfxVolume', label: 'SFX Volume', description: 'Sets the sound-effects level', keywords: 'volume sfx sound effects' },
-        ],
-      },
+    items: [
+      { key: 'masterVolume', label: 'Master Volume', description: 'Controls the overall game volume, so it affects all audio output', keywords: 'volume master level loud quiet' },
+      { key: 'perGroupVolume', label: 'Independent Music / SFX', description: 'Mix music and sound effects separately. Off keeps the original audio mix exactly, and the sliders below do nothing until this is on.', keywords: 'split independent music sfx mix per group separate volume' },
+      { key: 'musicVolume', label: 'Music Volume', description: 'Sets the music level for the original soundtrack and any music pack alike, since a pack plays in place of it, not alongside it', keywords: 'volume music bgm background msu pack' },
+      { key: 'ambientVolume', label: 'Ambience Volume', description: 'Sets the replacement ambient-bed level for rain, waterfalls and wind played by a pack. The sound chip cannot split its own ambience, so this governs replacement audio only', keywords: 'volume ambience ambient bed rain water background loop pack replacement' },
+      { key: 'sfxVolume', label: 'SFX Volume', description: 'Sets the sound-effects level', keywords: 'volume sfx sound effects' },
     ],
   },
   {
@@ -58,17 +46,11 @@ const SECTIONS: Section[] = [
   },
   {
     id: 'playback',
-    title: 'Output',
-    subsections: [
-      {
-        id: 'playback-output',
-        title: 'Audio device',
-        items: [
-          { key: 'audioFreq', label: 'Sample Rate', description: 'Output rate. Must match the pack format, which is why Auto sets it: 44100 Hz for MSU/Deluxe, 48000 Hz for OPUZ.', keywords: 'frequency sample rate hz automatic' },
-          { key: 'audioChannels', label: 'Channels', description: 'Mono or stereo output. Replacement music is always stereo, so Auto keeps it there.', keywords: 'mono stereo channel automatic' },
-          { key: 'audioSamples', label: 'Buffer Size', description: 'Latency against stability. This one depends on your machine, not the pack, so Auto leaves it at a widely safe value.', keywords: 'buffer latency crackle automatic' },
-        ],
-      },
+    title: 'Audio Device',
+    items: [
+      { key: 'audioFreq', label: 'Sample Rate', description: 'Output rate. Must match the pack format, which is why Auto sets it: 44100 Hz for MSU/Deluxe, 48000 Hz for OPUZ.', keywords: 'frequency sample rate hz automatic output' },
+      { key: 'audioChannels', label: 'Channels', description: 'Mono or stereo output. Replacement music is always stereo, so Auto keeps it there.', keywords: 'mono stereo channel automatic output' },
+      { key: 'audioSamples', label: 'Buffer Size', description: 'Latency against stability. This one depends on your machine, not the pack, so Auto leaves it at a widely safe value.', keywords: 'buffer latency crackle automatic output' },
     ],
   },
 ];
