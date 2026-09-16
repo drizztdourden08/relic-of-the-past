@@ -40,6 +40,11 @@ interface GameSettings {
   // Target rate in Hz. 0 means "the highest multiple of 60 this display offers", which is what
   // a fresh profile gets. A stored rate the display later stops offering falls back to that.
   syncedRefreshRateHz: number;
+  // Run the game faster than real time while the Turbo shortcut is held. Off = the core never
+  // leaves real time, whatever the shortcut does. Live-togglable.
+  turboEnabled: boolean;
+  // Speed multiplier while turbo is held, one of the rungs in shared/display/turbo-speed.ts.
+  turboSpeed: number;
 
   // ─── Aspect Ratio & Display ───
   // Master gate. Off: the engine always runs 4:3 vanilla and no sub-settings appear in the UI.

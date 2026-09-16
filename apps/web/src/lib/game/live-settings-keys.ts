@@ -59,6 +59,9 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'pixelPerfect',
   // Frame pacing, swapped via WasmSetVsync because the main loop's schedule can change mid-run
   'vsync',
+  // Turbo speed, pushed via WasmSetTurboSpeed; a plain pacing global, read on every tick
+  'turboEnabled',
+  'turboSpeed',
   // Audio volume (Web Audio gain, no restart needed)
   'masterVolume',
   // Sub-volumes (WASM DSP-level, no restart needed)

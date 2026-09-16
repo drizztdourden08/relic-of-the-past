@@ -6,6 +6,7 @@ import type { SyncedRateStatus } from '@shared/types/display';
 import { SegmentedControl } from '../../../../../design-system/primitives/SegmentedControl';
 import { AspectRatioControl } from './AspectRatioControl';
 import { RefreshRateControl } from './RefreshRateControl';
+import { TurboSpeedControl } from './TurboSpeedControl';
 
 const VIEWPORT_OPTIONS = [
   { value: 'none', label: 'Letterbox' },
@@ -118,6 +119,15 @@ const renderDisplayControl = (params: DisplayControlsParams): ReactNode | null =
         detectedHz={detectedHz}
         value={settings.syncedRefreshRateHz}
         onChange={(hz) => onChange({ syncedRefreshRateHz: hz })}
+      />
+    );
+  }
+
+  if (key === 'turboSpeed') {
+    return (
+      <TurboSpeedControl
+        value={settings.turboSpeed}
+        onChange={(speed) => onChange({ turboSpeed: speed })}
       />
     );
   }

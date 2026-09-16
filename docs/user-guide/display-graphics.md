@@ -24,7 +24,13 @@ The widescreen options give you two more toggles. **Unchanged Sprites** keeps th
 
 **Show FPS:** a toggle, off by default. It shows a frame-rate counter in the title bar, not over the game image.
 
-**Disable Frame Delay:** a toggle, off by default. It removes the per-frame pacing wait. This can reduce input lag on 60 Hz displays where v-sync already paces the game, and it uncaps the speed for benchmarking.
+**V-Sync:** a toggle, off by default. It paces the game against your display's refresh rate instead of an internal timer, which smooths scrolling on 60 Hz displays. Game speed stays correct at any refresh rate.
+
+**Set Synced Refresh Rate in full screen:** a toggle, off by default. While in fullscreen it switches the display to a refresh rate that divides evenly into the game's 60 frames a second, and puts your original rate back when you leave. Desktop only.
+
+**Turbo:** a toggle, off by default. While it is on, holding the Turbo shortcut runs the game faster than normal. Bind the shortcut under [Input & Controllers](input-controllers.md). Music keeps its own tempo; everything else moves at the chosen speed.
+
+**Turbo Speed:** a slider from 1.25x to 10x (default 2x), shown once Turbo is on. It sets how much faster the game runs while the shortcut is held.
 
 ## Rendering
 

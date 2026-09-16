@@ -48,7 +48,7 @@ const PROFILE_HUB_TABS: Record<ProfileHubTab, ProfileHubTabSpec> = {
         buildDisplaySection(s),
         ...(camera ? [camera] : []),
         buildWindowSection(s),
-        buildPerformanceSection(null, NEUTRAL_SYNCED_RATE),
+        buildPerformanceSection(null, NEUTRAL_SYNCED_RATE, s),
       ];
     },
   },

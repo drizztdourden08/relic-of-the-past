@@ -132,9 +132,9 @@ static void MainFrameCallback(void) {
     g_curr_fps = 0;
   }
 
-  // More than one step only happens when the display refreshes slower than the game runs; the
-  // intermediate states are simulated but never drawn, which keeps real-time speed without
-  // rendering frames nobody sees.
+  // More than one step happens when the display refreshes slower than the game runs, or while
+  // turbo is held; the intermediate states are simulated but never drawn, which keeps the owed
+  // speed without rendering frames nobody sees.
   int inputs = g_input1_state;
   for (int i = 0; i < steps; i++)
     ZeldaRunFrame(inputs);

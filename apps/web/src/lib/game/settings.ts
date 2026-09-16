@@ -1,6 +1,7 @@
 /* @layer bridge-wasm @kind data */
 
 import type { GameSettings, OffscreenAiMode } from '@shared/types/settings';
+import { DEFAULT_TURBO_SPEED } from '@shared/display/turbo-speed';
 import { effectiveCustomRatio, detectScreenRatio, detectViewportRatio } from './aspect-ratio';
 
 const DEFAULT_SETTINGS: GameSettings = {
@@ -15,6 +16,8 @@ const DEFAULT_SETTINGS: GameSettings = {
   vsync: false,
   syncedRefreshRate: false,
   syncedRefreshRateHz: 0,
+  turboEnabled: false,
+  turboSpeed: DEFAULT_TURBO_SPEED,
 
   // Aspect Ratio & Display
   extendedRendering: false,
