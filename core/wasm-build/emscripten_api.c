@@ -191,6 +191,25 @@ int WasmGetVsync(void) {
   return g_vsync ? 1 : 0;
 }
 
+// Turbo speed as a percent of real time (125 to 1000; 100 means the feature is off). Live-safe:
+// the profile pushes it with the other live settings, and it only takes effect while the turbo
+// key is held (WasmSetTurboHeld), so a profile with turbo off never leaves real time.
+EMSCRIPTEN_KEEPALIVE
+void WasmSetTurboSpeed(int percent) {
+  SetTurboSpeed(percent);
+}
+
+EMSCRIPTEN_KEEPALIVE
+void WasmSetTurboHeld(int held) {
+  SetTurboHeld(held != 0);
+}
+
+// The speed the loop is running at right now, as a percent (100 when turbo is off or released).
+EMSCRIPTEN_KEEPALIVE
+int WasmGetTurboFactorPercent(void) {
+  return (int)(TurboFactor() * 100.0 + 0.5);
+}
+
 // ---------------------------------------------------------------------------
 // Volume masters the SDL audio mixer + per-channel DSP volumes
 // ---------------------------------------------------------------------------

@@ -30,6 +30,7 @@ import { rebuildMaps, guardKeys, keyDown, keyUp, pollFrame, connectedGamepadKeys
 import { wireProfileActions, setProfiles as setProfilesImpl, subscribeActiveProfile, cycleActiveProfile as cycleActiveProfileImpl } from './input-manager-profiles';
 import { wireCheatActions } from './input-manager-cheats';
 import { wireDebugCaptureAction } from './input-manager-debug-capture';
+import { wireTurboAction } from './input-manager-turbo';
 import type { AllowedDevices } from './profile-devices';
 import type { ActiveProfileListener, DeviceChangeListener, InputStateListener } from './input-manager-types';
 import type { DeviceScopedMap } from './device-scoped-map';
@@ -98,6 +99,7 @@ class InputManager {
     wireProfileActions(this);
     wireCheatActions(this);
     wireDebugCaptureAction(this);
+    wireTurboAction(this);
   }
 
   // Event handler fields, with stable identity for add/removeEventListener.

@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind logic */
+import { DEFAULT_TURBO_SPEED, formatTurboSpeed } from '@shared/display/turbo-speed';
 
 const SETTINGS_SECTIONS: Array<{ title: string; keys: Array<{ key: string; label: string; format?: (v: unknown) => string }> }> = [
   {
@@ -9,6 +10,8 @@ const SETTINGS_SECTIONS: Array<{ title: string; keys: Array<{ key: string; label
       { key: 'vsync', label: 'V-Sync' },
       { key: 'syncedRefreshRate', label: 'Synced Refresh Rate (fullscreen)' },
       { key: 'syncedRefreshRateHz', label: 'Target Refresh Rate', format: (v) => (Number(v) > 0 ? `${v} Hz` : 'Highest') },
+      { key: 'turboEnabled', label: 'Turbo' },
+      { key: 'turboSpeed', label: 'Turbo Speed', format: (v) => formatTurboSpeed(Number(v ?? DEFAULT_TURBO_SPEED)) },
     ],
   },
   {

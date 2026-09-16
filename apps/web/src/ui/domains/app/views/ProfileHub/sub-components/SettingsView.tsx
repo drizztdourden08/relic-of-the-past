@@ -88,7 +88,7 @@ const SettingsView = (props: SettingsViewProps) => {
       buildDisplaySection(settings),
       ...(camera ? [camera] : []),
       buildWindowSection(settings),
-      buildPerformanceSection(detectedHz, syncedRate),
+      buildPerformanceSection(detectedHz, syncedRate, settings),
     ];
   }, [settings, detectedHz, syncedRate]);
 

@@ -13,6 +13,7 @@ import { log } from '../log-bus';
 import { buildFeatureFlags, buildFeatureWord3, buildFeatureWords } from './live-settings-flags';
 import { buildPpuFlags } from './live-settings-ppu-flags';
 import { LIVE_SETTINGS } from './live-settings-keys';
+import { pushTurboSpeed } from './turbo';
 
 // Track the last-pushed forceBackdropBlack value so we can re-assert after state loads
 let lastBackdropBlack = false;
@@ -98,6 +99,8 @@ const pushLiveSettings = (settings: GameSettings): boolean => {
       lastVsync = !!settings.vsync;
       mod.ccall('WasmSetVsync', null, ['number'], [settings.vsync ? 1 : 0]);
     } catch { /* WASM not rebuilt yet */ }
+    // Turbo speed: same pacing TU, own guard inside
+    pushTurboSpeed(settings);
 
     // Hide native gameplay HUD when enhanced overlay is active
     try {

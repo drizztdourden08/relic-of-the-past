@@ -37,6 +37,9 @@ class FunctionActionEngine {
   private functionCodeToKeyIds = new Map<string, string[]>();
   // Track which function-mapped gamepad buttons are currently held (for key-up detection)
   private heldFunctionGamepadButtons = new Set<string>(); // "deviceKey:index" or "deviceKey:axis:idx:dir"
+  // Actions currently held from any source, so clearHeld() can let go of a hold-style action
+  // (turbo) whose release would otherwise be lost when input is suppressed mid-hold.
+  private heldActions = new Set<FunctionAction>();
 
   // External callback for pause toggle (wired by InputManager)
   onPauseToggle: (() => void) | null = null;
@@ -68,8 +71,12 @@ class FunctionActionEngine {
     return () => this.functionKeyUpListeners.delete(listener);
   }
 
+  /** Forget every held button and release every held action, firing their key-up listeners. */
   clearHeld(): void {
     this.heldFunctionGamepadButtons.clear();
+    const held = [...this.heldActions];
+    this.heldActions.clear();
+    for (const action of held) this.fireKeyUp(action);
   }
 
   /**
@@ -91,15 +98,10 @@ class FunctionActionEngine {
    */
   handleKeyUp(code: string): void {
     const funcKeyIds = this.functionCodeToKeyIds.get(code);
-    if (funcKeyIds && this.functionKeyUpListeners.size > 0) {
-      for (const fkid of funcKeyIds) {
-        const funcAction = this.functionKeyMap.get(fkid);
-        if (funcAction) {
-          for (const fn of this.functionKeyUpListeners) {
-            try { fn(funcAction); } catch { /* ignore */ }
-          }
-        }
-      }
+    if (!funcKeyIds) return;
+    for (const fkid of funcKeyIds) {
+      const funcAction = this.functionKeyMap.get(fkid);
+      if (funcAction) this.fireKeyUp(funcAction);
     }
   }
 
@@ -169,6 +171,7 @@ class FunctionActionEngine {
   }
 
   private fireAction(action: FunctionAction): void {
+    this.heldActions.add(action);
     if (action === 'pause') {
       this.onPauseToggle?.();
       return;
@@ -178,6 +181,7 @@ class FunctionActionEngine {
   }
 
   private fireKeyUp(action: FunctionAction): void {
+    this.heldActions.delete(action);
     for (const fn of this.functionKeyUpListeners) {
       try { fn(action); } catch { /* ignore */ }
     }
