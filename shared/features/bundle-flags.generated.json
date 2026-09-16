@@ -1,5 +1,5 @@
 {
-  "total": 42,
+  "total": 43,
   "flags": {
     "medallionSpinAttackAbortFix": {
       "flag": "kFeatures1_MedallionSpinAttackAbortFix",
@@ -420,6 +420,16 @@
       "category": "gameplay-affecting",
       "sites": [
         "core/zelda3/src/player.c:6378"
+      ]
+    },
+    "fixBunnyPaletteAfterMap": {
+      "flag": "kFeatures2_FixBunnyPaletteAfterMap",
+      "word": 2,
+      "bit": 1024,
+      "bundleFlag": "MiscBugFixes",
+      "category": "visual-only",
+      "sites": [
+        "core/zelda3/src/messaging.c (WorldMap_ExitMap, DungeonMap_RecoverGFX) via GameHook_MapClosed"
       ]
     }
   }

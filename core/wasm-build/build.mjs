@@ -59,7 +59,7 @@ const hookSrcs = [
   'capacity_progressive', 'capacity_fixed_lines', 'capacity_probes', 'upgrade_icon', 'upgrade_bonus', 'gear_icon',
   'prize_grants', 'prize_probes', 'boss_receipt_gate', 'boss_exit_gate', 'prize_presentation', 'fairy_proximity',
   'dungeon_item_grants', 'dungeon_item_probes',
-  'player_sprite', 'transition_events', 'state_queries_combat', 'state_queries_oam',
+  'player_sprite', 'player_sprite_map', 'transition_events', 'state_queries_combat', 'state_queries_oam',
   'state_queries_pose',
   'item_power', 'swordless_paths', 'retro_bow', 'retro_drops', 'retro_shelf', 'retro_quiver_icon', 'archery_host',
   'dark_room_lights', 'file_name_prefill',

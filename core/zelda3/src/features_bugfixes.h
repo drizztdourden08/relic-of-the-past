@@ -51,6 +51,7 @@ enum {
   kFeatures2_IcePortalRevealChime = 128u,         // bug-fix-cosmetic: Ice Temple portal reveal chime
   kFeatures2_WidescreenLinkHideViaOffscreenY = 256u, // visual-only: Widescreen Link hide
   kFeatures2_SaveMenuLockoutAfterMedallionFix = 512u, // gameplay-affecting: Fix save-menu lockout after medallion cast
+  kFeatures2_FixBunnyPaletteAfterMap = 1024u,      // visual-only: Bunny colors after the map
 };
 
 #endif  // ZELDA3_FEATURES_BUGFIXES_H_

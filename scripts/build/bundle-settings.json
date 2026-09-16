@@ -410,6 +410,26 @@
       "sites": [
         "core/zelda3/src/player_oam.c:1110 (LinkOam_Main)"
       ]
+    },
+    {
+      "id": "saveMenuLockoutAfterMedallionFix",
+      "name": "Fix save-menu lockout after medallion cast",
+      "userMessage": "Fixes being locked out of the save menu when you die right after casting a medallion.",
+      "category": "gameplay-affecting",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/player.c:6378"
+      ]
+    },
+    {
+      "id": "fixBunnyPaletteAfterMap",
+      "name": "Bunny colors after the map",
+      "userMessage": "Fix the bunny keeping Link's mail colors after the map screen closes in the Dark World.",
+      "category": "visual-only",
+      "bundleFlag": "MiscBugFixes",
+      "sites": [
+        "core/zelda3/src/messaging.c (WorldMap_ExitMap, DungeonMap_RecoverGFX) via GameHook_MapClosed"
+      ]
     }
   ]
 }
