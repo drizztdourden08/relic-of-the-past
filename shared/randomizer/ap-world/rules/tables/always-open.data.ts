@@ -116,7 +116,7 @@ const ALWAYS_OPEN_EXITS: readonly string[] = [
   'Lake Hylia Fortune Teller',
   'Library',
   'Links House',
-  'Links House Exit',
+  'Links House S&Q',
   'Long Fairy Cave',
   'Lost Woods Gamble',
   'Lost Woods Hideout (top to bottom)',
