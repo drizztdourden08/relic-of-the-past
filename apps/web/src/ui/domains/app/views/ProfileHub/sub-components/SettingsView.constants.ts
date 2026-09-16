@@ -126,13 +126,6 @@ const ENHANCEMENTS_SECTION: Section = {
       ],
     },
     {
-      id: 'enhancements-minigames',
-      title: 'Minigames',
-      items: [
-        { key: 'archeryNeedsBow', label: 'Archery Game Asks For A Bow', description: 'Stop the archery game from taking your money when you have nothing to shoot with; the owner tells you why instead', keywords: 'archery shooting gallery target bow arrow minigame game refund fee rupees' },
-      ],
-    },
-    {
       id: 'enhancements-indoor',
       title: 'Indoor / Dungeons',
       items: [
