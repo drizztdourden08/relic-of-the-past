@@ -31,6 +31,10 @@ jobs:
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          # Google removed the legacy "tools" package from the SDK repository, and the
+          # action asks for it by default. The Gradle build fetches what it needs.
+          packages: platform-tools
 
       - name: Set up Emscripten (for the WASM core)
         uses: emscripten-core/setup-emsdk@v16
