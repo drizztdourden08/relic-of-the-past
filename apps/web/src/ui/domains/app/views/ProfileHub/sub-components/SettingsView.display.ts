@@ -83,12 +83,6 @@ const buildDisplaySection = (s: GameSettings): Section => {
         keywords: 'visual fixes widescreen tiles edges',
       },
       {
-        key: 'widePitFallTransition',
-        label: 'Wide Hole Falls',
-        description: 'Keep the wide view while falling through a hole in the overworld, instead of dropping to 4:3 for the crossing.',
-        keywords: 'hole pit fall transition widescreen crossing',
-      },
-      {
         key: 'widescreenPlayArea',
         label: 'Extend Play Area',
         description: 'Extends game activity to the whole widescreen picture: where hazards and enemies spawn, how long enemy spawners stay active, and how much of the view a "room cleared" check looks at. Off, only the original 4:3 area counts, so the extra width you can see stays inactive. Changes gameplay.',

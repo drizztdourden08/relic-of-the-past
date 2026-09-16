@@ -33,7 +33,6 @@ const DEFAULT_SETTINGS: GameSettings = {
   cameraLockToViewport: false,
   smoothTransitions: false,
   widescreenPlayArea: false,
-  widePitFallTransition: true,
   offscreenAI: 'idle',
   pauseOffscreenAI: false,
 

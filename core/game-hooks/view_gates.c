@@ -55,8 +55,11 @@ bool GameHook_LightConeSuppressesExtraWidth(void) {
 //
 // A wallmaster sending the player back to the last entrance reuses the same module from indoors, where
 // player_is_indoors is already set, so that crossing reads as the room it is throughout.
+//
+// Gated with the area-seam pan, not on a switch of its own: both are the same promise, that a crossing
+// keeps the view the play on either side of it had, so a player who wants one wants the other.
 int GameHook_PitFallViewModule(int effectiveModule) {
-  if (effectiveModule != MODULE_PIT_FALL_ENTRANCE || !(enhanced_features2 & kFeatures2_WidePitFallTransition))
+  if (effectiveModule != MODULE_PIT_FALL_ENTRANCE || !(enhanced_features0 & kFeatures0_SmoothTransitions))
     return effectiveModule;
   return player_is_indoors ? MODULE_DUNGEON : MODULE_OVERWORLD;
 }

@@ -31,8 +31,6 @@ const requestedFeatureIds = (s: GameSettings): string[] => {
   // these the resolver never sees either id, so neither features2 bit is ever sent.
   if (offscreenAiMode(s) === 'idle') ids.push('offscreenAI');
   if (s.widescreenPlayArea === true) ids.push('widescreenPlayArea');
-  // Defaults on, so a profile saved before the key existed still gets it; only an explicit false opts out.
-  if (s.widePitFallTransition !== false) ids.push('widePitFallTransition');
   for (const fix of BUNDLE_FIXES) {
     // Matches the legacy-bundle fallback in buildFeatureWords: an unset granular toggle inherits the
     // bundle master it was split from (WidescreenVisualFixes-origin fixes also need a wide ratio).

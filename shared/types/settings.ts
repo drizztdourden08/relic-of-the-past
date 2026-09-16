@@ -82,9 +82,6 @@ interface GameSettings {
   // Extend hazards, spawns and clear-room checks to the whole wide/tall view instead of just the
   // stock 4:3 area. Off = the extra width is scenery only. Changes gameplay; default off.
   widescreenPlayArea?: boolean;
-  // Keep the wide/tall view through the crossing a hole in the overworld starts, which renders the
-  // departure screen and then the room below. Off = that crossing shows the stock 4:3 frame.
-  widePitFallTransition?: boolean;
   // How sprites in the wide/tall extra band behave before reaching the stock 4:3 screen: 'idle'
   // (move/animate but cannot act on the player), 'vanilla' (full behavior, matches the original),
   // or 'paused' (frozen). Default 'idle'.

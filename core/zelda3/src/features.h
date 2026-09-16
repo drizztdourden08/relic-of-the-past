@@ -114,9 +114,6 @@ enum {
   kFeatures2_HandAuthoredFloor  = 1u << 24,
   kFeatures2_WidescreenPlayArea = 1u << 24,
   kFeatures2_WidescreenIdleAI   = 1u << 25,
-  // The pit-fall crossing renders the scene it is actually showing, so the wide/tall view carries
-  // through it; off => the crossing keeps the base 256x224 frame the way it always did.
-  kFeatures2_WidePitFallTransition = 1u << 26,
 };
 
 // Enum values for kRam_Features3 — cheats and other C-side hook divergences. Unlike kFeatures0 (opt-in
