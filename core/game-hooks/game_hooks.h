@@ -679,6 +679,14 @@ void GameHook_PlayerGearPaletteLoaded(const uint16 *src);
 // The gloves color was refreshed on its own, without a full gear reload.
 void GameHook_PlayerGlovesColorUpdated(void);
 
+// The map put the head marker in OAM slot |slot| (player_sprite_map.c). With a custom sheet the slot is
+// marked as the player's so the PPU draws it from the private bank, in the sheet's own colors.
+void GameHook_PlayerMapHeadDrawn(int slot);
+
+// The overworld or dungeon map just closed. Puts the bunny palette back where the map left mail
+// colors, and re-lands a custom sheet's bank for the form the player is in.
+void GameHook_MapClosed(void);
+
 // ─── HUD/Pause Override (hud_override.c) ───
 
 // True while kFeatures3_HudOverride permits hiding the native HUD/pause menu. WasmSetHudHidden and

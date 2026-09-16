@@ -1073,7 +1073,7 @@ static const uint32 kGateWordParityMask[kGateWordCount] = {
   // bundle-fixes.generated.ts and the word is fully packed with no unused bits, so the mask is total.
   0xFFFFFFFFu,
 
-  // features2: the 10 split bug-fix bits in use (bits 0-9), plus the hand-authored bits allocated downward
+  // features2: the 11 split bug-fix bits in use (bits 0-10), plus the hand-authored bits allocated downward
   // from bit 31 (features.h). Both widescreen bits change what the game computes — the play area moves the
   // sprite spawn, spawner-activity and room-clear windows off the original 256x224 area, and the idle-AI
   // bit lets a sprite outside the active section keep animating — so Vanilla Safe forces both off.
@@ -1082,6 +1082,7 @@ static const uint32 kGateWordParityMask[kGateWordCount] = {
   kFeatures2_SuperBombClearFollowerOnExplode | kFeatures2_SuperBombPaletteOnFrameZero |
   kFeatures2_FixPortalMusicRestart | kFeatures2_IcePortalRevealChime |
   kFeatures2_WidescreenLinkHideViaOffscreenY | kFeatures2_SaveMenuLockoutAfterMedallionFix |
+  kFeatures2_FixBunnyPaletteAfterMap |
   kFeatures2_WidescreenPlayArea | kFeatures2_WidescreenIdleAI,
 
   // features3: cheats (the master + all four per-category permission bits), the randomizer item-override

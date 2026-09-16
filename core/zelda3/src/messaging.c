@@ -5,6 +5,7 @@
 #include "dungeon.h"
 #include "hud.h"
 #include "load_gfx.h"
+#include "game_hooks.h"
 #include "dungeon.h"
 #include "overworld.h"
 #include "variables.h"
@@ -1242,6 +1243,7 @@ void WorldMap_ExitMap() {  // 8abc54
   overworld_palette_aux_or_main = 0;
   hud_palette = 0;
   InitializeTilesets();
+  GameHook_MapClosed();
   flag_update_cgram_in_nmi++;
   BYTE(dung_draw_width_indicator) = 0;
   overworld_map_state = 0;
@@ -1299,8 +1301,10 @@ void WorldMap_FillTilemapWithEF() {  // 8abda5
 void WorldMap_HandleSprites() {  // 8abf66
   Point16U pt;
 
-  if (frame_counter & 0x10 && WorldMap_CalculateOamCoordinates(&pt))
+  if (frame_counter & 0x10 && WorldMap_CalculateOamCoordinates(&pt)) {
     WorldMap_AddSprite(0, 2, 0x3e, 0, pt.x - 4, pt.y - 4);
+    GameHook_PlayerMapHeadDrawn(0);
+  }
 
   uint16 ybak = link_y_coord_spexit;
   uint16 xbak = link_x_coord_spexit;
@@ -1941,6 +1945,7 @@ void DungeonMap_DrawLinkPointing(int spr_pos, uint8 r2, uint8 r3) {  // 8aeaf0
       r3 -= a;
   }
   SetOamPlain(&oam_buf[spr_pos], 0x19, kDungMap_Tab33[r3] - 4, 0, palette_swap_flag ? 0x30 : 0x3e, 2);
+  GameHook_PlayerMapHeadDrawn(spr_pos);
 }
 
 int DungeonMap_DrawBlinkingIndicator(int spr_pos) {  // 8aeb50
@@ -2077,6 +2082,7 @@ void DungeonMap_RecoverGFX() {  // 8aef19
   HDMAEN_copy = hdmaen_bak;
 
   memcpy(main_palette_buffer, mapbak_palette, sizeof(uint16) * 256);
+  GameHook_MapClosed();
   COLDATA_copy0 |= overworld_fixed_color_plusminus;
   COLDATA_copy1 |= overworld_fixed_color_plusminus;
   COLDATA_copy2 |= overworld_fixed_color_plusminus;
