@@ -10,6 +10,7 @@ import { SettingsShell } from '../../../../design-system/composites/SettingsShel
 import { DisabledOverlay } from '../../../../design-system/composites/DisabledOverlay';
 import { DISABLED_SETTING_MESSAGES } from '../../../../design-system/composites/DisabledOverlay/DisabledOverlay.constants';
 import { partitionByLockState } from './behavior/partitionByLockState';
+import { resolveSections } from './behavior/resolveSections';
 import { RandomizerLockContext } from './randomizer-lock-context';
 import './SettingsLayout.css';
 import { type SettingItem, type SettingLockCause, type SettingsLayoutProps } from './SettingsLayout.type';
@@ -49,30 +50,18 @@ const SettingsLayout = (props: SettingsLayoutProps) => {
       ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, []);
 
-  const filterLower = filter.toLowerCase();
+  const filterLower = filter.trim().toLowerCase();
 
-  const filteredSections = useMemo(() => {
-    if (!filterLower) return sections;
-    return sections.map((section) => ({
-      ...section,
-      subsections: section.subsections
-        .map((sub) => ({
-          ...sub,
-          items: sub.items.filter(
-            (item) =>
-              item.label.toLowerCase().includes(filterLower) ||
-              item.description.toLowerCase().includes(filterLower) ||
-              (item.keywords ?? '').toLowerCase().includes(filterLower),
-          ),
-        }))
-        .filter((sub) => sub.items.length > 0),
-    })).filter((section) => section.subsections.length > 0);
-  }, [filterLower, sections]);
+  const filteredSections = useMemo(() => resolveSections(sections, filterLower), [filterLower, sections]);
 
+  // The section title is itself a nav target, so a flat section needs no child entry to be
+  // reachable and a divided one can still be jumped to as a whole.
   const navGroups = useMemo(
     () => filteredSections.map((section) => ({
+      id: section.id,
       title: section.title,
-      items: section.subsections.map((sub) => ({ id: sub.id, label: sub.title })),
+      items: section.groups.flatMap((group) =>
+        group.id && group.title ? [{ id: group.id, label: group.title }] : []),
     })),
     [filteredSections],
   );
@@ -113,11 +102,11 @@ const SettingsLayout = (props: SettingsLayoutProps) => {
         {filteredSections.map((section) => (
           <Box key={section.id} className="settings-layout__section" data-section={section.id}>
             <Text as="h2" className="settings-layout__section-title">{section.title}</Text>
-            {section.subsections.map((sub) => (
-              <Box key={sub.id} className="settings-layout__subsection" data-section={sub.id}>
-                <Text as="h3" className="settings-layout__subsection-title">{sub.title}</Text>
+            {section.groups.map((group, groupIndex) => (
+              <Box key={group.id ?? groupIndex} className="settings-layout__subsection" data-section={group.id ?? undefined}>
+                {group.title && <Text as="h3" className="settings-layout__subsection-title">{group.title}</Text>}
                 <Box className="settings-layout__group">
-                  {partitionByLockState(sub.items, lockCauseOf).map((run, runIndex) => {
+                  {partitionByLockState(group.items, lockCauseOf).map((run, runIndex) => {
                     const rows = run.items.map((item) => {
                       const custom = renderControl?.(item.key, settings, onChange);
                       const control = custom ?? renderToggle(item.key, item);
