@@ -5,9 +5,10 @@
  * in their own dungeon, never universal, so the 1099-1116 branch applies;
  * enemy health is default, so the guarded chest's kill clause collapses to
  * true, 1113-1115). The escape gating: the throne door opens only once the
- * cell chest is collectable (1093), the two upper castle exits and both
- * retry spawns open only once the church is reachable through the escape
- * (1094-1097), and every escape kill check uses the start-arsenal helper
+ * cell chest is collectable (1093), the two upper castle exits, the church
+ * spawn and the home's front door open only once the church is reachable
+ * through the escape (1094-1097, with the home gate moved off its spawn),
+ * and every escape kill check uses the start-arsenal helper
  * (StateHelpers.py can_kill_standard_start). The start connection itself
  * ('Uncle S&Q', 1091-1092) is wired in connections-mandatory.data.ts and
  * carries no rule (always open).
@@ -29,8 +30,11 @@ const STANDARD_RULES: readonly RuleEntry[] = [
   // 1094-1095
   { kind: 'exit', name: 'Hyrule Castle Exit (East)', mode: 'set', rule: canReach('Sanctuary') },
   { kind: 'exit', name: 'Hyrule Castle Exit (West)', mode: 'set', rule: canReach('Sanctuary') },
-  // 1096-1097
-  { kind: 'exit', name: 'Links House S&Q', mode: 'set', rule: canReach('Sanctuary') },
+  // 1096-1097. The reference gates the home spawn itself, which puts the
+  // home chest after the escape. The game opens in that house with the chest
+  // in reach before anything else, so the gate sits on its front door instead:
+  // the chest is sphere 0 and the fields still wait for the church.
+  { kind: 'exit', name: 'Links House Exit', mode: 'set', rule: canReach('Sanctuary') },
   { kind: 'exit', name: 'Sanctuary S&Q', mode: 'set', rule: canReach('Sanctuary') },
   // 1100-1102
   {
