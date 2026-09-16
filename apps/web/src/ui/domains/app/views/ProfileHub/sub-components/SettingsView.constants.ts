@@ -56,19 +56,6 @@ const syncedRateDescription = (status: SyncedRateStatus): string => {
   return status.lastError ? `${base} Last attempt failed: ${status.lastError}.` : base;
 };
 
-const TURBO_KEYWORDS = 'turbo fast forward speed up faster skip hold multiplier speedrun grind';
-
-/** The speed slider only appears once turbo is on, like the refresh-rate picker above. */
-const buildTurboSection = (s: GameSettings): Section => {
-  const items: SettingItem[] = [
-    { key: 'turboEnabled', label: 'Turbo', description: 'Run the game faster than normal while the Turbo shortcut is held. Bind the shortcut under Controls. Music keeps its own tempo; everything else moves at the chosen speed.', keywords: TURBO_KEYWORDS },
-  ];
-  if (s.turboEnabled) {
-    items.push({ key: 'turboSpeed', label: 'Turbo Speed', description: 'How much faster the game runs while the shortcut is held, from 1.25x up to 10x.', keywords: TURBO_KEYWORDS });
-  }
-  return { id: 'turbo', title: 'Turbo', items };
-};
-
 const buildPerformanceSection = (refreshHz: number | null, syncedRate: SyncedRateStatus): Section => {
   const items: SettingItem[] = [
     { key: 'displayPerfInTitle', label: 'Show FPS', description: 'Display the current frames per second, and the refresh rate of your display, in the title bar while the game is running', keywords: 'fps performance frame rate counter refresh rate hz' },
@@ -168,4 +155,4 @@ const MOBILE_SECTION: Section = {
   items: [NOTCH_ITEM],
 };
 
-export { buildWindowSection, buildPerformanceSection, buildTurboSection, RENDERING_SECTION, ENHANCEMENTS_SECTION, MOBILE_SECTION };
+export { buildWindowSection, buildPerformanceSection, RENDERING_SECTION, ENHANCEMENTS_SECTION, MOBILE_SECTION };

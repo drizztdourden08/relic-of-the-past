@@ -11,7 +11,7 @@ import type { Section } from '../../compounds/SettingsLayout';
 import type { SyncedRateStatus } from '@shared/types/display';
 import type { ProfileHubTab } from './ProfileHub.type';
 import { buildDisplaySection, buildCameraSection } from './sub-components/SettingsView.display';
-import { buildWindowSection, buildPerformanceSection, buildTurboSection, RENDERING_SECTION, ENHANCEMENTS_SECTION, MOBILE_SECTION } from './sub-components/SettingsView.constants';
+import { buildWindowSection, buildPerformanceSection, RENDERING_SECTION, ENHANCEMENTS_SECTION, MOBILE_SECTION } from './sub-components/SettingsView.constants';
 import { APPEARANCE_SECTION } from './sub-components/graphics-settings-sections';
 import { SECTIONS as AUDIO_SECTIONS } from './sub-components/audio-settings-sections';
 import { SECTIONS as GAMEPLAY_SECTIONS } from './sub-components/gameplay-settings-sections';
@@ -49,7 +49,6 @@ const PROFILE_HUB_TABS: Record<ProfileHubTab, ProfileHubTabSpec> = {
         ...(camera ? [camera] : []),
         buildWindowSection(s),
         buildPerformanceSection(null, NEUTRAL_SYNCED_RATE),
-        buildTurboSection(s),
       ];
     },
   },

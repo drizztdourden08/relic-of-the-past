@@ -16,6 +16,11 @@ The **Gameplay** tab gathers the original PC-port toggles alongside this app's o
 - **Enhanced Save Slot Shortcut:** a toggle (default on). When on, the save shortcut opens the slot menu instead of saving or loading right away.
 - **Hold to Save Duration:** a slider from 1 to 5 seconds in 0.5 steps (default 2, available when the enhanced shortcut is on). It sets how long you hold the key to save.
 
+## Turbo
+
+- **Turbo:** a toggle (default off). When on, holding the Turbo shortcut runs the game faster than normal. Bind the shortcut under [Input & Controllers](input-controllers.md). Music keeps its own tempo; everything else moves at the chosen speed.
+- **Turbo Speed:** a slider from 1.25x to 10x (default 2x, available when Turbo is on). It sets how much faster the game runs while the shortcut is held.
+
 ## Items
 
 - **Advanced Item Selection:** a toggle (default off). When on, you cycle through equipped items with the L and R shoulder buttons.
