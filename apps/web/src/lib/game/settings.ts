@@ -100,7 +100,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   // Post-Processing
   overworldEdgeEffect: true,
   postProcessingShadows: false,
-  hideSpaceBeyondWalls: false,
+  hideSpaceBeyondWalls: true,
 
   // World item presentation
   coloredRupees: true,

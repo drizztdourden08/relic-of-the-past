@@ -12,4 +12,4 @@ These are the Enhancements group in Settings.
 
 ## Indoor / Dungeons
 
-**Hide Space Beyond Walls:** a toggle, off by default. The game fills the space past the walls of a house, a cave or the sanctuary with a dark colour. This paints it pure black. The room itself is untouched, and the option does nothing in dungeons or outdoors.
+**Hide Space Beyond Walls:** a toggle, on by default. The game fills the space past the walls of a house, a cave or the sanctuary with a dark colour. This paints it pure black. The room itself is untouched, and the option does nothing in dungeons or outdoors.
