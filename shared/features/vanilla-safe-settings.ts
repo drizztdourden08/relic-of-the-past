@@ -56,6 +56,7 @@ const VANILLA_SAFE_LOCKED_SETTINGS: readonly string[] = [
   'dialogBoxOpacity',
   'dialogButtonPrompts',
   'dialogFloatingGround',
+  'dialogIntroTelepathyGround',
   'dialogGroundFade',
   'dialogBoxFit',
   'dialogBorder',

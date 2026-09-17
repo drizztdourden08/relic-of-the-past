@@ -66,6 +66,7 @@ const ENHANCED_CONFIG_OVERRIDES: Partial<GameSettings> = {
   dialogStrokeWidth: 1,
   dialogBoxOpacity: 0.5,
   dialogFloatingGround: true,
+  dialogIntroTelepathyGround: false,
   dialogGroundFade: true,
   dialogBoxFit: 'full',
   dialogGroundColor: '#000000',

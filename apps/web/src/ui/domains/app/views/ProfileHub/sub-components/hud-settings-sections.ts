@@ -74,6 +74,7 @@ const SECTIONS: Section[] = [
           { key: 'dialogBoxOpacity', label: 'Background Opacity', description: 'How solid the ground is, from clear to solid.', keywords: 'dialog box background opacity translucent transparent' },
           { key: 'dialogGroundFade', label: 'Fade Edges', description: 'Fades the background out toward its edges. Only without a border.', keywords: 'dialog box background fade feather soft edges vignette' },
           { key: 'dialogFloatingGround', label: 'Behind Telepathy', description: 'Also draws the background behind borderless messages, such as telepathy.', keywords: 'dialog box background telepathy floating borderless zelda' },
+          { key: 'dialogIntroTelepathyGround', label: 'Behind Intro Telepathy', description: "Draws it behind Zelda's first call, while Link is still in bed.", keywords: 'dialog box background telepathy intro opening bed zelda link house' },
         ],
       },
       {

@@ -27,6 +27,8 @@ import { useDialogScale } from './behavior/useDialogScale';
 const STORY_LEGEND_MESSAGE = 0x112;
 /** The spawn picker on starting a game or continuing after death, without and with the mountain spawn (misc.c). */
 const SPAWN_PICKER_MESSAGES = new Set([0x184, 0x185]);
+/** Zelda's telepathy in the opening at Link's house, her call while Link is still in bed (the uncle raises it). */
+const INTRO_TELEPATHY_MESSAGES = new Set([0x1f]);
 import { useDialogGeometry } from './behavior/useDialogGeometry';
 import { useFadePresence } from './behavior/useFadePresence';
 import { useButtonGlyphs } from './behavior/useButtonGlyphs';
@@ -73,10 +75,11 @@ const DialogView = () => {
     shiftX: native ? frame.layerScrollX : 0, shiftY: native ? frame.layerScrollY : 0,
   }, metrics);
   // A talk box always has a ground. The legend told over the pictures and the game-over menu never do;
-  // the later story scenes do, always faded at the edges, and a borderless message such as telepathy only
-  // when the player asks.
+  // the later story scenes do, always faded at the edges. A borderless message such as telepathy follows
+  // its setting, with the opening telepathy at Link's house on a setting of its own.
+  const floatingGround = INTRO_TELEPATHY_MESSAGES.has(openingMessage) ? look.introTelepathyGround : look.floatingGround;
   const sceneGround = frame.kind === 'story' && frame.messageId !== STORY_LEGEND_MESSAGE;
-  const grounded = frame.kind === 'box' || sceneGround || (frame.kind === 'floating' && look.floatingGround);
+  const grounded = frame.kind === 'box' || sceneGround || (frame.kind === 'floating' && floatingGround);
   const feathered = sceneGround || spawnPicker || look.groundFade;
   // The atlas is cached per font and palette; asking per message catches a language switch or a [Color] line.
   const atlas = useMemo(() => (frame.active ? getGlyphAtlas() : null), [frame.active, frame.messageId, frame.generation]);

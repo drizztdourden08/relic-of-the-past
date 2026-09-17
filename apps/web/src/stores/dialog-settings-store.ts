@@ -16,6 +16,7 @@ interface DialogBoxSettings {
   strokeWidth: number;
   boxOpacity: number;
   floatingGround: boolean;
+  introTelepathyGround: boolean;
   groundFade: boolean;
   boxFit: 'full' | 'message' | 'fit';
   groundColor: string;
@@ -53,7 +54,8 @@ const useDialogSettingsStore = create<DialogSettingsStore>()((set) => ({
   strokeColor: '#3850a8',
   strokeWidth: 0.5,
   boxOpacity: 0.7,
-  floatingGround: false,
+  floatingGround: true,
+  introTelepathyGround: false,
   groundFade: false,
   boxFit: 'message',
   groundColor: '#101018',

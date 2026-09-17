@@ -221,6 +221,7 @@ interface GameSettings {
   dialogStrokeWidth: DialogStrokeWidth;    // game pixels around each modern glyph; 0 = none
   dialogBoxOpacity: number;              // 0 .. 1, enhanced box ground
   dialogFloatingGround: boolean;         // draw the ground behind borderless messages such as telepathy
+  dialogIntroTelepathyGround: boolean;   // draw it behind Zelda's telepathy in the opening at Link's house
   dialogGroundFade: boolean;             // fade the ground out toward its edges
   dialogBoxFit: 'full' | 'message' | 'fit'; // message sizes the frame once to the whole message; fit follows the rows in use
   dialogGroundColor: string;             // hex, the ground behind the text

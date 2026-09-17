@@ -64,7 +64,7 @@ These settings change only how the message box looks. They are not tied to HUD M
 
 **Background Opacity** sets how solid that ground is, from fully clear to solid. The default is 70%.
 
-**Behind Telepathy** also draws that ground behind borderless messages, such as a telepathic plea. It is off by default, so those words float over the scene the way the game shows them. In the story told before the title screen, the legend over the pictures has no ground and the scenes after it do. The game-over menu never has one. The scene grounds always fade out at their edges, and so does the spawn picker shown when you start a game or continue after dying, which never has a border.
+**Behind Telepathy** also draws that ground behind borderless messages, such as a telepathic plea. It is on by default. **Behind Intro Telepathy** does the same for Zelda's first call, while Link is still in bed at the start of the game. It is off by default, so those opening words float over the dark room the way the game shows them. In the story told before the title screen, the legend over the pictures has no ground and the scenes after it do. The game-over menu never has one. The scene grounds always fade out at their edges, and so does the spawn picker shown when you start a game or continue after dying, which never has a border.
 
 **Fade Edges** fades the ground out toward its edges for every other message. It only applies to a box without a border, and it is off by default. Both keep their words where the game puts them, so the story lines up with its scenes and the fairy still points at each choice.
 
