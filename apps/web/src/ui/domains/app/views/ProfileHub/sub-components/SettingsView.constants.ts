@@ -129,7 +129,7 @@ const ENHANCEMENTS_SECTION: Section = {
       id: 'enhancements-indoor',
       title: 'Indoor / Dungeons',
       items: [
-        { key: 'forceBackdropBlack', label: 'Black Background', description: 'Replace the colored backdrop behind rooms with pure black', keywords: 'backdrop background color indoor dungeon house black' },
+        { key: 'hideSpaceBeyondWalls', label: 'Hide Space Beyond Walls', description: 'Black out the space past the walls of a house, a cave or the sanctuary. The room itself and dungeons are untouched', keywords: 'hide space beyond walls backdrop background black indoor house cave sanctuary surround' },
       ],
     },
   ],

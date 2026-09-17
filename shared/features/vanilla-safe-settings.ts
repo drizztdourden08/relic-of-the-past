@@ -36,6 +36,8 @@ const VANILLA_SAFE_LOCKED_SETTINGS: readonly string[] = [
   // Renderer effects that visibly differ from the cartridge, hand-gated in buildPpuFlags.
   'enhancedMode7',
   'noSpriteLimits',
+  // The band past a room's walls: pushLiveSettings withholds the request under Vanilla Safe.
+  'hideSpaceBeyondWalls',
 ];
 
 /** Haptic settings are nested, so they arrive as dotted keys (`haptics.swordSwing`). */

@@ -71,11 +71,11 @@ enum {
   kPpuRenderFlags_NoBG3 = 16,
   // Skip OBJ/sprite rendering
   kPpuRenderFlags_NoSprites = 32,
-  // Force BG1 + backdrop pixels to black (for indoor scenes)
-  kPpuRenderFlags_BlackBG2 = 64,
-  // Render the wide overworld view's no-data-gap sentinel (kPpuWorldGapPixel: backdrop layer 5 with a
-  // non-zero colour index) as black, while leaving the real green backdrop (cidx 0, which shows through
-  // transparent terrain such as tree bases and doorways) untouched. Set per-frame during scroll transitions.
+  // Render the gap sentinel (kPpuWorldGapPixel: backdrop layer 5 with a non-zero colour index) as black,
+  // while leaving the real backdrop (cidx 0, which shows through transparent terrain such as tree bases
+  // and doorways) untouched. Two things paint the sentinel: the wide overworld view's no-data gaps during
+  // a scroll transition, and indoors the ceiling tiles past a room's walls (hiddenTiles below). Set
+  // per frame by ZeldaDrawPpuFrame in both cases.
   kPpuRenderFlags_BlackBackdrop = 128,
 };
 
@@ -172,6 +172,12 @@ struct Ppu {
   // False unless a custom sheet is loaded, in which case the bank above is live. Keeps the stock game
   // on exactly the path it had before the bank existed.
   bool playerPalActive;
+  // The ceiling block as tilemap words, handed over each frame by ZeldaDrawPpuFrame (PpuSetHiddenTiles).
+  // A BG2 tile equal to one of them is the void past the room's walls and draws as the gap sentinel
+  // instead of its graphics, which BlackBackdrop then renders black. Count 0 means nothing is hidden and
+  // the draw never reaches the compare. Not part of a save state.
+  uint16_t hiddenTiles[8];
+  uint8_t hiddenTileCount;
 
   // store 31 extra entries to remove the need for clamp
   uint8_t brightnessMult[32 + 31];
@@ -209,6 +215,8 @@ int PpuGetCurrentRenderScale(Ppu *ppu, uint32_t render_flags);
 
 void PpuSetMode7PerspectiveCorrection(Ppu *ppu, int low, int high);
 void PpuSetExtraSideSpace(Ppu *ppu, int left, int right, int top, int bottom);
+// The tilemap words to draw as the gap sentinel on BG2 this frame (at most 8), or count 0 for none.
+void PpuSetHiddenTiles(Ppu *ppu, const uint16_t *words, int count);
 
 // Rasteriser diagnostics, see ppu.c. Per frame: which OAM slots actually drew pixels, and how often the
 // per-line sprite/tile budgets cut evaluation short.

@@ -82,8 +82,8 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'activeInputProfileId',
   // Edge effect (React prop, no WASM restart needed)
   'overworldEdgeEffect',
-  // Backdrop color (WASM flag, pushed live)
-  'forceBackdropBlack',
+  // Space beyond a room's walls (WASM request, pushed live)
+  'hideSpaceBeyondWalls',
   // HUD settings (React-only, no WASM restart needed)
   'hudMode',
   'hudStyle',

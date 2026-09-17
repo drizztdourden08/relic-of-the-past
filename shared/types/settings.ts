@@ -185,7 +185,9 @@ interface GameSettings {
   // ─── Post-Processing ───
   overworldEdgeEffect: boolean;
   postProcessingShadows: boolean;
-  forceBackdropBlack: boolean;
+  // Paint the space past the walls of a house, a cave or the sanctuary black. The core decides per
+  // frame (hide_space_beyond_walls.c), so dungeons and the overworld are never touched.
+  hideSpaceBeyondWalls: boolean;
 
   // ─── World item presentation ───
   // Draw a rupee reward lying in the world as the plain coloured gem, not the
