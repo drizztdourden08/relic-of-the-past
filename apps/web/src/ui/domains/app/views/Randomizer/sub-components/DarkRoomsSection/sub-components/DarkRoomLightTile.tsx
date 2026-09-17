@@ -18,7 +18,7 @@ import './DarkRoomLightTile.css';
 
 interface DarkRoomLightTileProps {
   tile: DarkRoomLightTileModel;
-  /** No light is asked for, or a read-only render: the tile draws inert. */
+  /** A read-only render: the tile draws inert. */
   disabled: boolean;
   onChange?: (checked: boolean) => void;
 }

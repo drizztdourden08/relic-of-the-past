@@ -474,6 +474,8 @@ static bool HandleIniConfig(int section, const char *key, char *value) {
       return ParseBoolBit(value, &g_config.features0, kFeatures0_SecondaryItemSlots);
     } else if (StringEqualsNoCase(key, "AutoSkipDialog")) {
       return ParseBoolBit(value, &g_config.features0, kFeatures0_AutoSkipDialog);
+    } else if (StringEqualsNoCase(key, "PrefillFileName")) {
+      return ParseBoolBit(value, &g_config.features0, kFeatures0_PrefillFileName);
     } else if (StringEqualsNoCase(key, "TurnWhileDashing")) {
       return ParseBoolBit(value, &g_config.features0, kFeatures0_TurnWhileDashing);
     } else if (StringEqualsNoCase(key, "MirrorToDarkworld")) {

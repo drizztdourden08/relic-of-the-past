@@ -3,7 +3,7 @@ import type { GameSettings } from '@shared/types/settings';
 import { SettingsLayout } from '../../../compounds/SettingsLayout';
 import { openVanillaSafeSettings } from '@app/stores/search-store';
 import { SECTIONS } from './hud-settings-sections';
-import { renderControl } from './hud-settings-controls';
+import { renderControl, isDisabled } from './hud-settings-controls';
 
 interface HudSettingsProps {
   settings: GameSettings;
@@ -17,6 +17,7 @@ const HudSettings = ({ settings, onChange }: HudSettingsProps) => {
       settings={settings}
       onChange={onChange}
       renderControl={renderControl}
+      isDisabled={isDisabled}
       onOpenVanillaSafeSettings={openVanillaSafeSettings}
     />
   );

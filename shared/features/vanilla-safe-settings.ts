@@ -36,6 +36,43 @@ const VANILLA_SAFE_LOCKED_SETTINGS: readonly string[] = [
   // Renderer effects that visibly differ from the cartridge, hand-gated in buildPpuFlags.
   'enhancedMode7',
   'noSpriteLimits',
+  // The band past a room's walls: pushLiveSettings withholds the request under Vanilla Safe.
+  'hideSpaceBeyondWalls',
+  // Dialog pacing: the DialogControls bit is masked out of gate word 3, so the core plays text at
+  // the game's own speed and ignores the hold and fill values these keys carry.
+  'dialogSpeed',
+  'dialogHoldSpeed',
+  'dialogHoldToAccelerate',
+  'dialogFillOnB',
+  'dialogTypewriter',
+  // Enhanced dialog box: it rides the same HudOverride bit as the custom HUD, so the native box
+  // comes back and every look option below it describes an overlay that is no longer drawn.
+  'dialogBox',
+  'dialogFont',
+  'dialogFontScale',
+  'dialogInkColor',
+  'dialogStrokeColor',
+  'dialogStrokeWidth',
+  'dialogBoxOpacity',
+  'dialogButtonPrompts',
+  'dialogFloatingGround',
+  'dialogGroundFade',
+  'dialogBoxFit',
+  'dialogBorder',
+  'dialogBorderThickness',
+  'dialogBorderColor',
+  'dialogCorner',
+  'dialogCornerMark',
+  'dialogCornerMarkAngle',
+  'dialogTexture',
+  'dialogTextureColor',
+  'dialogTextureOpacity',
+  'dialogTextureAnimation',
+  'dialogTextureSpeed',
+  'dialogTextureScale',
+  'dialogTextureDensity',
+  'dialogTextureScatter',
+  'dialogGroundColor',
 ];
 
 /** Haptic settings are nested, so they arrive as dotted keys (`haptics.swordSwing`). */

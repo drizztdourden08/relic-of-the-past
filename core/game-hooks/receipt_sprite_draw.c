@@ -98,7 +98,7 @@ bool GameHook_DrawSpriteAsReceiptItem(int k, int grant, int x_adj, int y_adj) {
   // Re-decoded every drawn frame, so any other user of the shared slot (a receipt that
   // just finished, a text box's story-sheet scribble) is repaired the next frame, so the
   // same per-frame repair pattern as receipt_gfx_guard.c.
-  DecodeAnimatedSpriteTile_variable(gfx);
+  GameHook_DecodeReceiptTiles(gfx);
   // The gem's two colour indices, pointed at the pair this denomination reads in.
   GameHook_TintRupeeGem(grant);
   // A blade or a shield reads its colours out of the player's own equipment row, so the

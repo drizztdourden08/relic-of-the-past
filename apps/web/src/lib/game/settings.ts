@@ -1,6 +1,7 @@
 /* @layer bridge-wasm @kind data */
 
 import type { GameSettings, OffscreenAiMode } from '@shared/types/settings';
+import { DEFAULT_TURBO_SPEED } from '@shared/display/turbo-speed';
 import { effectiveCustomRatio, detectScreenRatio, detectViewportRatio } from './aspect-ratio';
 
 const DEFAULT_SETTINGS: GameSettings = {
@@ -15,6 +16,8 @@ const DEFAULT_SETTINGS: GameSettings = {
   vsync: false,
   syncedRefreshRate: false,
   syncedRefreshRateHz: 0,
+  turboEnabled: false,
+  turboSpeed: DEFAULT_TURBO_SPEED,
 
   // Aspect Ratio & Display
   extendedRendering: false,
@@ -59,6 +62,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   inventoryReorder: false,
   secondaryItemSlots: false,
   autoSkipDialog: false,
+  prefillFileName: false,
   turnWhileDashing: false,
   mirrorToDarkworld: false,
   collectItemsWithSword: false,
@@ -96,7 +100,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   // Post-Processing
   overworldEdgeEffect: true,
   postProcessingShadows: false,
-  forceBackdropBlack: false,
+  hideSpaceBeyondWalls: false,
 
   // World item presentation
   coloredRupees: true,
@@ -104,6 +108,41 @@ const DEFAULT_SETTINGS: GameSettings = {
 
   // Minigames
   archeryNeedsBow: false,
+
+  // Dialog pacing: the stock values, so a fresh profile plays text exactly as the game does
+  dialogSpeed: 1,
+  dialogHoldSpeed: 2,
+  dialogHoldToAccelerate: true,
+  dialogFillOnB: true,
+  dialogTypewriter: true,
+
+  // Dialog box look
+  dialogBox: 'original',
+  dialogButtonPrompts: false,
+  dialogFont: 'original',
+  dialogFontScale: 1,
+  dialogInkColor: '#ffffff',
+  dialogStrokeColor: '#3850a8',
+  dialogStrokeWidth: 0.5,
+  dialogBoxOpacity: 0.7,
+  dialogFloatingGround: false,
+  dialogGroundFade: false,
+  dialogBoxFit: 'message',
+  dialogGroundColor: '#101018',
+  dialogBorder: 'original',
+  dialogBorderThickness: 'medium',
+  dialogBorderColor: '#f0f0f0',
+  dialogCorner: 'square',
+  dialogCornerMark: 'none',
+  dialogCornerMarkAngle: 0,
+  dialogTexture: 'none',
+  dialogTextureColor: '#5fb3c4',
+  dialogTextureOpacity: 0.25,
+  dialogTextureAnimation: 'none',
+  dialogTextureSpeed: 'normal',
+  dialogTextureScale: 1,
+  dialogTextureDensity: 60,
+  dialogTextureScatter: 0,
 
   // HUD
   hudMode: 'original',
@@ -250,6 +289,7 @@ ItemSwitchLRLimit = ${boolToIni(settings.itemSwitchLRLimit)}
 InventoryReorder = ${boolToIni(settings.inventoryReorder)}
 SecondaryItemSlots = ${boolToIni(settings.secondaryItemSlots)}
 AutoSkipDialog = ${boolToIni(settings.autoSkipDialog)}
+PrefillFileName = ${boolToIni(settings.prefillFileName)}
 TurnWhileDashing = ${boolToIni(settings.turnWhileDashing)}
 MirrorToDarkworld = ${boolToIni(settings.mirrorToDarkworld)}
 CollectItemsWithSword = ${boolToIni(settings.collectItemsWithSword)}
@@ -361,6 +401,12 @@ const mergeSettings = (partial: Partial<GameSettings>): GameSettings => {
   }
   delete (merged as Record<string, unknown>).unchangedSprites;
   delete (merged as Record<string, unknown>).noVisualFixes;
+
+  // forceBackdropBlack -> hideSpaceBeyondWalls rename: carry the old choice over once, then strip the key.
+  if ('forceBackdropBlack' in raw && !('hideSpaceBeyondWalls' in raw)) {
+    merged.hideSpaceBeyondWalls = raw.forceBackdropBlack === true;
+  }
+  delete (merged as Record<string, unknown>).forceBackdropBlack;
 
   // pauseOffscreenAI -> offscreenAI migration: only seed offscreenAI the first time a profile is
   // merged without it. After that, offscreenAI is the one written field and pauseOffscreenAI stays

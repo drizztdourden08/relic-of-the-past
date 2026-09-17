@@ -1,5 +1,6 @@
 /* @layer core-game-hooks @kind native */
 #include "game_hooks_internal.h"
+#include "cheat_inventory.h"
 
 // ─── Debug trace (read by the player control handler in player.c) ───
 int g_cheat_trace_frames = 0;
@@ -55,8 +56,7 @@ static int NearestUpgradeLevel(const uint8 *tiers, int wanted) {
 }
 
 // True when the engine is in normal interactive gameplay (overworld or indoor).
-// Includes the overworld-special-area flavor of MODULE_FALLING_ENTRANCE, as decided by
-// GameHook_IsOverworldSpecialArea.
+// Includes MODULE_OVERWORLD_SPECIAL_AREA, as decided by GameHook_IsOverworldSpecialArea.
 static inline bool IsInGameplay(void) {
   return main_module_index == MODULE_DUNGEON || main_module_index == MODULE_OVERWORLD || GameHook_IsOverworldSpecialArea();
 }
@@ -133,6 +133,9 @@ void WasmCheatSetMaxHealth(int value) {
   link_health_capacity = capped;
   if (link_health_current > capped)
     link_health_current = capped;
+  // The HUD redraws its hearts on a health change, not on a capacity change; ask for the redraw,
+  // in play only, since outside it the HUD's layer can hold a message box.
+  if (CheatConsole_InPlay()) Hud_RefreshIcon();
   printf("[Cheat] SetMaxHealth: capacity=%d\n", capped);
 }
 
@@ -214,19 +217,7 @@ void WasmCheatSetMaxArrows(int capacity) {
   printf("[Cheat] SetMaxArrows: capacity=%d (tier %d)\n", cap, level);
 }
 
-// Fill a specific bottle slot (0-3) with contents.
-// Contents: 0x02=empty, 0x03=red potion, 0x04=green potion, 0x05=blue potion,
-//           0x06=fairy, 0x07=bee, 0x08=good bee
-EMSCRIPTEN_KEEPALIVE
-void WasmCheatFillBottle(int slot, int contents) {
-  if (!CheatGate(kFeatures3_CheatStats)) return;
-  if (slot < 0 || slot > 3) {
-    printf("[Cheat] FillBottle: invalid slot %d\n", slot);
-    return;
-  }
-  link_bottle_info[slot] = (uint8)contents;
-  printf("[Cheat] FillBottle: slot=%d contents=0x%02x\n", slot, contents);
-}
+// Bottles, small keys and the direct inventory writes live in cheat_inventory.c.
 
 // Kill all hostile sprites on screen.
 // Skips: inactive sprites, friendly NPCs (state != 9 or bump_damage == 0).

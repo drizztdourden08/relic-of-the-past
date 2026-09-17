@@ -16,6 +16,9 @@ import { startSession, endSession } from './session-tracker';
 import { getInputManager } from '../input/input-manager';
 import { initHapticBridge, destroyHapticBridge, updateHapticBridgeSettings } from '../input/haptic-bridge';
 import { initUIBridge, stopUIBridge } from './ui-bridge';
+import { initDialogBridge, stopDialogBridge } from './dialog/dialog-bridge';
+import { clearGlyphAtlas } from './dialog/glyph-atlas';
+import { useDialogStore } from '../../stores/dialog-store';
 import { useGameUIStore } from '../../stores/game-ui-store';
 import { DEFAULT_SETTINGS } from './settings';
 import { deliveryQueue } from './delivery-queue';
@@ -74,6 +77,8 @@ const resetGame = async (): Promise<void> => {
   stopAutoSave();
   stopSramSync();
   stopUIBridge();
+  stopDialogBridge();
+  clearGlyphAtlas();
   deliveryQueue.stopProcessing();
   deliveryQueue.clear();
   destroyTrackerBridge();
@@ -90,8 +95,11 @@ const resetGame = async (): Promise<void> => {
   }
   const mod = getModule();
   if (mod) {
-    // Stop Emscripten's main loop to prevent stale rendering
-    try { (mod as any)._emscripten_cancel_main_loop?.(); } catch { /* ignore */ }
+    // Stop the core's main loop before anything else. The glue does not export
+    // _emscripten_cancel_main_loop on the module (it is a closure local), so the C side owns the
+    // cancel: WasmStop pauses and cancels in one call. Left running, the old core keeps emulating
+    // and keeps reporting music and sounds through the window hooks the next core takes over.
+    try { mod.ccall('WasmStop', null, [], []); } catch { /* a core built before WasmStop existed */ }
 
     const sdl2 = (mod as any).SDL2 as
       | { audioContext?: AudioContext; audio?: { scriptProcessorNode?: AudioNode }; capture?: { scriptProcessorNode?: AudioNode } }
@@ -233,6 +241,7 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
     appPauseUnsub = getPlatform().device.onAppPause(() => { void saveOnQuit(); });
 
     initUIBridge(useGameUIStore.getState()._setState);
+    initDialogBridge(useDialogStore.getState()._setFrame);
 
     deliveryQueue.startProcessing();
 

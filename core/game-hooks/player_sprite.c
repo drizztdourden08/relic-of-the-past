@@ -102,10 +102,14 @@ void GameHook_PlayerGlovesColorUpdated(void) {
   PushBank(g_last_outfit);
 }
 
-// Kept for callers that want the player's colors re-landed after a save-state load. The bank lives outside
-// the snapshot, so a load cannot disturb it. link_armor can differ, so rebuild from what's current.
+// Re-land the player's colors for the form they are in now: the bunny loader in bunny form, the armor one
+// otherwise. A save-state load and a closing map both need this, since neither reloads gear on its own.
 void PlayerSprite_RefreshPalette(void) {
-  if (g_has_custom)
+  if (!g_has_custom)
+    return;
+  if (link_is_bunny_mirror)
+    LoadGearPalettes_bunny();
+  else
     Palette_Load_LinkArmorAndGloves();
 }
 
@@ -174,15 +178,10 @@ void PlayerSprite_Restore(bool push_live) {
     Palette_Load_LinkArmorAndGloves();
 }
 
-// ─── JS-facing exports ───
-// Applying a sheet is file-based (WasmApplyPlayerSpriteFile, emscripten_io.c) so the renderer reuses
-// the MEMFS path it already writes at boot instead of hand-managing a heap buffer.
+// ─── JS-facing exports (applying a sheet is WasmApplyPlayerSpriteFile, emscripten_io.c) ───
 
-// Back to the sheet the assets shipped with. Gated like everything else: the override bit closing is
-// itself what puts the stock sheet back (GateWordTeardown in zelda_rtl.c runs the restore while the
-// gate is still open, before the bit clears), so by the time this export is refused there is nothing
-// left for it to undo. Leaving it open instead would be a way to reach the sprite system with the
-// gate shut.
+// Back to the stock sheet. Gated like everything else: closing the override bit already restores the
+// sheet (GateWordTeardown in zelda_rtl.c), so a refused call here has nothing left to undo.
 EMSCRIPTEN_KEEPALIVE
 void WasmClearPlayerSprite(void) {
   if (!(enhanced_features3 & kFeatures3_PlayerSpriteOverride))

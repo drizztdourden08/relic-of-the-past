@@ -1,4 +1,11 @@
 /* @layer renderer-components @kind logic */
+import { DEFAULT_TURBO_SPEED, formatTurboSpeed } from '@shared/display/turbo-speed';
+import { formatDialogSpeed } from '@shared/game/dialog/pacing';
+
+const capitalize = (v: unknown, fallback: string): string => {
+  const s = String(v ?? fallback);
+  return s.charAt(0).toUpperCase() + s.slice(1);
+};
 
 const SETTINGS_SECTIONS: Array<{ title: string; keys: Array<{ key: string; label: string; format?: (v: unknown) => string }> }> = [
   {
@@ -9,6 +16,8 @@ const SETTINGS_SECTIONS: Array<{ title: string; keys: Array<{ key: string; label
       { key: 'vsync', label: 'V-Sync' },
       { key: 'syncedRefreshRate', label: 'Synced Refresh Rate (fullscreen)' },
       { key: 'syncedRefreshRateHz', label: 'Target Refresh Rate', format: (v) => (Number(v) > 0 ? `${v} Hz` : 'Highest') },
+      { key: 'turboEnabled', label: 'Turbo' },
+      { key: 'turboSpeed', label: 'Turbo Speed', format: (v) => formatTurboSpeed(Number(v ?? DEFAULT_TURBO_SPEED)) },
     ],
   },
   {
@@ -60,13 +69,26 @@ const SETTINGS_SECTIONS: Array<{ title: string; keys: Array<{ key: string; label
       { key: 'breakPotsWithSword', label: 'Break Pots with Sword' },
       { key: 'disableLowHealthBeep', label: 'Disable Low Health Beep' },
       { key: 'skipIntroOnKeypress', label: 'Skip Intro on Keypress' },
-      { key: 'disableTelepathy', label: 'Disable Telepathic Messages' },
       { key: 'showMaxItemsInYellow', label: 'Show Max Items in Yellow' },
       { key: 'moreActiveBombs', label: 'More Active Bombs' },
       { key: 'carryMoreRupees', label: 'Carry More Rupees' },
       { key: 'miscBugFixes', label: 'Misc Bug Fixes' },
       { key: 'gameChangingBugFixes', label: 'Gameplay-altering bug fixes' },
       { key: 'cancelBirdTravel', label: 'Cancel Bird Travel' },
+    ],
+  },
+  {
+    title: 'Dialog',
+    keys: [
+      { key: 'dialogSpeed', label: 'Text Speed', format: (v) => formatDialogSpeed(Number(v ?? 1)) },
+      { key: 'dialogHoldToAccelerate', label: 'Hold A to Accelerate' },
+      { key: 'dialogHoldSpeed', label: 'Hold Speed', format: (v) => `${v ?? 2}x` },
+      { key: 'dialogFillOnB', label: 'B Completes the Box' },
+      { key: 'dialogTypewriter', label: 'Type Letter by Letter' },
+      { key: 'autoSkipDialog', label: 'Auto-Skip Dialog' },
+      { key: 'disableTelepathy', label: 'Disable Telepathic Messages' },
+      { key: 'dialogBox', label: 'Message Box', format: (v) => capitalize(v, 'original') },
+      { key: 'dialogFont', label: 'Dialog Font', format: (v) => capitalize(v, 'original') },
     ],
   },
 ];

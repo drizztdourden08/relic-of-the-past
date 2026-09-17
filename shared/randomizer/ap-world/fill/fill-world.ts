@@ -12,6 +12,12 @@
  * wish pond's own pair at Vanilla grants (what her upgrade produces), and the
  * capacity spots the profile locks: a vanilla meter's giver, and every present
  * fairy slot not proven deliverable.
+ *
+ * The rolled shelf prices are handed STRAIGHT THROUGH to the graph builder,
+ * because the access rules read them back off world.options (rules/prices.ts).
+ * Keeping them here priced every shelf at its vanilla rupees in logic while
+ * the running game charged the rolled price, which shipped seeds whose one
+ * bomb bag stood behind a five-bomb shelf (issue #219).
  */
 import { buildWorld } from '../build-world';
 import { registerRules } from '../rules/register';
@@ -121,7 +127,7 @@ const buildFillWorld = (options: FillWorldOptions): FillWorld => {
   const pondLocations = presentPondLocations(ponds, capacity, deliverableCapacityLocations);
   const pondSlots = pondVanillaSlotsOf(ponds, deliverableCapacityLocations, pondSlotsFollowMode);
   const world = buildWorld({
-    keyDropShuffle: true, capacity, medallions, shops, ponds, darkRooms, unlitEscapeExempt,
+    keyDropShuffle: true, capacity, medallions, shops, shopPrices, ponds, darkRooms, unlitEscapeExempt,
     progressiveTiers, progressiveModes, itemPower, retroBow, dungeonItems, accessibility,
     // The demands reach the rules through the world, because that is where the
     // rung ladder is registered from (rules/pond-demands.ts).

@@ -24,7 +24,7 @@ const DUNGEON_CASTLE_TOWER_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-113',
-    gameId: { roomId: 64, chestIndex: 0 },
+    gameId: { roomId: 208, chestIndex: 0 },
     kind: 'chest',
     screenId: 'screen-114',
     dungeonId: 'dungeon-002',

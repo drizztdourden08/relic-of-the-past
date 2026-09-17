@@ -26,8 +26,10 @@ static const uint16 kChestOpenMasksHook[] = { 0x100, 0x200, 0x400, 0x800, 0x1000
 #define kChestOpenMasksHook_COUNT 7
 
 // Try to visually open the chest tiles if the player is in the matching room.
-static void TryVisualChestOpen(uint16 room_id, uint8 chest_index) {
-  if (dungeon_room_index != room_id) {
+// |console| is the cheat console's route: the room only counts as loaded while the player is
+// indoors, and a slot that is not a small chest keeps its tiles (a big chest opens elsewhere).
+static void TryVisualChestOpen(uint16 room_id, uint8 chest_index, bool console) {
+  if (dungeon_room_index != room_id || (console && !player_is_indoors)) {
     printf("[GameHook] Visual skip: player in room 0x%03x, chest in 0x%03x\n",
            dungeon_room_index, room_id);
     return;
@@ -39,6 +41,10 @@ static void TryVisualChestOpen(uint16 room_id, uint8 chest_index) {
     uint16 chest_room = *(uint16 *)chest_data;
     if ((chest_room & 0x7fff) == room_id) {
       if (target_idx == 0) {
+        if (console && ((chest_room & 0x8000) || dung_chest_locations[chest_index] >= 0x8000)) {
+          printf("[GameHook] Visual skip: room 0x%03x slot %d is not a small chest\n", room_id, chest_index);
+          return;
+        }
         uint16 loc = dung_chest_locations[chest_index];
         uint16 pos = (loc & 0x7fff) >> 1;
         const uint16 *ptr = SrcPtr(0x14A4);
@@ -95,7 +101,10 @@ static const uint8 kSimReceiveItemAlternates[76] = {
   255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
 };
 
-void GameHook_TriggerCheck(uint16 room_id, uint8 chest_index, uint8 item_id) {
+// |console| is set by the cheat console's export alone. Clear, this is the delivery trigger as it
+// always was. Set, 0xFF records the chest with nothing handed over, and a virtual id resolves
+// through the receive seam like any other grant.
+static void TriggerCheckImpl(uint16 room_id, uint8 chest_index, uint8 item_id, bool console) {
   if (!TriggerGrantAllowed()) return;
   if (chest_index >= kChestOpenMasksHook_COUNT) {
     printf("[GameHook] Invalid chest_index %d (max %d)\n", chest_index, kChestOpenMasksHook_COUNT - 1);
@@ -107,7 +116,8 @@ void GameHook_TriggerCheck(uint16 room_id, uint8 chest_index, uint8 item_id) {
   // A heart piece re-granted this way silently inflated the heart count, since
   // every fourth one converts into a container (sprite_main.c:6493).
   uint16 mask = kChestOpenMasksHook[chest_index];
-  uint16 already = (dungeon_room_index == room_id)
+  bool here = dungeon_room_index == room_id && (!console || player_is_indoors);
+  uint16 already = here
       ? (uint16)(dung_savegame_state_bits & mask)
       : (uint16)(save_dung_info[room_id] & (mask >> 4));
   if (already) {
@@ -116,7 +126,7 @@ void GameHook_TriggerCheck(uint16 room_id, uint8 chest_index, uint8 item_id) {
     return;
   }
 
-  if (dungeon_room_index == room_id) {
+  if (here) {
     dung_savegame_state_bits |= kChestOpenMasksHook[chest_index];
     printf("[GameHook] TriggerCheck: room=0x%03x chest=%d item=0x%02x state_bits=0x%04x (current room)\n",
            room_id, chest_index, item_id, dung_savegame_state_bits);
@@ -126,7 +136,9 @@ void GameHook_TriggerCheck(uint16 room_id, uint8 chest_index, uint8 item_id) {
            room_id, chest_index, item_id, save_dung_info[room_id]);
   }
 
-  TryVisualChestOpen(room_id, chest_index);
+  TryVisualChestOpen(room_id, chest_index, console);
+  if (console && item_id == 0xFF) return;
+  if (console) item_id = GameHook_ResolveGrantItem(item_id);
 
   if (item_id < 76) {
     uint8 alt = kSimReceiveItemAlternates[item_id];
@@ -142,9 +154,17 @@ void GameHook_TriggerCheck(uint16 room_id, uint8 chest_index, uint8 item_id) {
   Link_ReceiveItem(item_id, 0);
 }
 
+void GameHook_TriggerCheck(uint16 room_id, uint8 chest_index, uint8 item_id) {
+  TriggerCheckImpl(room_id, chest_index, item_id, false);
+}
+
 EMSCRIPTEN_KEEPALIVE
 void WasmTriggerCheck(int room_id, int chest_index, int item_id) {
   GameHook_TriggerCheck((uint16)room_id, (uint8)chest_index, (uint8)item_id);
+}
+
+void GameHook_TriggerCheckFromConsole(uint16 room_id, uint8 chest_index, uint8 item_id) {
+  TriggerCheckImpl(room_id, chest_index, item_id, true);
 }
 
 // ─── NPC Check Trigger ───

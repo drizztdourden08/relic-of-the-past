@@ -9,6 +9,7 @@ import { reassertLiveFlagsAfterLoad } from './live-settings';
 import { requestLocationRebaseline } from './randomizer-client/location-poller';
 import { captureGameFrameBlob } from './capture-frame';
 import { saveMusicPosition, restoreMusicPosition } from './msu-save-glue';
+import { useDialogStore } from '../../stores/dialog-store';
 
 const saveState = async (slot: number): Promise<boolean> => {
   const mod = getModule();
@@ -103,6 +104,7 @@ const loadState = async (slot: number): Promise<boolean> => {
 
     // Re-assert all WASM flags that state load resets
     reassertLiveFlagsAfterLoad();
+    useDialogStore.getState().markStale();
     // The loaded state's completions are the poller's new baseline, not a burst of fresh
     // checks to report (and re-deliver).
     requestLocationRebaseline();
@@ -182,6 +184,7 @@ const loadStateFromBuffer = (buffer: ArrayBuffer, slot = 98): boolean => {
   mod.FS.writeFile(savePath, new Uint8Array(stripStamp(buffer)));
   mod.ccall('WasmLoadState', null, ['number'], [slot]);
   reassertLiveFlagsAfterLoad();
+  useDialogStore.getState().markStale();
   requestLocationRebaseline();
   pollInventoryState(true);
   try { mod.FS.unlink(savePath); } catch { /* ignore */ }

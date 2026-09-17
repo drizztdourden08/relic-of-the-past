@@ -4,8 +4,10 @@
  * how the in-core npc-override table can identify the giver's grant at the
  * plain receive seam. Indoor givers key by (room, vanilla item); the boss
  * prize keys by its arena room and the ceremonial heart grant. A giver with
- * no room keys by vanilla item alone, allowed only while that item id is
- * unique across every roomless giver (certified here over both scope
+ * no room keys by vanilla item alone, and so does a giver whose grant runs
+ * somewhere other than the room its record names (ROOMLESS_GRANT_CHECKS).
+ * Keying by item alone is allowed only while that item id is unique across
+ * every roomless giver (certified here over both scope
  * surfaces), or, for the audited givers whose shared vanilla item makes
  * that impossible (the three bottle givers), by the giver's own SPRITE TYPE:
  * the decomp audit certifies each one's grant executes inside its own sprite
@@ -36,8 +38,22 @@ interface NpcOverrideKey {
  */
 const SPRITE_KEY_CERTIFIED: ReadonlySet<number> = new Set([117, 43, 57]);
 
+/**
+ * Givers whose grant does NOT execute in the room their record names, so a
+ * room test would refuse every one of their grants. The record's screen says
+ * where the giver is FOUND; the escorted elder hands his reflector over after
+ * the escort ends, on the mountain overworld, when the tagalong trigger for
+ * that outdoor area turns him back into a sprite and the fresh sprite's first
+ * frame calls the receive seam (tagalong.c:562-570 over kTagalong_OutdoorInfos
+ * / kTagalong_OutdoorRooms; sprite_main.c:24674-24686 and 24721-24728, all of
+ * it with player_is_indoors clear). These key by item alone, under the same
+ * roomless-uniqueness rule as every other item-alone entry.
+ */
+const ROOMLESS_GRANT_CHECKS: ReadonlySet<string> = new Set(['check-060']);
+
 const giverRoomOf = (check: CheckRecord): number | null => {
   const { room, roomFlag, roomId } = check.gameId;
+  if (ROOMLESS_GRANT_CHECKS.has(check.id)) return null;
   if (room !== undefined) return room;
   if (roomFlag !== undefined) return roomFlag.roomId;
   // The boss prize's arena room pins its ceremonial grant, and the dungeon reward's the

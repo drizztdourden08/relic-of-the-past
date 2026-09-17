@@ -71,6 +71,7 @@ If a change would break an invariant, the code is in the wrong zone. Re-place it
 | Generic structural combo (Card, Dialog, Overlay) | `ui/design-system/composites/` | presentational, no data |
 | Domain-specific presentational card/form (ProfileCard, SaveSlot) | `ui/domains/app/compounds/` | takes a domain prop, fetches nothing |
 | Feature/page with logic + data | `ui/domains/app/views/` or `ui/domains/widgets/` | owns stores/IPC/game; logic in `behavior/` |
+| A view that draws game state the way the game draws it | compose `ui/domains/hud/` compounds from the view or widget | the HUD compounds are presentational, so a widget may lay hit zones over them (the cheat console does) |
 | Renderer UI state | `apps/web/src/stores/` | Zustand |
 | Shared renderer hook | `apps/web/src/hooks/` | non-feature-specific |
 | Pure renderer helper | `apps/web/src/utils/` | no side effects |

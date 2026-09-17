@@ -81,11 +81,11 @@ static void SpawnVolley(int base, int n) {
 static void PrepareVolleyArt(uint8 receipt) {
   uint8 item = receipt, pal = 0;
   if (GameHook_ColoredRupeeGem(receipt, &item, &pal)) {
-    DecodeAnimatedSpriteTile_variable(kReceiveItemGfx[item]);
+    GameHook_DecodeReceiptTiles(kReceiveItemGfx[item]);
     GameHook_PondGemPrepareArt();
     return;
   }
-  DecodeAnimatedSpriteTile_variable(kReceiveItemGfx[receipt]);
+  GameHook_DecodeReceiptTiles(kReceiveItemGfx[receipt]);
 }
 
 bool PondTossQueueNext(void) {

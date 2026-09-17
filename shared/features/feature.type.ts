@@ -21,6 +21,7 @@ type FeatureGroup =
   | 'Audio'
   | 'Input'
   | 'Quality of life'
+  | 'Dialog'
   | 'Bug fixes'
   | 'Cheats'
   | 'Dev';

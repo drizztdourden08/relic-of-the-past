@@ -25,10 +25,10 @@ import { ruleForPrice } from './shop-prices';
 import type { ApWorld, Rule } from '../world.type';
 import type { ShopPrice } from '../shops/shop-price.type';
 
-/** The named item cannot sit on the rung that asks to see it. */
+/** A rung never holds what its own demand is counted in (shops/shop-self-lock.ts). */
 const applySelfLock = (world: ApWorld, name: string, demand: ShopPrice): void => {
   const lock = selfLockRuleOf(demand);
-  if (lock === null) return;
+  if (lock === undefined) return;
   const existing = world.itemRules.get(name);
   world.itemRules.set(
     name,

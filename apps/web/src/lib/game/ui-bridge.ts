@@ -11,6 +11,7 @@ import { wasmGetGameUIState } from './wasm-bridge';
 import { pollHapticState, resetHapticPolling } from './haptic-polling';
 import { parseGameUIBuffer } from './ui-bridge-parser';
 import { stateChanged } from './ui-bridge-diff';
+import { pollDialogFrame } from './dialog/dialog-bridge';
 
 
 let rafId: number | null = null;
@@ -39,6 +40,8 @@ const pollFrame = (): void => {
       storeUpdater?.(state);
     }
   }
+  // The message box mirror rides the same loop, with its own change check.
+  pollDialogFrame();
   rafId = requestAnimationFrame(pollFrame);
 };
 

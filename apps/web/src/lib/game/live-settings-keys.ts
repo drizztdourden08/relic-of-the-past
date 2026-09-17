@@ -41,11 +41,45 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'inventoryReorder',
   'secondaryItemSlots',
   'autoSkipDialog',
+  'prefillFileName',
   // World-item presentation (synced every frame via features3, same path as cheatsEnabled)
   'coloredRupees',
   'itemSheen',
   // The archery host's refusal (features3, same path again)
   'archeryNeedsBow',
+  // Dialog pacing (pushed as plain values, gated by the DialogControls bit in features3)
+  'dialogSpeed',
+  'dialogHoldSpeed',
+  'dialogHoldToAccelerate',
+  'dialogFillOnB',
+  'dialogTypewriter',
+  // Dialog box look (React overlay, plus one hidden flag the core reads every frame)
+  'dialogBox',
+  'dialogFont',
+  'dialogFontScale',
+  'dialogInkColor',
+  'dialogStrokeColor',
+  'dialogStrokeWidth',
+  'dialogBoxOpacity',
+  'dialogButtonPrompts',
+  'dialogFloatingGround',
+  'dialogGroundFade',
+  'dialogBoxFit',
+  'dialogBorder',
+  'dialogBorderThickness',
+  'dialogBorderColor',
+  'dialogCorner',
+  'dialogCornerMark',
+  'dialogCornerMarkAngle',
+  'dialogTexture',
+  'dialogTextureColor',
+  'dialogTextureOpacity',
+  'dialogTextureAnimation',
+  'dialogTextureSpeed',
+  'dialogTextureScale',
+  'dialogTextureDensity',
+  'dialogTextureScatter',
+  'dialogGroundColor',
   // Per-group volume enable gate (DSP flag pushed live)
   'perGroupVolume',
   // Window settings (Electron-managed, no WASM restart needed)
@@ -58,6 +92,9 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'pixelPerfect',
   // Frame pacing, swapped via WasmSetVsync because the main loop's schedule can change mid-run
   'vsync',
+  // Turbo speed, pushed via WasmSetTurboSpeed; a plain pacing global, read on every tick
+  'turboEnabled',
+  'turboSpeed',
   // Audio volume (Web Audio gain, no restart needed)
   'masterVolume',
   // Sub-volumes (WASM DSP-level, no restart needed)
@@ -78,8 +115,8 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'activeInputProfileId',
   // Edge effect (React prop, no WASM restart needed)
   'overworldEdgeEffect',
-  // Backdrop color (WASM flag, pushed live)
-  'forceBackdropBlack',
+  // Space beyond a room's walls (WASM request, pushed live)
+  'hideSpaceBeyondWalls',
   // HUD settings (React-only, no WASM restart needed)
   'hudMode',
   'hudStyle',

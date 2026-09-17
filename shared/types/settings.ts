@@ -1,5 +1,10 @@
 /* @layer shared-types @kind logic */
 import type { FunctionMapping } from './controls';
+import type { DialogHoldStop, DialogSpeedStop, DialogStrokeWidth } from '../game/dialog/pacing';
+import type {
+  DialogBorder, DialogBorderThickness, DialogCorner, DialogCornerMark,
+  DialogTexture, DialogTextureAnimation, DialogTextureSpeed,
+} from '../game/dialog/box-style';
 
 /** How sprites in the wide/tall extra band behave before reaching the stock 4:3 screen. */
 type OffscreenAiMode = 'idle' | 'vanilla' | 'paused';
@@ -40,6 +45,11 @@ interface GameSettings {
   // Target rate in Hz. 0 means "the highest multiple of 60 this display offers", which is what
   // a fresh profile gets. A stored rate the display later stops offering falls back to that.
   syncedRefreshRateHz: number;
+  // Run the game faster than real time while the Turbo shortcut is held. Off = the core never
+  // leaves real time, whatever the shortcut does. Live-togglable.
+  turboEnabled: boolean;
+  // Speed multiplier while turbo is held, one of the rungs in shared/display/turbo-speed.ts.
+  turboSpeed: number;
 
   // ─── Aspect Ratio & Display ───
   // Master gate. Off: the engine always runs 4:3 vanilla and no sub-settings appear in the UI.
@@ -121,6 +131,8 @@ interface GameSettings {
   secondaryItemSlots: boolean;
   // Render dialog instantly and auto-advance message-box waits; choice prompts stay interactive. Non-vanilla.
   autoSkipDialog: boolean;
+  // A new file is named Link with the naming strip parked on End. Non-vanilla.
+  prefillFileName: boolean;
   turnWhileDashing: boolean;
   mirrorToDarkworld: boolean;
   collectItemsWithSword: boolean;
@@ -178,7 +190,9 @@ interface GameSettings {
   // ─── Post-Processing ───
   overworldEdgeEffect: boolean;
   postProcessingShadows: boolean;
-  forceBackdropBlack: boolean;
+  // Paint the space past the walls of a house, a cave or the sanctuary black. The core decides per
+  // frame (hide_space_beyond_walls.c), so dungeons and the overworld are never touched.
+  hideSpaceBeyondWalls: boolean;
 
   // ─── World item presentation ───
   // Draw a rupee reward lying in the world as the plain coloured gem, not the
@@ -189,6 +203,41 @@ interface GameSettings {
   // ─── Minigames ───
   // Let the archery host refuse the fee when the shots it buys could not be fired.
   archeryNeedsBow: boolean;
+
+  // ─── Dialog (Gameplay tab: behaviour, runs in the core under either HUD) ───
+  dialogSpeed: DialogSpeedStop;          // 1 = the game's pacing, 0 = instant (the ROM's own Speed 00 convention)
+  dialogHoldSpeed: DialogHoldStop;       // multiplier while A is held
+  dialogHoldToAccelerate: boolean;
+  dialogFillOnB: boolean;                // B completes the current box; the next press advances
+  dialogTypewriter: boolean;             // a line the game shows at once types one glyph per step instead
+
+  // ─── Dialog box (HUD tab: look only, independent of hudMode) ───
+  dialogBox: 'original' | 'enhanced';
+  dialogButtonPrompts: boolean;          // show the buttons that act on a message, under the box
+  dialogFont: 'original' | 'modern';     // enhanced box only
+  dialogFontScale: 1 | 1.25 | 1.5 | 2;   // modern font only
+  dialogInkColor: string;                // hex; modern font only
+  dialogStrokeColor: string;
+  dialogStrokeWidth: DialogStrokeWidth;    // game pixels around each modern glyph; 0 = none
+  dialogBoxOpacity: number;              // 0 .. 1, enhanced box ground
+  dialogFloatingGround: boolean;         // draw the ground behind borderless messages such as telepathy
+  dialogGroundFade: boolean;             // fade the ground out toward its edges
+  dialogBoxFit: 'full' | 'message' | 'fit'; // message sizes the frame once to the whole message; fit follows the rows in use
+  dialogGroundColor: string;             // hex, the ground behind the text
+  dialogBorder: DialogBorder;            // the game's tiles, none, one line, or a thin line inside a thicker one
+  dialogBorderThickness: DialogBorderThickness;
+  dialogBorderColor: string;             // hex, drawn borders and corner marks
+  dialogCorner: DialogCorner;
+  dialogCornerMark: DialogCornerMark;
+  dialogCornerMarkAngle: number;         // degrees the top-left mark turns; the others mirror it
+  dialogTexture: DialogTexture;          // the pattern on the ground
+  dialogTextureColor: string;            // hex
+  dialogTextureOpacity: number;          // 0 .. 1
+  dialogTextureAnimation: DialogTextureAnimation;
+  dialogTextureSpeed: DialogTextureSpeed;
+  dialogTextureScale: number;            // cell size multiplier
+  dialogTextureDensity: number;          // 0 .. 100, how close the cells sit
+  dialogTextureScatter: number;          // 0 .. 100, how far cells stray from the grid
 
   // ─── HUD ───
   hudMode: 'original' | 'enhanced';

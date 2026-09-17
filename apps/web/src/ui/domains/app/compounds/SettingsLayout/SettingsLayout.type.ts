@@ -20,10 +20,16 @@ interface SubSection {
   items: SettingItem[];
 }
 
+/**
+ * A section holds either a flat list of items or named subsections, never both. A subject
+ * with nothing to divide (one screen of related toggles) takes `items` and gets no second
+ * heading, so the nav shows the section alone and the panel stops repeating itself.
+ */
 interface Section {
   id: string;
   title: string;
-  subsections: SubSection[];
+  items?: SettingItem[];
+  subsections?: SubSection[];
 }
 
 interface SettingsLayoutProps {

@@ -6,7 +6,7 @@ import { canActivateCrystalSwitch, canShootArrows, canUseBombs } from '@shared/g
 const DUNGEON_GANONS_TOWER_CHECKS_2: CheckRecord[] = [
   {
     id: 'check-250',
-    gameId: { roomId: 123, chestIndex: 1 },
+    gameId: { roomId: 124, chestIndex: 1 },
     kind: 'chest',
     screenId: 'screen-390',
     dungeonId: 'dungeon-013',
@@ -16,7 +16,7 @@ const DUNGEON_GANONS_TOWER_CHECKS_2: CheckRecord[] = [
   },
   {
     id: 'check-251',
-    gameId: { roomId: 123, chestIndex: 2 },
+    gameId: { roomId: 124, chestIndex: 2 },
     kind: 'chest',
     screenId: 'screen-390',
     dungeonId: 'dungeon-013',
@@ -26,7 +26,7 @@ const DUNGEON_GANONS_TOWER_CHECKS_2: CheckRecord[] = [
   },
   {
     id: 'check-252',
-    gameId: { roomId: 123, chestIndex: 3 },
+    gameId: { roomId: 124, chestIndex: 3 },
     kind: 'chest',
     screenId: 'screen-390',
     dungeonId: 'dungeon-013',
@@ -36,7 +36,7 @@ const DUNGEON_GANONS_TOWER_CHECKS_2: CheckRecord[] = [
   },
   {
     id: 'check-253',
-    gameId: { roomId: 140, chestIndex: 4 },
+    gameId: { roomId: 140, chestIndex: 3 },
     kind: 'chest',
     screenId: 'screen-396',
     dungeonId: 'dungeon-013',
@@ -45,7 +45,7 @@ const DUNGEON_GANONS_TOWER_CHECKS_2: CheckRecord[] = [
   },
   {
     id: 'check-254',
-    gameId: { roomId: 140, chestIndex: 3 },
+    gameId: { roomId: 140, chestIndex: 0 },
     kind: 'chest',
     screenId: 'screen-396',
     dungeonId: 'dungeon-013',

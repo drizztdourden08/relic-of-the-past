@@ -1,0 +1,270 @@
+/* @layer renderer-widgets @kind style */
+
+/* The Player tab: the HUD pieces stacked down the middle of a black panel, the legend under.
+   Every pixel size that follows the HUD scale is an inline style; what lives here is the
+   layout, the hit zones and their hover and ghost treatments. */
+
+.cheats-player {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.cheats-player__stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-md) var(--space-sm);
+}
+
+/* A piece the game cannot take a write for right now: dimmed, and its cells stop answering. */
+.cheats-player__life[data-locked] .cheats-player__heart-cell--ghost,
+.cheats-player__bottles[data-locked] {
+  opacity: var(--opacity-disabled);
+  cursor: not-allowed;
+}
+
+/* One HUD piece with whatever sits beside it, centred as a group. */
+.cheats-player__block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+}
+
+/* ─── Life: the heart hit grid over HudLife, ghosts past the capacity ─── */
+
+.cheats-player__life {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.cheats-player__heart-grid {
+  position: absolute;
+  left: 0;
+  display: grid;
+}
+
+.cheats-player__heart-cell {
+  cursor: pointer;
+}
+
+.cheats-player__heart-cell:hover {
+  outline: var(--border-width-thin) solid var(--c-gold);
+  outline-offset: calc(-1 * var(--border-width-thin));
+}
+
+.cheats-player__heart-cell--ghost {
+  outline: var(--border-width-thin) dotted var(--c-border-strong);
+  outline-offset: calc(-2 * var(--border-width-thin));
+}
+
+.cheats-player__life-side {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-xs);
+}
+
+.cheats-player__readout {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--c-text-dim);
+  text-align: center;
+}
+
+/* ─── Magic: sixteen rows over the meter's interior, a caption under it ─── */
+
+.cheats-player__magic-block {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+/* The meter's frame layer sits at a low z-index of its own; the box isolates it so the rows
+   can go above the frame without competing with the popover outside. */
+.cheats-player__magic {
+  position: relative;
+  flex: 0 0 auto;
+  isolation: isolate;
+}
+
+.cheats-player__magic-rows {
+  position: absolute;
+  z-index: var(--z-sticky);
+  display: grid;
+}
+
+.cheats-player__magic-row {
+  cursor: pointer;
+}
+
+/* Hovering a row lights it and every row under it, so the level a click would set is read
+   as a fill before it is written. */
+.cheats-player__magic-row:hover,
+.cheats-player__magic-row:hover ~ .cheats-player__magic-row {
+  background: color-mix(in srgb, var(--c-gold) 35%, transparent);
+}
+
+.cheats-player__caption {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--c-text-dim);
+}
+
+.cheats-player__caption[data-preview] {
+  color: var(--c-gold);
+}
+
+/* The meter and its column of cost levels, side by side, both starting at the frame's top. */
+.cheats-player__magic-row-group {
+  display: flex;
+  align-items: flex-start;
+}
+
+/* One step per level, bottom first, filled up to the level held, like the hearts; the column is
+   as tall as the meter's inner well and starts where it starts. */
+.cheats-player__levels {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+}
+
+.cheats-player__level {
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+  gap: var(--space-xs);
+  cursor: pointer;
+}
+
+.cheats-player__level-label {
+  display: flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: 1;
+  color: var(--c-text-muted);
+  white-space: nowrap;
+}
+
+.cheats-player__level[data-held] .cheats-player__level-label {
+  color: var(--c-green-bright);
+}
+
+.cheats-player__level-step {
+  display: block;
+  border: var(--border-width-thin) solid var(--c-border-strong);
+  border-radius: var(--radius-sm);
+}
+
+.cheats-player__level[data-filled] .cheats-player__level-step {
+  background: var(--c-green-bright);
+  border-color: var(--c-green-bright);
+}
+
+.cheats-player__levels:not([data-locked]) .cheats-player__level[data-preview] .cheats-player__level-step {
+  border-color: var(--c-gold);
+  box-shadow: inset 0 0 0 var(--border-width-thin) var(--c-gold);
+}
+
+.cheats-player__levels:not([data-locked]) .cheats-player__level:hover .cheats-player__level-label {
+  color: var(--c-gold);
+}
+
+.cheats-player__levels[data-locked] .cheats-player__level {
+  opacity: var(--opacity-disabled);
+  cursor: not-allowed;
+}
+
+/* ─── Counters: icon over "held / ceiling", each number its own hit zone ─── */
+
+.cheats-player__counters {
+  flex-wrap: wrap;
+  gap: var(--space-lg);
+}
+
+.cheats-player__counter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.cheats-player__pair {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.cheats-player__slash {
+  font-family: var(--font-mono);
+  font-weight: var(--weight-bold);
+  line-height: 1;
+  color: var(--c-text);
+  text-shadow: var(--border-width-thin) var(--border-width-thin) 0 var(--c-bg);
+}
+
+.cheats-player__number {
+  position: relative;
+}
+
+.cheats-player__number--fixed {
+  opacity: var(--opacity-muted);
+}
+
+.cheats-player__number-hit {
+  position: absolute;
+  inset: 0;
+  cursor: text;
+}
+
+.cheats-player__number-hit:hover {
+  outline: var(--border-width-thin) dotted var(--c-gold);
+}
+
+.cheats-player__number-input {
+  position: absolute;
+  inset: 0 auto 0 50%;
+  transform: translateX(-50%);
+  width: 5ch;
+  padding: 0 var(--space-2xs);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+/* ─── Bottles: four slots in the yellow frame, a ghost where there is no bottle ─── */
+
+.cheats-player__bottle {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.cheats-player__bottle:hover {
+  background: var(--c-hover);
+}
+
+.cheats-player__bottle--ghost {
+  outline: var(--border-width-thin) dotted var(--c-border-strong);
+  outline-offset: calc(-2 * var(--border-width-thin));
+}
+
+.cheats-player__bottle--ghost .cheats-player__bottle-sprite {
+  opacity: var(--opacity-disabled);
+}
+
+.cheats-player__bottle-sprite {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}

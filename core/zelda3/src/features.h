@@ -98,6 +98,10 @@ enum {
   // dev-only GameHook). Off = zero GameHook host-calls, same contract as kFeatures0_Haptics. Purely
   // observational; never changes gameplay, so it carries no vanilla-parity note.
   kFeatures0_DeveloperTools = 1073741824,
+
+  // A new file's naming screen opens named Link with the strip parked on End
+  // (core/game-hooks/file_name_prefill.c). Off: six blank boxes with the strip on A. The last free bit.
+  kFeatures0_PrefillFileName = 2147483648u,
 };
 
 // The 42 split bug-fix toggles (kFeatures1_* / kFeatures2_*) — generated from the Wave-1b catalog.
@@ -223,6 +227,10 @@ enum {
   // refused and his own message box says why. No save byte, no wallet movement either way.
   // Off: the branch is the vendored condition and the vendored line, verbatim.
   kFeatures3_ArcheryNeedsBow       = 1073741824,
+  // Dialog pacing (core/game-hooks/dialog_pacing.c): the text engine's own step runs more than once
+  // a frame (speed multiplier, hold A to accelerate) and a B press fills the current box. Off: one
+  // step per frame and the joypad bytes untouched, the vendored engine verbatim.
+  kFeatures3_DialogControls        = 2147483648u,
 };
 
 // Enum values for kRam_Features4 — how helpful the items are. The reference randomizer asks this as one

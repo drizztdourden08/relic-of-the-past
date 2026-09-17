@@ -39,12 +39,35 @@
 
 .side-nav__group-title {
   display: block;
+  width: 100%;
   font-size: var(--text-xs);
   font-weight: var(--weight-semi);
   color: var(--c-text-dim);
+  text-align: left;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: var(--space-xs) var(--space-sm);
+}
+
+/* A heading that is also a jump target. It keeps the heading weight and tracking, and picks
+   up the same left-edge marker the items use, so the two read as one ladder. */
+.side-nav__group-title--action {
+  border-left: 2px solid transparent;
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.side-nav__group-title--action:hover {
+  background: var(--c-hover);
+  color: var(--c-text);
+  border-left-color: var(--c-gold-dim);
+}
+
+.side-nav__group-title--active {
+  background: var(--c-selected);
+  color: var(--c-gold-bright);
+  border-left-color: var(--c-gold);
 }
 
 .side-nav__item {

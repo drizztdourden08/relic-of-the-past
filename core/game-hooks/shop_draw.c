@@ -85,9 +85,14 @@ static bool ShopEnsureOamRegion(int k, int body) {
 }
 
 // Entries the receipt helper spent on the item, read off the same table it reads: a
-// 16x16 icon is one entry, an 8x16 one is two stacked.
+// 16x16 icon is one entry, an 8x16 one is two stacked. A large rupee is a 16x16 numbered
+// picture, but under coloured rupees the helper draws it as the 8x16 gem, so the gem's
+// receipt is the one to read. Otherwise the price's first entry lands on the gem's
+// bottom tile.
 static int ShopItemArtEntries(uint8 grant) {
   uint8 item = GameHook_GrantPresentationOf(grant);
+  uint8 gem_pal = 0;
+  GameHook_ColoredRupeeGem(grant, &item, &gem_pal);
   if (item >= 76) return 1;
   return kReceiveItem_Tab1[item] == 0 ? 2 : 1;
 }

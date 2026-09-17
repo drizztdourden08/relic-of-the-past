@@ -49,26 +49,15 @@ const pondPricesOf = (world: ApWorld): ReadonlyMap<string, number> => {
 };
 
 /**
- * A price that names an item keeps that item out of the slot it prices
- * (shop-self-lock.ts), AND-composed onto whatever the slot already forbade.
- * No price shape in use today names one, so this registers nothing yet.
- */
-const applySelfLock = (world: ApWorld, name: string, price: ShopPrice): void => {
-  const lock = selfLockRuleOf(price);
-  if (lock === null) return;
-  const existing = world.itemRules.get(name);
-  world.itemRules.set(
-    name,
-    existing === undefined ? lock : (itemName) => existing(itemName) && lock(itemName),
-  );
-};
-
-/**
- * The shelf slots this world opened, each charging its own vanilla price. A
- * restocked slot charges that price AGAIN instead of a multiple of it: what
- * these rules express is that the wallet can HOLD the price, and rupees are
- * farmable between purchases, so a slot's third item needs the same wallet
- * rung as its first.
+ * The shelf slots this world opened, each charging the price the seed rolled
+ * for it, or its own vanilla price when nothing was rolled. A restocked slot
+ * charges that price AGAIN instead of a multiple of it: what these rules
+ * express is that the wallet can HOLD the price, and rupees are farmable
+ * between purchases, so a slot's third item needs the same wallet rung as its
+ * first.
+ *
+ * The price also decides what the slot may HOLD: a shelf never sells the
+ * capacity its own price is counted in (shops/shop-self-lock.ts).
  */
 const registerShopPriceRules = (world: ApWorld): void => {
   const rolled = world.options.shopPrices;
@@ -82,7 +71,11 @@ const registerShopPriceRules = (world: ApWorld): void => {
     const price = rolled?.[name] ?? { currency: 'rupees' as const, amount: row.slot.price };
     const afford = ruleForPrice(price);
     world.locationRules.set(name, (state) => existing(state) && afford(state));
-    applySelfLock(world, name, price);
+    // The shelf may not sell what its own price is counted in (shop-self-lock).
+    const selfLock = selfLockRuleOf(price);
+    if (selfLock === undefined) continue;
+    const allowed = world.getItemRule(name);
+    world.itemRules.set(name, (itemName) => allowed(itemName) && selfLock(itemName));
   }
 };
 

@@ -9,7 +9,7 @@
  * 4:3 picture and Vanilla Safe, which forces every non-stock behavior off
  * regardless of what else is stored. Enhanced is every field a reference
  * profile diverges from default on: general/display quality-of-life, every
- * rendering companion, and the HUD/world-item presentation features.
+ * rendering companion, the HUD/world-item presentation features, and the full dialog setup.
  */
 import type { GameSettings } from '@shared/types/settings';
 
@@ -42,12 +42,47 @@ const ENHANCED_CONFIG_OVERRIDES: Partial<GameSettings> = {
   gameChangingBugFixes: true,
   itemSheen: true,
   archeryNeedsBow: true,
+  prefillFileName: true,
   hudMode: 'enhanced',
   hudHeartMode: 'smooth',
   hudMagicMode: 'accurate',
   hudPauseStyle: 'enhanced',
   saveHoldDuration: 1,
   cheatsEnabled: true,
+  // Dialog: pacing, the enhanced box and its look.
+  autoSkipDialog: false,
+  disableTelepathy: false,
+  dialogSpeed: 1,
+  dialogHoldSpeed: 2,
+  dialogHoldToAccelerate: true,
+  dialogFillOnB: true,
+  dialogTypewriter: true,
+  dialogBox: 'enhanced',
+  dialogButtonPrompts: true,
+  dialogFont: 'modern',
+  dialogFontScale: 1,
+  dialogInkColor: '#ffffff',
+  dialogStrokeColor: '#000000',
+  dialogStrokeWidth: 1,
+  dialogBoxOpacity: 0.5,
+  dialogFloatingGround: true,
+  dialogGroundFade: true,
+  dialogBoxFit: 'full',
+  dialogGroundColor: '#000000',
+  dialogBorder: 'single',
+  dialogBorderThickness: 'thin',
+  dialogBorderColor: '#a6a6a6',
+  dialogCorner: 'chamfered',
+  dialogCornerMark: 'none',
+  dialogCornerMarkAngle: 315,
+  dialogTexture: 'triforce-filled',
+  dialogTextureColor: '#ffeb00',
+  dialogTextureOpacity: 0.25,
+  dialogTextureAnimation: 'drift',
+  dialogTextureSpeed: 'normal',
+  dialogTextureScale: 0.75,
+  dialogTextureDensity: 30,
+  dialogTextureScatter: 100,
 };
 
 export { ENHANCED_CONFIG_OVERRIDES, VANILLA_CONFIG_OVERRIDES };

@@ -296,6 +296,17 @@ void GameHook_MarkSubstitutedBossHeart(uint8 vanilla_item);
 // False with the gate down or nothing armed, so the vendored expression stands alone.
 bool GameHook_SubstitutedReceiptNeedsUnfreeze(void);
 
+// ─── Substituted milestone boss-exit exemption (boss_exit_gate.c) ───
+
+// The vanilla receive id of the receipt in flight, recorded by the substitution seam
+// (npc_overrides.c) before any table lookup, substituted or not.
+void GameHook_NoteReceiptVanillaId(uint8 vanilla_item);
+
+// The receipt cleanup's (ancilla.c) extra boss-exit exemption: true when the vanilla id of
+// this receipt was one of the four the vendored test names. False with the gate down, so the
+// vendored expression stands alone.
+bool GameHook_SubstitutedReceiptSkipsBossExit(void);
+
 // ─── Dungeon-item shuffle (dungeon_item_grants.c) ───
 
 // The targeted dungeon-item ids (0xC0-0xFD, one per kind and palace index, see
@@ -331,6 +342,15 @@ int GameHook_PendingDungeonItemPalace(void);
 // per-visit arithmetic; true when the step was past the reachable bound and paid the
 // pond's consolation instead. Side effects: callers hold an open grant seam.
 bool GameHook_CapacityStep(int kind);
+
+// ─── Prefilled file name (file_name_prefill.c) ───
+
+// select_file.c NameFile_EraseSave, after the blank name is written: the next naming frame is
+// this screen's first.
+void GameHook_ArmFileNamePrefill(void);
+// select_file.c NameFile_DoTheNaming, first statement: on the armed frame, with
+// kFeatures0_PrefillFileName set, names the file Link, draws it and parks the strip on End.
+void GameHook_PrefillFileName(void);
 
 // ─── Capacity profile (capacity_profile.c) ───
 
@@ -373,6 +393,17 @@ int GameHook_CapacityRungOf(int family);
 
 // The starting rung the profile armed for |family|; -1 unless Custom under the gate.
 int GameHook_CapacityStartRung(int family);
+
+// The cheat console's ladder view. The cap |family| reads on |rung| in the current mode, or -1
+// when that rung is not offered (a native family offers its grid, a Custom one 0..its final
+// rung, a native wallet its one ceiling); the meter answers with a level code, not a count.
+int GameHook_CapacityRungCap(int family, int rung);
+
+// The rung |family| stands on as the console shows it (a native wallet: its ceiling's rung).
+int GameHook_CapacityRungNow(int family);
+
+// Land |family| on |rung|, clamped to the offered ladder; false when nothing can be set.
+bool GameHook_CapacitySetRung(int family, int rung);
 
 // hud.c MaxRupees seam: |vanilla| back untouched unless a Custom wallet is armed under the
 // gate, in which case the ladder's cap (0, then 100 * index - 1) when that is lower. Never raises.
@@ -592,6 +623,11 @@ bool GameHook_OverrideShopBombSlot(int k);
 // plays the hold-up animation, and fires the JS notification.
 void GameHook_TriggerCheck(uint16 room_id, uint8 chest_index, uint8 item_id);
 
+// The cheat console's form (WasmCheatTriggerCheck is its only caller): 0xFF records the chest with
+// nothing handed over, the loaded room also requires the player indoors, only a small chest has its
+// tiles stored, and a virtual id resolves through GameHook_ResolveGrantItem.
+void GameHook_TriggerCheckFromConsole(uint16 room_id, uint8 chest_index, uint8 item_id);
+
 // Programmatically trigger an NPC-type check (Uncle, the village elder, etc.)
 void GameHook_TriggerNpcCheck(uint8 flag_type, uint8 flag_mask, uint8 item_id,
                               uint8 sprite_type_id, uint8 post_gfx);
@@ -602,10 +638,9 @@ void GameHook_TriggerOverworldCheck(uint8 screen, uint8 mask, uint8 item_id);
 
 // ─── State Queries (state_queries.c) ───
 
-// True while `effectiveModule` is MODULE_FALLING_ENTRANCE (11) via the vanilla overworld
-// special-switch-area path (one of 3 locked-view locations reached by walking onto a
-// switch tile) and not an actual dungeon pit-fall. Both reuse the same module;
-// overworld_screen_index staying >= 128 is what's unique to the special-area flavor.
+// True while `effectiveModule` is MODULE_OVERWORLD_SPECIAL_AREA (11), the module the
+// vanilla special-switch-area path hands one of 3 locked-view locations reached by walking
+// onto a switch tile. overworld_screen_index staying >= 128 is what's unique to it.
 // Use this form once a menu-overlay remap has already been resolved (main_module_index
 // == 14, the real module in saved_module_for_menu), because passing the raw main_module_index
 // there would stop recognizing the special area the instant the pause menu opens over it.
@@ -641,6 +676,12 @@ uint8 GameHook_GetWantedIgnoreCollision(void);
 // hdr_dungeon_dark_with_lantern while the mask is still being drawn. Wide view only.
 bool GameHook_LightConeSuppressesExtraWidth(void);
 
+// The module whose geometry describes what MODULE_PIT_FALL_ENTRANCE is actually showing this frame:
+// MODULE_OVERWORLD while the departure screen is still up, MODULE_DUNGEON once the room below is
+// loaded. Any other module comes back unchanged, and so does the pit-fall one with the gate off, so
+// the caller's branch selection is exactly what it was.
+int GameHook_PitFallViewModule(int effectiveModule);
+
 // ─── Custom player sprite sheets (player_sprite.c) ───
 
 // Overwrite the player gfx asset from a ZSPR sheet and take its palette into the PPU's private player
@@ -664,6 +705,26 @@ void GameHook_PlayerGearPaletteLoaded(const uint16 *src);
 // The gloves color was refreshed on its own, without a full gear reload.
 void GameHook_PlayerGlovesColorUpdated(void);
 
+// The map put the head marker in OAM slot |slot| (player_sprite_map.c). With a custom sheet the slot is
+// marked as the player's so the PPU draws it from the private bank, in the sheet's own colors.
+void GameHook_PlayerMapHeadDrawn(int slot);
+
+// The overworld or dungeon map just closed. Puts the bunny palette back where the map left mail
+// colors, and re-lands a custom sheet's bank for the form the player is in.
+void GameHook_MapClosed(void);
+
+// ─── Hide Space Beyond Walls (hide_space_beyond_walls.c) ───
+
+// Records the renderer's request. WasmSetHideSpaceBeyondWalls (core/wasm-build/emscripten_api.c) is
+// the only caller.
+void GameHook_SetHideSpaceBeyondWalls(bool enable);
+
+// The tilemap words of the ceiling block, for a frame that should hide the space past the walls: the
+// request is on, the frame shows a room (player_is_indoors, in a live game module), and the room is a
+// house, a cave or the sanctuary. Returns the word count with |words| pointing at them, or 0 with
+// nothing to hide. Asked once per frame by ZeldaDrawPpuFrame, after PpuBeginDrawing has reset the flags.
+int GameHook_HideSpaceBeyondWallsFill(const uint16 **words);
+
 // ─── HUD/Pause Override (hud_override.c) ───
 
 // True while kFeatures3_HudOverride permits hiding the native HUD/pause menu. WasmSetHudHidden and
@@ -685,6 +746,13 @@ void HudOverride_SetWantedPauseHidden(bool on);
 void HudOverride_Sync(void);
 
 void HudOverride_Restore(void);
+
+// Whether the host wants the native message box kept off VRAM (it draws its own). Same wanted-state
+// and reconcile as the HUD/pause hides above.
+void HudOverride_SetWantedDialogHidden(bool on);
+
+// ─── Dialog pacing and mirror (dialog_pacing.c, dialog_mirror.c): dialog_hooks.h ───
+#include "dialog_hooks.h"
 
 // ─── Dark-room lighting cheat (cheat_lighting.c) ───
 

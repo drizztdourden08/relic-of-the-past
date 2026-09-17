@@ -19,8 +19,8 @@ const LW_DEATH_MOUNTAIN_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-061',
-    gameId: { roomId: 250, chestIndex: 0 },
-    kind: 'chest',
+    gameId: { roomId: 234, mask: 1024 },
+    kind: 'standing',
     screenId: 'screen-179',
     randomizerName: 'Spectacle Rock Cave',
     vanillaItemIds: ['item-024'],
@@ -91,7 +91,7 @@ const LW_DEATH_MOUNTAIN_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-070',
-    gameId: { owScreen: 3, mask: 64 },
+    gameId: { bufferIndex: 22, mask: 2 },
     kind: 'standing',
     screenId: 'screen-008',
     randomizerName: 'Ether Tablet',

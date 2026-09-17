@@ -6,8 +6,8 @@ import { canKillMostThings, hasFireSource } from '@shared/game/data/requirements
 const DUNGEON_TOWER_OF_HERA_CHECKS: CheckRecord[] = [
   {
     id: 'check-135',
-    gameId: { roomId: 135, chestIndex: 1 },
-    kind: 'chest',
+    gameId: { roomId: 135, mask: 1024 },
+    kind: 'standing',
     screenId: 'screen-139',
     dungeonId: 'dungeon-005',
     randomizerName: 'Basement Cage',
@@ -37,7 +37,7 @@ const DUNGEON_TOWER_OF_HERA_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-138',
-    gameId: { roomId: 39, chestIndex: 0 },
+    gameId: { roomId: 39, chestIndex: 1 },
     kind: 'chest',
     screenId: 'screen-109',
     dungeonId: 'dungeon-005',
@@ -47,7 +47,7 @@ const DUNGEON_TOWER_OF_HERA_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-139',
-    gameId: { roomId: 39, chestIndex: 1 },
+    gameId: { roomId: 39, chestIndex: 0 },
     kind: 'chest',
     screenId: 'screen-109',
     dungeonId: 'dungeon-005',

@@ -21,7 +21,7 @@ const buildWindowSection = (s: GameSettings): Section => {
 
   if (s.viewportConstraint === 'none') items.push(PIXEL_PERFECT_ITEM);
 
-  return { id: 'window', title: 'Window', subsections: [{ id: 'window-mode', title: 'Mode', items }] };
+  return { id: 'window', title: 'Window', items };
 };
 
 const VSYNC_DESCRIPTION = 'Pace the game against the refresh rate of your display instead of an internal timer. Smooths scrolling on 60 Hz displays where the two clocks would otherwise drift apart. Game speed stays correct on any refresh rate.';
@@ -78,7 +78,7 @@ const buildPerformanceSection = (refreshHz: number | null, syncedRate: SyncedRat
     });
   }
 
-  return { id: 'performance', title: 'Performance', subsections: [{ id: 'performance-options', title: 'Options', items }] };
+  return { id: 'performance', title: 'Performance', items };
 };
 
 const RENDERING_SECTION: Section = {
@@ -126,17 +126,10 @@ const ENHANCEMENTS_SECTION: Section = {
       ],
     },
     {
-      id: 'enhancements-minigames',
-      title: 'Minigames',
-      items: [
-        { key: 'archeryNeedsBow', label: 'Archery Game Asks For A Bow', description: 'Stop the archery game from taking your money when you have nothing to shoot with; the owner tells you why instead', keywords: 'archery shooting gallery target bow arrow minigame game refund fee rupees' },
-      ],
-    },
-    {
       id: 'enhancements-indoor',
       title: 'Indoor / Dungeons',
       items: [
-        { key: 'forceBackdropBlack', label: 'Black Background', description: 'Replace the colored backdrop behind rooms with pure black', keywords: 'backdrop background color indoor dungeon house black' },
+        { key: 'hideSpaceBeyondWalls', label: 'Hide Space Beyond Walls', description: 'Black out the space past the walls of a house, a cave or the sanctuary. The room itself and dungeons are untouched', keywords: 'hide space beyond walls backdrop background black indoor house cave sanctuary surround' },
       ],
     },
   ],
@@ -151,8 +144,8 @@ const NOTCH_ITEM = {
 
 const MOBILE_SECTION: Section = {
   id: 'mobile',
-  title: 'Mobile',
-  subsections: [{ id: 'mobile-display', title: 'Display', items: [NOTCH_ITEM] }],
+  title: 'Display',
+  items: [NOTCH_ITEM],
 };
 
 export { buildWindowSection, buildPerformanceSection, RENDERING_SECTION, ENHANCEMENTS_SECTION, MOBILE_SECTION };

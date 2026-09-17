@@ -23,9 +23,6 @@
 #include "num_util.h"
 #include "emscripten_internal.h"
 
-// Backdrop-black flag pairs with g_ppu_render_flags; only the API touches it.
-static bool g_force_backdrop_black = false;
-
 // ---------------------------------------------------------------------------
 // Live settings, callable from JS while the game is running
 // ---------------------------------------------------------------------------
@@ -131,8 +128,7 @@ uint32_t WasmGetFeatures2(void) {
 
 EMSCRIPTEN_KEEPALIVE
 void WasmSetPpuRenderFlags(int flags) {
-  // Preserve BlackBG2 flag (managed separately by WasmSetForceBackdropBlack)
-  g_ppu_render_flags = flags | (g_force_backdrop_black ? kPpuRenderFlags_BlackBG2 : 0);
+  g_ppu_render_flags = flags;
 }
 
 // Hiding the native HUD/pause menu requires kFeatures3_HudOverride. Both exports only record the
@@ -149,6 +145,12 @@ void WasmSetHudHidden(int hidden) {
 EMSCRIPTEN_KEEPALIVE
 void WasmSetPauseHidden(int hidden) {
   HudOverride_SetWantedPauseHidden(hidden != 0);
+}
+
+// The native message box, same gate and same deferred reconcile as the two above.
+EMSCRIPTEN_KEEPALIVE
+void WasmSetDialogHidden(int hidden) {
+  HudOverride_SetWantedDialogHidden(hidden != 0);
 }
 
 EMSCRIPTEN_KEEPALIVE
@@ -189,6 +191,25 @@ void WasmSetVsync(int enable) {
 EMSCRIPTEN_KEEPALIVE
 int WasmGetVsync(void) {
   return g_vsync ? 1 : 0;
+}
+
+// Turbo speed as a percent of real time (125 to 1000; 100 means the feature is off). Live-safe:
+// the profile pushes it with the other live settings, and it only takes effect while the turbo
+// key is held (WasmSetTurboHeld), so a profile with turbo off never leaves real time.
+EMSCRIPTEN_KEEPALIVE
+void WasmSetTurboSpeed(int percent) {
+  SetTurboSpeed(percent);
+}
+
+EMSCRIPTEN_KEEPALIVE
+void WasmSetTurboHeld(int held) {
+  SetTurboHeld(held != 0);
+}
+
+// The speed the loop is running at right now, as a percent (100 when turbo is off or released).
+EMSCRIPTEN_KEEPALIVE
+int WasmGetTurboFactorPercent(void) {
+  return (int)(TurboFactor() * 100.0 + 0.5);
 }
 
 // ---------------------------------------------------------------------------
@@ -253,6 +274,19 @@ void WasmTogglePause(void) {
   g_paused = !g_paused;
 }
 
+// Retire this core for good: the host is about to drop the module and boot another one. The
+// glue's own emscripten_cancel_main_loop is a closure local, not a module export, so JS has no
+// way to reach it; this is the one exported route. Without it the abandoned core keeps stepping
+// the game at full speed and keeps reporting music, sounds and transitions through the same
+// window hooks the next core installs, so a restart leaves a second game playing into the first.
+// Same shape as the SDL_QUIT path in emscripten_main.c. Pausing first covers the tick that may
+// already be scheduled.
+EMSCRIPTEN_KEEPALIVE
+void WasmStop(void) {
+  g_paused = 1;
+  emscripten_cancel_main_loop();
+}
+
 EMSCRIPTEN_KEEPALIVE
 void WasmReset(int warm) {
   ZeldaReset(warm ? true : false);
@@ -270,13 +304,11 @@ void WasmCheat(int cmd) {
   PatchCommand((char)cmd);
 }
 
+// Only the request is recorded; hide_space_beyond_walls.c answers per frame, so a frame showing a
+// house, a cave or the sanctuary hides its fill and the overworld never does.
 EMSCRIPTEN_KEEPALIVE
-void WasmSetForceBackdropBlack(int enable) {
-  g_force_backdrop_black = enable != 0;
-  if (g_force_backdrop_black)
-    g_ppu_render_flags |= kPpuRenderFlags_BlackBG2;
-  else
-    g_ppu_render_flags &= ~kPpuRenderFlags_BlackBG2;
+void WasmSetHideSpaceBeyondWalls(int enable) {
+  GameHook_SetHideSpaceBeyondWalls(enable != 0);
 }
 
 // ---------------------------------------------------------------------------

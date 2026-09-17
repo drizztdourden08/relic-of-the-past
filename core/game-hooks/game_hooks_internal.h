@@ -33,6 +33,9 @@ bool GameHook_DrawSpriteAsReceiptItem(int k, int grant, int x_adj, int y_adj);
 // True while a hold-up receipt lives: the decode slot is the held-up item's, and a shop
 // spot ignores a press until the ceremony is over.
 bool GameHook_HoldUpReceiptLive(void);
+// DecodeAnimatedSpriteTile_variable with the tilemap upload's destination table at 0x14000
+// kept intact (receipt_tile_decode.c). Every hook-side receipt decode goes through this.
+void GameHook_DecodeReceiptTiles(uint8 gfx);
 // The memo of |k|'s picture: kept from the decode slot once the caller has committed this
 // frame's finished picture for |grant|, and drawn back, without any decode, for the frames
 // the hold-up owns the slot. The draw is false when no memo of |grant| stands for |k|.
@@ -164,5 +167,22 @@ static inline bool DeliveryQueryGate(void) {
 static inline bool FlagQueryGate(void) {
   return TrackerQueryGate() || NavQueryGate() || SimQueryGate();
 }
+
+// ─── Dialog (dialog_pacing.c, dialog_mirror.c, hud_override.c) ───
+
+// The last kTextCmd_* value the character pump decoded, recorded by GameHook_DialogCommand.
+uint8 DialogMirror_LastCommand(void);
+// True for a command the engine parks on until the player presses a button.
+bool DialogMirror_IsKeyWaitCommand(uint8 cmd);
+// The mirror records while either the box may be hidden or paced.
+bool DialogMirror_Recording(void);
+// Whether a message is on screen this frame (dialog_presence.c). The engine reports each run, each
+// new message and each frame end.
+void DialogPresence_MarkRendered(void);
+void DialogPresence_FrameEnd(void);
+void DialogPresence_MessageStarted(void);
+bool DialogPresence_Active(void);
+// Reconciled result of the host's wanted dialog hide against kFeatures3_HudOverride.
+bool HudOverride_DialogHidden(void);
 
 #endif // GAME_HOOKS_INTERNAL_H
