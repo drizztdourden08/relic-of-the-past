@@ -1,0 +1,21 @@
+/* @layer renderer-components @kind style */
+.dialog-color-control--disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.dialog-color-control__text {
+  min-width: 0;
+  flex: 1;
+}
+
+.dialog-color-control__label {
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  color: var(--c-text);
+}
+
+.dialog-color-control__description {
+  font-size: var(--text-sm);
+  color: var(--c-text-dim);
+}

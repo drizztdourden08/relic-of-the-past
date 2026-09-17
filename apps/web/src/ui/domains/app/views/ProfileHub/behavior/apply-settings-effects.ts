@@ -6,6 +6,7 @@ import type { ToastItem } from '../../../../../design-system/primitives/Toast';
 import type { ProfileHubProps } from '../ProfileHub.type';
 import { pushLiveSettings, LIVE_SETTINGS, getInputManager, applyPlayerSprite, clearPlayerSprite, setLinkSpriteData } from '../../../../../../lib/game';
 import { useHudSettingsStore } from '../../../../../../stores/hud-settings-store';
+import { syncDialogStore, touchesDialogStore } from './sync-dialog-store';
 import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
 import { writeConfig } from '../../../../../../lib/storage/profile-store';
 import { readSpriteAsZspr } from '../../../../../../lib/game/player-sheet/load-sheet';
@@ -132,6 +133,9 @@ const applySettingsSideEffects = (patch: Partial<GameSettings>, next: GameSettin
   // Sync HUD settings to store for live rendering
   if ('hudMode' in patch || 'hudStyle' in patch || 'hudRatio' in patch || 'customHudAspectW' in patch || 'customHudAspectH' in patch || 'hudEnhancedParts' in patch || 'hudHeartMode' in patch || 'hudMagicMode' in patch || 'hudCountLayout' in patch || 'hudPauseStyle' in patch || 'hudPauseHighlight' in patch) {
     syncHudStore(next);
+  }
+  if (touchesDialogStore(patch)) {
+    syncDialogStore(next);
   }
 
   // If game is running, push live settings and maybe show restart toast

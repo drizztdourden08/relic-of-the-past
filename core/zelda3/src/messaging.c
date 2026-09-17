@@ -2144,8 +2144,12 @@ void CopySaveToWRAM() {  // 8ccfbb
   hud_palette = 0;
 }
 
-void RenderText() {  // 8ec440
+static void RenderText_Step() {
   kMessaging_Text[messaging_module]();
+}
+
+void RenderText() {  // 8ec440
+  GameHook_DialogRender(RenderText_Step);
 }
 
 void RenderText_PostDeathSaveOptions() {  // 8ec455
@@ -2171,6 +2175,8 @@ void Text_Initialize_initModuleStateLoop() {  // 8ec493
   text_tilemap_cur = 0x3980;
   Text_LoadCharacterBuffer();
   memset(messaging_buf, 0, 0x7e0);
+  GameHook_DialogCleared();
+  GameHook_DialogMeasure();
   nmi_subroutine_index = 2;
   nmi_disable_core_updates = 2;
 }
@@ -2392,7 +2398,7 @@ static bool Text_MessageHasChoice() {
 // end-of-message side-effects still fire) but withhold every VRAM upload so the box and
 // text never reach the screen. Choice messages are exempt so the player can still respond.
 static bool Text_ShouldSuppressDraw() {
-  return (enhanced_features0 & kFeatures0_AutoSkipDialog) && !Text_MessageHasChoice();
+  return ((enhanced_features0 & kFeatures0_AutoSkipDialog) && !Text_MessageHasChoice()) || GameHook_DialogNativeHidden();
 }
 
 void RenderText_Draw_Border() {  // 8ec8ea
@@ -2440,6 +2446,7 @@ void RenderText_Draw_MessageCharacters() {  // 8ec984
 RESTART:;
   uint32 cmd = Text_DecodeCmd(messaging_text_buffer[dialogue_msg_read_pos],
       &messaging_text_buffer[dialogue_msg_read_pos + 1]);
+  GameHook_DialogCommand(TEXTCMD_CMD(cmd));
 
   switch (TEXTCMD_CMD(cmd)) {
   case kTextCmd_IsLetter:
@@ -2449,7 +2456,7 @@ RESTART:;
     }
     VWF_RenderSingle(TEXTCMD_PARAM(cmd));
     dialogue_msg_read_pos += 1 + TEXTCMD_MULTIBYTE(cmd);
-    if (vwf_line_speed_cur == 0 || (enhanced_features0 & kFeatures0_AutoSkipDialog))
+    if ((vwf_line_speed_cur == 0 && !GameHook_DialogTypewriter()) || (enhanced_features0 & kFeatures0_AutoSkipDialog))
       goto RESTART;
     break;
   case kTextCmd_NextPic:  // RenderText_Draw_NextImage
@@ -2582,6 +2589,7 @@ void VWF_RenderSingle(int c) {  // 8ecab8
   const uint8 *kFontData = FindIndexInMemblk(g_zenv.dialogue_font_blk, 0).ptr;
   uint8 width = FindIndexInMemblk(g_zenv.dialogue_font_blk, 1).ptr[c];
   assert(width <= 8);
+  GameHook_DialogGlyph(c, vwf_curline >> 1, vwf_arr[vwf_var1], width);
 
   int i = vwf_var1++;
   uint8 arrval = vwf_arr[i];
@@ -2792,6 +2800,7 @@ bool RenderText_Draw_Scroll() {  // 8ecfe2
     if ((++byte_7E1CDF & 0xf) == 0) {
       vwf_curline = 4;
       vwf_flag_next_line = 1;
+      GameHook_DialogScrolled();
       return true;
     }
   } while (r2--);

@@ -91,6 +91,8 @@ MemBlk FindInAssetArray(int asset, int idx) {
 EMSCRIPTEN_KEEPALIVE
 int WasmInitHeadless(void) {
   LoadAssets();
+  // The default dialogue language, so a probe sees real message text; main() picks the INI's.
+  ZeldaSetLanguage(NULL);
   WasmZeldaInitialize();
   return 1;
 }

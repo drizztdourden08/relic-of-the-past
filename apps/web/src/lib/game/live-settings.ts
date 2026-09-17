@@ -14,6 +14,7 @@ import { buildFeatureFlags, buildFeatureWord3, buildFeatureWords } from './live-
 import { buildPpuFlags } from './live-settings-ppu-flags';
 import { LIVE_SETTINGS } from './live-settings-keys';
 import { pushTurboSpeed } from './turbo';
+import { pushDialogLive } from './live-settings-dialog';
 
 // Track the last-pushed hideSpaceBeyondWalls value so we can re-assert after state loads
 let lastHideSpaceBeyondWalls = false;
@@ -117,6 +118,9 @@ const pushLiveSettings = (settings: GameSettings): boolean => {
       mod.ccall('WasmSetPauseHidden', null, ['number'], [hidePause ? 1 : 0]);
     } catch { /* WASM not rebuilt yet */ }
 
+    // Dialog pacing and the native message box hide, own module, same guard inside
+    pushDialogLive(settings);
+
     // Haptic feedback settings (JS-only, no WASM needed)
     updateHapticBridgeSettings(settings.haptics ?? DEFAULT_SETTINGS.haptics);
     updateHapticsProfileEnabled(settings.hapticsEnabled ?? DEFAULT_SETTINGS.hapticsEnabled);
@@ -193,6 +197,7 @@ const reassertLiveFlagsAfterLoad = (): void => {
   reassertVsync();
   reassertHudHidden();
   reassertPauseHidden();
+  pushDialogLive(lastSettings ?? DEFAULT_SETTINGS);
   reassertVolumes();
 };
 

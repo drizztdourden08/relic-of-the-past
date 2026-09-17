@@ -11,6 +11,7 @@ import { log } from '../../../../../../lib/log-bus';
 import type { ProfileHubProps } from '../ProfileHub.type';
 import { readConfig } from '@app/lib/storage/profile-store';
 import { applySettingsSideEffects, syncHudStore } from './apply-settings-effects';
+import { syncDialogStore } from './sync-dialog-store';
 
 const useProfileSettings = (props: ProfileHubProps) => {
   const {
@@ -102,6 +103,7 @@ const useProfileSettings = (props: ProfileHubProps) => {
           const merged = mergeSettings(saved);
           setSettings(merged);
           syncHudStore(merged);
+          syncDialogStore(merged);
           onWindowModeChange?.(merged.windowMode);
           onConstraintSettingsChange?.(merged.viewportConstraint, merged.aspectRatio);
           onMasterVolumeChange?.(merged.masterVolume);

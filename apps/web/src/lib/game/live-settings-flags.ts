@@ -105,6 +105,7 @@ const FEATURE_FLAGS_3 = {
   dungeonItemGrants:     268435456,
   retroBow:              536870912,
   archeryNeedsBow:       1073741824,
+  dialogControls:        2147483648,
 } as const;
 
 // Whether the randomizer's chest-override table currently has entries. randomizer.ts flips this
@@ -255,8 +256,12 @@ const buildFeatureWord3 = (s: GameSettings): number => {
   // WasmSetPauseHidden), and is stripped under Vanilla Safe like any other divergence, which is what
   // lets Vanilla Safe restore the native HUD/pause menu mid-session (HudOverride_Restore in
   // core/game-hooks/hud_override.c, called the instant this bit clears in WRAM).
-  const hudOverrideWanted = s.hudMode === 'enhanced' && (s.hudEnhancedParts.includes('main') || s.hudEnhancedParts.includes('pause'));
+  // The enhanced message box hides the native one through the same override, in either HUD mode.
+  const hudOverrideWanted = (s.hudMode === 'enhanced' && (s.hudEnhancedParts.includes('main') || s.hudEnhancedParts.includes('pause')))
+    || s.dialogBox === 'enhanced';
   if (hudOverrideWanted && !s.vanillaSafe) flags |= FEATURE_FLAGS_3.hudOverride;
+  // One gate for speed, hold-A and B-fill; the values ride WasmSetDialogPacing (live-settings-dialog.ts).
+  if ((s.dialogSpeed !== 1 || s.dialogHoldToAccelerate || s.dialogFillOnB || s.dialogTypewriter) && !s.vanillaSafe) flags |= FEATURE_FLAGS_3.dialogControls;
 
   // Host-data gates. These feed host systems (tracker, navigation, renderer, overlay UI, delivery
   // queue), not the game, so none of them is a parity concern and none is stripped by Vanilla

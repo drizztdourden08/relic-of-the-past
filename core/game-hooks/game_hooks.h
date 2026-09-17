@@ -737,6 +737,13 @@ void HudOverride_Sync(void);
 
 void HudOverride_Restore(void);
 
+// Whether the host wants the native message box kept off VRAM (it draws its own). Same wanted-state
+// and reconcile as the HUD/pause hides above.
+void HudOverride_SetWantedDialogHidden(bool on);
+
+// ─── Dialog pacing and mirror (dialog_pacing.c, dialog_mirror.c): dialog_hooks.h ───
+#include "dialog_hooks.h"
+
 // ─── Dark-room lighting cheat (cheat_lighting.c) ───
 
 // Re-assert (or take back down) the lamp cone in a dark room the player has no lamp for. Runs every

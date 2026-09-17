@@ -1113,7 +1113,7 @@ static const uint32 kGateWordParityMask[kGateWordCount] = {
   kFeatures3_DropOverrides | kFeatures3_StandingOverrides | kFeatures3_ScriptedGrants | kFeatures3_CapacityProfile |
   kFeatures3_ColoredRupees | kFeatures3_ItemSheen | kFeatures3_PrizeShuffle | kFeatures3_ShopOverrides |
   kFeatures3_PondPlan | kFeatures3_GearArt | kFeatures3_DungeonItemGrants | kFeatures3_RetroBow |
-  kFeatures3_ArcheryNeedsBow,
+  kFeatures3_ArcheryNeedsBow | kFeatures3_DialogControls,
 
   // features4 — the item-power switches. Every bit is a divergence from the unmodified game, so all of
   // them are stripped by Vanilla Safe.

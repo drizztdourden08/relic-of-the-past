@@ -168,4 +168,21 @@ static inline bool FlagQueryGate(void) {
   return TrackerQueryGate() || NavQueryGate() || SimQueryGate();
 }
 
+// ─── Dialog (dialog_pacing.c, dialog_mirror.c, hud_override.c) ───
+
+// The last kTextCmd_* value the character pump decoded, recorded by GameHook_DialogCommand.
+uint8 DialogMirror_LastCommand(void);
+// True for a command the engine parks on until the player presses a button.
+bool DialogMirror_IsKeyWaitCommand(uint8 cmd);
+// The mirror records while either the box may be hidden or paced.
+bool DialogMirror_Recording(void);
+// Whether a message is on screen this frame (dialog_presence.c). The engine reports each run, each
+// new message and each frame end.
+void DialogPresence_MarkRendered(void);
+void DialogPresence_FrameEnd(void);
+void DialogPresence_MessageStarted(void);
+bool DialogPresence_Active(void);
+// Reconciled result of the host's wanted dialog hide against kFeatures3_HudOverride.
+bool HudOverride_DialogHidden(void);
+
 #endif // GAME_HOOKS_INTERNAL_H

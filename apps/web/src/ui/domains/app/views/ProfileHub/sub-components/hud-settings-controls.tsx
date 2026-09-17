@@ -7,6 +7,7 @@ import { ToggleGroup } from '../../../../../design-system/primitives/ToggleGroup
 import { HudStyleControl } from './HudStyleControl';
 import { AspectRatioControl } from './AspectRatioControl';
 import { aspectRatioValue, parseRatioString } from '@app/lib/game/aspect-ratio';
+import { renderDialogControl, isDialogDisabled } from './hud-dialog-controls';
 
 const HUD_MODE_OPTIONS = [
   { value: 'original', label: 'Original' },
@@ -158,8 +159,12 @@ const renderControl = (key: string, settings: GameSettings, onChange: (patch: Pa
         />
       );
     default:
-      return null;
+      // The Dialog Box section lives in its own renderer, so this file stays under the line cap.
+      return renderDialogControl(key, settings, onChange);
   }
 };
 
-export { renderControl };
+/** Only the Dialog Box section carries dependent rows; every other HUD row is always live. */
+const isDisabled = (key: string, settings: GameSettings): boolean => isDialogDisabled(key, settings);
+
+export { renderControl, isDisabled };

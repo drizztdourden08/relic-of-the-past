@@ -73,15 +73,37 @@ const SECTIONS: Section[] = [
     ],
   },
   {
+    id: 'dialog',
+    title: 'Dialog',
+    subsections: [
+      {
+        id: 'dialog-pacing',
+        title: 'Pacing',
+        items: [
+          { key: 'dialogSpeed', label: 'Text Speed', description: 'How fast text, pauses and scrolling play out, from the game\'s own pacing to instant', keywords: 'dialog text speed fast slow instant pacing multiplier' },
+          { key: 'dialogHoldToAccelerate', label: 'Hold A to Accelerate', description: 'While A is held, dialog plays at the speed on the right', keywords: 'dialog hold a accelerate fast forward speed button' },
+          { key: 'dialogFillOnB', label: 'B Completes the Box', description: 'One press writes the whole box; the next press advances', keywords: 'dialog b complete fill box skip typing advance' },
+          { key: 'dialogTypewriter', label: 'Type Letter by Letter', description: 'Lines the game shows all at once type out one letter at a time, so Text Speed sets the typing rate', keywords: 'dialog typewriter letter glyph typing rate slow text speed' },
+        ],
+      },
+      {
+        id: 'dialog-skipping',
+        title: 'Skipping',
+        items: [
+          { key: 'autoSkipDialog', label: 'Auto-Skip Dialog', description: 'Show dialog text instantly and dismiss message boxes for you, including item-get text. Yes/no and shop prompts still wait for your answer. Not in the original game.', keywords: 'dialog text skip fast auto advance message box speed instant' },
+          { key: 'disableTelepathy', label: 'Disable Telepathic Messages', description: 'Suppress the princess\'s periodic telepathic pleas while walking to the castle in the rain', keywords: 'princess telepathy rain message annoying skip' },
+        ],
+      },
+    ],
+  },
+  {
     id: 'qol',
     title: 'Quality of Life',
     items: [
       { key: 'disableLowHealthBeep', label: 'Disable Low Heart Beep', description: 'Silence the repeating warning beep when your health is low', keywords: 'beep heart health warning annoying' },
       { key: 'skipIntroOnKeypress', label: 'Skip Intro on Keypress', description: 'Press any key to skip the intro and title screen sequence', keywords: 'intro skip key press' },
-      { key: 'disableTelepathy', label: 'Disable Telepathic Messages', description: 'Suppress the princess\'s periodic telepathic pleas while walking to the castle in the rain', keywords: 'princess telepathy rain message annoying skip' },
       { key: 'showMaxItemsInYellow', label: 'Indicate Max Resources', description: 'Highlight rupees, bombs, and arrows in yellow when you\'re carrying the maximum amount', keywords: 'max yellow rupees bombs arrows' },
       { key: 'carryMoreRupees', label: 'Larger Wallet', description: 'Increase the maximum rupee capacity from 999 to 9999', keywords: 'rupees wallet money' },
-      { key: 'autoSkipDialog', label: 'Auto-Skip Dialog', description: 'Show dialog text instantly and dismiss message boxes for you, including item-get text. Yes/no and shop prompts still wait for your answer. Not in the original game.', keywords: 'dialog text skip fast auto advance message box speed instant' },
       { key: 'prefillFileName', label: 'Prefill File Name', description: 'New files start named Link, with the cursor on End.', keywords: 'name file link new save naming end default' },
       { key: 'archeryNeedsBow', label: 'Archery Game Asks For A Bow', description: 'Stop the archery game from taking your money when you have nothing to shoot with; the owner tells you why instead. Not in the original game.', keywords: 'archery shooting gallery target bow arrow minigame game refund fee rupees' },
     ],

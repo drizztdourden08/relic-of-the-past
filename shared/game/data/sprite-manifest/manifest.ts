@@ -10,6 +10,7 @@
  *
  * The schema beside this file stays here, because it describes the shape, which is ours.
  */
+import { DIALOG_SPRITE_DEFINITIONS } from './dialog-sprites';
 import { POOL_SPRITE_DEFINITIONS } from './pool-sprites';
 import { RANDOMIZER_SPRITE_DEFINITIONS } from './randomizer-sprites';
 import { RUPEE_SPRITE_DEFINITIONS } from './rupee-sprites';
@@ -50,7 +51,7 @@ const VAULT_DEFINITIONS: readonly SpriteDefinition[] =
 const SPRITE_DEFINITIONS: readonly SpriteDefinition[] =
   VAULT_DEFINITIONS.length === 0 ? [] : [
     ...VAULT_DEFINITIONS, ...UPGRADE_SPRITE_DEFINITIONS, ...RUPEE_SPRITE_DEFINITIONS,
-    ...RANDOMIZER_SPRITE_DEFINITIONS, ...POOL_SPRITE_DEFINITIONS,
+    ...RANDOMIZER_SPRITE_DEFINITIONS, ...POOL_SPRITE_DEFINITIONS, ...DIALOG_SPRITE_DEFINITIONS,
   ];
 
 const SPRITE_MANIFEST: SpriteManifestEntry[] = SPRITE_DEFINITIONS.map(sprite => ({
