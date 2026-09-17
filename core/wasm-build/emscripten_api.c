@@ -268,6 +268,19 @@ void WasmTogglePause(void) {
   g_paused = !g_paused;
 }
 
+// Retire this core for good: the host is about to drop the module and boot another one. The
+// glue's own emscripten_cancel_main_loop is a closure local, not a module export, so JS has no
+// way to reach it; this is the one exported route. Without it the abandoned core keeps stepping
+// the game at full speed and keeps reporting music, sounds and transitions through the same
+// window hooks the next core installs, so a restart leaves a second game playing into the first.
+// Same shape as the SDL_QUIT path in emscripten_main.c. Pausing first covers the tick that may
+// already be scheduled.
+EMSCRIPTEN_KEEPALIVE
+void WasmStop(void) {
+  g_paused = 1;
+  emscripten_cancel_main_loop();
+}
+
 EMSCRIPTEN_KEEPALIVE
 void WasmReset(int warm) {
   ZeldaReset(warm ? true : false);
