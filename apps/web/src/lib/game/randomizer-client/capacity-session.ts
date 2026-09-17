@@ -28,6 +28,7 @@ import { clearCapacityPlan, setCapacityPlanJumps } from '../capacity-plan';
 import { clearCapacityFixedLines, setCapacityFixedLines } from '../capacity-fixed-lines';
 import { applyUpgradeIcons, clearUpgradeIcons } from '../upgrade-icons';
 import { clearSessionWalletTable, setSessionWalletTable } from './session-wallet-table';
+import { setActiveCapacity } from './active-capacity-profile';
 import { NO_CAPACITY_LINES } from './capacity-rung-messages';
 import type { CapacityBonusSetting, CapacityFamilyId, CapacityProfile } from '@shared/randomizer/ap-world/capacity';
 import type { CapacityFamilyArm } from '../capacity-profile';
@@ -111,6 +112,7 @@ const armCapacitySession = async (
   plan: CapacitySessionPlan, tag: string, lines: CapacityLineMessages = NO_CAPACITY_LINES,
 ): Promise<void> => {
   primeCapacitySession(plan);
+  setActiveCapacity({ profile: plan.profile, progressive: plan.progressive });
   armCapacityProfile(plan, tag, lines);
   // The pickup bonus answers to a virtual grant, which an in-pool family hands out even
   // with no Custom family armed, so it follows the pool, not the profile.
@@ -122,6 +124,7 @@ const armCapacitySession = async (
 };
 
 const disarmCapacitySession = (): void => {
+  setActiveCapacity(null);
   clearSessionWalletTable();
   clearUpgradeIcons();
   clearCapacityPlan();

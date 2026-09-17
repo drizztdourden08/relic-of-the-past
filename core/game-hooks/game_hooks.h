@@ -394,6 +394,17 @@ int GameHook_CapacityRungOf(int family);
 // The starting rung the profile armed for |family|; -1 unless Custom under the gate.
 int GameHook_CapacityStartRung(int family);
 
+// The cheat console's ladder view. The cap |family| reads on |rung| in the current mode, or -1
+// when that rung is not offered (a native family offers its grid, a Custom one 0..its final
+// rung, a native wallet its one ceiling); the meter answers with a level code, not a count.
+int GameHook_CapacityRungCap(int family, int rung);
+
+// The rung |family| stands on as the console shows it (a native wallet: its ceiling's rung).
+int GameHook_CapacityRungNow(int family);
+
+// Land |family| on |rung|, clamped to the offered ladder; false when nothing can be set.
+bool GameHook_CapacitySetRung(int family, int rung);
+
 // hud.c MaxRupees seam: |vanilla| back untouched unless a Custom wallet is armed under the
 // gate, in which case the ladder's cap (0, then 100 * index - 1) when that is lower. Never raises.
 int GameHook_WalletMax(int vanilla);
