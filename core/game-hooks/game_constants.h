@@ -9,11 +9,14 @@
 // `-I ../game-hooks`), so the meaning of a value is defined once.
 
 // main_module_index values (the engine's top-level game mode).
+#define MODULE_PRE_DUNGEON      6   // Module_PreDungeon: entrance load, the room comes up under force blank
 #define MODULE_DUNGEON          7   // indoor gameplay (house / cave / palace)
 #define MODULE_OVERWORLD        9   // outdoor gameplay
 #define MODULE_MENU             14  // text / inventory / map overlay
 #define MODULE_SPOTLIGHT_CLOSE  15  // transient spotlight (iris closing)
 #define MODULE_SPOTLIGHT_OPEN   16  // transient spotlight (iris opening)
+#define MODULE_ATTRACT          20  // Module14_Attract: the title demo, no live room behind it
+#define MODULE_TRIFORCE_ROOM    25  // Module19_TriforceRoom: first of the ending modules
 #define MODULE_PIT_FALL_ENTRANCE 17  // Module11_DungeonFallingEntrance: the crossing a hole in the
                                      // overworld hands control to, from the palette bounce over the
                                      // departure screen to the landing in the room below. A wallmaster
@@ -28,6 +31,13 @@
                                     // it apart from the plain outdoor module for the view gates.
 #define OVERWORLD_SPECIAL_AREA_SCREEN_MIN 128  // overworld_screen_index floor for the flavor above, since
                                                 // real overworld screens (light or dark world) are 0-127.
+
+// Rooms named by id where the game's own grouping does not describe how they play.
+#define ROOM_SANCTUARY 0x12  // filed under the sewers' palace index, plays as a house
+
+// The Ceiling object (dungeon.c, subtype 1 index 0) paints a 2x2 block of tilemap words: the void past a
+// room's walls. Dungeon_CeilingTileWords hands it over.
+#define kCeilingBlockWords 4
 
 // Sprite type ids referenced by hook branching logic.
 #define SPRITE_UNCLE_PRIEST     0x73  // Uncle (sprite_E == 0) / Priest family

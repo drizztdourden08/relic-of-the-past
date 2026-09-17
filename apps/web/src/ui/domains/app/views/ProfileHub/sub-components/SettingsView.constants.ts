@@ -126,17 +126,10 @@ const ENHANCEMENTS_SECTION: Section = {
       ],
     },
     {
-      id: 'enhancements-minigames',
-      title: 'Minigames',
-      items: [
-        { key: 'archeryNeedsBow', label: 'Archery Game Asks For A Bow', description: 'Stop the archery game from taking your money when you have nothing to shoot with; the owner tells you why instead', keywords: 'archery shooting gallery target bow arrow minigame game refund fee rupees' },
-      ],
-    },
-    {
       id: 'enhancements-indoor',
       title: 'Indoor / Dungeons',
       items: [
-        { key: 'forceBackdropBlack', label: 'Black Background', description: 'Replace the colored backdrop behind rooms with pure black', keywords: 'backdrop background color indoor dungeon house black' },
+        { key: 'hideSpaceBeyondWalls', label: 'Hide Space Beyond Walls', description: 'Black out the space past the walls of a house, a cave or the sanctuary. The room itself and dungeons are untouched', keywords: 'hide space beyond walls backdrop background black indoor house cave sanctuary surround' },
       ],
     },
   ],

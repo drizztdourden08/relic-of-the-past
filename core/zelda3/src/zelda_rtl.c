@@ -530,6 +530,16 @@ void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
   if (g_zenv.ppu->extraLeftRight != 0 || g_zenv.ppu->extraTopBottom != 0 || render_flags & kPpuRenderFlags_Height240)
     ConfigurePpuSideSpace();
 
+  // Indoors: black out the ceiling past a room's walls (hide_space_beyond_walls.c). Asked per frame
+  // because PpuBeginDrawing just reset the flags, so the overworld never carries it. The ceiling words
+  // make the PPU draw those tiles as the gap sentinel, and BlackBackdrop renders the sentinel black.
+  {
+    const uint16 *fill = NULL;
+    int fillWords = GameHook_HideSpaceBeyondWallsFill(&fill);
+    PpuSetHiddenTiles(g_zenv.ppu, fill, fillWords);
+    if (fillWords) g_zenv.ppu->renderFlags |= kPpuRenderFlags_BlackBackdrop;
+  }
+
   // Total physical buffer rows = base 224 + top budget + bottom budget. The top budget is the tall extra
   // per side (extraTopBottom); the bottom budget matches it for tall, else the legacy +16 (extend_y). This
   // MUST equal g_snes_height (emscripten_main.c) or ppu_runLine overruns the texture. V == 0 ⇒ 224 or 240.

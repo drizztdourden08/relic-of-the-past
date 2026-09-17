@@ -18,7 +18,7 @@ power the delivery queue and randomizer. Most are `void` and take effect on the 
 | `WasmTogglePause` | `void(void)` | Flip pause. |
 | `WasmReset` | `void(int warm)` | Wraps `ZeldaReset`. `warm=1` keeps SRAM, `0` is a cold reset. |
 | `WasmCheat` | `void(int cmd)` | Runs a built-in `PatchCommand` byte (engine debug cheats). |
-| `WasmSetForceBackdropBlack` | `void(int enable)` | Toggles the `BlackBG2` PPU flag (paired with PPU render flags). |
+| `WasmSetHideSpaceBeyondWalls` | `void(int enable)` | Records the request; `hide_space_beyond_walls.c` hands the PPU the ceiling tiles on every frame that shows a house, a cave or the sanctuary, and they draw black. |
 
 ## Item cheats (`cheats.c` · `cheats.ts`)
 

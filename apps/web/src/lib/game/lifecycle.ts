@@ -90,8 +90,11 @@ const resetGame = async (): Promise<void> => {
   }
   const mod = getModule();
   if (mod) {
-    // Stop Emscripten's main loop to prevent stale rendering
-    try { (mod as any)._emscripten_cancel_main_loop?.(); } catch { /* ignore */ }
+    // Stop the core's main loop before anything else. The glue does not export
+    // _emscripten_cancel_main_loop on the module (it is a closure local), so the C side owns the
+    // cancel: WasmStop pauses and cancels in one call. Left running, the old core keeps emulating
+    // and keeps reporting music and sounds through the window hooks the next core takes over.
+    try { mod.ccall('WasmStop', null, [], []); } catch { /* a core built before WasmStop existed */ }
 
     const sdl2 = (mod as any).SDL2 as
       | { audioContext?: AudioContext; audio?: { scriptProcessorNode?: AudioNode }; capture?: { scriptProcessorNode?: AudioNode } }

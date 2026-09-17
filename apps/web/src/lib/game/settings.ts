@@ -100,7 +100,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   // Post-Processing
   overworldEdgeEffect: true,
   postProcessingShadows: false,
-  forceBackdropBlack: false,
+  hideSpaceBeyondWalls: false,
 
   // World item presentation
   coloredRupees: true,
@@ -366,6 +366,12 @@ const mergeSettings = (partial: Partial<GameSettings>): GameSettings => {
   }
   delete (merged as Record<string, unknown>).unchangedSprites;
   delete (merged as Record<string, unknown>).noVisualFixes;
+
+  // forceBackdropBlack -> hideSpaceBeyondWalls rename: carry the old choice over once, then strip the key.
+  if ('forceBackdropBlack' in raw && !('hideSpaceBeyondWalls' in raw)) {
+    merged.hideSpaceBeyondWalls = raw.forceBackdropBlack === true;
+  }
+  delete (merged as Record<string, unknown>).forceBackdropBlack;
 
   // pauseOffscreenAI -> offscreenAI migration: only seed offscreenAI the first time a profile is
   // merged without it. After that, offscreenAI is the one written field and pauseOffscreenAI stays

@@ -323,6 +323,14 @@ static void PpuWindows_Calc(PpuWindows *win, Ppu *ppu, uint layer) {
 }
 
 // Draw a whole line of a 4bpp background layer into bgBuffers
+// True when |tile| is one of the ceiling block's words (PpuSetHiddenTiles). The count is 0 on every
+// frame that hides nothing, so the stock draw never reaches this compare.
+static inline bool PpuIsHiddenTile(const Ppu *ppu, uint32 tile) {
+  for (int i = 0; i < ppu->hiddenTileCount; i++)
+    if (ppu->hiddenTiles[i] == tile) return true;
+  return false;
+}
+
 static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZbufType zhi, PpuZbufType zlo) {
 #define DO_PIXEL(i) do { \
   pixel = (bits >> i) & 1 | (bits >> (7 + i)) & 2 | (bits >> (14 + i)) & 4 | (bits >> (21 + i)) & 8; \
@@ -337,6 +345,8 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
   PpuWindows win;
   IS_SCREEN_WINDOWED(ppu, sub, layer) ? PpuWindows_Calc(&win, ppu, layer) : PpuWindows_Clear(&win, ppu, layer);
   BgLayer *bglayer = &ppu->bgLayer[layer];
+  // Indoors, BG2 tiles equal to the ceiling block draw as the gap sentinel (the space past the walls).
+  const bool hide = layer == 1 && ppu->hiddenTileCount != 0;
   y += bglayer->vScroll;
   // Camera lock (BG2 = overworld terrain only): shift the sampled coordinate itself (not worldOff) so the
   // tile INDEX and the in-tile row (y & 7) stay consistent — shifting worldOffY by a non-multiple-of-8
@@ -393,7 +403,8 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
       NEXT_TP();
       int ta = (tile & 0x8000) ? tileadr1 : tileadr0;
       PpuZbufType z = (tile & 0x2000) ? zhi : zlo;
-      uint32 bits = (tile || !useWorld) ? READ_BITS(ta, tile & 0x3ff) : 0;  // world gap (entry 0) => backdrop, not char 0
+      bool hidden = hide && PpuIsHiddenTile(ppu, tile);
+      uint32 bits = hidden ? 0 : (tile || !useWorld) ? READ_BITS(ta, tile & 0x3ff) : 0;  // world gap (entry 0) => backdrop, not char 0
       if (bits) {
         z += ((tile & 0x1c00) >> kPaletteShift);
         if (tile & 0x4000) {
@@ -404,7 +415,7 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
           do DO_PIXEL_HFLIP(0); while (bits <<= 1, dstz++, --curw);
         }
       } else {
-        if (useWorld && !tile)  // no-data gap: paint the backdrop run black via the sentinel
+        if ((useWorld && !tile) || hidden)  // no-data gap or hidden fill: paint the backdrop run black via the sentinel
           for (int q = 0; q < curw; q++) { if (dstz[q] == 0x0500) dstz[q] = kPpuWorldGapPixel; }
         dstz += curw;
       }
@@ -415,7 +426,8 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
       NEXT_TP();
       int ta = (tile & 0x8000) ? tileadr1 : tileadr0;
       PpuZbufType z = (tile & 0x2000) ? zhi : zlo;
-      uint32 bits = (tile || !useWorld) ? READ_BITS(ta, tile & 0x3ff) : 0;  // world gap (entry 0) => backdrop, not char 0
+      bool hidden = hide && PpuIsHiddenTile(ppu, tile);
+      uint32 bits = hidden ? 0 : (tile || !useWorld) ? READ_BITS(ta, tile & 0x3ff) : 0;  // world gap (entry 0) => backdrop, not char 0
       if (bits) {
         z += ((tile & 0x1c00) >> kPaletteShift);
         if (tile & 0x4000) {
@@ -425,7 +437,7 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
           DO_PIXEL_HFLIP(0); DO_PIXEL_HFLIP(1); DO_PIXEL_HFLIP(2); DO_PIXEL_HFLIP(3);
           DO_PIXEL_HFLIP(4); DO_PIXEL_HFLIP(5); DO_PIXEL_HFLIP(6); DO_PIXEL_HFLIP(7);
         }
-      } else if (useWorld && !tile) {  // no-data gap: paint the backdrop run black via the sentinel
+      } else if ((useWorld && !tile) || hidden) {  // no-data gap or hidden fill: paint the backdrop run black via the sentinel
         for (int q = 0; q < 8; q++) { if (dstz[q] == 0x0500) dstz[q] = kPpuWorldGapPixel; }
       }
       dstz += 8, w -= 8;
@@ -435,7 +447,8 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
       uint32 tile = *tp;
       int ta = (tile & 0x8000) ? tileadr1 : tileadr0;
       PpuZbufType z = (tile & 0x2000) ? zhi : zlo;
-      uint32 bits = (tile || !useWorld) ? READ_BITS(ta, tile & 0x3ff) : 0;  // world gap (entry 0) => backdrop, not char 0
+      bool hidden = hide && PpuIsHiddenTile(ppu, tile);
+      uint32 bits = hidden ? 0 : (tile || !useWorld) ? READ_BITS(ta, tile & 0x3ff) : 0;  // world gap (entry 0) => backdrop, not char 0
       if (bits) {
         z += ((tile & 0x1c00) >> kPaletteShift);
         if (tile & 0x4000) {
@@ -443,7 +456,7 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
         } else {
           do DO_PIXEL_HFLIP(0); while (bits <<= 1, dstz++, --w);
         }
-      } else if (useWorld && !tile) {  // no-data gap: paint the backdrop run black via the sentinel
+      } else if ((useWorld && !tile) || hidden) {  // no-data gap or hidden fill: paint the backdrop run black via the sentinel
         for (int q = 0; q < w; q++) { if (dstz[q] == 0x0500) dstz[q] = kPpuWorldGapPixel; }
       }
     }
@@ -565,6 +578,8 @@ static void PpuDrawBackground_4bpp_mosaic(Ppu *ppu, uint y, bool sub, uint layer
   PpuWindows win;
   IS_SCREEN_WINDOWED(ppu, sub, layer) ? PpuWindows_Calc(&win, ppu, layer) : PpuWindows_Clear(&win, ppu, layer);
   BgLayer *bglayer = &ppu->bgLayer[layer];
+  // Indoors, BG2 tiles equal to the ceiling block draw as the gap sentinel (the space past the walls).
+  const bool hide = layer == 1 && ppu->hiddenTileCount != 0;
   // Mosaic quantizes the SCREEN row, then scroll and the camera lock turn it into a world row — the same
   // order PpuDrawBackground_4bpp uses. This path used to skip the lock and the linear-world fetch
   // entirely, so every mosaic frame of a transition fell back to the stock wrapping 2-screen tilemap with
@@ -618,7 +633,8 @@ static void PpuDrawBackground_4bpp_mosaic(Ppu *ppu, uint y, bool sub, uint layer
       uint32 tile = *tp;
       int ta = (tile & 0x8000) ? tileadr1 : tileadr0;
       PpuZbufType z = (tile & 0x2000) ? zhi : zlo;
-      uint32 bits = (tile || !useWorld) ? READ_BITS(ta, tile & 0x3ff) : 0;  // world gap (entry 0) => backdrop, not char 0
+      bool hidden = hide && PpuIsHiddenTile(ppu, tile);
+      uint32 bits = hidden ? 0 : (tile || !useWorld) ? READ_BITS(ta, tile & 0x3ff) : 0;  // world gap (entry 0) => backdrop, not char 0
       if (tile & 0x4000) bits >>= x, GET_PIXEL(); else bits <<= x, GET_PIXEL_HFLIP();
       if (pixel) {
         pixel += (tile & 0x1c00) >> kPaletteShift;
@@ -627,7 +643,7 @@ static void PpuDrawBackground_4bpp_mosaic(Ppu *ppu, uint y, bool sub, uint layer
           if (z > dstz[i])
             dstz[i] = pixel + z;
         } while (++i != w);
-      } else if (useWorld && !tile) {  // no-data gap: paint the backdrop run black via the sentinel
+      } else if ((useWorld && !tile) || hidden) {  // no-data gap or hidden fill: paint the backdrop run black via the sentinel
         for (int q = 0; q < w; q++) { if (dstz[q] == 0x0500) dstz[q] = kPpuWorldGapPixel; }
       }
       dstz += w, x += w;
@@ -828,6 +844,13 @@ static void PpuDrawBackground_mode7(Ppu *ppu, uint y, bool sub, PpuZbufType z) {
 void PpuSetMode7PerspectiveCorrection(Ppu *ppu, int low, int high) {
   ppu->mode7PerspectiveLow = low ? 1.0f / low : 0.0f;
   ppu->mode7PerspectiveHigh = 1.0f / high;
+}
+
+void PpuSetHiddenTiles(Ppu *ppu, const uint16_t *words, int count) {
+  if (count > 8) count = 8;
+  if (count < 0 || words == NULL) count = 0;
+  for (int i = 0; i < count; i++) ppu->hiddenTiles[i] = words[i];
+  ppu->hiddenTileCount = (uint8_t)count;
 }
 
 void PpuSetExtraSideSpace(Ppu *ppu, int left, int right, int top, int bottom) {
@@ -1059,12 +1082,11 @@ static NOINLINE void PpuDrawWholeLine(Ppu *ppu, uint y) {
     if (math_enabled_cur == 0 || fixed_color == 0 && !ppu->halfColor && !rendered_subscreen) {
       // Math is disabled (or has no effect), so can avoid the per-pixel maths check
       uint32 i = left;
-      if (ppu->renderFlags & (kPpuRenderFlags_BlackBG2 | kPpuRenderFlags_BlackBackdrop)) {
+      if (ppu->renderFlags & kPpuRenderFlags_BlackBackdrop) {
         do {
           uint8 layer = ZBUF_LAYER(ppu->bgBuffers[0].data[i]);
           uint8 cidx = ppu->bgBuffers[0].data[i] & 0xff;
-          if ((ppu->renderFlags & kPpuRenderFlags_BlackBG2) ? (layer == 5 || (layer == 1 && cidx >= 112))
-                                                            : (layer == 5 && cidx != 0)) {  // BlackBackdrop: gap sentinel only
+          if (layer == 5 && cidx != 0) {  // the gap sentinel: a no-data gap, or a room's fill past its walls
             dst[0] = 0;
           } else {
             uint32 color = ppu->cgram[ZbufToCgram(ppu->bgBuffers[0].data[i])];
@@ -1090,8 +1112,7 @@ static NOINLINE void PpuDrawWholeLine(Ppu *ppu, uint y) {
       do {
         uint8 main_layer = ZBUF_LAYER(ppu->bgBuffers[0].data[i]);
         uint8 cidx2 = ppu->bgBuffers[0].data[i] & 0xff;
-        if ((ppu->renderFlags & kPpuRenderFlags_BlackBG2) ? (main_layer == 5 || (main_layer == 1 && cidx2 >= 112))
-            : ((ppu->renderFlags & kPpuRenderFlags_BlackBackdrop) && main_layer == 5 && cidx2 != 0)) {  // gap sentinel
+        if ((ppu->renderFlags & kPpuRenderFlags_BlackBackdrop) && main_layer == 5 && cidx2 != 0) {  // the gap sentinel
           dst[0] = 0;
         } else {
           uint32 color = ppu->cgram[ZbufToCgram(ppu->bgBuffers[0].data[i])], color2;

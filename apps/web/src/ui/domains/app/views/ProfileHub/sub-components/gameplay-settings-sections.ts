@@ -83,6 +83,7 @@ const SECTIONS: Section[] = [
       { key: 'carryMoreRupees', label: 'Larger Wallet', description: 'Increase the maximum rupee capacity from 999 to 9999', keywords: 'rupees wallet money' },
       { key: 'autoSkipDialog', label: 'Auto-Skip Dialog', description: 'Show dialog text instantly and dismiss message boxes for you, including item-get text. Yes/no and shop prompts still wait for your answer. Not in the original game.', keywords: 'dialog text skip fast auto advance message box speed instant' },
       { key: 'prefillFileName', label: 'Prefill File Name', description: 'New files start named Link, with the cursor on End.', keywords: 'name file link new save naming end default' },
+      { key: 'archeryNeedsBow', label: 'Archery Game Asks For A Bow', description: 'Stop the archery game from taking your money when you have nothing to shoot with; the owner tells you why instead. Not in the original game.', keywords: 'archery shooting gallery target bow arrow minigame game refund fee rupees' },
     ],
   },
   {

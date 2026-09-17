@@ -2270,6 +2270,12 @@ const uint8 *GetDungeonRoomLayout(int i) {
   return kDungeonRoom + kDungeonRoomOffs[i];
 }
 
+// The 2x2 block the Ceiling object (subtype 1, index 0) paints: the void past a room's walls. Read by
+// the hook layer (core/game-hooks/hide_space_beyond_walls.c); nothing in the game calls it.
+const uint16 *Dungeon_CeilingTileWords(void) {
+  return SrcPtr(kObjectSubtype1Params[0]);
+}
+
 static inline void WriteAttr1(int j, uint16 attr) {
   dung_bg1_attr_table[j + 0] = attr;
   dung_bg1_attr_table[j + 1] = attr >> 8;
