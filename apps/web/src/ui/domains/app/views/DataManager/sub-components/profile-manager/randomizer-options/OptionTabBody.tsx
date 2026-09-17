@@ -31,6 +31,11 @@ import { holdPondToWallet, pondWalletTopOf } from '@shared/randomizer/ap-world/p
 import { applyRowChange } from '@app/hooks/randomizer/capacity-row-state';
 import { capacityPondStateOf, withCapacityPondRule } from '@app/hooks/randomizer/capacity-pond-choices';
 import { FROZEN_POND_KEYS, NO_FROZEN_KEYS, pondGroupsFor } from '@app/hooks/randomizer/pond-mode-rows';
+import { CAPACITY_POND, POND_IDS } from '@shared/randomizer/ap-world/pond/pond-instances.data';
+import { effectivePondProfiles } from '@shared/randomizer/ap-world/pond/pond-share';
+import type { PondId } from '@shared/randomizer/ap-world/pond/pond-instance.type';
+import type { PondSetting } from '@shared/randomizer/ap-world/pond/pond-profile.type';
+import type { PondProfiles } from '@shared/randomizer/ap-world/pond/pond-profiles.type';
 import { darkRoomSettingOfChoices, withDarkRoomSetting } from '@app/hooks/randomizer/dark-room-choices';
 import { forcedItemPowerRows } from '@app/hooks/randomizer/item-power-rows';
 import { DARK_ROOM_REQUIRED_KEY, forcedDarkRoomLightReasons } from '@shared/randomizer/ap-world/dark-rooms';
@@ -41,10 +46,23 @@ import { UPCOMING_TITLE, isUpcomingTab } from './option-tab-copy';
 import type { ApOptionDef } from '@shared/randomizer/ap-world/options.type';
 import type { OptionTabBodyProps } from './OptionTabBody.type';
 
+/** The master switch is off, so the pond bound to the capacity families is not the player's to set. */
+const FROZEN_PONDS: readonly PondId[] = ['capacity'];
+
+/**
+ * The three ponds after an edit on one of them. While the share switch is on
+ * every pond READS the capacity pond's rows (pond-share.ts), so whichever tab
+ * the edit came from writes there and the other two keep the rows they hold,
+ * which is what gives them back when the switch goes off again.
+ */
+const pondsWithEdit = (
+  profiles: PondProfiles, id: PondId, next: PondSetting, share: boolean,
+): PondProfiles => ({ ...profiles, [share ? CAPACITY_POND.id : id]: next });
+
 const OptionTabBody = (props: OptionTabBodyProps) => {
   const {
     tab, groups, lockedGroups, values, valueOf, cellOf,
-    choices, notes, fillerHeadroom, onRowChange, onChange,
+    choices, seed, pondDemands, notes, fillerHeadroom, onRowChange, onChange,
   } = props;
 
   const rule = capacityPondStateOf(choices);
@@ -54,8 +72,18 @@ const OptionTabBody = (props: OptionTabBodyProps) => {
   // wallet row can never disagree about what the wallet holds.
   const walletFloor = walletFloorOf(values);
   const capacity = holdWalletToFloor(rule.capacity, walletFloor);
-  // The pond as the seed will read it: held to what the wallet family can hold.
+  // The capacity pond as the seed will read it: held to what the wallet family
+  // can hold. The rule settles that pond, so the settled one is what is shown.
   const heldPond = holdPondToWallet(rule.pond, pondWalletTopOf(capacity)).setting;
+  const pondShare = choices.pondShare === true;
+  // What the three blocks HOLD, and what the tabs show: the shared switch is
+  // resolved by the model's own reader, never a second time here.
+  const pondProfiles = { ...choices.ponds, capacity: rule.pond };
+  const shownPonds = effectivePondProfiles(pondProfiles, pondShare);
+  // Sharing sends every edit to the capacity pond, so a frozen capacity pond
+  // freezes all three: a live control that cannot change the seed is the thing
+  // worth avoiding.
+  const frozenPonds = pondShare ? POND_IDS : FROZEN_PONDS;
   const forcedItemPower = forcedItemPowerRows(choices.progressiveTiers, valueOf);
   const fixedValueOf = (option: ApOptionDef) => values[option.key] ?? option.baseline;
 
@@ -110,7 +138,9 @@ const OptionTabBody = (props: OptionTabBodyProps) => {
       {tab === 'pond' && <PondStatusNote lines={pondStatusOf({ ...rule, pond: heldPond })} />}
       {tab === 'shops' && (
         <ShopSlotsBlock
-          scope={choices.shops}
+          // The seed the random mode draws its shelves from, so the cards show
+          // the set this profile will really open.
+          scope={{ ...choices.shops, seed }}
           retroBow={choices.retroBow}
           onChange={(shops) => onChange({ ...choices, shops })}
         />
@@ -158,13 +188,22 @@ const OptionTabBody = (props: OptionTabBodyProps) => {
       )}
       {tab === 'pond' && (
         <WishingPondSection
-          setting={rule.pond}
+          profiles={shownPonds}
           capacity={capacity}
+          share={pondShare}
+          demands={pondDemands}
           notes={rule.notes}
-          readOnly={!rule.pondEditable}
-          onChange={rule.pondEditable
-            ? (pond) => onChange(withCapacityPondRule({ ...choices, pond }, 'pond'))
-            : undefined}
+          frozen={rule.pondEditable ? undefined : frozenPonds}
+          onShareChange={(next) => onChange({ ...choices, pondShare: next })}
+          onChange={(id, pond) => {
+            const ponds = pondsWithEdit(pondProfiles, id, pond, pondShare);
+            // The capacity families answer to one pond, so only its edit
+            // settles the pair; the other two stand alone. While sharing, every
+            // edit lands on that pond, so every edit settles it.
+            onChange(id === CAPACITY_POND.id || pondShare
+              ? withCapacityPondRule({ ...choices, ponds }, 'pond')
+              : { ...choices, ponds });
+          }}
         />
       )}
       {tab === 'world' && (

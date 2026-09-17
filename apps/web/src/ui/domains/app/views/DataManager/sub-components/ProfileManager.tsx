@@ -47,6 +47,7 @@ const ProfileManager = (props: ProfileManagerProps) => {
     readyRoms,
     selectedProfile,
     handleCreate,
+    formInvalid,
     handleKeyDown,
     handlePickPreset,
   } = useProfileManager({ profiles, romStatuses, onCreateProfile, onRefresh });
@@ -101,7 +102,7 @@ const ProfileManager = (props: ProfileManagerProps) => {
           {formError && <Text variant="caption" className="profile-form__error">{formError}</Text>}
           <ButtonRow>
             <Button variant="ghost" size="sm" onClick={() => setCreating(false)}>Cancel</Button>
-            <Button variant="primary" size="sm" onClick={() => void handleCreate()} disabled={!formName.trim() || !formRom}>Create</Button>
+            <Button variant="primary" size="sm" onClick={() => void handleCreate()} disabled={!formName.trim() || !formRom || formInvalid}>Create</Button>
           </ButtonRow>
         </Box>
       ) : (
@@ -147,6 +148,7 @@ const ProfileManager = (props: ProfileManagerProps) => {
   const detail = showOptionsPane ? (
     <RandomizerOptionsPanel
       romFile={formRom}
+      seed={formRandomizer.seed}
       // The form state IS the choices plus the connection fields, so it is
       // handed over whole: re-listing the option fields here is the second
       // list that forgets a row the catalog gained.

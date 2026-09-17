@@ -27,6 +27,7 @@ import { npcOverrideKeyOf } from './npc-override-key';
 import { scriptedOverrideKeyOf } from './scripted-override-key';
 import { standingOverrideKeyOf } from './standing-override-key';
 import { shopOverrideKeyOf } from './shop-override-key';
+import { pondPrizeTargetOf } from './pond-prize-target';
 import { capabilityVanillaItemOf, isLockedVanilla } from './scope-lock';
 import { scopeFlagsOfStats } from './plan-scope-flags';
 import { resolveServerItemLocalId } from './online-items';
@@ -83,18 +84,16 @@ const classifyLocation = (
       shopOverride: { ...shopKey, targetLocalId },
     };
   }
-  // A pond prize slot under a non-legacy pond. The pond's plan hands these over
-  // in prize ORDER from its own table, so they are keyed by ordinal instead of
-  // by a check record, since the slots past the reference's two have none. Still the
-  // scripted-grant plan class, so completion reports from the substitution seam
-  // exactly as every other pond grant does, and no polled detection is needed
-  // (the capacity tier a purchase used to advance no longer moves).
-  const pondPrize = flags.pondPrizeLocations?.indexOf(locationName) ?? -1;
-  if (pondPrize >= 0) {
+  // A pond prize slot under a non-legacy pond, keyed by its place in that pond's
+  // own table (pond-prize-target.ts). Still the scripted-grant plan class, so
+  // completion reports from the substitution seam exactly as every other pond
+  // grant does, and no polled detection is needed.
+  const pondTarget = pondPrizeTargetOf(locationName, flags);
+  if (pondTarget !== null) {
     return {
       locationName, itemName, planClass: 'override-scripted',
       ...(checkId !== undefined ? { checkId } : {}),
-      scriptedOverride: { target: { surface: 'pond', prize: pondPrize }, targetLocalId },
+      scriptedOverride: { target: pondTarget, targetLocalId },
     };
   }
   if (checkId === undefined) {

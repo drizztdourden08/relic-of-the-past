@@ -29,7 +29,7 @@ const UNAVAILABLE: PoolImpact = { locations: 0, items: 0, note: 'n/a' };
 
 const messageOf = (error: unknown): string => (error instanceof Error ? error.message : String(error));
 
-const usePoolImpacts = (snapshot: RandomizerOptionsSnapshot): PoolImpacts => useMemo(() => {
+const usePoolImpacts = (snapshot: RandomizerOptionsSnapshot, seed = ''): PoolImpacts => useMemo(() => {
   const deliverable = deliverableSets();
   const cache = new Map<string, ImpactCell>();
   const cellOf = (key: string): ImpactCell => {
@@ -37,7 +37,7 @@ const usePoolImpacts = (snapshot: RandomizerOptionsSnapshot): PoolImpacts => use
     if (cached !== undefined) return cached;
     let impact: PoolImpact;
     try {
-      impact = poolImpactOf(key, snapshot, deliverable);
+      impact = poolImpactOf(key, snapshot, deliverable, seed);
     } catch {
       impact = UNAVAILABLE;
     }
@@ -46,11 +46,11 @@ const usePoolImpacts = (snapshot: RandomizerOptionsSnapshot): PoolImpacts => use
     return cell;
   };
   try {
-    return { accounting: accountingOf(snapshot, deliverable), cellOf };
+    return { accounting: accountingOf(snapshot, deliverable, seed), cellOf };
   } catch (error) {
     return { accounting: null, error: messageOf(error), cellOf };
   }
-}, [snapshot]);
+}, [snapshot, seed]);
 
 export { usePoolImpacts };
 export type { PoolImpacts };

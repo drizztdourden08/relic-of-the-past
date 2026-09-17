@@ -25,10 +25,11 @@ import {
   RANDOMIZER_MSG_BASE, randomizerTemplateTexts,
 } from '@shared/asset-extraction/text/data/randomizer-templates';
 import { packPackedBytes } from '@shared/asset-extraction/packed-bytes';
-import { receiptLineCandidates } from '@shared/randomizer/receipt-text/receipt-line.type';
+import { isChoiceLine, receiptLineCandidates } from '@shared/randomizer/receipt-text/receipt-line.type';
 import { log } from '../../log-bus';
 import { getModule } from '../wasm-bridge';
 import { readActiveDialogue } from './active-dialogue';
+import { choiceMessageText } from './choice-message';
 import { fitReceiptLine, sanitizeForAlphabet, wrapMessageText } from './wrap-message';
 import type { ReceiptLine } from '@shared/randomizer/receipt-text/receipt-line.type';
 import type { ActiveDialogue } from './active-dialogue';
@@ -55,9 +56,13 @@ const baseChunksOf = (dialogue: ActiveDialogue): Uint8Array[] | null => {
   return [...lineChunks, ...compressStrings([...templates.slice(baked)], code)];
 };
 
-/** The candidate that fits the box, sanitized and wrapped into line commands. */
+/**
+ * The candidate that fits the box, sanitized and wrapped into line commands. A yes/no line
+ * lays its question out above its two answers (choice-message.ts).
+ */
 const prepareLine = (line: ReceiptLine, alphabet: readonly string[], dialogue: ActiveDialogue): string => {
   const candidates = receiptLineCandidates(line).map((text) => sanitizeForAlphabet(text, alphabet));
+  if (isChoiceLine(line)) return choiceMessageText(line, candidates, alphabet, dialogue.fontWidths);
   return wrapMessageText(fitReceiptLine(candidates, alphabet, dialogue.fontWidths), alphabet, dialogue.fontWidths);
 };
 

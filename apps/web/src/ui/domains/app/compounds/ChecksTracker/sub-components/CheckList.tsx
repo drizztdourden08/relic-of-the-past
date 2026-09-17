@@ -13,6 +13,7 @@ import type { CheckRecord, ItemId } from '@shared/game/data';
 import type { CheckStatus } from '@shared/game/logic/eval';
 import type { RunContext } from '@shared/game/logic/queries/check-grouping';
 import { getItemSprite } from '@shared/game/logic/queries/item-sprites';
+import { checkDisplayName } from '@app/lib/game/randomizer-client';
 import { TrackerCheckRow } from './TrackerCheckRow';
 import type { ViewMode } from '../ChecksTracker.type';
 import '../ChecksTracker.css';
@@ -44,7 +45,7 @@ const CheckCard = ({ check, status, itemOverride }: CheckCardProps) => {
         : SPRITE_PLACEHOLDER}
       <Box className="tracker-card__text">
         <Text className="tracker-card__item-name">{displayItem ?? '???'}</Text>
-        <Text className="tracker-card__check-name">{check.randomizerName}</Text>
+        <Text className="tracker-card__check-name">{checkDisplayName(check)}</Text>
       </Box>
     </Box>
   );

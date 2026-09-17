@@ -10,7 +10,9 @@
  * meter locks the bat explicitly, exactly as fill-world.ts does. A Custom
  * family with a locked spot also hands the poller its starting rung (0 is
  * the empty tier), so the pond's "purchased" compare keeps meaning "advanced
- * by one purchase".
+ * by one purchase". A wish pond at Vanilla grants locks her own two slots to
+ * what her upgrade produces, so no override is armed there and the real
+ * upgrade runs; only a placement that recorded the rule does.
  */
 
 import { capacityProfileOfStats } from '@shared/randomizer/ap-world/fill/placement-capacity';
@@ -19,19 +21,22 @@ import {
   familyOfSpot, lockedCapacitySpotsOf, spotOfFamily,
 } from '@shared/randomizer/ap-world/capacity/capacity-spots';
 import {
-  probeDeliverableCapacityLocations, undeliverableNpcLocations, undeliverableWorldLocations,
+  probeDeliverablePondLocations, undeliverableNpcLocations, undeliverableWorldLocations,
 } from './npc-capability';
 import type { ApPlacementStats } from '@shared/randomizer/ap-world/fill/ap-placement.type';
 import type { CapacityProfile } from '@shared/randomizer/ap-world/capacity';
 import { POND_PRIZE_LOCATIONS } from '@shared/randomizer/ap-world/pond/pond-locations.data';
+import { pondProfilesOfStats } from '@shared/randomizer/ap-world/fill/placement-ponds';
 import { NO_SHOP_SCOPE } from '@shared/randomizer/ap-world/shops/shop-scope-from-values';
+import { pondVanillaSlotsOf } from '@shared/randomizer/ap-world/pond/pond-vanilla-slots';
+import { wishPondRungKeysOf } from './wish-pond-rung-keys';
 import type { ScopeFlags } from './scope-lock';
 
 
 
 /** The capacity spots this profile keeps vanilla: undeliverable fairy slots, plus the bat of a vanilla meter. */
 const capacityLockedSpotsOf = (profile: CapacityProfile): ReadonlySet<string> => {
-  const locked = new Set(lockedCapacitySpotsOf(profile, probeDeliverableCapacityLocations()));
+  const locked = new Set(lockedCapacitySpotsOf(profile, probeDeliverablePondLocations()));
   const meterSpot = spotOfFamily('meter');
   if (profile.meter.mode === 'vanilla' && meterSpot !== undefined) locked.add(meterSpot);
   return locked;
@@ -57,7 +62,11 @@ const scopeFlagsOfStats = (stats: ApPlacementStats): ScopeFlags => {
   // A non-legacy pond owns its prize slots outright: they are proven deliverable
   // at generation or they are not locations at all, so nothing of the pond is
   // ever capability-locked here.
-  const pondOwnsSlots = stats.pond !== undefined && stats.pond.mode !== 'capacity';
+  const ponds = pondProfilesOfStats(stats);
+  const pondOwnsSlots = ponds.capacity.mode !== 'capacity';
+  const wishPondRungs = wishPondRungKeysOf(ponds);
+  const followMode = stats.pondSlotsFollowMode === true;
+  const pondLocked = pondVanillaSlotsOf(ponds, probeDeliverablePondLocations(), followMode).locked;
   const capacityLockedLocations = pondOwnsSlots ? new Set<string>() : capacityLockedSpotsOf(profile);
   return {
     keyDropShuffle: stats.keyDropShuffle,
@@ -71,6 +80,7 @@ const scopeFlagsOfStats = (stats: ApPlacementStats): ScopeFlags => {
     ...(stats.includeNpcChecks ? { npcLockedLocations: undeliverableNpcLocations() } : {}),
     ...(includeWorldItems ? { worldLockedLocations: undeliverableWorldLocations() } : {}),
     capacityLockedLocations,
+    ...(pondLocked.size > 0 ? { pondLockedItems: pondLocked } : {}),
     capacityStartTiers: capacityStartTiersOf(profile, capacityLockedLocations),
     // A placement frozen before shops existed opened no shelf.
     shops: stats.shops ?? NO_SHOP_SCOPE,
@@ -79,9 +89,11 @@ const scopeFlagsOfStats = (stats: ApPlacementStats): ScopeFlags => {
     // A placement frozen before the pond option, or one that kept the legacy
     // pond, carries no prize slots at all: its two pond names stay the capacity
     // families' spots and every classification below is the one it always was.
-    ...(stats.pond !== undefined && stats.pond.mode !== 'capacity'
+    ...(pondOwnsSlots
       ? { pondPrizeLocations: POND_PRIZE_LOCATIONS.slice(0, stats.pondPrizeCount ?? 0) }
       : {}),
+    // Each wish pond's numbered rungs are that pond's own, apart from the capacity pond's.
+    ...(wishPondRungs.size > 0 ? { wishPondRungs } : {}),
   };
 };
 

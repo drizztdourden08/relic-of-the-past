@@ -91,6 +91,13 @@ static const PondThrow *CurrentThrow(void) {
   return (index >= 0 && index < g_pond.count) ? &g_pond.entry[index] : NULL;
 }
 
+// The prize ordinal the throw about to be paid for hands over, or -1: a throw that sells a
+// capacity level, an exhausted pond, no plan. It is the rung the demand table is keyed by.
+int GameHook_PondThrowPrize(void) {
+  const PondThrow *entry = CurrentThrow();
+  return entry == NULL ? -1 : entry->prize;
+}
+
 // True while a throw PAST |index| still hands over a pool item: what the award line reads
 // to say whether the water has anything left after the one it is announcing.
 static bool MorePrizesAfter(int index) {
@@ -107,9 +114,13 @@ static bool MorePrizesAfter(int index) {
 // player's rhythm rests on, and the vanilla line now quotes the plan's own price
 // (GameHook_PondCostDigits) instead of two native amounts nobody is charged. An EXHAUSTED
 // pond keeps the seam closed: its price is unpayable, so the refusal is the only box.
+//
+// A throw whose prize asks for a demand shows no box here at all: the contact question already
+// named the demand and took the answer (pond_demand_visit.c), so a second box would ask twice.
 bool GameHook_PondPromptOverride(void) {
   const PondThrow *entry = CurrentThrow();
   if (entry == NULL) return GameHook_PondPlanOpen();
+  if (GameHook_PondVisitAsks()) return true;
   if (entry->prompt < 0) return false;
   Sprite_ShowMessageUnconditional((uint16)entry->prompt);
   return true;
@@ -149,10 +160,14 @@ int GameHook_PondCostDigits(int vanilla) {
 // not from a counter: the seam runs BEFORE the throw is resolved, so "still to come" means
 // a later throw carrying a prize. A pond with none left says so through its closing line
 // instead, on the next visit, so the two together cover every state the player can be in.
+//
+// A prize that asked for a demand may carry its own award line, the one that says an item shown
+// as proof goes back with the gift; the two lines above stand in when it carries none.
 int GameHook_PondAwardMessage(void) {
   const PondThrow *entry = CurrentThrow();
   if (entry == NULL || entry->prize < 0) return -1;
-  return MorePrizesAfter(GameHook_PondThrowIndex()) ? g_pond.award_more : g_pond.award_last;
+  int msg = MorePrizesAfter(GameHook_PondThrowIndex()) ? g_pond.award_more : g_pond.award_last;
+  return GameHook_PondVisitAwardMessage(msg);
 }
 
 bool GameHook_PondChoiceOverride(void) {
@@ -190,26 +205,41 @@ void GameHook_PondHoldPlayer(void) {
 // line for both refusals ("come back another time") which is right for a wallet that
 // cannot pay yet and wrong for a pond that will never sell again, so only the exhausted
 // case is replaced. |vanilla| back whenever a throw is still on the table.
+//
+// A throw that asks for a demand is the one other case: a player who answered yes and cannot
+// pay hears what she wants and to come back with it. The answer box still holds that yes (the
+// prompt seam put up no box of its own), which is what tells it apart from a no.
 int GameHook_PondLaterMessage(int vanilla) {
-  if (!GameHook_PondPlanOpen() || CurrentThrow() != NULL) return vanilla;
+  if (!GameHook_PondPlanOpen()) return vanilla;
+  if (CurrentThrow() != NULL) {
+    return choice_in_multiselect_box == 0 ? GameHook_PondVisitRefusal(vanilla) : vanilla;
+  }
   return g_pond.closed_msg >= 0 ? g_pond.closed_msg : vanilla;
 }
 
 // The affordability seam (ai state 2): what this throw really costs. |vanilla| back
 // unless a plan is open; an exhausted pond names a price no wallet holds, which sends
 // the handler down its own "come back another time" branch and closes the pond for good.
+//
+// A throw that asks for a demand costs no rupees: it costs nothing when the player can pay the
+// demand and the unpayable price when they cannot, so the handler's own wallet test takes the
+// refusal branch for exactly the players who cannot pay.
 int GameHook_PondThrowCost(int vanilla) {
   if (!GameHook_PondPlanOpen()) return vanilla;
   const PondThrow *entry = CurrentThrow();
-  return entry == NULL ? POND_CLOSED_COST : entry->price;
+  if (entry == NULL) return POND_CLOSED_COST;
+  if (GameHook_PondVisitAsks()) return GameHook_PondVisitCanPay() ? 0 : POND_CLOSED_COST;
+  return entry->price;
 }
 
 // The payment seam (ai state 3): the amount actually taken from the wallet and shown
 // flying in. The handler stashed the cost in a sprite BYTE, so the price is read back
-// from the plan instead of from that stash; |stored| back when no plan is open.
+// from the plan instead of from that stash; |stored| back when no plan is open. A throw paid in
+// a demand takes no rupees: its payment is taken by the payment seam.
 int GameHook_PondThrowAmount(int stored) {
   const PondThrow *entry = CurrentThrow();
-  return entry == NULL ? stored : entry->price;
+  if (entry == NULL) return stored;
+  return GameHook_PondVisitAsks() ? 0 : entry->price;
 }
 
 // The consolation line of the throw about to be resolved, without resolving it: -1 for

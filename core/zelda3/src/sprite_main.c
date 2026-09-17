@@ -1138,6 +1138,8 @@ void Sprite_WishPond3(int k) {
     flag_is_link_immobilized = 0;
     if (sprite_delay_main[k] || Sprite_CheckIfLinkIsBusy())
       return;
+    if (GameHook_WishPondContact(k))
+      break;
     if (Sprite_ShowMessageOnContact(k, 0x14a) & 0x100) {
       sprite_ai_state[k] = 1;
       Link_ResetProperties_A();
@@ -1146,6 +1148,8 @@ void Sprite_WishPond3(int k) {
     }
     break;
   case 1:
+    if (GameHook_WishPondAnswer(k))
+      break;
     if (!choice_in_multiselect_box) {
       Sprite_ShowMessageUnconditional(0x8a);
       sprite_ai_state[k] = 2;
@@ -1171,7 +1175,7 @@ void Sprite_WishPond3(int k) {
     break;
   }
   case 3:
-    if (sprite_delay_main[k] == 0) {
+    if (sprite_delay_main[k] == 0 && !GameHook_PondTossStillFlying()) {
       SpriteSpawnInfo info;
       int j = Sprite_SpawnDynamically(k, 0x72, &info);
       assert(j >= 0);
@@ -1191,7 +1195,8 @@ void Sprite_WishPond3(int k) {
     if (!(frame_counter & 7)) {
       PaletteFilter_SP5F();
       if (!BYTE(palette_filter_countdown)) {
-        Sprite_ShowMessageUnconditional(0x8b);
+        if (!GameHook_WishPondRiseLine())
+          Sprite_ShowMessageUnconditional(0x8b);
         Palette_RevertTranslucencySwap();
         TS_copy = 0;
         CGADSUB_copy = 0x20;
@@ -1209,6 +1214,8 @@ void Sprite_WishPond3(int k) {
     break;
   case 6:
     sprite_ai_state[k] = 7;
+    if (GameHook_WishPondPlanTakes(k))
+      break;
     if (!savegame_is_darkworld) {
       if (sprite_graphics[k] == 12) {
         sprite_graphics[k] = 42;
@@ -1265,7 +1272,8 @@ void Sprite_WishPond3(int k) {
     PaletteFilter_RestoreSP5F();
     Palette_RevertTranslucencySwap();
     item_receipt_method = 2;
-    Link_ReceiveItem(sprite_graphics[k], 0);
+    if (!GameHook_WishPondGrant(k))
+      Link_ReceiveItem(sprite_graphics[k], 0);
     sprite_ai_state[k] = 10;
     break;
   case 10: {
@@ -11421,7 +11429,7 @@ void Sprite_HappinessPond(int k) {  // 86c44c
     flag_is_link_immobilized = 0;
     if (sprite_delay_main[k] || Sprite_CheckIfLinkIsBusy())
       return;
-    if (Sprite_ShowMessageOnContact(k, 0x89) & 0x100) {
+    if (Sprite_ShowMessageOnContact(k, (uint16)GameHook_PondVisitQuestion(0x89)) & 0x100) {
       sprite_ai_state[k] = 1;
       Link_ResetProperties_A();
       Ancilla_TerminateSparkleObjects();
@@ -11462,7 +11470,7 @@ show_later_msg:
     int i = GameHook_PondThrowAmount(sprite_D[k]);
     link_rupees_goal -= i;
     link_rupees_in_pond += GameHook_PondPoolAdd(i);
-    if (!GameHook_PondTossRupees(i)) AddHappinessPondRupees(sprite_head_dir[k]);
+    if (!GameHook_PondTossPayment(i)) AddHappinessPondRupees(sprite_head_dir[k]);
     if (link_rupees_in_pond >= 100) {
       link_rupees_in_pond -= 100;
       sprite_ai_state[k] = 5;
@@ -11602,6 +11610,8 @@ void WishPond2_Draw(int k) {  // 86c4b5
     return;
   uint8 t = sprite_ai_state[k];
   if (t != 5 && t != 6 && t != 11 && t != 12)
+    return;
+  if (GameHook_WishPondHidesHeldItem(k))
     return;
   int g = sprite_graphics[k];
   uint8 f = kWishPond2_OamFlags[g];

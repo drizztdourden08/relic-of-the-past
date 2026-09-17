@@ -14,23 +14,10 @@ import {
   BOTTLE_CONTENTS, bottleContentKeyOf,
 } from '@shared/randomizer/ap-world/shops/shop-price-options.data';
 import { blockedContentNote, potionPriceStateOfValues } from '@shared/randomizer/ap-world/potion-price';
+import type { BottleContentRowModel } from '../../CurrencyPriceRow';
 import type { ApOptionValue } from '@shared/randomizer/ap-world/options.type';
-import type { ShopBottleContent } from '@shared/randomizer/ap-world/shops/shop-price.type';
 
 type Values = Readonly<Record<string, ApOptionValue>>;
-
-interface BottleContentRowModel {
-  content: ShopBottleContent;
-  /** The content in the player's own words. */
-  label: string;
-  /** Its catalog key: what an edit on this row writes. */
-  key: string;
-  checked: boolean;
-  /** Its cauldron went to the shuffle: the row is greyed and cannot be ticked. */
-  blocked: boolean;
-  /** Why this row is greyed; empty while it is not. */
-  note: string;
-}
 
 const bottleContentRowsOf = (values: Values): readonly BottleContentRowModel[] => {
   const { blockedKeys } = potionPriceStateOfValues(values);
@@ -42,4 +29,3 @@ const bottleContentRowsOf = (values: Values): readonly BottleContentRowModel[] =
 };
 
 export { bottleContentRowsOf };
-export type { BottleContentRowModel };

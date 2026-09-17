@@ -37,6 +37,7 @@ const CLAIMS: ReadonlyArray<readonly [string, string]> = [
   ['SRM_PRIZE_TAKEN', 'SRM_PRIZE_TAKEN_COUNT'],
   ['SRM_PENDING_CRYSTAL', ''],
   ['SRM_POND_THROWS', ''],
+  ['SRM_WISH_POND_THROWS', 'SRM_WISH_POND_THROWS_COUNT'],
   ['SRM_SHOP_SOLD', 'SRM_SHOP_SOLD_COUNT'],
 ];
 

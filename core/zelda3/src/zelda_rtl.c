@@ -1115,13 +1115,13 @@ static const uint32 kGateWordParityMask[kGateWordCount] = {
   kFeatures3_PondPlan | kFeatures3_GearArt | kFeatures3_DungeonItemGrants | kFeatures3_RetroBow |
   kFeatures3_ArcheryNeedsBow | kFeatures3_DialogControls,
 
-  // features4 — the item-power switches. Every bit is a divergence from the unmodified game, so all of
-  // them are stripped by Vanilla Safe.
+  // features4 — the item-power switches, and the wish ponds' plan. Every bit is a divergence from the
+  // unmodified game, so all of them are stripped by Vanilla Safe.
   kFeatures4_NoFairyCatching | kFeatures4_NoByrnaBarrierGuard | kFeatures4_CapeDoubleMagic |
   kFeatures4_SilverArrowsBossOnly | kFeatures4_NoPowderFairy | kFeatures4_HammerWakesTablets |
   kFeatures4_SwordlessMedallions | kFeatures4_PullableCurtains | kFeatures4_HammerHurtsLastFight |
   kFeatures4_HammerBreaksSeal | kFeatures4_RodLightsDarkRoom | kFeatures4_MedallionLightsDarkRoom |
-  kFeatures4_RedCaneLightsDarkRoom,
+  kFeatures4_RedCaneLightsDarkRoom | kFeatures4_WishPondPlan,
 
   // features5: the capacity pickup bonus rewrites what a borrowed receipt pays out, so Vanilla Safe strips it.
   kFeatures5_CapacityBonus,

@@ -25,7 +25,7 @@ import { defaultDifficulty } from '@shared/randomizer/ap-world/difficulty/diffic
 import { defaultProgressiveSetting } from '@shared/randomizer/ap-world/progressive/progressive-from-snapshot';
 import { defaultProgressiveModes } from '@shared/randomizer/ap-world/progressive/progressive-modes.data';
 import { defaultRetroBow } from '@shared/randomizer/ap-world/retro/retro-from-snapshot';
-import { LEGACY_POND_SETTING } from '@shared/randomizer/ap-world/pond/pond-profile-defaults';
+import { LEGACY_POND_PROFILES } from '@shared/randomizer/ap-world/pond/pond-profile-defaults';
 import {
   SHOP_PRICE_BLOCK_KEYS, SHOP_PRICE_OPTION_KEYS,
 } from '@shared/randomizer/ap-world/shops/shop-price-options.data';
@@ -53,7 +53,7 @@ const BASE: RandomizerOptionChoices = {
   capacity: LEGACY_SHUFFLE_ON_PROFILE,
   capacityProgressive: true,
   capacityBonus: DEFAULT_CAPACITY_BONUS,
-  pond: LEGACY_POND_SETTING,
+  ponds: LEGACY_POND_PROFILES,
   progressiveTiers: defaultProgressiveSetting(),
   progressiveModes: defaultProgressiveModes(),
   retroBow: defaultRetroBow(),

@@ -22,15 +22,33 @@
 #include "shop_payment.h"
 #include "src/hud.h"
 
-// A bottle slot holding what this price demands, or -1. A bee price accepts the
-// good bee too: it is the same bottled thing, only worth more to keep.
-static int FindPricedBottle(uint16 wanted) {
+// Whether a slot holding |have| answers a price for |wanted|. A bee price accepts the good bee
+// too: it is the same bottled thing, only worth more to keep.
+static bool BottleAnswers(uint8 have, uint16 wanted) {
+  return have == wanted || (wanted == SHOP_BOTTLE_BEE && have == SHOP_BOTTLE_GOOD_BEE);
+}
+
+// How many of the four slots hold what |wanted| names. A shelf charges one bottle and reads
+// this as a yes or a no; a pond demand counts them, so it reads the number.
+int ShopBottlesHeld(uint16 wanted) {
+  int held = 0;
   for (int i = 0; i < 4; i++) {
-    uint8 have = link_bottle_info[i];
-    if (have == wanted) return i;
-    if (wanted == SHOP_BOTTLE_BEE && have == SHOP_BOTTLE_GOOD_BEE) return i;
+    if (BottleAnswers(link_bottle_info[i], wanted)) held++;
   }
-  return -1;
+  return held;
+}
+
+// Empties |count| slots holding what |wanted| names, lowest slot first. Only ever called after
+// ShopBottlesHeld said the player holds that many, so it can never empty a slot it should not.
+void ShopTakeBottles(uint16 wanted, int count) {
+  for (int i = 0; i < 4 && count > 0; i++) {
+    if (!BottleAnswers(link_bottle_info[i], wanted)) continue;
+    link_bottle_info[i] = SHOP_BOTTLE_EMPTY;
+    count--;
+  }
+  // The item box shows bottle contents, so it has to be rebuilt like every other place the
+  // game empties a bottle (LinkItem_Bottle).
+  Hud_Rebuild();
 }
 
 // Pure test: can the player pay this price right now? No state is touched, so a
@@ -43,7 +61,7 @@ bool ShopCanPay(uint8 currency, uint16 amount) {
   // Paying must leave the player standing: a price can never take the last unit
   // of health, and the vendored damage path (the only other writer) is never entered.
   case kShopCurrency_Hearts: return link_health_current > amount * SHOP_UNITS_PER_HEART;
-  case kShopCurrency_Bottle: return FindPricedBottle(amount) >= 0;
+  case kShopCurrency_Bottle: return ShopBottlesHeld(amount) >= 1;
   default: return false;
   }
 }
@@ -69,14 +87,10 @@ void ShopTakePayment(uint8 currency, uint16 amount) {
     link_health_current -= (uint8)(amount * SHOP_UNITS_PER_HEART);
     link_hearts_filler = 0;
     break;
-  case kShopCurrency_Bottle: {
-    int slot = FindPricedBottle(amount);
-    if (slot >= 0) link_bottle_info[slot] = SHOP_BOTTLE_EMPTY;
-    // The item box shows bottle contents, so it has to be rebuilt like every
-    // other place the game empties a bottle (LinkItem_Bottle).
-    Hud_Rebuild();
+  case kShopCurrency_Bottle:
+    // One bottle: a shelf never charges more, and the rebuild rides along in the take.
+    ShopTakeBottles(amount, 1);
     break;
-  }
   default:
     break;
   }

@@ -18,6 +18,7 @@ import { RANDOMIZER_RECEIPT_MSG } from '@shared/asset-extraction/text/data/rando
 import { classifyReceiptItem } from '@shared/randomizer/receipt-text/receipt-item-class';
 import { renderOnline } from '@shared/randomizer/receipt-text/receipt-templates';
 import { renderReceiptMessage } from '@shared/randomizer/receipt-text/render-receipt-message';
+import { locationDisplayName } from '@shared/randomizer/ap-world/display-names';
 import { log } from '../../log-bus';
 import { deliverItem } from '../delivery-api';
 import { appendSessionReceiptMessage } from '../session-dialogue';
@@ -97,7 +98,9 @@ const classMsgOf = (itemName: string): number => {
  * without a count instead of with a wrong one.
  */
 const scoutedOverrideMsg = (locationName: string, itemName: string): number => {
-  const text = renderReceiptMessage({ kind: 'physical', itemName, locationName });
+  const text = renderReceiptMessage({
+    kind: 'physical', itemName, locationName: locationDisplayName(locationName),
+  });
   return appendSessionReceiptMessage(text) ?? classMsgOf(itemName);
 };
 

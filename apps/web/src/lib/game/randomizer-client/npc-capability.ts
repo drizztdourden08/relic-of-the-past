@@ -10,13 +10,17 @@
  * enter the shuffle) and the bridge (the rest classify vanilla-locked), so
  * a plan error on a probed location is structurally impossible for fresh
  * seeds. Data-driven and stable per build, cached after the first walk.
- * The capacity probe runs the same test over the fairy-slot table; its
- * slots carry scripted-grant keys (the pond's own handler seam), like the
- * cave bat and the prize minigame.
+ * The pond probe runs the same test over every pond's own pair of slots: the
+ * capacity pond's two carry scripted-grant keys (its handler's own seam), like
+ * the cave bat and the prize minigame, and each wish pond's two carry npc keys
+ * (the receive seam, keyed by the water's room). A numbered rung past a pair
+ * has no seam of its own, so certifying the pair is what certifies that pond's
+ * whole ladder (pond/pond-spots.ts reads a pond's pair out of the set).
  */
 
 import { NPC_SCOPE_LOCATIONS, WORLD_ITEM_SCOPE_LOCATIONS } from '@shared/randomizer/ap-world/scope-vanilla.data';
 import { CAPACITY_UPGRADE_LOCATIONS } from '@shared/randomizer/ap-world/special-locations.data';
+import { POND_INSTANCES } from '@shared/randomizer/ap-world/pond/pond-instances.data';
 import { checkIdByStandardName } from './check-names';
 import { detectionOf } from './check-detection';
 import { freestandingKeyDropOf } from './freestanding-key-drops';
@@ -58,9 +62,23 @@ const lockedComplement = (
   return locked;
 };
 
+/**
+ * Every pond's two vanilla slots, each mapped to the grant its fairy makes
+ * there in the unmodified game. The capacity pond's pair is named by the
+ * upgrade table, the wish ponds' pairs by the npc scope, because that is where
+ * each one's vanilla item is written down.
+ */
+const POND_SLOT_LOCATIONS: ReadonlyMap<string, string> = new Map(
+  POND_INSTANCES.flatMap((pond) => pond.slots.flatMap((slot) => {
+    const vanillaItem = CAPACITY_UPGRADE_LOCATIONS.get(slot.location)
+      ?? NPC_SCOPE_LOCATIONS.get(slot.location);
+    return vanillaItem === undefined ? [] : [[slot.location, vanillaItem] as [string, string]];
+  })),
+);
+
 let cachedNpcDeliverable: ReadonlySet<string> | null = null;
 let cachedWorldDeliverable: ReadonlySet<string> | null = null;
-let cachedCapacityDeliverable: ReadonlySet<string> | null = null;
+let cachedPondDeliverable: ReadonlySet<string> | null = null;
 
 /** The npc-scope AP location names with a certified physical delivery path. */
 const probeDeliverableNpcLocations = (): ReadonlySet<string> => {
@@ -82,21 +100,26 @@ const probeDeliverableWorldLocations = (): ReadonlySet<string> => {
 const undeliverableWorldLocations = (): ReadonlySet<string> =>
   lockedComplement(WORLD_ITEM_SCOPE_LOCATIONS, probeDeliverableWorldLocations());
 
-/** The capacity-fairy slots with a certified physical delivery path. */
-const probeDeliverableCapacityLocations = (): ReadonlySet<string> => {
-  cachedCapacityDeliverable ??= probeTable(CAPACITY_UPGRADE_LOCATIONS);
-  return cachedCapacityDeliverable;
+/**
+ * The pond slots with a certified physical delivery path: the capacity pond's
+ * pair and both wish ponds'. Generation carries ONE set for every pond, so all
+ * six are certified here; the capacity-only complement below stays over the
+ * upgrade table, because that is the only pair a profile locks.
+ */
+const probeDeliverablePondLocations = (): ReadonlySet<string> => {
+  cachedPondDeliverable ??= probeTable(POND_SLOT_LOCATIONS);
+  return cachedPondDeliverable;
 };
 
 /** Complement view: the capacity slots generation must keep vanilla. */
 const undeliverableCapacityLocations = (): ReadonlySet<string> =>
-  lockedComplement(CAPACITY_UPGRADE_LOCATIONS, probeDeliverableCapacityLocations());
+  lockedComplement(CAPACITY_UPGRADE_LOCATIONS, probeDeliverablePondLocations());
 
 export {
   probeDeliverableNpcLocations,
   undeliverableNpcLocations,
   probeDeliverableWorldLocations,
   undeliverableWorldLocations,
-  probeDeliverableCapacityLocations,
+  probeDeliverablePondLocations,
   undeliverableCapacityLocations,
 };

@@ -26,10 +26,11 @@ export type { CheckDetection } from './check-detection';
 export type { PhysicalPlan, PlanClass, PlanCounts, PlanEntry, PlanError } from './physical-plan.type';
 export { adaptLegacyPlacement } from './legacy-placement';
 export {
-  probeDeliverableCapacityLocations, probeDeliverableNpcLocations, probeDeliverableWorldLocations,
+  probeDeliverablePondLocations, probeDeliverableNpcLocations, probeDeliverableWorldLocations,
   undeliverableCapacityLocations, undeliverableNpcLocations, undeliverableWorldLocations,
 } from './npc-capability';
-export { checkIdByStandardName, standardCheckName } from './check-names';
+export { checkIdByStandardName, standardCheckName, standardNameOfCheck } from './check-names';
+export { checkDisplayName } from './check-display-name';
 export { armedCheckIdsOfPlacement } from './plan-armed-checks';
 export { buildPlacementView } from './placement-view';
 export type { PlacementView } from './placement-view';

@@ -14,6 +14,8 @@
 // The plan (pond_plan.c):
 //   GameHook_PondPlanOpen        true while a plan owns the pond.
 //   GameHook_PondThrowIndex      the throw about to be paid for, or -1.
+//   GameHook_PondThrowPrize      the prize ordinal that throw hands over, or -1: the rung
+//                                a demand is keyed by (pond_demand_visit.c).
 //   GameHook_PondPromptOverride  cost-prompt seam: the plan announced its own price, so
 //                                the vanilla two-choice line is skipped.
 //   GameHook_PondCostDigits      the digits that vanilla line quotes when it does run: the
@@ -37,6 +39,7 @@
 //   GameHook_PondThrowsTaken     the raw counter, for the progress buffer and the probes.
 bool GameHook_PondPlanOpen(void);
 int GameHook_PondThrowIndex(void);
+int GameHook_PondThrowPrize(void);
 bool GameHook_PondPromptOverride(void);
 int GameHook_PondCostDigits(int vanilla);
 bool GameHook_PondChoiceOverride(void);
@@ -55,8 +58,10 @@ uint8 GameHook_PondThrowsTaken(void);
 // the six denominations and spawned in volleys, one decoded sheet at a time, each gem
 // under its own denomination's receipt so a volley shows every colour it carries.
 // GameHook_PondTossRupees is false with no plan open, so the vendored five-rupee spawn
-// runs instead; GameHook_PondTossNextVolley refills the pond's slots with the next volley
-// when they are all spent, and GameHook_PondTossDelay stretches the purchase wait to cover
+// runs instead (the handler reaches it through GameHook_PondTossPayment, which throws a
+// demand in its place when the throw asks for one); GameHook_PondTossNextVolley refills
+// the pond's slots with the next volley when they are all spent, for any planned pond
+// (pond_toss_queue.c), and GameHook_PondTossDelay stretches the purchase wait to cover
 // them.
 bool GameHook_PondTossRupees(int amount);
 bool GameHook_PondTossNextVolley(void);

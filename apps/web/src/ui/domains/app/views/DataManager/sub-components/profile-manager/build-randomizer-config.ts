@@ -1,8 +1,12 @@
 /* @layer renderer-components @kind logic */
 /**
  * Builds the creation-time ProfileRandomizerConfig from the creation form's
- * randomizer fields. A blank seed becomes a random hex seed HERE, at create
- * time, so the profile always records the exact seed it was generated with.
+ * randomizer fields. The seed is THROWN WHEN THE FORM OPENS, not here: every
+ * seeded preview on the panel (the pond demands, the shelves a random scope
+ * opens) reads it while the player is still setting the profile up, so what
+ * they see is what they will get. A blank one is refused instead of filled in
+ * (randomizerFormError), because a preview cannot be drawn from a seed that
+ * does not exist yet.
  * The options field freezes the ENTIRE catalog snapshot (schema v2),
  * baselines plus the choices the form exposes, read through the ONE
  * choices → overrides reading the live panel also uses, so a row wired into
@@ -15,7 +19,7 @@
  */
 import type { ProfileRandomizerConfig } from '@shared/types/profile';
 import { DEFAULT_CAPACITY_BONUS, DEFAULT_CAPACITY_PROFILE } from '@shared/randomizer/ap-world/capacity';
-import { DEFAULT_POND_SETTING } from '@shared/randomizer/ap-world/pond/pond-profile-defaults';
+import { DEFAULT_POND_PROFILES } from '@shared/randomizer/ap-world/pond/pond-profile-defaults';
 import { defaultShopScope } from '@shared/randomizer/ap-world/shops/shop-scope-from-values';
 import { DEFAULT_DARK_ROOM_SETTING } from '@shared/randomizer/ap-world/dark-rooms/dark-room-lights.data';
 import { defaultDifficulty } from '@shared/randomizer/ap-world/difficulty/difficulty-from-snapshot';
@@ -62,7 +66,7 @@ const EMPTY_RANDOMIZER_FORM: RandomizerFormState = {
   capacity: DEFAULT_CAPACITY_PROFILE,
   capacityProgressive: true,
   capacityBonus: DEFAULT_CAPACITY_BONUS,
-  pond: DEFAULT_POND_SETTING,
+  ponds: DEFAULT_POND_PROFILES,
   // Every tier of every family ships, and the items behave as they always have.
   progressiveTiers: defaultProgressiveSetting(),
   // Every family climbs its ladder in order, which is how the seed has always
@@ -89,6 +93,15 @@ const randomSeed = (): string => {
   return Date.now().toString(16);
 };
 
+/** The form a fresh creation opens on: the baselines, with a seed already thrown. */
+const freshRandomizerForm = (): RandomizerFormState => ({ ...EMPTY_RANDOMIZER_FORM, seed: randomSeed() });
+
+const NO_SEED_ERROR = 'The randomizer needs a seed. Type one, or keep the one thrown for you.';
+
+/** Why this form cannot be submitted; nothing while it can. */
+const randomizerFormError = (form: RandomizerFormState): string | undefined =>
+  (form.enabled && form.seed.trim() === '' ? NO_SEED_ERROR : undefined);
+
 const buildRandomizerConfig = (form: RandomizerFormState): ProfileRandomizerConfig | undefined => {
   if (!form.enabled) return undefined;
   const config: ProfileRandomizerConfig = {
@@ -104,5 +117,7 @@ const buildRandomizerConfig = (form: RandomizerFormState): ProfileRandomizerConf
   return config;
 };
 
-export { buildRandomizerConfig, EMPTY_RANDOMIZER_FORM };
+export {
+  buildRandomizerConfig, EMPTY_RANDOMIZER_FORM, freshRandomizerForm, randomSeed, randomizerFormError,
+};
 export type { RandomizerFormState };

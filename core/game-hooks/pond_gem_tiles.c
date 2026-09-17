@@ -42,12 +42,15 @@
 // every read answers the caller's own value, no palette word is written OR restored, and each
 // denomination keeps its own numbered picture and its own volley. GameHook_PondTossStillFlying
 // is the exception only in which gate it reads: it answers for any plan-driven toss, coloured
-// or not, so it hangs off kFeatures3_PondPlan through GameHook_PondPlanOpen.
+// or not, at any planned pond, so it hangs off GameHook_PondTossOwned (kFeatures3_PondPlan or
+// kFeatures4_WishPondPlan).
 #include "game_hooks_internal.h"
 #include "decode_slot.h"
 
-// The pond's own flying-gem ancilla.
+// The pond's own flying-gem ancilla, and the vendored tossed-item one a demand's single
+// picture flies in (pond_demand_toss.c).
 #define ANCILLA_POND_RUPEES 0x42
+#define ANCILLA_TOSSED_ITEM 0x28
 // The two gem indices the picture paints with, and the pair the right column is remapped to.
 #define GEM_DARK 11
 #define GEM_LIGHT 12
@@ -91,18 +94,26 @@ static const PondGem *FindPondGem(uint8 receipt) {
   return NULL;
 }
 
-/** True while the pond's flying-gem ancilla is alive, the window these answers apply to. */
-bool GameHook_PondTossStillFlying(void) {
-  if (!GameHook_PondPlanOpen()) return false;
+// True while a planned pond owns an ancilla of |type|.
+static bool PondAncillaAlive(uint8 type) {
+  if (!GameHook_PondTossOwned()) return false;
   for (int k = 0; k < 10; k++) {
-    if (ancilla_type[k] == ANCILLA_POND_RUPEES) return true;
+    if (ancilla_type[k] == type) return true;
   }
   return false;
 }
 
+/**
+ * True while a planned pond's payment is in the air: the flying-gem ancilla, or the tossed item
+ * a bottle or item demand throws (pond_demand_toss.c).
+ */
+bool GameHook_PondTossStillFlying(void) {
+  return PondAncillaAlive(ANCILLA_POND_RUPEES) || PondAncillaAlive(ANCILLA_TOSSED_ITEM);
+}
+
 // The entry answering for |receipt| while a toss of it is in the air, or NULL.
 static const PondGem *LiveGem(uint8 receipt) {
-  if (!GemGate() || !GameHook_PondTossStillFlying()) return NULL;
+  if (!GemGate() || !PondAncillaAlive(ANCILLA_POND_RUPEES)) return NULL;
   return FindPondGem(receipt);
 }
 

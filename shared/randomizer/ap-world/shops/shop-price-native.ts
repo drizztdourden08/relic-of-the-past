@@ -33,14 +33,26 @@ interface NativePrice {
   amount: number;
 }
 
-const nativePriceOf = (price: ShopPrice): NativePrice =>
-  (price.currency === 'bottle'
-    ? { currency: NATIVE_CURRENCY.bottle, amount: NATIVE_BOTTLE_CONTENT[price.content] }
-    : { currency: NATIVE_CURRENCY[price.currency], amount: price.amount });
+/**
+ * The native form of a price, or null when it has none. An item price is
+ * SHOWN and handed back, so nothing is deducted and no counter is compared:
+ * there is no tag for it and no number to send, and the caller drops the
+ * override instead of shipping a price the core would read as something else.
+ */
+const nativePriceOf = (price: ShopPrice): NativePrice | null => {
+  if (price.currency === 'item') return null;
+  if (price.currency === 'bottle') {
+    return { currency: NATIVE_CURRENCY.bottle, amount: NATIVE_BOTTLE_CONTENT[price.content] };
+  }
+  return { currency: NATIVE_CURRENCY[price.currency], amount: price.amount };
+};
 
 /** Human wording for a price, for the spoiler and the plan log. */
 const priceLabelOf = (price: ShopPrice): string => {
   if (price.currency === 'bottle') return `a bottled ${price.content.replace(/-/g, ' ')}`;
+  // The only label that names a thing instead of counting one, because this
+  // price is shown and kept.
+  if (price.currency === 'item') return `the ${price.itemName}, shown`;
   const { amount, currency } = price;
   if (currency === 'hearts') return `${amount} heart${amount === 1 ? '' : 's'}`;
   return `${amount} ${currency}`;

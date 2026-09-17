@@ -19,7 +19,7 @@
 //
 // ADDING A CLAIM. Insert it in ASCENDING address order, give it a base and a count, name
 // the owner and the meaning, and add the two matching asserts. The gaps (0xF406-0xF40F,
-// 0xF41B-0xF41F, 0xF43F-0xF4FD) are free.
+// 0xF41D-0xF41F, 0xF43F-0xF4FD) are free.
 //
 // THE TS MIRROR. apps/web/src/lib/game/save-file/hook-save-bytes.ts restates these
 // addresses for the offline save-file reader; tests/randomizer/hook-save-bytes.test.ts
@@ -69,6 +69,14 @@
 // prize is handed out twice and the pond cannot be farmed.
 #define SRM_POND_THROWS 0xF41A
 
+// ─── 0xF41B-0xF41C: wish_pond_plan.c, throws taken at each item-throwing water ───
+// How many throws of the planned rung sequence each of the two ponds has been paid for, in the
+// order wish_pond_plan.c counts them: the light world water first, the dark world one second.
+// Two bytes and not one, because the ponds sell separate sequences and a shared counter would let
+// a throw into one water spend the other's rung. Neither rewinds, so no rung pays out twice.
+#define SRM_WISH_POND_THROWS 0xF41B
+#define SRM_WISH_POND_THROWS_COUNT 2
+
 // ─── 0xF420-0xF43E: shop_table.c, sold counters ───
 // One byte per canonical shelf slot: how many of that slot's armed steps have been
 // bought. A plain byte, not a bit dance, so a counter read is one load.
@@ -91,8 +99,10 @@ _Static_assert(SRM_PENDING_CRYSTAL >= SRM_PRIZE_TAKEN + SRM_PRIZE_TAKEN_COUNT,
                "crystal in flight overlaps the reward-handed-over bits");
 _Static_assert(SRM_POND_THROWS >= SRM_PENDING_CRYSTAL + 1,
                "pond throw counter overlaps the crystal in flight");
-_Static_assert(SRM_SHOP_SOLD >= SRM_POND_THROWS + 1,
-               "shelf sold counters overlap the pond throw counter");
+_Static_assert(SRM_WISH_POND_THROWS >= SRM_POND_THROWS + 1,
+               "wish pond throw counters overlap the rupee pond throw counter");
+_Static_assert(SRM_SHOP_SOLD >= SRM_WISH_POND_THROWS + SRM_WISH_POND_THROWS_COUNT,
+               "shelf sold counters overlap the wish pond throw counters");
 _Static_assert(SRM_SHOP_SOLD + SRM_SHOP_SOLD_COUNT - 1 <= HOOK_SAVE_LAST,
                "hook save bytes must end at or before 0xF4FD");
 

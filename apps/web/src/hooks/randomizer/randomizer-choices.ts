@@ -26,7 +26,7 @@ import { potionPriceOverrides } from '@shared/randomizer/ap-world/potion-price';
 import { progressiveValuesOf } from '@shared/randomizer/ap-world/progressive/progressive-from-snapshot';
 import { progressiveModeValuesOf } from '@shared/randomizer/ap-world/progressive/progressive-mode-from-snapshot';
 import { retroBowValuesOf } from '@shared/randomizer/ap-world/retro/retro-from-snapshot';
-import { pondValuesOf } from '@shared/randomizer/ap-world/pond/pond-from-snapshot';
+import { pondProfileValuesOf } from '@shared/randomizer/ap-world/pond/pond-profiles-from-snapshot';
 import { INCLUDE_NPC_CHECKS_KEY, INCLUDE_WORLD_ITEMS_KEY } from '@shared/randomizer/ap-world/scope-option-keys';
 import { shopScopeValues } from '@shared/randomizer/ap-world/shops/shop-scope-from-values';
 import { buildOptionsSnapshot } from '@shared/randomizer/options-snapshot';
@@ -39,7 +39,7 @@ import type { ItemPowerSetting } from '@shared/randomizer/ap-world/item-power/it
 import type { ProgressiveModeSetting, ProgressiveSetting } from '@shared/randomizer/ap-world/progressive/progressive.type';
 import type { RetroBowSetting } from '@shared/randomizer/ap-world/retro/retro.type';
 import type { ApOptionValue, RandomizerOptionsSnapshot } from '@shared/randomizer/ap-world/options.type';
-import type { PondSetting } from '@shared/randomizer/ap-world/pond/pond-profile.type';
+import type { PondProfiles } from '@shared/randomizer/ap-world/pond/pond-profiles.type';
 import type { ShopScope } from '@shared/randomizer/ap-world/shops/shop-scope.type';
 
 interface RandomizerOptionChoices {
@@ -72,8 +72,13 @@ interface RandomizerOptionChoices {
   capacityProgressive: boolean;
   /** What a pickup hands over beside its ceiling; one field for all eight rows, wired here once. */
   capacityBonus: CapacityBonusSetting;
-  /** What the rupee pond sells; the legacy setting leaves it exactly as it was. */
-  pond: PondSetting;
+  /** What each of the three ponds sells; the legacy setting leaves one exactly as it was. */
+  ponds: PondProfiles;
+  /**
+   * One set of settings across all three ponds. Absent on a choices object
+   * written before the switch existed, which read as three ponds set apart.
+   */
+  pondShare?: boolean;
   /**
    * Which tiers of each progressive family exist. One field for the whole set,
    * so its thirteen catalog rows are wired here in ONE line instead of listed
@@ -110,8 +115,8 @@ interface RandomizerOptionChoices {
 /** Every plain unlocked option that maps to one creation-form field. */
 type ChoiceField = Exclude<
   keyof RandomizerOptionChoices,
-  'capacity' | 'capacityBonus' | 'capacityEnabled' | 'capacityProgressive' | 'difficulty' | 'itemPower' | 'pond'
-  | 'progressiveTiers' | 'progressiveModes' | 'retroBow' | 'shopPrices' | 'shops'
+  'capacity' | 'capacityBonus' | 'capacityEnabled' | 'capacityProgressive' | 'difficulty' | 'itemPower' | 'ponds'
+  | 'pondShare' | 'progressiveTiers' | 'progressiveModes' | 'retroBow' | 'shopPrices' | 'shops'
 >;
 
 /**
@@ -152,14 +157,16 @@ const CHOICE_FIELDS: ReadonlySet<ChoiceField> = new Set<ChoiceField>([
 ]);
 
 /**
- * The pair the capacity/pond rule reads, lifted off the choices. The retro
- * switch rides along because it pins the projectiles family (the rule masks
- * it); a choices object that never carried the retro block reads as off.
+ * The pair the capacity/pond rule reads, lifted off the choices. The rule is
+ * about the capacity pond alone, since that pond is the only source of the
+ * families it binds. The retro switch rides along because it pins the
+ * projectiles family (the rule masks it); a choices object that never carried
+ * the retro block reads as off.
  */
 const capacityPondOf = (choices: RandomizerOptionChoices): CapacityPondSelection => ({
   enabled: choices.capacityEnabled,
   capacity: choices.capacity,
-  pond: choices.pond,
+  pond: choices.ponds.capacity,
   retroBow: choices.retroBow?.enabled === true,
 });
 
@@ -191,7 +198,7 @@ const randomizerChoiceOverrides = (
     [CAPACITY_PROGRESSIVE_KEY]: choices.capacityProgressive,
     // A choices object that never carried the bonus block reads as the baselines.
     ...capacityBonusValuesOf(choices.capacityBonus ?? DEFAULT_CAPACITY_BONUS),
-    ...pondValuesOf(pond),
+    ...pondProfileValuesOf({ ...choices.ponds, capacity: pond }, choices.pondShare === true),
     ...progressiveValuesOf(choices.progressiveTiers),
     ...progressiveModeValuesOf(choices.progressiveModes),
     ...retroBowValuesOf(choices.retroBow),

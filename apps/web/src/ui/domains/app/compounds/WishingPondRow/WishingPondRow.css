@@ -45,30 +45,32 @@
   color: var(--c-danger);
 }
 
+/* Every setting the mode asks for, on ONE grid: the name (a tick, or a plain
+   label) in the first track and the control in the second. One grid for the
+   whole block is the point, so the demand ticks, the throw count, the curve
+   and the item count all start on the same vertical line and every control
+   starts on the next. The label track sizes to its content up to a cap, past
+   which a long name wraps instead of squeezing the control beside it. */
+
 .pond-row__custom {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
+  display: grid;
+  grid-template-columns: fit-content(var(--pond-label-w-max)) minmax(0, 1fr);
   padding-left: var(--space-md);
   border-left: var(--border-width-thick) solid var(--c-hairline);
-}
-
-.pond-row__range,
-.pond-row__throws,
-.pond-row__items,
-.pond-row__curve,
-.pond-row__jumps {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
   min-width: 0;
 }
 
-.pond-row__range-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-md);
+/* Each line spans the grid and inherits its tracks, so it stays a real box
+   (its dimming and its blocked marker apply to the whole line) while its two
+   cells sit on the shared columns, centred against each other. */
+.pond-row__custom > * {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  column-gap: var(--space-md);
+  align-items: center;
+  padding: var(--space-2xs) 0;
+  min-width: 0;
 }
 
 .pond-row__caption {
@@ -78,20 +80,15 @@
   letter-spacing: 0.5px;
 }
 
-.pond-row__readout {
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  color: var(--c-gold);
-  white-space: nowrap;
-}
-
-/* Throws and curve side by side while there is room; the curve keeps a fixed
-   share so a long label never squeezes the slider. */
-.pond-row__controls {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) clamp(140px, 36%, 240px);
-  gap: var(--space-md);
-  align-items: start;
+/* The one caption that titles a group of lines instead of naming a control:
+   it takes the whole width and keeps room over the rows it heads. */
+.pond-row__custom > .pond-row__group-caption {
+  display: block;
+  padding-top: var(--space-xs);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .pond-row__preview {
@@ -111,10 +108,4 @@
   font-size: var(--text-xs);
   color: var(--c-text-dim);
   font-style: italic;
-}
-
-@media (width <= 900px) {
-  .pond-row__controls {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }

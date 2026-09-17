@@ -16,6 +16,7 @@
  */
 import { buildFillWorld } from './ap-world/fill/fill-world';
 import { capacityBonusOfStats, capacityProfileOfStats, capacityProgressiveOfStats } from './ap-world/fill/placement-capacity';
+import { pondProfilesOfStats } from './ap-world/fill/placement-ponds';
 import { createCollectionState } from './ap-world/collection-state';
 import { canCollectLocation } from './ap-world/rules/collect';
 import type { ApWorld } from './ap-world/world.type';
@@ -42,7 +43,9 @@ const worldFromPlacement = (placement: ApPlacement): ApWorld => {
     capacityBonus: capacityBonusOfStats(stats),
     shops: stats.shops,
     shopPrices: placement.shopPrices,
-    pond: stats.pond,
+    ponds: pondProfilesOfStats(stats),
+    pondSlotsFollowMode: stats.pondSlotsFollowMode === true,
+    pondDemands: placement.pondDemands,
     darkRooms: stats.darkRooms,
     progressiveTiers: stats.progressiveTiers,
     progressiveModes: stats.progressiveModes,

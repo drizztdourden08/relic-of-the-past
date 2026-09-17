@@ -33,6 +33,12 @@ const shopOverrideKeyOf = (
   // A rolled price replaces the shelf's own; with nothing rolled the shelf
   // keeps charging the rupees the unmodified game charges.
   const price = prices[locationName] ?? { currency: 'rupees' as const, amount: slot.price };
+  // A price with no native form (shop-price-native.ts) cannot be sent at all,
+  // so the shelf gets no override and keeps what the unmodified game put on
+  // it. Only an item price is shaped that way, and no shelf can roll one, so
+  // this is the shape of the refusal and not a case that runs.
+  const native = nativePriceOf(price);
+  if (native === null) return null;
   return {
     slotIndex: canonicalIndex,
     roomId: shop.roomId,
@@ -41,7 +47,7 @@ const shopOverrideKeyOf = (
     subtype: slot.subtype,
     depthIndex,
     depth: shops.depth,
-    ...nativePriceOf(price),
+    ...native,
   };
 };
 

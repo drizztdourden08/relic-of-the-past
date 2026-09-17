@@ -17,8 +17,10 @@
 import { WALLET } from '../capacity/capacity-family';
 import { reachableTopOf } from '../capacity/reachable-top';
 import { isValidFreeSequence } from '../capacity/curves/free-sequence';
+import { CAPACITY_POND } from './pond-instances.data';
 import { POND_PRICE_LADDER } from './pond-ladder.data';
 import type { CapacityProfile } from '../capacity/capacity-profile.type';
+import type { PondInstance } from './pond-instance.type';
 import type { PondCustomSetting, PondSetting } from './pond-profile.type';
 
 interface HeldPondSetting {
@@ -39,15 +41,17 @@ const pondCeilingRungOf = (walletTop: number): number => {
 
 const priceLabel = (price: number): string => (price === 0 ? 'free' : String(price));
 
-const holdCustom = (setting: PondCustomSetting, walletTop: number): HeldPondSetting => {
+const holdCustom = (setting: PondCustomSetting, walletTop: number, pond: PondInstance): HeldPondSetting => {
   const ceiling = POND_PRICE_LADDER[pondCeilingRungOf(walletTop)];
   if (setting.max <= ceiling) return { setting, notes: [] };
-  const notes = [`pond: the wallet tops out at ${walletTop}, so the price range is held at ${priceLabel(ceiling)}`];
+  const notes = [
+    `${pond.label}: the wallet tops out at ${walletTop}, so the price range is held at ${priceLabel(ceiling)}`,
+  ];
   const start = Math.min(setting.start, ceiling);
   const span = POND_PRICE_LADDER.indexOf(ceiling) - POND_PRICE_LADDER.indexOf(start);
   const keepsFree = setting.shape.curve === 'free' && isValidFreeSequence(setting.shape.jumps, span);
   if (setting.shape.curve === 'free' && !keepsFree) {
-    notes.push(`pond: the free sequence no longer sums to the span ${span}, using equal`);
+    notes.push(`${pond.label}: the free sequence no longer sums to the span ${span}, using equal`);
   }
   const shape = keepsFree ? setting.shape : { curve: 'equal' as const };
   return { setting: { ...setting, start, max: ceiling, shape }, notes };
@@ -64,9 +68,11 @@ const holdCustom = (setting: PondCustomSetting, walletTop: number): HeldPondSett
  * ending. Only a Custom range, which climbs to 999, can still outrun a
  * wallet.
  */
-const holdPondToWallet = (setting: PondSetting, walletTop: number): HeldPondSetting => {
+const holdPondToWallet = (
+  setting: PondSetting, walletTop: number, pond: PondInstance = CAPACITY_POND,
+): HeldPondSetting => {
   if (setting.mode === 'capacity') return { setting, notes: [] };
-  if (setting.mode === 'custom') return holdCustom(setting, walletTop);
+  if (setting.mode === 'custom') return holdCustom(setting, walletTop, pond);
   return { setting, notes: [] };
 };
 

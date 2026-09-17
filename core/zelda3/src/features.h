@@ -257,6 +257,12 @@ enum {
   kFeatures4_RodLightsDarkRoom       = 1024, // the rod that throws flame
   kFeatures4_MedallionLightsDarkRoom = 2048, // the first of the three medallions
   kFeatures4_RedCaneLightsDarkRoom   = 4096, // the red one of the two canes
+
+  // The two item-throwing waters run on a plan (core/game-hooks/wish_pond_plan.c). Under it a pond
+  // sells a numbered SEQUENCE of rungs instead of its native branch list: a rung states what the
+  // fairy demands for it, takes that in one throw, and hands over what the rung carries. A clear bit
+  // leaves both waters on their vendored branches, which is the game exactly as it shipped.
+  kFeatures4_WishPondPlan            = 8192,
 };
 
 // Enum values for kRam_Features5 — randomizer capacity extras. Same contract as word 4: every bit is a

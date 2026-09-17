@@ -14,6 +14,11 @@
  * written separately, precisely because of that whole-word write: two writers
  * would each clear the other's half. Their own bits are derived next door
  * (dark-room-lights.ts); this file only writes.
+ *
+ * The wish ponds' plan bit sits in the same word and is held here for the same
+ * reason, as a latch pond-plan.ts raises around its arming calls. It is the
+ * only bit of the three that is not a setting, so the last settings word is
+ * kept and re-written whenever the latch moves.
  */
 
 import { log } from '../log-bus';
@@ -34,6 +39,7 @@ const ITEM_POWER_BIT = {
   pullableCurtains: 128,
   hammerLastFight: 256,
   hammerBreaksSeal: 512,
+  wishPondPlan: 8192,
 } as const;
 
 /** The word a setting asks for; zero means the unmodified game. */
@@ -67,14 +73,38 @@ const writeItemPowerWord = (word: number): void => {
   }
 };
 
+/** The settings half of the word, kept so the plan latch can re-write it alone. */
+let settingsWord = 0;
+
+/** Whether a wish-pond rung table is armed (core/game-hooks/wish_pond_plan.c). */
+let wishPondPlanArmed = false;
+
+const pushWord = (): void => {
+  writeItemPowerWord(settingsWord | (wishPondPlanArmed ? ITEM_POWER_BIT.wishPondPlan : 0));
+};
+
 const setItemPower = (setting: ItemPowerSetting, darkRooms: DarkRoomSetting): void => {
-  const word = itemPowerWordOf(setting) | darkRoomLightWordOf(darkRooms);
-  writeItemPowerWord(word);
-  log.randomizer(`[Randomizer] Item power armed: 0x${word.toString(16)}`);
+  settingsWord = itemPowerWordOf(setting) | darkRoomLightWordOf(darkRooms);
+  pushWord();
+  log.randomizer(`[Randomizer] Item power armed: 0x${settingsWord.toString(16)}`);
+};
+
+/**
+ * Raise or drop the wish ponds' plan bit. Same contract as the word-3 session
+ * gates: wish-pond-plan.ts flips this around its WasmArmWishPondPlan /
+ * WasmClearWishPondPlan calls, so both waters only consult a rung table while
+ * one is loaded.
+ */
+const setWishPondPlanActive = (on: boolean): void => {
+  if (wishPondPlanArmed === on) return;
+  wishPondPlanArmed = on;
+  pushWord();
 };
 
 const clearItemPower = (): void => {
+  settingsWord = 0;
+  wishPondPlanArmed = false;
   writeItemPowerWord(0);
 };
 
-export { ITEM_POWER_BIT, clearItemPower, itemPowerWordOf, setItemPower };
+export { ITEM_POWER_BIT, clearItemPower, itemPowerWordOf, setItemPower, setWishPondPlanActive };

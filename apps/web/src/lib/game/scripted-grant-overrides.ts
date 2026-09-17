@@ -22,14 +22,20 @@ import { reassertGateWord3 } from './live-settings';
  * sequence of prizes instead of one purchase per family, but it stays the
  * same PLAN CLASS, so the classifier, the fire registry and the poller keep
  * one path for every scripted grant.
+ *
+ * A wish-pond rung is the same class again, but it never arms through this
+ * file: the core empties both waters' rung tables at once, so every rung of
+ * both is armed in a single call by the session (wish-pond-session.ts).
  */
 type ScriptedGrantSurface =
   | { surface: 'capacity'; kind: 0 | 1 }
   | { surface: 'pond'; prize: number }
+  | { surface: 'wish-pond'; pond: number; rung: number }
   | { surface: 'bat' }
   | { surface: 'minigame'; roomId: number };
 
-const armCall = (mod: NonNullable<ReturnType<typeof getModule>>, target: ScriptedGrantSurface,
+const armCall = (mod: NonNullable<ReturnType<typeof getModule>>,
+  target: Exclude<ScriptedGrantSurface, { surface: 'wish-pond' }>,
   newItem: number, messageId: number, fireId: number): void => {
   if (target.surface === 'pond') {
     setPondPrize({ prize: target.prize, newItem, messageId, fireId });
@@ -54,6 +60,11 @@ const armCall = (mod: NonNullable<ReturnType<typeof getModule>>, target: Scripte
 // id reported when the entry substitutes, or -1 for none.
 const setScriptedGrantOverride = (target: ScriptedGrantSurface, newItem: number,
   messageId = -1, fireId = -1): void => {
+  if (target.surface === 'wish-pond') {
+    log.error('[Randomizer] Scripted grant override refused: a wish-pond rung arms with its whole table, '
+      + `never one at a time (pond ${target.pond}, rung ${target.rung})`);
+    return;
+  }
   if (!isGrantableReceiveId(newItem)) {
     log.error(`[Randomizer] Scripted grant override refused: item 0x${newItem.toString(16)} `
       + `is outside the grantable id range (${target.surface})`);

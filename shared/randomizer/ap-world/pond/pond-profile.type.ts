@@ -12,15 +12,23 @@
  * the prize schedule, the locations) is a PondPlan and is never stored.
  */
 import type { CurveShape } from '../capacity/capacity-profile.type';
+import type { PondAskSetting } from './pond-ask.type';
 
 type PondMode = 'capacity' | 'vanilla-cost' | 'custom';
 
 interface PondCustomSetting {
   mode: 'custom';
-  /** Ladder value (rupees) of the first throw. */
+  /** Ladder value (rupees) of the first throw, and the rupee demand's low end. */
   start: number;
-  /** Ladder value (rupees) of the last throw. */
+  /** Ladder value (rupees) of the last throw, and the rupee demand's high end. */
   max: number;
+  /**
+   * What the fairy may ask for at each rung (pond-ask.type.ts). Absent means
+   * rupees and nothing else, over the ladder above: the only thing a pond ever
+   * charged before the block existed, so a setting written then and one that
+   * asks for nothing else read the same.
+   */
+  ask?: PondAskSetting;
   /** How many throws the pond sells; the price ladder has exactly this many entries. */
   throws: number;
   /** Pool items in the pond: the In Pool number; 0 makes the pond no check at all. */
@@ -36,6 +44,8 @@ interface PondCustomSetting {
 interface PondFixedSetting {
   mode: 'vanilla-cost';
   items: number;
+  /** What she may ask for; absent means the fixed schedule's rupees alone. */
+  ask?: PondAskSetting;
 }
 
 type PondSetting =

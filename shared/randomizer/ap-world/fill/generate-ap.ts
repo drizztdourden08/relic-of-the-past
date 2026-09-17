@@ -35,15 +35,15 @@ import { buildFillWorld, fillEligibleLocations } from './fill-world';
 import { fillOptionsFromSnapshot, shufflePrizesFromSnapshot } from './fill-options-from-snapshot';
 import { progressiveSettingFromSnapshot } from '../progressive/progressive-from-snapshot';
 import { assertRollableTickSet } from '../progressive/tick-set-check';
-import { rollShopPrices, shopPricePlanOf } from '../shops/shop-price-plan';
+import { rollPrices } from './roll-placement-prices';
+import { pondDemandsOfSnapshot } from './pond-demands-of-snapshot';
 import { DEFAULT_RETRO_BOW } from '../retro/retro-bow.data';
-import { shopSlotLocationsOf } from '../shops/shop-slots';
-import { NO_SHOP_SCOPE } from '../shops/shop-scope-from-values';
 import { prefillDungeonItems } from './dungeon-fill';
 import { ApFillError, fillRestrictive } from './ap-fill';
 import { sweepPlacementSpheres } from './verify-placement';
 import { verifyStandardEscape } from './verify-standard';
 import type { RandomizerOptionsSnapshot } from '../options.type';
+import type { PondDemandView } from '../pond/pond-ask.type';
 import type { DeliverableSets } from './fill-options-from-snapshot';
 import type { ApPlacement } from './ap-placement.type';
 
@@ -56,7 +56,7 @@ const countIn = (names: Iterable<string>, deliverable: ReadonlySet<string>): num
 
 const attemptApPlacement = (
   seed: string, attemptSeed: string, snapshot: RandomizerOptionsSnapshot, attempts: number,
-  deliverable: Required<DeliverableSets>,
+  deliverable: Required<DeliverableSets>, pondDemands: PondDemandView,
 ): ApPlacement => {
   const rng = createRng(attemptSeed);
   // The rolled flags are drawn from the SEED, never the attempt seed, so a
@@ -66,17 +66,14 @@ const attemptApPlacement = (
     pickFiller: (count) => rng.int(count),
     pickWeapon: (choices) => choices[rng.int(choices.length)],
   }, seed);
-  // Prices are rolled BEFORE the world is built, because the access rules read
-  // them: a shelf the file could never pay for is out of logic, and the fill
-  // has to know that before it places anything.
-  const shopPrices = rollShopPrices(
-    shopSlotLocationsOf(fillOptions.shops ?? NO_SHOP_SCOPE),
-    shopPricePlanOf(snapshot.values), rng, fillOptions.capacity,
-  );
-  const fillWorld = buildFillWorld({ ...fillOptions, shopPrices });
+  // Shelf prices roll BEFORE the world is built: the access rules read them
+  // back (roll-placement-prices.ts). The pond demands were settled from the
+  // seed alone, ahead of the first attempt, so the panel could show them.
+  const shopPrices = rollPrices({ values: snapshot.values, options: fillOptions, rng });
+  const fillWorld = buildFillWorld({ ...fillOptions, shopPrices, pondDemands });
   const {
     world, pool, keyDropShuffle, includeNpcChecks, includeWorldItems, capacity, capacityProgressive, capacityBonus,
-    capacityCounts, shops, pond, pondLocations, darkRooms, progressiveTiers, progressiveModes, itemPower, retroBow,
+    capacityCounts, shops, ponds, pondSlotsFollowMode, pondLocations, darkRooms, progressiveTiers, progressiveModes, itemPower, retroBow,
     dungeonItems, accessibility,
   } = fillWorld;
   // Minimal accessibility is the only contract that lets the fill park an item
@@ -133,6 +130,7 @@ const attemptApPlacement = (
     medallions: world.options.medallions,
     nameView,
     shopPrices,
+    pondDemands,
     spheres: sweep.spheres,
     stats: {
       attempts,
@@ -148,9 +146,10 @@ const attemptApPlacement = (
       npcDeliverableCount: includeNpcChecks ? countIn(NPC_SCOPE_LOCATIONS.keys(), deliverable.npc) : 0,
       worldDeliverableCount: includeWorldItems ? countIn(WORLD_ITEM_SCOPE_LOCATIONS.keys(), deliverable.world) : 0,
       capacityDeliverableCount: countIn(fairySpots, deliverable.capacity),
-      pond,
+      ponds,
       darkRooms,
       pondPrizeCount: pondLocations.length,
+      pondSlotsFollowMode,
       progressiveTiers,
       progressiveModes,
       retroBow,
@@ -178,11 +177,15 @@ const generateApPlacement = (
     capacity: deliverableCapacityLocations ?? EMPTY_DELIVERABLE,
     world: deliverableWorldLocations ?? EMPTY_DELIVERABLE,
   };
+  // Settled once, from the seed alone: every attempt is handed the same
+  // demands, which is what lets the options panel show them before a placement
+  // exists at all (pond-demands-of-snapshot.ts).
+  const pondDemands = pondDemandsOfSnapshot(snapshot, seed, deliverable);
   let lastMessage = '';
   for (let attempt = 0; attempt < MAX_AP_ATTEMPTS; attempt += 1) {
     const attemptSeed = attempt === 0 ? seed : `${seed}#retry${attempt}`;
     try {
-      return attemptApPlacement(seed, attemptSeed, snapshot, attempt + 1, deliverable);
+      return attemptApPlacement(seed, attemptSeed, snapshot, attempt + 1, deliverable, pondDemands);
     } catch (error) {
       if (!(error instanceof ApFillError)) throw error;
       lastMessage = error.message;

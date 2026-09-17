@@ -7,9 +7,8 @@
 // one gold gem, 427 is one gold, one silver, one red, one blue and two greens.
 //
 // Only one sprite sheet is decoded at a time, so gems needing different sheets cannot be in
-// the air together. The decomposition therefore leaves in VOLLEYS: gems sharing a decode key
-// travel as one group, at most a pond slot-full, and the next group is spawned when the
-// previous one has splashed.
+// the air together: the gems go into the shared queue (pond_toss_queue.c) under the key of the
+// sheet each one reads, and leave in volleys of gems sharing a key.
 //
 // Every slot carries its own denomination's receipt, and it is that id the draw reads its
 // picture and its OAM palette row from, so a volley is mixed by construction.
@@ -25,13 +24,7 @@
 // Gate: kFeatures3_PondPlan, checked through GameHook_PondPlanOpen. Off, this spawns
 // nothing and the vendored AddHappinessPondRupees runs byte-for-byte as before.
 #include "game_hooks_internal.h"
-#include "src/ancilla.h"
-#include "src/load_gfx.h"
-
-// The pond's own flying-gem slots (the happiness_pond_* arrays are ten deep).
-#define POND_GEM_SLOTS 10
-// The most gems one amount can decompose into, over the whole wallet range.
-#define POND_GEM_MAX 48
+#include "pond_toss.h"
 
 // The six denominations, largest first, with the receipt id carrying each one's art and
 // the key that says which of them can share a decoded sheet.
@@ -54,26 +47,17 @@ static uint8 DecodeKeyOf(const RupeeGem *gem) {
   return (enhanced_features3 & kFeatures3_ColoredRupees) ? 0 : gem->decode_key;
 }
 
-// The queue of gems still to leave, and where the next volley starts in it.
-static struct {
-  uint8 count;
-  uint8 sent;
-  uint8 receipt[POND_GEM_MAX];
-  uint8 key[POND_GEM_MAX];
-} g_toss;
-
 // |amount| as gems, largest first, into the queue. Returns how many it took.
-static int DecomposeRupees(int amount) {
-  int left = amount > 0 ? amount : 0, count = 0;
-  for (int i = 0; i < RUPEE_GEM_COUNT && count < POND_GEM_MAX; i++) {
-    while (left >= kRupeeGems[i].value && count < POND_GEM_MAX) {
-      g_toss.receipt[count] = kRupeeGems[i].receipt;
-      g_toss.key[count] = DecodeKeyOf(&kRupeeGems[i]);
-      count++;
+int PondTossQueueRupees(int amount) {
+  int left = amount > 0 ? amount : 0;
+  PondTossQueueClear();
+  for (int i = 0; i < RUPEE_GEM_COUNT && PondTossQueueCount() < POND_GEM_MAX; i++) {
+    while (left >= kRupeeGems[i].value && PondTossQueueCount() < POND_GEM_MAX) {
+      PondTossQueuePush(kRupeeGems[i].receipt, DecodeKeyOf(&kRupeeGems[i]));
       left -= kRupeeGems[i].value;
     }
   }
-  return count;
+  return PondTossQueueCount();
 }
 
 /**
@@ -92,58 +76,6 @@ int GameHook_PondGemAt(int amount, int index) {
   return -1;
 }
 
-// Fill the pond's slots with the |n| queued gems from |base|, each under its own
-// denomination's receipt, laid out the way the vendored spawn lays out its five-rupee
-// group: the slots count down from the top, the same start position, the same arcs.
-static void SpawnVolley(int base, int n) {
-  static const int8 kTossXvel[POND_GEM_SLOTS] = {0, -12, -6, 6, 12, -9, -5, 0, 5, 9};
-  static const int8 kTossYvel[POND_GEM_SLOTS] = {-40, -40, -40, -40, -40, -32, -32, -32, -32, -32};
-  static const int8 kTossZvel[POND_GEM_SLOTS] = {20, 20, 20, 20, 20, 16, 16, 16, 16, 16};
-  memset(happiness_pond_arr1, 0, POND_GEM_SLOTS);
-  int x = link_x_coord + 4, y = link_y_coord - 12;
-  for (int i = 0; i < n; i++) {
-    int slot = POND_GEM_SLOTS - 1 - i;
-    happiness_pond_arr1[slot] = 1;
-    happiness_pond_z_vel[slot] = kTossZvel[i];
-    happiness_pond_y_vel[slot] = kTossYvel[i];
-    happiness_pond_x_vel[slot] = kTossXvel[i];
-    happiness_pond_z[slot] = 0;
-    happiness_pond_step[slot] = 0;
-    happiness_pond_timer[slot] = 16;
-    happiness_pond_item_to_link[slot] = g_toss.receipt[base + i];
-    happiness_pond_x_lo[slot] = (uint8)x;
-    happiness_pond_x_hi[slot] = (uint8)(x >> 8);
-    happiness_pond_y_lo[slot] = (uint8)y;
-    happiness_pond_y_hi[slot] = (uint8)(y >> 8);
-  }
-}
-
-// Decode the sheet this volley draws from. With coloured rupees on that is the one gem sheet
-// for every denomination, and pond_gem_tiles.c then lays the second picture beside it and
-// borrows the violet row, so the whole volley is served by a single decode. Off, the volley
-// is one denomination's own numbered picture, decoded the way the vendored spawn decodes it.
-static void PrepareVolleyArt(uint8 receipt) {
-  uint8 item = receipt, pal = 0;
-  if (GameHook_ColoredRupeeGem(receipt, &item, &pal)) {
-    GameHook_DecodeReceiptTiles(kReceiveItemGfx[item]);
-    GameHook_PondGemPrepareArt();
-    return;
-  }
-  GameHook_DecodeReceiptTiles(kReceiveItemGfx[receipt]);
-}
-
-// Spawn the next run of queued gems sharing a decode key. False when the queue is empty.
-static bool SendNextVolley(void) {
-  if (g_toss.sent >= g_toss.count) return false;
-  uint8 key = g_toss.key[g_toss.sent];
-  int n = 0;
-  while (g_toss.sent + n < g_toss.count && n < POND_GEM_SLOTS && g_toss.key[g_toss.sent + n] == key) n++;
-  PrepareVolleyArt(g_toss.receipt[g_toss.sent]);
-  SpawnVolley(g_toss.sent, n);
-  g_toss.sent = (uint8)(g_toss.sent + n);
-  return true;
-}
-
 /**
  * Queue |amount| and send volleys up to and including |volley|, filling the pond's slots
  * exactly as a toss does but without the ancilla, the sound or the player's throw pose:
@@ -151,69 +83,51 @@ static bool SendNextVolley(void) {
  * WRAM. Returns the gems that volley spawned, or -1 when the amount has no such volley.
  */
 int GameHook_PondSpawnVolley(int amount, int volley) {
-  g_toss.count = (uint8)DecomposeRupees(amount);
-  g_toss.sent = 0;
+  PondTossQueueRupees(amount);
   int spawned = -1;
   for (int i = 0; i <= volley; i++) {
-    uint8 before = g_toss.sent;
-    if (!SendNextVolley()) return -1;
-    spawned = g_toss.sent - before;
+    int before = PondTossQueueSent();
+    if (!PondTossQueueNext()) return -1;
+    spawned = PondTossQueueSent() - before;
   }
   return spawned;
 }
 
 /**
- * The spawn seam (ai state 3): show |amount| as the gems that add up to it. False when
- * no plan is open, so the vendored five-rupee spawn runs instead.
+ * The rupee spawn (ai state 3 under a plan): show |amount| as the gems that add up to it. False
+ * when no plan is open, so the vendored five-rupee spawn runs instead. Reached through the
+ * payment seam, GameHook_PondTossPayment (pond_demand_visit.c).
  */
 bool GameHook_PondTossRupees(int amount) {
   if (!GameHook_PondPlanOpen()) return false;
-  g_toss.count = (uint8)DecomposeRupees(amount);
-  g_toss.sent = 0;
-  if (g_toss.count == 0) return true;
-  int k = Ancilla_AddAncilla(0x42, 9);
-  if (k < 0) return true;
-  sound_effect_2 = Link_CalculateSfxPan() | 0x13;
-  link_state_bits = 0x80;
-  link_picking_throw_state = 0;
-  link_direction_facing = 0;
-  link_animation_steps = 0;
-  SendNextVolley();
-  printf("[Randomizer] Pond toss: %d rupees as %d gems\n", amount, g_toss.count);
+  PondTossQueueRupees(amount);
+  if (!PondTossQueueLaunch()) return true;
+  printf("[Randomizer] Pond toss: %d rupees as %d gems\n", amount, PondTossQueueCount());
   return true;
-}
-
-/**
- * The keep-alive seam (the pond's own flying-gem ancilla, once its slots are all spent):
- * refill them with the next volley instead of ending. False lets the ancilla end.
- */
-bool GameHook_PondTossNextVolley(void) {
-  if (GameHook_PondPlanOpen() && SendNextVolley()) return true;
-  GameHook_PondGemReleaseArt();
-  return false;
 }
 
 // How many volleys |amount| leaves in: one per run of gems sharing a decode key, split
 // again whenever a run outgrows the pond's slots. Counted without touching the queue,
 // because the delay is set before the toss is armed.
-static int VolleysOf(int amount) {
+int PondTossRupeeVolleys(int amount) {
   int left = amount > 0 ? amount : 0, volleys = 0, small = 0;
   for (int i = 0; i < RUPEE_GEM_COUNT; i++) {
     int n = left / kRupeeGems[i].value;
     left %= kRupeeGems[i].value;
     // The values sharing a sheet add up into one run of their own.
     if (DecodeKeyOf(&kRupeeGems[i]) == 0) small += n;
-    else if (n > 0) volleys += (n + POND_GEM_SLOTS - 1) / POND_GEM_SLOTS;
+    else if (n > 0) volleys += PondTossVolleysOfRun(n);
   }
-  if (small > 0) volleys += (small + POND_GEM_SLOTS - 1) / POND_GEM_SLOTS;
+  if (small > 0) volleys += PondTossVolleysOfRun(small);
   return volleys > 0 ? volleys : 1;
 }
 
 // How long the purchase state waits before the fairy rises: long enough for every volley
 // to land. |vanilla| back when no plan is open, and the wait is capped at the byte the
-// vendored delay field holds.
+// vendored delay field holds. A throw paid in something else waits on its own volleys.
 int GameHook_PondTossDelay(int vanilla) {
   if (!GameHook_PondPlanOpen()) return vanilla;
-  int frames = vanilla * VolleysOf(GameHook_PondThrowAmount(0));
+  if (GameHook_PondVisitAsks()) return GameHook_PondVisitTossDelay(vanilla);
+  int frames = vanilla * PondTossRupeeVolleys(GameHook_PondThrowAmount(0));
   return frames > 255 ? 255 : frames;
 }

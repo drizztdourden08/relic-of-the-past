@@ -12,6 +12,7 @@
  */
 
 import { DIFFICULTY_OPTION_DESCRIPTIONS } from './difficulty/difficulty-options.data';
+import { POND_OPTION_DESCRIPTIONS } from './pond/pond-option-descriptions.data';
 import { PROGRESSIVE_TIER_DESCRIPTIONS } from './progressive/progressive-options.data';
 import { PROGRESSIVE_MODE_DESCRIPTIONS } from './progressive/progressive-mode-options.data';
 import { RETRO_OPTION_DESCRIPTIONS } from './retro/retro-options.data';
@@ -35,6 +36,7 @@ const AP_OPTION_DESCRIPTIONS: Readonly<Record<string, OptionDescription>> = {
   ...PROGRESSIVE_TIER_DESCRIPTIONS,
   ...PROGRESSIVE_MODE_DESCRIPTIONS,
   ...RETRO_OPTION_DESCRIPTIONS,
+  ...POND_OPTION_DESCRIPTIONS,
 
   include_npc_checks: 'Rewards from characters, bosses and story events join the shuffle.',
   include_world_items: 'Ledge and island items, dig and dash prizes, the tablets, the pedestal and the keys '
@@ -97,13 +99,6 @@ const AP_OPTION_DESCRIPTIONS: Readonly<Record<string, OptionDescription>> = {
     + 'empty tier; off, of the full bar.',
   capacity_wallet_bonus: BONUS,
   capacity_wallet_bonus_step: BONUS_BASE,
-
-  pond_mode: [
-    line('Vanilla cost', 'the same throws and prices, but the first few hand over a shuffled item.'),
-    line('Custom', 'your own price ladder; the first few throws hand over a shuffled item.'),
-  ],
-  pond_items: 'Zero leaves the pond out of the shuffle.',
-  pond_jumps: JUMPS,
 
   // ─── Locked rows: what the setting would do ───
   plando_connections: 'Hand-written entrance connections, set before the seed rolls.',

@@ -31,9 +31,10 @@ import { forcedDarkRoomLightReasons } from '@shared/randomizer/ap-world/dark-roo
 import { darkRoomSettingFromSnapshot } from '@shared/randomizer/ap-world/dark-rooms/dark-room-from-snapshot';
 import { DARK_ROOM_REQUIRED_KEY } from '@shared/randomizer/ap-world/dark-rooms/dark-room-option-keys';
 import { includeWorldItemsOf } from '@shared/randomizer/ap-world/scope-option-keys';
-import { parsePondSetting } from '@shared/randomizer/ap-world/pond/pond-from-snapshot';
+import { parsePondProfiles } from '@shared/randomizer/ap-world/pond/pond-profiles-from-snapshot';
 import { shopScopeOfValues } from '@shared/randomizer/ap-world/shops/shop-scope-from-values';
 import { retroBowOfValues } from '@shared/randomizer/ap-world/retro/retro-from-snapshot';
+import { usePondDemands } from '../../../../../../hooks/randomizer/usePondDemands';
 import { usePoolImpacts } from '../../../../../../hooks/randomizer/usePoolImpacts';
 import { usePoolTotals } from '../../../../../../hooks/randomizer/usePoolTotals';
 
@@ -49,11 +50,11 @@ const RunOptions = ({ options, seed = '' }: RunOptionsProps) => {
 
   const snapshot = useMemo(() => normalizeRandomizerOptions(options), [options]);
   const { values } = snapshot;
-  const { accounting, error, cellOf } = usePoolImpacts(snapshot);
+  const { accounting, error, cellOf } = usePoolImpacts(snapshot, seed);
   const parsed = useMemo(() => parseCapacityProfile(values), [values]);
   // The floor the profile was read under, so its rows say the same thing the panel did.
   const walletFloor = useMemo(() => walletFloorOf(values), [values]);
-  const pond = useMemo(() => parsePondSetting(values), [values]);
+  const ponds = useMemo(() => parsePondProfiles(values), [values]);
   const darkRooms = useMemo(() => darkRoomSettingFromSnapshot(snapshot), [snapshot]);
   // The reading above is already masked; this only recovers the sentence saying why.
   const forcedLights = useMemo(() => forcedDarkRoomLightReasons(includeWorldItemsOf(values)), [values]);
@@ -63,9 +64,11 @@ const RunOptions = ({ options, seed = '' }: RunOptionsProps) => {
   // The pair as it was frozen: the snapshot is already reconciled, so this
   // only recovers the sentences explaining why it reads the way it does.
   const rule = useMemo(() => reconcileCapacityPond({
-    enabled: capacityEnabledOf(values), capacity: parsed.profile, pond: pond.setting,
+    enabled: capacityEnabledOf(values), capacity: parsed.profile, pond: ponds.profiles.capacity,
     retroBow: retroBowFromSnapshot(snapshot).enabled,
-  }), [values, parsed, pond, snapshot]);
+  }), [values, parsed, ponds, snapshot]);
+  // The demands this run was generated with, read back from its own seed.
+  const pondDemands = usePondDemands(snapshot, seed);
   const totals = usePoolTotals(accounting);
   const { unlockedGroups, lockedGroups } = apCatalogByLock;
 
@@ -95,9 +98,11 @@ const RunOptions = ({ options, seed = '' }: RunOptionsProps) => {
         readOnly
       />
       <WishingPondSection
-        setting={pond.setting}
+        profiles={ponds.profiles}
         capacity={parsed.profile}
-        notes={[...pond.notes, ...rule.notes]}
+        share={ponds.shared}
+        demands={pondDemands}
+        notes={[...ponds.notes, ...rule.notes]}
         readOnly
       />
       <PoolTotals totals={totals} error={error} />

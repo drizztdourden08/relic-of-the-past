@@ -13,7 +13,9 @@ import type { PlacementSphere } from './verify-placement';
 import type { CapacityPoolCounts, CapacityProfile } from '../capacity/capacity-profile.type';
 import type { CapacityBonusSetting } from '../capacity/bonus/capacity-bonus.type';
 import type { ItemPowerSetting } from '../item-power/item-power.type';
+import type { PondDemandView } from '../pond/pond-ask.type';
 import type { PondSetting } from '../pond/pond-profile.type';
+import type { PondProfiles } from '../pond/pond-profiles.type';
 import type { ProgressiveModeSetting, ProgressiveSetting } from '../progressive/progressive.type';
 import type { RetroBowSetting } from '../retro/retro.type';
 import type { ShopScope } from '../shops/shop-scope.type';
@@ -80,11 +82,18 @@ interface ApPlacementStats {
    */
   shops?: ShopScope;
   /**
-   * What the rupee pond sold for this seed. Absent on placements persisted
-   * before the option existed, which keep the legacy pond, whose two slots
-   * answer to the capacity families alone. The throw schedule is not stored:
-   * it is re-derived from this setting and the placement's own seed, so a
-   * spoiler, the logic and the running game always read the same one.
+   * What each pond sold for this seed. Absent on placements persisted before
+   * the ponds were configured apart, which carry `pond` below instead, and on
+   * placements older than either, which keep every pond legacy. A throw
+   * schedule is not stored: it is re-derived from these settings and the
+   * placement's own seed, so a spoiler, the logic and the running game always
+   * read the same one (placement-ponds.ts).
+   */
+  ponds?: PondProfiles;
+  /**
+   * The single pond setting placements carried while one pond was
+   * configurable. It was always the capacity pond's, and that is what it
+   * reads as now. Never written any more.
    */
   pond?: PondSetting;
   /**
@@ -122,6 +131,13 @@ interface ApPlacementStats {
   /** How many pond prize slots existed as locations. Absent on older placements. */
   pondPrizeCount?: number;
   /**
+   * True when each wish pond's mode decided her two vanilla slots: locked at
+   * Vanilla grants, not locations under a Custom pond with rungs
+   * (pond/pond-vanilla-slots.ts). Absent on every placement generated before
+   * that rule, whose slots answered to the npc scope alone whatever the mode.
+   */
+  pondSlotsFollowMode?: boolean;
+  /**
    * Where each dungeon-item family was allowed to end up. Absent on placements
    * persisted before the rows were read, which were rolled with every family
    * pinned to its own dungeon.
@@ -151,6 +167,12 @@ interface ApPlacement {
    * currency was ticked: both mean every shelf charges its vanilla rupees.
    */
   shopPrices?: ShopPriceView;
+  /**
+   * Pond rung → the demand its fairy makes, rolled once from this seed. Absent
+   * on placements from before the demands existed, and empty whenever no pond
+   * rolled one: both mean every rung asks for the rupees its ladder charges.
+   */
+  pondDemands?: PondDemandView;
   spheres: PlacementSphere[];
   stats: ApPlacementStats;
 }

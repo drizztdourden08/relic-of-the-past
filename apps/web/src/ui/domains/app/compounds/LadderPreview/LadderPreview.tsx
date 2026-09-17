@@ -6,8 +6,12 @@
  * past the top of the ladder; an ordered ladder numbers its jumps (1st,
  * 2nd ...) because pickups take them in that order. Values arrive formatted
  * and the compound only lays them out.
+ *
+ * A chip may also carry the sprite of the currency its value is asked in, and
+ * then the picture says which currency and the number says how much, so a
+ * price naming no amount is the icon on its own.
  */
-import { Box, Text } from '@ds/primitives';
+import { Box, Image, Text } from '@ds/primitives';
 import type { LadderPreviewProps } from './LadderPreview.type';
 import './LadderPreview.css';
 
@@ -18,13 +22,16 @@ const ordinalOf = (n: number): string => {
 };
 
 const LadderPreview = (props: LadderPreviewProps) => {
-  const { chips, jumps, dim = false, note, surplus = false, ordered = false, className = '' } = props;
+  const {
+    chips, jumps, icons, dim = false, note, surplus = false, ordered = false, className = '',
+  } = props;
   const lastIndex = chips.length - 1;
 
   return (
     <Box className={`ladder-preview${dim ? ' ladder-preview--dim' : ''}${className ? ` ${className}` : ''}`}>
       {chips.map((chip, index) => {
         const flagged = surplus && index === lastIndex;
+        const icon = icons?.[index];
         return (
           <Box key={index} className="ladder-preview__step">
             {index > 0 && (
@@ -34,6 +41,9 @@ const LadderPreview = (props: LadderPreviewProps) => {
               </Text>
             )}
             <Text className={`ladder-preview__chip${flagged ? ' ladder-preview__chip--surplus' : ''}`}>
+              {icon !== undefined && (
+                <Image className="ladder-preview__icon" src={icon} alt="" draggable={false} />
+              )}
               {chip}
             </Text>
           </Box>

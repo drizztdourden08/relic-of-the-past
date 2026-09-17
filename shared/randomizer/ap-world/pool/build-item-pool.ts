@@ -47,6 +47,7 @@ import { spotOfFamily } from '../capacity/capacity-spots';
 import { capacityPoolItems, meterPoolItemsOf } from './capacity-pool-items';
 import { balanceFiller } from './balance-filler';
 import { removeScopeLockedFromPool, scopeLockedKeyCounts } from './scope-subtraction';
+import { removePondGrantsFromPool } from './pond-grant-subtraction';
 import {
   DEFAULT_DUNGEON_ITEM_SETTING, modeOfDungeonItem, staysInDungeons,
 } from '../dungeon-items/dungeon-item-modes';
@@ -179,6 +180,7 @@ const buildItemPool = (
   const upgrades = [...capacityPoolItems(plans, lockedCapacityLocations), ...meter.overflow];
   pool.push(...upgrades);
   removeScopeLockedFromPool(pool, lockedScope);
+  const uncoveredGrants = removePondGrantsFromPool(pool, world.options.lockedPondGrants, lockedScope);
   // After the subtraction, never before: a tick may only remove a copy the
   // shuffle was really going to carry (progressive/progressive-pool.ts).
   applyProgressiveTicks(pool, tiers);
@@ -200,8 +202,14 @@ const buildItemPool = (
   // count joins the capacity upgrades' filler arithmetic below instead of
   // getting one of its own.
   const extraCopies = applyCopyMultipliers(pool, modes, difficulty.copies);
+  // A closed pond slot is a location the reference counted and this world
+  // lacks while its vanilla item stays in the pool, and a vanilla grant the pool
+  // had no copy of is a locked slot with nothing removed for it: one filler
+  // leaves for each (pond/pond-vanilla-slots.ts).
+  const pondSlots = (world.options.closedPondSlots?.length ?? 0) + uncoveredGrants;
   balanceFiller(
-    pool, upgrades.length - openCapacitySpots(world, lockedCapacityLocations) + extraCopies, pickFiller);
+    pool, upgrades.length - openCapacitySpots(world, lockedCapacityLocations) + extraCopies + pondSlots,
+    pickFiller);
   // A shelf slot the profile opened is one more spot, so the pool gains one
   // more item for it. The reference backfills a freed slot with rupees
   // instead of putting the shop's own stock in the pool (ItemPool.py

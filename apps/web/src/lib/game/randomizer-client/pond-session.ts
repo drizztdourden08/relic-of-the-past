@@ -21,8 +21,11 @@
  */
 
 import { pondPlanOf } from '@shared/randomizer/ap-world/pond/pond-plan';
+import { pondProfilesOfStats } from '@shared/randomizer/ap-world/fill/placement-ponds';
 import { log } from '../../log-bus';
 import { clearPondPlan, setPondAwardMessage, setPondClosedMessage, setPondThrows } from '../pond-plan';
+import { disarmWishPondSession } from './wish-pond-session';
+import { disarmPondDemandSession } from './pond-demand-session';
 import type { ApPlacement } from '@shared/randomizer/ap-world/fill/ap-placement.type';
 import type { PondThrowArm } from '../pond-plan';
 import type { PondMessageIds } from './receipt-text-refresh';
@@ -52,8 +55,9 @@ interface PondSessionPlan {
 }
 
 const pondSessionOf = (placement: ApPlacement, messages: PondMessageIds = NO_POND_MESSAGES): PondSessionPlan => {
-  const setting = placement.stats.pond;
-  if (setting === undefined || setting.mode === 'capacity') {
+  // The core arms one pond, the capacity one (core/game-hooks/pond_plan.c).
+  const setting = pondProfilesOfStats(placement.stats).capacity;
+  if (setting.mode === 'capacity') {
     return {
       throws: [], armed: false, prizeCount: 0, awardMoreMessageId: -1, awardLastMessageId: -1, closedMessageId: -1,
     };
@@ -92,8 +96,11 @@ const armPondSession = (plan: PondSessionPlan, tag: string): void => {
     + `${spoken} of them announcing their own price`);
 };
 
+/** Every pond goes down together, so every stop and refusal site clears the wish ponds and the demands too. */
 const disarmPondSession = (): void => {
   clearPondPlan();
+  disarmWishPondSession();
+  disarmPondDemandSession();
 };
 
 export { armPondSession, disarmPondSession, pondSessionOf };

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * A shelf never sells the thing its own price is counted in.
+ * A slot never sells the thing its own price is counted in.
  *
  * A price is gated on the ceiling the file can hold (rules/shop-prices.ts),
  * so a slot charging five bombs asks for a bomb bag before it hands anything
@@ -16,6 +16,9 @@
  * A bottle price reads the same way: the vessel a shelf demands may not be the
  * vessel it is selling. Hearts have no upgrade item in the pool, so a heart
  * price locks nothing out.
+ *
+ * An item price is the plainest case: the player needs the Hookshot to get
+ * the Hookshot, so the slot may not hold the item it names.
  */
 import { capacityFamilyOfItemName } from '@shared/game/data/capacity-upgrade-item';
 import { BOTTLE_ITEMS } from '../item-names.data';
@@ -34,10 +37,11 @@ const FAMILY_OF_CURRENCY: Readonly<Record<ShopCountedCurrency, CapacityFamilyId 
 };
 
 /**
- * The placement predicate a priced shelf carries, or undefined when the price
+ * The placement predicate a priced slot carries, or undefined when the price
  * locks nothing out and the slot keeps whatever rule it already had.
  */
 const selfLockRuleOf = (price: ShopPrice): ItemRule | undefined => {
+  if (price.currency === 'item') return (itemName) => itemName !== price.itemName;
   if (price.currency === 'bottle') return (itemName) => !BOTTLE_SET.has(itemName);
   const family = FAMILY_OF_CURRENCY[price.currency];
   if (family === undefined) return undefined;

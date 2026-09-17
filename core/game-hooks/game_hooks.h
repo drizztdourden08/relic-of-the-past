@@ -505,6 +505,16 @@ bool GameHook_OverrideCapacityGrant(int kind);
 // pond_hooks.h.
 #include "pond_hooks.h"
 
+// The two item-throwing waters and the plan that can own them (wish_pond_plan.c):
+// wish_pond_hooks.h.
+#include "wish_pond_hooks.h"
+
+// What each rung of any planned pond asks for (pond_demands.c): pond_demands.h.
+#include "pond_demands.h"
+
+// The demand visit both pond handlers share (pond_demand_visit.c): pond_demand_visit.h.
+#include "pond_demand_visit.h"
+
 // Whether the cave bat's grant was already substituted (ungated read of the
 // completion bit: once the check's item went out, the bat stays closed).
 bool GameHook_BatGrantTaken(void);

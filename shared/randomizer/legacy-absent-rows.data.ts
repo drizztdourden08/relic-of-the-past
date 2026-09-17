@@ -19,8 +19,8 @@ import { REFERENCE_CAPACITY_PROFILE } from './ap-world/capacity/capacity-profile
 import { capacityValuesOf } from './ap-world/capacity/capacity-profile-from-snapshot';
 import { darkRoomValuesOf } from './ap-world/dark-rooms/dark-room-from-snapshot';
 import { REFERENCE_DARK_ROOM_SETTING } from './ap-world/dark-rooms/dark-room-lights.data';
-import { pondValuesOf } from './ap-world/pond/pond-from-snapshot';
-import { LEGACY_POND_SETTING } from './ap-world/pond/pond-profile-defaults';
+import { pondProfileValuesOf } from './ap-world/pond/pond-profiles-from-snapshot';
+import { LEGACY_POND_PROFILES } from './ap-world/pond/pond-profile-defaults';
 import { INCLUDE_NPC_CHECKS_KEY, INCLUDE_WORLD_ITEMS_KEY } from './ap-world/scope-option-keys';
 import { BOTTLE_KEY, CURRENCY_ROWS, currencyKeyOf } from './ap-world/shops/shop-price-options.data';
 import { SHOP_MODE_KEY, SHOP_SLOT_DEPTH_KEY } from './ap-world/shops/shop-slot-options.data';
@@ -48,7 +48,10 @@ const LEGACY_ABSENT_ROWS: Readonly<Record<string, ApOptionValue>> = {
   ...NO_PRICE_ROLLS,
   ...capacityValuesOf(REFERENCE_CAPACITY_PROFILE),
   ...capacityBonusValuesOf(LEGACY_CAPACITY_BONUS),
-  ...pondValuesOf(LEGACY_POND_SETTING),
+  // Every pond as it has always behaved; the shipped spelling of the capacity
+  // pond's rows is folded onto its keys before this table is consulted
+  // (pond/pond-key-migration.data.ts).
+  ...pondProfileValuesOf(LEGACY_POND_PROFILES),
 };
 
 export { LEGACY_ABSENT_ROWS };

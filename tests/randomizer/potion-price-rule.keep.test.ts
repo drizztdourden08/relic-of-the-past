@@ -27,7 +27,7 @@ import { REGION_NAME } from '@shared/randomizer/ap-world/item-names.data';
 import { LEGACY_SHUFFLE_ON_PROFILE } from '@shared/randomizer/ap-world/capacity';
 import { DEFAULT_ITEM_POWER } from '@shared/randomizer/ap-world/item-power/item-power.data';
 import { defaultProgressiveSetting } from '@shared/randomizer/ap-world/progressive/progressive-from-snapshot';
-import { LEGACY_POND_SETTING } from '@shared/randomizer/ap-world/pond/pond-profile-defaults';
+import { LEGACY_POND_PROFILES } from '@shared/randomizer/ap-world/pond/pond-profile-defaults';
 import { buildOptionsSnapshot } from '@shared/randomizer/options-snapshot';
 import { createRng } from '@shared/randomizer/rng';
 import { randomizerChoiceOverrides } from '@app/hooks/randomizer/randomizer-choices';
@@ -48,7 +48,7 @@ const BASE: Omit<RandomizerOptionChoices, 'shops' | 'shopPrices'> = {
   capacityEnabled: true,
   capacity: LEGACY_SHUFFLE_ON_PROFILE,
   capacityProgressive: true,
-  pond: LEGACY_POND_SETTING,
+  ponds: LEGACY_POND_PROFILES,
   progressiveTiers: defaultProgressiveSetting(),
   itemPower: DEFAULT_ITEM_POWER,
 };
@@ -234,26 +234,47 @@ describe('a snapshot this app did not write', () => {
 describe('paying a bottle price needs a source to buy the content back from', () => {
   // walletCapacity reads the wallet ladder off the collected upgrades; a file
   // with no upgrade stands on the native rung, which holds any cauldron price.
-  const stateWith = (bottle: boolean, atSeller: boolean): CollectionState => ({
+  // The bottle count is the group count, the way the real state answers it:
+  // holding a bottle at all means the count is at least one.
+  const stateWith = (bottles: number, atSeller: boolean): CollectionState => ({
     world: { options: {} },
-    has: () => bottle,
+    has: () => bottles > 0,
     count: () => 0,
-    countGroup: () => 0,
+    countGroup: () => bottles,
     canReachRegion: (name: string) => atSeller && name === REGION_NAME.potionSeller,
   } as unknown as CollectionState);
 
   it('asks a potion price for the hut and the bottle', () => {
     const rule = ruleForPrice({ currency: 'bottle', content: CAULDRON.content });
-    expect(rule(stateWith(true, true))).toBe(true);
-    expect(rule(stateWith(true, false))).toBe(false);
-    expect(rule(stateWith(false, true))).toBe(false);
+    expect(rule(stateWith(1, true))).toBe(true);
+    expect(rule(stateWith(1, false))).toBe(false);
+    expect(rule(stateWith(0, true))).toBe(false);
   });
 
   it('asks a caught content for the bottle alone', () => {
     for (const content of ['fairy', 'bee'] as const) {
       const rule = ruleForPrice({ currency: 'bottle', content });
-      expect(rule(stateWith(true, false))).toBe(true);
-      expect(rule(stateWith(false, false))).toBe(false);
+      expect(rule(stateWith(1, false))).toBe(true);
+      expect(rule(stateWith(0, false))).toBe(false);
+    }
+  });
+
+  it('asks a counted demand for that many bottles, and an uncounted one for a single bottle', () => {
+    // A pond rung may ask for up to four at once, and they are handed over
+    // together, so three bottles cannot pay a demand of four.
+    for (const count of [1, 2, 3, 4]) {
+      const rule = ruleForPrice({ currency: 'bottle', content: 'fairy', amount: count });
+      for (let held = 0; held <= 4; held += 1) {
+        expect(rule(stateWith(held, false)), `${count} asked, ${held} held`).toBe(held >= count);
+      }
+    }
+    // No amount is one bottle, which is what a shelf asks and what every
+    // placement frozen before the count means.
+    const bare = ruleForPrice({ currency: 'bottle', content: 'fairy' });
+    const one = ruleForPrice({ currency: 'bottle', content: 'fairy', amount: 1 });
+    for (let held = 0; held <= 4; held += 1) {
+      expect(bare(stateWith(held, false)), `${held} held`).toBe(one(stateWith(held, false)));
+      expect(bare(stateWith(held, false)), `${held} held`).toBe(held >= 1);
     }
   });
 

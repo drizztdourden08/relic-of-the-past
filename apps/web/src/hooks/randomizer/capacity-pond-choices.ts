@@ -35,7 +35,12 @@ const withCapacityPondRule = (
   choices: RandomizerOptionChoices, authority: CapacityPondAuthority,
 ): RandomizerOptionChoices => {
   const settled = reconcileCapacityPond(capacityPondOf(choices), authority);
-  return { ...choices, capacityEnabled: settled.enabled, capacity: keepingPinned(settled, choices.capacity), pond: settled.pond };
+  return {
+    ...choices,
+    capacityEnabled: settled.enabled,
+    capacity: keepingPinned(settled, choices.capacity),
+    ponds: { ...choices.ponds, capacity: settled.pond },
+  };
 };
 
 /** Everything the two tabs need to render the rule honestly. */

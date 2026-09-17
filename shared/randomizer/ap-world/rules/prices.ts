@@ -16,6 +16,7 @@
  * this prize, every earlier throw included.
  */
 import { CAPACITY_UPGRADE_LOCATIONS } from '../special-locations.data';
+import { POND_INSTANCES } from '../pond/pond-instances.data';
 import { POND_LOCATION_SET } from '../pond/pond-locations.data';
 import { pondPlanOf } from '../pond/pond-plan';
 import { walletCapacity } from '../state-helpers-capacity';
@@ -24,16 +25,26 @@ import { shopSlotLocationOf } from '../shops/shop-slots';
 import { selfLockRuleOf } from '../shops/shop-self-lock';
 import { ruleForPrice } from './shop-prices';
 import type { ApWorld, Rule } from '../world.type';
+import type { ShopPrice } from '../shops/shop-price.type';
 
 const canAfford = (price: number): Rule => (state) => walletCapacity(state) >= price;
 
-/** Location name → the price the pond charges for it; empty under the legacy pond. */
+/** Location name → the price its pond charges for it; empty while every pond is legacy. */
 const pondPricesOf = (world: ApWorld): ReadonlyMap<string, number> => {
-  const { pond } = world.options;
+  const { ponds } = world.options;
   const prices = new Map<string, number>();
-  if (pond === undefined || pond.mode === 'capacity') return prices;
-  const plan = pondPlanOf(pond);
-  plan.locations.forEach((name, index) => prices.set(name, plan.worstPriceOfPrize[index]));
+  if (ponds === undefined) return prices;
+  for (const pond of POND_INSTANCES) {
+    const setting = ponds[pond.id];
+    if (setting.mode === 'capacity') continue;
+    const plan = pondPlanOf(setting, pond);
+    // Only the numbered rungs are priced here. A plan whose prizes are the
+    // pond's own vanilla pair charges nothing for them, and their rules are
+    // the ones they have always had.
+    plan.locations.forEach((name, index) => {
+      if (POND_LOCATION_SET.has(name)) prices.set(name, plan.worstPriceOfPrize[index]);
+    });
+  }
   return prices;
 };
 
@@ -81,8 +92,8 @@ const registerPriceRules = (world: ApWorld): void => {
     const afford = canAfford(POND_LOCATION_SET.has(name) ? pondPrices.get(name) ?? price : price);
     registry.set(name, (state) => existing(state) && afford(state));
   }
-  // The prize slots the table does not list at all: everything past the
-  // reference's two names, which exist only under a non-legacy pond.
+  // The prize slots the table does not list at all: everything past a pond's
+  // two reference names, which exists only under a non-legacy pond.
   for (const [name, price] of pondPrices) {
     if (PRICED_ENTRIES.some((entry) => entry.name === name)) continue;
     const existing = world.locationRules.get(name);
