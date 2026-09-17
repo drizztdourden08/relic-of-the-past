@@ -92,6 +92,8 @@ static const SubstitutionBit kSubstitutionBits[] = {
   {0xf0, 2, 0x01},  // the upgrade pond's explosives-capacity purchase
   {0xf1, 2, 0x02},  // the upgrade pond's projectiles-capacity purchase
   {0xf2, 2, 0x04},  // the cave bat's meter upgrade
+  // Real receive id, filed after the synthetic keys because byte 2 had the free bits:
+  {0x13, 2, 0x08},  // the haunted stump's digging tool
   // The ceremonial blade's pedestal needs no bit: its own script writes a real
   // overworld event bit at the grant, which detection already reads.
 };
@@ -143,13 +145,17 @@ uint8 GameHook_SubstitutionTakenByte(int byte_index) {
 // The scan matches by vanilla item alone, with no room or sprite context, so prep-time
 // and menu callers outside the sprite loop are safe; each of these givers' vanilla
 // items is unique across the armed set.
-bool GameHook_GiftGateClosed(uint8 vanilla_item, bool vanilla_closed) {
-  if ((enhanced_features3 & kFeatures3_NpcOverrides) != 0) {
-    for (int i = 0; i < g_npc_override_count; i++) {
-      if (g_npc_overrides[i].vanilla_item == vanilla_item)
-        return GameHook_SubstitutedGiftTaken(vanilla_item);
-    }
+bool GameHook_GiftOverrideArmed(uint8 vanilla_item) {
+  if ((enhanced_features3 & kFeatures3_NpcOverrides) == 0) return false;
+  for (int i = 0; i < g_npc_override_count; i++) {
+    if (g_npc_overrides[i].vanilla_item == vanilla_item) return true;
   }
+  return false;
+}
+
+bool GameHook_GiftGateClosed(uint8 vanilla_item, bool vanilla_closed) {
+  if (GameHook_GiftOverrideArmed(vanilla_item))
+    return GameHook_SubstitutedGiftTaken(vanilla_item);
   return vanilla_closed;
 }
 

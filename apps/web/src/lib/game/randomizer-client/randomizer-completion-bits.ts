@@ -44,6 +44,8 @@ const COMPLETION_BIT_BY_CHECK: ReadonlyMap<string, CompletionBit> = new Map([
   ['check-273', { bufferIndex: SUBSTITUTION_BYTE_2, mask: 0x01 }], // pond capacity, explosives slot
   ['check-274', { bufferIndex: SUBSTITUTION_BYTE_2, mask: 0x02 }], // pond capacity, projectiles slot
   ['check-040', { bufferIndex: SUBSTITUTION_BYTE_2, mask: 0x04 }], // the cave bat's meter upgrade
+  // The haunted stump: its record flag is the song played to it, not the gift.
+  ['check-078', { bufferIndex: SUBSTITUTION_BYTE_2, mask: 0x08 }], // haunted stump's digging tool
 ]);
 
 /**

@@ -46,6 +46,16 @@ bool GameHook_SubstitutedGiftTaken(uint8 vanilla_item);
 // vanilla expression, verbatim. Called from the vendored gates in sprite_main.c.
 bool GameHook_GiftGateClosed(uint8 vanilla_item, bool vanilla_closed);
 
+// Whether the npc table holds an entry for |vanilla_item| with the gate word up. The
+// question every re-offer gate asks first; false on a vanilla profile.
+bool GameHook_GiftOverrideArmed(uint8 vanilla_item);
+
+// The haunted stump's gift (stumpy_gift.c). Its script reads the shared shovel/flute
+// slot for everything it says, so a shovel or flute found elsewhere hid the gift for
+// good. Both return the vanilla expression verbatim unless the stump's grant is armed.
+uint8 GameHook_StumpyFluteSlot(void);
+bool GameHook_StumpyFinished(void);
+
 // Whether the continue/death menu offers the third (mountain) spawn: the real
 // completion bit while the elder's grant is overridden this session, the vanilla
 // possession test otherwise. Called from the one vendored seam in misc.c.
