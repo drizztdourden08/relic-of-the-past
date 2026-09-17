@@ -7,10 +7,17 @@
  * model arrives derived, edits leave as a row state. Reuses the same range,
  * slider, curve and jump-chip controls the capacity families use, so the two
  * sections read and behave identically.
+ *
+ * Every setting the mode asks for sits on ONE grid: a label track and a
+ * control track. So a demand's tick, a slider's name and the curve's name all
+ * start on the same vertical line, their controls all start on the next, and
+ * no setting spends a line of its own on its name.
  */
 import { Box, Slider, Text } from '@ds/primitives';
 import { LadderPreview } from '../LadderPreview';
 import { OptionDescription } from '../OptionDescription';
+import { PondAskControls } from './sub-components/PondAskControls';
+import { PondOptionLine } from './sub-components/PondOptionLine';
 import { PondPriceControls } from './sub-components/PondPriceControls';
 import type { PondRowState, WishingPondRowProps } from './WishingPondRow.type';
 import './WishingPondRow.css';
@@ -33,9 +40,9 @@ const WishingPondRow = (props: WishingPondRowProps) => {
       {caption !== undefined && <OptionDescription className="pond-row__note" description={caption} />}
       {offersItems && (
         <Box className="pond-row__custom">
+          <PondAskControls model={model} readOnly={readOnly} onChange={patch} />
           {hasPrices && <PondPriceControls model={model} readOnly={readOnly} onChange={patch} />}
-          <Box className="pond-row__items">
-            <Text className="pond-row__caption">pool items in the pond</Text>
+          <PondOptionLine label="pool items in the pond">
             <Slider
               value={Math.min(state.items, maxItems)}
               min={0}
@@ -45,7 +52,7 @@ const WishingPondRow = (props: WishingPondRowProps) => {
               formatValue={itemsLabel}
               onChange={(items) => patch({ items })}
             />
-          </Box>
+          </PondOptionLine>
         </Box>
       )}
       <Box className="pond-row__preview">

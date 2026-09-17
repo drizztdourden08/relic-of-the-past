@@ -39,6 +39,10 @@ const SRM_PENDING_CRYSTAL = 0xf419;
 /** pond_plan.c: how many throws of the planned sequence have been paid for. */
 const SRM_POND_THROWS = 0xf41a;
 
+/** wish_pond_plan.c: throws taken at each item-throwing water, in its own counter order. */
+const SRM_WISH_POND_THROWS = 0xf41b;
+const SRM_WISH_POND_THROWS_COUNT = 2;
+
 /** shop_table.c: one byte per canonical shop slot, armed steps already bought. */
 const SRM_SHOP_SOLD = 0xf420;
 const SRM_SHOP_SOLD_COUNT = 31;
@@ -61,5 +65,7 @@ export {
   SRM_SUBSTITUTION_TAKEN,
   SRM_SUBSTITUTION_TAKEN_COUNT,
   SRM_WALLET_LADDER_INDEX,
+  SRM_WISH_POND_THROWS,
+  SRM_WISH_POND_THROWS_COUNT,
   blockOffsetOf,
 };

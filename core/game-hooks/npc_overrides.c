@@ -181,6 +181,40 @@ static bool EntryMatchesHere(const NpcGrantOverride *entry, bool anywhere) {
   return player_is_indoors && dungeon_room_index == entry->room_id;
 }
 
+// The sprite slot a wish pond is executing in, or -1 when the grant crossing the seam is
+// not a pond's. Both waters run as sprite type 0x72, so this is what tells a pond receipt
+// from a boss's heart container, which hands over with receipt method 2 as well
+// (boss_receipt_gate.c).
+static int WishPondSpriteHere(void) {
+  int k = cur_object_index;
+  if (k >= 16 || sprite_state[k] == 0 || sprite_type[k] != 0x72) return -1;
+  return k;
+}
+
+// Why a wish-pond receipt must NOT reach the substitution table, or NULL when it may. Two ways
+// it must not, and both are things the water does over and over:
+//
+// - It handed the thrown item straight back, or it filled a bottle. Both cross the seam
+//   carrying the item's OWN vanilla id, which a roomless entry matches on alone, so a returned
+//   medallion would fire the tablet's entry, and fire it again on every throw. sprite_head_dir
+//   is 0 on every non-upgrade outcome and 1 to 5 on the five branches ai state 6 takes; branch
+//   3 is the bottle fill, a service the water repeats and never a check.
+// - Its check has ALREADY paid out. The four upgrade branches are repeatable by design:
+//   vanilla hands the thrown gear back as the next tier, and a substitution hands the player
+//   their own gear back instead, so the same blue returning weapon would buy the seed's item
+//   again on every throw. The completion bit is what says the check is spent, and a spent one
+//   falls through to the water's own vanilla upgrade.
+//
+// A planned rung is neither. It carries its own save counter, which is its anti-farm record, and
+// it reaches the seam with the sprite_head_dir of 0 that also marks a handed-back item, so only
+// the plan can tell the two apart (wish_pond_plan.c).
+static const char *WishPondReceiptRefusal(uint8 item) {
+  int k = WishPondSpriteHere();
+  if (k < 0 || GameHook_WishPondRungInFlight()) return NULL;
+  if (sprite_head_dir[k] == 0 || sprite_head_dir[k] == 3) return "is handed back, not a check";
+  return GameHook_SubstitutedGiftTaken(item) ? "has already paid out" : NULL;
+}
+
 uint8 GameHook_OverrideNpcGrantItem(uint8 item) {
   // Both one-shots are consumed on EVERY receipt, applied or not, so a stale arm can
   // never leak into a later unrelated grant (the receipt_messages.c contract).
@@ -195,6 +229,14 @@ uint8 GameHook_OverrideNpcGrantItem(uint8 item) {
   // A chest receipt already substituted upstream at the chest seam; re-applying this
   // table there could double-substitute a chest-assigned item sharing a table key.
   if (item_receipt_method == 1) return item;
+  // A pond's refusal, its bottle service and a check it has already paid out are all things
+  // the water repeats, so none of them may reach the table (see WishPondReceiptRefusal); every
+  // other method-2 grant falls through.
+  const char *pond_refusal = item_receipt_method == 2 ? WishPondReceiptRefusal(item) : NULL;
+  if (pond_refusal != NULL) {
+    printf("[Randomizer] Wish pond receipt refused: item 0x%02x %s\n", item, pond_refusal);
+    return item;
+  }
   for (int i = 0; i < g_npc_override_count; i++) {
     if (g_npc_overrides[i].vanilla_item != item) continue;
     if (!EntryMatchesHere(&g_npc_overrides[i], anywhere)) continue;
@@ -216,10 +258,13 @@ uint8 GameHook_OverrideNpcGrantItem(uint8 item) {
     // player must keep the original piece, so the check costs nothing, matching the
     // reference model of these locations. The pond handler's own scratch (executing
     // sprite frame) still holds the taken slot and its value.
-    if (item_receipt_method == 2) {
-      int k = cur_object_index;
-      if (k < 16 && sprite_state[k] != 0 && sprite_type[k] == 0x72)
-        (&link_item_bow)[sprite_C[k]] = sprite_D[k];
+    //
+    // A planned rung is the one method-2 grant with nothing to hand back: its contact seam
+    // takes no item at all and parks that scratch at slot 0 (wish_pond_visit.c), so writing it
+    // here would put a zero in the bow slot.
+    if (item_receipt_method == 2 && !GameHook_WishPondRungInFlight()) {
+      int k = WishPondSpriteHere();
+      if (k >= 0) (&link_item_bow)[sprite_C[k]] = sprite_D[k];
     }
     // A boss's falling reward is the one grant whose "already taken" record is NOT the
     // item it hands over, so the dungeon's own claimed-bit is written here (prize_grants.c

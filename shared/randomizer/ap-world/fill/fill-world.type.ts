@@ -21,7 +21,8 @@ import type { CapacityBonusSetting } from '../capacity/bonus/capacity-bonus.type
 import type { DarkRoomSetting } from '../dark-rooms/dark-room.type';
 import type { DifficultySetting } from '../difficulty/difficulty.type';
 import type { ItemPowerSetting } from '../item-power/item-power.type';
-import type { PondSetting } from '../pond/pond-profile.type';
+import type { PondDemandView } from '../pond/pond-ask.type';
+import type { PondProfiles } from '../pond/pond-profiles.type';
 import type { ProgressiveModeSetting, ProgressiveSetting } from '../progressive/progressive.type';
 import type { RetroBowSetting } from '../retro/retro.type';
 import type { ShopScope } from '../shops/shop-scope.type';
@@ -63,10 +64,24 @@ interface FillWorldOptions {
   /** Prices rolled for the opened shelves; absent keeps every vanilla price. */
   shopPrices?: ShopPriceView;
   /**
-   * What the rupee pond sells (pond/). Absent means the legacy pond: its two
-   * slots answer to the capacity families alone, exactly as before.
+   * What each of the three ponds sells (pond/). Absent means every pond
+   * legacy: their slots answer to their vanilla grants alone, exactly as
+   * before.
    */
-  pond?: PondSetting;
+  ponds?: PondProfiles;
+  /**
+   * What each pond rung demands, rolled once from the seed (pond/). Absent
+   * rolls nothing and every rung keeps the wallet reading of its own price.
+   */
+  pondDemands?: PondDemandView;
+  /**
+   * Whether a wish pond's mode decides her two vanilla slots: locked at
+   * Vanilla grants, closed under a Custom pond that carries rungs
+   * (pond/pond-vanilla-slots.ts). Absent means false, where those slots answer
+   * to the npc scope alone: the oracles' world, and every placement generated
+   * before the rule.
+   */
+  pondSlotsFollowMode?: boolean;
   /**
    * What an unlit room asks for (dark-rooms/). Absent means the reference
    * reading the oracles pin: light required, the lamp alone providing it.
@@ -150,8 +165,10 @@ interface FillWorld {
   shopPrices: ShopPriceView;
   /** Pool items per family and the filler they displaced. */
   capacityCounts: CapacityPoolCounts;
-  /** The pond setting the world and pool were built for. */
-  pond: PondSetting;
+  /** The pond settings the world and pool were built for, one per pond. */
+  ponds: PondProfiles;
+  /** Whether the wish ponds' modes decided their vanilla slots, recorded so a placement says so. */
+  pondSlotsFollowMode: boolean;
   /** What an unlit room asks for in this world. */
   darkRooms: DarkRoomSetting;
   /** The tier ticks the world and pool were built for. */

@@ -43,16 +43,19 @@ const KEY_DROP_LOCATIONS: ReadonlyMap<string, string> = new Map([
 ]);
 
 /**
- * The two capacity-fairy slots (datapackage ids 4194334/4194335), existing
- * only while their family is not vanilla, each holding the upgrade the
- * fairy sells there in vanilla. The reference models them as a shop's two
- * inventory slots and names them left and right; they are the two answers to
- * the pond's question, so they are named for the family each one grows
- * (capacity/capacity-spots.data.ts holds the mapping back).
+ * The two capacity-fairy slots, existing only while their family is not
+ * vanilla, each holding the upgrade the fairy sells there in vanilla.
+ *
+ * The names are Archipelago's own (datapackage ids 4194334 and 4194335) and
+ * they are an IDENTITY, not a label: an online session looks every location up
+ * by this string, so a slot spelled any other way is absent from the session.
+ * What a player reads is decided elsewhere, by the pond display names
+ * (display-names/pond-display-name.ts), which call these two Hylia Fairy 1 and
+ * Hylia Fairy 2.
  */
 const CAPACITY_UPGRADE_LOCATIONS: ReadonlyMap<string, string> = new Map([
-  ['Bomb Capacity Upgrade', 'Bomb Upgrade (+5)'],
-  ['Arrow Capacity Upgrade', 'Arrow Upgrade (+5)'],
+  ['Capacity Upgrade Left', 'Bomb Upgrade (+5)'],
+  ['Capacity Upgrade Right', 'Arrow Upgrade (+5)'],
 ]);
 
 const EVENT_LOCATIONS: ReadonlySet<string> = new Set([

@@ -13,10 +13,10 @@
  * Each counted range ends where its currency does: the capacity profile
  * decides how many rupees, arrows and bombs the seed can ever hold and the
  * heart ceiling how many hearts, so the rows read their top off it
- * (behavior/currency-rows) and a range the player cannot pay for cannot be
- * set. The percentage has nothing to scale until a counted currency is
- * ticked, and freezes until one is; a bottle price carries no amount, so it
- * is never scaled.
+ * (CurrencyPriceRow's currency-rows) and a range the player cannot pay for
+ * cannot be set. The percentage has nothing to scale until a counted
+ * currency is ticked, and freezes until one is; a bottle price carries no
+ * amount, so it is never scaled.
  *
  * Two rules grey a row from elsewhere on the panel, and each says why on the
  * row it greys: a bottle content whose cauldron went to the shuffle cannot be
@@ -25,16 +25,16 @@
  * the choice comes straight back when the rule lets go.
  */
 import { Box } from '@ds/primitives';
+import { BottleContentRow, CurrencyPriceRow, currencyRowsOf } from '../CurrencyPriceRow';
 import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
-import { BottleContentRow } from './sub-components/BottleContentRow';
 import { ShopPriceModifierRow } from './sub-components/ShopPriceModifierRow';
-import { ShopPriceRow } from './sub-components/ShopPriceRow';
 import { bottleContentRowsOf } from './behavior/bottle-content-rows';
-import { currencyRowsOf } from './behavior/currency-rows';
 import {
-  BOTTLE_KEY, SHOP_PRICE_MODIFIER_DEFAULT, SHOP_PRICE_MODIFIER_KEY,
+  BOTTLE_KEY, CURRENCY_ROWS, SHOP_PRICE_MODIFIER_DEFAULT, SHOP_PRICE_MODIFIER_KEY,
   SHOP_PRICE_MODIFIER_MAX, SHOP_PRICE_MODIFIER_MIN,
+  currencyKeyOf, currencyMaxKeyOf, currencyMinKeyOf,
 } from '@shared/randomizer/ap-world/shops/shop-price-options.data';
+import type { CurrencyKeyHelpers } from '../CurrencyPriceRow';
 import type { CapacityProfile } from '@shared/randomizer/ap-world/capacity';
 import type { ApOptionValue } from '@shared/randomizer/ap-world/options.type';
 import './ShopPricesBlock.css';
@@ -53,13 +53,18 @@ interface ShopPricesBlockProps {
   onChange?: (patch: Readonly<Record<string, ApOptionValue>>) => void;
 }
 
+/** The shop's own catalog keys, the ones the shared currency rows are built from. */
+const SHOP_CURRENCY_KEYS: CurrencyKeyHelpers = {
+  keyOf: currencyKeyOf, minKeyOf: currencyMinKeyOf, maxKeyOf: currencyMaxKeyOf,
+};
+
 const boolAt = (values: ShopPricesBlockProps['values'], key: string): boolean => values[key] === true;
 const numberAt = (values: ShopPricesBlockProps['values'], key: string, fallback: number): number =>
   (typeof values[key] === 'number' ? values[key] : fallback);
 
 const ShopPricesBlock = (props: ShopPricesBlockProps) => {
   const { values, capacity, onChange } = props;
-  const currencyRows = currencyRowsOf(values, capacity);
+  const currencyRows = currencyRowsOf(values, capacity, CURRENCY_ROWS, SHOP_CURRENCY_KEYS);
   const bottleRows = bottleContentRowsOf(values);
   const bottleOn = boolAt(values, BOTTLE_KEY);
   // A percentage of nothing is nothing: with no counted currency in play there
@@ -70,7 +75,7 @@ const ShopPricesBlock = (props: ShopPricesBlockProps) => {
     <RandomizerOptionGroup title="Shop prices" live className="shop-prices-block">
       <Box className="shop-prices-block__rows">
         {currencyRows.map((row) => (
-          <ShopPriceRow
+          <CurrencyPriceRow
             key={row.currency}
             label={row.label}
             enabled={row.checked}
@@ -85,7 +90,7 @@ const ShopPricesBlock = (props: ShopPricesBlockProps) => {
             })}
           />
         ))}
-        <ShopPriceRow
+        <CurrencyPriceRow
           label="A bottle of something"
           enabled={bottleOn}
           onEnabledChange={onChange === undefined ? undefined : (next) => onChange({ [BOTTLE_KEY]: next })}
@@ -98,7 +103,7 @@ const ShopPricesBlock = (props: ShopPricesBlockProps) => {
               onChange={onChange === undefined ? undefined : (next) => onChange({ [row.key]: next })}
             />
           ))}
-        </ShopPriceRow>
+        </CurrencyPriceRow>
         <ShopPriceModifierRow
           label="Price modifier"
           value={numberAt(values, SHOP_PRICE_MODIFIER_KEY, SHOP_PRICE_MODIFIER_DEFAULT)}

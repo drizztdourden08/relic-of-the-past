@@ -1,8 +1,10 @@
 /* @layer renderer-components @kind logic */
 /**
- * The counted-currency rows the price block draws: one per currency a shelf
- * may charge, each already matched against the two things the rest of the
- * panel decides for it.
+ * The counted-currency rows a price block draws: one per currency a shelf may
+ * charge, each already matched against the two things the rest of the panel
+ * decides for it. The row definitions and the catalog keys behind them arrive
+ * from the block, so every options block that charges a currency shares this
+ * one derivation.
  *
  * THE CEILING. A price can never exceed what the profile can pay, so a row's
  * range stops where its currency does: the top rung the capacity profile
@@ -16,16 +18,15 @@
  * tick is left alone so it comes straight back when the rule lets go.
  */
 import { stopsFor } from './price-stops';
-import {
-  CURRENCY_ROWS, currencyKeyOf, currencyMaxKeyOf, currencyMinKeyOf,
-} from '@shared/randomizer/ap-world/shops/shop-price-options.data';
 import { priceCeilingsOf } from '@shared/randomizer/ap-world/shops/shop-price-ceilings';
 import {
   blockedCurrencyKeysOfValues, blockedCurrencyNote,
 } from '@shared/randomizer/ap-world/shops/shop-price-currency-rule';
 import { shopPricePlanOf } from '@shared/randomizer/ap-world/shops/shop-price-plan';
+import type { CurrencyKeyHelpers } from '../CurrencyPriceRow.type';
 import type { CapacityProfile } from '@shared/randomizer/ap-world/capacity';
 import type { ApOptionValue } from '@shared/randomizer/ap-world/options.type';
+import type { CurrencyRow } from '@shared/randomizer/ap-world/shops/shop-price-options.data';
 import type { ShopCountedCurrency } from '@shared/randomizer/ap-world/shops/shop-price.type';
 
 type Values = Readonly<Record<string, ApOptionValue>>;
@@ -62,13 +63,16 @@ const nearestStop = (stops: readonly string[], amount: number, ceiling: number):
     (Math.abs(Number(stop) - clamped) < Math.abs(Number(stops[best]) - clamped) ? index : best), 0);
 };
 
-const currencyRowsOf = (values: Values, capacity: CapacityProfile): readonly CurrencyRowModel[] => {
+const currencyRowsOf = (
+  values: Values, capacity: CapacityProfile,
+  rows: readonly CurrencyRow[], keys: CurrencyKeyHelpers,
+): readonly CurrencyRowModel[] => {
   const ceilings = priceCeilingsOf(shopPricePlanOf(values), capacity);
   const blockedKeys = blockedCurrencyKeysOfValues(values);
-  return CURRENCY_ROWS.map(({ currency, label, defaultMin, defaultMax }) => {
-    const key = currencyKeyOf(currency);
-    const minKey = currencyMinKeyOf(currency);
-    const maxKey = currencyMaxKeyOf(currency);
+  return rows.map(({ currency, label, defaultMin, defaultMax }) => {
+    const key = keys.keyOf(currency);
+    const minKey = keys.minKeyOf(currency);
+    const maxKey = keys.maxKeyOf(currency);
     const ceiling = ceilings[currency];
     const stops = stopsFor(ceiling);
     const blocked = blockedKeys.has(key);

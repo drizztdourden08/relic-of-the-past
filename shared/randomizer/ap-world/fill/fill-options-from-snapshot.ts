@@ -15,7 +15,7 @@ import { capacityBonusFromSnapshot } from '../capacity/bonus/capacity-bonus-from
 import { darkRoomSettingFromSnapshot } from '../dark-rooms/dark-room-from-snapshot';
 import { includeNpcChecksOf, includeWorldItemsOf } from '../scope-option-keys';
 import { difficultyFromSnapshot } from '../difficulty/difficulty-from-snapshot';
-import { pondSettingFromSnapshot } from '../pond/pond-from-snapshot';
+import { pondProfilesFromSnapshot } from '../pond/pond-profiles-from-snapshot';
 import { itemPowerFromSnapshot } from '../item-power/item-power-from-snapshot';
 import { progressiveSettingFromSnapshot } from '../progressive/progressive-from-snapshot';
 import { progressiveModesFromSnapshot } from '../progressive/progressive-mode-from-snapshot';
@@ -31,7 +31,7 @@ import type { CapacityProfile } from '../capacity/capacity-profile.type';
 import type { CapacityBonusSetting } from '../capacity/bonus/capacity-bonus.type';
 import type { DarkRoomSetting } from '../dark-rooms/dark-room.type';
 import type { DifficultySetting } from '../difficulty/difficulty.type';
-import type { PondSetting } from '../pond/pond-profile.type';
+import type { PondProfiles } from '../pond/pond-profiles.type';
 import type { ItemPowerSetting } from '../item-power/item-power.type';
 import type { ProgressiveModeSetting, ProgressiveSetting } from '../progressive/progressive.type';
 import type { RetroBowSetting } from '../retro/retro.type';
@@ -52,7 +52,8 @@ interface SnapshotFillFlags {
   capacityProgressive: boolean;
   capacityBonus: CapacityBonusSetting;
   shops: ShopScope;
-  pond: PondSetting;
+  ponds: PondProfiles;
+  pondSlotsFollowMode: boolean;
   darkRooms: DarkRoomSetting;
   difficulty: DifficultySetting;
   progressiveTiers: ProgressiveSetting;
@@ -93,8 +94,13 @@ const fillFlagsOf = (snapshot: RandomizerOptionsSnapshot, seed = ''): SnapshotFi
     shops: withRetroArrowSlots(shopScopeOfValues(snapshot.values, seed), retroBow),
     retroBow,
     // No pond row at all (every profile written before the option existed)
-    // reads as the legacy pond, so a stored placement keeps its meaning.
-    pond: pondSettingFromSnapshot(snapshot),
+    // reads as three legacy ponds, so a stored placement keeps its meaning.
+    // The shipped spelling of the capacity pond's rows is folded in on read.
+    ponds: pondProfilesFromSnapshot(snapshot),
+    // Every seed rolled from a snapshot now lets a wish pond's mode decide her
+    // two vanilla slots (pond/pond-vanilla-slots.ts). Only a stored placement
+    // generated before that reads otherwise, through its own stats.
+    pondSlotsFollowMode: true,
     // No dark-room row at all, every profile written before the settings
     // existed, reads as the reference rule, so a stored placement keeps its
     // meaning: light required, the lamp alone providing it.

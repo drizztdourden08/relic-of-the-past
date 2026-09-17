@@ -27,7 +27,7 @@ import { pondSettingForMode } from '@shared/randomizer/ap-world/pond/pond-mode-s
 import { DEFAULT_ITEM_POWER } from '@shared/randomizer/ap-world/item-power/item-power.data';
 import { defaultProgressiveSetting } from '@shared/randomizer/ap-world/progressive/progressive-from-snapshot';
 import { defaultRetroBow } from '@shared/randomizer/ap-world/retro/retro-from-snapshot';
-import { LEGACY_POND_SETTING } from '@shared/randomizer/ap-world/pond/pond-profile-defaults';
+import { LEGACY_POND_PROFILES, LEGACY_POND_SETTING } from '@shared/randomizer/ap-world/pond/pond-profile-defaults';
 import { defaultShopScope } from '@shared/randomizer/ap-world/shops/shop-scope-from-values';
 import { buildOptionsSnapshot } from '@shared/randomizer/options-snapshot';
 import { randomizerChoiceOverrides } from '@app/hooks/randomizer/randomizer-choices';
@@ -164,7 +164,8 @@ describe('the capacity/pond rule leaves no seed without its upgrades', () => {
   it('freezes a snapshot with a source, whatever the panel hands the writer', () => {
     for (const { selection } of combinations()) {
       const snapshot = buildOptionsSnapshot(randomizerChoiceOverrides({
-        ...BASE_CHOICES, capacityEnabled: selection.enabled, capacity: selection.capacity, pond: selection.pond,
+        ...BASE_CHOICES, capacityEnabled: selection.enabled, capacity: selection.capacity,
+        ponds: { ...LEGACY_POND_PROFILES, capacity: selection.pond },
         retroBow: { ...defaultRetroBow(), enabled: selection.retroBow },
       }));
       const capacity = capacityProfileFromSnapshot(snapshot);
@@ -256,7 +257,8 @@ describe('retro bow pins the projectiles family', () => {
 
   it('reads an old snapshot with both on as vanilla projectiles', () => {
     const snapshot = buildOptionsSnapshot(randomizerChoiceOverrides({
-      ...BASE_CHOICES, capacityEnabled: true, capacity: pair.capacity, pond: pair.pond, retroBow: defaultRetroBow(),
+      ...BASE_CHOICES, capacityEnabled: true, capacity: pair.capacity,
+      ponds: { ...LEGACY_POND_PROFILES, capacity: pair.pond }, retroBow: defaultRetroBow(),
     }));
     const values = { ...snapshot.values, capacity_projectiles_mode: 'vanilla-in-pool', retro_bow: true };
     expect(capacityProfileFromSnapshot({ ...snapshot, values }).projectiles.mode).toBe('vanilla');

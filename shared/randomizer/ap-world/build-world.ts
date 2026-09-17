@@ -95,7 +95,8 @@ const isPondSlotPresent = (
     : pondLocations.includes(name));
 
 const buildWorld = (options: ApWorldOptions): ApWorld => {
-  const { keyDropShuffle, capacity = REFERENCE_CAPACITY_PROFILE, shops, pondLocations } = options;
+  const { keyDropShuffle, capacity = REFERENCE_CAPACITY_PROFILE, shops, pondLocations, closedPondSlots = [] } = options;
+  const closed = new Set(closedPondSlots);
   const shopLocations = shops === undefined
     ? new Map<string, readonly string[]>()
     : shopLocationNamesByRegion(shops);
@@ -106,7 +107,7 @@ const buildWorld = (options: ApWorldOptions): ApWorld => {
     if (regions.has(def.name)) throw new Error(`duplicate region: ${def.name}`);
     const locations = def.locations
       .map((name) => buildLocation(name, def.name))
-      .filter((location) => (keyDropShuffle || !location.kdsOnly)
+      .filter((location) => (keyDropShuffle || !location.kdsOnly) && !closed.has(location.name)
         && (!location.pondSlot || isPondSlotPresent(location.name, capacity, pondLocations)));
     for (const name of shopLocations.get(def.name) ?? []) {
       locations.push(buildShopLocation(name, def.name));

@@ -9,7 +9,7 @@
  * a check); a locked row is fixed by construction and reports nothing.
  */
 import { apOptionByKey } from '../options.data';
-import { POND_MODE_KEY } from '../pond/pond-option-keys';
+import { POND_MODE_KEYS } from '../pond/pond-option-keys';
 import { SHOP_MODE_KEY } from '../shops/shop-slot-options.data';
 import { familyById } from '../capacity/capacity-family';
 import { familyOfOptionKey } from '../capacity/capacity-option-keys';
@@ -40,11 +40,11 @@ const NEUTRAL_VALUE: Readonly<Record<string, ApOptionValue>> = {
   [SHOP_MODE_KEY]: 'vanilla',
   shop_item_slots: 0,
   shop_slot_depth: 1,
-  // The legacy pond. Listed so the row is MEASURED instead of
-  // falling through to the no-impact default: the pond changes which spots
+  // Every pond legacy. Listed so each row is MEASURED instead of
+  // falling through to the no-impact default: a pond changes which spots
   // are locked vanilla, so a diff of zero here is an answer, not a shrug,
   // and the day a mode does open a fill spot, the cell says so on its own.
-  [POND_MODE_KEY]: 'capacity',
+  ...Object.fromEntries(Object.values(POND_MODE_KEYS).map((key) => [key, 'capacity'])),
 };
 
 const LOCKED_NOTE: Readonly<Record<ApOptionImplementation, string>> = {
@@ -68,7 +68,9 @@ const familyImpactOf = (key: string, snapshot: RandomizerOptionsSnapshot): PoolI
   };
 };
 
-const poolImpactOf = (key: string, snapshot: RandomizerOptionsSnapshot, deliverable: DeliverableSets): PoolImpact => {
+const poolImpactOf = (
+  key: string, snapshot: RandomizerOptionsSnapshot, deliverable: DeliverableSets, seed = '',
+): PoolImpact => {
   const option = apOptionByKey.get(key);
   if (option === undefined || option.locked) {
     return { ...NO_IMPACT, note: LOCKED_NOTE[option?.implementation ?? 'not-applicable'] };
@@ -78,8 +80,8 @@ const poolImpactOf = (key: string, snapshot: RandomizerOptionsSnapshot, delivera
   const neutralValue = NEUTRAL_VALUE[key];
   if (neutralValue === undefined) return NO_IMPACT;
   const neutral = { ...snapshot, values: { ...snapshot.values, [key]: neutralValue } };
-  const on = accountingOf(snapshot, deliverable);
-  const off = accountingOf(neutral, deliverable);
+  const on = accountingOf(snapshot, deliverable, seed);
+  const off = accountingOf(neutral, deliverable, seed);
   return { locations: on.open - off.open, items: on.items - off.items, note: '' };
 };
 

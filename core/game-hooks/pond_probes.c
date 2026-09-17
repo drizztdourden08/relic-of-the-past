@@ -1,9 +1,9 @@
 /* @layer core-game-hooks @kind native */
-// Headless probes for the rupee pond's seams (pond_plan.c, pond_toss_draw.c): what a node
-// harness calls after WasmInitHeadless to prove they behave, gate on and gate off; the
-// renderer never calls them. Gated on the REQUESTED developer-tools bit like
-// capacity_probes.c and prize_probes.c, because the gate word only lands in WRAM inside the
-// first frame such a harness runs.
+// Headless probes for the three ponds' seams (pond_plan.c, pond_toss_draw.c and
+// wish_pond_plan.c): what a node harness calls after WasmInitHeadless to prove they behave,
+// gate on and gate off; the renderer never calls them. Gated on the REQUESTED
+// developer-tools bit like capacity_probes.c and prize_probes.c, because the gate word only
+// lands in WRAM inside the first frame such a harness runs.
 //
 // The harness stages the context itself through WRAM (the wallet, the capacity tiers, the
 // throw counter) and reads the same bytes back through WasmProbeWramPtr; the exports here
@@ -11,6 +11,7 @@
 // it runs the whole purchase resolution, message and all, so the harness saves and restores
 // the module bytes around it.
 #include "game_hooks_internal.h"
+#include "src/sprite_main.h"
 
 static bool ProbeGate(void) {
   return (g_wanted_gate_words[0] & kFeatures0_DeveloperTools) != 0;
@@ -118,4 +119,70 @@ int WasmProbePondCostDigits(int vanilla) {
 EMSCRIPTEN_KEEPALIVE
 int WasmProbePondAwardMessage(void) {
   return ProbeGate() ? GameHook_PondAwardMessage() : -2;
+}
+
+// ─── The two item-throwing waters (wish_pond_plan.c, wish_pond_visit.c) ───
+// The harness stages the room itself (player_is_indoors, dungeon_room_index) and reads the
+// counters back through WasmProbeWramPtr, so these only run the seams a visit would run.
+
+// Which water the player is standing in, or -1 outside both.
+EMSCRIPTEN_KEEPALIVE
+int WasmProbeWishPondHere(void) {
+  return ProbeGate() ? GameHook_WishPondHere() : -2;
+}
+
+// The rung the next throw hands over; -1 with no plan open and once the ladder is spent.
+EMSCRIPTEN_KEEPALIVE
+int WasmProbeWishPondRungIndex(void) {
+  return ProbeGate() ? GameHook_WishPondRungIndex() : -2;
+}
+
+// The held-item seam: 1 when a plan owns the water, so the fairy holds nothing up.
+EMSCRIPTEN_KEEPALIVE
+int WasmProbeWishPondHidesHeldItem(int k) {
+  return ProbeGate() ? (GameHook_WishPondHidesHeldItem(k) ? 1 : 0) : -2;
+}
+
+// One tick of the vendored handler for sprite slot |k|, exactly as the sprite loop runs it, and
+// the ai state it leaves behind. The harness stages the room, the sprite and the player and
+// watches the messages, the grants and the inventory across a whole visit, so the seams are
+// proved where they sit and not only where they are called from. It shows messages and moves
+// the module, so the harness restores those bytes around it.
+EMSCRIPTEN_KEEPALIVE
+int WasmProbeWishPondTick(int k) {
+  if (!ProbeGate()) return -2;
+  Sprite_WishPond3(k);
+  return sprite_ai_state[k];
+}
+
+// One tick of the rupee pond's vendored handler for sprite slot |k|, the twin of the wish pond
+// tick above: the harness stages the room and the player and watches a whole purchase.
+EMSCRIPTEN_KEEPALIVE
+int WasmProbePondTick(int k) {
+  if (!ProbeGate()) return -2;
+  Sprite_HappinessPond(k);
+  return sprite_ai_state[k];
+}
+
+// The branch seam: 1 when a plan owns the water and the vendored branch list is skipped.
+EMSCRIPTEN_KEEPALIVE
+int WasmProbeWishPondPlanTakes(void) {
+  return ProbeGate() ? (GameHook_WishPondPlanTakes(0) ? 1 : 0) : -2;
+}
+
+// The demand armed on rung |rung| of pond |pond| (pond_demands.h keys, all three ponds),
+// read-only: (kind << 24) | (native_id << 16) | amount, or 0 when the rung carries none.
+EMSCRIPTEN_KEEPALIVE
+int WasmProbePondDemand(int pond, int rung) {
+  if (!ProbeGate()) return -2;
+  PondDemand demand;
+  if (!GameHook_PondDemand(pond, rung, &demand)) return 0;
+  return (demand.kind << 24) | (demand.native_id << 16) | demand.amount;
+}
+
+// Whether the grant that just crossed was a rung's: what the receive seam reads to tell a
+// planned reward from the item the fairy hands straight back (npc_overrides.c).
+EMSCRIPTEN_KEEPALIVE
+int WasmProbeWishPondRungInFlight(void) {
+  return ProbeGate() ? (GameHook_WishPondRungInFlight() ? 1 : 0) : -2;
 }

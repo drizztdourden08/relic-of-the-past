@@ -15,22 +15,30 @@
  * plan, so a toss announces its real amount instead of a native line that
  * names amounts no plan charges. The award line comes in two, one for a water
  * that still holds a prize and one for the throw that took the last, so a
- * player always knows whether the pond is worth returning to.
+ * player always knows whether the pond is worth returning to. The wish
+ * ponds' two host lines follow (wish-pond-lines.ts), and the lines every
+ * pond speaks for a rung that asks for something close the pool
+ * (pond-demand-messages.ts).
  */
 
 import { RANDOMIZER_RECEIPT_MSG } from '@shared/asset-extraction/text/data/randomizer-templates';
 import { classifyReceiptItem } from '@shared/randomizer/receipt-text/receipt-item-class';
 import { renderReceiptMessage } from '@shared/randomizer/receipt-text/render-receipt-message';
+import { locationDisplayName } from '@shared/randomizer/ap-world/display-names';
 import { capacityRungLinesOf } from '@shared/randomizer/receipt-text/capacity-rung-lines';
 import { capacityFixedLinesOf } from '@shared/randomizer/receipt-text/capacity-fixed-lines';
 import { pondLinesOf } from '@shared/randomizer/receipt-text/pond-lines';
 import { pondPlanOf } from '@shared/randomizer/ap-world/pond/pond-plan';
+import { pondProfilesOfStats } from '@shared/randomizer/ap-world/fill/placement-ponds';
 import { capacityProfileOfStats, capacityProgressiveOfStats } from '@shared/randomizer/ap-world/fill/placement-capacity';
+import { wishPondLinesOf } from './wish-pond-lines';
+import { appendPondDemandLines } from './pond-demand-messages';
 import type { ApPlacement } from '@shared/randomizer/ap-world/fill/ap-placement.type';
 import type { CapacityFamilyId } from '@shared/randomizer/ap-world/capacity';
 import type { ReceiptCountOf } from '@shared/randomizer/receipt-text/receipt-counts';
 import type { ReceiptLine } from '@shared/randomizer/receipt-text/receipt-line.type';
 import type { PhysicalPlan, PlanEntry } from './physical-plan.type';
+import type { PlanPondDemandLines } from './pond-demand-messages';
 
 /** One fixed-jump capacity line: the entry the core selects by the live rung. */
 interface PlanFixedLine {
@@ -55,6 +63,12 @@ interface PlanPondLines {
   closed: number;
 }
 
+/** Where the wish ponds' two host lines landed in the pool; -1 when neither water is planned. */
+interface PlanWishPondLines {
+  award: number;
+  closed: number;
+}
+
 interface PlanReceiptTexts {
   /** The rendered lines, in allocation order. */
   lines: ReceiptLine[];
@@ -68,6 +82,9 @@ interface PlanReceiptTexts {
   fixedLines: PlanFixedLine[];
   /** The pond's price / consolation / closing lines (non-legacy ponds only). */
   pondLines: PlanPondLines;
+  wishPondLines: PlanWishPondLines;
+  /** Each asking rung's ask, refuse and award lines, by the core's (pond, rung) key. */
+  pondDemandLines: PlanPondDemandLines;
 }
 
 /** The empty pond allocation: a legacy pond speaks with its own native lines. */
@@ -81,8 +98,9 @@ const NO_POND_LINES: PlanPondLines = {
  * arming does, so the prices these lines quote are the prices charged.
  */
 const appendPondLines = (placement: ApPlacement, lines: ReceiptLine[]): PlanPondLines => {
-  const setting = placement.stats.pond;
-  if (setting === undefined || setting.mode === 'capacity') return NO_POND_LINES;
+  // The lines the core speaks belong to the one pond it arms, the capacity one.
+  const setting = pondProfilesOfStats(placement.stats).capacity;
+  if (setting.mode === 'capacity') return NO_POND_LINES;
   const { prices, refunds, lines: pondLines } = pondLinesOf(pondPlanOf(setting));
   const base = lines.length;
   lines.push(...pondLines);
@@ -115,7 +133,7 @@ const buildPlanReceiptTexts = (plan: PhysicalPlan, placement: ApPlacement, count
     const line = renderReceiptMessage({
       kind: entry.planClass === 'deliver' ? 'delivered' : 'physical',
       itemName: entry.itemName,
-      locationName: entry.locationName,
+      locationName: locationDisplayName(entry.locationName),
       count: countOf(entry.locationName),
     });
     indexByLocation.set(entry.locationName, lines.length);
@@ -135,8 +153,14 @@ const buildPlanReceiptTexts = (plan: PhysicalPlan, placement: ApPlacement, count
     }
   }
   const pondLines = appendPondLines(placement, lines);
-  return { lines, indexByLocation, fallbackByLocation, rungIndexByFamily, fixedLines, pondLines };
+  const wishLines = wishPondLinesOf(placement);
+  const wishPondLines = wishLines.length === 0 ? { award: -1, closed: -1 } : { award: lines.length, closed: lines.length + 1 };
+  lines.push(...wishLines);
+  const pondDemandLines = appendPondDemandLines(placement, lines);
+  return {
+    lines, indexByLocation, fallbackByLocation, rungIndexByFamily, fixedLines, pondLines, wishPondLines, pondDemandLines,
+  };
 };
 
 export { buildPlanReceiptTexts };
-export type { PlanFixedLine, PlanPondLines, PlanReceiptTexts };
+export type { PlanFixedLine, PlanPondLines, PlanReceiptTexts, PlanWishPondLines };

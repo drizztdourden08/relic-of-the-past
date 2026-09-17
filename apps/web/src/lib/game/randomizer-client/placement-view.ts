@@ -11,6 +11,7 @@
  * silently dropped: a spoiler that omits ten items is worse than one that
  * says it did.
  */
+import { locationDisplayName } from '@shared/randomizer/ap-world/display-names';
 import { checkIdByStandardName } from './check-names';
 import { itemIdByStandardName } from './item-lookup';
 import { virtualCheckIdOf } from './virtual-locations';
@@ -54,7 +55,7 @@ const buildPlacementView = (placement: ApPlacement | null): PlacementView => {
 
     const itemId = itemIdByStandardName(itemName);
     if (itemId === undefined) {
-      view.unmatchedItems.push(`${location}: ${itemName}`);
+      view.unmatchedItems.push(`${locationDisplayName(location)}: ${itemName}`);
       continue;
     }
     view.itemByCheck.set(checkId, itemId);

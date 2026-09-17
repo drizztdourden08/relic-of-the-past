@@ -4,8 +4,13 @@
  * displayable: characters outside the active language's alphabet are mapped
  * to shared equivalents (or dropped), and the text is word-wrapped against
  * the real per-glyph pixel widths into the text box's line commands ([2] and
- * [3] for rows two and three, [Scroll] for every row past the visible three,
- * the engine renders variable-width glyphs and never wraps on its own).
+ * [3] for rows two and three, [Waitkey][Scroll] for every row past the visible
+ * three, the engine renders variable-width glyphs and never wraps on its own).
+ *
+ * A row past the third scrolls the top row off the box, and the engine never
+ * waits on its own, so each of those breaks carries a [Waitkey] first. Without
+ * it a long line pushes its own opening away before it can be read, which is
+ * what the game's own long lines pause for.
  */
 
 /**
@@ -21,6 +26,7 @@ const FALLBACK_WIDTH_PX = 8;
 
 const LINE_COMMANDS = ['', '[2]', '[3]'];
 const SCROLL_COMMAND = '[Scroll]';
+const WAIT_COMMAND = '[Waitkey]';
 
 /** Substitutions for characters most alphabets lack but can approximate. */
 const REPLACEMENTS: ReadonlyMap<string, string> = new Map([
@@ -78,12 +84,16 @@ const wrapRows = (text: string, alphabet: readonly string[], widths: Uint8Array)
 /** Word-wrap sanitized |text| into box rows and join with the line commands. */
 const wrapMessageText = (text: string, alphabet: readonly string[], widths: Uint8Array): string =>
   wrapRows(text, alphabet, widths)
-    .map((line, i) => `${i < LINE_COMMANDS.length ? LINE_COMMANDS[i] : SCROLL_COMMAND}${line}`)
+    .map((line, i) => `${i < LINE_COMMANDS.length ? LINE_COMMANDS[i] : `${WAIT_COMMAND}${SCROLL_COMMAND}`}${line}`)
     .join('');
+
+/** True when sanitized |text| wraps into at most |rows| rows. */
+const fitsRows = (text: string, rows: number, alphabet: readonly string[], widths: Uint8Array): boolean =>
+  wrapRows(text, alphabet, widths).length <= rows;
 
 /** True when sanitized |text| shows without scrolling: at most the visible rows. */
 const fitsVisibleRows = (text: string, alphabet: readonly string[], widths: Uint8Array): boolean =>
-  wrapRows(text, alphabet, widths).length <= VISIBLE_ROWS;
+  fitsRows(text, VISIBLE_ROWS, alphabet, widths);
 
 /**
  * The fullest of |candidates| (already sanitized, fullest first) that fits
@@ -92,4 +102,4 @@ const fitsVisibleRows = (text: string, alphabet: readonly string[], widths: Uint
 const fitReceiptLine = (candidates: readonly string[], alphabet: readonly string[], widths: Uint8Array): string =>
   candidates.find((candidate) => fitsVisibleRows(candidate, alphabet, widths)) ?? candidates[candidates.length - 1];
 
-export { VISIBLE_ROWS, fitReceiptLine, fitsVisibleRows, sanitizeForAlphabet, wrapMessageText, wrapRows };
+export { VISIBLE_ROWS, fitReceiptLine, fitsRows, fitsVisibleRows, sanitizeForAlphabet, wrapMessageText, wrapRows };

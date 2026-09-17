@@ -9,6 +9,12 @@
  *
  * Also pins that each prize slot holds its dungeon's vanilla prize, so the
  * spoiler, the pool listing, the tracker and the logic agree with the game.
+ *
+ * And the same guard over the rename a stored placement is read through: a
+ * location name lives in four maps, and rewriting only two of them once left
+ * every pond rung of a live seed with no demand, so the fairy asked for
+ * nothing and handed her prizes over free. A missing demand reads as no
+ * demand, which is why nothing failed loudly.
  */
 import { describe, expect, it } from 'vitest';
 import { generateApPlacement } from '@shared/randomizer/ap-world/fill/generate-ap';
@@ -18,6 +24,11 @@ import { VANILLA_PRIZES } from '@shared/randomizer/ap-world/vanilla-prizes.data'
 import { isShopSlotLocation } from '@shared/randomizer/ap-world/shops/shop-slots';
 import { STANDARD_SHOP_SLOT_COUNT } from '@shared/randomizer/ap-world/shops/shops.data';
 import { SHOP_MODE_KEY, SHOP_SLOT_ROWS } from '@shared/randomizer/ap-world/shops/shop-slot-options.data';
+import { renamePondLocations } from '@app/lib/randomizer-placement-names';
+import { POND_CERTIFIED_SPOTS } from '@shared/randomizer/ap-world/pond/pond-spots';
+import { POND_INSTANCES } from '@shared/randomizer/ap-world/pond/pond-instances.data';
+import { POND_RUNGS_BY_ID } from '@shared/randomizer/ap-world/pond/pond-locations.data';
+import type { ApPlacement } from '@shared/randomizer/ap-world/fill/ap-placement.type';
 import type { ApOptionValue } from '@shared/randomizer/ap-world/options.type';
 
 // The bridge chain pulls in log-bus, which wires window handlers at import
@@ -112,5 +123,59 @@ describe('physical plan covers every generated location', () => {
       expect(placement.nameView[location]).toBe(prize);
       expect(byLocation.get(location)?.planClass).toBe('vanilla-locked');
     }
+  });
+});
+
+const NO_LOCATIONS: ReadonlySet<string> = new Set();
+
+describe('a placement stored under the old pond names', () => {
+  /** The stems the rungs were numbered under before the fairies were named. */
+  const SHIPPED_STEMS: Readonly<Record<string, string>> = {
+    capacity: 'Capacity Upgrade Pond', wishing: 'Wishing Pond', cursed: 'Cursed Pond',
+  };
+
+  /** Today's rung name back under the stem a frozen seed on disk carries. */
+  const asShipped = (location: string): string => {
+    for (const pond of POND_INSTANCES) {
+      const rung = POND_RUNGS_BY_ID[pond.id].indexOf(location);
+      if (rung !== -1) return `${SHIPPED_STEMS[pond.id]} ${rung + 1}`;
+    }
+    return location;
+  };
+
+  const keyedBack = <T>(view: Readonly<Record<string, T>>): Record<string, T> =>
+    Object.fromEntries(Object.entries(view).map(([location, value]) => [asShipped(location), value]));
+
+  const stored = (placement: ApPlacement): ApPlacement => ({
+    ...placement,
+    nameView: keyedBack(placement.nameView),
+    pondDemands: placement.pondDemands === undefined ? undefined : keyedBack(placement.pondDemands),
+    spheres: placement.spheres.map((sphere) => ({ ...sphere, locations: sphere.locations.map(asShipped) })),
+  });
+
+  // The pond's seam has to be certified, or it contributes no location at all
+  // and the rungs this guard is about never exist.
+  const pondSeed = (): ApPlacement => generateApPlacement('pond-demands', buildOptionsSnapshot({
+    pond_capacity_mode: 'custom', pond_capacity_items: 4, pond_capacity_throws: 6,
+    pond_capacity_ask_rupees_min: '25', pond_capacity_ask_rupees_max: '300',
+    pond_capacity_ask_bombs: true, pond_capacity_ask_bombs_min: 5, pond_capacity_ask_bombs_max: 10,
+    // Only this pond's seam is certified here, so the two wish ponds stay out.
+    pond_wishing_mode: 'capacity', pond_cursed_mode: 'capacity',
+  }), NO_LOCATIONS, new Set(POND_CERTIFIED_SPOTS), NO_LOCATIONS);
+
+  it('reads back byte-identical, demands included', () => {
+    expect(POND_RUNGS_BY_ID.capacity.filter((rung) => pondSeed().nameView[rung] !== undefined)).toHaveLength(4);
+    const fresh = pondSeed();
+    expect(Object.keys(fresh.pondDemands ?? {}).length).toBeGreaterThan(0);
+    expect(renamePondLocations(stored(fresh))).toEqual(fresh);
+  });
+
+  it('leaves no rung holding an item with its demand lost behind an old name', () => {
+    const migrated = renamePondLocations(stored(pondSeed()));
+    const placed = new Set(Object.keys(migrated.nameView));
+    const rungs = new Set(POND_INSTANCES.flatMap((pond) => POND_RUNGS_BY_ID[pond.id]));
+    const orphaned = Object.keys(migrated.pondDemands ?? {})
+      .filter((location) => !rungs.has(location) || !placed.has(location));
+    expect(orphaned).toEqual([]);
   });
 });

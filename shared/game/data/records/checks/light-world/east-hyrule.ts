@@ -34,19 +34,25 @@ const LW_EAST_HYRULE_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-021',
-    gameId: { roomId: 276, chestIndex: 0 },
-    kind: 'chest',
+    gameId: {
+      bufferIndex: 22, mask: 8, flagType: 2, flagMask: 0, itemId: 42, spriteType: 114, postGfx: 0, room: 276,
+    },
+    kind: 'npc',
     screenId: 'screen-218',
     randomizerName: 'Waterfall Fairy - Left',
     vanillaItemIds: ['item-043'],
+    sourceFunc: 'Sprite_WishPond3',
   },
   {
     id: 'check-022',
-    gameId: { roomId: 276, chestIndex: 1 },
-    kind: 'chest',
+    gameId: {
+      bufferIndex: 22, mask: 16, flagType: 2, flagMask: 0, itemId: 5, spriteType: 114, postGfx: 0, room: 276,
+    },
+    kind: 'npc',
     screenId: 'screen-218',
     randomizerName: 'Waterfall Fairy - Right',
     vanillaItemIds: ['item-006'],
+    sourceFunc: 'Sprite_WishPond3',
   },
   {
     id: 'check-023',

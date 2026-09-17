@@ -36,6 +36,7 @@ import {
   CHOICE_FIELDS, NUMERIC_FIELDS, PLAIN_FIELD_BY_KEY, snapshotOfChoices,
 } from '../../../../../../../hooks/randomizer/randomizer-choices';
 import { usePoolImpacts } from '../../../../../../../hooks/randomizer/usePoolImpacts';
+import { usePondDemands } from '../../../../../../../hooks/randomizer/usePondDemands';
 import { usePoolListing } from '../../../../../../../hooks/randomizer/usePoolListing';
 import { usePoolTotals } from '../../../../../../../hooks/randomizer/usePoolTotals';
 import { FIRST_OPTION_TAB, optionTabsOf } from './randomizer-options/option-tabs';
@@ -43,7 +44,7 @@ import { OptionTabBody } from './randomizer-options/OptionTabBody';
 import type { OptionTabId } from '../../../../../../../hooks/randomizer/option-tab-model';
 import type { ApOptionDef, ApOptionValue } from '@shared/randomizer/ap-world/options.type';
 import { pondSettingForMode } from '@shared/randomizer/ap-world/pond/pond-mode-switch';
-import { POND_MODE_KEY } from '@shared/randomizer/ap-world/pond/pond-option-keys';
+import { pondIdOfModeKey } from '@shared/randomizer/ap-world/pond/pond-option-keys';
 import { withCapacityPondRule } from '../../../../../../../hooks/randomizer/capacity-pond-choices';
 import type { RandomizerOptionChoices } from '../../../../../../../hooks/randomizer/randomizer-choices';
 import type { PondMode } from '@shared/randomizer/ap-world/pond/pond-profile.type';
@@ -52,6 +53,8 @@ import './RandomizerOptionsPanel.css';
 interface RandomizerOptionsPanelProps {
   /** The ROM the profile is being created for; its extracted sprite set illustrates the pool. */
   romFile: string;
+  /** The seed this profile will be generated with; every seeded preview reads it. */
+  seed: string;
   value: RandomizerOptionChoices;
   onChange: (next: RandomizerOptionChoices) => void;
 }
@@ -71,20 +74,21 @@ const CAPTION = 'The settings, by subject. A number on a tab counts the rows ins
 const valueFor = (
   option: ApOptionDef, chosen: RandomizerOptionChoices, values: Readonly<Record<string, ApOptionValue>>,
 ): ApOptionValue => {
-  if (option.key === CAPACITY_ENABLED_KEY || option.key === POND_MODE_KEY) return values[option.key];
+  if (option.key === CAPACITY_ENABLED_KEY || pondIdOfModeKey(option.key) !== undefined) return values[option.key];
   const field = PLAIN_FIELD_BY_KEY[option.key];
   return field === undefined ? option.baseline : chosen[field];
 };
 
 const RandomizerOptionsPanel = (props: RandomizerOptionsPanelProps) => {
-  const { romFile, value, onChange } = props;
+  const { romFile, seed, value, onChange } = props;
   const { unlockedGroups, lockedGroups } = apCatalogByLock;
   const [tab, setTab] = useState<OptionTabId>(FIRST_OPTION_TAB);
 
   const snapshot = useMemo(() => snapshotOfChoices(value), [value]);
-  const { accounting, error, cellOf } = usePoolImpacts(snapshot);
+  const { accounting, error, cellOf } = usePoolImpacts(snapshot, seed);
   const notes = useMemo(() => parseCapacityProfile(snapshot.values).notes, [snapshot]);
-  const listing = usePoolListing(snapshot, romFile || null);
+  const listing = usePoolListing(snapshot, romFile || null, seed);
+  const pondDemands = usePondDemands(snapshot, seed);
   const totals = usePoolTotals(accounting);
 
   const groups = useMemo(() => splitUnlockedGroups(unlockedGroups), [unlockedGroups]);
@@ -93,9 +97,13 @@ const RandomizerOptionsPanel = (props: RandomizerOptionsPanelProps) => {
   const valueOf = (option: ApOptionDef): ApOptionValue => valueFor(option, value, snapshot.values);
 
   const handleRowChange = (key: string, next: ApOptionValue): void => {
-    if (key === POND_MODE_KEY) {
-      const pond = pondSettingForMode(String(next) as PondMode, value.pond);
-      onChange(withCapacityPondRule({ ...value, pond }, 'pond'));
+    const pondId = pondIdOfModeKey(key);
+    if (pondId !== undefined) {
+      const pond = pondSettingForMode(String(next) as PondMode, value.ponds[pondId]);
+      const ponds = { ...value.ponds, [pondId]: pond };
+      // Only the capacity pond is bound to the capacity families, so only its
+      // move asks the rule to settle the pair; the other two stand alone.
+      onChange(pondId === 'capacity' ? withCapacityPondRule({ ...value, ponds }, 'pond') : { ...value, ponds });
       return;
     }
     const field = PLAIN_FIELD_BY_KEY[key];
@@ -126,6 +134,8 @@ const RandomizerOptionsPanel = (props: RandomizerOptionsPanelProps) => {
           valueOf={valueOf}
           cellOf={cellOf}
           choices={value}
+          seed={seed}
+          pondDemands={pondDemands}
           notes={notes}
           fillerHeadroom={accounting?.filler ?? null}
           onRowChange={handleRowChange}

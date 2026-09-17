@@ -12,7 +12,7 @@ import { generateFromSnapshot } from '@shared/randomizer/generate';
 import { buildOptionsSnapshot } from '@shared/randomizer/options-snapshot';
 import type { ApPlacement } from '@shared/randomizer/ap-world/fill/ap-placement.type';
 import {
-  probeDeliverableCapacityLocations, probeDeliverableNpcLocations,
+  probeDeliverablePondLocations, probeDeliverableNpcLocations,
   startLocalFromPlacement, stopActive,
 } from '../../../../../../lib/game/randomizer-client';
 import type { ActiveSession } from '../../../../../../lib/game/randomizer-client';
@@ -43,7 +43,7 @@ const RandomizerSandbox = (props: RandomizerSandboxProps) => {
       // Baseline options: the same defaults profile creation freezes, with the
       // same physical-capability sets steering the npc scope and capacity slots.
       const result = generateFromSnapshot(effectiveSeed, buildOptionsSnapshot(),
-        probeDeliverableNpcLocations(), probeDeliverableCapacityLocations());
+        probeDeliverableNpcLocations(), probeDeliverablePondLocations());
       sandboxPlacement = result;
       sandboxSeed = effectiveSeed;
       setPlacementState(result);

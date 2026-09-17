@@ -126,6 +126,11 @@ const rollBottle = (contents: readonly ShopBottleContent[], rng: Rng): ShopPrice
 /**
  * One price per opened shelf. Every enabled currency is equally likely; a
  * bottle price counts as one more option alongside the counted ones.
+ *
+ * The item currency is not drawn here and cannot be. A shelf price comes from
+ * the counted rows or the bottle row, the plan carries no item row for a shelf
+ * to opt into, and CURRENCY_ROWS is typed to the counted four, so adding one
+ * would be a compile error and not a quiet new outcome.
  */
 const rollShopPrices = (
   slots: readonly ShopSlotLocation[], plan: ShopPricePlan, rng: Rng,

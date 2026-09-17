@@ -21,7 +21,8 @@ import type { CapacityProfile } from './capacity/capacity-profile.type';
 import type { DarkRoomSetting } from './dark-rooms/dark-room.type';
 import type { DifficultySetting } from './difficulty/difficulty.type';
 import type { ItemPowerSetting } from './item-power/item-power.type';
-import type { PondSetting } from './pond/pond-profile.type';
+import type { PondDemandView } from './pond/pond-ask.type';
+import type { PondProfiles } from './pond/pond-profiles.type';
 import type { ProgressiveModeSetting, ProgressiveSetting } from './progressive/progressive.type';
 import type { RetroBowSetting } from './retro/retro.type';
 import type { ShopScope } from './shops/shop-scope.type';
@@ -74,17 +75,35 @@ interface ApWorldOptions {
    */
   shopPrices?: ShopPriceView;
   /**
-   * What the rupee pond sells (pond/). Absent means the legacy pond: its two
-   * slots answer to the capacity families alone, exactly as before the option
-   * existed, and no further prize slot is a location.
+   * What each of the three ponds sells (pond/). Absent means every pond
+   * legacy: their slots answer to their vanilla grants alone, exactly as
+   * before the option existed, and no further prize slot is a location.
    */
-  pond?: PondSetting;
+  ponds?: PondProfiles;
   /**
    * The pond prize slots that exist in THIS world, in prize order. Absent
    * keeps the legacy derivation (the capacity families' present spots), so
    * every caller that predates the pond builds the same world it always did.
    */
   pondLocations?: readonly string[];
+  /**
+   * The wish ponds' own vanilla slots that are not locations in THIS world,
+   * because their pond closes after its rungs (pond/pond-vanilla-slots.ts).
+   * Absent closes nothing, the world every earlier placement was built on.
+   */
+  closedPondSlots?: readonly string[];
+  /**
+   * The wish ponds' vanilla slots locked at Vanilla grants, each to the item her
+   * upgrade produces there, which leaves the pool (pool/pond-grant-subtraction.ts).
+   * Absent locks nothing this way.
+   */
+  lockedPondGrants?: ReadonlyMap<string, string>;
+  /**
+   * What each pond rung demands, rolled once from the seed (pond/). Absent
+   * means nothing was rolled: every rung keeps the wallet reading of its own
+   * price, which is the only thing a pond ever asked for before.
+   */
+  pondDemands?: PondDemandView;
   /**
    * What an unlit room asks for (dark-rooms/). Absent means the reference
    * reading (light required, the lamp alone providing it) which every

@@ -52,8 +52,13 @@ interface PoolAccounting {
 const planItemsOf = (fillWorld: FillWorld): ReadonlySet<string> =>
   new Set(Object.values(capacityPlansOf(fillWorld.capacity, fillWorld.capacityProgressive)).flatMap((plan) => plan.items));
 
-const accountingOf = (snapshot: RandomizerOptionsSnapshot, deliverable: DeliverableSets): PoolAccounting => {
-  const fillWorld = buildFillWorld(fillOptionsFromSnapshot(snapshot, deliverable, { pickWeapon: firstChoice }));
+/** |seed| is the profile's own, which the random shop mode draws its shelves from. */
+const accountingOf = (
+  snapshot: RandomizerOptionsSnapshot, deliverable: DeliverableSets, seed = '',
+): PoolAccounting => {
+  const fillWorld = buildFillWorld(
+    fillOptionsFromSnapshot(snapshot, deliverable, { pickWeapon: firstChoice }, seed),
+  );
   const { world, pool } = fillWorld;
   const dungeon = [...pool.dungeonItems.values()].reduce((sum, items) => sum + items.length, 0);
   const allLocations = [...world.locationsByName.values()];

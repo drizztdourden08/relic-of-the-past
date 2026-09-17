@@ -37,7 +37,12 @@ import {
 } from './capacity-session';
 import { armPondSession, disarmPondSession, pondSessionOf } from './pond-session';
 import { armItemBehavior, disarmItemBehavior, itemBehaviorOf } from './item-behavior-session';
-import { armFireReporting, disarmFireReporting } from './override-fire-registry';
+import { allocateFireId, armFireReporting, disarmFireReporting } from './override-fire-registry';
+import { armWishPondSession } from './wish-pond-session';
+import { resolveLocalItemId } from './item-lookup';
+import { armPondDemandSession } from './pond-demand-session';
+import { pondDemandSessionOf } from './pond-demand-rows';
+import { wishPondSessionOf } from './wish-pond-rungs';
 import { startLocationPolling, stopLocationPolling } from './location-poller';
 import type { ApPlacement } from '@shared/randomizer/ap-world/fill/ap-placement.type';
 import type { MessageIdOf } from './apply-overrides';
@@ -154,6 +159,11 @@ const createLocalSession = (placement: ApPlacement): LocalSession => {
       armPondSession(pondSessionOf(placement, receiptTexts.pondMessages), '[Local]');
       armFireReporting(session);
       applyOverrides(plan, messageIdOf, '[Local]');
+      // Both wish ponds after the overrides: a native-economy water pays through their npc entries.
+      armWishPondSession(wishPondSessionOf(placement, plan, { messageIdOf, fireIdOf: allocateFireId, lines: receiptTexts.wishPondMessages }), '[Local]');
+      armPondDemandSession(
+        pondDemandSessionOf(placement, resolveLocalItemId, receiptTexts.pondDemandMessagesOf), '[Local]',
+      );
       startLocationPolling(session, pollEntriesOf(plan, '[Local]'));
       log.randomizer(`[Local] Session armed: ${plan.counts.override} chest + ${plan.counts.overrideNpc} npc `
         + `+ ${plan.counts.overrideDrop} drop + ${plan.counts.overrideStanding} standing overrides applied, `

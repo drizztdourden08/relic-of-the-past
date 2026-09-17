@@ -5,9 +5,10 @@
  * rules and the running game all read the same number, since a price is part of
  * the seed, never re-derived later.
  *
- * Four counted currencies carry an amount; a bottle price carries a content
- * instead and no amount at all, because the shelf demands one bottle of that
- * thing, not a quantity of it.
+ * Four counted currencies carry an amount; a bottle price carries a content,
+ * and a count only where the room asking for it counts bottles, which the
+ * ponds do and the shelves do not. An item price carries a name and no amount
+ * at all, because what it asks for is one item, held up and handed back.
  */
 
 type ShopCountedCurrency = 'rupees' | 'arrows' | 'bombs' | 'hearts';
@@ -15,7 +16,7 @@ type ShopCountedCurrency = 'rupees' | 'arrows' | 'bombs' | 'hearts';
 /** The bottle contents a shelf may demand as its price. */
 type ShopBottleContent = 'fairy' | 'bee' | 'red-potion' | 'blue-potion' | 'green-potion';
 
-type ShopCurrency = ShopCountedCurrency | 'bottle';
+type ShopCurrency = ShopCountedCurrency | 'bottle' | 'item';
 
 interface ShopCountedPrice {
   currency: ShopCountedCurrency;
@@ -26,9 +27,26 @@ interface ShopCountedPrice {
 interface ShopBottlePrice {
   currency: 'bottle';
   content: ShopBottleContent;
+  /**
+   * How many bottles of it, for a demand that counts them (pond/). A shelf
+   * charges one bottle and writes no amount, and so did every pond demand
+   * frozen before the count existed, so an absent amount is one bottle.
+   */
+  amount?: number;
 }
 
-type ShopPrice = ShopCountedPrice | ShopBottlePrice;
+/**
+ * A price paid by SHOWING: the holder names one pool item, the player has to
+ * be holding it, and it goes straight back into the pack. Every other currency
+ * is spent, so this one carries no amount and takes nothing away.
+ */
+interface ShopItemPrice {
+  currency: 'item';
+  /** The pool item this price names. Always a real item; never blank. */
+  itemName: string;
+}
+
+type ShopPrice = ShopCountedPrice | ShopBottlePrice | ShopItemPrice;
 
 /** One counted currency's opt-in and the range a roll is drawn from. */
 interface ShopCurrencySetting {
@@ -62,5 +80,6 @@ type ShopPriceView = Readonly<Record<string, ShopPrice>>;
 
 export type {
   ShopBottleContent, ShopBottlePrice, ShopCountedCurrency, ShopCountedPrice,
-  ShopCurrency, ShopCurrencySetting, ShopPrice, ShopPricePlan, ShopPriceView,
+  ShopCurrency, ShopCurrencySetting, ShopItemPrice, ShopPrice, ShopPricePlan,
+  ShopPriceView,
 };

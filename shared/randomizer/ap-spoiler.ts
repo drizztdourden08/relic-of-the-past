@@ -2,10 +2,13 @@
 /**
  * Renders an ApPlacement's spoiler as readable text: the seed line, the two
  * rolled medallions, then the verification sweep's spheres with each
- * location's assigned item looked up in the name view. Names are already the
- * community-standard strings, so no resolver is needed, and the legacy
- * Placement shape keeps its own renderer in spoiler.ts.
+ * location's assigned item looked up in the name view. Item names are already
+ * the community-standard strings, so no resolver is needed; a location name
+ * goes through the display lookup, so a pond slot reads as the fairy and the
+ * number a player sees everywhere else. The legacy Placement shape keeps its
+ * own renderer in spoiler.ts.
  */
+import { locationDisplayName } from './ap-world/display-names';
 import type { ApPlacement } from './ap-world/fill/ap-placement.type';
 
 const renderApSpoilerText = (placement: ApPlacement): string => {
@@ -18,7 +21,7 @@ const renderApSpoilerText = (placement: ApPlacement): string => {
   for (const sphere of spheres) {
     lines.push('', `sphere ${sphere.index}:`);
     for (const location of sphere.locations) {
-      lines.push(`  ${location}: ${nameView[location] ?? '(nothing)'}`);
+      lines.push(`  ${locationDisplayName(location)}: ${nameView[location] ?? '(nothing)'}`);
     }
   }
   return lines.join('\n');

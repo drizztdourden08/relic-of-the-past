@@ -25,7 +25,7 @@ const OPTION_TAB_LABELS: Readonly<Record<OptionTabId, string>> = {
   shops: 'Shops',
   dungeon: 'Dungeon',
   capacity: 'Capacity upgrades',
-  pond: 'Wishing pond',
+  pond: 'Fairy ponds',
   environmental: 'Environmental',
   entrance: 'Entrance',
   enemies: 'Enemies',

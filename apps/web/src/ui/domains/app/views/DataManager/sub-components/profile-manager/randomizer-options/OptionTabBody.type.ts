@@ -5,6 +5,7 @@ import type {
 } from '@app/hooks/randomizer/option-tab-model';
 import type { RandomizerOptionChoices } from '@app/hooks/randomizer/randomizer-choices';
 import type { ApOptionDef, ApOptionValue } from '@shared/randomizer/ap-world/options.type';
+import type { PondDemandView } from '@shared/randomizer/ap-world/pond/pond-ask.type';
 
 interface OptionTabBodyProps {
   tab: OptionTabId;
@@ -17,6 +18,10 @@ interface OptionTabBodyProps {
   valueOf: (option: ApOptionDef) => ApOptionValue;
   cellOf: (key: string) => ImpactCell;
   choices: RandomizerOptionChoices;
+  /** The seed this profile will be generated with; the previews are read from it. */
+  seed: string;
+  /** What that seed's ponds ask for at each rung. */
+  pondDemands: PondDemandView;
   /** Every fallback the capacity reader applied. */
   notes: readonly string[];
   /** Filler still in the pool; null when the pool could not be built. */

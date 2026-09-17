@@ -5,13 +5,20 @@
  * mode). Names are the AP originals, since this is transcribed game data.
  */
 import { CAPACITY_SPOT_LOCATIONS } from './capacity/capacity-spots.data';
-import { POND_PRIZE_LOCATIONS } from './pond/pond-locations.data';
+import { POND_RUNGS_BY_ID } from './pond/pond-locations.data';
 import type { ApRegionDef } from './region.type';
 
 const CAVE_REGIONS: readonly ApRegionDef[] = [
   { name: 'Blinds Hideout', type: 'cave', locations: ['Blind\'s Hideout - Top', 'Blind\'s Hideout - Left', 'Blind\'s Hideout - Right', 'Blind\'s Hideout - Far Left', 'Blind\'s Hideout - Far Right'], exits: [] },
   { name: 'Hyrule Castle Secret Entrance', type: 'cave', locations: ['Link\'s Uncle', 'Secret Passage'], exits: ['Hyrule Castle Secret Entrance Exit'] },
-  { name: 'Waterfall of Wishing', type: 'cave', locations: ['Waterfall Fairy - Left', 'Waterfall Fairy - Right'], exits: [] },
+  {
+    name: 'Waterfall of Wishing',
+    type: 'cave',
+    // The two fairy slots are the water's own, and are there in every mode; the numbered
+    // rungs exist only while a plan carries that many (pond/pond-spots.ts).
+    locations: ['Waterfall Fairy - Left', 'Waterfall Fairy - Right', ...POND_RUNGS_BY_ID.wishing],
+    exits: [],
+  },
   { name: 'Kings Grave', type: 'cave', locations: ['King\'s Tomb'], exits: [] },
   { name: 'North Fairy Cave', type: 'cave', locations: [], exits: ['North Fairy Cave Exit'] },
   { name: 'Dam', type: 'cave', locations: ['Floodgate', 'Floodgate Chest'], exits: [] },
@@ -69,7 +76,7 @@ const CAVE_REGIONS: readonly ApRegionDef[] = [
     type: 'cave',
     // The two fairy slots are the legacy pond's own locations; the numbered prize
     // rungs exist only while a non-legacy pond mode carries that many (pond/pond-spots.ts).
-    locations: ['Capacity Upgrade Shop', ...CAPACITY_SPOT_LOCATIONS, ...POND_PRIZE_LOCATIONS],
+    locations: ['Capacity Upgrade Shop', ...CAPACITY_SPOT_LOCATIONS, ...POND_RUNGS_BY_ID.capacity],
     exits: [],
   },
   { name: 'Two Brothers House', type: 'cave', locations: [], exits: ['Two Brothers House Exit (East)', 'Two Brothers House Exit (West)'] },
@@ -105,7 +112,13 @@ const CAVE_REGIONS: readonly ApRegionDef[] = [
   { name: 'Dark World Lumberjack Shop', type: 'cave', locations: [], exits: [] },
   { name: 'Dark World Potion Shop', type: 'cave', locations: [], exits: [] },
   { name: 'Dark World Hammer Peg Cave', type: 'cave', locations: ['Peg Cave'], exits: [] },
-  { name: 'Pyramid Fairy', type: 'cave', locations: ['Pyramid Fairy - Left', 'Pyramid Fairy - Right'], exits: [] },
+  {
+    name: 'Pyramid Fairy',
+    type: 'cave',
+    // Same shape as the waterfall above: the pair always, the rungs only under a plan.
+    locations: ['Pyramid Fairy - Left', 'Pyramid Fairy - Right', ...POND_RUNGS_BY_ID.cursed],
+    exits: [],
+  },
   { name: 'Brewery', type: 'cave', locations: ['Brewery'], exits: [] },
   { name: 'C-Shaped House', type: 'cave', locations: ['C-Shaped House'], exits: [] },
   { name: 'Chest Game', type: 'cave', locations: ['Chest Game'], exits: [] },

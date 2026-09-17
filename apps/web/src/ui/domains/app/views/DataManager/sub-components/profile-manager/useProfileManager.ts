@@ -6,7 +6,9 @@ import type { GameSettings } from '@shared/types/settings';
 import { readConfig } from '../../../../../../../lib/storage/profile-store';
 import { listLanguages } from '../../../../../../../lib/storage/languages-store';
 import { listMsuPacks } from '../../../../../../../lib/storage/msu-store';
-import { buildRandomizerConfig, EMPTY_RANDOMIZER_FORM, type RandomizerFormState } from './build-randomizer-config';
+import {
+  buildRandomizerConfig, freshRandomizerForm, randomizerFormError, type RandomizerFormState,
+} from './build-randomizer-config';
 import { applyProfilePreset, type ProfilePresetId } from './profile-presets';
 
 interface UseProfileManagerParams {
@@ -23,7 +25,9 @@ const useProfileManager = ({ profiles, romStatuses, onCreateProfile, onRefresh }
   const [formRom, setFormRom] = useState('');
   const [formLang, setFormLang] = useState('');
   const [formMsu, setFormMsu] = useState('');
-  const [formRandomizer, setFormRandomizer] = useState<RandomizerFormState>(EMPTY_RANDOMIZER_FORM);
+  // A seed is thrown as the form opens, and again after each create, so the
+  // panel's seeded previews always have one to read.
+  const [formRandomizer, setFormRandomizer] = useState<RandomizerFormState>(freshRandomizerForm);
   const [formPreset, setFormPreset] = useState<ProfilePresetId>('enhanced');
   const [formConfigOverrides, setFormConfigOverrides] = useState<Partial<GameSettings>>(applyProfilePreset('enhanced'));
   const [formError, setFormError] = useState<string | null>(null);
@@ -46,6 +50,11 @@ const useProfileManager = ({ profiles, romStatuses, onCreateProfile, onRefresh }
 
   const handleCreate = useCallback(async () => {
     if (!formName.trim() || !formRom) return;
+    const invalid = randomizerFormError(formRandomizer);
+    if (invalid !== undefined) {
+      setFormError(invalid);
+      return;
+    }
     setFormError(null);
     const result = await onCreateProfile({
       name: formName.trim(),
@@ -64,7 +73,7 @@ const useProfileManager = ({ profiles, romStatuses, onCreateProfile, onRefresh }
     setFormRom('');
     setFormLang('');
     setFormMsu('');
-    setFormRandomizer(EMPTY_RANDOMIZER_FORM);
+    setFormRandomizer(freshRandomizerForm());
     setFormPreset('enhanced');
     setFormConfigOverrides(applyProfilePreset('enhanced'));
     onRefresh();
@@ -95,6 +104,7 @@ const useProfileManager = ({ profiles, romStatuses, onCreateProfile, onRefresh }
     readyRoms,
     selectedProfile,
     handleCreate,
+    formInvalid: randomizerFormError(formRandomizer) !== undefined,
     handleKeyDown,
     handlePickPreset,
   };

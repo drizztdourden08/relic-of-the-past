@@ -5,18 +5,18 @@
    that is off dims as a whole, so the section reads at a glance as "these are
    in play". */
 
-.shop-price-row--off {
+.currency-price-row--off {
   opacity: var(--opacity-muted);
 }
 
 /* A row a rule elsewhere took away: the marker on the left says the greying
    came from another setting, and the line in the control's place says which.
    It reads as a refusal, not a caution, so it takes the danger colour. */
-.shop-price-row[data-blocked] {
+.currency-price-row[data-blocked] {
   border-left: var(--border-width-thick) solid var(--c-danger);
 }
 
-.shop-price-row__note {
+.currency-price-row__note {
   color: var(--c-danger);
   font-size: var(--text-xs);
   line-height: var(--leading-tight);
@@ -24,10 +24,18 @@
 
 /* The bottle contents wrap on one line beside their tick; a content carrying
    its own note takes a line of its own. */
-.shop-price-row__contents {
+.currency-price-row__contents {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-sm);
   min-width: 0;
+}
+
+/* A row carrying BOTH a range and its contents keeps the range beside the
+   tick and drops the contents onto a line of their own across the whole row,
+   indented to the control track so they read as belonging to it. */
+.currency-price-row__contents--below {
+  grid-column: 1 / -1;
+  padding-left: var(--space-md);
 }

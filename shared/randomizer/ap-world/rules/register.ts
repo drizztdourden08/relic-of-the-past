@@ -33,6 +33,7 @@ import { KEY_DROP_LOCATIONS } from '../special-locations.data';
 import { isShopSlotLocation } from '../shops/shop-slots';
 import { registerBunnyRules } from './bunny';
 import { registerPriceRules } from './prices';
+import { registerPondDemandRules } from './pond-demands';
 import { always, never } from './combinators';
 import type { ApWorld, Rule } from '../world.type';
 import type { RuleEntry } from './rule-entry.type';
@@ -158,6 +159,9 @@ const registerRules = (world: ApWorld): RuleCoverageReport => {
     ),
   );
   registerPriceRules(world);
+  // The demands a pond rolled sit on top of the wallet overlay, because a rung
+  // is a ladder and the whole climb has to be payable, not only its own throw.
+  registerPondDemandRules(world);
   return {
     ruledExits: exits.ruled,
     openExits: exits.open,

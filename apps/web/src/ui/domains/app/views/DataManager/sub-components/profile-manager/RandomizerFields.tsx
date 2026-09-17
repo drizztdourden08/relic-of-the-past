@@ -2,6 +2,10 @@
 /**
  * Randomizer section of the profile-creation form: enable toggle, then seed +
  * mode, and the server fields when the online mode is picked.
+ *
+ * The seed arrives already thrown (build-randomizer-config.ts) so the options
+ * panel can preview what it rolls. Typing over it is the point; emptying it is
+ * refused, because there is then nothing to preview from.
  */
 import { Text } from '../../../../../../design-system/primitives/Text';
 import { Toggle } from '../../../../../../design-system/primitives/Toggle';
@@ -36,7 +40,7 @@ const RandomizerFields = (props: RandomizerFieldsProps) => {
           <Field label="Seed">
             <TextInput
               type="text"
-              placeholder="blank = random"
+              placeholder="a seed is required"
               value={value.seed}
               onChange={(e) => patch({ seed: e.target.value })}
             />

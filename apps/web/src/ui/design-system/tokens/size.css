@@ -55,8 +55,20 @@
   --capacity-slider-w-min: 160px;
   --capacity-curve-w: 200px;
 
+  /* The label track of a pond block. Every setting there names itself in this
+     column, a demand tick and a plain caption alike, so the widest name would
+     otherwise set the width for all of them and leave the sliders nothing. A
+     cap, not a fixed width: a shorter set of names still packs tight, and the
+     one long demand label wraps. */
+  --pond-label-w-max: 200px;
+
   /* One extracted item sprite in a compact list row. */
   --item-sprite-d: 24px;
+
+  /* The currency symbol drawn inside a price chip, beside its number. Smaller
+     than a list row's sprite because the number carries the reading here and
+     the picture only says which currency. */
+  --price-symbol-d: 14px;
 
   /* Narrowest a shop card may be drawn before the grid drops a column: wide
      enough for a two-word shop name and three slot boxes side by side, each

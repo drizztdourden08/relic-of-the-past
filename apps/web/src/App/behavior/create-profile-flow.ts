@@ -11,7 +11,7 @@ import { generateFromSnapshot } from '@shared/randomizer/generate';
 import { normalizeRandomizerOptions } from '@shared/randomizer/options-snapshot';
 import { log } from '../../lib/log-bus';
 import {
-  probeDeliverableCapacityLocations, probeDeliverableNpcLocations, probeDeliverableWorldLocations,
+  probeDeliverablePondLocations, probeDeliverableNpcLocations, probeDeliverableWorldLocations,
 } from '../../lib/game/randomizer-client';
 import * as profileStore from '../../lib/storage/profile-store';
 import { saveRandomizerPlacement } from '../../lib/randomizer-placement-io';
@@ -28,7 +28,7 @@ const runCreateProfileFlow = async (opts: CreateProfileOptions): Promise<CreateP
       // carry errors.
       const snapshot = normalizeRandomizerOptions(opts.randomizer.options);
       placement = generateFromSnapshot(opts.randomizer.seed, snapshot,
-        probeDeliverableNpcLocations(), probeDeliverableCapacityLocations(),
+        probeDeliverableNpcLocations(), probeDeliverablePondLocations(),
         probeDeliverableWorldLocations());
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);

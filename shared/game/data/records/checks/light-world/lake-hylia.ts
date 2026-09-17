@@ -31,12 +31,17 @@ const LW_LAKE_HYLIA_CHECKS: CheckRecord[] = [
   // only those two carry the standard name the crosswalk needs
   // (check-name-overrides.data.ts) and the other twelve appear on a vanilla profile
   // alone: apAlignedCheckRecords drops any check the placement does not name.
+  //
+  // Each family is one ladder of the fairy's, numbered from one, so the two read as
+  // what they are and never as a side of a pond. The family word is load-bearing: the
+  // pond's own prize rungs are numbered "<fairy> N" with nothing between, so a tier
+  // named that way would be a second location answering to a rung's name.
   {
     id: 'check-273',
     gameId: { bufferIndex: 23, compare: 'gte', value: 1 },
     kind: 'npc',
     screenId: 'screen-217',
-    randomizerName: 'Bomb Capacity Upgrade 1',
+    randomizerName: 'Hylia Fairy Bombs 1',
     vanillaItemIds: ['item-132'],
   },
   {
@@ -44,7 +49,7 @@ const LW_LAKE_HYLIA_CHECKS: CheckRecord[] = [
     gameId: { bufferIndex: 23, compare: 'gte', value: 2 },
     kind: 'npc',
     screenId: 'screen-217',
-    randomizerName: 'Bomb Capacity Upgrade 2',
+    randomizerName: 'Hylia Fairy Bombs 2',
     vanillaItemIds: ['item-132'],
   },
   {
@@ -52,7 +57,7 @@ const LW_LAKE_HYLIA_CHECKS: CheckRecord[] = [
     gameId: { bufferIndex: 23, compare: 'gte', value: 3 },
     kind: 'npc',
     screenId: 'screen-217',
-    randomizerName: 'Bomb Capacity Upgrade 3',
+    randomizerName: 'Hylia Fairy Bombs 3',
     vanillaItemIds: ['item-132'],
   },
   {
@@ -60,7 +65,7 @@ const LW_LAKE_HYLIA_CHECKS: CheckRecord[] = [
     gameId: { bufferIndex: 23, compare: 'gte', value: 4 },
     kind: 'npc',
     screenId: 'screen-217',
-    randomizerName: 'Bomb Capacity Upgrade 4',
+    randomizerName: 'Hylia Fairy Bombs 4',
     vanillaItemIds: ['item-132'],
   },
   {
@@ -68,7 +73,7 @@ const LW_LAKE_HYLIA_CHECKS: CheckRecord[] = [
     gameId: { bufferIndex: 23, compare: 'gte', value: 5 },
     kind: 'npc',
     screenId: 'screen-217',
-    randomizerName: 'Bomb Capacity Upgrade 5',
+    randomizerName: 'Hylia Fairy Bombs 5',
     vanillaItemIds: ['item-132'],
   },
   {
@@ -76,7 +81,7 @@ const LW_LAKE_HYLIA_CHECKS: CheckRecord[] = [
     gameId: { bufferIndex: 23, compare: 'gte', value: 6 },
     kind: 'npc',
     screenId: 'screen-217',
-    randomizerName: 'Bomb Capacity Upgrade 6',
+    randomizerName: 'Hylia Fairy Bombs 6',
     vanillaItemIds: ['item-132'],
   },
   {
@@ -84,7 +89,7 @@ const LW_LAKE_HYLIA_CHECKS: CheckRecord[] = [
     gameId: { bufferIndex: 23, compare: 'gte', value: 7 },
     kind: 'npc',
     screenId: 'screen-217',
-    randomizerName: 'Bomb Capacity Upgrade 7',
+    randomizerName: 'Hylia Fairy Bombs 7',
     vanillaItemIds: ['item-132'],
   },
   {
@@ -92,7 +97,7 @@ const LW_LAKE_HYLIA_CHECKS: CheckRecord[] = [
     gameId: { bufferIndex: 24, compare: 'gte', value: 1 },
     kind: 'npc',
     screenId: 'screen-217',
-    randomizerName: 'Arrow Capacity Upgrade 1',
+    randomizerName: 'Hylia Fairy Arrows 1',
     vanillaItemIds: ['item-129'],
   },
   {
@@ -100,7 +105,7 @@ const LW_LAKE_HYLIA_CHECKS: CheckRecord[] = [
     gameId: { bufferIndex: 24, compare: 'gte', value: 2 },
     kind: 'npc',
     screenId: 'screen-217',
-    randomizerName: 'Arrow Capacity Upgrade 2',
+    randomizerName: 'Hylia Fairy Arrows 2',
     vanillaItemIds: ['item-129'],
   },
   {
@@ -108,7 +113,7 @@ const LW_LAKE_HYLIA_CHECKS: CheckRecord[] = [
     gameId: { bufferIndex: 24, compare: 'gte', value: 3 },
     kind: 'npc',
     screenId: 'screen-217',
-    randomizerName: 'Arrow Capacity Upgrade 3',
+    randomizerName: 'Hylia Fairy Arrows 3',
     vanillaItemIds: ['item-129'],
   },
   {
@@ -116,7 +121,7 @@ const LW_LAKE_HYLIA_CHECKS: CheckRecord[] = [
     gameId: { bufferIndex: 24, compare: 'gte', value: 4 },
     kind: 'npc',
     screenId: 'screen-217',
-    randomizerName: 'Arrow Capacity Upgrade 4',
+    randomizerName: 'Hylia Fairy Arrows 4',
     vanillaItemIds: ['item-129'],
   },
   {
@@ -124,7 +129,7 @@ const LW_LAKE_HYLIA_CHECKS: CheckRecord[] = [
     gameId: { bufferIndex: 24, compare: 'gte', value: 5 },
     kind: 'npc',
     screenId: 'screen-217',
-    randomizerName: 'Arrow Capacity Upgrade 5',
+    randomizerName: 'Hylia Fairy Arrows 5',
     vanillaItemIds: ['item-129'],
   },
   {
@@ -132,7 +137,7 @@ const LW_LAKE_HYLIA_CHECKS: CheckRecord[] = [
     gameId: { bufferIndex: 24, compare: 'gte', value: 6 },
     kind: 'npc',
     screenId: 'screen-217',
-    randomizerName: 'Arrow Capacity Upgrade 6',
+    randomizerName: 'Hylia Fairy Arrows 6',
     vanillaItemIds: ['item-129'],
   },
   {
@@ -140,7 +145,7 @@ const LW_LAKE_HYLIA_CHECKS: CheckRecord[] = [
     gameId: { bufferIndex: 24, compare: 'gte', value: 7 },
     kind: 'npc',
     screenId: 'screen-217',
-    randomizerName: 'Arrow Capacity Upgrade 7',
+    randomizerName: 'Hylia Fairy Arrows 7',
     vanillaItemIds: ['item-129'],
   },];
 

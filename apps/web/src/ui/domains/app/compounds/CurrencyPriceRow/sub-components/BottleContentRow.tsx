@@ -8,7 +8,7 @@
  * above. Only the second carries a note.
  */
 import { Box, Checkbox, Text } from '@ds/primitives';
-import type { BottleContentRowModel } from '../behavior/bottle-content-rows';
+import type { BottleContentRowModel } from '../CurrencyPriceRow.type';
 import './BottleContentRow.css';
 
 interface BottleContentRowProps {

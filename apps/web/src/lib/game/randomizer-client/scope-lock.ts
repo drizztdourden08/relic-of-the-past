@@ -15,6 +15,7 @@ import { NPC_SCOPE_LOCATIONS, WORLD_ITEM_SCOPE_LOCATIONS } from '@shared/randomi
 import { VANILLA_PRIZES } from '@shared/randomizer/ap-world/vanilla-prizes.data';
 import type { ShopScope } from '@shared/randomizer/ap-world/shops/shop-scope.type';
 import type { ShopPriceView } from '@shared/randomizer/ap-world/shops/shop-price.type';
+import type { WishPondRungKey } from './wish-pond-rung-keys';
 
 interface ScopeFlags {
   keyDropShuffle: boolean;
@@ -41,6 +42,13 @@ interface ScopeFlags {
    */
   capacityLockedLocations?: ReadonlySet<string>;
   /**
+   * A wish pond's vanilla slots generation locked at Vanilla grants, each to the
+   * item her upgrade produces there (pond/pond-vanilla-slots.ts), so no override
+   * is armed and the real upgrade runs. Absent (the online flags, and every
+   * placement generated before the rule) locks nothing this way.
+   */
+  pondLockedItems?: ReadonlyMap<string, string>;
+  /**
    * Locked spots of a Custom family: location → starting tier index, so a
    * polled "purchased" threshold is read past the tier a new file starts at.
    */
@@ -60,6 +68,13 @@ interface ScopeFlags {
    * reference slots are the capacity families' own spots, as they always were.
    */
   pondPrizeLocations?: readonly string[];
+  /**
+   * The numbered rungs of each wish pond whose plan carries them: location
+   * to the water and the place in its sequence (wish-pond-rung-keys.ts).
+   * Absent (both wish ponds legacy or at their native economy, and the online
+   * flags) means no rung is a location.
+   */
+  wishPondRungs?: ReadonlyMap<string, WishPondRungKey>;
 }
 
 const isLockedVanilla = (locationName: string, flags: ScopeFlags): boolean =>
@@ -69,11 +84,15 @@ const isLockedVanilla = (locationName: string, flags: ScopeFlags): boolean =>
   || (!flags.includeWorldItems && WORLD_ITEM_SCOPE_LOCATIONS.has(locationName))
   || flags.npcLockedLocations?.has(locationName) === true
   || flags.worldLockedLocations?.has(locationName) === true
-  || flags.capacityLockedLocations?.has(locationName) === true;
+  || flags.capacityLockedLocations?.has(locationName) === true
+  || flags.pondLockedItems?.has(locationName) === true;
 
 /** The capability-locked vanilla item a stale-placement check compares against. */
 const capabilityVanillaItemOf = (locationName: string, flags: ScopeFlags): string | undefined => {
   if (!flags.shufflePrizes && PRIZE_LOCATIONS.has(locationName)) return VANILLA_PRIZES.get(locationName);
+  // Checked before the npc remainder: the pond's own table names the item she produces.
+  const pondItem = flags.pondLockedItems?.get(locationName);
+  if (pondItem !== undefined) return pondItem;
   if (flags.npcLockedLocations?.has(locationName) === true) {
     return NPC_SCOPE_LOCATIONS.get(locationName);
   }

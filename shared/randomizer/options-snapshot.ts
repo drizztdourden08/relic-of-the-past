@@ -19,6 +19,7 @@ import { apBaselineValues, apOptionByKey } from './ap-world/options.data';
 import { CAPACITY_PROGRESSIVE_KEY, LEGACY_CAPACITY_KEY } from './ap-world/capacity/capacity-option-keys';
 import { legacyCapacityProfile } from './ap-world/capacity/capacity-profile-defaults';
 import { capacityValuesOf } from './ap-world/capacity/capacity-profile-from-snapshot';
+import { withMigratedPondKeys } from './ap-world/pond/pond-key-migration.data';
 import { POST_LEGACY_SHOP_SLOT_KEYS, SHOP_MODE_KEY } from './ap-world/shops/shop-slot-options.data';
 import { LEGACY_ABSENT_ROWS } from './legacy-absent-rows.data';
 import type { ApOptionValue, RandomizerOptionsSnapshot } from './ap-world/options.type';
@@ -119,10 +120,14 @@ const adaptV1 = (raw: Values): Values => {
  */
 const normalizeRandomizerOptions = (raw: unknown): RandomizerOptionsSnapshot => {
   if (isSnapshotOf(raw, OPTIONS_SCHEMA)) {
+    // The shipped pond rows move onto the pond they were always about BEFORE
+    // anything else reads them, so the absent-row table fills only the two
+    // ponds this snapshot really has nothing to say about.
+    const stored = withMigratedPondKeys(raw.values);
     const values = withShopLegacyDefault(
-      withProgressiveDefault(overBaselines(raw.values), raw.values), raw.values,
+      withProgressiveDefault(overBaselines(stored), stored), stored,
     );
-    return { schema: OPTIONS_SCHEMA, values: withScopeSplit(values, raw.values) };
+    return { schema: OPTIONS_SCHEMA, values: withScopeSplit(values, stored) };
   }
   if (isSnapshotOf(raw, LEGACY_SCHEMA)) return { schema: OPTIONS_SCHEMA, values: adaptV1(raw.values) };
   const legacy = raw as { randomizedKinds?: readonly string[] } | null | undefined;

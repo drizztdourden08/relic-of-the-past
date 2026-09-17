@@ -30,6 +30,14 @@ bool ShopCanPay(uint8 currency, uint16 amount);
 // Takes the payment. Only ever called after ShopCanPay returned true.
 void ShopTakePayment(uint8 currency, uint16 amount);
 
+// Bottles by the count, for a spot that charges more than one of them (a pond demand;
+// core/game-hooks/pond_demand_visit.c). |wanted| is the slot value the price names.
+//   ShopBottlesHeld   how many slots hold it. Pure.
+//   ShopTakeBottles   empty |count| of them, lowest slot first. Only ever called after
+//                     ShopBottlesHeld said the player holds that many.
+int ShopBottlesHeld(uint16 wanted);
+void ShopTakeBottles(uint16 wanted, int count);
+
 // The line a refusal shows: |currency|'s own template line when the loaded dialogue blob
 // carries it, else |vendored_msg|, the line the vendored spot shows. Rupees always keep
 // the vendored line, which already names them (shop_refusal.c).

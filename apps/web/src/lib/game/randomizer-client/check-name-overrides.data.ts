@@ -6,9 +6,12 @@
 
 const CHECK_NAME_OVERRIDES: Record<string, string> = {
   // The first tier of each pond family IS the AP world's fairy slot for it, so it answers
-  // to the bare family name; tiers 2-7 have no location and keep their numbered name.
-  'Bomb Capacity Upgrade 1': 'Bomb Capacity Upgrade',
-  'Arrow Capacity Upgrade 1': 'Arrow Capacity Upgrade',
+  // to that slot's Archipelago name (datapackage ids 4194334 and 4194335); tiers 2-7 have
+  // no location and keep their numbered name. It answered to a bare family name for a
+  // while, and no server has a location called that, so the pond sat out every online
+  // session. What a player reads is the display name (display-names/pond-display-name.ts).
+  'Hylia Fairy Bombs 1': 'Capacity Upgrade Left',
+  'Hylia Fairy Arrows 1': 'Capacity Upgrade Right',
   'Hyrule Castle - Dark Cross': 'Sewers - Dark Cross',
   'Hyrule Castle - Secret Room - Left': 'Sewers - Secret Room - Left',
   'Hyrule Castle - Secret Room - Middle': 'Sewers - Secret Room - Middle',

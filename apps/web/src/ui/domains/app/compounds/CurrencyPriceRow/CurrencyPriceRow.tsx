@@ -1,9 +1,11 @@
 /* @layer renderer-components @kind component */
 /**
- * One row of the shop-price section: the checkbox that opts a currency in,
+ * One row of a currency-price section: the checkbox that opts a currency in,
  * and beside it the two-thumb range a rolled price is drawn from, disabled
- * until the currency is ticked. The bottle row has no range; it passes its
- * content checkboxes in as children and they sit in the same place.
+ * until the currency is ticked. A row may also pass checkboxes in as children:
+ * on its own they take the range's place, and under a range they fall to a
+ * line of their own across the row, so the tick and its range stay together on
+ * the first line whatever the row carries below.
  *
  * A row a rule elsewhere on the panel has taken away is BLOCKED: its tick is
  * inert and off, and the one line saying why takes the range's place,
@@ -11,9 +13,9 @@
  * this row's own choice.
  */
 import { Box, Checkbox, RangeSlider, Text } from '@ds/primitives';
-import './ShopPriceRow.css';
+import './CurrencyPriceRow.css';
 
-interface ShopPriceRowProps {
+interface CurrencyPriceRowProps {
   label: string;
   enabled: boolean;
   onEnabledChange?: (enabled: boolean) => void;
@@ -29,7 +31,7 @@ interface ShopPriceRowProps {
   children?: React.ReactNode;
 }
 
-const ShopPriceRow = (props: ShopPriceRowProps) => {
+const CurrencyPriceRow = (props: CurrencyPriceRowProps) => {
   const {
     label, enabled, onEnabledChange, blocked = false, note = '',
     stops, range, onRangeChange, children,
@@ -37,7 +39,7 @@ const ShopPriceRow = (props: ShopPriceRowProps) => {
   const readOnly = onEnabledChange === undefined;
 
   const control = blocked && note !== '' ? (
-    <Text className="shop-price-row__note">{note}</Text>
+    <Text className="currency-price-row__note">{note}</Text>
   ) : stops !== undefined && range !== undefined ? (
     <RangeSlider
       stops={stops}
@@ -47,13 +49,11 @@ const ShopPriceRow = (props: ShopPriceRowProps) => {
       ariaLabel={`${label} price range`}
       onChange={(next) => onRangeChange?.(next)}
     />
-  ) : (
-    <Box className="shop-price-row__contents">{children}</Box>
-  );
+  ) : undefined;
 
   return (
     <Box
-      className={`shop-price-row${enabled ? '' : ' shop-price-row--off'}`}
+      className={`currency-price-row${enabled ? '' : ' currency-price-row--off'}`}
       data-blocked={blocked ? '' : undefined}
     >
       <Checkbox
@@ -62,10 +62,13 @@ const ShopPriceRow = (props: ShopPriceRowProps) => {
         onChange={(next) => onEnabledChange?.(next)}
         label={label}
       />
-      {control}
+      {control ?? <Box className="currency-price-row__contents">{children}</Box>}
+      {control !== undefined && children !== undefined && (
+        <Box className="currency-price-row__contents currency-price-row__contents--below">{children}</Box>
+      )}
     </Box>
   );
 };
 
-export { ShopPriceRow };
-export type { ShopPriceRowProps };
+export { CurrencyPriceRow };
+export type { CurrencyPriceRowProps };

@@ -8,7 +8,8 @@
  * (no set_rule/add_rule row targets these under the baseline options) and
  * pinned by tests/randomizer/ap-world-rules.test.ts.
  */
-import { POND_EXTRA_LOCATIONS } from '../../pond/pond-locations.data';
+import { CAPACITY_SPOT_LOCATIONS } from '../../capacity/capacity-spots.data';
+import { POND_RUNGS_BY_ID } from '../../pond/pond-locations.data';
 
 const ALWAYS_OPEN_EXITS: readonly string[] = [
   'Agahnims Tower Exit',
@@ -221,11 +222,17 @@ const ALWAYS_OPEN_LOCATIONS: readonly string[] = [
   'Bonk Rock Cave',
   'Bottle Merchant',
   'Bumper Cave Ledge',
-  'Arrow Capacity Upgrade',
-  'Bomb Capacity Upgrade',
-  // The pond's own prize slots (pond/pond-locations.data.ts), reachable
-  // exactly when the pond is, so the wallet overlay is their only gate.
-  ...POND_EXTRA_LOCATIONS,
+  // The capacity pond's two native slots, taken from the spot table so the two
+  // lists can never disagree on how Archipelago spells them.
+  ...CAPACITY_SPOT_LOCATIONS,
+  // The numbered rungs of the two LIGHT WORLD ponds (pond/pond-locations.data.ts):
+  // each is reachable exactly when its own pond is, so the wallet overlay is
+  // their only gate. The dark world's water is deliberately absent, for the same
+  // reason its two fairy slots are: everything standing there carries the
+  // transform rule the bunny pass registers, and a ruled name can never also be
+  // an open one.
+  ...POND_RUNGS_BY_ID.capacity,
+  ...POND_RUNGS_BY_ID.wishing,
   'Capacity Upgrade Shop',
   'Cave 45',
   'Checkerboard Cave',

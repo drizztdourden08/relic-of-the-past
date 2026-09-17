@@ -97,6 +97,8 @@ const applyOverrides = (plan: PhysicalPlan, messageIdOf: MessageIdOf, tag: strin
       log.randomizer(`${tag} Overrode "${entry.locationName}": shelf slot -> "${entry.itemName}" (0x${targetLocalId.toString(16)})`);
     } else if (entry.planClass === 'override-scripted' && entry.scriptedOverride !== undefined) {
       const { target, targetLocalId } = entry.scriptedOverride;
+      // A wish-pond rung arms with every other rung of both waters in one call (wish-pond-session.ts).
+      if (target.surface === 'wish-pond') continue;
       setScriptedGrantOverride(target, targetLocalId, messageIdOf(entry.locationName), allocateFireId(entry.locationName));
       log.randomizer(`${tag} Overrode "${entry.locationName}": scripted grant -> "${entry.itemName}" (0x${targetLocalId.toString(16)})`);
     }

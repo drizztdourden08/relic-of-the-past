@@ -4,6 +4,7 @@ import type { CheckRecord, ItemId } from '@shared/game/data';
 import { getItem } from '@shared/game/data';
 import type { CheckStatus } from '@shared/game/logic/eval';
 import type { RunContext } from '@shared/game/logic/queries/check-grouping';
+import { checkDisplayName } from '@app/lib/game/randomizer-client';
 import { CheckStatusIcon } from './CheckStatusIcon';
 import '../ChecksTracker.css';
 
@@ -24,7 +25,7 @@ const TrackerCheckRow = (props: TrackerCheckRowProps) => {
   return (
     <Box className={`tracker-check tracker-check--${status}`}>
       <CheckStatusIcon status={status} size={11} />
-      <Text className="tracker-check__name">{check.randomizerName}</Text>
+      <Text className="tracker-check__name">{checkDisplayName(check)}</Text>
       {detailed && (
         <Text className="tracker-check__item">{displayItem ?? '-'}</Text>
       )}
