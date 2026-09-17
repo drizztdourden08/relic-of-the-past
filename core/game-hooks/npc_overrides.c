@@ -65,9 +65,6 @@ static bool g_match_anywhere_once = false;
 // cave bat); they can never collide with a real id at the receive seam and are written
 // via GameHook_MarkSubstitutionKey.
 #define srm_substitution_taken(byte_index) (*(uint8*)(g_ram + SRM_SUBSTITUTION_TAKEN + (byte_index)))
-#define srm_substitution_taken_0 srm_substitution_taken(0)
-#define srm_substitution_taken_1 srm_substitution_taken(1)
-#define srm_substitution_taken_2 srm_substitution_taken(2)
 
 typedef struct { uint8 vanilla_item; uint8 byte_index; uint8 mask; } SubstitutionBit;
 static const SubstitutionBit kSubstitutionBits[] = {
@@ -108,9 +105,7 @@ static const SubstitutionBit *FindSubstitutionBit(uint8 vanilla_item) {
 static void MarkGrantSubstituted(uint8 vanilla_item) {
   const SubstitutionBit *bit = FindSubstitutionBit(vanilla_item);
   if (bit == NULL) return;
-  if (bit->byte_index == 0) srm_substitution_taken_0 |= bit->mask;
-  else if (bit->byte_index == 1) srm_substitution_taken_1 |= bit->mask;
-  else srm_substitution_taken_2 |= bit->mask;
+  srm_substitution_taken(bit->byte_index) |= bit->mask;
 }
 
 // The synthetic-key write path for grants with no vanilla receive id (scripted_grants.c).
@@ -130,8 +125,7 @@ bool GameHook_SubstitutedGiftTaken(uint8 vanilla_item) {
 }
 
 uint8 GameHook_SubstitutionTakenByte(int byte_index) {
-  if (byte_index == 0) return srm_substitution_taken_0;
-  return byte_index == 1 ? srm_substitution_taken_1 : srm_substitution_taken_2;
+  return srm_substitution_taken(byte_index == 0 || byte_index == 1 ? byte_index : 2);
 }
 
 // The re-offer gate for every possession-gated giver. The vanilla scripts gate on
