@@ -15,8 +15,8 @@ import { buildPpuFlags } from './live-settings-ppu-flags';
 import { LIVE_SETTINGS } from './live-settings-keys';
 import { pushTurboSpeed } from './turbo';
 
-// Track the last-pushed forceBackdropBlack value so we can re-assert after state loads
-let lastBackdropBlack = false;
+// Track the last-pushed hideSpaceBeyondWalls value so we can re-assert after state loads
+let lastHideSpaceBeyondWalls = false;
 // Frame pacing mode. The core boots on the timer schedule and has no INI key for this, so the
 // startup re-assert is what applies the profile's choice, not only a post-load repair.
 let lastVsync = false;
@@ -88,10 +88,11 @@ const pushLiveSettings = (settings: GameSettings): boolean => {
       mod.ccall('WasmSetDisplayPerf', null, ['number'], [settings.displayPerfInTitle ? 1 : 0]);
     } catch { /* WASM not rebuilt yet */ }
 
-    // Force backdrop to black (guard: function may not exist in older WASM builds)
+    // Hide space beyond walls (guard: function may not exist in older WASM builds). Vanilla Safe keeps it
+    // off, like the renderer effects buildPpuFlags hand-gates; the core decides per frame where it applies.
     try {
-      lastBackdropBlack = !!settings.forceBackdropBlack;
-      mod.ccall('WasmSetForceBackdropBlack', null, ['number'], [settings.forceBackdropBlack ? 1 : 0]);
+      lastHideSpaceBeyondWalls = !settings.vanillaSafe && !!settings.hideSpaceBeyondWalls;
+      mod.ccall('WasmSetHideSpaceBeyondWalls', null, ['number'], [lastHideSpaceBeyondWalls ? 1 : 0]);
     } catch { /* WASM not rebuilt yet */ }
 
     // Frame pacing (guard: function may not exist in older WASM builds)
@@ -135,7 +136,7 @@ const tryVoidCcall = (fn: string, value: number): void => {
   try { mod.ccall(fn, null, ['number'], [value]); } catch { /* WASM may not have this export */ }
 };
 
-const reassertBackdropBlack = (): void => tryVoidCcall('WasmSetForceBackdropBlack', lastBackdropBlack ? 1 : 0);
+const reassertHideSpaceBeyondWalls = (): void => tryVoidCcall('WasmSetHideSpaceBeyondWalls', lastHideSpaceBeyondWalls ? 1 : 0);
 
 const reassertVsync = (): void => tryVoidCcall('WasmSetVsync', lastVsync ? 1 : 0);
 
@@ -188,7 +189,7 @@ const reassertLiveFlagsAfterLoad = (): void => {
   // playerSpriteOverride. Re-pushing here must precede the hide reasserts below so their requests
   // are already permitted when the core reconciles them.
   reassertGateWord3();
-  reassertBackdropBlack();
+  reassertHideSpaceBeyondWalls();
   reassertVsync();
   reassertHudHidden();
   reassertPauseHidden();
@@ -211,7 +212,7 @@ const primeLiveSettings = (settings: GameSettings): void => {
   // Seed lastSettings so a live override (simulator auto-skip-dialog) can recompute and re-push
   // the features word even before the user changes a setting to trigger a full pushLiveSettings.
   lastSettings = settings;
-  lastBackdropBlack = !!settings.forceBackdropBlack;
+  lastHideSpaceBeyondWalls = !settings.vanillaSafe && !!settings.hideSpaceBeyondWalls;
   lastVsync = !!settings.vsync;
   const hideHud = settings.hudMode === 'enhanced' && settings.hudEnhancedParts.includes('main');
   lastHudHidden = hideHud;
@@ -222,4 +223,4 @@ const primeLiveSettings = (settings: GameSettings): void => {
   lastSfxVol = settings.sfxMuted ? 0 : Math.round(settings.sfxVolume * 1.28);
 };
 
-export { LIVE_SETTINGS, liveSettingsNow, pushLiveSettings, reassertFeatureWords, reassertBackdropBlack, reassertVsync, reassertHudHidden, reassertPauseHidden, reassertVolumes, reassertLiveFlagsAfterLoad, reassertFeatureFlags, reassertGateWord3, primeLiveSettings };
+export { LIVE_SETTINGS, liveSettingsNow, pushLiveSettings, reassertFeatureWords, reassertHideSpaceBeyondWalls, reassertVsync, reassertHudHidden, reassertPauseHidden, reassertVolumes, reassertLiveFlagsAfterLoad, reassertFeatureFlags, reassertGateWord3, primeLiveSettings };

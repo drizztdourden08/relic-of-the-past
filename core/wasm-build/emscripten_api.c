@@ -23,9 +23,6 @@
 #include "num_util.h"
 #include "emscripten_internal.h"
 
-// Backdrop-black flag pairs with g_ppu_render_flags; only the API touches it.
-static bool g_force_backdrop_black = false;
-
 // ---------------------------------------------------------------------------
 // Live settings, callable from JS while the game is running
 // ---------------------------------------------------------------------------
@@ -131,8 +128,7 @@ uint32_t WasmGetFeatures2(void) {
 
 EMSCRIPTEN_KEEPALIVE
 void WasmSetPpuRenderFlags(int flags) {
-  // Preserve BlackBG2 flag (managed separately by WasmSetForceBackdropBlack)
-  g_ppu_render_flags = flags | (g_force_backdrop_black ? kPpuRenderFlags_BlackBG2 : 0);
+  g_ppu_render_flags = flags;
 }
 
 // Hiding the native HUD/pause menu requires kFeatures3_HudOverride. Both exports only record the
@@ -289,13 +285,11 @@ void WasmCheat(int cmd) {
   PatchCommand((char)cmd);
 }
 
+// Only the request is recorded; hide_space_beyond_walls.c answers per frame, so a frame showing a
+// house, a cave or the sanctuary hides its fill and the overworld never does.
 EMSCRIPTEN_KEEPALIVE
-void WasmSetForceBackdropBlack(int enable) {
-  g_force_backdrop_black = enable != 0;
-  if (g_force_backdrop_black)
-    g_ppu_render_flags |= kPpuRenderFlags_BlackBG2;
-  else
-    g_ppu_render_flags &= ~kPpuRenderFlags_BlackBG2;
+void WasmSetHideSpaceBeyondWalls(int enable) {
+  GameHook_SetHideSpaceBeyondWalls(enable != 0);
 }
 
 // ---------------------------------------------------------------------------

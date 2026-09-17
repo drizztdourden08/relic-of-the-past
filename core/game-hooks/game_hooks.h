@@ -692,6 +692,18 @@ void GameHook_PlayerMapHeadDrawn(int slot);
 // colors, and re-lands a custom sheet's bank for the form the player is in.
 void GameHook_MapClosed(void);
 
+// ─── Hide Space Beyond Walls (hide_space_beyond_walls.c) ───
+
+// Records the renderer's request. WasmSetHideSpaceBeyondWalls (core/wasm-build/emscripten_api.c) is
+// the only caller.
+void GameHook_SetHideSpaceBeyondWalls(bool enable);
+
+// The tilemap words of the ceiling block, for a frame that should hide the space past the walls: the
+// request is on, the frame shows a room (player_is_indoors, in a live game module), and the room is a
+// house, a cave or the sanctuary. Returns the word count with |words| pointing at them, or 0 with
+// nothing to hide. Asked once per frame by ZeldaDrawPpuFrame, after PpuBeginDrawing has reset the flags.
+int GameHook_HideSpaceBeyondWallsFill(const uint16 **words);
+
 // ─── HUD/Pause Override (hud_override.c) ───
 
 // True while kFeatures3_HudOverride permits hiding the native HUD/pause menu. WasmSetHudHidden and

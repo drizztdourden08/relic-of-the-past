@@ -63,7 +63,7 @@ const hookSrcs = [
   'state_queries_pose',
   'item_power', 'swordless_paths', 'retro_bow', 'retro_drops', 'retro_shelf', 'retro_quiver_icon', 'archery_host',
   'dark_room_lights', 'file_name_prefill',
-  'host_gates', 'hud_override', 'running_man', 'music_hooks', 'sound_hooks', 'view_gates',
+  'host_gates', 'hud_override', 'running_man', 'music_hooks', 'sound_hooks', 'view_gates', 'hide_space_beyond_walls',
   'cheat_lighting', 'cheat_wallet', 'cheat_unblock', 'cheat_check_mark', 'dev_frame_dump',
 ].map((f) => h(`${f}.c`));
 
