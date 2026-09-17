@@ -17,11 +17,13 @@ const stateChanged = (a: GameUIState, b: GameUIState): boolean => {
   if (ah.equippedL !== bh.equippedL || ah.equippedR !== bh.equippedR) return true;
   if (ah.heartsFiller !== bh.heartsFiller || ah.magicFiller !== bh.magicFiller) return true;
   if (ah.bombFiller !== bh.bombFiller || ah.arrowFiller !== bh.arrowFiller) return true;
+  if (ah.maxRupees !== bh.maxRupees || ah.maxBombs !== bh.maxBombs || ah.maxArrows !== bh.maxArrows) return true;
 
   const ae = a.equipment, be = b.equipment;
   if (ae.sword !== be.sword || ae.shield !== be.shield || ae.armor !== be.armor) return true;
   if (ae.gloves !== be.gloves || ae.boots !== be.boots) return true;
   if (ae.flippers !== be.flippers || ae.moonPearl !== be.moonPearl) return true;
+  if (ae.heartPieces !== be.heartPieces || ae.abilityFlags !== be.abilityFlags) return true;
 
   const ad = a.dungeonProgress, bd = b.dungeonProgress;
   if (ad.pendants !== bd.pendants || ad.crystals !== bd.crystals) return true;

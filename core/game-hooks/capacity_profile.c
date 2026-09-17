@@ -251,6 +251,54 @@ bool GameHook_WalletLadderAtCap(void) {
   return srm_wallet_ladder_index >= g_capacity.max_rung[kFamily_Wallet];
 }
 
+// ─── The cheat console's ladder view (cheat_capacity.c) ───
+
+// The rung of the vanilla wallet's own ceiling: 999 is rung 10, the 9999 of CarryMoreRupees
+// rung 100.
+static int WalletRungOfVanilla(void) {
+  return (enhanced_features0 & kFeatures0_CarryMoreRupees) ? WALLET_LADDER_LAST : WALLET_VANILLA_RUNG;
+}
+
+// The cap a family reads on |rung| in the mode the game is in, or -1 when the ladder does
+// not offer that rung: a Custom family offers 0..its final rung; a native family offers its
+// grid's levels (rungs 1..last), and the native wallet offers one rung, its own ceiling. The
+// meter has no count, so it reports its rung as a level code (0 none, 1 full, 2 half,
+// 3 quarter).
+int GameHook_CapacityRungCap(int family, int rung) {
+  if (family < 0 || family >= kFamilyCount || rung < 0) return -1;
+  if (family == kFamily_Wallet) {
+    if (!FamilyCustom(kFamily_Wallet))
+      return rung == WalletRungOfVanilla() ? (int)WalletCapOfIndex(rung) : -1;
+    return rung <= g_capacity.max_rung[kFamily_Wallet] ? (int)WalletCapOfIndex(rung) : -1;
+  }
+  int last = FamilyCustom(family) ? g_capacity.max_rung[family] : kFamilyLastRung[family];
+  if (rung > last || (rung == 0 && !FamilyCustom(family))) return -1;
+  if (family == kFamily_Meter) return rung;
+  if (rung == 0) return 0;
+  return family == kFamily_Explosives ? kMaxBombsForLevel[rung - 1] : kMaxArrowsForLevel[rung - 1];
+}
+
+// The rung the console shows |family| on: the persisted rung, except a native wallet, which
+// keeps no rung and stands on the rung of its own ceiling.
+int GameHook_CapacityRungNow(int family) {
+  if (family == kFamily_Wallet && !FamilyCustom(kFamily_Wallet)) return WalletRungOfVanilla();
+  return GameHook_CapacityRungOf(family);
+}
+
+// Land |family| on |rung|, clamped to the ladder the mode offers. False when there is no rung
+// to set: a native wallet, or a family that is not a family.
+bool GameHook_CapacitySetRung(int family, int rung) {
+  if (family == kFamily_Wallet) return GameHook_WalletLadderSet(rung);
+  if (!IsStepped(family)) return false;
+  if (FamilyCustom(family)) {
+    SetFamilyRung(family, clampi(rung, 0, g_capacity.max_rung[family]));
+    return true;
+  }
+  *LevelByte(family) = (uint8)(clampi(rung, 1, kFamilyLastRung[family]) - 1);
+  srm_empty_rung(family) = 0;
+  return true;
+}
+
 // Climb |steps| rungs up to the profile's final index. Returns true when any step was
 // surplus (nothing to climb, an empty jump, or the cap reached mid-climb) so the caller
 // can present the reference's replacement instead. Writes nothing without a Custom

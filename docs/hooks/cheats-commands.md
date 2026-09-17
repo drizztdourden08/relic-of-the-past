@@ -4,7 +4,7 @@
 Functions that change game state: pause/reset, the cheat menu, and the check/NPC triggers that
 power the delivery queue and randomizer. Most are `void` and take effect on the next frame.
 
-**Sources:** `core/game-hooks/cheats.c`, `core/game-hooks/check_triggers.c`, `core/wasm-build/emscripten_api.c`
+**Sources:** `core/game-hooks/cheats.c`, `core/game-hooks/cheat_inventory.c`, `core/game-hooks/cheat_capacity.c`, `core/game-hooks/check_triggers.c`, `core/wasm-build/emscripten_api.c`
 **Bridge:** `lib/game/cheats.ts`, `lib/game/delivery-queue.ts`, `lib/game/bridge/commands.ts`
 
 ---
@@ -34,7 +34,13 @@ power the delivery queue and randomizer. Most are `void` and take effect on the 
 | `WasmCheatRefillMagic` | `void(void)` | Magic to full (`0x80`), same as `WasmCheatSetMagic(0x80)`. |
 | `WasmCheatSetMaxBombs` | `void(int capacity)` | Bomb capacity. Takes a wanted count and snaps to the nearest upgrade tier (10/15/20/25/30/35/40/50); trims the carried count to the new cap. |
 | `WasmCheatSetMaxArrows` | `void(int capacity)` | Arrow capacity, same contract as `WasmCheatSetMaxBombs` (tiers 30/35/40/45/50/55/60/70). |
-| `WasmCheatFillBottle` | `void(int slot, int contents)` | `slot` 0-3. contents: `0x02` empty, `0x03/04/05` red/green/blue potion, `0x06` fairy, `0x07` bee, `0x08` good bee. |
+| `WasmCheatSetBottle` | `void(int slot, int contents)` | `slot` 0-3. contents: `0x00` no bottle, `0x02` empty, `0x03/04/05` red/green/blue potion, `0x06` fairy, `0x07` bee, `0x08` good bee. Keeps the bottle index pointing at a held bottle, and clears the pause slot when none is left. |
+| `WasmCheatSetInventorySlot` | `void(int slot, int value)` | Writes one inventory byte: the remove and downgrade path. `slot` 0-19 is the pause menu save order (15 = bottle index), 20-26 gloves, boots, flippers, moon pearl, sword, shield, armor, 27-29 pendant bits, crystal bits, heart pieces. Redoes the gear palettes, the ability flags and the HUD item box the way a receipt would. |
+| `WasmCheatSetSmallKeys` | `void(int count)` | The live small-key count, clamped `[0, 99]`. Refused outside a dungeon. |
+| `WasmCheatSetDungeonItem` | `void(int kind, int palace_x2, int on)` | Toggles a dungeon's big key (1), map (2) or compass (3) bit. `palace_x2` is the doubled palace index. |
+| `WasmCheatCapacityRungCap` | `int(int kind, int rung)` | The cap of a capacity rung in the current mode (kind 0 bombs, 1 arrows, 2 meter, 3 wallet), or `-1` when the ladder does not offer that rung. A vanilla file offers the native grid; a capacity profile offers its own ladder, empty rung included. The meter answers with a level code (0 none, 1 full, 2 half, 3 quarter). |
+| `WasmCheatCapacityRung` | `int(int kind)` | The rung a family stands on. |
+| `WasmCheatSetCapacityRung` | `void(int kind, int rung)` | Lands a family on a rung, clamped to the offered ladder, and trims what it holds to the new cap. A vanilla wallet has no rung to set. |
 | `WasmCheatKillAllEnemies` | `void(void)` | Kills active/stunned hostile sprites; skips friendlies and fully-immune sprites. |
 | `WasmCheatSetDamageMultiplier` | `void(int mult)` | Outgoing damage ×`mult`, clamped `[1, 255]`. Read back in `sprite.c` via `GameHook_GetDamageMultiplier`. |
 | `WasmCheatSetExtraArmorPct` | `void(int pct)` | Extra incoming-damage reduction `[0, 100]%`, stacks with armor. Read via `GameHook_GetExtraArmorPct`. |
