@@ -63,6 +63,7 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'dialogBoxOpacity',
   'dialogButtonPrompts',
   'dialogFloatingGround',
+  'dialogIntroTelepathyGround',
   'dialogGroundFade',
   'dialogBoxFit',
   'dialogBorder',

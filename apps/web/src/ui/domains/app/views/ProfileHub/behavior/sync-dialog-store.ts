@@ -10,7 +10,7 @@ import { useDialogSettingsStore } from '../../../../../../stores/dialog-settings
 
 const DIALOG_BOX_KEYS = [
   'dialogBox', 'dialogFont', 'dialogFontScale', 'dialogInkColor', 'dialogStrokeColor', 'dialogStrokeWidth',
-  'dialogBoxOpacity', 'dialogFloatingGround', 'dialogGroundFade', 'dialogBoxFit', 'dialogGroundColor', 'dialogBorder', 'dialogBorderThickness', 'dialogBorderColor',
+  'dialogBoxOpacity', 'dialogFloatingGround', 'dialogIntroTelepathyGround', 'dialogGroundFade', 'dialogBoxFit', 'dialogGroundColor', 'dialogBorder', 'dialogBorderThickness', 'dialogBorderColor',
   'dialogCorner', 'dialogCornerMark', 'dialogCornerMarkAngle', 'dialogTexture', 'dialogTextureColor', 'dialogTextureOpacity',
   'dialogTextureAnimation', 'dialogTextureSpeed', 'dialogTextureScale', 'dialogTextureDensity', 'dialogTextureScatter',
   'dialogButtonPrompts', 'dialogSpeed', 'dialogHoldSpeed', 'dialogHoldToAccelerate', 'dialogFillOnB',
@@ -28,6 +28,7 @@ const syncDialogStore = (s: GameSettings): void => {
     strokeWidth: s.dialogStrokeWidth,
     boxOpacity: s.dialogBoxOpacity,
     floatingGround: s.dialogFloatingGround,
+    introTelepathyGround: s.dialogIntroTelepathyGround,
     groundFade: s.dialogGroundFade,
     boxFit: s.dialogBoxFit,
     groundColor: s.dialogGroundColor,
