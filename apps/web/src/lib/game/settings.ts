@@ -109,6 +109,41 @@ const DEFAULT_SETTINGS: GameSettings = {
   // Minigames
   archeryNeedsBow: false,
 
+  // Dialog pacing: the stock values, so a fresh profile plays text exactly as the game does
+  dialogSpeed: 1,
+  dialogHoldSpeed: 2,
+  dialogHoldToAccelerate: true,
+  dialogFillOnB: true,
+  dialogTypewriter: true,
+
+  // Dialog box look
+  dialogBox: 'original',
+  dialogButtonPrompts: false,
+  dialogFont: 'original',
+  dialogFontScale: 1,
+  dialogInkColor: '#ffffff',
+  dialogStrokeColor: '#3850a8',
+  dialogStrokeWidth: 0.5,
+  dialogBoxOpacity: 0.7,
+  dialogFloatingGround: false,
+  dialogGroundFade: false,
+  dialogBoxFit: 'message',
+  dialogGroundColor: '#101018',
+  dialogBorder: 'original',
+  dialogBorderThickness: 'medium',
+  dialogBorderColor: '#f0f0f0',
+  dialogCorner: 'square',
+  dialogCornerMark: 'none',
+  dialogCornerMarkAngle: 0,
+  dialogTexture: 'none',
+  dialogTextureColor: '#5fb3c4',
+  dialogTextureOpacity: 0.25,
+  dialogTextureAnimation: 'none',
+  dialogTextureSpeed: 'normal',
+  dialogTextureScale: 1,
+  dialogTextureDensity: 60,
+  dialogTextureScatter: 0,
+
   // HUD
   hudMode: 'original',
   hudStyle: 'vanilla',

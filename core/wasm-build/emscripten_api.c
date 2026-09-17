@@ -147,6 +147,12 @@ void WasmSetPauseHidden(int hidden) {
   HudOverride_SetWantedPauseHidden(hidden != 0);
 }
 
+// The native message box, same gate and same deferred reconcile as the two above.
+EMSCRIPTEN_KEEPALIVE
+void WasmSetDialogHidden(int hidden) {
+  HudOverride_SetWantedDialogHidden(hidden != 0);
+}
+
 EMSCRIPTEN_KEEPALIVE
 int WasmGetPpuRenderFlags(void) {
   return g_ppu_render_flags;

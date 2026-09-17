@@ -15,6 +15,17 @@
 
 static bool g_wanted_hud_hidden;
 static bool g_wanted_pause_hidden;
+// The message box needs no mask and no repaint: Text_ShouldSuppressDraw asks HudOverride_DialogHidden
+// on every upload, so the wanted value is read live and reconciled at each ask.
+static bool g_wanted_dialog_hidden;
+
+bool HudOverride_DialogHidden(void) {
+  return g_wanted_dialog_hidden && (enhanced_features3 & kFeatures3_HudOverride) != 0;
+}
+
+void HudOverride_SetWantedDialogHidden(bool on) {
+  g_wanted_dialog_hidden = on;
+}
 
 // Per-category masks for a headless harness. The renderer only ever asks for all-or-nothing, so
 // the per-category tables in nmi.c are otherwise unreachable and untestable from a probe. -1 means

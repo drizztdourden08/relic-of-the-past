@@ -2,9 +2,13 @@
 /** Per-key control renderer + disabled rules for the Gameplay settings tab. */
 import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
+import { DIALOG_SPEED_STOPS } from '@shared/game/dialog/pacing';
+import type { DialogSpeedStop } from '@shared/game/dialog/pacing';
 import { Toggle } from '../../../../../design-system/primitives/Toggle';
 import { Slider } from '../../../../../design-system/primitives/Slider';
 import { TurboSpeedControl } from './TurboSpeedControl';
+import { DialogStopSlider } from './dialog-stop-slider';
+import { DialogHoldRow } from './dialog-hold-row';
 
 const isDisabled = (key: string, settings: GameSettings): boolean => {
   if (key === 'itemSwitchLRLimit') return !settings.itemSwitchLR;
@@ -97,6 +101,28 @@ const renderControl = (key: string, settings: GameSettings, onChange: (patch: Pa
         value={settings.turboSpeed}
         onChange={(speed) => onChange({ turboSpeed: speed })}
         disabled={!settings.turboEnabled}
+      />
+    );
+  }
+  if (key === 'dialogSpeed') {
+    return (
+      <DialogStopSlider
+        label="Text Speed"
+        description="How fast text, pauses and scrolling play out: below Original slows typed lines, above it speeds everything, Instant skips the wait"
+        stops={DIALOG_SPEED_STOPS}
+        value={settings.dialogSpeed}
+        onChange={(stop) => onChange({ dialogSpeed: stop as DialogSpeedStop })}
+      />
+    );
+  }
+  if (key === 'dialogHoldToAccelerate') {
+    return (
+      <DialogHoldRow
+        label="Hold A to Accelerate"
+        description="While A is held, dialog plays at the speed on the right"
+        enabled={settings.dialogHoldToAccelerate}
+        speed={settings.dialogHoldSpeed}
+        onChange={onChange}
       />
     );
   }

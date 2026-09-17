@@ -227,6 +227,10 @@ enum {
   // refused and his own message box says why. No save byte, no wallet movement either way.
   // Off: the branch is the vendored condition and the vendored line, verbatim.
   kFeatures3_ArcheryNeedsBow       = 1073741824,
+  // Dialog pacing (core/game-hooks/dialog_pacing.c): the text engine's own step runs more than once
+  // a frame (speed multiplier, hold A to accelerate) and a B press fills the current box. Off: one
+  // step per frame and the joypad bytes untouched, the vendored engine verbatim.
+  kFeatures3_DialogControls        = 2147483648u,
 };
 
 // Enum values for kRam_Features4 — how helpful the items are. The reference randomizer asks this as one

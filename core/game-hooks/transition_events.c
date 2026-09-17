@@ -30,6 +30,9 @@ void GameHook_ModuleFrameEnd(void) {
   s_prev_module = mod;
   s_prev_submodule = sub;
 
+  // Close the frame for the dialog presence latch: a message is up when the engine ran during it.
+  DialogPresence_FrameEnd();
+
   // Pure C-side repair under its own gate (kFeatures3_ReceiptMessages), which runs even
   // when developer tools are off, ahead of the host-call gate below.
   GameHook_ReceiptPoseGfxGuard();
