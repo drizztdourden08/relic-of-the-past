@@ -164,6 +164,8 @@ void PpuBeginDrawing(Ppu *ppu, uint8_t *pixels, size_t pitch, uint32_t render_fl
     g_ppu_sprite_budget_hits = 0, g_ppu_tile_budget_hits = 0;
   }
   ppu->renderFlags = render_flags;
+  ppu->window1Wide = false;
+  ppu->lockShiftSomeFixed = false;
   ppu->renderPitch = (uint)pitch;
   ppu->renderBuffer = pixels;
 
@@ -272,14 +274,21 @@ static void PpuWindows_Calc(PpuWindows *win, Ppu *ppu, uint layer) {
   win->edges[1] = window_right;
   uint i, j;
   int t;
-  bool w1_ena = (winflags & kWindow1Enabled) && ppu->window1left <= ppu->window1right;
+  // Window 1 edges: the registers, or the wide pair (see Ppu.window1Wide) held inside this layer's span so
+  // the edge search below always finds them.
+  int w1l = ppu->window1left, w1r = ppu->window1right;
+  if (ppu->window1Wide) {
+    w1l = IntMax(ppu->window1leftWide, win->edges[0]);
+    w1r = IntMin(ppu->window1rightWide, window_right - 1);
+  }
+  bool w1_ena = (winflags & kWindow1Enabled) && w1l <= w1r;
   if (w1_ena) {
-    if (ppu->window1left > win->edges[0]) {
-      win->edges[nr] = ppu->window1left;
+    if (w1l > win->edges[0]) {
+      win->edges[nr] = w1l;
       win->edges[++nr] = window_right;
     }
-    if (ppu->window1right + 1 < window_right) {
-      win->edges[nr] = ppu->window1right + 1;
+    if (w1r + 1 < window_right) {
+      win->edges[nr] = w1r + 1;
       win->edges[++nr] = window_right;
     }
   }
@@ -306,8 +315,8 @@ static void PpuWindows_Calc(PpuWindows *win, Ppu *ppu, uint layer) {
   // get a bitmap of how regions map to windows
   uint8 w1_bits = 0, w2_bits = 0;
   if (w1_ena) {
-    for (i = 0; win->edges[i] != ppu->window1left; i++);
-    for (j = i; win->edges[j] != ppu->window1right + 1; j++);
+    for (i = 0; win->edges[i] != w1l; i++);
+    for (j = i; win->edges[j] != w1r + 1; j++);
     w1_bits = ((1 << (j - i)) - 1) << i;
   }
   if ((winflags & (kWindow1Enabled | kWindow1Inversed)) == (kWindow1Enabled | kWindow1Inversed))
@@ -1429,20 +1438,28 @@ static int ppu_getPixelForMode7(Ppu* ppu, int x, int layer, bool priority) {
   return pixel;
 }
 
+// The camera-lock shift a sprite takes. Every sprite takes it, except the slots a frame marks in
+// oamLockFixed, which stay placed for the base frame.
+static inline int PpuSpriteLockShift(const Ppu *ppu, int index, int shift) {
+  return (ppu->lockShiftSomeFixed && ppu->oamLockFixed[index >> 1]) ? 0 : shift;
+}
+
 static bool ppu_getWindowState(Ppu* ppu, int layer, int x) {
   uint32 winflags = GET_WINDOW_FLAGS(ppu, layer);
+  int w1l = ppu->window1Wide ? ppu->window1leftWide : ppu->window1left;
+  int w1r = ppu->window1Wide ? ppu->window1rightWide : ppu->window1right;
   if (!(winflags & kWindow1Enabled) && !(winflags & kWindow2Enabled)) {
     return false;
   }
   if ((winflags & kWindow1Enabled) && !(winflags & kWindow2Enabled)) {
-    bool test = x >= ppu->window1left && x <= ppu->window1right;
+    bool test = x >= w1l && x <= w1r;
     return (winflags & kWindow1Inversed) ? !test : test;
   }
   if (!(winflags & kWindow1Enabled) && (winflags & kWindow2Enabled)) {
     bool test = x >= ppu->window2left && x <= ppu->window2right;
     return (winflags & kWindow2Inversed) ? !test : test;
   }
-  bool test1 = x >= ppu->window1left && x <= ppu->window1right;
+  bool test1 = x >= w1l && x <= w1r;
   bool test2 = x >= ppu->window2left && x <= ppu->window2right;
   if (winflags & kWindow1Inversed) test1 = !test1;
   if (winflags & kWindow2Inversed) test2 = !test2;
@@ -1500,7 +1517,7 @@ static bool ppu_evaluateSprites(Ppu* ppu, int line) {
       // flickers. Shift after decoding instead.
       if (yy >= 256 + (int)ppu->extraTopBottom)
         yy -= 512;
-      yy += ppu->cameraLockShiftY;
+      yy += PpuSpriteLockShift(ppu, index, ppu->cameraLockShiftY);
       row = line - yy;
       if (row < 0 || row >= spriteSize)
         continue;
@@ -1515,12 +1532,12 @@ static bool ppu_evaluateSprites(Ppu* ppu, int line) {
       // Wide view: place at the TRUE X. oamHighX carries the signed bits above the 9th, so a sprite sits
       // anywhere across a >512px view with no ±512 fold (the fold would otherwise draw a 512px-away ghost).
       x += (int)(int8_t)ppu->oamHighX[index >> 1] * 512;
-      x += ppu->cameraLockShiftX;
+      x += PpuSpriteLockShift(ppu, index, ppu->cameraLockShiftX);
     } else {
       // Stock path (4:3 / tall-only): the view is at most 256px wide so the 9-bit X plus fold is exact and
       // never ghosts. Same ordering rule as the Y axis above: fold to decode, then apply the view shift.
       x -= (x >= 256 + extra_left_right) * 512;
-      x += ppu->cameraLockShiftX;
+      x += PpuSpriteLockShift(ppu, index, ppu->cameraLockShiftX);
     }
     // if in x-range
     if (x <= -(spriteSize + extra_left_right))

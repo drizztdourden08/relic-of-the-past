@@ -17,6 +17,15 @@
 #define MODULE_SPOTLIGHT_OPEN   16  // transient spotlight (iris opening)
 #define MODULE_ATTRACT          20  // Module14_Attract: the title demo, no live room behind it
 #define MODULE_TRIFORCE_ROOM    25  // Module19_TriforceRoom: first of the ending modules
+#define MODULE_GAME_OVER        18  // Module12_GameOver: the fall, the red fill, the GAME OVER letters, the save
+                                    // menu and the revival fairy, drawn over the interrupted play
+#define GAME_OVER_SUB_IRIS_WIPE  3  // kModule_Death: the circle closing on the player
+#define GAME_OVER_SUB_LETTERS    7  // kModule_Death: the GAME OVER letters falling in
+#define GAME_OVER_SUB_SAVE_MENU  9  // kModule_Death: the save / continue choice
+#define GAME_OVER_LETTER_SLOTS  16  // GameOverText_Draw: two OAM slots per letter from the start of oam_buf
+#define GAME_OVER_CURSOR_SLOT   20  // GameOver_AnimateChoiceFairy: oam_buf[0x14]
+#define GAME_OVER_SUB_FAIRY_RISE 12  // kModule_Death: the revival fairy lifting the player, still over the fill;
+                                    // 13 onward brings the scene back
 #define MODULE_PIT_FALL_ENTRANCE 17  // Module11_DungeonFallingEntrance: the crossing a hole in the
                                      // overworld hands control to, from the palette bounce over the
                                      // departure screen to the landing in the room below. A wallmaster

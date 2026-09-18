@@ -178,6 +178,16 @@ struct Ppu {
   // the draw never reaches the compare. Not part of a save state.
   uint16_t hiddenTiles[8];
   uint8_t hiddenTileCount;
+  // Window 1 edges past the 8-bit registers, for a view wider than the base frame. When window1Wide is
+  // set the window calculation reads these in place of window1left / window1right; ZeldaDrawPpuFrame sets
+  // it per line and PpuBeginDrawing clears it, so a frame that never sets it draws exactly as before. Not
+  // part of a save state.
+  bool window1Wide;
+  int16_t window1leftWide, window1rightWide;
+  // Slots whose sprite is placed for the base frame while the scene behind it is shifted by the camera
+  // lock, so they skip the shift. Only read while lockShiftSomeFixed is set, which PpuBeginDrawing clears.
+  bool lockShiftSomeFixed;
+  uint8_t oamLockFixed[128];
 
   // store 31 extra entries to remove the need for clamp
   uint8_t brightnessMult[32 + 31];

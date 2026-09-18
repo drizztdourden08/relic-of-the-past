@@ -1469,6 +1469,7 @@ void IrisSpotlight_ConfigureTable() {  // 80f312
       hdma_table_dynamic[r4] = r8;
     if (r6 < 240)
       hdma_table_dynamic[r6] = r8;
+    GameHook_IrisTableLines(r4, r6, r8);
     if (r4 == r14)
       break;
     r4++, r6--;
@@ -1514,6 +1515,7 @@ uint16 IrisSpotlight_CalculateCircleValue(uint8 a) {  // 80f4cc
   uint16 p = 2 * (uint8)(r10 * (uint8)spotlight_var1 >> 8);
   if (!r10)
     return 0xff;
+  GameHook_IrisCircleSpan((int16)spotlight_var3 - p, (int16)spotlight_var3 + p);
   uint16 r2 = spotlight_var3 + p;
   uint16 r0 = spotlight_var3 - p;
   r0 = ((int16)r0 < 0) ? 0 :
