@@ -22,6 +22,9 @@ import { darkRoomLightKeyOf, DARK_ROOM_REQUIRED_KEY } from '@shared/randomizer/a
 import { difficultyValuesOf } from '@shared/randomizer/ap-world/difficulty/difficulty-from-snapshot';
 import { DUNGEON_ITEM_OPTION_KEYS } from '@shared/randomizer/ap-world/dungeon-items/dungeon-item-modes';
 import { itemPowerValuesOf } from '@shared/randomizer/ap-world/item-power/item-power-from-snapshot';
+import { storyGateValuesOf } from '@shared/randomizer/ap-world/story-gates/story-gate-from-snapshot';
+import { DEFAULT_STORY_GATES } from '@shared/randomizer/ap-world/story-gates/story-gates.data';
+import type { StoryGateSetting } from '@shared/randomizer/ap-world/story-gates/story-gate.type';
 import { potionPriceOverrides } from '@shared/randomizer/ap-world/potion-price';
 import { progressiveValuesOf } from '@shared/randomizer/ap-world/progressive/progressive-from-snapshot';
 import { progressiveModeValuesOf } from '@shared/randomizer/ap-world/progressive/progressive-mode-from-snapshot';
@@ -101,6 +104,8 @@ interface RandomizerOptionChoices {
   difficulty: DifficultySetting;
   /** The seven item-power switches, one field for the whole set. */
   itemPower: ItemPowerSetting;
+  /** Which recorded event each story gate reads, and what the counts ask for; one field for all thirteen rows. */
+  storyGates: StoryGateSetting;
   /** How much of the seed has to be reachable for it to count as valid. */
   accessibility: AccessibilityMode;
   /** Must an unlit room be lit to count as passable? */
@@ -116,7 +121,13 @@ interface RandomizerOptionChoices {
 type ChoiceField = Exclude<
   keyof RandomizerOptionChoices,
   'capacity' | 'capacityBonus' | 'capacityEnabled' | 'capacityProgressive' | 'difficulty' | 'itemPower' | 'ponds'
+  | 'pondShare' | 'progressiveTiers' | 'progressiveModes' | 'retroBow' | 'shopPrices' | 'shops' | 'storyGates'
+| 'capacityBonus' | 'capacityEnabled' | 'capacityProgressive' | 'difficulty' | 'itemPower' | 'ponds'
   | 'pondShare' | 'progressiveTiers' | 'progressiveModes' | 'retroBow' | 'shopPrices' | 'shops'
+=======
+  'capacity' | 'capacityBonus' | 'capacityEnabled' | 'capacityProgressive' | 'difficulty' | 'itemPower' | 'pond'
+  | 'progressiveTiers' | 'progressiveModes' | 'retroBow' | 'shopPrices' | 'shops' | 'storyGates'
+>>>>>>> 3b3a613a1 (wip(story-events): event ledger, story gates, event records, vanilla tracker logic)
 >;
 
 /**
@@ -204,6 +215,8 @@ const randomizerChoiceOverrides = (
     ...retroBowValuesOf(choices.retroBow),
     ...itemPowerValuesOf(choices.itemPower),
     ...difficultyValuesOf(choices.difficulty),
+    // A choices object that never carried the story gates reads as the story as the game tells it.
+    ...storyGateValuesOf(choices.storyGates ?? DEFAULT_STORY_GATES),
   };
 };
 

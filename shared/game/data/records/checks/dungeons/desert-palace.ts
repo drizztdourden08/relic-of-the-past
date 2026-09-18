@@ -68,7 +68,10 @@ const DUNGEON_DESERT_PALACE_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-131',
-    gameId: { roomId: 51, mask: 2048 },
+    // The reward pickup is its own ledger bit; a file older than the ledger reads the heart bit
+    // and this dungeon's own reward in hand, which is what taking it meant before shuffles.
+    gameId: { eventBit: 22 },
+    fallback: { allOf: [{ checkId: 'check-130' }, { itemId: 'item-110' }] },
     kind: 'prize',
     screenId: 'screen-113',
     dungeonId: 'dungeon-004',

@@ -19,6 +19,7 @@ import type { FillerPicker } from '../pool/balance-filler';
 import type { CapacityPoolCounts, CapacityProfile } from '../capacity/capacity-profile.type';
 import type { CapacityBonusSetting } from '../capacity/bonus/capacity-bonus.type';
 import type { DarkRoomSetting } from '../dark-rooms/dark-room.type';
+import type { StoryGateSetting } from '../story-gates/story-gate.type';
 import type { DifficultySetting } from '../difficulty/difficulty.type';
 import type { ItemPowerSetting } from '../item-power/item-power.type';
 import type { PondDemandView } from '../pond/pond-ask.type';
@@ -87,6 +88,11 @@ interface FillWorldOptions {
    * reading the oracles pin: light required, the lamp alone providing it.
    */
   darkRooms?: DarkRoomSetting;
+  /**
+   * Which recorded event each story gate reads (story-gates/). Absent means the story as
+   * the game tells it, which is what every earlier placement was played under.
+   */
+  storyGates?: StoryGateSetting;
   /**
    * Which tiers of each progressive family exist (progressive/). Absent means
    * every tier: the reference pool every earlier placement was built from.
@@ -171,6 +177,7 @@ interface FillWorld {
   pondSlotsFollowMode: boolean;
   /** What an unlit room asks for in this world. */
   darkRooms: DarkRoomSetting;
+  storyGates: StoryGateSetting;
   /** The tier ticks the world and pool were built for. */
   progressiveTiers: ProgressiveSetting;
   /** How each family's copies arrive: in order, or the rungs themselves. */

@@ -31,6 +31,11 @@ const filterChecks = (
 ): CheckRecord[] => {
   let result = checks;
 
+  // Items, events, or both. Absent reads as items: the list as it always was.
+  const showMode = filter.showMode ?? 'items';
+  if (showMode === 'items') result = result.filter(c => c.kind !== 'event');
+  else if (showMode === 'events') result = result.filter(c => c.kind === 'event');
+
   if (filter.searchQuery.trim()) {
     const q = filter.searchQuery.toLowerCase();
     result = result.filter(c => matchesSearch(c, q, run));

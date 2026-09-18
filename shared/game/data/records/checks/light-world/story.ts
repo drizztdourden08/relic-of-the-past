@@ -7,12 +7,15 @@ const LW_STORY_CHECKS: CheckRecord[] = [
     id: 'check-002',
     gameId: { bufferIndex: 0, compare: 'gte', value: 1 },
     kind: 'event',
-    randomizerName: 'Zelda Rescue Started',
+    randomizerName: 'Uncle Gives the Sword',
     vanillaItemIds: [],
   },
   {
     id: 'check-003',
-    gameId: { bufferIndex: 19, compare: 'eq', value: 4 },
+    // The shelf's own ledger bit; a file older than the ledger reads the Sanctuary, which
+    // the shelf always precedes. The spawn-point value it used to read moves on later.
+    gameId: { eventBit: 42 },
+    fallback: { checkId: 'check-004' },
     kind: 'event',
     randomizerName: 'Throne Room Shelf Moved',
     vanillaItemIds: [],

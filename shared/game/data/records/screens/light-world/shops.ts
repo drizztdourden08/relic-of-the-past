@@ -40,7 +40,7 @@ const LW_SHOPS_SCREENS: ScreenRecord[] = [
   },
   {
     id: 'screen-213',
-    gameId: { roomIndex: 267 },
+    gameId: { roomIndex: 255 },
     kind: 'interior',
     world: 'light',
     interiorKind: 'shop',

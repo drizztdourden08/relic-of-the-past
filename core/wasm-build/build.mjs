@@ -61,7 +61,7 @@ const hookSrcs = [
   'dungeon_item_grants', 'dungeon_item_probes',
   'player_sprite', 'player_sprite_map', 'transition_events', 'state_queries_combat', 'state_queries_oam',
   'state_queries_pose',
-  'item_power', 'swordless_paths', 'retro_bow', 'retro_drops', 'retro_shelf', 'retro_quiver_icon', 'archery_host',
+  'item_power', 'swordless_paths', 'story_events', 'story_probes', 'story_barrier', 'story_status', 'events/event_ledger', 'events/event_watch', 'events/event_receipts', 'retro_bow', 'retro_drops', 'retro_shelf', 'retro_quiver_icon', 'archery_host',
   'dark_room_lights', 'file_name_prefill',
   'host_gates', 'hud_override', 'dialog_pacing', 'dialog_mirror', 'dialog_presence', 'dialog_suppress', 'running_man', 'music_hooks', 'sound_hooks',
   'view_gates', 'attract_view', 'spotlight_growth', 'attract_sprites', 'iris_wide', 'hide_space_beyond_walls', 'fixed_picture_edges',

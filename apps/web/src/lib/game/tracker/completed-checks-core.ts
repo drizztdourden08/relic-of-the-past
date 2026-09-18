@@ -9,23 +9,29 @@
  * threshold, so a fabricated read is not a safe "no".
  */
 import { all } from '@shared/game/data';
-import type { CheckId } from '@shared/game/data';
-import { isOutOfBedFallbackMet, isOverworldFactMet, isProgressFactMet, isRoomFactMet } from './check-facts';
+import type { CheckId, ItemId } from '@shared/game/data';
+import { isEventFactMet, isOutOfBedFallbackMet, isOverworldFactMet, isProgressFactMet, isRoomFactMet } from './check-facts';
+import { resolveDerivedChecks } from './derived-checks';
 import { completionBitOf } from '../randomizer-client/randomizer-completion-bits';
 
 interface ProgressReaders {
   readRoomWord: ((roomId: number) => number) | null;
   readOwByte: ((owScreen: number) => number) | null;
   readProgByte: ((bufferIndex: number) => number) | null;
+  /** The event ledger bytes (WasmGetEventBytes, or the battery file's own copy). */
+  readEventByte?: ((byteIndex: number) => number) | null;
+  /** Items held, for the derived pass's held-item events; null skips them. */
+  inventory?: ReadonlySet<ItemId> | null;
 }
 
 const computeCompletedChecks = (
   readers: ProgressReaders,
   isArmed: (checkId: string) => boolean,
 ): Set<CheckId> => {
-  const { readRoomWord, readOwByte, readProgByte } = readers;
+  const { readRoomWord, readOwByte, readProgByte, readEventByte = null, inventory = null } = readers;
   const completed = new Set<CheckId>();
-  for (const check of all('check')) {
+  const checks = all('check');
+  for (const check of checks) {
     const { gameId } = check;
     // A physically armed substitution row must never complete off its record's
     // possession-proxy detection: the vanilla item can arrive from anywhere in a
@@ -44,9 +50,11 @@ const computeCompletedChecks = (
       completed.add(check.id);
     } else if (readProgByte && (isProgressFactMet(gameId, readProgByte) || isOutOfBedFallbackMet(gameId, readProgByte))) {
       completed.add(check.id);
+    } else if (readEventByte && isEventFactMet(gameId, readEventByte)) {
+      completed.add(check.id);
     }
   }
-  return completed;
+  return resolveDerivedChecks(completed, inventory, checks);
 };
 
 export { computeCompletedChecks };

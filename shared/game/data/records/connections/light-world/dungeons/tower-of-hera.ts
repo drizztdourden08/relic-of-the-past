@@ -53,7 +53,7 @@ const LW_DUNGEON_TOWER_OF_HERA_CONNECTIONS: ConnectionRecord[] = [
     },
     canExit: true,
     dungeonId: 'dungeon-005',
-    tags: ['tag-079', 'tag-058'],
+    tags: ['tag-079'],
   },
   {
     id: 'connection-299',

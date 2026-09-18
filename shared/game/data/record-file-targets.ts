@@ -6,7 +6,7 @@
  */
 import { findOne, getScreen } from './facade';
 import type {
-  ActorKind, AreaId, DungeonId, DungeonRecord, InteriorKind, ScreenGameId, ScreenId, ScreenKind, ScreenWorld,
+  ActorKind, AreaId, CheckKind, DungeonId, DungeonRecord, InteriorKind, ScreenGameId, ScreenId, ScreenKind, ScreenWorld,
 } from './types';
 import type { ItemCategory } from './taxonomy/item-categories';
 
@@ -108,6 +108,7 @@ const connectionRecordFile = (screenId: ScreenId): FileTarget => {
 interface CheckHome {
   screenId?: ScreenId;
   dungeonId?: DungeonId;
+  kind?: CheckKind;
 }
 
 /**
@@ -116,6 +117,9 @@ interface CheckHome {
  * unresolved, never guessed.
  */
 const checkRecordFile = (check: CheckHome): FileTarget => {
+  // Event records are built by records/checks/events/, not written one by one, so there is
+  // no file a single one can be appended to.
+  if (check.kind === 'event') return { relativePath: null, unresolved: 'event records are generated in records/checks/events' };
   const dungeonId = check.dungeonId;
   if (dungeonId) {
     const dungeon = findOne('dungeon', d => d.id === dungeonId);

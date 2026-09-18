@@ -25,10 +25,10 @@ import type {
   FilterState, GroupDimension, RunContext,
 } from '@shared/game/logic/queries/check-grouping';
 import {
-  getCompletedChecks, getCurrentInventory, onCompletedChecksChanged, onInventoryChanged,
+  getCompletedChecks, getCurrentInventory, getEventStatus, onCompletedChecksChanged, onEventStatusChanged, onInventoryChanged,
 } from '../lib/game';
 import {
-  apAlignedCheckRecords, buildPlacementView, computeApTrackerSnapshot, firedLocations, getSessionState,
+  apAlignedCheckRecords, buildPlacementView, computeApTrackerSnapshot, eventCheckRecords, firedLocations, getSessionState,
   onFiredLocation, subscribeSessionStore,
 } from '../lib/game/randomizer-client';
 import type { PlacementView } from '../lib/game/randomizer-client';
@@ -61,6 +61,7 @@ const useTrackerData = (options: TrackerDataOptions = {}) => {
 
   const [inventory, setInventory] = useState<Set<ItemId>>(() => getCurrentInventory());
   const [completedChecks, setCompletedChecks] = useState<Set<CheckId>>(() => getCompletedChecks());
+  const [eventStatus, setEventStatus] = useState<ReadonlyMap<CheckId, boolean>>(() => new Map(getEventStatus()));
   const [placement, setPlacement] = useState(() => getSessionState().placement);
   const [fired, setFired] = useState<ReadonlySet<string>>(() => firedLocations());
   const [viewMode, setViewMode] = useWidgetPref<ViewMode>(prefKey, 'viewMode', initialViewMode);
@@ -77,6 +78,7 @@ const useTrackerData = (options: TrackerDataOptions = {}) => {
 
   useEffect(() => onInventoryChanged((inv) => setInventory(new Set(inv))), []);
   useEffect(() => onCompletedChecksChanged((checks) => setCompletedChecks(new Set(checks))), []);
+  useEffect(() => onEventStatusChanged((status) => setEventStatus(new Map(status))), []);
   useEffect(() => subscribeSessionStore((state) => setPlacement(state.placement)), []);
   useEffect(() => onFiredLocation(() => setFired(new Set(firedLocations()))), []);
 
@@ -85,10 +87,12 @@ const useTrackerData = (options: TrackerDataOptions = {}) => {
   // CheckRecord backs (shop slots at whatever depth this seed opened, chiefly),
   // so the widget's total always matches what the generator actually produced.
   // Vanilla profiles carry no placement, so this is just checkRecords for them.
+  // The events ride along on a seed too: shown, never counted in its total (see stats).
   const effectiveCheckRecords = useMemo(
-    () => (placement ? apAlignedCheckRecords(checkRecords, placement) : checkRecords),
+    () => (placement ? [...apAlignedCheckRecords(checkRecords, placement), ...eventCheckRecords(checkRecords)] : checkRecords),
     [checkRecords, placement],
   );
+  const eventIds = useMemo(() => new Set(eventCheckRecords(checkRecords).map((c) => c.id)), [checkRecords]);
   const resolvedLogic = useMemo(() => resolveRules(VANILLA_CONFIG), []);
   const effectiveInventory = useMemo(() => {
     const merged = new Set(resolvedLogic.startInventory);
@@ -96,13 +100,20 @@ const useTrackerData = (options: TrackerDataOptions = {}) => {
     return merged;
   }, [inventory, resolvedLogic]);
 
+  // A status-only row has no "ever" fact of its own: its tick is its live status (story.ts).
+  const effectiveCompleted = useMemo(() => {
+    const merged = new Set(completedChecks);
+    for (const check of checkRecords) if (check.statusOnly && eventStatus.get(check.id)) merged.add(check.id);
+    return merged;
+  }, [completedChecks, checkRecords, eventStatus]);
+
   const vanillaSnapshot = useMemo(
-    () => computeTrackerSnapshot(effectiveInventory, completedChecks, checkRecords, resolvedLogic.connections, resolvedLogic.checkOverrides),
-    [effectiveInventory, completedChecks, checkRecords, resolvedLogic],
+    () => computeTrackerSnapshot(effectiveInventory, effectiveCompleted, checkRecords, resolvedLogic.connections, resolvedLogic.checkOverrides),
+    [effectiveInventory, effectiveCompleted, checkRecords, resolvedLogic],
   );
   const apSnapshot = useMemo(
-    () => (placement ? computeApTrackerSnapshot(placement, completedChecks, effectiveCheckRecords, fired) : null),
-    [placement, completedChecks, effectiveCheckRecords, fired],
+    () => (placement ? computeApTrackerSnapshot(placement, effectiveCompleted, effectiveCheckRecords, fired) : null),
+    [placement, effectiveCompleted, effectiveCheckRecords, fired],
   );
   const snapshot = apSnapshot ?? vanillaSnapshot;
 
@@ -114,15 +125,21 @@ const useTrackerData = (options: TrackerDataOptions = {}) => {
     [placement, placementView],
   );
 
+  // The totals follow the Items / Events / Both switch: the summary counts what the list shows.
   const stats = useMemo(() => {
-    let completed = 0, reachable = 0, blocked = 0;
-    for (const status of snapshot.values()) {
+    const showMode = filter.showMode ?? 'items';
+    let completed = 0, reachable = 0, blocked = 0, total = 0;
+    for (const [id, status] of snapshot) {
+      const isEvent = eventIds.has(id);
+      if (showMode === 'items' && isEvent) continue;
+      if (showMode === 'events' && !isEvent) continue;
+      total++;
       if (status === 'completed') completed++;
       else if (status === 'reachable') reachable++;
       else blocked++;
     }
-    return { completed, reachable, blocked, total: snapshot.size };
-  }, [snapshot]);
+    return { completed, reachable, blocked, total };
+  }, [snapshot, eventIds, filter.showMode]);
 
   const filteredChecks = useMemo(
     () => filterChecks(effectiveCheckRecords, filter, snapshot, run),
@@ -139,7 +156,7 @@ const useTrackerData = (options: TrackerDataOptions = {}) => {
     filter, setFilter,
     panels, setPanels,
     expandedGroups, toggleGroup,
-    snapshot, stats, groupTree,
+    snapshot, stats, groupTree, eventStatus,
     placement, placementView, run,
   };
 };

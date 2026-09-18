@@ -24,7 +24,10 @@ const LW_SOUTH_HYRULE_CHECKS: CheckRecord[] = [
     // RoomTag_WaterGate (dungeon.c) sets dung_savegame_state_bits 0x800 when the lever
     // drains the swamp, and Dung_SaveDataForCurrentRoom persists that word shifted right
     // by four, so the saved bit is 0x80 on room 85, the dam.
-    gameId: { roomId: 85, mask: 128 },
+    // The lever's ledger bit: the game erases its own dam bits on the next overworld load. A
+    // file older than the ledger reads the heart piece the drained pond uncovers.
+    gameId: { eventBit: 97 },
+    fallback: { checkId: 'check-009' },
     kind: 'event',
     screenId: 'screen-170',
     randomizerName: 'Floodgate',

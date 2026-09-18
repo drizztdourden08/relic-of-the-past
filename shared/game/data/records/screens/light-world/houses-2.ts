@@ -65,7 +65,7 @@ const LW_HOUSES_SCREENS_2: ScreenRecord[] = [
   },
   {
     id: 'screen-170',
-    gameId: { roomIndex: 85 },
+    gameId: { roomIndex: 267 },
     kind: 'interior',
     world: 'light',
     interiorKind: 'house',

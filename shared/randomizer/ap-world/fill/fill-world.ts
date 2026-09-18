@@ -33,6 +33,7 @@ import { capacityPoolCountsOf } from '../capacity/family-plan';
 import { CAPACITY_POND, POND_INSTANCES } from '../pond/pond-instances.data';
 import { LEGACY_POND_PROFILES } from '../pond/pond-profile-defaults';
 import { REFERENCE_DARK_ROOM_SETTING } from '../dark-rooms/dark-room-lights.data';
+import { DEFAULT_STORY_GATES } from '../story-gates/story-gates.data';
 import { DEFAULT_PROGRESSIVE_SETTING } from '../progressive/progressive-families.data';
 import { DEFAULT_DIFFICULTY } from '../difficulty/difficulty.data';
 import { DEFAULT_PROGRESSIVE_MODES } from '../progressive/progressive-modes.data';
@@ -113,7 +114,7 @@ const buildFillWorld = (options: FillWorldOptions): FillWorld => {
     deliverableCapacityLocations, medallions,
     shops = NO_SHOP_SCOPE, shopPrices = NO_SHOP_PRICES, ponds = LEGACY_POND_PROFILES, pondDemands,
     pondSlotsFollowMode = false,
-    darkRooms = REFERENCE_DARK_ROOM_SETTING, unlitEscapeExempt,
+    darkRooms = REFERENCE_DARK_ROOM_SETTING, unlitEscapeExempt, storyGates = DEFAULT_STORY_GATES,
     progressiveTiers = DEFAULT_PROGRESSIVE_SETTING, progressiveModes = DEFAULT_PROGRESSIVE_MODES,
     itemPower = DEFAULT_ITEM_POWER, retroBow = DEFAULT_RETRO_BOW,
     dungeonItems = DEFAULT_DUNGEON_ITEM_SETTING, accessibility = DEFAULT_ACCESSIBILITY,
@@ -205,7 +206,7 @@ const buildFillWorld = (options: FillWorldOptions): FillWorld => {
   return {
     world, keyDropShuffle, includeNpcChecks, includeWorldItems, capacity, capacityProgressive, capacityBonus,
     shops, shopPrices,
-    ponds, pondSlotsFollowMode, pondLocations, darkRooms, progressiveTiers, progressiveModes, itemPower, retroBow,
+    ponds, pondSlotsFollowMode, pondLocations, darkRooms, storyGates, progressiveTiers, progressiveModes, itemPower, retroBow,
     dungeonItems, accessibility, difficulty,
     capacityCounts: capacityPoolCountsOf(
       capacity, checkSpotCount(capacity, pondLocations, lockedCapacity, lockedScope)),

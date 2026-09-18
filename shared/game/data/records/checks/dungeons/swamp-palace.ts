@@ -103,7 +103,10 @@ const DUNGEON_SWAMP_PALACE_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-167',
-    gameId: { roomId: 6, mask: 2048 },
+    // The reward pickup is its own ledger bit; a file older than the ledger reads the heart bit
+    // and this dungeon's own reward in hand, which is what taking it meant before shuffles.
+    gameId: { eventBit: 24 },
+    fallback: { allOf: [{ checkId: 'check-166' }, { itemId: 'item-113' }] },
     kind: 'prize',
     screenId: 'screen-319',
     dungeonId: 'dungeon-007',

@@ -157,7 +157,7 @@ bool GameHook_GiftGateClosed(uint8 vanilla_item, bool vanilla_closed) {
 // on owning the elder's gift, so it must follow his gate exactly (real completion bit
 // while his grant is overridden, the vanilla possession test otherwise).
 bool GameHook_MountainSpawnUnlocked(void) {
-  return GameHook_GiftGateClosed(0x1a, link_item_mirror == 2);
+  return GameHook_StoryGate(kGate_MountainRespawn, GameHook_GiftGateClosed(0x1a, link_item_mirror == 2));
 }
 
 void GameHook_NpcOverrideBypassOnce(void) {

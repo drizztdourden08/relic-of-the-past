@@ -15,6 +15,7 @@
  * the hand-authored vanilla dataset.
  */
 import { buildFillWorld } from './ap-world/fill/fill-world';
+import { DEFAULT_STORY_GATES } from './ap-world/story-gates/story-gates.data';
 import { capacityBonusOfStats, capacityProfileOfStats, capacityProgressiveOfStats } from './ap-world/fill/placement-capacity';
 import { pondProfilesOfStats } from './ap-world/fill/placement-ponds';
 import { createCollectionState } from './ap-world/collection-state';
@@ -47,6 +48,7 @@ const worldFromPlacement = (placement: ApPlacement): ApWorld => {
     pondSlotsFollowMode: stats.pondSlotsFollowMode === true,
     pondDemands: placement.pondDemands,
     darkRooms: stats.darkRooms,
+    storyGates: stats.storyGates ?? DEFAULT_STORY_GATES,
     progressiveTiers: stats.progressiveTiers,
     progressiveModes: stats.progressiveModes,
     retroBow: stats.retroBow,

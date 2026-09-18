@@ -46,6 +46,13 @@ const isProgressFactMet = (gameId: CheckGameId, readProgByte: (bufferIndex: numb
   return false;
 };
 
+/** A ledger bit (core/game-hooks/events/event_ids.h): an event the game never records for itself. */
+const isEventFactMet = (gameId: CheckGameId, readEventByte: (byteIndex: number) => number): boolean => {
+  const { eventBit } = gameId;
+  if (eventBit === undefined) return false;
+  return ((readEventByte(eventBit >> 3) >> (eventBit & 7)) & 1) === 1;
+};
+
 /** A save loaded past the first gift is out of bed even if the bed-state byte no longer says so, so the progress indicator (buffer index 0) answers too. Only for the record owning BED_STATE_BUFFER_INDEX. */
 const isOutOfBedFallbackMet = (gameId: CheckGameId, readProgByte: (bufferIndex: number) => number): boolean =>
   gameId.bufferIndex === BED_STATE_BUFFER_INDEX && readProgByte(0) >= 1;
@@ -54,4 +61,4 @@ const isOutOfBedFallbackMet = (gameId: CheckGameId, readProgByte: (bufferIndex: 
 const outOfBedCheckId = (): CheckId | undefined =>
   getCheckByGameId({ bufferIndex: BED_STATE_BUFFER_INDEX, compare: 'gte', value: 2 })?.id;
 
-export { isOutOfBedFallbackMet, isOverworldFactMet, isProgressFactMet, isRoomFactMet, outOfBedCheckId };
+export { isEventFactMet, isOutOfBedFallbackMet, isOverworldFactMet, isProgressFactMet, isRoomFactMet, outOfBedCheckId };

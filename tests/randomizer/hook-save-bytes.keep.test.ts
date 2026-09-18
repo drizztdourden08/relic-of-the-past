@@ -39,6 +39,7 @@ const CLAIMS: ReadonlyArray<readonly [string, string]> = [
   ['SRM_POND_THROWS', ''],
   ['SRM_WISH_POND_THROWS', 'SRM_WISH_POND_THROWS_COUNT'],
   ['SRM_SHOP_SOLD', 'SRM_SHOP_SOLD_COUNT'],
+  ['SRM_EVENT_LEDGER', 'SRM_EVENT_LEDGER_COUNT'],
 ];
 
 const SPAN_NAMES = ['SAVE_BLOCK_BASE', 'HOOK_SAVE_FIRST', 'HOOK_SAVE_LAST'] as const;

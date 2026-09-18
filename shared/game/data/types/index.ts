@@ -15,7 +15,7 @@ export type {
   ConnectionForm, ConnectionGameId, ConnectionKind, ConnectionPlacement, ConnectionRecord,
   ConnectionRect, ConnectionSide, ConnectionTile,
 } from './connection';
-export type { BitState, CheckGameId, CheckKind, CheckRecord, PresenceCondition, Requirement } from './check';
+export type { BitState, CheckGameId, CheckKind, CheckRecord, EventGroup, PresenceCondition, Requirement } from './check';
 export type { ItemGameId, ItemRecord } from './item';
 export type { DungeonGameId, DungeonRecord } from './dungeon';
 export type { AreaRecord, LocationRecord } from './region';

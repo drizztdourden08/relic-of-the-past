@@ -47,6 +47,10 @@ const SRM_WISH_POND_THROWS_COUNT = 2;
 const SRM_SHOP_SOLD = 0xf420;
 const SRM_SHOP_SOLD_COUNT = 31;
 
+/** events/event_ledger.c: one bit per event the game never records for itself. */
+const SRM_EVENT_LEDGER = 0xf43f;
+const SRM_EVENT_LEDGER_COUNT = 24;
+
 /** A save-block address as a byte offset inside one battery-save file block. */
 const blockOffsetOf = (wramAddress: number): number => wramAddress - SAVE_BLOCK_BASE;
 
@@ -56,6 +60,8 @@ export {
   SAVE_BLOCK_BASE,
   SRM_EMPTY_RUNG,
   SRM_EMPTY_RUNG_COUNT,
+  SRM_EVENT_LEDGER,
+  SRM_EVENT_LEDGER_COUNT,
   SRM_PENDING_CRYSTAL,
   SRM_POND_THROWS,
   SRM_PRIZE_TAKEN,

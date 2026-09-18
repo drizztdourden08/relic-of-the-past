@@ -8,6 +8,7 @@
 import type { MedallionName } from '../item-names.data';
 import type { AccessibilityMode } from '../accessibility/accessibility.type';
 import type { DarkRoomSetting } from '../dark-rooms/dark-room.type';
+import type { StoryGateSetting } from '../story-gates/story-gate.type';
 import type { DungeonItemSetting } from '../dungeon-items/dungeon-item.type';
 import type { PlacementSphere } from './verify-placement';
 import type { CapacityPoolCounts, CapacityProfile } from '../capacity/capacity-profile.type';
@@ -128,6 +129,12 @@ interface ApPlacementStats {
    * an absent value arms nothing and the seed keeps its meaning.
    */
   darkRooms?: DarkRoomSetting;
+  /**
+   * Which recorded event each story gate reads and what the counts ask for. Absent on
+   * placements persisted before the rows existed, which read as the story as the game
+   * tells it: the same thing a fresh profile arms.
+   */
+  storyGates?: StoryGateSetting;
   /** How many pond prize slots existed as locations. Absent on older placements. */
   pondPrizeCount?: number;
   /**

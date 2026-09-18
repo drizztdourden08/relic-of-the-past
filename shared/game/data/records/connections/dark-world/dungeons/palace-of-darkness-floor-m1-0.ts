@@ -273,7 +273,7 @@ const DW_DUNGEON_PALACE_OF_DARKNESS_FLOOR_M1_0_CONNECTIONS: ConnectionRecord[] =
     kind: 'door',
     placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
     canExit: true,
-    tags: [],
+    tags: ['tag-058'],
   },
 ];
 

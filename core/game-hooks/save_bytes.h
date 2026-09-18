@@ -19,7 +19,7 @@
 //
 // ADDING A CLAIM. Insert it in ASCENDING address order, give it a base and a count, name
 // the owner and the meaning, and add the two matching asserts. The gaps (0xF406-0xF40F,
-// 0xF41D-0xF41F, 0xF43F-0xF4FD) are free.
+// 0xF41D-0xF41F, 0xF457-0xF4FD) are free.
 //
 // THE TS MIRROR. apps/web/src/lib/game/save-file/hook-save-bytes.ts restates these
 // addresses for the offline save-file reader; tests/randomizer/hook-save-bytes.test.ts
@@ -83,6 +83,14 @@
 #define SRM_SHOP_SOLD 0xF420
 #define SRM_SHOP_SOLD_COUNT 31
 
+// ─── 0xF43F-0xF456: events/event_ledger.c, the event ledger ───
+// One bit per event the game never records for itself (events/event_ids.h names them; the
+// bit index is a save-file fact and never moves). Written only while kFeatures5_EventLedger
+// is set, by a test-and-set, so a save-state rewind that replays a trigger frame changes
+// nothing. Zero on a vanilla file and on every file older than the ledger.
+#define SRM_EVENT_LEDGER 0xF43F
+#define SRM_EVENT_LEDGER_COUNT 24
+
 // ─── Compile-time checks ───
 // Claims are listed in ascending address order above, so "each base is at or past the end
 // of the one before it" is exactly the no-overlap property; the first and last bounds keep
@@ -103,7 +111,9 @@ _Static_assert(SRM_WISH_POND_THROWS >= SRM_POND_THROWS + 1,
                "wish pond throw counters overlap the rupee pond throw counter");
 _Static_assert(SRM_SHOP_SOLD >= SRM_WISH_POND_THROWS + SRM_WISH_POND_THROWS_COUNT,
                "shelf sold counters overlap the wish pond throw counters");
-_Static_assert(SRM_SHOP_SOLD + SRM_SHOP_SOLD_COUNT - 1 <= HOOK_SAVE_LAST,
+_Static_assert(SRM_EVENT_LEDGER >= SRM_SHOP_SOLD + SRM_SHOP_SOLD_COUNT,
+               "event ledger overlaps the shelf sold counters");
+_Static_assert(SRM_EVENT_LEDGER + SRM_EVENT_LEDGER_COUNT - 1 <= HOOK_SAVE_LAST,
                "hook save bytes must end at or before 0xF4FD");
 
 #endif  // GAME_HOOKS_SAVE_BYTES_H

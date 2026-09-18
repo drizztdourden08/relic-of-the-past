@@ -124,7 +124,10 @@ const DUNGEON_TURTLE_ROCK_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-232',
-    gameId: { roomId: 164, mask: 2048 },
+    // The reward pickup is its own ledger bit; a file older than the ledger reads the heart bit
+    // and this dungeon's own reward in hand, which is what taking it meant before shuffles.
+    gameId: { eventBit: 31 },
+    fallback: { allOf: [{ checkId: 'check-231' }, { itemId: 'item-118' }] },
     kind: 'prize',
     screenId: 'screen-416',
     dungeonId: 'dungeon-012',

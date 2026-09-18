@@ -274,6 +274,66 @@ enum {
   // A capacity upgrade's borrowed receipt (ten bombs, ten arrows, the magic refill, fifty rupees) hands
   // over the profile's pickup bonus instead of its native goods (core/game-hooks/upgrade_bonus.c).
   kFeatures5_CapacityBonus = 1,
+
+  // Story events (core/game-hooks/events/, core/game-hooks/story_events.c). The game keeps almost no
+  // event log: where it needs to know how far a file has come it reads an ITEM and treats owning it
+  // as proof. These fields make each such site read the recorded event instead, and let a seed choose
+  // what a gate asks for. Every field at zero is the item reading, the vendored expression verbatim;
+  // zero is reached only through Vanilla Safe, since a fresh profile arms the event reading.
+  //
+  // The ledger: one bit per event the game never records, in the hook-owned save bytes
+  // (SRM_EVENT_LEDGER). Clear, no hook save byte is written.
+  kFeatures5_EventLedger      = 2,
+  // The scenes that read a beam blade as "the pedestal ceremony happened" (the captive's cell and
+  // sanctuary preps, the elder's death prep, the overworld song set, five hint lines) read the
+  // pedestal's own event bit instead.
+  kFeatures5_PedestalScenes   = 4,
+  // Multi-bit fields. Each is a small enum or a count; a mask and a shift name it below.
+  // PedestalGate: what the pedestal asks for. 0 three pendants held (vendored) · 1 the three Light
+  // World dungeons cleared · 2 any three dungeons cleared · 3 always open · 4-7 a count of pendants
+  // held, value - 3 (1 to 3, with 7 unused).
+  kFeatures5_PedestalGateMask  = 7u << 3,
+  kFeatures5_PedestalGateShift = 3,
+  // SahasrahlaGate: 0 the courage pendant held (vendored) · 1 the eastern palace cleared.
+  kFeatures5_SahasrahlaGate    = 1u << 6,
+  // BarrierGate: what breaks the castle barrier. 0 a blade that cuts it (vendored) · 1 the pedestal
+  // claimed · 2 all pendants held · 3 the three Light World dungeons cleared.
+  kFeatures5_BarrierGateMask   = 3u << 7,
+  kFeatures5_BarrierGateShift  = 7,
+  // BombShopGate: when the big bomb goes on sale. 0 crystals 5 and 6 held and the smiths reunited
+  // (vendored) · 1 the two dungeons holding those crystals cleared · 2 the tower count met.
+  kFeatures5_BombShopGateMask  = 3u << 9,
+  kFeatures5_BombShopGateShift = 9,
+  // TowerCount: crystals held or Dark World dungeons cleared before the tower opens, 0 to 7.
+  // TowerCountKind: 0 crystals held · 1 dungeons cleared. A zero count with kind 0 is vendored.
+  kFeatures5_TowerCountMask    = 7u << 11,
+  kFeatures5_TowerCountShift   = 11,
+  kFeatures5_TowerCountKind    = 1u << 14,
+  // GanonCount / GanonCountKind: same, before the last boss takes damage.
+  kFeatures5_GanonCountMask    = 7u << 15,
+  kFeatures5_GanonCountShift   = 15,
+  kFeatures5_GanonCountKind    = 1u << 18,
+  // PyramidHole: 0 after the second tower fight (vendored) · 1 open from the start · 2 open once the
+  // tower count is met.
+  kFeatures5_PyramidHoleMask   = 3u << 19,
+  kFeatures5_PyramidHoleShift  = 19,
+  // The tower's boss music reads the boss room's own bit instead of the wisdom pendant.
+  kFeatures5_HeraMusic         = 1u << 21,
+  // The weathervane scene and the stump's shovel offer read the weathervane's event bit instead of
+  // the flute's level.
+  kFeatures5_VaneScene         = 1u << 22,
+  // The mountain respawn on the continue menu reads "the old man was brought home" instead of the
+  // mirror.
+  kFeatures5_MountainRespawn   = 1u << 23,
+  // BombShopSmith: 0 the smiths are also asked for (vendored) · 1 not asked. Read only while
+  // BombShopGate is 0.
+  kFeatures5_BombShopSmith     = 1u << 24,
+  // The four possession-gated re-offers with no giver bit of their own (the powder bag, the stump's
+  // shovel, the falling boss reward, the cave bat) read the ledger, falling back to the item on a
+  // file older than the ledger.
+  kFeatures5_GiverReoffer      = 1u << 25,
+  // Every story field above, for the parity mask.
+  kFeatures5_StoryMask         = 0x03fffffeu,
 };
 
 #define enhanced_features0 (*(uint32*)(g_ram+0x64c))

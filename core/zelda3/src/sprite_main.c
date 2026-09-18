@@ -2093,7 +2093,7 @@ void MasterSword_Main(int k) {  // 8588d6
   switch (sprite_ai_state[k]) {
   case 0:  // waiting
     if (Sprite_CheckIfLinkIsBusy() || !Sprite_CheckDamageToLink_same_layer(k) || link_direction_facing != 2 ||
-      !(filtered_joypad_L & 0x80) || (link_which_pendants & 7) != 7)
+      !(filtered_joypad_L & 0x80) || !GameHook_StoryGate(kGate_Pedestal, (link_which_pendants & 7) == 7))
       return;
 
     music_control = 10;
@@ -6432,6 +6432,7 @@ void SpritePrep_HeartContainer(int k) {  // 85ef01
 
 void Sprite_HeartContainer(int k) {  // 85ef47
   if (BYTE(cur_palace_index_x2) == 26) {
+    GameHook_BossHeartSpawned(k);
     sprite_state[k] = 0;
     return;
   }
@@ -6440,6 +6441,7 @@ void Sprite_HeartContainer(int k) {  // 85ef47
     DecodeAnimatedSpriteTile_variable(3);
     Sprite_Get16BitCoords(k);
     sprite_G[k] = 1;
+    GameHook_BossHeartSpawned(k);
   }
 
   if (BYTE(dungeon_room_index2) == 6 && !sprite_z[k])
@@ -6533,7 +6535,7 @@ void HeartUpgrade_SetObtainedFlag(int k) {  // 85f0c3
 void Sprite_Aginah(int k) {  // 85f0ea
   if (!(sram_progress_flags & 0x20))
     goto default_msg;
-  if (link_sword_type >= 2) {
+  if (GameHook_StoryGate(kGate_PedestalScenes, link_sword_type >= 2)) {
     Sprite_ShowSolicitedMessage(k, 0x128);
   } else if ((link_which_pendants & 7) == 7) {
     Sprite_ShowSolicitedMessage(k, 0x126);
@@ -6573,7 +6575,7 @@ void Sprite_Sahasrahla(int k) {  // 85f14d
 }
 
 void Sasha_Idle(int k) {  // 85f160
-  if (!(link_which_pendants & 4)) {
+  if (!GameHook_StoryGate(kGate_Sahasrahla, (link_which_pendants & 4) != 0)) {
     if (Sprite_ShowSolicitedMessage(k, 0x32) & 0x100)
       sprite_ai_state[k] = 1;
   } else if (!GameHook_GiftGateClosed(0x4b, link_item_boots)) {
@@ -6584,7 +6586,7 @@ void Sasha_Idle(int k) {  // 85f160
     Sprite_ShowSolicitedMessage(k, 0x37);
   } else if ((link_which_pendants & 7) != 7) {
     Sprite_ShowSolicitedMessage(k, 0x34);
-  } else if (link_sword_type < 2) {
+  } else if (!GameHook_StoryGate(kGate_PedestalScenes, link_sword_type >= 2)) {
     Sprite_ShowSolicitedMessage(k, 0x30);
   } else {
     Sprite_ShowSolicitedMessage(k, 0x31);
@@ -6746,7 +6748,7 @@ void SpritePrep_PotionShop(int k) {  // 85f529
 }
 
 void MagicShopAssistant_SpawnPowder(int k) {  // 85f539
-  if (!flag_overworld_area_did_change || link_item_mushroom == 2)
+  if (!flag_overworld_area_did_change || GameHook_GiverTaken(kEvent_PowderBagTaken, link_item_mushroom == 2))
     return;
   if (save_dung_info[0x109] & 0x80) {
     SpriteSpawnInfo info;
@@ -7453,7 +7455,7 @@ void SpritePrep_BombShoppe(int k) {  // 8689df
     sprite_subtype2[j] = 1;
     sprite_ignore_projectile[j] = 1;
   }
-  if ((link_has_crystals & 5) == 5 && sram_progress_indicator_3 & 32) {
+  if (GameHook_StoryGate(kGate_BombShop, (link_has_crystals & 5) == 5 && (sram_progress_indicator_3 & 32) != 0)) {
     int j = Sprite_SpawnDynamically(k, 0xb5, &info);
     if (j >= 0) {
       Sprite_SetX(j, info.r0_x - 56);
@@ -8055,7 +8057,11 @@ void SpritePrep_FluteKid(int k) {  // 869075
   sprite_ignore_projectile[k]++;
   sprite_subtype2[k] = savegame_is_darkworld >> 6 & 1;
   if (sprite_subtype2[k]) {
+<<<<<<< HEAD
     if (GameHook_StumpyFinished()) {
+=======
+    if (sram_progress_indicator_3 & 8 || GameHook_StoryGate(kGate_Vane, link_item_flute > 2)) {
+>>>>>>> 3b3a613a1 (wip(story-events): event ledger, story gates, event records, vanilla tracker logic)
       sprite_graphics[k] = 3;
       sprite_ai_state[k] = 5;
     } else if (GameHook_StumpyFluteSlot() == 2) {
@@ -9931,7 +9937,11 @@ void Sprite_FluteKid_Stumpy(int k) {  // 86b040
     return;
   switch (sprite_ai_state[k]) {
   case 0:  //
+<<<<<<< HEAD
     switch (GameHook_StumpyFluteSlot() & 3) {
+=======
+    switch (GameHook_StumpState(link_item_flute & 3)) {
+>>>>>>> 3b3a613a1 (wip(story-events): event ledger, story gates, event records, vanilla tracker logic)
     case 0:  // supplicate
       if (Sprite_ShowSolicitedMessage(k, 0xe5) & 0x100)
         sprite_ai_state[k] = 1;
@@ -10910,7 +10920,7 @@ void SpritePrep_UncleAndPriest_bounce(int k) {  // 86bfe5
     sprite_flags2[k] = sprite_flags2[k] & 0xf0 | 0x2;
     sprite_flags4[k] = 3;
     int j;
-    if (link_sword_type >= 2) {
+    if (GameHook_PedestalClaimed()) {
       sprite_D[k] = 4;
       sprite_graphics[k] = 0;
       j = 0;
@@ -11099,7 +11109,7 @@ void Sprite_3A_MagicBat(int k) {  // 86c044
   case 0:  // wait for summon
     if (GameHook_BatGrantTaken())
       return;
-    if (link_magic_consumption >= 2)
+    if (GameHook_GiverTaken(kEvent_MagicBatSummoned, link_magic_consumption >= 2))
       return;
     if (!Sprite_CheckDamageToLink_same_layer(k))
       return;
@@ -11152,6 +11162,7 @@ void Sprite_3A_MagicBat(int k) {  // 86c044
       flag_update_cgram_in_nmi++;
       sprite_ai_state[k]++;
       link_magic_consumption = 1;
+      GameHook_RecordEvent(kEvent_MagicBatSummoned);
       Hud_RefreshIcon();
     } else if (sprite_delay_aux1[k] == 0x10) {
       intro_times_pal_flash = 0x10;
@@ -11166,7 +11177,7 @@ void Sprite_3A_MagicBat(int k) {  // 86c044
 }
 
 void SpritePrep_Zelda_bounce(int k) {  // 86c06c
-  if (link_sword_type >= 2) {
+  if (GameHook_PedestalClaimed()) {
     sprite_state[k] = 0;
     return;
   }
@@ -11200,7 +11211,7 @@ void Sprite_78_MrsSahasrahla(int k) {  // 86c071
   Sprite_BehaveAsBarrier(k);
   switch (sprite_ai_state[k]) {
   case 0:  // initial
-    if (link_sword_type < 2) {
+    if (!GameHook_StoryGate(kGate_PedestalScenes, link_sword_type >= 2)) {
       if (Sprite_ShowSolicitedMessage(k, 0x2b) & 0x100)
         sprite_ai_state[k] = 1;
     } else {
@@ -12800,7 +12811,7 @@ void Sprite_Lumberjacks(int k) {  // 8dc51b
     Link_CancelDash();
   }
   if (!Sprite_CheckIfLinkIsBusy() && Lumberjack_CheckProximity(k, 1) && (filtered_joypad_L & 0x80)) {
-    int msg = (BYTE(link_x_coord) >= sprite_x_lo[k]) + (link_sword_type >= 2) * 2;
+    int msg = (BYTE(link_x_coord) >= sprite_x_lo[k]) + GameHook_StoryGate(kGate_PedestalScenes, link_sword_type >= 2) * 2;
     Sprite_ShowMessageUnconditional(kLumberJackMsg[msg]);
   }
   sprite_graphics[k] = frame_counter >> 5 & 1;
@@ -14654,8 +14665,10 @@ void Sprite_D6_Ganon(int k) {  // 9d8eb4
   if (sign8(sprite_ai_state[k])) {
     if (Sprite_ReturnIfInactive(k))
       return;
-    if (!sprite_delay_main[k])
+    if (!sprite_delay_main[k]) {
       sprite_state[k] = 0;
+      GameHook_RecordEvent(kEvent_GanonBeaten);
+    }
     if (!(sprite_delay_main[k] & 1))
       Ganon_Draw(k);
     return;

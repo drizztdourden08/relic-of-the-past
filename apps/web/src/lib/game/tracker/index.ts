@@ -11,6 +11,8 @@ export {
   onCompletedChecksChanged,
   getCurrentInventory,
   getCompletedChecks,
+  getEventStatus,
+  onEventStatusChanged,
   getUnknownItems,
   loadUnknownItems,
   pollInventoryState,

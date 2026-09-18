@@ -16,7 +16,9 @@ const DW_DARK_NORTH_CHECKS: CheckRecord[] = [
     gameId: { owScreen: 99, mask: 64 },
     kind: 'standing',
     screenId: 'screen-281',
-    randomizerName: 'Dark Blacksmith Ruins',
+    // A vanilla-only pickup. The reference's "Dark Blacksmith Ruins" is the Purple Chest
+    // pickup event, which carries that name in records/checks/events.
+    randomizerName: 'Blacksmith Ruins Rupees',
     vanillaItemIds: ['item-072'],
   },
   {

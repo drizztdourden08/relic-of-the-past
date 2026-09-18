@@ -30,6 +30,8 @@ import type { RandomizerOptionsSnapshot } from '../options.type';
 import type { CapacityProfile } from '../capacity/capacity-profile.type';
 import type { CapacityBonusSetting } from '../capacity/bonus/capacity-bonus.type';
 import type { DarkRoomSetting } from '../dark-rooms/dark-room.type';
+import { storyGatesFromSnapshot } from '../story-gates/story-gate-from-snapshot';
+import type { StoryGateSetting } from '../story-gates/story-gate.type';
 import type { DifficultySetting } from '../difficulty/difficulty.type';
 import type { PondProfiles } from '../pond/pond-profiles.type';
 import type { ItemPowerSetting } from '../item-power/item-power.type';
@@ -55,6 +57,7 @@ interface SnapshotFillFlags {
   ponds: PondProfiles;
   pondSlotsFollowMode: boolean;
   darkRooms: DarkRoomSetting;
+  storyGates: StoryGateSetting;
   difficulty: DifficultySetting;
   progressiveTiers: ProgressiveSetting;
   progressiveModes: ProgressiveModeSetting;
@@ -105,6 +108,9 @@ const fillFlagsOf = (snapshot: RandomizerOptionsSnapshot, seed = ''): SnapshotFi
     // existed, reads as the reference rule, so a stored placement keeps its
     // meaning: light required, the lamp alone providing it.
     darkRooms: darkRoomSettingFromSnapshot(snapshot),
+    // No story gate row at all reads as the story as the game tells it, which is what a
+    // fresh profile arms, so a stored placement keeps its meaning.
+    storyGates: storyGatesFromSnapshot(snapshot),
     // No difficulty row at all (every profile written before they existed)
     // reads as the reference pool: one copy per rung and the game's own
     // twenty-heart ceiling, which is what it was rolled from.

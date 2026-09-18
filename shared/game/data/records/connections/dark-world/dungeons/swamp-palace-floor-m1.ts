@@ -26,7 +26,7 @@ const DW_DUNGEON_SWAMP_PALACE_FLOOR_M1_CONNECTIONS: ConnectionRecord[] = [
     placement: { form: 'border', side: 'south', rect: { x: 0, y: 63, w: 64, h: 1 }, tiles: [] },
     canExit: true,
     dungeonId: 'dungeon-007',
-    tags: ['tag-076', 'tag-058'],
+    tags: ['tag-076'],
   },
   {
     id: 'connection-638',

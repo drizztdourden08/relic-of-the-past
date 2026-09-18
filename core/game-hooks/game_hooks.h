@@ -507,6 +507,10 @@ void GameHook_ProgressiveAfterReceipt(uint8 item);
 // the table; synthetic keys 0xF0+ mark grants with no vanilla receive id).
 void GameHook_MarkSubstitutionKey(uint8 key);
 
+// The story-event surface: the ledger, the recorders and the gates (story_events.h).
+#include "story_events.h"
+
+
 // Pond seam: true when the capacity purchase of |kind| (0 explosives / 1 projectiles)
 // was substituted. The caller skips the vanilla counter bump and its message.
 bool GameHook_OverrideCapacityGrant(int kind);

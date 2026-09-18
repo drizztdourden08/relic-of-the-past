@@ -168,7 +168,7 @@ const LW_DUNGEON_EASTERN_PALACE_FLOOR_0_CONNECTIONS: ConnectionRecord[] = [
     placement: { form: 'border', side: 'south', rect: { x: 0, y: 63, w: 64, h: 1 }, tiles: [] },
     canExit: true,
     dungeonId: 'dungeon-003',
-    tags: ['tag-079', 'tag-058'],
+    tags: ['tag-079'],
   },
   {
     id: 'connection-275',
@@ -223,7 +223,7 @@ const LW_DUNGEON_EASTERN_PALACE_FLOOR_0_CONNECTIONS: ConnectionRecord[] = [
     kind: 'door',
     placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
     canExit: true,
-    tags: [],
+    tags: ['tag-058'],
   },
   {
     id: 'connection-1329',

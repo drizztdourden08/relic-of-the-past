@@ -34,6 +34,7 @@ import { CAPACITY_BONUS_OPTION_SEEDS } from './capacity/bonus/capacity-bonus-opt
 import { DARK_ROOM_OPTION_SEEDS } from './dark-rooms/dark-room-options.data';
 import { DIFFICULTY_OPTION_SEEDS } from './difficulty/difficulty-options.data';
 import { ITEM_POWER_OPTION_SEEDS } from './item-power/item-power-options.data';
+import { STORY_GATE_OPTION_SEEDS } from './story-gates/story-gate-options.data';
 import { PROGRESSIVE_OPTION_SEEDS } from './progressive/progressive-options.data';
 import { PROGRESSIVE_MODE_OPTION_SEEDS } from './progressive/progressive-mode-options.data';
 import { RETRO_OPTION_SEEDS } from './retro/retro-options.data';
@@ -189,10 +190,10 @@ const seeds: readonly Seed[] = [
   // asks the two questions inside it apart, as rows the player owns
   // (dark-rooms/), so the source's own row is gone instead of duplicated.
   ...DARK_ROOM_OPTION_SEEDS,
-  lockedChoice('open_pyramid', 'Open Pyramid Hole', 'world', 'vanilla-fixed',
-    choices(['closed', 0], ['open', 1], ['goal', 2], ['auto', 3]), 'goal'),
-  lockedRange('crystals_needed_for_gt', 'Crystals to enter the dark tower', 'goal', 'active', 0, 7, 7),
-  lockedRange('crystals_needed_for_ganon', 'Crystals to hurt the final boss', 'goal', 'active', 0, 7, 7),
+  // The story gates (story-gates/): which recorded event each gate reads and what the count
+  // gates ask for. Three of them are the reference's own rows (the pyramid hole, the crystals
+  // for the tower and for the final boss), which they replace under the same keys.
+  ...STORY_GATE_OPTION_SEEDS,
   lockedChoice('triforce_pieces_mode', 'Triforce Pieces Mode', 'goal', 'not-implemented',
     choices(['extra', 0], ['percentage', 1], ['available', 2]), 'available'),
   lockedRange('triforce_pieces_percentage', 'Triforce Pieces Percentage', 'goal', 'not-implemented', 100, 1000, 150),

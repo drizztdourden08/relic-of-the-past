@@ -44,8 +44,11 @@ const areaLabel = (check: CheckRecord): string => {
 const getGroupValue = (check: CheckRecord, dimension: GroupDimension, run?: RunContext): string => {
   const screen = check.screenId ? getScreen(check.screenId) : undefined;
   switch (dimension) {
-    case 'world':
-      return screen?.world === 'dark' ? 'Dark World' : 'Light World';
+    case 'world': {
+      // A dungeon event with no screen of its own sits in its dungeon's world.
+      const world = screen?.world ?? (check.dungeonId ? getScreen(getDungeon(check.dungeonId).roomScreenIds[0]).world : 'light');
+      return world === 'dark' ? 'Dark World' : 'Light World';
+    }
     case 'area':
       return areaLabel(check);
     case 'location':

@@ -6,11 +6,11 @@
 
 | Verdict | Areas | % |
 |---|---|---|
-| covered | 46 | 51% |
+| covered | 48 | 52% |
 | partial | 11 | 12% |
 | none | 34 | 37% |
 
-91 areas counted (one row per table row above, not weighted by file count). 2 rows excluded from the count: presentational primitives (n/a, not a real gap) and shadow-casting (unclear, needs a follow-up pass, covered in the Electron section).
+93 areas counted (one row per table row above, not weighted by file count). 2 rows excluded from the count: presentational primitives (n/a, not a real gap) and shadow-casting (unclear, needs a follow-up pass, covered in the Electron section).
 
 ## UI views (`apps/web/src/ui/domains/app/views/`)
 
@@ -99,6 +99,7 @@
 | Recommendations engine + detectors + diff/reconcile/registry | tests/game/recommendations (13 files) | covered |
 | Review types | tests/electron/review-files, tests/data-inspector/review-store | covered |
 | Simulation engine | tests/simulation (20 files) | covered. The largest single suite in the repo |
+| Story event records and the tracker's event sweep (ledger bits, vanilla bits, the derived pass, the older-file fallbacks, held items, a dungeon's own records) | tests/story-events/t6-tracker.keep.test.ts | covered |
 | simulation/port.ts (WASM↔simulation bridge) | none directly (consumers are tested) | partial |
 
 ## Randomizer (`shared/randomizer/` + `apps/web/src/lib/game/randomizer-client/`)
@@ -153,6 +154,7 @@
 | state_queries*.c → `apps/web/src/lib/game/bridge/*` (combat-tables, nav-tables, player-state, progress, render, room-doors/grids/layout, sim-queries, sprites-blockers, ui-state) | none directly (higher-level consumers are tested) | none |
 | **GameHook_\* event surface (cheats, check_triggers, item_overrides, haptic_events, transition_events, sim_triggers, sim_queries)** | none. Neither the C symbols nor their 2 JS call sites (transition-events.ts, simulator/interactables.ts) are referenced by any test | **none. Untested end to end** |
 | player_sprite.c, num_util.h, wasm_buf.h | none | none (lower risk, pure utilities) |
+| Story events: byte parity with the master core (every story field at zero) on every save-state fixture, through the headless harness in tests/story-events/core-harness.ts | tests/story-events/t1-parity.keep.test.ts (skips without a baseline core; recipe in the file header) | covered |
 
 ## Global stores (`apps/web/src/stores/`)
 

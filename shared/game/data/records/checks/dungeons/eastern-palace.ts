@@ -67,7 +67,10 @@ const DUNGEON_EASTERN_PALACE_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-122',
-    gameId: { roomId: 200, mask: 2048 },
+    // The reward pickup is its own ledger bit; a file older than the ledger reads the heart bit
+    // and this dungeon's own reward in hand, which is what taking it meant before shuffles.
+    gameId: { eventBit: 21 },
+    fallback: { allOf: [{ checkId: 'check-121' }, { itemId: 'item-109' }] },
     kind: 'prize',
     screenId: 'screen-151',
     dungeonId: 'dungeon-003',

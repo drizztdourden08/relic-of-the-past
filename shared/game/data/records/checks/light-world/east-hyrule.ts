@@ -5,7 +5,8 @@ import type { CheckRecord } from '@shared/game/data/types';
 const LW_EAST_HYRULE_CHECKS: CheckRecord[] = [
   {
     id: 'check-005',
-    gameId: { bufferIndex: 20, compare: 'eq', value: 3 },
+    // The map-marker stage keeps climbing after the quest, so at least, never exactly.
+    gameId: { bufferIndex: 20, compare: 'gte', value: 3 },
     kind: 'event',
     screenId: 'screen-209',
     randomizerName: 'Sahasrahla Quest Given',

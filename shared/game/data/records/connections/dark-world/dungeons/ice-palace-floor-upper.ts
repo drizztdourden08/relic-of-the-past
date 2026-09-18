@@ -217,7 +217,7 @@ const DW_DUNGEON_ICE_PALACE_FLOOR_UPPER_CONNECTIONS: ConnectionRecord[] = [
     placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
     canExit: true,
     dungeonId: 'dungeon-010',
-    tags: ['tag-079', 'tag-058'],
+    tags: ['tag-079'],
   },
   {
     id: 'connection-727',
