@@ -15,9 +15,11 @@ uniform float u_noiseScale;
 uniform float u_blackLeft;
 uniform float u_blackRight;
 uniform float u_blackBottom;
+uniform float u_blackTop;
 uniform float u_dynLeft;
 uniform float u_dynRight;
 uniform float u_dynBottom;
+uniform float u_dynTop;
 uniform float u_effectOpacity;
 uniform float u_pixelSize;
 uniform float u_pixelDivisor;
@@ -58,10 +60,12 @@ void main() {
   float dynLeftBound = u_dynLeft * 2.0;
   float dynRightBound = u_resolution.x - u_dynRight * 2.0;
   float dynBottomBound = u_resolution.y - u_dynBottom * 2.0;
+  float dynTopBound = u_dynTop * 2.0;
 
   bool inEffectZone = (pixelX < dynLeftBound && u_dynLeft > 0.0)
                    || (pixelX > dynRightBound && u_dynRight > 0.0)
-                   || (pixelY > dynBottomBound && u_dynBottom > 0.0);
+                   || (pixelY > dynBottomBound && u_dynBottom > 0.0)
+                   || (pixelY < dynTopBound && u_dynTop > 0.0);
 
   if (!inEffectZone) {
     gl_FragColor = game;
@@ -104,6 +108,7 @@ void main() {
   float maxLeftExtent = u_blackLeft * 2.0;
   float maxRightExtent = u_blackRight * 2.0;
   float maxBottomExtent = u_blackBottom * 2.0;
+  float maxTopExtent = u_blackTop * 2.0;
 
   float dist = 0.0;
   if (pixelX < dynLeftBound && maxLeftExtent > 0.0)
@@ -112,6 +117,8 @@ void main() {
     dist = max(dist, (pixelX - dynRightBound) / maxRightExtent);
   if (pixelY > dynBottomBound && maxBottomExtent > 0.0)
     dist = max(dist, (pixelY - dynBottomBound) / maxBottomExtent);
+  if (pixelY < dynTopBound && maxTopExtent > 0.0)
+    dist = max(dist, (dynTopBound - pixelY) / maxTopExtent);
   dist = clamp(dist, 0.0, 1.0);
 
   float blurMix = pow(clamp(edgePixelDist / 15.0, 0.0, 1.0), 0.55) * u_effectOpacity;

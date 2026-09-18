@@ -17,6 +17,15 @@
 #define MODULE_SPOTLIGHT_OPEN   16  // transient spotlight (iris opening)
 #define MODULE_ATTRACT          20  // Module14_Attract: the title demo, no live room behind it
 #define MODULE_TRIFORCE_ROOM    25  // Module19_TriforceRoom: first of the ending modules
+#define MODULE_FILE_COPY         2  // Module02: the copy flow, on the file screen's own art
+#define MODULE_FILE_ERASE        3  // Module03: the erase flow, the same art
+#define MODULE_FILE_NAME         4  // Module04: naming a new file, the same art
+#define MODULE_BOSS_VICTORY_PENDANT 19  // Module13: the prize held up in the boss's room, then the fade
+#define MODULE_MIRROR_WARP          21  // Module15: the warp out of the tower, over both scenes it crosses
+#define MODULE_GANON_EMERGES        24  // Module18: the bat smashing the pyramid, over the room then the overworld
+#define MODULE_TRIFORCE_SCENE       25  // Module19: fades out, then stands the player in a special area
+#define MODULE_BOSS_VICTORY_CRYSTAL 22  // Module16: the crystal flavour of 19
+#define MODULE_SAVE_AND_QUIT        23  // Module17: the room fading out under the menu's choice
 #define MODULE_GAME_OVER        18  // Module12_GameOver: the fall, the red fill, the GAME OVER letters, the save
                                     // menu and the revival fairy, drawn over the interrupted play
 #define GAME_OVER_SUB_IRIS_WIPE  3  // kModule_Death: the circle closing on the player

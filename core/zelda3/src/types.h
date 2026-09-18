@@ -144,6 +144,11 @@ static inline bool Tall_Active(void) { return g_oam_tall_budget != 0; }
 // never early.
 static inline int WideLeftPx(void)  { return (int)g_oam_wide_budget + g_camera_lock_shift_x; }
 static inline int WideRightPx(void) { return (int)g_oam_wide_budget - g_camera_lock_shift_x; }
+// The same measure on the other axis: rows visible above and below the stock 224-row picture. Used by the
+// projectile and debris culls, which otherwise end a shot at the old screen edge while it is still in plain
+// sight. Both are 0 with no tall view configured, so every test built on them collapses to the stock band.
+static inline int TallTopPx(void)    { return (int)g_oam_tall_budget + g_camera_lock_shift_y; }
+static inline int TallBottomPx(void) { return (int)g_oam_tall_budget - g_camera_lock_shift_y; }
 // OAM Y is only 8-bit, so a view taller than ~256px needs more per sprite than the entry can hold.
 // g_oam_y_high holds a per-slot THREE-state marker (see kOamY_* in sprite.h): untouched, tall-encoded with
 // the 9th bit clear, or tall-encoded with it set. The untouched state matters because rows 240 and -16 both

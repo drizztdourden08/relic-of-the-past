@@ -1,6 +1,8 @@
 /* @layer renderer-hud @kind component */
 import { HudBox } from '../../primitives/HudBox';
 import { useHud, SNES_HEIGHT } from '../../hooks/useHud';
+import { linesAbovePicture } from '@app/lib/game/bridge/view-origin';
+import { wasmGetViewportInfo } from '@app/lib/game';
 import { useHudSettingsStore } from '../../../../../stores/hud-settings-store';
 import { HudMagicMeter } from '../../composites/HudMagicMeter';
 import { HudCurrentItem } from '../../composites/HudCurrentItem';
@@ -14,6 +16,7 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(2);
+  const [linesAbove, setLinesAbove] = useState(0);
   const [hudWidth, setHudWidth] = useState<number | undefined>(undefined);
 
   const computeScale = useCallback(() => {
@@ -28,6 +31,9 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
     const nativeH = canvas ? canvas.height / 2 : SNES_HEIGHT;
     const newScale = h / nativeH;
     setScale(newScale);
+    // A tall view draws rows before the picture starts. The HUD belongs to the picture, so it moves down
+    // by those rows; the message box already does this, and the game's own HUD is drawn there too.
+    setLinesAbove(linesAbovePicture(nativeH, wasmGetViewportInfo()?.extraTopBottom));
 
     // Determine HUD content width based on chosen ratio
     const numericRatio = aspectRatioValue(hudRatio, customW, customH);
@@ -103,7 +109,7 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
-        paddingTop: 1.75 * tile,
+        paddingTop: 1.75 * tile + linesAbove * scale,
         height: '100%',
         width: hudWidth != null ? hudWidth : '100%',
         margin: hudWidth != null ? '0 auto' : undefined,

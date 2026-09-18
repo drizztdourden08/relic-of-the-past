@@ -3477,9 +3477,23 @@ void Garnish13_PyramidDebris(int k) {  // 89b216
     }
     OamSetX(oam, t);
   }
-  if ((t = garnish_y_lo[k] - BG2VOFS_copy2) >= 240) {
-    garnish_type[k] = 0;
-    return;
+  t = garnish_y_lo[k] - BG2VOFS_copy2;
+  if (!Tall_Active()) {
+    if (t >= 240) {
+      garnish_type[k] = 0;
+      return;
+    }
+  } else {
+    // Only a low byte of Y is tracked here, exactly as with X above, so widen the kill margin instead of
+    // testing a true position: the rows a tall view adds on either side read as a small negative distance,
+    // which the stock test threw away along with everything genuinely above the screen.
+    int margin = 8 + (TallTopPx() > TallBottomPx() ? TallTopPx() : TallBottomPx());
+    if (margin > 128)
+      margin = 128;
+    if ((int8)t < -margin) {
+      garnish_type[k] = 0;
+      return;
+    }
   }
   oam->y = t;
   oam->charnum = 0x5c;

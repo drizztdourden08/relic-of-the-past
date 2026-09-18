@@ -16,8 +16,8 @@
 // in the table, so a table rewritten by anything else falls back to the word the game wrote there. The
 // camera lock moves the scene the circle is drawn over, so the edges move with it.
 //
-// Recording changes nothing on its own. The wide pair is only handed over on the game-over frames that
-// cover the screen, which are gated in view_gates.c.
+// Recording changes nothing on its own. The wide pair is only handed over on the frames whose view the
+// gates in view_gates.c widen: the game-over sequence, and the spotlight transitions.
 
 enum { kIrisTableLines = 240, kIrisScreenLines = 224 };
 
@@ -51,13 +51,14 @@ void GameHook_IrisTableLines(uint16 upper_line, uint16 lower_line, uint16 word) 
 }
 
 bool GameHook_IrisWideWindow(int row, int shift_x, int shift_y, int *left, int *right) {
-  if (!GameHook_GameOverCoversScreen())
+  if (!GameHook_GameOverCoversScreen() && !GameHook_SpotlightCoversScreen())
     return false;
   // The camera lock moves the scene down by shift_y rows, so this content row shows what the table's line
-  // shift_y above it describes. A line outside the original 224-line screen is outside the circle: the
-  // table's last lines hold zero, which would otherwise draw as a one-column window in a tall view.
+  // shift_y above it describes.
   int line = row - shift_y;
   if (line < 0 || line >= kIrisScreenLines) {
+    // Past the picture the table describes, which is outside the shape: the table's own last entries hold
+    // zero and would otherwise draw as a one column strip down a tall view.
     *left = 1, *right = 0;
     return true;
   }

@@ -310,12 +310,17 @@ static void ConfigurePpuSideSpace() {
   // the module the player died in keeps the wide/tall view through the red fill and the menu. Resolved
   // before the special-area test so a death in one of those areas still reads as that area.
   mod = GameHook_GameOverViewModule(mod);
+  // A spotlight transition draws the scene it is crossing between, so it is read as that scene's module.
+  mod = GameHook_SpotlightViewModule(mod);
   // MODULE_OVERWORLD_SPECIAL_AREA is normal interactive outdoor gameplay even though the
   // module never returns to 9. Checked against `mod`
   // (already menu-remapped above) via the *For() form, not GameHook_IsOverworldSpecialArea()
   // — that reads the raw module and would miss this case the instant the pause menu opens
   // over it (main_module_index is 14 then, not 11, even though the location hasn't
   // changed), collapsing the view back to the base 256x224 frame on every pause.
+  // A victory, a save and quit, a mirror warp, the pyramid scene and the triforce room all draw over the
+  // scene the player is standing in. Resolved before the special-area test, since the triforce room is one.
+  mod = GameHook_InterruptedSceneModule(mod);
   bool isSpecialArea = GameHook_IsOverworldSpecialAreaFor(mod);
   // The pit-fall crossing is its own module and shows no scene of its own: it renders the departure
   // area, then the room below. Reading it as whichever of those two it is currently showing carries
@@ -343,7 +348,8 @@ static void ConfigurePpuSideSpace() {
       // correct here regardless of submodule_index.
       // The game-over module never scrolls, whatever its submodule reads, so it holds this lock too. It
       // only reaches this branch through GameHook_GameOverViewModule, which leaves it out with the gate off.
-      if (submodule_index == 0 || main_module_index == 14 || isSpecialArea || main_module_index == 18) {
+      if (submodule_index == 0 || main_module_index == 14 || isSpecialArea || main_module_index == 18
+          || GameHook_SpotlightCoversScreen() || GameHook_InterruptedSceneCoversScreen()) {
         if (enhanced_features0 & kFeatures0_CameraLockToViewport) {
           // Render-level camera lock: clamp the RENDERED view to the area so its edges rest on the
           // boundary (no out-of-area black), then shift the world fetch (below) + sprites (ppu eval) by
@@ -484,7 +490,7 @@ static void ConfigurePpuSideSpace() {
       // tilemap is fully resident, so the stock vertical fetch represents it without wrap.
       extra_top = IntMax(BG2VOFS_copy2 - room_bounds_y.v[qy], 0);
     }
-  } else if (mod == 20 || mod == 0 || mod == 1) {
+  } else if (mod == 20 || mod == 0 || mod == 1 || GameHook_FileScreenIsWide(mod)) {
     extra_left = kPpuExtraLeftRight, extra_right = kPpuExtraLeftRight;
     extra_bottom = 16;
   }
@@ -520,7 +526,7 @@ static void ConfigurePpuSideSpace() {
 // from the loop keeps the extra rows past the table's end outside the circle, where HDMA has stopped
 // and would otherwise leave its last pair standing.
 static void SetIrisWideWindow(int line) {
-  int row = line - (int)g_zenv.ppu->extraTopBottom;
+  int row = line - (int)g_zenv.ppu->extraTopBottom;  // the content row the next transfer draws
   int left, right;
   g_zenv.ppu->window1Wide = GameHook_IrisWideWindow(row, g_zenv.ppu->cameraLockShiftX, g_zenv.ppu->cameraLockShiftY, &left, &right);
   if (g_zenv.ppu->window1Wide) {
@@ -598,6 +604,9 @@ void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
 
   // The iris writes its circle to the window through this indirect table. On the frames that widen it,
   // each transferred line also hands the renderer the circle's unclamped edges (iris_wide.c).
+  // A tall view draws rows before the picture; the tables HDMA feeds describe the picture's own lines.
+  const int hdma_first_line = GameHook_HdmaWaitsForPicture() ? topBudget : 0;
+
   bool iris_wide = false;
   if (g_zenv.ppu->extraLeftCur | g_zenv.ppu->extraRightCur) {
     for (int c = 0; c < 2; c++)
@@ -617,8 +626,10 @@ void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
       }
     }
     ppu_runLine(g_zenv.ppu, i);
-    SimpleHdma_DoLine(&hdma_chans[0]);
-    SimpleHdma_DoLine(&hdma_chans[1]);
+    if (i >= hdma_first_line) {
+      SimpleHdma_DoLine(&hdma_chans[0]);
+      SimpleHdma_DoLine(&hdma_chans[1]);
+    }
     if (iris_wide)
       SetIrisWideWindow(i);
   }

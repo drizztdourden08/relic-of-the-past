@@ -23,12 +23,13 @@ interface FadeState {
   prevBlackLeft: number;
   prevBlackRight: number;
   prevBlackBottom: number;
+  prevBlackTop: number;
   fadeOpacity: number;
   fadeTarget: number;
   lastTime: number;
 }
 
-const initialFade = (): FadeState => ({ prevBlackLeft: -1, prevBlackRight: -1, prevBlackBottom: -1, fadeOpacity: 1.0, fadeTarget: 1.0, lastTime: 0 });
+const initialFade = (): FadeState => ({ prevBlackLeft: -1, prevBlackRight: -1, prevBlackBottom: -1, prevBlackTop: -1, fadeOpacity: 1.0, fadeTarget: 1.0, lastTime: 0 });
 
 const useEdgeGlowLoop = (params: EdgeGlowLoopParams): void => {
   const { status, canvasKey, canvasRef, fxCanvasRef, glowRendererRef, edgeEffectRef, setBufSize } = params;
@@ -66,9 +67,9 @@ const useEdgeGlowLoop = (params: EdgeGlowLoopParams): void => {
         }
         // Only update bounds on the overworld; freeze during text/events.
         if (isOverworld) {
-          renderer.setBlackBounds(vp.blackLeft, vp.blackRight, vp.blackBottom);
+          renderer.setBlackBounds(vp.blackLeft, vp.blackRight, vp.blackBottom, vp.blackTop);
           const maxBottom = vp.extraTopBottom > 0 ? vp.extraTopBottom : (vp.snesHeight === 240 ? 16 : 0);
-          renderer.setMaxBounds(vp.extraLeftRight, vp.extraLeftRight, maxBottom);
+          renderer.setMaxBounds(vp.extraLeftRight, vp.extraLeftRight, maxBottom, vp.extraTopBottom);
         }
 
         // Detect screen transition: bounds jump by >10px ONLY during overworld movement.
@@ -79,7 +80,8 @@ const useEdgeGlowLoop = (params: EdgeGlowLoopParams): void => {
           const leftDelta = Math.abs(vp.blackLeft - s.prevBlackLeft);
           const rightDelta = Math.abs(vp.blackRight - s.prevBlackRight);
           const bottomDelta = Math.abs(vp.blackBottom - s.prevBlackBottom);
-          if (leftDelta > 10 || rightDelta > 10 || bottomDelta > 10) {
+          const topDelta = Math.abs(vp.blackTop - s.prevBlackTop);
+          if (leftDelta > 10 || rightDelta > 10 || bottomDelta > 10 || topDelta > 10) {
             s.fadeTarget = 0;
             s.fadeOpacity = 0; // instant hide on transition
           }
@@ -88,6 +90,7 @@ const useEdgeGlowLoop = (params: EdgeGlowLoopParams): void => {
           s.prevBlackLeft = vp.blackLeft;
           s.prevBlackRight = vp.blackRight;
           s.prevBlackBottom = vp.blackBottom;
+          s.prevBlackTop = vp.blackTop;
         }
 
         // If just came back and stable, fade in

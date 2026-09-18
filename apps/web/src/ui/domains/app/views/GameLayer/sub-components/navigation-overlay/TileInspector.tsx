@@ -11,6 +11,7 @@ import { mouseEventToTile } from './tile-inspector-coords';
 import { useRectSelection } from './tile-inspector-rect-selection';
 import { buildSpriteInfo, computePathTooltipPosition } from './tile-inspector-tooltip';
 import { buildTooltipLayers } from './tile-inspector-classification';
+import { viewOrigin } from '@app/lib/game/bridge/view-origin';
 
 const COPIED_TOAST: CSSProperties = { position: 'absolute', left: '50%', top: 8, transform: 'translateX(-50%)', background: 'var(--c-green)', color: 'var(--c-text)', padding: '4px 12px', borderRadius: 'var(--r-sm)', fontFamily: 'monospace', fontSize: 12, fontWeight: 'bold', pointerEvents: 'none', zIndex: 8 };
 
@@ -95,8 +96,7 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex,
     const scaleY = height / snesH;
     const snesX = mx / scaleX;
     const snesY = my / scaleY;
-    const viewLeft = vp.cameraX - vp.cameraLockShiftX - vp.extraLeftRight;
-    const viewTop = vp.cameraY - vp.cameraLockShiftY;
+    const { viewLeft, viewTop } = viewOrigin(vp);
     const worldX = snesX + viewLeft;
     const worldY = snesY + viewTop;
     const screenWorldX = isIndoors ? (Math.floor(vp.linkX / 512) * 512) : ((result.screenIndex & 7) * 512);

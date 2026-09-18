@@ -21,6 +21,32 @@ bool GameHook_GameOverCoversScreen(void);
 // letters and the save menu cursor. False with the gate off, and |fixed| is left untouched.
 bool GameHook_LockFixedSlots(uint8 *fixed);
 
+// ─── The file screen's sub-screens (view_gates.c) ───
+
+// True for the copy, erase and name modules, which draw the file screen's own art and take the same full
+// frame it does. False with the gate off, and for every other module.
+bool GameHook_FileScreenIsWide(int effectiveModule);
+
+// ─── Scenes drawn over the interrupted play (view_gates.c) ───
+
+// The module whose geometry describes what a boss victory or a save and quit is drawn over: the room or
+// the overworld the player is standing in. Any other module comes back unchanged, and so do these with the
+// gate off or under the lamp's cone mask.
+int GameHook_InterruptedSceneModule(int effectiveModule);
+
+// True on those frames, so the caller holds the view still while the module runs its own submodules.
+bool GameHook_InterruptedSceneCoversScreen(void);
+
+// ─── Spotlight transitions (view_gates.c) ───
+
+// The module whose geometry describes what a spotlight transition is drawn over: the room or the overworld
+// the player is crossing between. Any other module comes back unchanged, and so do the spotlight ones with
+// the gate off or under the lamp's cone mask.
+int GameHook_SpotlightViewModule(int effectiveModule);
+
+// True on those frames, so the caller holds the view still and the circle widens with the picture.
+bool GameHook_SpotlightCoversScreen(void);
+
 // ─── Wide iris window (iris_wide.c) ───
 
 // Record calls in IrisSpotlight_CalculateCircleValue / IrisSpotlight_ConfigureTable: the circle's span on
@@ -33,5 +59,12 @@ void GameHook_IrisTableLines(uint16 upper_line, uint16 lower_line, uint16 word);
 // built, else the pair the game wrote, both moved by the camera-lock shift so the circle follows the
 // shifted scene. False on any other frame, and the renderer keeps the register values.
 bool GameHook_IrisWideWindow(int row, int shift_x, int shift_y, int *left, int *right);
+
+// ─── Scanline effects in a tall view (view_gates.c) ───
+
+// True when the per-scanline transfers must wait for the picture to start, because the view draws rows
+// above it and the tables they feed describe the original screen. False with the gate off, and on any view
+// that adds no rows on top, where the transfers keep their original timing.
+bool GameHook_HdmaWaitsForPicture(void);
 
 #endif  // GAME_HOOKS_GAME_OVER_VIEW_H

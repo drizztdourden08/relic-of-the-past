@@ -5,6 +5,7 @@ import type { FloodFillResult } from '@shared/game/navigation';
 import type { wasmGetViewportInfo } from '../../../../../../../lib/game';
 import type { GridPos } from './navigation-overlay.type';
 import { screenOriginFor } from '@app/lib/game/flood';
+import { viewOrigin } from '@app/lib/game/bridge/view-origin';
 
 const mouseEventToTile = (
   e: React.MouseEvent<HTMLDivElement>,
@@ -24,8 +25,7 @@ const mouseEventToTile = (
   const scaleY = height / snesH;
   const snesX = mx / scaleX;
   const snesY = my / scaleY;
-  const viewLeft = vp.cameraX - vp.cameraLockShiftX - vp.extraLeftRight;
-  const viewTop = vp.cameraY - vp.cameraLockShiftY;
+  const { viewLeft, viewTop } = viewOrigin(vp);
   const worldX = snesX + viewLeft;
   const worldY = snesY + viewTop;
   const { x: screenWorldX, y: screenWorldY } = screenOriginFor({

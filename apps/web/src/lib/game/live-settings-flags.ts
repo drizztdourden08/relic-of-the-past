@@ -4,7 +4,7 @@
 import type { GameSettings } from '@shared/types/settings';
 import { BUNDLE_FIXES } from '@shared/features/bundle-fixes.generated';
 import { effectiveFeatureIds } from './live-settings-gate';
-import { offscreenAiMode } from './settings';
+import { offscreenAiMode, rendersWide } from './settings';
 import { sessionGateArmed, setSessionGate } from './session-gate-flags';
 
 // Feature flag enum values: must match features.h
@@ -311,9 +311,9 @@ const buildFeatureFlags = (s: GameSettings): number => {
   // linearWorldTilemap → {ultrawide, tallRender} collapses without this file maintaining the tree.
   const effective = effectiveFeatureIds(s);
   const isOn = (id: string): boolean => effective.has(id);
-  // widescreenSprites/widescreenVisualFixes additionally need a wide ratio. That condition
-  // isn't part of the requires graph (it depends on aspectRatio, not another feature id).
-  const wide = isOn('extendedRendering') && s.aspectRatio !== '4:3';
+  // widescreenSprites/widescreenVisualFixes also need a wide ratio, which is not part of the requires
+  // graph, and it is what the view RENDERS: a ratio word of "auto" on a 4:3 display is not a wide view.
+  const wide = isOn('extendedRendering') && rendersWide(s);
   if (isOn('extendedRendering')) flags |= FEATURE_FLAGS.extendedRendering;
   if (isOn('linearWorldTilemap')) flags |= FEATURE_FLAGS.linearWorldTilemap;
   if (isOn('ultrawideRendering')) flags |= FEATURE_FLAGS.ultrawide;

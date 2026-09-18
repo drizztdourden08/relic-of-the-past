@@ -7,17 +7,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { SCREEN_H, SCREEN_W } from '@shared/game/dialog/box-geometry';
 import { wasmGetViewportInfo } from '../../../../../../lib/game/wasm-bridge';
+import { linesAbovePicture } from '@app/lib/game/bridge/view-origin';
 
-/**
- * Game lines above the 224-line picture. The tall view adds the same budget above and below; the
- * 240-line view adds its 16 lines below only. Without the core's answer, a 16-line surplus is that view.
- */
-const linesAbove = (nativeH: number): number => {
-  const reported = wasmGetViewportInfo()?.extraTopBottom;
-  if (reported !== undefined) return reported;
-  const surplus = nativeH - SCREEN_H;
-  return surplus === 16 ? 0 : surplus / 2;
-};
+/** Game lines above the picture, shared with the HUD so the two cannot drift apart. */
+const linesAbove = (nativeH: number): number =>
+  linesAbovePicture(nativeH, wasmGetViewportInfo()?.extraTopBottom);
 
 /**
  * The renderer draws output row r from scanline r + 1, as the hardware does (ppu_runLine skips line 0),

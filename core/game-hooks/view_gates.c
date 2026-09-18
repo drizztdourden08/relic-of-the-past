@@ -119,3 +119,104 @@ bool GameHook_GameOverCoversScreen(void) {
   // margins were already black in a dark room; the fill widens once the game turns the subscreen off.
   return !(hdr_dungeon_dark_with_lantern && TS_copy);
 }
+
+// ─── The File Screen's Own Sub-Screens ───
+//
+// Copying a file, erasing one and naming one are three modules of their own, and all three draw the file
+// screen's art, which the module before them already gets the full frame for. So choosing Copy pulled the
+// picture in and coming back pushed it out again, on a screen that never moves.
+bool GameHook_FileScreenIsWide(int effectiveModule) {
+  if (effectiveModule != MODULE_FILE_COPY && effectiveModule != MODULE_FILE_ERASE
+      && effectiveModule != MODULE_FILE_NAME)
+    return false;
+  return (enhanced_features0 & kFeatures0_WidescreenVisualFixes) != 0;
+}
+
+// ─── Scenes Drawn Over The Play They Interrupted ───
+//
+// Finishing a dungeon, saving and quitting, the warp out of the tower, the bat smashing the pyramid and the
+// walk to the triforce each hand the frame to a module of their own that draws no scene of its own: the
+// room or the overworld stays where it was, the player stands in it, and the module runs a prize, a heal, a
+// fade or a cutscene over the top. None of them were described, so the picture lost its margins for seconds
+// at a time and snapped back when play resumed.
+//
+// Each is read as the scene underneath, the same way the game-over sequence is. The camera, the scroll
+// bounds and the loaded map are untouched throughout, so the ordinary branch measures them correctly.
+static bool InterruptedSceneGate(void) {
+  return (enhanced_features0 & kFeatures0_WidescreenVisualFixes)
+      && !(hdr_dungeon_dark_with_lantern && TS_copy);
+}
+
+int GameHook_InterruptedSceneModule(int effectiveModule) {
+  if (!InterruptedSceneGate())
+    return effectiveModule;
+  // The triforce room is a special area, not a room or an overworld screen, so it is handed to the module
+  // that already knows those: if the latch there does not recognise the location, the caller falls through
+  // to no budget exactly as it does today.
+  if (effectiveModule == MODULE_TRIFORCE_SCENE)
+    return MODULE_OVERWORLD_SPECIAL_AREA;
+  if (effectiveModule != MODULE_BOSS_VICTORY_PENDANT && effectiveModule != MODULE_BOSS_VICTORY_CRYSTAL
+      && effectiveModule != MODULE_SAVE_AND_QUIT && effectiveModule != MODULE_MIRROR_WARP
+      && effectiveModule != MODULE_GANON_EMERGES)
+    return effectiveModule;
+  return player_is_indoors ? MODULE_DUNGEON : MODULE_OVERWORLD;
+}
+
+bool GameHook_InterruptedSceneCoversScreen(void) {
+  return InterruptedSceneGate()
+      && (main_module_index == MODULE_BOSS_VICTORY_PENDANT
+          || main_module_index == MODULE_BOSS_VICTORY_CRYSTAL
+          || main_module_index == MODULE_SAVE_AND_QUIT
+          || main_module_index == MODULE_MIRROR_WARP
+          || main_module_index == MODULE_GANON_EMERGES
+          || main_module_index == MODULE_TRIFORCE_SCENE);
+}
+
+// ─── Spotlight Transition View Gate ───
+//
+// Walking into a cave, a house or a dungeon, and walking back out, hands the frame to a module of its own
+// while a circle closes on the player and opens again on the other side. Both draw the scene they
+// interrupted: the same room or overworld, the same sprites, the player still walking. ConfigurePpuSideSpace
+// knew neither, so the picture lost its margins for the whole crossing and got them back on arrival, twice
+// per building, which is the most frequent transition in the game.
+//
+// player_is_indoors picks the side, the same way it does for a fall through a hole: the flag flips inside
+// the force-blank frame that swaps one scene for the other, so a frame before it still shows the departure
+// scene and a frame after it already shows the destination.
+//
+// A dark room lit by the lamp is the exception, as everywhere else: its cone mask only covers the base
+// frame, so those crossings stay at the base width instead of showing the mask's wrapped copy.
+static bool SpotlightViewGate(void) {
+  return (main_module_index == MODULE_SPOTLIGHT_CLOSE || main_module_index == MODULE_SPOTLIGHT_OPEN)
+      && (enhanced_features0 & kFeatures0_WidescreenVisualFixes)
+      && !(hdr_dungeon_dark_with_lantern && TS_copy);
+}
+
+int GameHook_SpotlightViewModule(int effectiveModule) {
+  if (!SpotlightViewGate()
+      || (effectiveModule != MODULE_SPOTLIGHT_CLOSE && effectiveModule != MODULE_SPOTLIGHT_OPEN))
+    return effectiveModule;
+  return player_is_indoors ? MODULE_DUNGEON : MODULE_OVERWORLD;
+}
+
+bool GameHook_SpotlightCoversScreen(void) {
+  return SpotlightViewGate();
+}
+
+// ─── Scanline Effects In A Tall View ───
+//
+// An effect built one scanline at a time (the iris, the swamp water's window, the mirror warp's wave, the
+// credits bands) reaches the renderer through a 240-entry table, one entry per line of the original screen,
+// which HDMA hands over as each line is drawn. The draw loop walks the physical buffer instead, and a tall
+// view puts the top budget's worth of rows in front of the picture, so entry 0 landed on the first buffer
+// row and every effect drew that many rows above where it belongs. The file-select split in the same loop
+// is already shifted by the budget; these transfers were not.
+//
+// Holding the transfers back until the picture starts puts entry 0 on content row 0, which is what the
+// table describes. The rows above the picture keep the registers the frame set up, as they did before.
+//
+// With the gate off, and on any view with no rows above the picture, the transfers run on every line
+// exactly as they always have.
+bool GameHook_HdmaWaitsForPicture(void) {
+  return (enhanced_features0 & kFeatures0_WidescreenVisualFixes) && g_zenv.ppu->extraTopBottom != 0;
+}
