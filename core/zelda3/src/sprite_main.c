@@ -8057,11 +8057,7 @@ void SpritePrep_FluteKid(int k) {  // 869075
   sprite_ignore_projectile[k]++;
   sprite_subtype2[k] = savegame_is_darkworld >> 6 & 1;
   if (sprite_subtype2[k]) {
-<<<<<<< HEAD
     if (GameHook_StumpyFinished()) {
-=======
-    if (sram_progress_indicator_3 & 8 || GameHook_StoryGate(kGate_Vane, link_item_flute > 2)) {
->>>>>>> 3b3a613a1 (wip(story-events): event ledger, story gates, event records, vanilla tracker logic)
       sprite_graphics[k] = 3;
       sprite_ai_state[k] = 5;
     } else if (GameHook_StumpyFluteSlot() == 2) {
@@ -9937,11 +9933,7 @@ void Sprite_FluteKid_Stumpy(int k) {  // 86b040
     return;
   switch (sprite_ai_state[k]) {
   case 0:  //
-<<<<<<< HEAD
-    switch (GameHook_StumpyFluteSlot() & 3) {
-=======
-    switch (GameHook_StumpState(link_item_flute & 3)) {
->>>>>>> 3b3a613a1 (wip(story-events): event ledger, story gates, event records, vanilla tracker logic)
+    switch (GameHook_StumpState(GameHook_StumpyFluteSlot() & 3)) {
     case 0:  // supplicate
       if (Sprite_ShowSolicitedMessage(k, 0xe5) & 0x100)
         sprite_ai_state[k] = 1;

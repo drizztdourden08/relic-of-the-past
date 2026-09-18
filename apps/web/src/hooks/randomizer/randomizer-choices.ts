@@ -122,12 +122,6 @@ type ChoiceField = Exclude<
   keyof RandomizerOptionChoices,
   'capacity' | 'capacityBonus' | 'capacityEnabled' | 'capacityProgressive' | 'difficulty' | 'itemPower' | 'ponds'
   | 'pondShare' | 'progressiveTiers' | 'progressiveModes' | 'retroBow' | 'shopPrices' | 'shops' | 'storyGates'
-| 'capacityBonus' | 'capacityEnabled' | 'capacityProgressive' | 'difficulty' | 'itemPower' | 'ponds'
-  | 'pondShare' | 'progressiveTiers' | 'progressiveModes' | 'retroBow' | 'shopPrices' | 'shops'
-=======
-  'capacity' | 'capacityBonus' | 'capacityEnabled' | 'capacityProgressive' | 'difficulty' | 'itemPower' | 'pond'
-  | 'progressiveTiers' | 'progressiveModes' | 'retroBow' | 'shopPrices' | 'shops' | 'storyGates'
->>>>>>> 3b3a613a1 (wip(story-events): event ledger, story gates, event records, vanilla tracker logic)
 >;
 
 /**
