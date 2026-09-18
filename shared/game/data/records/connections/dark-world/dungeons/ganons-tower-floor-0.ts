@@ -143,7 +143,7 @@ const DW_DUNGEON_GANONS_TOWER_FLOOR_0_CONNECTIONS: ConnectionRecord[] = [
     placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
     canExit: true,
     dungeonId: 'dungeon-013',
-    tags: ['tag-076', 'tag-058'],
+    tags: ['tag-076'],
   },
   {
     id: 'connection-839',

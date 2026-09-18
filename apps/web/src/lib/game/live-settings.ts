@@ -11,6 +11,8 @@ import { updateHapticBridgeSettings, updateHapticsProfileEnabled } from '../inpu
 import { DEFAULT_SETTINGS } from './settings';
 import { log } from '../log-bus';
 import { buildFeatureFlags, buildFeatureWord3, buildFeatureWords } from './live-settings-flags';
+import { reassertGateWord5 } from './gate-word-5';
+import { setSettingsStoryGates } from './story-gates';
 import { buildPpuFlags } from './live-settings-ppu-flags';
 import { LIVE_SETTINGS } from './live-settings-keys';
 import { pushTurboSpeed } from './turbo';
@@ -60,6 +62,9 @@ const pushLiveSettings = (settings: GameSettings): boolean => {
 
     // Cheat gating word (features3), guarded because older WASM lacks WasmSetGateWord.
     try { mod.ccall('WasmSetGateWord', null, ['number', 'number'], [3, buildFeatureWord3(settings)]); } catch { /* WASM not rebuilt yet */ }
+    // The story gates' settings half of word 5: the event reading everywhere, or nothing under
+    // Vanilla Safe (story-gates.ts). A running seed's own word takes precedence inside.
+    setSettingsStoryGates(settings.vanillaSafe);
 
     const ppuFlags = buildPpuFlags(settings);
     mod.ccall('WasmSetPpuRenderFlags', null, ['number'], [ppuFlags]);
@@ -172,6 +177,7 @@ const reassertFeatureWords = (): void => {
   tryVoidCcall('WasmSetFeatures', buildFeatureFlags(settings));
   tryVoidCcall('WasmSetFeatures1', features1);
   tryVoidCcall('WasmSetFeatures2', features2);
+  reassertGateWord5();
 };
 
 /** Re-assert every live flag after a save-state load clobbers WRAM. */

@@ -117,4 +117,8 @@ const apAlignedCheckRecords = (checkRecords: readonly CheckRecord[], placement: 
   return [...real, ...virtualChecksOf(placement)];
 };
 
-export { apAlignedCheckRecords, virtualChecksOf, virtualCheckIdOf };
+/** The event records: shown on every profile, never part of a seed's total. */
+const eventCheckRecords = (checkRecords: readonly CheckRecord[]): CheckRecord[] =>
+  checkRecords.filter((check) => check.kind === 'event');
+
+export { apAlignedCheckRecords, eventCheckRecords, virtualChecksOf, virtualCheckIdOf };

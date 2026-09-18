@@ -33,6 +33,7 @@ import { INCLUDE_NPC_CHECKS_KEY, INCLUDE_WORLD_ITEMS_KEY } from '@shared/randomi
 import { buildOptionsSnapshot } from '@shared/randomizer/options-snapshot';
 import { randomizerChoiceOverrides } from '@app/hooks/randomizer/randomizer-choices';
 import { DEFAULT_DUNGEON_ITEM_SETTING } from '@shared/randomizer/ap-world/dungeon-items/dungeon-item-modes';
+import { DEFAULT_STORY_GATES } from '@shared/randomizer/ap-world/story-gates/story-gates.data';
 import type { RandomizerOptionChoices } from '@app/hooks/randomizer/randomizer-choices';
 
 /** The connection fields plus every catalog choice the options panel edits. */
@@ -74,6 +75,7 @@ const EMPTY_RANDOMIZER_FORM: RandomizerFormState = {
   progressiveModes: defaultProgressiveModes(),
   retroBow: defaultRetroBow(),
   itemPower: DEFAULT_ITEM_POWER,
+  storyGates: DEFAULT_STORY_GATES,
   // Every family carries the copies it always carried, and the hearts climb to
   // the ceiling the game itself enforces.
   difficulty: defaultDifficulty(),

@@ -6,6 +6,7 @@
 #include "sprite.h"
 #include "ending.h"
 #include "overworld.h"
+#include "game_hooks.h"
 #include "player.h"
 #include "misc.h"
 #include "messaging.h"
@@ -2449,6 +2450,7 @@ void EndSequence_32() {  // 8ebc6d
   death_save_counter = 0;
   link_health_current = kHealthAfterDeath[link_health_capacity >> 3];
   savegame_is_darkworld = 0x40;
+  GameHook_RecordEvent(kEvent_GameCompleted);
   SaveGameFile();
   aux_palette_buffer[38] = 0;
   main_palette_buffer[38] = 0;

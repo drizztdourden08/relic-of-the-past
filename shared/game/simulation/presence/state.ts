@@ -23,7 +23,24 @@ interface PresenceGameState {
   owEventInfo: ArrayLike<number>;
   /** save_dung_info words, indexed by room id (bit 0x8000 = boss/room cleared). */
   roomState: ArrayLike<number>;
+  /** The live facts behind the status pills; absent on a snapshot with no live core (the sim, the offline reader). */
+  status?: StoryStatus;
 }
+
+/** WasmGetStoryStatusBytes, byte for byte (core/game-hooks/story_status.c). */
+interface StoryStatus {
+  darkWorld: boolean;
+  bunny: boolean;
+  crystalSwitchFlipped: boolean;
+  desertStatuesMoved: boolean;
+}
+
+const storyStatusOf = (bytes: ArrayLike<number>): StoryStatus => ({
+  darkWorld: (bytes[0] ?? 0) !== 0,
+  bunny: (bytes[1] ?? 0) !== 0,
+  crystalSwitchFlipped: (bytes[2] ?? 0) !== 0,
+  desertStatuesMoved: (bytes[3] ?? 0) !== 0,
+});
 
 /**
  * Raw inputs the live port hands in. `progress` is the 19-byte buffer from
@@ -36,6 +53,8 @@ interface PresenceStateInput {
   owEventInfo: ArrayLike<number>;
   roomState: ArrayLike<number>;
   inventory: ReadonlySet<ItemId>;
+  /** The WasmGetStoryStatusBytes bytes, when a live core is there to read them. */
+  statusBytes?: ArrayLike<number>;
 }
 
 const PROGRESS_INDICATOR = 0;
@@ -43,7 +62,7 @@ const PROGRESS_FLAGS = 1;
 const PROGRESS_INDICATOR_3 = 2;
 const PROGRESS_FOLLOWER = 13;
 
-const buildPresenceState = ({ progress, owEventInfo, roomState, inventory }: PresenceStateInput): PresenceGameState => ({
+const buildPresenceState = ({ progress, owEventInfo, roomState, inventory, statusBytes }: PresenceStateInput): PresenceGameState => ({
   progressFlags: progress[PROGRESS_FLAGS] ?? 0,
   progressIndicator: progress[PROGRESS_INDICATOR] ?? 0,
   progressIndicator3: progress[PROGRESS_INDICATOR_3] ?? 0,
@@ -51,6 +70,7 @@ const buildPresenceState = ({ progress, owEventInfo, roomState, inventory }: Pre
   inventory,
   owEventInfo,
   roomState,
+  ...(statusBytes !== undefined ? { status: storyStatusOf(statusBytes) } : {}),
 });
 
 /** A zeroed snapshot for the idle / no-map path (nothing is discoverable then). */
@@ -64,5 +84,5 @@ const emptyPresenceState = (): PresenceGameState => ({
   roomState: [],
 });
 
-export { buildPresenceState, emptyPresenceState };
-export type { PresenceGameState, PresenceStateInput, PresenceCondition };
+export { buildPresenceState, emptyPresenceState, storyStatusOf };
+export type { PresenceGameState, PresenceStateInput, PresenceCondition, StoryStatus };

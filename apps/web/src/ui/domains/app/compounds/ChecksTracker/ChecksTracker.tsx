@@ -29,7 +29,7 @@ const isNarrowed = (filter: ChecksTrackerProps['filter']): boolean =>
 const ChecksTracker = (props: ChecksTrackerProps) => {
   const {
     stats, filter, onFilterChange, grouping, onGroupingChange, viewMode, onViewModeChange,
-    groupTree, statuses, run, dimensions, notice, stickyHeader = true, className,
+    groupTree, statuses, eventStatus, run, dimensions, notice, stickyHeader = true, className,
     panels, onPanelsChange, expandedGroups, onToggleGroup,
   } = props;
 
@@ -62,6 +62,7 @@ const ChecksTracker = (props: ChecksTrackerProps) => {
         <TrackerGroupTree
           node={groupTree}
           statuses={statuses}
+          eventStatus={eventStatus}
           viewMode={viewMode}
           run={run}
           expandedGroups={expandedGroups}

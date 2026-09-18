@@ -27,7 +27,8 @@ describeDataset('resolveRules (id re-key regression)', () => {
 
   it('carries a real gated overworld edge through with its new screen ids', () => {
     const { connections } = resolveRules(VANILLA_CONFIG);
-    const edge = connections.find(c => c.from === 'screen-031' && c.to === 'screen-212');
+    // The bomb hut opens off the Light World region (the reference's 'Light World Bomb Hut' entrance).
+    const edge = connections.find(c => c.from === 'screen-026' && c.to === 'screen-212');
     expect(edge).toBeDefined();
     expect(edge?.requirements).toEqual({ itemId: 'item-041' }); // Bombs
   });

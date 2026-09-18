@@ -5,7 +5,7 @@ import type { ScreenRecord } from '@shared/game/data/types';
 const LW_FAIRY_SCREENS: ScreenRecord[] = [
   {
     id: 'screen-196',
-    gameId: { roomIndex: 249 },
+    gameId: { roomIndex: 294 },
     kind: 'interior',
     world: 'light',
     interiorKind: 'fairy',
@@ -59,7 +59,7 @@ const LW_FAIRY_SCREENS: ScreenRecord[] = [
   },
   {
     id: 'screen-197',
-    gameId: { roomIndex: 250 },
+    gameId: { roomIndex: 277 },
     kind: 'interior',
     world: 'light',
     interiorKind: 'fairy',
@@ -75,7 +75,7 @@ const LW_FAIRY_SCREENS: ScreenRecord[] = [
   },
   {
     id: 'screen-188',
-    gameId: { roomIndex: 234 },
+    gameId: { roomIndex: 277 },
     kind: 'interior',
     world: 'light',
     interiorKind: 'fairy',
@@ -89,7 +89,7 @@ const LW_FAIRY_SCREENS: ScreenRecord[] = [
   },
   {
     id: 'screen-187',
-    gameId: { roomIndex: 234 },
+    gameId: { roomIndex: 277 },
     kind: 'interior',
     world: 'light',
     interiorKind: 'fairy',
@@ -103,7 +103,7 @@ const LW_FAIRY_SCREENS: ScreenRecord[] = [
   },
   {
     id: 'screen-159',
-    gameId: { roomIndex: 3 },
+    gameId: { roomIndex: 286 },
     kind: 'interior',
     world: 'light',
     interiorKind: 'fairy',
@@ -114,7 +114,7 @@ const LW_FAIRY_SCREENS: ScreenRecord[] = [
   },
   {
     id: 'screen-186',
-    gameId: { roomIndex: 232 },
+    gameId: { roomIndex: 268 },
     kind: 'interior',
     world: 'light',
     interiorKind: 'fairy',

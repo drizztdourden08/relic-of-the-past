@@ -87,7 +87,10 @@ const DUNGEON_MISERY_MIRE_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-216',
-    gameId: { roomId: 144, mask: 2048 },
+    // The reward pickup is its own ledger bit; a file older than the ledger reads the heart bit
+    // and this dungeon's own reward in hand, which is what taking it meant before shuffles.
+    gameId: { eventBit: 26 },
+    fallback: { allOf: [{ checkId: 'check-215' }, { itemId: 'item-117' }] },
     kind: 'prize',
     screenId: 'screen-399',
     dungeonId: 'dungeon-011',

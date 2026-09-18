@@ -44,6 +44,9 @@ import { clearProgressiveTiers, isFullLadder, setProgressiveTiers } from '../pro
 import { clearRetroBow, setRetroBow } from '../retro-bow';
 import { clearRetroShelves, setRetroShelves } from '../retro-shelf';
 import { darkRoomLightWordOf } from '../dark-room-lights';
+import { setSessionStoryGates } from '../story-gates';
+import { DEFAULT_STORY_GATES } from '@shared/randomizer/ap-world/story-gates/story-gates.data';
+import type { StoryGateSetting } from '@shared/randomizer/ap-world/story-gates/story-gate.type';
 import type { ApPlacementStats } from '@shared/randomizer/ap-world/fill/ap-placement.type';
 import type { DarkRoomSetting } from '@shared/randomizer/ap-world/dark-rooms/dark-room.type';
 import type { ItemPowerSetting } from '@shared/randomizer/ap-world/item-power/item-power.type';
@@ -63,6 +66,8 @@ interface ItemBehaviorPlan {
   darkRooms: DarkRoomSetting;
   /** What a shot costs, and whether it costs anything at all. */
   retroBow: RetroBowSetting;
+  /** Which recorded event each story gate reads, and what the counts ask for. */
+  storyGates: StoryGateSetting;
   /**
    * The arrow shelves the core restocks in place: the quiver's shelf and the
    * refills. Only a retro seed with VANILLA shops has any; a shuffled scope
@@ -82,14 +87,18 @@ const itemBehaviorOf = (stats: ApPlacementStats): ItemBehaviorPlan => {
   const retroBow = stats.retroBow ?? DEFAULT_RETRO_BOW;
   const retroShelves = retroVanillaShelves(stats.shops ?? NO_SHOP_SCOPE, retroBow);
   const darkRooms = stats.darkRooms ?? REFERENCE_DARK_ROOM_SETTING;
+  const storyGates = stats.storyGates ?? DEFAULT_STORY_GATES;
   const vanilla = isFullLadder(tiers, modes) && !retroBow.enabled
     && darkRoomLightWordOf(darkRooms) === 0
     && (Object.keys(itemPower) as Array<keyof ItemPowerSetting>)
       .every((field) => itemPower[field] === DEFAULT_ITEM_POWER[field]);
-  return { tiers, modes, itemPower, darkRooms, retroBow, retroShelves, vanilla };
+  return { tiers, modes, itemPower, darkRooms, retroBow, retroShelves, storyGates, vanilla };
 };
 
 const armItemBehavior = (plan: ItemBehaviorPlan, tag: string): void => {
+  // The story gates are armed for every seed, altered or not: the seed's own choices replace
+  // the settings half of word 5 while it runs (story-gates.ts).
+  setSessionStoryGates(plan.storyGates);
   if (plan.vanilla) {
     log.randomizer(`${tag} Item behaviour: every tier present and nothing altered, core not armed`);
     return;
@@ -106,6 +115,7 @@ const armItemBehavior = (plan: ItemBehaviorPlan, tag: string): void => {
 };
 
 const disarmItemBehavior = (): void => {
+  setSessionStoryGates(null);
   clearProgressiveTiers();
   clearItemPower();
   clearRetroShelves();

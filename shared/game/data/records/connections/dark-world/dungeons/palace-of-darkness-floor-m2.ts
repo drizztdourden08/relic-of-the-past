@@ -89,7 +89,7 @@ const DW_DUNGEON_PALACE_OF_DARKNESS_FLOOR_M2_CONNECTIONS: ConnectionRecord[] = [
     placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
     canExit: true,
     dungeonId: 'dungeon-006',
-    tags: ['tag-079', 'tag-058'],
+    tags: ['tag-079'],
   },
   {
     id: 'connection-615',

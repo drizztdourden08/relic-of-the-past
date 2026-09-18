@@ -67,7 +67,9 @@ const LW_CENTRAL_HYRULE_CHECKS: CheckRecord[] = [
     id: 'check-011',
     // link_item_flute counts up 1 shovel, 2 flute, 3 flute activated (ancilla.c sets 3 when
     // the bird is released), so reaching 3 is the activation itself.
-    gameId: { bufferIndex: 31, compare: 'gte', value: 3 },
+    // The weathervane's own overworld bit, written when the bird is released; the flute's
+    // level it used to read can be granted without the scene.
+    gameId: { owScreen: 0x18, mask: 0x20 },
     kind: 'event',
     screenId: 'screen-026',
     randomizerName: 'Flute Activation Spot',

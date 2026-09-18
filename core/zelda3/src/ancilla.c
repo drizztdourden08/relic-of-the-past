@@ -551,6 +551,8 @@ void Ancilla_CheckDamageToSprite(int k, uint8 type) {  // 86ecb7
 }
 
 void Ancilla_CheckDamageToSprite_aggressive(int k, uint8 type) {  // 86ecbd
+  if (sprite_type[k] >= 0xd6 && !GameHook_StoryGate(kGate_Ganon, true))
+    return;
   uint8 dmg = kAncilla_Damage[type];
   if (dmg == 6 && link_item_bow >= 3 && GameHook_SilverArrowsBite(k)) {
     if (sprite_type[k] == 0xd7)
@@ -6783,7 +6785,7 @@ void AncillaAdd_WaterfallSplash() {  // 899b68
 
 void AncillaAdd_GTCutscene() {  // 899b83
   if (link_state_bits & 0x80 | link_auxiliary_state ||
-     (link_has_crystals & 0x7f) != 0x7f ||
+     !GameHook_StoryGate(kGate_Tower, (link_has_crystals & 0x7f) == 0x7f) ||
       save_ow_event_info[0x43] & 0x20)
     return;
 

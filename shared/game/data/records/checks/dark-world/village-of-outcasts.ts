@@ -14,7 +14,10 @@ const DW_VILLAGE_OF_OUTCASTS_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-081',
-    gameId: { bufferIndex: 2, mask: 32, flagType: 2, flagMask: 32, itemId: 255, spriteType: 26, postGfx: 0 },
+    // Picking the Frog up is its own ledger bit; the reunion bit it used to read belongs to
+    // the smithy, and a file older than the ledger reads that reunion as the fallback.
+    gameId: { eventBit: 48, flagType: 2, flagMask: 32, itemId: 255, spriteType: 26, postGfx: 0 },
+    fallback: { checkId: 'check-082' },
     kind: 'npc',
     screenId: 'screen-260',
     randomizerName: 'Frog',

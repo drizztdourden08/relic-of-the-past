@@ -6919,7 +6919,7 @@ table:
 }
 
 void Module07_0E_01_HandleMusicAndResetProps() {  // 828c78
-  if ((dungeon_room_index == 7 || dungeon_room_index == 23 && !ZeldaIsPlayingMusicTrack(17)) && !(link_which_pendants & 1))
+  if ((dungeon_room_index == 7 || dungeon_room_index == 23 && !ZeldaIsPlayingMusicTrack(17)) && !GameHook_StoryGate(kGate_HeraMusic, (link_which_pendants & 1) != 0))
     music_control = 0xf1;
   staircase_var1 = (which_staircase_index & 4) ? 106 : 88;
   overworld_map_state = 0;
@@ -7356,7 +7356,7 @@ void Dungeon_SetBossMusicUnorthodox() {  // 829165
       if (dungeon_room_index != 23 || ZeldaIsPlayingMusicTrack(17))
         return;
     }
-    if (music_unk1 != 0xf1 && (link_which_pendants & 1))
+    if (music_unk1 != 0xf1 && GameHook_StoryGate(kGate_HeraMusic, (link_which_pendants & 1) != 0))
       return;
   }
   music_control = x;

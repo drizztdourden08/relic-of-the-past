@@ -25,6 +25,8 @@ import { RetroBowBlock } from '@domains/app/compounds/RetroBowBlock';
 import { PondStatusNote } from '@domains/app/compounds/PondStatusNote';
 import { WishingPondSection } from '@domains/app/views/Randomizer/sub-components/WishingPondSection';
 import { DarkRoomsSection } from '@domains/app/views/Randomizer/sub-components/DarkRoomsSection';
+import { StoryGatesSection } from '@domains/app/views/Randomizer/sub-components/StoryGatesSection';
+import { DEFAULT_STORY_GATES } from '@shared/randomizer/ap-world/story-gates/story-gates.data';
 import { REFERENCE_CAPACITY_PROFILE, holdWalletToFloor, walletFloorOf } from '@shared/randomizer/ap-world/capacity';
 import { pondStatusOf } from '@shared/randomizer/ap-world/capacity-pond';
 import { holdPondToWallet, pondWalletTopOf } from '@shared/randomizer/ap-world/pond/pond-wallet-top';
@@ -204,6 +206,13 @@ const OptionTabBody = (props: OptionTabBodyProps) => {
               ? withCapacityPondRule({ ...choices, ponds }, 'pond')
               : { ...choices, ponds });
           }}
+        />
+      )}
+      {tab === 'goal' && (
+        <StoryGatesSection
+          setting={choices.storyGates ?? DEFAULT_STORY_GATES}
+          cellOf={cellOf}
+          onChange={(setting) => onChange({ ...choices, storyGates: setting })}
         />
       )}
       {tab === 'world' && (

@@ -32,6 +32,8 @@ interface GroupNode {
 
 type ItemFilter = 'all' | 'rewards' | 'non-rewards';
 type StatusFilter = 'all' | 'completed' | 'reachable' | 'blocked';
+/** What the tracker lists: the item checks, the events, or both. */
+type ShowMode = 'items' | 'events' | 'both';
 
 interface FilterState {
   searchQuery: string;
@@ -43,6 +45,8 @@ interface FilterState {
   itemFilter?: ItemFilter;
   /** Filter checks by their tracker status. */
   statusFilter?: StatusFilter;
+  /** Items, events, or both. Absent reads as items, the list as it always was. */
+  showMode?: ShowMode;
 }
 
 export type {
@@ -52,5 +56,6 @@ export type {
   GroupDimensionDef,
   GroupNode,
   ItemFilter,
+  ShowMode,
   StatusFilter,
 };

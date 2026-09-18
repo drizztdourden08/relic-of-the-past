@@ -16,10 +16,12 @@ interface TrackerCheckRowProps {
   itemOverride?: ItemId;
   /** With a run loaded, the check shows what it actually holds this seed. */
   run?: RunContext;
+  /** A reversible event's live side: true while it holds. Undefined for every other record. */
+  now?: boolean;
 }
 
 const TrackerCheckRow = (props: TrackerCheckRowProps) => {
-  const { check, status, detailed, itemOverride, run } = props;
+  const { check, status, detailed, itemOverride, run, now } = props;
   const itemId = itemOverride ?? run?.placedItems?.get(check.id) ?? check.vanillaItemIds[0];
   const displayItem = itemId ? getItem(itemId).randomizerName : undefined;
   return (
@@ -28,6 +30,9 @@ const TrackerCheckRow = (props: TrackerCheckRowProps) => {
       <Text className="tracker-check__name">{checkDisplayName(check)}</Text>
       {detailed && (
         <Text className="tracker-check__item">{displayItem ?? '-'}</Text>
+      )}
+      {now !== undefined && (
+        <Text className={`tracker-check__now tracker-check__now--${now ? 'on' : 'off'}`}>{now ? 'now' : 'not now'}</Text>
       )}
       <Text className="tracker-check__type">{check.kind}</Text>
     </Box>

@@ -75,6 +75,12 @@
   gap: var(--space-sm);
 }
 
+.tracker-filters__show-mode {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
 .tracker-filters__search-icon {
   position: absolute;
   left: var(--space-sm);

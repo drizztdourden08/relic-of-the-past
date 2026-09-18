@@ -21,6 +21,7 @@ import '../ChecksTracker.css';
 interface CheckListProps {
   checks: CheckRecord[];
   statuses: Map<string, CheckStatus>;
+  eventStatus?: ReadonlyMap<string, boolean>;
   viewMode: ViewMode;
   run?: RunContext;
 }
@@ -33,19 +34,28 @@ interface CheckCardProps {
 
 const SPRITE_PLACEHOLDER = <Box className="tracker-card__sprite-placeholder" />;
 
+/** An event card carries the app's own mark where an item shows its sprite. */
+const EVENT_MARK = './logos/logo-128.png';
+
 const CheckCard = ({ check, status, itemOverride }: CheckCardProps) => {
+  const isEvent = check.kind === 'event';
   const itemId = itemOverride ?? check.vanillaItemIds[0];
   const displayItem = itemId ? getItem(itemId).randomizerName : undefined;
-  const sprite = itemId ? getItemSprite(itemId) : undefined;
+  const sprite = isEvent ? EVENT_MARK : (itemId ? getItemSprite(itemId) : undefined);
 
   return (
-    <Box className={`tracker-card tracker-card--${status}`}>
+    <Box className={`tracker-card tracker-card--${status}${isEvent ? ' tracker-card--event' : ''}`}>
       {sprite
-        ? <Image className="tracker-card__sprite" src={sprite} alt={displayItem} draggable={false} fallback={SPRITE_PLACEHOLDER} />
+        ? <Image className="tracker-card__sprite" src={sprite} alt={displayItem ?? ''} draggable={false} fallback={SPRITE_PLACEHOLDER} />
         : SPRITE_PLACEHOLDER}
       <Box className="tracker-card__text">
+<<<<<<< HEAD
         <Text className="tracker-card__item-name">{displayItem ?? '???'}</Text>
         <Text className="tracker-card__check-name">{checkDisplayName(check)}</Text>
+=======
+        <Text className="tracker-card__item-name">{isEvent ? check.randomizerName : (displayItem ?? '???')}</Text>
+        <Text className="tracker-card__check-name">{isEvent ? (check.vanillaName ?? 'Event') : check.randomizerName}</Text>
+>>>>>>> 3b3a613a1 (wip(story-events): event ledger, story gates, event records, vanilla tracker logic)
       </Box>
     </Box>
   );
@@ -60,7 +70,7 @@ const itemsOf = (check: CheckRecord, expand: boolean, run?: RunContext): (ItemId
 };
 
 const CheckList = (props: CheckListProps) => {
-  const { checks, statuses, viewMode, run } = props;
+  const { checks, statuses, eventStatus, viewMode, run } = props;
   const showsItem = viewMode !== 'compact';
 
   if (viewMode === 'visual') {
@@ -85,6 +95,7 @@ const CheckList = (props: CheckListProps) => {
             key={`${check.id}__${i}`}
             check={check}
             status={status}
+            now={eventStatus?.get(check.id)}
             detailed={showsItem}
             itemOverride={itemId}
           />

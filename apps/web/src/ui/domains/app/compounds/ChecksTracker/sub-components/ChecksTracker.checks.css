@@ -63,6 +63,21 @@
   text-transform: uppercase;
 }
 
+/* The live side of a reversible event: a small pill beside the row, never the tick. */
+.tracker-check__now {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  padding: 0 var(--space-xs);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--c-border);
+  color: var(--c-text-dim);
+}
+
+.tracker-check__now--on {
+  color: var(--c-green);
+  border-color: var(--c-green);
+}
+
 .tracker-check--completed {
   color: var(--c-green);
   opacity: 0.6;
@@ -109,6 +124,21 @@
 .tracker-card--blocked {
   border-left-color: var(--c-text-muted);
   opacity: 0.45;
+}
+
+/* An event card: a gold frame tells it from an item; the left stripe still says its status. */
+.tracker-card--event {
+  border: 1px solid var(--c-gold);
+  border-left-width: 3px;
+}
+
+.tracker-card--event.tracker-card--completed { border-left-color: var(--c-green); }
+.tracker-card--event.tracker-card--reachable { border-left-color: var(--c-warning); }
+.tracker-card--event.tracker-card--blocked { border-left-color: var(--c-gold-dim); }
+
+.tracker-card--event .tracker-card__sprite {
+  image-rendering: auto;
+  opacity: 0.85;
 }
 
 .tracker-card__sprite {

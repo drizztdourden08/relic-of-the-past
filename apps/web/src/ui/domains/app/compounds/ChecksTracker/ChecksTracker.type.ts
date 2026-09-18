@@ -27,6 +27,8 @@ interface ChecksTrackerProps {
   onViewModeChange: (mode: ViewMode) => void;
   groupTree: GroupNode;
   statuses: Map<string, CheckStatus>;
+  /** The live side of the reversible events: true while the state holds. Absent hides the pill. */
+  eventStatus?: ReadonlyMap<string, boolean>;
   /** Randomized run: what each check actually holds, and its sweep sphere. */
   run?: RunContext;
   /** Grouping axes the config panel offers. Defaults to the base catalog. */

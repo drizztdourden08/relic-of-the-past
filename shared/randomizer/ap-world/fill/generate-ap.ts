@@ -73,7 +73,7 @@ const attemptApPlacement = (
   const fillWorld = buildFillWorld({ ...fillOptions, shopPrices, pondDemands });
   const {
     world, pool, keyDropShuffle, includeNpcChecks, includeWorldItems, capacity, capacityProgressive, capacityBonus,
-    capacityCounts, shops, ponds, pondSlotsFollowMode, pondLocations, darkRooms, progressiveTiers, progressiveModes, itemPower, retroBow,
+    capacityCounts, shops, ponds, pondSlotsFollowMode, pondLocations, darkRooms, storyGates, progressiveTiers, progressiveModes, itemPower, retroBow,
     dungeonItems, accessibility,
   } = fillWorld;
   // Minimal accessibility is the only contract that lets the fill park an item
@@ -148,6 +148,7 @@ const attemptApPlacement = (
       capacityDeliverableCount: countIn(fairySpots, deliverable.capacity),
       ponds,
       darkRooms,
+      storyGates,
       pondPrizeCount: pondLocations.length,
       pondSlotsFollowMode,
       progressiveTiers,

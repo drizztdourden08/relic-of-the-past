@@ -1123,8 +1123,10 @@ static const uint32 kGateWordParityMask[kGateWordCount] = {
   kFeatures4_HammerBreaksSeal | kFeatures4_RodLightsDarkRoom | kFeatures4_MedallionLightsDarkRoom |
   kFeatures4_RedCaneLightsDarkRoom | kFeatures4_WishPondPlan,
 
-  // features5: the capacity pickup bonus rewrites what a borrowed receipt pays out, so Vanilla Safe strips it.
-  kFeatures5_CapacityBonus,
+  // features5: the capacity pickup bonus rewrites what a borrowed receipt pays out, and every story
+  // field makes a gate read a recorded event instead of the item the game reads, so Vanilla Safe
+  // strips all of it: a zero word is the unmodified game.
+  kFeatures5_CapacityBonus | kFeatures5_StoryMask,
 };
 
 // Host-side reactions that must fire the instant a gate word changes, keyed by gate-word index. Kept

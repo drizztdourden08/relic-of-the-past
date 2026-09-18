@@ -53,6 +53,11 @@ void GameHook_ModuleFrameEnd(void) {
   // which each substituted sprite's own tiles can be written (sprite_art_slots.c). A no-op
   // on every frame no gated seam claimed a block, which is every frame with them off.
   GameHook_SpriteArtFrameEnd();
+  // The event ledger's watcher (events/event_watch.c), under its own gate
+  // (kFeatures5_EventLedger): edges on the game's own bytes, no host call.
+  GameHook_EventWatchFrameEnd();
+  // The pyramid hole modes (story_events.c), under their own word-5 field.
+  GameHook_StoryGatesFrameEnd();
 
   // Off by default: makes zero host-calls, same contract as haptics.
   if (!(enhanced_features0 & kFeatures0_DeveloperTools))

@@ -2389,7 +2389,7 @@ void Sprite_CalculateSwordDamage(int k) {  // 86ed3f
 void Sprite_ApplyCalculatedDamage(int k, int a) {  // 86ed89
   if ((sprite_flags3[k] & 0x40) || sprite_type[k] >= 0xD8)
     return;
-  uint8 dmg = kEnemyDamages[damage_type_determiner * 8 | enemy_damage_data[sprite_type[k] * 16 | damage_type_determiner]];
+  uint8 dmg = GameHook_BarrierDamage(k, kEnemyDamages[damage_type_determiner * 8 | enemy_damage_data[sprite_type[k] * 16 | damage_type_determiner]]);
   Sprite_GiveDamage(k, dmg, a);
 }
 
@@ -2755,6 +2755,8 @@ uint8 Sprite_CheckDamageFromLink(int k) {  // 86f2b4
   if (link_position_mode & 0x10)
     return kCheckDamageFromPlayer_Carry | kCheckDamageFromPlayer_Ne;
 
+  if (sprite_type[k] >= 0xd6 && !GameHook_StoryGate(kGate_Ganon, true))
+    return 0;
   if (link_item_in_hand & 10) {
     if (sprite_type[k] >= 0xd6 && !GameHook_HammerReachesLastFight())
       return 0;

@@ -21,6 +21,8 @@ import { ShopPricesBlock } from '@domains/app/compounds/ShopPricesBlock';
 import { ShopSlotsBlock } from '@domains/app/compounds/ShopSlotsBlock';
 import { WishingPondSection } from './WishingPondSection';
 import { DarkRoomsSection } from './DarkRoomsSection';
+import { StoryGatesSection } from './StoryGatesSection';
+import { storyGatesFromSnapshot } from '@shared/randomizer/ap-world/story-gates/story-gate-from-snapshot';
 import { normalizeRandomizerOptions } from '@shared/randomizer/options-snapshot';
 import {
   capacityBonusOfValues, capacityEnabledOf, capacityProgressiveOf, parseCapacityProfile, walletFloorOf,
@@ -56,6 +58,7 @@ const RunOptions = ({ options, seed = '' }: RunOptionsProps) => {
   const walletFloor = useMemo(() => walletFloorOf(values), [values]);
   const ponds = useMemo(() => parsePondProfiles(values), [values]);
   const darkRooms = useMemo(() => darkRoomSettingFromSnapshot(snapshot), [snapshot]);
+  const storyGates = useMemo(() => storyGatesFromSnapshot(snapshot), [snapshot]);
   // The reading above is already masked; this only recovers the sentence saying why.
   const forcedLights = useMemo(() => forcedDarkRoomLightReasons(includeWorldItemsOf(values)), [values]);
   // The scope this run was generated with, including the seed its random mode drew from.
@@ -84,6 +87,7 @@ const RunOptions = ({ options, seed = '' }: RunOptionsProps) => {
         </RandomizerOptionGroup>
       ))}
       <DarkRoomsSection setting={darkRooms} impact={cellOf(DARK_ROOM_REQUIRED_KEY)} forced={forcedLights} />
+      <StoryGatesSection setting={storyGates} cellOf={cellOf} />
       <ShopSlotsBlock scope={shops} retroBow={retroBow} />
       <ShopPricesBlock values={values} capacity={rule.capacity} />
       <CapacityUpgradesSection

@@ -6,7 +6,7 @@
  */
 import { useState } from 'react';
 import type {
-  FilterState, GroupDimension, GroupDimensionDef, ItemFilter, StatusFilter,
+  FilterState, GroupDimension, GroupDimensionDef, ItemFilter, ShowMode, StatusFilter,
 } from '@shared/game/logic/queries/check-grouping';
 import { Badge, Box, Button, Icon, IconButton, SegmentedControl, TextInput } from '@ds/primitives';
 import type { SegmentOption } from '@ds/primitives';
@@ -50,6 +50,13 @@ const VIEW_MODE_OPTIONS: SegmentOption<ViewMode>[] = [
   { value: 'compact', label: <Icon paths={LIST_PATHS} size={13} />, title: 'Compact rows' },
   { value: 'detailed', label: <Icon paths={LIST_DETAIL_PATHS} size={13} />, title: 'Rows with items' },
   { value: 'visual', label: <Icon paths={GRID_PATHS} size={13} />, title: 'Item cards' },
+];
+
+/** Items, events, or both: the one switch that is always in reach, above the drawer. */
+const SHOW_MODE_OPTIONS: SegmentOption<ShowMode>[] = [
+  { value: 'items', label: 'Items', title: 'The item checks' },
+  { value: 'events', label: 'Events', title: 'Story, dungeon, fairy and area events' },
+  { value: 'both', label: 'Both', title: 'Everything' },
 ];
 
 const ITEM_FILTER_OPTIONS: SegmentOption<ItemFilter>[] = [
@@ -107,6 +114,14 @@ const TrackerFilters = (props: TrackerFiltersProps) => {
             <Badge className="tracker-filters__count" variant="warning">{activeCount}</Badge>
           )}
         </Box>
+      </Box>
+
+      <Box className="tracker-filters__show-mode">
+        <SegmentedControl
+          value={filter.showMode ?? 'items'}
+          options={SHOW_MODE_OPTIONS}
+          onChange={(value) => onFilterChange({ ...filter, showMode: value })}
+        />
       </Box>
 
       {showFilters && (

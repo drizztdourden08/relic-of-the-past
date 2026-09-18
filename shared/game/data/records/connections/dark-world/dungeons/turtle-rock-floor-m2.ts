@@ -91,7 +91,7 @@ const DW_DUNGEON_TURTLE_ROCK_FLOOR_M2_CONNECTIONS: ConnectionRecord[] = [
     placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
     canExit: true,
     dungeonId: 'dungeon-012',
-    tags: ['tag-079', 'tag-058'],
+    tags: ['tag-079'],
   },
   {
     id: 'connection-792',
@@ -137,7 +137,7 @@ const DW_DUNGEON_TURTLE_ROCK_FLOOR_M2_CONNECTIONS: ConnectionRecord[] = [
     kind: 'door',
     placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
     canExit: true,
-    tags: [],
+    tags: ['tag-058'],
   },
   {
     id: 'connection-1078',
