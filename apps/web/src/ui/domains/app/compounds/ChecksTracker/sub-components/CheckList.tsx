@@ -49,13 +49,8 @@ const CheckCard = ({ check, status, itemOverride }: CheckCardProps) => {
         ? <Image className="tracker-card__sprite" src={sprite} alt={displayItem ?? ''} draggable={false} fallback={SPRITE_PLACEHOLDER} />
         : SPRITE_PLACEHOLDER}
       <Box className="tracker-card__text">
-<<<<<<< HEAD
-        <Text className="tracker-card__item-name">{displayItem ?? '???'}</Text>
-        <Text className="tracker-card__check-name">{checkDisplayName(check)}</Text>
-=======
         <Text className="tracker-card__item-name">{isEvent ? check.randomizerName : (displayItem ?? '???')}</Text>
-        <Text className="tracker-card__check-name">{isEvent ? (check.vanillaName ?? 'Event') : check.randomizerName}</Text>
->>>>>>> 3b3a613a1 (wip(story-events): event ledger, story gates, event records, vanilla tracker logic)
+        <Text className="tracker-card__check-name">{isEvent ? (check.vanillaName ?? 'Event') : checkDisplayName(check)}</Text>
       </Box>
     </Box>
   );
