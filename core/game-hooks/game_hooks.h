@@ -692,6 +692,9 @@ bool GameHook_LightConeSuppressesExtraWidth(void);
 // the caller's branch selection is exactly what it was.
 int GameHook_PitFallViewModule(int effectiveModule);
 
+// ─── Game-over view and wide iris (view_gates.c, iris_wide.c): game_over_view.h ───
+#include "game_over_view.h"
+
 // ─── Custom player sprite sheets (player_sprite.c) ───
 
 // Overwrite the player gfx asset from a ZSPR sheet and take its palette into the PPU's private player
