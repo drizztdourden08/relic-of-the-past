@@ -51,6 +51,14 @@ const rendersExtended = (s: GameSettings): boolean =>
 const rendersTall = (s: GameSettings): boolean => s.extendedRendering && allowedRatio(s) < TALL_RATIO;
 
 /**
+ * True when the view shows more than the original picture on any side, wider or taller. The
+ * widescreen corrections answer to this: a tall view has the same transitions, effects and sprites
+ * drawn for the original screen, so it needs them too.
+ */
+const rendersExtended = (s: GameSettings): boolean =>
+  s.extendedRendering && Math.abs(allowedRatio(s) - TALL_RATIO) > 1e-6;
+
+/**
  * The "W:H" word the core's config parser reads. Built from the served height so the pair is exact for
  * the shape being asked for, and reduced, which is what the ratio pickers hand over too.
  */

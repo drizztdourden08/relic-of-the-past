@@ -499,6 +499,12 @@ static void ConfigurePpuSideSpace() {
   } else if (mod == 20 || mod == 0 || mod == 1 || GameHook_FileScreenIsWide(mod)) {
     extra_left = kPpuExtraLeftRight, extra_right = kPpuExtraLeftRight;
     extra_bottom = 16;
+    // A still picture stops at the original frame, so rows above and below it could only ever have shown
+    // the tilemap wrapping back onto the picture. They open once the space around the picture draws that
+    // screen's own background instead (fixed_picture_edges.c). PpuSetExtraSideSpace caps each side to the
+    // configured budget, so a view with no extra rows still gets the same 16 the line above asks for.
+    if (GameHook_FixedPictureEdgeLayers() != 0)
+      extra_top = extra_bottom = kPpuExtraTopBottom;
   }
   // The game-over frames that draw over the whole screen fill every side, so the iris, the colour fill and
   // the fade reach the edges. Past the loaded map the fetch finds no data, which would show the fixed colour
@@ -583,6 +589,12 @@ void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
     PpuSetHiddenTiles(g_zenv.ppu, fill, fillWords);
     if (fillWords) g_zenv.ppu->renderFlags |= kPpuRenderFlags_BlackBackdrop;
   }
+
+  // A still picture that fills the original frame (the title, the file screen) has one tilemap screen
+  // and nothing past it, so the space around it sampled the picture again. Hand the PPU the layers that
+  // should carry the screen's own background block out there instead (fixed_picture_edges.c). Asked per
+  // frame, like the hide above, because PpuBeginDrawing just cleared the request.
+  PpuSetEdgeTiles(g_zenv.ppu, GameHook_FixedPictureEdgeLayers());
 
   // Total physical buffer rows = base 224 + top budget + bottom budget. The top budget is the tall extra
   // per side (extraTopBottom); the bottom budget matches it for tall, else the legacy +16 (extend_y). This

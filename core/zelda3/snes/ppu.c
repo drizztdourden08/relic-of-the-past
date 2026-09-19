@@ -166,6 +166,7 @@ void PpuBeginDrawing(Ppu *ppu, uint8_t *pixels, size_t pitch, uint32_t render_fl
   ppu->renderFlags = render_flags;
   ppu->window1Wide = false;
   ppu->lockShiftSomeFixed = false;
+  ppu->edgeTileLayers = 0;
   ppu->renderPitch = (uint)pitch;
   ppu->renderBuffer = pixels;
 
@@ -340,6 +341,25 @@ static inline bool PpuIsHiddenTile(const Ppu *ppu, uint32 tile) {
   return false;
 }
 
+// The tile to draw at screen tile position (col, row): the word the fetch found while inside the 32x32
+// the picture is laid out on, and that screen's own background block outside it (PpuSetEdgeTiles). The
+// picture is the 32 columns and the first 28 rows of that block; these screens carry the same background
+// through the rest of it. The block is indexed by the screen's own parity, so a 2x2 pattern carries on
+// from the picture with no phase step. |edge| is NULL on every frame that asks for nothing.
+static FORCEINLINE uint32 PpuEdgeTile(const uint16 *edge, uint32 tile, int col, int row) {
+  if (edge == NULL || ((unsigned)col < 32u && (unsigned)row < 32u))
+    return tile;
+  return edge[((row & 1) << 1) | (col & 1)];
+}
+
+// This layer's background block for the frame, or NULL when it keeps the stock fetch. The linear world
+// tilemap is left alone: it clamps its own edges and never belongs to a fixed picture.
+static FORCEINLINE const uint16 *PpuEdgeTilesFor(const Ppu *ppu, uint layer) {
+  if (!(ppu->edgeTileLayers & (1 << layer)) || ppu->bgLayer[layer].useWorld)
+    return NULL;
+  return ppu->edgeTiles[layer];
+}
+
 static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZbufType zhi, PpuZbufType zlo) {
 #define DO_PIXEL(i) do { \
   pixel = (bits >> i) & 1 | (bits >> (7 + i)) & 2 | (bits >> (14 + i)) & 4 | (bits >> (21 + i)) & 8; \
@@ -356,6 +376,7 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
   BgLayer *bglayer = &ppu->bgLayer[layer];
   // Indoors, BG2 tiles equal to the ceiling block draw as the gap sentinel (the space past the walls).
   const bool hide = layer == 1 && ppu->hiddenTileCount != 0;
+  const int edgeLine = (int)y;  // the screen row, before the scroll turns it into a tilemap one
   y += bglayer->vScroll;
   // Camera lock (BG2 = overworld terrain only): shift the sampled coordinate itself (not worldOff) so the
   // tile INDEX and the in-tile row (y & 7) stay consistent — shifting worldOffY by a non-multiple-of-8
@@ -377,12 +398,16 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
   bool useWorld = bglayer->useWorld;
   int worldTileY = useWorld ? (((int)y + bglayer->worldOffY) >> 3) : 0;
   uint16 worldRowBuf[kPpuXPixels / 8 + 8];
+  // Fixed picture: the block that fills the space around it, and the screen row this line's tiles start on.
+  const uint16 *edge = PpuEdgeTilesFor(ppu, layer);
+  const int edgeRow = (edgeLine - (int)(y & 7)) >> 3;
   const uint16 *addr;
   for (size_t windex = 0; windex < win.nr; windex++) {
     if (win.bits & (1 << windex))
       continue;  // layer is disabled for this window part
     uint x = win.edges[windex] + bglayer->hScroll;
     if (layer == 1) x -= ppu->cameraLockShiftX;  // camera lock (BG2 only): shift sample coord — world + stock paths
+    int edgeCol = (win.edges[windex] - (int)(x & 7)) >> 3;  // screen tile column, stepped with the fetch below
     uint w = win.edges[windex + 1] - win.edges[windex];
     PpuZbufType *dstz = ppu->bgBuffers[sub].data + win.edges[windex] + kPpuExtraLeftRight;
     const uint16 *tp, *tp_last, *tp_next;
@@ -408,8 +433,9 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
     if (x & 7) {
       int curw = IntMin(8 - (x & 7), w);
       w -= curw;
-      uint32 tile = *tp;
+      uint32 tile = PpuEdgeTile(edge, *tp, edgeCol, edgeRow);
       NEXT_TP();
+      edgeCol += 1;
       int ta = (tile & 0x8000) ? tileadr1 : tileadr0;
       PpuZbufType z = (tile & 0x2000) ? zhi : zlo;
       bool hidden = hide && PpuIsHiddenTile(ppu, tile);
@@ -431,8 +457,9 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
     }
     // Handle full tiles in the middle
     while (w >= 8) {
-      uint32 tile = *tp;
+      uint32 tile = PpuEdgeTile(edge, *tp, edgeCol, edgeRow);
       NEXT_TP();
+      edgeCol += 1;
       int ta = (tile & 0x8000) ? tileadr1 : tileadr0;
       PpuZbufType z = (tile & 0x2000) ? zhi : zlo;
       bool hidden = hide && PpuIsHiddenTile(ppu, tile);
@@ -453,7 +480,7 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
     }
     // Handle remaining clipped part
     if (w) {
-      uint32 tile = *tp;
+      uint32 tile = PpuEdgeTile(edge, *tp, edgeCol, edgeRow);
       int ta = (tile & 0x8000) ? tileadr1 : tileadr0;
       PpuZbufType z = (tile & 0x2000) ? zhi : zlo;
       bool hidden = hide && PpuIsHiddenTile(ppu, tile);
@@ -490,7 +517,11 @@ static void PpuDrawBackground_2bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
   PpuWindows win;
   IS_SCREEN_WINDOWED(ppu, sub, layer) ? PpuWindows_Calc(&win, ppu, layer) : PpuWindows_Clear(&win, ppu, layer);
   BgLayer *bglayer = &ppu->bgLayer[layer];
+  const int edgeLine = (int)y;  // the screen row, before the scroll turns it into a tilemap one
   y += bglayer->vScroll;
+  // Fixed picture: the block that fills the space around it, and the screen row this line's tiles start on.
+  const uint16 *edge = PpuEdgeTilesFor(ppu, layer);
+  const int edgeRow = (edgeLine - (int)(y & 7)) >> 3;
   int sc_offs = bglayer->tilemapAdr + (((y >> 3) & 0x1f) << 5);
   if ((y & 0x100) && bglayer->tilemapHigher)
     sc_offs += bglayer->tilemapWider ? 0x800 : 0x400;
@@ -506,6 +537,7 @@ static void PpuDrawBackground_2bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
     if (win.bits & (1 << windex))
       continue;  // layer is disabled for this window part
     uint x = win.edges[windex] + bglayer->hScroll;
+    int edgeCol = (win.edges[windex] - (int)(x & 7)) >> 3;  // screen tile column, stepped with the fetch below
     uint w = win.edges[windex + 1] - win.edges[windex];
     PpuZbufType *dstz = ppu->bgBuffers[sub].data + win.edges[windex] + kPpuExtraLeftRight;
     const uint16 *tp = tps[x >> 8 & 1] + ((x >> 3) & 0x1f);
@@ -517,8 +549,9 @@ static void PpuDrawBackground_2bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
     if (x & 7) {
       int curw = IntMin(8 - (x & 7), w);
       w -= curw;
-      uint32 tile = *tp;
+      uint32 tile = PpuEdgeTile(edge, *tp, edgeCol, edgeRow);
       NEXT_TP();
+      edgeCol += 1;
       int ta = (tile & 0x8000) ? tileadr1 : tileadr0;
       PpuZbufType z = (tile & 0x2000) ? zhi : zlo;
       uint32 bits = READ_BITS(ta, tile & 0x3ff);
@@ -537,8 +570,9 @@ static void PpuDrawBackground_2bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
     }
     // Handle full tiles in the middle
     while (w >= 8) {
-      uint32 tile = *tp;
+      uint32 tile = PpuEdgeTile(edge, *tp, edgeCol, edgeRow);
       NEXT_TP();
+      edgeCol += 1;
       int ta = (tile & 0x8000) ? tileadr1 : tileadr0;
       PpuZbufType z = (tile & 0x2000) ? zhi : zlo;
       uint32 bits = READ_BITS(ta, tile & 0x3ff);
@@ -556,7 +590,7 @@ static void PpuDrawBackground_2bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
     }
     // Handle remaining clipped part
     if (w) {
-      uint32 tile = *tp;
+      uint32 tile = PpuEdgeTile(edge, *tp, edgeCol, edgeRow);
       int ta = (tile & 0x8000) ? tileadr1 : tileadr0;
       PpuZbufType z = (tile & 0x2000) ? zhi : zlo;
       uint32 bits = READ_BITS(ta, tile & 0x3ff);
@@ -594,8 +628,12 @@ static void PpuDrawBackground_4bpp_mosaic(Ppu *ppu, uint y, bool sub, uint layer
   // entirely, so every mosaic frame of a transition fell back to the stock wrapping 2-screen tilemap with
   // an unshifted camera: the terrain tore at each 256px tilemap boundary and slid out from under the
   // sprites, which stayed on the locked coordinates.
-  y = MOSAIC_START(ppu, y) + bglayer->vScroll;
+  const int edgeLine = MOSAIC_START(ppu, y);  // the screen row this block of lines starts on
+  y = edgeLine + bglayer->vScroll;
   if (layer == 1) y -= ppu->cameraLockShiftY;
+  // Fixed picture: the block that fills the space around it, and the screen row this line's tiles start on.
+  const uint16 *edge = PpuEdgeTilesFor(ppu, layer);
+  const int edgeRow = (edgeLine - (int)(y & 7)) >> 3;
   int sc_offs = bglayer->tilemapAdr + (((y >> 3) & 0x1f) << 5);
   if ((y & 0x100) && bglayer->tilemapHigher)
     sc_offs += bglayer->tilemapWider ? 0x800 : 0x400;
@@ -617,6 +655,7 @@ static void PpuDrawBackground_4bpp_mosaic(Ppu *ppu, uint y, bool sub, uint layer
     PpuZbufType *dstz_end = ppu->bgBuffers[sub].data + win.edges[windex + 1] + kPpuExtraLeftRight;
     uint x = sx + bglayer->hScroll;
     if (layer == 1) x -= ppu->cameraLockShiftX;
+    int edgeCol = (sx - (int)(x & 7)) >> 3;  // screen tile column, stepped with the fetch below
     const uint16 *tp, *tp_last, *tp_next;
     if (useWorld) {
       // Gather this run's tiles into a contiguous buffer (clamped), so the step below is linear.
@@ -639,7 +678,7 @@ static void PpuDrawBackground_4bpp_mosaic(Ppu *ppu, uint y, bool sub, uint layer
     int w = ppu->mosaicSize - (sx - MOSAIC_START(ppu, sx));
     do {
       w = IntMin(w, dstz_end - dstz);
-      uint32 tile = *tp;
+      uint32 tile = PpuEdgeTile(edge, *tp, edgeCol, edgeRow);
       int ta = (tile & 0x8000) ? tileadr1 : tileadr0;
       PpuZbufType z = (tile & 0x2000) ? zhi : zlo;
       bool hidden = hide && PpuIsHiddenTile(ppu, tile);
@@ -666,6 +705,7 @@ static void PpuDrawBackground_4bpp_mosaic(Ppu *ppu, uint y, bool sub, uint layer
         if (tp != tp_last) tp += 1;
         else if (useWorld) tp = tp_next;
         else tp = tp_next, tp_next = tp_last - 31, tp_last = tp + 31;
+        edgeCol += 1;
       }
       w = ppu->mosaicSize;
     } while (dstz_end - dstz != 0);
@@ -686,7 +726,11 @@ static void PpuDrawBackground_2bpp_mosaic(Ppu *ppu, int y, bool sub, uint layer,
   PpuWindows win;
   IS_SCREEN_WINDOWED(ppu, sub, layer) ? PpuWindows_Calc(&win, ppu, layer) : PpuWindows_Clear(&win, ppu, layer);
   BgLayer *bglayer = &ppu->bgLayer[layer];
-  y = MOSAIC_START(ppu, y) + bglayer->vScroll;
+  const int edgeLine = MOSAIC_START(ppu, y);  // the screen row this block of lines starts on
+  y = edgeLine + bglayer->vScroll;
+  // Fixed picture: the block that fills the space around it, and the screen row this line's tiles start on.
+  const uint16 *edge = PpuEdgeTilesFor(ppu, layer);
+  const int edgeRow = (edgeLine - (int)(y & 7)) >> 3;
   int sc_offs = bglayer->tilemapAdr + (((y >> 3) & 0x1f) << 5);
   if ((y & 0x100) && bglayer->tilemapHigher)
     sc_offs += bglayer->tilemapWider ? 0x800 : 0x400;
@@ -704,13 +748,14 @@ static void PpuDrawBackground_2bpp_mosaic(Ppu *ppu, int y, bool sub, uint layer,
     PpuZbufType *dstz = ppu->bgBuffers[sub].data + sx + kPpuExtraLeftRight;
     PpuZbufType *dstz_end = ppu->bgBuffers[sub].data + win.edges[windex + 1] + kPpuExtraLeftRight;
     uint x = sx + bglayer->hScroll;
+    int edgeCol = (sx - (int)(x & 7)) >> 3;  // screen tile column, stepped with the fetch below
     const uint16 *tp = tps[x >> 8 & 1] + ((x >> 3) & 0x1f);
     const uint16 *tp_last = tps[x >> 8 & 1] + 31, *tp_next = tps[(x >> 8 & 1) ^ 1];
     x &= 7;
     int w = ppu->mosaicSize - (sx - MOSAIC_START(ppu, sx));
     do {
       w = IntMin(w, dstz_end - dstz);
-      uint32 tile = *tp;
+      uint32 tile = PpuEdgeTile(edge, *tp, edgeCol, edgeRow);
       int ta = (tile & 0x8000) ? tileadr1 : tileadr0;
       PpuZbufType z = (tile & 0x2000) ? zhi : zlo;
       uint32 bits = READ_BITS(ta, tile & 0x3ff);
@@ -724,8 +769,10 @@ static void PpuDrawBackground_2bpp_mosaic(Ppu *ppu, int y, bool sub, uint layer,
         } while (++i != w);
       }
       dstz += w, x += w;
-      for (; x >= 8; x -= 8)
+      for (; x >= 8; x -= 8) {
         tp = (tp != tp_last) ? tp + 1 : tp_next;
+        edgeCol += 1;
+      }
       w = ppu->mosaicSize;
     } while (dstz_end - dstz != 0);
   }
@@ -860,6 +907,22 @@ void PpuSetHiddenTiles(Ppu *ppu, const uint16_t *words, int count) {
   if (count < 0 || words == NULL) count = 0;
   for (int i = 0; i < count; i++) ppu->hiddenTiles[i] = words[i];
   ppu->hiddenTileCount = (uint8_t)count;
+}
+
+void PpuSetEdgeTiles(Ppu *ppu, int layerMask) {
+  ppu->edgeTileLayers = 0;
+  for (int i = 0; i < 4; i++) {
+    if (!(layerMask & (1 << i)))
+      continue;
+    // The 2x2 at the tilemap's origin. A fixed picture is built on a repeating block and lays it right
+    // up to its own edge, so the corner names the block without the caller knowing which screen it is.
+    int adr = ppu->bgLayer[i].tilemapAdr;
+    ppu->edgeTiles[i][0] = ppu->vram[adr & 0x7fff];
+    ppu->edgeTiles[i][1] = ppu->vram[(adr + 1) & 0x7fff];
+    ppu->edgeTiles[i][2] = ppu->vram[(adr + 32) & 0x7fff];
+    ppu->edgeTiles[i][3] = ppu->vram[(adr + 33) & 0x7fff];
+    ppu->edgeTileLayers |= 1 << i;
+  }
 }
 
 void PpuSetExtraSideSpace(Ppu *ppu, int left, int right, int top, int bottom) {
