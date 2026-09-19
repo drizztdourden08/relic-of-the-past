@@ -56,10 +56,17 @@ bool GameHook_LightConeSuppressesExtraWidth(void) {
 // A wallmaster sending the player back to the last entrance reuses the same module from indoors, where
 // player_is_indoors is already set, so that crossing reads as the room it is throughout.
 //
-// Gated with the area-seam pan, not on a switch of its own: both are the same promise, that a crossing
-// keeps the view the play on either side of it had, so a player who wants one wants the other.
+// Answers to the corrections for a picture drawn assuming a 4:3 screen, the same switch the spotlight
+// crossing, the death sequence and the interrupted scenes take. This crossing had only the area-seam pan
+// to ride, which is a switch of its own, off by default, and about the wrapped-edge slice at area
+// boundaries. A profile with the corrections on and that pan off therefore kept every other transition
+// and lost this one, and the fall alone went on collapsing to the base frame.
+//
+// The pan still carries it, so a profile that had the crossing working keeps it whatever the corrections
+// switch reads. With the corrections off, the pan alone decides, which is what the game did before.
 int GameHook_PitFallViewModule(int effectiveModule) {
-  if (effectiveModule != MODULE_PIT_FALL_ENTRANCE || !(enhanced_features0 & kFeatures0_SmoothTransitions))
+  const uint32 carries = kFeatures0_SmoothTransitions | kFeatures0_WidescreenVisualFixes;
+  if (effectiveModule != MODULE_PIT_FALL_ENTRANCE || !(enhanced_features0 & carries))
     return effectiveModule;
   return player_is_indoors ? MODULE_DUNGEON : MODULE_OVERWORLD;
 }
