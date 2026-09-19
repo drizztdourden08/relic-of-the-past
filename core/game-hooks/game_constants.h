@@ -17,6 +17,8 @@
 #define MODULE_SPOTLIGHT_OPEN   16  // transient spotlight (iris opening)
 #define MODULE_ATTRACT          20  // Module14_Attract: the title demo, no live room behind it
 #define MODULE_TRIFORCE_ROOM    25  // Module19_TriforceRoom: first of the ending modules
+#define MODULE_INTRO             0  // Module00_Intro: the logo, the falling triforce and the title screen
+#define MODULE_FILE_SELECT       1  // Module01_FileSelect: the three files and the copy/erase choices
 #define MODULE_FILE_COPY         2  // Module02: the copy flow, on the file screen's own art
 #define MODULE_FILE_ERASE        3  // Module03: the erase flow, the same art
 #define MODULE_FILE_NAME         4  // Module04: naming a new file, the same art
@@ -56,6 +58,10 @@
 // The Ceiling object (dungeon.c, subtype 1 index 0) paints a 2x2 block of tilemap words: the void past a
 // room's walls. Dungeon_CeilingTileWords hands it over.
 #define kCeilingBlockWords 4
+
+// The layers that carry a fixed picture's background into the space around it (PpuSetEdgeTiles):
+// BG1 and BG2 hold the art, BG3 holds the text. Bit per layer, in the renderer's own numbering.
+#define kFixedPictureEdgeLayers 0x7
 
 // Sprite type ids referenced by hook branching logic.
 #define SPRITE_UNCLE_PRIEST     0x73  // Uncle (sprite_E == 0) / Priest family

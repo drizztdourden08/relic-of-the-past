@@ -738,6 +738,15 @@ void GameHook_SetHideSpaceBeyondWalls(bool enable);
 // nothing to hide. Asked once per frame by ZeldaDrawPpuFrame, after PpuBeginDrawing has reset the flags.
 int GameHook_HideSpaceBeyondWallsFill(const uint16 **words);
 
+// ─── The Space Around A Fixed Picture (fixed_picture_edges.c) ───
+
+// Which layers should draw a screen's own background block in the space around it, as a bit per layer
+// for PpuSetEdgeTiles. Non-zero only while the frame shows one of the still pictures that fill the
+// original frame and stop there: the logo, the falling triforce, the title screen, the file screen and
+// its copy, erase and name flows. ZeldaDrawPpuFrame asks once per frame, and ConfigurePpuSideSpace tests
+// the same answer to decide whether the rows above and below the picture can be opened at all.
+int GameHook_FixedPictureEdgeLayers(void);
+
 // ─── HUD/Pause Override (hud_override.c) ───
 
 // True while kFeatures3_HudOverride permits hiding the native HUD/pause menu. WasmSetHudHidden and
