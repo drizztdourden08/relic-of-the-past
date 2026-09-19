@@ -451,18 +451,23 @@ void DesertPrayer_BuildIrisHDMATable() {  // 87ea27
       } else {
         r2 = spotlight_var3 + pair.b;
         r0 = spotlight_var3 - pair.b;
+        GameHook_IrisCircleSpan((int16)spotlight_var3 - (int16)pair.b, (int16)spotlight_var3 + (int16)pair.b);
       }
       k = (r14 - BYTE(spotlight_var4) - 1);
     }
     uint8 t6 = (r0 < 256) ? r0 : (r0 < 512) ? 255 : 0;
     uint8 t7 = (r2 < 256) ? r2 : 255;
     uint16 r6 = t7 << 8 | t6;
-    if (k < 240)
-     hdma_table_dynamic[k] = (r6 == 0xffff) ? 0xff : r6;
+    if (k < 240) {
+      hdma_table_dynamic[k] = (r6 == 0xffff) ? 0xff : r6;
+      GameHook_IrisTableLines(k, k, hdma_table_dynamic[k]);
+    }
     if (sign16(spotlight_y_lower) || (r4 >= spotlight_y_lower && r4 < spotlight_y_upper)) {
       k = BYTE(spotlight_var4) - 2 + r14;
-      if (k < 240)
+      if (k < 240) {
         hdma_table_dynamic[k] = (r6 == 0xffff) ? 0xff : r6;
+        GameHook_IrisTableLines(k, k, hdma_table_dynamic[k]);
+      }
       spotlight_var4++;
     }
     r4++;

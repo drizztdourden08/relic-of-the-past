@@ -1515,7 +1515,10 @@ static bool ppu_evaluateSprites(Ppu* ppu, int line) {
       // beforehand moves the value across the fold threshold and the decode then lands 512 rows out; since
       // the shift changes as the view pans, a sprite near that threshold alternates between placements and
       // flickers. Shift after decoding instead.
-      if (yy >= 256 + (int)ppu->extraTopBottom)
+      // The fold moves with the camera lock's offset, exactly as the OAM writer's own range does
+      // (OamTallFold in sprite.h): the stored value is camera-relative and the offset is added below, so a
+      // locked view would otherwise fold its lowest rows into negative ones far above the screen.
+      if (yy >= 256 + (int)ppu->extraTopBottom - ppu->tallFoldShift)
         yy -= 512;
       yy += PpuSpriteLockShift(ppu, index, ppu->cameraLockShiftY);
       row = line - yy;

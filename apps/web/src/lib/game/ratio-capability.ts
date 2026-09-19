@@ -39,6 +39,14 @@ const allowedRatio = (s: GameSettings): number => {
 /** True when the view the profile renders is wider than the original picture. */
 const rendersWide = (s: GameSettings): boolean => s.extendedRendering && allowedRatio(s) > TALL_RATIO;
 
+/**
+ * True when the view shows more than the original picture on any side, wider or taller. The
+ * widescreen corrections answer to this: a tall view has the same transitions, effects and sprites
+ * drawn for the original screen, so it needs them too.
+ */
+const rendersExtended = (s: GameSettings): boolean =>
+  s.extendedRendering && Math.abs(allowedRatio(s) - TALL_RATIO) > 1e-6;
+
 /** True when it is taller. */
 const rendersTall = (s: GameSettings): boolean => s.extendedRendering && allowedRatio(s) < TALL_RATIO;
 
@@ -54,5 +62,5 @@ const ratioToString = (ratio: number): string => {
   return `${width / g}:${height / g}`;
 };
 
-export { allowedRatio, requestedRatio, rendersWide, rendersTall, ratioToString };
+export { allowedRatio, requestedRatio, rendersWide, rendersTall, rendersExtended, ratioToString };
 export { LINEAR_RATIO, ULTRAWIDE_RATIO, TALL_RATIO };

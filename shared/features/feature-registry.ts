@@ -126,10 +126,10 @@ const DISPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'widescreenVisualFixes',
-    label: 'Widescreen visual fixes',
-    description: 'Graphics corrections for sprites/edges that assume a 4:3 screen.',
+    label: 'Widescreen fixes',
+    description: 'Corrections for a view wider or taller than the original: transitions, effects and sprites drawn for the 4:3 screen.',
     userMessage:
-      'Corrects sprites and edges that were drawn assuming a 4:3 screen. On by default when a wide ratio is active.',
+      'Corrects transitions, effects and sprites that were drawn for the 4:3 screen, in a wide or a tall view. On by default with extended rendering.',
     group: 'Display / Aspect',
     kind: 'features0-bit',
     origin: 'snesrev',

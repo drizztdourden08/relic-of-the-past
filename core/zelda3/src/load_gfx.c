@@ -1537,6 +1537,7 @@ void AdjustWaterHDMAWindow_X(uint16 r10) {  // 80f660
   uint16 r12 = water_hdma_var3 ? water_hdma_var3 - 1 : 0;
   uint16 r2 = spotlight_var3 + r12;
   uint16 r0 = spotlight_var3 - r12;
+  GameHook_WindowRectSpan((int16)spotlight_var3 - (int16)r12, (int16)spotlight_var3 + (int16)r12);
 
   r0 = (r0 < 255) ? r0 : 255;
   r2 = (r2 < 255) ? r2 : 255;
@@ -1554,8 +1555,10 @@ void AdjustWaterHDMAWindow_X(uint16 r10) {  // 80f660
         a = 0xff;
       else
         a = r12;
-      if (r4 < 240)
+      if (r4 < 240) {
         hdma_table_dynamic[r4] = (a != 0xffff) ? a : 0xff;
+        GameHook_IrisTableLines(r4, r4, hdma_table_dynamic[r4]);
+      }
     }
     if (r6 >= spotlight_y_upper) {
       a = 0xff;
@@ -1564,8 +1567,10 @@ void AdjustWaterHDMAWindow_X(uint16 r10) {  // 80f660
         word_7E0678--;
       a = r12;
     }
-    if (r6 < 240)
+    if (r6 < 240) {
       hdma_table_dynamic[r6] = (a != 0xffff) ? a : 0xff;
+      GameHook_IrisTableLines(r6, r6, hdma_table_dynamic[r6]);
+    }
   } while (r6--, r10 != r4++);
 }
 
@@ -1581,18 +1586,21 @@ void FloodDam_PrepFloodHDMA() {  // 80f734
   } while (++r4 != spotlight_y_upper);
 
   r12 = r14 - 7 + 8;
+  GameHook_WindowRectSpan((int16)spotlight_var3 - (int16)r12, (int16)spotlight_var3 + (int16)r12);
   r12 = (spotlight_var3 + r12) << 8 | (uint8)(spotlight_var3 - r12);
   uint16 r10 = (spotlight_y_upper + water_hdma_var2) ^ 1;
 
   do {
     if (r4 >= r10) {
       hdma_table_dynamic[r4] = 0xff;
+      GameHook_IrisTableLines(r4, r4, 0xff);
     } else {
       uint16 a = r4;
       do {
         a *= 2;
       } while (a >= 480);
       hdma_table_dynamic[a >> 1] = r12 == 0xffff ? 0xff : r12;
+      GameHook_IrisTableLines(a >> 1, a >> 1, hdma_table_dynamic[a >> 1]);
     }
   } while (++r4 < 225);
 }

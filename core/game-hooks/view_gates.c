@@ -203,6 +203,27 @@ bool GameHook_SpotlightCoversScreen(void) {
   return SpotlightViewGate();
 }
 
+// The room's bounds and the overworld's scroll bounds live in the same bytes. Leaving a room, the game
+// loads the destination area's scroll bounds there before the closing circle has finished drawing the
+// room, so the indoor measure reads the area's numbers as the room's and puts the extra rows on the wrong
+// side: the whole picture jumped by the band's height the frame the crossing started. The room has not
+// moved, so its last real measure is held until the room is gone.
+static int s_room_view[4];
+static bool s_room_view_known;
+
+void GameHook_NoteRoomView(int left, int right, int top, int bottom) {
+  s_room_view[0] = left, s_room_view[1] = right, s_room_view[2] = top, s_room_view[3] = bottom;
+  s_room_view_known = true;
+}
+
+bool GameHook_HeldRoomView(int *left, int *right, int *top, int *bottom) {
+  if (!SpotlightViewGate() || main_module_index != MODULE_SPOTLIGHT_CLOSE || !player_is_indoors
+      || !s_room_view_known)
+    return false;
+  *left = s_room_view[0], *right = s_room_view[1], *top = s_room_view[2], *bottom = s_room_view[3];
+  return true;
+}
+
 // ─── Scanline Effects In A Tall View ───
 //
 // An effect built one scanline at a time (the iris, the swamp water's window, the mirror warp's wave, the
@@ -213,7 +234,9 @@ bool GameHook_SpotlightCoversScreen(void) {
 // is already shifted by the budget; these transfers were not.
 //
 // Holding the transfers back until the picture starts puts entry 0 on content row 0, which is what the
-// table describes. The rows above the picture keep the registers the frame set up, as they did before.
+// table describes. The rows above the picture belong to no line of it, so the caller opens window 1 across
+// them first. Left to whatever pair the channel last held, they could show the table's own trailing zeros:
+// a one column slit drawn down the whole view.
 //
 // With the gate off, and on any view with no rows above the picture, the transfers run on every line
 // exactly as they always have.

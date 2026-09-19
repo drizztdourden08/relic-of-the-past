@@ -280,6 +280,7 @@ static int g_lock_last_cam_x, g_lock_last_cam_y;
 // parallax (BG1) holds when non-zero so it doesn't drift against the static scene; the sprite proximity
 // loader scans the lock band (the shifted side) so sprites in the extended view spawn even while pinned.
 int g_camera_lock_shift_x, g_camera_lock_shift_y;
+int g_oam_tall_fold_shift;
 int g_render_extra_left, g_render_extra_right;
 int g_render_extra_top, g_render_extra_bottom;
 int g_band_lo_x, g_band_hi_x;  // window the sprite band classifier last used, for the diagnostic dump
@@ -479,7 +480,10 @@ static void ConfigurePpuSideSpace() {
   } else if (mod == 7) {
     // indoors, except when the light cone is in use, including the room-transition frames where the
     // game has cleared hdr_dungeon_dark_with_lantern but the cone mask is still on the subscreen.
-    if (!GameHook_LightConeSuppressesExtraWidth()) {
+    // Leaving a room, the bounds already hold the destination area's scroll bounds (the same bytes), so
+    // the closing circle keeps the measure of the room it is still drawing.
+    if (GameHook_HeldRoomView(&extra_left, &extra_right, &extra_top, &extra_bottom)) {
+    } else if (!GameHook_LightConeSuppressesExtraWidth()) {
       int qm = quadrant_fullsize_x >> 1;
       extra_left = IntMax(BG2HOFS_copy2 - room_bounds_x.v[qm], 0);
       extra_right = IntMax(room_bounds_x.v[qm + 2] - BG2HOFS_copy2, 0);
@@ -489,6 +493,8 @@ static void ConfigurePpuSideSpace() {
       // tall: rows above the camera, bounded by the room's top edge (mirror of extra_bottom). The room's
       // tilemap is fully resident, so the stock vertical fetch represents it without wrap.
       extra_top = IntMax(BG2VOFS_copy2 - room_bounds_y.v[qy], 0);
+      if (main_module_index == 7)
+        GameHook_NoteRoomView(extra_left, extra_right, extra_top, extra_bottom);
     }
   } else if (mod == 20 || mod == 0 || mod == 1 || GameHook_FileScreenIsWide(mod)) {
     extra_left = kPpuExtraLeftRight, extra_right = kPpuExtraLeftRight;
@@ -512,6 +518,10 @@ static void ConfigurePpuSideSpace() {
   g_zenv.ppu->cameraLockShiftY = IntMax(-budget_y, IntMin(budget_y, g_zenv.ppu->cameraLockShiftY));
   g_camera_lock_shift_x = g_zenv.ppu->cameraLockShiftX;
   g_camera_lock_shift_y = g_zenv.ppu->cameraLockShiftY;
+  // The sprite fold travels with the lock only while the widescreen corrections are on; off, both the OAM
+  // writer and the renderer keep the fixed fold they always had.
+  g_oam_tall_fold_shift = (enhanced_features0 & kFeatures0_WidescreenVisualFixes) ? g_camera_lock_shift_y : 0;
+  g_zenv.ppu->tallFoldShift = g_oam_tall_fold_shift;
   // Per-frame visible band widths, for the sprite band classifier: the rendered view spans
   // [-g_render_extra_left, 256 + g_render_extra_right] in stock-screen coordinates.
   g_render_extra_left = (int)g_zenv.ppu->extraLeftCur;
@@ -604,13 +614,21 @@ void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
 
   // The iris writes its circle to the window through this indirect table. On the frames that widen it,
   // each transferred line also hands the renderer the circle's unclamped edges (iris_wide.c).
-  // A tall view draws rows before the picture; the tables HDMA feeds describe the picture's own lines.
+  // A tall view draws rows before the picture; the tables HDMA feeds describe the picture's own lines, so
+  // the transfers wait for it. Those rows belong to no line of the table, so window 1 is opened across
+  // them first: left at 0 and right at the last column is the same as no window at all, where the stale
+  // pair the channel happened to hold could be a one column slit, which is what leaked down the screen.
   const int hdma_first_line = GameHook_HdmaWaitsForPicture() ? topBudget : 0;
+  if (hdma_first_line) {
+    zelda_ppu_write(WH0, 0);
+    zelda_ppu_write(WH1, 0xff);
+  }
 
   bool iris_wide = false;
-  if (g_zenv.ppu->extraLeftCur | g_zenv.ppu->extraRightCur) {
+  if (g_zenv.ppu->extraLeftCur | g_zenv.ppu->extraRightCur | g_zenv.ppu->extraTopCur | g_zenv.ppu->extraBottomCur) {
     for (int c = 0; c < 2; c++)
-      if (hdma_chans[c].table == kSpotlightIndirectHdma && hdma_chans[c].ppu_addr == (uint8)WH0)
+      if ((hdma_chans[c].table == kSpotlightIndirectHdma || hdma_chans[c].table == kHdmaTableForPrayingScene)
+          && hdma_chans[c].ppu_addr == (uint8)WH0)
         iris_wide = true;
   }
 

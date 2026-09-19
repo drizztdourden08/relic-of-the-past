@@ -47,12 +47,20 @@ int GameHook_SpotlightViewModule(int effectiveModule);
 // True on those frames, so the caller holds the view still and the circle widens with the picture.
 bool GameHook_SpotlightCoversScreen(void);
 
+// The indoor measure of the view, noted on every frame the room's bounds are its own, and handed back on
+// the frames of a closing circle drawn over a room whose bounds already hold the destination area's. False
+// with the gate off, outdoors, and on every other frame, where the caller measures as before.
+void GameHook_NoteRoomView(int left, int right, int top, int bottom);
+bool GameHook_HeldRoomView(int *left, int *right, int *top, int *bottom);
+
 // ─── Wide iris window (iris_wide.c) ───
 
 // Record calls in IrisSpotlight_CalculateCircleValue / IrisSpotlight_ConfigureTable: the circle's span on
 // the line being built, before the game clamps it to the 8-bit window registers, and the table lines that
 // span was written to. They only record.
 void GameHook_IrisCircleSpan(int left, int right);
+// The same for a rectangular window (the water), whose shape ends where the table does.
+void GameHook_WindowRectSpan(int left, int right);
 void GameHook_IrisTableLines(uint16 upper_line, uint16 lower_line, uint16 word);
 // The window edges for content row |row| (the one the pair HDMA just transferred draws), on a game-over
 // frame covering the screen (gated): the unclamped span when the table still holds the circle the game

@@ -86,6 +86,8 @@ void main() {
     edgePixelDist = max(edgePixelDist, pixelX - dynRightBound);
   if (pixelY > dynBottomBound)
     edgePixelDist = max(edgePixelDist, pixelY - dynBottomBound);
+  if (pixelY < dynTopBound)
+    edgePixelDist = max(edgePixelDist, dynTopBound - pixelY);
 
   // Pixelation mask: transitions from no pixelation near game edge to full further out
   float pixelMask = pow(clamp(edgePixelDist / u_pixelDivisor, 0.0, 1.0), u_pixelExponent);

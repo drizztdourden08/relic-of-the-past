@@ -93,6 +93,9 @@ struct Ppu {
   // rendered view edge rests on the area boundary (no out-of-area black). Set per-frame by
   // ConfigurePpuSideSpace; the game camera (BG2VOFS) is untouched. 0 = no shift (not locked / mid-area).
   int32_t cameraLockShiftX, cameraLockShiftY;
+  // How far the 9-bit sprite Y fold moves with the lock (g_oam_tall_fold_shift). 0 leaves the fold where
+  // every build had it, which is what the corrections being off means.
+  int32_t tallFoldShift;
   float mode7PerspectiveLow, mode7PerspectiveHigh;
 
   // TMW / TSW etc
