@@ -497,14 +497,19 @@ static void ConfigurePpuSideSpace() {
         GameHook_NoteRoomView(extra_left, extra_right, extra_top, extra_bottom);
     }
   } else if (mod == 20 || mod == 0 || mod == 1 || GameHook_FileScreenIsWide(mod)) {
-    extra_left = kPpuExtraLeftRight, extra_right = kPpuExtraLeftRight;
-    extra_bottom = 16;
-    // A still picture stops at the original frame, so rows above and below it could only ever have shown
-    // the tilemap wrapping back onto the picture. They open once the space around the picture draws that
-    // screen's own background instead (fixed_picture_edges.c). PpuSetExtraSideSpace caps each side to the
-    // configured budget, so a view with no extra rows still gets the same 16 the line above asks for.
-    if (GameHook_FixedPictureEdgeLayers() != 0)
-      extra_top = extra_bottom = kPpuExtraTopBottom;
+    // The opening story is five scenes of three different constructions, each with its own real extent
+    // on every side, so it measures its own frame (attract_view.c). Every other module here, and the
+    // story itself with the gate off, keeps the fixed frame below.
+    if (!GameHook_AttractViewBudget(&extra_left, &extra_right, &extra_top, &extra_bottom)) {
+      extra_left = kPpuExtraLeftRight, extra_right = kPpuExtraLeftRight;
+      extra_bottom = 16;
+      // A still picture stops at the original frame, so rows above and below it could only ever have shown
+      // the tilemap wrapping back onto the picture. They open once the space around the picture draws that
+      // screen's own background instead (fixed_picture_edges.c). PpuSetExtraSideSpace caps each side to the
+      // configured budget, so a view with no extra rows still gets the same 16 the line above asks for.
+      if (GameHook_FixedPictureEdgeLayers() != 0)
+        extra_top = extra_bottom = kPpuExtraTopBottom;
+    }
   }
   // The game-over frames that draw over the whole screen fill every side, so the iris, the colour fill and
   // the fade reach the edges. Past the loaded map the fetch finds no data, which would show the fixed colour
