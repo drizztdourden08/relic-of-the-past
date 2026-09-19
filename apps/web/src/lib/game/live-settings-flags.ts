@@ -4,7 +4,7 @@
 import type { GameSettings } from '@shared/types/settings';
 import { BUNDLE_FIXES } from '@shared/features/bundle-fixes.generated';
 import { effectiveFeatureIds } from './live-settings-gate';
-import { offscreenAiMode, rendersWide } from './settings';
+import { offscreenAiMode, rendersExtended } from './settings';
 import { sessionGateArmed, setSessionGate } from './session-gate-flags';
 
 // Feature flag enum values: must match features.h
@@ -313,7 +313,7 @@ const buildFeatureFlags = (s: GameSettings): number => {
   const isOn = (id: string): boolean => effective.has(id);
   // widescreenSprites/widescreenVisualFixes also need a wide ratio, which is not part of the requires
   // graph, and it is what the view RENDERS: a ratio word of "auto" on a 4:3 display is not a wide view.
-  const wide = isOn('extendedRendering') && rendersWide(s);
+  const wide = isOn('extendedRendering') && rendersExtended(s);
   if (isOn('extendedRendering')) flags |= FEATURE_FLAGS.extendedRendering;
   if (isOn('linearWorldTilemap')) flags |= FEATURE_FLAGS.linearWorldTilemap;
   if (isOn('ultrawideRendering')) flags |= FEATURE_FLAGS.ultrawide;

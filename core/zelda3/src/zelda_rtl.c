@@ -491,8 +491,13 @@ static void ConfigurePpuSideSpace() {
       extra_top = IntMax(BG2VOFS_copy2 - room_bounds_y.v[qy], 0);
     }
   } else if (mod == 20 || mod == 0 || mod == 1 || GameHook_FileScreenIsWide(mod)) {
-    extra_left = kPpuExtraLeftRight, extra_right = kPpuExtraLeftRight;
-    extra_bottom = 16;
+    // The opening story is five scenes of three different constructions, each with its own real extent
+    // on every side, so it measures its own frame (attract_view.c). Every other module here, and the
+    // story itself with the gate off, keeps the fixed frame below.
+    if (!GameHook_AttractViewBudget(&extra_left, &extra_right, &extra_top, &extra_bottom)) {
+      extra_left = kPpuExtraLeftRight, extra_right = kPpuExtraLeftRight;
+      extra_bottom = 16;
+    }
   }
   // The game-over frames that draw over the whole screen fill every side, so the iris, the colour fill and
   // the fade reach the edges. Past the loaded map the fetch finds no data, which would show the fixed colour

@@ -2,7 +2,7 @@
 
 import type { GameSettings, OffscreenAiMode } from '@shared/types/settings';
 import { DEFAULT_TURBO_SPEED } from '@shared/display/turbo-speed';
-import { allowedRatio, ratioToString, rendersWide } from './ratio-capability';
+import { allowedRatio, ratioToString, rendersWide, rendersExtended } from './ratio-capability';
 
 const DEFAULT_SETTINGS: GameSettings = {
   // General
@@ -222,7 +222,7 @@ const serializeToIni = (settings: GameSettings, msuPath?: string, language?: str
   // Rendering feature flags mirror buildFeatureFlags (live bridge) so boot config and live push agree.
   // What the profile actually renders, not what its ratio word says: Auto on a 4:3 display is 4:3, and a
   // ratio the capabilities do not cover is pulled back to one they do.
-  const wide = rendersWide(settings);
+  const wide = rendersExtended(settings);
   const renderFlags = {
     ExtendedRendering: er,
     LinearWorldTilemap: er && !!settings.linearWorldTilemap,
@@ -440,4 +440,4 @@ const mergeSettings = (partial: Partial<GameSettings>): GameSettings => {
   return merged;
 };
 
-export { DEFAULT_SETTINGS, mergeSettings, serializeToIni, offscreenAiMode, rendersWide };
+export { DEFAULT_SETTINGS, mergeSettings, serializeToIni, offscreenAiMode, rendersWide, rendersExtended };
