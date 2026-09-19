@@ -80,6 +80,14 @@ int WasmDevSetTallBudget(int px) {
 // boot never parses a config, so g_config.extend_y stays false and WasmGetViewportInfo reports a
 // 224-row frame, which makes the host compute a bottom black margin of zero. A harness measuring
 // what the renderer is handed needs the real flag, not just the render-flag bit.
+//
+// THIS CALL ALONE DOES NOT WIDEN THE DUMP. The row count comes from the flags handed to
+// WasmDevDumpFrame, not from the config, so a script that sets this and then dumps with 0 gets a
+// 224-row frame and cannot see anything the extra sixteen rows hold. That hid a real fault through
+// six different shapes. Pass kPpuRenderFlags_Height240 to the dump as well, which is the same pair
+// the app derives from this one flag (emscripten_main.c). The coupling is deliberately left out
+// here: a parity run compares this dump against one built from another commit, and a config that
+// silently changed the row count on one side alone would read as a parity break.
 EMSCRIPTEN_KEEPALIVE
 int WasmDevSetExtendY(int on) {
   if (!(g_wanted_gate_words[0] & kFeatures0_DeveloperTools)) return 0;

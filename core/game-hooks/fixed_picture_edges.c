@@ -31,17 +31,24 @@
 // BG3 carries the text, whose tilemap wrapped a copy of the banner into the rows above the picture
 // once those rows were drawn. BG3's corner is the blank tile, so it now draws nothing there.
 //
-// The attract demo is deliberately not here. It shares the file screen's horizontal budget and
-// looks like a set piece for its story pages, but it goes on to replay real play: a mode-7 map and
-// then dungeon rooms, scrolling, with both tilemap screens in use and no repeating background to
-// carry on. Its margins are the ordinary wide-view problem, not this one, and a corner tile would
-// paint a wall over them. Its tall bands stay black, exactly as they are today.
+// The attract demo's own scenes are deliberately not here. It shares the file screen's horizontal
+// budget and looks like a set piece for its story pages, but it goes on to replay real play: a mode-7
+// map and then dungeon rooms, scrolling, with both tilemap screens in use and no repeating background
+// to carry on. Their margins are the ordinary wide-view problem, not this one, and a corner tile would
+// paint a wall over them. Their tall bands stay black, exactly as they are today.
+//
+// Its first frames ARE here. The story's module takes over while the title screen is still the picture
+// on the glass, and the fill had been keyed on the module index alone, so it stopped the frame the
+// story began and the title repeated out at the far left and far right until the tilemaps were erased
+// fifteen frames later. At 384 per side that read as a brief flash of the picture at both edges. The
+// story says for itself which of its frames those are (attract_view.c).
 static bool FixedPictureCoversView(void) {
   if (!(enhanced_features0 & kFeatures0_WidescreenVisualFixes))
     return false;
   const int mod = main_module_index;
   return mod == MODULE_INTRO || mod == MODULE_FILE_SELECT || mod == MODULE_FILE_COPY
-      || mod == MODULE_FILE_ERASE || mod == MODULE_FILE_NAME;
+      || mod == MODULE_FILE_ERASE || mod == MODULE_FILE_NAME
+      || GameHook_AttractStillOnTitle();
 }
 
 int GameHook_FixedPictureEdgeLayers(void) {
