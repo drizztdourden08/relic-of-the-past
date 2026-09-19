@@ -127,34 +127,49 @@ void GameHook_IrisTableLines(uint16 upper_line, uint16 lower_line, uint16 word) 
   RecordLine(lower_line, word);
 }
 
+// The span the table's own line describes, before the camera lock moves it: the recorded wide pair while
+// it still matches the word standing in the table, and otherwise the pair the 8-bit registers take. An
+// empty window comes back as left past right, which is how every caller here says "outside the shape".
+static void LineSpan(int line, int *left, int *right) {
+  const IrisLine *l = &s_lines[line];
+  uint16 word = hdma_table_dynamic[line];
+  if (l->wide && l->word == word) {
+    *left = l->left, *right = l->right;
+  } else if ((word & 0xff) > (word >> 8)) {
+    *left = 1, *right = 0;
+  } else {
+    *left = (word & 0xff), *right = (word >> 8);
+  }
+}
+
 bool GameHook_IrisWideWindow(int row, int shift_x, int shift_y, int *left, int *right) {
   if (!(enhanced_features0 & kFeatures0_WidescreenVisualFixes))
     return false;
   // The camera lock moves the scene down by shift_y rows, so this content row shows what the table's line
   // shift_y above it describes.
   int line = row - shift_y;
-  if (line < 0 || line >= kIrisScreenLines) {
-    // A row the table has no line for, because the view shows more than the original screen. The circle
-    // carries on through it when it reaches that far, and the row is outside the circle when it does not.
-    int l, r;
-    if (ShapeSpanAt(line, &l, &r)) {
-      *left = l + shift_x;
-      *right = r + shift_x;
-    } else {
-      *left = 1, *right = 0;
-    }
+  if (line >= 0 && line < kIrisScreenLines) {
+    LineSpan(line, left, right);
+  } else if (!s_span_circular) {
+    // A row the table has no line for, because the view shows more than the original screen, on a frame
+    // whose table is a rectangle the scene drives one line at a time: the water a draining or flooding
+    // room draws. There the window IS the effect. Closing it over these rows paints them with the water
+    // the picture only carries below its own front, and opening it paints them with the water everywhere.
+    // Neither is what the room holds beside the picture. The row takes the nearest line the table does
+    // describe instead: the first for the rows above the picture, the last for the rows below it. The
+    // rectangle itself is never extrapolated, because it has no curve to carry on, only the edge the
+    // scene last stated.
+    LineSpan(line < 0 ? 0 : kIrisScreenLines - 1, left, right);
+  } else if (ShapeSpanAt(line, left, right)) {
+    // The same row on a circle's frame, with the circle reaching that far: it carries its curve on.
+  } else {
+    // Past the circle's own height, so the row is outside it and the window closes.
+    *left = 1, *right = 0;
     return true;
   }
-  const IrisLine *l = &s_lines[line];
-  uint16 word = hdma_table_dynamic[line];
-  if (l->wide && l->word == word) {
-    *left = l->left + shift_x;
-    *right = l->right + shift_x;
-  } else if ((word & 0xff) > (word >> 8)) {
-    *left = 1, *right = 0;
-  } else {
-    *left = (word & 0xff) + shift_x;
-    *right = (word >> 8) + shift_x;
-  }
+  if (*left > *right)
+    return true;
+  *left += shift_x;
+  *right += shift_x;
   return true;
 }
