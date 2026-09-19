@@ -82,3 +82,15 @@ bool GameHook_AttractViewBudget(int *left, int *right, int *top, int *bottom) {
   *bottom = IntMax(0, ATTRACT_ROOM_SPAN - ATTRACT_PICTURE_H - camY);
   return true;
 }
+
+// The legend's backdrop darkens everything outside its box with colour maths, masked by a window the
+// scene drives one line at a time. Opening that window across the rows above the picture leaves them
+// undarkened, which reads as a bright band over a dark scene. The rows above take the picture's first
+// line instead. The map and the rooms drive no window, so they keep the open pair.
+bool GameHook_HdmaBandHoldsFirstLine(void) {
+  if (!AttractViewGate())
+    return false;
+  const Ppu *ppu = g_zenv.ppu;
+  const BgLayer *bg = &ppu->bgLayer[1];
+  return ppu->mode != 7 && !bg->tilemapWider && !bg->tilemapHigher;
+}

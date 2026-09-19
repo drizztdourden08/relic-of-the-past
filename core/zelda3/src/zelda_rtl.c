@@ -637,8 +637,21 @@ void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
   // pair the channel happened to hold could be a one column slit, which is what leaked down the screen.
   const int hdma_first_line = GameHook_HdmaWaitsForPicture() ? topBudget : 0;
   if (hdma_first_line) {
-    zelda_ppu_write(WH0, 0);
-    zelda_ppu_write(WH1, 0xff);
+    // Where the window carries the scene's own effect, opening it leaves those rows undarkened. Push
+    // the table's first line into the registers and put the channels back, so the band holds the
+    // picture's first line and the picture still starts from it.
+    bool held = false;
+    if (GameHook_HdmaBandHoldsFirstLine() && (hdma_chans[0].table || hdma_chans[1].table)) {
+      SimpleHdma save0 = hdma_chans[0], save1 = hdma_chans[1];
+      SimpleHdma_DoLine(&hdma_chans[0]);
+      SimpleHdma_DoLine(&hdma_chans[1]);
+      hdma_chans[0] = save0, hdma_chans[1] = save1;
+      held = true;
+    }
+    if (!held) {
+      zelda_ppu_write(WH0, 0);
+      zelda_ppu_write(WH1, 0xff);
+    }
   }
 
   bool iris_wide = false;

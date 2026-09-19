@@ -12,4 +12,8 @@
 // the caller keeps the fixed frame it has always given those.
 bool GameHook_AttractViewBudget(int *left, int *right, int *top, int *bottom);
 
+// True while the frame's window registers carry an effect the picture's own lines describe, so the rows
+// above the picture must hold that effect instead of having the window opened across them.
+bool GameHook_HdmaBandHoldsFirstLine(void);
+
 #endif  // GAME_HOOKS_ATTRACT_VIEW_H
