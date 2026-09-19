@@ -17,7 +17,11 @@ interface EdgeGlowLoopParams {
   setBufSize: (s: { w: number; h: number }) => void;
 }
 
-const FADE_SPEED = 4.0; // per second (0 to 1 in 250ms)
+// Coming back takes a quarter of a second. Leaving is quicker, because what the glow still holds
+// through a crossing is the edge of the screen being left, and every frame of that is a frame of the
+// wrong picture. Fast enough to be gone before the new screen settles, slow enough to read as a fade.
+const FADE_IN_SPEED = 4.0; // per second, so a full second quarter
+const FADE_OUT_SPEED = 12.0; // per second, so about 80ms
 
 interface FadeState {
   prevBlackLeft: number;
@@ -76,14 +80,15 @@ const useEdgeGlowLoop = (params: EdgeGlowLoopParams): void => {
         // The bottom bound counts too. A crossing between two areas of equal width moves
         // neither horizontal bound, so an up or down crossing never tripped this and the
         // glow kept compositing the departing screen's edge straight through it.
+        let boundsMoved = false;
         if (s.prevBlackLeft >= 0 && isOverworld) {
           const leftDelta = Math.abs(vp.blackLeft - s.prevBlackLeft);
           const rightDelta = Math.abs(vp.blackRight - s.prevBlackRight);
           const bottomDelta = Math.abs(vp.blackBottom - s.prevBlackBottom);
           const topDelta = Math.abs(vp.blackTop - s.prevBlackTop);
-          if (leftDelta > 10 || rightDelta > 10 || bottomDelta > 10 || topDelta > 10) {
+          boundsMoved = leftDelta > 10 || rightDelta > 10 || bottomDelta > 10 || topDelta > 10;
+          if (boundsMoved) {
             s.fadeTarget = 0;
-            s.fadeOpacity = 0; // instant hide on transition
           }
         }
         if (isOverworld) {
@@ -93,8 +98,10 @@ const useEdgeGlowLoop = (params: EdgeGlowLoopParams): void => {
           s.prevBlackTop = vp.blackTop;
         }
 
-        // If just came back and stable, fade in
-        if (isOverworld && hasExtended && s.fadeTarget === 0 && s.fadeOpacity <= 0) {
+        // Back and settled: the bounds stopped moving this frame, so the new screen is the one on
+        // screen and the glow can come up again. Asking for the fade to have finished instead would
+        // hold it out for the frames it is still on its way down.
+        if (isOverworld && hasExtended && s.fadeTarget === 0 && !boundsMoved) {
           s.fadeTarget = 1.0;
         }
       } else {
@@ -103,9 +110,9 @@ const useEdgeGlowLoop = (params: EdgeGlowLoopParams): void => {
 
       // Animate fade
       if (s.fadeOpacity < s.fadeTarget) {
-        s.fadeOpacity = Math.min(s.fadeOpacity + dt * FADE_SPEED, s.fadeTarget);
+        s.fadeOpacity = Math.min(s.fadeOpacity + dt * FADE_IN_SPEED, s.fadeTarget);
       } else if (s.fadeOpacity > s.fadeTarget) {
-        s.fadeOpacity = Math.max(s.fadeOpacity - dt * FADE_SPEED, s.fadeTarget);
+        s.fadeOpacity = Math.max(s.fadeOpacity - dt * FADE_OUT_SPEED, s.fadeTarget);
       }
       renderer.setEffectOpacity(s.fadeOpacity);
 
