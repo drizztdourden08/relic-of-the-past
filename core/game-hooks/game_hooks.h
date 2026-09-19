@@ -697,6 +697,7 @@ int GameHook_PitFallViewModule(int effectiveModule);
 
 // ─── The opening story's view budget (attract_view.c): attract_view.h ───
 #include "attract_view.h"
+#include "spotlight_growth.h"
 
 // ─── Custom player sprite sheets (player_sprite.c) ───
 

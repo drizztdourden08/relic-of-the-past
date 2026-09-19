@@ -1480,9 +1480,14 @@ void IrisSpotlight_ConfigureTable() {  // 80f312
 
   memcpy(hdma_table_unused, hdma_table_dynamic, 224  * sizeof(uint16));
 
-  spotlight_var1 += kSpotlight_delta_size[spotlight_var2 >> 1];
+  // A view past the original picture wants a circle that reaches its own edges, grown over the same
+  // number of frames (spotlight_growth.c). Off, this is the stock pair.
+  int spot_delta, spot_goal;
+  GameHook_SpotlightGrowth(kSpotlight_delta_size[spotlight_var2 >> 1],
+                           kSpotlight_goal[spotlight_var2 >> 1], &spot_delta, &spot_goal);
+  spotlight_var1 += spot_delta;
 
-  if (spotlight_var1 != kSpotlight_goal[spotlight_var2 >> 1])
+  if (spotlight_var1 != spot_goal)
     return;
 
   if (!spotlight_var2) {

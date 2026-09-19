@@ -67,6 +67,12 @@ static void MeasureShape(void) {
     // longer one, since the screen can cut the other short.
     int above = widest_line - first, below = last - widest_line;
     shape.half_rows = (above > below ? above : below) + 1;
+    // The table draws a round shape: one radius decides how far it reaches sideways and how far up. Once
+    // the circle is larger than the screen, every line it describes is one of the middle ones, so the
+    // rows it can be seen on say nothing about its height. The spans are recorded before the screen cuts
+    // them, so the widest is the radius itself, and that is the height too.
+    if (first == 0 && last == kIrisScreenLines - 1)
+      shape.half_rows = widest + 1;
     shape.center_x = (s_lines[widest_line].left + s_lines[widest_line].right) / 2;
     shape.half_width = widest;
   }
