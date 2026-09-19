@@ -56,10 +56,20 @@ bool GameHook_LightConeSuppressesExtraWidth(void) {
 // A wallmaster sending the player back to the last entrance reuses the same module from indoors, where
 // player_is_indoors is already set, so that crossing reads as the room it is throughout.
 //
-// Gated with the area-seam pan, not on a switch of its own: both are the same promise, that a crossing
-// keeps the view the play on either side of it had, so a player who wants one wants the other.
+// This was gated on the area-seam pan alone, on the reading that a crossing keeping its view is the same
+// promise the pan makes. The pan is only offered with the camera lock (settings.ts writes
+// SmoothTransitions as lock AND smooth), and the lock is the one setting that pins the rendered view to
+// the map so no margin is ever left over. So the profiles that could turn this gate on were exactly the
+// profiles with nothing to lose, and every profile that could see the picture snap in to 4:3 was unable
+// to reach the gate at all. Jumping off a ledge into a hole showed it: 105 frames of the original
+// picture in the middle of the wide one.
+//
+// The promise belongs with the other crossings instead, which all ride the corrections for a picture
+// drawn assuming a 4:3 screen. The pan's own bit still opens it too, so a profile that had this through
+// the lock keeps it unchanged.
 int GameHook_PitFallViewModule(int effectiveModule) {
-  if (effectiveModule != MODULE_PIT_FALL_ENTRANCE || !(enhanced_features0 & kFeatures0_SmoothTransitions))
+  if (effectiveModule != MODULE_PIT_FALL_ENTRANCE
+      || !(enhanced_features0 & (kFeatures0_WidescreenVisualFixes | kFeatures0_SmoothTransitions)))
     return effectiveModule;
   return player_is_indoors ? MODULE_DUNGEON : MODULE_OVERWORLD;
 }
