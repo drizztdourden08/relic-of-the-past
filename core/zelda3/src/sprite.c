@@ -3325,7 +3325,7 @@ bool Sprite_CheckIfScreenIsClear() {  // 89af32
         if (x < 256 && y < 256)
           return false;
       } else {
-        if ((int16)x >= -WideLeftPx() && (int16)x < 256 + WideRightPx() && y < 256)
+        if (GameHook_EnemyCountsTowardClear((int16)x, y))
           return false;
       }
     }
