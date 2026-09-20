@@ -43,7 +43,19 @@ static int FurthestCorner(void) {
   return r;
 }
 
-bool GameHook_SpotlightGrowth(int base_delta, int base_goal, int *delta, int *goal) {
+// Where the circle should be on a given step, over the same number of steps the stock opening took.
+// Squared, so it starts slower than the stock pace and finishes faster. The extra distance a larger
+// frame needs is then spent at the end, where the circle is already past the original picture, and the
+// eye reads that as the opening speeding up, not as a different opening.
+static int SizeAtStep(int step, int steps, int goal) {
+  if (step >= steps)
+    return goal;
+  return (int)((long)goal * step * step / ((long)steps * steps));
+}
+
+bool GameHook_SpotlightGrowth(int base_delta, int base_goal, int current, int *delta, int *goal) {
+  static int s_step;
+  static int s_last;
   *delta = base_delta;
   *goal = base_goal;
   if (!(enhanced_features0 & kFeatures0_WidescreenVisualFixes))
@@ -57,10 +69,19 @@ bool GameHook_SpotlightGrowth(int base_delta, int base_goal, int *delta, int *go
   int want = FurthestCorner();
   if (want > SPOTLIGHT_MAX_SIZE)
     want = SPOTLIGHT_MAX_SIZE;
-  const int step = (want + steps - 1) / steps;
-  if (step <= base_delta)
+  if (want <= base_goal)
     return false;
-  *delta = step;
-  *goal = step * steps;
+  // Anything smaller than the size this curve last handed out is a different opening, which is also how
+  // a fresh one is recognised: it starts from nothing. A size equal to it is this same one carrying on.
+  if (current < s_last)
+    s_step = 0;
+  s_step++;
+  s_last = SizeAtStep(s_step, steps, want);
+  // The first steps of a curve this shallow round to nothing, and a step of nothing would leave the
+  // size where it was and the opening would never end. Always move.
+  if (s_last <= current)
+    s_last = current + 1;
+  *delta = s_last - current;
+  *goal = want;
   return true;
 }

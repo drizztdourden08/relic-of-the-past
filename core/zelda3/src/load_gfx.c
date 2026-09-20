@@ -1484,7 +1484,8 @@ void IrisSpotlight_ConfigureTable() {  // 80f312
   // number of frames (spotlight_growth.c). Off, this is the stock pair.
   int spot_delta, spot_goal;
   GameHook_SpotlightGrowth(kSpotlight_delta_size[spotlight_var2 >> 1],
-                           kSpotlight_goal[spotlight_var2 >> 1], &spot_delta, &spot_goal);
+                           kSpotlight_goal[spotlight_var2 >> 1], (int)spotlight_var1,
+                           &spot_delta, &spot_goal);
   spotlight_var1 += spot_delta;
 
   if (spotlight_var1 != spot_goal)
