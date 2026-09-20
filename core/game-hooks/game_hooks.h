@@ -737,7 +737,8 @@ void GameHook_SetHideSpaceBeyondWalls(bool enable);
 
 // The tilemap words of the ceiling block, for a frame that should hide the space past the walls: the
 // request is on, the frame shows a room (player_is_indoors, in a live game module), and the room is a
-// house, a cave or the sanctuary. Returns the word count with |words| pointing at them, or 0 with
+// house, a cave or the sanctuary. A palace room answers no, and so does any room drawn with a dungeon's
+// tileset, whatever its entrance says. Returns the word count with |words| pointing at them, or 0 with
 // nothing to hide. Asked once per frame by ZeldaDrawPpuFrame, after PpuBeginDrawing has reset the flags.
 int GameHook_HideSpaceBeyondWallsFill(const uint16 **words);
 
