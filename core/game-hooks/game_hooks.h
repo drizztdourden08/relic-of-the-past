@@ -680,12 +680,6 @@ uint8 GameHook_GetWantedIgnoreCollision(void);
 
 // ─── View gates (view_gates.c) ───
 
-// True while the lamp's light-cone mask is on the subscreen, so the extended view must collapse to
-// the base frame: the mask only covers 256 pixels and its tilemap wraps, so any extra width samples
-// a second, undarkened copy of the cone. Covers the room-transition frames where the game clears
-// hdr_dungeon_dark_with_lantern while the mask is still being drawn. Wide view only.
-bool GameHook_LightConeSuppressesExtraWidth(void);
-
 // The module whose geometry describes what MODULE_PIT_FALL_ENTRANCE is actually showing this frame:
 // MODULE_OVERWORLD while the departure screen is still up, MODULE_DUNGEON once the room below is
 // loaded. Any other module comes back unchanged, and so does the pit-fall one with the gate off, so
@@ -698,6 +692,9 @@ int GameHook_PitFallViewModule(int effectiveModule);
 // ─── The opening story's view budget (attract_view.c): attract_view.h ───
 #include "attract_view.h"
 #include "spotlight_growth.h"
+
+// ─── How far the wide view reaches inside a room (view_gates.c, room_clear_reach.c): room_view_reach.h ───
+#include "room_view_reach.h"
 
 // ─── Custom player sprite sheets (player_sprite.c) ───
 
