@@ -65,6 +65,7 @@ const hookSrcs = [
   'dark_room_lights', 'file_name_prefill',
   'host_gates', 'hud_override', 'dialog_pacing', 'dialog_mirror', 'dialog_presence', 'running_man', 'music_hooks', 'sound_hooks',
   'view_gates', 'attract_view', 'spotlight_growth', 'attract_sprites', 'iris_wide', 'hide_space_beyond_walls', 'fixed_picture_edges',
+  'room_clear_reach',
   'cheat_lighting', 'cheat_wallet', 'cheat_unblock', 'cheat_check_mark', 'cheat_inventory', 'cheat_capacity', 'dev_frame_dump',
 ].map((f) => h(`${f}.c`));
 
