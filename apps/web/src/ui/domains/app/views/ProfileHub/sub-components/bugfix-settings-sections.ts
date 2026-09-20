@@ -7,11 +7,13 @@
 import type { GameSettings } from '@shared/types/settings';
 import type { Section } from '../../../compounds/SettingsLayout';
 import { BUNDLE_FIXES } from '@shared/features/bundle-fixes.generated';
+import { rendersExtended } from '@app/lib/game/ratio-capability';
 
+// The widescreen corrections are not here: they are one switch on the Display tab, which covers the
+// core bit and the fix split from that bundle together.
 const BUNDLE_GROUPS = [
   { origin: 'MiscBugFixes', id: 'bugfixes-misc', title: 'General fixes' },
   { origin: 'GameChangingBugFixes', id: 'bugfixes-gamechanging', title: 'Gameplay-altering bug fixes' },
-  { origin: 'WidescreenVisualFixes', id: 'bugfixes-widescreen', title: 'Widescreen visual fixes' },
 ] as const;
 
 // A fix with no explicit toggle inherits the legacy bundle master it came from.
@@ -19,7 +21,7 @@ const legacyMaster = (origin: string | undefined, s: GameSettings): boolean =>
   origin === 'GameChangingBugFixes'
     ? s.gameChangingBugFixes
     : origin === 'WidescreenVisualFixes'
-      ? s.aspectRatio !== '4:3' && s.widescreenVisualFixes
+      ? rendersExtended(s) && s.widescreenVisualFixes
       : s.miscBugFixes;
 
 const buildBugFixSection = (): Section => {

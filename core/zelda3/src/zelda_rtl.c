@@ -280,6 +280,7 @@ static int g_lock_last_cam_x, g_lock_last_cam_y;
 // parallax (BG1) holds when non-zero so it doesn't drift against the static scene; the sprite proximity
 // loader scans the lock band (the shifted side) so sprites in the extended view spawn even while pinned.
 int g_camera_lock_shift_x, g_camera_lock_shift_y;
+int g_oam_tall_fold_shift;
 int g_render_extra_left, g_render_extra_right;
 int g_render_extra_top, g_render_extra_bottom;
 int g_band_lo_x, g_band_hi_x;  // window the sprite band classifier last used, for the diagnostic dump
@@ -310,12 +311,17 @@ static void ConfigurePpuSideSpace() {
   // the module the player died in keeps the wide/tall view through the red fill and the menu. Resolved
   // before the special-area test so a death in one of those areas still reads as that area.
   mod = GameHook_GameOverViewModule(mod);
+  // A spotlight transition draws the scene it is crossing between, so it is read as that scene's module.
+  mod = GameHook_SpotlightViewModule(mod);
   // MODULE_OVERWORLD_SPECIAL_AREA is normal interactive outdoor gameplay even though the
   // module never returns to 9. Checked against `mod`
   // (already menu-remapped above) via the *For() form, not GameHook_IsOverworldSpecialArea()
   // — that reads the raw module and would miss this case the instant the pause menu opens
   // over it (main_module_index is 14 then, not 11, even though the location hasn't
   // changed), collapsing the view back to the base 256x224 frame on every pause.
+  // A victory, a save and quit, a mirror warp, the pyramid scene and the triforce room all draw over the
+  // scene the player is standing in. Resolved before the special-area test, since the triforce room is one.
+  mod = GameHook_InterruptedSceneModule(mod);
   bool isSpecialArea = GameHook_IsOverworldSpecialAreaFor(mod);
   // The pit-fall crossing is its own module and shows no scene of its own: it renders the departure
   // area, then the room below. Reading it as whichever of those two it is currently showing carries
@@ -343,7 +349,8 @@ static void ConfigurePpuSideSpace() {
       // correct here regardless of submodule_index.
       // The game-over module never scrolls, whatever its submodule reads, so it holds this lock too. It
       // only reaches this branch through GameHook_GameOverViewModule, which leaves it out with the gate off.
-      if (submodule_index == 0 || main_module_index == 14 || isSpecialArea || main_module_index == 18) {
+      if (submodule_index == 0 || main_module_index == 14 || isSpecialArea || main_module_index == 18
+          || GameHook_SpotlightCoversScreen() || GameHook_InterruptedSceneCoversScreen()) {
         if (enhanced_features0 & kFeatures0_CameraLockToViewport) {
           // Render-level camera lock: clamp the RENDERED view to the area so its edges rest on the
           // boundary (no out-of-area black), then shift the world fetch (below) + sprites (ppu eval) by
@@ -473,7 +480,10 @@ static void ConfigurePpuSideSpace() {
   } else if (mod == 7) {
     // indoors, except when the light cone is in use, including the room-transition frames where the
     // game has cleared hdr_dungeon_dark_with_lantern but the cone mask is still on the subscreen.
-    if (!GameHook_LightConeSuppressesExtraWidth()) {
+    // Leaving a room, the bounds already hold the destination area's scroll bounds (the same bytes), so
+    // the closing circle keeps the measure of the room it is still drawing.
+    if (GameHook_HeldRoomView(&extra_left, &extra_right, &extra_top, &extra_bottom)) {
+    } else if (!GameHook_LightConeSuppressesExtraWidth()) {
       int qm = quadrant_fullsize_x >> 1;
       extra_left = IntMax(BG2HOFS_copy2 - room_bounds_x.v[qm], 0);
       extra_right = IntMax(room_bounds_x.v[qm + 2] - BG2HOFS_copy2, 0);
@@ -483,10 +493,23 @@ static void ConfigurePpuSideSpace() {
       // tall: rows above the camera, bounded by the room's top edge (mirror of extra_bottom). The room's
       // tilemap is fully resident, so the stock vertical fetch represents it without wrap.
       extra_top = IntMax(BG2VOFS_copy2 - room_bounds_y.v[qy], 0);
+      if (main_module_index == 7)
+        GameHook_NoteRoomView(extra_left, extra_right, extra_top, extra_bottom);
     }
-  } else if (mod == 20 || mod == 0 || mod == 1) {
-    extra_left = kPpuExtraLeftRight, extra_right = kPpuExtraLeftRight;
-    extra_bottom = 16;
+  } else if (mod == 20 || mod == 0 || mod == 1 || GameHook_FileScreenIsWide(mod)) {
+    // The opening story is five scenes of three different constructions, each with its own real extent
+    // on every side, so it measures its own frame (attract_view.c). Every other module here, and the
+    // story itself with the gate off, keeps the fixed frame below.
+    if (!GameHook_AttractViewBudget(&extra_left, &extra_right, &extra_top, &extra_bottom)) {
+      extra_left = kPpuExtraLeftRight, extra_right = kPpuExtraLeftRight;
+      extra_bottom = 16;
+      // A still picture stops at the original frame, so rows above and below it could only ever have shown
+      // the tilemap wrapping back onto the picture. They open once the space around the picture draws that
+      // screen's own background instead (fixed_picture_edges.c). PpuSetExtraSideSpace caps each side to the
+      // configured budget, so a view with no extra rows still gets the same 16 the line above asks for.
+      if (GameHook_FixedPictureEdgeLayers() != 0)
+        extra_top = extra_bottom = kPpuExtraTopBottom;
+    }
   }
   // The game-over frames that draw over the whole screen fill every side, so the iris, the colour fill and
   // the fade reach the edges. Past the loaded map the fetch finds no data, which would show the fixed colour
@@ -506,6 +529,10 @@ static void ConfigurePpuSideSpace() {
   g_zenv.ppu->cameraLockShiftY = IntMax(-budget_y, IntMin(budget_y, g_zenv.ppu->cameraLockShiftY));
   g_camera_lock_shift_x = g_zenv.ppu->cameraLockShiftX;
   g_camera_lock_shift_y = g_zenv.ppu->cameraLockShiftY;
+  // The sprite fold travels with the lock only while the widescreen corrections are on; off, both the OAM
+  // writer and the renderer keep the fixed fold they always had.
+  g_oam_tall_fold_shift = (enhanced_features0 & kFeatures0_WidescreenVisualFixes) ? g_camera_lock_shift_y : 0;
+  g_zenv.ppu->tallFoldShift = g_oam_tall_fold_shift;
   // Per-frame visible band widths, for the sprite band classifier: the rendered view spans
   // [-g_render_extra_left, 256 + g_render_extra_right] in stock-screen coordinates.
   g_render_extra_left = (int)g_zenv.ppu->extraLeftCur;
@@ -520,7 +547,7 @@ static void ConfigurePpuSideSpace() {
 // from the loop keeps the extra rows past the table's end outside the circle, where HDMA has stopped
 // and would otherwise leave its last pair standing.
 static void SetIrisWideWindow(int line) {
-  int row = line - (int)g_zenv.ppu->extraTopBottom;
+  int row = line - (int)g_zenv.ppu->extraTopBottom;  // the content row the next transfer draws
   int left, right;
   g_zenv.ppu->window1Wide = GameHook_IrisWideWindow(row, g_zenv.ppu->cameraLockShiftX, g_zenv.ppu->cameraLockShiftY, &left, &right);
   if (g_zenv.ppu->window1Wide) {
@@ -568,6 +595,12 @@ void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
     if (fillWords) g_zenv.ppu->renderFlags |= kPpuRenderFlags_BlackBackdrop;
   }
 
+  // A still picture that fills the original frame (the title, the file screen) has one tilemap screen
+  // and nothing past it, so the space around it sampled the picture again. Hand the PPU the layers that
+  // should carry the screen's own background block out there instead (fixed_picture_edges.c). Asked per
+  // frame, like the hide above, because PpuBeginDrawing just cleared the request.
+  PpuSetEdgeTiles(g_zenv.ppu, GameHook_FixedPictureEdgeLayers());
+
   // Total physical buffer rows = base 224 + top budget + bottom budget. The top budget is the tall extra
   // per side (extraTopBottom); the bottom budget matches it for tall, else the legacy +16 (extend_y). This
   // MUST equal g_snes_height (emscripten_main.c) or ppu_runLine overruns the texture. V == 0 ⇒ 224 or 240.
@@ -598,10 +631,34 @@ void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
 
   // The iris writes its circle to the window through this indirect table. On the frames that widen it,
   // each transferred line also hands the renderer the circle's unclamped edges (iris_wide.c).
+  // A tall view draws rows before the picture; the tables HDMA feeds describe the picture's own lines, so
+  // the transfers wait for it. Those rows belong to no line of the table, so window 1 is opened across
+  // them first: left at 0 and right at the last column is the same as no window at all, where the stale
+  // pair the channel happened to hold could be a one column slit, which is what leaked down the screen.
+  const int hdma_first_line = GameHook_HdmaWaitsForPicture() ? topBudget : 0;
+  if (hdma_first_line) {
+    // Where the window carries the scene's own effect, opening it leaves those rows undarkened. Push
+    // the table's first line into the registers and put the channels back, so the band holds the
+    // picture's first line and the picture still starts from it.
+    bool held = false;
+    if (GameHook_HdmaBandHoldsFirstLine() && (hdma_chans[0].table || hdma_chans[1].table)) {
+      SimpleHdma save0 = hdma_chans[0], save1 = hdma_chans[1];
+      SimpleHdma_DoLine(&hdma_chans[0]);
+      SimpleHdma_DoLine(&hdma_chans[1]);
+      hdma_chans[0] = save0, hdma_chans[1] = save1;
+      held = true;
+    }
+    if (!held) {
+      zelda_ppu_write(WH0, 0);
+      zelda_ppu_write(WH1, 0xff);
+    }
+  }
+
   bool iris_wide = false;
-  if (g_zenv.ppu->extraLeftCur | g_zenv.ppu->extraRightCur) {
+  if (g_zenv.ppu->extraLeftCur | g_zenv.ppu->extraRightCur | g_zenv.ppu->extraTopCur | g_zenv.ppu->extraBottomCur) {
     for (int c = 0; c < 2; c++)
-      if (hdma_chans[c].table == kSpotlightIndirectHdma && hdma_chans[c].ppu_addr == (uint8)WH0)
+      if ((hdma_chans[c].table == kSpotlightIndirectHdma || hdma_chans[c].table == kHdmaTableForPrayingScene)
+          && hdma_chans[c].ppu_addr == (uint8)WH0)
         iris_wide = true;
   }
 
@@ -617,8 +674,10 @@ void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
       }
     }
     ppu_runLine(g_zenv.ppu, i);
-    SimpleHdma_DoLine(&hdma_chans[0]);
-    SimpleHdma_DoLine(&hdma_chans[1]);
+    if (i >= hdma_first_line) {
+      SimpleHdma_DoLine(&hdma_chans[0]);
+      SimpleHdma_DoLine(&hdma_chans[1]);
+    }
     if (iris_wide)
       SetIrisWideWindow(i);
   }

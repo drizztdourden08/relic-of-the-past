@@ -8,6 +8,7 @@ import type { GameSettings } from '@shared/types/settings';
 import { BUNDLE_FIXES } from '@shared/features/bundle-fixes.generated';
 import { resolveGates } from '@shared/features/resolve-gates';
 import { offscreenAiMode } from './settings';
+import { rendersExtended } from './ratio-capability';
 
 // Registered features0-bit ids whose GameSettings field shares the id's name and is requested
 // unconditionally (any extra condition, e.g. "only when the ratio is actually wide", is applied by the
@@ -32,14 +33,15 @@ const requestedFeatureIds = (s: GameSettings): string[] => {
   if (offscreenAiMode(s) === 'idle') ids.push('offscreenAI');
   if (s.widescreenPlayArea === true) ids.push('widescreenPlayArea');
   for (const fix of BUNDLE_FIXES) {
+    // The widescreen corrections are one setting: the Display switch, on by default with extended
+    // rendering, covers the core bit and every fix split from that bundle. No per-fix override.
+    if (fix.bundleOrigin === 'WidescreenVisualFixes') {
+      if (rendersExtended(s) && s.widescreenVisualFixes) ids.push(fix.id);
+      continue;
+    }
     // Matches the legacy-bundle fallback in buildFeatureWords: an unset granular toggle inherits the
-    // bundle master it was split from (WidescreenVisualFixes-origin fixes also need a wide ratio).
-    const legacy =
-      fix.bundleOrigin === 'GameChangingBugFixes'
-        ? s.gameChangingBugFixes
-        : fix.bundleOrigin === 'WidescreenVisualFixes'
-          ? !!s.extendedRendering && s.aspectRatio !== '4:3' && s.widescreenVisualFixes
-          : s.miscBugFixes;
+    // bundle master it was split from.
+    const legacy = fix.bundleOrigin === 'GameChangingBugFixes' ? s.gameChangingBugFixes : s.miscBugFixes;
     if (s.bugFixToggles?.[fix.id] ?? legacy) ids.push(fix.id);
   }
   return ids;

@@ -8,6 +8,7 @@ import type { ShadowRenderer } from '../../../../../../lib/game/shadow-casting';
 import type { ShadowCastingProject } from '@shared/types/shadow-casting';
 import { useShadowEditorStore } from '../../../../../../stores/shadow-editor-store';
 import { useCanvasOverlayLoop } from './useCanvasOverlayLoop';
+import { viewOrigin } from '@app/lib/game/bridge/view-origin';
 
 interface ShadowLoopParams {
   status: string;
@@ -65,9 +66,8 @@ const useShadowCastingLoop = (params: ShadowLoopParams): void => {
         const screenRow = Math.floor((vp.cameraY + 112) / 512) & 7;
         screenId = screenRow * 8 + screenCol;
 
-        // Update viewport origin every frame (same coords as NavigationOverlay)
-        const viewLeft = vp.cameraX - vp.extraLeftRight;
-        const viewTop = vp.cameraY;
+        // Update the viewport origin every frame, through the same helper the overlays use.
+        const { viewLeft, viewTop } = viewOrigin(vp);
         renderer.setScreenOrigin(viewLeft, viewTop, vp.snesWidth, vp.snesHeight);
       }
 

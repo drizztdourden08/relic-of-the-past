@@ -28,10 +28,39 @@
 // Palaces are left alone: a room whose floor sits on a translucent layer over the ceiling word would
 // lose it. The game marks every room outside a palace with palace index 0xff. The sanctuary is the
 // one room the game files under a palace (the sewers) that plays as a house, so it is named by room id.
+//
+// The palace index is a proxy for that, and a handful of rooms slip past it: the game hands their
+// entrance palace index 0xff while the room itself is drawn with a dungeon's art. Room 0x10B is one,
+// and there the fill blacks the void on three sides and leaves the water channel standing down the
+// fourth, because the channel is real art on the same layer as the ceiling word. What a room is drawn
+// with is the property that separates the two sides, and the room header states it: byte 2 is the
+// tileset. Across all 320 rooms they share none of them. Houses, shops and caves draw with 3, 6, 15,
+// 16, 17, 18 and 20; every room a palace entrance leads to draws with 0, 1, 2, 4, 5, 7, 8, 9, 10, 11,
+// 12, 13 or 14, and the tower and pyramid rooms with 19. Rooms 0x10B and 0x10D borrow the flooded
+// palace's 8, and room 0x119 borrows 10, which is why the three of them lose the fill here.
+//
+// The sanctuary is the single covered room drawn with a dungeon's tileset (4, which it shares with a
+// sewer room), so it stays named by room id and answers before the tileset does.
 static bool g_wanted_hide_space_beyond_walls;
 
 void GameHook_SetHideSpaceBeyondWalls(bool enable) {
   g_wanted_hide_space_beyond_walls = enable;
+}
+
+// Whether the room draws the space past its walls as an empty surround, from the tileset its header
+// names. Read from the table and not from the live copy (aux_tile_theme_index), which the map screen
+// and the mirror warp borrow for their own art while a room is still loaded.
+static bool RoomDrawsEmptySurround(void) {
+  unsigned room = (unsigned)dungeon_room_index;
+  if (room >= kDungeonRoomHeadersOffs_SIZE / 2) return false;
+  switch (GetRoomHeaderPtr((int)room)[2]) {
+    case 3:   // the village and lake houses, and the shops
+    case 6:   // the caves
+    case 15: case 16: case 17: case 18: case 20:  // the smaller house and cave sets
+      return true;
+    default:
+      return false;
+  }
 }
 
 static bool HideActive(void) {
@@ -39,7 +68,9 @@ static bool HideActive(void) {
   int mod = main_module_index;
   if (mod == MODULE_MENU) mod = saved_module_for_menu;
   if (mod < MODULE_PRE_DUNGEON || mod >= MODULE_TRIFORCE_ROOM || mod == MODULE_ATTRACT) return false;
-  return (uint8)cur_palace_index_x2 == 0xff || dungeon_room_index == ROOM_SANCTUARY;
+  if (dungeon_room_index == ROOM_SANCTUARY) return true;
+  if ((uint8)cur_palace_index_x2 != 0xff) return false;
+  return RoomDrawsEmptySurround();
 }
 
 int GameHook_HideSpaceBeyondWallsFill(const uint16 **words) {

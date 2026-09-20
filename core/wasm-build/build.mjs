@@ -64,7 +64,7 @@ const hookSrcs = [
   'item_power', 'swordless_paths', 'story_events', 'story_probes', 'story_barrier', 'story_status', 'events/event_ledger', 'events/event_watch', 'events/event_receipts', 'retro_bow', 'retro_drops', 'retro_shelf', 'retro_quiver_icon', 'archery_host',
   'dark_room_lights', 'file_name_prefill',
   'host_gates', 'hud_override', 'dialog_pacing', 'dialog_mirror', 'dialog_presence', 'running_man', 'music_hooks', 'sound_hooks',
-  'view_gates', 'iris_wide', 'hide_space_beyond_walls',
+  'view_gates', 'attract_view', 'spotlight_growth', 'attract_sprites', 'iris_wide', 'hide_space_beyond_walls', 'fixed_picture_edges',
   'cheat_lighting', 'cheat_wallet', 'cheat_unblock', 'cheat_check_mark', 'cheat_inventory', 'cheat_capacity', 'dev_frame_dump',
 ].map((f) => h(`${f}.c`));
 

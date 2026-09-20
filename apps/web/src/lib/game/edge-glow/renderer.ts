@@ -65,9 +65,11 @@ const createEdgeGlowRenderer = (glCanvas: HTMLCanvasElement, options: EdgeGlowOp
   let blackLeft = 0;
   let blackRight = 0;
   let blackBottom = 0;
+  let blackTop = 0;
   let maxLeft = 0;
   let maxRight = 0;
   let maxBottom = 0;
+  let maxTop = 0;
   let effectOpacity = 1.0;
   let pixelSizeMultiplier = 10.0;
   let pixelDivisor = 60.0;
@@ -122,6 +124,7 @@ const createEdgeGlowRenderer = (glCanvas: HTMLCanvasElement, options: EdgeGlowOp
         gl.uniform1f(mirrorUniforms.blackLeft, blackLeft);
         gl.uniform1f(mirrorUniforms.blackRight, blackRight);
         gl.uniform1f(mirrorUniforms.blackBottom, blackBottom);
+        gl.uniform1f(mirrorUniforms.blackTop, blackTop);
         gl.uniform1f(mirrorUniforms.swizzleBR, cleanFrame ? 1.0 : 0.0);
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, mirrorSrcTexture);
@@ -181,9 +184,11 @@ const createEdgeGlowRenderer = (glCanvas: HTMLCanvasElement, options: EdgeGlowOp
         gl.uniform1f(compositeUniforms.blackLeft, maxLeft);
         gl.uniform1f(compositeUniforms.blackRight, maxRight);
         gl.uniform1f(compositeUniforms.blackBottom, maxBottom);
+        gl.uniform1f(compositeUniforms.blackTop, maxTop);
         gl.uniform1f(compositeUniforms.dynLeft, blackLeft);
         gl.uniform1f(compositeUniforms.dynRight, blackRight);
         gl.uniform1f(compositeUniforms.dynBottom, blackBottom);
+        gl.uniform1f(compositeUniforms.dynTop, blackTop);
         gl.uniform1f(compositeUniforms.effectOpacity, effectOpacity);
         const pixelSize = glCanvas.clientWidth > 0 ? (glCanvas.clientWidth / width) * pixelSizeMultiplier : pixelSizeMultiplier;
         gl.uniform1f(compositeUniforms.pixelSize, pixelSize);
@@ -211,16 +216,18 @@ const createEdgeGlowRenderer = (glCanvas: HTMLCanvasElement, options: EdgeGlowOp
         enabled = val;
       };
 
-  const setBlackBounds = (left: number, right: number, bottom: number): void => {
+  const setBlackBounds = (left: number, right: number, bottom: number, top: number): void => {
         blackLeft = left;
         blackRight = right;
         blackBottom = bottom;
+        blackTop = top;
       };
 
-  const setMaxBounds = (left: number, right: number, bottom: number): void => {
+  const setMaxBounds = (left: number, right: number, bottom: number, top: number): void => {
         maxLeft = left;
         maxRight = right;
         maxBottom = bottom;
+        maxTop = top;
       };
 
   const setEffectOpacity = (opacity: number): void => {

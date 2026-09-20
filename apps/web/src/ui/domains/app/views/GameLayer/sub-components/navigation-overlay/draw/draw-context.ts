@@ -2,6 +2,7 @@
 import type { FloodFillResult } from '@shared/game/navigation';
 import type { ReachState } from '@shared/game/navigation/types';
 import { overworldOrigin, roomOrigin, screenOriginFor } from '@app/lib/game/flood';
+import { viewOrigin } from '@app/lib/game/bridge/view-origin';
 
 /** Shared drawing context passed to all draw functions. */
 interface DrawContext {
@@ -27,6 +28,7 @@ interface ViewportInfo {
   snesWidth: number;
   snesHeight: number;
   extraLeftRight: number;
+  extraTopBottom: number;
   cameraLockShiftX: number;
   cameraLockShiftY: number;
   linkX: number;
@@ -39,10 +41,9 @@ const buildDrawContext = (ctx: CanvasRenderingContext2D, vp: ViewportInfo, width
   const camY = vp.cameraY;
   const snesW = vp.snesWidth;
   const snesH = vp.snesHeight;
-  // The camera lock shifts the rendered view (view = camera - shift). Subtract it or world-anchored
-  // overlay elements drift as the view re-centers.
-  const viewLeft = camX - vp.cameraLockShiftX - vp.extraLeftRight;
-  const viewTop = camY - vp.cameraLockShiftY;
+  // Where the core started drawing: the camera, less the lock shift and the pixels the view adds on the
+  // left and on top. Shared with every other overlay so they cannot drift apart again.
+  const { viewLeft, viewTop } = viewOrigin(vp);
   const scaleX = width / snesW;
   const scaleY = height / snesH;
 

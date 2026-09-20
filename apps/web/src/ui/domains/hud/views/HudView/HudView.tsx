@@ -23,7 +23,9 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
     const w = el.clientWidth;
     if (h <= 0 || w <= 0) return;
 
-    // Scale derived from height, using canvas native height to respect extendY (240-line mode)
+    // One game pixel in CSS pixels. Measured against the canvas's native height, which already counts
+    // the rows a tall view adds and the 240-line mode's sixteen, so a game pixel is the size the core
+    // drew it at in every shape.
     const canvas = document.getElementById('canvas') as HTMLCanvasElement | null;
     const nativeH = canvas ? canvas.height / 2 : SNES_HEIGHT;
     const newScale = h / nativeH;
@@ -97,7 +99,11 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
         transition: slideTransition,
       }}
     >
-      {/* HUD content centered at the chosen ratio width */}
+      {/* Content centred at the chosen ratio width, and placed against the rendered frame on both axes:
+          the left and right groups sit two tiles in from its edges, the bar 1.75 tiles below its top. A
+          wide view spreads the groups over the columns it adds and a tall view puts the bar over the rows
+          it adds, so the HUD reaches the corners of whatever shape is on screen. The pause menu it slides
+          against measures the same way. */}
       <HudBox style={{
         position: 'relative',
         display: 'flex',
