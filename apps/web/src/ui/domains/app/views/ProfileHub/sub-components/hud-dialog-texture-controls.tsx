@@ -34,8 +34,12 @@ const SPEED_OPTIONS = [
   { value: 'fast', label: 'Fast' },
 ];
 
+/**
+ * Only the rows this subsection owns get an answer. The Dialog Box section runs every one of its
+ * keys through this rule, so claiming a key that belongs to another subsection idles that row too.
+ */
 const isTextureDisabled = (key: string, settings: GameSettings): boolean => {
-  if (key === 'dialogTexture') return false;
+  if (!key.startsWith('dialogTexture') || key === 'dialogTexture') return false;
   if (settings.dialogTexture === 'none') return true;
   return key === 'dialogTextureSpeed' && settings.dialogTextureAnimation === 'none';
 };
