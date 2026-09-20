@@ -63,3 +63,59 @@ int GameHook_PitFallViewModule(int effectiveModule) {
     return effectiveModule;
   return player_is_indoors ? MODULE_DUNGEON : MODULE_OVERWORLD;
 }
+
+// ─── Game-Over View Gate ───
+//
+// Dying hands the frame to the game-over module, and ConfigurePpuSideSpace describes the outdoor
+// module and the indoor one and nothing else, so the whole sequence fell through to a zero budget: the
+// picture snapped in to 4:3 when the player fell and stayed there through the red fill, the GAME OVER
+// letters and the save menu, then snapped back out on the next room.
+//
+// The module runs in two kinds of frame. While the player spins down, and again once the revival fairy
+// has lifted them and the colours come back, it shows the play it interrupted, with the camera, the
+// scroll bounds and the loaded map all untouched. Those frames are described by the module the player
+// died in, held the way a stationary frame of that module is, so the view keeps its width and the camera
+// lock keeps its offset.
+//
+// From the iris closing until the fairy has finished lifting the player it draws over the whole screen
+// instead: the iris, then a flat colour fill with the letters and the menu, or the fairy. Those frames take
+// the full budget on every side so the fill reaches the edges. The scene and the player keep the camera
+// lock's offset throughout, and the iris is widened and moved with it (iris_wide.c). The letters and the
+// menu cursor are the exception: they are placed for the base frame beside menu text on a layer the lock
+// never moves, so they keep their place. The game writes them to fixed OAM slots, the letters from the
+// start of the buffer and the cursor to slot 20, and those are the slots marked.
+//
+// The special switch areas report themselves through saved_module_for_menu, which the game sets to the
+// interrupted module on the way in; their scroll bounds are their own and the outdoor branch has to be
+// told. Anywhere else player_is_indoors picks the side, as it does for the pit fall.
+//
+// Gated with the other corrections for a picture drawn assuming a 4:3 screen.
+static bool GameOverViewGate(void) {
+  return main_module_index == MODULE_GAME_OVER && (enhanced_features0 & kFeatures0_WidescreenVisualFixes);
+}
+
+int GameHook_GameOverViewModule(int effectiveModule) {
+  if (effectiveModule != MODULE_GAME_OVER || !GameOverViewGate())
+    return effectiveModule;
+  if (saved_module_for_menu == MODULE_OVERWORLD_SPECIAL_AREA)
+    return MODULE_OVERWORLD_SPECIAL_AREA;
+  return player_is_indoors ? MODULE_DUNGEON : MODULE_OVERWORLD;
+}
+
+bool GameHook_LockFixedSlots(uint8 *fixed) {
+  if (!GameOverViewGate() || submodule_index < GAME_OVER_SUB_LETTERS || submodule_index > GAME_OVER_SUB_SAVE_MENU)
+    return false;
+  memset(fixed, 0, 128);
+  memset(fixed, 1, GAME_OVER_LETTER_SLOTS);
+  fixed[GAME_OVER_CURSOR_SLOT] = 1;
+  return true;
+}
+
+bool GameHook_GameOverCoversScreen(void) {
+  if (!GameOverViewGate() || submodule_index < GAME_OVER_SUB_IRIS_WIPE || submodule_index > GAME_OVER_SUB_FAIRY_RISE)
+    return false;
+  // A dark room keeps the lamp's cone mask on the subscreen until the iris has closed, and the mask only
+  // covers the base frame (see the light-cone gate above). Those frames stay at the base width, whose
+  // margins were already black in a dark room; the fill widens once the game turns the subscreen off.
+  return !(hdr_dungeon_dark_with_lantern && TS_copy);
+}

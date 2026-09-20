@@ -306,6 +306,10 @@ static void ConfigurePpuSideSpace() {
   int mod = main_module_index;
   if (mod == 14)
     mod = saved_module_for_menu;
+  // The game-over module is drawn over the play it interrupted, which it leaves standing. Reading it as
+  // the module the player died in keeps the wide/tall view through the red fill and the menu. Resolved
+  // before the special-area test so a death in one of those areas still reads as that area.
+  mod = GameHook_GameOverViewModule(mod);
   // MODULE_OVERWORLD_SPECIAL_AREA is normal interactive outdoor gameplay even though the
   // module never returns to 9. Checked against `mod`
   // (already menu-remapped above) via the *For() form, not GameHook_IsOverworldSpecialArea()
@@ -337,7 +341,9 @@ static void ConfigurePpuSideSpace() {
       // overworld_area_index (>=128) would index kOverworldMapIsSmall/kOverworld_OffsetBaseX/etc out of
       // bounds. Its own scroll bounds (ow_scroll_vars0, set by Overworld_EnterSpecialArea) are already
       // correct here regardless of submodule_index.
-      if (submodule_index == 0 || main_module_index == 14 || isSpecialArea) {
+      // The game-over module never scrolls, whatever its submodule reads, so it holds this lock too. It
+      // only reaches this branch through GameHook_GameOverViewModule, which leaves it out with the gate off.
+      if (submodule_index == 0 || main_module_index == 14 || isSpecialArea || main_module_index == 18) {
         if (enhanced_features0 & kFeatures0_CameraLockToViewport) {
           // Render-level camera lock: clamp the RENDERED view to the area so its edges rest on the
           // boundary (no out-of-area black), then shift the world fetch (below) + sprites (ppu eval) by
@@ -482,6 +488,13 @@ static void ConfigurePpuSideSpace() {
     extra_left = kPpuExtraLeftRight, extra_right = kPpuExtraLeftRight;
     extra_bottom = 16;
   }
+  // The game-over frames that draw over the whole screen fill every side, so the iris, the colour fill and
+  // the fade reach the edges. Past the loaded map the fetch finds no data, which would show the fixed colour
+  // where the game shows black, so those gaps render black as they do during an area transition.
+  if (GameHook_GameOverCoversScreen()) {
+    extra_left = extra_right = extra_top = extra_bottom = kPpuExtraLeftRight;
+    g_zenv.ppu->renderFlags |= kPpuRenderFlags_BlackBackdrop;
+  }
   PpuSetExtraSideSpace(g_zenv.ppu, extra_left, extra_right, extra_top, extra_bottom);
   // The shift is by definition how far the rendered view is inset from the game camera, so it cannot
   // exceed the budget: |shift| <= budget holds by construction. A larger value means the inputs the lock
@@ -499,6 +512,21 @@ static void ConfigurePpuSideSpace() {
   g_render_extra_right = (int)g_zenv.ppu->extraRightCur;
   g_render_extra_top = (int)g_zenv.ppu->extraTopCur;
   g_render_extra_bottom = (int)g_zenv.ppu->extraBottomCur;
+}
+
+// Hands the renderer the iris edges for the next content row, moved with the camera lock so the circle
+// stays on the player the scene shows, or leaves the 8-bit register values when it is not a wide iris
+// frame. |line| is the draw loop's index: the row drawn next is that line less the top budget. Counting
+// from the loop keeps the extra rows past the table's end outside the circle, where HDMA has stopped
+// and would otherwise leave its last pair standing.
+static void SetIrisWideWindow(int line) {
+  int row = line - (int)g_zenv.ppu->extraTopBottom;
+  int left, right;
+  g_zenv.ppu->window1Wide = GameHook_IrisWideWindow(row, g_zenv.ppu->cameraLockShiftX, g_zenv.ppu->cameraLockShiftY, &left, &right);
+  if (g_zenv.ppu->window1Wide) {
+    g_zenv.ppu->window1leftWide = (int16)left;
+    g_zenv.ppu->window1rightWide = (int16)right;
+  }
 }
 
 void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
@@ -565,6 +593,17 @@ void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
     for (int s = 0; s < 128; s++)
       g_zenv.ppu->oamIsPlayer[s] = g_oam_player[s];
   }
+  // Sprites placed for the base frame on a frame whose scene the camera lock shifts: they keep their place.
+  g_zenv.ppu->lockShiftSomeFixed = GameHook_LockFixedSlots(g_zenv.ppu->oamLockFixed);
+
+  // The iris writes its circle to the window through this indirect table. On the frames that widen it,
+  // each transferred line also hands the renderer the circle's unclamped edges (iris_wide.c).
+  bool iris_wide = false;
+  if (g_zenv.ppu->extraLeftCur | g_zenv.ppu->extraRightCur) {
+    for (int c = 0; c < 2; c++)
+      if (hdma_chans[c].table == kSpotlightIndirectHdma && hdma_chans[c].ppu_addr == (uint8)WH0)
+        iris_wide = true;
+  }
 
   for (int i = 0; i <= height; i++) {
     if (i == 128 + topBudget && irq_flag) {  // file-select BG3 split fires at content line 128 (shifted down by the top budget)
@@ -580,6 +619,8 @@ void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
     ppu_runLine(g_zenv.ppu, i);
     SimpleHdma_DoLine(&hdma_chans[0]);
     SimpleHdma_DoLine(&hdma_chans[1]);
+    if (iris_wide)
+      SetIrisWideWindow(i);
   }
   // After the draw, so the OAM and the rasteriser's own account of what it drew describe the same frame.
   GameHook_CaptureOamFrame();
