@@ -33,7 +33,9 @@ const viewOrigin = (vp: ViewportLike): ViewOrigin => ({
 /**
  * Game lines drawn above the 224-line picture. A tall view adds the same budget above and below; the
  * 240-line view adds its 16 lines below only, so a surplus of exactly 16 means nothing on top. Anything
- * laid over the picture (the HUD, the message box) has to start below these, or it floats in the band.
+ * that marks a spot in the picture (the message box, which sits on a scanline the game names) has to
+ * start below these, or it floats in the band. Frame furniture does not: the enhanced HUD and the pause
+ * menu are placed against the rendered frame, so they reach the top of the view in every shape.
  */
 const linesAbovePicture = (nativeHeight: number, reported?: number): number => {
   if (reported !== undefined) return reported;
