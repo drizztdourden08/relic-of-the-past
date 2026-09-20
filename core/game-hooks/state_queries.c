@@ -166,6 +166,13 @@ int WasmGetViewportInfo(void) {
   if (GameHook_IsOverworldSpecialAreaFor(mod)) {
     mod = MODULE_OVERWORLD;
   }
+  // A fall through a hole draws the departure area and then the room below, and ConfigurePpuSideSpace
+  // already reads it as whichever of the two it is showing. This field said 17 through all of it, so the
+  // renderer's overworld-only overlays (the edge effect, the shadow casting, the editor) each switched
+  // themselves off for a crossing the core was still drawing the overworld for, and the effect's black
+  // bounds froze at the values the last frame of play had. The margin the effect had been filling went
+  // flat black for the whole crossing. The same resolution the picture is measured by, so the two agree.
+  mod = (uint8)GameHook_PitFallViewModule(mod);
   g_viewport_buf[9] = mod;
   // locationType: 0=overworld/other, 1=house/cave, 2=dungeon
   uint8 locMod = g_viewport_buf[9];

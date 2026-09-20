@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind logic */
 import type { wasmGetViewportInfo } from '@app/lib/game';
+import { viewOrigin } from '@app/lib/game/bridge/view-origin';
 
 type Vp = NonNullable<ReturnType<typeof wasmGetViewportInfo>>;
 type Point = { x: number; y: number };
@@ -15,8 +16,7 @@ const screenIdFromVp = (vp: Vp): number => {
 const displayToWorld = (vp: Vp, width: number, height: number, displayX: number, displayY: number): Point => {
   const scaleX = width / vp.snesWidth;
   const scaleY = height / vp.snesHeight;
-  const viewLeft = vp.cameraX - vp.extraLeftRight;
-  const viewTop = vp.cameraY;
+  const { viewLeft, viewTop } = viewOrigin(vp);
   return { x: displayX / scaleX + viewLeft, y: displayY / scaleY + viewTop };
 };
 
@@ -24,8 +24,7 @@ const displayToWorld = (vp: Vp, width: number, height: number, displayX: number,
 const worldToDisplay = (vp: Vp, width: number, height: number, worldX: number, worldY: number): Point => {
   const scaleX = width / vp.snesWidth;
   const scaleY = height / vp.snesHeight;
-  const viewLeft = vp.cameraX - vp.extraLeftRight;
-  const viewTop = vp.cameraY;
+  const { viewLeft, viewTop } = viewOrigin(vp);
   return { x: (worldX - viewLeft) * scaleX, y: (worldY - viewTop) * scaleY };
 };
 

@@ -351,17 +351,39 @@ int Ancilla_AllocHigh() {
   return -1;
 }
 
+// True when this screen Y is on the picture. A tall view shows rows above the stock frame (a negative
+// screen Y) and below row 240, so the band widens with the budget; with no tall view this is the stock
+// test, where a Y at or past 0xf0 is the hardware's hide value rather than a row.
+static bool Ancilla_RowOnScreen(uint16 y) {
+  if (!Tall_Active())
+    return y < 0xf0;
+  int16 ys = (int16)y;
+  return ys >= -TallTopPx() && ys < 240 + TallBottomPx();
+}
+
+// Writes an accepted Y. A tall coordinate needs the 9th bit the entry cannot hold, which OamSetY carries
+// for the PPU in the per-slot marker; with no tall view it is the same byte the vanilla store wrote.
+static void Ancilla_WriteOamY(OamEnt *oam, uint16 y) {
+  if (Tall_Active())
+    OamSetY(oam, y);
+  else
+    oam->y = (uint8)y;
+}
+
 static void Ancilla_SetOam(OamEnt *oam, uint16 x, uint16 y, uint8 charnum, uint8 flags, uint8 big) {
-  uint8 yval = 0xf0;
+  bool placed = false;
   if (!Wide_Active()) {
     int xt = enhanced_features0 & kFeatures0_ExtendScreen64 ? 0x40 : 0;
-    if ((uint16)(x + xt) < 256 + xt * 2 && y < 256) {
+    if ((uint16)(x + xt) < 256 + xt * 2 && (y < 256 || Tall_Active())) {
       big |= (x >> 8) & 1;
       oam->x = x;
-      if (y < 0xf0)
-        yval = y;
+      if (Ancilla_RowOnScreen(y)) {
+        Ancilla_WriteOamY(oam, y);
+        placed = true;
+      }
     }
-    oam->y = yval;
+    if (!placed)
+      OamSetYRaw(oam, 0xf0);
     oam->charnum = charnum;
     oam->flags = flags;
     bytewise_extended_oam[oam - oam_buf] = big;
@@ -372,15 +394,18 @@ static void Ancilla_SetOam(OamEnt *oam, uint16 x, uint16 y, uint8 charnum, uint8
     // else here writes it this frame, and a slot reused from an earlier wide sprite
     // would otherwise keep flinging this one hundreds of pixels off-screen.
     int16 xs = (int16)x;
-    if (xs >= -WideLeftPx() && xs < 256 + WideRightPx() && y < 256) {
+    if (xs >= -WideLeftPx() && xs < 256 + WideRightPx() && (y < 256 || Tall_Active())) {
       big |= (x >> 8) & 1;
       OamSetX(oam, x);
-      if (y < 0xf0)
-        yval = y;
+      if (Ancilla_RowOnScreen(y)) {
+        Ancilla_WriteOamY(oam, y);
+        placed = true;
+      }
     } else {
       g_oam_x_high[oam - oam_buf] = 0;
     }
-    oam->y = yval;
+    if (!placed)
+      OamSetYRaw(oam, 0xf0);
     oam->charnum = charnum;
     oam->flags = flags;
     bytewise_extended_oam[oam - oam_buf] = big;
@@ -807,6 +832,17 @@ void Ancilla01_SomariaBullet(int k) {  // 88851b
   SomarianBlast_Draw(k);
 }
 
+// The vertical half of the bounds test, which the wide work left at the stock screen: a tall view shows
+// rows above and below it, so a projectile crossing one of those edges is still on screen and must live
+// until it leaves the view. The stock path keeps the low-byte residue it always used.
+static bool Ancilla_RowOutsideView(int k, AncillaOamInfo *info) {
+  if (!Tall_Active())
+    return (info->y = ancilla_y_lo[k] - BG2VOFS_copy2) >= 0xf0;
+  int rel_y = Ancilla_GetY(k) - BG2VOFS_copy2;
+  info->y = (uint16)rel_y;
+  return rel_y < -TallTopPx() || rel_y >= 240 + TallBottomPx();
+}
+
 bool Ancilla_ReturnIfOutsideBounds(int k, AncillaOamInfo *info) {  // 88862a
   static const uint8 kAncilla_FloorFlags[2] = {0x20, 0x10};
   info->flags = kAncilla_FloorFlags[ancilla_floor[k]];
@@ -815,7 +851,7 @@ bool Ancilla_ReturnIfOutsideBounds(int k, AncillaOamInfo *info) {  // 88862a
     // residue mod 256 of the true screen-relative X, not the signed distance
     // itself; cast explicitly so widening the field above cannot change the result.
     if ((info->x = (uint8)(ancilla_x_lo[k] - BG2HOFS_copy2)) >= 0xf4 ||
-        (info->y = ancilla_y_lo[k] - BG2VOFS_copy2) >= 0xf0) {
+        Ancilla_RowOutsideView(k, info)) {
       ancilla_type[k] = 0;
       return true;
     }
@@ -827,7 +863,7 @@ bool Ancilla_ReturnIfOutsideBounds(int k, AncillaOamInfo *info) {  // 88862a
     int rel_x = Ancilla_GetX(k) - BG2HOFS_copy2;
     info->x = (uint16)rel_x;
     if (rel_x < -WideLeftPx() || rel_x >= 256 + WideRightPx() ||
-        (info->y = ancilla_y_lo[k] - BG2VOFS_copy2) >= 0xf0) {
+        Ancilla_RowOutsideView(k, info)) {
       ancilla_type[k] = 0;
       return true;
     }
@@ -7186,20 +7222,27 @@ int DashTremor_TwiddleOffset(int k) {  // 8ffafe
   }
 }
 
+// The vertical twin of the band above, for the same reason: with rows visible past the stock picture, a
+// projectile leaves the screen later than row 240.
+static bool Ancilla_RowOffscreen(int j) {
+  int rel_y = Ancilla_GetY(j) - BG2VOFS_copy2;
+  if (!Tall_Active())
+    return (uint16)rel_y >= 240;
+  return rel_y < -TallTopPx() || rel_y >= 240 + TallBottomPx();
+}
+
 void Ancilla_TerminateIfOffscreen(int j) {  // 8ffd52
   if (!Wide_Active()) {
     int xt = (enhanced_features0 & kFeatures0_ExtendScreen64) ? 0x40 : 0;
     uint16 x = Ancilla_GetX(j) - BG2HOFS_copy2 + xt;
-    uint16 y = Ancilla_GetY(j) - BG2VOFS_copy2;
-    if (x >= 244 + xt * 2 || y >= 240)
+    if (x >= 244 + xt * 2 || Ancilla_RowOffscreen(j))
       ancilla_type[j] = 0;
   } else {
     // Same band as the stock check, but sized to the live wide budget on each side
     // instead of the fixed 64px allowance, so a projectile survives the full width
     // of the extended view instead of being destroyed 64px into the band.
     int rel_x = Ancilla_GetX(j) - BG2HOFS_copy2;
-    uint16 y = Ancilla_GetY(j) - BG2VOFS_copy2;
-    if (rel_x < -WideLeftPx() || rel_x >= 244 + WideRightPx() || y >= 240)
+    if (rel_x < -WideLeftPx() || rel_x >= 244 + WideRightPx() || Ancilla_RowOffscreen(j))
       ancilla_type[j] = 0;
   }
 }

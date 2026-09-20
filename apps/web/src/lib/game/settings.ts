@@ -2,7 +2,7 @@
 
 import type { GameSettings, OffscreenAiMode } from '@shared/types/settings';
 import { DEFAULT_TURBO_SPEED } from '@shared/display/turbo-speed';
-import { effectiveCustomRatio, detectScreenRatio, detectViewportRatio } from './aspect-ratio';
+import { allowedRatio, ratioToString, rendersExtended } from './ratio-capability';
 
 const DEFAULT_SETTINGS: GameSettings = {
   // General
@@ -211,25 +211,18 @@ const serializeToIni = (settings: GameSettings, msuPath?: string, language?: str
   const parts: string[] = [];
   if (er) {
     if (settings.extendY) parts.push('extend_y');
-    if (settings.aspectRatio === 'auto') {
-      const { w, h } = detectViewportRatio(settings.renderIntoNotch);
-      parts.push(`${w}:${h}`);
-    } else if (settings.aspectRatio === 'screen') {
-      const { w, h } = detectScreenRatio(true);
-      parts.push(`${w}:${h}`);
-    } else if (settings.aspectRatio === 'custom') {
-      const { w, h } = effectiveCustomRatio(settings.customAspectW, settings.customAspectH, settings.renderIntoNotch);
-      parts.push(`${w}:${h}`);
-    } else {
-      parts.push(settings.aspectRatio);
-    }
+    // The ratio the capabilities actually cover. Auto, Screen and Custom skip the picker's own gates, so
+    // without this a wide monitor on Auto asked the core for a shape its feature bits were never set for.
+    parts.push(ratioToString(allowedRatio(settings)));
   } else {
     parts.push('4:3');
   }
   const aspectValue = parts.join(', ');
 
   // Rendering feature flags mirror buildFeatureFlags (live bridge) so boot config and live push agree.
-  const wide = er && settings.aspectRatio !== '4:3';
+  // What the profile actually renders, not what its ratio word says: Auto on a 4:3 display is 4:3, and a
+  // ratio the capabilities do not cover is pulled back to one they do. Wider or taller both count.
+  const wide = rendersExtended(settings);
   const renderFlags = {
     ExtendedRendering: er,
     LinearWorldTilemap: er && !!settings.linearWorldTilemap,
@@ -447,4 +440,4 @@ const mergeSettings = (partial: Partial<GameSettings>): GameSettings => {
   return merged;
 };
 
-export { DEFAULT_SETTINGS, mergeSettings, serializeToIni, offscreenAiMode };
+export { DEFAULT_SETTINGS, mergeSettings, serializeToIni, offscreenAiMode, rendersExtended };

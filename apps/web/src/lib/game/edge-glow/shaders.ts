@@ -27,6 +27,7 @@ uniform vec2 u_resolution;
 uniform float u_blackLeft;
 uniform float u_blackRight;
 uniform float u_blackBottom;
+uniform float u_blackTop;
 uniform float u_swizzleBR;
 
 void main() {
@@ -36,12 +37,14 @@ void main() {
   float leftBound = u_blackLeft * 2.0;
   float rightBound = u_resolution.x - u_blackRight * 2.0;
   float bottomBound = u_resolution.y - u_blackBottom * 2.0;
+  float topBound = u_blackTop * 2.0;
 
   bool inLeft = pixelX < leftBound && u_blackLeft > 0.0;
   bool inRight = pixelX > rightBound && u_blackRight > 0.0;
   bool inBottom = pixelY > bottomBound && u_blackBottom > 0.0;
+  bool inTop = pixelY < topBound && u_blackTop > 0.0;
 
-  if (!inLeft && !inRight && !inBottom) {
+  if (!inLeft && !inRight && !inBottom && !inTop) {
     vec4 c = texture2D(u_gameTexture, v_uv);
     if (u_swizzleBR > 0.5) c = vec4(c.b, c.g, c.r, c.a);
     gl_FragColor = c;
@@ -60,6 +63,9 @@ void main() {
 
   if (inBottom) {
     float mirrorY = 2.0 * bottomBound - pixelY;
+    mirrorUV.y = mirrorY / u_resolution.y;
+  } else if (inTop) {
+    float mirrorY = 2.0 * topBound - pixelY;
     mirrorUV.y = mirrorY / u_resolution.y;
   }
 

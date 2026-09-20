@@ -66,8 +66,16 @@ const buildDisplaySection = (s: GameSettings): Section => {
     },
   );
 
-  // ── 3. Sprite / AI behaviour (only relevant for non-4:3) ─────────────────────
+  // ── 3. Sprite / AI behaviour (only relevant past the original picture) ───────
   const isWide = s.aspectRatio !== '4:3';
+  if (s.extendedRendering) {
+    items.push({
+      key: 'widescreenVisualFixes',
+      label: 'Widescreen Fixes',
+      description: 'Corrections for a view wider or taller than the original: transitions, effects and sprites drawn for the 4:3 screen. One switch; on by default.',
+      keywords: 'visual fixes widescreen tall tiles edges transitions iris link hide',
+    });
+  }
   if (isWide) {
     items.push(
       {
@@ -75,12 +83,6 @@ const buildDisplaySection = (s: GameSettings): Section => {
         label: 'Widescreen Sprites',
         description: 'Extend sprite spawn ranges so enemies and objects behave correctly in the wider view.',
         keywords: 'sprites widescreen spawn despawn ranges',
-      },
-      {
-        key: 'widescreenVisualFixes',
-        label: 'Widescreen Visual Fixes',
-        description: 'Apply graphics corrections for the wider view (edges and sprites that assume a 4:3 screen).',
-        keywords: 'visual fixes widescreen tiles edges',
       },
       {
         key: 'widescreenPlayArea',

@@ -7,8 +7,8 @@ interface EdgeGlowRenderer {
   render(gameCanvas: HTMLCanvasElement, time: number, cleanFrame?: { data: Uint8Array; width: number; height: number } | null): void;
   resize(width: number, height: number): void;
   setEnabled(enabled: boolean): void;
-  setBlackBounds(left: number, right: number, bottom: number): void;
-  setMaxBounds(left: number, right: number, bottom: number): void;
+  setBlackBounds(left: number, right: number, bottom: number, top: number): void;
+  setMaxBounds(left: number, right: number, bottom: number, top: number): void;
   setEffectOpacity(opacity: number): void;
   setPixelateParams(size: number, divisor: number, exponent: number): void;
   dispose(): void;

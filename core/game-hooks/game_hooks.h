@@ -695,6 +695,10 @@ int GameHook_PitFallViewModule(int effectiveModule);
 // ─── Game-over view and wide iris (view_gates.c, iris_wide.c): game_over_view.h ───
 #include "game_over_view.h"
 
+// ─── The opening story's view budget (attract_view.c): attract_view.h ───
+#include "attract_view.h"
+#include "spotlight_growth.h"
+
 // ─── Custom player sprite sheets (player_sprite.c) ───
 
 // Overwrite the player gfx asset from a ZSPR sheet and take its palette into the PPU's private player
@@ -734,9 +738,19 @@ void GameHook_SetHideSpaceBeyondWalls(bool enable);
 
 // The tilemap words of the ceiling block, for a frame that should hide the space past the walls: the
 // request is on, the frame shows a room (player_is_indoors, in a live game module), and the room is a
-// house, a cave or the sanctuary. Returns the word count with |words| pointing at them, or 0 with
+// house, a cave or the sanctuary. A palace room answers no, and so does any room drawn with a dungeon's
+// tileset, whatever its entrance says. Returns the word count with |words| pointing at them, or 0 with
 // nothing to hide. Asked once per frame by ZeldaDrawPpuFrame, after PpuBeginDrawing has reset the flags.
 int GameHook_HideSpaceBeyondWallsFill(const uint16 **words);
+
+// ─── The Space Around A Fixed Picture (fixed_picture_edges.c) ───
+
+// Which layers should draw a screen's own background block in the space around it, as a bit per layer
+// for PpuSetEdgeTiles. Non-zero only while the frame shows one of the still pictures that fill the
+// original frame and stop there: the logo, the falling triforce, the title screen, the file screen and
+// its copy, erase and name flows. ZeldaDrawPpuFrame asks once per frame, and ConfigurePpuSideSpace tests
+// the same answer to decide whether the rows above and below the picture can be opened at all.
+int GameHook_FixedPictureEdgeLayers(void);
 
 // ─── HUD/Pause Override (hud_override.c) ───
 

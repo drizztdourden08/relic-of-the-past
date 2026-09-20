@@ -8,6 +8,7 @@
 #include "messaging.h"
 #include "attract.h"
 #include "sprite_main.h"
+#include "game_hooks.h"
 
 const uint16 kMapMode_Zooms1[240] = {
   375, 374, 373, 373, 372, 371, 371, 370, 369, 369, 368, 367, 367, 366, 365, 365,
@@ -109,8 +110,11 @@ static const uint8 kAttract_Legendgraphics_3[265+1] = {
 void Attract_DrawSpriteSet2(const AttractOamInfo *p, int n) {
   OamEnt *oam = &oam_buf[attract_oam_idx + 64];
   attract_oam_idx += n;
-  for (; n--; oam++)
+  for (; n--; oam++) {
     SetOamPlain(oam, attract_x_base + p[n].x, attract_y_base + p[n].y, p[n].c, p[n].f, p[n].e);
+    GameHook_AttractOamEntry(oam, p[n].x, p[n].y);
+  }
+  GameHook_AttractDrawEnd();
 }
 
 void Attract_ZeldaPrison_Case0() {
@@ -202,6 +206,9 @@ void Attract_ZeldaPrison_DrawA() {
   int j = (attract_var1 >> 3) & 1;
   SetOamPlain(oam + 0, attract_x_base, attract_y_base + j, 6, 0x3d, ext);
   SetOamPlain(oam + 1, attract_x_base, attract_y_base + 10, j ? 10 : 8, 0x3d, ext);
+  GameHook_AttractOamEntry(oam + 0, 0, j);
+  GameHook_AttractOamEntry(oam + 1, 0, 10);
+  GameHook_AttractDrawEnd();
   attract_oam_idx += 2;
 }
 
@@ -742,9 +749,10 @@ void Attract_ThroneRoom() {  // 8cf1c8
     const AttractOamInfo *oamp = &kThroneRoom_Oams[kThroneRoom_OamOffs[i]];
     int n = kThroneRoom_OamOffs[i + 1] - kThroneRoom_OamOffs[i];
     uint16 y = kAttract_ThroneRoom_Ybase[i] - BG2VOFS_copy;
-    if (!sign16(y + 32)) {
+    if (!sign16(y + 32) || GameHook_AttractSpriteEntersFromAbove((int16)y)) {
       attract_x_base = kAttract_ThroneRoom_Xbase[i];
       attract_y_base = y;
+      GameHook_AttractDrawOrigin(kAttract_ThroneRoom_Xbase[i], (int16)y);
       Attract_DrawSpriteSet2(oamp, n);
     }
   }
@@ -764,13 +772,14 @@ void AttractDramatize_Prison() {  // 8cf27a
     Attract_FadeInStep();
   attract_x_base = 56;
   Attract_DrawZelda();
-  if (attract_var10 >= 192) {
+  if (attract_var10 >= 192 || GameHook_AttractEscortInView((int16)attract_vram_dst)) {
     attract_y_base = 112;
     if (sign8(--attract_var17))
       attract_var17 = 0xf;
     int t = attract_vram_dst + kAttract_ZeldaPrison_Tab0[attract_var17];
     attract_x_base_hi = t >> 8;
     attract_x_base = t;
+    GameHook_AttractDrawOrigin((int16)t, attract_y_base);
     Attract_ZeldaPrison_DrawA();
 
     for (int k = 1; k >= 0; k--) {
