@@ -2,7 +2,7 @@
 /**
  * Decode the dialog mirror snapshot (core/game-hooks/dialog_mirror.c) into a DialogFrame.
  *
- * Header, 20 bytes: 0 active, 1 flags (bit0 bordered, bit1 story), 2-3 top-left word address,
+ * Header, 20 bytes: 0 active, 1 flags (bit0 bordered, bit1 story, bit2 native box withheld), 2-3 top-left word address,
  * 4 render state, 5 last command, 6 choice index, 7 scroll step, 8-9 message id, 10-12 cells per
  * row, 13 generation, 14 the message's widest row, 15 its most rows, 16-17 and 18-19 the text layer's
  * signed horizontal and vertical scroll. Then 3 rows of 40 cells of (glyph, x, w).
@@ -43,6 +43,7 @@ const parseDialogState = (heap: Uint8Array, ptr: number): DialogFrame => {
     choice: heap[ptr + 6],
     messageId: readU16(heap, ptr + 8),
     renderState: heap[ptr + 4],
+    nativeHidden: (flags & 4) !== 0,
     generation: heap[ptr + 13],
     messageWidth: heap[ptr + 14],
     messageRows: heap[ptr + 15],
@@ -53,7 +54,8 @@ const parseDialogState = (heap: Uint8Array, ptr: number): DialogFrame => {
 
 const INACTIVE_FRAME: DialogFrame = {
   active: false, kind: 'box', topleft: 0, rows: [[], [], []], scrollStep: 0,
-  wait: 'none', choice: 0, messageId: 0, renderState: 0, generation: 0, messageWidth: 0, messageRows: 0,
+  wait: 'none', choice: 0, messageId: 0, renderState: 0, nativeHidden: false, generation: 0,
+  messageWidth: 0, messageRows: 0,
   layerScrollX: 0, layerScrollY: 0,
 };
 
