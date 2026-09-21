@@ -14,6 +14,7 @@ const dialogFrameChanged = (prev: DialogFrame, next: DialogFrame): boolean => {
   if (prev.active !== next.active || prev.kind !== next.kind || prev.topleft !== next.topleft) return true;
   if (prev.scrollStep !== next.scrollStep || prev.wait !== next.wait || prev.choice !== next.choice) return true;
   if (prev.messageId !== next.messageId || prev.renderState !== next.renderState || prev.generation !== next.generation) return true;
+  if (prev.nativeHidden !== next.nativeHidden) return true;
   if (prev.layerScrollX !== next.layerScrollX || prev.layerScrollY !== next.layerScrollY) return true;
   return prev.rows.some((row, i) => rowChanged(row, next.rows[i]));
 };

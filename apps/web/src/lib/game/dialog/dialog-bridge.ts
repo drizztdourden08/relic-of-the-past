@@ -2,7 +2,8 @@
 /**
  * Per-frame read of the dialog mirror, run from the UI bridge's animation-frame loop. Only a
  * changed frame reaches the store. Off (a closed gate) reads as an inactive frame, so the host
- * box stands down the moment the override is refused.
+ * box stands down the moment the override is refused, and so does stopping the bridge: the last
+ * frame read would otherwise stay in the store, painting a box over whatever comes next.
  */
 import type { DialogFrame } from '@shared/game/dialog/dialog-frame.types';
 import { wasmGetDialogState } from '../bridge/dialog';
@@ -28,6 +29,7 @@ const initDialogBridge = (updater: (frame: DialogFrame) => void): void => {
 };
 
 const stopDialogBridge = (): void => {
+  frameUpdater?.(INACTIVE_FRAME);
   frameUpdater = null;
   prevFrame = null;
 };
