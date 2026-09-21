@@ -46,3 +46,35 @@ bool GameHook_DialogSuppressDraw(bool wanted) {
 bool DialogSuppress_NativeHidden(void) {
   return g_decided && g_hidden;
 }
+
+// ─── Repair ───
+// A state saved while a box was stranded carries those tiles in its own VRAM, so the frame comes back
+// with it however the core that loads it behaves. The box is told from the room by tile identity: the
+// engine's own border tiles sitting on the text layer with no message running is a box nothing is going
+// to take down. Filling it with the blank the engine fills is what its tear-down would have written.
+//
+// The tiles and the fill are kText_BorderTiles (messaging.c), copied here because that table is file
+// private to the vendored decompilation. Corners and edges only; the table's middle entry IS the fill.
+static const uint16 kBoxBorderTiles[8] = {
+  0x28f3, 0x28f4, 0x68f3, 0x28c8, 0x68c8, 0xa8f3, 0xa8f4, 0xe8f3,
+};
+// The fill and the span of RenderText_Draw_Finish's own tear-down stripe (0x2E42 words of 0x387F).
+enum { kBoxBlankTile = 0x387f, kBoxWords = 280, kVramWords = 0x8000 };
+
+static bool IsBoxBorderTile(uint16 tile) {
+  for (int i = 0; i < 8; i++)
+    if (tile == kBoxBorderTiles[i]) return true;
+  return false;
+}
+
+void DialogSuppress_RepairStrandedBox(void) {
+  if (messaging_module != 0 || g_zenv.ppu == NULL) return;
+  if ((unsigned)text_msgbox_topleft + kBoxWords > kVramWords) return;
+  uint16 *box = &g_zenv.ppu->vram[text_msgbox_topleft];
+  bool stranded = false;
+  for (int i = 0; i < kBoxWords && !stranded; i++)
+    stranded = IsBoxBorderTile(box[i]);
+  if (!stranded) return;
+  for (int i = 0; i < kBoxWords; i++)
+    box[i] = kBoxBlankTile;
+}

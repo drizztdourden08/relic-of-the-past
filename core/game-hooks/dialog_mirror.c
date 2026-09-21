@@ -172,6 +172,9 @@ bool GameHook_DialogNativeHidden(void) {
 EMSCRIPTEN_KEEPALIVE
 void WasmDialogMarkStale(void) {
   g_stale = true;
+  // The host calls this right after every state load, which is the one moment a box can appear on the
+  // text layer without the engine having drawn it this session (dialog_suppress.c).
+  DialogSuppress_RepairStrandedBox();
 }
 
 // ─── Snapshot ───

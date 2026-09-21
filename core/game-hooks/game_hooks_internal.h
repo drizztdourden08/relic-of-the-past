@@ -188,5 +188,7 @@ bool HudOverride_DialogHidden(void);
 // and true while the native box is the one being withheld.
 void DialogSuppress_MessageStarted(void);
 bool DialogSuppress_NativeHidden(void);
+// Takes down a box left on the text layer by a state that was saved with one stranded.
+void DialogSuppress_RepairStrandedBox(void);
 
 #endif // GAME_HOOKS_INTERNAL_H
