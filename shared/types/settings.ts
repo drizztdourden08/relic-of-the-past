@@ -250,6 +250,7 @@ interface GameSettings {
   hudHeartMode: 'original' | 'smooth';
   hudMagicMode: 'original' | 'accurate';
   hudCountLayout: 'centered' | 'original';
+  hudCountdownStyle: 'pixel' | 'smooth';
   hudPauseStyle: 'vanilla' | 'enhanced';
   hudPauseHighlight: 'box' | 'glow' | 'none';
 

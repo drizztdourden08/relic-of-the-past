@@ -52,6 +52,8 @@ const GOLD: TokenGroup = {
     { name: 'gold', cssVar: '--c-gold', value: '#c8a84e' },
     { name: 'gold-bright', cssVar: '--c-gold-bright', value: '#e4c65a' },
     { name: 'gold-dim', cssVar: '--c-gold-dim', value: '#2a2418', note: 'dim fill bg' },
+    { name: 'gold-shade', cssVar: '--c-gold-shade', value: '#8c6a2a', note: 'pixel art shade' },
+    { name: 'gold-deep', cssVar: '--c-gold-deep', value: '#50431f', note: 'pixel art deep fill' },
     { name: 'gold-soft', cssVar: '--c-gold-soft', value: 'gold 14%', note: 'glow / selected' },
   ],
 };

@@ -42,6 +42,8 @@
   --c-gold:          #c8a84e;
   --c-gold-bright:   #e4c65a;
   --c-gold-dim:      #2a2418;            /* dim fill bg */
+  --c-gold-shade:    #8c6a2a;            /* pixel art: gold one step down, the shaded side */
+  --c-gold-deep:     #50431f;            /* pixel art: gold two steps down, a fill that sits under digits */
   --c-gold-soft:     rgb(200 168 78 / 0.14);
 
   /* ─── Accent: GREEN = secondary, used contextually for positive / success / go ─── */

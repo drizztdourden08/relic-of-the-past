@@ -31,6 +31,7 @@ const VANILLA_SAFE_LOCKED_SETTINGS: readonly string[] = [
   'hudHeartMode',
   'hudMagicMode',
   'hudCountLayout',
+  'hudCountdownStyle',
   'hudPauseStyle',
   'hudPauseHighlight',
   // Renderer effects that visibly differ from the cartridge, hand-gated in buildPpuFlags.
