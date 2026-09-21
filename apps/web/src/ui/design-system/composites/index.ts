@@ -5,6 +5,8 @@ export { DataTable, FieldPicker } from './DataTable';
 export type {
   ColumnActions, ColumnDragBinding, DataTableProps, FieldPickerProps, PickerNode,
 } from './DataTable';
+export { ConfirmIconButton } from './ConfirmIconButton';
+export type { ConfirmIconButtonProps } from './ConfirmIconButton';
 export { Dialog } from './Dialog';
 export { DialogShell } from './DialogShell';
 export type { DialogShellProps } from './DialogShell';
