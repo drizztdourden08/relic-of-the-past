@@ -28,6 +28,7 @@ const initialState: GameUIState = {
   text: { messageId: 0, messagingModule: 0, renderPhase: 0, incrementalState: 0, choice: 0, waitTimer: 0, isActive: false },
   map: { overworldMapState: 0, dungeonFloor: 0, dungeonIdx: 0, dungeonInitState: 0, palaceIndex: 0xff, roomIndex: 0, currentFloor: 0, overworldScreenIndex: 0, overworldAreaIndex: 0, isIndoors: false, isDarkWorld: false, whichEntrance: 0, linkLayer: 0, linkX: 0, linkY: 0 },
   floorIndicator: { timer: 0, floor: 0, isVisible: false },
+  countdown: { seconds: 0xff, frames: 0, isRunning: false },
   saveMenu: { cursorPosition: 0, sourceModule: 0, progressIndicator: 0 },
 };
 
