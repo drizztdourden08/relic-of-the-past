@@ -147,6 +147,9 @@ void GameHook_DialogMeasure(void) {
 }
 
 void GameHook_DialogCleared(void) {
+  // Ahead of the gate: the box's owner is decided once per message whatever the feature words say,
+  // since Skip Dialog withholds the native box with the mirror off (dialog_suppress.c).
+  DialogSuppress_MessageStarted();
   if (!DialogMirror_Recording()) return;
   memset(&g_mirror, 0, sizeof g_mirror);
   g_generation++;
@@ -169,11 +172,14 @@ bool GameHook_DialogNativeHidden(void) {
 EMSCRIPTEN_KEEPALIVE
 void WasmDialogMarkStale(void) {
   g_stale = true;
+  // The host calls this right after every state load, which is the one moment a box can appear on the
+  // text layer without the engine having drawn it this session (dialog_suppress.c).
+  DialogSuppress_RepairStrandedBox();
 }
 
 // ─── Snapshot ───
 // Header, 20 bytes:
-//   0 active   1 flags (bit0 bordered, bit1 story)   2-3 text_msgbox_topleft
+//   0 active   1 flags (bit0 bordered, bit1 story, bit2 native box withheld)   2-3 text_msgbox_topleft
 //   4 text_render_state   5 last command   6 choice index   7 scroll step (0..15)
 //   8-9 dialogue_message_index   10-12 cell count per row   13 generation
 //   14 the message's widest row in text-area pixels   15 the most rows it shows
@@ -188,7 +194,7 @@ int WasmGetDialogState(void) {
   uint8 *b = g_snapshot;
   // Every caller runs the engine each frame its message is up (dialog_presence.c), whichever module it is.
   b[0] = DialogPresence_Active();
-  b[1] = (g_mirror.bordered ? 1 : 0) | (g_mirror.story ? 2 : 0);
+  b[1] = (g_mirror.bordered ? 1 : 0) | (g_mirror.story ? 2 : 0) | (DialogSuppress_NativeHidden() ? 4 : 0);
   PutU16(b, 2, text_msgbox_topleft);
   b[4] = text_render_state;
   b[5] = g_mirror.last_cmd;

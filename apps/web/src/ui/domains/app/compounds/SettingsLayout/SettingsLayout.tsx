@@ -11,12 +11,14 @@ import { DisabledOverlay } from '../../../../design-system/composites/DisabledOv
 import { DISABLED_SETTING_MESSAGES } from '../../../../design-system/composites/DisabledOverlay/DisabledOverlay.constants';
 import { partitionByLockState } from './behavior/partitionByLockState';
 import { resolveSections } from './behavior/resolveSections';
+import { changedKeys, defaultsPatch } from './behavior/sectionDefaults';
+import { SectionHeading } from './sub-components/SectionHeading';
 import { RandomizerLockContext } from './randomizer-lock-context';
 import './SettingsLayout.css';
 import { type SettingItem, type SettingLockCause, type SettingsLayoutProps } from './SettingsLayout.type';
 
 const SettingsLayout = (props: SettingsLayoutProps) => {
-  const { sections, settings, onChange, renderControl, isDisabled, onOpenVanillaSafeSettings } = props;
+  const { sections, settings, defaults, onChange, renderControl, isDisabled, onOpenVanillaSafeSettings } = props;
   // A control is locked when Vanilla Safe is on AND the setting behind it stops working. That comes
   // from two places: the registry flag covers gate-word features, and vanilla-safe-settings.ts covers
   // the rest (cheats, MSU, the custom sprite, the overlay HUD, the two hand-gated renderer effects),
@@ -39,6 +41,7 @@ const SettingsLayout = (props: SettingsLayoutProps) => {
       isRandomizerLocked(key) ? 'randomizer' : isVanillaSafeLocked(key) ? 'vanillaSafe' : null,
     [isRandomizerLocked, isVanillaSafeLocked],
   );
+  const isLockedKey = useCallback((key: string) => lockCauseOf(key) !== null, [lockCauseOf]);
   const [filter, setFilter] = useState('');
   const [activeId, setActiveId] = useState('');
   const contentRef = useRef<HTMLDivElement>(null);
@@ -99,43 +102,56 @@ const SettingsLayout = (props: SettingsLayoutProps) => {
         {filteredSections.length === 0 && (
           <Box className="settings-layout__empty">No settings match "{filter}"</Box>
         )}
-        {filteredSections.map((section) => (
-          <Box key={section.id} className="settings-layout__section" data-section={section.id}>
-            <Text as="h2" className="settings-layout__section-title">{section.title}</Text>
-            {section.groups.map((group, groupIndex) => (
-              <Box key={group.id ?? groupIndex} className="settings-layout__subsection" data-section={group.id ?? undefined}>
-                {group.title && <Text as="h3" className="settings-layout__subsection-title">{group.title}</Text>}
-                <Box className="settings-layout__group">
-                  {partitionByLockState(group.items, lockCauseOf).map((run, runIndex) => {
-                    const rows = run.items.map((item) => {
-                      const custom = renderControl?.(item.key, settings, onChange);
-                      const control = custom ?? renderToggle(item.key, item);
+        {filteredSections.map((section) => {
+          // A search narrows a section to the rows it still shows, and the reset follows that:
+          // it offers exactly the settings in front of the reader, never hidden ones.
+          const resettable = defaults ? changedKeys(section.groups, settings, defaults, isLockedKey) : [];
+          return (
+            <Box key={section.id} className="settings-layout__section" data-section={section.id}>
+              {defaults
+                ? (
+                  <SectionHeading
+                    title={section.title}
+                    changedCount={resettable.length}
+                    onReset={() => onChange(defaultsPatch(resettable, settings, defaults))}
+                  />
+                )
+                : <Text as="h2" className="settings-layout__section-title">{section.title}</Text>}
+              {section.groups.map((group, groupIndex) => (
+                <Box key={group.id ?? groupIndex} className="settings-layout__subsection" data-section={group.id ?? undefined}>
+                  {group.title && <Text as="h3" className="settings-layout__subsection-title">{group.title}</Text>}
+                  <Box className="settings-layout__group">
+                    {partitionByLockState(group.items, lockCauseOf).map((run, runIndex) => {
+                      const rows = run.items.map((item) => {
+                        const custom = renderControl?.(item.key, settings, onChange);
+                        const control = custom ?? renderToggle(item.key, item);
+                        return (
+                          <Box key={item.key} data-setting-key={item.key} className="settings-layout__row">
+                            {control}
+                          </Box>
+                        );
+                      });
+                      if (!run.lock) return rows;
+                      // The randomizer lock is permanent for the profile, so it names its cause
+                      // and offers no action; the Vanilla Safe lock keeps its deep-link default.
                       return (
-                        <Box key={item.key} data-setting-key={item.key} className="settings-layout__row">
-                          {control}
-                        </Box>
+                        <DisabledOverlay
+                          key={`locked-${runIndex}`}
+                          active
+                          contained
+                          message={run.lock === 'randomizer' ? DISABLED_SETTING_MESSAGES.randomizer : undefined}
+                          onOpenSettings={run.lock === 'randomizer' ? undefined : (onOpenVanillaSafeSettings ?? (() => {}))}
+                        >
+                          {rows}
+                        </DisabledOverlay>
                       );
-                    });
-                    if (!run.lock) return rows;
-                    // The randomizer lock is permanent for the profile, so it names its cause
-                    // and offers no action; the Vanilla Safe lock keeps its deep-link default.
-                    return (
-                      <DisabledOverlay
-                        key={`locked-${runIndex}`}
-                        active
-                        contained
-                        message={run.lock === 'randomizer' ? DISABLED_SETTING_MESSAGES.randomizer : undefined}
-                        onOpenSettings={run.lock === 'randomizer' ? undefined : (onOpenVanillaSafeSettings ?? (() => {}))}
-                      >
-                        {rows}
-                      </DisabledOverlay>
-                    );
-                  })}
+                    })}
+                  </Box>
                 </Box>
-              </Box>
-            ))}
-          </Box>
-        ))}
+              ))}
+            </Box>
+          );
+        })}
       </Box>
     </SettingsShell>
   );

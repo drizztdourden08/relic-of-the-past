@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { SettingsLayout } from '../../../compounds/SettingsLayout';
 import { openVanillaSafeSettings } from '@app/stores/search-store';
+import { DEFAULT_SETTINGS } from '@app/lib/game/settings';
 import { SECTIONS } from './audio-settings-sections';
 import { renderControl, isDisabled } from './audio-settings-controls';
 import { useMsuPackProfile } from './useMsuPackProfile';
@@ -24,6 +25,7 @@ const AudioSettings = (props: AudioSettingsProps) => {
     <SettingsLayout
       sections={SECTIONS}
       settings={settings}
+      defaults={DEFAULT_SETTINGS}
       onChange={onChange}
       renderControl={boundRenderControl}
       isDisabled={isDisabled}

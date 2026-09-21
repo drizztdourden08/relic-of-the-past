@@ -3,6 +3,8 @@
  * The enhanced message box. Reads the core's dialog mirror through the dialog store and the look
  * from the dialog settings store, and draws the frame and rows over the canvas in either HUD mode.
  * Skipped messages never show: with skip-dialog on, only a box that waits on a choice is drawn.
+ * Nothing is drawn for a message the core is still drawing itself, which is how a setting changed
+ * mid-message lands: that message stays native and the next one is ours (dialog_suppress.c).
  * After a save-state load the store is stale until the next message, and nothing is drawn. The box
  * fades in when a message starts and fades out on its last content when it closes.
  */
@@ -46,7 +48,7 @@ const DialogView = () => {
 
   const liveWait = useChoiceLatch(liveFrame);
   const waitsOnPlayerChoice = liveWait === 'choice' || liveWait === 'item';
-  const show = liveFrame.active && !stale && (!autoSkipDialog || waitsOnPlayerChoice);
+  const show = liveFrame.active && liveFrame.nativeHidden && !stale && (!autoSkipDialog || waitsOnPlayerChoice);
   const fade = useFadePresence(show);
 
   // A closed box fades out on what it last showed, so the last shown frame is kept while it fades.

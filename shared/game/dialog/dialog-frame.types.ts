@@ -34,6 +34,12 @@ interface DialogFrame {
   messageId: number;
   /** The engine's kText_Render state, 0..4. */
   renderState: number;
+  /**
+   * Whether the core is withholding the native box for this message. Decided once as the message
+   * opens and held for its life (core/game-hooks/dialog_suppress.c), so the host box draws only
+   * where the native one is actually standing down and the two can never both be up.
+   */
+  nativeHidden: boolean;
   /** Messages started since boot, modulo 256; a loaded state does not advance it. */
   generation: number;
   /** The text layer's live scroll in game pixels, as the renderer draws it (the story crawl moves its words this way). */

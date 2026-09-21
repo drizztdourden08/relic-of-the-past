@@ -2402,8 +2402,10 @@ static bool Text_MessageHasChoice() {
 // With auto-skip-dialog on, non-choice message boxes complete their state machine (all
 // end-of-message side-effects still fire) but withhold every VRAM upload so the box and
 // text never reach the screen. Choice messages are exempt so the player can still respond.
+// The hook holds the answer steady for the life of one message, so a setting changed while a box is
+// on screen cannot withhold the tear-down of a box that was drawn (dialog_suppress.c).
 static bool Text_ShouldSuppressDraw() {
-  return ((enhanced_features0 & kFeatures0_AutoSkipDialog) && !Text_MessageHasChoice()) || GameHook_DialogNativeHidden();
+  return GameHook_DialogSuppressDraw(((enhanced_features0 & kFeatures0_AutoSkipDialog) && !Text_MessageHasChoice()) || GameHook_DialogNativeHidden());
 }
 
 void RenderText_Draw_Border() {  // 8ec8ea

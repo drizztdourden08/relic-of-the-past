@@ -31,4 +31,9 @@ void GameHook_DialogCommand(uint8 cmd);
 // True while the native box must stay off VRAM. Text_ShouldSuppressDraw ORs this in.
 bool GameHook_DialogNativeHidden(void);
 
+// The whole of Text_ShouldSuppressDraw's answer, latched per message (dialog_suppress.c). |wanted| is
+// what the settings ask for right now; the answer is what the message it belongs to must keep, so the
+// box that was drawn is the box that gets torn down.
+bool GameHook_DialogSuppressDraw(bool wanted);
+
 #endif  // GAME_HOOKS_DIALOG_HOOKS_H

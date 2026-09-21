@@ -35,6 +35,9 @@ interface Section {
 interface SettingsLayoutProps {
   sections: Section[];
   settings: GameSettings;
+  /** The app's factory settings, which the per-section reset writes back. Omit it and the
+   *  sections render as bare headings with no reset action. */
+  defaults?: GameSettings;
   onChange: (patch: Partial<GameSettings>) => void;
   renderControl?: (key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void) => ReactNode | null;
   isDisabled?: (key: string, settings: GameSettings) => boolean;

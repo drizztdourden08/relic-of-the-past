@@ -184,5 +184,11 @@ void DialogPresence_MessageStarted(void);
 bool DialogPresence_Active(void);
 // Reconciled result of the host's wanted dialog hide against kFeatures3_HudOverride.
 bool HudOverride_DialogHidden(void);
+// The message box's owner for the message now open (dialog_suppress.c): reset as each one starts,
+// and true while the native box is the one being withheld.
+void DialogSuppress_MessageStarted(void);
+bool DialogSuppress_NativeHidden(void);
+// Takes down a box left on the text layer by a state that was saved with one stranded.
+void DialogSuppress_RepairStrandedBox(void);
 
 #endif // GAME_HOOKS_INTERNAL_H
