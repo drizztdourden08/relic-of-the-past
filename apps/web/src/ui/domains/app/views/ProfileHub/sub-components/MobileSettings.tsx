@@ -3,6 +3,7 @@
 import type { GameSettings } from '@shared/types/settings';
 import { SettingsLayout, type Section } from '../../../compounds/SettingsLayout';
 import { openVanillaSafeSettings } from '@app/stores/search-store';
+import { DEFAULT_SETTINGS } from '@app/lib/game/settings';
 import { MOBILE_SECTION } from './SettingsView.constants';
 
 interface MobileSettingsProps {
@@ -18,6 +19,7 @@ const MobileSettings = (props: MobileSettingsProps) => {
     <SettingsLayout
       sections={SECTIONS}
       settings={settings}
+      defaults={DEFAULT_SETTINGS}
       onChange={onChange}
       onOpenVanillaSafeSettings={openVanillaSafeSettings}
     />

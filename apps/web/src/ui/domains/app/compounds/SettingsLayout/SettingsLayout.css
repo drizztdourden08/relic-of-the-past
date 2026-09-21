@@ -25,6 +25,34 @@
   gap: var(--space-lg);
 }
 
+/* Title and its reset action share the section's underline, so the action reads as belonging
+   to the heading and not to the first row beneath it. */
+.settings-layout__section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding-bottom: var(--space-xs);
+  border-bottom: 1px solid var(--c-border);
+}
+
+.settings-layout__section-heading .settings-layout__section-title {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+/* The action sits back until the heading is hovered or it holds focus, so a panel of
+   sections is not a column of competing buttons. It stays visible either way. */
+.settings-layout__section-reset {
+  opacity: 0.55;
+  transition: opacity var(--transition-fast);
+}
+
+.settings-layout__section-heading:hover .settings-layout__section-reset,
+.settings-layout__section-reset:focus-within {
+  opacity: 1;
+}
+
 .settings-layout__section-title {
   font-size: var(--text-lg);
   font-weight: var(--weight-semi);

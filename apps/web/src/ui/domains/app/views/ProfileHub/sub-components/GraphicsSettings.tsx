@@ -4,6 +4,7 @@ import { type ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { SettingsLayout, type Section } from '../../../compounds/SettingsLayout';
 import { openVanillaSafeSettings } from '@app/stores/search-store';
+import { DEFAULT_SETTINGS } from '@app/lib/game/settings';
 import { RENDERING_SECTION, ENHANCEMENTS_SECTION } from './SettingsView.constants';
 import { APPEARANCE_SECTION } from './graphics-settings-sections';
 import { PlayerSpriteSelector } from './PlayerSpriteSelector';
@@ -40,6 +41,7 @@ const GraphicsSettings = (props: GraphicsSettingsProps) => {
     <SettingsLayout
       sections={SECTIONS}
       settings={settings}
+      defaults={DEFAULT_SETTINGS}
       onChange={onChange}
       renderControl={renderControl}
       isDisabled={isDisabled}
