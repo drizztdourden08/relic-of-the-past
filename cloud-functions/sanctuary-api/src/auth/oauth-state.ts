@@ -8,15 +8,12 @@ import { randomBytes } from 'node:crypto';
 import type { Request, Response } from '@google-cloud/functions-framework';
 import type { Provider } from '../../../../shared/sanctuary';
 import { badRequest } from '../http/http-error';
-import { readCookie, setCookie, clearCookie } from '../http/cookies';
+import { readSlot, writeSlot, OAUTH_TTL_SECONDS } from '../http/session-jar';
 import { signingKey } from './signing-key';
 
 type OauthIntent = 'signin' | 'link' | 'device';
 type OauthState = { provider: Provider; intent: OauthIntent; verifier: string; returnTo: string };
 
-const COOKIE = 'sanctuary_oauth';
-const COOKIE_PATH = '/api/auth';
-const TTL_SECONDS = 10 * 60;
 
 const randomToken = (): string => randomBytes(32).toString('base64url');
 
@@ -24,22 +21,22 @@ const randomToken = (): string => randomBytes(32).toString('base64url');
 const safeReturnTo = (raw: string | undefined): string =>
   raw && raw.startsWith('/') && !raw.startsWith('//') ? raw : '/';
 
-const issueOauthState = async (res: Response, state: OauthState): Promise<string> => {
+const issueOauthState = async (req: Request, res: Response, state: OauthState): Promise<string> => {
   const stateId = randomToken();
   const jwt = await new SignJWT({ ...state })
     .setProtectedHeader({ alg: 'HS256' })
     .setJti(stateId)
     .setIssuedAt()
-    .setExpirationTime(`${TTL_SECONDS}s`)
+    .setExpirationTime(`${OAUTH_TTL_SECONDS}s`)
     .sign(signingKey());
-  setCookie(res, COOKIE, jwt, { maxAgeSeconds: TTL_SECONDS, path: COOKIE_PATH });
+  writeSlot(req, res, 'oauth', jwt);
   return stateId;
 };
 
 const readOauthState = async (req: Request, res: Response, provider: Provider): Promise<OauthState> => {
-  const jwt = readCookie(req, COOKIE);
+  const jwt = readSlot(req, 'oauth');
   const echoed = typeof req.query.state === 'string' ? req.query.state : null;
-  clearCookie(res, COOKIE, COOKIE_PATH);
+  writeSlot(req, res, 'oauth', null);
   if (!jwt || !echoed) throw badRequest('The sign-in flow expired. Start again.');
   try {
     const { payload } = await jwtVerify(jwt, signingKey(), { algorithms: ['HS256'] });

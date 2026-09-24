@@ -5,13 +5,12 @@
 import { SignJWT, jwtVerify } from 'jose';
 import type { Request, Response } from '@google-cloud/functions-framework';
 import { LIMITS } from '../../../../shared/sanctuary';
-import { readCookie, setCookie, clearCookie } from '../http/cookies';
+import { readSlot, writeSlot } from '../http/session-jar';
 import { usersRepo } from '../db/users-repo';
 import { signingKey } from './signing-key';
 
 type Session = { userId: string; v: number };
 
-const COOKIE = 'sanctuary_session';
 const TTL_SECONDS = LIMITS.sessionDays * 24 * 60 * 60;
 
 const signSession = (session: Session): Promise<string> =>
@@ -21,22 +20,22 @@ const signSession = (session: Session): Promise<string> =>
     .setExpirationTime(`${TTL_SECONDS}s`)
     .sign(signingKey());
 
-const setSessionCookie = (res: Response, jwt: string): void => {
-  setCookie(res, COOKIE, jwt, { maxAgeSeconds: TTL_SECONDS });
+const setSessionCookie = (req: Request, res: Response, jwt: string): void => {
+  writeSlot(req, res, 'session', jwt);
 };
 
-const clearSessionCookie = (res: Response): void => {
-  clearCookie(res, COOKIE);
+const clearSessionCookie = (req: Request, res: Response): void => {
+  writeSlot(req, res, 'session', null);
 };
 
 /** Signs the user in on this response with their current session version. */
-const startSession = async (res: Response, userId: string): Promise<void> => {
+const startSession = async (req: Request, res: Response, userId: string): Promise<void> => {
   const user = await usersRepo.get(userId);
-  setSessionCookie(res, await signSession({ userId, v: user?.sessionVersion ?? 1 }));
+  setSessionCookie(req, res, await signSession({ userId, v: user?.sessionVersion ?? 1 }));
 };
 
 const readSession = async (req: Request): Promise<Session | null> => {
-  const jwt = readCookie(req, COOKIE);
+  const jwt = readSlot(req, 'session');
   if (!jwt) return null;
   try {
     const { payload } = await jwtVerify(jwt, signingKey(), { algorithms: ['HS256'] });

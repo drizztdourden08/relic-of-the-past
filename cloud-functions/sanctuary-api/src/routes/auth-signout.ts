@@ -13,7 +13,7 @@ const authSignOut: Route = {
   handler: async ({ req, res }) => {
     const session = await readSession(req);
     if (session && queryFlag(req, 'everywhere')) await usersRepo.bumpSessionVersion(session.userId);
-    clearSessionCookie(res);
+    clearSessionCookie(req, res);
     res.status(200).json({ ok: true });
   },
 };

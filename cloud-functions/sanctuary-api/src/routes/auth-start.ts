@@ -28,7 +28,7 @@ const authStart: Route = {
     const verifier = generateCodeVerifier();
     const requested = queryParam(req, 'return') ?? queryParam(req, 'returnTo');
     const returnTo = safeReturnTo(requested ?? (intent === 'link' ? '/account' : '/'));
-    const stateId = await issueOauthState(res, { provider: provider.name, intent, verifier, returnTo });
+    const stateId = await issueOauthState(req, res, { provider: provider.name, intent, verifier, returnTo });
     res.redirect(302, provider.authUrl(stateId, verifier, callbackUrlFor(provider.name)).toString());
   },
 };
