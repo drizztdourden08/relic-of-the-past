@@ -22,9 +22,23 @@ const GAME_LABEL = 'Play area';
 const subjectOf = (source: DragSource): DragSubject =>
   ({ fromKey: source.fromKey, isGame: source.isGame, loneWidget: source.loneWidget });
 
-const isOutside = (client: Point): boolean =>
-  client.x < -POP_MARGIN || client.y < -POP_MARGIN
-  || client.x > window.innerWidth + POP_MARGIN || client.y > window.innerHeight + POP_MARGIN;
+/**
+ * Past the window's edge, or pinned against the screen's: a maximized window
+ * reaches the screen edge, and the OS never lets the pointer go further, so
+ * the edge itself has to count.
+ */
+const isOutside = (client: Point, onScreen: Point): boolean => {
+  if (client.x < -POP_MARGIN || client.y < -POP_MARGIN) return true;
+  if (client.x > window.innerWidth + POP_MARGIN || client.y > window.innerHeight + POP_MARGIN) return true;
+  const display = window.screen as Screen & { availLeft?: number; availTop?: number };
+  const left = display.availLeft ?? 0;
+  const top = display.availTop ?? 0;
+  return onScreen.x <= left || onScreen.y <= top
+    || onScreen.x >= left + display.width - 1 || onScreen.y >= top + display.height - 1;
+};
+
+const mayLeave = (ctx: DragContext, source: DragSource): boolean =>
+  !source.isGame && source.id !== null && (ctx.canPopOut?.(source.id) ?? true);
 
 const wantedRect = (source: DragSource, pointer: Point): Rect =>
   ({ x: pointer.x - source.grab.x, y: pointer.y - source.grab.y, width: source.size.width, height: source.size.height });
@@ -45,12 +59,24 @@ const paneUnder = (ctx: DragContext, pointer: Point, fromKey: string | null): st
   return leaf && leaf.node.key !== fromKey ? leaf.node.key : null;
 };
 
-const viewFor = (ctx: DragContext, source: DragSource, pointer: Point, client: Point, held: { shift: boolean; ctrl: boolean }): DragView => {
+interface PointerPlace {
+  /** Stage coordinates. */
+  pointer: Point;
+  /** Window coordinates. */
+  client: Point;
+  /** Screen coordinates. */
+  onScreen: Point;
+}
+
+const viewFor = (ctx: DragContext, source: DragSource, place: PointerPlace, held: { shift: boolean; ctrl: boolean }): DragView => {
+  const { pointer, client, onScreen } = place;
   const swap = (ctx.modifiers.swap || held.shift) && !source.isGame && source.fromKey !== null;
   const overlay = ctx.modifiers.overlay || held.ctrl;
+  const atEdge = !source.isGame && isOutside(client, onScreen);
+  const canLeave = mayLeave(ctx, source);
   const view: DragView = {
     pointer, label: labelFor(ctx, source, swap, overlay), zones: [], hot: null, preview: null, refused: false,
-    swapKey: null, outside: !source.isGame && isOutside(client), swap, overlay,
+    swapKey: null, outside: atEdge && canLeave, stays: atEdge && !canLeave, canPopOut: canLeave, swap, overlay,
     floatingRect: source.floating ? wantedRect(source, pointer) : null,
   };
   if (!ctx.laid) return view;

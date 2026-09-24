@@ -12,11 +12,14 @@ import { useHeldActions } from '@app/hooks/useHeldActions';
 import { useWidgetsNeverFocus } from '@app/hooks/useWidgetsNeverFocus';
 import { useGameRectStore } from '@app/stores/game-rect-store';
 import { useWidgetLayoutStore } from '@app/stores/widget-layout-store';
+import { getWidgetDefinition } from '@ds/composites/Widget/behavior/createWidgetState';
 import { visibleLayoutOf } from './behavior/visible-layout';
 import { DockPane, labelOf } from './sub-components/DockPane';
 import { WidgetOptionsHost } from './sub-components/WidgetOptionsHost';
 import type { WidgetDockProps } from './WidgetDock.type';
 import './WidgetDock.css';
+
+const canPopOut = (id: WidgetId): boolean => getWidgetDefinition(id)?.popOut === true;
 
 const WidgetDock = (props: WidgetDockProps) => {
   const {
@@ -79,6 +82,7 @@ const WidgetDock = (props: WidgetDockProps) => {
         onGameRect={setRect}
         onEdit={apply}
         onPopOut={popOut}
+        canPopOut={canPopOut}
         labelOf={labelOf}
       />
       {optionsFor && (

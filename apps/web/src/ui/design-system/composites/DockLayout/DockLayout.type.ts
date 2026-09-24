@@ -35,6 +35,8 @@ interface DockLayoutProps {
   onEdit: (edit: LayoutEdit) => void;
   /** Dragging past the window's edge pops the widget out. */
   onPopOut?: (id: WidgetId) => void;
+  /** Whether a widget may leave for its own window; every widget may when absent. */
+  canPopOut?: (id: WidgetId) => boolean;
   labelOf: (id: WidgetId) => string;
   className?: string;
 }

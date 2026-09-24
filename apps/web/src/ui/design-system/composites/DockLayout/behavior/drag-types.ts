@@ -42,6 +42,10 @@ interface DragView {
   swapKey: string | null;
   /** The pointer is past the window's edge; a release pops the widget out. */
   outside: boolean;
+  /** The pointer is past the edge but this widget has no window of its own, so it stays. */
+  stays: boolean;
+  /** This widget may leave for its own window at all. */
+  canPopOut: boolean;
   swap: boolean;
   overlay: boolean;
   /** A floating widget follows the pointer live. */
@@ -56,6 +60,8 @@ interface DragContext {
   stage: Rect;
   modifiers: DragModifiers;
   labelOf: (id: WidgetId) => string;
+  /** Whether a widget may leave for its own window; every widget may when absent. */
+  canPopOut?: (id: WidgetId) => boolean;
 }
 
 export type { DragContext, DragSource, DragView, Point };

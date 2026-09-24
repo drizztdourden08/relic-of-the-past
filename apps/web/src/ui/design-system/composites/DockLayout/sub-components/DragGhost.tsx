@@ -16,6 +16,7 @@ interface DragGhostProps {
   swap: boolean;
   overlay: boolean;
   outside: boolean;
+  canPopOut: boolean;
 }
 
 /** How far the ghost sits from the pointer so the pointer never covers it. */
@@ -32,7 +33,7 @@ const Key = (props: { keys: string; does: string; lit: boolean }) => {
 };
 
 const DragGhost = (props: DragGhostProps) => {
-  const { pointer, label, swap, overlay, outside } = props;
+  const { pointer, label, swap, overlay, outside, canPopOut } = props;
   const style = useMemo<CSSProperties>(
     () => ({ left: pointer.x + GHOST_OFFSET, top: pointer.y + GHOST_OFFSET }),
     [pointer.x, pointer.y],
@@ -44,7 +45,9 @@ const DragGhost = (props: DragGhostProps) => {
         <Key keys="Shift" does="swap" lit={swap} />
         <Key keys="Ctrl" does="overlay" lit={overlay} />
         <Key keys="Esc" does="cancel" lit={false} />
-        <Key keys="Past the edge" does="pop out" lit={outside} />
+        {canPopOut
+          ? <Key keys="Past the edge" does="pop out" lit={outside} />
+          : <Text className="dock-ghost__does">stays in the app</Text>}
       </Box>
     </Box>
   );

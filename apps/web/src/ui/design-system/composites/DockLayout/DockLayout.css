@@ -212,6 +212,15 @@
   background: var(--c-scrim);
 }
 
+.dock-layout__popzone--stays {
+  border-color: var(--c-text-muted);
+  border-style: dotted;
+}
+
+.dock-layout__popzone--stays .dock-layout__popzone-label {
+  color: var(--c-text-muted);
+}
+
 .dock-ghost {
   display: flex;
   flex-direction: column;

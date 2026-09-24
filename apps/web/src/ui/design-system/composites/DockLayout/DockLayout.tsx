@@ -23,7 +23,7 @@ import { GameGrip } from './sub-components/GameGrip';
 import './DockLayout.css';
 
 const DockLayout = (props: DockLayoutProps) => {
-  const { layout, peek, modifiers, renderPane, renderFloating, onGameRect, onEdit, onPopOut, labelOf, className } = props;
+  const { layout, peek, modifiers, renderPane, renderFloating, onGameRect, onEdit, onPopOut, canPopOut, labelOf, className } = props;
   const stageRef = useRef<HTMLDivElement>(null);
   const size = useStageSize(stageRef);
 
@@ -43,8 +43,8 @@ const DockLayout = (props: DockLayoutProps) => {
   }, [gameRect, onGameRect]);
 
   const context = useMemo<DragContext>(
-    () => ({ laid, layout, gameRect, stage, modifiers, labelOf }),
-    [laid, layout, gameRect, stage, modifiers, labelOf],
+    () => ({ laid, layout, gameRect, stage, modifiers, labelOf, canPopOut }),
+    [laid, layout, gameRect, stage, modifiers, labelOf, canPopOut],
   );
   const { drag, dragId, onPointerDown } = useDockDrag({ stageRef, context, onEdit, onPopOut });
 
@@ -77,7 +77,16 @@ const DockLayout = (props: DockLayoutProps) => {
         );
       })}
       {drag && laid && <DropHints view={drag} laid={laid} />}
-      {drag && <DragGhost pointer={drag.pointer} label={drag.label} swap={drag.swap} overlay={drag.overlay} outside={drag.outside} />}
+      {drag && (
+        <DragGhost
+          pointer={drag.pointer}
+          label={drag.label}
+          swap={drag.swap}
+          overlay={drag.overlay}
+          outside={drag.outside}
+          canPopOut={drag.canPopOut}
+        />
+      )}
     </Box>
   );
 };

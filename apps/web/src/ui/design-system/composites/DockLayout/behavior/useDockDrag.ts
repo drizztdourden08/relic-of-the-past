@@ -78,7 +78,8 @@ const useDockDrag = (params: DockDragParams) => {
         setDragId(p.source.id);
       }
       const held = { shift: ev.shiftKey, ctrl: ev.ctrlKey };
-      p.view = viewFor(latest.current.context, p.source, point, { x: ev.clientX, y: ev.clientY }, held);
+      const place = { pointer: point, client: { x: ev.clientX, y: ev.clientY }, onScreen: { x: ev.screenX, y: ev.screenY } };
+      p.view = viewFor(latest.current.context, p.source, place, held);
       setDrag(p.view);
     };
     const onUp = (ev: PointerEvent): void => {

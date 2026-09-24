@@ -19,6 +19,7 @@ interface DropHintsProps {
 const GLYPHS = { left: '◧', right: '◨', top: '⬒', bottom: '⬓', tab: '⧉' } as const;
 const SWAP_LABEL = 'SWAP';
 const POP_LABEL = 'RELEASE TO POP OUT';
+const STAYS_LABEL = 'THIS WIDGET STAYS IN THE APP';
 
 const glyphOf = (zone: DropZone): string => {
   const { target } = zone;
@@ -66,9 +67,9 @@ const DropHints = (props: DropHintsProps) => {
           <Text className="dock-layout__swap-label">{SWAP_LABEL}</Text>
         </Box>
       )}
-      {view.outside && (
-        <Box className="dock-layout__popzone" aria-hidden="true">
-          <Text className="dock-layout__popzone-label">{POP_LABEL}</Text>
+      {(view.outside || view.stays) && (
+        <Box className={`dock-layout__popzone${view.stays ? ' dock-layout__popzone--stays' : ''}`} aria-hidden="true">
+          <Text className="dock-layout__popzone-label">{view.stays ? STAYS_LABEL : POP_LABEL}</Text>
         </Box>
       )}
     </>
