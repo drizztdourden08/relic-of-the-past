@@ -5,10 +5,12 @@
  */
 import type { TitleFrame } from '@shared/game/title/title-frame.type';
 import { brightness, flashOn, logoAlpha, phaseOf, sceneAlpha, swordShown, triforceShown } from '@shared/game/title/title-phase';
+import { SWORD_REST_BASE } from '@shared/game/title/title-layout';
 import type { Scene } from '../scene/compose-scene';
 import type { SceneClock } from '../scene/scene.type';
 import { drawSword } from './draw-sword';
-import { drawShine } from './draw-shine';
+import type { Shine } from './draw-shine';
+import type { LogoSweep } from './logo-sweep';
 import { drawTriforce, type TriforcePicture } from './draw-triforce';
 import { drawBrightness, drawFlash, drawLogo, drawLogoOverBlade, drawOpeningMark } from './draw-marks';
 
@@ -36,10 +38,13 @@ interface TitleFrameInput {
   dimFlashes: boolean;
   /** Whether the core is keeping its own title off the picture this frame. */
   hidden: boolean;
+  /** The recurring sparkle and the band that sweeps the logo, each with its own seeded schedule. */
+  shine: Shine;
+  sweep: LogoSweep;
 }
 
 const drawTitleFrame = (ctx: CanvasRenderingContext2D, input: TitleFrameInput): void => {
-  const { frame, clock, scene, sceneCanvas, pictures, triforce, poly, palette, dimFlashes, hidden } = input;
+  const { frame, clock, scene, sceneCanvas, pictures, triforce, poly, palette, dimFlashes, hidden, shine, sweep } = input;
   const { width, height, frameX, frameY } = scene.geometry;
   const phase = phaseOf(frame);
   ctx.imageSmoothingEnabled = false;
@@ -71,8 +76,10 @@ const drawTitleFrame = (ctx: CanvasRenderingContext2D, input: TitleFrameInput): 
     drawSword(ctx, pictures.sword, frame, frameX, frameY);
     drawLogoOverBlade(ctx, pictures.logo, logoAlpha(frame), frameX, frameY);
   }
-  // The recurring sparkle exists from the logo fade on and plays over the letters and the hilt.
-  if (frame.submodule >= 5 || frame.module !== 0) drawShine(ctx, frame, logoAlpha(frame), frameX, frameY);
+  // The recurring sparkle plays from the logo fade on; the sweep only once the picture is finished.
+  const swordPlanted = swordShown(frame) && frame.swordY === SWORD_REST_BASE;
+  if (frame.submodule >= 5 || frame.module !== 0) shine.draw(ctx, clock.t, logoAlpha(frame), frameX, frameY, swordPlanted);
+  if (phase === 'idle') sweep.draw(ctx, clock.t, pictures.logo, logoAlpha(frame), frameX, frameY);
   if (flashOn(frame)) drawFlash(ctx, dimFlashes, width, height);
   drawBrightness(ctx, brightness(frame), width, height);
 };

@@ -31,7 +31,7 @@ const buildScene = (assets: SceneAssets, geometry: SceneGeometry, seed: number):
     cloudLayer(assets.clouds, layout.clouds, geometry),
     ridgeLayer({ pieces: assets.trees, placed: layout.trees, parallax: TREE_PARALLAX, rows: TREE_ROWS }, geometry),
     landmarkLayer(assets.landmark, geometry),
-    reflectionLayer({ caustics: assets.caustics, patches: layout.caustics }, geometry),
+    reflectionLayer(geometry),
     waterTextureLayer(geometry, seed),
     waterLineLayer(geometry),
     landmarkFootLayer(assets.landmark, geometry),

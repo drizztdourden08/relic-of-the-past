@@ -512,6 +512,7 @@ void Module00_Intro() {  // 8cc120
   // which point the whole logo animation has played out.
   uint8 skip_at = skip_early ? 2 : 8;
   // The host's title takes the press itself from the frame the pieces exist (title_skip.c).
+  GameHook_TitleRestart();
   int title_skip_floor = GameHook_TitleSkipFloor();
   if (title_skip_floor) {
     skip_early = true;

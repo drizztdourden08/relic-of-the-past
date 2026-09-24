@@ -23,6 +23,10 @@ void GameHook_TitleNoteFrame(void);
 // through the frames where the attract sequence still shows the title.
 void GameHook_TitleNoteAttractFrame(void);
 
+// Called at the start of Module00_Intro, every frame. On the host's title, a return to the intro
+// past its rest (the story's end, a save-and-quit) starts the sequence over from its first frame.
+void GameHook_TitleRestart(void);
+
 // The submodule a press may leave the sequence from on the host's title, or 0 to keep the module's own
 // skip rule (title_skip.c).
 int GameHook_TitleSkipFloor(void);

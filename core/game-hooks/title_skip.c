@@ -91,3 +91,15 @@ bool GameHook_TitleSkip(void) {
   }
   return false;
 }
+
+// The story's end and a save-and-quit hand the intro back at submodule 10: the finished picture,
+// with the triangles flying in again over it. The host's title plays its sequence from the first
+// frame instead, so its picture is built the same way every time it appears. Submodule 8 is the
+// sequence's own rest; anything past it is the returned picture.
+enum { kReturnedFrom = 9 };
+
+void GameHook_TitleRestart(void) {
+  if (!TitleOverride_Hidden() || submodule_index < kReturnedFrom) return;
+  submodule_index = 0;
+  subsubmodule_index = 0;
+}

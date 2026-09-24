@@ -1,8 +1,7 @@
 /* @layer renderer-hud @kind logic */
 /**
  * Places the scene's pieces for a canvas width: a few mountains with real gaps between them, a
- * closed row of trees on the water line, clouds at many heights, and sparse patches of moving water
- * low in the lake. Deterministic for a seed.
+ * closed row of trees on the water line, and clouds at many heights. Deterministic for a seed.
  */
 import type { Drifting, Placed, SceneAssets, SceneGeometry, SceneLayout } from './scene.type';
 import { seededRandom } from './seeded-random';
@@ -15,10 +14,7 @@ const MOUNTAIN_GAP = { min: 120, max: 320 } as const;
 const MOUNTAIN_PAIR_CHANCE = 0.35;
 const MOUNTAIN_OVERLAP = { min: 24, max: 44 } as const;
 const CLOUD_EVERY = 72;
-const CLOUD_SPEED = { min: 0.2, max: 0.7 } as const;
-const CAUSTIC_EVERY = 56;
-const CAUSTIC_SIZE = 16;
-const CAUSTIC_SPEED = { min: 0.4, max: 1.2 } as const;
+const CLOUD_SPEED = { min: 0.4, max: 1.1 } as const;
 
 const buildSceneLayout = (geometry: SceneGeometry, assets: SceneAssets, seed: number): SceneLayout => {
   const { width, height, frameY, horizonY } = geometry;
@@ -57,18 +53,7 @@ const buildSceneLayout = (geometry: SceneGeometry, assets: SceneAssets, seed: nu
     });
   }
 
-  const caustics: Drifting[] = [];
-  // Below the mirrored trees, where the lake reads as open water.
-  const waterTop = horizonY + 2;
-  const lowTop = waterTop + Math.round((height - waterTop) * 0.4);
-  for (let i = 0, n = Math.max(2, Math.round(width / CAUSTIC_EVERY)); i < n; i++) {
-    caustics.push({
-      x: rng.range(0, width), y: Math.round(rng.range(lowTop, Math.max(lowTop, height - CAUSTIC_SIZE))),
-      variant: rng.int(0, assets.caustics.length - 1), flip: rng.chance(0.5), speed: rng.range(CAUSTIC_SPEED.min, CAUSTIC_SPEED.max),
-    });
-  }
-
-  return { mountains, trees, clouds, caustics };
+  return { mountains, trees, clouds };
 };
 
 export { buildSceneLayout, TREE_ROWS };

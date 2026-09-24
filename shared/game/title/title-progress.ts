@@ -13,10 +13,10 @@ const PROGRESS_OFFSET = 0x3c5;
 const SECOND_HALF_AT = 3;
 const MAX_SWORD = 4;
 
-/** Index = the sword byte. No sword yet shows the design the original title shows. */
-const TIER_OF_SWORD: readonly SwordTier[] = ['master', 'fighter', 'master', 'tempered', 'golden'];
+/** Index = the sword byte. No sword yet, and no save at all, show the game's own title sword. */
+const TIER_OF_SWORD: readonly SwordTier[] = ['fighter', 'fighter', 'master', 'tempered', 'golden'];
 
-const DEFAULT_PROGRESS: TitleProgress = { tier: 'master', world: 'light', fromSlot: null };
+const DEFAULT_PROGRESS: TitleProgress = { tier: 'fighter', world: 'light', fromSlot: null };
 
 interface SlotReader {
   /** The valid slots, 0-based. */

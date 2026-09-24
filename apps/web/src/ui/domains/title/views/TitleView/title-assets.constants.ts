@@ -1,8 +1,7 @@
 /* @layer renderer-hud @kind data */
 /**
  * The scene tiles bundled under apps/web/src/assets/title-scene/: one strip of sky, and every
- * numbered variant of the mountains, trees, clouds and moving water the folder holds, plus the
- * castle. A sword's picture lives in sword/<id>.png; the fighter's, and any id without a file, draws
+ * numbered variant of the mountains, trees and clouds the folder holds, plus the castle. A sword's picture lives in sword/<id>.png; the fighter's, and any id without a file, draws
  * the ROM's sword.
  */
 import type { TitleSwordPicture } from '@shared/game/title/title-swords';
@@ -32,7 +31,6 @@ const LIGHT_SCENE_FILES = {
   mountains: variantsOf(LIGHT_FILES, 'mountain'),
   trees: variantsOf(LIGHT_FILES, 'tree'),
   clouds: variantsOf(LIGHT_FILES, 'cloud'),
-  caustics: variantsOf(LIGHT_FILES, 'caustics'),
   landmark: oneOf(LIGHT_FILES, 'castle'),
 } as const;
 

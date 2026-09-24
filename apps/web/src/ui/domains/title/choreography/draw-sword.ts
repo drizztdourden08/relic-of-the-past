@@ -12,15 +12,19 @@ const SPARKLE_RADIUS = [2, 3, 4, 3, 4, 3, 2] as const;
 const SPARKLE_STEPS = 7;
 const GLINT_H = 12;
 const WHITE = '#ffffff';
-const GLOW = 'rgba(255, 255, 220, 0.6)';
+const ARM = 'rgba(255, 255, 230, 0.9)';
+const CORE_FROM = 3;
 
-/** A four-point star of radius r, with short diagonal points when asked. */
+/**
+ * A four-point star of radius r, the way the game's sparkles are drawn: one-pixel arms with a bright
+ * three-pixel core once it is big enough, and short diagonal points when asked.
+ */
 const drawStar = (ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number, diagonals = false): void => {
-  ctx.fillStyle = GLOW;
-  ctx.fillRect(cx - r, cy - 1, r * 2 + 1, 3);
-  ctx.fillRect(cx - 1, cy - r, 3, r * 2 + 1);
+  ctx.fillStyle = ARM;
+  ctx.fillRect(cx - r, cy, r * 2 + 1, 1);
+  ctx.fillRect(cx, cy - r, 1, r * 2 + 1);
   if (diagonals) {
-    const d = Math.max(1, r >> 1);
+    const d = Math.max(1, r >> 2);
     for (let i = 1; i <= d; i++) {
       ctx.fillRect(cx - i, cy - i, 1, 1);
       ctx.fillRect(cx + i, cy - i, 1, 1);
@@ -29,8 +33,8 @@ const drawStar = (ctx: CanvasRenderingContext2D, cx: number, cy: number, r: numb
     }
   }
   ctx.fillStyle = WHITE;
-  ctx.fillRect(cx - r, cy, r * 2 + 1, 1);
-  ctx.fillRect(cx, cy - r, 1, r * 2 + 1);
+  if (r >= CORE_FROM) ctx.fillRect(cx - 1, cy - 1, 3, 3);
+  else ctx.fillRect(cx, cy, 1, 1);
 };
 
 const drawSword = (ctx: CanvasRenderingContext2D, { img, scale }: Picture, frame: TitleFrame, frameX: number, frameY: number): void => {
@@ -43,10 +47,10 @@ const drawSword = (ctx: CanvasRenderingContext2D, { img, scale }: Picture, frame
   if (frame.sparklePhase === 2 && frame.sparkleIndex < SPARKLE_STEPS) {
     const y = frameY + Math.min(frame.sparkleRun, GLINT_RUN_MAX) + frame.swordY + GLINT_TOP_OFFSET;
     const x = frameX + GLINT_X + 2;
-    ctx.fillStyle = GLOW;
-    ctx.fillRect(x, y, 4, GLINT_H);
+    ctx.fillStyle = ARM;
+    ctx.fillRect(x + 1, y, 2, GLINT_H);
     ctx.fillStyle = WHITE;
-    ctx.fillRect(x + 1, y + 2, 2, GLINT_H - 4);
+    ctx.fillRect(x + 1, y + 2, 1, GLINT_H - 4);
   }
 };
 

@@ -11,6 +11,9 @@ import { buildScene } from '../../../scene/compose-scene';
 import type { SceneGeometry } from '../../../scene/scene.type';
 import { createTriforcePicture } from '../../../choreography/draw-triforce';
 import { drawTitleFrame } from '../../../choreography/draw-title-frame';
+import { createShine } from '../../../choreography/draw-shine';
+import { shinePixelsOf } from '../../../choreography/shine-pixels';
+import { createLogoSweep } from '../../../choreography/logo-sweep';
 import type { TitleAssets } from './useTitleAssets';
 
 /** Parallax travel while the title idles, in game pixels per second. */
@@ -56,6 +59,9 @@ const useTitleLoop = (canvasRef: React.RefObject<HTMLCanvasElement | null>, opti
     sceneCanvas.width = geometry.width;
     sceneCanvas.height = geometry.height;
     const scene = buildScene(assets.scene, geometry, seed);
+    // Both schedules are seeded per mount and read the pictures once, so they follow an asset change.
+    const shine = createShine(seed, shinePixelsOf(assets.pictures.logo, assets.pictures.sword));
+    const sweep = createLogoSweep(seed);
     const still = reducedMotion();
     const t0 = performance.now();
     let raf = 0;
@@ -68,7 +74,7 @@ const useTitleLoop = (canvasRef: React.RefObject<HTMLCanvasElement | null>, opti
       const t = (now - t0) / 1000;
       const motion = live.current.moving && !still;
       drawTitleFrame(ctx, {
-        frame, scene, sceneCanvas, pictures: assets.pictures, triforce, hidden,
+        frame, scene, sceneCanvas, pictures: assets.pictures, triforce, hidden, shine, sweep,
         clock: { t, drift: motion ? t * DRIFT_SPEED : 0, moving: !still },
         poly: wasmGetTitlePoly(), palette: wasmGetTitlePalette(), dimFlashes: live.current.dimFlashes,
       });
