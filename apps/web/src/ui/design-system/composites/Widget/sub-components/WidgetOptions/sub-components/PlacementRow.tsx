@@ -1,7 +1,8 @@
 /* @layer renderer-components @kind component */
 /**
  * The placement controls: four dock edges and float as icon buttons, the current
- * one lit, then a text button that moves the widget to its own window.
+ * one lit, then a text button that moves the widget to its own window, or back
+ * into the app when it is already out.
  */
 import { Box } from '../../../../../primitives/Box';
 import { Button } from '../../../../../primitives/Button';
@@ -41,8 +42,12 @@ const PlacementRow = (props: PlacementRowProps) => {
           </IconButton>
         ))}
       </Box>
-      {canPopOut && (
-        <Button size="sm" variant="tertiary" active={placement === 'popped'} onClick={onPopOut}>
+      {placement === 'popped' ? (
+        <Button size="sm" variant="tertiary" onClick={onPopOut} title="Back into the app, where it was docked before">
+          Pop in
+        </Button>
+      ) : canPopOut && (
+        <Button size="sm" variant="tertiary" onClick={onPopOut}>
           Pop out
         </Button>
       )}

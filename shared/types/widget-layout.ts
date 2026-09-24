@@ -56,9 +56,38 @@ interface WindowBounds {
   height: number;
 }
 
+/** How a popped window sits over other windows: never, always, or exactly as the app does. */
+type PinMode = 'off' | 'top' | 'with-app';
+
+/** A popped window held flush against the app or another popped window. */
+interface SnapLink {
+  to: 'main' | WidgetId;
+  /** The edge of the target it touches. */
+  edge: DockEdge;
+}
+
+/** Where a popped window's title bar was released over the app. */
+interface WindowPoint {
+  x: number;
+  y: number;
+}
+
 interface PoppedWidget {
   id: WidgetId;
   bounds?: WindowBounds;
+  /** Missing means 'off'. */
+  pin?: PinMode;
+  /** Missing means on. */
+  snap?: boolean;
+  link?: SnapLink | null;
+}
+
+/** The live window facts a popped window's renderer shows: the pin, whether it is on top right now, snapping. */
+interface PoppedWindowState {
+  pin: PinMode;
+  onTop: boolean;
+  snap: boolean;
+  link: SnapLink | null;
 }
 
 interface WidgetFrame {
@@ -75,6 +104,8 @@ interface WidgetLayout {
   popped: PoppedWidget[];
   /** Per widget, wherever it is; a missing entry takes the defaults. */
   frame: Partial<Record<WidgetId, WidgetFrame>>;
+  /** The window facts of widgets that came back in, so the next pop-out reopens the same way. */
+  poppedMemory?: Partial<Record<WidgetId, PoppedWidget>>;
 }
 
 interface Rect {
@@ -92,6 +123,7 @@ type DropTarget =
   | { at: 'float' };
 
 export type {
-  DockEdge, DropTarget, FloatingWidget, GameNode, LayoutNode, LeafNode, PaneNode, PoppedWidget, Rect,
-  SplitAxis, SplitNode, WidgetFrame, WidgetId, WidgetLayout, WindowBounds,
+  DockEdge, DropTarget, FloatingWidget, GameNode, LayoutNode, LeafNode, PaneNode, PinMode, PoppedWidget,
+  PoppedWindowState, Rect, SnapLink, SplitAxis, SplitNode, WidgetFrame, WidgetId, WidgetLayout, WindowBounds,
+  WindowPoint,
 };

@@ -10,6 +10,7 @@ import type { CSSProperties } from 'react';
 import { Box } from '../../primitives/Box';
 import { Button } from '../../primitives/Button';
 import { Text } from '../../primitives/Text';
+import { PinButton } from './sub-components/PinButton';
 import type { WidgetProps, WidgetTab } from './Widget.type';
 import './Widget.css';
 
@@ -20,6 +21,7 @@ interface TabChipProps {
 }
 
 const TITLEBAR_HINT = 'Drag to move. Hold Alt to peek at the game. While dragging: Shift swaps, Ctrl overlays, Esc cancels, past the window edge pops out.';
+const OUT_HINT = 'Drag to move the window. Drop it over the app to put it back. Near an edge of the app or another widget, it snaps.';
 
 const TabChip = (props: TabChipProps) => {
   const { tab, active, onActivate } = props;
@@ -40,8 +42,10 @@ const TabChip = (props: TabChipProps) => {
 const Widget = (props: WidgetProps) => {
   const {
     id, tabs, activeId, paneKey, opacity, peek = false, optionsOpen = false,
-    onActivateTab, onOpenOptions, onPopOut, canPopOut = true, onClose, children,
+    onActivateTab, onOpenOptions, onPopOut, canPopOut = true, mode = 'in', pin = 'off', onTop = false, onPinChange,
+    onClose, children,
   } = props;
+  const out = mode === 'out';
   const [hovered, setHovered] = useState(false);
   const gearRef = useRef<HTMLButtonElement>(null);
 
@@ -73,7 +77,7 @@ const Widget = (props: WidgetProps) => {
         className="widget__titlebar"
         data-drag-widget={activeId}
         data-pane-key={paneKey ?? ''}
-        title={TITLEBAR_HINT}
+        title={out ? OUT_HINT : TITLEBAR_HINT}
       >
         {tabs.length > 1 ? (
           <Box className="widget__tabs">
@@ -85,7 +89,10 @@ const Widget = (props: WidgetProps) => {
           <Text className="widget__title">{label}</Text>
         )}
         <Box className="widget__titlebar-actions">
-          {canPopOut && <Button variant="bare" className="widget__btn" onClick={onPopOut} title="Pop out">{'⤢'}</Button>}
+          {out && onPinChange && <PinButton pin={pin} onTop={onTop} onChange={onPinChange} />}
+          {out
+            ? <Button variant="bare" className="widget__btn" onClick={onPopOut} title="Pop in">{'⤓'}</Button>
+            : canPopOut && <Button variant="bare" className="widget__btn" onClick={onPopOut} title="Pop out">{'⤢'}</Button>}
           <Button
             variant="bare"
             ref={gearRef}

@@ -15,21 +15,22 @@ import { SegmentedControl } from '../../../../primitives/SegmentedControl';
 import { Slider } from '../../../../primitives/Slider';
 import { Text } from '../../../../primitives/Text';
 import { Toggle } from '../../../../primitives/Toggle';
-import { OPACITY_MAX, OPACITY_MIN, OPACITY_STEP, SHOW_OPTIONS } from './WidgetOptions.constants';
+import { OPACITY_MAX, OPACITY_MIN, OPACITY_STEP, PIN_OPTIONS, SHOW_OPTIONS } from './WidgetOptions.constants';
 import { panelPositionFor } from './behavior/panel-position';
 import { useDismiss } from './behavior/useDismiss';
 import { OptionRow } from './sub-components/OptionRow';
 import { PlacementRow } from './sub-components/PlacementRow';
 import { ShortcutsList } from './sub-components/ShortcutsList';
-import type { WidgetOptionsProps, WidgetShow } from './WidgetOptions.type';
+import type { PinMode, WidgetOptionsProps, WidgetShow } from './WidgetOptions.type';
 import './WidgetOptions.css';
 
 const WidgetOptions = (props: WidgetOptionsProps) => {
   const {
     title, placement, dockEdge, makeRoom, opacity, show, anchorRect,
-    onDock, onFloat, onPopOut, canPopOut = true, onMakeRoomChange, onOpacityChange, onShowChange, onReset, onClose,
-    children,
+    onDock, onFloat, onPopOut, canPopOut = true, pin, onPinChange, snap, onSnapChange,
+    onMakeRoomChange, onOpacityChange, onShowChange, onReset, onClose, children,
   } = props;
+  const popped = placement === 'popped';
   const panelRef = useRef<HTMLDivElement>(null);
 
   useDismiss(panelRef, anchorRect, onClose);
@@ -72,6 +73,20 @@ const WidgetOptions = (props: WidgetOptionsProps) => {
           </OptionRow>
         )}
 
+        {popped && pin !== undefined && onPinChange && (
+          <>
+            <Text className="widget-options__section">Window</Text>
+            <OptionRow label="Pin" hint="With app: on top exactly when the app is">
+              <SegmentedControl<PinMode> value={pin} options={PIN_OPTIONS} onChange={onPinChange} />
+            </OptionRow>
+          </>
+        )}
+        {popped && snap !== undefined && onSnapChange && (
+          <OptionRow label="Snap to edges" hint="The app's and other widgets' windows">
+            <Toggle checked={snap} onChange={onSnapChange} />
+          </OptionRow>
+        )}
+
         <OptionRow label="Opacity">
           <Slider
             value={Math.round(opacity * OPACITY_MAX)}
@@ -84,9 +99,11 @@ const WidgetOptions = (props: WidgetOptionsProps) => {
           />
         </OptionRow>
 
-        <OptionRow label="Show">
-          <SegmentedControl<WidgetShow> value={show} options={SHOW_OPTIONS} onChange={onShowChange} />
-        </OptionRow>
+        {!popped && (
+          <OptionRow label="Show">
+            <SegmentedControl<WidgetShow> value={show} options={SHOW_OPTIONS} onChange={onShowChange} />
+          </OptionRow>
+        )}
 
         {children && (
           <>

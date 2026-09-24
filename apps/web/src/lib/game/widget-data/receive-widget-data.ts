@@ -6,6 +6,7 @@
  * host view to subscribe to. Asks for a full snapshot as soon as it is installed.
  */
 import type { GameSettings } from '@shared/types/settings';
+import type { WidgetFrame, WidgetId } from '@shared/types/widget-layout';
 import { ingest } from '../../log-bus';
 import { applyRelayedCompletedChecks, applyRelayedInventory } from '../tracker';
 import type { RelaySlice } from './relay-slices';
@@ -14,11 +15,12 @@ interface HostState {
   settings: GameSettings | null;
   profileId: string | null;
   running: boolean;
+  frames: Partial<Record<WidgetId, WidgetFrame>>;
 }
 
 type HostListener = (state: HostState) => void;
 
-let state: HostState = { settings: null, profileId: null, running: false };
+let state: HostState = { settings: null, profileId: null, running: false, frames: {} };
 const listeners = new Set<HostListener>();
 
 const setState = (patch: Partial<HostState>): void => {
@@ -37,6 +39,7 @@ const applySlice = (slice: RelaySlice): void => {
     case 'settings': setState({ settings: slice.data }); break;
     case 'profile': setState({ profileId: slice.data.profileId }); break;
     case 'game': setState({ running: slice.data.running }); break;
+    case 'frames': setState({ frames: slice.data }); break;
   }
 };
 

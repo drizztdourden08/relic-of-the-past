@@ -6,6 +6,7 @@
  * which owns them; the tracker sets and the log come straight from their buses.
  */
 import type { GameSettings } from '@shared/types/settings';
+import type { WidgetFrame, WidgetId } from '@shared/types/widget-layout';
 import { getEntries, subscribe as subscribeLog } from '../../log-bus';
 import { getCompletedChecks, getCurrentInventory, onCompletedChecksChanged, onInventoryChanged } from '../tracker';
 import type { RelaySlice } from './relay-slices';
@@ -13,6 +14,7 @@ import type { RelaySlice } from './relay-slices';
 let settings: GameSettings | null = null;
 let profileId: string | null = null;
 let running = false;
+let frames: Partial<Record<WidgetId, WidgetFrame>> = {};
 let installed: (() => void) | null = null;
 
 const publish = (slice: RelaySlice): void => {
@@ -23,6 +25,7 @@ const publishSnapshot = (): void => {
   publish({ kind: 'profile', data: { profileId } });
   if (settings) publish({ kind: 'settings', data: settings });
   publish({ kind: 'game', data: { running } });
+  publish({ kind: 'frames', data: frames });
   publish({ kind: 'inventory', data: [...getCurrentInventory()] });
   publish({ kind: 'completedChecks', data: [...getCompletedChecks()] });
   publish({ kind: 'logs', data: getEntries() });
@@ -31,6 +34,11 @@ const publishSnapshot = (): void => {
 const publishSettings = (next: GameSettings): void => {
   settings = next;
   publish({ kind: 'settings', data: next });
+};
+
+const publishFrames = (next: Partial<Record<WidgetId, WidgetFrame>>): void => {
+  frames = next;
+  publish({ kind: 'frames', data: next });
 };
 
 const publishProfile = (next: string | null): void => {
@@ -60,4 +68,4 @@ const installWidgetPublisher = (): (() => void) => {
   return installed;
 };
 
-export { installWidgetPublisher, publishGameRunning, publishProfile, publishSettings };
+export { installWidgetPublisher, publishFrames, publishGameRunning, publishProfile, publishSettings };

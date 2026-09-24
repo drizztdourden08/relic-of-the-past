@@ -20,6 +20,9 @@ import type { WidgetDockProps } from './WidgetDock.type';
 import './WidgetDock.css';
 
 const canPopOut = (id: WidgetId): boolean => getWidgetDefinition(id)?.popOut === true;
+const FALLBACK_SIZE = { width: 320, height: 280 };
+const sizeOf = (id: WidgetId): { width: number; height: number } =>
+  getWidgetDefinition(id)?.defaultFloatingSize ?? FALLBACK_SIZE;
 
 const WidgetDock = (props: WidgetDockProps) => {
   const {
@@ -30,6 +33,8 @@ const WidgetDock = (props: WidgetDockProps) => {
   const optionsFor = useWidgetLayoutStore((s) => s.optionsFor);
   const apply = useWidgetLayoutStore((s) => s.apply);
   const popOut = useWidgetLayoutStore((s) => s.popOut);
+  const externalDrag = useWidgetLayoutStore((s) => s.externalDrag);
+  const dropIn = useWidgetLayoutStore((s) => s.dropIn);
   const setRect = useGameRectStore((s) => s.setRect);
   const modifiers = useHeldActions();
   useWidgetsNeverFocus();
@@ -84,6 +89,9 @@ const WidgetDock = (props: WidgetDockProps) => {
         onPopOut={popOut}
         canPopOut={canPopOut}
         labelOf={labelOf}
+        externalDrag={externalDrag}
+        onExternalDrop={dropIn}
+        sizeOf={sizeOf}
       />
       {optionsFor && (
         <WidgetOptionsHost

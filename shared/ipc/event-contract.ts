@@ -8,7 +8,8 @@ import type { ControllerAddedInfo, ControllerJoystickSample, ControllerRawReport
 import type { UpdateInfo } from './updater-contract';
 import type { FfmpegState } from '@shared/types/ffmpeg-tool';
 import type { OptimizeProgress } from '@shared/types/msu-optimize';
-import type { WindowBounds } from '@shared/types/widget-layout';
+import type { PoppedWidget, PoppedWindowState, WidgetFrame, WindowBounds, WindowPoint } from '@shared/types/widget-layout';
+import type { DockBackTarget } from './send-contract';
 import type { WidgetSlice } from '@shared/types/widget-relay';
 
 /** Progress of a data import (ROM / MSU / language / sprites), main → renderer. */
@@ -68,10 +69,20 @@ interface EventContract {
   'widget:relay': (slice: WidgetSlice) => void;
   /** To the main window: a pop-out asked for a full snapshot. */
   'widget:snapshotRequest': (id: string) => void;
-  /** To the main window: that widget's window was closed, by the user or by dockBack. */
-  'widget:closed': (id: string) => void;
+  /** To the main window: that widget's window was closed, by the user or by dockBack, and where it asked to go. */
+  'widget:closed': (id: string, where?: DockBackTarget) => void;
   /** To the main window: that widget's window moved or resized. */
   'widget:bounds': (id: string, bounds: WindowBounds) => void;
+  /** To the main window: a popped window is being dragged over the app at that content point; null once it left. */
+  'widget:dragOver': (id: string, point: WindowPoint | null) => void;
+  /** To the main window: a popped window was released over the app at that content point. */
+  'widget:dropIn': (id: string, point: WindowPoint) => void;
+  /** To the main window: a popped window's persisted facts changed (pin, snap, link). */
+  'widget:popped': (id: string, patch: Partial<PoppedWidget>) => void;
+  /** To the main window: a popped window changed its own frame (opacity). */
+  'widget:frame': (id: string, patch: Partial<WidgetFrame>) => void;
+  /** To a popped window: the window facts it shows changed. */
+  'widget:windowState': (state: PoppedWindowState) => void;
 }
 
 export type { EventContract, ImportProgress };

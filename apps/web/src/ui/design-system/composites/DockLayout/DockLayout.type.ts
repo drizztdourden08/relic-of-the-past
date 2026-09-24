@@ -38,6 +38,12 @@ interface DockLayoutProps {
   /** Whether a widget may leave for its own window; every widget may when absent. */
   canPopOut?: (id: WidgetId) => boolean;
   labelOf: (id: WidgetId) => string;
+  /** A widget's own window dragged over the stage, in window content coordinates; null when none. */
+  externalDrag?: { id: WidgetId; point: { x: number; y: number }; released: boolean } | null;
+  /** The external drag was released: the edit it resolved to, or null when it landed on nothing. */
+  onExternalDrop?: (id: WidgetId, edit: LayoutEdit | null) => void;
+  /** The box a widget arriving from its own window lands as. */
+  sizeOf?: (id: WidgetId) => { width: number; height: number };
   className?: string;
 }
 

@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
+import type { PinMode } from '@shared/types/widget-layout';
 
 /** Where a widget lives: on a dock edge, free on the game, or in its own window. */
 type WidgetPlacement = 'docked' | 'floating' | 'popped';
@@ -39,6 +40,12 @@ interface WidgetOptionsProps {
   onPopOut: () => void;
   /** False hides the pop-out action. */
   canPopOut?: boolean;
+  /** Own-window only: the pin mode; the row shows when both are given. */
+  pin?: PinMode;
+  onPinChange?: (mode: PinMode) => void;
+  /** Own-window only: whether the window snaps to edges; the row shows when both are given. */
+  snap?: boolean;
+  onSnapChange?: (on: boolean) => void;
   /** Toggle the game shrinking to fit this widget. */
   onMakeRoomChange: (value: boolean) => void;
   /** New frame opacity, 0..1. */
@@ -62,4 +69,4 @@ interface OptionRowProps {
   children: ReactNode;
 }
 
-export type { AnchorRect, DockEdge, OptionRowProps, WidgetOptionsProps, WidgetPlacement, WidgetShow };
+export type { AnchorRect, DockEdge, OptionRowProps, PinMode, WidgetOptionsProps, WidgetPlacement, WidgetShow };

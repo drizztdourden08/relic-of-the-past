@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
-import type { DockEdge, Rect, WidgetId } from '@shared/types/widget-layout';
+import type { DockEdge, PinMode, Rect, WidgetId } from '@shared/types/widget-layout';
 
 /** When the widget should be visible */
 type WidgetVisibility = 'always' | 'game-only';
@@ -30,9 +30,17 @@ interface WidgetProps {
   onActivateTab: (id: WidgetId) => void;
   /** The gear button's viewport rect, for the options panel to anchor on. */
   onOpenOptions: (anchor: Rect) => void;
+  /** Inside the app it pops the widget out; in its own window it pops it back in. */
   onPopOut: () => void;
   /** False hides the pop-out action: the widget's content cannot run away from the core. */
   canPopOut?: boolean;
+  /** 'out' draws the shell as a whole window: a pop-in button and a pin. Default 'in'. */
+  mode?: 'in' | 'out';
+  /** Own-window only: the pin mode shown, and whether the window is on top right now. */
+  pin?: PinMode;
+  onTop?: boolean;
+  /** Own-window only: the pin button asks for the next mode. */
+  onPinChange?: (mode: PinMode) => void;
   onClose: () => void;
   children: ReactNode;
 }

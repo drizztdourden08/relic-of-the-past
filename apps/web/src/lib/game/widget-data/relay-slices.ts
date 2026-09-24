@@ -5,6 +5,7 @@
  */
 import type { CheckId, ItemId } from '@shared/game/data';
 import type { GameSettings } from '@shared/types/settings';
+import type { WidgetFrame, WidgetId } from '@shared/types/widget-layout';
 import type { LogEntry } from '../../log-bus';
 
 type RelaySlice =
@@ -14,6 +15,7 @@ type RelaySlice =
   | { kind: 'logs'; data: LogEntry[] }
   | { kind: 'settings'; data: GameSettings }
   | { kind: 'profile'; data: { profileId: string | null } }
-  | { kind: 'game'; data: { running: boolean } };
+  | { kind: 'game'; data: { running: boolean } }
+  | { kind: 'frames'; data: Partial<Record<WidgetId, WidgetFrame>> };
 
 export type { RelaySlice };

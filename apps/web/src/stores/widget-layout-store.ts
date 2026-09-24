@@ -7,7 +7,10 @@
  * whose writes are already debounced; a --fresh launch never persists.
  */
 import { create } from 'zustand';
-import type { DockEdge, Rect, WidgetFrame, WidgetId, WidgetLayout, WindowBounds } from '@shared/types/widget-layout';
+import type {
+  DockEdge, PoppedWidget, Rect, WidgetFrame, WidgetId, WidgetLayout, WindowBounds, WindowPoint,
+} from '@shared/types/widget-layout';
+import type { DockBackTarget } from '@shared/ipc';
 import type { LayoutEdit } from '@ds/composites/DockLayout/DockLayout.type';
 import { GAP } from '@ds/composites/DockLayout/behavior/layout-tree';
 import { floatingRect, placeFloating } from '@ds/composites/DockLayout/behavior/place-floating';
@@ -18,7 +21,7 @@ import {
 import type { WidgetPersistenceIO } from '@ds/composites/Widget/behavior/widgetStore';
 import {
   applyEdit, dockOnEdge, dropFrame, floatWidget, isWidgetOpen, placementOf, popOutWidget, removeEverywhere, setFrame,
-  setMakeRoom, setPoppedBounds,
+  setMakeRoom, setPopped, setPoppedBounds,
 } from './widget-layout-edits';
 import { useGameRectStore } from './game-rect-store';
 
@@ -27,11 +30,19 @@ interface StartupOverride {
   widgets: string[];
 }
 
+/** A widget's own window dragged over the app: where, and whether it was just released there. */
+interface ExternalDrag {
+  id: WidgetId;
+  point: WindowPoint;
+  released: boolean;
+}
+
 interface WidgetLayoutState {
   layout: WidgetLayout;
   profileId: string | null;
   peek: boolean;
   optionsFor: { id: WidgetId; anchor: Rect } | null;
+  externalDrag: ExternalDrag | null;
   hydrate: (profileId: string | null, io: WidgetPersistenceIO, startup: StartupOverride) => Promise<void>;
   apply: (edit: LayoutEdit) => void;
   open: (id: WidgetId) => void;
@@ -40,8 +51,14 @@ interface WidgetLayoutState {
   dock: (id: WidgetId, edge: DockEdge) => void;
   float: (id: WidgetId) => void;
   popOut: (id: WidgetId) => void;
-  dockBack: (id: WidgetId) => void;
+  /** Puts a popped widget back in the app: on an edge, floating, or its default edge. */
+  dockBack: (id: WidgetId, where?: DockBackTarget) => void;
   setPoppedBounds: (id: WidgetId, bounds: WindowBounds) => void;
+  setPopped: (id: WidgetId, patch: Partial<PoppedWidget>) => void;
+  /** A popped window moves over the app (point) or left it (null); `released` marks the drop. */
+  setExternalDrag: (drag: ExternalDrag | null) => void;
+  /** The drop resolved: apply the edit and close the window, or leave it out when it landed on nothing. */
+  dropIn: (id: WidgetId, edit: LayoutEdit | null) => void;
   setMakeRoom: (id: WidgetId, makeRoom: boolean) => void;
   setFrame: (id: WidgetId, patch: Partial<WidgetFrame>) => void;
   resetWidget: (id: WidgetId) => void;
@@ -79,6 +96,7 @@ const useWidgetLayoutStore = create<WidgetLayoutState>((set, get) => {
     profileId: null,
     peek: false,
     optionsFor: null,
+    externalDrag: null,
 
     hydrate: async (profileId, io, startup) => {
       persistIo = io;
@@ -115,13 +133,23 @@ const useWidgetLayoutStore = create<WidgetLayoutState>((set, get) => {
     popOut: (id) => {
       if (getWidgetDefinition(id)?.popOut !== true) return;
       edit((layout) => popOutWidget(layout, id));
-      void window.api.popOutWidget(id, get().layout.popped.find((p) => p.id === id)?.bounds);
+      const { id: _id, ...popped } = get().layout.popped.find((p) => p.id === id) ?? { id };
+      void window.api.popOutWidget(id, popped);
     },
-    dockBack: (id) => {
-      window.api.dockBackWidget(id);
-      edit((layout) => dockOnEdge(layout, id, defaultEdge(id)));
+    dockBack: (id, where) => {
+      window.api.dockBackWidget(id, where);
+      if (where === 'float') { get().float(id); return; }
+      edit((layout) => dockOnEdge(layout, id, where ?? defaultEdge(id)));
     },
     setPoppedBounds: (id, bounds) => edit((layout) => setPoppedBounds(layout, id, bounds)),
+    setPopped: (id, patch) => edit((layout) => setPopped(layout, id, patch)),
+    setExternalDrag: (drag) => set({ externalDrag: drag }),
+    dropIn: (id, layoutEdit) => {
+      set({ externalDrag: null });
+      if (!layoutEdit) return;
+      window.api.dockBackWidget(id);
+      edit((layout) => applyEdit(removeEverywhere(layout, id), layoutEdit, gameRect()));
+    },
 
     setMakeRoom: (id, makeRoom) => edit((layout) => setMakeRoom(layout, id, makeRoom)),
     setFrame: (id, patch) => edit((layout) => setFrame(layout, id, patch)),
@@ -143,4 +171,4 @@ const useWidgetLayoutStore = create<WidgetLayoutState>((set, get) => {
 });
 
 export { useWidgetLayoutStore };
-export type { StartupOverride, WidgetLayoutState };
+export type { ExternalDrag, StartupOverride, WidgetLayoutState };

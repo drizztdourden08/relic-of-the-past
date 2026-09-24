@@ -5,7 +5,9 @@
  * widget out of wherever it is, so a widget is never in two places. The
  * DockLayout's LayoutEdit is mapped onto the same moves here.
  */
-import type { DockEdge, DropTarget, LayoutNode, Rect, WidgetFrame, WidgetId, WidgetLayout, WindowBounds } from '@shared/types/widget-layout';
+import type {
+  DockEdge, DropTarget, LayoutNode, PoppedWidget, Rect, WidgetFrame, WidgetId, WidgetLayout, WindowBounds,
+} from '@shared/types/widget-layout';
 import type { LayoutEdit } from '@ds/composites/DockLayout/DockLayout.type';
 import {
   GAME_NODE, createPane, evenSplit, findLeaf, insertAt, paneOf, patchPane, removeLeaf, removeWidget, resizeSplit, swapPanes,
@@ -34,12 +36,18 @@ const frameOf = (layout: WidgetLayout, id: WidgetId): WidgetFrame => ({
   ...layout.frame[id],
 });
 
-const removeEverywhere = (layout: WidgetLayout, id: WidgetId): WidgetLayout => ({
-  ...layout,
-  dock: removeWidget(layout.dock, id) ?? GAME_NODE,
-  floating: layout.floating.filter((f) => f.id !== id),
-  popped: layout.popped.filter((p) => p.id !== id),
-});
+/** Takes the widget out of every place; a popped one leaves its window facts behind for the next pop-out. */
+const removeEverywhere = (layout: WidgetLayout, id: WidgetId): WidgetLayout => {
+  const popped = layout.popped.find((p) => p.id === id);
+  const poppedMemory = popped ? { ...layout.poppedMemory, [id]: { ...popped, link: null } } : layout.poppedMemory;
+  return {
+    ...layout,
+    dock: removeWidget(layout.dock, id) ?? GAME_NODE,
+    floating: layout.floating.filter((f) => f.id !== id),
+    popped: layout.popped.filter((p) => p.id !== id),
+    ...(poppedMemory ? { poppedMemory } : {}),
+  };
+};
 
 /** A target whose pane vanished with the widget's removal cannot be landed on. */
 const targetExists = (tree: LayoutNode, target: DockTarget): boolean =>
@@ -59,17 +67,21 @@ const floatWidget = (layout: WidgetLayout, id: WidgetId, rect: Rect, game: Rect)
   return { ...cleared, floating: [...cleared.floating, toFloating(id, rect, game)] };
 };
 
+/** The window facts kept for a widget between pop-outs: its last bounds, pin and snapping. */
 const popOutWidget = (layout: WidgetLayout, id: WidgetId): WidgetLayout => {
-  const bounds = layout.popped.find((p) => p.id === id)?.bounds;
+  const kept = layout.popped.find((p) => p.id === id) ?? layout.poppedMemory?.[id];
   const cleared = removeEverywhere(layout, id);
-  return { ...cleared, popped: [...cleared.popped, bounds ? { id, bounds } : { id }] };
+  return { ...cleared, popped: [...cleared.popped, { ...kept, id, link: null }] };
 };
 
-/** Remembers where a popped widget's window sits, so it reopens there. */
-const setPoppedBounds = (layout: WidgetLayout, id: WidgetId, bounds: WindowBounds): WidgetLayout => ({
+/** Patches a popped widget's window facts: bounds as it moves, pin, snap, link. */
+const setPopped = (layout: WidgetLayout, id: WidgetId, patch: Partial<PoppedWidget>): WidgetLayout => ({
   ...layout,
-  popped: layout.popped.map((p) => (p.id === id ? { id, bounds } : p)),
+  popped: layout.popped.map((p) => (p.id === id ? { ...p, ...patch, id } : p)),
 });
+
+const setPoppedBounds = (layout: WidgetLayout, id: WidgetId, bounds: WindowBounds): WidgetLayout =>
+  setPopped(layout, id, { bounds });
 
 const moveGame = (layout: WidgetLayout, target: Exclude<DropTarget, { at: 'float' } | { at: 'tab' }>): WidgetLayout => {
   const rest = removeLeaf(layout.dock, 'game');
@@ -113,6 +125,6 @@ const applyEdit = (layout: WidgetLayout, edit: LayoutEdit, game: Rect): WidgetLa
 
 export {
   applyEdit, dockOnEdge, dockWidget, dropFrame, floatWidget, frameOf, isWidgetOpen, placementOf, popOutWidget,
-  removeEverywhere, setFrame, setMakeRoom, setPoppedBounds,
+  removeEverywhere, setFrame, setMakeRoom, setPopped, setPoppedBounds,
 };
 export type { DockTarget, Placement };

@@ -4,23 +4,28 @@
  * same renderer with `?widget=<id>` so it draws that widget alone. Frameless,
  * the widget's own title bar does the job. Each reports its bounds to the main
  * window as it moves, and its closing, so the layout can dock the widget back.
+ * Pin, snapping and linked moves live in the registry.
  */
 import { BrowserWindow, screen } from 'electron';
 import { join } from 'path';
 import { is } from '@electron-toolkit/utils';
-import type { WindowBounds } from '@shared/types/widget-layout';
+import type { PoppedWidget, WindowBounds } from '@shared/types/widget-layout';
 import type { WidgetSlice } from '@shared/types/widget-relay';
+import type { DockBackTarget } from '@shared/ipc';
 import { emit } from '../lib/ipc/handle';
 import { getMainWindow } from '../window/create-window';
 import { resolveWindowIcon } from '../window/window-icon';
 import { parseInstanceConfig } from '../instance';
+import { cursorInApp, watchDragIn } from './popout-drag-in';
+import { openIds, register, settled, snapWanted, unregister, windowOf, windows } from './popout-registry';
 
 const DEFAULT_BOUNDS = { width: 360, height: 480 } as const;
 const MIN_WIDTH = 240;
 const MIN_HEIGHT = 160;
 const BOUNDS_DEBOUNCE_MS = 300;
 
-const windows = new Map<string, BrowserWindow>();
+/** Where each window asked to go as it closed, read back by the closed event. */
+const closingTo = new Map<string, DockBackTarget | undefined>();
 
 /** A window's bounds if it is a real window; null once it is gone. */
 const boundsOf = (win: BrowserWindow): WindowBounds | null => {
@@ -48,15 +53,15 @@ const loadWidget = (win: BrowserWindow, id: string): void => {
   }
 };
 
-const openPopOut = (id: string, bounds?: WindowBounds): void => {
-  const existing = windows.get(id);
-  if (existing && !existing.isDestroyed()) {
+const openPopOut = (id: string, popped?: Omit<PoppedWidget, 'id'>): void => {
+  const existing = windowOf(id);
+  if (existing) {
     existing.focus();
     return;
   }
   const instance = parseInstanceConfig();
   const win = new BrowserWindow({
-    ...placeOn(bounds),
+    ...placeOn(popped?.bounds),
     minWidth: MIN_WIDTH,
     minHeight: MIN_HEIGHT,
     frame: false,
@@ -72,7 +77,7 @@ const openPopOut = (id: string, bounds?: WindowBounds): void => {
       backgroundThrottling: false,
     },
   });
-  windows.set(id, win);
+  const entry = register(id, win, popped);
 
   let boundsTimer: ReturnType<typeof setTimeout> | null = null;
   const reportBounds = (): void => {
@@ -83,32 +88,45 @@ const openPopOut = (id: string, bounds?: WindowBounds): void => {
       if (main && b) emit(main, 'widget:bounds', id, b);
     }, BOUNDS_DEBOUNCE_MS);
   };
-  win.on('moved', reportBounds);
-  win.on('resized', reportBounds);
+  // Snapping only while the drag is a plain window move; over the app it is a drop-in.
+  win.on('will-move', (event, wanted) => {
+    if (cursorInApp(win)) return;
+    const snapped = snapWanted(id, wanted);
+    if (!snapped) return;
+    event.preventDefault();
+    win.setBounds(snapped);
+  });
+  win.on('moved', () => { settled(id); reportBounds(); });
+  win.on('resized', () => { settled(id); reportBounds(); });
   win.on('closed', () => {
     if (boundsTimer) clearTimeout(boundsTimer);
-    windows.delete(id);
+    unregister(id);
+    const where = closingTo.get(id);
+    closingTo.delete(id);
     const main = getMainWindow();
-    if (main) emit(main, 'widget:closed', id);
+    if (main) emit(main, 'widget:closed', id, where);
   });
+  watchDragIn(id, win, { isTowed: () => entry.towed });
   win.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
   loadWidget(win, id);
 };
 
-const closePopOut = (id: string): void => {
-  const win = windows.get(id);
-  if (win && !win.isDestroyed()) win.close();
+const closePopOut = (id: string, where?: DockBackTarget): void => {
+  const win = windowOf(id);
+  if (!win) return;
+  closingTo.set(id, where);
+  win.close();
 };
 
-const listPopOuts = (): string[] => [...windows.keys()].filter((id) => !windows.get(id)?.isDestroyed());
+const listPopOuts = (): string[] => openIds();
 
 /** Sends one published slice to every open pop-out. */
 const relayToPopOuts = (slice: WidgetSlice): void => {
-  for (const win of windows.values()) emit(win, 'widget:relay', slice);
+  for (const win of windows()) emit(win, 'widget:relay', slice);
 };
 
 const closeAllPopOuts = (): void => {
-  for (const win of windows.values()) if (!win.isDestroyed()) win.close();
+  for (const win of windows()) win.close();
 };
 
 export { closeAllPopOuts, closePopOut, listPopOuts, openPopOut, relayToPopOuts };

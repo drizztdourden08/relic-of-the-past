@@ -175,6 +175,8 @@ const INVOKE_MAP = {
   sendDebugReport: 'debug-report:send',
   popOutWidget: 'widget:popOut',
   listPoppedWidgets: 'widget:listPopped',
+  setWidgetPin: 'widget:setPin',
+  getWidgetWindowState: 'widget:getWindowState',
 } as const satisfies Record<string, keyof InvokeContract>;
 
 const SEND_MAP = {
@@ -188,6 +190,8 @@ const SEND_MAP = {
   shellReady: 'window:shellReady',
   appendSessionLog: 'debug:appendSessionLog',
   dockBackWidget: 'widget:dockBack',
+  setWidgetSnap: 'widget:setSnap',
+  setWidgetFrame: 'widget:setFrame',
   publishWidgetSlice: 'widget:publish',
   subscribeWidgetRelay: 'widget:subscribe',
 } as const satisfies Record<string, keyof SendContract>;
@@ -211,6 +215,11 @@ const EVENT_MAP = {
   onWidgetSnapshotRequest: 'widget:snapshotRequest',
   onWidgetClosed: 'widget:closed',
   onWidgetBounds: 'widget:bounds',
+  onWidgetDragOver: 'widget:dragOver',
+  onWidgetDropIn: 'widget:dropIn',
+  onWidgetPopped: 'widget:popped',
+  onWidgetFrame: 'widget:frame',
+  onWidgetWindowState: 'widget:windowState',
 } as const satisfies Record<string, keyof EventContract>;
 
 export { INVOKE_MAP, SEND_MAP, EVENT_MAP };

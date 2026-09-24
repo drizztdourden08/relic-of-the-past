@@ -15,6 +15,7 @@ import { GAP, gameRectOf, layoutTree } from './behavior/layout-tree';
 import { floatingRect } from './behavior/place-floating';
 import { rectStyle, sameRect } from './behavior/rect-style';
 import { useDockDrag } from './behavior/useDockDrag';
+import { useExternalDrag } from './behavior/useExternalDrag';
 import { useStageSize } from './behavior/useStageSize';
 import { Divider } from './sub-components/Divider';
 import { DragGhost } from './sub-components/DragGhost';
@@ -23,7 +24,10 @@ import { GameGrip } from './sub-components/GameGrip';
 import './DockLayout.css';
 
 const DockLayout = (props: DockLayoutProps) => {
-  const { layout, peek, modifiers, renderPane, renderFloating, onGameRect, onEdit, onPopOut, canPopOut, labelOf, className } = props;
+  const {
+    layout, peek, modifiers, renderPane, renderFloating, onGameRect, onEdit, onPopOut, canPopOut, labelOf,
+    externalDrag = null, onExternalDrop, sizeOf, className,
+  } = props;
   const stageRef = useRef<HTMLDivElement>(null);
   const size = useStageSize(stageRef);
 
@@ -46,7 +50,9 @@ const DockLayout = (props: DockLayoutProps) => {
     () => ({ laid, layout, gameRect, stage, modifiers, labelOf, canPopOut }),
     [laid, layout, gameRect, stage, modifiers, labelOf, canPopOut],
   );
-  const { drag, dragId, onPointerDown } = useDockDrag({ stageRef, context, onEdit, onPopOut });
+  const { drag: ownDrag, dragId, onPointerDown } = useDockDrag({ stageRef, context, onEdit, onPopOut });
+  const arriving = useExternalDrag({ stageRef, context, externalDrag, onExternalDrop, sizeOf });
+  const drag = ownDrag ?? arriving;
 
   const cls = ['dock-layout', drag && 'dock-layout--dragging', className].filter(Boolean).join(' ');
 
@@ -77,14 +83,14 @@ const DockLayout = (props: DockLayoutProps) => {
         );
       })}
       {drag && laid && <DropHints view={drag} laid={laid} />}
-      {drag && (
+      {ownDrag && (
         <DragGhost
-          pointer={drag.pointer}
-          label={drag.label}
-          swap={drag.swap}
-          overlay={drag.overlay}
-          outside={drag.outside}
-          canPopOut={drag.canPopOut}
+          pointer={ownDrag.pointer}
+          label={ownDrag.label}
+          swap={ownDrag.swap}
+          overlay={ownDrag.overlay}
+          outside={ownDrag.outside}
+          canPopOut={ownDrag.canPopOut}
         />
       )}
     </Box>
