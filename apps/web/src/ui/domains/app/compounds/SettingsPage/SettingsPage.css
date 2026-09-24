@@ -1,0 +1,128 @@
+/* @layer renderer-components @kind style */
+
+.settings-page {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--c-panel);
+  backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+/* One line: icon, title, then the section anchors after a divider. */
+.settings-page__head {
+  position: relative;
+  isolation: isolate;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  min-height: var(--settings-page-head-h);
+  padding: var(--space-md) var(--space-xl);
+  border-bottom: 1px solid var(--c-border);
+  overflow: hidden;
+  transition: min-height var(--transition-fast), padding var(--transition-fast);
+}
+
+.settings-page__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+}
+
+/* Fades the scene out behind the title so the text always reads. */
+.settings-page__head::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, var(--c-layer) 18%, color-mix(in srgb, var(--c-layer) 60%, transparent) 55%, color-mix(in srgb, var(--c-layer) 30%, transparent));
+}
+
+.settings-page__icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  font-size: var(--text-2xl);
+  color: var(--c-gold-bright);
+  filter: drop-shadow(0 0 var(--blur-glow) var(--c-gold));
+  transition: font-size var(--transition-fast);
+}
+
+.settings-page__title {
+  margin: 0;
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  color: var(--c-text);
+  white-space: nowrap;
+  transition: font-size var(--transition-fast);
+}
+
+.settings-page__anchors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-left: var(--space-sm);
+  padding-left: var(--space-lg);
+  border-left: 1px solid var(--c-border-strong);
+}
+
+.settings-page__anchor {
+  padding: var(--space-xs) var(--space-md);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--c-sunken) 55%, transparent);
+  color: var(--c-text-dim);
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.settings-page__anchor:hover {
+  color: var(--c-text);
+  border-color: var(--c-border-strong);
+}
+
+.settings-page__anchor--active,
+.settings-page__anchor--active:hover {
+  color: var(--c-gold-bright);
+  border-color: var(--c-gold);
+  background: var(--c-gold-soft);
+}
+
+.settings-page--compact .settings-page__head {
+  min-height: var(--settings-page-head-h-compact);
+  padding-block: var(--space-xs);
+}
+
+.settings-page--compact .settings-page__icon {
+  font-size: var(--text-xl);
+}
+
+.settings-page--compact .settings-page__title {
+  font-size: var(--text-lg);
+}
+
+.settings-page__body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--pad-page);
+}
+
+.settings-page__body--fixed {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .settings-page__head,
+  .settings-page__icon,
+  .settings-page__title {
+    transition: none;
+  }
+}

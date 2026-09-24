@@ -9,7 +9,8 @@ import { SpriteManager } from './sub-components/SpriteManager';
 import { PlayerSpriteStudio } from '../PlayerSpriteStudio';
 import { Spinner } from '../../../../design-system/primitives/Spinner';
 import { Box } from '../../../../design-system/primitives/Box';
-import { NavRail } from '../../../../design-system/composites/NavRail';
+import { SectionNav } from '../../../../design-system/composites/SectionNav';
+import { DATA_MANAGER_NAV } from './behavior/data-manager-nav';
 import { ListItemRow } from '../../../../design-system/composites/ListItemRow';
 import './DataManager.css';
 import './sub-components/DataManager.detail.css';
@@ -42,16 +43,6 @@ const DataManager = (props: DataManagerProps) => {
 
   const handleRefresh = useCallback(() => { onRefresh(); }, [onRefresh]);
 
-  const tabs: { id: DataTab; icon: string; label: string }[] = [
-    { id: 'home', icon: '🏠', label: 'Home' },
-    { id: 'profiles', icon: '👤', label: 'Profiles' },
-    { id: 'roms', icon: '🎮', label: 'ROMs' },
-    { id: 'sprites', icon: '🖼️', label: 'Sprites' },
-    { id: 'linkSprites', icon: '🧝', label: 'Character Studio' },
-    { id: 'languages', icon: '🌐', label: 'Language Studio' },
-    { id: 'msu', icon: '🎵', label: 'MSU Studio' },
-  ];
-
   return (
     <Box className="data-manager">
       {loadingProfile && (
@@ -61,9 +52,8 @@ const DataManager = (props: DataManagerProps) => {
       )}
 
       <Box className="data-manager__body">
-        <NavRail
-          className="data-manager__tabs"
-          items={tabs}
+        <SectionNav
+          config={DATA_MANAGER_NAV}
           activeId={activeTab}
           onSelect={(id) => setActiveTab(id as DataTab)}
         />

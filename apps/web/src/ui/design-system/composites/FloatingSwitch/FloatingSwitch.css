@@ -1,0 +1,60 @@
+/* @layer renderer-components @kind style */
+
+/* Opaque, raised, and edged in a strong border so it reads as floating over whatever it straddles. */
+.floating-switch {
+  display: inline-flex;
+  gap: var(--space-2xs);
+  padding: var(--space-2xs);
+  background: var(--c-layer);
+  border: 1px solid var(--c-border-strong);
+  border-radius: var(--r-pill);
+  box-shadow: var(--shadow-lg);
+}
+
+.floating-switch__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-lg);
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  background: none;
+  color: var(--c-text-dim);
+  font-family: inherit;
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.floating-switch__item:hover:not(:disabled) {
+  background: var(--c-hover);
+  color: var(--c-text);
+}
+
+.floating-switch__item:disabled {
+  opacity: var(--opacity-disabled);
+  cursor: not-allowed;
+}
+
+.floating-switch__icon {
+  display: grid;
+  place-items: center;
+  font-size: var(--text-lg);
+  color: var(--c-gold);
+}
+
+/* Current place: the nav's lit look, gold edge and glow. */
+.floating-switch__item--active,
+.floating-switch__item--active:hover:not(:disabled) {
+  border-color: var(--c-gold);
+  background: var(--c-gold-soft);
+  color: var(--c-gold-bright);
+  box-shadow: 0 0 var(--space-md) var(--c-gold-soft);
+  cursor: default;
+}
+
+.floating-switch__item--active .floating-switch__icon {
+  color: var(--c-gold-bright);
+  filter: drop-shadow(0 0 var(--blur-glow) var(--c-gold));
+}

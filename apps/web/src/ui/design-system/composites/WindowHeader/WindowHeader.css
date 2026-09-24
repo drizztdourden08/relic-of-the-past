@@ -6,9 +6,28 @@
   gap: var(--space-sm);
 }
 
-.window-header__title {
+/* Title then optional subtitle, sharing a baseline; together they take the free width. */
+.window-header__titles {
   flex: 1;
   min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-lg);
+}
+
+.window-header__subtitle {
+  min-width: 0;
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semi);
+  color: var(--c-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.window-header__title {
+  flex-shrink: 0;
+  max-width: 100%;
   margin: 0;
   font-size: var(--text-lg);
   font-weight: var(--weight-semi);

@@ -1,162 +1,37 @@
 /* @layer renderer-components @kind component */
-import { useState, useRef, useCallback, useContext, useMemo } from 'react';
-import type { GameSettings } from '@shared/types/settings';
-import { FEATURES_BY_ID } from '@shared/features/feature-registry';
-import { isVanillaSafeLockedSetting } from '@shared/features/vanilla-safe-settings';
+/**
+ * One settings tab. As a page it is a SettingsPage whose header links to each
+ * section; as a search result it is only the rows matching the query, or
+ * nothing at all when none match. See settings-page-context.ts.
+ */
+import { useContext, useMemo } from 'react';
 import { Box } from '../../../../design-system/primitives/Box';
-import { Text } from '../../../../design-system/primitives/Text';
-import { Toggle } from '../../../../design-system/primitives/Toggle';
-import { SettingsShell } from '../../../../design-system/composites/SettingsShell';
-import { DisabledOverlay } from '../../../../design-system/composites/DisabledOverlay';
-import { DISABLED_SETTING_MESSAGES } from '../../../../design-system/composites/DisabledOverlay/DisabledOverlay.constants';
-import { partitionByLockState } from './behavior/partitionByLockState';
+import { SettingsPage } from '../SettingsPage';
 import { resolveSections } from './behavior/resolveSections';
-import { changedKeys, defaultsPatch } from './behavior/sectionDefaults';
-import { SectionHeading } from './sub-components/SectionHeading';
-import { RandomizerLockContext } from './randomizer-lock-context';
+import { useLockCause } from './behavior/useLockCause';
+import { SettingsSections } from './sub-components/SettingsSections';
+import { SettingsPageContext } from './behavior/settings-page-context';
 import './SettingsLayout.css';
-import { type SettingItem, type SettingLockCause, type SettingsLayoutProps } from './SettingsLayout.type';
+import type { SettingsLayoutProps } from './SettingsLayout.type';
 
 const SettingsLayout = (props: SettingsLayoutProps) => {
-  const { sections, settings, defaults, onChange, renderControl, isDisabled, onOpenVanillaSafeSettings } = props;
-  // A control is locked when Vanilla Safe is on AND the setting behind it stops working. That comes
-  // from two places: the registry flag covers gate-word features, and vanilla-safe-settings.ts covers
-  // the rest (cheats, MSU, the custom sprite, the overlay HUD, the two hand-gated renderer effects),
-  // which Vanilla Safe forces off in the INI or the PPU flags without any FeatureDef to say so.
-  const isVanillaSafeLocked = useCallback(
-    (key: string) =>
-      settings.vanillaSafe === true &&
-      (FEATURES_BY_ID[key]?.affectsVanillaParity === true || isVanillaSafeLockedSetting(key)),
-    [settings.vanillaSafe],
-  );
-  // A profile with randomizer config pins the keys in its frozen set, so those controls lock
-  // for the profile's whole life, so their overlay states the cause and offers no way out.
-  const randomizerFrozenKeys = useContext(RandomizerLockContext);
-  const isRandomizerLocked = useCallback(
-    (key: string) => randomizerFrozenKeys.includes(key),
-    [randomizerFrozenKeys],
-  );
-  const lockCauseOf = useCallback(
-    (key: string): SettingLockCause | null =>
-      isRandomizerLocked(key) ? 'randomizer' : isVanillaSafeLocked(key) ? 'vanillaSafe' : null,
-    [isRandomizerLocked, isVanillaSafeLocked],
-  );
-  const isLockedKey = useCallback((key: string) => lockCauseOf(key) !== null, [lockCauseOf]);
-  const [filter, setFilter] = useState('');
-  const [activeId, setActiveId] = useState('');
-  const contentRef = useRef<HTMLDivElement>(null);
+  const { sections, settings, emptyMessage = 'Nothing to set here right now.' } = props;
+  const page = useContext(SettingsPageContext);
+  const query = page?.variant === 'results' ? page.query : '';
+  const { lockCauseOf, isLockedKey } = useLockCause(settings);
 
-  const scrollTo = useCallback((id: string) => {
-    setActiveId(id);
-    contentRef.current
-      ?.querySelector(`[data-section="${id}"]`)
-      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, []);
+  const resolved = useMemo(() => resolveSections(sections, query), [sections, query]);
+  const anchors = useMemo(() => resolved.map((s) => ({ id: s.id, label: s.title })), [resolved]);
 
-  const filterLower = filter.trim().toLowerCase();
+  const body = <SettingsSections {...props} sections={resolved} lockCauseOf={lockCauseOf} isLockedKey={isLockedKey} />;
 
-  const filteredSections = useMemo(() => resolveSections(sections, filterLower), [filterLower, sections]);
-
-  // The section title is itself a nav target, so a flat section needs no child entry to be
-  // reachable and a divided one can still be jumped to as a whole.
-  const navGroups = useMemo(
-    () => filteredSections.map((section) => ({
-      id: section.id,
-      title: section.title,
-      items: section.groups.flatMap((group) =>
-        group.id && group.title ? [{ id: group.id, label: group.title }] : []),
-    })),
-    [filteredSections],
-  );
-
-  const renderToggle = (key: string, item: SettingItem) => {
-    const val = (settings as unknown as Record<string, unknown>)[key];
-    if (typeof val !== 'boolean') return null;
-    const disabled = isDisabled?.(key, settings) ?? false;
-
-    return (
-      <Toggle
-        label={item.label}
-        description={item.description}
-        checked={val}
-        onChange={(v) => onChange({ [key]: v } as Partial<GameSettings>)}
-        disabled={disabled}
-        link={item.link}
-      />
-    );
-  };
-
-  const nav = {
-    groups: navGroups,
-    activeId,
-    onSelect: scrollTo,
-    searchable: true,
-    searchPlaceholder: 'Search settings...',
-    query: filter,
-    onQueryChange: setFilter,
-  };
-
+  if (!page) return body;
+  if (page.variant === 'results') return resolved.length > 0 ? body : null;
   return (
-    <SettingsShell nav={nav} className="settings-layout">
-      <Box className="settings-layout__sections" ref={contentRef}>
-        {filteredSections.length === 0 && (
-          <Box className="settings-layout__empty">No settings match "{filter}"</Box>
-        )}
-        {filteredSections.map((section) => {
-          // A search narrows a section to the rows it still shows, and the reset follows that:
-          // it offers exactly the settings in front of the reader, never hidden ones.
-          const resettable = defaults ? changedKeys(section.groups, settings, defaults, isLockedKey) : [];
-          return (
-            <Box key={section.id} className="settings-layout__section" data-section={section.id}>
-              {defaults
-                ? (
-                  <SectionHeading
-                    title={section.title}
-                    changedCount={resettable.length}
-                    onReset={() => onChange(defaultsPatch(resettable, settings, defaults))}
-                  />
-                )
-                : <Text as="h2" className="settings-layout__section-title">{section.title}</Text>}
-              {section.groups.map((group, groupIndex) => (
-                <Box key={group.id ?? groupIndex} className="settings-layout__subsection" data-section={group.id ?? undefined}>
-                  {group.title && <Text as="h3" className="settings-layout__subsection-title">{group.title}</Text>}
-                  <Box className="settings-layout__group">
-                    {partitionByLockState(group.items, lockCauseOf).map((run, runIndex) => {
-                      const rows = run.items.map((item) => {
-                        const custom = renderControl?.(item.key, settings, onChange);
-                        const control = custom ?? renderToggle(item.key, item);
-                        return (
-                          <Box key={item.key} data-setting-key={item.key} className="settings-layout__row">
-                            {control}
-                          </Box>
-                        );
-                      });
-                      if (!run.lock) return rows;
-                      // The randomizer lock is permanent for the profile, so it names its cause
-                      // and offers no action; the Vanilla Safe lock keeps its deep-link default.
-                      return (
-                        <DisabledOverlay
-                          key={`locked-${runIndex}`}
-                          active
-                          contained
-                          message={run.lock === 'randomizer' ? DISABLED_SETTING_MESSAGES.randomizer : undefined}
-                          onOpenSettings={run.lock === 'randomizer' ? undefined : (onOpenVanillaSafeSettings ?? (() => {}))}
-                        >
-                          {rows}
-                        </DisabledOverlay>
-                      );
-                    })}
-                  </Box>
-                </Box>
-              ))}
-            </Box>
-          );
-        })}
-      </Box>
-    </SettingsShell>
+    <SettingsPage icon={page.icon} title={page.title} backdrop={page.backdrop} anchors={anchors}>
+      {resolved.length > 0 ? body : <Box className="settings-layout__empty">{emptyMessage}</Box>}
+    </SettingsPage>
   );
 };
 
-export {
-  SettingsLayout,
-};
+export { SettingsLayout };

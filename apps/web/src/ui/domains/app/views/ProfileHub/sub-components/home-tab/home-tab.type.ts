@@ -6,9 +6,10 @@ interface HomeTabProps {
   romFile: string;
   isGameRunning: boolean;
   onStartGame: () => void;
+  onStopGame: () => void;
+  onResetGame: () => void;
   lastPlayed?: number;
   created?: number;
-  windowMode?: string;
   /** Frozen at profile creation; presence marks a randomized playthrough. */
   randomizer?: ProfileRandomizerConfig;
   vanillaSafe: boolean;
@@ -27,6 +28,8 @@ interface SummaryFact {
 /** Offline checks readout for one battery-save file (label = slot + 1). */
 interface SaveFileChecks {
   slot: number;
+  /** The player name stored in the file; null when blank. */
+  name: string | null;
   taken: number;
   available: number;
   left: number;

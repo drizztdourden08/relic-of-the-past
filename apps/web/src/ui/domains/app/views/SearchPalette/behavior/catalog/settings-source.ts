@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 /**
  * Flattens every ProfileHub settings tab's Section[] (built from PROFILE_HUB_TABS, the
- * same registry the NavRail renders from) into one setting per search entry. The
+ * same registry the hub nav renders from) into one setting per search entry. The
  * breadcrumb and keywords come straight from data the settings screens already carry, so
  * new settings become searchable with no catalog change.
  */
