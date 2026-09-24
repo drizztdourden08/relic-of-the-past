@@ -8,7 +8,7 @@ import type { NormalSaveInfo, AutoSaveInfo, QuickSaveSlotInfo } from '@shared/ty
 import type { PlaySession } from '@shared/types/session';
 import type { ShadowCastingProject, ScreenShadowData } from '@shared/types/shadow-casting';
 import type { RefreshRateInfo, SyncedRateStatus } from '@shared/types/display';
-import type { PinMode, PoppedWidget, PoppedWindowState } from '@shared/types/widget-layout';
+import type { WidgetInvokeContract } from './widget-contract';
 import type { DataLocation, StorageSummary, FileStat } from '@shared/platform';
 import type { SystemDiagnostics } from '@shared/types/diagnostics';
 import type { SimRunConfig } from '@shared/game/simulation';
@@ -44,7 +44,7 @@ type TriggerCal = { base: number; max: number; deadzone: number };
 type ReviewMap = Record<string, { status: string; comment?: string }>;
 
 interface InvokeContract extends
-  ControllerInvokeContract, LanguageInvokeContract, MsuInvokeContract, FfmpegInvokeContract {
+  ControllerInvokeContract, LanguageInvokeContract, MsuInvokeContract, FfmpegInvokeContract, WidgetInvokeContract {
   // App
   'app:getUserDataPath': () => Promise<string>;
 
@@ -291,12 +291,6 @@ interface InvokeContract extends
   'updater:getPrefs': () => Promise<UpdaterPrefs>;
   'updater:setPrefs': (prefs: UpdaterPrefs) => Promise<void>;
   'updater:getVersion': () => Promise<string>;
-
-  /** Widgets in their own OS window: open one at its remembered facts, list the open ones, set a pin, read the facts. */
-  'widget:popOut': (id: string, popped?: Omit<PoppedWidget, 'id'>) => Promise<void>;
-  'widget:listPopped': () => Promise<string[]>;
-  'widget:setPin': (id: string, mode: PinMode) => Promise<PinMode>;
-  'widget:getWindowState': (id: string) => Promise<PoppedWindowState | null>;
 }
 
 export type { InvokeContract };
