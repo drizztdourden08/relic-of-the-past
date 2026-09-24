@@ -29,7 +29,7 @@
         },
         "category": {
           "type": "string",
-          "enum": ["hud", "hud-pause", "hud-item", "fonts", "drop", "receipt", "randomizer"],
+          "enum": ["hud", "hud-pause", "hud-item", "fonts", "drop", "receipt", "randomizer", "title"],
           "description": "Sprite category determining extraction pipeline."
         },
         "extract": { "$ref": "#/definitions/ExtractConfig" }
@@ -52,7 +52,9 @@
         { "$ref": "#/definitions/ArtExtract" },
         { "$ref": "#/definitions/ArtBadgeExtract" },
         { "$ref": "#/definitions/UpgradeCompositeExtract" },
-        { "$ref": "#/definitions/PaletteSwapExtract" }
+        { "$ref": "#/definitions/PaletteSwapExtract" },
+        { "$ref": "#/definitions/TitleScreenExtract" },
+        { "$ref": "#/definitions/StoryLegendExtract" }
       ]
     },
     "HudTilesExtract": {
@@ -278,6 +280,24 @@
           "minItems": 1,
           "description": "Exact colour replacements applied to the base picture; every other pixel is copied as is."
         }
+      },
+      "additionalProperties": false
+    },
+    "TitleScreenExtract": {
+      "type": "object",
+      "required": ["method", "part"],
+      "properties": {
+        "method": { "type": "string", "const": "title-screen" },
+        "part": { "type": "string", "enum": ["logo", "sword", "triforce", "background"], "description": "Which of the title screen pictures." }
+      },
+      "additionalProperties": false
+    },
+    "StoryLegendExtract": {
+      "type": "object",
+      "required": ["method", "legend"],
+      "properties": {
+        "method": { "type": "string", "const": "story-legend" },
+        "legend": { "type": "integer", "minimum": 0, "maximum": 3, "description": "Which story intro picture, in the order it is told." }
       },
       "additionalProperties": false
     },

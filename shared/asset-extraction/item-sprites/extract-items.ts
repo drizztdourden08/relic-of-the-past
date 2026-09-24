@@ -31,6 +31,8 @@ import { extractUpgradeComposite } from './upgrade-composite';
 import { extractPaletteSwap, type ColorSwap } from './palette-swap';
 import { buildInGameBinaries } from './in-game-binaries';
 import { extractionStampBuffer } from './extraction-stamp';
+import { extractTitlePart, loadTitleSource, type TitlePart, type TitleSource } from '../title-screen/extract-title';
+import { extractLegend, loadLegend, type Legend } from '../story-intro/extract-legend';
 
 interface SpriteExtractDef {
   method: string;
@@ -54,12 +56,16 @@ interface SpriteExtractDef {
   badge?: string;
   /** palette-swap: the base's colours and what each becomes. */
   colors?: ColorSwap[];
+  /** title-screen: which of the title's pictures. */
+  part?: TitlePart;
+  /** story-legend: which of the story intro's four pictures, 0-3. */
+  legend?: number;
 }
 
 interface SpriteDef {
   file: string;
   label: string;
-  category: 'hud' | 'hud-pause' | 'hud-item' | 'fonts' | 'receipt' | 'drop' | 'randomizer';
+  category: 'hud' | 'hud-pause' | 'hud-item' | 'fonts' | 'receipt' | 'drop' | 'randomizer' | 'title';
   extract: SpriteExtractDef;
 }
 
@@ -75,6 +81,10 @@ interface ExtractionContext {
   byFile: ReadonlyMap<string, SpriteExtractDef>;
   /** Files whose extraction is in progress, to refuse a composite that loops back on itself. */
   resolving: Set<string>;
+  /** The title screen's rebuilt VRAM and palette, decoded on first use only. */
+  titleSource: () => TitleSource;
+  /** The story intro's picture sheet and palette, likewise. */
+  legendSource: () => Legend;
 }
 
 type Extractor = (def: SpriteExtractDef, ctx: ExtractionContext) => ImageBuffer | null;
@@ -117,6 +127,8 @@ const EXTRACTORS: Record<string, Extractor> = {
   'art-badge': (def) => extractArtBadge({ art: def.art!, badge: def.badge! }),
   'upgrade-composite': (def, ctx) =>
     extractUpgradeComposite({ baseFile: def.baseFile, art: def.art, badge: def.badge! }, (file) => extractByFile(file, ctx)),
+  'title-screen': (def, ctx) => extractTitlePart(def.part!, ctx.titleSource()),
+  'story-legend': (def, ctx) => extractLegend(ctx.rom, ctx.legendSource(), def.legend!),
   'palette-swap': (def, ctx) =>
     extractPaletteSwap({ baseFile: def.baseFile!, colors: def.colors! }, (file) => extractByFile(file, ctx)),
 };
@@ -129,13 +141,15 @@ const extractOne = (def: SpriteExtractDef, ctx: ExtractionContext): ImageBuffer 
 
 interface SpriteCounts {
   hud: number; 'hud-pause': number; 'hud-item': number;
-  fonts: number; receipt: number; drop: number; randomizer: number;
+  fonts: number; receipt: number; drop: number; randomizer: number; title: number;
 }
 interface SpriteBuffer { name: string; bytes: Uint8Array }
 interface SpriteBuffersResult { buffers: SpriteBuffer[]; counts: SpriteCounts; errors: string[] }
 
 /** Extract every sprite from an already-loaded ROM into PNG byte buffers (no fs). */
 const extractSpriteBuffers = (rom: RomData, allSprites: SpriteDef[]): SpriteBuffersResult => {
+  let title: TitleSource | undefined;
+  let legend: Legend | undefined;
   const ctx: ExtractionContext = {
     rom,
     hudSheets: loadHudSheets(rom),
@@ -146,9 +160,11 @@ const extractSpriteBuffers = (rom: RomData, allSprites: SpriteDef[]): SpriteBuff
     dialogueFont: loadDialogueFont(rom),
     byFile: new Map(allSprites.map((sprite) => [sprite.file, sprite.extract])),
     resolving: new Set(),
+    titleSource: () => (title ??= loadTitleSource(rom)),
+    legendSource: () => (legend ??= loadLegend(rom)),
   };
 
-  const counts: SpriteCounts = { hud: 0, 'hud-pause': 0, 'hud-item': 0, fonts: 0, receipt: 0, drop: 0, randomizer: 0 };
+  const counts: SpriteCounts = { hud: 0, 'hud-pause': 0, 'hud-item': 0, fonts: 0, receipt: 0, drop: 0, randomizer: 0, title: 0 };
   const errors: string[] = [];
   // The stamp names the definitions and code this set comes from, so a set whose
   // files are all present but whose bytes predate the current code is refreshed.

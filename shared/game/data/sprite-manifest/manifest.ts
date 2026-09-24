@@ -14,9 +14,10 @@ import { DIALOG_SPRITE_DEFINITIONS } from './dialog-sprites';
 import { POOL_SPRITE_DEFINITIONS } from './pool-sprites';
 import { RANDOMIZER_SPRITE_DEFINITIONS } from './randomizer-sprites';
 import { RUPEE_SPRITE_DEFINITIONS } from './rupee-sprites';
+import { TITLE_SPRITE_DEFINITIONS } from './title-sprites';
 import { UPGRADE_SPRITE_DEFINITIONS } from './upgrade-sprites';
 
-type SpriteCategory = 'hud' | 'hud-pause' | 'hud-item' | 'fonts' | 'receipt' | 'drop' | 'randomizer';
+type SpriteCategory = 'hud' | 'hud-pause' | 'hud-item' | 'fonts' | 'receipt' | 'drop' | 'randomizer' | 'title';
 
 interface SpriteManifestEntry {
   /** Filename without extension (e.g. "hud-bow"). */
@@ -52,6 +53,7 @@ const SPRITE_DEFINITIONS: readonly SpriteDefinition[] =
   VAULT_DEFINITIONS.length === 0 ? [] : [
     ...VAULT_DEFINITIONS, ...UPGRADE_SPRITE_DEFINITIONS, ...RUPEE_SPRITE_DEFINITIONS,
     ...RANDOMIZER_SPRITE_DEFINITIONS, ...POOL_SPRITE_DEFINITIONS, ...DIALOG_SPRITE_DEFINITIONS,
+    ...TITLE_SPRITE_DEFINITIONS,
   ];
 
 const SPRITE_MANIFEST: SpriteManifestEntry[] = SPRITE_DEFINITIONS.map(sprite => ({
@@ -68,10 +70,11 @@ const CATEGORY_LABELS: Record<SpriteCategory, string> = {
   receipt: 'Receipt / Chest',
   drop: 'Droppable',
   randomizer: 'Randomizer',
+  title: 'Title & Story',
 };
 
 const CATEGORY_ORDER: SpriteCategory[] =
-  ['hud', 'hud-pause', 'hud-item', 'fonts', 'receipt', 'drop', 'randomizer'];
+  ['hud', 'hud-pause', 'hud-item', 'fonts', 'receipt', 'drop', 'randomizer', 'title'];
 
 export { CATEGORY_LABELS, CATEGORY_ORDER, SPRITE_DEFINITIONS, SPRITE_MANIFEST };
 export type { SpriteCategory, SpriteDefinition, SpriteManifestEntry };
