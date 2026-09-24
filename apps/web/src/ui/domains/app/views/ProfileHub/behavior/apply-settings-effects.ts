@@ -7,6 +7,7 @@ import type { ProfileHubProps } from '../ProfileHub.type';
 import { pushLiveSettings, LIVE_SETTINGS, getInputManager, applyPlayerSprite, clearPlayerSprite, setLinkSpriteData } from '../../../../../../lib/game';
 import { useHudSettingsStore } from '../../../../../../stores/hud-settings-store';
 import { syncDialogStore, touchesDialogStore } from './sync-dialog-store';
+import { syncTitleStore, touchesTitleStore } from './sync-title-store';
 import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
 import { writeConfig } from '../../../../../../lib/storage/profile-store';
 import { readSpriteAsZspr } from '../../../../../../lib/game/player-sheet/load-sheet';
@@ -136,6 +137,9 @@ const applySettingsSideEffects = (patch: Partial<GameSettings>, next: GameSettin
   }
   if (touchesDialogStore(patch)) {
     syncDialogStore(next);
+  }
+  if (touchesTitleStore(patch)) {
+    syncTitleStore(next);
   }
 
   // If game is running, push live settings and maybe show restart toast

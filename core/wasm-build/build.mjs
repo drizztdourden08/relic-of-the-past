@@ -67,6 +67,7 @@ const hookSrcs = [
   'view_gates', 'attract_view', 'spotlight_growth', 'attract_sprites', 'iris_wide', 'hide_space_beyond_walls', 'fixed_picture_edges',
   'room_clear_reach',
   'cheat_lighting', 'cheat_wallet', 'cheat_unblock', 'cheat_check_mark', 'cheat_inventory', 'cheat_capacity', 'dev_frame_dump',
+  'title_override', 'title_mirror', 'title_skip',
 ].map((f) => h(`${f}.c`));
 
 // Our Emscripten entry points (replace the native main.c). Resolved from this dir.

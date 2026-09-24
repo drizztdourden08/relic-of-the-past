@@ -12,6 +12,8 @@ import { useLocationNotification } from '../../../hud/hooks/useLocationNotificat
 import { isMainHudVisibleForMode } from '../../../hud/hud-visibility';
 import { useHudSettingsStore } from '../../../../../stores/hud-settings-store';
 import { useDialogSettingsStore } from '../../../../../stores/dialog-settings-store';
+import { useTitleSettingsStore } from '../../../../../stores/title-settings-store';
+import { TitleView } from '../../../title';
 import { useGameUIStore } from '../../../../../stores/game-ui-store';
 import { useSpriteAvailabilityStore } from '../../../../../stores/sprite-availability-store';
 import { useDeliveryQueueStore } from '../../../../../stores/delivery-queue-store';
@@ -21,6 +23,8 @@ import '../../../hud/hud.css';
 interface GameOverlayProps {
   width: number;
   height: number;
+  /** The profile whose battery save the reimagined title reads. */
+  profileId?: string;
 }
 
 /** Menu transition: 29 frames at 60fps = 483ms */
@@ -28,11 +32,12 @@ const MENU_TRANSITION_MS = 483;
 
 type MenuPhase = 'gameplay' | 'opening' | 'open' | 'closing';
 
-const GameOverlay = ({ width, height }: GameOverlayProps) => {
+const GameOverlay = ({ width, height, profileId }: GameOverlayProps) => {
   const { mode: hudMode, style: hudStyle, enhancedParts } = useHudSettingsStore();
   const gameMode = useGameUIStore((s) => s.mode);
   const spritesAvailable = useSpriteAvailabilityStore((s) => s.available);
   const enhancedDialogBox = useDialogSettingsStore((s) => s.box) === 'enhanced';
+  const reimaginedTitle = useTitleSettingsStore((s) => s.screen) === 'reimagined';
   const isEnhanced = hudMode === 'enhanced';
 
   // The sprite HUD can only render when the Vanilla style is paired with
@@ -105,6 +110,8 @@ const GameOverlay = ({ width, height }: GameOverlayProps) => {
           <HudUnavailableNotice reason={hudStyle === 'modern' ? 'modern' : 'no-sprites'} />
         )
       )}
+      {/* The reimagined title draws over the hidden native one while the intro runs; it covers the view. */}
+      {reimaginedTitle && gameMode === 'title' && <TitleView profileId={profileId ?? null} />}
       {/* The enhanced message box draws in either HUD mode; the native one is kept off VRAM meanwhile. */}
       {enhancedDialogBox && <DialogView />}
       {/* Location change notifications */}

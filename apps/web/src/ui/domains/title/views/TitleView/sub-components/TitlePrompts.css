@@ -1,0 +1,21 @@
+/* @layer renderer-hud @kind style */
+.title-prompt {
+  pointer-events: none;
+}
+
+/* 32 frames on, 32 off at 60fps: the pace of the game's own blinking cursors, doubled. */
+@keyframes title-prompt-flash {
+  0%   { opacity: 1; }
+  50%  { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.title-prompt--start {
+  animation: title-prompt-flash 1066ms steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title-prompt--start {
+    animation: none;
+  }
+}

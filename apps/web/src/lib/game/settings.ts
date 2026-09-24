@@ -160,6 +160,12 @@ const DEFAULT_SETTINGS: GameSettings = {
   hudPauseStyle: 'vanilla',
   hudPauseHighlight: 'box',
 
+  // Title screen
+  titleScreen: 'reimagined',
+  titleMotion: 'drifting',
+  titleFollowsProgress: true,
+  titleSword: 'progress',
+
   // Controls
   activeInputProfileId: null,
   enhancedSaveSlotShortcut: true,
