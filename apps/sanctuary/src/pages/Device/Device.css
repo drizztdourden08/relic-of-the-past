@@ -1,0 +1,9 @@
+/* @layer sanctuary-site @kind style */
+.device__code {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: var(--text-xl);
+  letter-spacing: var(--code-tracking);
+  color: var(--c-gold-bright);
+  text-transform: uppercase;
+}

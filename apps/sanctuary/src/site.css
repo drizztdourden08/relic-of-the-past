@@ -1,0 +1,36 @@
+/* @layer sanctuary-site @kind style */
+
+/*
+ * Site-level tokens and the two reset overrides a web page needs. The design-system
+ * reset locks scrolling and text selection for the game shell; a document site scrolls
+ * and lets text be copied.
+ */
+:root {
+  --gate-w: 360px;
+  --page-maxw: 640px;
+  --row-key-w: 88px;
+  --eyebrow-tracking: 0.1em;
+  --code-tracking: 0.18em;
+  --detail-w: 340px;
+  --view-name-maxw: 160px;
+  --upload-list-maxh: 160px;
+
+  /* How tall one search result group's table grows before it scrolls on its own. */
+  --search-table-maxh: 320px;
+
+  /* The brand's logo at the height the app's title bar draws its own. */
+  --brand-logo-h: 20px;
+  --topbar-h: 44px;
+}
+
+html,
+body,
+#root {
+  overflow: auto;
+  user-select: text;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}

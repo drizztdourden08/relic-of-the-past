@@ -1,0 +1,41 @@
+/* @layer sanctuary-site @kind style */
+
+/* The frame is the viewport: pages that scroll do so inside main, not the document. A
+   black band carries the brand; under it the nav and the page start on the same line. */
+.site {
+  height: 100vh;
+  padding: 0 var(--space-md) var(--space-md);
+  gap: var(--space-sm);
+  background: var(--c-bg);
+}
+
+.site__header {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  min-height: var(--topbar-h);
+  padding: 0 var(--space-xs);
+  background: var(--c-bg);
+}
+
+/* The gap leaves room for the nav's round toggle on its right edge, as in the app. */
+.site__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  gap: var(--space-xl);
+}
+
+.site__main {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+}
+
+.site--bare .site__brand-strip {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-md) 0 0;
+}

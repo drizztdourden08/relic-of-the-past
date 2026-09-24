@@ -1,0 +1,31 @@
+/* @layer sanctuary-site @kind style */
+.upload-dialog {
+  width: var(--dialog-w-md);
+}
+
+.upload-dialog__files {
+  list-style: none;
+  margin: 0;
+  padding: var(--space-sm) var(--space-md);
+  max-height: var(--upload-list-maxh);
+  overflow-y: auto;
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--r-md);
+  background: var(--c-sunken);
+}
+
+.upload-dialog__file {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-md);
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+.upload-dialog__file > :first-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

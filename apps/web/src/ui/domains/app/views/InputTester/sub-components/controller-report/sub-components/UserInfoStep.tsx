@@ -1,25 +1,34 @@
 /* @layer renderer-components @kind component */
 import { Field, Text, TextInput, Textarea } from '@ds/primitives';
+import { githubHandleOf } from '@app/lib/sanctuary/github-handle';
+import { ReportingAsLine } from '../../../../../compounds/ReportingAsLine';
 import type { UseControllerReportForm } from '../controller-report-form.type';
 
 type UserInfoStepProps = Pick<
   UseControllerReportForm,
-  'email' | 'setEmail' | 'emailTouched' | 'emailValid' | 'name' | 'setName' | 'additionalInfo' | 'setAdditionalInfo' | 'debugText'
+  'me' | 'email' | 'setEmail' | 'emailTouched' | 'emailValid' | 'name' | 'setName' | 'additionalInfo' | 'setAdditionalInfo' | 'debugText'
 >;
 
-/** Step 2 collects contact info plus the same auto-collected debug info the bug report attaches. */
+/** Step 2 collects contact info plus the same auto-collected debug info the bug report attaches.
+ *  Signed in, the account is the contact and the email and name fields go away. */
 const UserInfoStep = (props: UserInfoStepProps) => {
-  const { email, setEmail, emailTouched, emailValid, name, setName, additionalInfo, setAdditionalInfo, debugText } = props;
+  const { me, email, setEmail, emailTouched, emailValid, name, setName, additionalInfo, setAdditionalInfo, debugText } = props;
 
   return (
     <>
-      <Field label="Email" required error={emailTouched && !emailValid ? 'Enter a valid email' : undefined}>
-        <TextInput type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
-      </Field>
+      {me ? (
+        <ReportingAsLine displayName={me.user.displayName} githubHandle={githubHandleOf(me.identities)} />
+      ) : (
+        <>
+          <Field label="Email" required error={emailTouched && !emailValid ? 'Enter a valid email' : undefined}>
+            <TextInput type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+          </Field>
 
-      <Field label="Name" hint="Optional">
-        <TextInput placeholder="How should we credit the report?" value={name} onChange={(e) => setName(e.target.value)} />
-      </Field>
+          <Field label="Name" hint="Optional">
+            <TextInput placeholder="How should we credit the report?" value={name} onChange={(e) => setName(e.target.value)} />
+          </Field>
+        </>
+      )}
 
       <Field label="Additional info" hint="What happened? Which buttons or sticks are affected?">
         <Textarea rows={4} value={additionalInfo} onChange={(e) => setAdditionalInfo(e.target.value)} />

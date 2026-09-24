@@ -49,6 +49,10 @@ interface EventContract {
   // A .msul music pack the app was opened with (file association / open-file).
   'msu:openPack': (filePath: string) => void;
 
+  // The device-code sign-in: the user code to confirm on the site, sent as soon as the API
+  // minted it, so the Contributor tab can show it while the browser opens.
+  'sanctuary:deviceCode': (userCode: string) => void;
+
   // Controllers over the SDL3 native transport (see apps/desktop/electron/input/sdl3-source.ts)
   'controller:added': (info: ControllerAddedInfo) => void;
   'controller:state': (deviceKey: string, buttons: boolean[], axes: number[]) => void;

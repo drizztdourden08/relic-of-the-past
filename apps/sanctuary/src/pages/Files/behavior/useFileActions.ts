@@ -1,0 +1,69 @@
+/* @layer sanctuary-site @kind hook */
+/**
+ * What the detail pane can do to one file: download, copy its link, patch its fields,
+ * delete it. Each call reports back through `notice`; a write hands the API's record to
+ * the list, a delete drops the row and closes the pane.
+ */
+import { useCallback, useState } from 'react';
+import type { SanctuaryFile } from '@shared/sanctuary/file-types';
+import type { PatchFileBody } from '@shared/sanctuary/schemas/file-schemas';
+import { deleteFile, downloadFile, patchFile } from '../../../api/files-endpoints';
+import { errorMessage } from '../../../api/client';
+
+type UseFileActionsParams = {
+  onPatched: (file: SanctuaryFile) => void;
+  onDeleted: (id: string) => void;
+};
+
+const COPIED_MS = 1500;
+
+const fileLink = (id: string) => `${window.location.origin}/files/${id}`;
+
+const useFileActions = (params: UseFileActionsParams) => {
+  const { onPatched, onDeleted } = params;
+  const [busy, setBusy] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
+
+  const run = useCallback(async (work: () => Promise<string | null>) => {
+    setBusy(true);
+    setNotice(null);
+    try {
+      setNotice(await work());
+    } catch (cause) {
+      setNotice(errorMessage(cause));
+    } finally {
+      setBusy(false);
+    }
+  }, []);
+
+  const download = useCallback((id: string) => run(async () => {
+    const { url } = await downloadFile(id);
+    window.location.assign(url);
+    return null;
+  }), [run]);
+
+  const copyLink = useCallback((id: string) => run(async () => {
+    await navigator.clipboard.writeText(fileLink(id));
+    setTimeout(() => setNotice(null), COPIED_MS);
+    return 'Link copied.';
+  }), [run]);
+
+  const patch = useCallback((id: string, body: PatchFileBody) => run(async () => {
+    const { file } = await patchFile(id, body);
+    onPatched(file);
+    return null;
+  }), [run, onPatched]);
+
+  const remove = useCallback((id: string) => run(async () => {
+    await deleteFile(id);
+    onDeleted(id);
+    return null;
+  }), [run, onDeleted]);
+
+  return { busy, notice, download, copyLink, patch, remove };
+};
+
+type FileActions = ReturnType<typeof useFileActions>;
+
+export { useFileActions, fileLink };
+export type { FileActions, UseFileActionsParams };

@@ -23,12 +23,14 @@ import './DataTable.css';
 
 const DataTable = <T,>(props: DataTableProps<T>) => {
   const {
-    rows, schema, getRowId, viewKey, fallbackColumns, fallbackGroupBy,
+    rows, schema, getRowId, viewKey, viewStorage, fallbackColumns, fallbackGroupBy,
     onSelect, selectedId, countLabel, emptyMessage = 'Nothing to show.',
     resolveTargetFields, resolveIdRefDisplay, resolveIdRefDefault,
   } = props;
 
-  const { table, sessionView, setSessionView } = useTableView({ rows, schema, viewKey, fallbackColumns, fallbackGroupBy });
+  const { table, sessionView, setSessionView } = useTableView({
+    rows, schema, viewKey, viewStorage, fallbackColumns, fallbackGroupBy,
+  });
   const index = useMemo(() => createSchemaIndex(schema), [schema]);
 
   const groups = useExpandedGroups({

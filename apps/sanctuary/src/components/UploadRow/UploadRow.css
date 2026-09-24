@@ -1,0 +1,33 @@
+/* @layer sanctuary-site @kind style */
+.upload-row {
+  padding: var(--space-sm) var(--space-md);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--r-md);
+  background: var(--c-sunken);
+}
+
+.upload-row__progress {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.upload-row__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--c-text);
+  font-size: var(--text-sm);
+}
+
+.upload-row__value {
+  flex: 0 0 auto;
+  color: var(--c-text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.upload-row[data-state='failed'] {
+  border-color: var(--c-danger);
+}

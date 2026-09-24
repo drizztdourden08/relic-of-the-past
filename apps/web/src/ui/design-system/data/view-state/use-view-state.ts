@@ -24,6 +24,17 @@ const DEFAULT_SESSION_VIEW: SessionView = {
   selectedId: null,
 };
 
+/**
+ * Where the durable half is read and written. The Electron pair is the default;
+ * a surface outside the app (the Sanctuary site) passes its own pair over HTTP.
+ */
+interface ViewStorage {
+  load: (key: ViewKey) => Promise<ViewSnapshot | undefined>;
+  save: (key: ViewKey, snapshot: ViewSnapshot) => void;
+}
+
+const ELECTRON_VIEW_STORAGE: ViewStorage = { load: loadViewSnapshot, save: saveViewSnapshot };
+
 interface UseViewStateResult {
   snapshot: ViewSnapshot;
   sessionView: SessionView;
@@ -38,6 +49,7 @@ const useViewState = (
   schema: SchemaLike,
   fallbackColumns: readonly TableColumn[],
   fallbackGroupBy?: readonly string[],
+  storage: ViewStorage = ELECTRON_VIEW_STORAGE,
 ): UseViewStateResult => {
   const [localSnapshot, setLocalSnapshot] = useState<ViewSnapshot>(
     () => emptySnapshotFor(fallbackColumns, fallbackGroupBy),
@@ -60,7 +72,7 @@ const useViewState = (
     }
     beginDurableLoad({
       guard: loadGuard,
-      load: () => loadViewSnapshot(key),
+      load: () => storage.load(key),
       schema,
       fallbackColumns,
       fallbackGroupBy,
@@ -80,8 +92,8 @@ const useViewState = (
     // definition newer than anything the disk was asked for before they did it.
     loadGuard.markEdited();
     setLocalSnapshot(next);
-    if (key) saveViewSnapshot(key, next);
-  }, [key]);
+    if (key) storage.save(key, next);
+  }, [key, storage]);
 
   const setSessionView = useCallback((next: SessionView) => {
     if (key) setStoredSession(key, next);
@@ -97,4 +109,4 @@ const useViewState = (
 };
 
 export { useViewState };
-export type { UseViewStateResult };
+export type { UseViewStateResult, ViewStorage };

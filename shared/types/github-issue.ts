@@ -20,16 +20,4 @@ interface ControllerReportPayload {
   diagnosticsReport?: string;
 }
 
-interface CreateIssueRequest {
-  email: string;
-  title: string;
-  message: string;
-  debugInfo: string;
-  controllerReport?: ControllerReportPayload;
-}
-
-interface CreateIssueResult {
-  url: string;
-}
-
-export type { ControllerReportPayload, CreateIssueRequest, CreateIssueResult };
+export type { ControllerReportPayload };

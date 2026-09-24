@@ -1,0 +1,12 @@
+/* @layer sanctuary-site @kind style */
+
+/* The column takes the nav's own width. The brand shows its wordmark only while the nav
+   is open, so it never widens the column when the nav is closed. */
+.site-nav {
+  flex: 0 0 auto;
+  min-height: 0;
+}
+
+.site-nav__sections {
+  flex: 1 1 auto;
+}

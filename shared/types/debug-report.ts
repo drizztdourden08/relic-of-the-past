@@ -84,14 +84,9 @@ type DebugCaptureDeleteSessionResult =
 
 /** Building is local-only (collect files, zip, sweep in finalized capture sessions) and
  *  never touches the network: it returns the id of the zip the main process is holding in
- *  memory, generated up front so it can be folded into the GitHub issue body before anything
- *  is uploaded. 'debug-report:send' takes that same id later, once the issue is confirmed
- *  created, and can be retried against it as many times as the upload itself fails. */
+ *  memory. 'sanctuary:submitReport' files the report and uploads that zip; a failed upload
+ *  is retried against the same id with 'sanctuary:retryUpload'. */
 type DebugReportBuildResult =
-  | { reportId: string }
-  | { error: string };
-
-type DebugReportUploadResult =
   | { reportId: string }
   | { error: string };
 
@@ -105,5 +100,4 @@ export type {
   DebugCaptureSessionSummary,
   DebugCaptureDeleteSessionResult,
   DebugReportBuildResult,
-  DebugReportUploadResult,
 };

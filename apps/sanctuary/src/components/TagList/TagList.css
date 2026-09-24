@@ -1,0 +1,18 @@
+/* @layer sanctuary-site @kind style */
+.tag-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tag-list__tag {
+  padding: 0 var(--space-xs);
+  border-radius: var(--r-sm);
+  background: var(--c-inset);
+  border: var(--border-width-thin) solid var(--c-border);
+  color: var(--c-text-dim);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  white-space: nowrap;
+}

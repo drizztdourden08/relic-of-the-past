@@ -35,6 +35,9 @@
      chip share this footprint, so swapping one for the other never shifts layout. */
   --mode-badge-d: 80px;
 
+  /* A signed-in account avatar: one control row tall, round. */
+  --avatar-d: 40px;
+
   /* Widest a single summary-fact value may grow before it ellipsizes. Long
      ROM names and seeds truncate instead of pushing the row apart. */
   --summary-fact-maxw: 220px;
@@ -97,4 +100,14 @@
      compact list rows, where a name beside the art carries the identity and
      24px is enough; here the picture has to be recognised on its own. */
   --dark-room-sprite-d: 32px;
+
+  /* Section nav: collapsed and open widths, item height, and the round toggle on its edge. */
+  --section-nav-w: 58px;
+  --section-nav-w-open: 236px;
+  --section-nav-item-h: 40px;
+  --section-nav-toggle-d: 24px;
+
+  /* Settings page header backdrop height, full and once the page has scrolled. */
+  --settings-page-head-h: 88px;
+  --settings-page-head-h-compact: 52px;
 }
