@@ -54,7 +54,7 @@ import { registerWasmHandlers } from './wasm/ipc-handlers';
 import { registerStorageHandlers } from './storage/ipc-handlers';
 import { registerFileHandlers } from './storage/file-handlers';
 import { initAutoUpdater, registerUpdaterHandlers } from './updater';
-import { registerGithubHandlers } from './github/ipc-handlers';
+import { registerSanctuaryHandlers } from './sanctuary/ipc-handlers';
 import { registerDebugReportHandlers } from './diagnostics/debug-report/ipc-handlers';
 import { registerFfmpegHandlers } from './tools/ipc-handlers';
 import { emit } from './lib/ipc/handle';
@@ -114,7 +114,7 @@ const IPC_HANDLERS: Array<{ register: () => void; devOnly?: boolean }> = [
   { register: registerWasmHandlers },
   { register: registerStorageHandlers },
   { register: registerFileHandlers },
-  { register: registerGithubHandlers },
+  { register: registerSanctuaryHandlers },
   { register: registerDebugReportHandlers },
   { register: registerFfmpegHandlers },
 ];

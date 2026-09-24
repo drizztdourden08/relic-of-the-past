@@ -167,12 +167,16 @@ const INVOKE_MAP = {
   writeSimRun: 'debug:writeSimRun',
   appendSimLog: 'sim:appendLog',
   openSimLog: 'sim:openLog',
-  createGithubIssue: 'github:createIssue',
   finalizeDebugCaptureSession: 'debug-capture:finalizeSession',
   listDebugCaptureSessions: 'debug-capture:listSessions',
   deleteDebugCaptureSession: 'debug-capture:deleteSession',
   buildDebugReport: 'debug-report:build',
-  sendDebugReport: 'debug-report:send',
+  beginSanctuarySignIn: 'sanctuary:beginDeviceSignIn',
+  cancelSanctuarySignIn: 'sanctuary:cancelDeviceSignIn',
+  sanctuarySignOut: 'sanctuary:signOut',
+  sanctuaryMe: 'sanctuary:me',
+  submitSanctuaryReport: 'sanctuary:submitReport',
+  retrySanctuaryUpload: 'sanctuary:retryUpload',
 } as const satisfies Record<string, keyof InvokeContract>;
 
 const SEND_MAP = {
@@ -193,6 +197,7 @@ const EVENT_MAP = {
   onLogEntry: 'log:entry',
   onImportProgress: 'import:progress',
   onMsuOpenPack: 'msu:openPack',
+  onSanctuaryDeviceCode: 'sanctuary:deviceCode',
   onMsuOptimizeProgress: 'msu:optimize:progress',
   onFfmpegProgress: 'ffmpeg:progress',
   onControllerAdded: 'controller:added',

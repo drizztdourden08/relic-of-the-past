@@ -62,35 +62,11 @@
   transition: font-size var(--transition-fast);
 }
 
-.settings-page__anchors {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-xs);
+/* The header tabs sit after a divider; their pills are HeaderTabs' own. */
+.settings-page__tabs {
   margin-left: var(--space-sm);
   padding-left: var(--space-lg);
   border-left: 1px solid var(--c-border-strong);
-}
-
-.settings-page__anchor {
-  padding: var(--space-xs) var(--space-md);
-  border: 1px solid var(--c-border);
-  border-radius: var(--r-pill);
-  background: color-mix(in srgb, var(--c-sunken) 55%, transparent);
-  color: var(--c-text-dim);
-  font-size: var(--text-sm);
-  cursor: pointer;
-}
-
-.settings-page__anchor:hover {
-  color: var(--c-text);
-  border-color: var(--c-border-strong);
-}
-
-.settings-page__anchor--active,
-.settings-page__anchor--active:hover {
-  color: var(--c-gold-bright);
-  border-color: var(--c-gold);
-  background: var(--c-gold-soft);
 }
 
 .settings-page--compact .settings-page__head {

@@ -4,6 +4,7 @@ import type { SchemaIndex } from '../../data/schema/build-schema';
 import type { FieldDescriptor } from '../../data/schema/field-descriptor';
 import type { ColumnMove, SortEntry, TableColumn } from '../../data/table/types';
 import type { ViewKey } from '../../data/view-state/snapshot';
+import type { ViewStorage } from '../../data/view-state/use-view-state';
 import type {
   IdRefDefaultResolver, IdRefDisplayResolver, IdRefTargetFieldResolver,
 } from './behavior/display-substitution';
@@ -14,6 +15,8 @@ interface DataTableProps<T> {
   getRowId: (row: T) => string;
   /** Binds layout to the durable + session view tiers. Omitted, the table is ephemeral. */
   viewKey?: ViewKey;
+  /** Where the durable half of `viewKey` is read and written. Omitted, the Electron pair. */
+  viewStorage?: ViewStorage;
   /** Initial column specs; defaults to every non-hidden top-level field in fit-to-content mode. */
   fallbackColumns?: readonly TableColumn[];
   /** Grouping when this view has nothing saved yet. Omitted, it opens flat. A saved layout always wins. */

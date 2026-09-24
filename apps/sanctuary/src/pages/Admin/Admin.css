@@ -1,0 +1,4 @@
+/* @layer sanctuary-site @kind style */
+.admin {
+  max-width: var(--page-maxw);
+}

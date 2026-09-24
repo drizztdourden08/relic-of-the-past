@@ -1,0 +1,30 @@
+/* @layer sanctuary-site @kind style */
+
+/* The content fills the settings page body, so the table scrolls, not the page. */
+.files {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.files__summary {
+  font-variant-numeric: tabular-nums;
+}
+
+.files .dropzone {
+  padding: var(--space-sm);
+}
+
+.files__uploads {
+  max-height: var(--upload-list-maxh);
+  overflow-y: auto;
+}
+
+.files__note {
+  margin: 0;
+  padding: var(--space-sm) var(--space-md);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--r-md);
+  background: var(--c-sunken);
+  color: var(--c-text);
+  white-space: pre-wrap;
+}

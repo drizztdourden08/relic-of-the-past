@@ -22,6 +22,7 @@
   },
   "include": [
     "apps/web/src/**/*",
+    "apps/sanctuary/src/**/*",
     "apps/desktop/electron/**/*",
     "shared/**/*"
   ],

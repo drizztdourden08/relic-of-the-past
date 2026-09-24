@@ -11,9 +11,8 @@ import type { RefreshRateInfo, SyncedRateStatus } from '@shared/types/display';
 import type { DataLocation, StorageSummary, FileStat } from '@shared/platform';
 import type { SystemDiagnostics } from '@shared/types/diagnostics';
 import type { SimRunConfig } from '@shared/game/simulation';
-import type { CreateIssueRequest, CreateIssueResult } from '@shared/types/github-issue';
 import type {
-  DebugReportPackageInput, DebugReportBuildResult, DebugReportUploadResult,
+  DebugReportPackageInput, DebugReportBuildResult,
   DebugCaptureFinalizeInput, DebugCaptureFinalizeResult,
   DebugCaptureSessionSummary, DebugCaptureDeleteSessionResult,
 } from '@shared/types/debug-report';
@@ -35,6 +34,7 @@ import type { ControllerInvokeContract } from './controller-contract';
 import type { LanguageInvokeContract } from './language-contract';
 import type { MsuInvokeContract } from './msu-contract';
 import type { FfmpegInvokeContract } from './ffmpeg-contract';
+import type { SanctuaryInvokeContract } from './sanctuary-contract';
 import type { UpdateInfo, UpdaterCapabilities, UpdaterPrefs, VersionOption } from './updater-contract';
 
 
@@ -43,7 +43,8 @@ type TriggerCal = { base: number; max: number; deadzone: number };
 type ReviewMap = Record<string, { status: string; comment?: string }>;
 
 interface InvokeContract extends
-  ControllerInvokeContract, LanguageInvokeContract, MsuInvokeContract, FfmpegInvokeContract {
+  ControllerInvokeContract, LanguageInvokeContract, MsuInvokeContract, FfmpegInvokeContract,
+  SanctuaryInvokeContract {
   // App
   'app:getUserDataPath': () => Promise<string>;
 
@@ -256,9 +257,6 @@ interface InvokeContract extends
   'screenEditor:writeLocationRecord': (args: WriteRecordArgs<LocationRecord>) => Promise<WriteRecordResult>;
   'screenEditor:deleteLocation': (args: DeleteRecordArgs) => Promise<WriteRecordResult>;
 
-  // GitHub bug reporting through an anonymous relay, see cloud-functions/report-issue
-  'github:createIssue': (req: CreateIssueRequest) => Promise<CreateIssueResult>;
-
   // Debug report tool (Contributor tab). A recording finalizes the moment it stops - raw
   // frames, the position timeline, and an ffmpeg-encoded video all land in their own folder
   // under debug-captures/<profileId>/ right away, never deferred to packaging time.
@@ -268,13 +266,10 @@ interface InvokeContract extends
   'debug-capture:listSessions': (input: { profileId: string }) => Promise<DebugCaptureSessionSummary[]>;
   'debug-capture:deleteSession': (input: { profileId: string; sessionKey: string }) => Promise<DebugCaptureDeleteSessionResult>;
   // Zips the save/settings/randomizer config plus whichever capture sessions the picker had
-  // checked, see cloud-functions/debug-report-upload. Build is local-only and returns the id
-  // of the zip it's holding in memory, generated before anything uploads so it can be folded
-  // into the GitHub issue body first; send uploads it once the issue is confirmed created,
-  // and can be retried on its own (network failure only) without repeating the local build.
-  // A session is only marked sent once send() actually succeeds - never at build time.
+  // checked. Build is local-only and returns the id of the zip the main process holds in
+  // memory. Filing and uploading go through the Sanctuary channels (sanctuary-contract.ts),
+  // which build the same zip themselves; this stays for the headless and tooling callers.
   'debug-report:build': (input: DebugReportPackageInput) => Promise<DebugReportBuildResult>;
-  'debug-report:send': (input: { reportId: string }) => Promise<DebugReportUploadResult>;
 
   // Auto-updater (nested namespace)
   /** What this build can do about updates: check only, or check and install. */

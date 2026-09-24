@@ -1,0 +1,4 @@
+/* @layer sanctuary-site @kind style */
+.guard__loading {
+  padding: var(--space-2xl);
+}

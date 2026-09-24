@@ -1,0 +1,27 @@
+/* @layer renderer-design-system @kind style */
+
+/*
+ * Other companies' colours, for their own sign-in buttons. These come from each
+ * provider's brand guidelines, not from this design system, so they are not themed:
+ * matching the provider is the requirement. Google's are its dark-theme button,
+ * which is the variant it provides for dark pages.
+ */
+
+:root {
+  /* Discord: blurple with a white mark. */
+  --brand-discord: #5865f2;
+  --brand-discord-hover: #4752c4;
+  --brand-discord-ink: #fff;
+
+  /* GitHub: near-black with a white mark and a faint edge on a dark page. */
+  --brand-github: #24292f;
+  --brand-github-hover: #32383f;
+  --brand-github-edge: #3d444d;
+  --brand-github-ink: #fff;
+
+  /* Google: the dark-theme button, dark fill, grey outline, light text. */
+  --brand-google: #131314;
+  --brand-google-hover: #1f1f20;
+  --brand-google-edge: #8e918f;
+  --brand-google-ink: #e3e3e3;
+}

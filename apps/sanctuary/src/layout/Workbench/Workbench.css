@@ -1,0 +1,35 @@
+/* @layer sanctuary-site @kind style */
+.workbench {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-md);
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.workbench--with-detail {
+  grid-template-columns: minmax(0, 1fr) var(--detail-w);
+}
+
+.workbench__list {
+  gap: var(--space-sm);
+  min-width: 0;
+  min-height: 0;
+}
+
+.workbench__toolbar {
+  flex: 0 0 auto;
+}
+
+.workbench__toolbar > .filter-bar {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0;
+}
+
+/* The table owns its scrolling; the column just hands it the height. */
+.workbench__table {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+}

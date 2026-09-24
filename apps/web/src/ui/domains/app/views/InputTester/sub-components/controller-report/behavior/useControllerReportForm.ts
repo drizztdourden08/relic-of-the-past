@@ -1,6 +1,8 @@
 /* @layer renderer-components @kind hook */
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDebugTextBuilder, useDebugText } from '@app/lib/diagnostics';
+import { useReportContext } from '@app/lib/diagnostics/useReportContext';
+import { useSanctuarySessionStore } from '@app/stores/sanctuary-session';
 import type { ReportStep } from '../report-step-labels';
 import { useDetectionContext } from './useDetectionContext';
 import { useReportDiagnostics } from './useReportDiagnostics';
@@ -9,14 +11,24 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type SubmitStatus = 'idle' | 'submitting' | 'done' | 'error';
 
+interface FiledControllerReport {
+  reportId: string;
+  issueUrl: string;
+  sanctuaryUrl: string;
+}
+
 const useControllerReportForm = (deviceKey: string) => {
+  const me = useSanctuarySessionStore((s) => s.me);
+  const refreshSession = useSanctuarySessionStore((s) => s.refresh);
+  const { subject: subjectPrefix, context } = useReportContext();
+
   const [step, setStep] = useState<ReportStep>('about');
   const [email, setEmailValue] = useState('');
   const [emailTouched, setEmailTouched] = useState(false);
   const [name, setName] = useState('');
   const [additionalInfo, setAdditionalInfo] = useState('');
   const [status, setStatus] = useState<SubmitStatus>('idle');
-  const [resultUrl, setResultUrl] = useState<string | null>(null);
+  const [filed, setFiled] = useState<FiledControllerReport | null>(null);
 
   const detection = useDetectionContext(deviceKey);
   const { buildDebugText } = useDebugTextBuilder();
@@ -28,14 +40,17 @@ const useControllerReportForm = (deviceKey: string) => {
   const calibrationMap = wizard.byteCapture;
   const positionalRecords = wizard.positionalRecords;
 
+  useEffect(() => { void refreshSession(); }, [refreshSession]);
+
   const setEmail = useCallback((value: string) => {
     setEmailValue(value);
     setEmailTouched(true);
   }, []);
 
   const emailValid = EMAIL_RE.test(email);
-  const canLeaveUserInfo = emailValid;
-  const canSubmit = emailValid && calibrationMap !== null && debugText !== null && status !== 'submitting';
+  const identityReady = me !== null || emailValid;
+  const canLeaveUserInfo = identityReady;
+  const canSubmit = identityReady && calibrationMap !== null && debugText !== null && status !== 'submitting';
 
   const goToStep = useCallback((to: ReportStep) => setStep(to), []);
   const finishDiagnostics = useCallback(() => setStep('confirm'), []);
@@ -47,33 +62,42 @@ const useControllerReportForm = (deviceKey: string) => {
     if (!canSubmit || !calibrationMap || debugText === null) return;
     setStatus('submitting');
     try {
-      const { url } = await window.api.createGithubIssue({
-        email,
-        title: `Controller report: ${detection.detectedName} (${detection.vendorId}:${detection.productId})`,
-        // Only what the reporter wrote; every captured artefact goes through controllerReport below.
-        message: [
-          name.trim() ? `Reported by: ${name.trim()}` : null,
-          additionalInfo.trim() || '_No additional info provided._',
-        ].filter(Boolean).join('\n\n'),
-        debugInfo: debugText,
-        controllerReport: {
-          detectedName: detection.detectedName,
-          sdlMatch: detection.sdlMatch,
-          inputApi: detection.inputApi,
-          vendorId: detection.vendorId,
-          productId: detection.productId,
-          hidReport: detection.hidReport,
-          calibrationMap: JSON.stringify(calibrationMap, null, 2),
-          ...(positionalRecords.length > 0 && { positionalCapture: JSON.stringify(positionalRecords, null, 2) }),
-          ...(diagnosticsReport && { diagnosticsReport: JSON.stringify(diagnosticsReport, null, 2) }),
+      const result = await window.api.submitSanctuaryReport({
+        request: {
+          kind: 'controller',
+          subject: `${subjectPrefix}Controller ${detection.detectedName} (${detection.vendorId}:${detection.productId})`,
+          // Only what the reporter wrote; every captured artefact goes through controllerReport below.
+          description: [
+            !me && name.trim() ? `Reported by: ${name.trim()}` : null,
+            additionalInfo.trim() || 'No additional info provided.',
+          ].filter(Boolean).join('\n\n'),
+          debugInfo: debugText,
+          context,
+          contactEmail: me ? null : email.trim(),
+          controllerReport: {
+            detectedName: detection.detectedName,
+            sdlMatch: detection.sdlMatch,
+            inputApi: detection.inputApi,
+            vendorId: detection.vendorId,
+            productId: detection.productId,
+            hidReport: detection.hidReport,
+            calibrationMap: JSON.stringify(calibrationMap, null, 2),
+            ...(positionalRecords.length > 0 && { positionalCapture: JSON.stringify(positionalRecords, null, 2) }),
+            ...(diagnosticsReport && { diagnosticsReport: JSON.stringify(diagnosticsReport, null, 2) }),
+          },
         },
+        profileId: null, saves: [], sessionKeys: [],
       });
-      setResultUrl(url);
+      if (!('reportId' in result)) {
+        setStatus('error');
+        return;
+      }
+      setFiled({ reportId: result.reportId, issueUrl: result.issueUrl, sanctuaryUrl: result.sanctuaryUrl });
       setStatus('done');
     } catch {
       setStatus('error');
     }
-  }, [canSubmit, calibrationMap, diagnosticsReport, positionalRecords, debugText, email, name, additionalInfo, detection]);
+  }, [canSubmit, calibrationMap, diagnosticsReport, positionalRecords, debugText, me, email, name, additionalInfo, detection, subjectPrefix, context]);
 
   const reset = useCallback(() => {
     setStep('about');
@@ -82,17 +106,18 @@ const useControllerReportForm = (deviceKey: string) => {
     setName('');
     setAdditionalInfo('');
     setStatus('idle');
-    setResultUrl(null);
+    setFiled(null);
     wizard.restart();
   }, [wizard]);
 
   return {
     step, goToStep, finishDiagnostics, backToDiagnostics, wizard,
-    email, setEmail, emailTouched, emailValid, canLeaveUserInfo,
+    me, email, setEmail, emailTouched, emailValid, canLeaveUserInfo,
     name, setName, additionalInfo, setAdditionalInfo,
     detection, debugText, calibrationMap, diagnosticsReport,
-    canSubmit, status, resultUrl, submit, reset,
+    canSubmit, status, filed, submit, reset,
   };
 };
 
 export { useControllerReportForm };
+export type { FiledControllerReport };

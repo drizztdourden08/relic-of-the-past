@@ -1,10 +1,18 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
+import type { HeaderTabItem } from '../../../../design-system/composites/HeaderTabs';
 
 /** A section the header links to; `id` matches a `data-section` in the body. */
 interface SettingsPageAnchor {
   id: string;
   label: string;
+}
+
+/** Header tabs for a page whose subsections are views, not scroll targets. */
+interface SettingsPageTabs {
+  items: HeaderTabItem[];
+  activeId: string;
+  onSelect: (id: string) => void;
 }
 
 interface SettingsPageProps {
@@ -13,9 +21,11 @@ interface SettingsPageProps {
   /** Fills the header behind the title; the host picks the scene. */
   backdrop?: ReactNode;
   anchors?: SettingsPageAnchor[];
+  /** Drawn in the header in place of the anchors, and driven by the host. */
+  tabs?: SettingsPageTabs;
   /** False when the content scrolls its own columns (the Controls tab). */
   scroll?: boolean;
   children: ReactNode;
 }
 
-export type { SettingsPageAnchor, SettingsPageProps };
+export type { SettingsPageAnchor, SettingsPageProps, SettingsPageTabs };

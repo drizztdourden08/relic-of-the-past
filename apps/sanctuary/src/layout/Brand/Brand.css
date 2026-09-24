@@ -1,0 +1,48 @@
+/* @layer sanctuary-site @kind style */
+
+/* Logo and wordmark, heading the site in its black top band. */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-width: 0;
+  color: var(--c-gold);
+}
+
+.brand__logo {
+  flex: 0 0 auto;
+  height: var(--brand-logo-h);
+  width: auto;
+  user-select: none;
+}
+
+/* Gold fill with a dark edge under it, the stroke kept behind the fill so the pixel
+   letterforms stay full width. A pixel face: whole cells only, no tracking, no smoothing. */
+.brand__wordmark {
+  font-family: var(--font-game);
+  font-size: var(--game-cell-h);
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--c-gold);
+  -webkit-text-stroke: var(--border-width-thick) var(--c-bg);
+  paint-order: stroke fill;
+  -webkit-font-smoothing: none;
+  font-synthesis: none;
+  white-space: nowrap;
+}
+
+/* Hero: the logo large, the word under it at a whole multiple of the game's cell so the
+   pixel letters stay sharp. */
+.brand--hero {
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.brand--hero .brand__logo {
+  height: var(--brand-hero-logo-h);
+}
+
+.brand--hero .brand__wordmark {
+  font-size: calc(var(--game-cell-h) * 3);
+  -webkit-text-stroke-width: calc(var(--border-width-thick) * 2);
+}

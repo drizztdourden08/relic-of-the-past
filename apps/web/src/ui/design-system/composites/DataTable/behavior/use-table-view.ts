@@ -14,11 +14,14 @@ import type { FieldDescriptor } from '../../../data/schema/field-descriptor';
 import type { TableColumn, TableState } from '../../../data/table/types';
 import type { DataTableState } from '../../../data/table/use-data-table';
 import type { ViewKey } from '../../../data/view-state/snapshot';
+import type { ViewStorage } from '../../../data/view-state/use-view-state';
 
 interface UseTableViewInput<T> {
   rows: readonly T[];
   schema: readonly FieldDescriptor[];
   viewKey?: ViewKey;
+  /** Forwarded to `useViewState`; omitted, its default storage. */
+  viewStorage?: ViewStorage;
   fallbackColumns?: readonly TableColumn[];
   /** Grouping to open with when this view has nothing saved. */
   fallbackGroupBy?: readonly string[];
@@ -35,7 +38,7 @@ const signatureOf = (state: TableState): string =>
   JSON.stringify([state.columns, state.sort, state.groupBy]);
 
 const useTableView = <T>(input: UseTableViewInput<T>): TableView<T> => {
-  const { rows, schema, viewKey, fallbackColumns, fallbackGroupBy } = input;
+  const { rows, schema, viewKey, viewStorage, fallbackColumns, fallbackGroupBy } = input;
 
   // The same list seeds both sides, so a first render never captures a spurious change.
   const initial = useMemo(
@@ -45,7 +48,7 @@ const useTableView = <T>(input: UseTableViewInput<T>): TableView<T> => {
 
   // Same for grouping: a default only one side knew about would be captured as a change.
   const table = useDataTable({ rows, schema, initial, initialGroupBy: fallbackGroupBy });
-  const view = useViewState(viewKey, schema, initial, fallbackGroupBy);
+  const view = useViewState(viewKey, schema, initial, fallbackGroupBy, viewStorage);
 
   const tableSignature = signatureOf(table);
   const snapshotSignature = signatureOf(view.snapshot);

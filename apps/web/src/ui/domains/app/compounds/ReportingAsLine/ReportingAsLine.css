@@ -1,0 +1,22 @@
+/* @layer renderer-components @kind style */
+.reporting-as {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-xs);
+  font-size: var(--text-sm);
+}
+
+.reporting-as__label {
+  color: var(--c-text-faint);
+  text-transform: uppercase;
+  font-size: var(--text-xs);
+  letter-spacing: 0.05em;
+}
+
+.reporting-as__who {
+  color: var(--c-gold);
+}
+
+.reporting-as__hint {
+  color: var(--c-text-dim);
+}

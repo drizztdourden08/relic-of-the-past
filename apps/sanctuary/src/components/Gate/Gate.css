@@ -1,0 +1,26 @@
+/* @layer sanctuary-site @kind style */
+.gate {
+  width: 100%;
+  max-width: var(--gate-w);
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+  text-align: center;
+}
+
+.gate__title {
+  font-size: var(--text-xl);
+}
+
+.gate__lead {
+  color: var(--c-text-dim);
+  max-width: 48ch;
+  margin: 0 auto;
+}
+
+.gate__foot {
+  margin-top: var(--space-sm);
+}
+
+.gate .btn {
+  justify-content: center;
+}

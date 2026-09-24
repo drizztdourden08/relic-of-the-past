@@ -1,0 +1,114 @@
+name: Sanctuary deploy
+run-name: Sanctuary deploy ${{ github.ref_name }}
+
+# Deploys the Sanctuary: the API first, then the site that fronts it. Runs on a
+# `sanctuary-v*` tag push or on demand from the GitHub UI (Run workflow).
+#
+# Authentication is Workload Identity Federation, so no cloud key is stored
+# here. Two repository secrets carry the federation:
+#   GCP_WORKLOAD_IDENTITY_PROVIDER  the provider resource name
+#                                   (projects/<n>/locations/global/workloadIdentityPools/<pool>/providers/<provider>)
+#   GCP_SERVICE_ACCOUNT             the service account the workflow impersonates
+#                                   (<name>@rotp-bugreports.iam.gserviceaccount.com)
+# That account needs the Cloud Functions developer, Firebase Hosting admin,
+# Secret Manager accessor and service account user roles.
+#
+# Plain settings come from repository variables (Settings > Variables):
+#   SANCTUARY_ORIGIN, DISCORD_CLIENT_ID, DISCORD_GUILD_ID,
+#   DISCORD_CONTRIBUTOR_ROLE_ID, GITHUB_CLIENT_ID, GITHUB_REPO, GOOGLE_CLIENT_ID,
+#   B2_KEY_ID, B2_BUCKET, B2_ENDPOINT, B2_REGION, SANCTUARY_ADMIN_IDS
+# Secret values never pass through here: the function reads them from Secret
+# Manager at run time, by the names listed in the deploy step below.
+on:
+  push:
+    tags:
+      - 'sanctuary-v*'
+  workflow_dispatch:
+
+concurrency:
+  group: sanctuary-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  # Needed to mint the OIDC token the federation exchanges for cloud credentials.
+  id-token: write
+
+env:
+  GCP_PROJECT: rotp-bugreports
+  GCP_REGION: us-central1
+
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      # The function bundles shared/ from the repo root, so the root
+      # dependencies have to be present before the function build runs.
+      - name: Install root dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Build the function
+        working-directory: cloud-functions/sanctuary-api
+        run: |
+          npm ci --no-audit --no-fund
+          npm run bundle
+          test -f dist/index.js || { echo "::error::dist/index.js missing after build"; exit 1; }
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Deploy the function
+        run: |
+          gcloud functions deploy sanctuary-api \
+            --gen2 \
+            --project="$GCP_PROJECT" \
+            --region="$GCP_REGION" \
+            --runtime=nodejs24 \
+            --entry-point=sanctuaryApi \
+            --source=cloud-functions/sanctuary-api \
+            --trigger-http \
+            --allow-unauthenticated \
+            --set-env-vars="SANCTUARY_ORIGIN=${{ vars.SANCTUARY_ORIGIN }},DISCORD_CLIENT_ID=${{ vars.DISCORD_CLIENT_ID }},DISCORD_GUILD_ID=${{ vars.DISCORD_GUILD_ID }},DISCORD_CONTRIBUTOR_ROLE_ID=${{ vars.DISCORD_CONTRIBUTOR_ROLE_ID }},GITHUB_CLIENT_ID=${{ vars.GITHUB_CLIENT_ID }},GITHUB_REPO=${{ vars.GITHUB_REPO }},GOOGLE_CLIENT_ID=${{ vars.GOOGLE_CLIENT_ID }},B2_KEY_ID=${{ vars.B2_KEY_ID }},B2_BUCKET=${{ vars.B2_BUCKET }},B2_ENDPOINT=${{ vars.B2_ENDPOINT }},B2_REGION=${{ vars.B2_REGION }},SANCTUARY_ADMIN_IDS=${{ vars.SANCTUARY_ADMIN_IDS }}" \
+            --set-secrets="SANCTUARY_SESSION_KEY=SANCTUARY_SESSION_KEY:latest,DISCORD_CLIENT_SECRET=DISCORD_CLIENT_SECRET:latest,GITHUB_CLIENT_SECRET=GITHUB_CLIENT_SECRET:latest,GITHUB_READ_TOKEN=GITHUB_READ_TOKEN:latest,GOOGLE_CLIENT_SECRET=GOOGLE_CLIENT_SECRET:latest,B2_APP_KEY=B2_APP_KEY:latest,GITHUB_ISSUE_TOKEN=github-issue-token:latest"
+
+  site:
+    # The site rewrites /api/** to the function, so it goes out second.
+    needs: api
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Build the site
+        run: npm run sanctuary:build
+
+      # The auth action exports GOOGLE_APPLICATION_CREDENTIALS, which firebase-tools
+      # picks up on its own, so no login step follows.
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Deploy hosting
+        working-directory: apps/sanctuary
+        run: npx firebase-tools deploy --only hosting --project "$GCP_PROJECT" --non-interactive

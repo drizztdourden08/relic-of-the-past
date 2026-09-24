@@ -1,0 +1,9 @@
+/* @layer sanctuary-site @kind style */
+.account {
+  max-width: var(--page-maxw);
+}
+
+.account__name {
+  margin: 0;
+  color: var(--c-text);
+}

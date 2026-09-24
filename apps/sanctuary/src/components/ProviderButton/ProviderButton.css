@@ -1,0 +1,46 @@
+/* @layer sanctuary-site @kind style */
+
+/* Each provider's own sign-in button, coloured from the brand tokens (tokens/brand.css). */
+.provider-btn {
+  --provider-bg: var(--c-surface);
+  --provider-bg-hover: var(--c-hover);
+  --provider-ink: var(--c-text);
+  --provider-edge: transparent;
+
+  justify-content: center;
+  gap: var(--space-sm);
+  background: var(--provider-bg);
+  color: var(--provider-ink);
+  border: var(--border-width-thin) solid var(--provider-edge);
+  font-weight: var(--weight-medium);
+}
+
+.provider-btn:hover:not(:disabled) {
+  background: var(--provider-bg-hover);
+  color: var(--provider-ink);
+  border-color: var(--provider-edge);
+}
+
+.provider-btn .btn__icon {
+  font-size: var(--text-lg);
+}
+
+.provider-btn--discord {
+  --provider-bg: var(--brand-discord);
+  --provider-bg-hover: var(--brand-discord-hover);
+  --provider-ink: var(--brand-discord-ink);
+}
+
+.provider-btn--github {
+  --provider-bg: var(--brand-github);
+  --provider-bg-hover: var(--brand-github-hover);
+  --provider-ink: var(--brand-github-ink);
+  --provider-edge: var(--brand-github-edge);
+}
+
+.provider-btn--google {
+  --provider-bg: var(--brand-google);
+  --provider-bg-hover: var(--brand-google-hover);
+  --provider-ink: var(--brand-google-ink);
+  --provider-edge: var(--brand-google-edge);
+}

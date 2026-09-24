@@ -35,6 +35,9 @@
      chip share this footprint, so swapping one for the other never shifts layout. */
   --mode-badge-d: 80px;
 
+  /* A signed-in account avatar: one control row tall, round. */
+  --avatar-d: 40px;
+
   /* Widest a single summary-fact value may grow before it ellipsizes. Long
      ROM names and seeds truncate instead of pushing the row apart. */
   --summary-fact-maxw: 220px;

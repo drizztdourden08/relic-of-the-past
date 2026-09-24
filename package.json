@@ -36,6 +36,8 @@
     "build:linux": "rimraf dist release && electron-vite build && electron-builder --linux --config scripts/build/electron-builder.config.js -c.directories.output=release",
     "preview": "electron-vite preview",
     "build:web": "vite build --config apps/web/vite.config.ts",
+    "sanctuary:dev": "vite -c apps/sanctuary/vite.config.ts",
+    "sanctuary:build": "vite build -c apps/sanctuary/vite.config.ts",
     "assets:android": "cd apps/mobile && npx @capacitor/assets generate --android --iconBackgroundColor=#0f0f12 --splashBackgroundColor=#0f0f12",
     "cap:sync": "npm run build:web && cd apps/mobile && npx cap sync && npx @capacitor/assets generate --android --iconBackgroundColor=#0f0f12 --splashBackgroundColor=#0f0f12",
     "android:open": "cd apps/mobile && npx cap open android",
@@ -81,7 +83,9 @@
     "@capawesome/capacitor-file-picker": "^8.0.2",
     "@electron-toolkit/utils": "^4.0.0",
     "@iconify-icons/game-icons": "^1.2.1",
+    "@iconify-icons/logos": "^1.2.37",
     "@iconify-icons/lucide": "^1.2.135",
+    "@iconify-icons/simple-icons": "^1.2.75",
     "@iconify/react": "^6.0.2",
     "@tiptap/core": "^3.30.2",
     "@tiptap/extension-document": "^3.30.2",
@@ -101,6 +105,7 @@
     "react-color": "^2.19.3",
     "react-dom": "^19.2.6",
     "velopack": "^1.2.110-ge826545",
+    "zod": "^3.25.76",
     "zustand": "^5.0.13"
   },
   "devDependencies": {

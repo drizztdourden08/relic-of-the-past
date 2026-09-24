@@ -1,0 +1,48 @@
+/* @layer renderer-components @kind style */
+.sanctuary-account {
+  min-width: 0;
+}
+
+.sanctuary-account__lead {
+  color: var(--c-text-dim);
+  font-size: var(--text-sm);
+}
+
+.sanctuary-account__error {
+  color: var(--c-danger);
+  font-size: var(--text-sm);
+}
+
+.sanctuary-account__code {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xl);
+  letter-spacing: 0.05em;
+  color: var(--c-gold);
+  user-select: text;
+}
+
+.sanctuary-account__avatar {
+  width: var(--avatar-d);
+  height: var(--avatar-d);
+  border-radius: var(--r-pill);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.sanctuary-account__avatar--initial {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--c-gold-dim);
+  color: var(--c-text);
+  font-weight: var(--weight-semi);
+}
+
+.sanctuary-account__name {
+  font-weight: var(--weight-semi);
+}
+
+.sanctuary-account__detail {
+  color: var(--c-text-dim);
+  font-size: var(--text-sm);
+}

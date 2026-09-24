@@ -2,6 +2,9 @@
 /** Section config for the Developer settings tab. */
 import type { Section } from '../../../compounds/SettingsLayout';
 
+/** The row DeveloperSettings swaps for the account card; it maps to no setting. */
+const SANCTUARY_ACCOUNT_KEY = 'sanctuaryAccount';
+
 const SECTIONS: Section[] = [
   {
     id: 'developer-instrumentation',
@@ -22,6 +25,19 @@ const SECTIONS: Section[] = [
     ],
   },
   {
+    id: 'developer-sanctuary',
+    title: 'Sanctuary account',
+    items: [
+      {
+        // Not a GameSettings key: DeveloperSettings renders the account card for it.
+        key: SANCTUARY_ACCOUNT_KEY,
+        label: 'Sanctuary account',
+        description: 'Sign in so bug reports carry your name and appear on the hub.',
+        keywords: 'sanctuary account sign in hub contributor device code reports',
+      },
+    ],
+  },
+  {
     id: 'developer-debug-reporting',
     title: 'Debug Reporting',
     items: [
@@ -35,4 +51,4 @@ const SECTIONS: Section[] = [
   },
 ];
 
-export { SECTIONS };
+export { SECTIONS, SANCTUARY_ACCOUNT_KEY };
