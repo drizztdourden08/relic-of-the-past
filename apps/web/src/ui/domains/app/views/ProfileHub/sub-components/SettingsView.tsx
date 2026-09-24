@@ -1,8 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
- * Everything about how the game reaches the screen: rendering geometry, camera,
- * the window it lives in, and the frame pacing between the two. Window and performance used to
- * sit in a separate "System" tab, which split one subject across two places.
+ * How the game reaches the screen, drawn as three tabs that share one set of controls and
+ * cascades: Display (rendering geometry and frame pacing), Camera, and Window.
  */
 import { useMemo, type ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
@@ -19,7 +18,11 @@ import { effectiveHz } from '@shared/display/refresh-rate';
 interface SettingsViewProps {
   settings: GameSettings;
   onChange: (patch: Partial<GameSettings>) => void;
+  /** Which of the three tabs this subject is split across. */
+  part?: 'display' | 'camera' | 'window';
 }
+
+const CAMERA_OFF_MESSAGE = 'Camera options appear once Extended Rendering is on, in Display.';
 
 // Wide preset values that require linearWorldTilemap to be valid
 const REQUIRES_LINEAR = new Set(['21:9']);
@@ -75,7 +78,7 @@ const withCascade = (patch: Partial<GameSettings>, current: GameSettings): Parti
 };
 
 const SettingsView = (props: SettingsViewProps) => {
-  const { settings, onChange } = props;
+  const { settings, onChange, part = 'display' } = props;
   const handleChange = (patch: Partial<GameSettings>) => onChange(withCascade(patch, settings));
 
   const detectedHz = effectiveHz(useRefreshRate());
@@ -84,14 +87,13 @@ const SettingsView = (props: SettingsViewProps) => {
   const { status: syncedRate } = useSyncedRate(settings.syncedRefreshRate, settings.syncedRefreshRateHz);
 
   const sections = useMemo<Section[]>(() => {
-    const camera = buildCameraSection(settings);
-    return [
-      buildDisplaySection(settings),
-      ...(camera ? [camera] : []),
-      buildWindowSection(settings),
-      buildPerformanceSection(detectedHz, syncedRate),
-    ];
-  }, [settings, detectedHz, syncedRate]);
+    if (part === 'camera') {
+      const camera = buildCameraSection(settings);
+      return camera ? [camera] : [];
+    }
+    if (part === 'window') return [buildWindowSection(settings)];
+    return [buildDisplaySection(settings), buildPerformanceSection(detectedHz, syncedRate)];
+  }, [part, settings, detectedHz, syncedRate]);
 
   const renderControl = (key: string, s: GameSettings, change: (patch: Partial<GameSettings>) => void): ReactNode | null =>
     renderDisplayControl({
@@ -113,6 +115,7 @@ const SettingsView = (props: SettingsViewProps) => {
       onChange={handleChange}
       renderControl={renderControl}
       onOpenVanillaSafeSettings={openVanillaSafeSettings}
+      emptyMessage={part === 'camera' ? CAMERA_OFF_MESSAGE : undefined}
     />
   );
 };

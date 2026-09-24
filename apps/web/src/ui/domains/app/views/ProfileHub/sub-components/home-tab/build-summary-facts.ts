@@ -1,35 +1,29 @@
 /* @layer renderer-components @kind logic */
 /**
- * Assembles the home summary panel's fact rows: the profile row (mode, ROM,
- * dates, window) and, for a randomized profile only, the run row (seed,
- * connection, session status; the per-save-file strips render beside it).
+ * Assembles the home hero's fact rows: the profile row (ROM, dates, window)
+ * and, for a randomized profile only, the run row (seed, connection, session
+ * status; the per-save-file strips render beside it). The mode is the hero's
+ * title, so it is not a fact.
  */
-import { MODE_BADGE_LABELS } from '../../../../compounds/ModeBadge';
 import { formatRelativeTime } from './home-tab-helpers';
-import type { ProfileModeId } from '../../../../compounds/ModeBadge';
 import type { ProfileRandomizerConfig } from '@shared/types/profile';
 import type { SummaryFact } from './home-tab.type';
 import type { HomeRandomizerStatus } from './useHomeRandomizerStatus';
 
 interface ProfileFactsInput {
-  mode: ProfileModeId;
   romFile: string;
   lastPlayed?: number;
   created?: number;
-  windowMode?: string;
 }
 
 const buildProfileFacts = (input: ProfileFactsInput): SummaryFact[] => {
-  const { mode, romFile, lastPlayed, created, windowMode } = input;
+  const { romFile, lastPlayed, created } = input;
   const romName = romFile.replace(/\.(sfc|smc)$/i, '');
-  const facts: SummaryFact[] = [
-    { label: 'Mode', value: MODE_BADGE_LABELS[mode] },
+  return [
     { label: 'ROM', value: romName, title: romFile },
     { label: 'Last played', value: formatRelativeTime(lastPlayed) },
     { label: 'Created', value: formatRelativeTime(created) },
   ];
-  if (windowMode) facts.push({ label: 'Window', value: windowMode, capitalize: true });
-  return facts;
 };
 
 const buildRandomizerFacts = (

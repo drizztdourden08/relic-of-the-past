@@ -1,6 +1,6 @@
 /* @layer renderer-appshell @kind component */
 import { useCallback } from 'react';
-import { ProfileHub } from '../ui/domains/app/views/ProfileHub';
+import { HubGameControls, ProfileHub } from '../ui/domains/app/views/ProfileHub';
 import { DataManager } from '../ui/domains/app/views/DataManager';
 import { InputCalibration } from '../ui/domains/app/views/InputTester';
 import { CreditsPage } from '../ui/domains/app/views/ProfileHub/sub-components/CreditsTab';
@@ -10,6 +10,7 @@ import { DataInspector } from '../ui/domains/app/views/DataInspector';
 import { About } from '../ui/domains/app/views/About';
 import { Randomizer } from '../ui/domains/app/views/Randomizer';
 import { FullScreenLayer } from '../ui/design-system/composites/FullScreenLayer';
+import { WorkspaceSwitch, type Workspace } from '../ui/domains/app/views/WorkspaceSwitch';
 import type { PageId, RomDisplayInfo } from './types';
 import type { GameSettings } from '@shared/types/settings';
 import type { CreateProfileOptions, CreateProfileResult } from '@shared/types/profile';
@@ -80,10 +81,13 @@ const PageRouter = (props: PageRouterProps) => {
 
   // ProfileHub stays mounted to preserve scroll/state; other pages use early returns
   let otherPage: React.ReactNode = null;
+  const switchTo = (current: Workspace) => (
+    <WorkspaceSwitch current={current} hasProfile={!!profileMgmt.activeProfile} onSelect={nav.setActivePage} />
+  );
 
   if (nav.activePage === 'data') {
     otherPage = (
-      <FullScreenLayer onClose={nav.closePage} title="Data Manager">
+      <FullScreenLayer onClose={nav.closePage} title="Data Manager" floating={switchTo('data')}>
         <DataManager
           profiles={profileMgmt.profiles}
           romStatuses={profileMgmt.romDisplayInfos}
@@ -153,8 +157,22 @@ const PageRouter = (props: PageRouterProps) => {
     <>
       {otherPage}
       {profileMgmt.activeProfile && (
-        <FullScreenLayer onClose={nav.closePage} hidden={!profileHubVisible} title="Home">
-
+        <FullScreenLayer
+          onClose={nav.closePage}
+          hidden={!profileHubVisible}
+          title="Home"
+          subtitle={profileMgmt.activeProfile.name}
+          floating={switchTo('profile')}
+          extra={profileHubTab !== 'home' && (
+            <HubGameControls
+              isGameRunning={game.isRunning}
+              showPlay
+              onStartGame={handleStartGame}
+              onStopGame={game.stop}
+              onResetGame={handleResetGame}
+            />
+          )}
+        >
           <ProfileHub
             profile={profileMgmt.activeProfile}
             isGameRunning={game.isRunning}

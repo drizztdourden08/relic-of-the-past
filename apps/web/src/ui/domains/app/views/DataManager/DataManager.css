@@ -11,18 +11,13 @@
   overflow: hidden;
 }
 
+/* The gap leaves room for the nav's round toggle, which straddles its right edge. */
 .data-manager__body {
   display: flex;
+  gap: var(--space-xl);
   flex: 1;
   min-height: 0;
   overflow: hidden;
-}
-
-/* Sized by its widest item, so renaming a tab can never truncate it (a fixed
-   120px ellipsized "MSU Studio"). On the compact viewport the labels are hidden,
-   so the rail shrinks to the icon strip with no second rule. */
-.data-manager__tabs {
-  width: max-content;
 }
 
 .data-manager__content {

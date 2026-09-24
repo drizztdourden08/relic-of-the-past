@@ -7,10 +7,13 @@ import { type WindowHeaderProps } from './WindowHeader.type';
 
 /** Shared window/dialog title bar: gold uppercase title on the left, ✕ inline on the right. */
 const WindowHeader = (props: WindowHeaderProps) => {
-  const { title, onClose, extra, className = '' } = props;
+  const { title, subtitle, onClose, extra, className = '' } = props;
   return (
     <Box className={`window-header${className ? ` ${className}` : ''}`}>
-      <Text as="h3" className="window-header__title">{title}</Text>
+      <Box className="window-header__titles">
+        <Text as="h3" className="window-header__title">{title}</Text>
+        {subtitle && <Text className="window-header__subtitle">{subtitle}</Text>}
+      </Box>
       {extra && <Box className="window-header__extra">{extra}</Box>}
       {onClose && (
         <IconButton variant="ghost" size="md" label="Close" className="window-header__close" onClick={onClose}>✕</IconButton>

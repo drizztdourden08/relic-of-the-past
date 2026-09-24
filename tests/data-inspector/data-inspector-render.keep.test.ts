@@ -64,7 +64,7 @@ describeDataset('DataInspector', () => {
   it('renders the whole screen on its default collection', () => {
     const html = renderToStaticMarkup(createElement(DataInspector));
     expect(html).toContain('data-inspector');
-    expect(html).toContain('nav-rail');
+    expect(html).toContain('section-nav');
     expect(html).toContain('filter-bar');
     expect(html).toContain('data-table');
   });
