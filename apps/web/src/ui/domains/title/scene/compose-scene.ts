@@ -23,15 +23,21 @@ interface Scene {
   draw: (ctx: CanvasRenderingContext2D, clock: SceneClock) => void;
 }
 
-const buildScene = (assets: SceneAssets, geometry: SceneGeometry, seed: number): Scene => {
+interface SceneOptions {
+  /** The patches of moving water low in the lake; off for a still picture, where they read as squares. */
+  movingWater?: boolean;
+}
+
+const buildScene = (assets: SceneAssets, geometry: SceneGeometry, seed: number, options: SceneOptions = {}): Scene => {
   const layout = buildSceneLayout(geometry, assets, seed);
+  const patches = options.movingWater === false ? [] : layout.caustics;
   const layers: SceneLayer[] = [
     skyLayer(assets.sky, geometry),
     ridgeLayer({ pieces: assets.mountains, placed: layout.mountains, parallax: MOUNTAIN_PARALLAX }, geometry),
     cloudLayer(assets.clouds, layout.clouds, geometry),
     ridgeLayer({ pieces: assets.trees, placed: layout.trees, parallax: TREE_PARALLAX, rows: TREE_ROWS }, geometry),
     landmarkLayer(assets.landmark, geometry),
-    reflectionLayer({ caustics: assets.caustics, patches: layout.caustics }, geometry),
+    reflectionLayer({ caustics: assets.caustics, patches }, geometry),
     waterTextureLayer(geometry, seed),
     waterLineLayer(geometry),
     landmarkFootLayer(assets.landmark, geometry),
@@ -46,4 +52,4 @@ const buildScene = (assets: SceneAssets, geometry: SceneGeometry, seed: number):
 };
 
 export { buildScene };
-export type { Scene };
+export type { Scene, SceneOptions };
