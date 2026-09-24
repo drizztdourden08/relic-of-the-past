@@ -1,0 +1,14 @@
+/* @layer renderer-hud @kind style */
+
+/* Fills its box and clips the canvas, which is a little larger than the box at whole pixels. */
+.scene-backdrop {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.scene-backdrop__canvas {
+  display: block;
+  image-rendering: pixelated;
+}

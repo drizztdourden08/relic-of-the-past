@@ -1,11 +1,25 @@
 /* @layer renderer-components @kind data */
 /**
- * Single registry of every ProfileHub tab: icon, label, and (when the tab is a
+ * Single registry of every ProfileHub tab: icons, label, and (when the tab is a
  * SettingsLayout screen) the function that builds its Section[] from current settings.
  * A `Record<ProfileHubTab, ...>`. Adding a tab to the union without describing it here is a
- * compile error, which is what keeps this in sync with ProfileHubBody's NavRail and the
- * search catalog's settings-source with no manual bookkeeping.
+ * compile error, which is what keeps this in sync with the hub's nav, its search results and
+ * the search palette's catalog with no manual bookkeeping.
  */
+import type { IconifyIcon } from '@iconify/react/offline';
+import homeIcon from '@iconify-icons/lucide/home';
+import monitorIcon from '@iconify-icons/lucide/monitor';
+import cameraIcon from '@iconify-icons/lucide/camera';
+import windowIcon from '@iconify-icons/lucide/app-window';
+import paletteIcon from '@iconify-icons/lucide/palette';
+import volumeIcon from '@iconify-icons/lucide/volume-2';
+import gamepadIcon from '@iconify-icons/lucide/gamepad-2';
+import bugIcon from '@iconify-icons/lucide/bug';
+import hudIcon from '@iconify-icons/lucide/layout-dashboard';
+import keyboardIcon from '@iconify-icons/lucide/keyboard';
+import vibrateIcon from '@iconify-icons/lucide/vibrate';
+import wrenchIcon from '@iconify-icons/lucide/wrench';
+import phoneIcon from '@iconify-icons/lucide/smartphone';
 import type { GameSettings } from '@shared/types/settings';
 import type { Section } from '../../compounds/SettingsLayout';
 import type { SyncedRateStatus } from '@shared/types/display';
@@ -21,11 +35,14 @@ import { SECTIONS as HAPTICS_SECTIONS } from './sub-components/haptics-settings-
 import { SECTIONS as DEVELOPER_SECTIONS } from './sub-components/developer-settings-sections';
 
 interface ProfileHubTabSpec {
+  /** Emoji for the search palette's rows. */
   icon: string;
+  /** Line icon for the hub's nav and page headers. */
+  navIcon: IconifyIcon;
   label: string;
   /** Omitted for tabs with no SettingsLayout (Home, Controls' custom binding UI). */
   sections?: (settings: GameSettings) => Section[];
-  /** Only appended to the tab list on mobile form factor. */
+  /** Only listed on mobile form factor. */
   mobileOnly?: boolean;
 }
 
@@ -38,30 +55,40 @@ const NEUTRAL_SYNCED_RATE: SyncedRateStatus = {
 };
 
 const PROFILE_HUB_TABS: Record<ProfileHubTab, ProfileHubTabSpec> = {
-  home: { icon: '🏠', label: 'Home' },
+  home: { icon: '🏠', navIcon: homeIcon, label: 'Home' },
   settings: {
     icon: '📺',
+    navIcon: monitorIcon,
     label: 'Display',
+    sections: (s) => [buildDisplaySection(s), buildPerformanceSection(null, NEUTRAL_SYNCED_RATE)],
+  },
+  camera: {
+    icon: '🎥',
+    navIcon: cameraIcon,
+    label: 'Camera',
     sections: (s) => {
       const camera = buildCameraSection(s);
-      return [
-        buildDisplaySection(s),
-        ...(camera ? [camera] : []),
-        buildWindowSection(s),
-        buildPerformanceSection(null, NEUTRAL_SYNCED_RATE),
-      ];
+      return camera ? [camera] : [];
     },
   },
-  graphics: { icon: '🎨', label: 'Graphics', sections: () => [RENDERING_SECTION, ENHANCEMENTS_SECTION, APPEARANCE_SECTION] },
-  audio: { icon: '🔊', label: 'Audio', sections: () => AUDIO_SECTIONS },
-  gameplay: { icon: '🎮', label: 'Gameplay', sections: () => GAMEPLAY_SECTIONS },
-  bugfixes: { icon: '🐛', label: 'Bug Fixes', sections: () => [buildBugFixSection()] },
-  hud: { icon: '🖥️', label: 'HUD', sections: () => HUD_SECTIONS },
-  controls: { icon: '⌨️', label: 'Controls' },
-  haptics: { icon: '📳', label: 'Haptics', sections: () => HAPTICS_SECTIONS },
-  developer: { icon: '🛠️', label: 'Contributor', sections: () => DEVELOPER_SECTIONS },
-  mobile: { icon: '📱', label: 'Mobile', sections: () => [MOBILE_SECTION], mobileOnly: true },
+  window: { icon: '🪟', navIcon: windowIcon, label: 'Window', sections: (s) => [buildWindowSection(s)] },
+  graphics: { icon: '🎨', navIcon: paletteIcon, label: 'Graphics', sections: () => [RENDERING_SECTION, ENHANCEMENTS_SECTION, APPEARANCE_SECTION] },
+  audio: { icon: '🔊', navIcon: volumeIcon, label: 'Audio', sections: () => AUDIO_SECTIONS },
+  gameplay: { icon: '🎮', navIcon: gamepadIcon, label: 'Gameplay', sections: () => GAMEPLAY_SECTIONS },
+  bugfixes: { icon: '🐛', navIcon: bugIcon, label: 'Bug Fixes', sections: () => [buildBugFixSection()] },
+  hud: { icon: '🖥️', navIcon: hudIcon, label: 'HUD', sections: () => HUD_SECTIONS },
+  controls: { icon: '⌨️', navIcon: keyboardIcon, label: 'Controls' },
+  haptics: { icon: '📳', navIcon: vibrateIcon, label: 'Haptics', sections: () => HAPTICS_SECTIONS },
+  developer: { icon: '🛠️', navIcon: wrenchIcon, label: 'Contributing', sections: () => DEVELOPER_SECTIONS },
+  mobile: { icon: '📱', navIcon: phoneIcon, label: 'Mobile', sections: () => [MOBILE_SECTION], mobileOnly: true },
 };
 
-export { PROFILE_HUB_TABS };
+/** The nav's groups, in order. Home is not in a group; it is pinned above them. */
+const PROFILE_HUB_NAV_GROUPS: { id: string; label: string; tabs: ProfileHubTab[] }[] = [
+  { id: 'video', label: 'Video', tabs: ['settings', 'graphics', 'camera', 'window'] },
+  { id: 'gameplay', label: 'Gameplay', tabs: ['gameplay', 'audio', 'hud', 'controls'] },
+  { id: 'extras', label: 'Extras', tabs: ['bugfixes', 'haptics', 'developer', 'mobile'] },
+];
+
+export { PROFILE_HUB_NAV_GROUPS, PROFILE_HUB_TABS };
 export type { ProfileHubTabSpec };

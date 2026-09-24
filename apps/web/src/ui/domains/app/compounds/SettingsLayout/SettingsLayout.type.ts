@@ -44,6 +44,8 @@ interface SettingsLayoutProps {
   /** Invoked when a Vanilla-Safe-locked control's overlay action is activated. Required to
    *  make the lock interactive; omitting it just leaves the action inert. */
   onOpenVanillaSafeSettings?: () => void;
+  /** Shown on the page when the tab has no rows to draw. */
+  emptyMessage?: string;
 }
 
 export type {

@@ -1,38 +1,15 @@
 /* @layer renderer-hud @kind data */
 /**
- * The scene tiles bundled under apps/web/src/assets/title-scene/: one strip of sky, and every
- * numbered variant of the mountains, trees and clouds the folder holds, plus the castle. A sword's picture lives in sword/<id>.png; the fighter's, and any id without a file, draws
- * the ROM's sword.
+ * What the title draws besides the scene tiles: the opening mark, and the pictures of the logo and
+ * the sword. A sword's picture lives in sword/<id>.png; the fighter's, and any id without a file,
+ * draws the ROM's sword.
  */
 import type { TitleSwordPicture } from '@shared/game/title/title-swords';
 import openingMark from '../../../../../assets/title-scene/opening-mark.png';
+import { LIGHT_SCENE_FILES, oneOf } from '../../scene/scene-files';
 
 // path -> bundled url
-const LIGHT_FILES = import.meta.glob('../../../../../assets/title-scene/light/*.png', { eager: true, import: 'default' }) as Record<string, string>;
 const SWORD_FILES = import.meta.glob('../../../../../assets/title-scene/sword/*.png', { eager: true, import: 'default' }) as Record<string, string>;
-
-const nameOf = (path: string): string => path.slice(path.lastIndexOf('/') + 1, -'.png'.length);
-
-/** Every `<stem>_<n>.png` in the folder, in numeric order. */
-const variantsOf = (files: Record<string, string>, stem: string): string[] =>
-  Object.entries(files)
-    .map(([path, url]) => ({ name: nameOf(path), url }))
-    .filter(({ name }) => name.startsWith(`${stem}_`))
-    .sort((a, b) => Number(a.name.slice(stem.length + 1)) - Number(b.name.slice(stem.length + 1)))
-    .map(({ url }) => url);
-
-const oneOf = (files: Record<string, string>, name: string): string => {
-  const hit = Object.entries(files).find(([path]) => nameOf(path) === name);
-  return hit ? hit[1] : '';
-};
-
-const LIGHT_SCENE_FILES = {
-  sky: oneOf(LIGHT_FILES, 'skybg'),
-  mountains: variantsOf(LIGHT_FILES, 'mountain'),
-  trees: variantsOf(LIGHT_FILES, 'tree'),
-  clouds: variantsOf(LIGHT_FILES, 'cloud'),
-  landmark: oneOf(LIGHT_FILES, 'castle'),
-} as const;
 
 const OPENING_MARK_URL: string = openingMark;
 

@@ -4,12 +4,8 @@
   height: 100%;
   display: flex;
   min-height: 0;
-  gap: var(--space-md);
+  gap: var(--space-xl); /* room for the nav's round toggle, which straddles its right edge */
   padding: var(--space-md);
-}
-
-.data-inspector__nav {
-  width: 12rem;
 }
 
 .data-inspector__panes {

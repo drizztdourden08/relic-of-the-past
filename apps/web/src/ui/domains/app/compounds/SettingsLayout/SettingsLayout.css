@@ -1,8 +1,7 @@
 /* @layer renderer-components @kind style */
 
-/* Settings content panel. The chrome (sidebar + search + scroll panel) is the shared
-   SettingsShell + SideNav composites; these styles only cover the section / subsection /
-   option-group content inside the panel. */
+/* Settings content. The page chrome (header, anchors, scroll) is the SettingsPage
+   compound; these styles only cover the section / subsection / option-group content. */
 
 .settings-layout__sections {
   display: flex;
@@ -44,6 +43,7 @@
 /* The action sits back until the heading is hovered or it holds focus, so a panel of
    sections is not a column of competing buttons. It stays visible either way. */
 .settings-layout__section-reset {
+  justify-content: flex-end; /* the glyph hugs the section's right edge; the armed pair grows leftward */
   opacity: 0.55;
   transition: opacity var(--transition-fast);
 }

@@ -1,0 +1,117 @@
+/* @layer renderer-components @kind style */
+
+/* Same card as a settings page, so switching between a tab and its search feels like one surface. */
+.hub-search {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--c-panel);
+  backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+/* Nothing typed yet: the empty state fills the card, centred. */
+.hub-search--idle {
+  justify-content: center;
+}
+
+.hub-search__empty {
+  margin-block: auto;
+}
+
+.hub-search__head {
+  flex-shrink: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm) var(--space-lg);
+  min-height: var(--settings-page-head-h-compact);
+  padding: var(--space-sm) var(--space-xl);
+  border-bottom: 1px solid var(--c-border);
+}
+
+.hub-search__summary {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semi);
+  color: var(--c-text);
+}
+
+.hub-search__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.hub-search__tab-chip,
+.hub-search__open {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-pill);
+  background: none;
+  color: var(--c-gold);
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.hub-search__tab-chip:hover,
+.hub-search__open:hover {
+  border-color: var(--c-gold);
+  background: var(--c-gold-soft);
+}
+
+.hub-search__body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+  padding: var(--pad-page);
+}
+
+.hub-search__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.hub-search__group-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.hub-search__group-icon {
+  display: grid;
+  place-items: center;
+  font-size: var(--text-xl);
+  color: var(--c-gold-bright);
+  filter: drop-shadow(0 0 var(--blur-glow) var(--c-gold));
+}
+
+.hub-search__group-title {
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  color: var(--c-text);
+}
+
+.hub-search__group-count {
+  padding: 0 var(--space-sm);
+  border-radius: var(--r-pill);
+  background: var(--c-gold-soft);
+  color: var(--c-gold-bright);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semi);
+  font-variant-numeric: tabular-nums;
+}
+
+.hub-search__open {
+  margin-left: auto;
+}

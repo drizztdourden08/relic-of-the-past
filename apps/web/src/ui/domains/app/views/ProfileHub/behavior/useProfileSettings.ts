@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind hook */
-/** Settings load/persist/live-push, pause tracking, and restart toasts for ProfileHub. */
+/** Settings load/persist/live-push and restart toasts for ProfileHub. */
 import { useState, useCallback, useEffect, useRef } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { usePlatform } from '@app/platform';
@@ -26,29 +26,6 @@ const useProfileSettings = (props: ProfileHubProps) => {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const restartToastShownRef = useRef(false);
   const wasRunningRef = useRef(isGameRunning);
-  const [gamePaused, setGamePaused] = useState(false);
-
-  // Track pause state from InputManager
-  useEffect(() => {
-    if (!isGameRunning) {
-      setGamePaused(false);
-      return;
-    }
-    const inputMgr = getInputManager();
-    setGamePaused(inputMgr.isPaused());
-    const unsub = inputMgr.onPauseChange((paused) => setGamePaused(paused));
-    return unsub;
-  }, [isGameRunning]);
-
-  const handleTogglePause = useCallback(() => {
-    const inputMgr = getInputManager();
-    if (inputMgr.isPaused()) {
-      inputMgr.resume();
-    } else {
-      inputMgr.togglePause();
-    }
-  }, []);
-
   // Push live settings when game starts; clear restart toast when it stops.
   useEffect(() => {
     if (!wasRunningRef.current && isGameRunning) {
@@ -135,7 +112,7 @@ const useProfileSettings = (props: ProfileHubProps) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  return { settings, handleSettingsChange, gamePaused, handleTogglePause, toasts, dismissToast };
+  return { settings, handleSettingsChange, toasts, dismissToast };
 };
 
 export { useProfileSettings };
