@@ -2,7 +2,7 @@
 .gate {
   width: 100%;
   max-width: var(--gate-w);
-  margin: var(--space-2xl) auto;
+  margin: 0 auto;
   padding: 0 var(--space-lg);
   text-align: center;
 }

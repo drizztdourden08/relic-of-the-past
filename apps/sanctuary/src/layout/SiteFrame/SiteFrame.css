@@ -34,8 +34,17 @@
   overflow: auto;
 }
 
+/* A page with no nav is one block, the brand over its card, centred in the viewport. */
+.site--bare {
+  justify-content: center;
+}
+
+.site--bare .site__main {
+  flex: 0 0 auto;
+}
+
 .site--bare .site__brand-strip {
   display: flex;
   justify-content: center;
-  padding: var(--space-2xl) 0 var(--space-lg);
+  padding: 0 0 var(--space-lg);
 }
