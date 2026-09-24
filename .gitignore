@@ -18,6 +18,9 @@ out/
 *.tsbuildinfo
 .wiki-build/
 
+# Firebase CLI deploy cache
+.firebase/
+
 # WASM build artifacts
 core/wasm-build/output/
 
