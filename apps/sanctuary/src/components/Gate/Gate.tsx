@@ -9,7 +9,8 @@ import { Text } from '@ds/primitives/Text';
 import './Gate.css';
 
 type GateProps = {
-  title: ReactNode;
+  /** Optional: a page headed by the large brand needs no second title. */
+  title?: ReactNode;
   lead?: ReactNode;
   children?: ReactNode;
   footnote?: ReactNode;
@@ -19,7 +20,7 @@ const Gate = (props: GateProps) => {
   const { title, lead, children, footnote } = props;
   return (
     <Stack as="section" gap="md" align="stretch" className="gate">
-      <Text as="h1" variant="title" className="gate__title">{title}</Text>
+      {title && <Text as="h1" variant="title" className="gate__title">{title}</Text>}
       {lead && <Text as="p" className="gate__lead">{lead}</Text>}
       {children}
       {footnote && <Text as="p" variant="caption" className="gate__foot">{footnote}</Text>}

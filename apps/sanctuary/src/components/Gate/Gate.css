@@ -13,7 +13,7 @@
 
 .gate__lead {
   color: var(--c-text-dim);
-  max-width: 34ch;
+  max-width: 48ch;
   margin: 0 auto;
 }
 

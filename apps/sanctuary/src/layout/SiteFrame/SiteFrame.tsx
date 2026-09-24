@@ -24,7 +24,7 @@ const SiteFrame = (props: SiteFrameProps) => {
   if (bare) {
     return (
       <Flex direction="column" align="stretch" className="site site--bare">
-        <Box as="header" className="site__brand-strip"><Brand /></Box>
+        <Box as="header" className="site__brand-strip"><Brand size="hero" /></Box>
         <Box as="main" className="site__main">{children}</Box>
       </Flex>
     );

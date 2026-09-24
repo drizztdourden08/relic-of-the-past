@@ -37,5 +37,5 @@
 .site--bare .site__brand-strip {
   display: flex;
   justify-content: center;
-  padding: var(--space-md) 0 0;
+  padding: var(--space-2xl) 0 var(--space-lg);
 }

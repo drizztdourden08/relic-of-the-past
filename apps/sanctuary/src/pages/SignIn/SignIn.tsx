@@ -15,11 +15,7 @@ const SignIn = (props: SignInProps) => {
   const { returnTo } = props;
   return (
     <SiteFrame bare>
-      <Gate
-        title="Sanctuary"
-        lead="Files, builds and bug reports for the people working on Relic of the Past."
-        footnote="any of them; the others can be linked afterwards"
-      >
+      <Gate lead="The contributor space for Relic of the Past.">
         <Stack gap="sm" align="stretch">
           {PROVIDERS.map((provider) => (
             <ProviderButton key={provider} provider={provider} intent="signin" returnTo={returnTo} fullWidth />

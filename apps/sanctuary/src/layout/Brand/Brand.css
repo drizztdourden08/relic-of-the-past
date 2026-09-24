@@ -30,3 +30,19 @@
   font-synthesis: none;
   white-space: nowrap;
 }
+
+/* Hero: the logo large, the word under it at a whole multiple of the game's cell so the
+   pixel letters stay sharp. */
+.brand--hero {
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.brand--hero .brand__logo {
+  height: var(--brand-hero-logo-h);
+}
+
+.brand--hero .brand__wordmark {
+  font-size: calc(var(--game-cell-h) * 3);
+  -webkit-text-stroke-width: calc(var(--border-width-thick) * 2);
+}

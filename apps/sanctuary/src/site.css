@@ -21,6 +21,9 @@
   /* The brand's logo at the height the app's title bar draws its own. */
   --brand-logo-h: 20px;
   --topbar-h: 44px;
+
+  /* The large logo heading the pages with no nav (sign-in, waiting, device). */
+  --brand-hero-logo-h: 112px;
 }
 
 html,
