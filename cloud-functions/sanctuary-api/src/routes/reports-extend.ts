@@ -9,7 +9,7 @@ import { requireAccess } from '../auth/require-access';
 import { reportsRepo } from '../db/reports-repo';
 import { now } from '../db/firestore';
 import { DAY_MS, expiryOf } from '../reports/expiry';
-import { loadReport, viewReport } from '../reports/report-view';
+import { loadVisibleReport, viewReport } from '../reports/report-view';
 import type { Route } from '../route.type';
 
 const reportsExtend: Route = {
@@ -17,7 +17,7 @@ const reportsExtend: Route = {
   handler: async ({ req, res, params }) => {
     const member = await requireAccess(req);
     parseBody(extendReportSchema, req.body);
-    const report = await loadReport(params.id);
+    const report = await loadVisibleReport(params.id, member);
     const closedAt = report.issue.closedAt;
     if (closedAt === null) throw conflict('The issue is still open; there is nothing to extend yet.');
     const cap = closedAt + LIMITS.extendMaxDays * DAY_MS;

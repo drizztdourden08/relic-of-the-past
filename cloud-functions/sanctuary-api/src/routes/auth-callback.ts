@@ -12,7 +12,7 @@ import { selectProvider } from '../auth/providers/select-provider';
 import type { ProviderProfile } from '../auth/providers/provider.type';
 import { readOauthState } from '../auth/oauth-state';
 import { readSession, startSession } from '../auth/session';
-import { evaluateAccess } from '../access/evaluate-access';
+import { refreshAccess } from '../access/refresh-access';
 import { identitiesRepo } from '../db/identities-repo';
 import { usersRepo } from '../db/users-repo';
 import { now } from '../db/firestore';
@@ -59,7 +59,7 @@ const authCallback: Route = {
 
     const userId = current?.userId ?? existing?.userId ?? (await usersRepo.create(profile)).id;
     await bindIdentity(userId, provider.name, profile);
-    await usersRepo.setAccess(userId, await evaluateAccess(userId, { provider: provider.name, accessToken }));
+    await refreshAccess(userId, { provider: provider.name, accessToken });
     await startSession(req, res, userId);
     res.redirect(302, siteUrl(state.returnTo));
   },

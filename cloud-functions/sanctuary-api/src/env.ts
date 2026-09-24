@@ -7,7 +7,8 @@ type Env = {
   DISCORD_CLIENT_ID: string;
   DISCORD_CLIENT_SECRET: string;
   DISCORD_GUILD_ID: string;
-  DISCORD_CONTRIBUTOR_ROLE_ID: string;
+  /** Seeds the default group's linked role; the groups hold role ids after that. */
+  DISCORD_CONTRIBUTOR_ROLE_ID: string | null;
   GITHUB_CLIENT_ID: string;
   GITHUB_CLIENT_SECRET: string;
   GITHUB_READ_TOKEN: string;
@@ -27,7 +28,7 @@ type Env = {
 
 const REQUIRED = [
   'SANCTUARY_ORIGIN',
-  'DISCORD_CLIENT_ID', 'DISCORD_CLIENT_SECRET', 'DISCORD_GUILD_ID', 'DISCORD_CONTRIBUTOR_ROLE_ID',
+  'DISCORD_CLIENT_ID', 'DISCORD_CLIENT_SECRET', 'DISCORD_GUILD_ID',
   'GITHUB_CLIENT_ID', 'GITHUB_CLIENT_SECRET', 'GITHUB_READ_TOKEN', 'GITHUB_ISSUE_TOKEN',
   'GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET',
   'B2_KEY_ID', 'B2_APP_KEY', 'B2_BUCKET', 'B2_ENDPOINT', 'B2_REGION',
@@ -57,6 +58,7 @@ const readEnv = (): Env => {
     GITHUB_REPO: process.env.GITHUB_REPO?.trim() || DEFAULT_GITHUB_REPO,
     SANCTUARY_ADMIN_IDS: parseAdminIds(process.env.SANCTUARY_ADMIN_IDS),
     SWEEP_KEY: process.env.SWEEP_KEY?.trim() || null,
+    DISCORD_CONTRIBUTOR_ROLE_ID: process.env.DISCORD_CONTRIBUTOR_ROLE_ID?.trim() || null,
   };
   return cached;
 };

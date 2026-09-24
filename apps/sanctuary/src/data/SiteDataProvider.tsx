@@ -1,7 +1,12 @@
 /* @layer sanctuary-site @kind component */
-/** Loads the files and the reports once for the signed-in frame and holds each list page's scope tab. */
+/**
+ * Loads the files and (with the reports right) the reports once for the signed-in frame
+ * and holds each list page's scope tab.
+ */
 import { useCallback, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
+import { useSessionContext } from '../session/session-context';
+import { canSeeReports } from '../session/rights';
 import { useFiles } from '../files/useFiles';
 import { useReports } from '../reports/useReports';
 import { useMultipartUpload } from '../upload/useMultipartUpload';
@@ -17,8 +22,9 @@ type SiteDataProviderProps = { children: ReactNode };
 
 const SiteDataProvider = (props: SiteDataProviderProps) => {
   const { children } = props;
+  const { rights } = useSessionContext();
   const files = useFiles();
-  const reports = useReports();
+  const reports = useReports(canSeeReports(rights));
   const uploads = useMultipartUpload(files.upsert);
   const [scopes, setScopes] = useState(INITIAL_SCOPES);
   const setScope = useCallback((surface: ListSurface, scopeId: string) => {

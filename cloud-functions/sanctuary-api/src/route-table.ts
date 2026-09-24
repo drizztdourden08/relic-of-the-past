@@ -15,11 +15,21 @@ import { filesComplete } from './routes/files-complete';
 import { filesPatch } from './routes/files-patch';
 import { filesDownload } from './routes/files-download';
 import { filesDelete } from './routes/files-delete';
+import { fileVersionsBegin } from './routes/file-versions-begin';
+import { fileVersionsSignParts } from './routes/file-versions-sign-parts';
+import { fileVersionsComplete } from './routes/file-versions-complete';
+import { fileVersionsRestore } from './routes/file-versions-restore';
+import { fileVersionsDownload } from './routes/file-versions-download';
+import { fileVersionsDelete } from './routes/file-versions-delete';
 import { viewsList } from './routes/views-list';
 import { viewsPut } from './routes/views-put';
 import { viewsDelete } from './routes/views-delete';
 import { adminPending } from './routes/admin-pending';
-import { adminGrant } from './routes/admin-grant';
+import { adminSetGroups } from './routes/admin-set-groups';
+import { groupsList } from './routes/groups-list';
+import { groupsCreate } from './routes/groups-create';
+import { groupsPatch } from './routes/groups-patch';
+import { groupsDelete } from './routes/groups-delete';
 import { adminRevoke } from './routes/admin-revoke';
 import { adminSweep } from './routes/admin-sweep';
 import { deviceBegin } from './routes/device-begin';
@@ -49,11 +59,21 @@ const ROUTES: Route[] = [
   filesPatch,
   filesDownload,
   filesDelete,
+  fileVersionsBegin,
+  fileVersionsSignParts,
+  fileVersionsComplete,
+  fileVersionsRestore,
+  fileVersionsDownload,
+  fileVersionsDelete,
   viewsList,
   viewsPut,
   viewsDelete,
   adminPending,
-  adminGrant,
+  adminSetGroups,
+  groupsList,
+  groupsCreate,
+  groupsPatch,
+  groupsDelete,
   adminRevoke,
   adminSweep,
   deviceBegin,

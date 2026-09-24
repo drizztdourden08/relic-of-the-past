@@ -1,13 +1,14 @@
 /* @layer sanctuary-site @kind hook */
 /**
- * The admin queue: every user, split by access state, with Grant and Revoke. Ignore on
- * a pending user is a revoke: the row leaves the queue and the user stays signed out of
- * the content until an admin grants them.
+ * The admin queue: every user, split by access state, with their manual groups and
+ * Revoke. Setting groups sends the person's whole manual list and reloads, since the
+ * API may move them between states. Ignore on a pending user is a revoke: the row leaves
+ * the queue and the user stays out of the content until an admin gives them a group.
  */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { AccessState } from '@shared/sanctuary/types';
 import type { AdminUser } from '../../../api/types';
-import { listAdminQueue, grantAccess, revokeAccess } from '../../../api/endpoints';
+import { listAdminQueue, setUserGroups, revokeAccess } from '../../../api/endpoints';
 import { errorMessage } from '../../../api/client';
 
 type Grouped = Record<AccessState, AdminUser[]>;
@@ -30,7 +31,7 @@ const useAdminQueue = () => {
     }
   }, []);
 
-  const act = useCallback(async (userId: string, action: (id: string) => Promise<void>) => {
+  const act = useCallback(async (userId: string, action: (id: string) => Promise<unknown>) => {
     setBusyId(userId);
     setError(null);
     try {
@@ -43,16 +44,19 @@ const useAdminQueue = () => {
     }
   }, [load]);
 
-  const grant = useCallback((userId: string) => act(userId, (id) => grantAccess(id)), [act]);
+  const setGroups = useCallback(
+    (userId: string, groupIds: string[]) => act(userId, (id) => setUserGroups(id, groupIds)),
+    [act],
+  );
   const revoke = useCallback((userId: string) => act(userId, (id) => revokeAccess(id)), [act]);
 
-  const groups = useMemo(() => {
+  const byState = useMemo(() => {
     const out = emptyGroups();
     for (const row of users ?? []) out[row.user.access.state].push(row);
     return out;
   }, [users]);
 
-  return { loading: users === null, groups, busyId, error, grant, revoke };
+  return { loading: users === null, byState, busyId, error, setGroups, revoke };
 };
 
 export { useAdminQueue };

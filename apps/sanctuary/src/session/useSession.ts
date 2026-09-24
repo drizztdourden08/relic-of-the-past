@@ -5,6 +5,7 @@
  */
 import { useCallback, useEffect, useState } from 'react';
 import type { SanctuaryUser, Identity } from '@shared/sanctuary/types';
+import type { Group, Rights } from '@shared/sanctuary/group-types';
 import { getMe, signOut as signOutRequest } from '../api/endpoints';
 import { ApiError, errorMessage } from '../api/client';
 import type { Session } from './session-context';
@@ -12,19 +13,21 @@ import type { Session } from './session-context';
 type SessionState = {
   me: SanctuaryUser | null;
   identities: Identity[];
+  groups: Group[];
+  rights: Rights | null;
   loading: boolean;
   error: string | null;
 };
 
-const SIGNED_OUT: SessionState = { me: null, identities: [], loading: false, error: null };
+const SIGNED_OUT: SessionState = { me: null, identities: [], groups: [], rights: null, loading: false, error: null };
 
 const useSession = (): Session => {
   const [state, setState] = useState<SessionState>({ ...SIGNED_OUT, loading: true });
 
   const refresh = useCallback(async () => {
     try {
-      const { user, identities } = await getMe();
-      setState({ me: user, identities, loading: false, error: null });
+      const { user, identities, groups, rights } = await getMe();
+      setState({ me: user, identities, groups: groups ?? [], rights: rights ?? null, loading: false, error: null });
     } catch (error) {
       if (error instanceof ApiError && error.status === 401) {
         setState(SIGNED_OUT);
@@ -43,8 +46,8 @@ const useSession = (): Session => {
     void refresh();
   }, [refresh]);
 
-  const { me, identities, loading, error } = state;
-  return { me, access: me?.access ?? null, identities, loading, error, refresh, signOut };
+  const { me, identities, groups, rights, loading, error } = state;
+  return { me, access: me?.access ?? null, identities, groups, rights, loading, error, refresh, signOut };
 };
 
 export { useSession };

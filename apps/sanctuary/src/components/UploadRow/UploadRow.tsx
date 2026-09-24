@@ -33,7 +33,7 @@ const UploadRow = (props: UploadRowProps) => {
     <Flex align="center" gap="md" className="upload-row" data-state={job.state}>
       <Stack gap="xs" align="stretch" className="upload-row__progress">
         <Flex align="baseline" gap="sm" justify="between">
-          <Text as="span" className="upload-row__label">{job.name} ({formatBytes(job.bytes)})</Text>
+          <Text as="span" className="upload-row__label">{job.label} ({formatBytes(job.bytes)})</Text>
           <Text as="span" className="upload-row__value">{status ?? `${percent}%`}</Text>
         </Flex>
         <ProgressBar value={percent} variant={variant} live />

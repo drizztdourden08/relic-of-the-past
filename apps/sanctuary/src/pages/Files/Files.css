@@ -19,6 +19,41 @@
   overflow-y: auto;
 }
 
+/* The version history in the detail pane: an eyebrow, one row per version, its drop zone. */
+.versions {
+  padding-top: var(--space-sm);
+  border-top: var(--border-width-thin) solid var(--c-border);
+}
+
+.versions__title {
+  letter-spacing: var(--eyebrow-tracking);
+  text-transform: uppercase;
+}
+
+.versions .row__key {
+  flex-basis: auto;
+}
+
+.versions .dropzone {
+  padding: var(--space-sm);
+}
+
+/* The same-name question and the new version dialog. */
+.version-dialog {
+  width: var(--dialog-w-sm);
+}
+
+.version-dialog__lead {
+  margin: 0;
+  color: var(--c-text);
+  font-family: var(--font-mono);
+  overflow-wrap: anywhere;
+}
+
+.version-dialog__row .row__value {
+  overflow-wrap: anywhere;
+}
+
 .files__note {
   margin: 0;
   padding: var(--space-sm) var(--space-md);

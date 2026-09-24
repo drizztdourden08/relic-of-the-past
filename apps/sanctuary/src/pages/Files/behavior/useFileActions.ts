@@ -1,14 +1,16 @@
 /* @layer sanctuary-site @kind hook */
 /**
  * What the detail pane can do to one file: download, copy its link, patch its fields,
- * delete it. Each call reports back through `notice`; a write hands the API's record to
+ * delete it, and download, restore or delete one of its versions. Each call reports back through `notice`; a write hands the API's record to
  * the list, a delete drops the row and closes the pane.
  */
 import { useCallback, useState } from 'react';
 import type { SanctuaryFile } from '@shared/sanctuary/file-types';
 import type { PatchFileBody } from '@shared/sanctuary/schemas/file-schemas';
 import { deleteFile, downloadFile, patchFile } from '../../../api/files-endpoints';
+import { deleteVersion, downloadVersion, restoreVersion } from '../../../api/versions-endpoints';
 import { errorMessage } from '../../../api/client';
+import { versionLabel } from '../../../files/file-versions';
 
 type UseFileActionsParams = {
   onPatched: (file: SanctuaryFile) => void;
@@ -60,7 +62,33 @@ const useFileActions = (params: UseFileActionsParams) => {
     return null;
   }), [run, onDeleted]);
 
-  return { busy, notice, download, copyLink, patch, remove };
+  const downloadOne = useCallback((id: string, n: number) => run(async () => {
+    const { url } = await downloadVersion(id, n);
+    window.location.assign(url);
+    return null;
+  }), [run]);
+
+  const restore = useCallback((id: string, n: number) => run(async () => {
+    const { file } = await restoreVersion(id, n);
+    onPatched(file);
+    return `${versionLabel(n)} is current again.`;
+  }), [run, onPatched]);
+
+  const removeOne = useCallback((id: string, n: number) => run(async () => {
+    const { file } = await deleteVersion(id, n);
+    onPatched(file);
+    return `${versionLabel(n)} deleted.`;
+  }), [run, onPatched]);
+
+  return {
+    busy,
+    notice,
+    download,
+    copyLink,
+    patch,
+    remove,
+    versions: { download: downloadOne, restore, remove: removeOne },
+  };
 };
 
 type FileActions = ReturnType<typeof useFileActions>;

@@ -1,14 +1,18 @@
 /* @layer root-config @kind logic */
 /** A maintainer read token asks the repository whether the linked login is a
- *  collaborator; the user's own token is not needed. 204 means yes, 404 no. */
+ *  collaborator; the user's own token is not needed. 204 means yes, 404 no. A
+ *  collaborator lands in the default group; the chain only asks when no other
+ *  source gave the user a group. */
+import { DEFAULT_GROUP_ID } from '../../../../../shared/sanctuary';
 import { readEnv } from '../../env';
-import type { AccessRule } from '../access-rule.type';
+import type { GroupRule } from '../access-rule.type';
 
 const API = 'https://api.github.com';
+const IS_COLLABORATOR = 204;
 
-const githubCollaborator: AccessRule = async ({ identities }) => {
+const githubCollaboratorGroups: GroupRule = async ({ identities }) => {
   const github = identities.find((identity) => identity.provider === 'github');
-  if (!github) return null;
+  if (!github) return [];
   const env = readEnv();
   const res = await fetch(`${API}/repos/${env.GITHUB_REPO}/collaborators/${encodeURIComponent(github.handle)}`, {
     headers: {
@@ -17,7 +21,7 @@ const githubCollaborator: AccessRule = async ({ identities }) => {
       'User-Agent': 'sanctuary-api',
     },
   });
-  return res.status === 204 ? 'github-collaborator' : null;
+  return res.status === IS_COLLABORATOR ? [DEFAULT_GROUP_ID] : [];
 };
 
-export { githubCollaborator };
+export { githubCollaboratorGroups };

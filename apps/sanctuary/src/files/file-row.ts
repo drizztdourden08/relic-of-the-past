@@ -7,8 +7,11 @@
 import type { SanctuaryFile } from '@shared/sanctuary/file-types';
 import { formatBytes } from '../lib/format-bytes';
 import { formatDateTime } from '../lib/format-date';
+import { versionLabel } from './file-versions';
 
 type FileRow = Pick<SanctuaryFile, 'id' | 'name' | 'type' | 'tags' | 'version' | 'owner' | 'bytes' | 'note' | 'stats'> & {
+  /** The version in use, as `v3`. `version` stays the app version the file relates to. */
+  rev: string;
   size: string;
   createdAt: string;
   expiresAt: string | null;
@@ -20,6 +23,7 @@ const toFileRow = (file: SanctuaryFile): FileRow => ({
   type: file.type,
   tags: file.tags,
   version: file.version,
+  rev: versionLabel(file.currentVersion),
   owner: file.owner,
   bytes: file.bytes,
   size: formatBytes(file.bytes),

@@ -1,5 +1,5 @@
 /* @layer sanctuary-site @kind component */
-/** The inline edit of a file's type, tags, version and note; Save sends only what changed. */
+/** The inline edit of a file's type, tags, app version and note; Save sends only what changed. */
 import { useState } from 'react';
 import { FILE_TYPES, FILE_TYPE_LABELS } from '@shared/sanctuary/file-types';
 import type { FileType, SanctuaryFile } from '@shared/sanctuary/file-types';
@@ -18,12 +18,17 @@ import { Textarea } from '@ds/primitives/Textarea';
 type FileEditFormProps = {
   file: SanctuaryFile;
   knownTags: readonly string[];
+  /** The types the caller may see; a file moved elsewhere would vanish from their list. */
+  types: readonly FileType[];
   busy: boolean;
   onSave: (patch: PatchFileBody) => void;
   onCancel: () => void;
 };
 
-const TYPE_OPTIONS = FILE_TYPES.map((type) => ({ value: type, label: FILE_TYPE_LABELS[type] }));
+/** The caller's types, plus the file's own so the select never shows a blank. */
+const typeOptions = (types: readonly FileType[], own: FileType) =>
+  FILE_TYPES.filter((type) => type === own || types.includes(type)).map((type) => ({ value: type, label: FILE_TYPE_LABELS[type] }));
+
 const TAG_HINT = 'lowercase letters, digits, dots, dashes';
 
 const validateTag = (raw: string) => tagsSchema.safeParse([raw]).success || TAG_HINT;
@@ -32,7 +37,7 @@ const sameTags = (a: readonly string[], b: readonly string[]) =>
   a.length === b.length && a.every((tag, i) => tag === b[i]);
 
 const FileEditForm = (props: FileEditFormProps) => {
-  const { file, knownTags, busy, onSave, onCancel } = props;
+  const { file, knownTags, types, busy, onSave, onCancel } = props;
   const [type, setType] = useState<FileType>(file.type);
   const [tags, setTags] = useState<readonly string[]>(file.tags);
   const [version, setVersion] = useState(file.version ?? '');
@@ -48,10 +53,10 @@ const FileEditForm = (props: FileEditFormProps) => {
   return (
     <Stack as="form" gap="sm" align="stretch" onSubmit={(event) => { event.preventDefault(); onSave(patch); }}>
       <Field label="Type">
-        <Select value={type} onChange={(value) => setType(value as FileType)} options={TYPE_OPTIONS} size="sm" />
+        <Select value={type} onChange={(value) => setType(value as FileType)} options={typeOptions(types, file.type)} size="sm" />
       </Field>
       <TagInput label="Tags" value={tags} onChange={setTags} suggestions={knownTags} validate={validateTag} enforce />
-      <Field label="Version">
+      <Field label="App version">
         <TextInput value={version} onChange={(event) => setVersion(event.target.value)} />
       </Field>
       <Field label="Note" hint={`${note.length} / ${LIMITS.noteMaxChars}`}>

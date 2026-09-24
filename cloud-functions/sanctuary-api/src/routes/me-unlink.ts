@@ -5,9 +5,8 @@
 import { SANCTUARY_ROUTES, isProvider } from '../../../../shared/sanctuary';
 import { badRequest, conflict, notFound } from '../http/http-error';
 import { requireSession } from '../auth/require-session';
-import { evaluateAccess } from '../access/evaluate-access';
+import { refreshAccess } from '../access/refresh-access';
 import { identitiesRepo } from '../db/identities-repo';
-import { usersRepo } from '../db/users-repo';
 import type { Route } from '../route.type';
 
 const meUnlink: Route = {
@@ -20,8 +19,7 @@ const meUnlink: Route = {
     if (!target) throw notFound('That provider is not linked.');
     if (identities.length <= 1) throw conflict('The last sign-in method cannot be unlinked.');
     await identitiesRepo.remove(target.id);
-    const access = await evaluateAccess(userId, null);
-    await usersRepo.setAccess(userId, access);
+    const { access } = await refreshAccess(userId, null);
     res.status(200).json({ identities: identities.filter((identity) => identity.id !== target.id), access });
   },
 };

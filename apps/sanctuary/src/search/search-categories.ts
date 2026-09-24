@@ -80,9 +80,15 @@ const SEARCH_CATEGORIES: readonly SearchCategory[] = [
   ...REPORT_KINDS.map((kind) => REPORT_CATEGORIES[kind]),
 ];
 
-/** The categories whose own name holds the (lowercase) query, for a quick jump. */
-const categoriesNamed = (query: string): SearchCategory[] =>
-  SEARCH_CATEGORIES.filter((category) => category.label.toLowerCase().includes(query));
+/** What the caller may open: their file types, and the reports when they have the right. */
+type CategoryRights = { types: readonly FileType[]; reports: boolean };
+
+const isAllowed = (category: SearchCategory, rights: CategoryRights) =>
+  (category.surface === 'reports' ? rights.reports : rights.types.includes(category.scope as FileType));
+
+/** The categories the caller may open whose own name holds the (lowercase) query, for a quick jump. */
+const categoriesNamed = (query: string, rights: CategoryRights): SearchCategory[] =>
+  SEARCH_CATEGORIES.filter((category) => isAllowed(category, rights) && category.label.toLowerCase().includes(query));
 
 export { FILE_CATEGORIES, REPORT_CATEGORIES, REPORT_KINDS, SEARCH_CATEGORIES, categoriesNamed };
-export type { SearchCategory };
+export type { SearchCategory, CategoryRights };

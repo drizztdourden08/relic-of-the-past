@@ -1,6 +1,6 @@
 /* @layer sanctuary-site @kind component */
 /**
- * The Account page: display name, the access row, one row per sign-in method, the
+ * The Account page: display name, the access and groups rows, one row per sign-in method, the
  * signed-in devices and the two sign-out buttons.
  */
 import { PROVIDERS } from '@shared/sanctuary/providers';
@@ -14,6 +14,7 @@ import { SettingsSection } from '@ds/composites/SettingsSection';
 import { SitePage } from '../../layout/SitePage/SitePage';
 import { Row } from '../../components/Row/Row';
 import { AccessChip } from '../../components/AccessChip/AccessChip';
+import { GroupChips } from '../../components/GroupChips/GroupChips';
 import { IdentityRow } from '../../components/IdentityRow/IdentityRow';
 import { DeviceRow } from '../../components/DeviceRow/DeviceRow';
 import { useSessionContext } from '../../session/session-context';
@@ -31,14 +32,14 @@ const ANCHORS = [
 
 const SOURCE_LABELS: Record<AccessSource, string> = {
   'admin-list': 'on the admin list',
-  'manual-grant': 'granted by an admin',
-  'discord-role': 'via Discord contributor role',
+  'manual-grant': 'in a group an admin set',
+  'discord-role': 'via a Discord role',
   'github-collaborator': 'via GitHub collaborator',
   none: 'no rule matched',
 };
 
 const Account = () => {
-  const { me, access, identities } = useSessionContext();
+  const { me, access, identities, groups } = useSessionContext();
   const actions = useAccountActions();
   const devices = useDevices();
   if (!me || !access) return null;
@@ -58,6 +59,10 @@ const Account = () => {
         <Box data-section="access">
           <SettingsSection title="Access">
             <Row label={<AccessChip state={access.state} />} value={accessValue} action={recheckButton} />
+            <Row
+              label="Groups"
+              value={<GroupChips groups={groups} manualIds={me.groupIds} roleIds={me.roleGroupIds} />}
+            />
           </SettingsSection>
         </Box>
 

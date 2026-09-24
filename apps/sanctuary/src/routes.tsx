@@ -22,14 +22,16 @@ type RouteEntry = {
   render: (params: RouteParams) => ReactNode;
   /** The page draws its own bare frame; the guard does not wrap it in the member frame. */
   bare?: boolean;
+  /** Needs the reports right on top of the access; without it the guard sends the caller to Files. */
+  needsReports?: boolean;
 };
 
 const ROUTES: RouteEntry[] = [
   { pattern: '/', access: 'member', render: () => <Files /> },
   { pattern: '/files', access: 'member', render: () => <Files /> },
   { pattern: '/files/:id', access: 'member', render: ({ id }) => <Files selectedId={id} /> },
-  { pattern: '/reports', access: 'member', render: () => <Reports /> },
-  { pattern: '/reports/:id', access: 'member', render: ({ id }) => <Reports selectedId={id} /> },
+  { pattern: '/reports', access: 'member', needsReports: true, render: () => <Reports /> },
+  { pattern: '/reports/:id', access: 'member', needsReports: true, render: ({ id }) => <Reports selectedId={id} /> },
   { pattern: '/account', access: 'member', render: () => <Account /> },
   { pattern: '/admin', access: 'admin', render: () => <Admin /> },
   { pattern: '/device/:code', access: 'member', bare: true, render: ({ code }) => <Device code={code} /> },

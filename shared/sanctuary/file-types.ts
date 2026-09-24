@@ -23,19 +23,45 @@ type FileOwner = { userId: string; displayName: string };
 /** The in-flight multipart upload; cleared at complete. */
 type FileUpload = { multipartId: string; parts: number };
 
+/**
+ * One upload of a file, kept forever unless the owner or an admin deletes it. Versions
+ * are never reordered or renumbered; `currentVersion` points at the one in use.
+ */
+type FileVersion = {
+  /** 1, 2, 3 ... */
+  n: number;
+  /** files/<id> for v1 of a file uploaded before versions existed, files/<id>/v<n> otherwise. */
+  key: string;
+  /** The uploaded file's own name; may differ from the file's display name. */
+  name: string;
+  bytes: number;
+  sha256: string | null;
+  contentType: string;
+  /** What changed, one line; empty for v1. */
+  note: string;
+  by: FileOwner;
+  status: 'uploading' | 'ready';
+  upload: FileUpload | null;
+  createdAt: number;
+};
+
 type SanctuaryFile = {
   id: string;
   type: FileType;
   /** Free, lowercase; the FilterBar's array kit filters on them. */
   tags: string[];
-  /** App version the file relates to, when it does. */
+  /** App version the file relates to, when it does. Not the file's own version history. */
   version: string | null;
-  /** Original file name, display only; the object key is files/<id>. */
+  /** Display name. With bytes, sha256 and contentType it mirrors the current version. */
   name: string;
   bytes: number;
   /** Client-computed, recorded at begin, shown in the UI. */
   sha256: string | null;
   contentType: string;
+  /** Oldest first. */
+  versions: FileVersion[];
+  /** The `n` of the version in use: lists, downloads and search read this one. */
+  currentVersion: number;
   /** One line, at most LIMITS.noteMaxChars. */
   note: string;
   owner: FileOwner;
@@ -48,4 +74,4 @@ type SanctuaryFile = {
 };
 
 export { FILE_TYPES, FILE_TYPE_LABELS };
-export type { FileType, FileStatus, FileOwner, FileUpload, SanctuaryFile };
+export type { FileType, FileStatus, FileOwner, FileUpload, FileVersion, SanctuaryFile };

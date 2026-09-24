@@ -5,6 +5,7 @@
  */
 import { createContext, useContext } from 'react';
 import type { SanctuaryUser, Identity, AccessCheck } from '@shared/sanctuary/types';
+import type { Group, Rights } from '@shared/sanctuary/group-types';
 
 type Session = {
   /** The signed-in user, or null when there is no session. */
@@ -12,6 +13,10 @@ type Session = {
   /** The user's access state; null with no session. */
   access: AccessCheck | null;
   identities: Identity[];
+  /** The groups the user is in, by hand, from Discord or by the default fallback. */
+  groups: Group[];
+  /** What the user may see: the union of their groups, everything for an admin. Null with no session. */
+  rights: Rights | null;
   /** True until the first GET /me answers. */
   loading: boolean;
   /** The last error from GET /me, shown when the API is unreachable. */
