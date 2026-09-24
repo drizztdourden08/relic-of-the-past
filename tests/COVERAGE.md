@@ -61,7 +61,7 @@
 | data/view-state (durable load/save, race protection) | 4 files under tests/design-system | covered |
 | ScrollArea sync, Portal anchor-tracking, SegmentedControl, PositionInput, TagInput, CodeBlock, CreateRecordDialog | 1 file each under tests/design-system | covered |
 | DeleteGuardDialog | delete-guard-route (via RecordEditor) | partial. The dialog component itself is untested |
-| DropdownMenu, Select, TagPicker, NavRail | none | none |
+| DropdownMenu, Select, TagPicker, SectionNav | none | none |
 | Dialog/DialogShell/Drawer/FullScreenLayer/ListItemRow/MasterDetailLayout/Overlay/SettingsSection/SettingsShell/SideNav/WindowHeader/WizardDialogShell | none | none (mostly presentational shells) |
 | Toggle/Toast/DropZone/NumberInput/RangeInput/Slider/Stepper/ToggleGroup/Tooltip/Checkbox/RadioGroup/Badge/StatusBadge/ProgressBar/ProgressRing/Thumbnail/TabBar/Svg | none | n/a. Pure presentational primitives, not counted as a gap |
 

@@ -2,7 +2,9 @@
 import { useCallback, useMemo } from 'react';
 import { usePlatform } from '@app/platform';
 import { log } from '@app/lib/log-bus';
-import { HeroSaveCard } from '../../../compounds/HeroSaveCard';
+import { ProfileHero } from '../../../compounds/ProfileHero';
+import { SceneBackdrop } from '../../../../title';
+import { HubGameControls } from './HubGameControls';
 import { Box } from '../../../../../design-system/primitives/Box';
 import { ToastContainer } from '../../../../../design-system/primitives/Toast';
 import { useHomeTabSaves } from './home-tab/useHomeTabSaves';
@@ -10,24 +12,23 @@ import { useHomeRandomizerStatus } from './home-tab/useHomeRandomizerStatus';
 import { useHomeSaveFileChecks } from './home-tab/useHomeSaveFileChecks';
 import { deriveProfileMode } from './home-tab/derive-profile-mode';
 import { buildProfileFacts, buildRandomizerFacts } from './home-tab/build-summary-facts';
-import { HomeTabSummary } from './home-tab/HomeTabSummary';
 import { HomeTabColumns } from './home-tab/HomeTabColumns';
 import { HomeTabDialogs } from './home-tab/HomeTabDialogs';
 import type { HomeTabProps } from './home-tab/home-tab.type';
 import './HomeTab.css';
 
 const HomeTab = (props: HomeTabProps) => {
-  const { profileId, romFile, isGameRunning, onStartGame, lastPlayed, created, windowMode, randomizer, vanillaSafe } = props;
+  const { profileId, romFile, isGameRunning, onStartGame, onStopGame, onResetGame, lastPlayed, created, randomizer, vanillaSafe } = props;
   const saves = useHomeTabSaves({ profileId, isGameRunning, onStartGame });
   const { heroSave, normalScreenshots, busyNormal, handleLoadNormal, handleImportSram, toasts, dismissToast } = saves;
   const { storage, capabilities } = usePlatform();
   const randomizerStatus = useHomeRandomizerStatus();
-  const saveFileChecks = useHomeSaveFileChecks(profileId, randomizer !== undefined, isGameRunning);
-
   const mode = deriveProfileMode(randomizer, vanillaSafe);
+  const saveFileChecks = useHomeSaveFileChecks(profileId, mode, isGameRunning);
+
   const facts = useMemo(
-    () => buildProfileFacts({ mode, romFile, lastPlayed, created, windowMode }),
-    [mode, romFile, lastPlayed, created, windowMode],
+    () => buildProfileFacts({ romFile, lastPlayed, created }),
+    [romFile, lastPlayed, created],
   );
   const randomizerFacts = useMemo(
     () => buildRandomizerFacts(randomizer, randomizerStatus),
@@ -45,26 +46,33 @@ const HomeTab = (props: HomeTabProps) => {
 
   return (
     <Box className="home-tab">
-      <HomeTabSummary
+      <ProfileHero
         mode={mode}
+        backdrop={<SceneBackdrop />}
         facts={facts}
-        randomizerFacts={randomizerFacts}
-        saveFileChecks={saveFileChecks}
+        runFacts={randomizerFacts}
+        progress={saveFileChecks}
+        lastSave={heroSave ? {
+          name: heroSave.name,
+          timestamp: heroSave.timestamp,
+          screenshotUrl: normalScreenshots[heroSave.id] ?? null,
+          busy: busyNormal === heroSave.id,
+          onLoad: () => handleLoadNormal(heroSave.id),
+        } : null}
+        actions={(
+          <HubGameControls
+            isGameRunning={isGameRunning}
+            showPlay
+            size="md"
+            onStartGame={onStartGame}
+            onStopGame={onStopGame}
+            onResetGame={onResetGame}
+          />
+        )}
         canRevealFolder={capabilities.revealDataFolder}
         onOpenFolder={() => void handleOpenFolder()}
         onImportSram={() => void handleImportSram()}
       />
-
-      {/* Hero card for the last normal save */}
-      {heroSave && (
-        <HeroSaveCard
-          name={heroSave.name}
-          timestamp={heroSave.timestamp}
-          screenshotUrl={normalScreenshots[heroSave.id] ?? null}
-          onLoad={() => handleLoadNormal(heroSave.id)}
-          busy={busyNormal === heroSave.id}
-        />
-      )}
 
       <HomeTabColumns saves={saves} isGameRunning={isGameRunning} />
       <HomeTabDialogs saves={saves} />

@@ -10,8 +10,9 @@ import { Box } from '@ds/primitives';
 import { DataTable } from '@ds/composites/DataTable';
 import { FilterBar } from '@ds/composites/FilterBar';
 import { MasterDetailLayout } from '@ds/composites/MasterDetailLayout';
-import { NavRail } from '@ds/composites/NavRail';
-import { NAV_ITEMS, isEntityKind, tableViewKey } from './DataInspector.constants';
+import { SectionNav } from '@ds/composites/SectionNav';
+import { isEntityKind, tableViewKey } from './DataInspector.constants';
+import { DATA_INSPECTOR_NAV } from './behavior/data-inspector-nav';
 import { buildDefaultColumns } from './behavior/default-table-columns';
 import { resolveIdRefDisplayValue, resolveIdRefTargetFields } from './behavior/id-ref-display';
 import { defaultIdRefDisplay } from './behavior/record-links';
@@ -112,12 +113,7 @@ const DataInspector = () => {
 
   return (
     <Box className="data-inspector">
-      <NavRail
-        className="data-inspector__nav"
-        items={NAV_ITEMS}
-        activeId={kind}
-        onSelect={showKind}
-      />
+      <SectionNav config={DATA_INSPECTOR_NAV} activeId={kind} onSelect={showKind} />
       {/* One delegated listener covers every reference the composites render. */}
       <Box className="data-inspector__panes" onClickCapture={handleIdRefClickCapture}>
         <MasterDetailLayout

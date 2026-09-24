@@ -1,0 +1,168 @@
+/* @layer renderer-components @kind style */
+
+/* Scene first, details floating over it. The shade darkens the left and the
+   bottom so the text there reads on any backdrop. */
+.profile-hero {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: var(--space-lg);
+  min-height: var(--profile-hero-h);
+  padding: var(--space-xl);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  background: var(--c-layer);
+  flex-shrink: 0;
+}
+
+.profile-hero__backdrop,
+.profile-hero__art,
+.profile-hero__shade {
+  position: absolute;
+  pointer-events: none;
+}
+
+.profile-hero__backdrop {
+  inset: 0;
+  z-index: -3;
+}
+
+/* The mode's piece stands in the open space right of the intro column, behind the details,
+   at twice its pixels so it stays pixel art. */
+.profile-hero__art {
+  z-index: -2;
+  left: var(--profile-hero-art-left);
+  bottom: var(--space-lg);
+  height: var(--profile-hero-art-h);
+  image-rendering: pixelated;
+  filter: drop-shadow(0 var(--space-sm) var(--space-lg) color-mix(in srgb, var(--c-bg) 70%, transparent));
+}
+
+.profile-hero__shade {
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--c-bg) 60%, transparent) 0%, transparent 28%),
+    linear-gradient(0deg, color-mix(in srgb, var(--c-bg) 80%, transparent) 0%, transparent 45%);
+}
+
+/* In the flow as the first row, so taller content grows the hero
+   instead of running into the buttons. */
+.profile-hero__tools {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}
+
+/* Intro | open space for the art | last save. The bottom row repeats the
+   side column's width so progress lines up under the last-save tile. */
+.profile-hero__main,
+.profile-hero__bottom {
+  display: grid;
+  align-items: end;
+  gap: var(--space-sm) var(--space-xl);
+  min-width: 0;
+}
+
+.profile-hero__main {
+  grid-template-columns: var(--profile-hero-intro-w) 1fr minmax(0, var(--profile-hero-save-w));
+}
+
+.profile-hero__bottom {
+  grid-template-columns: 1fr minmax(0, var(--profile-hero-save-w));
+}
+
+.profile-hero__bottom > :only-child {
+  grid-column: 1 / -1;
+}
+
+.profile-hero__intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-xs);
+}
+
+.profile-hero__main > .profile-hero__save {
+  grid-column: 3;
+}
+
+.profile-hero__eyebrow {
+  font-size: var(--text-xs);
+  color: var(--c-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: var(--weight-semi);
+}
+
+.profile-hero__title {
+  margin: 0;
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-black);
+  line-height: var(--leading-tight);
+  color: var(--c-text);
+  text-shadow: 0 var(--space-2xs) var(--space-md) color-mix(in srgb, var(--c-bg) 80%, transparent);
+}
+
+.profile-hero__actions {
+  margin-top: var(--space-sm);
+}
+
+/* Shared frosted-glass surface for everything floating over the scene. */
+.profile-hero__glass {
+  background: color-mix(in srgb, var(--c-layer) 64%, transparent);
+  backdrop-filter: blur(var(--blur));
+  border: 1px solid color-mix(in srgb, var(--c-text) 14%, transparent);
+  border-radius: var(--radius-lg);
+}
+
+.profile-hero__save {
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-sm);
+}
+
+.profile-hero__save-thumb {
+  width: var(--profile-hero-thumb-w);
+  aspect-ratio: 4 / 3;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+}
+
+.profile-hero__save-empty {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+.profile-hero__save-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.profile-hero__save-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+  max-width: 100%;
+}
+
+.profile-hero__save-name {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semi);
+  color: var(--c-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-hero__save-time {
+  font-size: var(--text-sm);
+  color: var(--c-text-dim);
+}

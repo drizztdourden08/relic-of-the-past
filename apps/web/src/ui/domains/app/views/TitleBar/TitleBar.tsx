@@ -3,6 +3,7 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { usePlatform } from '@app/platform';
 import { DropdownMenu } from '../../../../design-system/composites/DropdownMenu';
+import { SearchSpark } from '../../../../design-system/composites/SearchSpark';
 import { IconButton } from '../../../../design-system/primitives/IconButton';
 import { BugReportButton } from '../../compounds/BugReportButton';
 import { Box } from '../../../../design-system/primitives/Box';
@@ -23,7 +24,7 @@ import { effectiveHz, isSyncedRate } from '@shared/display/refresh-rate';
 import { RefreshRateTag } from './sub-components/RefreshRateTag';
 import './TitleBar.css';
 import {
-  MENU_ICON_CIRCLES, PIN_ICON_PATHS, MUTE_ICON_PATHS, VOLUME_ICON_PATHS, SAVE_ICON_PATHS, SEARCH_ICON_PATHS,
+  MENU_ICON_CIRCLES, PIN_ICON_PATHS, MUTE_ICON_PATHS, VOLUME_ICON_PATHS, SAVE_ICON_PATHS,
 } from './TitleBar.constants';
 import type { TitleBarProps } from './TitleBar.type';
 
@@ -172,8 +173,7 @@ const TitleBar = (props: TitleBarProps) => {
           className="titlebar__search"
           onClick={openSearch}
         >
-          <Icon paths={SEARCH_ICON_PATHS} size={14} />
-          <Text as="span" className="titlebar__search-spark" aria-hidden>✦</Text>
+          <SearchSpark size={14} />
         </IconButton>
         <BugReportButton onClick={onShowBugReport} />
         <IconButton

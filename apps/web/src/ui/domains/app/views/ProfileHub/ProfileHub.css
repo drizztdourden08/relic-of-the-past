@@ -7,52 +7,22 @@
   overflow: hidden;
 }
 
-/* ─── Profile Header ─── */
+/* ─── Game controls (rendered in the window title bar) ─── */
 
-.profile-hub__header {
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-  padding: 0 0 var(--space-lg);
-}
-
-.profile-hub__title-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.profile-hub__name {
-  font-size: var(--text-xl);
-  font-weight: var(--weight-semi);
-  color: var(--c-text);
-  margin: 0;
-}
-
-.profile-hub__actions {
+.hub-game-controls {
   display: flex;
   gap: var(--space-sm);
 }
 
 /* ─── Tab cards ─── */
 
+/* The gap leaves room for the nav's round toggle, which straddles its right edge. */
 .profile-hub__body {
   display: flex;
+  gap: var(--space-xl);
   flex: 1;
   min-height: 0;
   overflow: hidden;
-}
-
-.profile-hub__tabs {
-  width: 120px;
-}
-
-/* Compact viewport (< --bp-compact): let the rail shrink to its icon strip. */
-@media (width <= 820px) {
-  .profile-hub__tabs {
-    width: auto;
-  }
 }
 
 .profile-hub__content {

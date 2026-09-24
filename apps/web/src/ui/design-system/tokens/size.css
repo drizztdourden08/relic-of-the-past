@@ -42,6 +42,27 @@
      ROM names and seeds truncate instead of pushing the row apart. */
   --summary-fact-maxw: 220px;
 
+  /* Section nav: collapsed and open widths, item height, and the round toggle on its edge. */
+  --section-nav-w: 58px;
+  --section-nav-w-open: 236px;
+  --section-nav-item-h: 40px;
+  --section-nav-toggle-d: 24px;
+
+  /* Settings page header backdrop height, full and once the page has scrolled. */
+  --settings-page-head-h: 88px;
+  --settings-page-head-h-compact: 52px;
+
+  /* Home hero: the scene's minimum height, the intro column (mode + Play) and
+     where the mode's art starts beside it, the side column (last save over
+     progress) with its thumbnail, and the progress bar thickness. */
+  --profile-hero-h: 300px;
+  --profile-hero-intro-w: 200px;
+  --profile-hero-art-left: 232px;
+  --profile-hero-art-h: 256px; /* the 128px piece at 2x */
+  --profile-hero-bar-h: 6px;
+  --profile-hero-save-w: 360px;
+  --profile-hero-thumb-w: 160px;
+
   /* The option catalog lays every row (a plain option or a capacity family)
      on the same label | control | impact grid, so a value that changes width
      ("+33 loc · +33 items" to "0 loc · 0 items") never moves the control next
@@ -100,14 +121,4 @@
      compact list rows, where a name beside the art carries the identity and
      24px is enough; here the picture has to be recognised on its own. */
   --dark-room-sprite-d: 32px;
-
-  /* Section nav: collapsed and open widths, item height, and the round toggle on its edge. */
-  --section-nav-w: 58px;
-  --section-nav-w-open: 236px;
-  --section-nav-item-h: 40px;
-  --section-nav-toggle-d: 24px;
-
-  /* Settings page header backdrop height, full and once the page has scrolled. */
-  --settings-page-head-h: 88px;
-  --settings-page-head-h-compact: 52px;
 }

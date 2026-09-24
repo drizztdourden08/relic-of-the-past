@@ -1,0 +1,84 @@
+/* @layer renderer-components @kind style */
+
+/* Rows share one grid so every bar, percent and count lines up. */
+.hero-progress {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: var(--space-xs) var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+}
+
+.hero-progress__head,
+.hero-progress__row {
+  display: contents;
+}
+
+.hero-progress__head > .profile-hero__eyebrow {
+  grid-column: 1 / 3;
+}
+
+.hero-progress__legend {
+  grid-column: 3 / 5;
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}
+
+.hero-progress__key {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+.hero-progress__key::before {
+  content: '';
+  width: var(--space-sm);
+  height: var(--space-sm);
+  border-radius: 50%;
+  background: var(--c-text-faint);
+}
+
+.hero-progress__key--taken::before { background: var(--c-green); }
+.hero-progress__key--available::before { background: var(--c-warning); }
+
+.hero-progress__file {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--c-text-dim);
+  white-space: nowrap;
+}
+
+.hero-progress__bar {
+  display: flex;
+  height: var(--profile-hero-bar-h);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--c-text) 12%, transparent);
+  overflow: hidden;
+}
+
+.hero-progress__seg--taken {
+  background: var(--c-green);
+}
+
+.hero-progress__seg--available {
+  background: var(--c-warning);
+}
+
+.hero-progress__pct {
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  color: var(--c-gold);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.hero-progress__count {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}

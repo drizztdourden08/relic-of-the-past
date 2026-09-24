@@ -1,23 +1,22 @@
 /* @layer renderer-components @kind component */
-/** ProfileHub tab nav + active-tab content panel. */
-import { useMemo } from 'react';
+/**
+ * ProfileHub's nav and content pane. The pane shows the active tab as a page.
+ * While the search field has focus or holds text, no tab is selected and the
+ * pane shows the search: an empty state until something is typed, then every
+ * matching setting from every tab. Picking a tab (from the nav or a result),
+ * or leaving the field empty, ends the search.
+ */
+import { useCallback, useMemo, useState } from 'react';
+import { Icon as IconifyIcon } from '@iconify/react/offline';
 import type { GameSettings } from '@shared/types/settings';
 import { Box } from '../../../../../design-system/primitives/Box';
-import { NavRail } from '../../../../../design-system/composites/NavRail';
-import { RandomizerLockContext } from '../../../compounds/SettingsLayout';
-import { HomeTab } from './HomeTab';
-import { SettingsView } from './SettingsView';
-import { GraphicsSettings } from './GraphicsSettings';
-import { AudioSettings } from './AudioSettings';
-import { GameplaySettings } from './GameplaySettings';
-import { BugFixesSettings } from './BugFixesSettings';
-import { HudSettings } from './HudSettings';
-import { ControlsSettings } from './ControlsSettings';
-import { HapticsSettings } from './HapticsSettings';
-import { DeveloperSettings } from './DeveloperSettings';
-import { MobileSettings } from './MobileSettings';
+import { SectionNav, type SectionNavConfig } from '../../../../../design-system/composites/SectionNav';
+import { RandomizerLockContext, SettingsPageContext } from '../../../compounds/SettingsLayout';
+import { SceneBackdrop } from '../../../../title';
 import { usePlatform } from '@app/platform';
-import { PROFILE_HUB_TABS } from '../ProfileHub.constants';
+import { PROFILE_HUB_NAV_GROUPS, PROFILE_HUB_TABS } from '../ProfileHub.constants';
+import { ProfileHubTabContent } from './ProfileHubTabContent';
+import { HubSearchResults } from './hub-search/HubSearchResults';
 import type { ProfileHubProps, ProfileHubTab } from '../ProfileHub.type';
 
 interface ProfileHubBodyProps {
@@ -28,18 +27,45 @@ interface ProfileHubBodyProps {
   profile: ProfileHubProps['profile'];
   isGameRunning: boolean;
   onStartGame: () => void;
+  onStopGame: () => void;
+  onResetGame: () => void;
 }
 
+/** A page header is short, so its water line sits low to keep the castle in view. */
+const HEADER_HORIZON = 0.72;
+
+const navItem = (tab: ProfileHubTab) => ({
+  id: tab,
+  label: PROFILE_HUB_TABS[tab].label,
+  icon: <IconifyIcon icon={PROFILE_HUB_TABS[tab].navIcon} />,
+});
+
 const ProfileHubBody = (props: ProfileHubBodyProps) => {
-  const { activeTab, setActiveTab, settings, onChange, profile, isGameRunning, onStartGame } = props;
+  const { activeTab, setActiveTab, settings, onChange, profile, isGameRunning, onStartGame, onStopGame, onResetGame } = props;
   const { info } = usePlatform();
-  // Mobile options live in their own tab, always pinned to the very bottom, and shown only on mobile.
-  const tabs = useMemo(
-    () => (Object.entries(PROFILE_HUB_TABS) as [ProfileHubTab, typeof PROFILE_HUB_TABS[ProfileHubTab]][])
-      .filter(([, spec]) => !spec.mobileOnly || info.formFactor === 'mobile')
-      .map(([id, spec]) => ({ id, icon: spec.icon, label: spec.label })),
+  const [query, setQuery] = useState('');
+  const [searchFocused, setSearchFocused] = useState(false);
+  // In the field, or holding a query: no tab is current and the pane belongs to the search.
+  const searching = searchFocused || query.trim() !== '';
+
+  // Mobile options have their own tab, listed last and only on mobile.
+  const groups = useMemo(
+    () => PROFILE_HUB_NAV_GROUPS.map((group) => ({
+      ...group,
+      tabs: group.tabs.filter((tab) => !PROFILE_HUB_TABS[tab].mobileOnly || info.formFactor === 'mobile'),
+    })),
     [info.formFactor],
   );
+  const navConfig = useMemo<SectionNavConfig>(() => ({
+    home: navItem('home'),
+    groups: groups.map((group) => ({ id: group.id, label: group.label, items: group.tabs.map(navItem) })),
+  }), [groups]);
+  const searchableTabs = useMemo(() => groups.flatMap((group) => group.tabs), [groups]);
+
+  const openTab = useCallback((tab: ProfileHubTab) => {
+    setQuery('');
+    setActiveTab(tab);
+  }, [setActiveTab]);
 
   // Keys the profile's randomizer config pins; SettingsLayout locks these controls.
   const randomizerFrozenKeys = useMemo(
@@ -47,42 +73,31 @@ const ProfileHubBody = (props: ProfileHubBodyProps) => {
     [profile.randomizer],
   );
 
+  const spec = PROFILE_HUB_TABS[activeTab];
+  const pageContext = useMemo(
+    () => ({ variant: 'page' as const, icon: <IconifyIcon icon={spec.navIcon} />, title: spec.label, backdrop: <SceneBackdrop horizon={HEADER_HORIZON} />, query: '' }),
+    [spec],
+  );
+  const content = { settings, onChange, profile, isGameRunning, onStartGame, onStopGame, onResetGame };
+
   return (
     <RandomizerLockContext.Provider value={randomizerFrozenKeys}>
       <Box className="profile-hub__body">
-        <NavRail
-          className="profile-hub__tabs"
-          items={tabs}
-          activeId={activeTab}
-          onSelect={(id) => setActiveTab(id as ProfileHubTab)}
+        <SectionNav
+          config={navConfig}
+          activeId={searching ? '' : activeTab}
+          onSelect={(id) => openTab(id as ProfileHubTab)}
+          search={{ value: query, onChange: setQuery, placeholder: 'Search all settings', onFocusChange: setSearchFocused }}
         />
 
         <Box className="profile-hub__content">
-          {activeTab === 'home' && (
-            <HomeTab
-              profileId={profile.id}
-              romFile={profile.romFile}
-              isGameRunning={isGameRunning}
-              onStartGame={onStartGame}
-              lastPlayed={profile.lastPlayed}
-              created={profile.created}
-              windowMode={settings.windowMode}
-              randomizer={profile.randomizer}
-              vanillaSafe={settings.vanillaSafe}
-            />
-          )}
-          {activeTab === 'settings' && <SettingsView settings={settings} onChange={onChange} />}
-          {activeTab === 'graphics' && <GraphicsSettings settings={settings} onChange={onChange} />}
-          {activeTab === 'audio' && <AudioSettings settings={settings} onChange={onChange} profileId={profile.id} />}
-          {activeTab === 'gameplay' && <GameplaySettings settings={settings} onChange={onChange} />}
-          {activeTab === 'bugfixes' && <BugFixesSettings settings={settings} onChange={onChange} />}
-          {activeTab === 'hud' && <HudSettings settings={settings} onChange={onChange} />}
-          {activeTab === 'controls' && (
-            <ControlsSettings settings={settings} onChange={onChange} profileId={profile.id} />
-          )}
-          {activeTab === 'haptics' && <HapticsSettings settings={settings} onChange={onChange} />}
-          {activeTab === 'developer' && <DeveloperSettings settings={settings} onChange={onChange} />}
-          {activeTab === 'mobile' && <MobileSettings settings={settings} onChange={onChange} />}
+          {searching
+            ? <HubSearchResults {...content} query={query} tabs={searchableTabs} onOpenTab={openTab} />
+            : (
+              <SettingsPageContext.Provider value={pageContext}>
+                <ProfileHubTabContent {...content} tab={activeTab} />
+              </SettingsPageContext.Provider>
+            )}
         </Box>
       </Box>
     </RandomizerLockContext.Provider>
