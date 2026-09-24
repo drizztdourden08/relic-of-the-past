@@ -28,7 +28,7 @@ const OPACITY_STEP = 5;
 
 /** Panel footprint used to keep it inside the viewport. Width matches --widget-options-w. */
 const PANEL_WIDTH = 272;
-const PANEL_HEIGHT = 320;
+const PANEL_HEIGHT = 470;
 const EDGE_MARGIN = 8;
 const ANCHOR_GAP = 4;
 

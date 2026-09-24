@@ -19,6 +19,8 @@ interface TabChipProps {
   onActivate: (id: string) => void;
 }
 
+const TITLEBAR_HINT = 'Drag to move. Hold Alt to peek at the game. While dragging: Shift swaps, Ctrl overlays, Esc cancels, past the window edge pops out.';
+
 const TabChip = (props: TabChipProps) => {
   const { tab, active, onActivate } = props;
   const handleClick = useCallback(() => onActivate(tab.id), [onActivate, tab.id]);
@@ -67,7 +69,12 @@ const Widget = (props: WidgetProps) => {
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
     >
-      <Box className="widget__titlebar" data-drag-widget={activeId} data-pane-key={paneKey ?? ''}>
+      <Box
+        className="widget__titlebar"
+        data-drag-widget={activeId}
+        data-pane-key={paneKey ?? ''}
+        title={TITLEBAR_HINT}
+      >
         {tabs.length > 1 ? (
           <Box className="widget__tabs">
             {tabs.map((tab) => (

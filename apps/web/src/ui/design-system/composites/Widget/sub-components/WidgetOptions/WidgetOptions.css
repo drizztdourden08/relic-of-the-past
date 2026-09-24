@@ -16,6 +16,8 @@
   color: var(--c-text);
   font-size: var(--text-sm);
   pointer-events: auto;
+  max-height: calc(100vh - 2 * var(--space-md));
+  overflow-y: auto;
 }
 
 .widget-options__header {
@@ -93,6 +95,36 @@
 }
 
 .widget-option-row__hint {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+/* ─── Shortcuts ─── */
+
+.widget-shortcuts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.widget-shortcuts__row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  gap: var(--space-sm);
+}
+
+.widget-shortcuts__kbd {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-gold);
+  padding: 0 var(--space-xs);
+  border: 1px solid var(--c-gold-dim);
+  border-radius: var(--r-sm);
+  white-space: nowrap;
+}
+
+.widget-shortcuts__does {
   font-size: var(--text-xs);
   color: var(--c-text-muted);
 }

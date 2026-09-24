@@ -20,6 +20,7 @@ import { panelPositionFor } from './behavior/panel-position';
 import { useDismiss } from './behavior/useDismiss';
 import { OptionRow } from './sub-components/OptionRow';
 import { PlacementRow } from './sub-components/PlacementRow';
+import { ShortcutsList } from './sub-components/ShortcutsList';
 import type { WidgetOptionsProps, WidgetShow } from './WidgetOptions.type';
 import './WidgetOptions.css';
 
@@ -93,6 +94,10 @@ const WidgetOptions = (props: WidgetOptionsProps) => {
             {children}
           </>
         )}
+
+        <Divider className="widget-options__divider" />
+        <Text className="widget-options__section">Shortcuts</Text>
+        <ShortcutsList />
 
         <Divider className="widget-options__divider" />
         <Box className="widget-options__footer">

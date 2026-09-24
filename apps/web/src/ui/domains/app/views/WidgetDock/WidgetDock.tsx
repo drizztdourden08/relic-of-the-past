@@ -9,6 +9,7 @@ import { useCallback, useMemo, useRef } from 'react';
 import type { FloatingWidget, PaneNode, Rect, WidgetId } from '@shared/types/widget-layout';
 import { DockLayout } from '@ds/composites/DockLayout';
 import { useHeldActions } from '@app/hooks/useHeldActions';
+import { useWidgetsNeverFocus } from '@app/hooks/useWidgetsNeverFocus';
 import { useGameRectStore } from '@app/stores/game-rect-store';
 import { useWidgetLayoutStore } from '@app/stores/widget-layout-store';
 import { visibleLayoutOf } from './behavior/visible-layout';
@@ -28,6 +29,7 @@ const WidgetDock = (props: WidgetDockProps) => {
   const popOut = useWidgetLayoutStore((s) => s.popOut);
   const setRect = useGameRectStore((s) => s.setRect);
   const modifiers = useHeldActions();
+  useWidgetsNeverFocus();
 
   const contentIds = useMemo(() => Object.keys(contents), [contents]);
   const visibleLayout = useMemo(

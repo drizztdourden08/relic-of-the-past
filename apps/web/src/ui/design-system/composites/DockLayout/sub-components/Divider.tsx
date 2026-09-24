@@ -14,7 +14,7 @@ interface DividerProps {
 
 const Divider = (props: DividerProps) => {
   const { divider, onEdit } = props;
-  const { dragging, onPointerDown, onPointerMove, onPointerUp, onDoubleClick } = useDividerDrag(divider, onEdit);
+  const { dragging, onPointerDown, onDoubleClick } = useDividerDrag(divider, onEdit);
   const style = useMemo(() => rectStyle(divider.rect), [divider.rect]);
   const cls = [
     'dock-divider',
@@ -29,9 +29,6 @@ const Divider = (props: DividerProps) => {
       role="separator"
       aria-orientation={divider.node.axis === 'row' ? 'vertical' : 'horizontal'}
       onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
-      onPointerUp={onPointerUp}
-      onPointerCancel={onPointerUp}
       onDoubleClick={onDoubleClick}
     />
   );

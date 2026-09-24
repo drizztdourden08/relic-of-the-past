@@ -62,8 +62,9 @@ const DockLayout = (props: DockLayoutProps) => {
           {renderPane(node, rect)}
         </Box>
       ))}
-      {laid?.dividers.map((divider) => (
-        <Divider key={`${divider.node.axis}-${divider.rect.x}-${divider.rect.y}`} divider={divider} onEdit={onEdit} />
+      {/* Keyed by position in the tree, never by rect: a divider moves while it is dragged and must not remount. */}
+      {laid?.dividers.map((divider, i) => (
+        <Divider key={`${divider.node.axis}-${i}`} divider={divider} onEdit={onEdit} />
       ))}
       {gameRect && <GameGrip rect={gameRect} stageRef={stageRef} />}
       {gameRect && layout.floating.map((floating) => {
@@ -76,7 +77,7 @@ const DockLayout = (props: DockLayoutProps) => {
         );
       })}
       {drag && laid && <DropHints view={drag} laid={laid} />}
-      {drag && <DragGhost pointer={drag.pointer} label={drag.label} />}
+      {drag && <DragGhost pointer={drag.pointer} label={drag.label} swap={drag.swap} overlay={drag.overlay} outside={drag.outside} />}
     </Box>
   );
 };
