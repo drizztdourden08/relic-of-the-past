@@ -1,6 +1,8 @@
 /* @layer root-config @kind logic */
-import type { AccessRule } from '../access-rule.type';
+/** The groups an admin put the user in by hand. */
+import { knownIds } from '../membership';
+import type { GroupRule } from '../access-rule.type';
 
-const manualGrant: AccessRule = async ({ grant }) => (grant && !grant.revoked ? 'manual-grant' : null);
+const manualGroups: GroupRule = async ({ user, groups }) => knownIds(user.groupIds, groups);
 
-export { manualGrant };
+export { manualGroups };

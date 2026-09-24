@@ -12,7 +12,9 @@ export type {
   SavedView,
 } from './types';
 export { FILE_TYPES, FILE_TYPE_LABELS } from './file-types';
-export type { FileType, FileStatus, FileOwner, FileUpload, SanctuaryFile } from './file-types';
+export type { FileType, FileStatus, FileOwner, FileUpload, FileVersion, SanctuaryFile } from './file-types';
+export { DEFAULT_GROUP_ID } from './group-types';
+export type { GroupRights, Group, Rights } from './group-types';
 export { DEVICE_PLATFORMS } from './device-types';
 export type { DevicePlatform, Device } from './device-types';
 export type {

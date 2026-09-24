@@ -1,5 +1,8 @@
 /* @layer sanctuary-site @kind hook */
-/** Every report, loaded once by the signed-in frame; an extend replaces its row, a delete drops it. */
+/**
+ * Every report, loaded once by the signed-in frame; an extend replaces its row, a delete
+ * drops it. Without the reports right nothing is fetched and the list stays empty.
+ */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { listReports } from '../api/reports-endpoints';
 import { errorMessage } from '../api/client';
@@ -9,11 +12,16 @@ const NO_REPORTS: ReportView[] = [];
 
 const byNewest = (a: ReportView, b: ReportView) => b.createdAt - a.createdAt;
 
-const useReports = () => {
+const useReports = (enabled: boolean) => {
   const [reports, setReports] = useState<ReportView[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
+    if (!enabled) {
+      setReports(NO_REPORTS);
+      setError(null);
+      return;
+    }
     try {
       const { reports: rows } = await listReports();
       setReports([...rows].sort(byNewest));
@@ -22,7 +30,7 @@ const useReports = () => {
       setError(errorMessage(cause));
       setReports([]);
     }
-  }, []);
+  }, [enabled]);
 
   useEffect(() => {
     void load();

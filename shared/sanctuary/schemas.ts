@@ -35,3 +35,17 @@ export type {
   AdminRevokeBody,
 } from './schemas/account-schemas';
 export { tagsSchema, noteSchema, versionSchema, idSchema, MAX_TAGS } from './schemas/common';
+export {
+  groupRightsSchema,
+  createGroupSchema,
+  patchGroupSchema,
+  setGroupsSchema,
+  beginVersionSchema,
+} from './schemas/group-schemas';
+export type {
+  GroupRightsBody,
+  CreateGroupBody,
+  PatchGroupBody,
+  SetGroupsBody,
+  BeginVersionBody,
+} from './schemas/group-schemas';

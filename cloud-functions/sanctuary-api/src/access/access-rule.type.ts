@@ -1,18 +1,23 @@
 /* @layer root-config @kind types */
-import type { AccessSource, Identity, Provider } from '../../../../shared/sanctuary';
+import type { Group, Identity, Provider, SanctuaryUser } from '../../../../shared/sanctuary';
 import type { GrantDoc } from '../db/grants-repo';
 
 /** A provider token that only exists inside the callback that received it. */
 type FreshToken = { provider: Provider; accessToken: string };
 
 type AccessContext = {
-  userId: string;
+  user: SanctuaryUser;
   identities: Identity[];
   grant: GrantDoc | null;
+  /** Every group, read fresh for this run. */
+  groups: Group[];
   fresh: FreshToken | null;
 };
 
-/** Answers with the source that grants access, or null to pass to the next rule. */
-type AccessRule = (ctx: AccessContext) => Promise<AccessSource | null>;
+/** Answers whether the user is on the admin list. */
+type AdminRule = (ctx: AccessContext) => Promise<boolean>;
 
-export type { FreshToken, AccessContext, AccessRule };
+/** Answers the ids of the groups this source puts the user in; an empty list passes. */
+type GroupRule = (ctx: AccessContext) => Promise<string[]>;
+
+export type { FreshToken, AccessContext, AdminRule, GroupRule };

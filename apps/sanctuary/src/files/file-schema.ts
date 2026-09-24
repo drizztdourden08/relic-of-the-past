@@ -16,6 +16,7 @@ const SAMPLE_ROWS: readonly FileRow[] = FILE_TYPES.map((type, index) => ({
   type,
   tags: ['sample'],
   version: '0.0.0',
+  rev: 'v1',
   owner: { userId: 'sample', displayName: 'sample' },
   bytes: 0,
   size: '0 B',
@@ -27,13 +28,14 @@ const SAMPLE_ROWS: readonly FileRow[] = FILE_TYPES.map((type, index) => ({
 
 const FILE_SCHEMA_CONFIG: SchemaConfig = {
   order: [
-    'name', 'type', 'tags', 'version', 'owner', 'size', 'bytes', 'note', 'stats', 'createdAt', 'expiresAt',
+    'name', 'type', 'tags', 'rev', 'version', 'owner', 'size', 'bytes', 'note', 'stats', 'createdAt', 'expiresAt',
   ],
   labels: {
     name: 'Name',
     type: 'Type',
     tags: 'Tags',
-    version: 'Version',
+    rev: 'Rev',
+    version: 'App version',
     'owner.displayName': 'Owner',
     size: 'Size',
     bytes: 'Bytes',
@@ -47,6 +49,7 @@ const FILE_SCHEMA_CONFIG: SchemaConfig = {
     name: 'string',
     tags: 'array',
     'tags[]': 'string',
+    rev: 'string',
     version: 'string',
     'owner.displayName': 'string',
     size: 'string',
@@ -59,6 +62,7 @@ const FILE_SCHEMA_CONFIG: SchemaConfig = {
 const FILE_DEFAULT_COLUMNS: readonly TableColumn[] = [
   { path: 'name', grow: true },
   { path: 'tags', fit: true },
+  { path: 'rev', fit: true },
   { path: 'version', fit: true },
   { path: 'owner.displayName', fit: true },
   { path: 'createdAt', fit: true },

@@ -25,6 +25,10 @@ type SanctuaryUser = {
   displayName: string;
   avatarUrl: string | null;
   access: AccessCheck;
+  /** Groups an admin put this person in by hand. They never change on their own. */
+  groupIds: string[];
+  /** Groups from the Discord roles the person held at the last sign-in or re-check. */
+  roleGroupIds: string[];
   /** Bumped to sign the user out everywhere. */
   sessionVersion: number;
   createdAt: number;

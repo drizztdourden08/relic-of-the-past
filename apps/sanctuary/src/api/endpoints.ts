@@ -11,6 +11,7 @@ import type {
   DevicesResponse,
   DeviceConfirmResponse,
   AdminQueueResponse,
+  UserResponse,
 } from './types';
 
 type AuthIntent = 'signin' | 'link';
@@ -36,7 +37,9 @@ const confirmDevice = (userCode: string) => request<DeviceConfirmResponse>('devi
 
 const listAdminQueue = () => request<AdminQueueResponse>('adminPending');
 
-const grantAccess = (userId: string, note = '') => request<void>('adminGrant', { params: { userId }, body: { note } });
+/** Replaces the person's manual groups; their Discord groups are not the admin's to set. */
+const setUserGroups = (userId: string, groupIds: string[]) =>
+  request<UserResponse>('adminSetGroups', { params: { userId }, body: { groupIds } });
 
 const revokeAccess = (userId: string, note = '') => request<void>('adminRevoke', { params: { userId }, body: { note } });
 
@@ -50,7 +53,7 @@ export {
   revokeDevice,
   confirmDevice,
   listAdminQueue,
-  grantAccess,
+  setUserGroups,
   revokeAccess,
 };
 export type { AuthIntent };

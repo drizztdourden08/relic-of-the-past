@@ -2,7 +2,8 @@
 /**
  * Decides what the current path shows from the session: signed out sees Sign in, a
  * pending or revoked user sees the waiting page, a member sees the page inside the
- * member frame, and an admin route sends a non-admin home.
+ * member frame, an admin route sends a non-admin home, and a reports route sends a
+ * caller without the reports right to Files.
  */
 import { Spinner } from '@ds/primitives/Spinner';
 import { Center } from '@ds/primitives/Center';
@@ -10,6 +11,7 @@ import { Button } from '@ds/primitives/Button';
 import { useLocation } from '../router/useLocation';
 import { Redirect } from '../router/Redirect';
 import { useSessionContext } from '../session/session-context';
+import { canSeeReports } from '../session/rights';
 import { resolveRoute } from '../routes';
 import { SiteFrame } from '../layout/SiteFrame/SiteFrame';
 import { Gate } from '../components/Gate/Gate';
@@ -17,9 +19,11 @@ import { SignIn } from '../pages/SignIn/SignIn';
 import { Pending } from '../pages/Pending/Pending';
 import './RouteGuard.css';
 
+const FILES_PATH = '/files';
+
 const RouteGuard = () => {
   const { path } = useLocation();
-  const { me, access, loading, error, refresh } = useSessionContext();
+  const { me, access, rights, loading, error, refresh } = useSessionContext();
 
   if (loading) {
     return (
@@ -58,6 +62,7 @@ const RouteGuard = () => {
   if (entry.access === 'public') return <Redirect to="/" />;
   if (access.state === 'pending' || access.state === 'revoked') return <Pending />;
   if (entry.access === 'admin' && access.state !== 'admin') return <Redirect to="/" />;
+  if (entry.needsReports && !canSeeReports(rights)) return <Redirect to={FILES_PATH} />;
   if (entry.bare) return entry.render(params);
   // The one member frame: same element at the same place for every member route, so the
   // nav, the search and the shared lists stay mounted while the page beneath them changes.

@@ -1,10 +1,10 @@
 /* @layer sanctuary-site @kind component */
 /**
- * What is asked before an upload starts: type (preset from the rail), tags, version and
- * note, one answer for every file of the drop. The tag rule is the shared schema's, so a
+ * What is asked before an upload starts: type (preset from the rail, limited to the types
+ * the caller may see), tags, app version and note, one answer for every file of the drop. The tag rule is the shared schema's, so a
  * tag refused here would have been refused by the API.
  */
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FILE_TYPES, FILE_TYPE_LABELS } from '@shared/sanctuary/file-types';
 import type { FileType } from '@shared/sanctuary/file-types';
 import { LIMITS } from '@shared/sanctuary/limits';
@@ -24,6 +24,8 @@ import './UploadDialog.css';
 
 type UploadDialogProps = {
   files: File[];
+  /** The types the caller may upload to; the only choices offered. */
+  types: readonly FileType[];
   defaultType: FileType;
   /** Tags already in use, offered as suggestions. */
   knownTags: readonly string[];
@@ -31,14 +33,17 @@ type UploadDialogProps = {
   onCancel: () => void;
 };
 
-const TYPE_OPTIONS = FILE_TYPES.map((type) => ({ value: type, label: FILE_TYPE_LABELS[type] }));
 const TAG_HINT = 'lowercase letters, digits, dots, dashes';
 
 const validateTag = (raw: string) => tagsSchema.safeParse([raw]).success || TAG_HINT;
 
 const UploadDialog = (props: UploadDialogProps) => {
-  const { files, defaultType, knownTags, onConfirm, onCancel } = props;
+  const { files, types, defaultType, knownTags, onConfirm, onCancel } = props;
   const open = files.length > 0;
+  const typeOptions = useMemo(
+    () => FILE_TYPES.filter((t) => types.includes(t)).map((t) => ({ value: t, label: FILE_TYPE_LABELS[t] })),
+    [types],
+  );
   const [type, setType] = useState<FileType>(defaultType);
   const [tags, setTags] = useState<readonly string[]>([]);
   const [version, setVersion] = useState('');
@@ -82,7 +87,7 @@ const UploadDialog = (props: UploadDialogProps) => {
         </Text>
         <Text as="p" variant="caption">{formatBytes(total)} in total, stored exactly as sent.</Text>
         <Field label="Type">
-          <Select value={type} onChange={(value) => setType(value as FileType)} options={TYPE_OPTIONS} />
+          <Select value={type} onChange={(value) => setType(value as FileType)} options={typeOptions} />
         </Field>
         <TagInput
           label="Tags"
@@ -93,7 +98,7 @@ const UploadDialog = (props: UploadDialogProps) => {
           enforce
           placeholder="castle, jail..."
         />
-        <Field label="Version" hint="The app version the file relates to, if any.">
+        <Field label="App version" hint="The app version the file relates to, if any.">
           <TextInput value={version} onChange={(event) => setVersion(event.target.value)} placeholder="0.20.7" />
         </Field>
         <Field label="Note" hint={`${note.length} / ${LIMITS.noteMaxChars}`}>

@@ -18,11 +18,13 @@ type SiteSection = {
   path: string;
   icon: IconifyIcon;
   adminOnly?: boolean;
+  /** Shown only to a caller whose groups grant the reports. */
+  needsReports?: boolean;
 };
 
 const SITE_SECTIONS: Record<SiteSectionId, SiteSection> = {
   files: { id: 'files', label: 'Files', path: '/files', icon: filesIcon },
-  reports: { id: 'reports', label: 'Reports', path: '/reports', icon: flagIcon },
+  reports: { id: 'reports', label: 'Reports', path: '/reports', icon: flagIcon, needsReports: true },
   account: { id: 'account', label: 'Account', path: '/account', icon: userIcon },
   admin: { id: 'admin', label: 'Admin', path: '/admin', icon: shieldIcon, adminOnly: true },
 };

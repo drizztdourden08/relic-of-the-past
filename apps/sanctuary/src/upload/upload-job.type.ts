@@ -9,12 +9,27 @@ type UploadMeta = {
   note: string;
 };
 
+/** Where an upload lands: a new file, or the next version of one that exists. */
+type UploadTarget =
+  | { kind: 'new'; meta: UploadMeta }
+  | {
+    kind: 'version';
+    fileId: string;
+    /** What changed, one line. */
+    note: string;
+    /** The file's display name, for the upload row. */
+    of: string;
+    /** The number the site expects; the API's answer replaces it. */
+    next: number;
+  };
+
 type UploadState = 'hashing' | 'uploading' | 'done' | 'failed';
 
 /** One row of the upload list, kept from the drop until dismissed. */
 type UploadJob = {
   id: string;
-  name: string;
+  /** What the row says: the file name, or "v4 of name" for a version. */
+  label: string;
   bytes: number;
   /** Bytes the part PUTs have reported so far. */
   sent: number;
@@ -24,4 +39,4 @@ type UploadJob = {
   fileId: string | null;
 };
 
-export type { UploadMeta, UploadState, UploadJob };
+export type { UploadMeta, UploadTarget, UploadState, UploadJob };

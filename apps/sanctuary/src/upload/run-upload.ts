@@ -1,21 +1,23 @@
 /* @layer sanctuary-site @kind logic */
 /**
- * One file, start to finish: begin the record, sign part URLs in batches of
- * LIMITS.partsPerSign, PUT the batch in parallel, then complete with the ETags in part
- * order. A failure after begin deletes the record, which aborts the multipart upload.
+ * One file, start to finish: begin the record (a new file or the next version of one),
+ * sign part URLs in batches of LIMITS.partsPerSign, PUT the batch in parallel, then
+ * complete with the ETags in part order. A failure after begin aborts the record.
  */
 import { LIMITS } from '@shared/sanctuary/limits';
 import type { SanctuaryFile } from '@shared/sanctuary/file-types';
-import { beginFile, completeFile, deleteFile, signParts } from '../api/files-endpoints';
 import { putPart } from './put-part';
-import type { UploadMeta } from './upload-job.type';
+import { beginUpload } from './begin-upload';
+import type { UploadTarget } from './upload-job.type';
 
 const DEFAULT_CONTENT_TYPE = 'application/octet-stream';
 
 type RunUploadParams = {
   file: File;
-  meta: UploadMeta;
+  target: UploadTarget;
   sha256: string | null;
+  /** Called once the API has created the record, with the version number it gave. */
+  onBegun: (fileId: string, n: number | null) => void;
   /** Total bytes sent so far, across every part. */
   onProgress: (sent: number) => void;
 };
@@ -24,14 +26,15 @@ const partNumbers = (first: number, last: number) =>
   Array.from({ length: last - first + 1 }, (_, i) => first + i);
 
 const runUpload = async (params: RunUploadParams): Promise<SanctuaryFile> => {
-  const { file, meta, sha256, onProgress } = params;
-  const { fileId, partSize, parts } = await beginFile({
-    ...meta,
+  const { file, target, sha256, onBegun, onProgress } = params;
+  const begun = await beginUpload(target, {
     name: file.name,
     bytes: file.size,
     sha256,
     contentType: file.type || DEFAULT_CONTENT_TYPE,
   });
+  const { partSize, parts } = begun;
+  onBegun(begun.fileId, begun.n);
 
   const sentByPart = new Map<number, number>();
   const report = () => {
@@ -44,7 +47,7 @@ const runUpload = async (params: RunUploadParams): Promise<SanctuaryFile> => {
     const etags: string[] = new Array<string>(parts);
     for (let first = 1; first <= parts; first += LIMITS.partsPerSign) {
       const batch = partNumbers(first, Math.min(first + LIMITS.partsPerSign - 1, parts));
-      const { urls } = await signParts(fileId, batch);
+      const { urls } = await begun.sign(batch);
       await Promise.all(urls.map(async ({ part, url }) => {
         const blob = file.slice((part - 1) * partSize, Math.min(part * partSize, file.size));
         etags[part - 1] = await putPart({
@@ -57,10 +60,10 @@ const runUpload = async (params: RunUploadParams): Promise<SanctuaryFile> => {
         });
       }));
     }
-    const { file: record } = await completeFile(fileId, etags);
+    const { file: record } = await begun.complete(etags);
     return record;
   } catch (error) {
-    await deleteFile(fileId).catch(() => undefined);
+    await begun.abort().catch(() => undefined);
     throw error;
   }
 };

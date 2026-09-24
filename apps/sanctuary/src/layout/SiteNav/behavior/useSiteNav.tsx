@@ -1,12 +1,13 @@
 /* @layer sanctuary-site @kind hook */
 /**
  * What the section nav shows and does: the config built from the session (Admin for
- * admins only), the active section read from the location, and a select that navigates.
+ * admins only, Reports for the reports right only), the active section read from the location, and a select that navigates.
  */
 import { useCallback, useMemo } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import type { SectionNavConfig, SectionNavItem } from '@ds/composites/SectionNav';
 import { useSessionContext } from '../../../session/session-context';
+import { canSeeReports } from '../../../session/rights';
 import { useLocation } from '../../../router/useLocation';
 import { SITE_HOME, SITE_NAV_GROUPS, SITE_SECTIONS } from '../SiteNav.constants';
 import { NavAvatar } from '../sub-components/NavAvatar';
@@ -33,9 +34,10 @@ const sectionForPath = (path: string): SiteSectionId => {
 };
 
 const useSiteNav = () => {
-  const { me, access } = useSessionContext();
+  const { me, access, rights } = useSessionContext();
   const { path, navigate } = useLocation();
   const isAdmin = access?.state === 'admin';
+  const reports = canSeeReports(rights);
   const person = useMemo<NavPerson>(
     () => (me ? { displayName: me.displayName, avatarUrl: me.avatarUrl } : null),
     [me],
@@ -47,10 +49,10 @@ const useSiteNav = () => {
       id: group.id,
       label: group.label,
       items: group.sections
-        .filter((id) => !SITE_SECTIONS[id].adminOnly || isAdmin)
+        .filter((id) => (!SITE_SECTIONS[id].adminOnly || isAdmin) && (!SITE_SECTIONS[id].needsReports || reports))
         .map((id) => navItem(id, person)),
-    })),
-  }), [isAdmin, person]);
+    })).filter((group) => group.items.length > 0),
+  }), [isAdmin, reports, person]);
 
   const activeId = sectionForPath(path);
   const select = useCallback((id: string) => {

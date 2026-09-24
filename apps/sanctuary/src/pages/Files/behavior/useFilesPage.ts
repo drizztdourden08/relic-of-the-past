@@ -1,13 +1,16 @@
 /* @layer sanctuary-site @kind hook */
 /**
  * All of the Files page's state, so the component stays a layout: the list and the scope
- * tab (both shared through the site data, so they outlive the page), the schema, the view (clauses, search, saved views), the owners facet, the
- * selected file, its actions and the uploads. Selection is the route: `/files/:id`.
+ * tab (both shared through the site data, so they outlive the page), the schema, the view
+ * (clauses, search, saved views), the owners facet, the selected file, its actions, the
+ * uploads and the dialogs a drop leads to. Selection is the route: `/files/:id`. Tabs and
+ * upload types follow the caller's rights.
  */
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import type { SanctuaryFile } from '@shared/sanctuary/file-types';
 import { navigate } from '../../../router/useLocation';
 import { useSessionContext } from '../../../session/session-context';
+import { visibleFileTypes } from '../../../session/rights';
 import { useSiteData } from '../../../data/site-data-context';
 import { toFileRow } from '../../../files/file-row';
 import { buildFileSchema } from '../../../files/file-schema';
@@ -16,20 +19,22 @@ import { useFacet } from '../../../views/useFacet';
 import { filterRows } from '../../../views/filter-rows';
 import type { FileRow } from '../../../files/file-row';
 import { DEFAULT_UPLOAD_TYPE, isFileType } from '../Files.constants';
-import { fileScopeTabs, scopePredicate } from './file-scopes';
+import { fileScopeTabs, scopePredicate, shownScopeId } from './file-scopes';
 import { useFileActions } from './useFileActions';
+import { useDropFlow } from './useDropFlow';
 
 const FILES_PATH = '/files';
 
 const ownerOf = (row: FileRow) => row.owner.displayName;
 
 const useFilesPage = (selectedId: string | null) => {
-  const { me, access } = useSessionContext();
+  const { me, access, rights } = useSessionContext();
   const meId = me?.id ?? '';
   const isAdmin = access?.state === 'admin';
+  const types = useMemo(() => visibleFileTypes(rights), [rights]);
 
   const { files: data, uploads, scopes, setScope } = useSiteData();
-  const scopeId = scopes.files;
+  const scopeId = shownScopeId(scopes.files, types);
   const setScopeId = useCallback((id: string) => setScope('files', id), [setScope]);
 
   const rows = useMemo(() => data.files.map(toFileRow), [data.files]);
@@ -43,7 +48,7 @@ const useFilesPage = (selectedId: string | null) => {
     [owners, inScope, schema, view.clauses, view.search],
   );
 
-  const tabs = useMemo(() => fileScopeTabs(rows, meId), [rows, meId]);
+  const tabs = useMemo(() => fileScopeTabs(rows, meId, types), [rows, meId, types]);
   const scopeBytes = useMemo(() => inScope.reduce((sum, row) => sum + row.bytes, 0), [inScope]);
   const knownTags = useMemo(
     () => [...new Set(data.files.flatMap((file) => file.tags))].sort((a, b) => a.localeCompare(b)),
@@ -63,9 +68,10 @@ const useFilesPage = (selectedId: string | null) => {
     deselect();
   }, [remove, deselect]);
   const actions = useFileActions({ onPatched: upsert, onDeleted });
+  const drops = useDropFlow({ files: data.files, start: uploads.start });
 
-  const [pending, setPending] = useState<File[]>([]);
-  const uploadType = isFileType(scopeId) ? scopeId : DEFAULT_UPLOAD_TYPE;
+  const preferred = isFileType(scopeId) ? scopeId : DEFAULT_UPLOAD_TYPE;
+  const uploadType = types.includes(preferred) ? preferred : types[0] ?? DEFAULT_UPLOAD_TYPE;
 
   const canEdit = (file: SanctuaryFile) => isAdmin || file.owner.userId === meId;
 
@@ -83,8 +89,8 @@ const useFilesPage = (selectedId: string | null) => {
     actions,
     canEdit,
     uploads,
-    pending,
-    setPending,
+    drops,
+    types,
     uploadType,
   };
 };

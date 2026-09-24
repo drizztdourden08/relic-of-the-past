@@ -12,6 +12,7 @@ const COLLECTIONS = {
   devices: 'sanctuary-devices',
   reports: 'sanctuary-reports',
   rateLimits: 'sanctuary-rate-limits',
+  groups: 'sanctuary-groups',
 } as const;
 
 type CollectionName = keyof typeof COLLECTIONS;

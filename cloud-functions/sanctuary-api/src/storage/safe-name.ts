@@ -13,10 +13,17 @@ const safeName = (name: string): string => {
   return cleaned || 'download';
 };
 
+/**
+ * RFC 5987 value for filename*: encodeURIComponent leaves ( ) ' * ! raw, which the header
+ * grammar does not allow and B2 rejects, so those five are encoded too.
+ */
+const encodeExtValue = (value: string): string =>
+  encodeURIComponent(value).replace(/['()*!]/g, (char) => `%${char.charCodeAt(0).toString(16).toUpperCase()}`);
+
 const attachmentDisposition = (name: string): string => {
   const safe = safeName(name);
   const ascii = safe.replace(/[^\x20-\x7e]/g, '_');
-  return `attachment; filename="${ascii}"; filename*=UTF-8''${encodeURIComponent(safe)}`;
+  return `attachment; filename="${ascii}"; filename*=UTF-8''${encodeExtValue(safe)}`;
 };
 
 export { safeName, attachmentDisposition };

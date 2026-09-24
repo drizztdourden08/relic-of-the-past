@@ -8,11 +8,47 @@ import type { SanctuaryUser, Identity, AccessCheck, SavedView } from '@shared/sa
 import type { Device } from '@shared/sanctuary/device-types';
 import type { SanctuaryFile } from '@shared/sanctuary/file-types';
 import type { Report, ReportReporter } from '@shared/sanctuary/report-types';
+import type { Group, Rights } from '@shared/sanctuary/group-types';
 
-/** GET /me */
+/** GET /me: the caller, their groups and the rights those groups add up to. */
 type MeResponse = {
   user: SanctuaryUser;
   identities: Identity[];
+  groups: Group[];
+  rights: Rights;
+  via: 'session' | 'device';
+  deviceId: string | null;
+};
+
+/** One group as the admin list shows it, with how many people are in it. */
+type GroupView = Group & {
+  memberCount: number;
+  /** Of those, the ones an admin added by hand. */
+  manualCount: number;
+};
+
+/** GET /groups */
+type GroupsListResponse = {
+  groups: GroupView[];
+};
+
+/** POST /groups and PATCH /groups/:id */
+type GroupResponse = {
+  group: Group;
+};
+
+/** PUT /admin/users/:userId/groups */
+type UserResponse = {
+  user: SanctuaryUser;
+};
+
+/** POST /files/:id/versions */
+type VersionBeginResponse = {
+  fileId: string;
+  n: number;
+  uploadId: string;
+  partSize: number;
+  parts: number;
 };
 
 /** POST /me/recheck */
@@ -95,6 +131,11 @@ type ReportResponse = {
 
 export type {
   MeResponse,
+  GroupView,
+  GroupsListResponse,
+  GroupResponse,
+  UserResponse,
+  VersionBeginResponse,
   RecheckResponse,
   DevicesResponse,
   DeviceConfirmResponse,

@@ -1,7 +1,8 @@
 /* @layer root-config @kind logic */
 /** The S3 SDK against the Backblaze endpoint, behind a few verbs so routes never
- *  see bucket names or part numbers. Object keys are files/<id> and
- *  reports/<id>.zip; a user-chosen name never becomes a key. */
+ *  see bucket names or part numbers. Object keys are files/<id> (v1 of a file
+ *  stored before versions existed), files/<id>/v<n> and reports/<id>.zip; a
+ *  user-chosen name never becomes a key. */
 import {
   S3Client,
   CreateMultipartUploadCommand,
@@ -35,6 +36,7 @@ const s3 = (): S3Client => {
 const bucket = (): string => readEnv().B2_BUCKET;
 
 const fileKey = (fileId: string): string => `files/${fileId}`;
+const versionKey = (fileId: string, n: number): string => `files/${fileId}/v${n}`;
 const reportKey = (reportId: string): string => `reports/${reportId}.zip`;
 
 const begin = async (key: string, contentType: string): Promise<string> => {
@@ -92,4 +94,4 @@ const remove = async (key: string): Promise<void> => {
 
 const b2 = { begin, signPart, complete, abort, signPut, signDownload, headSize, remove };
 
-export { b2, fileKey, reportKey };
+export { b2, fileKey, versionKey, reportKey };
