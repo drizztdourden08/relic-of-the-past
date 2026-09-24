@@ -3,6 +3,7 @@
  * Fire-and-forget IPC channels, renderer → main: `ipcRenderer.send` ↔ `ipcMain.on`.
  * Single source of truth for each send channel's argument signature.
  */
+import type { WidgetSlice } from '@shared/types/widget-relay';
 
 interface SendContract {
   'window:minimize': () => void;
@@ -16,6 +17,12 @@ interface SendContract {
   'window:shellReady': () => void;
   /** Batched, pre-formatted renderer log lines for Data/debug/session.log. */
   'debug:appendSessionLog': (lines: string[]) => void;
+  /** Closes that widget's window; the main window then docks it back. */
+  'widget:dockBack': (id: string) => void;
+  /** From the main window: one piece of state every pop-out should have. */
+  'widget:publish': (slice: WidgetSlice) => void;
+  /** From a pop-out once it is ready: asks the main window for a full snapshot. */
+  'widget:subscribe': (id: string) => void;
 }
 
 export type { SendContract };

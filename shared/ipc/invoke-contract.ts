@@ -8,6 +8,7 @@ import type { NormalSaveInfo, AutoSaveInfo, QuickSaveSlotInfo } from '@shared/ty
 import type { PlaySession } from '@shared/types/session';
 import type { ShadowCastingProject, ScreenShadowData } from '@shared/types/shadow-casting';
 import type { RefreshRateInfo, SyncedRateStatus } from '@shared/types/display';
+import type { WindowBounds } from '@shared/types/widget-layout';
 import type { DataLocation, StorageSummary, FileStat } from '@shared/platform';
 import type { SystemDiagnostics } from '@shared/types/diagnostics';
 import type { SimRunConfig } from '@shared/game/simulation';
@@ -290,6 +291,11 @@ interface InvokeContract extends
   'updater:getPrefs': () => Promise<UpdaterPrefs>;
   'updater:setPrefs': (prefs: UpdaterPrefs) => Promise<void>;
   'updater:getVersion': () => Promise<string>;
+
+  /** Opens (or fronts) the OS window holding that widget, at the remembered bounds when given. */
+  'widget:popOut': (id: string, bounds?: WindowBounds) => Promise<void>;
+  /** Which widgets have a window open right now. */
+  'widget:listPopped': () => Promise<string[]>;
 }
 
 export type { InvokeContract };

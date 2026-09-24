@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useMemo, useState } from 'react';
 import { Box } from '../../../../design-system/primitives/Box';
 import { Text } from '../../../../design-system/primitives/Text';
 import { Canvas } from '../../../../design-system/primitives/Canvas';
@@ -10,7 +10,7 @@ import type { ShadowRenderer } from '../../../../../lib/game/shadow-casting';
 import type { ShadowCastingProject } from '@shared/types/shadow-casting';
 import { useCanvasFit } from '../../../../../hooks/useCanvasFit';
 import { useShadowEditorStore } from '../../../../../stores/shadow-editor-store';
-import { useExclusiveInsetsStore } from '../../../../../stores/exclusive-insets-store';
+import { useGameRectStore } from '../../../../../stores/game-rect-store';
 import { ControllerDisconnectOverlay } from './sub-components/ControllerDisconnectOverlay';
 import { ProfileSwitcherOverlay } from './sub-components/ProfileSwitcherOverlay';
 import { useControllerOverlay } from './behavior/useControllerOverlay';
@@ -46,8 +46,12 @@ const GameLayer = (props: GameLayerProps) => {
   const [bufSize, setBufSize] = useState({ w: 512, h: 448 });
   const shadowDebugMode = useShadowEditorStore((s) => s.debugMode);
 
-  // Docked widgets shrink the game area.
-  const exclusiveInsets = useExclusiveInsetsStore((s) => s.insets);
+  // The dock layout hands the game its rectangle; null until it has measured.
+  const gameRect = useGameRectStore((s) => s.rect);
+  const gameRectStyle = useMemo(
+    () => (gameRect ? { left: gameRect.x, top: gameRect.y, width: gameRect.width, height: gameRect.height } : undefined),
+    [gameRect],
+  );
 
   const fitSize = useCanvasFit({ containerRef, bufW: bufSize.w, bufH: bufSize.h, stretch, pixelPerfect });
 
@@ -133,11 +137,7 @@ const GameLayer = (props: GameLayerProps) => {
     <Box
       className="game-layer"
       ref={containerRef}
-      style={
-        (exclusiveInsets.left || exclusiveInsets.right || exclusiveInsets.top || exclusiveInsets.bottom)
-          ? { left: exclusiveInsets.left, right: exclusiveInsets.right, top: exclusiveInsets.top, bottom: exclusiveInsets.bottom }
-          : undefined
-      }
+      style={gameRectStyle}
     >
       {status === 'error' && (
         <Box className="game-layer__status-overlay">

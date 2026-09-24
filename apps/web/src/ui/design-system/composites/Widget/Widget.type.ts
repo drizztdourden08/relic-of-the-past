@@ -1,37 +1,40 @@
 /* @layer renderer-components @kind types */
+import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
-
-/** Docking sides: left/right stack vertically, top/bottom stack horizontally */
-type SnapSide = 'left' | 'right' | 'top' | 'bottom';
-type WidgetMode = 'docked' | 'floating';
+import type { DockEdge, Rect, WidgetId } from '@shared/types/widget-layout';
 
 /** When the widget should be visible */
 type WidgetVisibility = 'always' | 'game-only';
 
-interface WidgetState {
-  id: string;              // Unique widget ID (e.g. 'inventory', 'checks', 'logs')
-  mode: WidgetMode;
-  side: SnapSide;          // Relevant when docked
-  order: number;           // Stacking order within the same side (0-based)
-  opacity: number;         // 0.0-1.0, affects frame only (bg/border/shadow)
-  visibility: WidgetVisibility;
-  visible: boolean;        // Whether the widget is currently open
+/** The edge a widget definition docks to by default. */
+type SnapSide = DockEdge;
 
-  // Floating geometry (pixels)
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-
-  // Docked size: width for left/right, height for top/bottom
-  dockedSize: number;
-
-  /** When true AND docked, the game viewport shrinks to avoid this widget's space */
-  exclusive: boolean;
+interface WidgetTab {
+  id: WidgetId;
+  label: string;
 }
 
-interface WidgetLayout {
-  widgets: WidgetState[];
+interface WidgetProps {
+  id: WidgetId;
+  /** One entry for a plain widget; several when the pane holds tabs. */
+  tabs: WidgetTab[];
+  activeId: WidgetId;
+  /** Null while floating or popped. */
+  paneKey: string | null;
+  /** Frame only, 0..1. */
+  opacity: number;
+  /** Folded to its title strip. */
+  peek?: boolean;
+  /** The gear shows pressed. */
+  optionsOpen?: boolean;
+  onActivateTab: (id: WidgetId) => void;
+  /** The gear button's viewport rect, for the options panel to anchor on. */
+  onOpenOptions: (anchor: Rect) => void;
+  onPopOut: () => void;
+  /** False hides the pop-out action: the widget's content cannot run away from the core. */
+  canPopOut?: boolean;
+  onClose: () => void;
+  children: ReactNode;
 }
 
 interface WidgetDefinition {
@@ -45,22 +48,23 @@ interface WidgetDefinition {
    *  precedent on ProfileHubTabSpec (ProfileHub.constants.ts). */
   devOnly?: boolean;
   /** Reads live game data, an information advantage even though it never changes what the
-   *  game computes. When Vanilla Safe is on, WidgetManager covers these with a
-   *  DisabledOverlay instead of hiding them, which is what devOnly does. See the Vanilla
-   *  Safe plan. */
+   *  game computes. When Vanilla Safe is on, the host covers these with a DisabledOverlay
+   *  instead of hiding them, which is what devOnly does. See the Vanilla Safe plan. */
   readsGameData?: boolean;
   /** A GameSettings key that must be truthy for this widget to do anything useful (e.g. the
-   *  Cheats widget needs `cheatsEnabled`). When off, WidgetManager covers the widget with a
+   *  Cheats widget needs `cheatsEnabled`). When off, the host covers the widget with a
    *  DisabledOverlay the same way readsGameData does for Vanilla Safe: visible, inert, and
    *  linking back to the setting that would re-enable it. */
   requiresSetting?: keyof GameSettings;
+  /** Can live in its own OS window: its content reads only what the relay carries
+   *  (the tracker sets, the log), never the core directly. */
+  popOut?: boolean;
 }
 
 export type {
   SnapSide,
   WidgetDefinition,
-  WidgetLayout,
-  WidgetMode,
-  WidgetState,
-  WidgetVisibility
+  WidgetProps,
+  WidgetTab,
+  WidgetVisibility,
 };

@@ -14,7 +14,7 @@ const ChecksWidgetContent = () => {
     viewMode, setViewMode, grouping, setGrouping, filter, setFilter, snapshot, stats, groupTree, run,
     panels, setPanels, expandedGroups, toggleGroup,
   } = useTrackerData({ prefKey: 'checks' });
-  const stickyHeader = useStickyHeader();
+  const [stickyHeader] = useStickyHeader();
 
   return (
     <ChecksTracker

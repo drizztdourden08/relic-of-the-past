@@ -8,6 +8,8 @@ import type { ControllerAddedInfo, ControllerJoystickSample, ControllerRawReport
 import type { UpdateInfo } from './updater-contract';
 import type { FfmpegState } from '@shared/types/ffmpeg-tool';
 import type { OptimizeProgress } from '@shared/types/msu-optimize';
+import type { WindowBounds } from '@shared/types/widget-layout';
+import type { WidgetSlice } from '@shared/types/widget-relay';
 
 /** Progress of a data import (ROM / MSU / language / sprites), main → renderer. */
 interface ImportProgress {
@@ -62,6 +64,14 @@ interface EventContract {
   /** Whether the gamepad subsystem is currently held open for a raw HID capture. See
    *  `controller:release-hold` / `controller:restore-hold`. */
   'controller:hold-changed': (held: boolean) => void;
+  /** To every pop-out: a piece of state the main window published. */
+  'widget:relay': (slice: WidgetSlice) => void;
+  /** To the main window: a pop-out asked for a full snapshot. */
+  'widget:snapshotRequest': (id: string) => void;
+  /** To the main window: that widget's window was closed, by the user or by dockBack. */
+  'widget:closed': (id: string) => void;
+  /** To the main window: that widget's window moved or resized. */
+  'widget:bounds': (id: string, bounds: WindowBounds) => void;
 }
 
 export type { EventContract, ImportProgress };

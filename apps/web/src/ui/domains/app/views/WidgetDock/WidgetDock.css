@@ -1,0 +1,14 @@
+/* @layer renderer-components @kind style */
+
+/* Fills .app__content behind the pages and dialogs, the same stacking the old widget
+   manager had. The container itself never takes the pointer; the panes inside it do. */
+.widget-dock {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: var(--z-panel);
+}
+
+.widget-dock .widget {
+  pointer-events: auto;
+}

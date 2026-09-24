@@ -1,4 +1,4 @@
-/* @layer shared-types @kind logic */
+/* @layer shared-types @kind data */
 /**
  * The ONLY join tables between the renderer's friendly `window.api` method names
  * and the namespaced IPC channels. Every value is `satisfies`-checked to be a real
@@ -173,6 +173,8 @@ const INVOKE_MAP = {
   deleteDebugCaptureSession: 'debug-capture:deleteSession',
   buildDebugReport: 'debug-report:build',
   sendDebugReport: 'debug-report:send',
+  popOutWidget: 'widget:popOut',
+  listPoppedWidgets: 'widget:listPopped',
 } as const satisfies Record<string, keyof InvokeContract>;
 
 const SEND_MAP = {
@@ -185,6 +187,9 @@ const SEND_MAP = {
   setAspectRatioLock: 'window:setAspectRatioLock',
   shellReady: 'window:shellReady',
   appendSessionLog: 'debug:appendSessionLog',
+  dockBackWidget: 'widget:dockBack',
+  publishWidgetSlice: 'widget:publish',
+  subscribeWidgetRelay: 'widget:subscribe',
 } as const satisfies Record<string, keyof SendContract>;
 
 const EVENT_MAP = {
@@ -202,6 +207,10 @@ const EVENT_MAP = {
   onControllerRaw: 'controller:raw',
   onControllerJoystick: 'controller:joystick',
   onControllerHoldChanged: 'controller:hold-changed',
+  onWidgetRelay: 'widget:relay',
+  onWidgetSnapshotRequest: 'widget:snapshotRequest',
+  onWidgetClosed: 'widget:closed',
+  onWidgetBounds: 'widget:bounds',
 } as const satisfies Record<string, keyof EventContract>;
 
 export { INVOKE_MAP, SEND_MAP, EVENT_MAP };
