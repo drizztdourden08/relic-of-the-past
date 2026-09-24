@@ -1,5 +1,6 @@
 /* @layer shared-types @kind logic */
 import type { FunctionMapping } from './controls';
+import type { TitleSword } from '../game/title/title-swords';
 import type { DialogHoldStop, DialogSpeedStop, DialogStrokeWidth } from '../game/dialog/pacing';
 import type {
   DialogBorder, DialogBorderThickness, DialogCorner, DialogCornerMark,
@@ -252,6 +253,12 @@ interface GameSettings {
   hudCountLayout: 'centered' | 'original';
   hudPauseStyle: 'vanilla' | 'enhanced';
   hudPauseHighlight: 'box' | 'glow' | 'none';
+
+  // ─── Title screen (HUD tab: the host draws the title over the hidden native one) ───
+  titleScreen: 'original' | 'reimagined';
+  titleMotion: 'still' | 'drifting';     // a slow parallax and drifting clouds while the title idles
+  titleFollowsProgress: boolean;         // the world, and the sword when it is set to progress, come from the most advanced save
+  titleSword: TitleSword;                // the sword planted in the title, or the save's own
 
   // ─── Controls ───
   activeInputProfileId: string | null;

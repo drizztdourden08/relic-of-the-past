@@ -393,6 +393,7 @@ void Module14_Attract() {  // 8cedad
   case 8: Attract_EnactStory(); break;
   case 9: Attract_SkipToFileSelect(); break;
   }
+  GameHook_TitleNoteAttractFrame();
 }
 
 void Attract_Fade() {  // 8cede6

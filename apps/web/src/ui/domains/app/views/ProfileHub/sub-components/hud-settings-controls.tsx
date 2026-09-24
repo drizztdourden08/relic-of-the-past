@@ -8,6 +8,7 @@ import { HudStyleControl } from './HudStyleControl';
 import { AspectRatioControl } from './AspectRatioControl';
 import { aspectRatioValue, parseRatioString } from '@app/lib/game/aspect-ratio';
 import { renderDialogControl, isDialogDisabled } from './hud-dialog-controls';
+import { renderTitleControl, isTitleDisabled } from './hud-title-controls';
 
 const HUD_MODE_OPTIONS = [
   { value: 'original', label: 'Original' },
@@ -159,12 +160,12 @@ const renderControl = (key: string, settings: GameSettings, onChange: (patch: Pa
         />
       );
     default:
-      // The Dialog Box section lives in its own renderer, so this file stays under the line cap.
-      return renderDialogControl(key, settings, onChange);
+      // The Title Screen and Dialog Box sections live in their own renderers, so this file stays under the line cap.
+      return renderTitleControl(key, settings, onChange) ?? renderDialogControl(key, settings, onChange);
   }
 };
 
-/** Only the Dialog Box section carries dependent rows; every other HUD row is always live. */
-const isDisabled = (key: string, settings: GameSettings): boolean => isDialogDisabled(key, settings);
+/** The Title Screen and Dialog Box sections carry dependent rows; every other HUD row is always live. */
+const isDisabled = (key: string, settings: GameSettings): boolean => isTitleDisabled(key, settings) || isDialogDisabled(key, settings);
 
 export { renderControl, isDisabled };

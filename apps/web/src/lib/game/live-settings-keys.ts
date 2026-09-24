@@ -81,6 +81,11 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'dialogTextureDensity',
   'dialogTextureScatter',
   'dialogGroundColor',
+  // Title screen (React overlay, plus the hide bit in features2 and one wanted flag the core reconciles)
+  'titleScreen',
+  'titleMotion',
+  'titleFollowsProgress',
+  'titleSword',
   // Per-group volume enable gate (DSP flag pushed live)
   'perGroupVolume',
   // Window settings (Electron-managed, no WASM restart needed)

@@ -17,10 +17,10 @@ const load = (src: string): Promise<HTMLImageElement> => new Promise((resolve, r
 const loadAll = (srcs: readonly string[]): Promise<HTMLImageElement[]> => Promise.all(srcs.map(load));
 
 const loadSceneAssets = async (files: SceneFiles): Promise<SceneAssets> => {
-  const [sky, mountains, trees, clouds, caustics, landmark] = await Promise.all([
-    load(files.sky), loadAll(files.mountains), loadAll(files.trees), loadAll(files.clouds), loadAll(files.caustics), load(files.landmark),
+  const [sky, mountains, trees, clouds, landmark] = await Promise.all([
+    load(files.sky), loadAll(files.mountains), loadAll(files.trees), loadAll(files.clouds), load(files.landmark),
   ]);
-  return { sky, mountains, trees, clouds, caustics, landmark };
+  return { sky, mountains, trees, clouds, landmark };
 };
 
 let pending: Promise<SceneAssets> | null = null;

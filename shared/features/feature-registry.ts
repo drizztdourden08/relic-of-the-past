@@ -192,6 +192,23 @@ const DISPLAY_FEATURES: FeatureDef[] = [
     live: true,
   },
   {
+    id: 'titleOverride',
+    label: 'Title screen: reimagined',
+    description: 'Keeps the native title screen off the picture while the app draws its own over the running intro.',
+    userMessage:
+      'The app draws the title screen itself, from its own scene art, on the same frames as the original. Off keeps the game\'s own title.',
+    group: 'HUD',
+    kind: 'features0-bit',
+    origin: 'relic',
+    flag: 'kFeatures2_TitleOverride',
+    word: 2,
+    bit: 67108864,
+    default: true,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
     // offscreenAI is three-way, but the registry model carries one bit. This entry is the 'idle' bit
     // (default); 'paused' maps to the older kFeatures0_PauseOffscreenAI bit and 'vanilla' sets neither.
     // See offscreenAiMode in apps/web/src/lib/game/settings.ts.

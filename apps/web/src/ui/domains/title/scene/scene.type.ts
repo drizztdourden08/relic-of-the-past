@@ -6,7 +6,6 @@ interface SceneAssets {
   mountains: readonly HTMLImageElement[];
   trees: readonly HTMLImageElement[];
   clouds: readonly HTMLImageElement[];
-  caustics: readonly HTMLImageElement[];
   landmark: HTMLImageElement;
 }
 
@@ -37,7 +36,6 @@ interface SceneLayout {
   trees: readonly Placed[];
   clouds: readonly Drifting[];
   /** Sparse patches of moving water in the lower water rows. */
-  caustics: readonly Drifting[];
 }
 
 interface SceneClock {

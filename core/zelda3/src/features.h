@@ -114,6 +114,9 @@ enum {
   kFeatures2_HandAuthoredFloor  = 1u << 24,
   kFeatures2_WidescreenPlayArea = 1u << 24,
   kFeatures2_WidescreenIdleAI   = 1u << 25,
+  // The host draws the title screen itself and the native one is kept off the picture
+  // (core/game-hooks/title_override.c). Render-only, but a divergence, so Vanilla Safe strips it.
+  kFeatures2_TitleOverride      = 1u << 26,
 };
 
 // Enum values for kRam_Features3 — cheats and other C-side hook divergences. Unlike kFeatures0 (opt-in

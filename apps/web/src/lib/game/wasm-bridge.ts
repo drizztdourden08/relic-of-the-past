@@ -64,6 +64,7 @@ export { wasmSetPaused } from './bridge/commands';
 export { wasmGetViewportInfo, wasmRenderCleanFrame } from './bridge/render';
 export { wasmGetGameUIState, wasmSetUIOverlayMode, wasmGetUIOverlayMode, wasmGetMenuState } from './bridge/ui-state';
 export { wasmGetDialogState, wasmSetDialogPacing, wasmSetDialogHidden, wasmGetDialogFont, wasmGetDialogPalette, wasmDialogMarkStale } from './bridge/dialog';
+export { wasmGetTitleFrame, wasmGetTitleHidden, wasmGetTitlePalette, wasmGetTitlePoly, wasmSetTitleHidden } from './bridge/title';
 export { wasmGetProgressIndicator, wasmGetOverworldVariant } from './bridge/progress';
 export {
   wasmGetIndoorDualLayerGrids, wasmBuildRoomDualLayerGrids, wasmGetIndoorLayer0Grid, wasmGetLinkLayer,

@@ -600,6 +600,7 @@ void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
   // should carry the screen's own background block out there instead (fixed_picture_edges.c). Asked per
   // frame, like the hide above, because PpuBeginDrawing just cleared the request.
   PpuSetEdgeTiles(g_zenv.ppu, GameHook_FixedPictureEdgeLayers());
+  GameHook_TitleMaskLayers(g_zenv.ppu);
 
   // Total physical buffer rows = base 224 + top budget + bottom budget. The top budget is the tall extra
   // per side (extraTopBottom); the bottom budget matches it for tall, else the legacy +16 (extend_y). This
@@ -1197,7 +1198,7 @@ static const uint32 kGateWordParityMask[kGateWordCount] = {
   kFeatures2_FixPortalMusicRestart | kFeatures2_IcePortalRevealChime |
   kFeatures2_WidescreenLinkHideViaOffscreenY | kFeatures2_SaveMenuLockoutAfterMedallionFix |
   kFeatures2_FixBunnyPaletteAfterMap |
-  kFeatures2_WidescreenPlayArea | kFeatures2_WidescreenIdleAI,
+  kFeatures2_WidescreenPlayArea | kFeatures2_WidescreenIdleAI | kFeatures2_TitleOverride,
 
   // features3: cheats (the master + all four per-category permission bits), the randomizer item-override
   // table, tracker notifications, the custom player sprite/palette, and the HUD override all diverge
