@@ -60,7 +60,7 @@ const authCallback: Route = {
     const userId = current?.userId ?? existing?.userId ?? (await usersRepo.create(profile)).id;
     await bindIdentity(userId, provider.name, profile);
     await usersRepo.setAccess(userId, await evaluateAccess(userId, { provider: provider.name, accessToken }));
-    await startSession(res, userId);
+    await startSession(req, res, userId);
     res.redirect(302, siteUrl(state.returnTo));
   },
 };
