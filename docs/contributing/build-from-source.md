@@ -5,7 +5,7 @@
 
 - Node.js ≥ 24 (see [`.nvmrc`](https://github.com/drizztdourden08/relic-of-the-past/blob/master/.nvmrc)).
 - A legally obtained *A Link to the Past* ROM, supplied at runtime and kept out of commits.
-- Emscripten SDK (Windows; the repo expects it at `E:\GameProjects\emsdk` or `$EMSDK`). The WASM core
+- Emscripten SDK (Windows; at `third_party/emsdk` in the main checkout, or `$EMSDK`; version pinned in `package.json`). The WASM core
   is gitignored, not committed. `npm run dev` / `npm run build` auto-build it on first run, and
   again whenever C under `core/` changes, via the `ensure-wasm` pre-step. See
   [Building the WASM Core](building-wasm.md).

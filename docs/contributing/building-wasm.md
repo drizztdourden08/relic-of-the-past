@@ -9,7 +9,9 @@
 
 ## Prerequisites
 
-- Emscripten SDK installed (the repo's setup expects it at `E:\GameProjects\emsdk`, providing `emcc`).
+- Emscripten SDK, providing `emcc`: at `third_party/emsdk` in the main checkout (worktrees share it),
+  or anywhere with `$EMSDK` pointing at it. The version the repo builds with is pinned in
+  `package.json` under `config.emsdk`.
 - `emcc` on PATH. Source the emsdk env in the **same shell** as the build.
 
 ## Build manually (`build.bat`, the script `ensure-wasm` invokes)
@@ -19,7 +21,7 @@ source list and emcc flags); it writes straight to `apps/web/public/wasm/` (with
 `ensure-wasm` calls it for you, but you can run it directly. Activate the Emscripten env first:
 
 ```bash
-cmd /c "E:\GameProjects\emsdk\emsdk_env.bat && cd /d <repo>\core\wasm-build && build.bat"
+cmd /c "<emsdk>\emsdk_env.bat && cd /d <repo>\core\wasm-build && build.bat"
 ```
 
 On success it prints `Build successful!` and the two output files (`zelda3.js`, `zelda3.wasm`); on
