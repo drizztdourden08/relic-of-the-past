@@ -18,6 +18,7 @@ import { resolveWindowIcon } from '../window/window-icon';
 import { parseInstanceConfig } from '../instance';
 import { cursorInApp, watchDragIn } from './popout-drag-in';
 import { openIds, register, settled, snapWanted, unregister, windowOf, windows } from './popout-registry';
+import { clampToDisplay, moveInDip } from './window-dip';
 
 const DEFAULT_BOUNDS = { width: 360, height: 480 } as const;
 const MIN_WIDTH = 240;
@@ -36,7 +37,7 @@ const boundsOf = (win: BrowserWindow): WindowBounds | null => {
 
 /** Somewhere on a display: a remembered spot whose screen is gone falls back to the main window's display. */
 const placeOn = (wanted: WindowBounds | undefined): Partial<WindowBounds> => {
-  if (wanted && screen.getAllDisplays().some((d) => screen.getDisplayMatching(wanted).id === d.id)) return wanted;
+  if (wanted && screen.getAllDisplays().some((d) => screen.getDisplayMatching(wanted).id === d.id)) return clampToDisplay(wanted);
   const main = getMainWindow();
   const anchor = main && !main.isDestroyed() ? main.getBounds() : screen.getPrimaryDisplay().workArea;
   return { x: anchor.x + 40, y: anchor.y + 40, ...DEFAULT_BOUNDS };
@@ -91,7 +92,7 @@ const openPopOut = (id: string, popped?: Omit<PoppedWidget, 'id'>): void => {
   // Snapping only while the drag is a plain window move; over the app it is a drop-in.
   win.on('will-move', (event, wanted) => {
     if (cursorInApp(win)) return;
-    const snapped = snapWanted(id, wanted);
+    const snapped = snapWanted(id, moveInDip(win, wanted));
     if (!snapped) return;
     event.preventDefault();
     win.setBounds(snapped);
