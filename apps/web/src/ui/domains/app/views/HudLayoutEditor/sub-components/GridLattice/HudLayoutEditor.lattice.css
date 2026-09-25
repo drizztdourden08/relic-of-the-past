@@ -1,0 +1,254 @@
+/* @layer renderer-components @kind style */
+
+/* The lattice is the drawing two different controls stand on (`GridEditor`, which
+   edits the grid, and `CellPicker`, which edits one child's cell). Its own
+   sheet for that reason: neither control owns it, so neither control's sheet is
+   where its rules belong. */
+
+/* THE VIEWPORT. Past the point where every track still clears the 24px floor the
+   body OVERFLOWS instead of shrinking a track, and both header strips stay put,
+   which is the only reason a scrolled cell can still be identified. 220px tall
+   caps a ten-row grid instead of pushing the legend and the fields below the
+   fold. */
+
+/* FLAT ON THE PANEL. This was a sunken, bordered well - a black box inside a
+   section inside the inspector, which is the nesting the maintainer asked three
+   times to stop. The dashed cells are the drawing; they need no frame, and
+   without one the `+` column and row leave no dead black corner behind them. */
+.hud-lattice__scroll {
+  max-height: 220px;
+  overflow: auto;
+
+  /* `scrollbar-width` alone switches Chromium to the NATIVE bar and drops the
+     app's themed `::-webkit-scrollbar`, leaving a white slab down a dark panel. The
+     colour pair keeps it the panel's own. */
+  scrollbar-color: var(--c-border-strong) transparent;
+  scrollbar-width: thin;
+}
+
+/* THE GRID'S OWN SHAPE. `grid-template-*` carries the solved track sizes as `fr`
+   weights under a `minmax(24px, ...)` floor, so the tracks keep their proportions
+   until the floor binds, and the floor takes its space from the neighbours
+   instead of squashing anybody. The inline `height` (`latticeHeight`) is what
+   gives the ROW weights something to divide: without a definite block size every
+   row resolves to its floor and the drawing goes back to being a strip of equal
+   bands, which is the picture §50 exists to stop.
+
+   `min-*: min-content` lets the body grow past the rail and past that height
+   when the floors stop fitting, so nothing is ever clipped and the sticky column
+   strip runs the full width of what it labels. */
+.hud-lattice__body {
+  display: grid;
+  gap: var(--space-2xs);
+  min-width: min-content;
+  min-height: min-content;
+  padding: var(--space-2xs);
+}
+
+.hud-lattice__body:focus-visible {
+  outline: var(--border-width-thin) solid var(--c-gold);
+  outline-offset: calc(-1 * var(--border-width-thin));
+}
+
+/* `role="row"` survives a single CSS grid this way: the row contributes
+   semantics and no box, so every header, cell and occupant places itself. */
+.hud-lattice__line {
+  display: contents;
+}
+
+.hud-lattice__corner,
+.hud-lattice__head {
+  position: sticky;
+  z-index: var(--z-sticky);
+  display: flex;
+  gap: var(--space-2xs);
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  cursor: pointer;
+  background: var(--c-surface);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--r-sm);
+}
+
+/* The one cell whose address never changes, so it is the one not placed inline. */
+.hud-lattice__corner {
+  top: 0;
+  left: 0;
+  z-index: calc(var(--z-sticky) + 1);
+  grid-row: 1;
+  grid-column: 1;
+  color: var(--c-gold);
+}
+
+.hud-lattice__head {
+  top: 0;
+}
+
+.hud-lattice__head--row {
+  top: auto;
+  left: 0;
+}
+
+/* A header that selects nothing is not offered as one: `CellPicker` shows the
+   parent's tracks and may not edit them. */
+.hud-lattice__corner[data-inert='true'],
+.hud-lattice__head[data-inert='true'] {
+  cursor: default;
+}
+
+.hud-lattice__head[data-on='true'] {
+  color: var(--c-gold-bright);
+  background: var(--c-gold-dim);
+  border-color: var(--c-gold);
+}
+
+/* AN EMPTY `auto` TRACK IS DRAWN AT THE FLOOR AND SAYS SO. It solved to nothing,
+   so the 24px it occupies is the minimum, not its size, and a dashed
+   header is the cheapest honest way to say "this width is not a measurement". */
+.hud-lattice__head[data-empty='true'] {
+  color: var(--c-text-faint);
+  border-style: dashed;
+}
+
+.hud-lattice__head-text {
+  overflow: hidden;
+  font-size: var(--text-xs);
+  color: inherit;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* THE SELECTED TRACK'S SIZE IS ITS OWN LABEL (§55). The header has printed
+   `auto`/`fill` since §50; §54 ALSO put an `[auto ▾]` field in the contextual
+   strip, which is the same fact twice and 81px of a rail that then had to wrap.
+   Selected, the printed word becomes the button that opens the four-item menu,
+   in the same place at the same width, one click away. */
+.hud-lattice__size {
+  min-width: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-gold-bright);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* THE `+` AT THE END OF EACH STRIP is "just a + icon", in the lattice's own
+   template at the address one past the last track, so it moves, scrolls and
+   sticks with the strip it extends. Dashed, because it is not a track: it is
+   the place the next one will appear. */
+.hud-lattice__add {
+  position: sticky;
+  z-index: var(--z-sticky);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--c-text-muted);
+  cursor: pointer;
+  background: var(--c-surface);
+  border: var(--border-width-thin) dashed var(--c-border-strong);
+  border-radius: var(--r-sm);
+}
+
+.hud-lattice__add:hover {
+  color: var(--c-gold-bright);
+  border-color: var(--c-gold);
+}
+
+.hud-lattice__add--columns {
+  top: 0;
+}
+
+.hud-lattice__add--rows {
+  left: 0;
+}
+
+.hud-lattice__cell {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  cursor: pointer;
+  background: var(--c-hover);
+  border: var(--border-width-thin) dashed var(--c-border-strong);
+  border-radius: var(--r-sm);
+}
+
+/* FOUR STATES, FOUR PAINTS, and they are two facts crossed: selected or not,
+   occupied or not. Asserted as four distinct computed paints in Chromium. */
+.hud-lattice__cell[data-state='occupied'] {
+  background: var(--c-gold-soft);
+  border-style: solid;
+  border-color: var(--c-gold-dim);
+}
+
+.hud-lattice__cell[data-state='selected'] {
+  background: var(--c-gold);
+  border-style: solid;
+  border-color: var(--c-gold-bright);
+}
+
+/* Selected AND standing on somebody: the selection's own fill under the hatch
+   that says a child is here, so a track edit's blast radius stays visible while
+   the track is picked. */
+.hud-lattice__cell[data-state='occupied-selected'] {
+  background-color: var(--c-gold-dim);
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--c-gold-soft) 0 3px,
+    transparent 3px 6px
+  );
+  border-style: solid;
+  border-color: var(--c-gold);
+  box-shadow: inset 0 0 0 2px var(--c-gold-soft);
+}
+
+/* The keyboard's own cell, inside whatever is selected. Arrowing has to be
+   visible WITHIN a selection, so it is a rim, not a fill. */
+
+/* ONLY WHILE THE KEYBOARD IS IN THE GRID. Drawn always, it put a white rim on
+   the first cell of an untouched grid, beside a status line reading "nothing
+   selected" - a selection that was not one. */
+.hud-lattice__body:focus-visible .hud-lattice__cell[data-cursor='true']::after {
+  position: absolute;
+  inset: 1px;
+  content: '';
+  outline: var(--border-width-thin) solid var(--c-text);
+  opacity: 0.8;
+}
+
+/* Drawn once across everything it spans, and NEVER a click target, because §50 took
+   every child edit out of the grid editor, and this declaration is how the
+   drawing stays a drawing. */
+
+/* A BLOCK, centred by the grid it sits in. As a centring flex box its text was
+   an anonymous flex item, which `text-overflow` cannot reach - so a long name
+   was clipped at BOTH ends (`allet-regio`, `outtons`) instead of ending in an
+   ellipsis. Left-aligned past the fit, so the start of the name is what stays. */
+.hud-lattice__occupant {
+  z-index: var(--z-base);
+  display: block;
+  align-self: center;
+  min-width: 0;
+  padding: 0 var(--space-2xs);
+  overflow: hidden;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0.75;
+}
+
+.hud-lattice__occupant[data-active='true'] {
+  color: var(--c-gold-bright);
+  opacity: 1;
+}

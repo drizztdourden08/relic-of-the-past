@@ -71,6 +71,7 @@
 - [Audio](hooks/audio.md)
 - [Save / Load / I-O](hooks/save-load-io.md)
 - [Item Overrides](hooks/item-overrides.md)
+- [Host Menu & Gear](hooks/host-menu.md)
 - [Callbacks](hooks/callbacks.md)
 
 **Contributing**
@@ -84,6 +85,7 @@
 - [Testing](contributing/testing.md)
 - [Design System](contributing/design-system.md)
 - [Design Language](contributing/design-language.md)
+- [HUD Layouts & Glyph Packs](contributing/hud-layouts.md)
 
 **Legal**
 

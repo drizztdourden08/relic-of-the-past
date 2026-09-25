@@ -23,6 +23,7 @@ export type {
   FloorIndicatorState,
   GameModeState,
   GameUIState,
+  HostMenuState,
   HUDState,
   InventoryState,
   MapState,

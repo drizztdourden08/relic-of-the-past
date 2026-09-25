@@ -275,13 +275,20 @@ export default tseslint.config(
   {
     // no-raw-color exceptions: categorical palettes that encode categories
     // (requirement icons, HID byte roles), DebugWidget's retro terminal, HUD's SNES palette.
+    // HudLayoutEditor authors that same HUD document model, so a `Paint`/`HudBorder`/
+    // `HudTextStroke` default (a fresh border's `color: '#ffffff'`) is document data of
+    // the same category. tests/hud holds the fixtures for both: a test that renders a
+    // border has to state its colour, and a `var(--c-*)` there would assert against a
+    // value the game never stores.
     files: [
+      'tests/hud/**/*.{ts,tsx}',
       '**/ui/domains/widgets/navigation/sub-components/ReqIcon.tsx',
       '**/ui/domains/app/views/InputTester/sub-components/hid-calibration/components/ByteGrid.tsx',
       '**/ui/domains/app/views/InputTester/sub-components/hid-calibration/wizard-helpers.ts',
       '**/ui/domains/app/views/SpriteDebug/sub-components/ReviewCards.tsx',
       '**/ui/domains/widgets/debug/DebugWidget.tsx',
       '**/ui/domains/hud/**/*.{ts,tsx}',
+      '**/ui/domains/app/views/HudLayoutEditor/**/*.{ts,tsx}',
       'apps/desktop/electron/**/*.{ts,tsx}',
     ],
     rules: { 'local/no-raw-color': 'off' },

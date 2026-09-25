@@ -1,0 +1,207 @@
+{
+  "$comment": "Copied verbatim from .user-data/Data/profiles/spc2-test, which is a real profile stored in SDL device order (SOUTH, EAST, WEST, NORTH, DPAD_UP, DPAD_DOWN, DPAD_LEFT, DPAD_RIGHT) before slots were numbers. Never re-save this from a current build.",
+  "modern": {
+    "core": {
+      "up": {
+        "type": "gamepad-axis",
+        "axisIndex": 1,
+        "direction": "-",
+        "label": "Left Stick Y −"
+      },
+      "down": {
+        "type": "gamepad-axis",
+        "axisIndex": 1,
+        "direction": "+",
+        "label": "Left Stick Y +"
+      },
+      "left": {
+        "type": "gamepad-axis",
+        "axisIndex": 0,
+        "direction": "-",
+        "label": "Left Stick X −"
+      },
+      "right": {
+        "type": "gamepad-axis",
+        "axisIndex": 0,
+        "direction": "+",
+        "label": "Left Stick X +"
+      },
+      "pause": {
+        "type": "gamepad-button",
+        "index": 6,
+        "label": "Plus"
+      },
+      "map": {
+        "type": "gamepad-button",
+        "index": 4,
+        "label": "Minus"
+      },
+      "confirm": {
+        "type": "gamepad-button",
+        "index": 1,
+        "label": "A"
+      },
+      "cancel": {
+        "type": "gamepad-button",
+        "index": 0,
+        "label": "B"
+      },
+      "prevScreen": {
+        "type": "gamepad-button",
+        "index": 9,
+        "label": "L"
+      },
+      "nextScreen": {
+        "type": "gamepad-button",
+        "index": 10,
+        "label": "R"
+      }
+    },
+    "slots": [
+      {
+        "id": "slot:SOUTH",
+        "binding": {
+          "type": "gamepad-button",
+          "index": 0,
+          "label": "B"
+        },
+        "position": "SOUTH",
+        "category": "face",
+        "label": "B",
+        "icon": {
+          "key": "switch-b",
+          "path": null,
+          "label": "B"
+        }
+      },
+      {
+        "id": "slot:EAST",
+        "binding": {
+          "type": "gamepad-button",
+          "index": 1,
+          "label": "A"
+        },
+        "position": "EAST",
+        "category": "face",
+        "label": "A",
+        "icon": {
+          "key": "switch-a",
+          "path": null,
+          "label": "A"
+        }
+      },
+      {
+        "id": "slot:WEST",
+        "binding": {
+          "type": "gamepad-button",
+          "index": 2,
+          "label": "Y"
+        },
+        "position": "WEST",
+        "category": "face",
+        "label": "Y",
+        "icon": {
+          "key": "switch-y",
+          "path": null,
+          "label": "Y"
+        }
+      },
+      {
+        "id": "slot:NORTH",
+        "binding": {
+          "type": "gamepad-button",
+          "index": 3,
+          "label": "X"
+        },
+        "position": "NORTH",
+        "category": "face",
+        "label": "X",
+        "icon": {
+          "key": "switch-x",
+          "path": null,
+          "label": "X"
+        }
+      },
+      {
+        "id": "slot:DPAD_UP",
+        "binding": {
+          "type": "gamepad-button",
+          "index": 11,
+          "label": "D-Pad Up"
+        },
+        "position": "DPAD_UP",
+        "category": "dpad",
+        "label": "D-Pad Up",
+        "icon": {
+          "key": "switch-dup",
+          "path": null,
+          "label": "D-Pad Up"
+        }
+      },
+      {
+        "id": "slot:DPAD_DOWN",
+        "binding": {
+          "type": "gamepad-button",
+          "index": 12,
+          "label": "D-Pad Down"
+        },
+        "position": "DPAD_DOWN",
+        "category": "dpad",
+        "label": "D-Pad Down",
+        "icon": {
+          "key": "switch-ddown",
+          "path": null,
+          "label": "D-Pad Down"
+        }
+      },
+      {
+        "id": "slot:DPAD_LEFT",
+        "binding": {
+          "type": "gamepad-button",
+          "index": 13,
+          "label": "D-Pad Left"
+        },
+        "position": "DPAD_LEFT",
+        "category": "dpad",
+        "label": "D-Pad Left",
+        "icon": {
+          "key": "switch-dleft",
+          "path": null,
+          "label": "D-Pad Left"
+        }
+      },
+      {
+        "id": "slot:DPAD_RIGHT",
+        "binding": {
+          "type": "gamepad-button",
+          "index": 14,
+          "label": "D-Pad Right"
+        },
+        "position": "DPAD_RIGHT",
+        "category": "dpad",
+        "label": "D-Pad Right",
+        "icon": {
+          "key": "switch-dright",
+          "path": null,
+          "label": "D-Pad Right"
+        }
+      }
+    ]
+  },
+  "assignments": {
+    "slot:SOUTH": {
+      "kind": "sword"
+    },
+    "slot:EAST": {
+      "kind": "action"
+    },
+    "slot:NORTH": {
+      "kind": "item",
+      "hudItem": 2
+    },
+    "slot:DPAD_UP": {
+      "kind": "item",
+      "hudItem": 11
+    }
+  }
+}

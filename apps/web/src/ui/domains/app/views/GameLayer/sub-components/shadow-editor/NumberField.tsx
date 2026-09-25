@@ -83,7 +83,9 @@ const NumberField = ({ value, onChange, label, icon, min, max, step = 1, suffix 
           onBlur={commit}
           onKeyDown={(e) => {
             if (e.key === 'Enter') commit();
-            if (e.key === 'Escape') setEditing(false);
+            // preventDefault marks the key consumed here, so the dismiss stack
+            // leaves the surface this field sits on alone.
+            if (e.key === 'Escape') { e.preventDefault(); setEditing(false); }
           }}
         />
       ) : (

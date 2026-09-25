@@ -3,6 +3,7 @@
 export { HudSprite } from './primitives/HudSprite';
 export { HudNumber } from './primitives/HudNumber';
 export { HudHeart } from './primitives/HudHeart';
+export { HudMeter } from './primitives/HudMeter';
 export { PauseTile } from './primitives/PauseTile';
 export { PauseBorderBox } from './primitives/PauseBorderBox';
 export { PauseLabel } from './primitives/PauseLabel';
@@ -16,10 +17,15 @@ export { PausePendantIcon } from './composites/PausePendantIcon';
 export { PauseCrystalIcon } from './composites/PauseCrystalIcon';
 export { PauseEquipSlot } from './composites/PauseEquipSlot';
 export { PauseButtonLabel } from './composites/PauseButtonLabel';
+export { HudGlyph } from './composites/HudGlyph';
+export { PauseText } from './composites/PauseText';
 export { LocationNotification } from './views/LocationNotification';
 
 // Compounds
 export { HudLife } from './compounds/HudLife';
+export { HudNodeRenderer } from './compounds/HudNodeRenderer';
+export { HudMagicBar } from './compounds/HudMagicBar';
+export { HudShape } from './compounds/HudShape';
 export { PauseItemGrid } from './compounds/PauseItemGrid';
 export { PauseNamePanel } from './compounds/PauseNamePanel';
 export { PauseProgressPanel } from './compounds/PauseProgressPanel';
@@ -29,6 +35,8 @@ export { PauseEquipmentPanel } from './compounds/PauseEquipmentPanel';
 // Views
 export { HudView } from './views/HudView';
 export { PauseMenuView } from './views/PauseMenuView';
+export { HudLayoutView } from './views/HudLayoutView';
+export { EnhancedPauseView } from './views/EnhancedPauseView';
 
 // Hooks
 export { useHud } from './hooks/useHud';
@@ -37,11 +45,14 @@ export { useLocationNotification } from './hooks/useLocationNotification';
 
 // Types
 export type { HudNumberProps } from './primitives/HudNumber';
-export type { HudHeartProps, HeartState, HeartMode } from './primitives/HudHeart';
+export type { HudHeartProps, HeartMode } from './primitives/HudHeart';
+export type { HudMeterProps } from './primitives/HudMeter';
 export type { PauseTileProps } from './primitives/PauseTile';
 export type { PauseBorderBoxProps } from './primitives/PauseBorderBox';
 export type { PauseLabelProps } from './primitives/PauseLabel';
 export type { HudCountProps } from './composites/HudCount';
+export type { HudGlyphProps } from './composites/HudGlyph';
+export type { PauseTextProps } from './composites/PauseText';
 export type { HudCurrentItemProps } from './composites/HudCurrentItem';
 export type { HudMagicMeterProps, MagicMeterMode } from './composites/HudMagicMeter';
 export type { PauseItemSlotProps } from './composites/PauseItemSlot';
@@ -50,10 +61,17 @@ export type { PauseCrystalIconProps } from './composites/PauseCrystalIcon';
 export type { PauseEquipSlotProps } from './composites/PauseEquipSlot';
 export type { PauseButtonLabelProps } from './composites/PauseButtonLabel';
 export type { HudLifeProps } from './compounds/HudLife';
+export type {
+  HudNodeContent, HudNodeRendererProps, HudSlotContent, HudSlotRole,
+} from './compounds/HudNodeRenderer';
+export type { HudMagicBarProps } from './compounds/HudMagicBar';
+export type { HudShapeProps } from './compounds/HudShape';
 export type { PauseItemGridProps } from './compounds/PauseItemGrid';
 export type { PauseNamePanelProps } from './compounds/PauseNamePanel';
 export type { PauseProgressPanelProps } from './compounds/PauseProgressPanel';
 export type { PauseAbilitiesPanelProps } from './compounds/PauseAbilitiesPanel';
 export type { PauseEquipmentPanelProps } from './compounds/PauseEquipmentPanel';
+export type { HudLayoutViewProps } from './views/HudLayoutView';
+export type { EnhancedPauseViewProps } from './views/EnhancedPauseView';
 export type { HudData, HudConfig } from './hooks/useHud';
 export type { PauseMenuData, PauseMenuConfig } from './hooks/usePauseMenu';

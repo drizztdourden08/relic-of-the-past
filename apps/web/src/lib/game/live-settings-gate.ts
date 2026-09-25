@@ -16,7 +16,7 @@ import { rendersExtended } from './ratio-capability';
 const RAW_FEATURE_KEYS = [
   'extendedRendering', 'linearWorldTilemap', 'ultrawideRendering', 'tallRendering',
   'widescreenSprites', 'widescreenVisualFixes', 'cameraLockToViewport', 'smoothTransitions',
-  'pauseOffscreenAI', 'perGroupVolume', 'inventoryReorder', 'secondaryItemSlots', 'autoSkipDialog',
+  'pauseOffscreenAI', 'perGroupVolume', 'autoSkipDialog',
   'prefillFileName',
   // World-item presentation, and the archery host's refusal. Their bits live in features3
   // instead of features0, but the resolver only cares about ids, so they cascade and strip

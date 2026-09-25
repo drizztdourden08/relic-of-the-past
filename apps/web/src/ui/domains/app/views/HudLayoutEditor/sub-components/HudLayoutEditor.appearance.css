@@ -1,0 +1,223 @@
+/* @layer renderer-components @kind style */
+
+/* Phase 8 of `plans/hud-inspector-ux-review.html` builds Appearance's own
+   controls: the collapsible sub-group with a summary in its header, the border's box
+   diagram, the gradient ramp, and the slot chips.
+
+   A SHEET OF ITS OWN, for the reason phase 7 recorded one file over.
+   `inspector.css` is at 226 code lines, `panels.css` at 287, `fields.css` at 39
+   and `layout.css` at 150, and two other phases are writing into that folder in
+   the same tree. Every class below is namespaced to a control this phase built.
+
+   IT IS IMPORTED BY ITS COMPONENTS, not by the view, matching `ValueInput.css`
+   and `layout.css`, so `HudLayoutEditor.tsx` was never touched. */
+
+/* ── SubsectionGroup ──
+
+   The header row is the whole design: a checkbox, a name, a swatch, the value
+   in words, and a caret. It is NOT a `SectionAccordion` with extra props.
+   That one is a plain title bar for a section that is always available, and
+   this one has to say what it holds while shut. */
+
+.hud-subgroup {
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--r-sm);
+  background: var(--c-sunken);
+}
+
+/* Open reads as raised out of the list instead of as a second border, so a
+   stack of six closed groups and one open one still scans as one list. */
+.hud-subgroup.is-open {
+  background: var(--c-surface);
+  border-color: var(--c-border-strong);
+}
+
+.hud-subgroup__head {
+  display: flex;
+  gap: var(--space-2xs);
+  align-items: center;
+  padding: var(--space-2xs) var(--space-xs);
+  min-width: 0;
+}
+
+/* The trigger takes the rest of the row so the whole line is the hit target.
+   The checkbox and the optional action are the only things beside it. */
+.hud-subgroup__trigger {
+  display: flex;
+  flex: 1;
+  gap: var(--space-2xs);
+  align-items: center;
+  min-width: 0;
+  text-align: left;
+}
+
+.hud-subgroup__name {
+  font-size: var(--text-sm);
+  color: var(--c-text);
+  flex: none;
+}
+
+/* An off group's own name goes quiet with it; the row stays legible, but it
+   stops competing with the four groups that are actually painting something. */
+.hud-subgroup[data-on='false'] .hud-subgroup__name {
+  color: var(--c-text-muted);
+}
+
+/* The colour, drawn. `background` is set inline because it IS the value.
+   `swatchOf()` hands over a flat colour, a real gradient, or a hatch. */
+.hud-subgroup__swatch {
+  width: var(--icon-md);
+  height: var(--icon-md);
+  flex: none;
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--r-sm);
+}
+
+/* The summary is the only thing on the row allowed to run out of space, and it
+   ellipses instead of wrapping: a header that grows to two lines is a header
+   that costs what opening the group would have cost. */
+.hud-subgroup__summary {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hud-subgroup__caret {
+  flex: none;
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+.hud-subgroup__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  padding: var(--space-2xs) var(--space-xs) var(--space-xs);
+  border-top: var(--border-width-thin) solid var(--c-border);
+}
+
+/* ── SidesField ──
+
+   The same box the box model draws, at the size a border control can afford.
+   The bars are 7px instead of the wireframe's 3px because a 3px target cannot
+   be hit; the dotted centre is the node's own ink, and is not a control. */
+
+.hud-sides {
+  position: relative;
+  width: 46px;
+  height: 34px;
+  flex: none;
+}
+
+.hud-sides__edge {
+  position: absolute;
+  padding: 0;
+  border-radius: var(--r-sm);
+  background: var(--c-border-strong);
+  cursor: pointer;
+}
+
+.hud-sides__edge[aria-pressed='true'] {
+  background: var(--c-gold);
+}
+
+.hud-sides__edge:hover {
+  outline: var(--border-width-thin) solid var(--c-gold-bright);
+}
+
+.hud-sides__edge--top,
+.hud-sides__edge--bottom {
+  left: 7px;
+  right: 7px;
+  height: 7px;
+}
+
+.hud-sides__edge--top { top: 0; }
+.hud-sides__edge--bottom { bottom: 0; }
+
+.hud-sides__edge--left,
+.hud-sides__edge--right {
+  top: 7px;
+  bottom: 7px;
+  width: 7px;
+}
+
+.hud-sides__edge--left { left: 0; }
+.hud-sides__edge--right { right: 0; }
+
+.hud-sides__ink {
+  position: absolute;
+  inset: 10px;
+  border: var(--border-width-thin) dotted var(--c-border);
+}
+
+/* ── GradientRamp ── */
+
+/* The gradient itself, full width, with the stops standing on it. The inline
+   `background` is the value being edited, same rule as the swatch above. */
+.hud-ramp__track {
+  position: relative;
+  height: 18px;
+  margin: var(--space-2xs) 0 var(--space-sm);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--r-sm);
+}
+
+/* Taller than the track and centred on its own position, so a stop at 0 or 1
+   is still fully grabbable at the very edge of the ramp. */
+.hud-ramp__stop {
+  position: absolute;
+  top: -4px;
+  width: 9px;
+  height: 26px;
+  padding: 0;
+  border: var(--border-width-thin) solid var(--c-text);
+  border-radius: var(--r-sm);
+  transform: translateX(-50%);
+  cursor: ew-resize;
+  touch-action: none;
+}
+
+.hud-ramp__stop[aria-pressed='true'] {
+  border-color: var(--c-gold);
+  box-shadow: 0 0 0 1px var(--c-gold);
+}
+
+.hud-ramp__tools {
+  align-self: flex-end;
+}
+
+/* ── SlotChips ── */
+
+.hud-slot-chips__chip {
+  display: flex;
+  gap: var(--space-2xs);
+  align-items: center;
+  padding-left: var(--space-xs);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--r-sm);
+  background: var(--c-sunken);
+}
+
+.hud-slot-chips__num {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text);
+}
+
+.hud-slot-chips__empty {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+/* The entry is a number, not a rail-wide field: three digits is every slot
+   this game has, and the chips beside it are what the row is for. */
+.hud-slot-chips__entry {
+  width: 56px;
+  flex: none;
+}

@@ -10,20 +10,13 @@ import { allowedDevices } from '@app/lib/input/profile-devices';
 import { recallControllerName } from '@app/lib/input/controller-name-cache';
 import { resolveIconByVidPid } from '@app/lib/input/profile-utils';
 import { FAMILY_ICON_MAP, resolveLiveFamilyIcon } from './family-icon-map';
+import { findLiveDevice } from './live-device';
 import { padHex } from './controls-settings.type';
 
 interface UseDisplayMappingsArgs {
   activeProfile: InputProfile | null;
   devices: DetectedDevice[];
 }
-
-/** The live device (if any) currently plugged in at this vid:pid. */
-const findLiveDevice = (vid: string, pid: string, devices: DetectedDevice[]): DetectedDevice | undefined =>
-  devices.find(d =>
-    d.type === 'gamepad' && d.connected &&
-    d.vendorId && d.productId &&
-    padHex(d.vendorId) === vid && padHex(d.productId) === pid
-  );
 
 const useDisplayMappings = ({ activeProfile, devices }: UseDisplayMappingsArgs) => {
   const requiredInputs = useMemo(() => {
@@ -88,10 +81,14 @@ const useDisplayMappings = ({ activeProfile, devices }: UseDisplayMappingsArgs) 
         return { ...existing, icon: existing.icon?.key ? existing.icon : null, deviceIconUrl: null };
       }
 
+      // Every shape re-resolves, an axis INCLUDED. A stored axis icon can only
+      // ever be a stick's neutral base key, because one key is all a family declares
+      // per stick, shared by its X and its Y. So honouring it drew the same
+      // undeflected stick on all four movement rows. Only `resolveIconByVidPid`
+      // knows which END of the axis this binding is, and it is the half that
+      // reaches `resolveStickDirectionIcon`. `build-console-defaults` no longer
+      // stores one at all; this also re-resolves the profiles that already have.
       const deviceIconUrl = multiController ? resolveLiveFamilyIcon({ vid, pid, devices }) : null;
-      if (existing.icon?.key && existing.binding.type === 'gamepad-axis') {
-        return { ...existing, deviceIconUrl };
-      }
       const liveSdlType = findLiveDevice(vid, pid, devices)?.sdlType;
       const icon = resolveIconByVidPid(vid, pid, existing.binding, liveSdlType);
       return { ...existing, icon, deviceIconUrl };

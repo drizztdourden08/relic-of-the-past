@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Box } from '@ds/primitives/Box';
 import { Text } from '@ds/primitives/Text';
-import { PoseCanvas } from './PoseCanvas';
+import { PoseCanvas } from '@domains/app/compounds/PoseCanvas';
 import { POSE_ATLAS, poseCanvasSize } from '@shared/game/data/native-tables/player-pose-atlas';
 import { labelFor } from '@shared/game/data/native-tables/player-state-labels';
 import type { PlayerSheet } from '@shared/game/data/player-sheet/types';

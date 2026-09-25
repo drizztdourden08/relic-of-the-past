@@ -58,6 +58,8 @@ export { CreateRecordDialog } from './CreateRecordDialog';
 export type { CreateOutcome, CreateRecordDialogProps } from './CreateRecordDialog';
 export { CompactRecordView } from './CompactRecordView';
 export type { CompactRecordViewProps } from './CompactRecordView';
+export { SpritePicker } from './SpritePicker';
+export type { SpritePickerProps, SpritePickerTile } from './SpritePicker';
 // ColorPicker and ColorPickerPopover are deliberately NOT re-exported here. They pull in
 // react-color, and a barrel entry would drag that whole library into every consumer of
 // this barrel, whether or not it ever touches a colour. Import them by their own path.

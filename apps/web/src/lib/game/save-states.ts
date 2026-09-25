@@ -7,6 +7,7 @@ import { getModule, getProfileId } from './wasm-bridge';
 import { pollInventoryState } from './tracker';
 import { reassertLiveFlagsAfterLoad } from './live-settings';
 import { requestLocationRebaseline } from './randomizer-client/location-poller';
+import { reassertAfterSaveLoad } from './host-menu';
 import { captureGameFrameBlob } from './capture-frame';
 import { saveMusicPosition, restoreMusicPosition } from './msu-save-glue';
 import { useDialogStore } from '../../stores/dialog-store';
@@ -108,6 +109,10 @@ const loadState = async (slot: number): Promise<boolean> => {
     // The loaded state's completions are the poller's new baseline, not a burst of fresh
     // checks to report (and re-deliver).
     requestLocationRebaseline();
+    // And the takeover's own side effect: the snapshot brought its hud_cur_item_x/l/r back with it,
+    // and the map button reads that byte with no gate of its own. Runs after the flags above so the
+    // gate word is already back in WRAM when the C side checks it.
+    reassertAfterSaveLoad();
 
     // A save written before music positions were recorded has no sidecar; restoring null
     // starts its track from the beginning.
@@ -186,6 +191,7 @@ const loadStateFromBuffer = (buffer: ArrayBuffer, slot = 98): boolean => {
   reassertLiveFlagsAfterLoad();
   useDialogStore.getState().markStale();
   requestLocationRebaseline();
+  reassertAfterSaveLoad();
   pollInventoryState(true);
   try { mod.FS.unlink(savePath); } catch { /* ignore */ }
   return true;

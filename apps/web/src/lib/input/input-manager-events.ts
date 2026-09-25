@@ -1,6 +1,7 @@
 /* @layer renderer-lib @kind logic */
 /** Event handlers, map rebuild, and the per-frame poll loop for InputManager (take the instance). */
-import { computeBitmask } from './polling-engine';
+import { routeInputFrame } from './frame-router';
+import { rebuildSchemeBindings } from './scheme-runtime';
 import { allowedDevices } from './profile-devices';
 import { deviceKeyFor, setScoped } from './device-scoped-map';
 import { isAutomationLaunch } from '../instance';
@@ -33,6 +34,9 @@ const rebuildMaps = (m: InputManager): void => {
   m.gamepadButtonMap.clear();
   m.gamepadAxisMap.clear();
   m.allowed = allowedDevices(m.activeProfile);
+  // The modern scheme reads the same profile through a different lens (core verbs + slots),
+  // so it is re-resolved from the same seam instead of from a second change notification.
+  rebuildSchemeBindings(m.activeProfile, m.hidDeviceCache);
   if (!m.activeProfile) return;
   for (const mapping of m.activeProfile.mappings) {
     const b = mapping.binding;
@@ -100,8 +104,7 @@ const pollFrame = (m: InputManager): void => {
   const windowFocused = inputEligible();
 
   if (windowFocused && !m.pauseManager.isPaused && !m.inputSuppressed) {
-    const mask = computeBitmask(m.keyStates, m.keyboardMap, m.gamepadButtonMap, m.gamepadAxisMap, m.hidStates, m.allowed);
-    m.setInputFn?.(mask);
+    routeInputFrame(m);
   }
 
   if (windowFocused && m.rawDispatcher.hasListeners) {

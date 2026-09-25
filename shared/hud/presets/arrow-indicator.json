@@ -1,0 +1,112 @@
+{
+  "kind": "container",
+  "id": "arrow-indicator",
+  "direction": "row",
+  "align": "center",
+  "$comment": "Icon right-aligned in a 12px gutter by its own ink (HudConsumables.constants.ts's ARROW_ICON.inkRight=14, so margin.left = 12-14 = -2), then a 2px gap, then a zero-padded 2-digit counter - the exact geometry the compound it replaces measured. The icon switches to the silver-arrow art while that upgrade is owned, matching hasSilverArrows.",
+  "children": [
+    {
+      "kind": "container",
+      "id": "arrow-gutter",
+      "size": {
+        "w": {
+          "px": 12
+        },
+        "h": {
+          "px": 8
+        }
+      },
+      "layout": "grid",
+      "columns": [
+        "auto"
+      ],
+      "rows": [
+        "auto"
+      ],
+      "justifyItems": "start",
+      "alignItems": "start",
+      "children": [
+        {
+          "kind": "element",
+          "id": "arrow-icon",
+          "element": {
+            "type": "switch",
+            "cases": [
+              {
+                "when": "silver_arrows",
+                "node": {
+                  "kind": "element",
+                  "id": "arrow-icon-silver",
+                  "margin": {
+                    "left": -2
+                  },
+                  "element": {
+                    "type": "sprite",
+                    "file": "hud-silver-arrow-icon",
+                    "box": {
+                      "w": 16,
+                      "h": 8
+                    }
+                  }
+                }
+              }
+            ],
+            "otherwise": {
+              "kind": "element",
+              "id": "arrow-icon-normal",
+              "margin": {
+                "left": -2
+              },
+              "element": {
+                "type": "sprite",
+                "file": "hud-arrow-icon",
+                "box": {
+                  "w": 16,
+                  "h": 8
+                }
+              }
+            }
+          },
+          "place": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ]
+    },
+    {
+      "kind": "element",
+      "id": "arrow-gap",
+      "size": {
+        "w": {
+          "px": 2
+        },
+        "h": {
+          "px": 8
+        }
+      },
+      "element": {
+        "type": "spacer"
+      }
+    },
+    {
+      "kind": "element",
+      "id": "arrow-count",
+      "element": {
+        "type": "text",
+        "value": {
+          "from": "data",
+          "expr": "arrow_current"
+        },
+        "format": {
+          "digits": 2,
+          "pad": "zero"
+        },
+        "face": {
+          "from": "sprite",
+          "set": "hud-digits"
+        }
+      }
+    }
+  ]
+}

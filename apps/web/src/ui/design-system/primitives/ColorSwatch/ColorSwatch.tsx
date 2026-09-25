@@ -4,9 +4,10 @@ import type { ColorSwatchProps } from './ColorSwatch.type';
 
 /** A single colour, as a button. The fill is the data, so it stays an inline style. */
 const ColorSwatch = (props: ColorSwatchProps) => {
-  const { color, caption, selected = false, edited = false, transparent = false, className = '', ...rest } = props;
+  const { color, caption, selected = false, edited = false, transparent = false, size = 'md', className = '', ...rest } = props;
   const classes = [
     'color-swatch',
+    size === 'sm' ? 'color-swatch--sm' : '',
     selected ? 'color-swatch--selected' : '',
     edited ? 'color-swatch--edited' : '',
     transparent ? 'color-swatch--transparent' : '',

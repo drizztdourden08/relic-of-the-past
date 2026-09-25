@@ -1,5 +1,12 @@
 /* @layer renderer-components @kind component */
-/** Per-key control renderer + disabled rules for the Gameplay settings tab. */
+/**
+ * Per-key control renderer + disabled rules for the Gameplay settings tab.
+ *
+ * Only the keys that need something other than a switch are listed below; every
+ * plain boolean (including `mapOnSelect`) falls through to SettingsLayout's own
+ * Toggle, built from the section's label and description. `isDisabled` is the
+ * one hook a plain boolean still gets.
+ */
 import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { DIALOG_SPEED_STOPS } from '@shared/game/dialog/pacing';
@@ -9,13 +16,17 @@ import { Slider } from '../../../../../design-system/primitives/Slider';
 import { TurboSpeedControl } from './TurboSpeedControl';
 import { DialogStopSlider } from './dialog-stop-slider';
 import { DialogHoldRow } from './dialog-hold-row';
+import { controlSchemeOf } from '@shared/features/hud-style';
 
 const isDisabled = (key: string, settings: GameSettings): boolean => {
-  if (key === 'itemSwitchLRLimit') return !settings.itemSwitchLR;
   if (key === 'saveHoldDuration') return !settings.enhancedSaveSlotShortcut;
   if (key === 'autoSaveIntervalSeconds') return !settings.autoSaveEnabled;
   if (key === 'autoSaveMaxEntries') return !settings.autoSaveEnabled;
   if (key === 'turboSpeed') return !settings.turboEnabled;
+  // Under Modern the map is a core verb of its own, so this shortcut has nothing to do. Greyed and
+  // kept in place, like every other gated setting in this app: an option that vanishes when you
+  // change a neighbouring one reads as a bug.
+  if (key === 'mapOnSelect') return controlSchemeOf(settings) === 'modern';
   return false;
 };
 

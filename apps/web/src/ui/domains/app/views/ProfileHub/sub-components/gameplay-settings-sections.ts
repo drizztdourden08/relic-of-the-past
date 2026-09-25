@@ -45,16 +45,6 @@ const SECTIONS: Section[] = [
   // played, not a property of the host.
   GAME_FLOW_SECTION,
   {
-    id: 'items',
-    title: 'Items',
-    items: [
-      { key: 'itemSwitchLR', label: 'Advanced Item Selection', description: 'Use L and R shoulder buttons to cycle through your equipped items', keywords: 'item cycle lr bumper' },
-      { key: 'itemSwitchLRLimit', label: 'Limit to First 4 Items', description: 'When cycling with L/R, only rotate through the first 4 item slots', keywords: 'item limit slots' },
-      { key: 'secondaryItemSlots', label: 'Secondary Item Slots (X / L / R)', description: 'Assign separate items to the X, L, and R buttons instead of just Y. Not in the original game.', keywords: 'secondary item slot x l r buttons assign' },
-      { key: 'inventoryReorder', label: 'Reorder Inventory', description: 'Hold Y and press a direction in the inventory to move items around. Not in the original game.', keywords: 'inventory reorder rearrange organize items y arrows' },
-    ],
-  },
-  {
     id: 'movement',
     title: 'Movement',
     items: [
@@ -106,6 +96,7 @@ const SECTIONS: Section[] = [
       { key: 'carryMoreRupees', label: 'Larger Wallet', description: 'Increase the maximum rupee capacity from 999 to 9999', keywords: 'rupees wallet money' },
       { key: 'prefillFileName', label: 'Prefill File Name', description: 'New files start named Link, with the cursor on End.', keywords: 'name file link new save naming end default' },
       { key: 'archeryNeedsBow', label: 'Archery Game Asks For A Bow', description: 'Stop the archery game from taking your money when you have nothing to shoot with; the owner tells you why instead. Not in the original game.', keywords: 'archery shooting gallery target bow arrow minigame game refund fee rupees' },
+      { key: 'mapOnSelect', label: 'Open Map with Select', description: 'Press the select button to open the map without going through the pause menu. Classic controls only, since Modern gives the map a verb of its own.', keywords: 'map select button shortcut' },
     ],
   },
   {

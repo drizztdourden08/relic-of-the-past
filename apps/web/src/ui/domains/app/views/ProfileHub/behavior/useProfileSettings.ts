@@ -13,6 +13,11 @@ import { readConfig } from '@app/lib/storage/profile-store';
 import { applySettingsSideEffects, syncHudStore } from './apply-settings-effects';
 import { syncDialogStore } from './sync-dialog-store';
 import { syncTitleStore } from './sync-title-store';
+import { setHudProfileId } from '@app/lib/hud/active-profile';
+import { syncControlSettings } from '@app/stores/control-scheme-store';
+import {
+  ENHANCED_FALLBACK_EVENT, ENHANCED_FALLBACK_MESSAGE, ENHANCED_FALLBACK_TOAST_ID,
+} from '@app/lib/game/enhanced-fallback';
 
 const useProfileSettings = (props: ProfileHubProps) => {
   const {
@@ -72,8 +77,14 @@ const useProfileSettings = (props: ProfileHubProps) => {
     }
   }, [masterVolumeOverride?.version]);
 
-  // Load settings from disk on mount
+  // Load settings from disk on mount.
+  //
+  // The HUD storage layer is TOLD which profile this screen is editing instead of left to
+  // infer it: the layout editor opens from here, and this component is holding the profile
+  // object. The id is cleared again on the way out so the inference chain of running game,
+  // pinned launch and last-selected takes over when no settings screen is mounted.
   useEffect(() => {
+    setHudProfileId(profile.id);
     (async () => {
       try {
         const saved = await readConfig(profile.id);
@@ -83,6 +94,10 @@ const useProfileSettings = (props: ProfileHubProps) => {
           syncHudStore(merged);
           syncDialogStore(merged);
           syncTitleStore(merged);
+          // The control-scheme store and the per-frame router are driven off a game-UI-store
+          // subscription, which only ticks while the core is running. Without this the player's
+          // own slot assignments would not reach either of them until a game started.
+          syncControlSettings(merged);
           onWindowModeChange?.(merged.windowMode);
           onConstraintSettingsChange?.(merged.viewportConstraint, merged.aspectRatio);
           onMasterVolumeChange?.(merged.masterVolume);
@@ -96,6 +111,7 @@ const useProfileSettings = (props: ProfileHubProps) => {
         }
       } catch { /* use defaults */ }
     })();
+    return () => setHudProfileId(null);
   }, [profile.id]);
 
   // Listen for external settings change requests (e.g. from debug widget)
@@ -106,6 +122,21 @@ const useProfileSettings = (props: ProfileHubProps) => {
     };
     window.addEventListener('settings:change', handler);
     return () => window.removeEventListener('settings:change', handler);
+  }, [handleSettingsChange]);
+
+  // A host-drawn style has lost the width it needs. A settings change that narrowed the
+  // ratio asks for the drop, or the overlay does on seeing the window itself get smaller. Both
+  // routes land here so the style is dropped once and the notice worded once.
+  useEffect(() => {
+    const handler = () => {
+      handleSettingsChange({ hudStyle: 'vanilla' });
+      setToasts((prev) => [
+        ...prev.filter((t) => t.id !== ENHANCED_FALLBACK_TOAST_ID),
+        { id: ENHANCED_FALLBACK_TOAST_ID, message: ENHANCED_FALLBACK_MESSAGE, variant: 'danger' as const },
+      ]);
+    };
+    window.addEventListener(ENHANCED_FALLBACK_EVENT, handler);
+    return () => window.removeEventListener(ENHANCED_FALLBACK_EVENT, handler);
   }, [handleSettingsChange]);
 
   const dismissToast = useCallback((id: string) => {

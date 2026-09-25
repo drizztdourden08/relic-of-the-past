@@ -5,7 +5,7 @@ import { type ToggleProps } from './Toggle.type';
 
 
 const Toggle = (props: ToggleProps) => {
-  const { checked, onChange, label, description, disabled = false, id, link } = props;
+  const { checked, onChange, label, description, disabled = false, id, link, size = 'md' } = props;
   // Per-instance fallback id: a shared fallback (or two toggles with the same
   // label) makes every wrapping label's htmlFor resolve to the FIRST matching
   // input in the document, so clicking one toggle silently flips another.
@@ -13,7 +13,7 @@ const Toggle = (props: ToggleProps) => {
   const toggleId = id ?? `toggle-${generatedId}`;
 
   return (
-    <label className={`toggle ${disabled ? 'toggle--disabled' : ''}`} htmlFor={toggleId}>
+    <label className={`toggle${size === 'sm' ? ' toggle--sm' : ''} ${disabled ? 'toggle--disabled' : ''}`} htmlFor={toggleId}>
       {(label || description) && (
         <span className="toggle__text">
           {label && <span className="toggle__label">{label}</span>}

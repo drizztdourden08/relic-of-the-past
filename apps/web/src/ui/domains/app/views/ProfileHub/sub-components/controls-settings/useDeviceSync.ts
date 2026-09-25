@@ -28,9 +28,9 @@ const useDeviceSync = () => {
   }, []);
 
   const filteredDevices = devices.filter(d => !d.displayName.toLowerCase().includes('mouse'));
-  const { groups: controllerGroups, isRescanPending, handleRescan, addMapping } = useControllerDevices();
+  const { entries, groups: controllerGroups, isRescanPending, handleRescan, addMapping } = useControllerDevices();
 
-  return { devices, filteredDevices, controllerGroups, isRescanPending, handleRescan, addMapping };
+  return { devices, filteredDevices, entries, controllerGroups, isRescanPending, handleRescan, addMapping };
 };
 
 export { useDeviceSync };

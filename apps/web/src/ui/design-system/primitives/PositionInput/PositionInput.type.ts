@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind types */
+import type { ControlSize } from '../control-size';
 
 /** One bounded numeric axis of a position. Every field is optional: an axis with
  *  nothing set is open at both ends and steps by one. */
@@ -30,6 +31,13 @@ interface PositionInputProps {
   disabled?: boolean;
   /** Caption for the pair as a whole; also names the group for assistive tech. */
   label?: string;
+  /**
+   * Control density. Defaults to `md`. That is the tier this pair draws today, which
+   * emits no class of its own, so nothing that omits the prop moves a pixel.
+   * `sm` tightens the shell and hands the same tier to both axes' inputs, for
+   * a caller placing the pair in a 188-289 px inspector rail.
+   */
+  size?: ControlSize;
   className?: string;
 }
 
@@ -39,6 +47,7 @@ interface AxisFieldProps {
   axisLabel: string;
   value: number;
   disabled: boolean;
+  size?: ControlSize;
   onCommit: (next: number) => void;
 }
 

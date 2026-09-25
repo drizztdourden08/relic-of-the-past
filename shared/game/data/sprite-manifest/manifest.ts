@@ -17,7 +17,12 @@ import { RUPEE_SPRITE_DEFINITIONS } from './rupee-sprites';
 import { TITLE_SPRITE_DEFINITIONS } from './title-sprites';
 import { UPGRADE_SPRITE_DEFINITIONS } from './upgrade-sprites';
 
-type SpriteCategory = 'hud' | 'hud-pause' | 'hud-item' | 'fonts' | 'receipt' | 'drop' | 'randomizer' | 'title';
+import { GROUND_TILE_SPRITE_DEFINITIONS } from './ground-tiles';
+import { HUD_WALLET_SPRITE_DEFINITIONS } from './hud-wallet';
+import { boxForExtract } from './sprite-box';
+import type { SpriteBox } from './sprite-box';
+
+type SpriteCategory = 'hud' | 'hud-pause' | 'hud-item' | 'fonts' | 'receipt' | 'drop' | 'randomizer' | 'title' | 'ground';
 
 interface SpriteManifestEntry {
   /** Filename without extension (e.g. "hud-bow"). */
@@ -26,6 +31,8 @@ interface SpriteManifestEntry {
   label: string;
   /** Category for grouping. */
   category: SpriteCategory;
+  /** The extraction's own cut, when it isn't the fallback 16x16 (see `sprite-box.ts`). */
+  box?: SpriteBox;
 }
 
 /** One definition as authored, including the extraction recipe consumers read. */
@@ -46,21 +53,29 @@ const VAULT_DEFINITIONS: readonly SpriteDefinition[] =
 // Our own definitions ride on the vault set: the capacity-upgrade composites are
 // stamped onto its sprites and the recoloured gems are derived from one, so
 // without it they have nothing to stand on and the list stays empty, which keeps
-// "no definitions" meaning exactly that. The drawn sprites need nothing from the
-// ROM at all, but they ride along too: extraction only ever runs with one loaded,
-// and a set that appears with the others missing would read as a broken set.
+// "no definitions" meaning exactly that. The drawn sprites (the HUD wallet among
+// them) and the ground tiles, which name their own ROM offsets, need nothing from
+// the vault file, but they ride along too: extraction only ever runs with one
+// loaded, and a set that appears with the others missing would read as a broken set.
 const SPRITE_DEFINITIONS: readonly SpriteDefinition[] =
   VAULT_DEFINITIONS.length === 0 ? [] : [
     ...VAULT_DEFINITIONS, ...UPGRADE_SPRITE_DEFINITIONS, ...RUPEE_SPRITE_DEFINITIONS,
     ...RANDOMIZER_SPRITE_DEFINITIONS, ...POOL_SPRITE_DEFINITIONS, ...DIALOG_SPRITE_DEFINITIONS,
-    ...TITLE_SPRITE_DEFINITIONS,
+    ...TITLE_SPRITE_DEFINITIONS, ...HUD_WALLET_SPRITE_DEFINITIONS, ...GROUND_TILE_SPRITE_DEFINITIONS,
   ];
 
 const SPRITE_MANIFEST: SpriteManifestEntry[] = SPRITE_DEFINITIONS.map(sprite => ({
   file: sprite.file,
   label: sprite.label,
   category: sprite.category as SpriteCategory,
+  box: boxForExtract(sprite.extract),
 }));
+
+/** Every declared box, by filename. `intrinsic-size.ts` reads this lookup so a
+ *  sprite element's own box is real by default, not a fact a person types in. */
+const SPRITE_BOX_BY_FILE: Record<string, SpriteBox> = Object.fromEntries(
+  SPRITE_MANIFEST.filter((sprite) => sprite.box).map((sprite) => [sprite.file, sprite.box as SpriteBox]),
+);
 
 const CATEGORY_LABELS: Record<SpriteCategory, string> = {
   hud: 'HUD',
@@ -71,10 +86,11 @@ const CATEGORY_LABELS: Record<SpriteCategory, string> = {
   drop: 'Droppable',
   randomizer: 'Randomizer',
   title: 'Title & Story',
+  ground: 'Ground',
 };
 
 const CATEGORY_ORDER: SpriteCategory[] =
-  ['hud', 'hud-pause', 'hud-item', 'fonts', 'receipt', 'drop', 'randomizer', 'title'];
+  ['hud', 'hud-pause', 'hud-item', 'fonts', 'receipt', 'drop', 'randomizer', 'title', 'ground'];
 
-export { CATEGORY_LABELS, CATEGORY_ORDER, SPRITE_DEFINITIONS, SPRITE_MANIFEST };
+export { CATEGORY_LABELS, CATEGORY_ORDER, SPRITE_BOX_BY_FILE, SPRITE_DEFINITIONS, SPRITE_MANIFEST };
 export type { SpriteCategory, SpriteDefinition, SpriteManifestEntry };

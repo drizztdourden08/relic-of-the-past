@@ -2,6 +2,8 @@
 .dropdown-menu {
   position: fixed;
   min-width: 160px;
+  max-height: 70vh;
+  overflow-y: auto;
   background: var(--c-surface);
   border: 1px solid var(--c-border);
   border-radius: var(--radius-md);
@@ -86,6 +88,16 @@
   margin-left: auto;
   font-size: var(--text-base);
   color: var(--c-text-faint);
+}
+
+/* The keystroke that does the same thing, right-aligned against the label. A
+   menu is where a shortcut is learned, so it is printed instead of implied. */
+.dropdown__shortcut {
+  margin-left: auto;
+  padding-left: var(--space-md);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
 }
 
 .dropdown__check {

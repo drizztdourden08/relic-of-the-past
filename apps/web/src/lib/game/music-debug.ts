@@ -9,11 +9,15 @@
  * decided not to sound at all.
  *
  * The core-side gate costs host-calls while armed, so it is armed only while a debugger is
- * actually watching (`setMusicDebugArmed`); the engine's bus is free and always on.
+ * actually watching (`setMusicDebugArmed`); the engine's bus is free and stays attached for the
+ * whole run. All three are wired by `initMusicDebug`, called when the game starts. See there for
+ * why none of this happens on import.
  */
+import type { MsuDebugEvent } from '../msu/debug-bus';
 import { SOUND_CHANNELS } from '../msu/sound-claim';
 import { subscribeMsuDebug } from '../msu/debug-bus';
 import { setSoundTrace } from './bridge/host-gates';
+import type { GameState } from './types';
 import { subscribeGameState } from './wasm-bridge';
 
 /** Who produced (or suppressed) the sound: the pack's engine, the sound chip, or a lost roll. */
@@ -80,7 +84,7 @@ declare global {
   }
 }
 
-window.__onSoundTrace = (channel, id, pan, claimed) => {
+const onSoundTrace = (channel: number, id: number, pan: number, claimed: number): void => {
   const name = SOUND_CHANNELS[channel] ?? 'sfx1';
   const owner: MusicDebugOwner = claimed ? 'pack' : 'chip';
   const panNote = pan ? ` pan ${hex(pan)}` : '';
@@ -89,7 +93,7 @@ window.__onSoundTrace = (channel, id, pan, claimed) => {
   notify();
 };
 
-window.__onMusicTrace = (ctrl, module, external) => {
+const onMusicTrace = (ctrl: number, module: number, external: number): void => {
   const owner: MusicDebugOwner = external ? 'pack' : 'chip';
   const label = MUSIC_CODES[ctrl] ?? `track ${ctrl}`;
   push({ channel: 'music', detail: `${label} (module ${module})`, owner });
@@ -97,7 +101,7 @@ window.__onMusicTrace = (ctrl, module, external) => {
   notify();
 };
 
-subscribeMsuDebug((event) => {
+const onMsuDebug = (event: MsuDebugEvent): void => {
   const channel = event.channel as MusicDebugEvent['channel'];
   const outcome = event.passed ? 'played' : 'skipped';
   push({
@@ -108,7 +112,7 @@ subscribeMsuDebug((event) => {
   count(`roll:${event.channel}:${event.programId}:${event.layerId}`, channel,
     `${event.layerName} @${event.chance}%`, event.passed ? 'pack' : 'skipped');
   notify();
-});
+};
 
 /**
  * Whether a debugger wants the traces on. Kept here instead of trusting the gate mirror: every
@@ -118,9 +122,28 @@ subscribeMsuDebug((event) => {
  */
 let armed = false;
 
-subscribeGameState((state) => {
+const onGameState = (state: GameState): void => {
   if (state.status === 'running' && armed) setSoundTrace(true);
-});
+};
+
+let installed = false;
+
+/**
+ * Attach the three feeds. Called from `lifecycle.startGame`, never at import time: a module
+ * that subscribes just because something imported it runs its body wherever the bundler happens
+ * to order it, which is how the identical registration in `host-menu.ts` came to run before
+ * `wasm-bridge` had initialised and killed the bundled renderer at load. Nothing here can fire
+ * before a core exists anyway, because both traces are raised by the core and the engine's rolls
+ * only happen while it is playing. So installing at game start costs no event.
+ */
+const initMusicDebug = (): void => {
+  if (installed) return;
+  installed = true;
+  window.__onSoundTrace = onSoundTrace;
+  window.__onMusicTrace = onMusicTrace;
+  subscribeMsuDebug(onMsuDebug);
+  subscribeGameState(onGameState);
+};
 
 /** Arm or disarm the core-side traces. The feed keeps whatever it has already collected. */
 const setMusicDebugArmed = (on: boolean): void => {
@@ -153,7 +176,7 @@ const getMusicDebugCounters = (): MusicDebugCounter[] => {
 };
 
 export {
-  setMusicDebugArmed, clearMusicDebug, subscribeMusicDebug,
+  initMusicDebug, setMusicDebugArmed, clearMusicDebug, subscribeMusicDebug,
   getMusicDebugEvents, getMusicDebugCounters,
 };
 export type { MusicDebugEvent, MusicDebugCounter, MusicDebugOwner };

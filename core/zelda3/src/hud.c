@@ -548,7 +548,8 @@ void Hud_ChooseNextMode() {  // 8dde6e
     Hud_DrawSelectedYButtonItem();
 
     // Pick either the bottle state or normal one
-    overworld_map_state = (hud_cur_item == kHudItem_BottleOld && !kNewStyleInventory) ? 10 : 4;
+    overworld_map_state = (hud_cur_item == kHudItem_BottleOld && !kNewStyleInventory
+                           && !GameHook_HostMenuSkipsBottleMenu()) ? 10 : 4;
   } else {
     if (filtered_joypad_H)
       overworld_map_state = 5;
@@ -614,6 +615,7 @@ uint8 *GetCurrentItemButtonPtr(int i) {
 }
 
 void Hud_NormalMenu() {  // 8ddf15
+  if (GameHook_HostMenuHolds()) return;
   timer_for_flashing_circle++;
   if (!BYTE(joypad1H_last))
     BYTE(hud_tmp1) = 0;
@@ -694,7 +696,8 @@ uint8 Hud_LookupInventoryItem(uint8 item) {
     8,  7, 12, 21, 18, 13, // 8 is ocarina / shovel combined. moved shovel to 21.
     19, 20,11, 11, 11, 11, // 11 means bottle
   };
-  return kNewStyleInventory ? kHudItemToItemNew[item] : kHudItemToItemOrg[item];
+  return (kNewStyleInventory || GameHook_HostMenuNewStyleItems())
+    ? kHudItemToItemNew[item] : kHudItemToItemOrg[item];
 }
 
 void Hud_UpdateEquippedItem() {  // 8ddfaf

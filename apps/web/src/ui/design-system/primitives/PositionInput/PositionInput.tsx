@@ -26,13 +26,14 @@ const DEFAULT_X_LABEL = 'X';
 const DEFAULT_Y_LABEL = 'Y';
 
 const PositionInput = (props: PositionInputProps) => {
-  const { value, onChange, x = OPEN_AXIS, y = OPEN_AXIS, disabled = false, label, className = '' } = props;
+  const { value, onChange, x = OPEN_AXIS, y = OPEN_AXIS, disabled = false, label, size = 'md', className = '' } = props;
 
   const commitX = useCallback((next: number) => onChange({ ...value, x: next }), [onChange, value]);
   const commitY = useCallback((next: number) => onChange({ ...value, y: next }), [onChange, value]);
 
   const classes = [
     'position-input',
+    size === 'sm' ? 'position-input--sm' : '',
     disabled ? 'position-input--disabled' : '',
     className,
   ].filter(Boolean).join(' ');
@@ -46,6 +47,7 @@ const PositionInput = (props: PositionInputProps) => {
           axisLabel={x.label ?? DEFAULT_X_LABEL}
           value={value.x}
           disabled={disabled}
+          size={size}
           onCommit={commitX}
         />
         <AxisField
@@ -53,6 +55,7 @@ const PositionInput = (props: PositionInputProps) => {
           axisLabel={y.label ?? DEFAULT_Y_LABEL}
           value={value.y}
           disabled={disabled}
+          size={size}
           onCommit={commitY}
         />
       </div>

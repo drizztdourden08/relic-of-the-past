@@ -14,6 +14,8 @@ interface TitleBarProps {
   onToggleCheats: () => void;
   onShowDataManager: (tab?: string) => void;
   onShowInputTester: () => void;
+  /** The HUD Layout Editor studio, listed beside the others under Advanced. */
+  onShowHudLayout: () => void;
   onShowCredits: () => void;
   onShowDesignGallery: () => void;
   onShowSpriteDebug: () => void;

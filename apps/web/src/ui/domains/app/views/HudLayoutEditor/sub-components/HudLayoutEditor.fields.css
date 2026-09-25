@@ -1,0 +1,41 @@
+/* @layer renderer-components @kind style */
+
+/* Phase 1 of `plans/hud-inspector-ux-review.html`, for finding F2: "flex rows
+   with no min-width: fields collapsed to zero". Phase 1 said this sheet "deletes
+   whole at phase 4". IT DOES NOT, and the reason is worth recording: two of its
+   four rules were never about `ValueField` at all.
+
+   `ValueInput` owns its own row now, so the `.hud-value-field__row` and
+   `.hud-expr__row` rules are gone with the controls that needed them. What is
+   left targets rows this phase does not touch (`PaintField`'s colour row and
+   the keyframe `at` field), so unpicking them into `inspector.css` would only
+   move the same declarations somewhere with less headroom.
+
+   WHAT THE MEASUREMENT SHOWED, which is not quite what F2 says. The rows are
+   `display: flex` with no `min-width: 0`, as reported. But the control that
+   "wins" does not win on intrinsic content: `.text-input` and `.select-trigger`
+   are each `width: 100%`, and on a flex item a percentage width IS the flex
+   basis. So each of them claims the whole row and they split it by shrink
+   ratio, while a sibling on `flex: 1` (basis 0%) is left with nothing to grow
+   into. */
+
+/* `.hud-paint-field__row`, the colour control behind background, border,
+   shadow, outline, tint, text colour and text stroke. It is the most-rendered row in
+   Appearance, and the one the plan photographs under F1 as "a colour row
+   clipped to #0". Measured at 13.9 px of typing area for a `#rrggbb` string
+   before this rule, at every rail width. */
+.hud-paint-field__swatch-wrap {
+  min-width: 0;
+}
+
+.hud-paint-field__swatch-wrap > .text-input {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* And the sibling stops claiming the whole row. Scoped by class to the one
+   row left that pairs a `Select` with a numeric field. */
+.hud-paint-field__row > .select-trigger {
+  flex: 0 0 auto;
+  width: auto;
+}

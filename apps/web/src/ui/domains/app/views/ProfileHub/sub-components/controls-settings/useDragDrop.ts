@@ -7,22 +7,34 @@
  * 'keyboard', see device-detector.ts) still resolved from its own hand-authored
  * KEYBOARD_DEFAULT; every gamepad's defaults come from the family layer's
  * consoleDefaults via buildConsoleDefaultMappings.
+ *
+ * Under the modern scheme the same drop ALSO gives the profile its modern
+ * bindings, derived from what SDL says the dropped device actually has. The
+ * classic console-default mappings are written either way and are untouched by
+ * this: the two live side by side on the profile, so switching schemes back
+ * never has to rebuild the other one.
  */
 
 import { useState, useCallback } from 'react';
-import type { InputProfile, DetectedDevice, DeviceFamily } from '@shared/types/controls';
+import type { InputProfile, DetectedDevice, DeviceFamily, ModernBindings } from '@shared/types/controls';
+import type { ControlSchemeId } from '@shared/input/scheme';
+import type { DeviceEntry } from '@shared/ipc';
 import { KEYBOARD_DEFAULT, buildConsoleDefaultMappings } from '@shared/input';
 import { buildDisplayContext, resolveBrandLogoKey } from '@shared/input/family';
 import type { SdlGamepadType } from '@shared/input/family';
+import { buildModernBindings } from './build-modern-bindings';
+import { controlsForDevice } from './profile-controls';
 import { padHex } from './controls-settings.type';
 
 interface UseDragDropArgs {
   devices: DetectedDevice[];
+  entries: DeviceEntry[];
+  scheme: ControlSchemeId;
   activeProfile: InputProfile | null;
   updateActiveProfile: (profile: InputProfile) => void;
 }
 
-const useDragDrop = ({ devices, activeProfile, updateActiveProfile }: UseDragDropArgs) => {
+const useDragDrop = ({ devices, entries, scheme, activeProfile, updateActiveProfile }: UseDragDropArgs) => {
   const [dragOverBindings, setDragOverBindings] = useState(false);
   const [confirmPreset, setConfirmPreset] = useState<{ sdlType: string; deviceName: string; vid: string; pid: string } | null>(null);
 
@@ -86,6 +98,14 @@ const useDragDrop = ({ devices, activeProfile, updateActiveProfile }: UseDragDro
       sourcePid: m.binding.type !== 'keyboard' ? pid : null,
     }));
 
+    // Modern bindings come from the dropped device's own resolved controls.
+    // A device with nothing to resolve from (never seen by SDL, no remembered
+    // type) yields null and keeps whatever the profile already had.
+    const modern: ModernBindings | null = scheme === 'modern'
+      ? buildModernBindings(isKeyboard ? 'keyboard' : 'gamepad',
+          isKeyboard ? [] : controlsForDevice({ vid, pid, sdlType: confirmPreset.sdlType }, entries))
+      : null;
+
     const updatedProfile: InputProfile = {
       ...activeProfile,
       name: confirmPreset.deviceName,
@@ -98,12 +118,13 @@ const useDragDrop = ({ devices, activeProfile, updateActiveProfile }: UseDragDro
         displayName: confirmPreset.deviceName,
         deviceFamily,
       },
+      ...(modern ? { modern, core: modern.core } : {}),
       modifiedAt: Date.now(),
     };
 
     updateActiveProfile(updatedProfile);
     setConfirmPreset(null);
-  }, [confirmPreset, activeProfile, updateActiveProfile]);
+  }, [confirmPreset, activeProfile, updateActiveProfile, scheme, entries]);
 
   return {
     dragOverBindings,

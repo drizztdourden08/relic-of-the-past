@@ -1,3 +1,3 @@
 /* @layer renderer-hud @kind barrel */
-export { HudLife } from './HudLife';
-export type { HudLifeProps } from './HudLife';
+export { HEARTS_PER_ROW, HEART_UNITS, HudLife, heartFills, spriteStateFor } from './HudLife';
+export type { HeartArt, HudLifeProps } from './HudLife';

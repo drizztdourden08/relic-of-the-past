@@ -1,0 +1,32 @@
+{
+  "slot:SOUTH": {
+    "kind": "sword"
+  },
+  "slot:EAST": {
+    "kind": "action"
+  },
+  "slot:WEST": {
+    "kind": "item",
+    "hudItem": 11
+  },
+  "slot:NORTH": {
+    "kind": "item",
+    "hudItem": 4
+  },
+  "slot:LEFT_SHOULDER": {
+    "kind": "item",
+    "hudItem": 13
+  },
+  "slot:RIGHT_SHOULDER": {
+    "kind": "item",
+    "hudItem": 1
+  },
+  "slot:LEFT_TRIGGER": {
+    "kind": "item",
+    "hudItem": 21
+  },
+  "slot:RIGHT_TRIGGER": {
+    "kind": "item",
+    "hudItem": 2
+  }
+}

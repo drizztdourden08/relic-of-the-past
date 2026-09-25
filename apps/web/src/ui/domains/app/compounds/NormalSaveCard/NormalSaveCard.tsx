@@ -31,7 +31,8 @@ const NormalSaveCard = (props: NormalSaveCardProps) => {
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') handleCommitRename();
-    if (e.key === 'Escape') setEditing(false);
+    // Consumed here, so the dismiss stack leaves the page around the card alone.
+    if (e.key === 'Escape') { e.preventDefault(); setEditing(false); }
   };
 
   const actions = (

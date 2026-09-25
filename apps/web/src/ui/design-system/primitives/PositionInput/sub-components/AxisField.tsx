@@ -11,7 +11,7 @@ import type { AxisFieldProps } from '../PositionInput.type';
 const DEFAULT_STEP = 1;
 
 const AxisField = (props: AxisFieldProps) => {
-  const { axis, axisLabel, value, disabled, onCommit } = props;
+  const { axis, axisLabel, value, disabled, size, onCommit } = props;
   const { fieldValue, handleChange, handleBlur, handleKeyDown } = useAxisDraft({ value, axis, onCommit });
 
   return (
@@ -19,6 +19,7 @@ const AxisField = (props: AxisFieldProps) => {
       <span className="position-input__cap">{axisLabel}</span>
       <NumberInput
         className="position-input__field"
+        size={size}
         value={fieldValue}
         min={axis.min}
         max={axis.max}

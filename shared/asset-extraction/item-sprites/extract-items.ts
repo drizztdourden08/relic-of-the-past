@@ -17,6 +17,7 @@ import {
   type SpritePalettes, type ReceiptSheets,
 } from './receipt-decoder';
 import { extractDialogueGlyph, loadDialogueFont } from './dialogue-glyph-decoder';
+import { extractBgTile } from './bg-tile-decoder';
 import {
   loadDropSheets,
   extractDropStandard, extractDropNumbered,
@@ -60,12 +61,20 @@ interface SpriteExtractDef {
   part?: TitlePart;
   /** story-legend: which of the story intro's four pictures, 0-3. */
   legend?: number;
+  /** bg-tile: background sheet ids in VRAM slot order, for a map ground block. */
+  sheets?: number[];
+  /** bg-tile: which of those sheets use the upper half of their palette row. */
+  upper?: number[];
+  /** bg-tile: which palette family the ground block's row comes from. */
+  paletteSet?: 'overworld' | 'dungeon';
+  /** bg-tile: outdoor auxiliary palette selections, in order: aux1, aux2, aux3. */
+  paletteAux?: number[];
 }
 
 interface SpriteDef {
   file: string;
   label: string;
-  category: 'hud' | 'hud-pause' | 'hud-item' | 'fonts' | 'receipt' | 'drop' | 'randomizer' | 'title';
+  category: 'hud' | 'hud-pause' | 'hud-item' | 'fonts' | 'receipt' | 'drop' | 'randomizer' | 'title' | 'ground';
   extract: SpriteExtractDef;
 }
 
@@ -131,6 +140,11 @@ const EXTRACTORS: Record<string, Extractor> = {
   'story-legend': (def, ctx) => extractLegend(ctx.rom, ctx.legendSource(), def.legend!),
   'palette-swap': (def, ctx) =>
     extractPaletteSwap({ baseFile: def.baseFile!, colors: def.colors! }, (file) => extractByFile(file, ctx)),
+  'bg-tile': (def, ctx) => extractBgTile(ctx.rom, {
+    sheets: def.sheets!, upper: def.upper ?? [], tiles: def.tiles!,
+    paletteSet: def.paletteSet ?? 'overworld', paletteIndex: def.palette ?? 0,
+    paletteAux: def.paletteAux ?? [],
+  }),
 };
 
 const extractOne = (def: SpriteExtractDef, ctx: ExtractionContext): ImageBuffer | null => {
@@ -141,7 +155,7 @@ const extractOne = (def: SpriteExtractDef, ctx: ExtractionContext): ImageBuffer 
 
 interface SpriteCounts {
   hud: number; 'hud-pause': number; 'hud-item': number;
-  fonts: number; receipt: number; drop: number; randomizer: number; title: number;
+  fonts: number; receipt: number; drop: number; randomizer: number; title: number; ground: number;
 }
 interface SpriteBuffer { name: string; bytes: Uint8Array }
 interface SpriteBuffersResult { buffers: SpriteBuffer[]; counts: SpriteCounts; errors: string[] }
@@ -164,7 +178,7 @@ const extractSpriteBuffers = (rom: RomData, allSprites: SpriteDef[]): SpriteBuff
     legendSource: () => (legend ??= loadLegend(rom)),
   };
 
-  const counts: SpriteCounts = { hud: 0, 'hud-pause': 0, 'hud-item': 0, fonts: 0, receipt: 0, drop: 0, randomizer: 0, title: 0 };
+  const counts: SpriteCounts = { hud: 0, 'hud-pause': 0, 'hud-item': 0, fonts: 0, receipt: 0, drop: 0, randomizer: 0, title: 0, ground: 0 };
   const errors: string[] = [];
   // The stamp names the definitions and code this set comes from, so a set whose
   // files are all present but whose bytes predate the current code is refreshed.

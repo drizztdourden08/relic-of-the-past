@@ -1,5 +1,6 @@
 /* @layer shared-types @kind types */
 import type { ButtonIcon, ButtonMapping, DeviceFamily, InputApi } from './bindings';
+import type { CoreBindings, ModernBindings } from './scheme';
 
 // ── Input profile (persisted per-profile) ──
 
@@ -13,6 +14,14 @@ interface InputProfile {
   assignedDevice: AssignedDevice | null;
   createdAt: number;
   modifiedAt: number;
+  /** Modern-scheme bindings (core verbs + one slot per remaining control).
+   *  Absent on a profile that predates the modern scheme; build one with
+   *  defaultModernBindings (shared/input/scheme). */
+  modern?: ModernBindings;
+  /** The ten never-assignable verbs, on a classic profile too: the enhanced
+   *  pause menu is driven by them under both schemes. On a modern profile
+   *  this mirrors `modern.core`. */
+  core?: CoreBindings;
 }
 
 // ── Detected device at runtime (not persisted) ──

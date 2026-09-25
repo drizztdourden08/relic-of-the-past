@@ -92,7 +92,8 @@ const InputProfileList = (props: InputProfileListProps) => {
                 onBlur={() => commitEdit(profile)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') commitEdit(profile);
-                  if (e.key === 'Escape') setEditingId(null);
+                  // Consumed here, so the dismiss stack leaves the page alone.
+                  if (e.key === 'Escape') { e.preventDefault(); setEditingId(null); }
                 }}
                 onClick={(e) => e.stopPropagation()}
               />

@@ -3,9 +3,12 @@ import './Field.css';
 import type { FieldProps } from './Field.type';
 
 const Field = (props: FieldProps) => {
-  const { label, hint, error, htmlFor, required, inline, className = '', children } = props;
+  const { label, hint, error, htmlFor, required, inline, size = 'md', className = '', style, children } = props;
   return (
-    <div className={`field${inline ? ' field--inline' : ''}${className ? ` ${className}` : ''}`}>
+    <div
+      className={`field${size === 'sm' ? ' field--sm' : ''}${inline ? ' field--inline' : ''}${className ? ` ${className}` : ''}`}
+      style={style}
+    >
       {label != null && (
         <label className="field__label" htmlFor={htmlFor}>
           {label}

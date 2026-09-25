@@ -6,6 +6,11 @@
 /* Fixed sizes opt out of growing. */
 .spacer[data-size] { flex: 0 0 auto; }
 
+.spacer[data-size='2xs'] {
+  width: var(--space-2xs);
+  height: var(--space-2xs);
+}
+
 .spacer[data-size='xs'] {
   width: var(--space-xs);
   height: var(--space-xs);

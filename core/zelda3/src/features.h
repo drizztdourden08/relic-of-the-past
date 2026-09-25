@@ -117,6 +117,12 @@ enum {
   // The host draws the title screen itself and the native one is kept off the picture
   // (core/game-hooks/title_override.c). Render-only, but a divergence, so Vanilla Safe strips it.
   kFeatures2_TitleOverride      = 1u << 26,
+  // The host-owned pause menu and the host-driven active-item register (core/game-hooks/host_menu.c).
+  // Both change what the game computes: one holds the native browse state and rewrites gear, the other
+  // drives hud_cur_item and current_item_y. Parity divergences, so Vanilla Safe strips both. They live
+  // in this word because features3 has no free bit left.
+  kFeatures2_HostMenu           = 1u << 27, // host owns the pause menu; gear writes; 24-item lookup
+  kFeatures2_ModernControls     = 1u << 28, // host drives the active item register
 };
 
 // Enum values for kRam_Features3 — cheats and other C-side hook divergences. Unlike kFeatures0 (opt-in

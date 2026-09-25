@@ -11,6 +11,10 @@ import { syncTitleStore, touchesTitleStore } from './sync-title-store';
 import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
 import { writeConfig } from '../../../../../../lib/storage/profile-store';
 import { readSpriteAsZspr } from '../../../../../../lib/game/player-sheet/load-sheet';
+import { enhancedAspectAllowed } from '../../../../../../lib/game/settings';
+import { requestEnhancedFallback } from '@app/lib/game/enhanced-fallback';
+import { hostDrawnHud } from '@shared/features/hud-style';
+import { syncControlSettings } from '@app/stores/control-scheme-store';
 
 // Apply a sprite choice to the running core and re-stage it for the next boot. Staging matters even
 // when the live swap succeeds: the core re-reads the staged bytes when the game restarts.
@@ -42,11 +46,27 @@ const syncHudStore = (s: GameSettings): void => {
     heartMode: s.hudHeartMode,
     magicMode: s.hudMagicMode,
     countLayout: s.hudCountLayout,
-    pauseStyle: s.hudPauseStyle,
-    pauseHighlight: s.hudPauseHighlight,
     showMaxInYellow: s.showMaxItemsInYellow,
   });
 };
+
+// Keys the HUD render store mirrors; a change to any of them re-syncs it.
+const HUD_STORE_KEYS: (keyof GameSettings)[] = [
+  'hudMode', 'hudStyle', 'hudRatio', 'customHudAspectW', 'customHudAspectH', 'hudEnhancedParts',
+  'hudHeartMode', 'hudMagicMode', 'hudCountLayout', 'vanillaSafe',
+];
+
+// Keys the control-scheme store and the per-frame input router are derived from. Every one of
+// them is read by `syncControlSettings`, which is deliberately given the whole settings object
+// instead of a patch: the scheme itself and the takeover it arms are both derived from the HUD
+// style, and Vanilla Safe strips them. None of that is obviously input's business.
+const CONTROL_STORE_KEYS: (keyof GameSettings)[] = [
+  'modernScheme', 'mapOnSelect', 'vanillaSafe',
+  'hudStyle', 'hudMode', 'hudEnhancedParts',
+];
+
+// Keys that can change the display ratio a host-drawn style is measured against.
+const ASPECT_KEYS: (keyof GameSettings)[] = ['hudStyle', 'aspectRatio', 'customAspectW', 'customAspectH', 'renderIntoNotch'];
 
 type ParentCallbacks = Pick<ProfileHubProps,
   'onWindowModeChange' | 'onConstraintSettingsChange' | 'onMasterVolumeChange' | 'onDisplayPerfChange'
@@ -132,7 +152,7 @@ const applySettingsSideEffects = (patch: Partial<GameSettings>, next: GameSettin
   }
 
   // Sync HUD settings to store for live rendering
-  if ('hudMode' in patch || 'hudStyle' in patch || 'hudRatio' in patch || 'customHudAspectW' in patch || 'customHudAspectH' in patch || 'hudEnhancedParts' in patch || 'hudHeartMode' in patch || 'hudMagicMode' in patch || 'hudCountLayout' in patch || 'hudPauseStyle' in patch || 'hudPauseHighlight' in patch) {
+  if (HUD_STORE_KEYS.some((k) => k in patch)) {
     syncHudStore(next);
   }
   if (touchesDialogStore(patch)) {
@@ -140,6 +160,23 @@ const applySettingsSideEffects = (patch: Partial<GameSettings>, next: GameSettin
   }
   if (touchesTitleStore(patch)) {
     syncTitleStore(next);
+  }
+
+  // Control scheme + slot assignments go to the store AND the scheme runtime, which is what the
+  // per-frame router reads to turn a pressed button into an item id and the Y bit. Pushing here
+  // instead of leaving it to the store's own game-UI subscription is what makes an assignment
+  // take effect at the moment it is made: that subscription only ticks while the core is running.
+  if (CONTROL_STORE_KEYS.some((k) => k in patch)) syncControlSettings(next);
+
+  // A host-drawn style needs a 16:9-or-wider display to have room for the HUD and the menu.
+  // If the ratio is narrowed while it is active, drop back to the original style and say why.
+  // Silently rendering a clipped menu would be worse than losing the style.
+  // The correction is queued instead of applied inline: this runs inside the setSettings updater,
+  // and feeding a second change straight back into it would re-enter that updater.
+  // Merely shrinking the window can do it too, with no settings change at all; that route
+  // raises the same request from GameOverlay, so the drop and its wording live in one place.
+  if (ASPECT_KEYS.some((k) => k in patch) && !enhancedAspectAllowed(next) && hostDrawnHud(next.hudStyle)) {
+    queueMicrotask(requestEnhancedFallback);
   }
 
   // If game is running, push live settings and maybe show restart toast

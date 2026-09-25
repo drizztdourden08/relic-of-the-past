@@ -1,7 +1,9 @@
 /* @layer renderer-components @kind types */
 import type { ElementType, HTMLAttributes, ReactNode } from 'react';
 
-type SpaceToken = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+/** The spacing scale, in full. `2xs` (2px) is the pairing step (a caption and
+ *  the control it names reading as one thing) and the compact tier's row gap. */
+type SpaceToken = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 type FlexAlign = 'start' | 'center' | 'end' | 'stretch' | 'baseline';
 type FlexJustify = 'start' | 'center' | 'end' | 'between' | 'around';
 

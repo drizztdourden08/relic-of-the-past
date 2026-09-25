@@ -10,11 +10,11 @@ import { buildFeatureFlags, buildFeatureWords, buildPpuFlags } from '../../apps/
 
 const allOff = {
   aspectRatio: '4:3',
+  // The Original HUD style, which is the default: a host-drawn style arms the host-menu gate bits.
+  hudStyle: 'vanilla',
   extendedRendering: false,
   widescreenSprites: true,
   widescreenVisualFixes: true,
-  itemSwitchLR: false,
-  itemSwitchLRLimit: false,
   turnWhileDashing: false,
   mirrorToDarkworld: false,
   collectItemsWithSword: false,

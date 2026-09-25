@@ -17,8 +17,8 @@ let currentState: GameState = { status: 'idle', error: null };
 let currentProfileId: string | null = null;
 const listeners = new Set<GameStateListener>();
 
-/** Size of the UI state buffer exported from C. */
-const UI_STATE_BUFFER_SIZE = 109;
+/** Size of the UI state buffer exported from C. Last byte in use is 130 (core/game-hooks/ui_state.c). */
+const UI_STATE_BUFFER_SIZE = 131;
 
 const setState = (next: GameState): void => {
   currentState = next;
@@ -61,6 +61,12 @@ export { wasmGetPlayerStateInfo } from './bridge/player-state';
 export type { PlayerStateInfo } from './bridge/player-state';
 
 export { wasmSetPaused } from './bridge/commands';
+// Raw host-menu commands. App code should go through lib/game/host-menu.ts instead, which is
+// where the takeover's wanted state and the equipped-item re-assert live.
+export {
+  wasmHostMenuClose, wasmHostMenuIsHolding, wasmHostMenuSaveAndQuit, wasmHostMenuSetTakeover,
+  wasmHostSetActiveItem, wasmHostSetGear,
+} from './bridge/host-menu';
 export { wasmGetViewportInfo, wasmRenderCleanFrame } from './bridge/render';
 export { wasmGetGameUIState, wasmSetUIOverlayMode, wasmGetUIOverlayMode, wasmGetMenuState } from './bridge/ui-state';
 export { wasmGetDialogState, wasmSetDialogPacing, wasmSetDialogHidden, wasmGetDialogFont, wasmGetDialogPalette, wasmDialogMarkStale } from './bridge/dialog';

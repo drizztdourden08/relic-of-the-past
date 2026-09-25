@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { HubGameControls, ProfileHub } from '../ui/domains/app/views/ProfileHub';
 import { DataManager } from '../ui/domains/app/views/DataManager';
 import { InputCalibration } from '../ui/domains/app/views/InputTester';
+import { HudLayoutEditor } from '../ui/domains/app/views/HudLayoutEditor';
 import { CreditsPage } from '../ui/domains/app/views/ProfileHub/sub-components/CreditsTab';
 import { DesignGallery } from '../ui/domains/app/views/DesignGallery';
 import { SpriteDebug } from '../ui/domains/app/views/SpriteDebug';
@@ -116,6 +117,10 @@ const PageRouter = (props: PageRouterProps) => {
         <InputCalibration />
       </FullScreenLayer>
     );
+  } else if (nav.activePage === 'hud-layout') {
+    // The editor brings its own FullScreenLayer (title + close), the way the
+    // sprite studio does, because it wants the whole width for a true-scale stage.
+    otherPage = <HudLayoutEditor onClose={nav.closePage} />;
   } else if (nav.activePage === 'credits') {
     otherPage = (
       <FullScreenLayer onClose={nav.closePage} title="Credits">

@@ -146,6 +146,14 @@ int WasmGetGameUIState(void) {
   b[126] = (uint8)GameHook_CapacityMax(1, link_arrow_upgrades);
   PutU16(b, 127, GameHook_WalletMax((enhanced_features0 & kFeatures0_CarryMoreRupees) ? 9999 : 999));
 
+  // ─── Bytes 129-130: Host-owned pause menu ───
+  // 130 repeats byte 14 on purpose. Byte 14 is the HUD's equipped-item readout; this one is the
+  // host's own register, read back so it can see when the native menu moved it (Hud_Init runs
+  // Hud_SearchForEquippedItem before the hold takes effect at browse state 4, and that walks the
+  // 21-entry grid, so any id the 21-entry table has no row for is replaced) and re-assert.
+  b[129] = HostMenu_Holding() ? 1 : 0;
+  b[130] = hud_cur_item;
+
   return (int)g_ui_state_buf;
 }
 

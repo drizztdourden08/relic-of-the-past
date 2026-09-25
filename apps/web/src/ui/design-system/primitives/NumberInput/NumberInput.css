@@ -5,11 +5,27 @@
   display: inline-flex;
   align-items: stretch;
   width: 100%;
+  min-height: var(--ctl-h, auto);
   background: var(--c-surface);
   border: 1px solid var(--c-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--ctl-radius, var(--radius-md));
   overflow: hidden;
   transition: border-color var(--transition-normal);
+}
+
+/* Compact tier. The five `--ctl-*` are the shared control seam (see
+   TextInput.css). The spinner's own horizontal padding is not one of them,
+   because it is 8px at md while the field's is 12. So it gets a rule of its own. */
+.number-input--sm {
+  --ctl-h: var(--control-h-sm);
+  --ctl-pad-y: var(--space-xs);
+  --ctl-pad-x: var(--space-sm);
+  --ctl-font: var(--text-sm);
+  --ctl-radius: var(--radius-sm);
+}
+
+.number-input--sm .number-input__btn {
+  padding: 0 var(--space-xs);
 }
 
 .number-input:focus-within {
@@ -27,7 +43,7 @@
 
 .number-input--auto .number-input__field {
   flex: 0 0 auto;
-  width: calc((var(--number-input-columns) * 1ch) + (var(--space-md) * 2) + 0.75ch);
+  width: calc((var(--number-input-columns) * 1ch) + (var(--ctl-pad-x, var(--space-md)) * 2) + 0.75ch);
 }
 
 .number-input--disabled {
@@ -38,11 +54,11 @@
 .number-input__field {
   flex: 1;
   min-width: 0;
-  padding: var(--space-sm) var(--space-md);
+  padding: var(--ctl-pad-y, var(--space-sm)) var(--ctl-pad-x, var(--space-md));
   background: transparent;
   border: none;
   color: var(--c-text);
-  font-size: var(--text-base);
+  font-size: var(--ctl-font, var(--text-base));
   outline: none;
 
   /* Hide the native spinner. The chevron buttons replace it. */

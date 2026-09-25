@@ -1,0 +1,284 @@
+/* @layer renderer-components @kind style */
+
+/* The field deliberately mirrors `.number-input`'s own geometry of one bordered
+   box holding a borderless field and a flush spinner column, so deleting the
+   mode switch changes what is in front of the number and nothing about the
+   number itself. It cannot BE a `NumberInput`: that control is
+   `<input type="number">`, which cannot hold `= life_current / 8`.
+
+   The five `--ctl-*` reads are the compact tier's seam (`TextInput.css`), set
+   here instead of inherited because this control is always `sm`. It exists
+   only inside the inspector rail. */
+.hud-value-input {
+  --ctl-h: var(--control-h-sm);
+  --ctl-pad-y: var(--space-xs);
+  --ctl-pad-x: var(--space-sm);
+  --ctl-font: var(--text-sm);
+  --ctl-radius: var(--radius-sm);
+
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+  min-height: var(--ctl-h);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--ctl-radius);
+  overflow: hidden;
+  transition: border-color var(--transition-normal);
+}
+
+.hud-value-input:focus-within {
+  border-color: var(--c-gold);
+}
+
+/* State 3: a formula is a STATE OF THE FIELD, not a control beside it. That is the
+   convention After Effects, Blender and Unity all share. Cool border, mono
+   text, and nothing else on the row to say so. */
+.hud-value-input[data-formula='true'] {
+  border-color: var(--c-info);
+}
+
+.hud-value-input[data-formula='true'] .hud-value-input__field {
+  font-family: var(--font-mono);
+}
+
+/* Two classes on purpose: the field IS a `TextInput`, so it carries
+   `.text-input`, and a single-class selector here would be a specificity tie
+   decided by whichever sheet a bundler happened to emit last. */
+.hud-value-input .hud-value-input__field {
+  flex: 1 1 0;
+  width: auto;
+  min-width: 0;
+  padding: var(--ctl-pad-y) var(--ctl-pad-x);
+  background: transparent;
+  border: none;
+  color: var(--c-text);
+  font-size: var(--ctl-font);
+  outline: none;
+}
+
+.hud-value-input .hud-value-input__field::placeholder {
+  color: var(--c-text-muted);
+}
+
+.hud-value-input .hud-value-input__field.is-invalid {
+  color: var(--c-danger);
+}
+
+.hud-value-input .hud-value-input__field[readonly] {
+  color: var(--c-text-muted);
+}
+
+/* State 6: derived or owned elsewhere. Dashed, dim, still readable. */
+.hud-value-input:has(> .hud-value-input__field[readonly]) {
+  border-style: dashed;
+  opacity: 0.75;
+}
+
+/* The spinner exists exactly while the text parses as a bare numeral, so it
+   appears and disappears as a `=` is typed and deleted. That is the predicate,
+   made visible. */
+.hud-value-input__spin {
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--c-border);
+}
+
+.hud-value-input__spin > .btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--space-xs);
+  color: var(--c-text-dim);
+}
+
+.hud-value-input__spin > .btn:hover {
+  color: var(--c-text);
+  background: var(--c-hover);
+}
+
+/* The affordance is RENTED, NOT OWNED: 12px, on the focused row, and nowhere
+   else. A resting chip on thirty rows costs 19 % of a half-width field. */
+.hud-value-input__chip,
+.hud-value-input__fx {
+  flex: 0 0 auto;
+  padding: 0 var(--space-xs);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-info);
+  border-left: 1px solid var(--c-border);
+}
+
+.hud-value-input__chip:hover,
+.hud-value-input__fx:hover {
+  background: var(--c-hover);
+}
+
+.hud-value-input__feedback {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.hud-value-input__result,
+.hud-value-input__column {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-info);
+}
+
+.hud-value-input__column {
+  color: var(--c-text-muted);
+}
+
+.hud-value-input__reads {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs) var(--space-xs);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+.hud-value-input__fix {
+  align-self: flex-start;
+  padding: 0;
+  font-size: var(--text-xs);
+  color: var(--c-gold-bright);
+}
+
+/* ── Promotion (§58) ──
+   A formula being edited FLOATS OVER its siblings; it never pushes them. §36
+   gave the field `flex: 1 0 100%`, so the pair reflowed and the sibling dropped
+   to a new row. That was a layout shift caused by touching a control, which is the same
+   fault as a section that rearranges when one of its own options is pressed.
+
+   THE ROOT KEEPS ITS RESTING HEIGHT (`--promote-height`), which is what stops
+   the row from changing height when the control leaves flow; the control is
+   lifted out and spans the row it lives in. Both numbers are measured BEFORE
+   the class lands (`behavior/promote-overlay.ts`). Measured after, the floated
+   box answers about itself. */
+.hud-value-field--wide {
+  position: relative;
+  min-height: var(--promote-height, auto);
+}
+
+.hud-value-field--wide > .field__control {
+  position: absolute;
+  z-index: var(--z-sticky);
+  top: var(--promote-top, 0);
+  left: var(--promote-left, 0);
+  width: var(--promote-width, 100%);
+  padding: var(--space-2xs);
+  margin: calc(var(--space-2xs) * -1);
+  background: var(--c-surface);
+  border-radius: var(--r-sm);
+  box-shadow: var(--shadow-overlay);
+}
+
+/* ── InstanceStrip ── */
+.hud-instance-strip {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.hud-instance-strip__cells {
+  display: flex;
+  gap: var(--space-2xs);
+}
+
+.hud-instance-strip__cell {
+  flex: 1 1 0;
+  min-width: 2px;
+  height: 8px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+}
+
+.hud-instance-strip__cell[data-on='true'] {
+  background: var(--c-info);
+}
+
+.hud-instance-strip__cell.is-preview {
+  outline: 1px solid var(--c-gold);
+}
+
+.hud-instance-strip__read {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+/* ── FormulaMenu ──
+   Eighteen names is about 290px, taller than most whole sections in this
+   panel, which is why the variable list is a popover with a filter instead of
+   the docked panel the plan first sketched. */
+.hud-formula-menu {
+  position: fixed;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  width: 248px;
+  max-height: 300px;
+  padding: var(--space-2xs);
+  overflow-y: auto;
+  background: var(--c-surface);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-dropdown);
+}
+
+.hud-formula-menu[data-drop-up='true'] {
+  transform: translateY(-100%);
+}
+
+.hud-formula-menu__group {
+  display: flex;
+  flex-direction: column;
+}
+
+.hud-formula-menu__head {
+  padding: var(--space-2xs) var(--space-xs);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semi);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--c-gold-bright);
+}
+
+.hud-formula-menu__row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  padding: var(--space-2xs) var(--space-xs);
+  text-align: left;
+  border-radius: var(--radius-sm);
+}
+
+.hud-formula-menu__row:hover:not(:disabled) {
+  background: var(--c-hover);
+}
+
+/* Absence WITH A REASON. A name that is out of scope is listed and explained,
+   never silently dropped. A picker that hides `index` outside a repeat leaves
+   an author who saw it yesterday convinced the editor is broken. */
+.hud-formula-menu__row.is-unavailable {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.hud-formula-menu__title {
+  font-size: var(--text-sm);
+  color: var(--c-text);
+}
+
+.hud-formula-menu__expr {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}

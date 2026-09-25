@@ -5,6 +5,7 @@ import * as assetsStore from '@app/lib/storage/assets-store';
 import type { mergeSettings } from '../../lib/game/settings';
 import { log } from '../../lib/log-bus';
 import { readInputProfiles } from '@app/lib/storage/profile-data-store';
+import { migrateProfilesLoudly } from '@app/lib/input/migrate-profiles';
 import { updateActiveInputProfileId } from '@app/lib/storage/profile-store';
 import { readSpriteAsZspr } from '@app/lib/game/player-sheet/load-sheet';
 import type { InputProfile } from '@shared/types/controls';
@@ -15,7 +16,9 @@ type Settings = ReturnType<typeof mergeSettings>;
 const loadInputProfile = async (profileId: string, settings: Settings) => {
   try {
     const rawProfiles = await readInputProfiles(profileId);
-    const inputProfiles = rawProfiles as InputProfile[];
+    // Not a cast: a profile written before slots were numbers is turned into one
+    // here, and one that cannot be is reported and dropped instead of half-loaded.
+    const inputProfiles: InputProfile[] = migrateProfilesLoudly(rawProfiles);
     if (inputProfiles.length > 0) {
       const activeId = settings.activeInputProfileId;
       const active = inputProfiles.find(p => p.id === activeId) ?? inputProfiles[0];

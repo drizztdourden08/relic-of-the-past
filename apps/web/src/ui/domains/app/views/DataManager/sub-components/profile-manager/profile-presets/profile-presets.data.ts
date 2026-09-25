@@ -46,7 +46,6 @@ const ENHANCED_CONFIG_OVERRIDES: Partial<GameSettings> = {
   hudMode: 'enhanced',
   hudHeartMode: 'smooth',
   hudMagicMode: 'accurate',
-  hudPauseStyle: 'enhanced',
   saveHoldDuration: 1,
   cheatsEnabled: true,
 };

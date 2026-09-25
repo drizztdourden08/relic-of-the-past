@@ -4,8 +4,6 @@ import type { GameSettings } from '@shared/types/settings';
 
 const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   // Feature flags (synced every frame via g_wanted_zelda_features)
-  'itemSwitchLR',
-  'itemSwitchLRLimit',
   'turnWhileDashing',
   'mirrorToDarkworld',
   'collectItemsWithSword',
@@ -38,8 +36,6 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'widescreenVisualFixes',
   // Granular bug-fix toggles + new gameplay flags (synced every frame via features1/features2)
   'bugFixToggles',
-  'inventoryReorder',
-  'secondaryItemSlots',
   'autoSkipDialog',
   'prefillFileName',
   // World-item presentation (synced every frame via features3, same path as cheatsEnabled)
@@ -119,6 +115,12 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   // Controls (JS-only)
   'functionMappings',
   'activeInputProfileId',
+  // The per-slot assignment table and the classic-only map shortcut. (The scheme itself is derived
+  // from hudStyle, listed below, and reaches the core as the gate-word bits features2
+  // HostMenu/ModernControls, pushed every frame.) The assignments never leave the host at all, so
+  // neither of these needs a restart.
+  'modernScheme',
+  'mapOnSelect',
   // Edge effect (React prop, no WASM restart needed)
   'overworldEdgeEffect',
   // Space beyond a room's walls (WASM request, pushed live)
@@ -133,8 +135,7 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'hudHeartMode',
   'hudMagicMode',
   'hudCountLayout',
-  'hudPauseStyle',
-  'hudPauseHighlight',
+  // Which stored layout the host-drawn HUD arranges itself by (React-only)
   // Haptics (JS-only, no WASM restart needed)
   'haptics',
   // Developer tools master gate (synced every frame via features0, same path as haptics)

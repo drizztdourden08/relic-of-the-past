@@ -22,7 +22,6 @@ AudioSamples = 2048
 EnableMSU = false
 
 [Features]
-ItemSwitchLR = 0
 TurnWhileDashing = 0
 CollectItemsWithSword = 0
 DisableLowHealthBeep = 0

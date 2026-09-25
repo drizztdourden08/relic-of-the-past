@@ -1,0 +1,20 @@
+/* @layer renderer-components @kind style */
+
+/* The body is the outline and the lit part is a fill, both `currentColor`, so
+   a legend that dims itself dims the mouse with it and one colour rule governs
+   the whole strip. */
+.mouse-glyph {
+  display: inline-block;
+  color: inherit;
+  vertical-align: middle;
+}
+
+/* The outline stays quiet and the lit part carries the meaning: without this
+   split a filled ear on a full-strength body reads as a solid blob at 16px. */
+.mouse-glyph__body {
+  opacity: 0.55;
+}
+
+.mouse-glyph__lit {
+  opacity: 1;
+}

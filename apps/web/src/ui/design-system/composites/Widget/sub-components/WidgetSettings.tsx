@@ -4,7 +4,7 @@
  * options via children. Portalled and anchored below the gear button.
  */
 import { useRef, useEffect, type ReactNode } from 'react';
-import { Portal, useAnchorTracking } from '../../../primitives/Portal';
+import { Portal, useAnchorTracking, useDismissable } from '../../../primitives/Portal';
 import { Box } from '../../../primitives/Box';
 import { Text } from '../../../primitives/Text';
 import { Checkbox } from '../../../primitives/Checkbox';
@@ -75,14 +75,9 @@ const WidgetSettings = (props: WidgetSettingsProps) => {
     };
   }, [onClose, anchorRef]);
 
-  // Close on Escape
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
-  }, [onClose]);
+  // Close on Escape. Mounted means open, so it registers unconditionally, and
+  // through the dismiss stack, so it beats whatever it is floating over.
+  useDismissable({ active: true, level: 'popover', onDismiss: onClose });
 
   const posValue: PositionValue = widget.mode === 'floating' ? 'float' : widget.side;
 

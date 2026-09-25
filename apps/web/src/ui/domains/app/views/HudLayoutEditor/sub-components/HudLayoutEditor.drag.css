@@ -1,0 +1,204 @@
+/* @layer renderer-components @kind style */
+
+/* THE OUTLINE'S DRAG, and nothing else's: the ghost that follows the cursor, the
+   pan band, the spring-load caret and the keyboard path's two small signals.
+
+   §46 TOOK HALF OF THIS SHEET OUT. §44 drew the stage as a drop surface here
+   (the band rings, the two categories of drop indicator, the displaced occupant
+   and the hint strip along the bottom edge), and the maintainer removed that
+   whole mechanic after seeing it. There is no `.hud-drop` anything any more, and
+   the ghost has lost its `nudge` tone with it, because the stage's margin nudge
+   no longer has a card.
+
+   ITS OWN SHEET, on the §37/§38 precedent: `panels.css` sits at 289 of 300 and
+   `inspector.css` at 202, and a phase in flight must not have to touch a file
+   another phase is editing. That is also why the outline's own scroll rules are
+   HERE instead of in `panels.css`, which they properly belong to: the scroller
+   exists so the pan has something to pan and something to draw its band on, and
+   `panels.css` had four lines of room. It is imported by `DragGhost` and
+   `OutlinePanel` themselves, not by the view, so the rules arrive with
+   the components that need them.
+
+   ALMOST NOTHING HERE ANIMATES. A ghost with an easing curve on it reads as
+   latency, and an indicator that fades in is an indicator that is wrong for
+   120 ms. THE ONE EXCEPTION IS THE SPRING-LOAD CARET, and it earns its place
+   because a progressive turn over the 500 ms dwell is the only way to tell
+   "waiting" from "nothing is going to happen". The plan calls it the only
+   animation in the whole design and this is it. */
+
+/* ── the ghost ────────────────────────────────────────────────────────────
+   Three lines in a fixed order, positioned from the cursor by
+   `behavior/drop-ghost.ts` and drawn through `Portal` at the `tooltip` layer,
+   so neither the stage's `overflow: hidden` nor a rail's scroller can clip it.
+   `pointer-events: none` because the portal root is inert but the card is not
+   by default, and a card under the cursor would eat the drop. */
+.hud-ghost {
+  position: fixed;
+  z-index: var(--z-base);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  max-width: 22rem;
+  padding: var(--space-2xs) var(--space-xs);
+  background: var(--c-surface);
+  border: var(--border-width-thin) solid var(--c-gold);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-overlay);
+  font-family: var(--font-mono);
+  pointer-events: none;
+}
+
+.hud-ghost__l1 {
+  display: flex;
+  gap: var(--space-xs);
+  align-items: center;
+  white-space: nowrap;
+}
+
+.hud-ghost__chip {
+  padding: 0 var(--space-2xs);
+  background: var(--c-bg);
+  border: var(--border-width-thin) solid var(--c-border-strong);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  color: var(--c-text);
+}
+
+.hud-ghost__kind {
+  font-size: var(--text-xs);
+  color: var(--c-gold-bright);
+}
+
+.hud-ghost__l2 {
+  font-size: var(--text-xs);
+  color: var(--c-info);
+  white-space: nowrap;
+}
+
+.hud-ghost__l3 {
+  overflow: hidden;
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* The one thing no other surface in the editor says: this lands in a template
+   that draws N times. */
+.hud-ghost__l3.is-warn {
+  color: var(--c-warning);
+}
+
+/* THE WHOLE CARD TURNS, so the state is readable in peripheral vision without
+   parsing a word. */
+.hud-ghost.is-refused {
+  border-color: var(--c-danger);
+}
+
+.hud-ghost.is-refused .hud-ghost__kind,
+.hud-ghost.is-refused .hud-ghost__l2 {
+  color: var(--c-danger);
+}
+
+/* ── the outline's scroller, and its pan band ─────────────────────────────
+   The drag stops being limited to what fits on screen, which is when a deep
+   tree becomes editable instead of demonstrable. The list scrolls inside its
+   own panel so the label and the hint stay put and the band has an edge to
+   stick to. */
+.hud-outline {
+  flex: 1;
+  min-height: 0;
+}
+
+.hud-outline__rows {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* Zero-height sticky children of the scroller, so they cost no layout at all
+   and sit at ITS edges, not at the content's. Drawn only while a drag is
+   live: undrawn auto-scroll is the version everyone has met and nobody has
+   understood, and at this width there is no room for a scroll arrow. */
+.hud-outline__pan {
+  position: sticky;
+  z-index: var(--z-base);
+  flex: none;
+  height: 0;
+  pointer-events: none;
+}
+
+.hud-outline__pan.is-up {
+  top: 0;
+}
+
+.hud-outline__pan.is-down {
+  bottom: 0;
+}
+
+.hud-outline__rows.is-panning .hud-outline__pan::before {
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: 24px;
+  content: "";
+}
+
+.hud-outline__rows.is-panning .hud-outline__pan.is-up::before {
+  top: 0;
+  background: linear-gradient(var(--c-gold-soft), transparent);
+}
+
+.hud-outline__rows.is-panning .hud-outline__pan.is-down::before {
+  bottom: 0;
+  background: linear-gradient(transparent, var(--c-gold-soft));
+}
+
+/* ── spring-load, and the keyboard path's two small signals ───────────────
+   THE CARET SHOWS THE WAIT. It turns progressively over the 500 ms dwell
+   instead of snapping, which is the only way to tell "waiting" from "nothing
+   is going to happen". `SPRING_MS` in `use-spring-load.ts` and the duration
+   here are the same number said twice; they are two lines apart in the diff
+   that changes either. */
+.hud-outline__caret.is-springing .hud-outline__caret-mark {
+  animation: hud-spring 500ms linear forwards;
+}
+
+@keyframes hud-spring {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(90deg); }
+}
+
+/* NOWHERE TO GO IS NOT A REFUSAL. Already first, already last, no previous
+   sibling: the row shakes instead of saying anything, because the list itself
+   already shows why. */
+.hud-outline__row.is-shaking {
+  animation: hud-shake 320ms ease-in-out;
+}
+
+@keyframes hud-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hud-outline__caret.is-springing .hud-outline__caret-mark,
+  .hud-outline__row.is-shaking {
+    animation: none;
+  }
+}
+
+/* The announcement is for a screen reader and for nothing else: it must be in
+   the accessibility tree, so `display: none` and `visibility: hidden` are both
+   wrong, and it must take no space, so it is clipped instead. */
+.hud-outline__live {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

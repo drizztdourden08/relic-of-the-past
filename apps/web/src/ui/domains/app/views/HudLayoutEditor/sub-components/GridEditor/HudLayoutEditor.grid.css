@@ -1,0 +1,46 @@
+/* @layer renderer-components @kind style */
+
+/* What is left of the grid editor's own chrome once the two BANDS moved out
+   (§58). The contextual strip and the legend are `SelectionBands`, because the
+   flex manipulation section wears the same two ("the flex should have a
+   manipulation section as well. same principle"), and the LATTICE was never
+   here: two controls stand on that drawing and neither owns it, so it has a
+   sheet of its own beside `GridLattice`.
+
+   THERE IS NO BLOCK LEFT TO STYLE, AND THAT IS §55's AMENDMENT. The maintainer:
+   "why do we have container inception exactly?? and why the black background?
+   [...] stop putting container with border everywhere, that's horrible."
+
+   - `.hud-grid`'s `--c-surface` card, its border and its radius are GONE. It is
+     a bare column of three bands on the panel's own background; the section's
+     gold rule above it (`.hud-subsec__title`) is what says where it starts.
+   - `.hud-grid__title` held the `THIS CONTAINER'S COLUMNS AND ROWS` heading
+     and is GONE with it. The section is titled `GRID MANIPULATION`; saying it
+     twice, once inside a box drawn to hold the second saying, was the inception.
+   - `.hud-grid-set` was §54's sunken settings well and is GONE. Its five controls
+     are sections one and two, flat, with no well at all.
+   - `.hud-grid__control` is GONE: the strip holds buttons and a chip now, and
+     the one field it used to carry is on the selected track's own header.
+
+   `.hud-cellpick__title` keeps its old rules in `cellpick.css`: that control IS
+   still a titled block, because it is the same drawing meaning the opposite
+   thing and the title is what tells them apart (§50). */
+
+.hud-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+
+/* ── the stage echo ── */
+
+/* VISUAL ONLY, and this declaration is why: the surface it replaces was
+   clickable, and §46 took that away on purpose. Colour comes from the
+   container's own `guide.color` inline, so the echo and the guide lines read as
+   one thing. */
+.hud-grid-echo {
+  position: absolute;
+  border: var(--border-width-thin) solid;
+  pointer-events: none;
+}

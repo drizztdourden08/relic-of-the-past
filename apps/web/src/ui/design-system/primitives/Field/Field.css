@@ -11,8 +11,28 @@
   gap: var(--space-sm);
 }
 
+/* `min-width: 0` is what lets the control actually take the `flex: 1`: without
+   it the control keeps its automatic min-content floor and pushes the row wider
+   than its container instead of shrinking inside it. Found by measuring the
+   inspector's min/max row at 188px, where the row overflowed by 75px. */
 .field--inline .field__control {
   flex: 1;
+  min-width: 0;
+}
+
+/* ─── Compact tier ───
+   The label, hint and error are ALREADY at the small tier's 10px (this
+   wrapper was the one piece of the row that never drifted), so `sm` is
+   entirely about the gaps: 4px becomes the 2px pairing step, and the inline
+   label sits 4px from its control instead of 8. The compound selector is
+   deliberate: `.field--inline` is declared above and would otherwise win the
+   cascade against an equally specific `.field--sm`. */
+.field--sm {
+  gap: var(--space-2xs);
+}
+
+.field--sm.field--inline {
+  gap: var(--space-xs);
 }
 
 .field__label {

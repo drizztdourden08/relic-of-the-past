@@ -11,6 +11,7 @@ import './generic.family';
 export { findFamily, registerFamily } from './family-registry';
 export {
   buildDisplayContext,
+  resolveAxisConsoleDefault,
   resolveAxisIcon,
   resolveAxisLabel,
   resolveBrandLogoKey,
@@ -35,6 +36,7 @@ export { NINTENDO_FAMILY } from './nintendo.family';
 export { PLAYSTATION_FAMILY } from './playstation.family';
 export { XBOX_FAMILY } from './xbox.family';
 export type {
+  AxisConsoleDefault,
   ConsoleButton,
   DeviceOverride,
   FamilyMetadata,

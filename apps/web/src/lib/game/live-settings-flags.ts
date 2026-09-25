@@ -6,10 +6,11 @@ import { effectiveFeatureIds } from './live-settings-gate';
 import { offscreenAiMode, rendersExtended } from './settings';
 import { sessionGateArmed, setSessionGate } from './session-gate-flags';
 
-// Feature flag enum values: must match features.h
+// Feature flag enum values: must match features.h. Bits 2 (SwitchLR), 32768 (SwitchLRLimit) and
+// 134217728 (InventoryReorder) are still defined in the core and left out here on purpose: their
+// settings were removed, so nothing can set them again, and listing them would invite a new driver.
 const FEATURE_FLAGS = {
   extendScreen64:         1,
-  switchLR:               2,
   turnWhileDashing:       4,
   mirrorToDarkworld:      8,
   collectItemsWithSword:  16,
@@ -23,7 +24,6 @@ const FEATURE_FLAGS = {
   miscBugFixes:           4096,
   cancelBirdTravel:       8192,
   gameChangingBugFixes:   16384,
-  switchLRLimit:          32768,
   dimFlashes:             65536,
   disableTelepathy:       131072,
   cameraLockToViewport:   262144,
@@ -35,7 +35,6 @@ const FEATURE_FLAGS = {
   ultrawide:              16777216,
   tallRender:             33554432,
   smoothTransitions:      67108864,
-  inventoryReorder:       134217728,
   secondaryItemSlots:     268435456,
   autoSkipDialog:         536870912,
   developerTools:         1073741824,
@@ -319,16 +318,18 @@ const buildFeatureFlags = (s: GameSettings): number => {
   // Off-screen behaviour is three-way now, so the pause bit answers to the mode instead of to a
   // boolean: 'idle' carries its own features2 bit (buildFeatureWords) and 'acting' sets neither.
   if (isOn('pauseOffscreenAI') && offscreenAiMode(s) === 'paused') flags |= FEATURE_FLAGS.pauseOffscreenAI;
-  if (isOn('inventoryReorder')) flags |= FEATURE_FLAGS.inventoryReorder;
-  if (isOn('secondaryItemSlots')) flags |= FEATURE_FLAGS.secondaryItemSlots;
+  // secondaryItemSlots is deliberately NEVER armed. It belongs to the abandoned lane design: with the
+  // bit on, GetCurrentItemButtonIndex() (hud.c) reports slot 1 whenever X is held and player.c fires
+  // hud_cur_item_x while faking a Y press. So under the modern scheme, whose map verb IS X, the map
+  // button fires an item instead. The lane-free design drives the single hud_cur_item register through
+  // WasmHostSetActiveItem and needs nothing from this bit. The C-side enum entry stays defined (an INI
+  // key still parses it). It is never set from here.
   if (autoSkipDialogOverride === null ? isOn('autoSkipDialog') : autoSkipDialogOverride)
     flags |= FEATURE_FLAGS.autoSkipDialog;
   if (isOn('prefillFileName')) flags |= FEATURE_FLAGS.prefillFileName;
   // Not yet registered as FeatureDefs (the 16 snesrev quality-of-life flags: see feature-registry.ts),
   // so the resolver can't reach them; gated inline until that follow-up pass lands. The un-bypassable
   // C-side mask (zelda_rtl.c kGateWordParityMask) already covers every one of these regardless.
-  if (!s.vanillaSafe && s.itemSwitchLR) flags |= FEATURE_FLAGS.switchLR;
-  if (!s.vanillaSafe && s.itemSwitchLRLimit) flags |= FEATURE_FLAGS.switchLRLimit;
   if (!s.vanillaSafe && s.turnWhileDashing) flags |= FEATURE_FLAGS.turnWhileDashing;
   if (!s.vanillaSafe && s.mirrorToDarkworld) flags |= FEATURE_FLAGS.mirrorToDarkworld;
   if (!s.vanillaSafe && s.collectItemsWithSword) flags |= FEATURE_FLAGS.collectItemsWithSword;

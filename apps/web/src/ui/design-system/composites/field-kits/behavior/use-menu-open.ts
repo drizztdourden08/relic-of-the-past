@@ -4,13 +4,20 @@
  * rendered elsewhere in the DOM, so an outside click has to allow for both the
  * trigger and the portal, the same two-part check the title bar menu uses.
  */
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useDismissable } from '@ds/primitives/Portal';
 
 const MENU_SELECTOR = '.dropdown-menu';
 
 const useMenuOpen = <T extends HTMLElement>() => {
   const anchorRef = useRef<T>(null);
   const [open, setOpen] = useState(false);
+  const close = useCallback(() => setOpen(false), []);
+
+  // Escape closed nothing here before: the key fell through to the app shell,
+  // which shut the whole page the table was on. Registering at `menu` makes one
+  // press close the menu and stop there.
+  useDismissable({ active: open, level: 'menu', onDismiss: close });
 
   useEffect(() => {
     if (!open) return undefined;
@@ -28,7 +35,7 @@ const useMenuOpen = <T extends HTMLElement>() => {
     anchorRef,
     open,
     toggle: () => setOpen((wasOpen) => !wasOpen),
-    close: () => setOpen(false),
+    close,
   };
 };
 

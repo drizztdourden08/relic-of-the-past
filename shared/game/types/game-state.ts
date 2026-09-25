@@ -107,6 +107,22 @@ interface SaveMenuState {
   progressIndicator: number;
 }
 
+/**
+ * Host-owned pause menu. Lives in bytes 129 and 130 of the UI state buffer.
+ *
+ * `activeItem` deliberately repeats `hud.equippedY` (byte 14). Byte 14 is the HUD's
+ * equipped-item readout; this one is the host's own register read back, so the host can
+ * see when the native menu moved it and write it again. It does move: the menu's own
+ * init walks the 21-entry grid before the hold engages, which replaces any id that grid
+ * has no row for.
+ */
+interface HostMenuState {
+  /** True while the takeover is in force AND the core's gate allows it. */
+  holding: boolean;
+  /** The core's live equipped-item register, 0..24 (new-style ids while held). */
+  activeItem: number;
+}
+
 interface GameModeState {
   mainModule: number;
   subModule: number;
@@ -124,6 +140,7 @@ interface GameUIState {
   map: MapState;
   floorIndicator: FloorIndicatorState;
   saveMenu: SaveMenuState;
+  hostMenu: HostMenuState;
 }
 
 export type {
@@ -132,6 +149,7 @@ export type {
   FloorIndicatorState,
   GameModeState,
   GameUIState,
+  HostMenuState,
   HUDState,
   InventoryState,
   MapState,

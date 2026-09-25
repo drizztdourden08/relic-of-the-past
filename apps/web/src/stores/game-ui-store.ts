@@ -29,6 +29,7 @@ const initialState: GameUIState = {
   map: { overworldMapState: 0, dungeonFloor: 0, dungeonIdx: 0, dungeonInitState: 0, palaceIndex: 0xff, roomIndex: 0, currentFloor: 0, overworldScreenIndex: 0, overworldAreaIndex: 0, isIndoors: false, isDarkWorld: false, whichEntrance: 0, linkLayer: 0, linkX: 0, linkY: 0 },
   floorIndicator: { timer: 0, floor: 0, isVisible: false },
   saveMenu: { cursorPosition: 0, sourceModule: 0, progressIndicator: 0 },
+  hostMenu: { holding: false, activeItem: 0 },
 };
 
 const useGameUIStore = create<GameUIStore>()((set) => ({

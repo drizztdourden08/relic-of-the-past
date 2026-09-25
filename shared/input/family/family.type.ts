@@ -18,6 +18,18 @@ import type { SdlAxisName, SdlButtonName, SdlGamepadType } from '../sdl-buttons'
  *  from the existing SNES button type, not redeclared. */
 type ConsoleButton = SnesButton;
 
+/**
+ * The console button each half of one analog axis defaults to. An axis has
+ * two ends and they are two different console buttons, which is the whole
+ * reason this cannot reuse the flat `SdlButtonName -> ConsoleButton` shape
+ * the button defaults use. Either end may be left out; an axis with neither
+ * contributes no default.
+ */
+interface AxisConsoleDefault {
+  readonly '-'?: ConsoleButton;
+  readonly '+'?: ConsoleButton;
+}
+
 // -- Display metadata a family (or a single device) can answer with --
 
 interface FamilyMetadata {
@@ -36,6 +48,20 @@ interface FamilyMetadata {
    * diagnostic; those surfaces show what SDL reports, not a suggestion.
    */
   readonly consoleDefaults?: Partial<Record<SdlButtonName, ConsoleButton>>;
+  /**
+   * The same thing for axes, and the reason it exists: MOVEMENT DEFAULTS TO
+   * THE LEFT STICK on every gamepad. SDL normalizes the left stick to
+   * LEFT_X/LEFT_Y whatever the pad is, so this is one table for all of them
+   * and it lives on the generic family, which is the terminal fallback in
+   * every other family's chain (see resolve-display.ts). A family or a
+   * device override may still narrow it; none needs to.
+   *
+   * Movement's d-pad defaults in `consoleDefaults` are NOT removed by this.
+   * Both are emitted, so a pad moves on the stick and on the d-pad out of the
+   * box. One SNES button may carry several mappings, and the polling engine
+   * ORs them (see build-console-defaults.ts for the whole argument).
+   */
+  readonly axisConsoleDefaults?: Partial<Record<SdlAxisName, AxisConsoleDefault>>;
   /**
    * How far a trigger reported as an axis must travel before it also counts
    * as "pressed" for a display that highlights it like a button. Only
@@ -95,7 +121,8 @@ interface ResolvedDevice {
   readonly controls: readonly ResolvedControl[];
 }
 
-export type {ConsoleButton,
+export type {AxisConsoleDefault,
+  ConsoleButton,
   DeviceOverride,
   FamilyMetadata,
   ResolvedControl,

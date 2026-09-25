@@ -6,6 +6,7 @@ import type {
   FloorIndicatorState,
   GameModeState,
   GameUIState,
+  HostMenuState,
   HUDState,
   InventoryState,
   MapState,
@@ -169,6 +170,14 @@ const parseGameUIBuffer = (heap: Uint8Array, ptr: number): GameUIState => {
   const maxArrows = b[p + 126];
   const maxRupees = b[p + 127] | (b[p + 128] << 8);
 
+  // Host-owned pause menu (bytes 129-130)
+  const hostMenuHolding = b[p + 129] !== 0;
+  // Byte 130 repeats byte 14 on purpose (see HostMenuState). Byte 14 is the HUD's readout of
+  // the equipped item; this is the host's own register read back, so a value the native menu
+  // moved (its init walks the 21-entry grid before the hold engages, and replaces any id that
+  // grid has no row for) can be detected and written again.
+  const hostMenuActiveItem = b[p + 130];
+
   // Derive mode
   const mode = deriveUIMode(mainModule, subModule, subSubModule, floorTimer, overworldScreenIndex);
 
@@ -213,7 +222,9 @@ const parseGameUIBuffer = (heap: Uint8Array, ptr: number): GameUIState => {
     progressIndicator,
   };
 
-  return { mode, gameMode, hud, inventory: inventoryState, equipment, dungeonProgress, text, map, floorIndicator, saveMenu };
+  const hostMenu: HostMenuState = { holding: hostMenuHolding, activeItem: hostMenuActiveItem };
+
+  return { mode, gameMode, hud, inventory: inventoryState, equipment, dungeonProgress, text, map, floorIndicator, saveMenu, hostMenu };
 };
 
 export { parseGameUIBuffer };

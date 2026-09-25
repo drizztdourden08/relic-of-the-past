@@ -1,0 +1,17 @@
+{
+  "kind": "element",
+  "id": "magic-bar",
+  "$comment": "80x16 reserved at every value, per HudMagicBar.constants.ts - the bar's own length is the value, drawn by the shape leaf, not a sprite, because the rounded frame and its banded sheen are not a sprite/tint composition.",
+  "element": {
+    "type": "shape",
+    "shape": "magic-bar",
+    "fill": {
+      "from": "data",
+      "expr": "magic_current / magic_max"
+    },
+    "bands": {
+      "from": "data",
+      "expr": "half_magic + 1"
+    }
+  }
+}

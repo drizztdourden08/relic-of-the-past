@@ -13,5 +13,13 @@ export type {
   NoneBinding,
 } from './bindings';
 export type { AssignedDevice, DetectedDevice, DevicePreset, InputProfile } from './devices';
+export type {
+  CoreBindings,
+  ModernBindings,
+  ModernScheme,
+  ModernSlot,
+  SlotAssignment,
+  SlotIndex,
+} from './scheme';
 export { CHEAT_ACTIONS, DEFAULT_FUNCTION_MAPPINGS, FUNCTION_ACTIONS, FUNCTION_ACTION_LABELS, SHORTCUT_ACTIONS } from './functions';
 export type { FunctionAction, FunctionMapping } from './functions';

@@ -2,7 +2,7 @@
 import { Box } from '@ds/primitives/Box';
 import { Text } from '@ds/primitives/Text';
 import { Badge } from '@ds/primitives/Badge';
-import { PoseCanvas } from './PoseCanvas';
+import { PoseCanvas } from '@domains/app/compounds/PoseCanvas';
 import { facingsOf, framesOf, FACING_LABELS } from '@shared/game/data/native-tables/player-pose-atlas';
 import type { PoseState } from '@shared/game/data/native-tables/player-pose-atlas.type';
 import { labelFor } from '@shared/game/data/native-tables/player-state-labels';

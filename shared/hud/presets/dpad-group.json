@@ -1,0 +1,109 @@
+{
+  "kind": "container",
+  "id": "dpad-group",
+  "$comment": "a d-pad direction has no glyph of its own, so its item IS its cell - lifted unchanged from the shipped default layout.",
+  "layout": "grid",
+  "columns": [
+    "auto"
+  ],
+  "rows": [
+    "auto"
+  ],
+  "justifyItems": "start",
+  "alignItems": "start",
+  "children": [
+    {
+      "kind": "element",
+      "id": "dpad-glyph",
+      "$comment": "ONE cross for all four directions, 16 x 1.25 - slightly larger than a face disc and no larger - dimmed while none of the four fires anything",
+      "element": {
+        "type": "glyph",
+        "position": "DPAD"
+      },
+      "size": {
+        "w": {
+          "px": 20
+        },
+        "h": {
+          "px": 20
+        }
+      },
+      "margin": {
+        "left": 16,
+        "top": 16
+      },
+      "dimWhenEmpty": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "place": {
+        "column": 1,
+        "row": 1
+      }
+    },
+    {
+      "kind": "element",
+      "id": "dpad-down-item",
+      "element": {
+        "type": "slot",
+        "index": 8
+      },
+      "margin": {
+        "left": 18,
+        "top": 36
+      },
+      "place": {
+        "column": 1,
+        "row": 1
+      }
+    },
+    {
+      "kind": "element",
+      "id": "dpad-right-item",
+      "element": {
+        "type": "slot",
+        "index": 7
+      },
+      "margin": {
+        "left": 36,
+        "top": 18
+      },
+      "place": {
+        "column": 1,
+        "row": 1
+      }
+    },
+    {
+      "kind": "element",
+      "id": "dpad-left-item",
+      "element": {
+        "type": "slot",
+        "index": 6
+      },
+      "margin": {
+        "top": 18
+      },
+      "place": {
+        "column": 1,
+        "row": 1
+      }
+    },
+    {
+      "kind": "element",
+      "id": "dpad-up-item",
+      "element": {
+        "type": "slot",
+        "index": 5
+      },
+      "margin": {
+        "left": 18
+      },
+      "place": {
+        "column": 1,
+        "row": 1
+      }
+    }
+  ]
+}
