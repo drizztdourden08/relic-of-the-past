@@ -16,7 +16,7 @@ const NO_ANCHORS: SettingsPageAnchor[] = [];
 const TABS_CLASS = 'settings-page__tabs';
 
 const SettingsPage = (props: SettingsPageProps) => {
-  const { icon, title, backdrop, anchors = NO_ANCHORS, tabs, scroll = true, children } = props;
+  const { icon, title, backdrop, anchors = NO_ANCHORS, tabs, scroll = true, actions, children } = props;
   const ids = useMemo(() => anchors.map((a) => a.id), [anchors]);
   const { bodyRef, activeId, compact, jumpTo } = useScrollSpy(ids);
 
@@ -33,6 +33,7 @@ const SettingsPage = (props: SettingsPageProps) => {
         <Box as="span" className="settings-page__icon" aria-hidden="true">{icon}</Box>
         <Text as="h2" className="settings-page__title">{title}</Text>
         {strip}
+        {actions && <Box className="settings-page__actions">{actions}</Box>}
       </Box>
       <Box ref={bodyRef} className={`settings-page__body${scroll ? '' : ' settings-page__body--fixed'}`}>
         {children}

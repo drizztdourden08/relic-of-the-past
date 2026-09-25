@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { DragEvent, PointerEvent } from 'react';
+import type { DragEvent, KeyboardEvent, MouseEvent, PointerEvent } from 'react';
 import type { SchemaIndex } from '../../data/schema/build-schema';
 import type { FieldDescriptor } from '../../data/schema/field-descriptor';
 import type { ColumnMove, SortEntry, TableColumn } from '../../data/table/types';
@@ -23,6 +23,15 @@ interface DataTableProps<T> {
   fallbackGroupBy?: readonly string[];
   onSelect?: (id: string) => void;
   selectedId?: string | null;
+  /**
+   * The rows picked together. Passed, a plain click still calls `onSelect` and also
+   * makes the set that one row; Ctrl or Cmd-click toggles a row, Shift-click takes the
+   * range from the last anchor, and Escape clears. Omitted, only `selectedId` applies.
+   */
+  selectedIds?: ReadonlySet<string>;
+  onSelectionChange?: (ids: ReadonlySet<string>) => void;
+  /** With `selectedIds`: a leading checkbox column, and a header box over the shown rows. */
+  selectable?: boolean;
   /** Singular / plural noun for the footer's row count. Defaults to entry / entries. */
   countLabel?: readonly [one: string, many: string];
   emptyMessage?: string;
@@ -105,6 +114,24 @@ interface ColumnResizeBinding {
   onPointerUp: (event: PointerEvent<HTMLElement>) => void;
 }
 
+/** How the header box reads the shown rows: none, some or all of them picked. */
+type SelectAllState = 'none' | 'some' | 'all';
+
+/** The multi-selection, bound once for the table and handed to every row. */
+interface RowSelectionBinding {
+  /** Draw the checkbox column. */
+  selectable: boolean;
+  isSelected: (id: string) => boolean;
+  onRowClick: (id: string, event: MouseEvent<HTMLElement>) => void;
+  /** Keeps a Shift-click from painting a text selection across the rows. */
+  onRowMouseDown: (event: MouseEvent<HTMLElement>) => void;
+  /** A row's box: `range` when Shift was held. */
+  onCheck: (id: string, range: boolean) => void;
+  onCheckAll: () => void;
+  allState: SelectAllState;
+  onKeyDown: (event: KeyboardEvent<HTMLElement>) => void;
+}
+
 /** One parameter object instead of a dozen props drilled through the row tree. */
 interface RowRenderContext<T> {
   columns: readonly TableColumn[];
@@ -114,6 +141,8 @@ interface RowRenderContext<T> {
   getRowId: (row: T) => string;
   selectedId?: string | null;
   onSelect?: (id: string) => void;
+  /** Set when the host passes `selectedIds`; it then decides what a row click means. */
+  selection?: RowSelectionBinding | null;
   isExpanded: (uid: string) => boolean;
   onToggleGroup: (uid: string) => void;
   /** Resolves a referenced record's display field. Rows and group headers share it, so they never disagree. */
@@ -127,5 +156,5 @@ interface RowRenderContext<T> {
 
 export type {
   ColumnActions, ColumnDragBinding, ColumnDragStart, ColumnResizeBinding,
-  DataTableProps, RowRenderContext, TableActions,
+  DataTableProps, RowRenderContext, RowSelectionBinding, SelectAllState, TableActions,
 };

@@ -78,6 +78,17 @@ const signDownload = (key: string, name: string): Promise<string> =>
     { expiresIn: LIMITS.downloadUrlSeconds },
   );
 
+/**
+ * A link the browser shows in place (an image, a video) instead of saving. The stored
+ * content type is sent back as given, so a media element can play it.
+ */
+const signPreview = (key: string, contentType: string): Promise<string> =>
+  getSignedUrl(
+    s3(),
+    new GetObjectCommand({ Bucket: bucket(), Key: key, ResponseContentDisposition: 'inline', ResponseContentType: contentType }),
+    { expiresIn: LIMITS.previewUrlSeconds },
+  );
+
 /** The stored size, or null when the object is not there. */
 const headSize = async (key: string): Promise<number | null> => {
   try {
@@ -92,6 +103,6 @@ const remove = async (key: string): Promise<void> => {
   await s3().send(new DeleteObjectCommand({ Bucket: bucket(), Key: key }));
 };
 
-const b2 = { begin, signPart, complete, abort, signPut, signDownload, headSize, remove };
+const b2 = { begin, signPart, complete, abort, signPut, signDownload, signPreview, headSize, remove };
 
 export { b2, fileKey, versionKey, reportKey };

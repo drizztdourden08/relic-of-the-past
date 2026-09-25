@@ -1,0 +1,18 @@
+/* @layer sanctuary-site @kind style */
+
+/* A fixed width beside the card; a panel that outgrows the height scrolls on its own. */
+.side-column {
+  flex: 0 0 var(--side-column-w);
+  width: var(--side-column-w);
+  min-height: 0;
+  gap: var(--space-md);
+}
+
+/* The same panel as the page card: translucent panel ground, border, large radius. */
+.side-column .side-panel {
+  min-height: 0;
+  background: var(--c-panel);
+  backdrop-filter: blur(var(--blur));
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-xl);
+}

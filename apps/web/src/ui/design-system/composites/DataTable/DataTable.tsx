@@ -10,10 +10,12 @@ import { ghostRowSample } from './behavior/ghost-row-sample';
 import { useColumnDrag } from './behavior/use-column-drag';
 import { TRACKS_PROPERTY, useColumnSizing } from './behavior/use-column-sizing';
 import { useExpandedGroups } from './behavior/use-expanded-groups';
+import { useRowSelection } from './behavior/use-row-selection';
 import { useTableView } from './behavior/use-table-view';
 import { ColumnDropTrash } from './sub-components/ColumnDropTrash';
 import { HeaderRow } from './sub-components/HeaderRow';
 import { RowTree } from './sub-components/RowTree';
+import { SelectCell } from './sub-components/SelectCell';
 import { TableFooter } from './sub-components/TableFooter';
 import type { CSSProperties } from 'react';
 import type {
@@ -24,7 +26,8 @@ import './DataTable.css';
 const DataTable = <T,>(props: DataTableProps<T>) => {
   const {
     rows, schema, getRowId, viewKey, viewStorage, fallbackColumns, fallbackGroupBy,
-    onSelect, selectedId, countLabel, emptyMessage = 'Nothing to show.',
+    onSelect, selectedId, selectedIds, onSelectionChange, selectable = false,
+    countLabel, emptyMessage = 'Nothing to show.',
     resolveTargetFields, resolveIdRefDisplay, resolveIdRefDefault,
   } = props;
 
@@ -38,6 +41,10 @@ const DataTable = <T,>(props: DataTableProps<T>) => {
     groupBy: table.groupBy,
     sessionView,
     setSessionView,
+  });
+  const selection = useRowSelection({
+    nodes: table.groupedRows, isExpanded: groups.isExpanded, getRowId,
+    selectable, selectedIds, selectedId, onSelect, onSelectionChange,
   });
   const drag = useColumnDrag(table.reorderColumn);
   const sizing = useColumnSizing({ columns: table.columns, onResize: table.resizeColumn });
@@ -108,6 +115,7 @@ const DataTable = <T,>(props: DataTableProps<T>) => {
     getRowId,
     selectedId,
     onSelect,
+    selection,
     isExpanded: groups.isExpanded,
     onToggleGroup: groups.toggle,
     /* Stable for the length of a drag; the hovered index deliberately stays out
@@ -118,18 +126,33 @@ const DataTable = <T,>(props: DataTableProps<T>) => {
     resolveIdRefDefault,
   }), [
     table.columns, index, drag.draggingPath, drag.onDragOver, drag.onDrop,
-    getRowId, selectedId, onSelect, groups, resolveIdRefDisplay, resolveIdRefDefault,
+    getRowId, selectedId, onSelect, selection, groups, resolveIdRefDisplay, resolveIdRefDefault,
   ]);
 
+  const checkboxes = selection?.selectable ?? false;
+  const selectAll = selection && checkboxes && (
+    <SelectCell
+      role="columnheader"
+      checked={selection.allState === 'all'}
+      indeterminate={selection.allState === 'some'}
+      ariaLabel="Select all shown rows"
+      onToggle={selection.onCheckAll}
+    />
+  );
+
   return (
-    <Box className="data-table">
+    <Box className={checkboxes ? 'data-table data-table--selectable' : 'data-table'}>
       {/* The scroller is the drag's backstop: the bare grid between cells would
-          otherwise refuse the release. See `onSurfaceHover`. */}
+          otherwise refuse the release. See `onSurfaceHover`. It takes focus on a
+          row click when rows can be picked, so Escape reaches it. */}
       <Box
         ref={sizing.rootRef}
         className="data-table__scroll"
         role="grid"
+        aria-multiselectable={selection ? true : undefined}
+        tabIndex={selection ? -1 : undefined}
         style={gridStyle}
+        onKeyDown={selection?.onKeyDown}
         onDragEnter={drag.onSurfaceHover}
         onDragOver={drag.onSurfaceHover}
         onDrop={drag.onSurfaceDrop}
@@ -145,6 +168,7 @@ const DataTable = <T,>(props: DataTableProps<T>) => {
           drag={drag}
           ghostRows={ghostRows}
           rowTotal={table.sortedRows.length}
+          lead={selectAll || undefined}
         />
         <RowTree nodes={table.groupedRows} parentUid="" context={context} />
         {rows.length === 0 && <Text className="data-table__empty">{emptyMessage}</Text>}

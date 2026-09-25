@@ -1,0 +1,37 @@
+/* @layer sanctuary-site @kind style */
+
+/* A dark well the media sits centred in; its height follows the media up to the cap. */
+.media-preview__frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--control-h-sm);
+  border-radius: var(--radius-md);
+  background: var(--c-sunken);
+  overflow: hidden;
+}
+
+.media-preview .media-preview__open {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  cursor: zoom-in;
+}
+
+.media-preview__media {
+  display: block;
+  max-width: 100%;
+  max-height: var(--media-preview-maxh);
+  object-fit: contain;
+}
+
+/* A sprite fills the preview width with hard pixel edges; a large image is only shrunk. */
+.media-preview__media[data-pixel-art] {
+  width: 100%;
+  height: var(--media-preview-maxh);
+  image-rendering: pixelated;
+}
+
+.media-preview__media--video {
+  width: 100%;
+}

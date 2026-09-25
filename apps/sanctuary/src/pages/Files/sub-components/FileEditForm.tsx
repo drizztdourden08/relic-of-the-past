@@ -5,7 +5,6 @@ import { FILE_TYPES, FILE_TYPE_LABELS } from '@shared/sanctuary/file-types';
 import type { FileType, SanctuaryFile } from '@shared/sanctuary/file-types';
 import { LIMITS } from '@shared/sanctuary/limits';
 import type { PatchFileBody } from '@shared/sanctuary/schemas/file-schemas';
-import { tagsSchema } from '@shared/sanctuary/schemas/common';
 import { Button } from '@ds/primitives/Button';
 import { Field } from '@ds/primitives/Field';
 import { Flex } from '@ds/primitives/Flex';
@@ -14,6 +13,7 @@ import { Stack } from '@ds/primitives/Stack';
 import { TagInput } from '@ds/primitives/TagInput';
 import { TextInput } from '@ds/primitives/TextInput';
 import { Textarea } from '@ds/primitives/Textarea';
+import { validateTag } from '../../../files/validate-tag';
 
 type FileEditFormProps = {
   file: SanctuaryFile;
@@ -28,10 +28,6 @@ type FileEditFormProps = {
 /** The caller's types, plus the file's own so the select never shows a blank. */
 const typeOptions = (types: readonly FileType[], own: FileType) =>
   FILE_TYPES.filter((type) => type === own || types.includes(type)).map((type) => ({ value: type, label: FILE_TYPE_LABELS[type] }));
-
-const TAG_HINT = 'lowercase letters, digits, dots, dashes';
-
-const validateTag = (raw: string) => tagsSchema.safeParse([raw]).success || TAG_HINT;
 
 const sameTags = (a: readonly string[], b: readonly string[]) =>
   a.length === b.length && a.every((tag, i) => tag === b[i]);

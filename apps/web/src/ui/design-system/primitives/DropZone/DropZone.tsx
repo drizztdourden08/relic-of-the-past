@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-﻿import { useState, useRef, useCallback, type DragEvent } from 'react';
+﻿import { useState, useRef, useCallback, type DragEvent, type KeyboardEvent } from 'react';
 import './DropZone.css';
 import { type DropZoneProps } from './DropZone.type';
 
@@ -10,6 +10,8 @@ const DropZone = (props: DropZoneProps) => {
     label = 'Drop files here',
     hint,
     disabled = false,
+    variant = 'block',
+    icon,
     onDrop,
   } = props;
   const [active, setActive] = useState(false);
@@ -65,8 +67,18 @@ const DropZone = (props: DropZoneProps) => {
   // still enforces the accept extensions after the pick.
   const inputAccept = accept?.length ? [...accept, 'application/octet-stream'].join(',') : undefined;
 
+  const inline = variant === 'inline';
+
+  // The inline target reads as a button, so the keyboard opens the picker too.
+  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    e.preventDefault();
+    handleClick();
+  };
+
   const cls = [
     'dropzone',
+    inline && 'dropzone--inline',
     active && 'dropzone--active',
     disabled && 'dropzone--disabled',
   ].filter(Boolean).join(' ');
@@ -79,11 +91,12 @@ const DropZone = (props: DropZoneProps) => {
       onDragOver={handleDragOver}
       onDrop={handleDrop}
       onClick={handleClick}
+      {...(inline ? { role: 'button', tabIndex: disabled ? -1 : 0, title: hint, onKeyDown: handleKeyDown } : {})}
     >
-      <span className="dropzone__icon">📦</span>
+      <span className="dropzone__icon" aria-hidden={inline || undefined}>{icon ?? '📦'}</span>
       <span className="dropzone__label">{label}</span>
-      {hint && <span className="dropzone__hint">{hint}</span>}
-      <span className="dropzone__hint" style={{ marginTop: '2px', opacity: 0.6 }}>or click to browse files</span>
+      {!inline && hint && <span className="dropzone__hint">{hint}</span>}
+      {!inline && <span className="dropzone__hint" style={{ marginTop: '2px', opacity: 0.6 }}>or click to browse files</span>}
       <input
         ref={inputRef}
         type="file"

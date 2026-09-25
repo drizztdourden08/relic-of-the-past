@@ -69,6 +69,14 @@
   border-left: 1px solid var(--c-border-strong);
 }
 
+/* Host controls at the far end of the line; they ride the header as it compacts. */
+.settings-page__actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
 .settings-page--compact .settings-page__head {
   min-height: var(--settings-page-head-h-compact);
   padding-block: var(--space-xs);

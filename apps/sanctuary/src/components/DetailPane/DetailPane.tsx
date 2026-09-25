@@ -1,7 +1,7 @@
 /* @layer sanctuary-site @kind component */
 /**
- * The right-hand pane of a page: the app's window header over a stack of stat rows for
- * the selected row's fields, whatever block the page adds under it (a note, an edit
+ * The right-hand pane of a page: the app's window header, an optional media block, then a
+ * stack of stat rows for the selected row's fields, whatever block the page adds under it (a note, an edit
  * form), and the actions row.
  */
 import type { ReactNode } from 'react';
@@ -25,15 +25,20 @@ type DetailPaneProps = {
   /** Shown under the actions in a caption, e.g. the last error. */
   notice?: ReactNode;
   onClose?: () => void;
+  /** Shown between the header and the fields, e.g. an image preview. */
+  media?: ReactNode;
+  /** Added to the card, e.g. the side column's panel class. */
+  className?: string;
   children?: ReactNode;
 };
 
 const DetailPane = (props: DetailPaneProps) => {
-  const { title, fields, actions, notice, onClose, children } = props;
+  const { title, fields, actions, notice, onClose, media, className, children } = props;
   return (
-    <Card className="detail">
+    <Card className={className ? `detail ${className}` : 'detail'}>
       <Stack as="aside" gap="md" align="stretch">
         <WindowHeader title={title} onClose={onClose} className="detail__head" />
+        {media}
         <Stack gap="xs" align="stretch">
           {fields.map((field) => <StatRow key={field.label} label={field.label} value={field.value} className="detail__field" />)}
         </Stack>

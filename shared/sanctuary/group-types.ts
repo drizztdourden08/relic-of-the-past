@@ -26,8 +26,18 @@ type Group = {
 /** What one caller may see: the union of their groups, or everything for an admin. */
 type Rights = GroupRights & { admin: boolean };
 
+/** One role of the Discord server, as the group editor offers it. */
+type DiscordRole = {
+  id: string;
+  name: string;
+  /** RGB as a number, 0 when the role has no colour. */
+  color: number;
+  /** Discord's own order, highest first when sorted descending. */
+  position: number;
+};
+
 /** Seeded from today's contributor role and sees everything, so nobody loses access. */
 const DEFAULT_GROUP_ID = 'contributors';
 
 export { DEFAULT_GROUP_ID };
-export type { GroupRights, Group, Rights };
+export type { GroupRights, Group, Rights, DiscordRole };

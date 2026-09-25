@@ -7,7 +7,7 @@
 import { useState } from 'react';
 import { FILE_TYPES } from '@shared/sanctuary/file-types';
 import type { FileType } from '@shared/sanctuary/file-types';
-import type { Group } from '@shared/sanctuary/group-types';
+import type { DiscordRole, Group } from '@shared/sanctuary/group-types';
 import { createGroupSchema } from '@shared/sanctuary/schemas/group-schemas';
 import type { CreateGroupBody } from '@shared/sanctuary/schemas/group-schemas';
 import { Button } from '@ds/primitives/Button';
@@ -18,9 +18,13 @@ import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
 import { TextInput } from '@ds/primitives/TextInput';
 import { Toggle } from '@ds/primitives/Toggle';
+import { RolePicker } from './RolePicker';
 import { SCOPE_TYPE_LABELS } from '../../Files/Files.constants';
 
 type GroupEditorProps = {
+  /** The server's roles; empty with `rolesAvailable` false falls back to typing an id. */
+  roles: readonly DiscordRole[];
+  rolesAvailable: boolean;
   /** The group being edited, or null for a new one. */
   group: Group | null;
   busy: boolean;
@@ -36,7 +40,7 @@ const toggled = (types: readonly FileType[], type: FileType, on: boolean): FileT
   FILE_TYPES.filter((t) => (t === type ? on : types.includes(t)));
 
 const GroupEditor = (props: GroupEditorProps) => {
-  const { group, busy, onSave, onCancel } = props;
+  const { group, busy, onSave, onCancel, roles, rolesAvailable } = props;
   const [name, setName] = useState(group?.name ?? '');
   const [roleId, setRoleId] = useState(group?.discordRoleId ?? '');
   const [types, setTypes] = useState<FileType[]>(group?.rights.fileTypes ?? []);
@@ -63,9 +67,17 @@ const GroupEditor = (props: GroupEditorProps) => {
       <Field label="Name">
         <TextInput value={name} maxLength={NAME_MAX_CHARS} onChange={(event) => setName(event.target.value)} placeholder="Artists" />
       </Field>
-      <Field label="Discord role id" hint={ROLE_HINT}>
-        <TextInput value={roleId} inputMode="numeric" onChange={(event) => setRoleId(event.target.value)} placeholder="no Discord role" />
-      </Field>
+      {rolesAvailable
+        ? (
+          <Field label="Discord role">
+            <RolePicker roles={roles} value={roleId} onChange={setRoleId} />
+          </Field>
+        )
+        : (
+          <Field label="Discord role id" hint={ROLE_HINT}>
+            <TextInput value={roleId} inputMode="numeric" onChange={(event) => setRoleId(event.target.value)} placeholder="no Discord role" />
+          </Field>
+        )}
       <Field label="File types">
         <Flex gap="md" wrap>
           {FILE_TYPES.map((type) => (

@@ -28,6 +28,8 @@ const newJob = (file: File, target: UploadTarget): UploadJob => ({
   fileId: null,
 });
 
+const isFinished = (job: UploadJob) => job.state === 'done' || job.state === 'failed';
+
 const useMultipartUpload = (onUploaded: (file: SanctuaryFile) => void) => {
   const [jobs, setJobs] = useState<UploadJob[]>([]);
 
@@ -69,7 +71,12 @@ const useMultipartUpload = (onUploaded: (file: SanctuaryFile) => void) => {
     setJobs((rows) => rows.filter((row) => row.id !== id));
   }, []);
 
-  return useMemo(() => ({ jobs, start, dismiss }), [jobs, start, dismiss]);
+  /** Drops every row that is over, done or failed; the ones still moving stay. */
+  const clearFinished = useCallback(() => {
+    setJobs((rows) => rows.filter((row) => !isFinished(row)));
+  }, []);
+
+  return useMemo(() => ({ jobs, start, dismiss, clearFinished }), [jobs, start, dismiss, clearFinished]);
 };
 
-export { useMultipartUpload };
+export { useMultipartUpload, isFinished };

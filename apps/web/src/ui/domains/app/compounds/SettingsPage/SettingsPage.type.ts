@@ -25,6 +25,8 @@ interface SettingsPageProps {
   tabs?: SettingsPageTabs;
   /** False when the content scrolls its own columns (the Controls tab). */
   scroll?: boolean;
+  /** Drawn at the right end of the header line, vertically centred. */
+  actions?: ReactNode;
   children: ReactNode;
 }
 
