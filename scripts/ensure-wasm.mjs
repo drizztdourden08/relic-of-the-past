@@ -3,11 +3,11 @@
  * Check that the WASM core (apps/web/public/wasm/zelda3.{js,wasm}) exists and is
  * newer than every C source and build.mjs; rebuild via core/wasm-build/build.mjs
  * otherwise. Wired as predev/prebuild. On Windows it sources emsdk_env first
- * ($EMSDK, default E:\GameProjects\emsdk). On Linux/macOS emcc must be on PATH
+ * ($EMSDK, else the main checkout's third_party/emsdk). On Linux/macOS emcc must be on PATH
  * (CI uses emscripten-core/setup-emsdk); see docs/contributing/building-wasm.md.
  */
 import { existsSync, statSync, readdirSync, writeFileSync, rmSync } from 'node:fs';
-import { join, resolve, extname } from 'node:path';
+import { dirname, join, resolve, extname } from 'node:path';
 import { tmpdir } from 'node:os';
 import { execSync } from 'node:child_process';
 
@@ -26,6 +26,13 @@ const newestSourceMtime = (dir) => {
     else if (SOURCE_EXTS.has(extname(entry.name))) newest = Math.max(newest, statSync(full).mtimeMs);
   }
   return newest;
+};
+
+// The one SDK lives in the MAIN checkout's third_party/emsdk, so a worktree asks git for
+// the shared .git dir and uses the checkout that owns it.
+const mainEmsdk = () => {
+  const gitCommon = execSync('git rev-parse --path-format=absolute --git-common-dir', { cwd: repoRoot, encoding: 'utf8' }).trim();
+  return join(dirname(gitCommon), 'third_party', 'emsdk');
 };
 
 // Returns a human reason the wasm needs (re)building, or null when it's current.
@@ -47,7 +54,7 @@ console.log(`[ensure-wasm] ${reason}. Building the WASM core (this takes a minut
 if (process.platform === 'win32') {
   // A wrapper batch is more reliable than && chaining: activate emsdk, then run the
   // build script by full path.
-  const emsdk = process.env.EMSDK || 'E:\\GameProjects\\emsdk';
+  const emsdk = process.env.EMSDK || mainEmsdk();
   const emsdkEnv = join(emsdk, 'emsdk_env.bat');
   if (!existsSync(emsdkEnv)) {
     console.warn(`[ensure-wasm] ${reason}, but the Emscripten SDK was not found at "${emsdk}". Set the EMSDK env var or build manually (build-wasm). The game will not load until the WASM core is built.`);

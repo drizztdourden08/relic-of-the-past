@@ -8,7 +8,7 @@ import { createRequire } from 'module';
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 
-const require = createRequire('E:/GameProjects/relic-of-the-past/package.json');
+const require = createRequire(import.meta.url);
 const sharp = require('sharp');
 
 const ROOT = process.cwd();

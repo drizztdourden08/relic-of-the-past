@@ -16,6 +16,9 @@
   "engines": {
     "node": ">=24"
   },
+  "config": {
+    "emsdk": "5.0.7"
+  },
   "scripts": {
     "postinstall": "node scripts/ensure-electron.mjs && node scripts/ensure-sdl3.mjs && npm run vault:sync",
     "ensure-electron": "node scripts/ensure-electron.mjs",
