@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind types */
-import type { VideoHTMLAttributes } from 'react';
+import type { ComponentPropsWithRef } from 'react';
 
-type VideoProps = VideoHTMLAttributes<HTMLVideoElement>;
+/** Every `<video>` attribute plus `ref`, which React 19 hands a function component as a prop. */
+type VideoProps = ComponentPropsWithRef<'video'>;
 
 export type { VideoProps };

@@ -9,6 +9,8 @@ type Env = {
   DISCORD_GUILD_ID: string;
   /** Seeds the default group's linked role; the groups hold role ids after that. */
   DISCORD_CONTRIBUTOR_ROLE_ID: string | null;
+  /** A bot with no permissions in the server; only lists its roles for the group editor. */
+  DISCORD_BOT_TOKEN: string | null;
   GITHUB_CLIENT_ID: string;
   GITHUB_CLIENT_SECRET: string;
   GITHUB_READ_TOKEN: string;
@@ -59,6 +61,7 @@ const readEnv = (): Env => {
     SANCTUARY_ADMIN_IDS: parseAdminIds(process.env.SANCTUARY_ADMIN_IDS),
     SWEEP_KEY: process.env.SWEEP_KEY?.trim() || null,
     DISCORD_CONTRIBUTOR_ROLE_ID: process.env.DISCORD_CONTRIBUTOR_ROLE_ID?.trim() || null,
+    DISCORD_BOT_TOKEN: process.env.DISCORD_BOT_TOKEN?.trim() || null,
   };
   return cached;
 };

@@ -10,6 +10,13 @@
      dropdown trigger already draw themselves at. */
   --control-h-sm: 26px;
 
+  /* The inline drop target in a header line: wide enough to read as a target, and
+     a label that fits on one line inside it. */
+  --dropzone-inline-w: 288px;
+
+  /* A table's leading checkbox column, when its rows can be picked several at a time. */
+  --table-select-w: 28px;
+
   /* The inline entry a closed-set control offers for a value its option list
      has never seen. Wide enough for a short identifier, free to grow. */
   --open-entry-width: 140px;

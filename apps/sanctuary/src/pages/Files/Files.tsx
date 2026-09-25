@@ -1,22 +1,22 @@
 /* @layer sanctuary-site @kind component */
 /**
- * Files: the scope tabs in the header, then the drop zone (the one way in for an
- * upload), the uploads in flight, the FilterBar and the DataTable over the files, with
- * the selected one's detail on the right, and the three dialogs a drop can lead to.
+ * Files: the scope tabs in the header with the drop target at its end, the FilterBar and
+ * the DataTable over the files (rows can be picked several at a time), and the side
+ * column on the right with the uploads panel over the picked file's details, or over the
+ * selection panel when several are picked, plus the three dialogs a drop can lead to.
  * Everything stateful lives in useFilesPage.
  */
 import { useMemo } from 'react';
 import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
-import { DropZone } from '@ds/primitives/DropZone';
 import { DataTable } from '@ds/composites/DataTable';
 import { FilterBar } from '@ds/composites/FilterBar';
-import { LIMITS } from '@shared/sanctuary/limits';
 import { SitePage } from '../../layout/SitePage/SitePage';
+import { SideColumn } from '../../layout/SideColumn/SideColumn';
 import { Workbench } from '../../layout/Workbench/Workbench';
 import { SavedViewsMenu } from '../../views/SavedViewsMenu';
 import { UploadDialog } from '../../components/UploadDialog/UploadDialog';
-import { UploadRow } from '../../components/UploadRow/UploadRow';
+import { UploadsPanel } from '../../components/UploadsPanel/UploadsPanel';
 import { fileRowId } from '../../files/file-row';
 import { FILE_DEFAULT_COLUMNS } from '../../files/file-schema';
 import { formatBytes } from '../../lib/format-bytes';
@@ -24,6 +24,8 @@ import { useFilesPage } from './behavior/useFilesPage';
 import { FileDetail } from './sub-components/FileDetail';
 import { SameNameDialog } from './sub-components/SameNameDialog';
 import { NewVersionDialog } from './sub-components/NewVersionDialog';
+import { UploadActions } from './sub-components/UploadActions';
+import { SelectionPanel } from './sub-components/SelectionPanel';
 import './Files.css';
 
 type FilesProps = {
@@ -33,12 +35,11 @@ type FilesProps = {
 
 const COUNT_LABEL = ['file', 'files'] as const;
 const SEARCH_PLACEHOLDER = 'Search files...';
-const DROP_HINT = `up to ${formatBytes(LIMITS.fileBytes)} each, stored exactly as sent`;
 
 const Files = (props: FilesProps) => {
   const { selectedId = null } = props;
   const page = useFilesPage(selectedId);
-  const { data, scope, view, uploads, drops, selected } = page;
+  const { data, scope, view, uploads, uploadsPanel, drops, selected } = page;
   const headerTabs = useMemo(
     () => ({ items: scope.tabs, activeId: scope.activeId, onSelect: scope.select }),
     [scope.tabs, scope.activeId, scope.select],
@@ -68,43 +69,72 @@ const Files = (props: FilesProps) => {
       viewKey={view.tableKey}
       viewStorage={view.storage}
       fallbackColumns={FILE_DEFAULT_COLUMNS}
+      selectable
       selectedId={selectedId}
+      selectedIds={page.pickedIds}
       onSelect={page.select}
+      onSelectionChange={page.pick}
       countLabel={COUNT_LABEL}
       emptyMessage={data.loading ? 'Loading files...' : 'No file matches.'}
     />
   );
 
-  const detail = selected && (
-    <FileDetail
-      key={selected.id}
-      file={selected}
-      knownTags={page.knownTags}
-      types={page.types}
-      canEdit={page.canEdit(selected)}
-      canDelete={page.canEdit(selected)}
-      actions={page.actions}
-      onDropVersion={drops.dropOnFile}
-      onClose={page.deselect}
+  const headerActions = (
+    <UploadActions
+      canUpload={page.types.length > 0}
+      onDrop={drops.drop}
+      hiddenUploads={uploadsPanel.isOpen ? 0 : uploadsPanel.count}
+      onShowUploads={uploadsPanel.show}
     />
   );
-  const canUpload = page.types.length > 0;
+
+  const several = page.picked.length > 1;
+  const aside = (uploadsPanel.isOpen || selected || several) && (
+    <SideColumn>
+      {uploadsPanel.isOpen && (
+        <UploadsPanel
+          jobs={uploads.jobs}
+          onDismiss={uploads.dismiss}
+          onClearFinished={uploads.clearFinished}
+          onClose={uploadsPanel.close}
+        />
+      )}
+      {several && (
+        <SelectionPanel
+          files={page.picked}
+          types={page.types}
+          knownTags={page.knownTags}
+          canEdit={page.canEdit}
+          batch={page.batch}
+          download={page.download}
+          onClear={page.clearPick}
+        />
+      )}
+      {selected && (
+        <FileDetail
+          key={selected.id}
+          file={selected}
+          knownTags={page.knownTags}
+          types={page.types}
+          canEdit={page.canEdit(selected)}
+          canDelete={page.canEdit(selected)}
+          actions={page.actions}
+          onDropVersion={drops.dropOnFile}
+          onClose={page.deselect}
+        />
+      )}
+    </SideColumn>
+  );
 
   return (
     <>
-      <SitePage section="files" tabs={headerTabs} scroll={false}>
+      <SitePage section="files" tabs={headerTabs} scroll={false} actions={headerActions} aside={aside}>
         <Stack gap="md" align="stretch" className="files">
           <Text as="span" variant="caption" className="files__summary">
             {page.shown.length === 1 ? '1 file' : `${page.shown.length} files`} · {formatBytes(scope.bytes)}
           </Text>
-          {canUpload && <DropZone label="drop files here" hint={DROP_HINT} onDrop={drops.drop} />}
-          {uploads.jobs.length > 0 && (
-            <Stack gap="xs" align="stretch" className="files__uploads">
-              {uploads.jobs.map((job) => <UploadRow key={job.id} job={job} onDismiss={uploads.dismiss} />)}
-            </Stack>
-          )}
           {data.error && <Text as="p" variant="caption" role="alert">{data.error}</Text>}
-          <Workbench toolbar={toolbar} table={table} detail={detail} />
+          <Workbench toolbar={toolbar} table={table} detail={null} />
         </Stack>
       </SitePage>
       <SameNameDialog question={drops.asking} onSeparate={drops.separate} onVersion={drops.version} onClose={drops.skip} />

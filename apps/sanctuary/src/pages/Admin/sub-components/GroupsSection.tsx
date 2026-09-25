@@ -17,6 +17,7 @@ import type { GroupView } from '../../../api/types';
 import type { GroupsState } from '../behavior/useGroups';
 import { groupSummary } from '../behavior/group-summary';
 import { GroupEditor } from './GroupEditor';
+import { useDiscordRoles } from '../behavior/useDiscordRoles';
 
 type GroupsSectionProps = {
   state: GroupsState;
@@ -28,13 +29,14 @@ type Editing = { kind: 'new' } | { kind: 'edit'; group: GroupView } | null;
 const GroupsSection = (props: GroupsSectionProps) => {
   const { state } = props;
   const { groups, loading, busy, error } = state;
+  const discord = useDiscordRoles();
   const [editing, setEditing] = useState<Editing>(null);
   const [deleting, setDeleting] = useState<GroupView | null>(null);
 
   const value = (group: GroupView) => (
     <Flex gap="sm" align="center" wrap>
       {group.id === DEFAULT_GROUP_ID && <Chip tone="gold">default</Chip>}
-      <Text as="span" variant="caption">{groupSummary(group)}</Text>
+      <Text as="span" variant="caption">{groupSummary(group, discord.byId)}</Text>
     </Flex>
   );
   const action = (group: GroupView) => (
@@ -57,6 +59,8 @@ const GroupsSection = (props: GroupsSectionProps) => {
           <GroupEditor
             key={editorGroup?.id ?? 'new'}
             group={editorGroup}
+            roles={discord.roles}
+            rolesAvailable={discord.available}
             busy={busy}
             onSave={(body) => void state.save(editorGroup?.id ?? null, body).then((ok) => { if (ok) setEditing(null); })}
             onCancel={() => setEditing(null)}

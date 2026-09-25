@@ -14,6 +14,7 @@ import { filesSignParts } from './routes/files-sign-parts';
 import { filesComplete } from './routes/files-complete';
 import { filesPatch } from './routes/files-patch';
 import { filesDownload } from './routes/files-download';
+import { filesPreview } from './routes/files-preview';
 import { filesDelete } from './routes/files-delete';
 import { fileVersionsBegin } from './routes/file-versions-begin';
 import { fileVersionsSignParts } from './routes/file-versions-sign-parts';
@@ -27,6 +28,7 @@ import { viewsDelete } from './routes/views-delete';
 import { adminPending } from './routes/admin-pending';
 import { adminSetGroups } from './routes/admin-set-groups';
 import { groupsList } from './routes/groups-list';
+import { discordRoles } from './routes/discord-roles';
 import { groupsCreate } from './routes/groups-create';
 import { groupsPatch } from './routes/groups-patch';
 import { groupsDelete } from './routes/groups-delete';
@@ -58,6 +60,7 @@ const ROUTES: Route[] = [
   filesComplete,
   filesPatch,
   filesDownload,
+  filesPreview,
   filesDelete,
   fileVersionsBegin,
   fileVersionsSignParts,
@@ -71,6 +74,7 @@ const ROUTES: Route[] = [
   adminPending,
   adminSetGroups,
   groupsList,
+  discordRoles,
   groupsCreate,
   groupsPatch,
   groupsDelete,

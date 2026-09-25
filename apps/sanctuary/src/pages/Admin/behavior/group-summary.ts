@@ -4,11 +4,16 @@
  * the reports and how many people are in it (and how many of them by hand).
  */
 import { FILE_TYPES } from '@shared/sanctuary/file-types';
+import type { DiscordRole } from '@shared/sanctuary/group-types';
 import type { GroupView } from '../../../api/types';
 import { SCOPE_TYPE_LABELS } from '../../Files/Files.constants';
 
-const roleText = (group: GroupView) =>
-  (group.discordRoleId ? `Discord role ${group.discordRoleId}` : 'no Discord role');
+/** Names the linked role when the server's roles are known, the id otherwise. */
+const roleText = (group: GroupView, roles: ReadonlyMap<string, DiscordRole>) => {
+  if (!group.discordRoleId) return 'no Discord role';
+  const role = roles.get(group.discordRoleId);
+  return role ? `Discord role ${role.name}` : `Discord role ${group.discordRoleId}`;
+};
 
 const typesText = (group: GroupView) => {
   const { fileTypes } = group.rights;
@@ -25,8 +30,8 @@ const peopleText = (group: GroupView) => {
   return `${people} (${manualCount} by hand)`;
 };
 
-const groupSummary = (group: GroupView): string => [
-  roleText(group),
+const groupSummary = (group: GroupView, roles: ReadonlyMap<string, DiscordRole>): string => [
+  roleText(group, roles),
   typesText(group),
   ...(group.rights.reports ? ['reports'] : []),
   peopleText(group),

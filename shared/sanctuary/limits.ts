@@ -16,6 +16,8 @@ const LIMITS = {
   /** Lifetime of a presigned part PUT. */
   partUrlSeconds: 3600,
   /** Lifetime of a presigned download GET. */
+  /** Long enough to watch a video through without the link lapsing. */
+  previewUrlSeconds: 60 * 60 * 2,
   downloadUrlSeconds: 600,
   /** Largest report zip, in bytes. */
   reportBytes: 50 * MiB,

@@ -2,6 +2,7 @@
 /** The sticky header: one cell per visible column, plus an empty trailing cell that soaks up leftover width (see `trackList`). */
 import { Box } from '../../../primitives/Box';
 import { HeaderCell } from './HeaderCell';
+import type { ReactNode } from 'react';
 import type { SchemaIndex } from '../../../data/schema/build-schema';
 import type { SortEntry, TableColumn } from '../../../data/table/types';
 import type { IdRefTargetFieldResolver } from '../behavior/display-substitution';
@@ -22,16 +23,19 @@ interface HeaderRowProps {
   /** A few rows off the top of the rendered order. Each cell's ghost shows them. */
   ghostRows: readonly unknown[];
   rowTotal: number;
+  /** A cell ahead of the columns, e.g. the select-all box of a selectable table. */
+  lead?: ReactNode;
 }
 
 const HeaderRow = (props: HeaderRowProps) => {
   const {
     columns, schema, fieldNodes, sort, groupBy, resolveTargetFields,
-    actions, drag, ghostRows, rowTotal,
+    actions, drag, ghostRows, rowTotal, lead,
   } = props;
 
   return (
     <Box className="data-table__header" role="row">
+      {lead}
       {columns.map((column, index) => (
         <HeaderCell
           key={column.path}

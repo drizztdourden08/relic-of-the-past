@@ -2,13 +2,13 @@
 /**
  * All of the Files page's state, so the component stays a layout: the list and the scope
  * tab (both shared through the site data, so they outlive the page), the schema, the view
- * (clauses, search, saved views), the owners facet, the selected file, its actions, the
- * uploads and the dialogs a drop leads to. Selection is the route: `/files/:id`. Tabs and
- * upload types follow the caller's rights.
+ * (clauses, search, saved views), the owners facet, the picked files with the actions on
+ * one of them or on several, the uploads with their side panel, and the dialogs a drop
+ * leads to. One picked file is the route, `/files/:id`; a new tab clears the pick. Tabs
+ * and upload types follow the caller's rights.
  */
 import { useCallback, useMemo } from 'react';
 import type { SanctuaryFile } from '@shared/sanctuary/file-types';
-import { navigate } from '../../../router/useLocation';
 import { useSessionContext } from '../../../session/session-context';
 import { visibleFileTypes } from '../../../session/rights';
 import { useSiteData } from '../../../data/site-data-context';
@@ -20,10 +20,12 @@ import { filterRows } from '../../../views/filter-rows';
 import type { FileRow } from '../../../files/file-row';
 import { DEFAULT_UPLOAD_TYPE, isFileType } from '../Files.constants';
 import { fileScopeTabs, scopePredicate, shownScopeId } from './file-scopes';
+import { useBatchActions } from './useBatchActions';
+import { useBatchDownload } from './useBatchDownload';
 import { useFileActions } from './useFileActions';
+import { useFileSelection } from './useFileSelection';
 import { useDropFlow } from './useDropFlow';
-
-const FILES_PATH = '/files';
+import { useUploadsPanel } from './useUploadsPanel';
 
 const ownerOf = (row: FileRow) => row.owner.displayName;
 
@@ -55,40 +57,65 @@ const useFilesPage = (selectedId: string | null) => {
     [data.files],
   );
 
-  const selected = useMemo(
-    () => data.files.find((file) => file.id === selectedId) ?? null,
-    [data.files, selectedId],
-  );
-  const select = useCallback((id: string) => navigate(`${FILES_PATH}/${id}`, { replace: true }), []);
-  const deselect = useCallback(() => navigate(FILES_PATH, { replace: true }), []);
+  const selection = useFileSelection(selectedId);
+  const picked = useMemo(() => data.files.filter((file) => selection.ids.has(file.id)), [data.files, selection.ids]);
+  const selected = picked.length === 1 ? picked[0] : null;
+  const { select, change, clear: deselect, forget } = selection;
+
+  /** A new tab starts with nothing picked. */
+  const selectScope = useCallback((id: string) => {
+    deselect();
+    setScopeId(id);
+  }, [deselect, setScopeId]);
 
   const { upsert, remove } = data;
   const onDeleted = useCallback((id: string) => {
     remove(id);
     deselect();
   }, [remove, deselect]);
+  const onBatchDeleted = useCallback((id: string) => {
+    remove(id);
+    forget(id);
+  }, [remove, forget]);
   const actions = useFileActions({ onPatched: upsert, onDeleted });
+
+  const canEdit = useCallback((file: SanctuaryFile) => isAdmin || file.owner.userId === meId, [isAdmin, meId]);
+  const batch = useBatchActions({ canEdit, onPatched: upsert, onDeleted: onBatchDeleted });
+  const download = useBatchDownload();
+  const { dismiss } = batch;
+  /** A pick made in the table or cleared from the panel; the last batch report goes with the old pick. */
+  const pick = useCallback((ids: ReadonlySet<string>) => {
+    dismiss();
+    change(ids);
+  }, [dismiss, change]);
+  const clearPick = useCallback(() => pick(new Set()), [pick]);
   const drops = useDropFlow({ files: data.files, start: uploads.start });
+  const uploadsPanel = useUploadsPanel(uploads.jobs);
 
   const preferred = isFileType(scopeId) ? scopeId : DEFAULT_UPLOAD_TYPE;
   const uploadType = types.includes(preferred) ? preferred : types[0] ?? DEFAULT_UPLOAD_TYPE;
 
-  const canEdit = (file: SanctuaryFile) => isAdmin || file.owner.userId === meId;
-
   return {
     data,
-    scope: { tabs, activeId: scopeId, select: setScopeId, bytes: scopeBytes },
+    scope: { tabs, activeId: scopeId, select: selectScope, bytes: scopeBytes },
     schema,
     view,
     facets: [owners.facet],
     shown,
     knownTags,
     selected,
+    picked,
+    pickedIds: selection.ids,
+    pick,
+    clearPick,
     select,
     deselect,
     actions,
+    batch,
+    download,
     canEdit,
     uploads,
+    uploadsPanel,
     drops,
     types,
     uploadType,

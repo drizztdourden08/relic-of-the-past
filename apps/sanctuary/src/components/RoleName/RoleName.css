@@ -1,0 +1,21 @@
+/* @layer sanctuary-site @kind style */
+.role-name {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+
+.role-name__dot {
+  flex: 0 0 auto;
+  width: var(--space-sm);
+  height: var(--space-sm);
+  border-radius: var(--r-pill);
+  background: var(--role-color, var(--c-text-dim));
+}
+
+.role-name__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -42,7 +42,7 @@ const fileVersionsBegin: Route = {
     try {
       await filesRepo.mutate(file.id, (latest) => {
         if (lastVersionNumber(latest) + 1 !== n) throw conflict('Another version started at the same time. Try again.');
-        return { versions: [...latest.versions, version] };
+        return { versions: [...latest.versions, version], currentVersion: latest.currentVersion };
       });
     } catch (err) {
       await b2.abort(key, multipartId).catch(() => undefined);

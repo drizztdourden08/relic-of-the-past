@@ -107,6 +107,13 @@ type DownloadResponse = {
   expiresInSeconds: number;
 };
 
+/** POST /files/:id/preview: a link the browser shows inline, in an img or a video. */
+type PreviewResponse = {
+  url: string;
+  contentType: string;
+  expiresInSeconds: number;
+};
+
 /** GET /me/views?surface */
 type ViewsListResponse = {
   views: SavedView[];
@@ -146,6 +153,7 @@ export type {
   SignPartsResponse,
   FileResponse,
   DownloadResponse,
+  PreviewResponse,
   ViewsListResponse,
   ReportReporterView,
   ReportView,

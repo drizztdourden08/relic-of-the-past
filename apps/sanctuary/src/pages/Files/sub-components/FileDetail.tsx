@@ -1,6 +1,7 @@
 /* @layer sanctuary-site @kind component */
 /**
- * The selected file: its fields, the note, the version history with its drop zone, and
+ * The selected file, as a panel of the side column: a preview for an image or a video,
+ * its fields, the note, the version history with its drop zone, and
  * the actions. Edit swaps the note for the inline form; Delete asks once and is offered
  * to the owner and to admins only.
  */
@@ -16,8 +17,10 @@ import { TagList } from '../../../components/TagList/TagList';
 import { formatBytes } from '../../../lib/format-bytes';
 import { formatDateTime } from '../../../lib/format-date';
 import { versionLabel } from '../../../files/file-versions';
+import { mediaKindOf } from '../../../files/media-kind';
 import type { FileActions } from '../behavior/useFileActions';
 import { FileEditForm } from './FileEditForm';
+import { FileMedia } from './FileMedia';
 import { VersionsPanel } from './VersionsPanel';
 
 type FileDetailProps = {
@@ -54,6 +57,7 @@ const FileDetail = (props: FileDetailProps) => {
   const [editing, setEditing] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const { busy } = actions;
+  const kind = mediaKindOf(file.contentType);
 
   const buttons = (
     <>
@@ -77,7 +81,15 @@ const FileDetail = (props: FileDetailProps) => {
   );
 
   return (
-    <DetailPane title={file.name} fields={fieldsOf(file)} actions={buttons} notice={actions.notice} onClose={onClose}>
+    <DetailPane
+      title={file.name}
+      fields={fieldsOf(file)}
+      actions={buttons}
+      notice={actions.notice}
+      onClose={onClose}
+      media={kind && <FileMedia file={file} kind={kind} />}
+      className="side-panel"
+    >
       {editing
         ? (
           <FileEditForm

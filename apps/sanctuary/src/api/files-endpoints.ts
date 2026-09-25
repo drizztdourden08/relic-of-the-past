@@ -1,5 +1,5 @@
 /* @layer sanctuary-site @kind logic */
-/** The file routes: list, the three multipart steps, download, patch and delete. */
+/** The file routes: list, the three multipart steps, download, preview, patch and delete. */
 import type { CreateFileBody, PatchFileBody } from '@shared/sanctuary/schemas/file-schemas';
 import { request } from './client';
 import type {
@@ -8,6 +8,7 @@ import type {
   SignPartsResponse,
   FileResponse,
   DownloadResponse,
+  PreviewResponse,
 } from './types';
 
 /** Every ready file, one page. The rail counts and the type filter run in the browser. */
@@ -23,9 +24,13 @@ const completeFile = (id: string, etags: string[]) =>
 
 const downloadFile = (id: string) => request<DownloadResponse>('filesDownload', { params: { id } });
 
-const patchFile = (id: string, patch: PatchFileBody) =>
+/** An inline link to version `v`, or to the current version when `v` is left out. */
+const previewFile = (id: string, v?: number) =>
+  request<PreviewResponse>('filesPreview', { params: { id }, query: { v } });
+
+const patchFile =(id: string, patch: PatchFileBody) =>
   request<FileResponse>('filesPatch', { params: { id }, body: patch });
 
 const deleteFile = (id: string) => request<{ ok: true }>('filesDelete', { params: { id } });
 
-export { listFiles, beginFile, signParts, completeFile, downloadFile, patchFile, deleteFile };
+export { listFiles, beginFile, signParts, completeFile, downloadFile, previewFile, patchFile, deleteFile };

@@ -9,7 +9,9 @@ type StoredFile = Omit<SanctuaryFile, 'versions' | 'currentVersion'> &
   Partial<Pick<SanctuaryFile, 'versions' | 'currentVersion'>>;
 
 const upgradeFile = (stored: StoredFile): SanctuaryFile => {
-  if (stored.versions && stored.currentVersion) return stored as SanctuaryFile;
+  // Stored versions always win. A file whose first version was written before the pointer
+  // was (a version begun on a pre-versions file) points at v1 until something moves it.
+  if (stored.versions?.length) return { ...stored, versions: stored.versions, currentVersion: stored.currentVersion ?? 1 };
   const v1 = {
     n: 1,
     key: fileKey(stored.id),

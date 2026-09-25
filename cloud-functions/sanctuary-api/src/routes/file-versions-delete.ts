@@ -40,7 +40,7 @@ const fileVersionsDelete: Route = {
     assertDeletable(file, version.n);
     const updated = await filesRepo.mutate(file.id, (latest) => {
       assertDeletable(latest, version.n);
-      return { versions: latest.versions.filter((entry) => entry.n !== version.n) };
+      return { versions: latest.versions.filter((entry) => entry.n !== version.n), currentVersion: latest.currentVersion };
     });
     await dropObject(version);
     res.status(200).json({ file: updated });
