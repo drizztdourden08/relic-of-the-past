@@ -6,6 +6,7 @@
  * anchor, mirrors the app's own pin onto the windows that follow it, and tells
  * the main window whenever a persisted fact changes.
  */
+import { screen } from 'electron';
 import type { BrowserWindow } from 'electron';
 import type { PinMode, PoppedWidget, PoppedWindowState, SnapLink, WindowBounds } from '@shared/types/widget-layout';
 import { emit } from '../lib/ipc/handle';
@@ -22,6 +23,10 @@ interface Entry {
   last: WindowBounds;
   /** Set while this registry moves the window itself, so its own handlers stay quiet. */
   towed: boolean;
+  /** The pointer's offset from the window's corner while the user drags it; null between drags. */
+  grab: { x: number; y: number } | null;
+  /** Minimized along with the app, so the app's restore brings it back. */
+  hiddenWithApp: boolean;
 }
 
 const entries = new Map<string, Entry>();
@@ -82,6 +87,35 @@ const attachMain = (): void => {
   main.on('focus', () => {
     for (const entry of entries.values()) if (entry.pin === 'with-app' && alive(entry.win)) entry.win.moveTop();
   });
+  // The app goes to the taskbar: the windows that follow it go too, and come back with it.
+  main.on('minimize', () => {
+    for (const entry of entries.values()) {
+      if (entry.pin !== 'with-app' || !alive(entry.win) || entry.win.isMinimized()) continue;
+      entry.hiddenWithApp = true;
+      entry.win.minimize();
+    }
+  });
+  main.on('restore', () => {
+    for (const entry of entries.values()) {
+      if (!entry.hiddenWithApp || !alive(entry.win)) continue;
+      entry.hiddenWithApp = false;
+      entry.win.restore();
+    }
+  });
+};
+
+/**
+ * Where the user's drag wants the window: the cursor minus the offset it was
+ * grabbed at, at the window's own size. Built from the cursor, never from the
+ * event's bounds, whose units differ per display scaling.
+ */
+const dragWanted = (id: string): WindowBounds | null => {
+  const entry = entries.get(id);
+  if (!entry || entry.towed || !alive(entry.win)) return null;
+  const cursor = screen.getCursorScreenPoint();
+  const cur = boundsOf(entry.win);
+  entry.grab ??= { x: cursor.x - cur.x, y: cursor.y - cur.y };
+  return { x: cursor.x - entry.grab.x, y: cursor.y - entry.grab.y, width: cur.width, height: cur.height };
 };
 
 /** What the dragged window may snap against: the app and every other popped window. */
@@ -111,6 +145,7 @@ const snapWanted = (id: string, wanted: WindowBounds): WindowBounds | null => {
 const settled = (id: string): void => {
   const entry = entries.get(id);
   if (!entry || !alive(entry.win)) return;
+  entry.grab = null;
   const now = boundsOf(entry.win);
   if (!entry.towed) towLinked(id, now.x - entry.last.x, now.y - entry.last.y);
   entry.last = now;
@@ -118,7 +153,10 @@ const settled = (id: string): void => {
 
 const register = (id: string, win: BrowserWindow, popped: Omit<PoppedWidget, 'id'> | undefined): Entry => {
   attachMain();
-  const entry: Entry = { win, pin: popped?.pin ?? 'off', snap: popped?.snap ?? true, link: null, last: boundsOf(win), towed: false };
+  const entry: Entry = {
+    win, pin: popped?.pin ?? 'off', snap: popped?.snap ?? true, link: null, last: boundsOf(win), towed: false,
+    grab: null, hiddenWithApp: false,
+  };
   entries.set(id, entry);
   applyPin(entry, mainOnTop());
   return entry;
@@ -167,5 +205,6 @@ const openIds = (): string[] => [...entries.keys()].filter((id) => windowOf(id) 
 const windows = (): BrowserWindow[] => [...entries.values()].map((e) => e.win).filter(alive);
 
 export {
-  mirrorMainPin, openIds, register, setPin, setSnap, settled, snapWanted, unregister, windowOf, windowState, windows,
+  dragWanted, mirrorMainPin, openIds, register, setPin, setSnap, settled, snapWanted, unregister, windowOf,
+  windowState, windows,
 };

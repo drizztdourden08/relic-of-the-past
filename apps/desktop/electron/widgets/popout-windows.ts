@@ -17,8 +17,8 @@ import { getMainWindow } from '../window/create-window';
 import { resolveWindowIcon } from '../window/window-icon';
 import { parseInstanceConfig } from '../instance';
 import { cursorInApp, watchDragIn } from './popout-drag-in';
-import { openIds, register, settled, snapWanted, unregister, windowOf, windows } from './popout-registry';
-import { clampToDisplay, moveInDip } from './window-dip';
+import { dragWanted, openIds, register, settled, snapWanted, unregister, windowOf, windows } from './popout-registry';
+import { clampToDisplay } from './window-bounds';
 
 const DEFAULT_BOUNDS = { width: 360, height: 480 } as const;
 const MIN_WIDTH = 240;
@@ -89,13 +89,14 @@ const openPopOut = (id: string, popped?: Omit<PoppedWidget, 'id'>): void => {
       if (main && b) emit(main, 'widget:bounds', id, b);
     }, BOUNDS_DEBOUNCE_MS);
   };
-  // Snapping only while the drag is a plain window move; over the app it is a drop-in.
-  win.on('will-move', (event, wanted) => {
+  // The drag is ours: the window follows the cursor at its own size, and snaps when an
+  // edge is near. Over the app the OS keeps the move, since that drag is a drop-in.
+  win.on('will-move', (event) => {
     if (cursorInApp(win)) return;
-    const snapped = snapWanted(id, moveInDip(win, wanted));
-    if (!snapped) return;
+    const wanted = dragWanted(id);
+    if (!wanted) return;
     event.preventDefault();
-    win.setBounds(snapped);
+    win.setBounds(snapWanted(id, wanted) ?? wanted);
   });
   win.on('moved', () => { settled(id); reportBounds(); });
   win.on('resized', () => { settled(id); reportBounds(); });

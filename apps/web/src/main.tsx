@@ -10,7 +10,6 @@ import { deliveryQueue } from './lib/game/delivery-queue';
 import { cheatTriggerNpcCheck } from './lib/game/cheats';
 import { installSessionLogTap } from './lib/diagnostics/session-log';
 import { isWidgetHost } from './lib/game/widget-data';
-import { WidgetHost } from './ui/domains/app/views/WidgetHost';
 import './ui/design-system/tokens/index.css';
 
 const mount = (root: ReactNode): void => {
@@ -24,9 +23,10 @@ const mount = (root: ReactNode): void => {
 };
 
 // A widget's own window (?widget=<id>) draws that widget alone, fed by the main
-// window over the relay; it keeps no session log and exposes no bridge.
+// window over the relay; it keeps no session log and exposes no bridge. Its host
+// is loaded on its own so that window never pulls the app's module graph.
 if (isWidgetHost()) {
-  mount(<WidgetHost />);
+  void import('./ui/domains/app/views/WidgetHost').then(({ WidgetHost }) => mount(<WidgetHost />));
 } else {
   // Every launch: stream the log-bus (ring-evicted entries included) to
   // Data/debug/session.log via the main process, see lib/diagnostics/session-log.
