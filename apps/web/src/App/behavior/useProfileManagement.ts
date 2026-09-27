@@ -98,12 +98,12 @@ const useProfileManagement = (params: {
 
     // Whatever the profile before this one left behind goes now, ahead of the gate that may
     // park new material. Its placement is what the tracker builds its roster from, and
-    // nothing used to clear it, so a vanilla profile loaded after a randomized one went on
+    // nothing used to clear it, so a normal profile loaded after a randomized one went on
     // listing the seed's locations instead of the game in front of the player.
     resetSession();
 
     // Randomizer gate: a randomized profile only boots when its session can
-    // actually start afterwards (placement on disk / server reachable).
+    // actually start afterwards (placement on disk / a server URL).
     if (profile.randomizer) {
       const gate = await gateRandomizerBoot(profile.id, profile.randomizer);
       if (!gate.ok) {

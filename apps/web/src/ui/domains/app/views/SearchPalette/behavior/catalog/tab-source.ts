@@ -6,7 +6,7 @@
  * PROFILE_HUB_TABS registry as the NavRail and settings-source, so a new tab is indexed for
  * free. 'home' is skipped: it's already the menu's "Home" screen entry.
  */
-import { PROFILE_HUB_TABS } from '../../../ProfileHub/ProfileHub.constants';
+import { isHubTabShown, PROFILE_HUB_TABS } from '../../../ProfileHub/ProfileHub.constants';
 import type { ProfileHubTab } from '../../../ProfileHub/ProfileHub.type';
 import type { SearchContext, SearchEntry, SearchSource } from '../../SearchPalette.type';
 
@@ -16,7 +16,7 @@ const build = (ctx: SearchContext): SearchEntry[] => {
   if (!ctx.settings) return [];
 
   return (Object.entries(PROFILE_HUB_TABS) as [ProfileHubTab, typeof PROFILE_HUB_TABS[ProfileHubTab]][])
-    .filter(([tab, spec]) => tab !== 'home' && (!spec.mobileOnly || ctx.isMobile))
+    .filter(([tab, spec]) => tab !== 'home' && isHubTabShown(spec, { isMobile: ctx.isMobile, isOnline: ctx.isOnline === true }))
     .map(([tab, spec]): SearchEntry => ({
       id: `tab:${tab}`,
       kind: 'tab',

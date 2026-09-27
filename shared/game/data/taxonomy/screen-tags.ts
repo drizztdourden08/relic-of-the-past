@@ -1,29 +1,33 @@
-/* @layer shared-game @kind data */
+/* @layer shared-game @kind generated */
 /**
- * Screen tag taxonomy. Our own invented vocabulary for categorizing every
- * location, not a game secret. Ported from data/screens/tags.ts verbatim;
- * only the metadata table lives here, the query helpers moved to logic/queries.
+ * GENERATED FILE. Do not hand-edit; run `npm run generate`
+ * (scripts/generate-from-records.mjs).
+ *
+ * Source: records/tags, every tag record that applies to a screen
+ *
+ * Our own vocabulary for categorizing a screen, not a game value. The query helpers live in
+ * logic/queries.
  */
 
 type EnvironmentTag = 'env:outdoor' | 'env:indoor' | 'env:underground' | 'env:water';
 
 type RoleTag =
-  | 'role:entrance' | 'role:boss' | 'role:pre-boss' | 'role:mini-boss'
-  | 'role:hub' | 'role:dead-end' | 'role:connector' | 'role:stairwell'
-  | 'role:safe' | 'role:spawn' | 'role:puzzle';
+  | 'role:entrance' | 'role:boss' | 'role:pre-boss' | 'role:mini-boss' | 'role:hub'
+  | 'role:dead-end' | 'role:connector' | 'role:stairwell' | 'role:safe' | 'role:spawn'
+  | 'role:puzzle';
 
 type HazardTag =
-  | 'hazard:dark' | 'hazard:pits' | 'hazard:water' | 'hazard:spikes'
-  | 'hazard:conveyor' | 'hazard:fire' | 'hazard:ice' | 'hazard:bumpers';
+  | 'hazard:dark' | 'hazard:pits' | 'hazard:water' | 'hazard:spikes' | 'hazard:conveyor'
+  | 'hazard:fire' | 'hazard:ice' | 'hazard:bumpers';
 
 type LootTag =
-  | 'loot:chest' | 'loot:standing' | 'loot:boss-drop' | 'loot:npc'
-  | 'loot:pot' | 'loot:dig' | 'loot:bonk';
+  | 'loot:chest' | 'loot:standing' | 'loot:boss-drop' | 'loot:npc' | 'loot:pot' | 'loot:dig'
+  | 'loot:bonk';
 
 type TraversalTag =
   | 'traverse:hookshot' | 'traverse:swim' | 'traverse:hammer' | 'traverse:bomb'
-  | 'traverse:dash' | 'traverse:lift-light' | 'traverse:lift-dark'
-  | 'traverse:mirror' | 'traverse:warp' | 'traverse:fall';
+  | 'traverse:dash' | 'traverse:lift-light' | 'traverse:lift-dark' | 'traverse:mirror'
+  | 'traverse:warp' | 'traverse:fall';
 
 type ScreenTag = EnvironmentTag | RoleTag | HazardTag | LootTag | TraversalTag;
 
@@ -87,4 +91,6 @@ const TAG_METADATA: TagMetadata[] = [
 ];
 
 export { TAG_METADATA, TAG_NAMESPACES };
-export type { EnvironmentTag, HazardTag, LootTag, RoleTag, ScreenTag, TagMetadata, TagNamespace, TraversalTag };
+export type {
+  EnvironmentTag, HazardTag, LootTag, RoleTag, ScreenTag, TagMetadata, TagNamespace, TraversalTag,
+};

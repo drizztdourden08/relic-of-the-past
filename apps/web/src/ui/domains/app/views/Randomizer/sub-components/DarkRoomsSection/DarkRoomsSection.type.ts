@@ -2,7 +2,7 @@
 import type { ImpactCell } from '@domains/app/compounds/PoolImpactCell';
 import type {
   DarkRoomLightField, DarkRoomSetting,
-} from '@shared/randomizer/ap-world/dark-rooms/dark-room.type';
+} from '@shared/randomizer/world/dark-rooms/dark-room.type';
 
 interface DarkRoomsSectionProps {
   setting: DarkRoomSetting;

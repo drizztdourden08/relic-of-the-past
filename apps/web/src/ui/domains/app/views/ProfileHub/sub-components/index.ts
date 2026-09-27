@@ -7,3 +7,4 @@ export { HapticsSettings } from './HapticsSettings';
 export { HomeTab } from './HomeTab';
 export { HudSettings } from './HudSettings';
 export { MsuImport } from './MsuImport';
+export { OnlineSettings } from './OnlineSettings';

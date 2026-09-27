@@ -5,6 +5,7 @@ import { usePlatform } from '@app/platform';
 import type { NormalSaveInfo, AutoSaveInfo } from '@shared/types/saves';
 import type { PlaySession } from '@shared/types/session';
 import { saveState, loadState, captureStateBuffer, loadStateFromBuffer } from '../../../../../../../lib/game';
+import { onAutoSavesChanged } from '../../../../../../../lib/game/auto-save';
 import { saveMusicPosition, restoreMusicPosition } from '../../../../../../../lib/game/msu-save-glue';
 import { listSessions } from '../../../../../../../lib/game/session-tracker';
 import { log } from '../../../../../../../lib/log-bus';
@@ -57,6 +58,10 @@ const useHomeTabSaves = (params: { profileId: string; isGameRunning: boolean; on
     loadAutoSaves();
     loadSessions();
   }, [profileId]);
+
+  // The timer writes auto-saves while this tab is open: follow it, so the newest one is on the
+  // list the moment it exists.
+  useEffect(() => onAutoSavesChanged(() => { loadAutoSaves(); }), [profileId]);
 
   // ─── Quick save handlers ───
   const handleQuickSave = useCallback(async (slot: number) => {

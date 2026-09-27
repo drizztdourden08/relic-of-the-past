@@ -14,6 +14,7 @@ import { isCheckPhysicallyArmed } from '../randomizer-client/override-fire-regis
 import { computeCompletedChecks } from './completed-checks-core';
 import { computeEventStatus } from './event-status';
 import { outOfBedCheckId } from './check-facts';
+import { withCollectedChecks } from './collected-checks';
 import type { CheckId, ItemId } from '@shared/game/data';
 
 interface WasmModule {
@@ -70,7 +71,8 @@ const readCompletedChecks = (mod: WasmModule, inventory: ReadonlySet<ItemId> | n
     if (id) newCompleted.add(id);
   }
 
-  return newCompleted;
+  // What the online room holds as done shows as done too (collected-checks.ts).
+  return withCollectedChecks(newCompleted);
 };
 
 /** How many progress bytes, overworld event bytes and room words the exports expose. */

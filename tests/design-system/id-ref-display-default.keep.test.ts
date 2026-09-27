@@ -25,7 +25,7 @@ const screens = all('screen') as unknown as readonly InspectorLikeRow[];
 const areas = all('area') as unknown as readonly InspectorLikeRow[];
 
 const AREA_PATH = 'areaId';
-const NAME_PATH = 'randomizerName';
+const NAME_PATH = 'name';
 
 let DataRow: typeof DataRowModule.DataRow;
 
@@ -84,7 +84,7 @@ describeDataset('substituteDisplay falls back by default for a column with no di
     const [actor] = all('actor');
     const mixedField: FieldDescriptor = { ...field, targetKind: undefined };
     expect(substituteDisplay(sample.id, mixedField, { resolveDefault: defaultIdRefDisplay })).toBe(sample.name);
-    expect(substituteDisplay(actor.id, mixedField, { resolveDefault: defaultIdRefDisplay })).toBe(actor.randomizerName);
+    expect(substituteDisplay(actor.id, mixedField, { resolveDefault: defaultIdRefDisplay })).toBe(actor.name);
   });
 });
 
@@ -126,7 +126,7 @@ describeDataset('the rendered table with a mixed-target-kind column and only the
       row: mixedRows[1], context: mixedContext,
     }));
     expect(first).toContain(sample.name);
-    expect(second).toContain(actor.randomizerName);
+    expect(second).toContain(actor.name);
   });
 
   it('keeps the real id on the element regardless of the resolved text, so navigation is unaffected', () => {

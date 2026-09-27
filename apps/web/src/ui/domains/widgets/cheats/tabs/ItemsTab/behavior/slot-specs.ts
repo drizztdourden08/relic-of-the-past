@@ -21,9 +21,9 @@ const equipSprite = (type: string): SpriteOf => (value) => EQUIP_SPRITES[type]?.
 const labelOf = (slot: number, value: number, receiveItemId?: number): string => {
   const raw = RAW_VALUE_LABELS[slot]?.[value];
   if (raw) return raw;
-  // The game's own name first: the randomizer name of a fighter's shield reads "Blue Shield".
+  // The record's own name, which for a fighter's shield reads "Blue Shield".
   const record = receiveItemId === undefined ? undefined : getItemByGameId({ receiveItemId });
-  return record?.vanillaName ?? record?.randomizerName ?? `Value ${value}`;
+  return record?.name ?? `Value ${value}`;
 };
 
 /** The empty tier. A slot whose zero draws a sprite (armor) names it instead of "None". */

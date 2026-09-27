@@ -12,20 +12,40 @@
  * the next one (a phrase like "on the way to" read as the next pickup's rung,
  * which it never was); on the last rung it says the climb has arrived. The
  * composer may drop it entirely when the box is short of rows, so the jump
- * and the two values always survive.
+ * and the two values always survive. The family's label carries the primary
+ * highlight, as an item name does. The climb is the receipt's second page:
+ * the first is the line every item gets in that context (found, received
+ * from another player), and the core joins the two (receipt_pages.c).
  */
 import { CAPACITY_RECEIPT_LABELS } from '@shared/game/data/capacity-upgrade-names.data';
-import { METER_LEVEL_LABELS } from '../ap-world/capacity/capacity-ladders.data';
-import { familyById } from '../ap-world/capacity/capacity-family';
+import { primary } from './highlight-markup';
+import { METER_LEVEL_LABELS } from '../world/capacity/capacity-ladders.data';
+import { familyById } from '../world/capacity/capacity-family';
+import { detailPage } from './receipt-line.type';
 import type { CapacityFamilyId } from '@shared/game/data/capacity-family.type';
 import type { ReceiptLine } from './receipt-line.type';
 
-/** How each family grows, so the four lines do not read as one template filled in. */
+/**
+ * How each family grows, so the four lines do not read as one template filled in. Each verb
+ * is the plain form ("fill out"); a family whose label is a singular noun takes it with -s.
+ */
 const GROWTH_VERB: Readonly<Record<CapacityFamilyId, string>> = {
-  explosives: 'swells',
-  projectiles: 'fills out',
-  meter: 'deepens',
-  wallet: 'stretches',
+  explosives: 'swell',
+  projectiles: 'fill out',
+  meter: 'deepen',
+  wallet: 'stretch',
+};
+
+/** The families whose label is a plural noun ("Arrows"), so the verb agrees with them. */
+const PLURAL_LABEL: ReadonlySet<CapacityFamilyId> = new Set(['projectiles']);
+
+/** The verb as the family's label takes it: "Your arrows fill out", "Your wallet stretches". */
+const growthVerb = (family: CapacityFamilyId): string => {
+  const verb = GROWTH_VERB[family];
+  if (PLURAL_LABEL.has(family)) return verb;
+  const [head, ...rest] = verb.split(' ');
+  const inflected = /(?:s|sh|ch|x|z)$/.test(head) ? `${head}es` : `${head}s`;
+  return [inflected, ...rest].join(' ');
 };
 
 /** The unit the values are counted in, where a bare number would be ambiguous. */
@@ -43,7 +63,7 @@ const capacityTierText = (tiers: number): string => `${tiers} tier${tiers === 1 
 /** The label opens a possessive clause, so it reads as speech and not as a heading. */
 const ownedLabel = (family: CapacityFamilyId): string => {
   const label = CAPACITY_RECEIPT_LABELS[family];
-  return `Your ${label.charAt(0).toLowerCase()}${label.slice(1)}`;
+  return `Your ${primary(`${label.charAt(0).toLowerCase()}${label.slice(1)}`)}`;
 };
 
 /** A rung value opening its own sentence, so it is capitalized. */
@@ -58,23 +78,16 @@ const aheadText = (family: CapacityFamilyId, toRung: number, maxRung: number): s
     ? '. That is the ceiling.'
     : `. ${sentenceText(family, maxRung)} is the ceiling.`);
 
-/** The climb from |fromRung| to |toRung| under a plan that stops at |maxRung|. */
+/**
+ * The climb from |fromRung| to |toRung| under a plan that stops at |maxRung|, as a detail page:
+ * the receipt's own line comes first, the one every item gets, and the climb follows it.
+ */
 const renderCapacityStep = (
   family: CapacityFamilyId, fromRung: number, toRung: number, maxRung: number,
 ): ReceiptLine => {
-  const climb = `${ownedLabel(family)} ${GROWTH_VERB[family]} ${capacityTierText(toRung - fromRung)}. `
+  const climb = `${ownedLabel(family)} ${growthVerb(family)} ${capacityTierText(toRung - fromRung)}. `
     + `${sentenceText(family, fromRung)} > ${capacityRungText(family, toRung)}${VALUE_UNIT[family] ?? ''}`;
-  return [`${climb}${aheadText(family, toRung, maxRung)}`, `${climb}.`];
+  return detailPage([`${climb}${aheadText(family, toRung, maxRung)}`, `${climb}.`]);
 };
 
-/** The climb with no values behind it: the location's own line, when no rung line exists. */
-const capacityGrowthLine = (family: CapacityFamilyId, tiers: number): string =>
-  `${ownedLabel(family)} ${GROWTH_VERB[family]} ${capacityTierText(tiers)}.`;
-
-/** A progressive pickup whose jump the core has not resolved yet. */
-const capacityNextStepLine = (family: CapacityFamilyId): string =>
-  `${ownedLabel(family)} takes its next step up.`;
-
-export {
-  capacityGrowthLine, capacityNextStepLine, capacityRungText, capacityTierText, renderCapacityStep,
-};
+export { capacityRungText, capacityTierText, renderCapacityStep };

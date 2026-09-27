@@ -11,7 +11,7 @@ import type { ItemRecord } from '../../../data';
 const hex = (n: number): string => `0x${n.toString(16).toUpperCase()}`;
 
 /**
- * The neutral placeholders a `create` proposes: `category`/`randomizerName`
+ * The neutral placeholders a `create` proposes: `category`/`name`
  * have no native answer (unlike a screen's authoring gaps, `ItemRecord`
  * requires both), so this proposes the dataset's own neutral defaults instead
  * of guessing a real one. `origin: 'vanilla'` IS provable: anything that
@@ -21,7 +21,7 @@ const hex = (n: number): string => `0x${n.toString(16).toUpperCase()}`;
 const placeholderFor = (itemId: number): Omit<ItemRecord, 'id'> => ({
   origin: 'vanilla',
   category: 'junk',
-  randomizerName: `Unnamed item ${hex(itemId)}`,
+  name: `Unnamed item ${hex(itemId)}`,
   gameId: { receiveItemId: itemId },
 });
 

@@ -60,7 +60,7 @@ describeDataset('buildSchema on a second real collection', () => {
   it('derives the same way over a different shape', () => {
     expect(schema.byPath('id')?.kind).toBe('idRef');
     expect(schema.byPath('category')?.kind).toBe('enum');
-    expect(schema.byPath('randomizerName')?.kind).toBe('string');
+    expect(schema.byPath('name')?.kind).toBe('string');
     // Uniform nested shape → object. weapon.range's branches only ever ADD a
     // key on top of the smaller ones (unbounded ⊂ estimated ⊂ contact), so
     // it's one shape with optional fields, not a genuine variant, so object.

@@ -17,6 +17,8 @@ import { useTrackerData } from '../../../../../../hooks/useTrackerData';
 
 const SPOILER_DIMENSIONS = [SPHERE_DIMENSION, ...GROUP_DIMENSIONS];
 
+const countOf = (count: number, one: string, many: string): string => `${count} ${count === 1 ? one : many}`;
+
 const SpoilerPanel = () => {
   const {
     viewMode, setViewMode, grouping, setGrouping, filter, setFilter,
@@ -27,8 +29,12 @@ const SpoilerPanel = () => {
     const { unmatchedLocations, unmatchedItems } = placementView;
     if (unmatchedLocations.length === 0 && unmatchedItems.length === 0) return null;
     const parts: string[] = [];
-    if (unmatchedLocations.length > 0) parts.push(`${unmatchedLocations.length} placed locations have no check here`);
-    if (unmatchedItems.length > 0) parts.push(`${unmatchedItems.length} placed items have no record here`);
+    if (unmatchedLocations.length > 0) {
+      parts.push(`${countOf(unmatchedLocations.length, 'placed location has', 'placed locations have')} no check here`);
+    }
+    if (unmatchedItems.length > 0) {
+      parts.push(`${countOf(unmatchedItems.length, 'placed item has', 'placed items have')} no record here`);
+    }
     return (
       <Text
         className="randomizer-page__hint"

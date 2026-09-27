@@ -6,15 +6,15 @@
  * the page.
  */
 import { CapacityUpgradesBlock } from '@domains/app/compounds/CapacityUpgradesBlock';
-import { CAPACITY_ENABLED_KEY, CAPACITY_PROGRESSIVE_KEY } from '@shared/randomizer/ap-world/capacity';
-import { apOptionByKey } from '@shared/randomizer/ap-world/options.data';
+import { CAPACITY_ENABLED_KEY, CAPACITY_PROGRESSIVE_KEY } from '@shared/randomizer/world/capacity';
+import { optionByKey } from '@shared/randomizer/world/options.data';
 import { useCapacityRows } from '../../../../../../../hooks/randomizer/useCapacityRows';
 import type { CapacityUpgradesSectionProps } from './CapacityUpgradesSection.type';
 
 type CapacityUpgradesRowsProps = Omit<CapacityUpgradesSectionProps, 'onReset'>;
 
-const ENABLED_OPTION = apOptionByKey.get(CAPACITY_ENABLED_KEY);
-const PROGRESSIVE_OPTION = apOptionByKey.get(CAPACITY_PROGRESSIVE_KEY);
+const ENABLED_OPTION = optionByKey.get(CAPACITY_ENABLED_KEY);
+const PROGRESSIVE_OPTION = optionByKey.get(CAPACITY_PROGRESSIVE_KEY);
 
 const CapacityUpgradesRows = (props: CapacityUpgradesRowsProps) => {
   const {

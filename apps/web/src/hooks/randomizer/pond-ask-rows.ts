@@ -17,9 +17,9 @@
  */
 import {
   POND_ASK_BOTTLE_CONTENTS, POND_ASK_ROWS, POND_BOTTLE_ROW,
-} from '@shared/randomizer/ap-world/pond/pond-ask.data';
-import type { PondAskSetting } from '@shared/randomizer/ap-world/pond/pond-ask.type';
-import type { PondCeilings } from '@shared/randomizer/ap-world/pond/pond-ceilings';
+} from '@shared/randomizer/world/pond/pond-ask.data';
+import type { PondAskSetting } from '@shared/randomizer/world/pond/pond-ask.type';
+import type { PondCeilings } from '@shared/randomizer/world/pond/pond-ceilings';
 import type { PondAskModel, PondAskRowModel } from '@domains/app/compounds/WishingPondRow';
 
 /** The stop nearest an amount, so a stored amount off the ladder still shows a thumb. */

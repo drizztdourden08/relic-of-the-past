@@ -4,6 +4,7 @@
  * pickable option and rebuild the `CollectionSource` so the table shows the
  * row without a reload. Shared with `create-connection.ts`, which settles two ids.
  */
+import { bumpDataRevision } from '@app/lib/game/data-revision';
 import { refreshCollectionSource } from './collection-sources';
 import { registerIdRefOption } from './id-ref-options';
 import { resolveRecordLabel } from './record-links';
@@ -12,6 +13,7 @@ import type { EntityKind } from '@shared/game/data';
 const settleCreatedRecord = (kind: EntityKind, id: string): { success: true; id: string } => {
   registerIdRefOption(kind, { value: id, label: resolveRecordLabel(id), description: id });
   refreshCollectionSource(kind);
+  bumpDataRevision();
   return { success: true, id };
 };
 

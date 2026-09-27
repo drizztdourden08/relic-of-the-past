@@ -13,27 +13,27 @@
 import { describe, expect, it } from 'vitest';
 import { randomizerChoiceOverrides, snapshotOfChoices } from '@app/hooks/randomizer/randomizer-choices';
 import { partitionCatalogByLock } from '@app/ui/domains/app/compounds/RandomizerOptionRow/behavior/partitionCatalogByLock';
-import { AP_OPTION_GROUPS, apOptionCatalog } from '@shared/randomizer/ap-world/options.data';
-import { DEFAULT_CAPACITY_BONUS, LEGACY_SHUFFLE_ON_PROFILE } from '@shared/randomizer/ap-world/capacity';
-import { DEFAULT_ITEM_POWER } from '@shared/randomizer/ap-world/item-power/item-power.data';
-import { DEFAULT_DARK_ROOM_SETTING } from '@shared/randomizer/ap-world/dark-rooms/dark-room-lights.data';
-import { DEFAULT_ACCESSIBILITY } from '@shared/randomizer/ap-world/accessibility/accessibility-from-snapshot';
-import { DEFAULT_DUNGEON_ITEM_SETTING } from '@shared/randomizer/ap-world/dungeon-items/dungeon-item-modes';
-import { DARK_ROOM_OPTION_KEYS } from '@shared/randomizer/ap-world/dark-rooms/dark-room-option-keys';
-import { DIFFICULTY_OPTION_KEYS } from '@shared/randomizer/ap-world/difficulty/difficulty-option-keys';
-import { defaultDifficulty } from '@shared/randomizer/ap-world/difficulty/difficulty-from-snapshot';
-import { defaultProgressiveSetting } from '@shared/randomizer/ap-world/progressive/progressive-from-snapshot';
-import { defaultProgressiveModes } from '@shared/randomizer/ap-world/progressive/progressive-modes.data';
-import { defaultRetroBow } from '@shared/randomizer/ap-world/retro/retro-from-snapshot';
-import { LEGACY_POND_PROFILES } from '@shared/randomizer/ap-world/pond/pond-profile-defaults';
+import { OPTION_GROUPS, optionCatalog } from '@shared/randomizer/world/options.data';
+import { DEFAULT_CAPACITY_BONUS, LEGACY_SHUFFLE_ON_PROFILE } from '@shared/randomizer/world/capacity';
+import { DEFAULT_ITEM_POWER } from '@shared/randomizer/world/item-power/item-power.data';
+import { DEFAULT_DARK_ROOM_SETTING } from '@shared/randomizer/world/dark-rooms/dark-room-lights.data';
+import { DEFAULT_ACCESSIBILITY } from '@shared/randomizer/world/accessibility/accessibility-from-snapshot';
+import { DEFAULT_DUNGEON_ITEM_SETTING } from '@shared/randomizer/world/dungeon-items/dungeon-item-modes';
+import { DARK_ROOM_OPTION_KEYS } from '@shared/randomizer/world/dark-rooms/dark-room-option-keys';
+import { DIFFICULTY_OPTION_KEYS } from '@shared/randomizer/world/difficulty/difficulty-option-keys';
+import { defaultDifficulty } from '@shared/randomizer/world/difficulty/difficulty-from-snapshot';
+import { defaultProgressiveSetting } from '@shared/randomizer/world/progressive/progressive-from-snapshot';
+import { defaultProgressiveModes } from '@shared/randomizer/world/progressive/progressive-modes.data';
+import { defaultRetroBow } from '@shared/randomizer/world/retro/retro-from-snapshot';
+import { LEGACY_POND_PROFILES } from '@shared/randomizer/world/pond/pond-profile-defaults';
 import {
   SHOP_PRICE_BLOCK_KEYS, SHOP_PRICE_OPTION_KEYS,
-} from '@shared/randomizer/ap-world/shops/shop-price-options.data';
-import { SHOP_SCOPE_OPTION_KEYS } from '@shared/randomizer/ap-world/shops/shop-slot-options.data';
-import { defaultShopScope } from '@shared/randomizer/ap-world/shops/shop-scope-from-values';
-import { CANONICAL_SLOTS } from '@shared/randomizer/ap-world/shops/shop-slots';
-import { accountingOf } from '@shared/randomizer/ap-world/pool/pool-accounting';
-import { fillFlagsOf } from '@shared/randomizer/ap-world/fill/fill-options-from-snapshot';
+} from '@shared/randomizer/world/shops/shop-price-options.data';
+import { SHOP_SCOPE_OPTION_KEYS } from '@shared/randomizer/world/shops/shop-slot-options.data';
+import { defaultShopScope } from '@shared/randomizer/world/shops/shop-scope-from-values';
+import { CANONICAL_SLOTS } from '@shared/randomizer/world/shops/shop-slot-facts';
+import { accountingOf } from '@shared/randomizer/world/pool/pool-accounting';
+import { fillFlagsOf } from '@shared/randomizer/world/fill/fill-options-from-snapshot';
 import type { RandomizerOptionChoices } from '@app/hooks/randomizer/randomizer-choices';
 
 const BASE: RandomizerOptionChoices = {
@@ -81,7 +81,7 @@ describe('every unlocked catalog row reaches the generator', () => {
     // still puts its catalog key in the map with nothing behind it, which is
     // exactly the half-wired row this case exists to catch.
     const overrides = randomizerChoiceOverrides({ ...BASE, shopPrices: everyPrice });
-    const unwired = apOptionCatalog
+    const unwired = optionCatalog
       .filter((option) => !option.locked)
       .map((option) => option.key)
       .filter((key) => overrides[key] === undefined);
@@ -89,7 +89,7 @@ describe('every unlocked catalog row reaches the generator', () => {
   });
 
   it('lists each row once, so a row with its own block stays out of the plain list', () => {
-    const { unlocked } = partitionCatalogByLock(apOptionCatalog, AP_OPTION_GROUPS);
+    const { unlocked } = partitionCatalogByLock(optionCatalog, OPTION_GROUPS);
     const keys = unlocked.map((option) => option.key);
     expect(keys.filter((key) => SHOP_PRICE_BLOCK_KEYS.includes(key))).toEqual([]);
     expect(keys.filter((key) => SHOP_SCOPE_OPTION_KEYS.includes(key))).toEqual([]);

@@ -15,14 +15,14 @@
  * the pool is reused, and the pool stays small however long the ladders are.
  */
 
-import { pondProfilesOfStats } from '@shared/randomizer/ap-world/fill/placement-ponds';
-import { POND_INSTANCES } from '@shared/randomizer/ap-world/pond/pond-instances.data';
-import { pondPlanOf } from '@shared/randomizer/ap-world/pond/pond-plan';
+import { pondProfilesOfStats } from '@shared/randomizer/world/fill/placement-ponds';
+import { POND_INSTANCES } from '@shared/randomizer/world/pond/pond-instances';
+import { pondPlanOf } from '@shared/randomizer/world/pond/pond-plan';
 import { pondDemandLinesOf } from '@shared/randomizer/receipt-text/pond-demand-lines';
 import { receiptLineKey } from '@shared/randomizer/receipt-text/receipt-line.type';
 import { POND_DEMAND_KEY } from './pond-demand-rows';
-import type { ApPlacement } from '@shared/randomizer/ap-world/fill/ap-placement.type';
-import type { PondPlan } from '@shared/randomizer/ap-world/pond/pond-profile.type';
+import type { Placement } from '@shared/randomizer/world/fill/placement.type';
+import type { PondPlan } from '@shared/randomizer/world/pond/pond-profile.type';
 import type { PondDemandPlace } from '@shared/randomizer/receipt-text/pond-demand-lines';
 import type { ReceiptLine } from '@shared/randomizer/receipt-text/receipt-line.type';
 
@@ -44,7 +44,7 @@ const placeAtCapacity = (plan: PondPlan, prize: number): PondDemandPlace => {
   return plan.throws.slice(at + 1).some((entry) => entry.prize >= 0) ? 'more' : 'last';
 };
 
-const appendPondDemandLines = (placement: ApPlacement, lines: ReceiptLine[]): PlanPondDemandLines => {
+const appendPondDemandLines = (placement: Placement, lines: ReceiptLine[]): PlanPondDemandLines => {
   const profiles = pondProfilesOfStats(placement.stats);
   const demands = placement.pondDemands ?? {};
   const byText = new Map<string, number>();

@@ -27,6 +27,8 @@ interface DialogRowsProps {
   scrollStep: number;
   font: 'original' | 'modern';
   atlas: HTMLCanvasElement | null;
+  /** The primary then the secondary highlight: an atlas each for the game's glyphs, an ink each for the modern face. */
+  highlight: DialogHighlight;
   alphabet: readonly string[];
   ink: string;
   stroke: string;
@@ -35,8 +37,13 @@ interface DialogRowsProps {
   itemSprite: string | null;
 }
 
+interface DialogHighlight {
+  atlases: readonly (HTMLCanvasElement | null)[];
+  inks: readonly string[];
+}
+
 const DialogRows = (props: DialogRowsProps) => {
-  const { rows, unit, widthPx, visibleRows, scrollStep, font, atlas, alphabet, ink, stroke, strokeWidth, itemSprite } = props;
+  const { rows, unit, widthPx, visibleRows, scrollStep, font, atlas, highlight, alphabet, ink, stroke, strokeWidth, itemSprite } = props;
   const rowH = ROW_H * unit;
   const original = font === 'original' && atlas !== null;
 
@@ -46,8 +53,8 @@ const DialogRows = (props: DialogRowsProps) => {
         {rows.map((cells, r) => (
           <HudBox key={r} style={{ position: 'absolute', top: r * rowH, left: 0, width: widthPx * unit, height: rowH }}>
             {original
-              ? <GlyphRow cells={cells} atlas={atlas as HTMLCanvasElement} unit={unit} widthPx={widthPx} />
-              : <ModernRow cells={cells} alphabet={alphabet} atlas={atlas} unit={unit} ink={ink} stroke={stroke} strokeWidth={strokeWidth} />}
+              ? <GlyphRow cells={cells} atlas={atlas as HTMLCanvasElement} highlightAtlases={highlight.atlases} unit={unit} widthPx={widthPx} />
+              : <ModernRow cells={cells} alphabet={alphabet} atlas={atlas} unit={unit} ink={ink} highlightInks={highlight.inks} stroke={stroke} strokeWidth={strokeWidth} />}
           </HudBox>
         ))}
         {itemSprite && (
@@ -62,4 +69,4 @@ const DialogRows = (props: DialogRowsProps) => {
 };
 
 export { DialogRows };
-export type { DialogRowsProps };
+export type { DialogHighlight, DialogRowsProps };

@@ -123,6 +123,36 @@ typedef enum {
   kEvent_TurtleRockLedge_LaserBridge,
   // The dam's lever was pulled at least once; the game clears its own bits on the next screen.
   kEvent_FloodgatePulled,
+  // Named places inside the open regions: towns, grounds and fields, one head each.
+  kEvent_Area_LostWoods,
+  kEvent_Area_Lumberjacks,
+  kEvent_Area_Kakariko,
+  kEvent_Area_SanctuaryGrounds,
+  kEvent_Area_Graveyard,
+  kEvent_Area_WitchsHut,
+  kEvent_Area_ZorasRiver,
+  kEvent_Area_EasternPalaceGrounds,
+  kEvent_Area_UnclesEstate,
+  kEvent_Area_HauntedGrove,
+  kEvent_Area_GreatSwamp,
+  kEvent_Area_VillageOfOutcasts,
+  kEvent_Area_PalaceOfDarknessGrounds,
+  kEvent_Area_SwampPalaceGrounds,
+  kEvent_Area_DarkSanctuaryGrounds,
+  kEvent_Area_BombShopGrounds,
+  // The first bomb ever held. The game keeps only the count, which reads zero both before
+  // the first bomb and after the last one.
+  kEvent_BombsFirstHeld,
+  // A word exchanged with Aginah. The game's own flag for him is set the moment his sprite runs,
+  // so it says the cave was entered, never that he was spoken to.
+  kEvent_AginahTalked,
+  // The small island of Lake Hylia ringed by ledges, reached by the Mirror from the dark lake.
+  kEvent_Area_LakeHyliaLedgeIsland,
+  // The ledge the Bumper Cave's upper mouth opens on, above the screen everyone walks across.
+  kEvent_Area_BumperCaveLedge,
+  // Standing past the water in the Hookshot Fairy's cave. The game marks that tall room visited
+  // whole on entry, so its own bits cannot tell the far side from the doorway.
+  kEvent_HookshotFairyFarSide,
   kEventCount,
 } EventId;
 

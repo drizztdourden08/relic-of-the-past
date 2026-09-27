@@ -4,7 +4,7 @@
 // fall-hole table, room->exit-screen table) is obvious.
 import { wasmGetEntranceRooms, wasmGetExitScreenMap, wasmGetFallHoles, wasmGetOverworldEntrances, wasmGetEntranceSpawns, wasmGetAreaHeads, wasmGetRoomWalkBoundariesFor, wasmGetRoomStairInfoFor } from '../';
 import { roomEntrances, getScreenGrids } from '../flood';
-import { enrichEntrances } from '@domains/widgets/navigation/widget-helpers';
+import { enrichEntrances } from '../flood/overworld-entrances';
 import { usableEntranceTransition } from '@shared/game/navigation';
 import { detectRoom } from './room-exits';
 import { getRoomChests, getRoomSprites, getRoomDoors } from './interactables';

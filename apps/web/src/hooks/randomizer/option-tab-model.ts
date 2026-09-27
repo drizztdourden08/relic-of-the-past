@@ -19,14 +19,14 @@
  * switches once and read as a shrug of a first page, so the subject that
  * describes the world now opens the panel and takes them with it.
  */
-import { apOptionCatalog } from '@shared/randomizer/ap-world/options.data';
-import { familyOfOptionKey } from '@shared/randomizer/ap-world/capacity';
+import { optionCatalog } from '@shared/randomizer/world/options.data';
+import { familyOfOptionKey } from '@shared/randomizer/world/capacity';
 import {
   CAPACITY_BLOCK_KEYS, ENTRANCE_KEYS, ENVIRONMENT_KEYS, GLITCH_KEYS, ITEM_KEYS, MEDALLION_KEYS,
   POND_KEYS, SHOP_KEYS, TRAP_KEYS,
 } from './option-tab-keys';
 import type { LockedOptionGroup } from '@domains/app/compounds/RandomizerOptionRow';
-import type { ApOptionDef, ApOptionValue } from '@shared/randomizer/ap-world/options.type';
+import type { OptionDef, OptionValue } from '@shared/randomizer/world/options.type';
 
 /** The faces of the options panel, in the order they are shown. */
 const OPTION_TAB_IDS = [
@@ -74,7 +74,7 @@ const EMPTY_COUNTS: ChangedCounts =
  * Locked and live rows follow the same path, so the settings this version
  * fixes sit beside the ones it offers instead of being filed away elsewhere.
  */
-const tabOfOption = (option: ApOptionDef): OptionTabId => {
+const tabOfOption = (option: OptionDef): OptionTabId => {
   if (option.group === 'dungeon-items' || MEDALLION_KEYS.has(option.key)) return 'dungeon';
   // The capacity and pond rows sit in the reference's item section but have
   // tabs of their own, so they are claimed before the section is.
@@ -106,13 +106,13 @@ const tabOfOption = (option: ApOptionDef): OptionTabId => {
 };
 
 /** Where a plain row is listed; a row with a block of its own falls back to the world tab. */
-const listTabOfOption = (option: ApOptionDef): ListTabId => {
+const listTabOfOption = (option: OptionDef): ListTabId => {
   const tab = tabOfOption(option);
   return (LIST_TABS as readonly OptionTabId[]).includes(tab) ? tab as ListTabId : 'world';
 };
 
 /** Where a fixed row is listed: its own subject's tab, or the world tab. */
-const lockedTabOfOption = (option: ApOptionDef): LockedTabId => {
+const lockedTabOfOption = (option: OptionDef): LockedTabId => {
   const tab = tabOfOption(option);
   return (LOCKED_TABS as readonly OptionTabId[]).includes(tab) ? tab as LockedTabId : 'world';
 };
@@ -155,7 +155,7 @@ const splitLockedGroups = (groups: readonly LockedOptionGroup[]): LockedGroupsBy
   return byTab;
 };
 
-const isChanged = (option: ApOptionDef, value: ApOptionValue | undefined): boolean =>
+const isChanged = (option: OptionDef, value: OptionValue | undefined): boolean =>
   value !== undefined && String(value) !== String(option.baseline);
 
 /**
@@ -163,9 +163,9 @@ const isChanged = (option: ApOptionDef, value: ApOptionValue | undefined): boole
  * Locked rows can never move, so a tab holding only locked rows always counts
  * zero and wears no indicator at all.
  */
-const changedCountsOf = (values: Readonly<Record<string, ApOptionValue>>): ChangedCounts => {
+const changedCountsOf = (values: Readonly<Record<string, OptionValue>>): ChangedCounts => {
   const counts = { ...EMPTY_COUNTS };
-  for (const option of apOptionCatalog) {
+  for (const option of optionCatalog) {
     if (option.locked || !isChanged(option, values[option.key])) continue;
     counts[tabOfOption(option)] += 1;
   }

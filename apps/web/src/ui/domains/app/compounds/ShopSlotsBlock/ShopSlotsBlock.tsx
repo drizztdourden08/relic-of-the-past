@@ -31,9 +31,9 @@ import { shopTotalTextOf } from './behavior/shop-total-text';
 import { retroShopNoteOf } from './behavior/retro-shop-note';
 import { summaryOf, withDepth, withMode, withSlotCount, withSlotTicked } from './behavior/shop-scope-edits';
 import { DEPTH_LABEL, MODE_OPTIONS, MODE_TITLE, SLOTS_TITLE } from './ShopSlotsBlock.constants';
-import { MAX_SHOP_SLOT_DEPTH, MIN_SHOP_SLOT_DEPTH } from '@shared/randomizer/ap-world/shops/shop-slots';
-import type { RetroBowSetting } from '@shared/randomizer/ap-world/retro/retro.type';
-import type { ShopScope, ShopShuffleMode } from '@shared/randomizer/ap-world/shops/shop-scope.type';
+import { MAX_SHOP_SLOT_DEPTH, MIN_SHOP_SLOT_DEPTH } from '@shared/randomizer/world/shops/shop-slots';
+import type { RetroBowSetting } from '@shared/randomizer/world/retro/retro.type';
+import type { ShopScope, ShopShuffleMode } from '@shared/randomizer/world/shops/shop-scope.type';
 import './ShopSlotsBlock.css';
 
 interface ShopSlotsBlockProps {

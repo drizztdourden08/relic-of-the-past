@@ -12,6 +12,7 @@ type ProfileHubTab =
   | 'hud'
   | 'controls'
   | 'haptics'
+  | 'online' // Archipelago profiles only
   | 'developer'
   | 'mobile';
 

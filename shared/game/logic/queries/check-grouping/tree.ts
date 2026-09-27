@@ -4,7 +4,7 @@
  * per-node completion stats.
  */
 import type { CheckRecord } from '../../../data';
-import type { CheckStatus } from '../../eval';
+import type { CheckStatus } from '../../check-status.type';
 import type { GroupDimension, GroupNode, RunContext } from './types';
 import { getGroupValue, OUTSIDE_SWEEP } from './dimensions';
 

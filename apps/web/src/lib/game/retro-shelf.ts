@@ -12,10 +12,10 @@
  */
 
 import { resolveLocalItemId } from './randomizer-client/item-lookup';
-import { RETRO_QUIVER_ITEM } from '@shared/randomizer/ap-world/retro/retro-bow.data';
+import { RETRO_QUIVER_ITEM } from '@shared/randomizer/world/retro/retro-bow.data';
 import { log } from '../log-bus';
 import { getModule } from './wasm-bridge';
-import type { RetroShelfStock } from '@shared/randomizer/ap-world/retro/retro-shops';
+import type { RetroShelfStock } from '@shared/randomizer/world/retro/retro-shops';
 
 /** The core's "match anything" values, for a shop the earlier fields already name. */
 const ENTRANCE_ANY = -1;
@@ -29,18 +29,18 @@ const setRetroShelves = (shelves: readonly RetroShelfStock[]): void => {
     return;
   }
   for (const shelf of shelves) {
-    const { shop, slot, role, refillItem, refillPrice, quiverPrice } = shelf;
+    const { role, refillItem, refillPrice, quiverPrice } = shelf;
     const refillId = resolveLocalItemId(refillItem);
     if (refillId === undefined) {
       log.error(`[Randomizer] Retro shelf refused: refill "${refillItem}" is unresolvable`);
       continue;
     }
     mod.ccall('WasmSetRetroShelf', null, Array.from({ length: 7 }, () => 'number'), [
-      shop.roomId, shop.entrance ?? ENTRANCE_ANY, shop.owArea ?? OW_AREA_ANY, slot.subtype,
+      shelf.roomId, shelf.entrance ?? ENTRANCE_ANY, shelf.owArea ?? OW_AREA_ANY, shelf.subtype,
       quiverPrice, refillId, refillPrice,
     ]);
-    log.randomizer(`[Randomizer] Retro shelf armed: room 0x${shop.roomId.toString(16)} `
-      + `subtype ${slot.subtype} ${role === 'quiver' ? `${RETRO_QUIVER_ITEM} at ${quiverPrice}, then ` : ''}`
+    log.randomizer(`[Randomizer] Retro shelf armed: room 0x${shelf.roomId.toString(16)} `
+      + `subtype ${shelf.subtype} ${role === 'quiver' ? `${RETRO_QUIVER_ITEM} at ${quiverPrice}, then ` : ''}`
       + `${refillItem} at ${refillPrice}`);
   }
 };

@@ -54,7 +54,7 @@ const useSimulatorRun = () => {
 
     // Config echo + sequence marker, then the starting screen's flood up front.
     const startEvents: SimEvent[] = [];
-    const stopLabel = config.stopAtCheckId ? `stop at "${getCheck(config.stopAtCheckId).randomizerName}", ` : '';
+    const stopLabel = config.stopAtCheckId ? `stop at "${getCheck(config.stopAtCheckId).name}", ` : '';
     startEvents.push({ level: 'narrative', msg: `Run config: ${stopLabel}screen limit ${config.screenLimit ?? 'unlimited'}`, step: state.step });
     const seq = sequenceEvent(sequenceLabel, state.step);
     if (seq) { startEvents.push(seq); sequenceLabel = seq.msg.slice('Sequence '.length); }

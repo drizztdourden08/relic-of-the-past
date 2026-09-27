@@ -6,7 +6,7 @@
  * new settings become searchable with no catalog change.
  */
 import type { GameSettings } from '@shared/types/settings';
-import { PROFILE_HUB_TABS } from '../../../ProfileHub/ProfileHub.constants';
+import { isHubTabShown, PROFILE_HUB_TABS } from '../../../ProfileHub/ProfileHub.constants';
 import type { ProfileHubTab } from '../../../ProfileHub/ProfileHub.type';
 import type { SearchContext, SearchEntry, SearchSource } from '../../SearchPalette.type';
 
@@ -23,7 +23,7 @@ const build = (ctx: SearchContext): SearchEntry[] => {
   if (!settings) return [];
 
   return (Object.entries(PROFILE_HUB_TABS) as [ProfileHubTab, typeof PROFILE_HUB_TABS[ProfileHubTab]][])
-    .filter(([, spec]) => !spec.mobileOnly || ctx.isMobile)
+    .filter(([, spec]) => isHubTabShown(spec, { isMobile: ctx.isMobile, isOnline: ctx.isOnline === true }))
     .flatMap(([tab, spec]) => {
       if (!spec.sections) return [];
       return spec.sections(settings).flatMap((section) => {

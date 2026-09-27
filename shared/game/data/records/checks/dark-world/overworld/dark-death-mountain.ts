@@ -1,0 +1,152 @@
+/* @layer shared-game @kind data */
+
+import type { CheckRecord } from '@shared/game/data/types';
+
+const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_CHECKS: CheckRecord[] = [
+  {
+    id: 'check-075',
+    gameId: { roomId: 279, chestIndex: 0 },
+    kind: 'chest',
+    screenId: 'screen-465',
+    regionId: 'region-158',
+    name: 'Spike Cave',
+    vanillaItemIds: ['item-025'],
+    review: { status: 'verified', source: 'person', at: '2026-08-26T03:06:52.923Z' },
+  },
+  {
+    id: 'check-091',
+    gameId: { roomId: 248, chestIndex: 0 },
+    kind: 'chest',
+    // Both chests are in the one room the cartridge lists them under, so both sit on its screen.
+    screenId: 'screen-457',
+    regionId: 'region-156',
+    name: 'Superbunny Cave - Top',
+    vanillaItemIds: ['item-041'],
+    review: {
+      status: 'accepted',
+      source: 'person',
+      note: 'vanillaItemIds[0] item-072 -> item-041: S1 census item byte at the certified position == receive-item id (decomp id-space ruling)',
+      at: '2026-08-26T03:06:52.923Z',
+    },
+  },
+  {
+    id: 'check-092',
+    gameId: { roomId: 248, chestIndex: 1 },
+    kind: 'chest',
+    screenId: 'screen-457',
+    regionId: 'region-156',
+    name: 'Superbunny Cave - Bottom',
+    vanillaItemIds: ['item-055'],
+    review: {
+      status: 'accepted',
+      source: 'person',
+      note: 'vanillaItemIds[0] item-072 -> item-055: S1 census item byte at the certified position == receive-item id (decomp id-space ruling)',
+      at: '2026-08-26T03:06:52.923Z',
+    },
+  },
+  {
+    id: 'check-093',
+    gameId: { roomId: 60, chestIndex: 0 },
+    kind: 'chest',
+    screenId: 'screen-464',
+    regionId: 'region-159',
+    name: 'Hookshot Cave - Top Right',
+    vanillaItemIds: ['item-066'],
+    review: { status: 'verified', source: 'person', at: '2026-08-26T03:06:52.923Z' },
+  },
+  {
+    id: 'check-094',
+    gameId: { roomId: 60, chestIndex: 1 },
+    kind: 'chest',
+    screenId: 'screen-464',
+    regionId: 'region-159',
+    name: 'Hookshot Cave - Top Left',
+    vanillaItemIds: ['item-066'],
+    review: { status: 'verified', source: 'person', at: '2026-08-26T03:06:52.923Z' },
+  },
+  {
+    id: 'check-095',
+    gameId: { roomId: 60, chestIndex: 3 },
+    kind: 'chest',
+    screenId: 'screen-464',
+    regionId: 'region-159',
+    name: 'Hookshot Cave - Bottom Right',
+    vanillaItemIds: ['item-066'],
+    review: {
+      status: 'accepted',
+      source: 'person',
+      note: 'gameId.roomId/chestIndex (60, 2) -> (60, 3): S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census',
+      at: '2026-08-26T03:06:52.923Z',
+    },
+  },
+  {
+    id: 'check-096',
+    gameId: { roomId: 60, chestIndex: 2 },
+    kind: 'chest',
+    screenId: 'screen-464',
+    regionId: 'region-159',
+    name: 'Hookshot Cave - Bottom Left',
+    vanillaItemIds: ['item-066'],
+    review: {
+      status: 'accepted',
+      source: 'person',
+      note: 'gameId.roomId/chestIndex (60, 3) -> (60, 2): S2 reference address -> chest-table crosswalk; target entry confirmed present in the S1 census',
+      at: '2026-08-26T03:06:52.923Z',
+    },
+  },
+  {
+    id: 'check-272',
+    gameId: { owScreen: 74, mask: 64 },
+    kind: 'standing',
+    // The ledge's own screen, the one the tracker's map reaches through the cave with the Cape.
+    screenId: 'screen-230',
+    regionId: 'region-045',
+    name: 'Bumper Cave Ledge',
+    vanillaItemIds: ['item-024'],
+    scope: 'world-item',
+    review: {
+      status: 'accepted',
+      source: 'person',
+      note: 'record absent -> created (standing, owScreen 74, mask 64, vanilla item-024): ROM OW sprite census: sprite 0xEB at area 0x4A stage2; HeartUpgrade_SetObtainedFlag sprite_main.c:6516-6523: outdoors save_ow_event_info[screen] |= 0x40; AP Regions.py \'Bumper Cave Ledge\' (0x180146, dw region); receive id 0x17 = item-024 (misc.c:67/:88 heart-piece row)',
+      at: '2026-08-26T03:06:52.923Z',
+    },
+  },
+  // The cave shelf up here. Its room (0x0112 through entrance 0x58) is shared with the lake
+  // cave's door, so the overworld area the player walked in from tells the two apart; see the
+  // seam note on CheckGameId.shopSeam.
+  {
+    id: 'check-626',
+    gameId: { shopSeam: { roomId: 274, entrance: 88, owArea: 69, subtype: 7 } },
+    kind: 'shop-slot',
+    screenId: 'screen-453',
+    regionId: 'region-108',
+    name: 'Cave Shop (Dark Death Mountain) Left',
+    vanillaItemIds: ['item-047'],
+    price: 150,
+    shop: { shopId: 'cave-shop-dark-death-mountain', slot: 0, position: 'Left', seam: 'shelf' },
+  },
+  {
+    id: 'check-627',
+    gameId: { shopSeam: { roomId: 274, entrance: 88, owArea: 69, subtype: 10 } },
+    kind: 'shop-slot',
+    screenId: 'screen-453',
+    regionId: 'region-108',
+    name: 'Cave Shop (Dark Death Mountain) Center',
+    vanillaItemIds: ['item-125'],
+    price: 10,
+    shop: { shopId: 'cave-shop-dark-death-mountain', slot: 1, position: 'Center', seam: 'shelf' },
+  },
+  {
+    id: 'check-628',
+    gameId: { shopSeam: { roomId: 274, entrance: 88, owArea: 69, subtype: 12 } },
+    kind: 'shop-slot',
+    screenId: 'screen-453',
+    regionId: 'region-108',
+    name: 'Cave Shop (Dark Death Mountain) Right',
+    vanillaItemIds: ['item-050'],
+    price: 50,
+    shop: { shopId: 'cave-shop-dark-death-mountain', slot: 2, position: 'Right', seam: 'shelf' },
+  },
+];
+
+export { DW_OVERWORLD_DARK_DEATH_MOUNTAIN_CHECKS };

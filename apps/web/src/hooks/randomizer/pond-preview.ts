@@ -17,11 +17,11 @@
  * Nothing here rolls anything: the demands arrive already settled, so the
  * panel and the seed cannot disagree.
  */
-import { describeRupees } from '@shared/randomizer/ap-world/pond/rupee-gems';
+import { describeRupees } from '@shared/randomizer/world/pond/rupee-gems';
 import { currencySpriteOf, priceSpriteOf } from './currency-sprites';
-import type { PondDemandView } from '@shared/randomizer/ap-world/pond/pond-ask.type';
-import type { PondPlan, PondSetting } from '@shared/randomizer/ap-world/pond/pond-profile.type';
-import type { ShopPrice } from '@shared/randomizer/ap-world/shops/shop-price.type';
+import type { PondDemandView } from '@shared/randomizer/world/pond/pond-ask.type';
+import type { PondPlan, PondSetting } from '@shared/randomizer/world/pond/pond-profile.type';
+import type { ShopPrice } from '@shared/randomizer/world/shops/shop-price.type';
 import type { LadderPreviewProps } from '@domains/app/compounds/LadderPreview';
 
 /** What one throw takes, and in what. */

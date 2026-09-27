@@ -22,14 +22,15 @@
  * of the ladder, so a gap would strand every rung past it.
  */
 
+import type { LocationKey } from '@shared/randomizer/world/location-key';
 import { getCheck } from '@shared/game/data';
-import { pondProfilesOfStats } from '@shared/randomizer/ap-world/fill/placement-ponds';
-import { pondPlanOf } from '@shared/randomizer/ap-world/pond/pond-plan';
+import { pondProfilesOfStats } from '@shared/randomizer/world/fill/placement-ponds';
+import { pondPlanOf } from '@shared/randomizer/world/pond/pond-plan';
 import { WISH_POND_WATERS } from './wish-pond-rung-keys';
 import type { CheckId } from '@shared/game/data';
-import type { ApPlacement } from '@shared/randomizer/ap-world/fill/ap-placement.type';
-import type { PondId, PondInstance } from '@shared/randomizer/ap-world/pond/pond-instance.type';
-import type { PondMode } from '@shared/randomizer/ap-world/pond/pond-profile.type';
+import type { Placement } from '@shared/randomizer/world/fill/placement.type';
+import type { PondId, PondInstance } from '@shared/randomizer/world/pond/pond-instance.type';
+import type { PondMode } from '@shared/randomizer/world/pond/pond-profile.type';
 import type { WishPondRungArm } from '../wish-pond-plan';
 import type { WishPondMessageIds } from './receipt-text-refresh';
 import type { PhysicalPlan, PlanEntry } from './physical-plan.type';
@@ -37,17 +38,17 @@ import type { PhysicalPlan, PlanEntry } from './physical-plan.type';
 /** What a session hands the translation: the two lookups that belong to the session itself. */
 interface WishPondArmContext {
   /** The pre-rendered receipt line of one location, or -1. */
-  messageIdOf: (locationName: string) => number;
+  messageIdOf: (location: LocationKey) => number;
   /** The completion id for one location, allocated in the session's ledger. */
-  fireIdOf: (locationName: string) => number;
+  fireIdOf: (location: LocationKey) => number;
   /** The two host lines every planned water speaks. */
   lines: WishPondMessageIds;
 }
 
 /** One armed rung, with the names it came from for the log and the harness. */
 interface WishPondRungRow extends WishPondRungArm {
-  location: string;
-  itemName: string;
+  location: LocationKey;
+  item: string;
 }
 
 /** One water's share of the session. */
@@ -72,16 +73,16 @@ interface WishPondSessionPlan {
 
 /** What one location hands over, before it has a place and a fire id. */
 interface RungGrant {
-  itemName: string;
+  item: string;
   newItem: number;
   messageId: number;
   /** False for a vanilla slot, which the receive-seam table substitutes and reports. */
   assigned: boolean;
 }
 
-type PendingRung = RungGrant & { pond: number; rung: number; location: string };
+type PendingRung = RungGrant & { pond: number; rung: number; location: LocationKey };
 
-const vanillaSlotGrant = (entry: PlanEntry | undefined, location: string): RungGrant | string => {
+const vanillaSlotGrant = (entry: PlanEntry | undefined, location: LocationKey): RungGrant | string => {
   if (entry?.planClass !== 'override-npc' || entry.npcOverride === undefined || entry.checkId === undefined) {
     return `"${location}" has no npc override armed, so a vanilla grant there would pay nothing`;
   }
@@ -89,24 +90,24 @@ const vanillaSlotGrant = (entry: PlanEntry | undefined, location: string): RungG
   if (itemId === undefined || itemId !== entry.npcOverride.vanillaItemId) {
     return `"${location}" has no vanilla receive id matching its npc override`;
   }
-  return { itemName: entry.itemName, newItem: itemId, messageId: -1, assigned: false };
+  return { item: entry.item, newItem: itemId, messageId: -1, assigned: false };
 };
 
 const customGrant = (
-  entry: PlanEntry | undefined, location: string, messageIdOf: WishPondArmContext['messageIdOf'],
+  entry: PlanEntry | undefined, location: LocationKey, messageIdOf: WishPondArmContext['messageIdOf'],
 ): RungGrant | string => {
   const target = entry?.scriptedOverride?.target;
   if (entry?.scriptedOverride === undefined || target?.surface !== 'wish-pond') {
     return `"${location}" is not classified as a wish-pond rung`;
   }
   return {
-    itemName: entry.itemName, newItem: entry.scriptedOverride.targetLocalId,
+    item: entry.item, newItem: entry.scriptedOverride.targetLocalId,
     messageId: messageIdOf(location), assigned: true,
   };
 };
 
 const waterPlanOf = (
-  instance: PondInstance, pond: number, placement: ApPlacement,
+  instance: PondInstance, pond: number, placement: Placement,
   byLocation: ReadonlyMap<string, PlanEntry>, context: WishPondArmContext,
 ): WishPondWaterPlan => {
   const { messageIdOf, fireIdOf, lines } = context;
@@ -130,9 +131,9 @@ const waterPlanOf = (
 };
 
 const wishPondSessionOf = (
-  placement: ApPlacement, plan: PhysicalPlan, context: WishPondArmContext,
+  placement: Placement, plan: PhysicalPlan, context: WishPondArmContext,
 ): WishPondSessionPlan => {
-  const byLocation = new Map(plan.entries.map((entry) => [entry.locationName, entry]));
+  const byLocation = new Map(plan.entries.map((entry) => [entry.location, entry]));
   const waters = WISH_POND_WATERS.map(({ instance, pond }) =>
     waterPlanOf(instance, pond, placement, byLocation, context));
   const rungs = waters.flatMap((water) => water.rungs.map(({ pond, rung, newItem, messageId, fireId, assigned }) =>

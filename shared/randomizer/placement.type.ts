@@ -1,7 +1,9 @@
 /* @layer shared-game @kind types */
 /**
- * The randomizer's output contract: a Placement is the full, serializable
- * result of one seed: which item sits at which check, plus the spoiler spheres.
+ * The v1 output contract the first generator wrote: a LegacyPlacement is the
+ * full, serializable result of one seed, which item sits at which check, plus
+ * the spoiler spheres. A profile saved under it is lifted into the engine's
+ * Placement on read (legacy-placement.ts).
  */
 
 /** Check kinds the randomizer is allowed to reassign. */
@@ -25,17 +27,12 @@ interface SpoilerSphere {
   entries: SpoilerSphereEntry[];
 }
 
-interface Placement {
+interface LegacyPlacement {
   version: 1;
   seed: string;
   options: RandomizerOptions;
   /** CheckId -> ItemId. */
   assignments: Record<string, string>;
-  /**
-   * Standard location name -> standard item name. Filled by a later
-   * integration step, and the generator leaves it {} for now.
-   */
-  nameView: Record<string, string>;
   spoiler: SpoilerSphere[];
 }
 
@@ -46,4 +43,4 @@ const DEFAULT_OPTIONS: RandomizerOptions = {
 };
 
 export { DEFAULT_OPTIONS };
-export type { Placement, RandomizedKind, RandomizerOptions, SpoilerSphere, SpoilerSphereEntry };
+export type { LegacyPlacement, RandomizedKind, RandomizerOptions, SpoilerSphere, SpoilerSphereEntry };

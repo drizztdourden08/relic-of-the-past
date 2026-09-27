@@ -1,6 +1,8 @@
 /* @layer bridge-wasm @kind data */
 /** Settings keys that can be live-updated while the game runs (no restart). */
 import type { GameSettings } from '@shared/types/settings';
+import { ONLINE_NOTICE_SETTING_KEYS } from '@shared/randomizer/archipelago/online-notice-settings';
+import { QUIET_RECEIPT_KEY, QUIET_RECEIPT_KINDS } from '@shared/game/quiet-receipts';
 
 const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   // Feature flags (synced every frame via g_wanted_zelda_features)
@@ -60,6 +62,9 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'dialogInkColor',
   'dialogStrokeColor',
   'dialogStrokeWidth',
+  // Randomizer message highlights (the host box's colours, and two words the core draws with)
+  'hudHighlightPrimary',
+  'hudHighlightSecondary',
   'dialogBoxOpacity',
   'dialogButtonPrompts',
   'dialogFloatingGround',
@@ -128,6 +133,7 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'hudHeartMode',
   'hudMagicMode',
   'hudCountLayout',
+  'hudCountdownStyle',
   'hudPauseStyle',
   'hudPauseHighlight',
   // Haptics (JS-only, no WASM restart needed)
@@ -145,6 +151,10 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   // session start, so a change applies to the very next one.
   'resumeMSU',
   'resetMSUAtTitle',
+  // Online notice toasts: the toast stack reads them as each notice arrives
+  ...ONLINE_NOTICE_SETTING_KEYS,
+  // Quiet receipts: gate word 5 follows them on every push, and each delivery reads them when queued
+  ...QUIET_RECEIPT_KINDS.map((kind) => QUIET_RECEIPT_KEY[kind]),
 ]);
 
 export { LIVE_SETTINGS };

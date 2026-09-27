@@ -7,7 +7,7 @@
  */
 import type {
   ProgressiveFamilyId, ProgressiveFamilyMode, ProgressiveModeSetting, ProgressiveSetting,
-} from '@shared/randomizer/ap-world/progressive/progressive.type';
+} from '@shared/randomizer/world/progressive/progressive.type';
 
 const withTierTicked = (
   setting: ProgressiveSetting, family: ProgressiveFamilyId, index: number, checked: boolean,

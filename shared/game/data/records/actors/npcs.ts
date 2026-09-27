@@ -1,73 +1,73 @@
 /* @layer shared-game @kind data */
-/** Split out of the flat seed files by scripts/generate-ids/split-seeds.ts. */
+
 import type { ActorRecord } from '@shared/game/data/types';
 
-const NPC_ACTORS: ActorRecord[] = [
+const NPCS_ACTORS: ActorRecord[] = [
   {
     id: 'actor-001',
     gameId: { spriteType: 22 },
     kind: 'npc',
-    randomizerName: 'Sahasrahla',
+    name: 'Sahasrahla',
   },
   {
     id: 'actor-002',
     gameId: { spriteType: 26 },
     kind: 'npc',
-    randomizerName: 'Blacksmith',
+    name: 'Blacksmith',
   },
   {
     id: 'actor-003',
     gameId: { spriteType: 26 },
     kind: 'npc',
-    randomizerName: 'Frog',
+    name: 'Frog',
   },
   {
     id: 'actor-004',
     gameId: { spriteType: 26 },
     kind: 'npc',
-    randomizerName: 'Missing Smith',
+    name: 'Missing Smith',
   },
   {
     id: 'actor-005',
     gameId: { spriteType: 31 },
     kind: 'npc',
-    randomizerName: 'Sick Kid',
+    name: 'Sick Kid',
   },
   {
     id: 'actor-006',
     gameId: { spriteType: 43 },
     kind: 'npc',
-    randomizerName: 'Hobo',
+    name: 'Hobo',
   },
   {
     id: 'actor-007',
     gameId: { spriteType: 46 },
     kind: 'npc',
-    randomizerName: 'Stumpy',
+    name: 'Stumpy',
   },
   {
     id: 'actor-008',
     gameId: { spriteType: 57 },
     kind: 'npc',
-    randomizerName: 'Purple Chest',
+    name: 'Purple Chest',
   },
   {
     id: 'actor-009',
     gameId: { spriteType: 58 },
     kind: 'npc',
-    randomizerName: 'Magic Bat',
+    name: 'Magic Bat',
   },
   {
     id: 'actor-010',
     gameId: { spriteType: 82 },
     kind: 'npc',
-    randomizerName: 'King Zora',
+    name: 'King Zora',
   },
   {
     id: 'actor-011',
     gameId: { spriteType: 115 },
     kind: 'npc',
-    randomizerName: 'Uncle',
+    name: 'Uncle',
     combat: {
       health: 0,
       flags4: 10,
@@ -95,20 +95,172 @@ const NPC_ACTORS: ActorRecord[] = [
     id: 'actor-012',
     gameId: { spriteType: 117 },
     kind: 'npc',
-    randomizerName: 'Bottle Merchant',
+    name: 'Bottle Merchant',
   },
   {
     id: 'actor-013',
     gameId: { spriteType: 173 },
     kind: 'npc',
-    randomizerName: 'Old Man',
+    name: 'Old Man',
   },
   {
     id: 'actor-014',
     gameId: { spriteType: 192 },
     kind: 'npc',
-    randomizerName: 'Catfish',
+    name: 'Catfish',
+  },
+  {
+    // Sprite_28_DarkWorldHintNPC (sprite_main.h) is a townsfolk NPC. Reclassified from
+    // 'object' because npc was out of scope for the package that built this file.
+    id: 'actor-165',
+    gameId: { spriteType: 40 },
+    kind: 'npc',
+    name: 'Dark World Hint NPC',
+  },
+  {
+    // Townsfolk NPC; reclassified from 'object'.
+    id: 'actor-166',
+    gameId: { spriteType: 42 },
+    kind: 'npc',
+    name: 'DustGirl',
+  },
+  {
+    // Townsfolk NPCs (the two brothers blocking the path); reclassified from 'object'.
+    id: 'actor-167',
+    gameId: { spriteType: 44 },
+    kind: 'npc',
+    name: 'Lumberjacks',
+  },
+  {
+    // Townsfolk NPC; reclassified from 'object'.
+    id: 'actor-168',
+    gameId: { spriteType: 47 },
+    kind: 'npc',
+    name: 'Person',
+  },
+  {
+    // Townsfolk NPC; reclassified from 'object'.
+    id: 'actor-169',
+    gameId: { spriteType: 48 },
+    kind: 'npc',
+    name: 'Person',
+  },
+  {
+    // Townsfolk NPC; reclassified from 'object'.
+    id: 'actor-170',
+    gameId: { spriteType: 49 },
+    kind: 'npc',
+    name: 'FortuneTeller',
+  },
+  {
+    // Townsfolk NPC; reclassified from 'object'.
+    id: 'actor-171',
+    gameId: { spriteType: 50 },
+    kind: 'npc',
+    name: 'AngryBrother',
+  },
+  {
+    // Townsfolk NPC; reclassified from 'object'.
+    id: 'actor-173',
+    gameId: { spriteType: 52 },
+    kind: 'npc',
+    name: 'ScaredGirl2',
+  },
+  {
+    // Townsfolk NPC; reclassified from 'object'.
+    id: 'actor-174',
+    gameId: { spriteType: 53 },
+    kind: 'npc',
+    name: 'HedgeMan',
+  },
+  {
+    // Townsfolk NPC; reclassified from 'object'.
+    id: 'actor-175',
+    gameId: { spriteType: 54 },
+    kind: 'npc',
+    name: 'Witch',
+  },
+  {
+    // Townsfolk NPC; reclassified from 'object'.
+    id: 'actor-179',
+    gameId: { spriteType: 60 },
+    kind: 'npc',
+    name: 'FarmBoy',
+  },
+  {
+    // Townsfolk NPC; reclassified from 'object'.
+    id: 'actor-180',
+    gameId: { spriteType: 61 },
+    kind: 'npc',
+    name: 'ScaredGirl1',
+  },
+  {
+    // The princess NPC, reclassified from 'object'. Real names are legitimate in
+    // DATA per the copyright rule, and this is a data file, not code.
+    id: 'actor-200',
+    gameId: { spriteType: 118 },
+    kind: 'npc',
+    name: 'Zelda',
+  },
+  {
+    // Sprite_78_MrsSahasrahla (sprite_main.h) is the elder's wife, a townsfolk NPC
+    // reclassified from 'object'.
+    id: 'actor-201',
+    gameId: { spriteType: 120 },
+    kind: 'npc',
+    name: 'Mrs Sahasrahla',
+  },
+  {
+    // A named NPC character; reclassified from 'object'.
+    id: 'actor-226',
+    gameId: { spriteType: 182 },
+    kind: 'npc',
+    name: 'Kiki',
+  },
+  {
+    // Sprite_B7_BlindMaiden (sprite_main.h) is the boss's captive-maiden illusion. The
+    // census had the wrong gender. Townsfolk NPC, reclassified from 'object'.
+    id: 'actor-227',
+    gameId: { spriteType: 183 },
+    kind: 'npc',
+    name: 'Blind Maiden',
+  },
+  {
+    // Sprite_B9_BullyAndPinkBall (sprite_main.h) is townsfolk NPCs, reclassified from
+    // 'object'; spelling fix ('Whimp' -> 'Wimp').
+    id: 'actor-228',
+    gameId: { spriteType: 185 },
+    kind: 'npc',
+    name: 'Bully & Wimp (DW)',
+  },
+  {
+    // Sprite_BB_Shopkeeper (sprite_main.h) is a townsfolk NPC, reclassified from 'object'.
+    id: 'actor-230',
+    gameId: { spriteType: 187 },
+    kind: 'npc',
+    name: 'Shopkeeper',
+  },
+  {
+    // Sprite_BC_Drunkard (sprite_main.h) is a townsfolk NPC, reclassified from 'object'.
+    id: 'actor-231',
+    gameId: { spriteType: 188 },
+    kind: 'npc',
+    name: 'Drunkard',
+  },
+  {
+    // Sprite_D5_DigGameGuy (sprite_main.h) is a townsfolk NPC, reclassified from 'object'.
+    id: 'actor-243',
+    gameId: { spriteType: 213 },
+    kind: 'npc',
+    name: 'Dig Game Guy',
+  },
+  {
+    // Townsfolk NPC; reclassified from 'object'.
+    id: 'actor-261',
+    gameId: { spriteType: 234 },
+    kind: 'npc',
+    name: 'WitchAssistant',
   },
 ];
 
-export { NPC_ACTORS };
+export { NPCS_ACTORS };

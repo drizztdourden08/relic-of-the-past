@@ -26,7 +26,7 @@ const MODE_BADGE_LABELS: Record<ProfileModeId, string> = {
   'vanilla': 'Vanilla',
   'vanilla-safe': 'Vanilla Safe',
   'randomizer': 'Randomizer',
-  'randomizer-online': 'Online Randomizer',
+  'randomizer-online': 'Archipelago Randomizer',
 };
 
 /** Short monogram shown on the fallback chip until the art exists. */

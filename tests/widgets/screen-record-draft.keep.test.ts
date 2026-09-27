@@ -13,8 +13,8 @@ const draft = (over: Partial<ScreenDraft>): ScreenDraft => ({
   kind: 'dungeon',
   world: 'light',
   interiorKind: 'cave',
-  randomizerName: 'Test Room',
-  areaId: 'area-011',
+  name: 'Test Room',
+  areaId: 'area-009',
   locationId: 'location-011',
   tags: [],
   variant: undefined,
@@ -54,7 +54,9 @@ describe('buildScreenRecord and the native id the record carries', () => {
 describe('buildScreenRecord position and defaults', () => {
   it('carries a floor only alongside a grid position', () => {
     expect(buildScreenRecord(draft({})).record?.position).toEqual({ gridX: 1, gridY: 2, floor: 0 });
-    expect(buildScreenRecord(draft({ floor: undefined })).record?.position)
+    // An interior for the floor-less half: a dungeon room's file IS its floor,
+    // so leaving the floor out of one is its own blocker (record-file-targets).
+    expect(buildScreenRecord(draft({ kind: 'interior', floor: undefined })).record?.position)
       .toEqual({ gridX: 1, gridY: 2 });
   });
 
@@ -65,8 +67,8 @@ describe('buildScreenRecord position and defaults', () => {
 
   it('trims the name and resolves the chosen terms to tag references', () => {
     const tags = ['role:boss'] as ScreenDraft['tags'];
-    const { record } = buildScreenRecord(draft({ randomizerName: '  Spaced  ', tags }));
-    expect(record?.randomizerName).toBe('Spaced');
+    const { record } = buildScreenRecord(draft({ name: '  Spaced  ', tags }));
+    expect(record?.name).toBe('Spaced');
     expect(record?.tags).toEqual(tagIdsForKeys(tags));
     expect(record?.tags).not.toBe(tags);
     // A reference, not the term the form worked in.
@@ -84,7 +86,7 @@ describe('buildScreenRecord and what it refuses to invent', () => {
     buildScreenRecord(draft(over)).blockers;
 
   it.each([
-    ['a name', { randomizerName: '   ' }],
+    ['a name', { name: '   ' }],
     ['an area', { areaId: '' as const }],
     ['a location', { locationId: '' as const }],
     ['a palace index', { palaceIndex: undefined }],
@@ -110,13 +112,13 @@ describe('buildScreenRecord on fields the form does not own', () => {
   it('carries them across from the record being edited instead of dropping them', () => {
     const existing = {
       id: 'screen-183',
-      vanillaName: 'Held Name',
+      review: { status: 'accepted', source: 'person', at: '2026-01-01' },
       nav: { edges: [] },
       triggerIds: ['trigger-001'],
       spawns: [{ id: 'spawn-1' }],
     } as unknown as NonNullable<ScreenDraft['existing']>;
     const { record } = buildScreenRecord(draft({ existing }));
-    expect(record?.vanillaName).toBe('Held Name');
+    expect(record?.review).toBe(existing.review);
     expect(record?.nav).toBe(existing.nav);
     expect(record?.triggerIds).toBe(existing.triggerIds);
     expect(record?.spawns).toBe(existing.spawns);
@@ -124,7 +126,7 @@ describe('buildScreenRecord on fields the form does not own', () => {
 
   it('leaves them undefined when there is nothing being edited', () => {
     const { record } = buildScreenRecord(draft({ existing: null }));
-    expect(record?.vanillaName).toBeUndefined();
+    expect(record?.review).toBeUndefined();
     expect(record?.nav).toBeUndefined();
     expect(record?.triggerIds).toBeUndefined();
     expect(record?.spawns).toBeUndefined();

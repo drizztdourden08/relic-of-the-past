@@ -1,10 +1,10 @@
 /* @layer renderer-components @kind types */
-import type { CurveId } from '@shared/randomizer/ap-world/capacity';
-import type { PondAskSetting } from '@shared/randomizer/ap-world/pond/pond-ask.type';
-import type { PondAskCurrency } from '@shared/randomizer/ap-world/pond/pond-ask.type';
-import type { ShopBottleContent } from '@shared/randomizer/ap-world/shops/shop-price.type';
-import type { OptionDescription } from '@shared/randomizer/ap-world/option-description.type';
-import type { PondMode } from '@shared/randomizer/ap-world/pond/pond-profile.type';
+import type { CurveId } from '@shared/randomizer/world/capacity';
+import type { PondAskSetting } from '@shared/randomizer/world/pond/pond-ask.type';
+import type { PondAskCurrency } from '@shared/randomizer/world/pond/pond-ask.type';
+import type { ShopBottleContent } from '@shared/randomizer/world/shops/shop-price.type';
+import type { OptionDescription } from '@shared/randomizer/world/option-description.type';
+import type { PondMode } from '@shared/randomizer/world/pond/pond-profile.type';
 import type { LadderPreviewProps } from '../LadderPreview';
 
 /** The row's own shape of the pond setting: indexes and choices, never prices. */

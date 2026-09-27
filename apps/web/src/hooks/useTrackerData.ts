@@ -8,19 +8,28 @@
  * One hook for both surfaces (the Checks widget and the randomizer page's
  * spoiler tab) so the two can never drift apart on what a check contains.
  *
- * Reachability depends on the session kind. A vanilla profile evaluates the
- * hand-authored rule set as before. A randomized profile evaluates the ported
- * rule engine over the frozen placement instead: collected placed items,
- * standard-mode escape gating and per-dungeon key counts included, because
- * the vanilla dataset models neither the seed nor the escape sequence.
+ * Reachability comes from ONE engine in both modes. A seed is judged over its own placement; the
+ * plain game is judged over the placement where nothing moved (normal-placement.ts), so the
+ * engine cannot tell the two apart and cannot disagree with itself. Rows the world holds no
+ * location for keep being read from the dataset's own requirements, the same way in both modes
+ * (tracker/tracker-statuses.ts).
+ *
+ * An online multiworld has no placement of its own, so it is judged over that same plain-game
+ * world, which is the fullest one the app can build. What it does NOT do is show the plain
+ * game's items: the server hands locations over one at a time, so the run says its contents
+ * are not known here (randomizer-client/run-kind.ts) and every row shows nothing instead.
  */
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { computeTrackerSnapshot } from '@shared/game/logic/eval';
-import { resolveRules } from '@shared/game/logic/resolver';
-import { VANILLA_CONFIG } from '@shared/game/data/presets';
+import type { LocationKey } from '@shared/randomizer/world/location-key';
+import { normalPlacement } from '../lib/game/tracker/normal-placement-ref';
+import { trackerCheckRecords } from '../lib/game/tracker/tracker-roster';
+import { trackerStatuses } from '../lib/game/tracker/tracker-statuses';
+import { liveChestItems } from '@shared/game/logic/queries/chest-stand-ins';
 import { find } from '@shared/game/data';
 import type { CheckId, ItemId } from '@shared/game/data';
-import { buildGroupTree, filterChecks } from '@shared/game/logic/queries/check-grouping';
+import {
+  buildGroupTree, filterChecks, isListedRow, smallKeyDoorsOf,
+} from '@shared/game/logic/queries/check-grouping';
 import type {
   FilterState, GroupDimension, RunContext,
 } from '@shared/game/logic/queries/check-grouping';
@@ -28,8 +37,8 @@ import {
   getCompletedChecks, getCurrentInventory, getEventStatus, onCompletedChecksChanged, onEventStatusChanged, onInventoryChanged,
 } from '../lib/game';
 import {
-  apAlignedCheckRecords, buildPlacementView, computeApTrackerSnapshot, eventCheckRecords, firedLocations, getSessionState,
-  onFiredLocation, subscribeSessionStore,
+  buildPlacementView, firedLocations, getSessionState,
+  onFiredLocation, runKindOfSession, subscribeSessionStore,
 } from '../lib/game/randomizer-client';
 import type { PlacementView } from '../lib/game/randomizer-client';
 import type { ViewMode } from '../ui/domains/app/compounds/ChecksTracker';
@@ -62,8 +71,8 @@ const useTrackerData = (options: TrackerDataOptions = {}) => {
   const [inventory, setInventory] = useState<Set<ItemId>>(() => getCurrentInventory());
   const [completedChecks, setCompletedChecks] = useState<Set<CheckId>>(() => getCompletedChecks());
   const [eventStatus, setEventStatus] = useState<ReadonlyMap<CheckId, boolean>>(() => new Map(getEventStatus()));
-  const [placement, setPlacement] = useState(() => getSessionState().placement);
-  const [fired, setFired] = useState<ReadonlySet<string>>(() => firedLocations());
+  const [sessionState, setSessionState] = useState(() => getSessionState());
+  const [fired, setFired] = useState<ReadonlySet<LocationKey>>(() => firedLocations());
   const [viewMode, setViewMode] = useWidgetPref<ViewMode>(prefKey, 'viewMode', initialViewMode);
   const [grouping, setGrouping] = useWidgetPref<GroupDimension[]>(prefKey, 'grouping', initialGrouping);
   const [filter, setFilter] = useWidgetPref<FilterState>(prefKey, 'filter', EMPTY_FILTER);
@@ -79,26 +88,22 @@ const useTrackerData = (options: TrackerDataOptions = {}) => {
   useEffect(() => onInventoryChanged((inv) => setInventory(new Set(inv))), []);
   useEffect(() => onCompletedChecksChanged((checks) => setCompletedChecks(new Set(checks))), []);
   useEffect(() => onEventStatusChanged((status) => setEventStatus(new Map(status))), []);
-  useEffect(() => subscribeSessionStore((state) => setPlacement(state.placement)), []);
+  useEffect(() => subscribeSessionStore(setSessionState), []);
   useEffect(() => onFiredLocation(() => setFired(new Set(firedLocations()))), []);
 
+  const { placement, foreignOwners } = sessionState;
+  const runKind = runKindOfSession(sessionState);
+
   const checkRecords = useMemo(() => find('check', () => true), []);
-  // Every AP location this seed placed an item at, real checks plus the ones no
-  // CheckRecord backs (shop slots at whatever depth this seed opened, chiefly),
-  // so the widget's total always matches what the generator actually produced.
-  // Vanilla profiles carry no placement, so this is just checkRecords for them.
-  // The events ride along on a seed too: shown, never counted in its total (see stats).
+  // One roster for every surface that lists rows (tracker/tracker-roster.ts): on a seed the
+  // locations it generated plus the events, without a placement the dataset's own list.
   const effectiveCheckRecords = useMemo(
-    () => (placement ? [...apAlignedCheckRecords(checkRecords, placement), ...eventCheckRecords(checkRecords)] : checkRecords),
+    () => trackerCheckRecords(checkRecords, placement),
     [checkRecords, placement],
   );
-  const eventIds = useMemo(() => new Set(eventCheckRecords(checkRecords).map((c) => c.id)), [checkRecords]);
-  const resolvedLogic = useMemo(() => resolveRules(VANILLA_CONFIG), []);
-  const effectiveInventory = useMemo(() => {
-    const merged = new Set(resolvedLogic.startInventory);
-    for (const item of inventory) merged.add(item);
-    return merged;
-  }, [inventory, resolvedLogic]);
+  const bigKeyDoors = filter.bigKeyDoors ?? true;
+  const smallKeyDoors = smallKeyDoorsOf(filter, { kind: runKind });
+  const darkRoomsNeedLight = filter.darkRoomsNeedLight ?? true;
 
   // A status-only row has no "ever" fact of its own: its tick is its live status (story.ts).
   const effectiveCompleted = useMemo(() => {
@@ -107,39 +112,58 @@ const useTrackerData = (options: TrackerDataOptions = {}) => {
     return merged;
   }, [completedChecks, checkRecords, eventStatus]);
 
-  const vanillaSnapshot = useMemo(
-    () => computeTrackerSnapshot(effectiveInventory, effectiveCompleted, checkRecords, resolvedLogic.connections, resolvedLogic.checkOverrides),
-    [effectiveInventory, effectiveCompleted, checkRecords, resolvedLogic],
+  // The one placement the rules answer over: the seed's own, or the one where nothing moved,
+  // which is also the fullest world an online session can be judged in, having none of its own.
+  const logicPlacement = placement ?? normalPlacement();
+  const snapshot = useMemo(
+    () => trackerStatuses({
+      placement: logicPlacement,
+      checks: effectiveCheckRecords,
+      inventory,
+      completed: effectiveCompleted,
+      fired,
+      darkRoomsNeedLight,
+      bigKeyDoors,
+      smallKeyDoors,
+    }),
+    [logicPlacement, effectiveCheckRecords, inventory, effectiveCompleted, fired, darkRoomsNeedLight, bigKeyDoors, smallKeyDoors],
   );
-  const apSnapshot = useMemo(
-    () => (placement ? computeApTrackerSnapshot(placement, effectiveCompleted, effectiveCheckRecords, fired) : null),
-    [placement, effectiveCompleted, effectiveCheckRecords, fired],
-  );
-  const snapshot = apSnapshot ?? vanillaSnapshot;
 
-  const placementView: PlacementView = useMemo(() => buildPlacementView(placement), [placement]);
-  const run: RunContext | undefined = useMemo(
+  const placementView: PlacementView = useMemo(
+    () => buildPlacementView(placement, foreignOwners), [placement, foreignOwners],
+  );
+  // A swap chest reads the stand-in once its item is held. Only on the plain game: a seed's
+  // chests hold what the seed placed, and online knows none of its contents.
+  const liveItems = useMemo(
+    () => (runKind === 'normal' ? liveChestItems(checkRecords, inventory, effectiveCompleted) : undefined),
+    [runKind, checkRecords, inventory, effectiveCompleted],
+  );
+  const run: RunContext = useMemo(
     () => (placement
-      ? { placedItems: placementView.itemByCheck, spheres: placementView.sphereByCheck }
-      : undefined),
-    [placement, placementView],
+      ? {
+        kind: runKind, placedItems: placementView.itemByCheck,
+        foreignItems: placementView.foreignByCheck, spheres: placementView.sphereByCheck,
+      }
+      : { kind: runKind, liveItems }),
+    [placement, runKind, placementView, liveItems],
   );
 
-  // The totals follow the Items / Events / Both switch: the summary counts what the list shows.
+  // The totals follow the Items / Events / Both switch and the shelves rule: the summary
+  // counts what the list shows (isListedRow), before any search or facet narrows it, so it
+  // always equals the sum of the groups. The Items view lists no event, so there a seed's
+  // total is its locations (tracker-count.ts), the count an Archipelago room keeps.
   const stats = useMemo(() => {
-    const showMode = filter.showMode ?? 'items';
     let completed = 0, reachable = 0, blocked = 0, total = 0;
-    for (const [id, status] of snapshot) {
-      const isEvent = eventIds.has(id);
-      if (showMode === 'items' && isEvent) continue;
-      if (showMode === 'events' && !isEvent) continue;
+    for (const check of effectiveCheckRecords) {
+      if (!isListedRow(check, filter, run)) continue;
+      const status = snapshot.get(check.id);
       total++;
       if (status === 'completed') completed++;
       else if (status === 'reachable') reachable++;
       else blocked++;
     }
     return { completed, reachable, blocked, total };
-  }, [snapshot, eventIds, filter.showMode]);
+  }, [snapshot, effectiveCheckRecords, filter, run]);
 
   const filteredChecks = useMemo(
     () => filterChecks(effectiveCheckRecords, filter, snapshot, run),
@@ -157,7 +181,7 @@ const useTrackerData = (options: TrackerDataOptions = {}) => {
     panels, setPanels,
     expandedGroups, toggleGroup,
     snapshot, stats, groupTree, eventStatus,
-    placement, placementView, run,
+    placement, placementView, run, runKind,
   };
 };
 

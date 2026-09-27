@@ -6,7 +6,7 @@
  */
 import { describe, it, expect, beforeEach } from 'vitest';
 import { all, find } from '@shared/game/data';
-import { toScreenIdOf } from '@shared/game/data/connections/derive';
+import { toScreenIdOf } from '@shared/game/data';
 import type { ConnectionRecord, ScreenId } from '@shared/game/data';
 import {
   createRecommendationStore, detectorsFor, memoryStorage, recommendationFile, runDetection,
@@ -54,13 +54,13 @@ const contextFor = (screenId: ScreenId, realTransitions: ObservedTransition[], e
 
 describeDataset('the detector barrel', () => {
   it('installs a detector for both kinds it covers', () => {
-    // `connection-shape`/`screen-identity` became `strategy:connection` and
-    // `strategy:screen`; `connection-add`/`connection-remove` folded into
-    // `strategy:connection` (phase 4, part 2). The direction-tag detector is
-    // gone with the `dir:*` namespace; direction derives from `canExit`.
+    // A screen carries two: the comparison strategy that judges it against live
+    // memory, and `screen:geography`, which judges the record against the rest
+    // of the dataset, an inconsistency the game cannot be asked about.
     expect(detectorsFor('connection').map(d => d.id).sort())
       .toEqual(['strategy:connection']);
-    expect(detectorsFor('screen').map(d => d.id)).toEqual(['strategy:screen']);
+    expect(detectorsFor('screen').map(d => d.id).sort())
+      .toEqual(['screen:geography', 'strategy:screen']);
   });
 
   it('reports every detector that ran, including the ones that found nothing', () => {

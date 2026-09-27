@@ -13,12 +13,12 @@ import { RandomizerOptionRow } from '@domains/app/compounds/RandomizerOptionRow'
 import { RandomizerOptionGroup } from '@domains/app/compounds/RandomizerOptionGroup';
 import type { LockedOptionGroup } from '@domains/app/compounds/RandomizerOptionRow';
 import type { ImpactCell } from '@domains/app/compounds/PoolImpactCell';
-import type { ApOptionDef, ApOptionValue } from '@shared/randomizer/ap-world/options.type';
+import type { OptionDef, OptionValue } from '@shared/randomizer/world/options.type';
 
 interface OptionGroupListProps {
   groups: readonly LockedOptionGroup[];
   /** The value each row shows. */
-  valueOf: (option: ApOptionDef) => ApOptionValue;
+  valueOf: (option: OptionDef) => OptionValue;
   cellOf: (key: string) => ImpactCell;
   /** The player's own sections; absent renders the group as a fixed one. */
   live?: boolean;
@@ -26,7 +26,7 @@ interface OptionGroupListProps {
   frozenKeys?: ReadonlySet<string>;
   /** Per-row reason a frozen row is showing a value the player did not choose. */
   notes?: ReadonlyMap<string, string>;
-  onRowChange?: (key: string, next: ApOptionValue) => void;
+  onRowChange?: (key: string, next: OptionValue) => void;
 }
 
 const OptionGroupList = (props: OptionGroupListProps) => {

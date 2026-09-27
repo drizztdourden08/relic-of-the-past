@@ -8,7 +8,7 @@
  */
 import { all, hasTagKey } from '@shared/game/data';
 import type { CheckId, CheckRecord, ItemId } from '@shared/game/data';
-import { evaluateRequirement } from '@shared/game/logic/eval';
+import { evaluateRequirement } from '@shared/game/logic';
 
 const EMPTY_INVENTORY: ReadonlySet<ItemId> = new Set();
 
@@ -23,10 +23,12 @@ const resolveDerivedChecks = (
   completed: Set<CheckId>,
   inventory: ReadonlySet<ItemId> | null,
   checks: readonly CheckRecord[] = all('check'),
+  /** Rows a seed has armed: their own taken-bit is the only answer, never a fallback. */
+  armed: ReadonlySet<CheckId> = new Set(),
 ): Set<CheckId> => {
   const items = inventory ?? EMPTY_INVENTORY;
   for (const record of checks) {
-    if (completed.has(record.id)) continue;
+    if (completed.has(record.id) || armed.has(record.id)) continue;
     if (record.derivedDungeon) {
       const members = dungeonMembers(record, checks);
       if (members.length > 0 && members.every((m) => completed.has(m.id))) completed.add(record.id);

@@ -97,6 +97,8 @@ void GameHook_UpgradeBonusArm(int family, uint8 presentation, bool climbed) {
 }
 
 int GameHook_ReceiptPayout(uint8 item, int native) {
+  // A foreign item's hold-up hands over nothing (foreign_item.c). Only ever armed under its gate.
+  if (GameHook_ForeignReceiptPaysNothing(item)) return 0;
   if (g_pending_item < 0 || item != g_pending_item || !BonusGate()) return native;
   g_pending_item = -1;
   return g_pending_amount;

@@ -20,6 +20,11 @@ export type {
   NavigationStep, NavigationResult, PathfindingOptions,
 } from './types';
 
+// ─── Crossings (one record for every way on or off a screen) ─────────────────
+export type {
+  CrossingClass, CrossingOrigin, CrossingSpan, CrossingTarget, ScreenCrossing, ScreenCrossings,
+} from './crossing.types';
+
 // ─── Utilities ───────────────────────────────────────────────────────────────
 export { classifyTileAttr } from './tile-classification';
 export {

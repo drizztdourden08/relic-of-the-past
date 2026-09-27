@@ -4,7 +4,7 @@
  *
  * The room's chest table is enumerable (no chest has to be opened for it to
  * report one), so an absence in the dataset is proven: `certain`.
- * `randomizerName` has no native answer, so this proposes an unmistakable
+ * `name` has no native answer, so this proposes an unmistakable
  * placeholder, not a guessed name. The contents byte is in the same raw id
  * space as `ItemGameId.receiveItemId`, so `vanillaItemIds` resolves to a real
  * item when the catalogue has it and stays empty when it does not.
@@ -57,7 +57,7 @@ const toProposed = (item: RoomChest, observations: ScreenObservations, screenId:
     screenId,
     ...(dungeon ? { dungeonId: dungeon.id } : {}),
     // No native answer: an obvious placeholder a reviewer must replace.
-    randomizerName: `Unnamed chest ${hex(item.roomId)}#${item.chest.chestIndex}`,
+    name: `Unnamed chest ${hex(item.roomId)}#${item.chest.chestIndex}`,
     // The contents byte is a raw receive id: a real item when the catalogue
     // covers it, empty when it does not.
     vanillaItemIds: content ? [content.id] : [],

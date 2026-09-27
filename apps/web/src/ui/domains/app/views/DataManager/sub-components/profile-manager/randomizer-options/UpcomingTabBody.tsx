@@ -10,14 +10,14 @@ import { Text } from '@ds/primitives';
 import { LockedRowsSection } from './LockedRowsSection';
 import type { LockedOptionGroup } from '@domains/app/compounds/RandomizerOptionRow';
 import type { ImpactCell } from '@domains/app/compounds/PoolImpactCell';
-import type { ApOptionDef, ApOptionValue } from '@shared/randomizer/ap-world/options.type';
+import type { OptionDef, OptionValue } from '@shared/randomizer/world/options.type';
 
 interface UpcomingTabBodyProps {
   /** The one line the tab shows, and the heading its rows sit under when there are any. */
   title: string;
   /** The catalog rows already filed under this subject; empty is expected. */
   groups: readonly LockedOptionGroup[];
-  valueOf: (option: ApOptionDef) => ApOptionValue;
+  valueOf: (option: OptionDef) => OptionValue;
   cellOf: (key: string) => ImpactCell;
 }
 

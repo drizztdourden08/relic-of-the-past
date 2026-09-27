@@ -4,19 +4,19 @@ import { Toast } from '../Toast';
 import type { ToastContainerProps } from '../Toast.type';
 
 const ToastContainer = (props: ToastContainerProps) => {
-  const { toasts, onDismiss, position = 'bottom-right' } = props;
+  const { toasts, onDismiss, position = 'bottom-right', anchored = false } = props;
 
   if (toasts.length === 0) return null;
 
-  return (
-    <Portal layer="toast">
-      <div className={`toast-container toast-container--${position}`}>
-        {toasts.map((t) => (
-          <Toast key={t.id} item={t} onDismiss={onDismiss} />
-        ))}
-      </div>
-    </Portal>
+  const stack = (
+    <div className={`toast-container toast-container--${position}${anchored ? ' toast-container--anchored' : ''}`}>
+      {toasts.map((t) => (
+        <Toast key={t.id} item={t} onDismiss={onDismiss} />
+      ))}
+    </div>
   );
+
+  return anchored ? stack : <Portal layer="toast">{stack}</Portal>;
 };
 
 export { ToastContainer };

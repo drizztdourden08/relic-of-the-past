@@ -2,17 +2,24 @@
 /**
  * Multiworld protocol types: the typed subset of the Archipelago network
  * protocol the online session speaks: JSON arrays of packets over a WebSocket,
- * each packet discriminated on `cmd`. Server commands outside this subset fall
- * through unhandled (see the closed `Unknown` arm).
+ * each packet discriminated on `cmd`. This file holds the shared shapes; the
+ * packets themselves live in ap-server-packets.type.ts and
+ * ap-client-packets.type.ts and are re-exported here.
  */
 
-/** Per-game name↔id tables from the server's data package. */
+/** Per-game name to id tables from the server's data package. */
 interface ApGameData {
   item_name_to_id: Record<string, number>;
   location_name_to_id: Record<string, number>;
+  /** Present on every current server; the cache key for a game's tables. */
+  checksum?: string;
 }
 
-/** One placed item as the server describes it (network ids, not names). */
+/**
+ * One placed item as the server describes it (network ids, not names). In
+ * ReceivedItems `player` is the slot whose world held the item (the sender);
+ * in LocationInfo it is the slot that receives it.
+ */
 interface ApNetworkItem {
   item: number;
   location: number;
@@ -27,108 +34,65 @@ interface ApVersion {
   class: 'Version';
 }
 
-// --- Server → client -------------------------------------------------------
-
-interface ApRoomInfoPacket {
-  cmd: 'RoomInfo';
-  games: string[];
-}
-
-interface ApDataPackagePacket {
-  cmd: 'DataPackage';
-  data: { games: Record<string, ApGameData> };
-}
-
-interface ApConnectedPacket {
-  cmd: 'Connected';
+interface ApNetworkPlayer {
   team: number;
   slot: number;
-  checked_locations: number[];
-  missing_locations: number[];
-  slot_data: unknown;
-}
-
-interface ApConnectionRefusedPacket {
-  cmd: 'ConnectionRefused';
-  errors: string[];
-}
-
-interface ApReceivedItemsPacket {
-  cmd: 'ReceivedItems';
-  index: number;
-  items: ApNetworkItem[];
-}
-
-interface ApLocationInfoPacket {
-  cmd: 'LocationInfo';
-  locations: ApNetworkItem[];
-}
-
-/** Closed arm standing in for every server command this client ignores. */
-interface ApUnknownPacket {
-  cmd: 'Unknown';
-}
-
-type ApServerPacket =
-  | ApRoomInfoPacket
-  | ApDataPackagePacket
-  | ApConnectedPacket
-  | ApConnectionRefusedPacket
-  | ApReceivedItemsPacket
-  | ApLocationInfoPacket
-  | ApUnknownPacket;
-
-// --- Client → server -------------------------------------------------------
-
-interface ApGetDataPackagePacket {
-  cmd: 'GetDataPackage';
-  games: string[];
-}
-
-interface ApConnectPacket {
-  cmd: 'Connect';
-  game: string;
+  alias: string;
   name: string;
-  password: string | null;
-  uuid: string;
-  version: ApVersion;
-  items_handling: number;
-  tags: string[];
-  slot_data: boolean;
 }
 
-interface ApLocationScoutsPacket {
-  cmd: 'LocationScouts';
-  locations: number[];
-  create_as_hint: number;
+interface ApNetworkSlot {
+  name: string;
+  game: string;
+  type: number;
+  group_members: number[];
 }
 
-interface ApLocationChecksPacket {
-  cmd: 'LocationChecks';
-  locations: number[];
+/** One piece of a PrintJSON message. */
+interface ApJsonMessagePart {
+  type?: string;
+  text?: string;
+  color?: string;
+  player?: number;
+  flags?: number;
+  hint_status?: number;
 }
-
-type ApClientPacket =
-  | ApGetDataPackagePacket
-  | ApConnectPacket
-  | ApLocationScoutsPacket
-  | ApLocationChecksPacket;
 
 export type {
-  ApClientPacket,
-  ApConnectPacket,
+  ApGameData,
+  ApJsonMessagePart,
+  ApNetworkItem,
+  ApNetworkPlayer,
+  ApNetworkSlot,
+  ApVersion,
+};
+export type {
+  ApBouncedPacket,
   ApConnectedPacket,
   ApConnectionRefusedPacket,
   ApDataPackagePacket,
-  ApGameData,
-  ApGetDataPackagePacket,
-  ApLocationChecksPacket,
+  ApInvalidPacket,
   ApLocationInfoPacket,
-  ApLocationScoutsPacket,
-  ApNetworkItem,
+  ApPrintJsonPacket,
   ApReceivedItemsPacket,
+  ApRetrievedPacket,
   ApRoomInfoPacket,
+  ApRoomUpdatePacket,
   ApServerPacket,
+  ApSetReplyPacket,
   ApUnknownPacket,
-  ApVersion,
-};
+} from './ap-server-packets.type';
+export type {
+  ApBouncePacket,
+  ApClientPacket,
+  ApConnectPacket,
+  ApConnectUpdatePacket,
+  ApGetDataPackagePacket,
+  ApGetPacket,
+  ApLocationChecksPacket,
+  ApLocationScoutsPacket,
+  ApSayPacket,
+  ApSetNotifyPacket,
+  ApStatusUpdatePacket,
+  ApSyncPacket,
+} from './ap-client-packets.type';

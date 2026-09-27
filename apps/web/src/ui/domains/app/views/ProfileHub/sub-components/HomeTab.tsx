@@ -2,6 +2,7 @@
 import { useCallback, useMemo } from 'react';
 import { usePlatform } from '@app/platform';
 import { log } from '@app/lib/log-bus';
+import { runKindOfProfile } from '@app/lib/game/randomizer-client';
 import { HeroSaveCard } from '../../../compounds/HeroSaveCard';
 import { Box } from '../../../../../design-system/primitives/Box';
 import { ToastContainer } from '../../../../../design-system/primitives/Toast';
@@ -22,7 +23,7 @@ const HomeTab = (props: HomeTabProps) => {
   const { heroSave, normalScreenshots, busyNormal, handleLoadNormal, handleImportSram, toasts, dismissToast } = saves;
   const { storage, capabilities } = usePlatform();
   const randomizerStatus = useHomeRandomizerStatus();
-  const saveFileChecks = useHomeSaveFileChecks(profileId, randomizer !== undefined, isGameRunning);
+  const saveFileChecks = useHomeSaveFileChecks(profileId, runKindOfProfile(randomizer), isGameRunning);
 
   const mode = deriveProfileMode(randomizer, vanillaSafe);
   const facts = useMemo(

@@ -48,6 +48,11 @@ const COUNT_LAYOUT_OPTIONS = [
   { value: 'original', label: 'Original' },
 ];
 
+const COUNTDOWN_STYLE_OPTIONS = [
+  { value: 'pixel', label: 'Pixel' },
+  { value: 'smooth', label: 'Smooth' },
+];
+
 const ENHANCED_PARTS_OPTIONS = [
   { value: 'main', label: 'Main' },
   { value: 'pause', label: 'Pause' },
@@ -136,6 +141,15 @@ const renderControl = (key: string, settings: GameSettings, onChange: (patch: Pa
           value={settings.hudCountLayout}
           options={COUNT_LAYOUT_OPTIONS}
           onChange={(v) => onChange({ hudCountLayout: v as GameSettings['hudCountLayout'] })}
+        />
+      );
+    case 'hudCountdownStyle':
+      return (
+        <SegmentedControl
+          label="Countdown Timer"
+          value={settings.hudCountdownStyle}
+          options={COUNTDOWN_STYLE_OPTIONS}
+          onChange={(v) => onChange({ hudCountdownStyle: v as GameSettings['hudCountdownStyle'] })}
         />
       );
     case 'hudPauseStyle':

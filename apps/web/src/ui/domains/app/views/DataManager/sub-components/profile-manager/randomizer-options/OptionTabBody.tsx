@@ -26,26 +26,26 @@ import { PondStatusNote } from '@domains/app/compounds/PondStatusNote';
 import { WishingPondSection } from '@domains/app/views/Randomizer/sub-components/WishingPondSection';
 import { DarkRoomsSection } from '@domains/app/views/Randomizer/sub-components/DarkRoomsSection';
 import { StoryGatesSection } from '@domains/app/views/Randomizer/sub-components/StoryGatesSection';
-import { DEFAULT_STORY_GATES } from '@shared/randomizer/ap-world/story-gates/story-gates.data';
-import { REFERENCE_CAPACITY_PROFILE, holdWalletToFloor, walletFloorOf } from '@shared/randomizer/ap-world/capacity';
-import { pondStatusOf } from '@shared/randomizer/ap-world/capacity-pond';
-import { holdPondToWallet, pondWalletTopOf } from '@shared/randomizer/ap-world/pond/pond-wallet-top';
+import { DEFAULT_STORY_GATES } from '@shared/randomizer/world/story-gates/story-gates.data';
+import { REFERENCE_CAPACITY_PROFILE, holdWalletToFloor, walletFloorOf } from '@shared/randomizer/world/capacity';
+import { pondStatusOf } from '@shared/randomizer/world/capacity-pond';
+import { holdPondToWallet, pondWalletTopOf } from '@shared/randomizer/world/pond/pond-wallet-top';
 import { applyRowChange } from '@app/hooks/randomizer/capacity-row-state';
 import { capacityPondStateOf, withCapacityPondRule } from '@app/hooks/randomizer/capacity-pond-choices';
 import { FROZEN_POND_KEYS, NO_FROZEN_KEYS, pondGroupsFor } from '@app/hooks/randomizer/pond-mode-rows';
-import { CAPACITY_POND, POND_IDS } from '@shared/randomizer/ap-world/pond/pond-instances.data';
-import { effectivePondProfiles } from '@shared/randomizer/ap-world/pond/pond-share';
-import type { PondId } from '@shared/randomizer/ap-world/pond/pond-instance.type';
-import type { PondSetting } from '@shared/randomizer/ap-world/pond/pond-profile.type';
-import type { PondProfiles } from '@shared/randomizer/ap-world/pond/pond-profiles.type';
+import { CAPACITY_POND, POND_IDS } from '@shared/randomizer/world/pond/pond-instances';
+import { effectivePondProfiles } from '@shared/randomizer/world/pond/pond-share';
+import type { PondId } from '@shared/randomizer/world/pond/pond-instance.type';
+import type { PondSetting } from '@shared/randomizer/world/pond/pond-profile.type';
+import type { PondProfiles } from '@shared/randomizer/world/pond/pond-profiles.type';
 import { darkRoomSettingOfChoices, withDarkRoomSetting } from '@app/hooks/randomizer/dark-room-choices';
 import { forcedItemPowerRows } from '@app/hooks/randomizer/item-power-rows';
-import { DARK_ROOM_REQUIRED_KEY, forcedDarkRoomLightReasons } from '@shared/randomizer/ap-world/dark-rooms';
+import { DARK_ROOM_REQUIRED_KEY, forcedDarkRoomLightReasons } from '@shared/randomizer/world/dark-rooms';
 import { OptionGroupList } from './OptionGroupList';
 import { SubjectFixedRows } from './SubjectFixedRows';
 import { UpcomingTabBody } from './UpcomingTabBody';
 import { UPCOMING_TITLE, isUpcomingTab } from './option-tab-copy';
-import type { ApOptionDef } from '@shared/randomizer/ap-world/options.type';
+import type { OptionDef } from '@shared/randomizer/world/options.type';
 import type { OptionTabBodyProps } from './OptionTabBody.type';
 
 /** The master switch is off, so the pond bound to the capacity families is not the player's to set. */
@@ -87,7 +87,7 @@ const OptionTabBody = (props: OptionTabBodyProps) => {
   // worth avoiding.
   const frozenPonds = pondShare ? POND_IDS : FROZEN_PONDS;
   const forcedItemPower = forcedItemPowerRows(choices.progressiveTiers, valueOf);
-  const fixedValueOf = (option: ApOptionDef) => values[option.key] ?? option.baseline;
+  const fixedValueOf = (option: OptionDef) => values[option.key] ?? option.baseline;
 
   if (tab === 'capacity') {
     return (

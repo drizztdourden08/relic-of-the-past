@@ -2,6 +2,8 @@
 
 import type { GameSettings, OffscreenAiMode } from '@shared/types/settings';
 import { DEFAULT_TURBO_SPEED } from '@shared/display/turbo-speed';
+import { ONLINE_NOTICE_DEFAULTS } from '@shared/randomizer/archipelago/online-notice-settings';
+import { QUIET_RECEIPT_DEFAULTS } from '@shared/game/quiet-receipts';
 import { allowedRatio, ratioToString, rendersExtended } from './ratio-capability';
 
 const DEFAULT_SETTINGS: GameSettings = {
@@ -126,6 +128,9 @@ const DEFAULT_SETTINGS: GameSettings = {
   dialogInkColor: '#ffffff',
   dialogStrokeColor: '#000000',
   dialogStrokeWidth: 1,
+  // The app's own accent gold and ok green; snapped to the game's 15-bit colours when pushed.
+  hudHighlightPrimary: '#e8a33d',
+  hudHighlightSecondary: '#7fb861',
   dialogBoxOpacity: 0.5,
   dialogFloatingGround: true,
   dialogIntroTelepathyGround: false,
@@ -157,6 +162,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   hudHeartMode: 'original',
   hudMagicMode: 'original',
   hudCountLayout: 'centered',
+  hudCountdownStyle: 'pixel',
   hudPauseStyle: 'vanilla',
   hudPauseHighlight: 'box',
 
@@ -190,6 +196,11 @@ const DEFAULT_SETTINGS: GameSettings = {
 
   // Host systems
   trackerEnabled: true,
+
+  // Online notices: one toast toggle per kind
+  ...ONLINE_NOTICE_DEFAULTS,
+  // Randomizer rupees, bombs and arrows arrive without a hold-up or message
+  ...QUIET_RECEIPT_DEFAULTS,
 };
 
 const boolToIni = (v: boolean): string => {
@@ -301,8 +312,6 @@ CancelBirdTravel = ${boolToIni(settings.cancelBirdTravel)}
 DisableTelepathy = ${boolToIni(settings.disableTelepathy)}
 Haptics = ${boolToIni(!!settings.haptics?.enabled)}
 DeveloperTools = ${boolToIni(settings.developerToolsEnabled)}
-DevNavigationData = ${boolToIni(settings.devNavigationData)}
-TrackerEnabled = ${boolToIni(settings.trackerEnabled)}
 CheatsEnabled = ${boolToIni(settings.cheatsEnabled)}
 VanillaSafe = ${boolToIni(settings.vanillaSafe)}
 ${renderFlagsIni}

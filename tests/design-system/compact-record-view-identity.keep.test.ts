@@ -35,7 +35,7 @@ describeDataset('CompactRecordView always shows its own id in the identity field
     // ...even though the SAME resolver correctly turns a genuine reference like
     // Randomizer Name into readable text elsewhere on the same record, so
     // this is the identity exemption, not the resolver failing to run at all.
-    expect(markup).toContain(String(record.randomizerName));
+    expect(markup).toContain(String(record.name));
   });
 
   it('an explicit resolveIdRefDisplay result for another field is unaffected by the exemption', () => {

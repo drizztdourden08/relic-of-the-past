@@ -6,8 +6,11 @@
  * (3 of 7)", "Triforce Piece (12 of 20, 30 available)". A dungeon item names
  * its dungeon in every case; the other numbers appear only with a count
  * (an online receipt has no seed to count from and shows the plain name).
- * The names themselves come from the placement data, never from here.
+ * The names themselves come from the placement data, never from here. The
+ * name carries the primary highlight and the numbers stay plain.
  */
+import { itemKeyOfName } from '../world/display-names/item-key-name';
+import { primary } from './highlight-markup';
 import { countClassOf } from './receipt-counts';
 import type { ReceiptCount } from './receipt-counts';
 
@@ -28,28 +31,29 @@ const heartPieceLabel = (itemName: string, count: ReceiptCount): string => {
   const quarter = towardNext === PIECES_PER_HEART
     ? `${PIECES_PER_HEART} of ${PIECES_PER_HEART}, a whole heart`
     : `${towardNext} of ${PIECES_PER_HEART} to a heart`;
-  return `${itemName} (${quarter}, ${count.ordinal} of ${count.total})`;
+  return `${primary(itemName)} (${quarter}, ${count.ordinal} of ${count.total})`;
 };
 
 const triforceLabel = (itemName: string, count: ReceiptCount): string =>
   (count.required === undefined
-    ? `${itemName} ${ofTotal(count)}`
-    : `${itemName} (${count.ordinal} of ${count.required}, ${count.total} available)`);
+    ? `${primary(itemName)} ${ofTotal(count)}`
+    : `${primary(itemName)} (${count.ordinal} of ${count.required}, ${count.total} available)`);
 
 const numberedItemLabel = (itemName: string, count: ReceiptCount | undefined): string => {
   const dungeonItem = DUNGEON_ITEM_RE.exec(itemName);
   if (dungeonItem !== null) {
     const [, base, dungeon] = dungeonItem;
-    return count === undefined ? `${base} of ${dungeon}` : `${base} of ${dungeon} ${ofTotal(count)}`;
+    const name = primary(`${base} of ${dungeon}`);
+    return count === undefined ? name : `${name} ${ofTotal(count)}`;
   }
-  if (count === undefined) return itemName;
-  const countClass = countClassOf(itemName);
+  if (count === undefined) return primary(itemName);
+  const countClass = countClassOf(itemKeyOfName(itemName));
   if (countClass === 'heart-piece') return heartPieceLabel(itemName, count);
   if (countClass === 'triforce') return triforceLabel(itemName, count);
   if (countClass?.startsWith('progressive:')) {
-    return `${itemName.slice(PROGRESSIVE_PREFIX.length)} tier ${count.ordinal} of ${count.total}`;
+    return `${primary(itemName.slice(PROGRESSIVE_PREFIX.length))} tier ${count.ordinal} of ${count.total}`;
   }
-  return `${itemName} ${ofTotal(count)}`;
+  return `${primary(itemName)} ${ofTotal(count)}`;
 };
 
 export { numberedItemLabel };

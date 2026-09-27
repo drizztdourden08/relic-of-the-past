@@ -21,24 +21,28 @@
  * (pond-demand-messages.ts).
  */
 
+import { locationDisplayName } from '@shared/randomizer/world/display-names/location-display-name';
+import { itemKeyName } from '@shared/randomizer/world/display-names/item-key-name';
 import { RANDOMIZER_RECEIPT_MSG } from '@shared/asset-extraction/text/data/randomizer-templates';
 import { classifyReceiptItem } from '@shared/randomizer/receipt-text/receipt-item-class';
 import { renderReceiptMessage } from '@shared/randomizer/receipt-text/render-receipt-message';
-import { locationDisplayName } from '@shared/randomizer/ap-world/display-names';
 import { capacityRungLinesOf } from '@shared/randomizer/receipt-text/capacity-rung-lines';
 import { capacityFixedLinesOf } from '@shared/randomizer/receipt-text/capacity-fixed-lines';
 import { pondLinesOf } from '@shared/randomizer/receipt-text/pond-lines';
-import { pondPlanOf } from '@shared/randomizer/ap-world/pond/pond-plan';
-import { pondProfilesOfStats } from '@shared/randomizer/ap-world/fill/placement-ponds';
-import { capacityProfileOfStats, capacityProgressiveOfStats } from '@shared/randomizer/ap-world/fill/placement-capacity';
+import { pondPlanOf } from '@shared/randomizer/world/pond/pond-plan';
+import { pondProfilesOfStats } from '@shared/randomizer/world/fill/placement-ponds';
+import { capacityProfileOfStats, capacityProgressiveOfStats } from '@shared/randomizer/world/fill/placement-capacity';
+import { isForeignItem } from '@shared/randomizer/archipelago/foreign-item';
 import { wishPondLinesOf } from './wish-pond-lines';
+import { foreignItemLine } from './foreign-item-line';
 import { appendPondDemandLines } from './pond-demand-messages';
-import type { ApPlacement } from '@shared/randomizer/ap-world/fill/ap-placement.type';
-import type { CapacityFamilyId } from '@shared/randomizer/ap-world/capacity';
+import type { Placement } from '@shared/randomizer/world/fill/placement.type';
+import type { CapacityFamilyId } from '@shared/randomizer/world/capacity';
 import type { ReceiptCountOf } from '@shared/randomizer/receipt-text/receipt-counts';
 import type { ReceiptLine } from '@shared/randomizer/receipt-text/receipt-line.type';
 import type { PhysicalPlan, PlanEntry } from './physical-plan.type';
 import type { PlanPondDemandLines } from './pond-demand-messages';
+import type { ForeignItemOf } from './foreign-item-line';
 
 /** One fixed-jump capacity line: the entry the core selects by the live rung. */
 interface PlanFixedLine {
@@ -97,7 +101,7 @@ const NO_POND_LINES: PlanPondLines = {
  * from the setting and the placement's own seed, exactly as the session's
  * arming does, so the prices these lines quote are the prices charged.
  */
-const appendPondLines = (placement: ApPlacement, lines: ReceiptLine[]): PlanPondLines => {
+const appendPondLines = (placement: Placement, lines: ReceiptLine[]): PlanPondLines => {
   // The lines the core speaks belong to the one pond it arms, the capacity one.
   const setting = pondProfilesOfStats(placement.stats).capacity;
   if (setting.mode === 'capacity') return NO_POND_LINES;
@@ -116,13 +120,24 @@ const appendPondLines = (placement: ApPlacement, lines: ReceiptLine[]): PlanPond
 /** The baked class line matching this grant, mirroring the core's own routing. */
 const fallbackClassId = (entry: PlanEntry): number => {
   if (entry.planClass === 'deliver') return RANDOMIZER_RECEIPT_MSG.delivered;
-  const itemClass = classifyReceiptItem(entry.itemName);
+  const itemClass = classifyReceiptItem(entry.item);
   if (itemClass.kind === 'progressive') return RANDOMIZER_RECEIPT_MSG.progressive;
   if (itemClass.kind === 'dungeon-item') return RANDOMIZER_RECEIPT_MSG.dungeonItem;
   return RANDOMIZER_RECEIPT_MSG.generic;
 };
 
-const buildPlanReceiptTexts = (plan: PhysicalPlan, placement: ApPlacement, countOf: ReceiptCountOf): PlanReceiptTexts => {
+/** One planned grant's line; another player's item says what it was and who it went to. */
+const entryLine = (entry: PlanEntry, countOf: ReceiptCountOf, foreignItemOf?: ForeignItemOf): ReceiptLine =>
+  (isForeignItem(entry.item) ? foreignItemLine(foreignItemOf?.(entry.location)) : renderReceiptMessage({
+    kind: entry.planClass === 'deliver' ? 'delivered' : 'physical',
+    itemName: itemKeyName(entry.item),
+    locationName: locationDisplayName(entry.location),
+    count: countOf(entry.location),
+  }));
+
+const buildPlanReceiptTexts = (
+  plan: PhysicalPlan, placement: Placement, countOf: ReceiptCountOf, foreignItemOf?: ForeignItemOf,
+): PlanReceiptTexts => {
   const lines: ReceiptLine[] = [];
   const indexByLocation = new Map<string, number>();
   const fallbackByLocation = new Map<string, number>();
@@ -130,14 +145,9 @@ const buildPlanReceiptTexts = (plan: PhysicalPlan, placement: ApPlacement, count
   const fixedLines: PlanFixedLine[] = [];
   for (const entry of plan.entries) {
     if (entry.planClass === 'vanilla-locked') continue;
-    const line = renderReceiptMessage({
-      kind: entry.planClass === 'deliver' ? 'delivered' : 'physical',
-      itemName: entry.itemName,
-      locationName: locationDisplayName(entry.locationName),
-      count: countOf(entry.locationName),
-    });
-    indexByLocation.set(entry.locationName, lines.length);
-    fallbackByLocation.set(entry.locationName, fallbackClassId(entry));
+    const line = entryLine(entry, countOf, foreignItemOf);
+    indexByLocation.set(entry.location, lines.length);
+    fallbackByLocation.set(entry.location, fallbackClassId(entry));
     lines.push(line);
   }
   const profile = capacityProfileOfStats(placement.stats);

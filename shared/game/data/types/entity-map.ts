@@ -5,7 +5,7 @@ import type { ConnectionRecord } from './connection';
 import type { CheckRecord } from './check';
 import type { ItemRecord } from './item';
 import type { DungeonRecord } from './dungeon';
-import type { AreaRecord, LocationRecord } from './region';
+import type { AreaRecord, LocationRecord, RegionRecord } from './region';
 import type { ActorRecord } from './actor';
 import type { TagRecord } from './tag';
 import type { ItemGroupRecord } from './item-group';
@@ -20,6 +20,7 @@ interface EntityRecordMap {
   dungeon: DungeonRecord;
   area: AreaRecord;
   location: LocationRecord;
+  region: RegionRecord;
   actor: ActorRecord;
   tag: TagRecord;
   'item-group': ItemGroupRecord;

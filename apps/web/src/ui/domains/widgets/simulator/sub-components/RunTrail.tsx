@@ -30,7 +30,7 @@ const RunTrail = ({ trail, checksDone }: RunTrailProps) => {
         return (
           <Box key={`${i}-${stop.screenId}`} className="simulator__trail-row">
             <Text className="simulator__trail-index">{i + 1}</Text>
-            <Text className="simulator__trail-name">{screen.vanillaName ?? screen.randomizerName}</Text>
+            <Text className="simulator__trail-name">{screen.name}</Text>
             {haul > 0 && <Text className="simulator__trail-haul">+{haul}</Text>}
             <Text className="simulator__trail-epoch">e{stop.epoch}</Text>
           </Box>

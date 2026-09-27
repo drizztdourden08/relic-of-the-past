@@ -14,7 +14,7 @@ import type { AreaId, DungeonId, LocationId, ScreenWorld } from '@shared/game/da
 interface DungeonGeography {
   dungeonId: DungeonId;
   /** For display only. */
-  randomizerName: string;
+  name: string;
   areaId: AreaId;
   locationId: LocationId;
   world: ScreenWorld;
@@ -27,7 +27,7 @@ const dungeonGeographyFor = (palaceIndex: number): DungeonGeography | null => {
   const room = getScreen(firstRoom);
   return {
     dungeonId: dungeon.id,
-    randomizerName: dungeon.randomizerName,
+    name: dungeon.name,
     areaId: room.areaId,
     locationId: room.locationId,
     world: room.world,

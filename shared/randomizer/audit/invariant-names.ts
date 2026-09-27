@@ -15,21 +15,21 @@ const checkNames = ({ checks }: InvariantInput): InvariantFinding[] => {
   const byScopedName = new Map<string, string>();
 
   for (const check of checks) {
-    if (check.randomizerName === undefined || check.randomizerName.trim() === '') {
+    if (check.name === undefined || check.name.trim() === '') {
       findings.push({
-        rule: 'A6-name', checkId: check.id, field: 'randomizerName',
-        detail: 'randomizerName is empty',
+        rule: 'A6-name', checkId: check.id, field: 'name',
+        detail: 'name is empty',
       });
       continue;
     }
-    const scopedName = `${check.dungeonId ?? NO_SCOPE}|${check.randomizerName}`;
+    const scopedName = `${check.dungeonId ?? NO_SCOPE}|${check.name}`;
     const owner = byScopedName.get(scopedName);
     if (owner === undefined) {
       byScopedName.set(scopedName, check.id);
       continue;
     }
     findings.push({
-      rule: 'A6-name', checkId: check.id, field: 'randomizerName',
+      rule: 'A6-name', checkId: check.id, field: 'name',
       detail: `name collides with ${owner} within scope ${check.dungeonId ?? NO_SCOPE}`,
     });
   }

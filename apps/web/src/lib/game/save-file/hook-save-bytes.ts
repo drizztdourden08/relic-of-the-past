@@ -51,6 +51,14 @@ const SRM_SHOP_SOLD_COUNT = 31;
 const SRM_EVENT_LEDGER = 0xf43f;
 const SRM_EVENT_LEDGER_COUNT = 24;
 
+/** ap_received_index.c: how many of the multiworld server's items this file took, 16-bit LE. */
+const SRM_AP_RECEIVED_INDEX = 0xf457;
+const SRM_AP_RECEIVED_INDEX_COUNT = 2;
+
+/** ap_room_hash.c: FNV-1a hash of the multiworld room's seed name, 32-bit LE; 0 = no room yet. */
+const SRM_AP_ROOM_HASH = 0xf459;
+const SRM_AP_ROOM_HASH_COUNT = 4;
+
 /** A save-block address as a byte offset inside one battery-save file block. */
 const blockOffsetOf = (wramAddress: number): number => wramAddress - SAVE_BLOCK_BASE;
 
@@ -58,6 +66,10 @@ export {
   HOOK_SAVE_FIRST,
   HOOK_SAVE_LAST,
   SAVE_BLOCK_BASE,
+  SRM_AP_RECEIVED_INDEX,
+  SRM_AP_RECEIVED_INDEX_COUNT,
+  SRM_AP_ROOM_HASH,
+  SRM_AP_ROOM_HASH_COUNT,
   SRM_EMPTY_RUNG,
   SRM_EMPTY_RUNG_COUNT,
   SRM_EVENT_LEDGER,

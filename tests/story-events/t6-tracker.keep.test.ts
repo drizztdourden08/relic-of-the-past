@@ -9,13 +9,13 @@ import { all } from '@shared/game/data';
 import type { CheckRecord, ItemId } from '@shared/game/data';
 import { computeCompletedChecks } from '@app/lib/game/tracker/completed-checks-core';
 import type { ProgressReaders } from '@app/lib/game/tracker/completed-checks-core';
-import { EVENT_BIT } from '@shared/game/data/records/checks/events/event-bits';
+import { EVENT_BIT, LAST_EVENT_BIT } from '@shared/game/data';
 import { computeEventStatus } from '@app/lib/game/tracker/event-status';
 import { buildPresenceState } from '@shared/game/simulation/presence/state';
 
 const events = (): CheckRecord[] => all('check').filter((c) => c.kind === 'event');
 const byName = (name: string): CheckRecord => {
-  const found = all('check').find((c) => c.randomizerName === name);
+  const found = all('check').find((c) => c.name === name);
   if (!found) throw new Error(`no record named ${name}`);
   return found;
 };
@@ -38,7 +38,7 @@ describe('T6: event records', () => {
     for (const record of events()) {
       expect(ids.has(record.id), `duplicate ${record.id}`).toBe(false);
       ids.add(record.id);
-      if (record.gameId.eventBit !== undefined) expect(record.gameId.eventBit).toBeLessThanOrEqual(EVENT_BIT.floodgatePulled);
+      if (record.gameId.eventBit !== undefined) expect(record.gameId.eventBit).toBeLessThanOrEqual(LAST_EVENT_BIT);
       const named: string[] = [];
       const walk = (req: unknown): void => {
         if (!req || typeof req !== 'object') return;
@@ -77,7 +77,7 @@ describe('T6: event records', () => {
     expect(done.has(byName('Tower of Hera: heart container taken').id)).toBe(true);
     expect(done.has(byName('Tower of Hera: Moldorm beaten').id)).toBe(true);
     expect(done.has(byName('Tower of Hera: reward taken').id)).toBe(false);
-    h.inventory.add('item-111' as ItemId);
+    h.inventory.add('item-057' as ItemId);
     const withPendant = sweep(h);
     expect(withPendant.has(byName('Tower of Hera: reward taken').id)).toBe(true);
     expect(withPendant.has(byName('Pendant of Wisdom held').id)).toBe(true);
@@ -85,7 +85,7 @@ describe('T6: event records', () => {
 
   it('held items and the combined events follow the inventory', () => {
     const h = heap();
-    for (const id of ['item-109', 'item-110', 'item-111']) h.inventory.add(id as ItemId);
+    for (const id of ['item-056', 'item-057', 'item-058']) h.inventory.add(id as ItemId);
     const done = sweep(h);
     expect(done.has(byName('All pendants held').id)).toBe(true);
     expect(done.has(byName('All crystals held').id)).toBe(false);
@@ -100,7 +100,7 @@ describe('T6: event records', () => {
     });
     const status = computeEventStatus(state);
     expect(status.get(byName('Floodgate lever pulled').id)).toBe(true);
-    expect(status.get(byName('Dark Blacksmith Ruins').id)).toBe(true);
+    expect(status.get(byName('Purple Chest found').id)).toBe(true);
     expect(status.get(byName('Kiki hired').id)).toBe(false);
     expect(status.has(byName('Ganon beaten').id)).toBe(false);
   });

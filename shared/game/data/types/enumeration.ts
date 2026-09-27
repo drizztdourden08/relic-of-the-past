@@ -1,5 +1,6 @@
 /* @layer shared-game @kind types */
 import type { EntityKind, EnumerationId } from './ids';
+import type { ReviewMark } from './review';
 
 /**
  * The closed-set fields that stay baked into their record as plain literals
@@ -25,6 +26,7 @@ interface EnumerationEntry {
   label: string;
   /** Which record kinds carry a field this category labels. */
   appliesTo: readonly EntityKind[];
+  review?: ReviewMark;
 }
 
 export type { EnumerationCategory, EnumerationEntry };

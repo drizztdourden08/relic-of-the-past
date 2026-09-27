@@ -1,10 +1,10 @@
 /* @layer shared-game @kind data */
-import { collectRecords } from '../collect-records';
+import { recordsIn } from '../registry';
 import type { ItemRecord } from '../types';
 
-// The record files are flat here, so they are globbed directly.
-const files = import.meta.glob('../records/items/*.ts', { eager: true });
+// The files by meaning, plus one folder per dungeon for a dungeon's own items.
+const files = import.meta.glob('../records/items/**/*.ts', { eager: true });
 
-const ALL_ITEMS: ItemRecord[] = collectRecords<ItemRecord>(files);
+const ALL_ITEMS: ItemRecord[] = recordsIn<ItemRecord>(files);
 
 export { ALL_ITEMS };

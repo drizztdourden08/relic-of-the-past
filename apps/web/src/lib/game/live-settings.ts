@@ -16,6 +16,7 @@ import { setSettingsStoryGates } from './story-gates';
 import { buildPpuFlags } from './live-settings-ppu-flags';
 import { LIVE_SETTINGS } from './live-settings-keys';
 import { pushTurboSpeed } from './turbo';
+import { restoreCheatRules } from './cheat-rules-memory';
 import { pushDialogLive } from './live-settings-dialog';
 
 // Track the last-pushed hideSpaceBeyondWalls value so we can re-assert after state loads
@@ -44,6 +45,9 @@ let lastSettings: GameSettings | null = null;
 const liveSettingsNow = (): GameSettings | null => lastSettings;
 
 const pushLiveSettings = (settings: GameSettings): boolean => {
+  // Before the module check: the story half is kept even when the core is not up yet, and the
+  // reassert after the next load writes it (gate-word-5.ts).
+  setSettingsStoryGates(settings.vanillaSafe);
   const mod = getModule();
   if (!mod) {
     log.app('Live settings: no WASM module available', 'warn');
@@ -204,7 +208,12 @@ const reassertLiveFlagsAfterLoad = (): void => {
   reassertHudHidden();
   reassertPauseHidden();
   pushDialogLive(lastSettings ?? DEFAULT_SETTINGS);
+  // The turbo speed is a pacing global no boot file carries: without this the key does nothing
+  // after a start until some other setting change happens to push the settings again.
+  pushTurboSpeed(lastSettings ?? DEFAULT_SETTINGS);
   reassertVolumes();
+  // The remembered cheat rules, again: a load is one more moment the core may have refused them.
+  restoreCheatRules();
 };
 
 /**

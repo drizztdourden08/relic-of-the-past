@@ -1,6 +1,5 @@
 /* @layer shared-game @kind data */
-/** Randomizer-only inventions (§7b bucket 3). They have no vanilla counterpart, so
- *  no gameId until the core learns to deliver each of these. */
+
 import type { ItemRecord } from '@shared/game/data/types';
 
 const RANDOMIZER_ITEMS: ItemRecord[] = [
@@ -8,55 +7,55 @@ const RANDOMIZER_ITEMS: ItemRecord[] = [
     id: 'item-164',
     origin: 'randomizer',
     category: 'junk',
-    randomizerName: 'Blue Clock',
+    name: 'Blue Clock',
   },
   {
     id: 'item-165',
     origin: 'randomizer',
     category: 'junk',
-    randomizerName: 'Green Clock',
+    name: 'Green Clock',
   },
   {
     id: 'item-166',
     origin: 'randomizer',
     category: 'junk',
-    randomizerName: 'Red Clock',
+    name: 'Red Clock',
   },
   {
     id: 'item-167',
     origin: 'randomizer',
     category: 'junk',
-    randomizerName: 'Rupoor',
+    name: 'Rupoor',
   },
   {
     id: 'item-168',
     origin: 'randomizer',
     category: 'junk',
-    randomizerName: 'Nothing',
+    name: 'Nothing',
   },
   {
     id: 'item-169',
     origin: 'randomizer',
     category: 'junk',
-    randomizerName: 'Power Star',
+    name: 'Power Star',
   },
   {
     id: 'item-170',
     origin: 'randomizer',
     category: 'junk',
-    randomizerName: 'Multi RNG',
+    name: 'Multi RNG',
   },
   {
     id: 'item-171',
     origin: 'randomizer',
     category: 'junk',
-    randomizerName: 'Single RNG',
+    name: 'Single RNG',
   },
   {
     id: 'item-172',
     origin: 'randomizer',
     category: 'weapon',
-    randomizerName: 'Progressive Bow (Alt)',
+    name: 'Progressive Bow (Alt)',
     spriteId: 'sprite-receipt-bow',
   },
   // The four progressive capacity pool items (capacity-upgrade-names.data.ts). A progressive
@@ -69,28 +68,28 @@ const RANDOMIZER_ITEMS: ItemRecord[] = [
     id: 'item-175',
     origin: 'randomizer',
     category: 'upgrade',
-    randomizerName: 'Progressive Bomb Capacity',
+    name: 'Progressive Bomb Capacity',
     spriteId: 'sprite-upgrade-explosives',
   },
   {
     id: 'item-176',
     origin: 'randomizer',
     category: 'upgrade',
-    randomizerName: 'Progressive Arrow Capacity',
+    name: 'Progressive Arrow Capacity',
     spriteId: 'sprite-upgrade-projectiles',
   },
   {
     id: 'item-177',
     origin: 'randomizer',
     category: 'upgrade',
-    randomizerName: 'Progressive Magic Capacity',
+    name: 'Progressive Magic Capacity',
     spriteId: 'sprite-upgrade-meter',
   },
   {
     id: 'item-178',
     origin: 'randomizer',
     category: 'upgrade',
-    randomizerName: 'Progressive Wallet',
+    name: 'Progressive Wallet',
     spriteId: 'sprite-upgrade-wallet',
   },
 ];

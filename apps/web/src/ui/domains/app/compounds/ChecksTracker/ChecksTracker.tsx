@@ -10,7 +10,7 @@
  * without it the whole tracker scrolls as one piece.
  *
  * With a `run` supplied, checks display what THIS seed put in them instead of
- * their vanilla contents; without one, nothing changes for a vanilla profile.
+ * their vanilla contents; without one, nothing changes for a normal profile.
  */
 import { Box, Text } from '@ds/primitives';
 import { TrackerSummary } from './sub-components/TrackerSummary';
@@ -40,6 +40,7 @@ const ChecksTracker = (props: ChecksTrackerProps) => {
         <TrackerFilters
           filter={filter}
           onFilterChange={onFilterChange}
+          run={run}
           grouping={grouping}
           onGroupingChange={onGroupingChange}
           viewMode={viewMode}

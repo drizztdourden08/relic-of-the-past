@@ -15,6 +15,13 @@ out/
 # instead of the directory, or git never descends far enough to see the exception.
 /build/*
 !/build/installer-splash.gif
+# The built Archipelago world package, bundled as an extra resource. Already
+# covered by /build/*, named so no later exception un-ignores it.
+/build/archipelago/
+# The world package's generated data and manifest (scripts/build/build-apworld.mjs).
+/integrations/archipelago/relic_of_the_past/data/
+/integrations/archipelago/relic_of_the_past/archipelago.json
+__pycache__/
 *.tsbuildinfo
 .wiki-build/
 

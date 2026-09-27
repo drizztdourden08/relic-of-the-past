@@ -11,29 +11,35 @@
  * being received. Key drops count only under key-drop shuffle: with it off
  * they stay vanilla pickups the tracker never sees.
  */
+import { getItem } from '@shared/game/data';
 import { isProgressiveCapacityItemName } from '@shared/game/data/capacity-progressive-item';
-import { BOTTLE_ITEMS, CRYSTAL_ITEMS, ITEM } from '../ap-world/item-names.data';
-import { PRIZE_ITEMS } from '../ap-world/pool/event-items.data';
-import { KEY_DROP_LOCATIONS } from '../ap-world/special-locations.data';
+import { familyOfDungeonItem } from '../world/dungeon-items/dungeon-item-modes';
+import { itemKeyName } from '../world/display-names/item-key-name';
+import type { ItemKey } from '../world/item-ids.data';
+import type { LocationKey } from '../world/location-key';
+import { BOTTLE_ITEMS, CRYSTAL_ITEMS } from '../world/item-groups';
+import { ITEM } from '../world/item-ids.data';
+import { PRIZE_ITEMS } from '../world/pool/event-items.data';
+import { KEY_DROP_LOCATIONS } from '../world/scope-tables';
 
-const SMALL_KEY_RE = /^Small Key \((.+)\)$/;
 const PROGRESSIVE_PREFIX = 'Progressive ';
 
-const BOTTLES = new Set(BOTTLE_ITEMS);
-const CRYSTALS = new Set(CRYSTAL_ITEMS);
-const PENDANTS = new Set(PRIZE_ITEMS.filter((name) => !CRYSTALS.has(name)));
+const BOTTLES: ReadonlySet<ItemKey> = new Set<ItemKey>(BOTTLE_ITEMS);
+const CRYSTALS: ReadonlySet<ItemKey> = new Set<ItemKey>(CRYSTAL_ITEMS);
+const PENDANTS: ReadonlySet<ItemKey> = new Set<ItemKey>(PRIZE_ITEMS.filter((item) => !CRYSTALS.has(item)));
 
-/** The class an item name is counted under, or undefined for an uncounted item. */
-const countClassOf = (itemName: string): string | undefined => {
-  const smallKey = SMALL_KEY_RE.exec(itemName);
-  if (smallKey !== null) return `small-key:${smallKey[1]}`;
-  if (itemName === ITEM.pieceOfHeart) return 'heart-piece';
-  if (itemName === ITEM.bossHeartContainer || itemName === ITEM.sanctuaryHeartContainer) return 'heart-container';
-  if (BOTTLES.has(itemName)) return 'bottle';
-  if (CRYSTALS.has(itemName)) return 'crystal';
-  if (PENDANTS.has(itemName)) return 'pendant';
-  if (itemName === ITEM.triforcePiece) return 'triforce';
-  if (itemName.startsWith(PROGRESSIVE_PREFIX) && !isProgressiveCapacityItemName(itemName)) return `progressive:${itemName}`;
+/** The class an item is counted under, or undefined for an uncounted item. */
+const countClassOf = (item: ItemKey): string | undefined => {
+  const family = familyOfDungeonItem(item);
+  if (family === 'smallKey') return `small-key:${getItem(item).dungeonId ?? item}`;
+  if (item === ITEM.pieceOfHeart) return 'heart-piece';
+  if (item === ITEM.bossHeartContainer || item === ITEM.sanctuaryHeartContainer) return 'heart-container';
+  if (BOTTLES.has(item)) return 'bottle';
+  if (CRYSTALS.has(item)) return 'crystal';
+  if (PENDANTS.has(item)) return 'pendant';
+  if (item === ITEM.triforcePiece) return 'triforce';
+  const name = itemKeyName(item);
+  if (name.startsWith(PROGRESSIVE_PREFIX) && !isProgressiveCapacityItemName(name)) return `progressive:${item}`;
   return undefined;
 };
 
@@ -48,25 +54,26 @@ interface ReceiptCount {
 }
 
 interface ReceiptCountSource {
-  /** Location → item, every location of the seed. */
-  nameView: Readonly<Record<string, string>>;
+  /** What every location of the seed holds. */
+  locations: Readonly<Record<LocationKey, ItemKey>>;
   keyDropShuffle: boolean;
-  /** Completed locations, by the same names. */
-  completed: ReadonlySet<string>;
+  /** The locations already taken. */
+  completed: ReadonlySet<LocationKey>;
   triforceRequired?: number;
 }
 
-/** location → its count, or undefined for an uncounted (or excluded) location. */
-type ReceiptCountOf = (location: string) => ReceiptCount | undefined;
+/** A location's count, or undefined for an uncounted (or excluded) one. */
+type ReceiptCountOf = (location: LocationKey) => ReceiptCount | undefined;
 
 const receiptCountsOf = (source: ReceiptCountSource): ReceiptCountOf => {
-  const { nameView, keyDropShuffle, completed, triforceRequired } = source;
-  const classByLocation = new Map<string, string>();
+  const { locations, keyDropShuffle, completed, triforceRequired } = source;
+  const classByLocation = new Map<LocationKey, string>();
   const totals = new Map<string, number>();
   const found = new Map<string, number>();
-  for (const [location, itemName] of Object.entries(nameView)) {
+  for (const [where, item] of Object.entries(locations)) {
+    const location = where as LocationKey;
     if (!keyDropShuffle && KEY_DROP_LOCATIONS.has(location)) continue;
-    const countClass = countClassOf(itemName);
+    const countClass = countClassOf(item);
     if (countClass === undefined) continue;
     classByLocation.set(location, countClass);
     totals.set(countClass, (totals.get(countClass) ?? 0) + 1);

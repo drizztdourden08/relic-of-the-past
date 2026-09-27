@@ -23,7 +23,7 @@ type NamedKind = 'screen' | 'check' | 'item' | 'location' | 'area' | 'dungeon';
 const NAMED_KINDS: NamedKind[] = ['screen', 'check', 'item', 'location', 'area', 'dungeon'];
 
 /** One named record, in the only shape this builder reads. */
-type NamedRecord = { id: string; randomizerName: string; vanillaName?: string };
+type NamedRecord = { id: string; name: string };
 
 /**
  * How the caller reaches the records. Handed in, not imported: this
@@ -33,17 +33,13 @@ type NamedRecord = { id: string; randomizerName: string; vanillaName?: string };
  */
 type RecordSource = (kind: NamedKind) => readonly NamedRecord[];
 
-/** Stated when a record has no original name and falls back to its working one. */
-const NO_ORIGINAL = 'No original name is recorded for this record, so the working name is shown instead.';
-
 const slotsForKind = (kind: NamedKind, all: RecordSource): TextSlot[] =>
   all(kind).map((record) => ({
     key: `${kind}:${record.id}`,
     label: `${record.id} (${kind})`,
-    fallback: record.vanillaName ?? record.randomizerName,
+    fallback: record.name,
     limit: { kind: 'none' } as const,
     alphabet: 'pack' as const,
-    ...(record.vanillaName ? {} : { note: NO_ORIGINAL }),
   }));
 
 /** Every named record, in kind order. Empty when the dataset is not present. */

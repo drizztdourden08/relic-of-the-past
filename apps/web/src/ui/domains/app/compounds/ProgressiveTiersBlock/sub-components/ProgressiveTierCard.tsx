@@ -19,8 +19,8 @@
  * mode.
  */
 import { Box, Checkbox, SegmentedControl, Text } from '@ds/primitives';
-import { PROGRESSIVE_MODES, PROGRESSIVE_MODE_LABELS } from '@shared/randomizer/ap-world/progressive/progressive-modes.data';
-import type { ProgressiveFamilyMode } from '@shared/randomizer/ap-world/progressive/progressive.type';
+import { PROGRESSIVE_MODES, PROGRESSIVE_MODE_LABELS } from '@shared/randomizer/world/progressive/progressive-modes.data';
+import type { ProgressiveFamilyMode } from '@shared/randomizer/world/progressive/progressive.type';
 import type { SegmentOption } from '@ds/primitives';
 import type { ProgressiveCardModel } from '../behavior/progressive-cards';
 import './ProgressiveTierCard.css';

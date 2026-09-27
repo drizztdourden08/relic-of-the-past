@@ -16,13 +16,13 @@
  * the read-only face the run view shows.
  */
 import { Box, Text, Toggle } from '@ds/primitives';
-import { FINAL_FIGHT_SILVER_HITS } from '@shared/randomizer/ap-world/final-fight.data';
-import { tickedIndexesOf } from '@shared/randomizer/ap-world/progressive/progressive-reach';
+import { FINAL_FIGHT_SILVER_HITS } from '@shared/randomizer/world/final-fight.data';
+import { tickedIndexesOf } from '@shared/randomizer/world/progressive/progressive-reach';
 import {
   RETRO_BOW_KEY, RETRO_SILVER_COST_KEY, RETRO_WOOD_COST_KEY,
-} from '@shared/randomizer/ap-world/retro/retro-bow.data';
-import { retroCostCeilingsOf } from '@shared/randomizer/ap-world/retro/retro-cost-ceiling';
-import { apOptionByKey } from '@shared/randomizer/ap-world/options.data';
+} from '@shared/randomizer/world/retro/retro-bow.data';
+import { retroCostCeilingsOf } from '@shared/randomizer/world/retro/retro-cost-ceiling';
+import { optionByKey } from '@shared/randomizer/world/options.data';
 import { OptionSliderRow } from '../OptionSliderRow';
 import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
 import {
@@ -34,9 +34,9 @@ import './RetroBowBlock.css';
 /** The first rung of the bow family is the plain bow; unticked, every bow found is silver. */
 const PLAIN_BOW_RUNG = 0;
 
-const nameOf = (key: string): string => apOptionByKey.get(key)?.displayName ?? key;
+const nameOf = (key: string): string => optionByKey.get(key)?.displayName ?? key;
 const retroLine = (): string => {
-  const description = apOptionByKey.get(RETRO_BOW_KEY)?.description;
+  const description = optionByKey.get(RETRO_BOW_KEY)?.description;
   return typeof description === 'string' ? description : '';
 };
 const rupees = (amount: number): string => `${amount} rupees`;

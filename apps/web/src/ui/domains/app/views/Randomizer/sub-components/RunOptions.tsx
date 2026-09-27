@@ -13,7 +13,7 @@
  */
 import { useMemo, useState } from 'react';
 import { Box, Text } from '@ds/primitives';
-import { RandomizerOptionRow, apCatalogByLock } from '@domains/app/compounds/RandomizerOptionRow';
+import { RandomizerOptionRow, catalogByLock } from '@domains/app/compounds/RandomizerOptionRow';
 import { RandomizerOptionGroup } from '@domains/app/compounds/RandomizerOptionGroup';
 import { PoolTotals } from '@domains/app/compounds/PoolTotals';
 import { CapacityUpgradesSection } from './CapacityUpgradesSection';
@@ -22,20 +22,20 @@ import { ShopSlotsBlock } from '@domains/app/compounds/ShopSlotsBlock';
 import { WishingPondSection } from './WishingPondSection';
 import { DarkRoomsSection } from './DarkRoomsSection';
 import { StoryGatesSection } from './StoryGatesSection';
-import { storyGatesFromSnapshot } from '@shared/randomizer/ap-world/story-gates/story-gate-from-snapshot';
+import { storyGatesFromSnapshot } from '@shared/randomizer/world/story-gates/story-gate-from-snapshot';
 import { normalizeRandomizerOptions } from '@shared/randomizer/options-snapshot';
 import {
   capacityBonusOfValues, capacityEnabledOf, capacityProgressiveOf, parseCapacityProfile, walletFloorOf,
-} from '@shared/randomizer/ap-world/capacity';
-import { reconcileCapacityPond } from '@shared/randomizer/ap-world/capacity-pond';
-import { retroBowFromSnapshot } from '@shared/randomizer/ap-world/retro/retro-from-snapshot';
-import { forcedDarkRoomLightReasons } from '@shared/randomizer/ap-world/dark-rooms/dark-room-forced';
-import { darkRoomSettingFromSnapshot } from '@shared/randomizer/ap-world/dark-rooms/dark-room-from-snapshot';
-import { DARK_ROOM_REQUIRED_KEY } from '@shared/randomizer/ap-world/dark-rooms/dark-room-option-keys';
-import { includeWorldItemsOf } from '@shared/randomizer/ap-world/scope-option-keys';
-import { parsePondProfiles } from '@shared/randomizer/ap-world/pond/pond-profiles-from-snapshot';
-import { shopScopeOfValues } from '@shared/randomizer/ap-world/shops/shop-scope-from-values';
-import { retroBowOfValues } from '@shared/randomizer/ap-world/retro/retro-from-snapshot';
+} from '@shared/randomizer/world/capacity';
+import { reconcileCapacityPond } from '@shared/randomizer/world/capacity-pond';
+import { retroBowFromSnapshot } from '@shared/randomizer/world/retro/retro-from-snapshot';
+import { forcedDarkRoomLightReasons } from '@shared/randomizer/world/dark-rooms/dark-room-forced';
+import { darkRoomSettingFromSnapshot } from '@shared/randomizer/world/dark-rooms/dark-room-from-snapshot';
+import { DARK_ROOM_REQUIRED_KEY } from '@shared/randomizer/world/dark-rooms/dark-room-option-keys';
+import { includeWorldItemsOf } from '@shared/randomizer/world/scope-option-keys';
+import { parsePondProfiles } from '@shared/randomizer/world/pond/pond-profiles-from-snapshot';
+import { shopScopeOfValues } from '@shared/randomizer/world/shops/shop-scope-from-values';
+import { retroBowOfValues } from '@shared/randomizer/world/retro/retro-from-snapshot';
 import { usePondDemands } from '../../../../../../hooks/randomizer/usePondDemands';
 import { usePoolImpacts } from '../../../../../../hooks/randomizer/usePoolImpacts';
 import { usePoolTotals } from '../../../../../../hooks/randomizer/usePoolTotals';
@@ -73,7 +73,7 @@ const RunOptions = ({ options, seed = '' }: RunOptionsProps) => {
   // The demands this run was generated with, read back from its own seed.
   const pondDemands = usePondDemands(snapshot, seed);
   const totals = usePoolTotals(accounting);
-  const { unlockedGroups, lockedGroups } = apCatalogByLock;
+  const { unlockedGroups, lockedGroups } = catalogByLock;
 
   return (
     <Box className="randomizer-page__panel">

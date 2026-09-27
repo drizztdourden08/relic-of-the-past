@@ -18,13 +18,13 @@ import { Box, Select, Slider, Text, TextInput, Toggle } from '@ds/primitives';
 import { OptionDescription } from '../OptionDescription';
 import { PoolImpactCell } from '../PoolImpactCell';
 import type { ImpactCell } from '../PoolImpactCell';
-import type { ApOptionDef, ApOptionValue } from '@shared/randomizer/ap-world/options.type';
+import type { OptionDef, OptionValue } from '@shared/randomizer/world/options.type';
 import './RandomizerOptionRow.css';
 
 interface RandomizerOptionRowProps {
-  option: ApOptionDef;
-  value: ApOptionValue;
-  onChange?: (value: ApOptionValue) => void;
+  option: OptionDef;
+  value: OptionValue;
+  onChange?: (value: OptionValue) => void;
   /** The In Pool cell, worded; omitted when the panel has no accounting to show. */
   impact?: ImpactCell;
   /** The panel freezes this row although the catalog leaves it open. */
@@ -33,9 +33,9 @@ interface RandomizerOptionRowProps {
   note?: string;
 }
 
-const EMPTY_CHOICES: ApOptionDef['choices'] = [];
+const EMPTY_CHOICES: OptionDef['choices'] = [];
 
-const tagFor = (option: ApOptionDef): string | null => {
+const tagFor = (option: OptionDef): string | null => {
   if (!option.locked) return null;
   if (option.implementation === 'not-implemented') return 'not in this version';
   if (option.implementation === 'not-applicable') return 'not used here';

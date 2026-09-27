@@ -1,0 +1,106 @@
+/* @layer shared-game @kind data */
+
+import type { ItemRecord } from '@shared/game/data/types';
+
+const CAPACITY_ITEMS: ItemRecord[] = [
+  {
+    id: 'item-077',
+    gameId: { receiveItemId: 78 },
+    origin: 'vanilla',
+    category: 'upgrade',
+    name: 'Magic Upgrade (1/2)',
+    spriteId: 'sprite-upgrade-meter',
+    poolClass: 'progression',
+    review: {
+      status: 'accepted',
+      source: 'person',
+      note: 'gameId.receiveItemId 78 -> null: native tables are 76 entries; chest path bails on sign8',
+      at: '2026-08-26T03:06:52.923Z',
+    },
+  },
+  {
+    id: 'item-024',
+    gameId: { receiveItemId: 23 },
+    origin: 'vanilla',
+    category: 'upgrade',
+    name: 'Piece of Heart',
+    spriteId: 'sprite-receipt-heart-piece',
+    poolClass: 'useful',
+  },
+  {
+    id: 'item-063',
+    gameId: { receiveItemId: 62 },
+    origin: 'vanilla',
+    category: 'upgrade',
+    name: 'Boss Heart Container',
+    spriteId: 'sprite-receipt-heart-container',
+    poolClass: 'useful',
+  },
+  {
+    id: 'item-064',
+    gameId: { receiveItemId: 63 },
+    origin: 'vanilla',
+    category: 'upgrade',
+    name: 'Sanctuary Heart Container',
+    spriteId: 'sprite-receipt-heart-container',
+    poolClass: 'useful',
+  },
+  {
+    id: 'item-129',
+    origin: 'vanilla',
+    category: 'upgrade',
+    name: 'Arrow Upgrade (+5)',
+    spriteId: 'sprite-upgrade-projectiles',
+    poolClass: 'progression',
+  },
+  {
+    id: 'item-130',
+    origin: 'vanilla',
+    category: 'upgrade',
+    name: 'Arrow Upgrade (+10)',
+    spriteId: 'sprite-upgrade-projectiles',
+    poolClass: 'progression',
+  },
+  {
+    id: 'item-131',
+    origin: 'vanilla',
+    category: 'upgrade',
+    name: 'Arrow Upgrade (70)',
+    spriteId: 'sprite-upgrade-projectiles',
+    poolClass: 'progression',
+  },
+  {
+    id: 'item-132',
+    origin: 'vanilla',
+    category: 'upgrade',
+    name: 'Bomb Upgrade (+5)',
+    spriteId: 'sprite-upgrade-explosives',
+    poolClass: 'progression',
+  },
+  {
+    id: 'item-133',
+    origin: 'vanilla',
+    category: 'upgrade',
+    name: 'Bomb Upgrade (+10)',
+    spriteId: 'sprite-upgrade-explosives',
+    poolClass: 'progression',
+  },
+  {
+    id: 'item-134',
+    origin: 'vanilla',
+    category: 'upgrade',
+    name: 'Bomb Upgrade (50)',
+    spriteId: 'sprite-upgrade-explosives',
+    poolClass: 'progression',
+  },
+  {
+    id: 'item-135',
+    origin: 'vanilla',
+    category: 'upgrade',
+    name: 'Magic Upgrade (1/4)',
+    spriteId: 'sprite-upgrade-meter',
+    poolClass: 'progression',
+  },
+];
+
+export { CAPACITY_ITEMS };

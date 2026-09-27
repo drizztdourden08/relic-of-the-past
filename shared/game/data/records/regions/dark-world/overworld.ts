@@ -1,0 +1,167 @@
+/* @layer shared-game @kind data */
+
+import type { RegionRecord } from '@shared/game/data/types';
+
+const DW_OVERWORLD_REGIONS: RegionRecord[] = [
+  {
+    id: 'region-034',
+    world: 'dark',
+    type: 'dark',
+    name: 'East Dark World',
+    headScreenId: 'screen-280',
+  },
+  {
+    id: 'region-035',
+    world: 'dark',
+    type: 'dark',
+    name: 'Catfish',
+    headScreenId: 'screen-310',
+  },
+  {
+    id: 'region-036',
+    world: 'dark',
+    type: 'dark',
+    name: 'Northeast Dark World',
+    headScreenId: 'screen-295',
+  },
+  {
+    id: 'region-037',
+    world: 'dark',
+    type: 'dark',
+    name: 'South Dark World',
+    headScreenId: 'screen-249',
+  },
+  {
+    id: 'region-038',
+    world: 'dark',
+    type: 'dark',
+    name: 'Dark Lake Hylia',
+    headScreenId: 'screen-299',
+  },
+  {
+    id: 'region-039',
+    world: 'dark',
+    type: 'dark',
+    name: 'Dark Lake Hylia Central Island',
+    bounds: { screenId: 'screen-299', x0: 3168, x1: 3359, y0: 3528, y1: 3599 },
+  },
+  {
+    id: 'region-040',
+    world: 'dark',
+    type: 'dark',
+    name: 'Dark Lake Hylia Ledge',
+  },
+  {
+    id: 'region-041',
+    world: 'dark',
+    type: 'dark',
+    name: 'West Dark World',
+    headScreenId: 'screen-246',
+  },
+  {
+    id: 'region-042',
+    world: 'dark',
+    type: 'dark',
+    name: 'Dark Grassy Lawn',
+  },
+  {
+    id: 'region-043',
+    world: 'dark',
+    type: 'dark',
+    name: 'Hammer Peg Area',
+  },
+  {
+    id: 'region-044',
+    world: 'dark',
+    type: 'dark',
+    name: 'Bumper Cave Entrance',
+  },
+  {
+    id: 'region-045',
+    world: 'dark',
+    type: 'dark',
+    name: 'Bumper Cave Ledge',
+    bounds: { screenId: 'screen-270', x0: 1360, x1: 1503, y0: 576, y1: 671 },
+  },
+  {
+    id: 'region-046',
+    world: 'dark',
+    type: 'dark',
+    name: 'Skull Woods Forest',
+    headScreenId: 'screen-244',
+  },
+  {
+    id: 'region-047',
+    world: 'dark',
+    type: 'dark',
+    name: 'Skull Woods Forest (West)',
+  },
+  {
+    id: 'region-048',
+    world: 'dark',
+    type: 'dark',
+    name: 'Dark Desert',
+    headScreenId: 'screen-250',
+  },
+  {
+    id: 'region-049',
+    world: 'dark',
+    type: 'dark',
+    name: 'Dark Death Mountain (West Bottom)',
+    headScreenId: 'screen-277',
+  },
+  {
+    id: 'region-050',
+    world: 'dark',
+    type: 'dark',
+    name: 'Dark Death Mountain (Top)',
+    bounds: { screenId: 'screen-277', x0: 1600, x1: 2559, y0: 32, y1: 327 },
+  },
+  {
+    id: 'region-051',
+    world: 'dark',
+    type: 'dark',
+    name: 'Dark Death Mountain Ledge',
+  },
+  {
+    id: 'region-052',
+    world: 'dark',
+    type: 'dark',
+    name: 'Dark Death Mountain Isolated Ledge',
+  },
+  {
+    id: 'region-053',
+    world: 'dark',
+    type: 'dark',
+    name: 'Dark Death Mountain (East Bottom)',
+    headScreenId: 'screen-293',
+  },
+  {
+    id: 'region-054',
+    world: 'dark',
+    type: 'dark',
+    name: 'Death Mountain Floating Island (Dark World)',
+  },
+  {
+    id: 'region-055',
+    world: 'dark',
+    type: 'dark',
+    name: 'Turtle Rock (Top)',
+    headScreenId: 'screen-309',
+  },
+  {
+    id: 'region-056',
+    world: 'dark',
+    type: 'dark',
+    name: 'Pyramid Ledge',
+    bounds: { screenId: 'screen-280', x0: 2000, x1: 2079, y0: 1632, y1: 1711 },
+  },
+  {
+    id: 'region-057',
+    world: 'dark',
+    type: 'dark',
+    name: 'Dark Death Mountain Bunny Descent Area',
+  },
+];
+
+export { DW_OVERWORLD_REGIONS };

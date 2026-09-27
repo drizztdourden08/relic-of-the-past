@@ -1,48 +1,48 @@
 /* @layer tests @kind test */
 /**
- * Generation with the pond in the shuffle: the slot names an online server
- * answers to, every mode beatable over many
- * seeds, the prize slots really carrying pool items, the wallet rule really
- * gating them, and, at the legacy default, a world and a placement identical
- * to the one built before the option existed.
+ * Generation with the pond in the shuffle: every slot a real location of the world named for its
+ * pond and its number, every mode beatable over many seeds, the prize slots really carrying pool
+ * items, the wallet rule really gating them, and, at the legacy default, a world and a placement
+ * identical to the one built before the option existed.
  *
  * The last block is the one the options panel stands on: the demands a seed
  * asks for are drawn from the SEED, so what the panel previews before
  * generation is byte for byte what the placement carries, retries included.
  */
+import { locationDisplayName } from '@shared/randomizer/world/display-names/location-display-name';
+import { ITEM } from '@shared/randomizer/world/item-ids.data';
 import { describe, expect, it } from 'vitest';
-import { generateApPlacement } from '@shared/randomizer/ap-world/fill/generate-ap';
-import { pondDemandsOfSnapshot } from '@shared/randomizer/ap-world/fill/pond-demands-of-snapshot';
-import { buildFillWorld } from '@shared/randomizer/ap-world/fill/fill-world';
-import { fillOptionsFromSnapshot } from '@shared/randomizer/ap-world/fill/fill-options-from-snapshot';
-import { apBaselineValues } from '@shared/randomizer/ap-world/options.data';
-import { POND_CERTIFIED_SPOTS } from '@shared/randomizer/ap-world/pond/pond-spots';
-import { POND_OPTION_KEYS } from '@shared/randomizer/ap-world/pond/pond-option-keys';
-import { POND_PRIZE_LOCATIONS } from '@shared/randomizer/ap-world/pond/pond-locations.data';
-import { pondPlanOf } from '@shared/randomizer/ap-world/pond/pond-plan';
+import { generatePlacement } from '@shared/randomizer/world/fill/generate';
+import { pondDemandsOfSnapshot } from '@shared/randomizer/world/fill/pond-demands-of-snapshot';
+import { buildFillWorld } from '@shared/randomizer/world/fill/fill-world';
+import { fillOptionsFromSnapshot } from '@shared/randomizer/world/fill/fill-options-from-snapshot';
+import { baselineValues } from '@shared/randomizer/world/options.data';
+import { POND_CERTIFIED_SPOTS } from '@shared/randomizer/world/pond/pond-spots';
+import { POND_OPTION_KEYS } from '@shared/randomizer/world/pond/pond-option-keys';
+import { POND_PRIZE_LOCATIONS } from '@shared/randomizer/world/pond/pond-rungs';
+import { pondPlanOf } from '@shared/randomizer/world/pond/pond-plan';
 import {
   parsePondProfiles, pondProfileValuesOf,
-} from '@shared/randomizer/ap-world/pond/pond-profiles-from-snapshot';
-import { pondProfilesOfStats } from '@shared/randomizer/ap-world/fill/placement-ponds';
-import { LEGACY_POND_PROFILES } from '@shared/randomizer/ap-world/pond/pond-profile-defaults';
-import { createCollectionState } from '@shared/randomizer/ap-world/collection-state';
-import { WALLET } from '@shared/randomizer/ap-world/capacity/capacity-family';
-import { reachableTopOf } from '@shared/randomizer/ap-world/capacity/reachable-top';
-import { POND_INSTANCES } from '@shared/randomizer/ap-world/pond/pond-instances.data';
-import { POND_RUNGS_BY_ID } from '@shared/randomizer/ap-world/pond/pond-locations.data';
+} from '@shared/randomizer/world/pond/pond-profiles-from-snapshot';
+import { pondProfilesOfStats } from '@shared/randomizer/world/fill/placement-ponds';
+import { LEGACY_POND_PROFILES } from '@shared/randomizer/world/pond/pond-profile-defaults';
+import { createCollectionState } from '@shared/randomizer/world/collection-state';
+import { WALLET } from '@shared/randomizer/world/capacity/capacity-family';
+import { reachableTopOf } from '@shared/randomizer/world/capacity/reachable-top';
+import { POND_INSTANCES } from '@shared/randomizer/world/pond/pond-instances';
+import { POND_RUNGS_BY_ID } from '@shared/randomizer/world/pond/pond-rungs';
+import { POND_REGION_LOCATIONS } from '@shared/randomizer/world/pond/pond-region-locations';
 import { find } from '@shared/game/data';
-import { locationDisplayName } from '@shared/randomizer/ap-world/display-names';
-import AP_DATAPACKAGE from '@shared/randomizer/ap-world/alttp-datapackage.json';
-import { NPC_SCOPE_LOCATIONS } from '@shared/randomizer/ap-world/scope-vanilla.data';
-import type { ApOptionValue, RandomizerOptionsSnapshot } from '@shared/randomizer/ap-world/options.type';
+import { NPC_SCOPE_LOCATIONS } from '@shared/randomizer/world/scope-tables';
+import type { OptionValue, RandomizerOptionsSnapshot } from '@shared/randomizer/world/options.type';
 
-const snapshotOf = (over: Record<string, ApOptionValue>): RandomizerOptionsSnapshot =>
-  ({ schema: 'ap-options-v2', values: { ...apBaselineValues, ...over } });
+const snapshotOf = (over: Record<string, OptionValue>): RandomizerOptionsSnapshot =>
+  ({ schema: 'ap-options-v2', values: { ...baselineValues, ...over } });
 
 const DELIVERABLE = new Set(POND_CERTIFIED_SPOTS);
 const EMPTY: ReadonlySet<string> = new Set();
 
-const ALL_POND_SLOTS = new Set(POND_INSTANCES.flatMap((pond) => pond.slots.map((slot) => slot.location)));
+const ALL_POND_SLOTS = new Set(POND_INSTANCES.flatMap((pond) => pond.slots.map((slot) => slot.key)));
 const ALL_NPC = new Set(NPC_SCOPE_LOCATIONS.keys());
 
 const SEEDS = Array.from({ length: 40 }, (_, index) => `pond-${index}`);
@@ -50,32 +50,42 @@ const SEEDS = Array.from({ length: 40 }, (_, index) => `pond-${index}`);
 const MODES = ['vanilla-cost', 'custom'] as const;
 
 describe('pond slot identity', () => {
-  const serverLocations = AP_DATAPACKAGE.location_name_to_id as Record<string, number>;
-
-  it('every pond slot is named exactly as the server names it', () => {
+  it('every pond slot is a location of the world', () => {
+    const declared = new Set([...POND_REGION_LOCATIONS.values()].flat());
     for (const pond of POND_INSTANCES) {
       for (const slot of pond.slots) {
-        expect(serverLocations[slot.location], `${pond.label}: ${slot.location}`).toBeTypeOf('number');
+        expect(declared.has(slot.key), `${pond.label}: ${slot.key}`).toBe(true);
       }
     }
   });
 
-  it('a player reads the pond and a number, never a side', () => {
-    const shown = POND_INSTANCES.flatMap(
-      (pond) => pond.slots.map((slot) => locationDisplayName(slot.location)));
-    expect(shown).toEqual([
+  it('every slot is its pond and a number, never a side', () => {
+    expect(POND_INSTANCES.flatMap((pond) => pond.slots.map((slot) => slot.key))).toEqual([
+      'check-273', 'check-274',
+      'check-021', 'check-022',
+      'check-266', 'check-267',
+    ]);
+    // The names the keys read as, which is where the pond and the number live.
+    expect(POND_INSTANCES.flatMap((pond) => pond.slots.map((slot) => locationDisplayName(slot.key)))).toEqual([
       'Hylia Fairy Bombs 1', 'Hylia Fairy Arrows 1',
       'Waterfall Fairy 1', 'Waterfall Fairy 2',
       'Pyramid Fairy 1', 'Pyramid Fairy 2',
     ]);
   });
 
-  it('no check answers to a pond rung name, so a tier and a rung never share one', () => {
-    const rungs = new Set(POND_INSTANCES.flatMap((pond) => POND_RUNGS_BY_ID[pond.id]));
-    const clashing = find('check', () => true)
-      .map((check) => check.randomizerName)
-      .filter((name) => rungs.has(name));
-    expect(clashing).toEqual([]);
+  // A wish pond's own pair IS rungs 1 and 2 of her ladder, so a check record answers to those
+  // two names. The capacity pond answers in two named family ladders instead, so none of its
+  // plain rungs may be a record's name: a tier and a rung would share one.
+  it('a wish pond pair is rungs 1 and 2, and no record answers to a prize rung', () => {
+    const recordIds = new Set(find('check', () => true).map((check) => check.id as string));
+    for (const pond of POND_INSTANCES) {
+      const rungs = POND_RUNGS_BY_ID[pond.id];
+      const pair = pond.slots.map((slot) => slot.key);
+      const asRungs = pond.id === 'capacity' ? [] : [rungs[0], rungs[1]];
+      expect(pair.filter((key) => rungs.includes(key)), pond.label).toEqual(asRungs);
+      expect(pair.filter((key) => !recordIds.has(key)), pond.label).toEqual([]);
+      expect(rungs.slice(asRungs.length).filter((key) => recordIds.has(key)), pond.label).toEqual([]);
+    }
   });
 });
 
@@ -87,11 +97,11 @@ describe('pond generation', () => {
         pond_capacity_mode: mode, pond_capacity_items: 6, pond_capacity_throws: 8, pond_capacity_start: '25', pond_capacity_max: '999',
       });
       for (const seed of SEEDS) {
-        const placement = generateApPlacement(seed, snapshot, EMPTY, DELIVERABLE, EMPTY);
+        const placement = generatePlacement(seed, snapshot, EMPTY, DELIVERABLE, EMPTY);
         expect(placement.stats.pondPrizeCount, seed).toBe(6);
         const prizes = POND_PRIZE_LOCATIONS.slice(0, 6);
         for (const name of prizes) {
-          expect(placement.nameView[name], `${seed} ${name}`).toBeTruthy();
+          expect(placement.locations[name], `${seed} ${name}`).toBeTruthy();
         }
         // The sweep inside the generator already proved full accessibility and
         // the goal; a placement that came back at all is beatable.
@@ -102,14 +112,14 @@ describe('pond generation', () => {
 
   it('zero pool items leaves the pond out of the world entirely', () => {
     const snapshot = snapshotOf({ pond_capacity_mode: 'custom', pond_capacity_items: 0 });
-    const placement = generateApPlacement('pond-none', snapshot, EMPTY, DELIVERABLE, EMPTY);
+    const placement = generatePlacement('pond-none', snapshot, EMPTY, DELIVERABLE, EMPTY);
     expect(placement.stats.pondPrizeCount).toBe(0);
-    for (const name of POND_PRIZE_LOCATIONS) expect(placement.nameView[name]).toBeUndefined();
+    for (const name of POND_PRIZE_LOCATIONS) expect(placement.locations[name]).toBeUndefined();
   }, 30_000);
 
   it('an unproven pond seam contributes no location at all', () => {
     const snapshot = snapshotOf({ pond_capacity_mode: 'vanilla-cost', pond_capacity_items: 4 });
-    const placement = generateApPlacement('pond-unproven', snapshot, EMPTY, EMPTY, EMPTY);
+    const placement = generatePlacement('pond-unproven', snapshot, EMPTY, EMPTY, EMPTY);
     expect(placement.stats.pondPrizeCount).toBe(0);
   }, 30_000);
 
@@ -154,7 +164,7 @@ describe('pond generation', () => {
       capacity_wallet_count: 1,
     });
     for (const seed of SEEDS.slice(0, 5)) {
-      const placement = generateApPlacement(seed, snapshot, EMPTY, DELIVERABLE, EMPTY);
+      const placement = generatePlacement(seed, snapshot, EMPTY, DELIVERABLE, EMPTY);
       expect(placement.stats.pondPrizeCount, seed).toBe(2);
       expect(pondPlanOf(pondProfilesOfStats(placement.stats).capacity).throws.map((entry) => entry.price)).toEqual([500, 500]);
     }
@@ -166,38 +176,40 @@ describe('pond generation', () => {
     for (const key of POND_OPTION_KEYS) delete (before.values as Record<string, unknown>)[key];
     const withRow = buildFillWorld(fillOptionsFromSnapshot(legacy, { capacity: DELIVERABLE }, {}, 's'));
     const withoutRow = buildFillWorld(fillOptionsFromSnapshot(before, { capacity: DELIVERABLE }, {}, 's'));
-    expect([...withRow.world.locationsByName.keys()]).toEqual([...withoutRow.world.locationsByName.keys()]);
+    expect([...withRow.world.locationsByKey.keys()]).toEqual([...withoutRow.world.locationsByKey.keys()]);
     expect(withRow.ponds.capacity).toEqual({ mode: 'capacity' });
     expect(withRow.pondLocations).toEqual(withoutRow.pondLocations);
     expect(withRow.pool.pool).toEqual(withoutRow.pool.pool);
-    const a = generateApPlacement('legacy-seed', legacy, EMPTY, DELIVERABLE, EMPTY);
-    const b = generateApPlacement('legacy-seed', before, EMPTY, DELIVERABLE, EMPTY);
-    expect(a.nameView).toEqual(b.nameView);
+    const a = generatePlacement('legacy-seed', legacy, EMPTY, DELIVERABLE, EMPTY);
+    const b = generatePlacement('legacy-seed', before, EMPTY, DELIVERABLE, EMPTY);
+    expect(a.locations).toEqual(b.locations);
   }, 30_000);
 
   it('a placement re-derives the same schedule the generator planned', () => {
     const snapshot = snapshotOf({ pond_capacity_mode: 'custom', pond_capacity_items: 3, pond_capacity_throws: 5 });
-    const placement = generateApPlacement('pond-derive', snapshot, EMPTY, DELIVERABLE, EMPTY);
+    const placement = generatePlacement('pond-derive', snapshot, EMPTY, DELIVERABLE, EMPTY);
     const plan = pondPlanOf(pondProfilesOfStats(placement.stats).capacity);
     expect(plan.locations).toHaveLength(3);
-    expect(plan.locations.every((name) => placement.nameView[name] !== undefined)).toBe(true);
+    expect(plan.locations.every((name) => placement.locations[name] !== undefined)).toBe(true);
   }, 30_000);
 
   for (const pond of POND_INSTANCES.filter((entry) => entry.id !== 'capacity')) {
-    const slots = pond.slots.map((slot) => slot.location);
+    const slots = pond.slots.map((slot) => slot.key);
     const worldOf = (mode: string, flag: boolean) => buildFillWorld({
       ...fillOptionsFromSnapshot(snapshotOf({
         [`pond_${pond.id}_mode`]: mode, [`pond_${pond.id}_items`]: 4, [`pond_${pond.id}_throws`]: 4,
       }), { npc: ALL_NPC, capacity: ALL_POND_SLOTS }, {}, 's'),
       pondSlotsFollowMode: flag,
     });
-    const present = (mode: string, flag = true): string[] => [...slots, ...POND_RUNGS_BY_ID[pond.id]]
-      .filter((name) => worldOf(mode, flag).world.locationsByName.has(name));
+    // Her pair IS rungs 1 and 2, so the candidates are her ladder and nothing besides.
+    const candidates = [...new Set([...slots, ...POND_RUNGS_BY_ID[pond.id]])];
+    const present = (mode: string, flag = true): string[] => candidates
+      .filter((name) => worldOf(mode, flag).world.locationsByKey.has(name));
 
     it(`${pond.label} at Vanilla grants locks both slots to what her upgrade produces`, () => {
       const locked = worldOf('capacity', true);
       expect(present('capacity')).toEqual(slots);
-      for (const slot of pond.slots) expect(locked.lockedVanilla.get(slot.location), slot.location).toBe(slot.vanillaGrant);
+      for (const slot of pond.slots) expect(locked.lockedVanilla.get(slot.key), slot.key).toBe(slot.vanillaGrant);
       // Exactly the produced items leave the pool; what she takes in trade stays findable.
       const open = worldOf('vanilla-cost', true).pool.pool;
       const produced = pond.slots.map((slot) => slot.vanillaGrant as string).sort();
@@ -214,10 +226,15 @@ describe('pond generation', () => {
 
     it(`${pond.label} under Custom carries exactly its rungs and still rolls`, () => {
       expect(present('custom')).toEqual(POND_RUNGS_BY_ID[pond.id].slice(0, 4));
-      expect(present('custom', false)).toEqual([...slots, ...POND_RUNGS_BY_ID[pond.id].slice(0, 4)]);
+      // Which slots exist is the pond's own ladder, so the vanilla-grant flag cannot move it.
+      expect(present('custom', false)).toEqual(POND_RUNGS_BY_ID[pond.id].slice(0, 4));
       const snapshot = snapshotOf({ [`pond_${pond.id}_mode`]: 'custom', [`pond_${pond.id}_items`]: 4 });
-      const placement = generateApPlacement(`closed-${pond.id}`, snapshot, ALL_NPC, ALL_POND_SLOTS, EMPTY);
-      for (const name of slots) expect(placement.nameView[name], name).toBeUndefined();
+      const placement = generatePlacement(`closed-${pond.id}`, snapshot, ALL_NPC, ALL_POND_SLOTS, EMPTY);
+      // Her pair is prizes 1 and 2 of the ladder here, so both carry what the seed put there.
+      for (const name of slots) expect(placement.locations[name], name).toBeDefined();
+      for (const name of POND_RUNGS_BY_ID[pond.id].slice(4)) {
+        expect(placement.locations[name], name).toBeUndefined();
+      }
     }, 30_000);
   }
 
@@ -238,7 +255,7 @@ describe('pond generation', () => {
     // The rows each pond holds are untouched, so the switch is reversible.
     expect(parsePondProfiles(snapshotOf({ ...separate, pond_share: true }).values).stored)
       .toEqual(parsePondProfiles(snapshotOf(separate).values).profiles);
-    const placement = generateApPlacement('pond-shared', snapshotOf({ ...separate, pond_share: true }), EMPTY, DELIVERABLE, EMPTY);
+    const placement = generatePlacement('pond-shared', snapshotOf({ ...separate, pond_share: true }), EMPTY, DELIVERABLE, EMPTY);
     expect(placement.stats.pondPrizeCount).toBeGreaterThan(0);
   }, 30_000);
 
@@ -247,16 +264,17 @@ describe('pond generation', () => {
     // displaces a filler, never the blue one she needs.
     const snapshot = snapshotOf({ include_npc_checks: false, pond_wishing_mode: 'capacity' });
     const { pool, lockedVanilla } = buildFillWorld(fillOptionsFromSnapshot(snapshot, { capacity: ALL_POND_SLOTS }, {}, 's'));
-    expect(pool.pool.filter((name) => name === 'Blue Boomerang')).toHaveLength(1);
-    expect(pool.pool.filter((name) => name === 'Red Boomerang')).toHaveLength(0);
-    expect([lockedVanilla.get('Brewery'), lockedVanilla.get('Waterfall Fairy - Left')]).toEqual(['Red Boomerang', 'Red Boomerang']);
-    const placement = generateApPlacement('double-red', snapshot, EMPTY, ALL_POND_SLOTS, EMPTY);
-    expect(Object.values(placement.nameView)).toContain('Blue Boomerang');
+    expect(pool.pool.filter((item) => item === ITEM.blueBoomerang)).toHaveLength(1);
+    expect(pool.pool.filter((item) => item === ITEM.redBoomerang)).toHaveLength(0);
+    expect([lockedVanilla.get('check-268'), lockedVanilla.get('check-021')])
+      .toEqual([ITEM.redBoomerang, ITEM.redBoomerang]);
+    const placement = generatePlacement('double-red', snapshot, EMPTY, ALL_POND_SLOTS, EMPTY);
+    expect(Object.values(placement.locations)).toContain(ITEM.blueBoomerang);
   }, 30_000);
 });
 
 /** A custom pond with every ask row ticked: the ladder a preview has to get right. */
-const MIXED_ASK: Record<string, ApOptionValue> = {
+const MIXED_ASK: Record<string, OptionValue> = {
   pond_capacity_mode: 'custom', pond_capacity_items: 6, pond_capacity_throws: 8,
   pond_capacity_start: '25', pond_capacity_max: '999',
   pond_capacity_ask_rupees: true,
@@ -275,7 +293,7 @@ describe('pond demands come from the seed, so a preview cannot lie', () => {
   it('what the panel would show is what the placement carries, retries included', () => {
     const retried: string[] = [];
     for (const seed of previewSeeds) {
-      const placement = generateApPlacement(seed, snapshot, EMPTY, DELIVERABLE, EMPTY);
+      const placement = generatePlacement(seed, snapshot, EMPTY, DELIVERABLE, EMPTY);
       // The panel calls this same function, with the same probe sets, before
       // any placement exists.
       const previewed = pondDemandsOfSnapshot(snapshot, seed, { capacity: DELIVERABLE });

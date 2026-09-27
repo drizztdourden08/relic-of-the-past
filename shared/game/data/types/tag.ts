@@ -1,5 +1,6 @@
 /* @layer shared-game @kind types */
 import type { EntityKind, TagId } from './ids';
+import type { ReviewMark } from './review';
 
 /**
  * One term of the shared tag vocabulary, as a first-class record.
@@ -31,6 +32,7 @@ interface TagRecord {
   namespaceLabel: string;
   /** Which collections' `tags` field this term belongs on. */
   appliesTo: readonly EntityKind[];
+  review?: ReviewMark;
 }
 
 export type { TagRecord };

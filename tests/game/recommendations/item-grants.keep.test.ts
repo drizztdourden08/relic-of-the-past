@@ -158,7 +158,7 @@ describeDataset('item strategy on an alias mismatch', () => {
     expect(draft.detector).toBe('strategy:item');
     expect(draft.confidence).toBe('certain');
     expect((draft.proposed as ItemRecord).aliasOf).toBeUndefined();
-    expect(draft.reason).toContain(alias.randomizerName);
+    expect(draft.reason).toContain(alias.name);
   });
 
   it('grades an alias mismatch sourced from a tracker delta only likely', () => {

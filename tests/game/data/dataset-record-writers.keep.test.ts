@@ -3,8 +3,12 @@
  * Create/update/delete round trip for the six record-facade collections, in a
  * throwaway workspace. The temp tree is shaped like `shared/game/data/...`
  * because the id allocator scans that shape and the path resolver refuses to
- * escape it. Every kind gets a SPLIT collection (a record in the earlier file
- * of a size-split pair), the case a canonical destination gets wrong.
+ * escape it.
+ *
+ * The fixture parks one record in a file its own resolver would NOT name. Nothing
+ * in the committed tree does that, and tree-layout.keep.test.ts forbids it there;
+ * here it is the probe: an update or a delete must find a record by id, wherever
+ * it sits, instead of assuming the file a create would have picked.
  */
 import { mkdtemp, mkdir, readFile, rm, writeFile } from 'fs/promises';
 import { tmpdir } from 'os';
@@ -36,34 +40,45 @@ const seed = async (relativePath: string, contents: string): Promise<void> => {
 const sourceOf = (relativePath: string): Promise<string> =>
   readFile(join(root, 'shared', 'game', 'data', 'records', relativePath), 'utf-8');
 
+/**
+ * The records a written file really holds, by evaluating its array literal. The
+ * emitter's output is plain data, so reading it back this way is the round trip a
+ * reader would get, without a loader for a file in a temp tree.
+ */
+const recordsIn = (source: string): Record<string, unknown>[] => {
+  const body = source.slice(source.indexOf('= [') + 2, source.lastIndexOf('];') + 1);
+  return new Function(`return ${body};`)() as Record<string, unknown>[];
+};
+
 beforeEach(async () => {
   root = await mkdtemp(join(tmpdir(), 'rotp-writers-'));
 
-  // Items: a junk record parked in the EARLIER half of a size split, so an
-  // update has to find it there instead of in the file a create would pick.
-  await seed('items/junk-1.ts', arrayFile('JUNK_1', record(
-    "    id: 'item-001',\n    origin: 'vanilla',\n    category: 'junk',\n    randomizerName: 'Blue Rupee',\n",
+  // A vanilla junk record parked with the seed-only items, which is not where a
+  // create for it would land.
+  await seed('items/randomizer.ts', arrayFile('RANDOMIZER', record(
+    "    id: 'item-001',\n    origin: 'vanilla',\n    category: 'junk',\n    name: 'Blue Rupee',\n",
   )));
-  await seed('items/junk-2.ts', arrayFile('JUNK_2', ''));
+  await seed('items/junk.ts', arrayFile('JUNK', ''));
 
-  await seed('actors/enemies-1.ts', arrayFile('ENEMIES_1', record(
-    "    id: 'actor-001',\n    gameId: { spriteType: 8 },\n    kind: 'enemy',\n    vanillaName: 'Guard',\n",
+  // An enemy parked with the bosses, for the same reason.
+  await seed('actors/bosses.ts', arrayFile('BOSSES', record(
+    "    id: 'actor-001',\n    gameId: { spriteType: 8 },\n    kind: 'enemy',\n    name: 'Guard',\n",
   )));
-  await seed('actors/enemies-4.ts', arrayFile('ENEMIES_4', ''));
+  await seed('actors/enemies.ts', arrayFile('ENEMIES', ''));
 
-  await seed('dungeons-1.ts', arrayFile('DUNGEONS_1', record(
-    "    id: 'dungeon-001',\n    gameId: { palaceIndex: 0 },\n    randomizerName: 'First',\n"
+  await seed('dungeons/light-world/first.ts', arrayFile('FIRST', record(
+    "    id: 'dungeon-001',\n    gameId: { palaceIndex: 0 },\n    name: 'First',\n"
     + "    fileStem: 'first',\n    roomScreenIds: [],\n",
   )));
-  await seed('dungeons-2.ts', arrayFile('DUNGEONS_2', ''));
 
-  await seed('checks/dungeons/turtle-rock.ts', arrayFile('TR', ''));
+  await seed('checks/dark-world/turtle-rock.ts', arrayFile('TR', ''));
 
-  await seed('areas.ts', arrayFile('AREAS', record(
-    "    id: 'area-001',\n    world: 'light',\n    randomizerName: 'Central',\n",
+  await seed('areas/light-world.ts', arrayFile('LIGHT_AREAS', record(
+    "    id: 'area-001',\n    world: 'light',\n    name: 'Central',\n",
   )));
-  await seed('locations.ts', arrayFile('LOCATIONS', record(
-    "    id: 'location-001',\n    areaId: 'area-001',\n    randomizerName: 'A Village',\n",
+  await seed('areas/dark-world.ts', arrayFile('DARK_AREAS', ''));
+  await seed('locations/light-world.ts', arrayFile('LIGHT_LOCATIONS', record(
+    "    id: 'location-001',\n    areaId: 'area-001',\n    name: 'A Village',\n",
   )));
 });
 
@@ -74,81 +89,81 @@ afterEach(async () => {
 describeDataset('an item record', () => {
   it('creates into the canonical file for its category, with an allocated id', async () => {
     const result = await allocateItem(root, {
-      record: { origin: 'vanilla', category: 'junk', randomizerName: 'Green Rupee' },
+      record: { origin: 'vanilla', category: 'junk', name: 'Green Rupee' },
     });
     expect(result.success).toBe(true);
     if (!result.success) return;
     expect(result.record.id).toBe('item-002');
-    expect(await sourceOf('items/junk-2.ts')).toContain("id: 'item-002'");
+    expect(await sourceOf('items/junk.ts')).toContain("id: 'item-002'");
     // Never in the file it was NOT filed in.
-    expect(await sourceOf('items/junk-1.ts')).not.toContain("id: 'item-002'");
+    expect(await sourceOf('items/randomizer.ts')).not.toContain("id: 'item-002'");
   });
 
-  it('updates a record living in the earlier half of a split, in place', async () => {
+  it('updates a record living somewhere a create would not have put it, in place', async () => {
     const result = await writeItemRecord(root, {
       id: 'item-001',
-      record: { origin: 'vanilla', category: 'junk', randomizerName: 'Red Rupee' },
+      record: { origin: 'vanilla', category: 'junk', name: 'Red Rupee' },
     });
     expect(result).toEqual({ success: true, ids: ['item-001'] });
-    const source = await sourceOf('items/junk-1.ts');
-    expect(source).toContain("randomizerName: 'Red Rupee'");
+    const source = await sourceOf('items/randomizer.ts');
+    expect(source).toContain("name: 'Red Rupee'");
     expect(source).not.toContain('Blue Rupee');
-    expect(await sourceOf('items/junk-2.ts')).not.toContain("id: 'item-001'");
+    expect(await sourceOf('items/junk.ts')).not.toContain("id: 'item-001'");
   });
 
   it('deletes a record from the file it really sits in', async () => {
     expect(await deleteItem(root, { id: 'item-001' })).toEqual({ success: true, ids: ['item-001'] });
-    expect(await sourceOf('items/junk-1.ts')).not.toContain("id: 'item-001'");
+    expect(await sourceOf('items/randomizer.ts')).not.toContain("id: 'item-001'");
   });
 
   it('refuses an id no file carries, instead of writing anywhere', async () => {
-    const before = await sourceOf('items/junk-1.ts');
+    const before = await sourceOf('items/randomizer.ts');
     const result = await deleteItem(root, { id: 'item-404' });
     expect(result.success).toBe(false);
-    expect(await sourceOf('items/junk-1.ts')).toBe(before);
+    expect(await sourceOf('items/randomizer.ts')).toBe(before);
   });
 });
 
 describeDataset('an actor record', () => {
-  it('creates into the last file of its kind group', async () => {
+  it('creates into the file its kind owns', async () => {
     const result = await allocateActor(root, {
-      record: { gameId: { spriteType: 9 }, kind: 'enemy', vanillaName: 'Soldier' },
+      record: { gameId: { spriteType: 9 }, kind: 'enemy', name: 'Soldier' },
     });
     expect(result.success).toBe(true);
     if (!result.success) return;
     expect(result.record.id).toBe('actor-002');
-    expect(await sourceOf('actors/enemies-4.ts')).toContain("id: 'actor-002'");
+    expect(await sourceOf('actors/enemies.ts')).toContain("id: 'actor-002'");
   });
 
-  it('updates and deletes one that sits in an earlier file of the group', async () => {
+  it('updates and deletes one that sits in another file of the collection', async () => {
     await writeActorRecord(root, {
       id: 'actor-001',
-      record: { gameId: { spriteType: 8 }, kind: 'enemy', vanillaName: 'Sentry' },
+      record: { gameId: { spriteType: 8 }, kind: 'enemy', name: 'Sentry' },
     });
-    expect(await sourceOf('actors/enemies-1.ts')).toContain("vanillaName: 'Sentry'");
+    expect(await sourceOf('actors/bosses.ts')).toContain("name: 'Sentry'");
     await deleteActor(root, { id: 'actor-001' });
-    expect(await sourceOf('actors/enemies-1.ts')).not.toContain("id: 'actor-001'");
+    expect(await sourceOf('actors/bosses.ts')).not.toContain("id: 'actor-001'");
   });
 });
 
 describeDataset('a dungeon record', () => {
-  it('creates into the second file and edits one held by the first', async () => {
+  it('creates into its own file and edits the one already there', async () => {
     const created = await allocateDungeon(root, {
-      record: { gameId: { palaceIndex: 4 }, randomizerName: 'Second', fileStem: 'second', roomScreenIds: [] },
+      record: { gameId: { palaceIndex: 4 }, name: 'Second', fileStem: 'second', roomScreenIds: [] },
     });
-    expect(created.success).toBe(true);
+    expect(created.success ? '' : created.error).toBe('');
     if (!created.success) return;
     expect(created.record.id).toBe('dungeon-002');
-    expect(await sourceOf('dungeons-2.ts')).toContain("id: 'dungeon-002'");
+    expect(await sourceOf('dungeons/light-world/second.ts')).toContain("id: 'dungeon-002'");
 
     await writeDungeonRecord(root, {
       id: 'dungeon-001',
-      record: { gameId: { palaceIndex: 0 }, randomizerName: 'Renamed', fileStem: 'first', roomScreenIds: [] },
+      record: { gameId: { palaceIndex: 0 }, name: 'Renamed', fileStem: 'first', roomScreenIds: [] },
     });
-    expect(await sourceOf('dungeons-1.ts')).toContain("randomizerName: 'Renamed'");
+    expect(await sourceOf('dungeons/light-world/first.ts')).toContain("name: 'Renamed'");
 
     await deleteDungeon(root, { id: 'dungeon-001' });
-    expect(await sourceOf('dungeons-1.ts')).not.toContain("id: 'dungeon-001'");
+    expect(await sourceOf('dungeons/light-world/first.ts')).not.toContain("id: 'dungeon-001'");
   });
 });
 
@@ -157,7 +172,7 @@ describeDataset('a check record', () => {
     gameId: { roomId: 0xd6, chestIndex: 0 },
     kind: 'chest' as const,
     dungeonId: 'dungeon-012' as const,
-    randomizerName: 'A Chest',
+    name: 'A Chest',
     vanillaItemIds: [],
   };
 
@@ -165,7 +180,7 @@ describeDataset('a check record', () => {
     const result = await allocateCheck(root, { record: draft });
     expect(result.success ? '' : result.error).toBe('');
     if (!result.success) return;
-    expect(await sourceOf('checks/dungeons/turtle-rock.ts')).toContain(`id: '${result.record.id}'`);
+    expect(await sourceOf('checks/dark-world/turtle-rock.ts')).toContain(`id: '${result.record.id}'`);
   });
 
   it('round-trips an update and a delete through the file it was created in', async () => {
@@ -174,17 +189,33 @@ describeDataset('a check record', () => {
     if (!created.success) return;
     const id = created.record.id;
 
-    expect(await writeCheckRecord(root, { id, record: { ...draft, randomizerName: 'Renamed Chest' } }))
+    expect(await writeCheckRecord(root, { id, record: { ...draft, name: 'Renamed Chest' } }))
       .toEqual({ success: true, ids: [id] });
-    expect(await sourceOf('checks/dungeons/turtle-rock.ts')).toContain("randomizerName: 'Renamed Chest'");
+    expect(await sourceOf('checks/dark-world/turtle-rock.ts')).toContain("name: 'Renamed Chest'");
 
     expect(await deleteCheck(root, { id })).toEqual({ success: true, ids: [id] });
-    expect(await sourceOf('checks/dungeons/turtle-rock.ts')).not.toContain(`id: '${id}'`);
+    expect(await sourceOf('checks/dark-world/turtle-rock.ts')).not.toContain(`id: '${id}'`);
+  });
+
+  it('writes a review mark into the record file, last, and reads it back unchanged', async () => {
+    const review = {
+      status: 'needs-work' as const,
+      source: 'person' as const,
+      note: 'the standing mask is unverified',
+      at: '2026-09-23T00:00:00.000Z',
+    };
+    const created = await allocateCheck(root, { record: { ...draft, review } });
+    expect(created.success ? '' : created.error).toBe('');
+    if (!created.success) return;
+
+    const [written] = recordsIn(await sourceOf('checks/dark-world/turtle-rock.ts'));
+    expect(written).toEqual({ id: created.record.id, ...draft, review });
+    expect(Object.keys(written).at(-1)).toBe('review');
   });
 
   it('refuses a check with no destination instead of picking one', async () => {
     const result = await allocateCheck(root, {
-      record: { gameId: {}, kind: 'event', randomizerName: 'Nowhere', vanillaItemIds: [] },
+      record: { gameId: {}, kind: 'event', name: 'Nowhere', vanillaItemIds: [] },
     });
     expect(result.success).toBe(false);
   });
@@ -192,29 +223,29 @@ describeDataset('a check record', () => {
 
 describeDataset('geography records', () => {
   it('round-trips an area through create, update and delete', async () => {
-    const created = await allocateGeography(root, { kind: 'area', randomizerName: 'New Land', world: 'dark' });
+    const created = await allocateGeography(root, { kind: 'area', name: 'New Land', world: 'dark' });
     expect(created.success).toBe(true);
     if (!created.success || created.kind !== 'area') return;
     const id = created.record.id;
-    expect(await sourceOf('areas.ts')).toContain(`id: '${id}'`);
+    expect(await sourceOf('areas/dark-world.ts')).toContain(`id: '${id}'`);
 
-    await writeAreaRecord(root, { id, record: { world: 'dark', randomizerName: 'Renamed Land' } });
-    expect(await sourceOf('areas.ts')).toContain("randomizerName: 'Renamed Land'");
+    await writeAreaRecord(root, { id, record: { world: 'dark', name: 'Renamed Land' } });
+    expect(await sourceOf('areas/dark-world.ts')).toContain("name: 'Renamed Land'");
 
     expect(await deleteArea(root, { id })).toEqual({ success: true, ids: [id] });
-    expect(await sourceOf('areas.ts')).not.toContain(`id: '${id}'`);
+    expect(await sourceOf('areas/dark-world.ts')).not.toContain(`id: '${id}'`);
   });
 
   it('round-trips a location through create, update and delete', async () => {
-    const created = await allocateGeography(root, { kind: 'location', randomizerName: 'A Shop', areaId: 'area-001' });
+    const created = await allocateGeography(root, { kind: 'location', name: 'A Shop', areaId: 'area-001' });
     expect(created.success).toBe(true);
     if (!created.success || created.kind !== 'location') return;
     const id = created.record.id;
 
-    await writeLocationRecord(root, { id, record: { areaId: 'area-001', randomizerName: 'The Shop' } });
-    expect(await sourceOf('locations.ts')).toContain("randomizerName: 'The Shop'");
+    await writeLocationRecord(root, { id, record: { areaId: 'area-001', name: 'The Shop' } });
+    expect(await sourceOf('locations/light-world.ts')).toContain("name: 'The Shop'");
 
     expect(await deleteLocation(root, { id })).toEqual({ success: true, ids: [id] });
-    expect(await sourceOf('locations.ts')).not.toContain(`id: '${id}'`);
+    expect(await sourceOf('locations/light-world.ts')).not.toContain(`id: '${id}'`);
   });
 });

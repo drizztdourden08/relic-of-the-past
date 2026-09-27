@@ -9,14 +9,14 @@ import { RandomizerOptionGroup } from '@domains/app/compounds/RandomizerOptionGr
 import { RandomizerOptionRow } from '@domains/app/compounds/RandomizerOptionRow';
 import type { LockedOptionGroup } from '@domains/app/compounds/RandomizerOptionRow';
 import type { ImpactCell } from '@domains/app/compounds/PoolImpactCell';
-import type { ApOptionDef, ApOptionValue } from '@shared/randomizer/ap-world/options.type';
+import type { OptionDef, OptionValue } from '@shared/randomizer/world/options.type';
 
 interface LockedRowsSectionProps {
   /** The one heading the merged rows sit under. */
   title: string;
   /** The tab's fixed groups, as the tab model split them. */
   groups: readonly LockedOptionGroup[];
-  valueOf: (option: ApOptionDef) => ApOptionValue;
+  valueOf: (option: OptionDef) => OptionValue;
   cellOf: (key: string) => ImpactCell;
 }
 

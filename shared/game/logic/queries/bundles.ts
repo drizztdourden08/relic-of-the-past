@@ -51,8 +51,8 @@ const screenByIndex = (): Map<number, ScreenRecord> => {
   return cachedByIndex;
 };
 
-const label = (screen: ScreenRecord): string => screen.vanillaName ?? screen.randomizerName;
-const locationName = (screen: ScreenRecord): string => getLocation(screen.locationId).randomizerName;
+const label = (screen: ScreenRecord): string => screen.name;
+const locationName = (screen: ScreenRecord): string => getLocation(screen.locationId).name;
 
 const buildScreenBundle = (group: number[]): ScreenBundle => {
   const byIndex = screenByIndex();

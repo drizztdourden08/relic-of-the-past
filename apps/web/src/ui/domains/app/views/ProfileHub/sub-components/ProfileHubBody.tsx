@@ -16,8 +16,10 @@ import { ControlsSettings } from './ControlsSettings';
 import { HapticsSettings } from './HapticsSettings';
 import { DeveloperSettings } from './DeveloperSettings';
 import { MobileSettings } from './MobileSettings';
+import { OnlineSettings } from './OnlineSettings';
 import { usePlatform } from '@app/platform';
-import { PROFILE_HUB_TABS } from '../ProfileHub.constants';
+import { runKindOfProfile } from '@app/lib/game/randomizer-client';
+import { isHubTabShown, PROFILE_HUB_TABS } from '../ProfileHub.constants';
 import type { ProfileHubProps, ProfileHubTab } from '../ProfileHub.type';
 
 interface ProfileHubBodyProps {
@@ -31,14 +33,17 @@ interface ProfileHubBodyProps {
 }
 
 const ProfileHubBody = (props: ProfileHubBodyProps) => {
-  const { activeTab, setActiveTab, settings, onChange, profile, isGameRunning, onStartGame } = props;
+  const { activeTab: chosenTab, setActiveTab, settings, onChange, profile, isGameRunning, onStartGame } = props;
   const { info } = usePlatform();
+  const isOnline = runKindOfProfile(profile.randomizer) === 'online';
+  // A profile switch away from Archipelago drops the Online tab; its body goes with it.
+  const activeTab = chosenTab === 'online' && !isOnline ? 'home' : chosenTab;
   // Mobile options live in their own tab, always pinned to the very bottom, and shown only on mobile.
   const tabs = useMemo(
     () => (Object.entries(PROFILE_HUB_TABS) as [ProfileHubTab, typeof PROFILE_HUB_TABS[ProfileHubTab]][])
-      .filter(([, spec]) => !spec.mobileOnly || info.formFactor === 'mobile')
+      .filter(([, spec]) => isHubTabShown(spec, { isMobile: info.formFactor === 'mobile', isOnline }))
       .map(([id, spec]) => ({ id, icon: spec.icon, label: spec.label })),
-    [info.formFactor],
+    [info.formFactor, isOnline],
   );
 
   // Keys the profile's randomizer config pins; SettingsLayout locks these controls.
@@ -81,6 +86,7 @@ const ProfileHubBody = (props: ProfileHubBodyProps) => {
             <ControlsSettings settings={settings} onChange={onChange} profileId={profile.id} />
           )}
           {activeTab === 'haptics' && <HapticsSettings settings={settings} onChange={onChange} />}
+          {activeTab === 'online' && <OnlineSettings settings={settings} onChange={onChange} />}
           {activeTab === 'developer' && <DeveloperSettings settings={settings} onChange={onChange} />}
           {activeTab === 'mobile' && <MobileSettings settings={settings} onChange={onChange} />}
         </Box>

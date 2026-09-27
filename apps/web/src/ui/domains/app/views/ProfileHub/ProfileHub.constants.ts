@@ -19,6 +19,7 @@ import { buildBugFixSection } from './sub-components/bugfix-settings-sections';
 import { SECTIONS as HUD_SECTIONS } from './sub-components/hud-settings-sections';
 import { SECTIONS as HAPTICS_SECTIONS } from './sub-components/haptics-settings-sections';
 import { SECTIONS as DEVELOPER_SECTIONS } from './sub-components/developer-settings-sections';
+import { SECTIONS as ONLINE_SECTIONS } from './sub-components/online-settings-sections';
 
 interface ProfileHubTabSpec {
   icon: string;
@@ -27,7 +28,18 @@ interface ProfileHubTabSpec {
   sections?: (settings: GameSettings) => Section[];
   /** Only appended to the tab list on mobile form factor. */
   mobileOnly?: boolean;
+  /** Only shown for an online (Archipelago) profile. */
+  onlineOnly?: boolean;
 }
+
+interface TabShownContext {
+  isMobile: boolean;
+  isOnline: boolean;
+}
+
+/** Whether a tab is listed: the NavRail and the search catalog ask the same question. */
+const isHubTabShown = (spec: ProfileHubTabSpec, { isMobile, isOnline }: TabShownContext): boolean =>
+  (!spec.mobileOnly || isMobile) && (!spec.onlineOnly || isOnline);
 
 // buildPerformanceSection normally takes the live-detected refresh rate + synced-rate status
 // (from hooks, not settings). The search catalog only needs the section's labels/keywords for
@@ -59,9 +71,10 @@ const PROFILE_HUB_TABS: Record<ProfileHubTab, ProfileHubTabSpec> = {
   hud: { icon: '🖥️', label: 'HUD', sections: () => HUD_SECTIONS },
   controls: { icon: '⌨️', label: 'Controls' },
   haptics: { icon: '📳', label: 'Haptics', sections: () => HAPTICS_SECTIONS },
+  online: { icon: '🌐', label: 'Online', sections: () => ONLINE_SECTIONS, onlineOnly: true },
   developer: { icon: '🛠️', label: 'Contributor', sections: () => DEVELOPER_SECTIONS },
   mobile: { icon: '📱', label: 'Mobile', sections: () => [MOBILE_SECTION], mobileOnly: true },
 };
 
-export { PROFILE_HUB_TABS };
-export type { ProfileHubTabSpec };
+export { isHubTabShown, PROFILE_HUB_TABS };
+export type { ProfileHubTabSpec, TabShownContext };

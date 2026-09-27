@@ -89,11 +89,11 @@ describe('a record-facade collection (check)', () => {
   const creator = RECORD_CREATORS.check!;
 
   it('sends the whole draft as the record and folds the allocated result back in', async () => {
-    const record = { id: 'check-900', gameId: {}, kind: 'event', randomizerName: 'A brand-new check', vanillaItemIds: [] };
+    const record = { id: 'check-900', gameId: {}, kind: 'event', name: 'A brand-new check', vanillaItemIds: [] };
     api.allocateCheck.mockResolvedValue({ success: true, record });
     const before = all('check').length;
 
-    const result = await creator({ gameId: {}, kind: 'event', randomizerName: 'A brand-new check', vanillaItemIds: [] });
+    const result = await creator({ gameId: {}, kind: 'event', name: 'A brand-new check', vanillaItemIds: [] });
 
     expect(result).toEqual({ success: true, id: 'check-900' });
     expect(all('check').length).toBe(before + 1);
@@ -104,7 +104,7 @@ describe('a record-facade collection (check)', () => {
     api.allocateCheck.mockResolvedValue({ success: false, error: 'nope' });
     const before = all('check').length;
 
-    const result = await creator({ gameId: {}, kind: 'event', randomizerName: 'x', vanillaItemIds: [] });
+    const result = await creator({ gameId: {}, kind: 'event', name: 'x', vanillaItemIds: [] });
 
     expect(result).toEqual({ success: false, error: 'nope' });
     expect(all('check').length).toBe(before);

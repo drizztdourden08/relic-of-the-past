@@ -15,7 +15,7 @@ import type { TraversalId } from '@shared/game/simulation';
 const SYNTHETIC_ROOM = /^room:(\d+)(?:[@^].*)?$/;
 const SYNTHETIC_OW = /^ow:(\d+)$/;
 
-const nameOf = (screen: ScreenRecord): string => screen.vanillaName ?? screen.randomizerName;
+const nameOf = (screen: ScreenRecord): string => screen.name;
 
 /**
  * The interior a room NUMBER names, or undefined when more than one place answers. `palace`

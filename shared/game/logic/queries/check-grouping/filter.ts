@@ -4,24 +4,51 @@
  */
 import type { CheckRecord } from '../../../data';
 import { getDungeon, getItem, getScreen } from '../../../data';
-import type { CheckStatus } from '../../eval';
+import type { CheckStatus } from '../../check-status.type';
 import type { FilterState, RunContext } from './types';
 import { matchesFacet } from './facets';
 
 const matchesSearch = (check: CheckRecord, query: string, run?: RunContext): boolean => {
-  if (check.id.toLowerCase().includes(query) || check.randomizerName.toLowerCase().includes(query)) return true;
+  if (check.id.toLowerCase().includes(query) || check.name.toLowerCase().includes(query)) return true;
   if (check.screenId) {
     const screen = getScreen(check.screenId);
-    if (screen.randomizerName.toLowerCase().includes(query) || screen.vanillaName?.toLowerCase().includes(query)) return true;
+    if (screen.name.toLowerCase().includes(query)) return true;
   }
-  if (check.dungeonId && getDungeon(check.dungeonId).randomizerName.toLowerCase().includes(query)) return true;
+  if (check.dungeonId && getDungeon(check.dungeonId).name.toLowerCase().includes(query)) return true;
   // With a run loaded, the item a reader searches for is the one actually
   // there, since matching the vanilla contents instead would answer the wrong
   // question ("where WAS the lamp", not "where IS it").
+  const foreign = run?.foreignItems?.get(check.id);
+  if (foreign !== undefined) return foreign.toLowerCase().includes(query);
   const placed = run?.placedItems?.get(check.id);
-  if (placed !== undefined) return getItem(placed).randomizerName.toLowerCase().includes(query);
-  return check.vanillaItemIds.some(id => getItem(id).randomizerName.toLowerCase().includes(query));
+  if (placed !== undefined) return getItem(placed).name.toLowerCase().includes(query);
+  const live = run?.liveItems?.get(check.id);
+  if (live !== undefined && getItem(live).name.toLowerCase().includes(query)) return true;
+  return check.vanillaItemIds.some(id => getItem(id).name.toLowerCase().includes(query));
 };
+
+/**
+ * Whether a row is in the list at all, before any search or facet narrows it: the
+ * Items / Events / Both switch, and on the plain game the shop shelves, which stay
+ * out until asked for. The summary counts over the same answer, so the totals say
+ * what the list shows.
+ */
+const isListedRow = (check: CheckRecord, filter: FilterState, run?: RunContext): boolean => {
+  // Items, events, or both. Absent reads as items: the list as it always was.
+  const showMode = filter.showMode ?? 'items';
+  if (showMode === 'items' && check.kind === 'event') return false;
+  if (showMode === 'events' && check.kind !== 'event') return false;
+  const plainGame = (run?.kind ?? 'normal') === 'normal';
+  if (plainGame && check.kind === 'shop-slot' && !(filter.shopShelves ?? false)) return false;
+  return true;
+};
+
+/**
+ * Whether rows past a small key door wait for the keys the logic counts. Unset, the plain game
+ * reads them as open, the way its tracker always has; a seed counts them, the way its fill did.
+ */
+const smallKeyDoorsOf = (filter: FilterState, run?: RunContext): boolean =>
+  filter.smallKeyDoors ?? (run?.kind ?? 'normal') !== 'normal';
 
 const filterChecks = (
   checks: CheckRecord[],
@@ -29,12 +56,7 @@ const filterChecks = (
   statuses?: Map<string, CheckStatus>,
   run?: RunContext
 ): CheckRecord[] => {
-  let result = checks;
-
-  // Items, events, or both. Absent reads as items: the list as it always was.
-  const showMode = filter.showMode ?? 'items';
-  if (showMode === 'items') result = result.filter(c => c.kind !== 'event');
-  else if (showMode === 'events') result = result.filter(c => c.kind === 'event');
+  let result = checks.filter(c => isListedRow(c, filter, run));
 
   if (filter.searchQuery.trim()) {
     const q = filter.searchQuery.toLowerCase();
@@ -60,4 +82,4 @@ const filterChecks = (
   return result;
 };
 
-export { filterChecks };
+export { filterChecks, isListedRow, smallKeyDoorsOf };

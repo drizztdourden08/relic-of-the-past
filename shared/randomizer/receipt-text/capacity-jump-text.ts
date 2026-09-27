@@ -8,7 +8,7 @@
  * change meaning with position; a tier count does not. The wallet ladder is
  * uniform (100 rupees per step), so its jump is shown as rupees.
  */
-import { familyById } from '../ap-world/capacity/capacity-family';
+import { familyById } from '../world/capacity/capacity-family';
 import type { CapacityFamilyId } from '@shared/game/data/capacity-family.type';
 
 const WALLET_STEP_RUPEES = 100;

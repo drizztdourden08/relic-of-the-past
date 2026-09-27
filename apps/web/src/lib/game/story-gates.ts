@@ -10,9 +10,9 @@
  * seed arms exactly its own choices; disarming hands the word back to the settings half.
  */
 
-import { DEFAULT_STORY_WORD, storyWordOf } from '@shared/randomizer/ap-world/story-gates/story-gate-word';
+import { DEFAULT_STORY_WORD, storyWordOf } from '@shared/randomizer/world/story-gates/story-gate-word';
 import { setStoryHalf } from './gate-word-5';
-import type { StoryGateSetting } from '@shared/randomizer/ap-world/story-gates/story-gate.type';
+import type { StoryGateSetting } from '@shared/randomizer/world/story-gates/story-gate.type';
 
 let settingsWord = DEFAULT_STORY_WORD;
 let sessionWord: number | null = null;

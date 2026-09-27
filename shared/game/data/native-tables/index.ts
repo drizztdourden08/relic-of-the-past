@@ -1,22 +1,12 @@
 /* @layer shared-game @kind barrel */
 /**
- * The native tile tables, or empty stand-ins for them.
- *
- * The tables are transcribed from the original engine, so they live in the
- * private companion repo and are synced into `records/native-tables/`. A
- * checkout without access gets the empty values below.
- *
- * That is a real loss of function, not a cosmetic one: collision classification,
- * ledge detection, flood fill and the navigation overlay all read these, and with
- * empty tables they report nothing instead of something wrong. Every table is
- * byte-keyed, so an absent entry already means "no information about this byte".
- * The empty case is the existing miss path, taken for every byte at once.
+ * The native tile tables, transcribed from the original engine.
  *
  * One glob covers the whole folder and exports are picked by name, because these
- * are twenty differently shaped tables, not one collection: sets, byte
- * maps, string lists. Their SHAPES stay in this repository
- * (`types/native-tables.ts`, `attr-group-map.ts`), because a type is erased at runtime
- * and still has to compile in a checkout with no tables to read.
+ * are twenty differently shaped tables, not one collection: sets, byte maps,
+ * string lists. Every table is byte-keyed, so `pick`'s empty fallback is the same
+ * miss path an absent entry already takes, which is what keeps a table that has
+ * not been transcribed yet from reporting something wrong about a byte.
  */
 import type { AttrGroup } from './attr-group-map';
 import type { CliffDir, DoorKind } from '../types/native-tables';
@@ -28,7 +18,7 @@ import type { TraversalRequirement } from '../../navigation/nav-data.types';
 const modules = import.meta.glob('../records/native-tables/*.ts', { eager: true });
 
 // Export names are unique across the folder, so one merged namespace is enough to
-// look any of them up. A missing folder merges to {} and every fallback applies.
+// look any of them up.
 const tables: Record<string, unknown> = Object.assign({}, ...Object.values(modules));
 
 const pick = <T>(name: string, fallback: T): T =>

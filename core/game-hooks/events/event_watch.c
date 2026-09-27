@@ -14,16 +14,28 @@
 
 #define AGAHNIM_ALTAR_ROOM 0x30
 #define ALTAR_SCENE_DONE_BIT 0x4000
+#define AGINAH_ROOM 0x10A
+#define AGINAH_FIRST_LINE 0x125
+#define AGINAH_LAST_LINE 0x129
+#define MODULE_MESSAGING 14
+#define SUBMODULE_DIALOGUE 2
+#define DESERT_PRAYER_SCREEN 0x30
 #define DAM_ROOM 0x10B
 #define DAM_LEVER_PULLED_BIT 0x800
-#define DESERT_PALACE_INDEX 3
+// The Hookshot Fairy's cave is the east column of room 0x10C (the Mimic Cave is the west one). The
+// door opens at the bottom and a pool lies across the way, its water running up to a wall at room
+// y 272. Behind that wall is the ledge with the pot, floor from y 208 to 255, reached only by a
+// Hookshot shot. The player's y is the top of a sprite 24 tall: on the ledge it reads 236 at most,
+// wading against the pool's wall 257 at least, so the line sits between the two.
+#define HOOKSHOT_FAIRY_ROOM 0x10C
+#define ROOM_EAST_COLUMN_X 256
+#define HOOKSHOT_FAIRY_FAR_SIDE_Y 244
 #define TEMPERING_IN_PROGRESS 0x80
 #define SHELF_PUSHED_START 4
 #define MAP_ICONS_SAHASRAHLA 3
 
 static uint16 s_prev_area = 0xFFFF;
 static uint8 s_prev_indoors = 0xFF;
-static uint8 s_prev_follower = 0xFF;
 
 static bool LedgerOn(void) {
   return (enhanced_features5 & kFeatures5_EventLedger) != 0;
@@ -35,7 +47,7 @@ static void RecordArea(void) {
   uint16 special = overworld_screen_index;
   uint8 key = (special == 0x80 || special == 0x81) ? (uint8)special : (uint8)head;
   for (size_t i = 0; i < sizeof(kAreaHeadEvents) / sizeof(kAreaHeadEvents[0]); i++) {
-    if (kAreaHeadEvents[i].head == key) { GameHook_RecordEvent(kAreaHeadEvents[i].event); return; }
+    if (kAreaHeadEvents[i].head == key) GameHook_RecordEvent(kAreaHeadEvents[i].event);
   }
 }
 
@@ -80,12 +92,23 @@ static void RecordLevels(void) {
   if (savegame_is_darkworld & 0x40) GameHook_RecordEvent(kEvent_FirstDarkWorld);
   if (sram_progress_indicator_3 & TEMPERING_IN_PROGRESS) GameHook_RecordEvent(kEvent_TemperingPaid);
   if (which_starting_point == SHELF_PUSHED_START) GameHook_RecordEvent(kEvent_ShelfPushed);
+  if (link_item_bombs != 0) GameHook_RecordEvent(kEvent_BombsFirstHeld);
+  // One of Aginah's five lines is on screen, in his cave: he was spoken to.
+  if (player_is_indoors && dungeon_room_index == AGINAH_ROOM && main_module_index == MODULE_MESSAGING
+      && submodule_index == SUBMODULE_DIALOGUE && dialogue_message_index >= AGINAH_FIRST_LINE
+      && dialogue_message_index <= AGINAH_LAST_LINE)
+    GameHook_RecordEvent(kEvent_AginahTalked);
   if (player_is_indoors && dungeon_room_index == AGAHNIM_ALTAR_ROOM && (dung_savegame_state_bits & ALTAR_SCENE_DONE_BIT))
     GameHook_RecordEvent(kEvent_AgahnimAltar);
   // The dam's own bit is erased by the next overworld load, so the pull is kept here.
   if (player_is_indoors && dungeon_room_index == DAM_ROOM && (dung_savegame_state_bits & DAM_LEVER_PULLED_BIT))
     GameHook_RecordEvent(kEvent_FloodgatePulled);
-  if (player_is_indoors && (BYTE(cur_palace_index_x2) >> 1) == DESERT_PALACE_INDEX && byte_7E02F0)
+  // Past the water in the Hookshot Fairy's cave: read from where the player stands inside the room.
+  if (player_is_indoors && dungeon_room_index == HOOKSHOT_FAIRY_ROOM && (link_x_coord & 0x1ff) >= ROOM_EAST_COLUMN_X
+      && (link_y_coord & 0x1ff) < HOOKSHOT_FAIRY_FAR_SIDE_Y)
+    GameHook_RecordEvent(kEvent_HookshotFairyFarSide);
+  // The prayer is said outdoors, in front of the statues on the desert screen.
+  if (!player_is_indoors && BYTE(overworld_screen_index) == DESERT_PRAYER_SCREEN && byte_7E02F0)
     GameHook_RecordEvent(kEvent_DesertPrayer);
   // The map hint and the gift make the identical write; the gift is recorded by its receipt
   // during the frame, so at frame end "3 and no gift yet" can only be the hint.
@@ -98,7 +121,6 @@ void GameHook_EventWatchFrameEnd(void) {
   if (!LedgerOn()) {
     s_prev_area = 0xFFFF;
     s_prev_indoors = 0xFF;
-    s_prev_follower = 0xFF;
     return;
   }
   const uint8 indoors = player_is_indoors;
@@ -108,10 +130,12 @@ void GameHook_EventWatchFrameEnd(void) {
   if (!indoors && (area != s_prev_area || indoors != s_prev_indoors)) RecordArea();
   if (!indoors) RecordAreaBoxes();
   if (indoors && !s_prev_indoors && s_prev_indoors != 0xFF) RecordEntrance();
-  if (follower != s_prev_follower && s_prev_follower != 0xFF) RecordFollower(follower);
+  // A level read, like the rest: a state loaded with someone already following, or a ledger
+  // armed after they joined, still records them. Frame end never sees the graphics-load
+  // flickers of the byte, and the record is a test-and-set.
+  if (follower != 0) RecordFollower(follower);
   RecordLevels();
 
   s_prev_area = area;
   s_prev_indoors = indoors;
-  s_prev_follower = follower;
 }

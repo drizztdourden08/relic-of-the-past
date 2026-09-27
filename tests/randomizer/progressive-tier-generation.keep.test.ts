@@ -1,7 +1,7 @@
 /* @layer tests @kind test */
 /**
  * Generation sweeps over representative tier tick sets. A returned placement is
- * itself the proof of beatability: generateApPlacement only hands one back once
+ * itself the proof of beatability: generatePlacement only hands one back once
  * the sweep has collected every location AND reached the goal, so a set that
  * rolls thirty seeds in a row is a set that plays.
  *
@@ -13,17 +13,19 @@
  * the stand-ins the reference's swordless mode has, so a file with no blade in
  * it reaches the ending on the hammer and a pulled-down cloth door.
  */
+import type { ItemKey } from '@shared/randomizer/world/item-ids.data';
+import { ITEM } from '@shared/randomizer/world/item-ids.data';
 import { describe, expect, it } from 'vitest';
 import { buildOptionsSnapshot } from '@shared/randomizer/options-snapshot';
-import { generateApPlacement } from '@shared/randomizer/ap-world/fill/generate-ap';
-import { buildFillWorld } from '@shared/randomizer/ap-world/fill/fill-world';
-import { fillOptionsFromSnapshot } from '@shared/randomizer/ap-world/fill/fill-options-from-snapshot';
-import { ProgressiveTierError } from '@shared/randomizer/ap-world/progressive/tick-set-check';
-import { NPC_SCOPE_LOCATIONS, WORLD_ITEM_SCOPE_LOCATIONS } from '@shared/randomizer/ap-world/scope-vanilla.data';
+import { generatePlacement } from '@shared/randomizer/world/fill/generate';
+import { buildFillWorld } from '@shared/randomizer/world/fill/fill-world';
+import { fillOptionsFromSnapshot } from '@shared/randomizer/world/fill/fill-options-from-snapshot';
+import { ProgressiveTierError } from '@shared/randomizer/world/progressive/tick-set-check';
+import { NPC_SCOPE_LOCATIONS, WORLD_ITEM_SCOPE_LOCATIONS } from '@shared/randomizer/world/scope-tables';
 import {
   defaultProgressiveSetting, progressiveValuesOf,
-} from '@shared/randomizer/ap-world/progressive/progressive-from-snapshot';
-import type { ProgressiveFamilyId, ProgressiveSetting } from '@shared/randomizer/ap-world/progressive/progressive.type';
+} from '@shared/randomizer/world/progressive/progressive-from-snapshot';
+import type { ProgressiveFamilyId, ProgressiveSetting } from '@shared/randomizer/world/progressive/progressive.type';
 
 const SEEDS = 30;
 
@@ -52,14 +54,14 @@ const EVERY_SCOPE = {
   world: new Set(WORLD_ITEM_SCOPE_LOCATIONS.keys()),
 };
 
-const poolOf = (setting: ProgressiveSetting): readonly string[] =>
+const poolOf = (setting: ProgressiveSetting): readonly ItemKey[] =>
   buildFillWorld(fillOptionsFromSnapshot(snapshotOf(setting), {})).pool.pool;
 
-const shuffledScopePoolOf = (setting: ProgressiveSetting): readonly string[] =>
+const shuffledScopePoolOf = (setting: ProgressiveSetting): readonly ItemKey[] =>
   buildFillWorld(fillOptionsFromSnapshot(shuffledScopeSnapshot(setting), EVERY_SCOPE)).pool.pool;
 
-const countIn = (pool: readonly string[], name: string): number =>
-  pool.filter((item) => item === name).length;
+const countIn = (pool: readonly ItemKey[], wanted: ItemKey): number =>
+  pool.filter((item) => item === wanted).length;
 
 const ALL_ON = defaultProgressiveSetting();
 const NO_GOLD_SWORD = withUnticked(['sword', 3]);
@@ -88,7 +90,7 @@ describe('generation over representative tier tick sets', () => {
   for (const [name, setting] of ROLLABLE) {
     it(`rolls ${SEEDS} beatable seeds with ${name}`, () => {
       for (let index = 0; index < SEEDS; index += 1) {
-        const placement = generateApPlacement(`tier-${name}-${index}`, snapshotOf(setting));
+        const placement = generatePlacement(`tier-${name}-${index}`, snapshotOf(setting));
         expect(placement.stats.sphereCount, `seed ${index}`).toBeGreaterThan(0);
         expect(placement.stats.progressiveTiers).toEqual(setting);
       }
@@ -97,7 +99,7 @@ describe('generation over representative tier tick sets', () => {
 
   it('rolls beatable seeds with the ticks really biting, both scopes shuffled', () => {
     for (let index = 0; index < SEEDS; index += 1) {
-      const placement = generateApPlacement(
+      const placement = generatePlacement(
         `tier-scoped-${index}`, shuffledScopeSnapshot(NO_GOLD_SWORD), EVERY_SCOPE.npc, undefined, EVERY_SCOPE.world,
       );
       expect(placement.stats.sphereCount, `seed ${index}`).toBeGreaterThan(0);
@@ -106,10 +108,10 @@ describe('generation over representative tier tick sets', () => {
 
   for (const [name, setting, family] of REFUSED) {
     it(`refuses ${name}, naming the rung to tick back on`, () => {
-      expect(() => generateApPlacement('tier-refused', snapshotOf(setting)))
+      expect(() => generatePlacement('tier-refused', snapshotOf(setting)))
         .toThrow(ProgressiveTierError);
       try {
-        generateApPlacement('tier-refused', snapshotOf(setting));
+        generatePlacement('tier-refused', snapshotOf(setting));
       } catch (error) {
         expect(String((error as Error).message)).toContain(family);
       }
@@ -122,14 +124,14 @@ describe('an unticked rung leaves the pool the same size', () => {
     const full = shuffledScopePoolOf(ALL_ON);
     const trimmed = shuffledScopePoolOf(NO_GOLD_SWORD);
     expect(trimmed.length).toBe(full.length);
-    expect(countIn(full, 'Progressive Sword')).toBe(4);
-    expect(countIn(trimmed, 'Progressive Sword')).toBe(3);
-    expect(countIn(trimmed, 'Rupees (20)')).toBe(countIn(full, 'Rupees (20)') + 1);
+    expect(countIn(full, ITEM.progressiveSword)).toBe(4);
+    expect(countIn(trimmed, ITEM.progressiveSword)).toBe(3);
+    expect(countIn(trimmed, ITEM.rupees20)).toBe(countIn(full, ITEM.rupees20) + 1);
   });
 
   it('takes every blade out of the shuffle when no blade rung is ticked', () => {
     const pool = shuffledScopePoolOf(NO_SWORDS);
-    expect(countIn(pool, 'Progressive Sword')).toBe(0);
+    expect(countIn(pool, ITEM.progressiveSword)).toBe(0);
     expect(pool.length).toBe(shuffledScopePoolOf(ALL_ON).length);
   });
 
@@ -137,14 +139,14 @@ describe('an unticked rung leaves the pool the same size', () => {
     // All four blade copies are the vanilla items of character checks, so with those
     // checks locked the shuffled pool never carried one and a tick has nothing to take:
     // those givers go on handing their tiers over whatever the ticks say.
-    expect(countIn(poolOf(ALL_ON), 'Progressive Sword')).toBe(0);
-    expect(countIn(poolOf(NO_GOLD_SWORD), 'Progressive Sword')).toBe(0);
+    expect(countIn(poolOf(ALL_ON), ITEM.progressiveSword)).toBe(0);
+    expect(countIn(poolOf(NO_GOLD_SWORD), ITEM.progressiveSword)).toBe(0);
     expect(poolOf(NO_GOLD_SWORD).length).toBe(poolOf(ALL_ON).length);
   });
 
   it('a shield rung is reachable either way, since the shuffle carries those copies', () => {
-    const carried = countIn(poolOf(ALL_ON), 'Progressive Shield');
+    const carried = countIn(poolOf(ALL_ON), ITEM.progressiveShield);
     expect(carried).toBeGreaterThan(0);
-    expect(countIn(poolOf(withUnticked(['shield', 2])), 'Progressive Shield')).toBe(carried - 1);
+    expect(countIn(poolOf(withUnticked(['shield', 2])), ITEM.progressiveShield)).toBe(carried - 1);
   });
 });

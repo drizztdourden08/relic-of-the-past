@@ -32,25 +32,25 @@ interface SpriteDefinition extends SpriteManifestEntry {
   extract: unknown;
 }
 
-// A glob instead of an import: the file is not in this repository, and a static
-// import of an absent path fails the build instead of yielding nothing.
+// A glob, so the whole manifest arrives as one record file the same way every other
+// collection does.
 const modules = import.meta.glob<{ default: { sprites?: SpriteDefinition[] } }>(
   '../records/sprite-manifest/definitions.json',
   { eager: true },
 );
 
-const VAULT_DEFINITIONS: readonly SpriteDefinition[] =
+const EXTRACTED_DEFINITIONS: readonly SpriteDefinition[] =
   Object.values(modules)[0]?.default?.sprites ?? [];
 
-// Our own definitions ride on the vault set: the capacity-upgrade composites are
+// Our own definitions ride on the extracted set: the capacity-upgrade composites are
 // stamped onto its sprites and the recoloured gems are derived from one, so
 // without it they have nothing to stand on and the list stays empty, which keeps
 // "no definitions" meaning exactly that. The drawn sprites need nothing from the
 // ROM at all, but they ride along too: extraction only ever runs with one loaded,
 // and a set that appears with the others missing would read as a broken set.
 const SPRITE_DEFINITIONS: readonly SpriteDefinition[] =
-  VAULT_DEFINITIONS.length === 0 ? [] : [
-    ...VAULT_DEFINITIONS, ...UPGRADE_SPRITE_DEFINITIONS, ...RUPEE_SPRITE_DEFINITIONS,
+  EXTRACTED_DEFINITIONS.length === 0 ? [] : [
+    ...EXTRACTED_DEFINITIONS, ...UPGRADE_SPRITE_DEFINITIONS, ...RUPEE_SPRITE_DEFINITIONS,
     ...RANDOMIZER_SPRITE_DEFINITIONS, ...POOL_SPRITE_DEFINITIONS, ...DIALOG_SPRITE_DEFINITIONS,
   ];
 

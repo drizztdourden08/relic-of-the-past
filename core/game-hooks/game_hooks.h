@@ -317,6 +317,9 @@ void GameHook_NoteReceiptVanillaId(uint8 vanilla_item);
 // vendored expression stands alone.
 bool GameHook_SubstitutedReceiptSkipsBossExit(void);
 
+// ─── Online multiworld (foreign_item.c, death_link.c, ap_received_index.c) ───
+#include "ap_hooks.h"
+
 // ─── Dungeon-item shuffle (dungeon_item_grants.c) ───
 
 // The targeted dungeon-item ids (0xC0-0xFD, one per kind and palace index, see
@@ -584,13 +587,18 @@ enum {
   kReceiptMsg_Online      = kReceiptMsgBase + 4,
   // Position 5 is the archery host's refusal, named where it is shown (archery_host.c).
 };
+// The line a placed quiet rupee, bomb or arrow is armed with: no dialogue line has this id, and the
+// message seam shows no text for it (receipt_messages.c, kFeatures5_QuietMask). Mirrored by
+// QUIET_RECEIPT_MSG in apps/web/src/lib/game/quiet-receipts.ts.
+#define kReceiptMsg_Silent 0x7fff
 
 // Arm |msg| as the finishing receipt's message unless one is already armed. A one-shot the host
 // set for this grant (richer context) always wins over a class default. Gated record: no-op while
 // kFeatures3_ReceiptMessages is off, so a closed gate can never hold a stale arm.
 void GameHook_ArmReceiptMessageIfClear(int msg);
-// The progressive capacity resolver's arm: replaces the armed one-shot (receipt_messages.c).
-void GameHook_ArmReceiptMessageReplace(int msg);
+// A capacity resolver's detail line: shown as the next page of the armed one-shot, which stays the
+// receipt's first page (receipt_messages.c, receipt_pages.c).
+void GameHook_ArmReceiptDetailPage(int msg);
 // Link_ReceiveItem ran: the new receipt claims the armed one-shot, and an arm a previous
 // receipt claimed without consuming (a seam-skipping room, no free ancilla) is dropped.
 void GameHook_ReceiptMessageClaim(void);
@@ -742,7 +750,13 @@ void GameHook_SetHideSpaceBeyondWalls(bool enable);
 // house, a cave or the sanctuary. A palace room answers no, and so does any room drawn with a dungeon's
 // tileset, whatever its entrance says. Returns the word count with |words| pointing at them, or 0 with
 // nothing to hide. Asked once per frame by ZeldaDrawPpuFrame, after PpuBeginDrawing has reset the flags.
+// In ROOM_TOWER_AGAHNIM, under the same request, it returns 0 and blacks the two CGRAM entries that
+// colour that room's surround until GameHook_HideSpaceBeyondWallsDone.
 int GameHook_HideSpaceBeyondWallsFill(const uint16 **words);
+
+// The frame is drawn: gives the CGRAM entries blacked by the call above their values back. Does nothing
+// on every other frame. Called by ZeldaDrawPpuFrame after its last line.
+void GameHook_HideSpaceBeyondWallsDone(void);
 
 // ─── The Space Around A Fixed Picture (fixed_picture_edges.c) ───
 

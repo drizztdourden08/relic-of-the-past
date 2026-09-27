@@ -8,7 +8,7 @@
  * fill every location of the world exactly, the same total the Checks
  * widget shows.
  */
-import type { PoolAccounting } from '@shared/randomizer/ap-world/pool/pool-accounting';
+import type { PoolAccounting } from '@shared/randomizer/world/pool/pool-accounting';
 import type { PoolFillTotals } from '@domains/app/compounds/PoolFillBar';
 
 const poolTotalsOf = (accounting: PoolAccounting): PoolFillTotals => {

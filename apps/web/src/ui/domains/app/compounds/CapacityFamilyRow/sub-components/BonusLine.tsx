@@ -6,9 +6,9 @@
  * two, because "of what" is exactly what a percentage cannot say by itself.
  */
 import { Box, Slider, Toggle } from '@ds/primitives';
-import { CAPACITY_BONUS_MAX, CAPACITY_BONUS_STEP } from '@shared/randomizer/ap-world/capacity';
+import { CAPACITY_BONUS_MAX, CAPACITY_BONUS_STEP } from '@shared/randomizer/world/capacity';
 import { RowLine } from './RowLine';
-import type { FamilyBonus } from '@shared/randomizer/ap-world/capacity';
+import type { FamilyBonus } from '@shared/randomizer/world/capacity';
 
 interface BonusLineProps {
   bonus: FamilyBonus;

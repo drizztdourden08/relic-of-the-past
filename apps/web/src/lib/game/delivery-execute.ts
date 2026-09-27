@@ -6,15 +6,17 @@
  */
 
 import { getModule } from './wasm-bridge';
-import type { DeliveryAction } from './delivery-queue.type';
+import type { DeliveryAction, DeliveryEntry } from './delivery-queue.type';
 
 /**
  * 'done': the action fired (for receipt grants, the core confirmed the grant).
  * 'refused': the receipt export reported status 0, NOTHING was granted (gate not
  * latched yet, or the player cannot receive despite the readiness probe). The queue
  * must retry such an entry, never complete it.
+ * 'settled': granted with nothing left to show (a quiet receipt), so the entry completes at once
+ * instead of waiting for a pickup the game never runs.
  */
-type ExecuteOutcome = 'done' | 'refused';
+type ExecuteOutcome = 'done' | 'refused' | 'settled';
 
 /** A receipt-flow grant, the only action the core can refuse synchronously. */
 const isReceiptGrant = (action: DeliveryAction): boolean =>
@@ -22,9 +24,15 @@ const isReceiptGrant = (action: DeliveryAction): boolean =>
 
 const executeAction = (action: DeliveryAction): ExecuteOutcome => {
   const mod = getModule();
-  if (!mod) return isReceiptGrant(action) ? 'refused' : 'done';
+  if (!mod) return isReceiptGrant(action) || action.type === 'quiet_receipt' ? 'refused' : 'done';
 
   switch (action.type) {
+    case 'quiet_receipt': {
+      // 1 granted, 0 not now (retried), 2 not quiet here: the ordinary receipt runs in its place.
+      const status = mod.ccall('WasmGrantQuietReceipt', 'number', ['number'], [action.itemId]);
+      if (status === 2) return executeAction(action.fallback);
+      return status === 1 ? 'settled' : 'refused';
+    }
     case 'give_item':
       // Randomizer deliveries (receiptExport) run the native receipt flow: hold-up +
       // message + inventory, gated by kFeatures3_ReceiptExport. The cheats UI and the
@@ -33,8 +41,9 @@ const executeAction = (action: DeliveryAction): ExecuteOutcome => {
       // entries and the slot is consumed by whichever receipt finishes next. Re-arming
       // on a retry just records the same id again, because the setter only records.
       if (action.receiptExport) {
-        if (action.messageId !== undefined) {
-          mod.ccall('WasmSetNextReceiptMessage', null, ['number'], [action.messageId]);
+        const messageId = action.messageOf?.() ?? action.messageId;
+        if (messageId !== undefined) {
+          mod.ccall('WasmSetNextReceiptMessage', null, ['number'], [messageId]);
         }
         // Status 1 = granted, 0 = refused (receipt_grant.c). A pre-status WASM build
         // returns undefined from the void export; treat that as the old fire-and-forget
@@ -68,5 +77,14 @@ const executeAction = (action: DeliveryAction): ExecuteOutcome => {
   }
 };
 
-export { executeAction, isReceiptGrant };
+/** Executes a queued entry; a confirmed grant (never a refused one) fires its onGranted. */
+const executeEntry = (entry: DeliveryEntry): ExecuteOutcome => {
+  const outcome = executeAction(entry.action);
+  if (outcome !== 'refused') {
+    try { entry.onGranted?.(); } catch { /* a bad listener never stalls the queue */ }
+  }
+  return outcome;
+};
+
+export { executeAction, executeEntry, isReceiptGrant };
 export type { ExecuteOutcome };

@@ -18,12 +18,12 @@
 import { Box, Text } from '@ds/primitives';
 import {
   COPY_MULTIPLIERS, COPY_MULTIPLIER_LABELS, MAX_HEART_CAP, STARTING_HEARTS, asCopyMultiplier,
-} from '@shared/randomizer/ap-world/difficulty/difficulty.data';
-import { HEART_CAP_KEY, difficultyCopiesKeyOf } from '@shared/randomizer/ap-world/difficulty/difficulty-option-keys';
-import { PROGRESSIVE_FAMILIES } from '@shared/randomizer/ap-world/progressive/progressive-families.data';
-import { progressiveFamilyName } from '@shared/randomizer/ap-world/progressive/progressive-display-names';
-import { tickedCountOf } from '@shared/randomizer/ap-world/progressive/progressive-reach';
-import { apOptionByKey } from '@shared/randomizer/ap-world/options.data';
+} from '@shared/randomizer/world/difficulty/difficulty.data';
+import { HEART_CAP_KEY, difficultyCopiesKeyOf } from '@shared/randomizer/world/difficulty/difficulty-option-keys';
+import { PROGRESSIVE_FAMILIES } from '@shared/randomizer/world/progressive/progressive-families.data';
+import { progressiveFamilyName } from '@shared/randomizer/world/progressive/progressive-display-names';
+import { tickedCountOf } from '@shared/randomizer/world/progressive/progressive-reach';
+import { optionByKey } from '@shared/randomizer/world/options.data';
 import { OptionSliderRow } from '../OptionSliderRow';
 import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
 import {
@@ -35,7 +35,7 @@ import './DifficultyBlock.css';
 const FIRST_STEP = COPY_MULTIPLIERS[0];
 const LAST_STEP = COPY_MULTIPLIERS[COPY_MULTIPLIERS.length - 1];
 
-const descriptionOf = (key: string) => apOptionByKey.get(key)?.description ?? '';
+const descriptionOf = (key: string) => optionByKey.get(key)?.description ?? '';
 const multipleLabel = (value: number): string => COPY_MULTIPLIER_LABELS[asCopyMultiplier(value)];
 const heartLabel = (value: number): string => `${value} hearts`;
 
@@ -72,7 +72,7 @@ const DifficultyBlock = (props: DifficultyBlockProps) => {
       </Box>
       <Text className="difficulty-block__heading">{DIFFICULTY_HEARTS_HEADING}</Text>
       <OptionSliderRow
-        label={apOptionByKey.get(HEART_CAP_KEY)?.displayName ?? HEART_CAP_KEY}
+        label={optionByKey.get(HEART_CAP_KEY)?.displayName ?? HEART_CAP_KEY}
         description={descriptionOf(HEART_CAP_KEY)}
         value={setting.heartCap}
         min={STARTING_HEARTS}

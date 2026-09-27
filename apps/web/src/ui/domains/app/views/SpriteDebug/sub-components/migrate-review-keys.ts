@@ -18,8 +18,7 @@ const migrateLegacyReviewKeys = (data: ReviewData): ReviewData => {
 
   const byName = new Map<string, string>();
   for (const item of find('item', () => true)) {
-    if (!byName.has(item.randomizerName)) byName.set(item.randomizerName, item.id);
-    if (item.vanillaName && !byName.has(item.vanillaName)) byName.set(item.vanillaName, item.id);
+    if (!byName.has(item.name)) byName.set(item.name, item.id);
   }
 
   const migrated: ReviewData = {};

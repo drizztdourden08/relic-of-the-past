@@ -1,12 +1,13 @@
 /* @layer bridge-wasm @kind logic */
 
+import { registerCheatRule, rememberCheatRule } from './cheat-rules-memory';
 import { getModule, getGameState } from './wasm-bridge';
 import { voidCall } from './bridge/wasm-call';
 import { enqueue } from './delivery-queue';
 import type { DeliveryAction } from './delivery-queue';
 import { getItemByGameId } from '@shared/game/data';
 
-const itemName = (itemId: number): string => getItemByGameId({ receiveItemId: itemId })?.randomizerName ?? `Unknown Item #${itemId}`;
+const itemName = (itemId: number): string => getItemByGameId({ receiveItemId: itemId })?.name ?? `Unknown Item #${itemId}`;
 
 // Expose trace helper on window for dev-console debugging
 if (typeof window !== 'undefined') {
@@ -211,6 +212,7 @@ let ignoreCollisionEnabled = false;
 
 const cheatSetIgnoreCollision = (on: boolean): void => {
   ignoreCollisionEnabled = on;
+  rememberCheatRule('noWalls', on);
   voidCall('WasmCheatSetIgnoreCollision', numArgs(on ? 1 : 0));
 };
 
@@ -229,6 +231,7 @@ let illuminateDarkRoomsEnabled = false;
 
 const cheatSetIlluminateDarkRooms = (on: boolean): void => {
   illuminateDarkRoomsEnabled = on;
+  rememberCheatRule('litRooms', on);
   voidCall('WasmCheatSetIlluminateDarkRooms', numArgs(on ? 1 : 0));
 };
 
@@ -245,6 +248,7 @@ let extraArmorPct = 0;
 
 const cheatSetDamageMultiplier = (mult: number): void => {
   damageMultiplier = Math.max(1, Math.min(255, mult));
+  rememberCheatRule('damageDealt', damageMultiplier);
   voidCall('WasmCheatSetDamageMultiplier', numArgs(damageMultiplier));
 };
 
@@ -252,10 +256,16 @@ const getDamageMultiplier = (): number => damageMultiplier;
 
 const cheatSetExtraArmorPct = (pct: number): void => {
   extraArmorPct = Math.max(0, Math.min(100, pct));
+  rememberCheatRule('damageTaken', extraArmorPct);
   voidCall('WasmCheatSetExtraArmorPct', numArgs(extraArmorPct));
 };
 
 const getExtraArmorPct = (): number => extraArmorPct;
+
+registerCheatRule('noWalls', (v) => cheatSetIgnoreCollision(v === true));
+registerCheatRule('litRooms', (v) => cheatSetIlluminateDarkRooms(v === true));
+registerCheatRule('damageDealt', (v) => cheatSetDamageMultiplier(Number(v)));
+registerCheatRule('damageTaken', (v) => cheatSetExtraArmorPct(Number(v)));
 
 const cheatStartTrace = (frames = 120): void => voidCall('WasmCheatStartTrace', numArgs(frames));
 

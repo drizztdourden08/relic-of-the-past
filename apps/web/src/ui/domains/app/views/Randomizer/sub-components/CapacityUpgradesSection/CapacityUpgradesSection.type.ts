@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 import type {
   CapacityBonusSetting, CapacityFamilyId, CapacityProfile, FamilyBonus, WalletFloor,
-} from '@shared/randomizer/ap-world/capacity';
+} from '@shared/randomizer/world/capacity';
 import type { CapacityRowState } from '@domains/app/compounds/CapacityFamilyRow';
 
 interface CapacityUpgradesSectionProps {

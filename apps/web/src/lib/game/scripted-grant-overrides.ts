@@ -8,8 +8,8 @@
  * gate bit is requested alongside it, and it stays open only while armed.
  */
 
-import { isGrantableReceiveId } from '@shared/game/data';
 import { log } from '../log-bus';
+import { isArmableOverrideId } from './foreign-item-id';
 import { getModule } from './wasm-bridge';
 import { setScriptedGrantsActive } from './live-settings-flags';
 import { setPondPrize } from './pond-plan';
@@ -65,7 +65,7 @@ const setScriptedGrantOverride = (target: ScriptedGrantSurface, newItem: number,
       + `never one at a time (pond ${target.pond}, rung ${target.rung})`);
     return;
   }
-  if (!isGrantableReceiveId(newItem)) {
+  if (!isArmableOverrideId(newItem)) {
     log.error(`[Randomizer] Scripted grant override refused: item 0x${newItem.toString(16)} `
       + `is outside the grantable id range (${target.surface})`);
     return;

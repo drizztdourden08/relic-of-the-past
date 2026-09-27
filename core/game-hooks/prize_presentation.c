@@ -32,9 +32,11 @@
 // The native receive id each dungeon's OWN vanilla prize carries, by palace index; 0 for the
 // dungeons that have no falling prize. Mirrors kBossFinishedFallingItem (dungeon.c) and
 // kDungeonCrystalPendantBit (zelda_rtl.c), which agree on which three dungeons hold pendants.
+/* generated: begin kVanillaPrizeItem */
 static const uint8 kVanillaPrizeItem[13] = {
   0, 0, 0x37, 0x39, 0, 0x20, 0x20, 0x20, 0x20, 0x20, 0x38, 0x20, 0x20,
 };
+/* generated: end kVanillaPrizeItem */
 
 // Ancilla_SpawnFallingPrize's kind argument for each native prize id.
 #define PRIZE_KIND_NONE 0

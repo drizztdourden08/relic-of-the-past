@@ -25,10 +25,13 @@
 extern const uint8 kDungeonCrystalPendantBit[13];
 
 // The boss room of each palace, by palace index (cur_palace_index_x2 >> 1). The heart bit there is
-// the game's own "boss finished" record.
+// the game's own "boss finished" record. A slot no dungeon record claims holds 0, and so does
+// Hyrule Castle, which has no boss room at all.
+/* generated: begin kBossRoomByPalace */
 static const uint16 kBossRoomByPalace[14] = {
   0, 0, 0xC8, 0x33, 0x20, 0x06, 0x5A, 0x90, 0x29, 0xDE, 0x07, 0xAC, 0xA4, 0x0D,
 };
+/* generated: end kBossRoomByPalace */
 #define PALACE_EASTERN 2
 #define PALACE_DESERT 3
 #define PALACE_AGAHNIM 4

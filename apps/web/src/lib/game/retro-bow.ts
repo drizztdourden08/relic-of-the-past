@@ -15,7 +15,7 @@ import { log } from '../log-bus';
 import { getModule } from './wasm-bridge';
 import { setRetroBowActive } from './live-settings-flags';
 import { reassertGateWord3 } from './live-settings';
-import type { RetroBowSetting } from '@shared/randomizer/ap-world/retro/retro.type';
+import type { RetroBowSetting } from '@shared/randomizer/world/retro/retro.type';
 
 const setRetroBow = (setting: RetroBowSetting): void => {
   const mod = getModule();

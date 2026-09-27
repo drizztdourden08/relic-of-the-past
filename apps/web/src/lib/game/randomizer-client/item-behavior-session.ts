@@ -27,17 +27,17 @@
 
 import {
   REFERENCE_DARK_ROOM_SETTING,
-} from '@shared/randomizer/ap-world/dark-rooms/dark-room-lights.data';
-import { DEFAULT_ITEM_POWER } from '@shared/randomizer/ap-world/item-power/item-power.data';
-import { DEFAULT_RETRO_BOW } from '@shared/randomizer/ap-world/retro/retro-bow.data';
-import { retroVanillaShelves } from '@shared/randomizer/ap-world/retro/retro-shops';
-import { NO_SHOP_SCOPE } from '@shared/randomizer/ap-world/shops/shop-scope-from-values';
-import { derivedItemPower } from '@shared/randomizer/ap-world/item-power/item-power-rule';
-import { DEFAULT_PROGRESSIVE_SETTING } from '@shared/randomizer/ap-world/progressive/progressive-families.data';
-import { DEFAULT_PROGRESSIVE_MODES } from '@shared/randomizer/ap-world/progressive/progressive-modes.data';
+} from '@shared/randomizer/world/dark-rooms/dark-room-lights.data';
+import { DEFAULT_ITEM_POWER } from '@shared/randomizer/world/item-power/item-power.data';
+import { DEFAULT_RETRO_BOW } from '@shared/randomizer/world/retro/retro-bow.data';
+import { retroVanillaShelves } from '@shared/randomizer/world/retro/retro-shops';
+import { NO_SHOP_SCOPE } from '@shared/randomizer/world/shops/shop-scope-from-values';
+import { derivedItemPower } from '@shared/randomizer/world/item-power/item-power-rule';
+import { DEFAULT_PROGRESSIVE_SETTING } from '@shared/randomizer/world/progressive/progressive-families.data';
+import { DEFAULT_PROGRESSIVE_MODES } from '@shared/randomizer/world/progressive/progressive-modes.data';
 import {
   beamSwordReachable, swordReachable,
-} from '@shared/randomizer/ap-world/progressive/progressive-reach';
+} from '@shared/randomizer/world/progressive/progressive-reach';
 import { log } from '../../log-bus';
 import { clearItemPower, setItemPower } from '../item-power';
 import { clearProgressiveTiers, isFullLadder, setProgressiveTiers } from '../progressive-tiers';
@@ -45,16 +45,16 @@ import { clearRetroBow, setRetroBow } from '../retro-bow';
 import { clearRetroShelves, setRetroShelves } from '../retro-shelf';
 import { darkRoomLightWordOf } from '../dark-room-lights';
 import { setSessionStoryGates } from '../story-gates';
-import { DEFAULT_STORY_GATES } from '@shared/randomizer/ap-world/story-gates/story-gates.data';
-import type { StoryGateSetting } from '@shared/randomizer/ap-world/story-gates/story-gate.type';
-import type { ApPlacementStats } from '@shared/randomizer/ap-world/fill/ap-placement.type';
-import type { DarkRoomSetting } from '@shared/randomizer/ap-world/dark-rooms/dark-room.type';
-import type { ItemPowerSetting } from '@shared/randomizer/ap-world/item-power/item-power.type';
-import type { RetroBowSetting } from '@shared/randomizer/ap-world/retro/retro.type';
-import type { RetroShelfStock } from '@shared/randomizer/ap-world/retro/retro-shops';
+import { DEFAULT_STORY_GATES } from '@shared/randomizer/world/story-gates/story-gates.data';
+import type { StoryGateSetting } from '@shared/randomizer/world/story-gates/story-gate.type';
+import type { PlacementStats } from '@shared/randomizer/world/fill/placement.type';
+import type { DarkRoomSetting } from '@shared/randomizer/world/dark-rooms/dark-room.type';
+import type { ItemPowerSetting } from '@shared/randomizer/world/item-power/item-power.type';
+import type { RetroBowSetting } from '@shared/randomizer/world/retro/retro.type';
+import type { RetroShelfStock } from '@shared/randomizer/world/retro/retro-shops';
 import type {
   ProgressiveModeSetting, ProgressiveSetting,
-} from '@shared/randomizer/ap-world/progressive/progressive.type';
+} from '@shared/randomizer/world/progressive/progressive.type';
 
 interface ItemBehaviorPlan {
   tiers: ProgressiveSetting;
@@ -78,7 +78,7 @@ interface ItemBehaviorPlan {
   vanilla: boolean;
 }
 
-const itemBehaviorOf = (stats: ApPlacementStats): ItemBehaviorPlan => {
+const itemBehaviorOf = (stats: PlacementStats): ItemBehaviorPlan => {
   const tiers = stats.progressiveTiers ?? DEFAULT_PROGRESSIVE_SETTING;
   const modes = stats.progressiveModes ?? DEFAULT_PROGRESSIVE_MODES;
   const itemPower = derivedItemPower(

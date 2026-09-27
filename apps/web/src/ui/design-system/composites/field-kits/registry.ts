@@ -41,10 +41,17 @@ interface IdRefOption {
  * input when it does not. The whole descriptor comes along so the caller can say
  * "not this one", since a collection's own primary key is an id but not a
  * reference to another record, and only the caller knows which path that is.
+ *
+ * `record` is the same bargain one step further out: which rows are legal can
+ * depend on what a SIBLING field holds, so picking a region can narrow the
+ * places that may be referenced, and neither the descriptor nor the kit can know
+ * that rule. It is typed `unknown` because this package has no record shape to
+ * claim; a resolver that narrows by nothing ignores it.
  */
 type IdRefOptionResolver = (
   targetKind: string,
   field: FieldDescriptor,
+  record?: unknown,
 ) => readonly IdRefOption[];
 
 /**

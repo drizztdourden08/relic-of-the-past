@@ -11,7 +11,7 @@
  */
 import { Box, Slider, Text } from '@ds/primitives';
 import { OptionDescription } from '../OptionDescription';
-import type { OptionDescription as OptionDescriptionText } from '@shared/randomizer/ap-world/option-description.type';
+import type { OptionDescription as OptionDescriptionText } from '@shared/randomizer/world/option-description.type';
 import './OptionSliderRow.css';
 
 interface OptionSliderRowProps {

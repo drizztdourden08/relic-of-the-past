@@ -8,7 +8,7 @@
  * by that many and the cell must not say it does.
  */
 import type { ImpactCell } from '@domains/app/compounds/PoolImpactCell';
-import type { PoolImpact } from '@shared/randomizer/ap-world/pool/pool-impact';
+import type { PoolImpact } from '@shared/randomizer/world/pool/pool-impact';
 
 /** The pool accounting's short qualifiers, in the player's words. */
 const NOTE_LABEL: Readonly<Record<string, string>> = {

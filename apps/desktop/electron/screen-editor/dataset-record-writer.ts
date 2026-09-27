@@ -5,9 +5,10 @@
  * record is filed, which emitter serializes it), so the three operations are
  * written once.
  *
- * A CREATE uses the spec's canonical destination; an UPDATE or DELETE locates the
- * record by id (data-files.ts), because several collections were split by size
- * and a record's real home is not always the one the resolver would pick today.
+ * A CREATE uses the spec's canonical destination, starting that file when the tree
+ * has none yet (a dungeon is one record in one file, and an area may have no
+ * interiors today). An UPDATE or DELETE locates the record by id (data-files.ts),
+ * because a record's real home is not always the one the resolver would pick.
  */
 
 import { readFile, writeFile } from 'fs/promises';
@@ -17,6 +18,7 @@ import type {
   Allocated, AllocateRecordResult, WriteRecordResult,
 } from '@shared/ipc/screen-editor-contract';
 import { locateRecordFile } from './data-files';
+import { startRecordFile } from './record-file-template';
 import { KIND_ROOTS, withAllocatedIds } from './id-allocator';
 import type { AllocatableKind } from './id-allocator';
 import { resolveSourceFile } from './resolve-source-file';
@@ -29,6 +31,8 @@ interface RecordWriterSpec<T extends { id: string }> {
   /** Where a BRAND-NEW record is filed. */
   target: (record: Unnumbered<T>) => FileTarget;
   serialize: (record: T) => string;
+  /** The record type the file's array is typed with, for a file that has to be started. */
+  recordType: string;
 }
 
 const NO_TARGET = 'No source file could be derived for this record.';
@@ -60,6 +64,8 @@ const createRecord = async <T extends { id: string }>(
   const target = spec.target(record);
   if (!target.relativePath) return { success: false, error: target.unresolved ?? NO_TARGET };
   const path = resolveSourceFile(root, target.relativePath, 'data');
+  const started = await startRecordFile(path, target.relativePath, spec.recordType);
+  if (started) return { success: false, error: started };
 
   return withAllocatedIds(root, spec.kind, 1, async ([id]) => {
     const full = { id, ...record } as unknown as T;

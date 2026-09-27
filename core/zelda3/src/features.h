@@ -331,6 +331,20 @@ enum {
   kFeatures5_GiverReoffer      = 1u << 25,
   // Every story field above, for the parity mask.
   kFeatures5_StoryMask         = 0x03fffffeu,
+
+  // Online multiworld (core/game-hooks/foreign_item.c, death_link.c). Both are divergences, so both
+  // sit in the parity mask. ApOnline: an override table may hold the foreign-item sentinel, whose
+  // pickup runs the native ceremony and puts nothing in the inventory. ApDeathLink: a host kill runs
+  // the game's own death path, and every death is reported to the host once.
+  kFeatures5_ApOnline          = 1u << 26,
+  kFeatures5_ApDeathLink       = 1u << 27,
+  // Quiet receipts (core/game-hooks/receipt_grant.c, receipt_messages.c): a delivered rupee, bomb or
+  // arrow goes straight into the wallet, bag or quiver with no hold-up, and a placed one's armed
+  // silent line shows no text. One bit per kind. Divergences, so they sit in the parity mask.
+  kFeatures5_QuietRupees       = 1u << 28,
+  kFeatures5_QuietBombs        = 1u << 29,
+  kFeatures5_QuietArrows       = 1u << 30,
+  kFeatures5_QuietMask         = 7u << 28,
 };
 
 #define enhanced_features0 (*(uint32*)(g_ram+0x64c))

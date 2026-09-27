@@ -42,9 +42,11 @@ const HomeTabSummary = (props: HomeTabSummaryProps) => {
 
       <Box className="home-summary__rows">
         <Box className="home-summary__row">{renderFacts(facts)}</Box>
-        {randomizerFacts && (
+        {/* The run row: a seed's own facts, and the per-save checks strips, which every
+            profile has now that the plain game is judged over a placement too. */}
+        {(randomizerFacts || saveFileChecks) && (
           <Box className="home-summary__row home-summary__row--randomizer">
-            {renderFacts(randomizerFacts)}
+            {randomizerFacts && renderFacts(randomizerFacts)}
             {saveFileChecks && <SaveFileChecksStrips files={saveFileChecks} />}
           </Box>
         )}

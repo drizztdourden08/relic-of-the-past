@@ -6,7 +6,9 @@
  * found-item line with its numbered label AND its class's own wording, so the
  * numbers always show and never in the same sentence twice over. Otherwise
  * physical grants (chest / scripted-giver overrides) are routed by item class:
- * progressive, dungeon item, capacity, junk, or the plain found line. Queue
+ * progressive, dungeon item, junk, or the plain found line. A capacity upgrade
+ * takes the plain found line: its climb is only known when the grant resolves,
+ * so the core shows the climb's own line as the next page (receipt_pages.c). Queue
  * deliveries always take the delivered template, since the missing container is the
  * salient context there. Online receipts are rendered separately (renderOnline)
  * because their sender is only known at network time.
@@ -15,9 +17,7 @@
 import { classifyReceiptItem } from './receipt-item-class';
 import { flavourKeyOf } from './receipt-flavour';
 import { numberedItemLabel } from './numbered-item-label';
-import {
-  renderCapacityJump, renderCapacityNextStep, renderDelivered, renderFoundItem, renderJunk, renderProgressive,
-} from './receipt-templates';
+import { renderDelivered, renderFoundItem, renderJunk, renderProgressive } from './receipt-templates';
 import type { ReceiptCount } from './receipt-counts';
 import type { ReceiptLine } from './receipt-line.type';
 
@@ -49,12 +49,10 @@ const renderReceiptMessage = (params: ReceiptMessageParams): ReceiptLine => {
   switch (itemClass.kind) {
     case 'progressive':
       return renderProgressive(itemClass.slot);
-    case 'capacity':
-      return renderCapacityJump(itemClass.family, itemClass.jump);
-    case 'capacity-progressive':
-      return renderCapacityNextStep(itemClass.family);
     case 'junk':
       return renderJunk(itemName);
+    case 'capacity':
+    case 'capacity-progressive':
     case 'dungeon-item':
     case 'standard':
       return found();

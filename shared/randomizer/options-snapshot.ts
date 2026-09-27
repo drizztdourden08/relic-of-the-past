@@ -15,23 +15,23 @@
  * reading it shipped with (legacy-absent-rows.data.ts): a stored snapshot
  * missing such a row reads the shipped value, never today's baseline.
  */
-import { apBaselineValues, apOptionByKey } from './ap-world/options.data';
-import { CAPACITY_PROGRESSIVE_KEY, LEGACY_CAPACITY_KEY } from './ap-world/capacity/capacity-option-keys';
-import { legacyCapacityProfile } from './ap-world/capacity/capacity-profile-defaults';
-import { capacityValuesOf } from './ap-world/capacity/capacity-profile-from-snapshot';
-import { withMigratedPondKeys } from './ap-world/pond/pond-key-migration.data';
-import { POST_LEGACY_SHOP_SLOT_KEYS, SHOP_MODE_KEY } from './ap-world/shops/shop-slot-options.data';
+import { baselineValues, optionByKey } from './world/options.data';
+import { CAPACITY_PROGRESSIVE_KEY, LEGACY_CAPACITY_KEY } from './world/capacity/capacity-option-keys';
+import { legacyCapacityProfile } from './world/capacity/capacity-profile-defaults';
+import { capacityValuesOf } from './world/capacity/capacity-profile-from-snapshot';
+import { withMigratedPondKeys } from './world/pond/pond-key-migration.data';
+import { POST_LEGACY_SHOP_SLOT_KEYS, SHOP_MODE_KEY } from './world/shops/shop-slot-options.data';
 import { LEGACY_ABSENT_ROWS } from './legacy-absent-rows.data';
-import type { ApOptionValue, RandomizerOptionsSnapshot } from './ap-world/options.type';
+import type { OptionValue, RandomizerOptionsSnapshot } from './world/options.type';
 import type { RandomizedKind, RandomizerOptions } from './placement.type';
 
 const OPTIONS_SCHEMA = 'ap-options-v2';
 const LEGACY_SCHEMA = 'ap-options-v1';
 
-type Values = Record<string, ApOptionValue>;
+type Values = Record<string, OptionValue>;
 
 /** The v1 spelling: a bare boolean toggle ⇒ the profile it stood for (see capacity-profile-defaults.ts), fixed jumps. */
-const legacyCapacityRows = (toggle: ApOptionValue | undefined): Values | undefined =>
+const legacyCapacityRows = (toggle: OptionValue | undefined): Values | undefined =>
   (typeof toggle === 'boolean'
     ? { ...capacityValuesOf(legacyCapacityProfile(toggle)), [CAPACITY_PROGRESSIVE_KEY]: false }
     : undefined);
@@ -42,11 +42,11 @@ const legacyCapacityRows = (toggle: ApOptionValue | undefined): Values | undefin
  * capacity rows it stood for.
  */
 const buildOptionsSnapshot = (
-  overrides: Readonly<Record<string, ApOptionValue>> = {},
+  overrides: Readonly<Record<string, OptionValue>> = {},
 ): RandomizerOptionsSnapshot => {
-  const values: Values = { ...apBaselineValues, ...legacyCapacityRows(overrides[LEGACY_CAPACITY_KEY]) };
+  const values: Values = { ...baselineValues, ...legacyCapacityRows(overrides[LEGACY_CAPACITY_KEY]) };
   for (const [key, value] of Object.entries(overrides)) {
-    const option = apOptionByKey.get(key);
+    const option = optionByKey.get(key);
     if (option && !option.locked) values[key] = value;
   }
   return { schema: OPTIONS_SCHEMA, values };
@@ -99,7 +99,7 @@ const withLegacyAbsentRows = (values: Values, raw: Values): Values => {
 };
 
 /** The baselines under a stored snapshot's own rows, with every absent row reading as it shipped. */
-const overBaselines = (raw: Values): Values => withLegacyAbsentRows({ ...apBaselineValues, ...raw }, raw);
+const overBaselines = (raw: Values): Values => withLegacyAbsentRows({ ...baselineValues, ...raw }, raw);
 
 /** v1 → v2: the retired toggle becomes the Custom values that reproduce the v1 pool exactly. */
 const adaptV1 = (raw: Values): Values => {

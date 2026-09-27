@@ -135,7 +135,7 @@ const pollInventoryState = (force = false): void => {
 
     if (force || !setsEqual(currentInventory, newInventory)) {
       // Logged by name: a reader needs to recognise what the player picked up.
-      log.app(`[Tracker] Inventory changed: ${[...newInventory].map((id) => getItem(id).randomizerName).join(', ') || '(empty)'}`);
+      log.app(`[Tracker] Inventory changed: ${[...newInventory].map((id) => getItem(id).name).join(', ') || '(empty)'}`);
       currentInventory = newInventory;
       for (const fn of inventoryListeners) {
         try { fn(newInventory); } catch { /* ignore */ }
@@ -159,7 +159,7 @@ const initTrackerBridge = (): void => {
   (window as any).__onItemReceived = (itemId: number, method: number) => {
     const item = getItemByGameId({ receiveItemId: itemId });
     if (item) {
-      log.app(`[Tracker] Item received: ${item.id} ${item.randomizerName} (0x${itemId.toString(16)}, method=${method})`);
+      log.app(`[Tracker] Item received: ${item.id} ${item.name} (0x${itemId.toString(16)}, method=${method})`);
       for (const fn of itemListeners) {
         try { fn(item.id, itemId, method); } catch { /* ignore */ }
       }

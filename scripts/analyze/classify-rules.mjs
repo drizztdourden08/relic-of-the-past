@@ -50,7 +50,6 @@ const DATA_PATH_HINTS = [
   'shared/input/presets/',
   'shared/input/device-database',
   'shared/asset-extraction/text/language-data',
-  'shared/asset-extraction/extraction/tables-data',
   'shared/input/haptic-patterns',
   '/data/button-icons',
   'InputTester/data/',

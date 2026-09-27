@@ -10,23 +10,27 @@
  * no row carries a sprite at all, so the listing shows placeholders instead of
  * asking for files that are not on disk.
  */
-import { poolItemSpriteOf } from './pool-item-sprite';
-import type { ApItemPool } from '@shared/randomizer/ap-world/pool/item-pool.type';
+import { itemKeyName } from '@shared/randomizer/world/display-names/item-key-name';
+import { poolItemSpriteOfKey } from './pool-item-sprite';
+import type { ItemKey } from '@shared/randomizer/world/item-ids.data';
+import type { ItemPool } from '@shared/randomizer/world/pool/item-pool.type';
 import type { PoolListingGroup, PoolListingRow } from '@domains/app/compounds/PoolListing';
 
-const rowsOf = (names: readonly string[], spritesAvailable: boolean): PoolListingRow[] => {
-  const counts = new Map<string, number>();
-  for (const name of names) counts.set(name, (counts.get(name) ?? 0) + 1);
+const rowsOf = (items: readonly ItemKey[], spritesAvailable: boolean): PoolListingRow[] => {
+  const counts = new Map<ItemKey, number>();
+  for (const item of items) counts.set(item, (counts.get(item) ?? 0) + 1);
   return [...counts]
-    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-    .map(([name, count]) => ({ name, count, sprite: spritesAvailable ? poolItemSpriteOf(name) : undefined }));
+    .map(([item, count]) => ({
+      name: itemKeyName(item), count, sprite: spritesAvailable ? poolItemSpriteOfKey(item) : undefined,
+    }))
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
 };
 
-const groupOf = (id: string, label: string, names: readonly string[], spritesAvailable: boolean): PoolListingGroup =>
-  ({ id, label, total: names.length, rows: rowsOf(names, spritesAvailable) });
+const groupOf = (id: string, label: string, items: readonly ItemKey[], spritesAvailable: boolean): PoolListingGroup =>
+  ({ id, label, total: items.length, rows: rowsOf(items, spritesAvailable) });
 
-const poolListingGroupsOf = (pool: ApItemPool, spritesAvailable: boolean): PoolListingGroup[] => {
-  const group = (id: string, label: string, names: readonly string[]) => groupOf(id, label, names, spritesAvailable);
+const poolListingGroupsOf = (pool: ItemPool, spritesAvailable: boolean): PoolListingGroup[] => {
+  const group = (id: string, label: string, items: readonly ItemKey[]) => groupOf(id, label, items, spritesAvailable);
   return [
     group('progression', 'Progression', pool.progression),
     group('useful', 'Useful', pool.useful),

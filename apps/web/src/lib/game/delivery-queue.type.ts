@@ -24,6 +24,12 @@ interface DeliveryEntry {
    * synchronous flag write.
    */
   onComplete?: () => void;
+  /**
+   * Fired once, the moment the core confirms the grant (the action executed and was not
+   * refused). Never for a refused attempt and never for an entry removed or cleared before it
+   * executed, so it counts exactly the items that reached the player.
+   */
+  onGranted?: () => void;
 }
 
 type DeliveryAction =
@@ -45,7 +51,20 @@ type DeliveryAction =
      * with receiptExport.
      */
     messageId?: number;
+    /**
+     * Answers the message id when the entry reaches the front of the queue, for a line composed
+     * only then (a received item's line, server-delivery.ts). Asked on every attempt, so a retry
+     * after a refusal gets the same id. Wins over |messageId|.
+     */
+    messageOf?: () => number;
   }
+  /**
+   * Quiet receipts: the rupees, bombs or arrows of receipt |itemId| go straight to the wallet, bag
+   * or quiver (WasmGrantQuietReceipt), no hold-up and no message, so the entry completes the moment
+   * the core confirms it. When the core answers that the receipt is not quiet (its option was
+   * turned off after the entry was queued), |fallback| runs in its place: the ordinary receipt.
+   */
+  | { type: 'quiet_receipt'; itemId: number; fallback: DeliveryAction }
   | { type: 'trigger_check'; roomId: number; chestIndex: number; itemId: number }
   | {
     type: 'trigger_npc_check'; flagType: number; flagMask: number; itemId: number; spriteType: number; postGfx: number;

@@ -30,8 +30,11 @@ const CAPACITY_ICONS_FILE = 'capacity-icons.4bpp';
  *   3: the gear pictures emitted beside them (gear-icons.4bpp).
  *   4: the quiver's in-game picture emitted beside them (quiver-icon.4bpp).
  *   5: the shop price symbols emitted beside them (currency-symbols.4bpp).
+ *   6: the multiworld pool icons emitted beside them (foreign-icons.4bpp).
+ *   7: the pool icons quantized by OKLab, greys to greys (was plain RGB).
+ *   8: the pool icons quantized to their own 15-colour palette, carried after them (was row 4).
  */
-const EXTRACTION_FORMAT_VERSION = 5;
+const EXTRACTION_FORMAT_VERSION = 8;
 
 /**
  * The sprite palette row every icon is quantized to. Mirrored by ICON_PALETTE_ROW in

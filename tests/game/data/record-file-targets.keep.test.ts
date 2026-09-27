@@ -4,16 +4,17 @@
  *
  * Checks are held to the strongest claim: EVERY check record must resolve to
  * the file it is committed in, so a create can never land somewhere its
- * siblings are not.
+ * siblings are not. Nothing is split by size any more, so there is no group of
+ * sibling files to fall back on: the resolved path is the file, exactly.
  *
- * Item, actor and dungeon follow no rule the record carries (see
- * record-file-targets.ts), so the resolver names ONE canonical destination per
- * category/kind for new records only. Pinned: that choice, and that the file exists.
+ * Item, actor, dungeon, area and location follow the same convention from the
+ * other side (see record-file-targets.ts): one file per category, per kind, per
+ * dungeon or per world. Pinned: that choice, and that the file exists.
  */
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { describe, expect, it } from 'vitest';
-import { all } from '@shared/game/data';
+import { all, getDungeon } from '@shared/game/data';
 import {
   actorRecordFile, areaRecordFile, checkRecordFile, dungeonRecordFile, itemRecordFile, locationRecordFile,
 } from '@shared/game/data/record-file-targets';
@@ -38,48 +39,56 @@ describeDataset('the file a check is filed in', () => {
     expect(checks.length).toBeGreaterThan(200);
   });
 
-  /** The sibling files a size-split destination shares its group with. */
-  const splitGroup = (relativePath: string): string[] => {
-    const match = /^(.*)-(\d+)\.ts$/.exec(relativePath);
-    if (!match) return [relativePath];
-    const [, stem, last] = match;
-    return Array.from({ length: Number(last) }, (_, i) => `${stem}-${i + 1}.ts`);
-  };
-
   const holdsCheck = (relativePath: string, id: string): boolean =>
-    readFileSync(dataFile(relativePath), 'utf-8').includes(`id: '${id}'`);
+    existsSync(dataFile(relativePath)) && readFileSync(dataFile(relativePath), 'utf-8').includes(`id: '${id}'`);
+
+  /** An event record is written as a numbered spec, so its file names the number, not the id. */
+  const holdsEvent = (relativePath: string, id: string): boolean => {
+    if (!existsSync(dataFile(relativePath))) return false;
+    const n = Number(id.slice('check-'.length)) - 300;
+    return new RegExp(`\\bn: ${n},`).test(readFileSync(dataFile(relativePath), 'utf-8'));
+  };
 
   it('names the file every committed record actually sits in', () => {
     const misfiled: string[] = [];
     for (const check of checks) {
       const target = checkRecordFile(check);
-      // A handful of story-progress checks name neither a dungeon nor a screen;
-      // those are unresolvable BY DESIGN and are asserted separately below.
+      // A handful of story rows name neither a dungeon nor a screen, and the event groups
+      // that span two files are refused by design; both are asserted separately below.
       if (!target.relativePath) continue;
-      // A group split by size is the one place the destination and the record's
-      // real home may differ: a NEW record joins the last split, while the
-      // earlier ones stay put. Anything outside the group is a genuine misfile.
-      if (!splitGroup(target.relativePath).some(file => holdsCheck(file, check.id))) {
-        misfiled.push(`${check.id} → ${target.relativePath}`);
-      }
+      const found = check.kind === 'event'
+        ? holdsEvent(target.relativePath, check.id) || holdsCheck(target.relativePath, check.id)
+        : holdsCheck(target.relativePath, check.id);
+      if (!found) misfiled.push(`${check.id} -> ${target.relativePath}`);
     }
     expect(misfiled).toEqual([]);
   });
 
-  it('files a record in a collection with no split exactly where it already sits', () => {
-    const unsplit = checks
-      .map(check => ({ id: check.id, path: checkRecordFile(check).relativePath }))
-      .filter((entry): entry is { id: string; path: string } => !!entry.path && !/-\d+\.ts$/.test(entry.path));
-    expect(unsplit.length).toBeGreaterThan(200);
-    expect(unsplit.filter(entry => !holdsCheck(entry.path, entry.id)).map(entry => entry.id)).toEqual([]);
+  it('resolves every check that names a dungeon or a screen', () => {
+    const unresolved = checks
+      .filter(check => check.kind !== 'event' && (check.dungeonId || check.screenId))
+      .filter(check => !checkRecordFile(check).relativePath)
+      .map(check => check.id);
+    expect(unresolved).toEqual([]);
   });
 
-  it('files a dungeon check with its dungeon', () => {
-    expect(resolved(checkRecordFile({ dungeonId: 'dungeon-012' }))).toBe('checks/dungeons/turtle-rock.ts');
+  it('files a dungeon check with its dungeon, under that dungeon world', () => {
+    expect(resolved(checkRecordFile({ dungeonId: 'dungeon-012' }))).toBe('checks/dark-world/turtle-rock.ts');
+    expect(resolved(checkRecordFile({ dungeonId: 'dungeon-003' }))).toBe('checks/light-world/eastern-palace.ts');
   });
 
-  it('sends a new record for the one split dungeon to the last split', () => {
-    expect(resolved(checkRecordFile({ dungeonId: 'dungeon-013' }))).toBe('checks/dungeons/ganons-tower-2.ts');
+  it('files a dungeon stage event with its dungeon, in the events tree', () => {
+    expect(resolved(checkRecordFile({ kind: 'event', eventGroup: 'dungeon', dungeonId: 'dungeon-013' })))
+      .toBe('checks/events/dungeons/ganons-tower.ts');
+  });
+
+  it('files a story event and a status with the story', () => {
+    expect(resolved(checkRecordFile({ kind: 'event', eventGroup: 'story' }))).toBe('checks/events/story.ts');
+    expect(resolved(checkRecordFile({ kind: 'event', eventGroup: 'status' }))).toBe('checks/events/story.ts');
+  });
+
+  it('refuses an event whose group spans two files', () => {
+    expect(checkRecordFile({ kind: 'event', eventGroup: 'area' }).relativePath).toBeNull();
   });
 
   it('refuses a check that names neither a dungeon nor a screen', () => {
@@ -95,12 +104,12 @@ describeDataset('the file a check is filed in', () => {
 describeDataset('the file a new item is filed in', () => {
   const EXPECTED: Record<ItemCategory, string> = {
     weapon: 'items/weapons.ts',
-    equipment: 'items/equipment-2.ts',
-    bottle: 'items/equipment-2.ts',
-    upgrade: 'items/equipment-2.ts',
-    junk: 'items/junk-2.ts',
-    key: 'items/dungeon-items-3.ts',
-    crystal: 'items/progression.ts',
+    equipment: 'items/equipment.ts',
+    bottle: 'items/bottles.ts',
+    upgrade: 'items/capacity.ts',
+    junk: 'items/junk.ts',
+    key: 'items/keys.ts',
+    crystal: 'items/prizes.ts',
     event: 'items/progression.ts',
     medallion: 'items/progression.ts',
   };
@@ -115,13 +124,30 @@ describeDataset('the file a new item is filed in', () => {
     const categories = new Set(all('item').map(item => item.category));
     for (const category of categories) expect(EXPECTED[category], category).toBeDefined();
   });
+
+  it('files a dungeon item with its dungeon', () => {
+    expect(resolved(itemRecordFile({ category: 'key', dungeonId: 'dungeon-002' })))
+      .toBe('items/dungeon-items/light-world/castle-tower.ts');
+  });
+
+  it('files a seed-only item with the other seed items', () => {
+    expect(resolved(itemRecordFile({ category: 'junk', origin: 'randomizer' }))).toBe('items/randomizer.ts');
+  });
+
+  it('names the file every committed record actually sits in', () => {
+    const misfiled = all('item')
+      .map(item => ({ id: item.id, path: itemRecordFile(item).relativePath }))
+      .filter(entry => !entry.path || !readFileSync(dataFile(entry.path), 'utf-8').includes(`id: '${entry.id}'`))
+      .map(entry => `${entry.id} -> ${entry.path}`);
+    expect(misfiled).toEqual([]);
+  });
 });
 
 describeDataset('the file a new actor is filed in', () => {
   const EXPECTED: Record<ActorKind, string> = {
-    enemy: 'actors/enemies-4.ts',
-    object: 'actors/objects-4.ts',
-    trigger: 'actors/triggers-2.ts',
+    enemy: 'actors/enemies.ts',
+    object: 'actors/objects.ts',
+    trigger: 'actors/triggers.ts',
     boss: 'actors/bosses.ts',
     npc: 'actors/npcs.ts',
     obstacle: 'actors/obstacles.ts',
@@ -133,26 +159,42 @@ describeDataset('the file a new actor is filed in', () => {
     expect(existsSync(dataFile(target)), target).toBe(true);
   });
 
-  it('names the LAST file of each size-split group, so a new record joins the newest', () => {
-    for (const [kind, path] of Object.entries(EXPECTED)) {
-      const next = path.replace(/-(\d+)\.ts$/, (_, n: string) => `-${Number(n) + 1}.ts`);
-      expect(next === path || !existsSync(dataFile(next)), `${kind} has a file after ${path}`).toBe(true);
-    }
-  });
-
   it('covers every kind the collection uses', () => {
     const kinds = new Set(all('actor').map(actor => actor.kind));
     for (const kind of kinds) expect(EXPECTED[kind], kind).toBeDefined();
   });
+
+  it('names the file every committed record actually sits in', () => {
+    const misfiled = all('actor')
+      .map(actor => ({ id: actor.id, path: actorRecordFile(actor).relativePath as string }))
+      .filter(entry => !readFileSync(dataFile(entry.path), 'utf-8').includes(`id: '${entry.id}'`))
+      .map(entry => `${entry.id} -> ${entry.path}`);
+    expect(misfiled).toEqual([]);
+  });
 });
 
-describeDataset('the flat single-file collections', () => {
-  it.each([
-    ['dungeon', dungeonRecordFile(), 'dungeons-2.ts'],
-    ['area', areaRecordFile(), 'areas.ts'],
-    ['location', locationRecordFile(), 'locations.ts'],
-  ])('files a new %s in %s', (_kind, target, path) => {
-    expect(resolved(target)).toBe(path);
-    expect(existsSync(dataFile(path)), path).toBe(true);
+describeDataset('the collections filed by world', () => {
+  it('files a dungeon in its own file, under its world', () => {
+    expect(resolved(dungeonRecordFile(getDungeon('dungeon-012')))).toBe('dungeons/dark-world/turtle-rock.ts');
+    expect(resolved(dungeonRecordFile(getDungeon('dungeon-001')))).toBe('dungeons/light-world/hyrule-castle.ts');
+  });
+
+  it('files an area and a location by world', () => {
+    expect(resolved(areaRecordFile({ world: 'light' }))).toBe('areas/light-world.ts');
+    expect(resolved(areaRecordFile({ world: 'dark' }))).toBe('areas/dark-world.ts');
+    expect(resolved(locationRecordFile({ areaId: 'area-001' }))).toBe('locations/light-world.ts');
+    expect(resolved(locationRecordFile({ areaId: 'area-002' }))).toBe('locations/dark-world.ts');
+  });
+
+  it('names the file every committed record of those three sits in', () => {
+    const paths = [
+      ...all('dungeon').map(d => ({ id: d.id, path: dungeonRecordFile(d).relativePath as string })),
+      ...all('area').map(a => ({ id: a.id, path: areaRecordFile(a).relativePath as string })),
+      ...all('location').map(l => ({ id: l.id, path: locationRecordFile(l).relativePath as string })),
+    ];
+    const misfiled = paths
+      .filter(entry => !readFileSync(dataFile(entry.path), 'utf-8').includes(`id: '${entry.id}'`))
+      .map(entry => `${entry.id} -> ${entry.path}`);
+    expect(misfiled).toEqual([]);
   });
 });

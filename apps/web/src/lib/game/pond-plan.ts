@@ -16,8 +16,8 @@
  * only.
  */
 
-import { isGrantableReceiveId } from '@shared/game/data';
 import { log } from '../log-bus';
+import { isArmableOverrideId } from './foreign-item-id';
 import { getModule } from './wasm-bridge';
 import { setPondPlanActive } from './live-settings-flags';
 import { reassertGateWord3 } from './live-settings';
@@ -65,7 +65,7 @@ const setPondThrows = (throws: readonly PondThrowArm[]): void => {
 
 const setPondPrize = (arm: PondPrizeArm): void => {
   const { prize, newItem, messageId, fireId } = arm;
-  if (!isGrantableReceiveId(newItem)) {
+  if (!isArmableOverrideId(newItem)) {
     log.error(`[Randomizer] Pond prize refused: item 0x${newItem.toString(16)} `
       + `is outside the grantable id range (prize ${prize})`);
     return;
