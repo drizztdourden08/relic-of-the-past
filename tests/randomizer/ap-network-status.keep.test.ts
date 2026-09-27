@@ -42,7 +42,7 @@ const makeRoom = (overrides: Partial<FakeRoom> = {}): FakeRoom => ({
   },
   slotData: { worldVersion: '0.1.0', options: {}, medallions: { mire: 'Ether', turtleRock: 'Quake' }, deathLink: false },
   placements: { 1: { item: 101, location: 1, player: 1, flags: 0 }, 2: { item: 500, location: 2, player: 2, flags: 0 } },
-  refusedUrls: new Set(['wss://localhost:38281']),
+  refusedUrls: new Set(),
   seedName: 'SEED42',
   ...overrides,
 });

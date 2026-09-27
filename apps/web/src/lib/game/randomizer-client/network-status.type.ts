@@ -11,7 +11,7 @@ interface NetworkConnection {
   state: NetworkState;
   /** The address as the profile holds it. */
   configuredUrl: string;
-  /** The candidate that opened (after the wss to ws fallback); null until one did. */
+  /** The candidate that opened (server-url.ts); null until one did. */
   url: string | null;
   seedName: string | null;
   serverVersion: string | null;

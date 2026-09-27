@@ -5,8 +5,8 @@
  * sends Connect, so the room sees no join and no leave: the probe answers only
  * whether the server is reachable and hosts this game, and reads its version.
  * A wrong slot name or password is the real session's to report, through its
- * own error path. A bare host:port tries wss:// first and ws:// when the
- * secure socket never opens.
+ * own error path. A bare local host:port tries ws:// only; any other tries
+ * wss:// first and ws:// when the secure socket never opens (server-url.ts).
  */
 import { AP_GAME } from '@shared/randomizer/archipelago/ap-game';
 import { parseServerPackets, versionOf } from './online-handshake';
