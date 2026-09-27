@@ -6,10 +6,10 @@
  */
 import { useState } from 'react';
 import type { SanctuaryFile } from '@shared/sanctuary/file-types';
-import { MediaPreview } from '../../../components/MediaPreview/MediaPreview';
-import { MediaViewer } from '../../../components/MediaViewer/MediaViewer';
+import { MediaPreview } from '@site-kit/components/MediaPreview/MediaPreview';
+import { MediaViewer } from '@site-kit/components/MediaViewer/MediaViewer';
 import { useFilePreview } from '../../../files/useFilePreview';
-import type { MediaKind } from '../../../files/media-kind';
+import type { MediaKind } from '@site-kit/lib/media-kind';
 
 type FileMediaProps = {
   file: SanctuaryFile;

@@ -3,11 +3,11 @@
  *  rate-limited by address and must give a contact email, which stays on the
  *  record and never reaches the issue. */
 import { SANCTUARY_ROUTES, submitReportSchema } from '../../../../shared/sanctuary';
-import { clientIp } from '../http/client-ip';
-import { parseBody } from '../http/parse-body';
-import { readCaller } from '../auth/require-caller';
+import { clientIp } from '../../../hub-core/http/client-ip';
+import { parseBody } from '../../../hub-core/http/parse-body';
+import { readCaller } from '../../../hub-core/auth/require-caller';
 import { createReport } from '../reports/create-report';
-import type { Route } from '../route.type';
+import type { Route } from '../../../hub-core/route.type';
 
 const reportsCreate: Route = {
   ...SANCTUARY_ROUTES.reportsCreate,

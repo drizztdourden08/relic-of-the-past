@@ -1,0 +1,26 @@
+/* @layer store-site @kind style */
+
+/* Cards at one width side by side; the row scrolls sideways, never the page. */
+.shelf__row {
+  display: grid;
+  grid-auto-columns: var(--item-card-w);
+  grid-auto-flow: column;
+  gap: var(--space-md);
+  padding-bottom: var(--space-xs);
+  overflow-x: auto;
+}
+
+.shelf__title {
+  margin: 0;
+  color: var(--c-gold);
+}
+
+.shelf__all {
+  flex: 0 0 auto;
+  color: var(--c-text-dim);
+  font-size: var(--text-sm);
+}
+
+.shelf__all:hover {
+  color: var(--c-gold-bright);
+}

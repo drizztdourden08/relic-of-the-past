@@ -1,0 +1,12 @@
+/* @layer store-site @kind style */
+.item {
+  max-width: var(--store-form-maxw);
+}
+
+.item__actions {
+  align-self: center;
+}
+
+.item-overview__author {
+  color: var(--c-gold-bright);
+}

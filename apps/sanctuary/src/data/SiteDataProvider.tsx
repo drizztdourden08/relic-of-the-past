@@ -5,8 +5,8 @@
  */
 import { useCallback, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
-import { useSessionContext } from '../session/session-context';
-import { canSeeReports } from '../session/rights';
+import { useSessionContext } from '@site-kit/session/session-context';
+import { canSeeReports } from '@shared/sanctuary/sanctuary-rights';
 import { useFiles } from '../files/useFiles';
 import { useReports } from '../reports/useReports';
 import { useMultipartUpload } from '../upload/useMultipartUpload';

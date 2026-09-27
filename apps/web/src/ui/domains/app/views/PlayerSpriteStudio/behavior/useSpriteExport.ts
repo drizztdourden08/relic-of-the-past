@@ -12,7 +12,7 @@ import type { PlayerSheet } from '@shared/game/data/player-sheet/types';
 import { getPlatform } from '@app/platform/get-platform';
 import { toZsprBytes } from '@app/lib/game/zspr-write';
 import { toRspBytes } from '@app/lib/game/rsp';
-import { safeFileName } from '@app/lib/storage/link-sprites-store';
+import { safeFileName } from '@shared/storage/link-sprites/link-sprites';
 
 type Container = 'zspr' | 'rsp';
 

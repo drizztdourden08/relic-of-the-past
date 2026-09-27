@@ -1,0 +1,36 @@
+/* @layer store-site @kind style */
+
+/* A dark well at the picture's own shape; the picture fills it, the icon sits centred. */
+.item-picture {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: var(--item-card-ratio);
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--c-sunken);
+}
+
+.item-picture--banner {
+  aspect-ratio: var(--item-banner-ratio);
+}
+
+.item-picture__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.item-picture__icon {
+  display: inline-flex;
+  width: var(--item-kind-icon);
+  height: var(--item-kind-icon);
+  color: var(--c-text-muted);
+}
+
+.item-picture__icon svg {
+  width: 100%;
+  height: 100%;
+}

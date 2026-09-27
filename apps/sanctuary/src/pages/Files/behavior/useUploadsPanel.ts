@@ -5,8 +5,8 @@
  * rows left it is not shown at all.
  */
 import { useCallback, useState } from 'react';
-import type { UploadJob } from '../../../upload/upload-job.type';
-import { isFinished } from '../../../upload/useMultipartUpload';
+import type { UploadJob } from '@site-kit/upload/upload-job.type';
+import { isFinished } from '@site-kit/upload/useUploads';
 
 const idsOf = (jobs: readonly UploadJob[]) => jobs.map((job) => job.id).join(' ');
 

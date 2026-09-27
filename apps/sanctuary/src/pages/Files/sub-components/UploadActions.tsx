@@ -10,7 +10,7 @@ import { Button } from '@ds/primitives/Button';
 import { DropZone } from '@ds/primitives/DropZone';
 import { Flex } from '@ds/primitives/Flex';
 import { LIMITS } from '@shared/sanctuary/limits';
-import { formatBytes } from '../../../lib/format-bytes';
+import { formatBytes } from '@site-kit/lib/format-bytes';
 
 type UploadActionsProps = {
   canUpload: boolean;

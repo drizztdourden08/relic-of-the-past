@@ -91,5 +91,5 @@ const writeContent = async (files: FileStore, set: LanguageSet): Promise<void> =
   await writeJson(files, variablesPath(set.id), variablesOf(set));
 };
 
-export { DEFAULT_STRUCTURE, readContent, SET_FORMAT, writeContent };
+export { DEFAULT_STRUCTURE, formatOf, readContent, SET_FORMAT, writeContent };
 export type { SetContent };

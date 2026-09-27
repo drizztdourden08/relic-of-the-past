@@ -22,13 +22,20 @@ type BundleHeaderProps = {
   saveError: string | null;
   onDuplicate?: () => void;
   onSaveNow?: () => void;
+  /** Saves the set as a `.rlang` file. */
+  onExport?: () => void;
+  exporting?: boolean;
+  /** What the last export did, or why it failed. */
+  exportStatus?: string | null;
 };
 
 /** The base language in words, falling back to its bare code. */
 const baseLabel = (base: string): string => LANGUAGE_NAMES[base] ?? base;
 
 const BundleHeader = (props: BundleHeaderProps) => {
-  const { set, warnings, dirty, saving, saveError, onDuplicate, onSaveNow } = props;
+  const {
+    set, warnings, dirty, saving, saveError, onDuplicate, onSaveNow, onExport, exporting = false, exportStatus,
+  } = props;
 
   const facts = useMemo(() => [
     `id: ${set.id}`,
@@ -60,6 +67,12 @@ const BundleHeader = (props: BundleHeaderProps) => {
           <Button variant="ghost" size="sm" disabled={!dirty || saving} onClick={onSaveNow}>Save now</Button>
         )}
         {onDuplicate && <Button variant="ghost" size="sm" onClick={onDuplicate}>Duplicate</Button>}
+        {onExport && (
+          <Button variant="ghost" size="sm" disabled={saving || exporting} onClick={onExport}>
+            {exporting ? 'Exporting...' : 'Export .rlang'}
+          </Button>
+        )}
+        {exportStatus && <Text variant="caption">{exportStatus}</Text>}
       </Box>
     </Box>
   );

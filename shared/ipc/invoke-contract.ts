@@ -35,6 +35,8 @@ import type { LanguageInvokeContract } from './language-contract';
 import type { MsuInvokeContract } from './msu-contract';
 import type { FfmpegInvokeContract } from './ffmpeg-contract';
 import type { SanctuaryInvokeContract } from './sanctuary-contract';
+import type { HubInvokeContract } from './hub-contract';
+import type { StoreInvokeContract } from './store-contract';
 import type { UpdateInfo, UpdaterCapabilities, UpdaterPrefs, VersionOption } from './updater-contract';
 
 
@@ -44,7 +46,7 @@ type ReviewMap = Record<string, { status: string; comment?: string }>;
 
 interface InvokeContract extends
   ControllerInvokeContract, LanguageInvokeContract, MsuInvokeContract, FfmpegInvokeContract,
-  SanctuaryInvokeContract {
+  SanctuaryInvokeContract, HubInvokeContract, StoreInvokeContract {
   // App
   'app:getUserDataPath': () => Promise<string>;
 

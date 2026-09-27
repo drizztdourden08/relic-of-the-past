@@ -9,14 +9,15 @@
  */
 import { useCallback, useMemo } from 'react';
 import type { SanctuaryFile } from '@shared/sanctuary/file-types';
-import { useSessionContext } from '../../../session/session-context';
-import { visibleFileTypes } from '../../../session/rights';
+import { useSessionContext } from '@site-kit/session/session-context';
+import { visibleFileTypes } from '@shared/sanctuary/sanctuary-rights';
 import { useSiteData } from '../../../data/site-data-context';
 import { toFileRow } from '../../../files/file-row';
 import { buildFileSchema } from '../../../files/file-schema';
-import { useSurfaceView } from '../../../views/useSurfaceView';
-import { useFacet } from '../../../views/useFacet';
-import { filterRows } from '../../../views/filter-rows';
+import { useSurfaceView } from '@site-kit/views/useSurfaceView';
+import { SANCTUARY_VIEWS } from '../../../views/sanctuary-views';
+import { useFacet } from '@site-kit/views/useFacet';
+import { filterRows } from '@site-kit/views/filter-rows';
 import type { FileRow } from '../../../files/file-row';
 import { DEFAULT_UPLOAD_TYPE, isFileType } from '../Files.constants';
 import { fileScopeTabs, scopePredicate, shownScopeId } from './file-scopes';
@@ -41,7 +42,7 @@ const useFilesPage = (selectedId: string | null) => {
 
   const rows = useMemo(() => data.files.map(toFileRow), [data.files]);
   const schema = useMemo(() => buildFileSchema(rows), [rows]);
-  const view = useSurfaceView('files', schema);
+  const view = useSurfaceView(SANCTUARY_VIEWS, 'files', schema);
   const owners = useFacet({ id: 'owners', label: 'Show owners', rows, valueOf: ownerOf });
 
   const inScope = useMemo(() => rows.filter(scopePredicate(scopeId, meId)), [rows, scopeId, meId]);

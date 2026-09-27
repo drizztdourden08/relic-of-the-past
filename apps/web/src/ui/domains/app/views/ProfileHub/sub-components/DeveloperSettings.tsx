@@ -4,7 +4,7 @@ import { SettingsLayout } from '../../../compounds/SettingsLayout';
 import { openVanillaSafeSettings } from '@app/stores/search-store';
 import { DEFAULT_SETTINGS } from '@app/lib/game/settings';
 import { SECTIONS, SANCTUARY_ACCOUNT_KEY } from './developer-settings-sections';
-import { SanctuaryAccountCard } from './SanctuaryAccountCard';
+import { SanctuaryAccount } from './SanctuaryAccount';
 
 interface DeveloperSettingsProps {
   settings: GameSettings;
@@ -12,7 +12,7 @@ interface DeveloperSettingsProps {
 }
 
 /** The account row is the one item here that is not a toggle. */
-const renderControl = (key: string) => (key === SANCTUARY_ACCOUNT_KEY ? <SanctuaryAccountCard /> : null);
+const renderControl = (key: string) => (key === SANCTUARY_ACCOUNT_KEY ? <SanctuaryAccount /> : null);
 
 const DeveloperSettings = (props: DeveloperSettingsProps) => {
   const { settings, onChange } = props;

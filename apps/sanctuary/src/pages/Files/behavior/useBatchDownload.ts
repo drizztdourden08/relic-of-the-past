@@ -8,7 +8,7 @@
 import { useCallback, useState } from 'react';
 import type { SanctuaryFile } from '@shared/sanctuary/file-types';
 import { downloadFile } from '../../../api/files-endpoints';
-import { errorMessage } from '../../../api/client';
+import { errorMessage } from '@site-kit/api/api-error';
 import { BATCH_SAVE_GAP_MS } from '../Files.constants';
 import { fitsInZip, totalBytes } from './batch-size';
 import { saveBlob, saveUrl } from './save-link';

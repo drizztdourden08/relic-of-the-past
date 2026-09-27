@@ -1,0 +1,53 @@
+/* @layer store-site @kind style */
+
+/* The kit's panel treatment at card size; the border turns gold on hover and when picked. */
+.item-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  min-width: 0;
+  padding: var(--space-sm);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-lg);
+  background: var(--c-surface);
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.item-card:hover {
+  border-color: var(--c-border-strong);
+  background: var(--c-hover);
+}
+
+.item-card:focus-visible {
+  outline: var(--border-width-thick) solid var(--c-gold);
+  outline-offset: var(--border-width-thin);
+}
+
+.item-card--selected {
+  border-color: var(--c-gold);
+  background: var(--c-selected);
+}
+
+.item-card__body {
+  min-width: 0;
+}
+
+.item-card__name {
+  overflow: hidden;
+  color: var(--c-text);
+  font-weight: var(--weight-semi);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.item-card__byline,
+.item-card__extra {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.item-card__average,
+.item-card__extra {
+  font-variant-numeric: tabular-nums;
+}

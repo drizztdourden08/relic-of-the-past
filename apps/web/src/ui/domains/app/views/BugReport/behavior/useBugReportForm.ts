@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDebugTextBuilder, useDebugText } from '@app/lib/diagnostics';
 import { collectSaveStates } from '@app/lib/diagnostics/collect-save-states';
 import { useReportContext } from '@app/lib/diagnostics/useReportContext';
-import { useSanctuarySessionStore } from '@app/stores/sanctuary-session';
+import { useHubSessionStore } from '@app/stores/hub-session';
 import type { DebugReportSaveEntry } from '@shared/types/debug-report';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // only requires an @ and a dot with an extension
@@ -26,8 +26,8 @@ const messageOf = (err: unknown, fallback: string): string =>
  *  sessions the picker had checked, files the report and uploads the zip in one call. A
  *  failed upload leaves the report filed and can be retried against the same report id. */
 const useBugReportForm = (profileId: string | null, sessionKeys: string[]) => {
-  const me = useSanctuarySessionStore((s) => s.me);
-  const refreshSession = useSanctuarySessionStore((s) => s.refresh);
+  const me = useHubSessionStore((s) => s.me);
+  const refreshSession = useHubSessionStore((s) => s.refresh);
   const { subject: prefilledSubject, context } = useReportContext();
 
   const [email, setEmailValue] = useState('');

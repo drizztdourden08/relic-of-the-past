@@ -7,7 +7,7 @@
  * Data Manager performs, so an opened pack and a dropped pack land identically.
  */
 import { useEffect } from 'react';
-import { installMsulPack } from '@app/lib/msu/import/install-msul-pack';
+import { installMsulFile } from '@app/lib/storage/msu-store';
 import { log } from '../../lib/log-bus';
 
 const stemOf = (filePath: string): string =>
@@ -20,7 +20,7 @@ const useMsulOpen = (): void => {
         log.app(`[MSU] Opening pack file ${filePath}`);
         try {
           const buffer = await window.api.readMsulFile(filePath);
-          const result = await installMsulPack(new Uint8Array(buffer), stemOf(filePath));
+          const result = await installMsulFile(new Uint8Array(buffer), stemOf(filePath));
           log.app(`[MSU] Imported "${result.pack}" with ${result.fileCount} files and ${result.trackCount} slots`);
         } catch (err) {
           log.error(`[MSU] Could not import that pack: ${err instanceof Error ? err.message : err}`);

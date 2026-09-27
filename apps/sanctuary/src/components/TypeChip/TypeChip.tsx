@@ -2,8 +2,8 @@
 /** The pill that names a file type, one tone per type. */
 import { FILE_TYPE_LABELS } from '@shared/sanctuary/file-types';
 import type { FileType } from '@shared/sanctuary/file-types';
-import { Chip } from '../Chip/Chip';
-import type { ChipTone } from '../Chip/Chip';
+import { Chip } from '@site-kit/components/Chip/Chip';
+import type { ChipTone } from '@site-kit/components/Chip/Chip';
 
 type TypeChipProps = {
   type: FileType;

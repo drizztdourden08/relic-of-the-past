@@ -1,0 +1,54 @@
+/* @layer store-site @kind style */
+
+/*
+ * Site-level tokens and the two reset overrides a web page needs. The design-system
+ * reset locks scrolling and text selection for the game shell; a document site scrolls
+ * and lets text be copied. The kit's pieces read the first block, the same values the
+ * Sanctuary sets; the second block sizes the store's own cards, shelves and pictures.
+ */
+:root {
+  --gate-w: 360px;
+  --page-maxw: 640px;
+  --row-key-w: 88px;
+  --eyebrow-tracking: 0.1em;
+  --code-tracking: 0.18em;
+  --detail-w: 340px;
+  --view-name-maxw: 160px;
+  --upload-list-maxh: 160px;
+  --side-column-w: 360px;
+  --uploads-panel-maxh: 280px;
+  --media-preview-maxh: 240px;
+  --media-viewer-w: 92vw;
+  --media-viewer-h: 90vh;
+  --search-table-maxh: 320px;
+  --brand-logo-h: 20px;
+  --topbar-h: 44px;
+  --brand-hero-logo-h: 112px;
+
+  /* A card picture is 512 by 288 and a banner 1280 by 400; both keep that shape on screen. */
+  --item-card-ratio: 16 / 9;
+  --item-banner-ratio: 16 / 5;
+  --item-card-w: 200px;
+  --item-grid-min: 180px;
+  --item-kind-icon: 32px;
+  --hero-copy-maxw: 420px;
+  --hero-dot-d: 8px;
+  --stars-size: 14px;
+  --stars-size-lg: 22px;
+  --histogram-bar-h: 8px;
+  --welcome-maxw: 72ch;
+  --store-form-maxw: 720px;
+  --picture-preview-w: 256px;
+}
+
+html,
+body,
+#root {
+  overflow: auto;
+  user-select: text;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}

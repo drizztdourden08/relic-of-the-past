@@ -14,6 +14,7 @@ import { useSetFont } from './behavior/useSetFont';
 import { useEntryLayout } from './behavior/useEntryLayout';
 import { useEntryOpen } from './behavior/useEntryOpen';
 import { useVariablesTab } from './behavior/useVariablesTab';
+import { useSetExport } from './behavior/useSetExport';
 import { BundleHeader } from './sub-components/BundleHeader';
 import { DialogueTab } from './sub-components/DialogueTab';
 import { TextGroupsTab } from './sub-components/text-groups';
@@ -60,6 +61,7 @@ const LanguageEditor = (props: LanguageEditorProps) => {
   const layout = useEntryLayout(metrics, terms);
   const { view, draft, open, close, setMode } = useEntryOpen(dialogue, setEntryTokens);
   const variablesTab = useVariablesTab({ dialogue, variables, onRewrite: setManyEntryTokens });
+  const { exporting, exportStatus, exportSet } = useSetExport({ id, dirty, saveNow });
 
   const cfg = useMemo(() => (set ? kLanguages[set.base] ?? null : null), [set]);
   const variableIndex = useMemo(() => buildVariableIndex(variables), [variables]);
@@ -104,6 +106,9 @@ const LanguageEditor = (props: LanguageEditorProps) => {
         saving={saving}
         saveError={saveError}
         onSaveNow={saveNow}
+        onExport={exportSet}
+        exporting={exporting}
+        exportStatus={exportStatus}
       />
 
       <TabBar tabs={tabs} activeTab={tab} onTabChange={setTab} />

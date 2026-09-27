@@ -1,0 +1,23 @@
+/* @layer store-site @kind style */
+.home {
+  min-width: 0;
+}
+
+.home__publish {
+  align-self: center;
+}
+
+/* The text takes the width; the highlight keeps its own size at the right. */
+.welcome__text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.welcome .welcome__highlight {
+  flex: 0 0 auto;
+}
+
+.welcome__title {
+  margin: 0;
+  color: var(--c-gold);
+}

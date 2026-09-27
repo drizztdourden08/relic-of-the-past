@@ -3,19 +3,20 @@
  *  never further than a year after the issue closed. Only a closed issue has
  *  a close to count from; an open one is not expiring on that clock yet. */
 import { LIMITS, SANCTUARY_ROUTES, extendReportSchema } from '../../../../shared/sanctuary';
-import { conflict } from '../http/http-error';
-import { parseBody } from '../http/parse-body';
-import { requireAccess } from '../auth/require-access';
+import { conflict } from '../../../hub-core/http/http-error';
+import { parseBody } from '../../../hub-core/http/parse-body';
+import { requireMember } from '../../../hub-core/auth/require-member';
 import { reportsRepo } from '../db/reports-repo';
-import { now } from '../db/firestore';
+import { now } from '../../../hub-core/db/firestore';
 import { DAY_MS, expiryOf } from '../reports/expiry';
 import { loadVisibleReport, viewReport } from '../reports/report-view';
-import type { Route } from '../route.type';
+import type { Route } from '../../../hub-core/route.type';
+import { SANCTUARY_SITE } from '../site';
 
 const reportsExtend: Route = {
   ...SANCTUARY_ROUTES.reportsExtend,
   handler: async ({ req, res, params }) => {
-    const member = await requireAccess(req);
+    const member = await requireMember(req, SANCTUARY_SITE);
     parseBody(extendReportSchema, req.body);
     const report = await loadVisibleReport(params.id, member);
     const closedAt = report.issue.closedAt;

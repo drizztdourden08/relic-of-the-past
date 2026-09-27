@@ -1,0 +1,21 @@
+{
+  "name": "hub-core",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The server kit every site function bundles: router, sessions, sign-in, access, account repositories and storage.",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1139.0",
+    "@aws-sdk/s3-request-presigner": "^3.1139.0",
+    "@google-cloud/firestore": "^7.11.6",
+    "@google-cloud/functions-framework": "^3.5.1",
+    "arctic": "^3.7.0",
+    "jose": "^6.2.12",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

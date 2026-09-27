@@ -6,10 +6,10 @@
  * never asks which kind it is running.
  */
 import type { SanctuaryFile } from '@shared/sanctuary/file-types';
+import type { BegunMultipart } from '@shared/hub/upload/run-multipart';
 import { beginFile, completeFile, deleteFile, signParts } from '../api/files-endpoints';
 import { beginVersion, completeVersion, deleteVersion, signVersionParts } from '../api/versions-endpoints';
-import type { SignPartsResponse } from '../api/types';
-import type { UploadMeta, UploadTarget } from './upload-job.type';
+import type { UploadMeta, UploadTarget } from './upload-target.type';
 
 /** The facts of the bytes, the same for either target. */
 type UploadFacts = {
@@ -19,16 +19,11 @@ type UploadFacts = {
   contentType: string;
 };
 
-type BegunUpload = {
+/** The shared multipart steps, bound to the record, plus which record they are bound to. */
+type BegunUpload = BegunMultipart<{ file: SanctuaryFile }> & {
   fileId: string;
   /** The version number the API gave; null for a new file. */
   n: number | null;
-  partSize: number;
-  parts: number;
-  sign: (parts: number[]) => Promise<SignPartsResponse>;
-  complete: (etags: string[]) => Promise<{ file: SanctuaryFile }>;
-  /** Drops the record, which aborts the multipart upload. */
-  abort: () => Promise<unknown>;
 };
 
 const beginNewFile = async (meta: UploadMeta, facts: UploadFacts): Promise<BegunUpload> => {

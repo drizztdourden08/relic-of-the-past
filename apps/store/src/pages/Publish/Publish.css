@@ -1,0 +1,47 @@
+/* @layer store-site @kind style */
+.publish {
+  max-width: var(--store-form-maxw);
+}
+
+.publish__pack-name {
+  color: var(--c-text);
+  font-family: var(--font-mono);
+  overflow-wrap: anywhere;
+}
+
+/* A picture at its own shape, the same width for the card and the banner. */
+.publish .publish__preview {
+  width: var(--picture-preview-w);
+  border-radius: var(--radius-md);
+}
+
+.publish__preview--card {
+  aspect-ratio: var(--item-card-ratio);
+}
+
+.publish__preview--banner {
+  aspect-ratio: var(--item-banner-ratio);
+}
+
+.publish__picture-actions {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.publish__licence {
+  flex: 0 0 auto;
+}
+
+.publish__tags {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.publish__footer {
+  padding-top: var(--space-md);
+  border-top: var(--border-width-thin) solid var(--c-border);
+}
+
+.publish__problem {
+  color: var(--c-warning);
+}

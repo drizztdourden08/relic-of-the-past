@@ -5,14 +5,15 @@
  * selected report and its actions. Selection is the route: `/reports/:id`.
  */
 import { useCallback, useMemo, useState } from 'react';
-import { navigate } from '../../../router/useLocation';
-import { useSessionContext } from '../../../session/session-context';
+import { navigate } from '@site-kit/router/useLocation';
+import { useSessionContext } from '@site-kit/session/session-context';
 import { useSiteData } from '../../../data/site-data-context';
 import { toReportRow } from '../../../reports/report-row';
 import { buildReportSchema } from '../../../reports/report-schema';
-import { useSurfaceView } from '../../../views/useSurfaceView';
-import { useFacet } from '../../../views/useFacet';
-import { filterRows } from '../../../views/filter-rows';
+import { useSurfaceView } from '@site-kit/views/useSurfaceView';
+import { SANCTUARY_VIEWS } from '../../../views/sanctuary-views';
+import { useFacet } from '@site-kit/views/useFacet';
+import { filterRows } from '@site-kit/views/filter-rows';
 import type { ReportRow } from '../../../reports/report-row';
 import { scopePredicate, reportScopeTabs } from './report-scopes';
 import { useReportActions } from './useReportActions';
@@ -36,7 +37,7 @@ const useReportsPage = (selectedId: string | null) => {
   const rows = useMemo(() => inScope.map(toReportRow), [inScope]);
   const allRows = useMemo(() => data.reports.map(toReportRow), [data.reports]);
   const schema = useMemo(() => buildReportSchema(allRows), [allRows]);
-  const view = useSurfaceView('reports', schema);
+  const view = useSurfaceView(SANCTUARY_VIEWS, 'reports', schema);
   const kinds = useFacet({ id: 'kinds', label: 'Show kinds', rows: allRows, valueOf: kindOf });
 
   const shown = useMemo(

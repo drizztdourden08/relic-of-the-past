@@ -1,0 +1,74 @@
+/* @layer store-site @kind style */
+
+/* The banner fills the block; the copy sits over its left side on a scrim, the dots under it. */
+.featured-hero {
+  position: relative;
+  overflow: hidden;
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-xl);
+  background: var(--c-sunken);
+}
+
+.featured-hero .featured-hero__picture {
+  border-radius: 0;
+}
+
+.featured-hero__copy {
+  position: absolute;
+  inset: 0 auto 0 0;
+  justify-content: center;
+  max-width: var(--hero-copy-maxw);
+  padding: var(--space-lg) var(--space-xl);
+  background: linear-gradient(to right, var(--c-scrim), transparent);
+}
+
+.featured-hero__eyebrow {
+  color: var(--c-gold);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--eyebrow-tracking);
+  text-transform: uppercase;
+}
+
+.featured-hero__name {
+  margin: 0;
+  color: var(--c-text);
+}
+
+.featured-hero__summary {
+  margin: 0;
+  color: var(--c-text-dim);
+}
+
+.featured-hero__dots {
+  position: absolute;
+  right: 0;
+  bottom: var(--space-sm);
+  left: 0;
+}
+
+.featured-hero .featured-hero__dot {
+  width: var(--hero-dot-d);
+  height: var(--hero-dot-d);
+  padding: 0;
+  border-radius: var(--r-pill);
+  background: var(--c-text-faint);
+}
+
+.featured-hero .featured-hero__dot[data-on] {
+  background: var(--c-gold);
+}
+
+/* Below the compact breakpoint (--bp-compact) the copy stacks under the banner. */
+@media (width <= 820px) {
+  .featured-hero__copy {
+    position: static;
+    max-width: none;
+    background: none;
+  }
+
+  .featured-hero__dots {
+    position: static;
+    padding-bottom: var(--space-sm);
+  }
+}

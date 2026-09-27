@@ -1,0 +1,45 @@
+/* @layer shared-store @kind data */
+/**
+ * The store's own routes. The account routes it also serves (sign-in, me, devices, views)
+ * are HUB_ROUTES in shared/hub. store-api's router, the store site and the app all read
+ * this table, so a route exists in one place.
+ */
+import { route } from '../hub/api-contract';
+import type { RouteDef } from '../hub/api-contract';
+
+const STORE_ROUTES = {
+  home: route('GET', '/home'),
+  itemsList: route('GET', '/items'),
+  itemsGet: route('GET', '/items/:id'),
+  authorsGet: route('GET', '/authors/:userId'),
+
+  itemsCreate: route('POST', '/items'),
+  itemsMedia: route('POST', '/items/:id/media'),
+  itemsListing: route('POST', '/items/:id/listing'),
+  versionsBegin: route('POST', '/items/:id/versions'),
+  versionsSignParts: route('POST', '/items/:id/versions/:n/parts'),
+  versionsComplete: route('POST', '/items/:id/versions/:n/complete'),
+  versionsAbort: route('POST', '/items/:id/versions/:n/abort'),
+  versionsWithdraw: route('POST', '/items/:id/versions/:n/withdraw'),
+
+  download: route('POST', '/items/:id/download'),
+  ratingPut: route('PUT', '/items/:id/rating'),
+  ratingDelete: route('DELETE', '/items/:id/rating'),
+
+  myPublications: route('GET', '/me/publications'),
+
+  reviewQueue: route('GET', '/review'),
+  reviewDecide: route('POST', '/review/:itemId/:target'),
+  itemsUnlist: route('POST', '/items/:id/unlist'),
+  itemsRelist: route('POST', '/items/:id/relist'),
+  homeFeatured: route('PUT', '/home/featured'),
+  homeWelcome: route('PUT', '/home/welcome'),
+  usersBan: route('POST', '/users/:userId/ban'),
+
+  jobsDaily: route('POST', '/jobs/daily'),
+} as const satisfies Record<string, RouteDef>;
+
+type StoreRoute = keyof typeof STORE_ROUTES;
+
+export { STORE_ROUTES };
+export type { StoreRoute };

@@ -5,8 +5,15 @@ export {
   signPartsSchema,
   completeFileSchema,
   patchFileSchema,
+  beginVersionSchema,
 } from './schemas/file-schemas';
-export type { CreateFileBody, SignPartsBody, CompleteFileBody, PatchFileBody } from './schemas/file-schemas';
+export type {
+  CreateFileBody,
+  SignPartsBody,
+  CompleteFileBody,
+  PatchFileBody,
+  BeginVersionBody,
+} from './schemas/file-schemas';
 export {
   reportKindSchema,
   reportContentsSchema,
@@ -17,35 +24,3 @@ export {
   extendReportSchema,
 } from './schemas/report-schemas';
 export type { SubmitReportBody, ExtendReportBody } from './schemas/report-schemas';
-export {
-  viewSurfaceSchema,
-  putViewSchema,
-  deviceBeginSchema,
-  deviceConfirmSchema,
-  devicePollSchema,
-  adminGrantSchema,
-  adminRevokeSchema,
-} from './schemas/account-schemas';
-export type {
-  PutViewBody,
-  DeviceBeginBody,
-  DeviceConfirmBody,
-  DevicePollBody,
-  AdminGrantBody,
-  AdminRevokeBody,
-} from './schemas/account-schemas';
-export { tagsSchema, noteSchema, versionSchema, idSchema, MAX_TAGS } from './schemas/common';
-export {
-  groupRightsSchema,
-  createGroupSchema,
-  patchGroupSchema,
-  setGroupsSchema,
-  beginVersionSchema,
-} from './schemas/group-schemas';
-export type {
-  GroupRightsBody,
-  CreateGroupBody,
-  PatchGroupBody,
-  SetGroupsBody,
-  BeginVersionBody,
-} from './schemas/group-schemas';

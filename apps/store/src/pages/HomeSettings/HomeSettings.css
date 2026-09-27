@@ -1,0 +1,11 @@
+/* @layer store-site @kind style */
+.home-settings {
+  max-width: var(--store-form-maxw);
+}
+
+.home-settings__preview {
+  padding: var(--space-sm) var(--space-md);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--r-md);
+  background: var(--c-sunken);
+}
