@@ -33,14 +33,14 @@ import {
   BOTTLE_KEY, CURRENCY_ROWS, SHOP_PRICE_MODIFIER_DEFAULT, SHOP_PRICE_MODIFIER_KEY,
   SHOP_PRICE_MODIFIER_MAX, SHOP_PRICE_MODIFIER_MIN,
   currencyKeyOf, currencyMaxKeyOf, currencyMinKeyOf,
-} from '@shared/randomizer/ap-world/shops/shop-price-options.data';
+} from '@shared/randomizer/world/shops/shop-price-options.data';
 import type { CurrencyKeyHelpers } from '../CurrencyPriceRow';
-import type { CapacityProfile } from '@shared/randomizer/ap-world/capacity';
-import type { ApOptionValue } from '@shared/randomizer/ap-world/options.type';
+import type { CapacityProfile } from '@shared/randomizer/world/capacity';
+import type { OptionValue } from '@shared/randomizer/world/options.type';
 import './ShopPricesBlock.css';
 
 interface ShopPricesBlockProps {
-  values: Readonly<Record<string, ApOptionValue>>;
+  values: Readonly<Record<string, OptionValue>>;
   /** The reconciled capacity profile: what each counted range may climb to. */
   capacity: CapacityProfile;
   /**
@@ -50,7 +50,7 @@ interface ShopPricesBlockProps {
    * would be lost. Absent renders the section frozen, the Run tab's
    * read-only view.
    */
-  onChange?: (patch: Readonly<Record<string, ApOptionValue>>) => void;
+  onChange?: (patch: Readonly<Record<string, OptionValue>>) => void;
 }
 
 /** The shop's own catalog keys, the ones the shared currency rows are built from. */

@@ -43,6 +43,9 @@ const SRM_POND_THROWS = 0xf41a;
 const SRM_WISH_POND_THROWS = 0xf41b;
 const SRM_WISH_POND_THROWS_COUNT = 2;
 
+/** smith_sword.c: the sword level the smiths keep while they temper it, as 0x80 | level. */
+const SRM_SWORD_AT_SMITHS = 0xf41d;
+
 /** shop_table.c: one byte per canonical shop slot, armed steps already bought. */
 const SRM_SHOP_SOLD = 0xf420;
 const SRM_SHOP_SOLD_COUNT = 31;
@@ -70,6 +73,7 @@ export {
   SRM_SHOP_SOLD_COUNT,
   SRM_SUBSTITUTION_TAKEN,
   SRM_SUBSTITUTION_TAKEN_COUNT,
+  SRM_SWORD_AT_SMITHS,
   SRM_WALLET_LADDER_INDEX,
   SRM_WISH_POND_THROWS,
   SRM_WISH_POND_THROWS_COUNT,

@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { Box, Button, Text, TextInput } from '@ds/primitives';
 import { generateFromSnapshot } from '@shared/randomizer/generate';
 import { buildOptionsSnapshot } from '@shared/randomizer/options-snapshot';
-import type { ApPlacement } from '@shared/randomizer/ap-world/fill/ap-placement.type';
+import type { Placement } from '@shared/randomizer/world/fill/placement.type';
 import {
   probeDeliverablePondLocations, probeDeliverableNpcLocations,
   startLocalFromPlacement, stopActive,
@@ -25,7 +25,7 @@ interface RandomizerSandboxProps {
 }
 
 let sandboxSeed = '';
-let sandboxPlacement: ApPlacement | null = null;
+let sandboxPlacement: Placement | null = null;
 
 const randomSeed = (): string => Math.random().toString(36).slice(2, 10);
 
@@ -33,7 +33,7 @@ const RandomizerSandbox = (props: RandomizerSandboxProps) => {
   const { session, status, gameRunning } = props;
   const [open, setOpen] = useState(false);
   const [seed, setSeedState] = useState(sandboxSeed);
-  const [placement, setPlacementState] = useState<ApPlacement | null>(sandboxPlacement);
+  const [placement, setPlacementState] = useState<Placement | null>(sandboxPlacement);
 
   const sessionActive = session != null && (status === 'active' || status === 'starting');
 
@@ -48,7 +48,7 @@ const RandomizerSandbox = (props: RandomizerSandboxProps) => {
       sandboxSeed = effectiveSeed;
       setPlacementState(result);
       setSeedState(effectiveSeed);
-      log.randomizer(`Placement generated: seed ${effectiveSeed}, ${Object.keys(result.nameView).length} locations, ${result.spheres.length} spheres`);
+      log.randomizer(`Placement generated: seed ${effectiveSeed}, ${Object.keys(result.locations).length} locations, ${result.spheres.length} spheres`);
     } catch (error) {
       log.randomizer(`Generation failed for seed ${effectiveSeed}: ${error instanceof Error ? error.message : String(error)}`, 'error');
     }
@@ -73,7 +73,7 @@ const RandomizerSandbox = (props: RandomizerSandboxProps) => {
           </Box>
           {placement && (
             <Text className="randomizer-page__summary">
-              {Object.keys(placement.nameView).length} locations · {placement.spheres.length} spheres · seed {placement.seed}
+              {Object.keys(placement.locations).length} locations · {placement.spheres.length} spheres · seed {placement.seed}
             </Text>
           )}
           <Box className="randomizer-page__actions">

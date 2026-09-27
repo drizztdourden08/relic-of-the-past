@@ -133,7 +133,7 @@ const onCheckVerified = (state: EngineState, check: DetectedCheck, events: SimEv
     // unmatched grants like an enemy's key drop, to the dungeon the run stands in.
     const dungeon = check.matched?.dungeonId ?? dungeonForScreen(state.virtual.screenId) ?? undefined;
     const gained = applyItem(state, check.itemReceived, dungeon);
-    reopenLedgersFor(state, gained, getItem(check.itemReceived).randomizerName, events);
+    reopenLedgersFor(state, gained, getItem(check.itemReceived).name, events);
   }
   if (check.checkId) state.completedChecks.add(check.checkId);
 

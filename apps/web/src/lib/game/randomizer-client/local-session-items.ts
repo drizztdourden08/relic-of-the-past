@@ -28,6 +28,6 @@ const resolveAssignedItemId = (itemId: string): number | undefined => {
   return undefined;
 };
 
-const assignedItemName = (itemId: string): string => getItem(itemId).randomizerName;
+const assignedItemName = (itemId: string): string => getItem(itemId).name;
 
 export { assignedItemName, resolveAssignedItemId };

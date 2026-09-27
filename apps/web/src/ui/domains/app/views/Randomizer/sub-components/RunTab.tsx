@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
  * The Run tab's stack: what the run is, then the options it was generated
- * with, then the dev-only sandbox. A vanilla profile (or none) gets a quiet
+ * with, then the dev-only sandbox. A normal profile (or none) gets a quiet
  * empty state instead, since there is nothing to say about a run that isn't one.
  */
 import { Box, Text } from '@ds/primitives';

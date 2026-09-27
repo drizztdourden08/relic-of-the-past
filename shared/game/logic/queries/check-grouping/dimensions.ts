@@ -34,10 +34,10 @@ const areaLabel = (check: CheckRecord): string => {
   if (check.screenId) {
     const screen = getScreen(check.screenId);
     const area = getArea(screen.areaId);
-    if (area.world === 'both') return screen.world === 'dark' ? `Dark ${area.randomizerName}` : area.randomizerName;
-    return area.randomizerName;
+    if (area.world === 'both') return screen.world === 'dark' ? `Dark ${area.name}` : area.name;
+    return area.name;
   }
-  if (check.dungeonId) return getDungeon(check.dungeonId).randomizerName;
+  if (check.dungeonId) return getDungeon(check.dungeonId).name;
   return 'Other';
 };
 
@@ -57,10 +57,10 @@ const getGroupValue = (check: CheckRecord, dimension: GroupDimension, run?: RunC
       if (screen?.interiorKind === 'house') return 'House';
       return 'Overworld';
     case 'dungeon':
-      return check.dungeonId ? getDungeon(check.dungeonId).randomizerName : 'Overworld';
+      return check.dungeonId ? getDungeon(check.dungeonId).name : 'Overworld';
     case 'screen': {
       if (!screen) return 'Unknown';
-      return screen.vanillaName ?? screen.randomizerName;
+      return screen.name;
     }
     case 'type':
       return labelOf('check-kind', check.kind) ?? check.kind;

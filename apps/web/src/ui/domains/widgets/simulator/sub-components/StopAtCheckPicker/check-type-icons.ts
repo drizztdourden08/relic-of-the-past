@@ -19,6 +19,8 @@ const CHECK_TYPE_ICONS: Record<CheckKind, string> = {
   dig: '⛏️',
   bonk: '🌳',
   event: '⚑',
+  'shop-slot': '🏪',
+  'pond-slot': '⛲',
 };
 
 const checkTypeIcon = (type: CheckKind): string => CHECK_TYPE_ICONS[type] ?? '•';

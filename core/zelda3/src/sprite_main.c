@@ -10200,6 +10200,7 @@ void Smithy_Main(int k) {  // 86b34e
       sprite_ai_state[sprite_E[k]] = 5;
       sprite_ai_state[k] = 5;
       flag_overworld_area_did_change = 0;
+      GameHook_SmithTakesSword();
       link_sword_type = 255;
       sram_progress_indicator_3 |= 128;
     }
@@ -10225,6 +10226,7 @@ void Smithy_Main(int k) {  // 86b34e
     sprite_ai_state[sprite_E[k]] = 0;
     item_receipt_method = 0;
     Link_ReceiveItem(2, 0);
+    GameHook_SmithReturnsSword();
     sram_progress_indicator_3 &= ~0x80;
     break;
   case 7:  //

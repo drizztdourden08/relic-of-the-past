@@ -1,10 +1,11 @@
 /* @layer shared-game @kind data */
-import { collectRecords } from '../collect-records';
+import { recordsIn } from '../registry';
 import type { ScreenRecord } from '../types';
 
-// One entry per world. Empty without vault access (see collect-records.ts).
-const worlds = import.meta.glob('../records/screens/*/index.ts', { eager: true });
+// Every record file in the tree, whatever depth it sits at: world, then overworld,
+// interiors or a dungeon's floor.
+const files = import.meta.glob('../records/screens/**/*.ts', { eager: true });
 
-const ALL_SCREENS: ScreenRecord[] = collectRecords<ScreenRecord>(worlds);
+const ALL_SCREENS: ScreenRecord[] = recordsIn<ScreenRecord>(files);
 
 export { ALL_SCREENS };

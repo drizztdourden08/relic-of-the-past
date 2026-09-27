@@ -16,11 +16,11 @@
 
 import { log } from '../log-bus';
 import { getModule } from './wasm-bridge';
-import { PROGRESSIVE_FAMILIES } from '@shared/randomizer/ap-world/progressive/progressive-families.data';
-import { DEFAULT_PROGRESSIVE_MODES, isRandomOrder } from '@shared/randomizer/ap-world/progressive/progressive-modes.data';
+import { PROGRESSIVE_FAMILIES } from '@shared/randomizer/world/progressive/progressive-families.data';
+import { DEFAULT_PROGRESSIVE_MODES, isRandomOrder } from '@shared/randomizer/world/progressive/progressive-modes.data';
 import type {
   ProgressiveFamilyId, ProgressiveModeSetting, ProgressiveSetting,
-} from '@shared/randomizer/ap-world/progressive/progressive.type';
+} from '@shared/randomizer/world/progressive/progressive.type';
 
 /** core/game-hooks/progressive_grants.c kFamilies order. */
 const CORE_FAMILY_INDEX: Readonly<Record<ProgressiveFamilyId, number>> = {

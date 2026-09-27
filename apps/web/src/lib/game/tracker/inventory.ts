@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Reads the 34-byte WASM buffer from
+ * Reads the 38-byte WASM buffer from
  * WasmGetInventoryState() and converts it into a `Set<ItemId>`.
  *
  * The set is keyed by dataset id, never by display name. Names are not unique
@@ -11,7 +11,7 @@
 import type { ItemId } from '@shared/game/data';
 import {
   addBits, addByValue, addLadder, addNative,
-  BOTTLE_SLOT, BY_VALUE, CRYSTAL_BITS, LADDERS, MIRROR, PENDANT_BITS, SIMPLE,
+  BIG_KEY_BITS, BOTTLE_SLOT, BY_VALUE, CRYSTAL_BITS, LADDERS, MIRROR, PENDANT_BITS, SIMPLE,
 } from './item-ids';
 
 interface RawInventoryState {
@@ -49,6 +49,14 @@ interface RawInventoryState {
   crystals: number;
   heartPieces: number;
   healthCapacity: number;
+  /** One bit per dungeon, the core's own big key word. */
+  bigKeys: number;
+  /** How many bombs the bag can hold. Zero only on a file that starts without a bag. */
+  bombCapacity: number;
+  /** True once a bomb has ever been held (the ledger's bit). */
+  bombsEverHeld: boolean;
+  /** The sword the smiths keep while `sword` reads 255: 0x80 | level, or 0 (smith_sword.c). */
+  swordAtSmiths: number;
 }
 
 const parseInventoryBuffer = (heapU8: Uint8Array, ptr: number): RawInventoryState => {
@@ -87,6 +95,10 @@ const parseInventoryBuffer = (heapU8: Uint8Array, ptr: number): RawInventoryStat
     crystals: heapU8[ptr + 31],
     heartPieces: heapU8[ptr + 32],
     healthCapacity: heapU8[ptr + 33],
+    bigKeys: heapU8[ptr + 34] | (heapU8[ptr + 35] << 8),
+    bombCapacity: heapU8[ptr + 36],
+    bombsEverHeld: heapU8[ptr + 37] !== 0,
+    swordAtSmiths: heapU8[ptr + 38],
   };
 };
 
@@ -107,16 +119,39 @@ const addSimpleFlags = (items: Set<ItemId>, raw: RawInventoryState): void => {
   }
 };
 
+/**
+ * The sword level the game writes while the smiths keep the sword to temper it (sprite_main.c,
+ * the tempering payment). Read as a level it held every sword up to Golden, which completed
+ * the Pyramid Fairy's Golden Sword row the moment the smith was paid.
+ */
+const SWORD_AT_THE_SMITHS = 255;
+const SWORD_KEPT = 0x80;
+/** A payment made before the level was recorded: a sword went over, its level is unknown. */
+const SWORD_KEPT_UNRECORDED = 1;
+
+/**
+ * The sword the player owns. While the smiths keep it the sword is still the player's: it
+ * comes back at the pickup, so a row that asks for it must not drop out and come back.
+ */
+const swordLevelOwned = (raw: RawInventoryState): number => {
+  if (raw.sword !== SWORD_AT_THE_SMITHS) return raw.sword;
+  return raw.swordAtSmiths & SWORD_KEPT ? raw.swordAtSmiths & ~SWORD_KEPT : SWORD_KEPT_UNRECORDED;
+};
+
 const inventoryToItemSet = (raw: RawInventoryState): Set<ItemId> => {
   const items = new Set<ItemId>();
 
-  addLadder(items, LADDERS.sword, raw.sword);
+  addLadder(items, LADDERS.sword, swordLevelOwned(raw));
   addLadder(items, LADDERS.shield, raw.shield);
   addLadder(items, LADDERS.mail, raw.armor);
   addLadder(items, LADDERS.lift, raw.gloves);
   addLadder(items, LADDERS.bow, bowRungs(raw.bow));
 
   addSimpleFlags(items, raw);
+  // Bombs are spent and found again all the time. Before the first one, a rule that asks for
+  // bombs is not met; after it, an empty count is a refill away, so it stays met as long as
+  // the player can carry any. The count alone would flip a dozen rows at every last bomb.
+  if (raw.bombsEverHeld && raw.bombCapacity > 0) addNative(items, SIMPLE.bombs);
   if (raw.mirror >= 2) addNative(items, MIRROR);
 
   addByValue(items, BY_VALUE.boomerang, raw.boomerang);
@@ -127,6 +162,7 @@ const inventoryToItemSet = (raw: RawInventoryState): Set<ItemId> => {
   addBottles(items, raw);
   addBits(items, PENDANT_BITS, raw.pendants);
   addBits(items, CRYSTAL_BITS, raw.crystals);
+  addBits(items, BIG_KEY_BITS, raw.bigKeys);
 
   return items;
 };

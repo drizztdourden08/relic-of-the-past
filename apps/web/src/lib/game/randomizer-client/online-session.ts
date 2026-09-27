@@ -29,7 +29,7 @@ import { armFireReporting, disarmFireReporting } from './override-fire-registry'
 import { startLocationPolling, stopLocationPolling } from './location-poller';
 import { buildConnect, buildGetDataPackage, parseServerPackets } from './online-handshake';
 import { applyScoutedLocations, buildScoutPlan, deliverReceivedItems } from './online-overrides';
-import type { CapacityBonusSetting, CapacityProfile } from '@shared/randomizer/ap-world/capacity';
+import type { CapacityBonusSetting, CapacityProfile } from '@shared/randomizer/world/capacity';
 import type { ApClientPacket, ApGameData, ApServerPacket } from './ap-protocol.type';
 import type { ScoutMaps } from './online-overrides';
 import type { RandomizerSession, SessionStatusListener } from './session.type';
@@ -58,8 +58,8 @@ const createOnlineSession = (config: OnlineSessionConfig): OnlineSession => {
   const { url, slotName, game = DEFAULT_GAME, capacity, capacityProgressive = false, capacityBonus } = config;
   const listeners = new Set<SessionStatusListener>();
   const maps: ScoutMaps = {
-    nameByLocationId: new Map(),
-    locationIdByName: new Map(),
+    keyByLocationId: new Map(),
+    locationIdByKey: new Map(),
     overriddenLocationIds: new Set(),
   };
   let itemNameById = new Map<number, string>();
@@ -106,8 +106,8 @@ const createOnlineSession = (config: OnlineSessionConfig): OnlineSession => {
     disarmReceiptGates();
     // Restore the baked dialogue blob, since the scouted and received lines go with it.
     clearSessionDialogue();
-    maps.nameByLocationId.clear();
-    maps.locationIdByName.clear();
+    maps.keyByLocationId.clear();
+    maps.locationIdByKey.clear();
     maps.overriddenLocationIds.clear();
     itemNameById = new Map();
     gameData = null;
@@ -214,9 +214,9 @@ const createOnlineSession = (config: OnlineSessionConfig): OnlineSession => {
       ws.onclose = cleanup;
     },
 
-    reportCheck(locationName) {
-      log.randomizer(`[Online] Check completed: ${locationName}`);
-      const locationId = maps.locationIdByName.get(locationName);
+    reportCheck(location) {
+      log.randomizer(`[Online] Check completed: ${location}`);
+      const locationId = maps.locationIdByKey.get(location);
       if (locationId === undefined) return;
       send({ cmd: 'LocationChecks', locations: [locationId] });
     },

@@ -37,10 +37,10 @@ const LOCATION_FACETS: CheckFacetDef[] = [
 const areaFacets = (): CheckFacetDef[] =>
   all('area').flatMap((area): CheckFacetDef[] => area.world === 'both'
     ? [
-        { id: `area:${area.id}:light`, label: area.randomizerName, category: 'area' },
-        { id: `area:${area.id}:dark`, label: `Dark ${area.randomizerName}`, category: 'area' },
+        { id: `area:${area.id}:light`, label: area.name, category: 'area' },
+        { id: `area:${area.id}:dark`, label: `Dark ${area.name}`, category: 'area' },
       ]
-    : [{ id: `area:${area.id}`, label: area.randomizerName, category: 'area' }]);
+    : [{ id: `area:${area.id}`, label: area.name, category: 'area' }]);
 
 const contentFacets = (): CheckFacetDef[] =>
   tagsFor('check').map(tag => ({ id: tag.name, label: tag.label, category: 'content' as const }));

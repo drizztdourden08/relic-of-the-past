@@ -141,6 +141,18 @@
   opacity: 0.85;
 }
 
+/* The live pill on a card sits at the far end, like the swap mark. */
+.tracker-card__now {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* A swap chest's mark sits at the far end of its row or card. */
+.tracker-swap-badge {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
 .tracker-card__sprite {
   width: 24px;
   height: 24px;

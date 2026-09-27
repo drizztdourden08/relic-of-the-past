@@ -46,7 +46,6 @@ import { registerConnectionHandlers } from './connections/ipc-handlers';
 import { registerScreenEditorHandlers } from './screen-editor/ipc-handlers';
 import { registerShadowCastingHandlers } from './shadow-casting';
 import { registerUiViewsHandlers } from './ui-views';
-import { registerReviewHandlers } from './review';
 import { registerRecommendationHandlers } from './recommendations';
 import { registerAppHandlers } from './app/ipc-handlers';
 import { registerDiagnosticsHandlers } from './diagnostics/ipc-handlers';
@@ -103,7 +102,6 @@ const IPC_HANDLERS: Array<{ register: () => void; devOnly?: boolean }> = [
   { register: registerSessionLogHandler },
   { register: registerConnectionHandlers },
   { register: registerUiViewsHandlers },
-  { register: registerReviewHandlers },
   { register: registerRecommendationHandlers },
   // Writes to source files: never registered in a packaged build.
   { register: registerScreenEditorHandlers, devOnly: true },

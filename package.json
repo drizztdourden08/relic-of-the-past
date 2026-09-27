@@ -25,6 +25,8 @@
     "ensure-wasm": "node scripts/ensure-wasm.mjs",
     "ensure-sdl3": "node scripts/ensure-sdl3.mjs",
     "fetch-sdl3": "node scripts/build/fetch-sdl3.mjs",
+    "generate": "node scripts/generate-from-records.mjs",
+    "generate:check": "node scripts/generate-from-records.mjs --check",
     "generate:enum-types": "node scripts/generate-enum-types-cli.mjs",
     "predev": "node scripts/ensure-electron.mjs && node scripts/ensure-wasm.mjs && node scripts/ensure-sdl3.mjs",
     "dev": "electron-vite dev",

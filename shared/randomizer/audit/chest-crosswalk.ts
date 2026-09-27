@@ -19,7 +19,7 @@ const CHEST_TABLE_LINEAR_BASE = 0xe96e;
 const CHEST_TABLE_ENTRY_SIZE = 3;
 const CHEST_TABLE_COUNT = 168;
 /** Addresses at or above this are the reference project's own expanded-ROM slots. */
-const AP_CUSTOM_ADDRESS_FLOOR = 0x180000;
+const REFERENCE_CUSTOM_ADDRESS_FLOOR = 0x180000;
 
 /**
  * Map a location address to its global chest-table index, or null when the
@@ -27,7 +27,7 @@ const AP_CUSTOM_ADDRESS_FLOOR = 0x180000;
  * the table span, or not stride-aligned).
  */
 const chestAddressToTableIndex = (romAddress: number | null): number | null => {
-  if (romAddress === null || romAddress >= AP_CUSTOM_ADDRESS_FLOOR) return null;
+  if (romAddress === null || romAddress >= REFERENCE_CUSTOM_ADDRESS_FLOOR) return null;
   const offset = romAddress - CHEST_TABLE_LINEAR_BASE;
   if (offset < 0 || offset % CHEST_TABLE_ENTRY_SIZE !== 0) return null;
   const index = offset / CHEST_TABLE_ENTRY_SIZE;
@@ -55,4 +55,4 @@ const joinCrosswalk = (
   return { roomId, chestIndex };
 };
 
-export { AP_CUSTOM_ADDRESS_FLOOR, CHEST_TABLE_COUNT, CHEST_TABLE_ENTRY_SIZE, CHEST_TABLE_LINEAR_BASE, chestAddressToTableIndex, joinCrosswalk };
+export { REFERENCE_CUSTOM_ADDRESS_FLOOR, CHEST_TABLE_COUNT, CHEST_TABLE_ENTRY_SIZE, CHEST_TABLE_LINEAR_BASE, chestAddressToTableIndex, joinCrosswalk };

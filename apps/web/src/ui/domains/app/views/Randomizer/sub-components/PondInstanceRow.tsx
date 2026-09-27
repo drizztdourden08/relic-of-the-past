@@ -10,14 +10,14 @@ import { useMemo, useState } from 'react';
 import { Text } from '@ds/primitives';
 import { PondImportControl } from '@domains/app/compounds/PondImportControl';
 import { WishingPondRow } from '@domains/app/compounds/WishingPondRow';
-import { holdPondToWallet } from '@shared/randomizer/ap-world/pond/pond-wallet-top';
-import { NO_POND_DEMANDS } from '@shared/randomizer/ap-world/pond/pond-demand-seed';
+import { holdPondToWallet } from '@shared/randomizer/world/pond/pond-wallet-top';
+import { NO_POND_DEMANDS } from '@shared/randomizer/world/pond/pond-demand-seed';
 import { pondRowModelOf, settingOfState } from '../../../../../../hooks/randomizer/pond-row-model';
-import type { PondDemandView } from '@shared/randomizer/ap-world/pond/pond-ask.type';
-import type { PondCeilings } from '@shared/randomizer/ap-world/pond/pond-ceilings';
+import type { PondDemandView } from '@shared/randomizer/world/pond/pond-ask.type';
+import type { PondCeilings } from '@shared/randomizer/world/pond/pond-ceilings';
 import type { PondImportSource } from '@domains/app/compounds/PondImportControl';
-import type { PondInstance } from '@shared/randomizer/ap-world/pond/pond-instance.type';
-import type { PondSetting } from '@shared/randomizer/ap-world/pond/pond-profile.type';
+import type { PondInstance } from '@shared/randomizer/world/pond/pond-instance.type';
+import type { PondSetting } from '@shared/randomizer/world/pond/pond-profile.type';
 import type { PondRowState } from '@domains/app/compounds/WishingPondRow';
 
 interface PondInstanceRowProps {

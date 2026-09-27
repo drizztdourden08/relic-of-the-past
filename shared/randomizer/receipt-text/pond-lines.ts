@@ -25,7 +25,7 @@
  * one per distinct refund (the prices repeat across throws, so the pool
  * stays small) and the core selects by the throw it is resolving.
  */
-import type { PondPlan } from '../ap-world/pond/pond-profile.type';
+import type { PondPlan } from '../world/pond/pond-profile.type';
 import type { ReceiptLine } from './receipt-line.type';
 
 /** What one toss costs. Rung 0 of the price ladder is free, and says so. */

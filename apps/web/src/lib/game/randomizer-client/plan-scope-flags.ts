@@ -15,27 +15,28 @@
  * upgrade runs; only a placement that recorded the rule does.
  */
 
-import { capacityProfileOfStats } from '@shared/randomizer/ap-world/fill/placement-capacity';
-import { familyById, startTierOf } from '@shared/randomizer/ap-world/capacity';
+import type { LocationKey } from '@shared/randomizer/world/location-key';
+import { capacityProfileOfStats } from '@shared/randomizer/world/fill/placement-capacity';
+import { familyById, startTierOf } from '@shared/randomizer/world/capacity';
 import {
   familyOfSpot, lockedCapacitySpotsOf, spotOfFamily,
-} from '@shared/randomizer/ap-world/capacity/capacity-spots';
+} from '@shared/randomizer/world/capacity/capacity-spots';
 import {
   probeDeliverablePondLocations, undeliverableNpcLocations, undeliverableWorldLocations,
 } from './npc-capability';
-import type { ApPlacementStats } from '@shared/randomizer/ap-world/fill/ap-placement.type';
-import type { CapacityProfile } from '@shared/randomizer/ap-world/capacity';
-import { POND_PRIZE_LOCATIONS } from '@shared/randomizer/ap-world/pond/pond-locations.data';
-import { pondProfilesOfStats } from '@shared/randomizer/ap-world/fill/placement-ponds';
-import { NO_SHOP_SCOPE } from '@shared/randomizer/ap-world/shops/shop-scope-from-values';
-import { pondVanillaSlotsOf } from '@shared/randomizer/ap-world/pond/pond-vanilla-slots';
+import type { PlacementStats } from '@shared/randomizer/world/fill/placement.type';
+import type { CapacityProfile } from '@shared/randomizer/world/capacity';
+import { POND_PRIZE_LOCATIONS } from '@shared/randomizer/world/pond/pond-rungs';
+import { pondProfilesOfStats } from '@shared/randomizer/world/fill/placement-ponds';
+import { NO_SHOP_SCOPE } from '@shared/randomizer/world/shops/shop-scope-from-values';
+import { pondVanillaSlotsOf } from '@shared/randomizer/world/pond/pond-vanilla-slots';
 import { wishPondRungKeysOf } from './wish-pond-rung-keys';
 import type { ScopeFlags } from './scope-lock';
 
 
 
 /** The capacity spots this profile keeps vanilla: undeliverable fairy slots, plus the bat of a vanilla meter. */
-const capacityLockedSpotsOf = (profile: CapacityProfile): ReadonlySet<string> => {
+const capacityLockedSpotsOf = (profile: CapacityProfile): ReadonlySet<LocationKey> => {
   const locked = new Set(lockedCapacitySpotsOf(profile, probeDeliverablePondLocations()));
   const meterSpot = spotOfFamily('meter');
   if (profile.meter.mode === 'vanilla' && meterSpot !== undefined) locked.add(meterSpot);
@@ -44,7 +45,7 @@ const capacityLockedSpotsOf = (profile: CapacityProfile): ReadonlySet<string> =>
 
 /** location → starting rung, for the locked spots of a Custom family (rung 0 included; other modes omitted). */
 const capacityStartTiersOf = (
-  profile: CapacityProfile, locked: ReadonlySet<string>,
+  profile: CapacityProfile, locked: ReadonlySet<LocationKey>,
 ): ReadonlyMap<string, number> => {
   const tiers = new Map<string, number>();
   for (const location of locked) {
@@ -56,7 +57,7 @@ const capacityStartTiersOf = (
   return tiers;
 };
 
-const scopeFlagsOfStats = (stats: ApPlacementStats): ScopeFlags => {
+const scopeFlagsOfStats = (stats: PlacementStats): ScopeFlags => {
   const includeWorldItems = stats.includeWorldItems ?? stats.includeNpcChecks;
   const profile = capacityProfileOfStats(stats);
   // A non-legacy pond owns its prize slots outright: they are proven deliverable
@@ -67,7 +68,7 @@ const scopeFlagsOfStats = (stats: ApPlacementStats): ScopeFlags => {
   const wishPondRungs = wishPondRungKeysOf(ponds);
   const followMode = stats.pondSlotsFollowMode === true;
   const pondLocked = pondVanillaSlotsOf(ponds, probeDeliverablePondLocations(), followMode).locked;
-  const capacityLockedLocations = pondOwnsSlots ? new Set<string>() : capacityLockedSpotsOf(profile);
+  const capacityLockedLocations = pondOwnsSlots ? new Set<LocationKey>() : capacityLockedSpotsOf(profile);
   return {
     keyDropShuffle: stats.keyDropShuffle,
     includeNpcChecks: stats.includeNpcChecks,

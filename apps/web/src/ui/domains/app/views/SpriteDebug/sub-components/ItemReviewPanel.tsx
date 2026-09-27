@@ -12,7 +12,7 @@ import { migrateLegacyReviewKeys } from './migrate-review-keys';
 
 const ALL_ITEMS = find('item', () => true).map(item => ({
   id: item.id,
-  name: item.randomizerName,
+  name: item.name,
   file: spriteFilename(item.spriteId) ?? '',
 }));
 

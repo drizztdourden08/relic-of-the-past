@@ -8,6 +8,7 @@ type EntityKind =
   | 'dungeon'
   | 'area'
   | 'location'
+  | 'region'
   | 'actor'
   | 'tag'
   | 'item-group'
@@ -20,6 +21,7 @@ type ItemId = `item-${string}`;
 type DungeonId = `dungeon-${string}`;
 type AreaId = `area-${string}`;
 type LocationId = `location-${string}`;
+type RegionId = `region-${string}`;
 type ActorId = `actor-${string}`;
 type TagId = `tag-${string}`;
 
@@ -33,30 +35,19 @@ type ItemGroupId = `ig-${string}`;
 /** An enumeration entry's id (data/enumeration/). */
 type EnumerationId = `enum-${string}`;
 
-/** Real entity counts in the game; the biggest one sets the shared zero-pad
- *  width. `actor` is a provisional count (see data/actors/**), not a full census. */
-const ENTITY_COUNTS: Record<EntityKind, number> = {
-  // STALE ON PURPOSE: the real count is ~1610 since the connection-points
-  // migration. Bumping it would push `ID_PAD_WIDTH` from 3 digits to 4 and
-  // re-pad every OTHER kind's future ids. `makeId` handles the longer ids
-  // (`padStart` never truncates).
-  connection: 896,
-  screen: 486,
-  check: 265,
-  item: 174,             // 124 vanilla + 50 randomizer-catalog additions (§7b)
-  actor: 271,                // 14 npc + 9 obstacle + 33 trigger + 84 enemy + 14 boss + 117 object (Phase 8 census;
-                              // +4 trigger appended for the clear-room family widening, actor-268..271)
-  tag: 84,                   // 40 screen terms + 40 crossing terms + 4 check content terms, derived from the taxonomy tables
-                              // (the dir:one-way/dir:two-way pair was retired, since direction comes from `canExit`)
-  location: 31,
-  area: 17,
-  dungeon: 13,               // verified via generate-ids.ts against the real dungeon field values
-  'item-group': 7,           // Swords, Bottles, Crystals, Pendants, Medallions, Bows, Gloves
-  enumeration: 60,           // one row per value across the 10 closed-set label categories
-                              // (screen-status was retired with ScreenRecord.status; enum-063 'drop' was added to connection-kind)
-};
-
-const ID_PAD_WIDTH = Math.max(...Object.values(ENTITY_COUNTS)).toString().length;
+/**
+ * How many digits every minted id is padded to.
+ *
+ * Three, and it stays three: every id in the dataset is already written this way, and a fourth
+ * digit would re-pad every kind's future ids into a second spelling of the same number. The
+ * connection collection passed 999 records with the connection-points migration, so `makeId`
+ * lets a longer number through unpadded (`padStart` never truncates) instead of widening this.
+ *
+ * It used to be derived from a hand-kept table of per-kind counts, three of whose eleven rows
+ * had drifted from the records they claimed to count. A count is a query over the records now:
+ * `find(kind, () => true).length`.
+ */
+const ID_PAD_WIDTH = 3;
 
 /**
  * The id prefix each kind mints under: the kind name, except `item-group`
@@ -70,6 +61,7 @@ const KIND_ID_PREFIXES: Record<EntityKind, string> = {
   dungeon: 'dungeon',
   area: 'area',
   location: 'location',
+  region: 'region',
   actor: 'actor',
   tag: 'tag',
   'item-group': 'ig',
@@ -78,8 +70,8 @@ const KIND_ID_PREFIXES: Record<EntityKind, string> = {
 
 const makeId = (kind: EntityKind, n: number): string => `${KIND_ID_PREFIXES[kind]}-${String(n).padStart(ID_PAD_WIDTH, '0')}`;
 
-export { ENTITY_COUNTS, ID_PAD_WIDTH, KIND_ID_PREFIXES, makeId };
+export { ID_PAD_WIDTH, KIND_ID_PREFIXES, makeId };
 export type {
   ActorId, AreaId, CheckId, ConnectionId, DungeonId, EntityKind, EnumerationId, ItemGroupId,
-  ItemId, LocationId, ScreenId, SpriteId, TagId,
+  ItemId, LocationId, RegionId, ScreenId, SpriteId, TagId,
 };

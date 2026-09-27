@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind logic */
 /**
  * The four lights as tiles: the item each one stands for, its art from the
- * extracted set, and whether this setting accepts it. Art comes the same way
- * the pool listing gets it: the item's own record through its standard name
- * so a light shows the very sprite the player will see in their inventory.
+ * extracted set, and whether this setting accepts it. Art comes off the item's
+ * own record, so a light shows the very sprite the player will see in their
+ * inventory.
  *
  * While the set is not extracted yet no tile carries a sprite at all: the row
  * draws placeholders instead of asking for files that are not on disk, and
@@ -18,11 +18,11 @@
 import { getItemSprite } from '@shared/game/logic/queries/item-sprites';
 import {
   DARK_ROOM_LIGHT_FIELDS, DARK_ROOM_LIGHT_ITEMS,
-} from '@shared/randomizer/ap-world/dark-rooms/dark-room-lights.data';
-import { itemIdByStandardName } from '@app/lib/game/randomizer-client';
+} from '@shared/randomizer/world/dark-rooms/dark-room-lights.data';
+import { getItem } from '@shared/game/data';
 import type {
   DarkRoomLightField, DarkRoomLights,
-} from '@shared/randomizer/ap-world/dark-rooms/dark-room.type';
+} from '@shared/randomizer/world/dark-rooms/dark-room.type';
 
 interface DarkRoomLightTileModel {
   field: DarkRoomLightField;
@@ -37,21 +37,17 @@ interface DarkRoomLightTileModel {
 
 const NO_FORCED: ReadonlyMap<DarkRoomLightField, string> = new Map();
 
-const spriteOf = (name: string): string | undefined => {
-  const itemId = itemIdByStandardName(name);
-  return itemId === undefined ? undefined : getItemSprite(itemId);
-};
-
 const darkRoomLightTilesOf = (
   lights: DarkRoomLights, spritesAvailable: boolean,
   forced: ReadonlyMap<DarkRoomLightField, string> = NO_FORCED,
 ): DarkRoomLightTileModel[] => DARK_ROOM_LIGHT_FIELDS.map((field) => {
-  const name = DARK_ROOM_LIGHT_ITEMS[field];
+  // The table names the item by id; the tile reads its name and art off the record.
+  const itemId = DARK_ROOM_LIGHT_ITEMS[field];
   const reason = forced.get(field);
   return {
     field,
-    name,
-    sprite: spritesAvailable ? spriteOf(name) : undefined,
+    name: getItem(itemId).name,
+    sprite: spritesAvailable ? getItemSprite(itemId) : undefined,
     checked: reason === undefined && lights[field],
     ...(reason === undefined ? {} : { reason }),
   };

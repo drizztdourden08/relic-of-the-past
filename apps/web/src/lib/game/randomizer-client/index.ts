@@ -9,6 +9,8 @@ export {
   startLocalFromPlacement, startOnline, stopActive, subscribeSessionStore,
 } from './session-store';
 export type { ActiveSession, PendingBoot, SessionSource, SessionStoreState } from './session-store';
+export { currentRun, runKindOfProfile, runKindOfSession } from './run-kind';
+export type { ActiveRun } from './run-kind';
 export { normalizeServerUrl, probeOnlineServer } from './online-probe';
 export type { ProbeConfig, ProbeResult } from './online-probe';
 export type {
@@ -19,8 +21,8 @@ export type {
 } from './ap-protocol.type';
 export { startLocationPolling, stopLocationPolling } from './location-poller';
 export type { PollEntry } from './location-poller';
-export { buildPhysicalPlan, classifyLocation, logPlanSummary } from './ap-bridge';
-export type { ScopeFlags } from './ap-bridge';
+export { buildPhysicalPlan, classifyLocation, logPlanSummary } from './placement-bridge';
+export type { ScopeFlags } from './placement-bridge';
 export { detectionOf } from './check-detection';
 export type { CheckDetection } from './check-detection';
 export type { PhysicalPlan, PlanClass, PlanCounts, PlanEntry, PlanError } from './physical-plan.type';
@@ -30,11 +32,10 @@ export {
   undeliverableCapacityLocations, undeliverableNpcLocations, undeliverableWorldLocations,
 } from './npc-capability';
 export { checkIdByStandardName, standardCheckName, standardNameOfCheck } from './check-names';
-export { checkDisplayName } from './check-display-name';
 export { armedCheckIdsOfPlacement } from './plan-armed-checks';
 export { buildPlacementView } from './placement-view';
 export type { PlacementView } from './placement-view';
-export { computeApTrackerSnapshot } from './tracker-availability';
+export { computeTrackerSnapshot } from './tracker-availability';
 export { firedLocations, onFiredLocation } from './override-fire-registry';
-export { apAlignedCheckRecords, eventCheckRecords, virtualChecksOf } from './virtual-locations';
+export { placementCheckRecords, eventCheckRecords, virtualChecksOf } from './virtual-locations';
 export { itemIdByStandardName, resolveLocalItemId } from './item-lookup';

@@ -179,7 +179,7 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
         viewport: viewport ? { locationType: viewport.locationType } : null,
         detection: detection ? {
           screenId: detection.screen.id,
-          screenName: detection.screen.randomizerName,
+          screenName: detection.screen.name,
           method: detection.method,
           hasVariant: !!detection.screen.variant,
           variantKey: detection.screen.variant?.key ?? null,

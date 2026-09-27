@@ -1,10 +1,10 @@
 /* @layer shared-game @kind data */
-import { collectRecords } from '../collect-records';
+import { recordsIn } from '../registry';
 import type { ConnectionRecord } from '../types';
 
-// One entry per world. Empty without vault access (see collect-records.ts).
-const worlds = import.meta.glob('../records/connections/*/index.ts', { eager: true });
+// Every record file in the tree, at the same paths screens uses.
+const files = import.meta.glob('../records/connections/**/*.ts', { eager: true });
 
-const ALL_CONNECTIONS: ConnectionRecord[] = collectRecords<ConnectionRecord>(worlds);
+const ALL_CONNECTIONS: ConnectionRecord[] = recordsIn<ConnectionRecord>(files);
 
 export { ALL_CONNECTIONS };

@@ -77,6 +77,12 @@
 #define SRM_WISH_POND_THROWS 0xF41B
 #define SRM_WISH_POND_THROWS_COUNT 2
 
+// ─── 0xF41D: smith_sword.c, the sword the smiths keep ───
+// The sword level handed over when the tempering is paid, as 0x80 | level, and 0 while the
+// smiths hold nothing. The game writes 255 over the level at that moment and never keeps it,
+// so this is the one place it survives until the pickup.
+#define SRM_SWORD_AT_SMITHS 0xF41D
+
 // ─── 0xF420-0xF43E: shop_table.c, sold counters ───
 // One byte per canonical shelf slot: how many of that slot's armed steps have been
 // bought. A plain byte, not a bit dance, so a counter read is one load.
@@ -109,8 +115,10 @@ _Static_assert(SRM_POND_THROWS >= SRM_PENDING_CRYSTAL + 1,
                "pond throw counter overlaps the crystal in flight");
 _Static_assert(SRM_WISH_POND_THROWS >= SRM_POND_THROWS + 1,
                "wish pond throw counters overlap the rupee pond throw counter");
-_Static_assert(SRM_SHOP_SOLD >= SRM_WISH_POND_THROWS + SRM_WISH_POND_THROWS_COUNT,
-               "shelf sold counters overlap the wish pond throw counters");
+_Static_assert(SRM_SWORD_AT_SMITHS >= SRM_WISH_POND_THROWS + SRM_WISH_POND_THROWS_COUNT,
+               "the smiths' sword overlaps the wish pond throw counters");
+_Static_assert(SRM_SHOP_SOLD >= SRM_SWORD_AT_SMITHS + 1,
+               "shelf sold counters overlap the smiths' sword");
 _Static_assert(SRM_EVENT_LEDGER >= SRM_SHOP_SOLD + SRM_SHOP_SOLD_COUNT,
                "event ledger overlaps the shelf sold counters");
 _Static_assert(SRM_EVENT_LEDGER + SRM_EVENT_LEDGER_COUNT - 1 <= HOOK_SAVE_LAST,

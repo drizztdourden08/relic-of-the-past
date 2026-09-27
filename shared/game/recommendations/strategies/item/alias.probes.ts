@@ -26,7 +26,7 @@ import { known } from '../../compare/probe-helpers';
 import type { FieldProbe } from '../../compare/probe.types';
 import type { GrantedItemObservation, ScreenObservations } from '../../detection-types';
 
-const formatAlias = (value: unknown): string => (value ? getItem(value as ItemId).randomizerName : '-');
+const formatAlias = (value: unknown): string => (value ? getItem(value as ItemId).name : '-');
 
 const grantFor = (observations: ScreenObservations, primary: number | undefined): GrantedItemObservation | undefined => {
   if (primary == null) return undefined;

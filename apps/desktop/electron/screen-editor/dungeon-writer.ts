@@ -2,10 +2,8 @@
 /**
  * Creating, rewriting and removing a dungeon record.
  *
- * The two dungeon files were split by size alone, so a new record always goes
- * to the second. Nothing on a dungeon says which half it belongs to, and
- * inventing a balancing rule for a collection of thirteen would be more
- * machinery than the problem. An existing record is found by id across both.
+ * A dungeon is one record in one file, named by its own file stem, under its
+ * world. An existing record is found by id across the tree.
  */
 
 import { serializeDungeonRecord } from '@shared/game/data/record-codegen';
@@ -19,7 +17,8 @@ import type { RecordWriterSpec } from './dataset-record-writer';
 
 const SPEC: RecordWriterSpec<DungeonRecord> = {
   kind: 'dungeon',
-  target: () => dungeonRecordFile(),
+  recordType: 'DungeonRecord',
+  target: record => dungeonRecordFile(record),
   serialize: serializeDungeonRecord,
 };
 

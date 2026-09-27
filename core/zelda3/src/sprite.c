@@ -1899,7 +1899,8 @@ bool Sprite_PrepOamCoordOrDoubleRet(int k, PrepOamCoordsRet *ret) {  // 86e41e
   // spawn rect could sit outside the keep-alive window: spawned, killed, spawned again, which reads on
   // screen as the sprite flickering in and out. Width is unchanged; only the frame is corrected, so with
   // no lock this is the stock window.
-  if (xr < -(0x40 + xt) || xr >= 0x130 + xt ||
+  if (GameHook_SpriteBeyondShownRoom(k, xr, yr) ||
+      xr < -(0x40 + xt) || xr >= 0x130 + xt ||
       (yr < -(0x40 + yt) || yr >= 0x130 + yt) && !(sprite_flags4[k] & 0x20)) {
     sprite_pause[k]++;
     if (!(sprite_defl_bits[k] & 0x80))

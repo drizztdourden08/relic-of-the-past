@@ -9,7 +9,7 @@ import { Box, Text } from '@ds/primitives';
 import { GroupTree } from '@ds/composites/GroupTree';
 import type { TreeNode } from '@ds/composites/GroupTree';
 import type { CheckRecord } from '@shared/game/data';
-import type { CheckStatus } from '@shared/game/logic/eval';
+import type { CheckStatus } from '@shared/game/logic';
 import type { GroupNode, RunContext } from '@shared/game/logic/queries/check-grouping';
 import type { ViewMode } from '../ChecksTracker.type';
 import { CheckList } from './CheckList';

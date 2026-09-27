@@ -15,19 +15,19 @@ import { CapacityFamilyRow } from '../CapacityFamilyRow';
 import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
 import { RandomizerOptionRow } from '../RandomizerOptionRow';
 import type { CapacityRowModel, CapacityRowState } from '../CapacityFamilyRow';
-import type { CapacityFamilyId, FamilyBonus } from '@shared/randomizer/ap-world/capacity';
-import type { ApOptionDef } from '@shared/randomizer/ap-world/options.type';
+import type { CapacityFamilyId, FamilyBonus } from '@shared/randomizer/world/capacity';
+import type { OptionDef } from '@shared/randomizer/world/options.type';
 import './CapacityUpgradesBlock.css';
 
 interface CapacityUpgradesBlockProps {
   rows: readonly CapacityRowModel[];
   notes: readonly string[];
   /** The catalog row of the master switch, rendered above everything else. */
-  enabledOption?: ApOptionDef;
+  enabledOption?: OptionDef;
   /** The master switch itself; off greys and freezes the rest of the block. */
   enabled?: boolean;
   /** The catalog row of the progressive switch, rendered above the families. */
-  progressiveOption?: ApOptionDef;
+  progressiveOption?: OptionDef;
   progressive?: boolean;
   readOnly?: boolean;
   onChange?: (family: CapacityFamilyId, next: CapacityRowState) => void;

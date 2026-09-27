@@ -15,8 +15,8 @@ typedef struct { uint8 head; EventId event; } AreaHeadEvent;
 static const AreaHeadEvent kAreaHeadEvents[] = {
   { 0x03, kEvent_Area_DeathMountain },
   { 0x05, kEvent_Area_EastDeathMountain },
-  { 0x07, kEvent_Area_MimicLedge },
-  { 0x0A, kEvent_Area_DeathMountainEntrance },
+  // Screens 0x0A and 0x4A carry no entry. The place each one names is a pocket behind a rock on a
+  // screen anyone can walk onto, so the tracker reads the cave behind the rock instead (world.ts).
   { 0x1B, kEvent_Area_CastleGrounds },
   { 0x30, kEvent_Area_Desert },
   { 0x35, kEvent_Area_LakeHylia },
@@ -35,10 +35,27 @@ static const AreaHeadEvent kAreaHeadEvents[] = {
   { 0x75, kEvent_Area_DarkLakeHylia },
   { 0x70, kEvent_Area_DarkDesert }, { 0x7A, kEvent_Area_DarkDesert },
   { 0x40, kEvent_Area_SkullWoods },
-  { 0x4A, kEvent_Area_BumperCave },
   { 0x43, kEvent_Area_DarkDeathMountainWest },
   { 0x45, kEvent_Area_DarkDeathMountainEast },
   { 0x47, kEvent_Area_TurtleRockTop },
+  // Named places. A Dark World one shares its head with the region row above it, so a head
+  // can record more than one event.
+  { 0x00, kEvent_Area_LostWoods },
+  { 0x02, kEvent_Area_Lumberjacks },
+  { 0x18, kEvent_Area_Kakariko },
+  { 0x13, kEvent_Area_SanctuaryGrounds },
+  { 0x14, kEvent_Area_Graveyard },
+  { 0x16, kEvent_Area_WitchsHut },
+  { 0x0F, kEvent_Area_ZorasRiver },
+  { 0x1E, kEvent_Area_EasternPalaceGrounds },
+  { 0x2C, kEvent_Area_UnclesEstate },
+  { 0x2A, kEvent_Area_HauntedGrove },
+  { 0x3B, kEvent_Area_GreatSwamp },
+  { 0x58, kEvent_Area_VillageOfOutcasts },
+  { 0x5E, kEvent_Area_PalaceOfDarknessGrounds },
+  { 0x7B, kEvent_Area_SwampPalaceGrounds },
+  { 0x53, kEvent_Area_DarkSanctuaryGrounds },
+  { 0x6C, kEvent_Area_BombShopGrounds },
 };
 
 // Areas reached, pass 2: parts of a head, each a box in the overworld's pixel frame (link_x_coord,
@@ -50,12 +67,15 @@ typedef struct { uint8 head; uint16 x0, x1, y0, y1; EventId event; } AreaBoxEven
 static const AreaBoxEvent kAreaBoxEvents[] = {
   { 0x03, 1600, 2559,   32,  343, kEvent_Area_DeathMountainTop },       // the level the tower door opens on
   { 0x05, 2992, 3583,   48,  319, kEvent_Area_EastDeathMountainTop },   // the level above the spiral cave's drop ledge
-  { 0x35, 2904, 3015, 3368, 3447, kEvent_Area_LakeHyliaIsland },        // the ledge-rimmed island with the heart piece
+  { 0x05, 3424, 3487,  360,  399, kEvent_Area_MimicLedge },             // the closed ledge the Mimic Cave's door opens on; screen 0x07 above it is the open summit
+  { 0x35, 3144, 3367, 3480, 3639, kEvent_Area_LakeHyliaIsland },        // the island the Hylia Fairy's cave opens on, water on every side
+  { 0x35, 2904, 3015, 3368, 3447, kEvent_Area_LakeHyliaLedgeIsland },   // the ledge-rimmed island with the heart piece
   { 0x1B, 1744, 2351, 1600, 2199, kEvent_Area_CastleTerrace },          // the level the tower door opens on, ramparts included
   { 0x30,  296,  311, 3256, 3391, kEvent_Area_DesertPalaceStairs },     // landing, staircase and walled approach
   { 0x43, 1600, 2559,   32,  327, kEvent_Area_DarkDeathMountainTop },   // the level the last tower's door opens on
+  { 0x4A, 1360, 1503,  576,  671, kEvent_Area_BumperCaveLedge },        // the ledge below the cave's upper mouth, rimmed by drops
   { 0x5B, 2000, 2079, 1632, 1711, kEvent_Area_PyramidLedge },           // the walled top platform around the hole
-  { 0x75, 2888, 3031, 3368, 3479, kEvent_Area_DarkLakeHyliaIsland },    // enclosed by water on every side
+  { 0x75, 3168, 3359, 3528, 3599, kEvent_Area_DarkLakeHyliaIsland },    // the walled forecourt of the Ice Palace, where the light world warp lands
 };
 
 // Entrances the visited-room bits cannot tell apart, keyed by the entrance id and, where several

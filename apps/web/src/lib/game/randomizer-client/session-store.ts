@@ -10,7 +10,7 @@ import { createLocalSession } from './local-session';
 import { createOnlineSession } from './online-session';
 import type { LocalSession } from './local-session';
 import type { OnlineSession, OnlineSessionConfig } from './online-session';
-import type { ApPlacement } from '@shared/randomizer/ap-world/fill/ap-placement.type';
+import type { Placement } from '@shared/randomizer/world/fill/placement.type';
 import type { ProfileRandomizerConfig } from '@shared/types/profile';
 
 type ActiveSession = LocalSession | OnlineSession;
@@ -18,7 +18,7 @@ type SessionSource = 'profile' | 'manual';
 
 interface SessionStoreState {
   session: ActiveSession | null;
-  placement: ApPlacement | null;
+  placement: Placement | null;
   source: SessionSource | null;
 }
 
@@ -26,13 +26,13 @@ interface PendingBoot {
   profileId: string;
   config: ProfileRandomizerConfig;
   /** Loaded (or legacy-adapted) by the boot gate for local mode; null for online mode. */
-  placement: ApPlacement | null;
+  placement: Placement | null;
 }
 
 type SessionStoreListener = (state: SessionStoreState) => void;
 
 let session: ActiveSession | null = null;
-let placement: ApPlacement | null = null;
+let placement: Placement | null = null;
 let source: SessionSource | null = null;
 let unsubscribeStatus: (() => void) | null = null;
 let pendingBoot: PendingBoot | null = null;
@@ -80,7 +80,7 @@ const adopt = (next: ActiveSession, nextSource: SessionSource): void => {
   notify();
 };
 
-const startLocalFromPlacement = async (nextPlacement: ApPlacement, nextSource: SessionSource): Promise<void> => {
+const startLocalFromPlacement = async (nextPlacement: Placement, nextSource: SessionSource): Promise<void> => {
   const next = createLocalSession(nextPlacement);
   placement = nextPlacement;
   adopt(next, nextSource);
@@ -105,7 +105,7 @@ const clearPendingBoot = (): void => { pendingBoot = null; };
  * The placement is the part that used to: stopActive releases the session but leaves it
  * standing, since a stopped session should still be able to show its spoiler. Nothing ever
  * cleared it, so it outlived its own profile, and the tracker went on listing a seed's
- * locations for a vanilla profile that has none.
+ * locations for a normal profile that has none.
  */
 const resetSession = (): void => {
   clearPendingBoot();

@@ -190,5 +190,23 @@ void DialogSuppress_MessageStarted(void);
 bool DialogSuppress_NativeHidden(void);
 // Takes down a box left on the text layer by a state that was saved with one stranded.
 void DialogSuppress_RepairStrandedBox(void);
+// What each dialog file hands to a save and takes back from one (dialog_hook_state.c). A pack writes
+// exactly its k*PackBytes; an unpack reads the same bytes and cleans any value a reader indexes by.
+enum {
+  kDialogMirrorPackBytes = 369,
+  kDialogPresencePackBytes = 3,
+  kDialogPacingPackBytes = 3,
+  kDialogSuppressPackBytes = 2,
+};
+// True while the rows belong to a game the mirror never watched (a load that brought no hook state).
+bool DialogMirror_Stale(void);
+void DialogMirror_Pack(uint8 *out);
+void DialogMirror_Unpack(const uint8 *in);
+void DialogPresence_Pack(uint8 *out);
+void DialogPresence_Unpack(const uint8 *in);
+void DialogPacing_Pack(uint8 *out);
+void DialogPacing_Unpack(const uint8 *in);
+void DialogSuppress_Pack(uint8 *out);
+void DialogSuppress_Unpack(const uint8 *in);
 
 #endif // GAME_HOOKS_INTERNAL_H

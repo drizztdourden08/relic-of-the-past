@@ -25,10 +25,10 @@
 import { useMemo, useState } from 'react';
 import { Box, ScrollArea, TabBar, Text } from '@ds/primitives';
 import { SplitPane } from '@ds/composites/SplitPane';
-import { apCatalogByLock } from '@domains/app/compounds/RandomizerOptionRow';
+import { catalogByLock } from '@domains/app/compounds/RandomizerOptionRow';
 import { PoolListing } from '@domains/app/compounds/PoolListing';
 import { PoolTotals } from '@domains/app/compounds/PoolTotals';
-import { CAPACITY_ENABLED_KEY, parseCapacityProfile } from '@shared/randomizer/ap-world/capacity';
+import { CAPACITY_ENABLED_KEY, parseCapacityProfile } from '@shared/randomizer/world/capacity';
 import {
   changedCountsOf, splitLockedGroups, splitUnlockedGroups,
 } from '../../../../../../../hooks/randomizer/option-tab-model';
@@ -42,12 +42,12 @@ import { usePoolTotals } from '../../../../../../../hooks/randomizer/usePoolTota
 import { FIRST_OPTION_TAB, optionTabsOf } from './randomizer-options/option-tabs';
 import { OptionTabBody } from './randomizer-options/OptionTabBody';
 import type { OptionTabId } from '../../../../../../../hooks/randomizer/option-tab-model';
-import type { ApOptionDef, ApOptionValue } from '@shared/randomizer/ap-world/options.type';
-import { pondSettingForMode } from '@shared/randomizer/ap-world/pond/pond-mode-switch';
-import { pondIdOfModeKey } from '@shared/randomizer/ap-world/pond/pond-option-keys';
+import type { OptionDef, OptionValue } from '@shared/randomizer/world/options.type';
+import { pondSettingForMode } from '@shared/randomizer/world/pond/pond-mode-switch';
+import { pondIdOfModeKey } from '@shared/randomizer/world/pond/pond-option-keys';
 import { withCapacityPondRule } from '../../../../../../../hooks/randomizer/capacity-pond-choices';
 import type { RandomizerOptionChoices } from '../../../../../../../hooks/randomizer/randomizer-choices';
-import type { PondMode } from '@shared/randomizer/ap-world/pond/pond-profile.type';
+import type { PondMode } from '@shared/randomizer/world/pond/pond-profile.type';
 import './RandomizerOptionsPanel.css';
 
 interface RandomizerOptionsPanelProps {
@@ -72,8 +72,8 @@ const CAPTION = 'The settings, by subject. A number on a tab counts the rows ins
  * will be built from, not what was asked for before the rule answered.
  */
 const valueFor = (
-  option: ApOptionDef, chosen: RandomizerOptionChoices, values: Readonly<Record<string, ApOptionValue>>,
-): ApOptionValue => {
+  option: OptionDef, chosen: RandomizerOptionChoices, values: Readonly<Record<string, OptionValue>>,
+): OptionValue => {
   if (option.key === CAPACITY_ENABLED_KEY || pondIdOfModeKey(option.key) !== undefined) return values[option.key];
   const field = PLAIN_FIELD_BY_KEY[option.key];
   return field === undefined ? option.baseline : chosen[field];
@@ -81,7 +81,7 @@ const valueFor = (
 
 const RandomizerOptionsPanel = (props: RandomizerOptionsPanelProps) => {
   const { romFile, seed, value, onChange } = props;
-  const { unlockedGroups, lockedGroups } = apCatalogByLock;
+  const { unlockedGroups, lockedGroups } = catalogByLock;
   const [tab, setTab] = useState<OptionTabId>(FIRST_OPTION_TAB);
 
   const snapshot = useMemo(() => snapshotOfChoices(value), [value]);
@@ -94,9 +94,9 @@ const RandomizerOptionsPanel = (props: RandomizerOptionsPanelProps) => {
   const groups = useMemo(() => splitUnlockedGroups(unlockedGroups), [unlockedGroups]);
   const fixed = useMemo(() => splitLockedGroups(lockedGroups), [lockedGroups]);
   const tabs = useMemo(() => optionTabsOf(changedCountsOf(snapshot.values)), [snapshot]);
-  const valueOf = (option: ApOptionDef): ApOptionValue => valueFor(option, value, snapshot.values);
+  const valueOf = (option: OptionDef): OptionValue => valueFor(option, value, snapshot.values);
 
-  const handleRowChange = (key: string, next: ApOptionValue): void => {
+  const handleRowChange = (key: string, next: OptionValue): void => {
     const pondId = pondIdOfModeKey(key);
     if (pondId !== undefined) {
       const pond = pondSettingForMode(String(next) as PondMode, value.ponds[pondId]);

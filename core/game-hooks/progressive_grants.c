@@ -13,7 +13,7 @@
 //   0x65  armor   tiers 0x22 / 0x23                (link_armor 0..2)
 //   0x66  bow     tiers 0x0b / 0x3b                (link_item_bow: 1-2 = first, 3-4 = second)
 // A session may also leave RUNGS OUT of a family. The pool then carries one copy per rung that
-// is still there (the option catalog's tier ticks, shared/randomizer/ap-world/progressive/), and
+// is still there (the option catalog's tier ticks, shared/randomizer/world/progressive/), and
 // a pickup climbs to the next rung that is still there instead of to the next native tier, so
 // unticking a middle rung shortens the ladder instead of leaving a hole in it. The mask is
 // armed per family at session start (WasmSetProgressiveTiers); an unarmed family, which is every
@@ -84,7 +84,8 @@ static int NextPresentTier(int family, int tier) {
 // so its tier is the halved value.
 static int CurrentTier(int family) {
   switch (family) {
-    case 0: return link_sword_type;
+    // While the smiths keep the sword the byte reads 255; the level they keep is the tier.
+    case 0: return GameHook_SwordLevelOwned();
     case 1: return link_shield_type;
     case 2: return link_item_gloves;
     case 3: return link_armor;
@@ -181,7 +182,7 @@ void WasmClearProgressiveTiers(void) {
 // ─── Families whose rungs arrive as themselves ───
 //
 // A session may put a family's rungs in the pool AS THE RUNGS instead of as nameless
-// copies (the per-family order setting, shared/randomizer/ap-world/progressive/). Those
+// copies (the per-family order setting, shared/randomizer/world/progressive/). Those
 // pickups carry the tier's own native id, so they never reach the resolver above and the
 // ladder mask never touches them: finding the top rung first really does hand over the
 // top rung, which is the whole point of the setting.

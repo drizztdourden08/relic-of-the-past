@@ -28,7 +28,7 @@ const Randomizer = ({ activeProfile }: RandomizerProps) => {
   const tabs: TabItem[] = useMemo(() => [
     { id: 'run', label: 'Run' },
     { id: 'logs', label: 'Logs' },
-    { id: 'spoiler', label: 'Spoiler', badge: placement ? Object.keys(placement.nameView).length : undefined },
+    { id: 'spoiler', label: 'Spoiler', badge: placement ? Object.keys(placement.locations).length : undefined },
   ], [placement]);
 
   return (

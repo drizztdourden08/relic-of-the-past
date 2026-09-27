@@ -681,9 +681,12 @@ void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
     }
     if (iris_wide)
       SetIrisWideWindow(i);
+    // The world fetch follows a scroll the transfers just moved across a 1024 px block (world_scroll_carry.c).
+    GameHook_WorldFetchFollowsScroll(i == height);
   }
   // After the draw, so the OAM and the rasteriser's own account of what it drew describe the same frame.
   GameHook_CaptureOamFrame();
+  GameHook_HideSpaceBeyondWallsDone();
 }
 
 void HdmaSetup(uint32 addr6, uint32 addr7, uint8 transfer_unit, uint8 reg6, uint8 reg7, uint8 indirect_bank) {

@@ -1,5 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /** Dialog mirror snapshot, pacing and native-box hiding (core/game-hooks/dialog_*.c). */
+import type { EmscriptenModule } from '../types';
 import { callPtr, readU16, voidCall } from './wasm-call';
 
 interface HeapView {
@@ -43,5 +44,21 @@ const wasmGetDialogPalette = (): number[] | null =>
 /** Tell the core a state was loaded: the native box shows until the next message starts. */
 const wasmDialogMarkStale = (): void => voidCall('WasmDialogMarkStale');
 
+/**
+ * The dialog hook statics a save made right now must carry, copied out of the core's frozen buffer
+ * (two length bytes, then the blob). Null with no message up, a stale mirror or a closed gate. Takes
+ * the module itself: saves and loads run wherever the core does, not only while the game is 'running'.
+ */
+const wasmGetDialogHookState = (mod: EmscriptenModule): Uint8Array | null => {
+  const ptr = mod.ccall('WasmGetDialogHookState', 'number', [], []);
+  if (!ptr) return null;
+  return mod.HEAPU8.slice(ptr + 2, ptr + 2 + readU16(mod.HEAPU8, ptr));
+};
+
+/** Hand a saved blob back after the state load. False when the core refused it and restored nothing. */
+const wasmRestoreDialogHookState = (mod: EmscriptenModule, blob: Uint8Array): boolean =>
+  mod.ccall('WasmRestoreDialogHookState', 'number', ['array', 'number'], [blob, blob.length]) === 1;
+
+export { wasmGetDialogHookState, wasmRestoreDialogHookState };
 export { wasmGetDialogState, wasmSetDialogPacing, wasmSetDialogHidden, wasmGetDialogFont, wasmGetDialogPalette, wasmDialogMarkStale };
 export type { FontView, HeapView };

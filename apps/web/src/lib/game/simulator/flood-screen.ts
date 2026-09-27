@@ -7,15 +7,12 @@
  * runs it for every caller, so a screen flooded from a given seed answers the
  * same for the widget and for the run. What this file adds is the summary and
  * the diagnostics the run needs on top.
- *
- * NOTE (prototype): enrichEntrances still lives in the nav widget layer; it only
- * reads addressable WASM tables, so it is reused here pending a move to the bridge.
  */
 import { wasmGetOverworldSpriteSpawns } from '../';
 import { usableEntranceTransition } from '@shared/game/navigation';
 import type { ConnectionInfo, FloodFillResult, GridPos } from '@shared/game/navigation';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
-import { enrichEntrances } from '@domains/widgets/navigation/widget-helpers';
+import { enrichEntrances } from '../flood/overworld-entrances';
 import { floodOneScreen, getScreenGrids } from '../flood';
 
 interface ScreenFlood {

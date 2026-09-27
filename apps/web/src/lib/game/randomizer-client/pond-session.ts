@@ -20,13 +20,13 @@
  * down, and the pond's own handler runs exactly as it always has.
  */
 
-import { pondPlanOf } from '@shared/randomizer/ap-world/pond/pond-plan';
-import { pondProfilesOfStats } from '@shared/randomizer/ap-world/fill/placement-ponds';
+import { pondPlanOf } from '@shared/randomizer/world/pond/pond-plan';
+import { pondProfilesOfStats } from '@shared/randomizer/world/fill/placement-ponds';
 import { log } from '../../log-bus';
 import { clearPondPlan, setPondAwardMessage, setPondClosedMessage, setPondThrows } from '../pond-plan';
 import { disarmWishPondSession } from './wish-pond-session';
 import { disarmPondDemandSession } from './pond-demand-session';
-import type { ApPlacement } from '@shared/randomizer/ap-world/fill/ap-placement.type';
+import type { Placement } from '@shared/randomizer/world/fill/placement.type';
 import type { PondThrowArm } from '../pond-plan';
 import type { PondMessageIds } from './receipt-text-refresh';
 
@@ -54,7 +54,7 @@ interface PondSessionPlan {
   closedMessageId: number;
 }
 
-const pondSessionOf = (placement: ApPlacement, messages: PondMessageIds = NO_POND_MESSAGES): PondSessionPlan => {
+const pondSessionOf = (placement: Placement, messages: PondMessageIds = NO_POND_MESSAGES): PondSessionPlan => {
   // The core arms one pond, the capacity one (core/game-hooks/pond_plan.c).
   const setting = pondProfilesOfStats(placement.stats).capacity;
   if (setting.mode === 'capacity') {

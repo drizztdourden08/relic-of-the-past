@@ -9,7 +9,7 @@
  * Inventing one is the one thing the connection path refuses to do.
  */
 import { connectionTagKeysOf, findOne } from '@shared/game/data';
-import { toScreenIdOf } from '@shared/game/data/connections/derive';
+import { toScreenIdOf, toScreenIdOrNone } from '@shared/game/data';
 import type { ConnectionRecord } from '@shared/game/data';
 import { buildConnectionNav } from '@shared/game/navigation/analysis/connection-nav-from-flood';
 import { known, unread } from '@shared/game/recommendations/compare';
@@ -18,8 +18,10 @@ import { findFloodForTarget } from '../../../connection-tile-display';
 
 const screenExists = (id: string): boolean => findOne('screen', s => s.id === id) != null;
 
-const endpointsResolvable = (record: ConnectionRecord): boolean =>
-  screenExists(record.screenId) && screenExists(toScreenIdOf(record));
+const endpointsResolvable = (record: ConnectionRecord): boolean => {
+  const other = toScreenIdOrNone(record);
+  return screenExists(record.screenId) && other !== undefined && screenExists(other);
+};
 
 const NAV_PROBE: FieldProbe<'connection'> = {
   path: 'nav',

@@ -1,0 +1,26 @@
+/* @layer renderer-components @kind style */
+
+/* Laid over the game picture, the same box the HUD overlay uses. */
+.check-toasts {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  pointer-events: none;
+  z-index: var(--z-nav-overlay);
+}
+
+/* The tracker's card, a size up: it is read at a glance over the game, not in a list. */
+.check-toast {
+  min-width: 16rem;
+  max-width: 22rem;
+}
+
+.check-toast .tracker-card__sprite,
+.check-toast .tracker-card__sprite-placeholder {
+  width: 32px;
+  height: 32px;
+}
+
+.check-toast .tracker-card__item-name {
+  font-size: var(--text-sm);
+}

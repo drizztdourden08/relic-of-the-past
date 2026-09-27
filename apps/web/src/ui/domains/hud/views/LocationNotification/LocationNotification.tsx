@@ -24,8 +24,8 @@ const LocationNotification = () => {
       {screen && (
         <NotificationBanner
           key={`screen-${screen.timestamp}`}
-          title={getLocation(screen.screen.locationId).randomizerName}
-          subtitle={screen.screen.vanillaName ?? screen.screen.randomizerName}
+          title={getLocation(screen.screen.locationId).name}
+          subtitle={screen.screen.name}
           dismissMs={SCREEN_DISMISS_MS}
           variant="screen"
         />

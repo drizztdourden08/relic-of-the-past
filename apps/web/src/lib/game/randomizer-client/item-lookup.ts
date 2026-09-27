@@ -33,14 +33,14 @@ const receiveIdOf = (record: ItemRecord | undefined): number | undefined => {
 };
 
 const byName = (name: string): ItemRecord | undefined =>
-  findOne('item', (item) => item.randomizerName === name);
+  findOne('item', (item) => item.name === name);
 
 const resolveLocalItemId = (
   standardItemName: string, walletTable: readonly number[] = sessionWalletTable(),
 ): number | undefined => {
-  // The ten dungeon prizes answer first: the dataset carries two records per pendant
-  // name (only one of them with a native id) and none at all for the seven crystals, so
-  // a record lookup is either ambiguous or empty. prize-receive-id.ts is the one answer.
+  // The seven crystals answer first: they share one native id, so each one's grantable id
+  // is a reservation the records cannot hold (prize-receive-id.ts). A pendant carries its
+  // own id and falls through to the record path below.
   const prize = prizeReceiveIdOfName(standardItemName);
   if (prize !== undefined) return prize;
   const virtual = progressiveReceiveIdOfName(standardItemName)

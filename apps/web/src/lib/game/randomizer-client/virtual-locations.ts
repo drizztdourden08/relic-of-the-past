@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Synthesizes tracker-facing CheckRecord-shaped entries for every AP-world
+ * Synthesizes tracker-facing CheckRecord-shaped entries for every world
  * location this seed placed an item at that no real CheckRecord backs (shop
  * shelves at every restock depth, chiefly). Built fresh per placement so the
  * widget's total always matches exactly what THIS seed generated, never a
@@ -8,7 +8,7 @@
  *
  * A virtual record carries no gameId (there is nothing to poll: its status
  * comes from the availability engine and the fire-id ledger, both already
- * keyed by the raw AP location name), and `kind: 'npc'` is a placeholder
+ * keyed by the raw world location name), and `kind: 'npc'` is a placeholder
  * class for the "type" facet, not a detection claim. vanillaItemIds carries
  * the real vanilla item where one exists (a shop shelf, a key-drop pot);
  * everything here still hands over a real item, so isGuaranteedReward says so
@@ -20,33 +20,22 @@
  * flag for each, and every one has a check record of its own here.
  * UNTRACKED_LOCATIONS is the exception that has none.
  */
-import { SHOP_DEFS } from '@shared/randomizer/ap-world/shops/shops.data';
-import { shopSlotLocationOf } from '@shared/randomizer/ap-world/shops/shop-slots';
-import { EVENT_LOCATIONS, KEY_DROP_LOCATIONS } from '@shared/randomizer/ap-world/special-locations.data';
-import { checkIdByStandardName, standardCheckName } from './check-names';
-import { itemIdByStandardName } from './item-lookup';
-import type { ApPlacement } from '@shared/randomizer/ap-world/fill/ap-placement.type';
+import { shopSlotLocationOf } from '@shared/randomizer/world/shops/shop-slots';
+import { EVENT_LOCATIONS, KEY_DROP_LOCATIONS } from '@shared/randomizer/world/scope-tables';
+import { CAPACITY_SHOP_EVENT, isSlotKey } from '@shared/randomizer/world/location-key';
+import { locationDisplayName } from '@shared/randomizer/world/display-names/location-display-name';
+import { getCheck } from '@shared/game/data';
+import type { LocationKey } from '@shared/randomizer/world/location-key';
+import type { Placement } from '@shared/randomizer/world/fill/placement.type';
 import type { CheckId, CheckRecord, ItemId, ScreenId } from '@shared/game/data';
 
-/** Shop def name -> the screen its building stands on (screens/*\/shops.ts), for world/area grouping. */
-const SHOP_SCREEN_BY_NAME: Readonly<Record<string, ScreenId>> = {
-  'Kakariko Shop': 'screen-199',
-  'Cave Shop (Lake Hylia)': 'screen-214',
-  'Light World Death Mountain Shop': 'screen-213',
-  'Potion Shop': 'screen-220',
-  'Village of Outcasts Shop': 'screen-482',
-  'Dark Lake Hylia Shop': 'screen-483',
-  'Dark World Lumberjack Shop': 'screen-475',
-  'Dark World Potion Shop': 'screen-478',
-  'Red Shield Shop': 'screen-476',
-  'Big Bomb Shop': 'screen-466',
-  'Cave Shop (Dark Death Mountain)': 'screen-453',
-};
-
-/** A shop-slot location's name is always its shop's own name plus a position suffix. */
-const shopScreenFor = (locationName: string): ScreenId | undefined => {
-  const def = SHOP_DEFS.find((shop) => locationName.startsWith(shop.name));
-  return def ? SHOP_SCREEN_BY_NAME[def.name] : undefined;
+/**
+ * The screen a restock rides on: its own slot's record says which shop interior it is in,
+ * which is what the world and area grouping reads.
+ */
+const shopScreenFor = (location: LocationKey): ScreenId | undefined => {
+  const checkId = shopSlotLocationOf(location)?.slot.checkId;
+  return checkId === undefined ? undefined : getCheck(checkId).screenId;
 };
 
 /**
@@ -58,45 +47,49 @@ const shopScreenFor = (locationName: string): ScreenId | undefined => {
  * vanilla capacity family can be bought up from there (state-helpers-capacity.ts). It is
  * the one event with no check record here, for exactly that reason.
  */
-const UNTRACKED_LOCATIONS: ReadonlySet<string> = new Set(['Capacity Upgrade Shop']);
+const UNTRACKED_LOCATIONS: ReadonlySet<LocationKey> = new Set([CAPACITY_SHOP_EVENT]);
 
 const slugOf = (name: string): string => name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
 /** A virtual location's own vanilla item, when it has one (a shop shelf or a key-drop pot). */
-const vanillaItemIdsOf = (name: string): ItemId[] => {
-  const standardName = shopSlotLocationOf(name)?.slot.vanillaItem ?? KEY_DROP_LOCATIONS.get(name);
-  if (standardName === undefined) return [];
-  const itemId = itemIdByStandardName(standardName);
-  return itemId !== undefined ? [itemId] : [];
+const vanillaItemIdsOf = (location: LocationKey): ItemId[] => {
+  const itemId = shopSlotLocationOf(location)?.slot.vanillaItem ?? KEY_DROP_LOCATIONS.get(location);
+  return itemId === undefined ? [] : [itemId];
 };
 
-/** The synthetic id a virtual check gets for a given AP location name. Shared
+/** The synthetic id a virtual check gets for a given world location name. Shared
  * with placement-view.ts so a virtual check's row and its placed-item lookup
  * can never drift onto two different ids for the same location. */
-const virtualCheckIdOf = (locationName: string): CheckId => `check-virtual-${slugOf(locationName)}` as CheckId;
+const VIRTUAL_PREFIX = 'check-virtual-';
+
+const virtualCheckIdOf = (location: LocationKey): CheckId => `${VIRTUAL_PREFIX}${slugOf(location)}` as CheckId;
+
+/** The location a virtual check stands for: a key is already slug-shaped, so this is exact. */
+const virtualLocationOf = (checkId: string): LocationKey => checkId.slice(VIRTUAL_PREFIX.length) as LocationKey;
 
 /** One cache slot: placements don't change mid-session, and this only ever runs against the active one. */
-let cached: { placement: ApPlacement; records: CheckRecord[] } | null = null;
+let cached: { placement: Placement; records: CheckRecord[] } | null = null;
 
 /**
- * Every location in the placement's nameView with no real CheckId, as a
+ * Every location in the placement's locations with no real CheckId, as a
  * plain CheckRecord the grouping/filter/stats code (all generic over
  * CheckRecord fields) already knows how to render without any changes.
  */
-const virtualChecksOf = (placement: ApPlacement): CheckRecord[] => {
+const virtualChecksOf = (placement: Placement): CheckRecord[] => {
   if (cached?.placement === placement) return cached.records;
   const records: CheckRecord[] = [];
-  for (const name of Object.keys(placement.nameView)) {
-    if (UNTRACKED_LOCATIONS.has(name) || checkIdByStandardName(name) !== undefined) continue;
-    const screenId = shopScreenFor(name);
+  for (const where of Object.keys(placement.locations)) {
+    const location = where as LocationKey;
+    if (UNTRACKED_LOCATIONS.has(location) || !isSlotKey(location)) continue;
+    const screenId = shopScreenFor(location);
     records.push({
-      id: virtualCheckIdOf(name),
+      id: virtualCheckIdOf(location),
       gameId: {},
       kind: 'npc',
       screenId,
-      randomizerName: name,
-      vanillaItemIds: vanillaItemIdsOf(name),
-      isGuaranteedReward: !EVENT_LOCATIONS.has(name),
+      name: locationDisplayName(location),
+      vanillaItemIds: vanillaItemIdsOf(location),
+      isGuaranteedReward: !EVENT_LOCATIONS.has(location),
     });
   }
   cached = { placement, records };
@@ -108,17 +101,22 @@ const virtualChecksOf = (placement: ApPlacement): CheckRecord[] => {
  * seed's own placement actually names, plus a virtual one for every location
  * none of them cover. A handful of our checks (the intro's own story beats:
  * "Link Wakes Up", "Rescued Zelda") track real vanilla progress but were
- * never AP-world locations at all, so counting them here would inflate the
+ * never world locations at all, so counting them here would inflate the
  * total past what the seed actually generated; they stay in the base
- * checkRecords array untouched for the vanilla profile that DOES want them.
+ * checkRecords array untouched for the normal profile that DOES want them.
  */
-const apAlignedCheckRecords = (checkRecords: readonly CheckRecord[], placement: ApPlacement): CheckRecord[] => {
-  const real = checkRecords.filter((check) => placement.nameView[standardCheckName(check.id)] !== undefined);
+const placementCheckRecords = (checkRecords: readonly CheckRecord[], placement: Placement): CheckRecord[] => {
+  const real = checkRecords.filter((check) => placement.locations[check.id] !== undefined);
   return [...real, ...virtualChecksOf(placement)];
 };
 
-/** The event records: shown on every profile, never part of a seed's total. */
+/**
+ * The event records: shown on every profile, never part of a seed's total. Three of them are
+ * also locations of the world (the flute spot, the floodgate, the smiths' ruins), so this list
+ * and the aligned one overlap and whoever joins them deduplicates by id
+ * (tracker/tracker-roster.ts).
+ */
 const eventCheckRecords = (checkRecords: readonly CheckRecord[]): CheckRecord[] =>
   checkRecords.filter((check) => check.kind === 'event');
 
-export { apAlignedCheckRecords, eventCheckRecords, virtualChecksOf, virtualCheckIdOf };
+export { placementCheckRecords, eventCheckRecords, virtualChecksOf, virtualCheckIdOf, virtualLocationOf };

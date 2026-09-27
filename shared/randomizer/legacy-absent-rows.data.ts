@@ -13,26 +13,26 @@
  * for every row whose baseline still is the reading it shipped with. A row
  * that moves away from that reading later is one line here.
  */
-import { LEGACY_CAPACITY_BONUS } from './ap-world/capacity/bonus/capacity-bonus.data';
-import { capacityBonusValuesOf } from './ap-world/capacity/bonus/capacity-bonus-from-snapshot';
-import { REFERENCE_CAPACITY_PROFILE } from './ap-world/capacity/capacity-profile-defaults';
-import { capacityValuesOf } from './ap-world/capacity/capacity-profile-from-snapshot';
-import { darkRoomValuesOf } from './ap-world/dark-rooms/dark-room-from-snapshot';
-import { REFERENCE_DARK_ROOM_SETTING } from './ap-world/dark-rooms/dark-room-lights.data';
-import { pondProfileValuesOf } from './ap-world/pond/pond-profiles-from-snapshot';
-import { LEGACY_POND_PROFILES } from './ap-world/pond/pond-profile-defaults';
-import { INCLUDE_NPC_CHECKS_KEY, INCLUDE_WORLD_ITEMS_KEY } from './ap-world/scope-option-keys';
-import { BOTTLE_KEY, CURRENCY_ROWS, currencyKeyOf } from './ap-world/shops/shop-price-options.data';
-import { SHOP_MODE_KEY, SHOP_SLOT_DEPTH_KEY } from './ap-world/shops/shop-slot-options.data';
-import { MIN_SHOP_SLOT_DEPTH } from './ap-world/shops/shop-slots';
-import type { ApOptionValue } from './ap-world/options.type';
+import { LEGACY_CAPACITY_BONUS } from './world/capacity/bonus/capacity-bonus.data';
+import { capacityBonusValuesOf } from './world/capacity/bonus/capacity-bonus-from-snapshot';
+import { REFERENCE_CAPACITY_PROFILE } from './world/capacity/capacity-profile-defaults';
+import { capacityValuesOf } from './world/capacity/capacity-profile-from-snapshot';
+import { darkRoomValuesOf } from './world/dark-rooms/dark-room-from-snapshot';
+import { REFERENCE_DARK_ROOM_SETTING } from './world/dark-rooms/dark-room-lights.data';
+import { pondProfileValuesOf } from './world/pond/pond-profiles-from-snapshot';
+import { LEGACY_POND_PROFILES } from './world/pond/pond-profile-defaults';
+import { INCLUDE_NPC_CHECKS_KEY, INCLUDE_WORLD_ITEMS_KEY } from './world/scope-option-keys';
+import { BOTTLE_KEY, CURRENCY_ROWS, currencyKeyOf } from './world/shops/shop-price-options.data';
+import { SHOP_MODE_KEY, SHOP_SLOT_DEPTH_KEY } from './world/shops/shop-slot-options.data';
+import { MIN_SHOP_SLOT_DEPTH } from './world/shops/shop-slots';
+import type { OptionValue } from './world/options.type';
 
 /** No currency rolled: every shelf charges what the unmodified game charges. */
-const NO_PRICE_ROLLS: Readonly<Record<string, ApOptionValue>> = Object.fromEntries(
+const NO_PRICE_ROLLS: Readonly<Record<string, OptionValue>> = Object.fromEntries(
   [...CURRENCY_ROWS.map(({ currency }) => currencyKeyOf(currency)), BOTTLE_KEY].map((key) => [key, false]),
 );
 
-const LEGACY_ABSENT_ROWS: Readonly<Record<string, ApOptionValue>> = {
+const LEGACY_ABSENT_ROWS: Readonly<Record<string, OptionValue>> = {
   // Both scope switches shipped off. A v1 or v2 snapshot missing the
   // world-items one is re-read from the npc one by the scope-split rule, which
   // runs after this table; the pre-snapshot shape has neither and reads off.

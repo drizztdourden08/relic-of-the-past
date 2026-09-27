@@ -1,11 +1,12 @@
-/* @layer shared-game @kind data */
+/* @layer shared-game @kind generated */
 /**
- * Check content tag taxonomy. This is the one CheckTag family that was never a pure
- * duplicate of another record's field (world/location/area/dungeon all were,
- * and were deleted in favor of joining ScreenRecord/AreaRecord/DungeonRecord
- * directly). A check's content, meaning whether it carries a key, the big key,
- * the map/compass or a boss's prize, is derived from name-matching, so it earns
- * a real, stored tag instead of a value recomputed on every read.
+ * GENERATED FILE. Do not hand-edit; run `npm run generate`
+ * (scripts/generate-from-records.mjs).
+ *
+ * Source: records/tags, every tag record that applies to a check
+ *
+ * A check's content is the one check tag family no other record states, so it is stored instead
+ * of recomputed on every read.
  */
 
 type ContentTag = 'content:key' | 'content:big-key' | 'content:map-compass' | 'content:boss-item';

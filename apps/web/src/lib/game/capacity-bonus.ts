@@ -16,7 +16,7 @@ import { log } from '../log-bus';
 import { CAPACITY_FAMILY_INDEX } from './capacity-profile.constants';
 import { setCapacityHalf } from './gate-word-5';
 import { getModule } from './wasm-bridge';
-import type { CapacityBonusSetting } from '@shared/randomizer/ap-world/capacity';
+import type { CapacityBonusSetting } from '@shared/randomizer/world/capacity';
 
 /** features.h kFeatures5_CapacityBonus: keep in lockstep with that enum. */
 const CAPACITY_BONUS_BIT = 1;

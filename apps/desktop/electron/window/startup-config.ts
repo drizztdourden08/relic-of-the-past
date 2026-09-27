@@ -63,10 +63,21 @@ const startupRendererArgs = (config: StartupConfig): string[] => {
 };
 
 /**
- * Test/automation launches must not persist window or layout state over the user's.
- * Delegates to the one automation predicate so every automation flag is covered.
+ * A window handed to a person over its own data folder: `--visible` with `--user-data=`. Its
+ * window-state.json sits inside that folder, so keeping the size and position the person gave it
+ * writes nothing of theirs. A launch that names its own size, or asks for a fresh one, is not one.
  */
-const isEphemeralLaunch = (): boolean => isAutomationLaunch();
+const isIsolatedHandover = (): boolean => {
+  const has = (flag: string): boolean => process.argv.some((arg) => arg === flag || arg.startsWith(`${flag}=`));
+  return has('--visible') && has('--user-data') && !has('--window-size') && !has('--fresh');
+};
+
+/**
+ * Test/automation launches must not persist window or layout state over the user's.
+ * Delegates to the one automation predicate so every automation flag is covered. The one
+ * launch that may: a handover over its own data folder, which has no one else's state to lose.
+ */
+const isEphemeralLaunch = (): boolean => isAutomationLaunch() && !isIsolatedHandover();
 
 export { parseStartupConfig, startupRendererArgs, isEphemeralLaunch };
 export type { StartupConfig };

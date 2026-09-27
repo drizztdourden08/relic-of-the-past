@@ -1,14 +1,13 @@
 /* @layer tests @kind test */
 /**
- * The "On this screen" list must show everything the overlay draws. Pinned:
- * grouping (an unmapped kind lands in "Unmapped", not nowhere) and exit/edge
- * parity (diagnostics must not invent mismatches).
+ * The widget's "On this screen" list must show everything the overlay draws, so
+ * these tests pin the place that could silently swallow an item, the grouping: an
+ * unmapped kind must land in "Unmapped" and not vanish.
  */
 import { describe, it, expect } from 'vitest';
 import type { ScreenAnnotation } from '../../shared/game/simulation';
 import { roomTagName } from '../../shared/game/simulation';
-import { groupAnnotations, stepsOf } from '../../apps/web/src/ui/domains/widgets/navigation/sub-components/ScreenPanel/annotation-rows';
-import { compareExitsToEdges } from '../../apps/web/src/ui/domains/widgets/navigation/sub-components/ScreenPanel/exit-parity';
+import { groupAnnotations } from '../../apps/web/src/ui/domains/widgets/navigation/sub-components/ScreenPanel/annotation-rows';
 import { describeDataset } from '../dataset-guard';
 
 const at = (kind: ScreenAnnotation['kind'], label: string, extra: Partial<ScreenAnnotation> = {}): ScreenAnnotation =>
@@ -20,11 +19,10 @@ describeDataset('annotation grouping', () => {
       at('chest', 'Map Chest'),
       at('cell-lock', 'cell lock #0'),
       at('big-key-carrier', 'big key guard'),
-      at('exit', 'Sanctuary'),
       at('unknown', 'something new'),
     ];
     const groups = groupAnnotations(items);
-    expect(groups.map((g) => g.id)).toEqual(['checks', 'locks', 'triggers', 'ways-out', 'other']);
+    expect(groups.map((g) => g.id)).toEqual(['checks', 'locks', 'triggers', 'other']);
     expect(groups.flatMap((g) => g.items)).toHaveLength(items.length);
     expect(groups.find((g) => g.id === 'other')?.items[0].label).toBe('something new');
   });
@@ -32,47 +30,6 @@ describeDataset('annotation grouping', () => {
   it('drops empty groups instead of rendering headers with nothing under them', () => {
     expect(groupAnnotations([at('chest', 'Map Chest')]).map((g) => g.id)).toEqual(['checks']);
     expect(groupAnnotations([])).toEqual([]);
-  });
-
-  it('reads walk distance off the detail line, and sorts unknowns last', () => {
-    expect(stepsOf(at('exit', 'a', { detail: '42 steps' }))).toBe(42);
-    expect(stepsOf(at('exit', 'b'))).toBe(Number.MAX_SAFE_INTEGER);
-    expect(stepsOf(at('exit', 'c', { detail: 'nonsense' }))).toBe(Number.MAX_SAFE_INTEGER);
-  });
-});
-
-// REAL screen ids: an indoor gameId is keyed by palace+room, so a made-up id
-// resolves to nothing, which is how the widget shipped with every indoor exit
-// missing. 'screen-133' is the Jail Cell (room 0x80, palace 0x02).
-describeDataset('exit / edge parity', () => {
-  it('reports nothing when the two lists agree', () => {
-    const exits = [at('exit', 'Jail Cell', { target: 'screen-133' })];
-    const parity = compareExitsToEdges(exits, [{ targetScreen: 0x80, edge: 'north' }], true, 1);
-    expect(parity).toEqual({ edgesWithoutExit: [], exitsWithoutEdge: [] });
-  });
-
-  it('names an edge the flood reached but derived no exit for', () => {
-    const parity = compareExitsToEdges([], [{ targetScreen: 0x71, edge: 'east' }], true, 1);
-    expect(parity.edgesWithoutExit).toEqual(['Boomerang Chest Room']);
-  });
-
-  it('names a door/stair exit that is not a border edge', () => {
-    const exits = [at('exit', 'Jail Cell', { target: 'screen-133' })];
-    expect(compareExitsToEdges(exits, [], true, 1).exitsWithoutEdge).toEqual(['Jail Cell']);
-
-    // Without the palace, room 0x80 resolves to a CAVE that shares the number.
-    // That is why the palace index is threaded through.
-    expect(compareExitsToEdges(exits, [], true).exitsWithoutEdge).not.toEqual(['Jail Cell']);
-  });
-
-  it('ignores an exit whose target id is not a known screen', () => {
-    const exits = [at('exit', 'nowhere', { target: 'not-a-screen' })];
-    expect(compareExitsToEdges(exits, [], true, 1).exitsWithoutEdge).toEqual([]);
-  });
-
-  it('labels a screen by its real name when the data knows it', () => {
-    expect(compareExitsToEdges([], [{ targetScreen: 0x2c, edge: 'south' }], false).edgesWithoutExit).toEqual(["Uncle's Estate East"]);
-
   });
 });
 

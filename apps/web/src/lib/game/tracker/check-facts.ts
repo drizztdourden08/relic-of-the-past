@@ -24,7 +24,10 @@ const thresholdMet = (val: number, compare: 'gte' | 'eq' | 'any-of', value: numb
 
 /** Chest slot or direct room-mask bit, whichever the record's own gameId carries. */
 const isRoomFactMet = (gameId: CheckGameId, readRoomWord: (roomId: number) => number): boolean => {
-  const { roomId, chestIndex, mask } = gameId;
+  const { roomId, chestIndex, mask, roomFlag } = gameId;
+  // A gift giver's own room bit. Read through the room reader so the room the player stands in
+  // answers from its live bits: the save block only gets them when the room is left.
+  if (roomFlag !== undefined) return (readRoomWord(roomFlag.roomId) & CHEST_OPEN_MASKS[roomFlag.chestIndex]) !== 0;
   if (roomId === undefined) return false;
   if (chestIndex !== undefined) return (readRoomWord(roomId) & CHEST_OPEN_MASKS[chestIndex]) !== 0;
   if (mask !== undefined) return (readRoomWord(roomId) & mask) !== 0;

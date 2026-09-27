@@ -1,11 +1,18 @@
-/* @layer shared-game @kind data */
-/** Connection tag taxonomy, ported verbatim from data/connections/tags.ts. */
+/* @layer shared-game @kind generated */
+/**
+ * GENERATED FILE. Do not hand-edit; run `npm run generate`
+ * (scripts/generate-from-records.mjs).
+ *
+ * Source: records/tags, every tag record that applies to a connection
+ *
+ * Direction is read off `canExit` (connections/derive.ts), so the retired `dir:one-way` and
+ * `dir:two-way` terms have no replacement here.
+ */
 
 type TransitTag =
-  | 'transit:door' | 'transit:hole' | 'transit:ledge' | 'transit:stairs'
-  | 'transit:warp' | 'transit:mirror' | 'transit:waterfall' | 'transit:walk'
-  | 'transit:swim' | 'transit:grave' | 'transit:bomb' | 'transit:bonk'
-  | 'transit:rock' | 'transit:push' | 'transit:hookshot';
+  | 'transit:door' | 'transit:hole' | 'transit:ledge' | 'transit:stairs' | 'transit:warp'
+  | 'transit:mirror' | 'transit:waterfall' | 'transit:walk' | 'transit:swim' | 'transit:grave'
+  | 'transit:bomb' | 'transit:bonk' | 'transit:rock' | 'transit:push' | 'transit:hookshot';
 
 type BarrierTag =
   | 'barrier:none' | 'barrier:small-key' | 'barrier:big-key' | 'barrier:bomb'
@@ -14,11 +21,9 @@ type BarrierTag =
   | 'barrier:swim' | 'barrier:fire' | 'barrier:book' | 'barrier:glitch';
 
 type ContextTag =
-  | 'ctx:entrance' | 'ctx:exit' | 'ctx:internal' | 'ctx:cross-world'
-  | 'ctx:save-quit' | 'ctx:boss' | 'ctx:overworld' | 'ctx:dungeon-enter' | 'ctx:shortcut';
+  | 'ctx:entrance' | 'ctx:exit' | 'ctx:internal' | 'ctx:cross-world' | 'ctx:save-quit'
+  | 'ctx:boss' | 'ctx:overworld' | 'ctx:dungeon-enter' | 'ctx:shortcut';
 
-/** Direction is derived from `canExit` now (see `data/connections/derive.ts`). The
- *  `dir:one-way` / `dir:two-way` tags are retired, not replaced. */
 type ConnectionTag = TransitTag | BarrierTag | ContextTag;
 
 type ConnectionTagNamespace = 'transit' | 'barrier' | 'ctx';
@@ -80,6 +85,5 @@ const CONNECTION_TAG_METADATA: ConnectionTagMetadata[] = [
 
 export { CONNECTION_TAG_METADATA, CONNECTION_TAG_NAMESPACES };
 export type {
-  BarrierTag, ConnectionTag, ConnectionTagMetadata, ConnectionTagNamespace,
-  ContextTag, TransitTag,
+  BarrierTag, ConnectionTag, ConnectionTagMetadata, ConnectionTagNamespace, ContextTag, TransitTag,
 };

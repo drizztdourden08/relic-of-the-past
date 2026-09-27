@@ -75,4 +75,12 @@ bool GameHook_IrisWideWindow(int row, int shift_x, int shift_y, int *left, int *
 // that adds no rows on top, where the transfers keep their original timing.
 bool GameHook_HdmaWaitsForPicture(void);
 
+// ─── World fetch scroll carry (world_scroll_carry.c) ───
+
+// Called at the end of every line of the draw loop. Reads the BG2 scroll registers as the place nearest
+// the game camera and moves the linear world fetch's offsets by the whole 1024 px blocks between the
+// two, so a scanline effect that swings the scroll across a block boundary still fetches the map.
+// |frameDone| (the last line) takes the carry back out. Gated: off, the offsets are never touched.
+void GameHook_WorldFetchFollowsScroll(bool frameDone);
+
 #endif  // GAME_HOOKS_GAME_OVER_VIEW_H

@@ -23,8 +23,8 @@
  * is the read-only face the run view shows.
  */
 import { Box, Text } from '@ds/primitives';
-import { progressiveTickConsequences } from '@shared/randomizer/ap-world/progressive/tick-consequences';
-import { unrollableTickSetReasons } from '@shared/randomizer/ap-world/progressive/tick-set-check';
+import { progressiveTickConsequences } from '@shared/randomizer/world/progressive/tick-consequences';
+import { unrollableTickSetReasons } from '@shared/randomizer/world/progressive/tick-set-check';
 import { OptionDescription } from '../OptionDescription';
 import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
 import { progressiveCardsOf } from './behavior/progressive-cards';
@@ -33,7 +33,7 @@ import { ProgressiveTierCard } from './sub-components/ProgressiveTierCard';
 import { BLOCKED_LEAD, TIERS_CAPTION, TIERS_TITLE } from './ProgressiveTiersBlock.constants';
 import type {
   ProgressiveModeSetting, ProgressiveSetting,
-} from '@shared/randomizer/ap-world/progressive/progressive.type';
+} from '@shared/randomizer/world/progressive/progressive.type';
 import './ProgressiveTiersBlock.css';
 
 interface ProgressiveTiersBlockProps {

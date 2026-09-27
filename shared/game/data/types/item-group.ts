@@ -1,5 +1,6 @@
 /* @layer shared-game @kind types */
 import type { ItemGroupId, ItemId } from './ids';
+import type { ReviewMark } from './review';
 
 /**
  * A named set of items a count-based Requirement leaf (`{ count: { groupId, n } }`)
@@ -11,6 +12,7 @@ interface ItemGroupRecord {
   id: ItemGroupId;
   label: string;
   memberIds: readonly ItemId[];
+  review?: ReviewMark;
 }
 
 export type { ItemGroupRecord };

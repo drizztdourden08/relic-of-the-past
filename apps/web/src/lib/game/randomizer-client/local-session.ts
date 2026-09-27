@@ -2,7 +2,7 @@
 /**
  * Local randomizer session: plays a generated placement against the live
  * core with no server. start() classifies the placement into the physical
- * plan (ap-bridge), refuses loudly when the plan carries errors, applies the
+ * plan (placement-bridge), refuses loudly when the plan carries errors, applies the
  * chest, npc-grant and key-drop overrides in-core, and arms the poller over
  * every detectable planned location. Reports: overrides (chest, npc, drop) and
  * vanilla-locked locations are log-only (the game grants the item
@@ -28,8 +28,9 @@ import { applyQuiverIcon, clearQuiverIcon } from '../quiver-icon';
 import { applyCurrencySymbols, clearCurrencySymbols } from '../currency-symbols';
 import {
   capacityBonusOfStats, capacityProfileOfStats, capacityProgressiveOfStats,
-} from '@shared/randomizer/ap-world/fill/placement-capacity';
-import { buildPhysicalPlan, logPlanSummary } from './ap-bridge';
+} from '@shared/randomizer/world/fill/placement-capacity';
+import { itemKeyName } from '@shared/randomizer/world/display-names/item-key-name';
+import { buildPhysicalPlan, logPlanSummary } from './placement-bridge';
 import { startSessionReceiptTexts } from './receipt-text-refresh';
 import { applyOverrides, clearArmedShopEntries, pollEntriesOf } from './apply-overrides';
 import {
@@ -44,7 +45,7 @@ import { armPondDemandSession } from './pond-demand-session';
 import { pondDemandSessionOf } from './pond-demand-rows';
 import { wishPondSessionOf } from './wish-pond-rungs';
 import { startLocationPolling, stopLocationPolling } from './location-poller';
-import type { ApPlacement } from '@shared/randomizer/ap-world/fill/ap-placement.type';
+import type { Placement } from '@shared/randomizer/world/fill/placement.type';
 import type { MessageIdOf } from './apply-overrides';
 import type { PlanCounts, PlanEntry } from './physical-plan.type';
 import type { SessionReceiptTexts } from './receipt-text-refresh';
@@ -62,20 +63,20 @@ const emptyCounts = (): PlanCounts =>
 
 const deliverEntry = (entry: PlanEntry, messageId: number): void => {
   if (entry.targetLocalId === undefined) {
-    log.randomizer(`[Local] Cannot deliver "${entry.itemName}" for "${entry.locationName}": unresolvable`, 'error');
+    log.randomizer(`[Local] Cannot deliver "${entry.item}" for "${entry.location}": unresolvable`, 'error');
     return;
   }
   const contextual = messageId >= 0 ? messageId : undefined;
   const queued = entry.npcGrant !== undefined
     ? deliverNpcCheck(entry.npcGrant.flagType, entry.npcGrant.flagMask, entry.targetLocalId,
-      entry.npcGrant.spriteType, entry.npcGrant.postGfx, entry.itemName, 'randomizer', contextual)
-    : deliverItem(entry.targetLocalId, entry.itemName, 'randomizer', contextual);
+      entry.npcGrant.spriteType, entry.npcGrant.postGfx, itemKeyName(entry.item), 'randomizer', contextual)
+    : deliverItem(entry.targetLocalId, itemKeyName(entry.item), 'randomizer', contextual);
   if (queued === null) {
-    log.randomizer(`[Local] Delivery refused for "${entry.locationName}": game not running or module gone`, 'error');
+    log.randomizer(`[Local] Delivery refused for "${entry.location}": game not running or module gone`, 'error');
   }
 };
 
-const createLocalSession = (placement: ApPlacement): LocalSession => {
+const createLocalSession = (placement: Placement): LocalSession => {
   const listeners = new Set<SessionStatusListener>();
   const byLocation = new Map<string, PlanEntry>();
   let stats = emptyCounts();
@@ -97,7 +98,7 @@ const createLocalSession = (placement: ApPlacement): LocalSession => {
 
     async start() {
       setStatus('starting');
-      log.randomizer(`[Local] Starting session: seed ${placement.seed}, ${Object.keys(placement.nameView).length} locations`);
+      log.randomizer(`[Local] Starting session: seed ${placement.seed}, ${Object.keys(placement.locations).length} locations`);
       // The persisted placement carries the profile it was generated with; its wallet
       // table must exist before the plan resolves the wallet item names.
       const capacity = capacitySessionOf(
@@ -122,7 +123,7 @@ const createLocalSession = (placement: ApPlacement): LocalSession => {
         setStatus('error');
         return;
       }
-      for (const entry of plan.entries) byLocation.set(entry.locationName, entry);
+      for (const entry of plan.entries) byLocation.set(entry.location, entry);
       // Pre-render every planned grant's contextual line from the frozen placement and
       // the tracker's counts, and push the composed session dialogue into the core
       // BEFORE the overrides arm, so the very first chest already carries its exact
@@ -171,42 +172,42 @@ const createLocalSession = (placement: ApPlacement): LocalSession => {
       setStatus('active');
     },
 
-    reportCheck(locationName) {
-      const entry = byLocation.get(locationName);
+    reportCheck(location) {
+      const entry = byLocation.get(location);
       if (!entry) {
-        log.randomizer(`[Local] Check completed: ${locationName} (not in plan, nothing to do)`, 'warn');
+        log.randomizer(`[Local] Check completed: ${location} (not in plan, nothing to do)`, 'warn');
         return;
       }
       if (entry.planClass === 'override') {
-        log.randomizer(`[Local] Check completed: ${locationName}: "${entry.itemName}" granted physically`);
+        log.randomizer(`[Local] Check completed: ${location}: "${entry.item}" granted physically`);
         return;
       }
       if (entry.planClass === 'override-npc') {
-        log.randomizer(`[Local] Check completed: ${locationName}: "${entry.itemName}" granted natively by the giver`);
+        log.randomizer(`[Local] Check completed: ${location}: "${entry.item}" granted natively by the giver`);
         return;
       }
       if (entry.planClass === 'override-drop') {
-        log.randomizer(`[Local] Check completed: ${locationName}: "${entry.itemName}" granted physically by the drop`);
+        log.randomizer(`[Local] Check completed: ${location}: "${entry.item}" granted physically by the drop`);
         return;
       }
       if (entry.planClass === 'override-standing') {
-        log.randomizer(`[Local] Check completed: ${locationName}: "${entry.itemName}" granted physically by the pickup`);
+        log.randomizer(`[Local] Check completed: ${location}: "${entry.item}" granted physically by the pickup`);
         return;
       }
       if (entry.planClass === 'override-scripted') {
-        log.randomizer(`[Local] Check completed: ${locationName}: "${entry.itemName}" granted by the scripted giver`);
+        log.randomizer(`[Local] Check completed: ${location}: "${entry.item}" granted by the scripted giver`);
         return;
       }
       if (entry.planClass === 'override-shop') {
-        log.randomizer(`[Local] Check completed: ${locationName}: "${entry.itemName}" bought from the shelf`);
+        log.randomizer(`[Local] Check completed: ${location}: "${entry.item}" bought from the shelf`);
         return;
       }
       if (entry.planClass === 'vanilla-locked') {
-        log.randomizer(`[Local] Check completed: ${locationName}: vanilla "${entry.itemName}" (locked, no action)`);
+        log.randomizer(`[Local] Check completed: ${location}: vanilla "${entry.item}" (locked, no action)`);
         return;
       }
-      log.randomizer(`[Local] Check completed: ${locationName}: delivering "${entry.itemName}"`);
-      deliverEntry(entry, messageIdOf(locationName));
+      log.randomizer(`[Local] Check completed: ${location}: delivering "${entry.item}"`);
+      deliverEntry(entry, messageIdOf(location));
     },
 
     stop() {

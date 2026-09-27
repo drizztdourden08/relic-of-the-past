@@ -2,8 +2,12 @@
 /** Live-evidence shapes carried by `ScreenObservations`; `detection-types.ts` re-exports every name below. */
 import type { ItemId, ScreenId } from '../data/types';
 
-/** How a raw destination index should be resolved into a screen id. */
-type ObservedDestKind = 'screen' | 'room' | 'entrance';
+/**
+ * How a raw destination index should be resolved into a screen id. An entrance
+ * id is not one of them: it names a room only through the native entrance
+ * table, so a producer resolves it there and reports the `room` it found.
+ */
+type ObservedDestKind = 'screen' | 'room';
 
 /**
  * One real in-game transition leaving the current screen, read off a native

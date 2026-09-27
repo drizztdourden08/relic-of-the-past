@@ -75,6 +75,8 @@ class Core {
   }
 
   get8(addr: number): number { return this.raw.HEAPU8[this.ram + addr]; }
+  /** A core buffer by its returned pointer, for the exports that hand one back. */
+  heap(ptr: number, length: number): Uint8Array { return this.raw.HEAPU8.subarray(ptr, ptr + length); }
   set8(addr: number, value: number): void { this.raw.HEAPU8[this.ram + addr] = value & 0xff; }
   get16(addr: number): number { return this.get8(addr) | (this.get8(addr + 1) << 8); }
   set16(addr: number, value: number): void { this.set8(addr, value); this.set8(addr + 1, value >> 8); }

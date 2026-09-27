@@ -13,6 +13,7 @@ export { startGame, resetGame } from './lifecycle';
 export { setAutoSaveConfig, setLinkSpriteData } from './lifecycle';
 export { applyPlayerSprite, clearPlayerSprite } from './player-sprite';
 export type { AutoSaveConfig } from './lifecycle';
+export { markStateLoaded, wasStateJustLoaded } from './state-load-signal';
 export { saveState, loadState, loadNamedState, loadStateRef, captureStateBuffer, loadStateFromBuffer } from './save-states';
 export { captureGameFrameBlob, fulfillFrameCapture } from './capture-frame';
 export { setChestSlotOverride, clearItemOverrides } from './randomizer';

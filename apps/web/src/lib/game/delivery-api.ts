@@ -13,7 +13,7 @@ import { log } from '../log-bus';
 import { receiptJumpText } from './receipt-jump-text';
 
 // A virtual upgrade id has no record: its label is the jump it performs.
-const itemName = (itemId: number): string => getItemByGameId({ receiveItemId: itemId })?.randomizerName
+const itemName = (itemId: number): string => getItemByGameId({ receiveItemId: itemId })?.name
   ?? receiptJumpText(itemId) ?? `Unknown Item #${itemId}`;
 
 const isReady = (): boolean => {

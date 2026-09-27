@@ -93,6 +93,8 @@ const ALL_ENUMERATION: EnumerationEntry[] = [
   { id: 'enum-044', category: 'check-kind', value: 'dig', label: 'Dig Spot', appliesTo: ['check'] },
   { id: 'enum-045', category: 'check-kind', value: 'bonk', label: 'Bonk Item', appliesTo: ['check'] },
   { id: 'enum-046', category: 'check-kind', value: 'event', label: 'Event', appliesTo: ['check'] },
+  { id: 'enum-068', category: 'check-kind', value: 'shop-slot', label: 'Shop Slot', appliesTo: ['check'] },
+  { id: 'enum-069', category: 'check-kind', value: 'pond-slot', label: 'Pond Slot', appliesTo: ['check'] },
 
   // item-category labels are reused verbatim from taxonomy/item-categories.ts's ITEM_CATEGORY_LABELS.
   { id: 'enum-047', category: 'item-category', value: 'weapon', label: 'Weapon', appliesTo: ['item'] },
@@ -124,12 +126,11 @@ const ALL_ENUMERATION: EnumerationEntry[] = [
   { id: 'enum-066', category: 'progress-tier', value: '2', label: 'Princess delivered', appliesTo: ['screen'] },
   { id: 'enum-067', category: 'progress-tier', value: '3', label: 'Tower boss defeated', appliesTo: ['screen'] },
 
-  // review-status is the personal curation layer's status pill (see
-  // shared/game/review/types.ts). It is not a field on any record itself (it
-  // lives in Data/review/<kind>.json, never in the committed dataset), but it
-  // is a real category in this same registry, because the review UI's dropdown
-  // reads it exactly like any other enum field would. Applies to all eleven
-  // collections, in the natural untouched → verified progression.
+  // review-status is the status of a record's own review mark (see
+  // shared/game/data/types/review.ts), which every collection carries and
+  // nothing gates on. The review UI's dropdown reads this category exactly like
+  // any other enum field would. Applies to all eleven collections, in the
+  // natural untouched to verified progression.
   { id: 'enum-058', category: 'review-status', value: 'untouched', label: 'Untouched', appliesTo: ALL_KINDS },
   { id: 'enum-059', category: 'review-status', value: 'in-review', label: 'In Review', appliesTo: ALL_KINDS },
   { id: 'enum-060', category: 'review-status', value: 'needs-work', label: 'Needs Work', appliesTo: ALL_KINDS },

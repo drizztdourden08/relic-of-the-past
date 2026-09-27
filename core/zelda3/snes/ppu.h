@@ -28,6 +28,9 @@ typedef struct BgLayer {
   uint16_t worldW, worldH;       // tilemap size in 8x8 tiles
   int32_t worldOffX, worldOffY;  // added to the local (x,y) to recover the full area-relative pixel (the PPU scroll is masked to 0x1ff, so it only carries the low 512px)
   uint16_t *world;
+  // Set per line while a scanline effect has moved this line's scroll off the camera (world_scroll_carry.c):
+  // columns past either end of the map repeat its edge column, where they otherwise read as no data.
+  bool worldRepeatColumns;
 } BgLayer;
 
 enum {
@@ -177,8 +180,9 @@ struct Ppu {
   bool playerPalActive;
   // The ceiling block as tilemap words, handed over each frame by ZeldaDrawPpuFrame (PpuSetHiddenTiles).
   // A BG2 tile equal to one of them is the void past the room's walls and draws as the gap sentinel
-  // instead of its graphics, which BlackBackdrop then renders black. Count 0 means nothing is hidden and
-  // the draw never reaches the compare. Not part of a save state.
+  // instead of its graphics, which BlackBackdrop then renders black. The sentinel also replaces a sprite
+  // pixel already on that tile, so the black covers sprites the way a wall would. Count 0 means nothing is
+  // hidden and the draw never reaches the compare. Not part of a save state.
   uint16_t hiddenTiles[8];
   uint8_t hiddenTileCount;
   // A still picture that fills the original frame (the title, the file screen) has one tilemap screen

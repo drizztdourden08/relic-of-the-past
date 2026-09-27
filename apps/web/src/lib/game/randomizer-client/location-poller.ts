@@ -1,25 +1,39 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Location poller: watches live memory for newly-completed planned checks
- * and reports each one, once, to the active randomizer session. Polls ONLY
- * what the session's plan includes, over the three detection modes the plan
- * can carry: persisted room-flag words (with the loaded room's live bits
- * folded in, mirroring tracker/flag-polling.ts), overworld event bytes, and
- * progress-buffer bytes (bit mask or threshold).
+ * Location poller: watches for newly-completed planned checks and reports each one, once, to
+ * the active randomizer session. Polls ONLY what the session's plan includes.
+ *
+ * Two sources, one per row, and the second is why a row can be reported at all when the plan
+ * carries no detection for it:
+ *
+ *  - the plan's own detection, read here, which stays because a plan detection is not always
+ *    the record's own: a locked capacity family's compare is re-based on its starting rung
+ *    (withProgressBaseline), and only the plan knows that;
+ *  - for a row with no plan detection, the tracker's own completion sweep
+ *    (tracker/completed-checks-core.ts, over check-facts.ts), which reads every mode a record
+ *    can carry INCLUDING the event ledger. This module had no reading of the ledger at all, so
+ *    a row recorded only there was logged poll-blind and never reported.
  */
 
 import { getModule } from '../wasm-bridge';
 import { log } from '../../log-bus';
+import { getCompletedChecks } from '../tracker';
 import { rescanShopCatchUp } from './apply-overrides';
 import type { CheckDetection } from './check-detection';
+import type { LocationKey } from '@shared/randomizer/world/location-key';
 import type { RandomizerSession } from './session.type';
 
 type ReportingSession = Pick<RandomizerSession, 'reportCheck'>;
 
-/** One polled location: the session key it reports under, and how to read it. */
+/**
+ * One polled location: the session key it reports under, the record behind it when there is
+ * one, and the plan's own read when it carries one. At least one of the two answers, or the
+ * plan would not have kept the entry.
+ */
 interface PollEntry {
-  key: string;
-  detection: CheckDetection;
+  key: LocationKey;
+  checkId?: string;
+  detection?: CheckDetection;
 }
 
 const POLL_INTERVAL_MS = 1000;
@@ -78,14 +92,26 @@ const isDetectionMet = (detection: CheckDetection, reads: HeapReads): boolean =>
 };
 
 /**
+ * Whether one entry reads as complete. The plan's own detection answers when it carries one,
+ * because only the plan knows a re-based compare; the sweep answers for the rest, which is the
+ * only reading a row recorded in the event ledger has. Never both: the sweep also resolves
+ * records from other records (derived-checks.ts), and a row that already reads straight from
+ * memory must not gain a second, looser way to fire.
+ */
+const isEntryComplete = (entry: PollEntry, reads: HeapReads, completed: ReadonlySet<string>): boolean => {
+  if (entry.detection !== undefined) return isDetectionMet(entry.detection, reads);
+  return entry.checkId !== undefined && completed.has(entry.checkId);
+};
+
+/**
  * Adopt the loaded state's own completions as the baseline: everything it already shows as
  * done counts as reported, everything it does not becomes eligible again. Replaces the set
  * instead of adding to it, so a state loaded BACKWARDS re-arms the checks it undid.
  */
-const applyRebaseline = (entries: readonly PollEntry[], reads: HeapReads): void => {
+const applyRebaseline = (entries: readonly PollEntry[], reads: HeapReads, completed: ReadonlySet<string>): void => {
   reported.clear();
   for (const entry of entries) {
-    if (isDetectionMet(entry.detection, reads)) reported.add(entry.key);
+    if (isEntryComplete(entry, reads, completed)) reported.add(entry.key);
   }
   log.randomizer(`[Poller] Re-baselined after a state load: ${reported.size}/${entries.length} already complete`);
 };
@@ -100,17 +126,18 @@ const pollOnce = (session: ReportingSession, entries: readonly PollEntry[]): voi
     rescanShopCatchUp();
     const reads = buildHeapReads(mod);
     if (!reads) return;
+    const completed = getCompletedChecks();
     // A pending re-baseline is resolved on a TICK, never at the load call itself: the flag
     // words the detections read only latch into WRAM a frame after the load re-asserts them,
     // so reading immediately would see a zeroed buffer and re-arm every check instead.
     if (rebaselinePending) {
       rebaselinePending = false;
-      applyRebaseline(entries, reads);
+      applyRebaseline(entries, reads, completed);
       return;
     }
     for (const entry of entries) {
       if (reported.has(entry.key)) continue;
-      if (isDetectionMet(entry.detection, reads)) {
+      if (isEntryComplete(entry, reads, completed)) {
         reported.add(entry.key);
         log.randomizer(`[Poller] Check completed: ${entry.key}`);
         session.reportCheck(entry.key);

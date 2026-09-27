@@ -86,7 +86,20 @@ static bool BoxClosed(uint8 module_at_entry) {
   return main_module_index != module_at_entry || (messaging_module == 0 && submodule_index == 0);
 }
 
+// A save made before the box state travelled with it (or with the original box) loads with a
+// message in flight that the mirror never saw, and with the host box drawing there is no native
+// picture to fall back on. The open message is started over: the engine's first stage loads the
+// same message again from its first page, which clears the mirror and the stale mark with it.
+// Only the text module's render stage, only while the host box is the one drawing.
+static void RestartMessageTheMirrorMissed(void) {
+  enum { kModule_Text = 14, kMessagingModule_Render = 1 };
+  if (!DialogMirror_Stale() || !HudOverride_DialogHidden()) return;
+  if (main_module_index != kModule_Text || messaging_module != kMessagingModule_Render) return;
+  messaging_module = 0;
+}
+
 void GameHook_DialogRender(void (*step)(void)) {
+  RestartMessageTheMirrorMissed();
   DialogPresence_MarkRendered();
   g_in_paced_run = messaging_module != kMessagingModule_PostDeath;
   int steps = StepsThisFrame();
@@ -116,4 +129,17 @@ void WasmSetDialogPacing(int base_q4, int hold_q4, int hold_on, int fill_on, int
   g_typewriter = typewriter != 0;
   g_fill_latched = false;
   g_credit = 0;
+}
+
+// ─── Travelling with a save (dialog_hook_state.c) ───
+// Only what belongs to the message in progress: the step credit carried between frames and a fill a B
+// press latched. The multipliers and switches are settings, and the host pushes those after every load.
+void DialogPacing_Pack(uint8 *out) {
+  PutU16(out, 0, g_credit);
+  out[2] = g_fill_latched;
+}
+
+void DialogPacing_Unpack(const uint8 *in) {
+  g_credit = (uint16)(in[0] | (in[1] << 8));
+  g_fill_latched = in[2] != 0;
 }

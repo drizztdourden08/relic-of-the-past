@@ -341,6 +341,17 @@ static inline bool PpuIsHiddenTile(const Ppu *ppu, uint32 tile) {
   return false;
 }
 
+// Paint |n| pixels as the gap sentinel. A no-data gap replaces the backdrop alone. A hidden tile (|solid|)
+// replaces sprite pixels too, whatever their priority, so the black past a room's walls covers a sprite
+// out there the way a wall would. A sprite entry is the one with layer bit 2 set and bit 0 clear (types 4
+// and 6, and the player's 12 and 14); the backdrop is 5 and the backgrounds are 0 to 2. BG1 is drawn
+// before BG2 and its pixels stay, and BG3 is drawn after and still wins over the sentinel's priority.
+static FORCEINLINE void PpuPaintGap(PpuZbufType *dstz, int n, bool solid) {
+  for (int q = 0; q < n; q++) {
+    if (dstz[q] == 0x0500 || (solid && (dstz[q] & 0x0500) == 0x0400)) dstz[q] = kPpuWorldGapPixel;
+  }
+}
+
 // The tile to draw at screen tile position (col, row): the word the fetch found while inside the 32x32
 // the picture is laid out on, and that screen's own background block outside it (PpuSetEdgeTiles). The
 // picture is the 32 columns and the first 28 rows of that block; these screens carry the same background
@@ -420,6 +431,7 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
       const uint16 *wrow = validY ? bglayer->world + (size_t)worldTileY * bglayer->worldW : NULL;
       for (int k = 0; k <= ntiles; k++) {
         int c = firstCol + k;
+        if (bglayer->worldRepeatColumns) c = IntMax(0, IntMin(c, (int)bglayer->worldW - 1));  // world_scroll_carry.c
         worldRowBuf[k] = (validY && c >= 0 && c < (int)bglayer->worldW) ? wrow[c] : 0;
       }
       tp = worldRowBuf, tp_next = worldRowBuf, tp_last = worldRowBuf + (kPpuXPixels / 8 + 7);
@@ -450,8 +462,8 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
           do DO_PIXEL_HFLIP(0); while (bits <<= 1, dstz++, --curw);
         }
       } else {
-        if ((useWorld && !tile) || hidden)  // no-data gap or hidden fill: paint the backdrop run black via the sentinel
-          for (int q = 0; q < curw; q++) { if (dstz[q] == 0x0500) dstz[q] = kPpuWorldGapPixel; }
+        if ((useWorld && !tile) || hidden)  // no-data gap or hidden fill: paint the run black via the sentinel
+          PpuPaintGap(dstz, curw, hidden);
         dstz += curw;
       }
     }
@@ -473,8 +485,8 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
           DO_PIXEL_HFLIP(0); DO_PIXEL_HFLIP(1); DO_PIXEL_HFLIP(2); DO_PIXEL_HFLIP(3);
           DO_PIXEL_HFLIP(4); DO_PIXEL_HFLIP(5); DO_PIXEL_HFLIP(6); DO_PIXEL_HFLIP(7);
         }
-      } else if ((useWorld && !tile) || hidden) {  // no-data gap or hidden fill: paint the backdrop run black via the sentinel
-        for (int q = 0; q < 8; q++) { if (dstz[q] == 0x0500) dstz[q] = kPpuWorldGapPixel; }
+      } else if ((useWorld && !tile) || hidden) {  // no-data gap or hidden fill: paint the run black via the sentinel
+        PpuPaintGap(dstz, 8, hidden);
       }
       dstz += 8, w -= 8;
     }
@@ -492,8 +504,8 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
         } else {
           do DO_PIXEL_HFLIP(0); while (bits <<= 1, dstz++, --w);
         }
-      } else if ((useWorld && !tile) || hidden) {  // no-data gap or hidden fill: paint the backdrop run black via the sentinel
-        for (int q = 0; q < w; q++) { if (dstz[q] == 0x0500) dstz[q] = kPpuWorldGapPixel; }
+      } else if ((useWorld && !tile) || hidden) {  // no-data gap or hidden fill: paint the run black via the sentinel
+        PpuPaintGap(dstz, (int)w, hidden);
       }
     }
   }
@@ -666,6 +678,7 @@ static void PpuDrawBackground_4bpp_mosaic(Ppu *ppu, uint y, bool sub, uint layer
       const uint16 *wrow = validY ? bglayer->world + (size_t)worldTileY * bglayer->worldW : NULL;
       for (int k = 0; k <= ntiles; k++) {
         int c = firstCol + k;
+        if (bglayer->worldRepeatColumns) c = IntMax(0, IntMin(c, (int)bglayer->worldW - 1));  // world_scroll_carry.c
         worldRowBuf[k] = (validY && c >= 0 && c < (int)bglayer->worldW) ? wrow[c] : 0;
       }
       tp = worldRowBuf, tp_next = worldRowBuf, tp_last = worldRowBuf + (kPpuXPixels / 8 + 7);
@@ -691,8 +704,8 @@ static void PpuDrawBackground_4bpp_mosaic(Ppu *ppu, uint y, bool sub, uint layer
           if (z > dstz[i])
             dstz[i] = pixel + z;
         } while (++i != w);
-      } else if ((useWorld && !tile) || hidden) {  // no-data gap or hidden fill: paint the backdrop run black via the sentinel
-        for (int q = 0; q < w; q++) { if (dstz[q] == 0x0500) dstz[q] = kPpuWorldGapPixel; }
+      } else if ((useWorld && !tile) || hidden) {  // no-data gap or hidden fill: paint the run black via the sentinel
+        PpuPaintGap(dstz, w, hidden);
       }
       dstz += w, x += w;
       // Crossing into the other half of the 2-screen tilemap has to re-arm both bounds, the way NEXT_TP

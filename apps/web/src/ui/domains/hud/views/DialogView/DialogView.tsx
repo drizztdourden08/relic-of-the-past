@@ -5,8 +5,9 @@
  * Skipped messages never show: with skip-dialog on, only a box that waits on a choice is drawn.
  * Nothing is drawn for a message the core is still drawing itself, which is how a setting changed
  * mid-message lands: that message stays native and the next one is ours (dialog_suppress.c).
- * After a save-state load the store is stale until the next message, and nothing is drawn. The box
- * fades in when a message starts and fades out on its last content when it closes.
+ * A save-state load that brought the mirror back shows its message where it was saved. One that did
+ * not leaves the store stale until the next message, and nothing is drawn. The box fades in when a
+ * message starts and fades out on its last content when it closes.
  */
 import { useMemo, useRef } from 'react';
 import { useDialogStore } from '../../../../../stores/dialog-store';
@@ -20,7 +21,6 @@ import { DialogBox } from '../../compounds/DialogBox';
 import { DialogRows } from '../../compounds/DialogRows';
 import { DialogPrompts } from '../../compounds/DialogPrompts';
 import { promptsFor } from '@shared/game/dialog/dialog-prompts';
-import { getSlotSprite } from '../../composites/PauseItemSlot';
 import { TILE_PX } from '@shared/game/dialog/box-geometry';
 import { strokeWidthsOf } from '@shared/game/dialog/box-style';
 import { useDialogScale } from './behavior/useDialogScale';
@@ -36,13 +36,15 @@ import { useFadePresence } from './behavior/useFadePresence';
 import { useButtonGlyphs } from './behavior/useButtonGlyphs';
 import { useChoiceLatch } from './behavior/useChoiceLatch';
 import { useOpeningMessage } from './behavior/useOpeningMessage';
+import { pickerItemSprite } from './behavior/picker-item-sprite';
 
 const DialogView = () => {
   const liveFrame = useDialogStore((s) => s.frame);
   const stale = useDialogStore((s) => s.stale);
   const look = useDialogSettingsStore();
   const { font, fontScale, inkColor, strokeColor, strokeWidth, boxFit, autoSkipDialog } = look;
-  const items = useGameUIStore((s) => s.inventory.items);
+  const inventory = useGameUIStore((s) => s.inventory);
+  const equipment = useGameUIStore((s) => s.equipment);
   const { containerRef, ...metrics } = useDialogScale();
   const { glyphsFor } = useButtonGlyphs();
 
@@ -90,9 +92,7 @@ const DialogView = () => {
   const prompts = look.buttonPrompts
     ? promptsFor(frame, look.prompts).map((p) => ({ glyphs: glyphsFor(p.buttons), label: p.label, hold: p.hold }))
     : [];
-  const itemSprite = frame.wait === 'item' && frame.choice < items.length
-    ? getSlotSprite(frame.choice, items[frame.choice])
-    : null;
+  const itemSprite = frame.wait === 'item' ? pickerItemSprite(frame.choice, inventory, equipment) : null;
 
   return (
     <HudBox ref={containerRef} style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>

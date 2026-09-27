@@ -26,6 +26,11 @@ interface StateStamp {
   formatId: string;
   /** Epoch ms. */
   at: number;
+  /**
+   * The core's dialog hook state at the save, base64 (core/game-hooks/dialog_hook_state.c). Present
+   * only when a message was up and the host was allowed to draw it. Absent on every older save.
+   */
+  dialog?: string;
 }
 
 /**

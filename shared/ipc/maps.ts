@@ -151,8 +151,6 @@ const INVOKE_MAP = {
   saveConnectionReview: 'connectionReview:save',
   loadNavReview: 'navReview:load',
   saveNavReview: 'navReview:save',
-  loadReview: 'review:load',
-  saveReview: 'review:save',
   loadRecommendations: 'recommendations:load',
   applyRecommendationPass: 'recommendations:applyPass',
   decideRecommendation: 'recommendations:decide',

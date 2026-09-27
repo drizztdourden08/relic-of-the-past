@@ -2,10 +2,10 @@
 import { useMemo } from 'react';
 import type { CSSProperties } from 'react';
 import { Icon } from '@iconify/react/offline';
-import { usableEntrances } from '@shared/game/navigation';
 import type { ConnectionInfo, ScreenBundle, FloodFillResult } from '@shared/game/navigation';
+import { landingCrossings, markerCrossings } from '@app/lib/crossing-sections';
 import { Box, Text } from '../../../../design-system/primitives';
-import { getEntranceIcon } from '../../../../../lib/entrance-icons';
+import { crossingIcon } from '../../../../../lib/entrance-icons';
 import { wasmGetRoomLayoutInfo } from '../../../../../lib/game';
 import { useNavigationOverlayStore } from '../../../../../stores/navigation-overlay-store';
 import { EDGE_COLORS } from '../navigation.constants';
@@ -19,14 +19,13 @@ interface MinimapProps {
   renderResults: FloodFillResult[];
   playerScreenIndex: number | null;
   playerPos: { screen: number; row: number; col: number } | null;
-  respawnEntIds: Set<number>;
   roomIndex: number;
 }
 
 const COUNT_LABEL: CSSProperties = { position: 'absolute', bottom: 2, left: 0, right: 0, textAlign: 'center', fontSize: 9, color: 'var(--c-text-dim)', pointerEvents: 'none' };
 
 /** Indoor/dungeon minimap: a single full-size rectangle. */
-const IndoorMinimap = ({ bundle, connections, renderResults, playerPos, respawnEntIds, roomIndex }: MinimapProps) => {
+const IndoorMinimap = ({ bundle, connections, renderResults, playerPos, roomIndex }: MinimapProps) => {
   const EDGE_PAD = 18;
   const AVAIL = 224;
   const innerSize = AVAIL - EDGE_PAD * 2;
@@ -44,7 +43,7 @@ const IndoorMinimap = ({ bundle, connections, renderResults, playerPos, respawnE
   const totalH = AVAIL;
 
   const externalConns = connections.filter(c => !c.isIntraRoom);
-  const fallHoleSpawns = useNavigationOverlayStore(s => s.fallHoleSpawns);
+  const crossings = useNavigationOverlayStore(s => s.crossings);
   const annotations = useNavigationOverlayStore(s => s.annotations);
 
   const primaryResult = renderResults.find(r => r.screenIndex === bundle.head) ?? renderResults[0];
@@ -123,26 +122,26 @@ const IndoorMinimap = ({ bundle, connections, renderResults, playerPos, respawnE
         )}
       </Box>
 
-      {renderResults.flatMap(r => usableEntrances(r).map(ent => {
-        const x = mapLeft + ((ent.gridCol + 0.5) / 64) * mapW;
-        const y = mapTop + ((ent.gridRow + 0.5) / 64) * mapH;
+      {crossings.flatMap(screen => markerCrossings(screen, true).map(crossing => {
+        const x = mapLeft + ((crossing.tile.col + 0.5) / 64) * mapW;
+        const y = mapTop + ((crossing.tile.row + 0.5) / 64) * mapH;
         const sz = Math.max(6, mapW * 4 / 64);
-        const { icon: markerIcon, color: markerColor } = getEntranceIcon(ent.id, ent.roomId, roomIndex, true, respawnEntIds);
+        const { icon: markerIcon, color: markerColor } = crossingIcon(crossing);
         return (
-          <Box key={`ent-${r.screenIndex}-${ent.id}`} style={{ position: 'absolute', left: x - sz / 2, top: y - sz / 2, width: sz, height: sz, pointerEvents: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Box key={`ent-${screen.screenIndex}-${crossing.id}`} style={{ position: 'absolute', left: x - sz / 2, top: y - sz / 2, width: sz, height: sz, pointerEvents: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }} title={crossing.label}>
             <Icon icon={markerIcon} width={sz} height={sz} style={{ color: markerColor, filter: 'drop-shadow(0 0 1px #000)' }} />
           </Box>
         );
       }))}
 
-      {fallHoleSpawns.map((fh, i) => {
-        const x = mapLeft + ((fh.gridCol + 0.5) / 64) * mapW;
-        const y = mapTop + ((fh.gridRow + 0.5) / 64) * mapH;
+      {crossings.flatMap(screen => landingCrossings(screen, true).map(crossing => {
+        const x = mapLeft + ((crossing.tile.col + 0.5) / 64) * mapW;
+        const y = mapTop + ((crossing.tile.row + 0.5) / 64) * mapH;
         const sz = Math.max(6, mapW * 4 / 64);
         return (
-          <Box key={`fh-${i}`} style={{ position: 'absolute', left: x - sz / 2, top: y - sz / 2, width: sz, height: sz, border: '1.5px solid var(--c-gold)', borderRadius: 1, pointerEvents: 'none', background: 'repeating-linear-gradient(45deg, var(--c-gold) 0px, var(--c-gold) 2px, transparent 2px, transparent 4px)', opacity: 0.8 }} />
+          <Box key={`fh-${screen.screenIndex}-${crossing.id}`} style={{ position: 'absolute', left: x - sz / 2, top: y - sz / 2, width: sz, height: sz, border: '1.5px solid var(--c-gold)', borderRadius: 1, pointerEvents: 'none', background: 'repeating-linear-gradient(45deg, var(--c-gold) 0px, var(--c-gold) 2px, transparent 2px, transparent 4px)', opacity: 0.8 }} />
         );
-      })}
+      }))}
 
       {playerPos && bundle.screens.includes(playerPos.screen) && (() => {
         const x = mapLeft + ((playerPos.col + 0.5) / 64) * mapW;

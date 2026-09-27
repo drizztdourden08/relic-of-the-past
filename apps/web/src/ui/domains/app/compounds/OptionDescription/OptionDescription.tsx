@@ -8,7 +8,7 @@
  * so the row above it closes up instead of keeping a blank line.
  */
 import { Text, TermList } from '@ds/primitives';
-import { detailsOf, plainTextOf } from '@shared/randomizer/ap-world/option-description';
+import { detailsOf, plainTextOf } from '@shared/randomizer/world/option-description';
 import type { OptionDescriptionProps } from './OptionDescription.type';
 
 const OptionDescription = (props: OptionDescriptionProps) => {

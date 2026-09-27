@@ -5,39 +5,23 @@ import {
   wasmGetEntranceSpawns, wasmGetEntranceRooms, wasmGetFallHoles,
 } from '../../../../../lib/game';
 import { spawnLandingTile } from '../../../../../lib/game/flood';
+import { togglesLayer } from '../../../../../lib/game/crossings';
 import type { wasmGetRoomLayoutInfo } from '../../../../../lib/game';
 import type { ConnectionInfo, ScreenBundle } from '@shared/game/navigation';
 
 type EdgeName = 'north' | 'south' | 'east' | 'west';
 type FallHoleLanding = { gridRow: number; gridCol: number; entranceId: number };
 
+/**
+ * Stamps the border bundles the overlay and the internal-edge lists read. The
+ * crossing facade answers the same question for its own edge records off the
+ * same predicate, so both views of one boundary agree.
+ */
 const annotateLayerToggles = (allConnections: ConnectionInfo[], isIndoors: boolean): void => {
-  // Annotate all edges with layer toggle info from toggle floor positions.
-  // dung_toggle_floor_pos is populated during room load for doors with type 22 (kDoorType_PlayerBgChange).
-  // These positions indicate tiles where crossing triggers link_is_on_lower_level ^= 1.
   if (!isIndoors) return;
-  const togglePositions = wasmGetToggleFloorPositions();
-  // Threshold: how close a toggle position must be to the room edge to count for that edge
-  const EDGE_THRESHOLD = 8;
-  const GRID_MAX = 63;
+  const toggles = wasmGetToggleFloorPositions();
   for (const conn of allConnections) {
-    // For N/S edges, connection positions are column indices; for E/W edges, they are row indices
-    const useCol = conn.edge === 'north' || conn.edge === 'south';
-    const matchingToggles = togglePositions.filter(t => {
-      // Check toggle is near the correct edge
-      switch (conn.edge) {
-        case 'north': return t.row <= EDGE_THRESHOLD;
-        case 'south': return t.row >= GRID_MAX - EDGE_THRESHOLD;
-        case 'west': return t.col <= EDGE_THRESHOLD;
-        case 'east': return t.col >= GRID_MAX - EDGE_THRESHOLD;
-      }
-    });
-    // Check if any matching toggle position overlaps with connection positions
-    if (matchingToggles.some(t =>
-      conn.positions.some(p => Math.abs(p - (useCol ? t.col : t.row)) <= 3)
-    )) {
-      conn.layerToggle = true;
-    }
+    if (togglesLayer(conn.edge, conn.positions, toggles)) conn.layerToggle = true;
   }
 };
 

@@ -4,8 +4,8 @@ import type {
   LockedGroupsByTab, OptionTabId, UnlockedGroupsByTab,
 } from '@app/hooks/randomizer/option-tab-model';
 import type { RandomizerOptionChoices } from '@app/hooks/randomizer/randomizer-choices';
-import type { ApOptionDef, ApOptionValue } from '@shared/randomizer/ap-world/options.type';
-import type { PondDemandView } from '@shared/randomizer/ap-world/pond/pond-ask.type';
+import type { OptionDef, OptionValue } from '@shared/randomizer/world/options.type';
+import type { PondDemandView } from '@shared/randomizer/world/pond/pond-ask.type';
 
 interface OptionTabBodyProps {
   tab: OptionTabId;
@@ -14,8 +14,8 @@ interface OptionTabBodyProps {
   /** The fixed sections each tab that shows some owns, already split. */
   lockedGroups: LockedGroupsByTab;
   /** The snapshot these choices would freeze: what the keyed blocks read. */
-  values: Readonly<Record<string, ApOptionValue>>;
-  valueOf: (option: ApOptionDef) => ApOptionValue;
+  values: Readonly<Record<string, OptionValue>>;
+  valueOf: (option: OptionDef) => OptionValue;
   cellOf: (key: string) => ImpactCell;
   choices: RandomizerOptionChoices;
   /** The seed this profile will be generated with; the previews are read from it. */
@@ -26,7 +26,7 @@ interface OptionTabBodyProps {
   notes: readonly string[];
   /** Filler still in the pool; null when the pool could not be built. */
   fillerHeadroom: number | null;
-  onRowChange: (key: string, next: ApOptionValue) => void;
+  onRowChange: (key: string, next: OptionValue) => void;
   onChange: (next: RandomizerOptionChoices) => void;
 }
 

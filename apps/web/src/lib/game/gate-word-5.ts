@@ -6,13 +6,16 @@
  * so neither can clear the other's bits with a write of its own.
  */
 
+import { DEFAULT_STORY_WORD } from '@shared/randomizer/world/story-gates/story-gate-word';
 import { log } from '../log-bus';
 import { getModule } from './wasm-bridge';
 
 const GATE_WORD = 5;
 
 let capacityHalf = 0;
-let storyHalf = 0;
+// The story half starts as the default every profile arms, so a word written before the first
+// settings push (a state load, the capacity half) never lands with the ledger off.
+let storyHalf = DEFAULT_STORY_WORD;
 
 const write = (): void => {
   const mod = getModule();

@@ -23,29 +23,29 @@
  * The difficulty block owns the five copy multiples and the heart ceiling
  * (difficulty/) on exactly those terms.
  */
-import { AP_OPTION_GROUPS, apOptionCatalog } from '@shared/randomizer/ap-world/options.data';
+import { OPTION_GROUPS, optionCatalog } from '@shared/randomizer/world/options.data';
 import {
   CAPACITY_ENABLED_KEY, CAPACITY_PROGRESSIVE_KEY, familyOfOptionKey, isCapacityBonusKey,
-} from '@shared/randomizer/ap-world/capacity';
-import { isShopPriceOptionKey } from '@shared/randomizer/ap-world/shops/shop-price-options.data';
-import { isShopScopeOptionKey } from '@shared/randomizer/ap-world/shops/shop-slot-options.data';
-import { isDarkRoomOptionKey } from '@shared/randomizer/ap-world/dark-rooms/dark-room-option-keys';
-import { isDifficultyOptionKey } from '@shared/randomizer/ap-world/difficulty/difficulty-option-keys';
-import { isPondValueKey } from '@shared/randomizer/ap-world/pond/pond-option-keys';
-import { isProgressiveTierKey } from '@shared/randomizer/ap-world/progressive/progressive-option-keys';
-import { isProgressiveModeKey } from '@shared/randomizer/ap-world/progressive/progressive-mode-keys';
-import { RETRO_BOW_KEY } from '@shared/randomizer/ap-world/retro/retro-bow.data';
-import { isRetroOptionKey } from '@shared/randomizer/ap-world/retro/retro-options.data';
-import type { ApOptionDef, ApOptionGroup } from '@shared/randomizer/ap-world/options.type';
+} from '@shared/randomizer/world/capacity';
+import { isShopPriceOptionKey } from '@shared/randomizer/world/shops/shop-price-options.data';
+import { isShopScopeOptionKey } from '@shared/randomizer/world/shops/shop-slot-options.data';
+import { isDarkRoomOptionKey } from '@shared/randomizer/world/dark-rooms/dark-room-option-keys';
+import { isDifficultyOptionKey } from '@shared/randomizer/world/difficulty/difficulty-option-keys';
+import { isPondValueKey } from '@shared/randomizer/world/pond/pond-option-keys';
+import { isProgressiveTierKey } from '@shared/randomizer/world/progressive/progressive-option-keys';
+import { isProgressiveModeKey } from '@shared/randomizer/world/progressive/progressive-mode-keys';
+import { RETRO_BOW_KEY } from '@shared/randomizer/world/retro/retro-bow.data';
+import { isRetroOptionKey } from '@shared/randomizer/world/retro/retro-options.data';
+import type { OptionDef, OptionGroup } from '@shared/randomizer/world/options.type';
 
 interface LockedOptionGroup {
-  group: ApOptionGroup;
-  options: ApOptionDef[];
+  group: OptionGroup;
+  options: OptionDef[];
 }
 
 interface CatalogByLock {
   /** Options the player may change at creation time, in catalog order, the capacity rows excepted. */
-  unlocked: ApOptionDef[];
+  unlocked: OptionDef[];
   /** The same options, grouped by section in catalog group order; empty groups dropped. */
   unlockedGroups: LockedOptionGroup[];
   /** Everything fixed by this app, grouped; groups with no locked option are omitted. */
@@ -53,8 +53,8 @@ interface CatalogByLock {
 }
 
 const partitionCatalogByLock = (
-  catalog: readonly ApOptionDef[],
-  groups: readonly ApOptionGroup[],
+  catalog: readonly OptionDef[],
+  groups: readonly OptionGroup[],
 ): CatalogByLock => {
   const unlocked = catalog.filter((option) =>
     !option.locked && familyOfOptionKey(option.key) === undefined && option.key !== CAPACITY_PROGRESSIVE_KEY
@@ -64,7 +64,7 @@ const partitionCatalogByLock = (
     && !isProgressiveModeKey(option.key)
     && option.key !== RETRO_BOW_KEY && !isRetroOptionKey(option.key)
     && !isDarkRoomOptionKey(option.key) && !isDifficultyOptionKey(option.key));
-  const byGroup = (wanted: readonly ApOptionDef[]): LockedOptionGroup[] => groups
+  const byGroup = (wanted: readonly OptionDef[]): LockedOptionGroup[] => groups
     .map((group) => ({ group, options: wanted.filter((option) => option.group === group.id) }))
     .filter((entry) => entry.options.length > 0);
   const lockedGroups = byGroup(catalog.filter((option) => option.locked));
@@ -72,7 +72,7 @@ const partitionCatalogByLock = (
 };
 
 /** The shipped catalog, partitioned once, since the catalog is static module data. */
-const apCatalogByLock: CatalogByLock = partitionCatalogByLock(apOptionCatalog, AP_OPTION_GROUPS);
+const catalogByLock: CatalogByLock = partitionCatalogByLock(optionCatalog, OPTION_GROUPS);
 
-export { apCatalogByLock, partitionCatalogByLock };
+export { catalogByLock, partitionCatalogByLock };
 export type { CatalogByLock, LockedOptionGroup };

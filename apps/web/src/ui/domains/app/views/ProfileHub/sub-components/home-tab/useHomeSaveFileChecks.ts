@@ -8,9 +8,18 @@
  * session starts or ends.
  */
 import { useEffect, useState } from 'react';
+import type { RunKind } from '@shared/game/logic';
 import { computeSaveFileChecks } from './compute-save-file-checks';
 import type { ProfileModeId } from '../../../../compounds/ModeBadge';
 import type { SaveFileChecks } from './home-tab.type';
+
+/** The run a profile mode reads its saves as; Vanilla Safe reads none. */
+const RUN_OF_MODE: Readonly<Record<ProfileModeId, RunKind | null>> = {
+  vanilla: 'normal',
+  'vanilla-safe': null,
+  randomizer: 'seed',
+  'randomizer-online': 'online',
+};
 
 const useHomeSaveFileChecks = (
   profileId: string,
@@ -20,13 +29,13 @@ const useHomeSaveFileChecks = (
   const [files, setFiles] = useState<SaveFileChecks[] | null>(null);
 
   useEffect(() => {
-    if (mode === 'vanilla-safe') {
+    const runKind = RUN_OF_MODE[mode];
+    if (runKind === null) {
       setFiles(null);
       return;
     }
     let cancelled = false;
-    const isRandomized = mode === 'randomizer' || mode === 'randomizer-online';
-    computeSaveFileChecks(profileId, isRandomized)
+    computeSaveFileChecks(profileId, runKind)
       .then((rows) => { if (!cancelled) setFiles(rows); })
       .catch(() => { if (!cancelled) setFiles(null); });
     return () => { cancelled = true; };

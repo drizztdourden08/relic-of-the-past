@@ -12,12 +12,12 @@
  */
 import {
   BOTTLE_CONTENTS, bottleContentKeyOf,
-} from '@shared/randomizer/ap-world/shops/shop-price-options.data';
-import { blockedContentNote, potionPriceStateOfValues } from '@shared/randomizer/ap-world/potion-price';
+} from '@shared/randomizer/world/shops/shop-price-options.data';
+import { blockedContentNote, potionPriceStateOfValues } from '@shared/randomizer/world/potion-price';
 import type { BottleContentRowModel } from '../../CurrencyPriceRow';
-import type { ApOptionValue } from '@shared/randomizer/ap-world/options.type';
+import type { OptionValue } from '@shared/randomizer/world/options.type';
 
-type Values = Readonly<Record<string, ApOptionValue>>;
+type Values = Readonly<Record<string, OptionValue>>;
 
 const bottleContentRowsOf = (values: Values): readonly BottleContentRowModel[] => {
   const { blockedKeys } = potionPriceStateOfValues(values);

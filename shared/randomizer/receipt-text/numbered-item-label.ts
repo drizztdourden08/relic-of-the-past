@@ -8,6 +8,7 @@
  * (an online receipt has no seed to count from and shows the plain name).
  * The names themselves come from the placement data, never from here.
  */
+import { itemKeyOfName } from '../world/display-names/item-key-name';
 import { countClassOf } from './receipt-counts';
 import type { ReceiptCount } from './receipt-counts';
 
@@ -43,7 +44,7 @@ const numberedItemLabel = (itemName: string, count: ReceiptCount | undefined): s
     return count === undefined ? `${base} of ${dungeon}` : `${base} of ${dungeon} ${ofTotal(count)}`;
   }
   if (count === undefined) return itemName;
-  const countClass = countClassOf(itemName);
+  const countClass = countClassOf(itemKeyOfName(itemName));
   if (countClass === 'heart-piece') return heartPieceLabel(itemName, count);
   if (countClass === 'triforce') return triforceLabel(itemName, count);
   if (countClass?.startsWith('progressive:')) {

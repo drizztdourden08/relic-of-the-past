@@ -10,7 +10,7 @@
 import { chestAddressToTableIndex, joinCrosswalk } from './chest-crosswalk';
 import { vanillaVerdict } from './comparator-vanilla';
 import type { CheckRecord, ItemRecord } from '../../game/data/types';
-import type { ApLocation } from './ap-source';
+import type { ReferenceLocation } from './reference-source';
 import type { ChestVerdict, ComparatorInput } from './comparator-types';
 import type { RomCensus, RomChest } from './rom-census';
 
@@ -24,12 +24,12 @@ const chestAt = (
     : census.chestsByRoom.get(roomId)?.find((chest) => chest.chestIndex === chestIndex);
 
 /** The reference-side (roomId, chestIndex) for a standard name, when it maps into the chest table. */
-const apPositionOf = (
+const referencePositionOf = (
   standardName: string,
-  apByName: ReadonlyMap<string, ApLocation>,
+  referenceByName: ReadonlyMap<string, ReferenceLocation>,
   flatTable: readonly { roomId: number }[],
 ): { roomId: number; chestIndex: number } | null => {
-  const location = apByName.get(standardName);
+  const location = referenceByName.get(standardName);
   if (location === undefined) return null;
   const tableIndex = chestAddressToTableIndex(location.romAddress);
   return tableIndex === null ? null : joinCrosswalk(tableIndex, flatTable);
@@ -39,7 +39,7 @@ const verdictsForChest = (
   check: CheckRecord,
   standardName: string,
   input: ComparatorInput,
-  apByName: ReadonlyMap<string, ApLocation>,
+  referenceByName: ReadonlyMap<string, ReferenceLocation>,
   itemById: ReadonlyMap<string, ItemRecord>,
 ): ChestVerdict[] => {
   const { census, flatTable, items } = input;
@@ -57,15 +57,15 @@ const verdictsForChest = (
     });
   }
 
-  const apPosition = apPositionOf(standardName, apByName, flatTable);
+  const referencePosition = referencePositionOf(standardName, referenceByName, flatTable);
   const positionMismatch =
-    apPosition !== null && (apPosition.roomId !== roomId || apPosition.chestIndex !== chestIndex);
-  if (apPosition === null) {
+    referencePosition !== null && (referencePosition.roomId !== roomId || referencePosition.chestIndex !== chestIndex);
+  if (referencePosition === null) {
     out.push({
       checkId: check.id,
       standardName,
-      verdict: 'no-ap-address',
-      note: apByName.has(standardName)
+      verdict: 'no-reference-address',
+      note: referenceByName.has(standardName)
         ? 'reference location exists but its address is outside the chest-table range'
         : 'no reference location with this standard name',
     });
@@ -74,12 +74,12 @@ const verdictsForChest = (
       checkId: check.id,
       standardName,
       verdict: 'position-mismatch',
-      expected: apPosition,
+      expected: referencePosition,
       actual: { roomId, chestIndex },
     });
   }
 
-  const finalPosition = positionMismatch ? apPosition : { roomId, chestIndex };
+  const finalPosition = positionMismatch ? referencePosition : { roomId, chestIndex };
   const finalChest = chestAt(census, finalPosition.roomId, finalPosition.chestIndex);
   if (finalChest !== undefined) {
     const verdict = vanillaVerdict({
@@ -100,30 +100,30 @@ const verdictsForChest = (
 const keyDropVerdict = (
   check: CheckRecord,
   standardName: string,
-  apLocationIds: Record<string, number>,
+  referenceLocationIds: Record<string, number>,
 ): ChestVerdict =>
-  standardName in apLocationIds
+  standardName in referenceLocationIds
     ? { checkId: check.id, standardName, verdict: 'ok' }
     : {
         checkId: check.id,
         standardName,
-        verdict: 'no-ap-address',
+        verdict: 'no-reference-address',
         note: 'keydrop name not in datapackage',
       };
 
 const compareChestChecks = (input: ComparatorInput): ChestVerdict[] => {
-  const { checks, items, apLocations, apLocationIds, nameOf } = input;
+  const { checks, items, referenceLocations, referenceLocationIds, nameOf } = input;
   const itemById = new Map(items.map((item) => [item.id, item]));
-  const apByName = new Map(apLocations.map((location) => [location.name, location]));
+  const referenceByName = new Map(referenceLocations.map((location) => [location.name, location]));
 
   const verdicts: ChestVerdict[] = [];
   for (const check of checks) {
     if (check.kind === 'keyDrop') {
-      verdicts.push(keyDropVerdict(check, nameOf(check), apLocationIds));
+      verdicts.push(keyDropVerdict(check, nameOf(check), referenceLocationIds));
       continue;
     }
     if (check.kind !== 'chest') continue;
-    verdicts.push(...verdictsForChest(check, nameOf(check), input, apByName, itemById));
+    verdicts.push(...verdictsForChest(check, nameOf(check), input, referenceByName, itemById));
   }
   return verdicts;
 };

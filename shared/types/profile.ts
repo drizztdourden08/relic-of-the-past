@@ -1,5 +1,5 @@
 /* @layer shared-types @kind logic */
-import type { RandomizerOptionsSnapshot } from '../randomizer/ap-world/options.type';
+import type { RandomizerOptionsSnapshot } from '../randomizer/world/options.type';
 import type { GameSettings } from './settings';
 
 /**

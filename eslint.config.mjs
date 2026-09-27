@@ -205,6 +205,8 @@ export default tseslint.config(
       // The private-vault paths are NOT excluded: they are linted and fixed here,
       // then pushed back to the vault.
       '.claude/**',
+      // A worktree's own user data: profiles, saves, scratch core builds. Never source.
+      '.user-data/**',
     ],
   },
   {
@@ -330,5 +332,32 @@ export default tseslint.config(
     // breaks the decode/encode round-trip. Prose rules still apply to the comments.
     files: ['shared/asset-extraction/text/data/**'],
     rules: { 'local/no-smart-punctuation': 'off' },
+  },
+  {
+    // The dataset has one door: shared/game/data's facade, re-exported by its barrel. A record
+    // file, a collection loader or the registry is never imported from outside the package, so
+    // every read of a record, everywhere, is one of the facade's queries.
+    files: ['**/*.{ts,tsx}'],
+    ignores: ['shared/game/data/**'],
+    rules: {
+      'no-restricted-imports': ['error', {
+        patterns: [
+          {
+            group: ['@shared/game/data/records/*', '**/game/data/records/*'],
+            message: 'Read records through @shared/game/data (the facade), never a record file.',
+          },
+          {
+            group: [
+              '@shared/game/data/registry', '@shared/game/data/bootstrap',
+              '@shared/game/data/items', '@shared/game/data/dungeons', '@shared/game/data/checks',
+              '@shared/game/data/screens', '@shared/game/data/connections', '@shared/game/data/actors',
+              '@shared/game/data/areas', '@shared/game/data/locations', '@shared/game/data/regions',
+              '@shared/game/data/tags', '@shared/game/data/item-groups', '@shared/game/data/enumeration',
+            ],
+            message: 'A collection loader is the facade\'s own input. Read it with all(kind), find or a getter from @shared/game/data.',
+          },
+        ],
+      }],
+    },
   },
 );

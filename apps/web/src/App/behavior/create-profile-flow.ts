@@ -6,7 +6,7 @@
  * state, so a generation failure aborts BEFORE anything reaches disk.
  */
 import type { CreateProfileOptions, CreateProfileResult } from '@shared/types/profile';
-import type { ApPlacement } from '@shared/randomizer/ap-world/fill/ap-placement.type';
+import type { Placement } from '@shared/randomizer/world/fill/placement.type';
 import { generateFromSnapshot } from '@shared/randomizer/generate';
 import { normalizeRandomizerOptions } from '@shared/randomizer/options-snapshot';
 import { log } from '../../lib/log-bus';
@@ -19,7 +19,7 @@ import { saveRandomizerPlacement } from '../../lib/randomizer-placement-io';
 const runCreateProfileFlow = async (opts: CreateProfileOptions): Promise<CreateProfileResult> => {
   // Local mode generates before the profile exists, so a failed generation
   // aborts creation instead of leaving a profile with no placement.
-  let placement: ApPlacement | null = null;
+  let placement: Placement | null = null;
   if (opts.randomizer?.mode === 'local') {
     try {
       // The ported pipeline consumes the frozen snapshot directly (tolerating legacy config

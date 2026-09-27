@@ -6,6 +6,7 @@ export { HudHeart } from './primitives/HudHeart';
 export { PauseTile } from './primitives/PauseTile';
 export { PauseBorderBox } from './primitives/PauseBorderBox';
 export { PauseLabel } from './primitives/PauseLabel';
+export { HudPie } from './primitives/HudPie';
 
 // Composites
 export { HudCount } from './composites/HudCount';
@@ -20,6 +21,7 @@ export { LocationNotification } from './views/LocationNotification';
 
 // Compounds
 export { HudLife } from './compounds/HudLife';
+export { HudCountdown } from './compounds/HudCountdown';
 export { PauseItemGrid } from './compounds/PauseItemGrid';
 export { PauseNamePanel } from './compounds/PauseNamePanel';
 export { PauseProgressPanel } from './compounds/PauseProgressPanel';
@@ -41,6 +43,7 @@ export type { HudHeartProps, HeartState, HeartMode } from './primitives/HudHeart
 export type { PauseTileProps } from './primitives/PauseTile';
 export type { PauseBorderBoxProps } from './primitives/PauseBorderBox';
 export type { PauseLabelProps } from './primitives/PauseLabel';
+export type { HudPieProps } from './primitives/HudPie';
 export type { HudCountProps } from './composites/HudCount';
 export type { HudCurrentItemProps } from './composites/HudCurrentItem';
 export type { HudMagicMeterProps, MagicMeterMode } from './composites/HudMagicMeter';
@@ -50,6 +53,7 @@ export type { PauseCrystalIconProps } from './composites/PauseCrystalIcon';
 export type { PauseEquipSlotProps } from './composites/PauseEquipSlot';
 export type { PauseButtonLabelProps } from './composites/PauseButtonLabel';
 export type { HudLifeProps } from './compounds/HudLife';
+export type { HudCountdownProps } from './compounds/HudCountdown';
 export type { PauseItemGridProps } from './compounds/PauseItemGrid';
 export type { PauseNamePanelProps } from './compounds/PauseNamePanel';
 export type { PauseProgressPanelProps } from './compounds/PauseProgressPanel';

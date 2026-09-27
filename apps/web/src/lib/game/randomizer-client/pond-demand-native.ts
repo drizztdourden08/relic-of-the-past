@@ -16,8 +16,8 @@
  * Pure: the item lookup is handed in, so a test pins it with a plain map.
  */
 
-import { nativePriceOf } from '@shared/randomizer/ap-world/shops/shop-price-native';
-import type { ShopPrice } from '@shared/randomizer/ap-world/shops/shop-price.type';
+import { nativePriceOf } from '@shared/randomizer/world/shops/shop-price-native';
+import type { ShopPrice } from '@shared/randomizer/world/shops/shop-price.type';
 
 /** Tags shared with core/game-hooks/pond_demands.h. */
 const POND_DEMAND_KIND = {
@@ -47,7 +47,7 @@ const NO_DEMAND: NativeDemand = { kind: POND_DEMAND_KIND.none, amount: 0, native
  * rung over for free once the handler charges it.
  */
 const nativeDemandOf = (
-  demand: ShopPrice | undefined, receiveIdOf: (itemName: string) => number | undefined,
+  demand: ShopPrice | undefined, receiveIdOf: (item: string) => number | undefined,
 ): NativeDemand | string => {
   if (demand === undefined) return NO_DEMAND;
   if (demand.currency === 'item') {

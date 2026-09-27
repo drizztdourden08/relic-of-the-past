@@ -151,8 +151,6 @@ describeDataset('the two panes share one tab', () => {
     vi.stubGlobal('window', {
       api: {
         uiViews: { load: vi.fn().mockResolvedValue({}), save: vi.fn().mockResolvedValue(undefined) },
-        loadReview: vi.fn().mockResolvedValue({}),
-        saveReview: vi.fn().mockResolvedValue(undefined),
         loadRecommendations: vi.fn().mockResolvedValue([]),
       },
       addEventListener: () => {},

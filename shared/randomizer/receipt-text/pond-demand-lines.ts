@@ -19,8 +19,9 @@
  * first, so the composer keeps the longer wording when the box has room
  * (receipt-line.type.ts). Pure: nothing here knows about message ids.
  */
-import { priceLabelOf } from '../ap-world/shops/shop-price-native';
-import type { ShopBottleContent, ShopBottlePrice, ShopPrice } from '../ap-world/shops/shop-price.type';
+import { ITEM } from '../world/item-ids.data';
+import { priceLabelOf } from '../world/shops/shop-price-native';
+import type { ShopBottleContent, ShopBottlePrice, ShopPrice } from '../world/shops/shop-price.type';
 import type { ChoiceReceiptLine, ReceiptLine } from './receipt-line.type';
 
 /** Where a rung stands, for the award line's closing clause. */
@@ -34,12 +35,12 @@ interface PondDemandLineSet {
 }
 
 const BOTTLE_NAMES: Readonly<Record<ShopBottleContent, string>> = {
-  'red-potion': 'Red Potion', 'green-potion': 'Green Potion', 'blue-potion': 'Blue Potion', fairy: 'Fairy', bee: 'Bee',
+  'red-potion': ITEM.redPotion, 'green-potion': ITEM.greenPotion, 'blue-potion': ITEM.bluePotion, fairy: 'Fairy', bee: ITEM.bee,
 };
 
 /** What several of a bottled creature are called; a potion reads the same however many. */
 const BOTTLE_PLURALS: Readonly<Record<ShopBottleContent, string>> = {
-  'red-potion': 'Red Potion', 'green-potion': 'Green Potion', 'blue-potion': 'Blue Potion',
+  'red-potion': ITEM.redPotion, 'green-potion': ITEM.greenPotion, 'blue-potion': ITEM.bluePotion,
   fairy: 'Fairies', bee: 'Bees',
 };
 

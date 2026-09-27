@@ -55,6 +55,7 @@ bool GameHook_GiftOverrideArmed(uint8 vanilla_item);
 // good. Both return the vanilla expression verbatim unless the stump's grant is armed.
 uint8 GameHook_StumpyFluteSlot(void);
 bool GameHook_StumpyFinished(void);
+#include "smith_sword.h"
 
 // Whether the continue/death menu offers the third (mountain) spawn: the real
 // completion bit while the elder's grant is overridden this session, the vanilla
@@ -742,7 +743,13 @@ void GameHook_SetHideSpaceBeyondWalls(bool enable);
 // house, a cave or the sanctuary. A palace room answers no, and so does any room drawn with a dungeon's
 // tileset, whatever its entrance says. Returns the word count with |words| pointing at them, or 0 with
 // nothing to hide. Asked once per frame by ZeldaDrawPpuFrame, after PpuBeginDrawing has reset the flags.
+// In ROOM_TOWER_AGAHNIM, under the same request, it returns 0 and blacks the two CGRAM entries that
+// colour that room's surround until GameHook_HideSpaceBeyondWallsDone.
 int GameHook_HideSpaceBeyondWallsFill(const uint16 **words);
+
+// The frame is drawn: gives the CGRAM entries blacked by the call above their values back. Does nothing
+// on every other frame. Called by ZeldaDrawPpuFrame after its last line.
+void GameHook_HideSpaceBeyondWallsDone(void);
 
 // ─── The Space Around A Fixed Picture (fixed_picture_edges.c) ───
 

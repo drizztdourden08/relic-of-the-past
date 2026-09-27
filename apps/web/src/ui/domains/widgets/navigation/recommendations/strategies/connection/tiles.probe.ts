@@ -16,17 +16,19 @@
  * table is a live read of that room, so it cannot speak for the arriving side
  * of a crossing that also shows up in `existingConnections`.
  */
-import { getScreen } from '@shared/game/data';
-import { toScreenIdOf } from '@shared/game/data/connections/derive';
+import { get } from '@shared/game/data';
+import { toScreenIdOrNone } from '@shared/game/data';
 import type { ConnectionTile } from '@shared/game/data';
 import { known, unread } from '@shared/game/recommendations/compare';
 import type { FieldProbe } from '@shared/game/recommendations/compare';
 import type { LiveWalkBoundary, ScreenObservations } from '@shared/game/recommendations';
 
+// `get`, not `getScreen`: a record the inspector is editing can name a screen nothing holds
+// yet, and this probe answers "not this room" for it instead of throwing.
 const isCurrentRoom = (observations: ScreenObservations, screenId: string): boolean => {
   const live = observations.liveGameId;
   if (!live || live.roomIndex == null) return false;
-  return getScreen(screenId).gameId.roomIndex === live.roomIndex;
+  return get('screen', screenId)?.gameId.roomIndex === live.roomIndex;
 };
 
 /** Every walk-boundary tile leading to `destRoom`, as base tiles. */
@@ -44,7 +46,8 @@ const TILES_PROBE: FieldProbe<'connection'> = {
     && isCurrentRoom(observations, record.screenId),
   read: (observations, record) => {
     if (!observations.walkBoundaries) return unread();
-    const destRoom = getScreen(toScreenIdOf(record)).gameId.roomIndex;
+    const other = toScreenIdOrNone(record);
+    const destRoom = other === undefined ? null : get('screen', other)?.gameId.roomIndex;
     if (destRoom == null) return unread();
     const tiles = tilesFor(observations.walkBoundaries, destRoom);
     return tiles.length > 0 ? known(tiles) : unread();

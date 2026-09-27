@@ -11,7 +11,7 @@
 import { useEffect, useRef } from 'react';
 import {
   capacityBonusFromSnapshot, capacityProfileFromSnapshot, capacityProgressiveFromSnapshot,
-} from '@shared/randomizer/ap-world/capacity';
+} from '@shared/randomizer/world/capacity';
 import { normalizeRandomizerOptions } from '@shared/randomizer/options-snapshot';
 import { subscribeGameState } from '../../lib/game';
 import {

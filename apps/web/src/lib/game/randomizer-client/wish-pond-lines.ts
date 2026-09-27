@@ -17,9 +17,9 @@
  * carries one of each, and only when at least one water is planned.
  */
 
-import { pondProfilesOfStats } from '@shared/randomizer/ap-world/fill/placement-ponds';
+import { pondProfilesOfStats } from '@shared/randomizer/world/fill/placement-ponds';
 import { WISH_POND_WATERS } from './wish-pond-rung-keys';
-import type { ApPlacement } from '@shared/randomizer/ap-world/fill/ap-placement.type';
+import type { Placement } from '@shared/randomizer/world/fill/placement.type';
 import type { ReceiptLine } from '@shared/randomizer/receipt-text/receipt-line.type';
 
 const WISH_POND_AWARD_LINE: ReceiptLine = [
@@ -33,13 +33,13 @@ const WISH_POND_CLOSED_LINE: ReceiptLine = [
 ];
 
 /** True when either water runs on a plan, which is when the core needs the two lines. */
-const anyWishPondPlanned = (placement: ApPlacement): boolean => {
+const anyWishPondPlanned = (placement: Placement): boolean => {
   const profiles = pondProfilesOfStats(placement.stats);
   return WISH_POND_WATERS.some(({ instance }) => profiles[instance.id].mode !== 'capacity');
 };
 
 /** The award line then the closing line, or none when neither water is planned. */
-const wishPondLinesOf = (placement: ApPlacement): readonly ReceiptLine[] =>
+const wishPondLinesOf = (placement: Placement): readonly ReceiptLine[] =>
   (anyWishPondPlanned(placement) ? [WISH_POND_AWARD_LINE, WISH_POND_CLOSED_LINE] : []);
 
 export { WISH_POND_AWARD_LINE, WISH_POND_CLOSED_LINE, wishPondLinesOf };

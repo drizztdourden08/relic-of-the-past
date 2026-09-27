@@ -48,7 +48,7 @@ const StopAtCheckPicker = (props: StopAtCheckPickerProps) => {
 
   const selected = stopAtCheckId ? getCheck(stopAtCheckId) : undefined;
   const triggerIcon = selected ? checkTypeIcon(selected.kind) : '∞';
-  const triggerLabel = selected?.randomizerName ?? 'No stop (full run)';
+  const triggerLabel = selected?.name ?? 'No stop (full run)';
 
   return (
     <>

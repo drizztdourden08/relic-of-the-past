@@ -1,0 +1,9 @@
+/* @layer renderer-hud @kind style */
+
+/* Bottom centre of the HUD content box. The bottom offset follows the HUD scale, so it is set inline. */
+.hud-countdown-slot {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}

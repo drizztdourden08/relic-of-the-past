@@ -25,13 +25,14 @@ const nativeGrantIdOf = (check: CheckRecord): number | undefined => {
     return itemId <= MAX_NATIVE_GRANT_ID ? itemId : undefined;
   }
   if (kind === 'boss') return BOSS_PRIZE_GRANT_ID;
-  // A dungeon reward: the falling ancilla carries the id the boss's own script grants,
-  // the dungeon's vanilla pendant, or the one shared crystal id. The record's vanilla item
-  // names it; its own gameId cannot, because the crystal-category records carry none.
+  // A dungeon reward: the falling ancilla carries the id the boss's own script grants.
+  // A pendant's record says which id that is. The seven crystals share one id no record
+  // holds, so those alone come from the prize table.
   if (kind === 'prize') {
     const vanillaItem = vanillaItemIds[0];
     if (vanillaItem === undefined) return undefined;
-    return vanillaPrizeGrantIdOfName(getItem(vanillaItem).randomizerName);
+    const record = getItem(vanillaItem);
+    return record.gameId?.receiveItemId ?? vanillaPrizeGrantIdOfName(record.name);
   }
   if (kind === 'standing' || kind === 'dig' || kind === 'bonk') {
     const vanillaItem = vanillaItemIds[0];

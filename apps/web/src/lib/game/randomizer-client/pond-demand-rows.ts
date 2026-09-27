@@ -18,12 +18,12 @@
  * pond and says why. Nothing here touches a module.
  */
 
-import { pondProfilesOfStats } from '@shared/randomizer/ap-world/fill/placement-ponds';
-import { POND_INSTANCES } from '@shared/randomizer/ap-world/pond/pond-instances.data';
-import { pondPlanOf } from '@shared/randomizer/ap-world/pond/pond-plan';
+import { pondProfilesOfStats } from '@shared/randomizer/world/fill/placement-ponds';
+import { POND_INSTANCES } from '@shared/randomizer/world/pond/pond-instances';
+import { pondPlanOf } from '@shared/randomizer/world/pond/pond-plan';
 import { nativeDemandOf } from './pond-demand-native';
-import type { ApPlacement } from '@shared/randomizer/ap-world/fill/ap-placement.type';
-import type { PondId } from '@shared/randomizer/ap-world/pond/pond-instance.type';
+import type { Placement } from '@shared/randomizer/world/fill/placement.type';
+import type { PondId } from '@shared/randomizer/world/pond/pond-instance.type';
 import type { PondDemandArm } from '../pond-demands';
 import type { PondDemandMessagesOf } from './receipt-text-refresh';
 
@@ -45,7 +45,7 @@ interface PondDemandSessionPlan {
 }
 
 const pondDemandSessionOf = (
-  placement: ApPlacement, receiveIdOf: (itemName: string) => number | undefined,
+  placement: Placement, receiveIdOf: (item: string) => number | undefined,
   messagesOf: PondDemandMessagesOf = NO_DEMAND_MESSAGES,
 ): PondDemandSessionPlan => {
   const profiles = pondProfilesOfStats(placement.stats);

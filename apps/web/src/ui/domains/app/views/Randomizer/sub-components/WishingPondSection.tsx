@@ -22,14 +22,14 @@ import { useMemo, useState } from 'react';
 import { Box, TabBar, Text, Toggle } from '@ds/primitives';
 import { ErrorBoundary } from '@ds/composites';
 import { RandomizerOptionGroup } from '@domains/app/compounds/RandomizerOptionGroup';
-import { POND_INSTANCES } from '@shared/randomizer/ap-world/pond/pond-instances.data';
-import { pondCeilingsOf } from '@shared/randomizer/ap-world/pond/pond-ceilings';
+import { POND_INSTANCES } from '@shared/randomizer/world/pond/pond-instances';
+import { pondCeilingsOf } from '@shared/randomizer/world/pond/pond-ceilings';
 import { PondInstanceRow } from './PondInstanceRow';
-import type { CapacityProfile } from '@shared/randomizer/ap-world/capacity/capacity-profile.type';
-import type { PondDemandView } from '@shared/randomizer/ap-world/pond/pond-ask.type';
-import type { PondId } from '@shared/randomizer/ap-world/pond/pond-instance.type';
-import type { PondSetting } from '@shared/randomizer/ap-world/pond/pond-profile.type';
-import type { PondProfiles } from '@shared/randomizer/ap-world/pond/pond-profiles.type';
+import type { CapacityProfile } from '@shared/randomizer/world/capacity/capacity-profile.type';
+import type { PondDemandView } from '@shared/randomizer/world/pond/pond-ask.type';
+import type { PondId } from '@shared/randomizer/world/pond/pond-instance.type';
+import type { PondSetting } from '@shared/randomizer/world/pond/pond-profile.type';
+import type { PondProfiles } from '@shared/randomizer/world/pond/pond-profiles.type';
 import './WishingPondSection.css';
 
 interface WishingPondSectionProps {

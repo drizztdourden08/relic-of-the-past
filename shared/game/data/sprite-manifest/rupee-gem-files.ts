@@ -11,9 +11,8 @@
  * game's own picture, so they do not follow the in-game gate; the core's swap
  * (kFeatures3_ColoredRupees) still decides what the GAME draws.
  *
- * The item records name the numbered files (`receipt-rupee-50` and friends), and
- * they are vault data this repository cannot change; the sprite query consults
- * this table before a record's own sprite.
+ * The item records name the numbered files (`receipt-rupee-50` and friends), so
+ * the sprite query consults this table before a record's own sprite.
  */
 
 /** Native receive id -> extracted file name (without extension). */

@@ -12,8 +12,9 @@
  * manufacture a mismatch. `palaceIndex` is the exception: see its comment.
  */
 import type { ScreenRecord } from '../../../data/types';
+import { PALACE_NONE } from '../../../logic/queries/dungeon-values';
 import { hex2, hex4, known, unread } from '../../compare/probe-helpers';
-import type { FieldProbe } from '../../compare/probe.types';
+import type { FieldProbe, Probe } from '../../compare/probe.types';
 import type { ScreenObservations } from '../../detection-types';
 import { resolvedPalaceMismatches } from './palace-mismatches';
 
@@ -31,6 +32,15 @@ const enteredDirectly = (observations: ScreenObservations): boolean => {
   if (!entranceRooms || liveGameId?.entranceId == null || liveGameId.roomIndex == null) return false;
   return entranceRooms[liveGameId.entranceId] === liveGameId.roomIndex;
 };
+
+/**
+ * `PALACE_NONE` is what the register holds for a cave, for a house, and for a
+ * palace room the game has not put in palace context. The three are
+ * indistinguishable in it, so it says nothing about the record's own palace
+ * membership and reads as unread, not as a value to compare.
+ */
+const palaceReading = (value: number | undefined): Probe<number | undefined> =>
+  (value === PALACE_NONE ? unread() : known(value));
 
 const ROOM_INDEX_PROBE: FieldProbe<'screen'> = {
   path: 'gameId.roomIndex',
@@ -70,13 +80,19 @@ const PALACE_INDEX_PROBE: FieldProbe<'screen'> = {
   applies: () => true,
   read: (observations, record) => {
     if (isCurrentScreen(observations, record)) {
-      return observations.isIndoors ? known(observations.liveGameId?.palaceIndex) : unread();
+      return observations.isIndoors ? palaceReading(observations.liveGameId?.palaceIndex) : unread();
     }
     const mismatch = resolvedPalaceMismatches(observations).find(m => m.screenId === record.id);
-    return mismatch ? known(mismatch.actual) : unread();
+    return mismatch ? palaceReading(mismatch.actual) : unread();
   },
 };
 
+/**
+ * RAM $010E holds 0 out of boot and is not rewritten by loading a save state,
+ * so a live 0 cannot be told apart from the player having walked through
+ * entrance 0x00. It is not evidence, and reads as unread, not as a value to
+ * compare.
+ */
 const ENTRANCE_ID_PROBE: FieldProbe<'screen'> = {
   path: 'gameId.entranceId',
   label: 'Entrance',
@@ -86,7 +102,10 @@ const ENTRANCE_ID_PROBE: FieldProbe<'screen'> = {
   applies: (observations, record) => (
     observations.isIndoors && isCurrentScreen(observations, record) && enteredDirectly(observations)
   ),
-  read: observations => known(observations.liveGameId?.entranceId),
+  read: (observations) => {
+    const entranceId = observations.liveGameId?.entranceId;
+    return entranceId ? known(entranceId) : unread();
+  },
 };
 
 const GAME_ID_PROBES: readonly FieldProbe<'screen'>[] = [

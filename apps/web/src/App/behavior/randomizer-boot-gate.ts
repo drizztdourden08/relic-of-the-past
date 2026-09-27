@@ -24,7 +24,7 @@ const gateRandomizerBoot = async (profileId: string, config: ProfileRandomizerCo
       return { ok: false, reason: 'Randomizer boot blocked: this profile has no valid placement file' };
     }
     setPendingBoot({ profileId, config, placement });
-    log.randomizer(`[Boot] Gate passed: local placement loaded (seed ${placement.seed}, ${Object.keys(placement.nameView).length} locations, ${placement.spheres.length} spheres)`);
+    log.randomizer(`[Boot] Gate passed: local placement loaded (seed ${placement.seed}, ${Object.keys(placement.locations).length} locations, ${placement.spheres.length} spheres)`);
     return { ok: true };
   }
 

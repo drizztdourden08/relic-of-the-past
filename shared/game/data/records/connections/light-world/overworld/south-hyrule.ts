@@ -1,8 +1,45 @@
 /* @layer shared-game @kind data */
-/** Split out of the flat seed files by scripts/generate-ids/split-seeds.ts. */
+
 import type { ConnectionRecord } from '@shared/game/data/types';
 
 const LW_OVERWORLD_SOUTH_HYRULE_CONNECTIONS: ConnectionRecord[] = [
+  {
+    id: 'connection-1219',
+    screenId: 'screen-003',
+    toConnectionId: 'connection-453',
+    kind: 'teleport',
+    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
+    canExit: false,
+    tags: [],
+  },
+  {
+    id: 'connection-321',
+    screenId: 'screen-003',
+    toConnectionId: 'connection-1300',
+    kind: 'entrance',
+    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
+    canExit: true,
+    gameId: { entranceId: 81 },
+    tags: ['tag-074'],
+  },
+  {
+    id: 'connection-1434',
+    screenId: 'screen-057',
+    toConnectionId: 'connection-131',
+    kind: 'edge',
+    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
+    canExit: true,
+    tags: [],
+  },
+  {
+    id: 'connection-1492',
+    screenId: 'screen-057',
+    toConnectionId: 'connection-143',
+    kind: 'edge',
+    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
+    canExit: true,
+    tags: [],
+  },
   {
     id: 'connection-046',
     screenId: 'screen-003',
@@ -38,24 +75,6 @@ const LW_OVERWORLD_SOUTH_HYRULE_CONNECTIONS: ConnectionRecord[] = [
     placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
     canExit: true,
     tags: ['tag-080'],
-  },
-  {
-    id: 'connection-1598',
-    screenId: 'screen-065',
-    toConnectionId: 'connection-145',
-    kind: 'edge',
-    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
-    canExit: true,
-    tags: [],
-  },
-  {
-    id: 'connection-1599',
-    screenId: 'screen-058',
-    toConnectionId: 'connection-146',
-    kind: 'edge',
-    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
-    canExit: true,
-    tags: [],
   },
 ];
 

@@ -1,12 +1,7 @@
-/* @layer shared-game @kind logic */
-export {
-  evaluateRequirement,
-  getReachableScreens,
-  getAccessibleChecks,
-  getCheckStatus,
-  getBlockingItems,
-  computeTrackerSnapshot,
-  type CheckStatus,
-  type ReachConnection,
-} from './eval';
-export { resolveRules, type ResolvedRules } from './resolver';
+/* @layer shared-game @kind barrel */
+export { evaluateRequirement } from './evaluate-requirement';
+export { computeRecordStatuses } from './record-statuses';
+export type { RecordStatusParams } from './record-statuses';
+export { screensOfRegions } from './regions/reachable-screens';
+export type { CheckStatus } from './check-status.type';
+export type { RunKind } from './run-kind.type';

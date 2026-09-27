@@ -47,6 +47,19 @@ bool DialogSuppress_NativeHidden(void) {
   return g_decided && g_hidden;
 }
 
+// ─── Travelling with a save (dialog_hook_state.c) ───
+// The owner of the message that was open when the state was saved. The loaded picture was drawn under
+// that decision, so the rest of the message keeps it.
+void DialogSuppress_Pack(uint8 *out) {
+  out[0] = g_decided;
+  out[1] = g_hidden;
+}
+
+void DialogSuppress_Unpack(const uint8 *in) {
+  g_decided = in[0] != 0;
+  g_hidden = in[1] != 0;
+}
+
 // ─── Repair ───
 // A state saved while a box was stranded carries those tiles in its own VRAM, so the frame comes back
 // with it however the core that loads it behaves. The box is told from the room by tile identity: the

@@ -3,19 +3,15 @@
  * Crosswalks a placement into the tracker's own vocabulary, so a check can be
  * shown holding what THIS run put there instead of its vanilla contents.
  *
- * Two lookups, both by community-standard name: the location name gives the
- * check id (a real one, or the virtual id virtual-locations.ts mints for a
- * slot this app's dataset does not model on its own), the item name gives
- * the item record. Only the item lookup can still miss (a placed name with
- * no item record here), and a miss is counted and reported instead of
- * silently dropped: a spoiler that omits ten items is worse than one that
- * says it did.
+ * A placement is keyed by id, so a real check needs no lookup at all. What is left is the
+ * two kinds of row the dataset does not model on its own: a slot with no check record, which
+ * takes the virtual id virtual-locations.ts mints for it, and an item with no item record,
+ * which is counted and reported instead of silently dropped.
  */
-import { locationDisplayName } from '@shared/randomizer/ap-world/display-names';
-import { checkIdByStandardName } from './check-names';
-import { itemIdByStandardName } from './item-lookup';
+import { isSlotKey } from '@shared/randomizer/world/location-key';
+import { isUnrecordedItem } from '@shared/randomizer/world/item-ids.data';
 import { virtualCheckIdOf } from './virtual-locations';
-import type { ApPlacement } from '@shared/randomizer/ap-world/fill/ap-placement.type';
+import type { Placement } from '@shared/randomizer/world/fill/placement.type';
 import type { CheckId, ItemId } from '@shared/game/data';
 
 interface PlacementView {
@@ -23,9 +19,9 @@ interface PlacementView {
   itemByCheck: Map<CheckId, ItemId>;
   /** check id → the sweep sphere the location was reached in. */
   sphereByCheck: Map<CheckId, number>;
-  /** Placement locations with no check of that name here. */
+  /** Placement locations with no check record of their own. */
   unmatchedLocations: string[];
-  /** Placed item names with no item record here, by location. */
+  /** Placed items with no item record here, by location. */
   unmatchedItems: string[];
 }
 
@@ -36,7 +32,7 @@ const emptyView = (): PlacementView => ({
   unmatchedItems: [],
 });
 
-const buildPlacementView = (placement: ApPlacement | null): PlacementView => {
+const buildPlacementView = (placement: Placement | null): PlacementView => {
   const view = emptyView();
   if (!placement) return view;
 
@@ -45,20 +41,19 @@ const buildPlacementView = (placement: ApPlacement | null): PlacementView => {
     for (const location of sphere.locations) sphereOfLocation.set(location, sphere.index);
   }
 
-  for (const [location, itemName] of Object.entries(placement.nameView)) {
+  for (const [location, item] of Object.entries(placement.locations)) {
     // A location with no real check still gets the exact virtual id
     // virtualChecksOf mints for it, so its row shows what this seed actually
     // placed instead of nothing.
-    const checkId = (checkIdByStandardName(location) as CheckId | undefined) ?? virtualCheckIdOf(location);
+    const checkId = isSlotKey(location) ? virtualCheckIdOf(location) : (location as CheckId);
     const sphere = sphereOfLocation.get(location);
     if (sphere !== undefined) view.sphereByCheck.set(checkId, sphere);
 
-    const itemId = itemIdByStandardName(itemName);
-    if (itemId === undefined) {
-      view.unmatchedItems.push(`${locationDisplayName(location)}: ${itemName}`);
+    if (isUnrecordedItem(item)) {
+      view.unmatchedItems.push(`${location}: ${item}`);
       continue;
     }
-    view.itemByCheck.set(checkId, itemId);
+    view.itemByCheck.set(checkId, item as ItemId);
   }
 
   return view;

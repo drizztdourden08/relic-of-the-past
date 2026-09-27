@@ -30,18 +30,22 @@ const computeCompletedChecks = (
 ): Set<CheckId> => {
   const { readRoomWord, readOwByte, readProgByte, readEventByte = null, inventory = null } = readers;
   const completed = new Set<CheckId>();
+  // Armed rows answer from their own taken-bit alone: a fallback that reads the vanilla item
+  // would tick them the moment that item turned up anywhere on the seed.
+  const armed = new Set<CheckId>();
   const checks = all('check');
   for (const check of checks) {
     const { gameId } = check;
     // A physically armed substitution row must never complete off its record's
     // possession-proxy detection: the vanilla item can arrive from anywhere in a
     // shuffled seed. The substitution seam persists the REAL taken-bit instead
-    // (progress bytes 21/22); vanilla profiles never arm, so they keep the proxy.
+    // (progress bytes 21/22); normal profiles never arm, so they keep the proxy.
     const realBit = completionBitOf(check.id);
     if (realBit !== undefined && isArmed(check.id)) {
       if (readProgByte && (readProgByte(realBit.bufferIndex) & realBit.mask) !== 0) {
         completed.add(check.id);
       }
+      armed.add(check.id);
       continue;
     }
     if (readRoomWord && isRoomFactMet(gameId, readRoomWord)) {
@@ -54,7 +58,7 @@ const computeCompletedChecks = (
       completed.add(check.id);
     }
   }
-  return resolveDerivedChecks(completed, inventory, checks);
+  return resolveDerivedChecks(completed, inventory, checks, armed);
 };
 
 export { computeCompletedChecks };

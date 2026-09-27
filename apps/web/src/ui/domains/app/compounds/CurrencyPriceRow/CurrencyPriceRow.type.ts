@@ -5,7 +5,7 @@
  * row components and their behavior take both as plain data and never reach
  * for one block's catalog keys.
  */
-import type { ShopBottleContent, ShopCountedCurrency } from '@shared/randomizer/ap-world/shops/shop-price.type';
+import type { ShopBottleContent, ShopCountedCurrency } from '@shared/randomizer/world/shops/shop-price.type';
 
 /** Where a block's catalog keys come from: the opt-in and the two range ends. */
 interface CurrencyKeyHelpers {

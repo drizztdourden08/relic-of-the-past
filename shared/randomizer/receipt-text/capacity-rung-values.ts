@@ -15,8 +15,8 @@
  * and the two values always survive.
  */
 import { CAPACITY_RECEIPT_LABELS } from '@shared/game/data/capacity-upgrade-names.data';
-import { METER_LEVEL_LABELS } from '../ap-world/capacity/capacity-ladders.data';
-import { familyById } from '../ap-world/capacity/capacity-family';
+import { METER_LEVEL_LABELS } from '../world/capacity/capacity-ladders.data';
+import { familyById } from '../world/capacity/capacity-family';
 import type { CapacityFamilyId } from '@shared/game/data/capacity-family.type';
 import type { ReceiptLine } from './receipt-line.type';
 

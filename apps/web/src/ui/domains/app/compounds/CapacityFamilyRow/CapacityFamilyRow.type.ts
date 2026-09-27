@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind types */
 import type { SelectGroup } from '@ds/primitives';
-import type { CapacityFamilyId, CapacityMode, CurveId, FamilyBonus } from '@shared/randomizer/ap-world/capacity';
-import type { CurvePresetId } from '@shared/randomizer/ap-world/capacity';
-import type { OptionDescription } from '@shared/randomizer/ap-world/option-description.type';
+import type { CapacityFamilyId, CapacityMode, CurveId, FamilyBonus } from '@shared/randomizer/world/capacity';
+import type { CurvePresetId } from '@shared/randomizer/world/capacity';
+import type { OptionDescription } from '@shared/randomizer/world/option-description.type';
 import type { LadderPreviewProps } from '../LadderPreview';
 import type { ImpactCell } from '../PoolImpactCell';
 

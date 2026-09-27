@@ -98,7 +98,7 @@ const useProfileManagement = (params: {
 
     // Whatever the profile before this one left behind goes now, ahead of the gate that may
     // park new material. Its placement is what the tracker builds its roster from, and
-    // nothing used to clear it, so a vanilla profile loaded after a randomized one went on
+    // nothing used to clear it, so a normal profile loaded after a randomized one went on
     // listing the seed's locations instead of the game in front of the player.
     resetSession();
 
