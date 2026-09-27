@@ -78,6 +78,7 @@ jobs:
 
       # Completing a version hashes the whole upload, up to a 400 MB music pack,
       # so the function gets more time and memory than the Sanctuary's.
+      # The ^;^ prefix makes ; the separator between variables, since SANCTUARY_ADMIN_IDS holds commas.
       - name: Deploy the function
         run: |
           gcloud functions deploy store-api \
@@ -91,7 +92,7 @@ jobs:
             --allow-unauthenticated \
             --timeout=300s \
             --memory=512Mi \
-            --set-env-vars="STORE_ORIGIN=${{ vars.STORE_ORIGIN }},B2_STORE_BUCKET=${{ vars.B2_STORE_BUCKET }},B2_STORE_KEY_ID=${{ vars.B2_STORE_KEY_ID }},B2_ENDPOINT=${{ vars.B2_ENDPOINT }},B2_REGION=${{ vars.B2_REGION }},DISCORD_CLIENT_ID=${{ vars.DISCORD_CLIENT_ID }},DISCORD_GUILD_ID=${{ vars.DISCORD_GUILD_ID }},DISCORD_CONTRIBUTOR_ROLE_ID=${{ vars.DISCORD_CONTRIBUTOR_ROLE_ID }},GITHUB_CLIENT_ID=${{ vars.STORE_GITHUB_CLIENT_ID }},GITHUB_REPO=${{ github.repository }},GOOGLE_CLIENT_ID=${{ vars.GOOGLE_CLIENT_ID }},SANCTUARY_ADMIN_IDS=${{ vars.SANCTUARY_ADMIN_IDS }}" \
+            --set-env-vars="^;^STORE_ORIGIN=${{ vars.STORE_ORIGIN }};B2_STORE_BUCKET=${{ vars.B2_STORE_BUCKET }};B2_STORE_KEY_ID=${{ vars.B2_STORE_KEY_ID }};B2_ENDPOINT=${{ vars.B2_ENDPOINT }};B2_REGION=${{ vars.B2_REGION }};DISCORD_CLIENT_ID=${{ vars.DISCORD_CLIENT_ID }};DISCORD_GUILD_ID=${{ vars.DISCORD_GUILD_ID }};DISCORD_CONTRIBUTOR_ROLE_ID=${{ vars.DISCORD_CONTRIBUTOR_ROLE_ID }};GITHUB_CLIENT_ID=${{ vars.STORE_GITHUB_CLIENT_ID }};GITHUB_REPO=${{ github.repository }};GOOGLE_CLIENT_ID=${{ vars.GOOGLE_CLIENT_ID }};SANCTUARY_ADMIN_IDS=${{ vars.SANCTUARY_ADMIN_IDS }}" \
             --set-secrets="SANCTUARY_SESSION_KEY=SANCTUARY_SESSION_KEY:latest,DISCORD_CLIENT_SECRET=DISCORD_CLIENT_SECRET:latest,GITHUB_CLIENT_SECRET=STORE_GITHUB_CLIENT_SECRET:latest,GITHUB_READ_TOKEN=GITHUB_READ_TOKEN:latest,GOOGLE_CLIENT_SECRET=GOOGLE_CLIENT_SECRET:latest,DISCORD_BOT_TOKEN=DISCORD_BOT_TOKEN:latest,B2_STORE_APP_KEY=b2-store-app-key:latest"
 
   site:
