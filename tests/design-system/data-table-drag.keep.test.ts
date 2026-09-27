@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { describe, it, expect, vi } from 'vitest';
-import { createElement } from 'react';
+import { createElement, isValidElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
 import {
@@ -216,9 +216,15 @@ const rowContext = (over?: RowRenderContext<Record3>['onCellDragOver'], drop?: R
   onCellDrop: drop,
 });
 
+/**
+ * The row's data cells, in order. A row with selection on draws a select cell ahead of them,
+ * and without it that slot is an empty child, so the cells are picked out by their type.
+ */
 const cellsOf = (context: RowRenderContext<Record3>): ReactElement<DataCellProps>[] => {
-  const row = DataRow({ row: ROW, context }) as ReactElement<{ children: ReactElement<DataCellProps>[] }>;
-  return row.props.children;
+  const row = DataRow({ row: ROW, context }) as ReactElement<{ children: unknown[] }>;
+  return row.props.children.flat().filter(
+    (child): child is ReactElement<DataCellProps> => isValidElement(child) && child.type === DataCell,
+  );
 };
 
 /** What the cell hands the browser, once it has been given its own props. */
