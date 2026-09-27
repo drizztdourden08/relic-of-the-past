@@ -33,7 +33,8 @@ import { isShopSlotLocation } from '../shops/shop-slots';
 import { registerBunnyRules } from './bunny';
 import { registerPriceRules } from './prices';
 import { registerPondDemandRules } from './pond-demands';
-import { always, never } from './combinators';
+import { seedValuesOfWorld } from './seed-values';
+import { allOf, always, never } from './combinators';
 import type { CheckId } from '@shared/game/data/types/ids';
 import type { LocationKey } from '../location-key';
 import type { World, Rule } from '../world.type';
@@ -76,7 +77,7 @@ const applyRule = (registry: Map<string, Rule>, entry: RuleEntry): void => {
     return;
   }
   const existing = registry.get(target);
-  registry.set(target, existing === undefined ? rule : (state) => existing(state) && rule(state));
+  registry.set(target, existing === undefined ? rule : allOf(existing, rule));
 };
 
 const applyEntry = (world: World, exitNames: Set<string>, entry: RuleEntry): void => {
@@ -159,6 +160,8 @@ const registerRules = (world: World): RuleCoverageReport => {
   // The demands a pond rolled sit on top of the wallet overlay, because a rung
   // is a ladder and the whole climb has to be payable, not only its own throw.
   registerPondDemandRules(world);
+  // The values those seeded rules read: this world's prices and demands (seed-values.ts).
+  for (const [key, value] of seedValuesOfWorld(world)) world.seedValues.set(key, value);
   return {
     ruledExits: exits.ruled,
     openExits: exits.open,

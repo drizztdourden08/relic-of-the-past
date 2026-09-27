@@ -36,4 +36,31 @@ bool GameHook_DialogNativeHidden(void);
 // box that was drawn is the box that gets torn down.
 bool GameHook_DialogSuppressDraw(bool wanted);
 
+// ─── Highlight spans (dialog_highlight.c, dialog_highlight_draw.c) ───
+// The pseudo-command a highlight byte decodes to, one past the engine's own kTextCmd_* values.
+enum { kDialogCmd_Highlight = 27 };
+enum { kHighlightEnd = 0, kHighlightPrimary = 1, kHighlightSecondary = 2 };
+enum { kHighlightTileRows = 6, kHighlightTileCols = 21 };
+// Text_DecodeCmd asks this first: the packed command for a highlight byte at |a|, or 0 for any other
+// byte and whenever the gate is down.
+uint32 GameHook_DialogHighlightDecode(uint8 a, const uint8 *src);
+// The character pump met a highlight command: the pen is now in span |kind| (kHighlightEnd closes).
+void GameHook_DialogHighlightSet(uint8 kind);
+// VWF_RenderSingle finished a glyph: a highlighted one takes the highlight index.
+void GameHook_DialogGlyphDrawn(void);
+// Text_DecodeCmd asks this second: the letter an extra-glyph escape draws (dialog_extra_glyphs.c), or 0
+// for any other byte and whenever the gate is down.
+uint32 GameHook_DialogExtraGlyphDecode(uint8 a, const uint8 *src);
+// ZeldaDrawPpuFrame brackets its draw with these.
+void GameHook_DialogHighlightDrawBegin(void);
+void GameHook_DialogHighlightDrawEnd(void);
+// For the mirror and the draw.
+uint8 DialogHighlight_Kind(void);
+bool DialogHighlight_Used(void);
+uint16 DialogHighlight_Color(uint8 kind);
+bool DialogHighlight_SecondaryTile(int row, int col);
+void DialogHighlight_GlyphAt(uint8 line, uint8 x, uint8 w);
+void DialogHighlight_Scrolled(void);
+void DialogHighlight_Cleared(void);
+
 #endif  // GAME_HOOKS_DIALOG_HOOKS_H

@@ -60,7 +60,8 @@ static bool EnsureOamRegion(int k, int body) {
 // The picture's one or two entries at |k|'s spot, then its shadow once the region has the
 // slot for it. A two-tile receipt is one 8-pixel column, centred over the sprite's
 // 16-pixel footprint (and the shadow drawn under it) instead of hugging its left edge.
-static void WriteReceiptOam(int k, PrepOamCoordsRet *info, int x_adj, int y_adj,
+// A foreign item's game icon marks its entries for the icons' own palette bank.
+static void WriteReceiptOam(int k, int grant, PrepOamCoordsRet *info, int x_adj, int y_adj,
                             uint8 art, uint8 pal, uint8 ext, bool fits) {
   OamEnt *oam = GetOamCurPtr();
   uint8 flags = (uint8)(pal * 2) | (info->flags & 0x30);
@@ -68,6 +69,7 @@ static void WriteReceiptOam(int k, PrepOamCoordsRet *info, int x_adj, int y_adj,
   SetOamHelper0(oam, x, y, art, flags, ext);
   if (ext == 0)
     SetOamHelper0(oam + 1, x, y + 8, (uint8)(art + SPRITE_ART_ROW_STRIDE), flags, 0);
+  GameHook_ForeignIconWorldOam((uint8)grant, oam, oam + (ext == 0 ? 2 : 1));
   if (fits && (sprite_flags3[k] & 0x10))
     SpriteDraw_Shadow(k, info);
 }
@@ -124,7 +126,7 @@ bool GameHook_DrawSpriteAsReceiptItem(int k, int grant, int x_adj, int y_adj) {
   PrepOamCoordsRet info;
   if (Sprite_PrepOamCoordOrDoubleRet(k, &info))
     return true;
-  WriteReceiptOam(k, &info, x_adj, y_adj, GameHook_ClaimSpriteArt(k), pal, ext, fits);
+  WriteReceiptOam(k, grant, &info, x_adj, y_adj, GameHook_ClaimSpriteArt(k), pal, ext, fits);
   return true;
 }
 
@@ -146,6 +148,6 @@ bool GameHook_DrawSpriteArtFromMemo(int k, int grant, int x_adj, int y_adj) {
     return true;
   uint8 art = GameHook_ClaimSpriteArt(k);
   GameHook_CommitSpriteArtBytes(k, memo->art);
-  WriteReceiptOam(k, &info, x_adj, y_adj, art, memo->pal, memo->ext, fits);
+  WriteReceiptOam(k, grant, &info, x_adj, y_adj, art, memo->pal, memo->ext, fits);
   return true;
 }

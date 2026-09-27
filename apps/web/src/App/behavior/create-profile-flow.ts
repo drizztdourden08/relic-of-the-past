@@ -9,12 +9,28 @@ import type { CreateProfileOptions, CreateProfileResult } from '@shared/types/pr
 import type { Placement } from '@shared/randomizer/world/fill/placement.type';
 import { generateFromSnapshot } from '@shared/randomizer/generate';
 import { normalizeRandomizerOptions } from '@shared/randomizer/options-snapshot';
+import { deliverableListsOf } from '@shared/randomizer/world/fill/deliverable-lists';
 import { log } from '../../lib/log-bus';
 import {
   probeDeliverablePondLocations, probeDeliverableNpcLocations, probeDeliverableWorldLocations,
 } from '../../lib/game/randomizer-client';
 import * as profileStore from '../../lib/storage/profile-store';
 import { saveRandomizerPlacement } from '../../lib/randomizer-placement-io';
+
+/**
+ * An online profile keeps the probed spots on its config, so the player file written later
+ * randomizes the same npc, pond and world spots a local seed of this profile would.
+ */
+const withDeliverable = (opts: CreateProfileOptions): CreateProfileOptions => {
+  const { randomizer } = opts;
+  if (randomizer?.mode !== 'online') return opts;
+  const deliverable = deliverableListsOf({
+    npc: probeDeliverableNpcLocations(),
+    capacity: probeDeliverablePondLocations(),
+    world: probeDeliverableWorldLocations(),
+  });
+  return { ...opts, randomizer: { ...randomizer, deliverable } };
+};
 
 const runCreateProfileFlow = async (opts: CreateProfileOptions): Promise<CreateProfileResult> => {
   // Local mode generates before the profile exists, so a failed generation
@@ -37,7 +53,7 @@ const runCreateProfileFlow = async (opts: CreateProfileOptions): Promise<CreateP
     }
   }
 
-  const profile = await profileStore.createProfile(opts);
+  const profile = await profileStore.createProfile(withDeliverable(opts));
 
   // A creation-form preset's config values, then any randomizer-pinned setting on top,
   // the pin always wins, since it is what makes the frozen placement play correctly.

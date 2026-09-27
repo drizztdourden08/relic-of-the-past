@@ -17,6 +17,7 @@ import { setStandingOverride } from '../standing-overrides';
 import { setShopSlotOverride } from '../shop-overrides';
 import { armPrizeShuffle } from '../prize-shuffle';
 import { getModule } from '../wasm-bridge';
+import { quietMessageFor } from '../quiet-receipts';
 import { PRIZE_LOCATIONS } from '@shared/randomizer/world/scope-tables';
 import { allocateFireId, markLocationFired } from './override-fire-registry';
 import { isReportableCheck } from './check-detection';
@@ -59,6 +60,8 @@ const rescanShopCatchUp = (): void => {
 };
 
 const applyOverrides = (plan: PhysicalPlan, messageIdOf: MessageIdOf, tag: string): void => {
+  // A placed rupee, bomb or arrow takes the silent line when its kind is quiet (quiet-receipts.ts).
+  const lineOf = (location: string, localId: number): number => quietMessageFor(localId, messageIdOf(location));
   // A boss reward substitutes through the npc table like any other scripted grant, but
   // the core also has to stop reading the dungeon's own pendant/crystal bit as "reward
   // claimed", so the reward gate is requested exactly when such a row is armed.
@@ -70,11 +73,11 @@ const applyOverrides = (plan: PhysicalPlan, messageIdOf: MessageIdOf, tag: strin
   for (const entry of plan.entries) {
     if (entry.planClass === 'override' && entry.target !== undefined) {
       const { roomId, chestIndex, targetLocalId } = entry.target;
-      setChestSlotOverride(roomId, chestIndex, targetLocalId, messageIdOf(entry.location));
+      setChestSlotOverride(roomId, chestIndex, targetLocalId, lineOf(entry.location, targetLocalId));
       log.randomizer(`${tag} Overrode "${entry.location}": slot ${chestIndex} -> "${entry.item}" (0x${targetLocalId.toString(16)})`);
     } else if (entry.planClass === 'override-npc' && entry.npcOverride !== undefined) {
       const { roomId, vanillaItemId, spriteType, targetLocalId } = entry.npcOverride;
-      const messageId = messageIdOf(entry.location);
+      const messageId = lineOf(entry.location, targetLocalId);
       const fireId = allocateFireId(entry.location);
       if (spriteType !== undefined) {
         setNpcGrantSpriteOverride(spriteType, vanillaItemId, targetLocalId, messageId, fireId);
@@ -84,15 +87,15 @@ const applyOverrides = (plan: PhysicalPlan, messageIdOf: MessageIdOf, tag: strin
       log.randomizer(`${tag} Overrode "${entry.location}": giver grant -> "${entry.item}" (0x${targetLocalId.toString(16)})`);
     } else if (entry.planClass === 'override-drop' && entry.dropOverride !== undefined) {
       const { roomId, big, targetLocalId } = entry.dropOverride;
-      setDropOverride(roomId, big, targetLocalId, messageIdOf(entry.location), allocateFireId(entry.location));
+      setDropOverride(roomId, big, targetLocalId, lineOf(entry.location, targetLocalId), allocateFireId(entry.location));
       log.randomizer(`${tag} Overrode "${entry.location}": ground drop -> "${entry.item}" (0x${targetLocalId.toString(16)})`);
     } else if (entry.planClass === 'override-standing' && entry.standingOverride !== undefined) {
       const { targetLocalId, ...target } = entry.standingOverride;
-      setStandingOverride(target, targetLocalId, messageIdOf(entry.location), allocateFireId(entry.location));
+      setStandingOverride(target, targetLocalId, lineOf(entry.location, targetLocalId), allocateFireId(entry.location));
       log.randomizer(`${tag} Overrode "${entry.location}": standing prize -> "${entry.item}" (0x${targetLocalId.toString(16)})`);
     } else if (entry.planClass === 'override-shop' && entry.shopOverride !== undefined) {
       const { targetLocalId, ...target } = entry.shopOverride;
-      setShopSlotOverride(target, targetLocalId, messageIdOf(entry.location), allocateFireId(entry.location));
+      setShopSlotOverride(target, targetLocalId, lineOf(entry.location, targetLocalId), allocateFireId(entry.location));
       armedShopEntries.push({
         location: entry.location, slotIndex: target.slotIndex, depthIndex: target.depthIndex,
       });
@@ -101,7 +104,7 @@ const applyOverrides = (plan: PhysicalPlan, messageIdOf: MessageIdOf, tag: strin
       const { target, targetLocalId } = entry.scriptedOverride;
       // A wish-pond rung arms with every other rung of both waters in one call (wish-pond-session.ts).
       if (target.surface === 'wish-pond') continue;
-      setScriptedGrantOverride(target, targetLocalId, messageIdOf(entry.location), allocateFireId(entry.location));
+      setScriptedGrantOverride(target, targetLocalId, lineOf(entry.location, targetLocalId), allocateFireId(entry.location));
       log.randomizer(`${tag} Overrode "${entry.location}": scripted grant -> "${entry.item}" (0x${targetLocalId.toString(16)})`);
     }
   }

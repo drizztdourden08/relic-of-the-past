@@ -9,6 +9,8 @@ interface DialogCell {
   glyph: number;
   x: number;
   w: number;
+  /** The highlight span it was drawn in: 1 primary, 2 secondary; absent or 0 for plain text. */
+  highlight?: number;
 }
 
 /** What the engine is parked on, if anything. */

@@ -37,6 +37,7 @@ import { useButtonGlyphs } from './behavior/useButtonGlyphs';
 import { useChoiceLatch } from './behavior/useChoiceLatch';
 import { useOpeningMessage } from './behavior/useOpeningMessage';
 import { pickerItemSprite } from './behavior/picker-item-sprite';
+import { useHighlightLook } from './behavior/useHighlightLook';
 
 const DialogView = () => {
   const liveFrame = useDialogStore((s) => s.frame);
@@ -88,6 +89,7 @@ const DialogView = () => {
   // The atlas is cached per font and palette; asking per message catches a language switch or a [Color] line.
   const atlas = useMemo(() => (frame.active ? getGlyphAtlas() : null), [frame.active, frame.messageId, frame.generation]);
   const alphabet = useMemo(() => (frame.active ? activeAlphabet() : []), [frame.active]);
+  const highlight = useHighlightLook({ frame, primary: look.highlightPrimary, secondary: look.highlightSecondary });
   const spritesBase = getSpritesBase();
   const prompts = look.buttonPrompts
     ? promptsFor(frame, look.prompts).map((p) => ({ glyphs: glyphsFor(p.buttons), label: p.label, hold: p.hold }))
@@ -113,6 +115,7 @@ const DialogView = () => {
                 scrollStep={frame.scrollStep}
                 font={font}
                 atlas={atlas?.canvas ?? null}
+                highlight={highlight}
                 alphabet={alphabet}
                 ink={inkColor}
                 stroke={strokeColor}

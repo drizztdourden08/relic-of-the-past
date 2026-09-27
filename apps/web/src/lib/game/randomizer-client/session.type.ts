@@ -12,7 +12,8 @@ interface RandomizerSession {
   /** Poller → session: a planned location just completed in live memory (keyed by its standard name). */
   reportCheck(location: LocationKey): void;
   readonly kind: 'local' | 'online';
-  readonly status: 'idle' | 'starting' | 'active' | 'error';
+  /** 'reconnecting' is online only: the server dropped or was never reached, and the session is retrying. */
+  readonly status: 'idle' | 'starting' | 'active' | 'reconnecting' | 'error';
 }
 
 type SessionStatusListener = (status: RandomizerSession['status']) => void;

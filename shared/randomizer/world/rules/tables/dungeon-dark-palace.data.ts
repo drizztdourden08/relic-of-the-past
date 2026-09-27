@@ -10,14 +10,13 @@ import { ITEM } from '../../item-ids.data';
 import {
   allOf, anyOf, hasItem, hasKeys, placedAt,
 } from '../combinators';
-import { canBombOrBonk, canShootArrows, canUseBombs } from '../../state-helpers';
+import { arrows as arrowsFor, bombs as bombsFor, canBombOrBonk } from '../helper-rules';
 import { actGate } from '../../events';
 import { dungeonBossDefeat } from './bosses.data';
-import type { CollectionState } from '../../collection-state';
 import type { RuleEntry } from '../rule-entry.type';
 
-const bombs = (state: CollectionState): boolean => canUseBombs(state);
-const arrows = (state: CollectionState): boolean => canShootArrows(state);
+const bombs = bombsFor();
+const arrows = arrowsFor();
 
 const DARK_PALACE_RULES: readonly RuleEntry[] = [
   // default_rules 681: the gatekeeper wants the real traveler, and the door is opened once,

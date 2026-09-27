@@ -6,6 +6,7 @@
  * 2-space JSON format match the original Electron stores, so existing desktop data
  * is read unchanged.
  */
+import { applyProfilePatch } from './profile-patch';
 import type { FileStore } from '@shared/platform';
 import type { Profile, ProfilePatch, AppState, CreateProfileOptions } from '@shared/types/profile';
 
@@ -62,13 +63,12 @@ const createProfile = async (files: FileStore, opts: CreateProfileOptions): Prom
   return profile;
 };
 
-// Whitelist by design: `randomizer` is deliberately not patchable. It is frozen at creation.
+// Whitelist by design: of `randomizer`, only the connection is patchable (profile-patch.ts).
+// A refused patch throws before anything is written.
 const updateProfile = async (files: FileStore, id: string, patch: ProfilePatch): Promise<Profile | null> => {
   const profile = await loadProfile(files, id);
   if (!profile) return null;
-  if (patch.name != null) profile.name = patch.name;
-  if (patch.language !== undefined) profile.language = patch.language ?? undefined;
-  if (patch.msuPack !== undefined) profile.msuPack = patch.msuPack ?? undefined;
+  applyProfilePatch(profile, patch);
   await writeJson(files, profileFile(id), profile);
   return profile;
 };

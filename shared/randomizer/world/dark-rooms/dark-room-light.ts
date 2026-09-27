@@ -26,9 +26,11 @@
 import {
   DARK_ROOM_LIGHT_FIELDS, DARK_ROOM_LIGHT_ITEMS, REFERENCE_DARK_ROOM_SETTING,
 } from './dark-room-lights.data';
-import type { CollectionState } from '../collection-state';
+import { compileRule } from '../rules/rule-eval';
+import { all, any, countGroup, option } from '../rules/rule-node-build';
 import type { DarkRoomLightField, DarkRoomSetting } from './dark-room.type';
 import type { World, Rule } from '../world.type';
+import type { RuleNode, RuleOptionKey } from '../rules/rule-node.type';
 
 /** A world built before the settings existed reads as the reference default. */
 const darkRoomSettingOf = (world: World): DarkRoomSetting =>
@@ -37,14 +39,19 @@ const darkRoomSettingOf = (world: World): DarkRoomSetting =>
 const acceptedLightsOf = (setting: DarkRoomSetting): readonly DarkRoomLightField[] =>
   DARK_ROOM_LIGHT_FIELDS.filter((field) => setting.lights[field]);
 
-const carriesLight = (state: CollectionState, field: DarkRoomLightField): boolean =>
-  state.count(DARK_ROOM_LIGHT_ITEMS[field]) > 0;
+const lightKey = (field: DarkRoomLightField): RuleOptionKey => `darkRooms.light.${field}`;
 
-const canCrossDarkRoom: Rule = (state) => {
-  const setting = darkRoomSettingOf(state.world);
-  const accepted = acceptedLightsOf(setting);
-  if (!setting.requireLight || accepted.length === 0) return true;
-  return accepted.some((field) => carriesLight(state, field));
-};
+/** Carried, read raw: possession alone lights the room. */
+const carriesLight = (field: DarkRoomLightField): RuleNode => countGroup([DARK_ROOM_LIGHT_ITEMS[field]], 1);
+
+/**
+ * The three readings in order: no light required; no light accepted (a mask, read as none
+ * required); otherwise one accepted light carried.
+ */
+const canCrossDarkRoom: Rule = compileRule(any(
+  option('darkRooms.requireLight', false),
+  all(...DARK_ROOM_LIGHT_FIELDS.map((field) => option(lightKey(field), false))),
+  any(...DARK_ROOM_LIGHT_FIELDS.map((field) => all(option(lightKey(field), true), carriesLight(field)))),
+));
 
 export { acceptedLightsOf, canCrossDarkRoom, darkRoomSettingOf };

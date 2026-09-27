@@ -13,13 +13,16 @@ interface TrackerCheckRowProps {
   detailed?: boolean;
   /** The item this row shows, already resolved by the caller (check-contents.ts). */
   item?: ItemId;
+  /** The name of another player's item placed here (online), shown in place of |item|. */
+  foreignItem?: string;
   /** A reversible event's live side: true while it holds. Undefined for every other record. */
   now?: boolean;
 }
 
 const TrackerCheckRow = (props: TrackerCheckRowProps) => {
-  const { check, status, detailed, item: itemId, now } = props;
-  const displayItem = itemId ? getItem(itemId).name : undefined;
+  const { check, status, detailed, item, foreignItem, now } = props;
+  const itemId = foreignItem === undefined ? item : undefined;
+  const displayItem = foreignItem ?? (itemId ? getItem(itemId).name : undefined);
   return (
     <Box className={`tracker-check tracker-check--${status}`}>
       <CheckStatusIcon status={status} size={11} />

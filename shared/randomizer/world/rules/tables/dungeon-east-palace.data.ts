@@ -10,20 +10,16 @@ import { ITEM } from '../../item-ids.data';
 import {
   allOf, anyOf, hasItem, hasKeys, placedAt,
 } from '../combinators';
-import { canShootArrows } from '../../state-helpers';
-import { canKillMostThings } from '../../state-helpers-world';
+import { arrows, kill } from '../helper-rules';
 import { dungeonBossDefeat } from './bosses.data';
-import type { CollectionState } from '../../collection-state';
 import type { RuleEntry } from '../rule-entry.type';
-
-const kill = (enemies: number) => (state: CollectionState): boolean => canKillMostThings(state, enemies);
 
 /** 340-350: big key + both keys + the boss fight, and (no enemy shuffle) arrows. */
 const bossAccess = allOf(
   hasItem(ITEM.bigKeyEasternPalace),
   hasKeys(ITEM.smallKeyEasternPalace, 2),
   dungeonBossDefeat('dungeon-003'),
-  (state: CollectionState) => canShootArrows(state),
+  arrows(),
 );
 
 const EAST_PALACE_RULES: readonly RuleEntry[] = [

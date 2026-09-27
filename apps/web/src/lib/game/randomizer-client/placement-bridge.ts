@@ -17,15 +17,14 @@
  * is a hard plan error the session must refuse on.
  */
 
-import { itemKeyName } from '@shared/randomizer/world/display-names/item-key-name';
 import type { ItemKey } from '@shared/randomizer/world/item-ids.data';
 import type { LocationKey } from '@shared/randomizer/world/location-key';
 import { getCheck } from '@shared/game/data';
-import { EVENT_LOCATIONS, KEY_DROP_LOCATIONS, PRIZE_LOCATIONS } from '@shared/randomizer/world/scope-tables';
-import { log } from '../../log-bus';
-import { isSlotKey } from '@shared/randomizer/world/location-key';
+import { EVENT_LOCATIONS, PRIZE_LOCATIONS } from '@shared/randomizer/world/scope-tables';
+import { checkIdOfLocation } from '@shared/randomizer/world/location-record';
 import { detectionOf, withProgressBaseline } from './check-detection';
 import { freestandingKeyDropOf } from './freestanding-key-drops';
+import { isBigKeyDrop } from './key-drop-size';
 import { npcOverrideKeyOf } from './npc-override-key';
 import { scriptedOverrideKeyOf } from './scripted-override-key';
 import { standingOverrideKeyOf } from './standing-override-key';
@@ -33,7 +32,7 @@ import { shopOverrideKeyOf } from './shop-override-key';
 import { pondPrizeTargetOf } from './pond-prize-target';
 import { capabilityVanillaItemOf, isLockedVanilla } from './scope-lock';
 import { scopeFlagsOfStats } from './plan-scope-flags';
-import { resolveServerItemLocalId } from './online-items';
+import { planItemLabel, targetLocalIdOf } from './plan-target-id';
 import type { CheckId } from '@shared/game/data';
 import type { Placement } from '@shared/randomizer/world/fill/placement.type';
 import type { ScopeFlags } from './scope-lock';
@@ -49,8 +48,8 @@ const npcGrantOf = (checkId: string): PlanEntry['npcGrant'] => {
 const classifyLocation = (
   location: LocationKey, item: ItemKey, flags: ScopeFlags,
 ): PlanEntry | PlanError => {
-  // A location IS its check id, except a slot key (a restock, a pond rung), which has no record.
-  const checkId = isSlotKey(location) ? undefined : location;
+  // The record the location stands for: none for a restock or a pond rung.
+  const checkId = checkIdOfLocation(location);
   const detection = checkId !== undefined
     ? withProgressBaseline(detectionOf(checkId), flags.capacityStartTiers?.get(location))
     : null;
@@ -73,10 +72,9 @@ const classifyLocation = (
       ...detectionField,
     };
   }
-  const itemName = itemKeyName(item);
-  const targetLocalId = resolveServerItemLocalId(itemName);
+  const targetLocalId = targetLocalIdOf(item);
   if (targetLocalId === undefined) {
-    return { location, item, reason: `assigned item is unresolvable: ${itemName}` };
+    return { location, item, reason: `assigned item is unresolvable: ${planItemLabel(item)}` };
   }
   // A shelf slot is keyed off the shop dataset, not a check record, because the app
   // has none for a shelf, because a shelf is a repeatable purchase in the
@@ -148,8 +146,8 @@ const classifyLocation = (
     };
   }
   if (kind === 'keyDrop' && gameId.roomId !== undefined) {
-    // The engine's vanilla item names the drop's size; the record's roomId pins it.
-    const big = KEY_DROP_LOCATIONS.get(location)?.startsWith('Big Key') === true;
+    // The drop's vanilla item names its size; the record's roomId pins it.
+    const big = isBigKeyDrop(checkId as CheckId);
     return {
       location, item, checkId, planClass: 'override-drop', ...detectionField,
       dropOverride: { roomId: gameId.roomId, big, targetLocalId },
@@ -200,17 +198,5 @@ const buildPhysicalPlan = (placement: Placement): PhysicalPlan => {
   return { entries, errors, counts };
 };
 
-const logPlanSummary = (plan: PhysicalPlan, tag: string): void => {
-  const { counts, errors } = plan;
-  log.randomizer(`${tag} Plan summary: ${counts.override} overrides, ${counts.overrideNpc} npc overrides, `
-    + `${counts.overrideDrop} drop overrides, ${counts.overrideStanding} standing overrides, `
-    + `${counts.overrideScripted} scripted overrides, ${counts.overrideShop} shop overrides, `
-    + `${counts.deliver} deliver, ${counts.vanillaLocked} vanilla-locked (${counts.pollBlind} poll-blind), `
-    + `${counts.errors} errors`);
-  for (const error of errors) {
-    log.randomizer(`${tag} Plan error at "${error.location}" (${error.item}): ${error.reason}`, 'error');
-  }
-};
-
-export { buildPhysicalPlan, classifyLocation, logPlanSummary };
+export { buildPhysicalPlan, classifyLocation };
 export type { ScopeFlags };

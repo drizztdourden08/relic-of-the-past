@@ -54,7 +54,8 @@ bool GameHook_IsVirtualGrantId(uint8 item) {
   // encoding is nibble-aligned, see dungeon_item_ids.h), so the answer is a disjunction
   // instead of one widened bound: widening would swallow the prize ids, which every
   // bound check here deliberately refuses.
-  return GameHook_IsDungeonItemGrantId(item);
+  // The foreign-item sentinel joins only while its gate is set (foreign_item.c).
+  return GameHook_IsDungeonItemGrantId(item) || GameHook_IsForeignGrantId(item);
 }
 
 // Pure presentation lookup for the draw seams: no arithmetic, no messages.
@@ -78,6 +79,7 @@ int GameHook_UpgradeFamilyOf(uint8 item) {
 // progressive id as the next tier from live inventory, a wallet slot as its rupee
 // receipt, a native id as itself.
 uint8 GameHook_GrantPresentationOf(uint8 item) {
+  if (GameHook_IsForeignGrantId(item)) return GameHook_ForeignPresentationOf(item);
   if (GameHook_IsDungeonItemGrantId(item)) return GameHook_DungeonItemPresentationOf(item);
   if (GameHook_IsProgressiveCapacityId(item)) return GameHook_ProgressiveCapacityPresentationOf(item);
   if (GameHook_IsProgressiveVirtualId(item)) return GameHook_ProgressivePresentationOf(item);
@@ -110,6 +112,7 @@ bool GameHook_CapacityStep(int kind) {
 // and returns the native presentation item. Call at the LAST moment before the id
 // enters any vanilla receive path.
 uint8 GameHook_ResolveGrantItem(uint8 item) {
+  if (GameHook_IsForeignGrantId(item)) return GameHook_ResolveForeignItem(item);
   if (GameHook_IsDungeonItemGrantId(item)) return GameHook_ResolveDungeonItemGrant(item);
   if (GameHook_IsProgressiveCapacityId(item)) return GameHook_ResolveProgressiveCapacityItem(item);
   if (GameHook_IsProgressiveVirtualId(item)) return GameHook_ResolveProgressiveItem(item);
@@ -142,9 +145,9 @@ uint8 GameHook_ResolveGrantItem(uint8 item) {
     GameHook_ArmReceiptMessageIfClear(maxed ? 0x98 : (kind == 0 ? 0x96 : 0x97));
     GameHook_ArmUpgradeIcon(maxed ? -1 : kind);
   }
-  // The line of the climb actually made replaces the location's jump-only line.
+  // The line of the climb actually made is the next page of the receipt's own line.
   int msg = climbed ? GameHook_CapacityFixedLine(family, from, GameHook_CapacityRungOf(family) - from) : -1;
-  if (msg >= 0) GameHook_ArmReceiptMessageReplace(msg);
+  if (msg >= 0) GameHook_ArmReceiptDetailPage(msg);
   GameHook_UpgradeBonusArm(family, presentation, climbed);
   printf("[Randomizer] Upgrade grant resolved: 0x%02x -> presentation 0x%02x (rung %d -> %d, line %d)\n",
          item, presentation, from, GameHook_CapacityRungOf(family), msg);

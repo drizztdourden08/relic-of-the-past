@@ -15,23 +15,19 @@ import { ITEM } from '../item-ids.data';
 import { BUNNY_ACCESSIBLE_LOCATIONS } from './tables/bunny-lists.data';
 import { REGION } from '../region-ids.data';
 import { bunnyImpassableRegionIds } from '../world-from-records';
-import { anyOf } from './combinators';
+import {
+  allOf, anyOf, canReach, exitRule as registeredExitRule, hasItem,
+} from './combinators';
 import type { Exit, Region } from '../region.type';
 import type { World, Rule } from '../world.type';
 
-const suppressionItem: Rule = (state) => state.has(ITEM.moonPearl);
+const suppressionItem: Rule = hasItem(ITEM.moonPearl);
 
-/** python state.can_reach(entrance): parent region + the entrance's own rule. */
-const canUseExit = (world: World, exit: Exit): Rule => (state) => {
-  if (!state.canReachRegion(exit.source)) return false;
-  const rule = world.getRule(exit.name);
-  return rule === undefined || rule(state);
-};
-
-const exitRule = (world: World, exit: Exit): Rule => (state) => {
-  const rule = world.getRule(exit.name);
-  return rule === undefined || rule(state);
-};
+/**
+ * python state.can_reach(entrance): parent region + the entrance's own rule. The entrance rule
+ * is read when asked, so it is the one registered by then, overlays included.
+ */
+const canUseExit = (exit: Exit): Rule => allOf(canReach(exit.source), registeredExitRule(exit.name));
 
 /** python get_rule_to_add for a mixed region (1716-1759, glitchless path). */
 const mixedRegionRule = (world: World, region: Region): Rule => {
@@ -44,13 +40,13 @@ const mixedRegionRule = (world: World, region: Region): Rule => {
       const from = world.regions.get(entrance.source);
       if (from === undefined || seen.has(from.id)) continue;
       seen.add(from.id);
-      const newPath = [...path, exitRule(world, entrance)];
+      const newPath = [...path, registeredExitRule(entrance.name)];
       if (!from.isLightWorld) continue;
       if (from.isDarkWorld) {
         queue.push([from, newPath]);
       } else {
-        const reach = canUseExit(world, entrance);
-        options.push((state) => reach(state) && newPath.every((rule) => rule(state)));
+        const reach = canUseExit(entrance);
+        options.push(allOf(reach, ...newPath));
       }
     }
   }
@@ -63,7 +59,7 @@ const bunnyRegionRule = (world: World, region: Region): Rule =>
 
 const addRule = (map: Map<string, Rule>, name: string, rule: Rule): void => {
   const existing = map.get(name);
-  map.set(name, existing === undefined ? rule : (state) => existing(state) && rule(state));
+  map.set(name, existing === undefined ? rule : allOf(existing, rule));
 };
 
 const registerBunnyRules = (world: World): void => {

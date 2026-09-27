@@ -55,9 +55,9 @@ uint8 GameHook_ResolveWalletItem(uint8 item) {
   bool surplus = GameHook_WalletLadderClimb(steps);
   uint8 presentation = surplus ? WALLET_SURPLUS_ITEM : WALLET_STEP_ITEM;
   GameHook_ArmReceiptClassMessage(presentation, kReceiptMsg_Generic);
-  // The line of the climb actually made replaces the location's jump-only line.
+  // The line of the climb actually made is the next page of the receipt's own line.
   int msg = surplus ? -1 : GameHook_CapacityFixedLine(3, from, steps);
-  if (msg >= 0) GameHook_ArmReceiptMessageReplace(msg);
+  if (msg >= 0) GameHook_ArmReceiptDetailPage(msg);
   // The hold-up icon (upgrade_icon.c) only for a slot that climbed; the surplus
   // replacement keeps its own picture.
   GameHook_ArmUpgradeIcon(surplus ? -1 : 3);

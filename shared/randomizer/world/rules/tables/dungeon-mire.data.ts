@@ -10,11 +10,11 @@ import { ITEM } from '../../item-ids.data';
 import {
   allOf, anyOf, either, hasItem, hasKeys, placedAt,
 } from '../combinators';
-import { canShootArrows, canUseBombs, hasFireSource, hasHearts, hasSword } from '../../state-helpers';
-import { canActivateCrystalSwitch } from '../../state-helpers-world';
+import {
+  arrows, bombs, canActivateCrystalSwitch, hasFireSource, hasSword, hearts,
+} from '../helper-rules';
 import { actGate } from '../../events';
 import { dungeonBossDefeat } from './bosses.data';
-import type { CollectionState } from '../../collection-state';
 import type { RuleEntry } from '../rule-entry.type';
 
 /** 478-482: a key placed west is safe only when the big key locks it. */
@@ -37,7 +37,7 @@ const MIRE_RULES: readonly RuleEntry[] = [
       anyOf(hasItem(ITEM.pegasusBoots), hasItem(ITEM.hookshot)),
       anyOf(
         hasSword, hasItem(ITEM.fireRod), hasItem(ITEM.iceRod), hasItem(ITEM.hammer),
-        hasItem(ITEM.caneOfSomaria), (state: CollectionState) => canShootArrows(state),
+        hasItem(ITEM.caneOfSomaria), arrows(),
       ),
     ),
   },
@@ -50,7 +50,7 @@ const MIRE_RULES: readonly RuleEntry[] = [
   {
     kind: 'location', target: 'check-212', mode: 'set',
     rule: anyOf(
-      (state: CollectionState) => hasHearts(state, 4),
+      hearts(4),
       hasItem(ITEM.caneOfByrna),
       hasItem(ITEM.cape),
     ),
@@ -94,7 +94,7 @@ const MIRE_RULES: readonly RuleEntry[] = [
   { kind: 'location', target: 'check-214', mode: 'set', rule: hasFireSource },
   {
     kind: 'exit', target: 'Misery Mire (Vitreous)', mode: 'set',
-    rule: allOf(hasItem(ITEM.caneOfSomaria), (state: CollectionState) => canUseBombs(state)),
+    rule: allOf(hasItem(ITEM.caneOfSomaria), bombs()),
   },
   // dungeon_boss_rules
   { kind: 'location', target: 'check-215', mode: 'add', rule: dungeonBossDefeat('dungeon-011') },

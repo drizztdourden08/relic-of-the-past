@@ -1,5 +1,6 @@
 /* @layer electron-main @kind logic */
 import { handle } from '../lib/ipc/handle';
+import { applyProfilePatch } from '@shared/storage/profile-patch';
 import type { Profile, ProfilePatch, CreateProfileOptions } from '@shared/types/profile';
 import { listProfiles, createProfile, loadProfile, updateProfile, deleteProfile } from './store';
 import { loadAppState, saveAppState } from './app-state';
@@ -40,17 +41,12 @@ const registerProfileHandlers = (): void => {
     }
   });
 
-  // Whitelist by design: `randomizer` is deliberately not patchable. It is frozen at creation.
-  // A patch distinguishes three things, and the middle one used to be unreachable: a key that is
-  // ABSENT leaves the field alone, a key holding NULL clears it, and a key holding a value sets it.
-  // Clearing was written as `undefined`, which is indistinguishable from absent once the patch has
-  // crossed the IPC boundary, so picking "None" for a pack or language silently kept the old one.
+  // Whitelist by design, shared with the renderer's store (shared/storage/profile-patch.ts):
+  // absent leaves a field alone, null clears it, and of `randomizer` only the connection moves.
   handle('profiles:update', async (_event, id: string, patch: ProfilePatch) => {
     const profile = await loadProfile(id);
     if (!profile) return null;
-    if (patch.name != null) profile.name = patch.name;
-    if (patch.language !== undefined) profile.language = patch.language ?? undefined;
-    if (patch.msuPack !== undefined) profile.msuPack = patch.msuPack ?? undefined;
+    applyProfilePatch(profile, patch);
     await updateProfile(profile);
     return profile;
   });

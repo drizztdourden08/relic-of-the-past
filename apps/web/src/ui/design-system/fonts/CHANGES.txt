@@ -1,0 +1,13 @@
+Changes made to "The Legend of Zelda: A Link to the Past (Ext)" by Patrick H. Lauke
+for Relic of the Past. The original is licensed under Creative Commons Attribution 3.0
+(http://creativecommons.org/licenses/by/3.0/). README.txt and LICENSE.txt in this
+folder are the originals and are unchanged.
+
+2026-09-26
+- Added glyphs for 19 characters the face did not have:
+  # $ % & * + / ; = @ [ \ ] ^ _ ` { } ~
+  They are drawn on the face's own pixel grid, and their source outlines are in
+  extra-glyphs/.
+- Appended "(modified for Relic of the Past)" to the version string and a note
+  listing the added characters to the description.
+- Every original glyph keeps its outline and advance width.

@@ -27,10 +27,8 @@
  */
 import { createRng } from '../../rng';
 import { accessibilityFailures } from '../accessibility/accessibility-check';
-import {
-  NPC_SCOPE_LOCATIONS, PRIZE_LOCATIONS, VANILLA_PRIZES, WORLD_ITEM_SCOPE_LOCATIONS,
-} from '../scope-tables';
-import { presentCapacitySpots } from '../capacity/capacity-spots';
+import { PRIZE_LOCATIONS, VANILLA_PRIZES } from '../scope-tables';
+import { placementStatsOf } from './placement-stats';
 import { buildFillWorld, fillEligibleLocations } from './fill-world';
 import { fillOptionsFromSnapshot, shufflePrizesFromSnapshot } from './fill-options-from-snapshot';
 import { progressiveSettingFromSnapshot } from '../progressive/progressive-from-snapshot';
@@ -53,9 +51,6 @@ const MAX_PLACEMENT_ATTEMPTS = 20;
 
 const EMPTY_DELIVERABLE: ReadonlySet<LocationKey> = new Set();
 
-const countIn = (keys: Iterable<LocationKey>, deliverable: ReadonlySet<LocationKey>): number =>
-  [...keys].filter((key) => deliverable.has(key)).length;
-
 const attemptPlacement = (
   seed: string, attemptSeed: string, snapshot: RandomizerOptionsSnapshot, attempts: number,
   deliverable: Required<DeliverableSets>, pondDemands: PondDemandView,
@@ -73,11 +68,7 @@ const attemptPlacement = (
   // seed alone, ahead of the first attempt, so the panel could show them.
   const shopPrices = rollPrices({ values: snapshot.values, options: fillOptions, rng });
   const fillWorld = buildFillWorld({ ...fillOptions, shopPrices, pondDemands });
-  const {
-    world, pool, keyDropShuffle, includeNpcChecks, includeWorldItems, capacity, capacityProgressive, capacityBonus,
-    capacityCounts, shops, ponds, pondSlotsFollowMode, pondLocations, darkRooms, storyGates, progressiveTiers, progressiveModes, itemPower, retroBow,
-    dungeonItems, accessibility,
-  } = fillWorld;
+  const { world, pool, capacity, retroBow, accessibility } = fillWorld;
   // Minimal accessibility is the only contract that lets the fill park an item
   // somewhere it can never be reached, and only once the goal is already
   // secured (Fill.py's perform_access_check).
@@ -126,7 +117,6 @@ const attemptPlacement = (
   const escapeProblems = verifyStandardEscape(locations, capacity, retroBow.enabled);
   if (escapeProblems.length > 0) throw new FillError('standard escape', escapeProblems.join('; '));
 
-  const fairySpots = presentCapacitySpots(capacity);
   return {
     seed,
     medallions: world.options.medallions,
@@ -134,35 +124,9 @@ const attemptPlacement = (
     shopPrices,
     pondDemands,
     spheres: sweep.spheres,
-    stats: {
-      attempts,
-      keyDropShuffle,
-      includeNpcChecks,
-      includeWorldItems,
-      shufflePrizes,
-      capacityShuffle: fairySpots.length > 0,
-      capacity,
-      capacityProgressive,
-      capacityBonus,
-      capacityCounts,
-      npcDeliverableCount: includeNpcChecks ? countIn(NPC_SCOPE_LOCATIONS.keys(), deliverable.npc) : 0,
-      worldDeliverableCount: includeWorldItems ? countIn(WORLD_ITEM_SCOPE_LOCATIONS.keys(), deliverable.world) : 0,
-      capacityDeliverableCount: countIn(fairySpots, deliverable.capacity),
-      ponds,
-      darkRooms,
-      storyGates,
-      pondPrizeCount: pondLocations.length,
-      pondSlotsFollowMode,
-      progressiveTiers,
-      progressiveModes,
-      retroBow,
-      itemPower,
-      dungeonItems,
-      accessibility,
-      shops,
-      locationCount: world.locationsByKey.size,
-      sphereCount: sweep.spheres.length,
-    },
+    stats: placementStatsOf({
+      fillWorld, attempts, shufflePrizes, deliverable, sphereCount: sweep.spheres.length,
+    }),
   };
 };
 

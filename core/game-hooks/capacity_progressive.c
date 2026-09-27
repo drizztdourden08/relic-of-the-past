@@ -90,21 +90,22 @@ static uint8 ApplyPickup(int family, int steps, int msg) {
     bool surplus = GameHook_WalletLadderClimb(steps);
     climbed = !surplus;
     presentation = surplus ? WALLET_SURPLUS_ITEM : WALLET_STEP_ITEM;
-    if (!climbed || msg < 0) GameHook_ArmReceiptClassMessage(presentation, kReceiptMsg_Generic);
+    GameHook_ArmReceiptClassMessage(presentation, kReceiptMsg_Generic);
   } else if (family == kFamily_Meter) {
     int left = steps > 0 ? steps : 1;
     while (left-- > 0 && GameHook_CapacityClimb(kFamily_Meter)) climbed = true;
-    if (!climbed || msg < 0) GameHook_ArmReceiptMessageIfClear(0x111);
+    GameHook_ArmReceiptMessageIfClear(0x111);
   } else {
     bool maxed = false;
     int left = steps > 0 ? steps : 1;
     for (int n = 0; n < left; n++) maxed |= GameHook_CapacityStep(family);
     climbed = !maxed;
-    if (!climbed || msg < 0) GameHook_ArmReceiptMessageIfClear(maxed ? 0x98 : (family == 0 ? 0x96 : 0x97));
+    GameHook_ArmReceiptMessageIfClear(maxed ? 0x98 : (family == 0 ? 0x96 : 0x97));
   }
-  // The rung's own line replaces whatever the seam armed for the location: the jump is
-  // only known here.
-  if (climbed && msg >= 0) GameHook_ArmReceiptMessageReplace(msg);
+  // The rung's own line is the next page of whatever is armed for the receipt: the jump is
+  // only known here. The family's own line above stands as the first page when the seam
+  // armed nothing for the location.
+  if (climbed && msg >= 0) GameHook_ArmReceiptDetailPage(msg);
   GameHook_ArmUpgradeIcon(climbed ? family : -1);
   GameHook_UpgradeBonusArm(family, presentation, climbed);
   return presentation;

@@ -16,12 +16,16 @@
  * to the base family item. Every native id
  * leaves here range-checked: the native grant tables hold 76 entries, so an
  * id outside 0x00-0x4B resolves as undefined instead of reaching the core.
+ * The retro quiver has no record at all: it resolves to the single-arrow
+ * receipt it is granted as (retro-bow.data.ts).
  */
 
 import {
   asNativeReceiveId, dungeonItemReceiveIdOfRecord, findOne, getItem, prizeReceiveIdOfName,
   progressiveReceiveIdOfName, upgradeReceiveIdOfName,
 } from '@shared/game/data';
+import { itemKeyName } from '@shared/randomizer/world/display-names/item-key-name';
+import { RETRO_QUIVER_GRANT_ITEM, RETRO_QUIVER_ITEM } from '@shared/randomizer/world/retro/retro-bow.data';
 import { sessionWalletTable } from './session-wallet-table';
 import type { ItemId, ItemRecord } from '@shared/game/data';
 
@@ -46,6 +50,7 @@ const resolveLocalItemId = (
   const virtual = progressiveReceiveIdOfName(standardItemName)
     ?? upgradeReceiveIdOfName(standardItemName, walletTable);
   if (virtual !== undefined) return virtual;
+  if (standardItemName === itemKeyName(RETRO_QUIVER_ITEM)) return receiveIdOf(getItem(RETRO_QUIVER_GRANT_ITEM));
   const record = byName(standardItemName);
   // A dungeon-flavoured record answers with the TARGETED id of the dungeon it belongs to
   // (dungeon-item-receive-id.ts). Its native id credits whichever dungeon the player is

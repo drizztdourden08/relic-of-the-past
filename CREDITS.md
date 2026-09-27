@@ -48,7 +48,7 @@
 
 | Who | Project | Use | License |
 |-----|---------|-----|---------|
-| **Patrick H. Lauke** | [The Legend of Zelda: A Link to the Past (Ext)](https://fontstruct.com/fontstructions/show/1534358) | Assets Used Directly: the dialogue face, used in the translation editor so a line is written in the shape it takes on screen | CC BY 3.0 |
+| **Patrick H. Lauke** | [The Legend of Zelda: A Link to the Past (Ext)](https://fontstruct.com/fontstructions/show/1534358) | Assets Modified: the dialogue face, modified and adapted for this project with added glyphs for `#` `$` `%` `&` `*` `+` `/` `;` `=` `@` `[` `\` `]` `^` `_` `` ` `` `{` `}` `~`, drawn on the face's own pixel grid (`CHANGES.txt` beside the font lists the changes). Used wherever the app shows text the game will display, so a line is written in the shape it takes on screen | CC BY 3.0 |
 
 ## Randomizer Logic
 

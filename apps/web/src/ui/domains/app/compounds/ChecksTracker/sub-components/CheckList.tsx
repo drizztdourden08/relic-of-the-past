@@ -35,7 +35,10 @@ const CheckList = (props: CheckListProps) => {
         {checks.flatMap((check) => {
           const status = statuses.get(check.id) ?? 'blocked';
           return shownItemsOf({ check, run, expand: true }).map((itemId, i) => (
-            <CheckCard key={`${check.id}__${i}`} check={check} status={status} item={itemId} now={eventStatus?.get(check.id)} />
+            <CheckCard
+              key={`${check.id}__${i}`} check={check} status={status} item={itemId}
+              foreignItem={run?.foreignItems?.get(check.id)} now={eventStatus?.get(check.id)}
+            />
           ));
         })}
       </Box>
@@ -54,6 +57,7 @@ const CheckList = (props: CheckListProps) => {
             now={eventStatus?.get(check.id)}
             detailed={showsItem}
             item={itemId}
+            foreignItem={run?.foreignItems?.get(check.id)}
           />
         ));
       })}

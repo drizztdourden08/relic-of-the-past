@@ -563,6 +563,7 @@ void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
   // developer tools that read them are on.
   g_ppu_diag = (enhanced_features0 & kFeatures0_DeveloperTools) ? 1 : 0;
 
+  GameHook_DialogHighlightDrawBegin();  // undone by the End call after the draw (dialog_highlight_draw.c)
   PpuBeginDrawing(g_zenv.ppu, pixel_buffer, pitch, render_flags);
 
   dma_startDma(g_zenv.dma, HDMAEN_copy, true);
@@ -687,6 +688,7 @@ void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
   // After the draw, so the OAM and the rasteriser's own account of what it drew describe the same frame.
   GameHook_CaptureOamFrame();
   GameHook_HideSpaceBeyondWallsDone();
+  GameHook_DialogHighlightDrawEnd();
 }
 
 void HdmaSetup(uint32 addr6, uint32 addr7, uint8 transfer_unit, uint8 reg6, uint8 reg7, uint8 indirect_bank) {
@@ -1230,7 +1232,8 @@ static const uint32 kGateWordParityMask[kGateWordCount] = {
   // features5: the capacity pickup bonus rewrites what a borrowed receipt pays out, and every story
   // field makes a gate read a recorded event instead of the item the game reads, so Vanilla Safe
   // strips all of it: a zero word is the unmodified game.
-  kFeatures5_CapacityBonus | kFeatures5_StoryMask,
+  kFeatures5_CapacityBonus | kFeatures5_StoryMask | kFeatures5_ApOnline | kFeatures5_ApDeathLink |
+  kFeatures5_QuietMask,
 };
 
 // Host-side reactions that must fire the instant a gate word changes, keyed by gate-word index. Kept

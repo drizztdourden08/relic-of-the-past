@@ -67,7 +67,8 @@ const scopeFlagsOfStats = (stats: PlacementStats): ScopeFlags => {
   const pondOwnsSlots = ponds.capacity.mode !== 'capacity';
   const wishPondRungs = wishPondRungKeysOf(ponds);
   const followMode = stats.pondSlotsFollowMode === true;
-  const pondLocked = pondVanillaSlotsOf(ponds, probeDeliverablePondLocations(), followMode).locked;
+  const pondSlots = pondVanillaSlotsOf(ponds, probeDeliverablePondLocations(), followMode);
+  const pondLocked = pondSlots.locked;
   const capacityLockedLocations = pondOwnsSlots ? new Set<LocationKey>() : capacityLockedSpotsOf(profile);
   return {
     keyDropShuffle: stats.keyDropShuffle,
@@ -82,6 +83,8 @@ const scopeFlagsOfStats = (stats: PlacementStats): ScopeFlags => {
     ...(includeWorldItems ? { worldLockedLocations: undeliverableWorldLocations() } : {}),
     capacityLockedLocations,
     ...(pondLocked.size > 0 ? { pondLockedItems: pondLocked } : {}),
+    // A slot sold as a prize rung is out of the npc and world scopes, as the fill left it.
+    ...(pondSlots.pairAsPrizes.length > 0 ? { pondPrizeSlots: new Set(pondSlots.pairAsPrizes) } : {}),
     capacityStartTiers: capacityStartTiersOf(profile, capacityLockedLocations),
     // A placement frozen before shops existed opened no shelf.
     shops: stats.shops ?? NO_SHOP_SCOPE,

@@ -28,7 +28,7 @@ const BUNNY_ACCESSIBLE_LOCATIONS: ReadonlySet<CheckId> = new Set<CheckId>([
   'check-070',   // the northern tablet
   'check-010',   // the purple chest, delivered
   'check-039',   // the smith's reward
-  'check-336',   // the smith, found
+  'check-336',   // the smiths, reunited
   'check-072',   // the pedestal
   'check-007',   // the bottle seller
   'check-009',   // the item under the water

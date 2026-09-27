@@ -11,17 +11,18 @@ import { ITEM } from '../../item-ids.data';
 import {
   allOf, anyOf, hasItem, never,
 } from '../combinators';
-import { canLiftHeavyRocks, canLiftRocks, canUseBombs } from '../../state-helpers';
-import { canRetrieveTablet } from '../../state-helpers-world';
+import {
+  bombs, canLiftHeavyRocks, canLiftRocks, canRetrieveTablet,
+} from '../helper-rules';
 import { actGate } from '../../events';
 import type { RuleEntry } from '../rule-entry.type';
 
 const DEFAULT_OVERWORLD_RULES: readonly RuleEntry[] = [
   // 627-630
-  { kind: 'exit', target: 'Light World Bomb Hut', mode: 'set', rule: (state) => canUseBombs(state) },
-  { kind: 'exit', target: 'Light Hype Fairy', mode: 'set', rule: (state) => canUseBombs(state) },
-  { kind: 'exit', target: 'Mini Moldorm Cave', mode: 'set', rule: (state) => canUseBombs(state) },
-  { kind: 'exit', target: 'Ice Rod Cave', mode: 'set', rule: (state) => canUseBombs(state) },
+  { kind: 'exit', target: 'Light World Bomb Hut', mode: 'set', rule: bombs() },
+  { kind: 'exit', target: 'Light Hype Fairy', mode: 'set', rule: bombs() },
+  { kind: 'exit', target: 'Mini Moldorm Cave', mode: 'set', rule: bombs() },
+  { kind: 'exit', target: 'Ice Rod Cave', mode: 'set', rule: bombs() },
   // 632-635
   // The tomb wall was dashed open once and stays open, so the act carries the boots.
   { kind: 'exit', target: 'Kings Grave', mode: 'set', rule: actGate('check-325') },
@@ -70,7 +71,7 @@ const DEFAULT_OVERWORLD_RULES: readonly RuleEntry[] = [
   // 655-658
   { kind: 'location', target: 'check-020', mode: 'set', rule: hasItem(ITEM.flippers) },
   { kind: 'exit', target: 'Waterfall of Wishing', mode: 'set', rule: hasItem(ITEM.flippers) },
-  { kind: 'location', target: 'check-335', mode: 'set', rule: canLiftHeavyRocks },
+  { kind: 'location', target: 'check-335', mode: 'set', rule: canLiftHeavyRocks },   // Frog found
   { kind: 'location', target: 'check-056', mode: 'set', rule: hasItem(ITEM.mushroom) },
   // 661, 663-664
   { kind: 'exit', target: 'Checkerboard Cave', mode: 'set', rule: canLiftRocks },
@@ -129,7 +130,7 @@ const DEFAULT_OVERWORLD_RULES: readonly RuleEntry[] = [
   },
   {
     kind: 'exit', target: 'Dark Lake Hylia Ledge Fairy', mode: 'set',
-    rule: allOf(hasItem(ITEM.moonPearl), (state) => canUseBombs(state)),
+    rule: allOf(hasItem(ITEM.moonPearl), bombs()),
   },
   {
     kind: 'exit', target: 'Dark Lake Hylia Ledge Spike Cave', mode: 'set',
@@ -146,11 +147,11 @@ const DEFAULT_OVERWORLD_RULES: readonly RuleEntry[] = [
   },
   {
     kind: 'exit', target: 'Hype Cave', mode: 'set',
-    rule: allOf(hasItem(ITEM.moonPearl), (state) => canUseBombs(state)),
+    rule: allOf(hasItem(ITEM.moonPearl), bombs()),
   },
   {
     kind: 'exit', target: 'Brewery', mode: 'set',
-    rule: allOf(hasItem(ITEM.moonPearl), (state) => canUseBombs(state)),
+    rule: allOf(hasItem(ITEM.moonPearl), bombs()),
   },
   // 696-698
   { kind: 'exit', target: 'Maze Race Mirror Spot', mode: 'set', rule: hasItem(ITEM.magicMirror) },

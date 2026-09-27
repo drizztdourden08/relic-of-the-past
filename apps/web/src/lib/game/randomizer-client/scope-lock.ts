@@ -78,15 +78,28 @@ interface ScopeFlags {
    * flags) means no rung is a location.
    */
   wishPondRungs?: ReadonlyMap<LocationKey, WishPondRungKey>;
+  /**
+   * A wish pond's own two slots that her Custom mode sells as prize rungs
+   * (pond/pond-vanilla-slots.ts). The npc and world scopes no longer decide them, in
+   * the fill (fill-world.ts) and here alike: they carry a pool item handed over by
+   * the rung table. Absent (the online flags, and every placement generated before
+   * the rule) exempts nothing.
+   */
+  pondPrizeSlots?: ReadonlySet<LocationKey>;
 }
+
+/** The npc and world scopes, toggle and probe remainder, minus a slot sold as a pond prize. */
+const isScopeLocked = (location: LocationKey, flags: ScopeFlags): boolean =>
+  flags.pondPrizeSlots?.has(location) !== true && (
+    (!flags.includeNpcChecks && NPC_SCOPE_LOCATIONS.has(location))
+    || (!flags.includeWorldItems && WORLD_ITEM_SCOPE_LOCATIONS.has(location))
+    || flags.npcLockedLocations?.has(location) === true
+    || flags.worldLockedLocations?.has(location) === true);
 
 const isLockedVanilla = (location: LocationKey, flags: ScopeFlags): boolean =>
   (!flags.shufflePrizes && PRIZE_LOCATIONS.has(location))
   || (!flags.keyDropShuffle && KEY_DROP_LOCATIONS.has(location))
-  || (!flags.includeNpcChecks && NPC_SCOPE_LOCATIONS.has(location))
-  || (!flags.includeWorldItems && WORLD_ITEM_SCOPE_LOCATIONS.has(location))
-  || flags.npcLockedLocations?.has(location) === true
-  || flags.worldLockedLocations?.has(location) === true
+  || isScopeLocked(location, flags)
   || flags.capacityLockedLocations?.has(location) === true
   || flags.pondLockedItems?.has(location) === true;
 

@@ -94,6 +94,10 @@ static bool GrantRung(void) {
     Link_ReceiveItem((uint8)new_item, 0);
     return true;
   }
+  if (GameHook_ForeignSentinelStranded((uint8)new_item)) {
+    printf("[Randomizer] Wish pond rung held another player's item with the online gate clear\n");
+    return true;
+  }
   if (msg >= 0) GameHook_ArmReceiptMessageIfClear(msg);
   uint8 grant = GameHook_ResolvePrizeItem(GameHook_ResolveGrantItem((uint8)new_item));
   if (msg < 0) GameHook_ArmReceiptClassMessage(grant, kReceiptMsg_Generic);

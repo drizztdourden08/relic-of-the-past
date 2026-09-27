@@ -11,6 +11,7 @@ import { armReceiptGates } from './receipt-grants';
 import { getItemByGameId, isGrantableReceiveId } from '@shared/game/data';
 import { log } from '../log-bus';
 import { receiptJumpText } from './receipt-jump-text';
+import { isQuietReceiptItem } from './quiet-receipts';
 
 // A virtual upgrade id has no record: its label is the jump it performs.
 const itemName = (itemId: number): string => getItemByGameId({ receiveItemId: itemId })?.name
@@ -32,19 +33,28 @@ const isGrantable = (itemId: number): boolean => {
  * |onComplete| runs once the core has finished handing the item over, for work that must follow the
  * pickup without sitting behind it as a second queue entry the player can see. The queue also fires
  * it for an entry it DROPS (clear() on a session stop), so a caller that must tell the two apart
- * checks something of its own.
+ * checks something of its own. |onGranted| runs only when the core confirmed the grant, never
+ * for a refused attempt or a dropped entry (delivery-queue.type.ts). |messageId| as a function is
+ * asked for the id when the entry reaches the front of the queue, never at enqueue.
  */
 const deliverItem = (
-  itemId: number, message?: string, source = 'randomizer', messageId?: number, onComplete?: () => void,
+  itemId: number, message?: string, source = 'randomizer', messageId?: number | (() => number),
+  onComplete?: () => void, onGranted?: () => void,
 ): string | null => {
   if (!isGrantable(itemId) || !isReady()) return null;
   // Sessions arm the receipt gates at start (receipt-grants.ts); arming again at enqueue
   // covers grants fired outside a session, and the WRAM latch (next frame) still lands
   // before the queue's readiness poll can execute, the arm-with-the-write pattern.
   armReceiptGates();
-  const action: DeliveryAction = { type: 'give_item', itemId, receiptExport: true, messageId };
+  const action: DeliveryAction = typeof messageId === 'function'
+    ? { type: 'give_item', itemId, receiptExport: true, messageOf: messageId }
+    : { type: 'give_item', itemId, receiptExport: true, messageId };
   const label = message ?? itemName(itemId);
-  return enqueue(label, source, action, onComplete);
+  // Quiet receipts: a randomizer rupee, bomb or arrow skips its hold-up and message.
+  if (source === 'randomizer' && isQuietReceiptItem(itemId)) {
+    return enqueue(label, source, { type: 'quiet_receipt', itemId, fallback: action }, onComplete, onGranted);
+  }
+  return enqueue(label, source, action, onComplete, onGranted);
 };
 
 const deliverCheck = (roomId: number, chestIndex: number, itemId: number, message?: string, source = 'randomizer'): string | null => {

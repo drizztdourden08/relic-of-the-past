@@ -15,6 +15,7 @@ const STATUS_LABELS = {
   idle: 'Idle',
   starting: 'Starting...',
   active: 'Active',
+  reconnecting: 'Reconnecting...',
   error: 'Error',
 } as const;
 

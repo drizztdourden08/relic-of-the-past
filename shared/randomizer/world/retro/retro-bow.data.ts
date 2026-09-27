@@ -60,6 +60,12 @@ const RETRO_REPLACEMENT_ITEM = ITEM.rupees5;
 const RETRO_QUIVER_ITEM: ItemKey = UNRECORDED.quiver;
 
 /**
+ * The record the quiver is granted as: the single arrow, whose receipt (0x43) is the one the
+ * retro shelf sells as the quiver too (core/game-hooks/retro_shelf.c RETRO_QUIVER_RECEIPT).
+ */
+const RETRO_QUIVER_GRANT_ITEM: ItemId = ITEM.singleArrow;
+
+/**
  * The arrow capacity upgrades. The reference strips these under retro too (ItemPool.py
  * 726), because a carried count stops meaning anything once every shot is paid
  * for in rupees. This app reaches the same pool by a different door: the
@@ -109,6 +115,7 @@ export {
   RETRO_ARROW_PICKUPS,
   RETRO_BOW_KEY,
   RETRO_PRICE_CEILING,
+  RETRO_QUIVER_GRANT_ITEM,
   RETRO_QUIVER_ITEM,
   RETRO_QUIVER_PRICE,
   RETRO_ARROW_CAPACITY_UPGRADES,

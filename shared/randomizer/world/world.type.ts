@@ -31,8 +31,17 @@ import type { ProgressiveModeSetting, ProgressiveSetting } from './progressive/p
 import type { RetroBowSetting } from './retro/retro.type';
 import type { ShopScope } from './shops/shop-scope.type';
 import type { ShopPriceView } from './shops/shop-price.type';
+import type { RuleNode } from './rules/rule-node.type';
 
-type Rule = (state: CollectionState) => boolean;
+/**
+ * An access rule: a closure the engine asks, carrying the tree it was compiled from
+ * (rules/rule-node.type.ts, compiled by rules/rule-eval.ts). The tree is the rule; the closure
+ * is its cache, so the two always answer alike.
+ */
+type Rule = ((state: CollectionState) => boolean) & { readonly node: RuleNode };
+
+/** One value of the seed table: a number, a currency or content name, an item key, a flag. */
+type SeedValue = string | number | boolean;
 
 /** python add_item_rule/forbid_item: may this item be placed here? */
 type ItemRule = (item: ItemKey) => boolean;
@@ -209,6 +218,12 @@ interface World {
   alwaysAllow: Map<LocationKey, AlwaysAllowRule>;
   /** Fill seam: location key to the item placed there (empty before a fill). */
   placedItems: Map<LocationKey, ItemKey>;
+  /**
+   * The values a seeded rule reads (rules/seed-values.ts): each shelf's price and each pond
+   * rung's demand, as this world settled them. Filled by the registration pass, so the trees
+   * themselves carry no value and keep one shape for every seed.
+   */
+  seedValues: Map<string, SeedValue>;
   getRule(name: string): Rule | undefined;
   getLocationRule(key: LocationKey): Rule | undefined;
   /** Absent entry means every item is allowed (reference default). */
@@ -217,4 +232,4 @@ interface World {
   isBeaten(state: CollectionState): boolean;
 }
 
-export type { Rule, ItemRule, AlwaysAllowRule, WorldOptions, World };
+export type { Rule, ItemRule, AlwaysAllowRule, SeedValue, WorldOptions, World };

@@ -39,6 +39,7 @@ const INVOKE_MAP = {
   openRomDialog: 'dialog:openRom',
   pickFile: 'dialog:pickFile',
   saveFile: 'dialog:saveFile',
+  saveArchipelagoFiles: 'archipelago:save-files',
   listProfiles: 'profiles:list',
   createProfile: 'profiles:create',
   deleteProfile: 'profiles:delete',

@@ -78,6 +78,8 @@ void GameHook_ArmUpgradeIcon(int family) {
 // decoded its tiles. Consumes the arm; when the receipt is that family's presentation,
 // binds the family to it and writes the icon over the fresh decode.
 void GameHook_ReceiptTilesDecoded(uint8 item) {
+  // A foreign item's game icon rides the same seam (foreign_icon.c, kFeatures5_ApOnline).
+  GameHook_ForeignIconTilesDecoded(item);
   int family = g_armed_family;
   g_armed_family = -1;
   if (family < 0 || family >= ICON_FAMILY_COUNT || !IconGate()) return;
@@ -114,37 +116,42 @@ static bool IconShown(int family, uint8 item) {
 // A world draw seam just decoded |grant_id|'s presentation into the slot: a capacity id
 // that still climbs gets its icon; a surplus replacement keeps its own picture.
 void GameHook_WriteUpgradeIconFor(uint8 grant_id) {
+  GameHook_WriteForeignIconFor(grant_id);
   int family = GameHook_UpgradeFamilyOf(grant_id);
   if (IconShown(family, GameHook_GrantPresentationOf(grant_id))) GameHook_WriteUpgradeIcon(family);
 }
 
 // The hold-up seam's palette read: the icon's row while the live receipt shows one.
+// A foreign item's game icon answers when no capacity icon does (foreign_icon.c).
 uint8 GameHook_ReceiptPalette(uint8 item, uint8 native) {
-  return IconShown(g_live_family, item) ? ICON_PALETTE_ROW : native;
+  return IconShown(g_live_family, item) ? ICON_PALETTE_ROW : GameHook_ForeignIconPalette(item, native);
 }
 
 // The sprite-side draw's palette read: the icon's row when |grant_id| draws as one.
 uint8 GameHook_ReceiptPaletteFor(uint8 grant_id, uint8 native) {
   int family = GameHook_UpgradeFamilyOf(grant_id);
-  return IconShown(family, GameHook_GrantPresentationOf(grant_id)) ? ICON_PALETTE_ROW : native;
+  return IconShown(family, GameHook_GrantPresentationOf(grant_id))
+    ? ICON_PALETTE_ROW : GameHook_ForeignIconPaletteFor(grant_id, native);
 }
 
 // The hold-up seam's OAM size read: a wide receipt's while the live receipt shows an icon,
 // |native| (the presentation item's own kReceiveItem_Tab1 entry) otherwise.
 uint8 GameHook_ReceiptShape(uint8 item, uint8 native) {
-  return IconShown(g_live_family, item) ? ICON_OAM_SIZE : native;
+  return IconShown(g_live_family, item) ? ICON_OAM_SIZE : GameHook_ForeignIconShape(item, native);
 }
 
 // The sprite-side draw's OAM size read: a wide receipt's when |grant_id| draws as an icon.
 uint8 GameHook_ReceiptShapeFor(uint8 grant_id, uint8 native) {
   int family = GameHook_UpgradeFamilyOf(grant_id);
-  return IconShown(family, GameHook_GrantPresentationOf(grant_id)) ? ICON_OAM_SIZE : native;
+  return IconShown(family, GameHook_GrantPresentationOf(grant_id))
+    ? ICON_OAM_SIZE : GameHook_ForeignIconShapeFor(grant_id, native);
 }
 
 // The hold-up spawn of |item| computed a narrow receipt's spot: moved to a wide one's while
 // its icon shows. The chest and the scripted presentations (item_receipt_method 1 and 2)
 // also place a narrow receipt two pixels lower than a wide one; the standing one does not.
 void GameHook_UpgradeIconSpawnOffset(uint8 item, int *x, int *y) {
+  GameHook_ForeignIconSpawnOffset(item, x, y);
   if (kReceiveItem_Tab1[item] != 0 || !IconShown(g_live_family, item)) return;
   *x += ICON_SPAWN_DX;
   int method = item_receipt_method == 3 ? 0 : item_receipt_method;

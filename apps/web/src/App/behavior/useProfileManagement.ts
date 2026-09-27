@@ -103,7 +103,7 @@ const useProfileManagement = (params: {
     resetSession();
 
     // Randomizer gate: a randomized profile only boots when its session can
-    // actually start afterwards (placement on disk / server reachable).
+    // actually start afterwards (placement on disk / a server URL).
     if (profile.randomizer) {
       const gate = await gateRandomizerBoot(profile.id, profile.randomizer);
       if (!gate.ok) {

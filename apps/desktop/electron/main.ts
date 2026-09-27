@@ -47,6 +47,7 @@ import { registerScreenEditorHandlers } from './screen-editor/ipc-handlers';
 import { registerShadowCastingHandlers } from './shadow-casting';
 import { registerUiViewsHandlers } from './ui-views';
 import { registerRecommendationHandlers } from './recommendations';
+import { registerArchipelagoHandlers } from './archipelago';
 import { registerAppHandlers } from './app/ipc-handlers';
 import { registerDiagnosticsHandlers } from './diagnostics/ipc-handlers';
 import { registerWasmHandlers } from './wasm/ipc-handlers';
@@ -103,6 +104,7 @@ const IPC_HANDLERS: Array<{ register: () => void; devOnly?: boolean }> = [
   { register: registerConnectionHandlers },
   { register: registerUiViewsHandlers },
   { register: registerRecommendationHandlers },
+  { register: registerArchipelagoHandlers },
   // Writes to source files: never registered in a packaged build.
   { register: registerScreenEditorHandlers, devOnly: true },
   { register: registerShadowCastingHandlers },

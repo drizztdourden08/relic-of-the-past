@@ -13,18 +13,17 @@
 import { ITEM } from '../../item-ids.data';
 import { REGION } from '../../region-ids.data';
 import {
-  allOf, anyOf, either, hasItem, hasKeys, placedAt, placedIn,
+  allOf, always, anyOf, canReach, either, hasAnyItem, hasItem, hasKeys, placedAt, placedIn,
 } from '../combinators';
-import { canBombOrBonk, canShootArrows, canUseBombs, hasBeamSword } from '../../state-helpers';
-import { canKillMostThings } from '../../state-helpers-world';
+import {
+  arrows, bombs as bombsFor, canBombOrBonk, hasBeamSword, kill,
+} from '../helper-rules';
 import { actGate } from '../../events';
 import { dungeonBossDefeat } from './bosses.data';
-import type { CollectionState } from '../../collection-state';
 import type { LocationKey } from '../../location-key';
 import type { RuleEntry } from '../rule-entry.type';
 
-const bombs = (state: CollectionState): boolean => canUseBombs(state);
-const kill = (enemies: number) => (state: CollectionState): boolean => canKillMostThings(state, enemies);
+const bombs = bombsFor();
 
 /** 1153: the chests locked behind the front-only doors. */
 const FRONT_LOCKED_LOCATIONS: readonly LocationKey[] = [
@@ -40,7 +39,7 @@ const TURTLE_RULES: readonly RuleEntry[] = [
     // The medallion opened it once and the seal stays down, so the act carries the casting.
     rule: allOf(
       hasItem(ITEM.moonPearl), actGate('check-345'),
-      (state) => state.canReachRegion(REGION.turtleRockTop),
+      canReach(REGION.turtleRockTop),
     ),
   },
   // 490-491
@@ -75,8 +74,8 @@ const TURTLE_RULES: readonly RuleEntry[] = [
   {
     kind: 'location', target: 'check-223', mode: 'set',
     rule: anyOf(
-      bombs, (state) => canShootArrows(state), hasBeamSword,
-      (state) => state.hasAny([ITEM.blueBoomerang, ITEM.redBoomerang, ITEM.hookshot, ITEM.caneOfSomaria, ITEM.fireRod, ITEM.iceRod]),
+      bombs, arrows(), hasBeamSword,
+      hasAnyItem([ITEM.blueBoomerang, ITEM.redBoomerang, ITEM.hookshot, ITEM.caneOfSomaria, ITEM.fireRod, ITEM.iceRod]),
     ),
   },
   // 502-503
@@ -131,7 +130,7 @@ const TURTLE_RULES: readonly RuleEntry[] = [
     kind: 'location', target: 'check-224', mode: 'set',
     rule: either(
       placedAt('check-224', ITEM.smallKeyTurtleRock),
-      () => true,
+      always,
       either(
         placedAt('check-224', ITEM.bigKeyTurtleRock),
         hasKeys(ITEM.smallKeyTurtleRock, 4),

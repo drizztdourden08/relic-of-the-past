@@ -82,6 +82,16 @@ static int StepsThisFrame(void) {
   return steps;
 }
 
+// The border stages (kText_Render[0] and [1]) queue the box's frame and fill in vram_upload_data for
+// this frame's NMI. The next stage writes the text tilemap into that same buffer, so a second step in
+// the same frame replaced the frame before it was ever uploaded, and the words drew over the room with
+// no box. The loop stops once a border stage has queued its rows; the next frame carries on.
+enum { kTextRenderState_LastBorder = 1 };
+
+static bool BorderUploadQueued(uint8 state_before) {
+  return state_before <= kTextRenderState_LastBorder && nmi_load_bg_from_vram != 0;
+}
+
 static bool BoxClosed(uint8 module_at_entry) {
   return main_module_index != module_at_entry || (messaging_module == 0 && submodule_index == 0);
 }
@@ -107,8 +117,9 @@ void GameHook_DialogRender(void (*step)(void)) {
   // A zero-credit frame under a slow fraction still runs nothing, matching the engine's own idea of
   // "this frame is a wait frame"; the credit carries to the next one.
   while (steps-- > 0) {
+    uint8 state_before = text_render_state;
     step();
-    if (BoxClosed(module) || AtKeyWait()) break;
+    if (BoxClosed(module) || AtKeyWait() || BorderUploadQueued(state_before)) break;
   }
   g_in_paced_run = false;
   if (g_fill_latched && (AtKeyWait() || BoxClosed(module))) g_fill_latched = false;

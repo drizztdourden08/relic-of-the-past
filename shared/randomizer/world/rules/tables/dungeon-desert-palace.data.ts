@@ -11,22 +11,21 @@ import { REGION } from '../../region-ids.data';
 import {
   allOf, hasItem, hasKeys,
 } from '../combinators';
-import { canLiftRocks, hasFireSource } from '../../state-helpers';
+import { canLiftRocks, hasFireSource, kill } from '../helper-rules';
 import { actGate } from '../../events';
-import { canKillMostThings } from '../../state-helpers-world';
-import { DEFAULT_DUNGEON_ITEM_SETTING, staysInOwnDungeon } from '../../dungeon-items/dungeon-item-modes';
+import { compileRule } from '../rule-eval';
+import { any, option, region } from '../rule-node-build';
 import { dungeonBossDefeat } from './bosses.data';
-import type { CollectionState } from '../../collection-state';
-import type { World } from '../../world.type';
 import type { RuleEntry } from '../rule-entry.type';
 
-const kill = (enemies: number) => (state: CollectionState): boolean => canKillMostThings(state, enemies);
-
-/** True while at least one key family is still pinned to the dungeon that owns it. */
-const eitherKeyFamilyPinned = (world: World): boolean => {
-  const setting = world.options.dungeonItems ?? DEFAULT_DUNGEON_ITEM_SETTING;
-  return staysInOwnDungeon(setting.smallKey) || staysInOwnDungeon(setting.bigKey);
-};
+/**
+ * The prize guard: moot once neither key family is pinned to its own dungeon (the setting
+ * reading 'dungeonItems.keyFamilyPinned'), else the outer palace must be reachable.
+ */
+const prizeGuard = compileRule(any(
+  option('dungeonItems.keyFamilyPinned', false),
+  region(REGION.desertPalaceOuter),
+));
 
 /** 367-368: full keys + big key + a fire source + the boss fight. */
 const bossAccess = allOf(
@@ -68,7 +67,7 @@ const DESERT_PALACE_RULES: readonly RuleEntry[] = [
   // dungeon, at which point neither key can be locked behind this prize.
   {
     kind: 'location', target: 'check-131', mode: 'add',
-    rule: (state) => !eitherKeyFamilyPinned(state.world) || state.canReachRegion(REGION.desertPalaceOuter),
+    rule: prizeGuard,
   },
 ];
 

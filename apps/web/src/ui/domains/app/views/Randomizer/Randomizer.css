@@ -122,6 +122,9 @@
   color: var(--c-text-muted);
 }
 
+.randomizer-page__hint--ok { color: var(--c-green-bright); }
+.randomizer-page__hint--error { color: var(--c-danger); }
+
 /* ── Activity log palette ──
    Kinds come from behavior/randomizer-log-style.ts; the panel owns everything
    structural. A clock gutter needs more room than a line number. */
@@ -149,6 +152,8 @@
 .randomizer-log .log-panel__msg--receipt  { color: var(--c-text-dim); }
 .randomizer-log .log-panel__tag--online   { color: var(--c-info); }
 .randomizer-log .log-panel__msg--online   { color: var(--c-text); }
+.randomizer-log .log-panel__tag--ap       { color: var(--c-gold); }
+.randomizer-log .log-panel__msg--ap       { color: var(--c-text); }
 .randomizer-log .log-panel__tag--info     { color: var(--c-text-muted); }
 .randomizer-log .log-panel__msg--info     { color: var(--c-text); }
 .randomizer-log .log-panel__tag--warn     { color: var(--c-warning); }
@@ -171,4 +176,13 @@
   border: 1px solid var(--c-hairline);
   border-radius: var(--radius-md);
   background: var(--c-sunken);
+}
+
+/* ── Online tab ──
+   The settings screen's own layout, which scrolls itself. */
+.randomizer-online {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }

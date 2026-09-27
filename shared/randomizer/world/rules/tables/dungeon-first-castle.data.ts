@@ -8,12 +8,8 @@
  */
 import { ITEM } from '../../item-ids.data';
 import { hasKeys } from '../combinators';
-import { canBombOrBonk } from '../../state-helpers';
-import { canKillMostThings } from '../../state-helpers-world';
-import type { CollectionState } from '../../collection-state';
+import { canBombOrBonk, kill } from '../helper-rules';
 import type { RuleEntry } from '../rule-entry.type';
-
-const kill = (enemies: number) => (state: CollectionState): boolean => canKillMostThings(state, enemies);
 
 const FIRST_CASTLE_RULES: readonly RuleEntry[] = [
   // 304-305

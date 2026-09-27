@@ -18,13 +18,16 @@
  * the rung that hands X over.
  */
 import { POND_INSTANCES } from '../pond/pond-instances';
-import { POND_LOCATION_SET } from '../pond/pond-rungs';
+import { POND_LOCATION_SET, POND_RUNGS_BY_ID } from '../pond/pond-rungs';
 import { pondPlanOf } from '../pond/pond-plan';
 import { selfLockRuleOf } from '../shops/shop-self-lock';
-import { ruleForPrice } from './shop-prices';
-import type { World, Rule } from '../world.type';
+import { compileRule } from './rule-eval';
+import { TRUE, all, seedIs, when } from './rule-node-build';
+import { seedKey, seededPriceNode } from './seeded-price';
+import { allOf } from './combinators';
+import type { World } from '../world.type';
 import type { LocationKey } from '../location-key';
-import type { PondDemandView } from '../pond/pond-ask.type';
+import type { RuleNode } from './rule-node.type';
 import type { ShopPrice } from '../shops/shop-price.type';
 
 /** A rung never holds what its own demand is counted in (shops/shop-self-lock.ts). */
@@ -40,33 +43,47 @@ const applySelfLock = (world: World, key: LocationKey, demand: ShopPrice): void 
 
 /**
  * One pond's rungs, each gated by every demand up to and including its own. The climb runs over
- * the whole plan, because a rung this world does not sell still had to be paid through; only a
- * prize slot the world really sells carries the rule. A pond handing over its own pair asks for
- * that pair on its own terms, so the pair is not one.
+ * every rung, because a rung this world does not sell still had to be paid through; a rung past
+ * the plan, or one nothing was rolled for, demands `none` in the seed table and adds nothing.
+ * Only a prize slot the world really sells, with a demand of its own, carries the rule: that is
+ * the `pondGated` flag (seed-values.ts). A pond handing over its own pair asks for that pair on
+ * its own terms, so the pair is not one.
  */
-const registerLadder = (
-  world: World, rungs: readonly LocationKey[], demands: PondDemandView,
-  prizes: ReadonlySet<LocationKey>,
-): void => {
-  let climb: Rule | undefined;
+const registerLadder = (world: World, rungs: readonly LocationKey[]): void => {
+  const climb: RuleNode[] = [];
   for (const key of rungs) {
-    const demand = demands[key];
-    if (demand === undefined) continue;
-    const afford = ruleForPrice(demand);
-    const earlier = climb;
-    const gate: Rule = earlier === undefined ? afford : (state) => earlier(state) && afford(state);
-    climb = gate;
+    climb.push(seededPriceNode(seedKey.pondDemand(key)));
     const existing = world.locationRules.get(key);
-    if (existing === undefined || !prizes.has(key)) continue;
-    world.locationRules.set(key, (state) => existing(state) && gate(state));
-    applySelfLock(world, key, demand);
+    if (existing === undefined) continue;
+    const gate = when(seedIs(seedKey.pondGated(key), true), all(...climb), TRUE);
+    world.locationRules.set(key, allOf(existing, compileRule(gate)));
   }
 };
 
 /**
- * The demands this seed rolled, over the rungs each pond really has. Nothing
- * rolled (every pond legacy, or a placement frozen before the demands existed)
- * registers nothing at all, so such a seed keeps the rules it was built with.
+ * The item half, which is a placement predicate and reads the demands themselves: a gated rung
+ * never holds what its own demand is counted in.
+ */
+const registerSelfLocks = (world: World): void => {
+  const { ponds, pondDemands, pondPrizeLocations } = world.options;
+  if (ponds === undefined || pondDemands === undefined) return;
+  const prizes = new Set(pondPrizeLocations);
+  for (const pond of POND_INSTANCES) {
+    const setting = ponds[pond.id];
+    if (setting.mode === 'capacity') continue;
+    for (const key of pondPlanOf(setting, pond).locations) {
+      const demand = pondDemands[key];
+      if (demand === undefined || !POND_LOCATION_SET.has(key)) continue;
+      if (world.locationRules.has(key) && prizes.has(key)) applySelfLock(world, key, demand);
+    }
+  }
+};
+
+/**
+ * Every pond's ladder, registered the same way for every setting and seed; the demands the seed
+ * rolled are read off the seed table when the rule is asked. Nothing rolled (every pond legacy,
+ * or a placement frozen before the demands existed) leaves every rung ungated there, so such a
+ * seed keeps the rules it was built with.
  *
  * Which ponds may carry one is the ROLL's question, not this one
  * (pond/pond-demand-seed.ts: a custom pond and nothing else). This reads
@@ -74,15 +91,8 @@ const registerLadder = (
  * an already generated seed on the rules it was verified against.
  */
 const registerPondDemandRules = (world: World): void => {
-  const { ponds, pondDemands, pondPrizeLocations } = world.options;
-  if (ponds === undefined || pondDemands === undefined) return;
-  const prizes = new Set(pondPrizeLocations);
-  for (const pond of POND_INSTANCES) {
-    const setting = ponds[pond.id];
-    if (setting.mode === 'capacity') continue;
-    const rungs = pondPlanOf(setting, pond).locations.filter((key) => POND_LOCATION_SET.has(key));
-    registerLadder(world, rungs, pondDemands, prizes);
-  }
+  for (const pond of POND_INSTANCES) registerLadder(world, POND_RUNGS_BY_ID[pond.id]);
+  registerSelfLocks(world);
 };
 
 export { registerPondDemandRules };

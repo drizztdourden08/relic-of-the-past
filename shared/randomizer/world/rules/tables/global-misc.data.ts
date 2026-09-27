@@ -11,16 +11,16 @@ import {
   allOf, anyOf, canCollect, canReach, hasItem,
 } from '../combinators';
 import {
-  canBombOrBonk, canExtendMagic, canLiftRocks, canShootArrows, canUseBombs, hasBeamSword, hasHearts,
-} from '../../state-helpers';
-import { canKillMostThings, canRetrieveTablet } from '../../state-helpers-world';
+  arrows, bombs, canBombOrBonk, canLiftRocks, canRetrieveTablet, hasBeamSword, hearts, kill, magic,
+} from '../helper-rules';
+import { compileRule } from '../rule-eval';
+import { countGroup } from '../rule-node-build';
 import { pedestalRule, sahasrahlaRule } from '../story-gate-rules';
 import { BOTTLE_ITEMS } from '../../item-groups';
-import type { CollectionState } from '../../collection-state';
 import type { RuleEntry } from '../rule-entry.type';
 
-const bombs = (quantity = 1) => (state: CollectionState): boolean => canUseBombs(state, quantity);
-const kill = (enemies: number) => (state: CollectionState): boolean => canKillMostThings(state, enemies);
+/** Any bottle at all, counted raw: an empty one is still somewhere to put the prize. */
+const holdsBottle = compileRule(countGroup(BOTTLE_ITEMS, 1));
 
 const GLOBAL_MISC_RULES: readonly RuleEntry[] = [
   // 216-221: the mountain S&Q spot opens once its cave dweller is reachable.
@@ -35,20 +35,20 @@ const GLOBAL_MISC_RULES: readonly RuleEntry[] = [
     kind: 'location', target: 'check-072', mode: 'set',
     rule: pedestalRule,
   },
-  // 230-234
+  // 230-234. The first is the ledger's "Smiths reunited" event.
   {
     kind: 'location', target: 'check-336', mode: 'set',
     rule: allOf(hasItem(ITEM.getFrog), canReach(REGION.blacksmithsHut)),
   },
   { kind: 'location', target: 'check-039', mode: 'set', rule: hasItem(ITEM.returnSmith) },
   { kind: 'location', target: 'check-040', mode: 'set', rule: hasItem(ITEM.magicPowder) },
-  { kind: 'location', target: 'check-041', mode: 'set', rule: (state) => state.hasGroup(BOTTLE_ITEMS) },
+  { kind: 'location', target: 'check-041', mode: 'set', rule: holdsBottle },
   { kind: 'location', target: 'check-055', mode: 'set', rule: hasItem(ITEM.pegasusBoots) },
   // 239-244: enemy shuffle off, enemy health default → the bombs branch stays.
   {
     kind: 'location', target: 'check-074', mode: 'set',
     rule: allOf(hasItem(ITEM.hammer), anyOf(
-      bombs(4), (state) => canShootArrows(state), hasItem(ITEM.caneOfSomaria), hasBeamSword,
+      bombs(4), arrows(), hasItem(ITEM.caneOfSomaria), hasBeamSword,
     )),
   },
   // 246
@@ -67,7 +67,7 @@ const GLOBAL_MISC_RULES: readonly RuleEntry[] = [
   ...['check-063', 'check-064', 'check-065',
     'check-066', 'check-062'].map((target): RuleEntry => ({
     kind: 'location', target, mode: 'set',
-    rule: anyOf(bombs(), hasBeamSword, (state) => canShootArrows(state),
+    rule: anyOf(bombs(), hasBeamSword, arrows(),
       hasItem(ITEM.fireRod), hasItem(ITEM.caneOfSomaria)),
   })),
   // 271-272
@@ -94,12 +94,12 @@ const GLOBAL_MISC_RULES: readonly RuleEntry[] = [
       hasItem(ITEM.hammer),
       canLiftRocks,
       anyOf(
-        allOf(hasItem(ITEM.cape), (state) => canExtendMagic(state, 16)),
+        allOf(hasItem(ITEM.cape), magic(16)),
         allOf(
           hasItem(ITEM.caneOfByrna),
           anyOf(
-            (state) => canExtendMagic(state, 12),
-            anyOf(hasItem(ITEM.pegasusBoots), (state) => hasHearts(state, 4)),
+            magic(12),
+            anyOf(hasItem(ITEM.pegasusBoots), hearts(4)),
           ),
         ),
       ),

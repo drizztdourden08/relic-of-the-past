@@ -1,17 +1,16 @@
 /* @layer renderer-lib @kind logic */
 /**
  * Typed wrapper around the per-profile randomizer-placement store
- * (profiles/<id>/randomizer.json). Writes the v3 shape, the Placement under an explicit schema
- * stamp, and reads two generations back as a Placement: a v3 file loads directly, and a v1
+ * (profiles/<id>/randomizer.json). Writes the v4 shape, the Placement under an explicit schema
+ * stamp, and reads two generations back as a Placement: a v4 file loads directly, and a v1
  * LegacyPlacement, which already stored dataset check and item ids, is lifted through the
  * adapter so the oldest profiles keep playing. Callers get a Placement or null, never a
  * half-parsed blob. A file under any other stamp reads as absent, so the caller generates a
  * fresh seed.
  *
- * NO MIGRATION, AND NO RENAME MAP. A placement is keyed by id now, so nothing in it can go
- * stale from a relabel; what it cannot survive is the key change itself, because a v2 file
- * holds names. The stamp is bumped instead, and a file under any earlier stamp reads as
- * absent.
+ * NO MIGRATION, AND NO KEY MAP. A placement is keyed by id, so nothing in it can go stale
+ * from a relabel; what it cannot survive is a change of the keys themselves. The stamp is
+ * bumped instead, and a file under any earlier stamp reads as absent.
  */
 import type { Placement } from '@shared/randomizer/world/fill/placement.type';
 import type { LegacyPlacement } from '@shared/randomizer/placement.type';
@@ -19,12 +18,13 @@ import { adaptLegacyPlacement } from './game/randomizer-client/legacy-placement'
 import { loadRandomizerState, saveRandomizerState } from './storage/profile-data-store';
 
 /**
- * Bumped whenever a placement's keys stop naming this build's locations. v3 was keyed by id
- * and still held the Frog, Missing Smith, Ganon, both Agahnim, flute-spot and floodgate rows,
- * which are gone: their markers sit on the story events they duplicated. An older file is not
- * a placement for this build, so the caller generates a fresh seed.
+ * Bumped whenever the location keys change: v3 stopped keying by NAME, v4 keyed a shop purchase
+ * by shop, shelf and purchase (`kakariko-shop-shelf_left-slot_1`) instead of by the shelf's check
+ * id, and v5 moved the flute and floodgate slots onto their story events ("Weathervane opened",
+ * "Floodgate lever pulled"). An older file names slots this build does not have, so the honest
+ * reading is that it is not a placement for this build and the caller generates a fresh seed.
  */
-const PLACEMENT_SCHEMA = 'placement-v4';
+const PLACEMENT_SCHEMA = 'placement-v5';
 
 type StoredPlacement = Placement & { schema: typeof PLACEMENT_SCHEMA };
 

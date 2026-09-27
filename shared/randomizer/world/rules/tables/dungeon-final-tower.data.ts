@@ -11,17 +11,16 @@ import { ITEM } from '../../item-ids.data';
 import {
   allOf, anyOf, hasItem, hasKeys, placedAt, placedIn,
 } from '../combinators';
-import { canShootArrows, canUseBombs, hasFireSource } from '../../state-helpers';
-import { canKillMostThings, hasCrystals } from '../../state-helpers-world';
+import {
+  arrows as arrowsFor, bombs as bombsFor, hasFireSource, kill,
+} from '../helper-rules';
 import { actGate } from '../../events';
 import { dungeonBossDefeat, FINAL_TOWER_SUB_BOSSES } from './bosses.data';
-import type { CollectionState } from '../../collection-state';
 import type { LocationKey } from '../../location-key';
 import type { RuleEntry } from '../rule-entry.type';
 
-const bombs = (state: CollectionState): boolean => canUseBombs(state);
-const arrows = (state: CollectionState): boolean => canShootArrows(state);
-const kill = (enemies: number) => (state: CollectionState): boolean => canKillMostThings(state, enemies);
+const bombs = bombsFor();
+const arrows = arrowsFor();
 
 /** 544-546. */
 const RANDOMIZER_ROOM_CHESTS: readonly LocationKey[] = [

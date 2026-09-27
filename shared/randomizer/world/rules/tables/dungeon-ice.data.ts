@@ -9,12 +9,11 @@ import { ITEM } from '../../item-ids.data';
 import {
   allOf, anyOf, either, hasItem, hasKeys, placedIn,
 } from '../combinators';
-import { canLiftRocks, canMeltThings, canUseBombs } from '../../state-helpers';
+import { bombs as bombsFor, canLiftRocks, canMeltThings } from '../helper-rules';
 import { dungeonBossDefeat } from './bosses.data';
-import type { CollectionState } from '../../collection-state';
 import type { RuleEntry } from '../rule-entry.type';
 
-const bombs = (state: CollectionState): boolean => canUseBombs(state);
+const bombs = bombsFor();
 
 /** 453-458: the big key in the far side lowers the key need to four. */
 const bigKeyBeyondEastDoor = placedIn(ITEM.bigKeyIcePalace, [

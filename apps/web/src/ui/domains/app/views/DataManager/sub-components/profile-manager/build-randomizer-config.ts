@@ -43,6 +43,9 @@ interface RandomizerFormState extends RandomizerOptionChoices {
   mode: 'local' | 'online';
   serverUrl: string;
   slotName: string;
+  password: string;
+  deathLink: boolean;
+  trackOtherPlayers: boolean;
 }
 
 /** A plain switch starts where its catalog row's baseline says. */
@@ -50,7 +53,8 @@ const baselineSwitch = (key: string): boolean => baselineValues[key] === true;
 
 /** The form as a new profile first sees it: the catalog baselines, block by block. */
 const EMPTY_RANDOMIZER_FORM: RandomizerFormState = {
-  enabled: false, seed: '', mode: 'local', serverUrl: '', slotName: '',
+  enabled: false, seed: '', mode: 'local', serverUrl: '', slotName: '', password: '', deathLink: false,
+  trackOtherPlayers: true,
   keyDropShuffle: baselineSwitch('key_drop_shuffle'),
   includeNpcChecks: baselineSwitch(INCLUDE_NPC_CHECKS_KEY),
   includeWorldItems: baselineSwitch(INCLUDE_WORLD_ITEMS_KEY),
@@ -115,6 +119,9 @@ const buildRandomizerConfig = (form: RandomizerFormState): ProfileRandomizerConf
   if (form.mode === 'online') {
     if (form.serverUrl.trim()) config.serverUrl = form.serverUrl.trim();
     if (form.slotName.trim()) config.slotName = form.slotName.trim();
+    if (form.password) config.password = form.password;
+    config.deathLink = form.deathLink;
+    config.trackOtherPlayers = form.trackOtherPlayers;
   }
   return config;
 };

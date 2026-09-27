@@ -17,7 +17,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { get, getCheck } from '@shared/game/data';
 import type { CheckId, CheckRecord, ItemId } from '@shared/game/data';
-import { isSlotKey } from '@shared/randomizer/world/location-key';
+import { checkIdOfLocation } from '@shared/randomizer/world/location-record';
 import type { LocationKey } from '@shared/randomizer/world/location-key';
 import { virtualCheckIdOf } from '@app/lib/game/randomizer-client/virtual-locations';
 import { chestSwapOf } from '@shared/game/logic/queries/chest-stand-ins';
@@ -44,8 +44,9 @@ interface CheckToastEntry {
 
 /** The row a reported location belongs to: its check record, or the virtual row this seed minted for it. */
 const recordOfLocation = (location: LocationKey): CheckRecord | undefined => {
-  // A location is its check id, except a slot key, whose row is the virtual one the seed minted.
-  if (!isSlotKey(location)) return get('check', location);
+  // A location with a record shows that record; any other row is the virtual one the seed minted.
+  const checkId = checkIdOfLocation(location);
+  if (checkId !== undefined) return get('check', checkId);
   const { placement } = getSessionState();
   if (placement === null) return undefined;
   const id = virtualCheckIdOf(location);

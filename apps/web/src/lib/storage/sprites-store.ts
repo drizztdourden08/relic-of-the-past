@@ -55,6 +55,9 @@ const readGearIcons = (romFile: string): Promise<Uint8Array | null> => sprites.r
 /** The in-game quiver picture binary of the ROM's extracted set, or null before it exists. */
 const readQuiverIcon = (romFile: string): Promise<Uint8Array | null> => sprites.readQuiverIcon(files(), romFile);
 
+/** The in-game pool icon binary of the ROM's extracted set, or null before it exists. */
+const readForeignIcons = (romFile: string): Promise<Uint8Array | null> => sprites.readForeignIcons(files(), romFile);
+
 /** The in-game shop price symbol binary of the ROM's extracted set, or null before it exists. */
 const readCurrencySymbols = (romFile: string): Promise<Uint8Array | null> =>
   sprites.readCurrencySymbols(files(), romFile);
@@ -78,5 +81,5 @@ const extractSprites = async (romFile: string): Promise<{ success: boolean; coun
 export {
   checkSpritesExtracted, checkSpritesStale, deleteSprites, expectedSpriteFiles, expectedSpritesVersion,
   getSpritesBaseUrl, extractSprites, hasSpriteDefinitions, loadSpriteDebug, readCapacityIcons, readCurrencySymbols,
-  readGearIcons, readQuiverIcon, readSpritesVersion, saveSpriteDebug, loadSpriteReview, saveSpriteReview,
+  readForeignIcons, readGearIcons, readQuiverIcon, readSpritesVersion, saveSpriteDebug, loadSpriteReview, saveSpriteReview,
 };

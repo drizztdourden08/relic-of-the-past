@@ -176,6 +176,13 @@ uint8 DialogMirror_LastCommand(void);
 bool DialogMirror_IsKeyWaitCommand(uint8 cmd);
 // The mirror records while either the box may be hidden or paced.
 bool DialogMirror_Recording(void);
+// Paged receipts (receipt_pages.c): the receipt's line and the detail page that follows it, joined
+// when the engine loads the first. Clear drops a chain a newer arm made stale.
+void ReceiptPages_Chain(int head_msg, int detail_msg);
+// The same join for an ordinary line, laid out as a page while it is appended.
+void ReceiptPages_ChainAsPage(int head_msg, int detail_msg);
+void ReceiptPages_Clear(void);
+void ReceiptPages_MessageLoaded(void);
 // Whether a message is on screen this frame (dialog_presence.c). The engine reports each run, each
 // new message and each frame end.
 void DialogPresence_MarkRendered(void);

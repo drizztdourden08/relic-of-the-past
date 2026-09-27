@@ -12,22 +12,23 @@
 
 import { all, getCheck } from '@shared/game/data';
 import { standardNameOfCheck } from '@shared/game/data/check-standard-name';
+import { locationKeyOfCheck } from '@shared/randomizer/world/location-record';
 import type { CheckId } from '@shared/game/data';
 import type { LocationKey } from '@shared/randomizer/world/location-key';
 
 const standardCheckName = (checkId: string): string => standardNameOfCheck(getCheck(checkId));
 
 /**
- * The locations a run counts as taken: the completed checks, plus the locations the
- * substitution seam reported, which are the only word on a row no check record covers (a
- * shelf, a pond prize past the reference's two). Two callers need exactly this set, the rules
- * engine's collected state and the receipt lines' found/total.
+ * The locations a run counts as taken: the locations of the completed checks, plus the
+ * locations the substitution seam reported, which are the only word on a row no check record
+ * covers (a shelf, a pond prize past the reference's two). Two callers need exactly this set,
+ * the rules engine's collected state and the receipt lines' found/total.
  */
 const completedLocationKeys = (
   completedChecks: Iterable<CheckId>, firedLocationKeys: Iterable<LocationKey> = [],
 ): Set<LocationKey> => {
   const keys = new Set<LocationKey>();
-  for (const checkId of completedChecks) keys.add(checkId);
+  for (const checkId of completedChecks) keys.add(locationKeyOfCheck(checkId));
   for (const key of firedLocationKeys) keys.add(key);
   return keys;
 };

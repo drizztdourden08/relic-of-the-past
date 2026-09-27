@@ -37,17 +37,20 @@ const slotName = (key: LocationKey): string => {
     const label = POND_LABEL_BY_ID.get(rung[1]);
     if (label !== undefined) return `${label} ${rung[2]}`;
   }
-  const restock = shopSlotLocationOf(key);
-  if (restock !== undefined) {
-    const shelf = standardNameOfCheck(getCheck(restock.slot.checkId));
-    const ordinal = RESTOCK_ORDINALS[restock.depthIndex - 1];
-    return ordinal === undefined ? shelf : `${shelf} (${ordinal})`;
-  }
   return key;
+};
+
+/** A shelf purchase reads as its shelf's record, plus an ordinal past the first stock. */
+const shopName = (key: LocationKey): string | undefined => {
+  const purchase = shopSlotLocationOf(key);
+  if (purchase === undefined) return undefined;
+  const shelf = standardNameOfCheck(getCheck(purchase.slot.checkId));
+  const ordinal = RESTOCK_ORDINALS[purchase.depthIndex - 1];
+  return ordinal === undefined ? shelf : `${shelf} (${ordinal})`;
 };
 
 /** The name to show for one location. */
 const locationDisplayName = (key: LocationKey): string =>
-  (isSlotKey(key) ? slotName(key) : standardNameOfCheck(getCheck(key)));
+  shopName(key) ?? (isSlotKey(key) ? slotName(key) : standardNameOfCheck(getCheck(key)));
 
 export { CAPACITY_SHOP_EVENT_NAME, RESTOCK_ORDINALS, locationDisplayName };

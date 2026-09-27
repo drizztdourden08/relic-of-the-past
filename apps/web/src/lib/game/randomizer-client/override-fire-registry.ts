@@ -11,13 +11,13 @@
 import type { LocationKey } from '@shared/randomizer/world/location-key';
 import { log } from '../../log-bus';
 import { armOverrideFiredEvents, disarmOverrideFiredEvents } from '../override-fired';
-import { isSlotKey } from '@shared/randomizer/world/location-key';
+import { checkIdOfLocation } from '@shared/randomizer/world/location-record';
 
 type ReportingSession = { reportCheck(location: LocationKey): void };
 type FiredLocationListener = (location: LocationKey) => void;
 
 const locationByFireId = new Map<number, LocationKey>();
-const armedCheckIds = new Set<LocationKey>();
+const armedCheckIds = new Set<string>();
 const fired = new Set<number>();
 const firedLocationKeys = new Set<LocationKey>();
 const firedListeners = new Set<FiredLocationListener>();
@@ -28,7 +28,8 @@ const allocateFireId = (location: LocationKey): number => {
   const fireId = nextFireId;
   nextFireId += 1;
   locationByFireId.set(fireId, location);
-  if (!isSlotKey(location)) armedCheckIds.add(location);
+  const checkId = checkIdOfLocation(location);
+  if (checkId !== undefined) armedCheckIds.add(checkId);
   return fireId;
 };
 
@@ -37,7 +38,7 @@ const allocateFireId = (location: LocationKey): number => {
  * substitution). While true, its completion must be read from the real
  * substitution facts, never a possession-proxy detection.
  */
-const isCheckPhysicallyArmed = (checkId: string): boolean => armedCheckIds.has(checkId as LocationKey);
+const isCheckPhysicallyArmed = (checkId: string): boolean => armedCheckIds.has(checkId);
 
 /** Route substitution reports to the session, one report per entry. */
 const armFireReporting = (session: ReportingSession): void => {
@@ -68,8 +69,9 @@ const onFiredLocation = (listener: FiredLocationListener): () => void => {
 
 /**
  * Backfills a substitution the core already recorded before this boot (a
- * shelf sold in an earlier session, per its persisted SRAM counter). No fire
- * id exists for a past purchase, so this bypasses the id ledger and reports
+ * shelf sold in an earlier session, per its persisted SRAM counter), or a
+ * location the multiworld room holds as checked (online-collected.ts). No
+ * fire id exists for either, so this bypasses the id ledger and reports
  * straight to the location set the live path also writes.
  */
 const markLocationFired = (location: LocationKey): void => {

@@ -14,6 +14,8 @@ interface RunContext {
   kind?: RunKind;
   /** check id → the item record actually placed there. */
   placedItems?: ReadonlyMap<string, ItemId>;
+  /** check id → the name to show for another player's item placed there (online only). */
+  foreignItems?: ReadonlyMap<string, string>;
   /** check id → verification-sweep sphere. */
   spheres?: ReadonlyMap<string, number>;
   /** check id → what a swap chest holds right now (chest-stand-ins.ts). Set on a normal profile too. */

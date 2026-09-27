@@ -9,19 +9,13 @@
  * flag re-arms as soon as the game stops.
  */
 import { useEffect, useRef } from 'react';
-import {
-  capacityBonusFromSnapshot, capacityProfileFromSnapshot, capacityProgressiveFromSnapshot,
-} from '@shared/randomizer/world/capacity';
-import { normalizeRandomizerOptions } from '@shared/randomizer/options-snapshot';
 import { subscribeGameState } from '../../lib/game';
 import {
-  clearPendingBoot, getPendingBoot, normalizeServerUrl,
+  clearPendingBoot, getPendingBoot, onlineConfigOfProfile,
   startLocalFromPlacement, startOnline, stopActive,
 } from '../../lib/game/randomizer-client';
 import { log } from '../../lib/log-bus';
 import type { PendingBoot } from '../../lib/game/randomizer-client';
-
-const DEFAULT_SLOT_NAME = 'Player';
 
 const startPendingSession = (pending: PendingBoot): void => {
   const { config, placement } = pending;
@@ -29,16 +23,9 @@ const startPendingSession = (pending: PendingBoot): void => {
     log.randomizer(`[Boot] Auto-starting local session for this profile (seed ${config.seed})`);
     void startLocalFromPlacement(placement, 'profile');
   } else if (config.mode === 'online') {
-    const slotName = config.slotName ?? DEFAULT_SLOT_NAME;
-    log.randomizer(`[Boot] Auto-starting online session for this profile (slot ${slotName})`);
-    // No placement online: the profile's frozen options carry its capacity settings.
-    const snapshot = normalizeRandomizerOptions(config.options);
-    const capacity = capacityProfileFromSnapshot(snapshot);
-    const capacityProgressive = capacityProgressiveFromSnapshot(snapshot);
-    const capacityBonus = capacityBonusFromSnapshot(snapshot);
-    void startOnline({
-      url: normalizeServerUrl(config.serverUrl ?? ''), slotName, capacity, capacityProgressive, capacityBonus,
-    }, 'profile');
+    const online = onlineConfigOfProfile(config);
+    log.randomizer(`[Boot] Auto-starting online session for this profile (slot ${online.slotName})`);
+    void startOnline(online, 'profile');
   }
 };
 

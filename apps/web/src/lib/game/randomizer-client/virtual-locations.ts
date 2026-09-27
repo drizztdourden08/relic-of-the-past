@@ -8,8 +8,9 @@
  *
  * A virtual record carries no gameId (there is nothing to poll: its status
  * comes from the availability engine and the fire-id ledger, both already
- * keyed by the raw world location name), and `kind: 'npc'` is a placeholder
- * class for the "type" facet, not a detection claim. vanillaItemIds carries
+ * keyed by the raw world location name). Its kind is the one its real siblings
+ * carry (a restock is a shop slot, a pond rung a pond slot), so the "type" facet
+ * puts every rung of a ladder together; it is not a detection claim. vanillaItemIds carries
  * the real vanilla item where one exists (a shop shelf, a key-drop pot);
  * everything here still hands over a real item, so isGuaranteedReward says so
  * even where there is no vanilla precedent to point vanillaItemIds at (a pond
@@ -22,7 +23,8 @@
  */
 import { shopSlotLocationOf } from '@shared/randomizer/world/shops/shop-slots';
 import { EVENT_LOCATIONS, KEY_DROP_LOCATIONS } from '@shared/randomizer/world/scope-tables';
-import { CAPACITY_SHOP_EVENT, isSlotKey } from '@shared/randomizer/world/location-key';
+import { CAPACITY_SHOP_EVENT } from '@shared/randomizer/world/location-key';
+import { checkIdOfLocation, locationKeyOfCheck } from '@shared/randomizer/world/location-record';
 import { locationDisplayName } from '@shared/randomizer/world/display-names/location-display-name';
 import { getCheck } from '@shared/game/data';
 import type { LocationKey } from '@shared/randomizer/world/location-key';
@@ -49,7 +51,8 @@ const shopScreenFor = (location: LocationKey): ScreenId | undefined => {
  */
 const UNTRACKED_LOCATIONS: ReadonlySet<LocationKey> = new Set([CAPACITY_SHOP_EVENT]);
 
-const slugOf = (name: string): string => name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+/** Underscores stay, because a shop key uses them (`kakariko-shop-shelf_left-slot_2`). */
+const slugOf = (name: string): string => name.toLowerCase().replace(/[^a-z0-9_]+/g, '-').replace(/(^-|-$)/g, '');
 
 /** A virtual location's own vanilla item, when it has one (a shop shelf or a key-drop pot). */
 const vanillaItemIdsOf = (location: LocationKey): ItemId[] => {
@@ -80,12 +83,12 @@ const virtualChecksOf = (placement: Placement): CheckRecord[] => {
   const records: CheckRecord[] = [];
   for (const where of Object.keys(placement.locations)) {
     const location = where as LocationKey;
-    if (UNTRACKED_LOCATIONS.has(location) || !isSlotKey(location)) continue;
+    if (UNTRACKED_LOCATIONS.has(location) || checkIdOfLocation(location) !== undefined) continue;
     const screenId = shopScreenFor(location);
     records.push({
       id: virtualCheckIdOf(location),
       gameId: {},
-      kind: 'npc',
+      kind: shopSlotLocationOf(location) === undefined ? 'pond-slot' : 'shop-slot',
       screenId,
       name: locationDisplayName(location),
       vanillaItemIds: vanillaItemIdsOf(location),
@@ -106,7 +109,7 @@ const virtualChecksOf = (placement: Placement): CheckRecord[] => {
  * checkRecords array untouched for the normal profile that DOES want them.
  */
 const placementCheckRecords = (checkRecords: readonly CheckRecord[], placement: Placement): CheckRecord[] => {
-  const real = checkRecords.filter((check) => placement.locations[check.id] !== undefined);
+  const real = checkRecords.filter((check) => placement.locations[locationKeyOfCheck(check.id)] !== undefined);
   return [...real, ...virtualChecksOf(placement)];
 };
 

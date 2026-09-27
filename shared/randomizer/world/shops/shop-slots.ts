@@ -8,14 +8,14 @@
  * A scope that opens nothing leaves the world exactly as it is.
  *
  * DEPTH. The depth option multiplies each opened slot: at depth N the slot
- * restocks N times, so it carries N locations bought in a fixed order. The
- * first is the slot's own check, and each restock hangs off that check's id
- * (location-key.ts), because only the first is a spot the unmodified game has.
+ * restocks N times, so it carries N locations bought in a fixed order, keyed
+ * `<shop>-shelf_<side>-slot_<n>` (location-key.ts). Only the first is a spot
+ * the unmodified game has, so only the first maps back to a check record.
  */
 import { CANONICAL_SLOTS } from './shop-slot-facts';
 import { openedSlotIndicesOf } from './shop-scope';
-import { restockKey } from '../location-key';
-import type { RegionId } from '@shared/game/data/types/ids';
+import { shopSlotLocationKey } from './shop-location-keys';
+import type { CheckId, RegionId } from '@shared/game/data/types/ids';
 import type { LocationKey } from '../location-key';
 import type { ShopSlotFacts } from './shop-slot-facts';
 import type { ShopScope } from './shop-scope.type';
@@ -32,8 +32,7 @@ interface ShopSlotLocation {
   depthIndex: number;
 }
 
-const keyOf = (slot: ShopSlotFacts, depthIndex: number): LocationKey =>
-  (depthIndex === 0 ? slot.checkId : restockKey(slot.checkId, depthIndex + 1));
+const keyOf = (slot: ShopSlotFacts, depthIndex: number): LocationKey => shopSlotLocationKey(slot, depthIndex);
 
 const clampDepth = (depth: number): number =>
   Math.min(MAX_SHOP_SLOT_DEPTH, Math.max(MIN_SHOP_SLOT_DEPTH, Math.trunc(depth)));
@@ -65,6 +64,19 @@ const isShopSlotLocation = (key: string): boolean => ALL_SHOP_SLOT_LOCATIONS.has
 const shopSlotLocationOf = (key: string): ShopSlotLocation | undefined =>
   ALL_SHOP_SLOT_LOCATIONS.get(key as LocationKey);
 
+/** A shelf's check record to its first stock: the one purchase the record stands for. */
+const FIRST_STOCK_BY_CHECK: ReadonlyMap<string, LocationKey> = new Map(
+  CANONICAL_SLOTS.map((slot): [CheckId, LocationKey] => [slot.checkId, keyOf(slot, 0)]),
+);
+
+const shopLocationOfCheck = (checkId: string): LocationKey | undefined => FIRST_STOCK_BY_CHECK.get(checkId);
+
+/** Purchase |purchase| (1 is the first stock) of the shelf a check record stands for. */
+const shopPurchaseKeyOfCheck = (checkId: string, purchase: number): LocationKey | undefined => {
+  const slot = CANONICAL_SLOTS.find((row) => row.checkId === checkId);
+  return slot === undefined ? undefined : keyOf(slot, purchase - 1);
+};
+
 /** Locations this scope opens, grouped by the region they hang off. */
 const shopLocationsByRegion = (scope: ShopScope): ReadonlyMap<RegionId, readonly LocationKey[]> => {
   const byRegion = new Map<RegionId, LocationKey[]>();
@@ -82,7 +94,9 @@ export {
   MIN_SHOP_SLOT_DEPTH,
   clampDepth,
   isShopSlotLocation,
+  shopLocationOfCheck,
   shopLocationsByRegion,
+  shopPurchaseKeyOfCheck,
   shopSlotLocationOf,
   shopSlotLocationsOf,
 };

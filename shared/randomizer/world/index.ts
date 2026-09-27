@@ -48,8 +48,9 @@ export { BOTTLE_ITEMS, CRYSTAL_ITEMS, MEDALLION_ITEMS, VANILLA_MEDALLIONS } from
 export type { MedallionId } from './item-groups';
 export { REGION } from './region-ids.data';
 export { PROGRESSION_TIERS } from './progressive/progression-tiers.data';
-export { CAPACITY_SHOP_EVENT, isSlotKey, pondRungKey, restockKey } from './location-key';
-export type { LocationKey, SlotKey } from './location-key';
+export { CAPACITY_SHOP_EVENT, isSlotKey, pondRungKey, shopLocationKey } from './location-key';
+export type { LocationKey, ShopLocationKey, SlotKey } from './location-key';
+export { checkIdOfLocation, locationKeyOfCheck } from './location-record';
 export { isSeedLocation } from './seed-locations';
 export { locationDisplayName } from './display-names/location-display-name';
 export { DUNGEON_ORDER } from './fill/dungeon-order.data';

@@ -16,12 +16,8 @@
 import { ITEM } from '../../item-ids.data';
 import { REGION } from '../../region-ids.data';
 import { allOf, canCollect, canReach, hasItem, hasKeys } from '../combinators';
-import { canKillStandardStart } from '../../state-helpers-world';
-import type { CollectionState } from '../../collection-state';
+import { killStart } from '../helper-rules';
 import type { RuleEntry } from '../rule-entry.type';
-
-const killStart = (enemies: number) => (state: CollectionState): boolean =>
-  canKillStandardStart(state, enemies);
 
 const STANDARD_RULES: readonly RuleEntry[] = [
   // 1093

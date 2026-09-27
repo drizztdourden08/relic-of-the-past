@@ -65,6 +65,50 @@ int WasmGrantItemWithReceipt(int item_id) {
   return 1;
 }
 
+// What a native rupee, bomb or arrow receipt pays: the rupees of ancilla.c Ancilla_AddRupees, the
+// bombs and arrows of misc.c AncillaAdd_ItemReceipt. |gate| is the quiet bit of its kind, 0 for an
+// id that is none of the three.
+typedef struct QuietPay { uint32 gate; int rupees, bombs, arrows; } QuietPay;
+
+static QuietPay QuietPayOf(int item_id) {
+  switch (item_id) {
+    case 0x34: return (QuietPay){kFeatures5_QuietRupees, 1, 0, 0};
+    case 0x35: return (QuietPay){kFeatures5_QuietRupees, 5, 0, 0};
+    case 0x36: case 0x47: return (QuietPay){kFeatures5_QuietRupees, 20, 0, 0};
+    case 0x41: return (QuietPay){kFeatures5_QuietRupees, 50, 0, 0};
+    case 0x40: return (QuietPay){kFeatures5_QuietRupees, 100, 0, 0};
+    case 0x46: return (QuietPay){kFeatures5_QuietRupees, 300, 0, 0};
+    case 0x27: return (QuietPay){kFeatures5_QuietBombs, 0, 1, 0};
+    case 0x28: return (QuietPay){kFeatures5_QuietBombs, 0, 3, 0};
+    case 0x31: return (QuietPay){kFeatures5_QuietBombs, 0, 10, 0};
+    case 0x43: return (QuietPay){kFeatures5_QuietArrows, 0, 0, 1};
+    case 0x44: return (QuietPay){kFeatures5_QuietArrows, 0, 0, 10};
+    default: return (QuietPay){0, 0, 0, 0};
+  }
+}
+
+// Quiet receipts: the rupees, bombs or arrows of receipt |item_id| go into the wallet goal or the
+// bag and quiver refills, the HUD drains them in with its own tick and sound, and no hold-up or
+// message runs. The drain stops at the current capacity, as it does for any refill. Under the retro
+// bow the single arrow is the quiver itself, never ammunition, so an arrow is not quiet there.
+// Returns 1 granted, 0 refused for now (the queue retries), 2 not quiet: its gate
+// (kFeatures3_ReceiptExport and the kind's kFeatures5_Quiet* bit) is clear, or the id is none of
+// the three, and the queue runs the ordinary receipt in its place.
+EMSCRIPTEN_KEEPALIVE
+int WasmGrantQuietReceipt(int item_id) {
+  QuietPay pay = QuietPayOf(item_id);
+  if (!(enhanced_features3 & kFeatures3_ReceiptExport) || !(enhanced_features5 & pay.gate)) return 2;
+  if (pay.arrows && GameHook_RetroBowActive()) return 2;
+  if (!CanRunReceiptNow()) return 0;
+  link_rupees_goal = (uint16)clampi(link_rupees_goal + pay.rupees, 0, 0xffff);
+  link_bomb_filler = (uint8)clampi(link_bomb_filler + pay.bombs, 0, 99);
+  link_arrow_filler = (uint8)clampi(link_arrow_filler + pay.arrows, 0, 99);
+  if (pay.bombs) Hud_RefreshIcon();
+  printf("[Randomizer] Quiet receipt: item=0x%02x rupees+%d bombs+%d arrows+%d\n",
+         item_id, pay.rupees, pay.bombs, pay.arrows);
+  return 1;
+}
+
 // Grant |amount| capacity-upgrade steps for |kind| (0 = bombs, 1 = arrows), one pond
 // visit per step (GameHook_CapacityStep, upgrade_grants.c, the pond handler's own
 // arithmetic: the level index advances, the refill target and the message digits take

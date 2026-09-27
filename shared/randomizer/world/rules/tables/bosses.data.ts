@@ -13,24 +13,23 @@ import {
   allOf, anyOf, hasAnyItem, hasItem,
 } from '../combinators';
 import {
-  canExtendMagic, canShootArrows, canUseBombs, hasBeamSword, hasFireSource,
-  hasMeleeWeapon, hasSword,
-} from '../../state-helpers';
-import { canGetGoodBee } from '../../state-helpers-world';
+  arrows, bombs, canGetGoodBee, hasBeamSword, hasFireSource, hasMeleeWeapon, hasSword, magic,
+} from '../helper-rules';
+import { compileRule } from '../rule-eval';
+import { all, has, option } from '../rule-node-build';
 import { getDungeon } from '@shared/game/data';
 import { FINAL_FIGHT_SILVER_HITS } from '../../final-fight.data';
-import { itemPowerOf } from '../../item-power/item-power-rule';
 import type { ActorId, DungeonId } from '@shared/game/data/types/ids';
 import type { Rule } from '../../world.type';
 
 /** Bosses.py 36-46. */
 const armosDefeat: Rule = anyOf(
   hasMeleeWeapon,
-  (state) => canShootArrows(state),
-  allOf(hasItem(ITEM.caneOfSomaria), (state) => canExtendMagic(state, 10)),
-  allOf(hasItem(ITEM.caneOfByrna), (state) => canExtendMagic(state, 16)),
-  allOf(hasItem(ITEM.iceRod), (state) => canExtendMagic(state, 32)),
-  allOf(hasItem(ITEM.fireRod), (state) => canExtendMagic(state, 32)),
+  arrows(),
+  allOf(hasItem(ITEM.caneOfSomaria), magic(10)),
+  allOf(hasItem(ITEM.caneOfByrna), magic(16)),
+  allOf(hasItem(ITEM.iceRod), magic(32)),
+  allOf(hasItem(ITEM.fireRod), magic(32)),
   hasItem(ITEM.blueBoomerang),
   hasItem(ITEM.redBoomerang),
 );
@@ -42,7 +41,7 @@ const lanmolasDefeat: Rule = anyOf(
   hasItem(ITEM.iceRod),
   hasItem(ITEM.caneOfSomaria),
   hasItem(ITEM.caneOfByrna),
-  (state) => canShootArrows(state),
+  arrows(),
 );
 
 /** Bosses.py 59-60. */
@@ -50,8 +49,8 @@ const moldormDefeat: Rule = hasMeleeWeapon;
 
 /** Bosses.py 63-66. */
 const helmasaurDefeat: Rule = allOf(
-  anyOf((state) => canUseBombs(state, 5), hasItem(ITEM.hammer)),
-  anyOf(hasSword, (state) => canShootArrows(state)),
+  anyOf(bombs(5), hasItem(ITEM.hammer)),
+  anyOf(hasSword, arrows()),
 );
 
 /** Bosses.py 69-80. */
@@ -59,17 +58,17 @@ const arrghusDefeat: Rule = allOf(
   hasItem(ITEM.hookshot),
   anyOf(
     hasMeleeWeapon,
-    allOf(hasItem(ITEM.fireRod), anyOf((state) => canShootArrows(state), (state) => canExtendMagic(state, 12))),
-    allOf(hasItem(ITEM.iceRod), anyOf((state) => canShootArrows(state), (state) => canExtendMagic(state, 16))),
+    allOf(hasItem(ITEM.fireRod), anyOf(arrows(), magic(12))),
+    allOf(hasItem(ITEM.iceRod), anyOf(arrows(), magic(16))),
   ),
 );
 
 /** Bosses.py 83-92. */
 const mothulaDefeat: Rule = anyOf(
   hasMeleeWeapon,
-  allOf(hasItem(ITEM.fireRod), (state) => canExtendMagic(state, 10)),
-  allOf(hasItem(ITEM.caneOfSomaria), (state) => canExtendMagic(state, 16)),
-  allOf(hasItem(ITEM.caneOfByrna), (state) => canExtendMagic(state, 16)),
+  allOf(hasItem(ITEM.fireRod), magic(10)),
+  allOf(hasItem(ITEM.caneOfSomaria), magic(16)),
+  allOf(hasItem(ITEM.caneOfByrna), magic(16)),
   canGetGoodBee,
 );
 
@@ -79,13 +78,13 @@ const blindDefeat: Rule = anyOf(hasMeleeWeapon, hasItem(ITEM.caneOfSomaria), has
 /** Bosses.py 99-118: swordless off, so only the sworded branches remain. */
 const kholdstareDefeat: Rule = allOf(
   anyOf(hasItem(ITEM.fireRod), allOf(hasItem(ITEM.bombos), hasSword)),
-  anyOf(hasMeleeWeapon, allOf(hasItem(ITEM.fireRod), (state) => canExtendMagic(state, 20))),
+  anyOf(hasMeleeWeapon, allOf(hasItem(ITEM.fireRod), magic(20))),
 );
 
 /** Bosses.py 121-124. */
 const vitreousDefeat: Rule = anyOf(
-  allOf((state) => canShootArrows(state), (state) => canUseBombs(state, 10)),
-  (state) => canShootArrows(state, 35),
+  allOf(arrows(), bombs(10)),
+  arrows(35),
   hasItem(ITEM.silverBow),
   hasMeleeWeapon,
 );
@@ -98,8 +97,8 @@ const trinexxDefeat: Rule = allOf(
     hasItem(ITEM.hammer),
     hasItem(ITEM.temperedSword),
     hasItem(ITEM.goldenSword),
-    allOf(hasItem(ITEM.masterSword), (state) => canExtendMagic(state, 16)),
-    allOf(hasSword, (state) => canExtendMagic(state, 32)),
+    allOf(hasItem(ITEM.masterSword), magic(16)),
+    allOf(hasSword, magic(32)),
   ),
 );
 
@@ -110,8 +109,7 @@ const agahnimDefeat: Rule = anyOf(hasSword, hasItem(ITEM.hammer), hasItem(ITEM.b
  * The last fight takes a hammer while that switch is on, which is the reference's own
  * swordless branch, see item-power/ and the core hook behind it.
  */
-const lastFightTakesHammer: Rule = (state) =>
-  itemPowerOf(state.world).hammerLastFight && state.has(ITEM.hammer);
+const lastFightTakesHammer: Rule = compileRule(all(option('itemPower.hammerLastFight', true), has(ITEM.hammer)));
 
 /**
  * Bosses.py 139-156: no_glitches, the strict silvers path, with the swordless branch.
@@ -123,7 +121,7 @@ const ganonDefeat: Rule = allOf(
   anyOf(hasBeamSword, lastFightTakesHammer),
   hasFireSource,
   hasItem(ITEM.silverBow),
-  (state) => canShootArrows(state, FINAL_FIGHT_SILVER_HITS),
+  arrows(FINAL_FIGHT_SILVER_HITS),
 );
 
 /**

@@ -34,6 +34,7 @@ import { currentRun } from './randomizer-client/run-kind';
 import { standardCheckName } from './randomizer-client/check-names';
 import { resolveLocalItemId } from './randomizer-client/item-lookup';
 import { itemKeyName } from '@shared/randomizer/world/display-names/item-key-name';
+import { locationKeyOfCheck } from '@shared/randomizer/world/location-record';
 import { suppressLocationReport } from './randomizer-client/location-poller';
 import { deliverItem } from './delivery-api';
 import { isWritable, markCheckCollected, markPlanOf } from './cheat-check-mark';
@@ -112,7 +113,7 @@ const planCheckGrant = (check: CheckRecord): CheckGrantPlan => {
   if (!isWritable(markPlan)) {
     return { kind: 'blocked', reason: `it cannot be cleared here, because ${markPlan.refusal}` };
   }
-  const itemLabel = placement.locations[check.id];
+  const itemLabel = placement.locations[locationKeyOfCheck(check.id)];
   if (itemLabel === undefined) {
     return { kind: 'blocked', reason: 'this seed placed nothing at this location' };
   }

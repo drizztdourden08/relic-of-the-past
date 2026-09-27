@@ -2,20 +2,26 @@
 /**
  * The facts of the run: which profile it belongs to, the seed it was generated
  * from, the live session state out of the shared store, and, once a local
- * session has armed, the plan counters it armed with. The frozen option
- * catalog is RunOptions' job; the placement is the spoiler tab's.
+ * session has armed, the plan counters it armed with. An Archipelago run adds
+ * its connection facts, a one-line network status that opens the Network tab,
+ * and the button that saves its files. The frozen option catalog is
+ * RunOptions' job; the placement is the spoiler tab's.
  */
 import { Box, Text } from '@ds/primitives';
 import type { ProfileRandomizerConfig } from '@shared/types/profile';
 import type { ActiveSession, SessionSource } from '../../../../../../lib/game/randomizer-client';
+import { ArchipelagoFiles } from './ArchipelagoFiles';
+import { NetworkPill } from './NetworkTab';
 
 interface RunSummaryProps {
+  profileId: string;
   profileName: string;
   config: ProfileRandomizerConfig;
   session: ActiveSession | null;
   source: SessionSource | null;
   status: ActiveSession['status'];
   gameRunning: boolean;
+  onOpenNetwork: () => void;
 }
 
 interface Fact {
@@ -49,7 +55,8 @@ const sourceLabel = (source: SessionSource | null): string =>
   source === 'profile' ? 'started by this profile' : source === 'manual' ? 'started manually' : 'not started';
 
 const RunSummary = (props: RunSummaryProps) => {
-  const { profileName, config, session, source, status, gameRunning } = props;
+  const { profileId, profileName, config, session, source, status, gameRunning, onOpenNetwork } = props;
+  const archipelago = config.mode === 'online';
   const localStats = session?.kind === 'local' ? session.stats : null;
 
   const facts: Fact[] = [
@@ -58,9 +65,10 @@ const RunSummary = (props: RunSummaryProps) => {
     { label: 'session', value: status },
     { label: 'origin', value: sourceLabel(source) },
   ];
-  if (config.mode === 'online') {
+  if (archipelago) {
     facts.push({ label: 'server', value: config.serverUrl ?? '(none)' });
     facts.push({ label: 'slot', value: config.slotName ?? 'Player' });
+    facts.push({ label: 'death link', value: config.deathLink ? 'on' : 'off' });
   }
 
   const counters: Fact[] = localStats === null ? [] : Object.entries(localStats)
@@ -72,6 +80,8 @@ const RunSummary = (props: RunSummaryProps) => {
         <Text className="randomizer-page__profile-name">{profileName}</Text>
         <Text className={`randomizer-page__status-chip randomizer-page__status-chip--${status}`}>{status}</Text>
       </Box>
+
+      {archipelago && <NetworkPill onOpen={onOpenNetwork} />}
 
       <Box className="randomizer-page__facts">
         {facts.map((fact) => (
@@ -92,6 +102,8 @@ const RunSummary = (props: RunSummaryProps) => {
           ))}
         </Box>
       )}
+
+      {archipelago && <ArchipelagoFiles profileId={profileId} />}
 
       {!session && !gameRunning && (
         <Text className="randomizer-page__hint">The session starts automatically when the game boots.</Text>

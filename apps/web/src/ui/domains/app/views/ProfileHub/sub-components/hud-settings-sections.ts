@@ -66,6 +66,14 @@ const SECTIONS: Section[] = [
         ],
       },
       {
+        id: 'hud-dialog-highlight',
+        title: 'Highlights',
+        items: [
+          { key: 'hudHighlightPrimary', label: 'Highlight Primary', description: 'Item names in randomizer messages.', keywords: 'dialog highlight primary color colour item name randomizer message gold' },
+          { key: 'hudHighlightSecondary', label: 'Highlight Secondary', description: 'Player names in randomizer messages.', keywords: 'dialog highlight secondary color colour player name randomizer multiworld message green' },
+        ],
+      },
+      {
         id: 'hud-dialog-border',
         title: 'Border',
         items: [

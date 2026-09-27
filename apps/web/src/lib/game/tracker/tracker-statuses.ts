@@ -18,6 +18,7 @@
  * answer this half is gone.
  */
 import { computeRecordStatuses } from '@shared/game/logic/record-statuses';
+import { locationKeyOfCheck } from '@shared/randomizer/world/location-record';
 import { trackerReading } from '../randomizer-client/tracker-availability';
 import { grantedInventory, recordRowOverrides } from './record-row-inputs';
 import type { CheckId, CheckRecord, ItemId } from '@shared/game/data';
@@ -46,7 +47,7 @@ interface TrackerStatusParams {
 const rowsWithoutALocation = (
   checks: readonly CheckRecord[], placement: Placement,
 ): CheckRecord[] => checks.filter((check) => !check.id.startsWith(VIRTUAL_PREFIX)
-  && placement.locations[check.id] === undefined);
+  && placement.locations[locationKeyOfCheck(check.id)] === undefined);
 
 const trackerStatuses = (params: TrackerStatusParams): Map<CheckId, CheckStatus> => {
   const {

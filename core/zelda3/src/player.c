@@ -171,7 +171,7 @@ void Link_Main() {  // 878000
 }
 
 void Link_ControlHandler() {  // 87807f
-
+  GameHook_ApKillApply();
   if (link_give_damage) {
     if (link_cape_mode) {
       link_give_damage = 0;

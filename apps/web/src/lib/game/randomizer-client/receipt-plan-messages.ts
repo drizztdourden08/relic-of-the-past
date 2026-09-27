@@ -32,7 +32,9 @@ import { pondLinesOf } from '@shared/randomizer/receipt-text/pond-lines';
 import { pondPlanOf } from '@shared/randomizer/world/pond/pond-plan';
 import { pondProfilesOfStats } from '@shared/randomizer/world/fill/placement-ponds';
 import { capacityProfileOfStats, capacityProgressiveOfStats } from '@shared/randomizer/world/fill/placement-capacity';
+import { isForeignItem } from '@shared/randomizer/archipelago/foreign-item';
 import { wishPondLinesOf } from './wish-pond-lines';
+import { foreignItemLine } from './foreign-item-line';
 import { appendPondDemandLines } from './pond-demand-messages';
 import type { Placement } from '@shared/randomizer/world/fill/placement.type';
 import type { CapacityFamilyId } from '@shared/randomizer/world/capacity';
@@ -40,6 +42,7 @@ import type { ReceiptCountOf } from '@shared/randomizer/receipt-text/receipt-cou
 import type { ReceiptLine } from '@shared/randomizer/receipt-text/receipt-line.type';
 import type { PhysicalPlan, PlanEntry } from './physical-plan.type';
 import type { PlanPondDemandLines } from './pond-demand-messages';
+import type { ForeignItemOf } from './foreign-item-line';
 
 /** One fixed-jump capacity line: the entry the core selects by the live rung. */
 interface PlanFixedLine {
@@ -123,7 +126,18 @@ const fallbackClassId = (entry: PlanEntry): number => {
   return RANDOMIZER_RECEIPT_MSG.generic;
 };
 
-const buildPlanReceiptTexts = (plan: PhysicalPlan, placement: Placement, countOf: ReceiptCountOf): PlanReceiptTexts => {
+/** One planned grant's line; another player's item says what it was and who it went to. */
+const entryLine = (entry: PlanEntry, countOf: ReceiptCountOf, foreignItemOf?: ForeignItemOf): ReceiptLine =>
+  (isForeignItem(entry.item) ? foreignItemLine(foreignItemOf?.(entry.location)) : renderReceiptMessage({
+    kind: entry.planClass === 'deliver' ? 'delivered' : 'physical',
+    itemName: itemKeyName(entry.item),
+    locationName: locationDisplayName(entry.location),
+    count: countOf(entry.location),
+  }));
+
+const buildPlanReceiptTexts = (
+  plan: PhysicalPlan, placement: Placement, countOf: ReceiptCountOf, foreignItemOf?: ForeignItemOf,
+): PlanReceiptTexts => {
   const lines: ReceiptLine[] = [];
   const indexByLocation = new Map<string, number>();
   const fallbackByLocation = new Map<string, number>();
@@ -131,12 +145,7 @@ const buildPlanReceiptTexts = (plan: PhysicalPlan, placement: Placement, countOf
   const fixedLines: PlanFixedLine[] = [];
   for (const entry of plan.entries) {
     if (entry.planClass === 'vanilla-locked') continue;
-    const line = renderReceiptMessage({
-      kind: entry.planClass === 'deliver' ? 'delivered' : 'physical',
-      itemName: itemKeyName(entry.item),
-      locationName: locationDisplayName(entry.location),
-      count: countOf(entry.location),
-    });
+    const line = entryLine(entry, countOf, foreignItemOf);
     indexByLocation.set(entry.location, lines.length);
     fallbackByLocation.set(entry.location, fallbackClassId(entry));
     lines.push(line);

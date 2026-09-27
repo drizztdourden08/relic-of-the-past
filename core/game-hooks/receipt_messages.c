@@ -49,17 +49,25 @@ void GameHook_ArmReceiptMessageIfClear(int msg) {
   if (g_next_receipt_msg != -1 && !g_receipt_msg_claimed) return;
   g_next_receipt_msg = msg;
   g_receipt_msg_claimed = false;
+  ReceiptPages_Clear();
 }
 
 void GameHook_ArmReceiptClassMessage(uint8 item_id, int fallback_msg) {
   GameHook_ArmReceiptMessageIfClear(ClassMessageFor(item_id, fallback_msg));
 }
 
-// The progressive capacity resolver's arm (capacity_progressive.c): REPLACES whatever the
-// seam armed for the location, because the jump (and so the line) is only known once
-// the pickup resolves. Same gate as the if-clear arm.
-void GameHook_ArmReceiptMessageReplace(int msg) {
+// A capacity resolver's arm (capacity_progressive.c, upgrade_grants.c, wallet_grants.c): the
+// climb's own line, only known once the pickup resolves. The line already armed for this
+// receipt (the location's, the incoming one, or the class line the resolver armed) stays the
+// first page and the climb's line becomes the next one (receipt_pages.c). With nothing armed for
+// this receipt the climb's line is the whole message. Same gate as the if-clear arm.
+void GameHook_ArmReceiptDetailPage(int msg) {
   if (!(enhanced_features3 & kFeatures3_ReceiptMessages)) return;
+  if (g_next_receipt_msg >= 0 && !g_receipt_msg_claimed && g_next_receipt_msg != msg) {
+    ReceiptPages_Chain(g_next_receipt_msg, msg);
+    return;
+  }
+  ReceiptPages_Clear();
   g_next_receipt_msg = msg;
   g_receipt_msg_claimed = false;
 }
@@ -69,7 +77,10 @@ void GameHook_ArmReceiptMessageReplace(int msg) {
 // on this receipt. No gate test: with the gate off nothing is ever armed, so this is a
 // no-op there, and the arm this clears could only exist with the gate on.
 void GameHook_ReceiptMessageClaim(void) {
-  if (g_receipt_msg_claimed) g_next_receipt_msg = -1;
+  if (g_receipt_msg_claimed) {
+    g_next_receipt_msg = -1;
+    ReceiptPages_Clear();
+  }
   g_receipt_msg_claimed = g_next_receipt_msg != -1;
 }
 
@@ -96,6 +107,8 @@ int GameHook_ReceiptMessageOverride(uint8 item_id, int vanilla_msg) {
   g_receipt_msg_claimed = false;
   if (armed < 0) return vanilla_msg;
   if (!(enhanced_features3 & kFeatures3_ReceiptMessages)) return vanilla_msg;
+  // Quiet receipts: the silent line keeps the pickup's own message, the game's nothing for these.
+  if (armed == kReceiptMsg_Silent && (enhanced_features5 & kFeatures5_QuietMask)) return vanilla_msg;
   if (!DialogueLineExists(armed)) {
     printf("[Randomizer] Receipt message %d not in the dialogue blob (stale assets?), keeping %d\n",
            armed, vanilla_msg);
@@ -111,4 +124,5 @@ EMSCRIPTEN_KEEPALIVE
 void WasmSetNextReceiptMessage(int msg_id) {
   g_next_receipt_msg = msg_id;
   g_receipt_msg_claimed = false;
+  ReceiptPages_Clear();
 }

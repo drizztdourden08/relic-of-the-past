@@ -16,8 +16,9 @@
  */
 import { ITEM } from '../item-ids.data';
 import { allOf, hasItem } from '../rules/combinators';
-import { canLiftHeavyRocks, hasBeamSword } from '../state-helpers';
-import { canUseMedallion, hasMireMedallion, hasTurtleRockMedallion } from '../state-helpers-world';
+import {
+  canLiftHeavyRocks, canUseMedallion, hasBeamSword, hasMireMedallion, hasTurtleRockMedallion,
+} from '../rules/helper-rules';
 import { bombShopRule, towerRule } from '../rules/story-gate-rules';
 import { BOMBS_HELD_CHECK } from './bombs-record';
 import type { EventGate } from './event-gate.type';

@@ -17,6 +17,7 @@
 enum { kDialogRows = 3, kDialogCells = 40 };
 // The text area is 21 tiles wide; a pen past it is a row the engine itself would not show.
 enum { kTextAreaWidthPx = 168 };
+enum { kCellWidthMask = 0x0f, kCellHighlightShift = 4 };
 
 typedef struct DialogCell {
   uint8 glyph, x, w;
@@ -84,20 +85,25 @@ static void EvictOverlap(int line, int x, int w) {
   DialogCell *row = g_mirror.rows[line];
   int n = g_mirror.count[line], kept = 0;
   for (int i = 0; i < n; i++) {
-    bool overlaps = row[i].x < x + w && x < row[i].x + row[i].w;
+    bool overlaps = row[i].x < x + w && x < row[i].x + (row[i].w & kCellWidthMask);
     if (!overlaps) row[kept++] = row[i];
   }
   g_mirror.count[line] = (uint8)kept;
 }
 
+// A cell's width byte carries the glyph's highlight span in its high nibble (dialog_highlight.c); a
+// glyph is at most 8 px wide, so the low nibble is the width and a plain cell reads as before.
 void GameHook_DialogGlyph(uint8 c, uint8 line, uint8 x, uint8 w) {
+  DialogHighlight_GlyphAt(line, x, w);
   if (!DialogMirror_Recording() || line >= kDialogRows || x >= kTextAreaWidthPx) return;
   EvictOverlap(line, x, w);
   if (g_mirror.count[line] >= kDialogCells) return;
-  g_mirror.rows[line][g_mirror.count[line]++] = (DialogCell){ c, x, w };
+  uint8 marked = (uint8)(w | DialogHighlight_Kind() << kCellHighlightShift);
+  g_mirror.rows[line][g_mirror.count[line]++] = (DialogCell){ c, x, marked };
 }
 
 void GameHook_DialogScrolled(void) {
+  DialogHighlight_Scrolled();
   if (!DialogMirror_Recording()) return;
   for (int r = 0; r + 1 < kDialogRows; r++) {
     memcpy(g_mirror.rows[r], g_mirror.rows[r + 1], sizeof g_mirror.rows[r]);
@@ -148,9 +154,12 @@ void GameHook_DialogMeasure(void) {
 }
 
 void GameHook_DialogCleared(void) {
+  // Runs right after the loader, ahead of the measure: a paged receipt joins its next page here.
+  ReceiptPages_MessageLoaded();
   // Ahead of the gate: the box's owner is decided once per message whatever the feature words say,
   // since Skip Dialog withholds the native box with the mirror off (dialog_suppress.c).
   DialogSuppress_MessageStarted();
+  DialogHighlight_Cleared();
   if (!DialogMirror_Recording()) return;
   memset(&g_mirror, 0, sizeof g_mirror);
   g_generation++;
@@ -224,7 +233,7 @@ void DialogMirror_Unpack(const uint8 *in) {
 //   8-9 dialogue_message_index   10-12 cell count per row   13 generation
 //   14 the message's widest row in text-area pixels   15 the most rows it shows
 //   16-17 text layer horizontal scroll   18-19 text layer vertical scroll (signed, as the PPU draws)
-// Rows follow: 3 x kDialogCells cells of (glyph, x, w).
+// Rows follow: 3 x kDialogCells cells of (glyph, x, w), w's high nibble the glyph's highlight span.
 enum { kSnapshotHeader = 20 };
 static uint8 g_snapshot[kSnapshotHeader + kDialogRows * kDialogCells * 3];
 

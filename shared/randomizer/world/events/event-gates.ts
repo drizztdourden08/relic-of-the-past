@@ -8,6 +8,8 @@
  * before acts existed.
  */
 import { EVENT_GATES } from './event-gates.data';
+import { compileRule } from '../rules/rule-eval';
+import { any, has, option } from '../rules/rule-node-build';
 import type { ActToken, EventGate } from './event-gate.type';
 import type { ItemKey } from '../item-ids.data';
 import type { Rule } from '../world.type';
@@ -42,8 +44,10 @@ const actGate = (checkId: string): Rule => {
   if (gate === undefined) throw new Error(`no event gate for check: ${checkId}`);
   const { precondition } = gate;
   const token = tokenOf(gate);
-  return (state) => state.has(token)
-    || (precondition === undefined ? state.world.options.actTokens === undefined : precondition(state));
+  return compileRule(any(
+    has(token),
+    precondition === undefined ? option('events.recordAttached', false) : precondition.node,
+  ));
 };
 
 export { actGate, actTokensOf, isCertifiedAct };

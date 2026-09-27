@@ -20,15 +20,16 @@ import { CAPACITY_UPGRADE_LOCATIONS } from '../scope-tables';
 import { POND_INSTANCES } from '../pond/pond-instances';
 import { POND_LOCATION_SET } from '../pond/pond-rungs';
 import { pondPlanOf } from '../pond/pond-plan';
-import { walletCapacity } from '../state-helpers-capacity';
 import { PRICED_ENTRIES } from './priced-entries';
 import { shopSlotLocationOf } from '../shops/shop-slots';
 import { selfLockRuleOf } from '../shops/shop-self-lock';
-import { ruleForPrice } from './shop-prices';
+import { compileRule } from './rule-eval';
+import { seedRef } from './rule-node-build';
+import { seedKey, seededPriceNode } from './seeded-price';
+import { allOf, helperRule } from './combinators';
 import type { World, Rule } from '../world.type';
-import type { ShopPrice } from '../shops/shop-price.type';
 
-const canAfford = (price: number): Rule => (state) => walletCapacity(state) >= price;
+const canAfford = (price: number): Rule => helperRule('walletAtLeast', price);
 
 /** Location to the price its pond charges for it; empty while every pond is legacy. */
 const pondPricesOf = (world: World): ReadonlyMap<LocationKey, number> => {
@@ -70,9 +71,10 @@ const registerShopPriceRules = (world: World): void => {
     if (existing === undefined) throw new Error(`shelf slot left unruled: ${key}`);
     // A rolled price replaces the shelf's own; with no roll the shelf keeps
     // charging the rupees the unmodified game charges.
+    // The tree reads the price off the seed table (seed-values.ts), so it keeps one shape for
+    // every seed; the item rule below is a placement predicate and reads the price itself.
     const price = rolled?.[key] ?? { currency: 'rupees' as const, amount: row.slot.price };
-    const afford = ruleForPrice(price);
-    world.locationRules.set(key, (state) => existing(state) && afford(state));
+    world.locationRules.set(key, allOf(existing, compileRule(seededPriceNode(seedKey.shopPrice(key)))));
     // The shelf may not sell what its own price is counted in (shop-self-lock).
     const selfLock = selfLockRuleOf(price);
     if (selfLock === undefined) continue;
@@ -81,8 +83,17 @@ const registerShopPriceRules = (world: World): void => {
   }
 };
 
+/** A pond slot's wallet reading, its rupees read off the seed table (0 asks nothing). */
+const pondAfford = (key: LocationKey): Rule => helperRule('walletAtLeast', seedRef(seedKey.pondPrice(key)));
+
+const TABLE_TARGETS: ReadonlySet<string> = new Set(PRICED_ENTRIES.map((entry) => entry.target));
+
+/**
+ * Every pond slot this world holds is priced from the seed table: the pond plan's worst case
+ * when the plan sells it, the table's row otherwise, nothing at all for a slot neither prices.
+ * Registering every slot the same way is what keeps the tree the same for every setting.
+ */
 const registerPriceRules = (world: World): void => {
-  const pondPrices = pondPricesOf(world);
   for (const { kind, target, price } of PRICED_ENTRIES) {
     const registry: Map<string, Rule> = kind === 'exit' ? world.rules : world.locationRules;
     const existing = registry.get(target);
@@ -90,19 +101,15 @@ const registerPriceRules = (world: World): void => {
       if (CAPACITY_UPGRADE_LOCATIONS.has(target as LocationKey)) continue;
       throw new Error(`price row targets unknown ${kind}: ${target}`);
     }
-    // A pond prize slot is priced by the pond's own plan, never by the table.
     const key = target as LocationKey;
-    const afford = canAfford(POND_LOCATION_SET.has(key) ? pondPrices.get(key) ?? price : price);
-    registry.set(target, (state) => existing(state) && afford(state));
+    registry.set(target, allOf(existing, POND_LOCATION_SET.has(key) ? pondAfford(key) : canAfford(price)));
   }
-  // The prize slots the table does not list at all: everything past a pond's
-  // two reference names, which exists only under a non-legacy pond.
-  for (const [key, price] of pondPrices) {
-    if (PRICED_ENTRIES.some((entry) => entry.target === key)) continue;
+  // The pond slots the table does not list at all: everything past a pond's two reference names.
+  for (const key of world.locationsByKey.keys()) {
+    if (!POND_LOCATION_SET.has(key) || TABLE_TARGETS.has(key)) continue;
     const existing = world.locationRules.get(key);
     if (existing === undefined) continue;
-    const afford = canAfford(price);
-    world.locationRules.set(key, (state) => existing(state) && afford(state));
+    world.locationRules.set(key, allOf(existing, pondAfford(key)));
   }
   registerShopPriceRules(world);
 };

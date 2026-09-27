@@ -91,7 +91,7 @@ const useTrackerData = (options: TrackerDataOptions = {}) => {
   useEffect(() => subscribeSessionStore(setSessionState), []);
   useEffect(() => onFiredLocation(() => setFired(new Set(firedLocations()))), []);
 
-  const { placement } = sessionState;
+  const { placement, foreignOwners } = sessionState;
   const runKind = runKindOfSession(sessionState);
 
   const checkRecords = useMemo(() => find('check', () => true), []);
@@ -129,7 +129,9 @@ const useTrackerData = (options: TrackerDataOptions = {}) => {
     [logicPlacement, effectiveCheckRecords, inventory, effectiveCompleted, fired, darkRoomsNeedLight, bigKeyDoors, smallKeyDoors],
   );
 
-  const placementView: PlacementView = useMemo(() => buildPlacementView(placement), [placement]);
+  const placementView: PlacementView = useMemo(
+    () => buildPlacementView(placement, foreignOwners), [placement, foreignOwners],
+  );
   // A swap chest reads the stand-in once its item is held. Only on the plain game: a seed's
   // chests hold what the seed placed, and online knows none of its contents.
   const liveItems = useMemo(
@@ -138,13 +140,18 @@ const useTrackerData = (options: TrackerDataOptions = {}) => {
   );
   const run: RunContext = useMemo(
     () => (placement
-      ? { kind: runKind, placedItems: placementView.itemByCheck, spheres: placementView.sphereByCheck }
+      ? {
+        kind: runKind, placedItems: placementView.itemByCheck,
+        foreignItems: placementView.foreignByCheck, spheres: placementView.sphereByCheck,
+      }
       : { kind: runKind, liveItems }),
     [placement, runKind, placementView, liveItems],
   );
 
   // The totals follow the Items / Events / Both switch and the shelves rule: the summary
-  // counts what the list shows (isListedRow), before any search or facet narrows it.
+  // counts what the list shows (isListedRow), before any search or facet narrows it, so it
+  // always equals the sum of the groups. The Items view lists no event, so there a seed's
+  // total is its locations (tracker-count.ts), the count an Archipelago room keeps.
   const stats = useMemo(() => {
     let completed = 0, reachable = 0, blocked = 0, total = 0;
     for (const check of effectiveCheckRecords) {

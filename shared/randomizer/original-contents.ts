@@ -13,6 +13,7 @@ import {
 } from './world/scope-tables';
 import { ITEM } from './world/item-ids.data';
 import { EVENT_ITEMS } from './world/pool/event-items.data';
+import { checkIdOfLocation } from './world/location-record';
 import type { CheckId, ItemId, RegionId } from '../game/data/types/ids';
 import type { ItemKey } from './world/item-ids.data';
 import type { LocationKey } from './world/location-key';
@@ -43,7 +44,8 @@ const originalContentOf = (
     ?? VANILLA_PRIZES.get(location);
   if (direct !== undefined) return direct;
 
-  const held = recorded.get(location as CheckId);
+  const checkId = checkIdOfLocation(location);
+  const held = checkId === undefined ? undefined : recorded.get(checkId);
   if (held === undefined) return undefined;
   if (held === ITEM.heartContainer) return ITEM.bossHeartContainer;
 

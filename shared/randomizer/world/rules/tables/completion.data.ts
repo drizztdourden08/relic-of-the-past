@@ -13,12 +13,10 @@ import { REGION } from '../../region-ids.data';
 import {
   allOf, anyOf, canReach, hasItem,
 } from '../combinators';
-import { canLiftRocks, hasBeamSword } from '../../state-helpers';
-import { hasCrystals } from '../../state-helpers-world';
+import { canLiftRocks, hasBeamSword } from '../helper-rules';
 import { ganonRule, pyramidHoleRule } from '../story-gate-rules';
 import { actGate } from '../../events';
 import { ganonDefeat, lastFightTakesHammer } from './bosses.data';
-import type { CollectionState } from '../../collection-state';
 import type { RuleEntry } from '../rule-entry.type';
 
 /** Rules.py 1357-1358. */
@@ -30,6 +28,7 @@ const basicRoutes = anyOf(southernTeleporter, hasItem(ITEM.beatAgahnim1));
 
 const COMPLETION_RULES: readonly RuleEntry[] = [
   // 611, then 97 (goal ganon) and 617 (crystals_needed_for_ganon = 7) add on.
+  // The location is the ledger's "Ganon beaten" event.
   { kind: 'location', target: 'check-351', mode: 'set', rule: ganonDefeat },
   { kind: 'location', target: 'check-351', mode: 'add', rule: hasItem(ITEM.beatAgahnim2) },
   { kind: 'location', target: 'check-351', mode: 'add', rule: ganonRule },

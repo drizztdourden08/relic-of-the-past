@@ -10,10 +10,9 @@ import { ITEM } from '../../item-ids.data';
 import {
   allOf, anyOf, hasItem, hasKeys, placedAt,
 } from '../combinators';
-import { canUseBombs } from '../../state-helpers';
+import { bombs } from '../helper-rules';
 import { actGate } from '../../events';
 import { dungeonBossDefeat } from './bosses.data';
-import type { CollectionState } from '../../collection-state';
 import type { RuleEntry } from '../rule-entry.type';
 
 const THIEVES_DEN_RULES: readonly RuleEntry[] = [
@@ -26,7 +25,7 @@ const THIEVES_DEN_RULES: readonly RuleEntry[] = [
   // 413-414 (vanilla boss placement)
   {
     kind: 'exit', target: 'Blind Fight', mode: 'set',
-    rule: allOf(hasKeys(ITEM.smallKeyThievesTown, 3), (state: CollectionState) => canUseBombs(state)),
+    rule: allOf(hasKeys(ITEM.smallKeyThievesTown, 3), bombs()),
   },
   // 415-416: the reference's operator precedence: 3keys OR (self-placed AND 2keys), AND hammer.
   {

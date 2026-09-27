@@ -178,6 +178,7 @@ const buildWorld = (options: World['options']): World => {
     itemRules,
     alwaysAllow: new Map(),
     placedItems: new Map(),
+    seedValues: new Map(),
     getRule: (name) => rules.get(name),
     getLocationRule: (key) => locationRules.get(key),
     getItemRule: (key) => itemRules.get(key) ?? ALLOW_ANY_ITEM,

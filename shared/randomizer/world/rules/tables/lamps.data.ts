@@ -25,6 +25,8 @@
  * nothing beyond them is reachable without a light either.
  */
 import { canCrossDarkRoom } from '../../dark-rooms/dark-room-light';
+import { compileRule } from '../rule-eval';
+import { any, option } from '../rule-node-build';
 import type { LocationKey } from '../../location-key';
 import type { Rule } from '../../world.type';
 import type { RuleEntry } from '../rule-entry.type';
@@ -67,8 +69,7 @@ const ESCAPE_DARK_LOCATIONS: readonly LocationKey[] = ['check-103']; // 1035
  * harness that replays one says so through the world option and gets the
  * reading it was generated under. No app path sets it.
  */
-const canCrossEscapeDarkRoom: Rule = (state) =>
-  state.world.options.unlitEscapeExempt === true || canCrossDarkRoom(state);
+const canCrossEscapeDarkRoom: Rule = compileRule(any(option('unlitEscapeExempt', true), canCrossDarkRoom.node));
 
 const exitRow = (rule: Rule) => (target: string): RuleEntry => ({ kind: 'exit', target, mode: 'add', rule });
 const locationRow = (rule: Rule) => (target: LocationKey): RuleEntry => ({ kind: 'location', target, mode: 'add', rule });

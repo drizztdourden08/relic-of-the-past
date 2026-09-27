@@ -10,12 +10,15 @@ import { ITEM } from '../../item-ids.data';
 import {
   allOf, anyOf, hasItem, hasKeys, never,
 } from '../combinators';
-import { canUseBombs, hasSword } from '../../state-helpers';
+import { bombs, hasSword } from '../helper-rules';
 import { actGate } from '../../events';
 import { dungeonBossDefeat } from './bosses.data';
-import { itemPowerOf } from '../../item-power/item-power-rule';
-import type { CollectionState } from '../../collection-state';
+import { compileRule } from '../rule-eval';
+import { option } from '../rule-node-build';
 import type { RuleEntry } from '../rule-entry.type';
+
+/** The switch that lets the cloth be pulled down, blade or not (item-power/). */
+const curtainsPullable = compileRule(option('itemPower.pullableCurtains', true));
 
 const WOODS_RULES: readonly RuleEntry[] = [
   // default_rules 694-695: drops under bushes stay bunny-proof.
@@ -39,14 +42,14 @@ const WOODS_RULES: readonly RuleEntry[] = [
   // 430
   {
     kind: 'location', target: 'check-186', mode: 'set',
-    rule: allOf(hasItem(ITEM.bigKeySkullWoods), (state: CollectionState) => canUseBombs(state)),
+    rule: allOf(hasItem(ITEM.bigKeySkullWoods), bombs()),
   },
   // 433: the hanging cloth door needs a blade to cut, unless the switch that lets it be
   // pulled down instead is on, which is the reference's own swordless branch.
   {
     kind: 'exit', target: 'Skull Woods Torch Room', mode: 'set',
     rule: allOf(hasKeys(ITEM.smallKeySkullWoods, 4), hasItem(ITEM.fireRod),
-      anyOf(hasSword, (state: CollectionState) => itemPowerOf(state.world).pullableCurtains)),
+      anyOf(hasSword, curtainsPullable)),
   },
   // forbid_bomb_jump_requirements 961
   { kind: 'exit', target: 'Skull Woods First Section Bomb Jump', mode: 'set', rule: never },

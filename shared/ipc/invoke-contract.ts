@@ -4,6 +4,7 @@
  * of truth for every invoke channel's signature; preload and main handlers are checked against it.
  */
 import type { Profile, AppState, CreateProfileOptions } from '@shared/types/profile';
+import type { ArchipelagoSaveFilesResult } from '@shared/types/archipelago-files';
 import type { NormalSaveInfo, AutoSaveInfo, QuickSaveSlotInfo } from '@shared/types/saves';
 import type { PlaySession } from '@shared/types/session';
 import type { ShadowCastingProject, ScreenShadowData } from '@shared/types/shadow-casting';
@@ -87,6 +88,9 @@ interface InvokeContract extends
   'dialog:openRom': () => Promise<string | null>;
   'dialog:pickFile': (extensions: string[]) => Promise<{ name: string; data: ArrayBuffer } | null>;
   'dialog:saveFile': (name: string, data: ArrayBuffer, extensions: string[]) => Promise<{ saved: boolean; name?: string; error?: string }>;
+
+  // Archipelago
+  'archipelago:save-files': (profileId: string) => Promise<ArchipelagoSaveFilesResult>;
 
   // Profiles
   'profiles:list': () => Promise<Profile[]>;

@@ -26,10 +26,19 @@ type ActiveRun =
   | { kind: 'seed'; placement: Placement }
   | { kind: 'online' };
 
-/** The run a session state stands for. A placement is a seed; a session without one is online. */
+/** An online session that ended (stopped, or refused with an error) is no run at all. */
+const isEndedOnline = (session: SessionStoreState['session']): boolean =>
+  session?.kind === 'online' && (session.status === 'idle' || session.status === 'error');
+
+/**
+ * The run a session state stands for. A live online session is online, even once its scouts
+ * became a placement for the Spoiler tab; an ended one is plain play, never a seed, whatever
+ * placement it left. Otherwise a placement is a seed.
+ */
 const runOfSession = ({ session, placement }: SessionStoreState): ActiveRun => {
-  if (placement !== null) return { kind: 'seed', placement };
+  if (isEndedOnline(session)) return { kind: 'normal' };
   if (session?.kind === 'online') return { kind: 'online' };
+  if (placement !== null) return { kind: 'seed', placement };
   return { kind: 'normal' };
 };
 

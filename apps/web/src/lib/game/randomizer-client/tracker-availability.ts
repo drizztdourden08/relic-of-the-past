@@ -29,6 +29,7 @@ import { BIG_KEY_ITEMS } from '@shared/randomizer/world/big-keys';
 import { fullKeyRing } from '@shared/randomizer/world/small-keys';
 import { screensOfRegions } from '@shared/game/logic/regions/reachable-screens';
 import { completedLocationKeys } from './check-names';
+import { locationKeyOfCheck } from '@shared/randomizer/world/location-record';
 import { virtualLocationOf } from './virtual-locations';
 import type { ItemKey } from '@shared/randomizer/world/item-ids.data';
 import type { LocationKey } from '@shared/randomizer/world/location-key';
@@ -81,7 +82,7 @@ const trackerReading = (
       snapshot.set(check.id, 'completed');
       continue;
     }
-    const location = isVirtual ? virtualLocationOf(check.id) : check.id;
+    const location = isVirtual ? virtualLocationOf(check.id) : locationKeyOfCheck(check.id);
     // A fired location answers for a REAL check too, not only a virtual one. The pond's
     // first two slots keep the check records the reference's names gave them, and those
     // records poll the capacity counter bytes a purchase used to write; a randomized pond

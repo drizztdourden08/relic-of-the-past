@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
  * Randomizer section of the profile-creation form: enable toggle, then seed +
- * mode, and the server fields when the online mode is picked.
+ * mode, and the server fields when Archipelago is picked.
  *
  * The seed arrives already thrown (build-randomizer-config.ts) so the options
  * panel can preview what it rolls. Typing over it is the point; emptying it is
@@ -21,7 +21,7 @@ interface RandomizerFieldsProps {
 
 const MODE_OPTIONS = [
   { value: 'local', label: 'Local' },
-  { value: 'online', label: 'Online' },
+  { value: 'online', label: 'Archipelago' },
 ];
 
 const RandomizerFields = (props: RandomizerFieldsProps) => {
@@ -70,9 +70,32 @@ const RandomizerFields = (props: RandomizerFieldsProps) => {
                   onChange={(e) => patch({ slotName: e.target.value })}
                 />
               </Field>
+              <Field label="Password">
+                <TextInput
+                  type="password"
+                  placeholder="optional"
+                  autoComplete="off"
+                  value={value.password}
+                  onChange={(e) => patch({ password: e.target.value })}
+                />
+              </Field>
+              <Toggle
+                label="DeathLink"
+                checked={value.deathLink}
+                onChange={(deathLink) => patch({ deathLink })}
+              />
+              <Toggle
+                label="Track other players"
+                checked={value.trackOtherPlayers}
+                onChange={(trackOtherPlayers) => patch({ trackOtherPlayers })}
+              />
             </>
           )}
-          <Text variant="caption">Locked once the profile is created.</Text>
+          <Text variant="caption">
+            {value.mode === 'online'
+              ? 'Seed and options lock once the profile is created. The connection stays editable.'
+              : 'Locked once the profile is created.'}
+          </Text>
         </>
       )}
     </>

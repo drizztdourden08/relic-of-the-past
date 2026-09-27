@@ -3652,6 +3652,7 @@ OamEnt *Ancilla_ReceiveItem_Draw(int k, int x, int y) {  // 88c690
     Ancilla_SetOam(oam, x, y + 8, 0x34 + col, a * 2 | 0x30, 0);
     oam++;
   }
+  GameHook_ForeignIconHoldUpOam(j, GetOamCurPtr(), oam);
   return oam;
 }
 

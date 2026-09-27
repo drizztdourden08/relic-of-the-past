@@ -18,6 +18,8 @@ const matchesSearch = (check: CheckRecord, query: string, run?: RunContext): boo
   // With a run loaded, the item a reader searches for is the one actually
   // there, since matching the vanilla contents instead would answer the wrong
   // question ("where WAS the lamp", not "where IS it").
+  const foreign = run?.foreignItems?.get(check.id);
+  if (foreign !== undefined) return foreign.toLowerCase().includes(query);
   const placed = run?.placedItems?.get(check.id);
   if (placed !== undefined) return getItem(placed).name.toLowerCase().includes(query);
   const live = run?.liveItems?.get(check.id);

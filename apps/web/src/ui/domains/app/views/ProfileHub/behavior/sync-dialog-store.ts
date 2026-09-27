@@ -10,7 +10,7 @@ import { useDialogSettingsStore } from '../../../../../../stores/dialog-settings
 
 const DIALOG_BOX_KEYS = [
   'dialogBox', 'dialogFont', 'dialogFontScale', 'dialogInkColor', 'dialogStrokeColor', 'dialogStrokeWidth',
-  'dialogBoxOpacity', 'dialogFloatingGround', 'dialogIntroTelepathyGround', 'dialogGroundFade', 'dialogBoxFit', 'dialogGroundColor', 'dialogBorder', 'dialogBorderThickness', 'dialogBorderColor',
+  'hudHighlightPrimary', 'hudHighlightSecondary', 'dialogBoxOpacity', 'dialogFloatingGround', 'dialogIntroTelepathyGround', 'dialogGroundFade', 'dialogBoxFit', 'dialogGroundColor', 'dialogBorder', 'dialogBorderThickness', 'dialogBorderColor',
   'dialogCorner', 'dialogCornerMark', 'dialogCornerMarkAngle', 'dialogTexture', 'dialogTextureColor', 'dialogTextureOpacity',
   'dialogTextureAnimation', 'dialogTextureSpeed', 'dialogTextureScale', 'dialogTextureDensity', 'dialogTextureScatter',
   'dialogButtonPrompts', 'dialogSpeed', 'dialogHoldSpeed', 'dialogHoldToAccelerate', 'dialogFillOnB',
@@ -26,6 +26,8 @@ const syncDialogStore = (s: GameSettings): void => {
     inkColor: s.dialogInkColor,
     strokeColor: s.dialogStrokeColor,
     strokeWidth: s.dialogStrokeWidth,
+    highlightPrimary: s.hudHighlightPrimary,
+    highlightSecondary: s.hudHighlightSecondary,
     boxOpacity: s.dialogBoxOpacity,
     floatingGround: s.dialogFloatingGround,
     introTelepathyGround: s.dialogIntroTelepathyGround,

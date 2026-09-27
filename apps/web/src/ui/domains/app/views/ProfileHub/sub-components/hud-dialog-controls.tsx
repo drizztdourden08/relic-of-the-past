@@ -13,6 +13,7 @@ import { DialogStopSlider } from './dialog-stop-slider';
 import { DialogColorControl } from './dialog-color-control';
 import { renderBorderControl, isBorderDisabled } from './hud-dialog-border-controls';
 import { renderTextureControl, isTextureDisabled } from './hud-dialog-texture-controls';
+import { renderHighlightControl } from './hud-dialog-highlight-controls';
 
 const BOX_OPTIONS = [
   { value: 'original', label: 'Original' },
@@ -32,9 +33,12 @@ const FIT_OPTIONS = [
 
 const MODERN_ONLY_KEYS = new Set(['dialogFontScale', 'dialogInkColor', 'dialogStrokeColor', 'dialogStrokeWidth']);
 
-/** Every row but the box switch describes the enhanced box, so the original box idles them all. */
+/** Rows that act on both boxes, so the original box leaves them live. */
+const EITHER_BOX_KEYS = new Set(['dialogBox', 'hudHighlightPrimary', 'hudHighlightSecondary']);
+
+/** Every other row describes the enhanced box, so the original box idles them all. */
 const isDialogDisabled = (key: string, settings: GameSettings): boolean => {
-  if (key === 'dialogBox') return false;
+  if (EITHER_BOX_KEYS.has(key)) return false;
   if (settings.dialogBox === 'original') return true;
   if (MODERN_ONLY_KEYS.has(key) && settings.dialogFont === 'original') return true;
   return isBorderDisabled(key, settings) || isTextureDisabled(key, settings);
@@ -147,7 +151,8 @@ const renderDialogControl = (key: string, settings: GameSettings, onChange: (pat
         />
       );
     default:
-      return renderBorderControl(key, settings, onChange, disabled) ?? renderTextureControl(key, settings, onChange, disabled);
+      return renderBorderControl(key, settings, onChange, disabled) ?? renderTextureControl(key, settings, onChange, disabled)
+        ?? renderHighlightControl(key, settings, onChange);
   }
 };
 

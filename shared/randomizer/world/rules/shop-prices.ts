@@ -33,28 +33,24 @@
  */
 import { ITEM } from '../item-ids.data';
 import { REGION } from '../region-ids.data';
-import { explosivesCapacity, projectilesCapacity, walletCapacity } from '../state-helpers-capacity';
-import { bottleCount } from '../state-helpers';
+import { BASELINE } from '../state-helpers';
 import { BOTTLE_ITEMS } from '../item-groups';
 import { itemKeyOfName } from '../display-names/item-key-name';
 import { cauldronPriceOf } from '../potion-price/potion-cauldrons.data';
-import type { CollectionState } from '../collection-state';
+import { compileRule } from './rule-eval';
+import {
+  FALSE, all, any, countGroup, has, helper, region,
+} from './rule-node-build';
 import type { Rule } from '../world.type';
+import type { RuleNode } from './rule-node.type';
 import type { ShopPrice } from '../shops/shop-price.type';
 
-/** Hearts a new file starts with, before any container or piece is collected. */
-const STARTING_HEARTS = 3;
-const PIECES_PER_HEART = 4;
-
-const heartCapacity = (state: CollectionState): number =>
-  STARTING_HEARTS
-  + state.count(ITEM.bossHeartContainer)
-  + state.count(ITEM.sanctuaryHeartContainer)
-  + Math.floor(state.count(ITEM.pieceOfHeart) / PIECES_PER_HEART);
-
 /** Any bottle will do: the shelf takes what is inside it, not a particular vessel. */
-const hasAnyBottle = (state: CollectionState): boolean =>
-  BOTTLE_ITEMS.some((name) => state.has(name));
+const hasAnyBottle: RuleNode = any(...BOTTLE_ITEMS.map((bottle) => has(bottle)));
+
+/** The bottles carried, held to the slots the game has for them (state-helpers bottleCount). */
+const bottlesAtLeast = (count: number): RuleNode =>
+  (count > BASELINE.progressiveBottleLimit ? FALSE : countGroup(BOTTLE_ITEMS, count));
 
 /**
  * Bottles enough to hand that many over at once.
@@ -72,8 +68,7 @@ const hasAnyBottle = (state: CollectionState): boolean =>
  * A demand of one reads exactly as it always has: holding a usable bottle
  * already means the count is at least one, so the second half decides nothing.
  */
-const hasBottles = (state: CollectionState, count: number): boolean =>
-  hasAnyBottle(state) && bottleCount(state) >= count;
+const hasBottles = (count: number): RuleNode => all(hasAnyBottle, bottlesAtLeast(count));
 
 /**
  * A bottle price: the vessel, plus, for a content that is BOUGHT and not
@@ -84,18 +79,17 @@ const hasBottles = (state: CollectionState, count: number): boolean =>
  * any other counter and a wallet too small to hold that is a wallet that
  * cannot refill the bottle.
  */
-const ruleForBottle = (content: string, count: number): Rule => {
+const bottleNode = (content: string, count: number): RuleNode => {
   const price = cauldronPriceOf(content);
-  if (price === undefined) return (state) => hasBottles(state, count);
-  return (state) => hasBottles(state, count)
-    && state.canReachRegion(REGION.potionSeller)
-    && walletCapacity(state) >= price;
+  if (price === undefined) return hasBottles(count);
+  return all(hasBottles(count), region(REGION.potionSeller), helper('walletAtLeast', price));
 };
 
-const ruleForPrice = (price: ShopPrice): Rule => {
+/** What paying this price asks, as a tree. */
+const priceNode = (price: ShopPrice): RuleNode => {
   // A price with no count of its own asks for one bottle, which is what every
   // shelf asks for and what every placement frozen before the count means.
-  if (price.currency === 'bottle') return ruleForBottle(price.content, price.amount ?? 1);
+  if (price.currency === 'bottle') return bottleNode(price.content, price.amount ?? 1);
   // Holding the named item is the WHOLE rule. Every other currency is spent,
   // so its rule asks what the player can hold and still afford again; this one
   // is shown and handed straight back, so there is nothing left to ask.
@@ -107,13 +101,15 @@ const ruleForPrice = (price: ShopPrice): Rule => {
   // routes around this slot, or rerolls. The player owning the item when the
   // price was rolled has never been the question, because going and getting it
   // is the point.
-  if (price.currency === 'item') return (state) => state.has(itemKeyOfName(price.itemName));
+  if (price.currency === 'item') return has(itemKeyOfName(price.itemName));
   const { amount } = price;
-  if (price.currency === 'rupees') return (state) => walletCapacity(state) >= amount;
-  if (price.currency === 'arrows') return (state) => projectilesCapacity(state) >= amount;
-  if (price.currency === 'bombs') return (state) => explosivesCapacity(state) >= amount;
+  if (price.currency === 'rupees') return helper('walletAtLeast', amount);
+  if (price.currency === 'arrows') return helper('projectilesAtLeast', amount);
+  if (price.currency === 'bombs') return helper('explosivesAtLeast', amount);
   // Paying hearts must leave the player standing, so the price is never the last heart.
-  return (state) => heartCapacity(state) > amount;
+  return helper('heartCapacityAbove', amount);
 };
 
-export { heartCapacity, ruleForPrice };
+const ruleForPrice = (price: ShopPrice): Rule => compileRule(priceNode(price));
+
+export { priceNode, ruleForPrice };

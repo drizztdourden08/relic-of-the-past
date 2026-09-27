@@ -16,6 +16,8 @@ interface CheckCardProps {
   status: CheckStatus;
   /** The item this card shows, already resolved by the caller (check-contents.ts). */
   item?: ItemId;
+  /** The name of another player's item placed here (online), shown in place of |item|. */
+  foreignItem?: string;
   /** A reversible row's live side: true while what it did still holds. Undefined for every other row. */
   now?: boolean;
 }
@@ -25,12 +27,13 @@ const SPRITE_PLACEHOLDER = <Box className="tracker-card__sprite-placeholder" />;
 /** An event card carries the app's own mark where an item shows its sprite. */
 const EVENT_MARK = './logos/logo-128.png';
 
-const CheckCard = ({ check, status, item: itemId, now }: CheckCardProps) => {
+const CheckCard = ({ check, status, item: itemId, foreignItem, now }: CheckCardProps) => {
   // The pill only says something once the row happened: 'not now' on a row never done is noise.
   const showNow = now !== undefined && (now || status === 'completed');
   const isEvent = check.kind === 'event';
-  const displayItem = itemId ? getItem(itemId).name : undefined;
-  const sprite = isEvent ? EVENT_MARK : (itemId ? getItemSprite(itemId) : undefined);
+  const shownId = foreignItem === undefined ? itemId : undefined;
+  const displayItem = foreignItem ?? (shownId ? getItem(shownId).name : undefined);
+  const sprite = isEvent ? EVENT_MARK : (shownId ? getItemSprite(shownId) : undefined);
 
   return (
     <Box className={`tracker-card tracker-card--${status}${isEvent ? ' tracker-card--event' : ''}`}>
@@ -44,7 +47,7 @@ const CheckCard = ({ check, status, item: itemId, now }: CheckCardProps) => {
       {showNow && (
         <Text className={`tracker-check__now tracker-card__now tracker-check__now--${now ? 'on' : 'off'}`}>{now ? 'now' : 'not now'}</Text>
       )}
-      <SwapBadge check={check} shown={itemId} />
+      <SwapBadge check={check} shown={shownId} />
     </Box>
   );
 };

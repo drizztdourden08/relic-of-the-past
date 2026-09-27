@@ -9,13 +9,15 @@
  * day a fresh floor is taken.
  *
  * A name a record no longer answers to is passed through `renamed`, which is the gate's own
- * declared-rename table. The two kinds of row no record ever covered are derived instead: a
- * shelf's restock hangs off its shelf's check, and a pond rung off its pond.
+ * declared-rename table, and a check that stands for a shelf's first stock is read as that
+ * stock's shop key. The two kinds of row no record ever covered are derived instead: a shelf's
+ * restock from its shelf's check, and a pond rung from its pond.
  */
 import { itemKeyOfName } from '@shared/randomizer/world/display-names/item-key-name';
-import { CAPACITY_SHOP_EVENT, pondRungKey, restockKey } from '@shared/randomizer/world/location-key';
+import { CAPACITY_SHOP_EVENT, pondRungKey } from '@shared/randomizer/world/location-key';
+import { locationKeyOfCheck } from '@shared/randomizer/world/location-record';
 import { POND_INSTANCES } from '@shared/randomizer/world/pond/pond-instances';
-import type { CheckId } from '@shared/game/data';
+import { shopPurchaseKeyOfCheck } from '@shared/randomizer/world/shops/shop-slots';
 import type { LocationKey } from '@shared/randomizer/world/location-key';
 
 interface LegacyShot {
@@ -36,11 +38,13 @@ const keyOfLegacyName = (
   name: string, idByName: ReadonlyMap<string, string>, renamed: (old: string) => string,
 ): LocationKey => {
   const direct = idByName.get(renamed(name));
-  if (direct !== undefined) return direct as LocationKey;
+  if (direct !== undefined) return locationKeyOfCheck(direct);
   if (name === 'Capacity Upgrade Shop') return CAPACITY_SHOP_EVENT;
   const restock = /^(.*) \((2nd|3rd|4th|5th)\)$/.exec(name);
   const shelf = restock === null ? undefined : idByName.get(restock[1]);
-  if (restock !== null && shelf !== undefined) return restockKey(shelf as CheckId, ORDINALS[restock[2]]);
+  const purchase = restock === null || shelf === undefined
+    ? undefined : shopPurchaseKeyOfCheck(shelf, ORDINALS[restock[2]]);
+  if (purchase !== undefined) return purchase;
   const rung = /^(.*) (\d+)$/.exec(name);
   const pond = rung === null ? undefined : POND_BY_LABEL.get(rung[1]);
   if (rung !== null && pond !== undefined) return pondRungKey(pond, Number(rung[2]));

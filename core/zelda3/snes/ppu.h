@@ -53,6 +53,12 @@ enum {
   // gear palette shares a sprite row with villagers and followers, so a custom sheet's colors live here
   // instead and only the player's own pixels resolve against them. See Ppu.cgram.
   kPpuPlayerPalBase = 0x100,
+  // First entry of the foreign icons' private 16-color bank, right after the player's. A multiworld item
+  // shown as another game's icon is drawn in colors no sprite row holds, so its own OAM slots resolve
+  // against this bank and nothing else on screen can change color. See Ppu.cgram.
+  kPpuForeignIconPalBase = 0x110,
+  // Total CGRAM entries: the hardware's 256, then the two private banks.
+  kPpuCgramEntries = 0x120,
 };
 
 typedef uint16_t PpuZbufType;
@@ -178,6 +184,11 @@ struct Ppu {
   // False unless a custom sheet is loaded, in which case the bank above is live. Keeps the stock game
   // on exactly the path it had before the bank existed.
   bool playerPalActive;
+  // Which OAM slots hold a foreign item's game icon this frame (foreign_icon_bank.c). Those pixels read
+  // the bank at kPpuForeignIconPalBase. False/zero unless an icon is on screen, which keeps every other
+  // frame on exactly the path it had before the bank existed.
+  uint8_t oamIsForeignIcon[128];
+  bool foreignIconPalActive;
   // The ceiling block as tilemap words, handed over each frame by ZeldaDrawPpuFrame (PpuSetHiddenTiles).
   // A BG2 tile equal to one of them is the void past the room's walls and draws as the gap sentinel
   // instead of its graphics, which BlackBackdrop then renders black. The sentinel also replaces a sprite
@@ -209,13 +220,14 @@ struct Ppu {
   uint8_t brightnessMultHalf[32 * 2];
   // 0x000-0x0FF is CGRAM as the hardware sees it, and the only part a save state records. kPpuPlayerPalBase
   // onward is the player's private bank, derived from the loaded sheet and re-pushed whenever gear palettes
-  // reload, so growing this array leaves the snapshot byte-identical.
-  uint16_t cgram[0x110];
+  // reload, so growing this array leaves the snapshot byte-identical. kPpuForeignIconPalBase onward is
+  // the foreign icons' bank, re-pushed on every frame an icon is on screen.
+  uint16_t cgram[kPpuCgramEntries];
   // Block-start coordinate per screen coordinate. Read through MOSAIC_START (ppu.c), never indexed raw:
   // the index is signed and biased by kPpuMosaicBias.
   int16_t mosaicModulo[kPpuMosaicEntries];
-  // Brightness-mapped mirror of cgram for the 4x scale path, player bank included.
-  uint32_t colorMapRgb[0x110];
+  // Brightness-mapped mirror of cgram for the 4x scale path, both private banks included.
+  uint32_t colorMapRgb[kPpuCgramEntries];
   PpuPixelPrioBufs bgBuffers[2];
   PpuPixelPrioBufs objBuffer;
   uint16_t vram[0x8000];

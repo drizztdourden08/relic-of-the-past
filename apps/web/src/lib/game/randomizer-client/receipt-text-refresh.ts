@@ -20,6 +20,7 @@
 import type { LocationKey } from '@shared/randomizer/world/location-key';
 import { receiptCountsOf } from '@shared/randomizer/receipt-text/receipt-counts';
 import { receiptLineKey } from '@shared/randomizer/receipt-text/receipt-line.type';
+import { isForeignItem } from '@shared/randomizer/archipelago/foreign-item';
 import { log } from '../../log-bus';
 import { setSessionReceiptMessages } from '../session-dialogue';
 import { getCompletedChecks, onCompletedChecksChanged } from '../tracker';
@@ -34,6 +35,7 @@ import type { CapacityFixedLineArm } from '../capacity-fixed-lines';
 import type { MessageIdOf } from './apply-overrides';
 import type { RungMessageIdOf } from './capacity-rung-messages';
 import type { PhysicalPlan } from './physical-plan.type';
+import type { ForeignItemOf } from './foreign-item-line';
 
 /**
  * The pond's own composed lines, by the amount each one quotes. Every getter
@@ -86,10 +88,17 @@ interface SessionReceiptTexts {
 const completedKeysOf = (checks: ReadonlySet<CheckId>): Set<LocationKey> =>
   completedLocationKeys(checks, firedLocations());
 
-const startSessionReceiptTexts = (plan: PhysicalPlan, placement: Placement, tag: string): SessionReceiptTexts => {
-  const { locations, stats } = placement;
-  const textsFor = (completed: ReadonlySet<LocationKey>) =>
-    buildPlanReceiptTexts(plan, placement, receiptCountsOf({ locations, keyDropShuffle: stats.keyDropShuffle, completed }));
+/** Another player's items count toward nothing this seed shows. */
+const ownLocations = (placement: Placement): Placement['locations'] =>
+  Object.fromEntries(Object.entries(placement.locations).filter(([, item]) => !isForeignItem(item))) as Placement['locations'];
+
+const startSessionReceiptTexts = (
+  plan: PhysicalPlan, placement: Placement, tag: string, foreignItemOf?: ForeignItemOf,
+): SessionReceiptTexts => {
+  const { stats } = placement;
+  const locations = ownLocations(placement);
+  const textsFor = (completed: ReadonlySet<LocationKey>) => buildPlanReceiptTexts(plan, placement,
+    receiptCountsOf({ locations, keyDropShuffle: stats.keyDropShuffle, completed }), foreignItemOf);
   const first = textsFor(completedKeysOf(getCompletedChecks()));
   const messageIds = setSessionReceiptMessages(first.lines);
   let lastKeys = first.lines.map(receiptLineKey);

@@ -9,10 +9,10 @@ import { ITEM } from '../../item-ids.data';
 import {
   allOf, anyOf, hasItem, hasKeys, placedAt,
 } from '../combinators';
-import { canShootArrows, hasFireSource, hasMeleeWeapon } from '../../state-helpers';
-import { canActivateCrystalSwitch } from '../../state-helpers-world';
+import {
+  arrows, canActivateCrystalSwitch, hasFireSource, hasMeleeWeapon,
+} from '../helper-rules';
 import { dungeonBossDefeat } from './bosses.data';
-import type { CollectionState } from '../../collection-state';
 import type { RuleEntry } from '../rule-entry.type';
 
 const MOUNTAIN_TOWER_RULES: readonly RuleEntry[] = [
@@ -39,7 +39,7 @@ const MOUNTAIN_TOWER_RULES: readonly RuleEntry[] = [
     kind: 'exit', target: 'Tower of Hera Big Key Door', mode: 'add',
     rule: anyOf(
       hasMeleeWeapon,
-      allOf(hasItem(ITEM.silverBow), (state: CollectionState) => canShootArrows(state)),
+      allOf(hasItem(ITEM.silverBow), arrows()),
       hasItem(ITEM.caneOfByrna),
       hasItem(ITEM.caneOfSomaria),
     ),

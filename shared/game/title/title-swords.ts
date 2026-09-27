@@ -1,8 +1,7 @@
 /* @layer shared-game @kind data */
 /**
  * The swords the title can plant, in the order the setting steps through them: the save's own pick,
- * then one per tier. The fighter's tier draws the game's own sword until its picture exists; the
- * other three are efracraft's.
+ * then one per tier. All four tier pictures are efracrafting's.
  */
 import type { SwordTier } from './title-frame.type';
 

@@ -17,9 +17,11 @@
  *
  * Counted amounts reuse the shop's own price labels. Candidates run fullest
  * first, so the composer keeps the longer wording when the box has room
- * (receipt-line.type.ts). Pure: nothing here knows about message ids.
+ * (receipt-line.type.ts). Pure: nothing here knows about message ids. What
+ * she asks for carries the primary highlight in every line.
  */
 import { ITEM } from '../world/item-ids.data';
+import { capitalizeMarked, primary } from './highlight-markup';
 import { priceLabelOf } from '../world/shops/shop-price-native';
 import type { ShopBottleContent, ShopBottlePrice, ShopPrice } from '../world/shops/shop-price.type';
 import type { ChoiceReceiptLine, ReceiptLine } from './receipt-line.type';
@@ -47,10 +49,11 @@ const BOTTLE_PLURALS: Readonly<Record<ShopBottleContent, string>> = {
 const POTIONS: ReadonlySet<ShopBottleContent> = new Set(['red-potion', 'green-potion', 'blue-potion']);
 
 /** "the Hookshot"; a progressive family names the thing itself, "the Sword". */
-const itemLabelOf = (itemName: string): string => `the ${itemName.replace(/^Progressive /, '')}`;
+const itemNameOf = (itemName: string): string => itemName.replace(/^Progressive /, '');
+const itemLabelOf = (itemName: string): string => `the ${itemNameOf(itemName)}`;
 
 /** The label as its own sentence opens, for the terse wording that has to fit one box row. */
-const capitalized = (label: string): string => `${label.charAt(0).toUpperCase()}${label.slice(1)}`;
+const capitalized = capitalizeMarked;
 
 /** How many of the thing a demand asks for; one for the kinds that count nothing. */
 const countOf = (demand: ShopPrice): number => (demand.currency === 'item' ? 1 : demand.amount ?? 1);
@@ -127,8 +130,12 @@ const awardOf = (demand: ShopPrice, label: string, place: PondDemandPlace): Rece
   return ['The water accepts your offering. This gift is yours.', 'The water accepts your offering.'];
 };
 
+/** The label with its thing highlighted: an item's name, or the whole of an amount or a bottle. */
+const markedLabelOf = (demand: ShopPrice): string =>
+  (demand.currency === 'item' ? `the ${primary(itemNameOf(demand.itemName))}` : primary(demandLabelOf(demand)));
+
 const pondDemandLinesOf = (demand: ShopPrice, place: PondDemandPlace): PondDemandLineSet => {
-  const label = demandLabelOf(demand);
+  const label = markedLabelOf(demand);
   const award = awardOf(demand, label, place);
   return { ask: askOf(demand, label), refuse: refuseOf(label), ...(award === undefined ? {} : { award }) };
 };

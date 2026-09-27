@@ -322,8 +322,10 @@ const seeds: readonly Seed[] = [
   lockedRange('green_clock_time', 'Green Clock Time', 'timers', 'not-implemented', -60, 60, 4, 0),
   // The two rows that describe a session shared with other players instead of
   // the seed's own shape. They ride along on the world tab, which opens the
-  // panel, because neither belongs to a subject the other tabs own.
-  lockedToggle('death_link', 'Death Link', 'session', 'not-implemented'),
+  // panel, because neither belongs to a subject the other tabs own. The player
+  // file writes death_link from the profile's own DeathLink toggle (player-yaml.ts), so the row stays
+  // locked here: the question is asked once, by that toggle.
+  lockedToggle('death_link', 'Death Link', 'session', 'active'),
   lockedToggle('allow_collect', 'Collect checks for other players', 'session', 'not-applicable', true),
 ];
 
