@@ -8,6 +8,7 @@
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createOnlineClient } from '@app/lib/game/randomizer-client/online-client';
+import { serverUrlCandidates } from '@app/lib/game/randomizer-client/server-url';
 import { createFakeServer, VERSION } from './ap-fake-server';
 import { createFakeCore } from './ap-fake-core';
 import { parseSlotData } from '@shared/randomizer/archipelago/parse-slot-data';
@@ -88,10 +89,10 @@ afterEach(() => {
 });
 
 describe('handshake', () => {
-  it('connects with password, uuid, the server version and DeathLink; wss falls back to ws', async () => {
-    const room = makeRoom({ password: 'pw', refusedUrls: new Set(['wss://localhost:38281']) });
+  it('connects a local server over plain ws only, with password, uuid, the server version and DeathLink', async () => {
+    const room = makeRoom({ password: 'pw' });
     const { server, session } = await boot(room, { deathLink: true });
-    expect(server.urls).toEqual(['wss://localhost:38281', 'ws://localhost:38281']);
+    expect(server.urls).toEqual(['ws://localhost:38281']);
     expect(server.of('GetDataPackage')[0].games.sort()).toEqual(['Other', OWN].sort());
     const [connect] = server.of('Connect');
     expect(connect).toMatchObject({
@@ -99,6 +100,15 @@ describe('handshake', () => {
     });
     expect(connect.uuid).toBe(localStorage.getItem('rotp.ap.uuid'));
     expect(session.status).toBe('active');
+  });
+
+  it('tries an online server over wss first and falls back to ws when that never opens', async () => {
+    const secure = await boot(makeRoom(), { url: 'archipelago.gg:38281' });
+    expect(secure.server.urls).toEqual(['wss://archipelago.gg:38281']);
+    expect(secure.session.status).toBe('active');
+    const plain = await boot(makeRoom({ refusedUrls: new Set(['wss://play.example.org:38281']) }), { url: 'play.example.org:38281' });
+    expect(plain.server.urls).toEqual(['wss://play.example.org:38281', 'ws://play.example.org:38281']);
+    expect(plain.session.status).toBe('active');
   });
 
   it('stores slot data and the room, and reuses the cached data package', async () => {
@@ -312,5 +322,31 @@ describe('the world package version', () => {
       message: `World package version 0.0.9 does not match this app (${AP_WORLD_VERSION}). `
         + 'Regenerate the game with the package this app saves.',
     });
+  });
+});
+
+describe('server url candidates', () => {
+  const LOCAL = [
+    'localhost:38281', 'LOCALHOST:38281', 'room.localhost:38281', '127.0.0.1:38281', '127.5.5.5',
+    '0.0.0.0:38281', '10.0.0.4:38281', '172.16.0.9:38281', '172.31.255.1:38281', '192.168.1.20:38281',
+    '169.254.3.3:38281', '[::1]:38281', '::1', '[fd12:3456::1]:38281', '[fe80::1]:38281',
+    'gaming-pc:38281', 'nas.local:38281',
+  ];
+  const ONLINE = [
+    'archipelago.gg:38281', '8.8.8.8:38281', '172.32.0.1:38281', '172.15.0.1:38281', '192.169.0.1:38281',
+    '[2001:db8::1]:38281', 'my.server.net',
+  ];
+
+  it.each(LOCAL)('connects to local %s over plain ws only', (address) => {
+    expect(serverUrlCandidates(address)).toEqual([`ws://${address}`]);
+  });
+
+  it.each(ONLINE)('tries online %s over wss first, then ws', (address) => {
+    expect(serverUrlCandidates(address)).toEqual([`wss://${address}`, `ws://${address}`]);
+  });
+
+  it('keeps a scheme the address names, local or not', () => {
+    expect(serverUrlCandidates('wss://localhost:38281')).toEqual(['wss://localhost:38281']);
+    expect(serverUrlCandidates(' ws://archipelago.gg:38281 ')).toEqual(['ws://archipelago.gg:38281']);
   });
 });

@@ -1,8 +1,9 @@
 /* @layer bridge-wasm @kind logic */
 /**
  * One connection to the room, over the candidate URLs of server-url.ts in order: a socket
- * that closes without ever opening hands over to the next candidate (wss:// failing on a
- * local server falls back to ws://). The session hears one close, for the last socket.
+ * that closes without ever opening hands over to the next candidate (wss:// failing on an
+ * online server that only speaks ws:// falls back to it). The session hears one close, for
+ * the last socket.
  */
 import type { ApSocket, CreateSocket } from './ap-socket.type';
 

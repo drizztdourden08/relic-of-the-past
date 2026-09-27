@@ -6,7 +6,7 @@
  */
 
 interface OnlineSessionConfig {
-  /** As typed: a bare host:port tries wss:// first and ws:// when that never opens. */
+  /** As typed: a bare local host:port tries ws:// only, any other wss:// first, then ws://. */
   url: string;
   slotName: string;
   /** Server-side game key; defaults to this app's own registered name. */
