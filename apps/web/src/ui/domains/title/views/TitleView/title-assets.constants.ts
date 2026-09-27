@@ -1,8 +1,7 @@
 /* @layer renderer-hud @kind data */
 /**
  * What the title draws besides the scene tiles: the opening mark, and the pictures of the logo and
- * the sword. A sword's picture lives in sword/<id>.png; the fighter's, and any id without a file,
- * draws the ROM's sword.
+ * the sword. A sword's picture lives in sword/<id>.png; an id without a file draws the ROM's sword.
  */
 import type { TitleSwordPicture } from '@shared/game/title/title-swords';
 import openingMark from '../../../../../assets/title-scene/opening-mark.png';
