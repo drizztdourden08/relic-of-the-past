@@ -113,7 +113,7 @@ const main = () => {
 
   // 5. Install desktop entry + launch
   const installer = resolve(import.meta.dirname, 'vm-install-desktop.sh');
-  const icon = resolve(import.meta.dirname, '../../apps/web/public/logos/logo-256.png');
+  const icon = resolve(import.meta.dirname, '../../apps/web/public/logos/logo/logo-256.png');
   run('ssh', [...sshArgs, target, 'mkdir', '-p', '.local/share/icons', '.local/share/applications']);
   run('scp', [...scpArgs, installer, `${target}:vm-install-desktop.sh`]);
   run('scp', [...scpArgs, icon, `${target}:.local/share/icons/relic-of-the-past.png`]);

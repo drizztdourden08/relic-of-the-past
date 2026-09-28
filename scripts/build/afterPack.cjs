@@ -71,7 +71,7 @@ exports.default = async function afterPack(context) {
   trimUnusedFiles(context.appOutDir);
 
   const exePath = path.join(context.appOutDir, `${context.packager.appInfo.productFilename}.exe`);
-  const icoPath = path.resolve(__dirname, '../../apps/web/public/logos/icon.ico');
+  const icoPath = path.resolve(__dirname, '../../apps/web/public/logos/logo/logo.ico');
 
   const { rcedit } = require('rcedit');
   await rcedit(exePath, { icon: icoPath });

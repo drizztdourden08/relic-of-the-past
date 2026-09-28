@@ -85,12 +85,12 @@ module.exports = {
   ],
   win: {
     target: ['dir'],
-    icon: 'apps/web/public/logos/icon.ico',
+    icon: 'apps/web/public/logos/logo/logo.ico',
     signAndEditExecutable: false,
   },
   mac: {
     target: ['dmg', 'zip'],
-    icon: 'apps/web/public/logos/logo-512.png',
+    icon: 'apps/web/public/logos/logo/logo-512.png',
     artifactName: 'rotp-macos.${ext}',
     // Ad-hoc signature (no Apple Developer ID): stops Gatekeeper reporting the app
     // as "damaged" on Apple Silicon; users still right-click → Open once.
@@ -98,7 +98,7 @@ module.exports = {
   },
   linux: {
     target: ['AppImage', 'deb'],
-    icon: 'apps/web/public/logos/logo-256.png',
+    icon: 'apps/web/public/logos/logo/logo-256.png',
     artifactName: 'rotp-linux.${ext}',
     category: 'Game',
     maintainer: 'drizztdourden08@users.noreply.github.com',

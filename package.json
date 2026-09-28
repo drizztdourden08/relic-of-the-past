@@ -30,6 +30,7 @@
     "dev": "electron-vite dev",
     "prebuild": "node scripts/ensure-electron.mjs && node scripts/ensure-wasm.mjs && node scripts/ensure-sdl3.mjs",
     "build": "npm run build:win",
+    "logos": "node apps/web/public/logos/build.mjs",
     "msul:icon": "node scripts/build/make-msul-icon.mjs",
     "prebuild:win": "node scripts/ensure-electron.mjs && node scripts/ensure-wasm.mjs && node scripts/ensure-sdl3.mjs && node scripts/build/make-msul-icon.mjs",
     "build:win": "rimraf dist release && electron-vite build && electron-builder --win --dir --config scripts/build/electron-builder.config.js -c.directories.output=release && npm run pack:win",

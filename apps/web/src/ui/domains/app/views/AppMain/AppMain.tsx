@@ -131,7 +131,7 @@ const AppMain = () => {
 
       <Box className="app__content">
         {!game.isRunning && (
-          <Image className="app__bg-logo" src="./logos/logo-512.png" alt="" />
+          <Image className="app__bg-logo" src="./logos/logo/logo-512.png" alt="" />
         )}
 
         <GameLayer

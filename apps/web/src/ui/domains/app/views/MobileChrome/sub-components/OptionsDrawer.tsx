@@ -34,7 +34,7 @@ const OptionsDrawer = (props: OptionsDrawerProps) => {
   return (
     <Box className="options-drawer">
       <Box className="options-drawer__header">
-        <Image className="options-drawer__logo" src="./logos/logo-512.png" alt="" />
+        <Image className="options-drawer__logo" src="./logos/logo/logo-512.png" alt="" />
         <Text className="options-drawer__title">Relic of the Past</Text>
         {showFps ? <Text className="options-drawer__fps">{fps} FPS</Text> : null}
       </Box>
