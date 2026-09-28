@@ -16,7 +16,8 @@ run-name: Sanctuary deploy ${{ github.ref_name }}
 # Plain settings come from repository variables (Settings > Variables):
 #   SANCTUARY_ORIGIN, DISCORD_CLIENT_ID, DISCORD_GUILD_ID,
 #   DISCORD_CONTRIBUTOR_ROLE_ID, SANCTUARY_GH_CLIENT_ID, GOOGLE_CLIENT_ID,
-#   B2_KEY_ID, B2_BUCKET, B2_ENDPOINT, B2_REGION, SANCTUARY_ADMIN_IDS
+#   B2_KEY_ID, B2_BUCKET, B2_ENDPOINT, B2_REGION, SANCTUARY_ADMIN_IDS,
+#   SCHEDULER_SA (the one account the sweep route accepts a scheduler token from)
 # GitHub refuses variable names that start with GITHUB_, so the client id carries a
 # GH_ name and the repository comes from the run itself.
 # Secret values never pass through here: the function reads them from Secret
@@ -90,7 +91,7 @@ jobs:
             --source=cloud-functions/sanctuary-api \
             --trigger-http \
             --allow-unauthenticated \
-            --set-env-vars="^;^SANCTUARY_ORIGIN=${{ vars.SANCTUARY_ORIGIN }};DISCORD_CLIENT_ID=${{ vars.DISCORD_CLIENT_ID }};DISCORD_GUILD_ID=${{ vars.DISCORD_GUILD_ID }};DISCORD_CONTRIBUTOR_ROLE_ID=${{ vars.DISCORD_CONTRIBUTOR_ROLE_ID }};GITHUB_CLIENT_ID=${{ vars.SANCTUARY_GH_CLIENT_ID }};GITHUB_REPO=${{ github.repository }};GOOGLE_CLIENT_ID=${{ vars.GOOGLE_CLIENT_ID }};B2_KEY_ID=${{ vars.B2_KEY_ID }};B2_BUCKET=${{ vars.B2_BUCKET }};B2_ENDPOINT=${{ vars.B2_ENDPOINT }};B2_REGION=${{ vars.B2_REGION }};SANCTUARY_ADMIN_IDS=${{ vars.SANCTUARY_ADMIN_IDS }}" \
+            --set-env-vars="^;^SANCTUARY_ORIGIN=${{ vars.SANCTUARY_ORIGIN }};DISCORD_CLIENT_ID=${{ vars.DISCORD_CLIENT_ID }};DISCORD_GUILD_ID=${{ vars.DISCORD_GUILD_ID }};DISCORD_CONTRIBUTOR_ROLE_ID=${{ vars.DISCORD_CONTRIBUTOR_ROLE_ID }};GITHUB_CLIENT_ID=${{ vars.SANCTUARY_GH_CLIENT_ID }};GITHUB_REPO=${{ github.repository }};GOOGLE_CLIENT_ID=${{ vars.GOOGLE_CLIENT_ID }};B2_KEY_ID=${{ vars.B2_KEY_ID }};B2_BUCKET=${{ vars.B2_BUCKET }};B2_ENDPOINT=${{ vars.B2_ENDPOINT }};B2_REGION=${{ vars.B2_REGION }};SANCTUARY_ADMIN_IDS=${{ vars.SANCTUARY_ADMIN_IDS }};SCHEDULER_SA=${{ vars.SCHEDULER_SA }}" \
             --set-secrets="SANCTUARY_SESSION_KEY=SANCTUARY_SESSION_KEY:latest,DISCORD_CLIENT_SECRET=DISCORD_CLIENT_SECRET:latest,GITHUB_CLIENT_SECRET=GITHUB_CLIENT_SECRET:latest,GITHUB_READ_TOKEN=GITHUB_READ_TOKEN:latest,GOOGLE_CLIENT_SECRET=GOOGLE_CLIENT_SECRET:latest,B2_APP_KEY=B2_APP_KEY:latest,GITHUB_ISSUE_TOKEN=github-issue-token:latest,DISCORD_BOT_TOKEN=DISCORD_BOT_TOKEN:latest"
 
   site:

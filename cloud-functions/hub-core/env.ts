@@ -1,6 +1,6 @@
 /* @layer hub-core @kind logic */
 /** Typed view of the account settings every site's function shares: the sign-in providers,
- *  the session key, the admin list and the scheduler key. Plain values arrive through
+ *  the session key, the admin list, the scheduler key and the scheduler's account. Plain values arrive through
  *  --set-env-vars, secrets through --set-secrets; both land in process.env. Read lazily so a
  *  build or typecheck never needs the deploy environment. A site's own settings (its origin,
  *  its bucket) live in that function's env. */
@@ -21,6 +21,8 @@ type HubEnv = {
   SANCTUARY_SESSION_KEY: string;
   SANCTUARY_ADMIN_IDS: string[];
   SWEEP_KEY: string | null;
+  /** The one service account Cloud Scheduler signs its calls as. Unset, no token is accepted. */
+  SCHEDULER_SA: string | null;
 };
 
 const REQUIRED = [
@@ -53,6 +55,7 @@ const readHubEnv = (): HubEnv => {
     GITHUB_REPO: process.env.GITHUB_REPO?.trim() || DEFAULT_GITHUB_REPO,
     SANCTUARY_ADMIN_IDS: parseAdminIds(process.env.SANCTUARY_ADMIN_IDS),
     SWEEP_KEY: process.env.SWEEP_KEY?.trim() || null,
+    SCHEDULER_SA: process.env.SCHEDULER_SA?.trim().toLowerCase() || null,
     DISCORD_CONTRIBUTOR_ROLE_ID: process.env.DISCORD_CONTRIBUTOR_ROLE_ID?.trim() || null,
     DISCORD_BOT_TOKEN: process.env.DISCORD_BOT_TOKEN?.trim() || null,
   };
