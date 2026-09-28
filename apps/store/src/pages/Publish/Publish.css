@@ -3,9 +3,13 @@
   max-width: var(--store-form-maxw);
 }
 
-/* A picture at its own shape, the same width for the card and the banner. */
+/* A picture at its own shape, the same width for the card and the banner, never stretched
+   to the drop zone's height. */
 .publish .publish__preview {
+  position: relative;
+  flex: 0 0 auto;
   width: var(--picture-preview-w);
+  overflow: hidden;
   border-radius: var(--radius-md);
 }
 
@@ -15,6 +19,28 @@
 
 .publish__preview--banner {
   aspect-ratio: var(--item-banner-ratio);
+}
+
+.publish__preview .item-picture,
+.publish__preview .publish__preview-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Shown over the preview while it is hovered or focused, when a picked picture can be adjusted. */
+.publish .publish__adjust {
+  position: absolute;
+  right: var(--space-sm);
+  bottom: var(--space-sm);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.publish__preview:hover .publish__adjust,
+.publish__preview:focus-within .publish__adjust {
+  opacity: 1;
 }
 
 .publish__picture-actions {

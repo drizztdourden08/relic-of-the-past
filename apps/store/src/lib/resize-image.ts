@@ -1,9 +1,13 @@
 /* @layer store-site @kind logic */
 /**
- * A picture the author picked, made into the exact webp the store keeps: scaled to cover
- * the target size, centred, cropped to it, then encoded at the best quality that fits the
- * byte cap. Everything runs in the browser, so the bucket only ever sees the finished file.
+ * A picture the author picked, made into the exact webp the store keeps: the chosen crop
+ * (the centred, largest one by default) scaled to the target size, then encoded at the best
+ * quality that fits the byte cap. Everything runs in the browser, so the bucket only ever
+ * sees the finished file.
  */
+import { cropAt } from './picture-crop';
+import type { CropRect } from './picture-crop';
+
 type PictureSpec = { width: number; height: number; bytes: number };
 
 type Picture = { blob: Blob; width: number; height: number };
@@ -16,17 +20,14 @@ const loadBitmap = (file: Blob): Promise<ImageBitmap> =>
     throw new Error('This file is not a picture the browser can read.');
   });
 
-const drawCover = (bitmap: ImageBitmap, spec: PictureSpec): HTMLCanvasElement => {
+const drawCrop = (bitmap: ImageBitmap, spec: PictureSpec, crop: CropRect): HTMLCanvasElement => {
   const canvas = document.createElement('canvas');
   canvas.width = spec.width;
   canvas.height = spec.height;
   const context = canvas.getContext('2d');
   if (!context) throw new Error('The browser could not draw the picture.');
-  const scale = Math.max(spec.width / bitmap.width, spec.height / bitmap.height);
-  const drawnWidth = bitmap.width * scale;
-  const drawnHeight = bitmap.height * scale;
   context.imageSmoothingQuality = 'high';
-  context.drawImage(bitmap, (spec.width - drawnWidth) / 2, (spec.height - drawnHeight) / 2, drawnWidth, drawnHeight);
+  context.drawImage(bitmap, crop.x, crop.y, crop.width, crop.height, 0, 0, spec.width, spec.height);
   return canvas;
 };
 
@@ -38,10 +39,10 @@ const encode = (canvas: HTMLCanvasElement, quality: number): Promise<Blob> =>
     }, 'image/webp', quality);
   });
 
-const resizeToWebp = async (file: Blob, spec: PictureSpec): Promise<Picture> => {
+const resizeToWebp = async (file: Blob, spec: PictureSpec, crop?: CropRect): Promise<Picture> => {
   const bitmap = await loadBitmap(file);
   try {
-    const canvas = drawCover(bitmap, spec);
+    const canvas = drawCrop(bitmap, spec, crop ?? cropAt(bitmap, spec.width / spec.height));
     for (const quality of QUALITIES) {
       const blob = await encode(canvas, quality);
       if (blob.size <= spec.bytes) return { blob, width: spec.width, height: spec.height };

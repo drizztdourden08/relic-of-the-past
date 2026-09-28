@@ -52,7 +52,8 @@
   --histogram-bar-h: 8px;
   --welcome-maxw: 72ch;
   --store-form-maxw: 720px;
-  --picture-preview-w: 256px;
+  --picture-preview-w: 320px;
+  --crop-dialog-w: 760px;
 }
 
 html,
