@@ -1,8 +1,9 @@
 /* @layer store-api @kind logic */
-/** POST /items/:id/versions { semver, changelog, container, bytes, sha256 }. The author
- *  starts the next version: the entry is appended as uploading and a multipart upload opens
- *  under incoming/. One version is in flight at a time, its semver must pass every earlier
- *  one, the container is the kind's own, and the item needs its card first. */
+/** POST /items/:id/versions { changelog, container, bytes, sha256 }. The author starts the
+ *  next version: the entry is appended as uploading and a multipart upload opens under
+ *  incoming/. Versions number themselves: the nth one the item ever started is n.0.0, so
+ *  nobody types a number and each is higher than the last. One version is in flight at a
+ *  time, the container is the kind's own, and the item needs its card first. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { VersionBeginResponse } from '../../../../shared/store/api-types';
 import { HUB_LIMITS } from '../../../../shared/hub/limits';
@@ -19,7 +20,6 @@ import { personOf, requirePlayer } from '../auth/player';
 import { itemsRepo } from '../db/items-repo';
 import { loadOwnItem } from '../items/item-guards';
 import { inFlight, lastVersionNumber } from '../items/versions';
-import { isNextSemver } from '../items/semver';
 import { storeBucket } from '../storage/store-bucket';
 
 const ZIP = 'application/zip';
@@ -34,16 +34,16 @@ const versionsBegin: Route = {
     if (body.bytes > STORE_LIMITS.packBytes[item.kind]) throw badRequest(`A ${item.kind} pack is at most ${STORE_LIMITS.packBytes[item.kind]} bytes.`);
     if (!item.card) throw conflict('Add a card picture to the listing before submitting a version.');
     if (item.versions.some(inFlight)) throw conflict('A version is already uploading or waiting for review.');
-    if (!isNextSemver(item.versions, body.semver)) throw badRequest('The version number must be higher than the last one.');
 
     const n = lastVersionNumber(item) + 1;
-    const key = STORE_KEYS.incoming(item, { n, semver: body.semver, container: body.container });
+    const semver = `${n}.0.0`;
+    const key = STORE_KEYS.incoming(item, { n, semver, container: body.container });
     const parts = Math.max(1, Math.ceil(body.bytes / HUB_LIMITS.partBytes));
     const multipartId = await storeBucket.begin(key, ZIP);
     const version: StoreVersion = {
       n,
       key,
-      name: packName(item, body),
+      name: packName(item, { semver, container: body.container }),
       bytes: body.bytes,
       sha256: body.sha256,
       contentType: ZIP,
@@ -52,7 +52,7 @@ const versionsBegin: Route = {
       status: 'uploading',
       upload: { multipartId, parts },
       createdAt: now(),
-      semver: body.semver,
+      semver,
       changelog: body.changelog,
       container: body.container,
       facts: null,

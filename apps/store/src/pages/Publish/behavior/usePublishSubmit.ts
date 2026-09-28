@@ -25,7 +25,6 @@ type Submission = {
   card: Picture | null;
   banner: Picture | null;
   pack: PackState;
-  semver: string;
   changelog: string;
 };
 
@@ -47,7 +46,7 @@ const usePublishSubmit = () => {
   }, [onItem]);
 
   const submit = useCallback(async (submission: Submission) => {
-    const { item, text, card, banner, pack, semver, changelog } = submission;
+    const { item, text, card, banner, pack, changelog } = submission;
     setBusy(true);
     setError(null);
     try {
@@ -61,7 +60,7 @@ const usePublishSubmit = () => {
         onItem(target);
       }
       if (pack.file && pack.container) {
-        uploads.start([pack.file], { itemId: target.id, itemName: target.name, semver: semver.trim(), changelog: changelog.trim(), container: pack.container });
+        uploads.start([pack.file], { itemId: target.id, itemName: target.name, changelog: changelog.trim(), container: pack.container });
       }
       navigate(PUBLICATIONS_PATH);
     } catch (cause) {

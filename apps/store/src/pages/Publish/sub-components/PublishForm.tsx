@@ -1,8 +1,7 @@
 /* @layer store-site @kind component */
 /**
- * The Publish form for one mode: the pack and its version, the listing and its pictures, the
- * rights box, then the first thing still missing and the submit button. Every submission
- * goes to review; the line above the buttons says so.
+ * The Publish form for one mode: the pack and what changed in it, the listing and its
+ * pictures, the rights box, then the first thing still missing and the submit button.
  */
 import { Button } from '@ds/primitives/Button';
 import { Checkbox } from '@ds/primitives/Checkbox';
@@ -17,8 +16,8 @@ import type { PublishMode } from '../Publish.constants';
 import { usePublishForm } from '../behavior/usePublishForm';
 import { ListingFields } from './ListingFields';
 import { PackField } from './PackField';
+import { ChangesField } from './ChangesField';
 import { PictureField } from './PictureField';
-import { VersionFields } from './VersionFields';
 
 type PublishFormProps = {
   mode: PublishMode;
@@ -33,19 +32,16 @@ const PublishForm = (props: PublishFormProps) => {
   const { mode, item } = props;
   const form = usePublishForm(mode, item);
   const kind = item?.kind ?? form.pack.kind ?? 'music';
-  const privacy = item?.status === 'published'
-    ? 'Reviewers see it first. The live version and listing stay as they are until it is approved.'
-    : 'Reviewers see it first. It stays private until approved.';
 
   return (
     <Stack gap="lg" align="stretch" className="publish">
       {form.takesPack && <PackField pack={form.pack} />}
-      {form.takesPack && <VersionFields version={form.version} last={form.lastSemver} />}
+      {form.takesPack && <ChangesField changes={form.changes} />}
       {form.takesListing && <ListingFields listing={form.listing} />}
       {form.takesListing && (
         <PictureField
           label={mode === 'new' ? 'Card picture' : 'Card picture, to replace'}
-          hint={`Cut to ${CARD.width} by ${CARD.height} and saved as webp.`}
+          size={`${CARD.width} × ${CARD.height}`}
           role="card"
           state={form.card}
           current={item?.card ?? null}
@@ -55,7 +51,7 @@ const PublishForm = (props: PublishFormProps) => {
       {form.takesListing && (
         <PictureField
           label="Banner, optional"
-          hint={`Cut to ${BANNER.width} by ${BANNER.height}. Shown when the item is featured.`}
+          size={`${BANNER.width} × ${BANNER.height}`}
           role="banner"
           state={form.banner}
           current={item?.banner ?? null}
@@ -64,7 +60,6 @@ const PublishForm = (props: PublishFormProps) => {
       )}
       <Checkbox checked={form.rights.checked} onChange={form.rights.set} label={RIGHTS_LINE} />
       <Stack gap="xs" align="stretch" className="publish__footer">
-        <Text as="p" variant="caption">{privacy}</Text>
         {form.problem && <Text as="p" variant="caption" role="status" className="publish__problem">{form.problem}</Text>}
         {form.error && <Text as="p" variant="caption" role="alert">{form.error}</Text>}
         <Flex gap="sm" justify="end">

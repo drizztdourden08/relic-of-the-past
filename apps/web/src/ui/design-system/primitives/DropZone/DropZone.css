@@ -32,8 +32,9 @@
 }
 
 .dropzone__icon {
+  display: inline-flex;
+  color: var(--c-gold);
   font-size: var(--text-2xl);
-  opacity: 0.6;
 }
 
 .dropzone__label {

@@ -19,12 +19,12 @@ const LARGEST_PACK = Math.max(...Object.values(STORE_LIMITS.packBytes));
 
 const STORE_UPLOADER: UploadRunner<VersionTarget, StoreItem> = {
   maxBytes: LARGEST_PACK,
-  labelOf: (_file, target) => `${target.itemName} ${target.semver}`,
+  labelOf: (_file, target) => `${target.itemName}, new version`,
   pick: (files) => files.slice(0, 1),
   recordIdOf: (item) => item.id,
   run: async ({ file, target, sha256, onBegun, onProgress }) => {
-    const { itemId, semver, changelog, container } = target;
-    const body = { semver, changelog, container, bytes: file.size, sha256: await hashPack(file, sha256) };
+    const { itemId, changelog, container } = target;
+    const body = { changelog, container, bytes: file.size, sha256: await hashPack(file, sha256) };
     const { item } = await runMultipart({
       source: file,
       begin: async () => {

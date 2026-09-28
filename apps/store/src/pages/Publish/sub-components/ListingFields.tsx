@@ -24,10 +24,10 @@ const ListingFields = (props: ListingFieldsProps) => {
       <Field label="Name" htmlFor="publish-name">
         <TextInput id="publish-name" value={text.name} onChange={(event) => set('name', event.target.value)} placeholder="Orchestral Overworld" />
       </Field>
-      <Field label="One line" hint="Shown on the item's card." htmlFor="publish-summary">
+      <Field label="One line" htmlFor="publish-summary">
         <TextInput id="publish-summary" value={text.summary} onChange={(event) => set('summary', event.target.value)} placeholder="Every track rescored for strings and brass" />
       </Field>
-      <Field label="Description" hint="Markdown: **bold**, lists and links work." htmlFor="publish-description">
+      <Field label="Description" htmlFor="publish-description">
         <Textarea id="publish-description" rows={6} value={text.description} onChange={(event) => set('description', event.target.value)} />
       </Field>
       <Flex gap="md" wrap align="start">

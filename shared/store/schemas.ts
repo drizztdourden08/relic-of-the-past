@@ -20,7 +20,6 @@ const MAX_WELCOME_CHARS = 4000;
 const MAX_FEATURED = 12;
 const LARGEST_PACK = Math.max(...Object.values(STORE_LIMITS.packBytes));
 
-const SEMVER_PATTERN = /^(0|[1-9]\d{0,5})\.(0|[1-9]\d{0,5})\.(0|[1-9]\d{0,5})$/;
 const SHA256_PATTERN = /^[a-f0-9]{64}$/;
 const MEDIA_KEY_PATTERN = /^media\/[A-Za-z0-9_-]{1,128}\/(card|banner)-[a-f0-9]{8}\.webp$/;
 
@@ -63,9 +62,8 @@ const listingPatchSchema = z
   .partial()
   .refine((patch) => Object.keys(patch).length > 0, 'nothing to change');
 
-/** POST /items/:id/versions. The size is held to the item's kind by the API. */
+/** POST /items/:id/versions. The size is held to the item's kind by the API, which also numbers the version. */
 const versionBeginSchema = z.object({
-  semver: z.string().trim().regex(SEMVER_PATTERN, 'a version like 1.2.0'),
   changelog: z.string().trim().max(MAX_CHANGELOG_CHARS).default(''),
   container: containerSchema,
   bytes: z.number().int().positive().max(LARGEST_PACK),
