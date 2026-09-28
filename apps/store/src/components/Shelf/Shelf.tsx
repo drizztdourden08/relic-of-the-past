@@ -2,7 +2,7 @@
 /**
  * One row of the home page: a title with the line that says how it is ordered, a
  * "See all" link, then its items as cards side by side, scrolling sideways when they
- * outgrow the page. An empty shelf says so in one line.
+ * outgrow the page. An empty shelf keeps the row's height and says so in the middle.
  */
 import type { ReactNode } from 'react';
 import { Box } from '@ds/primitives/Box';
@@ -11,6 +11,7 @@ import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
 import type { ItemCardView } from '@shared/store/home-types';
 import { Link } from '@site-kit/router/Link';
+import { EmptyState } from '../EmptyState/EmptyState';
 import { ItemCard } from '../ItemCard/ItemCard';
 import './Shelf.css';
 
@@ -39,7 +40,7 @@ const Shelf = (props: ShelfProps) => {
         {seeAll && <Link to={seeAll} className="shelf__all">See all {'›'}</Link>}
       </Flex>
       {items.length === 0
-        ? <Text as="p" variant="caption">{emptyMessage}</Text>
+        ? <EmptyState message={emptyMessage} shape="row" />
         : (
           <Box className="shelf__row">
             {items.map((item) => <ItemCard key={item.id} item={item} to={itemPath(item)} extra={extraOf?.(item)} />)}

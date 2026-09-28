@@ -7,17 +7,26 @@
   align-self: center;
 }
 
-/* The text takes the width; the highlight keeps its own size at the right. */
+/* The highlight keeps its own size on the left; the text takes what is left. */
+.welcome .welcome__highlight {
+  flex: 0 0 auto;
+}
+
 .welcome__text {
   flex: 1 1 auto;
   min-width: 0;
 }
 
-.welcome .welcome__highlight {
-  flex: 0 0 auto;
-}
-
 .welcome__title {
   margin: 0;
   color: var(--c-gold);
+  font-family: var(--font-game);
+  font-size: var(--text-xl);
+  font-weight: normal;
+}
+
+.welcome__message {
+  max-width: 60ch;
+  color: var(--c-text-dim);
+  font-size: var(--text-sm);
 }

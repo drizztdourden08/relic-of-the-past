@@ -31,6 +31,10 @@
   --item-card-w: 200px;
   --item-grid-min: 180px;
   --item-kind-icon: 32px;
+
+  /* An empty shelf keeps about the height a row of cards would take. */
+  --shelf-empty-h: 190px;
+  --empty-stripe: 10px;
   --hero-copy-maxw: 420px;
   --hero-dot-d: 8px;
   --stars-size: 14px;

@@ -1,0 +1,37 @@
+/* @layer store-site @kind style */
+
+/* The stripes sit on a layer of their own, masked to fade towards the edges; the message stays solid. */
+.empty-state {
+  position: relative;
+  isolation: isolate;
+  padding: var(--space-xl);
+  text-align: center;
+}
+
+.empty-state--banner {
+  aspect-ratio: var(--item-banner-ratio);
+}
+
+.empty-state--row {
+  min-height: var(--shelf-empty-h);
+}
+
+.empty-state::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: repeating-linear-gradient(
+    135deg,
+    var(--c-gold-dim) 0 var(--empty-stripe),
+    transparent var(--empty-stripe) calc(var(--empty-stripe) * 2)
+  );
+  content: '';
+  mask-image: radial-gradient(ellipse closest-side at center, var(--c-gold) 20%, transparent 100%);
+}
+
+.empty-state__message {
+  margin: 0;
+  color: var(--c-gold);
+  font-family: var(--font-game);
+  font-size: var(--text-2xl);
+}

@@ -7,8 +7,8 @@
 import { useSyncExternalStore } from 'react';
 
 const COMPACT_QUERY = '(width <= 820px)';
-const PIXEL_SIZE = 4;
-const PIXEL_SIZE_COMPACT = 2;
+const PIXEL_SIZE = 2;
+const PIXEL_SIZE_COMPACT = 1;
 
 const subscribe = (onChange: () => void) => {
   const query = window.matchMedia(COMPACT_QUERY);

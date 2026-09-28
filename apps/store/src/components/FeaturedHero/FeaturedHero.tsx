@@ -2,7 +2,8 @@
 /**
  * The featured row: one item at a time on its banner (its card when it has none), with its
  * name, kind, stars, one line and the author, Install and Open. Dots under it pick another
- * featured item; the hero moves on by itself otherwise.
+ * featured item; the hero moves on by itself otherwise. With nothing featured, the banner's
+ * space holds an empty state.
  */
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';
@@ -13,6 +14,7 @@ import type { ItemCardView } from '@shared/store/home-types';
 import { KIND_CONTAINER } from '@shared/store/containers';
 import { Link } from '@site-kit/router/Link';
 import { formatAverage, formatCount } from '../../lib/format-count';
+import { EmptyState } from '../EmptyState/EmptyState';
 import { InstallButton } from '../InstallButton/InstallButton';
 import { ItemPicture } from '../ItemPicture/ItemPicture';
 import { KindChip } from '../KindChip/KindChip';
@@ -29,7 +31,7 @@ const FeaturedHero = (props: FeaturedHeroProps) => {
   const { items, itemPath } = props;
   const { index, select, hold, release } = useRotation(items.length);
   const item = items[index];
-  if (!item) return null;
+  if (!item) return <EmptyState message="Nothing featured yet." shape="banner" label="Featured" />;
   return (
     <Box as="section" className="featured-hero" aria-label="Featured" onMouseEnter={hold} onMouseLeave={release} onFocus={hold} onBlur={release}>
       <ItemPicture picture={item.banner ?? item.card} kind={item.kind} role="banner" className="featured-hero__picture" />
