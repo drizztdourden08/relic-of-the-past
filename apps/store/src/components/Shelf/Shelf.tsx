@@ -1,8 +1,8 @@
 /* @layer store-site @kind component */
 /**
- * One row of the home page: a title with the line that says how it is ordered, a
- * "See all" link, then its items as cards side by side, scrolling sideways when they
- * outgrow the page. An empty shelf keeps the row's height and says so in the middle.
+ * One row of the home page, as the plan mockup draws it: the title, the line that says how
+ * it is ordered and "See all" on one line, then one row of cards. The rest is behind "See
+ * all". An empty shelf keeps the row's height and says so in the middle.
  */
 import type { ReactNode } from 'react';
 import { Box } from '@ds/primitives/Box';
@@ -15,14 +15,17 @@ import { EmptyState } from '../EmptyState/EmptyState';
 import { ItemCard } from '../ItemCard/ItemCard';
 import './Shelf.css';
 
+/** One row at the widest layout; matches --shelf-columns. */
+const ROW = 4;
+
 type ShelfProps = {
   title: string;
-  /** How the shelf is ordered, under the title. */
+  /** How the shelf is ordered, beside the title. */
   lead?: string;
   items: readonly ItemCardView[];
   /** Where "See all" leads; no link without it. */
   seeAll?: string;
-  /** A line under one card, such as its installs this month. */
+  /** The right side of a card's last line, such as its installs this month. */
   extraOf?: (item: ItemCardView) => ReactNode;
   itemPath: (item: ItemCardView) => string;
   emptyMessage?: string;
@@ -31,19 +34,17 @@ type ShelfProps = {
 const Shelf = (props: ShelfProps) => {
   const { title, lead, items, seeAll, extraOf, itemPath, emptyMessage = 'Nothing here yet.' } = props;
   return (
-    <Stack as="section" gap="sm" align="stretch" className="shelf" aria-label={title}>
-      <Flex align="baseline" justify="between" gap="md">
-        <Stack gap="xs">
-          <Text as="h2" variant="subtitle" className="shelf__title">{title}</Text>
-          {lead && <Text as="span" variant="caption">{lead}</Text>}
-        </Stack>
+    <Stack as="section" align="stretch" className="shelf" aria-label={title}>
+      <Flex align="baseline" className="shelf__head">
+        <Text as="h2" className="shelf__title">{title}</Text>
+        {lead && <Text as="span" className="shelf__lead">{lead}</Text>}
         {seeAll && <Link to={seeAll} className="shelf__all">See all {'›'}</Link>}
       </Flex>
       {items.length === 0
         ? <EmptyState message={emptyMessage} shape="row" />
         : (
           <Box className="shelf__row">
-            {items.map((item) => <ItemCard key={item.id} item={item} to={itemPath(item)} extra={extraOf?.(item)} />)}
+            {items.slice(0, ROW).map((item) => <ItemCard key={item.id} item={item} to={itemPath(item)} extra={extraOf?.(item)} />)}
           </Box>
         )}
     </Stack>

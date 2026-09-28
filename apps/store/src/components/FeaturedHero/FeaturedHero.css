@@ -1,50 +1,49 @@
 /* @layer store-site @kind style */
 
-/* The banner fills the block; the copy sits over its left side on a scrim, the dots under it. */
+/* As the plan mockup: one card, the banner in the wider column and the copy in the narrower. */
 .featured-hero {
-  position: relative;
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
   overflow: hidden;
   border: var(--border-width-thin) solid var(--c-border);
   border-radius: var(--radius-xl);
-  background: var(--c-sunken);
+  background: var(--c-panel);
 }
 
 .featured-hero .featured-hero__picture {
+  height: 100%;
+  min-height: var(--hero-min-h);
   border-radius: 0;
+  aspect-ratio: auto;
 }
 
 .featured-hero__copy {
-  position: absolute;
-  inset: 0 auto 0 0;
   justify-content: center;
-  max-width: var(--hero-copy-maxw);
-  padding: var(--space-lg) var(--space-xl);
-  background: linear-gradient(to right, var(--c-scrim), transparent);
+  gap: var(--hero-gap);
+  min-width: 0;
+  padding: var(--hero-pad-y) var(--hero-pad-x);
 }
 
-.featured-hero__eyebrow {
-  color: var(--c-gold);
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  letter-spacing: var(--eyebrow-tracking);
-  text-transform: uppercase;
-}
-
-.featured-hero__name {
+/* Two classes, so the text primitive's own colour and size never win on load order. */
+.featured-hero .featured-hero__name {
   margin: 0;
   color: var(--c-text);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
 }
 
-.featured-hero__summary {
+.featured-hero .featured-hero__summary {
   margin: 0;
   color: var(--c-text-dim);
+  font-size: var(--text-sm);
+}
+
+.featured-hero__actions {
+  align-self: stretch;
 }
 
 .featured-hero__dots {
-  position: absolute;
-  right: 0;
-  bottom: var(--space-sm);
-  left: 0;
+  margin-left: auto;
 }
 
 .featured-hero .featured-hero__dot {
@@ -61,14 +60,7 @@
 
 /* Below the compact breakpoint (--bp-compact) the copy stacks under the banner. */
 @media (width <= 820px) {
-  .featured-hero__copy {
-    position: static;
-    max-width: none;
-    background: none;
-  }
-
-  .featured-hero__dots {
-    position: static;
-    padding-bottom: var(--space-sm);
+  .featured-hero {
+    grid-template-columns: 1fr;
   }
 }

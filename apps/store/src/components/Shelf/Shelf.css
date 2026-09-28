@@ -1,26 +1,46 @@
 /* @layer store-site @kind style */
 
-/* Cards at one width side by side; the row scrolls sideways, never the page. */
-.shelf__row {
-  display: grid;
-  grid-auto-columns: var(--item-card-w);
-  grid-auto-flow: column;
-  gap: var(--space-md);
-  padding-bottom: var(--space-xs);
-  overflow-x: auto;
+/* As the plan mockup: the head on one baseline, then the cards in equal columns. */
+.shelf {
+  gap: var(--hero-gap);
 }
 
-.shelf__title {
+.shelf__head {
+  gap: var(--hero-gap);
+}
+
+/* Two classes, so the text primitive's own colour and size never win on load order. */
+.shelf .shelf__title {
   margin: 0;
-  color: var(--c-gold);
+  color: var(--c-text);
+  font-size: var(--shelf-title-size);
+  font-weight: var(--weight-semi);
+}
+
+.shelf .shelf__lead {
+  color: var(--c-text-muted);
+  font-size: var(--text-xs);
 }
 
 .shelf__all {
-  flex: 0 0 auto;
-  color: var(--c-text-dim);
+  margin-left: auto;
+  color: var(--c-gold);
   font-size: var(--text-sm);
 }
 
 .shelf__all:hover {
   color: var(--c-gold-bright);
+}
+
+.shelf__row {
+  display: grid;
+  grid-template-columns: repeat(var(--shelf-columns), minmax(0, 1fr));
+  gap: var(--space-md);
+}
+
+/* Below the compact breakpoint (--bp-compact) two cards to a row. */
+@media (width <= 820px) {
+  .shelf__row {
+    grid-template-columns: repeat(var(--shelf-columns-compact), minmax(0, 1fr));
+  }
 }

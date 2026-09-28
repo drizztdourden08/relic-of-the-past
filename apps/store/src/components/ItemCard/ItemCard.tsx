@@ -1,8 +1,8 @@
 /* @layer store-site @kind component */
 /**
- * One item on a shelf or in a grid: its card picture, name, author and live version, the
- * stars with the average, the kind chip, and a chip for what the player has of it. The
- * whole card is one link.
+ * One item on a shelf or in a grid, as the plan mockup draws it: the card picture edge to
+ * edge, then the name, a line with the author and the stars, and a line with the kind (and
+ * what the player has of it) and one extra fact. The whole card is one link.
  */
 import type { ReactNode } from 'react';
 import { Flex } from '@ds/primitives/Flex';
@@ -26,7 +26,7 @@ type ItemCardProps = {
   to: string;
   selected?: boolean;
   owned?: OwnedState | null;
-  /** One more line under the chips, such as "1 880 this month". */
+  /** The right side of the last line, such as "1 880 this month". */
   extra?: ReactNode;
 };
 
@@ -41,19 +41,23 @@ const ItemCard = (props: ItemCardProps) => {
   const { item, to, selected = false, owned = null, extra } = props;
   return (
     <Link to={to} className={`item-card${selected ? ' item-card--selected' : ''}`} aria-current={selected ? 'page' : undefined}>
-      <ItemPicture picture={item.card} kind={item.kind} />
-      <Stack gap="xs" align="stretch" className="item-card__body">
+      <ItemPicture picture={item.card} kind={item.kind} className="item-card__picture" />
+      <Stack align="stretch" className="item-card__body">
         <Text as="span" className="item-card__name">{item.name}</Text>
-        <Text as="span" variant="caption" className="item-card__byline">{byline(item)}</Text>
-        <Flex align="center" gap="xs" wrap>
-          <Stars value={item.ratingAverage} />
-          <Text as="span" variant="caption" className="item-card__average">{formatAverage(item.ratingAverage)}</Text>
+        <Flex align="center" justify="between" className="item-card__meta">
+          <Text as="span" className="item-card__byline">{byline(item)}</Text>
+          <Flex align="center" gap="xs">
+            <Stars value={item.ratingAverage} />
+            <Text as="span" className="item-card__average">{formatAverage(item.ratingAverage)}</Text>
+          </Flex>
         </Flex>
-        <Flex align="center" gap="xs" wrap>
-          <KindChip kind={item.kind} />
-          {owned && OWNED_CHIPS[owned]}
+        <Flex align="center" justify="between" className="item-card__meta">
+          <Flex align="center" gap="xs">
+            <KindChip kind={item.kind} />
+            {owned && OWNED_CHIPS[owned]}
+          </Flex>
+          {extra && <Text as="span" className="item-card__extra">{extra}</Text>}
         </Flex>
-        {extra && <Text as="span" variant="caption" className="item-card__extra">{extra}</Text>}
       </Stack>
     </Link>
   );

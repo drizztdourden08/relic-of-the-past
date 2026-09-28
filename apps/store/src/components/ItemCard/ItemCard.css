@@ -1,15 +1,14 @@
 /* @layer store-site @kind style */
 
-/* The kit's panel treatment at card size; the border turns gold on hover and when picked. */
+/* As the plan mockup: the picture edge to edge, the text under it; gold border when picked. */
 .item-card {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
   min-width: 0;
-  padding: var(--space-sm);
+  overflow: hidden;
   border: var(--border-width-thin) solid var(--c-border);
-  border-radius: var(--radius-lg);
-  background: var(--c-surface);
+  border-radius: var(--radius-xl);
+  background: var(--c-panel);
   transition: border-color var(--transition-fast), background var(--transition-fast);
 }
 
@@ -28,11 +27,18 @@
   background: var(--c-selected);
 }
 
-.item-card__body {
-  min-width: 0;
+.item-card .item-card__picture {
+  border-radius: 0;
 }
 
-.item-card__name {
+.item-card__body {
+  gap: var(--card-body-gap);
+  min-width: 0;
+  padding: var(--card-body-pad-top) var(--space-md) var(--space-md);
+}
+
+/* Two classes, so the text primitive's own colour and size never win on load order. */
+.item-card .item-card__name {
   overflow: hidden;
   color: var(--c-text);
   font-weight: var(--weight-semi);
@@ -40,14 +46,30 @@
   text-overflow: ellipsis;
 }
 
-.item-card__byline,
-.item-card__extra {
+.item-card__meta {
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.item-card .item-card__byline,
+.item-card .item-card__average,
+.item-card .item-card__extra {
+  color: var(--c-text-dim);
+  font-size: var(--text-sm);
+}
+
+.item-card .item-card__byline,
+.item-card .item-card__extra {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
-.item-card__average,
-.item-card__extra {
+.item-card .item-card__average,
+.item-card .item-card__extra {
   font-variant-numeric: tabular-nums;
+}
+
+.item-card .stars {
+  font-size: var(--text-sm);
 }

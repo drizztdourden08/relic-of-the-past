@@ -1,6 +1,9 @@
 /* @layer store-site @kind style */
 
-/* The stripes sit on a layer of their own, masked to fade towards the edges; the message stays solid. */
+/*
+ * Faint charcoal stripes on a layer of their own, masked to fade towards the edges; the
+ * message stays solid. No border, so the empty part reads as space, not as a box.
+ */
 .empty-state {
   position: relative;
   isolation: isolate;
@@ -9,7 +12,7 @@
 }
 
 .empty-state--banner {
-  aspect-ratio: var(--item-banner-ratio);
+  min-height: var(--hero-min-h);
 }
 
 .empty-state--row {
@@ -22,14 +25,15 @@
   z-index: -1;
   background: repeating-linear-gradient(
     135deg,
-    var(--c-gold-dim) 0 var(--empty-stripe),
+    var(--c-hover) 0 var(--empty-stripe),
     transparent var(--empty-stripe) calc(var(--empty-stripe) * 2)
   );
   content: '';
-  mask-image: radial-gradient(ellipse closest-side at center, var(--c-gold) 20%, transparent 100%);
+  mask-image: radial-gradient(ellipse closest-side at center, var(--c-text) 20%, transparent 100%);
 }
 
-.empty-state__message {
+/* Two classes, so the text primitive's own colour and size never win on load order. */
+.empty-state .empty-state__message {
   margin: 0;
   color: var(--c-gold);
   font-family: var(--font-game);

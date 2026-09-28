@@ -7,7 +7,7 @@
   align-self: center;
 }
 
-/* The highlight keeps its own size on the left; the text takes what is left. */
+/* As the plan mockup: the picture on the left, then the greeting and the message. */
 .welcome .welcome__highlight {
   flex: 0 0 auto;
 }
@@ -17,16 +17,18 @@
   min-width: 0;
 }
 
-.welcome__title {
-  margin: 0;
+/* Two classes, so the text primitive's own colour and size never win on load order. */
+.welcome .welcome__title {
+  margin: 0 0 var(--space-xs);
   color: var(--c-gold);
   font-family: var(--font-game);
-  font-size: var(--text-xl);
-  font-weight: normal;
+  font-size: var(--welcome-title-size);
+  font-weight: var(--weight-normal);
 }
 
-.welcome__message {
+.welcome .welcome__message {
   max-width: 60ch;
+  margin: 0;
   color: var(--c-text-dim);
-  font-size: var(--text-sm);
+  font-size: var(--text-base);
 }
