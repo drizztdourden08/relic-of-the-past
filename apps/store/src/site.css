@@ -41,6 +41,7 @@
   --hero-gap: 10px;
   --shelf-title-size: 15px;
   --shelf-columns: 4;
+  --shelf-card-max-w: 280px;
   --shelf-columns-compact: 2;
   --card-body-pad-top: 10px;
   --card-body-gap: 5px;
@@ -48,6 +49,7 @@
   /* An empty part keeps the height its content would take: a row of cards, or the hero. */
   --shelf-empty-h: 190px;
   --empty-stripe: 8px;
+  --empty-fade: 56px;
   --hero-dot-d: 8px;
   --stars-size: 14px;
   --stars-size-lg: 22px;
