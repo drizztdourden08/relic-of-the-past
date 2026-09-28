@@ -1,8 +1,8 @@
 /* @layer store-site @kind hook */
 /**
  * The home page's two settings, read from GET /home and saved on their own routes: the
- * featured row as an ordered list of item ids (moved, added and removed here, then saved in
- * one call), and the welcome message's markdown.
+ * featured row as an ordered list of item ids (reordered and trimmed here, then saved in one
+ * call; items join it from their own page), and the welcome message's markdown.
  */
 import { useCallback, useEffect, useState } from 'react';
 import { errorMessage } from '@site-kit/api/api-error';
@@ -42,7 +42,6 @@ const useHomeSettings = () => {
     });
   }, []);
 
-  const add = useCallback((id: string) => setFeatured((ids) => (ids && !ids.includes(id) ? [...ids, id] : ids)), []);
   const remove = useCallback((id: string) => setFeatured((ids) => (ids ? ids.filter((entry) => entry !== id) : ids)), []);
 
   const run = useCallback(async (work: () => Promise<string>) => {
@@ -68,7 +67,7 @@ const useHomeSettings = () => {
     return 'The welcome message is saved.';
   }), [run, welcome]);
 
-  return { featured, welcome, setWelcome, move, add, remove, saveFeatured, saveWelcome, busy, notice };
+  return { featured, welcome, setWelcome, move, remove, saveFeatured, saveWelcome, busy, notice };
 };
 
 type HomeSettingsState = ReturnType<typeof useHomeSettings>;

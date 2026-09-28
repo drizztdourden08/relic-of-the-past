@@ -1,21 +1,18 @@
 /* @layer store-site @kind component */
 /**
- * The item's first tab: its banner (or card), who made it and when it was published and
- * last updated, the description, then the details of the live version, or of the version
- * the host passes (the review page shows the one under review).
+ * The item's first tab, under its hero: when it was published and last updated, the
+ * description, then the details of the live version, or of the version the host passes
+ * (the review page shows the one under review).
  */
 import { SettingsSection } from '@ds/composites/SettingsSection';
 import { Stack } from '@ds/primitives/Stack';
 import { StatRow } from '@ds/primitives/StatRow';
 import { Text } from '@ds/primitives/Text';
 import type { StoreItem, StoreVersion } from '@shared/store/types';
-import { Link } from '@site-kit/router/Link';
 import { TagList } from '@site-kit/components/TagList/TagList';
 import { formatDay } from '@site-kit/lib/format-date';
-import { ItemPicture } from '../../../components/ItemPicture/ItemPicture';
 import { KindChip } from '../../../components/KindChip/KindChip';
 import { Markdown } from '../../../components/Markdown/Markdown';
-import { authorPath } from '../../../catalog/item-paths';
 import { factsLine } from '../../../catalog/facts-line';
 import { liveVersionOf } from '../../../catalog/approved-versions';
 import { formatCount } from '../../../lib/format-count';
@@ -40,10 +37,7 @@ const ItemOverview = (props: ItemOverviewProps) => {
   const live = version === undefined ? liveVersionOf(item) : version;
   return (
     <Stack gap="lg" align="stretch" className="item-overview">
-      <ItemPicture picture={item.banner ?? item.card} kind={item.kind} color={item.color} role={item.banner ? 'banner' : 'card'} className="item-overview__picture" />
-      <Text as="p" variant="caption">
-        by <Link to={authorPath(item.author.userId)} className="item-overview__author">{item.author.displayName}</Link> · {datesLine(item)}
-      </Text>
+      <Text as="p" variant="caption">{datesLine(item)}</Text>
       {item.description.trim() ? <Markdown source={item.description} /> : <Text as="p">{item.summary}</Text>}
       <SettingsSection title="Details">
         <StatRow label="kind" value={<KindChip kind={item.kind} />} />

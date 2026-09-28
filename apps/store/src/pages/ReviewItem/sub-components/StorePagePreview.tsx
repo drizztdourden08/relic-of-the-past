@@ -1,8 +1,8 @@
 /* @layer store-site @kind component */
 /**
  * The Store page tab: the listing as players will see it once approved. The item's card as
- * on a shelf, the featured hero when it has a banner, then its page's overview showing the
- * version under review.
+ * on a shelf, the featured hero when it has a banner, then its page as players open it: the
+ * item's hero over the overview, both showing the version under review.
  */
 import { useMemo } from 'react';
 import { Box } from '@ds/primitives/Box';
@@ -10,6 +10,7 @@ import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
 import { FeaturedHero } from '../../../components/FeaturedHero/FeaturedHero';
 import { ItemCard } from '../../../components/ItemCard/ItemCard';
+import { ItemHero } from '../../../components/ItemHero';
 import { itemPath } from '../../../catalog/item-paths';
 import { ItemOverview } from '../../Item/sub-components/ItemOverview';
 import type { ItemPreview } from '../behavior/preview-item';
@@ -36,6 +37,7 @@ const StorePagePreview = (props: StorePagePreviewProps) => {
       )}
       <Stack gap="xs" align="stretch">
         <Text as="span" variant="label">Item page</Text>
+        <ItemHero item={item} version={version} />
         <ItemOverview item={item} version={version} />
       </Stack>
     </Stack>

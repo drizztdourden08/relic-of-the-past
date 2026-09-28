@@ -55,6 +55,7 @@
   --welcome-maxw: 72ch;
   --store-form-maxw: 720px;
   --picture-preview-w: 320px;
+  --item-hero-h: 280px;
   --crop-dialog-w: 760px;
 
   /* The review page: one card at a shelf's width, and the colour swatch in its details. */

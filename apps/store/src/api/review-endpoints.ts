@@ -38,6 +38,14 @@ const relistItem = (id: string) => storeApi.request<ItemChangeResponse>('itemsRe
 
 const putFeatured = (body: FeaturedBody) => storeApi.request<FeaturedResponse>('homeFeatured', { body });
 
+/** Adds a published item to the end of the featured row. */
+const featureItem = (id: string) => storeApi.request<ItemChangeResponse>('itemsFeature', { params: { id }, body: {} });
+
+const unfeatureItem = (id: string) => storeApi.request<ItemChangeResponse>('itemsUnfeature', { params: { id } });
+
 const putWelcome = (body: WelcomeBody) => storeApi.request<WelcomeResponse>('homeWelcome', { body });
 
-export { reviewTargetParam, listReviewQueue, listUnsubmitted, decideReview, reviewPack, unlistItem, relistItem, putFeatured, putWelcome };
+export {
+  reviewTargetParam, listReviewQueue, listUnsubmitted, decideReview, reviewPack, unlistItem, relistItem, putFeatured, featureItem, unfeatureItem,
+  putWelcome,
+};

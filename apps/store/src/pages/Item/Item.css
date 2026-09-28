@@ -6,7 +6,3 @@
 .item__actions {
   align-self: center;
 }
-
-.item-overview__author {
-  color: var(--c-gold-bright);
-}

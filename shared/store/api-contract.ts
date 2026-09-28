@@ -38,6 +38,8 @@ const STORE_ROUTES = {
   itemsUnlist: route('POST', '/items/:id/unlist'),
   itemsRelist: route('POST', '/items/:id/relist'),
   homeFeatured: route('PUT', '/home/featured'),
+  itemsFeature: route('POST', '/items/:id/feature'),
+  itemsUnfeature: route('DELETE', '/items/:id/feature'),
   homeWelcome: route('PUT', '/home/welcome'),
   usersBan: route('POST', '/users/:userId/ban'),
 

@@ -1,9 +1,9 @@
 /* @layer store-site @kind component */
 /**
- * The featured row, first to last: one row per item with up, down and remove, then a picker
- * over the catalogue to add one more, and Save. The first one shows first on the home page.
+ * The featured row, first to last: one row per item with up, down and remove, and Save. The
+ * first one shows first on the home page. Items join the row from their own page (Feature).
  */
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import upIcon from '@iconify-icons/lucide/arrow-up';
 import downIcon from '@iconify-icons/lucide/arrow-down';
@@ -11,7 +11,6 @@ import removeIcon from '@iconify-icons/lucide/x';
 import { Button } from '@ds/primitives/Button';
 import { Flex } from '@ds/primitives/Flex';
 import { IconButton } from '@ds/primitives/IconButton';
-import { Select } from '@ds/primitives/Select';
 import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
 import type { ItemCardView } from '@shared/store/home-types';
@@ -27,12 +26,7 @@ type FeaturedOrderProps = {
 const FeaturedOrder = (props: FeaturedOrderProps) => {
   const { settings, catalog } = props;
   const { featured, busy } = settings;
-  const [adding, setAdding] = useState('');
   const byId = useMemo(() => new Map(catalog.map((item) => [item.id, item])), [catalog]);
-  const options = useMemo(
-    () => catalog.filter((item) => !featured?.includes(item.id)).map((item) => ({ value: item.id, label: item.name, description: item.author.displayName })),
-    [catalog, featured],
-  );
 
   if (!featured) return <Text as="p" variant="caption">Loading the featured row...</Text>;
 
@@ -46,17 +40,18 @@ const FeaturedOrder = (props: FeaturedOrderProps) => {
 
   return (
     <Stack gap="sm" align="stretch">
+      <Text as="p" variant="caption">To feature an item, open its page and press Feature.</Text>
       {featured.length === 0 && <Text as="p" variant="caption">Nothing is featured. The home page skips the featured row.</Text>}
       {featured.map((id, index) => {
         const item = byId.get(id);
         const value = item ? <Flex gap="sm" align="center">{item.name} <KindChip kind={item.kind} /></Flex> : `${id} (no longer listed)`;
         return <Row key={id} label={String(index + 1)} value={value} action={controls(id, index)} />;
       })}
-      <Flex gap="sm" align="center" wrap>
-        <Select value={adding} onChange={setAdding} options={options} placeholder="Pick an item to feature" searchable size="sm" />
-        <Button variant="secondary" size="sm" disabled={!adding} onClick={() => { settings.add(adding); setAdding(''); }}>Add</Button>
-        <Button variant="primary" size="sm" disabled={busy} onClick={() => void settings.saveFeatured()}>Save the featured row</Button>
-      </Flex>
+      {featured.length > 0 && (
+        <Flex gap="sm" align="center" wrap>
+          <Button variant="primary" size="sm" busy={busy} onClick={() => void settings.saveFeatured()}>Save the order</Button>
+        </Flex>
+      )}
     </Stack>
   );
 };

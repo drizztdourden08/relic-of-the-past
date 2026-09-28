@@ -40,6 +40,8 @@ const STORE_LIMITS = {
   manifestBytes: 8 * MiB,
   /** Items per page of the catalogue listing. */
   itemsPageSize: 200,
+  /** Items the home page's featured row holds at most. */
+  featuredMax: 12,
   /** How long the built home page is served from cache. */
   homeCacheMs: 5 * MINUTE_MS,
   /** The window Popular counts installs over. */

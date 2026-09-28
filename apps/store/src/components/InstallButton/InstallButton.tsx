@@ -38,7 +38,8 @@ const InstallButton = (props: InstallButtonProps) => {
           variant="secondary"
           size={size}
           icon={<IconifyIcon icon={downloadIcon} />}
-          disabled={!live || busy}
+          disabled={!live}
+          busy={busy}
           title="For playing without the app installed"
           onClick={() => void download()}
         >

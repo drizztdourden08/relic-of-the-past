@@ -18,7 +18,6 @@ const MAX_LICENSE_CHARS = 60;
 const MAX_CHANGELOG_CHARS = 2000;
 const MAX_REVIEW_NOTE_CHARS = 1000;
 const MAX_WELCOME_CHARS = 4000;
-const MAX_FEATURED = 12;
 const LARGEST_PACK = Math.max(...Object.values(STORE_LIMITS.packBytes));
 
 const SHA256_PATTERN = /^[a-f0-9]{64}$/;
@@ -109,7 +108,7 @@ const reviewDecideSchema = z
 const featuredSchema = z.object({
   itemIds: z
     .array(idSchema)
-    .max(MAX_FEATURED)
+    .max(STORE_LIMITS.featuredMax)
     .refine((ids) => new Set(ids).size === ids.length, 'an item appears twice'),
 });
 

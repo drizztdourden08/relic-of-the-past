@@ -1,7 +1,8 @@
 /* @layer store-site @kind hook */
 /**
  * All of the item page's state: the item as this player may see it, the header tab, the
- * approved versions, the player's rating, and a reviewer's unlist and relist.
+ * approved versions, the player's rating, a reviewer's unlist and relist, and a curator's
+ * feature and unfeature.
  */
 import { useCallback, useMemo, useState } from 'react';
 import type { StoreItem } from '@shared/store/types';
@@ -10,7 +11,7 @@ import { useSessionContext } from '@site-kit/session/session-context';
 import { useItem } from '../../../catalog/useItem';
 import { approvedVersions } from '../../../catalog/approved-versions';
 import { useListingToggle } from '../../../catalog/useListingToggle';
-import { REVIEW_PERMISSION } from '../../../site/site-sections';
+import { FEATURE_PERMISSION, REVIEW_PERMISSION } from '../../../site/site-sections';
 import { plural } from '../../../lib/format-count';
 import { useRating } from './useRating';
 
@@ -50,6 +51,7 @@ const useItemPage = (id: string) => {
     installedNote,
     ratingsLine,
     canModerate: hasRight(rights, REVIEW_PERMISSION),
+    canFeature: hasRight(rights, FEATURE_PERMISSION),
     listing,
     onItem,
   };

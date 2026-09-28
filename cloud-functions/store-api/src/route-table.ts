@@ -34,6 +34,8 @@ import { reviewPack } from './routes/review-pack';
 import { itemsUnlist } from './routes/items-unlist';
 import { itemsRelist } from './routes/items-relist';
 import { homeFeatured } from './routes/home-featured';
+import { itemsFeature } from './routes/items-feature';
+import { itemsUnfeature } from './routes/items-unfeature';
 import { homeWelcome } from './routes/home-welcome';
 import { usersBan } from './routes/users-ban';
 import { jobsDaily } from './routes/jobs-daily';
@@ -80,6 +82,8 @@ const STORE_OWN_ROUTES: Route[] = [
   itemsUnlist,
   itemsRelist,
   homeFeatured,
+  itemsFeature,
+  itemsUnfeature,
   homeWelcome,
   usersBan,
   jobsDaily,
