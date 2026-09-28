@@ -33,7 +33,7 @@
 }
 
 /* Each column stops at the card's widest, so the 16:9 picture (and the card) never grows
-   with the window; on a wide screen the row simply ends before the edge. */
+   with the window; on a wide screen the row ends before the edge. */
 .shelf__row {
   display: grid;
   grid-template-columns: repeat(var(--shelf-columns), minmax(0, var(--shelf-card-max-w)));
