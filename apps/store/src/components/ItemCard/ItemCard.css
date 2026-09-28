@@ -1,30 +1,36 @@
 /* @layer store-site @kind style */
 
-/* As the plan mockup: the picture edge to edge, the text under it; gold border when picked. */
+/*
+ * As the plan mockup: the picture edge to edge, the text under it, and a border in the
+ * item's own colour (`--item-color`), softer at rest, full when hovered or picked.
+ */
 .item-card {
+  --card-color: var(--item-color, var(--c-gold));
+
   display: flex;
   flex-direction: column;
   min-width: 0;
   overflow: hidden;
-  border: var(--border-width-thin) solid var(--c-border);
+  border: var(--border-width-thin) solid color-mix(in srgb, var(--card-color) 55%, transparent);
   border-radius: var(--radius-xl);
   background: var(--c-panel);
-  transition: border-color var(--transition-fast), background var(--transition-fast);
+  transition: border-color var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .item-card:hover {
-  border-color: var(--c-border-strong);
+  border-color: var(--card-color);
   background: var(--c-hover);
 }
 
 .item-card:focus-visible {
-  outline: var(--border-width-thick) solid var(--c-gold);
+  outline: var(--border-width-thick) solid var(--card-color);
   outline-offset: var(--border-width-thin);
 }
 
 .item-card--selected {
-  border-color: var(--c-gold);
+  border-color: var(--card-color);
   background: var(--c-selected);
+  box-shadow: 0 0 0 var(--border-width-thin) var(--card-color);
 }
 
 .item-card .item-card__picture {

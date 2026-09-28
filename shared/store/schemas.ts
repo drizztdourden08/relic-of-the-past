@@ -8,6 +8,7 @@
 import { z } from 'zod';
 import { HUB_LIMITS } from '../hub/limits';
 import { idSchema, tagsSchema } from '../hub/schemas/common';
+import { DEFAULT_ITEM_COLOR, ITEM_COLOR_PATTERN } from './item-color';
 import { STORE_LIMITS } from './limits';
 
 const MAX_NAME_CHARS = 60;
@@ -34,6 +35,7 @@ const listingFields = {
   description: z.string().trim().max(MAX_DESCRIPTION_CHARS),
   tags: tagsSchema,
   license: z.string().trim().min(1).max(MAX_LICENSE_CHARS),
+  color: z.string().regex(ITEM_COLOR_PATTERN, 'a colour as #rrggbb'),
 };
 
 /** A picture the author uploaded through POST /items/:id/media; the API checks it is there. */
@@ -49,6 +51,7 @@ const itemCreateSchema = z.object({
   ...listingFields,
   description: listingFields.description.default(''),
   tags: listingFields.tags.default([]),
+  color: listingFields.color.default(DEFAULT_ITEM_COLOR),
 });
 
 /** POST /items/:id/media, the size held to the cap of the picture's role. */

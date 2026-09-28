@@ -60,6 +60,8 @@ type Listing = {
   description: string;
   tags: string[];
   license: string;
+  /** The card's border and the placeholder's colour, `#rrggbb` (item-color.ts). */
+  color: string;
   card: MediaRef | null;
   banner: MediaRef | null;
 };

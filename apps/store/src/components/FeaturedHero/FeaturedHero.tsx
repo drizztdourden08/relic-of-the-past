@@ -18,6 +18,7 @@ import { Link } from '@site-kit/router/Link';
 import { formatAverage, formatCount } from '../../lib/format-count';
 import { EmptyState } from '../EmptyState/EmptyState';
 import { InstallButton } from '../InstallButton/InstallButton';
+import { itemColorStyle } from '../../lib/item-color-style';
 import { ItemPicture } from '../ItemPicture/ItemPicture';
 import { KindChip } from '../KindChip/KindChip';
 import { Stars } from '../Stars/Stars';
@@ -35,8 +36,8 @@ const FeaturedHero = (props: FeaturedHeroProps) => {
   const item = items[index];
   if (!item) return <EmptyState message="Nothing featured yet." shape="banner" label="Featured" />;
   return (
-    <Box as="section" className="featured-hero" aria-label="Featured" onMouseEnter={hold} onMouseLeave={release} onFocus={hold} onBlur={release}>
-      <ItemPicture picture={item.banner ?? item.card} kind={item.kind} role="banner" className="featured-hero__picture" />
+    <Box as="section" className="featured-hero" style={itemColorStyle(item.color)} aria-label="Featured" onMouseEnter={hold} onMouseLeave={release} onFocus={hold} onBlur={release}>
+      <ItemPicture picture={item.banner ?? item.card} kind={item.kind} role="banner" color={item.color} className="featured-hero__picture" />
       <Stack align="start" className="featured-hero__copy">
         <Chip tone="gold">Featured</Chip>
         <Text as="h2" className="featured-hero__name">{item.name}</Text>

@@ -3,13 +3,15 @@
  * An in-site link: a real anchor (middle click and copy link keep working) whose plain
  * left click goes through the history router instead of a full reload.
  */
-import type { MouseEvent, ReactNode } from 'react';
+import type { CSSProperties, MouseEvent, ReactNode } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { navigate } from './useLocation';
 
 type LinkProps = {
   to: string;
   className?: string;
+  /** Custom properties for the link's own styles, such as an item's colour. */
+  style?: CSSProperties;
   children?: ReactNode;
   'aria-current'?: 'page';
 };

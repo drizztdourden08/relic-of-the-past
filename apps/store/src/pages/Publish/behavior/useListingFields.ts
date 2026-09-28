@@ -5,11 +5,12 @@
  */
 import { useMemo, useState } from 'react';
 import type { StoreItem } from '@shared/store/types';
+import { DEFAULT_ITEM_COLOR } from '@shared/store/item-color';
 import { itemCreateSchema } from '@shared/store/schemas';
 import type { ListingPatchBody } from '@shared/store/schemas';
 import { DEFAULT_LICENSE } from '../Publish.constants';
 
-type ListingText = { name: string; summary: string; description: string; tags: readonly string[]; license: string };
+type ListingText = { name: string; summary: string; description: string; tags: readonly string[]; license: string; color: string };
 
 const FIELD_LABELS: Record<string, string> = {
   name: 'Name',
@@ -17,12 +18,13 @@ const FIELD_LABELS: Record<string, string> = {
   description: 'Description',
   tags: 'Tags',
   license: 'Licence',
+  color: 'Colour',
 };
 
-const EMPTY: ListingText ={ name: '', summary: '', description: '', tags: [], license: DEFAULT_LICENSE };
+const EMPTY: ListingText = { name: '', summary: '', description: '', tags: [], license: DEFAULT_LICENSE, color: DEFAULT_ITEM_COLOR };
 
 const textOf = (item: StoreItem | null): ListingText => (item
-  ? { name: item.name, summary: item.summary, description: item.description, tags: item.tags, license: item.license }
+  ? { name: item.name, summary: item.summary, description: item.description, tags: item.tags, license: item.license, color: item.color }
   : EMPTY);
 
 const sameTags = (a: readonly string[], b: readonly string[]) => a.length === b.length && a.every((tag, i) => tag === b[i]);
@@ -33,6 +35,7 @@ const changedText = (from: ListingText, to: ListingText): ListingPatchBody => {
   if (to.summary.trim() !== from.summary) patch.summary = to.summary.trim();
   if (to.description.trim() !== from.description) patch.description = to.description.trim();
   if (to.license.trim() !== from.license) patch.license = to.license.trim();
+  if (to.color !== from.color) patch.color = to.color;
   if (!sameTags(to.tags, from.tags)) patch.tags = [...to.tags];
   return patch;
 };

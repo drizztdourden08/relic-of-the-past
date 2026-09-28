@@ -46,6 +46,7 @@ const PublishForm = (props: PublishFormProps) => {
           state={form.card}
           current={item?.card ?? null}
           kind={kind}
+          color={form.listing.text.color}
         />
       )}
       {form.takesListing && (
@@ -56,6 +57,7 @@ const PublishForm = (props: PublishFormProps) => {
           state={form.banner}
           current={item?.banner ?? null}
           kind={kind}
+          color={form.listing.text.color}
         />
       )}
       <Checkbox checked={form.rights.checked} onChange={form.rights.set} label={RIGHTS_LINE} />

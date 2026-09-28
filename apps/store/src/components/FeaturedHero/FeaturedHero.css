@@ -5,7 +5,7 @@
   display: grid;
   grid-template-columns: 1.6fr 1fr;
   overflow: hidden;
-  border: var(--border-width-thin) solid var(--c-border);
+  border: var(--border-width-thin) solid color-mix(in srgb, var(--item-color, var(--c-gold)) 55%, transparent);
   border-radius: var(--radius-xl);
   background: var(--c-panel);
 }

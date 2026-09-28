@@ -12,6 +12,7 @@ import type { ItemCardView } from '@shared/store/home-types';
 import { Chip } from '@site-kit/components/Chip/Chip';
 import { Link } from '@site-kit/router/Link';
 import { formatAverage } from '../../lib/format-count';
+import { itemColorStyle } from '../../lib/item-color-style';
 import { ItemPicture } from '../ItemPicture/ItemPicture';
 import { KindChip } from '../KindChip/KindChip';
 import { Stars } from '../Stars/Stars';
@@ -40,8 +41,8 @@ const byline = (item: ItemCardView) => (item.semver ? `${item.author.displayName
 const ItemCard = (props: ItemCardProps) => {
   const { item, to, selected = false, owned = null, extra } = props;
   return (
-    <Link to={to} className={`item-card${selected ? ' item-card--selected' : ''}`} aria-current={selected ? 'page' : undefined}>
-      <ItemPicture picture={item.card} kind={item.kind} className="item-card__picture" />
+    <Link to={to} className={`item-card${selected ? ' item-card--selected' : ''}`} style={itemColorStyle(item.color)} aria-current={selected ? 'page' : undefined}>
+      <ItemPicture picture={item.card} kind={item.kind} color={item.color} className="item-card__picture" />
       <Stack align="stretch" className="item-card__body">
         <Text as="span" className="item-card__name">{item.name}</Text>
         <Flex align="center" justify="between" className="item-card__meta">

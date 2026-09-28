@@ -35,7 +35,7 @@ const ItemOverview = (props: ItemOverviewProps) => {
   const live = liveVersionOf(item);
   return (
     <Stack gap="lg" align="stretch" className="item-overview">
-      <ItemPicture picture={item.banner ?? item.card} kind={item.kind} role={item.banner ? 'banner' : 'card'} className="item-overview__picture" />
+      <ItemPicture picture={item.banner ?? item.card} kind={item.kind} color={item.color} role={item.banner ? 'banner' : 'card'} className="item-overview__picture" />
       <Text as="p" variant="caption">
         by <Link to={authorPath(item.author.userId)} className="item-overview__author">{item.author.displayName}</Link> · {datesLine(item)}
       </Text>

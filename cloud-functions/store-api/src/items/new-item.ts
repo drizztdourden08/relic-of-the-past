@@ -38,6 +38,7 @@ const newItem = (id: string, body: ItemCreateBody, author: Person, at: number): 
   description: body.description,
   tags: body.tags,
   license: body.license,
+  color: body.color,
   card: null,
   banner: null,
   status: 'draft',

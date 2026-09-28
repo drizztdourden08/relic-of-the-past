@@ -16,6 +16,8 @@ type ItemCardView = {
   name: string;
   summary: string;
   author: Person;
+  /** The item's own colour, `#rrggbb`. */
+  color: string;
   card: MediaRef | null;
   /** Shown only in the featured row. */
   banner: MediaRef | null;

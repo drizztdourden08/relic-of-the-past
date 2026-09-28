@@ -15,6 +15,7 @@ const toCardView = (item: StoreItem): ItemCardView => ({
   name: item.name,
   summary: item.summary,
   author: item.author,
+  color: item.color,
   card: item.card,
   banner: item.banner,
   semver: liveVersionOf(item)?.semver ?? null,

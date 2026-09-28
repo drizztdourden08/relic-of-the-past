@@ -1,5 +1,5 @@
 /* @layer store-site @kind component */
-/** The listing's words: name, the one line cards show, the description (markdown), licence and tags. */
+/** The listing's words and look: name, the one line cards show, the description (markdown), colour, licence and tags. */
 import { Field } from '@ds/primitives/Field';
 import { Flex } from '@ds/primitives/Flex';
 import { Select } from '@ds/primitives/Select';
@@ -9,6 +9,7 @@ import { Textarea } from '@ds/primitives/Textarea';
 import { tagsSchema } from '@shared/hub/schemas/common';
 import { LICENSE_OPTIONS } from '../Publish.constants';
 import type { ListingFieldsState } from '../behavior/useListingFields';
+import { ColorField } from './ColorField';
 
 type ListingFieldsProps = { listing: ListingFieldsState };
 
@@ -31,6 +32,7 @@ const ListingFields = (props: ListingFieldsProps) => {
         <Textarea id="publish-description" rows={6} value={text.description} onChange={(event) => set('description', event.target.value)} />
       </Field>
       <Flex gap="md" wrap align="start">
+        <ColorField value={text.color} onChange={(value) => set('color', value)} />
         <Field label="Licence" className="publish__licence">
           <Select value={text.license} onChange={(value) => set('license', value)} options={LICENSE_OPTIONS} />
         </Field>

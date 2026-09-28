@@ -68,7 +68,7 @@ const ItemSideCard = (props: ItemSideCardProps) => {
   return (
     <DetailPane
       title={item.name}
-      media={<ItemPicture picture={item.card} kind={item.kind} />}
+      media={<ItemPicture picture={item.card} kind={item.kind} color={item.color} />}
       fields={fieldsOf(item, detail)}
       actions={actions}
       onClose={onClose}

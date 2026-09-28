@@ -26,13 +26,13 @@ const ListingEditPreview = (props: ListingEditPreviewProps) => {
       {patch.card !== undefined && (
         <Stack gap="xs" align="stretch">
           <Text as="span" variant="caption">New card</Text>
-          <ItemPicture picture={patch.card} kind={item.kind} />
+          <ItemPicture picture={patch.card} kind={item.kind} color={patch.color ?? item.color} />
         </Stack>
       )}
       {patch.banner !== undefined && (
         <Stack gap="xs" align="stretch">
           <Text as="span" variant="caption">{patch.banner ? 'New banner' : 'Banner removed'}</Text>
-          {patch.banner && <ItemPicture picture={patch.banner} kind={item.kind} role="banner" />}
+          {patch.banner && <ItemPicture picture={patch.banner} kind={item.kind} role="banner" color={patch.color ?? item.color} />}
         </Stack>
       )}
     </Stack>

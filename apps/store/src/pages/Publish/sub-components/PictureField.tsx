@@ -32,6 +32,8 @@ type PictureFieldProps = {
   /** The picture the listing has now, if any. */
   current: MediaRef | null;
   kind: StoreKind;
+  /** The colour picked for the item, shown on the placeholder while there is no picture. */
+  color: string;
 };
 
 const IMAGE_ACCEPT = ['image/*'];
@@ -41,7 +43,7 @@ const readyStatus = (state: PictureState, size: string): DropZoneStatus | undefi
   (state.picture ? { tone: 'success', message: `Ready: cut to ${size}, ${formatBytes(state.picture.blob.size)}` } : undefined);
 
 const PictureField = (props: PictureFieldProps) => {
-  const { label, size, role, state, current, kind } = props;
+  const { label, size, role, state, current, kind, color } = props;
   const [adjusting, setAdjusting] = useState(false);
   const pick = (files: File[]) => {
     if (files[0]) void state.choose(files[0]);
@@ -56,7 +58,7 @@ const PictureField = (props: PictureFieldProps) => {
         <Box className={`publish__preview publish__preview--${role}`}>
           {state.preview
             ? <Image src={state.preview} alt={`New ${role}`} className="publish__preview-image" />
-            : <ItemPicture picture={current} kind={kind} role={role} />}
+            : <ItemPicture picture={current} kind={kind} role={role} color={color} />}
           {state.source && !state.busy && (
             <Button variant="secondary" size="sm" className="publish__adjust" onClick={() => setAdjusting(true)}>
               <IconifyIcon icon={cropIcon} aria-hidden="true" />
