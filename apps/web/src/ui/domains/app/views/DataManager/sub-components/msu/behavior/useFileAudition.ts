@@ -6,8 +6,8 @@
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import * as msuStore from '@app/lib/storage/msu-store';
-import { startFileAudition, stopFileAudition } from './file-audition';
-import type { Audition } from './file-audition';
+import { startFileAudition, stopFileAudition } from '@domains/packs/music/behavior/file-audition';
+import type { Audition } from '@domains/packs/music/behavior/file-audition';
 import type { MsuFile } from '../msu.type';
 
 const useFileAudition = (pack: string, files: MsuFile[]) => {

@@ -9,7 +9,7 @@ import { COLORS_PER_OUTFIT, GLOVES_INDEX, OUTFIT_IDS } from '@shared/game/data/p
 import type { OutfitId, PlayerSheet } from '@shared/game/data/player-sheet/types';
 import { bgr555ToHex, hexToBgr555, isExactColor } from '@app/lib/game/snes-color';
 import { flattenPalette } from '@app/lib/game/player-sheet/flatten-palette';
-import { OUTFIT_LABELS } from '../behavior/useWearing';
+import { OUTFIT_LABELS } from '@domains/packs/character/behavior/useWearing';
 
 interface PaletteEditorProps {
   sheet: PlayerSheet;

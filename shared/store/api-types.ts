@@ -75,6 +75,15 @@ type UnsubmittedResponse = { entries: ReviewEntry[] };
 
 type ReviewDecideRequest = { decision: ReviewDecision; note: string };
 
+/** GET /review/:itemId/:target/pack: an inline signed link to a version's pack, read in parts by the review page. */
+type ReviewPackResponse = {
+  url: string;
+  bytes: number;
+  container: Container;
+  /** When the link stops working, epoch ms. */
+  expiresAt: number;
+};
+
 /**
  * The item after a change to it: a listing edit, an abort, a submit, a withdraw, a delete, a
  * review decision, an unlist or a relist. Projected like ItemResponse.item.
@@ -125,6 +134,7 @@ export type {
   ReviewQueueResponse,
   UnsubmittedResponse,
   ReviewDecideRequest,
+  ReviewPackResponse,
   ItemChangeResponse,
   FeaturedResponse,
   WelcomeResponse,

@@ -7,8 +7,6 @@ export { TokenAtom } from './TokenAtom';
 export type { TokenAtomProps } from './TokenAtom';
 export { GlyphChar } from './GlyphChar';
 export type { GlyphCharProps } from './GlyphChar';
-export { GlyphCell } from './GlyphCell';
-export type { GlyphCellProps } from './GlyphCell';
 export { ToolbarButton } from './ToolbarButton';
 export type { ToolbarButtonProps } from './ToolbarButton';
 export { pictureGlyphIndex } from './glyph-index';

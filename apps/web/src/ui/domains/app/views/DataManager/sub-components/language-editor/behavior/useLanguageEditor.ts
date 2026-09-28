@@ -9,8 +9,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type {
   GlossaryTerm, LanguageSet, SetStructure, TextGroupId, Token, Variable,
 } from '@shared/game/language';
-import { mergeVariableMeta, variablesFromLegacy } from '@shared/game/language';
 import { getLanguageSet } from '@app/lib/storage/languages-store';
+import { literalTermsOf, variablesOf } from '@domains/packs/language/behavior/set-variables';
 import type { LanguageEditorState, NameEdit } from '../language-editor.type';
 import {
   withEntryNote, withEntryTokens, withGlossaryTerm, withManyEntryTokens, withNameValue,
@@ -23,11 +23,6 @@ import { useSetPersistence } from './useSetPersistence';
 
 const NO_VARIABLES: Variable[] = [];
 const NO_TERMS: GlossaryTerm[] = [];
-
-/** Every variable carrying literal text, as the walks that expand refs take it. */
-const literalTermsOf = (variables: Variable[]): GlossaryTerm[] => variables.flatMap(
-  (variable) => (variable.value === null ? [] : [{ key: variable.key, value: variable.value }]),
-);
 
 const useLanguageEditor = (id: string | null): LanguageEditorState => {
   const [set, setSet] = useState<LanguageSet | null>(null);
@@ -118,7 +113,7 @@ const useLanguageEditor = (id: string | null): LanguageEditorState => {
   const variables = useMemo(
     () => (glossary === undefined || names === undefined
       ? NO_VARIABLES
-      : mergeVariableMeta(variablesFromLegacy(glossary, names), stored)),
+      : variablesOf(glossary, names, stored)),
     [glossary, names, stored],
   );
   const terms = useMemo(

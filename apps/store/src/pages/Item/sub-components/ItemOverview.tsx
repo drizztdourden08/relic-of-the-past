@@ -1,13 +1,14 @@
 /* @layer store-site @kind component */
 /**
  * The item's first tab: its banner (or card), who made it and when it was published and
- * last updated, the description, then the details of the live version.
+ * last updated, the description, then the details of the live version, or of the version
+ * the host passes (the review page shows the one under review).
  */
 import { SettingsSection } from '@ds/composites/SettingsSection';
 import { Stack } from '@ds/primitives/Stack';
 import { StatRow } from '@ds/primitives/StatRow';
 import { Text } from '@ds/primitives/Text';
-import type { StoreItem } from '@shared/store/types';
+import type { StoreItem, StoreVersion } from '@shared/store/types';
 import { Link } from '@site-kit/router/Link';
 import { TagList } from '@site-kit/components/TagList/TagList';
 import { formatDay } from '@site-kit/lib/format-date';
@@ -19,7 +20,11 @@ import { factsLine } from '../../../catalog/facts-line';
 import { liveVersionOf } from '../../../catalog/approved-versions';
 import { formatCount } from '../../../lib/format-count';
 
-type ItemOverviewProps = { item: StoreItem };
+type ItemOverviewProps = {
+  item: StoreItem;
+  /** The version to show; the live one when absent. */
+  version?: StoreVersion | null;
+};
 
 const SHA_EDGE = 4;
 
@@ -31,8 +36,8 @@ const datesLine = (item: StoreItem) => {
 };
 
 const ItemOverview = (props: ItemOverviewProps) => {
-  const { item } = props;
-  const live = liveVersionOf(item);
+  const { item, version } = props;
+  const live = version === undefined ? liveVersionOf(item) : version;
   return (
     <Stack gap="lg" align="stretch" className="item-overview">
       <ItemPicture picture={item.banner ?? item.card} kind={item.kind} color={item.color} role={item.banner ? 'banner' : 'card'} className="item-overview__picture" />

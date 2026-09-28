@@ -36,6 +36,16 @@ const u32 = (b: Uint8Array, at: number): number => (u16(b, at) | (u16(b, at + 2)
 const hasSignature = (head: Uint8Array): boolean => SIGNATURE.every((byte, i) => head[i] === byte);
 
 /**
+ * Where an entry's data starts, counted from the start of its local header, or null when
+ * `head` does not open with one. The fixed 30 bytes are enough: they hold the name and extra
+ * lengths, and the extra here can differ from the one in the central directory.
+ */
+const localDataOffset = (head: Uint8Array): number | null => {
+  if (head.length < HEADER_BYTES || !hasSignature(head)) return null;
+  return HEADER_BYTES + u16(head, 26) + u16(head, 28);
+};
+
+/**
  * `streamed` covers the two layouts that keep the sizes out of the local header: a data
  * descriptor after the data, and ZIP64. The app's own exports use neither.
  */
@@ -61,5 +71,5 @@ const readLocalHeader = (head: Uint8Array): HeaderResult => {
   return { ok: true, header: { name, method: u16(head, 8), compressedSize, uncompressedSize, dataStart } };
 };
 
-export { readLocalHeader };
+export { readLocalHeader, localDataOffset, u16, u32, HEADER_BYTES as LOCAL_HEADER_BYTES, FLAG_ENCRYPTED };
 export type { LocalHeader, HeaderFailure, HeaderResult };

@@ -1,0 +1,12 @@
+/* @layer renderer-components @kind style */
+.pose-canvas {
+  image-rendering: pixelated;
+  background:
+    linear-gradient(45deg, var(--c-sunken) 25%, transparent 25% 75%, var(--c-sunken) 75%),
+    linear-gradient(45deg, var(--c-sunken) 25%, transparent 25% 75%, var(--c-sunken) 75%);
+  background-color: var(--c-bg);
+  background-size: 16px 16px;
+  background-position: 0 0, 8px 8px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+}

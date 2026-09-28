@@ -7,6 +7,7 @@
  */
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import { resolve } from 'path';
 
 const SITE_ROOT = __dirname;
@@ -16,7 +17,8 @@ export default defineConfig({
   root: SITE_ROOT,
   base: '/',
   publicDir: resolve(SITE_ROOT, 'public'),
-  plugins: [react()],
+  // The shared pack viewers reach shared language code that imports Node modules, as the app does.
+  plugins: [react(), nodePolyfills({ globals: { Buffer: true, process: true } })],
   resolve: {
     alias: {
       '@shared': resolve(SITE_ROOT, '../../shared'),

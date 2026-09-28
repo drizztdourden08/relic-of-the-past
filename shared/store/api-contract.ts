@@ -34,6 +34,7 @@ const STORE_ROUTES = {
   reviewQueue: route('GET', '/review'),
   reviewUnsubmitted: route('GET', '/review/unsubmitted'),
   reviewDecide: route('POST', '/review/:itemId/:target'),
+  reviewPack: route('GET', '/review/:itemId/:target/pack'),
   itemsUnlist: route('POST', '/items/:id/unlist'),
   itemsRelist: route('POST', '/items/:id/relist'),
   homeFeatured: route('PUT', '/home/featured'),

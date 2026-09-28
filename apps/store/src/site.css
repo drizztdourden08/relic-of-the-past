@@ -56,6 +56,10 @@
   --store-form-maxw: 720px;
   --picture-preview-w: 320px;
   --crop-dialog-w: 760px;
+
+  /* The review page: one card at a shelf's width, and the colour swatch in its details. */
+  --review-card-w: 220px;
+  --review-swatch-size: 14px;
 }
 
 html,

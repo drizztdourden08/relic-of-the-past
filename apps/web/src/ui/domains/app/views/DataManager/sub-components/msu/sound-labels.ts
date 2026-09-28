@@ -1,12 +1,8 @@
 /* @layer renderer-components @kind logic */
-// Ids are hex because that is how the game's tables and every disassembly note write them.
 import type { SoundChannel } from '@shared/types/msu-manifest';
 import { SOUND_CHANNEL_PORTS } from '@shared/game/data/game-sounds';
 import type { TabItem } from '@ds/primitives/TabBar';
-
-const SOUND_CHANNEL_LABELS: Record<SoundChannel, string> = {
-  ambient: 'Ambient', sfx1: 'Effects 1', sfx2: 'Effects 2',
-};
+import { SOUND_CHANNEL_LABELS, soundHexId } from '@domains/packs/music/behavior/sound-names';
 
 /** Row tag for a list holding more than one channel; must stay legible at id-column width. */
 const SOUND_CHANNEL_TAGS: Record<SoundChannel, string> = {
@@ -25,9 +21,6 @@ const STUDIO_TABS: TabItem[] = [
   { id: 'effects', label: 'Effects' },
   { id: 'files', label: 'Files' },
 ];
-
-const soundHexId = (soundId: number): string =>
-  `0x${soundId.toString(16).toUpperCase().padStart(2, '0')}`;
 
 /** How one sound is named wherever it appears on its own, like `Ambient 0x05`. */
 const soundTitle = (channel: SoundChannel, soundId: number): string =>

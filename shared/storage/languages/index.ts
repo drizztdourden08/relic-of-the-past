@@ -8,9 +8,11 @@ export { DEFAULT_STRUCTURE, SET_FORMAT } from './format-2';
 export { assertValidSetId } from './set-id';
 export { exportRlang } from './export-rlang';
 export { importRlang } from './import-rlang';
+export { readRlangBytes } from './read-rlang-bytes';
+export type { RlangContents } from './read-rlang-bytes';
 export { RLANG_EXTENSION } from './rlang-format';
 export type { RlangImportOptions, RlangImportResult } from './import-rlang';
-// Legacy extraction-payload view, still used by the read-only inspector UI.
+// Legacy extraction-payload view: the extracted-language list, and the renderer store's getLanguage.
 export { listPacks, readPack as getLanguage } from './pack';
 export type { NewSetParams } from './create';
 export type { ExtractedPack, LanguageSetSummary, SetFontBytes } from './types';

@@ -30,6 +30,7 @@ import { myPublications } from './routes/my-publications';
 import { reviewQueue } from './routes/review-queue';
 import { reviewUnsubmitted } from './routes/review-unsubmitted';
 import { reviewDecide } from './routes/review-decide';
+import { reviewPack } from './routes/review-pack';
 import { itemsUnlist } from './routes/items-unlist';
 import { itemsRelist } from './routes/items-relist';
 import { homeFeatured } from './routes/home-featured';
@@ -75,6 +76,7 @@ const STORE_OWN_ROUTES: Route[] = [
   reviewQueue,
   reviewUnsubmitted,
   reviewDecide,
+  reviewPack,
   itemsUnlist,
   itemsRelist,
   homeFeatured,

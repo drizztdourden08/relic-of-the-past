@@ -1,0 +1,17 @@
+/* @layer renderer-components @kind style */
+.pack-contents {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pack-contents__status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+}
+
+.pack-contents__error {
+  color: var(--c-danger);
+}

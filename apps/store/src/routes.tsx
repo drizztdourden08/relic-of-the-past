@@ -17,7 +17,8 @@ import { Author } from './pages/Author/Author';
 import { Publications } from './pages/Publications/Publications';
 import { Publish } from './pages/Publish/Publish';
 import { Review } from './pages/Review/Review';
-import { HomeSettings } from './pages/HomeSettings/HomeSettings';
+import { ReviewItem } from './pages/ReviewItem/ReviewItem';
+import { Administration } from './pages/Administration/Administration';
 
 const HOME_PATH = '/home';
 
@@ -40,8 +41,8 @@ const ROUTES: RouteEntry[] = [
   { pattern: '/publications/:itemId/listing', access: 'member', render: ({ itemId }) => <Publish mode="listing" itemId={itemId} /> },
   { pattern: '/publications/:rowId', access: 'member', render: ({ rowId }) => <Publications selectedId={rowId} /> },
   { pattern: '/review', access: 'member', permission: REVIEW_PERMISSION, render: () => <Review /> },
-  { pattern: '/review/:rowId', access: 'member', permission: REVIEW_PERMISSION, render: ({ rowId }) => <Review selectedId={rowId} /> },
-  { pattern: '/curate', access: 'member', permission: FEATURE_PERMISSION, render: () => <HomeSettings /> },
+  { pattern: '/review/:rowId', access: 'member', permission: REVIEW_PERMISSION, render: ({ rowId }) => <ReviewItem key={rowId} rowId={rowId} /> },
+  { pattern: '/admin', access: 'member', permission: FEATURE_PERMISSION, render: () => <Administration /> },
   { pattern: '/account', access: 'member', render: () => <Account /> },
   { pattern: '/device/:code', access: 'member', bare: true, render: ({ code }) => <Device code={code} /> },
   { pattern: '/signin', access: 'public', bare: true, render: () => <SignIn lead={STORE_SITE_UI.signIn.lead} /> },

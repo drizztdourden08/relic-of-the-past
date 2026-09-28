@@ -25,10 +25,10 @@ import { Text } from '@ds/primitives/Text';
 import { TextInput } from '@ds/primitives/TextInput';
 import type { MsuFileMetadata } from '@shared/storage/msu';
 import { formatBytes } from '@app/utils/formatBytes';
-import { FilePlayer } from './FilePlayer';
-import { clock } from './behavior/clock';
+import { FilePlayer } from '@domains/packs/music/compounds/FilePlayer';
+import { clock } from '@domains/packs/music/behavior/clock';
+import type { Audition } from '@domains/packs/music/behavior/file-audition';
 import { listSummary } from './sound-labels';
-import type { Audition } from './behavior/file-audition';
 
 interface FileRowProps {
   file: MsuFileMetadata;
