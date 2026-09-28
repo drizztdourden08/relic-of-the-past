@@ -1,26 +1,25 @@
 /* @layer store-site @kind hook */
-/** The Download fallback: one request at a time, and the API's refusal kept to show under the buttons. */
+/** The Download fallback: one request at a time, and the API's refusal shown as a toast. */
 import { useCallback, useState } from 'react';
 import { errorMessage } from '@site-kit/api/api-error';
+import { showToast } from '@site-kit/toast/toast-store';
 import { startDownload } from '../../../lib/start-download';
 
 const useDownload = (itemId: string) => {
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const download = useCallback(async () => {
     setBusy(true);
-    setError(null);
     try {
       await startDownload(itemId);
     } catch (cause) {
-      setError(errorMessage(cause));
+      showToast({ message: errorMessage(cause), variant: 'danger' });
     } finally {
       setBusy(false);
     }
   }, [itemId]);
 
-  return { busy, error, download };
+  return { busy, download };
 };
 
 export { useDownload };

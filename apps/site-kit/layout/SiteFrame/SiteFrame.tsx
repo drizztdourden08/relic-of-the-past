@@ -3,12 +3,13 @@
  * The page frame. The router mounts one around every signed-in member page: the section
  * nav, the site's one search and the data the site's member pages share. A bare frame (sign-in,
  * waiting, device, the guard's own states) shows the brand alone above the content,
- * since those pages have no sections to move between.
+ * since those pages have no sections to move between. Both carry the site's toasts.
  */
 import type { ReactNode } from 'react';
 import { Flex } from '@ds/primitives/Flex';
 import { Box } from '@ds/primitives/Box';
 import { Brand } from '../Brand/Brand';
+import { ToastLayer } from '../../components/ToastLayer';
 import { useSiteDefinition } from '../../site/site-context';
 import { MemberFrame } from './sub-components/MemberFrame';
 import './SiteFrame.css';
@@ -27,12 +28,14 @@ const SiteFrame = (props: SiteFrameProps) => {
       <Flex direction="column" align="stretch" className="site site--bare">
         <Box as="header" className="site__brand-strip"><Brand size="hero" /></Box>
         <Box as="main" className="site__main">{children}</Box>
+        <ToastLayer />
       </Flex>
     );
   }
   return (
     <MemberData>
       <MemberFrame>{children}</MemberFrame>
+      <ToastLayer />
     </MemberData>
   );
 };
