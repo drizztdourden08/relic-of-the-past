@@ -1,6 +1,7 @@
 /* @layer store-site @kind logic */
 /**
- * What the review and feature permissions call: the queue, a decision on a version or a
+ * What the review and feature permissions call: the queue and the versions not submitted
+ * yet, a decision on a version or a
  * listing edit, unlisting and relisting an item, and the home page's featured row and welcome.
  */
 import type {
@@ -8,6 +9,7 @@ import type {
   ItemChangeResponse,
   ReviewQueueResponse,
   ReviewTarget,
+  UnsubmittedResponse,
   WelcomeResponse,
 } from '@shared/store/api-types';
 import type { FeaturedBody, ReviewDecideBody, WelcomeBody } from '@shared/store/schemas';
@@ -18,6 +20,9 @@ const reviewTargetParam = (target: ReviewTarget): string =>
   (target.kind === 'version' ? `v${target.n}` : target.editId);
 
 const listReviewQueue = () => storeApi.request<ReviewQueueResponse>('reviewQueue');
+
+/** The ready versions no author has sent for review yet. */
+const listUnsubmitted = () => storeApi.request<UnsubmittedResponse>('reviewUnsubmitted');
 
 const decideReview = (itemId: string, target: ReviewTarget, body: ReviewDecideBody) =>
   storeApi.request<ItemChangeResponse>('reviewDecide', { params: { itemId, target: reviewTargetParam(target) }, body });
@@ -30,4 +35,4 @@ const putFeatured = (body: FeaturedBody) => storeApi.request<FeaturedResponse>('
 
 const putWelcome = (body: WelcomeBody) => storeApi.request<WelcomeResponse>('homeWelcome', { body });
 
-export { reviewTargetParam, listReviewQueue, decideReview, unlistItem, relistItem, putFeatured, putWelcome };
+export { reviewTargetParam, listReviewQueue, listUnsubmitted, decideReview, unlistItem, relistItem, putFeatured, putWelcome };

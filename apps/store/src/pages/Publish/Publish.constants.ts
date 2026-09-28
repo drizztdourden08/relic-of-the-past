@@ -25,11 +25,40 @@ const PAGE_TITLES: Record<PublishMode, (name: string) => string> = {
   listing: (name) => `Edit ${name}`,
 };
 
+/** A new pack only uploads; sending it for review is a later step. */
 const SUBMIT_LABELS: Record<PublishMode, string> = {
-  new: 'Upload and submit for review',
-  version: 'Upload and submit for review',
+  new: 'Upload',
+  version: 'Upload',
   listing: 'Submit for review',
 };
 
-export { LICENSE_OPTIONS, DEFAULT_LICENSE, PACK_ACCEPT, PAGE_TITLES, SUBMIT_LABELS };
+/** The listing fields' labels, also named in their error messages. */
+const FIELD_LABELS = {
+  name: 'Name',
+  summary: 'Short description',
+  description: 'Description',
+  tags: 'Tags',
+  license: 'Licence',
+  color: 'Colour',
+} as const;
+
+/** Each message says what is wrong and how to fix it. */
+const FIELD_MESSAGES = {
+  packMissing: 'Add the pack file. Drop it here, or click to pick it.',
+  nameMissing: 'Give the pack a name. It shows on every card.',
+  summaryMissing: 'Write a short description. It shows on cards.',
+  licenseMissing: 'Pick a licence, so players know what they may do with it.',
+  cardMissing: 'Add a card picture. It shows on every shelf.',
+  rights: 'Tick the box to confirm you may share it.',
+  inFlight: 'A version of this pack is still uploading, ready or in review. Send, withdraw or delete it from Publications first.',
+  nothingChanged: 'Nothing has changed yet. Change a field or a picture first.',
+  following: 'Filled from the short description until you change it.',
+} as const;
+
+/** The red line over the form once Submit is pressed with fields still wrong. */
+const needsALook = (count: number) => (count === 1
+  ? '1 field needs a look. It is outlined in red below.'
+  : `${count} fields need a look. They are outlined in red below.`);
+
+export { LICENSE_OPTIONS, DEFAULT_LICENSE, PACK_ACCEPT, PAGE_TITLES, SUBMIT_LABELS, FIELD_LABELS, FIELD_MESSAGES, needsALook };
 export type { PublishMode };

@@ -13,9 +13,11 @@ import {
   HeadObjectCommand,
   DeleteObjectCommand,
   CopyObjectCommand,
+  ListPartsCommand,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { HUB_LIMITS } from '../../../shared/hub';
+import type { UploadedPart } from '../../../shared/hub';
 import { attachmentDisposition } from './safe-name';
 
 type StorageConfig = { keyId: string; appKey: string; bucket: string; endpoint: string; region: string };
@@ -52,6 +54,20 @@ const createStorage = (readConfig: () => StorageConfig) => {
 
   const abort = async (key: string, uploadId: string): Promise<void> => {
     await s3().send(new AbortMultipartUploadCommand({ Bucket: bucket(), Key: key, UploadId: uploadId }));
+  };
+
+  /** Every part of an open multipart upload already in the bucket, read page by page. */
+  const listParts = async (key: string, uploadId: string): Promise<UploadedPart[]> => {
+    const found: UploadedPart[] = [];
+    let marker: string | undefined;
+    do {
+      const out = await s3().send(new ListPartsCommand({ Bucket: bucket(), Key: key, UploadId: uploadId, PartNumberMarker: marker }));
+      for (const { PartNumber, ETag, Size } of out.Parts ?? []) {
+        if (PartNumber && ETag) found.push({ part: PartNumber, etag: ETag, size: Size ?? 0 });
+      }
+      marker = out.IsTruncated ? out.NextPartNumberMarker : undefined;
+    } while (marker);
+    return found;
   };
 
   /** One PUT for a small object. The signed Content-Length binds the upload to the declared size. */
@@ -108,7 +124,7 @@ const createStorage = (readConfig: () => StorageConfig) => {
     return out.Body.transformToWebStream();
   };
 
-  return { begin, signPart, complete, abort, signPut, signDownload, signPreview, headSize, remove, copy, readRange, readStream };
+  return { begin, signPart, complete, abort, listParts, signPut, signDownload, signPreview, headSize, remove, copy, readRange, readStream };
 };
 
 type Storage = ReturnType<typeof createStorage>;

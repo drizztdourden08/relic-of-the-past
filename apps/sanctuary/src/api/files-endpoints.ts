@@ -6,6 +6,7 @@ import type {
   FilesListResponse,
   FileBeginResponse,
   SignPartsResponse,
+  UploadedPartsResponse,
   FileResponse,
   DownloadResponse,
   PreviewResponse,
@@ -16,8 +17,12 @@ const listFiles = () => sanctuaryApi.request<FilesListResponse>('filesList');
 
 const beginFile = (body: CreateFileBody) => sanctuaryApi.request<FileBeginResponse>('filesCreate', { body });
 
-const signParts = (id: string, parts: number[]) =>
-  sanctuaryApi.request<SignPartsResponse>('filesSignParts', { params: { id }, body: { parts } });
+/** `partsDone` is how many parts are already up, which the record keeps. */
+const signParts = (id: string, parts: number[], partsDone?: number) =>
+  sanctuaryApi.request<SignPartsResponse>('filesSignParts', { params: { id }, body: { parts, partsDone } });
+
+/** The parts of a first upload already in the bucket, for a resumed upload. */
+const fileParts = (id: string) => sanctuaryApi.request<UploadedPartsResponse>('filesParts', { params: { id } });
 
 const completeFile = (id: string, etags: string[]) =>
   sanctuaryApi.request<FileResponse>('filesComplete', { params: { id }, body: { etags } });
@@ -33,4 +38,4 @@ const patchFile = (id: string, patch: PatchFileBody) =>
 
 const deleteFile = (id: string) => sanctuaryApi.request<{ ok: true }>('filesDelete', { params: { id } });
 
-export { listFiles, beginFile, signParts, completeFile, downloadFile, previewFile, patchFile, deleteFile };
+export { listFiles, beginFile, signParts, fileParts, completeFile, downloadFile, previewFile, patchFile, deleteFile };

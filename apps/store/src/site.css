@@ -16,7 +16,9 @@
   --view-name-maxw: 160px;
   --upload-list-maxh: 160px;
   --side-column-w: 360px;
-  --uploads-panel-maxh: 280px;
+  --upload-tray-w: 360px;
+  --upload-tray-maxh: 320px;
+  --upload-dialog-w: 440px;
   --media-preview-maxh: 240px;
   --media-viewer-w: 92vw;
   --media-viewer-h: 90vh;

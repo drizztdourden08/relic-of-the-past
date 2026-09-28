@@ -1,5 +1,8 @@
 /* @layer store-site @kind component */
-/** What changed in this version, shown to players once it is approved. Store-api numbers the version itself. */
+/**
+ * What changed in this version, shown to players once it is approved. Only a new version
+ * has it; a first upload has nothing to compare to. Store-api numbers the version itself.
+ */
 import { Field } from '@ds/primitives/Field';
 import { Textarea } from '@ds/primitives/Textarea';
 import type { PublishForm } from '../behavior/usePublishForm';

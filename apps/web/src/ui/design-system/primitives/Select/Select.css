@@ -54,6 +54,11 @@
   border-color: var(--c-gold);
 }
 
+/* Invalid: an erroring Field around it. */
+.field--invalid .select-trigger {
+  border-color: var(--c-danger);
+}
+
 .select-trigger--disabled {
   opacity: 0.5;
   cursor: not-allowed;

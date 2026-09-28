@@ -2,12 +2,11 @@
 /**
  * The picked entry of the queue: the author, what is live now, the pack's manifest line,
  * size and checksum, what changed, a link to download the upload and test it, the note to
- * the author (required to reject), then Approve, Reject and Unlist item.
+ * the author (required to reject), then the reviewer's buttons (ReviewButtons).
  */
 import { useState } from 'react';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import downloadIcon from '@iconify-icons/lucide/download';
-import { Button } from '@ds/primitives/Button';
 import { Field } from '@ds/primitives/Field';
 import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
@@ -25,6 +24,7 @@ import { formatCount } from '../../../lib/format-count';
 import { editOfEntry, versionOfEntry } from '../../../review/review-row';
 import type { ReviewActions } from '../behavior/useReviewActions';
 import { ListingEditPreview } from './ListingEditPreview';
+import { ReviewButtons } from './ReviewButtons';
 
 type ReviewDetailProps = {
   entry: ReviewEntry;
@@ -58,15 +58,7 @@ const ReviewDetail = (props: ReviewDetailProps) => {
   const edit = editOfEntry(entry);
   const title = version ? `${entry.item.name} · ${version.semver}` : `${entry.item.name} · listing`;
 
-  const buttons = (
-    <>
-      <Button variant="primary" size="sm" disabled={actions.busy} onClick={() => void actions.decide(entry, 'approve', note)}>Approve</Button>
-      <Button variant="danger" size="sm" disabled={actions.busy || !note.trim()} title={note.trim() ? undefined : 'Write a note first'} onClick={() => void actions.decide(entry, 'reject', note)}>
-        Reject
-      </Button>
-      <Button variant="ghost" size="sm" disabled={actions.busy || entry.item.status !== 'published'} onClick={() => void actions.unlist(entry)}>Unlist item</Button>
-    </>
-  );
+  const buttons = <ReviewButtons entry={entry} version={version} note={note} actions={actions} />;
 
   return (
     <DetailPane title={title} fields={fieldsOf(entry)} actions={buttons} notice={actions.notice} onClose={onClose} className="side-panel review-detail">

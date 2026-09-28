@@ -5,7 +5,7 @@
  * API, the store site and the app, so each reads the same record.
  */
 import type { FileVersion } from '@shared/sanctuary/file-types';
-import type { Review } from './review-types';
+import type { ListingEditState, Review } from './review-types';
 
 /** What an item is, which decides where it installs. */
 type StoreKind = 'music' | 'character' | 'language';
@@ -40,6 +40,12 @@ type CharacterFacts = { kind: 'character'; title: string; author: string };
 type LanguageFacts = { kind: 'language'; title: string; base: string; origin: 'rom' | 'custom' };
 type KindFacts = MusicFacts | CharacterFacts | LanguageFacts;
 
+/** Why a version has no file any more. */
+type RemovalReason = 'deleted' | 'rejected-expired' | 'ready-expired' | 'pruned';
+
+/** When a version's file left the bucket and why. `by` names who deleted it; null for the store's own jobs. */
+type FileRemoval = { at: number; reason: RemovalReason; by: Person | null };
+
 type StoreVersion = FileVersion & {
   /** Must increase from one version to the next. */
   semver: string;
@@ -50,6 +56,8 @@ type StoreVersion = FileVersion & {
   /** The key under packs/ once approved; null before that. */
   packKey: string | null;
   review: Review;
+  /** Set once the file is gone from the bucket; the row stays as a trace. */
+  removed: FileRemoval | null;
 };
 
 /** The text and pictures a player reads before installing. */
@@ -67,7 +75,7 @@ type Listing = {
 };
 
 /** A change to a published listing, reviewed like a version. A draft changes directly. */
-type ListingEdit = { id: string; patch: Partial<Listing>; review: Review };
+type ListingEdit = { id: string; patch: Partial<Listing>; review: Review<ListingEditState> };
 
 type ItemStats = {
   installs: number;
@@ -103,5 +111,5 @@ type StoreItem = Listing & {
 
 export type {
   StoreKind, Container, Person, MediaRef, MusicFacts, CharacterFacts, LanguageFacts, KindFacts,
-  StoreVersion, Listing, ListingEdit, ItemStats, ItemStatus, StoreItem,
+  RemovalReason, FileRemoval, StoreVersion, Listing, ListingEdit, ItemStats, ItemStatus, StoreItem,
 };

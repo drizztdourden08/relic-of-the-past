@@ -28,8 +28,8 @@ const filesBegin: Route = {
     const parts = Math.max(1, Math.ceil(body.bytes / LIMITS.partBytes));
     const multipartId = await filesBucket.begin(key, body.contentType);
     const owner: FileOwner = { userId: member.caller.userId, displayName: member.user.displayName };
-    const upload = { multipartId, parts };
     const createdAt = now();
+    const upload = { multipartId, parts, partsDone: 0, updatedAt: createdAt };
     const { name, bytes, sha256, contentType } = body;
     const file: SanctuaryFile = {
       id,

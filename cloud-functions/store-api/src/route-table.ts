@@ -17,14 +17,18 @@ import { itemsMedia } from './routes/items-media';
 import { itemsListing } from './routes/items-listing';
 import { versionsBegin } from './routes/versions-begin';
 import { versionsSignParts } from './routes/versions-sign-parts';
+import { versionsParts } from './routes/versions-parts';
 import { versionsComplete } from './routes/versions-complete';
 import { versionsAbort } from './routes/versions-abort';
 import { versionsWithdraw } from './routes/versions-withdraw';
+import { versionsSubmit } from './routes/versions-submit';
+import { versionsDelete } from './routes/versions-delete';
 import { download } from './routes/download';
 import { ratingPut } from './routes/rating-put';
 import { ratingDelete } from './routes/rating-delete';
 import { myPublications } from './routes/my-publications';
 import { reviewQueue } from './routes/review-queue';
+import { reviewUnsubmitted } from './routes/review-unsubmitted';
 import { reviewDecide } from './routes/review-decide';
 import { itemsUnlist } from './routes/items-unlist';
 import { itemsRelist } from './routes/items-relist';
@@ -58,14 +62,18 @@ const STORE_OWN_ROUTES: Route[] = [
   itemsListing,
   versionsBegin,
   versionsSignParts,
+  versionsParts,
   versionsComplete,
   versionsAbort,
   versionsWithdraw,
+  versionsSubmit,
+  versionsDelete,
   download,
   ratingPut,
   ratingDelete,
   myPublications,
   reviewQueue,
+  reviewUnsubmitted,
   reviewDecide,
   itemsUnlist,
   itemsRelist,

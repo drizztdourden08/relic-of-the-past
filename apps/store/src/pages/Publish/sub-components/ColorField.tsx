@@ -8,6 +8,7 @@ import { ColorPickerPopover } from '@ds/composites/ColorPickerPopover';
 import { ColorSwatch } from '@ds/primitives/ColorSwatch';
 import { Field } from '@ds/primitives/Field';
 import { DEFAULT_ITEM_COLOR } from '@shared/store/item-color';
+import { FIELD_LABELS } from '../Publish.constants';
 
 type ColorFieldProps = {
   value: string;
@@ -19,7 +20,7 @@ const ColorField = (props: ColorFieldProps) => {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLElement | null>(null);
   return (
-    <Field label="Colour" className="publish__color">
+    <Field label={FIELD_LABELS.color} className="publish__color">
       <ColorSwatch
         color={value}
         selected={open}

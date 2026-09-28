@@ -1,7 +1,7 @@
 /* @layer store-site @kind logic */
 /**
- * The rows of the review queue: one per waiting version or listing edit, oldest first as
- * the API sends them. A version of an item with nothing approved yet is a new item; a later
+ * The rows of the review page: one per waiting version or listing edit, or per version not
+ * submitted yet, oldest first as the API sends them. A version of an item with nothing approved yet is a new item; a later
  * one is an update. Dates read as sortable text.
  */
 import type { ReviewEntry } from '@shared/store/api-types';
@@ -34,7 +34,7 @@ const editOfEntry = (entry: ReviewEntry) => {
   return target.kind === 'listing' ? item.listingEdits.find((edit) => edit.id === target.editId) ?? null : null;
 };
 
-const toReviewRow =(entry: ReviewEntry): ReviewRow => {
+const toReviewRow = (entry: ReviewEntry): ReviewRow => {
   const { item, target } = entry;
   const version = versionOfEntry(entry);
   const label = version ? `${item.name} · ${version.semver}` : `${item.name} · listing`;

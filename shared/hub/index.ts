@@ -14,8 +14,10 @@ export { HUB_LIMITS } from './limits';
 export type { HubLimits } from './limits';
 export { HUB_ROUTES, route, formatPath } from './api-contract';
 export type { HttpMethod, RouteDef, HubRoute, PathParams } from './api-contract';
-export { runMultipart } from './upload/run-multipart';
+export { runMultipart, keptParts } from './upload/run-multipart';
 export type { SignedParts, BegunMultipart, Sliceable, PutPart, RunMultipartParams } from './upload/run-multipart';
+export { withRetry } from './upload/with-retry';
+export type { UploadedPart, UploadedParts } from './upload/uploaded-part.type';
 export { tagsSchema, noteSchema, versionSchema, idSchema, MAX_TAGS } from './schemas/common';
 export {
   viewSurfaceSchema,

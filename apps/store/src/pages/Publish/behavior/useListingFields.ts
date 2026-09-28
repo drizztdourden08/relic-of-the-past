@@ -1,25 +1,17 @@
 /* @layer store-site @kind hook */
 /**
- * The listing's text fields, started from the item when editing one, and what changed
- * against it. The fields are checked with the same schema store-api parses a new item with.
+ * The listing's text fields, started from the item when editing one, what is wrong with
+ * each, and what changed against the item. The description follows the short description
+ * while it is empty or still a copy of it, until the author writes their own.
  */
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import type { StoreItem } from '@shared/store/types';
 import { DEFAULT_ITEM_COLOR } from '@shared/store/item-color';
-import { itemCreateSchema } from '@shared/store/schemas';
 import type { ListingPatchBody } from '@shared/store/schemas';
 import { DEFAULT_LICENSE } from '../Publish.constants';
+import { listingErrors } from './listing-errors';
 
 type ListingText = { name: string; summary: string; description: string; tags: readonly string[]; license: string; color: string };
-
-const FIELD_LABELS: Record<string, string> = {
-  name: 'Name',
-  summary: 'One line',
-  description: 'Description',
-  tags: 'Tags',
-  license: 'Licence',
-  color: 'Colour',
-};
 
 const EMPTY: ListingText = { name: '', summary: '', description: '', tags: [], license: DEFAULT_LICENSE, color: DEFAULT_ITEM_COLOR };
 
@@ -42,20 +34,20 @@ const changedText = (from: ListingText, to: ListingText): ListingPatchBody => {
 
 const useListingFields = (item: StoreItem | null) => {
   const [text, setText] = useState<ListingText>(() => textOf(item));
-  const set = <K extends keyof ListingText>(key: K, value: ListingText[K]) => setText((current) => ({ ...current, [key]: value }));
+  const set = useCallback(<K extends keyof ListingText>(key: K, value: ListingText[K]) => setText((current) => ({ ...current, [key]: value })), []);
 
-  const problem = useMemo(() => {
-    const parsed = itemCreateSchema.safeParse({ kind: item?.kind ?? 'music', ...text, tags: [...text.tags] });
-    if (parsed.success) return null;
-    const issue = parsed.error.issues[0];
-    const field = FIELD_LABELS[String(issue?.path[0])] ?? 'Listing';
-    if (issue?.code === 'too_small') return `${field} is empty.`;
-    return issue ? `${field}: ${issue.message}` : 'Check the listing.';
-  }, [text, item]);
+  const setSummary = useCallback((value: string) => setText((current) => ({
+    ...current,
+    summary: value,
+    description: current.description === '' || current.description === current.summary ? value : current.description,
+  })), []);
 
+  /** True while the description is the short description's copy. */
+  const following = text.summary !== '' && text.description === text.summary;
+  const errors = useMemo(() => listingErrors(text), [text]);
   const patch = useMemo(() => changedText(textOf(item), text), [item, text]);
 
-  return { text, set, problem, patch };
+  return { text, set, setSummary, following, errors, patch };
 };
 
 type ListingFieldsState = ReturnType<typeof useListingFields>;

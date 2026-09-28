@@ -18,11 +18,11 @@ const extensionOf = (name: string) => name.slice(name.lastIndexOf('.') + 1).toLo
 const checkPack = (file: File | null, required: StoreKind | null): PackCheck => {
   if (!file) return { container: null, kind: null, problem: null };
   const ext = extensionOf(file.name);
-  if (!isContainer(ext)) return { container: null, kind: null, problem: 'The Hookshop takes .msul, .rsp and .rlang files.' };
+  if (!isContainer(ext)) return { container: null, kind: null, problem: `"${file.name}" is not a pack. Drop a .msul, .rsp or .rlang file.` };
   const kind = CONTAINER_KIND[ext];
-  if (required && kind !== required) return { container: ext, kind, problem: `This item is a ${KIND_LABELS[required]} item; this file is a ${KIND_LABELS[kind]} pack.` };
+  if (required && kind !== required) return { container: ext, kind, problem: `This file is a ${KIND_LABELS[kind]} pack. Drop a ${KIND_LABELS[required]} pack for this item.` };
   const cap = STORE_LIMITS.packBytes[kind];
-  if (file.size > cap) return { container: ext, kind, problem: `A ${KIND_LABELS[kind]} pack is at most ${formatBytes(cap)}.` };
+  if (file.size > cap) return { container: ext, kind, problem: `This pack is ${formatBytes(file.size)}. A ${KIND_LABELS[kind]} pack is at most ${formatBytes(cap)}.` };
   return { container: ext, kind, problem: null };
 };
 

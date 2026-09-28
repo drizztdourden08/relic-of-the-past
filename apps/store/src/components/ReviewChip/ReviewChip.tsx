@@ -1,25 +1,36 @@
 /* @layer store-site @kind component */
-/** Where a version or a listing edit stands in review, as the kit's pill in the state's tone. */
-import type { ReviewState } from '@shared/store/review-types';
+/**
+ * Where a version or a listing edit stands in review, as the kit's pill in the state's tone.
+ * Expired is a ready version whose file the store removed before it was sent.
+ */
+import type { ListingEditState, ReviewState } from '@shared/store/review-types';
 import { Chip } from '@site-kit/components/Chip/Chip';
 import type { ChipTone } from '@site-kit/components/Chip/Chip';
 
-type ReviewChipProps = { state: ReviewState };
+type ReviewChipState = ReviewState | ListingEditState | 'expired';
 
-const REVIEW_TONES: Record<ReviewState, ChipTone> = {
+type ReviewChipProps = { state: ReviewChipState };
+
+const REVIEW_TONES: Record<ReviewChipState, ChipTone> = {
   uploading: 'muted',
+  ready: 'info',
   waiting: 'warning',
   approved: 'green',
   rejected: 'danger',
+  deleted: 'muted',
   withdrawn: 'muted',
+  expired: 'muted',
 };
 
-const REVIEW_LABELS: Record<ReviewState, string> = {
+const REVIEW_LABELS: Record<ReviewChipState, string> = {
   uploading: 'uploading',
+  ready: 'ready',
   waiting: 'waiting',
   approved: 'approved',
   rejected: 'rejected',
+  deleted: 'deleted',
   withdrawn: 'withdrawn',
+  expired: 'expired',
 };
 
 const ReviewChip = (props: ReviewChipProps) => {
@@ -28,4 +39,4 @@ const ReviewChip = (props: ReviewChipProps) => {
 };
 
 export { ReviewChip, REVIEW_LABELS };
-export type { ReviewChipProps };
+export type { ReviewChipProps, ReviewChipState };

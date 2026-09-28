@@ -1,15 +1,17 @@
 /* @layer sanctuary-site @kind component */
 /**
- * Loads the files and (with the reports right) the reports once for the signed-in frame
- * and holds each list page's scope tab.
+ * Loads the files and (with the reports right) the reports once for the signed-in frame,
+ * holds each list page's scope tab, and mounts the upload tray and dialog over every page.
+ * Every file an upload finishes reaches the files list.
  */
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import { useSessionContext } from '@site-kit/session/session-context';
+import { UploadLayer } from '@site-kit/components/UploadLayer';
 import { canSeeReports } from '@shared/sanctuary/sanctuary-rights';
 import { useFiles } from '../files/useFiles';
 import { useReports } from '../reports/useReports';
-import { useMultipartUpload } from '../upload/useMultipartUpload';
+import { SANCTUARY_QUEUE } from '../upload/sanctuary-queue';
 import { ALL_SCOPE_ID } from '../pages/Files/Files.constants';
 import { REPORT_SCOPE_IDS } from '../pages/Reports/Reports.constants';
 import { SiteDataContext } from './site-data-context';
@@ -25,14 +27,23 @@ const SiteDataProvider = (props: SiteDataProviderProps) => {
   const { rights } = useSessionContext();
   const files = useFiles();
   const reports = useReports(canSeeReports(rights));
-  const uploads = useMultipartUpload(files.upsert);
+  const { upsert } = files;
+  useEffect(() => SANCTUARY_QUEUE.onRecord(upsert), [upsert]);
   const [scopes, setScopes] = useState(INITIAL_SCOPES);
   const setScope = useCallback((surface: ListSurface, scopeId: string) => {
     setScopes((current) => (current[surface] === scopeId ? current : { ...current, [surface]: scopeId }));
   }, []);
 
-  const value = useMemo<SiteData>(() => ({ files, reports, uploads, scopes, setScope }), [files, reports, uploads, scopes, setScope]);
-  return <SiteDataContext.Provider value={value}>{children}</SiteDataContext.Provider>;
+  const value = useMemo<SiteData>(
+    () => ({ files, reports, uploads: SANCTUARY_QUEUE, scopes, setScope }),
+    [files, reports, scopes, setScope],
+  );
+  return (
+    <SiteDataContext.Provider value={value}>
+      {children}
+      <UploadLayer queue={SANCTUARY_QUEUE} />
+    </SiteDataContext.Provider>
+  );
 };
 
 export { SiteDataProvider };

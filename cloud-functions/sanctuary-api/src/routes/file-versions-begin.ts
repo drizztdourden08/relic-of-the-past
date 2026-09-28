@@ -28,6 +28,7 @@ const fileVersionsBegin: Route = {
     const key = versionKey(file.id, n);
     const parts = Math.max(1, Math.ceil(body.bytes / LIMITS.partBytes));
     const multipartId = await filesBucket.begin(key, body.contentType);
+    const createdAt = now();
     const version: FileVersion = {
       n,
       key,
@@ -38,8 +39,8 @@ const fileVersionsBegin: Route = {
       note: body.note,
       by: { userId: member.caller.userId, displayName: member.user.displayName },
       status: 'uploading',
-      upload: { multipartId, parts },
-      createdAt: now(),
+      upload: { multipartId, parts, partsDone: 0, updatedAt: createdAt },
+      createdAt,
     };
     try {
       await filesRepo.mutate(file.id, (latest) => {

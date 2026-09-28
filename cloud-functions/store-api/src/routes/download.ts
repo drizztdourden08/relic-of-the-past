@@ -2,7 +2,8 @@
 /** POST /items/:id/download { version? }. Holds the player to the daily download count and
  *  byte cap, records the install, and answers a presigned GET of the live version (or the
  *  approved version asked for) with its checksum and container. Only keys under packs/ are
- *  ever signed here, so nothing unreviewed can leave through this route. */
+ *  ever signed here, so nothing unreviewed can leave through this route. An approved version
+ *  whose file was pruned is refused with the reason. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { DownloadResponse } from '../../../../shared/store/api-types';
 import { HUB_LIMITS } from '../../../../shared/hub/limits';
@@ -29,6 +30,9 @@ const approvedVersion = (item: StoreItem, requested: number | undefined): StoreV
   const version = n === null ? null : versionOf(item, n);
   if (!version || version.review.state !== 'approved' || !version.packKey || !isPackKey(version.packKey)) {
     throw notFound('That version is not available.');
+  }
+  if (version.removed) {
+    throw notFound(`The file of ${version.semver} was removed. The store keeps the newest ${STORE_LIMITS.filesKept[item.kind]} versions of a ${item.kind} pack; install the live version.`);
   }
   return { ...version, packKey: version.packKey };
 };

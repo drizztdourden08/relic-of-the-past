@@ -73,9 +73,10 @@ const versionBeginSchema = z.object({
   sha256: sha256Schema,
 });
 
-/** POST /items/:id/versions/:n/parts */
+/** POST /items/:id/versions/:n/parts. `partsDone` is how many parts the uploader already has up. */
 const signPartsSchema = z.object({
   parts: z.array(z.number().int().positive()).min(1).max(HUB_LIMITS.partsPerSign),
+  partsDone: z.number().int().nonnegative().optional(),
 });
 
 /** POST /items/:id/versions/:n/complete */

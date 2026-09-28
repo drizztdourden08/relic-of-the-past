@@ -51,6 +51,7 @@ const useItemPage = (id: string) => {
     ratingsLine,
     canModerate: hasRight(rights, REVIEW_PERMISSION),
     listing,
+    onItem,
   };
 };
 

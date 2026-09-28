@@ -17,6 +17,13 @@ const PACK_BYTES: Record<StoreKind, number> = {
   language: 20 * MiB,
 };
 
+/** Approved pack files kept per item, by kind. A music pack is large, so it keeps fewer. */
+const FILES_KEPT: Record<StoreKind, number> = {
+  music: 2,
+  character: 5,
+  language: 5,
+};
+
 const STORE_LIMITS = {
   packBytes: PACK_BYTES,
   /** Every item's card, 16:9: exact size, webp, at most this many bytes. */
@@ -39,6 +46,12 @@ const STORE_LIMITS = {
   popularWindowDays: 30,
   /** Days an upload stays under incoming/ before the bucket lifecycle clears it. */
   incomingKeepDays: 45,
+  /** Days a rejected version keeps its file, so the author can resubmit it; counted from the rejection. */
+  rejectedKeepDays: 30,
+  /** Days a ready version never sent for review keeps its file; counted from the start of its upload. */
+  readyKeepDays: 45,
+  /** Approved files an item keeps, newest first; older approved versions lose theirs. Music keeps the live one and the one before. */
+  filesKept: FILES_KEPT,
 } as const;
 
 type StoreLimits = typeof STORE_LIMITS;

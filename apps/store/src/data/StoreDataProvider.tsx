@@ -1,11 +1,15 @@
 /* @layer store-site @kind component */
-/** Loads the catalogue and the player's publications once for the signed-in frame, and runs pack uploads. */
-import { useMemo } from 'react';
+/**
+ * Loads the catalogue and the player's publications once for the signed-in frame, and
+ * mounts the upload tray and dialog over every page. Every item an upload step answers
+ * with reaches the publications list.
+ */
+import { useEffect, useMemo } from 'react';
 import type { ReactNode } from 'react';
-import { useUploads } from '@site-kit/upload/useUploads';
+import { UploadLayer } from '@site-kit/components/UploadLayer';
 import { useCatalog } from '../catalog/useCatalog';
 import { usePublications } from '../publications/usePublications';
-import { STORE_UPLOADER } from '../upload/store-uploader';
+import { STORE_QUEUE } from '../upload/store-queue';
 import { StoreDataContext } from './store-data-context';
 import type { StoreData } from './store-data-context';
 
@@ -15,12 +19,18 @@ const StoreDataProvider = (props: StoreDataProviderProps) => {
   const { children } = props;
   const catalog = useCatalog();
   const publications = usePublications();
-  const uploads = useUploads(STORE_UPLOADER, publications.upsert);
+  const { upsert } = publications;
+  useEffect(() => STORE_QUEUE.onRecord(upsert), [upsert]);
   const value = useMemo<StoreData>(
-    () => ({ catalog, publications, uploads, onItem: publications.upsert }),
-    [catalog, publications, uploads],
+    () => ({ catalog, publications, uploads: STORE_QUEUE, onItem: upsert }),
+    [catalog, publications, upsert],
   );
-  return <StoreDataContext.Provider value={value}>{children}</StoreDataContext.Provider>;
+  return (
+    <StoreDataContext.Provider value={value}>
+      {children}
+      <UploadLayer queue={STORE_QUEUE} />
+    </StoreDataContext.Provider>
+  );
 };
 
 export { StoreDataProvider };

@@ -3,9 +3,9 @@
  * All of the Files page's state, so the component stays a layout: the list and the scope
  * tab (both shared through the site data, so they outlive the page), the schema, the view
  * (clauses, search, saved views), the owners facet, the picked files with the actions on
- * one of them or on several, the uploads with their side panel, and the dialogs a drop
- * leads to. One picked file is the route, `/files/:id`; a new tab clears the pick. Tabs
- * and upload types follow the caller's rights.
+ * one of them or on several, and the dialogs a drop leads to (a confirmed drop joins the
+ * site's upload queue, shown in the tray). One picked file is the route, `/files/:id`; a
+ * new tab clears the pick. Tabs and upload types follow the caller's rights.
  */
 import { useCallback, useMemo } from 'react';
 import type { SanctuaryFile } from '@shared/sanctuary/file-types';
@@ -26,7 +26,6 @@ import { useBatchDownload } from './useBatchDownload';
 import { useFileActions } from './useFileActions';
 import { useFileSelection } from './useFileSelection';
 import { useDropFlow } from './useDropFlow';
-import { useUploadsPanel } from './useUploadsPanel';
 
 const ownerOf = (row: FileRow) => row.owner.displayName;
 
@@ -91,7 +90,6 @@ const useFilesPage = (selectedId: string | null) => {
   }, [dismiss, change]);
   const clearPick = useCallback(() => pick(new Set()), [pick]);
   const drops = useDropFlow({ files: data.files, start: uploads.start });
-  const uploadsPanel = useUploadsPanel(uploads.jobs);
 
   const preferred = isFileType(scopeId) ? scopeId : DEFAULT_UPLOAD_TYPE;
   const uploadType = types.includes(preferred) ? preferred : types[0] ?? DEFAULT_UPLOAD_TYPE;
@@ -115,8 +113,6 @@ const useFilesPage = (selectedId: string | null) => {
     batch,
     download,
     canEdit,
-    uploads,
-    uploadsPanel,
     drops,
     types,
     uploadType,

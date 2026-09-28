@@ -1,20 +1,26 @@
 /* @layer store-site @kind hook */
 /**
  * Everything the Publish form holds for one mode: the pack and what changed in it, the
- * listing text, the two pictures and the rights box, with the first thing still wrong. The
- * submit button stays off until nothing is. A new item needs all of it; a new version needs
- * the pack; a listing edit needs a change. Store-api numbers each version itself.
+ * listing text, the two pictures and the rights box, with an error for each field that is
+ * wrong. Submit stays pressable: a press with fields still wrong shows every error and sends
+ * nothing. A version still uploading, ready or in review blocks a new one, and a listing
+ * edit needs a change.
+ * Store-api numbers each version itself.
  */
 import { useCallback, useMemo, useState } from 'react';
 import type { StoreItem } from '@shared/store/types';
 import { STORE_LIMITS } from '@shared/store/limits';
+import { isInFlight } from '@shared/store/version-flow';
+import { FIELD_MESSAGES, needsALook } from '../Publish.constants';
 import type { PublishMode } from '../Publish.constants';
+import { formErrors } from './form-errors';
+import { useFieldErrors } from './useFieldErrors';
 import { useListingFields } from './useListingFields';
 import { usePack } from './usePack';
 import { usePicture } from './usePicture';
 import { usePublishSubmit } from './usePublishSubmit';
 
-const inFlight = (item: StoreItem) => item.versions.some((v) => v.review.state === 'uploading' || v.review.state === 'waiting');
+const inFlight = (item: StoreItem) => item.versions.some(isInFlight);
 
 const usePublishForm = (mode: PublishMode, item: StoreItem | null) => {
   const pack = usePack(item?.kind ?? null);
@@ -25,21 +31,24 @@ const usePublishForm = (mode: PublishMode, item: StoreItem | null) => {
   const [rights, setRights] = useState(false);
   const sending = usePublishSubmit();
 
-  const takesPack = mode !== 'listing';
-  const takesListing = mode !== 'version';
+  const errors = useMemo(
+    () => formErrors({ mode, pack, listing: listing.errors, card, rights }),
+    [mode, pack, listing.errors, card, rights],
+  );
+  const fields = useFieldErrors(errors);
 
-  const problem = useMemo((): string | null => {
-    if (mode === 'version' && item && inFlight(item)) return 'A version is already waiting for review. Withdraw it first, or wait for the decision.';
-    if (takesPack && !pack.file) return 'Add the pack file.';
-    if (takesPack && pack.problem) return pack.problem;
-    if (takesListing && listing.problem) return listing.problem;
-    if (mode === 'new' && !card.picture) return 'Add a card picture.';
-    if (mode === 'listing' && Object.keys(listing.patch).length === 0 && !card.picture && !banner.picture) return 'Nothing has changed yet.';
-    if (!rights) return 'Tick the box to confirm you may share it.';
-    return null;
-  }, [mode, item, takesPack, takesListing, pack, listing, card.picture, banner.picture, rights]);
+  /** A reason no field can fix, shown over the form from the start. */
+  const note = mode === 'version' && item && inFlight(item) ? FIELD_MESSAGES.inFlight : null;
+  const unchanged = mode === 'listing' && Object.keys(listing.patch).length === 0 && !card.picture && !banner.picture;
+  const alertLine = useMemo(() => {
+    if (fields.attempts === 0) return null;
+    if (fields.count > 0) return needsALook(fields.count);
+    return unchanged ? FIELD_MESSAGES.nothingChanged : null;
+  }, [fields.attempts, fields.count, unchanged]);
 
   const submit = useCallback(() => {
+    fields.attempt();
+    if (note || fields.count > 0 || unchanged) return;
     void sending.submit({
       item,
       kind: item?.kind ?? pack.kind,
@@ -47,20 +56,23 @@ const usePublishForm = (mode: PublishMode, item: StoreItem | null) => {
       card: card.picture,
       banner: banner.picture,
       pack,
-      changelog,
+      changelog: mode === 'version' ? changelog : '',
     });
-  }, [sending, item, pack, listing.text, card.picture, banner.picture, changelog]);
+  }, [fields, note, unchanged, sending, item, pack, listing.text, card.picture, banner.picture, mode, changelog]);
 
   return {
-    takesPack,
-    takesListing,
+    takesPack: mode !== 'listing',
+    takesListing: mode !== 'version',
+    takesChanges: mode === 'version',
     pack,
     listing,
     card,
     banner,
     changes: { changelog, setChangelog },
     rights: { checked: rights, set: setRights },
-    problem,
+    fields,
+    note,
+    alertLine,
     busy: sending.busy || card.busy || banner.busy,
     error: sending.error,
     submit,

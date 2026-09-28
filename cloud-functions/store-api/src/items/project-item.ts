@@ -5,6 +5,7 @@
 import { hasRight } from '../../../../shared/hub/rights';
 import type { Rights } from '../../../../shared/hub/group-types';
 import type { StoreItem, StoreVersion } from '../../../../shared/store/types';
+import type { Actor } from '../../../../shared/store/version-flow';
 
 /** The parts of a caller the projection reads; a hub-core Member has them. */
 type Viewer = { caller: { userId: string }; rights: Rights };
@@ -18,10 +19,17 @@ const canSeeReviews = (item: Pick<StoreItem, 'author'>, viewer: Viewer): boolean
 const canView = (item: Pick<StoreItem, 'author' | 'status'>, viewer: Viewer): boolean =>
   item.status === 'published' || canSeeReviews(item, viewer);
 
+/** The roles the viewer holds on this item, which the version flow table is read with. */
+const actorsOf = (item: Pick<StoreItem, 'author'>, viewer: Viewer): Actor[] => [
+  ...(isAuthor(item, viewer) ? ['author' as const] : []),
+  ...(hasRight(viewer.rights, 'review') ? ['reviewer' as const] : []),
+];
+
 const publicVersion = (version: StoreVersion): StoreVersion => ({
   ...version,
   key: '',
   upload: null,
+  removed: version.removed && { ...version.removed, by: null },
   review: {
     state: 'approved',
     submittedAt: version.review.submittedAt,
@@ -37,5 +45,5 @@ const projectItem = (item: StoreItem, viewer: Viewer): StoreItem => {
   return { ...item, versions, listingEdits: [] };
 };
 
-export { projectItem, canSeeReviews, canView, isAuthor };
+export { projectItem, canSeeReviews, canView, isAuthor, actorsOf };
 export type { Viewer };

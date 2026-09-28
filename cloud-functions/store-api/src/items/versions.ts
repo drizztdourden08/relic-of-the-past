@@ -27,7 +27,10 @@ const dropVersion = (item: VersionList, n: number): StoreVersion[] => item.versi
 const liveVersionOf = (item: Pick<StoreItem, 'versions' | 'liveVersion'>): StoreVersion | null =>
   (item.liveVersion === null ? null : versionOf(item, item.liveVersion));
 
-/** A version still in flight: being uploaded or waiting for review. */
-const inFlight = (version: StoreVersion): boolean => version.review.state === 'uploading' || version.review.state === 'waiting';
+/** The version installs receive: the newest approved one whose file is still in the bucket. */
+const liveAfter = (versions: readonly StoreVersion[]): number | null => {
+  const live = versions.filter((version) => version.review.state === 'approved' && !version.removed);
+  return live.length > 0 ? Math.max(...live.map((version) => version.n)) : null;
+};
 
-export { versionOf, lastVersionNumber, loadVersion, replaceVersion, dropVersion, liveVersionOf, inFlight };
+export { versionOf, lastVersionNumber, loadVersion, replaceVersion, dropVersion, liveVersionOf, liveAfter };

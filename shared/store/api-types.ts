@@ -35,6 +35,9 @@ type VersionBeginResponse = { itemId: string; n: number; uploadId: string; partS
 
 type SignPartsResponse = { urls: { part: number; url: string }[] };
 
+/** GET /items/:id/versions/:n/parts: the parts of an uploading version already in the bucket, for a resumed upload. */
+type UploadedPartsResponse = { parts: { part: number; etag: string; size: number }[] };
+
 type VersionCompleteResponse = { item: StoreItem };
 
 type DownloadResponse = {
@@ -59,6 +62,7 @@ type ReviewTarget = { kind: 'version'; n: number } | { kind: 'listing'; editId: 
 type ReviewEntry = {
   item: StoreItem;
   target: ReviewTarget;
+  /** When it was sent for review; for a version not sent yet, when its upload started. */
   submittedAt: number;
   /** For a version: a short-lived link to the upload under incoming/, so the reviewer can test it. */
   downloadUrl?: string;
@@ -66,11 +70,14 @@ type ReviewEntry = {
 
 type ReviewQueueResponse = { entries: ReviewEntry[] };
 
+/** GET /review/unsubmitted: the ready versions no author has sent for review yet, oldest first. */
+type UnsubmittedResponse = { entries: ReviewEntry[] };
+
 type ReviewDecideRequest = { decision: ReviewDecision; note: string };
 
 /**
- * The item after a change to it: a listing edit, an abort, a withdraw, a review decision, an
- * unlist or a relist. Projected like ItemResponse.item.
+ * The item after a change to it: a listing edit, an abort, a submit, a withdraw, a delete, a
+ * review decision, an unlist or a relist. Projected like ItemResponse.item.
  */
 type ItemChangeResponse = { item: StoreItem };
 
@@ -91,8 +98,10 @@ type DailyJobResponse = {
   recounted: number;
   /** Per-day counters dropped for falling out of the window. */
   prunedDays: number;
-  /** Versions whose upload was started and never finished, now removed. */
+  /** Versions whose upload was started and never finished, now deleted. */
   droppedUploads: VersionRef[];
+  /** Rejected and ready versions whose file was kept its full time and is now removed. */
+  expiredFiles: VersionRef[];
   /** Versions waiting so long their upload will soon leave incoming/. */
   staleWaiting: VersionRef[];
 };
@@ -106,6 +115,7 @@ export type {
   MediaUploadResponse,
   VersionBeginResponse,
   SignPartsResponse,
+  UploadedPartsResponse,
   VersionCompleteResponse,
   DownloadResponse,
   RatingResponse,
@@ -113,6 +123,7 @@ export type {
   ReviewTarget,
   ReviewEntry,
   ReviewQueueResponse,
+  UnsubmittedResponse,
   ReviewDecideRequest,
   ItemChangeResponse,
   FeaturedResponse,

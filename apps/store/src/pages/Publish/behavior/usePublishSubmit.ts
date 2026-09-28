@@ -1,19 +1,17 @@
 /* @layer store-site @kind hook */
 /**
- * Sending the form, in the order store-api needs: the draft first (a new item), then its
- * pictures and the listing that names them (the API refuses a version before the item has a
- * card), then the pack, which joins the upload list and runs on while the player moves on
- * to My publications. A draft created by a failed attempt is reused on the next one.
+ * Sending the form: the whole publish (the draft for a new item, its pictures, the listing
+ * changes, then the pack) goes to the store's upload queue as one job. Its dialog opens and
+ * the page moves to My publications at once, so the form is gone while the job runs on in
+ * the corner. A listing edit is the same job without the pack.
  */
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import type { StoreItem, StoreKind } from '@shared/store/types';
-import type { ListingPatchBody } from '@shared/store/schemas';
 import { errorMessage } from '@site-kit/api/api-error';
 import { navigate } from '@site-kit/router/useLocation';
-import { createItem, submitListing } from '../../../api/publish-endpoints';
 import { useStoreData } from '../../../data/store-data-context';
-import { uploadPicture } from '../../../upload/upload-picture';
 import type { Picture } from '../../../lib/resize-image';
+import type { PublishTarget } from '../../../upload/publish-target.type';
 import { changedText, textOf } from './useListingFields';
 import type { ListingText } from './useListingFields';
 import type { PackState } from './usePack';
@@ -30,46 +28,36 @@ type Submission = {
 
 const PUBLICATIONS_PATH = '/publications';
 
-const usePublishSubmit = () => {
-  const { uploads, onItem } = useStoreData();
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const created = useRef<StoreItem | null>(null);
+const targetOf = (submission: Submission): PublishTarget => {
+  const { item, kind, text, card, banner, pack, changelog } = submission;
+  const packTarget = pack.file && pack.container ? { container: pack.container, changelog: changelog.trim() } : null;
+  if (item) {
+    const patch = changedText(textOf(item), text);
+    return { itemId: item.id, itemName: item.name, isNew: false, draft: null, patch, card, banner, pack: packTarget };
+  }
+  if (!kind) throw new Error('Pick the pack first, so the Hookshop knows what kind of item it is.');
+  const draft = { kind, ...text, tags: [...text.tags] };
+  return { itemId: null, itemName: text.name.trim(), isNew: true, draft, patch: {}, card, banner, pack: packTarget };
+};
 
-  /** The new draft with the whole listing, which then needs no text patch. */
-  const createDraft = useCallback(async ({ kind, text }: Submission): Promise<StoreItem> => {
-    if (!kind) throw new Error('Pick the pack first, so the Hookshop knows what kind of item it is.');
-    const { item: draft } = await createItem({ kind, ...text, tags: [...text.tags] });
-    created.current = draft;
-    onItem(draft);
-    return draft;
-  }, [onItem]);
+const usePublishSubmit = () => {
+  const { uploads } = useStoreData();
+  const [error, setError] = useState<string | null>(null);
 
   const submit = useCallback(async (submission: Submission) => {
-    const { item, text, card, banner, pack, changelog } = submission;
-    setBusy(true);
     setError(null);
     try {
-      const existing = item ?? created.current;
-      let target = existing ?? await createDraft(submission);
-      const patch: ListingPatchBody = existing ? changedText(textOf(existing), text) : {};
-      if (card) patch.card = await uploadPicture(target.id, 'card', card);
-      if (banner) patch.banner = await uploadPicture(target.id, 'banner', banner);
-      if (Object.keys(patch).length > 0) {
-        target = (await submitListing(target.id, patch)).item;
-        onItem(target);
-      }
-      if (pack.file && pack.container) {
-        uploads.start([pack.file], { itemId: target.id, itemName: target.name, changelog: changelog.trim(), container: pack.container });
-      }
+      const target = targetOf(submission);
+      const id = uploads.add(target, target.pack ? submission.pack.file : null);
+      uploads.open(id);
       navigate(PUBLICATIONS_PATH);
     } catch (cause) {
       setError(errorMessage(cause));
-    } finally {
-      setBusy(false);
     }
-  }, [createDraft, onItem, uploads]);
+  }, [uploads]);
 
+  /** Handing a job to the queue is instant; the form never waits on the upload. */
+  const busy = false;
   return { busy, error, submit };
 };
 

@@ -1,13 +1,16 @@
 /* @layer store-site @kind logic */
 /**
  * The rows of My publications: one per version and one per listing edit of every item the
- * player published, newest first within an item, grouped by the item's name. A draft with
- * nothing uploaded yet still gets one row, so it can be found and finished. Dates read as
- * sortable text; the reviewer and the note are the author's own to see.
+ * player published, newest first within an item, grouped by the item's name. Deleted,
+ * rejected and expired versions stay as trace rows, with their file column saying what
+ * became of the file. A draft with nothing uploaded yet still gets one row, so it can be
+ * found and finished. Dates read as sortable text; the reviewer and the note are the
+ * author's own to see.
  */
 import type { ListingEdit, StoreItem, StoreKind, StoreVersion } from '@shared/store/types';
 import { formatDateTime } from '@site-kit/lib/format-date';
 import { formatCount } from '../lib/format-count';
+import { chipStateOf, fileLineOf } from './version-file';
 
 type PublicationTarget = { kind: 'version'; n: number } | { kind: 'listing'; editId: string } | { kind: 'none' };
 
@@ -19,6 +22,7 @@ type PublicationRow = {
   kind: StoreKind;
   semver: string;
   review: string;
+  file: string;
   submitted: string;
   reviewedBy: string;
   reviewedAt: string;
@@ -47,14 +51,15 @@ const parseRowId = (id: string): { itemId: string; target: PublicationTarget } |
   return { itemId, target: version ? { kind: 'version', n: Number(version[1]) } : { kind: 'listing', editId: rest } };
 };
 
-const versionRow = (item: StoreItem, v: StoreVersion): PublicationRow => ({
+const itemFields = (item: StoreItem) => ({ itemId: item.id, item: item.name, kind: item.kind });
+
+const versionRow = (item: StoreItem, v: StoreVersion, now: number): PublicationRow => ({
+  ...itemFields(item),
   id: rowId(item.id, { kind: 'version', n: v.n }),
-  itemId: item.id,
-  item: item.name,
   entry: `v${v.n}${v.n === item.liveVersion ? ' · live' : ''}`,
-  kind: item.kind,
   semver: v.semver,
-  review: v.review.state,
+  review: chipStateOf(v),
+  file: fileLineOf(item, v, now),
   submitted: dateOr(v.review.submittedAt),
   reviewedBy: v.review.by?.displayName ?? DASH,
   reviewedAt: dateOr(v.review.decidedAt),
@@ -63,13 +68,12 @@ const versionRow = (item: StoreItem, v: StoreVersion): PublicationRow => ({
 });
 
 const editRow = (item: StoreItem, edit: ListingEdit): PublicationRow => ({
+  ...itemFields(item),
   id: rowId(item.id, { kind: 'listing', editId: edit.id }),
-  itemId: item.id,
-  item: item.name,
   entry: `listing edit · ${Object.keys(edit.patch).join(', ')}`,
-  kind: item.kind,
   semver: DASH,
   review: edit.review.state,
+  file: DASH,
   submitted: dateOr(edit.review.submittedAt),
   reviewedBy: edit.review.by?.displayName ?? DASH,
   reviewedAt: dateOr(edit.review.decidedAt),
@@ -78,14 +82,21 @@ const editRow = (item: StoreItem, edit: ListingEdit): PublicationRow => ({
 });
 
 const draftRow = (item: StoreItem): PublicationRow => ({
-  ...editRow(item, { id: 'item', patch: {}, review: { state: 'uploading', submittedAt: null, decidedAt: null, by: null, note: '' } }),
+  ...itemFields(item),
   id: rowId(item.id, { kind: 'none' }),
   entry: 'no version yet',
+  semver: DASH,
   review: 'draft',
+  file: DASH,
+  submitted: DASH,
+  reviewedBy: DASH,
+  reviewedAt: DASH,
+  note: DASH,
+  installs: DASH,
 });
 
-const rowsOfItem = (item: StoreItem): PublicationRow[] => {
-  const versions = [...item.versions].reverse().map((v) => versionRow(item, v));
+const rowsOfItem = (item: StoreItem, now: number): PublicationRow[] => {
+  const versions = [...item.versions].reverse().map((v) => versionRow(item, v, now));
   const edits = [...item.listingEdits].reverse().map((edit) => editRow(item, edit));
   const rows = [...versions, ...edits];
   return rows.length ? rows : [draftRow(item)];

@@ -7,6 +7,11 @@
   column-gap: var(--space-lg);
 }
 
+/* A reviewer's copy adds the actions column. */
+.version-history--actions {
+  grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+}
+
 .version-history__row {
   display: contents;
 }

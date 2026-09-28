@@ -34,6 +34,10 @@ type PictureFieldProps = {
   kind: StoreKind;
   /** The colour picked for the item, shown on the placeholder while there is no picture. */
   color: string;
+  /** The error to show now, if any; the drop zone is outlined in red while there is one. */
+  error?: string;
+  /** Called once a picture is dropped or picked, so its error may show. */
+  onPick?: () => void;
 };
 
 const IMAGE_ACCEPT = ['image/*'];
@@ -43,17 +47,18 @@ const readyStatus = (state: PictureState, size: string): DropZoneStatus | undefi
   (state.picture ? { tone: 'success', message: `Ready: cut to ${size}, ${formatBytes(state.picture.blob.size)}` } : undefined);
 
 const PictureField = (props: PictureFieldProps) => {
-  const { label, size, role, state, current, kind, color } = props;
+  const { label, size, role, state, current, kind, color, error, onPick } = props;
   const [adjusting, setAdjusting] = useState(false);
   const pick = (files: File[]) => {
     if (files[0]) void state.choose(files[0]);
+    onPick?.();
   };
   const apply = (crop: CropRect) => {
     setAdjusting(false);
     void state.recrop(crop);
   };
   return (
-    <Field label={label} error={state.error ?? undefined}>
+    <Field label={label} error={error}>
       <Flex align="start" gap="md" wrap className="publish__picture">
         <Box className={`publish__preview publish__preview--${role}`}>
           {state.preview

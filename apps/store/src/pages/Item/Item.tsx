@@ -2,7 +2,7 @@
 /**
  * One item: its kind's icon and its name in the header with the Overview, Versions and
  * Ratings tabs and Install at the end, then the tab's content. A reviewer also gets Unlist
- * or Relist. Everything stateful lives in useItemPage.
+ * or Relist, and a Delete on each approved version. Everything stateful lives in useItemPage.
  */
 import storeIcon from '@iconify-icons/lucide/store';
 import { Button } from '@ds/primitives/Button';
@@ -12,11 +12,11 @@ import { Text } from '@ds/primitives/Text';
 import { KIND_CONTAINER } from '@shared/store/containers';
 import { InstallButton } from '../../components/InstallButton/InstallButton';
 import { RatingPanel } from '../../components/RatingPanel/RatingPanel';
-import { VersionHistory } from '../../components/VersionHistory/VersionHistory';
 import { TitledPage } from '../../layout/TitledPage/TitledPage';
 import { KIND_ICONS } from '../../lib/kinds';
 import { useItemPage } from './behavior/useItemPage';
 import { ItemOverview } from './sub-components/ItemOverview';
+import { ItemVersions } from './sub-components/ItemVersions';
 import './Item.css';
 
 type ItemProps = { id: string };
@@ -54,10 +54,7 @@ const Item = (props: ItemProps) => {
         {item.status === 'unlisted' && <Text as="p" variant="caption" role="status">This item is unlisted: players cannot find it in the catalogue.</Text>}
         {page.tab === 'overview' && <ItemOverview item={item} />}
         {page.tab === 'versions' && (
-          <Stack gap="sm" align="stretch">
-            <VersionHistory versions={page.versions} liveVersion={item.liveVersion} />
-            <Text as="p" variant="caption">Every version here was approved by a reviewer before players could install it.</Text>
-          </Stack>
+          <ItemVersions item={item} versions={page.versions} canModerate={page.canModerate} onItem={page.onItem} />
         )}
         {page.tab === 'ratings' && (
           <RatingPanel

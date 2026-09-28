@@ -31,7 +31,14 @@ type FileStatus = 'uploading' | 'ready' | 'deleted';
 type FileOwner = { userId: string; displayName: string };
 
 /** The in-flight multipart upload; cleared at complete. */
-type FileUpload = { multipartId: string; parts: number };
+type FileUpload = {
+  multipartId: string;
+  parts: number;
+  /** Parts the uploader reported up with its last batch; 0 at begin. */
+  partsDone: number;
+  /** When the uploader last asked for part URLs. */
+  updatedAt: number;
+};
 
 /**
  * One upload of a file, kept forever unless the owner or an admin deletes it. Versions

@@ -18,9 +18,12 @@ const STORE_ROUTES = {
   itemsListing: route('POST', '/items/:id/listing'),
   versionsBegin: route('POST', '/items/:id/versions'),
   versionsSignParts: route('POST', '/items/:id/versions/:n/parts'),
+  versionsParts: route('GET', '/items/:id/versions/:n/parts'),
   versionsComplete: route('POST', '/items/:id/versions/:n/complete'),
   versionsAbort: route('POST', '/items/:id/versions/:n/abort'),
   versionsWithdraw: route('POST', '/items/:id/versions/:n/withdraw'),
+  versionsSubmit: route('POST', '/items/:id/versions/:n/submit'),
+  versionsDelete: route('DELETE', '/items/:id/versions/:n'),
 
   download: route('POST', '/items/:id/download'),
   ratingPut: route('PUT', '/items/:id/rating'),
@@ -29,6 +32,7 @@ const STORE_ROUTES = {
   myPublications: route('GET', '/me/publications'),
 
   reviewQueue: route('GET', '/review'),
+  reviewUnsubmitted: route('GET', '/review/unsubmitted'),
   reviewDecide: route('POST', '/review/:itemId/:target'),
   itemsUnlist: route('POST', '/items/:id/unlist'),
   itemsRelist: route('POST', '/items/:id/relist'),

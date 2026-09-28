@@ -1,17 +1,22 @@
 /* @layer sanctuary-site @kind logic */
 /**
- * The version routes of one file: the three multipart steps of a new version, then
- * restore, download and delete of one version by its number.
+ * The version routes of one file: the multipart steps of a new version (with the parts
+ * already up, for a resumed upload), then restore, download and delete of one version by
+ * its number.
  */
 import type { BeginVersionBody } from '@shared/sanctuary/schemas/file-schemas';
 import { sanctuaryApi } from './sanctuary-client';
-import type { VersionBeginResponse, SignPartsResponse, FileResponse, DownloadResponse } from './types';
+import type { VersionBeginResponse, SignPartsResponse, UploadedPartsResponse, FileResponse, DownloadResponse } from './types';
 
 const beginVersion = (id: string, body: BeginVersionBody) =>
   sanctuaryApi.request<VersionBeginResponse>('fileVersionsBegin', { params: { id }, body });
 
-const signVersionParts = (id: string, n: number, parts: number[]) =>
-  sanctuaryApi.request<SignPartsResponse>('fileVersionsSignParts', { params: { id, n }, body: { parts } });
+/** `partsDone` is how many parts are already up, which the version keeps. */
+const signVersionParts = (id: string, n: number, parts: number[], partsDone?: number) =>
+  sanctuaryApi.request<SignPartsResponse>('fileVersionsSignParts', { params: { id, n }, body: { parts, partsDone } });
+
+const versionParts = (id: string, n: number) =>
+  sanctuaryApi.request<UploadedPartsResponse>('fileVersionsParts', { params: { id, n } });
 
 const completeVersion = (id: string, n: number, etags: string[]) =>
   sanctuaryApi.request<FileResponse>('fileVersionsComplete', { params: { id, n }, body: { etags } });
@@ -25,4 +30,4 @@ const downloadVersion = (id: string, n: number) =>
 
 const deleteVersion = (id: string, n: number) => sanctuaryApi.request<FileResponse>('fileVersionsDelete', { params: { id, n } });
 
-export { beginVersion, signVersionParts, completeVersion, restoreVersion, downloadVersion, deleteVersion };
+export { beginVersion, signVersionParts, versionParts, completeVersion, restoreVersion, downloadVersion, deleteVersion };

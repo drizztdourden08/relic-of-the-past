@@ -6,6 +6,7 @@
 import type { SanctuaryFile } from '@shared/sanctuary/file-types';
 import type { Report, ReportReporter } from '@shared/sanctuary/report-types';
 import type { SignedParts } from '@shared/hub/upload/run-multipart';
+import type { UploadedParts } from '@shared/hub/upload/uploaded-part.type';
 
 /** POST /files/:id/versions */
 type VersionBeginResponse = {
@@ -32,6 +33,9 @@ type FileBeginResponse = {
 
 /** POST /files/:id/parts */
 type SignPartsResponse = SignedParts;
+
+/** GET /files/:id/parts and GET /files/:id/versions/:n/parts: what a resumed upload already has up. */
+type UploadedPartsResponse = UploadedParts;
 
 /** POST /files/:id/complete and PATCH /files/:id both answer with the record. */
 type FileResponse = {
@@ -73,6 +77,7 @@ export type {
   FilesListResponse,
   FileBeginResponse,
   SignPartsResponse,
+  UploadedPartsResponse,
   FileResponse,
   DownloadResponse,
   PreviewResponse,

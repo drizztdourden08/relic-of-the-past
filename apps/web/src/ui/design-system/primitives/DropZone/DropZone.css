@@ -119,3 +119,9 @@
 .dropzone__status--error {
   color: var(--c-danger);
 }
+
+/* Invalid: an erroring Field around it. The red edge holds while hovered. */
+.field--invalid .dropzone,
+.field--invalid .dropzone:hover {
+  border-color: var(--c-danger);
+}

@@ -12,6 +12,7 @@ import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
 import { DataTable } from '@ds/composites/DataTable';
 import { FilterBar } from '@ds/composites/FilterBar';
+import { SideColumn } from '@site-kit/layout/SideColumn/SideColumn';
 import { SitePage } from '@site-kit/layout/SitePage/SitePage';
 import { Workbench } from '@site-kit/layout/Workbench/Workbench';
 import { SavedViewsMenu } from '@site-kit/views/SavedViewsMenu';
@@ -20,7 +21,6 @@ import { useSessionContext } from '@site-kit/session/session-context';
 import { authorPath } from '../../catalog/item-paths';
 import { publicationRowId } from '../../publications/publication-row';
 import { PUBLICATION_DEFAULT_COLUMNS, PUBLICATION_DEFAULT_GROUP_BY } from '../../publications/publication-schema';
-import { UploadsColumn } from '../../upload/UploadsColumn';
 import { usePublicationsPage } from './behavior/usePublicationsPage';
 import { PublicationDetail } from './sub-components/PublicationDetail';
 import './Publications.css';
@@ -75,12 +75,10 @@ const Publications = (props: PublicationsProps) => {
     />
   );
 
-  const aside = (
-    <UploadsColumn>
-      {picked && (
-        <PublicationDetail key={selectedId} item={picked.item} target={picked.target} actions={page.actions} onClose={page.deselect} />
-      )}
-    </UploadsColumn>
+  const aside = picked && (
+    <SideColumn>
+      <PublicationDetail key={selectedId} item={picked.item} target={picked.target} actions={page.actions} onClose={page.deselect} />
+    </SideColumn>
   );
 
   return (

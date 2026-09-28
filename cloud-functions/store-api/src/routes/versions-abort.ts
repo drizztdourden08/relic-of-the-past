@@ -1,14 +1,18 @@
 /* @layer store-api @kind logic */
-/** POST /items/:id/versions/:n/abort. The author gives up an upload in progress: the
- *  multipart upload is cancelled and the entry removed, so the next version can start. */
+/** POST /items/:id/versions/:n/abort. The author, or a reviewer, gives up an upload in
+ *  progress: the multipart upload is cancelled and the row stays as deleted, so the next
+ *  version can start and the history still shows this one. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
 import type { ItemChangeResponse } from '../../../../shared/store/api-types';
-import { conflict } from '../../../hub-core/http/http-error';
+import { now } from '../../../hub-core/db/firestore';
 import type { Route } from '../../../hub-core/route.type';
-import { requirePlayer } from '../auth/player';
+import { personOf, requirePlayer } from '../auth/player';
 import { itemsRepo } from '../db/items-repo';
-import { loadOwnItem } from '../items/item-guards';
-import { dropVersion, loadVersion, versionOf } from '../items/versions';
+import { loadVisibleItem } from '../items/item-guards';
+import { moveVersion } from '../items/move-version';
+import { actorsOf } from '../items/project-item';
+import { requireStep } from '../items/version-guard';
+import { loadVersion } from '../items/versions';
 import { storeBucket } from '../storage/store-bucket';
 import { signItem } from '../media/sign-media';
 
@@ -16,14 +20,18 @@ const versionsAbort: Route = {
   ...STORE_ROUTES.versionsAbort,
   handler: async ({ req, res, params }) => {
     const player = await requirePlayer(req);
-    const item = await loadOwnItem(params.id, player);
+    const item = await loadVisibleItem(params.id, player);
+    const actors = actorsOf(item, player);
     const version = loadVersion(item, params.n);
-    if (version.review.state !== 'uploading' || !version.upload) throw conflict('This version is not being uploaded.');
-    await storeBucket.abort(version.key, version.upload.multipartId).catch(() => undefined);
-    const updated = await itemsRepo.mutate(item.id, (latest) => {
-      if (versionOf(latest, version.n)?.review.state !== 'uploading') throw conflict('This version is not being uploaded.');
-      return { versions: dropVersion(latest, version.n) };
-    });
+    requireStep(version, 'abort', actors);
+    if (version.upload) await storeBucket.abort(version.key, version.upload.multipartId).catch(() => undefined);
+    const removal = { at: now(), reason: 'deleted' as const, by: personOf(player) };
+    const updated = await itemsRepo.mutate(item.id, (latest) => moveVersion(latest, {
+      n: version.n,
+      action: 'abort',
+      actors,
+      reshape: (entry, to) => ({ ...entry, upload: null, review: { ...entry.review, state: to }, removed: removal }),
+    }));
     const body: ItemChangeResponse = { item: await signItem(updated) };
     res.status(200).json(body);
   },

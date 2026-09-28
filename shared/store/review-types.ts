@@ -5,12 +5,19 @@
  */
 import type { Person } from './types';
 
-/** uploading, then waiting, then one of approved, rejected or withdrawn. */
-type ReviewState = 'uploading' | 'waiting' | 'approved' | 'rejected' | 'withdrawn';
+/**
+ * A version's life: uploading, then ready until the author sends it, then waiting in the
+ * queue, then approved or rejected. Deleted is reachable from most states and final. The
+ * moves between them are VERSION_FLOW in version-flow.ts.
+ */
+type ReviewState = 'uploading' | 'ready' | 'waiting' | 'approved' | 'rejected' | 'deleted';
 
-type Review = {
-  state: ReviewState;
-  /** When the upload completed and the version joined the queue. */
+/** A listing edit waits, then is approved or rejected, or withdrawn when a newer edit replaces it. */
+type ListingEditState = 'waiting' | 'approved' | 'rejected' | 'withdrawn';
+
+type Review<S extends string = ReviewState> = {
+  state: S;
+  /** When the author sent it for review; null while it has not been sent. */
   submittedAt: number | null;
   decidedAt: number | null;
   /** The reviewer who decided. */
@@ -22,4 +29,4 @@ type Review = {
 /** What a reviewer can decide on a waiting version or listing edit. */
 type ReviewDecision = 'approve' | 'reject';
 
-export type { ReviewState, Review, ReviewDecision };
+export type { ReviewState, ListingEditState, Review, ReviewDecision };

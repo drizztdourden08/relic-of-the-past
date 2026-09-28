@@ -24,8 +24,14 @@ const usePublicationsPage = (selectedId: string | null) => {
   const [scopeId, setScopeId] = useState('all');
 
   const inScope = useMemo(() => items.filter(scopePredicate(scopeId)), [items, scopeId]);
-  const rows = useMemo(() => inScope.flatMap(rowsOfItem), [inScope]);
-  const allRows = useMemo(() => items.flatMap(rowsOfItem), [items]);
+  const rows = useMemo(() => {
+    const now = Date.now();
+    return inScope.flatMap((item) => rowsOfItem(item, now));
+  }, [inScope]);
+  const allRows = useMemo(() => {
+    const now = Date.now();
+    return items.flatMap((item) => rowsOfItem(item, now));
+  }, [items]);
   const schema = useMemo(() => buildPublicationSchema(allRows), [allRows]);
   const view = useSurfaceView(STORE_VIEWS, 'publications', schema);
   const shown = useMemo(

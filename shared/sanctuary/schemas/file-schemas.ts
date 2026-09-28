@@ -30,9 +30,10 @@ const createFileSchema = z.object({
   note: noteSchema.default(''),
 });
 
-/** POST /files/:id/parts */
+/** POST /files/:id/parts and /files/:id/versions/:n/parts. `partsDone` is how many parts the uploader already has up. */
 const signPartsSchema = z.object({
   parts: z.array(z.number().int().positive()).min(1).max(LIMITS.partsPerSign),
+  partsDone: z.number().int().nonnegative().optional(),
 });
 
 /** POST /files/:id/complete */

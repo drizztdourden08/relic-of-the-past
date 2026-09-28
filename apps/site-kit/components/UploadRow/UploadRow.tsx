@@ -1,49 +1,41 @@
 /* @layer site-kit @kind component */
-/** One upload in flight or just finished: name and size, the percent or the state, the bar, a dismiss once it is over. */
+/**
+ * One job in the tray: its label and phase chip, the bar, how far it is with the speed and
+ * the time left, and a note when it stopped or waits for its file. Clicking the row opens
+ * the job's dialog; its buttons act on the job alone.
+ */
+import { Box } from '@ds/primitives/Box';
+import { Button } from '@ds/primitives/Button';
 import { Flex } from '@ds/primitives/Flex';
-import { Stack } from '@ds/primitives/Stack';
-import { Text } from '@ds/primitives/Text';
-import { IconButton } from '@ds/primitives/IconButton';
 import { ProgressBar } from '@ds/primitives/ProgressBar';
-import type { ProgressVariant } from '@ds/primitives/ProgressBar';
-import { formatBytes } from '../../lib/format-bytes';
-import type { UploadJob } from '../../upload/upload-job.type';
+import { Text } from '@ds/primitives/Text';
+import { Chip } from '../Chip/Chip';
+import { percentOf, rowLines } from './behavior/row-lines';
+import { RowActions } from './sub-components/RowActions';
+import { BAR_VARIANTS, PHASE_CHIPS } from './UploadRow.constants';
+import type { UploadRowProps } from './UploadRow.type';
 import './UploadRow.css';
 
-type UploadRowProps = {
-  job: UploadJob;
-  onDismiss: (id: string) => void;
-};
-
-const statusOf = (job: UploadJob): { status?: string; variant: ProgressVariant } => {
-  switch (job.state) {
-    case 'hashing': return { status: 'hashing', variant: 'gold' };
-    case 'done': return { status: 'done', variant: 'green' };
-    case 'failed': return { status: job.error ?? 'failed', variant: 'danger' };
-    default: return { variant: 'gold' };
-  }
-};
-
 const UploadRow = (props: UploadRowProps) => {
-  const { job, onDismiss } = props;
-  const { status, variant } = statusOf(job);
-  const over = job.state === 'done' || job.state === 'failed';
-  const percent = Math.round(Math.max(0, Math.min(1, job.bytes ? job.sent / job.bytes : 0)) * 100);
+  const { job, onOpen, onCancel, onDismiss, onPickFile } = props;
+  const chip = PHASE_CHIPS[job.phase];
+  const { transfer, timeLeft, note } = rowLines(job);
   return (
-    <Flex align="center" gap="md" className="upload-row" data-state={job.state}>
-      <Stack gap="xs" align="stretch" className="upload-row__progress">
+    <Box className="upload-row" data-phase={job.phase} onClick={() => onOpen(job.id)}>
+      <Flex align="center" gap="sm" justify="between">
+        <Button variant="bare" className="upload-row__label" title={job.label}>{job.label}</Button>
+        <Chip tone={chip.tone}>{chip.label}</Chip>
+      </Flex>
+      {job.bytes > 0 && <ProgressBar value={percentOf(job)} variant={BAR_VARIANTS[job.phase] ?? 'gold'} live />}
+      {(transfer || timeLeft) && (
         <Flex align="baseline" gap="sm" justify="between">
-          <Text as="span" className="upload-row__label">{job.label} ({formatBytes(job.bytes)})</Text>
-          <Text as="span" className="upload-row__value">{status ?? `${percent}%`}</Text>
+          <Text as="span" className="upload-row__value">{transfer}</Text>
+          {timeLeft && <Text as="span" className="upload-row__value">{timeLeft}</Text>}
         </Flex>
-        <ProgressBar value={percent} variant={variant} live />
-      </Stack>
-      {over && (
-        <IconButton variant="ghost" size="sm" label="Dismiss" onClick={() => onDismiss(job.id)}>
-          {'×'}
-        </IconButton>
       )}
-    </Flex>
+      {note && <Text as="p" variant="caption" className="upload-row__note">{note}</Text>}
+      <RowActions job={job} onCancel={onCancel} onDismiss={onDismiss} onPickFile={onPickFile} />
+    </Box>
   );
 };
 
