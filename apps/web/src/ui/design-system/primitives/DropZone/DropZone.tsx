@@ -6,9 +6,8 @@ import { type DropZoneProps } from './DropZone.type';
 import { BOX_ICON_PATHS, ICON_SIZE, ICON_VIEWBOX, OUTLINE } from './DropZone.constants';
 import { acceptsFile, acceptsType } from './behavior/accepts-file';
 import { refreshClipboard } from './behavior/clipboard-watch';
-import { useClipboardButton } from './behavior/useClipboardButton';
+import { useClipboardTakes } from './behavior/useClipboardTakes';
 import { usePasteFiles } from './behavior/usePasteFiles';
-import { PasteButton } from './sub-components/PasteButton';
 
 const BOX_ICON = <Icon paths={BOX_ICON_PATHS} viewBox={ICON_VIEWBOX} size={ICON_SIZE} {...OUTLINE} />;
 
@@ -67,15 +66,15 @@ const DropZone = (props: DropZoneProps) => {
   }, [filterFiles, onDrop]);
   const paste = usePasteFiles(deliver, !disabled);
   const takesType = useCallback((type: string) => (accept ?? []).some((pattern) => acceptsType(type, pattern)), [accept]);
-  const clipboard = useClipboardButton(takesType, deliver);
-  // the clipboard carries media types, never file names, so only a zone taking a type can paste from it
+  const clipboardTakes = useClipboardTakes(takesType);
+  // the clipboard carries media types, never file names, so only a zone taking a type looks at it
   const pastesTypes = (accept ?? []).some((pattern) => pattern.includes('/'));
-  const clipboardReady = pastesTypes && !disabled && clipboard.state === 'ready';
+  const clipboardReady = pastesTypes && !disabled && clipboardTakes;
 
   const handlePointerEnter = useCallback(() => {
     paste.onPointerEnter();
-    void refreshClipboard();
-  }, [paste.onPointerEnter]);
+    if (pastesTypes) void refreshClipboard(true);
+  }, [paste.onPointerEnter, pastesTypes]);
 
   const handleClick = () => inputRef.current?.click();
 
@@ -121,11 +120,11 @@ const DropZone = (props: DropZoneProps) => {
       onPointerLeave={paste.onPointerLeave}
       {...(inline ? { role: 'button', tabIndex: disabled ? -1 : 0, title: hint, onKeyDown: handleKeyDown } : {})}
     >
-      {!inline && !disabled && pastesTypes && <PasteButton state={clipboard.state} onPaste={clipboard.paste} />}
       <span className="dropzone__icon" aria-hidden={inline || undefined}>{icon ?? BOX_ICON}</span>
       <span className="dropzone__label">{label}</span>
       {!inline && hint && <span className="dropzone__hint">{hint}</span>}
-      {!inline && <span className="dropzone__hint dropzone__hint--soft">or click to browse, or hover here and press Ctrl+V</span>}
+      {!inline && !clipboardReady && <span className="dropzone__hint dropzone__hint--soft">or click to browse, or hover here and press Ctrl+V</span>}
+      {!inline && clipboardReady && !status && <span className="dropzone__status dropzone__status--success" role="status">On your clipboard: hover here and press Ctrl+V</span>}
       {!inline && status && <span className={`dropzone__status dropzone__status--${status.tone}`} role="status">{status.message}</span>}
       <input
         ref={inputRef}

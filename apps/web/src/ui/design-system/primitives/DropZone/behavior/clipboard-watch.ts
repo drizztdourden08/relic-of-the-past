@@ -1,11 +1,11 @@
 /* @layer renderer-components @kind logic */
 /**
- * One look at the clipboard for the whole page, shared by every drop zone. It reads only
- * when the browser lets the page read without asking, so no prompt or paste menu ever opens
- * on its own: Chromium browsers once the viewer has allowed it, never Firefox or Safari,
- * which show their own paste menu for every read. It looks again when the page gets focus
- * back, when something is copied or cut on the page, and when a zone asks. The snapshot is
- * the media types on the clipboard, or null while they are not known.
+ * One look at the clipboard for the whole page, shared by every drop zone. It reads only in
+ * browsers with a clipboard permission, the Chromium ones: they ask once, the first time a
+ * zone is hovered, then read without asking. Firefox and Safari show their own paste menu for
+ * every read, so there it never reads and the zones keep their plain Ctrl+V hint. It looks
+ * again when the page gets focus back, when something is copied or cut on the page, and when
+ * a zone is hovered. The snapshot is the media types on the clipboard, or null while unknown.
  */
 type ClipboardSnapshot = readonly string[] | null;
 
@@ -21,19 +21,23 @@ const publish = (next: ClipboardSnapshot) => {
   listeners.forEach((listener) => listener());
 };
 
-const readsSilently = async (): Promise<boolean> => {
-  if (!navigator.clipboard?.read || !navigator.permissions?.query) return false;
+/** The page's clipboard permission, or `unsupported` where reading always opens a paste menu. */
+const readPermission = async (): Promise<PermissionState | 'unsupported'> => {
+  if (!navigator.clipboard?.read || !navigator.permissions?.query) return 'unsupported';
   try {
-    const status = await navigator.permissions.query({ name: 'clipboard-read' as PermissionName });
-    return status.state === 'granted';
+    return (await navigator.permissions.query({ name: 'clipboard-read' as PermissionName })).state;
   } catch {
-    return false;
+    return 'unsupported';
   }
 };
 
-/** Reads the clipboard's media types when that needs no prompt; otherwise they stay unknown. */
-const refreshClipboard = async () => {
-  if (!document.hasFocus() || !(await readsSilently())) {
+/**
+ * Reads the clipboard's media types when the browser allows it. `ask` lets a Chromium browser
+ * show its one-time permission prompt; without it, only an already allowed read happens.
+ */
+const refreshClipboard = async (ask = false) => {
+  const permission = document.hasFocus() ? await readPermission() : 'unsupported';
+  if (permission !== 'granted' && !(ask && permission === 'prompt')) {
     publish(null);
     return;
   }

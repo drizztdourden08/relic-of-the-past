@@ -91,40 +91,6 @@
   }
 }
 
-/* The paste icon, in the zone's top-right corner (the zone is positioned for it): plain
-   until the clipboard is known, green when it holds something the zone takes, faded when not. */
-.dropzone__paste {
-  position: absolute;
-  top: var(--space-sm);
-  right: var(--space-sm);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-xs);
-  border: var(--border-width-thin) solid var(--c-border-strong);
-  border-radius: var(--radius-md);
-  background: var(--c-surface);
-  color: var(--c-text-dim);
-  font-size: var(--text-xs);
-  cursor: pointer;
-}
-
-.dropzone__paste:hover:not(:disabled) {
-  border-color: var(--c-gold);
-  color: var(--c-text);
-}
-
-.dropzone__paste.dropzone__paste--ready {
-  border-color: var(--c-green);
-  background: var(--c-green-soft);
-  color: var(--c-green-bright);
-}
-
-.dropzone__paste:disabled {
-  cursor: default;
-  opacity: var(--opacity-disabled);
-}
-
 .dropzone__hint--soft {
   margin-top: var(--space-2xs);
   opacity: var(--opacity-muted);
