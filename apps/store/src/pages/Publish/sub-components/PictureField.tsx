@@ -19,7 +19,7 @@ import type { PictureState } from '../behavior/usePicture';
 
 type PictureFieldProps = {
   label: string;
-  /** The size it is cut to, such as "512 × 288". */
+  /** The size it is cut to, such as "1280 × 720". */
   size: string;
   role: 'card' | 'banner';
   state: PictureState;

@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind component */
 /**
- * The Paste button in a drop zone's top-right corner. Green when the clipboard holds
- * something the zone takes, disabled when it holds nothing it takes, plain before the
- * browser has said either. A click pastes into the zone and never opens the file picker.
+ * The paste icon in a drop zone's top-right corner. Green when the clipboard holds something
+ * the zone takes, disabled when it holds nothing it takes, plain while the browser has not
+ * said. A click pastes into the zone and never opens the file picker.
  */
 import type { MouseEvent } from 'react';
 import { Icon } from '../../Icon';
@@ -12,6 +12,12 @@ import type { ClipboardState } from '../behavior/useClipboardButton';
 type PasteButtonProps = {
   state: ClipboardState;
   onPaste: () => void;
+};
+
+const TITLES: Record<ClipboardState, string> = {
+  ready: 'Paste from the clipboard',
+  empty: 'Nothing on the clipboard this can take',
+  unknown: 'Paste from the clipboard',
 };
 
 const PasteButton = (props: PasteButtonProps) => {
@@ -26,10 +32,10 @@ const PasteButton = (props: PasteButtonProps) => {
       className={`dropzone__paste${state === 'ready' ? ' dropzone__paste--ready' : ''}`}
       disabled={state === 'empty'}
       onClick={handleClick}
-      title={state === 'empty' ? 'Nothing on the clipboard this can take' : 'Paste from the clipboard'}
+      title={TITLES[state]}
+      aria-label={TITLES[state]}
     >
       <Icon paths={PASTE_ICON_PATHS} viewBox={ICON_VIEWBOX} size={PASTE_ICON_SIZE} {...OUTLINE} aria-hidden="true" />
-      Paste
     </button>
   );
 };

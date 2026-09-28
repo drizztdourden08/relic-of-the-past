@@ -27,7 +27,7 @@
 
   /* A card picture is 512 by 288 and a banner 1280 by 400; both keep that shape on screen. */
   --item-card-ratio: 16 / 9;
-  --item-banner-ratio: 16 / 5;
+  --item-banner-ratio: 3 / 1;
   --item-grid-min: 180px;
   --item-kind-icon: 32px;
 

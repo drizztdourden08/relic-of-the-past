@@ -14,7 +14,7 @@ import './ItemPicture.css';
 type ItemPictureProps = {
   picture: MediaRef | null;
   kind: StoreKind;
-  /** card is 16:9, banner is 16:5. */
+  /** card is 16:9, banner is 3:1. */
   role?: 'card' | 'banner';
   className?: string;
 };

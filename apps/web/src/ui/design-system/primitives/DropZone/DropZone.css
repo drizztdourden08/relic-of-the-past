@@ -91,7 +91,7 @@
   }
 }
 
-/* The Paste button, in the zone's top-right corner (the zone is positioned for it): plain
+/* The paste icon, in the zone's top-right corner (the zone is positioned for it): plain
    until the clipboard is known, green when it holds something the zone takes, faded when not. */
 .dropzone__paste {
   position: absolute;
@@ -99,8 +99,8 @@
   right: var(--space-sm);
   display: inline-flex;
   align-items: center;
-  gap: var(--space-xs);
-  padding: var(--space-2xs) var(--space-sm);
+  justify-content: center;
+  padding: var(--space-xs);
   border: var(--border-width-thin) solid var(--c-border-strong);
   border-radius: var(--radius-md);
   background: var(--c-surface);
@@ -130,9 +130,12 @@
   opacity: var(--opacity-muted);
 }
 
-/* The zone holds a file of the right kind: green edge and a green line saying so, hovered or not. */
+/* The zone holds a file of the right kind, or the clipboard holds content it takes: green
+   edge and tint, hovered or not. */
 .dropzone.dropzone--success,
-.dropzone.dropzone--success:hover {
+.dropzone.dropzone--success:hover,
+.dropzone.dropzone--clipboard,
+.dropzone.dropzone--clipboard:hover {
   border-style: solid;
   border-color: var(--c-green);
   background: var(--c-green-soft);

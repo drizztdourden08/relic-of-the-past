@@ -5,6 +5,7 @@ import { Icon } from '../Icon';
 import { type DropZoneProps } from './DropZone.type';
 import { BOX_ICON_PATHS, ICON_SIZE, ICON_VIEWBOX, OUTLINE } from './DropZone.constants';
 import { acceptsFile, acceptsType } from './behavior/accepts-file';
+import { refreshClipboard } from './behavior/clipboard-watch';
 import { useClipboardButton } from './behavior/useClipboardButton';
 import { usePasteFiles } from './behavior/usePasteFiles';
 import { PasteButton } from './sub-components/PasteButton';
@@ -66,7 +67,15 @@ const DropZone = (props: DropZoneProps) => {
   }, [filterFiles, onDrop]);
   const paste = usePasteFiles(deliver, !disabled);
   const takesType = useCallback((type: string) => (accept ?? []).some((pattern) => acceptsType(type, pattern)), [accept]);
-  const clipboard = useClipboardButton(paste.hovered && !disabled, takesType, deliver);
+  const clipboard = useClipboardButton(takesType, deliver);
+  // the clipboard carries media types, never file names, so only a zone taking a type can paste from it
+  const pastesTypes = (accept ?? []).some((pattern) => pattern.includes('/'));
+  const clipboardReady = pastesTypes && !disabled && clipboard.state === 'ready';
+
+  const handlePointerEnter = useCallback(() => {
+    paste.onPointerEnter();
+    void refreshClipboard();
+  }, [paste.onPointerEnter]);
 
   const handleClick = () => inputRef.current?.click();
 
@@ -97,6 +106,7 @@ const DropZone = (props: DropZoneProps) => {
     active && 'dropzone--active',
     disabled && 'dropzone--disabled',
     status?.tone === 'success' && 'dropzone--success',
+    clipboardReady && 'dropzone--clipboard',
   ].filter(Boolean).join(' ');
 
   return (
@@ -107,11 +117,11 @@ const DropZone = (props: DropZoneProps) => {
       onDragOver={handleDragOver}
       onDrop={handleDrop}
       onClick={handleClick}
-      onPointerEnter={paste.onPointerEnter}
+      onPointerEnter={handlePointerEnter}
       onPointerLeave={paste.onPointerLeave}
       {...(inline ? { role: 'button', tabIndex: disabled ? -1 : 0, title: hint, onKeyDown: handleKeyDown } : {})}
     >
-      {!inline && !disabled && <PasteButton state={clipboard.state} onPaste={clipboard.paste} />}
+      {!inline && !disabled && pastesTypes && <PasteButton state={clipboard.state} onPaste={clipboard.paste} />}
       <span className="dropzone__icon" aria-hidden={inline || undefined}>{icon ?? BOX_ICON}</span>
       <span className="dropzone__label">{label}</span>
       {!inline && hint && <span className="dropzone__hint">{hint}</span>}

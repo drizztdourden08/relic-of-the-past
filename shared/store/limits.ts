@@ -19,10 +19,10 @@ const PACK_BYTES: Record<StoreKind, number> = {
 
 const STORE_LIMITS = {
   packBytes: PACK_BYTES,
-  /** Every item's card: exact size, webp, at most this many bytes. */
-  card: { width: 512, height: 288, bytes: 300 * KiB },
-  /** The optional banner used when an item is featured. */
-  banner: { width: 1280, height: 400, bytes: 800 * KiB },
+  /** Every item's card, 16:9: exact size, webp, at most this many bytes. */
+  card: { width: 1280, height: 720, bytes: 500 * KiB },
+  /** The optional banner used when an item is featured, 3:1. */
+  banner: { width: 1920, height: 640, bytes: 1 * MiB },
   /** Downloads one player may start in a day. */
   downloadsPerDay: 40,
   /** Bytes one player may download in a day: a few full music packs. */

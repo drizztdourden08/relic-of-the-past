@@ -17,7 +17,7 @@ const PASTE_ICON_PATHS = [
 
 const ICON_VIEWBOX = '0 0 24 24';
 const ICON_SIZE = 28;
-const PASTE_ICON_SIZE = 14;
+const PASTE_ICON_SIZE = 16;
 
 /** SVG attributes that turn the Icon primitive's filled glyph into lucide's outline. */
 const OUTLINE = {
