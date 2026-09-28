@@ -5,7 +5,7 @@
  * fixed angle and bends along an even arc. The bag is placed so the head's point lands just
  * past the front face's left edge at mid-height, whatever the angles are, and the hookshot
  * is clipped along that edge so the point goes in behind the front. The stamp is placed
- * inside the bag's box, so it turns with the bag.
+ * inside the bag's box, square to the front's bottom edge, so it turns with the bag.
  */
 import { hookshotCurve, layoutHookshot } from '../../Hookshot';
 import type { HookshopParts, HookshopLayout, Point } from '../HookshopHighlight.type';
@@ -38,7 +38,7 @@ const computeLayout = (parts: HookshopParts): HookshopLayout => {
   const onBag = ([x, y]: Point) => turn([bag.left + x * g.scale, bag.top + y * g.scale], bagPivot, BAG_ANGLE);
   const hookshotClip = nearSideOf(onBag(g.frontEdge[0]), onBag(g.frontEdge[1]));
   const sw = st.w * st.scale, sh = st.h * st.scale;
-  const stamp = placed('stamp', g.stampCentre[0] * g.scale - sw / 2, g.stampCentre[1] * g.scale - sh / 2, sw, sh);
+  const stamp = placed('stamp', g.stampCentre[0] * g.scale - sw / 2, g.stampCentre[1] * g.scale - sh / 2, sw, sh, g.stampAngle);
 
   // the bag travels back along the chain, so the lines trail the other way
   const trail = HOOKSHOT_ANGLE + CHAIN_BEND + 180;

@@ -4,7 +4,9 @@
  * They describe the SVGs in assets/hookshop, so a redrawn part changes its numbers here too.
  * `scale` is the size of one part pixel in mascot pixels: the bag is drawn at four times
  * the mascot's resolution, and the stamp (the app logo) at the bag's own size, so one logo
- * pixel is one bag pixel. The bag's `frontEdge` is the outer side
+ * pixel is one bag pixel. The bag is drawn in perspective, so its front's bottom edge is not
+ * level: `stampAngle` is that edge's angle, measured on the art, and the stamp follows it.
+ * The bag's `frontEdge` is the outer side
  * of the front face's left outline: the hookshot's head vanishes behind it. The hookshot's
  * and the mascot's own sprites are in Hookshot.constants.ts and Mascot.constants.ts.
  */
@@ -16,6 +18,7 @@ const HOOKSHOP_PARTS = {
     scale: 0.25,
     catch: [40, 60],
     stampCentre: [47.5, 62],
+    stampAngle: -10.5,
     frontEdge: [[18, 37], [21, 95]],
   },
   stamp: { w: 35, h: 28, scale: 0.25 },

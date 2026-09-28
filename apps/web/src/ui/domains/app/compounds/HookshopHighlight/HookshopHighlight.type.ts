@@ -14,6 +14,8 @@ type HookshopParts = {
   readonly bag: PartSize & {
     readonly catch: Point;
     readonly stampCentre: Point;
+    /** The angle of the front face's bottom edge in the bag's pixels; the stamp sits square to it. */
+    readonly stampAngle: number;
     readonly frontEdge: readonly [Point, Point];
   };
   readonly stamp: PartSize;
