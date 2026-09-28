@@ -2,19 +2,14 @@
 ﻿import { useState, useRef, useCallback, type DragEvent, type KeyboardEvent } from 'react';
 import './DropZone.css';
 import { Icon } from '../Icon';
-import { type DropZoneProps, type DropZoneStatus } from './DropZone.type';
+import { type DropZoneProps } from './DropZone.type';
 import { BOX_ICON_PATHS, ICON_SIZE, ICON_VIEWBOX, OUTLINE } from './DropZone.constants';
 import { acceptsFile, acceptsType } from './behavior/accepts-file';
-import { useClipboardPeek } from './behavior/useClipboardPeek';
+import { useClipboardButton } from './behavior/useClipboardButton';
 import { usePasteFiles } from './behavior/usePasteFiles';
+import { PasteButton } from './sub-components/PasteButton';
 
 const BOX_ICON = <Icon paths={BOX_ICON_PATHS} viewBox={ICON_VIEWBOX} size={ICON_SIZE} {...OUTLINE} />;
-
-/** The notice for something pasteable already on the clipboard. */
-const clipboardStatus = (accept: string[] | undefined): DropZoneStatus => ({
-  tone: 'success',
-  message: `${accept?.some((a) => a.startsWith('image/')) ? 'An image' : 'Something you can use'} is on your clipboard: press Ctrl+V, or right-click and choose Paste.`,
-});
 
 
 const DropZone = (props: DropZoneProps) => {
@@ -71,8 +66,7 @@ const DropZone = (props: DropZoneProps) => {
   }, [filterFiles, onDrop]);
   const paste = usePasteFiles(deliver, !disabled);
   const takesType = useCallback((type: string) => (accept ?? []).some((pattern) => acceptsType(type, pattern)), [accept]);
-  const clipboardReady = useClipboardPeek(paste.hovered && !disabled && !status, takesType);
-  const shown = status ?? (clipboardReady ? clipboardStatus(accept) : undefined);
+  const clipboard = useClipboardButton(paste.hovered && !disabled, takesType, deliver);
 
   const handleClick = () => inputRef.current?.click();
 
@@ -102,7 +96,7 @@ const DropZone = (props: DropZoneProps) => {
     inline && 'dropzone--inline',
     active && 'dropzone--active',
     disabled && 'dropzone--disabled',
-    shown?.tone === 'success' && 'dropzone--success',
+    status?.tone === 'success' && 'dropzone--success',
   ].filter(Boolean).join(' ');
 
   return (
@@ -117,22 +111,12 @@ const DropZone = (props: DropZoneProps) => {
       onPointerLeave={paste.onPointerLeave}
       {...(inline ? { role: 'button', tabIndex: disabled ? -1 : 0, title: hint, onKeyDown: handleKeyDown } : {})}
     >
-      {!disabled && (
-        <span
-          className="dropzone__paste-layer"
-          contentEditable
-          suppressContentEditableWarning
-          aria-hidden="true"
-          tabIndex={-1}
-          onPaste={paste.onLayerPaste}
-          onInput={paste.onLayerInput}
-        />
-      )}
+      {!inline && !disabled && <PasteButton state={clipboard.state} onPaste={clipboard.paste} />}
       <span className="dropzone__icon" aria-hidden={inline || undefined}>{icon ?? BOX_ICON}</span>
       <span className="dropzone__label">{label}</span>
       {!inline && hint && <span className="dropzone__hint">{hint}</span>}
-      {!inline && <span className="dropzone__hint dropzone__hint--soft">or click to browse, or hover here and press Ctrl+V (or right-click, then Paste)</span>}
-      {!inline && shown && <span className={`dropzone__status dropzone__status--${shown.tone}`} role="status">{shown.message}</span>}
+      {!inline && <span className="dropzone__hint dropzone__hint--soft">or click to browse, or hover here and press Ctrl+V</span>}
+      {!inline && status && <span className={`dropzone__status dropzone__status--${status.tone}`} role="status">{status.message}</span>}
       <input
         ref={inputRef}
         type="file"

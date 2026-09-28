@@ -1,12 +1,10 @@
 /* @layer renderer-components @kind hook */
 /**
- * Paste for a drop zone, which is not a text field and so never holds focus. While the
+ * Ctrl+V for a drop zone, which is not a text field and so never holds focus. While the
  * pointer is over the zone, a paste anywhere on the page hands the clipboard's files to
- * `onFiles`: hover and press Ctrl+V. The zone also carries a transparent editable layer, so
- * a right-click offers the browser's own Paste; that layer never keeps what is pasted.
+ * `onFiles`. A paste of text only is left alone, so text fields keep working.
  */
 import { useCallback, useEffect, useState } from 'react';
-import type { ClipboardEvent as ReactClipboardEvent, FormEvent } from 'react';
 
 const filesOf = (data: DataTransfer | null): File[] => Array.from(data?.files ?? []);
 
@@ -27,11 +25,8 @@ const usePasteFiles = (onFiles: (files: File[]) => void, enabled: boolean) => {
 
   const onPointerEnter = useCallback(() => setHovered(true), []);
   const onPointerLeave = useCallback(() => setHovered(false), []);
-  /** The editable layer takes no text: a paste of files reaches the window listener above. */
-  const onLayerPaste = useCallback((event: ReactClipboardEvent<HTMLElement>) => event.preventDefault(), []);
-  const onLayerInput = useCallback((event: FormEvent<HTMLElement>) => { event.currentTarget.textContent = ''; }, []);
 
-  return { hovered, onPointerEnter, onPointerLeave, onLayerPaste, onLayerInput };
+  return { hovered, onPointerEnter, onPointerLeave };
 };
 
 export { usePasteFiles };

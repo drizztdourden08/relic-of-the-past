@@ -91,16 +91,38 @@
   }
 }
 
-/* Paste: a transparent editable layer over the whole zone (which is positioned for it), so
-   a right-click offers the browser's own Paste. It shows nothing and keeps nothing; a click
-   still opens the picker. */
-.dropzone__paste-layer {
+/* The Paste button, in the zone's top-right corner (the zone is positioned for it): plain
+   until the clipboard is known, green when it holds something the zone takes, faded when not. */
+.dropzone__paste {
   position: absolute;
-  inset: 0;
-  overflow: hidden;
-  color: transparent;
-  caret-color: transparent;
-  outline: none;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-2xs) var(--space-sm);
+  border: var(--border-width-thin) solid var(--c-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--c-surface);
+  color: var(--c-text-dim);
+  font-size: var(--text-xs);
+  cursor: pointer;
+}
+
+.dropzone__paste:hover:not(:disabled) {
+  border-color: var(--c-gold);
+  color: var(--c-text);
+}
+
+.dropzone__paste.dropzone__paste--ready {
+  border-color: var(--c-green);
+  background: var(--c-green-soft);
+  color: var(--c-green-bright);
+}
+
+.dropzone__paste:disabled {
+  cursor: default;
+  opacity: var(--opacity-disabled);
 }
 
 .dropzone__hint--soft {
