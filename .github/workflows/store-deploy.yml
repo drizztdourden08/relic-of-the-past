@@ -76,7 +76,7 @@ jobs:
 
       - uses: google-github-actions/setup-gcloud@v2
 
-      # Completing a version hashes the whole upload, up to a 400 MB music pack,
+      # Completing a version hashes the whole upload, up to a 2 GB music pack,
       # so the function gets more time and memory than the Sanctuary's.
       # The ^;^ prefix makes ; the separator between variables, since SANCTUARY_ADMIN_IDS holds commas.
       - name: Deploy the function

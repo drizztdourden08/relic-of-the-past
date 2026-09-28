@@ -10,9 +10,9 @@ const MiB = 1024 * KiB;
 const GiB = 1024 * MiB;
 const MINUTE_MS = 60 * 1000;
 
-/** Largest pack per kind, in bytes. */
+/** Largest pack per kind, in bytes. A full MSU-1 soundtrack runs past 1.5 GB; sprites and text stay small. */
 const PACK_BYTES: Record<StoreKind, number> = {
-  music: 400 * MiB,
+  music: 2 * GiB,
   character: 5 * MiB,
   language: 20 * MiB,
 };
@@ -25,8 +25,8 @@ const STORE_LIMITS = {
   banner: { width: 1280, height: 400, bytes: 800 * KiB },
   /** Downloads one player may start in a day. */
   downloadsPerDay: 40,
-  /** Bytes one player may download in a day. */
-  downloadBytesPerDay: 4 * GiB,
+  /** Bytes one player may download in a day: a few full music packs. */
+  downloadBytesPerDay: 8 * GiB,
   /** Bytes read from the head of an upload to find its manifest; a larger first entry is refused. */
   manifestHeadBytes: 1 * MiB,
   /** Largest manifest once inflated; a first entry claiming more is refused before inflating. */
