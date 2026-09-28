@@ -32,6 +32,7 @@ const ROLE_RULES = [
   ['apps/web/src/', 'renderer-other'],
   ['apps/web/public/', 'renderer-public'],
   ['apps/sanctuary/', 'sanctuary-site'],
+  ['shared/config/', 'shared-config'],
   ['shared/platform/', 'shared-platform'],
   ['shared/storage/', 'shared-storage'],
   ['shared/asset-extraction/', 'shared-asset-extraction'],

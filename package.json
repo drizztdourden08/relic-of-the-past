@@ -40,6 +40,7 @@
     "preview": "electron-vite preview",
     "build:web": "vite build --config apps/web/vite.config.ts",
     "sanctuary:dev": "vite -c apps/sanctuary/vite.config.ts",
+    "sanctuary:api": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON cloud-functions/sanctuary-api/dev-server.mjs",
     "sanctuary:build": "vite build -c apps/sanctuary/vite.config.ts",
     "assets:android": "cd apps/mobile && npx @capacitor/assets generate --android --iconBackgroundColor=#0f0f12 --splashBackgroundColor=#0f0f12",
     "cap:sync": "npm run build:web && cd apps/mobile && npx cap sync && npx @capacitor/assets generate --android --iconBackgroundColor=#0f0f12 --splashBackgroundColor=#0f0f12",
