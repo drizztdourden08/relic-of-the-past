@@ -3,12 +3,6 @@
   max-width: var(--store-form-maxw);
 }
 
-.publish__pack-name {
-  color: var(--c-text);
-  font-family: var(--font-mono);
-  overflow-wrap: anywhere;
-}
-
 /* A picture at its own shape, the same width for the card and the banner. */
 .publish .publish__preview {
   width: var(--picture-preview-w);

@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind style */
 .dropzone {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -87,4 +88,42 @@
   .dropzone__icon {
     font-size: var(--text-xl);
   }
+}
+
+/* Paste: a transparent editable layer over the whole zone (which is positioned for it), so
+   a right-click offers the browser's own Paste. It shows nothing and keeps nothing; a click
+   still opens the picker. */
+.dropzone__paste-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  color: transparent;
+  caret-color: transparent;
+  outline: none;
+}
+
+.dropzone__hint--soft {
+  margin-top: var(--space-2xs);
+  opacity: var(--opacity-muted);
+}
+
+/* The zone holds a file of the right kind: green edge and a green line saying so, hovered or not. */
+.dropzone.dropzone--success,
+.dropzone.dropzone--success:hover {
+  border-style: solid;
+  border-color: var(--c-green);
+  background: var(--c-green-soft);
+}
+
+.dropzone__status {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+}
+
+.dropzone__status--success {
+  color: var(--c-green-bright);
+}
+
+.dropzone__status--error {
+  color: var(--c-danger);
 }

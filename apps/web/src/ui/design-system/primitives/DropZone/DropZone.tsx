@@ -2,6 +2,8 @@
 ﻿import { useState, useRef, useCallback, type DragEvent, type KeyboardEvent } from 'react';
 import './DropZone.css';
 import { type DropZoneProps } from './DropZone.type';
+import { acceptsFile } from './behavior/accepts-file';
+import { usePasteFiles } from './behavior/usePasteFiles';
 
 
 const DropZone = (props: DropZoneProps) => {
@@ -12,6 +14,7 @@ const DropZone = (props: DropZoneProps) => {
     disabled = false,
     variant = 'block',
     icon,
+    status,
     onDrop,
   } = props;
   const [active, setActive] = useState(false);
@@ -39,9 +42,7 @@ const DropZone = (props: DropZoneProps) => {
 
   const filterFiles = useCallback((files: File[]): File[] => {
     if (!accept || accept.length === 0) return files;
-    return files.filter((f) =>
-      accept.some((ext) => f.name.toLowerCase().endsWith(ext.toLowerCase())),
-    );
+    return files.filter((f) => accept.some((pattern) => acceptsFile(f, pattern)));
   }, [accept]);
 
   const handleDrop = useCallback((e: DragEvent) => {
@@ -52,6 +53,12 @@ const DropZone = (props: DropZoneProps) => {
     const files = filterFiles(Array.from(e.dataTransfer.files));
     if (files.length > 0) onDrop(files);
   }, [filterFiles, onDrop]);
+
+  const deliver = useCallback((picked: File[]) => {
+    const files = filterFiles(picked);
+    if (files.length > 0) onDrop(files);
+  }, [filterFiles, onDrop]);
+  const paste = usePasteFiles(deliver, !disabled);
 
   const handleClick = () => inputRef.current?.click();
 
@@ -81,6 +88,7 @@ const DropZone = (props: DropZoneProps) => {
     inline && 'dropzone--inline',
     active && 'dropzone--active',
     disabled && 'dropzone--disabled',
+    status?.tone === 'success' && 'dropzone--success',
   ].filter(Boolean).join(' ');
 
   return (
@@ -91,12 +99,26 @@ const DropZone = (props: DropZoneProps) => {
       onDragOver={handleDragOver}
       onDrop={handleDrop}
       onClick={handleClick}
+      onPointerEnter={paste.onPointerEnter}
+      onPointerLeave={paste.onPointerLeave}
       {...(inline ? { role: 'button', tabIndex: disabled ? -1 : 0, title: hint, onKeyDown: handleKeyDown } : {})}
     >
+      {!disabled && (
+        <span
+          className="dropzone__paste-layer"
+          contentEditable
+          suppressContentEditableWarning
+          aria-hidden="true"
+          tabIndex={-1}
+          onPaste={paste.onLayerPaste}
+          onInput={paste.onLayerInput}
+        />
+      )}
       <span className="dropzone__icon" aria-hidden={inline || undefined}>{icon ?? '📦'}</span>
       <span className="dropzone__label">{label}</span>
       {!inline && hint && <span className="dropzone__hint">{hint}</span>}
-      {!inline && <span className="dropzone__hint" style={{ marginTop: '2px', opacity: 0.6 }}>or click to browse files</span>}
+      {!inline && <span className="dropzone__hint dropzone__hint--soft">or click to browse, or hover here and press Ctrl+V (or right-click, then Paste)</span>}
+      {!inline && status && <span className={`dropzone__status dropzone__status--${status.tone}`} role="status">{status.message}</span>}
       <input
         ref={inputRef}
         type="file"
