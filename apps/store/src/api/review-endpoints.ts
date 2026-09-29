@@ -7,7 +7,7 @@
 import type {
   FeaturedResponse,
   ItemChangeResponse,
-  ReviewPackResponse,
+  PackLinkResponse,
   ReviewQueueResponse,
   ReviewTarget,
   UnsubmittedResponse,
@@ -30,7 +30,7 @@ const decideReview = (itemId: string, target: ReviewTarget, body: ReviewDecideBo
 
 /** An inline signed link to a version's pack, for reading it in parts. */
 const reviewPack = (itemId: string, target: ReviewTarget) =>
-  storeApi.request<ReviewPackResponse>('reviewPack', { params: { itemId, target: reviewTargetParam(target) } });
+  storeApi.request<PackLinkResponse>('reviewPack', { params: { itemId, target: reviewTargetParam(target) } });
 
 const unlistItem =(id: string) => storeApi.request<ItemChangeResponse>('itemsUnlist', { params: { id }, body: {} });
 

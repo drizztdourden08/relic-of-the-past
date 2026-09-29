@@ -7,9 +7,9 @@
  * and tries once more.
  */
 import type { PackSource } from '@domains/packs/pack-source.type';
-import type { ReviewPackResponse } from '@shared/store/api-types';
+import type { PackLinkResponse } from '@shared/store/api-types';
 
-type RenewLink = () => Promise<ReviewPackResponse>;
+type RenewLink = () => Promise<PackLinkResponse>;
 
 /** A link this close to its end counts as lapsed. */
 const EXPIRY_MARGIN_MS = 60 * 1000;
@@ -37,14 +37,14 @@ const readRange = async (url: string, start: number, length: number): Promise<Ui
   throw new RangeReadError(res.status);
 };
 
-const isLapsed = (link: ReviewPackResponse, cause: unknown): boolean =>
+const isLapsed = (link: PackLinkResponse, cause: unknown): boolean =>
   Date.now() >= link.expiresAt - EXPIRY_MARGIN_MS || (cause instanceof RangeReadError && cause.status === FORBIDDEN);
 
-const rangePackSource = (link: ReviewPackResponse, renew?: RenewLink): PackSource => {
+const rangePackSource = (link: PackLinkResponse, renew?: RenewLink): PackSource => {
   let current = link;
   // Reads that fail together share one renewal.
-  let renewing: Promise<ReviewPackResponse> | null = null;
-  const renewOnce = (next: RenewLink): Promise<ReviewPackResponse> => {
+  let renewing: Promise<PackLinkResponse> | null = null;
+  const renewOnce = (next: RenewLink): Promise<PackLinkResponse> => {
     renewing ??= next().finally(() => { renewing = null; });
     return renewing;
   };

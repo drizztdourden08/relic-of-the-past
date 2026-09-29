@@ -26,6 +26,7 @@ const STORE_ROUTES = {
   versionsDelete: route('DELETE', '/items/:id/versions/:n'),
 
   download: route('POST', '/items/:id/download'),
+  itemsPack: route('GET', '/items/:id/pack'),
   ratingPut: route('PUT', '/items/:id/rating'),
   ratingDelete: route('DELETE', '/items/:id/rating'),
 

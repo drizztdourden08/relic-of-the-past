@@ -24,6 +24,7 @@ import { versionsWithdraw } from './routes/versions-withdraw';
 import { versionsSubmit } from './routes/versions-submit';
 import { versionsDelete } from './routes/versions-delete';
 import { download } from './routes/download';
+import { itemsPack } from './routes/items-pack';
 import { ratingPut } from './routes/rating-put';
 import { ratingDelete } from './routes/rating-delete';
 import { myPublications } from './routes/my-publications';
@@ -72,6 +73,7 @@ const STORE_OWN_ROUTES: Route[] = [
   versionsSubmit,
   versionsDelete,
   download,
+  itemsPack,
   ratingPut,
   ratingDelete,
   myPublications,

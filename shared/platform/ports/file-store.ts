@@ -18,6 +18,11 @@ interface FileStore {
   writeText: (path: string, data: string) => Promise<void>;
   list: (dir: string) => Promise<string[]>; // immediate child names, [] if missing
   remove: (path: string) => Promise<void>; // recursive; no-op if missing
+  /**
+   * Moves a file or folder to the OS recycle bin, so a delete the player regrets can be
+   * undone there. Only where the OS has one (the desktop app); callers fall back to `remove`.
+   */
+  trash?: (path: string) => Promise<void>;
   exists: (path: string) => Promise<boolean>;
   mkdir: (dir: string) => Promise<void>; // recursive
   stat: (path: string) => Promise<FileStat | null>;

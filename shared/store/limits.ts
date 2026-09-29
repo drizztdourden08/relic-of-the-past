@@ -34,6 +34,8 @@ const STORE_LIMITS = {
   downloadsPerDay: 40,
   /** Bytes one player may download in a day: a few full music packs. */
   downloadBytesPerDay: 8 * GiB,
+  /** Pack preview links one player may open in a day, for the Contents tab of an item page. */
+  packPreviewsPerDay: 60,
   /** Bytes read from the head of an upload to find its manifest; a larger first entry is refused. */
   manifestHeadBytes: 1 * MiB,
   /** Largest manifest once inflated; a first entry claiming more is refused before inflating. */

@@ -5,7 +5,7 @@
  *  incoming/. The link lives as long as a preview link. A version still uploading, or whose
  *  file was removed, is refused with the reason. */
 import { STORE_ROUTES } from '../../../../shared/store/api-contract';
-import type { ReviewPackResponse } from '../../../../shared/store/api-types';
+import type { PackLinkResponse } from '../../../../shared/store/api-types';
 import { HUB_LIMITS } from '../../../../shared/hub/limits';
 import type { StoreVersion } from '../../../../shared/store/types';
 import { badRequest, conflict, notFound } from '../../../hub-core/http/http-error';
@@ -34,7 +34,7 @@ const reviewPack: Route = {
     const version = versionOf(item, target.n);
     if (!version) throw notFound('No such version.');
     const url = await storeBucket.signPreview(readableKey(version), version.contentType);
-    const body: ReviewPackResponse = {
+    const body: PackLinkResponse = {
       url,
       bytes: version.bytes,
       container: version.container,

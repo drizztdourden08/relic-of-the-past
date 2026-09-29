@@ -6,6 +6,7 @@
  */
 import { readFile, writeFile, readdir, rm, mkdir, stat } from 'fs/promises';
 import { join, normalize, dirname, relative, isAbsolute } from 'path';
+import { shell } from 'electron';
 import type { FileStat } from '@shared/platform';
 import { getUserDataPath } from '../lib/paths';
 import { toArrayBufferOrNull } from '../lib/buffer';
@@ -45,6 +46,12 @@ const registerFileHandlers = (): void => {
   });
   handle('file:remove', async (_e, path) => {
     await rm(resolveSafe(path), { recursive: true, force: true });
+  });
+  // To the Recycle Bin (the Trash on macOS), so a delete can be undone there; no-op if missing.
+  handle('file:trash', async (_e, path) => {
+    const full = resolveSafe(path);
+    try { await stat(full); } catch { return; }
+    await shell.trashItem(full);
   });
   handle('file:exists', async (_e, path) => {
     try { await stat(resolveSafe(path)); return true; } catch { return false; }

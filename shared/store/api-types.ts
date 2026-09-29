@@ -75,8 +75,11 @@ type UnsubmittedResponse = { entries: ReviewEntry[] };
 
 type ReviewDecideRequest = { decision: ReviewDecision; note: string };
 
-/** GET /review/:itemId/:target/pack: an inline signed link to a version's pack, read in parts by the review page. */
-type ReviewPackResponse = {
+/**
+ * An inline signed link to a version's pack, read in parts. GET /review/:itemId/:target/pack
+ * answers it for the review page, GET /items/:id/pack for the live version on the item page.
+ */
+type PackLinkResponse = {
   url: string;
   bytes: number;
   container: Container;
@@ -134,7 +137,7 @@ export type {
   ReviewQueueResponse,
   UnsubmittedResponse,
   ReviewDecideRequest,
-  ReviewPackResponse,
+  PackLinkResponse,
   ItemChangeResponse,
   FeaturedResponse,
   WelcomeResponse,

@@ -25,6 +25,7 @@ const INVOKE_MAP = {
   fileWriteText: 'file:writeText',
   fileList: 'file:list',
   fileRemove: 'file:remove',
+  fileTrash: 'file:trash',
   fileExists: 'file:exists',
   fileMkdir: 'file:mkdir',
   fileStat: 'file:stat',

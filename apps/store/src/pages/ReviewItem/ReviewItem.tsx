@@ -10,12 +10,12 @@ import { Flex } from '@ds/primitives/Flex';
 import { Text } from '@ds/primitives/Text';
 import { SideColumn } from '@site-kit/layout/SideColumn/SideColumn';
 import { Link } from '@site-kit/router/Link';
+import { PackContentsPanel } from '../../components/PackContentsPanel/PackContentsPanel';
 import { ReviewChip } from '../../components/ReviewChip/ReviewChip';
 import { TitledPage } from '../../layout/TitledPage/TitledPage';
 import { KIND_ICONS } from '../../lib/kinds';
 import { editOfEntry, versionOfEntry } from '../../review/review-row';
 import { useReviewItemPage } from './behavior/useReviewItemPage';
-import { ContentsPanel } from './sub-components/ContentsPanel';
 import { DecisionPanel } from './sub-components/DecisionPanel';
 import { PackDetails } from './sub-components/PackDetails';
 import { StorePagePreview } from './sub-components/StorePagePreview';
@@ -59,7 +59,15 @@ const ReviewItem = (props: ReviewItemProps) => {
   return (
     <TitledPage icon={KIND_ICONS[entry.item.kind]} title={preview.item.name} tabs={page.tabs} actions={header} aside={aside}>
       {page.tab === 'store' && <StorePagePreview preview={preview} />}
-      {page.tab === 'contents' && <ContentsPanel kind={entry.item.kind} pack={page.pack} target={page.target} />}
+      {page.tab === 'contents' && (
+        <PackContentsPanel
+          kind={entry.item.kind}
+          pack={page.pack}
+          noPack={page.target.noPack}
+          note={page.target.note}
+          className="review-item__contents"
+        />
+      )}
       {page.tab === 'details' && <PackDetails item={preview.item} version={version} pack={page.pack} noPack={page.target.noPack} />}
     </TitledPage>
   );

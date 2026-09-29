@@ -66,6 +66,7 @@ interface InvokeContract extends
   'file:writeText': (path: string, data: string) => Promise<void>;
   'file:list': (dir: string) => Promise<string[]>;
   'file:remove': (path: string) => Promise<void>;
+  'file:trash': (path: string) => Promise<void>;
   'file:exists': (path: string) => Promise<boolean>;
   'file:mkdir': (dir: string) => Promise<void>;
   'file:stat': (path: string) => Promise<FileStat | null>;

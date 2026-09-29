@@ -5,7 +5,7 @@
  */
 import { Stack } from '@ds/primitives/Stack';
 import type { StoreItem, StoreVersion } from '@shared/store/types';
-import type { PackLink } from '../behavior/usePackLink';
+import type { PackLink } from '../../../lib/pack-link/usePackLink';
 import { ListingDetails } from './ListingDetails';
 import { ManifestView } from './ManifestView';
 import { VersionDetails } from './VersionDetails';

@@ -6,10 +6,11 @@
  */
 import { useCallback, useMemo, useState } from 'react';
 import { navigate } from '@site-kit/router/useLocation';
+import { reviewPack } from '../../../api/review-endpoints';
+import { usePackLink } from '../../../lib/pack-link/usePackLink';
 import { useReviewActions } from '../../Review/behavior/useReviewActions';
 import { packTargetOf } from './pack-target';
 import { previewOf } from './preview-item';
-import { usePackLink } from './usePackLink';
 import { useReviewEntry } from './useReviewEntry';
 
 type ReviewItemTab = 'store' | 'contents' | 'details';
@@ -23,7 +24,13 @@ const useReviewItemPage = (rowId: string) => {
   const [tab, setTab] = useState<ReviewItemTab>('store');
   const preview = useMemo(() => (entry ? previewOf(entry) : null), [entry]);
   const target = useMemo(() => (entry ? packTargetOf(entry) : NO_TARGET), [entry]);
-  const pack = usePackLink(entry?.item.id ?? '', target.n);
+  const itemId = entry?.item.id ?? null;
+  const { n } = target;
+  const load = useMemo(
+    () => (itemId === null || n === null ? null : () => reviewPack(itemId, { kind: 'version', n })),
+    [itemId, n],
+  );
+  const pack = usePackLink(load);
 
   const backToList = useCallback(() => navigate(REVIEW_PATH), []);
   const actions = useReviewActions({ onSettled: backToList });
