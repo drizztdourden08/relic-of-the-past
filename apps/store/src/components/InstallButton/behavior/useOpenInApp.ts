@@ -1,6 +1,6 @@
 /* @layer store-site @kind hook */
 /**
- * Opens an item's rotp:// install link and notices when nothing answered it. When the app
+ * Opens an item's install link (relic-of-the-past://) and notices when nothing answered it. When the app
  * (or the browser's "open this app?" prompt) takes the link, the page loses focus; when the
  * page keeps its focus for a moment, no app handles the link and a toast says so.
  */

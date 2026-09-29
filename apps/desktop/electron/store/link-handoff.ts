@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 /**
- * Bringing a rotp:// link to the running app, without a single-instance lock. The player's
+ * Bringing a store install link to the running app, without a single-instance lock. The player's
  * app listens on a pipe named after its user data folder (a named pipe on Windows, a socket
  * in that folder elsewhere). A process the browser started with a link tries the pipe first:
  * when an app answers, it hands the link over and quits; when none does, it starts normally

@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 /**
- * rotp://install links. The protocol is claimed by the player's own app only: never by an
+ * relic-of-the-past://install links. The protocol is claimed by the player's own app only: never by an
  * automation launch, and never by a development build, which would take the links away from
  * the installed app. A link arrives three ways: in argv when the browser started this
  * process, as macOS `open-url`, or over the hand-off pipe from a process the browser started.
@@ -9,12 +9,12 @@
  */
 import { app } from 'electron';
 import type { BrowserWindow } from 'electron';
-import { installLinkFromArgv, parseInstallLink } from '@shared/store/deep-link';
+import { INSTALL_SCHEME, installLinkFromArgv, parseInstallLink } from '@shared/store/deep-link';
 import type { InstallLink } from '@shared/store/deep-link';
 import { isAutomationLaunch } from '../instance';
 import { emit, on } from '../lib/ipc/handle';
 
-const PROTOCOL = 'rotp';
+const PROTOCOL = INSTALL_SCHEME;
 
 let target: BrowserWindow | null = null;
 let shellReady = false;

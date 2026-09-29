@@ -74,13 +74,14 @@ module.exports = {
       mimeType: 'application/x-rlang',
     },
   ],
-  // Hookshop install links (rotp://install/<id>). macOS and Linux take the scheme from the
+  // Hookshop install links (relic-of-the-past://install/<id>). macOS and Linux take the scheme from the
   // package; Windows ships through Velopack, so the app claims it at run time
   // (apps/desktop/electron/store/deep-link.ts).
   protocols: [
     {
       name: 'Relic of the Past',
-      schemes: ['rotp'],
+      // INSTALL_SCHEME in shared/store/deep-link.ts; browsers show it when they ask to open the app.
+      schemes: ['relic-of-the-past'],
     },
   ],
   win: {

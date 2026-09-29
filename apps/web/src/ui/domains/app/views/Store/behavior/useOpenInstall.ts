@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 /**
- * A rotp://install link the browser opened. The browser's own prompt was the approval, so the
+ * A store install link the browser opened. The browser's own prompt was the approval, so the
  * tab selects the item and starts the install with no further click. Signed out, the item is
  * selected and the link waits; the install starts once the sign-in completes.
  */

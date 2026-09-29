@@ -145,11 +145,11 @@ protocol.registerSchemesAsPrivileged([
 // Multiple --disable-features values must share ONE switch, comma-separated.
 app.commandLine.appendSwitch('disable-features', 'CalculateNativeWinOcclusion');
 
-// macOS can deliver a rotp:// link before the app is ready.
+// macOS can deliver a store install link before the app is ready.
 listenForOpenUrl();
 
 app.whenReady().then(async () => {
-  // Started by a rotp:// link while the player's app runs: that app takes the link, this one quits.
+  // Started by an install link while the player's app runs: that app takes the link, this one quits.
   if (await quitIfHandedOff()) return;
 
   // Register protocol handlers
@@ -211,7 +211,7 @@ app.whenReady().then(async () => {
 
   // A .msul pack the app was launched with (file association) reaches the renderer's importer.
   registerMsulOpenHandler(mainWindow);
-  // rotp:// install links: from argv, macOS, or handed over by a process the browser started.
+  // Store install links: from argv, macOS, or handed over by a process the browser started.
   bootStoreLinks(mainWindow);
 
   // Set up application menu for clipboard shortcuts only (debug items moved to in-app Advanced menu)

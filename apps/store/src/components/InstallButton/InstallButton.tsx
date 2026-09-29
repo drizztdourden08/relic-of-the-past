@@ -1,6 +1,6 @@
 /* @layer store-site @kind component */
 /**
- * Install in the app, and Download beside it. Install opens the item's rotp:// link, so the
+ * Install in the app, and Download beside it. Install opens the item's install link, so the
  * browser asks once to open Relic of the Past and the app installs it at once; when nothing
  * answers the link, a toast says so and points at Download. Download is for a player without
  * the app: it saves the pack file itself.

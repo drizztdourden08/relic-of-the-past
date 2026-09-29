@@ -54,7 +54,7 @@ interface EventContract {
   // minted it, so the account card can show it while the browser opens.
   'hub:deviceCode': (userCode: string) => void;
 
-  // The Hookshop: each step of a running install, and a rotp://install link the browser
+  // The Hookshop: each step of a running install, and a store install link the browser
   // opened (in this process, or handed over by the process the link started).
   'store:installProgress': (report: StoreInstallProgress) => void;
   'store:openInstall': (link: StoreOpenInstall) => void;

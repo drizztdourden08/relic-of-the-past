@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 /**
  * Registering the app's document types with Windows (`.msul` music packs, `.rsp` characters,
- * `.rlang` language sets), and taking them back out, along with the rotp:// link protocol the
+ * `.rlang` language sets), and taking them back out, along with the store's install link type the
  * app claims at run time.
  *
  * electron-builder only writes the associations through its NSIS/MSI installers, and Windows
@@ -16,11 +16,12 @@
  */
 import { execFileSync } from 'child_process';
 import { join } from 'path';
+import { INSTALL_SCHEME } from '@shared/store/deep-link';
 
 type DocumentType = { extension: string; progId: string; name: string; contentType: string; icon: () => string };
 
 const CLASSES = 'HKCU\\Software\\Classes';
-const PROTOCOL_KEY = `${CLASSES}\\rotp`;
+const PROTOCOL_KEY = `${CLASSES}\\${INSTALL_SCHEME}`;
 
 /** The .msul icon ships as an extra resource (see the electron-builder config); the others use the app's. */
 const msulIcon = (): string => `"${join(process.resourcesPath, 'msul.ico')}",0`;

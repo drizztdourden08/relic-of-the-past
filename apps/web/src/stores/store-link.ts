@@ -1,6 +1,6 @@
 /* @layer renderer-stores @kind logic */
 /**
- * A rotp://install link waiting for the Hookshop tab. The shell puts it here and opens the
+ * A store install link waiting for the Hookshop tab. The shell puts it here and opens the
  * tab; the tab takes it once, selects the item and starts the install. A store because the
  * link can arrive while any page is open, before the tab is mounted.
  */

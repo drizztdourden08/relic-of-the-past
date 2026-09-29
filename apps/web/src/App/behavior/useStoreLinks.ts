@@ -1,6 +1,6 @@
 /* @layer renderer-appshell @kind hook */
 /**
- * A rotp://install link the browser opened lands on the Hookshop tab whatever page was open:
+ * A store install link the browser opened lands on the Hookshop tab whatever page was open:
  * the link waits in the link store and the tab installs it. No-op off Electron.
  */
 import { useEffect } from 'react';

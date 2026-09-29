@@ -1,6 +1,7 @@
 /* @layer shared-store @kind logic */
 /**
- * The store's install link, `rotp://install/<docId>` with an optional `?v=<n>`. It arrives from
+ * The store's install link, `relic-of-the-past://install/<docId>` with an optional `?v=<n>`. The
+ * link type is the app's name, since browsers show it when they ask to open the app. It arrives from
  * the OS (a new process's argv, or the hand-off pipe), so the parser accepts that exact shape
  * and nothing else: no other host, path segment, query key or fragment. One trailing slash
  * before the query is tolerated, since some launchers append one to a custom-scheme URL.
@@ -15,7 +16,9 @@ type InstallLink = {
   version: number | null;
 };
 
-const SCHEME_AND_HOST = 'rotp://install/';
+/** The link type the app registers with the OS; also in electron-builder.config.js `protocols`. */
+const INSTALL_SCHEME = 'relic-of-the-past';
+const SCHEME_AND_HOST = `${INSTALL_SCHEME}://install/`;
 const MAX_LINK_CHARS = 256;
 const MAX_VERSION = 1_000_000;
 
@@ -68,5 +71,5 @@ const installLinkFromArgv = (argv: readonly string[]): InstallLink | null => {
   return null;
 };
 
-export { parseInstallLink, formatInstallLink, installLinkFromArgv, isStoreDocId };
+export { INSTALL_SCHEME, parseInstallLink, formatInstallLink, installLinkFromArgv, isStoreDocId };
 export type { InstallLink };

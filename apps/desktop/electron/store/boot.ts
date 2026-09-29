@@ -4,7 +4,7 @@
  * macOS link events are caught. Once it is ready and before any window, a process the
  * browser started with a link hands it to the player's running app and quits. Once the main
  * window exists, links reach that window, the player's app listens for links other
- * processes hand over, and the rotp:// protocol is claimed. Automation launches skip the
+ * processes hand over, and the install link type is claimed. Automation launches skip the
  * hand-off, the listening and the claim.
  */
 import { app } from 'electron';

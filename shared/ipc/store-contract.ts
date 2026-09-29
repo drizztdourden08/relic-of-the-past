@@ -32,7 +32,7 @@ type StoreUninstallResult = { ok: true; releasedProfiles: string[] } | { ok: fal
 /** One report per step of a running install, keyed by the item. */
 type StoreInstallProgress = { itemId: string; progress: InstallProgress };
 
-/** A `rotp://install/<id>` link the browser opened, for the Hookshop tab to install. */
+/** A `relic-of-the-past://install/<id>` link the browser opened, for the Hookshop tab to install. */
 type StoreOpenInstall = { itemId: string; version: number | null };
 
 interface StoreInvokeContract {

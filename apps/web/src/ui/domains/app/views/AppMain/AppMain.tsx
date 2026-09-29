@@ -107,7 +107,7 @@ const AppMain = () => {
   useIpcLogBridge();
   // A music pack opened from the desktop imports itself.
   useMsulOpen();
-  // A rotp://install link the browser opened lands on the Hookshop tab.
+  // A store install link the browser opened lands on the Hookshop tab.
   useStoreLinks(nav.setActivePage);
   useAppMainEffects({ isGameRunning: game.isRunning, activePage: nav.activePage, openNavWidget: () => widgets.open('navigation') });
 
