@@ -4,7 +4,10 @@
  * root and written by the main process. The record is what makes uninstall and update exact:
  * `installedName` is the one thing an installer wrote.
  */
-import type { Container, StoreKind } from './types';
+import type { Container, Person, StoreKind } from './types';
+
+/** The listing an install came from, as the download grant named it. */
+type InstalledOrigin = { name: string; author: Person; license: string };
 
 type InstalledPack = {
   itemId: string;
@@ -16,9 +19,11 @@ type InstalledPack = {
   /** The music pack folder, the sprite file name, or the language set id. */
   installedName: string;
   installedAt: number;
+  /** A record without one is not valid and is dropped on read. */
+  origin: InstalledOrigin;
 };
 
 /** The whole file. */
 type InstalledRegistry = { version: 1; packs: InstalledPack[] };
 
-export type { InstalledPack, InstalledRegistry };
+export type { InstalledOrigin, InstalledPack, InstalledRegistry };

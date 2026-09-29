@@ -10,7 +10,7 @@ export type {
 export type { HubInvokeContract, HubSignInFailure, HubSignInResult, HubMe } from './hub-contract';
 export type {
   StoreInvokeContract, StoreResult, StoreInstallRequest, StoreInstallResult, StoreUninstallResult,
-  StoreInstallProgress, StoreOpenInstall,
+  StoreDuplicateResult, StoreInstallProgress, StoreOpenInstall,
 } from './store-contract';
 export type { ReviewEntry, ReviewFile } from './review-contract';
 export type {

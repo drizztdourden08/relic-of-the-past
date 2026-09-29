@@ -12,9 +12,10 @@ import { mkdir, readFile, readdir, stat, writeFile } from 'fs/promises';
 import type { MsuPackManifest } from '@shared/types/msu-manifest';
 import { MSUL_MANIFEST_NAME } from '@shared/types/msu-manifest';
 import { isInventoryName, sortInventory } from '@shared/storage/msu-inventory';
-import { isSafeName } from '@shared/storage/msu-paths';
+import { isSafeName, packDir } from '@shared/storage/msu-paths';
 import { parseManifest, serializeManifest } from '@shared/storage/msu-edit';
 import { getUserDataPath } from '../lib/paths';
+import { refuseInstalled } from '../storage/installed-guard';
 
 const safeName = (name: string): string => {
   if (!isSafeName(name)) throw new Error('Invalid filename');
@@ -22,6 +23,9 @@ const safeName = (name: string): string => {
 };
 
 const packPath = (pack: string): string => getUserDataPath('msu', safeName(pack));
+
+/** Throws when the pack was installed from the Hookshop, which makes it read only. */
+const refuseInstalledPack = (pack: string): Promise<void> => refuseInstalled(packDir(safeName(pack)));
 
 const packFilePath = (pack: string, fileName: string): string =>
   join(packPath(pack), safeName(fileName));
@@ -60,6 +64,6 @@ const writePackManifest = async (pack: string, manifest: MsuPackManifest): Promi
 };
 
 export {
-  manifestPath, packFilePath, packPath, pathExists, readPackManifest, readPackText, safeName,
-  writePackManifest,
+  manifestPath, packFilePath, packPath, pathExists, readPackManifest, readPackText, refuseInstalledPack,
+  safeName, writePackManifest,
 };

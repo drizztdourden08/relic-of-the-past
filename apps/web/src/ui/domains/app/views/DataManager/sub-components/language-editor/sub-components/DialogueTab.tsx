@@ -57,6 +57,8 @@ type DialogueTabProps = {
   draft: EntryDraftState;
   view: EntryViewState;
   structureMode: SetStructure;
+  /** An installed set: lines open and preview, and the editor cannot change them. */
+  readOnly: boolean;
   onQueryChange: (query: string) => void;
   onFilterChange: (filter: EntryFilter) => void;
   onOpen: (id: number) => void;
@@ -74,7 +76,7 @@ const FILTER_OPTIONS = [
 const DialogueTab = (props: DialogueTabProps) => {
   const {
     entries, total, issues, query, filter, cfg, glossary, variables, variableIndex,
-    metrics, sheet, layout, draft, view, structureMode,
+    metrics, sheet, layout, draft, view, structureMode, readOnly,
     onQueryChange, onFilterChange, onOpen, onClose, onModeChange, onChangeStructureMode,
   } = props;
 
@@ -136,6 +138,7 @@ const DialogueTab = (props: DialogueTabProps) => {
                   sheet={sheet}
                   structureMode={structureMode}
                   dirty={draft.isDirty(entry.id)}
+                  readOnly={readOnly}
                   onChangeTokens={(next) => draft.setTokens(entry.id, next)}
                   onChangeStructureMode={onChangeStructureMode}
                   onSave={() => draft.commit(entry.id)}

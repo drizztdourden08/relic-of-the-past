@@ -23,10 +23,12 @@ import type { LayerEditorProps } from './LayerEditor.type';
 const LayerEditor = (props: LayerEditorProps) => {
   const {
     pack, target, manifest, saveBase, availableFiles, isLayered, reportStore, onConfirm, onSaved,
+    readOnly = false,
   } = props;
   const {
     layers, dirty, saving, error, addLayer, removeLayer, moveLayer, updateLayer, save, revert,
   } = useLayerEditor({ pack, target, manifest, saveBase, onSaved });
+  const locked = saving || readOnly;
   // A loop point applies to a single-file layer, so only each layer's first file is consulted.
   const fileLoopSamples = useFileLoopSamples(
     pack, [...new Set(layers.map((layer) => layer.files[0]).filter((name) => name !== undefined))],
@@ -37,12 +39,12 @@ const LayerEditor = (props: LayerEditorProps) => {
       <SectionHeader
         title={`Layers - ${target.label}`}
         subtitle={
-          isLayered
+          isLayered || readOnly
             ? 'Each layer is scheduled on its own; they play together.'
             : 'This pack has no manifest yet. Saving writes one and keeps every other slot as it plays today.'
         }
         action={
-          <Button variant="secondary" size="sm" disabled={saving} onClick={addLayer}>Add layer</Button>
+          <Button variant="secondary" size="sm" disabled={locked} onClick={addLayer}>Add layer</Button>
         }
       />
 
@@ -57,7 +59,7 @@ const LayerEditor = (props: LayerEditorProps) => {
             total={layers.length}
             available={availableFiles}
             fileLoopSample={fileLoopSamples.get(layer.files[0] ?? '') ?? null}
-            disabled={saving}
+            disabled={locked}
             live={<LayerLive store={reportStore} previewKey={target.previewKey} layerId={layer.id} />}
             onConfirm={onConfirm}
             onChange={(patch) => updateLayer(layer.id, patch)}
@@ -70,10 +72,10 @@ const LayerEditor = (props: LayerEditorProps) => {
       {error != null && <Text className="layer-editor__error">{error}</Text>}
 
       <ButtonRow align="start">
-        <Button variant="primary" size="sm" disabled={saving || !dirty} onClick={() => void save()}>
+        <Button variant="primary" size="sm" disabled={locked || !dirty} onClick={() => void save()}>
           {saving ? 'Saving...' : 'Save layers'}
         </Button>
-        <Button variant="tertiary" size="sm" disabled={saving || !dirty} onClick={revert}>Revert</Button>
+        <Button variant="tertiary" size="sm" disabled={locked || !dirty} onClick={revert}>Revert</Button>
         {dirty && !saving && <Text variant="caption">Unsaved changes</Text>}
       </ButtonRow>
     </Box>

@@ -24,7 +24,8 @@ import { useSetPersistence } from './useSetPersistence';
 const NO_VARIABLES: Variable[] = [];
 const NO_TERMS: GlossaryTerm[] = [];
 
-const useLanguageEditor = (id: string | null): LanguageEditorState => {
+/** `readOnly` is an installed set: every edit is refused here, so nothing is marked or written. */
+const useLanguageEditor = (id: string | null, readOnly = false): LanguageEditorState => {
   const [set, setSet] = useState<LanguageSet | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -63,13 +64,13 @@ const useLanguageEditor = (id: string | null): LanguageEditorState => {
   /** Applies one immutable transform, then marks the result for a debounced write. */
   const apply = useCallback((change: (from: LanguageSet) => LanguageSet) => {
     const from = current.current;
-    if (!from) return;
+    if (!from || readOnly) return;
     const next = change(from);
     if (next === from) return;
     current.current = next;
     setSet(next);
     markEdited(next);
-  }, [markEdited]);
+  }, [markEdited, readOnly]);
 
   const setEntryTokens = useCallback((entryId: number, tokens: Token[]) => {
     apply((from) => withEntryTokens(from, entryId, tokens));

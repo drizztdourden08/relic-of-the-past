@@ -13,6 +13,7 @@
  * in the stock asset is the flash palette used while the player is zapped; no sheet format
  * carries it and the core deliberately leaves the player on the shared row for it.
  */
+import type { BasedOn } from '@shared/store/based-on';
 
 /** The four outfits a sheet supplies. The first three are recolours; `bunny` is its own art. */
 type OutfitId = 'green' | 'blue' | 'red' | 'bunny';
@@ -52,6 +53,8 @@ interface SheetMeta {
    */
   authorShort: string;
   notes?: string;
+  /** Set on a copy of a sprite installed from the Hookshop: the original it credits. */
+  basedOn?: BasedOn;
 }
 
 interface PlayerSheet {

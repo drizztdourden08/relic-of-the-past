@@ -43,6 +43,8 @@ interface LayerEditorProps {
    */
   onConfirm: ConfirmRequest;
   onSaved: () => void;
+  /** An installed pack: the layers show as they are, and every control that changes them is off. */
+  readOnly?: boolean;
 }
 
 export type { LayerEditorProps };

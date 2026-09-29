@@ -19,6 +19,7 @@ const SITE_INVOKE_MAP = {
   storeItem: 'store:item',
   storeInstall: 'store:install',
   storeUninstall: 'store:uninstall',
+  storeDuplicate: 'store:duplicate',
   storeInstalled: 'store:installed',
   storeCancel: 'store:cancel',
 } as const satisfies Record<string, keyof InvokeContract>;

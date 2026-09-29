@@ -6,17 +6,20 @@ import { IconButton } from '@ds/primitives/IconButton';
 import { EmptyState } from '@ds/primitives/EmptyState';
 import { ListItemRow } from '@ds/composites/ListItemRow';
 import { formatBytes } from '@app/utils/formatBytes';
+import { HookshopChip } from '@domains/app/compounds/HookshopChip';
 import type { MsuPackRow } from './msu.type';
 
 interface MsuPackListProps {
   packs: MsuPackRow[];
   selected: string | null;
+  /** True for a pack installed from the Hookshop: its row carries the lock, and Delete uninstalls it. */
+  isInstalled: (name: string) => boolean;
   onSelect: (name: string) => void;
   onDelete: (name: string) => void;
 }
 
 const MsuPackList = (props: MsuPackListProps) => {
-  const { packs, selected, onSelect, onDelete } = props;
+  const { packs, selected, isInstalled, onSelect, onDelete } = props;
 
   const handleDeleteClick = useCallback((e: React.MouseEvent, name: string) => {
     e.stopPropagation();
@@ -44,12 +47,18 @@ const MsuPackList = (props: MsuPackListProps) => {
               <Badge variant={pack.format === 'layered' ? 'success' : 'neutral'}>
                 {pack.format === 'layered' ? 'Layered' : 'Classic'}
               </Badge>
+              {isInstalled(pack.name) && <HookshopChip />}
             </>
           }
           selected={selected === pack.name}
           onClick={() => onSelect(pack.name)}
           action={
-            <IconButton variant="ghost" size="sm" label="Delete" onClick={(e) => handleDeleteClick(e, pack.name)}>
+            <IconButton
+              variant="ghost"
+              size="sm"
+              label={isInstalled(pack.name) ? 'Uninstall' : 'Delete'}
+              onClick={(e) => handleDeleteClick(e, pack.name)}
+            >
               ✕
             </IconButton>
           }

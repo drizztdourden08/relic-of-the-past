@@ -14,6 +14,8 @@ import { OUTFIT_LABELS } from '@domains/packs/character/behavior/useWearing';
 interface PaletteEditorProps {
   sheet: PlayerSheet;
   outfit: OutfitId;
+  /** An installed sprite: the colours show, and no swatch opens the picker. */
+  readOnly?: boolean;
   onColor: (index: number, word: number) => void;
   onGloveColor: (slot: 0 | 1, word: number) => void;
   onReset: (index: number) => void;
@@ -23,7 +25,7 @@ interface PaletteEditorProps {
 type Slot = number | 'g0' | 'g1' | null;
 
 const PaletteEditor = (props: PaletteEditorProps) => {
-  const { sheet, outfit, onColor, onGloveColor, onReset } = props;
+  const { sheet, outfit, readOnly = false, onColor, onGloveColor, onReset } = props;
   const [slot, setSlot] = useState<Slot>(null);
   const anchorRef = useRef<HTMLElement | null>(null);
 
@@ -32,9 +34,10 @@ const PaletteEditor = (props: PaletteEditorProps) => {
   const originals = sheet.original.outfits[outfit];
 
   const openAt = useCallback((el: HTMLElement, s: Exclude<Slot, null>) => {
+    if (readOnly) return;
     anchorRef.current = el;
     setSlot((cur) => (cur === s ? null : s));
-  }, []);
+  }, [readOnly]);
 
   const wordOf = useCallback((s: Exclude<Slot, null>): number =>
     (typeof s === 'number' ? colors[s] : live.gloves[s === 'g0' ? 0 : 1]), [colors, live.gloves]);
@@ -114,7 +117,7 @@ const PaletteEditor = (props: PaletteEditorProps) => {
       </Box>
 
       <ColorPickerPopover
-        open={slot !== null}
+        open={slot !== null && !readOnly}
         anchorRef={anchorRef}
         value={slot === null ? '#000000' : bgr555ToHex(wordOf(slot))}
         onChange={change}

@@ -4,18 +4,30 @@
  * It runs on the FileStore port, so a test can drive it on a store in memory. Every change is a
  * read-modify-write in one queue, so two installs finishing together never drop each other's
  * record. A file that does not parse reads as empty, and a record missing a field is skipped,
- * so a damaged file never blocks the tab.
+ * so a damaged file never blocks the tab. A record without a well-formed origin is not valid
+ * and is skipped the same way.
  */
 import type { FileStore } from '@shared/platform';
 import { isContainer } from '@shared/store/containers';
-import type { InstalledPack, InstalledRegistry } from '@shared/store/installed-types';
+import type { InstalledOrigin, InstalledPack, InstalledRegistry } from '@shared/store/installed-types';
 
 const REGISTRY_PATH = 'store/installed.json';
 const KINDS = ['music', 'character', 'language'];
 
+const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null;
+
+const isNonEmpty = (value: unknown): value is string => typeof value === 'string' && value.length > 0;
+
+/** The listing name, the author as a Person, and a licence id, none of them empty. */
+const isInstalledOrigin = (value: unknown): value is InstalledOrigin => {
+  if (!isRecord(value) || !isRecord(value.author)) return false;
+  return isNonEmpty(value.name) && isNonEmpty(value.license)
+    && isNonEmpty(value.author.userId) && typeof value.author.displayName === 'string';
+};
+
 const isInstalledPack = (value: unknown): value is InstalledPack => {
-  if (typeof value !== 'object' || value === null) return false;
-  const pack = value as Record<string, unknown>;
+  if (!isRecord(value)) return false;
+  const pack = value;
   return typeof pack.itemId === 'string'
     && KINDS.includes(pack.kind as string)
     && typeof pack.version === 'number'
@@ -23,7 +35,8 @@ const isInstalledPack = (value: unknown): value is InstalledPack => {
     && isContainer(pack.container)
     && typeof pack.installedName === 'string'
     && pack.installedName.length > 0
-    && typeof pack.installedAt === 'number';
+    && typeof pack.installedAt === 'number'
+    && isInstalledOrigin(pack.origin);
 };
 
 const parseRegistry = (text: string | null): InstalledRegistry => {
@@ -65,5 +78,5 @@ const createInstalledRegistry = (files: FileStore) => {
 
 type InstalledRegistryStore = ReturnType<typeof createInstalledRegistry>;
 
-export { createInstalledRegistry, parseRegistry, REGISTRY_PATH };
+export { createInstalledRegistry, isInstalledOrigin, parseRegistry, REGISTRY_PATH };
 export type { InstalledRegistryStore };

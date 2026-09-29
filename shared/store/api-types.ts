@@ -46,6 +46,9 @@ type DownloadResponse = {
   itemId: string;
   kind: StoreKind;
   name: string;
+  author: Person;
+  /** A licence id from shared/store/licenses. */
+  license: string;
   version: number;
   semver: string;
   container: Container;

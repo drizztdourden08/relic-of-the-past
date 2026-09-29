@@ -29,7 +29,7 @@ const EFFECTS_SUBTITLE = 'The sound chip raises one-shot effects on two ports, e
   + ' port it belongs to.';
 
 const MsuEffectsPanel = (props: MsuEffectsPanelProps) => {
-  const { pack, manifest, saveBase, files, isLayered, onDeleteConfirm, onReload } = props;
+  const { pack, manifest, saveBase, files, isLayered, readOnly, onDeleteConfirm, onReload } = props;
   const [filter, setFilter] = useState('');
   // `sfx2` in the box means the port, not text to find, so it is applied to the merged list instead.
   const query = parseEffectQuery(filter);
@@ -131,6 +131,7 @@ const MsuEffectsPanel = (props: MsuEffectsPanelProps) => {
               availableFiles={availableFiles}
               isLayered={isLayered}
               showChannel
+              readOnly={readOnly}
               onPreview={play}
               onPlayOriginal={playOriginal}
               onToggleLayers={toggleLayers}

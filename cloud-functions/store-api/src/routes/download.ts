@@ -59,6 +59,8 @@ const download: Route = {
       itemId: item.id,
       kind: item.kind,
       name: item.name,
+      author: { userId: item.author.userId, displayName: item.author.displayName },
+      license: item.license,
       version: version.n,
       semver: version.semver,
       container: version.container,

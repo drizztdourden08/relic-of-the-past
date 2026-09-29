@@ -72,6 +72,7 @@ const installItem = async (params: InstallParams): Promise<InstalledPack> => {
     container: grant.container,
     installedName,
     installedAt: Date.now(),
+    origin: { name: grant.name, author: grant.author, license: grant.license },
   };
   if (previous && previous.installedName !== installedName) await retirePack(previous, installedName);
   await installedRegistry.put(pack);

@@ -4,6 +4,7 @@
  * shared/types/language.ts: dialogue lines are token streams, and glossary/name
  * data is broken out for editing before a bake step recompiles it into the ROM.
  */
+import type { BasedOn } from '@shared/store/based-on';
 import type { TextOverrides } from './text/types';
 import type { Variable } from './variables/types';
 
@@ -56,6 +57,8 @@ type LanguageSetMeta = {
   origin: 'rom' | 'custom';
   version: number;
   author?: string;
+  /** Set on a copy of a set installed from the Hookshop: the original it credits. */
+  basedOn?: BasedOn;
 };
 
 /**

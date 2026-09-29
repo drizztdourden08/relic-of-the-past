@@ -12,6 +12,10 @@
   color: var(--c-green-bright);
 }
 
+.sprite-studio__status--error {
+  color: var(--c-danger);
+}
+
 /* ── library column ── */
 .sprite-library__create {
   display: flex;

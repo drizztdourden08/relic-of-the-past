@@ -2,17 +2,12 @@
 /** The Publish form's fixed choices: the three modes, the licences offered and the pack files it takes. */
 import type { SelectOption } from '@ds/primitives/Select';
 import { CONTAINERS } from '@shared/store/containers';
+import { LICENSES } from '@shared/store/licenses';
 
 /** A new item, the next version of one, or a change to its listing. */
 type PublishMode = 'new' | 'version' | 'listing';
 
-const LICENSE_OPTIONS: SelectOption[] = [
-  { value: 'CC-BY-4.0', label: 'CC-BY-4.0', description: 'Anyone may share and change it, crediting you.' },
-  { value: 'CC-BY-SA-4.0', label: 'CC-BY-SA-4.0', description: 'The same, and changes keep this licence.' },
-  { value: 'CC-BY-NC-4.0', label: 'CC-BY-NC-4.0', description: 'Credit you, and never sold.' },
-  { value: 'CC0-1.0', label: 'CC0-1.0', description: 'No rights kept.' },
-  { value: 'All rights reserved', label: 'All rights reserved', description: 'Players may install it, nothing more.' },
-];
+const LICENSE_OPTIONS: SelectOption[] = LICENSES.map(({ id, label, description }) => ({ value: id, label, description }));
 
 const DEFAULT_LICENSE = 'CC-BY-4.0';
 

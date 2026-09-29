@@ -22,6 +22,7 @@ interface TrackSectionProps {
   reportStore: PreviewReportStore;
   openTrack: number | null;
   busy: boolean;
+  readOnly: boolean;
   onAssign: (trackNum: number, fileName: string) => void;
   onPreview: (trackNum: number) => void;
   onStopPreview: () => void;
@@ -32,7 +33,7 @@ interface TrackSectionProps {
 
 const TrackSection = (props: TrackSectionProps) => {
   const {
-    title, rows, files, fileOptions, playing, playingOriginal, reportStore, openTrack, busy,
+    title, rows, files, fileOptions, playing, playingOriginal, reportStore, openTrack, busy, readOnly,
     onAssign, onPreview, onStopPreview, onPlayOriginal, onToggleLayers, renderDetail,
   } = props;
 
@@ -55,6 +56,7 @@ const TrackSection = (props: TrackSectionProps) => {
               busy={busy}
               expanded={openTrack === row.trackNum}
               playingOriginal={playingOriginal === row.trackNum}
+              readOnly={readOnly}
               onAssign={onAssign}
               onPreview={onPreview}
               onStopPreview={onStopPreview}

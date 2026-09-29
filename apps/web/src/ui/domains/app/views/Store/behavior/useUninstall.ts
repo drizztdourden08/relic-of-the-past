@@ -5,6 +5,7 @@
  * refreshed afterwards.
  */
 import { useCallback, useState } from 'react';
+import { uninstallMessage, uninstallTitle } from '../../../compounds/InstalledOrigin';
 
 type UninstallParams = {
   onDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
@@ -26,11 +27,7 @@ const useUninstall = (params: UninstallParams) => {
   }, [onUninstalled]);
 
   const uninstall = useCallback((itemId: string, name: string) => {
-    onDeleteConfirm(
-      `Uninstall ${name}`,
-      `Remove ${name} from this computer? A profile that uses it goes back to the default.`,
-      () => { void run(itemId); },
-    );
+    onDeleteConfirm(uninstallTitle(name), uninstallMessage(name), () => { void run(itemId); });
   }, [onDeleteConfirm, run]);
 
   return { uninstall, uninstallingId, uninstallError };

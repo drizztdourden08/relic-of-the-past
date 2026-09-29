@@ -24,12 +24,12 @@ interface SoundDetailProps extends LayerEditorProps {
 const SoundDetail = (props: SoundDetailProps) => {
   const {
     pack, target, manifest, saveBase, availableFiles, isLayered, reportStore,
-    channel, soundId, syncGroup, unclaimed, uploading, onUpload, onConfirm, onSaved,
+    channel, soundId, syncGroup, unclaimed, uploading, onUpload, onConfirm, onSaved, readOnly = false,
   } = props;
 
   return (
     <Box className="msu-track-detail">
-      {unclaimed && (
+      {unclaimed && !readOnly && (
         <Text variant="caption">
           This sound still plays from the sound chip. Add a layer with audio and save to hand it
           over to the pack.
@@ -39,7 +39,7 @@ const SoundDetail = (props: SoundDetailProps) => {
         accept={AUDIO_ACCEPT}
         label={uploading ? 'Adding audio...' : 'Drop audio into this pack'}
         hint={AUDIO_ACCEPT_HINT}
-        disabled={uploading}
+        disabled={uploading || readOnly}
         onDrop={onUpload}
       />
       {/* Sound-level, so it sits beside the editor. Meaningless until the sound is claimed. */}
@@ -50,6 +50,7 @@ const SoundDetail = (props: SoundDetailProps) => {
           soundId={soundId}
           group={syncGroup}
           saveBase={saveBase}
+          disabled={readOnly}
           onSaved={onSaved}
         />
       )}
@@ -64,6 +65,7 @@ const SoundDetail = (props: SoundDetailProps) => {
         reportStore={reportStore}
         onConfirm={onConfirm}
         onSaved={onSaved}
+        readOnly={readOnly}
       />
     </Box>
   );

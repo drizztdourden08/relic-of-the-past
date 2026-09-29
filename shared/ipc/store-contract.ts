@@ -1,7 +1,7 @@
 /* @layer shared-types @kind types */
 /**
- * The Hookshop invoke channels: the catalogue, one item, and installing, updating and
- * uninstalling packs. The main process calls the store API with the device token, so the
+ * The Hookshop invoke channels: the catalogue, one item, and installing, updating,
+ * uninstalling and duplicating packs. The main process calls the store API with the device token, so the
  * renderer never holds it. Split out of `InvokeContract` (which extends this) for the line
  * cap; the signatures have their one source of truth here. Install progress and the links a
  * browser opens arrive on the `store:installProgress` and `store:openInstall` EVENTS.
@@ -29,6 +29,9 @@ type StoreInstallResult =
 /** The profiles whose selection pointed at the pack and went back to the default. */
 type StoreUninstallResult = { ok: true; releasedProfiles: string[] } | { ok: false; error: string };
 
+/** The editable copy a duplicate made: its kind, and its pack folder, sprite file name or set id. */
+type StoreDuplicateResult = { kind: StoreKind; name: string };
+
 /** One report per step of a running install, keyed by the item. */
 type StoreInstallProgress = { itemId: string; progress: InstallProgress };
 
@@ -44,6 +47,11 @@ interface StoreInvokeContract {
   'store:install': (request: StoreInstallRequest) => Promise<StoreInstallResult>;
   /** Releases any profile that selects the pack, removes its files, drops the record. */
   'store:uninstall': (itemId: string) => Promise<StoreUninstallResult>;
+  /**
+   * Copies an installed item to a free new name the player can edit, crediting the original in
+   * the copy's `basedOn`. Refused, with the reason, when its licence does not allow copies.
+   */
+  'store:duplicate': (itemId: string) => Promise<StoreResult<StoreDuplicateResult>>;
   'store:installed': () => Promise<InstalledPack[]>;
   /** Stops the install of that item; its pending `store:install` answers cancelled. */
   'store:cancel': (itemId: string) => Promise<void>;
@@ -55,6 +63,7 @@ export type {
   StoreInstallRequest,
   StoreInstallResult,
   StoreUninstallResult,
+  StoreDuplicateResult,
   StoreInstallProgress,
   StoreOpenInstall,
 };
