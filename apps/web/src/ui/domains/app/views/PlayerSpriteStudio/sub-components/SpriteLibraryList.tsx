@@ -57,12 +57,8 @@ const SpriteLibraryList = (props: SpriteLibraryListProps) => {
               ? <Image className="sprite-library__thumb" src={entry.preview} alt={entry.label} draggable={false} />
               : '🧝'}
             name={entry.label}
-            meta={(
-              <>
-                <Badge variant="neutral">{entry.container}</Badge>
-                {isInstalled(entry.name) && <HookshopChip />}
-              </>
-            )}
+            meta={<Badge variant="neutral">{entry.container}</Badge>}
+            badge={isInstalled(entry.name) ? <HookshopChip /> : undefined}
             selected={selected === entry.name}
             onClick={() => onSelect(entry.name)}
             action={

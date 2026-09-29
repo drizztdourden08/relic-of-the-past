@@ -47,9 +47,9 @@ const MsuPackList = (props: MsuPackListProps) => {
               <Badge variant={pack.format === 'layered' ? 'success' : 'neutral'}>
                 {pack.format === 'layered' ? 'Layered' : 'Classic'}
               </Badge>
-              {isInstalled(pack.name) && <HookshopChip />}
             </>
           }
+          badge={isInstalled(pack.name) ? <HookshopChip /> : undefined}
           selected={selected === pack.name}
           onClick={() => onSelect(pack.name)}
           action={

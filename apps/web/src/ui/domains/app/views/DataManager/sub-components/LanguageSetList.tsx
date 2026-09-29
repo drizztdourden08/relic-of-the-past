@@ -27,12 +27,8 @@ const LanguageSetList = (props: LanguageSetListProps) => {
           key={set.id}
           icon="🌐"
           name={labelOf(set)}
-          meta={(
-            <>
-              {`${set.lineCount} lines · base ${set.base}${set.origin === 'custom' ? ' · custom' : ''} `}
-              {isInstalled(set.id) && <HookshopChip />}
-            </>
-          )}
+          meta={`${set.lineCount} lines · base ${set.base}${set.origin === 'custom' ? ' · custom' : ''}`}
+          badge={isInstalled(set.id) ? <HookshopChip /> : undefined}
           selected={selected === set.id}
           onClick={() => onSelect(set.id)}
           action={
