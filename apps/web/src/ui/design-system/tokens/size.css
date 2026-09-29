@@ -138,4 +138,7 @@
   /* The Hookshop's detail panel beside the card grid, the same width as the
      list column of the master-detail layout it mirrors. */
   --store-detail-w: 340px;
+
+  /* The Hookshop's signed-out screen: one readable centred column. */
+  --store-sign-in-w: 480px;
 }
