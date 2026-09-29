@@ -10,14 +10,15 @@ import {
 } from '@shared/storage/link-sprites/link-sprites';
 import type { InstallProgress, PackInstaller } from './installer.type';
 
-const install = async (bytes: Uint8Array, files: FileStore, onProgress: (p: InstallProgress) => void, listingName?: string) => {
+const install = async (bytes: Uint8Array, files: FileStore, onProgress: (p: InstallProgress) => void) => {
   const sheet = await parseRsp(bytes);
   if (!sheet) throw new Error('This download is not a readable sprite pack.');
-  const name = await freeSpriteName(files, `${listingName || sheet.meta.name || 'sprite'}.rsp`);
+  const ownName = safeFileName(`${sheet.meta.name || 'sprite'}.rsp`);
+  const name = await freeSpriteName(files, ownName);
   onProgress({ phase: 'unpack', done: 0, total: 1 });
   await writeLinkSprite(files, name, bytes);
   onProgress({ phase: 'unpack', done: 1, total: 1 });
-  return { installedName: name };
+  return { installedName: name, ownName };
 };
 
 const uninstall = async (installedName: string, files: FileStore): Promise<void> => {
@@ -27,15 +28,14 @@ const uninstall = async (installedName: string, files: FileStore): Promise<void>
   await deleteLinkSprite(files, installedName);
 };
 
-/** Moves the file to the listing's name once that name is free (after an update). */
-const settleName = async (installedName: string, listingName: string, files: FileStore): Promise<string> => {
-  const wanted = await freeSpriteName(files, `${listingName}.rsp`);
-  if (wanted === installedName || wanted !== safeFileName(`${listingName}.rsp`)) return installedName;
+/** Moves the file to the sprite's own name once that name is free (after an update). */
+const settleName = async (installedName: string, ownName: string, files: FileStore): Promise<string> => {
+  if (ownName === installedName || await readLinkSprite(files, ownName)) return installedName;
   const bytes = await readLinkSprite(files, installedName);
   if (!bytes) return installedName;
-  await writeLinkSprite(files, wanted, bytes);
+  await writeLinkSprite(files, ownName, bytes);
   await deleteLinkSprite(files, installedName);
-  return wanted;
+  return ownName;
 };
 
 const rspInstaller: PackInstaller = { container: 'rsp', install, uninstall, settleName };

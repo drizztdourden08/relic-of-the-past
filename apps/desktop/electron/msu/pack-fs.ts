@@ -40,9 +40,15 @@ const readPackText = async (path: string): Promise<string | null> => {
   try { return await readFile(path, 'utf-8'); } catch { return null; }
 };
 
+/** A pack's name is its folder; the name inside its settings follows it on read and write. */
+const withPackName = (manifest: MsuPackManifest, pack: string): MsuPackManifest =>
+  ({ ...manifest, meta: { ...manifest.meta, name: pack } });
+
 /** null for a classic pack (no manifest), and for one that is unreadable or an unknown version. */
-const readPackManifest = async (pack: string): Promise<MsuPackManifest | null> =>
-  parseManifest(await readPackText(manifestPath(pack)));
+const readPackManifest = async (pack: string): Promise<MsuPackManifest | null> => {
+  const manifest = parseManifest(await readPackText(manifestPath(pack)));
+  return manifest && withPackName(manifest, pack);
+};
 
 /** Same rule as the FileStore side (shared/storage/msu-inventory): regular files, manifest excepted. */
 const packInventory = async (pack: string): Promise<string[]> => {
@@ -60,7 +66,7 @@ const writePackManifest = async (pack: string, manifest: MsuPackManifest): Promi
   const path = manifestPath(pack);
   await mkdir(dirname(path), { recursive: true });
   const files = await packInventory(pack);
-  await writeFile(path, serializeManifest({ ...manifest, files }), 'utf-8');
+  await writeFile(path, serializeManifest({ ...withPackName(manifest, pack), files }), 'utf-8');
 };
 
 export {

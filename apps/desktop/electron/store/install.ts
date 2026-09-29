@@ -4,15 +4,16 @@
  * temp file with progress, the size and sha256 are checked, the container's installer
  * unpacks them, and the registry records what it wrote. Installing an item that is already
  * installed is an update: the new copy goes in first, profiles that used the old copy are
- * pointed at the new one, the old copy is removed, and the new one moves to the listing's
- * name now that it is free. A language is baked into the game assets after, the way the
+ * pointed at the new one, the old copy is removed, and the new one moves to its own name now
+ * that it is free. A language is baked into the game assets after, the way the
  * language editor's save does it.
  */
 import { readFile, rm } from 'fs/promises';
 import { STORE_ROUTES } from '@shared/store/api-contract';
 import type { DownloadResponse } from '@shared/store/api-types';
 import { selectInstaller } from '@shared/store/install/select-installer';
-import type { InstallProgress, PackInstaller } from '@shared/store/install/installer.type';
+import type { InstallOutcome, InstallProgress, PackInstaller } from '@shared/store/install/installer.type';
+import type { StoreKind } from '@shared/store/types';
 import type { InstalledPack } from '@shared/store/installed-types';
 import { recompileAllAssets } from '../assets/compile-rom-assets';
 import { downloadToTemp } from '../lib/download';
@@ -40,13 +41,14 @@ const requestGrant = (itemId: string, version: number | null): Promise<DownloadR
   });
 
 /**
- * The name the pack ends under: the listing's name when the installer can move it there (free
- * once an update removed the old copy), and the profiles follow it.
+ * The name the pack ends under: its own name when the installer can move it there (free once an
+ * update removed the old copy), and the profiles follow it.
  */
-const settledName = async (installer: PackInstaller, installedName: string, grant: DownloadResponse): Promise<string> => {
-  if (!installer.settleName) return installedName;
-  const settled = await installer.settleName(installedName, grant.name, storeFiles);
-  if (settled !== installedName) await repointProfiles(storeFiles, { kind: grant.kind, installedName }, settled);
+const settledName = async (installer: PackInstaller, installed: InstallOutcome, kind: StoreKind): Promise<string> => {
+  const { installedName, ownName } = installed;
+  if (!installer.settleName || !ownName) return installedName;
+  const settled = await installer.settleName(installedName, ownName, storeFiles);
+  if (settled !== installedName) await repointProfiles(storeFiles, { kind, installedName }, settled);
   return settled;
 };
 
@@ -77,9 +79,9 @@ const installItem = async (params: InstallParams): Promise<InstalledPack> => {
 
   const previous = await installedRegistry.get(itemId);
   const installer = selectInstaller(grant.container);
-  const installed = await installer.install(bytes, storeFiles, onProgress, grant.name);
+  const installed = await installer.install(bytes, storeFiles, onProgress);
   if (previous && previous.installedName !== installed.installedName) await retirePack(previous, installed.installedName);
-  const installedName = await settledName(installer, installed.installedName, grant);
+  const installedName = await settledName(installer, installed, grant.kind);
   const pack: InstalledPack = {
     itemId,
     kind: grant.kind,
