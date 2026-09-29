@@ -99,6 +99,9 @@ const renamePack = async (files: FileStore, from: string, to: string): Promise<v
     const bytes = await files.readBytes(`${packDir(from)}/${name}`);
     if (bytes) await files.writeBytes(`${packDir(to)}/${name}`, bytes);
   }
+  // The pack carries its name inside too, and an export or a store install reads that one.
+  const manifest = await readManifest(files, to);
+  if (manifest) await writeManifest(files, to, { ...manifest, meta: { ...manifest.meta, name: to, modifiedAt: Date.now() } });
   await files.remove(packDir(from));
 };
 

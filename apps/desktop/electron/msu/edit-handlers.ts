@@ -52,6 +52,9 @@ const registerMsuEditHandlers = (): void => {
     await refuseInstalledPack(from);
     await refuseInstalledPack(to);
     await rename(packPath(from), packPath(to));
+    // The pack carries its name inside too, and an export or a store install reads that one.
+    const manifest = await readPackManifest(to);
+    if (manifest) await writePackManifest(to, { ...manifest, meta: { ...manifest.meta, name: to, modifiedAt: Date.now() } });
   });
 
   handle('msu:renameTrackFile', async (_event, packName: string, from: string, to: string) => {
