@@ -66,11 +66,18 @@ import { registerMsulAssociation, unregisterMsulAssociation } from './msu/msul-a
 // nothing of ours may happen before it. The `.msul` document type rides on those
 // hooks (registered after install and every update, removed before uninstall).
 // Windows only; the other platforms get it from the package.
-VelopackApp.build()
-  .onAfterInstallFastCallback(registerMsulAssociation)
-  .onAfterUpdateFastCallback(registerMsulAssociation)
-  .onBeforeUninstallFastCallback(unregisterMsulAssociation)
-  .run();
+// Velopack's prebuilt Linux module needs a recent glibc (2.39 as of 1.2.161) and throws
+// on load on older distros. The app must still start there, just without self-update:
+// the UpdateManager already reports "not available" when it cannot be built.
+try {
+  VelopackApp.build()
+    .onAfterInstallFastCallback(registerMsulAssociation)
+    .onAfterUpdateFastCallback(registerMsulAssociation)
+    .onBeforeUninstallFastCallback(unregisterMsulAssociation)
+    .run();
+} catch (err) {
+  console.warn('[velopack] unavailable, continuing without self-update:', err);
+}
 
 // Portable `data` folder first (every other location derives from userData), then
 // --user-data, which outranks it.
