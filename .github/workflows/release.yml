@@ -42,7 +42,8 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: master
+          # The branch the run was started on: master, or a hotfix branch cut from a tag.
+          ref: ${{ github.ref_name }}
           fetch-depth: 0
 
       - name: Resolve & validate target version
@@ -51,7 +52,7 @@ jobs:
           RAW="${{ inputs.version }}"
           TAG="v${RAW#v}"            # accept 0.9.0 or v0.9.0 → v0.9.0
           if [ ! -f "release-notes/$TAG.md" ]; then
-            echo "::error::Missing release-notes/$TAG.md on master. Commit the notes first — they are the source of truth for the release body."
+            echo "::error::Missing release-notes/$TAG.md on ${{ github.ref_name }}. Commit the notes first — they are the source of truth for the release body."
             exit 1
           fi
           if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
@@ -96,7 +97,7 @@ jobs:
             echo "package.json already at $TAG — skipping the release commit."
           else
             git commit -m "release: $TAG"
-            git push origin HEAD:master
+            git push origin "HEAD:${{ github.ref_name }}"
           fi
           git tag "$TAG"
           git push origin "$TAG"
