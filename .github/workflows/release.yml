@@ -243,12 +243,9 @@ jobs:
         env:
           VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
         run: |
-          # Pinned to the vault as it was when v0.19.0 shipped: the record dataset left
-          # the vault on 2026-09-06 and is tracked in the public repo since.
-          git clone \
+          git clone --depth 1 \
             "https://x-access-token:${VAULT_TOKEN}@github.com/drizztdourden08/rotp-vault.git" \
             ../rotp-vault
-          git -C ../rotp-vault checkout --quiet a73551bff9
           node scripts/vault/sync.mjs --force-pull
 
       # The one place an empty dataset is an error rather than a normal state.
@@ -432,12 +429,9 @@ jobs:
         env:
           VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
         run: |
-          # Pinned to the vault as it was when v0.19.0 shipped: the record dataset left
-          # the vault on 2026-09-06 and is tracked in the public repo since.
-          git clone \
+          git clone --depth 1 \
             "https://x-access-token:${VAULT_TOKEN}@github.com/drizztdourden08/rotp-vault.git" \
             ../rotp-vault
-          git -C ../rotp-vault checkout --quiet a73551bff9
           node scripts/vault/sync.mjs --force-pull
 
       - name: Verify the dataset landed

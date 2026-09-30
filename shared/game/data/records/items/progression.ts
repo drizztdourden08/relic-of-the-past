@@ -1,0 +1,158 @@
+/* @layer shared-game @kind data */
+/** Split out of the flat seed files by scripts/generate-ids/split-seeds.ts. */
+import type { ItemRecord } from '@shared/game/data/types';
+
+const PROGRESSION_ITEMS: ItemRecord[] = [
+  {
+    id: 'item-016',
+    gameId: { receiveItemId: 15 },
+    origin: 'vanilla',
+    category: 'medallion',
+    randomizerName: 'Bombos',
+    spriteId: 'sprite-hud-bombos',
+  },
+  {
+    id: 'item-017',
+    gameId: { receiveItemId: 16 },
+    origin: 'vanilla',
+    category: 'medallion',
+    randomizerName: 'Ether',
+    spriteId: 'sprite-hud-ether',
+  },
+  {
+    id: 'item-018',
+    gameId: { receiveItemId: 17 },
+    origin: 'vanilla',
+    category: 'medallion',
+    randomizerName: 'Quake',
+    spriteId: 'sprite-hud-quake',
+  },
+  {
+    id: 'item-109',
+    origin: 'vanilla',
+    category: 'crystal',
+    randomizerName: 'Green Pendant',
+    spriteId: 'sprite-hud-green-pendant',
+  },
+  {
+    id: 'item-110',
+    origin: 'vanilla',
+    category: 'crystal',
+    randomizerName: 'Blue Pendant',
+    spriteId: 'sprite-hud-blue-pendant',
+  },
+  {
+    id: 'item-111',
+    origin: 'vanilla',
+    category: 'crystal',
+    randomizerName: 'Red Pendant',
+    spriteId: 'sprite-hud-red-pendant',
+  },
+  {
+    id: 'item-112',
+    origin: 'vanilla',
+    category: 'crystal',
+    randomizerName: 'Crystal 1',
+    spriteId: 'sprite-hud-crystal',
+  },
+  {
+    id: 'item-113',
+    origin: 'vanilla',
+    category: 'crystal',
+    randomizerName: 'Crystal 2',
+    spriteId: 'sprite-hud-crystal',
+  },
+  {
+    id: 'item-114',
+    origin: 'vanilla',
+    category: 'crystal',
+    randomizerName: 'Crystal 3',
+    spriteId: 'sprite-hud-crystal',
+  },
+  {
+    id: 'item-115',
+    origin: 'vanilla',
+    category: 'crystal',
+    randomizerName: 'Crystal 4',
+    spriteId: 'sprite-hud-crystal',
+  },
+  {
+    id: 'item-116',
+    origin: 'vanilla',
+    category: 'crystal',
+    randomizerName: 'Crystal 5',
+    spriteId: 'sprite-hud-crystal',
+  },
+  {
+    id: 'item-117',
+    origin: 'vanilla',
+    category: 'crystal',
+    randomizerName: 'Crystal 6',
+    spriteId: 'sprite-hud-crystal',
+  },
+  {
+    id: 'item-118',
+    origin: 'vanilla',
+    category: 'crystal',
+    randomizerName: 'Crystal 7',
+    spriteId: 'sprite-hud-crystal',
+  },
+  {
+    id: 'item-119',
+    origin: 'vanilla',
+    category: 'event',
+    randomizerName: 'Beat Agahnim 1',
+  },
+  {
+    id: 'item-120',
+    origin: 'vanilla',
+    category: 'event',
+    randomizerName: 'Beat Agahnim 2',
+  },
+  {
+    id: 'item-121',
+    origin: 'vanilla',
+    category: 'event',
+    randomizerName: 'Get Frog',
+  },
+  {
+    id: 'item-122',
+    origin: 'vanilla',
+    category: 'event',
+    randomizerName: 'Return Smith',
+  },
+  {
+    id: 'item-123',
+    origin: 'vanilla',
+    category: 'event',
+    randomizerName: 'Pick Up Purple Chest',
+  },
+  {
+    id: 'item-124',
+    origin: 'vanilla',
+    category: 'event',
+    randomizerName: 'Open Floodgate',
+  },
+  {
+    id: 'item-075',
+    gameId: { receiveItemId: 74 },
+    origin: 'vanilla',
+    category: 'event',
+    randomizerName: 'Activated Flute',
+    spriteId: 'sprite-receipt-activated-flute',
+  },
+  {
+    id: 'item-173',
+    origin: 'randomizer',
+    category: 'event',
+    randomizerName: 'Triforce',
+  },
+  {
+    id: 'item-174',
+    origin: 'randomizer',
+    category: 'event',
+    randomizerName: 'Triforce Piece',
+  },
+];
+
+export { PROGRESSION_ITEMS };

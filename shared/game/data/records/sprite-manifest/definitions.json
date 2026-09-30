@@ -1,0 +1,1689 @@
+{
+  "$schema": "./sprite-definitions.schema.json",
+  "version": 1,
+  "description": "Unified sprite extraction definitions. Used by both the extraction script (Python) and the UI (TypeScript). Sprites are extracted from the user's own ROM at runtime. None are distributed with the code.",
+  "sprites": [
+    {
+      "file": "hud-fighter-sword",
+      "label": "Fighter Sword",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [11364, 11470, 11381, 15653] }
+    },
+    {
+      "file": "hud-master-sword",
+      "label": "Master Sword",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [11402, 11365, 9332, 15654] }
+    },
+    {
+      "file": "hud-tempered-sword",
+      "label": "Tempered Sword",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [9354, 9317, 15476, 11592] }
+    },
+    {
+      "file": "hud-golden-sword",
+      "label": "Golden Sword",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [10378, 10341, 11380, 11577] }
+    },
+    {
+      "file": "hud-fighters-shield",
+      "label": "Fighter's Shield",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [11517, 27901, 11518, 27902] }
+    },
+    {
+      "file": "hud-fire-shield",
+      "label": "Fire Shield",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [13567, 29951, 13471, 29855] }
+    },
+    {
+      "file": "hud-mirror-shield",
+      "label": "Mirror Shield",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [10368, 10369, 10381, 10382] }
+    },
+    {
+      "file": "hud-green-mail",
+      "label": "Green Mail",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [15464, 31848, 15480, 31864] }
+    },
+    {
+      "file": "hud-blue-mail",
+      "label": "Blue Mail",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [11368, 27752, 11384, 27768] }
+    },
+    {
+      "file": "hud-red-mail",
+      "label": "Red Mail",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [9320, 25704, 9336, 25720] }
+    },
+    {
+      "file": "hud-bow-no-arrows",
+      "label": "Bow (no arrows)",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [10426, 10473, 10472, 10443] }
+    },
+    {
+      "file": "hud-bow",
+      "label": "Bow",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [10426, 10314, 10313, 10443] }
+    },
+    {
+      "file": "hud-silver-bow",
+      "label": "Silver Bow",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [10426, 10427, 9418, 10443] }
+    },
+    {
+      "file": "hud-blue-boomerang",
+      "label": "Blue Boomerang",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [11448, 11449, 11509, 11465] }
+    },
+    {
+      "file": "hud-red-boomerang",
+      "label": "Red Boomerang",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [9400, 9401, 9461, 9417] }
+    },
+    {
+      "file": "hud-hookshot",
+      "label": "Hookshot",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [9461, 9462, 9408, 9461] }
+    },
+    {
+      "file": "hud-bombs",
+      "label": "Bombs",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [11442, 11443, 11458, 27842] }
+    },
+    {
+      "file": "hud-mushroom",
+      "label": "Mushroom",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [9284, 9285, 9286, 9287] }
+    },
+    {
+      "file": "hud-magic-powder",
+      "label": "Magic Powder",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [8251, 8252, 8253, 8254] }
+    },
+    {
+      "file": "hud-fire-rod",
+      "label": "Fire Rod",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [9392, 9393, 9408, 9409] }
+    },
+    {
+      "file": "hud-ice-rod",
+      "label": "Ice Rod",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [11440, 11454, 11456, 11457] }
+    },
+    {
+      "file": "hud-bombos",
+      "label": "Bombos",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [10365, 10366, 59518, 59517] }
+    },
+    {
+      "file": "hud-ether",
+      "label": "Ether",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [10358, 10359, 59511, 59510] }
+    },
+    {
+      "file": "hud-quake",
+      "label": "Quake",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [10342, 10343, 59495, 59494] }
+    },
+    {
+      "file": "hud-lamp",
+      "label": "Lamp",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [9404, 9405, 9420, 9421] }
+    },
+    {
+      "file": "hud-hammer",
+      "label": "Hammer",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [8374, 8375, 8390, 8391] }
+    },
+    {
+      "file": "hud-shovel",
+      "label": "Shovel",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [8400, 8401, 8416, 8417] }
+    },
+    {
+      "file": "hud-flute",
+      "label": "Flute",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [11476, 11477, 11492, 11493] }
+    },
+    {
+      "file": "hud-bug-net",
+      "label": "Bug Net",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [15424, 15425, 10306, 15427] }
+    },
+    {
+      "file": "hud-book-of-mudora",
+      "label": "Book of Mudora",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [15525, 15526, 15576, 15577] }
+    },
+    {
+      "file": "hud-cane-of-somaria",
+      "label": "Cane of Somaria",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [9436, 9437, 9452, 9453] }
+    },
+    {
+      "file": "hud-cane-of-byrna",
+      "label": "Cane of Byrna",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [11484, 11485, 11500, 11501] }
+    },
+    {
+      "file": "hud-cape",
+      "label": "Cape",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [9396, 9397, 9412, 9413] }
+    },
+    {
+      "file": "hud-magic-mirror",
+      "label": "Magic Mirror",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [11362, 11363, 11378, 11379] }
+    },
+    {
+      "file": "hud-power-glove",
+      "label": "Power Glove",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [8496, 8497, 8512, 8513] }
+    },
+    {
+      "file": "hud-titans-mitts",
+      "label": "Titan's Mitts",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [10458, 10459, 10474, 10475] }
+    },
+    {
+      "file": "hud-pegasus-boots",
+      "label": "Pegasus Boots",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [13353, 13354, 13355, 13356] }
+    },
+    {
+      "file": "hud-flippers",
+      "label": "Flippers",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [11418, 11419, 11421, 11422] }
+    },
+    {
+      "file": "hud-moon-pearl",
+      "label": "Moon Pearl",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [9267, 9268, 9269, 9270] }
+    },
+    {
+      "file": "hud-bottle",
+      "label": "Bottle (empty)",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [10295, 10296, 11459, 11475] }
+    },
+    {
+      "file": "hud-mushroom-2",
+      "label": "Mushroom",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [8260, 8261, 8262, 8263] }
+    },
+    {
+      "file": "hud-bottle-red",
+      "label": "Bottle (red potion)",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [9426, 25810, 9442, 9443] }
+    },
+    {
+      "file": "hud-bottle-green",
+      "label": "Bottle (green potion)",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [15570, 31954, 15586, 15587] }
+    },
+    {
+      "file": "hud-bottle-blue",
+      "label": "Bottle (blue potion)",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [11474, 27858, 11490, 11491] }
+    },
+    {
+      "file": "hud-bottle-fairy",
+      "label": "Bottle (fairy)",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [10325, 26709, 11351, 11354] }
+    },
+    {
+      "file": "hud-bottle-bee",
+      "label": "Bottle (bee)",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [10295, 10296, 10297, 10298] }
+    },
+    {
+      "file": "hud-bottle-good-bee",
+      "label": "Bottle (good bee)",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [10295, 10296, 10297, 10298] }
+    },
+    {
+      "file": "hud-big-key",
+      "label": "Big Key",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [10454, 26838, 10470, 10471] }
+    },
+    {
+      "file": "hud-compass",
+      "label": "Compass",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [9407, 25791, 11471, 27855] }
+    },
+    {
+      "file": "hud-map",
+      "label": "Map",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [10462, 10463, 10478, 10479] }
+    },
+    {
+      "file": "hud-red-pendant",
+      "label": "Red Pendant",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [9515, 9516, 9517, 9518] }
+    },
+    {
+      "file": "hud-blue-pendant",
+      "label": "Blue Pendant",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [11563, 11564, 11565, 11566] }
+    },
+    {
+      "file": "hud-green-pendant",
+      "label": "Green Pendant",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [15659, 15660, 15661, 15662] }
+    },
+    {
+      "file": "hud-crystal",
+      "label": "Crystal",
+      "category": "hud-item",
+      "extract": { "method": "hud-special", "tiles": [11588, 11589], "layout": "8x16-centered" }
+    },
+    {
+      "file": "hud-big-key-chest",
+      "label": "Big Key (chest)",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [13643, 13644, 13645, 13646] }
+    },
+    {
+      "file": "hud-heart-piece-0",
+      "label": "Heart Piece (0/4)",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [9348, 25732, 9349, 25733] }
+    },
+    {
+      "file": "hud-heart-piece-1",
+      "label": "Heart Piece (1/4)",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [9389, 25732, 9349, 25733] }
+    },
+    {
+      "file": "hud-heart-piece-2",
+      "label": "Heart Piece (2/4)",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [9389, 25732, 9390, 25733] }
+    },
+    {
+      "file": "hud-heart-piece-3",
+      "label": "Heart Piece (3/4)",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [9389, 25773, 9390, 25733] }
+    },
+    {
+      "file": "hud-heart-piece-4",
+      "label": "Heart Piece (4/4)",
+      "category": "hud-item",
+      "extract": { "method": "hud-tiles", "tiles": [9389, 25773, 9390, 25774] }
+    },
+
+    {
+      "file": "receipt-fighter-sword",
+      "label": "Fighter Sword",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 0 }
+    },
+    {
+      "file": "receipt-master-sword",
+      "label": "Master Sword",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 1 }
+    },
+    {
+      "file": "receipt-tempered-sword",
+      "label": "Tempered Sword",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 2 }
+    },
+    {
+      "file": "receipt-golden-sword",
+      "label": "Golden Sword",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 3 }
+    },
+    {
+      "file": "receipt-fighters-shield",
+      "label": "Fighter's Shield",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 4 }
+    },
+    {
+      "file": "receipt-fire-shield",
+      "label": "Fire Shield",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 5 }
+    },
+    {
+      "file": "receipt-mirror-shield",
+      "label": "Mirror Shield",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 6 }
+    },
+    {
+      "file": "receipt-fire-rod",
+      "label": "Fire Rod",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 7 }
+    },
+    {
+      "file": "receipt-ice-rod",
+      "label": "Ice Rod",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 8 }
+    },
+    {
+      "file": "receipt-hammer",
+      "label": "Hammer",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 9 }
+    },
+    {
+      "file": "receipt-hookshot",
+      "label": "Hookshot",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 10 }
+    },
+    {
+      "file": "receipt-bow",
+      "label": "Bow",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 58 }
+    },
+    {
+      "file": "receipt-blue-boomerang",
+      "label": "Blue Boomerang",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 12 }
+    },
+    {
+      "file": "receipt-magic-powder",
+      "label": "Magic Powder",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 13 }
+    },
+    {
+      "file": "receipt-bombos",
+      "label": "Bombos",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 15 }
+    },
+    {
+      "file": "receipt-ether",
+      "label": "Ether",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 16 }
+    },
+    {
+      "file": "receipt-quake",
+      "label": "Quake",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 17 }
+    },
+    {
+      "file": "receipt-lamp",
+      "label": "Lamp",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 18 }
+    },
+    {
+      "file": "receipt-shovel",
+      "label": "Shovel",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 19 }
+    },
+    {
+      "file": "receipt-flute",
+      "label": "Flute",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 20 }
+    },
+    {
+      "file": "receipt-cane-of-somaria",
+      "label": "Cane of Somaria",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 21 }
+    },
+    {
+      "file": "receipt-bottle-empty",
+      "label": "Bottle (empty)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 22 }
+    },
+    {
+      "file": "receipt-heart-piece",
+      "label": "Heart Piece",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 23 }
+    },
+    {
+      "file": "receipt-cane-of-byrna",
+      "label": "Cane of Byrna",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 24 }
+    },
+    {
+      "file": "receipt-magic-cape",
+      "label": "Magic Cape",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 25 }
+    },
+    {
+      "file": "receipt-magic-mirror",
+      "label": "Magic Mirror",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 26 }
+    },
+    {
+      "file": "receipt-power-glove",
+      "label": "Power Glove",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 27 }
+    },
+    {
+      "file": "receipt-titans-mitt",
+      "label": "Titan's Mitt",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 28 }
+    },
+    {
+      "file": "receipt-book-of-mudora",
+      "label": "Book of Mudora",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 29 }
+    },
+    {
+      "file": "receipt-flippers",
+      "label": "Flippers",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 30 }
+    },
+    {
+      "file": "receipt-moon-pearl",
+      "label": "Moon Pearl",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 31 }
+    },
+    {
+      "file": "receipt-crystal",
+      "label": "Crystal",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 32 }
+    },
+    {
+      "file": "receipt-bug-net",
+      "label": "Bug Net",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 33 }
+    },
+    {
+      "file": "receipt-blue-mail",
+      "label": "Blue Mail",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 34 }
+    },
+    {
+      "file": "receipt-red-mail",
+      "label": "Red Mail",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 35 }
+    },
+    {
+      "file": "receipt-small-key",
+      "label": "Small Key",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 36 }
+    },
+    {
+      "file": "receipt-compass",
+      "label": "Compass",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 37 }
+    },
+    {
+      "file": "receipt-heart-container",
+      "label": "Heart Container",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 38 }
+    },
+    {
+      "file": "receipt-bomb-1",
+      "label": "1 Bomb",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 39 }
+    },
+    {
+      "file": "receipt-bomb-3",
+      "label": "3 Bombs",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 40 }
+    },
+    {
+      "file": "receipt-mushroom",
+      "label": "Mushroom",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 41 }
+    },
+    {
+      "file": "receipt-red-boomerang",
+      "label": "Red Boomerang",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 42 }
+    },
+    {
+      "file": "receipt-bottle-red-potion",
+      "label": "Bottle (red potion)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 43 }
+    },
+    {
+      "file": "receipt-bottle-green-potion",
+      "label": "Bottle (green potion)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 44 }
+    },
+    {
+      "file": "receipt-bottle-blue-potion",
+      "label": "Bottle (blue potion)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 45 }
+    },
+    {
+      "file": "receipt-bomb-10",
+      "label": "10 Bombs",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 49 }
+    },
+    {
+      "file": "receipt-big-key",
+      "label": "Big Key",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 50 }
+    },
+    {
+      "file": "receipt-dungeon-map",
+      "label": "Dungeon Map",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 51 }
+    },
+    {
+      "file": "receipt-rupee-1",
+      "label": "Rupee (1)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 52 }
+    },
+    {
+      "file": "receipt-rupee-5",
+      "label": "Rupee (5)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 53 }
+    },
+    {
+      "file": "receipt-rupee-20",
+      "label": "Rupee (20)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 54 }
+    },
+    {
+      "file": "receipt-green-pendant",
+      "label": "Green Pendant",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 55 }
+    },
+    {
+      "file": "receipt-blue-pendant",
+      "label": "Blue Pendant",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 57 }
+    },
+    {
+      "file": "receipt-red-pendant",
+      "label": "Red Pendant",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 56 }
+    },
+    {
+      "file": "receipt-bow-no-arrows",
+      "label": "Bow (no arrows)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 11 }
+    },
+    {
+      "file": "receipt-silver-bow",
+      "label": "Silver Bow",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 59 }
+    },
+    {
+      "file": "receipt-bottle-bee",
+      "label": "Bottle (bee)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 60 }
+    },
+    {
+      "file": "receipt-bottle-fairy",
+      "label": "Bottle (fairy)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 61 }
+    },
+    {
+      "file": "receipt-rupee-100",
+      "label": "Rupee (100)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 64 }
+    },
+    {
+      "file": "receipt-rupee-50",
+      "label": "Rupee (50)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 65 }
+    },
+    {
+      "file": "receipt-heart-refill",
+      "label": "Heart Refill",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 66 }
+    },
+    {
+      "file": "receipt-arrows",
+      "label": "Arrows",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 67 }
+    },
+    {
+      "file": "receipt-arrow-10",
+      "label": "10 Arrows",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 68 }
+    },
+    {
+      "file": "receipt-magic-small",
+      "label": "Small Magic",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 69 }
+    },
+    {
+      "file": "receipt-rupee-300",
+      "label": "Rupee (300)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 70 }
+    },
+    {
+      "file": "receipt-rupee-20-alt",
+      "label": "Rupee (20 alt)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 71 }
+    },
+    {
+      "file": "receipt-bottle-good-bee",
+      "label": "Bottle (good bee)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 72 }
+    },
+    {
+      "file": "receipt-fighter-sword-uncle",
+      "label": "Fighter Sword (uncle)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 73 }
+    },
+    {
+      "file": "receipt-activated-flute",
+      "label": "Activated Flute",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 74 }
+    },
+    {
+      "file": "receipt-pegasus-boots",
+      "label": "Pegasus Boots",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 75 }
+    },
+
+    {
+      "file": "drop-heart-refill",
+      "label": "Heart Refill",
+      "category": "drop",
+      "extract": { "method": "drop-standard", "spriteType": 216, "palette": 1 }
+    },
+    {
+      "file": "drop-rupee-1",
+      "label": "Rupee (1)",
+      "category": "drop",
+      "extract": { "method": "drop-rupee", "palette": 4 }
+    },
+    {
+      "file": "drop-rupee-5",
+      "label": "Rupee (5)",
+      "category": "drop",
+      "extract": { "method": "drop-rupee", "palette": 2 }
+    },
+    {
+      "file": "drop-rupee-20",
+      "label": "Rupee (20)",
+      "category": "drop",
+      "extract": { "method": "drop-rupee", "palette": 1 }
+    },
+    {
+      "file": "drop-bomb-1",
+      "label": "Bomb (1)",
+      "category": "drop",
+      "extract": { "method": "drop-numbered", "spriteType": 220, "palette": 2, "group": 1 }
+    },
+    {
+      "file": "drop-bomb-4",
+      "label": "Bomb (4)",
+      "category": "drop",
+      "extract": { "method": "drop-numbered", "spriteType": 221, "palette": 2, "group": 2 }
+    },
+    {
+      "file": "drop-bomb-8",
+      "label": "Bomb (8)",
+      "category": "drop",
+      "extract": { "method": "drop-numbered", "spriteType": 222, "palette": 2, "group": 3 }
+    },
+    {
+      "file": "drop-small-magic",
+      "label": "Small Magic",
+      "category": "drop",
+      "extract": { "method": "drop-standard", "spriteType": 223, "palette": 4 }
+    },
+    {
+      "file": "drop-full-magic",
+      "label": "Full Magic",
+      "category": "drop",
+      "extract": { "method": "drop-standard", "spriteType": 224, "palette": 4 }
+    },
+    {
+      "file": "drop-arrow-5",
+      "label": "Arrow (5)",
+      "category": "drop",
+      "extract": { "method": "drop-numbered", "spriteType": 225, "palette": 2, "group": 4 }
+    },
+    {
+      "file": "drop-arrow-10",
+      "label": "Arrow (10)",
+      "category": "drop",
+      "extract": { "method": "drop-numbered", "spriteType": 226, "palette": 2, "group": 5 }
+    },
+    {
+      "file": "drop-fairy",
+      "label": "Fairy",
+      "category": "drop",
+      "extract": { "method": "drop-standard", "spriteType": 227, "palette": 4 }
+    },
+    {
+      "file": "drop-small-key",
+      "label": "Small Key",
+      "category": "drop",
+      "extract": { "method": "drop-standard", "spriteType": 228, "palette": 4 }
+    },
+    {
+      "file": "drop-big-key",
+      "label": "Big Key",
+      "category": "drop",
+      "extract": { "method": "drop-bigkey", "palette": 4 }
+    },
+    {
+      "file": "drop-shield-fighters",
+      "label": "Fighter's Shield",
+      "category": "drop",
+      "extract": { "method": "drop-shield-fighters", "sheet": 27, "tiles": [44, 60], "palette": 4 }
+    },
+    {
+      "file": "drop-shield-fire",
+      "label": "Fire Shield",
+      "category": "drop",
+      "extract": { "method": "drop-shield-fire", "sheet": 27, "tiles": [42, 43, 58, 59], "palette": 7 }
+    },
+    {
+      "file": "drop-super-bomb",
+      "label": "Super Bomb",
+      "category": "drop",
+      "extract": { "method": "follower-bomb", "palette": 4 }
+    },
+
+    {
+      "file": "hud-heart-full",
+      "label": "Heart (Full)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [9376] }
+    },
+    {
+      "file": "hud-heart-half",
+      "label": "Heart (Half)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [9377] }
+    },
+    {
+      "file": "hud-heart-empty",
+      "label": "Heart (Empty)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [9378] }
+    },
+    {
+      "file": "hud-rupee-icon",
+      "label": "Rupee Icon",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [15528] }
+    },
+    {
+      "file": "hud-bomb-icon",
+      "label": "Bomb Icon",
+      "category": "hud",
+      "extract": { "method": "hud-strip", "tiles": [11400, 11401] }
+    },
+    {
+      "file": "hud-arrow-icon",
+      "label": "Arrow Icon",
+      "category": "hud",
+      "extract": { "method": "hud-strip", "tiles": [8359, 8361] }
+    },
+    {
+      "file": "hud-silver-arrow-icon",
+      "label": "Silver Arrow Icon",
+      "category": "hud",
+      "extract": { "method": "hud-strip", "tiles": [9350, 9351] }
+    },
+    {
+      "file": "hud-key-icon",
+      "label": "Key Icon",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [10353] }
+    },
+    {
+      "file": "hud-life-text",
+      "label": "LIFE Text",
+      "category": "hud",
+      "extract": { "method": "hud-strip", "tiles": [9387, 9388] }
+    },
+    {
+      "file": "hud-life-dash-left",
+      "label": "Life Dash (Left)",
+      "category": "hud",
+      "extract": { "method": "hud-strip", "tiles": [10379, 10383] }
+    },
+    {
+      "file": "hud-life-dash-right",
+      "label": "Life Dash (Right)",
+      "category": "hud",
+      "extract": { "method": "hud-strip", "tiles": [26767, 26763] }
+    },
+    {
+      "file": "font-digit-0",
+      "label": "Digit 0",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9360] }
+    },
+    {
+      "file": "font-digit-1",
+      "label": "Digit 1",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9361] }
+    },
+    {
+      "file": "font-digit-2",
+      "label": "Digit 2",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9362] }
+    },
+    {
+      "file": "font-digit-3",
+      "label": "Digit 3",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9363] }
+    },
+    {
+      "file": "font-digit-4",
+      "label": "Digit 4",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9364] }
+    },
+    {
+      "file": "font-digit-5",
+      "label": "Digit 5",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9365] }
+    },
+    {
+      "file": "font-digit-6",
+      "label": "Digit 6",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9366] }
+    },
+    {
+      "file": "font-digit-7",
+      "label": "Digit 7",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9367] }
+    },
+    {
+      "file": "font-digit-8",
+      "label": "Digit 8",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9368] }
+    },
+    {
+      "file": "font-digit-9",
+      "label": "Digit 9",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9369] }
+    },
+    {
+      "file": "font-digit-0-yellow",
+      "label": "Digit 0 (Yellow, max indicator)",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [13456] }
+    },
+    {
+      "file": "font-digit-1-yellow",
+      "label": "Digit 1 (Yellow, max indicator)",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [13457] }
+    },
+    {
+      "file": "font-digit-2-yellow",
+      "label": "Digit 2 (Yellow, max indicator)",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [13458] }
+    },
+    {
+      "file": "font-digit-3-yellow",
+      "label": "Digit 3 (Yellow, max indicator)",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [13459] }
+    },
+    {
+      "file": "font-digit-4-yellow",
+      "label": "Digit 4 (Yellow, max indicator)",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [13460] }
+    },
+    {
+      "file": "font-digit-5-yellow",
+      "label": "Digit 5 (Yellow, max indicator)",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [13461] }
+    },
+    {
+      "file": "font-digit-6-yellow",
+      "label": "Digit 6 (Yellow, max indicator)",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [13462] }
+    },
+    {
+      "file": "font-digit-7-yellow",
+      "label": "Digit 7 (Yellow, max indicator)",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [13463] }
+    },
+    {
+      "file": "font-digit-8-yellow",
+      "label": "Digit 8 (Yellow, max indicator)",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [13464] }
+    },
+    {
+      "file": "font-digit-9-yellow",
+      "label": "Digit 9 (Yellow, max indicator)",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [13465] }
+    },
+    {
+      "file": "hud-magic-label",
+      "label": "Magic Label (½)",
+      "category": "hud",
+      "extract": { "method": "hud-strip", "tiles": [10487, 10321, 10490], "width": 20 }
+    },
+    {
+      "file": "hud-magic-tl",
+      "label": "Magic Meter (Top-Left)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [10320] }
+    },
+    {
+      "file": "hud-magic-tr",
+      "label": "Magic Meter (Top-Right)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [26704] }
+    },
+    {
+      "file": "hud-magic-left",
+      "label": "Magic Meter (Left)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [10324] }
+    },
+    {
+      "file": "hud-magic-right",
+      "label": "Magic Meter (Right)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [26708] }
+    },
+    {
+      "file": "hud-magic-bl",
+      "label": "Magic Meter (Bottom-Left)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [43088] }
+    },
+    {
+      "file": "hud-magic-br",
+      "label": "Magic Meter (Bottom-Right)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [59472] }
+    },
+    {
+      "file": "hud-magic-top",
+      "label": "Magic Meter (Top Cap)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [43094] }
+    },
+    {
+      "file": "hud-magic-bottom",
+      "label": "Magic Meter (Bottom Cap)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [10326] }
+    },
+    {
+      "file": "hud-magic-fill-full",
+      "label": "Magic Fill (Full)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [15454] }
+    },
+    {
+      "file": "hud-magic-fill-three-quarter",
+      "label": "Magic Fill (3/4)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [15438] }
+    },
+    {
+      "file": "hud-magic-fill-half",
+      "label": "Magic Fill (1/2)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [15437] }
+    },
+    {
+      "file": "hud-magic-fill-quarter",
+      "label": "Magic Fill (1/4)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [15436] }
+    },
+    {
+      "file": "hud-magic-fill-empty",
+      "label": "Magic Fill (Empty)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [15605] }
+    },
+    {
+      "file": "hud-magic-cap",
+      "label": "Magic Cap (Transition)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [15455] }
+    },
+    {
+      "file": "hud-itembox-tl",
+      "label": "Item Box (Top-Left)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [26716] }
+    },
+    {
+      "file": "hud-itembox-top",
+      "label": "Item Box (Top)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [10331] }
+    },
+    {
+      "file": "hud-itembox-tr",
+      "label": "Item Box (Top-Right)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [10332] }
+    },
+    {
+      "file": "hud-itembox-left",
+      "label": "Item Box (Left)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [26717] }
+    },
+    {
+      "file": "hud-itembox-right",
+      "label": "Item Box (Right)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [10333] }
+    },
+    {
+      "file": "hud-itembox-bl",
+      "label": "Item Box (Bottom-Left)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [59484] }
+    },
+    {
+      "file": "hud-itembox-bottom",
+      "label": "Item Box (Bottom)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [43099] }
+    },
+    {
+      "file": "hud-itembox-br",
+      "label": "Item Box (Bottom-Right)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [43100] }
+    },
+
+    {
+      "file": "font-letter-a",
+      "label": "Letter A",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9552] }
+    },
+    {
+      "file": "font-letter-b",
+      "label": "Letter B",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9553] }
+    },
+    {
+      "file": "font-letter-c",
+      "label": "Letter C",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9554] }
+    },
+    {
+      "file": "font-letter-d",
+      "label": "Letter D",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9555] }
+    },
+    {
+      "file": "font-letter-e",
+      "label": "Letter E",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9556] }
+    },
+    {
+      "file": "font-letter-f",
+      "label": "Letter F",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9557] }
+    },
+    {
+      "file": "font-letter-g",
+      "label": "Letter G",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9558] }
+    },
+    {
+      "file": "font-letter-h",
+      "label": "Letter H",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9559] }
+    },
+    {
+      "file": "font-letter-i",
+      "label": "Letter I",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9560] }
+    },
+    {
+      "file": "font-letter-j",
+      "label": "Letter J",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9561] }
+    },
+    {
+      "file": "font-letter-k",
+      "label": "Letter K",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9562] }
+    },
+    {
+      "file": "font-letter-l",
+      "label": "Letter L",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9563] }
+    },
+    {
+      "file": "font-letter-m",
+      "label": "Letter M",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9564] }
+    },
+    {
+      "file": "font-letter-n",
+      "label": "Letter N",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9565] }
+    },
+    {
+      "file": "font-letter-o",
+      "label": "Letter O",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9566] }
+    },
+    {
+      "file": "font-letter-p",
+      "label": "Letter P",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9567] }
+    },
+    {
+      "file": "font-letter-q",
+      "label": "Letter Q",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9568] }
+    },
+    {
+      "file": "font-letter-r",
+      "label": "Letter R",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9569] }
+    },
+    {
+      "file": "font-letter-s",
+      "label": "Letter S",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9570] }
+    },
+    {
+      "file": "font-letter-t",
+      "label": "Letter T",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9571] }
+    },
+    {
+      "file": "font-letter-u",
+      "label": "Letter U",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9572] }
+    },
+    {
+      "file": "font-letter-v",
+      "label": "Letter V",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9573] }
+    },
+    {
+      "file": "font-letter-w",
+      "label": "Letter W",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9574] }
+    },
+    {
+      "file": "font-letter-x",
+      "label": "Letter X",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9575] }
+    },
+    {
+      "file": "font-letter-y",
+      "label": "Letter Y",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9576] }
+    },
+    {
+      "file": "font-letter-z",
+      "label": "Letter Z",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [9577] }
+    },
+    {
+      "file": "font-symbol-ampersand",
+      "label": "Symbol & (spans 2 native tiles)",
+      "category": "fonts",
+      "extract": { "method": "hud-strip", "tiles": [9582, 9583] }
+    },
+    {
+      "file": "font-level-1",
+      "label": "Level .1",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [11559] }
+    },
+    {
+      "file": "font-level-2",
+      "label": "Level .2",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [11560] }
+    },
+    {
+      "file": "font-level-3",
+      "label": "Level .3",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [11561] }
+    },
+    {
+      "file": "font-dot",
+      "label": "Dot Separator",
+      "category": "fonts",
+      "extract": { "method": "hud-single", "tiles": [10455] }
+    },
+
+    {
+      "file": "font-picture-ellipsis",
+      "label": "Ellipsis",
+      "category": "fonts",
+      "extract": { "method": "dialogue-glyph", "glyph": 67 }
+    },
+    {
+      "file": "font-picture-ankh",
+      "label": "Ankh Symbol",
+      "category": "fonts",
+      "extract": { "method": "dialogue-glyph", "glyph": 71 }
+    },
+    {
+      "file": "font-picture-waves",
+      "label": "Waves Symbol",
+      "category": "fonts",
+      "extract": { "method": "dialogue-glyph", "glyph": 72 }
+    },
+    {
+      "file": "font-picture-snake",
+      "label": "Snake Symbol",
+      "category": "fonts",
+      "extract": { "method": "dialogue-glyph", "glyph": 73 }
+    },
+    {
+      "file": "font-picture-player",
+      "label": "Player Character",
+      "category": "fonts",
+      "extract": { "method": "dialogue-glyph", "glyph": 74, "glyphRight": 75 }
+    },
+    {
+      "file": "font-picture-arrow-up",
+      "label": "Arrow Up",
+      "category": "fonts",
+      "extract": { "method": "dialogue-glyph", "glyph": 77 }
+    },
+    {
+      "file": "font-picture-arrow-down",
+      "label": "Arrow Down",
+      "category": "fonts",
+      "extract": { "method": "dialogue-glyph", "glyph": 78 }
+    },
+    {
+      "file": "font-picture-arrow-left",
+      "label": "Arrow Left",
+      "category": "fonts",
+      "extract": { "method": "dialogue-glyph", "glyph": 79 }
+    },
+    {
+      "file": "font-picture-arrow-right",
+      "label": "Arrow Right",
+      "category": "fonts",
+      "extract": { "method": "dialogue-glyph", "glyph": 80 }
+    },
+    {
+      "file": "font-picture-heart-piece-1",
+      "label": "Heart Piece 1",
+      "category": "fonts",
+      "extract": { "method": "dialogue-glyph", "glyph": 82, "glyphRight": 83 }
+    },
+    {
+      "file": "font-picture-heart-piece-2-left",
+      "label": "Heart Piece 2 (Left Half)",
+      "category": "fonts",
+      "extract": { "method": "dialogue-glyph", "glyph": 84 }
+    },
+    {
+      "file": "font-picture-heart-piece-3",
+      "label": "Heart Piece 3",
+      "category": "fonts",
+      "extract": { "method": "dialogue-glyph", "glyph": 85, "glyphRight": 86 }
+    },
+    {
+      "file": "font-picture-heart-piece-4",
+      "label": "Heart Piece 4",
+      "category": "fonts",
+      "extract": { "method": "dialogue-glyph", "glyph": 87, "glyphRight": 88 }
+    },
+    {
+      "file": "font-picture-button-a",
+      "label": "Button A",
+      "category": "fonts",
+      "extract": { "method": "dialogue-glyph", "glyph": 91 }
+    },
+    {
+      "file": "font-picture-button-b",
+      "label": "Button B",
+      "category": "fonts",
+      "extract": { "method": "dialogue-glyph", "glyph": 92 }
+    },
+    {
+      "file": "font-picture-button-x",
+      "label": "Button X",
+      "category": "fonts",
+      "extract": { "method": "dialogue-glyph", "glyph": 93 }
+    },
+    {
+      "file": "font-picture-button-y",
+      "label": "Button Y",
+      "category": "fonts",
+      "extract": { "method": "dialogue-glyph", "glyph": 94 }
+    },
+
+    {
+      "file": "pause-btn-y",
+      "label": "Button Y",
+      "category": "hud-pause",
+      "extract": { "method": "hud-vstrip", "tiles": [15600, 15601] }
+    },
+    {
+      "file": "pause-btn-x",
+      "label": "Button X",
+      "category": "hud-pause",
+      "extract": { "method": "hud-vstrip", "tiles": [11504, 44272] }
+    },
+    {
+      "file": "pause-btn-a",
+      "label": "Button A",
+      "category": "hud-pause",
+      "extract": { "method": "hud-vstrip", "tiles": [42224, 9458] }
+    },
+
+    {
+      "file": "pause-label-pendants",
+      "label": "Label: PENDANTS",
+      "category": "hud-pause",
+      "extract": { "method": "hud-strip", "tiles": [9505, 9506, 9507, 9508, 9535] }
+    },
+    {
+      "file": "pause-label-crystals",
+      "label": "Label: CRYSTALS",
+      "category": "hud-pause",
+      "extract": { "method": "hud-strip", "tiles": [9519, 9524, 9525, 9526, 9527] }
+    },
+    {
+      "file": "pause-label-equipment",
+      "label": "Label: EQUIPMENT",
+      "category": "hud-pause",
+      "extract": { "method": "hud-strip", "tiles": [9337, 9338, 9339, 9340, 9356] }
+    },
+    {
+      "file": "pause-label-dungeon-item",
+      "label": "Label: DUNGEON ITEM",
+      "category": "hud-pause",
+      "extract": { "method": "hud-strip", "tiles": [9321, 9322, 9323, 9324, 9325, 9326, 9327] }
+    },
+    {
+      "file": "pause-label-do",
+      "label": "Label: DO (Abilities border)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-strip", "tiles": [9346, 9347] }
+    },
+    {
+      "file": "pause-label-item",
+      "label": "Label: ITEM (Items border)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-strip", "tiles": [9326, 9327] }
+    },
+
+    {
+      "file": "pause-border-corner-green",
+      "label": "Border Corner (Green)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-single", "tiles": [15611] }
+    },
+    {
+      "file": "pause-border-hedge-green",
+      "label": "Border H-Edge (Green)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-single", "tiles": [15609] }
+    },
+    {
+      "file": "pause-border-vedge-green",
+      "label": "Border V-Edge (Green)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-single", "tiles": [15612] }
+    },
+    {
+      "file": "pause-border-corner-blue",
+      "label": "Border Corner (Blue)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-single", "tiles": [11515] }
+    },
+    {
+      "file": "pause-border-hedge-blue",
+      "label": "Border H-Edge (Blue)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-single", "tiles": [11513] }
+    },
+    {
+      "file": "pause-border-vedge-blue",
+      "label": "Border V-Edge (Blue)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-single", "tiles": [11516] }
+    },
+    {
+      "file": "pause-border-corner-gray",
+      "label": "Border Corner (Gray)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-single", "tiles": [12539] }
+    },
+    {
+      "file": "pause-border-hedge-gray",
+      "label": "Border H-Edge (Gray)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-single", "tiles": [12537] }
+    },
+    {
+      "file": "pause-border-vedge-gray",
+      "label": "Border V-Edge (Gray)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-single", "tiles": [12540] }
+    },
+    {
+      "file": "pause-border-corner-yellow",
+      "label": "Border Corner (Yellow)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-single", "tiles": [10491] }
+    },
+    {
+      "file": "pause-border-hedge-yellow",
+      "label": "Border H-Edge (Yellow)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-single", "tiles": [10489] }
+    },
+    {
+      "file": "pause-border-vedge-yellow",
+      "label": "Border V-Edge (Yellow)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-single", "tiles": [10492] }
+    },
+    {
+      "file": "pause-border-corner-red",
+      "label": "Border Corner (Red)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-single", "tiles": [9467] }
+    },
+    {
+      "file": "pause-border-hedge-red",
+      "label": "Border H-Edge (Red)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-single", "tiles": [9465] }
+    },
+    {
+      "file": "pause-border-vedge-red",
+      "label": "Border V-Edge (Red)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-single", "tiles": [9468] }
+    },
+    {
+      "file": "pause-pendant-empty",
+      "label": "Pendant (Empty)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-tiles", "tiles": [12603, 12604, 12605, 12606] }
+    },
+    {
+      "file": "pause-pendant-green",
+      "label": "Pendant (Green/Courage)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-tiles", "tiles": [15659, 15660, 15661, 15662] }
+    },
+    {
+      "file": "pause-pendant-blue",
+      "label": "Pendant (Blue/Wisdom)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-tiles", "tiles": [11563, 11564, 11565, 11566] }
+    },
+    {
+      "file": "pause-pendant-red",
+      "label": "Pendant (Red/Power)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-tiles", "tiles": [9515, 9516, 9517, 9518] }
+    },
+    {
+      "file": "pause-crystal-empty",
+      "label": "Crystal (Empty)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-strip", "tiles": [12614, 12615] }
+    },
+    {
+      "file": "pause-crystal-filled",
+      "label": "Crystal (Filled)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-strip", "tiles": [11588, 11589] }
+    }
+  ]
+}
