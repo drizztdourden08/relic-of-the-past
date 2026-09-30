@@ -61,7 +61,14 @@ import { installDevFileLogging } from './lib/dev-file-logger';
 // Velopack's startup logic, before anything else runs. It handles the hooks fired
 // during install, update and uninstall, and may restart the process to do so, which
 // is why nothing of ours may happen first.
-VelopackApp.build().run();
+// Velopack's prebuilt Linux module needs a recent glibc (2.39 as of 1.2.161) and throws
+// on load on older distros. The app must still start there, just without self-update:
+// the UpdateManager already reports "not available" when it cannot be built.
+try {
+  VelopackApp.build().run();
+} catch (err) {
+  console.warn('[velopack] unavailable, continuing without self-update:', err);
+}
 
 // A copy carrying its own `data` folder keeps everything there. This runs before any
 // path is read, because every other location is derived from userData. An explicit
