@@ -8,9 +8,10 @@
  * source, so switching that preference has to build a new one.
  */
 import { app } from 'electron';
-import { UpdateManager, GithubSource, FileSource } from 'velopack';
+import type { UpdateManager } from 'velopack';
 import { FEED_REPO_URL, MAX_DELTAS } from './updater.constants';
 import { readPrefs } from './updater-prefs';
+import { loadVelopack } from './velopack-loader';
 
 let cached: UpdateManager | null = null;
 let cachedPrerelease: boolean | null = null;
@@ -34,6 +35,9 @@ const localSourceDir = (): string | null => {
 const getUpdateManager = (): UpdateManager | null => {
   const { allowPrerelease } = readPrefs();
   if (cached && cachedPrerelease === allowPrerelease) return cached;
+  const velopack = loadVelopack();
+  if (!velopack) return null;
+  const { UpdateManager, GithubSource, FileSource } = velopack;
 
   try {
     const local = localSourceDir();
