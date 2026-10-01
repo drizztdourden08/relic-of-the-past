@@ -1,5 +1,4 @@
 /* @layer electron-main @kind logic */
-import { VelopackApp } from 'velopack';
 import { app, BrowserWindow, Menu, session, protocol, ipcMain } from 'electron';
 import { is } from '@electron-toolkit/utils';
 
@@ -53,6 +52,7 @@ import { registerWasmHandlers } from './wasm/ipc-handlers';
 import { registerStorageHandlers } from './storage/ipc-handlers';
 import { registerFileHandlers } from './storage/file-handlers';
 import { initAutoUpdater, registerUpdaterHandlers } from './updater';
+import { loadVelopack } from './updater/velopack-loader';
 import { registerGithubHandlers } from './github/ipc-handlers';
 import { registerFfmpegHandlers } from './tools/ipc-handlers';
 import { emit } from './lib/ipc/handle';
@@ -61,14 +61,9 @@ import { installDevFileLogging } from './lib/dev-file-logger';
 // Velopack's startup logic, before anything else runs. It handles the hooks fired
 // during install, update and uninstall, and may restart the process to do so, which
 // is why nothing of ours may happen first.
-// Velopack's prebuilt Linux module needs a recent glibc (2.39 as of 1.2.161) and throws
-// on load on older distros. The app must still start there, just without self-update:
-// the UpdateManager already reports "not available" when it cannot be built.
-try {
-  VelopackApp.build().run();
-} catch (err) {
-  console.warn('[velopack] unavailable, continuing without self-update:', err);
-}
+// Loaded lazily: on a distro too old for Velopack's Linux module the app still starts,
+// just without self-update (see velopack-loader).
+loadVelopack()?.VelopackApp.build().run();
 
 // A copy carrying its own `data` folder keeps everything there. This runs before any
 // path is read, because every other location is derived from userData. An explicit
