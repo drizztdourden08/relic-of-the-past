@@ -1,5 +1,4 @@
 /* @layer electron-main @kind logic */
-import { VelopackApp } from 'velopack';
 import { app, BrowserWindow, Menu, session, protocol, ipcMain } from 'electron';
 import { is } from '@electron-toolkit/utils';
 
@@ -54,6 +53,7 @@ import { registerWasmHandlers } from './wasm/ipc-handlers';
 import { registerStorageHandlers } from './storage/ipc-handlers';
 import { registerFileHandlers } from './storage/file-handlers';
 import { initAutoUpdater, registerUpdaterHandlers } from './updater';
+import { loadVelopack } from './updater/velopack-loader';
 import { registerSanctuaryHandlers } from './sanctuary/ipc-handlers';
 import { registerDebugReportHandlers } from './diagnostics/debug-report/ipc-handlers';
 import { registerFfmpegHandlers } from './tools/ipc-handlers';
@@ -66,18 +66,13 @@ import { registerMsulAssociation, unregisterMsulAssociation } from './msu/msul-a
 // nothing of ours may happen before it. The `.msul` document type rides on those
 // hooks (registered after install and every update, removed before uninstall).
 // Windows only; the other platforms get it from the package.
-// Velopack's prebuilt Linux module needs a recent glibc (2.39 as of 1.2.161) and throws
-// on load on older distros. The app must still start there, just without self-update:
-// the UpdateManager already reports "not available" when it cannot be built.
-try {
-  VelopackApp.build()
-    .onAfterInstallFastCallback(registerMsulAssociation)
-    .onAfterUpdateFastCallback(registerMsulAssociation)
-    .onBeforeUninstallFastCallback(unregisterMsulAssociation)
-    .run();
-} catch (err) {
-  console.warn('[velopack] unavailable, continuing without self-update:', err);
-}
+// Loaded lazily: on a distro too old for Velopack's Linux module the app still starts,
+// just without self-update (see velopack-loader).
+loadVelopack()?.VelopackApp.build()
+  .onAfterInstallFastCallback(registerMsulAssociation)
+  .onAfterUpdateFastCallback(registerMsulAssociation)
+  .onBeforeUninstallFastCallback(unregisterMsulAssociation)
+  .run();
 
 // Portable `data` folder first (every other location derives from userData), then
 // --user-data, which outranks it.
