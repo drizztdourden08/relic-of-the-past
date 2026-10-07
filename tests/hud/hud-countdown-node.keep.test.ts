@@ -26,6 +26,7 @@ import {
   countdownInset, countdownVariantOf,
 } from '../../apps/web/src/ui/domains/hud/compounds/HudNodeRenderer/behavior/countdown-art';
 import { countdownContentOf } from '../../apps/web/src/ui/domains/hud/views/HudLayoutView/behavior/countdown-content';
+import { occupantsOf } from '../../apps/web/src/ui/domains/app/views/HudLayoutEditor/sub-components/GridLattice';
 import type { PlacedNode } from '@shared/hud/engine';
 import type { HudLayout, HudNode } from '@shared/types/hud';
 
@@ -153,5 +154,16 @@ describe('the live path: a parsed reading to a pie on the shipped layout', () =>
     expect(scope.countdown_active).toBe(0);
     expect(placedById(layoutHud(layoutById('default') as HudLayout, { w: 398, h: 224 }, { scope }), 'countdown'))
       .toBeUndefined();
+  });
+
+  // The grid editor's lattice and cell picker read occupants. The countdown spans the
+  // whole screen grid only so it sizes no track; counting it would mark all nine cells
+  // taken (found on the grand-merge test run). It still shows in its OWN cell picker.
+  it('is no grid occupant, except in its own cell picker', () => {
+    const screen = (layoutById('default') as HudLayout).screen;
+    const ids = (keep?: string) => occupantsOf(screen, keep).map((o) => o.id);
+    expect(ids()).not.toContain('countdown');
+    expect(ids()).toEqual(screen.children.filter((c) => c.id !== 'countdown').map((c) => c.id));
+    expect(ids('countdown')).toContain('countdown');
   });
 });

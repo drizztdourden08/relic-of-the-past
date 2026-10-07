@@ -236,6 +236,7 @@
   min-width: 0;
   padding: var(--space-2xs) 0;
   text-align: left;
+  white-space: normal;
   cursor: pointer;
 }
 

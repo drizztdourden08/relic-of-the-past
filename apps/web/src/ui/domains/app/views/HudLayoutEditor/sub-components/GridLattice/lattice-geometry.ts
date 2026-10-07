@@ -70,8 +70,16 @@ const boundsOf = (cells: readonly CellRef[]): CellBounds => ({
   r1: Math.max(...cells.map((c) => c.row)),
 });
 
-const occupantsOf = (container: HudGridContainer): Occupant[] =>
+/** A countdown is a floating overlay: it spans the whole grid only so it sizes
+ *  no track, and it is not placed at all while idle (section 62). Counting it
+ *  would mark every cell taken. It is kept when it is the child being edited,
+ *  so its own cell picker still shows where it stands. */
+const isOverlay = (node: HudGridContainer['children'][number]): boolean =>
+  node.kind === 'element' && node.element.type === 'countdown';
+
+const occupantsOf = (container: HudGridContainer, keepId?: string): Occupant[] =>
   [...assignCells(container.children, Math.max(1, container.columns.length))]
+    .filter(([node]) => !isOverlay(node) || node.id === keepId)
     .map(([node, cell]) => ({ id: node.id, ...cell }));
 
 const covers = (occupant: Occupant, column: number, row: number): boolean =>

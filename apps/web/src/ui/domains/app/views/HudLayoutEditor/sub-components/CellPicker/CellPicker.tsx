@@ -39,7 +39,7 @@ interface CellPickerProps {
 const CellPicker = (props: CellPickerProps) => {
   const { container, childId, place, onChange } = props;
   const solve = useGridSolve(container);
-  const occupants = occupantsOf(container);
+  const occupants = occupantsOf(container, childId);
   const rows = rowCountFor(container, occupants);
   const mine = occupants.find((o) => o.id === childId);
   const pick = useCellPick({ place, onChange });
