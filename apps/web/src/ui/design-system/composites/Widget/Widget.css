@@ -199,6 +199,17 @@
   flex-shrink: 0;
 }
 
+.widget-settings__text {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.widget-settings__hint {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
 .widget-settings__separator {
   height: 1px;
   background: var(--c-border);

@@ -2,6 +2,8 @@
 export { Widget } from './Widget';
 export { WidgetManager } from './sub-components/WidgetManager';
 export { WidgetSettings } from './sub-components/WidgetSettings';
+export { OptionRow } from './sub-components/OptionRow';
+export type { OptionRowProps } from './sub-components/OptionRow';
 export type { WidgetState, WidgetLayout, WidgetDefinition, SnapSide, WidgetMode, WidgetVisibility } from './Widget.type';
 export { WIDGET_DEFINITIONS, TITLEBAR_HEIGHT } from './Widget.constants';
 export { createDefaultLayout, getDevOnlyWidgetIds, getWidgetDefinition, createDefaultWidgetState } from './behavior/createWidgetState';

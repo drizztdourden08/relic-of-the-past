@@ -1,26 +1,13 @@
 /* @layer renderer-widgets @kind hook */
 /**
- * The widget's pinned-header preference, read live so the settings popover and
- * the tracker below it never disagree. Same localStorage-plus-storage-event
- * shape the inventory widget's view mode uses.
+ * The widget's pinned-header preference. A per-profile widget pref, so the
+ * settings panel and the tracker below it read the same value with no event
+ * plumbing, and it survives the widget being unmounted and the app closing.
  */
-import { useState, useEffect } from 'react';
-import { STICKY_HEADER_KEY } from '../checks.constants';
+import { useWidgetPref } from '@app/hooks/useWidgetPref';
+import { CHECKS_PREF_KEY, STICKY_HEADER_DEFAULT, STICKY_HEADER_PREF } from '../checks.constants';
 
-const readSticky = (): boolean => localStorage.getItem(STICKY_HEADER_KEY) !== 'off';
+const useStickyHeader = (): readonly [boolean, (next: boolean) => void] =>
+  useWidgetPref<boolean>(CHECKS_PREF_KEY, STICKY_HEADER_PREF, STICKY_HEADER_DEFAULT);
 
-const useStickyHeader = () => {
-  const [sticky, setSticky] = useState<boolean>(readSticky);
-
-  useEffect(() => {
-    const handler = (e: StorageEvent) => {
-      if (e.key === STICKY_HEADER_KEY) setSticky(readSticky());
-    };
-    window.addEventListener('storage', handler);
-    return () => window.removeEventListener('storage', handler);
-  }, []);
-
-  return sticky;
-};
-
-export { readSticky, useStickyHeader };
+export { useStickyHeader };
