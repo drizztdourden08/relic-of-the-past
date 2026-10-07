@@ -25,11 +25,13 @@ type TextSlotRowProps = {
   slot: TextSlot;
   /** The translator's words, or '' while the original still stands. */
   value: string;
+  /** An installed set: the words show and cannot be changed. */
+  readOnly?: boolean;
   onChangeValue: (key: string, value: string) => void;
 };
 
 const TextSlotRow = (props: TextSlotRowProps) => {
-  const { slot, value, onChangeValue } = props;
+  const { slot, value, readOnly = false, onChangeValue } = props;
 
   const handleChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     onChangeValue(slot.key, event.currentTarget.value);
@@ -68,6 +70,7 @@ const TextSlotRow = (props: TextSlotRowProps) => {
         value={value}
         placeholder={slot.fallback}
         aria-label={slot.label}
+        disabled={readOnly}
         onChange={handleChange}
       />
 

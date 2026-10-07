@@ -5,23 +5,26 @@
  * lists a translator had to work out which one a piece of text lived in.
  */
 import { useCallback, useMemo, useState } from 'react';
+import type { ReactNode } from 'react';
 import { Box, TabBar, EmptyState, Spinner } from '@ds/primitives';
 import { buildVariableIndex } from '@shared/game/language';
 import { kLanguages } from '@shared/asset-extraction/text/data/language-data';
 import { useLanguageEditor } from './behavior/useLanguageEditor';
-import { useTranslationSearch } from './behavior/useTranslationSearch';
+import { useTranslationSearch } from '@domains/packs/language/behavior/useTranslationSearch';
+import { useEntryLayout } from '@domains/packs/language/behavior/useEntryLayout';
+import { filterEntriesByHits } from '@domains/packs/language/behavior/entry-selectors';
+import { VariablesTable } from '@domains/packs/language/compounds/variables';
 import { useSetFont } from './behavior/useSetFont';
-import { useEntryLayout } from './behavior/useEntryLayout';
 import { useEntryOpen } from './behavior/useEntryOpen';
 import { useVariablesTab } from './behavior/useVariablesTab';
+import { useSetExport } from './behavior/useSetExport';
 import { BundleHeader } from './sub-components/BundleHeader';
 import { DialogueTab } from './sub-components/DialogueTab';
 import { TextGroupsTab } from './sub-components/text-groups';
 import { StaleGameNotice } from './sub-components/StaleGameNotice';
 import { UnbuiltPane } from './sub-components/UnbuiltPane';
 import { useTextGroups } from './behavior/useTextGroups';
-import { FindHardcodedDialog, VariablesTable } from './sub-components/variables';
-import { filterEntriesByHits } from './behavior/editor-selectors';
+import { FindHardcodedDialog } from './sub-components/variables';
 import { selectEntries } from './behavior/select-entries';
 import type { EntryFilter } from './sub-components/DialogueTab';
 import type { DialogueEntry } from '@shared/game/language';
@@ -31,6 +34,10 @@ import './LanguageEditor.css';
 type LanguageEditorProps = {
   /** The set to edit; null renders the empty state. */
   id: string | null;
+  /** An installed set: it opens and previews, and nothing in it changes. */
+  readOnly?: boolean;
+  /** The origin bar of an installed set, shown above its header. */
+  origin?: ReactNode;
 };
 
 const NO_ENTRIES: DialogueEntry[] = [];
@@ -42,8 +49,8 @@ const VARIABLES_SUMMARY = 'Substitutions are listed and editable here, but nothi
 const TEXT_SUMMARY = 'Every string the game shows is listed here, but none of it is baked yet.';
 
 const LanguageEditor = (props: LanguageEditorProps) => {
-  const { id } = props;
-  const editor = useLanguageEditor(id);
+  const { id, readOnly = false, origin = null } = props;
+  const editor = useLanguageEditor(id, readOnly);
   const {
     set, loading, error, dirty, saving, saveError, issues, variables, terms,
     setEntryTokens, setManyEntryTokens, setStructureMode, setTextValue, setVariableValue,
@@ -60,6 +67,7 @@ const LanguageEditor = (props: LanguageEditorProps) => {
   const layout = useEntryLayout(metrics, terms);
   const { view, draft, open, close, setMode } = useEntryOpen(dialogue, setEntryTokens);
   const variablesTab = useVariablesTab({ dialogue, variables, onRewrite: setManyEntryTokens });
+  const { exporting, exportStatus, exportSet } = useSetExport({ id, dirty, saveNow });
 
   const cfg = useMemo(() => (set ? kLanguages[set.base] ?? null : null), [set]);
   const variableIndex = useMemo(() => buildVariableIndex(variables), [variables]);
@@ -97,13 +105,18 @@ const LanguageEditor = (props: LanguageEditorProps) => {
   return (
     <Box className="language-editor">
       <StaleGameNotice />
+      {origin}
       <BundleHeader
         set={set}
         warnings={warnings}
         dirty={dirty}
         saving={saving}
         saveError={saveError}
+        readOnly={readOnly}
         onSaveNow={saveNow}
+        onExport={exportSet}
+        exporting={exporting}
+        exportStatus={exportStatus}
       />
 
       <TabBar tabs={tabs} activeTab={tab} onTabChange={setTab} />
@@ -125,6 +138,7 @@ const LanguageEditor = (props: LanguageEditorProps) => {
           draft={draft}
           view={view}
           structureMode={set?.structure ?? 'continuous'}
+          readOnly={readOnly}
           onChangeStructureMode={setStructureMode}
           onQueryChange={setQuery}
           onFilterChange={handleFilterChange}
@@ -144,10 +158,10 @@ const LanguageEditor = (props: LanguageEditorProps) => {
             query={variablesTab.query}
             onFilterChange={variablesTab.setFilter}
             onQueryChange={variablesTab.setQuery}
-            onChangeValue={setVariableValue}
-            onAddTerm={upsertGlossaryTerm}
-            onRemoveTerm={removeGlossaryTerm}
-              onFindHardcoded={variablesTab.openScan}
+            onChangeValue={readOnly ? undefined : setVariableValue}
+            onAddTerm={readOnly ? undefined : upsertGlossaryTerm}
+            onRemoveTerm={readOnly ? undefined : removeGlossaryTerm}
+              onFindHardcoded={readOnly ? undefined : variablesTab.openScan}
             />
           </UnbuiltPane>
         </Box>
@@ -160,6 +174,7 @@ const LanguageEditor = (props: LanguageEditorProps) => {
               groups={text.groups}
               activeGroup={text.activeGroup}
               values={text.values}
+              readOnly={readOnly}
               onSelectGroup={text.selectGroup}
               onChangeValue={text.setValue}
             />

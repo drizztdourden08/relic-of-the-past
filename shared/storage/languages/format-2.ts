@@ -70,7 +70,7 @@ const variablesOf = (set: LanguageSet): Variable[] =>
   mergeVariableMeta(variablesFromLegacy(set.glossary, set.names), set.variables);
 
 const writeHeader = async (files: FileStore, set: LanguageSet): Promise<void> => {
-  const { id, name, base, origin, version, author } = set;
+  const { id, name, base, origin, version, author, basedOn } = set;
   const previous = await readHeader(files, id);
   await writeJson(files, setMetaPath(id), {
     ...previous,
@@ -80,6 +80,7 @@ const writeHeader = async (files: FileStore, set: LanguageSet): Promise<void> =>
     origin,
     version,
     author,
+    ...(basedOn ? { basedOn } : {}),
     format: SET_FORMAT,
     structure: asStructure(set.structure),
   });
@@ -91,5 +92,5 @@ const writeContent = async (files: FileStore, set: LanguageSet): Promise<void> =
   await writeJson(files, variablesPath(set.id), variablesOf(set));
 };
 
-export { DEFAULT_STRUCTURE, readContent, SET_FORMAT, writeContent };
+export { DEFAULT_STRUCTURE, formatOf, readContent, SET_FORMAT, writeContent };
 export type { SetContent };

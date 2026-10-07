@@ -1,0 +1,11 @@
+/* @layer store-site @kind style */
+
+/* The content fills the page body, so the table scrolls, not the page. */
+.review {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.review__summary {
+  font-variant-numeric: tabular-nums;
+}

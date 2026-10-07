@@ -9,5 +9,6 @@
     "skipLibCheck": true,
     "noEmit": true
   },
-  "include": ["src", "../../shared/sanctuary"]
+  "include": ["src", "../hub-core", "../../shared/hub", "../../shared/sanctuary"],
+  "exclude": ["../hub-core/node_modules"]
 }

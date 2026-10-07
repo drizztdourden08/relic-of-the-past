@@ -4,5 +4,5 @@
     "baseUrl": "../..",
     "types": ["vite/client"]
   },
-  "include": ["src/**/*", "../web/src/ui/design-system/**/*", "../../shared/**/*"]
+  "include": ["src/**/*", "../site-kit/**/*", "../web/src/ui/design-system/**/*", "../../shared/**/*"]
 }

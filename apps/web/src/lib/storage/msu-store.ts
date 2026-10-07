@@ -9,6 +9,8 @@ import * as msu from '@shared/storage/msu';
 import * as resume from '@shared/storage/msu-resume';
 import { fetchToBytes } from '@shared/storage/download';
 import { isZip, unzip } from '@shared/storage/archive';
+import { installMsulPack } from '@shared/storage/msul/install-msul-pack';
+import type { InstallResult } from '@shared/storage/msul/install-msul-pack';
 import { getPlatform } from '@app/platform/get-platform';
 import { publishImportProgress } from './import-progress-bus';
 import { probeAudioFile } from './audio-probe';
@@ -90,10 +92,20 @@ const importMsu = async (pack: string, url: string): Promise<MsuResult> => {
   } catch (err) { const msg = err instanceof Error ? err.message : String(err); emit('error', undefined, undefined, msg); return { success: false, error: msg }; }
 };
 
+/** A `.msul` archive installed as a new pack, with the copy progress on the import bus. */
+const installMsulFile = async (bytes: Uint8Array, desiredName?: string): Promise<InstallResult> => {
+  const result = await installMsulPack(files(), bytes, {
+    desiredName,
+    onProgress: (done, total) => emit('copy', done, total),
+  });
+  emit('done');
+  return result;
+};
+
 export {
   listMsuPacks, getMsuPackFiles, getMsuTrackList, listMsuAudioFiles, listMsuPackEntries, getMsuFileMetadata,
   readMsuLoopSample, deleteMsuPack, readMsuTrackFile,
-  importMsuFile, importMsu,
+  importMsuFile, importMsu, installMsulFile,
   readMsuManifest, writeMsuManifest, createMsuPack, renameMsuPack, renameMsuTrackFile, deleteMsuTrackFile,
   writeMsuTrackFile,
   writeMsuResume, readMsuResume, deleteMsuResume,

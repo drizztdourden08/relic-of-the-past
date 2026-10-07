@@ -22,6 +22,7 @@ import { useDisplaySettings } from '@app/App/behavior/useDisplaySettings';
 import { useGameLifecycle } from '@app/App/behavior/useGameLifecycle';
 import { useIpcLogBridge } from '@app/App/behavior/useIpcLogBridge';
 import { useMsulOpen } from '@app/App/behavior/useMsulOpen';
+import { useStoreLinks } from '@app/App/behavior/useStoreLinks';
 import { useKeyboardShortcuts } from '@app/App/behavior/useKeyboardShortcuts';
 import { useProfileManagement } from '@app/App/behavior/useProfileManagement';
 import { useSaveOverlay } from '@app/App/behavior/useSaveOverlay';
@@ -106,6 +107,8 @@ const AppMain = () => {
   useIpcLogBridge();
   // A music pack opened from the desktop imports itself.
   useMsulOpen();
+  // A store install link the browser opened lands on the Hookshop tab.
+  useStoreLinks(nav.setActivePage);
   useAppMainEffects({ isGameRunning: game.isRunning, activePage: nav.activePage, openNavWidget: () => widgets.open('navigation') });
 
   // Splash window → main window: reveal only once startup has settled and painted,
@@ -128,7 +131,7 @@ const AppMain = () => {
 
       <Box className="app__content">
         {!game.isRunning && (
-          <Image className="app__bg-logo" src="./logos/logo-512.png" alt="" />
+          <Image className="app__bg-logo" src="./logos/logo/logo-512.png" alt="" />
         )}
 
         <GameLayer

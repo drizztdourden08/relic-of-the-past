@@ -59,15 +59,17 @@
   --settings-page-head-h: 88px;
   --settings-page-head-h-compact: 52px;
 
-  /* Home hero: the scene's minimum height, the intro column (mode + Play) and
-     where the mode's art starts beside it, the side column (last save over
-     progress) with its thumbnail, and the progress bar thickness. */
-  --profile-hero-h: 300px;
-  --profile-hero-intro-w: 200px;
+  /* Hero (a scene with details over it): its minimum height, the intro column and the
+     side column. A hero's modifier class may override them. */
+  --hero-h: 300px;
+  --hero-intro-w: 200px;
+  --hero-side-w: 360px;
+
+  /* Home hero: where the mode's art starts beside the intro, the art's height, the last
+     save's thumbnail, and the progress bar thickness. */
   --profile-hero-art-left: 232px;
   --profile-hero-art-h: 256px; /* the 128px piece at 2x */
   --profile-hero-bar-h: 6px;
-  --profile-hero-save-w: 360px;
   --profile-hero-thumb-w: 160px;
 
   /* The option catalog lays every row (a plain option or a capacity family)
@@ -128,4 +130,15 @@
      compact list rows, where a name beside the art carries the identity and
      24px is enough; here the picture has to be recognised on its own. */
   --dark-room-sprite-d: 32px;
+
+  /* Narrowest a Hookshop item card may be before its grid drops a column: a
+     16:9 card picture still reads at this width, and so does a two-word name. */
+  --store-card-w-min: 200px;
+
+  /* The Hookshop's detail panel beside the card grid, the same width as the
+     list column of the master-detail layout it mirrors. */
+  --store-detail-w: 340px;
+
+  /* The Hookshop's signed-out screen: one readable centred column. */
+  --store-sign-in-w: 480px;
 }

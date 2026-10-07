@@ -35,6 +35,11 @@
   border-color: var(--c-gold);
 }
 
+/* Invalid: an erroring Field around it. */
+.field--invalid .tag-input__field {
+  border-color: var(--c-danger);
+}
+
 .tag-input--disabled .tag-input__field {
   opacity: var(--opacity-disabled);
   cursor: not-allowed;

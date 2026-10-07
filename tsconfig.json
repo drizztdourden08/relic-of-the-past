@@ -17,12 +17,15 @@
       "@shared/*": ["./shared/*"],
       "@app/*": ["./apps/web/src/*"],
       "@ds/*": ["./apps/web/src/ui/design-system/*"],
-      "@domains/*": ["./apps/web/src/ui/domains/*"]
+      "@domains/*": ["./apps/web/src/ui/domains/*"],
+      "@site-kit/*": ["./apps/site-kit/*"]
     }
   },
   "include": [
     "apps/web/src/**/*",
     "apps/sanctuary/src/**/*",
+    "apps/store/src/**/*",
+    "apps/site-kit/**/*",
     "apps/desktop/electron/**/*",
     "shared/**/*"
   ],

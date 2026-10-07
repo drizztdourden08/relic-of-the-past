@@ -1,0 +1,49 @@
+/* @layer store-site @kind style */
+
+.review-item__store,
+.review-item__details,
+.review-item__contents {
+  max-width: var(--store-form-maxw);
+}
+
+.review-item__card {
+  width: var(--review-card-w);
+}
+
+.review-item__head {
+  align-self: center;
+}
+
+.review-item__semver {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.review-item__back {
+  color: var(--c-gold);
+  font-size: var(--text-sm);
+}
+
+.review-item__back:hover {
+  color: var(--c-gold-bright);
+}
+
+.review-item__text {
+  margin: 0;
+  padding: var(--space-sm) var(--space-md);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--r-md);
+  background: var(--c-sunken);
+  color: var(--c-text);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.review-item__swatch {
+  display: inline-block;
+  width: var(--review-swatch-size);
+  height: var(--review-swatch-size);
+  border: var(--border-width-thin) solid var(--c-border-strong);
+  border-radius: var(--r-sm);
+  background: var(--item-color, var(--c-gold));
+}

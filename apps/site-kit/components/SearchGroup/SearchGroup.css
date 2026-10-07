@@ -1,0 +1,68 @@
+/* @layer site-kit @kind style */
+
+/* The pill a search result opens with: the group's Open, and any "Open <category>" beside the summary. */
+.search-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-pill);
+  background: none;
+  color: var(--c-gold);
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.search-pill:hover {
+  border-color: var(--c-gold);
+  background: var(--c-gold-soft);
+}
+
+.search-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.search-group__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.search-group__icon {
+  display: grid;
+  place-items: center;
+  font-size: var(--text-xl);
+  color: var(--c-gold-bright);
+  filter: drop-shadow(0 0 var(--blur-glow) var(--c-gold));
+}
+
+.search-group__title {
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  color: var(--c-text);
+}
+
+.search-group__count {
+  padding: 0 var(--space-sm);
+  border-radius: var(--r-pill);
+  background: var(--c-gold-soft);
+  color: var(--c-gold-bright);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semi);
+  font-variant-numeric: tabular-nums;
+}
+
+.search-group__open {
+  margin-left: auto;
+}
+
+/* A long group scrolls inside its own table, so the next group stays in reach. */
+.search-group__table {
+  display: flex;
+  flex-direction: column;
+  max-height: var(--search-table-maxh);
+}

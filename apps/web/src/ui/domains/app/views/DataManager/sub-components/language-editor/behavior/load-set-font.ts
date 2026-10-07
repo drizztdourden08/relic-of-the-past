@@ -1,20 +1,13 @@
 /* @layer renderer-components @kind logic */
 /**
- * A set's drawable font: the glyph tiles and widths (the set's own bytes) plus
- * the alphabet (from the extraction language table via the set's `base` code).
+ * A set's drawable font, read from the set's stored pair (see `setFontAssets`).
  * Cached at module scope by set id, holding the pending promise so two callers
  * in one tick share one read. The font is not editable in the studio, so a
  * cached entry cannot go stale under an edit; only a re-import would need it dropped.
  */
-import type { GlyphMetrics, GlyphSheet } from '@shared/game/language/layout/types';
-import { kLanguages } from '@shared/asset-extraction/text/data/language-data';
+import { setFontAssets } from '@domains/packs/language/behavior/set-font-assets';
+import type { SetFontAssets } from '@domains/packs/language/behavior/set-font-assets';
 import { getLanguageSet, getLanguageSetFont } from '@app/lib/storage/languages-store';
-
-/** One set's drawable font: the tiles, and the metrics to place them. */
-type SetFontAssets = {
-  sheet: GlyphSheet;
-  metrics: GlyphMetrics;
-};
 
 /** Pending-or-settled reads, so a remount never re-reads the same font. */
 const assetsBySetId = new Map<string, Promise<SetFontAssets | null>>();
@@ -26,15 +19,7 @@ const resolveBase = async (setId: string, base?: string): Promise<string | null>
 const read = async (setId: string, base?: string): Promise<SetFontAssets | null> => {
   const font = await getLanguageSetFont(setId);
   if (!font) return null;
-  const code = await resolveBase(setId, base);
-  const config = code ? kLanguages[code] ?? null : null;
-  if (!config) return null;
-  // Copied: the host may pass a pooled view whose byteOffset is not zero, and
-  // every offset below is tile-relative.
-  return {
-    sheet: { tiles: Uint8Array.from(font.fontData) },
-    metrics: { widths: Uint8Array.from(font.fontWidth), alphabet: config.alphabet },
-  };
+  return setFontAssets(font, await resolveBase(setId, base));
 };
 
 /** The set's font, or null when no font pair is stored or the base language is unknown; callers then draw nothing. */

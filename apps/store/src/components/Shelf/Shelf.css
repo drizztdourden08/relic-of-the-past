@@ -1,0 +1,48 @@
+/* @layer store-site @kind style */
+
+/* As the plan mockup: the head on one baseline, then the cards in equal columns. */
+.shelf {
+  gap: var(--hero-gap);
+}
+
+.shelf__head {
+  gap: var(--hero-gap);
+}
+
+/* Two classes, so the text primitive's own colour and size never win on load order. */
+.shelf .shelf__title {
+  margin: 0;
+  color: var(--c-text);
+  font-size: var(--shelf-title-size);
+  font-weight: var(--weight-semi);
+}
+
+.shelf .shelf__lead {
+  color: var(--c-text-muted);
+  font-size: var(--text-xs);
+}
+
+.shelf__all {
+  margin-left: auto;
+  color: var(--c-gold);
+  font-size: var(--text-sm);
+}
+
+.shelf__all:hover {
+  color: var(--c-gold-bright);
+}
+
+/* Each column stops at the card's widest, so the 16:9 picture (and the card) never grows
+   with the window; on a wide screen the row ends before the edge. */
+.shelf__row {
+  display: grid;
+  grid-template-columns: repeat(var(--shelf-columns), minmax(0, var(--shelf-card-max-w)));
+  gap: var(--space-md);
+}
+
+/* Below the compact breakpoint (--bp-compact) two cards to a row. */
+@media (width <= 820px) {
+  .shelf__row {
+    grid-template-columns: repeat(var(--shelf-columns-compact), minmax(0, 1fr));
+  }
+}

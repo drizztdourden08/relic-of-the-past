@@ -20,17 +20,21 @@ interface MsuPackHeaderProps {
   isDeluxe: boolean;
   hasOpuz: boolean;
   busy: boolean;
+  /** An installed pack keeps its name; it still exports. */
+  readOnly: boolean;
   exporting: ExportFormat | null;
   onRename: (name: string) => void;
   onExport: (format: ExportFormat) => void;
 }
 
 const MsuPackHeader = (props: MsuPackHeaderProps) => {
-  const { pack, format, slotCount, fileCount, totalSize, isDeluxe, hasOpuz, busy, exporting, onRename, onExport } = props;
+  const {
+    pack, format, slotCount, fileCount, totalSize, isDeluxe, hasOpuz, busy, readOnly, exporting, onRename, onExport,
+  } = props;
   const [draftName, setDraftName] = useState(pack);
 
   useEffect(() => { setDraftName(pack); }, [pack]);
-  const renameReady = draftName.trim().length > 0 && draftName.trim() !== pack;
+  const renameReady = !readOnly && draftName.trim().length > 0 && draftName.trim() !== pack;
 
   return (
     <Box className="msu-pack-header">
@@ -39,6 +43,7 @@ const MsuPackHeader = (props: MsuPackHeaderProps) => {
           type="text"
           value={draftName}
           aria-label="Pack name"
+          disabled={readOnly}
           onChange={(e) => setDraftName(e.target.value)}
           onKeyDown={(e) => { if (e.key === 'Enter' && renameReady && !busy) onRename(draftName); }}
         />

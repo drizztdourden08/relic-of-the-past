@@ -5,8 +5,8 @@
  */
 import type { ReportContents } from '@shared/sanctuary/report-types';
 import type { ReportView } from '../api/types';
-import { formatBytes } from '../lib/format-bytes';
-import { formatDateTime } from '../lib/format-date';
+import { formatBytes } from '@site-kit/lib/format-bytes';
+import { formatDateTime } from '@site-kit/lib/format-date';
 
 const ANONYMOUS = 'anonymous';
 

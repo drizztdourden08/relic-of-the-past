@@ -10,7 +10,8 @@ import type { PlayerSheet, SheetPalette } from '@shared/game/data/player-sheet/t
 import { readLinkSprite, writeLinkSprite } from '@app/lib/storage/link-sprites-store';
 import { parseZspr } from '../zspr';
 import { toZsprBytes } from '../zspr-write';
-import { parseRsp, toRspBytes, isRspName } from '../rsp';
+import { toRspBytes } from '../rsp';
+import { parseRsp, isRspName } from '@shared/storage/link-sprites/parse-rsp';
 
 const loadSheet = async (name: string, stockPalette?: SheetPalette): Promise<PlayerSheet | null> => {
   const bytes = await readLinkSprite(name);

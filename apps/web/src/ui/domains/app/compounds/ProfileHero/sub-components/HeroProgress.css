@@ -14,7 +14,7 @@
   display: contents;
 }
 
-.hero-progress__head > .profile-hero__eyebrow {
+.hero-progress__head > .hero__eyebrow {
   grid-column: 1 / 3;
 }
 

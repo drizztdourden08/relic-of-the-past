@@ -68,9 +68,18 @@ const newManifest = (pack: string, meta?: Partial<MsuPackMeta>): MsuPackManifest
   return { version: 1, meta: { name: pack, ...meta, createdAt: now, modifiedAt: now }, tracks: [] };
 };
 
+/**
+ * A pack's name is its folder. The name inside its settings follows the folder on every read and
+ * every write, so a renamed pack, its export and its store install all carry the same name.
+ */
+const withPackName = (manifest: MsuPackManifest, pack: string): MsuPackManifest =>
+  ({ ...manifest, meta: { ...manifest.meta, name: pack } });
+
 /** null for a classic pack (no manifest), and for one that is unreadable or an unknown version. */
-const readManifest = async (files: FileStore, pack: string): Promise<MsuPackManifest | null> =>
-  parseManifest(await files.readText(manifestPath(pack)));
+const readManifest = async (files: FileStore, pack: string): Promise<MsuPackManifest | null> => {
+  const manifest = parseManifest(await files.readText(manifestPath(pack)));
+  return manifest && withPackName(manifest, pack);
+};
 
 /**
  * The inventory is taken from the folder at write time, never from the caller: a manifest from
@@ -80,7 +89,7 @@ const readManifest = async (files: FileStore, pack: string): Promise<MsuPackMani
 const writeManifest = async (files: FileStore, pack: string, manifest: MsuPackManifest): Promise<void> => {
   assertSafeName(pack);
   const inventory = await listPackEntries(files, pack);
-  await files.writeText(manifestPath(pack), serializeManifest({ ...manifest, files: inventory }));
+  await files.writeText(manifestPath(pack), serializeManifest({ ...withPackName(manifest, pack), files: inventory }));
 };
 
 const createPack = async (files: FileStore, pack: string, meta?: Partial<MsuPackMeta>): Promise<void> => {
@@ -99,6 +108,9 @@ const renamePack = async (files: FileStore, from: string, to: string): Promise<v
     const bytes = await files.readBytes(`${packDir(from)}/${name}`);
     if (bytes) await files.writeBytes(`${packDir(to)}/${name}`, bytes);
   }
+  // Rewritten so the name inside its settings becomes the new folder name.
+  const manifest = await readManifest(files, to);
+  if (manifest) await writeManifest(files, to, manifest);
   await files.remove(packDir(from));
 };
 

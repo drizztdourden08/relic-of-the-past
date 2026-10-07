@@ -5,7 +5,7 @@
  * outside (a deep link, Back) makes the set that one file, or empties a set of one.
  */
 import { useCallback, useState } from 'react';
-import { navigate } from '../../../router/useLocation';
+import { navigate } from '@site-kit/router/useLocation';
 
 const FILES_PATH = '/files';
 

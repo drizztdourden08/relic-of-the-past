@@ -4,29 +4,32 @@
  *  type the caller can see takes an upload. */
 import { LIMITS, SANCTUARY_ROUTES, createFileSchema } from '../../../../shared/sanctuary';
 import type { FileOwner, SanctuaryFile } from '../../../../shared/sanctuary';
-import { parseBody } from '../http/parse-body';
-import { requireAccess } from '../auth/require-access';
+import { parseBody } from '../../../hub-core/http/parse-body';
+import { requireMember } from '../../../hub-core/auth/require-member';
 import { assertVisibleType } from '../files/file-guards';
 import { filesRepo } from '../db/files-repo';
-import { collection, now } from '../db/firestore';
-import { b2, versionKey } from '../storage/b2';
-import type { Route } from '../route.type';
+import { now } from '../../../hub-core/db/firestore';
+import { sanctuaryCollection } from '../db/collections';
+import { filesBucket } from '../storage/files-bucket';
+import { versionKey } from '../storage/keys';
+import type { Route } from '../../../hub-core/route.type';
+import { SANCTUARY_SITE } from '../site';
 
 const FIRST_VERSION = 1;
 
 const filesBegin: Route = {
   ...SANCTUARY_ROUTES.filesCreate,
   handler: async ({ req, res }) => {
-    const member = await requireAccess(req);
+    const member = await requireMember(req, SANCTUARY_SITE);
     const body = parseBody(createFileSchema, req.body);
     assertVisibleType(body.type, member);
-    const id = collection('files').doc().id;
+    const id = sanctuaryCollection('files').doc().id;
     const key = versionKey(id, FIRST_VERSION);
     const parts = Math.max(1, Math.ceil(body.bytes / LIMITS.partBytes));
-    const multipartId = await b2.begin(key, body.contentType);
+    const multipartId = await filesBucket.begin(key, body.contentType);
     const owner: FileOwner = { userId: member.caller.userId, displayName: member.user.displayName };
-    const upload = { multipartId, parts };
     const createdAt = now();
+    const upload = { multipartId, parts, partsDone: 0, updatedAt: createdAt };
     const { name, bytes, sha256, contentType } = body;
     const file: SanctuaryFile = {
       id,

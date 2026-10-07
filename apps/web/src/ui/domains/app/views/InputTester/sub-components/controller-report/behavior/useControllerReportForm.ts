@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useDebugTextBuilder, useDebugText } from '@app/lib/diagnostics';
 import { useReportContext } from '@app/lib/diagnostics/useReportContext';
-import { useSanctuarySessionStore } from '@app/stores/sanctuary-session';
+import { useHubSessionStore } from '@app/stores/hub-session';
 import type { ReportStep } from '../report-step-labels';
 import { useDetectionContext } from './useDetectionContext';
 import { useReportDiagnostics } from './useReportDiagnostics';
@@ -18,8 +18,8 @@ interface FiledControllerReport {
 }
 
 const useControllerReportForm = (deviceKey: string) => {
-  const me = useSanctuarySessionStore((s) => s.me);
-  const refreshSession = useSanctuarySessionStore((s) => s.refresh);
+  const me = useHubSessionStore((s) => s.me);
+  const refreshSession = useHubSessionStore((s) => s.refresh);
   const { subject: subjectPrefix, context } = useReportContext();
 
   const [step, setStep] = useState<ReportStep>('about');

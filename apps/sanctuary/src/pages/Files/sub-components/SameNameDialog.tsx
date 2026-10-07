@@ -9,9 +9,9 @@ import { Flex } from '@ds/primitives/Flex';
 import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
 import { DialogShell } from '@ds/composites/DialogShell';
-import { Row } from '../../../components/Row/Row';
+import { Row } from '@site-kit/components/Row/Row';
 import { TypeChip } from '../../../components/TypeChip/TypeChip';
-import { formatBytes } from '../../../lib/format-bytes';
+import { formatBytes } from '@site-kit/lib/format-bytes';
 import { nextVersionNumber, versionLabel } from '../../../files/file-versions';
 import type { SameNameQuestion } from '../behavior/drop-queue';
 

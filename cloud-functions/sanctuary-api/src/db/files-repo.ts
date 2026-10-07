@@ -3,17 +3,18 @@
  *  versions existed comes back with its version 1. */
 import { FieldValue } from '@google-cloud/firestore';
 import type { FileType, SanctuaryFile } from '../../../../shared/sanctuary';
-import { notFound } from '../http/http-error';
+import { notFound } from '../../../hub-core/http/http-error';
 import { upgradeFile } from '../files/upgrade-file';
 import type { StoredFile } from '../files/upgrade-file';
-import { collection, db, decodeCursor, encodeCursor } from './firestore';
+import { db, decodeCursor, encodeCursor } from '../../../hub-core/db/firestore';
+import { sanctuaryCollection } from './collections';
 
 type FilePage = { items: SanctuaryFile[]; nextCursor: string | null };
 type FilePatch = Partial<Omit<SanctuaryFile, 'id' | 'owner' | 'stats' | 'createdAt'>>;
 /** Reads the latest record inside a transaction and answers the patch to write; throwing aborts. */
 type FileChange = (file: SanctuaryFile) => FilePatch;
 
-const files = () => collection('files');
+const files = () => sanctuaryCollection('files');
 
 const create = async (file: SanctuaryFile): Promise<void> => {
   await files().doc(file.id).set(file);

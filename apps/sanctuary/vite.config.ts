@@ -1,8 +1,9 @@
 /* @layer root-config @kind config */
 /**
  * The Sanctuary site: a plain Vite + React build of apps/sanctuary, served by Firebase
- * Hosting. Same aliases as the app so it reuses the design system. In dev, /api is
- * proxied to the functions-framework so the cookie session stays same-origin.
+ * Hosting. Same aliases as the app so it reuses the design system, plus the site kit it
+ * stands on. In dev, /api is proxied to the functions-framework so the cookie session
+ * stays same-origin.
  */
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
@@ -25,6 +26,7 @@ export default defineConfig({
       '@app': WEB_SRC,
       '@ds': resolve(WEB_SRC, 'ui/design-system'),
       '@domains': resolve(WEB_SRC, 'ui/domains'),
+      '@site-kit': resolve(SITE_ROOT, '../site-kit'),
     },
   },
   server: {

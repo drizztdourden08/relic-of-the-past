@@ -30,11 +30,10 @@ import { Box, Canvas, Text } from '@ds/primitives';
 import { widthOf } from '@shared/game/language';
 import { isMergedSecond, mergedSecondOf } from '../editor/merged-glyph';
 import { pictureGlyphIndex } from './glyph-index';
-import { CELL_W } from './glyph-cell-geometry';
-import { useGlyphCanvas } from './behavior/useGlyphCanvas';
+import { CELL_W, useGlyphCanvas } from '@domains/packs/language/compounds/glyph';
 import type { CSSProperties } from 'react';
 import type { GlyphMetrics, GlyphSheet } from '@shared/game/language';
-import './GlyphChar.css';
+import '@domains/packs/language/compounds/glyph/GlyphChar.css';
 
 type GlyphCharProps = {
   /** The bracket name as parsed out of the line, without its brackets. */

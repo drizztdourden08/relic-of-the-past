@@ -1,0 +1,39 @@
+/* @layer site-kit @kind style */
+
+/* The Portal layer is click-through; the tray opts back in. */
+.upload-tray {
+  position: absolute;
+  right: var(--space-lg);
+  bottom: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  width: min(var(--upload-tray-w), calc(100vw - 2 * var(--space-lg)));
+  padding: var(--space-sm) var(--space-md) var(--space-md);
+  border: var(--border-width-thin) solid var(--c-border-strong);
+  border-radius: var(--r-lg);
+  background: var(--c-surface);
+  box-shadow: var(--shadow-2);
+  pointer-events: auto;
+}
+
+.upload-tray[data-collapsed='yes'] {
+  padding-bottom: var(--space-sm);
+}
+
+.upload-tray__title {
+  color: var(--c-gold);
+}
+
+.upload-tray__count {
+  flex: 1 1 auto;
+  color: var(--c-text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.upload-tray__list {
+  max-height: var(--upload-tray-maxh);
+  overflow-y: auto;
+}

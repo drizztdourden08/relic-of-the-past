@@ -74,7 +74,7 @@ const SaveSlot = (props: SaveSlotProps) => {
             {/* Relative src: the renderer is served from file:// in the packaged app,
                 where a leading slash resolves to the filesystem root. Same form the
                 title bar and the About view use for these logos. */}
-            <Image src="./logos/logo-bot-trimmed.png" alt="" className="save-slot__empty-mascot" />
+            <Image src="./logos/sentri/sentri-trimmed.png" alt="" className="save-slot__empty-mascot" />
           </Box>
         )}
         {/* Hold-to-save fill overlay */}

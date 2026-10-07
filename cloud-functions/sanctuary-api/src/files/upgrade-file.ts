@@ -3,7 +3,7 @@
  *  at the object it already has. The first write that touches `versions`
  *  stores the upgraded shape, so no record ever needs a migration pass. */
 import type { SanctuaryFile } from '../../../../shared/sanctuary';
-import { fileKey } from '../storage/b2';
+import { fileKey } from '../storage/keys';
 
 type StoredFile = Omit<SanctuaryFile, 'versions' | 'currentVersion'> &
   Partial<Pick<SanctuaryFile, 'versions' | 'currentVersion'>>;

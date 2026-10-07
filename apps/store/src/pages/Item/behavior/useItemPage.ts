@@ -1,0 +1,70 @@
+/* @layer store-site @kind hook */
+/**
+ * All of the item page's state: the item as this player may see it, the header tab, the
+ * live pack for the Contents tab, the approved versions, the player's rating, a reviewer's
+ * unlist and relist, and a curator's feature and unfeature.
+ */
+import { useCallback, useMemo, useState } from 'react';
+import type { StoreItem } from '@shared/store/types';
+import { hasRight } from '@shared/hub/rights';
+import { useSessionContext } from '@site-kit/session/session-context';
+import { useItem } from '../../../catalog/useItem';
+import { approvedVersions, liveVersionOf } from '../../../catalog/approved-versions';
+import { useListingToggle } from '../../../catalog/useListingToggle';
+import { FEATURE_PERMISSION, REVIEW_PERMISSION } from '../../../site/site-sections';
+import { plural } from '../../../lib/format-count';
+import { useLivePack } from './useLivePack';
+import { useRating } from './useRating';
+
+type ItemTab = 'overview' | 'contents' | 'versions' | 'ratings';
+
+const useItemPage = (id: string) => {
+  const { me, rights } = useSessionContext();
+  const { data, loading, error, merge } = useItem(id);
+  const [tab, setTab] = useState<ItemTab>('overview');
+  const [contentsOpened, setContentsOpened] = useState(false);
+  const versions = useMemo(() => (data ? approvedVersions(data.item) : []), [data]);
+  const rating = useRating({ data, meId: me?.id ?? '', merge });
+  const livePack = useLivePack(data?.item ?? null, contentsOpened);
+
+  const onItem = useCallback((item: StoreItem) => merge({ item }), [merge]);
+  const listing = useListingToggle(onItem);
+
+  const facts = data ? liveVersionOf(data.item)?.facts : null;
+  const tabs = useMemo(() => ({
+    items: [
+      { id: 'overview', label: 'Overview' },
+      { id: 'contents', label: 'Contents', badge: facts?.kind === 'music' ? facts.trackCount : undefined },
+      { id: 'versions', label: 'Versions', badge: versions.length },
+      { id: 'ratings', label: 'Ratings', badge: data?.item.stats.ratingCount ?? 0 },
+    ],
+    activeId: tab,
+    onSelect: (next: string) => {
+      setTab(next as ItemTab);
+      if (next === 'contents') setContentsOpened(true);
+    },
+  }), [tab, facts, versions.length, data]);
+
+  const installedNote = data?.installed ? 'You installed it, so you can change your stars any time.' : undefined;
+  const ratingsLine = data ? plural(data.item.stats.ratingCount, 'rating', 'ratings') : '';
+
+  return {
+    data,
+    loading,
+    error,
+    tab,
+    tabs,
+    versions,
+    livePack,
+    rating,
+    installedNote,
+    ratingsLine,
+    canModerate: hasRight(rights, REVIEW_PERMISSION),
+    canFeature: hasRight(rights, FEATURE_PERMISSION),
+    listing,
+    onItem,
+  };
+};
+
+export { useItemPage };
+export type { ItemTab };
