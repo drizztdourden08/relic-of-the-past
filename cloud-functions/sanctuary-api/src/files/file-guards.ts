@@ -2,10 +2,10 @@
 /** The checks every file route repeats: the record exists, is not deleted and
  *  is of a type the caller can see, and the caller owns it or is an admin. An
  *  unseen type answers as missing, so a shelf never shows through an error. */
+import { canSeeType } from '../../../../shared/sanctuary';
 import type { FileType, SanctuaryFile } from '../../../../shared/sanctuary';
-import { forbidden, notFound } from '../http/http-error';
-import type { Member } from '../auth/require-access';
-import { canSeeType } from '../access/can-see';
+import { forbidden, notFound } from '../../../hub-core/http/http-error';
+import type { Member } from '../../../hub-core/auth/require-member';
 import { filesRepo } from '../db/files-repo';
 
 const loadFile = async (id: string): Promise<SanctuaryFile> => {
@@ -25,8 +25,8 @@ const assertVisibleType = (type: FileType, { rights }: Member): void => {
   if (!canSeeType(rights, type)) throw notFound('Pick a file type you can see.');
 };
 
-const isOwnerOrAdmin = (file: SanctuaryFile, { caller, user }: Member): boolean =>
-  file.owner.userId === caller.userId || user.access.state === 'admin';
+const isOwnerOrAdmin = (file: SanctuaryFile, { caller, access }: Member): boolean =>
+  file.owner.userId === caller.userId || access.state === 'admin';
 
 const assertOwnerOrAdmin = (file: SanctuaryFile, member: Member): void => {
   if (!isOwnerOrAdmin(file, member)) throw forbidden('Only the owner or an admin can do that.');

@@ -3,14 +3,15 @@
  *  first, in pages of 200; `type` narrows to one type and is optional (the rail
  *  counts need every type at once). A type the caller cannot see lists empty.
  *  Search, clauses, sort and grouping run in the browser. */
-import { FILE_TYPES, SANCTUARY_ROUTES, fileTypeSchema } from '../../../../shared/sanctuary';
-import type { FileType, Rights } from '../../../../shared/sanctuary';
-import { badRequest } from '../http/http-error';
-import { queryParam } from '../http/query';
-import { requireAccess } from '../auth/require-access';
-import { canSeeType } from '../access/can-see';
+import { FILE_TYPES, SANCTUARY_ROUTES, canSeeType, fileTypeSchema } from '../../../../shared/sanctuary';
+import type { FileType } from '../../../../shared/sanctuary';
+import type { Rights } from '../../../../shared/hub';
+import { badRequest } from '../../../hub-core/http/http-error';
+import { queryParam } from '../../../hub-core/http/query';
+import { requireMember } from '../../../hub-core/auth/require-member';
 import { filesRepo } from '../db/files-repo';
-import type { Route } from '../route.type';
+import type { Route } from '../../../hub-core/route.type';
+import { SANCTUARY_SITE } from '../site';
 
 const PAGE_SIZE = 200;
 
@@ -24,7 +25,7 @@ const typesToList = (requested: FileType | null, rights: Rights): FileType[] | n
 const filesList: Route = {
   ...SANCTUARY_ROUTES.filesList,
   handler: async ({ req, res }) => {
-    const { rights } = await requireAccess(req);
+    const { rights } = await requireMember(req, SANCTUARY_SITE);
     const rawType = queryParam(req, 'type');
     const type = rawType === undefined ? null : fileTypeSchema.safeParse(rawType);
     if (type && !type.success) throw badRequest('Pick a file type.');

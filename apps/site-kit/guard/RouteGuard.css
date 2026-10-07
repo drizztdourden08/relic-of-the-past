@@ -1,0 +1,4 @@
+/* @layer site-kit @kind style */
+.guard__loading {
+  padding: var(--space-2xl);
+}

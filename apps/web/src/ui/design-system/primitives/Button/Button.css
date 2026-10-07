@@ -147,7 +147,8 @@
   justify-content: center;
 }
 
-.btn:disabled .btn__icon {
+/* Busy, not merely disabled: the icon turns while the work runs. */
+.btn--busy .btn__icon {
   animation: btn-spin 1s linear infinite;
 }
 

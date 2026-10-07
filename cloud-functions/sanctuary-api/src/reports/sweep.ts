@@ -4,9 +4,10 @@
  *  closed state written here is what the site shows. */
 import type { Report } from '../../../../shared/sanctuary';
 import { reportsRepo } from '../db/reports-repo';
-import { now } from '../db/firestore';
+import { now } from '../../../hub-core/db/firestore';
 import { github } from '../github/issues';
-import { b2, reportKey } from '../storage/b2';
+import { filesBucket } from '../storage/files-bucket';
+import { reportKey } from '../storage/keys';
 import { expiryOf, isExpired } from './expiry';
 
 type SweepResult = { checked: number; closed: number; deleted: number };
@@ -23,7 +24,7 @@ const refreshIssue = async (report: Report): Promise<Report> => {
 };
 
 const removeReport = async (report: Report): Promise<void> => {
-  if (report.zip) await b2.remove(reportKey(report.id));
+  if (report.zip) await filesBucket.remove(reportKey(report.id));
   await reportsRepo.remove(report.id);
 };
 

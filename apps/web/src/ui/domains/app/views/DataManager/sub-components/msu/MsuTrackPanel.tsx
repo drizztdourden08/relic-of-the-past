@@ -34,6 +34,8 @@ interface MsuTrackPanelProps {
   reportStore: PreviewReportStore;
   openTrack: number | null;
   busy: boolean;
+  /** An installed pack: slots play and export, nothing changes. */
+  readOnly: boolean;
   exporting: ExportFormat | null;
   statusMessage: string | null;
   statusOk: boolean;
@@ -53,7 +55,7 @@ interface MsuTrackPanelProps {
 const MsuTrackPanel = (props: MsuTrackPanelProps) => {
   const {
     selected, files, manifest, saveBase, format, totalSize, isDeluxe, hasOpuz, rows, unusedFiles, fileOptions,
-    playing, reportStore, openTrack, busy, exporting, statusMessage, statusOk,
+    playing, reportStore, openTrack, busy, readOnly, exporting, statusMessage, statusOk,
     onTrackAssign, onTrackUpload, onToggleLayers, onPreview, onStopPreview, onRename, onExport,
     onDeleteFile, onConfirm, onReload,
   } = props;
@@ -86,11 +88,12 @@ const MsuTrackPanel = (props: MsuTrackPanelProps) => {
       reportStore={reportStore}
       onConfirm={onConfirm}
       onSaved={onReload}
+      readOnly={readOnly}
     />
-  ), [selected, manifest, saveBase, files, format, reportStore, onConfirm, onReload]);
+  ), [selected, manifest, saveBase, files, format, reportStore, onConfirm, onReload, readOnly]);
 
   const sectionProps = {
-    files, fileOptions, playing, reportStore, openTrack, busy,
+    files, fileOptions, playing, reportStore, openTrack, busy, readOnly,
     playingOriginal: original.playing,
     onAssign: onTrackAssign, onPreview: previewTrack, onStopPreview, onPlayOriginal: playOriginal,
     onToggleLayers, renderDetail,
@@ -107,6 +110,7 @@ const MsuTrackPanel = (props: MsuTrackPanelProps) => {
         isDeluxe={isDeluxe}
         hasOpuz={hasOpuz}
         busy={busy}
+        readOnly={readOnly}
         exporting={exporting}
         onRename={onRename}
         onExport={onExport}
@@ -141,7 +145,7 @@ const MsuTrackPanel = (props: MsuTrackPanelProps) => {
                 <Text className="track-list__name">{file.name}</Text>
                 <Text className="track-list__size">{formatBytes(file.size)}</Text>
                 <IconButton
-                  variant="ghost" size="sm" label={`Delete ${file.name}`} disabled={busy}
+                  variant="ghost" size="sm" label={`Delete ${file.name}`} disabled={busy || readOnly}
                   onClick={() => onDeleteFile(file.name)}
                 >
                   ✕

@@ -1,5 +1,4 @@
 /* @layer electron-main @kind logic */
-import { VelopackApp } from 'velopack';
 import { app, BrowserWindow, Menu, session, protocol, ipcMain } from 'electron';
 import { is } from '@electron-toolkit/utils';
 
@@ -16,8 +15,7 @@ import { applyUserDataArg } from './app/user-data-arg';
 import { registerInstallSize } from './app/install-size-type';
 import { applyInstanceIdentity, parseInstanceConfig } from './instance';
 import { createWindow, getMainWindow, registerWindowHandlers, registerAspectRatioHandlers, setSplashStatus } from './window';
-import { saveWindowState } from './window/window-state';
-import { isEphemeralLaunch } from './window/startup-config';
+import { isEphemeralLaunch, saveWindowState } from './window';
 import { registerDisplayHandlers } from './display/ipc-handlers';
 import { onFullscreenChange, restoreOnShutdown } from './display/mode-switch';
 import { registerDialogHandlers } from './dialogs/ipc-handlers';
@@ -54,22 +52,30 @@ import { registerWasmHandlers } from './wasm/ipc-handlers';
 import { registerStorageHandlers } from './storage/ipc-handlers';
 import { registerFileHandlers } from './storage/file-handlers';
 import { initAutoUpdater, registerUpdaterHandlers } from './updater';
+import { loadVelopack } from './updater/velopack-loader';
 import { registerSanctuaryHandlers } from './sanctuary/ipc-handlers';
+import { registerHubHandlers } from './hub/ipc-handlers';
 import { registerDebugReportHandlers } from './diagnostics/debug-report/ipc-handlers';
 import { registerFfmpegHandlers } from './tools/ipc-handlers';
+import { registerWidgetHandlers } from './widgets/ipc-handlers';
+import { closeAllPopOuts } from './widgets/popout-windows';
 import { emit } from './lib/ipc/handle';
 import { installDevFileLogging } from './lib/dev-file-logger';
 import { installCrashForensics } from './diagnostics/crash-forensics';
-import { registerMsulAssociation, unregisterMsulAssociation } from './msu/msul-association';
+import { registerDocumentAssociations, unregisterDocumentAssociations } from './documents/document-associations';
+import { registerStoreHandlers } from './store/ipc-handlers';
+import { bootStoreLinks, listenForOpenUrl, quitIfHandedOff } from './store/boot';
 
 // Velopack first: its install/update/uninstall hooks may restart the process, so
-// nothing of ours may happen before it. The `.msul` document type rides on those
-// hooks (registered after install and every update, removed before uninstall).
-// Windows only; the other platforms get it from the package.
-VelopackApp.build()
-  .onAfterInstallFastCallback(registerMsulAssociation)
-  .onAfterUpdateFastCallback(registerMsulAssociation)
-  .onBeforeUninstallFastCallback(unregisterMsulAssociation)
+// nothing of ours may happen before it. The document types (.msul, .rsp, .rlang) ride on
+// those hooks (registered after install and every update, removed before uninstall).
+// Windows only; the other platforms get them from the package.
+// Loaded lazily: on a distro too old for Velopack's Linux module the app still starts,
+// just without self-update (see velopack-loader).
+loadVelopack()?.VelopackApp.build()
+  .onAfterInstallFastCallback(registerDocumentAssociations)
+  .onAfterUpdateFastCallback(registerDocumentAssociations)
+  .onBeforeUninstallFastCallback(unregisterDocumentAssociations)
   .run();
 
 // Portable `data` folder first (every other location derives from userData), then
@@ -81,6 +87,7 @@ const userDataOverride = applyUserDataArg();
 // stays inline below after createWindow().
 const IPC_HANDLERS: Array<{ register: () => void; devOnly?: boolean }> = [
   { register: registerWindowHandlers },
+  { register: registerWidgetHandlers },
   { register: registerAspectRatioHandlers },
   { register: registerDisplayHandlers },
   { register: registerDialogHandlers },
@@ -114,9 +121,11 @@ const IPC_HANDLERS: Array<{ register: () => void; devOnly?: boolean }> = [
   { register: registerWasmHandlers },
   { register: registerStorageHandlers },
   { register: registerFileHandlers },
+  { register: registerHubHandlers },
   { register: registerSanctuaryHandlers },
   { register: registerDebugReportHandlers },
   { register: registerFfmpegHandlers },
+  { register: registerStoreHandlers },
 ];
 
 // Same userData path in dev and production.
@@ -140,7 +149,13 @@ protocol.registerSchemesAsPrivileged([
 // Multiple --disable-features values must share ONE switch, comma-separated.
 app.commandLine.appendSwitch('disable-features', 'CalculateNativeWinOcclusion');
 
+// macOS can deliver a store install link before the app is ready.
+listenForOpenUrl();
+
 app.whenReady().then(async () => {
+  // Started by an install link while the player's app runs: that app takes the link, this one quits.
+  if (await quitIfHandedOff()) return;
+
   // Register protocol handlers
   registerSpriteProtocol();
   registerDebugCaptureProtocol();
@@ -171,6 +186,8 @@ app.whenReady().then(async () => {
   createWindow();
 
   const mainWindow = getMainWindow()!;
+  // A widget's own window has no game of its own: it goes when the main window goes.
+  mainWindow.on('closed', closeAllPopOuts);
 
   // Dev-only: mirror console output to disk so a hard crash leaves a trace.
   if (is.dev) {
@@ -199,6 +216,8 @@ app.whenReady().then(async () => {
 
   // A .msul pack the app was launched with (file association) reaches the renderer's importer.
   registerMsulOpenHandler(mainWindow);
+  // Store install links: from argv, macOS, or handed over by a process the browser started.
+  bootStoreLinks(mainWindow);
 
   // Set up application menu for clipboard shortcuts only (debug items moved to in-app Advanced menu)
   Menu.setApplicationMenu(Menu.buildFromTemplate([

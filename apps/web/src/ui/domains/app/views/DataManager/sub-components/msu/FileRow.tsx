@@ -25,10 +25,10 @@ import { Text } from '@ds/primitives/Text';
 import { TextInput } from '@ds/primitives/TextInput';
 import type { MsuFileMetadata } from '@shared/storage/msu';
 import { formatBytes } from '@app/utils/formatBytes';
-import { FilePlayer } from './FilePlayer';
-import { clock } from './behavior/clock';
+import { FilePlayer } from '@domains/packs/music/compounds/FilePlayer';
+import { clock } from '@domains/packs/music/behavior/clock';
+import type { Audition } from '@domains/packs/music/behavior/file-audition';
 import { listSummary } from './sound-labels';
-import type { Audition } from './behavior/file-audition';
 
 interface FileRowProps {
   file: MsuFileMetadata;
@@ -42,6 +42,8 @@ interface FileRowProps {
   /** The handle on the sounding file, for the player this row opens. Null unless it is playing. */
   audition: Audition | null;
   busy: boolean;
+  /** An installed pack: the file plays, and it cannot be renamed or deleted. */
+  readOnly: boolean;
   onPlay: (fileName: string) => void;
   onRename: (from: string, to: string) => void;
   onDelete: (fileName: string) => void;
@@ -60,7 +62,7 @@ const rateSpec = (file: MsuFileMetadata): string => {
 };
 
 const FileRow = (props: FileRowProps) => {
-  const { file, usedBy, loopSeconds, playing, loading, audition, busy, onPlay, onRename, onDelete } = props;
+  const { file, usedBy, loopSeconds, playing, loading, audition, busy, readOnly, onPlay, onRename, onDelete } = props;
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(file.name);
   // Escape has to be known to the blur that follows it, and it lands in the same tick, so it
@@ -102,8 +104,8 @@ const FileRow = (props: FileRowProps) => {
         ) : (
           <Text
             className="msu-file-row__name"
-            title={`${file.name} (click to rename)`}
-            onClick={() => setEditing(true)}
+            title={readOnly ? file.name : `${file.name} (click to rename)`}
+            onClick={readOnly ? undefined : () => setEditing(true)}
           >
             {file.name}
           </Text>
@@ -145,7 +147,7 @@ const FileRow = (props: FileRowProps) => {
             {playing ? '■' : '▶'}
           </IconButton>
           <IconButton
-            variant="ghost" size="sm" label={`Delete ${file.name}`} disabled={busy}
+            variant="ghost" size="sm" label={`Delete ${file.name}`} disabled={busy || readOnly}
             onClick={() => onDelete(file.name)}
           >
             ✕

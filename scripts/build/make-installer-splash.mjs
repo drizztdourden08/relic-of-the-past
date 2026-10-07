@@ -58,7 +58,7 @@ const ringSvg = (angle) => `
   </g>
 </svg>`;
 
-const logo = await sharp(join(ROOT, 'apps/web/public/logos/logo-256.png'))
+const logo = await sharp(join(ROOT, 'apps/web/public/logos/logo/logo-256.png'))
   .resize(LOGO, LOGO, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
   .png()
   .toBuffer();

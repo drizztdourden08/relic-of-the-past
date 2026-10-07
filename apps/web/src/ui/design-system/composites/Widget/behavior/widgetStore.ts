@@ -6,11 +6,12 @@
  *  1. localStorage ("widget-layout"): current in-memory layout for fast restore on reload.
  *  2. Per-profile persistence: round-tripped through an injected WidgetPersistenceIO
  *     (provided by the View tier) so this bare composite never imports IPC directly.
+ *
+ * Both read through migrateLayout, so a layout saved by an older build loads too.
  */
 
-import type { WidgetLayout, WidgetState } from '../Widget.type';
-import { WIDGET_DEFINITIONS } from '../Widget.constants';
-import { createDefaultLayout, createDefaultWidgetState, getWidgetDefinition } from './createWidgetState';
+import type { WidgetLayout } from '@shared/types/widget-layout';
+import { migrateLayout } from './migrate-layout';
 
 /** Persistence round-trip injected by the View tier (keeps IPC out of the composite). */
 interface WidgetPersistenceIO {
@@ -20,92 +21,37 @@ interface WidgetPersistenceIO {
 
 const STORAGE_KEY = 'widget-layout';
 
-// ─── Local (session) persistence ───
-
 const loadLayoutLocal = (): WidgetLayout => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const parsed: WidgetLayout = JSON.parse(raw);
-      // Make sure all known widgets exist (handles new widgets added in updates)
-      return ensureAllWidgets(parsed);
-    }
+    if (raw) return migrateLayout(JSON.parse(raw));
   } catch { /* corrupt, use defaults */ }
-  return createDefaultLayout();
-}
+  return migrateLayout(null);
+};
 
 const saveLayoutLocal = (layout: WidgetLayout): void => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(layout));
-}
-
-// ─── Profile persistence (via injected IO) ───
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(layout));
+  } catch { /* storage unavailable */ }
+};
 
 const loadLayoutForProfile = async (profileId: string, io: WidgetPersistenceIO): Promise<WidgetLayout> => {
   try {
     const state = await io.load(profileId);
-    const layout = state?.widgetLayout as WidgetLayout | undefined;
-    if (layout) return ensureAllWidgets(layout);
+    if (state?.widgetLayout) return migrateLayout(state.widgetLayout);
   } catch { /* fall through */ }
-  return loadLayoutLocal(); // Fallback to local layout
-}
+  return loadLayoutLocal();
+};
 
 const saveLayoutForProfile = async (profileId: string, layout: WidgetLayout, io: WidgetPersistenceIO): Promise<void> => {
-  // Load existing tracker state and merge widget layout into it
   let existing: Record<string, unknown> = {};
   try {
     const raw = await io.load(profileId);
     if (raw) existing = raw;
   } catch { /* new state */ }
-
   existing.widgetLayout = layout;
   await io.save(profileId, existing);
-}
-
-// ─── Helpers ───
-
-/**
- * Adds entries for any defined widget the layout is missing (forward-compat), and
- * takes `visibility` back from the definition.
- *
- * Nothing in the UI can change a widget's visibility, so a stored value that
- * disagrees with its definition is corruption, not a choice. The `--widgets=`
- * startup flag used to write 'always' into the saved layout, which turned a
- * game-only widget into one that never left the screen, permanently, in a profile
- * the flag was only meant to pass through. Reading it from the definition here
- * repairs any layout already carrying that.
- */
-const ensureAllWidgets = (layout: WidgetLayout): WidgetLayout => {
-  const existing = new Set(layout.widgets.map((w) => w.id));
-  const missing = WIDGET_DEFINITIONS.filter((d) => !existing.has(d.id));
-  return {
-    widgets: [
-      ...layout.widgets.map((w) => {
-        const def = getWidgetDefinition(w.id);
-        return def ? { ...w, visibility: def.defaultVisibility } : w;
-      }),
-      ...missing.map((def, i) => createDefaultWidgetState(def, layout.widgets.length + i)),
-    ],
-  };
-}
-
-/** Get a single widget state from the layout. */
-const getWidgetState = (layout: WidgetLayout, id: string): WidgetState | undefined => {
-  return layout.widgets.find((w) => w.id === id);
-}
-
-/** Update a single widget in the layout. */
-const updateWidget = (layout: WidgetLayout, id: string, patch: Partial<WidgetState>): WidgetLayout => {
-  return {
-    widgets: layout.widgets.map((w) => (w.id === id ? { ...w, ...patch } : w)),
-  };
-}
-
-export {
-  getWidgetState,
-  loadLayoutForProfile,
-  loadLayoutLocal,
-  saveLayoutForProfile,
-  saveLayoutLocal,
-  updateWidget
 };
+
+export { loadLayoutForProfile, loadLayoutLocal, saveLayoutForProfile, saveLayoutLocal };
 export type { WidgetPersistenceIO };

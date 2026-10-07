@@ -24,4 +24,19 @@ const assertFreeSetId = async (files: FileStore, id: string): Promise<void> => {
   if (await files.exists(setDir(id))) throw new Error(`A language set with the id "${id}" already exists.`);
 };
 
-export { assertFreeSetId, assertValidSetId };
+/** Lowercase, runs of anything else turned into one dash, never empty. */
+const slugSetId = (value: string): string =>
+  value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'imported';
+
+/** `wanted` when it is valid and free, else its slug with the first free numbered suffix. */
+const pickFreeSetId = async (files: FileStore, wanted: string): Promise<string> => {
+  const base = SET_ID_RE.test(wanted) ? wanted : slugSetId(wanted);
+  if (!(await files.exists(setDir(base)))) return base;
+  for (let n = 2; n < 1000; n += 1) {
+    const candidate = `${base}-${n}`;
+    if (!(await files.exists(setDir(candidate)))) return candidate;
+  }
+  return `${base}-${Date.now()}`;
+};
+
+export { assertFreeSetId, assertValidSetId, pickFreeSetId };

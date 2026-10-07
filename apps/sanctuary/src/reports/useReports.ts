@@ -5,7 +5,7 @@
  */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { listReports } from '../api/reports-endpoints';
-import { errorMessage } from '../api/client';
+import { errorMessage } from '@site-kit/api/api-error';
 import type { ReportView } from '../api/types';
 
 const NO_REPORTS: ReportView[] = [];

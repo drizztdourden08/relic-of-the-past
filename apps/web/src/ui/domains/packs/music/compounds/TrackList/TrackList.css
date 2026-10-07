@@ -1,0 +1,97 @@
+/* @layer renderer-components @kind style */
+.pack-tracks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  min-width: 0;
+}
+
+.pack-tracks__summary {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--c-text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.pack-tracks__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.pack-tracks__heading {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--c-text-muted);
+}
+
+/* Number, name and layer count in fixed columns; the files take the rest. */
+.pack-tracks__row {
+  display: grid;
+  grid-template-columns: 4rem minmax(8rem, 14rem) 5rem minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+}
+
+.pack-tracks__row:nth-child(odd) {
+  background: var(--c-surface);
+}
+
+.pack-tracks__num {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--c-gold);
+  font-variant-numeric: tabular-nums;
+}
+
+.pack-tracks__title {
+  font-size: var(--text-sm);
+  color: var(--c-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pack-tracks__files {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+
+.pack-tracks__file {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+}
+
+.pack-tracks__file--playing {
+  border-color: var(--c-gold);
+  box-shadow: inset 2px 0 0 var(--c-gold);
+}
+
+.pack-tracks__file-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-xs);
+  padding-left: var(--space-xs);
+}
+
+.pack-tracks__file-name {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pack-tracks__note {
+  padding: 0 var(--space-xs) var(--space-2xs);
+  color: var(--c-warning);
+}

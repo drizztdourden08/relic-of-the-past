@@ -2,8 +2,8 @@
 /** Reading and rewriting a file's version list. Versions are never renumbered;
  *  the top-level name, bytes, sha256 and content type mirror the current one. */
 import type { FileVersion, SanctuaryFile } from '../../../../shared/sanctuary';
-import { forbidden, notFound } from '../http/http-error';
-import type { Member } from '../auth/require-access';
+import { forbidden, notFound } from '../../../hub-core/http/http-error';
+import type { Member } from '../../../hub-core/auth/require-member';
 
 type VersionMirror = Pick<SanctuaryFile, 'name' | 'bytes' | 'sha256' | 'contentType'>;
 

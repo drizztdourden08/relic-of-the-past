@@ -1,0 +1,178 @@
+/* @layer renderer-components @kind style */
+
+/* The frame matches the Data Manager's: side nav, then a scrolling content column. */
+.store {
+  user-select: text;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* The gap leaves room for the nav's round toggle, which straddles its right edge. */
+.store__body {
+  display: flex;
+  gap: var(--space-xl);
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.store__content {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.store-page {
+  min-width: 0;
+  overflow-y: auto;
+  padding: 0 var(--space-sm) var(--space-lg);
+}
+
+.store__title {
+  color: var(--c-gold);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semi);
+}
+
+.store__heading {
+  color: var(--c-text);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semi);
+}
+
+.store__lead {
+  max-width: 68ch;
+  color: var(--c-text-dim);
+  white-space: pre-line;
+}
+
+.store__hint {
+  color: var(--c-text-muted);
+  font-size: var(--text-sm);
+}
+
+.store__label {
+  color: var(--c-text-muted);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.store__note {
+  color: var(--c-info);
+  font-size: var(--text-sm);
+}
+
+.store__error {
+  color: var(--c-danger);
+  font-size: var(--text-sm);
+}
+
+/* Cards fill the pane's width in as many columns as fit. */
+.store-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--store-card-w-min), 1fr));
+  gap: var(--space-md);
+}
+
+.store-home__welcome {
+  padding: var(--space-md);
+  background: var(--c-hover);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+}
+
+.store-home__highlight {
+  flex-shrink: 0;
+}
+
+/* The master-detail layout with its columns swapped: the card grid takes the width. */
+.store-browse.master-detail {
+  grid-template-columns: 1fr var(--store-detail-w);
+}
+
+.store-detail {
+  min-width: 0;
+}
+
+.store-detail__image {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+.store-detail__icon {
+  display: inline-flex;
+  color: var(--c-gold);
+  font-size: var(--text-display);
+}
+
+.store-detail__name {
+  color: var(--c-gold);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semi);
+}
+
+.store-detail__facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--space-xs) var(--space-md);
+  align-items: baseline;
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.store-install-bar {
+  padding: var(--space-sm);
+  background: var(--c-inset);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+}
+
+.store-installed-row__name {
+  color: var(--c-text);
+  font-weight: var(--weight-semi);
+}
+
+/* Signed out: one centred column, the store's art over what signing in is for and the button. */
+.store-sign-in {
+  max-width: var(--store-sign-in-w);
+  margin: 0 auto;
+  padding: var(--space-2xl) var(--space-sm);
+  text-align: center;
+}
+
+.store-sign-in .store-sign-in__title {
+  margin: 0;
+  color: var(--c-gold);
+  font-family: var(--font-game);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-normal);
+}
+
+.store-sign-in .store-sign-in__lead {
+  color: var(--c-text-dim);
+}
+
+/* A link from the site is waiting on the sign-in: said in gold, framed so it is not missed. */
+.store-sign-in__callout {
+  padding: var(--space-sm) var(--space-md);
+  border: var(--border-width-thin) solid var(--c-gold);
+  border-radius: var(--radius-md);
+  background: var(--c-gold-soft);
+  color: var(--c-text);
+}
+
+.store-sign-in__actions {
+  width: 100%;
+}
+
+.store-sign-in .store-sign-in__hint {
+  color: var(--c-text-muted);
+  font-size: var(--text-sm);
+}

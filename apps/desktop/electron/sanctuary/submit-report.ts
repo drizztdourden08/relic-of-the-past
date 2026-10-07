@@ -6,14 +6,16 @@
  * in the pending cache under the report id, so a retry sends the same bytes again without
  * rebuilding. Sessions are marked sent only once the upload went through.
  */
+import { SANCTUARY_ROUTES } from '@shared/sanctuary';
 import type { SubmitReportRequest, SubmitReportResult } from '@shared/sanctuary';
 import type { SanctuarySubmitInput, SanctuarySubmitResult, SanctuaryUploadResult } from '@shared/ipc';
 import { markSessionsSent } from '../diagnostics/debug-report/capture-manifest';
 import { getPendingReport, storePendingReport, dropPendingReport } from '../diagnostics/debug-report/pending-reports';
-import { callApi } from './client';
-import { reportPageUrl } from './endpoint';
+import { callApi } from '../hub/client';
+import { SANCTUARY_API } from '../hub/endpoints';
+import { readToken } from '../hub/token-store';
+import { reportPageUrl } from './report-page';
 import { buildReportAttachment } from './report-attachment';
-import { readToken } from './token-store';
 
 const ZIP_CONTENT_TYPE = 'application/zip';
 
@@ -34,7 +36,7 @@ const uploadPendingZip = async (reportId: string): Promise<SanctuaryUploadResult
       body: new Uint8Array(pending.zip),
     });
     if (!put.ok) return { uploaded: false, error: `upload failed (${put.status})` };
-    await callApi({ route: 'reportsComplete', params: { id: reportId }, body: {}, token: await readToken() });
+    await callApi(SANCTUARY_API, { route: SANCTUARY_ROUTES.reportsComplete, params: { id: reportId }, body: {}, token: await readToken() });
     dropPendingReport(reportId);
     uploadUrls.delete(reportId);
     await markSessionsSent(pending.profileId, pending.sessionKeys, Date.now());
@@ -59,7 +61,7 @@ const submitReport = async (input: SanctuarySubmitInput): Promise<SanctuarySubmi
   const body: SubmitReportRequest = { ...request, attachment: attachment?.zip ?? null };
   let filed: SubmitReportResult;
   try {
-    filed = await callApi<SubmitReportResult>({ route: 'reportsCreate', body, token: await readToken() });
+    filed = await callApi<SubmitReportResult>(SANCTUARY_API, { route: SANCTUARY_ROUTES.reportsCreate, body, token: await readToken() });
   } catch (err) {
     if (attachment) dropPendingReport(attachment.pendingId);
     return { error: messageOf(err, 'Could not file the report.') };

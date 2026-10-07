@@ -45,6 +45,14 @@
   color: var(--c-text-muted);
 }
 
+/* Pushed to the right and centred on the row by the row's own flex; always visible. */
+.list-item-row__badge {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  margin-left: auto;
+}
+
 .list-item-row__action {
   flex-shrink: 0;
   opacity: 0;

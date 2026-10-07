@@ -8,7 +8,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { FILE_TYPES, FILE_TYPE_LABELS } from '@shared/sanctuary/file-types';
 import type { FileType } from '@shared/sanctuary/file-types';
 import { LIMITS } from '@shared/sanctuary/limits';
-import { tagsSchema } from '@shared/sanctuary/schemas/common';
+import { tagsSchema } from '@shared/hub/schemas/common';
 import { Button } from '@ds/primitives/Button';
 import { Stack } from '@ds/primitives/Stack';
 import { Field } from '@ds/primitives/Field';
@@ -18,8 +18,8 @@ import { TextInput } from '@ds/primitives/TextInput';
 import { Textarea } from '@ds/primitives/Textarea';
 import { Text } from '@ds/primitives/Text';
 import { DialogShell } from '@ds/composites/DialogShell';
-import { formatBytes } from '../../lib/format-bytes';
-import type { UploadMeta } from '../../upload/upload-job.type';
+import { formatBytes } from '@site-kit/lib/format-bytes';
+import type { UploadMeta } from '../../upload/upload-target.type';
 import './UploadDialog.css';
 
 type UploadDialogProps = {

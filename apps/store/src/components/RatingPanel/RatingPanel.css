@@ -1,0 +1,54 @@
+/* @layer store-site @kind style */
+.rating-panel__summary {
+  flex: 0 0 auto;
+}
+
+.rating-panel__average {
+  color: var(--c-gold);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  font-variant-numeric: tabular-nums;
+}
+
+.rating-panel__mine {
+  padding-top: var(--space-sm);
+  border-top: var(--border-width-thin) solid var(--c-border);
+}
+
+/* Star count, bar, count: three columns so every bar starts and ends on the same line. */
+.rating-histogram {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--space-xs) var(--space-sm);
+  align-items: center;
+  min-width: 0;
+}
+
+.rating-histogram__row {
+  display: contents;
+}
+
+.rating-histogram__stars,
+.rating-histogram__count {
+  font-variant-numeric: tabular-nums;
+}
+
+.rating-histogram__count {
+  text-align: right;
+}
+
+.rating-histogram__track {
+  height: var(--histogram-bar-h);
+  overflow: hidden;
+  border-radius: var(--r-pill);
+  background: var(--c-sunken);
+}
+
+.rating-histogram__bar {
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: var(--c-gold);
+}

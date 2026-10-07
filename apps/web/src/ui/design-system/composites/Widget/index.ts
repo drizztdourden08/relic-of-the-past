@@ -1,14 +1,14 @@
 /* @layer renderer-components @kind barrel */
 export { Widget } from './Widget';
-export { WidgetManager } from './sub-components/WidgetManager';
-export { WidgetSettings } from './sub-components/WidgetSettings';
-export type { WidgetState, WidgetLayout, WidgetDefinition, SnapSide, WidgetMode, WidgetVisibility } from './Widget.type';
+export { WidgetOptions, OptionRow } from './sub-components/WidgetOptions';
+export type { AnchorRect, DockEdge, OptionRowProps, WidgetOptionsProps, WidgetPlacement, WidgetShow } from './sub-components/WidgetOptions';
+export type { WidgetProps, WidgetDefinition, WidgetVisibility } from './Widget.type';
 export { WIDGET_DEFINITIONS, TITLEBAR_HEIGHT } from './Widget.constants';
-export { createDefaultLayout, getDevOnlyWidgetIds, getWidgetDefinition, createDefaultWidgetState } from './behavior/createWidgetState';
-export { computeDockedStyles } from './behavior/computeDockedStyles';
-export type { ExclusiveInsets } from './behavior/computeDockedStyles';
-export { loadLayoutLocal, saveLayoutLocal, loadLayoutForProfile, saveLayoutForProfile, updateWidget, getWidgetState } from './behavior/widgetStore';
-export { useWidgetLayout } from './behavior/useWidgetLayout';
-export { useWidgetDrag } from './behavior/useWidgetDrag';
-export { useWidgetResize, getDockedResizeEdge } from './behavior/useWidgetResize';
+export { createDefaultLayout, getDevOnlyWidgetIds, getWidgetDefinition } from './behavior/createWidgetState';
+export { migrateLayout } from './behavior/migrate-layout';
+export type { WidgetLayoutV1, WidgetStateV1 } from './behavior/migrate-layout';
+export { loadLayoutLocal, saveLayoutLocal, loadLayoutForProfile, saveLayoutForProfile } from './behavior/widgetStore';
+export type { WidgetPersistenceIO } from './behavior/widgetStore';
+export { resolveWidgetDisabledState } from './behavior/resolveWidgetDisabledState';
+export type { WidgetDisabledState } from './behavior/resolveWidgetDisabledState';
 import './Widget.css';

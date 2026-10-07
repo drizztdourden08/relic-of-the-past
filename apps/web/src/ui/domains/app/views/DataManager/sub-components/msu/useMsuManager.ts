@@ -130,4 +130,7 @@ const useMsuManager = (onRefresh: () => void) => {
   };
 };
 
+type MsuManagerModel = ReturnType<typeof useMsuManager>;
+
 export { useMsuManager };
+export type { MsuManagerModel };

@@ -10,7 +10,7 @@ interface TrackDetailProps extends LayerEditorProps {
 
 const TrackDetail = (props: TrackDetailProps) => {
   const {
-    pack, target, manifest, saveBase, availableFiles, isLayered, reportStore, onConfirm, onSaved,
+    pack, target, manifest, saveBase, availableFiles, isLayered, reportStore, onConfirm, onSaved, readOnly,
   } = props;
 
   return (
@@ -26,6 +26,7 @@ const TrackDetail = (props: TrackDetailProps) => {
         reportStore={reportStore}
         onConfirm={onConfirm}
         onSaved={onSaved}
+        readOnly={readOnly}
       />
     </Box>
   );

@@ -37,7 +37,7 @@ const About = () => {
   return (
     <Box className="about">
       <Box className="about__header">
-        <Image className="about__logo" src="./logos/logo-256.png" alt="Relic of the Past" />
+        <Image className="about__logo" src="./logos/logo/logo-256.png" alt="Relic of the Past" />
         <Text as="h2" className="about__title">Relic of the Past</Text>
       </Box>
 

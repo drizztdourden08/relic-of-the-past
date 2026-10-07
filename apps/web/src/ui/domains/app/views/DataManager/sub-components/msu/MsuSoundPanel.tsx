@@ -29,12 +29,14 @@ interface MsuSoundPanelProps {
   saveBase: MsuPackManifest;
   files: MsuFile[];
   isLayered: boolean;
+  /** An installed pack: sounds play, nothing changes. */
+  readOnly: boolean;
   onDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
   onReload: () => void;
 }
 
 const MsuSoundPanel = (props: MsuSoundPanelProps) => {
-  const { pack, channel, manifest, saveBase, files, isLayered, onDeleteConfirm, onReload } = props;
+  const { pack, channel, manifest, saveBase, files, isLayered, readOnly, onDeleteConfirm, onReload } = props;
   const [filter, setFilter] = useState('');
   // Off by default: the ids it reveals are ones nothing in the game can raise.
   const [showUnreachable, setShowUnreachable] = useState(false);
@@ -111,6 +113,7 @@ const MsuSoundPanel = (props: MsuSoundPanelProps) => {
               saveBase={saveBase}
               availableFiles={availableFiles}
               isLayered={isLayered}
+              readOnly={readOnly}
               onPreview={sound.play}
               onPlayOriginal={(_channel, soundId) => sound.playOriginal(soundId)}
               onToggleLayers={(_channel, soundId) => sound.toggleLayers(soundId)}

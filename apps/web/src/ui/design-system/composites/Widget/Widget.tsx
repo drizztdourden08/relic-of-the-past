@@ -1,156 +1,116 @@
 /* @layer renderer-components @kind component */
 /**
- * Generic container shell: titlebar with settings, a frame that takes the
- * opacity setting, and fully opaque content. Handles docking, floating, drag,
- * resize and hover-to-reveal-frame.
+ * The frame every widget wears: a title bar that the dock drags it by, tab
+ * chips when its pane holds several, the pop-out, options and close buttons,
+ * and a scrolling body. It fills whatever box the dock or the window gives
+ * it; where it sits and how big it is are not its business.
  */
-import { useState, useCallback, useRef, useMemo } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import type { CSSProperties } from 'react';
 import { Box } from '../../primitives/Box';
 import { Button } from '../../primitives/Button';
 import { Text } from '../../primitives/Text';
-import type { WidgetState } from './Widget.type';
-import { getWidgetDefinition } from './behavior/createWidgetState';
-import { useWidgetDrag } from './behavior/useWidgetDrag';
-import { useWidgetResize, getDockedResizeEdge } from './behavior/useWidgetResize';
-import { WidgetSettings } from './sub-components/WidgetSettings';
+import { PinButton } from './sub-components/PinButton';
+import type { WidgetProps, WidgetTab } from './Widget.type';
+import './Widget.css';
 
-interface WidgetProps {
-  state: WidgetState;
-  onChange: (patch: Partial<WidgetState>) => void;
-  onClose: () => void;
-  children: React.ReactNode;
-  /** Widget-specific settings content rendered inside the settings popover */
-  settingsContent?: React.ReactNode;
-  /** Computed position/size for docked widgets (set by WidgetManager) */
-  dockedStyle?: React.CSSProperties;
+interface TabChipProps {
+  tab: WidgetTab;
+  active: boolean;
+  onActivate: (id: string) => void;
 }
 
+const TITLEBAR_HINT = 'Drag to move. Hold Alt to peek at the game. While dragging: Shift swaps, Ctrl overlays, Esc cancels, past the window edge pops out.';
+const OUT_HINT = 'Drag to move the window. Drop it over the app to put it back. Near an edge of the app or another widget, it snaps.';
+
+const TabChip = (props: TabChipProps) => {
+  const { tab, active, onActivate } = props;
+  const handleClick = useCallback(() => onActivate(tab.id), [onActivate, tab.id]);
+  return (
+    <Button
+      variant="bare"
+      className={`widget__tab${active ? ' widget__tab--active' : ''}`}
+      data-drag-tab={tab.id}
+      aria-pressed={active}
+      onClick={handleClick}
+    >
+      {tab.label}
+    </Button>
+  );
+};
+
 const Widget = (props: WidgetProps) => {
-  const { state, onChange, onClose, children, settingsContent, dockedStyle } = props;
+  const {
+    id, tabs, activeId, paneKey, opacity, peek = false, optionsOpen = false,
+    onActivateTab, onOpenOptions, onPopOut, canPopOut = true, mode = 'in', pin = 'off', onTop = false, onPinChange,
+    onClose, children,
+  } = props;
+  const out = mode === 'out';
   const [hovered, setHovered] = useState(false);
-  const [settingsOpen, setSettingsOpen] = useState(false);
   const gearRef = useRef<HTMLButtonElement>(null);
 
-  const def = getWidgetDefinition(state.id);
-  const label = def?.label ?? state.id;
-
-  const frameOpacity = hovered ? 1 : state.opacity;
-
-  // Drag (floating only)
-  const handleDragMove = useCallback(
-    (x: number, y: number) => onChange({ x, y }),
-    [onChange],
-  );
-  const dragMouseDown = useWidgetDrag({ x: state.x, y: state.y }, handleDragMove);
-
-  // Resize (floating: all edges; docked: thickness edge only)
-  const handleResize = useCallback(
-    (width: number, height: number, x: number, y: number) => {
-      if (state.mode === 'floating') {
-        onChange({ width, height, x, y });
-      } else {
-        // Docked: only update dockedSize (the thickness dimension)
-        const side = state.side;
-        const newSize = (side === 'left' || side === 'right') ? width : height;
-        onChange({ dockedSize: newSize });
-      }
-    },
-    [onChange, state.mode, state.side],
-  );
-  const { onEdgeMouseDown } = useWidgetResize(
-    { width: state.width, height: state.height },
-    { x: state.x, y: state.y },
-    handleResize,
+  const frameOpacity = hovered ? 1 : opacity;
+  const style = useMemo(
+    () => ({ '--widget-frame-opacity': frameOpacity }) as CSSProperties,
+    [frameOpacity],
   );
 
-  const cls = [
-    'widget',
-    `widget--${state.mode}`,
-    state.mode === 'docked' && `widget--${state.side}`,
-  ].filter(Boolean).join(' ');
+  const handleEnter = useCallback(() => setHovered(true), []);
+  const handleLeave = useCallback(() => setHovered(false), []);
+  const handleOptions = useCallback(() => {
+    const box = gearRef.current?.getBoundingClientRect();
+    if (box) onOpenOptions({ x: box.left, y: box.top, width: box.width, height: box.height });
+  }, [onOpenOptions]);
 
-  const style: React.CSSProperties = useMemo(() => {
-    const s: React.CSSProperties = {
-      '--widget-frame-opacity': frameOpacity,
-    } as React.CSSProperties;
-
-    if (state.mode === 'floating') {
-      s.left = state.x;
-      s.top = state.y;
-      s.width = state.width;
-      s.height = state.height;
-    } else if (dockedStyle) {
-      Object.assign(s, dockedStyle);
-    }
-
-    return s;
-  }, [state.mode, state.x, state.y, state.width, state.height, frameOpacity, dockedStyle]);
+  const label = tabs.find((tab) => tab.id === activeId)?.label ?? tabs[0]?.label ?? id;
+  const cls = ['widget', peek && 'widget--peek', paneKey === null && 'widget--floating'].filter(Boolean).join(' ');
 
   return (
     <Box
       className={cls}
       style={style}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      data-widget-id={id}
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
     >
-      {/* Titlebar */}
       <Box
         className="widget__titlebar"
-        onMouseDown={state.mode === 'floating' ? dragMouseDown : undefined}
+        data-drag-widget={activeId}
+        data-pane-key={paneKey ?? ''}
+        title={out ? OUT_HINT : TITLEBAR_HINT}
       >
-        <Text className="widget__title">{label}</Text>
+        {tabs.length > 1 ? (
+          <Box className="widget__tabs">
+            {tabs.map((tab) => (
+              <TabChip key={tab.id} tab={tab} active={tab.id === activeId} onActivate={onActivateTab} />
+            ))}
+          </Box>
+        ) : (
+          <Text className="widget__title">{label}</Text>
+        )}
         <Box className="widget__titlebar-actions">
+          {out && onPinChange && <PinButton pin={pin} onTop={onTop} onChange={onPinChange} />}
+          {out
+            ? <Button variant="bare" className="widget__btn" onClick={onPopOut} title="Pop in">{'⤓'}</Button>
+            : canPopOut && <Button variant="bare" className="widget__btn" onClick={onPopOut} title="Pop out">{'⤢'}</Button>}
           <Button
             variant="bare"
             ref={gearRef}
             className="widget__btn"
-            onClick={() => setSettingsOpen((v) => !v)}
-            title="Settings"
-          >⚙</Button>
-          <Button variant="bare" className="widget__btn" onClick={onClose} title="Close">×</Button>
+            active={optionsOpen}
+            onClick={handleOptions}
+            title="Options"
+          >{'⚙'}</Button>
+          <Button variant="bare" className="widget__btn" onClick={onClose} title="Close">{'×'}</Button>
         </Box>
       </Box>
-
-      {/* Content (always fully opaque) */}
-      <Box className="widget__content">
-        {children}
-      </Box>
-
-      {/* Resize handles */}
-      {state.mode === 'floating' && (
-        <>
-          <Box className="widget__resize widget__resize--n" onMouseDown={onEdgeMouseDown('n')} />
-          <Box className="widget__resize widget__resize--s" onMouseDown={onEdgeMouseDown('s')} />
-          <Box className="widget__resize widget__resize--e" onMouseDown={onEdgeMouseDown('e')} />
-          <Box className="widget__resize widget__resize--w" onMouseDown={onEdgeMouseDown('w')} />
-          <Box className="widget__resize widget__resize--ne" onMouseDown={onEdgeMouseDown('ne')} />
-          <Box className="widget__resize widget__resize--nw" onMouseDown={onEdgeMouseDown('nw')} />
-          <Box className="widget__resize widget__resize--se" onMouseDown={onEdgeMouseDown('se')} />
-          <Box className="widget__resize widget__resize--sw" onMouseDown={onEdgeMouseDown('sw')} />
-        </>
-      )}
-
-      {/* Docked resize handle (thickness edge only) */}
-      {state.mode === 'docked' && (
-        <Box
-          className={`widget__resize widget__resize--${getDockedResizeEdge(state.side)}`}
-          onMouseDown={onEdgeMouseDown(getDockedResizeEdge(state.side))}
-        />
-      )}
-
-      {/* Settings popover */}
-      {settingsOpen && (
-        <WidgetSettings
-          widget={state}
-          anchorRef={gearRef}
-          onClose={() => setSettingsOpen(false)}
-          onChange={onChange}
-        >
-          {settingsContent}
-        </WidgetSettings>
+      {!peek && (
+        <Box className="widget__content">
+          {children}
+        </Box>
       )}
     </Box>
   );
-}
+};
 
 export { Widget };

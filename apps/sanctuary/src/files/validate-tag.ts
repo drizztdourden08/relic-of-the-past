@@ -1,6 +1,6 @@
 /* @layer sanctuary-site @kind logic */
 /** The TagInput check for a file tag: the API's own tag rule, with the hint shown when it fails. */
-import { tagsSchema } from '@shared/sanctuary/schemas/common';
+import { tagsSchema } from '@shared/hub/schemas/common';
 
 const TAG_HINT = 'lowercase letters, digits, dots, dashes';
 

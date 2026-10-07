@@ -9,6 +9,7 @@ import type { NormalSaveInfo, AutoSaveInfo, QuickSaveSlotInfo } from '@shared/ty
 import type { PlaySession } from '@shared/types/session';
 import type { ShadowCastingProject, ScreenShadowData } from '@shared/types/shadow-casting';
 import type { RefreshRateInfo, SyncedRateStatus } from '@shared/types/display';
+import type { WidgetInvokeContract } from './widget-contract';
 import type { DataLocation, StorageSummary, FileStat } from '@shared/platform';
 import type { SystemDiagnostics } from '@shared/types/diagnostics';
 import type { SimRunConfig } from '@shared/game/simulation';
@@ -35,6 +36,8 @@ import type { LanguageInvokeContract } from './language-contract';
 import type { MsuInvokeContract } from './msu-contract';
 import type { FfmpegInvokeContract } from './ffmpeg-contract';
 import type { SanctuaryInvokeContract } from './sanctuary-contract';
+import type { HubInvokeContract } from './hub-contract';
+import type { StoreInvokeContract } from './store-contract';
 import type { UpdateInfo, UpdaterCapabilities, UpdaterPrefs, VersionOption } from './updater-contract';
 
 
@@ -44,7 +47,7 @@ type ReviewMap = Record<string, { status: string; comment?: string }>;
 
 interface InvokeContract extends
   ControllerInvokeContract, LanguageInvokeContract, MsuInvokeContract, FfmpegInvokeContract,
-  SanctuaryInvokeContract {
+  SanctuaryInvokeContract, HubInvokeContract, StoreInvokeContract, WidgetInvokeContract {
   // App
   'app:getUserDataPath': () => Promise<string>;
 
@@ -64,6 +67,7 @@ interface InvokeContract extends
   'file:writeText': (path: string, data: string) => Promise<void>;
   'file:list': (dir: string) => Promise<string[]>;
   'file:remove': (path: string) => Promise<void>;
+  'file:trash': (path: string) => Promise<void>;
   'file:exists': (path: string) => Promise<boolean>;
   'file:mkdir': (dir: string) => Promise<void>;
   'file:stat': (path: string) => Promise<FileStat | null>;

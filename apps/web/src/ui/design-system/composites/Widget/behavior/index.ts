@@ -1,9 +1,8 @@
 /* @layer renderer-components @kind barrel */
-export { computeDockedStyles } from './computeDockedStyles';
-export { createDefaultLayout, createDefaultWidgetState, getDevOnlyWidgetIds, getWidgetDefinition } from './createWidgetState';
-export { useWidgetDrag } from './useWidgetDrag';
-export { useWidgetLayout } from './useWidgetLayout';
-export { getDockedResizeEdge, useWidgetResize } from './useWidgetResize';
-export { getWidgetState, loadLayoutForProfile, loadLayoutLocal, saveLayoutForProfile, saveLayoutLocal, updateWidget } from './widgetStore';
+export { createDefaultLayout, getDevOnlyWidgetIds, getWidgetDefinition } from './createWidgetState';
+export { migrateLayout } from './migrate-layout';
+export type { WidgetLayoutV1, WidgetStateV1 } from './migrate-layout';
+export { loadLayoutForProfile, loadLayoutLocal, saveLayoutForProfile, saveLayoutLocal } from './widgetStore';
+export type { WidgetPersistenceIO } from './widgetStore';
 export { resolveWidgetDisabledState } from './resolveWidgetDisabledState';
 export type { WidgetDisabledState } from './resolveWidgetDisabledState';

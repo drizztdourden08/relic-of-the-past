@@ -13,7 +13,7 @@ import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
 import { Dialog } from '@ds/composites/Dialog';
 import { WindowHeader } from '@ds/composites/WindowHeader';
-import { formatBytes } from '../../../lib/format-bytes';
+import { formatBytes } from '@site-kit/lib/format-bytes';
 import { splitByRight } from '../behavior/batch-edits';
 import { totalBytes } from '../behavior/batch-size';
 import type { BatchActions } from '../behavior/useBatchActions';

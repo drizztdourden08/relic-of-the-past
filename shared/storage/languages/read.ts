@@ -20,8 +20,8 @@ import type { LanguageSetSummary, SetFontBytes } from './types';
 const readSetMeta = async (files: FileStore, id: string): Promise<LanguageSetMeta | null> => {
   const raw = await readJson<LanguageSetMeta | null>(files, setMetaPath(id), null);
   if (!raw) return null;
-  const { name, base, origin, version, author } = raw;
-  return { id: raw.id, name, base, origin, version, author };
+  const { name, base, origin, version, author, basedOn } = raw;
+  return { id: raw.id, name, base, origin, version, author, ...(basedOn ? { basedOn } : {}) };
 };
 
 const readDialogue = (files: FileStore, id: string): Promise<DialogueEntry[]> =>

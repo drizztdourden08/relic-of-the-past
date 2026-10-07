@@ -9,7 +9,7 @@ import type { SanctuaryFile } from '@shared/sanctuary/file-types';
 import type { PatchFileBody } from '@shared/sanctuary/schemas/file-schemas';
 import { deleteFile, downloadFile, patchFile } from '../../../api/files-endpoints';
 import { deleteVersion, downloadVersion, restoreVersion } from '../../../api/versions-endpoints';
-import { errorMessage } from '../../../api/client';
+import { errorMessage } from '@site-kit/api/api-error';
 import { versionLabel } from '../../../files/file-versions';
 
 type UseFileActionsParams = {

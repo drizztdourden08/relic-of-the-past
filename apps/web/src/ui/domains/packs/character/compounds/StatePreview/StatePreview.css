@@ -1,0 +1,46 @@
+/* @layer renderer-components @kind style */
+.state-preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.state-preview__head,
+.state-preview__row {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.state-preview__title {
+  font-size: var(--text-base);
+  color: var(--c-gold);
+}
+
+.state-preview__from {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+.state-preview__cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.state-preview__label {
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.state-preview__count { color: var(--c-text-muted); }
+
+.state-preview__note {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}

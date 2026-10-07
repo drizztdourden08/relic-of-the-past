@@ -1,0 +1,23 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * The mascot fills its positioned parent. Every length is a count of mascot pixels times
+ * the parent's --px, and each piece turns around its own origin.
+ */
+.mascot {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.mascot__piece {
+  position: absolute;
+  left: calc(var(--part-x) * var(--px));
+  top: calc(var(--part-y) * var(--px));
+  width: calc(var(--part-w) * var(--px));
+  height: calc(var(--part-h) * var(--px));
+  transform: rotate(var(--part-angle));
+  transform-origin: calc(var(--part-ox) * var(--px)) calc(var(--part-oy) * var(--px));
+  image-rendering: pixelated;
+  user-select: none;
+}

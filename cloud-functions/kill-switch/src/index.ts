@@ -2,8 +2,6 @@
 import { cloudEvent } from '@google-cloud/functions-framework';
 import { GoogleAuth } from 'google-auth-library';
 
-const PROJECT_ID = 'rotp-bugreports';
-
 interface BudgetNotification {
   costAmount?: number;
   budgetAmount?: number;
@@ -24,7 +22,9 @@ const unlinkBilling = async (): Promise<void> => {
   const auth = new GoogleAuth({ scopes: ['https://www.googleapis.com/auth/cloud-platform'] });
   const client = await auth.getClient();
   const token = await client.getAccessToken();
-  await fetch(`https://cloudbilling.googleapis.com/v1/projects/${PROJECT_ID}/billingInfo`, {
+  // the project this function runs in, so one build serves every project it is deployed to
+  const projectId = await auth.getProjectId();
+  await fetch(`https://cloudbilling.googleapis.com/v1/projects/${projectId}/billingInfo`, {
     method: 'PUT',
     headers: { Authorization: `Bearer ${token.token}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({ billingAccountName: '' }),

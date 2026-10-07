@@ -7,7 +7,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import type { SanctuaryFile } from '@shared/sanctuary/file-types';
 import { nextVersionNumber } from '../../../files/file-versions';
-import type { UploadMeta, UploadTarget } from '../../../upload/upload-job.type';
+import type { UploadMeta, UploadTarget } from '../../../upload/upload-target.type';
 import { sameNameMatch } from './same-name-match';
 import {
   EMPTY_QUEUE,

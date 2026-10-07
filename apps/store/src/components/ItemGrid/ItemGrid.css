@@ -1,0 +1,16 @@
+/* @layer store-site @kind style */
+
+/* As many cards to a row as fit at their smallest width; the grid scrolls inside its column. */
+.item-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--item-grid-min), 1fr));
+  align-content: start;
+  gap: var(--space-md);
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.item-grid__empty {
+  flex: 1 1 auto;
+}

@@ -3,6 +3,8 @@ export type { RawInventoryState } from './inventory';
 export { parseInventoryBuffer, inventoryToItemSet } from './inventory';
 export type { UnknownItemEntry } from './bridge';
 export {
+  applyRelayedCompletedChecks,
+  applyRelayedInventory,
   initTrackerBridge,
   destroyTrackerBridge,
   onItemReceived,

@@ -1,19 +1,20 @@
 /* @layer renderer-components @kind style */
 
-/* Sized/positioned against the actual game-render rectangle by its caller (exclusiveInsets),
-   not the wider .app__content box. No z-index of its own on purpose: a widget (explicit
-   z-index, --z-panel) then always wins the pointer hit-test over this zone wherever they
-   overlap, so hovering a widget never counts as hovering the game section - without trapping
-   the button stack's own (much higher) z-index inside a losing stacking context, which is
-   what made the buttons vanish behind any docked widget. */
+/* Sized/positioned against the actual game-render rectangle by its caller (the game rect the
+   dock layout measured), not the wider .app__content box. No z-index of its own on purpose: a
+   widget (explicit z-index, --z-panel) then always wins the pointer hit-test over this zone
+   wherever they overlap, so hovering a widget never counts as hovering the game section,
+   without trapping the button stack's own (much higher) z-index inside a losing stacking
+   context, which is what made the buttons vanish behind any docked widget. */
 .debug-floating-controls__hover-zone {
   position: absolute;
   inset: 0;
   pointer-events: auto;
 }
 
+/* Offset from the zone's top-right corner, so the stack follows the game rect. */
 .debug-floating-controls__stack {
-  position: fixed;
+  position: absolute;
   z-index: var(--z-floating);
   display: flex;
   flex-direction: column;

@@ -12,7 +12,7 @@ import type { CheckId, ItemId } from '@shared/game/data';
 import { parseInventoryBuffer, inventoryToItemSet, setsEqual } from './inventory';
 import { readCompletedChecks, readEventStatus } from './flag-polling';
 import { eventStatusEqual } from './event-status';
-
+import { createListenerSet } from './listener-set';
 
 /**
  * A delivered item, as its dataset id plus the native index the game reported.
@@ -25,63 +25,48 @@ type UnknownItemEntry = { id: number; method: number; timestamp: number };
 type UnknownItemListener = (items: UnknownItemEntry[]) => void;
 type CompletedChecksListener = (checks: Set<CheckId>) => void;
 
-
-const itemListeners = new Set<ItemReceivedListener>();
-const inventoryListeners = new Set<InventoryChangedListener>();
-const unknownItemListeners = new Set<UnknownItemListener>();
-const completedChecksListeners = new Set<CompletedChecksListener>();
+const itemListeners = createListenerSet<Parameters<ItemReceivedListener>>();
+const inventoryListeners = createListenerSet<Parameters<InventoryChangedListener>>();
+const unknownItemListeners = createListenerSet<Parameters<UnknownItemListener>>();
+const completedChecksListeners = createListenerSet<Parameters<CompletedChecksListener>>();
 let currentInventory = new Set<ItemId>();
 let currentCompletedChecks = new Set<CheckId>();
 let unknownItems: UnknownItemEntry[] = [];
 let pollIntervalId: ReturnType<typeof setInterval> | null = null;
 
+const onItemReceived = (fn: ItemReceivedListener): () => void => itemListeners.add(fn);
+const onInventoryChanged = (fn: InventoryChangedListener): () => void => inventoryListeners.add(fn);
+const onUnknownItem = (fn: UnknownItemListener): () => void => unknownItemListeners.add(fn);
+const onCompletedChecksChanged = (fn: CompletedChecksListener): () => void => completedChecksListeners.add(fn);
 
-const onItemReceived = (fn: ItemReceivedListener): () => void => {
-  itemListeners.add(fn);
-  return () => itemListeners.delete(fn);
-};
-
-const onInventoryChanged = (fn: InventoryChangedListener): () => void => {
-  inventoryListeners.add(fn);
-  return () => inventoryListeners.delete(fn);
-};
-
-const getCurrentInventory = (): Set<ItemId> => {
-  return currentInventory;
-};
-
-const onUnknownItem = (fn: UnknownItemListener): () => void => {
-  unknownItemListeners.add(fn);
-  return () => unknownItemListeners.delete(fn);
-};
-
-const getUnknownItems = (): UnknownItemEntry[] => {
-  return unknownItems;
-};
+const getCurrentInventory = (): Set<ItemId> => currentInventory;
+const getCompletedChecks = (): Set<CheckId> => currentCompletedChecks;
+const getUnknownItems = (): UnknownItemEntry[] => unknownItems;
 
 const loadUnknownItems = (items: UnknownItemEntry[]): void => {
   unknownItems = items;
-  for (const fn of unknownItemListeners) {
-    try { fn(unknownItems); } catch { /* ignore */ }
-  }
+  unknownItemListeners.notify(unknownItems);
 };
 
-const onCompletedChecksChanged = (fn: CompletedChecksListener): () => void => {
-  completedChecksListeners.add(fn);
-  return () => completedChecksListeners.delete(fn);
+/**
+ * A widget in its own window has no core to poll: the main window sends it the
+ * sets instead, and these feed them to the same listeners the poll feeds.
+ */
+const applyRelayedInventory = (ids: readonly ItemId[]): void => {
+  currentInventory = new Set(ids);
+  inventoryListeners.notify(currentInventory);
 };
 
-const getCompletedChecks = (): Set<CheckId> => {
-  return currentCompletedChecks;
+const applyRelayedCompletedChecks = (ids: readonly CheckId[]): void => {
+  currentCompletedChecks = new Set(ids);
+  completedChecksListeners.notify(currentCompletedChecks);
 };
 
 let currentEventStatus: Map<CheckId, boolean> = new Map();
-const eventStatusListeners = new Set<(status: ReadonlyMap<CheckId, boolean>) => void>();
+const eventStatusListeners = createListenerSet<[ReadonlyMap<CheckId, boolean>]>();
 
-const onEventStatusChanged = (fn: (status: ReadonlyMap<CheckId, boolean>) => void): () => void => {
+const onEventStatusChanged = (fn: (status: ReadonlyMap<CheckId, boolean>) => void): () => void =>
   eventStatusListeners.add(fn);
-  return () => eventStatusListeners.delete(fn);
-};
 
 const getEventStatus = (): ReadonlyMap<CheckId, boolean> => currentEventStatus;
 
@@ -90,9 +75,7 @@ const pollEventStatus = (mod: Parameters<typeof readEventStatus>[0]): void => {
   const next = readEventStatus(mod, currentInventory);
   if (!next || eventStatusEqual(currentEventStatus, next)) return;
   currentEventStatus = next;
-  for (const fn of eventStatusListeners) {
-    try { fn(next); } catch { /* ignore */ }
-  }
+  eventStatusListeners.notify(next);
 };
 
 const pollRoomFlags = (force = false): void => {
@@ -107,9 +90,7 @@ const pollRoomFlags = (force = false): void => {
     if (force || !setsEqual(currentCompletedChecks, newCompleted)) {
       log.app(`[Tracker] Completed checks: ${newCompleted.size} (was ${currentCompletedChecks.size})`);
       currentCompletedChecks = newCompleted;
-      for (const fn of completedChecksListeners) {
-        try { fn(newCompleted); } catch { /* ignore */ }
-      }
+      completedChecksListeners.notify(newCompleted);
     }
   } catch {
     // Module may not be ready yet
@@ -137,9 +118,7 @@ const pollInventoryState = (force = false): void => {
       // Logged by name: a reader needs to recognise what the player picked up.
       log.app(`[Tracker] Inventory changed: ${[...newInventory].map((id) => getItem(id).name).join(', ') || '(empty)'}`);
       currentInventory = newInventory;
-      for (const fn of inventoryListeners) {
-        try { fn(newInventory); } catch { /* ignore */ }
-      }
+      inventoryListeners.notify(newInventory);
     }
   } catch {
     // Module may not be ready yet
@@ -160,16 +139,12 @@ const initTrackerBridge = (): void => {
     const item = getItemByGameId({ receiveItemId: itemId });
     if (item) {
       log.app(`[Tracker] Item received: ${item.id} ${item.name} (0x${itemId.toString(16)}, method=${method})`);
-      for (const fn of itemListeners) {
-        try { fn(item.id, itemId, method); } catch { /* ignore */ }
-      }
+      itemListeners.notify(item.id, itemId, method);
     } else {
       log.app(`[Tracker] Unknown item id 0x${itemId.toString(16)} (method=${method})`);
       const entry: UnknownItemEntry = { id: itemId, method, timestamp: Date.now() };
       unknownItems = [...unknownItems, entry];
-      for (const fn of unknownItemListeners) {
-        try { fn(unknownItems); } catch { /* ignore */ }
-      }
+      unknownItemListeners.notify(unknownItems);
     }
     // Defer poll to next microtask to avoid re-entrant WASM calls
     // (this callback fires via EM_ASM while WasmCheatGiveItem is still on the WASM stack)
@@ -178,9 +153,7 @@ const initTrackerBridge = (): void => {
 
   // Reset unknown items on fresh game start
   unknownItems = [];
-  for (const fn of unknownItemListeners) {
-    try { fn(unknownItems); } catch { /* ignore */ }
-  }
+  unknownItemListeners.notify(unknownItems);
 
   if (pollIntervalId !== null) clearInterval(pollIntervalId);
   pollIntervalId = setInterval(pollInventoryState, 2000);
@@ -199,6 +172,8 @@ const destroyTrackerBridge = (): void => {
 };
 
 export {
+  applyRelayedCompletedChecks,
+  applyRelayedInventory,
   destroyTrackerBridge,
   getCompletedChecks,
   getCurrentInventory,
@@ -212,6 +187,6 @@ export {
   onItemReceived,
   onUnknownItem,
   pollInventoryState,
-  pollRoomFlags
+  pollRoomFlags,
 };
 export type { UnknownItemEntry };

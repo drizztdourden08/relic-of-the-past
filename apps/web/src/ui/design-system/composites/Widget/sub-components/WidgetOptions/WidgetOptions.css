@@ -1,0 +1,147 @@
+/* @layer renderer-components @kind style */
+
+/* ─── Panel ─── */
+
+.widget-options {
+  position: fixed;
+  width: var(--widget-options-w);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--c-layer);
+  border: 1px solid var(--c-border-strong);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  color: var(--c-text);
+  font-size: var(--text-sm);
+  pointer-events: auto;
+  max-height: calc(100vh - 2 * var(--space-md));
+  overflow-y: auto;
+}
+
+.widget-options__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  min-height: var(--control-h-sm);
+}
+
+.widget-options__title {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semi);
+  color: var(--c-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.widget-options__section {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: var(--c-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: var(--space-xs);
+}
+
+/* ─── Placement ─── */
+
+.widget-options__placement {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.widget-options__placement-buttons {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.widget-options__divider {
+  margin: var(--space-xs) 0;
+}
+
+.widget-options__footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ─── Option row ─── */
+
+.widget-option-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  min-height: var(--control-h-sm);
+}
+
+.widget-option-row__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+
+.widget-option-row__label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--c-text-dim);
+  white-space: nowrap;
+}
+
+.widget-option-row__hint {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+/* ─── Shortcuts ─── */
+
+.widget-shortcuts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.widget-shortcuts__row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  gap: var(--space-sm);
+}
+
+.widget-shortcuts__kbd {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-gold);
+  padding: 0 var(--space-xs);
+  border: 1px solid var(--c-gold-dim);
+  border-radius: var(--r-sm);
+  white-space: nowrap;
+}
+
+.widget-shortcuts__does {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+.widget-option-row__control {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+/* Compact overrides for the controls a row holds */
+.widget-option-row .segmented__btn {
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--text-sm);
+}
+
+.widget-option-row .slider {
+  width: var(--widget-options-slider-w);
+}

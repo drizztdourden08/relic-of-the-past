@@ -29,6 +29,26 @@ For testing, always launch so the app never steals focus or makes noise:
 npm run dev -- -- --no-focus --muted
 ```
 
+## Local ports
+
+Every local server the project runs sits in one fixed block of ports. The base and each role
+are defined once, in `shared/config/ports.constants.ts`; nothing else writes a port number.
+
+| Offset | Role |
+|---|---|
+| +0 | the app's renderer dev server (`npm run dev`) |
+| +1 | reserved for a component catalogue |
+| +2 | the Sanctuary site (`npm run sanctuary:dev`) |
+| +3 | the Sanctuary API (`npm run sanctuary:api`), which the site proxies `/api` to |
+| +4 | a static file server, for testing install manifests |
+| +5 | the mGBA Lua socket tracer |
+| +6 to +9 | free for other project tools |
+
+A worktree can carry a `.rotp-port-slot` file holding a slot number N (or set
+`ROTP_PORT_SLOT`); the whole block then moves up by 10 x N, so two checkouts never ask for
+the same port. The main checkout is slot 0. The dev servers use `strictPort`, so a port
+already in use stops them with an error instead of moving them somewhere unexpected.
+
 ## Quality gate
 
 ```bash

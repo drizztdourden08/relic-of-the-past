@@ -8,13 +8,12 @@
  * instead of leaving the caller to work it out.
  */
 import { useState, useEffect, useCallback } from 'react';
-import {
-  listLinkSprites, importLinkSprite, spriteStem,
-} from '@app/lib/storage/link-sprites-store';
+import { listLinkSprites, importLinkSprite } from '@app/lib/storage/link-sprites-store';
+import { spriteStem } from '@shared/storage/link-sprites/link-sprites';
 import { deleteSprite } from '@app/lib/game/player-sheet/delete-sprite';
 import { loadSheet } from '@app/lib/game/player-sheet/load-sheet';
 import { renderThumbnail } from '@app/lib/game/player-sheet/thumbnail';
-import { isRspName } from '@app/lib/game/rsp';
+import { isRspName } from '@shared/storage/link-sprites/parse-rsp';
 
 interface LibraryEntry {
   /** File name including extension. This is the key everything else uses. */

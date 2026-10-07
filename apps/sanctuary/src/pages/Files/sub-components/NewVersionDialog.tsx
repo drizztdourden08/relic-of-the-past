@@ -12,8 +12,8 @@ import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
 import { TextInput } from '@ds/primitives/TextInput';
 import { DialogShell } from '@ds/composites/DialogShell';
-import { Row } from '../../../components/Row/Row';
-import { formatBytes } from '../../../lib/format-bytes';
+import { Row } from '@site-kit/components/Row/Row';
+import { formatBytes } from '@site-kit/lib/format-bytes';
 import { nextVersionNumber, versionLabel } from '../../../files/file-versions';
 import type { VersionRequest } from '../behavior/drop-queue';
 

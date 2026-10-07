@@ -49,7 +49,7 @@
 | Screen-editor draft builder, and `screenBlockers` (shared/game/logic/queries/screen-validity.ts) as the one owner of "is this screen real enough to store", which the builder and the create validator both delegate to | tests/widgets/screen-record-draft.keep.test.ts | covered for the builder. The tier-agreement and file-home rules inside `screenBlockers` are reached through it, not asserted directly |
 | SimulatorWidget orchestration (run-results, runner-loop, useDatasetSuggestions, useLogWindow, useSimulatorRun, useStopAtChecks) | none directly (the engine itself is covered in the simulation row) | none |
 | ChecksWidget / DebugWidget / InventoryWidget / LogsWidget / CheatsWidget | none | none |
-| **Widget composite (drag/resize/dock chrome shared by all 7 widgets)** | none | **none. The single biggest gap in the UI layer** |
+| **Widget shell + DockLayout composite (the split tree, floating placement, drag/divider chrome shared by every widget) and the WidgetDock view that gates and hosts them** | none | **none. The single biggest gap in the UI layer** |
 
 ## Design system (`apps/web/src/ui/design-system/`)
 

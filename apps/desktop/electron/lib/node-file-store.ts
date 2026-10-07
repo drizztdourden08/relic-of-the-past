@@ -7,6 +7,7 @@
  */
 import { readFile, writeFile, readdir, rm, mkdir, stat } from 'fs/promises';
 import { join, dirname } from 'path';
+import { shell } from 'electron';
 import type { FileStore } from '@shared/platform';
 import { getUserDataPath } from './paths';
 
@@ -36,6 +37,11 @@ const createNodeFileStore = (): FileStore => ({
   },
   remove: async (path) => {
     await rm(resolve(path), { recursive: true, force: true });
+  },
+  trash: async (path) => {
+    const full = resolve(path);
+    try { await stat(full); } catch { return; }
+    await shell.trashItem(full);
   },
   exists: async (path) => {
     try { await stat(resolve(path)); return true; } catch { return false; }

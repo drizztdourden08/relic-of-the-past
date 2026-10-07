@@ -1,0 +1,43 @@
+/* @layer store-site @kind style */
+
+/* Wide enough for a banner to be worth adjusting. */
+.dialog.crop-dialog {
+  max-width: var(--crop-dialog-w);
+}
+
+/* The picture is dragged here; the space around the frame shows what the crop leaves out. */
+.crop-dialog__stage {
+  padding: var(--space-xl);
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--c-sunken);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.crop-dialog__stage:active {
+  cursor: grabbing;
+}
+
+.crop-dialog__frame {
+  position: relative;
+  width: 100%;
+}
+
+.crop-dialog__picture {
+  position: absolute;
+  max-width: none;
+  height: auto;
+  pointer-events: none;
+}
+
+/* The frame's edge, and everything outside it dimmed. */
+.crop-dialog__frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: var(--border-width-thin) solid var(--c-gold);
+  box-shadow: 0 0 0 100vmax var(--c-scrim);
+  pointer-events: none;
+}

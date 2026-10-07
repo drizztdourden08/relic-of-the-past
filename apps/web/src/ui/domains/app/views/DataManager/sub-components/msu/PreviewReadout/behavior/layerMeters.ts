@@ -10,7 +10,7 @@
  * a fade fills the same way.
  */
 import type { LayerReport } from '@app/lib/msu/engine';
-import { clock } from '../../behavior/clock';
+import { clock } from '@domains/packs/music/behavior/clock';
 import { shortName, voiceCaptions } from './voiceCaptions';
 import type { FadeMeter, LayerMeterRow, LayerMeters, ReportedVoice } from '../PreviewReadout.type';
 

@@ -5,27 +5,30 @@
  *  later one is refused and its upload aborted. */
 import { LIMITS, SANCTUARY_ROUTES, beginVersionSchema } from '../../../../shared/sanctuary';
 import type { FileVersion } from '../../../../shared/sanctuary';
-import { conflict } from '../http/http-error';
-import { parseBody } from '../http/parse-body';
-import { requireAccess } from '../auth/require-access';
+import { conflict } from '../../../hub-core/http/http-error';
+import { parseBody } from '../../../hub-core/http/parse-body';
+import { requireMember } from '../../../hub-core/auth/require-member';
 import { loadVisibleFile } from '../files/file-guards';
 import { lastVersionNumber } from '../files/versions';
 import { filesRepo } from '../db/files-repo';
-import { now } from '../db/firestore';
-import { b2, versionKey } from '../storage/b2';
-import type { Route } from '../route.type';
+import { now } from '../../../hub-core/db/firestore';
+import { filesBucket } from '../storage/files-bucket';
+import { versionKey } from '../storage/keys';
+import type { Route } from '../../../hub-core/route.type';
+import { SANCTUARY_SITE } from '../site';
 
 const fileVersionsBegin: Route = {
   ...SANCTUARY_ROUTES.fileVersionsBegin,
   handler: async ({ req, res, params }) => {
-    const member = await requireAccess(req);
+    const member = await requireMember(req, SANCTUARY_SITE);
     const file = await loadVisibleFile(params.id, member);
     if (file.status !== 'ready') throw conflict('This file is still uploading.');
     const body = parseBody(beginVersionSchema, req.body);
     const n = lastVersionNumber(file) + 1;
     const key = versionKey(file.id, n);
     const parts = Math.max(1, Math.ceil(body.bytes / LIMITS.partBytes));
-    const multipartId = await b2.begin(key, body.contentType);
+    const multipartId = await filesBucket.begin(key, body.contentType);
+    const createdAt = now();
     const version: FileVersion = {
       n,
       key,
@@ -36,8 +39,8 @@ const fileVersionsBegin: Route = {
       note: body.note,
       by: { userId: member.caller.userId, displayName: member.user.displayName },
       status: 'uploading',
-      upload: { multipartId, parts },
-      createdAt: now(),
+      upload: { multipartId, parts, partsDone: 0, updatedAt: createdAt },
+      createdAt,
     };
     try {
       await filesRepo.mutate(file.id, (latest) => {
@@ -45,7 +48,7 @@ const fileVersionsBegin: Route = {
         return { versions: [...latest.versions, version], currentVersion: latest.currentVersion };
       });
     } catch (err) {
-      await b2.abort(key, multipartId).catch(() => undefined);
+      await filesBucket.abort(key, multipartId).catch(() => undefined);
       throw err;
     }
     res.status(201).json({ fileId: file.id, n, uploadId: multipartId, partSize: LIMITS.partBytes, parts });
