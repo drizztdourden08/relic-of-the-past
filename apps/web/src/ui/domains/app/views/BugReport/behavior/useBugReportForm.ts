@@ -1,127 +1,134 @@
 /* @layer renderer-components @kind hook */
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDebugTextBuilder, useDebugText } from '@app/lib/diagnostics';
 import { collectSaveStates } from '@app/lib/diagnostics/collect-save-states';
+import { useReportContext } from '@app/lib/diagnostics/useReportContext';
+import { useSanctuarySessionStore } from '@app/stores/sanctuary-session';
+import type { DebugReportSaveEntry } from '@shared/types/debug-report';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // only requires an @ and a dot with an extension
 
 type SubmitStatus = 'idle' | 'submitting' | 'done' | 'error';
 type UploadStatus = 'idle' | 'uploading' | 'done' | 'error';
 
+interface FiledReport {
+  reportId: string;
+  issueUrl: string;
+  sanctuaryUrl: string;
+}
+
 const messageOf = (err: unknown, fallback: string): string =>
   (err instanceof Error && err.message.length > 0 ? err.message : fallback);
 
 /** `profileId` is only set when debug logging is on and a profile is active (see
- *  BugReportDialog) - that's the whole gate for whether a debug report is attempted at all.
- *  Packaging now happens at submit time, against whatever the session picker had checked
- *  (`sessionKeys`), not ahead of time: nothing is zipped or touched on disk until the player
- *  actually files the report, and a failure packaging it degrades to a plain issue instead of
- *  blocking submission. The upload itself only fires once the GitHub issue is confirmed
- *  created, so the id is honest to embed in the issue body ahead of time, and can be retried
- *  on its own (network failure only) without repackaging. */
+ *  BugReportDialog); that is the whole gate for whether a debug report is attempted at all.
+ *  The main process builds the zip at submit time, from the saves collected here and the
+ *  sessions the picker had checked, files the report and uploads the zip in one call. A
+ *  failed upload leaves the report filed and can be retried against the same report id. */
 const useBugReportForm = (profileId: string | null, sessionKeys: string[]) => {
+  const me = useSanctuarySessionStore((s) => s.me);
+  const refreshSession = useSanctuarySessionStore((s) => s.refresh);
+  const { subject: prefilledSubject, context } = useReportContext();
+
   const [email, setEmailValue] = useState('');
   const [emailTouched, setEmailTouched] = useState(false);
-  const [subject, setSubject] = useState('');
+  const [editedSubject, setEditedSubject] = useState<string | null>(null);
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState<SubmitStatus>('idle');
-  const [resultUrl, setResultUrl] = useState<string | null>(null);
-  const [reportId, setReportId] = useState<string | null>(null);
-  const [attachError, setAttachError] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [filed, setFiled] = useState<FiledReport | null>(null);
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>('idle');
   const [uploadError, setUploadError] = useState<string | null>(null);
 
   const { buildDebugText } = useDebugTextBuilder();
   const { debugText } = useDebugText(buildDebugText);
 
+  useEffect(() => { void refreshSession(); }, [refreshSession]);
+
   const setEmail = useCallback((value: string) => {
     setEmailValue(value);
     setEmailTouched(true);
   }, []);
 
+  // The subject follows the running game until the person edits it.
+  const subject = editedSubject ?? prefilledSubject;
+  const setSubject = useCallback((value: string) => setEditedSubject(value), []);
+
   const emailValid = EMAIL_RE.test(email);
-  const canSubmit = emailValid && subject.trim().length > 0 && description.trim().length > 0
+  const identityReady = me !== null || emailValid;
+  const canSubmit = identityReady && subject.trim().length > 0 && description.trim().length > 0
     && debugText !== null && status !== 'submitting';
 
-  const uploadDebugReport = useCallback(async (id: string) => {
-    setUploadStatus('uploading');
-    setUploadError(null);
+  const collectSaves = useCallback(async (): Promise<DebugReportSaveEntry[]> => {
+    if (!profileId) return [];
     try {
-      const result = await window.api.sendDebugReport({ reportId: id });
-      if ('error' in result) {
-        setUploadStatus('error');
-        setUploadError(result.error);
-        return;
-      }
-      setUploadStatus('done');
-    } catch (err) {
-      setUploadStatus('error');
-      setUploadError(messageOf(err, 'Could not upload the debug report.'));
+      return await collectSaveStates(profileId);
+    } catch {
+      return [];
     }
-  }, []);
-
-  const retryUpload = useCallback(() => {
-    if (reportId) void uploadDebugReport(reportId);
-  }, [reportId, uploadDebugReport]);
-
-  /** Nothing to attach (debug logging off, or a profile with no saves and no checked
-   *  recordings) is not a failure - it just means the issue files plain, same as before this
-   *  picker existed. An actual build error still surfaces, but doesn't block filing. */
-  const packageDebugReport = useCallback(async (): Promise<string | null> => {
-    if (!profileId) return null;
-    try {
-      const saves = await collectSaveStates(profileId);
-      if (saves.length === 0 && sessionKeys.length === 0) return null;
-      const result = await window.api.buildDebugReport({ profileId, saves, sessionKeys });
-      if ('error' in result) {
-        setAttachError(result.error);
-        return null;
-      }
-      return result.reportId;
-    } catch (err) {
-      setAttachError(messageOf(err, 'Could not package the debug report.'));
-      return null;
-    }
-  }, [profileId, sessionKeys]);
+  }, [profileId]);
 
   const submit = useCallback(async () => {
     if (!canSubmit || debugText === null) return;
     setStatus('submitting');
-    setAttachError(null);
+    setSubmitError(null);
     try {
-      const builtReportId = await packageDebugReport();
-      const fullDebugInfo = builtReportId ? `${debugText}\n\ndebug-report-id: ${builtReportId}` : debugText;
-      const { url } = await window.api.createGithubIssue({
-        email, title: subject, message: description, debugInfo: fullDebugInfo,
+      const saves = await collectSaves();
+      const result = await window.api.submitSanctuaryReport({
+        request: {
+          kind: 'player', subject: subject.trim(), description: description.trim(), debugInfo: debugText,
+          context, contactEmail: me ? null : email.trim(),
+        },
+        profileId, saves, sessionKeys,
       });
-      setResultUrl(url);
-      setReportId(builtReportId);
+      if (!('reportId' in result)) {
+        setStatus('error');
+        setSubmitError(result.error);
+        return;
+      }
+      setFiled({ reportId: result.reportId, issueUrl: result.issueUrl, sanctuaryUrl: result.sanctuaryUrl });
+      setUploadStatus(result.attached ? (result.uploaded ? 'done' : 'error') : 'idle');
+      setUploadError(result.error ?? null);
       setStatus('done');
-      if (builtReportId) void uploadDebugReport(builtReportId);
-    } catch {
+    } catch (err) {
       setStatus('error');
+      setSubmitError(messageOf(err, 'Could not file the report.'));
     }
-  }, [canSubmit, email, subject, description, debugText, packageDebugReport, uploadDebugReport]);
+  }, [canSubmit, debugText, collectSaves, subject, description, context, me, email, profileId, sessionKeys]);
+
+  const retryUpload = useCallback(async () => {
+    if (!filed) return;
+    setUploadStatus('uploading');
+    setUploadError(null);
+    try {
+      const result = await window.api.retrySanctuaryUpload({ reportId: filed.reportId });
+      setUploadStatus(result.uploaded ? 'done' : 'error');
+      setUploadError(result.error ?? null);
+    } catch (err) {
+      setUploadStatus('error');
+      setUploadError(messageOf(err, 'Could not upload the debug report.'));
+    }
+  }, [filed]);
 
   const reset = useCallback(() => {
     setEmailValue('');
     setEmailTouched(false);
-    setSubject('');
+    setEditedSubject(null);
     setDescription('');
     setStatus('idle');
-    setResultUrl(null);
-    setReportId(null);
-    setAttachError(null);
+    setSubmitError(null);
+    setFiled(null);
     setUploadStatus('idle');
     setUploadError(null);
   }, []);
 
   return {
-    email, setEmail, emailTouched, emailValid,
+    me, email, setEmail, emailTouched, emailValid,
     subject, setSubject, description, setDescription,
-    debugText, canSubmit, status, resultUrl, submit, reset,
-    reportId, attachError, uploadStatus, uploadError, retryUpload,
+    debugText, canSubmit, status, submitError, submit, reset,
+    filed, uploadStatus, uploadError, retryUpload,
   };
 };
 
 export { useBugReportForm };
+export type { FiledReport, UploadStatus };

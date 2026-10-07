@@ -14,6 +14,7 @@
 #include "ancilla.h"
 #include "hud.h"
 #include "assets.h"
+#include "game_hooks.h"
 
 static const uint16 kPolyhedralPalette[8] = { 0, 0x14d, 0x1b0, 0x1f3, 0x256, 0x279, 0x2fd, 0x35f };
 
@@ -510,6 +511,13 @@ void Module00_Intro() {  // 8cc120
   // WRAM and the tileset load both finish as submodule 1 ends. Vanilla waits for 8 instead, by
   // which point the whole logo animation has played out.
   uint8 skip_at = skip_early ? 2 : 8;
+  // The host's title takes the press itself from the frame the pieces exist (title_skip.c).
+  GameHook_TitleRestart();
+  int title_skip_floor = GameHook_TitleSkipFloor();
+  if (title_skip_floor) {
+    skip_early = true;
+    skip_at = title_skip_floor;
+  }
   bool pressed = ((filtered_joypad_L & 0xc0 | filtered_joypad_H) & 0xd0) != 0;
 
   if (submodule_index == 0)
@@ -520,6 +528,8 @@ void Module00_Intro() {  // 8cc120
     skip_pending = 1;
   if ((skip_early ? skip_pending : pressed) && submodule_index >= skip_at) {
     skip_pending = 0;
+    if (GameHook_TitleSkip())
+      return;
     FadeMusicAndResetSRAMMirror();
     return;
   }
@@ -537,6 +547,8 @@ void Module00_Intro() {  // 8cc120
   case 7: Intro_FadeInBg(); break;
   case 8: Intro_WaitPlayer(); break;
   }
+  GameHook_TitleHoldWait();
+  GameHook_TitleNoteFrame();
 }
 
 void Intro_Init() {  // 8cc15d

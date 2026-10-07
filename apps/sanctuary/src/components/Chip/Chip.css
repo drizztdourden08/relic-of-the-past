@@ -1,0 +1,52 @@
+/* @layer sanctuary-site @kind style */
+.chip {
+  display: inline-block;
+  padding: 0 var(--space-sm);
+  border-radius: var(--r-pill);
+  border: var(--border-width-thin) solid var(--c-border);
+  background: var(--c-hover);
+  color: var(--c-text-dim);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  white-space: nowrap;
+}
+
+.chip[data-tone='gold'] {
+  background: var(--c-gold-dim);
+  border-color: var(--c-gold);
+  color: var(--c-gold-bright);
+}
+
+.chip[data-tone='green'] {
+  background: var(--c-green-dim);
+  border-color: var(--c-green);
+  color: var(--c-green);
+}
+
+.chip[data-tone='info'] {
+  background: var(--c-info-dim);
+  border-color: var(--c-info);
+  color: var(--c-info);
+}
+
+.chip[data-tone='warning'] {
+  background: var(--c-warning-dim);
+  border-color: var(--c-warning);
+  color: var(--c-warning);
+}
+
+.chip[data-tone='danger'] {
+  background: var(--c-danger-dim);
+  border-color: var(--c-danger);
+  color: var(--c-danger);
+}
+
+.chip[data-tone='muted'] {
+  color: var(--c-text-muted);
+}
+
+.chip--link:hover {
+  border-color: var(--c-border-strong);
+  color: var(--c-text);
+}

@@ -2,7 +2,6 @@
 /** Feature-word builders for live WASM settings. Values must match features.h (the PPU
  * render flags live in live-settings-ppu-flags.ts). */
 import type { GameSettings } from '@shared/types/settings';
-import { BUNDLE_FIXES } from '@shared/features/bundle-fixes.generated';
 import { effectiveFeatureIds } from './live-settings-gate';
 import { offscreenAiMode, rendersExtended } from './settings';
 import { sessionGateArmed, setSessionGate } from './session-gate-flags';
@@ -61,12 +60,6 @@ const setDeveloperToolsOverride = (on: boolean | null): void => {
   developerToolsOverride = on;
 };
 
-// Hand-authored features2 bits, allocated downward from bit 24; the generated bug-fix catalog
-// (BUNDLE_FIXES) owns features2 upward from bit 0. Values must match features.h.
-const FEATURES2_FLAGS = {
-  widescreenPlayArea: 16777216, // kFeatures2_WidescreenPlayArea = 1 << 24
-  widescreenIdleAI: 33554432, // kFeatures2_WidescreenIdleAI = 1 << 25
-} as const;
 
 // Word 3 (features3) bit values. Must match kRam_Features3 in features.h. The four category bits
 // (CheatIgnoreCollision/CheatItemGrant/CheatStats/CheatCombat) are PERMISSIONS: each one just lets its
@@ -373,31 +366,7 @@ const buildFeatureFlags = (s: GameSettings): number => {
   return flags >>> 0;
 };
 
-// The 42 split bug-fix toggles live in two extra bitmask words (features1/features2). Each fix is on when
-// its granular toggle is set, falling back to the legacy bundle setting it was extracted from so existing
-// profiles keep their behavior. Values come from the generated registry (must match features_bugfixes.h).
-// All 42 are affectsVanillaParity: true, so effectiveFeatureIds already drops every one of them when
-// Vanilla Safe is on.
-const buildFeatureWords = (s: GameSettings): { features1: number; features2: number } => {
-  const effective = effectiveFeatureIds(s);
-  let f1 = 0;
-  let f2 = 0;
-  for (const fix of BUNDLE_FIXES) {
-    if (!effective.has(fix.id) || !fix.bit) continue;
-    if (fix.word === 2) f2 |= fix.bit;
-    else f1 |= fix.bit;
-  }
-  // Hand-authored features2 bits. Both are registered ids, so they go through the same Vanilla Safe
-  // resolver as the generated fixes above; the wide-view condition stays separate because it depends on
-  // aspectRatio, not on another feature id.
-  const wide = effective.has('extendedRendering') && s.aspectRatio !== '4:3';
-  if (wide) {
-    if (effective.has('widescreenPlayArea')) f2 |= FEATURES2_FLAGS.widescreenPlayArea;
-    if (effective.has('offscreenAI') && offscreenAiMode(s) === 'idle') f2 |= FEATURES2_FLAGS.widescreenIdleAI;
-  }
-  return { features1: f1, features2: f2 };
-};
-
-// The PPU builder keeps its historical import path for existing callers.
+// The PPU and feature-word builders keep their historical import path for existing callers.
 export { buildPpuFlags } from './live-settings-ppu-flags';
-export { buildFeatureFlags, buildFeatureWord3, buildFeatureWords, setAutoSkipDialogOverride, setCapacityProfileActive, setDeveloperToolsOverride, setDropOverridesActive, setDungeonItemGrantsActive, setGearArtActive, setItemOverridesActive, setNpcOverridesActive, setPondPlanActive, setPrizeShuffleActive, setReceiptGrantsActive, setRetroBowActive, setScriptedGrantsActive, setShopOverridesActive, setStandingOverridesActive };
+export { buildFeatureWords } from './live-settings-feature-words';
+export { buildFeatureFlags, buildFeatureWord3, setAutoSkipDialogOverride, setCapacityProfileActive, setDeveloperToolsOverride, setDropOverridesActive, setDungeonItemGrantsActive, setGearArtActive, setItemOverridesActive, setNpcOverridesActive, setPondPlanActive, setPrizeShuffleActive, setReceiptGrantsActive, setRetroBowActive, setScriptedGrantsActive, setShopOverridesActive, setStandingOverridesActive };

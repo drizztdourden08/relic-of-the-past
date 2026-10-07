@@ -33,7 +33,7 @@
   // fix made here is dropped by the next render. Fix those in that repo. The
   // private-vault docs are NOT ignored: we fix them here and push them to the vault.
   "ignores": [
-    "node_modules/**", "dist/**", "release/**", "core/zelda3/**",
+    "node_modules/**", "dist/**", "release/**", "core/zelda3/**", "third_party/**",
     ".claude/**", "CLAUDE.md"
   ]
 }

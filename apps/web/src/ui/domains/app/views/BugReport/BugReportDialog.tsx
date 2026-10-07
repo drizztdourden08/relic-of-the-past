@@ -3,16 +3,19 @@ import { Box } from '@ds/primitives/Box';
 import { DialogShell } from '@ds/composites/DialogShell';
 import { Button, Field, Text, TextInput, Textarea } from '@ds/primitives';
 import { useAllowDebugLogging } from '@app/lib/diagnostics/useAllowDebugLogging';
+import { githubHandleOf } from '@app/lib/sanctuary/github-handle';
 import { CaptureSessionPicker } from '../../compounds/CaptureSessionPicker';
+import { ReportingAsLine } from '../../compounds/ReportingAsLine';
 import { useBugReportForm } from './behavior/useBugReportForm';
 import { useCaptureSessions } from './behavior/useCaptureSessions';
 import { DebugInfoPreview } from './sub-components/DebugInfoPreview';
+import { ReportFiledPanel } from './sub-components/ReportFiledPanel';
 import type { BugReportDialogProps } from './types';
 import './BugReportDialog.css';
 
 const BugReportDialog = (props: BugReportDialogProps) => {
   const { open, onClose, profileId } = props;
-  // Attaching a debug report only makes sense while logging is on for this profile - the
+  // Attaching a debug report only makes sense while logging is on for this profile. The
   // dialog can be reached from several places (the floating button, "Report a bug" in the
   // menu, the updater), and this is the one gate all of them share.
   const allowDebugLogging = useAllowDebugLogging();
@@ -21,19 +24,21 @@ const BugReportDialog = (props: BugReportDialogProps) => {
   const capture = useCaptureSessions(attachProfileId, open);
   const form = useBugReportForm(attachProfileId, capture.selectedSessionKeys);
   const showPicker = attachProfileId != null;
-  const showResult = open && form.status === 'done' && form.resultUrl !== null;
+  const showResult = open && form.status === 'done' && form.filed !== null;
 
   const closeForm = () => {
     onClose();
     form.reset();
   };
 
-  const openOnGithub = () => {
-    if (form.resultUrl) window.open(form.resultUrl, '_blank');
+  // window.open on an external URL is routed to the system browser by the main process.
+  const openAndClose = (url: string) => {
+    window.open(url, '_blank');
     closeForm();
   };
 
-  if (showResult) {
+  if (showResult && form.filed) {
+    const { issueUrl, sanctuaryUrl } = form.filed;
     return (
       <DialogShell
         open={open}
@@ -43,23 +48,17 @@ const BugReportDialog = (props: BugReportDialogProps) => {
         actions={
           <>
             <Button variant="secondary" onClick={closeForm}>Close</Button>
-            <Button variant="primary" onClick={openOnGithub}>Open on GitHub</Button>
+            <Button variant="secondary" onClick={() => openAndClose(sanctuaryUrl)}>See it in the Sanctuary</Button>
+            <Button variant="primary" onClick={() => openAndClose(issueUrl)}>Open on GitHub</Button>
           </>
         }
       >
-        <Text as="p">Thanks! Your report was filed.</Text>
-        <Text as="p" className="bug-report__result-url">{form.resultUrl}</Text>
-        {form.reportId && form.uploadStatus === 'uploading' && (
-          <Text as="p" className="bug-report__upload-status">Attaching the debug report...</Text>
-        )}
-        {form.reportId && form.uploadStatus === 'error' && (
-          <>
-            <Text as="p" className="bug-report__status bug-report__status--error">
-              Couldn't attach the debug report{form.uploadError ? `: ${form.uploadError}` : ''}.
-            </Text>
-            <Button variant="secondary" onClick={form.retryUpload}>Retry upload</Button>
-          </>
-        )}
+        <ReportFiledPanel
+          issueUrl={issueUrl}
+          uploadStatus={form.uploadStatus}
+          uploadError={form.uploadError}
+          onRetryUpload={() => { void form.retryUpload(); }}
+        />
       </DialogShell>
     );
   }
@@ -74,25 +73,28 @@ const BugReportDialog = (props: BugReportDialogProps) => {
         <>
           <Button variant="secondary" onClick={closeForm}>Cancel</Button>
           <Button variant="primary" onClick={form.submit} disabled={!form.canSubmit}>
-            {form.status === 'submitting' ? 'Submitting...' : 'Submit'}
+            {form.status === 'submitting' ? 'Sending...' : 'Send report'}
           </Button>
         </>
       }
     >
       <Box className="bug-report__body">
         <Box className="bug-report__form">
-          <Field label="Email" required error={form.emailTouched && !form.emailValid ? 'Enter a valid email' : undefined}>
-            <TextInput
-              type="email"
-              placeholder="you@example.com"
-              value={form.email}
-              onChange={(e) => form.setEmail(e.target.value)}
-            />
-          </Field>
+          {form.me ? (
+            <ReportingAsLine displayName={form.me.user.displayName} githubHandle={githubHandleOf(form.me.identities)} />
+          ) : (
+            <Field label="Email" required error={form.emailTouched && !form.emailValid ? 'Enter a valid email' : undefined}>
+              <TextInput
+                type="email"
+                placeholder="you@example.com"
+                value={form.email}
+                onChange={(e) => form.setEmail(e.target.value)}
+              />
+            </Field>
+          )}
 
-          <Field label="Subject" required>
+          <Field label="Subject" required hint="Prefilled from the running game, editable">
             <TextInput
-              placeholder="Short summary of the problem"
               value={form.subject}
               onChange={(e) => form.setSubject(e.target.value)}
             />
@@ -101,7 +103,7 @@ const BugReportDialog = (props: BugReportDialogProps) => {
           <Field label="Description" required>
             <Textarea
               rows={5}
-              placeholder="What happened? What did you expect instead?"
+              placeholder="What happened, and what you expected"
               value={form.description}
               onChange={(e) => form.setDescription(e.target.value)}
             />
@@ -109,15 +111,9 @@ const BugReportDialog = (props: BugReportDialogProps) => {
 
           <DebugInfoPreview text={form.debugText} />
 
-          {form.attachError && (
-            <Text className="bug-report__status bug-report__status--error">
-              Couldn't attach the debug report ({form.attachError}) - filing without it.
-            </Text>
-          )}
-
           {form.status === 'error' && (
             <Text className="bug-report__status bug-report__status--error">
-              Couldn't file the report. Try again in a moment.
+              Couldn't file the report{form.submitError ? `: ${form.submitError}` : ''}. Try again in a moment.
             </Text>
           )}
         </Box>

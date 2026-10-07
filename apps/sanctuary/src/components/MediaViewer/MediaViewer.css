@@ -1,0 +1,53 @@
+/* @layer sanctuary-site @kind style */
+
+/* The dialog panel grown to most of the viewport, the stage taking what the header leaves. */
+.dialog.media-viewer {
+  display: flex;
+  flex-direction: column;
+  width: var(--media-viewer-w);
+  max-width: none;
+  height: var(--media-viewer-h);
+}
+
+.media-viewer .window-header__title {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.media-viewer__stage {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  border-radius: var(--radius-md);
+  background: var(--c-sunken);
+  overflow: auto;
+}
+
+/* Auto margins centre the media and still let an oversized one scroll from its top left. */
+.media-viewer__media {
+  display: block;
+  margin: auto;
+}
+
+/* Fit sizes the image to the stage either way: a large one shrinks, a small one grows. */
+.media-viewer__stage[data-zoom='fit'] .media-viewer__media {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* A sprite grown past its own size keeps hard pixel edges instead of blurring. */
+.media-viewer__media[data-pixel-art] {
+  image-rendering: pixelated;
+}
+
+/* A video fills the stage; the player letterboxes it. */
+.media-viewer__stage .media-viewer__media--video {
+  width: 100%;
+  height: 100%;
+}
+
+.media-viewer__stage[data-zoom='actual'] .media-viewer__media {
+  flex: 0 0 auto;
+  max-width: none;
+}

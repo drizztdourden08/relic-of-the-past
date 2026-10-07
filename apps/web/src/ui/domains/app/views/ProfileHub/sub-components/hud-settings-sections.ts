@@ -4,6 +4,16 @@ import type { Section } from '../../../compounds/SettingsLayout';
 
 const SECTIONS: Section[] = [
   {
+    id: 'hud-title',
+    title: 'Title Screen',
+    items: [
+      { key: 'titleScreen', label: 'Title Screen', description: 'Original keeps the game\'s title. Reimagined draws a wider scene over the same sequence.', keywords: 'title screen intro reimagined original scene logo sword' },
+      { key: 'titleMotion', label: 'Motion', description: 'Drifting moves the scene and the clouds slowly while the title waits.', keywords: 'title motion parallax drift clouds still' },
+      { key: 'titleSword', label: 'Sword', description: 'The sword planted in the title. Progress picks it from the most advanced save.', keywords: 'title sword fighter master tempered golden progress' },
+      { key: 'titleFollowsProgress', label: 'Follows Progress', description: 'The world, and the sword set to Progress, come from the most advanced save.', keywords: 'title progress save sword tier dark world' },
+    ],
+  },
+  {
     id: 'hud-display',
     title: 'Display',
     items: [

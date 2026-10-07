@@ -1,0 +1,11 @@
+/* @layer sanctuary-site @kind style */
+
+/* The nav sizes its icons by font size, so the avatar takes one em and sits in the
+   same square an icon glyph would. */
+.nav-avatar {
+  width: 1em;
+  height: 1em;
+  border-radius: var(--r-pill);
+  border: var(--border-width-thin) solid var(--c-border-strong);
+  object-fit: cover;
+}

@@ -10,6 +10,13 @@
      dropdown trigger already draw themselves at. */
   --control-h-sm: 26px;
 
+  /* The inline drop target in a header line: wide enough to read as a target, and
+     a label that fits on one line inside it. */
+  --dropzone-inline-w: 288px;
+
+  /* A table's leading checkbox column, when its rows can be picked several at a time. */
+  --table-select-w: 28px;
+
   /* The inline entry a closed-set control offers for a value its option list
      has never seen. Wide enough for a short identifier, free to grow. */
   --open-entry-width: 140px;
@@ -34,6 +41,9 @@
      smoothly (roughly 60% of the summary panel's height). Image and fallback
      chip share this footprint, so swapping one for the other never shifts layout. */
   --mode-badge-d: 80px;
+
+  /* A signed-in account avatar: one control row tall, round. */
+  --avatar-d: 40px;
 
   /* Widest a single summary-fact value may grow before it ellipsizes. Long
      ROM names and seeds truncate instead of pushing the row apart. */

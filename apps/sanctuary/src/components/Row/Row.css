@@ -1,0 +1,20 @@
+/* @layer sanctuary-site @kind style */
+
+/* The box around a row is the SettingsSection's; the row lays out its three parts. */
+.row__key {
+  flex: 0 0 var(--row-key-w);
+  font-weight: var(--weight-semi);
+  color: var(--c-text);
+}
+
+.row__value {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--c-text-dim);
+}
+
+.row__action {
+  flex: 0 0 auto;
+  display: inline-flex;
+  gap: var(--space-xs);
+}

@@ -66,5 +66,8 @@
   ".githooks/**":             { "layer": "tooling-scripts", "kind": "logic" },
 
   // Per-version release notes. GitHub release bodies come from these.
-  "release-notes/**":         { "layer": "root-config", "kind": "doc" }
+  "release-notes/**":         { "layer": "root-config", "kind": "doc" },
+
+  // Firestore security rules deployed next to a Cloud Function (no header syntax the tagger reads).
+  "apps/sanctuary/firestore.rules": { "layer": "root-config", "kind": "config" }
 }

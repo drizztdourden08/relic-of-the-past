@@ -2,7 +2,7 @@
 export { DataTable } from './DataTable';
 export type {
   ColumnActions, ColumnDragBinding, ColumnResizeBinding,
-  DataTableProps, RowRenderContext, TableActions,
+  DataTableProps, RowRenderContext, RowSelectionBinding, SelectAllState, TableActions,
 } from './DataTable.type';
 export { FieldPicker } from './sub-components/FieldPicker';
 export type { FieldPickerProps } from './sub-components/FieldPicker';

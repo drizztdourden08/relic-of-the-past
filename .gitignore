@@ -18,6 +18,9 @@ out/
 *.tsbuildinfo
 .wiki-build/
 
+# Firebase CLI deploy cache
+.firebase/
+
 # WASM build artifacts
 core/wasm-build/output/
 
@@ -117,11 +120,15 @@ saves/
 !apps/desktop/electron/saves/
 seeds/
 config/
+!shared/config/
 scripts/analyze/report.json
 .claude/worktrees/
 
 # Per-worktree isolated user data (the app's --user-data flag points here)
 .user-data/
+
+# Per-worktree port slot (shared/config/port-slot.ts)
+.rotp-port-slot
 
 # Loop scheduler transient lock
 .claude/scheduled_tasks.lock

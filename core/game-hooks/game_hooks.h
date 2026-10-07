@@ -749,6 +749,9 @@ int GameHook_HideSpaceBeyondWallsFill(const uint16 **words);
 // the same answer to decide whether the rows above and below the picture can be opened at all.
 int GameHook_FixedPictureEdgeLayers(void);
 
+// ─── Title override and mirror (title_override.c, title_mirror.c): title_hooks.h ───
+#include "title_hooks.h"
+
 // ─── HUD/Pause Override (hud_override.c) ───
 
 // True while kFeatures3_HudOverride permits hiding the native HUD/pause menu. WasmSetHudHidden and

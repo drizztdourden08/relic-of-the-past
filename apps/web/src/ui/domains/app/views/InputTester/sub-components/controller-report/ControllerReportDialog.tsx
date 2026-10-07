@@ -29,15 +29,17 @@ const ControllerReportDialog = (props: ControllerReportDialogProps) => {
   const [capturedCount, setCapturedCount] = useState(0);
   const { handleCopyJson } = useSummaryExport(form.wizard.byteCapture, form.wizard.positionalRecords);
   const [copyStatus, flashCopy] = useFlashStatus();
-  const showResult = open && form.status === 'done' && form.resultUrl !== null;
+  const filed = form.status === 'done' ? form.filed : null;
+  const showResult = open && filed !== null;
 
   const closeForm = () => {
     onClose();
     form.reset();
   };
 
-  const openOnGithub = () => {
-    if (form.resultUrl) window.open(form.resultUrl, '_blank');
+  // window.open on an external URL is routed to the system browser by the main process.
+  const openAndClose = (url: string) => {
+    window.open(url, '_blank');
     closeForm();
   };
 
@@ -69,10 +71,11 @@ const ControllerReportDialog = (props: ControllerReportDialogProps) => {
     />
   );
 
-  const actions = showResult ? (
+  const actions = filed ? (
     <>
       <Button variant="secondary" onClick={closeForm}>Close</Button>
-      <Button variant="primary" onClick={openOnGithub}>Open on GitHub</Button>
+      <Button variant="secondary" onClick={() => openAndClose(filed.sanctuaryUrl)}>See it in the Sanctuary</Button>
+      <Button variant="primary" onClick={() => openAndClose(filed.issueUrl)}>Open on GitHub</Button>
     </>
   ) : form.step === 'about' ? (
     <>
@@ -106,13 +109,13 @@ const ControllerReportDialog = (props: ControllerReportDialogProps) => {
         {showResult ? (
           <>
             <Text as="p">Thanks, your report was filed.</Text>
-            <Text as="p" className="controller-report__result-url">{form.resultUrl}</Text>
+            <Text as="p" className="controller-report__result-url">{filed?.issueUrl}</Text>
           </>
         ) : form.step === 'about' ? (
           <IntroStep />
         ) : form.step === 'user-info' ? (
           <UserInfoStep
-            email={form.email} setEmail={form.setEmail} emailTouched={form.emailTouched} emailValid={form.emailValid}
+            me={form.me} email={form.email} setEmail={form.setEmail} emailTouched={form.emailTouched} emailValid={form.emailValid}
             name={form.name} setName={form.setName} additionalInfo={form.additionalInfo} setAdditionalInfo={form.setAdditionalInfo}
             debugText={form.debugText}
           />
@@ -120,7 +123,7 @@ const ControllerReportDialog = (props: ControllerReportDialogProps) => {
           <DiagnosticsFlowBody wizard={form.wizard} wizardRef={wizardRef} onCapturedCountChange={setCapturedCount} />
         ) : (
           <ConfirmStep
-            email={form.email} name={form.name} additionalInfo={form.additionalInfo} debugText={form.debugText}
+            me={form.me} email={form.email} name={form.name} additionalInfo={form.additionalInfo} debugText={form.debugText}
             detection={form.detection} calibrationMap={form.calibrationMap} diagnosticsReport={form.diagnosticsReport} status={form.status}
           />
         )}

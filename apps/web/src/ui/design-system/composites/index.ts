@@ -14,6 +14,8 @@ export { WizardDialogShell } from './WizardDialogShell';
 export type { WizardStep, WizardDialogShellProps } from './WizardDialogShell';
 export { GroupTree } from './GroupTree';
 export type { GroupTreeProps, TreeNode } from './GroupTree';
+export { HeaderTabs } from './HeaderTabs';
+export type { HeaderTabItem, HeaderTabsProps } from './HeaderTabs';
 export { LogPanel } from './LogPanel';
 export type { LogKindDef, LogPanelProps, LogRow } from './LogPanel';
 export { ListItemRow } from './ListItemRow';

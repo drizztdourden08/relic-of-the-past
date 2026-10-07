@@ -1,3 +1,3 @@
 /* @layer renderer-components @kind barrel */
 export { DropZone } from './DropZone';
-export type { DropZoneProps } from './DropZone.type';
+export type { DropZoneProps, DropZoneVariant } from './DropZone.type';

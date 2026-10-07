@@ -1,0 +1,39 @@
+/* @layer sanctuary-site @kind style */
+
+/* The card scrolls on its own; the header's title wraps, since a file name can be long. */
+.detail {
+  min-width: 0;
+  min-height: 0;
+  padding: var(--space-lg);
+  overflow-y: auto;
+}
+
+.detail .detail__head .window-header__title {
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  text-transform: none;
+  letter-spacing: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* Keys read as the pane's own eyebrows; values keep the row's right alignment. */
+.detail .detail__field .stat-row__label {
+  font-size: var(--text-xs);
+  letter-spacing: var(--eyebrow-tracking);
+  text-transform: uppercase;
+}
+
+.detail .detail__field .stat-row__value {
+  color: var(--c-text-dim);
+  overflow-wrap: anywhere;
+}
+
+.detail__actions {
+  padding-top: var(--space-sm);
+  border-top: var(--border-width-thin) solid var(--c-border);
+}
+
+.detail__notice {
+  margin: 0;
+}

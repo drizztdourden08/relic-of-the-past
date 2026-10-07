@@ -200,7 +200,7 @@ const GameLayer = (props: GameLayerProps) => {
       {status === 'running' && developerToolsEnabled && <ShadowEditorOverlay width={fitSize.width} height={fitSize.height} gameRunning={status === 'running'} />}
       {status === 'running' && developerToolsEnabled && <ShadowEditorPanel />}
       {status === 'running' && developerToolsEnabled && <ShadowElementList />}
-      {status === 'running' && <GameOverlay width={fitSize.width} height={fitSize.height} />}
+      {status === 'running' && <GameOverlay width={fitSize.width} height={fitSize.height} profileId={profileId} />}
     </Box>
   );
 };

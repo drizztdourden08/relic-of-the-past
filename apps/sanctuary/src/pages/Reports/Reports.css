@@ -1,0 +1,11 @@
+/* @layer sanctuary-site @kind style */
+
+/* The content fills the settings page body, so the table scrolls, not the page. */
+.reports {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.reports__summary {
+  font-variant-numeric: tabular-nums;
+}

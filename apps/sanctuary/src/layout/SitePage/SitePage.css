@@ -1,0 +1,20 @@
+/* @layer sanctuary-site @kind style */
+
+/* The card and, when a page has one, its side column, side by side in the frame's main area. */
+.site-page {
+  flex: 1 1 auto;
+  min-height: 0;
+  gap: var(--space-md);
+}
+
+.site-page > .settings-page {
+  min-width: 0;
+}
+
+/* A page's header controls take the full height of the header's content row, so a drop
+   target there is a real box, and give up width when the line runs short. */
+.site-page .settings-page__actions {
+  flex-shrink: 1;
+  align-self: stretch;
+  align-items: stretch;
+}

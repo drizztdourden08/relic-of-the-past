@@ -31,6 +31,7 @@ const requestedFeatureIds = (s: GameSettings): string[] => {
   // mode requests its 'idle' bit, and the play-area toggle is optional on GameSettings. Without
   // these the resolver never sees either id, so neither features2 bit is ever sent.
   if (offscreenAiMode(s) === 'idle') ids.push('offscreenAI');
+  if (s.titleScreen === 'reimagined') ids.push('titleOverride');
   if (s.widescreenPlayArea === true) ids.push('widescreenPlayArea');
   for (const fix of BUNDLE_FIXES) {
     // The widescreen corrections are one setting: the Display switch, on by default with extended

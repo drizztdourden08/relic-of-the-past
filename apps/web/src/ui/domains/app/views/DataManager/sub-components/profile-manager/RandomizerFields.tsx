@@ -12,7 +12,10 @@ import { Toggle } from '../../../../../../design-system/primitives/Toggle';
 import { Select } from '../../../../../../design-system/primitives/Select';
 import { TextInput } from '../../../../../../design-system/primitives/TextInput';
 import { Field } from '../../../../../../design-system/primitives/Field';
+import { ARCHIPELAGO_DEFAULT_PORT } from '@shared/config/ports.constants';
 import type { RandomizerFormState } from './build-randomizer-config';
+
+const SERVER_PLACEHOLDER = `archipelago.gg:${ARCHIPELAGO_DEFAULT_PORT}`;
 
 interface RandomizerFieldsProps {
   value: RandomizerFormState;
@@ -57,7 +60,7 @@ const RandomizerFields = (props: RandomizerFieldsProps) => {
               <Field label="Server URL">
                 <TextInput
                   type="text"
-                  placeholder="archipelago.gg:38281"
+                  placeholder={SERVER_PLACEHOLDER}
                   value={value.serverUrl}
                   onChange={(e) => patch({ serverUrl: e.target.value })}
                 />

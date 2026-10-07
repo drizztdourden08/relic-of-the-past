@@ -46,6 +46,36 @@
   color: var(--c-text-muted);
 }
 
+/* Inline: a dashed target on one line, for a header or a toolbar. It is as tall as the
+   row it sits in (at least one control high) and gives up width when the row runs
+   short, down to what its icon and label need. */
+.dropzone.dropzone--inline {
+  flex-direction: row;
+  flex-shrink: 1;
+  align-self: stretch;
+  gap: var(--space-sm);
+  width: var(--dropzone-inline-w);
+  min-width: max-content;
+  min-height: var(--control-h-sm);
+  padding: 0 var(--space-md);
+  border-radius: var(--radius-md);
+  white-space: nowrap;
+}
+
+.dropzone--inline .dropzone__icon {
+  display: inline-flex;
+  font-size: var(--text-lg);
+}
+
+.dropzone--inline .dropzone__label {
+  font-size: var(--text-sm);
+}
+
+.dropzone--inline:focus-visible {
+  outline: var(--border-width-thin) solid var(--c-gold-bright);
+  outline-offset: var(--border-width-thin);
+}
+
 /* Compact viewport (< --bp-compact): a tall drop target wastes scarce vertical
    space on phones, so shrink the padding and icon. */
 @media (width <= 820px) {

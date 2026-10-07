@@ -5,17 +5,18 @@ import { ReportSection } from './ReportSection';
 
 type ConfirmStepProps = Pick<
   UseControllerReportForm,
-  'email' | 'name' | 'additionalInfo' | 'debugText' | 'detection' | 'calibrationMap' | 'diagnosticsReport' | 'status'
+  'me' | 'email' | 'name' | 'additionalInfo' | 'debugText' | 'detection' | 'calibrationMap' | 'diagnosticsReport' | 'status'
 >;
 
 /** Step 4: review EVERYTHING that will be sent. Dense sections stay collapsed, but nothing is left out. */
 const ConfirmStep = (props: ConfirmStepProps) => {
-  const { email, name, additionalInfo, debugText, detection, calibrationMap, diagnosticsReport, status } = props;
+  const { me, email, name, additionalInfo, debugText, detection, calibrationMap, diagnosticsReport, status } = props;
+  const contact = me ? me.user.displayName : `${email}${name.trim() ? ` (${name.trim()})` : ''}`;
 
   return (
     <>
       <Text as="p">
-        <Text as="strong">Contact:</Text> {email}{name.trim() && ` (${name.trim()})`}
+        <Text as="strong">{me ? 'Reporting as:' : 'Contact:'}</Text> {contact}
       </Text>
       <ReportSection label="Additional info you entered" text={additionalInfo.trim() || '(none provided)'} />
 
@@ -35,8 +36,9 @@ const ConfirmStep = (props: ConfirmStepProps) => {
       <ReportSection label="Debug info (app/OS/hardware)" text={debugText ?? 'Collecting...'} />
 
       <Text as="p" className="controller-report__disclaimer">
-        Everything above (your contact info, every section here, and the debug info) will be recorded
-        in a public issue on the project's GitHub repository.
+        Everything above (every section here and the debug info) will be recorded in a public issue
+        on the project's GitHub repository.
+        {me ? ' The issue names your account.' : ' Your email stays on the report record and never in the issue.'}
       </Text>
 
       {status === 'error' && (

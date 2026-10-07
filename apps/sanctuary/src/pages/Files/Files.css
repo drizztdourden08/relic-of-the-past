@@ -1,0 +1,141 @@
+/* @layer sanctuary-site @kind style */
+
+/* The content fills the settings page body, so the table scrolls, not the page. */
+.files {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.files__summary {
+  font-variant-numeric: tabular-nums;
+}
+
+/* The version history in the detail pane: an eyebrow, one row per version, its drop zone. */
+.versions {
+  padding-top: var(--space-sm);
+  border-top: var(--border-width-thin) solid var(--c-border);
+}
+
+.versions__title {
+  letter-spacing: var(--eyebrow-tracking);
+  text-transform: uppercase;
+}
+
+.versions .row__key {
+  flex-basis: auto;
+}
+
+.versions .dropzone {
+  padding: var(--space-sm);
+}
+
+/* The same-name question and the new version dialog. */
+.version-dialog {
+  width: var(--dialog-w-sm);
+}
+
+.version-dialog__lead {
+  margin: 0;
+  color: var(--c-text);
+  font-family: var(--font-mono);
+  overflow-wrap: anywhere;
+}
+
+.version-dialog__row .row__value {
+  overflow-wrap: anywhere;
+}
+
+.files__note {
+  margin: 0;
+  padding: var(--space-sm) var(--space-md);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--r-md);
+  background: var(--c-sunken);
+  color: var(--c-text);
+  white-space: pre-wrap;
+}
+
+/* The header's drop target fills the line's height; the uploads button stays a button. */
+.upload-actions .upload-actions__show {
+  align-self: center;
+}
+
+/* The selection panel: the same card as the details, scrolling on its own when tall. */
+.selection-panel {
+  min-width: 0;
+  min-height: 0;
+  padding: var(--space-lg);
+  overflow-y: auto;
+}
+
+.selection-panel .selection-panel__head .window-header__title {
+  font-size: var(--text-base);
+}
+
+.selection-panel__total {
+  font-variant-numeric: tabular-nums;
+}
+
+.selection-panel__note,
+.selection-panel__skip {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.selection-panel__skip {
+  padding: var(--space-xs) var(--space-sm);
+  border-left: var(--border-width-thick) solid var(--c-gold);
+  color: var(--c-text-dim);
+}
+
+.selection-panel__type {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.selection-panel__edits {
+  padding-top: var(--space-sm);
+  border-top: var(--border-width-thin) solid var(--c-border);
+}
+
+.selection-panel .selection-panel__delete {
+  align-self: flex-start;
+}
+
+/* One tile: a dark well holding the picture or the icon, the name under it. */
+.selection-tile {
+  min-width: 0;
+}
+
+.selection-tile__well {
+  height: var(--selection-tile-h);
+  border-radius: var(--radius-md);
+  background: var(--c-sunken);
+  overflow: hidden;
+}
+
+.selection-tile__icon {
+  width: var(--selection-tile-icon);
+  height: var(--selection-tile-icon);
+  color: var(--c-text-muted);
+}
+
+.selection-tile__image {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* A sprite fills the well with hard pixel edges, as in the file's own preview. */
+.selection-tile__image[data-pixel-art] {
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+.selection-tile__name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

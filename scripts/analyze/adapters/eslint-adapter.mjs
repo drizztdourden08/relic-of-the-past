@@ -11,7 +11,9 @@ import { batchQuoted, sh, toolExists, toRel } from './_run.mjs';
 
 const LANGS = new Set(['TypeScript', 'TypeScript-React', 'JavaScript', 'JavaScript-React']);
 const lint = (target, root) => {
-  const { stdout } = sh(`npx eslint ${target} -f json`, root);
+  // Changed files are passed explicitly, so a config-ignored one (vite.config.ts) would
+  // otherwise come back as a "File ignored" warning instead of being skipped.
+  const { stdout } = sh(`npx eslint ${target} -f json --no-warn-ignored`, root);
   const start = stdout.indexOf('[');
   if (start < 0) return [];
   try { return JSON.parse(stdout.slice(start)); } catch { return []; }

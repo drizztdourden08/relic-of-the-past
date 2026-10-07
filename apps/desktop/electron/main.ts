@@ -1,5 +1,4 @@
 /* @layer electron-main @kind logic */
-import { VelopackApp } from 'velopack';
 import { app, BrowserWindow, Menu, session, protocol, ipcMain } from 'electron';
 import { is } from '@electron-toolkit/utils';
 
@@ -54,7 +53,8 @@ import { registerWasmHandlers } from './wasm/ipc-handlers';
 import { registerStorageHandlers } from './storage/ipc-handlers';
 import { registerFileHandlers } from './storage/file-handlers';
 import { initAutoUpdater, registerUpdaterHandlers } from './updater';
-import { registerGithubHandlers } from './github/ipc-handlers';
+import { loadVelopack } from './updater/velopack-loader';
+import { registerSanctuaryHandlers } from './sanctuary/ipc-handlers';
 import { registerDebugReportHandlers } from './diagnostics/debug-report/ipc-handlers';
 import { registerFfmpegHandlers } from './tools/ipc-handlers';
 import { registerWidgetHandlers } from './widgets/ipc-handlers';
@@ -68,7 +68,9 @@ import { registerMsulAssociation, unregisterMsulAssociation } from './msu/msul-a
 // nothing of ours may happen before it. The `.msul` document type rides on those
 // hooks (registered after install and every update, removed before uninstall).
 // Windows only; the other platforms get it from the package.
-VelopackApp.build()
+// Loaded lazily: on a distro too old for Velopack's Linux module the app still starts,
+// just without self-update (see velopack-loader).
+loadVelopack()?.VelopackApp.build()
   .onAfterInstallFastCallback(registerMsulAssociation)
   .onAfterUpdateFastCallback(registerMsulAssociation)
   .onBeforeUninstallFastCallback(unregisterMsulAssociation)
@@ -117,7 +119,7 @@ const IPC_HANDLERS: Array<{ register: () => void; devOnly?: boolean }> = [
   { register: registerWasmHandlers },
   { register: registerStorageHandlers },
   { register: registerFileHandlers },
-  { register: registerGithubHandlers },
+  { register: registerSanctuaryHandlers },
   { register: registerDebugReportHandlers },
   { register: registerFfmpegHandlers },
 ];
