@@ -17,8 +17,8 @@ let currentState: GameState = { status: 'idle', error: null };
 let currentProfileId: string | null = null;
 const listeners = new Set<GameStateListener>();
 
-/** Size of the UI state buffer exported from C. Last byte in use is 130 (core/game-hooks/ui_state.c). */
-const UI_STATE_BUFFER_SIZE = 131;
+/** Size of the UI state buffer exported from C. Last byte in use is 132 (core/game-hooks/ui_state.c). */
+const UI_STATE_BUFFER_SIZE = 133;
 
 const setState = (next: GameState): void => {
   currentState = next;

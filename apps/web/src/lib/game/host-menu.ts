@@ -10,7 +10,7 @@
  *    frame the module starts running, and whenever the core is seen to have let go.
  *  - **The wanted equipped item.** The core has one register and the native menu's own init
  *    walks the 21-entry grid before the host's hold matters, which replaces any id that grid
- *    has no row for (a bottle, or the digging tool). Byte 130 of the state buffer is the
+ *    has no row for (a bottle, or the digging tool). Byte 132 of the state buffer is the
  *    register read back, so `reconcileHostMenu` can see that happen and write it again.
  *
  * Deduping the item write here instead of at the call site is deliberate: `pollFrame` calls
@@ -91,8 +91,8 @@ const reassertAfterSaveLoad = (): void => {
 
 /**
  * What the host last asked the register to hold, or 0 if it never has. The pause menu reads
- * this, not byte 130, when deciding which cell to open on: on the frame the menu
- * appears, byte 130 may still be showing the value the native init just replaced.
+ * this, not byte 132, when deciding which cell to open on: on the frame the menu
+ * appears, byte 132 may still be showing the value the native init just replaced.
  */
 const wantedActiveItem = (): number => wantedItem;
 

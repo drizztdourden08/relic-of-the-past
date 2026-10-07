@@ -122,10 +122,10 @@ host wants, and the teardown that follows puts the id back in range before anyth
 
 | Offset | Value |
 |-------:|-------|
-| `129` | `1` while the takeover is in force and the gate allows it |
-| `130` | the live `hud_cur_item` |
+| `131` | `1` while the takeover is in force and the gate allows it |
+| `132` | the live `hud_cur_item` |
 
-Byte `130` repeats byte `14` deliberately. Byte `14` is the HUD's equipped-item readout; this one is
+Byte `132` repeats byte `14` deliberately. Byte `14` is the HUD's equipped-item readout; this one is
 the host's own register read back, so the host can see when the native menu moved it and re-assert.
 It can move: `Hud_Init` runs `Hud_SearchForEquippedItem()` at menu state 1, before the hold takes
 effect at browse state 4, and that walks the 21-entry grid, so any id the 21-entry table has no row

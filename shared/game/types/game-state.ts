@@ -108,7 +108,7 @@ interface SaveMenuState {
 }
 
 /**
- * Host-owned pause menu. Lives in bytes 129 and 130 of the UI state buffer.
+ * Host-owned pause menu. Lives in bytes 131 and 132 of the UI state buffer.
  *
  * `activeItem` deliberately repeats `hud.equippedY` (byte 14). Byte 14 is the HUD's
  * equipped-item readout; this one is the host's own register read back, so the host can

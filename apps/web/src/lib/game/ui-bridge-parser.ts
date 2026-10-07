@@ -170,13 +170,13 @@ const parseGameUIBuffer = (heap: Uint8Array, ptr: number): GameUIState => {
   const maxArrows = b[p + 126];
   const maxRupees = b[p + 127] | (b[p + 128] << 8);
 
-  // Host-owned pause menu (bytes 129-130)
-  const hostMenuHolding = b[p + 129] !== 0;
-  // Byte 130 repeats byte 14 on purpose (see HostMenuState). Byte 14 is the HUD's readout of
+  // Host-owned pause menu (bytes 131-132; 129-130 are the HUD countdown)
+  const hostMenuHolding = b[p + 131] !== 0;
+  // Byte 132 repeats byte 14 on purpose (see HostMenuState). Byte 14 is the HUD's readout of
   // the equipped item; this is the host's own register read back, so a value the native menu
   // moved (its init walks the 21-entry grid before the hold engages, and replaces any id that
   // grid has no row for) can be detected and written again.
-  const hostMenuActiveItem = b[p + 130];
+  const hostMenuActiveItem = b[p + 132];
 
   // Derive mode
   const mode = deriveUIMode(mainModule, subModule, subSubModule, floorTimer, overworldScreenIndex);
