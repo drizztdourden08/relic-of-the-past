@@ -1,7 +1,7 @@
 /* @layer shared-hud @kind barrel */
 export { HUD_EDGE_INSET, PAUSE_LEGEND_HEIGHT, PAUSE_LEGEND_LEFT_RESERVE } from './chrome-reserve';
 export {
-  CONSUMABLES_SIZE, DEFAULT_HEARTS, HEARTS_PER_ROW, HEART_SIZE, LIFE_SIZE,
+  CONSUMABLES_SIZE, COUNTDOWN_SIZE, DEFAULT_HEARTS, HEARTS_PER_ROW, HEART_SIZE, LIFE_SIZE,
   MAGIC_FRAME, MAGIC_SIZE, WALLET_SIZE, lifeSize,
 } from './element-sizes';
 export { REFERENCE_VIEW, VITALS_RESERVE, vitalsReserve } from './vitals-reserve';
@@ -15,6 +15,7 @@ export { failureMessage, loadLayout, tryLoadLayout } from './load-layout';
 export type { LoadResult } from './load-layout';
 export { MAX_EXPANDED_NODES, worstCaseNodeCount } from './validate-expand-budget';
 export { validateLayout, validateValue } from './validate-layout';
+export { COUNTDOWN_VARIANTS } from './validate-countdown-node';
 export type { ValidationResult } from './validate-layout';
 export type { ValueContext } from './validate-value';
 export { validateStyle } from './validate-style';

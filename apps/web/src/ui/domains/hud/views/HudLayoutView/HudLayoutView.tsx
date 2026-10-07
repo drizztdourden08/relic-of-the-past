@@ -32,6 +32,7 @@ import { HudNodeRenderer } from '../../compounds/HudNodeRenderer';
 import { useHudLayoutStore } from '@app/stores/hud-layout-store';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { useClusterVisibility } from './behavior/useClusterVisibility';
+import { useCountdownContent } from './behavior/useCountdownContent';
 import { useHudViewport } from './behavior/useHudViewport';
 import { usePlacedLayout } from './behavior/usePlacedLayout';
 import { useSlotContent } from './behavior/useSlotContent';
@@ -53,21 +54,25 @@ const HudLayoutView = (props: HudLayoutViewProps = {}) => {
   const slots = useSlotContent(layout.glyphPack ?? AUTO_PACK_ID);
   const { vitals, hearts, spritesBase } = useVitalsContent(scale);
   const visible = useClusterVisibility(layout.inGameplay, slots.signature, showAllChips);
+  const countdown = useCountdownContent();
 
   // The flat data surface every bound `Value`/`repeat`/`switch` in the
   // document reads from (`shared/hud/data/variables.ts`). Built from the
   // SAME vitals object the content below hands the renderer, so the two can
   // never disagree about what the save holds.
   const slotCount = Object.keys(slots.slots).length;
-  const dataScope = useMemo(() => hudDataScope(vitals, slotCount), [vitals, slotCount]);
+  const dataScope = useMemo(
+    () => hudDataScope(vitals, slotCount, countdown.source),
+    [vitals, slotCount, countdown.source],
+  );
   const ctx = useMemo(
     () => ({ hearts, filledSlots: slots.filledSlots, scope: dataScope }),
     [dataScope, hearts, slots.filledSlots],
   );
   const placed = usePlacedLayout(layout, view, ctx);
   const content = useMemo(
-    () => ({ vitals, slots: slots.slots, glyph: slots.glyph }),
-    [slots.glyph, slots.slots, vitals],
+    () => ({ vitals, slots: slots.slots, glyph: slots.glyph, countdown: countdown.countdown }),
+    [countdown.countdown, slots.glyph, slots.slots, vitals],
   );
 
   return (

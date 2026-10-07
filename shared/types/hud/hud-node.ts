@@ -42,6 +42,7 @@
 
 import type { SdlAxisName, SdlButtonName } from '../../input/sdl-buttons';
 import type { HudButtonSpec } from './hud-button';
+import type { HudCountdownSpec } from './hud-countdown';
 import type { HudAnimation, HudTransition } from './hud-motion';
 import type { HudShapeSpec } from './hud-shape';
 import type { HudBoxStyle } from './hud-style';
@@ -127,6 +128,7 @@ type HudElementSpec =
   | HudTextSpec
   | HudButtonSpec
   | HudShapeSpec
+  | HudCountdownSpec
   | HudRepeatSpec
   | HudSwitchSpec;
 

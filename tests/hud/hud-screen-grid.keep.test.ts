@@ -66,6 +66,34 @@ describe('the shipped HUD is pixel-identical to what the anchors drew', () => {
   });
 });
 
+describe('the countdown (§62) joins every built-in without moving a pixel', () => {
+  const VIEWS = [VIEW, { w: 256, h: 224 }, { w: 399, h: 224 }, { w: 512, h: 448 }];
+  const COUNTING = { ...SCOPE, countdown_active: 1, countdown_seconds: 18, countdown_frames: 40 };
+  /** The document as it shipped before §62: the same layout minus its countdown. */
+  const without = (doc: HudLayout): HudLayout =>
+    ({ ...doc, screen: { ...doc.screen, children: doc.screen.children.filter((c) => c.id !== 'countdown') } });
+
+  it.each(['default', 'compact', 'bottom-right'])('%s: every other node is where it was, counting or not', (id) => {
+    const doc = layoutById(id) as HudLayout;
+    VIEWS.forEach((view) => [SCOPE, COUNTING].forEach((scope) => {
+      const before = layoutHud(without(doc), view, { scope, hearts: 20 });
+      const after = layoutHud(doc, view, { scope, hearts: 20 }).filter((node) => node.id !== 'countdown');
+      expect(after.map((n) => [n.id, n.rect, n.scale, n.opacity, n.dimmed]))
+        .toEqual(before.map((n) => [n.id, n.rect, n.scale, n.opacity, n.dimmed]));
+    }));
+  });
+
+  it.each(['default', 'compact', 'bottom-right'])('%s: the pie sits where HudView draws it, and only while counting', (id) => {
+    const doc = layoutById(id) as HudLayout;
+    // Centred across the view, box bottom 12 px up, so the disc (4 px in) is two tiles up.
+    expect(placedById(layoutHud(doc, VIEW, { scope: COUNTING }), 'countdown')?.rect)
+      .toEqual({ x: 177, y: 168, w: 44, h: 44 });
+    expect(placedById(layoutHud(doc, { w: 512, h: 448 }, { scope: COUNTING }), 'countdown')?.rect)
+      .toEqual({ x: 234, y: 392, w: 44, h: 44 });
+    expect(placedById(layoutHud(doc, VIEW, { scope: SCOPE }), 'countdown')).toBeUndefined();
+  });
+});
+
 describe('a pre-§42 stack document migrates and draws identically', () => {
   const leaf = (id: string, extra: Partial<HudNode> = {}): HudNode =>
     ({ kind: 'element', id, element: { type: 'slot', index: 1 }, ...extra }) as HudNode;

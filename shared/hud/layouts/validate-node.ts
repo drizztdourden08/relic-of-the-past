@@ -37,6 +37,7 @@ import { BOX_KEYS, checkKeys, isRecord, numberAt, validateBox } from './validate
 import { validateFlexContainer, validateGridContainer } from './validate-container';
 import { repeatSpec, switchSpec } from './validate-dynamic-node';
 import { shapeSpec } from './validate-shape-node';
+import { countdownSpec } from './validate-countdown-node';
 import { validateAnimations, validateTransition } from './validate-motion';
 import { validateStyle } from './validate-style';
 import { buttonSpec } from './validate-button-node';
@@ -120,6 +121,7 @@ const elementSpec = (
   if (type === 'text') return textSpec(value, path, issues, insideRepeat);
   if (type === 'button') return buttonSpec(value, path, issues);
   if (type === 'shape') return shapeSpec(value, path, issues, insideRepeat);
+  if (type === 'countdown') return countdownSpec(value, path, issues);
   if (type === 'repeat') return repeatSpec(value, path, issues, seen, validateNode, insideRepeat);
   if (type === 'switch') return switchSpec(value, path, issues, seen, validateNode, insideRepeat);
   issues.push(`${path}.type: unknown element type ${JSON.stringify(type)}`);

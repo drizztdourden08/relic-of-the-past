@@ -7,6 +7,7 @@
  */
 import { Text } from '@ds/primitives/Text';
 import { ButtonContent } from '../content/ButtonContent';
+import { CountdownContent } from '../content/CountdownContent';
 import { GlyphContent } from '../content/GlyphContent';
 import { RepeatContent } from '../content/RepeatContent';
 import { ShapeContent } from '../content/ShapeContent';
@@ -44,6 +45,8 @@ const ContentSection = (props: ContentSectionProps) => {
       return <TextContent spec={element} onChange={setElement} scope={scope} insideRepeat={insideRepeat} />;
     case 'button':
       return <ButtonContent spec={element} onChange={setElement} glyphPacks={glyphPacks} />;
+    case 'countdown':
+      return <CountdownContent spec={element} onChange={setElement} />;
     case 'repeat':
       return <RepeatContent spec={element} onChange={setElement} scope={scope} insideRepeat={insideRepeat} glyphPacks={glyphPacks} onSelectNode={onSelectNode} />;
     case 'switch':

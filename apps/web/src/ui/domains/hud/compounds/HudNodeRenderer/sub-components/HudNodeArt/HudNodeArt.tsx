@@ -25,6 +25,7 @@ import { HudGlyph } from '../../../../composites/HudGlyph';
 import { HudButton } from '../../../HudButton';
 import { HudShape } from '../../../HudShape';
 import { HudText } from '../../../HudText';
+import { HudNodeCountdown } from '../HudNodeCountdown';
 import { DIMMED_GLYPH_OPACITY } from '../../HudNodeRenderer.constants';
 import type { HudNodeArtProps } from './HudNodeArt.type';
 import type { HudGlyphSpec, HudNodeContent } from '../../HudNodeRenderer.type';
@@ -96,6 +97,8 @@ const HudNodeArt = (props: HudNodeArtProps) => {
       return <HudText spec={spec} scope={dataScope} scale={s} spritesBase={spritesBase} />;
     case 'button':
       return <HudButton spec={spec} content={content} unassigned={placed.dimmed} scale={s} spritesBase={spritesBase} />;
+    case 'countdown':
+      return <HudNodeCountdown spec={spec} countdown={content.countdown} scale={s} spritesBase={spritesBase} />;
     case 'repeat':
     case 'switch':
       // Unreachable: `layoutHud` expands the tree

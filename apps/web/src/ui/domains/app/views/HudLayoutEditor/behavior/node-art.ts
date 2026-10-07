@@ -36,7 +36,8 @@ const spriteLabel = (file: string): string =>
 
 /** One character per kind. Each is a stand-in with a shape, not a `?`. */
 const PLACEHOLDERS: Readonly<Record<string, string>> = {
-  text: 'T', shape: '♥', slot: '▫', spacer: '␣', repeat: '⧉', switch: '⑂', button: '⊙', container: '▤',
+  text: 'T', shape: '♥', slot: '▫', spacer: '␣', repeat: '⧉', switch: '⑂', button: '⊙', countdown: '◔',
+  container: '▤',
 };
 
 const specArt = (spec: HudElementSpec, packs: readonly GlyphPack[]): NodeArt => {

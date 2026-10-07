@@ -17,6 +17,7 @@ export type {
   HudButtonBind, HudButtonFace, HudButtonSpec, HudButtonState, HudButtonStates, HudButtonVerb,
 } from './hud-button';
 export type { HudShapeKind, HudShapeSpec } from './hud-shape';
+export type { HudCountdownSpec, HudCountdownVariantChoice, HudCountdownVariantId } from './hud-countdown';
 export type {
   HudAnimatableProperty, HudAnimation, HudAnimationKeyframe, HudAnimationLoop, HudEasing, HudEnterExitProperty,
   HudEnterExitTransition, HudNamedEasing, HudTransition, HudTransitionProperty,

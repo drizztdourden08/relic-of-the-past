@@ -36,6 +36,13 @@ const SAMPLE_HUD = {
   maxRupees: 999,
 };
 
+/** A countdown caught part way, always: the editor is where a countdown node is
+ *  placed, and a real one runs for thirty seconds at most, so a stage that only
+ *  drew it while the game counted would almost never show it. Eighteen of the
+ *  digging game's thirty seconds, so the pie reads part eaten and two digits
+ *  sit on it. Never written anywhere. */
+const SAMPLE_COUNTDOWN = { total: 30, remaining: 18, fractionLeft: 0.6, frames: 40 };
+
 /** Inventory tiers by save slot. Almost everything is owned, because the sample
  *  slots deal a RANDOM item onto every placeholder and a silhouette says
  *  nothing about the density the layout has to hold. Two cells are left empty
@@ -121,6 +128,7 @@ const sampleSlotAssignments = (
 export {
   SAMPLE_ASSIGNMENTS,
   SAMPLE_BOTTLES,
+  SAMPLE_COUNTDOWN,
   SAMPLE_HUD,
   SAMPLE_ITEMS,
   SAMPLE_ITEM_POOL,

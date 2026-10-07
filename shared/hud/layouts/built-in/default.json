@@ -910,6 +910,25 @@
           "row": 1
         },
         "justifySelf": "end"
+      },
+      {
+        "kind": "element",
+        "id": "countdown",
+        "$comment": "The digging game and Super Bomb countdown, where the Original style draws it: centred across the screen, its box 12 px above the bottom edge, which puts the pie's disc two HUD tiles up. It spans all nine cells so it sizes no band and moves nothing else, and it is not placed at all while nothing is counting (section 62).",
+        "element": {
+          "type": "countdown"
+        },
+        "place": {
+          "column": 1,
+          "row": 1,
+          "colSpan": 3,
+          "rowSpan": 3
+        },
+        "alignSelf": "end",
+        "justifySelf": "center",
+        "margin": {
+          "bottom": 12
+        }
       }
     ]
   }

@@ -45,6 +45,7 @@ import circleDotIcon from '@iconify-icons/lucide/circle-dot';
 import repeatIcon from '@iconify-icons/lucide/repeat';
 import gitBranchIcon from '@iconify-icons/lucide/git-branch';
 import zapIcon from '@iconify-icons/lucide/zap';
+import timerIcon from '@iconify-icons/lucide/timer';
 import starIcon from '@iconify-icons/lucide/star';
 import bookmarkIcon from '@iconify-icons/lucide/bookmark';
 import gamepadIcon from '@iconify-icons/lucide/gamepad-2';
@@ -54,7 +55,7 @@ import magnetIcon from '@iconify-icons/lucide/magnet';
 import { HUD_PRESETS, instantiatePreset } from '@shared/hud/presets';
 import { SDL_BUTTON } from '@shared/input/sdl-buttons';
 import {
-  newButton, newContainer, newElement, newGrid, newOverlap, newRepeat, newSwitch, newText,
+  newButton, newContainer, newCountdown, newElement, newGrid, newOverlap, newRepeat, newSwitch, newText,
 } from './new-node';
 import type { MenuEntry, MenuIconSource } from '@ds/composites/DropdownMenu';
 import type { HudLayout, HudNode } from '@shared/types/hud';
@@ -91,12 +92,15 @@ const containerItems = (deps: MenuDeps): MenuEntry[] => ([
  *  §23's own toolbar pass left out because none of them existed in
  *  `HudElementSpec` yet. `Text`/`Button` are picked visually elsewhere in the
  *  full design (a font/glyph picker, phase 7); here each row inserts the
- *  minimum a validator accepts, ready for the inspector to tune. */
+ *  minimum a validator accepts, ready for the inspector to tune. The
+ *  countdown (§62) sits beside them: it is one element that draws live data,
+ *  and it has nothing to pick by eye. */
 const dynamicsItems = (deps: MenuDeps): MenuEntry[] => ([
   { key: 'text', icon: typeIcon, label: 'Text', onClick: () => deps.insert(newText()) },
   { key: 'button', icon: circleDotIcon, label: 'Button', onClick: () => deps.insert(newButton()) },
   { key: 'repeat', icon: repeatIcon, label: 'Repeat', onClick: () => deps.insert(newRepeat()) },
   { key: 'switch', icon: gitBranchIcon, label: 'Switch', onClick: () => deps.insert(newSwitch()) },
+  { key: 'countdown', icon: timerIcon, label: 'Countdown', onClick: () => deps.insert(newCountdown()) },
 ]);
 
 const buildToolbarGroups = (deps: MenuDeps): ToolbarGroup[] => [

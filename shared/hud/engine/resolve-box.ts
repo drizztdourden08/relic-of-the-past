@@ -12,7 +12,7 @@
  */
 
 import { resolveValue } from '../data/resolve-value';
-import type { HudBox, HudContainer } from '../../types/hud/hud-node';
+import type { HudBox, HudContainer, HudElement } from '../../types/hud/hud-node';
 import type { Value } from '../../types/hud/hud-value';
 import type { MeasureContext } from './engine.type';
 
@@ -31,10 +31,18 @@ const resolveOpacity = (node: HudBox, ctx: MeasureContext): number => {
   return Math.min(1, Math.max(0, value));
 };
 
+/** A countdown with nothing counting (§62). It is the `countdown` kind's own
+ *  rule, read here so it is the same rule `visible: false` already is: the
+ *  node leaves the flow and takes no space, under both engines and at a root. */
+const idleCountdown = (node: HudBox, ctx: MeasureContext): boolean =>
+  'element' in node && (node as HudElement).element.type === 'countdown'
+  && (scopeOf(ctx).countdown_active ?? 0) === 0;
+
 /** `visible` keeps its boolean shorthand and gains a bound form beside it,
  *  resolved truthy when non-zero - the same reading a repeat's future count
  *  will give a resolved number. */
 const resolveVisible = (node: HudBox, ctx: MeasureContext): boolean => {
+  if (idleCountdown(node, ctx)) return false;
   const { visible } = node;
   if (visible === undefined) return true;
   if (typeof visible === 'boolean') return visible;

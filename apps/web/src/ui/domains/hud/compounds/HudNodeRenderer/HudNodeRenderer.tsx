@@ -27,6 +27,7 @@
  * how the pause menu's targets used to drift from the cluster they covered.
  */
 import { HudBox } from '../../primitives/HudBox';
+import { drawOrigin } from './behavior/draw-origin';
 import { HudNodeArt } from './sub-components/HudNodeArt';
 import { useHudNodeMotion } from './sub-components/HudNodeMotion';
 import { resolveNodeStyle } from './sub-components/HudNodeStyle';
@@ -62,6 +63,8 @@ const HudNodeRenderer = (props: HudNodeRendererProps) => {
         if (placed.node.kind !== 'element') return null;
         const slot = slotOf(placed.node);
         const press = slot !== null && onSlotPress ? () => onSlotPress(slot) : undefined;
+        // The rect as drawn: exact, except the countdown, which snaps to whole game pixels.
+        const at = drawOrigin(placed);
 
         return (
           <HudBox
@@ -69,8 +72,8 @@ const HudNodeRenderer = (props: HudNodeRendererProps) => {
             onClick={press}
             style={{
               position: 'absolute',
-              left: (placed.rect.x - origin.x) * scale,
-              top: (placed.rect.y - origin.y) * scale,
+              left: (at.x - origin.x) * scale,
+              top: (at.y - origin.y) * scale,
               opacity: motion.opacityFor(placed),
               ...resolveNodeStyle(placed.node.style, dataScope),
               ...motion.styleFor(placed),

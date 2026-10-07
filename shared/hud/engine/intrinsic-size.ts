@@ -17,7 +17,7 @@
  * `aspectOf` derives it and nothing stores it.
  */
 
-import { HEART_SIZE, MAGIC_SIZE } from '../layouts/element-sizes';
+import { COUNTDOWN_SIZE, HEART_SIZE, MAGIC_SIZE } from '../layouts/element-sizes';
 import { resolveTextContent, textIntrinsicSize } from './resolve-text';
 import { SPRITE_BOX_BY_FILE } from '../../game/data/sprite-manifest/manifest';
 import type { HudElementSpec } from '../../types/hud/hud-node';
@@ -51,6 +51,9 @@ const intrinsicSize = (spec: HudElementSpec, ctx: MeasureContext = {}): Size => 
     case 'slot':
     case 'button': return { ...TILE_SIZE };
     case 'spacer': return { ...EMPTY_SIZE };
+    // The full pie, whatever it reads: a countdown that is not running is not
+    // measured at all, because it is not visible (`resolve-box.ts`).
+    case 'countdown': return { ...COUNTDOWN_SIZE };
     case 'text': return textIntrinsicSize(resolveTextContent(spec, ctx.scope ?? {}), spec.face);
     // Unreachable once `expand.ts` has run - every real call path
     // (`layoutHud`) expands the tree before measuring, so

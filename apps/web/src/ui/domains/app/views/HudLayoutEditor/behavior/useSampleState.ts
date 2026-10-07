@@ -10,6 +10,9 @@
  *    numbers, and a player with nothing running gets a plausible save chosen to
  *    exercise the same size questions (fourteen of twenty hearts, half a meter,
  *    two- and three-digit counts, a four-figure purse).
+ *  - The countdown is always SAMPLE too (`SAMPLE_COUNTDOWN`), drawn in the
+ *    profile's own pie, so a countdown node is on the stage to be seen and
+ *    picked whether or not the game is counting.
  *  - The slots are always SAMPLE. Every placeholder is dealt a random item so
  *    the density of a cluster can be judged; a live save with two things
  *    assigned would draw two sprites and eight blanks, which says nothing about
@@ -32,7 +35,7 @@ import { useGameUIStore } from '@app/stores/game-ui-store';
 import { useHudSettingsStore } from '@app/stores/hud-settings-store';
 import { deviceFamilyOf } from '@domains/hud/views/HudLayoutView/behavior/device-family';
 import {
-  SAMPLE_BOTTLES, SAMPLE_HUD, SAMPLE_ITEMS, SAMPLE_SLOTS, SAMPLE_SWORD_TIER, sampleSlotAssignments,
+  SAMPLE_BOTTLES, SAMPLE_COUNTDOWN, SAMPLE_HUD, SAMPLE_ITEMS, SAMPLE_SLOTS, SAMPLE_SWORD_TIER, sampleSlotAssignments,
 } from './sample-state';
 import type { EditorSampleState } from './useSampleState.type';
 import type { GlyphPack } from '@shared/types/hud';
@@ -58,7 +61,7 @@ const useSampleState = (args: SampleStateArgs): EditorSampleState => {
   const hud = useGameUIStore((s) => s.hud);
   const items = useGameUIStore((s) => s.inventory.items);
   const armor = useGameUIStore((s) => s.equipment.armor);
-  const { heartMode, showMaxInYellow } = useHudSettingsStore();
+  const { heartMode, showMaxInYellow, countdownStyle } = useHudSettingsStore();
 
   // A save with no heart containers has never been loaded, so there is nothing
   // live to prefer. That is the whole liveness test, and it needs no extra flag.
@@ -99,14 +102,26 @@ const useSampleState = (args: SampleStateArgs): EditorSampleState => {
     return {
       live,
       slots,
-      content: { vitals, slots: content.slots, glyph: content.glyph },
+      content: {
+        vitals,
+        slots: content.slots,
+        glyph: content.glyph,
+        countdown: {
+          variant: countdownStyle,
+          total: SAMPLE_COUNTDOWN.total,
+          remaining: SAMPLE_COUNTDOWN.remaining,
+          fractionLeft: SAMPLE_COUNTDOWN.fractionLeft,
+        },
+      },
       filledSlots: content.filledSlots,
       hearts: Math.floor(counters.healthCapacity / HEALTH_PER_HEART),
-      dataScope: hudDataScope(vitals, slots.length),
+      dataScope: hudDataScope(vitals, slots.length, {
+        active: true, seconds: SAMPLE_COUNTDOWN.remaining, frames: SAMPLE_COUNTDOWN.frames,
+      }),
       view,
       spritesBase: getSpritesBase(),
     };
-  }, [armor, heartMode, hud, items, live, packId, packs, schemeSlots, showMaxInYellow, view]);
+  }, [armor, countdownStyle, heartMode, hud, items, live, packId, packs, schemeSlots, showMaxInYellow, view]);
 };
 
 export { useSampleState };

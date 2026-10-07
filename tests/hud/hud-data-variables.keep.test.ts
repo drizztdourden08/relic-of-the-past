@@ -1,7 +1,7 @@
 /* @layer test @kind test */
 /**
  * The flat variable table: the exact fifteen names the plan's data-surface
- * section lists, the three scope extras kept OUT of the table proper, and the
+ * section lists plus the three countdown names §62 added, the three scope extras kept OUT of the table proper, and the
  * scope-builder that turns the HUD's existing vitals fields into the numbers
  * an expression actually evaluates against.
  */
@@ -16,10 +16,12 @@ const PLAN_VARIABLES = [
   'life_current', 'life_max', 'magic_current', 'magic_max', 'half_magic', 'armor',
   'arrow_current', 'arrow_max', 'bomb_current', 'bomb_max', 'key_current',
   'rupee_current', 'rupee_max', 'silver_arrows', 'slot_count',
+  // §62: the HUD countdown, for a formula or a switch to read.
+  'countdown_active', 'countdown_seconds', 'countdown_frames',
 ];
 
 describe('the table matches the plan, name for name', () => {
-  it('is exactly the fifteen documented variables, one entry each', () => {
+  it('is exactly the eighteen documented variables, one entry each', () => {
     expect(HUD_VARIABLES.map((entry) => entry.name)).toEqual(PLAN_VARIABLES);
     HUD_VARIABLES.forEach((entry) => expect(entry.note.length).toBeGreaterThan(0));
   });
@@ -56,6 +58,16 @@ describe('hudDataScope - sourced from the HUD\'s own existing fields, no new plu
       life_current: 28, life_max: 40, magic_current: 96, magic_max: 128, half_magic: 1,
       armor: 2, arrow_current: 12, arrow_max: 40, bomb_current: 5, bomb_max: 30,
       key_current: 3, rupee_current: 250, rupee_max: 999, silver_arrows: 0, slot_count: 6,
+      countdown_active: 0, countdown_seconds: 0, countdown_frames: 0,
+    });
+  });
+
+  it('reads the countdown while one runs, and 0 on all three names while none does', () => {
+    expect(hudDataScope(vitals, 6, { active: true, seconds: 18, frames: 40 })).toMatchObject({
+      countdown_active: 1, countdown_seconds: 18, countdown_frames: 40,
+    });
+    expect(hudDataScope(vitals, 6, { active: false, seconds: 18, frames: 40 })).toMatchObject({
+      countdown_active: 0, countdown_seconds: 0, countdown_frames: 0,
     });
   });
 

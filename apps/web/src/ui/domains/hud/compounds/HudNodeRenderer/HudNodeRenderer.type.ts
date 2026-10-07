@@ -13,6 +13,7 @@
  * Nothing here reads a store, and nothing here computes a position.
  */
 import type { HeartMode } from '../../primitives/HudHeart';
+import type { HudCountdownVariant } from '../HudCountdown';
 import type { PlacedNode } from '@shared/hud/engine';
 import type { SlotIndex } from '@shared/types/controls/scheme';
 import type { GlyphSource, HudElementSpec } from '@shared/types/hud';
@@ -53,6 +54,19 @@ interface HudSlotContent {
   dimmed: boolean;
 }
 
+/** The countdown as the caller tracks it (`hud-countdown-track.ts`), plus the
+ *  pie the profile picked. A `countdown` node draws this, or nothing when absent. */
+interface HudCountdownContent {
+  /** The profile's `hudCountdownStyle`. A node's own `variant` wins over it. */
+  variant: HudCountdownVariant;
+  /** Seconds the countdown started from. */
+  total: number;
+  /** Whole seconds left. */
+  remaining: number;
+  /** Share of the countdown still to run, 1 down to 0. */
+  fractionLeft: number;
+}
+
 interface HudNodeContent {
   vitals: HudVitalsContent;
   /** Keyed by slot NUMBER; a slot with no entry draws nothing. */
@@ -63,6 +77,8 @@ interface HudNodeContent {
    * position or a slot, and only the caller knows the packs and the device.
    */
   glyph: (spec: HudGlyphSpec) => GlyphSource | null;
+  /** Absent draws no countdown. The pause menu's copy of the map leaves it out. */
+  countdown?: HudCountdownContent;
 }
 
 interface HudNodeRendererProps {
@@ -103,6 +119,6 @@ interface HudNodeRendererProps {
 }
 
 export type {
-  HudGlyphSpec, HudNodeContent, HudNodeRendererProps, HudSlotContent, HudSlotRole,
+  HudCountdownContent, HudGlyphSpec, HudNodeContent, HudNodeRendererProps, HudSlotContent, HudSlotRole,
   HudVitalsContent,
 };

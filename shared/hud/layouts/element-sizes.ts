@@ -62,6 +62,16 @@ const CONSUMABLES_SIZE: Size = { w: 30, h: 24 };
 const WALLET_SIZE: Size = { w: 48, h: 16 };
 
 /**
+ * The countdown pie: 44x44, the pixel pie's own grid (`HudPixelPie`'s
+ * `GRID_SIZE`), one cell per game pixel. The smooth pie draws a hair larger
+ * (`countdownSize(1)`, about 44.4) with the same disc, so the renderer centres
+ * it across this box and keeps its top edge, which puts both discs on the same
+ * centre and the same bottom line. `tests/hud/hud-countdown-node.keep.test.ts`
+ * pins the two numbers against each other, since `shared/` cannot import them.
+ */
+const COUNTDOWN_SIZE: Size = { w: 44, h: 44 };
+
+/**
  * What life, magic and consumables occupy together, once stacked at the shipped
  * offsets, lives in `vitals-reserve.ts` - DERIVED from those offsets and these
  * sizes, not written down beside them. A second hand-kept copy of that
@@ -77,6 +87,7 @@ const lifeSize = (hearts: number): Size => ({
 
 export {
   CONSUMABLES_SIZE,
+  COUNTDOWN_SIZE,
   DEFAULT_HEARTS,
   HEARTS_PER_ROW,
   HEART_SIZE,

@@ -39,6 +39,9 @@ const HUD_VARIABLES: readonly HudVariableDef[] = [
   { name: 'rupee_max', note: 'Wallet tier: 99, 999 or 9999.' },
   { name: 'silver_arrows', note: '0 or 1.' },
   { name: 'slot_count', note: 'How many slots the active scheme has.' },
+  { name: 'countdown_active', note: '0 or 1 - the digging game or a Super Bomb is counting down.' },
+  { name: 'countdown_seconds', note: 'Whole seconds left on the countdown. 0 while none runs.' },
+  { name: 'countdown_frames', note: 'Frames left inside the current second, 0-61. 0 while none runs.' },
 ];
 
 const HUD_VARIABLE_NAMES: ReadonlySet<string> = new Set(HUD_VARIABLES.map((entry) => entry.name));
@@ -79,14 +82,29 @@ interface HudVitalsSource {
   hasSilverArrows: boolean;
 }
 
+/** The HUD countdown as the caller already tracks it: whether one runs, and
+ *  the seconds and frames the game reports for it. */
+interface HudCountdownSource {
+  active: boolean;
+  seconds: number;
+  frames: number;
+}
+
+/** Nothing counting, which is what a caller with no countdown to hand means. */
+const IDLE_COUNTDOWN: HudCountdownSource = { active: false, seconds: 0, frames: 0 };
+
 /**
  * Builds the scope object every expression in a plain (non-repeat) field is
  * evaluated against. `slotCount` is not part of the vitals - it is the size of
  * whatever slot-content map the caller already holds (`Object.keys(slots)
  * .length`), passed in instead of re-derived so this file invents no new
- * plumbing of its own.
+ * plumbing of its own. `countdown` is optional for the same reason: a caller
+ * that does not track one (the pause menu's copy of the map) reads it idle,
+ * and an idle countdown reads 0 on all three names.
  */
-const hudDataScope = (vitals: HudVitalsSource, slotCount: number): Record<string, number> => ({
+const hudDataScope = (
+  vitals: HudVitalsSource, slotCount: number, countdown: HudCountdownSource = IDLE_COUNTDOWN,
+): Record<string, number> => ({
   life_current: vitals.healthCurrent,
   life_max: vitals.healthCapacity,
   magic_current: vitals.magic,
@@ -102,10 +120,13 @@ const hudDataScope = (vitals: HudVitalsSource, slotCount: number): Record<string
   rupee_max: vitals.maxRupees,
   silver_arrows: vitals.hasSilverArrows ? 1 : 0,
   slot_count: slotCount,
+  countdown_active: countdown.active ? 1 : 0,
+  countdown_seconds: countdown.active ? countdown.seconds : 0,
+  countdown_frames: countdown.active ? countdown.frames : 0,
 });
 
 /** Levenshtein distance, capped - this only ever compares short identifiers
- *  against a table of ~15 names, so no larger algorithm earns its keep here. */
+ *  against a table of ~18 names, so no larger algorithm earns its keep here. */
 const editDistance = (a: string, b: string): number => {
   const rows = a.length + 1;
   const cols = b.length + 1;
@@ -141,4 +162,4 @@ export {
   HUD_SCOPE_EXTRAS, HUD_VARIABLES, hudDataScope, hudVariableNamesFor, isHudScopeExtra, isHudVariableName,
   suggestVariableName,
 };
-export type { HudScopeExtra, HudVariableDef, HudVitalsSource };
+export type { HudCountdownSource, HudScopeExtra, HudVariableDef, HudVitalsSource };

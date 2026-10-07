@@ -97,6 +97,10 @@ const newSwitch = (): HudElement => newElement({
   type: 'switch', cases: [{ when: '1', node: placeholderChild() }],
 });
 
+/** The countdown pie (§62). No `variant`: a fresh one follows the profile's own
+ *  pie, and the inspector's Content section is where a node pins one. */
+const newCountdown = (): HudElement => newElement({ type: 'countdown' });
+
 /** What the outline calls a node. Containers say their direction; elements say
  *  what they draw, with the number or the button that makes them distinct. */
 const labelOf = (node: HudNode): string => {
@@ -108,6 +112,7 @@ const labelOf = (node: HudNode): string => {
     case 'slot': return `slot ${spec.index}`;
     case 'sprite': return `sprite ${spec.file}`;
     case 'button': return spec.bind.kind === 'slot' ? `button (slot ${spec.bind.index})` : `button (${spec.bind.verb})`;
+    case 'countdown': return spec.variant && spec.variant !== 'setting' ? `countdown (${spec.variant})` : 'countdown';
     default: return spec.type;
   }
 };
@@ -124,6 +129,6 @@ const slotsOf = (node: HudNode): number[] => {
 };
 
 export {
-  labelOf, newButton, newContainer, newElement, newGrid, newOverlap, newRepeat, newSwitch, newText,
+  labelOf, newButton, newContainer, newCountdown, newElement, newGrid, newOverlap, newRepeat, newSwitch, newText,
   nodeId, placeholderChild, slotsOf,
 };
