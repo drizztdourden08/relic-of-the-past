@@ -124,8 +124,8 @@ describe('goal terminal conditions', () => {
 
   it('returns completed once the goal check is done', () => {
     const s = freshState();
-    s.config = { goalCheckId: 'check-097' };
-    s.completedChecks.add('check-097');
+    s.config = { goalCheckId: 'check-351' };
+    s.completedChecks.add('check-351');
     expect(evaluateOutcome(s)).toBe('completed');
   });
 

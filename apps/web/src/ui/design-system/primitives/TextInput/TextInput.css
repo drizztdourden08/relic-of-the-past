@@ -32,6 +32,12 @@
   border-color: var(--c-gold);
 }
 
+/* Invalid: set through aria-invalid, or by an erroring Field around it. */
+.text-input[aria-invalid="true"],
+.field--invalid .text-input {
+  border-color: var(--c-danger);
+}
+
 .text-input::placeholder {
   color: var(--c-text-muted);
 }

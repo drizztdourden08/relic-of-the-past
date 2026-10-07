@@ -8,10 +8,10 @@
  */
 import { useCallback, useMemo, useRef } from 'react';
 import { useEntryDraft } from './useEntryDraft';
-import { useEntryView } from './useEntryView';
+import { useEntryView } from '@domains/packs/language/behavior/useEntryView';
 import type { DialogueEntry, Token } from '@shared/game/language';
 import type { EntryDraftState } from './useEntryDraft';
-import type { EntryViewMode, EntryViewState } from './useEntryView';
+import type { EntryViewMode, EntryViewState } from '@domains/packs/language/behavior/useEntryView';
 
 type EntryOpenState = {
   view: EntryViewState;

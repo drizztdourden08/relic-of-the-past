@@ -101,6 +101,15 @@ interface FloorIndicatorState {
   isVisible: boolean;
 }
 
+/** The HUD countdown the digging game and the Super Bomb share. */
+interface CountdownState {
+  /** Seconds left, as the game stores them. The sign bit is set while no countdown runs. */
+  seconds: number;
+  /** Frames left inside the current second. Reloads to 62 when a second comes off. */
+  frames: number;
+  isRunning: boolean;
+}
+
 interface SaveMenuState {
   cursorPosition: number;
   sourceModule: number;
@@ -139,11 +148,13 @@ interface GameUIState {
   text: TextState;
   map: MapState;
   floorIndicator: FloorIndicatorState;
+  countdown: CountdownState;
   saveMenu: SaveMenuState;
   hostMenu: HostMenuState;
 }
 
 export type {
+  CountdownState,
   DungeonProgressState,
   EquipmentState,
   FloorIndicatorState,

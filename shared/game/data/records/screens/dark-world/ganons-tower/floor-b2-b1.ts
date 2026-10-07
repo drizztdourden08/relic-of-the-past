@@ -1,0 +1,98 @@
+/* @layer shared-game @kind data */
+
+import type { ScreenRecord } from '@shared/game/data/types';
+
+const DW_GANONS_TOWER_FLOOR_B2_B1_SCREENS: ScreenRecord[] = [
+  {
+    id: 'screen-318',
+    gameId: { roomIndex: 5, palaceIndex: 26 },
+    kind: 'dungeon',
+    world: 'dark',
+    name: 'Wizzrobes Room',
+    areaId: 'area-002',
+    locationId: 'location-014',
+    position: { gridX: 5, gridY: 0, floor: -2 },
+    tags: ['tag-003', 'tag-015'],
+    triggerIds: ['actor-041'],
+  },
+  {
+    id: 'screen-403',
+    gameId: { roomIndex: 149, palaceIndex: 26 },
+    kind: 'dungeon',
+    world: 'dark',
+    // name unknown: no check, no reference room
+    name: 'Ganon\'s Tower room 0x95',
+    areaId: 'area-002',
+    locationId: 'location-014',
+    position: { gridX: 5, gridY: 9, floor: -1 },
+    tags: ['tag-003', 'tag-024'],
+    spawns: [
+      { actorId: 'actor-078', tile: { x: 44, y: 24 } },
+      { actorId: 'actor-078', tile: { x: 46, y: 24 } },
+      { actorId: 'actor-078', tile: { x: 48, y: 24 } },
+      { actorId: 'actor-078', tile: { x: 50, y: 24 } },
+    ],
+  },
+  {
+    id: 'screen-404',
+    gameId: { roomIndex: 150, palaceIndex: 26 },
+    kind: 'dungeon',
+    world: 'dark',
+    // name unknown: no check, no reference room
+    name: 'Ganon\'s Tower room 0x96',
+    areaId: 'area-002',
+    locationId: 'location-014',
+    position: { gridX: 6, gridY: 9, floor: -1 },
+    tags: ['tag-003', 'tag-015'],
+    triggerIds: ['actor-045'],
+    spawns: [
+      { actorId: 'actor-204', tile: { x: 16, y: 22 } },
+      { actorId: 'actor-210', tile: { x: 60, y: 42 } },
+      { actorId: 'actor-210', tile: { x: 60, y: 46 } },
+      { actorId: 'actor-210', tile: { x: 60, y: 50 } },
+      { actorId: 'actor-210', tile: { x: 60, y: 54 } },
+    ],
+  },
+  {
+    id: 'screen-417',
+    gameId: { roomIndex: 165, palaceIndex: 26 },
+    kind: 'dungeon',
+    world: 'dark',
+    name: 'Spike Skip Room',
+    areaId: 'area-002',
+    locationId: 'location-014',
+    position: { gridX: 5, gridY: 10, floor: -1 },
+    tags: ['tag-003', 'tag-015'],
+    spawns: [
+      { actorId: 'actor-121', tile: { x: 44, y: 10 } },
+      { actorId: 'actor-121', tile: { x: 50, y: 10 } },
+      { actorId: 'actor-121', tile: { x: 8, y: 14 } },
+      { actorId: 'actor-121', tile: { x: 22, y: 14 } },
+      { actorId: 'actor-207', tile: { x: 46, y: 16 } },
+      { actorId: 'actor-121', tile: { x: 42, y: 18 } },
+      { actorId: 'actor-121', tile: { x: 52, y: 18 } },
+      { actorId: 'actor-121', tile: { x: 16, y: 20 } },
+      { actorId: 'actor-211', tile: { x: 24, y: 36 } },
+      { actorId: 'actor-211', tile: { x: 36, y: 36 } },
+      { actorId: 'actor-078', tile: { x: 36, y: 46 } },
+      { actorId: 'actor-076', tile: { x: 38, y: 48 } },
+    ],
+  },
+  {
+    id: 'screen-418',
+    gameId: { roomIndex: 166, palaceIndex: 26 },
+    kind: 'dungeon',
+    world: 'dark',
+    // name unknown: no check, no reference room
+    name: 'Ganon\'s Tower room 0xA6',
+    areaId: 'area-002',
+    locationId: 'location-014',
+    position: { gridX: 6, gridY: 10, floor: -1 },
+    tags: ['tag-003', 'tag-024'],
+    spawns: [
+      { actorId: 'actor-065', tile: { x: 24, y: 28 } },
+    ],
+  },
+];
+
+export { DW_GANONS_TOWER_FLOOR_B2_B1_SCREENS };

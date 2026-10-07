@@ -9,7 +9,7 @@
  */
 
 import { WALLET_SLOT_COUNT, WALLET_VIRT_FIRST, WALLET_VIRT_LAST, isWalletReceiveId } from '@shared/game/data';
-import { FAMILIES, WALLET_LADDER, WALLET_LADDER_LAST, maxSpanOf } from '@shared/randomizer/ap-world/capacity';
+import { FAMILIES, WALLET_LADDER, WALLET_LADDER_LAST, maxSpanOf } from '@shared/randomizer/world/capacity';
 import type { CapacityFamilyId } from '@shared/game/data';
 
 /** Family → the index WasmSetCapacityProfile addresses it by (the core's enum order). */

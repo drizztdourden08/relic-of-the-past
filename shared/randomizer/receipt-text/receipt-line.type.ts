@@ -13,6 +13,11 @@
  * The box shows three rows and the answers take the lower two, so anything
  * longer than a row is paged: what she says, a key, then the prompt with the
  * answers under it (choice-message.ts).
+ *
+ * A line can also be a detail page: the core shows it as the next page of the
+ * line armed for the same receipt (receipt_pages.c), so the receipt reads the
+ * way every other one does and the details follow a key press
+ * (page-message.ts).
  */
 
 type PlainReceiptLine = string | readonly string[];
@@ -25,13 +30,23 @@ interface ChoiceReceiptLine {
   readonly no: string;
 }
 
-type ReceiptLine = PlainReceiptLine | ChoiceReceiptLine;
+interface PageReceiptLine {
+  readonly page: PlainReceiptLine;
+}
+
+type ReceiptLine = PlainReceiptLine | ChoiceReceiptLine | PageReceiptLine;
 
 const isChoiceLine = (line: ReceiptLine): line is ChoiceReceiptLine => typeof line === 'object' && 'ask' in line;
+
+const isPageLine = (line: ReceiptLine): line is PageReceiptLine => typeof line === 'object' && 'page' in line;
+
+/** |page| as a detail page, shown after the receipt's own line. */
+const detailPage = (page: PlainReceiptLine): PageReceiptLine => ({ page });
 
 /** The candidates of a line, fullest first; a question's own candidates for a yes/no line. */
 const receiptLineCandidates = (line: ReceiptLine): readonly string[] => {
   if (isChoiceLine(line)) return receiptLineCandidates(line.ask);
+  if (isPageLine(line)) return receiptLineCandidates(line.page);
   return typeof line === 'string' ? [line] : line;
 };
 
@@ -42,5 +57,5 @@ const receiptLineKey = (line: ReceiptLine): string => {
   return [...receiptLineCandidates(line), ...prompts, line.yes, line.no].join(' ');
 };
 
-export { isChoiceLine, receiptLineCandidates, receiptLineKey };
-export type { ChoiceReceiptLine, PlainReceiptLine, ReceiptLine };
+export { detailPage, isChoiceLine, isPageLine, receiptLineCandidates, receiptLineKey };
+export type { ChoiceReceiptLine, PageReceiptLine, PlainReceiptLine, ReceiptLine };

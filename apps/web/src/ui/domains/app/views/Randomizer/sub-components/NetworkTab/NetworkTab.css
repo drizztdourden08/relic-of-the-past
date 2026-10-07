@@ -1,0 +1,83 @@
+/* @layer renderer-components @kind style */
+
+/* Every number in the tab lines up in columns. */
+.network-tab,
+.network-tab__pill {
+  font-variant-numeric: tabular-nums;
+}
+
+.network-tab__rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+/* ── Players table: one grid, each row's cells joining its columns ── */
+.network-tab__players {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr) auto auto auto;
+  gap: var(--space-xs) var(--space-sm);
+  align-items: center;
+  font-size: var(--text-sm);
+}
+
+/* The compact table: name, game, online and checks. */
+.network-tab__players[data-compact] {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto auto;
+}
+
+.network-tab__player {
+  display: contents;
+}
+
+.network-tab__cell {
+  min-width: 0;
+  color: var(--c-text);
+  overflow-wrap: anywhere;
+}
+
+.network-tab__cell--num {
+  font-family: var(--font-mono);
+  text-align: right;
+}
+
+.network-tab__cell--dim {
+  color: var(--c-text-dim);
+}
+
+/* Checks: the count over a small bar, right-aligned with the other numbers. */
+.network-tab__checks {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2xs);
+}
+
+.network-tab__checks-bar {
+  width: calc(var(--space-2xl) * 2);
+}
+
+.network-tab__player--head .network-tab__cell {
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.network-tab__player--self .network-tab__cell {
+  color: var(--c-gold-bright);
+}
+
+/* ── Run tab pill ── */
+.network-tab__pill {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.network-tab__pill-text {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+}

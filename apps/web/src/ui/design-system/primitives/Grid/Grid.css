@@ -8,3 +8,13 @@
 .grid[data-gap='lg'] { gap: var(--space-lg); }
 .grid[data-gap='xl'] { gap: var(--space-xl); }
 .grid[data-gap='2xl'] { gap: var(--space-2xl); }
+
+/* Named tracks: auto-fill keeps every cell the same width, and min() lets a
+   single cell shrink with a container narrower than the track. */
+.grid[data-track='tile'] {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--tile-w-min)), 1fr));
+}
+
+.grid[data-track='flag'] {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--flag-w-min)), 1fr));
+}

@@ -18,6 +18,7 @@ export type {
   World,
 } from './screen';
 export type {
+  CountdownState,
   DungeonProgressState,
   EquipmentState,
   FloorIndicatorState,
@@ -31,11 +32,3 @@ export type {
   TextState,
   UIMode,
 } from './game-state';
-export type {
-  CheckState,
-  Goal,
-  LogicConfig,
-  LogicMode,
-  SwordMode,
-  TrackerState,
-} from './logic';

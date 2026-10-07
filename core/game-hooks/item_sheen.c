@@ -69,7 +69,8 @@ void GameHook_PaintItemSheen(uint8 pal_row) {
   if (!(enhanced_features3 & kFeatures3_ItemSheen)) return;
   int phase = frame_counter % SHEEN_CYCLE_FRAMES;
   if (phase >= SHEEN_SWEEP_FRAMES) return;
-  uint8 light = LightestIndex(pal_row);
+  // A foreign item's game icon draws against its own bank, whose lightest entry has another index.
+  uint8 light = GameHook_ForeignIconSheenIndex(LightestIndex(pal_row));
   if (light == 0) return;
   // One anti-diagonal of the picture: x + y is constant along it, and the constant walks
   // from the top-left corner to the bottom-right one over the sweep.

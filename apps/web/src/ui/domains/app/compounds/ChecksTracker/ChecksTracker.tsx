@@ -10,7 +10,7 @@
  * without it the whole tracker scrolls as one piece.
  *
  * With a `run` supplied, checks display what THIS seed put in them instead of
- * their vanilla contents; without one, nothing changes for a vanilla profile.
+ * their vanilla contents; without one, nothing changes for a normal profile.
  */
 import { Box, Text } from '@ds/primitives';
 import { TrackerSummary } from './sub-components/TrackerSummary';
@@ -29,7 +29,7 @@ const isNarrowed = (filter: ChecksTrackerProps['filter']): boolean =>
 const ChecksTracker = (props: ChecksTrackerProps) => {
   const {
     stats, filter, onFilterChange, grouping, onGroupingChange, viewMode, onViewModeChange,
-    groupTree, statuses, run, dimensions, notice, stickyHeader = true, className,
+    groupTree, statuses, eventStatus, run, dimensions, notice, stickyHeader = true, className,
     panels, onPanelsChange, expandedGroups, onToggleGroup,
   } = props;
 
@@ -40,6 +40,7 @@ const ChecksTracker = (props: ChecksTrackerProps) => {
         <TrackerFilters
           filter={filter}
           onFilterChange={onFilterChange}
+          run={run}
           grouping={grouping}
           onGroupingChange={onGroupingChange}
           viewMode={viewMode}
@@ -62,6 +63,7 @@ const ChecksTracker = (props: ChecksTrackerProps) => {
         <TrackerGroupTree
           node={groupTree}
           statuses={statuses}
+          eventStatus={eventStatus}
           viewMode={viewMode}
           run={run}
           expandedGroups={expandedGroups}

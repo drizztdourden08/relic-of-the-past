@@ -154,7 +154,7 @@ describeDataset('CompactRecordView calls resolveIdRefDisplay across a real colle
     }));
     const area = all('area').find((entry) => entry.id === withArea.areaId);
     expect(area).toBeDefined();
-    expect(markup).toContain(area!.randomizerName);
+    expect(markup).toContain(area!.name);
     expect(markup).toContain(`data-id-ref="${withArea.areaId}"`);
   });
 });

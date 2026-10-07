@@ -38,6 +38,8 @@ type EntryEditorProps = {
   sheet: GlyphSheet | null;
   structureMode: SetStructure;
   dirty: boolean;
+  /** An installed set: the line shows in the editor and cannot be changed or saved. */
+  readOnly?: boolean;
   onChangeTokens: (tokens: Token[]) => void;
   onChangeStructureMode: (mode: SetStructure) => void;
   onSave: () => void;
@@ -46,7 +48,7 @@ type EntryEditorProps = {
 
 const EntryEditor = (props: EntryEditorProps) => {
   const {
-    tokens, rows, cfg, glossary, variables, metrics, sheet, structureMode, dirty,
+    tokens, rows, cfg, glossary, variables, metrics, sheet, structureMode, dirty, readOnly = false,
     onChangeTokens, onSave, onCancel, onChangeStructureMode,
   } = props;
 
@@ -62,6 +64,7 @@ const EntryEditor = (props: EntryEditorProps) => {
         metrics={metrics}
         sheet={sheet}
         structureMode={structureMode}
+        readOnly={readOnly}
         onChange={onChangeTokens}
         onChangeStructureMode={onChangeStructureMode}
       />
@@ -71,8 +74,8 @@ const EntryEditor = (props: EntryEditorProps) => {
       )}
 
       <Box className="entry-editor__actions">
-        <Button size="sm" disabled={Boolean(blocked) || !dirty} onClick={onSave}>Save</Button>
-        <Button variant="ghost" size="sm" onClick={onCancel}>Cancel</Button>
+        {!readOnly && <Button size="sm" disabled={Boolean(blocked) || !dirty} onClick={onSave}>Save</Button>}
+        <Button variant="ghost" size="sm" onClick={onCancel}>{readOnly ? 'Close' : 'Cancel'}</Button>
       </Box>
     </Box>
   );

@@ -9,11 +9,11 @@
  * stops going down; `bonus` what each family's pickups hand over.
  */
 import { useMemo } from 'react';
-import { FAMILIES, NO_WALLET_FLOOR } from '@shared/randomizer/ap-world/capacity';
+import { FAMILIES, NO_WALLET_FLOOR } from '@shared/randomizer/world/capacity';
 import { capacityRowModelOf } from './capacity-row-model';
 import type {
   CapacityBonusSetting, CapacityFamilyId, CapacityProfile, WalletFloor,
-} from '@shared/randomizer/ap-world/capacity';
+} from '@shared/randomizer/world/capacity';
 import type { CapacityRowModel } from '@domains/app/compounds/CapacityFamilyRow';
 
 interface CapacityRowsInput {

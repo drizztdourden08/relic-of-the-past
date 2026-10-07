@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind types */
-import type { OptionDescription } from '@shared/randomizer/ap-world/option-description.type';
+import type { OptionDescription } from '@shared/randomizer/world/option-description.type';
 
 interface OptionDescriptionProps {
   /** The catalog's own wording: one sentence, or a list of term/detail lines. */

@@ -3,7 +3,7 @@
  *  is mentioned, so GitHub's own notifications carry every later comment to the
  *  reporter. Without one the display name stands alone; no caller reads `anonymous`. */
 import type { ReportReporter } from '../../../../shared/sanctuary';
-import { identitiesRepo } from '../db/identities-repo';
+import { identitiesRepo } from '../../../hub-core/db/identities-repo';
 
 const reporterLine = async (reporter: ReportReporter | null): Promise<string> => {
   if (!reporter) return 'Reporter: anonymous';

@@ -1,22 +1,26 @@
 /* @layer bridge-wasm @kind logic */
-// ScreenAnnotations for one screen, from the SAME bridge reads the simulator uses, so what the
-// overlay draws is what the run acts on. Per-family mapping lives in `annotate/`.
+/**
+ * Derives ScreenAnnotations for one screen from the SAME game reads the
+ * simulator's discovery uses, so what the overlay draws is what the run acts on.
+ * Nothing here re-derives game facts: doors (including cell locks), sprites with
+ * their key-carrier markers, chests and room tags all arrive from the existing
+ * bridge queries. Ways on and off the screen are NOT here. Those are crossings
+ * (apps/web/src/lib/game/crossings/), with their own producer and renderer.
+ *
+ * This file only ORCHESTRATES. Per-family mapping lives in `annotate/`.
+ */
 import type { ScreenAnnotation, ScreenAnnotations, ScreenTag } from '@shared/game/simulation';
-import type { SimLocation, SimExit } from '@shared/game/simulation';
-import type { GridPos } from '@shared/game/navigation';
+import type { SimLocation } from '@shared/game/simulation';
 import type { ReachState } from '@shared/game/navigation/types';
-import { roomTagName, arrivalLabel } from '@shared/game/simulation';
+import { roomTagName } from '@shared/game/simulation';
 import { itemLabel, resolveDuplicate } from '@shared/game/logic/queries/item-duplicates';
 import { getRoomChests, getRoomDoors, getRoomSprites, getOverworldSprites } from '../simulator/interactables';
-import { detectScreenExits } from '../simulator/screen-exits';
-import { screenNameFor } from '../simulator/screen-name';
-import { wasmGetRoomTagsFor, wasmGetRoomTravelDestinationsFor } from '../';
+import { wasmGetRoomTagsFor } from '../';
 import { isFollowerActive } from '../follower-state';
 import { getCompletedChecks, getCurrentInventory } from '../tracker';
 import type { CheckId, ItemId } from '@shared/game/data';
 import { doorAnnotation } from './annotate/doors';
 import { spriteAnnotation } from './annotate/sprites';
-import { exitDoorTiles } from './annotate/exit-doors';
 import { markUnreachable } from './annotate/reachability';
 
 /** Room-header TAGs whose doors open when the room is cleared (see sim-kill-triggers). */
@@ -29,9 +33,11 @@ const annotateRoom = (roomId: number, items: ScreenAnnotation[], completed: Read
 
   for (const chest of getRoomChests(roomId)) {
     if (!chest.posKnown) continue;
-    // Name what the chest will ACTUALLY yield: the duplicate rule swaps an owned item for
-    // its alternate. The item name IS the label; detail carries the slot instead, which
-    // tells two same-item chests apart.
+    // Name what the chest will ACTUALLY yield: the vanilla duplicate rule swaps
+    // an already-owned item for its alternate, so a lamp-owning save must not be
+    // promised a Lamp here when the run would deliver 5 Rupees.
+    // The item name IS the label, so repeating it as detail renders "Lamp Lamp".
+    // Detail carries the slot, which disambiguates two same-item chests.
     const yielded = chest.itemId !== undefined ? resolveDuplicate(chest.itemId, inventory) : undefined;
     const name = yielded !== undefined ? itemLabel(yielded) : undefined;
     const swapped = chest.itemId !== undefined && yielded !== chest.itemId;
@@ -67,58 +73,19 @@ const annotateRoom = (roomId: number, items: ScreenAnnotation[], completed: Read
     if (a) items.push(a);
   }
 
-  for (const tile of exitDoorTiles(roomId)) {
-    items.push({ kind: 'exit-door', tile, label: 'exit to overworld', state: 'open' });
-  }
-
-  const dests = wasmGetRoomTravelDestinationsFor(roomId) ?? [];
-  for (const warp of items.filter((a) => a.kind === 'warp-door')) {
-    const to = dests[3] ?? dests[4];
-    if (to) warp.detail = `→ room 0x${hex(to)}`;
-  }
-
   return tags.filter((t) => t !== 0).map((t) => ({ value: t, name: roomTagName(t) }));
-};
-
-/** How far the exit is. `steps` is a real distance or absent; the note says why, never a sort score. */
-const exitDistance = (exit: { steps?: number; stepsNote?: string }): string | undefined => {
-  const where = exit.stepsNote === 'other-screen' ? ' (other screen)' : '';
-  if (exit.steps !== undefined) return `${exit.steps} steps${where}`;
-  if (exit.stepsNote === 'via-hop') return 'via a ledge hop';
-  if (exit.stepsNote === 'other-screen') return 'other screen';
-  return undefined;
-};
-
-/**
- * Distance, the WAY IN it uses, and which detection branch produced it. Several exits can
- * share a destination and still be different crossings, so identical rows would be
- * unauditable; the simulator decides on these three facts, so the widget shows all three.
- */
-const exitDetail = (exit: SimExit): string | undefined => {
-  const parts = [exitDistance(exit), arrivalLabel(exit), exit.origin].filter(Boolean);
-  return parts.length > 0 ? parts.join(' · ') : undefined;
-};
-
-/** Ways off the screen, with the walk distance the simulator ordered them by. */
-const annotateExits = (screenId: string, items: ScreenAnnotation[], entryTile?: GridPos): void => {
-  const detected = detectScreenExits(screenId, entryTile ? { entryTile } : {});
-  for (const exit of detected?.exits ?? []) {
-    if (!exit.fromTile) continue;
-    // The destination is a traversal id, not a dataset key, so the name comes from a lookup
-    // that may answer nothing (the asking screen lends the palace that tells two rooms sharing
-    // a number apart). `target` keeps the id for the engine; `label` is display only and
-    // falls back to the id, never a guess.
-    const label = screenNameFor(exit.to, screenId) ?? exit.to;
-    items.push({ kind: 'exit', tile: exit.fromTile, label, target: exit.to,
-      ...(exitDetail(exit) ? { detail: exitDetail(exit) } : {}) });
-  }
 };
 
 const CHECK_KINDS: ReadonlySet<ScreenAnnotation['kind']> = new Set(['chest', 'big-chest', 'npc-check', 'standing-item']);
 
 /**
- * Progress for the screen's checks, off each annotation's own `state`. Never test the LABEL
- * against the completed set: a chest's label is the item it yields, not a check's name.
+ * Progress for the screen's checks, off each annotation's own state.
+ *
+ * There used to be a second test here, asking the completed set about the
+ * annotation's LABEL, which could never work: a chest's label is the item it
+ * yields, not a check's name. Whoever knows the check sets `state` (chests from
+ * the room's open bit, NPCs and standing items from the completed set by
+ * `checkId`), so the state is the whole answer.
  */
 const tallyChecks = (items: readonly ScreenAnnotation[]) =>
   items.reduce(
@@ -136,7 +103,6 @@ const tallyChecks = (items: readonly ScreenAnnotation[]) =>
 const annotateScreen = (
   screenId: string,
   loc: SimLocation,
-  entryTile?: GridPos,
   reachable?: readonly ReachState[][],
 ): ScreenAnnotations => {
   const items: ScreenAnnotation[] = [];
@@ -148,7 +114,7 @@ const annotateScreen = (
   } else {
     for (const sprite of getOverworldSprites(loc.owScreenIndex)) {
       // A big area's spawn table lists every screen's sprites, already resolved
-      // to their true screen. One belonging to a neighbour is drawn when THAT
+      // to their true screen, so one belonging to a neighbour is drawn when THAT
       // screen is annotated, not here.
       if (sprite.roomId !== loc.owScreenIndex) continue;
       const a = spriteAnnotation(sprite, { roomId: -1, completed, shutterCount: 0 });
@@ -156,7 +122,6 @@ const annotateScreen = (
     }
   }
 
-  annotateExits(screenId, items, entryTile);
   // Last: the flood decides what is actually touchable, so it must run after
   // every family has contributed.
   markUnreachable(items, reachable);

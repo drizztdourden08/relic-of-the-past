@@ -2,9 +2,8 @@
 /**
  * Creating, rewriting and removing an item record.
  *
- * A new record is filed by CATEGORY, one canonical file each. That is a
- * deliberate simplification of a committed split with no category rule to
- * recover, and record-file-targets.ts documents it as such. Existing records are never
+ * A new record is filed by its dungeon when it names one, and by CATEGORY otherwise,
+ * one file each (record-file-targets.ts holds the rule). Existing records are never
  * moved: an edit or a removal finds the record where it already sits, by id.
  */
 
@@ -19,6 +18,7 @@ import type { RecordWriterSpec } from './dataset-record-writer';
 
 const SPEC: RecordWriterSpec<ItemRecord> = {
   kind: 'item',
+  recordType: 'ItemRecord',
   target: record => itemRecordFile(record),
   serialize: serializeItemRecord,
 };

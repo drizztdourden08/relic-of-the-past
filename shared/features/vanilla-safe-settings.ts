@@ -31,6 +31,7 @@ const VANILLA_SAFE_LOCKED_SETTINGS: readonly string[] = [
   'hudHeartMode',
   'hudMagicMode',
   'hudCountLayout',
+  'hudCountdownStyle',
   // Modern controls: the ModernControls gate bit is stripped from word 2 under Vanilla Safe, so the
   // core keeps its own equipped-item register and the slot assignments drive nothing. The scheme
   // itself has no key of its own any more. It is derived from `hudStyle`, locked just above.
@@ -76,6 +77,9 @@ const VANILLA_SAFE_LOCKED_SETTINGS: readonly string[] = [
   'dialogTextureDensity',
   'dialogTextureScatter',
   'dialogGroundColor',
+  // Randomizer message highlights: gate word 3 drops the receipt-messages bit, so no line carries them.
+  'hudHighlightPrimary',
+  'hudHighlightSecondary',
 ];
 
 /** Haptic settings are nested, so they arrive as dotted keys (`haptics.swordSwing`). */

@@ -4,7 +4,7 @@
  * core/game-hooks/npc_overrides.c (the single documented source of the byte
  * addresses and bit assignment). Several givers gate on POSSESSION of their
  * vanilla item and write no completion flag, so their record detections are
- * possession proxies, sound on a vanilla profile, false-positive the moment
+ * possession proxies, sound on a normal profile, false-positive the moment
  * a randomizer seed hands the vanilla item out elsewhere. When a session has
  * physically armed such a check, its completion must be read from the real
  * bit the substitution seam persists, exposed as progress-buffer bytes

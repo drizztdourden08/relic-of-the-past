@@ -11,7 +11,7 @@ import sharp from 'sharp';
 import pngToIco from 'png-to-ico';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
-const SOURCE = join(root, 'apps', 'web', 'public', 'logos', 'logo-512.png');
+const SOURCE = join(root, 'apps', 'web', 'public', 'logos', 'logo', 'logo-512.png');
 const OUT_DIR = join(root, 'apps', 'web', 'public', 'logos', 'generated');
 
 // Windows .ico wants the whole ladder; the small sizes are what actually show in a file list.

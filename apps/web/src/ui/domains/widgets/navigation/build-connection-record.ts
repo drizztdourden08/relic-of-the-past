@@ -17,7 +17,7 @@
  * mints BOTH halves as a pair (`connection-pair-writer.ts` on the main side).
  */
 import { findOne, pendingPartnerId, tagIdsForKeys } from '@shared/game/data';
-import { toScreenIdOf } from '@shared/game/data/connections/derive';
+import { toScreenIdOf } from '@shared/game/data';
 import type {
   ConnectionKind, ConnectionRecord, ConnectionTag, DungeonId, ScreenId, ScreenRecord,
 } from '@shared/game/data';

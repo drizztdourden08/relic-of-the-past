@@ -10,6 +10,7 @@ import type { ImageBuffer } from '../graphics/png-writer';
 import type { RGBA } from '../graphics/palette';
 import { buildCapacityIconsFile, CAPACITY_ICON_FAMILIES, CAPACITY_ICONS_FILE } from './capacity-icons';
 import { buildCurrencySymbolsFile, CURRENCY_SYMBOL_FILES, CURRENCY_SYMBOLS_FILE } from './currency-symbols';
+import { buildForeignIconsFile, FOREIGN_ICON_FILES, FOREIGN_ICONS_FILE } from './foreign-icons';
 import { buildGearIconsFile, GEAR_ICON_FILES, GEAR_ICONS_FILE } from './gear-icons';
 import { buildQuiverIconFile, QUIVER_ICON_FILE, QUIVER_ICON_SPRITE } from './quiver-icon';
 
@@ -47,6 +48,11 @@ const IN_GAME_BINARIES: readonly InGameBinary[] = [
   {
     name: CURRENCY_SYMBOLS_FILE, files: CURRENCY_SYMBOL_FILES, build: buildCurrencySymbolsFile,
     failure: 'a currency sprite is missing or larger than 16×8',
+  },
+  // The pool icons, held up for another player's item in a multiworld (foreign-icons.ts).
+  {
+    name: FOREIGN_ICONS_FILE, files: FOREIGN_ICON_FILES, build: buildForeignIconsFile,
+    failure: 'a pool icon is missing or not 16x16',
   },
 ];
 

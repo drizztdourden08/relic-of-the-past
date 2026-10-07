@@ -15,6 +15,13 @@ out/
 # instead of the directory, or git never descends far enough to see the exception.
 /build/*
 !/build/installer-splash.gif
+# The built Archipelago world package, bundled as an extra resource. Already
+# covered by /build/*, named so no later exception un-ignores it.
+/build/archipelago/
+# The world package's generated data and manifest (scripts/build/build-apworld.mjs).
+/integrations/archipelago/relic_of_the_past/data/
+/integrations/archipelago/relic_of_the_past/archipelago.json
+__pycache__/
 *.tsbuildinfo
 .wiki-build/
 
@@ -118,13 +125,19 @@ temp-scripts/
 # Saves (user data)
 saves/
 !apps/desktop/electron/saves/
+# Local ROM-derived WASM harness assets and imported save states.
+core/wasm-build/assets/
 seeds/
 config/
+!shared/config/
 scripts/analyze/report.json
 .claude/worktrees/
 
 # Per-worktree isolated user data (the app's --user-data flag points here)
 .user-data/
+
+# Per-worktree port slot (shared/config/port-slot.ts)
+.rotp-port-slot
 
 # Loop scheduler transient lock
 .claude/scheduled_tasks.lock

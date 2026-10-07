@@ -6,6 +6,7 @@
 #include "player.h"
 #include "sprite.h"
 #include "assets.h"
+#include "gba_alttp.h"
 #include "game_hooks.h"
 
 // Allow this to be overwritten
@@ -513,6 +514,7 @@ void DecompressAnimatedDungeonTiles(uint8 a) {  // 80d337
     WORD(p[0x1E80]) = WORD(p[0x1A80]);
     WORD(p[0x1A80]) = x;
   }
+  GbaAlttp_ApplyAnimatedTiles();
   animated_tile_vram_addr = 0x3b00;
 }
 
@@ -619,18 +621,24 @@ void Gfx_LoadSpritesInner(uint8 *dst) {  // 80d706
 
   if (p[0])
     sprite_gfx_subset_0 = p[0];
-  len = Decomp_spr(dst, sprite_gfx_subset_0);
-  assert(len == 0x600);
   if (p[1])
     sprite_gfx_subset_1 = p[1];
-  len = Decomp_spr(dst + 0x600, sprite_gfx_subset_1);
-  assert(len == 0x600);
   if (p[2])
     sprite_gfx_subset_2 = p[2];
-  len = Decomp_spr(dst + 0x600*2, sprite_gfx_subset_2);
-  assert(len == 0x600);
   if (p[3])
     sprite_gfx_subset_3 = p[3];
+  // After the tileset table, matching InitializeTilesets: the hook must have the last word,
+  // or a transition decompresses the vanilla sheets and every sprite garbles until the next
+  // full load puts the right ones back.
+  GbaAlttp_SelectDungeonSpriteSheets(&sprite_gfx_subset_0, &sprite_gfx_subset_1,
+                                     &sprite_gfx_subset_2, &sprite_gfx_subset_3);
+
+  len = Decomp_spr(dst, sprite_gfx_subset_0);
+  assert(len == 0x600);
+  len = Decomp_spr(dst + 0x600, sprite_gfx_subset_1);
+  assert(len == 0x600);
+  len = Decomp_spr(dst + 0x600*2, sprite_gfx_subset_2);
+  assert(len == 0x600);
   len = Decomp_spr(dst + 0x600*3, sprite_gfx_subset_3);
   assert(len == 0x600);
   incremental_counter_for_vram = 0;
@@ -773,6 +781,7 @@ void PrepTransAuxGfx() {  // 80df1a
   } else {
     Do3To4Low16Bit(&g_ram[0x10800], &g_ram[0x6600], 0xC0);
   }
+  GbaAlttp_PatchTransAuxStaging();
 }
 
 void Do3To4High16Bit(uint8 *dst, const uint8 *src, int num) {  // 80df4f
@@ -812,6 +821,23 @@ void LoadNewSpriteGFXSet() {  // 80e031
     Do3To4Low16Bit(&g_ram[0x11800], &g_ram[0x8a00], 0x40);
 }
 
+/* The sprite half of InitializeTilesets, callable on its own: table, selection hook, then
+   a direct load into VRAM and the decomp caches. Used when a transition deferred its sheet
+   swap to the settle frame. */
+void Gfx_ReloadSpriteSheetsImmediate(void) {
+  const uint8 *p = kSpriteTilesets[sprite_graphics_index];
+  if (p[0]) sprite_gfx_subset_0 = p[0];
+  if (p[1]) sprite_gfx_subset_1 = p[1];
+  if (p[2]) sprite_gfx_subset_2 = p[2];
+  if (p[3]) sprite_gfx_subset_3 = p[3];
+  GbaAlttp_SelectDungeonSpriteSheets(&sprite_gfx_subset_0, &sprite_gfx_subset_1,
+                                     &sprite_gfx_subset_2, &sprite_gfx_subset_3);
+  LoadSpriteGraphics(&g_zenv.vram[0x5000], sprite_gfx_subset_0, &g_ram[0x7800]);
+  LoadSpriteGraphics(&g_zenv.vram[0x5400], sprite_gfx_subset_1, &g_ram[0x7e00]);
+  LoadSpriteGraphics(&g_zenv.vram[0x5800], sprite_gfx_subset_2, &g_ram[0x8400]);
+  LoadSpriteGraphics(&g_zenv.vram[0x5c00], sprite_gfx_subset_3, &g_ram[0x8a00]);
+}
+
 void InitializeTilesets() {  // 80e19b
   LoadCommonSprites();
 
@@ -820,6 +846,8 @@ void InitializeTilesets() {  // 80e19b
   if (p[1]) sprite_gfx_subset_1 = p[1];
   if (p[2]) sprite_gfx_subset_2 = p[2];
   if (p[3]) sprite_gfx_subset_3 = p[3];
+  GbaAlttp_SelectDungeonSpriteSheets(&sprite_gfx_subset_0, &sprite_gfx_subset_1,
+                                     &sprite_gfx_subset_2, &sprite_gfx_subset_3);
 
   LoadSpriteGraphics(&g_zenv.vram[0x5000], sprite_gfx_subset_0, &g_ram[0x7800]);
   LoadSpriteGraphics(&g_zenv.vram[0x5400], sprite_gfx_subset_1, &g_ram[0x7e00]);
@@ -842,6 +870,7 @@ void InitializeTilesets() {  // 80e19b
   LoadBackgroundGraphics(&g_zenv.vram[0x3400], aux_bg_subset_2, 2, &g_ram[0x6c00]);
   LoadBackgroundGraphics(&g_zenv.vram[0x3800], aux_bg_subset_3, 1, &g_ram[0x7200]);
   LoadBackgroundGraphics(&g_zenv.vram[0x3c00], mt[7], 0, &g_ram[0x14000]);
+  GbaAlttp_ApplyDungeonGraphics();
 }
 
 void LoadDefaultGraphics() {  // 80e2d0
@@ -1710,6 +1739,7 @@ void Dungeon_HandleTranslucencyAndPalette() {  // 82a1e9
   Palette_Load_Sp0L();
   Palette_Load_Sp5L();
   Palette_Load_Sp6L();
+  GbaAlttp_ApplyDungeonPalette();
   subsubmodule_index += 1;
 }
 
@@ -1753,6 +1783,7 @@ void Dungeon_LoadPalettes() {  // 82c630
   Palette_Load_HUD();
   Palette_Load_DungeonSet();
   Overworld_LoadPalettesInner();
+  GbaAlttp_ApplyDungeonPalette();
 }
 
 void Overworld_LoadPalettesInner() {  // 82c65f

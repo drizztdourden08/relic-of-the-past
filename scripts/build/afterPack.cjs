@@ -71,9 +71,24 @@ exports.default = async function afterPack(context) {
   trimUnusedFiles(context.appOutDir);
 
   const exePath = path.join(context.appOutDir, `${context.packager.appInfo.productFilename}.exe`);
-  const icoPath = path.resolve(__dirname, '../../apps/web/public/logos/icon.ico');
+  const icoPath = path.resolve(__dirname, '../../apps/web/public/logos/logo/logo.ico');
 
+  // The name Windows and browsers show for the exe ("Open Relic of the Past?") is its
+  // FileDescription; left alone it reads "Electron", so the app's own name goes in too.
+  const { productName } = context.packager.appInfo;
+  const version = context.packager.appInfo.version;
   const { rcedit } = require('rcedit');
-  await rcedit(exePath, { icon: icoPath });
-  console.log(`  • icon stamped: ${exePath}`);
+  await rcedit(exePath, {
+    icon: icoPath,
+    'file-version': version,
+    'product-version': version,
+    'version-string': {
+      FileDescription: productName,
+      ProductName: productName,
+      InternalName: productName,
+      OriginalFilename: `${context.packager.appInfo.productFilename}.exe`,
+      CompanyName: productName,
+    },
+  });
+  console.log(`  • icon and name stamped: ${exePath}`);
 };

@@ -21,7 +21,7 @@ const saveMusicPosition = async (profileId: string, kind: SaveKind, id: string |
 /**
  * Resume the music a save was playing, at its position. A save with no stored position is left
  * alone, not silenced: loading a snapshot already re-announces the track, and "stop" here would
- * load an older save into silence.
+ * load that save into silence.
  */
 const restoreMusicPosition = async (profileId: string, kind: SaveKind, id: string | number): Promise<void> => {
   try {

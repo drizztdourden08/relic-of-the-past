@@ -1,19 +1,23 @@
 /* @layer renderer-components @kind component */
 /**
  * The randomizer page's activity feed: randomizer-channel and error-channel
- * entries, newest at the bottom, rendered through the shared LogPanel so it
- * gets the same windowing, search, copy and type filter the simulation log has.
+ * entries, merged in time order with the Archipelago room's messages (tagged
+ * AP), newest at the bottom. Rendered through the shared LogPanel so it gets
+ * the same windowing, search, copy and type filter the simulation log has.
  */
 import { useCallback, useMemo, useState } from 'react';
 import { LogPanel } from '@ds/composites/LogPanel';
-import { ACTIVITY_KINDS, classifyEntry, entriesToText, toActivityRows } from '../behavior/randomizer-log-style';
+import { ACTIVITY_KINDS, rowsToText } from '../behavior/randomizer-log-style';
+import { buildActivityRows } from '../behavior/activity-feed';
 import type { LogEntry } from '../../../../../../lib/log-bus';
+import type { RoomMessage } from '../../../../../../lib/game/randomizer-client';
 
 interface ActivityLogProps {
   entries: LogEntry[];
+  roomLines: readonly RoomMessage[];
 }
 
-const ActivityLog = ({ entries }: ActivityLogProps) => {
+const ActivityLog = ({ entries, roomLines }: ActivityLogProps) => {
   const [hidden, setHidden] = useState<Set<string>>(() => new Set());
   const [search, setSearch] = useState('');
 
@@ -25,12 +29,12 @@ const ActivityLog = ({ entries }: ActivityLogProps) => {
     });
   }, []);
 
-  const rows = useMemo(() => {
-    const kept = hidden.size > 0 ? entries.filter((e) => !hidden.has(classifyEntry(e).kind)) : entries;
-    return toActivityRows(kept);
-  }, [entries, hidden]);
+  const rows = useMemo(() => buildActivityRows(entries, roomLines, hidden), [entries, roomLines, hidden]);
 
-  const copyText = useCallback(() => entriesToText(entries), [entries]);
+  const copyText = useCallback(
+    () => rowsToText(buildActivityRows(entries, roomLines)),
+    [entries, roomLines],
+  );
 
   return (
     <LogPanel

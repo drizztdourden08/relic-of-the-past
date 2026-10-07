@@ -138,9 +138,9 @@ const TitleBar = (props: TitleBarProps) => {
 
 
 
-  // An automated launch wears the bot logo so a screenshot identifies itself.
+  // An automated launch wears Sentri so a screenshot identifies itself.
   const instance = instanceName();
-  const logoSrc = instance ? './logos/logo-bot-128.png' : './logos/logo-128.png';
+  const logoSrc = instance ? './logos/sentri/sentri-128.png' : './logos/logo/logo-128.png';
 
   const titlebarClass = [
     'titlebar',

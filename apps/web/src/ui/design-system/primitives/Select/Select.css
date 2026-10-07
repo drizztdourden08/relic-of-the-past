@@ -54,6 +54,11 @@
   border-color: var(--c-gold);
 }
 
+/* Invalid: an erroring Field around it. */
+.field--invalid .select-trigger {
+  border-color: var(--c-danger);
+}
+
 .select-trigger--disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -84,13 +89,16 @@
 /* ─── Dropdown content (rendered in portal) ─── */
 
 /* The shell only clips and positions; the options list inside it is what
-   scrolls, so the search box can stay put without needing to be sticky. */
+   scrolls, so the search box can stay put without needing to be sticky. It is at least
+   as wide as its trigger and grows to fit its longest option, within the window. */
 .select-content {
   position: fixed;
   z-index: var(--z-popover);
   display: flex;
   flex-direction: column;
+  width: max-content;
   min-width: 180px;
+  max-width: calc(100vw - var(--space-2xl));
   max-height: 280px;
   overflow: hidden;
   background: var(--c-surface);

@@ -19,7 +19,7 @@
 //
 // ADDING A CLAIM. Insert it in ASCENDING address order, give it a base and a count, name
 // the owner and the meaning, and add the two matching asserts. The gaps (0xF406-0xF40F,
-// 0xF41D-0xF41F, 0xF43F-0xF4FD) are free.
+// 0xF41E-0xF41F, 0xF45D-0xF4FD) are free.
 //
 // THE TS MIRROR. apps/web/src/lib/game/save-file/hook-save-bytes.ts restates these
 // addresses for the offline save-file reader; tests/randomizer/hook-save-bytes.test.ts
@@ -77,11 +77,39 @@
 #define SRM_WISH_POND_THROWS 0xF41B
 #define SRM_WISH_POND_THROWS_COUNT 2
 
+// ─── 0xF41D: smith_sword.c, the sword the smiths keep ───
+// The sword level handed over when the tempering is paid, as 0x80 | level, and 0 while the
+// smiths hold nothing. The game writes 255 over the level at that moment and never keeps it,
+// so this is the one place it survives until the pickup.
+#define SRM_SWORD_AT_SMITHS 0xF41D
+
 // ─── 0xF420-0xF43E: shop_table.c, sold counters ───
 // One byte per canonical shelf slot: how many of that slot's armed steps have been
 // bought. A plain byte, not a bit dance, so a counter read is one load.
 #define SRM_SHOP_SOLD 0xF420
 #define SRM_SHOP_SOLD_COUNT 31
+
+// ─── 0xF43F-0xF456: events/event_ledger.c, the event ledger ───
+// One bit per event the game never records for itself (events/event_ids.h names them; the
+// bit index is a save-file fact and never moves). Written only while kFeatures5_EventLedger
+// is set, by a test-and-set, so a save-state rewind that replays a trigger frame changes
+// nothing. Zero on a vanilla file.
+#define SRM_EVENT_LEDGER 0xF43F
+#define SRM_EVENT_LEDGER_COUNT 24
+
+// ─── 0xF457-0xF458: ap_received_index.c, online items received ───
+// How many items of the multiworld server's received list this file has already taken, as a
+// little-endian 16-bit count. The host owns the meaning and writes it; the core only keeps it,
+// so it travels with the battery save and with a save state. Zero on a vanilla file.
+#define SRM_AP_RECEIVED_INDEX 0xF457
+#define SRM_AP_RECEIVED_INDEX_COUNT 2
+
+// ─── 0xF459-0xF45C: ap_room_hash.c, online room identity ───
+// A 32-bit FNV-1a hash of the multiworld room's seed name, little-endian. Written by the host
+// on the file's first delivery from a room; a file holding another room's hash takes nothing.
+// Zero on a vanilla file and on a file no room has delivered to yet.
+#define SRM_AP_ROOM_HASH 0xF459
+#define SRM_AP_ROOM_HASH_COUNT 4
 
 // ─── Compile-time checks ───
 // Claims are listed in ascending address order above, so "each base is at or past the end
@@ -101,9 +129,17 @@ _Static_assert(SRM_POND_THROWS >= SRM_PENDING_CRYSTAL + 1,
                "pond throw counter overlaps the crystal in flight");
 _Static_assert(SRM_WISH_POND_THROWS >= SRM_POND_THROWS + 1,
                "wish pond throw counters overlap the rupee pond throw counter");
-_Static_assert(SRM_SHOP_SOLD >= SRM_WISH_POND_THROWS + SRM_WISH_POND_THROWS_COUNT,
-               "shelf sold counters overlap the wish pond throw counters");
-_Static_assert(SRM_SHOP_SOLD + SRM_SHOP_SOLD_COUNT - 1 <= HOOK_SAVE_LAST,
+_Static_assert(SRM_SWORD_AT_SMITHS >= SRM_WISH_POND_THROWS + SRM_WISH_POND_THROWS_COUNT,
+               "the smiths' sword overlaps the wish pond throw counters");
+_Static_assert(SRM_SHOP_SOLD >= SRM_SWORD_AT_SMITHS + 1,
+               "shelf sold counters overlap the smiths' sword");
+_Static_assert(SRM_EVENT_LEDGER >= SRM_SHOP_SOLD + SRM_SHOP_SOLD_COUNT,
+               "event ledger overlaps the shelf sold counters");
+_Static_assert(SRM_AP_RECEIVED_INDEX >= SRM_EVENT_LEDGER + SRM_EVENT_LEDGER_COUNT,
+               "online received index overlaps the event ledger");
+_Static_assert(SRM_AP_ROOM_HASH >= SRM_AP_RECEIVED_INDEX + SRM_AP_RECEIVED_INDEX_COUNT,
+               "online room hash overlaps the online received index");
+_Static_assert(SRM_AP_ROOM_HASH + SRM_AP_ROOM_HASH_COUNT - 1 <= HOOK_SAVE_LAST,
                "hook save bytes must end at or before 0xF4FD");
 
 #endif  // GAME_HOOKS_SAVE_BYTES_H

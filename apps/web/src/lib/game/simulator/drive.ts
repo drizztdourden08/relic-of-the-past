@@ -88,7 +88,7 @@ interface CheckLog {
 }
 
 /** Item names for a held set, resolved at the point of logging and stored nowhere. */
-const itemNames = (items: ReadonlySet<ItemId>): string[] => [...items].map((id) => getItem(id).randomizerName).sort();
+const itemNames = (items: ReadonlySet<ItemId>): string[] => [...items].map((id) => getItem(id).name).sort();
 
 const recordEvents = (recorder: RecorderState, events: SimEvent[], checks: CheckLog[], pathIndex: number, step: number, items: string[]): void => {
   for (const event of events) {
@@ -97,7 +97,7 @@ const recordEvents = (recorder: RecorderState, events: SimEvent[], checks: Check
     if (!detected || !checkId) continue;
     const loc = locationForScreen(detected.at.screenId);
     recordCheck(recorder, { checkId, screenId: detected.at.screenId, roomId: loc?.roomId ?? 0, tile: detected.at.tile });
-    checks.push({ checkId, name: getCheck(checkId).randomizerName, screenId: detected.at.screenId, atPathIndex: pathIndex, step, items });
+    checks.push({ checkId, name: getCheck(checkId).name, screenId: detected.at.screenId, atPathIndex: pathIndex, step, items });
   }
 };
 

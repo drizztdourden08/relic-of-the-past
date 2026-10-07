@@ -19,7 +19,7 @@ import { darkRoomLightTilesOf } from './dark-room-light-tiles';
 import type { DarkRoomLightTileModel } from './dark-room-light-tiles';
 import type {
   DarkRoomLightField, DarkRoomLights,
-} from '@shared/randomizer/ap-world/dark-rooms/dark-room.type';
+} from '@shared/randomizer/world/dark-rooms/dark-room.type';
 
 const useDarkRoomLightTiles = (
   lights: DarkRoomLights, forced?: ReadonlyMap<DarkRoomLightField, string>,

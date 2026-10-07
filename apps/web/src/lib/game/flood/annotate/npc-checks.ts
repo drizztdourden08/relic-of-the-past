@@ -34,7 +34,7 @@ const npcCheckFor = (
 ): NpcCheck | null => {
   const check = npcConfigForSprite(spriteType, roomId, outdoor);
   if (!check) return null;
-  return { checkId: check.id, name: check.randomizerName, done: completed.has(check.id) };
+  return { checkId: check.id, name: check.name, done: completed.has(check.id) };
 };
 
 export { npcCheckFor };

@@ -25,7 +25,12 @@ interface GlyphAtlas {
   key: string;
 }
 
-let cached: GlyphAtlas | null = null;
+/** The plain atlas and one per highlight colour, by key. */
+const cached = new Map<string, GlyphAtlas>();
+/** The palette entry a letter's body is painted with; a highlight repaints it (dialog_highlight.c). */
+const BODY_ENTRY = 2;
+/** More keys than this means the sheet or the palette moved on; the old atlases are dropped. */
+const CACHE_LIMIT = 8;
 
 /** Fill styles for the four palette entries; entry 0 is the transparent ground and never painted. */
 const rampOf = (palette: number[]): string[] =>
@@ -65,21 +70,29 @@ const buildAtlas = (tiles: Uint8Array, widths: Uint8Array, palette: number[], ke
 /** A sheet is its heap address and size (both change with the language) plus the palette words. */
 const atlasKey = (ptr: number, size: number, palette: number[]): string => `${ptr}:${size}:${palette.join(',')}`;
 
-const getGlyphAtlas = (): GlyphAtlas | null => {
+/**
+ * The atlas in the live text palette, or with every letter's body in |body| (a SNES 15-bit word) for a
+ * highlighted span, the way the core recolours it.
+ */
+const getGlyphAtlas = (body?: number): GlyphAtlas | null => {
   const sheet = wasmGetDialogFont(0);
   const widthTable = wasmGetDialogFont(1);
-  const palette = wasmGetDialogPalette();
-  if (!sheet || !widthTable || !palette) return null;
+  const live = wasmGetDialogPalette();
+  if (!sheet || !widthTable || !live) return null;
+  const palette = body === undefined ? live : live.map((word, entry) => (entry === BODY_ENTRY ? body : word));
   const key = atlasKey(sheet.ptr, sheet.size, palette);
-  if (cached && cached.key === key) return cached;
+  const known = cached.get(key);
+  if (known) return known;
   const tiles = sheet.heap.slice(sheet.ptr, sheet.ptr + sheet.size);
   const widths = widthTable.heap.slice(widthTable.ptr, widthTable.ptr + widthTable.size);
-  cached = buildAtlas(tiles, widths, palette, key);
-  return cached;
+  const atlas = buildAtlas(tiles, widths, palette, key);
+  if (cached.size >= CACHE_LIMIT) cached.clear();
+  if (atlas) cached.set(key, atlas);
+  return atlas;
 };
 
 const clearGlyphAtlas = (): void => {
-  cached = null;
+  cached.clear();
 };
 
 export { getGlyphAtlas, clearGlyphAtlas, CELL_W, CELL_H, COLUMNS };

@@ -11,9 +11,9 @@
  * the value the counted modes read can never outrun a ticked set the player
  * has just made smaller.
  */
-import { clampCount, maxSlotCountOf, openedSlotIndicesOf, usesSlotCount } from '@shared/randomizer/ap-world/shops/shop-scope';
-import { clampDepth } from '@shared/randomizer/ap-world/shops/shop-slots';
-import type { ShopScope, ShopShuffleMode } from '@shared/randomizer/ap-world/shops/shop-scope.type';
+import { clampCount, maxSlotCountOf, openedSlotIndicesOf, usesSlotCount } from '@shared/randomizer/world/shops/shop-scope';
+import { clampDepth } from '@shared/randomizer/world/shops/shop-slots';
+import type { ShopScope, ShopShuffleMode } from '@shared/randomizer/world/shops/shop-scope.type';
 
 interface ShopScopeSummary {
   /** Slots ticked: the ceiling every mode draws from, and the count's maximum. */

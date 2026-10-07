@@ -1,6 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 
 import { log } from '../log-bus';
+import { reportWasmCrash } from './report-wasm-crash';
 import * as savesStore from '../storage/saves-store';
 import type { EmscriptenModule } from './types';
 import { writeBootFiles } from './boot-files';
@@ -24,6 +25,7 @@ import { useGameUIStore } from '../../stores/game-ui-store';
 import { DEFAULT_SETTINGS } from './settings';
 import { deliveryQueue } from './delivery-queue';
 import { createInstantiateWasm } from './instantiate-wasm';
+import { restoreLostContext } from './canvas-context';
 import { readOamSnapshot } from './oam-snapshot';
 import { readOamRing } from './oam-ring';
 import { loadGlueScript } from './wasm-warmup';
@@ -157,16 +159,7 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
     if (!armed || crashed) return;
     crashed = true;
     setState({ status: 'error', error: `WASM crashed: ${err.message}` });
-    log.error(`WASM crashed: ${err.message}`);
-    if (err.stack) {
-      for (const line of err.stack.split('\n').slice(1, 10)) {
-        const trimmed = line.trim();
-        if (trimmed) log.error(`  ${trimmed}`);
-      }
-    }
-    if (event.filename) {
-      log.error(`  at ${event.filename}:${event.lineno}:${event.colno}`);
-    }
+    reportWasmCrash(err, event);
   };
 
   try {
@@ -192,6 +185,8 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
     // this same-type context. MUST be 'webgl' (WebGL1) because SDL2's Emscripten renderer is
     // GLES2/WebGL1. A 'webgl2' context makes SDL's getContext('webgl') null, then the
     // software fallback's getContext('2d') is null too ("createImageData of null" on Android).
+    // A restart finds the context stopGame lost; bring it back before SDL asks for it.
+    await restoreLostContext(canvas);
     canvas.getContext('webgl', { preserveDrawingBuffer: true });
 
     const module: EmscriptenModule = await Zelda3({

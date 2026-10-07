@@ -2,7 +2,7 @@
 import type { ImpactCell } from '@domains/app/compounds/PoolImpactCell';
 import type {
   DarkRoomLightField, DarkRoomSetting,
-} from '@shared/randomizer/ap-world/dark-rooms/dark-room.type';
+} from '@shared/randomizer/world/dark-rooms/dark-room.type';
 
 interface DarkRoomsSectionProps {
   setting: DarkRoomSetting;
@@ -13,7 +13,7 @@ interface DarkRoomsSectionProps {
    * and inert with the sentence under the row, the stored answer kept.
    */
   forced?: ReadonlyMap<DarkRoomLightField, string>;
-  /** Absent renders the whole section frozen: the run view's read-only face. */
+  /** Absent renders the whole section as a read-out: the read-only Options page. */
   onChange?: (next: DarkRoomSetting) => void;
 }
 

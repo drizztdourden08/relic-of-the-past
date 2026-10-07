@@ -5,8 +5,8 @@
  * direct mask, or an NPC's room-recorded chest bit), an overworld event bit,
  * or a progress-buffer byte (bit mask or threshold). Mirrors the tracker's
  * check-facts read modes so the poller and the tracker agree on what "done"
- * means. Review-gated like the registry: a record below 'accepted' yields no
- * detection, so uncertified data can never fire a report. A pond compare is
+ * means. A review mark on a record decides nothing here: what a record reports
+ * follows from its own gameId. A pond compare is
  * re-based on a Custom family's starting rung (withProgressBaseline): from
  * the empty rung the first purchase leaves the tier byte at 0 and clears the
  * family's empty-rung flag instead, so that start reads the flag byte.
@@ -26,10 +26,18 @@ type CheckDetection =
   | { mode: 'ow-mask'; owScreen: number; mask: number }
   | { mode: 'progress'; bufferIndex: number; mask?: number; compare?: 'gte' | 'eq' | 'any-of'; value?: number | number[] };
 
-// review-gating: tighten once certification lands
-const passesReviewGate = (check: CheckRecord): boolean => {
-  const { review } = check;
-  return review === undefined || review === 'accepted' || review === 'verified';
+/**
+ * Whether a record may report a completion at all, asked by id, for a caller that reads the
+ * completion from somewhere other than a detection: the tracker's own sweep answers for modes
+ * no detection covers. A real record can always report; an id nothing answers to cannot.
+ */
+const isReportableCheck = (checkId: string): boolean => {
+  try {
+    getCheck(checkId as CheckId);
+    return true;
+  } catch {
+    return false;
+  }
 };
 
 const detectionOfGameId = (gameId: CheckGameId): CheckDetection | null => {
@@ -55,7 +63,7 @@ const detectionOfGameId = (gameId: CheckGameId): CheckDetection | null => {
   return null;
 };
 
-/** The detection for one check id, or null (unknown id, gated, or no read). */
+/** The detection for one check id, or null (unknown id, or no read). */
 const detectionOf = (checkId: string): CheckDetection | null => {
   let check: CheckRecord;
   try {
@@ -63,7 +71,6 @@ const detectionOf = (checkId: string): CheckDetection | null => {
   } catch {
     return null;
   }
-  if (!passesReviewGate(check)) return null;
   return detectionOfGameId(check.gameId);
 };
 
@@ -89,5 +96,5 @@ const withProgressBaseline = (detection: CheckDetection | null, startRung: numbe
   return detection;
 };
 
-export { detectionOf, withProgressBaseline };
+export { detectionOf, isReportableCheck, withProgressBaseline };
 export type { CheckDetection };

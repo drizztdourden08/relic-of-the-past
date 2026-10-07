@@ -1,4 +1,4 @@
 /* @layer bridge-wasm @kind barrel */
 export {
-  appendSessionReceiptMessage, clearSessionDialogue, setSessionReceiptMessages,
+  appendSessionReceiptMessage, clearSessionDialogue, releaseSessionReceiptMessage, setSessionReceiptMessages,
 } from './session-dialogue';

@@ -1,6 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 /** Parses the raw WASM UI-state buffer into a typed GameUIState. */
 import type {
+  CountdownState,
   DungeonProgressState,
   EquipmentState,
   FloorIndicatorState,
@@ -170,7 +171,11 @@ const parseGameUIBuffer = (heap: Uint8Array, ptr: number): GameUIState => {
   const maxArrows = b[p + 126];
   const maxRupees = b[p + 127] | (b[p + 128] << 8);
 
-  // Host-owned pause menu (bytes 131-132; 129-130 are the HUD countdown)
+  // HUD countdown (bytes 129-130)
+  const countdownSeconds = b[p + 129];
+  const countdownFrames = b[p + 130];
+
+  // Host-owned pause menu (bytes 131-132)
   const hostMenuHolding = b[p + 131] !== 0;
   // Byte 132 repeats byte 14 on purpose (see HostMenuState). Byte 14 is the HUD's readout of
   // the equipped item; this is the host's own register read back, so a value the native menu
@@ -216,6 +221,13 @@ const parseGameUIBuffer = (heap: Uint8Array, ptr: number): GameUIState => {
     isVisible: floorTimer > 0 && (mainModule === 7),
   };
 
+  // The game parks the seconds at 0xFF or 0xFE, sign bit set, while no countdown runs.
+  const countdown: CountdownState = {
+    seconds: countdownSeconds,
+    frames: countdownFrames,
+    isRunning: (countdownSeconds & 0x80) === 0,
+  };
+
   const saveMenu: SaveMenuState = {
     cursorPosition: subSubModule,
     sourceModule,
@@ -224,7 +236,7 @@ const parseGameUIBuffer = (heap: Uint8Array, ptr: number): GameUIState => {
 
   const hostMenu: HostMenuState = { holding: hostMenuHolding, activeItem: hostMenuActiveItem };
 
-  return { mode, gameMode, hud, inventory: inventoryState, equipment, dungeonProgress, text, map, floorIndicator, saveMenu, hostMenu };
+  return { mode, gameMode, hud, inventory: inventoryState, equipment, dungeonProgress, text, map, floorIndicator, countdown, saveMenu, hostMenu };
 };
 
 export { parseGameUIBuffer };

@@ -4,16 +4,16 @@
  * after an admin revoked them. Linking Discord is the self-serve way in.
  */
 import { useCallback, useState } from 'react';
-import { PROVIDER_LABELS } from '@shared/sanctuary/providers';
+import { PROVIDER_LABELS } from '@shared/hub/providers';
 import { Stack } from '@ds/primitives/Stack';
 import { Button } from '@ds/primitives/Button';
 import { Text } from '@ds/primitives/Text';
-import { SiteFrame } from '../../layout/SiteFrame/SiteFrame';
-import { Gate } from '../../components/Gate/Gate';
-import { ProviderButton } from '../../components/ProviderButton/ProviderButton';
-import { useSessionContext } from '../../session/session-context';
-import { recheckAccess } from '../../api/endpoints';
-import { errorMessage } from '../../api/client';
+import { SiteFrame } from '@site-kit/layout/SiteFrame/SiteFrame';
+import { Gate } from '@site-kit/components/Gate/Gate';
+import { ProviderButton } from '@site-kit/components/ProviderButton/ProviderButton';
+import { useSessionContext } from '@site-kit/session/session-context';
+import { recheckAccess } from '@site-kit/api/hub-endpoints';
+import { errorMessage } from '@site-kit/api/api-error';
 import './Pending.css';
 
 const Pending = () => {

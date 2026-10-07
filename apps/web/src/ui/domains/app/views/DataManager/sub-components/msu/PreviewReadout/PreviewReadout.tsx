@@ -7,7 +7,7 @@
 import { Box } from '@ds/primitives/Box';
 import { Text } from '@ds/primitives/Text';
 import { usePreviewReport } from '../behavior/usePreviewReport';
-import { clock } from '../behavior/clock';
+import { clock } from '@domains/packs/music/behavior/clock';
 import { LayerMeter } from './sub-components/LayerMeter';
 import './PreviewReadout.css';
 import type { PreviewReadoutProps } from './PreviewReadout.type';

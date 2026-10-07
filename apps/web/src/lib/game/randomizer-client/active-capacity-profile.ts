@@ -6,7 +6,7 @@
  * such as the cheat console's capacity ladders: logic reads a family as its start rung plus
  * the collected jumps, so a value no set of upgrades reaches is a value logic never assumed.
  */
-import type { CapacityProfile } from '@shared/randomizer/ap-world/capacity';
+import type { CapacityProfile } from '@shared/randomizer/world/capacity';
 
 type ActiveCapacity = {
   profile: CapacityProfile;

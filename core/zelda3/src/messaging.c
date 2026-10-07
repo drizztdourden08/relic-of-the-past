@@ -1,4 +1,5 @@
 #include "messaging.h"
+#include "gba_alttp.h"
 #include "zelda_rtl.h"
 #include "variables.h"
 #include "snes/snes_regs.h"
@@ -32,14 +33,14 @@ static void WorldMap_ShiftMarkerForWideView(Point16U *pt) {
   pt->y += (uint16)g_oam_tall_budget;
 }
 
-static const int8 kDungMap_Tab0[14] = {-1, -1, -1, -1, -1, 2, 0, 10, 4, 8, -1, 6, 12, 14};
+static const int8 kDungMap_Tab0[15] = {-1, -1, -1, -1, -1, 2, 0, 10, 4, 8, -1, 6, 12, 14, -1};
 static const uint16 kDungMap_Tab1[8] = {0x2108, 0x2109, 0x2109, 0x210a, 0x210b, 0x210c, 0x210d, 0x211d};
 static const uint16 kDungMap_Tab2[8] = {0x2118, 0x2119, 0xa109, 0x211a, 0x211b, 0x211c, 0x2118, 0xa11d};
 static const uint8 kDungMap_Tab3[14] = {0x60, 0x84, 0, 0xb, 0x32, 0x21, 0x33, 0x21, 0x38, 0x21, 0x3a, 0x21, 0x7f, 0x20};
 static const uint8 kDungMap_Tab4[14] = {0x60, 0xa4, 0, 0xb, 0x42, 0x21, 0x43, 0x21, 0x49, 0x21, 0x4a, 0x21, 0x7f, 0x20};
 static const uint16 kDungMap_Tab8[7] = {0x1b28, 0x1b29, 0x1b2a, 0x1b2b, 0x1b2c, 0x1b2d, 0x1b2e};
 static const uint16 kDungMap_Tab6[21] = {0xaa10, 0x100, 0x1b2f, 0xc910, 0x300, 0x1b2f, 0x1b2e, 0xe510, 0xb00, 0x1b2f, 0x1b2e, 0x5b2f, 0x1b2f, 0x1b2e, 0x1b2e, 0x311, 0x100, 0x1b2f, 0x411, 0xc40, 0x1b2e};
-static const uint16 kDungMap_Tab5[14] = {0x21, 0x23, 0x20, 0x21, 0x70, 0x12, 0x11, 0x212, 2, 0x217, 0x160, 0x12, 0x113, 0x171};
+static const uint16 kDungMap_Tab5[15] = {0x21, 0x23, 0x20, 0x21, 0x70, 0x12, 0x11, 0x212, 2, 0x217, 0x160, 0x12, 0x113, 0x171, 0x20};
 static const uint16 kDungMap_Tab7[9] = {0x1223, 0x1263, 0x12a3, 0x12e3, 0x1323, 0x11e3, 0x11a3, 0x1163, 0x1123};
 static const uint16 kDungMap_Tab9[8] = {0xf26, 0xf27, 0x4f27, 0x4f26, 0x8f26, 0x8f27, 0xcf27, 0xcf26};
 static const uint16 kDungMap_Tab10[4] = {0xe2, 0xf8, 0x3a2, 0x3b8};
@@ -270,6 +271,7 @@ void SaveGameFile() {  // 80894a
   int offs = ((srm_var1 >> 1) - 1) * 0x500;
   memcpy(g_zenv.sram + offs, save_dung_info, 0x500);
   memcpy(g_zenv.sram + offs + 0xf00, save_dung_info, 0x500);
+  GameHook_BankSaveStore(offs);
   uint16 t = 0x5a5a;
   for (int i = 0; i < 0x4fe; i += 2)
     t -= *(uint16 *)((char *)save_dung_info + i);
@@ -720,6 +722,7 @@ void GameOver_SplatAndFade() {  // 89f3de
       return;
     }
   }
+  GameHook_LinkDied();
   index_of_changable_dungeon_objs[0] = 0;
   index_of_changable_dungeon_objs[1] = 0;
   nmi_subroutine_index = 22;
@@ -2125,6 +2128,7 @@ void CopySaveToWRAM() {  // 8ccfbb
   birdtravel_var1[k] = 0;
 
   memcpy(save_dung_info, &g_zenv.sram[WORD(g_ram[0])], 0x500);
+  GameHook_BankSaveLoad(WORD(g_ram[0]));
 
   bg_tile_animation_countdown = 7;
   word_7EC013 = 7;
@@ -2241,6 +2245,8 @@ enum {
 #define TEXTCMD_MK(c, x, m) ((c) << 6 | (x) << 1 | (m))
 
 uint32 Text_DecodeCmd(uint8 a, const uint8 *src) {
+  { uint32 highlight = GameHook_DialogHighlightDecode(a, src); if (highlight) return highlight; }
+  { uint32 extra = GameHook_DialogExtraGlyphDecode(a, src); if (extra) return extra; }
   if ((g_zenv.dialogue_flags & 1) == 0) {
     // US encoding
     if (a < kTextCommandStart_US)
@@ -2466,6 +2472,10 @@ RESTART:;
     if ((vwf_line_speed_cur == 0 && !GameHook_DialogTypewriter()) || (enhanced_features0 & kFeatures0_AutoSkipDialog))
       goto RESTART;
     break;
+  case kDialogCmd_Highlight:  // a highlight span opens or closes (dialog_highlight.c); draws nothing
+    GameHook_DialogHighlightSet(TEXTCMD_PARAM(cmd));
+    dialogue_msg_read_pos += 1 + TEXTCMD_MULTIBYTE(cmd);
+    goto RESTART;
   case kTextCmd_NextPic:  // RenderText_Draw_NextImage
     if (main_module_index == 20) {
       PaletteFilterHistory();
@@ -2651,6 +2661,7 @@ void VWF_RenderSingle(int c) {  // 8ecab8
     if (r4 != 0)
       WORD(mbuf[x + 0]) = r4;
   }
+  GameHook_DialogGlyphDrawn();
 }
 
 void RenderText_Draw_Choose2LowOr3() {  // 8ecd1a

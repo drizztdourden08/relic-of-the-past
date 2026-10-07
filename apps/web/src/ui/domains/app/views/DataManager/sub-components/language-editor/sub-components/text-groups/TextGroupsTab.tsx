@@ -32,12 +32,14 @@ type TextGroupsTabProps = {
   activeGroup: TextGroupId;
   /** The translator's overrides for the active group; missing key = untranslated. */
   values: Record<string, string>;
+  /** An installed set: every slot shows, none can be changed. */
+  readOnly?: boolean;
   onSelectGroup: (id: TextGroupId) => void;
   onChangeValue: (key: string, value: string) => void;
 };
 
 const TextGroupsTab = (props: TextGroupsTabProps) => {
-  const { groups, activeGroup, values, onSelectGroup, onChangeValue } = props;
+  const { groups, activeGroup, values, readOnly = false, onSelectGroup, onChangeValue } = props;
 
   const [query, setQuery] = useState('');
   const [untranslatedOnly, setUntranslatedOnly] = useState(false);
@@ -104,6 +106,7 @@ const TextGroupsTab = (props: TextGroupsTabProps) => {
               key={slot.key}
               slot={slot}
               value={values[slot.key] ?? ''}
+              readOnly={readOnly}
               onChangeValue={onChangeValue}
             />
           ))}

@@ -17,6 +17,12 @@
   border-color: var(--c-gold);
 }
 
+/* Invalid: set through aria-invalid, or by an erroring Field around it. */
+.textarea[aria-invalid="true"],
+.field--invalid .textarea {
+  border-color: var(--c-danger);
+}
+
 .textarea::placeholder {
   color: var(--c-text-muted);
 }

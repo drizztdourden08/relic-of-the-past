@@ -17,25 +17,25 @@
  * explosives family alone.
  */
 import { describe, expect, it } from 'vitest';
-import { POND_FED_FAMILIES, reconcileCapacityPond } from '@shared/randomizer/ap-world/capacity-pond';
-import { customSetting } from '@shared/randomizer/ap-world/capacity';
+import { POND_FED_FAMILIES, reconcileCapacityPond } from '@shared/randomizer/world/capacity-pond';
+import { customSetting } from '@shared/randomizer/world/capacity';
 import {
   capacityEnabledOf, capacityProfileFromSnapshot,
-} from '@shared/randomizer/ap-world/capacity/capacity-profile-from-snapshot';
-import { pondSettingFromSnapshot } from '@shared/randomizer/ap-world/pond/pond-from-snapshot';
-import { pondSettingForMode } from '@shared/randomizer/ap-world/pond/pond-mode-switch';
-import { DEFAULT_ITEM_POWER } from '@shared/randomizer/ap-world/item-power/item-power.data';
-import { defaultProgressiveSetting } from '@shared/randomizer/ap-world/progressive/progressive-from-snapshot';
-import { defaultRetroBow } from '@shared/randomizer/ap-world/retro/retro-from-snapshot';
-import { LEGACY_POND_PROFILES, LEGACY_POND_SETTING } from '@shared/randomizer/ap-world/pond/pond-profile-defaults';
-import { defaultShopScope } from '@shared/randomizer/ap-world/shops/shop-scope-from-values';
+} from '@shared/randomizer/world/capacity/capacity-profile-from-snapshot';
+import { pondSettingFromSnapshot } from '@shared/randomizer/world/pond/pond-from-snapshot';
+import { pondSettingForMode } from '@shared/randomizer/world/pond/pond-mode-switch';
+import { DEFAULT_ITEM_POWER } from '@shared/randomizer/world/item-power/item-power.data';
+import { defaultProgressiveSetting } from '@shared/randomizer/world/progressive/progressive-from-snapshot';
+import { defaultRetroBow } from '@shared/randomizer/world/retro/retro-from-snapshot';
+import { LEGACY_POND_PROFILES, LEGACY_POND_SETTING } from '@shared/randomizer/world/pond/pond-profile-defaults';
+import { defaultShopScope } from '@shared/randomizer/world/shops/shop-scope-from-values';
 import { buildOptionsSnapshot } from '@shared/randomizer/options-snapshot';
 import { randomizerChoiceOverrides } from '@app/hooks/randomizer/randomizer-choices';
 import type {
   CapacityPondAuthority, CapacityPondSelection,
-} from '@shared/randomizer/ap-world/capacity-pond';
-import type { CapacityProfile, FamilySetting } from '@shared/randomizer/ap-world/capacity';
-import type { PondMode, PondSetting } from '@shared/randomizer/ap-world/pond/pond-profile.type';
+} from '@shared/randomizer/world/capacity-pond';
+import type { CapacityProfile, FamilySetting } from '@shared/randomizer/world/capacity';
+import type { PondMode, PondSetting } from '@shared/randomizer/world/pond/pond-profile.type';
 import type { RandomizerOptionChoices } from '@app/hooks/randomizer/randomizer-choices';
 
 const POND_MODES: readonly PondMode[] = ['capacity', 'vanilla-cost', 'custom'];

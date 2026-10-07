@@ -63,10 +63,8 @@ const MIRROR = 26;
 
 /**
  * SRAM bit -> id for the items with no receive index (pendants, crystals: bits in one byte,
- * never granted through `Link_ReceiveItem`). The pendants must point at `item-056/057/058`,
- * the trio the `Pendants` group and the sage's `presence`/`requirements` name; the dataset
- * also holds `item-109/110/111` (same display names), and granting those broke the sage's
- * condition once inventory became a set of ids.
+ * never granted through `Link_ReceiveItem`). The pendants point at `item-056/057/058`, the
+ * trio the `Pendants` group and the sage's `presence`/`requirements` name.
  */
 // Bit order follows the core's own kDungeonCrystalPendantBit (zelda_rtl.c) read
 // against the receive id each boss grants (kBossFinishedFallingItem ->
@@ -77,6 +75,17 @@ const PENDANT_BITS: readonly (readonly [number, ItemId])[] = [
 const CRYSTAL_BITS: readonly (readonly [number, ItemId])[] = [
   [0x02, 'item-112'], [0x10, 'item-113'], [0x40, 'item-114'], [0x20, 'item-115'],
   [0x04, 'item-116'], [0x01, 'item-117'], [0x08, 'item-118'],
+];
+
+/**
+ * Big key word bit -> id. The core keys the word by dungeon index (kUpperBitmasks: the
+ * highest bit is index 0), and the castle's key can land under the sewers' index or the
+ * castle's own, so both bits name it.
+ */
+const BIG_KEY_BITS: readonly (readonly [number, ItemId])[] = [
+  [0x8000, 'item-095'], [0x4000, 'item-095'], [0x2000, 'item-094'], [0x1000, 'item-093'],
+  [0x0400, 'item-092'], [0x0200, 'item-091'], [0x0100, 'item-090'], [0x0080, 'item-089'],
+  [0x0040, 'item-088'], [0x0020, 'item-087'], [0x0010, 'item-086'], [0x0008, 'item-085'], [0x0004, 'item-084'],
 ];
 
 const addNative = (out: Set<ItemId>, receiveItemId: number): void => {
@@ -99,4 +108,4 @@ const addBits = (out: Set<ItemId>, bits: readonly (readonly [number, ItemId])[],
 };
 
 export { addBits, addByValue, addLadder, addNative, idOf };
-export { BOTTLE_SLOT, BY_VALUE, CRYSTAL_BITS, LADDERS, MIRROR, PENDANT_BITS, SIMPLE };
+export { BIG_KEY_BITS, BOTTLE_SLOT, BY_VALUE, CRYSTAL_BITS, LADDERS, MIRROR, PENDANT_BITS, SIMPLE };

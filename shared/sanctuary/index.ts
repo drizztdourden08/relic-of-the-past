@@ -1,22 +1,6 @@
 /* @layer shared-sanctuary @kind barrel */
-export { PROVIDERS, PROVIDER_LABELS, isProvider } from './providers';
-export type { Provider } from './providers';
-export type {
-  AccessState,
-  AccessSource,
-  AccessCheck,
-  SanctuaryUser,
-  Identity,
-  AccessGrant,
-  ViewSurface,
-  SavedView,
-} from './types';
-export { FILE_TYPES, FILE_TYPE_LABELS } from './file-types';
+export { FILE_TYPES, FILE_TYPE_LABELS, FILE_TYPE_SHELF_LABELS } from './file-types';
 export type { FileType, FileStatus, FileOwner, FileUpload, FileVersion, SanctuaryFile } from './file-types';
-export { DEFAULT_GROUP_ID } from './group-types';
-export type { GroupRights, Group, Rights, DiscordRole } from './group-types';
-export { DEVICE_PLATFORMS } from './device-types';
-export type { DevicePlatform, Device } from './device-types';
 export type {
   ReportKind,
   ReportContents,
@@ -30,6 +14,17 @@ export type {
 } from './report-types';
 export { LIMITS } from './limits';
 export type { Limits } from './limits';
-export { SANCTUARY_ROUTES, formatPath } from './api-contract';
-export type { HttpMethod, RouteDef, SanctuaryRoute, PathParams } from './api-contract';
+export { SANCTUARY_ROUTES } from './api-contract';
+export type { SanctuaryRoute } from './api-contract';
+export {
+  SANCTUARY_RIGHTS,
+  REPORTS_PERMISSION,
+  filePermission,
+  canSeeType,
+  canSeeReports,
+  visibleFileTypes,
+} from './sanctuary-rights';
+export type { SanctuaryPermission, FilePermission } from './sanctuary-rights';
+export { SANCTUARY_VIEW_SURFACES } from './view-surfaces';
+export type { SanctuaryViewSurface } from './view-surfaces';
 export * from './schemas';

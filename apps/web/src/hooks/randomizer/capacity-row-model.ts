@@ -10,15 +10,15 @@ import {
   CURVE_IDS, CURVE_LABELS, METER_LEVEL_LABELS, NO_WALLET_FLOOR, capacityBonusBaseKeyOf, capacityFieldsOf,
   capacityKeyOf, defaultFamilyBonus, freeSequenceProblem, ladderClamps, maxFloorReasonOf, maxRungFloorOf,
   minCountFor, planOf,
-} from '@shared/randomizer/ap-world/capacity';
-import { apOptionByKey } from '@shared/randomizer/ap-world/options.data';
+} from '@shared/randomizer/world/capacity';
+import { optionByKey } from '@shared/randomizer/world/options.data';
 import { offeredPresetsOf, rowStateOf } from './capacity-row-state';
 import { familyImpactCell } from './impact-cell';
 import type { SelectGroup } from '@ds/primitives';
 import type {
   CapacityFamily, CapacityFamilyId, FamilyBonus, FamilyPlan, FamilySetting, WalletFloor,
-} from '@shared/randomizer/ap-world/capacity';
-import type { OptionDescription } from '@shared/randomizer/ap-world/option-description.type';
+} from '@shared/randomizer/world/capacity';
+import type { OptionDescription } from '@shared/randomizer/world/option-description.type';
 import type { CapacityRowModel } from '@domains/app/compounds/CapacityFamilyRow';
 import type { LadderPreviewProps } from '@domains/app/compounds/LadderPreview';
 
@@ -37,13 +37,13 @@ const FAMILY_LABEL: Readonly<Record<CapacityFamilyId, string>> = {
  * in exactly the words the plain option rows and the Run tab use.
  */
 const captionOf = (id: CapacityFamilyId): OptionDescription | undefined => {
-  const option = apOptionByKey.get(capacityKeyOf(id, 'mode'));
+  const option = optionByKey.get(capacityKeyOf(id, 'mode'));
   return option === undefined ? undefined : option.details ?? option.description;
 };
 
 /** The bonus base switch's own clarifier: what the percentage is of. */
 const bonusCaptionOf = (id: CapacityFamilyId): string | undefined =>
-  apOptionByKey.get(capacityBonusBaseKeyOf(id))?.description;
+  optionByKey.get(capacityBonusBaseKeyOf(id))?.description;
 
 const JUMP_LABEL: Readonly<Record<CapacityFamilyId, (jump: number) => string>> = {
   explosives: (jump) => plural(jump, 'tier'),

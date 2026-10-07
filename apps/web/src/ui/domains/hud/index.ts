@@ -7,6 +7,7 @@ export { HudMeter } from './primitives/HudMeter';
 export { PauseTile } from './primitives/PauseTile';
 export { PauseBorderBox } from './primitives/PauseBorderBox';
 export { PauseLabel } from './primitives/PauseLabel';
+export { HudPie } from './primitives/HudPie';
 
 // Composites
 export { HudCount } from './composites/HudCount';
@@ -26,6 +27,7 @@ export { HudLife } from './compounds/HudLife';
 export { HudNodeRenderer } from './compounds/HudNodeRenderer';
 export { HudMagicBar } from './compounds/HudMagicBar';
 export { HudShape } from './compounds/HudShape';
+export { HudCountdown } from './compounds/HudCountdown';
 export { PauseItemGrid } from './compounds/PauseItemGrid';
 export { PauseNamePanel } from './compounds/PauseNamePanel';
 export { PauseProgressPanel } from './compounds/PauseProgressPanel';
@@ -50,6 +52,7 @@ export type { HudMeterProps } from './primitives/HudMeter';
 export type { PauseTileProps } from './primitives/PauseTile';
 export type { PauseBorderBoxProps } from './primitives/PauseBorderBox';
 export type { PauseLabelProps } from './primitives/PauseLabel';
+export type { HudPieProps } from './primitives/HudPie';
 export type { HudCountProps } from './composites/HudCount';
 export type { HudGlyphProps } from './composites/HudGlyph';
 export type { PauseTextProps } from './composites/PauseText';
@@ -66,6 +69,7 @@ export type {
 } from './compounds/HudNodeRenderer';
 export type { HudMagicBarProps } from './compounds/HudMagicBar';
 export type { HudShapeProps } from './compounds/HudShape';
+export type { HudCountdownProps } from './compounds/HudCountdown';
 export type { PauseItemGridProps } from './compounds/PauseItemGrid';
 export type { PauseNamePanelProps } from './compounds/PauseNamePanel';
 export type { PauseProgressPanelProps } from './compounds/PauseProgressPanel';

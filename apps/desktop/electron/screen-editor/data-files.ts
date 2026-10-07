@@ -12,9 +12,8 @@
 import { readdir, readFile } from 'fs/promises';
 import { join } from 'path';
 
-// The record tree is synced in from the private companion repo, so every path
-// record-file-targets.ts derives is relative to `records/`, not to the data
-// folder as a whole. Without vault access there is nothing under here to edit.
+// Every path record-file-targets.ts derives is relative to `records/`, not to the
+// data folder as a whole.
 const DATA_SEGMENTS = ['shared', 'game', 'data', 'records'] as const;
 
 /** An absolute path inside shared/game/data/records/. */

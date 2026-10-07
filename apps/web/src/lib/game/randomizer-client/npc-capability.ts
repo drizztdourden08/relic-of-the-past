@@ -18,9 +18,13 @@
  * whole ladder (pond/pond-spots.ts reads a pond's pair out of the set).
  */
 
-import { NPC_SCOPE_LOCATIONS, WORLD_ITEM_SCOPE_LOCATIONS } from '@shared/randomizer/ap-world/scope-vanilla.data';
-import { CAPACITY_UPGRADE_LOCATIONS } from '@shared/randomizer/ap-world/special-locations.data';
-import { POND_INSTANCES } from '@shared/randomizer/ap-world/pond/pond-instances.data';
+import { isSlotKey } from '@shared/randomizer/world/location-key';
+import type { ItemId } from '@shared/game/data';
+import type { LocationKey } from '@shared/randomizer/world/location-key';
+import {
+  CAPACITY_UPGRADE_LOCATIONS, NPC_SCOPE_LOCATIONS, WORLD_ITEM_SCOPE_LOCATIONS,
+} from '@shared/randomizer/world/scope-tables';
+import { POND_INSTANCES } from '@shared/randomizer/world/pond/pond-instances';
 import { checkIdByStandardName } from './check-names';
 import { detectionOf } from './check-detection';
 import { freestandingKeyDropOf } from './freestanding-key-drops';
@@ -28,13 +32,14 @@ import { npcOverrideKeyOf } from './npc-override-key';
 import { scriptedOverrideKeyOf } from './scripted-override-key';
 import { standingOverrideKeyOf } from './standing-override-key';
 import { resolveServerItemLocalId } from './online-items';
+import { itemKeyName } from '@shared/randomizer/world/display-names/item-key-name';
 import type { CheckId } from '@shared/game/data';
 
 /** One physical-delivery test, shared by every capability table. */
-const isDeliverable = (locationName: string, vanillaItem: string): boolean => {
-  const checkId = checkIdByStandardName(locationName);
-  if (checkId === undefined) return false;
-  if (resolveServerItemLocalId(vanillaItem) === undefined) return false;
+const isDeliverable = (location: LocationKey, vanillaItem: ItemId): boolean => {
+  if (isSlotKey(location)) return false;
+  const checkId = location;
+  if (resolveServerItemLocalId(itemKeyName(vanillaItem)) === undefined) return false;
   // A physical substitution key reports completion at the grant seam itself
   // (override-fired events), so it needs no polled detection.
   if (scriptedOverrideKeyOf(checkId as CheckId) !== null) return true;
@@ -44,20 +49,20 @@ const isDeliverable = (locationName: string, vanillaItem: string): boolean => {
   return detectionOf(checkId) !== null;
 };
 
-const probeTable = (table: ReadonlyMap<string, string>): ReadonlySet<string> => {
-  const deliverable = new Set<string>();
-  for (const [locationName, vanillaItem] of table) {
-    if (isDeliverable(locationName, vanillaItem)) deliverable.add(locationName);
+const probeTable = (table: ReadonlyMap<LocationKey, ItemId>): ReadonlySet<LocationKey> => {
+  const deliverable = new Set<LocationKey>();
+  for (const [location, vanillaItem] of table) {
+    if (isDeliverable(location, vanillaItem)) deliverable.add(location);
   }
   return deliverable;
 };
 
 const lockedComplement = (
-  table: ReadonlyMap<string, string>, deliverable: ReadonlySet<string>,
-): ReadonlySet<string> => {
-  const locked = new Set<string>();
-  for (const name of table.keys()) {
-    if (!deliverable.has(name)) locked.add(name);
+  table: ReadonlyMap<LocationKey, ItemId>, deliverable: ReadonlySet<LocationKey>,
+): ReadonlySet<LocationKey> => {
+  const locked = new Set<LocationKey>();
+  for (const key of table.keys()) {
+    if (!deliverable.has(key)) locked.add(key);
   }
   return locked;
 };
@@ -68,36 +73,36 @@ const lockedComplement = (
  * upgrade table, the wish ponds' pairs by the npc scope, because that is where
  * each one's vanilla item is written down.
  */
-const POND_SLOT_LOCATIONS: ReadonlyMap<string, string> = new Map(
+const POND_SLOT_LOCATIONS: ReadonlyMap<LocationKey, ItemId> = new Map(
   POND_INSTANCES.flatMap((pond) => pond.slots.flatMap((slot) => {
-    const vanillaItem = CAPACITY_UPGRADE_LOCATIONS.get(slot.location)
-      ?? NPC_SCOPE_LOCATIONS.get(slot.location);
-    return vanillaItem === undefined ? [] : [[slot.location, vanillaItem] as [string, string]];
+    const vanillaItem = CAPACITY_UPGRADE_LOCATIONS.get(slot.key)
+      ?? NPC_SCOPE_LOCATIONS.get(slot.key);
+    return vanillaItem === undefined ? [] : [[slot.key, vanillaItem] as [LocationKey, ItemId]];
   })),
 );
 
-let cachedNpcDeliverable: ReadonlySet<string> | null = null;
-let cachedWorldDeliverable: ReadonlySet<string> | null = null;
-let cachedPondDeliverable: ReadonlySet<string> | null = null;
+let cachedNpcDeliverable: ReadonlySet<LocationKey> | null = null;
+let cachedWorldDeliverable: ReadonlySet<LocationKey> | null = null;
+let cachedPondDeliverable: ReadonlySet<LocationKey> | null = null;
 
-/** The npc-scope AP location names with a certified physical delivery path. */
-const probeDeliverableNpcLocations = (): ReadonlySet<string> => {
+/** The npc-scope world location names with a certified physical delivery path. */
+const probeDeliverableNpcLocations = (): ReadonlySet<LocationKey> => {
   cachedNpcDeliverable ??= probeTable(NPC_SCOPE_LOCATIONS);
   return cachedNpcDeliverable;
 };
 
 /** Complement view: the npc-scope locations generation must keep vanilla. */
-const undeliverableNpcLocations = (): ReadonlySet<string> =>
+const undeliverableNpcLocations = (): ReadonlySet<LocationKey> =>
   lockedComplement(NPC_SCOPE_LOCATIONS, probeDeliverableNpcLocations());
 
-/** The world-item AP location names with a certified physical delivery path. */
-const probeDeliverableWorldLocations = (): ReadonlySet<string> => {
+/** The world-item location names with a certified physical delivery path. */
+const probeDeliverableWorldLocations = (): ReadonlySet<LocationKey> => {
   cachedWorldDeliverable ??= probeTable(WORLD_ITEM_SCOPE_LOCATIONS);
   return cachedWorldDeliverable;
 };
 
 /** Complement view: the world-item locations generation must keep vanilla. */
-const undeliverableWorldLocations = (): ReadonlySet<string> =>
+const undeliverableWorldLocations = (): ReadonlySet<LocationKey> =>
   lockedComplement(WORLD_ITEM_SCOPE_LOCATIONS, probeDeliverableWorldLocations());
 
 /**
@@ -106,13 +111,13 @@ const undeliverableWorldLocations = (): ReadonlySet<string> =>
  * six are certified here; the capacity-only complement below stays over the
  * upgrade table, because that is the only pair a profile locks.
  */
-const probeDeliverablePondLocations = (): ReadonlySet<string> => {
+const probeDeliverablePondLocations = (): ReadonlySet<LocationKey> => {
   cachedPondDeliverable ??= probeTable(POND_SLOT_LOCATIONS);
   return cachedPondDeliverable;
 };
 
 /** Complement view: the capacity slots generation must keep vanilla. */
-const undeliverableCapacityLocations = (): ReadonlySet<string> =>
+const undeliverableCapacityLocations = (): ReadonlySet<LocationKey> =>
   lockedComplement(CAPACITY_UPGRADE_LOCATIONS, probeDeliverablePondLocations());
 
 export {

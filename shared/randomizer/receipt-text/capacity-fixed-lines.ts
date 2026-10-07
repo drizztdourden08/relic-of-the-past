@@ -10,10 +10,10 @@
  * moves them off-plan), so every rung is a candidate start; the wallet has
  * no native step, so only the sums the plan's own jumps can reach are.
  */
-import { FAMILIES } from '../ap-world/capacity/capacity-family';
-import { maxTierOf, planOf, startTierOf } from '../ap-world/capacity/family-plan';
+import { FAMILIES } from '../world/capacity/capacity-family';
+import { maxTierOf, planOf, startTierOf } from '../world/capacity/family-plan';
 import { renderCapacityStep } from './capacity-rung-values';
-import type { CapacityFamilyId, CapacityProfile } from '../ap-world/capacity/capacity-profile.type';
+import type { CapacityFamilyId, CapacityProfile } from '../world/capacity/capacity-profile.type';
 import type { ReceiptLine } from './receipt-line.type';
 
 interface CapacityFixedLine {

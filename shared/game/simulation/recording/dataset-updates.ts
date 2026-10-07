@@ -40,7 +40,7 @@ const transitionSuggestions = (rec: RecorderState, connections: ConnectionRecord
       targetFile: 'connections',
       targetId: null,
       code: `{ screenId: '${t.from}', kind: 'edge', tags: ['transit:walk'] } -> '${t.to}' (canExit: true, needs a paired point)`,
-      reason: `Traversed ${t.from} → ${t.to} but no connection exists in the data.`,
+      reason: `Crossing ${t.from} to ${t.to}: traversed, not in dataset.`,
     }));
 };
 
@@ -52,7 +52,7 @@ const doorSuggestions = (gates: ObservedDoorGate[]): DatasetSuggestion[] =>
       targetFile: 'connections',
       targetId: null,
       code: `// room 0x${g.roomId.toString(16)} ${g.direction} door → add tag '${DOOR_BARRIER[g.kind]}'`,
-      reason: `Observed a ${g.kind} door on room 0x${g.roomId.toString(16)} (${g.direction}) not reflected in connection barriers.`,
+      reason: `Door 0x${g.roomId.toString(16)} ${g.direction}: ${g.kind} in game, no barrier tag.`,
     }));
 
 /**
@@ -70,7 +70,7 @@ const checkSuggestions = (rec: RecorderState): DatasetSuggestion[] =>
       targetFile: 'checks',
       targetId: null,
       code: `// discovered check on screen '${c.screenId}' (room 0x${c.roomId.toString(16)}) at r${c.tile.row} c${c.tile.col}`,
-      reason: `In-game interactable observed on '${c.screenId}' (room 0x${c.roomId.toString(16)}) with no matching check definition.`,
+      reason: `Check on ${c.screenId} r${c.tile.row} c${c.tile.col}: in game, not in dataset.`,
     }));
 
 const buildDatasetSuggestions = (rec: RecorderState, deps: UpdateDeps = {}): DatasetSuggestion[] => {

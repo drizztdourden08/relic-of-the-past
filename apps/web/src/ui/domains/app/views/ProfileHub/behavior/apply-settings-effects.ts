@@ -46,6 +46,7 @@ const syncHudStore = (s: GameSettings): void => {
     heartMode: s.hudHeartMode,
     magicMode: s.hudMagicMode,
     countLayout: s.hudCountLayout,
+    countdownStyle: s.hudCountdownStyle,
     showMaxInYellow: s.showMaxItemsInYellow,
   });
 };
@@ -53,7 +54,7 @@ const syncHudStore = (s: GameSettings): void => {
 // Keys the HUD render store mirrors; a change to any of them re-syncs it.
 const HUD_STORE_KEYS: (keyof GameSettings)[] = [
   'hudMode', 'hudStyle', 'hudRatio', 'customHudAspectW', 'customHudAspectH', 'hudEnhancedParts',
-  'hudHeartMode', 'hudMagicMode', 'hudCountLayout', 'vanillaSafe',
+  'hudHeartMode', 'hudMagicMode', 'hudCountLayout', 'hudCountdownStyle', 'vanillaSafe',
 ];
 
 // Keys the control-scheme store and the per-frame input router are derived from. Every one of

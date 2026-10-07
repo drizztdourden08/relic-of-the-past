@@ -1,15 +1,16 @@
 /* @layer sanctuary-site @kind logic */
 /**
- * The first step of an upload, per target. A new file and a new version begin on
- * different routes and sign, complete and abort on different routes after that; each
- * begin hands back the three later steps already bound to the record, so the part loop
- * never asks which kind it is running.
+ * The two ends of an upload, per target. A new file and a new version begin on different
+ * routes and sign, list, complete and abort on different routes after that. `beginUpload`
+ * opens the record and answers what a reload needs to find it again; `bindUpload` hands
+ * back the later steps bound to that record, so the part loop never asks which kind it runs.
  */
 import type { SanctuaryFile } from '@shared/sanctuary/file-types';
-import { beginFile, completeFile, deleteFile, signParts } from '../api/files-endpoints';
-import { beginVersion, completeVersion, deleteVersion, signVersionParts } from '../api/versions-endpoints';
-import type { SignPartsResponse } from '../api/types';
-import type { UploadMeta, UploadTarget } from './upload-job.type';
+import type { BegunMultipart } from '@shared/hub/upload/run-multipart';
+import type { UploadResume } from '@site-kit/upload/upload-job.type';
+import { beginFile, completeFile, deleteFile, fileParts, signParts } from '../api/files-endpoints';
+import { beginVersion, completeVersion, deleteVersion, signVersionParts, versionParts } from '../api/versions-endpoints';
+import type { UploadTarget } from './upload-target.type';
 
 /** The facts of the bytes, the same for either target. */
 type UploadFacts = {
@@ -19,48 +20,37 @@ type UploadFacts = {
   contentType: string;
 };
 
-type BegunUpload = {
-  fileId: string;
-  /** The version number the API gave; null for a new file. */
-  n: number | null;
-  partSize: number;
-  parts: number;
-  sign: (parts: number[]) => Promise<SignPartsResponse>;
-  complete: (etags: string[]) => Promise<{ file: SanctuaryFile }>;
-  /** Drops the record, which aborts the multipart upload. */
-  abort: () => Promise<unknown>;
+const beginUpload = async (target: UploadTarget, facts: UploadFacts): Promise<UploadResume> => {
+  if (target.kind === 'new') {
+    const { fileId, partSize, parts } = await beginFile({ ...target.meta, ...facts });
+    return { recordId: fileId, n: null, partSize, parts };
+  }
+  const { n, partSize, parts } = await beginVersion(target.fileId, { ...facts, note: target.note });
+  return { recordId: target.fileId, n, partSize, parts };
 };
 
-const beginNewFile = async (meta: UploadMeta, facts: UploadFacts): Promise<BegunUpload> => {
-  const { fileId, partSize, parts } = await beginFile({ ...meta, ...facts });
+/** A resume with no version number is a new file's first upload. */
+const bindUpload = (resume: UploadResume): BegunMultipart<SanctuaryFile> => {
+  const { recordId: fileId, n, partSize, parts } = resume;
+  if (n === null) {
+    return {
+      partSize,
+      parts,
+      sign: (batch, partsDone) => signParts(fileId, batch, partsDone),
+      complete: async (etags) => (await completeFile(fileId, etags)).file,
+      abort: () => deleteFile(fileId),
+      listParts: async () => (await fileParts(fileId)).parts,
+    };
+  }
   return {
-    fileId,
-    n: null,
     partSize,
     parts,
-    sign: (batch) => signParts(fileId, batch),
-    complete: (etags) => completeFile(fileId, etags),
-    abort: () => deleteFile(fileId),
-  };
-};
-
-const beginNextVersion = async (fileId: string, note: string, facts: UploadFacts): Promise<BegunUpload> => {
-  const { n, partSize, parts } = await beginVersion(fileId, { ...facts, note });
-  return {
-    fileId,
-    n,
-    partSize,
-    parts,
-    sign: (batch) => signVersionParts(fileId, n, batch),
-    complete: (etags) => completeVersion(fileId, n, etags),
+    sign: (batch, partsDone) => signVersionParts(fileId, n, batch, partsDone),
+    complete: async (etags) => (await completeVersion(fileId, n, etags)).file,
     abort: () => deleteVersion(fileId, n),
+    listParts: async () => (await versionParts(fileId, n)).parts,
   };
 };
 
-const beginUpload = (target: UploadTarget, facts: UploadFacts): Promise<BegunUpload> =>
-  target.kind === 'new'
-    ? beginNewFile(target.meta, facts)
-    : beginNextVersion(target.fileId, target.note, facts);
-
-export { beginUpload };
-export type { UploadFacts, BegunUpload };
+export { beginUpload, bindUpload };
+export type { UploadFacts };

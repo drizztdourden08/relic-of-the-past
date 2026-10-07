@@ -5,6 +5,7 @@ import { usePlatform } from '@app/platform';
 import type { NormalSaveInfo, AutoSaveInfo } from '@shared/types/saves';
 import type { PlaySession } from '@shared/types/session';
 import { saveState, loadState, captureStateBuffer, loadStateFromBuffer } from '../../../../../../../lib/game';
+import { onAutoSavesChanged } from '../../../../../../../lib/game/auto-save';
 import { saveMusicPosition, restoreMusicPosition } from '../../../../../../../lib/game/msu-save-glue';
 import { listSessions } from '../../../../../../../lib/game/session-tracker';
 import { log } from '../../../../../../../lib/log-bus';
@@ -58,6 +59,10 @@ const useHomeTabSaves = (params: { profileId: string; isGameRunning: boolean; on
     loadSessions();
   }, [profileId]);
 
+  // The timer writes auto-saves while this tab is open: follow it, so the newest one is on the
+  // list the moment it exists.
+  useEffect(() => onAutoSavesChanged(() => { loadAutoSaves(); }), [profileId]);
+
   // ─── Quick save handlers ───
   const handleQuickSave = useCallback(async (slot: number) => {
     setBusySlot(slot);
@@ -70,8 +75,7 @@ const useHomeTabSaves = (params: { profileId: string; isGameRunning: boolean; on
   const handleQuickLoad = useCallback(async (slot: number) => {
     setBusySlot(slot);
     log.app(`Loading state from slot ${slot + 1}`);
-    await ensureGameRunning(isGameRunning, onStartGame);
-    await loadState(slot);
+    if (await ensureGameRunning(isGameRunning, onStartGame)) await loadState(slot);
     setBusySlot(null);
   }, [profileId, isGameRunning, onStartGame]);
 
@@ -98,8 +102,8 @@ const useHomeTabSaves = (params: { profileId: string; isGameRunning: boolean; on
   const handleLoadNormal = useCallback(async (id: string) => {
     setBusyNormal(id);
     log.app(`Loading normal save: ${id}`);
-    await ensureGameRunning(isGameRunning, onStartGame);
-    const buffer = await savesStore.loadNormalSave(profileId, id);
+    const ready = await ensureGameRunning(isGameRunning, onStartGame);
+    const buffer = ready ? await savesStore.loadNormalSave(profileId, id) : null;
     if (buffer) {
       loadStateFromBuffer(buffer);
       await restoreMusicPosition(profileId, 'normal', id);
@@ -151,8 +155,8 @@ const useHomeTabSaves = (params: { profileId: string; isGameRunning: boolean; on
   const handleLoadAuto = useCallback(async (id: string) => {
     setBusyAuto(id);
     log.app(`Loading auto-save: ${id}`);
-    await ensureGameRunning(isGameRunning, onStartGame);
-    const buffer = await savesStore.loadAutoSave(profileId, id);
+    const ready = await ensureGameRunning(isGameRunning, onStartGame);
+    const buffer = ready ? await savesStore.loadAutoSave(profileId, id) : null;
     if (buffer) {
       loadStateFromBuffer(buffer);
       await restoreMusicPosition(profileId, 'auto', id);

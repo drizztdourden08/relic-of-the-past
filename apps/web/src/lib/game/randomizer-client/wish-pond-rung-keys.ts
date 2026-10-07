@@ -12,11 +12,12 @@
  * the settings alone.
  */
 
-import { pondInstanceOf } from '@shared/randomizer/ap-world/pond/pond-instances.data';
-import { POND_LOCATION_SET } from '@shared/randomizer/ap-world/pond/pond-locations.data';
-import { pondPlanOf } from '@shared/randomizer/ap-world/pond/pond-plan';
-import type { PondInstance } from '@shared/randomizer/ap-world/pond/pond-instance.type';
-import type { PondProfiles } from '@shared/randomizer/ap-world/pond/pond-profiles.type';
+import type { LocationKey } from '@shared/randomizer/world/location-key';
+import { pondInstanceOf } from '@shared/randomizer/world/pond/pond-instances';
+import { POND_LOCATION_SET } from '@shared/randomizer/world/pond/pond-rungs';
+import { pondPlanOf } from '@shared/randomizer/world/pond/pond-plan';
+import type { PondInstance } from '@shared/randomizer/world/pond/pond-instance.type';
+import type { PondProfiles } from '@shared/randomizer/world/pond/pond-profiles.type';
 
 /** One water the core arms a rung table for. */
 interface WishPondWater {
@@ -38,8 +39,8 @@ const WISH_POND_WATERS: readonly WishPondWater[] = [
 ];
 
 /** Every rung location of both waters, each mapped to its key. Empty when neither water carries rungs. */
-const wishPondRungKeysOf = (profiles: PondProfiles): ReadonlyMap<string, WishPondRungKey> => {
-  const keys = new Map<string, WishPondRungKey>();
+const wishPondRungKeysOf = (profiles: PondProfiles): ReadonlyMap<LocationKey, WishPondRungKey> => {
+  const keys = new Map<LocationKey, WishPondRungKey>();
   for (const { instance, pond } of WISH_POND_WATERS) {
     const { locations } = pondPlanOf(profiles[instance.id], instance);
     locations.forEach((location, rung) => {

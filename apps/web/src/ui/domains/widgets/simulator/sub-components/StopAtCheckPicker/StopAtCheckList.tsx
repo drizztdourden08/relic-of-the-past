@@ -6,7 +6,7 @@
  */
 import { Box, Button, Text } from '@ds/primitives';
 import type { CheckId, CheckRecord } from '@shared/game/data';
-import type { CheckStatus } from '@shared/game/logic/eval';
+import type { CheckStatus } from '@shared/game/logic';
 import { checkTypeIcon } from './check-type-icons';
 
 interface StopAtCheckListProps {
@@ -43,7 +43,7 @@ const StopAtCheckList = (props: StopAtCheckListProps) => {
           title={check.kind}
         >
           <Text className="stop-picker__row-icon">{checkTypeIcon(check.kind)}</Text>
-          <Text className="stop-picker__row-name">{check.randomizerName}</Text>
+          <Text className="stop-picker__row-name">{check.name}</Text>
           <Text className="stop-picker__row-id">{check.id}</Text>
         </Button>
       ))}

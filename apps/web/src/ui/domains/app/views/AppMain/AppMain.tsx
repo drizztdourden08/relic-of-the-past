@@ -1,8 +1,9 @@
 /* @layer renderer-app @kind component */
 import { useEffect, useMemo } from 'react';
+import { subscribeGameState } from '@app/lib/game/wasm-bridge';
 import { Box, Image } from '@ds/primitives';
 import { WidgetManager, useWidgetLayout } from '@ds/composites/Widget';
-import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, ChecksWidgetSettings, LogsWidgetContent, DebugWidgetContent, NavigationWidgetContent, LiveDataInspectorContent, CheatsWidgetContent, SimulatorWidgetContent, MusicWidgetContent } from '@domains/widgets';
+import { WIDGET_CONTENT, WIDGET_SETTINGS_CONTENT } from '@domains/widgets';
 import { widgetLayoutIO } from '@app/lib/storage/widget-state';
 import { primeLiveSettings } from '@app/lib/game';
 import { useExclusiveInsetsStore } from '@app/stores/exclusive-insets-store';
@@ -22,6 +23,7 @@ import { useDisplaySettings } from '@app/App/behavior/useDisplaySettings';
 import { useGameLifecycle } from '@app/App/behavior/useGameLifecycle';
 import { useIpcLogBridge } from '@app/App/behavior/useIpcLogBridge';
 import { useMsulOpen } from '@app/App/behavior/useMsulOpen';
+import { useStoreLinks } from '@app/App/behavior/useStoreLinks';
 import { useKeyboardShortcuts } from '@app/App/behavior/useKeyboardShortcuts';
 import { useProfileManagement } from '@app/App/behavior/useProfileManagement';
 import { useSaveOverlay } from '@app/App/behavior/useSaveOverlay';
@@ -106,7 +108,13 @@ const AppMain = () => {
   useIpcLogBridge();
   // A music pack opened from the desktop imports itself.
   useMsulOpen();
+  // A store install link the browser opened lands on the Hookshop tab.
+  useStoreLinks(nav.setActivePage);
   useAppMainEffects({ isGameRunning: game.isRunning, activePage: nav.activePage, openNavWidget: () => widgets.open('navigation') });
+  // A core crash surfaces its own evidence: the logs widget opens on the spot.
+  useEffect(() => subscribeGameState((state) => {
+    if (state.status === 'error') widgets.open('logs');
+  }), [widgets.open]);
 
   // Splash window → main window: reveal only once startup has settled and painted,
   // so the first frame the user sees is the finished shell (electron only).
@@ -128,7 +136,7 @@ const AppMain = () => {
 
       <Box className="app__content">
         {!game.isRunning && (
-          <Image className="app__bg-logo" src="./logos/logo-512.png" alt="" />
+          <Image className="app__bg-logo" src="./logos/logo/logo-512.png" alt="" />
         )}
 
         <GameLayer
@@ -170,24 +178,14 @@ const AppMain = () => {
           onUpdate={widgets.update}
           onClose={widgets.close}
           onInsetsChange={setExclusiveInsets}
-          settingsContent={{ inventory: <InventoryWidgetSettings />, checks: <ChecksWidgetSettings /> }}
+          settingsContent={WIDGET_SETTINGS_CONTENT}
           developerToolsEnabled={developerToolsEnabled}
           startupForcedWidgetIds={window.api.startup.widgets}
           vanillaSafe={vanillaSafe}
           settings={liveSettings}
           onOpenSettings={onOpenWidgetSettings}
         >
-          {{
-            inventory: <InventoryWidgetContent />,
-            checks: <ChecksWidgetContent />,
-            logs: <LogsWidgetContent />,
-            debug: <DebugWidgetContent />,
-            navigation: <NavigationWidgetContent />,
-            dataset: <LiveDataInspectorContent />,
-            cheats: <CheatsWidgetContent />,
-            simulator: <SimulatorWidgetContent />,
-            music: <MusicWidgetContent />,
-          }}
+          {WIDGET_CONTENT}
         </WidgetManager>
 
         <DebugFloatingControls

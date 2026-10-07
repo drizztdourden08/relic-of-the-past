@@ -14,7 +14,7 @@ interface FadePresence {
   transition: string;
 }
 
-const useFadePresence = (shown: boolean): FadePresence => {
+const useFadePresence = (shown: boolean, fadeMs: number = FADE_MS): FadePresence => {
   const [mounted, setMounted] = useState(shown);
   const [opacity, setOpacity] = useState(shown ? 1 : 0);
 
@@ -26,11 +26,11 @@ const useFadePresence = (shown: boolean): FadePresence => {
       return () => cancelAnimationFrame(raf);
     }
     setOpacity(0);
-    const timer = window.setTimeout(() => setMounted(false), FADE_MS);
+    const timer = window.setTimeout(() => setMounted(false), fadeMs);
     return () => window.clearTimeout(timer);
-  }, [shown]);
+  }, [shown, fadeMs]);
 
-  return { mounted, opacity, transition: `opacity ${FADE_MS}ms ease-out` };
+  return { mounted, opacity, transition: `opacity ${fadeMs}ms ease-out` };
 };
 
 export { useFadePresence, FADE_MS };

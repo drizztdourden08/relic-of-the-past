@@ -16,6 +16,8 @@
 #include "src/features.h"
 #include "src/hud.h"
 #include "src/spc_player.h"
+#include "src/dungeon.h"
+#include "gba_alttp.h"
 
 #include "game_constants.h"
 #include "game_hooks_internal.h"

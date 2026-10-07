@@ -55,6 +55,15 @@
   padding: var(--space-2xs);
 }
 
+/* The read-only face: the sprite over its True or False tag. */
+.dark-room-light .dark-room-light__readout {
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-2xs);
+  padding: var(--space-2xs);
+}
+
 .dark-room-light__sprite {
   width: var(--dark-room-sprite-d);
   height: var(--dark-room-sprite-d);

@@ -1,15 +1,14 @@
 /* @layer renderer-widgets @kind hook */
 /**
- * Data + filter state for the stop-at-check picker. Mirrors the checks widget's
- * snapshot pipeline (tracker statuses over the vanilla logic preset) and reuses
- * the shared `filterChecks` helper + `FilterState` so the picker offers the same
- * search / tag / item / status filtering the checks widget does.
+ * Data + filter state for the stop-at-check picker. Runs the checks widget's own snapshot
+ * pipeline (tracker/tracker-statuses.ts, over the placement where nothing moved) and reuses the
+ * shared `filterChecks` helper + `FilterState` so the picker offers the same search / tag / item
+ * / status filtering the checks widget does.
  */
 import { useState, useEffect, useMemo } from 'react';
-import { computeTrackerSnapshot } from '@shared/game/logic/eval';
-import type { CheckStatus } from '@shared/game/logic/eval';
-import { resolveRules } from '@shared/game/logic/resolver';
-import { VANILLA_CONFIG } from '@shared/game/data/presets';
+import type { CheckStatus } from '@shared/game/logic';
+import { normalPlacement } from '@app/lib/game/tracker/normal-placement-ref';
+import { trackerStatuses } from '@app/lib/game/tracker/tracker-statuses';
 import { find } from '@shared/game/data';
 import type { CheckId, CheckRecord, ItemId } from '@shared/game/data';
 import { filterChecks } from '@shared/game/logic/queries/check-grouping';
@@ -36,16 +35,15 @@ const useStopAtChecks = () => {
   useEffect(() => onCompletedChecksChanged((c) => setCompleted(new Set(c))), []);
 
   const checkRecords = useMemo(() => find('check', () => true), []);
-  const resolvedLogic = useMemo(() => resolveRules(VANILLA_CONFIG), []);
-  const effectiveInventory = useMemo(() => {
-    const merged = new Set(resolvedLogic.startInventory);
-    for (const item of inventory) merged.add(item);
-    return merged;
-  }, [inventory, resolvedLogic]);
 
   const statuses = useMemo<Map<string, CheckStatus>>(
-    () => computeTrackerSnapshot(effectiveInventory, completed, checkRecords, resolvedLogic.connections, resolvedLogic.checkOverrides),
-    [effectiveInventory, completed, checkRecords, resolvedLogic],
+    () => trackerStatuses({
+      placement: normalPlacement(),
+      checks: checkRecords,
+      inventory,
+      completed,
+    }),
+    [inventory, completed, checkRecords],
   );
 
   const checks = useMemo<CheckRecord[]>(

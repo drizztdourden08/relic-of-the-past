@@ -83,8 +83,8 @@ const useLocationNotification = () => {
       }
 
       // ─── Transition notification (name change within same location) ───
-      if (store.showTransition && prev && prev.locationId === detected.locationId && prev.randomizerName !== detected.randomizerName) {
-        const entrance = detected.vanillaName ?? detected.randomizerName;
+      if (store.showTransition && prev && prev.locationId === detected.locationId && prev.name !== detected.name) {
+        const entrance = detected.name;
         store.setTransition(entrance);
 
         if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);

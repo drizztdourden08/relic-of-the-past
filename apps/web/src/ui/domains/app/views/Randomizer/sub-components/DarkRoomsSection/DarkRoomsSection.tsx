@@ -16,7 +16,8 @@
  * banner instead of flagged on a control. The setting handed back on every edit is the STORED one,
  * the mask living in the tiles, so lifting it returns the player's own answer.
  *
- * The run view shares this section, so a stored snapshot reads the same way.
+ * The read-only Options page shares this section with no handler, so a stored
+ * snapshot reads the same way, every value drawn as a tag.
  */
 import { Box, Text } from '@ds/primitives';
 import { AlertBanner } from '@domains/app/compounds/AlertBanner';
@@ -46,6 +47,7 @@ const DarkRoomsSection = (props: DarkRoomsSectionProps) => {
           option={DARK_ROOM_REQUIRED_OPTION}
           value={setting.requireLight}
           impact={impact}
+          readout={readOnly}
           onChange={readOnly
             ? undefined
             : (next) => onChange({ ...setting, requireLight: Boolean(next) })}
@@ -58,6 +60,7 @@ const DarkRoomsSection = (props: DarkRoomsSectionProps) => {
             key={tile.field}
             tile={tile}
             disabled={readOnly}
+            readout={readOnly}
             onChange={readOnly ? undefined : (checked) => onChange({
               ...setting, lights: { ...setting.lights, [tile.field]: checked },
             })}

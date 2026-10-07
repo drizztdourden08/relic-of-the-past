@@ -34,6 +34,6 @@ const isDuplicated = (itemId: number, owned: ReadonlySet<ItemId>): boolean =>
   resolveDuplicate(itemId, owned) !== itemId;
 
 const itemLabel = (itemId: number): string =>
-  getItemByGameId({ receiveItemId: itemId })?.randomizerName ?? `item 0x${itemId.toString(16)}`;
+  getItemByGameId({ receiveItemId: itemId })?.name ?? `item 0x${itemId.toString(16)}`;
 
 export { isDuplicated, itemLabel, resolveDuplicate };

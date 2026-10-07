@@ -8,7 +8,7 @@ import type { Recommendation } from '@shared/game/recommendations';
 const subscribe = (listener: () => void): (() => void) => subscribeRecommendations(listener);
 
 /** Every stored finding, unordered. Client-only cache, so the same getter serves
- *  the server snapshot (see `use-review-store.ts` on the third argument). */
+ *  the server snapshot, which is what the third argument is for. */
 const useRecommendations = (): readonly Recommendation[] => {
   const getSnapshot = useCallback(() => allRecommendations(), []);
   return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);

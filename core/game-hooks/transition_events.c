@@ -1,5 +1,6 @@
 /* @layer core-game-hooks @kind native */
 #include "game_hooks_internal.h"
+#include "gba_alttp.h"
 #include "sprite_art_slots.h"
 
 // ─── Transition Settled Events ───
@@ -19,10 +20,13 @@ static uint8 s_prev_module = 0xFF;
 static uint8 s_prev_submodule = 0;
 
 void GameHook_ModuleFrameEnd(void) {
-  // This is the one hook that runs after a module has finished building its frame and before the
-  // frame is rasterised, so anything that needs to EDIT what the module produced belongs here rather
-  // than at a call-site of its own. The host menu's player-sprite blank is the only such tenant; it
-  // resolves its own gate and is a no-op on every frame the menu is not up.
+  // Every frame, after logic and before the draw: hold pinned camera bounds for the rooms
+  // whose baked side columns are padding. No-op everywhere else.
+  GbaAlttp_PinCameraBounds();
+  // This hook runs after a module has finished building its frame and before the frame is
+  // rasterised, so anything that needs to EDIT what the module produced belongs here and not at a
+  // call-site of its own. The host menu's player-sprite blank is one such tenant; it resolves its
+  // own gate and is a no-op on every frame the menu is not up.
   HostMenu_HidePlayerOam();
 
   const uint8 mod = main_module_index;
@@ -50,6 +54,10 @@ void GameHook_ModuleFrameEnd(void) {
   // And for the capacity pickup bonus (kFeatures5_CapacityBonus): an arm whose receipt is
   // gone is dropped here.
   GameHook_UpgradeBonusFrameEnd();
+  // And for a foreign item's empty payout (kFeatures5_ApOnline).
+  GameHook_ForeignItemFrameEnd();
+  // And for that item's game icon over the hold-up (kFeatures5_ApOnline).
+  GameHook_ForeignIconFrameEnd();
   // And for the quiver's picture under the retro bow (kFeatures3_RetroBow).
   GameHook_QuiverIconFrameEnd();
   // The glint over the held-up item (kFeatures3_ItemSheen), after every other repaint of
@@ -59,6 +67,11 @@ void GameHook_ModuleFrameEnd(void) {
   // which each substituted sprite's own tiles can be written (sprite_art_slots.c). A no-op
   // on every frame no gated seam claimed a block, which is every frame with them off.
   GameHook_SpriteArtFrameEnd();
+  // The event ledger's watcher (events/event_watch.c), under its own gate
+  // (kFeatures5_EventLedger): edges on the game's own bytes, no host call.
+  GameHook_EventWatchFrameEnd();
+  // The pyramid hole modes (story_events.c), under their own word-5 field.
+  GameHook_StoryGatesFrameEnd();
 
   // Off by default: makes zero host-calls, same contract as haptics.
   if (!(enhanced_features0 & kFeatures0_DeveloperTools))

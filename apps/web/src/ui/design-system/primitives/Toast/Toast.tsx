@@ -21,8 +21,10 @@ const Toast = (props: ToastProps) => {
   }, [item.duration, dismiss]);
 
   return (
-    <div className={`toast toast--${variant} ${exiting ? 'toast--exiting' : ''}`}>
-      <span className="toast__message">{item.message}</span>
+    <div className={`toast toast--${variant} ${exiting ? 'toast--exiting' : ''}`} role="status" aria-label={item.content ? item.message : undefined}>
+      {item.content
+        ? <div className="toast__content">{item.content}</div>
+        : <span className="toast__message">{item.message}</span>}
       <button className="toast__close" onClick={dismiss} aria-label="Dismiss">
         ✕
       </button>

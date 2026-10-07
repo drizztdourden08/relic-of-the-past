@@ -9,8 +9,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type {
   GlossaryTerm, LanguageSet, SetStructure, TextGroupId, Token, Variable,
 } from '@shared/game/language';
-import { mergeVariableMeta, variablesFromLegacy } from '@shared/game/language';
 import { getLanguageSet } from '@app/lib/storage/languages-store';
+import { literalTermsOf, variablesOf } from '@domains/packs/language/behavior/set-variables';
 import type { LanguageEditorState, NameEdit } from '../language-editor.type';
 import {
   withEntryNote, withEntryTokens, withGlossaryTerm, withManyEntryTokens, withNameValue,
@@ -24,12 +24,8 @@ import { useSetPersistence } from './useSetPersistence';
 const NO_VARIABLES: Variable[] = [];
 const NO_TERMS: GlossaryTerm[] = [];
 
-/** Every variable carrying literal text, as the walks that expand refs take it. */
-const literalTermsOf = (variables: Variable[]): GlossaryTerm[] => variables.flatMap(
-  (variable) => (variable.value === null ? [] : [{ key: variable.key, value: variable.value }]),
-);
-
-const useLanguageEditor = (id: string | null): LanguageEditorState => {
+/** `readOnly` is an installed set: every edit is refused here, so nothing is marked or written. */
+const useLanguageEditor = (id: string | null, readOnly = false): LanguageEditorState => {
   const [set, setSet] = useState<LanguageSet | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -68,13 +64,13 @@ const useLanguageEditor = (id: string | null): LanguageEditorState => {
   /** Applies one immutable transform, then marks the result for a debounced write. */
   const apply = useCallback((change: (from: LanguageSet) => LanguageSet) => {
     const from = current.current;
-    if (!from) return;
+    if (!from || readOnly) return;
     const next = change(from);
     if (next === from) return;
     current.current = next;
     setSet(next);
     markEdited(next);
-  }, [markEdited]);
+  }, [markEdited, readOnly]);
 
   const setEntryTokens = useCallback((entryId: number, tokens: Token[]) => {
     apply((from) => withEntryTokens(from, entryId, tokens));
@@ -118,7 +114,7 @@ const useLanguageEditor = (id: string | null): LanguageEditorState => {
   const variables = useMemo(
     () => (glossary === undefined || names === undefined
       ? NO_VARIABLES
-      : mergeVariableMeta(variablesFromLegacy(glossary, names), stored)),
+      : variablesOf(glossary, names, stored)),
     [glossary, names, stored],
   );
   const terms = useMemo(

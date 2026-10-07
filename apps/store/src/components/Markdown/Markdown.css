@@ -1,0 +1,28 @@
+/* @layer store-site @kind style */
+
+/* Rendered markdown at reading width, in the page's own text colours. */
+.markdown {
+  max-width: var(--welcome-maxw);
+  color: var(--c-text-dim);
+  line-height: var(--leading-normal);
+  overflow-wrap: anywhere;
+}
+
+.markdown p,
+.markdown ul,
+.markdown ol {
+  margin: 0 0 var(--space-sm);
+}
+
+.markdown > :last-child {
+  margin-bottom: 0;
+}
+
+.markdown a {
+  color: var(--c-gold-bright);
+  text-decoration: underline;
+}
+
+.markdown strong {
+  color: var(--c-text);
+}

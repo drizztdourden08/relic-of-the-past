@@ -4,6 +4,7 @@
  */
 import type { RomData } from './rom/rom-types';
 import type { AssetBuilder } from './asset-builder';
+import { appendExtraExit } from './extensions/second-cartridge-links';
 
 const buildOverworldExits = (rom: RomData, A: AssetBuilder): void => {
   const exitScreen = new Array(79).fill(0);
@@ -69,6 +70,13 @@ const buildOverworldExits = (rom: RomData, A: AssetBuilder): void => {
       spT7[j] = rom.getInt16(0x82e7c1 + j * 2);
     }
   }
+
+  appendExtraExit({
+    screen: exitScreen, rooms: exitRooms, loadOff: exitLoadOff,
+    scrollX: exitScrollX, scrollY: exitScrollY, x: exitX, y: exitY,
+    camX: exitCamX, camY: exitCamY, nDoor: exitNDoor, fDoor: exitFDoor,
+    unk1: exitUnk1, unk3: exitUnk3,
+  });
 
   A.addUint8('kExitData_ScreenIndex', exitScreen);
   A.addUint16('kExitDataRooms', exitRooms);

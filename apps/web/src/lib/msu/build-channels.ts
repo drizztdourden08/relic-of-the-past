@@ -3,8 +3,7 @@
  * Turns a pack manifest into the four channels the engine drives.
  *
  * Music comes from `tracks`, the other three from `sounds`, and a pack that authors no sounds
- * gets three empty channels, which is what every pack written before sound replacement
- * existed expects.
+ * gets three empty channels.
  */
 import type { MsuPackManifest, SoundChannel } from '@shared/types/msu-manifest';
 import { createSoundChannel } from './channel';

@@ -4,8 +4,8 @@
  * than inside it so the sentences a player reads are one short file to review,
  * and the component stays layout.
  */
-import { SHOP_MODE_LABELS } from '@shared/randomizer/ap-world/shops/shop-slot-options.data';
-import { SHOP_SHUFFLE_MODES } from '@shared/randomizer/ap-world/shops/shop-scope';
+import { SHOP_MODE_LABELS } from '@shared/randomizer/world/shops/shop-slot-options.data';
+import { SHOP_SHUFFLE_MODES } from '@shared/randomizer/world/shops/shop-scope';
 
 /** The dropdown, in the catalog's own order, vanilla first. */
 const MODE_OPTIONS = SHOP_SHUFFLE_MODES.map((mode) => ({ value: mode, label: SHOP_MODE_LABELS[mode] }));

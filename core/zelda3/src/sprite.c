@@ -13,6 +13,7 @@
 #include "tile_detect.h"
 #include "sprite_main.h"
 #include "assets.h"
+#include "gba_alttp.h"
 #include "game_hooks.h"
 
 // True once a sprite is confirmed to sit in the wide/tall extra band (Sprite_PrepOamCoordOrDoubleRet)
@@ -1524,7 +1525,7 @@ void Sprite_PrepAndDrawSingleLargeNoPrep(int k, PrepOamCoordsRet *info) {  // 86
   OamSetY(oam, info->y);
   if (oam->y != 0xf0) {
     oam->charnum = kSprite_PrepAndDrawSingleLarge_Tab2[kSprite_PrepAndDrawSingleLarge_Tab1[sprite_type[k]] + sprite_graphics[k]];
-    oam->flags = info->flags;
+    oam->flags = GbaAlttp_AdjustSpriteOamFlags(oam->charnum, info->flags);
   }
   // bit 8 of the 9-bit OAM X. Stock used (x >= 256), which only equals bit 8 for x < 512; in a wide view a
   // sprite at screen-x >= 512 needs the true (x>>8)&1 or its body splits 256px from its shadow (SetOamHelper1).
@@ -1899,7 +1900,8 @@ bool Sprite_PrepOamCoordOrDoubleRet(int k, PrepOamCoordsRet *ret) {  // 86e41e
   // spawn rect could sit outside the keep-alive window: spawned, killed, spawned again, which reads on
   // screen as the sprite flickering in and out. Width is unchanged; only the frame is corrected, so with
   // no lock this is the stock window.
-  if (xr < -(0x40 + xt) || xr >= 0x130 + xt ||
+  if (GameHook_SpriteBeyondShownRoom(k, xr, yr) ||
+      xr < -(0x40 + xt) || xr >= 0x130 + xt ||
       (yr < -(0x40 + yt) || yr >= 0x130 + yt) && !(sprite_flags4[k] & 0x20)) {
     sprite_pause[k]++;
     if (!(sprite_defl_bits[k] & 0x80))
@@ -2389,7 +2391,7 @@ void Sprite_CalculateSwordDamage(int k) {  // 86ed3f
 void Sprite_ApplyCalculatedDamage(int k, int a) {  // 86ed89
   if ((sprite_flags3[k] & 0x40) || sprite_type[k] >= 0xD8)
     return;
-  uint8 dmg = kEnemyDamages[damage_type_determiner * 8 | enemy_damage_data[sprite_type[k] * 16 | damage_type_determiner]];
+  uint8 dmg = GameHook_BarrierDamage(k, kEnemyDamages[damage_type_determiner * 8 | enemy_damage_data[sprite_type[k] * 16 | damage_type_determiner]]);
   Sprite_GiveDamage(k, dmg, a);
 }
 
@@ -2645,6 +2647,12 @@ bool Sprite_CheckDamageToLink_same_layer(int k) {  // 86f154
 
 bool Sprite_CheckDamageToLink_ignore_layer(int k) {  // 86f15c
   uint8 carry, t;
+  // Under the surface nothing can reach the player: this is the one point every contact test
+  // funnels through, so refusing here withholds the shove and the recoil as well as the damage.
+  // The timer only ever leaves zero behind kFeatures2_AllowDiving, so this reads as vanilla with
+  // the setting off.
+  if (g_ram[kRam_DiveTimer])
+    return false;
   if (sprite_flags4[k]) {
     SpriteHitBox hitbox;
     Link_SetupHitBox(&hitbox);
@@ -2755,6 +2763,8 @@ uint8 Sprite_CheckDamageFromLink(int k) {  // 86f2b4
   if (link_position_mode & 0x10)
     return kCheckDamageFromPlayer_Carry | kCheckDamageFromPlayer_Ne;
 
+  if (sprite_type[k] >= 0xd6 && !GameHook_StoryGate(kGate_Ganon, true))
+    return 0;
   if (link_item_in_hand & 10) {
     if (sprite_type[k] >= 0xd6 && !GameHook_HammerReachesLastFight())
       return 0;
@@ -2827,7 +2837,11 @@ void Sprite_AttemptDamageToLinkWithCollisionCheck(int k) {  // 86f3ca
 }
 
 void Sprite_AttemptDamageToLinkPlusRecoil(int k) {  // 86f3db
-  if (countdown_for_blink | link_disable_sprite_damage | Sprite_BandSuppressed(k))
+  // The second way a sprite arrives at the player, and it tests its own hitboxes rather than going
+  // through the check above, so a diving player has to be refused here as well. This is the path
+  // that carries the shove: it sets the recoil before the damage, so a sprite that could not hurt
+  // the player could still throw them across the room.
+  if (countdown_for_blink | link_disable_sprite_damage | Sprite_BandSuppressed(k) || g_ram[kRam_DiveTimer])
     return;
   link_incapacitated_timer = 19;
   Sprite_ApplyRecoilToLink(k, 24);
@@ -3719,8 +3733,12 @@ void Garnish02_MothulaBeamTrail(int k) {  // 89b6e1
   }
 }
 
-void Dungeon_ResetSprites() {  // 89c114
-  Dungeon_CacheTransSprites();
+static void Dungeon_ResetSpritesInner() {
+  // Bank rooms carry per-room sprite sheets, and the new set is already in VRAM by the time
+  // the pan starts - cached leaving-room sprites would render from it as garbage. They
+  // despawn at the transition instead; the arriving room's sprites are correct from frame one.
+  if (!GbaAlttp_IsBakedRoomActive())
+    Dungeon_CacheTransSprites();
   link_picking_throw_state = 0;
   link_state_bits = 0;
   Sprite_DisableAll();
@@ -3735,6 +3753,10 @@ void Dungeon_ResetSprites() {  // 89c114
     if (blk != 0xffff)
       sprite_where_in_room[blk] = 0;
   }
+}
+
+void Dungeon_ResetSprites() {  // 89c114
+  Dungeon_ResetSpritesInner();
   Dungeon_LoadSprites();
 }
 
@@ -3802,7 +3824,9 @@ void Sprite_DisableAll() {  // 89c22f
 }
 
 void Dungeon_LoadSprites() {  // 89c290
-  const uint8 *src = kDungeonSprites + kDungeonSpriteOffs[dungeon_room_index2];
+  const uint8 *src = GbaAlttp_GetRoomSprites(dungeon_room_index2);
+  if (!src)
+    src = kDungeonSprites + kDungeonSpriteOffs[dungeon_room_index2];
   byte_7E0FB1 = dungeon_room_index2 >> 3 & 0xfe;
   byte_7E0FB0 = (dungeon_room_index2 & 0xf) << 1;
   sort_sprites_setting = *src++;

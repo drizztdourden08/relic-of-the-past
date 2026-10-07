@@ -1,8 +1,6 @@
 /* @layer test @kind test */
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import type { GameSettings } from '@shared/types/settings';
 import { validateCustomRatio, detectScreenRatio, MAX_ASPECT } from '../../apps/web/src/lib/game/aspect-ratio';
-import { mergeSettings } from '../../apps/web/src/lib/game/settings';
 
 describe('validateCustomRatio', () => {
   it('accepts ratios from 4:3 up to the wide ceiling', () => {
@@ -58,21 +56,5 @@ describe('detectScreenRatio', () => {
     vi.stubGlobal('window', { screen: { width: 5120, height: 1080 } }); // 4.74
     const { w, h } = detectScreenRatio();
     expect(w / h).toBeLessThanOrEqual(MAX_ASPECT + 1e-6);
-  });
-});
-
-describe('mergeSettings and the 18:9 migration', () => {
-  it('rewrites a stored 18:9 screen ratio to custom 18:9', () => {
-    const m = mergeSettings({ aspectRatio: '18:9' } as unknown as Partial<GameSettings>);
-    expect(m.aspectRatio).toBe('custom');
-    expect(m.customAspectW).toBe(18);
-    expect(m.customAspectH).toBe(9);
-  });
-
-  it('rewrites a stored 18:9 HUD ratio to custom 18:9', () => {
-    const m = mergeSettings({ hudRatio: '18:9' } as unknown as Partial<GameSettings>);
-    expect(m.hudRatio).toBe('custom');
-    expect(m.customHudAspectW).toBe(18);
-    expect(m.customHudAspectH).toBe(9);
   });
 });

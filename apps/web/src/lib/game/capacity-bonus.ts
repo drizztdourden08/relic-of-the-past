@@ -4,33 +4,24 @@
  * core's upgrade resolvers read (core/game-hooks/upgrade_bonus.c) and of gate
  * word 5 (features.h kFeatures5_CapacityBonus), the word that says a borrowed
  * receipt pays the profile's bonus, not its native goods. Same shape as
- * the item-power word: nothing else in the app writes word 5, so a session
- * owns it outright and writes the whole word; the table writes are record-only,
- * and clearing both is a complete disarm, so every payout seam is back on its
- * vendored expression, byte for byte.
+ * the item-power word, except that word 5 is shared with the story gates, so
+ * the bit goes through the word's composer (gate-word-5.ts) and never clears
+ * the other half. The table writes are record-only, and clearing both is a
+ * complete disarm, so every payout seam is back on its vendored expression,
+ * byte for byte.
  */
 
 import { CAPACITY_FAMILY_IDS } from '@shared/game/data';
 import { log } from '../log-bus';
 import { CAPACITY_FAMILY_INDEX } from './capacity-profile.constants';
+import { setCapacityHalf } from './gate-word-5';
 import { getModule } from './wasm-bridge';
-import type { CapacityBonusSetting } from '@shared/randomizer/ap-world/capacity';
+import type { CapacityBonusSetting } from '@shared/randomizer/world/capacity';
 
 /** features.h kFeatures5_CapacityBonus: keep in lockstep with that enum. */
 const CAPACITY_BONUS_BIT = 1;
-const GATE_WORD = 5;
 
-const writeGateWord = (word: number): void => {
-  const mod = getModule();
-  if (!mod) return;
-  // Guarded like every other gate-word write: a core built before this word
-  // carried bits has no export to call.
-  try {
-    mod.ccall('WasmSetGateWord', null, ['number', 'number'], [GATE_WORD, word]);
-  } catch {
-    log.error('[Randomizer] Capacity bonus refused: this core has no gate word 5');
-  }
-};
+const writeGateWord = (word: number): void => setCapacityHalf(word);
 
 const setCapacityBonus = (setting: CapacityBonusSetting): void => {
   const mod = getModule();

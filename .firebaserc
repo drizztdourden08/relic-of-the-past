@@ -1,0 +1,17 @@
+{
+  "projects": {
+    "default": "relic-of-the-past"
+  },
+  "targets": {
+    "relic-of-the-past": {
+      "hosting": {
+        "sanctuary": [
+          "rotp-sanctuary"
+        ],
+        "store": [
+          "rotp-hookshop"
+        ]
+      }
+    }
+  }
+}

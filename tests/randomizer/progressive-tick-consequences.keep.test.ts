@@ -10,17 +10,17 @@
  * whole, the beam-only three while the first rung alone is ticked.
  */
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_ITEM_POWER } from '@shared/randomizer/ap-world/item-power/item-power.data';
-import { derivedItemPower } from '@shared/randomizer/ap-world/item-power/item-power-rule';
+import { DEFAULT_ITEM_POWER } from '@shared/randomizer/world/item-power/item-power.data';
+import { derivedItemPower } from '@shared/randomizer/world/item-power/item-power-rule';
 import {
   TICK_CONSEQUENCES, progressiveTickConsequences,
-} from '@shared/randomizer/ap-world/progressive/tick-consequences';
-import { defaultProgressiveSetting } from '@shared/randomizer/ap-world/progressive/progressive-from-snapshot';
+} from '@shared/randomizer/world/progressive/tick-consequences';
+import { defaultProgressiveSetting } from '@shared/randomizer/world/progressive/progressive-from-snapshot';
 import {
   beamSwordReachable, swordReachable,
-} from '@shared/randomizer/ap-world/progressive/progressive-reach';
-import type { ItemPowerSetting } from '@shared/randomizer/ap-world/item-power/item-power.type';
-import type { ProgressiveSetting } from '@shared/randomizer/ap-world/progressive/progressive.type';
+} from '@shared/randomizer/world/progressive/progressive-reach';
+import type { ItemPowerSetting } from '@shared/randomizer/world/item-power/item-power.type';
+import type { ProgressiveSetting } from '@shared/randomizer/world/progressive/progressive.type';
 
 /** The default set with the blade family's ticks replaced. */
 const withSwordTicks = (ticks: readonly boolean[]): ProgressiveSetting => ({

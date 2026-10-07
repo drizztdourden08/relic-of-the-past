@@ -8,11 +8,10 @@ import { FilterBtns, Stats } from './ReviewControls';
 import { ItemAssocCard } from './ReviewCards';
 import { S } from '../SpriteDebug.constants';
 import { loadSpriteDebug, saveSpriteDebug } from '@app/lib/storage/sprites-store';
-import { migrateLegacyReviewKeys } from './migrate-review-keys';
 
 const ALL_ITEMS = find('item', () => true).map(item => ({
   id: item.id,
-  name: item.randomizerName,
+  name: item.name,
   file: spriteFilename(item.spriteId) ?? '',
 }));
 
@@ -24,8 +23,7 @@ const ItemReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
 
   useEffect(() => {
     loadSpriteDebug().then(d => {
-      const migrated = migrateLegacyReviewKeys((d ?? {}) as ReviewData);
-      setData(migrated);
+      setData((d ?? {}) as ReviewData);
       setLoaded(true);
     });
   }, []);

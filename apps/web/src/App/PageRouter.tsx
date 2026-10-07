@@ -2,16 +2,13 @@
 import { useCallback } from 'react';
 import { HubGameControls, ProfileHub } from '../ui/domains/app/views/ProfileHub';
 import { DataManager } from '../ui/domains/app/views/DataManager';
-import { InputCalibration } from '../ui/domains/app/views/InputTester';
+import { Store } from '../ui/domains/app/views/Store';
 import { HudLayoutEditor } from '../ui/domains/app/views/HudLayoutEditor';
-import { CreditsPage } from '../ui/domains/app/views/ProfileHub/sub-components/CreditsTab';
-import { DesignGallery } from '../ui/domains/app/views/DesignGallery';
 import { SpriteDebug } from '../ui/domains/app/views/SpriteDebug';
-import { DataInspector } from '../ui/domains/app/views/DataInspector';
-import { About } from '../ui/domains/app/views/About';
 import { Randomizer } from '../ui/domains/app/views/Randomizer';
+import { SIMPLE_PAGES } from './simple-pages';
 import { FullScreenLayer } from '../ui/design-system/composites/FullScreenLayer';
-import { WorkspaceSwitch, type Workspace } from '../ui/domains/app/views/WorkspaceSwitch';
+import { WorkspaceSwitch, type Workspace } from '../ui/domains/app/compounds/WorkspaceSwitch';
 import type { PageId, RomDisplayInfo } from './types';
 import type { GameSettings } from '@shared/types/settings';
 import type { CreateProfileOptions, CreateProfileResult } from '@shared/types/profile';
@@ -83,8 +80,10 @@ const PageRouter = (props: PageRouterProps) => {
   // ProfileHub stays mounted to preserve scroll/state; other pages use early returns
   let otherPage: React.ReactNode = null;
   const switchTo = (current: Workspace) => (
-    <WorkspaceSwitch current={current} hasProfile={!!profileMgmt.activeProfile} onSelect={nav.setActivePage} />
+    <WorkspaceSwitch current={current} hasProfile={!!profileMgmt.activeProfile} hasRandomizer={!!profileMgmt.activeProfile?.randomizer} onSelect={nav.setActivePage} />
   );
+
+  const simplePage = SIMPLE_PAGES[nav.activePage];
 
   if (nav.activePage === 'data') {
     otherPage = (
@@ -111,46 +110,28 @@ const PageRouter = (props: PageRouterProps) => {
         />
       </FullScreenLayer>
     );
-  } else if (nav.activePage === 'input-tester') {
+  } else if (nav.activePage === 'store') {
     otherPage = (
-      <FullScreenLayer onClose={nav.closePage} title="Input Calibration">
-        <InputCalibration />
+      <FullScreenLayer onClose={nav.closePage} title="Hookshop" floating={switchTo('store')}>
+        <Store onLibraryChanged={profileMgmt.refreshProfilesAndRoms} onDeleteConfirm={handleDeleteConfirm} />
       </FullScreenLayer>
     );
   } else if (nav.activePage === 'hud-layout') {
     // The editor brings its own FullScreenLayer (title + close), the way the
     // sprite studio does, because it wants the whole width for a true-scale stage.
     otherPage = <HudLayoutEditor onClose={nav.closePage} />;
-  } else if (nav.activePage === 'credits') {
+  } else if (simplePage) {
     otherPage = (
-      <FullScreenLayer onClose={nav.closePage} title="Credits">
-        <CreditsPage />
-      </FullScreenLayer>
-    );
-  } else if (nav.activePage === 'design-gallery') {
-    otherPage = (
-      <FullScreenLayer onClose={nav.closePage} title="Design Gallery">
-        <DesignGallery />
+      <FullScreenLayer onClose={nav.closePage} title={simplePage.title}>
+        {simplePage.render()}
       </FullScreenLayer>
     );
   } else if (nav.activePage === 'sprite-debug') {
     // SpriteDebug brings its own FullScreenLayer (title + close), so render it directly.
     otherPage = <SpriteDebug onClose={nav.closePage} romFile={profileMgmt.activeProfile?.romFile ?? ''} />;
-  } else if (nav.activePage === 'data-inspector') {
-    otherPage = (
-      <FullScreenLayer onClose={nav.closePage} title="Data Inspector">
-        <DataInspector />
-      </FullScreenLayer>
-    );
-  } else if (nav.activePage === 'about') {
-    otherPage = (
-      <FullScreenLayer onClose={nav.closePage} title="About">
-        <About />
-      </FullScreenLayer>
-    );
   } else if (nav.activePage === 'randomizer') {
     otherPage = (
-      <FullScreenLayer onClose={nav.closePage} title="Randomizer">
+      <FullScreenLayer onClose={nav.closePage} title="Randomizer" floating={switchTo('randomizer')}>
         <Randomizer activeProfile={profileMgmt.activeProfile} />
       </FullScreenLayer>
     );

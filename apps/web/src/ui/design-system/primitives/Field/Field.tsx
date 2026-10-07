@@ -4,11 +4,11 @@ import type { FieldProps } from './Field.type';
 
 const Field = (props: FieldProps) => {
   const { label, hint, error, htmlFor, required, inline, size = 'md', className = '', style, children } = props;
+  const cls = [
+    'field', size === 'sm' && 'field--sm', inline && 'field--inline', error != null && 'field--invalid', className,
+  ].filter(Boolean).join(' ');
   return (
-    <div
-      className={`field${size === 'sm' ? ' field--sm' : ''}${inline ? ' field--inline' : ''}${className ? ` ${className}` : ''}`}
-      style={style}
-    >
+    <div className={cls} style={style}>
       {label != null && (
         <label className="field__label" htmlFor={htmlFor}>
           {label}

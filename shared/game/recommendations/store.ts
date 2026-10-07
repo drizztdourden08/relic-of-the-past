@@ -42,6 +42,17 @@ interface PassResult {
   entries: readonly Recommendation[];
 }
 
+/**
+ * Whether a pass left the collection exactly as it found it. `reconcile`
+ * rebuilds an entry it actually touched, and hands back the stored object
+ * itself for one it did not, so element identity is a sound (and cheap) test
+ * for "nothing here changed". A sweep covers every collection, most of which
+ * any single pass has nothing to say about; recognising that is what keeps the
+ * extra coverage from costing a file write each.
+ */
+const unchanged = (previous: readonly Recommendation[], next: readonly Recommendation[]): boolean =>
+  previous.length === next.length && next.every((entry, at) => entry === previous[at]);
+
 const createRecommendationStore = (storage: RecommendationStorage = memoryStorage()) => {
   const list = (kind: EntityKind): Promise<readonly Recommendation[]> => storage.load(kind);
 
@@ -66,6 +77,7 @@ const createRecommendationStore = (storage: RecommendationStorage = memoryStorag
       inScope: scopedToPass(detectorIds, context.screenId),
       now,
     });
+    if (unchanged(previous, entries)) return { kind, entries: previous };
     await storage.save(kind, entries);
     return { kind, entries };
   };

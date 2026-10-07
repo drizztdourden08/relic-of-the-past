@@ -7,11 +7,11 @@
  * real-bit-vs-possession-proxy routing the live poller uses without a
  * session ever having started.
  */
-import { buildPhysicalPlan } from './ap-bridge';
+import { buildPhysicalPlan } from './placement-bridge';
 import { FIRE_REPORTED_CLASSES } from './fire-reported-classes';
-import type { ApPlacement } from '@shared/randomizer/ap-world/fill/ap-placement.type';
+import type { Placement } from '@shared/randomizer/world/fill/placement.type';
 
-const armedCheckIdsOfPlacement = (placement: ApPlacement): ReadonlySet<string> => {
+const armedCheckIdsOfPlacement = (placement: Placement): ReadonlySet<string> => {
   const armed = new Set<string>();
   for (const entry of buildPhysicalPlan(placement).entries) {
     if (entry.checkId !== undefined && FIRE_REPORTED_CLASSES.has(entry.planClass)) {

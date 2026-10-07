@@ -6,7 +6,7 @@
  */
 import { useCallback, useState } from 'react';
 import { deleteReport, downloadReport, extendReport } from '../../../api/reports-endpoints';
-import { errorMessage } from '../../../api/client';
+import { errorMessage } from '@site-kit/api/api-error';
 import type { ReportView } from '../../../api/types';
 
 type UseReportActionsParams = {

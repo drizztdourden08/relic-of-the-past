@@ -9,6 +9,7 @@
  * MSU-1 itself cannot represent layers (single audio stream, one track register), so
  * layering is our extension. The `.msul` container keeps it, and MSU-1 export flattens it.
  */
+import type { BasedOn } from '@shared/store/based-on';
 
 /** Longest crossfade a loop may use, in seconds. */
 const MAX_CROSSFADE_SECONDS = 10;
@@ -27,7 +28,7 @@ type LayerPlayMode =
     order: 'sequential' | 'random' | 'single';
     /**
      * Overlap between one pass and the next, in seconds (0-10): outgoing fades out while
-     * incoming fades in. 0 or absent keeps the hard cut older packs expect.
+     * incoming fades in. 0 or absent keeps a hard cut.
      */
     crossfadeSeconds?: number;
   }
@@ -39,7 +40,7 @@ type LayerPlayMode =
     /**
      * True: the gap is measured from when the sound FINISHES, so one plays at a time. False or
      * absent: measured from when it STARTED, so sounds may overlap (deliberate for layering
-     * several gusts, and what older packs relied on).
+     * several gusts).
      */
     waitForCompletion?: boolean;
   }
@@ -74,7 +75,7 @@ interface MsuLayer {
    * Chance this layer sounds at all, 1-100, rolled each time the layer STARTS: a per-trigger
    * chance on a one-shot, a per-bed decision on a bed. Exists because the game raises some
    * effects on a fixed frame cycle (the storm's thunder), which a real recording turns into a
-   * metronome. Absent means 100, the behaviour of older packs.
+   * metronome. Absent means 100.
    */
   chance?: number;
   /** Loop restart point, in samples at 44100 Hz (the MSU-1 loop-point field on export). Undefined = beginning. */
@@ -114,6 +115,8 @@ interface MsuPackMeta {
   cover?: string;
   createdAt: number;
   modifiedAt: number;
+  /** Set on a copy of a pack installed from the Hookshop: the original it credits. */
+  basedOn?: BasedOn;
 }
 
 interface MsuPackManifest {
@@ -121,7 +124,7 @@ interface MsuPackManifest {
   version: 1;
   meta: MsuPackMeta;
   tracks: MsuTrackDef[];
-  /** Sounds this pack replaces, per channel. Absent or empty: every sound keeps playing from the chip (what older packs expect). */
+  /** Sounds this pack replaces, per channel. Absent or empty: every sound keeps playing from the chip. */
   sounds?: Partial<Record<SoundChannel, MsuSoundDef[]>>;
   /**
    * Every file the pack folder holds except the manifest, sorted by name, wired or not. Stamped

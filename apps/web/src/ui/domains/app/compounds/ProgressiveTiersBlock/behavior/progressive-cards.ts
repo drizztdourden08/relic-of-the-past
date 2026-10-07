@@ -16,12 +16,12 @@
  * rung is called, and a checkout without it keeps the short neutral words the
  * family table carries.
  */
-import { PROGRESSIVE_FAMILIES } from '@shared/randomizer/ap-world/progressive/progressive-families.data';
-import { progressiveFamilyName, progressiveTierName } from '@shared/randomizer/ap-world/progressive/progressive-display-names';
-import { progressiveTierKeyOf } from '@shared/randomizer/ap-world/progressive/progressive-option-keys';
+import { PROGRESSIVE_FAMILIES } from '@shared/randomizer/world/progressive/progressive-families.data';
+import { progressiveFamilyName, progressiveTierName } from '@shared/randomizer/world/progressive/progressive-display-names';
+import { progressiveTierKeyOf } from '@shared/randomizer/world/progressive/progressive-option-keys';
 import type {
   ProgressiveFamilyId, ProgressiveFamilyMode, ProgressiveModeSetting, ProgressiveSetting,
-} from '@shared/randomizer/ap-world/progressive/progressive.type';
+} from '@shared/randomizer/world/progressive/progressive.type';
 
 interface ProgressiveTierToggleModel {
   /** The catalog key this box stands for, which is also its react key. */

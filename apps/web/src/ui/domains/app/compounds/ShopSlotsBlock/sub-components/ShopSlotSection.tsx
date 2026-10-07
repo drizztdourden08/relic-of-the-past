@@ -17,11 +17,13 @@ interface ShopSlotSectionProps {
   section: ShopSectionModel;
   /** Vanilla mode or a read-only render: every card draws inert. */
   disabled: boolean;
+  /** Every slot shows a tag in place of its box: the read-only panel. */
+  readout?: boolean;
   onSlotChange?: (canonicalIndex: number, checked: boolean) => void;
 }
 
 const ShopSlotSection = (props: ShopSlotSectionProps) => {
-  const { section, disabled, onSlotChange } = props;
+  const { section, disabled, readout, onSlotChange } = props;
 
   return (
     <RandomizerOptionGroup title={section.title} live className="shop-slot-section">
@@ -31,6 +33,7 @@ const ShopSlotSection = (props: ShopSlotSectionProps) => {
             key={card.id}
             card={card}
             disabled={disabled}
+            readout={readout}
             onSlotChange={onSlotChange}
           />
         ))}

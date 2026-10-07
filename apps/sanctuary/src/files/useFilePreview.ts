@@ -5,7 +5,7 @@
  */
 import { useEffect, useState } from 'react';
 import { previewFile } from '../api/files-endpoints';
-import { errorMessage } from '../api/client';
+import { errorMessage } from '@site-kit/api/api-error';
 
 type PreviewResult = {
   /** The file and version the answer is for. */

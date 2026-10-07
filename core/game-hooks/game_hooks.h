@@ -55,6 +55,7 @@ bool GameHook_GiftOverrideArmed(uint8 vanilla_item);
 // good. Both return the vanilla expression verbatim unless the stump's grant is armed.
 uint8 GameHook_StumpyFluteSlot(void);
 bool GameHook_StumpyFinished(void);
+#include "smith_sword.h"
 
 // Whether the continue/death menu offers the third (mountain) spawn: the real
 // completion bit while the elder's grant is overridden this session, the vanilla
@@ -215,7 +216,7 @@ bool GameHook_IsUpgradeVirtualId(uint8 item);
 // upgrade id renders as; any other id passes through unchanged.
 uint8 GameHook_UpgradePresentationOf(uint8 item);
 
-// Any virtual family (upgrade 0x50-0x61, progressive 0x62-0x66, wallet 0x67-0x76,
+// Any virtual family (upgrade 0x50-0x61, progressive 0x62-0x66 and 0x82, wallet 0x67-0x76,
 // progressive capacity 0x77-0x7A): the one sanctioned exception to the 76-entry native
 // bound every override table and the receipt export enforce.
 bool GameHook_IsVirtualGrantId(uint8 item);
@@ -316,6 +317,9 @@ void GameHook_NoteReceiptVanillaId(uint8 vanilla_item);
 // this receipt was one of the four the vendored test names. False with the gate down, so the
 // vendored expression stands alone.
 bool GameHook_SubstitutedReceiptSkipsBossExit(void);
+
+// ─── Online multiworld (foreign_item.c, death_link.c, ap_received_index.c) ───
+#include "ap_hooks.h"
 
 // ─── Dungeon-item shuffle (dungeon_item_grants.c) ───
 
@@ -475,7 +479,7 @@ int GameHook_CapacityFixedLine(int family, int from_rung, int jump);
 
 // ─── Progressive virtual receive ids (progressive_grants.c) ───
 
-// True for a reserved progressive id (0x62-0x66), one copy of a multi-tier equipment
+// True for a reserved progressive id (0x62-0x66, 0x82), one copy of a multi-tier equipment
 // family, resolved to the next tier from live inventory. Never reaches vendored code.
 bool GameHook_IsProgressiveVirtualId(uint8 item);
 
@@ -506,6 +510,10 @@ void GameHook_ProgressiveAfterReceipt(uint8 item);
 // Record a substitution-completion bit by its allocation key (npc_overrides.c owns
 // the table; synthetic keys 0xF0+ mark grants with no vanilla receive id).
 void GameHook_MarkSubstitutionKey(uint8 key);
+
+// The story-event surface: the ledger, the recorders and the gates (story_events.h).
+#include "story_events.h"
+
 
 // Pond seam: true when the capacity purchase of |kind| (0 explosives / 1 projectiles)
 // was substituted. The caller skips the vanilla counter bump and its message.
@@ -580,13 +588,18 @@ enum {
   kReceiptMsg_Online      = kReceiptMsgBase + 4,
   // Position 5 is the archery host's refusal, named where it is shown (archery_host.c).
 };
+// The line a placed quiet rupee, bomb or arrow is armed with: no dialogue line has this id, and the
+// message seam shows no text for it (receipt_messages.c, kFeatures5_QuietMask). Mirrored by
+// QUIET_RECEIPT_MSG in apps/web/src/lib/game/quiet-receipts.ts.
+#define kReceiptMsg_Silent 0x7fff
 
 // Arm |msg| as the finishing receipt's message unless one is already armed. A one-shot the host
 // set for this grant (richer context) always wins over a class default. Gated record: no-op while
 // kFeatures3_ReceiptMessages is off, so a closed gate can never hold a stale arm.
 void GameHook_ArmReceiptMessageIfClear(int msg);
-// The progressive capacity resolver's arm: replaces the armed one-shot (receipt_messages.c).
-void GameHook_ArmReceiptMessageReplace(int msg);
+// A capacity resolver's detail line: shown as the next page of the armed one-shot, which stays the
+// receipt's first page (receipt_messages.c, receipt_pages.c).
+void GameHook_ArmReceiptDetailPage(int msg);
 // Link_ReceiveItem ran: the new receipt claims the armed one-shot, and an arm a previous
 // receipt claimed without consuming (a seam-skipping room, no free ancilla) is dropped.
 void GameHook_ReceiptMessageClaim(void);
@@ -738,7 +751,13 @@ void GameHook_SetHideSpaceBeyondWalls(bool enable);
 // house, a cave or the sanctuary. A palace room answers no, and so does any room drawn with a dungeon's
 // tileset, whatever its entrance says. Returns the word count with |words| pointing at them, or 0 with
 // nothing to hide. Asked once per frame by ZeldaDrawPpuFrame, after PpuBeginDrawing has reset the flags.
+// In ROOM_TOWER_AGAHNIM, under the same request, it returns 0 and blacks the two CGRAM entries that
+// colour that room's surround until GameHook_HideSpaceBeyondWallsDone.
 int GameHook_HideSpaceBeyondWallsFill(const uint16 **words);
+
+// The frame is drawn: gives the CGRAM entries blacked by the call above their values back. Does nothing
+// on every other frame. Called by ZeldaDrawPpuFrame after its last line.
+void GameHook_HideSpaceBeyondWallsDone(void);
 
 // ─── The Space Around A Fixed Picture (fixed_picture_edges.c) ───
 

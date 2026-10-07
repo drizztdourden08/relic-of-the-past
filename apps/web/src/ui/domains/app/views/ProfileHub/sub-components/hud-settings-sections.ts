@@ -30,6 +30,7 @@ const SECTIONS: Section[] = [
       { key: 'hudHeartMode', label: 'Heart Style', description: 'How life hearts are drawn. Smooth fills fractional hearts gradually instead of in 4 steps.', keywords: 'heart life health style smooth' },
       { key: 'hudMagicMode', label: 'Magic Meter', description: 'How the magic power bar is rendered. Accurate shows the true value instead of rounding to 1/8ths.', keywords: 'magic meter style bar accurate' },
       { key: 'hudCountLayout', label: 'Counter Layout', description: 'Position of the rupee, bomb, arrow, and key counters relative to the screen.', keywords: 'counter layout position center original rupee bomb arrow key' },
+      { key: 'hudCountdownStyle', label: 'Countdown Timer', description: '', keywords: 'countdown timer pie pixel smooth digging super bomb' },
     ],
   },
   {
@@ -54,6 +55,14 @@ const SECTIONS: Section[] = [
           { key: 'dialogInkColor', label: 'Ink Color', description: 'The colour the modern font is written in.', keywords: 'dialog ink color colour text font' },
           { key: 'dialogStrokeColor', label: 'Stroke Color', description: 'The outline colour around each modern glyph.', keywords: 'dialog stroke outline color colour text font' },
           { key: 'dialogStrokeWidth', label: 'Stroke Width', description: 'How thick the outline is, in game pixels.', keywords: 'dialog stroke outline width thickness text font' },
+        ],
+      },
+      {
+        id: 'hud-dialog-highlight',
+        title: 'Highlights',
+        items: [
+          { key: 'hudHighlightPrimary', label: 'Highlight Primary', description: 'Item names in randomizer messages.', keywords: 'dialog highlight primary color colour item name randomizer message gold' },
+          { key: 'hudHighlightSecondary', label: 'Highlight Secondary', description: 'Player names in randomizer messages.', keywords: 'dialog highlight secondary color colour player name randomizer multiworld message green' },
         ],
       },
       {

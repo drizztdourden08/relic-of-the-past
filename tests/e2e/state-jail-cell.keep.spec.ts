@@ -21,7 +21,7 @@ test('test-jail-cell still has both checks behind a locked cell', async () => {
     expect(flood, 'the blessed indoor baseline').toEqual({ reachable: 1049, total: 12288 });
 
     expect(await r.groups()).toEqual({
-      'Checks': 3, 'Locks & barriers': 4, 'Triggers': 3, 'Ways out': 3,
+      'Checks': 3, 'Locks & barriers': 4, 'Triggers': 3,
     });
 
     // Nothing in the cell itself is collectable: both of its checks sit behind the lock. The flood

@@ -36,7 +36,7 @@ int PondTossRupeeVolleys(int amount);
 // The other currencies (pond_demand_toss.c): the payment of |demand| shown flying in, and the
 // volleys it leaves in. Both read the demand before anything is taken. PondDemandBottles is how
 // many bottles a bottle demand asks for, which is what the test, the take and the toss all
-// count; an amount of zero is a placement frozen before the count existed and means one.
+// count.
 bool PondDemandToss(const PondDemand *demand);
 int PondDemandVolleys(const PondDemand *demand);
 int PondDemandBottles(const PondDemand *demand);

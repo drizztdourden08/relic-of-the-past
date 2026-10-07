@@ -63,6 +63,7 @@ const createFileStore = (): FileStore => ({
   writeText: (path, data) => window.api.fileWriteText(path, data),
   list: (dir) => window.api.fileList(dir),
   remove: (path) => window.api.fileRemove(path),
+  trash: (path) => window.api.fileTrash(path),
   exists: (path) => window.api.fileExists(path),
   mkdir: (dir) => window.api.fileMkdir(dir),
   stat: (path) => window.api.fileStat(path),

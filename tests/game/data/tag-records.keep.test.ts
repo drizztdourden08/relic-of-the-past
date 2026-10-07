@@ -7,7 +7,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import {
-  ALL_TAGS, all, CONNECTION_TAG_METADATA, CONTENT_TAG_METADATA, ENTITY_COUNTS, getTag, tagById, tagByKey,
+  ALL_TAGS, all, CONNECTION_TAG_METADATA, CONTENT_TAG_METADATA, find, getTag, tagById, tagByKey,
   tagIdForKey, tagIdsForKeys, tagKey, tagKeysOf, tagsFor, TAG_METADATA,
 } from '@shared/game/data';
 import { describeDataset } from '../../dataset-guard';
@@ -21,7 +21,7 @@ const SEED = [
 describeDataset('the tag collection', () => {
   it('holds one record per seeded term, and nothing else', () => {
     expect(ALL_TAGS).toHaveLength(SEED.length);
-    expect(ALL_TAGS).toHaveLength(ENTITY_COUNTS.tag);
+    expect(find('tag', () => true)).toHaveLength(SEED.length);
   });
 
   it('gives every record a unique id and a unique key', () => {
@@ -55,7 +55,8 @@ describeDataset('the tag collection', () => {
   it('reaches the facade like any other kind', () => {
     expect(all('tag')).toHaveLength(ALL_TAGS.length);
     expect(getTag('tag-001').name).toBe(ALL_TAGS[0].name);
-    expect(getTag('tag-999').name).toBe('(unregistered)');
+    // A miss throws and says which id: the getter no longer fabricates a record to answer with.
+    expect(() => getTag('tag-999')).toThrow("no tag record with id 'tag-999'");
   });
 });
 

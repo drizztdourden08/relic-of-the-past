@@ -46,9 +46,9 @@ const verifyStep = (s: EngineState, obs: SimObservation, events: SimEvent[]): vo
   if (s.config.stopAtCheckId && matched?.id === s.config.stopAtCheckId) s.stopHit = true;
 
   // Names are resolved HERE, for a human reading the log, and stored nowhere.
-  const shown = matched ? matched.randomizerName : target?.label ?? UNIDENTIFIED;
+  const shown = matched ? matched.name : target?.label ?? UNIDENTIFIED;
   if (itemReceived) {
-    const itemName = getItem(itemReceived).randomizerName;
+    const itemName = getItem(itemReceived).name;
     events.push(narrative(s, matched || target ? `Got "${itemName}" (${shown})` : `Got "${itemName}"`));
   }
   events.push({ ...narrative(s, `Verified ${shown}`), data: { detected } });

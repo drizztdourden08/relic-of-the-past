@@ -14,6 +14,9 @@ interface DialogBoxSettings {
   inkColor: string;
   strokeColor: string;
   strokeWidth: number;
+  /** Item names and player names in randomizer messages, hex. */
+  highlightPrimary: string;
+  highlightSecondary: string;
   boxOpacity: number;
   floatingGround: boolean;
   introTelepathyGround: boolean;
@@ -53,6 +56,8 @@ const useDialogSettingsStore = create<DialogSettingsStore>()((set) => ({
   inkColor: '#ffffff',
   strokeColor: '#3850a8',
   strokeWidth: 0.5,
+  highlightPrimary: '#e8a33d',
+  highlightSecondary: '#7fb861',
   boxOpacity: 0.7,
   floatingGround: true,
   introTelepathyGround: false,

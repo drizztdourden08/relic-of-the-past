@@ -1,3 +1,0 @@
-/* @layer shared-game @kind barrel */
-export { VANILLA_CONFIG } from './vanilla';
-export { OPEN_CONFIG } from './open';

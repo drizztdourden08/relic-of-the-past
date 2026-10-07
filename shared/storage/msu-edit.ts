@@ -18,40 +18,10 @@ const isManifest = (value: unknown): value is MsuPackManifest => {
 };
 
 /** null for missing text, malformed JSON, or a version this build does not know. */
-/**
- * Rewrites a play mode this build no longer has. There was briefly a separate `repeat` kind for
- * a single self-looping file, which is what `loop` with one file already is; a pack saved then
- * must still open as the same thing, now the `single` order.
- */
-const migrateMode = (mode: { kind?: unknown }): unknown =>
-  (mode?.kind === 'repeat' ? { kind: 'loop', order: 'single' } : mode);
-
-const migrateLayers = (layers: { mode?: { kind?: unknown } }[]): unknown[] =>
-  layers.map((layer) => ({ ...layer, mode: migrateMode(layer.mode ?? {}) }));
-
-/** Applied before validation, so a migrated manifest is judged on its current shape. */
-const migrateManifest = (parsed: unknown): unknown => {
-  if (typeof parsed !== 'object' || parsed === null) return parsed;
-  const doc = parsed as { tracks?: unknown; sounds?: Record<string, unknown> };
-  const tracks = Array.isArray(doc.tracks)
-    ? doc.tracks.map((t) => (typeof t === 'object' && t !== null && Array.isArray((t as { layers?: unknown }).layers)
-      ? { ...t, layers: migrateLayers((t as { layers: { mode?: { kind?: unknown } }[] }).layers) }
-      : t))
-    : doc.tracks;
-  const sounds = doc.sounds === undefined ? undefined : Object.fromEntries(
-    Object.entries(doc.sounds).map(([channel, defs]) => [channel, Array.isArray(defs)
-      ? defs.map((d) => (typeof d === 'object' && d !== null && Array.isArray((d as { layers?: unknown }).layers)
-        ? { ...d, layers: migrateLayers((d as { layers: { mode?: { kind?: unknown } }[] }).layers) }
-        : d))
-      : defs]),
-  );
-  return sounds === undefined ? { ...doc, tracks } : { ...doc, tracks, sounds };
-};
-
 const parseManifest = (text: string | null): MsuPackManifest | null => {
   if (text == null) return null;
   try {
-    const parsed: unknown = migrateManifest(JSON.parse(text));
+    const parsed: unknown = JSON.parse(text);
     return isManifest(parsed) ? parsed : null;
   } catch { return null; }
 };
@@ -68,9 +38,18 @@ const newManifest = (pack: string, meta?: Partial<MsuPackMeta>): MsuPackManifest
   return { version: 1, meta: { name: pack, ...meta, createdAt: now, modifiedAt: now }, tracks: [] };
 };
 
+/**
+ * A pack's name is its folder. The name inside its settings follows the folder on every read and
+ * every write, so a renamed pack, its export and its store install all carry the same name.
+ */
+const withPackName = (manifest: MsuPackManifest, pack: string): MsuPackManifest =>
+  ({ ...manifest, meta: { ...manifest.meta, name: pack } });
+
 /** null for a classic pack (no manifest), and for one that is unreadable or an unknown version. */
-const readManifest = async (files: FileStore, pack: string): Promise<MsuPackManifest | null> =>
-  parseManifest(await files.readText(manifestPath(pack)));
+const readManifest = async (files: FileStore, pack: string): Promise<MsuPackManifest | null> => {
+  const manifest = parseManifest(await files.readText(manifestPath(pack)));
+  return manifest && withPackName(manifest, pack);
+};
 
 /**
  * The inventory is taken from the folder at write time, never from the caller: a manifest from
@@ -80,7 +59,7 @@ const readManifest = async (files: FileStore, pack: string): Promise<MsuPackMani
 const writeManifest = async (files: FileStore, pack: string, manifest: MsuPackManifest): Promise<void> => {
   assertSafeName(pack);
   const inventory = await listPackEntries(files, pack);
-  await files.writeText(manifestPath(pack), serializeManifest({ ...manifest, files: inventory }));
+  await files.writeText(manifestPath(pack), serializeManifest({ ...withPackName(manifest, pack), files: inventory }));
 };
 
 const createPack = async (files: FileStore, pack: string, meta?: Partial<MsuPackMeta>): Promise<void> => {
@@ -99,6 +78,9 @@ const renamePack = async (files: FileStore, from: string, to: string): Promise<v
     const bytes = await files.readBytes(`${packDir(from)}/${name}`);
     if (bytes) await files.writeBytes(`${packDir(to)}/${name}`, bytes);
   }
+  // Rewritten so the name inside its settings becomes the new folder name.
+  const manifest = await readManifest(files, to);
+  if (manifest) await writeManifest(files, to, manifest);
   await files.remove(packDir(from));
 };
 

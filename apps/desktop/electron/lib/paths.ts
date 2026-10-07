@@ -12,7 +12,8 @@ const getUserDataPath = (...segments: string[]): string => {
   return join(userDataPath, 'Data', ...segments);
 };
 
-const getLegacyPath = (...segments: string[]): string => {
+/** A path directly under userData, beside the Data folder (the user's controller db lives here). */
+const getUserDataRootPath = (...segments: string[]): string => {
   return join(userDataPath, ...segments);
 };
 
@@ -25,7 +26,7 @@ const ensureDataDirectories = async (): Promise<void> => {
 
 export {
   ensureDataDirectories,
-  getLegacyPath,
   getUserDataPath,
+  getUserDataRootPath,
   initPaths
 };

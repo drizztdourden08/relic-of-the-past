@@ -100,7 +100,7 @@ const censusFindings = (
 
     if (roomId === undefined || chestIndex === undefined) {
       chestMismatches.push({
-        checkId: check.id, name: check.randomizerName,
+        checkId: check.id, name: check.name,
         roomId: roomId ?? null, chestIndex: chestIndex ?? null,
         reason: 'missing roomId/chestIndex in gameId',
       });
@@ -110,7 +110,7 @@ const censusFindings = (
     const romChest = census.chestsByRoom.get(roomId)?.find((c) => c.chestIndex === chestIndex);
     if (!romChest) {
       chestMismatches.push({
-        checkId: check.id, name: check.randomizerName, roomId, chestIndex,
+        checkId: check.id, name: check.name, roomId, chestIndex,
         reason: 'no chest at (roomId, chestIndex) in the native table',
       });
       continue;
@@ -122,7 +122,7 @@ const censusFindings = (
       : (receiveIdByItemId.get(firstVanillaId) ?? null);
     if (datasetReceiveId !== romChest.itemByte) {
       vanillaItemDiffs.push({
-        checkId: check.id, name: check.randomizerName,
+        checkId: check.id, name: check.name,
         romItemByte: romChest.itemByte, datasetReceiveId,
       });
     }

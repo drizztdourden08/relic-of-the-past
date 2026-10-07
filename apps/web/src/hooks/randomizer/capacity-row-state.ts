@@ -9,11 +9,11 @@
 import {
   CURVE_PRESETS, FAMILIES, NO_WALLET_FLOOR, capacityFieldsOf, clampCount, heldMaxRungOf, maxSpanOf, planOf,
   presetMatching,
-} from '@shared/randomizer/ap-world/capacity';
+} from '@shared/randomizer/world/capacity';
 import type {
   CapacityFamily, CapacityFamilyId, CapacityProfile, CurvePreset, CurvePresetId, CustomFamilySetting, FamilySetting,
   WalletFloor, WalletSetting,
-} from '@shared/randomizer/ap-world/capacity';
+} from '@shared/randomizer/world/capacity';
 import type { CapacityRowState, CurveChoice } from '@domains/app/compounds/CapacityFamilyRow';
 
 /** The wallet has no reference ladder, so the Reference preset is not offered there. */

@@ -15,6 +15,7 @@ import type { ConnectionRecord, ScreenRecord } from '@shared/game/data/types';
 import type {
   WriteConnectionsArgs, WriteRecordResult, WriteScreenArgs,
 } from '@shared/ipc/screen-editor-contract';
+import { startRecordFile } from './record-file-template';
 import { resolveSourceFile } from './resolve-source-file';
 import { insertBeforeArrayClose, removeById, replaceById } from './source-writers';
 import type { WriteResult } from './source-writers';
@@ -53,8 +54,10 @@ const writeScreen = (args: WriteScreenArgs): Promise<WriteRecordResult> => {
     const record = { id: replaceId, ...args.record } as ScreenRecord;
     return editFile(path, content => replaceById(content, replaceId, serializeScreenRecord(record)), [replaceId]);
   }
-  return withAllocatedIds(root, 'screen', 1, ([id]) => {
+  return withAllocatedIds(root, 'screen', 1, async ([id]) => {
     const record = { id: id as ScreenRecord['id'], ...args.record } as ScreenRecord;
+    const started = await startRecordFile(path, args.filePath, 'ScreenRecord');
+    if (started) return { success: false, error: started };
     return editFile(path, content => insertBeforeArrayClose(content, serializeScreenRecord(record)), [id]);
   });
 };
@@ -72,10 +75,12 @@ const writeConnections = (args: WriteConnectionsArgs): Promise<WriteRecordResult
   }
   const records = args.records;
   if (records.length === 0) return Promise.resolve({ success: false, error: 'insert needs at least one record' });
-  return withAllocatedIds(root, 'connection', records.length, ids => {
+  return withAllocatedIds(root, 'connection', records.length, async (ids) => {
     const code = records
       .map((record, i) => serializeConnectionRecord({ id: ids[i] as ConnectionRecord['id'], ...record } as ConnectionRecord))
       .join('\n');
+    const started = await startRecordFile(path, args.filePath, 'ConnectionRecord');
+    if (started) return { success: false, error: started };
     return editFile(path, content => insertBeforeArrayClose(content, code), ids);
   });
 };

@@ -7,7 +7,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { SanctuaryFile } from '@shared/sanctuary/file-types';
 import { listFiles } from '../api/files-endpoints';
-import { errorMessage } from '../api/client';
+import { errorMessage } from '@site-kit/api/api-error';
 
 const NO_FILES: SanctuaryFile[] = [];
 

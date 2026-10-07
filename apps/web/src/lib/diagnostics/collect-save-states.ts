@@ -5,7 +5,7 @@
  *  writes to a scratch WASM slot and unlinks it immediately), so packaging a report never
  *  creates a save the player didn't ask for. */
 import type { DebugReportSaveEntry } from '@shared/types/debug-report';
-import { captureStateBuffer } from '@app/lib/game/save-states';
+import { captureStateBuffer } from '@app/lib/game/state-buffers';
 import * as savesStore from '../storage/saves-store';
 
 const NORMAL_LIMIT = 5;

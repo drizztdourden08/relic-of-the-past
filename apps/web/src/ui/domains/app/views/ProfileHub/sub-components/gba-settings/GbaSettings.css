@@ -1,0 +1,34 @@
+/* @layer renderer-components @kind style */
+.gba-settings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.gba-settings__catalogue {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.gba-settings__note {
+  font-size: var(--text-sm);
+  color: var(--c-text-muted);
+  margin: 0;
+}
+
+.gba-settings__filters {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.gba-settings__search-field {
+  flex: 1;
+  min-width: 220px;
+}

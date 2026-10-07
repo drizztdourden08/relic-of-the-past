@@ -16,7 +16,7 @@ import type { SoundListItemProps } from './msu.type';
 
 const SoundListItem = (props: SoundListItemProps) => {
   const {
-    pack, channel, row, sound, manifest, saveBase, availableFiles, isLayered, showChannel = false,
+    pack, channel, row, sound, manifest, saveBase, availableFiles, isLayered, showChannel = false, readOnly,
     onPreview, onPlayOriginal, onToggleLayers, onStopReplacing, onConfirm, onReload,
   } = props;
   const previewKey = soundPreviewKey(channel, row.soundId);
@@ -35,6 +35,7 @@ const SoundListItem = (props: SoundListItemProps) => {
         expanded={expanded}
         playingOriginal={sound.playingOriginal === row.soundId}
         chipAudible={sound.chipAudible(row.soundId)}
+        readOnly={readOnly}
         onPreview={onPreview}
         onStopPreview={sound.stop}
         onPlayOriginal={(soundId) => onPlayOriginal(channel, soundId)}
@@ -67,6 +68,7 @@ const SoundListItem = (props: SoundListItemProps) => {
           uploading={sound.uploading}
           onUpload={sound.handleUpload}
           onSaved={onReload}
+          readOnly={readOnly}
         />
       )}
     </Box>

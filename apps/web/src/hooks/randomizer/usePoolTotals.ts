@@ -6,7 +6,7 @@
  */
 import { useMemo } from 'react';
 import { poolTotalsOf } from './pool-totals-model';
-import type { PoolAccounting } from '@shared/randomizer/ap-world/pool/pool-accounting';
+import type { PoolAccounting } from '@shared/randomizer/world/pool/pool-accounting';
 import type { PoolFillTotals } from '@domains/app/compounds/PoolFillBar';
 
 const usePoolTotals = (accounting: PoolAccounting | null): PoolFillTotals | null =>

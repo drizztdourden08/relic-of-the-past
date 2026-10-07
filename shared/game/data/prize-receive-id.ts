@@ -18,19 +18,20 @@
  *   0x7B  Crystal 1    0x7C  Crystal 2    0x7D  Crystal 3    0x7E  Crystal 4
  *   0x7F  Crystal 5    0x80  Crystal 6    0x81  Crystal 7
  *
- * The dataset carries two records per pendant name (a junk-category one with
- * the native id and a crystal-category one without), so a name lookup over the
- * records alone is ambiguous, and these tables are the single answer for a prize.
+ * Every item name is unique across the records, so a pendant resolves off its own
+ * record and no table here names one. What stays is the crystal id space, which no
+ * record field can hold: it is a reservation in the core's id range, not a game value.
  */
 
 const PRIZE_VIRT_FIRST = 0x7b;
 const PRIZE_VIRT_LAST = 0x81;
 
-/** Pool-item name → receive id, mirroring the C encoding exactly. */
+/**
+ * Crystal name → reserved receive id, mirroring the C encoding exactly. The pendants are
+ * absent on purpose: each one's own record carries its native id, so it resolves there.
+ * A name lookup cannot be dropped here, because no record field holds a reserved id.
+ */
 const PRIZE_RECEIVE_ID_BY_NAME: ReadonlyMap<string, number> = new Map([
-  ['Green Pendant', 0x37],
-  ['Red Pendant', 0x38],
-  ['Blue Pendant', 0x39],
   ['Crystal 1', 0x7b],
   ['Crystal 2', 0x7c],
   ['Crystal 3', 0x7d],
@@ -40,29 +41,13 @@ const PRIZE_RECEIVE_ID_BY_NAME: ReadonlyMap<string, number> = new Map([
   ['Crystal 7', 0x81],
 ]);
 
-/** Dataset item id → receive id, for the crystal-category records that carry no gameId. */
-const PRIZE_RECEIVE_ID_BY_ITEM: ReadonlyMap<string, number> = new Map([
-  ['item-109', 0x37], // Green Pendant
-  ['item-111', 0x38], // Red Pendant
-  ['item-110', 0x39], // Blue Pendant
-  ['item-112', 0x7b],
-  ['item-113', 0x7c],
-  ['item-114', 0x7d],
-  ['item-115', 0x7e],
-  ['item-116', 0x7f],
-  ['item-117', 0x80],
-  ['item-118', 0x81],
-]);
-
 /**
  * The NATIVE receive id a boss's own script hands over for this prize: what the falling
  * ancilla carries and therefore the key a substitution table matches on. All seven
- * crystals share one id (0x20); the pendants keep their own.
+ * crystals share one id (0x20), which is the only reason this table exists; a pendant's
+ * own record already says which id its boss hands over.
  */
 const VANILLA_PRIZE_GRANT_ID_BY_NAME: ReadonlyMap<string, number> = new Map([
-  ['Green Pendant', 0x37],
-  ['Red Pendant', 0x38],
-  ['Blue Pendant', 0x39],
   ['Crystal 1', 0x20],
   ['Crystal 2', 0x20],
   ['Crystal 3', 0x20],
@@ -82,7 +67,4 @@ const isPrizeReceiveId = (id: number): boolean =>
 const prizeReceiveIdOfName = (standardItemName: string): number | undefined =>
   PRIZE_RECEIVE_ID_BY_NAME.get(standardItemName);
 
-const prizeReceiveIdOfItem = (itemId: string): number | undefined =>
-  PRIZE_RECEIVE_ID_BY_ITEM.get(itemId);
-
-export { isPrizeReceiveId, prizeReceiveIdOfItem, prizeReceiveIdOfName, vanillaPrizeGrantIdOfName };
+export { isPrizeReceiveId, prizeReceiveIdOfName, vanillaPrizeGrantIdOfName };

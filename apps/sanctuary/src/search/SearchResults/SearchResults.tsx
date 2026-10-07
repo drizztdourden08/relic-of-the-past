@@ -17,7 +17,7 @@ import { FILE_DEFAULT_COLUMNS } from '../../files/file-schema';
 import { reportRowId } from '../../reports/report-row';
 import { REPORT_DEFAULT_COLUMNS, REPORT_DEFAULT_GROUP_BY } from '../../reports/report-schema';
 import { useSearchResults } from './behavior/useSearchResults';
-import { SearchGroup } from './sub-components/SearchGroup';
+import { SearchGroup } from '@site-kit/components/SearchGroup/SearchGroup';
 import './SearchResults.css';
 
 type SearchResultsProps = {
@@ -61,7 +61,7 @@ const SearchResults = (props: SearchResultsProps) => {
         {results.named.length > 0 && (
           <Box className="site-search__chips">
             {results.named.map((category) => (
-              <Button key={category.key} variant="bare" className="site-search__chip" onClick={() => results.open(category)}>
+              <Button key={category.key} variant="bare" className="search-pill" onClick={() => results.open(category)}>
                 <IconifyIcon icon={category.icon} aria-hidden="true" />
                 Open {category.label}
               </Button>
@@ -73,7 +73,7 @@ const SearchResults = (props: SearchResultsProps) => {
       <Box className="site-search__body">
         {results.total === 0 && <EmptyState className="site-search__empty" message={noMatch} />}
         {results.fileGroups.map(({ category, rows }) => (
-          <SearchGroup key={category.key} category={category} count={rows.length} onOpen={results.open}>
+          <SearchGroup key={category.key} label={category.label} icon={category.icon} count={rows.length} onOpen={() => results.open(category)}>
             <DataTable
               rows={rows}
               schema={results.fileSchema}
@@ -85,7 +85,7 @@ const SearchResults = (props: SearchResultsProps) => {
           </SearchGroup>
         ))}
         {results.reportGroups.map(({ category, rows }) => (
-          <SearchGroup key={category.key} category={category} count={rows.length} onOpen={results.open}>
+          <SearchGroup key={category.key} label={category.label} icon={category.icon} count={rows.length} onOpen={() => results.open(category)}>
             <DataTable
               rows={rows}
               schema={results.reportSchema}

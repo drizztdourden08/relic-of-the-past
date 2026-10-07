@@ -56,3 +56,9 @@
   font-size: var(--text-xs);
   color: var(--c-danger);
 }
+
+/* A field with an error: its label turns red, and each control primitive outlines itself
+   red under .field--invalid in its own stylesheet. */
+.field--invalid .field__label {
+  color: var(--c-danger);
+}

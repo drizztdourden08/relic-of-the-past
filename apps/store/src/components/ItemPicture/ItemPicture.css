@@ -1,0 +1,92 @@
+/* @layer store-site @kind style */
+
+/* A well at the picture's own shape; the picture fills it. `--item-color` comes from the item. */
+.item-picture {
+  --picture-color: var(--item-color, var(--c-gold));
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: var(--item-card-ratio);
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--c-sunken);
+}
+
+.item-picture--banner {
+  aspect-ratio: var(--item-banner-ratio);
+}
+
+.item-picture__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* No picture: the item's colour, dark in one corner and deeper in the other, under its stripes. */
+.item-picture__placeholder {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--picture-color) 10%, var(--c-sunken)),
+    color-mix(in srgb, var(--picture-color) 38%, var(--c-sunken)) 60%,
+    color-mix(in srgb, var(--picture-color) 58%, var(--c-sunken))
+  );
+}
+
+.item-picture__placeholder::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--picture-color) 22%, transparent) 0 var(--empty-stripe),
+    transparent var(--empty-stripe) calc(var(--empty-stripe) * 2)
+  );
+  content: '';
+}
+
+/*
+ * The dark ground under the icon: three offset ellipses blurred into one uneven shape, wider
+ * than the icon's glow, so the glow and the shadow read as two layers.
+ */
+.item-picture__shade {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(var(--item-kind-icon) * 3);
+  height: calc(var(--item-kind-icon) * 2.3);
+  background:
+    radial-gradient(ellipse 44% 48% at 42% 47%, var(--c-bg) 0 40%, transparent 72%),
+    radial-gradient(ellipse 38% 40% at 61% 56%, var(--c-bg) 0 36%, transparent 70%),
+    radial-gradient(ellipse 30% 36% at 55% 36%, var(--c-bg) 0 30%, transparent 68%);
+  filter: blur(var(--space-sm));
+  opacity: 0.9;
+  translate: -50% -50%;
+  pointer-events: none;
+}
+
+/* The kind's icon, a light tint of the colour, with a closer and fainter glow of it. */
+.item-picture__icon {
+  position: relative;
+  display: inline-flex;
+  width: var(--item-kind-icon);
+  height: var(--item-kind-icon);
+  color: color-mix(in srgb, var(--picture-color) 45%, var(--c-text));
+  filter:
+    drop-shadow(0 0 var(--space-2xs) color-mix(in srgb, var(--picture-color) 55%, transparent))
+    drop-shadow(0 0 var(--space-sm) color-mix(in srgb, var(--picture-color) 30%, transparent));
+}
+
+.item-picture__icon svg {
+  width: 100%;
+  height: 100%;
+}

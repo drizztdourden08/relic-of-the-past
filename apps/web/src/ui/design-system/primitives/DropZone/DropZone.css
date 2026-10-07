@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind style */
 .dropzone {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -31,8 +32,9 @@
 }
 
 .dropzone__icon {
+  display: inline-flex;
+  color: var(--c-gold);
   font-size: var(--text-2xl);
-  opacity: 0.6;
 }
 
 .dropzone__label {
@@ -87,4 +89,39 @@
   .dropzone__icon {
     font-size: var(--text-xl);
   }
+}
+
+.dropzone__hint--soft {
+  margin-top: var(--space-2xs);
+  opacity: var(--opacity-muted);
+}
+
+/* The zone holds a file of the right kind, or the clipboard holds content it takes: green
+   edge and tint, hovered or not. */
+.dropzone.dropzone--success,
+.dropzone.dropzone--success:hover,
+.dropzone.dropzone--clipboard,
+.dropzone.dropzone--clipboard:hover {
+  border-style: solid;
+  border-color: var(--c-green);
+  background: var(--c-green-soft);
+}
+
+.dropzone__status {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+}
+
+.dropzone__status--success {
+  color: var(--c-green-bright);
+}
+
+.dropzone__status--error {
+  color: var(--c-danger);
+}
+
+/* Invalid: an erroring Field around it. The red edge holds while hovered. */
+.field--invalid .dropzone,
+.field--invalid .dropzone:hover {
+  border-color: var(--c-danger);
 }

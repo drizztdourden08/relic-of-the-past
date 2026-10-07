@@ -6,9 +6,10 @@
  * belong to different gate categories, so there is no whole-tab overlay: each tile
  * draws inert by itself when its category is off.
  */
-import { useReducer } from 'react';
+import { useEffect, useReducer } from 'react';
 import { Box, Text } from '@ds/primitives';
 import type { CheatCategory } from '@app/lib/game';
+import { onCheatRulesRestored } from '@app/lib/game/cheat-rules-memory';
 import type { CheatGates } from '../../behavior/useCheatGates';
 import { ACTION_TILES, RULES_HINT, RULE_TILES, RUNG_TILES } from './RulesTab.constants';
 import { RuleTile } from './sub-components/RuleTile';
@@ -25,6 +26,8 @@ const bump = (tick: number): number => tick + 1;
 const RulesTab = (props: RulesTabProps) => {
   const { gates } = props;
   const [, rerender] = useReducer(bump, 0);
+  // The remembered rules land a moment after the game starts; the getters never re-render alone.
+  useEffect(() => onCheatRulesRestored(rerender), []);
   const reasonFor = (category: CheatCategory): string | undefined =>
     (gates.allowed[category] ? undefined : gates.reason(category));
 

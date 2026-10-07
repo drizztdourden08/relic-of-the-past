@@ -7,8 +7,7 @@
  *
  * Everything but the dialogue and the non-dialogue overrides is the current set
  * format's business, so the header and the variable list are written by
- * ./format-2. A set read as the older format is therefore rewritten in the
- * current one here, on the first save, without the caller doing anything.
+ * ./format-2.
  *
  * The overrides file stays outside that bookkeeping on purpose: it is purely
  * additive, so it needs no format to discriminate it and its absence is a

@@ -2,12 +2,15 @@
 import './bootstrap';
 
 export {
-  all, find, findOne,
+  PLACEHOLDER_AREA_ID, PLACEHOLDER_LOCATION_ID,
+  all, find, findOne, get,
   getActor, getActorByGameId, getArea, getCheck, getCheckByGameId, getConnection,
-  getDungeon, getDungeonByGameId, getItem, getItemByGameId, getLocation, getScreen, getScreenByGameId,
-  getTag,
+  getDungeon, getDungeonByGameId, getItem, getItemByGameId, getLocation, getRegion, getScreen,
+  getScreenByGameId, getTag,
 } from './facade';
 export * from './types';
+export { EVENT_BIT, LAST_EVENT_BIT } from './records/checks/events/event-bits';
+export { PALACE_INDEX_NAMES } from './palace-names';
 export { NATIVE_RECEIVE_TABLE_SIZE, asNativeReceiveId, isNativeReceiveId } from './native-receive-id';
 export {
   UPGRADE_VIRT_FIRST, UPGRADE_VIRT_LAST, WALLET_VIRT_FIRST, WALLET_VIRT_LAST,
@@ -38,7 +41,7 @@ export {
   isProgressiveReceiveId, progressiveReceiveIdOfItem, progressiveReceiveIdOfName,
 } from './progressive-receive-id';
 export {
-  isPrizeReceiveId, prizeReceiveIdOfItem, prizeReceiveIdOfName, vanillaPrizeGrantIdOfName,
+  isPrizeReceiveId, prizeReceiveIdOfName, vanillaPrizeGrantIdOfName,
 } from './prize-receive-id';
 export {
   DUNGEON_ITEM_NATIVE_IDS, DUNGEON_ITEM_PALACE_COUNT, DUNGEON_ITEM_VIRT_FIRST, DUNGEON_ITEM_VIRT_LAST,
@@ -73,5 +76,6 @@ export type { SpriteCategory, SpriteManifestEntry } from './sprite-manifest/mani
 export { POOL_ICON_FALLBACK, poolIconFileOf } from './sprite-manifest/pool-game-icons';
 export { PICTURE_GLYPH_SPRITES, pictureGlyphSpriteByName } from './sprite-manifest/picture-glyph-sprites';
 export type { GlyphSpan, PictureGlyphSprite } from './sprite-manifest/picture-glyph-sprites';
-export { directionOf, isReachable, toScreenIdOf } from './connections/derive';
+export { directionOf, isReachable, toScreenIdOf, toScreenIdOrNone } from './connections/derive';
+export { pairLinksScreens } from './connections/pair-join';
 export { pendingPartnerId, pendingPartnerScreenId } from './connections/pending-partner';

@@ -8,9 +8,9 @@ import type { FileVersion } from '@shared/sanctuary/file-types';
 import { Button } from '@ds/primitives/Button';
 import { Flex } from '@ds/primitives/Flex';
 import { Text } from '@ds/primitives/Text';
-import { Row } from '../../../components/Row/Row';
-import { Chip } from '../../../components/Chip/Chip';
-import { formatAgo } from '../../../lib/format-date';
+import { Row } from '@site-kit/components/Row/Row';
+import { Chip } from '@site-kit/components/Chip/Chip';
+import { formatAgo } from '@site-kit/lib/format-date';
 import { versionLabel } from '../../../files/file-versions';
 
 type VersionRowProps = {

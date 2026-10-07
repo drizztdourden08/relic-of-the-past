@@ -9,19 +9,21 @@ import { RandomizerOptionGroup } from '@domains/app/compounds/RandomizerOptionGr
 import { RandomizerOptionRow } from '@domains/app/compounds/RandomizerOptionRow';
 import type { LockedOptionGroup } from '@domains/app/compounds/RandomizerOptionRow';
 import type { ImpactCell } from '@domains/app/compounds/PoolImpactCell';
-import type { ApOptionDef, ApOptionValue } from '@shared/randomizer/ap-world/options.type';
+import type { OptionDef, OptionValue } from '@shared/randomizer/world/options.type';
 
 interface LockedRowsSectionProps {
   /** The one heading the merged rows sit under. */
   title: string;
   /** The tab's fixed groups, as the tab model split them. */
   groups: readonly LockedOptionGroup[];
-  valueOf: (option: ApOptionDef) => ApOptionValue;
+  valueOf: (option: OptionDef) => OptionValue;
   cellOf: (key: string) => ImpactCell;
+  /** Every row shows its value as a tag: the read-only panel. */
+  readout?: boolean;
 }
 
 const LockedRowsSection = (props: LockedRowsSectionProps) => {
-  const { title, groups, valueOf, cellOf } = props;
+  const { title, groups, valueOf, cellOf, readout } = props;
 
   const options = groups.flatMap((entry) => entry.options);
   if (options.length === 0) return null;
@@ -34,6 +36,7 @@ const LockedRowsSection = (props: LockedRowsSectionProps) => {
           option={option}
           value={valueOf(option)}
           impact={cellOf(option.key)}
+          readout={readout}
         />
       ))}
     </RandomizerOptionGroup>

@@ -45,12 +45,22 @@ const SECTIONS: Section[] = [
   // played, not a property of the host.
   GAME_FLOW_SECTION,
   {
+    id: 'received-items',
+    title: 'Received Items',
+    items: [
+      { key: 'quietRupees', label: 'Quiet Rupees', description: 'Randomizer rupees arrive without a message.', keywords: 'quiet rupees message received randomizer archipelago online hold up' },
+      { key: 'quietBombs', label: 'Quiet Bombs', description: 'Randomizer bombs arrive without a message.', keywords: 'quiet bombs message received randomizer archipelago online hold up' },
+      { key: 'quietArrows', label: 'Quiet Arrows', description: 'Randomizer arrows arrive without a message.', keywords: 'quiet arrows message received randomizer archipelago online hold up' },
+    ],
+  },
+  {
     id: 'movement',
     title: 'Movement',
     items: [
       { key: 'turnWhileDashing', label: 'Turn While Dashing', description: 'Change direction while using the Pegasus Boots dash', keywords: 'dash turn pegasus boots direction' },
       { key: 'mirrorToDarkworld', label: 'Mirror to Dark World', description: 'The Magic Mirror can warp you to the Dark World from the Light World', keywords: 'mirror warp dark world light world' },
       { key: 'cancelBirdTravel', label: 'Cancel Bird Travel', description: 'Cancel duck flight in progress by pressing the X button', keywords: 'bird duck cancel fly' },
+      { key: 'allowDiving', label: 'Allow Diving with Flippers', description: 'Press B while swimming to duck under for a moment, out of reach of anything that would hit you. Turned on automatically by the extra dungeon, whose water room needs it.', keywords: 'dive diving swim underwater flippers b button dodge' },
     ],
   },
   {

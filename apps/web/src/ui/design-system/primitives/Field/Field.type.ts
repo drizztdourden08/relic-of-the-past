@@ -5,6 +5,7 @@ import type { ControlSize } from '../control-size';
 interface FieldProps {
   label?: ReactNode;
   hint?: ReactNode;
+  /** Shown under the control in place of the hint; the label and the control turn red. */
   error?: ReactNode;
   htmlFor?: string;
   required?: boolean;

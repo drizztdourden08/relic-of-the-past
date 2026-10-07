@@ -24,6 +24,6 @@ const dungeonItemReceiveIdOfRecord = (record: ItemRecord | undefined): number | 
 
 /** Pool-item name → targeted id; undefined for any name outside the four families. */
 const dungeonItemReceiveIdOfName = (standardItemName: string): number | undefined =>
-  dungeonItemReceiveIdOfRecord(findOne('item', (item) => item.randomizerName === standardItemName));
+  dungeonItemReceiveIdOfRecord(findOne('item', (item) => item.name === standardItemName));
 
 export { dungeonItemReceiveIdOfName, dungeonItemReceiveIdOfRecord };

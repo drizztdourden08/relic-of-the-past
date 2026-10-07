@@ -12,9 +12,11 @@ export { changedPaths, linesForPaths } from './diff';
 export { fnv1a, identityOf, recommendationId } from './id';
 export { pathLines } from './path-lines';
 export { reconcile, scopedToPass } from './reconcile';
-export { allDetectors, clearDetectors, detectorsFor, registerDetector, runDetection } from './registry';
+export {
+  allDetectors, clearDetectors, detectorsFor, registerDetector, runDetection, runDetectionSweep,
+} from './registry';
 export { createRecommendationStore, memoryStorage, recommendationFile } from './store';
-export type { DetectionRun } from './registry';
+export type { DetectionRun, DetectionSweep } from './registry';
 export type { ReconcileOptions } from './reconcile';
 export type { PassResult, RecommendationStorage, RecommendationStore } from './store';
 export type {

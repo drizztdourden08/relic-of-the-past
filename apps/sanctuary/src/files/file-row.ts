@@ -5,8 +5,8 @@
  * multipart id, the content type) stays off the row, so the schema never offers it.
  */
 import type { SanctuaryFile } from '@shared/sanctuary/file-types';
-import { formatBytes } from '../lib/format-bytes';
-import { formatDateTime } from '../lib/format-date';
+import { formatBytes } from '@site-kit/lib/format-bytes';
+import { formatDateTime } from '@site-kit/lib/format-date';
 import { versionLabel } from './file-versions';
 
 type FileRow = Pick<SanctuaryFile, 'id' | 'name' | 'type' | 'tags' | 'version' | 'owner' | 'bytes' | 'note' | 'stats'> & {

@@ -22,7 +22,7 @@
  * the canvas up with a world position instead of with its own corner.
  */
 import { poseCanvasSize } from '@shared/game/data/native-tables/player-pose-atlas';
-import { PoseCanvas } from '@domains/app/compounds/PoseCanvas';
+import { PoseCanvas } from '@domains/packs/character/compounds/PoseCanvas';
 import { HudBox } from '../../primitives/HudBox';
 import './PauseHeroPortrait.css';
 import type { PauseHeroPortraitProps } from './PauseHeroPortrait.type';

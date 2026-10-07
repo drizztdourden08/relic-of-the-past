@@ -5,8 +5,8 @@
  * of screen IDs. Connection requirements gate every edge: `ConnectionNavData.requirements`
  * when present, else a fallback derived from `barrier:*` tags.
  */
-import { connectionTagKeysOf, find, getScreen, hasTagKey } from '../../data';
-import { toScreenIdOf } from '../../data/connections/derive';
+import { connectionTagKeysOf, find, get, hasTagKey } from '../../data';
+import { toScreenIdOf, toScreenIdOrNone } from '../../data/connections/derive';
 import type { ConnectionRecord } from '../../data';
 import type { RequirementSet } from '../../navigation/nav-data.types';
 import type { Route, RouteStep, ScreenPath } from '../../navigation/types';
@@ -30,8 +30,12 @@ type Adjacency = Map<string, ScreenEdge[]>;
  */
 const isCrossWorld = (conn: ConnectionRecord): boolean => {
   if (hasTagKey(conn.tags, 'ctx:cross-world') || hasTagKey(conn.tags, 'transit:warp')) return true;
-  const fromWorld = getScreen(conn.screenId).world;
-  const toWorld = getScreen(toScreenIdOf(conn)).world;
+  // `get`, not `getScreen`: an end the registry never held is the miss this default is
+  // written for, and a getter would throw on it.
+  const fromWorld = get('screen', conn.screenId)?.world;
+  const to = toScreenIdOrNone(conn);
+  const toWorld = to === undefined ? undefined : get('screen', to)?.world;
+  if (fromWorld === undefined || toWorld === undefined) return false;
   return fromWorld !== toWorld;
 };
 
@@ -134,18 +138,26 @@ const reachableFrom = (adjacency: Adjacency, from: string, canPass: CanPass): Se
   return reached;
 };
 
+/**
+ * The game's own number for a screen on a path, or -1.
+ *
+ * -1 already stood for "this screen carries neither index", and a screen the registry never
+ * held reads the same way, so the lookup goes through `get` and never a throwing getter.
+ */
+const gameNumberOf = (id: string): number => {
+  const gameId = get('screen', id)?.gameId;
+  return gameId?.roomIndex ?? gameId?.overworldIndex ?? -1;
+};
+
 /** Adapt a screen-ID path into the navigation `Route` stub (no tile paths). */
 const toRoute = (path: string[]): Route => {
-  const steps: RouteStep[] = path.map(id => ({
-    screen: getScreen(id).gameId.roomIndex ?? getScreen(id).gameId.overworldIndex ?? -1,
-    path: [],
-  }));
+  const steps: RouteStep[] = path.map(id => ({ screen: gameNumberOf(id), path: [] }));
   return { steps, totalCost: Math.max(0, path.length - 1), screens: steps.map(s => s.screen), requirements: [] };
 };
 
 /** Adapt a screen-ID path into the navigation `ScreenPath` stub. */
 const toScreenPath = (path: string[]): ScreenPath => ({
-  screens: path.map(id => getScreen(id).gameId.roomIndex ?? getScreen(id).gameId.overworldIndex ?? -1),
+  screens: path.map(gameNumberOf),
   crossings: [],
   totalCost: Math.max(0, path.length - 1),
 });

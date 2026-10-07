@@ -1,0 +1,54 @@
+/* @layer renderer-hud @kind style */
+.hud-pie {
+  display: block;
+  overflow: visible;
+}
+
+.hud-pie__disc {
+  fill: var(--c-glass);
+}
+
+.hud-pie__hub {
+  fill: var(--c-bg);
+  opacity: var(--opacity-muted);
+}
+
+/* A slice leaves by fading while it slides to its own push offset, away from the centre. */
+.hud-pie__slice {
+  fill: var(--c-gold);
+  stroke: var(--c-bg);
+  opacity: 1;
+  transform: translate(0, 0);
+  transition:
+    opacity var(--duration-slice-exit) var(--ease-standard),
+    transform var(--duration-slice-exit) var(--ease-standard);
+}
+
+/* The breath keeps running through the exit, so the fill never jumps when the slice starts to leave. */
+.hud-pie__slice--next,
+.hud-pie__slice--gone {
+  fill: var(--c-gold-bright);
+  animation: hud-pie-breath var(--duration-slice-pulse) ease-in-out infinite alternate;
+}
+
+.hud-pie__slice--gone {
+  opacity: 0;
+  transform: translate(var(--hud-pie-push-x), var(--hud-pie-push-y));
+}
+
+@keyframes hud-pie-breath {
+  from { fill-opacity: 1; }
+  to { fill-opacity: var(--opacity-faint); }
+}
+
+/* Reduced motion keeps the fade and drops the breath and the slide. */
+@media (prefers-reduced-motion: reduce) {
+  .hud-pie__slice--next,
+  .hud-pie__slice--gone {
+    animation: none;
+  }
+
+  .hud-pie__slice--gone {
+    transform: translate(0, 0);
+  }
+}

@@ -1,12 +1,13 @@
 /* @layer root-config @kind logic */
 import type { Report } from '../../../../shared/sanctuary';
-import { collection, decodeCursor, encodeCursor } from './firestore';
+import { decodeCursor, encodeCursor } from '../../../hub-core/db/firestore';
+import { sanctuaryCollection } from './collections';
 
 type ReportPage = { items: Report[]; nextCursor: string | null };
 type ReportFilter = { mineUserId: string | null; state: Report['issue']['state'] | null; cursor: string | undefined };
 type ReportPatch = Partial<Pick<Report, 'zip' | 'issue' | 'expiresAt' | 'extendedUntil'>>;
 
-const reports = () => collection('reports');
+const reports = () => sanctuaryCollection('reports');
 
 const create = async (report: Report): Promise<void> => {
   await reports().doc(report.id).set(report);

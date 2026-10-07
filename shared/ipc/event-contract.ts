@@ -6,6 +6,7 @@
 
 import type { ControllerAddedInfo, ControllerJoystickSample, ControllerRawReport, DeviceEntry } from './controller-contract';
 import type { UpdateInfo } from './updater-contract';
+import type { StoreInstallProgress, StoreOpenInstall } from './store-contract';
 import type { FfmpegState } from '@shared/types/ffmpeg-tool';
 import type { OptimizeProgress } from '@shared/types/msu-optimize';
 
@@ -50,8 +51,13 @@ interface EventContract {
   'msu:openPack': (filePath: string) => void;
 
   // The device-code sign-in: the user code to confirm on the site, sent as soon as the API
-  // minted it, so the Contributor tab can show it while the browser opens.
-  'sanctuary:deviceCode': (userCode: string) => void;
+  // minted it, so the account card can show it while the browser opens.
+  'hub:deviceCode': (userCode: string) => void;
+
+  // The Hookshop: each step of a running install, and a store install link the browser
+  // opened (in this process, or handed over by the process the link started).
+  'store:installProgress': (report: StoreInstallProgress) => void;
+  'store:openInstall': (link: StoreOpenInstall) => void;
 
   // Controllers over the SDL3 native transport (see apps/desktop/electron/input/sdl3-source.ts)
   'controller:added': (info: ControllerAddedInfo) => void;

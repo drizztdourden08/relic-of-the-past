@@ -14,31 +14,31 @@
 import { describe, expect, it } from 'vitest';
 import {
   POTION_CAULDRONS, blockedContentsOf, potionPriceStateOfValues, reconcilePotionPrices,
-} from '@shared/randomizer/ap-world/potion-price';
+} from '@shared/randomizer/world/potion-price';
 import {
   BOTTLE_CONTENTS, BOTTLE_KEY, bottleContentKeyOf,
-} from '@shared/randomizer/ap-world/shops/shop-price-options.data';
-import { rollShopPrices, shopPricePlanOf } from '@shared/randomizer/ap-world/shops/shop-price-plan';
-import { shopSlotLocationsOf } from '@shared/randomizer/ap-world/shops/shop-slots';
-import { defaultShopScope, shopScopeOfValues } from '@shared/randomizer/ap-world/shops/shop-scope-from-values';
-import { SHOP_SHUFFLE_MODES } from '@shared/randomizer/ap-world/shops/shop-scope';
-import { ruleForPrice } from '@shared/randomizer/ap-world/rules/shop-prices';
-import { REGION_NAME } from '@shared/randomizer/ap-world/item-names.data';
-import { LEGACY_SHUFFLE_ON_PROFILE } from '@shared/randomizer/ap-world/capacity';
-import { DEFAULT_ITEM_POWER } from '@shared/randomizer/ap-world/item-power/item-power.data';
-import { defaultProgressiveSetting } from '@shared/randomizer/ap-world/progressive/progressive-from-snapshot';
-import { LEGACY_POND_PROFILES } from '@shared/randomizer/ap-world/pond/pond-profile-defaults';
+} from '@shared/randomizer/world/shops/shop-price-options.data';
+import { rollShopPrices, shopPricePlanOf } from '@shared/randomizer/world/shops/shop-price-plan';
+import { shopSlotLocationsOf } from '@shared/randomizer/world/shops/shop-slots';
+import { defaultShopScope, shopScopeOfValues } from '@shared/randomizer/world/shops/shop-scope-from-values';
+import { SHOP_SHUFFLE_MODES } from '@shared/randomizer/world/shops/shop-scope';
+import { ruleForPrice } from '@shared/randomizer/world/rules/shop-prices';
+import { REGION } from '@shared/randomizer/world/region-ids.data';
+import { customSetting } from '@shared/randomizer/world/capacity';
+import { DEFAULT_ITEM_POWER } from '@shared/randomizer/world/item-power/item-power.data';
+import { defaultProgressiveSetting } from '@shared/randomizer/world/progressive/progressive-from-snapshot';
+import { LEGACY_POND_PROFILES } from '@shared/randomizer/world/pond/pond-profile-defaults';
 import { buildOptionsSnapshot } from '@shared/randomizer/options-snapshot';
 import { createRng } from '@shared/randomizer/rng';
 import { randomizerChoiceOverrides } from '@app/hooks/randomizer/randomizer-choices';
 import { bottleContentRowsOf } from '@app/ui/domains/app/compounds/ShopPricesBlock/behavior/bottle-content-rows';
-import type { CollectionState } from '@shared/randomizer/ap-world/collection-state';
-import type { ApOptionValue } from '@shared/randomizer/ap-world/options.type';
-import type { ShopBottleContent } from '@shared/randomizer/ap-world/shops/shop-price.type';
-import type { ShopScope } from '@shared/randomizer/ap-world/shops/shop-scope.type';
+import type { CollectionState } from '@shared/randomizer/world/collection-state';
+import type { OptionValue } from '@shared/randomizer/world/options.type';
+import type { ShopBottleContent } from '@shared/randomizer/world/shops/shop-price.type';
+import type { ShopScope } from '@shared/randomizer/world/shops/shop-scope.type';
 import type { RandomizerOptionChoices } from '@app/hooks/randomizer/randomizer-choices';
 
-type Values = Readonly<Record<string, ApOptionValue>>;
+type Values = Readonly<Record<string, OptionValue>>;
 
 const BASE: Omit<RandomizerOptionChoices, 'shops' | 'shopPrices'> = {
   keyDropShuffle: true,
@@ -46,7 +46,12 @@ const BASE: Omit<RandomizerOptionChoices, 'shops' | 'shopPrices'> = {
   includeWorldItems: false,
   shufflePrizes: false,
   capacityEnabled: true,
-  capacity: LEGACY_SHUFFLE_ON_PROFILE,
+  capacity: {
+    explosives: customSetting(10, 15, 1),
+    projectiles: customSetting(30, 35, 1),
+    meter: { mode: 'vanilla-in-pool' },
+    wallet: { mode: 'vanilla' },
+  },
   capacityProgressive: true,
   ponds: LEGACY_POND_PROFILES,
   progressiveTiers: defaultProgressiveSetting(),
@@ -241,7 +246,7 @@ describe('paying a bottle price needs a source to buy the content back from', ()
     has: () => bottles > 0,
     count: () => 0,
     countGroup: () => bottles,
-    canReachRegion: (name: string) => atSeller && name === REGION_NAME.potionSeller,
+    canReachRegion: (region: string) => atSeller && region === REGION.potionSeller,
   } as unknown as CollectionState);
 
   it('asks a potion price for the hut and the bottle', () => {

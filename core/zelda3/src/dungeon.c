@@ -16,6 +16,7 @@
 #include "tagalong.h"
 #include "messaging.h"
 #include "assets.h"
+#include "gba_alttp.h"
 
 // todo: move to config
 static const uint16 kBossRooms[] = {
@@ -127,7 +128,7 @@ static const uint16 kDungeon_QueryIfTileLiftable_rv[16] = { 0x5252, 0x5050, 0x54
 static const uint16 kDoor_BlastWallUp_Dsts[] = { 0xd8a, 0xdaa, 0xdca, 0x2b6, 0xab6, 0x12b6 };
 #define adjacent_doors_flags (*(uint16*)(g_ram+0x1100))
 #define adjacent_doors ((uint16*)(g_ram+0x1110))
-static const DungPalInfo kDungPalinfos[41] = {
+static const DungPalInfo kDungPalinfos[42] = {
   { 0,  0,  3,  1},
   { 2,  0,  3,  1},
   { 4,  0, 10,  1},
@@ -169,6 +170,9 @@ static const DungPalInfo kDungPalinfos[41] = {
   { 0,  0,  3,  2},
   {14,  0,  3,  7},
   {26,  5,  5, 11},
+  // The extra dungeon. Its background colours come from its own cartridge; these are the
+  // sprite and aux palettes that go with them.
+  {18,  0,  2, 12},
 };
 // these are not used by the code, but needed for the comparison with the real rom to work.
 static const uint8 kDungeon_DrawObjectOffsets_BG1[33] = {
@@ -1462,7 +1466,7 @@ non_submerged:
     RoomDraw_4x4(src, dst);
     break;
   case 0x33:       // 33 -  Stairs Submerged [N](layer)
-    if (dung_hdr_tag[1] == 27 && !(save_dung_info[dungeon_room_index] & 0x100)) {
+    if (dung_hdr_tag[1] == 27 && !((*SaveDungInfoFor(dungeon_room_index)) & 0x100)) {
       dung_hdr_bg2_properties = 0;
       src = SrcPtr(0x10C8);
       goto non_submerged;
@@ -1475,7 +1479,7 @@ non_submerged:
     }
     break;
   case 0x35:  // 35 -  Water Ladder
-    if (dung_hdr_tag[1] == 27 && !(save_dung_info[dungeon_room_index] & 0x100))
+    if (dung_hdr_tag[1] == 27 && !((*SaveDungInfoFor(dungeon_room_index)) & 0x100))
       goto inactive_water_ladder;
     dung_stairs_table_1[dung_num_activated_water_ladders >> 1] = dsto;
     dung_num_activated_water_ladders += 2;
@@ -1616,7 +1620,7 @@ void LoadType1ObjectSubtype3(uint8 idx, uint16 *dst, uint16 dsto) {
   switch (idx) {
   case 0x00:  // 00 -  Water Face Closed
     if (dung_hdr_tag[1] == 27) {
-      if (save_dung_info[dungeon_room_index] & 0x100)
+      if ((*SaveDungInfoFor(dungeon_room_index)) & 0x100)
         goto water_face_open;
     } else if (dung_hdr_tag[1] == 25) {
       if (dung_savegame_state_bits & 0x800)
@@ -1901,7 +1905,7 @@ door28:
     break;
   case 0x33:  // 33 -  Stairs Submerged [S](layer)
     if (dung_hdr_tag[1] == 27) {
-      if (!(save_dung_info[dungeon_room_index] & 0x100)) {
+      if (!((*SaveDungInfoFor(dungeon_room_index)) & 0x100)) {
         dung_hdr_bg2_properties = 0;
         goto stairs_wet;
       }
@@ -2065,7 +2069,10 @@ void Dungeon_StartInterRoomTrans_Left() {
     RoomBounds_SubB(&room_bounds_x);
     BYTE(dungeon_room_index_prev) = dungeon_room_index;
     if ((link_tile_below & 0xcf) == 0x89) {
-      dungeon_room_index = dung_hdr_travel_destinations[3];
+      if (GbaAlttp_IsBankRoom(dungeon_room_index))
+        BYTE(dungeon_room_index) = dung_hdr_travel_destinations[3];
+      else
+        dungeon_room_index = dung_hdr_travel_destinations[3];
       Dungeon_AdjustForTeleportDoors(dungeon_room_index + 1, 0xff);
     } else {
       if ((uint8)dungeon_room_index != (uint8)dungeon_room_index2) {
@@ -2255,10 +2262,16 @@ void Door_Draw_Helper4(uint8 door_type, uint16 dsto) {
 }
 
 const uint16 *GetRoomDoorInfo(int room) {
+  const uint16 *gba_doors = GbaAlttp_GetRoomDoors(room);
+  if (gba_doors)
+    return gba_doors;
   return (uint16 *)(kDungeonRoom + kDungeonRoomDoorOffs[room]);
 }
 
 const uint8 *GetRoomHeaderPtr(int room) {
+  const uint8 *gba_header = GbaAlttp_GetRoomHeader(room);
+  if (gba_header)
+    return gba_header;
   return kDungeonRoomHeaders + kDungeonRoomHeadersOffs[room];
 }
 
@@ -2613,6 +2626,9 @@ void Dungeon_LoadRoom() {  // 81873a
     dung_object_tilemap_pos[i] = 0;
   }
 
+  if (GbaAlttp_LoadBakedRoom())
+    return;
+
   const uint8 *cur_p0 = GetDungeonRoomLayout(dungeon_room_index);
   dung_load_ptr_offs = 0;
   RoomDraw_DrawFloors(cur_p0);
@@ -2666,6 +2682,14 @@ void Dungeon_LoadRoom() {  // 81873a
   } while (i != 0x120);
 
   dung_load_ptr_offs = 0x120;
+}
+
+/* Full row-pointer init for a draw outside the stream path (the baked-room door pass):
+   offsets AND bank bytes, exactly as the stream draw sets them before its lower sections.
+   Selecting only the bank bytes leaves whatever offsets history put there, and a door then
+   draws and registers at garbage positions. */
+void Dungeon_PrepDoorDrawLayer(void) {
+  memcpy(&dung_line_ptrs_row0, kDungeon_DrawObjectOffsets_BG1, 33);
 }
 
 void RoomDraw_DrawAllObjects(const uint8 *level_data) {  // 8188e4
@@ -3704,7 +3728,8 @@ void Dungeon_LoadHeader() {  // 81b564
   dung_hdr_collision = (hdr_ptr[0] >> 2) & 7;
   dung_want_lights_out_copy = dung_want_lights_out;
   dung_want_lights_out = hdr_ptr[0] & 1;
-  const DungPalInfo *dpi = &kDungPalinfos[hdr_ptr[1]];
+  int palette_index = hdr_ptr[1];
+  const DungPalInfo *dpi = &kDungPalinfos[palette_index];
   palette_main_indoors = dpi->pal0;
   palette_sp0l = dpi->pal1;
   palette_sp5l = dpi->pal2;
@@ -3714,6 +3739,7 @@ void Dungeon_LoadHeader() {  // 81b564
   dung_hdr_collision_2 = hdr_ptr[4];
   dung_hdr_tag[0] = hdr_ptr[5];
   dung_hdr_tag[1] = hdr_ptr[6];
+  GbaAlttp_FilterRoomTags(&dung_hdr_tag[0], &dung_hdr_tag[1]);
   dung_hdr_hole_teleporter_plane = hdr_ptr[7] & 3;
   dung_hdr_staircase_plane[0] = (hdr_ptr[7] >> 2) & 3;
   dung_hdr_staircase_plane[1] = (hdr_ptr[7] >> 4) & 3;
@@ -3728,7 +3754,7 @@ void Dungeon_LoadHeader() {  // 81b564
   dung_overlay_to_load = 0;
   dung_index_x3 = dungeon_room_index * 3;
 
-  uint16 x = save_dung_info[dungeon_room_index];
+  uint16 x = (*SaveDungInfoFor(dungeon_room_index));
   dung_door_opened = x & 0xf000;
   dung_door_opened_incl_adjacent = dung_door_opened | 0xf00;
   dung_savegame_state_bits = (x & 0xff0) << 4;
@@ -3796,7 +3822,7 @@ void Dungeon_CheckAdjacentRoomsForOpenDoors(int idx, int room) {  // 81b759
 
 void Dungeon_LoadAdjacentRoomDoors(int room) {  // 81b7ef
   const uint16 *dp = GetRoomDoorInfo(room);
-  adjacent_doors_flags = (save_dung_info[room] & 0xf000) | 0xf00;
+  adjacent_doors_flags = ((*SaveDungInfoFor(room)) & 0xf000) | 0xf00;
   for (int i = 0; ; i++) {
     uint16 a = dp[i];
     adjacent_doors[i] = a;
@@ -3820,6 +3846,7 @@ void Dungeon_LoadAttribute_Selectable() {  // 81b8b4
     break;
   case 3:
     Dungeon_LoadDoorAttribute();
+    GbaAlttp_ApplyBakedAttrOverlay();
     break;
   case 4:
     overworld_map_state = 5;
@@ -3834,10 +3861,13 @@ void Dungeon_LoadAttribute_Selectable() {  // 81b8b4
 }
 
 void Dungeon_LoadAttributeTable() {  // 81b8bf
+  if (GbaAlttp_SkipAttrLoadForVoidRoom())
+    return;
   dung_draw_width_indicator = dung_draw_height_indicator = 0;
   Dungeon_LoadBasicAttribute_full(0x1000);
   Dungeon_LoadObjectAttribute();
   Dungeon_LoadDoorAttribute();
+  GbaAlttp_ApplyBakedAttrOverlay();
   if (orange_blue_barrier_state)
     Dungeon_FlipCrystalPegAttribute();
   overworld_map_state = 0;
@@ -4587,7 +4617,7 @@ void Dung_TagRoutine_BlastWallStuff(int k) {  // 81c68c
 
 // Used for bosses
 void RoomTag_GetHeartForPrize(int k) {  // 81c709
-  static const uint8 kBossFinishedFallingItem[13] = { 0, 0, 1, 2, 0, 6, 6, 6, 6, 6, 3, 6, 6 };
+  static const uint8 kBossFinishedFallingItem[15] = { 0, 0, 1, 2, 0, 6, 6, 6, 6, 6, 3, 6, 6, 6, 6 };
   if (!(dung_savegame_state_bits & 0x8000))
     return;
   int t = savegame_is_darkworld ? link_has_crystals : link_which_pendants;
@@ -5604,7 +5634,9 @@ void ManipBlock_Something(Point16U *pt) {  // 81db41
 void RevealPotItem(uint16 pos6, uint16 pos4) {  // 81e6b2
   BYTE(dung_secrets_unk1) = 0;
 
-  const uint8 *src_ptr = kDungeonSecrets + WORD(kDungeonSecrets[dungeon_room_index * 2]);
+  const uint8 *src_ptr = GbaAlttp_GetRoomSecrets(dungeon_room_index);
+  if (!src_ptr)
+    src_ptr = kDungeonSecrets + WORD(kDungeonSecrets[dungeon_room_index * 2]);
 
   int index = 0;
   for (;;) {
@@ -6090,7 +6122,7 @@ void Dungeon_ExtinguishTorch() {  // 81f4a6
 
   uint16 r8 = (dung_object_tilemap_pos[y >> 1] &= 0x7fff);
 
-  dung_torch_data[(dung_object_pos_in_objdata[y >> 1] & 0xff) >> 1] = r8;
+  dung_torch_data[GbaAlttp_TorchDataOffset(dung_object_pos_in_objdata[y >> 1]) >> 1] = r8;
 
   r8 &= 0x3fff;
   RoomDraw_AdjustTorchLightingChange(r8, 0xec2, r8);
@@ -6686,6 +6718,7 @@ void Module07_02_SupertileTransition() {  // 828a26
 }
 
 void Module07_02_00_InitializeTransition() {  // 828a4f
+  ZeldaSnapshotDungeonTransitionSource();
   uint8 bak = hdr_dungeon_dark_with_lantern;
   ResetTransitionPropsAndAdvanceSubmodule();
   hdr_dungeon_dark_with_lantern = bak;
@@ -6694,7 +6727,15 @@ void Module07_02_00_InitializeTransition() {  // 828a4f
 void Module07_02_01_LoadNextRoom() {  // 828a5b
   Dungeon_LoadRoom();
   ResetStarTileGraphics();
-  LoadTransAuxGFX_sprite();
+  // Bank rooms carry a sprite-sheet set per room, and the incremental mid-scroll upload
+  // garbles whatever is on screen. This is the one moment with no sprites visible (the old
+  // room's are disabled just below, the new room's not yet spawned), so their sheets load
+  // in full right here; the spawn keeps vanilla timing and renders correct from frame one.
+  if (GbaAlttp_IsBakedRoomActive())
+    Gfx_ReloadSpriteSheetsImmediate();
+  else
+    LoadTransAuxGFX_sprite();
+  GbaAlttp_PlaceTeleportArrival();
   subsubmodule_index++;
   overworld_map_state = 0;
   BYTE(dungeon_room_index2) = BYTE(dungeon_room_index);
@@ -6708,6 +6749,9 @@ void Dungeon_InterRoomTrans_State3() {  // 828a87
   if (dung_want_lights_out | dung_want_lights_out_copy)
     TS_copy = 0;
   Dungeon_AdjustForRoomLayout();
+  // Runs for bank rooms too: the incremental NMI uploader copies this staging into sprite
+  // VRAM regardless, so it must hold the sprite sheets - gating it left our background
+  // patch in the staging and the uploader wrote tiles over every sprite sheet.
   LoadNewSpriteGFXSet();
   MirrorBg1Bg2Offs();
   WaterFlood_BuildOneQuadrantForVRAM();
@@ -6798,6 +6842,8 @@ void Dungeon_InterRoomTrans_State7() {  // 828b2e
 
   if (dungeon_room_index != 54 && dungeon_room_index != 56) {
     uint16 y = kSpiralTab1[dung_hdr_bg2_properties] ? 0x116 : 0x16;
+    if (GbaAlttp_IsBakedRoomActive() && sign8(kSpiralTab1[dung_hdr_bg2_properties]))
+      y = 0x17;  // opaque upper layer stays on the main screen through the scroll
     if (y != (TM_copy | TS_copy << 8) && (TM_copy == 0x17 || (TM_copy | TS_copy) != 0x17))
       TM_copy = y, TS_copy = y >> 8;
   }
@@ -6919,7 +6965,7 @@ table:
 }
 
 void Module07_0E_01_HandleMusicAndResetProps() {  // 828c78
-  if ((dungeon_room_index == 7 || dungeon_room_index == 23 && !ZeldaIsPlayingMusicTrack(17)) && !(link_which_pendants & 1))
+  if ((dungeon_room_index == 7 || dungeon_room_index == 23 && !ZeldaIsPlayingMusicTrack(17)) && !GameHook_StoryGate(kGate_HeraMusic, (link_which_pendants & 1) != 0))
     music_control = 0xf1;
   staircase_var1 = (which_staircase_index & 4) ? 106 : 88;
   overworld_map_state = 0;
@@ -6960,6 +7006,8 @@ void Dungeon_InitializeRoomFromSpecial() {  // 828ce2
 }
 
 void DungeonTransition_LoadSpriteGFX() {  // 828d10
+  if (GbaAlttp_IsBakedRoomActive())
+    Gfx_ReloadSpriteSheetsImmediate();
   LoadNewSpriteGFXSet();
   Dungeon_ResetSprites();
   DungeonTransition_RunFiltering();
@@ -7356,7 +7404,7 @@ void Dungeon_SetBossMusicUnorthodox() {  // 829165
       if (dungeon_room_index != 23 || ZeldaIsPlayingMusicTrack(17))
         return;
     }
-    if (music_unk1 != 0xf1 && (link_which_pendants & 1))
+    if (music_unk1 != 0xf1 && GameHook_StoryGate(kGate_HeraMusic, (link_which_pendants & 1) != 0))
       return;
   }
   music_control = x;
@@ -7931,7 +7979,10 @@ void Dungeon_AdjustAfterSpiralStairs() {  // 82a2f0
   room_bounds_y.b0 += yd;
 }
 
-void Dungeon_AdjustForTeleportDoors(uint8 room, uint8 flag) {  // 82a37c
+void Dungeon_AdjustForTeleportDoors(uint16 room, uint8 flag) {  // 82a37c
+  bool extended = GbaAlttp_IsBankRoom(room);
+  if (!extended)
+    room &= 0xff;
   dungeon_room_index2 = room;
   dungeon_room_index_prev = room;
 
@@ -7943,13 +7994,18 @@ void Dungeon_AdjustForTeleportDoors(uint8 room, uint8 flag) {  // 82a37c
   room_bounds_x.a0 += (xx << 8);
   room_bounds_x.b0 += (xx << 8);
 
-  xx = ((room & 0xf0) >> 3) - (link_y_coord >> 8);
+  // Rooms are two 256px pages tall and an east/west teleport door sits at one physical row,
+  // so the extended world keeps the half the player left from. The vanilla expression stays
+  // byte-for-byte on the vanilla side of the gate, overflow quirks included.
+  xx = (extended ? (((room & 0xff0) >> 3) | ((link_y_coord >> 8) & 1))
+                 : ((room & 0xf0) >> 3)) - (link_y_coord >> 8);
   link_y_coord += (xx << 8);
   BG2VOFS_copy2 += (xx << 8);
   room_bounds_y.a1 += (xx << 8);
   room_bounds_y.b1 += (xx << 8);
   room_bounds_y.a0 += (xx << 8);
   room_bounds_y.b0 += (xx << 8);
+  GbaAlttp_ArmTeleportArrival(flag == 0xff);
 
   for (int i = 0; i < 20; i++)
     tagalong_y_hi[i] = link_y_coord >> 8;
@@ -7983,7 +8039,10 @@ void Dungeon_StartInterRoomTrans_Right() {  // 82b63a
     RoomBounds_AddB(&room_bounds_x);
     BYTE(dungeon_room_index_prev) = dungeon_room_index;
     if ((link_tile_below & 0xcf) == 0x89) {
-      dungeon_room_index = dung_hdr_travel_destinations[4];
+      if (GbaAlttp_IsBankRoom(dungeon_room_index))
+        BYTE(dungeon_room_index) = dung_hdr_travel_destinations[4];
+      else
+        dungeon_room_index = dung_hdr_travel_destinations[4];
       Dungeon_AdjustForTeleportDoors(dungeon_room_index - 1, 1);
     } else {
       if ((uint8)dungeon_room_index != (uint8)dungeon_room_index2) {
@@ -8029,11 +8088,11 @@ void AdjustQuadrantAndCamera_right() {  // 82b8bd
 
 void SetAndSaveVisitedQuadrantFlags() {  // 82b8cb
   dung_quadrants_visited |= kQuadrantVisitingFlags[(quadrant_fullsize_y << 2) + (quadrant_fullsize_x << 1) + link_quadrant_y + link_quadrant_x];
-  save_dung_info[dungeon_room_index] |= dung_quadrants_visited;
+  (*SaveDungInfoFor(dungeon_room_index)) |= dung_quadrants_visited;
 }
 
 void SaveQuadrantsToSram() {  // 82b8e5
-  save_dung_info[dungeon_room_index] |= dung_quadrants_visited;
+  (*SaveDungInfoFor(dungeon_room_index)) |= dung_quadrants_visited;
 }
 
 void AdjustQuadrantAndCamera_left() {  // 82b8f9
@@ -8063,7 +8122,7 @@ void Dungeon_FlagRoomData_Quadrants() {  // 82b929
 }
 
 void Dung_SaveDataForCurrentRoom() {  // 82b947
-  save_dung_info[dungeon_room_index] =
+  (*SaveDungInfoFor(dungeon_room_index)) =
     (dung_savegame_state_bits >> 4) |
     (dung_door_opened & 0xf000) |
     dung_quadrants_visited;
@@ -8176,11 +8235,11 @@ void DungeonTransition_ScrollRoom() {  // 82be03
 
   if (i >= 2) {
     t = BG1HOFS_copy2 = BG2HOFS_copy2 = (BG2HOFS_copy2 + kStaircaseTab3[i]) & ~1;
-    if (transition_counter >= kStaircaseTab4[i])
+    if (transition_counter >= kStaircaseTab4[i] && !GbaAlttp_TeleportArrivalHoldsPlayer())
       link_x_coord += kStaircaseTab3[i];
   } else {
     t = BG1VOFS_copy2 = BG2VOFS_copy2 = (BG2VOFS_copy2 + kStaircaseTab3[i]) & ~1;
-    if (transition_counter >= kStaircaseTab4[i])
+    if (transition_counter >= kStaircaseTab4[i] && !GbaAlttp_TeleportArrivalHoldsPlayer())
       link_y_coord += kStaircaseTab3[i];
   }
 
@@ -8211,10 +8270,12 @@ void DungeonTransition_FindSubtileLanding() {  // 82c110
   Dungeon_ResetTorchBackgroundAndPlayerInner();
   SubtileTransitionCalculateLanding();
   subsubmodule_index++;
-  save_dung_info[dungeon_room_index] |= dung_quadrants_visited;
+  (*SaveDungInfoFor(dungeon_room_index)) |= dung_quadrants_visited;
 }
 
 void SubtileTransitionCalculateLanding() {  // 82c12c
+  if (GbaAlttp_TeleportLandingSnap())
+    return;
   int st = overworld_screen_transition;
   int a = CalculateTransitionLanding();
   if (a == 2)
@@ -8242,6 +8303,7 @@ void Dungeon_IntraRoomTrans_State5() {  // 82c170
   Link_HandleMovingAnimation_FullLongEntry();
   if (!DungeonTransition_MoveLinkOutDoor())
     return;
+  GbaAlttp_TeleportArrivalDone();
   if (byte_7E004E == 2 || byte_7E004E == 4)
     is_standing_in_doorway = 0;
   // todo: write to tiledetect_diag_state
@@ -8253,6 +8315,7 @@ void Dungeon_IntraRoomTrans_State5() {  // 82c170
 
 bool DungeonTransition_MoveLinkOutDoor() {  // 82c191
   uint8 x = kStaircaseTab2[byte_7E004E + overworld_screen_transition * 5];
+  GbaAlttp_TeleportWalkTarget(&x);
   int r0 = overworld_screen_transition & 1 ? -2 : 2;
   if ((overworld_screen_transition & 2) == 0) {
     link_y_coord += r0;
@@ -8432,6 +8495,7 @@ void Dungeon_LoadEntrance() {  // 82d8b3
   memcpy(&movable_block_datas[99], kTorchDataInit, 116); // junk
   memcpy(dung_torch_data, kTorchDataInit, kTorchDataInit_SIZE);
   memcpy(&dung_torch_data[144], kTorchDataJunk, kTorchDataJunk_SIZE);
+  GbaAlttp_AppendTorchData();
 
   memset(memorized_tile_addr, 0, 0x100);
   memset(pots_revealed_in_room, 0, 0x280);
@@ -8742,12 +8806,16 @@ void LayerEffect_Ganon() {  // 8affa4
 }
 
 void LayerEffect_WaterRapids() {  // 8affde
+  if (GbaAlttp_ApplyWaterCurrent())
+    return;
   int t;
   dung_some_subpixel[1] = t = dung_some_subpixel[1] + 0x80;
   dung_floor_x_vel = -(t >> 8);
 }
 
 void Dungeon_LoadCustomTileAttr() {  // 8e942a
+  if (GbaAlttp_ApplyDungeonTileAttr())
+    return;
   memcpy(&attributes_for_tile[0x140], &kDungAttrsForTile[kDungAttrsForTile_Offs[aux_tile_theme_index]], 0x80);
 }
 

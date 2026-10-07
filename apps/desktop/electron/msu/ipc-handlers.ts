@@ -10,6 +10,7 @@ import { toArrayBuffer } from '../lib/buffer';
 import { fail, errMessage } from '../lib/result';
 import { makeImportReporter } from '../lib/import-progress';
 import { selectPackFiles } from './import-selection';
+import { refuseInstalledPack } from './pack-fs';
 
 type MsuImportResult = {
   success: boolean;
@@ -32,6 +33,7 @@ const installMsuTracks = async (source: ImportSource, packName: string): Promise
   const report = makeImportReporter('msu', packName);
   let resolved;
   try {
+    await refuseInstalledPack(packName);
     resolved = await resolveSourceFiles(source, MSU_EXTENSIONS, (s) => report(s.phase, s.loaded, s.total));
   } catch (err) {
     report('error', undefined, undefined, errMessage(err));
@@ -106,8 +108,10 @@ const registerMsuHandlers = (): void => {
     } catch { return []; }
   });
 
-  handle('msu:deletePack', (_event, packName: string) =>
-    rm(getMsuDir(packName), { recursive: true, force: true }));
+  handle('msu:deletePack', async (_event, packName: string) => {
+    await refuseInstalledPack(packName);
+    await rm(getMsuDir(packName), { recursive: true, force: true });
+  });
 
   handle('msu:getTrackList', async (_event, packName: string) => {
     const packDir = getMsuDir(packName);

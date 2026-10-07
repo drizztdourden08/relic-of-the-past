@@ -11,9 +11,12 @@ import { updateHapticBridgeSettings, updateHapticsProfileEnabled } from '../inpu
 import { DEFAULT_SETTINGS } from './settings';
 import { log } from '../log-bus';
 import { buildFeatureFlags, buildFeatureWord3, buildFeatureWords } from './live-settings-flags';
+import { reassertGateWord5 } from './gate-word-5';
+import { setSettingsStoryGates } from './story-gates';
 import { buildPpuFlags } from './live-settings-ppu-flags';
 import { LIVE_SETTINGS } from './live-settings-keys';
 import { pushTurboSpeed } from './turbo';
+import { restoreCheatRules } from './cheat-rules-memory';
 import { pushDialogLive } from './live-settings-dialog';
 
 // Track the last-pushed hideSpaceBeyondWalls value so we can re-assert after state loads
@@ -21,6 +24,7 @@ let lastHideSpaceBeyondWalls = false;
 // Frame pacing mode. The core boots on the timer schedule and has no INI key for this, so the
 // startup re-assert is what applies the profile's choice, not only a post-load repair.
 let lastVsync = false;
+let lastExtraDungeon = false;
 // Track the last-pushed hudHidden value so we can re-assert after state loads
 let lastHudHidden = false;
 // Track the last-pushed pauseHidden value so we can re-assert after state loads
@@ -42,6 +46,9 @@ let lastSettings: GameSettings | null = null;
 const liveSettingsNow = (): GameSettings | null => lastSettings;
 
 const pushLiveSettings = (settings: GameSettings): boolean => {
+  // Before the module check: the story half is kept even when the core is not up yet, and the
+  // reassert after the next load writes it (gate-word-5.ts).
+  setSettingsStoryGates(settings.vanillaSafe);
   const mod = getModule();
   if (!mod) {
     log.app('Live settings: no WASM module available', 'warn');
@@ -60,6 +67,9 @@ const pushLiveSettings = (settings: GameSettings): boolean => {
 
     // Cheat gating word (features3), guarded because older WASM lacks WasmSetGateWord.
     try { mod.ccall('WasmSetGateWord', null, ['number', 'number'], [3, buildFeatureWord3(settings)]); } catch { /* WASM not rebuilt yet */ }
+    // The story gates' settings half of word 5: the event reading everywhere, or nothing under
+    // Vanilla Safe (story-gates.ts). A running seed's own word takes precedence inside.
+    setSettingsStoryGates(settings.vanillaSafe);
 
     const ppuFlags = buildPpuFlags(settings);
     mod.ccall('WasmSetPpuRenderFlags', null, ['number'], [ppuFlags]);
@@ -118,6 +128,13 @@ const pushLiveSettings = (settings: GameSettings): boolean => {
       mod.ccall('WasmSetPauseHidden', null, ['number'], [hidePause ? 1 : 0]);
     } catch { /* WASM not rebuilt yet */ }
 
+    // Optional second-cartridge content. Guarded like its neighbours: an older WASM build
+    // has no such export, and the base game must not care.
+    try {
+      lastExtraDungeon = !!settings.extraDungeon;
+      mod.ccall('WasmSetExtraDungeonEnabled', null, ['number'], [settings.extraDungeon ? 1 : 0]);
+    } catch { /* WASM not rebuilt yet */ }
+
     // Dialog pacing and the native message box hide, own module, same guard inside
     pushDialogLive(settings);
 
@@ -143,6 +160,11 @@ const tryVoidCcall = (fn: string, value: number): void => {
 const reassertHideSpaceBeyondWalls = (): void => tryVoidCcall('WasmSetHideSpaceBeyondWalls', lastHideSpaceBeyondWalls ? 1 : 0);
 
 const reassertVsync = (): void => tryVoidCcall('WasmSetVsync', lastVsync ? 1 : 0);
+
+// Same shape as the flags above, and for the same reason: this only ever reaches the core
+// through the live path, so a boot that loads straight into a save state would leave the
+// extra content switched off until a setting was touched.
+const reassertExtraDungeon = (): void => tryVoidCcall('WasmSetExtraDungeonEnabled', lastExtraDungeon ? 1 : 0);
 
 const reassertHudHidden = (): void => tryVoidCcall('WasmSetHudHidden', lastHudHidden ? 1 : 0);
 
@@ -172,6 +194,7 @@ const reassertFeatureWords = (): void => {
   tryVoidCcall('WasmSetFeatures', buildFeatureFlags(settings));
   tryVoidCcall('WasmSetFeatures1', features1);
   tryVoidCcall('WasmSetFeatures2', features2);
+  reassertGateWord5();
 };
 
 /** Re-assert every live flag after a save-state load clobbers WRAM. */
@@ -198,7 +221,13 @@ const reassertLiveFlagsAfterLoad = (): void => {
   reassertHudHidden();
   reassertPauseHidden();
   pushDialogLive(lastSettings ?? DEFAULT_SETTINGS);
+  // The turbo speed is a pacing global no boot file carries: without this the key does nothing
+  // after a start until some other setting change happens to push the settings again.
+  pushTurboSpeed(lastSettings ?? DEFAULT_SETTINGS);
   reassertVolumes();
+  reassertExtraDungeon();
+  // The remembered cheat rules, again: a load is one more moment the core may have refused them.
+  restoreCheatRules();
 };
 
 /**
@@ -226,6 +255,7 @@ const primeLiveSettings = (settings: GameSettings): void => {
   lastMasterVolume = settings.masterVolume;
   lastMusicVol = settings.musicMuted ? 0 : Math.round(settings.musicVolume * 1.28);
   lastSfxVol = settings.sfxMuted ? 0 : Math.round(settings.sfxVolume * 1.28);
+  lastExtraDungeon = !!settings.extraDungeon;
 };
 
 export { LIVE_SETTINGS, liveSettingsNow, pushLiveSettings, reassertFeatureWords, reassertHideSpaceBeyondWalls, reassertVsync, reassertHudHidden, reassertPauseHidden, reassertVolumes, reassertLiveFlagsAfterLoad, reassertFeatureFlags, reassertGateWord3, primeLiveSettings };

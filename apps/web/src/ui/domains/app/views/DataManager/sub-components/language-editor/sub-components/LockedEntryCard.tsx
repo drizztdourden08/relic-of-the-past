@@ -14,7 +14,7 @@
  * warning about what will go wrong.
  */
 import { Badge, Box, Text } from '@ds/primitives';
-import './entry/EntryCardCollapsed.css';
+import '@domains/packs/language/compounds/entry/EntryCardCollapsed.css';
 
 type LockedEntryCardProps = {
   id: number;

@@ -13,7 +13,10 @@ export { startGame, resetGame } from './lifecycle';
 export { setAutoSaveConfig, setLinkSpriteData } from './lifecycle';
 export { applyPlayerSprite, clearPlayerSprite } from './player-sprite';
 export type { AutoSaveConfig } from './lifecycle';
-export { saveState, loadState, loadNamedState, loadStateRef, captureStateBuffer, loadStateFromBuffer } from './save-states';
+export { markStateLoaded, wasStateJustLoaded } from './state-load-signal';
+export { saveState, loadState, loadNamedState, loadStateRef } from './save-states';
+export { captureStateBuffer, loadStateFromBuffer } from './state-buffers';
+export { isCoreReady, whenCoreReady } from './core-ready';
 export { captureGameFrameBlob, fulfillFrameCapture } from './capture-frame';
 export { setChestSlotOverride, clearItemOverrides } from './randomizer';
 export { pushLiveSettings, reassertHideSpaceBeyondWalls, reassertVsync, reassertHudHidden, reassertPauseHidden, reassertVolumes, reassertLiveFlagsAfterLoad, reassertFeatureFlags, primeLiveSettings, LIVE_SETTINGS } from './live-settings';
@@ -45,7 +48,7 @@ export type { UnknownItemEntry } from './tracker';
 export {
   initTrackerBridge, destroyTrackerBridge,
   onItemReceived, onInventoryChanged, onUnknownItem, onCompletedChecksChanged,
-  getCurrentInventory, getCompletedChecks, getUnknownItems, loadUnknownItems,
+  getCurrentInventory, getCompletedChecks, getEventStatus, getUnknownItems, loadUnknownItems, onEventStatusChanged,
   pollInventoryState, pollRoomFlags,
 } from './tracker';
 export { deliveryQueue } from './delivery-queue';

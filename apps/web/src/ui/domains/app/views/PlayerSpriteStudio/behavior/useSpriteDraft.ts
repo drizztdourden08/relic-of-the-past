@@ -19,7 +19,7 @@ import { toZsprBytes } from '@app/lib/game/zspr-write';
 import { applyPlayerSprite } from '@app/lib/game/player-sprite';
 import { getActiveProfileId } from '@app/lib/game';
 import { readConfig } from '@app/lib/storage/profile-store';
-import { safeFileName } from '@app/lib/storage/link-sprites-store';
+import { safeFileName } from '@shared/storage/link-sprites/link-sprites';
 
 interface OpenDraft {
   /** File name on disk, or null for a sheet created but never saved. */

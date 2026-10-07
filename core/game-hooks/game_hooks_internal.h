@@ -176,6 +176,13 @@ uint8 DialogMirror_LastCommand(void);
 bool DialogMirror_IsKeyWaitCommand(uint8 cmd);
 // The mirror records while either the box may be hidden or paced.
 bool DialogMirror_Recording(void);
+// Paged receipts (receipt_pages.c): the receipt's line and the detail page that follows it, joined
+// when the engine loads the first. Clear drops a chain a newer arm made stale.
+void ReceiptPages_Chain(int head_msg, int detail_msg);
+// The same join for an ordinary line, laid out as a page while it is appended.
+void ReceiptPages_ChainAsPage(int head_msg, int detail_msg);
+void ReceiptPages_Clear(void);
+void ReceiptPages_MessageLoaded(void);
 // Whether a message is on screen this frame (dialog_presence.c). The engine reports each run, each
 // new message and each frame end.
 void DialogPresence_MarkRendered(void);
@@ -190,6 +197,24 @@ void DialogSuppress_MessageStarted(void);
 bool DialogSuppress_NativeHidden(void);
 // Takes down a box left on the text layer by a state that was saved with one stranded.
 void DialogSuppress_RepairStrandedBox(void);
+// What each dialog file hands to a save and takes back from one (dialog_hook_state.c). A pack writes
+// exactly its k*PackBytes; an unpack reads the same bytes and cleans any value a reader indexes by.
+enum {
+  kDialogMirrorPackBytes = 369,
+  kDialogPresencePackBytes = 3,
+  kDialogPacingPackBytes = 3,
+  kDialogSuppressPackBytes = 2,
+};
+// True while the rows belong to a game the mirror never watched (a load that brought no hook state).
+bool DialogMirror_Stale(void);
+void DialogMirror_Pack(uint8 *out);
+void DialogMirror_Unpack(const uint8 *in);
+void DialogPresence_Pack(uint8 *out);
+void DialogPresence_Unpack(const uint8 *in);
+void DialogPacing_Pack(uint8 *out);
+void DialogPacing_Unpack(const uint8 *in);
+void DialogSuppress_Pack(uint8 *out);
+void DialogSuppress_Unpack(const uint8 *in);
 
 // ─── Host-owned pause menu / active item ───
 

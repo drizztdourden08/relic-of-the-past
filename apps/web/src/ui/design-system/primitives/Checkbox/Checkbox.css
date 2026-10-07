@@ -36,3 +36,9 @@
   font-size: var(--text-sm);
   color: var(--c-text-dim);
 }
+
+/* Invalid: an erroring Field around it outlines the box in red. */
+.field--invalid .checkbox__input {
+  outline: var(--border-width-thin) solid var(--c-danger);
+  outline-offset: var(--border-width-thin);
+}

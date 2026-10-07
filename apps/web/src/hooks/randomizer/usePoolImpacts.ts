@@ -8,13 +8,13 @@
  * upgrades than the filler can absorb) reports its reason instead.
  */
 import { useMemo } from 'react';
-import { accountingOf } from '@shared/randomizer/ap-world/pool/pool-accounting';
-import { poolImpactOf } from '@shared/randomizer/ap-world/pool/pool-impact';
+import { accountingOf } from '@shared/randomizer/world/pool/pool-accounting';
+import { poolImpactOf } from '@shared/randomizer/world/pool/pool-impact';
 import { deliverableSets } from './deliverable-sets';
 import { poolImpactCell } from './impact-cell';
-import type { RandomizerOptionsSnapshot } from '@shared/randomizer/ap-world/options.type';
-import type { PoolAccounting } from '@shared/randomizer/ap-world/pool/pool-accounting';
-import type { PoolImpact } from '@shared/randomizer/ap-world/pool/pool-impact';
+import type { RandomizerOptionsSnapshot } from '@shared/randomizer/world/options.type';
+import type { PoolAccounting } from '@shared/randomizer/world/pool/pool-accounting';
+import type { PoolImpact } from '@shared/randomizer/world/pool/pool-impact';
 import type { ImpactCell } from '@domains/app/compounds/PoolImpactCell';
 
 interface PoolImpacts {

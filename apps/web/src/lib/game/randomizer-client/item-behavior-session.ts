@@ -19,39 +19,30 @@
  * pair at generation time would let a stored placement and the running game
  * disagree the day the derivation changes, so the derivation runs on both
  * sides instead.
- *
- * A placement with neither field (every seed rolled before these rows existed)
- * arms nothing at all: the full ladder and the unmodified game, which is what
- * it was generated against.
  */
 
-import {
-  REFERENCE_DARK_ROOM_SETTING,
-} from '@shared/randomizer/ap-world/dark-rooms/dark-room-lights.data';
-import { DEFAULT_ITEM_POWER } from '@shared/randomizer/ap-world/item-power/item-power.data';
-import { DEFAULT_RETRO_BOW } from '@shared/randomizer/ap-world/retro/retro-bow.data';
-import { retroVanillaShelves } from '@shared/randomizer/ap-world/retro/retro-shops';
-import { NO_SHOP_SCOPE } from '@shared/randomizer/ap-world/shops/shop-scope-from-values';
-import { derivedItemPower } from '@shared/randomizer/ap-world/item-power/item-power-rule';
-import { DEFAULT_PROGRESSIVE_SETTING } from '@shared/randomizer/ap-world/progressive/progressive-families.data';
-import { DEFAULT_PROGRESSIVE_MODES } from '@shared/randomizer/ap-world/progressive/progressive-modes.data';
+import { DEFAULT_ITEM_POWER } from '@shared/randomizer/world/item-power/item-power.data';
+import { retroVanillaShelves } from '@shared/randomizer/world/retro/retro-shops';
+import { derivedItemPower } from '@shared/randomizer/world/item-power/item-power-rule';
 import {
   beamSwordReachable, swordReachable,
-} from '@shared/randomizer/ap-world/progressive/progressive-reach';
+} from '@shared/randomizer/world/progressive/progressive-reach';
 import { log } from '../../log-bus';
 import { clearItemPower, setItemPower } from '../item-power';
 import { clearProgressiveTiers, isFullLadder, setProgressiveTiers } from '../progressive-tiers';
 import { clearRetroBow, setRetroBow } from '../retro-bow';
 import { clearRetroShelves, setRetroShelves } from '../retro-shelf';
 import { darkRoomLightWordOf } from '../dark-room-lights';
-import type { ApPlacementStats } from '@shared/randomizer/ap-world/fill/ap-placement.type';
-import type { DarkRoomSetting } from '@shared/randomizer/ap-world/dark-rooms/dark-room.type';
-import type { ItemPowerSetting } from '@shared/randomizer/ap-world/item-power/item-power.type';
-import type { RetroBowSetting } from '@shared/randomizer/ap-world/retro/retro.type';
-import type { RetroShelfStock } from '@shared/randomizer/ap-world/retro/retro-shops';
+import { setSessionStoryGates } from '../story-gates';
+import type { StoryGateSetting } from '@shared/randomizer/world/story-gates/story-gate.type';
+import type { PlacementStats } from '@shared/randomizer/world/fill/placement.type';
+import type { DarkRoomSetting } from '@shared/randomizer/world/dark-rooms/dark-room.type';
+import type { ItemPowerSetting } from '@shared/randomizer/world/item-power/item-power.type';
+import type { RetroBowSetting } from '@shared/randomizer/world/retro/retro.type';
+import type { RetroShelfStock } from '@shared/randomizer/world/retro/retro-shops';
 import type {
   ProgressiveModeSetting, ProgressiveSetting,
-} from '@shared/randomizer/ap-world/progressive/progressive.type';
+} from '@shared/randomizer/world/progressive/progressive.type';
 
 interface ItemBehaviorPlan {
   tiers: ProgressiveSetting;
@@ -63,6 +54,8 @@ interface ItemBehaviorPlan {
   darkRooms: DarkRoomSetting;
   /** What a shot costs, and whether it costs anything at all. */
   retroBow: RetroBowSetting;
+  /** Which recorded event each story gate reads, and what the counts ask for. */
+  storyGates: StoryGateSetting;
   /**
    * The arrow shelves the core restocks in place: the quiver's shelf and the
    * refills. Only a retro seed with VANILLA shops has any; a shuffled scope
@@ -73,23 +66,21 @@ interface ItemBehaviorPlan {
   vanilla: boolean;
 }
 
-const itemBehaviorOf = (stats: ApPlacementStats): ItemBehaviorPlan => {
-  const tiers = stats.progressiveTiers ?? DEFAULT_PROGRESSIVE_SETTING;
-  const modes = stats.progressiveModes ?? DEFAULT_PROGRESSIVE_MODES;
-  const itemPower = derivedItemPower(
-    stats.itemPower ?? DEFAULT_ITEM_POWER, swordReachable(tiers), beamSwordReachable(tiers),
-  );
-  const retroBow = stats.retroBow ?? DEFAULT_RETRO_BOW;
-  const retroShelves = retroVanillaShelves(stats.shops ?? NO_SHOP_SCOPE, retroBow);
-  const darkRooms = stats.darkRooms ?? REFERENCE_DARK_ROOM_SETTING;
+const itemBehaviorOf = (stats: PlacementStats): ItemBehaviorPlan => {
+  const { progressiveTiers: tiers, progressiveModes: modes, retroBow, darkRooms, storyGates } = stats;
+  const itemPower = derivedItemPower(stats.itemPower, swordReachable(tiers), beamSwordReachable(tiers));
+  const retroShelves = retroVanillaShelves(stats.shops, retroBow);
   const vanilla = isFullLadder(tiers, modes) && !retroBow.enabled
     && darkRoomLightWordOf(darkRooms) === 0
     && (Object.keys(itemPower) as Array<keyof ItemPowerSetting>)
       .every((field) => itemPower[field] === DEFAULT_ITEM_POWER[field]);
-  return { tiers, modes, itemPower, darkRooms, retroBow, retroShelves, vanilla };
+  return { tiers, modes, itemPower, darkRooms, retroBow, retroShelves, storyGates, vanilla };
 };
 
 const armItemBehavior = (plan: ItemBehaviorPlan, tag: string): void => {
+  // The story gates are armed for every seed, altered or not: the seed's own choices replace
+  // the settings half of word 5 while it runs (story-gates.ts).
+  setSessionStoryGates(plan.storyGates);
   if (plan.vanilla) {
     log.randomizer(`${tag} Item behaviour: every tier present and nothing altered, core not armed`);
     return;
@@ -106,6 +97,7 @@ const armItemBehavior = (plan: ItemBehaviorPlan, tag: string): void => {
 };
 
 const disarmItemBehavior = (): void => {
+  setSessionStoryGates(null);
   clearProgressiveTiers();
   clearItemPower();
   clearRetroShelves();

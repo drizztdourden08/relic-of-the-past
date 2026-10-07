@@ -16,12 +16,12 @@ import { loadRecommendationFile, queued, recommendationStorage } from './recomme
 const store = createRecommendationStore(recommendationStorage);
 
 const registerRecommendationHandlers = (): void => {
-  handle('recommendations:load', (_e, kind) => loadRecommendationFile(kind));
+  handle('recommendations:load', async (_e, kind) => loadRecommendationFile(kind));
 
-  handle('recommendations:applyPass', (_e, kind, context, detectorIds, drafts) =>
+  handle('recommendations:applyPass', async (_e, kind, context, detectorIds, drafts) =>
     queued(kind, () => store.applyPass(kind, context, detectorIds, drafts)));
 
-  handle('recommendations:decide', (_e, kind, id, state) =>
+  handle('recommendations:decide', async (_e, kind, id, state) =>
     queued(kind, () => store.decide(kind, id, state)));
 };
 

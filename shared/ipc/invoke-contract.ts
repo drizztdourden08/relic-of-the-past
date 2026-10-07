@@ -4,6 +4,7 @@
  * of truth for every invoke channel's signature; preload and main handlers are checked against it.
  */
 import type { Profile, AppState, CreateProfileOptions } from '@shared/types/profile';
+import type { ArchipelagoSaveFilesResult } from '@shared/types/archipelago-files';
 import type { NormalSaveInfo, AutoSaveInfo, QuickSaveSlotInfo } from '@shared/types/saves';
 import type { PlaySession } from '@shared/types/session';
 import type { ShadowCastingProject, ScreenShadowData } from '@shared/types/shadow-casting';
@@ -28,13 +29,14 @@ import type {
 } from '@shared/game/data/types';
 import type { EntityKind } from '@shared/game/data';
 import type { UiViewsMap } from './ui-views-contract';
-import type { ReviewEntry, ReviewFile } from './review-contract';
 import type { DetectionContext, DraftRecommendation, PassResult, Recommendation } from './recommendation-contract';
 import type { ControllerInvokeContract } from './controller-contract';
 import type { LanguageInvokeContract } from './language-contract';
 import type { MsuInvokeContract } from './msu-contract';
 import type { FfmpegInvokeContract } from './ffmpeg-contract';
 import type { SanctuaryInvokeContract } from './sanctuary-contract';
+import type { HubInvokeContract } from './hub-contract';
+import type { StoreInvokeContract } from './store-contract';
 import type { UpdateInfo, UpdaterCapabilities, UpdaterPrefs, VersionOption } from './updater-contract';
 
 
@@ -44,7 +46,7 @@ type ReviewMap = Record<string, { status: string; comment?: string }>;
 
 interface InvokeContract extends
   ControllerInvokeContract, LanguageInvokeContract, MsuInvokeContract, FfmpegInvokeContract,
-  SanctuaryInvokeContract {
+  SanctuaryInvokeContract, HubInvokeContract, StoreInvokeContract {
   // App
   'app:getUserDataPath': () => Promise<string>;
 
@@ -64,6 +66,7 @@ interface InvokeContract extends
   'file:writeText': (path: string, data: string) => Promise<void>;
   'file:list': (dir: string) => Promise<string[]>;
   'file:remove': (path: string) => Promise<void>;
+  'file:trash': (path: string) => Promise<void>;
   'file:exists': (path: string) => Promise<boolean>;
   'file:mkdir': (dir: string) => Promise<void>;
   'file:stat': (path: string) => Promise<FileStat | null>;
@@ -88,6 +91,9 @@ interface InvokeContract extends
   'dialog:openRom': () => Promise<string | null>;
   'dialog:pickFile': (extensions: string[]) => Promise<{ name: string; data: ArrayBuffer } | null>;
   'dialog:saveFile': (name: string, data: ArrayBuffer, extensions: string[]) => Promise<{ saved: boolean; name?: string; error?: string }>;
+
+  // Archipelago
+  'archipelago:save-files': (profileId: string) => Promise<ArchipelagoSaveFilesResult>;
 
   // Profiles
   'profiles:list': () => Promise<Profile[]>;
@@ -179,13 +185,6 @@ interface InvokeContract extends
   // debounced by the renderer repo. See shared/ipc/ui-views-contract.ts.
   'uiViews:load': () => Promise<UiViewsMap>;
   'uiViews:save': (data: UiViewsMap) => Promise<void>;
-
-  // Data Inspector review layer: a personal status/note/timestamps pair per record, one
-  // file per collection (Data/review/<kind>.json), never inside the committed dataset.
-  // Supersedes spriteReview/connectionReview/navReview above. The main process merges
-  // one entry per call instead of trusting a whole map from the renderer; see review-contract.ts.
-  'review:load': (kind: EntityKind) => Promise<ReviewFile>;
-  'review:save': (kind: EntityKind, id: string, entry: ReviewEntry) => Promise<void>;
 
   // Recommendation store, one file per collection (Data/recommendations/<kind>.json).
   // The collection lives in the main process: folding a pass and recording a verdict are

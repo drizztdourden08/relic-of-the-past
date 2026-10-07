@@ -1,20 +1,18 @@
 /* @layer renderer-widgets @kind data */
 /**
- * The connection add/remove pair as ONE `SetProbe`, so cardinality and the
- * missing/unresolvable/unbacked split fall out of `compareSet`'s join instead
- * of being hand-written twice.
+ * Every non-edge crossing leaving the current screen, as ONE `SetProbe`: the
+ * missing/unresolvable/unbacked split falls out of `compareSet`'s own join.
  *
- * Live set: `observations.realTransitions`, NOT `unmatchedCrossings`. The
- * latter is already pre-filtered by `useConnectionStatus`'s matching, which
- * would make this probe's own join redundant. `realTransitions` is also more
- * complete (it folds in travel-destination bytes and the flood on top of the
- * exit/stair/hole tables) and tags each entry with a `source`.
+ * The live set is `observations.realTransitions`, not `unmatchedCrossings`, which
+ * arrives pre-filtered by the status hook's own matching. The point of a
+ * `SetProbe` is that the join decides what is missing, not the caller. Each entry
+ * carries the `source` this probe needs for the enumerable/flood split.
  *
  * Only ENUMERABLE, non-flood entries are used: `source === 'flood'` is
- * presence-only and can never back a `certain` removal, and `source === 'walk'`
- * (indoor scroll boundaries) gets its own probe (`indoor-edge.set.ts`) because
- * its removability depends on whether `walkBoundaries`/`doorBoundaries` were
- * read for this room (F3).
+ * presence-only and can never back a removal, and `source === 'walk'` (indoor
+ * scroll boundaries) belongs to `indoor-edge.set.ts`, whose removals depend on
+ * whether `walkBoundaries`/`doorBoundaries` were read for this room, a different
+ * gate than "was this pass available at all".
  */
 import type { ConnectionRecord, ConnectionTag, ScreenId } from '@shared/game/data';
 import { buildConnectionNav } from '@shared/game/navigation/analysis/connection-nav-from-flood';
@@ -24,25 +22,43 @@ import type { ObservedTransition, ScreenObservations } from '@shared/game/recomm
 import { buildConnectionRecord } from '../../../build-connection-record';
 import { resolveRealDestId } from '../../../connection-audit-resolve';
 import { findFloodForTarget } from '../../../connection-tile-display';
-import { auditableFromHere, otherEndpoint, transitionKey } from './screen-endpoint';
+import { auditableFromHere, otherEndpoint, storedOnFarSide, transitionKey } from './screen-endpoint';
 
-/** Sources the native room tables enumerate directly, so an absence among
- *  them is provable. `flood` and `walk` are excluded; see the file header. */
-const ENUMERABLE_SOURCES: ReadonlySet<string> = new Set(['exit', 'stair', 'travel', 'hole', 'entrance']);
+/** Sources the native room tables enumerate directly, so an absence among these
+ *  is provable. `flood` and `walk` are excluded; see the file header. */
+const ENUMERABLE_SOURCES: ReadonlySet<string> = new Set(['exit', 'stair', 'travel', 'hole', 'entrance', 'doorway']);
 
 const inferTags = (transition: ObservedTransition): ConnectionTag[] => {
   if (transition.source === 'stair') return ['transit:stairs', 'ctx:internal'];
   if (transition.source === 'hole') return ['transit:hole', 'ctx:entrance'];
-  if (transition.source === 'travel') return ['transit:walk', 'ctx:internal'];
+  if (transition.source === 'travel') return ['transit:warp', 'ctx:internal'];
+  // A doorway object through an outer wall joins two rooms of the same interior.
+  if (transition.source === 'doorway') return ['transit:door', 'ctx:internal'];
   // 'exit' (the overworld screen this room exits to) and 'entrance' (an
   // overworld door leading into a room) are both door crossings.
   return ['transit:door', 'ctx:entrance'];
 };
 
-const readLive = (observations: ScreenObservations): Probe<readonly ObservedTransition[]> => {
+/** Removal candidacy requires the backing table to have been read: indoors no
+ *  source enumerates fall holes, so the absence of one proves nothing. Such a
+ *  record is still matched by the far-side pair check, which is what keeps the
+ *  live crossing from being proposed a second time. */
+const unprovableIndoors = (observations: ScreenObservations, record: ConnectionRecord): boolean =>
+  observations.isIndoors && (record.kind === 'hole' || record.kind === 'drop');
+
+const readDataset = (observations: ScreenObservations, screenId: ScreenId | null): readonly ConnectionRecord[] => {
+  if (!screenId) return [];
+  return observations.existingConnections.filter(c => (
+    c.kind !== 'edge' && !unprovableIndoors(observations, c) && auditableFromHere(screenId, c)
+  ));
+};
+
+const readLive = (observations: ScreenObservations, screenId: ScreenId | null): Probe<readonly ObservedTransition[]> => {
   if (!observations.realAvailable) return unread();
-  // Dedupe by resolved key: two sources naming the same destination (a stair
-  // AND a travel byte) propose ONE record. `compareSet` does not dedupe its input.
+  const here = readDataset(observations, screenId);
+  // Dedupe by resolved key: two sources naming the same destination (e.g. a
+  // stair AND a travel byte both landing on the same room) propose ONE record,
+  // not two, because `compareSet`'s own live loop does not dedupe its input.
   const seen = new Set<string>();
   const enumerable: ObservedTransition[] = [];
   for (const t of observations.realTransitions) {
@@ -50,18 +66,16 @@ const readLive = (observations: ScreenObservations): Probe<readonly ObservedTran
     const key = transitionKey(t);
     if (seen.has(key)) continue;
     seen.add(key);
+    if (storedOnFarSide(screenId, key, observations.existingConnections, here)) continue;
     enumerable.push(t);
   }
   return { known: true, value: enumerable };
 };
 
-const readDataset = (observations: ScreenObservations, screenId: ScreenId | null): readonly ConnectionRecord[] => {
-  if (!screenId) return [];
-  return observations.existingConnections.filter(c => c.kind !== 'edge' && auditableFromHere(screenId, c));
-};
-
+// A pair with no far side yet keys on the record's own id, the same as a screen-less pass:
+// neither can collide with a real ScreenId, so neither can read as "already covered".
 const datasetKey = (record: ConnectionRecord, screenId: ScreenId | null): string =>
-  (screenId ? otherEndpoint(screenId, record) : record.id);
+  (screenId ? otherEndpoint(screenId, record) ?? record.id : record.id);
 
 const toProposed = (item: ObservedTransition, observations: ScreenObservations, screenId: ScreenId | null) => {
   if (!screenId) return null;
@@ -84,6 +98,7 @@ const CONNECTION_CROSSING_PROBE: SetProbe<'connection', ObservedTransition> = {
   removable: true,
   source: 'native:room-transitions',
   confidence: 'certain',
+  removalConfidence: 'likely',
 };
 
 export { CONNECTION_CROSSING_PROBE, inferTags };

@@ -1,0 +1,66 @@
+/* @layer store-site @kind style */
+
+/* As the plan mockup: one card, the banner in the wider column and the copy in the narrower. */
+.featured-hero {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  overflow: hidden;
+  border: var(--border-width-thin) solid color-mix(in srgb, var(--item-color, var(--c-gold)) 55%, transparent);
+  border-radius: var(--radius-xl);
+  background: var(--c-panel);
+}
+
+.featured-hero .featured-hero__picture {
+  height: 100%;
+  min-height: var(--hero-min-h);
+  border-radius: 0;
+  aspect-ratio: auto;
+}
+
+.featured-hero__copy {
+  justify-content: center;
+  gap: var(--hero-gap);
+  min-width: 0;
+  padding: var(--hero-pad-y) var(--hero-pad-x);
+}
+
+/* Two classes, so the text primitive's own colour and size never win on load order. */
+.featured-hero .featured-hero__name {
+  margin: 0;
+  color: var(--c-text);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+}
+
+.featured-hero .featured-hero__summary {
+  margin: 0;
+  color: var(--c-text-dim);
+  font-size: var(--text-sm);
+}
+
+.featured-hero__actions {
+  align-self: stretch;
+}
+
+.featured-hero__dots {
+  margin-left: auto;
+}
+
+.featured-hero .featured-hero__dot {
+  width: var(--hero-dot-d);
+  height: var(--hero-dot-d);
+  padding: 0;
+  border-radius: var(--r-pill);
+  background: var(--c-text-faint);
+}
+
+.featured-hero .featured-hero__dot[data-on] {
+  background: var(--c-gold);
+}
+
+/* Below the compact breakpoint (--bp-compact) the copy stacks under the banner. */
+@media (width <= 820px) {
+  .featured-hero {
+    grid-template-columns: 1fr;
+  }
+}

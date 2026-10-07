@@ -12,14 +12,14 @@ import type { FieldDescriptor, TableColumn } from '@ds/data';
 
 /** The field a reference to each collection shows in place of the raw id. */
 const NAME_FIELD_BY_KIND: Partial<Record<EntityKind, string>> = {
-  screen: 'randomizerName',
+  screen: 'name',
   connection: 'name',
-  check: 'randomizerName',
-  item: 'randomizerName',
-  dungeon: 'randomizerName',
-  area: 'randomizerName',
-  location: 'randomizerName',
-  actor: 'randomizerName',
+  check: 'name',
+  item: 'name',
+  dungeon: 'name',
+  area: 'name',
+  location: 'name',
+  actor: 'name',
   tag: 'name',
   'item-group': 'label',
   enumeration: 'label',

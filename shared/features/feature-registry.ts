@@ -327,6 +327,25 @@ const INPUT_FEATURES: FeatureDef[] = [
 // Item selection split out of snesrev's SwitchLR bundle.
 const GAMEPLAY_FEATURES: FeatureDef[] = [
   {
+    id: 'allowDiving',
+    label: 'Allow diving with flippers',
+    description: 'Press B while swimming to duck under the surface for a moment, as the handheld port allows.',
+    userMessage:
+      'Lets you duck under anything that would hit you while swimming. Turned on automatically by the extra dungeon, whose water room is built around it.',
+    group: 'Quality of life',
+    kind: 'features0-bit',
+    origin: 'relic',
+    flag: 'kFeatures2_AllowDiving',
+    word: 2,
+    bit: 536870912,
+    default: false,
+    requires: [],
+    // Deliberately not a Vanilla Safe casualty: it rides with the extra dungeon, which is added
+    // content, not a parity question, and the room it exists for is impassable without it.
+    affectsVanillaParity: false,
+    live: true,
+  },
+  {
     id: 'turnWhileDashing',
     label: 'Turn while dashing',
     description: 'Allows the player character to change direction while dashing.',

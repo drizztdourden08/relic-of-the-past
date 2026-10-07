@@ -57,17 +57,17 @@ describeDataset('resolveRecordLabel', () => {
 describeDataset('defaultIdRefDisplay names a column that has no displayField', () => {
   it('resolves a hinted kind straight off its own getter', () => {
     const [screen] = all('screen');
-    expect(defaultIdRefDisplay(screen.id, 'screen')).toBe(screen.vanillaName ?? screen.randomizerName);
+    expect(defaultIdRefDisplay(screen.id, 'screen')).toBe(screen.name);
   });
 
   it('infers the kind from the id\'s own prefix when no hint is given', () => {
     const [item] = all('item');
-    expect(defaultIdRefDisplay(item.id)).toBe(item.vanillaName ?? item.randomizerName);
+    expect(defaultIdRefDisplay(item.id)).toBe(item.name);
   });
 
   it('ignores a hint that names nothing and falls back to the id\'s own prefix', () => {
     const [dungeon] = all('dungeon');
-    expect(defaultIdRefDisplay(dungeon.id, 'nowhere')).toBe(dungeon.randomizerName);
+    expect(defaultIdRefDisplay(dungeon.id, 'nowhere')).toBe(dungeon.name);
   });
 
   // The Recommendations `targetId` column points at a different collection per
@@ -76,9 +76,9 @@ describeDataset('defaultIdRefDisplay names a column that has no displayField', (
     const [screen] = all('screen');
     const [connection] = all('connection');
     const [actor] = all('actor');
-    expect(defaultIdRefDisplay(screen.id)).toBe(screen.vanillaName ?? screen.randomizerName);
+    expect(defaultIdRefDisplay(screen.id)).toBe(screen.name);
     expect(defaultIdRefDisplay(connection.id)).toBe(connection.name);
-    expect(defaultIdRefDisplay(actor.id)).toBe(actor.randomizerName);
+    expect(defaultIdRefDisplay(actor.id)).toBe(actor.name);
   });
 
   it('resolves an item-group id by its own label, same as resolveRecordLabel', () => {

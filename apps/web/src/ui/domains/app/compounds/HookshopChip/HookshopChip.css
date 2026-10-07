@@ -1,0 +1,9 @@
+/* @layer renderer-components @kind style */
+.hookshop-chip {
+  padding: 0 var(--space-xs);
+  border: 1px solid var(--c-gold);
+  background: var(--c-gold-soft);
+  color: var(--c-gold-bright);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semi);
+}

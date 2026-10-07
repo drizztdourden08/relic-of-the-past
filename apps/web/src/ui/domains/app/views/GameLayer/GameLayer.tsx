@@ -19,6 +19,7 @@ import { NavigationOverlay } from './sub-components/navigation-overlay';
 import { ShadowEditorOverlay } from './sub-components/ShadowEditorOverlay';
 import { ShadowEditorPanel } from './sub-components/ShadowEditorPanel';
 import { ShadowElementList } from './sub-components/ShadowElementList';
+import { CheckToasts } from '../CheckToasts';
 import { GameOverlay } from '../GameOverlay';
 import { useEdgeGlowLoop } from './behavior/useEdgeGlowLoop';
 import { useShadowCastingLoop } from './behavior/useShadowCastingLoop';
@@ -201,6 +202,7 @@ const GameLayer = (props: GameLayerProps) => {
       {status === 'running' && developerToolsEnabled && <ShadowEditorPanel />}
       {status === 'running' && developerToolsEnabled && <ShadowElementList />}
       {status === 'running' && <GameOverlay width={fitSize.width} height={fitSize.height} profileId={profileId} />}
+      {status === 'running' && <CheckToasts width={fitSize.width} height={fitSize.height} />}
     </Box>
   );
 };

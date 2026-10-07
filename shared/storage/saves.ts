@@ -44,19 +44,7 @@ const listStates = async (files: FileStore, p: string): Promise<number[]> => {
     .sort((a, b) => a - b);
 };
 
-// Legacy: move save{N}.(sav|png) from saves/ root into saves/quick/.
-const migrateQuick = async (files: FileStore, p: string): Promise<void> => {
-  const root = await files.list(savesDir(p));
-  for (const f of root.filter((n) => /^save\d+\.(sav|png)$/.test(n))) {
-    const dest = `${quickDir(p)}/${f}`;
-    if (await files.exists(dest)) continue;
-    const bytes = await files.readBytes(`${savesDir(p)}/${f}`);
-    if (bytes) { await files.writeBytes(dest, bytes); await files.remove(`${savesDir(p)}/${f}`); }
-  }
-};
-
 const getSlotInfos = async (files: FileStore, p: string): Promise<QuickSaveSlotInfo[]> => {
-  await migrateQuick(files, p);
   const out: QuickSaveSlotInfo[] = [];
   for (let slot = 0; slot < QUICK_SLOTS; slot += 1) {
     const stat = await files.stat(`${quickDir(p)}/save${slot}.sav`);

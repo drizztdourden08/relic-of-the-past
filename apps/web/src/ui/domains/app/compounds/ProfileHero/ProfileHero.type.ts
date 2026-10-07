@@ -1,16 +1,7 @@
 /* @layer renderer-components @kind types */
 import type { ReactNode } from 'react';
+import type { HeroFact } from '../HeroFacts';
 import type { ProfileModeId } from '../ModeBadge';
-
-/** One label/value cell of the hero's fact strip. */
-interface HeroFact {
-  label: string;
-  value: string;
-  /** Full value for the hover tooltip when the cell truncates. */
-  title?: string;
-  mono?: boolean;
-  capitalize?: boolean;
-}
 
 /** The save the hero offers to resume. */
 interface HeroLastSave {

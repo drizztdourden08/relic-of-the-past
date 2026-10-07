@@ -146,8 +146,13 @@ int WasmGetGameUIState(void) {
   b[126] = (uint8)GameHook_CapacityMax(1, link_arrow_upgrades);
   PutU16(b, 127, GameHook_WalletMax((enhanced_features0 & kFeatures0_CarryMoreRupees) ? 9999 : 999));
 
+  // ─── Bytes 129-130: HUD Countdown (digging game, Super Bomb) ───
+  // 129 is the seconds left, with the sign bit set while no countdown runs. 130 is the frame
+  // counter inside the current second: it reloads to 62 when a second comes off.
+  b[129] = super_bomb_indicator_unk2;
+  b[130] = super_bomb_indicator_unk1;
+
   // ─── Bytes 131-132: Host-owned pause menu ───
-  // 129-130 belong to the HUD countdown (story-events / #257).
   // 132 repeats byte 14 on purpose. Byte 14 is the HUD's equipped-item readout; this one is the
   // host's own register, read back so it can see when the native menu moved it (Hud_Init runs
   // Hud_SearchForEquippedItem before the hold takes effect at browse state 4, and that walks the

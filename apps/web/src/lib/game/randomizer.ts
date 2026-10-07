@@ -3,8 +3,8 @@
  * Randomizer: JS-side item override hooks that talk to the WASM core.
  */
 
-import { isGrantableReceiveId } from '@shared/game/data';
 import { log } from '../log-bus';
+import { isArmableOverrideId } from './foreign-item-id';
 import { getModule } from './wasm-bridge';
 import { setItemOverridesActive } from './live-settings-flags';
 import { reassertGateWord3 } from './live-settings';
@@ -14,7 +14,7 @@ import { reassertGateWord3 } from './live-settings';
 const setChestSlotOverride = (roomId: number, slot: number, newItem: number, messageId = -1): void => {
   // The chest path bails on high-bit ids and the grant tables hold 76 entries,
   // so an out-of-range override would open as an empty chest. Refuse it here.
-  if (!isGrantableReceiveId(newItem)) {
+  if (!isArmableOverrideId(newItem)) {
     log.error(`[Randomizer] Override refused: item id 0x${newItem.toString(16)} is outside the native grant table (room ${roomId} slot ${slot})`);
     return;
   }

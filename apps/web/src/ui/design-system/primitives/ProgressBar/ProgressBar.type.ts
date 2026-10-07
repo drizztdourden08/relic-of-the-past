@@ -1,4 +1,6 @@
 /* @layer renderer-components @kind types */
+import type { ReactNode } from 'react';
+
 type ProgressVariant = 'gold' | 'green' | 'danger';
 
 interface ProgressBarProps {
@@ -21,6 +23,11 @@ interface ProgressBarProps {
    * value resets. This turns the easing off so the fill IS the value.
    */
   live?: boolean;
+  /**
+   * A short reading at the bar's right end, such as its percent. The bar then shares
+   * one line with it and takes the room the reading leaves.
+   */
+  readout?: ReactNode;
   className?: string;
 }
 

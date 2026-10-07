@@ -11,6 +11,7 @@ interface HudSettings {
   heartMode: 'original' | 'smooth';
   magicMode: 'original' | 'accurate';
   countLayout: 'centered' | 'original';
+  countdownStyle: 'pixel' | 'smooth';
   showMaxInYellow: boolean;
 }
 
@@ -28,6 +29,7 @@ const useHudSettingsStore = create<HudSettingsStore>()((set) => ({
   heartMode: 'original',
   magicMode: 'original',
   countLayout: 'centered',
+  countdownStyle: 'pixel',
   showMaxInYellow: false,
   setHudSettings: (patch) => set(patch),
 }));

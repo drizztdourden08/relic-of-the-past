@@ -98,4 +98,7 @@ const duplicateLanguageSet = async (sourceId: string, id: string, name: string):
 
 export { listLanguages, getLanguage, extractLanguage, extractLanguageFromFile, extractLanguageFromUrl, deleteLanguage };
 export { getLanguageSet, saveLanguageSet, listLanguageSets, createLanguageSet, duplicateLanguageSet };
-export { getLanguageSetFont };
+// The set folder as it is on disk, packed as `.rlang`. Nothing here rebakes.
+const exportLanguageSet = (id: string): Promise<Uint8Array> => languages.exportRlang(files(), id);
+
+export { getLanguageSetFont, exportLanguageSet };
