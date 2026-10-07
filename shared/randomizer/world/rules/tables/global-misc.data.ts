@@ -16,6 +16,7 @@ import {
 import { compileRule } from '../rule-eval';
 import { countGroup } from '../rule-node-build';
 import { pedestalRule, sahasrahlaRule } from '../story-gate-rules';
+import { STORY_EVENT, storyEvent } from '../../events';
 import { BOTTLE_ITEMS } from '../../item-groups';
 import type { RuleEntry } from '../rule-entry.type';
 
@@ -26,9 +27,9 @@ const GLOBAL_MISC_RULES: readonly RuleEntry[] = [
   // 216-221: the mountain S&Q spot opens once its cave dweller is reachable.
   { kind: 'exit', target: 'Old Man S&Q', mode: 'set', rule: canCollect('check-060') },
   // 223-226
-  { kind: 'location', target: 'check-009', mode: 'set', rule: hasItem(ITEM.openFloodgate) },
-  { kind: 'location', target: 'check-337', mode: 'set', rule: hasItem(ITEM.returnSmith) },
-  { kind: 'location', target: 'check-010', mode: 'set', rule: hasItem(ITEM.pickUpPurpleChest) },
+  { kind: 'location', target: 'check-009', mode: 'set', rule: storyEvent(STORY_EVENT.floodgateLeverPulled) },
+  { kind: 'event', target: STORY_EVENT.purpleChestFound, mode: 'set', rule: storyEvent(STORY_EVENT.smithsReunited) },
+  { kind: 'location', target: 'check-010', mode: 'set', rule: storyEvent(STORY_EVENT.purpleChestFound) },
   // 227-228
   { kind: 'location', target: 'check-070', mode: 'set', rule: canRetrieveTablet },
   {
@@ -37,10 +38,10 @@ const GLOBAL_MISC_RULES: readonly RuleEntry[] = [
   },
   // 230-234. The first is the ledger's "Smiths reunited" event.
   {
-    kind: 'location', target: 'check-336', mode: 'set',
-    rule: allOf(hasItem(ITEM.getFrog), canReach(REGION.blacksmithsHut)),
+    kind: 'event', target: STORY_EVENT.smithsReunited, mode: 'set',
+    rule: allOf(storyEvent(STORY_EVENT.frogFound), canReach(REGION.blacksmithsHut)),
   },
-  { kind: 'location', target: 'check-039', mode: 'set', rule: hasItem(ITEM.returnSmith) },
+  { kind: 'location', target: 'check-039', mode: 'set', rule: storyEvent(STORY_EVENT.smithsReunited) },
   { kind: 'location', target: 'check-040', mode: 'set', rule: hasItem(ITEM.magicPowder) },
   { kind: 'location', target: 'check-041', mode: 'set', rule: holdsBottle },
   { kind: 'location', target: 'check-055', mode: 'set', rule: hasItem(ITEM.pegasusBoots) },
@@ -116,7 +117,7 @@ const GLOBAL_MISC_RULES: readonly RuleEntry[] = [
   },
   { kind: 'location', target: 'check-096', mode: 'set', rule: hasItem(ITEM.hookshot) },
   // 620
-  { kind: 'location', target: 'check-324', mode: 'set', rule: hasItem(ITEM.flute) },
+  { kind: 'event', target: STORY_EVENT.weathervaneOpened, mode: 'set', rule: hasItem(ITEM.flute) },
 ];
 
 export { GLOBAL_MISC_RULES };

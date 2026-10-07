@@ -6,10 +6,8 @@
  * binding recorded from one pad can never fire from another pad that
  * happens to share the same button index.
  *
- * A binding with no recorded source device (older profiles, and the
- * console-default presets, never stamp one) is filed under ANY_DEVICE and
- * matches every gamepad, and treating it as scoped to nothing would silently
- * break every profile that predates per-device binding.
+ * A binding with no recorded source device (the console-default presets
+ * never stamp one) is filed under ANY_DEVICE and matches every gamepad.
  */
 import { padHex } from './profile-devices';
 

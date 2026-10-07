@@ -12,15 +12,15 @@
  * (rules/tables/region-graph.data.ts), which states both of its ends as ids, so no wiring pass
  * resolves anything. A LOCATION is a record too: each region takes its own check rows
  * (`check.regionId`), keeps the ones a seed fills (seed-locations.ts) and hands them over in
- * record order, so no transcribed list of names is left and the whole engine reads ids. An
+ * record order, so no transcribed list of names is left and the whole engine reads ids. A
+ * region's story events come from their records the same way (events/world-events.ts). An
  * exit stays named: the reference's exits are logical passages, one per rule, and the rule
  * tables key by that name.
  */
 import { getCheck } from '@shared/game/data';
 import { REGION_GRAPH } from './rules/tables/region-graph.data';
 import {
-  CAPACITY_UPGRADE_LOCATIONS, EVENT_LOCATIONS, KEY_DROP_LOCATIONS, NPC_SCOPE_LOCATIONS,
-  PRIZE_LOCATIONS, WORLD_ITEM_SCOPE_LOCATIONS,
+  CAPACITY_UPGRADE_LOCATIONS, KEY_DROP_LOCATIONS, NPC_SCOPE_LOCATIONS, PRIZE_LOCATIONS, WORLD_ITEM_SCOPE_LOCATIONS,
 } from './scope-tables';
 import { isSeedLocation } from './seed-locations';
 import { shopLocationsByRegion } from './shops/shop-slots';
@@ -30,11 +30,12 @@ import { worldDungeonOf } from './world-dungeon';
 import { markWorldZones } from './world-zones';
 import { POND_LOCATION_SET } from './pond/pond-rungs';
 import { POND_REGION_LOCATIONS } from './pond/pond-region-locations';
-import { VICTORY_ITEM } from './pool/event-items.data';
+import { GOAL_EVENT } from './events/story-events.data';
+import { worldEventsOf } from './events/world-events';
 import { checksByRegion, regionRecords } from './world-from-records';
 import type { CheckId, ItemId, RegionId } from '@shared/game/data/types/ids';
 import type { LocationKey } from './location-key';
-import type { Exit, WorldLocation, Region, RegionGraphRow } from './region.type';
+import type { Exit, WorldEvent, WorldLocation, Region, RegionGraphRow } from './region.type';
 import type { World, ItemRule, Rule } from './world.type';
 
 const ALLOW_ANY_ITEM: ItemRule = () => true;
@@ -95,7 +96,6 @@ const buildLocation = (key: LocationKey, region: RegionId): WorldLocation => {
     // this world holds is `pondLocations` (pond/pond-spots.ts), settled before the graph.
     pondSlot: POND_LOCATION_SET.has(key) || CAPACITY_UPGRADE_LOCATIONS.has(key as CheckId),
     prize: PRIZE_LOCATIONS.has(key as CheckId),
-    event: EVENT_LOCATIONS.has(key),
     ...(vanillaItem !== undefined ? { vanillaItem } : {}),
   };
 };
@@ -111,7 +111,6 @@ const buildShopLocation = (key: LocationKey, region: RegionId): WorldLocation =>
   capacityOnly: false,
   pondSlot: false,
   prize: false,
-  event: false,
 });
 
 const buildWorld = (options: World['options']): World => {
@@ -137,6 +136,7 @@ const buildWorld = (options: World['options']): World => {
       name: record.name,
       type: record.type,
       locations,
+      events: worldEventsOf(record.id),
       exits,
       entrances: [],
       isLightWorld: false,
@@ -155,35 +155,41 @@ const buildWorld = (options: World['options']): World => {
   markWorldZones(regions);
 
   const locationsByKey = new Map<LocationKey, WorldLocation>();
+  const eventsByKey = new Map<CheckId, WorldEvent>();
   for (const region of regions.values()) {
     for (const location of region.locations) {
       if (locationsByKey.has(location.key)) throw new Error(`duplicate location: ${location.key}`);
       locationsByKey.set(location.key, location);
     }
+    for (const event of region.events) eventsByKey.set(event.key, event);
   }
 
   // In create_dungeons order, because the prefill pushes each dungeon's items in it.
   const dungeons = new Map(DUNGEON_ORDER.map(worldDungeonOf).map((dungeon) => [dungeon.name, dungeon]));
   const rules = new Map<string, Rule>();
   const locationRules = new Map<LocationKey, Rule>();
+  const eventRules = new Map<CheckId, Rule>();
   const itemRules = new Map<LocationKey, ItemRule>();
 
   return {
     regions,
     locationsByKey,
+    eventsByKey,
     dungeons,
     options,
     rules,
     locationRules,
+    eventRules,
     itemRules,
     alwaysAllow: new Map(),
     placedItems: new Map(),
     seedValues: new Map(),
     getRule: (name) => rules.get(name),
     getLocationRule: (key) => locationRules.get(key),
+    getEventRule: (key) => eventRules.get(key),
     getItemRule: (key) => itemRules.get(key) ?? ALLOW_ANY_ITEM,
-    // Rules.py 51: the goal item sits on the final fight's event location.
-    isBeaten: (state) => state.has(VICTORY_ITEM),
+    // Rules.py 51: the game is beaten once the final fight is won.
+    isBeaten: (state) => state.has(GOAL_EVENT),
   };
 };
 

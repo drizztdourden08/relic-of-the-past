@@ -21,7 +21,7 @@ import { beamSwordReachable, progressiveSettingOf, swordReachable } from '../pro
 import type { World } from '../world.type';
 import type { ItemPowerSetting } from './item-power.type';
 
-/** What the player asked for; a world built before the rows existed asks for the normal step. */
+/** What the player asked for; a world built without the setting asks for the normal step. */
 const requestedItemPowerOf = (world: World): ItemPowerSetting =>
   world.options.itemPower ?? DEFAULT_ITEM_POWER;
 

@@ -11,6 +11,7 @@
  */
 import { ITEM } from '../item-ids.data';
 import { CRYSTAL_ITEMS } from '../item-groups';
+import { STORY_EVENT } from '../events/story-events.data';
 import { compileRule } from './rule-eval';
 import {
   FALSE, TRUE, all, countGroup, has, hasDistinct, option, optionRef, optionSwitch, when,
@@ -73,7 +74,7 @@ const ganonRule = compileRule(countGate('ganon'));
 const pyramidHoleRule = compileRule(optionSwitch('storyGates.pyramidHole', [
   ['open', TRUE],
   ['towerCount', countGate('tower')],
-], has(ITEM.beatAgahnim2)));
+], has(STORY_EVENT.agahnim2Beaten)));
 
 export {
   barrierRule, bombShopRule, ganonRule, pedestalRule, pyramidHoleRule, sahasrahlaRule, towerRule,

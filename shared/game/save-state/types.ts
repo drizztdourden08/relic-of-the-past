@@ -28,7 +28,7 @@ interface StateStamp {
   at: number;
   /**
    * The core's dialog hook state at the save, base64 (core/game-hooks/dialog_hook_state.c). Present
-   * only when a message was up and the host was allowed to draw it. Absent on every older save.
+   * only when a message was up and the host was allowed to draw it.
    */
   dialog?: string;
 }
@@ -47,7 +47,7 @@ type TargetCompat =
 
 /** Whether a file on disk can be handed to the core. */
 type Loadability =
-  | { ok: true; stamp: StateStamp | null }
+  | { ok: true; stamp: StateStamp }
   | { ok: false; stamp: StateStamp | null; reason: 'format-mismatch' | 'not-a-state'; message: string };
 
 export type { KnownFormat, Loadability, StateStamp, TargetCompat };

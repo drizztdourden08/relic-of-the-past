@@ -8,6 +8,7 @@
  */
 import { createLocalSession } from './local-session';
 import { createOnlineSession } from './online-session';
+import { rememberNetworkStatus } from './last-network-status';
 import type { LocalSession } from './local-session';
 import type { OnlineSession, OnlineSessionConfig } from './online-session';
 import type { ForeignOwners } from './foreign-item-line';
@@ -28,7 +29,7 @@ interface SessionStoreState {
 interface PendingBoot {
   profileId: string;
   config: ProfileRandomizerConfig;
-  /** Loaded (or legacy-adapted) by the boot gate for local mode; null for online mode. */
+  /** Loaded by the boot gate for local mode; null for online mode. */
   placement: Placement | null;
 }
 
@@ -41,6 +42,7 @@ let placement: Placement | null = null;
 let foreignOwners: ForeignOwners = NO_OWNERS;
 let source: SessionSource | null = null;
 let unsubscribeStatus: (() => void) | null = null;
+let unsubscribeNetwork: (() => void) | null = null;
 let pendingBoot: PendingBoot | null = null;
 const listeners = new Set<SessionStoreListener>();
 
@@ -64,6 +66,14 @@ const dropOnlinePlacement = (): void => {
   foreignOwners = NO_OWNERS;
 };
 
+/** An online session's last network picture outlives it, as the Network tab's last known state. */
+const keepLastNetworkStatus = (active: OnlineSession): void => {
+  unsubscribeNetwork?.();
+  unsubscribeNetwork = null;
+  // The picture reads the game, which may already be gone; the last one it sent stands then.
+  try { rememberNetworkStatus(active.networkStatus); } catch { /* the game is gone */ }
+};
+
 /**
  * Releases the active slot. An online session takes its placement with it: left behind, it
  * would read as a local seed (run-kind.ts).
@@ -71,7 +81,10 @@ const dropOnlinePlacement = (): void => {
 const clearActive = (): void => {
   unsubscribeStatus?.();
   unsubscribeStatus = null;
-  if (session?.kind === 'online') dropOnlinePlacement();
+  if (session?.kind === 'online') {
+    keepLastNetworkStatus(session);
+    dropOnlinePlacement();
+  }
   session = null;
   source = null;
 };
@@ -112,6 +125,7 @@ const startOnline = async (config: OnlineSessionConfig, nextSource: SessionSourc
   placement = null;
   foreignOwners = NO_OWNERS;
   adopt(next, nextSource);
+  unsubscribeNetwork = next.onNetworkStatus(rememberNetworkStatus);
   // The scouts become the session's placement once armed, so the Spoiler tab reads it as
   // it reads a local seed's. It goes when the session stops (clearActive).
   next.onPlacement((scouted, owners) => {

@@ -13,7 +13,7 @@ const GANONS_TOWER_EVENTS: CheckRecord[] = [
   eventRecord({ n: 172, name: "Ganon's Tower: boss reached", group: 'dungeon', dungeonId: 'dungeon-013', gameId: { roomId: 0x0d, mask: 0x0f },
     requirements: { allOf: [{ itemId: 'item-084' }, { allOf: [hasSword, { itemId: 'item-011' }, { itemId: 'item-012' }, hasFireSource, { itemId: 'item-010' }, { itemId: 'item-022' }] }] } }),
   eventRecord({ n: 173, name: "Ganon's Tower: Agahnim beaten", group: 'dungeon', dungeonId: 'dungeon-013', gameId: { eventBit: E.bossKilled(13) },
-    fallback: { checkId: 'check-474' }, requirements: { allOf: [{ itemId: 'item-084' }, { allOf: [hasSword, { itemId: 'item-011' }, { itemId: 'item-012' }, hasFireSource, { itemId: 'item-010' }, { itemId: 'item-022' }] }] } }),
+    requirements: { allOf: [{ itemId: 'item-084' }, { allOf: [hasSword, { itemId: 'item-011' }, { itemId: 'item-012' }, hasFireSource, { itemId: 'item-010' }, { itemId: 'item-022' }] }] } }),
   eventRecord({ n: 174, name: "Ganon's Tower: heart container taken", group: 'dungeon', dungeonId: 'dungeon-013', gameId: { roomId: 0x0d, mask: 0x800 },
     requirements: { checkId: 'check-473' } }),
   eventRecord({ n: 176, name: "Ganon's Tower: all chests opened", group: 'dungeon', dungeonId: 'dungeon-013',

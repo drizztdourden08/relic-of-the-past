@@ -6,8 +6,9 @@
  * is built region by region, so the order a region lists its rows in decides which item lands
  * where. The reference builds a dungeon's rows in walk order, with a key drop sitting where
  * the pot it comes from stands; the records number the same rows by kind, key drops last. The
- * two agree everywhere except the nine regions below, and dropping this table moves 9 to 14
- * rows of every seed in tests/regression (measured, step 8c).
+ * two agree everywhere except the seven regions below. Dropping this table moved 9 to 14 rows
+ * of every seed in tests/regression when it had nine (measured, step 8c); the other two only
+ * ordered a story event, which is no location any more.
  *
  * Nothing else reads it. Every other region comes out in record order, which is already the
  * reference's, and build-world throws when a row here is not exactly that region's own set.
@@ -15,8 +16,6 @@
 import type { CheckId, RegionId } from '@shared/game/data/types/ids';
 
 const REGION_LOCATION_ORDER: Readonly<Partial<Record<RegionId, readonly CheckId[]>>> = {
-  // Dam: the floodgate itself is worked before the chest behind it.
-  'region-063': ['check-326', 'check-024'],
   // Desert Palace North: the three pots come before the boss and its prize.
   'region-167': ['check-132', 'check-133', 'check-134', 'check-130', 'check-131'],
   // Eastern Palace: the two key drops sit between the third and fourth chest.
@@ -34,8 +33,6 @@ const REGION_LOCATION_ORDER: Readonly<Partial<Record<RegionId, readonly CheckId[
   'region-197': ['check-204', 'check-195'],
   // Ice Palace (Main): the pot room sits between the first and second chest.
   'region-199': ['check-196', 'check-207', 'check-197', 'check-198'],
-  // Agahnim 2: the validation chest comes before the fight.
-  'region-239': ['check-261', 'check-349'],
 };
 
 export { REGION_LOCATION_ORDER };

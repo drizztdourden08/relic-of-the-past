@@ -78,8 +78,8 @@ interface RandomizerOptionChoices {
   /** What each of the three ponds sells; the legacy setting leaves one exactly as it was. */
   ponds: PondProfiles;
   /**
-   * One set of settings across all three ponds. Absent on a choices object
-   * written before the switch existed, which read as three ponds set apart.
+   * One set of settings across all three ponds. Absent reads as three ponds
+   * set apart.
    */
   pondShare?: boolean;
   /**

@@ -13,11 +13,15 @@
  *
  *   0x62  Progressive Sword    0x63  Progressive Shield
  *   0x64  Progressive Glove    0x65  Progressive Mail
- *   0x66  Progressive Bow
+ *   0x66  Progressive Bow      0x82  Progressive Ocarina
+ *
+ * The ocarina came after the span above 0x66 had filled, so it takes the first id of the free
+ * span above the prize crystals (dungeon-item-receive-id.ts leaves 0x82-0xBF free).
  */
 
 const PROGRESSIVE_VIRT_FIRST = 0x62;
 const PROGRESSIVE_VIRT_LAST = 0x66;
+const PROGRESSIVE_OCARINA_ID = 0x82;
 
 /** Pool-item name → virtual receive id, mirroring the C encoding exactly. */
 const PROGRESSIVE_RECEIVE_ID_BY_NAME: ReadonlyMap<string, number> = new Map([
@@ -26,6 +30,7 @@ const PROGRESSIVE_RECEIVE_ID_BY_NAME: ReadonlyMap<string, number> = new Map([
   ['Progressive Glove', 0x64],
   ['Progressive Mail', 0x65],
   ['Progressive Bow', 0x66],
+  ['Progressive Ocarina', PROGRESSIVE_OCARINA_ID],
 ]);
 
 /** Dataset item id → virtual receive id (the records carry no gameId for these). */
@@ -35,10 +40,11 @@ const PROGRESSIVE_RECEIVE_ID_BY_ITEM: ReadonlyMap<string, number> = new Map([
   ['item-082', 0x64], // Progressive Glove
   ['item-081', 0x65], // Progressive Mail
   ['item-083', 0x66], // Progressive Bow
+  ['item-179', PROGRESSIVE_OCARINA_ID], // Progressive Ocarina
 ]);
 
 const isProgressiveReceiveId = (id: number): boolean =>
-  Number.isInteger(id) && id >= PROGRESSIVE_VIRT_FIRST && id <= PROGRESSIVE_VIRT_LAST;
+  Number.isInteger(id) && ((id >= PROGRESSIVE_VIRT_FIRST && id <= PROGRESSIVE_VIRT_LAST) || id === PROGRESSIVE_OCARINA_ID);
 
 const progressiveReceiveIdOfName = (standardItemName: string): number | undefined =>
   PROGRESSIVE_RECEIVE_ID_BY_NAME.get(standardItemName);

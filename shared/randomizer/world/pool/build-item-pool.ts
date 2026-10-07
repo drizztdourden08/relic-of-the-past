@@ -39,7 +39,7 @@ import { applyHeartCap } from '../difficulty/difficulty-hearts-pool';
 import { USEFUL_ITEMS } from './item-classes.data';
 import { isProgressionUnder } from './progression-class';
 import { uncleWeaponUsableAtStart } from './uncle-usability';
-import { EVENT_ITEMS, PRIZE_ITEMS } from './event-items.data';
+import { PRIZE_ITEMS } from './prize-items.data';
 import { BOTTLE_ITEMS } from '../item-groups';
 import {
   CAPACITY_UPGRADE_LOCATIONS, KEY_DROP_LOCATIONS, NPC_SCOPE_LOCATIONS, WORLD_ITEM_SCOPE_LOCATIONS,
@@ -263,7 +263,6 @@ const buildItemPool = (
     promotedHeartContainers: 1,
     dungeonItems,
     prizes: PRIZE_ITEMS,
-    eventItems: EVENT_ITEMS,
     startInventory: [],
   };
 };

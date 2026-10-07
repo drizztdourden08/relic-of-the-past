@@ -21,7 +21,7 @@
 //
 // This module also owns the entry points every seam shares for ALL the virtual
 // families: the counter upgrades here, the progressive equipment ids of
-// progressive_grants.c (0x62-0x66), the wallet slots of wallet_grants.c
+// progressive_grants.c (0x62-0x66 and 0x82), the wallet slots of wallet_grants.c
 // (0x67-0x76) and the progressive capacity ids of capacity_progressive.c
 // (0x77-0x7A): GameHook_IsVirtualGrantId for the bound checks,
 // GameHook_GrantPresentationOf for the draw seams, GameHook_ResolveGrantItem for the
@@ -54,8 +54,10 @@ bool GameHook_IsVirtualGrantId(uint8 item) {
   // encoding is nibble-aligned, see dungeon_item_ids.h), so the answer is a disjunction
   // instead of one widened bound: widening would swallow the prize ids, which every
   // bound check here deliberately refuses.
-  // The foreign-item sentinel joins only while its gate is set (foreign_item.c).
-  return GameHook_IsDungeonItemGrantId(item) || GameHook_IsForeignGrantId(item);
+  // The foreign-item sentinel joins only while its gate is set (foreign_item.c). The ocarina's
+  // progressive id sits above the prize span too (progressive_grants.c).
+  return GameHook_IsDungeonItemGrantId(item) || GameHook_IsForeignGrantId(item)
+      || GameHook_IsProgressiveVirtualId(item);
 }
 
 // Pure presentation lookup for the draw seams: no arithmetic, no messages.

@@ -8,9 +8,8 @@
  * equal curve. Every fallback is reported, under the pond's own name, so the
  * panel can say which pond it applies to.
  *
- * A snapshot with NO row for this pond (every profile written before the
- * option existed) reads as the legacy pond, so a stored placement keeps
- * meaning exactly what it meant when it was generated.
+ * Values with NO mode row for this pond read as the pond's baseline, the
+ * setting a fresh profile gives it.
  *
  * Every active reading is then held to the wallet the same snapshot
  * describes, so a price the wallet can never hold is never handed to the
@@ -22,12 +21,13 @@ import { isValidFreeSequence, parseFreeJumps } from '../capacity/curves/free-seq
 import { holdPondToWallet, pondWalletTopOf } from './pond-wallet-top';
 import { CAPACITY_POND } from './pond-instances';
 import { POND_MAX_ITEMS, POND_MAX_THROWS, POND_PRICE_LADDER } from './pond-ladder.data';
-import { DEFAULT_POND_CUSTOM, DEFAULT_POND_ITEMS, LEGACY_POND_SETTING } from './pond-profile-defaults';
+import {
+  DEFAULT_POND_CUSTOM, DEFAULT_POND_ITEMS, LEGACY_POND_SETTING, defaultPondSettingOf,
+} from './pond-profile-defaults';
 import { POND_MODES } from './pond-mode-switch';
 import { pondKeyOf } from './pond-option-keys';
 import { pondAskMaxKeyOf, pondAskMinKeyOf } from './pond-ask-keys';
 import { parsePondAsk, pondAskValuesOf } from './pond-ask-from-snapshot';
-import { withMigratedPondKeys } from './pond-key-migration.data';
 import { rungOf } from './pond-plan';
 import type { CurveId, CurveShape } from '../capacity/capacity-profile.type';
 import type { OptionValue, RandomizerOptionsSnapshot } from '../options.type';
@@ -110,7 +110,7 @@ const fixedAskOf = (values: Values, pond: PondInstance): PondAskSetting | undefi
 
 const askedPondSetting = (values: Values, pond: PondInstance): ParsedPondSetting => {
   const raw = values[pondKeyOf(pond, 'mode')];
-  if (raw === undefined) return { setting: LEGACY_POND_SETTING, notes: [] };
+  if (raw === undefined) return { setting: defaultPondSettingOf(pond.id), notes: [] };
   const notes: string[] = [];
   const mode = POND_MODES.includes(raw as PondMode) ? raw as PondMode : 'capacity';
   if (mode !== raw) notes.push(`${pond.label}: unknown mode ${String(raw)}, using the vanilla pond`);
@@ -122,13 +122,10 @@ const askedPondSetting = (values: Values, pond: PondInstance): ParsedPondSetting
 
 /**
  * The setting as asked for, then held to the wallet the same snapshot
- * describes (pond-wallet-top.ts): a range a stored wallet can no longer reach
- * reads as the reach itself, so an old snapshot still rolls.
+ * describes (pond-wallet-top.ts): a range the wallet cannot reach reads as
+ * the reach itself.
  */
-const parsePondSetting = (raw: Values, pond: PondInstance = CAPACITY_POND): ParsedPondSetting => {
-  // Every reading starts from the current spelling, so one snapshot cannot be
-  // read one way here and another way through the three-pond reader.
-  const values = withMigratedPondKeys(raw);
+const parsePondSetting = (values: Values, pond: PondInstance = CAPACITY_POND): ParsedPondSetting => {
   const asked = askedPondSetting(values, pond);
   if (asked.setting.mode === 'capacity') return asked;
   const held = holdPondToWallet(asked.setting, pondWalletTopOf(parseCapacityProfile(values).profile), pond);

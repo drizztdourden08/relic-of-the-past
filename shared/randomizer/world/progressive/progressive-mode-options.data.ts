@@ -7,9 +7,7 @@
  * asks it per family, because "the blades in order, the shields in any order"
  * is a shape a player thinks in and the reference cannot say.
  *
- * Every baseline is the in-order reading (the reference's own `on`), so a
- * fresh profile rolls the seed it always rolled and a snapshot frozen before
- * these rows existed reads the same way.
+ * Every baseline is the in-order reading (the reference's own `on`).
  */
 import { PROGRESSIVE_FAMILIES } from './progressive-families.data';
 import { progressiveFamilyName } from './progressive-display-names';

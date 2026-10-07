@@ -1,6 +1,6 @@
 /* @layer tests @kind helper */
 /**
- * The export side of the rule-node parity guard: every location and exit tree of a world, with
+ * The export side of the rule-node parity guard: every location, story event and exit tree of a world, with
  * every derived helper inlined down to primitive ops and sent through JSON and back, compiled
  * fresh and asked beside the rule the engine holds. A mismatch means an expansion (or a tree)
  * says something other than what the engine does, which is exactly what an exporter would hand
@@ -36,6 +36,10 @@ const exportParity = (over: Record<string, OptionValue>, states: number, actReco
     return compileRule(inlined);
   };
   for (const [key, rule] of world.locationRules) pairs.push([key, rule, exported(view.locations[key])]);
+  for (const event of view.events) {
+    const rule = world.getEventRule(event.key);
+    if (rule !== undefined) pairs.push([event.key, rule, exported(event.node)]);
+  }
   for (const exit of view.exits) {
     const rule = world.getRule(exit.name);
     if (rule !== undefined) pairs.push([exit.name, rule, exported(exit.node)]);

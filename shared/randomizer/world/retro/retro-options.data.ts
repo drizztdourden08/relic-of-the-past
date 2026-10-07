@@ -8,8 +8,7 @@
  * sort of number a player wants to move.
  *
  * Both baselines are the reference's own patched bytes (retro-bow.data.ts), so
- * a fresh profile that turns retro on fires at 10 and 50, and a snapshot frozen
- * before these rows existed reads the same way.
+ * a fresh profile that turns retro on fires at 10 and 50.
  */
 import { FINAL_FIGHT_SILVER_HITS } from '../final-fight.data';
 import {

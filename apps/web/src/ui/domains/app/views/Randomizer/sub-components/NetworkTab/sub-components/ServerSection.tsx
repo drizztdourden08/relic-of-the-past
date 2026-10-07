@@ -2,11 +2,15 @@
 /** The room's rules: release, collect and remaining, hints, its games and the data package check. */
 import { NetworkSection } from './NetworkSection';
 import { DASH, formatValue, formatYesNo } from '../behavior/network-format';
+import { NOT_CONNECTED_HINT } from '../behavior/network-view';
 import type { NetworkServer } from '@app/lib/game/randomizer-client';
 import type { NetworkRow } from './NetworkSection';
+import type { NetworkView } from '../behavior/network-view';
+import type { PanelPlacement } from '../../../Randomizer.constants';
 
 interface ServerSectionProps {
-  server: NetworkServer;
+  placement: PanelPlacement;
+  view: NetworkView;
 }
 
 const hintCostText = (server: NetworkServer): string => {
@@ -35,7 +39,15 @@ const serverRows = (server: NetworkServer): NetworkRow[] => [
   { label: 'data package', value: checksumText(server) },
 ];
 
-const ServerSection = ({ server }: ServerSectionProps) => <NetworkSection title="Server" rows={serverRows(server)} />;
+const ServerSection = ({ placement, view }: ServerSectionProps) => (
+  <NetworkSection
+    placement={placement}
+    title="Server"
+    chip={view.live ? undefined : view.offline}
+    rows={view.status === null ? null : serverRows(view.status.server)}
+    empty={NOT_CONNECTED_HINT}
+  />
+);
 
 export { ServerSection };
 export type { ServerSectionProps };

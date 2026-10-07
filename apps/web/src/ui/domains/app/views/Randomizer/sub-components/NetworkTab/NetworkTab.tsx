@@ -1,51 +1,44 @@
 /* @layer renderer-components @kind component */
 /**
- * The Randomizer page's Network tab, for an Archipelago profile: the connection, its health,
- * the room's players, the server's rules and this slot's progress, all live from the online
- * session (behavior/useNetworkStatus.ts). With no session it says where it would connect.
- * The profile's connection is editable from the Connection section, session or not.
+ * The Randomizer page's Network tab, for an Archipelago profile, as a dashboard: the server
+ * setup with its Test connection, then the connection, its health, this slot's progress, the
+ * room's players and the server's rules, all live from the online session
+ * (behavior/useNetworkStatus.ts). With the game stopped every panel still stands: the setup
+ * stays editable, and the rest show the last session's picture on this connection, marked as
+ * such, or say they fill in once the game connects. Where each panel sits is NETWORK_PANELS.
  */
-import { Box, Text } from '@ds/primitives';
+import { Text } from '@ds/primitives';
+import { DashboardGrid, DashboardPanel } from '@ds/composites';
 import { useNetworkStatus } from './behavior/useNetworkStatus';
-import { ConnectionSection } from './sub-components/ConnectionSection';
+import { networkViewOf } from './behavior/network-view';
 import { ConnectionEditor } from './sub-components/ConnectionEditor';
-import { NetworkSection } from './sub-components/NetworkSection';
+import { ConnectionSection } from './sub-components/ConnectionSection';
 import { HealthSection } from './sub-components/HealthSection';
+import { ProgressSection } from './sub-components/ProgressSection';
 import { PlayersSection } from './sub-components/PlayersSection';
 import { ServerSection } from './sub-components/ServerSection';
-import { ProgressSection } from './sub-components/ProgressSection';
+import { NETWORK_ANCHORS, NETWORK_PANELS } from '../../Randomizer.constants';
 import type { NetworkTabProps } from './NetworkTab.type';
 import './NetworkTab.css';
 
-const NetworkTab = ({ config, onSaveConnection }: NetworkTabProps) => {
-  const { status, now } = useNetworkStatus();
-  const editor = (error: string | null) => config && (
-    <ConnectionEditor config={config} error={error} onSave={onSaveConnection} />
-  );
+const NetworkTab = ({ config, onSaveConnection, frame }: NetworkTabProps) => {
+  const { status, last, now } = useNetworkStatus();
+  const view = networkViewOf(status, last, config);
 
-  if (status === null) {
-    return (
-      <Box className="randomizer-page__scroll network-tab">
-        <NetworkSection title="Connection">
-          <Text className="randomizer-page__hint">
-            {`Not connected. The session connects to ${config?.serverUrl ?? 'the server'} when the game boots.`}
-          </Text>
-          {editor(null)}
-        </NetworkSection>
-      </Box>
-    );
-  }
-
-  return (
-    <Box className="randomizer-page__scroll network-tab">
-      <ConnectionSection connection={status.connection} now={now}>
-        {editor(status.connection.error)}
-      </ConnectionSection>
-      <HealthSection status={status} now={now} />
-      <PlayersSection players={status.players} />
-      <ProgressSection progress={status.progress} />
-      <ServerSection server={status.server} />
-    </Box>
+  return frame(
+    <DashboardGrid className="network-tab">
+      <DashboardPanel {...NETWORK_PANELS.setup} title="Server setup">
+        {config === null
+          ? <Text className="randomizer-page__hint">No Archipelago profile is open.</Text>
+          : <ConnectionEditor config={config} sessionError={status?.connection.error ?? null} onSave={onSaveConnection} />}
+      </DashboardPanel>
+      <ConnectionSection placement={NETWORK_PANELS.connection} view={view} now={now} />
+      <HealthSection placement={NETWORK_PANELS.health} view={view} now={now} />
+      <ProgressSection placement={NETWORK_PANELS.progress} view={view} />
+      <PlayersSection placement={NETWORK_PANELS.players} view={view} />
+      <ServerSection placement={NETWORK_PANELS.server} view={view} />
+    </DashboardGrid>,
+    NETWORK_ANCHORS,
   );
 };
 

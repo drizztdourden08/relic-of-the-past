@@ -7,8 +7,9 @@
  * fallback the profile reader applied, plus whatever the pond rule is
  * forcing) underneath. With the master switch off everything below it greys
  * out and freezes, because the families are not the player's to set while the
- * feature is out. Shared by the creation panel and the Run tab; the rows
- * arrive derived, edits leave keyed by family.
+ * feature is out. Shared by the creation panel and the read-only Options
+ * page, where `readOnly` draws the switches, modes and bonuses as tags; the
+ * rows arrive derived, edits leave keyed by family.
  */
 import { Box, Text } from '@ds/primitives';
 import { CapacityFamilyRow } from '../CapacityFamilyRow';
@@ -50,6 +51,7 @@ const CapacityUpgradesBlock = (props: CapacityUpgradesBlockProps) => {
           option={enabledOption}
           value={enabled}
           disabled={readOnly}
+          readout={readOnly}
           onChange={readOnly || onEnabledChange === undefined ? undefined : (next) => onEnabledChange(Boolean(next))}
         />
       )}
@@ -59,6 +61,7 @@ const CapacityUpgradesBlock = (props: CapacityUpgradesBlockProps) => {
             option={progressiveOption}
             value={progressive}
             disabled={frozen}
+            readout={readOnly}
             onChange={frozen || onProgressiveChange === undefined ? undefined : (next) => onProgressiveChange(Boolean(next))}
           />
         )}
@@ -67,6 +70,7 @@ const CapacityUpgradesBlock = (props: CapacityUpgradesBlockProps) => {
             key={row.id}
             model={row}
             readOnly={frozen}
+            readout={readOnly}
             onChange={frozen || onChange === undefined ? undefined : (next) => onChange(row.id, next)}
             onBonusChange={frozen || onBonusChange === undefined ? undefined : (next) => onBonusChange(row.id, next)}
           />

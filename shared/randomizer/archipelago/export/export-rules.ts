@@ -10,7 +10,8 @@ import type { World } from '../../world/world.type';
 import type { ExportedRules } from './export.type';
 
 const exportRules = (world: World): ExportedRules => {
-  const roots = [...world.locationRules.values(), ...world.rules.values()].map((rule) => rule.node);
+  const roots = [...world.locationRules.values(), ...world.eventRules.values(), ...world.rules.values()]
+    .map((rule) => rule.node);
   return {
     primitives: Object.fromEntries(PRIMITIVE_HELPERS.map((definition) => [definition.name, definition.params])),
     helpers: helperCallsOf(world, roots),

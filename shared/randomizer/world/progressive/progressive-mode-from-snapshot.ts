@@ -5,10 +5,7 @@
  * never spell the same option two ways, the same contract the tier ticks and
  * the dark-room rows keep.
  *
- * A snapshot frozen before these rows existed carries none of them, and an
- * absent key falls back to the in-order reading. That is the pool every stored
- * placement was generated under, so an old profile keeps playing exactly as it
- * was rolled.
+ * An absent key falls back to the in-order reading, the baseline.
  */
 import { PROGRESSIVE_FAMILIES } from './progressive-families.data';
 import { progressiveModeKeyOf } from './progressive-mode-keys';

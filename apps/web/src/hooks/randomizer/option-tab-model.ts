@@ -172,5 +172,5 @@ const changedCountsOf = (values: Readonly<Record<string, OptionValue>>): Changed
   return counts;
 };
 
-export { OPTION_TAB_IDS, changedCountsOf, splitLockedGroups, splitUnlockedGroups, tabOfOption };
+export { OPTION_TAB_IDS, changedCountsOf, isChanged, splitLockedGroups, splitUnlockedGroups, tabOfOption };
 export type { ChangedCounts, LockedGroupsByTab, LockedTabId, OptionTabId, UnlockedGroupsByTab };

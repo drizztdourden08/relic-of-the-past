@@ -14,6 +14,7 @@ export {
   startLocalFromPlacement, startOnline, stopActive, subscribeSessionStore,
 } from './session-store';
 export type { ActiveSession, PendingBoot, SessionSource, SessionStoreState } from './session-store';
+export { lastNetworkStatus } from './last-network-status';
 export { currentRun, runKindOfProfile, runKindOfSession } from './run-kind';
 export type { ActiveRun } from './run-kind';
 export { normalizeServerUrl, probeOnlineServer } from './online-probe';
@@ -36,7 +37,6 @@ export type { ScopeFlags } from './placement-bridge';
 export { detectionOf } from './check-detection';
 export type { CheckDetection } from './check-detection';
 export type { PhysicalPlan, PlanClass, PlanCounts, PlanEntry, PlanError } from './physical-plan.type';
-export { adaptLegacyPlacement } from './legacy-placement';
 export {
   probeDeliverablePondLocations, probeDeliverableNpcLocations, probeDeliverableWorldLocations,
   undeliverableCapacityLocations, undeliverableNpcLocations, undeliverableWorldLocations,

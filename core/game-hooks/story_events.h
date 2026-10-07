@@ -44,7 +44,7 @@ uint8 GameHook_BarrierDamage(int k, uint8 dmg);
 // A possession-gated re-offer with no giver bit of its own; the stump's four-way offer state.
 bool GameHook_GiverTaken(EventId id, bool vanilla);
 int GameHook_StumpState(int vanilla);
-// The falling reward of |palace| was picked up (ledger, or an older file's own reward in hand).
+// The falling reward of |palace| was picked up (the ledger's record).
 bool GameHook_PrizeTaken(int palace);
 void GameHook_StoryGatesFrameEnd(void);
 int GameHook_StoryCount(int which);

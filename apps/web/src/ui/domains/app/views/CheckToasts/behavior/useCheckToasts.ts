@@ -10,8 +10,9 @@
  *    any virtual row. Those never reach the completed set, so on a seed they used to pass
  *    silently while every other row raised a toast.
  *
- * What turns up right after a save state is loaded was done in that state, not just now, and
- * shows nothing; neither does a large jump (a profile switch, or a session arming that
+ * Nothing shows outside a file in play (the intro, the title, file select), and what turns up
+ * right after the save changes (a state load, a file entered) was done in that file, not just
+ * now, and shows nothing (play-quiet.ts); neither does a large jump (a profile switch, or a session arming that
  * backfills what an earlier one already bought). The tracker itself still follows both.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -21,7 +22,8 @@ import { checkIdOfLocation } from '@shared/randomizer/world/location-record';
 import type { LocationKey } from '@shared/randomizer/world/location-key';
 import { virtualCheckIdOf } from '@app/lib/game/randomizer-client/virtual-locations';
 import { chestSwapOf } from '@shared/game/logic/queries/chest-stand-ins';
-import { getCompletedChecks, onCompletedChecksChanged, onItemReceived, wasStateJustLoaded } from '@app/lib/game';
+import { getCompletedChecks, onCompletedChecksChanged, onItemReceived } from '@app/lib/game';
+import { isToastQuiet } from '@app/lib/game/play-quiet';
 import {
   firedLocations, getSessionState, onFiredLocation, virtualChecksOf,
 } from '@app/lib/game/randomizer-client';
@@ -76,7 +78,7 @@ const useCheckToasts = (enabled: boolean) => {
 
   const show = useCallback((rows: readonly CheckRecord[], paid: (check: CheckRecord) => ItemId | undefined) => {
     // Off still follows both sources, so turning it on later never replays what was done meanwhile.
-    if (!enabledRef.current || rows.length === 0 || rows.length > MAX_BURST || wasStateJustLoaded(LOAD_QUIET_MS)) return;
+    if (!enabledRef.current || rows.length === 0 || rows.length > MAX_BURST || isToastQuiet(LOAD_QUIET_MS)) return;
     setEntries((prev) => [
       ...prev,
       ...rows.map((check) => ({ id: `check-toast-${serial.current++}`, check, paid: paid(check) })),

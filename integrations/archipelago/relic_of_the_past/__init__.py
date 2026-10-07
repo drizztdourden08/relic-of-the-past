@@ -6,12 +6,12 @@ and everything one profile settles (which locations exist, the pool, the
 readings and seed values the rules read) arrives in the player file under
 `pre_rolled`, written by the app. See README.md beside this folder.
 """
-from BaseClasses import Item, ItemClassification
+from BaseClasses import Item
 from worlds.AutoWorld import WebWorld, World
 
-from .data import GAME, REGIONS, VICTORY_ITEM, WORLD_VERSION
+from .data import GAME, GOAL_EVENT, REGIONS, WORLD_VERSION
 from .dungeon_fill import prefill
-from .items import ITEM_NAME_TO_ID, KEY_BY_NAME, RotpItem, make_item, name_of_item
+from .items import ITEM_NAME_TO_ID, KEY_BY_NAME, RotpItem, make_event_item, make_item, name_of_item
 from .locations import LOCATION_BY_KEY, LOCATION_NAME_TO_ID
 from .model import model_of, slot_pre_rolled
 from .options import RotpOptions
@@ -50,22 +50,20 @@ class RotpWorld(World):
     def create_item(self, name: str) -> Item:
         return self.create_item_by_key(KEY_BY_NAME.get(name, name))
 
-    def create_event(self, key: str) -> RotpItem:
-        return RotpItem(name_of_item(key), ItemClassification.progression, None, self.player)
-
     def get_filler_item_name(self) -> str:
         return name_of_item(self.model["fillerItem"])
 
     def create_regions(self) -> None:
-        self.locations_by_key = create_regions(self, self.model)
+        self.locations_by_key, self.events_by_key = create_regions(self, self.model)
 
     def _place(self, key: str, item: Item) -> None:
         self.locations_by_key[key].place_locked_item(item)
 
     def create_items(self) -> None:
         model = self.model
-        for key, item in model["events"].items():
-            self._place(key, self.create_event(item))
+        # Each story event of the world is an Archipelago event: its location, locked to the item of its name.
+        for key, location in self.events_by_key.items():
+            location.place_locked_item(make_event_item(key, self.player))
         for key, item in model["locked"].items():
             self._place(key, self.create_item_by_key(item))
         for key, count in model["pool"].items():
@@ -89,8 +87,10 @@ class RotpWorld(World):
         for key, location in self.locations_by_key.items():
             location.access_rule = compiler.compile(LOCATION_BY_KEY[key]["rule"])
             location.item_rule = self._item_rule(key)
-        victory = name_of_item(VICTORY_ITEM)
-        self.multiworld.completion_condition[self.player] = lambda state: state.has(victory, self.player)
+        for event_row in REGIONS["events"]:
+            self.events_by_key[event_row["key"]].access_rule = compiler.compile(event_row["rule"])
+        goal = name_of_item(GOAL_EVENT)
+        self.multiworld.completion_condition[self.player] = lambda state: state.has(goal, self.player)
 
     def _item_rule(self, key: str):
         """The engine's placement predicate for one location, plus the pinned dungeon items."""

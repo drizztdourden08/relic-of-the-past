@@ -11,7 +11,7 @@ const CASTLE_TOWER_EVENTS: CheckRecord[] = [
   eventRecord({ n: 92, name: "Agahnim's Tower: boss reached", group: 'dungeon', dungeonId: 'dungeon-002', gameId: { roomId: 0x20, mask: 0x0f },
     requirements: { allOf: [hasSword, canSeeInDarkRooms] } }),
   eventRecord({ n: 93, name: "Agahnim's Tower: Agahnim beaten", group: 'dungeon', dungeonId: 'dungeon-002', gameId: { eventBit: E.bossKilled(4) },
-    fallback: { checkId: 'check-394' }, requirements: { allOf: [hasSword, canSeeInDarkRooms] } }),
+    requirements: { allOf: [hasSword, canSeeInDarkRooms] } }),
   eventRecord({ n: 94, name: "Agahnim's Tower: heart container taken", group: 'dungeon', dungeonId: 'dungeon-002', gameId: { roomId: 0x20, mask: 0x800 },
     requirements: { checkId: 'check-393' } }),
   eventRecord({ n: 96, name: "Agahnim's Tower: all chests opened", group: 'dungeon', dungeonId: 'dungeon-002',

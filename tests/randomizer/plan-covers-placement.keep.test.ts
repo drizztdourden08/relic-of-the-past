@@ -2,8 +2,7 @@
 /**
  * No-silent-drop guard: every location a generated placement names must show
  * up in the physical plan, as an entry (a class the session acts on or
- * reports) or as an explicit error. Only the event slots may be absent; they
- * are logic constructs with no spot in the game. A location that is neither
+ * reports) or as an explicit error. A location that is neither
  * planned nor reported is exactly the failure that let the shuffled dungeon
  * prizes disappear between generation and the session.
  *
@@ -17,7 +16,7 @@
 import { describe, expect, it } from 'vitest';
 import { generatePlacement } from '@shared/randomizer/world/fill/generate';
 import { buildOptionsSnapshot } from '@shared/randomizer/options-snapshot';
-import { EVENT_LOCATIONS, PRIZE_LOCATIONS, VANILLA_PRIZES } from '@shared/randomizer/world/scope-tables';
+import { PRIZE_LOCATIONS, VANILLA_PRIZES } from '@shared/randomizer/world/scope-tables';
 import { isShopSlotLocation } from '@shared/randomizer/world/shops/shop-slots';
 import { STANDARD_SHOP_SLOT_COUNT } from '@shared/randomizer/world/shops/shop-slot-facts';
 import { SHOP_MODE_KEY, SHOP_SLOT_ROWS } from '@shared/randomizer/world/shops/shop-slot-options.data';
@@ -94,8 +93,7 @@ describe('physical plan covers every generated location', () => {
         ...plan.entries.map((entry) => entry.location),
         ...plan.errors.map((error) => error.location),
       ]);
-      const dropped = Object.keys(placement.locations)
-        .filter((location) => !EVENT_LOCATIONS.has(location) && !covered.has(location));
+      const dropped = Object.keys(placement.locations).filter((location) => !covered.has(location));
       expect(dropped).toEqual([]);
       // A shelf slot must be a real physical entry, never an error row.
       expect(plan.errors.filter((error) => isShopSlotLocation(error.location))).toEqual([]);

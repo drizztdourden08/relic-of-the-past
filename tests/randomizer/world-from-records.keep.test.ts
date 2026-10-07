@@ -9,8 +9,8 @@
  * wings, so the collection's id order has to be the order the reference's four taxonomies list
  * them in, and a dungeon's array order has to be its create order.
  *
- * WHICH ROWS THE SEED FILLS is a record question too now. One rule over kind, scope and the
- * fill's own event pairing (world/seed-locations.ts) picks the 269 spots out of the 594 rows,
+ * WHICH ROWS THE SEED FILLS is a record question too now. One rule over kind and scope
+ * (world/seed-locations.ts) picks the 261 spots out of the 594 rows,
  * and the four transcribed lists of location names are gone. Nothing states the set twice any
  * more, so the suite below pins it by COUNT: the whole world, each dungeon, the shelves the
  * shop scope opens and the ladders a pond sells. A number moving means a record moved.
@@ -26,7 +26,7 @@
  * passes; raising it means a record got worse, and it fails.
  */
 import { describe, expect, it } from 'vitest';
-import { all, getRegion } from '@shared/game/data';
+import { all, getCheck, getRegion } from '@shared/game/data';
 import { buildWorld } from '@shared/randomizer/world/build-world';
 import { REGION_GRAPH } from '@shared/randomizer/world/rules/tables/region-graph.data';
 import { DUNGEON_ORDER } from '@shared/randomizer/world/fill/dungeon-order.data';
@@ -45,14 +45,16 @@ import { describeDataset } from '../dataset-guard';
 /** Every region the collection holds, which is the whole graph the engine walks. */
 const REGION_COUNT = 239;
 /** The rows the one rule picks out of the collection as spots a seed fills. */
-const SEED_LOCATIONS = 269;
+const SEED_LOCATIONS = 261;
 /** The world's own locations with key drops on, which is those rows minus the pond pairs. */
-const WORLD_LOCATIONS = 264;
+const WORLD_LOCATIONS = 255;
 /** The same world with key drops off: the 33 spots that option invents are gone. */
-const WORLD_LOCATIONS_NO_KEY_DROPS = 231;
+const WORLD_LOCATIONS_NO_KEY_DROPS = 222;
+/** The story events the world holds beside its locations, each in its own record's region. */
+const WORLD_EVENTS = 8;
 
 /** What each dungeon holds with key drops on, in create order. */
-const DUNGEON_LOCATIONS: readonly number[] = [9, 9, 10, 7, 5, 15, 11, 11, 16, 13, 12, 15, 32];
+const DUNGEON_LOCATIONS: readonly number[] = [9, 9, 10, 7, 4, 15, 11, 11, 16, 13, 12, 15, 31];
 
 /** The regions the records flag as impassable while transformed, by the name they are known by. */
 const BUNNY_IMPASSABLE: readonly string[] = [
@@ -174,6 +176,8 @@ describeDataset('the records say which rows a seed fills', () => {
 
   it('builds a world of exactly those spots, under the option that invents some of them', () => {
     expect(world().locationsByKey.size).toBe(WORLD_LOCATIONS);
+    expect([...world().eventsByKey.values()].filter((event) => getCheck(event.key).regionId === event.region))
+      .toHaveLength(WORLD_EVENTS);
     const off = buildWorld({
       keyDropShuffle: false,
       medallions: { ...VANILLA_MEDALLIONS },

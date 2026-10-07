@@ -1,0 +1,13 @@
+/* @layer renderer-design-system @kind style */
+
+/* Data-series colours: one name per series, read by every block that draws a series (a
+   segmented bar's segment, a legend's dot and count). A block sets data-series on the
+   element and paints with var(--series-color), so a series keeps one colour everywhere. */
+
+[data-series='green'] { --series-color: var(--c-green); }
+[data-series='upgrade'] { --series-color: var(--c-upgrade); }
+[data-series='warning'] { --series-color: var(--c-warning); }
+[data-series='danger'] { --series-color: var(--c-danger); }
+[data-series='info'] { --series-color: var(--c-info); }
+[data-series='gold'] { --series-color: var(--c-gold); }
+[data-series='muted'] { --series-color: var(--c-border-strong); }

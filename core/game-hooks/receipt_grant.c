@@ -53,7 +53,7 @@ int WasmGrantItemWithReceipt(int item_id) {
   // A virtual upgrade id (0x50-0x61) resolves to its native presentation item here,
   // the counter arithmetic runs and the pond's own upgrade message is armed (winning
   // over the class default below via the if-clear contract). A progressive id
-  // (0x62-0x66) resolves to the next tier's native id from live inventory.
+  // (0x62-0x66, 0x82) resolves to the next tier's native id from live inventory.
   uint8 grant = GameHook_ResolveGrantItem((uint8)item_id);
   GameHook_ArmReceiptClassMessage(grant, kReceiptMsg_Delivered);
   item_receipt_method = 0;

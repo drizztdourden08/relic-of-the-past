@@ -5,11 +5,10 @@
  * dungeon-restricted set that never enters the global pool (keys, big keys,
  * maps, compasses per dungeon: the reference pre-fills these inside their
  * own dungeon under the baseline shuffle options); prizes fill the ten prize
- * locations; eventItems sit locked on the event locations. startInventory is
- * the reference's precollected list (empty for the baseline).
+ * locations. startInventory is the reference's precollected list (empty for
+ * the baseline).
  */
 import type { ItemKey } from '../item-ids.data';
-import type { LocationKey } from '../location-key';
 
 interface ItemPool {
   pool: readonly ItemKey[];
@@ -29,8 +28,6 @@ interface ItemPool {
   /** dungeon name to its restricted items (respects the key-drop option). */
   dungeonItems: ReadonlyMap<string, readonly ItemKey[]>;
   prizes: readonly ItemKey[];
-  /** event location to the event item that sits there. */
-  eventItems: ReadonlyMap<LocationKey, ItemKey>;
   startInventory: readonly ItemKey[];
 }
 

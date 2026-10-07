@@ -88,11 +88,7 @@ interface OptionDef {
   synthetic?: boolean;
 }
 
-/**
- * The frozen option snapshot recorded on a profile at creation time. v2
- * carries the 22 per-family capacity rows; the v1 schema (one capacity
- * toggle) is adapted on read by normalizeRandomizerOptions.
- */
+/** The frozen option snapshot recorded on a profile at creation time. */
 interface RandomizerOptionsSnapshot {
   schema: 'ap-options-v2';
   values: Record<string, OptionValue>;

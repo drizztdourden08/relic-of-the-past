@@ -19,8 +19,8 @@
  * the ticks as they are edited.
  *
  * Presentational only: the setting comes in as a prop and every edit leaves as
- * a whole new setting. An absent handler renders the whole block frozen, which
- * is the read-only face the run view shows.
+ * a whole new setting. An absent handler renders the whole block as a read-out,
+ * every tick and order as a tag, which is the read-only Options page's face.
  */
 import { Box, Text } from '@ds/primitives';
 import { progressiveTickConsequences } from '@shared/randomizer/world/progressive/tick-consequences';
@@ -40,7 +40,7 @@ interface ProgressiveTiersBlockProps {
   setting: ProgressiveSetting;
   /** How each family's copies arrive: in order, or the rungs themselves. */
   modes: ProgressiveModeSetting;
-  /** Absent renders the whole block frozen. */
+  /** Absent renders the whole block as a read-out: the read-only Options page. */
   onChange?: (next: ProgressiveSetting) => void;
   /** Absent freezes the order controls alone. */
   onModesChange?: (next: ProgressiveModeSetting) => void;
@@ -63,6 +63,7 @@ const ProgressiveTiersBlock = (props: ProgressiveTiersBlockProps) => {
               key={card.id}
               card={card}
               disabled={readOnly}
+              readout={readOnly}
               onTierChange={readOnly
                 ? undefined
                 : (index, checked) => onChange(withTierTicked(setting, card.id, index, checked))}

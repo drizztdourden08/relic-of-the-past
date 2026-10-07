@@ -7,8 +7,8 @@
  * game that waits on a button with no words on screen. So the hook state is read on the frame the
  * core saves, travels in the save file's stamp, and goes back in right after the load.
  *
- * A save with no such state (every older save, a save with no message up, a closed gate) loads the
- * way it always has: the store is marked stale and the host box holds back until the next message.
+ * A save with no such state (a save with no message up, a closed gate) loads with the store marked
+ * stale, and the host box holds back until the next message.
  */
 import type { StateStamp } from '@shared/game/save-state';
 import { useDialogStore } from '../../stores/dialog-store';

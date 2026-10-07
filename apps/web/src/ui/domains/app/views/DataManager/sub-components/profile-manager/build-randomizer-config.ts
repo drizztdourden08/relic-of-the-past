@@ -34,6 +34,10 @@ import { buildOptionsSnapshot } from '@shared/randomizer/options-snapshot';
 import { randomizerChoiceOverrides } from '@app/hooks/randomizer/randomizer-choices';
 import { DEFAULT_DUNGEON_ITEM_SETTING } from '@shared/randomizer/world/dungeon-items/dungeon-item-modes';
 import { DEFAULT_STORY_GATES } from '@shared/randomizer/world/story-gates/story-gates.data';
+import {
+  absorbPort, draftError, EMPTY_SERVER_SETUP, serverUrlOf,
+} from '@app/hooks/randomizer/server-setup/server-setup-draft';
+import type { ServerSetupDraft } from '@app/hooks/randomizer/server-setup/server-setup-draft';
 import type { RandomizerOptionChoices } from '@app/hooks/randomizer/randomizer-choices';
 
 /** The connection fields plus every catalog choice the options panel edits. */
@@ -41,9 +45,8 @@ interface RandomizerFormState extends RandomizerOptionChoices {
   enabled: boolean;
   seed: string;
   mode: 'local' | 'online';
-  serverUrl: string;
-  slotName: string;
-  password: string;
+  /** Archipelago only: the server setup, as its fields hold it. */
+  server: ServerSetupDraft;
   deathLink: boolean;
   trackOtherPlayers: boolean;
 }
@@ -53,7 +56,7 @@ const baselineSwitch = (key: string): boolean => baselineValues[key] === true;
 
 /** The form as a new profile first sees it: the catalog baselines, block by block. */
 const EMPTY_RANDOMIZER_FORM: RandomizerFormState = {
-  enabled: false, seed: '', mode: 'local', serverUrl: '', slotName: '', password: '', deathLink: false,
+  enabled: false, seed: '', mode: 'local', server: EMPTY_SERVER_SETUP, deathLink: false,
   trackOtherPlayers: true,
   keyDropShuffle: baselineSwitch('key_drop_shuffle'),
   includeNpcChecks: baselineSwitch(INCLUDE_NPC_CHECKS_KEY),
@@ -104,9 +107,12 @@ const freshRandomizerForm = (): RandomizerFormState => ({ ...EMPTY_RANDOMIZER_FO
 
 const NO_SEED_ERROR = 'The randomizer needs a seed. Type one, or keep the one thrown for you.';
 
-/** Why this form cannot be submitted; nothing while it can. */
-const randomizerFormError = (form: RandomizerFormState): string | undefined =>
-  (form.enabled && form.seed.trim() === '' ? NO_SEED_ERROR : undefined);
+/** Why this form cannot be submitted; nothing while it can. An Archipelago profile needs a server it can boot against. */
+const randomizerFormError = (form: RandomizerFormState): string | undefined => {
+  if (!form.enabled) return undefined;
+  if (form.seed.trim() === '') return NO_SEED_ERROR;
+  return form.mode === 'online' ? draftError(absorbPort(form.server)) ?? undefined : undefined;
+};
 
 const buildRandomizerConfig = (form: RandomizerFormState): ProfileRandomizerConfig | undefined => {
   if (!form.enabled) return undefined;
@@ -117,9 +123,10 @@ const buildRandomizerConfig = (form: RandomizerFormState): ProfileRandomizerConf
   };
   if (form.capacity.wallet.mode === 'custom') config.frozenSettings = { carryMoreRupees: true };
   if (form.mode === 'online') {
-    if (form.serverUrl.trim()) config.serverUrl = form.serverUrl.trim();
-    if (form.slotName.trim()) config.slotName = form.slotName.trim();
-    if (form.password) config.password = form.password;
+    const server = absorbPort(form.server);
+    if (server.host.trim() !== '') config.serverUrl = serverUrlOf(server);
+    if (server.slotName.trim() !== '') config.slotName = server.slotName.trim();
+    if (server.password !== '') config.password = server.password;
     config.deathLink = form.deathLink;
     config.trackOtherPlayers = form.trackOtherPlayers;
   }

@@ -12,7 +12,6 @@ import {
   KEY_DROP_LOCATIONS, NPC_SCOPE_LOCATIONS, VANILLA_PRIZES, WORLD_ITEM_SCOPE_LOCATIONS,
 } from './world/scope-tables';
 import { ITEM } from './world/item-ids.data';
-import { EVENT_ITEMS } from './world/pool/event-items.data';
 import { checkIdOfLocation } from './world/location-record';
 import type { CheckId, ItemId, RegionId } from '../game/data/types/ids';
 import type { ItemKey } from './world/item-ids.data';
@@ -39,7 +38,7 @@ const dungeonOfRegion = (world: World, region: RegionId): WorldDungeon | undefin
 const originalContentOf = (
   world: World, recorded: ReadonlyMap<CheckId, ItemId>, location: LocationKey, region: RegionId,
 ): ItemKey | undefined => {
-  const direct = EVENT_ITEMS.get(location) ?? KEY_DROP_LOCATIONS.get(location)
+  const direct = KEY_DROP_LOCATIONS.get(location)
     ?? NPC_SCOPE_LOCATIONS.get(location) ?? WORLD_ITEM_SCOPE_LOCATIONS.get(location)
     ?? VANILLA_PRIZES.get(location);
   if (direct !== undefined) return direct;

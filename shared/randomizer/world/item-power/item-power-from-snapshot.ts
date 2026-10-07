@@ -4,9 +4,7 @@
  * file so the reading the generator uses and the writing the creation form
  * freezes can never spell the same option two ways.
  *
- * A snapshot frozen before these rows existed carries none of them, and an
- * absent key falls back to the normal step, the unmodified game every stored
- * placement was generated under.
+ * An absent key falls back to its baseline, the normal step.
  */
 import { DEFAULT_ITEM_POWER, ITEM_POWER_KEY } from './item-power.data';
 import type { OptionValue, RandomizerOptionsSnapshot } from '../options.type';

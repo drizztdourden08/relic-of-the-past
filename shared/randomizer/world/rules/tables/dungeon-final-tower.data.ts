@@ -14,7 +14,7 @@ import {
 import {
   arrows as arrowsFor, bombs as bombsFor, hasFireSource, kill,
 } from '../helper-rules';
-import { actGate } from '../../events';
+import { STORY_EVENT, actGate } from '../../events';
 import { dungeonBossDefeat, FINAL_TOWER_SUB_BOSSES } from './bosses.data';
 import type { LocationKey } from '../../location-key';
 import type { RuleEntry } from '../rule-entry.type';
@@ -157,7 +157,7 @@ const FINAL_TOWER_RULES: readonly RuleEntry[] = [
     rule: allOf(hasItem(ITEM.hookshot), FINAL_TOWER_SUB_BOSSES.top),
   },
   // 609: the second tower fight.
-  { kind: 'location', target: 'check-349', mode: 'add', rule: dungeonBossDefeat('dungeon-013') },
+  { kind: 'event', target: STORY_EVENT.agahnim2Beaten, mode: 'add', rule: dungeonBossDefeat('dungeon-013') },
   // forbid_bomb_jump_requirements 957-959
   ...DMS_ROOM_CHESTS.map((target): RuleEntry => ({
     kind: 'location', target, mode: 'add', rule: hasItem(ITEM.hookshot),

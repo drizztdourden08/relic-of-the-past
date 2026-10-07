@@ -47,8 +47,8 @@ interface ScopeFlags {
   /**
    * A wish pond's vanilla slots generation locked at Vanilla grants, each to the
    * item her upgrade produces there (pond/pond-vanilla-slots.ts), so no override
-   * is armed and the real upgrade runs. Absent (the online flags, and every
-   * placement generated before the rule) locks nothing this way.
+   * is armed and the real upgrade runs. Absent (the online flags) locks nothing
+   * this way.
    */
   pondLockedItems?: ReadonlyMap<LocationKey, ItemKey>;
   /**
@@ -82,8 +82,7 @@ interface ScopeFlags {
    * A wish pond's own two slots that her Custom mode sells as prize rungs
    * (pond/pond-vanilla-slots.ts). The npc and world scopes no longer decide them, in
    * the fill (fill-world.ts) and here alike: they carry a pool item handed over by
-   * the rung table. Absent (the online flags, and every placement generated before
-   * the rule) exempts nothing.
+   * the rung table. Absent (the online flags) exempts nothing.
    */
   pondPrizeSlots?: ReadonlySet<LocationKey>;
 }

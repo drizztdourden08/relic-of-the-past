@@ -10,7 +10,7 @@ import { DataInspector } from '../ui/domains/app/views/DataInspector';
 import { About } from '../ui/domains/app/views/About';
 import { Randomizer } from '../ui/domains/app/views/Randomizer';
 import { FullScreenLayer } from '../ui/design-system/composites/FullScreenLayer';
-import { WorkspaceSwitch, type Workspace } from '../ui/domains/app/views/WorkspaceSwitch';
+import { WorkspaceSwitch, type Workspace } from '../ui/domains/app/compounds/WorkspaceSwitch';
 import type { PageId, RomDisplayInfo } from './types';
 import type { GameSettings } from '@shared/types/settings';
 import type { CreateProfileOptions, CreateProfileResult } from '@shared/types/profile';
@@ -82,7 +82,7 @@ const PageRouter = (props: PageRouterProps) => {
   // ProfileHub stays mounted to preserve scroll/state; other pages use early returns
   let otherPage: React.ReactNode = null;
   const switchTo = (current: Workspace) => (
-    <WorkspaceSwitch current={current} hasProfile={!!profileMgmt.activeProfile} onSelect={nav.setActivePage} />
+    <WorkspaceSwitch current={current} hasProfile={!!profileMgmt.activeProfile} hasRandomizer={!!profileMgmt.activeProfile?.randomizer} onSelect={nav.setActivePage} />
   );
 
   if (nav.activePage === 'data') {
@@ -145,7 +145,7 @@ const PageRouter = (props: PageRouterProps) => {
     );
   } else if (nav.activePage === 'randomizer') {
     otherPage = (
-      <FullScreenLayer onClose={nav.closePage} title="Randomizer">
+      <FullScreenLayer onClose={nav.closePage} title="Randomizer" floating={switchTo('randomizer')}>
         <Randomizer activeProfile={profileMgmt.activeProfile} />
       </FullScreenLayer>
     );

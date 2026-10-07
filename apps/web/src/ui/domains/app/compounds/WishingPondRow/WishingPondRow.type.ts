@@ -81,8 +81,10 @@ interface PondRowModel {
 
 interface WishingPondRowProps {
   model: PondRowModel;
-  /** The Run tab: every control disabled, the preview and readouts kept. */
+  /** Every control disabled, the preview and readouts kept. */
   readOnly?: boolean;
+  /** Every control drawn as its value in a tag: the read-only Options page. */
+  readout?: boolean;
   onChange?: (next: PondRowState) => void;
 }
 

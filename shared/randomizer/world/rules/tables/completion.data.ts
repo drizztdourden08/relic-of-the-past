@@ -15,7 +15,7 @@ import {
 } from '../combinators';
 import { canLiftRocks, hasBeamSword } from '../helper-rules';
 import { ganonRule, pyramidHoleRule } from '../story-gate-rules';
-import { actGate } from '../../events';
+import { GOAL_EVENT, STORY_EVENT, actGate, storyEvent } from '../../events';
 import { ganonDefeat, lastFightTakesHammer } from './bosses.data';
 import type { RuleEntry } from '../rule-entry.type';
 
@@ -24,14 +24,14 @@ const crossPegBridge = allOf(hasItem(ITEM.hammer), hasItem(ITEM.moonPearl));
 /** Rules.py 1362-1363. */
 const southernTeleporter = allOf(canLiftRocks, crossPegBridge);
 /** Rules.py 1367-1368. */
-const basicRoutes = anyOf(southernTeleporter, hasItem(ITEM.beatAgahnim1));
+const basicRoutes = anyOf(southernTeleporter, storyEvent(STORY_EVENT.agahnim1Beaten));
 
 const COMPLETION_RULES: readonly RuleEntry[] = [
   // 611, then 97 (goal ganon) and 617 (crystals_needed_for_ganon = 7) add on.
-  // The location is the ledger's "Ganon beaten" event.
-  { kind: 'location', target: 'check-351', mode: 'set', rule: ganonDefeat },
-  { kind: 'location', target: 'check-351', mode: 'add', rule: hasItem(ITEM.beatAgahnim2) },
-  { kind: 'location', target: 'check-351', mode: 'add', rule: ganonRule },
+  // The goal is the ledger's "Ganon beaten" event.
+  { kind: 'event', target: GOAL_EVENT, mode: 'set', rule: ganonDefeat },
+  { kind: 'event', target: GOAL_EVENT, mode: 'add', rule: storyEvent(STORY_EVENT.agahnim2Beaten) },
+  { kind: 'event', target: GOAL_EVENT, mode: 'add', rule: ganonRule },
   // 618: the drop asks for a blow the last fight will feel, so the hammer stands in for the
   // beam blade on the same switch the fight itself reads.
   { kind: 'exit', target: 'Ganon Drop', mode: 'set', rule: anyOf(hasBeamSword, lastFightTakesHammer) },
@@ -47,7 +47,7 @@ const COMPLETION_RULES: readonly RuleEntry[] = [
   },
   {
     kind: 'exit', target: 'Pyramid Fairy', mode: 'add',
-    rule: anyOf(crossPegBridge, allOf(hasItem(ITEM.magicMirror), hasItem(ITEM.beatAgahnim1))),
+    rule: anyOf(crossPegBridge, allOf(hasItem(ITEM.magicMirror), storyEvent(STORY_EVENT.agahnim1Beaten))),
   },
 ];
 

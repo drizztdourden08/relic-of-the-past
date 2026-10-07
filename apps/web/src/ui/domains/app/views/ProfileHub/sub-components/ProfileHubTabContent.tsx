@@ -62,7 +62,7 @@ const ProfileHubTabContent = (props: ProfileHubTabContentProps) => {
     case 'bugfixes': return <BugFixesSettings settings={settings} onChange={onChange} />;
     case 'hud': return <HudSettings settings={settings} onChange={onChange} />;
     case 'haptics': return <HapticsSettings settings={settings} onChange={onChange} />;
-    case 'online': return <OnlineSettings settings={settings} onChange={onChange} />;
+    case 'online': return <OnlineSettings profile={profile} settings={settings} onChange={onChange} />;
     case 'developer': return <DeveloperSettings settings={settings} onChange={onChange} />;
     case 'mobile': return <MobileSettings settings={settings} onChange={onChange} />;
     case 'controls':

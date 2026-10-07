@@ -4,10 +4,9 @@
  * belongs to (`pond_wishing_ask_bombs_max`), the way the pond's other rows do,
  * so the three ponds are set apart in the same snapshot.
  *
- * The rupee row's two ends are the pond's ladder ends: `pond_<id>_start` and
- * `pond_<id>_max` used to spell them and now read onto this row
- * (pond-key-migration.data.ts), so one key pair says what the ladder costs and
- * what she asks for, and the two can never drift apart.
+ * The rupee row's two ends are the pond's ladder ends, so one key pair says
+ * what the ladder costs and what she asks for, and the two can never drift
+ * apart.
  *
  * The bottle carries a count, so it carries the same two range keys every
  * other counted row does, under its own name.

@@ -20,7 +20,6 @@ import { hasSword } from '@shared/game/data/requirements/helpers';
 import { ITEM_GROUP_IDS } from '@shared/game/data';
 import { all } from '@shared/game/data';
 import { DARK_ROOM_LIGHT_FIELDS } from '@shared/randomizer/world/dark-rooms';
-import { REFERENCE_DARK_ROOM_SETTING } from '@shared/randomizer/world/dark-rooms/dark-room-lights.data';
 import type { DarkRoomLightField } from '@shared/randomizer/world/dark-rooms';
 import type { Placement } from '@shared/randomizer/world/fill/placement.type';
 import type { PedestalGate } from '@shared/randomizer/world/story-gates/story-gate.type';
@@ -53,7 +52,7 @@ const medallionRequirement = (medallion: MedallionId): Requirement => ({
 });
 
 const recordRowOverrides = (placement: Placement): Partial<Record<CheckId, Requirement>> => ({
-  'check-312': pedestalRequirement(placement.stats.storyGates?.pedestal),
+  'check-312': pedestalRequirement(placement.stats.storyGates.pedestal),
   'check-344': medallionRequirement(placement.medallions.mire),
   'check-345': medallionRequirement(placement.medallions.turtleRock),
 });
@@ -69,7 +68,7 @@ const bigKeyItemIds = (): readonly ItemId[] => {
 const seesInTheDark = (
   placement: Placement, darkRoomsNeedLight: boolean, inventory: ReadonlySet<ItemId>,
 ): boolean => {
-  const setting = placement.stats.darkRooms ?? REFERENCE_DARK_ROOM_SETTING;
+  const setting = placement.stats.darkRooms;
   const accepted = DARK_ROOM_LIGHT_FIELDS.filter((field) => setting.lights[field]);
   if (!setting.requireLight || !darkRoomsNeedLight || accepted.length === 0) return true;
   return accepted.some((field) => inventory.has(LIGHT_ITEM[field]));

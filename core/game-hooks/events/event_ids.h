@@ -19,7 +19,7 @@ typedef enum {
   kEvent_BossKilled_HyruleCastle,     // unused slot
   kEvent_BossKilled_EasternPalace,
   kEvent_BossKilled_DesertPalace,
-  kEvent_BossKilled_AgahnimTower,     // the first tower fight, recorded at its own exit
+  kEvent_BossKilled_AgahnimTower,     // the first tower fight, from its room's beaten bit (event_watch.c)
   kEvent_BossKilled_SwampPalace,
   kEvent_BossKilled_PalaceOfDarkness,
   kEvent_BossKilled_MiseryMire,
@@ -28,7 +28,7 @@ typedef enum {
   kEvent_BossKilled_TowerOfHera,
   kEvent_BossKilled_ThievesTown,
   kEvent_BossKilled_TurtleRock,
-  kEvent_BossKilled_GanonsTower,      // the second tower fight
+  kEvent_BossKilled_GanonsTower,      // the second tower fight, from its room's beaten bit
   // The three rematches inside the last tower, by room.
   kEvent_RematchKilled_Armos,
   kEvent_RematchKilled_Lanmolas,

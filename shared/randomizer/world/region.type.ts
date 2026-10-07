@@ -5,7 +5,7 @@
  * build-world produces out of the records and what the graph sweep walks. A
  * region and an exit are still named; a location is its own key.
  */
-import type { ConnectionId, DungeonId, ItemId, RegionId } from '@shared/game/data/types/ids';
+import type { CheckId, ConnectionId, DungeonId, ItemId, RegionId } from '@shared/game/data/types/ids';
 import type { RegionType } from '@shared/game/data/types/region';
 import type { LocationKey } from './location-key';
 
@@ -46,10 +46,17 @@ interface WorldLocation {
   pondSlot: boolean;
   /** Boss prize slot (crystal flag in the python location_table), never a pool item. */
   prize: boolean;
-  /** Carries a logic event (address None in the python location_table), never a pool item. */
-  event: boolean;
   /** For key-drop, capacity and npc-scope locations: the item sitting there in vanilla. */
   vanillaItem?: ItemId;
+}
+
+/**
+ * A story event that happens in a region (events/story-events.data.ts): never a location, never
+ * filled, granted by the sweep once its region is reached and its own rule holds.
+ */
+interface WorldEvent {
+  key: CheckId;
+  region: RegionId;
 }
 
 /**
@@ -70,6 +77,7 @@ interface Region {
   name: string;
   type: RegionType;
   locations: WorldLocation[];
+  events: WorldEvent[];
   exits: Exit[];
   entrances: Exit[];
   isLightWorld: boolean;
@@ -96,6 +104,7 @@ interface WorldDungeon {
 export type {
   RegionGraphRow,
   WorldLocation,
+  WorldEvent,
   Exit,
   Region,
   WorldDungeon,

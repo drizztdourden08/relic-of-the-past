@@ -30,8 +30,7 @@ interface ShopBottlePrice {
   content: ShopBottleContent;
   /**
    * How many bottles of it, for a demand that counts them (pond/). A shelf
-   * charges one bottle and writes no amount, and so did every pond demand
-   * frozen before the count existed, so an absent amount is one bottle.
+   * charges one bottle and writes no amount, so an absent amount is one bottle.
    */
   amount?: number;
 }

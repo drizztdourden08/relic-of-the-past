@@ -10,7 +10,7 @@ import {
   allOf, anyOf, hasItem, hasKeys,
 } from '../combinators';
 import { hasSword, kill } from '../helper-rules';
-import { actGate } from '../../events';
+import { STORY_EVENT, actGate, storyEvent } from '../../events';
 import { compileRule } from '../rule-eval';
 import { all, has, option } from '../rule-node-build';
 import { dungeonBossDefeat } from './bosses.data';
@@ -29,7 +29,9 @@ const CASTLE_TOWER_RULES: readonly RuleEntry[] = [
   // down and the cape is not: one slips past a barrier that is still standing.
   {
     kind: 'exit', target: 'Agahnims Tower', mode: 'set',
-    rule: anyOf(hasItem(ITEM.cape), actGate('check-314'), sealTakesHammer, barrierRule, hasItem(ITEM.beatAgahnim1)),
+    rule: anyOf(
+      hasItem(ITEM.cape), actGate('check-314'), sealTakesHammer, barrierRule, storyEvent(STORY_EVENT.agahnim1Beaten),
+    ),
   },
   // 314-315, plus Rules.py swordless_rules: with no blade anywhere in the seed the entrance
   // asks only what the fight itself asks, which the hammer and the net already satisfy.
@@ -40,8 +42,8 @@ const CASTLE_TOWER_RULES: readonly RuleEntry[] = [
       hasKeys(ITEM.smallKeyAgahnimsTower, 4),
     ),
   },
-  // dungeon_boss_rules: the fight location carries the boss defeat rule.
-  { kind: 'location', target: 'check-329', mode: 'add', rule: dungeonBossDefeat('dungeon-002') },
+  // dungeon_boss_rules: the fight carries the boss defeat rule.
+  { kind: 'event', target: STORY_EVENT.agahnim1Beaten, mode: 'add', rule: dungeonBossDefeat('dungeon-002') },
   // 317-326
   { kind: 'location', target: 'check-112', mode: 'set', rule: kill(4) },
   {

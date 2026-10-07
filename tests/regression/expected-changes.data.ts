@@ -25,8 +25,40 @@ interface ExpectedStatusChange {
  * it moved is part of that baseline now. A new step starts here with every list empty.
  */
 
+/**
+ * The story events stopped being locations of the world. Their rows now take the path every
+ * other event row takes (lib/game/tracker/tracker-statuses.ts): the dataset's own record,
+ * against the place the event happens at, instead of the engine's reading of a location.
+ */
+const EVENT_ROW_PATH = 'the story event is no location any more, so its row reads its own record like every other event row';
+
 /** Statuses this step may move. Empty means the step must change nothing. */
-const EXPECTED_STATUS_CHANGES: readonly ExpectedStatusChange[] = [];
+const EXPECTED_STATUS_CHANGES: readonly ExpectedStatusChange[] = [
+  // Frog found: the record asks for the Titan's Mitt, where the seed engine asked for heavy lifting
+  // from the items the seed's own completed locations hand over. Seeds only; Normal never moved.
+  { save: '*', checkId: 'check-335', from: 'reachable', to: 'blocked', because: EVENT_ROW_PATH },
+  // Agahnim 1 beaten: the record asks for a sword and sight inside the tower, where the engine also
+  // asked for the tower's four small keys on the way to the fight.
+  { save: '*', checkId: 'check-329', from: 'blocked', to: 'reachable', because: EVENT_ROW_PATH },
+];
+
+/**
+ * Location keys this step drops from every world, key to why. A placement is compared with these
+ * rows taken out of the baseline's locations and spheres, a sphere they leave empty taken out with
+ * them, and the location and sphere counts of its stats read off what is left.
+ */
+const STORY_EVENT_DROPPED = 'a story event of the world, found by the sweep, never a location';
+const EXPECTED_DROPPED_LOCATIONS: Readonly<Record<string, string>> = {
+  'check-351': STORY_EVENT_DROPPED,
+  'check-329': STORY_EVENT_DROPPED,
+  'check-349': STORY_EVENT_DROPPED,
+  'check-337': STORY_EVENT_DROPPED,
+  'check-335': STORY_EVENT_DROPPED,
+  'check-336': STORY_EVENT_DROPPED,
+  'check-326': STORY_EVENT_DROPPED,
+  'check-324': STORY_EVENT_DROPPED,
+  'slot-capacity-shop': 'no event at all: the rules read the capacity fairy\'s room and price directly',
+};
 
 /**
  * Check ids this step ADDS to the dataset, so a save reporting one as completed is allowed.
@@ -56,7 +88,7 @@ const EXPECTED_NAME_CHANGES: Readonly<Record<string, string>> = {};
 const EXPECTED_PLACEMENT_CHANGES: readonly string[] = [];
 
 export {
-  EXPECTED_NAME_CHANGES, EXPECTED_NEW_CHECKS, EXPECTED_PLACEMENT_CHANGES, EXPECTED_SCREEN_ADDITIONS,
-  EXPECTED_SCREEN_COLUMN_CHANGE, EXPECTED_STATUS_CHANGES,
+  EXPECTED_DROPPED_LOCATIONS, EXPECTED_NAME_CHANGES, EXPECTED_NEW_CHECKS, EXPECTED_PLACEMENT_CHANGES,
+  EXPECTED_SCREEN_ADDITIONS, EXPECTED_SCREEN_COLUMN_CHANGE, EXPECTED_STATUS_CHANGES,
 };
 export type { ExpectedStatusChange };

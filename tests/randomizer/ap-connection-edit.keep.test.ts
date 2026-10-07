@@ -16,7 +16,7 @@ import { reconnectProfileSession } from '@app/lib/game/randomizer-client/profile
 import {
   joinServerAddress, serverAddressError, splitServerAddress,
 } from '@app/lib/game/randomizer-client/server-address';
-import { absorbPort, draftError, draftOf, patchOf } from '@app/ui/domains/app/views/Randomizer/sub-components/NetworkTab/behavior/connection-draft';
+import { absorbPort, draftError, draftOf, patchOf } from '@app/hooks/randomizer/server-setup/server-setup-draft';
 import { createMemFileStore } from '../storage/mem-file-store';
 import { createFakeServer } from './ap-fake-server';
 import { createFakeCore } from './ap-fake-core';
@@ -138,7 +138,7 @@ describe('the address fields', () => {
     const draft = { ...draftOf(onlineConfig('pw')), host: 'localhost:38290', port: '1' };
     expect(absorbPort(draft)).toMatchObject({ host: 'localhost', port: '38290' });
     expect(patchOf(absorbPort(draft))).toEqual({
-      serverUrl: 'localhost:38290', slotName: 'Link', password: 'pw', deathLink: false, trackOtherPlayers: false,
+      serverUrl: 'localhost:38290', slotName: 'Link', password: 'pw',
     });
   });
 

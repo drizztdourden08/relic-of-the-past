@@ -26,8 +26,9 @@ interface OptionTabBodyProps {
   notes: readonly string[];
   /** Filler still in the pool; null when the pool could not be built. */
   fillerHeadroom: number | null;
-  onRowChange: (key: string, next: OptionValue) => void;
-  onChange: (next: RandomizerOptionChoices) => void;
+  /** Both absent draw the tab read-only: every value as a tag, no control. */
+  onRowChange?: (key: string, next: OptionValue) => void;
+  onChange?: (next: RandomizerOptionChoices) => void;
 }
 
 export type { OptionTabBodyProps };

@@ -192,10 +192,8 @@ const DW_PALACE_OF_DARKNESS_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-156',
-    // The reward pickup is its own ledger bit; a file older than the ledger reads the heart bit
-    // and this dungeon's own reward in hand, which is what taking it meant before shuffles.
+    // The reward pickup is its own ledger bit.
     gameId: { eventBit: 25 },
-    fallback: { allOf: [{ checkId: 'check-155' }, { itemId: 'item-112' }] },
     kind: 'prize',
     screenId: 'screen-373',
     regionId: 'region-227',

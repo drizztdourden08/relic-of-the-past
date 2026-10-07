@@ -41,11 +41,15 @@ const healthChip = (status: NetworkStatus, now: number): Chip => {
   return quiet ? { tone: 'warn', label: 'no reply' } : { tone: 'ok', label: 'healthy' };
 };
 
+/** A panel with no session behind it: the last session's picture, or nothing yet. */
+const offlineChip = (hasLast: boolean): Chip =>
+  (hasLast ? { tone: 'dim', label: 'last session' } : { tone: 'idle', label: 'not connected' });
+
 const onlineChip = (online: boolean | null): Chip => {
   if (online === null) return { tone: 'dim', label: 'unknown' };
   // Another player being away is ordinary, so offline takes no alarm colour.
   return online ? { tone: 'ok', label: 'online' } : { tone: 'idle', label: 'offline' };
 };
 
-export { healthChip, onlineChip, stateChip, STALE_AFTER_MS };
+export { healthChip, offlineChip, onlineChip, stateChip, STALE_AFTER_MS };
 export type { Chip, Tone };

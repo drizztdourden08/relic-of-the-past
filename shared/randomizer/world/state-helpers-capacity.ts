@@ -5,7 +5,8 @@
  * top of the ladder (rung 0 is the empty tier: no capacity, no magic). A
  * vanilla family keeps the reference's fixed-option arithmetic
  * (StateHelpers.py can_use_bombs / can_hold_arrows with the capacity shuffle
- * off: the vanilla rung, plus the whole grid once the shop event is reached);
+ * off: the vanilla rung, plus the whole grid once the capacity fairy's shop is
+ * in reach and paid for, capacity/capacity-shop.data.ts);
  * a family in the pool counts its items instead and gets no shop bonus, the
  * reference's own on-mode divergence. A progressive item is one step of
  * the family's plan: k copies collected reach the plan's cumulative rung k,
@@ -15,8 +16,8 @@
  * the reference has neither.
  */
 import { ITEM } from './item-ids.data';
-import { UNRECORDED } from './item-ids.data';
 import { EXPLOSIVES, METER, PROJECTILES, WALLET } from './capacity/capacity-family';
+import { CAPACITY_SHOP } from './capacity/capacity-shop.data';
 import { REFERENCE_CAPACITY_PROFILE } from './capacity/capacity-profile-defaults';
 import { planOf, startTierOf } from './capacity/family-plan';
 import type { CapacityFamily } from './capacity/capacity-family';
@@ -58,11 +59,23 @@ const tierReached = (state: CollectionState, capacityFamily: CapacityFamily, set
     startTierOf(capacityFamily, setting) + collectedStepsOf(state, capacityFamily, setting),
   );
 
+/** The largest rupee count the wallet holds at once: the vanilla 999, or the ladder rung reached. */
+const walletCapacity = (state: CollectionState): number => {
+  const setting = settingOf(state, WALLET);
+  const { ladder, vanillaRung } = WALLET;
+  if (setting.mode !== 'custom') return ladder[vanillaRung];
+  return ladder[tierReached(state, WALLET, setting)];
+};
+
+/** The capacity fairy's room is reached and the wallet holds her price. */
+const capacityShopOpen = (state: CollectionState): boolean =>
+  state.canReachRegion(CAPACITY_SHOP.region) && walletCapacity(state) >= CAPACITY_SHOP.price;
+
 const explosivesCapacity = (state: CollectionState): number => {
   const setting = settingOf(state, EXPLOSIVES);
   const { ladder, vanillaRung } = EXPLOSIVES;
   if (setting.mode === 'vanilla') {
-    return state.has(UNRECORDED.capacityShopEvent) ? ladder[ladder.length - 1] : ladder[vanillaRung];
+    return capacityShopOpen(state) ? ladder[ladder.length - 1] : ladder[vanillaRung];
   }
   return ladder[tierReached(state, EXPLOSIVES, setting)];
 };
@@ -71,7 +84,7 @@ const projectilesCapacity = (state: CollectionState): number => {
   const setting = settingOf(state, PROJECTILES);
   const { ladder, vanillaRung } = PROJECTILES;
   if (setting.mode === 'vanilla') {
-    return state.has(UNRECORDED.capacityShopEvent) ? ladder[ladder.length - 1] : ladder[vanillaRung];
+    return capacityShopOpen(state) ? ladder[ladder.length - 1] : ladder[vanillaRung];
   }
   return ladder[tierReached(state, PROJECTILES, setting)];
 };
@@ -93,14 +106,6 @@ const meterUsesMultiplier = (state: CollectionState): number => {
 
 /** No magic at all on the meter's empty rung: every use is refused there. */
 const hasMeterCapacity = (state: CollectionState): boolean => meterUsesMultiplier(state) > 0;
-
-/** The largest rupee count the wallet holds at once: the vanilla 999, or the ladder rung reached. */
-const walletCapacity = (state: CollectionState): number => {
-  const setting = settingOf(state, WALLET);
-  const { ladder, vanillaRung } = WALLET;
-  if (setting.mode !== 'custom') return ladder[vanillaRung];
-  return ladder[tierReached(state, WALLET, setting)];
-};
 
 /** The first wallet rung that holds |price| at once. */
 const walletRungFor = (price: number): number => {

@@ -2,10 +2,10 @@
 /**
  * Tracker-facing availability over a frozen placement. The player's logical
  * inventory is the multiset of items sitting at the locations they have
- * already completed (per the placement's locations), plus every event and
- * dungeon-prize slot whose location is in logic for that inventory, the
- * reference sweep's semantics: an in-logic slot's content counts because the
- * player can go take it. A location is available when its region and access
+ * already completed (per the placement's locations), plus every story event
+ * within reach and every dungeon-prize slot whose location is in logic for that
+ * inventory, the reference sweep's semantics: an in-logic slot's content counts
+ * because the player can go take it. A location is available when its region and access
  * rule pass under that state and it is not already completed.
  *
  * The world is rebuilt from the placement's own frozen record (the key-drop
@@ -14,12 +14,9 @@
  * availability always answers for THIS seed under the ported rules, never
  * the hand-authored normal dataset.
  */
-import { REFERENCE_DARK_ROOM_SETTING } from './world/dark-rooms';
 import { buildFillWorld } from './world/fill/fill-world';
-import { DEFAULT_STORY_GATES } from './world/story-gates/story-gates.data';
-import { capacityBonusOfStats, capacityProfileOfStats, capacityProgressiveOfStats } from './world/fill/placement-capacity';
-import { pondProfilesOfStats } from './world/fill/placement-ponds';
-import { actTokensOf, isCertifiedAct } from './world/events/event-gates';
+import { actTokensOf } from './world/events/event-gates';
+import { collectReachableEvents } from './world/events/event-sweep';
 import { createCollectionState } from './world/collection-state';
 import { computeReachableRegions } from './world/graph';
 import { canCollectLocation } from './world/rules/collect';
@@ -55,21 +52,21 @@ const worldFromPlacement = (
   const { stats } = placement;
   // The tracker's own switch: off reads every unlit room as walked in the dark, whatever the seed asked.
   const darkRooms = darkRoomsNeedLight ? stats.darkRooms
-    : { ...(stats.darkRooms ?? REFERENCE_DARK_ROOM_SETTING), requireLight: false };
+    : { ...stats.darkRooms, requireLight: false };
   const { world } = buildFillWorld({
     keyDropShuffle: stats.keyDropShuffle,
     includeNpcChecks: stats.includeNpcChecks,
     includeWorldItems: stats.includeWorldItems,
-    capacity: capacityProfileOfStats(stats),
-    capacityProgressive: capacityProgressiveOfStats(stats),
-    capacityBonus: capacityBonusOfStats(stats),
+    capacity: stats.capacity,
+    capacityProgressive: stats.capacityProgressive,
+    capacityBonus: stats.capacityBonus,
     shops: stats.shops,
     shopPrices: placement.shopPrices,
-    ponds: pondProfilesOfStats(stats),
-    pondSlotsFollowMode: stats.pondSlotsFollowMode === true,
+    ponds: stats.ponds,
+    pondSlotsFollowMode: stats.pondSlotsFollowMode,
     pondDemands: placement.pondDemands,
     darkRooms,
-    storyGates: stats.storyGates ?? DEFAULT_STORY_GATES,
+    storyGates: stats.storyGates,
     ...(actTokens === undefined ? {} : { actTokens }),
     progressiveTiers: stats.progressiveTiers,
     progressiveModes: stats.progressiveModes,
@@ -86,32 +83,30 @@ const worldFromPlacement = (
 };
 
 /**
- * Fixpoint sweep over the auto-granted slots (event and prize locations):
- * an in-logic slot's content joins the inventory, which can open more.
+ * Fixpoint sweep over the auto-granted slots (the prize locations) and the story events of the
+ * world: an in-logic slot's content, or an event within reach, joins the inventory, which can
+ * open more.
  *
- * With a record of what the player did attached, an act the record certifies is left out of
- * the sweep: whether the floodgate is open is a fact the game wrote down, not something to
- * infer from the lever being within walking distance. An event no check certifies (the
- * capacity fairy) has no other source, so it keeps the sweep.
+ * With a record of what the player did attached, the record alone answers. A crystal or pendant
+ * is held once its boss is beaten, and the record says when that was; one merely within reach is
+ * not held yet, and counting it opened Ganon's Tower. A story event is the same: whether the
+ * floodgate is open is a fact the game wrote down (events/event-sweep.ts skips the inference).
  */
 const sweepAutoGrantedSlots = (
   state: CollectionState, world: World, readsRecord: boolean,
   /** Already in the state's hands: sweeping one again would count its item twice. */
   completedLocations: ReadonlySet<LocationKey>,
 ): void => {
+  if (readsRecord) return;
   const collected = new Set<LocationKey>(completedLocations);
   let changed = true;
   while (changed) {
     changed = false;
+    collectReachableEvents(state);
     for (const location of world.locationsByKey.values()) {
-      if (!location.event && !location.prize) continue;
-      if (collected.has(location.key)) continue;
-      const item = world.placedItems.get(location.key);
-      if (readsRecord && location.event && item !== undefined && isCertifiedAct(item)) continue;
-      // A crystal or pendant is held once its boss is beaten, and the record says when that
-      // was. One merely within reach is not held yet, and counting it opened Ganon's Tower.
-      if (readsRecord && location.prize) continue;
+      if (!location.prize || collected.has(location.key)) continue;
       if (!canCollectLocation(state, location.key)) continue;
+      const item = world.placedItems.get(location.key);
       if (item !== undefined) state.collect(item);
       collected.add(location.key);
       changed = true;

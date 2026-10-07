@@ -1,0 +1,52 @@
+/* @layer renderer-components @kind style */
+
+/* A neutral chip reads as a value; a toned one takes its colour for the text,
+   a soft wash of it for the fill, and the text colour again for the edge. */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  padding: 0 var(--space-xs);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-sm);
+  background: var(--c-surface);
+  color: var(--c-text);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.chip[data-caps] {
+  text-transform: uppercase;
+}
+
+.chip[data-tone='ok'] {
+  border-color: currentcolor;
+  background: var(--c-green-soft);
+  color: var(--c-green-bright);
+}
+
+.chip[data-tone='warn'] {
+  border-color: currentcolor;
+  background: var(--c-warning-soft);
+  color: var(--c-warning);
+}
+
+.chip[data-tone='bad'] {
+  border-color: currentcolor;
+  background: var(--c-danger-soft);
+  color: var(--c-danger);
+}
+
+.chip[data-tone='idle'] {
+  color: var(--c-text-muted);
+}
+
+.chip[data-tone='dim'] {
+  border-style: dashed;
+  background: transparent;
+  color: var(--c-text-muted);
+  opacity: var(--opacity-faint);
+}

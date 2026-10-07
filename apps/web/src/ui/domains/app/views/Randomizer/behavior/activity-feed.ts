@@ -42,9 +42,11 @@ const ROOM_ECHO_PREFIX = '[AP] ';
 const isRoomEcho = (entry: LogEntry, lines: readonly RoomMessage[]): boolean =>
   lines.length > 0 && entry.message.startsWith(ROOM_ECHO_PREFIX);
 
-/** Every row of the feed, oldest first, minus the kinds the viewer has hidden. */
+const NOTHING_HIDDEN: ReadonlySet<string> = new Set();
+
+/** Every row of the feed, oldest first, minus the kinds the viewer has hidden (none by default). */
 const buildActivityRows = (
-  entries: readonly LogEntry[], lines: readonly RoomMessage[], hidden: ReadonlySet<string>,
+  entries: readonly LogEntry[], lines: readonly RoomMessage[], hidden: ReadonlySet<string> = NOTHING_HIDDEN,
 ): LogRow[] => {
   const own = entries
     .filter((entry) => !isRoomEcho(entry, lines))
@@ -54,4 +56,4 @@ const buildActivityRows = (
   return hidden.size > 0 ? rows.filter((row) => !hidden.has(row.kind)) : rows;
 };
 
-export { buildActivityRows };
+export { buildActivityRows, isRoomEcho };

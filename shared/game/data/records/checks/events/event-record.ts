@@ -23,7 +23,6 @@ interface EventSpec {
    */
   subArea?: string;
   derived?: Requirement;
-  fallback?: Requirement;
   reachAny?: readonly ScreenId[];
   now?: PresenceCondition;
   derivedDungeon?: CheckRecord['derivedDungeon'];
@@ -37,7 +36,7 @@ interface EventSpec {
 const eventId = (n: number): CheckId => `check-${String(EVENT_ID_BASE + n).padStart(3, '0')}` as CheckId;
 
 const eventRecord = (spec: EventSpec): CheckRecord => {
-  const { n, name, group, gameId = {}, dungeonId, subArea, derived, fallback, reachAny, now, derivedDungeon, statusOnly, requirements, actorId } = spec;
+  const { n, name, group, gameId = {}, dungeonId, subArea, derived, reachAny, now, derivedDungeon, statusOnly, requirements, actorId } = spec;
   return {
     id: eventId(n),
     gameId,
@@ -53,7 +52,6 @@ const eventRecord = (spec: EventSpec): CheckRecord => {
     ...(dungeonId !== undefined ? { dungeonId } : {}),
     ...(subArea !== undefined ? { subArea } : {}),
     ...(derived !== undefined ? { derived } : {}),
-    ...(fallback !== undefined ? { fallback } : {}),
     ...(reachAny !== undefined ? { reachAny } : {}),
     ...(now !== undefined ? { now } : {}),
     ...(derivedDungeon !== undefined ? { derivedDungeon } : {}),

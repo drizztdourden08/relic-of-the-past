@@ -12,18 +12,12 @@
  * carry (a restock is a shop slot, a pond rung a pond slot), so the "type" facet
  * puts every rung of a ladder together; it is not a detection claim. vanillaItemIds carries
  * the real vanilla item where one exists (a shop shelf, a key-drop pot);
- * everything here still hands over a real item, so isGuaranteedReward says so
+ * everything here hands over a real item, so isGuaranteedReward says so
  * even where there is no vanilla precedent to point vanillaItemIds at (a pond
  * prize rung).
- *
- * The reference's logic events stay: beating Agahnim, opening the floodgate,
- * getting the frog and the rest are things the player DOES, the game writes a
- * flag for each, and every one has a check record of its own here.
- * UNTRACKED_LOCATIONS is the exception that has none.
  */
 import { shopSlotLocationOf } from '@shared/randomizer/world/shops/shop-slots';
-import { EVENT_LOCATIONS, KEY_DROP_LOCATIONS } from '@shared/randomizer/world/scope-tables';
-import { CAPACITY_SHOP_EVENT } from '@shared/randomizer/world/location-key';
+import { KEY_DROP_LOCATIONS } from '@shared/randomizer/world/scope-tables';
 import { checkIdOfLocation, locationKeyOfCheck } from '@shared/randomizer/world/location-record';
 import { locationDisplayName } from '@shared/randomizer/world/display-names/location-display-name';
 import { getCheck } from '@shared/game/data';
@@ -39,17 +33,6 @@ const shopScreenFor = (location: LocationKey): ScreenId | undefined => {
   const checkId = shopSlotLocationOf(location)?.slot.checkId;
   return checkId === undefined ? undefined : getCheck(checkId).screenId;
 };
-
-/**
- * Placement locations the tracker does not list, because there is nothing at them to track.
- *
- * "Capacity Upgrade Shop" is Archipelago's own event (its spoilers carry it), but unlike
- * every other event it stands for no act of the player and the game writes no flag for it:
- * it fires on reaching the pond's room, and the token only tells the fill's solver that a
- * vanilla capacity family can be bought up from there (state-helpers-capacity.ts). It is
- * the one event with no check record here, for exactly that reason.
- */
-const UNTRACKED_LOCATIONS: ReadonlySet<LocationKey> = new Set([CAPACITY_SHOP_EVENT]);
 
 /** Underscores stay, because a shop key uses them (`kakariko-shop-shelf_left-slot_2`). */
 const slugOf = (name: string): string => name.toLowerCase().replace(/[^a-z0-9_]+/g, '-').replace(/(^-|-$)/g, '');
@@ -83,7 +66,7 @@ const virtualChecksOf = (placement: Placement): CheckRecord[] => {
   const records: CheckRecord[] = [];
   for (const where of Object.keys(placement.locations)) {
     const location = where as LocationKey;
-    if (UNTRACKED_LOCATIONS.has(location) || checkIdOfLocation(location) !== undefined) continue;
+    if (checkIdOfLocation(location) !== undefined) continue;
     const screenId = shopScreenFor(location);
     records.push({
       id: virtualCheckIdOf(location),
@@ -92,7 +75,7 @@ const virtualChecksOf = (placement: Placement): CheckRecord[] => {
       screenId,
       name: locationDisplayName(location),
       vanillaItemIds: vanillaItemIdsOf(location),
-      isGuaranteedReward: !EVENT_LOCATIONS.has(location),
+      isGuaranteedReward: true,
     });
   }
   cached = { placement, records };
@@ -114,10 +97,8 @@ const placementCheckRecords = (checkRecords: readonly CheckRecord[], placement: 
 };
 
 /**
- * The event records: shown on every profile, never part of a seed's total. Three of them are
- * also locations of the world (the flute spot, the floodgate, the smiths' ruins), so this list
- * and the aligned one overlap and whoever joins them deduplicates by id
- * (tracker/tracker-roster.ts).
+ * The event records: shown on every profile, never part of a seed's total. No event is a
+ * location of any world, so this list and the placement's never overlap.
  */
 const eventCheckRecords = (checkRecords: readonly CheckRecord[]): CheckRecord[] =>
   checkRecords.filter((check) => check.kind === 'event');

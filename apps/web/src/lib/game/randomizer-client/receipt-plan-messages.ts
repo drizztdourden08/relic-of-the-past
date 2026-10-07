@@ -30,8 +30,6 @@ import { capacityRungLinesOf } from '@shared/randomizer/receipt-text/capacity-ru
 import { capacityFixedLinesOf } from '@shared/randomizer/receipt-text/capacity-fixed-lines';
 import { pondLinesOf } from '@shared/randomizer/receipt-text/pond-lines';
 import { pondPlanOf } from '@shared/randomizer/world/pond/pond-plan';
-import { pondProfilesOfStats } from '@shared/randomizer/world/fill/placement-ponds';
-import { capacityProfileOfStats, capacityProgressiveOfStats } from '@shared/randomizer/world/fill/placement-capacity';
 import { isForeignItem } from '@shared/randomizer/archipelago/foreign-item';
 import { wishPondLinesOf } from './wish-pond-lines';
 import { foreignItemLine } from './foreign-item-line';
@@ -103,7 +101,7 @@ const NO_POND_LINES: PlanPondLines = {
  */
 const appendPondLines = (placement: Placement, lines: ReceiptLine[]): PlanPondLines => {
   // The lines the core speaks belong to the one pond it arms, the capacity one.
-  const setting = pondProfilesOfStats(placement.stats).capacity;
+  const setting = placement.stats.ponds.capacity;
   if (setting.mode === 'capacity') return NO_POND_LINES;
   const { prices, refunds, lines: pondLines } = pondLinesOf(pondPlanOf(setting));
   const base = lines.length;
@@ -150,8 +148,8 @@ const buildPlanReceiptTexts = (
     fallbackByLocation.set(entry.location, fallbackClassId(entry));
     lines.push(line);
   }
-  const profile = capacityProfileOfStats(placement.stats);
-  if (capacityProgressiveOfStats(placement.stats)) {
+  const profile = placement.stats.capacity;
+  if (placement.stats.capacityProgressive) {
     for (const { family, lines: rungLines } of capacityRungLinesOf(profile)) {
       rungIndexByFamily.set(family, rungLines.map((_, offset) => lines.length + offset));
       lines.push(...rungLines);

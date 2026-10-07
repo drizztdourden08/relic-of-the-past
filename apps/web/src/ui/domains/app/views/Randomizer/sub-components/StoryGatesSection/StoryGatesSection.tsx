@@ -3,7 +3,8 @@
  * The story gates group of an options panel: one plain row per gate, in the order the
  * catalog lists them. The rows read and write through the same key mapping the snapshot
  * uses (story-gate-from-snapshot.ts), so a row and a stored value can never disagree.
- * The run view shares the section read-only, so a stored seed shows what it was rolled with.
+ * The read-only Options page shares the section with no handler, every value as a tag, so a
+ * stored seed shows what it was rolled with.
  */
 import { RandomizerOptionGroup } from '@domains/app/compounds/RandomizerOptionGroup';
 import { RandomizerOptionRow } from '@domains/app/compounds/RandomizerOptionRow';
@@ -23,6 +24,7 @@ const StoryGatesSection = (props: StoryGatesSectionProps) => {
           option={option}
           value={values[option.key]}
           impact={cellOf?.(option.key)}
+          readout={onChange === undefined}
           onChange={onChange === undefined
             ? undefined
             : (next) => onChange(storyGatesOfValues({ ...values, [option.key]: next }))}

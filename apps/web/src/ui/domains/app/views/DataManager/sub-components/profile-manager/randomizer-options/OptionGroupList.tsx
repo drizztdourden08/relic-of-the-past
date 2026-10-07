@@ -27,10 +27,12 @@ interface OptionGroupListProps {
   /** Per-row reason a frozen row is showing a value the player did not choose. */
   notes?: ReadonlyMap<string, string>;
   onRowChange?: (key: string, next: OptionValue) => void;
+  /** Every row shows its value as a tag: the read-only panel. */
+  readout?: boolean;
 }
 
 const OptionGroupList = (props: OptionGroupListProps) => {
-  const { groups, valueOf, cellOf, live = false, frozenKeys, notes, onRowChange } = props;
+  const { groups, valueOf, cellOf, live = false, frozenKeys, notes, onRowChange, readout } = props;
 
   return (
     <>
@@ -42,6 +44,7 @@ const OptionGroupList = (props: OptionGroupListProps) => {
               option={option}
               value={valueOf(option)}
               impact={cellOf(option.key)}
+              readout={readout}
               disabled={frozenKeys?.has(option.key)}
               note={notes?.get(option.key)}
               onChange={onRowChange === undefined ? undefined : (next) => onRowChange(option.key, next)}

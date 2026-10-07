@@ -4,7 +4,7 @@
  * unique and FROZEN.
  *
  * Complete: every location the widest world declares and every item any option can put in
- * the pool has an id, and no event carries one. Unique: no id is used twice across both
+ * the pool has an id, and no story event carries one. Unique: no id is used twice across both
  * tables, and no name twice within one. Frozen: the ids handed out so far are pinned by a
  * digest over the first FROZEN_* ids of each table. Appending new ids past them leaves the
  * digest alone; editing, reusing or removing one fails, because a seed already generated
@@ -33,7 +33,8 @@ import { apLocationUniverse } from '@shared/randomizer/archipelago/ap-location-u
 import { FAMILIES } from '@shared/randomizer/world/capacity/capacity-family';
 import { ITEM } from '@shared/randomizer/world/item-ids.data';
 import { POND_EXTRA_LOCATIONS } from '@shared/randomizer/world/pond/pond-rungs';
-import { EVENT_ITEMS, PRIZE_ITEMS } from '@shared/randomizer/world/pool/event-items.data';
+import { PRIZE_ITEMS } from '@shared/randomizer/world/pool/prize-items.data';
+import { WORLD_EVENT_IDS } from '@shared/randomizer/world/events/story-events.data';
 import { RETRO_QUIVER_ITEM } from '@shared/randomizer/world/retro/retro-bow.data';
 import { ALL_SHOP_SLOT_LOCATIONS } from '@shared/randomizer/world/shops/shop-slots';
 import { describeDataset } from '../dataset-guard';
@@ -67,7 +68,6 @@ const digestOf = (ids: Readonly<Record<string, number>>, base: number, count: nu
 const itemBase = AP_ID_BASE + AP_ITEM_ID_OFFSET;
 const locationIds = Object.values(AP_LOCATION_IDS);
 const itemIds = Object.values(AP_ITEM_IDS);
-const eventItems = new Set<string>(EVENT_ITEMS.values());
 
 const missing = (keys: Iterable<string>, table: Readonly<Record<string, number>>): string[] =>
   [...keys].filter((key) => table[key] === undefined);
@@ -80,7 +80,7 @@ describeDataset('Archipelago ids cover the whole world', () => {
   });
 
   it('gives every item any option can pool an id', () => {
-    const handles = Object.values(ITEM).filter((item) => !eventItems.has(item));
+    const handles = Object.values(ITEM);
     const capacity = FAMILIES.flatMap((family) => [
       family.progressiveItem,
       ...Array.from({ length: family.maxJump }, (_unused, index) => family.itemFor(index + 1)),
@@ -89,9 +89,9 @@ describeDataset('Archipelago ids cover the whole world', () => {
     expect(missing([...handles, ...capacity, ...PRIZE_ITEMS, RETRO_QUIVER_ITEM], AP_ITEM_IDS)).toEqual([]);
   });
 
-  it('gives no event an id, as Archipelago gives it none', () => {
-    expect([...EVENT_ITEMS.keys()].filter((key) => key in AP_LOCATION_IDS)).toEqual([]);
-    expect([...eventItems].filter((key) => key in AP_ITEM_IDS)).toEqual([]);
+  it('gives no story event an id, as Archipelago gives an event none', () => {
+    expect(WORLD_EVENT_IDS.filter((key) => key in AP_LOCATION_IDS)).toEqual([]);
+    expect(apLocationUniverse().filter((key) => (WORLD_EVENT_IDS as readonly string[]).includes(key))).toEqual([]);
   });
 });
 

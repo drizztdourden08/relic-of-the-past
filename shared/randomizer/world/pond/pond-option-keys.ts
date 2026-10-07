@@ -8,10 +8,6 @@
  * same snapshot. Only a mode row is bubbled up with the player's other
  * choices; the rest are rendered by the pond block itself, exactly as the
  * capacity family rows are.
- *
- * The shipped spelling (`pond_mode`, `pond_items`, ...) was the capacity
- * pond's alone and is read through pond-key-migration.data.ts, which also
- * carries the price range onto the ask block's rupee row.
  */
 import { POND_INSTANCES } from './pond-instances';
 import { pondAskKeysOf } from './pond-ask-keys';

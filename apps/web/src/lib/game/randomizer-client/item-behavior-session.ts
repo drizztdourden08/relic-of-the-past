@@ -19,22 +19,11 @@
  * pair at generation time would let a stored placement and the running game
  * disagree the day the derivation changes, so the derivation runs on both
  * sides instead.
- *
- * A placement with neither field (every seed rolled before these rows existed)
- * arms nothing at all: the full ladder and the unmodified game, which is what
- * it was generated against.
  */
 
-import {
-  REFERENCE_DARK_ROOM_SETTING,
-} from '@shared/randomizer/world/dark-rooms/dark-room-lights.data';
 import { DEFAULT_ITEM_POWER } from '@shared/randomizer/world/item-power/item-power.data';
-import { DEFAULT_RETRO_BOW } from '@shared/randomizer/world/retro/retro-bow.data';
 import { retroVanillaShelves } from '@shared/randomizer/world/retro/retro-shops';
-import { NO_SHOP_SCOPE } from '@shared/randomizer/world/shops/shop-scope-from-values';
 import { derivedItemPower } from '@shared/randomizer/world/item-power/item-power-rule';
-import { DEFAULT_PROGRESSIVE_SETTING } from '@shared/randomizer/world/progressive/progressive-families.data';
-import { DEFAULT_PROGRESSIVE_MODES } from '@shared/randomizer/world/progressive/progressive-modes.data';
 import {
   beamSwordReachable, swordReachable,
 } from '@shared/randomizer/world/progressive/progressive-reach';
@@ -45,7 +34,6 @@ import { clearRetroBow, setRetroBow } from '../retro-bow';
 import { clearRetroShelves, setRetroShelves } from '../retro-shelf';
 import { darkRoomLightWordOf } from '../dark-room-lights';
 import { setSessionStoryGates } from '../story-gates';
-import { DEFAULT_STORY_GATES } from '@shared/randomizer/world/story-gates/story-gates.data';
 import type { StoryGateSetting } from '@shared/randomizer/world/story-gates/story-gate.type';
 import type { PlacementStats } from '@shared/randomizer/world/fill/placement.type';
 import type { DarkRoomSetting } from '@shared/randomizer/world/dark-rooms/dark-room.type';
@@ -79,15 +67,9 @@ interface ItemBehaviorPlan {
 }
 
 const itemBehaviorOf = (stats: PlacementStats): ItemBehaviorPlan => {
-  const tiers = stats.progressiveTiers ?? DEFAULT_PROGRESSIVE_SETTING;
-  const modes = stats.progressiveModes ?? DEFAULT_PROGRESSIVE_MODES;
-  const itemPower = derivedItemPower(
-    stats.itemPower ?? DEFAULT_ITEM_POWER, swordReachable(tiers), beamSwordReachable(tiers),
-  );
-  const retroBow = stats.retroBow ?? DEFAULT_RETRO_BOW;
-  const retroShelves = retroVanillaShelves(stats.shops ?? NO_SHOP_SCOPE, retroBow);
-  const darkRooms = stats.darkRooms ?? REFERENCE_DARK_ROOM_SETTING;
-  const storyGates = stats.storyGates ?? DEFAULT_STORY_GATES;
+  const { progressiveTiers: tiers, progressiveModes: modes, retroBow, darkRooms, storyGates } = stats;
+  const itemPower = derivedItemPower(stats.itemPower, swordReachable(tiers), beamSwordReachable(tiers));
+  const retroShelves = retroVanillaShelves(stats.shops, retroBow);
   const vanilla = isFullLadder(tiers, modes) && !retroBow.enabled
     && darkRoomLightWordOf(darkRooms) === 0
     && (Object.keys(itemPower) as Array<keyof ItemPowerSetting>)

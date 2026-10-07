@@ -3,10 +3,7 @@
  * The two fixed profiles. REFERENCE is the reference randomizer's own
  * baseline (its single half-meter item at the bat, nothing else in the
  * pool, no fairy-slot locations): the world every oracle and existing view
- * was built on, and what an absent profile means everywhere. LEGACY_SHUFFLE_ON
- * is the Custom shape that reproduces the pre-v2 "shuffle capacity
- * upgrades" pool byte-for-byte: one one-tier item per fairy slot, so a live
- * seed regenerates the same placement from its adapted snapshot. DEFAULT is
+ * was built on, and what an absent profile means everywhere. DEFAULT is
  * what a NEW profile starts on: the two pond-fed families in the pool, the
  * meter and the wallet on a Custom ladder. It is the catalog baseline of the
  * capacity rows and the creation form's starting profile, and nothing else:
@@ -36,13 +33,6 @@ const VANILLA_CAPACITY_PROFILE: CapacityProfile = {
   wallet: { mode: 'vanilla' },
 };
 
-const LEGACY_SHUFFLE_ON_PROFILE: CapacityProfile = {
-  explosives: customSetting(10, 15, 1),
-  projectiles: customSetting(30, 35, 1),
-  meter: { mode: 'vanilla-in-pool' },
-  wallet: { mode: 'vanilla' },
-};
-
 /**
  * Where a fresh profile starts. All four families ride a Custom ladder from
  * an empty rung: bombs and arrows climb to 50 and 70 over seven equal steps,
@@ -56,11 +46,6 @@ const DEFAULT_CAPACITY_PROFILE: CapacityProfile = {
   wallet: { mode: 'custom', start: 0, max: 9999, count: 8, shape: { curve: 'geometric' } },
 };
 
-/** The profile a v1 snapshot's single toggle stood for. */
-const legacyCapacityProfile = (shuffleOn: boolean): CapacityProfile =>
-  shuffleOn ? LEGACY_SHUFFLE_ON_PROFILE : REFERENCE_CAPACITY_PROFILE;
-
 export {
-  DEFAULT_CAPACITY_PROFILE, LEGACY_SHUFFLE_ON_PROFILE, REFERENCE_CAPACITY_PROFILE, VANILLA_CAPACITY_PROFILE,
-  customSetting, legacyCapacityProfile,
+  DEFAULT_CAPACITY_PROFILE, REFERENCE_CAPACITY_PROFILE, VANILLA_CAPACITY_PROFILE, customSetting,
 };

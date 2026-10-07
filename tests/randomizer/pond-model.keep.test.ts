@@ -1,8 +1,8 @@
 /* @layer tests @kind test */
 /**
  * The pond model: the rupee decomposition, the modes' schedules, the snapshot
- * adapter (a snapshot with no pond row means the legacy pond, and so does a
- * mode the model no longer offers), the wallet reading of a prize, and the
+ * adapter (a snapshot with no pond row means the baseline pond, and a mode the
+ * model does not offer means the legacy pond), the wallet reading of a prize, and the
  * pond's own receipt lines: the price of a toss, a prize award, an emptied
  * pond, which have to quote the plan's real amounts, because every vanilla
  * line they replace names an amount no plan charges or asks a question no
@@ -176,10 +176,10 @@ describe('pond receipt lines', () => {
 });
 
 describe('pond snapshot adapter', () => {
-  it('reads a snapshot with no pond row as the legacy pond', () => {
+  it('reads a snapshot with no pond row as the baseline pond', () => {
     const values = { ...baselineValues };
     delete (values as Record<string, unknown>)['pond_capacity_mode'];
-    expect(parsePondSetting(values).setting).toEqual(LEGACY_POND_SETTING);
+    expect(parsePondSetting(values).setting).toEqual(DEFAULT_POND_SETTING);
   });
 
   it('the shipped baseline is the fresh-profile pond', () => {

@@ -24,7 +24,7 @@ import { defaultShopScope, shopScopeOfValues } from '@shared/randomizer/world/sh
 import { SHOP_SHUFFLE_MODES } from '@shared/randomizer/world/shops/shop-scope';
 import { ruleForPrice } from '@shared/randomizer/world/rules/shop-prices';
 import { REGION } from '@shared/randomizer/world/region-ids.data';
-import { LEGACY_SHUFFLE_ON_PROFILE } from '@shared/randomizer/world/capacity';
+import { customSetting } from '@shared/randomizer/world/capacity';
 import { DEFAULT_ITEM_POWER } from '@shared/randomizer/world/item-power/item-power.data';
 import { defaultProgressiveSetting } from '@shared/randomizer/world/progressive/progressive-from-snapshot';
 import { LEGACY_POND_PROFILES } from '@shared/randomizer/world/pond/pond-profile-defaults';
@@ -46,7 +46,12 @@ const BASE: Omit<RandomizerOptionChoices, 'shops' | 'shopPrices'> = {
   includeWorldItems: false,
   shufflePrizes: false,
   capacityEnabled: true,
-  capacity: LEGACY_SHUFFLE_ON_PROFILE,
+  capacity: {
+    explosives: customSetting(10, 15, 1),
+    projectiles: customSetting(30, 35, 1),
+    meter: { mode: 'vanilla-in-pool' },
+    wallet: { mode: 'vanilla' },
+  },
   capacityProgressive: true,
   ponds: LEGACY_POND_PROFILES,
   progressiveTiers: defaultProgressiveSetting(),

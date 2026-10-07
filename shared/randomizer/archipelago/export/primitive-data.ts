@@ -6,7 +6,8 @@
  * primitives are the arithmetic of state-helpers-capacity.ts, state-helpers.ts and
  * rules/heart-capacity.ts over these tables and nothing else.
  */
-import { ITEM, UNRECORDED } from '../../world/item-ids.data';
+import { ITEM } from '../../world/item-ids.data';
+import { CAPACITY_SHOP } from '../../world/capacity/capacity-shop.data';
 import { REGION } from '../../world/region-ids.data';
 import { BOTTLE_ITEMS } from '../../world/item-groups';
 import { BASELINE } from '../../world/state-helpers';
@@ -36,7 +37,7 @@ const primitiveDataOf = (world: World): PrimitiveData => {
   ) as PrimitiveData['families'];
   return {
     families,
-    shopEvent: UNRECORDED.capacityShopEvent,
+    capacityShop: { region: CAPACITY_SHOP.region, price: CAPACITY_SHOP.price },
     meterHalf: ITEM.magicUpgradeHalf,
     meterQuarter: ITEM.magicUpgradeQuarter,
     meterItems: [...meterConsumingItems()].sort(),

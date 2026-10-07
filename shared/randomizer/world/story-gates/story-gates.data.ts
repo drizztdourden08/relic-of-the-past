@@ -1,8 +1,7 @@
 /* @layer shared-game @kind data */
 /**
  * The default story gates: the story as the game tells it. The scenes read their recorded
- * event, the counts are the original numbers. A snapshot with no row reads the same way,
- * so a seed rolled before these rows existed keeps its meaning.
+ * event, the counts are the original numbers. A snapshot with no row reads the same way.
  */
 import type { StoryGateSetting } from './story-gate.type';
 

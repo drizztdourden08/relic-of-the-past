@@ -18,15 +18,17 @@ interface ShopSlotCountProps {
   summary: ShopScopeSummary;
   /** Vanilla mode or a read-only render: both faces draw inert. */
   disabled: boolean;
+  /** Draw the read-out face whatever the mode: the read-only panel. */
+  readout?: boolean;
   /** Absent renders the control frozen; only the slider face ever calls it. */
   onChange?: (slotCount: number) => void;
 }
 
 const ShopSlotCount = (props: ShopSlotCountProps) => {
-  const { summary, disabled, onChange } = props;
+  const { summary, disabled, readout = false, onChange } = props;
   const control = shopCountControlOf(summary);
 
-  if (control.kind === 'readout') {
+  if (control.kind === 'readout' || readout) {
     return (
       <Box className="shop-slot-count" data-inert={disabled ? '' : undefined}>
         <StatRow label={SLOT_COUNT_LABEL} value={control.value} />

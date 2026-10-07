@@ -14,6 +14,11 @@
 
 #define AGAHNIM_ALTAR_ROOM 0x30
 #define ALTAR_SCENE_DONE_BIT 0x4000
+// Agahnim's two fights: the tower top and the last tower's top. Neither drops a heart container,
+// so the boss room's own "boss beaten" bit in the save is what marks the kill.
+#define AGAHNIM_TOWER_BOSS_ROOM 0x20
+#define GANONS_TOWER_BOSS_ROOM 0x0D
+#define BOSS_BEATEN_BIT 0x800
 #define AGINAH_ROOM 0x10A
 #define AGINAH_FIRST_LINE 0x125
 #define AGINAH_LAST_LINE 0x129
@@ -100,6 +105,9 @@ static void RecordLevels(void) {
     GameHook_RecordEvent(kEvent_AginahTalked);
   if (player_is_indoors && dungeon_room_index == AGAHNIM_ALTAR_ROOM && (dung_savegame_state_bits & ALTAR_SCENE_DONE_BIT))
     GameHook_RecordEvent(kEvent_AgahnimAltar);
+  // The heart-container hook records every other boss; Agahnim's fights have none to spawn.
+  if (save_dung_info[AGAHNIM_TOWER_BOSS_ROOM] & BOSS_BEATEN_BIT) GameHook_RecordEvent(kEvent_BossKilled_AgahnimTower);
+  if (save_dung_info[GANONS_TOWER_BOSS_ROOM] & BOSS_BEATEN_BIT) GameHook_RecordEvent(kEvent_BossKilled_GanonsTower);
   // The dam's own bit is erased by the next overworld load, so the pull is kept here.
   if (player_is_indoors && dungeon_room_index == DAM_ROOM && (dung_savegame_state_bits & DAM_LEVER_PULLED_BIT))
     GameHook_RecordEvent(kEvent_FloodgatePulled);

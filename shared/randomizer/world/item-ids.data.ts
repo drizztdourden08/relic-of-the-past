@@ -34,7 +34,10 @@ const ITEM = {
   // Medallions.
   bombos: 'item-016', ether: 'item-017', quake: 'item-018',
   // The rest of the kit.
-  hammer: 'item-010', hookshot: 'item-011', shovel: 'item-020', flute: 'item-021',
+  // The flute's two rungs (the plain Flute, the Activated Flute that calls the bird as it is)
+  // and the family item the pool carries for them.
+  hammer: 'item-010', hookshot: 'item-011', shovel: 'item-020', flute: 'item-021', activatedFlute: 'item-075',
+  progressiveOcarina: 'item-179',
   flippers: 'item-031', moonPearl: 'item-032', bugCatchingNet: 'item-034',
   bookOfMudora: 'item-030', magicMirror: 'item-027', mushroom: 'item-042',
   pegasusBoots: 'item-076', blueBoomerang: 'item-013', redBoomerang: 'item-043',
@@ -73,10 +76,6 @@ const ITEM = {
   greenPendant: 'item-056', redPendant: 'item-057', bluePendant: 'item-058',
   crystal1: 'item-112', crystal2: 'item-113', crystal3: 'item-114', crystal4: 'item-115',
   crystal5: 'item-116', crystal6: 'item-117', crystal7: 'item-118',
-  // The moments the rules read as done, and the goal.
-  beatAgahnim1: 'item-119', beatAgahnim2: 'item-120', getFrog: 'item-121',
-  returnSmith: 'item-122', pickUpPurpleChest: 'item-123', openFloodgate: 'item-124',
-  activatedFlute: 'item-075', triforce: 'item-173',
   // Randomizer-only pickups.
   triforcePiece: 'item-174', powerStar: 'item-169',
 } as const satisfies Record<string, ItemId>;
@@ -85,16 +84,14 @@ const ITEM = {
  * A pool item the dataset holds NO record for, carried as its own name behind a prefix that
  * cannot be mistaken for an id.
  *
- * Three groups, all reported with step 10c:
+ * Two groups, both reported with step 10c:
  *
  *  - the counter catalog's generated rungs. A family's upgrade item is minted by formula per
  *    family and jump (shared/game/data/capacity-upgrade-names.data.ts), which is 110 names and
  *    8 records: the two counted families' third to seventh tier jumps, and every rung of the
  *    hundred-step wallet ladder, exist only as names. Those rows are settings' business and
  *    this step leaves them alone;
- *  - the retro quiver. Its own comment says it has a record; it does not;
- *  - the capacity shop's event, which says the shop is standable in. It is a logic event of the
- *    generator's model and never a pickup, so there is no receive id to file a record under.
+ *  - the retro quiver. Its own comment says it has a record; it does not.
  *
  * Each becomes an ordinary `ItemId` the day a record exists, and nothing else has to change:
  * the engine already only ever compares keys, and a name is read back through
@@ -114,9 +111,8 @@ const isUnrecordedItem = (item: ItemKey): item is UnrecordedItem => item.startsW
 /** The name behind an unrecorded key. */
 const nameOfUnrecorded = (item: UnrecordedItem): string => item.slice(UNRECORDED_PREFIX.length);
 
-/** The two one-offs, spelled once. */
+/** The one-off, spelled once. */
 const UNRECORDED = {
-  capacityShopEvent: unrecordedItem('Capacity Upgrade Shop'),
   quiver: unrecordedItem('Quiver'),
 } as const;
 

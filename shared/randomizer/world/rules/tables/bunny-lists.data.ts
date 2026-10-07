@@ -1,7 +1,9 @@
 /* @layer shared-game @kind data */
 /**
  * The locations the transformed state can still pick up, from Archipelago
- * worlds/alttp/Rules.py set_bunny_rules 1668-1673. Check ids.
+ * worlds/alttp/Rules.py set_bunny_rules 1668-1673. Check ids. Two of them are story
+ * events of the world (the chest found, the smiths reunited), which the source keeps as
+ * event locations, so the same exemption covers them.
  *
  * The regions that list named (1663-1666, and the one shop handled apart at 1769-1771) are
  * gone from here: being impassable while transformed is a fact about the place, so it is a

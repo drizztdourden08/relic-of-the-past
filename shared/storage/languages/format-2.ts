@@ -1,11 +1,8 @@
 /* @layer shared-storage @kind logic */
 /**
- * Format 2 of a stored language set: one `variables.json` in place of the `glossary.json` +
- * `names.json` pair, plus a `structure` choice, discriminated by a `format` number in the header.
- *
- * UPGRADE ON READ. A folder with no `format` field reads as 1: the old pair is folded into one
- * variable list. Nothing is written and the old files are never deleted; the next save writes
- * format 2, and the header says which payload counts. A folder that already says 2 skips the fold.
+ * Format 2 of a stored language set: one `variables.json` plus a `structure` choice, with a
+ * `format` number in the header. A folder without `variables.json` reads as no variables: an
+ * older format is a clean break.
  *
  * REBUILD ON WRITE. The set is still edited through its projected glossary and name table, so
  * the variable list is rebuilt from the pair on every save, with the previous list merged back
@@ -18,11 +15,11 @@ import type { FileStore } from '@shared/platform';
 import type {
   GlossaryTerm, LanguageSet, NameTable, SetStructure, Variable,
 } from '@shared/game/language';
-import { emptyNameTable, legacyFromVariables, mergeVariableMeta, variablesFromLegacy } from '@shared/game/language';
+import { legacyFromVariables, mergeVariableMeta, variablesFromLegacy } from '@shared/game/language';
 import { readJson, writeJson } from '../json';
-import { glossaryPath, namesPath, setMetaPath, variablesPath } from './paths';
+import { setMetaPath, variablesPath } from './paths';
 
-/** Format this build writes. A folder with no `format` field is format 1. */
+/** Format this build writes. */
 const SET_FORMAT = 2;
 
 const DEFAULT_STRUCTURE: SetStructure = 'continuous';
@@ -45,22 +42,10 @@ const asStructure = (value: unknown): SetStructure => (
 const readHeader = (files: FileStore, id: string): Promise<Record<string, unknown>> =>
   readJson<Record<string, unknown>>(files, setMetaPath(id), {});
 
-const formatOf = (header: Record<string, unknown>): number => (
-  typeof header.format === 'number' ? header.format : 1
-);
-
-const readLegacyVariables = async (files: FileStore, id: string): Promise<Variable[]> =>
-  variablesFromLegacy(
-    await readJson<GlossaryTerm[]>(files, glossaryPath(id), []),
-    await readJson<NameTable>(files, namesPath(id), emptyNameTable()),
-  );
-
-/** The set's content, upgraded from format 1 in memory when that is what is there. */
+/** The set's content: its variable list, its layout mode, and their projection. */
 const readContent = async (files: FileStore, id: string): Promise<SetContent> => {
   const header = await readHeader(files, id);
-  const variables = formatOf(header) >= SET_FORMAT
-    ? await readJson<Variable[]>(files, variablesPath(id), [])
-    : await readLegacyVariables(files, id);
+  const variables = await readJson<Variable[]>(files, variablesPath(id), []);
 
   return { variables, structure: asStructure(header.structure), ...legacyFromVariables(variables) };
 };

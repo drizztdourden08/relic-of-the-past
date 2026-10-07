@@ -69,8 +69,7 @@ interface FillWorldOptions {
   shopPrices?: ShopPriceView;
   /**
    * What each of the three ponds sells (pond/). Absent means every pond
-   * legacy: their slots answer to their vanilla grants alone, exactly as
-   * before.
+   * legacy: their slots answer to their vanilla grants alone.
    */
   ponds?: PondProfiles;
   /**
@@ -82,8 +81,7 @@ interface FillWorldOptions {
    * Whether a wish pond's mode decides her two vanilla slots: locked at
    * Vanilla grants, closed under a Custom pond that carries rungs
    * (pond/pond-vanilla-slots.ts). Absent means false, where those slots answer
-   * to the npc scope alone: the oracles' world, and every placement generated
-   * before the rule.
+   * to the npc scope alone: the oracles' world.
    */
   pondSlotsFollowMode?: boolean;
   /**
@@ -93,7 +91,7 @@ interface FillWorldOptions {
   darkRooms?: DarkRoomSetting;
   /**
    * Which recorded event each story gate reads (story-gates/). Absent means the story as
-   * the game tells it, which is what every earlier placement was played under.
+   * the game tells it.
    */
   storyGates?: StoryGateSetting;
   /**
@@ -104,12 +102,12 @@ interface FillWorldOptions {
   actTokens?: ReadonlySet<ActToken>;
   /**
    * Which tiers of each progressive family exist (progressive/). Absent means
-   * every tier: the reference pool every earlier placement was built from.
+   * every tier: the reference pool.
    */
   progressiveTiers?: ProgressiveSetting;
   /**
    * How each family's copies arrive (progressive/). Absent means every family
-   * in order: the reference reading every earlier placement was built from.
+   * in order: the reference reading.
    */
   progressiveModes?: ProgressiveModeSetting;
   /**
@@ -125,19 +123,17 @@ interface FillWorldOptions {
   retroBow?: RetroBowSetting;
   /**
    * How helpful the items are (item-power/). Absent means the reference's
-   * normal step, the unmodified game every earlier placement was rolled
-   * against.
+   * normal step, the unmodified game.
    */
   itemPower?: ItemPowerSetting;
   /**
    * Where each dungeon-item family may end up (dungeon-items/). Absent means
-   * the reference baseline (every family pinned to its own dungeon), which is
-   * what every placement rolled before the rows were read.
+   * the reference baseline: every family pinned to its own dungeon.
    */
   dungeonItems?: DungeonItemSetting;
   /**
    * How much of the seed has to be reachable (accessibility/). Absent means
-   * `full`: the generator's original contract, and the pruned always-allow
+   * `full`, and the pruned always-allow
    * registry that goes with it.
    */
   accessibility?: AccessibilityMode;

@@ -1,9 +1,8 @@
 /* @layer shared-game @kind data */
 /**
- * The ponds' fixed settings. LEGACY is the mode every snapshot written
- * before the pond option means: a pond keeps its native purchase loop and
- * its two slots answer to their vanilla grants alone, byte for byte the
- * behaviour that shipped. DEFAULT is where a NEW profile starts: every pond on
+ * The ponds' fixed settings. LEGACY is the pond as the unmodified game runs
+ * it: a pond keeps its native purchase loop and its two slots answer to their
+ * vanilla grants alone. DEFAULT is where a NEW profile starts: every pond on
  * a Custom ladder selling ten pool items over ten throws. Hylia Fairy asks for
  * rupees alone, free up to 999. Waterfall Fairy mixes rupees (free up to 400,
  * geometric), bombs, arrows and an item. Pyramid Fairy asks for bottles and an
@@ -18,7 +17,7 @@ import type { PondId } from './pond-instance.type';
 import type { PondCustomSetting, PondSetting } from './pond-profile.type';
 import type { PondProfiles } from './pond-profiles.type';
 
-/** A pond as it has always behaved: an absent snapshot row means exactly this. */
+/** A pond as the unmodified game runs it. */
 const LEGACY_POND_SETTING: PondSetting = { mode: 'capacity' };
 
 /** Today's two pond checks: what a mode offers before the player moves the slider. */
@@ -95,7 +94,7 @@ const DEFAULT_WISH_POND_SETTING: PondSetting = { mode: 'vanilla-cost', items: DE
 const pondProfilesOf = (setting: (id: PondId) => PondSetting): PondProfiles =>
   Object.fromEntries(POND_IDS.map((id) => [id, setting(id)])) as PondProfiles;
 
-/** Every pond as it has always behaved: what a snapshot with no pond row at all means. */
+/** Every pond as the unmodified game runs it: the reference world's ponds. */
 const LEGACY_POND_PROFILES: PondProfiles = pondProfilesOf(() => LEGACY_POND_SETTING);
 
 /** Where a fresh profile starts, per pond. */

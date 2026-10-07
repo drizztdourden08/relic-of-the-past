@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * The five tiered families, their pool item and the concrete tiers each copy
+ * The tiered families, their pool item and the concrete tiers each copy
  * hands over, transcribed from Archipelago worlds/alttp/Items.py
  * (progression_mapping, lines 230-242) and ItemPool.py difficulties['normal']
  * (lines 99-130), which is the row set this app's pool is pinned to. The mail
@@ -62,6 +62,17 @@ const PROGRESSIVE_FAMILIES: readonly ProgressiveFamilyDef[] = [
     tiers: [ITEM.bow, ITEM.silverBow],
     tierLabels: ['Plain', 'Silver'],
   },
+  {
+    // The reference pool holds one Flute, woken at the weathervane in play. Ticking the second
+    // rung puts the Activated Flute in the pool too, as a second copy.
+    id: 'ocarina',
+    label: 'Ocarina',
+    poolItem: ITEM.progressiveOcarina,
+    tiers: [ITEM.flute, ITEM.activatedFlute],
+    tierLabels: ['Flute', 'Activated'],
+    referenceCopies: 1,
+    defaultTicks: [true, false],
+  },
 ];
 
 const PROGRESSIVE_FAMILY_IDS: readonly ProgressiveFamilyId[] =
@@ -73,10 +84,13 @@ const familyOfId = (id: ProgressiveFamilyId): ProgressiveFamilyDef => {
   return found;
 };
 
-/** Every tier ticked: the reference pool, and what an absent row reads as. */
+/** Each family's default ticks (every tier, unless the family says otherwise): what an absent row reads as. */
 const DEFAULT_PROGRESSIVE_SETTING: ProgressiveSetting = Object.fromEntries(
-  PROGRESSIVE_FAMILIES.map((family) => [family.id, family.tiers.map(() => true)]),
+  PROGRESSIVE_FAMILIES.map((family) => [family.id, family.defaultTicks ?? family.tiers.map(() => true)]),
 ) as unknown as ProgressiveSetting;
+
+/** How many copies the transcribed pool carries for a family before its ticks apply. */
+const referenceCopiesOf = (family: ProgressiveFamilyDef): number => family.referenceCopies ?? family.tiers.length;
 
 export {
   DEFAULT_PROGRESSIVE_SETTING,
@@ -84,4 +98,5 @@ export {
   PROGRESSIVE_FAMILY_IDS,
   REPLACEMENT_ITEM,
   familyOfId,
+  referenceCopiesOf,
 };

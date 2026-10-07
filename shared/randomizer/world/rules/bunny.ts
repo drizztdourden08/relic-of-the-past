@@ -79,14 +79,19 @@ const registerBunnyRules = (world: World): void => {
   if (shop !== undefined && shop.isDarkWorld && shop.entrances.length > 0) {
     addRule(world.rules, shop.entrances[0].name, bunnyRegionRule(world, shop));
   }
-  // 1773-1788: locations in affected regions need the suppression rule.
+  // 1773-1788: locations in affected regions need the suppression rule, and so do the story
+  // events there, which are event locations to the source.
   for (const region of world.regions.values()) {
     if (!region.isDarkWorld || region.entrances.length === 0) continue;
-    if (region.locations.length === 0) continue;
+    if (region.locations.length === 0 && region.events.length === 0) continue;
     const rule = bunnyRegionRule(world, region);
     for (const location of region.locations) {
       if (BUNNY_ACCESSIBLE_LOCATIONS.has(location.key as CheckId)) continue;
       addRule(world.locationRules as Map<string, Rule>, location.key, rule);
+    }
+    for (const event of region.events) {
+      if (BUNNY_ACCESSIBLE_LOCATIONS.has(event.key)) continue;
+      addRule(world.eventRules as Map<string, Rule>, event.key, rule);
     }
   }
 };

@@ -30,6 +30,8 @@ interface PondInstanceRowProps {
   /** The ponds this one may be filled from; none hides the copy control. */
   sources?: readonly PondImportSource[];
   readOnly?: boolean;
+  /** Every control drawn as its value in a tag: the read-only Options page. */
+  readout?: boolean;
   onChange?: (next: PondSetting) => void;
   onImport?: (source: string) => void;
 }
@@ -39,7 +41,7 @@ const NO_SOURCES: readonly PondImportSource[] = [];
 const PondInstanceRow = (props: PondInstanceRowProps) => {
   const {
     pond, setting, ceilings, demands = NO_POND_DEMANDS, sources = NO_SOURCES,
-    readOnly = false, onChange, onImport,
+    readOnly = false, readout = false, onChange, onImport,
   } = props;
   const [source, setSource] = useState('');
   const walletTop = ceilings.rupees;
@@ -63,7 +65,7 @@ const PondInstanceRow = (props: PondInstanceRowProps) => {
           onImport={() => onImport(source)}
         />
       )}
-      <WishingPondRow model={model} readOnly={readOnly} onChange={handleChange} />
+      <WishingPondRow model={model} readOnly={readOnly} readout={readout} onChange={handleChange} />
       {held.notes.map((note) => (
         <Text key={note} className="pond-row__note pond-row__note--held">{note}</Text>
       ))}

@@ -38,7 +38,6 @@ const placementStatsOf = (input: PlacementStatsInput): PlacementStats => {
     includeNpcChecks,
     includeWorldItems,
     shufflePrizes,
-    capacityShuffle: fairySpots.length > 0,
     capacity,
     capacityProgressive,
     capacityBonus,

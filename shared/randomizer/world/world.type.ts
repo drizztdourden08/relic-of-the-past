@@ -11,8 +11,8 @@
  * it (empty until a fill phase populates it, which makes every
  * placement-conditional rule take its conservative branch).
  */
-import type { RegionId } from '@shared/game/data/types/ids';
-import type { WorldDungeon, WorldLocation, Region } from './region.type';
+import type { CheckId, RegionId } from '@shared/game/data/types/ids';
+import type { WorldDungeon, WorldEvent, WorldLocation, Region } from './region.type';
 import type { ItemKey } from './item-ids.data';
 import type { LocationKey } from './location-key';
 import type { MedallionId } from './item-groups';
@@ -73,13 +73,13 @@ interface WorldOptions {
   /**
    * Custom families ship one progressive item each (pickups climb the plan
    * in order) instead of fixed-jump items. Absent means false: the
-   * fixed-jump pool every earlier placement was generated from.
+   * fixed-jump pool.
    */
   capacityProgressive?: boolean;
   /**
    * How many shelf slots the shops open as locations, and how many purchases
    * each opened slot carries (shops/shop-slots.ts). Absent means no shop
-   * location exists at all: the world every earlier placement was built on.
+   * location exists at all.
    */
   shops?: ShopScope;
   /**
@@ -89,8 +89,8 @@ interface WorldOptions {
   shopPrices?: ShopPriceView;
   /**
    * What each of the three ponds sells (pond/). Absent means every pond
-   * legacy: their slots answer to their vanilla grants alone, exactly as
-   * before the option existed, and no further prize slot is a location.
+   * legacy: their slots answer to their vanilla grants alone, and no further
+   * prize slot is a location.
    */
   ponds?: PondProfiles;
   /**
@@ -122,50 +122,44 @@ interface WorldOptions {
   /**
    * What each pond rung demands, rolled once from the seed (pond/). Absent
    * means nothing was rolled: every rung keeps the wallet reading of its own
-   * price, which is the only thing a pond ever asked for before.
+   * price.
    */
   pondDemands?: PondDemandView;
   /**
    * What an unlit room asks for (dark-rooms/). Absent means the reference
-   * reading (light required, the lamp alone providing it) which every
-   * placement rolled before the settings existed was generated under.
+   * reading: light required, the lamp alone providing it.
    */
   darkRooms?: DarkRoomSetting;
   /**
    * What each story moment asks for (story-gates/). Absent means the story as the game
-   * tells it, which is what the rules asked for before the setting reached them.
+   * tells it.
    */
   storyGates?: StoryGateSetting;
   /**
    * Which tiers of each progressive family exist at all (progressive/).
-   * Absent means every tier: the reference pool, and the world every
-   * placement rolled before the rows existed was generated against.
+   * Absent means every tier: the reference pool.
    */
   progressiveTiers?: ProgressiveSetting;
   /**
    * How each family's copies arrive: nameless steps up the ladder, or the
    * rungs themselves in any order (progressive/). Absent means every family in
-   * order, which is the reference reading every placement rolled before the
-   * rows existed was generated against.
+   * order, the reference reading.
    */
   progressiveModes?: ProgressiveModeSetting;
   /**
    * How many copies of each tiered family the seed carries, and how high the
    * hearts climb (difficulty/). Absent means the reference pool: one copy per
-   * rung and the game's own twenty-heart ceiling, which is what every
-   * placement rolled before the rows existed was generated against.
+   * rung and the game's own twenty-heart ceiling.
    */
   difficulty?: DifficultySetting;
   /**
    * Whether the bow is fed rupees, not arrows, and what a shot costs
-   * (retro/). Absent means off: the pool and the rules every earlier placement
-   * was rolled under.
+   * (retro/). Absent means off.
    */
   retroBow?: RetroBowSetting;
   /**
    * How helpful the items are (item-power/). Absent means the reference's
-   * normal step, the unmodified game every earlier placement was rolled
-   * against.
+   * normal step, the unmodified game.
    */
   itemPower?: ItemPowerSetting;
   /**
@@ -178,14 +172,12 @@ interface WorldOptions {
   unlitEscapeExempt?: boolean;
   /**
    * Where each dungeon-item family may end up (dungeon-items/). Absent means
-   * the reference baseline (every family pinned to the dungeon that owns it)
-   * which is the world every placement rolled before the rows were read.
+   * the reference baseline: every family pinned to the dungeon that owns it.
    */
   dungeonItems?: DungeonItemSetting;
   /**
    * How much of the seed has to be reachable (accessibility/). Absent means
-   * `full`, the contract the generator enforced before the row was read; it
-   * also decides which of the reference's self-locking allowances exist, since
+   * `full`. It also decides which of the reference's self-locking allowances exist, since
    * every one but Rules.py 327-328 is guarded by `accessibility != 'full'`.
    */
   accessibility?: AccessibilityMode;
@@ -206,12 +198,16 @@ interface WorldOptions {
 interface World {
   regions: ReadonlyMap<RegionId, Region>;
   locationsByKey: ReadonlyMap<LocationKey, WorldLocation>;
+  /** The story events the sweep grants where they happen (events/story-events.data.ts). */
+  eventsByKey: ReadonlyMap<CheckId, WorldEvent>;
   dungeons: ReadonlyMap<string, WorldDungeon>;
   options: WorldOptions;
   /** Access rules by exit name, populated by rules/register.ts. */
   rules: Map<string, Rule>;
   /** Access rules by location key, populated by rules/register.ts. */
   locationRules: Map<LocationKey, Rule>;
+  /** Access rules by story event, populated by rules/register.ts. */
+  eventRules: Map<CheckId, Rule>;
   /** Placement predicates by location key (forbid_item and friends). */
   itemRules: Map<LocationKey, ItemRule>;
   /** python always_allow by location key (self-locking key allowances). */
@@ -226,9 +222,10 @@ interface World {
   seedValues: Map<string, SeedValue>;
   getRule(name: string): Rule | undefined;
   getLocationRule(key: LocationKey): Rule | undefined;
+  getEventRule(key: CheckId): Rule | undefined;
   /** Absent entry means every item is allowed (reference default). */
   getItemRule(key: LocationKey): ItemRule;
-  /** python completion_condition for the boss-defeat goal. */
+  /** python completion_condition: the goal's story event has happened. */
   isBeaten(state: CollectionState): boolean;
 }
 

@@ -21,11 +21,11 @@
  * dungeon-item placement rows, the three
  * synthetic switches at the top (two scope, one dungeon-prize) and the 22 synthetic capacity rows
  * (options-capacity.data.ts) that replace the reference's single capacity
- * toggle, which stays locked off. Descriptions merge in from
+ * toggle. Descriptions merge in from
  * options-descriptions.data.ts. A synthetic row has no source default, so its
  * sourceDefault is its baseline; the baselines of the unlocked rows are what a
  * NEW profile starts from, and a stored snapshot missing one of them reads
- * the value it meant before the row existed (options-snapshot.ts).
+ * that baseline (options-snapshot.ts).
  */
 import { OPTION_DESCRIPTIONS } from './options-descriptions.data';
 import { detailsOf, plainTextOf } from './option-description';
@@ -147,8 +147,7 @@ const seeds: readonly Seed[] = [
   {
     // Not a reference option: the reference always shuffles the ten dungeon rewards among
     // the ten reward slots (Rules.py 204-211 restricts those slots to reward items), with
-    // no switch. This app needs the switch, because a placement generated before the core
-    // could substitute a boss reward must keep playing as it was generated. The
+    // no switch. This app offers the switch so a seed can keep each dungeon's own reward. The
     // reference's own `shuffle_prizes` is a different feature entirely: the enemy,
     // tree-pull and bonk DROP packs, and stays locked below.
     key: 'dungeon_prize_shuffle',
@@ -165,7 +164,7 @@ const seeds: readonly Seed[] = [
   // The three contracts are all enforced: the fill relaxes for minimal, the
   // reference's self-locking allowances exist for anything but full, and the
   // post-fill sweep asks the question the chosen mode asks (accessibility/).
-  // The baseline stays `full`, so every stored placement keeps its meaning.
+  // The baseline is `full`.
   unlocked(lockedChoice('accessibility', 'Accessibility',
     'world', 'active', choices(['full', 0], ['items', 1], ['minimal', 2]), 'items', 'full')),
   lockedText('plando_connections', 'Plando Connections', 'other', 'not-implemented', ''),
@@ -296,9 +295,7 @@ const seeds: readonly Seed[] = [
   unlocked(lockedRange('shop_price_modifier', 'Shop Price Modifier', 'shops', 'active',
     SHOP_PRICE_MODIFIER_MIN, SHOP_PRICE_MODIFIER_MAX, SHOP_PRICE_MODIFIER_DEFAULT)),
   // The reference's single capacity toggle is gone: this app makes the same
-  // decision per family through the synthetic capacity rows below. Its key
-  // survives only as the v1 snapshot spelling (capacity-option-keys.ts), read
-  // on migration and never shown.
+  // decision per family through the synthetic capacity rows below.
   ...CAPACITY_OPTION_SEEDS,
   ...CAPACITY_BONUS_OPTION_SEEDS,
   // The pond's own rows: what it sells and what it charges, on top of whatever

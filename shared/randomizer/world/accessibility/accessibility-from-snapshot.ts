@@ -1,10 +1,8 @@
 /* @layer shared-game @kind logic */
 /**
  * Snapshot → accessibility mode, the one reading the generator and the live
- * panel share. A missing key (every profile frozen before the row was read)
- * or an unknown spelling reads as `full`, which is this app's baseline and
- * exactly the contract every stored placement was generated under, so a
- * legacy snapshot keeps its meaning.
+ * panel share. A missing key or an unknown spelling reads as `full`, which is
+ * this app's baseline.
  *
  * Note the reference's own default is `items`; this app's catalog baseline is
  * `full`, and that is what the fallback follows.

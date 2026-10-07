@@ -92,45 +92,20 @@ const fillFlagsOf = (snapshot: RandomizerOptionsSnapshot, seed = ''): SnapshotFi
     includeWorldItems: includeWorldItemsOf(snapshot.values),
     capacity: capacityProfileFromSnapshot(snapshot),
     capacityProgressive: capacityProgressiveFromSnapshot(snapshot),
-    // No bonus row at all reads as the baselines: the goods a pickup handed
-    // over before the rows existed.
     capacityBonus: capacityBonusFromSnapshot(snapshot),
     shops: withRetroArrowSlots(shopScopeOfValues(snapshot.values, seed), retroBow),
     retroBow,
-    // No pond row at all (every profile written before the option existed)
-    // reads as three legacy ponds, so a stored placement keeps its meaning.
-    // The shipped spelling of the capacity pond's rows is folded in on read.
     ponds: pondProfilesFromSnapshot(snapshot),
-    // Every seed rolled from a snapshot now lets a wish pond's mode decide her
-    // two vanilla slots (pond/pond-vanilla-slots.ts). Only a stored placement
-    // generated before that reads otherwise, through its own stats.
+    // Every seed rolled from a snapshot lets a wish pond's mode decide her two
+    // vanilla slots (pond/pond-vanilla-slots.ts).
     pondSlotsFollowMode: true,
-    // No dark-room row at all, every profile written before the settings
-    // existed, reads as the reference rule, so a stored placement keeps its
-    // meaning: light required, the lamp alone providing it.
     darkRooms: darkRoomSettingFromSnapshot(snapshot),
-    // No story gate row at all reads as the story as the game tells it, which is what a
-    // fresh profile arms, so a stored placement keeps its meaning.
     storyGates: storyGatesFromSnapshot(snapshot),
-    // No difficulty row at all (every profile written before they existed)
-    // reads as the reference pool: one copy per rung and the game's own
-    // twenty-heart ceiling, which is what it was rolled from.
     difficulty: difficultyFromSnapshot(snapshot),
-    // No tier row at all (every profile written before they existed) reads
-    // as every tier ticked, which is the reference pool it was rolled from.
     progressiveTiers: progressiveSettingFromSnapshot(snapshot),
-    // No mode row at all reads as every family in order, which is the pool a
-    // stored placement was rolled from.
     progressiveModes: progressiveModesFromSnapshot(snapshot),
-    // No item-power row at all reads as the reference's normal step, so a
-    // stored placement keeps the game it was rolled against.
     itemPower: itemPowerFromSnapshot(snapshot),
-    // No dungeon-item rows at all, every profile frozen before the engine
-    // read them, reads as the reference baseline: each family pinned to the
-    // dungeon that owns it, which is how those placements were rolled.
     dungeonItems: dungeonItemSettingFromSnapshot(snapshot),
-    // No accessibility row at all reads as this app's baseline, `full`, the
-    // contract every stored placement was verified against.
     accessibility: accessibilityFromSnapshot(snapshot),
   };
 };
@@ -138,11 +113,11 @@ const fillFlagsOf = (snapshot: RandomizerOptionsSnapshot, seed = ''): SnapshotFi
 /**
  * Whether the ten dungeon rewards are shuffled over the ten reward slots. Read here
  * instead of in the generator so every consumer of a snapshot reads the option once, the
- * same rule the flags above follow. Absent (any snapshot predating the option) is OFF, so
- * a stored placement keeps the vanilla rewards it was generated with.
+ * same rule the flags above follow. Only an explicit false turns it off: an absent row is
+ * its baseline.
  */
 const shufflePrizesFromSnapshot = (snapshot: RandomizerOptionsSnapshot): boolean =>
-  snapshot.values['dungeon_prize_shuffle'] === true;
+  snapshot.values['dungeon_prize_shuffle'] !== false;
 
 /** |seed| is the placement's own seed, which the rolled flags below are drawn from. */
 const fillOptionsFromSnapshot = (

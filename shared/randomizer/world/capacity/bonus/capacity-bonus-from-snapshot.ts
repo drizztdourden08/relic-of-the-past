@@ -2,13 +2,12 @@
 /**
  * The pickup-bonus rows ⇄ the setting they stand for, both directions in one
  * file so the reading a session arms and the writing the creation form
- * freezes can never spell the same option two ways. A snapshot frozen before
- * these rows existed carries none of them, and an absent key falls back to
- * the family's legacy bonus, which reproduces what a pickup handed over then.
+ * freezes can never spell the same option two ways. An absent key reads as
+ * the family's baseline bonus.
  */
 import { CAPACITY_FAMILY_IDS } from '@shared/game/data/capacity-upgrade-names.data';
 import {
-  LEGACY_CAPACITY_BONUS, capacityBonusBaseKeyOf, capacityBonusKeyOf, clampBonusPercent,
+  DEFAULT_CAPACITY_BONUS, capacityBonusBaseKeyOf, capacityBonusKeyOf, clampBonusPercent,
 } from './capacity-bonus.data';
 import type { CapacityFamilyId } from '@shared/game/data/capacity-family.type';
 import type { OptionValue, RandomizerOptionsSnapshot } from '../../options.type';
@@ -22,7 +21,7 @@ const percentOf = (raw: OptionValue | undefined, fallback: number): number => {
 };
 
 const familyBonusOf = (values: Values, family: CapacityFamilyId): FamilyBonus => {
-  const fallback = LEGACY_CAPACITY_BONUS[family];
+  const fallback = DEFAULT_CAPACITY_BONUS[family];
   const stepBase = values[capacityBonusBaseKeyOf(family)];
   return {
     percent: percentOf(values[capacityBonusKeyOf(family)], fallback.percent),

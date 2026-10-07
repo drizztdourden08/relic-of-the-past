@@ -33,9 +33,6 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'smoothTransitions',
   'widescreenPlayArea',
   'offscreenAI',
-  // Deprecated migration source for offscreenAI, never written any more; kept live so any
-  // stray legacy write still applies without forcing a restart.
-  'pauseOffscreenAI',
   'widescreenSprites',
   'widescreenVisualFixes',
   // Granular bug-fix toggles + new gameplay flags (synced every frame via features1/features2)

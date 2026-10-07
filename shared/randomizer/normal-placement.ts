@@ -12,6 +12,7 @@ import { sweepPlacementSpheres } from './world/fill/verify-placement';
 import { REFERENCE_DARK_ROOM_SETTING } from './world/dark-rooms/dark-room-lights.data';
 import { VANILLA_MEDALLIONS } from './world/item-groups';
 import { originalContentOf, recordedContents } from './original-contents';
+import { normalPlacementStats } from './normal-placement-stats';
 import type { ItemKey } from './world/item-ids.data';
 import type { LocationKey } from './world/location-key';
 import type { Placement } from './world/fill/placement.type';
@@ -74,16 +75,15 @@ const buildNormalPlacement = (params: NormalPlacementParams = {}): Placement => 
     seed: NORMAL_SEED,
     medallions: { ...ORIGINAL_MEDALLIONS },
     locations,
+    shopPrices: {},
+    pondDemands: {},
     spheres,
-    stats: {
-      attempts: 1,
-      keyDropShuffle: true,
-      includeNpcChecks: true,
+    stats: normalPlacementStats({
       darkRooms: NORMAL_DARK_ROOMS,
+      storyGates: params.storyGates,
       locationCount: Object.keys(locations).length,
       sphereCount: spheres.length,
-      ...(params.storyGates === undefined ? {} : { storyGates: params.storyGates }),
-    },
+    }),
   };
 };
 

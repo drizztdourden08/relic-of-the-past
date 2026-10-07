@@ -19,21 +19,26 @@
  * stopping early, which can only collect MORE than the source's walk, so the
  * missing set below is a subset of the source's, so a seed this accepts is one
  * the source accepts.
+ *
+ * A story event of the world is an event location to the source, holding an
+ * advancement event item, so one the sweep never made happen fails `full` and
+ * `items` alike, exactly as that location would.
  */
-import { EVENT_ITEMS, PRIZE_ITEMS } from '../pool/event-items.data';
+import { PRIZE_ITEMS } from '../pool/prize-items.data';
 import { isProgressionUnder } from '../pool/progression-class';
+import type { CheckId } from '@shared/game/data/types/ids';
 import type { AccessibilityMode } from './accessibility.type';
 import type { ItemKey } from '../item-ids.data';
 import type { LocationKey } from '../location-key';
 import type { CapacityProfile } from '../capacity/capacity-profile.type';
 
-const AUTO_ADVANCEMENT: ReadonlySet<ItemKey> = new Set<ItemKey>([...PRIZE_ITEMS, ...EVENT_ITEMS.values()]);
+const AUTO_ADVANCEMENT: ReadonlySet<ItemKey> = new Set<ItemKey>(PRIZE_ITEMS);
 
 /**
  * python Item.advancement for the items this world can place: the pool's
  * progression partition (progression-class.ts, which the fill itself uses),
- * plus the dungeon rewards and the event items, both advancement in
- * Items.py, and neither one ever sits in the shuffled pool.
+ * plus the dungeon rewards, advancement in Items.py and never in the shuffled
+ * pool.
  */
 const advancementItemsOf = (capacity: CapacityProfile): ((item: ItemKey) => boolean) => {
   const isProgression = isProgressionUnder(capacity);
@@ -45,24 +50,29 @@ interface AccessibilityInput {
   capacity: CapacityProfile;
   /** Locations the verification sweep never reached. */
   uncollected: readonly LocationKey[];
+  /** Story events the verification sweep never made happen. */
+  missedEvents: readonly CheckId[];
   /** location name → the item sitting on it. */
   placedItems: ReadonlyMap<LocationKey, ItemKey>;
 }
 
 /**
- * The uncollectable locations this mode refuses to ship. Empty means the
- * placement satisfies its accessibility contract (the goal check is the
- * caller's, and is asked in every mode).
+ * The uncollectable locations and missed story events this mode refuses to
+ * ship. Empty means the placement satisfies its accessibility contract (the
+ * goal check is the caller's, and is asked in every mode).
  */
 const accessibilityFailures = (input: AccessibilityInput): string[] => {
-  const { mode, capacity, uncollected, placedItems } = input;
+  const { mode, capacity, uncollected, missedEvents, placedItems } = input;
   if (mode === 'minimal') return [];
-  if (mode === 'full') return [...uncollected];
+  if (mode === 'full') return [...uncollected, ...missedEvents];
   const isAdvancement = advancementItemsOf(capacity);
-  return uncollected.filter((key) => {
-    const item = placedItems.get(key);
-    return item !== undefined && isAdvancement(item);
-  });
+  return [
+    ...uncollected.filter((key) => {
+      const item = placedItems.get(key);
+      return item !== undefined && isAdvancement(item);
+    }),
+    ...missedEvents,
+  ];
 };
 
 export { accessibilityFailures, advancementItemsOf };

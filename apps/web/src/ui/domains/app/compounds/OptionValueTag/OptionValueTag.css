@@ -1,0 +1,26 @@
+/* @layer renderer-components @kind style */
+
+/* A read-out in a control's place: the label the control carried, then the
+   value on a chip. True is the one tone that stands out; false and every other
+   value stay neutral so the eye lands on what is switched on. */
+
+.option-value-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.option-value-tag__label {
+  min-width: 0;
+  font-size: var(--text-sm);
+  color: var(--c-text);
+  overflow-wrap: break-word;
+}
+
+/* A tag inside a small box (a rung, a shop slot): the label at the small size. */
+.option-value-tag[data-compact] .option-value-tag__label {
+  font-size: var(--text-xs);
+  line-height: var(--leading-tight);
+  overflow-wrap: anywhere;
+}

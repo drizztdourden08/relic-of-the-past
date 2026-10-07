@@ -18,7 +18,6 @@
  * pond and says why. Nothing here touches a module.
  */
 
-import { pondProfilesOfStats } from '@shared/randomizer/world/fill/placement-ponds';
 import { POND_INSTANCES } from '@shared/randomizer/world/pond/pond-instances';
 import { pondPlanOf } from '@shared/randomizer/world/pond/pond-plan';
 import { nativeDemandOf } from './pond-demand-native';
@@ -48,8 +47,8 @@ const pondDemandSessionOf = (
   placement: Placement, receiveIdOf: (item: string) => number | undefined,
   messagesOf: PondDemandMessagesOf = NO_DEMAND_MESSAGES,
 ): PondDemandSessionPlan => {
-  const profiles = pondProfilesOfStats(placement.stats);
-  const demands = placement.pondDemands ?? {};
+  const profiles = placement.stats.ponds;
+  const demands = placement.pondDemands;
   const rows: PondDemandRow[] = [];
   const refusals: string[] = [];
   for (const instance of POND_INSTANCES) {

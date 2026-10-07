@@ -7,8 +7,7 @@
  *
  *   counted:  the amount, straight through (hearts in WHOLE hearts);
  *   bottle:   the value the game stores in a bottle slot for that content,
- *             with how many bottles of it as the amount. A placement frozen
- *             before the count existed carries none, and meant one;
+ *             with how many bottles of it as the amount;
  *   item:     the receive id of the named item, resolved the way a grant of
  *             that name is, so a progressive family name carries its virtual
  *             id and the core reads the tier from live inventory.

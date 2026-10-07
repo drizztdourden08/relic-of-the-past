@@ -34,15 +34,10 @@ const familyOfOptionKey = (key: string): CapacityFamilyId | undefined => {
   return (FIELDS_OF[family] as readonly string[]).includes(match[2]) ? family : undefined;
 };
 
-/** The retired v1 toggle; kept in the catalog (locked) because the reference declares it. */
-const LEGACY_CAPACITY_KEY = 'shuffle_capacity_upgrades';
-
 /**
  * The master switch over the whole capacity feature. Off means every family
  * plays vanilla and the pond keeps its native purchase loop, the shape the
- * game shipped with. On for a new profile and for every snapshot written
- * before the switch existed, so a stored placement keeps its meaning.
- * Not a family row, so familyOfOptionKey answers undefined for it.
+ * game shipped with. On for a new profile. Not a family row, so familyOfOptionKey answers undefined for it.
  */
 const CAPACITY_ENABLED_KEY = 'capacity_upgrades_enabled';
 
@@ -55,7 +50,7 @@ const CAPACITY_ENABLED_KEY = 'capacity_upgrades_enabled';
 const CAPACITY_PROGRESSIVE_KEY = 'capacity_progressive';
 
 export {
-  CAPACITY_ENABLED_KEY, CAPACITY_OPTION_KEYS, CAPACITY_PROGRESSIVE_KEY, LEGACY_CAPACITY_KEY, capacityFieldsOf,
+  CAPACITY_ENABLED_KEY, CAPACITY_OPTION_KEYS, CAPACITY_PROGRESSIVE_KEY, capacityFieldsOf,
   capacityKeyOf, familyOfOptionKey,
 };
 export type { CapacityField };

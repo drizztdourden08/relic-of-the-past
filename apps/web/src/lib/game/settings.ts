@@ -36,7 +36,6 @@ const DEFAULT_SETTINGS: GameSettings = {
   smoothTransitions: false,
   widescreenPlayArea: false,
   offscreenAI: 'idle',
-  pauseOffscreenAI: false,
 
   // Graphics
   windowScale: 2,
@@ -213,11 +212,9 @@ const boolToIni = (v: boolean): string => {
   return v ? '1' : '0';
 };
 
-// Anyone who explicitly turned the old pause setting ON keeps 'paused'. Everyone else, including
-// profiles carrying the old default of false, moves to the new 'idle' default, because false was
-// the absence of a choice, not a choice.
+// An unset mode is the 'idle' default.
 const offscreenAiMode = (s: GameSettings): OffscreenAiMode => {
-  return s.offscreenAI ?? (s.pauseOffscreenAI === true ? 'paused' : 'idle');
+  return s.offscreenAI ?? 'idle';
 };
 
 const serializeToIni = (settings: GameSettings, msuPath?: string, language?: string): string => {
@@ -328,131 +325,16 @@ const mergeSettings = (partial: Partial<GameSettings>): GameSettings => {
   const merged = { ...DEFAULT_SETTINGS, ...partial };
 
   // Tall rendering forces the enhanced HUD: the native HUD is a fixed 4:3 tile strip, wrong under tall.
-  // Forcing it here (not in the settings UI) covers profiles saved before tall existed and every
-  // consumer at once: INI, live push and HUD gate word all read this merged value.
+  // Forcing it here (not in the settings UI) covers every consumer at once: INI, live push and HUD gate
+  // word all read this merged value.
   if (merged.tallRendering) {
     merged.hudMode = 'enhanced';
     if (!merged.hudEnhancedParts.includes('main'))
       merged.hudEnhancedParts = [...merged.hudEnhancedParts, 'main'];
   }
 
-  // Migrate old windowMode values from previous schema
-  const rawMode = (partial as Record<string, unknown>).windowMode;
-  if (rawMode === 'normal') {
-    merged.windowMode = 'default';
-  } else if (rawMode === 'fullscreen') {
-    merged.windowMode = 'default';
-    merged.startFullscreen = true;
-  }
-
-  // Migrate old ignoreAspectRatio / lockToGameRatio / stretch to viewportConstraint
-  const raw = partial as Record<string, unknown>;
-  if (!('viewportConstraint' in raw)) {
-    if (raw.lockToGameRatio === true) {
-      merged.viewportConstraint = 'fit';
-    } else if (raw.ignoreAspectRatio === true || raw.aspectRatio === 'stretch') {
-      merged.viewportConstraint = 'fill';
-    }
-  }
-  // Fix aspectRatio if it was set to the removed 'stretch' value
-  if ((merged.aspectRatio as string) === 'stretch') {
-    merged.aspectRatio = '16:9';
-  }
-  // Migrate the removed '18:9' preset to an equivalent custom ratio (screen + HUD)
-  if ((merged.aspectRatio as string) === '18:9') {
-    merged.aspectRatio = 'custom';
-    merged.customAspectW = 18;
-    merged.customAspectH = 9;
-  }
-  if ((merged.hudRatio as string) === '18:9') {
-    merged.hudRatio = 'custom';
-    merged.customHudAspectW = 18;
-    merged.customHudAspectH = 9;
-  }
-  // Strip removed fields so they don't persist
-  delete (merged as Record<string, unknown>).ignoreAspectRatio;
-  delete (merged as Record<string, unknown>).lockToGameRatio;
-
-  // Old configs won't have masterVolume
-  if (merged.masterVolume == null || typeof merged.masterVolume !== 'number') {
-    merged.masterVolume = 100;
-  }
-
-
   // enableAudio is no longer exposed in UI; always keep enabled
   merged.enableAudio = true;
-
-  // Migration: new capability gates (default off). Existing profiles that already have a ratio
-  // requiring these capabilities get them implicitly enabled so nothing silently regresses.
-  if (!('extendedRendering' in raw)) {
-    merged.extendedRendering = merged.aspectRatio !== '4:3';
-  }
-  if (!('linearWorldTilemap' in raw)) {
-    const needsLinear = merged.aspectRatio === '21:9' || merged.aspectRatio === '32:9' ||
-      (merged.aspectRatio === 'custom' && (merged.customAspectW / merged.customAspectH) > 2.2);
-    merged.linearWorldTilemap = needsLinear;
-  }
-  if (!('ultrawideRendering' in raw)) {
-    merged.ultrawideRendering = merged.aspectRatio === '32:9' ||
-      (merged.aspectRatio === 'custom' && (merged.customAspectW / merged.customAspectH) > 2.4);
-  }
-  if (!('tallRendering' in raw)) {
-    const isTall = merged.aspectRatio === 'custom' &&
-      merged.customAspectH > 0 && (merged.customAspectW / merged.customAspectH) < 1.333;
-    merged.tallRendering = isTall;
-  }
-
-  // Positive-naming migration: the old inverted fields (unchangedSprites / noVisualFixes) flip to their
-  // positive equivalents so existing profiles keep the same behavior. Then strip the old keys.
-  if ('unchangedSprites' in raw && !('widescreenSprites' in raw)) {
-    merged.widescreenSprites = !raw.unchangedSprites;
-  }
-  if ('noVisualFixes' in raw && !('widescreenVisualFixes' in raw)) {
-    merged.widescreenVisualFixes = !raw.noVisualFixes;
-  }
-  delete (merged as Record<string, unknown>).unchangedSprites;
-  delete (merged as Record<string, unknown>).noVisualFixes;
-
-  // forceBackdropBlack -> hideSpaceBeyondWalls rename: carry the old choice over once, then strip the key.
-  if ('forceBackdropBlack' in raw && !('hideSpaceBeyondWalls' in raw)) {
-    merged.hideSpaceBeyondWalls = raw.forceBackdropBlack === true;
-  }
-  delete (merged as Record<string, unknown>).forceBackdropBlack;
-
-  // pauseOffscreenAI -> offscreenAI migration: only seed offscreenAI the first time a profile is
-  // merged without it. After that, offscreenAI is the one written field and pauseOffscreenAI stays
-  // untouched as a deprecated, read-only artifact.
-  if (!('offscreenAI' in raw)) {
-    merged.offscreenAI = raw.pauseOffscreenAI === true ? 'paused' : 'idle';
-  }
-
-  // Inventory reorder + secondary X/L/R item slots used to be bundled under itemSwitchLR. Existing profiles
-  // that had Advanced Item Selection on keep both behaviors; otherwise they default off (vanilla).
-  if (!('inventoryReorder' in raw)) merged.inventoryReorder = merged.itemSwitchLR;
-  if (!('secondaryItemSlots' in raw)) merged.secondaryItemSlots = merged.itemSwitchLR;
-
-  // perGroupVolume used to be auto-derived from the sliders. Existing profiles that had a non-default mix
-  // get the explicit toggle turned on so their audio doesn't silently revert to the stock mix.
-  if (!('perGroupVolume' in raw)) {
-    merged.perGroupVolume = merged.musicVolume !== 100 || merged.sfxVolume !== 100 || merged.musicMuted || merged.sfxMuted;
-  }
-
-  // msuVolume was a separate dial; MSU replaces the music channel, so it folds into musicVolume. Only
-  // migrate when this partial has no explicit musicVolume (an old default of 100 is not a signal).
-  const legacyMsuVolume = raw.msuVolume;
-  if (typeof legacyMsuVolume === 'number' && !('musicVolume' in raw)) {
-    merged.musicVolume = legacyMsuVolume;
-  }
-  delete (merged as Record<string, unknown>).msuVolume;
-
-  if (!('msuConfigMode' in raw)) {
-    merged.msuConfigMode = 'auto';
-  }
-
-  // Both default on: a pack only replaces what it actually authors, so a profile saved before
-  // these existed behaves identically either way.
-  if (!('packReplaceAmbient' in raw)) merged.packReplaceAmbient = true;
-  if (!('packReplaceSfx' in raw)) merged.packReplaceSfx = true;
 
   return merged;
 };

@@ -19,7 +19,7 @@ import type { ItemKey } from '../world/item-ids.data';
 import type { LocationKey } from '../world/location-key';
 import { BOTTLE_ITEMS, CRYSTAL_ITEMS } from '../world/item-groups';
 import { ITEM } from '../world/item-ids.data';
-import { PRIZE_ITEMS } from '../world/pool/event-items.data';
+import { PRIZE_ITEMS } from '../world/pool/prize-items.data';
 import { KEY_DROP_LOCATIONS } from '../world/scope-tables';
 
 const PROGRESSIVE_PREFIX = 'Progressive ';

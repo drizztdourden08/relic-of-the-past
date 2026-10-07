@@ -19,10 +19,11 @@
  * read-out instead of a slider, because a track whose value is its own
  * maximum can only ever draw full (sub-components/ShopSlotCount).
  *
- * Shared by the creation panel and the frozen Run tab; no handler renders the
- * whole section read-only.
+ * Shared by the creation panel and the read-only Options page; no handler
+ * renders the whole section as a read-out, every control's value as a tag.
  */
 import { Box, Select, Slider, Text } from '@ds/primitives';
+import { OptionValueTag, choiceLabelOf } from '../OptionValueTag';
 import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
 import { ShopSlotCount } from './sub-components/ShopSlotCount';
 import { ShopSlotSection } from './sub-components/ShopSlotSection';
@@ -40,7 +41,7 @@ interface ShopSlotsBlockProps {
   scope: ShopScope;
   /** The Items tab's retro switch; on, the mode line says what the arrow shelves sell. */
   retroBow?: RetroBowSetting;
-  /** Absent renders the section frozen, the Run tab's read-only view. */
+  /** Absent renders the section as a read-out, the read-only Options page. */
   onChange?: (next: ShopScope) => void;
 }
 
@@ -56,12 +57,13 @@ const ShopSlotsBlock = (props: ShopSlotsBlockProps) => {
     <Box className="shop-slots-block">
       <RandomizerOptionGroup title={MODE_TITLE} live className="shop-slots-block__mode">
         <Box className="shop-slots-block__mode-control">
-          <Select
-            value={scope.mode}
-            options={MODE_OPTIONS}
-            disabled={readOnly}
-            onChange={(next) => onChange?.(withMode(scope, next as ShopShuffleMode))}
-          />
+          {readOnly ? <OptionValueTag value={choiceLabelOf(MODE_OPTIONS, scope.mode)} /> : (
+            <Select
+              value={scope.mode}
+              options={MODE_OPTIONS}
+              onChange={(next) => onChange(withMode(scope, next as ShopShuffleMode))}
+            />
+          )}
         </Box>
         {retroNote !== null && <Text className="shop-slots-block__note">{retroNote}</Text>}
       </RandomizerOptionGroup>
@@ -72,6 +74,7 @@ const ShopSlotsBlock = (props: ShopSlotsBlockProps) => {
             key={section.world}
             section={section}
             disabled={inert}
+            readout={readOnly}
             onSlotChange={readOnly ? undefined
               : (index, next) => onChange(withSlotTicked(scope, index, next))}
           />
@@ -82,16 +85,19 @@ const ShopSlotsBlock = (props: ShopSlotsBlockProps) => {
         <ShopSlotCount
           summary={summary}
           disabled={inert}
+          readout={readOnly}
           onChange={readOnly ? undefined : (next) => onChange(withSlotCount(scope, next))}
         />
-        <Slider
-          label={DEPTH_LABEL}
-          value={summary.depth}
-          min={MIN_SHOP_SLOT_DEPTH}
-          max={MAX_SHOP_SLOT_DEPTH}
-          disabled={inert}
-          onChange={(next) => onChange?.(withDepth(scope, next))}
-        />
+        {readOnly ? <OptionValueTag label={DEPTH_LABEL} value={summary.depth} /> : (
+          <Slider
+            label={DEPTH_LABEL}
+            value={summary.depth}
+            min={MIN_SHOP_SLOT_DEPTH}
+            max={MAX_SHOP_SLOT_DEPTH}
+            disabled={inert}
+            onChange={(next) => onChange(withDepth(scope, next))}
+          />
+        )}
         <Text className="shop-slots-block__total">{shopTotalTextOf(summary)}</Text>
       </Box>
     </Box>

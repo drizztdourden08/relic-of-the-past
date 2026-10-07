@@ -8,7 +8,8 @@
  * tests/randomizer/ap-ids.keep.test.ts pins every id in use and fails on any edit to one.
  *
  * Locations count up from AP_ID_BASE, items from AP_ID_BASE + AP_ITEM_ID_OFFSET (ap-game.ts).
- * Event locations and event items carry no id, as Archipelago gives them none.
+ * A story event of the world carries no id: the world package creates it as an Archipelago
+ * event, which Archipelago gives none.
  */
 import type { ItemKey } from '../world/item-ids.data';
 import type { LocationKey } from '../world/location-key';
@@ -1241,6 +1242,8 @@ const AP_ITEM_IDS: Readonly<Record<ItemKey, number>> = {
   'unrecorded-Wallet Upgrade (+9800)': 0x52510112,
   'unrecorded-Wallet Upgrade (+9900)': 0x52510113,
   'unrecorded-Wallet Upgrade (+10000)': 0x52510114,
+  'item-075': 0x52510115,
+  'item-179': 0x52510116,
 };
 
 const AP_ITEM_NAMES: Readonly<Record<number, string>> = {
@@ -1521,6 +1524,8 @@ const AP_ITEM_NAMES: Readonly<Record<number, string>> = {
   0x52510112: 'Wallet Upgrade (+9800)',
   0x52510113: 'Wallet Upgrade (+9900)',
   0x52510114: 'Wallet Upgrade (+10000)',
+  0x52510115: 'Activated Flute',
+  0x52510116: 'Progressive Ocarina',
 };
 
 export { AP_ITEM_IDS, AP_ITEM_NAMES, AP_LOCATION_IDS, AP_LOCATION_NAMES };

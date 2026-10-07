@@ -112,8 +112,7 @@ const loadState = async (slot: number): Promise<boolean> => {
     requestLocationRebaseline();
     markStateLoaded();
 
-    // A save written before music positions were recorded has no sidecar; restoring null
-    // starts its track from the beginning.
+    // A save with no music sidecar restores nothing, and its track starts from the beginning.
     await restoreMusicPosition(profileId, 'quick', slot);
 
     // Force inventory poll so tracker reflects the loaded state

@@ -9,7 +9,8 @@
  *
  * - progressive gear stands in for the concrete tier (the four Progressive Swords cover the
  *   uncle's, the smithy's, the pedestal's and the cursed water's; Progressive Shield covers
- *   the wishing water's; Progressive Bow covers her arrow upgrade);
+ *   the wishing water's; Progressive Bow covers her arrow upgrade; Progressive Ocarina covers
+ *   the flute spot's);
  * - a boss's heart container is the pool's own boss-drop item, never the pickup the game hands
  *   over;
  * - the three in-dungeon standing keys name their per-dungeon key, which is removed from that
@@ -33,6 +34,7 @@ const POOL_ITEM_OVERRIDES: Readonly<Partial<Record<CheckId, ItemId>>> = {
   'check-267': ITEM.progressiveBow,     // her second grant
   'check-021': ITEM.blueBoomerang,      // the wishing water's, since the pool holds one of each colour
   'check-022': ITEM.progressiveShield,  // her second grant
+  'check-008': ITEM.progressiveOcarina, // the flute spot's
   // The ten boss heart containers.
   'check-121': ITEM.bossHeartContainer,
   'check-130': ITEM.bossHeartContainer,

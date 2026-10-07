@@ -17,7 +17,7 @@
  *   key category         small keys are spent on doors. A big key, a map or a
  *                        compass resolves to one plain id for every dungeon,
  *                        so the core cannot tell which dungeon it came from.
- *   event category       triforce pieces and the event items: never held.
+ *   event category       triforce pieces and the woken flute: never held.
  *   a family tier name   the inventory keeps only the highest rung reached,
  *                        so a named lower rung cannot be told from a higher
  *                        one. The family's own pool item is eligible: the
@@ -47,6 +47,8 @@ const HOLDABLE_CATEGORIES: ReadonlySet<ItemCategory> =
 const UNHELD_ITEMS: ReadonlyMap<string, string> = new Map([
   [ITEM.shovel, 'shares its inventory byte with the Flute, which replaces it'],
   [ITEM.flute, 'shares its inventory byte with the Shovel, which replaces it'],
+  [ITEM.activatedFlute, 'shares the Flute and Shovel byte, so a Shovel found later replaces it'],
+  [ITEM.progressiveOcarina, 'its rungs share the Flute and Shovel byte, so a Shovel found later replaces them'],
   [ITEM.mushroom, 'the witch takes it, and it shares its byte with the Magic Powder'],
   [ITEM.magicPowder, 'shares its inventory byte with the Mushroom'],
   [ITEM.blueBoomerang, 'shares its inventory byte with the Red Boomerang, which replaces it'],

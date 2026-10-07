@@ -1,20 +1,18 @@
 /* @layer renderer-components @kind component */
-/**
- * Where the session is connected, as whom, and in what state. Below the rows, the editor
- * (children), which names the reason when it failed; with no editor, the reason alone.
- */
-import { Text } from '@ds/primitives';
+/** Where the session is connected, as whom, and in what state; the last session's, while none runs. */
 import { NetworkSection } from './NetworkSection';
 import { formatCountdown, formatSince, formatValue, formatYesNo } from '../behavior/network-format';
 import { stateChip } from '../behavior/network-tone';
-import type { ReactNode } from 'react';
+import { NOT_CONNECTED_HINT } from '../behavior/network-view';
 import type { NetworkConnection } from '@app/lib/game/randomizer-client';
 import type { NetworkRow } from './NetworkSection';
+import type { NetworkView } from '../behavior/network-view';
+import type { PanelPlacement } from '../../../Randomizer.constants';
 
 interface ConnectionSectionProps {
-  connection: NetworkConnection;
+  placement: PanelPlacement;
+  view: NetworkView;
   now: number;
-  children?: ReactNode;
 }
 
 const worldText = (connection: NetworkConnection): string => {
@@ -46,11 +44,18 @@ const connectionRows = (connection: NetworkConnection, now: number): NetworkRow[
   return rows;
 };
 
-const ConnectionSection = ({ connection, now, children }: ConnectionSectionProps) => (
-  <NetworkSection title="Connection" chip={stateChip(connection, now)} rows={connectionRows(connection, now)}>
-    {children ?? (connection.error !== null && <Text className="randomizer-page__hint--error">{connection.error}</Text>)}
-  </NetworkSection>
-);
+const ConnectionSection = ({ placement, view, now }: ConnectionSectionProps) => {
+  const { status, live, offline } = view;
+  return (
+    <NetworkSection
+      placement={placement}
+      title="Connection"
+      chip={live && status !== null ? stateChip(status.connection, now) : offline}
+      rows={status === null ? null : connectionRows(status.connection, now)}
+      empty={NOT_CONNECTED_HINT}
+    />
+  );
+};
 
 export { ConnectionSection };
 export type { ConnectionSectionProps };

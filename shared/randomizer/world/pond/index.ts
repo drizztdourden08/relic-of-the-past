@@ -16,7 +16,6 @@ export {
   POND_PRICE_FLOOR, defaultPondSettingOf,
 } from './pond-profile-defaults';
 export { POND_MODES, pondSettingForMode } from './pond-mode-switch';
-export { SHIPPED_POND_KEYS, withMigratedPondKeys } from './pond-key-migration.data';
 export {
   POND_ARROW_STOPS, POND_ASK_BOTTLE_CONTENTS, POND_ASK_ROWS, POND_ASK_ROW_BY_CURRENCY,
   POND_ASK_ROW_BY_KIND, POND_BOMB_STOPS, POND_BOTTLE_ROW, POND_BOTTLE_STOPS, asksOnlyRupees,

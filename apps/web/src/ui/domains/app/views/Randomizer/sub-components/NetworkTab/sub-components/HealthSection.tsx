@@ -3,11 +3,15 @@
 import { NetworkSection } from './NetworkSection';
 import { formatAge, formatMs, formatYesNo } from '../behavior/network-format';
 import { healthChip } from '../behavior/network-tone';
+import { NOT_CONNECTED_HINT } from '../behavior/network-view';
 import type { NetworkStatus } from '@app/lib/game/randomizer-client';
 import type { NetworkRow } from './NetworkSection';
+import type { NetworkView } from '../behavior/network-view';
+import type { PanelPlacement } from '../../../Randomizer.constants';
 
 interface HealthSectionProps {
-  status: NetworkStatus;
+  placement: PanelPlacement;
+  view: NetworkView;
   now: number;
 }
 
@@ -25,9 +29,18 @@ const healthRows = (status: NetworkStatus, now: number): NetworkRow[] => {
   ];
 };
 
-const HealthSection = ({ status, now }: HealthSectionProps) => (
-  <NetworkSection title="Health" chip={healthChip(status, now)} rows={healthRows(status, now)} />
-);
+const HealthSection = ({ placement, view, now }: HealthSectionProps) => {
+  const { status, live, offline } = view;
+  return (
+    <NetworkSection
+      placement={placement}
+      title="Health"
+      chip={live && status !== null ? healthChip(status, now) : offline}
+      rows={status === null ? null : healthRows(status, now)}
+      empty={NOT_CONNECTED_HINT}
+    />
+  );
+};
 
 export { HealthSection };
 export type { HealthSectionProps };

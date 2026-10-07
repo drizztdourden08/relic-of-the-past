@@ -6,9 +6,8 @@
  * tables out of a US ROM and asserts the records agree. Without a ROM the whole suite skips,
  * so a clone that has none stays green (`rom-fixture.ts`).
  *
- * The two hand tables these ids will generate are checked here too, so the day they are
- * generated the numbers are already proven: `kBossRoomByPalace` in story_events.c and the
- * area heads in event_areas.h.
+ * The hand table these ids will generate is checked here too, so the day it is generated the
+ * numbers are already proven: the area heads in event_areas.h.
  */
 import { readFileSync } from 'fs';
 import { join, resolve } from 'path';
@@ -21,7 +20,6 @@ import { readRomRoomDoors } from '@shared/randomizer/audit/rom-room-doors';
 import { describeRom, usRom } from './rom-fixture';
 
 const CORE = resolve(__dirname, '..', '..', '..', 'core', 'game-hooks', 'events');
-const STORY_EVENTS = resolve(__dirname, '..', '..', '..', 'core', 'game-hooks', 'story_events.c');
 const SPECIAL_SCREENS = [0x80, 0x81];
 /** The room header tags a boss room carries: "kill enemy to clear level", or Agahnim's own. */
 const BOSS_TAGS = [37, 56];
@@ -330,21 +328,6 @@ describeRom('native ids, against the cartridge', () => {
       if (!tags.some((tag) => BOSS_TAGS.includes(tag))) {
         wrong.push(`${dungeon.id}: room 0x${room.toString(16)} carries tags ${tags.join('/')}, none of them a boss tag`);
       }
-    }
-    expect(wrong).toEqual([]);
-  });
-
-  it('agrees with the hand table bossRoomId will generate', () => {
-    const source = readFileSync(STORY_EVENTS, 'utf-8');
-    const body = source.match(/kBossRoomByPalace\[14\] = \{([^}]*)\}/)?.[1] ?? '';
-    const table = body.split(',').map((part) => part.trim()).filter((part) => part.length > 0).map(Number);
-    expect(table).toHaveLength(14);
-    const wrong: string[] = [];
-    for (const dungeon of all('dungeon')) {
-      const room = dungeon.gameId.bossRoomId;
-      if (room === undefined || dungeon.gameId.palaceIndex === undefined) continue;
-      const held = table[dungeon.gameId.palaceIndex / 2];
-      if (held !== room) wrong.push(`${dungeon.id}: the C table holds 0x${held.toString(16)}, the record 0x${room.toString(16)}`);
     }
     expect(wrong).toEqual([]);
   });

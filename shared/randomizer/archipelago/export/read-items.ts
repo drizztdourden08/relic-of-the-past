@@ -20,8 +20,9 @@ const itemsOfPrimitive = (data: PrimitiveData, name: string): string[] => {
   const { hearts } = data;
   const meter = meterOf(data);
   switch (name) {
-    case 'explosivesAtLeast': return [...familyItems(data, 'explosives'), data.shopEvent];
-    case 'projectilesAtLeast': return [...familyItems(data, 'projectiles'), data.shopEvent];
+    // A vanilla family tops out at the capacity fairy's, which asks the wallet for her price.
+    case 'explosivesAtLeast': return [...familyItems(data, 'explosives'), ...familyItems(data, 'wallet')];
+    case 'projectilesAtLeast': return [...familyItems(data, 'projectiles'), ...familyItems(data, 'wallet')];
     case 'walletAtLeast': return familyItems(data, 'wallet');
     case 'heartCapacityAbove':
     case 'hasHearts': return [hearts.container, hearts.sanctuary, hearts.piece];

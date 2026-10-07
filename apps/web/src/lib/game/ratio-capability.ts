@@ -4,8 +4,7 @@
  *
  * The preset picker gates its own entries: the widest ones need the world tilemap and the ultrawide
  * switch, the tall ones need tall rendering. Auto, Screen and Custom went around that, so a wide monitor
- * on Auto, or a tall Custom ratio, handed the core a shape whose capability bits were never set. The
- * thresholds here are the ones the settings migration already used to decide what an old profile needed.
+ * on Auto, or a tall Custom ratio, handed the core a shape whose capability bits were never set.
  */
 import { aspectRatioValue } from './aspect-ratio';
 import type { GameSettings } from '@shared/types/settings';

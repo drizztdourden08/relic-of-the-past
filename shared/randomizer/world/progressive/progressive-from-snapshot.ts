@@ -4,25 +4,28 @@
  * the reading the generator uses and the writing the creation form freezes can
  * never spell the same option two ways, the dark-room module's contract.
  *
- * A snapshot frozen before these rows existed carries none of them, and an
- * absent key falls back to TICKED. That is the reference pool every stored
- * placement was generated under, so an old profile keeps playing exactly as it
- * was rolled.
+ * An absent key falls back to its default tick (every rung, but the ocarina's second, which
+ * puts the Activated Flute in the pool and is off): the reference pool.
  */
 import { DEFAULT_PROGRESSIVE_SETTING, PROGRESSIVE_FAMILIES } from './progressive-families.data';
 import { progressiveTierKeyOf } from './progressive-option-keys';
 import type { OptionValue, RandomizerOptionsSnapshot } from '../options.type';
-import type { ProgressiveSetting, ProgressiveTierTicks } from './progressive.type';
+import type { ProgressiveFamilyId, ProgressiveSetting, ProgressiveTierTicks } from './progressive.type';
 
 type Values = Readonly<Record<string, OptionValue>>;
 
-const tickOf = (values: Values, key: string): boolean =>
-  (typeof values[key] === 'boolean' ? values[key] : true);
+/** A tier's default tick: every rung, but the ocarina's second (progressive-families.data.ts). */
+const defaultTickOf = (family: ProgressiveFamilyId, index: number): boolean =>
+  DEFAULT_PROGRESSIVE_SETTING[family][index] ?? true;
+
+const tickOf = (values: Values, key: string, fallback: boolean): boolean =>
+  (typeof values[key] === 'boolean' ? values[key] : fallback);
 
 const progressiveSettingOfValues = (values: Values): ProgressiveSetting =>
   Object.fromEntries(PROGRESSIVE_FAMILIES.map((family) => [
     family.id,
-    family.tiers.map((_tier, index) => tickOf(values, progressiveTierKeyOf(family.id, index))),
+    family.tiers.map((_tier, index) =>
+      tickOf(values, progressiveTierKeyOf(family.id, index), defaultTickOf(family.id, index))),
   ])) as unknown as ProgressiveSetting;
 
 const progressiveSettingFromSnapshot = (snapshot: RandomizerOptionsSnapshot): ProgressiveSetting =>
@@ -33,13 +36,13 @@ const progressiveValuesOf = (setting: ProgressiveSetting): Record<string, Option
   Object.fromEntries(PROGRESSIVE_FAMILIES.flatMap((family) =>
     family.tiers.map((_tier, index): [string, OptionValue] => [
       progressiveTierKeyOf(family.id, index),
-      setting[family.id][index] ?? true,
+      setting[family.id][index] ?? defaultTickOf(family.id, index),
     ])));
 
-/** True while every family still carries every tier: the reference pool. */
+/** True while every family is at its default ticks: the reference pool. */
 const isReferenceProgressiveSetting = (setting: ProgressiveSetting): boolean =>
-  PROGRESSIVE_FAMILIES.every((family) =>
-    family.tiers.every((_tier, index) => setting[family.id][index] !== false));
+  PROGRESSIVE_FAMILIES.every((family) => family.tiers.every((_tier, index) =>
+    (setting[family.id][index] ?? defaultTickOf(family.id, index)) === defaultTickOf(family.id, index)));
 
 /** The default, handed out as a fresh mutable-safe copy for a creation form. */
 const defaultProgressiveSetting = (): ProgressiveSetting =>

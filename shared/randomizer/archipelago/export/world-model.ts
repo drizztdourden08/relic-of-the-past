@@ -7,7 +7,7 @@
  * the profile's game and not a second reading of its options.
  */
 import { UNCLE_LOCATION } from '../../world/pool/standard-escape.data';
-import { PRIZE_ITEMS } from '../../world/pool/event-items.data';
+import { PRIZE_ITEMS } from '../../world/pool/prize-items.data';
 import { VANILLA_PRIZES } from '../../world/scope-tables';
 import { ruleOptionsOfWorld } from '../../world/rules/rule-options';
 import { progressiveSettingOf, progressiveTierMapOf } from '../../world/progressive/progressive-reach';
@@ -46,7 +46,8 @@ const specializedTrees = (fillWorld: FillWorld): RuleNode[] => {
       return value;
     },
   };
-  const roots = [...world.locationRules.values(), ...world.rules.values()].map((rule) => rule.node);
+  const roots = [...world.locationRules.values(), ...world.eventRules.values(), ...world.rules.values()]
+    .map((rule) => rule.node);
   return roots.map((node) => specializeNode(node, world, reader));
 };
 
@@ -54,15 +55,14 @@ const worldModelOf = (input: WorldModelInput): WorldModel => {
   const { fillWorld, options, shufflePrizes } = input;
   const { world, pool } = fillWorld;
   const locked = lockedOf(fillWorld);
-  const events = Object.fromEntries(pool.eventItems);
   const primitives = primitiveDataOf(world);
   const fillable = [...world.locationsByKey.values()]
-    .filter((location) => !location.event && !location.prize && locked[location.key] === undefined)
+    .filter((location) => !location.prize && locked[location.key] === undefined)
     .map((location): LocationKey => location.key);
   const items = itemHalfOf({
     fillWorld,
     fillable,
-    fixedProgression: new Set<string>([...PRIZE_ITEMS, ...pool.prizes, ...Object.values(events)]),
+    fixedProgression: new Set<string>([...PRIZE_ITEMS, ...pool.prizes]),
     read: readItemsOf(specializedTrees(fillWorld), primitives),
     locked: Object.values(locked),
   });
@@ -70,7 +70,6 @@ const worldModelOf = (input: WorldModelInput): WorldModel => {
     options,
     present: [...world.locationsByKey.keys()],
     locked,
-    events,
     prizes: { shuffle: shufflePrizes, vanilla: Object.fromEntries(VANILLA_PRIZES), items: [...pool.prizes] },
     ...items,
     locationDungeon: Object.fromEntries(fillWorld.locationDungeon),

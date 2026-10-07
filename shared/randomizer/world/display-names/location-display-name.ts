@@ -10,19 +10,13 @@
  */
 import { getCheck } from '@shared/game/data';
 import { standardNameOfCheck } from '@shared/game/data/check-standard-name';
-import { CAPACITY_SHOP_EVENT, isSlotKey } from '../location-key';
+import { isSlotKey } from '../location-key';
 import { POND_INSTANCES } from '../pond/pond-instances';
 import { shopSlotLocationOf } from '../shops/shop-slots';
 import type { LocationKey } from '../location-key';
 
 /** Depth ordinals past the first; the first purchase keeps the shelf's plain name. */
 const RESTOCK_ORDINALS: readonly string[] = ['2nd', '3rd', '4th', '5th'];
-
-/**
- * The capacity shop's event has no record to read a name off, so its one word sits here until
- * one exists (location-key.ts says why it has none).
- */
-const CAPACITY_SHOP_EVENT_NAME = 'Capacity Upgrade Shop';
 
 const POND_LABEL_BY_ID: ReadonlyMap<string, string> = new Map(
   POND_INSTANCES.map((pond) => [pond.id, pond.label]),
@@ -31,7 +25,6 @@ const POND_LABEL_BY_ID: ReadonlyMap<string, string> = new Map(
 const POND_RUNG = /^slot-pond-(.+)-(\d+)$/;
 
 const slotName = (key: LocationKey): string => {
-  if (key === CAPACITY_SHOP_EVENT) return CAPACITY_SHOP_EVENT_NAME;
   const rung = POND_RUNG.exec(key);
   if (rung !== null) {
     const label = POND_LABEL_BY_ID.get(rung[1]);
@@ -53,4 +46,4 @@ const shopName = (key: LocationKey): string | undefined => {
 const locationDisplayName = (key: LocationKey): string =>
   shopName(key) ?? (isSlotKey(key) ? slotName(key) : standardNameOfCheck(getCheck(key)));
 
-export { CAPACITY_SHOP_EVENT_NAME, RESTOCK_ORDINALS, locationDisplayName };
+export { RESTOCK_ORDINALS, locationDisplayName };

@@ -12,6 +12,7 @@
  */
 import { Select, Slider } from '@ds/primitives';
 import { JumpChipsEditor } from '../../JumpChipsEditor';
+import { OptionValueTag, choiceLabelOf, stepsLabelOf } from '../../OptionValueTag';
 import { PondOptionLine } from './PondOptionLine';
 import type { SelectOption } from '@ds/primitives';
 import type { PondRowModel, PondRowState } from '../WishingPondRow.type';
@@ -19,47 +20,57 @@ import type { PondRowModel, PondRowState } from '../WishingPondRow.type';
 interface PondPriceControlsProps {
   model: PondRowModel;
   readOnly: boolean;
+  /** Every value as a tag in place of its control: the read-only panel. */
+  readout?: boolean;
   onChange: (part: Partial<PondRowState>) => void;
 }
 
 const throwsLabel = (count: number): string => `${count} throw${count === 1 ? '' : 's'}`;
 
 const PondPriceControls = (props: PondPriceControlsProps) => {
-  const { model, readOnly, onChange } = props;
+  const { model, readOnly, readout = false, onChange } = props;
   const { state, curveOptions, maxThrows } = model;
   const [low, high] = state.range;
   const span = high - low;
+  const throws = Math.min(Math.max(state.throws, 1), maxThrows);
+  const curveLabel = choiceLabelOf(curveOptions, state.curve);
 
   return (
     <>
       <PondOptionLine label="throws the pond sells">
-        <Slider
-          value={Math.min(Math.max(state.throws, 1), maxThrows)}
-          min={1}
-          max={maxThrows}
-          step={1}
-          disabled={readOnly}
-          formatValue={throwsLabel}
-          onChange={(throws) => onChange({ throws })}
-        />
+        {readout ? <OptionValueTag value={throwsLabel(throws)} /> : (
+          <Slider
+            value={throws}
+            min={1}
+            max={maxThrows}
+            step={1}
+            disabled={readOnly}
+            formatValue={throwsLabel}
+            onChange={(next) => onChange({ throws: next })}
+          />
+        )}
       </PondOptionLine>
       <PondOptionLine label="price curve">
-        <Select
-          size="sm"
-          value={state.curve}
-          options={curveOptions as SelectOption[]}
-          disabled={readOnly}
-          onChange={(curve) => onChange({ curve: curve as PondRowState['curve'] })}
-        />
+        {readout ? <OptionValueTag value={curveLabel} /> : (
+          <Select
+            size="sm"
+            value={state.curve}
+            options={curveOptions as SelectOption[]}
+            disabled={readOnly}
+            onChange={(curve) => onChange({ curve: curve as PondRowState['curve'] })}
+          />
+        )}
       </PondOptionLine>
       {state.curve === 'free' && (
         <PondOptionLine label="price steps">
-          <JumpChipsEditor
-            jumps={state.jumps}
-            span={span}
-            disabled={readOnly}
-            onChange={(jumps) => onChange({ jumps })}
-          />
+          {readout ? <OptionValueTag value={stepsLabelOf(state.jumps)} /> : (
+            <JumpChipsEditor
+              jumps={state.jumps}
+              span={span}
+              disabled={readOnly}
+              onChange={(jumps) => onChange({ jumps })}
+            />
+          )}
         </PondOptionLine>
       )}
     </>

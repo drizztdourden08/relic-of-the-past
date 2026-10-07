@@ -5,7 +5,7 @@
  * what one profile settles travels in its player file (pre-rolled.ts).
  */
 import { AP_GAME, AP_WORLD_VERSION } from '../ap-game';
-import { VICTORY_ITEM } from '../../world/pool/event-items.data';
+import { GOAL_EVENT } from '../../world/events/story-events.data';
 import { widestRuledWorld } from './widest-world';
 import { exportLocations } from './export-locations';
 import { exportRegions } from './export-regions';
@@ -19,7 +19,7 @@ type WorldExport = Record<string, unknown>;
 const exportWorld = (): WorldExport => {
   const world = widestRuledWorld();
   return {
-    'game.json': { game: AP_GAME, worldVersion: AP_WORLD_VERSION, victoryItem: VICTORY_ITEM },
+    'game.json': { game: AP_GAME, worldVersion: AP_WORLD_VERSION, goalEvent: GOAL_EVENT },
     'locations.json': exportLocations(world),
     'regions.json': exportRegions(world),
     'items.json': exportItems(),

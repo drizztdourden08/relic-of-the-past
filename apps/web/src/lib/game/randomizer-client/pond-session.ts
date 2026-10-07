@@ -21,7 +21,6 @@
  */
 
 import { pondPlanOf } from '@shared/randomizer/world/pond/pond-plan';
-import { pondProfilesOfStats } from '@shared/randomizer/world/fill/placement-ponds';
 import { log } from '../../log-bus';
 import { clearPondPlan, setPondAwardMessage, setPondClosedMessage, setPondThrows } from '../pond-plan';
 import { disarmWishPondSession } from './wish-pond-session';
@@ -56,7 +55,7 @@ interface PondSessionPlan {
 
 const pondSessionOf = (placement: Placement, messages: PondMessageIds = NO_POND_MESSAGES): PondSessionPlan => {
   // The core arms one pond, the capacity one (core/game-hooks/pond_plan.c).
-  const setting = pondProfilesOfStats(placement.stats).capacity;
+  const setting = placement.stats.ponds.capacity;
   if (setting.mode === 'capacity') {
     return {
       throws: [], armed: false, prizeCount: 0, awardMoreMessageId: -1, awardLastMessageId: -1, closedMessageId: -1,

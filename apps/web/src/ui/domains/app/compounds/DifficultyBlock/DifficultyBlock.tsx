@@ -12,8 +12,8 @@
  * pointless, the same rule the retro costs follow under their own switch.
  *
  * Presentational only: the setting comes in as a prop and every edit leaves as
- * a whole new setting. An absent handler renders the block frozen, which is
- * the read-only face the run view shows.
+ * a whole new setting. An absent handler renders the block as a read-out,
+ * each value as a tag, which is the read-only Options page's face.
  */
 import { Box, Text } from '@ds/primitives';
 import {
@@ -62,6 +62,7 @@ const DifficultyBlock = (props: DifficultyBlockProps) => {
               max={LAST_STEP}
               disabled={readOnly || rungs === 0}
               formatValue={multipleLabel}
+              readout={readOnly}
               onChange={(value) => onChange?.({
                 ...setting,
                 copies: { ...setting.copies, [family.id]: asCopyMultiplier(value) },
@@ -79,6 +80,7 @@ const DifficultyBlock = (props: DifficultyBlockProps) => {
         max={MAX_HEART_CAP}
         disabled={readOnly}
         formatValue={heartLabel}
+        readout={readOnly}
         onChange={(heartCap) => onChange?.({ ...setting, heartCap })}
       />
     </RandomizerOptionGroup>

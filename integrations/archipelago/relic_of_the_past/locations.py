@@ -10,7 +10,7 @@ from BaseClasses import Location
 from .data import GAME, LOCATIONS
 
 LOCATION_BY_KEY = {row["key"]: row for row in LOCATIONS}
-LOCATION_NAME_TO_ID = {row["name"]: row["id"] for row in LOCATIONS if row["id"] is not None}
+LOCATION_NAME_TO_ID = {row["name"]: row["id"] for row in LOCATIONS}
 
 
 class RotpLocation(Location):

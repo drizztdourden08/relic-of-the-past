@@ -66,21 +66,9 @@ describe('T6: event records', () => {
     expect(done.has(byName('Old Man rescued').id)).toBe(true);
     expect(done.has(byName('Master Sword pulled').id)).toBe(true);
     expect(done.has(byName('Agahnim 1 beaten').id)).toBe(true);
-    expect(done.has(byName('Dark World reached').id)).toBe(true);
+    // A ledger event answers from its own bit alone: a later beat does not stand in for it.
+    expect(done.has(byName('Dark World reached').id)).toBe(false);
     expect(done.has(byName('Ganon beaten').id)).toBe(false);
-  });
-
-  it('a boss falls back to the heart on a file older than the ledger', () => {
-    const h = heap();
-    h.rooms.set(0x07, 0x800);
-    const done = sweep(h);
-    expect(done.has(byName('Tower of Hera: heart container taken').id)).toBe(true);
-    expect(done.has(byName('Tower of Hera: Moldorm beaten').id)).toBe(true);
-    expect(done.has(byName('Tower of Hera: reward taken').id)).toBe(false);
-    h.inventory.add('item-057' as ItemId);
-    const withPendant = sweep(h);
-    expect(withPendant.has(byName('Tower of Hera: reward taken').id)).toBe(true);
-    expect(withPendant.has(byName('Pendant of Wisdom held').id)).toBe(true);
   });
 
   it('held items and the combined events follow the inventory', () => {

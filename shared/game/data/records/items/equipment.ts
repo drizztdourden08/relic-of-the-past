@@ -63,6 +63,15 @@ const EQUIPMENT_ITEMS: ItemRecord[] = [
     poolClass: 'progression',
   },
   {
+    id: 'item-075',
+    gameId: { receiveItemId: 74 },
+    origin: 'vanilla',
+    category: 'equipment',
+    name: 'Activated Flute',
+    spriteId: 'sprite-receipt-activated-flute',
+    poolClass: 'progression',
+  },
+  {
     id: 'item-034',
     gameId: { receiveItemId: 33 },
     origin: 'vanilla',

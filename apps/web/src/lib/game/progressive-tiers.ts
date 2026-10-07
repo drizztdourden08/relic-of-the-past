@@ -16,7 +16,7 @@
 
 import { log } from '../log-bus';
 import { getModule } from './wasm-bridge';
-import { PROGRESSIVE_FAMILIES } from '@shared/randomizer/world/progressive/progressive-families.data';
+import { DEFAULT_PROGRESSIVE_SETTING, PROGRESSIVE_FAMILIES } from '@shared/randomizer/world/progressive/progressive-families.data';
 import { DEFAULT_PROGRESSIVE_MODES, isRandomOrder } from '@shared/randomizer/world/progressive/progressive-modes.data';
 import type {
   ProgressiveFamilyId, ProgressiveModeSetting, ProgressiveSetting,
@@ -24,19 +24,24 @@ import type {
 
 /** core/game-hooks/progressive_grants.c kFamilies order. */
 const CORE_FAMILY_INDEX: Readonly<Record<ProgressiveFamilyId, number>> = {
-  sword: 0, shield: 1, glove: 2, mail: 3, bow: 4,
+  sword: 0, shield: 1, glove: 2, mail: 3, bow: 4, ocarina: 5,
 };
 
 const maskOf = (ticks: readonly boolean[]): number =>
   ticks.reduce((mask, ticked, index) => (ticked ? mask | (1 << index) : mask), 0);
 
-/** True while every family still carries every rung, in order, with nothing to arm. */
+/**
+ * True while every family is at its default ticks, in order, with nothing to arm. The default is
+ * every rung but the ocarina's second: that one exists only as a pool copy, and at the default
+ * the pool carries a single ocarina copy, which the unarmed ladder reads as the Flute already.
+ */
 const isFullLadder = (
   setting: ProgressiveSetting, modes: ProgressiveModeSetting = DEFAULT_PROGRESSIVE_MODES,
 ): boolean =>
   PROGRESSIVE_FAMILIES.every((family) =>
     !isRandomOrder(modes, family.id)
-    && family.tiers.every((_tier, index) => setting[family.id][index] !== false));
+    && family.tiers.every((_tier, index) =>
+      (setting[family.id][index] ?? true) === (DEFAULT_PROGRESSIVE_SETTING[family.id][index] ?? true)));
 
 const setProgressiveTiers = (
   setting: ProgressiveSetting, modes: ProgressiveModeSetting = DEFAULT_PROGRESSIVE_MODES,

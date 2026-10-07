@@ -12,10 +12,12 @@
  * plain bow rung is unticked above: the first bow found already fires silver.
  *
  * Presentational only: the setting comes in as a prop and every edit leaves as
- * a whole new setting. An absent handler renders the block frozen, which is
- * the read-only face the run view shows.
+ * a whole new setting. An absent handler renders the block as a read-out, the
+ * switch as a True or False tag and each cost as text, which is the read-only
+ * Options page's face.
  */
 import { Box, Text, Toggle } from '@ds/primitives';
+import { OptionValueTag } from '../OptionValueTag';
 import { FINAL_FIGHT_SILVER_HITS } from '@shared/randomizer/world/final-fight.data';
 import { tickedIndexesOf } from '@shared/randomizer/world/progressive/progressive-reach';
 import {
@@ -50,12 +52,13 @@ const RetroBowBlock = (props: RetroBowBlockProps) => {
 
   return (
     <RandomizerOptionGroup title={RETRO_TITLE} live className="retro-bow-block">
-      <Toggle
-        label={RETRO_SWITCH_LABEL}
-        checked={setting.enabled}
-        disabled={readOnly}
-        onChange={(enabled) => onChange?.({ ...setting, enabled })}
-      />
+      {readOnly ? <OptionValueTag label={RETRO_SWITCH_LABEL} value={setting.enabled} /> : (
+        <Toggle
+          label={RETRO_SWITCH_LABEL}
+          checked={setting.enabled}
+          onChange={(enabled) => onChange({ ...setting, enabled })}
+        />
+      )}
       <Text className="retro-bow-block__caption">{retroLine()}</Text>
       <Box className="retro-bow-block__prices">
         <OptionSliderRow
@@ -67,6 +70,7 @@ const RetroBowBlock = (props: RetroBowBlockProps) => {
           step={RETRO_COST_STEP}
           disabled={!costsLive || !hasPlainBow}
           formatValue={rupees}
+          readout={readOnly}
           onChange={(woodArrowCost) => onChange?.({ ...setting, woodArrowCost })}
         />
         <OptionSliderRow
@@ -77,6 +81,7 @@ const RetroBowBlock = (props: RetroBowBlockProps) => {
           step={RETRO_COST_STEP}
           disabled={!costsLive}
           formatValue={rupees}
+          readout={readOnly}
           onChange={(silverArrowCost) => onChange?.({ ...setting, silverArrowCost })}
         />
         <Text className="retro-bow-block__ceiling">

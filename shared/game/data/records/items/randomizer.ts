@@ -92,6 +92,17 @@ const RANDOMIZER_ITEMS: ItemRecord[] = [
     name: 'Progressive Wallet',
     spriteId: 'sprite-upgrade-wallet',
   },
+  // The flute as a two-rung family: the first copy is the Flute, the second the Activated Flute.
+  // Like the other progressive items it has no receive id here: the core resolves the rung from
+  // live inventory (progressive-receive-id.ts).
+  {
+    id: 'item-179',
+    origin: 'randomizer',
+    category: 'equipment',
+    name: 'Progressive Ocarina',
+    spriteId: 'sprite-hud-flute',
+    poolClass: 'progression',
+  },
 ];
 
 export { RANDOMIZER_ITEMS };

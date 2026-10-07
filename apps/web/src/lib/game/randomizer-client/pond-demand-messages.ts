@@ -15,7 +15,6 @@
  * the pool is reused, and the pool stays small however long the ladders are.
  */
 
-import { pondProfilesOfStats } from '@shared/randomizer/world/fill/placement-ponds';
 import { POND_INSTANCES } from '@shared/randomizer/world/pond/pond-instances';
 import { pondPlanOf } from '@shared/randomizer/world/pond/pond-plan';
 import { pondDemandLinesOf } from '@shared/randomizer/receipt-text/pond-demand-lines';
@@ -45,8 +44,8 @@ const placeAtCapacity = (plan: PondPlan, prize: number): PondDemandPlace => {
 };
 
 const appendPondDemandLines = (placement: Placement, lines: ReceiptLine[]): PlanPondDemandLines => {
-  const profiles = pondProfilesOfStats(placement.stats);
-  const demands = placement.pondDemands ?? {};
+  const profiles = placement.stats.ponds;
+  const demands = placement.pondDemands;
   const byText = new Map<string, number>();
   const indexOf = (line: ReceiptLine | undefined): number => {
     if (line === undefined) return -1;

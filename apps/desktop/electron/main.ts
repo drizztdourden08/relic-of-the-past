@@ -21,7 +21,7 @@ import { isEphemeralLaunch } from './window/startup-config';
 import { registerDisplayHandlers } from './display/ipc-handlers';
 import { onFullscreenChange, restoreOnShutdown } from './display/mode-switch';
 import { registerDialogHandlers } from './dialogs/ipc-handlers';
-import { registerProfileHandlers, migrateDataFolder } from './profiles';
+import { registerProfileHandlers } from './profiles';
 import { registerRomHandlers } from './roms';
 import { registerAssetHandlers } from './assets/ipc-handlers';
 import { registerSaveHandlers } from './saves/ipc-handlers';
@@ -157,7 +157,6 @@ app.whenReady().then(async () => {
   // Velopack writes the size in a type Windows ignores. Not awaited: it is cosmetic.
   if (!portableData) void registerInstallSize();
   initPaths(dataPath);
-  await migrateDataFolder();
   await ensureDataDirectories();
   // Always-on: keep the previous session.log as session-1.log and start fresh,
   // so the renderer's session-log batches land in a file scoped to this launch.

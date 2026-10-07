@@ -12,9 +12,6 @@ import { armDungeonItemGrants } from '../dungeon-item-grants';
 import { applyGearIcons } from '../gear-icons';
 import { applyQuiverIcon } from '../quiver-icon';
 import { applyCurrencySymbols } from '../currency-symbols';
-import {
-  capacityBonusOfStats, capacityProfileOfStats, capacityProgressiveOfStats,
-} from '@shared/randomizer/world/fill/placement-capacity';
 import { buildPhysicalPlan } from './placement-bridge';
 import { withForeignIcons } from './foreign-icon-plan';
 import { logPlanSummary } from './plan-summary-log';
@@ -58,10 +55,8 @@ const armSessionFromPlacement = async (
 ): Promise<SessionArmResult> => {
   // The persisted placement carries the profile it was generated with; its wallet
   // table must exist before the plan resolves the wallet item names.
-  const capacity = capacitySessionOf(
-    capacityProfileOfStats(placement.stats), capacityProgressiveOfStats(placement.stats),
-    capacityBonusOfStats(placement.stats),
-  );
+  const { stats } = placement;
+  const capacity = capacitySessionOf(stats.capacity, stats.capacityProgressive, stats.capacityBonus);
   primeCapacitySession(capacity);
   // Which rungs of each tiered family exist, and how helpful the items are.
   // Armed before the plan resolves anything: a progressive copy's presentation

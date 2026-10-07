@@ -50,7 +50,7 @@ const worldOfSnapshot = (over: Record<string, OptionValue>): { world: World; ite
   const { pool } = fillWorld;
   const universe = new Set<Holding>([
     ...Object.values(ITEM), ...Object.values(UNRECORDED), ...pool.pool, ...pool.prizes,
-    ...pool.eventItems.values(), ...[...pool.dungeonItems.values()].flat(), ...fillWorld.lockedVanilla.values(),
+    ...[...pool.dungeonItems.values()].flat(), ...fillWorld.lockedVanilla.values(),
     ...actTokensOf(all('check').map((check) => check.id)),
   ]);
   return { world: fillWorld.world, items: [...universe].sort() };
@@ -83,7 +83,7 @@ interface ParityDigest {
 }
 
 /**
- * Every location rule and every exit rule, asked over `states` random states. `actRecord` hands
+ * Every location rule, story event rule and exit rule, asked over `states` random states. `actRecord` hands
  * the world a random record of done acts, the reading a world built from a save file answers
  * from, so the rules that fall back when no record is attached are asked both ways.
  */
@@ -92,7 +92,7 @@ const ruleDigest = (over: Record<string, OptionValue>, states: number, actRecord
   const random = seededRandom(states * 7919 + Object.keys(over).length);
   const tokens = actTokensOf(all('check').map((check) => check.id));
   const hash = createHash('sha256');
-  const locations = [...world.locationRules.entries()];
+  const locations = [...world.locationRules.entries(), ...world.eventRules.entries()];
   const exits = [...world.rules.entries()];
   let trues = 0;
   for (let index = 0; index < states; index += 1) {

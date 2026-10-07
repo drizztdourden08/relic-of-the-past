@@ -6,8 +6,8 @@
  * below start clamps to start (no span, no items); the count is clamped at
  * derivation; a free sequence that does not sum to the span, or carries a
  * jump above the family's largest item, degrades to equal; the meter's curve is always equal. Every fallback is reported so
- * the panel can say so. A snapshot without the v2 rows (a v1 profile that
- * skipped normalization) resolves through the legacy toggle. A projectiles
+ * the panel can say so. Values carrying no capacity row at all read as the
+ * reference profile, what an absent profile means everywhere. A projectiles
  * max below the final fight's floor is raised onto it, as is a wallet max
  * below what these settings let the seed charge at once (max-floor.ts and
  * wallet-floor.ts). A
@@ -20,9 +20,9 @@ import { CURVE_IDS } from './curves/curves.data';
 import { parseFreeJumps, isValidFreeSequence } from './curves/free-sequence';
 import { FAMILIES, familyById, maxSpanOf } from './capacity-family';
 import {
-  CAPACITY_ENABLED_KEY, CAPACITY_PROGRESSIVE_KEY, LEGACY_CAPACITY_KEY, capacityFieldsOf, capacityKeyOf,
+  CAPACITY_ENABLED_KEY, CAPACITY_PROGRESSIVE_KEY, capacityFieldsOf, capacityKeyOf,
 } from './capacity-option-keys';
-import { legacyCapacityProfile } from './capacity-profile-defaults';
+import { REFERENCE_CAPACITY_PROFILE } from './capacity-profile-defaults';
 import { maxFloorReasonOf, maxRungFloorOf } from './max-floor';
 import { walletFloorOf } from './wallet-floor';
 import { withRetroBow } from './retro-projectiles';
@@ -110,7 +110,7 @@ const retroBowOf = (values: Values): boolean => values[RETRO_BOW_KEY] === true;
 const parseCapacityProfile = (values: Values): ParsedCapacityProfile => {
   const retroBow = retroBowOf(values);
   if (!hasCapacityRows(values)) {
-    return { profile: withRetroBow(legacyCapacityProfile(values[LEGACY_CAPACITY_KEY] === true), retroBow), notes: [] };
+    return { profile: withRetroBow(REFERENCE_CAPACITY_PROFILE, retroBow), notes: [] };
   }
   const notes: string[] = [];
   // What the settings let the seed charge at once, read before any family: it
@@ -128,18 +128,14 @@ const parseCapacityProfile = (values: Values): ParsedCapacityProfile => {
 const capacityProfileFromSnapshot = (snapshot: RandomizerOptionsSnapshot): CapacityProfile =>
   parseCapacityProfile(snapshot.values).profile;
 
-/**
- * The master switch of a snapshot: only an explicit false turns the feature
- * off. An absent key is a snapshot written before the switch existed, and
- * those played with the families they recorded, so they read as on.
- */
+/** The master switch of a snapshot: only an explicit false turns the feature off (an absent key is its baseline). */
 const capacityEnabledOf = (values: Values): boolean => values[CAPACITY_ENABLED_KEY] !== false;
 
 const capacityEnabledFromSnapshot = (snapshot: RandomizerOptionsSnapshot): boolean =>
   capacityEnabledOf(snapshot.values);
 
-/** The progressive switch of a snapshot: only an explicit true turns it on (an absent key is the fixed-jump pool). */
-const capacityProgressiveOf = (values: Values): boolean => values[CAPACITY_PROGRESSIVE_KEY] === true;
+/** The progressive switch of a snapshot: only an explicit false turns it off (an absent key is its baseline). */
+const capacityProgressiveOf = (values: Values): boolean => values[CAPACITY_PROGRESSIVE_KEY] !== false;
 
 const capacityProgressiveFromSnapshot = (snapshot: RandomizerOptionsSnapshot): boolean =>
   capacityProgressiveOf(snapshot.values);

@@ -4,9 +4,7 @@
  * reads as.
  *
  * Every family defaults to `progressive`, which is the reference project's own
- * reading and the one every placement rolled before these rows existed was
- * generated under. An absent row therefore changes nothing: the same pool, the
- * same ladder, the same seed.
+ * reading.
  */
 import { PROGRESSIVE_FAMILIES } from './progressive-families.data';
 import type {

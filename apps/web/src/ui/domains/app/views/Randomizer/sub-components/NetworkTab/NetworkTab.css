@@ -12,81 +12,6 @@
   gap: var(--space-2xs);
 }
 
-/* ── Connection editor: Edit beside the failure reason, or the fields inline ── */
-.network-tab__edit-row {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--space-sm);
-}
-
-.network-tab__form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-}
-
-/* Host takes the room; the port fits five digits. */
-.network-tab__address {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: var(--space-sm);
-}
-
-.network-tab__address .network-tab__port {
-  width: 9ch;
-}
-
-.network-tab__secret {
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
-}
-
-.network-tab__form-error {
-  margin-right: auto;
-}
-
-/* ── State chip: the tone decides the colour ── */
-.network-tab__chip {
-  display: inline-block;
-  font-size: var(--text-xs);
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-  white-space: nowrap;
-  padding: 0 var(--space-xs);
-  border-radius: var(--radius-sm);
-  border: var(--border-width-thin) solid currentcolor;
-}
-
-.network-tab__chip--ok {
-  color: var(--c-green-bright);
-  background: var(--c-green-soft);
-}
-
-.network-tab__chip--warn {
-  color: var(--c-warning);
-  background: var(--c-warning-soft);
-}
-
-.network-tab__chip--bad {
-  color: var(--c-danger);
-  background: var(--c-danger-soft);
-}
-
-.network-tab__chip--idle {
-  color: var(--c-text-muted);
-  background: var(--c-surface);
-}
-
-/* Nothing known: quieter than an idle chip, no fill. */
-.network-tab__chip--dim {
-  color: var(--c-text-muted);
-  background: transparent;
-  border-style: dashed;
-  opacity: var(--opacity-faint);
-}
-
 /* ── Players table: one grid, each row's cells joining its columns ── */
 .network-tab__players {
   display: grid;
@@ -94,6 +19,11 @@
   gap: var(--space-xs) var(--space-sm);
   align-items: center;
   font-size: var(--text-sm);
+}
+
+/* The compact table: name, game, online and checks. */
+.network-tab__players[data-compact] {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto auto;
 }
 
 .network-tab__player {

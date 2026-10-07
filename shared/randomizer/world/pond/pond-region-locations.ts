@@ -7,10 +7,8 @@
  * the unmodified game has. So the region's list is the whole ladder, with the pond's own
  * records sitting at the rungs they are (pond-rungs.ts) and every rung above them a slot key.
  *
- * The capacity pond carries two more rows. Its pair heads two NAMED ladders, so it sits ahead
- * of the plain numbered series instead of inside it, and the shop's own event stands in front
- * of both: it fires on reaching the room and only tells the solver that a vanilla counter
- * family can be bought up from there (location-key.ts).
+ * The capacity pond's pair heads two NAMED ladders, so it sits ahead of the plain numbered
+ * series instead of inside it.
  *
  * The region is read off the pond's own records, never a name: a slot record says which
  * region it sits in, the same way every other check row does.
@@ -19,7 +17,6 @@ import { getCheck } from '@shared/game/data';
 import { POND_INSTANCES } from './pond-instances';
 import { POND_RUNGS_BY_ID } from './pond-rungs';
 import { capacityPondSpots } from '../capacity/capacity-spots';
-import { CAPACITY_SHOP_EVENT } from '../location-key';
 import type { CheckId, RegionId } from '@shared/game/data/types/ids';
 import type { LocationKey } from '../location-key';
 import type { PondInstance } from './pond-instance.type';
@@ -33,7 +30,7 @@ const regionOfPond = (pond: PondInstance): RegionId => {
 
 const locationsOfPond = (pond: PondInstance): readonly LocationKey[] =>
   (pond.id === 'capacity'
-    ? [CAPACITY_SHOP_EVENT, ...capacityPondSpots(), ...POND_RUNGS_BY_ID.capacity]
+    ? [...capacityPondSpots(), ...POND_RUNGS_BY_ID.capacity]
     : POND_RUNGS_BY_ID[pond.id]);
 
 const POND_REGION_LOCATIONS: ReadonlyMap<RegionId, readonly LocationKey[]> = new Map(

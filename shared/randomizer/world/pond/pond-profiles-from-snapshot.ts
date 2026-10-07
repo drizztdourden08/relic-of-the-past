@@ -8,15 +8,8 @@
  * (pond-share.ts), so a caller cannot forget it. `stored` is what the three
  * blocks hold, which is what a panel edits and what the writer puts back, and
  * the two are the same object while the switch is off.
- *
- * The shipped spelling is folded in first (pond-key-migration.data.ts): a
- * snapshot frozen when one pond was configurable reads as that pond's setting
- * and leaves the other two legacy. A snapshot carrying neither spelling reads
- * as the legacy pond three times over, which is what every profile written
- * before the option existed meant.
  */
 import { POND_INSTANCES } from './pond-instances';
-import { withMigratedPondKeys } from './pond-key-migration.data';
 import { POND_SHARE_KEY, effectivePondProfiles, readsPondShare } from './pond-share';
 import { parsePondSetting, pondValuesOf } from './pond-from-snapshot';
 import type { OptionValue, RandomizerOptionsSnapshot } from '../options.type';
@@ -35,10 +28,9 @@ interface ParsedPondProfiles {
 }
 
 const parsePondProfiles = (values: Values): ParsedPondProfiles => {
-  const migrated = withMigratedPondKeys(values);
-  const parsed = POND_INSTANCES.map((pond) => ({ pond, ...parsePondSetting(migrated, pond) }));
+  const parsed = POND_INSTANCES.map((pond) => ({ pond, ...parsePondSetting(values, pond) }));
   const stored = Object.fromEntries(parsed.map((entry) => [entry.pond.id, entry.setting])) as PondProfiles;
-  const shared = readsPondShare(migrated);
+  const shared = readsPondShare(values);
   return {
     profiles: effectivePondProfiles(stored, shared),
     stored,

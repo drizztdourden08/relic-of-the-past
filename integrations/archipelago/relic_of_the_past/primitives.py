@@ -20,7 +20,7 @@ class Primitives:
         self.families = data["families"]
         self.meter_items = {name_of_item(key) for key in data["meterItems"]}
         self.bottles = [name_of_item(key) for key in data["bottles"]]
-        self.shop_event = name_of_item(data["shopEvent"])
+        self.capacity_shop = data["capacityShop"]
         self.meter_half = name_of_item(data["meterHalf"])
         self.meter_quarter = name_of_item(data["meterQuarter"])
         hearts = data["hearts"]
@@ -39,11 +39,16 @@ class Primitives:
         steps += sum(family["planJumps"][:copies])
         return min(len(family["ladder"]) - 1, family["startTier"] + steps)
 
+    def _capacity_shop_open(self, state) -> bool:
+        """The capacity fairy's room is reached and the wallet holds her price."""
+        shop = self.capacity_shop
+        return state.can_reach_region(shop["region"], self.player) and self._wallet(state) >= shop["price"]
+
     def _counted(self, state, family_id: str) -> int:
         family = self.families[family_id]
         ladder = family["ladder"]
         if family["mode"] == "vanilla":
-            return ladder[-1] if self.has(state, self.shop_event) else ladder[family["vanillaRung"]]
+            return ladder[-1] if self._capacity_shop_open(state) else ladder[family["vanillaRung"]]
         return ladder[self._tier(state, family)]
 
     def _wallet(self, state) -> int:

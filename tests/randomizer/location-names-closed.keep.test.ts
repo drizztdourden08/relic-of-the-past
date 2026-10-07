@@ -15,10 +15,10 @@ import { describe, expect, it } from 'vitest';
 import { buildNormalPlacement, normalWorldOptions } from '@shared/randomizer/normal-placement';
 import { buildWorld } from '@shared/randomizer/world/build-world';
 import {
-  CAPACITY_UPGRADE_LOCATIONS, EVENT_LOCATIONS, KEY_DROP_LOCATIONS, NPC_SCOPE_LOCATIONS,
-  PRIZE_LOCATIONS, VANILLA_PRIZES, WORLD_ITEM_SCOPE_LOCATIONS,
+  CAPACITY_UPGRADE_LOCATIONS, KEY_DROP_LOCATIONS, NPC_SCOPE_LOCATIONS, PRIZE_LOCATIONS, VANILLA_PRIZES,
+  WORLD_ITEM_SCOPE_LOCATIONS,
 } from '@shared/randomizer/world/scope-tables';
-import { EVENT_ITEMS } from '@shared/randomizer/world/pool/event-items.data';
+import { WORLD_EVENT_IDS } from '@shared/randomizer/world/events/story-events.data';
 import { isShopSlotLocation } from '@shared/randomizer/world/shops/shop-slots';
 import { capacityPondSpots, capacitySpots } from '@shared/randomizer/world/capacity/capacity-spots';
 import { POND_INSTANCES } from '@shared/randomizer/world/pond/pond-instances';
@@ -62,6 +62,9 @@ const isLocation = (key: string): boolean =>
 
 const notLocations = (keys: Iterable<string>): string[] => [...keys].filter((key) => !isLocation(key));
 
+/** The story events of the world: never a location, and the only thing an event row may name. */
+const STORY_EVENTS: ReadonlySet<string> = new Set(WORLD_EVENT_IDS);
+
 const RULE_TABLES: Readonly<Record<string, readonly RuleEntry[]>> = {
   'global-misc': GLOBAL_MISC_RULES,
   'default-overworld': DEFAULT_OVERWORLD_RULES,
@@ -88,21 +91,23 @@ const KEYED_TABLES: readonly (readonly [string, readonly string[]])[] = [
   ['scope-tables WORLD_ITEM_SCOPE_LOCATIONS', [...WORLD_ITEM_SCOPE_LOCATIONS.keys()]],
   ['scope-tables KEY_DROP_LOCATIONS', [...KEY_DROP_LOCATIONS.keys()]],
   ['scope-tables CAPACITY_UPGRADE_LOCATIONS', [...CAPACITY_UPGRADE_LOCATIONS.keys()]],
-  ['scope-tables EVENT_LOCATIONS', [...EVENT_LOCATIONS]],
   ['scope-tables PRIZE_LOCATIONS', [...PRIZE_LOCATIONS]],
   ['scope-tables VANILLA_PRIZES', [...VANILLA_PRIZES.keys()]],
-  ['pool/event-items EVENT_ITEMS', [...EVENT_ITEMS.keys()]],
   ['capacity-spots capacitySpots', [...capacitySpots().values()]],
   ['capacity-spots capacityPondSpots', capacityPondSpots()],
   ['pond-instances slot locations', POND_INSTANCES.flatMap((pond) => pond.slots.map((slot) => slot.key))],
   ['pond-rungs POND_LOCATION_SET', [...POND_LOCATION_SET]],
   ['rules/tables lamps LAMP_LOCATIONS', LAMP_LOCATIONS],
   ['rules/tables lamps ESCAPE_DARK_LOCATIONS', ESCAPE_DARK_LOCATIONS],
-  ['rules/tables bunny-lists', [...BUNNY_ACCESSIBLE_LOCATIONS]],
+  // The source exempts two story events alongside the locations; those two are events here.
+  ['rules/tables bunny-lists', [...BUNNY_ACCESSIBLE_LOCATIONS].filter((key) => !STORY_EVENTS.has(key))],
   ['rules/tables item-rules FULL_ACCESS_ALWAYS_ALLOW', [...FULL_ACCESS_ALWAYS_ALLOW]],
   ['rules priced-entries PRICED_ENTRIES', PRICED_ENTRIES.filter((e) => e.kind === 'location').map((e) => e.target)],
-  ...Object.entries(RULE_TABLES).map(([label, table]): readonly [string, readonly string[]] =>
-    [`rules/tables ${label}`, table.filter((entry) => entry.kind === 'location').map((entry) => entry.target)]),
+  ...Object.entries(RULE_TABLES)
+    .map(([label, table]): readonly [string, readonly string[]] =>
+      [`rules/tables ${label}`, table.filter((entry) => entry.kind === 'location').map((entry) => entry.target)])
+    // A table may rule only passages and events (the goal's own table does).
+    .filter(([, keys]) => keys.length > 0),
 ];
 
 /** The pond slots a setting invents, which exist as keys and never as records. */
@@ -117,6 +122,14 @@ describe('every id-keyed table names a location the world really has', () => {
       expect(notLocations(keys)).toEqual([]);
     });
   }
+});
+
+describe('every event row names a story event of the world, never a location', () => {
+  it('rule tables', () => {
+    const events = Object.values(RULE_TABLES).flat().filter((entry) => entry.kind === 'event').map((entry) => entry.target);
+    expect(events.length).toBeGreaterThan(0);
+    expect(events.filter((key) => !STORY_EVENTS.has(key) || isLocation(key))).toEqual([]);
+  });
 });
 
 describe('Normal fills the world it is built over', () => {

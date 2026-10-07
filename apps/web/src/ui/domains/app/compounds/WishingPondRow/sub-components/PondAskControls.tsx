@@ -24,11 +24,13 @@ import type { PondRowModel, PondRowState } from '../WishingPondRow.type';
 interface PondAskControlsProps {
   model: PondRowModel;
   readOnly: boolean;
+  /** Every tick and range as a tag in place of its control: the read-only panel. */
+  readout?: boolean;
   onChange: (part: Partial<PondRowState>) => void;
 }
 
 const PondAskControls = (props: PondAskControlsProps) => {
-  const { model, readOnly, onChange } = props;
+  const { model, readOnly, readout = false, onChange } = props;
   const { askModel, state } = model;
   const { ask } = state;
   const edit = readOnly ? undefined : onChange;
@@ -43,6 +45,7 @@ const PondAskControls = (props: PondAskControlsProps) => {
           enabled={row.checked}
           stops={row.stops}
           range={row.range}
+          readout={readout}
           onEnabledChange={edit === undefined
             ? undefined
             : (next) => edit({ ask: askWithCurrencyTick(ask, row.currency, next) })}
@@ -58,6 +61,7 @@ const PondAskControls = (props: PondAskControlsProps) => {
         enabled={askModel.bottleChecked}
         stops={askModel.bottleStops}
         range={askModel.bottleRange}
+        readout={readout}
         onEnabledChange={edit === undefined ? undefined : (next) => edit({ ask: askWithBottleTick(ask, next) })}
         onRangeChange={edit === undefined
           ? undefined
@@ -68,6 +72,7 @@ const PondAskControls = (props: PondAskControlsProps) => {
             key={row.content}
             row={{ ...row, key: row.content, blocked: false, note: '' }}
             disabled={!askModel.bottleChecked}
+            readout={readout}
             onChange={edit === undefined
               ? undefined
               : (next) => edit({ ask: askWithContent(ask, row.content, next) })}
@@ -77,6 +82,7 @@ const PondAskControls = (props: PondAskControlsProps) => {
       <CurrencyPriceRow
         label="An item, held up and handed back"
         enabled={askModel.itemChecked}
+        readout={readout}
         onEnabledChange={edit === undefined ? undefined : (next) => edit({ ask: askWithItemTick(ask, next) })}
       />
     </>

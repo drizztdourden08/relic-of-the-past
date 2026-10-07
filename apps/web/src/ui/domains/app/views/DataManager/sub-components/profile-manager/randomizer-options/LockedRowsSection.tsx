@@ -18,10 +18,12 @@ interface LockedRowsSectionProps {
   groups: readonly LockedOptionGroup[];
   valueOf: (option: OptionDef) => OptionValue;
   cellOf: (key: string) => ImpactCell;
+  /** Every row shows its value as a tag: the read-only panel. */
+  readout?: boolean;
 }
 
 const LockedRowsSection = (props: LockedRowsSectionProps) => {
-  const { title, groups, valueOf, cellOf } = props;
+  const { title, groups, valueOf, cellOf, readout } = props;
 
   const options = groups.flatMap((entry) => entry.options);
   if (options.length === 0) return null;
@@ -34,6 +36,7 @@ const LockedRowsSection = (props: LockedRowsSectionProps) => {
           option={option}
           value={valueOf(option)}
           impact={cellOf(option.key)}
+          readout={readout}
         />
       ))}
     </RandomizerOptionGroup>

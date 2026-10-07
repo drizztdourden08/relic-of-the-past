@@ -19,10 +19,12 @@ interface UpcomingTabBodyProps {
   groups: readonly LockedOptionGroup[];
   valueOf: (option: OptionDef) => OptionValue;
   cellOf: (key: string) => ImpactCell;
+  /** Every row shows its value as a tag: the read-only panel. */
+  readout?: boolean;
 }
 
 const UpcomingTabBody = (props: UpcomingTabBodyProps) => {
-  const { title, groups, valueOf, cellOf } = props;
+  const { title, groups, valueOf, cellOf, readout } = props;
 
   if (groups.length === 0) return <Text variant="caption">{title}</Text>;
 
@@ -32,6 +34,7 @@ const UpcomingTabBody = (props: UpcomingTabBodyProps) => {
       groups={groups}
       valueOf={valueOf}
       cellOf={cellOf}
+      readout={readout}
     />
   );
 };

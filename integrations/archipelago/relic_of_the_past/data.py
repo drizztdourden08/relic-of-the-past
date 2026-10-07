@@ -24,4 +24,4 @@ OPTIONS = _load("options.json")
 
 GAME: str = GAME_DATA["game"]
 WORLD_VERSION: str = GAME_DATA["worldVersion"]
-VICTORY_ITEM: str = GAME_DATA["victoryItem"]
+GOAL_EVENT: str = GAME_DATA["goalEvent"]

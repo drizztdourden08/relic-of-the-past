@@ -11,6 +11,7 @@ import {
   allOf, hasItem, hasKeys,
 } from '../combinators';
 import { bombs } from '../helper-rules';
+import { STORY_EVENT, storyEvent } from '../../events';
 import { dungeonBossDefeat } from './bosses.data';
 import type { RuleEntry } from '../rule-entry.type';
 
@@ -18,7 +19,7 @@ const SWAMP_RULES: readonly RuleEntry[] = [
   // 390, then 109-110 adds the mirror (unmoved swamp under no-glitches).
   {
     kind: 'exit', target: 'Swamp Palace Moat', mode: 'set',
-    rule: allOf(hasItem(ITEM.flippers), hasItem(ITEM.openFloodgate)),
+    rule: allOf(hasItem(ITEM.flippers), storyEvent(STORY_EVENT.floodgateLeverPulled)),
   },
   { kind: 'exit', target: 'Swamp Palace Moat', mode: 'add', rule: hasItem(ITEM.magicMirror) },
   // 391-395

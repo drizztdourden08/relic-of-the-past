@@ -11,7 +11,7 @@ interface DifficultyBlockProps {
    * item-power rows take from the same ticks.
    */
   tiers: ProgressiveSetting;
-  /** Absent renders the whole block frozen. */
+  /** Absent renders the whole block as a read-out: the read-only Options page. */
   onChange?: (next: DifficultySetting) => void;
 }
 

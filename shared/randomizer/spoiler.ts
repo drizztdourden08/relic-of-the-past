@@ -2,8 +2,7 @@
 /**
  * Renders a Placement's spoiler as readable text: the seed line, the two
  * rolled medallions, then the verification sweep's spheres with each location's assigned item.
- * A placement holds ids, so every name here is read off the record at print time. The v1
- * LegacyPlacement shape keeps its own renderer in legacy-spoiler.ts.
+ * A placement holds ids, so every name here is read off the record at print time.
  */
 import { itemKeyName } from './world/display-names/item-key-name';
 import { locationDisplayName } from './world/display-names/location-display-name';

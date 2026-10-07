@@ -48,11 +48,11 @@ const STORY_EVENTS: CheckRecord[] = [
   // Intro and Hyrule Castle
   eventRecord({ n: 0, name: 'Uncle leaves the house', group: 'story', gameId: { bufferIndex: P.flags, mask: 0x10 } }),
   eventRecord({ n: 2, name: "Zelda's cell unlocked", group: 'story', ...IN_CASTLE, gameId: { roomId: 0x80, mask: 0x20 }, requirements: { allOf: [UNCLE, CASTLE_BIG_KEY] } }),
-  eventRecord({ n: 3, name: 'Zelda freed', group: 'story', ...IN_CASTLE, gameId: { eventBit: E.zeldaFreed }, fallback: SANCTUARY, now: { followerEq: 1 }, requirements: after(2) }),
+  eventRecord({ n: 3, name: 'Zelda freed', group: 'story', ...IN_CASTLE, gameId: { eventBit: E.zeldaFreed }, now: { followerEq: 1 }, requirements: after(2) }),
   eventRecord({ n: 6, name: 'Intro complete', group: 'story', ...IN_CASTLE, derived: SANCTUARY }),
   // Light World
   eventRecord({ n: 7, name: "Kakariko kid's hint", group: 'story', gameId: { bufferIndex: P.mapIcons, compare: 'gte', value: 2 }, requirements: SANCTUARY }),
-  eventRecord({ n: 8, name: "Sahasrahla's quest", group: 'story', gameId: { eventBit: E.sahasrahlaMapHint }, fallback: after(9), requirements: SANCTUARY }),
+  eventRecord({ n: 8, name: "Sahasrahla's quest", group: 'story', gameId: { eventBit: E.sahasrahlaMapHint }, requirements: SANCTUARY }),
   eventRecord({ n: 9, name: 'Sahasrahla marks the map', group: 'story', gameId: { bufferIndex: P.mapIcons, compare: 'gte', value: 3 }, requirements: after(8) }),
   eventRecord({ n: 10, name: "Sahasrahla's trial passed", group: 'story', gameId: { eventBit: E.sahasrahlaGift }, requirements: item('item-056') }),
   // The game's own flag (progress flags 0x20) is set when his sprite first runs, on entering the
@@ -62,7 +62,7 @@ const STORY_EVENTS: CheckRecord[] = [
     requirements: { count: { groupId: ITEM_GROUP_IDS.Pendants, n: 3 } } }),
   eventRecord({ n: 13, name: "Loyal Sage's last words", group: 'story', ...IN_CASTLE, gameId: { bufferIndex: P.flags, mask: 0x02 }, requirements: after(12) }),
   eventRecord({ n: 14, name: 'Castle barrier broken', group: 'story', gameId: { owScreen: 0x1b, mask: 0x40 }, requirements: hasBeamSword }),
-  eventRecord({ n: 15, name: 'Old Man found', group: 'story', gameId: { eventBit: E.followerOldMan }, fallback: after(16), now: { followerEq: 4 } }),
+  eventRecord({ n: 15, name: 'Old Man found', group: 'story', gameId: { eventBit: E.followerOldMan }, now: { followerEq: 4 } }),
   eventRecord({ n: 16, name: 'Old Man rescued', group: 'story', gameId: { eventBit: E.oldManRescued }, requirements: after(15) }),
   eventRecord({ n: 17, name: "Hobo's bottle", group: 'story', gameId: { bufferIndex: P.indicator3, mask: 0x01 }, requirements: item('item-031') }),
   // Named for the purchase, not the man: his own row is the item check of the same name.
@@ -70,7 +70,7 @@ const STORY_EVENTS: CheckRecord[] = [
   eventRecord({ n: 19, name: "Witch's powder ready", group: 'story', gameId: { roomId: 0x109, mask: 0x80 }, requirements: item('item-042') }),
   eventRecord({ n: 20, name: "Witch's brew collected", group: 'story', gameId: { eventBit: E.powderBag }, requirements: after(19) }),
   eventRecord({ n: 21, name: 'Magic Bat summoned', group: 'story', gameId: { eventBit: E.magicBat }, requirements: item('item-014') }),
-  eventRecord({ n: 22, name: 'Tempering paid', group: 'story', gameId: { eventBit: E.temperingPaid }, fallback: after(23),
+  eventRecord({ n: 22, name: 'Tempering paid', group: 'story', gameId: { eventBit: E.temperingPaid },
     // The smiths take whatever sword is in hand, none included: only an already tempered one is
     // refused, and a seed lifts that. So the reunion is the whole requirement, in both modes.
     now: { progressIndicator3: 0x80, state: 'set' }, requirements: after(36) }),
@@ -82,19 +82,18 @@ const STORY_EVENTS: CheckRecord[] = [
   eventRecord({ n: 24, name: 'Weathervane opened', group: 'story', gameId: { owScreen: 0x18, mask: 0x20 },
     requirements: { allOf: [SANCTUARY, { anyOf: [item('item-021'), item('item-075')] }] } }),
   eventRecord({ n: 25, name: "King's Tomb opened", group: 'story', gameId: { owScreen: 0x14, mask: 0x20 }, requirements: item('item-076') }),
-  // The lever's ledger bit: the game erases its own dam bits on the next overworld load. A file
-  // older than the ledger reads the heart piece the drained pond uncovers. The randomizer's
-  // open-floodgate slot sits on this row.
+  // The lever's ledger bit: the game erases its own dam bits on the next overworld load. The
+  // randomizer's open-floodgate slot sits on this row.
   eventRecord({ n: 26, name: 'Floodgate lever pulled', group: 'story', gameId: { eventBit: E.floodgatePulled },
-    fallback: { checkId: 'check-009' }, now: { owEvent: { screen: 0x3b, mask: 0x20 }, state: 'set' } }),
+    now: { owEvent: { screen: 0x3b, mask: 0x20 }, state: 'set' } }),
   // Three pegs behind a heavy rock, hammered in order, open the warp tile to the dark mountain top.
   eventRecord({ n: 27, name: 'Death Mountain warp pegs', group: 'story', gameId: { owScreen: 0x07, mask: 0x20 },
     requirements: { allOf: [HAMMER, canLiftHeavyRocks] } }),
   // Dark World
-  eventRecord({ n: 28, name: 'Agahnim sends Zelda away', group: 'story', ...IN_CASTLE_TOWER, gameId: { eventBit: E.agahnimAltar }, fallback: after(29), requirements: MIRROR_TOWER }),
+  eventRecord({ n: 28, name: 'Agahnim sends Zelda away', group: 'story', ...IN_CASTLE_TOWER, gameId: { eventBit: E.agahnimAltar }, requirements: MIRROR_TOWER }),
   eventRecord({ n: 29, name: 'Agahnim 1 beaten', group: 'story', ...IN_CASTLE_TOWER, gameId: { bufferIndex: P.indicator, compare: 'gte', value: 3 }, requirements: { allOf: [hasSword, LAMP] } }),
   // The first step into the dark world, from wherever it is taken: the mountain's warp counts as much as the castle gate.
-  eventRecord({ n: 30, name: 'Dark World reached', group: 'story', gameId: { eventBit: E.firstDarkWorld }, fallback: after(29), reachAny: DARK_WORLD_REGIONS, now: { darkWorld: true } }),
+  eventRecord({ n: 30, name: 'Dark World reached', group: 'story', gameId: { eventBit: E.firstDarkWorld }, reachAny: DARK_WORLD_REGIONS, now: { darkWorld: true } }),
   eventRecord({ n: 31, name: 'Kiki hired', group: 'story', gameId: { eventBit: E.followerKiki }, now: { followerEq: 10 } }),
   eventRecord({ n: 32, name: 'Palace of Darkness opened', group: 'story', gameId: { owScreen: 0x5e, mask: 0x20 }, requirements: after(31) }),
   eventRecord({ n: 33, name: "Thieves' Town opened", group: 'story', gameId: { owScreen: 0x58, mask: 0x20 }, requirements: item('item-032') }),
@@ -103,24 +102,24 @@ const STORY_EVENTS: CheckRecord[] = [
   // sprite (Smithy_Frog, Smithy_Homecoming), found by sprite type (trigger-plans.ts).
   eventRecord({ n: 35, name: 'Frog found', group: 'story', actorId: 'actor-003',
     gameId: { eventBit: E.followerFrog, flagType: 2, flagMask: 0x20, itemId: 255, spriteType: 26, postGfx: 0 },
-    fallback: after(36), now: { followerEq: 7 }, requirements: item('item-029') }),
+    now: { followerEq: 7 }, requirements: item('item-029') }),
   eventRecord({ n: 36, name: 'Smiths reunited', group: 'story',
     gameId: { bufferIndex: P.indicator3, mask: 0x20, flagType: 2, flagMask: 0x20, itemId: 255, spriteType: 255, postGfx: 0 },
     requirements: after(35) }),
   // An event with no item of its own: picking the chest up, before the smith opens it.
   eventRecord({ n: 37, name: 'Purple Chest found', group: 'story', gameId: { eventBit: E.followerPurpleChest },
-    fallback: after(38), now: { followerEq: 12 }, requirements: after(36) }),
+    now: { followerEq: 12 }, requirements: after(36) }),
   eventRecord({ n: 38, name: 'Purple Chest opened', group: 'story', gameId: { bufferIndex: P.indicator3, mask: 0x10 }, requirements: after(37) }),
   eventRecord({ n: 39, name: 'Flute boy asks for his flute', group: 'story', gameId: { eventBit: E.shovelFromStump } }),
   eventRecord({ n: 40, name: 'Stumpy at rest', group: 'story', gameId: { bufferIndex: P.indicator3, mask: 0x08 },
     requirements: { anyOf: [item('item-021'), item('item-075')] } }),
-  eventRecord({ n: 41, name: 'Big Bomb bought', group: 'story', gameId: { eventBit: E.followerBigBomb }, fallback: after(42), now: { followerEq: 13 },
+  eventRecord({ n: 41, name: 'Big Bomb bought', group: 'story', gameId: { eventBit: E.followerBigBomb }, now: { followerEq: 13 },
     requirements: { allOf: [item('item-116'), item('item-117')] } }),
   eventRecord({ n: 42, name: 'Pyramid Fairy wall blown up', group: 'story', gameId: { owScreen: 0x5b, mask: 0x02 }, requirements: after(41) }),
   eventRecord({ n: 43, name: 'Skull Woods back entrance burned', group: 'story', gameId: { owScreen: 0x40, mask: 0x20 }, requirements: item('item-008') }),
   eventRecord({ n: 44, name: 'Misery Mire opened', group: 'story', gameId: { owScreen: 0x70, mask: 0x20 }, requirements: { allOf: [item('item-032'), item('item-017'), hasSword] } }),
   eventRecord({ n: 45, name: 'Turtle Rock opened', group: 'story', gameId: { owScreen: 0x47, mask: 0x20 }, requirements: { allOf: [item('item-032'), item('item-018'), hasSword] } }),
-  eventRecord({ n: 46, name: 'Maiden freed', group: 'story', ...IN_THIEVES_TOWN, gameId: { eventBit: E.followerMaiden }, fallback: after(47), now: { followerEq: 6 }, requirements: item('item-086') }),
+  eventRecord({ n: 46, name: 'Maiden freed', group: 'story', ...IN_THIEVES_TOWN, gameId: { eventBit: E.followerMaiden }, now: { followerEq: 6 }, requirements: item('item-086') }),
   eventRecord({ n: 47, name: 'Blind revealed', group: 'story', ...IN_THIEVES_TOWN, gameId: { roomId: 0xac, mask: 0x200 }, requirements: after(46) }),
   // Endgame
   eventRecord({ n: 48, name: "Ganon's Tower opened", group: 'story', gameId: { owScreen: 0x43, mask: 0x20 }, requirements: hasCrystals(7) }),
@@ -132,9 +131,7 @@ const STORY_EVENTS: CheckRecord[] = [
   // The game keeps nothing for this one: the statues are sprites that step aside while a live flag
   // is up, and the flag drops when the desert screen is left, so the prayer is said again on every
   // visit. The ledger keeps that it was ever said; the pill says whether they stand aside now.
-  // Whoever stood on the stairs behind them has said it, which also answers for a file whose
-  // prayer was said before the ledger watched for it.
-  eventRecord({ n: 53, name: 'Desert statues prayed open', group: 'story', gameId: { eventBit: E.desertPrayer }, fallback: { checkId: 'check-565' },
+  eventRecord({ n: 53, name: 'Desert statues prayed open', group: 'story', gameId: { eventBit: E.desertPrayer },
     now: { desertStatuesMoved: true }, requirements: item('item-030') }),
   // Statuses: things that are true for a while. The first has an "ever" side (stage 2 reached);
   // the other three have none, so their tick follows the status itself (statusOnly).
@@ -172,10 +169,8 @@ const EARLY_STORY_EVENTS: CheckRecord[] = [
   },
   {
     id: 'check-003',
-    // The shelf's own ledger bit; a file older than the ledger reads the Sanctuary, which
-    // the shelf always precedes. The spawn-point value it used to read moves on later.
+    // The shelf's own ledger bit.
     gameId: { eventBit: 42 },
-    fallback: { checkId: 'check-004' },
     kind: 'event',
     screenId: 'screen-119',
     regionId: 'region-169',

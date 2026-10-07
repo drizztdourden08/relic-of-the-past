@@ -9,7 +9,7 @@
  * can pay for, and under full accessibility the generator then refuses every
  * seed instead of handing over a hard one. The editor snaps the max thumb
  * onto this rung and the snapshot reader raises a stored cap onto it with a
- * note, so a profile written before the floor existed rolls instead of failing.
+ * note, so a cap below it rolls instead of failing.
  *
  * What can set it:
  *   - the fixed prices (rules/priced-entries.ts): a check or a passage

@@ -7,8 +7,7 @@ export {
 export { EXPLOSIVES, FAMILIES, METER, PROJECTILES, WALLET, familyById, maxSpanOf } from './capacity-family';
 export type { CapacityFamily } from './capacity-family';
 export {
-  DEFAULT_CAPACITY_PROFILE, LEGACY_SHUFFLE_ON_PROFILE, REFERENCE_CAPACITY_PROFILE, VANILLA_CAPACITY_PROFILE,
-  customSetting, legacyCapacityProfile,
+  DEFAULT_CAPACITY_PROFILE, REFERENCE_CAPACITY_PROFILE, VANILLA_CAPACITY_PROFILE, customSetting,
 } from './capacity-profile-defaults';
 export { capacityPlansOf, capacityPoolCountsOf, maxTierOf, planOf, startTierOf } from './family-plan';
 export { reachableTopOf } from './reachable-top';
@@ -17,7 +16,7 @@ export { NO_WALLET_FLOOR, holdWalletToFloor, walletFloorOf } from './wallet-floo
 export type { WalletDemand, WalletFloor } from './wallet-floor';
 export { RETRO_PINNED_FAMILIES, isPinnedUnderRetro, withRetroBow } from './retro-projectiles';
 export {
-  CAPACITY_ENABLED_KEY, CAPACITY_OPTION_KEYS, CAPACITY_PROGRESSIVE_KEY, LEGACY_CAPACITY_KEY, capacityFieldsOf,
+  CAPACITY_ENABLED_KEY, CAPACITY_OPTION_KEYS, CAPACITY_PROGRESSIVE_KEY, capacityFieldsOf,
   capacityKeyOf, familyOfOptionKey,
 } from './capacity-option-keys';
 export type { CapacityField } from './capacity-option-keys';
@@ -27,7 +26,7 @@ export {
 } from './capacity-profile-from-snapshot';
 export type { ParsedCapacityProfile } from './capacity-profile-from-snapshot';
 export {
-  CAPACITY_BONUS_KEYS, CAPACITY_BONUS_MAX, CAPACITY_BONUS_STEP, DEFAULT_CAPACITY_BONUS, LEGACY_CAPACITY_BONUS,
+  CAPACITY_BONUS_KEYS, CAPACITY_BONUS_MAX, CAPACITY_BONUS_STEP, DEFAULT_CAPACITY_BONUS, REFERENCE_CAPACITY_BONUS,
   capacityBonusBaseKeyOf, capacityBonusKeyOf, clampBonusPercent, defaultFamilyBonus, isCapacityBonusKey,
 } from './bonus/capacity-bonus.data';
 export { capacityBonusFromSnapshot, capacityBonusOfValues, capacityBonusValuesOf } from './bonus/capacity-bonus-from-snapshot';

@@ -4,33 +4,34 @@
  * client status and checks done. Another player's checks show while a tracker link to their
  * slot is up.
  */
-import { Box, Text } from '@ds/primitives';
+import { Text } from '@ds/primitives';
 import { NetworkSection } from './NetworkSection';
-import { PlayerRow } from './PlayerRow';
-import type { NetworkPlayer } from '@app/lib/game/randomizer-client';
+import { PlayersTable } from './PlayersTable';
+import { NOT_CONNECTED_HINT } from '../behavior/network-view';
+import type { NetworkView } from '../behavior/network-view';
+import type { PanelPlacement } from '../../../Randomizer.constants';
 
 interface PlayersSectionProps {
-  players: readonly NetworkPlayer[];
+  placement: PanelPlacement;
+  view: NetworkView;
 }
 
-const HEADINGS = ['#', 'player', 'game', 'online', 'status', 'checks'] as const;
-
-const PlayersSection = ({ players }: PlayersSectionProps) => (
-  <NetworkSection title={`Players (${players.length})`}>
-    {players.length === 0 ? (
-      <Text className="randomizer-page__hint">No players yet.</Text>
-    ) : (
-      <Box role="table" className="network-tab__players">
-        <Box role="row" className="network-tab__player network-tab__player--head">
-          {HEADINGS.map((heading) => (
-            <Text key={heading} role="columnheader" className="network-tab__cell">{heading}</Text>
-          ))}
-        </Box>
-        {players.map((player) => <PlayerRow key={player.slot} player={player} />)}
-      </Box>
-    )}
-  </NetworkSection>
-);
+const PlayersSection = ({ placement, view }: PlayersSectionProps) => {
+  const players = view.status?.players ?? null;
+  return (
+    <NetworkSection
+      placement={placement}
+      title={players === null ? 'Players' : `Players (${players.length})`}
+      chip={view.live ? undefined : view.offline}
+      rows={players === null ? null : []}
+      empty={NOT_CONNECTED_HINT}
+    >
+      {players !== null && (players.length === 0
+        ? <Text className="randomizer-page__hint">No players yet.</Text>
+        : <PlayersTable players={players} />)}
+    </NetworkSection>
+  );
+};
 
 export { PlayersSection };
 export type { PlayersSectionProps };

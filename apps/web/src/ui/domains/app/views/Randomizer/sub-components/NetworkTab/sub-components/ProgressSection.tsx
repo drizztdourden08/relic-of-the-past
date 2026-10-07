@@ -3,11 +3,15 @@
 import { ProgressBar } from '@ds/primitives';
 import { NetworkSection } from './NetworkSection';
 import { formatYesNo } from '../behavior/network-format';
+import { NOT_CONNECTED_HINT } from '../behavior/network-view';
 import type { NetworkProgress } from '@app/lib/game/randomizer-client';
 import type { NetworkRow } from './NetworkSection';
+import type { NetworkView } from '../behavior/network-view';
+import type { PanelPlacement } from '../../../Randomizer.constants';
 
 interface ProgressSectionProps {
-  progress: NetworkProgress;
+  placement: PanelPlacement;
+  view: NetworkView;
 }
 
 const progressRows = (progress: NetworkProgress): NetworkRow[] => [
@@ -17,11 +21,22 @@ const progressRows = (progress: NetworkProgress): NetworkRow[] => [
   { label: 'goal reported', value: formatYesNo(progress.goalReported) },
 ];
 
-const ProgressSection = ({ progress }: ProgressSectionProps) => (
-  <NetworkSection title="Progress" rows={progressRows(progress)}>
-    {progress.total > 0 && <ProgressBar value={progress.checked} max={progress.total} variant="green" />}
-  </NetworkSection>
-);
+const ProgressSection = ({ placement, view }: ProgressSectionProps) => {
+  const progress = view.status?.progress ?? null;
+  return (
+    <NetworkSection
+      placement={placement}
+      title="Progress"
+      chip={view.live ? undefined : view.offline}
+      rows={progress === null ? null : progressRows(progress)}
+      empty={NOT_CONNECTED_HINT}
+    >
+      {progress !== null && progress.total > 0 && (
+        <ProgressBar value={progress.checked} max={progress.total} variant="green" readout={`${Math.round((progress.checked / progress.total) * 100)}%`} />
+      )}
+    </NetworkSection>
+  );
+};
 
 export { ProgressSection };
 export type { ProgressSectionProps };

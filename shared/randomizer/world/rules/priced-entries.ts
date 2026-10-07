@@ -14,7 +14,6 @@
  * on the way to the goal.
  */
 import { all } from '@shared/game/data';
-import { CAPACITY_SHOP_EVENT } from '../location-key';
 import type { RuleTargetKind } from './rule-entry.type';
 
 interface PricedEntry {
@@ -25,13 +24,11 @@ interface PricedEntry {
 }
 
 /**
- * The two priced targets no record covers: the cursed fairy's passage, which is an exit and
- * never a location at all, and the capacity shop's token, which stands for no act of the
- * player and has no check record by design (randomizer-client/virtual-locations.ts). Both
- * take the price the reference's shop table lists for a fairy slot.
+ * The priced target no record covers: the cursed fairy's passage, which is an exit and never a
+ * location at all. It takes the price the reference's shop table lists for a fairy slot. The
+ * capacity fairy's own price is read where her shop is (capacity/capacity-shop.data.ts).
  */
 const PRICED_WITHOUT_RECORDS: readonly PricedEntry[] = [
-  { kind: 'location', target: CAPACITY_SHOP_EVENT, price: 100 },
   { kind: 'exit', target: 'Pyramid Fairy', price: 100 },
 ];
 

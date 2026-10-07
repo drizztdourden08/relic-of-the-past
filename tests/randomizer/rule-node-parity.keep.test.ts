@@ -25,6 +25,32 @@
  * slots (check-011, check-025) became the story events they duplicated, "Weathervane opened"
  * (check-324) and "Floodgate lever pulled" (check-326). With those two keys mapped back, the
  * engine hashes to exactly the previous digests, for every rule case and all 20 seeds.
+ *
+ * Re-captured a fourth time when the event pairs became story events of the world: the eight
+ * event locations and their event items are gone, the sweep grants each story event where it
+ * happens, and a rule asks for it by its check id. The capacity shop's token is gone too; a
+ * vanilla bomb or arrow family reads the fairy's room and her price directly. With every old
+ * event item read as its check id and the old event locations left out of both runs, the rules
+ * answered exactly alike over the same random states for every case but "capacity vanilla",
+ * whose random states could hold the shop token without reaching the shop. Generation did not
+ * move: every seed placed the same item on every location, sphere for sphere, in all five
+ * option sets measured (capacity vanilla among them) and in all 20 seeds below; the placement
+ * digests moved only because the event rows left the placement. From this capture on, the rule
+ * digests also ask every story event's own rule.
+ *
+ * Re-captured a fifth time when the Activated Flute (item-075) became an ordinary item with its
+ * own handle, so the random states now draw it too. No rule changed (the bird already came to
+ * it); with item-075 left out of the random states the old digests matched in every case, and
+ * all 20 seeds held.
+ *
+ * Re-captured a sixth time when the Flute became the Progressive Ocarina family (item-179): the
+ * pool carries the family item in the Flute's place, and a snapshot now holds the family's two
+ * tier rows. The rules did not move: with item-179 left out of the random states, every case
+ * hashed to the fifth capture. The placements moved because the pool's item and the snapshot did.
+ *
+ * Re-captured a seventh time when the placement stats dropped `capacityShuffle`, a field only
+ * older placements were read by. With that field put back in its place, all 20 seeds hashed to
+ * the sixth capture; the rules were not touched.
  */
 import { describe, expect, it } from 'vitest';
 import { generateFromSnapshot } from '@shared/randomizer/generate';
@@ -82,28 +108,28 @@ const CASES: readonly ParityCase[] = [
 
 /** Captured from the closure-only engine, before any rule became a node tree. */
 const PINNED_RULES: Readonly<Record<string, string>> = {
-  'default': 'a5a759a3d11b79d22f09',
-  'npc and world items off': 'b788f49b886f41c83f53',
-  'key drop shuffle off': 'be2a1bd8606765a56f36',
-  'capacity vanilla': '7ddae5cb5928294795af',
-  'ponds at vanilla cost, shops open': '1ce0e8b4d2a3df6951fd',
-  'dark rooms: lamp and fire rod refused': '975550de45a0d8c2fce4',
-  'dark rooms: no light required': '8d62fd5c9de2cd1dd76e',
-  'retro bow with shops': 'c0550dc5328fcc34636c',
-  'story gates moved': 'ca98a127fc9ba0cd9e11',
-  'item power and tiers': 'e287d04f84364e6397eb',
-  'record of acts attached': 'b96a028cf2a449dce9df',
+  'default': '35a0ed0e720941258942',
+  'npc and world items off': '7a9220d1cb55a426f7c1',
+  'key drop shuffle off': '0318950cd932669abbae',
+  'capacity vanilla': 'adebf9a70ec8416609e2',
+  'ponds at vanilla cost, shops open': '6a98c22d955bdb7605e1',
+  'dark rooms: lamp and fire rod refused': 'af896962764fd9d694e7',
+  'dark rooms: no light required': 'b738cae95b4c92a100db',
+  'retro bow with shops': '9f3239c942cec515597d',
+  'story gates moved': '61fde2006d3bb6c13c64',
+  'item power and tiers': '596aea8c4d63eb094d14',
+  'record of acts attached': '53b36023d659e9470391',
 };
 
 const GENERATION_SEEDS = Array.from({ length: 20 }, (_, index) => `rule-node-${index}`);
 
 /** Captured from the closure-only engine, one per seed of GENERATION_SEEDS, default options. */
 const PINNED_PLACEMENTS: readonly string[] = [
-  '7600a29b2dcefb3a4484', 'd6f01b193eff6f1d1b2c', 'cc0c3ffd911ff3d6b5dd', '837be902a5a1c32d7ac5',
-  '97d5068de0f15350b47b', '6c2ec73dca35b0bacedc', 'be632aacbb123e14ba51', '91799c7c1461e678812c',
-  'f5d8e6ec1cf20c1a0ccb', '5b6f00e8f8cb9690da14', '8920078714a3ca432e21', '2d7181e380a624e999d2',
-  '83bdffe57f5521597029', '12d7398eef5c8d752e37', '74460f1f07ab938c9fd7', '50a9cb90df6543edc9c9',
-  '8455d33b44e8751eb60e', 'e277bbc9de072d2366b7', '18000150784c526637ae', '08bbc272aba7625a2fe9',
+  'a6412448c4a7b50f6176', '5b17132dbdddf7e4a459', '8e7d80ae6694b327423b', '1b966a4b8288afb5fdb2',
+  '11d8e648e0149df0ecee', '2c973fcbc08329e5d1ab', '52a9434d9254547ebcad', 'c048f5249da36765701c',
+  'f0c842a4e3d80be67f04', 'f0566f32157061433dd4', '06a600818938d68c8ba0', 'a3446d4e009711114455',
+  '51118e704198f1b0e6cc', '470d692901525326b87f', '06f154682cb394ff025d', 'c9bb2e92484a1f29ad94',
+  'fa62e5e7f1a0a24622eb', 'dd2cc64507ffb3706790', 'a36a4cac4eb06ad07bae', '5763ab90f3f651cf7a91',
 ];
 
 describe('rule answers match the closure-only engine', () => {

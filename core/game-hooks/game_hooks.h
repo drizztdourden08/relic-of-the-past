@@ -216,7 +216,7 @@ bool GameHook_IsUpgradeVirtualId(uint8 item);
 // upgrade id renders as; any other id passes through unchanged.
 uint8 GameHook_UpgradePresentationOf(uint8 item);
 
-// Any virtual family (upgrade 0x50-0x61, progressive 0x62-0x66, wallet 0x67-0x76,
+// Any virtual family (upgrade 0x50-0x61, progressive 0x62-0x66 and 0x82, wallet 0x67-0x76,
 // progressive capacity 0x77-0x7A): the one sanctioned exception to the 76-entry native
 // bound every override table and the receipt export enforce.
 bool GameHook_IsVirtualGrantId(uint8 item);
@@ -479,7 +479,7 @@ int GameHook_CapacityFixedLine(int family, int from_rung, int jump);
 
 // ─── Progressive virtual receive ids (progressive_grants.c) ───
 
-// True for a reserved progressive id (0x62-0x66), one copy of a multi-tier equipment
+// True for a reserved progressive id (0x62-0x66, 0x82), one copy of a multi-tier equipment
 // family, resolved to the next tier from live inventory. Never reaches vendored code.
 bool GameHook_IsProgressiveVirtualId(uint8 item);
 

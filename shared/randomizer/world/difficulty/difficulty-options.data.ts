@@ -11,8 +11,7 @@
  * doubling everything else, which is the whole reason it was taken apart.
  *
  * Every baseline is the reference pool, one copy per rung and the ceiling the
- * game itself enforces, so a fresh profile rolls the seed it always rolled and
- * a snapshot frozen before these rows existed reads the same way.
+ * game itself enforces.
  */
 import { PROGRESSIVE_FAMILIES } from '../progressive/progressive-families.data';
 import { progressiveFamilyName } from '../progressive/progressive-display-names';

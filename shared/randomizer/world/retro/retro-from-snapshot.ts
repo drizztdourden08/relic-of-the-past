@@ -5,12 +5,11 @@
  * never spell the same option two ways, the contract every other block here
  * keeps.
  *
- * A snapshot frozen before these rows existed carries none of them: the switch
- * falls back to off, which is the pool and the logic every stored placement was
- * generated under, and the costs to the reference's own two numbers.
+ * An absent switch reads as off and absent costs as the reference's own two
+ * numbers, the baselines.
  *
  * A cost is read under the wallet the same snapshot describes
- * (retro-cost-ceiling.ts): a stored number above what that wallet can hold at
+ * (retro-cost-ceiling.ts): a number above what that wallet can hold at
  * once is held at the ceiling instead of left to make the seed refuse, so the
  * reading the generator uses is always one the sliders would have offered.
  */

@@ -10,10 +10,9 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { ROOT } from './corpus';
-import { placementByKey } from './legacy-placement-shot';
 import {
-  EXPECTED_NAME_CHANGES, EXPECTED_NEW_CHECKS, EXPECTED_PLACEMENT_CHANGES, EXPECTED_SCREEN_ADDITIONS,
-  EXPECTED_SCREEN_COLUMN_CHANGE, EXPECTED_STATUS_CHANGES,
+  EXPECTED_DROPPED_LOCATIONS, EXPECTED_NAME_CHANGES, EXPECTED_NEW_CHECKS, EXPECTED_PLACEMENT_CHANGES,
+  EXPECTED_SCREEN_ADDITIONS, EXPECTED_SCREEN_COLUMN_CHANGE, EXPECTED_STATUS_CHANGES,
 } from './expected-changes.data';
 
 type Status = 'completed' | 'reachable' | 'blocked';
@@ -58,6 +57,30 @@ const withoutAdded = (completed: readonly string[]): string[] => completed.filte
  */
 const ADDED_SCREENS = new Set(EXPECTED_SCREEN_ADDITIONS);
 const withoutAddedScreens = (screens: readonly string[]): string[] => screens.filter((id) => !ADDED_SCREENS.has(id));
+
+interface PlacementShot {
+  locations: Record<string, unknown>;
+  spheres: { index: number; locations: string[] }[];
+  stats: { locationCount: number; sphereCount: number };
+}
+
+/**
+ * A baseline placement with the locations this step declared dropped taken out: from the
+ * locations, from the spheres (a sphere left empty goes with them), and from the two counts the
+ * stats keep. Every other row still has to match exactly.
+ */
+const DROPPED = new Set(Object.keys(EXPECTED_DROPPED_LOCATIONS));
+const withoutDropped = (placement: unknown): unknown => {
+  if (DROPPED.size === 0) return placement;
+  const shot = placement as PlacementShot;
+  const locations = Object.fromEntries(Object.entries(shot.locations).filter(([key]) => !DROPPED.has(key)));
+  const spheres = shot.spheres
+    .map((sphere) => sphere.locations.filter((key) => !DROPPED.has(key)))
+    .filter((keys) => keys.length > 0)
+    .map((keys, index) => ({ index, locations: keys }));
+  const stats = { ...shot.stats, locationCount: Object.keys(locations).length, sphereCount: spheres.length };
+  return { ...shot, locations, spheres, stats };
+};
 
 (ready ? describe : describe.skip)('the net', () => {
   const base = ready ? read(BASE) : ({} as Shot);
@@ -114,14 +137,11 @@ const withoutAddedScreens = (screens: readonly string[]): string[] => screens.fi
   });
 
   it('leaves every seed placement alone unless the step declared it', () => {
-    // A placement is compared BY ID, which is the only reading a relabel cannot move. A
-    // baseline older than that change speaks names, so it is read into those keys first
-    // (legacy-placement-shot.ts).
-    const idByName = new Map(Object.entries(now.names).map(([checkId, name]) => [name, checkId]));
+    // A placement is compared BY ID, which is the only reading a relabel cannot move.
     const wrong: string[] = [];
     for (const [seed, was] of Object.entries(base.placements)) {
       if (EXPECTED_PLACEMENT_CHANGES.includes(seed)) continue;
-      const wanted = placementByKey(was, idByName, renamed);
+      const wanted = withoutDropped(was);
       if (JSON.stringify(wanted) !== JSON.stringify(now.placements[seed])) wrong.push(seed);
     }
     expect(wrong).toEqual([]);

@@ -306,17 +306,6 @@ const cByte = (value) => (value === 0 ? '0' : `0x${value.toString(16).toUpperCas
 
 const PALACE_SLOTS = 14;
 
-/** Boss room per palace slot (`cur_palace_index_x2 >> 1`); 0 where no dungeon claims the slot. */
-const bossRoomByPalace = (data) => {
-  const rooms = new Array(PALACE_SLOTS).fill(0);
-  for (const dungeon of data.all('dungeon')) {
-    const { palaceIndex, bossRoomId } = dungeon.gameId ?? {};
-    if (palaceIndex === undefined || bossRoomId === undefined) continue;
-    rooms[palaceIndex >> 1] = bossRoomId;
-  }
-  return rooms;
-};
-
 /** The native receive id each palace's own vanilla prize hands over; 0 where there is no prize. */
 const vanillaPrizeItem = (data) => {
   const items = new Array(PALACE_SLOTS - 1).fill(0);
@@ -336,13 +325,6 @@ const vanillaPrizeItem = (data) => {
 };
 
 const C_TABLES = [
-  {
-    file: 'core/game-hooks/story_events.c',
-    name: 'kBossRoomByPalace',
-    build: (data) => `static const uint16 kBossRoomByPalace[${PALACE_SLOTS}] = {
-  ${bossRoomByPalace(data).map(cByte).join(', ')},
-};`,
-  },
   {
     file: 'core/game-hooks/prize_presentation.c',
     name: 'kVanillaPrizeItem',

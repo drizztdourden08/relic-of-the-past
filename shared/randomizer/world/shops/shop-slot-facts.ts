@@ -96,9 +96,6 @@ const SHOP_IDS: readonly string[] = [...new Set(CANONICAL_SLOTS.map((row) => row
 const slotsOfShop = (shopId: string): readonly ShopSlotFacts[] =>
   CANONICAL_SLOTS.filter((row) => row.shopId === shopId);
 
-/** Slots that shipped before the doors were split: canonical indices 0-14. */
-const LEGACY_SHOP_SLOT_COUNT = 15;
-
 /** Every canonical slot there is: the ceiling of the whole shop surface. */
 const STANDARD_SHOP_SLOT_COUNT = CANONICAL_SLOTS.length;
 
@@ -109,7 +106,7 @@ const SHOP_WORLD_LABELS: Readonly<Record<ShopWorld, string>> = {
 };
 
 export {
-  CANONICAL_SLOTS, LEGACY_SHOP_SLOT_COUNT, SHOP_IDS, SHOP_WORLD_LABELS,
+  CANONICAL_SLOTS, SHOP_IDS, SHOP_WORLD_LABELS,
   STANDARD_SHOP_SLOT_COUNT, slotsOfShop,
 };
 export type { ShopSlotFacts, ShopWorld };

@@ -14,11 +14,10 @@ type LocationRequires = { always: true } | { present: 'pond' | 'shop' };
 
 interface ExportedLocation {
   key: string;
-  /** Archipelago's numeric id; null for an event location, which Archipelago gives none. */
-  id: number | null;
+  /** Archipelago's numeric id. */
+  id: number;
   name: string;
   region: string;
-  event: boolean;
   prize: boolean;
   requires: LocationRequires;
   rule: RuleNode;
@@ -31,22 +30,32 @@ interface ExportedExit {
   rule: RuleNode;
 }
 
+/**
+ * A story event of the world: the loader creates it at generation time as an Archipelago event
+ * (a location and an item, both with no id, under the event's own name) in its region.
+ */
+interface ExportedEvent {
+  key: string;
+  name: string;
+  region: string;
+  rule: RuleNode;
+}
+
 interface ExportedRegions {
   start: string;
   regions: { id: string; name: string }[];
   exits: ExportedExit[];
-  events: { location: string; item: string }[];
+  events: ExportedEvent[];
 }
 
 type ItemClass = 'progression' | 'progression_skip_balancing' | 'useful' | 'filler';
 
 interface ExportedItem {
   key: string;
-  id: number | null;
+  id: number;
   name: string;
   /** What the pool itself calls the item under the default options. */
   classification: ItemClass;
-  event: boolean;
 }
 
 interface ExportedHelper {
@@ -90,7 +99,8 @@ interface CapacityFamilyData {
 
 interface PrimitiveData {
   families: Record<'explosives' | 'projectiles' | 'meter' | 'wallet', CapacityFamilyData>;
-  shopEvent: string;
+  /** The capacity fairy's room and price: a vanilla bomb or arrow family tops out there. */
+  capacityShop: { region: string; price: number };
   meterHalf: string;
   meterQuarter: string;
   /** Items every use of which spends the meter: unusable on the meter's empty rung. */
@@ -109,7 +119,6 @@ interface WorldModel {
   options: Record<string, OptionValue>;
   present: string[];
   locked: Record<string, string>;
-  events: Record<string, string>;
   prizes: { shuffle: boolean; vanilla: Record<string, string>; items: string[] };
   pool: Record<string, number>;
   /**
@@ -129,6 +138,6 @@ interface WorldModel {
 }
 
 export type {
-  CapacityFamilyData, ExportedExit, ExportedHelper, ExportedItem, ExportedLocation, ExportedOption,
+  CapacityFamilyData, ExportedEvent, ExportedExit, ExportedHelper, ExportedItem, ExportedLocation, ExportedOption,
   ExportedRegions, ExportedRules, ItemClass, LocationRequires, OptionType, PrimitiveData, WorldModel,
 };

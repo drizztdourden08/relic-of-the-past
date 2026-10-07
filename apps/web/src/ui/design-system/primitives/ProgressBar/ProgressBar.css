@@ -8,6 +8,25 @@
   overflow: hidden;
 }
 
+/* A bar with its reading at the right end, on one line. */
+.progress-bar__meter {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.progress-bar__meter .progress-bar {
+  flex: 1;
+}
+
+.progress-bar__readout {
+  flex-shrink: 0;
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
 .progress-bar__fill {
   position: absolute;
   inset: 0 auto 0 0;

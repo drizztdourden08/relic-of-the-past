@@ -13,7 +13,7 @@
  * plain option list.
  */
 import { itemKeyName } from '../display-names/item-key-name';
-import { CANONICAL_SLOTS, LEGACY_SHOP_SLOT_COUNT } from './shop-slot-facts';
+import { CANONICAL_SLOTS } from './shop-slot-facts';
 import { MAX_SHOP_SLOT_DEPTH, MIN_SHOP_SLOT_DEPTH } from './shop-slots';
 import { SHOP_SHUFFLE_MODES } from './shop-scope';
 import type { OptionDef } from '../options.type';
@@ -150,19 +150,9 @@ const SHOP_SCOPE_OPTION_KEYS: readonly string[] = [
 
 const isShopScopeOptionKey = (key: string): boolean => SHOP_SCOPE_OPTION_KEYS.includes(key);
 
-/**
- * The tick rows of the slots that did NOT exist when the shop option shipped
- * (the split doors, the hut and the bomb counter). A snapshot frozen before
- * the mode row existed is read with exactly these forced off, so its stored
- * slot count still opens the slots it always opened.
- */
-const POST_LEGACY_SHOP_SLOT_KEYS: readonly string[] = SHOP_SLOT_ROWS
-  .filter((row) => row.canonicalIndex >= LEGACY_SHOP_SLOT_COUNT)
-  .map((row) => row.key);
-
 export {
   DEFAULT_OFF_SHOPS, DEFAULT_SHOP_SHUFFLE_MODE, DEFAULT_SHOP_SLOT_DEPTH,
-  POST_LEGACY_SHOP_SLOT_KEYS, SHOP_MODE_KEY, SHOP_MODE_LABELS, SHOP_MODE_SEED,
+  SHOP_MODE_KEY, SHOP_MODE_LABELS, SHOP_MODE_SEED,
   SHOP_SCOPE_OPTION_KEYS, SHOP_SLOT_COUNT_KEY, SHOP_SLOT_DEPTH_KEY, SHOP_SLOT_DEPTH_SEED,
   SHOP_SLOT_DESCRIPTIONS, SHOP_SLOT_OPTION_KEYS, SHOP_SLOT_OPTION_SEEDS, SHOP_SLOT_ROWS,
   isShopScopeOptionKey, shopSlotKeyOf,

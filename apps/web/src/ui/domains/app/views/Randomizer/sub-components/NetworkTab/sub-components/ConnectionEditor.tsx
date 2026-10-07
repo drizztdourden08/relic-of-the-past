@@ -1,29 +1,44 @@
 /* @layer renderer-components @kind component */
 /**
- * The profile's connection, editable: an Edit button with the reason the session stopped
- * beside it, or the fields open inline. Saving reconnects at once.
+ * The profile's server setup, always open, with Test connection; Save and Revert show once
+ * it is edited. Saving reconnects at once. Below it, why the session stopped, when it did.
  */
-import { Box, Button, Text } from '@ds/primitives';
+import { Button, Text } from '@ds/primitives';
+import { ServerSetup } from '@domains/app/compounds/ServerSetup';
 import { useConnectionForm } from '../behavior/useConnectionForm';
-import { ConnectionForm } from './ConnectionForm';
 import type { ProfileRandomizerConfig, RandomizerConnectionPatch } from '@shared/types/profile';
 
 interface ConnectionEditorProps {
   config: ProfileRandomizerConfig;
   /** Why the session stopped or cannot reach the server; null while it is fine. */
-  error: string | null;
+  sessionError: string | null;
   onSave: (patch: RandomizerConnectionPatch) => Promise<void>;
 }
 
-const ConnectionEditor = ({ config, error, onSave }: ConnectionEditorProps) => {
+const ConnectionEditor = ({ config, sessionError, onSave }: ConnectionEditorProps) => {
   const form = useConnectionForm({ config, onSave });
+  const actions = form.dirty && (
+    <>
+      <Button variant="ghost" size="sm" onClick={form.revert} disabled={form.saving}>Revert</Button>
+      <Button variant="primary" size="sm" onClick={() => void form.save()} disabled={form.saving}>Save</Button>
+    </>
+  );
 
-  if (form.draft !== null) return <ConnectionForm form={form} draft={form.draft} />;
   return (
-    <Box className="network-tab__edit-row">
-      <Button variant="secondary" size="sm" onClick={form.open}>Edit</Button>
-      {error !== null && <Text className="randomizer-page__hint--error">{error}</Text>}
-    </Box>
+    <>
+      <ServerSetup
+        value={form.draft}
+        onChange={form.change}
+        onHostChange={form.changeHost}
+        onHostBlur={form.settleHost}
+        probe={form.probe.state}
+        onTest={() => void form.probe.test()}
+        error={form.error}
+        actions={actions || undefined}
+        disabled={form.saving}
+      />
+      {sessionError !== null && !form.dirty && <Text className="randomizer-page__hint--error">{sessionError}</Text>}
+    </>
   );
 };
 

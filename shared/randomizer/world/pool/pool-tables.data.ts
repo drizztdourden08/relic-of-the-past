@@ -15,9 +15,9 @@ import type { ItemId } from '@shared/game/data/types/ids';
  * (extraitems = 153 - 83 = 70 consumes them exactly).
  */
 
-/** ItemPool.py 25-28. */
+/** ItemPool.py 25-28, the Flute carried as the ocarina family's one reference copy. */
 const ALWAYS_ITEMS: readonly ItemId[] = [
-  ITEM.bombos, ITEM.bookOfMudora, ITEM.caneOfSomaria, ITEM.ether, ITEM.fireRod, ITEM.flippers, ITEM.flute, ITEM.hammer,
+  ITEM.bombos, ITEM.bookOfMudora, ITEM.caneOfSomaria, ITEM.ether, ITEM.fireRod, ITEM.flippers, ITEM.progressiveOcarina, ITEM.hammer,
   ITEM.hookshot, ITEM.iceRod, ITEM.lamp,
   ITEM.cape, ITEM.magicPowder, ITEM.mushroom, ITEM.pegasusBoots, ITEM.quake, ITEM.shovel, ITEM.bugCatchingNet,
   ITEM.caneOfByrna, ITEM.blueBoomerang, ITEM.redBoomerang,

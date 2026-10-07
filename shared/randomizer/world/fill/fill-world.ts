@@ -6,7 +6,7 @@
  * drop locations are fillable or locked to their vanilla keys (ItemPool.py
  * 349-369). Also prunes the always-allow registry to the rows the reference
  * installs under full accessibility, and pre-places the locked content the
- * fill must never touch: event items, (key drops off) the vanilla drop keys,
+ * fill must never touch: (key drops off) the vanilla drop keys,
  * the locked npc-scope locations' vanilla items (the whole scope table with
  * the option off, the physically undeliverable remainder with it on), a
  * wish pond's own pair at Vanilla grants (what her upgrade produces), and the
@@ -28,7 +28,7 @@ import {
   CAPACITY_UPGRADE_LOCATIONS, KEY_DROP_LOCATIONS, NPC_SCOPE_LOCATIONS, WORLD_ITEM_SCOPE_LOCATIONS,
 } from '../scope-tables';
 import { REFERENCE_CAPACITY_PROFILE } from '../capacity/capacity-profile-defaults';
-import { LEGACY_CAPACITY_BONUS } from '../capacity/bonus/capacity-bonus.data';
+import { REFERENCE_CAPACITY_BONUS } from '../capacity/bonus/capacity-bonus.data';
 import { lockedCapacitySpotsOf, spotOfFamily } from '../capacity/capacity-spots';
 import { capacityPoolCountsOf } from '../capacity/family-plan';
 import { CAPACITY_POND, POND_INSTANCES } from '../pond/pond-instances';
@@ -114,7 +114,7 @@ const buildFillWorld = (options: FillWorldOptions): FillWorld => {
   const {
     keyDropShuffle, includeNpcChecks = true, includeWorldItems = includeNpcChecks,
     deliverableNpcLocations, deliverableWorldLocations,
-    capacity = REFERENCE_CAPACITY_PROFILE, capacityProgressive = false, capacityBonus = LEGACY_CAPACITY_BONUS,
+    capacity = REFERENCE_CAPACITY_PROFILE, capacityProgressive = false, capacityBonus = REFERENCE_CAPACITY_BONUS,
     deliverableCapacityLocations, medallions,
     shops = NO_SHOP_SCOPE, shopPrices = NO_SHOP_PRICES, ponds = LEGACY_POND_PROFILES, pondDemands,
     pondSlotsFollowMode = false,
@@ -193,7 +193,6 @@ const buildFillWorld = (options: FillWorldOptions): FillWorld => {
   for (const [location, item] of CAPACITY_UPGRADE_LOCATIONS) {
     if (lockedCapacity.has(location) && world.locationsByKey.has(location)) lockedVanilla.set(location, item);
   }
-  for (const [location, item] of pool.eventItems) world.placedItems.set(location, item);
   for (const [location, item] of lockedVanilla) world.placedItems.set(location, item);
   // Standard-mode assurance: the chosen starting weapon sits locked on the
   // mentor check before any fill pass (ItemPool.py 318, place_locked_item).
@@ -224,11 +223,10 @@ const buildFillWorld = (options: FillWorldOptions): FillWorld => {
   };
 };
 
-/** Empty, fillable locations: not an event slot, not a prize slot, not placed. */
+/** Empty, fillable locations: not a prize slot, not placed. */
 const fillEligibleLocations = (fillWorld: FillWorld): LocationKey[] =>
   [...fillWorld.world.locationsByKey.values()]
-    .filter((location) => !location.event && !location.prize
-      && !fillWorld.world.placedItems.has(location.key))
+    .filter((location) => !location.prize && !fillWorld.world.placedItems.has(location.key))
     .map((location) => location.key);
 
 export { buildFillWorld, fillEligibleLocations };

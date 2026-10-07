@@ -1,17 +1,16 @@
 /* @layer shared-game @kind logic */
 /**
  * A built world's rules as plain data: every location's tree, every passage's tree with its two
- * ends, the event locations with the item each one hands over, and the setting readings the
+ * ends, every story event's tree with the region it happens in, and the setting readings the
  * trees test. Nothing here is compiled; it is the view an exporter serializes.
  *
- * A name no table ruled is registered open (rules/register.ts), so every location and exit of a
- * registered world has a tree; one missing here reads as `true`, the same as the engine reads it.
+ * A name no table ruled is registered open (rules/register.ts), so every location, event and exit
+ * of a registered world has a tree; one missing here reads as `true`, the same as the engine
+ * reads it.
  */
-import { EVENT_ITEMS } from '../pool/event-items.data';
 import { TRUE } from './rule-node-build';
 import { ruleOptionsOfWorld } from './rule-options';
-import type { RegionId } from '@shared/game/data/types/ids';
-import type { ItemKey } from '../item-ids.data';
+import type { CheckId, RegionId } from '@shared/game/data/types/ids';
 import type { LocationKey } from '../location-key';
 import type { World } from '../world.type';
 import type { RuleNode, RuleOptionKey, RuleOptionValue } from './rule-node.type';
@@ -24,8 +23,8 @@ interface ExitRuleView {
 }
 
 interface EventRuleView {
-  location: LocationKey;
-  item: ItemKey;
+  key: CheckId;
+  region: RegionId;
   node: RuleNode;
 }
 
@@ -45,9 +44,9 @@ const ruleNodesOfWorld = (world: World): WorldRulesView => {
       exits.push({ name: exit.name, from: exit.source, to: exit.target, node: world.getRule(exit.name)?.node ?? TRUE });
     }
   }
-  const events = [...EVENT_ITEMS]
-    .filter(([location]) => world.locationsByKey.has(location))
-    .map(([location, item]): EventRuleView => ({ location, item, node: locations[location] }));
+  const events = [...world.eventsByKey.values()].map((event): EventRuleView => ({
+    key: event.key, region: event.region, node: world.getEventRule(event.key)?.node ?? TRUE,
+  }));
   return { locations, exits, events, options: ruleOptionsOfWorld(world) };
 };
 

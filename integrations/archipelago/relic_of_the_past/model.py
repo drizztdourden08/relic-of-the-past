@@ -12,7 +12,7 @@ from Options import OptionError
 from .options import app_value_of
 
 MODEL_KEYS = (
-    "options", "present", "locked", "events", "prizes", "pool", "dungeonItems", "locationDungeon",
+    "options", "present", "locked", "prizes", "pool", "dungeonItems", "locationDungeon",
     "classes", "readings", "seedValues", "tiers", "primitives", "forbidden", "fillerItem",
 )
 

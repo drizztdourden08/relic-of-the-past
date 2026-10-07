@@ -22,6 +22,7 @@ import { Box, Checkbox, SegmentedControl, Text } from '@ds/primitives';
 import { PROGRESSIVE_MODES, PROGRESSIVE_MODE_LABELS } from '@shared/randomizer/world/progressive/progressive-modes.data';
 import type { ProgressiveFamilyMode } from '@shared/randomizer/world/progressive/progressive.type';
 import type { SegmentOption } from '@ds/primitives';
+import { OptionValueTag } from '../../OptionValueTag';
 import type { ProgressiveCardModel } from '../behavior/progressive-cards';
 import './ProgressiveTierCard.css';
 
@@ -29,6 +30,8 @@ interface ProgressiveTierCardProps {
   card: ProgressiveCardModel;
   /** A read-only render: every control draws inert. */
   disabled: boolean;
+  /** Every tick and the order show as tags in place of their controls: the read-only panel. */
+  readout?: boolean;
   onTierChange?: (index: number, checked: boolean) => void;
   onModeChange?: (mode: ProgressiveFamilyMode) => void;
 }
@@ -45,7 +48,7 @@ const stateOf = (disabled: boolean, noneOn: boolean): string => {
 };
 
 const ProgressiveTierCard = (props: ProgressiveTierCardProps) => {
-  const { card, disabled, onTierChange, onModeChange } = props;
+  const { card, disabled, readout = false, onTierChange, onModeChange } = props;
   const { name, countText, tiers, noneOn, mode } = card;
 
   return (
@@ -57,7 +60,15 @@ const ProgressiveTierCard = (props: ProgressiveTierCardProps) => {
       <Text className="progressive-tier-card__title">{name}</Text>
       <Text className="progressive-tier-card__count">{countText}</Text>
       <Box className="progressive-tier-card__tiers">
-        {tiers.map((tier) => (
+        {tiers.map((tier) => (readout ? (
+          <OptionValueTag
+            key={tier.key}
+            className="progressive-tier-card__tier"
+            label={tier.label}
+            compact
+            value={tier.checked}
+          />
+        ) : (
           <Checkbox
             key={tier.key}
             className="progressive-tier-card__tier"
@@ -66,15 +77,17 @@ const ProgressiveTierCard = (props: ProgressiveTierCardProps) => {
             disabled={disabled || onTierChange === undefined}
             onChange={(next) => onTierChange?.(tier.index, next)}
           />
-        ))}
+        )))}
       </Box>
       <Box className="progressive-tier-card__mode">
-        <SegmentedControl<ProgressiveFamilyMode>
-          value={mode}
-          options={MODE_OPTIONS}
-          disabled={disabled || noneOn || onModeChange === undefined}
-          onChange={(next) => onModeChange?.(next)}
-        />
+        {readout ? <OptionValueTag value={PROGRESSIVE_MODE_LABELS[mode]} /> : (
+          <SegmentedControl<ProgressiveFamilyMode>
+            value={mode}
+            options={MODE_OPTIONS}
+            disabled={disabled || noneOn || onModeChange === undefined}
+            onChange={(next) => onModeChange?.(next)}
+          />
+        )}
       </Box>
     </Box>
   );

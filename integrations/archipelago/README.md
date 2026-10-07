@@ -40,11 +40,11 @@ restock, the key drops):
 
 ```json
 { "key": "check-214", "id": 1380974792, "name": "Misery Mire - Big Key Chest",
-  "region": "region-205", "event": false, "prize": false,
+  "region": "region-205", "prize": false,
   "requires": { "always": true }, "rule": { "op": "all", "of": ["..."] } }
 ```
 
-`id` is null for an event location. `requires` is `{ "always": true }` for a location every world
+`requires` is `{ "always": true }` for a location every world
 holds, or `{ "present": "pond" }` / `{ "present": "shop" }` for one that exists only while the
 world model lists it. `rule` is the engine's own rule tree (`world/rules/rule-node.type.ts`).
 
@@ -54,15 +54,18 @@ world model lists it. `rule` is the engine's own rule tree (`world/rules/rule-no
 { "start": "region-001",
   "regions": [{ "id": "region-001", "name": "Menu" }],
   "exits": [{ "name": "Links House S&Q", "from": "region-001", "to": "region-064", "rule": { "op": "true" } }],
-  "events": [{ "location": "check-351", "item": "item-173" }] }
+  "events": [{ "key": "check-351", "name": "Ganon beaten", "region": "region-162", "rule": { "op": "all", "of": ["..."] } }] }
 ```
 
-A region's id is its Archipelago name.
+A region's id is its Archipelago name. `events` lists the story events the rules ask about. Each
+one is created in its region as an Archipelago event: a location and an item, both without an id,
+both named after the event, the item locked to the location. A rule asks for an event by its key,
+and the goal is the event `game.json` names as `goalEvent`.
 
 ### items.json
 
 ```json
-{ "key": "item-011", "id": 1381040138, "name": "Hookshot", "classification": "progression", "event": false }
+{ "key": "item-011", "id": 1381040138, "name": "Hookshot", "classification": "progression" }
 ```
 
 `classification` is what the pool calls the item under the default options. The world model's
@@ -97,7 +100,8 @@ only for the package: `seed_text` (the profile seed) and `pre_rolled` (a dict, w
 
 ### game.json
 
-The game name, the world version and the key of the goal item.
+The game name, the world version and the key of the goal event (`goalEvent`, a key of
+`regions.json` `events`). The goal is met once that event's item is held.
 
 ## Rule trees in Python
 

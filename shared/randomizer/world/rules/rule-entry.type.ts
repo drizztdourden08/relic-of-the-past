@@ -10,12 +10,12 @@ import type { ItemKey } from '../item-ids.data';
 import type { LocationKey } from '../location-key';
 import type { AlwaysAllowRule, Rule } from '../world.type';
 
-type RuleTargetKind = 'exit' | 'location';
+type RuleTargetKind = 'exit' | 'location' | 'event';
 type RuleMode = 'set' | 'add';
 
 interface RuleEntry {
   kind: RuleTargetKind;
-  /** An exit's own name, or a location's key. */
+  /** An exit's own name, a location's key, or a story event's check id. */
   target: string;
   mode: RuleMode;
   rule: Rule;

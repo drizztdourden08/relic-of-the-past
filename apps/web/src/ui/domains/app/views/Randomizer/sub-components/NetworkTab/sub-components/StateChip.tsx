@@ -1,10 +1,8 @@
 /* @layer renderer-components @kind component */
-/** A small uppercase chip, its colour taken from the tone (ok, warn, bad, idle). */
-import { Text } from '@ds/primitives';
-import type { Chip } from '../behavior/network-tone';
+/** A network state on the design system's chip: the tone decides the colour, the label reads in capitals. */
+import { Chip } from '@ds/primitives';
+import type { Chip as ChipModel } from '../behavior/network-tone';
 
-const StateChip = ({ tone, label }: Chip) => (
-  <Text className={`network-tab__chip network-tab__chip--${tone}`}>{label}</Text>
-);
+const StateChip = ({ tone, label }: ChipModel) => <Chip tone={tone} caps>{label}</Chip>;
 
 export { StateChip };

@@ -93,7 +93,7 @@
 // One bit per event the game never records for itself (events/event_ids.h names them; the
 // bit index is a save-file fact and never moves). Written only while kFeatures5_EventLedger
 // is set, by a test-and-set, so a save-state rewind that replays a trigger frame changes
-// nothing. Zero on a vanilla file and on every file older than the ledger.
+// nothing. Zero on a vanilla file.
 #define SRM_EVENT_LEDGER 0xF43F
 #define SRM_EVENT_LEDGER_COUNT 24
 

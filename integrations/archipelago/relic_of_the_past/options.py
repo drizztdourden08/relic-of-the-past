@@ -32,6 +32,17 @@ def _doc(row: dict) -> str:
     return row["description"] or row["displayName"]
 
 
+# Archipelago keeps `random` for itself (roll any value) and from 0.6.7 refuses a Choice that
+# offers it as an option name. The app's own `random` choices keep their ids and app values;
+# only the name the generator shows changes. A player file writes such a choice as its id
+# (concrete-option-values.ts), so the name is never parsed.
+RESERVED_CHOICE_NAMES = {"random": "randomized"}
+
+
+def _choice_name(value: str) -> str:
+    return RESERVED_CHOICE_NAMES.get(value, value)
+
+
 def _choice_default(row: dict) -> int:
     wanted = str(row["default"])
     for choice in row["choices"]:
@@ -47,7 +58,7 @@ def _option_class(row: dict) -> type:
         return type(_class_name(row["key"]), (DefaultOnToggle if row["default"] else Toggle,), attrs)
     if kind == "choice":
         for choice in row["choices"]:
-            attrs[f"option_{choice['value']}"] = choice["id"]
+            attrs[f"option_{_choice_name(choice['value'])}"] = choice["id"]
         attrs["default"] = _choice_default(row)
         return type(_class_name(row["key"]), (Choice,), attrs)
     if kind == "range":

@@ -198,7 +198,7 @@ interface CheckRecord {
   derived?: Requirement;
   /** An event that happens on the first of several places reached: any one of these screens opens it. */
   reachAny?: readonly ScreenId[];
-  /** An event with its own ledger bit that an older file can still answer from a vanilla fact. */
+  /** A check the game keeps no flag for: a plain file answers from this vanilla fact (a seed arms its own bit). */
   fallback?: Requirement;
   /** The live "is it true right now" side of a reversible event, shown as a status, never unticking the row. */
   now?: PresenceCondition;

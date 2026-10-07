@@ -5,9 +5,8 @@
  * In Pool column and the seed can never disagree about what a snapshot asks
  * for.
  *
- * A missing tick row reads as its own baseline instead of as off, so a
- * snapshot written before a shop was added still opens what that shop's
- * default says, the same tolerance every other row of the catalog gets.
+ * A missing tick row reads as its own baseline instead of as off, the same
+ * reading every other row of the catalog gets.
  */
 import { CANONICAL_SLOTS } from './shop-slot-facts';
 import { clampDepth } from './shop-slots';
@@ -21,7 +20,7 @@ import type { ShopScope, ShopShuffleMode } from './shop-scope.type';
 
 type Values = Readonly<Record<string, OptionValue>>;
 
-/** The scope that opens nothing: a placement frozen before shops existed. */
+/** The scope that opens nothing: every shop stays vanilla. */
 const NO_SHOP_SCOPE: ShopScope = { mode: 'vanilla', enabled: [], slotCount: 0, depth: 1, seed: '' };
 
 const numberAt = (values: Values, key: string, fallback: number): number =>

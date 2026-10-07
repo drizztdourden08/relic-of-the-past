@@ -21,9 +21,8 @@
  * did not certify) arms nothing in the core, so the native upgrade still runs
  * and both slots stay what the npc scope makes them.
  *
- * `followMode` false is every world built before this rule existed: the slots
- * answer to the npc scope alone whatever the mode says, so a stored placement
- * and the reference oracles keep the world they were built on.
+ * `followMode` false is the reference oracles' world: the slots answer to the
+ * npc scope alone whatever the mode says.
  */
 import type { ItemId } from '@shared/game/data/types/ids';
 import type { ItemKey } from '../item-ids.data';

@@ -14,7 +14,7 @@ import { describe, expect, it } from 'vitest';
 import { randomizerChoiceOverrides, snapshotOfChoices } from '@app/hooks/randomizer/randomizer-choices';
 import { partitionCatalogByLock } from '@app/ui/domains/app/compounds/RandomizerOptionRow/behavior/partitionCatalogByLock';
 import { OPTION_GROUPS, optionCatalog } from '@shared/randomizer/world/options.data';
-import { DEFAULT_CAPACITY_BONUS, LEGACY_SHUFFLE_ON_PROFILE } from '@shared/randomizer/world/capacity';
+import { DEFAULT_CAPACITY_BONUS, customSetting } from '@shared/randomizer/world/capacity';
 import { DEFAULT_ITEM_POWER } from '@shared/randomizer/world/item-power/item-power.data';
 import { DEFAULT_DARK_ROOM_SETTING } from '@shared/randomizer/world/dark-rooms/dark-room-lights.data';
 import { DEFAULT_ACCESSIBILITY } from '@shared/randomizer/world/accessibility/accessibility-from-snapshot';
@@ -50,7 +50,12 @@ const BASE: RandomizerOptionChoices = {
   shops: { ...defaultShopScope(), mode: 'vanilla' },
   shopPrices: {},
   capacityEnabled: true,
-  capacity: LEGACY_SHUFFLE_ON_PROFILE,
+  capacity: {
+    explosives: customSetting(10, 15, 1),
+    projectiles: customSetting(30, 35, 1),
+    meter: { mode: 'vanilla-in-pool' },
+    wallet: { mode: 'vanilla' },
+  },
   capacityProgressive: true,
   capacityBonus: DEFAULT_CAPACITY_BONUS,
   ponds: LEGACY_POND_PROFILES,

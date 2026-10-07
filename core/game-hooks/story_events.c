@@ -18,20 +18,9 @@
 // ─── The blade drawn from its pedestal ──────────────────────────────────────────────────────────
 // MasterSword_Main sets bit 0x40 of the pedestal screen's overworld event byte in the same breath as
 // the grant; the screen is 0x80, so that byte IS savegame_has_master_sword_flags. It sits in the
-// battery block, is set exactly when the ceremony completes, and every file written before this
-// hook carries it correctly. Nothing to migrate.
+// battery block and is set exactly when the ceremony completes.
 #define PEDESTAL_CLAIMED_BIT 0x40
 
-extern const uint8 kDungeonCrystalPendantBit[13];
-
-// The boss room of each palace, by palace index (cur_palace_index_x2 >> 1). The heart bit there is
-// the game's own "boss finished" record. A slot no dungeon record claims holds 0, and so does
-// Hyrule Castle, which has no boss room at all.
-/* generated: begin kBossRoomByPalace */
-static const uint16 kBossRoomByPalace[14] = {
-  0, 0, 0xC8, 0x33, 0x20, 0x06, 0x5A, 0x90, 0x29, 0xDE, 0x07, 0xAC, 0xA4, 0x0D,
-};
-/* generated: end kBossRoomByPalace */
 #define PALACE_EASTERN 2
 #define PALACE_DESERT 3
 #define PALACE_AGAHNIM 4
@@ -39,44 +28,23 @@ static const uint16 kBossRoomByPalace[14] = {
 #define PALACE_ICE 9
 #define PALACE_MIRE 7
 #define PALACE_GANON 13
-#define HEART_TAKEN_BIT 0x800
 
 static uint32 Field(uint32 mask, uint32 shift) { return (enhanced_features5 & mask) >> shift; }
 static bool Bit(uint32 mask) { return (enhanced_features5 & mask) != 0; }
-
-// A seed is running when any override table is armed: then the ledger alone is the truth, since
-// the file has recorded from its first frame. Outside a seed an older file may predate the ledger,
-// so the vendored item reading stays as a fallback.
-static bool SeedArmed(void) {
-  return (enhanced_features3 & (kFeatures3_ItemOverrides | kFeatures3_NpcOverrides | kFeatures3_StandingOverrides)) != 0;
-}
 
 bool GameHook_PedestalClaimed(void) {
   if (!Bit(kFeatures5_PedestalScenes)) return link_sword_type >= 2;
   return (savegame_has_master_sword_flags & PEDESTAL_CLAIMED_BIT) != 0;
 }
 
-static bool HeartTaken(int palace) {
-  return palace >= 0 && palace <= 13 && (save_dung_info[kBossRoomByPalace[palace]] & HEART_TAKEN_BIT) != 0;
-}
-
+// The boss is dead: the ledger records it when the heart container first appears.
 static bool BossKilled(int palace) {
-  return GameHook_HasEvent((EventId)(kEvent_BossKilled_Sewers + palace)) || HeartTaken(palace);
+  return GameHook_HasEvent((EventId)(kEvent_BossKilled_Sewers + palace));
 }
 
-static bool VanillaPrizeHeld(int palace) {
-  if (palace < 0 || palace > 12) return false;
-  uint8 bit = kDungeonCrystalPendantBit[palace];
-  if (bit == 0) return false;
-  bool pendant = palace == PALACE_EASTERN || palace == PALACE_DESERT || palace == PALACE_HERA;
-  return ((pendant ? link_which_pendants : link_has_crystals) & bit) != 0;
-}
-
-// The falling reward was picked up: the ledger, or on a file older than it, the heart taken and
-// this dungeon's own reward in hand.
+// The falling reward was picked up: the ledger records it with the pickup.
 bool GameHook_PrizeTaken(int palace) {
-  if (GameHook_HasEvent((EventId)(kEvent_PrizeTaken_Sewers + palace))) return true;
-  return HeartTaken(palace) && VanillaPrizeHeld(palace);
+  return GameHook_HasEvent((EventId)(kEvent_PrizeTaken_Sewers + palace));
 }
 
 // For a gate, "cleared" is the boss and the reward; the two tower fights have no reward.
@@ -163,17 +131,17 @@ bool GameHook_StoryGate(StoryGate gate, bool vanilla) {
 }
 
 // A possession-gated re-offer with no giver bit of its own reads the ledger: the item may have
-// come from anywhere. Outside a seed an older file keeps the item reading as a fallback.
+// come from anywhere.
 bool GameHook_GiverTaken(EventId id, bool vanilla) {
   if (!Bit(kFeatures5_GiverReoffer)) return vanilla;
-  return GameHook_HasEvent(id) || (!SeedArmed() && vanilla);
+  return GameHook_HasEvent(id);
 }
 
 // The stump's offer keys on the flute slot: 0 offers the shovel, 1 asks after the flute, 2 and 3
 // thank the player. With the ledger the shovel's own fact decides the first two.
 int GameHook_StumpState(int vanilla) {
   if (!Bit(kFeatures5_GiverReoffer)) return vanilla;
-  bool given = GameHook_HasEvent(kEvent_ShovelFromStump) || (!SeedArmed() && vanilla != 0);
+  bool given = GameHook_HasEvent(kEvent_ShovelFromStump);
   if (!given) return 0;
   return vanilla == 0 ? 1 : vanilla;
 }

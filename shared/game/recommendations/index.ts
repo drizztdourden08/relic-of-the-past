@@ -10,7 +10,6 @@ export type {
 } from './compare';
 export { changedPaths, linesForPaths } from './diff';
 export { fnv1a, identityOf, recommendationId } from './id';
-export { migrateMisfiledEntries } from './migrate-misfiled';
 export { pathLines } from './path-lines';
 export { reconcile, scopedToPass } from './reconcile';
 export {

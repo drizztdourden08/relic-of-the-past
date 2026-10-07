@@ -70,10 +70,10 @@ interface GameSettings extends OnlineNoticeSettings, QuietReceiptSettings {
   customAspectH: number; // ratio height; 0 = auto-detect
   extendY: boolean;
   // Extend sprite spawn/despawn ranges so enemies/objects revealed by the wider view behave correctly.
-  // Positive opt-in (replaces the old inverted `unchangedSprites`). Default on; only relevant when wide.
+  // Default on; only relevant when wide.
   widescreenSprites: boolean;
-  // Apply the widescreen graphics corrections (edges/sprites that assume a 4:3 screen). Positive opt-in
-  // (replaces the old inverted `noVisualFixes`). Default on; only relevant when wide.
+  // Apply the widescreen graphics corrections (edges/sprites that assume a 4:3 screen). Default on;
+  // only relevant when wide.
   widescreenVisualFixes: boolean;
   // Uses a clamped linear BG fetch instead of the wrapping 512px SNES tilemap, which prevents tile
   // garbage at edges in wide views. Required for any ratio above ~19:9. Memory cost: one world
@@ -98,8 +98,6 @@ interface GameSettings extends OnlineNoticeSettings, QuietReceiptSettings {
   // (move/animate but cannot act on the player), 'vanilla' (full behavior, matches the original),
   // or 'paused' (frozen). Default 'idle'.
   offscreenAI?: OffscreenAiMode;
-  /** @deprecated Read-only migration source for offscreenAI ('paused' when this was true), never written again. */
-  pauseOffscreenAI?: boolean;
 
   // ─── Graphics ───
   windowScale: number; // 1-5 (legacy, unused in Electron)

@@ -84,10 +84,26 @@
   color: var(--c-text-faint);
 }
 
+/* A short excerpt (LogLines): the list's type without its well, scroller or row padding.
+   The widths fall back to the panel's defaults, since no .log-panel sits around it. */
+.log-panel__lines {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  color: var(--c-text);
+}
+
+.log-panel__lines .log-panel__row {
+  padding: 0;
+}
+
 /* A fixed gutter column, then the (indentable) content block. */
 .log-panel__row {
   display: grid;
-  grid-template-columns: var(--log-gutter-w) 1fr;
+  grid-template-columns: var(--log-gutter-w, 4ch) 1fr;
   column-gap: var(--space-md);
   align-items: stretch;
   padding: 0 var(--space-md);
@@ -107,7 +123,7 @@
 /* Content = tag column + message. */
 .log-panel__content {
   display: grid;
-  grid-template-columns: var(--log-tag-w) 1fr;
+  grid-template-columns: var(--log-tag-w, 10ch) 1fr;
   column-gap: var(--space-md);
   align-items: baseline;
   min-width: 0;

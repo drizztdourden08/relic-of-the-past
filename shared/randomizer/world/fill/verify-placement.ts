@@ -6,10 +6,14 @@
  * contract: the spheres, and the locations it never reached; which of those
  * locations actually invalidate the seed is the contract's question, and the
  * caller asks it of accessibility/accessibility-check.ts. The batches double
- * as the placement's spoiler spheres.
+ * as the placement's spoiler spheres. The story events within reach of each
+ * batch's state happen with it (events/event-sweep.ts); they are no location,
+ * so no sphere lists them.
  */
 import { createCollectionState } from '../collection-state';
 import { canCollectLocation } from '../rules/collect';
+import { reachableEvents } from '../events/event-sweep';
+import type { CheckId } from '@shared/game/data/types/ids';
 import type { LocationKey } from '../location-key';
 import type { World } from '../world.type';
 
@@ -23,6 +27,8 @@ interface PlacementSweep {
   collected: Set<LocationKey>;
   /** Locations the sweep never reached; the accessibility contract judges them. */
   uncollected: LocationKey[];
+  /** Story events the sweep never made happen; the accessibility contract judges them too. */
+  missedEvents: CheckId[];
   beaten: boolean;
 }
 
@@ -33,16 +39,20 @@ const sweepPlacementSpheres = (world: World): PlacementSweep => {
   for (;;) {
     const batch = [...world.locationsByKey.keys()]
       .filter((key) => !collected.has(key) && canCollectLocation(state, key));
-    if (batch.length === 0) break;
+    const events = reachableEvents(state);
+    if (batch.length === 0 && events.length === 0) break;
     for (const key of batch) {
       collected.add(key);
       const item = world.placedItems.get(key);
       if (item !== undefined) state.collect(item);
     }
-    spheres.push({ index: spheres.length, locations: batch });
+    for (const event of events) state.collect(event);
+    // A round that only made story events happen holds no location, so it is no sphere.
+    if (batch.length > 0) spheres.push({ index: spheres.length, locations: batch });
   }
   const uncollected = [...world.locationsByKey.keys()].filter((key) => !collected.has(key));
-  return { spheres, collected, uncollected, beaten: world.isBeaten(state) };
+  const missedEvents = [...world.eventsByKey.keys()].filter((key) => !state.has(key));
+  return { spheres, collected, uncollected, missedEvents, beaten: world.isBeaten(state) };
 };
 
 export { sweepPlacementSpheres };

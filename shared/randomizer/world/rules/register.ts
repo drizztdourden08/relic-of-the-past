@@ -86,6 +86,11 @@ const applyEntry = (world: World, exitNames: Set<string>, entry: RuleEntry): voi
     applyRule(world.rules, entry);
     return;
   }
+  if (entry.kind === 'event') {
+    if (!world.eventsByKey.has(entry.target as CheckId)) throw new Error(`rule targets unknown event: ${entry.target}`);
+    applyRule(world.eventRules as Map<string, Rule>, entry);
+    return;
+  }
   const key = entry.target as LocationKey;
   if (!world.locationsByKey.has(key)) {
     if (!world.options.keyDropShuffle && KEY_DROP_LOCATIONS.has(key as CheckId)) return;
@@ -156,6 +161,7 @@ const registerRules = (world: World): RuleCoverageReport => {
   const exits = closeCoverage(exitNames, world.rules);
   openShopSlots(world);
   const locations = closeCoverage(world.locationsByKey.keys(), world.locationRules as Map<string, Rule>);
+  closeCoverage(world.eventsByKey.keys(), world.eventRules as Map<string, Rule>);
   registerPriceRules(world);
   // The demands a pond rolled sit on top of the wallet overlay, because a rung
   // is a ladder and the whole climb has to be payable, not only its own throw.

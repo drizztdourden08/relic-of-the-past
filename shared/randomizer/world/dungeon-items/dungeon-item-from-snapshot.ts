@@ -4,11 +4,9 @@
  * through here, so the panel's In Pool column and the seed can never disagree
  * about what a snapshot means.
  *
- * A key that is missing (every profile frozen before the engine read these),
- * spelled as something this catalog never offered, or naming a mode this
- * engine refuses (dungeon-item-modes.ts REFUSED_MODES) reads as
- * original_dungeon, the baseline every stored placement was rolled under, so
- * a legacy snapshot keeps its exact meaning and a hand-edited one still
+ * A key that is missing, spelled as something this catalog never offered, or
+ * naming a mode this engine refuses (dungeon-item-modes.ts REFUSED_MODES)
+ * reads as original_dungeon, the baseline, so a hand-edited snapshot still
  * produces a playable seed instead of an unfillable one.
  */
 import {

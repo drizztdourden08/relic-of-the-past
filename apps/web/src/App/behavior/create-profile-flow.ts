@@ -7,8 +7,6 @@
  */
 import type { CreateProfileOptions, CreateProfileResult } from '@shared/types/profile';
 import type { Placement } from '@shared/randomizer/world/fill/placement.type';
-import { generateFromSnapshot } from '@shared/randomizer/generate';
-import { normalizeRandomizerOptions } from '@shared/randomizer/options-snapshot';
 import { deliverableListsOf } from '@shared/randomizer/world/fill/deliverable-lists';
 import { log } from '../../lib/log-bus';
 import {
@@ -16,6 +14,7 @@ import {
 } from '../../lib/game/randomizer-client';
 import * as profileStore from '../../lib/storage/profile-store';
 import { saveRandomizerPlacement } from '../../lib/randomizer-placement-io';
+import { rollPlacement } from './roll-placement';
 
 /**
  * An online profile keeps the probed spots on its config, so the player file written later
@@ -38,14 +37,7 @@ const runCreateProfileFlow = async (opts: CreateProfileOptions): Promise<CreateP
   let placement: Placement | null = null;
   if (opts.randomizer?.mode === 'local') {
     try {
-      // The ported pipeline consumes the frozen snapshot directly (tolerating legacy config
-      // shapes). The capability probes name the npc-scope locations and capacity slots the
-      // app can physically deliver. The rest stay locked vanilla so the plan can never
-      // carry errors.
-      const snapshot = normalizeRandomizerOptions(opts.randomizer.options);
-      placement = generateFromSnapshot(opts.randomizer.seed, snapshot,
-        probeDeliverableNpcLocations(), probeDeliverablePondLocations(),
-        probeDeliverableWorldLocations());
+      placement = rollPlacement(opts.randomizer);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       log.error(`Randomizer generation failed: ${message}`);

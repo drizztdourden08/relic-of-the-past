@@ -104,6 +104,8 @@ const createFakeOnline = (): FakeOnline => {
       placementListeners.add(listener);
       return () => placementListeners.delete(listener);
     },
+    networkStatus: null,
+    onNetworkStatus: () => () => undefined,
   } as unknown as OnlineSession;
   return {
     session,

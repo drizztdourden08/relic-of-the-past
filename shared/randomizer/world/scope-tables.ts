@@ -14,14 +14,10 @@
  * their items from the pool and the order it locks them onto their locations. The key drops
  * are in record order, which is their dungeons' order and then each dungeon's own.
  *
- * TWO LISTS ARE NOT SCOPE. The prize slots are every check of kind 'prize', and the event
- * locations are the ones the fill hands an event item to instead of a pool item, which is
- * the fill's own pairing (pool/event-items.data.ts) and includes one location with no check
- * record at all by design.
+ * ONE LIST IS NOT SCOPE. The prize slots are every check of kind 'prize'.
  */
 import { all } from '@shared/game/data';
 import { standardNameOfCheck } from '@shared/game/data/check-standard-name';
-import { EVENT_ITEMS } from './pool/event-items.data';
 import { poolItemOfCheck } from './pool-items';
 import type { ItemId } from '@shared/game/data/types/ids';
 import type { CheckRecord } from '@shared/game/data';
@@ -66,10 +62,7 @@ const VANILLA_PRIZES: ReadonlyMap<LocationKey, ItemId> = new Map(
   rowsOf(all('check').filter((check) => check.kind === 'prize')),
 );
 
-/** The locations the fill hands a logic event to; they never carry a pool item. */
-const EVENT_LOCATIONS: ReadonlySet<LocationKey> = new Set(EVENT_ITEMS.keys());
-
 export {
-  CAPACITY_UPGRADE_LOCATIONS, EVENT_LOCATIONS, KEY_DROP_LOCATIONS, NPC_SCOPE_LOCATIONS,
-  PRIZE_LOCATIONS, VANILLA_PRIZES, WORLD_ITEM_SCOPE_LOCATIONS,
+  CAPACITY_UPGRADE_LOCATIONS, KEY_DROP_LOCATIONS, NPC_SCOPE_LOCATIONS, PRIZE_LOCATIONS, VANILLA_PRIZES,
+  WORLD_ITEM_SCOPE_LOCATIONS,
 };

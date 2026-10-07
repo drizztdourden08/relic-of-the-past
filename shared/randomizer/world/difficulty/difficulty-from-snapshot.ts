@@ -5,10 +5,8 @@
  * freezes can never spell the same option two ways, the contract every other
  * block here keeps.
  *
- * A snapshot frozen before these rows existed carries none of them. Every
- * missing key falls back to the reference pool: one copy per rung, hearts to
- * the game's own ceiling. That is the seed every stored placement was rolled
- * from, so an old profile keeps playing exactly as it was rolled.
+ * Every missing key falls back to the reference pool: one copy per rung,
+ * hearts to the game's own ceiling.
  */
 import { PROGRESSIVE_FAMILIES } from '../progressive/progressive-families.data';
 import {

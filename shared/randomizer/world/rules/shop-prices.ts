@@ -88,7 +88,7 @@ const bottleNode = (content: string, count: number): RuleNode => {
 /** What paying this price asks, as a tree. */
 const priceNode = (price: ShopPrice): RuleNode => {
   // A price with no count of its own asks for one bottle, which is what every
-  // shelf asks for and what every placement frozen before the count means.
+  // shelf asks for.
   if (price.currency === 'bottle') return bottleNode(price.content, price.amount ?? 1);
   // Holding the named item is the WHOLE rule. Every other currency is spent,
   // so its rule asks what the player can hold and still afford again; this one

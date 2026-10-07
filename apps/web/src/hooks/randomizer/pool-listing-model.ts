@@ -2,8 +2,8 @@
 /**
  * The pool builder's own partition as list groups: the global pool by its
  * classification (progression, useful, filler), the assured starting
- * weapon, the per-dungeon restricted sets, the prizes and the event items,
- * each a name → count multiset, largest count first. The categories are
+ * weapon, the per-dungeon restricted sets and the prizes, each a name → count
+ * multiset, largest count first. The categories are
  * read off the built pool, never re-derived here. Art comes from the
  * extracted sprite set through the one lookup every surface shares
  * (pool-item-sprite.ts). While the set is not extracted yet,
@@ -38,7 +38,6 @@ const poolListingGroupsOf = (pool: ItemPool, spritesAvailable: boolean): PoolLis
     ...(pool.uncleWeapon === undefined ? [] : [group('starting-weapon', 'Starting weapon', [pool.uncleWeapon])]),
     ...[...pool.dungeonItems].map(([dungeon, items]) => group(`dungeon:${dungeon}`, `${dungeon} items`, items)),
     group('prizes', 'Prizes', pool.prizes),
-    group('events', 'Events', [...pool.eventItems.values()]),
   ].filter((entry) => entry.total > 0);
 };
 

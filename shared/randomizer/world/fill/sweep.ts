@@ -6,10 +6,12 @@
  * items sitting on already-placed locations that are collectable, in sphere
  * batches, until a fixpoint. Placed non-advancement items are collected too
  * (no rule reads their names, so this is behavior-neutral and keeps the
- * bookkeeping to one map).
+ * bookkeeping to one map). Each batch also grants the story events within
+ * reach of the same state (events/event-sweep.ts).
  */
 import { createCollectionState } from '../collection-state';
 import { canCollectLocation } from '../rules/collect';
+import { reachableEvents } from '../events/event-sweep';
 import type { ItemKey } from '../item-ids.data';
 import type { LocationKey } from '../location-key';
 import type { World } from '../world.type';
@@ -31,12 +33,15 @@ const sweepPlacedItems = (assumed: AssumedState): void => {
     for (const key of placedItems.keys()) {
       if (!collectedLocations.has(key) && canCollectLocation(state, key)) batch.push(key);
     }
+    const events = reachableEvents(state);
     for (const key of batch) {
       collectedLocations.add(key);
       const item = placedItems.get(key);
       if (item !== undefined) state.collect(item);
       changed = true;
     }
+    for (const event of events) state.collect(event);
+    if (events.length > 0) changed = true;
   }
 };
 

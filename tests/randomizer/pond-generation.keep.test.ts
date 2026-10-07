@@ -2,8 +2,7 @@
 /**
  * Generation with the pond in the shuffle: every slot a real location of the world named for its
  * pond and its number, every mode beatable over many seeds, the prize slots really carrying pool
- * items, the wallet rule really gating them, and, at the legacy default, a world and a placement
- * identical to the one built before the option existed.
+ * items, and the wallet rule really gating them.
  *
  * The last block is the one the options panel stands on: the demands a seed
  * asks for are drawn from the SEED, so what the panel previews before
@@ -18,14 +17,9 @@ import { buildFillWorld } from '@shared/randomizer/world/fill/fill-world';
 import { fillOptionsFromSnapshot } from '@shared/randomizer/world/fill/fill-options-from-snapshot';
 import { baselineValues } from '@shared/randomizer/world/options.data';
 import { POND_CERTIFIED_SPOTS } from '@shared/randomizer/world/pond/pond-spots';
-import { POND_OPTION_KEYS } from '@shared/randomizer/world/pond/pond-option-keys';
 import { POND_PRIZE_LOCATIONS } from '@shared/randomizer/world/pond/pond-rungs';
 import { pondPlanOf } from '@shared/randomizer/world/pond/pond-plan';
-import {
-  parsePondProfiles, pondProfileValuesOf,
-} from '@shared/randomizer/world/pond/pond-profiles-from-snapshot';
-import { pondProfilesOfStats } from '@shared/randomizer/world/fill/placement-ponds';
-import { LEGACY_POND_PROFILES } from '@shared/randomizer/world/pond/pond-profile-defaults';
+import { parsePondProfiles } from '@shared/randomizer/world/pond/pond-profiles-from-snapshot';
 import { createCollectionState } from '@shared/randomizer/world/collection-state';
 import { WALLET } from '@shared/randomizer/world/capacity/capacity-family';
 import { reachableTopOf } from '@shared/randomizer/world/capacity/reachable-top';
@@ -166,29 +160,14 @@ describe('pond generation', () => {
     for (const seed of SEEDS.slice(0, 5)) {
       const placement = generatePlacement(seed, snapshot, EMPTY, DELIVERABLE, EMPTY);
       expect(placement.stats.pondPrizeCount, seed).toBe(2);
-      expect(pondPlanOf(pondProfilesOfStats(placement.stats).capacity).throws.map((entry) => entry.price)).toEqual([500, 500]);
+      expect(pondPlanOf(placement.stats.ponds.capacity).throws.map((entry) => entry.price)).toEqual([500, 500]);
     }
   }, 60_000);
-
-  it('the legacy pond rows build exactly the world a snapshot without them did', () => {
-    const legacy = snapshotOf(pondProfileValuesOf(LEGACY_POND_PROFILES));
-    const before = snapshotOf({});
-    for (const key of POND_OPTION_KEYS) delete (before.values as Record<string, unknown>)[key];
-    const withRow = buildFillWorld(fillOptionsFromSnapshot(legacy, { capacity: DELIVERABLE }, {}, 's'));
-    const withoutRow = buildFillWorld(fillOptionsFromSnapshot(before, { capacity: DELIVERABLE }, {}, 's'));
-    expect([...withRow.world.locationsByKey.keys()]).toEqual([...withoutRow.world.locationsByKey.keys()]);
-    expect(withRow.ponds.capacity).toEqual({ mode: 'capacity' });
-    expect(withRow.pondLocations).toEqual(withoutRow.pondLocations);
-    expect(withRow.pool.pool).toEqual(withoutRow.pool.pool);
-    const a = generatePlacement('legacy-seed', legacy, EMPTY, DELIVERABLE, EMPTY);
-    const b = generatePlacement('legacy-seed', before, EMPTY, DELIVERABLE, EMPTY);
-    expect(a.locations).toEqual(b.locations);
-  }, 30_000);
 
   it('a placement re-derives the same schedule the generator planned', () => {
     const snapshot = snapshotOf({ pond_capacity_mode: 'custom', pond_capacity_items: 3, pond_capacity_throws: 5 });
     const placement = generatePlacement('pond-derive', snapshot, EMPTY, DELIVERABLE, EMPTY);
-    const plan = pondPlanOf(pondProfilesOfStats(placement.stats).capacity);
+    const plan = pondPlanOf(placement.stats.ponds.capacity);
     expect(plan.locations).toHaveLength(3);
     expect(plan.locations.every((name) => placement.locations[name] !== undefined)).toBe(true);
   }, 30_000);

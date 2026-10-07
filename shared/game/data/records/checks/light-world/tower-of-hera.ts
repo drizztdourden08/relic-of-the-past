@@ -101,10 +101,8 @@ const LW_TOWER_OF_HERA_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-141',
-    // The reward pickup is its own ledger bit; a file older than the ledger reads the heart bit
-    // and this dungeon's own reward in hand, which is what taking it meant before shuffles.
+    // The reward pickup is its own ledger bit.
     gameId: { eventBit: 29 },
-    fallback: { allOf: [{ checkId: 'check-140' }, { itemId: 'item-057' }] },
     kind: 'prize',
     screenId: 'screen-101',
     regionId: 'region-179',

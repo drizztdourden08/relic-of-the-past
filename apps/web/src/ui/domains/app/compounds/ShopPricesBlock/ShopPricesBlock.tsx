@@ -7,7 +7,7 @@
  * With nothing ticked no price is rolled and every shelf charges what the
  * unmodified game charges.
  *
- * Shared by the creation panel and the frozen Run tab; the rows arrive
+ * Shared by the creation panel and the read-only Options page; the rows arrive
  * derived from the snapshot values, and edits leave keyed by catalog key.
  *
  * Each counted range ends where its currency does: the capacity profile
@@ -47,10 +47,12 @@ interface ShopPricesBlockProps {
    * One patch per edit, keyed by catalog key. A patch instead of a single
    * key because the range writes both ends together; two separate calls in
    * the same tick would each build on the pre-edit values and the first end
-   * would be lost. Absent renders the section frozen, the Run tab's
-   * read-only view.
+   * would be lost. Absent renders the section frozen, which is also how
+   * vanilla shops show it.
    */
   onChange?: (patch: Readonly<Record<string, OptionValue>>) => void;
+  /** Every tick, range and percentage shows as a tag: the read-only Options page. */
+  readout?: boolean;
 }
 
 /** The shop's own catalog keys, the ones the shared currency rows are built from. */
@@ -63,7 +65,7 @@ const numberAt = (values: ShopPricesBlockProps['values'], key: string, fallback:
   (typeof values[key] === 'number' ? values[key] : fallback);
 
 const ShopPricesBlock = (props: ShopPricesBlockProps) => {
-  const { values, capacity, onChange } = props;
+  const { values, capacity, onChange, readout = false } = props;
   const currencyRows = currencyRowsOf(values, capacity, CURRENCY_ROWS, SHOP_CURRENCY_KEYS);
   const bottleRows = bottleContentRowsOf(values);
   const bottleOn = boolAt(values, BOTTLE_KEY);
@@ -81,6 +83,7 @@ const ShopPricesBlock = (props: ShopPricesBlockProps) => {
             enabled={row.checked}
             blocked={row.blocked}
             note={row.note}
+            readout={readout}
             onEnabledChange={onChange === undefined ? undefined : (next) => onChange({ [row.key]: next })}
             stops={row.stops}
             range={row.range}
@@ -93,6 +96,7 @@ const ShopPricesBlock = (props: ShopPricesBlockProps) => {
         <CurrencyPriceRow
           label="A bottle of something"
           enabled={bottleOn}
+          readout={readout}
           onEnabledChange={onChange === undefined ? undefined : (next) => onChange({ [BOTTLE_KEY]: next })}
         >
           {bottleRows.map((row) => (
@@ -100,6 +104,7 @@ const ShopPricesBlock = (props: ShopPricesBlockProps) => {
               key={row.content}
               row={row}
               disabled={!bottleOn}
+              readout={readout}
               onChange={onChange === undefined ? undefined : (next) => onChange({ [row.key]: next })}
             />
           ))}
@@ -110,6 +115,7 @@ const ShopPricesBlock = (props: ShopPricesBlockProps) => {
           min={SHOP_PRICE_MODIFIER_MIN}
           max={SHOP_PRICE_MODIFIER_MAX}
           disabled={!countedOn}
+          readout={readout}
           onChange={onChange === undefined ? undefined : (next) => onChange({ [SHOP_PRICE_MODIFIER_KEY]: next })}
         />
       </Box>

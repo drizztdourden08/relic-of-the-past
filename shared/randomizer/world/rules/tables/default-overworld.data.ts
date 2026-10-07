@@ -14,8 +14,14 @@ import {
 import {
   bombs, canLiftHeavyRocks, canLiftRocks, canRetrieveTablet,
 } from '../helper-rules';
-import { actGate } from '../../events';
+import { STORY_EVENT, actGate, storyEvent } from '../../events';
 import type { RuleEntry } from '../rule-entry.type';
+
+/**
+ * The bird comes to an active flute: the plain flute woken at the weathervane (the Weathervane
+ * opened event), or the Activated Flute, an item a check gives already awake.
+ */
+const canCallTheBird = anyOf(storyEvent(STORY_EVENT.weathervaneOpened), hasItem(ITEM.activatedFlute));
 
 const DEFAULT_OVERWORLD_RULES: readonly RuleEntry[] = [
   // 627-630
@@ -36,7 +42,7 @@ const DEFAULT_OVERWORLD_RULES: readonly RuleEntry[] = [
   { kind: 'exit', target: 'Bonk Fairy (Light)', mode: 'set', rule: hasItem(ITEM.pegasusBoots) },
   {
     kind: 'exit', target: 'Lumberjack Tree Tree', mode: 'set',
-    rule: allOf(hasItem(ITEM.pegasusBoots), hasItem(ITEM.beatAgahnim1)),
+    rule: allOf(hasItem(ITEM.pegasusBoots), storyEvent(STORY_EVENT.agahnim1Beaten)),
   },
   { kind: 'exit', target: 'Bonk Rock Cave', mode: 'set', rule: hasItem(ITEM.pegasusBoots) },
   // 641-644
@@ -46,12 +52,12 @@ const DEFAULT_OVERWORLD_RULES: readonly RuleEntry[] = [
   { kind: 'exit', target: 'Death Mountain Entrance Rock', mode: 'set', rule: canLiftRocks },
   // 645-646
   { kind: 'exit', target: 'Bumper Cave Entrance Mirror Spot', mode: 'set', rule: hasItem(ITEM.magicMirror) },
-  { kind: 'exit', target: 'Flute Spot 1', mode: 'set', rule: hasItem(ITEM.activatedFlute) },
+  { kind: 'exit', target: 'Flute Spot 1', mode: 'set', rule: canCallTheBird },
   // 647-651
   { kind: 'exit', target: 'Lake Hylia Central Island Teleporter', mode: 'set', rule: canLiftHeavyRocks },
   {
     kind: 'exit', target: 'Dark Desert Teleporter', mode: 'set',
-    rule: allOf(hasItem(ITEM.activatedFlute), canLiftHeavyRocks),
+    rule: allOf(canCallTheBird, canLiftHeavyRocks),
   },
   {
     kind: 'exit', target: 'East Hyrule Teleporter', mode: 'set',
@@ -71,11 +77,11 @@ const DEFAULT_OVERWORLD_RULES: readonly RuleEntry[] = [
   // 655-658
   { kind: 'location', target: 'check-020', mode: 'set', rule: hasItem(ITEM.flippers) },
   { kind: 'exit', target: 'Waterfall of Wishing', mode: 'set', rule: hasItem(ITEM.flippers) },
-  { kind: 'location', target: 'check-335', mode: 'set', rule: canLiftHeavyRocks },   // Frog found
+  { kind: 'event', target: STORY_EVENT.frogFound, mode: 'set', rule: canLiftHeavyRocks },
   { kind: 'location', target: 'check-056', mode: 'set', rule: hasItem(ITEM.mushroom) },
   // 661, 663-664
   { kind: 'exit', target: 'Checkerboard Cave', mode: 'set', rule: canLiftRocks },
-  { kind: 'exit', target: 'Top of Pyramid', mode: 'set', rule: hasItem(ITEM.beatAgahnim1) },
+  { kind: 'exit', target: 'Top of Pyramid', mode: 'set', rule: storyEvent(STORY_EVENT.agahnim1Beaten) },
   { kind: 'exit', target: 'Old Man Cave Exit (West)', mode: 'set', rule: never },
   // 665-668
   { kind: 'exit', target: 'Broken Bridge (West)', mode: 'set', rule: hasItem(ITEM.hookshot) },

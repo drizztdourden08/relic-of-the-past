@@ -17,7 +17,6 @@ import type { CapacityPoolCounts, CapacityProfile } from '../capacity/capacity-p
 import type { CapacityBonusSetting } from '../capacity/bonus/capacity-bonus.type';
 import type { ItemPowerSetting } from '../item-power/item-power.type';
 import type { PondDemandView } from '../pond/pond-ask.type';
-import type { PondSetting } from '../pond/pond-profile.type';
 import type { PondProfiles } from '../pond/pond-profiles.type';
 import type { ProgressiveModeSetting, ProgressiveSetting } from '../progressive/progressive.type';
 import type { RetroBowSetting } from '../retro/retro.type';
@@ -29,135 +28,73 @@ interface PlacementStats {
   attempts: number;
   keyDropShuffle: boolean;
   includeNpcChecks: boolean;
-  /**
-   * Whether the standing world items were shuffleable. Absent on placements
-   * persisted before the scope split, which followed includeNpcChecks.
-   */
-  includeWorldItems?: boolean;
-  /**
-   * Whether the ten dungeon prizes were shuffled over the ten prize slots.
-   * Absent on placements persisted before the option existed, which hold
-   * each dungeon's vanilla prize and must keep being played that way.
-   */
-  shufflePrizes?: boolean;
+  /** Whether the standing world items were shuffleable. */
+  includeWorldItems: boolean;
+  /** Whether the ten dungeon prizes were shuffled over the ten prize slots. */
+  shufflePrizes: boolean;
   /**
    * How many npc-scope locations entered the shuffle (the caller's deliverable
-   * set ∩ the scope table; 0 with the option off). Absent on placements
-   * persisted before the capability probe existed.
+   * set ∩ the scope table; 0 with the option off).
    */
-  npcDeliverableCount?: number;
-  /** Same count over the world-item scope table. Absent on older placements. */
-  worldDeliverableCount?: number;
-  /**
-   * Whether any capacity-fairy slot existed as a location for this seed.
-   * Absent on placements persisted before the option existed (off).
-   */
-  capacityShuffle?: boolean;
+  npcDeliverableCount: number;
+  /** Same count over the world-item scope table. */
+  worldDeliverableCount: number;
   /**
    * How many fairy slots entered the shuffle (the caller's deliverable set ∩
-   * the present slots; 0 when none exist). Absent on older placements.
+   * the present slots; 0 when none exist).
    */
-  capacityDeliverableCount?: number;
-  /**
-   * The capacity profile this seed was generated with. Absent on placements
-   * persisted before the profile existed, which follow capacityShuffle
-   * (placement-capacity.ts).
-   */
-  capacity?: CapacityProfile;
+  capacityDeliverableCount: number;
+  /** The capacity profile this seed was generated with. */
+  capacity: CapacityProfile;
   /**
    * Whether the Custom families' items were progressive (one name per family,
-   * pickups climb the plan in order). Absent on placements persisted before
-   * the switch existed, which hold fixed-jump items (false).
+   * pickups climb the plan in order).
    */
-  capacityProgressive?: boolean;
+  capacityProgressive: boolean;
+  /** What a capacity pickup handed over beside its ceiling, per family. */
+  capacityBonus: CapacityBonusSetting;
+  /** Pool items per family and the filler they displaced. */
+  capacityCounts: CapacityPoolCounts;
+  /** The shelf scope this seed was generated with. */
+  shops: ShopScope;
   /**
-   * What a capacity pickup handed over beside its ceiling, per family. Absent
-   * on placements persisted before the rows existed, which read as the
-   * baselines, which reproduce the goods a pickup gave then.
+   * What each pond sold for this seed. A throw schedule is not stored: it is
+   * re-derived from these settings and the placement's own seed, so a spoiler,
+   * the logic and the running game always read the same one.
    */
-  capacityBonus?: CapacityBonusSetting;
-  /** Pool items per family and the filler they displaced. Absent on older placements. */
-  capacityCounts?: CapacityPoolCounts;
-  /**
-   * The shelf scope this seed was generated with. Absent on placements
-   * persisted before shops existed, which opened no slot, so the bridge
-   * reads an absent value as a scope of zero and every shop stays vanilla.
-   */
-  shops?: ShopScope;
-  /**
-   * What each pond sold for this seed. Absent on placements persisted before
-   * the ponds were configured apart, which carry `pond` below instead, and on
-   * placements older than either, which keep every pond legacy. A throw
-   * schedule is not stored: it is re-derived from these settings and the
-   * placement's own seed, so a spoiler, the logic and the running game always
-   * read the same one (placement-ponds.ts).
-   */
-  ponds?: PondProfiles;
-  /**
-   * The single pond setting placements carried while one pond was
-   * configurable. It was always the capacity pond's, and that is what it
-   * reads as now. Never written any more.
-   */
-  pond?: PondSetting;
-  /**
-   * Which tiers of each progressive family this seed was rolled with. Absent on
-   * placements persisted before the rows existed, which carry every tier, so
-   * the session arms the full ladder and the placement keeps its meaning.
-   */
-  progressiveTiers?: ProgressiveSetting;
+  ponds: PondProfiles;
+  /** Which tiers of each progressive family this seed was rolled with. */
+  progressiveTiers: ProgressiveSetting;
   /**
    * How each family's copies arrived: nameless steps up the ladder, or the
-   * rungs themselves in any order. Absent on placements persisted before the
-   * rows existed, which are in order, and that is what the session arms.
+   * rungs themselves in any order.
    */
-  progressiveModes?: ProgressiveModeSetting;
-  /**
-   * Whether the bow was fed rupees, not arrows, and what a shot cost.
-   * Absent on placements persisted before the option existed, which found
-   * arrows in the world and must keep being played that way.
-   */
-  retroBow?: RetroBowSetting;
+  progressiveModes: ProgressiveModeSetting;
+  /** Whether the bow was fed rupees, not arrows, and what a shot cost. */
+  retroBow: RetroBowSetting;
   /**
    * How helpful the items were for this seed, AS ASKED FOR: the two derived
    * fallbacks are recomputed from the tier ticks at arming time instead of
-   * frozen, so a stored placement and a live one always agree. Absent means the
-   * reference's normal step, the unmodified game.
+   * frozen, so a stored placement and a live one always agree.
    */
-  itemPower?: ItemPowerSetting;
-  /**
-   * Which items this seed counted as a light in an unlit room. Absent on
-   * placements persisted before the rows existed, which were rolled with the
-   * lamp as the only light, which is what the unmodified game does anyway, so
-   * an absent value arms nothing and the seed keeps its meaning.
-   */
-  darkRooms?: DarkRoomSetting;
-  /**
-   * Which recorded event each story gate reads and what the counts ask for. Absent on
-   * placements persisted before the rows existed, which read as the story as the game
-   * tells it: the same thing a fresh profile arms.
-   */
-  storyGates?: StoryGateSetting;
-  /** How many pond prize slots existed as locations. Absent on older placements. */
-  pondPrizeCount?: number;
+  itemPower: ItemPowerSetting;
+  /** Which items this seed counted as a light in an unlit room. */
+  darkRooms: DarkRoomSetting;
+  /** Which recorded event each story gate reads and what the counts ask for. */
+  storyGates: StoryGateSetting;
+  /** How many pond prize slots existed as locations. */
+  pondPrizeCount: number;
   /**
    * True when each wish pond's mode decided her two vanilla slots: locked at
    * Vanilla grants, not locations under a Custom pond with rungs
-   * (pond/pond-vanilla-slots.ts). Absent on every placement generated before
-   * that rule, whose slots answered to the npc scope alone whatever the mode.
+   * (pond/pond-vanilla-slots.ts). False where those slots answer to the npc
+   * scope alone.
    */
-  pondSlotsFollowMode?: boolean;
-  /**
-   * Where each dungeon-item family was allowed to end up. Absent on placements
-   * persisted before the rows were read, which were rolled with every family
-   * pinned to its own dungeon.
-   */
-  dungeonItems?: DungeonItemSetting;
-  /**
-   * The accessibility contract this seed was verified against. Absent on
-   * placements persisted before the row was read, which were all verified at
-   * `full`.
-   */
-  accessibility?: AccessibilityMode;
+  pondSlotsFollowMode: boolean;
+  /** Where each dungeon-item family was allowed to end up. */
+  dungeonItems: DungeonItemSetting;
+  /** The accessibility contract this seed was verified against. */
+  accessibility: AccessibilityMode;
   locationCount: number;
   sphereCount: number;
 }
@@ -175,17 +112,17 @@ interface Placement {
    */
   locations: Record<LocationKey, ItemKey>;
   /**
-   * Shelf location → the price it charges, rolled once from this seed. Absent
-   * on placements from before shop prices existed, and empty whenever no
-   * currency was ticked: both mean every shelf charges its vanilla rupees.
+   * Shelf location → the price it charges, rolled once from this seed. Empty
+   * whenever no currency was ticked, and then every shelf charges its vanilla
+   * rupees.
    */
-  shopPrices?: ShopPriceView;
+  shopPrices: ShopPriceView;
   /**
-   * Pond rung → the demand its fairy makes, rolled once from this seed. Absent
-   * on placements from before the demands existed, and empty whenever no pond
-   * rolled one: both mean every rung asks for the rupees its ladder charges.
+   * Pond rung → the demand its fairy makes, rolled once from this seed. Empty
+   * whenever no pond rolled one, and then every rung asks for the rupees its
+   * ladder charges.
    */
-  pondDemands?: PondDemandView;
+  pondDemands: PondDemandView;
   spheres: PlacementSphere[];
   stats: PlacementStats;
 }

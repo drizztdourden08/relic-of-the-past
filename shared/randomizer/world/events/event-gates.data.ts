@@ -1,15 +1,14 @@
 /* @layer shared-game @kind data */
 /**
- * Every act the rules ask about, and the dataset event check that certifies it.
+ * Every act the rules judge from an inventory, and the dataset event check that certifies it.
  *
- * Two kinds of row sit here. The first eight are the generator's own event items, whose
- * locations the fill sweeps; listing them says which dataset check proves each one, so a
- * tracker reading the record does not have to guess, and the item the fill places there is
- * what the collected state calls the act. The rest are the acts that used to be written as
- * item rules, where holding the item stood in for having done the thing. Those carry no item,
- * so the check that certifies them IS what the state calls them and nothing is named twice. A
- * row with no precondition is one the rules cannot judge at all, so only the record can answer
- * for it.
+ * These are the acts that used to be written as item rules, where holding the item stood in for
+ * having done the thing. The check that certifies one IS what the state calls it, so nothing is
+ * named twice. A row with no precondition is one the rules cannot judge at all, so only the
+ * record can answer for it.
+ *
+ * The story events that happen at a place (a boss beaten, the smiths reunited) are not here:
+ * the solver finds those in the world by reaching them (story-events.data.ts).
  *
  * A rule asks for an act BY CHECK ID (`actGate('check-314')`), so the record is the only name
  * an act has.
@@ -24,19 +23,8 @@ import { BOMBS_HELD_CHECK } from './bombs-record';
 import type { EventGate } from './event-gate.type';
 
 const EVENT_GATES: readonly EventGate[] = [
-  // The eight event items the generator already carried. Their locations keep their own rules,
-  // so no precondition is repeated here; the row exists to name the check that proves the act.
-  { checkId: 'check-351', token: ITEM.triforce },            // Ganon beaten
-  { checkId: 'check-329', token: ITEM.beatAgahnim1 },        // Agahnim 1 beaten
-  { checkId: 'check-349', token: ITEM.beatAgahnim2 },        // Agahnim 2 beaten
-  { checkId: 'check-326', token: ITEM.openFloodgate },       // Floodgate lever pulled
-  { checkId: 'check-335', token: ITEM.getFrog },
-  { checkId: 'check-336', token: ITEM.returnSmith },
-  { checkId: 'check-337', token: ITEM.pickUpPurpleChest },
-  { checkId: 'check-324', token: ITEM.activatedFlute },      // Weathervane opened
-
-  // Acts that used to be item rules. The precondition is the rule that was there, so a world
-  // with no record to read answers exactly as it did before.
+  // The precondition is the item rule that was there, so a world with no record to read
+  // answers exactly as it did before.
   { checkId: 'check-353', precondition: hasItem(ITEM.bookOfMudora) },   // the desert statues, moved
   { checkId: 'check-325', precondition: hasItem(ITEM.pegasusBoots) },   // the tomb, cracked open
   { checkId: 'check-342', precondition: bombShopRule },                 // the pyramid wall, blown up

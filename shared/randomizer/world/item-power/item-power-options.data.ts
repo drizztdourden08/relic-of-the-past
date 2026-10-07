@@ -4,8 +4,7 @@
  * 'items'. They replace the reference's single four-step Item Functionality
  * choice, which stays in the catalog, locked, as the transcription of its
  * dataclass. Every baseline is the normal step, so a fresh profile plays the
- * unmodified game and a snapshot frozen before these rows existed reads the
- * same way.
+ * unmodified game.
  */
 import { DEFAULT_ITEM_POWER, ITEM_POWER_KEY } from './item-power.data';
 import type { OptionDef } from '../options.type';

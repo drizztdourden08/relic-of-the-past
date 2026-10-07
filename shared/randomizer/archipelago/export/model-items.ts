@@ -58,9 +58,9 @@ const forbiddenOf = (
 
 interface ItemHalfInput {
   fillWorld: FillWorld;
-  /** The locations Archipelago fills: present, not an event, a prize or a locked spot. */
+  /** The locations Archipelago fills: present, not a prize or a locked spot. */
   fillable: readonly LocationKey[];
-  /** Events and prizes: advancement whatever the pool says. */
+  /** The prizes: advancement whatever the pool says. */
   fixedProgression: ReadonlySet<string>;
   /** Items the world's rules read (read-items.ts). */
   read: ReadonlySet<string>;

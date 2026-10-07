@@ -17,7 +17,7 @@ interface RetroBowBlockProps {
    * apply and its slider is shown inert with the reason on it.
    */
   tiers: ProgressiveSetting;
-  /** Absent renders the whole block frozen. */
+  /** Absent renders the whole block as a read-out: the read-only Options page. */
   onChange?: (next: RetroBowSetting) => void;
 }
 

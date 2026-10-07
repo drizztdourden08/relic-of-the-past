@@ -5,8 +5,8 @@
  * start sequence a local one does (session-start.ts).
  *
  * The fill world is built from the slot's options the way the generator builds it, with no
- * fill run: the scouts say what every location holds. Events and generation-locked rows
- * keep what the fill world pre-places. This slot's own items map through the frozen id
+ * fill run: the scouts say what every location holds. Generation-locked rows keep what the
+ * fill world pre-places. This slot's own items map through the frozen id
  * table; another player's item, or an id this game does not know, is the foreign item.
  * The stats come from the generator's own function over that world, and the sweep gives the
  * spheres the Spoiler tab groups by.

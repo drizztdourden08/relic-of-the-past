@@ -1,7 +1,7 @@
 /* @layer shared-game @kind data */
 /**
  * Item-placement constraints of the baseline path, from tests/fixtures/
- * ap-source/Rules.py: the goal item lock (203), the prize-slot restriction
+ * ap-source/Rules.py: the prize-slot restriction
  * (204-211), the swamp big-key forbid (404-405: only while the small keys stay
  * pinned to their own dungeon, glitches no_glitches), and every
  * set_always_allow / allow_self_locking_items row the source installs. The
@@ -14,7 +14,7 @@
 import type { LocationKey } from '../../location-key';
 import { ITEM } from '../../item-ids.data';
 import { REGION } from '../../region-ids.data';
-import { PRIZE_ITEMS, VICTORY_ITEM } from '../../pool/event-items.data';
+import { PRIZE_ITEMS } from '../../pool/prize-items.data';
 import { PRIZE_LOCATIONS } from '../../scope-tables';
 import { DEFAULT_DUNGEON_ITEM_SETTING, staysInOwnDungeon } from '../../dungeon-items/dungeon-item-modes';
 import type { ItemKey } from '../../item-ids.data';
@@ -24,15 +24,12 @@ import type { AlwaysAllowEntry, ItemRuleEntry } from '../rule-entry.type';
 const PRIZE_SET: ReadonlySet<ItemKey> = new Set<ItemKey>(PRIZE_ITEMS);
 
 const buildItemRuleEntries = (world: World): ItemRuleEntry[] => {
-  const entries: ItemRuleEntry[] = [
-    // 203: the final fight only carries the goal item.
-    { location: 'check-351', allowed: (item) => item === VICTORY_ITEM },
-    // 204-211: prize slots only carry prize items.
-    ...[...PRIZE_LOCATIONS].map((location): ItemRuleEntry => ({
-      location,
-      allowed: (item) => PRIZE_SET.has(item),
-    })),
-  ];
+  // 204-211: prize slots only carry prize items. The goal lock (203) has no row: the final
+  // fight is a story event of the world, never a location an item could sit at.
+  const entries: ItemRuleEntry[] = [...PRIZE_LOCATIONS].map((location): ItemRuleEntry => ({
+    location,
+    allowed: (item) => PRIZE_SET.has(item),
+  }));
   // 404-405: guarded by `not small_key_shuffle`, and a Choice is falsy only at
   // value 0, so the forbid exists exactly while the small keys stay pinned to
   // their own dungeon. (The glitch half of the guard is fixed at no_glitches.)

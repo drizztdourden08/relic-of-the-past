@@ -24,8 +24,41 @@ const noticeItem = (kind: OnlineNoticeKind): SettingItem => {
   return { key: noticeSettingKey(kind), ...row, keywords: `notification toast online archipelago ${keywords ?? ''}` };
 };
 
+/**
+ * The session's switches. They live on the profile's connection, not in GameSettings, so their
+ * keys name no setting: a section reset and the search palette's inline toggle pass them by,
+ * and OnlineSettings draws them itself.
+ */
+type SessionSwitchKey = 'session.deathLink' | 'session.trackOtherPlayers';
+
+interface SessionSwitch extends Omit<SettingItem, 'key'> {
+  field: 'deathLink' | 'trackOtherPlayers';
+  /** The value a profile that never set it runs with. */
+  fallback: boolean;
+}
+
+const SESSION_ITEMS: Readonly<Record<SessionSwitchKey, SessionSwitch>> = {
+  'session.deathLink': {
+    field: 'deathLink', fallback: false, label: 'DeathLink',
+    description: 'Dying takes down the other DeathLink players, and their deaths take you down.',
+    keywords: 'deathlink death link die archipelago',
+  },
+  'session.trackOtherPlayers': {
+    field: 'trackOtherPlayers', fallback: true, label: 'Track Other Players',
+    description: "Follow the other players' checks on the Network page.",
+    keywords: 'track other players checks tracker archipelago',
+  },
+};
+
+const sessionItem = (key: SessionSwitchKey): SettingItem => {
+  const { label, description, keywords } = SESSION_ITEMS[key];
+  return { key, label, description, keywords };
+};
+
 const SECTIONS: Section[] = [
+  { id: 'online-session', title: 'Session', items: (Object.keys(SESSION_ITEMS) as SessionSwitchKey[]).map(sessionItem) },
   { id: 'online-notifications', title: 'Notifications', items: ONLINE_NOTICE_KINDS.map(noticeItem) },
 ];
 
-export { SECTIONS };
+export { SECTIONS, SESSION_ITEMS };
+export type { SessionSwitchKey };

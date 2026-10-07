@@ -1,8 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * The placement→game bridge. Classifies every planned location of an
- * Placement (only the event slots are excluded, because they are logic
- * constructs, not item spots) into the physical plan classes: chest-kind checks with a
+ * The placement→game bridge. Classifies every planned location of a
+ * Placement into the physical plan classes: chest-kind checks with a
  * resolvable item become in-core chest overrides; standing world items with
  * a certified pickup seam become in-core standing overrides (the pickup
  * shows and grants the assigned item natively); checks whose grant crosses
@@ -20,7 +19,7 @@
 import type { ItemKey } from '@shared/randomizer/world/item-ids.data';
 import type { LocationKey } from '@shared/randomizer/world/location-key';
 import { getCheck } from '@shared/game/data';
-import { EVENT_LOCATIONS, PRIZE_LOCATIONS } from '@shared/randomizer/world/scope-tables';
+import { PRIZE_LOCATIONS } from '@shared/randomizer/world/scope-tables';
 import { checkIdOfLocation } from '@shared/randomizer/world/location-record';
 import { detectionOf, withProgressBaseline } from './check-detection';
 import { freestandingKeyDropOf } from './freestanding-key-drops';
@@ -168,12 +167,11 @@ const isPlanError = (row: PlanEntry | PlanError): row is PlanError =>
 
 const buildPhysicalPlan = (placement: Placement): PhysicalPlan => {
   // The persisted stats say what generation locked; the same derivation names the rows.
-  const flags = { ...scopeFlagsOfStats(placement.stats), shopPrices: placement.shopPrices ?? {} };
+  const flags = { ...scopeFlagsOfStats(placement.stats), shopPrices: placement.shopPrices };
   const entries: PlanEntry[] = [];
   const errors: PlanError[] = [];
   for (const [where, item] of Object.entries(placement.locations)) {
     const location = where as LocationKey;
-    if (EVENT_LOCATIONS.has(location)) continue;
     const row = classifyLocation(location, item, flags);
     if (isPlanError(row)) errors.push(row);
     else entries.push(row);

@@ -24,10 +24,10 @@ import type { RandomizerOptionsSnapshot } from '../options.type';
 const firstChoice = (choices: readonly ItemKey[]): ItemKey => choices[0];
 
 interface PoolAccounting {
-  /** Every location of the world, events and prizes included. */
+  /** Every location of the world, prizes included. */
   locations: number;
   /**
-   * Every location an item can sit in, not an event slot, not a prize slot.
+   * Every location an item can sit in, not a prize slot.
    * The ceiling of the fill; a new kind of spot (grass, pots) raises it.
    */
   spots: number;
@@ -45,8 +45,6 @@ interface PoolAccounting {
   filler: number;
   /** The capacity families' items in the global pool: each one took a filler's place. */
   upgrades: number;
-  /** Pure logic locations (Ganon, Agahnim, the flute spot): a location, but never a reward. */
-  events: number;
 }
 
 /** The items the profile's family plans put in the pool, by name, the meter's row included. */
@@ -63,7 +61,7 @@ const accountingOf = (
   const { world, pool } = fillWorld;
   const dungeon = [...pool.dungeonItems.values()].reduce((sum, items) => sum + items.length, 0);
   const allLocations = [...world.locationsByKey.values()];
-  const spots = allLocations.filter((location) => !location.event && !location.prize);
+  const spots = allLocations.filter((location) => !location.prize);
   const planItems = planItemsOf(fillWorld);
   return {
     locations: world.locationsByKey.size,
@@ -75,7 +73,6 @@ const accountingOf = (
     lockedVanilla: fillWorld.lockedVanilla.size,
     filler: fillerCountOf(pool.pool),
     upgrades: pool.pool.filter((item) => planItems.has(item)).length,
-    events: allLocations.filter((location) => location.event).length,
   };
 };
 

@@ -10,16 +10,14 @@
  * every reference rule that names one is capacity-aware without a rewrite;
  * count/countGroup stay raw, which is what the capacity readings sum.
  *
- * Everything is keyed by ID. An item is its record's id, an act is the check that certifies
- * it (events/), and one event carries neither because no record covers it yet
- * (item-ids.data.ts). A region is its record's id too, so the reachable set reads straight
- * against the collection.
+ * Everything is keyed by ID. An item is its record's id, and an act or a story event is the
+ * check that certifies it (events/). A region is its record's id too, so the reachable set
+ * reads straight against the collection.
  *
  * The tier ladder a pickup climbs is the world's, not a constant: a seed whose
  * tier ticks left a rung out hands over the next rung that is still there
- * (progressive/progressive-reach.ts). Every rung ticked, which is the default, and what
- * a world built before the rows existed reads as, gives the reference map back
- * unchanged.
+ * (progressive/progressive-reach.ts). Every rung ticked, which is the default, gives the
+ * reference map back unchanged.
  */
 import { updateReachableRegions } from './graph';
 import { isItemUsable } from './item-usability';

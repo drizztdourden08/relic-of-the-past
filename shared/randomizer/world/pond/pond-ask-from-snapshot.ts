@@ -8,8 +8,8 @@
  *
  * An ask asking for rupees and nothing else is handed back as NOTHING
  * (pond-ask.data.ts): a setting with no ask means exactly that reading, so a
- * profile written before these rows existed, a placement frozen then, and a
- * player who left the block alone all carry the same setting.
+ * player who left the block alone and one who ticked rupees alone carry the
+ * same setting.
  */
 import {
   POND_ASK_BOTTLE_CONTENTS, POND_ASK_ROW_BY_KIND, asksOnlyRupees, pondRupeesOnlyAsk,

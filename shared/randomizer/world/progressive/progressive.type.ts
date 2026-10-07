@@ -12,13 +12,12 @@
  * A tick list is read positionally against the family's tier table: entry k is
  * the k-th tier. Pickups climb the TICKED tiers in order, so unticking a middle
  * tier does not leave a hole, because the copy after it hands over the next
- * ticked tier instead. A shorter or absent list reads as every tier ticked, so
- * a snapshot frozen before these rows existed keeps the pool it was rolled with.
+ * ticked tier instead. A shorter or absent list reads as every tier ticked.
  */
 import type { ItemId } from '@shared/game/data/types/ids';
 
-/** The five families whose items arrive one tier at a time. */
-type ProgressiveFamilyId = 'sword' | 'shield' | 'mail' | 'glove' | 'bow';
+/** The six families whose items arrive one tier at a time. */
+type ProgressiveFamilyId = 'sword' | 'shield' | 'mail' | 'glove' | 'bow' | 'ocarina';
 
 /**
  * How a family's copies reach the player.
@@ -56,6 +55,14 @@ interface ProgressiveFamilyDef {
   tiers: readonly ItemId[];
   /** Short per-tier labels for the tick boxes, positional with `tiers`. */
   tierLabels: readonly string[];
+  /**
+   * How many copies the transcribed pool carries before any tick applies. Omitted, one per
+   * tier. A family with fewer (the ocarina's pool holds one Flute) gains a copy per extra
+   * ticked tier, each taking a stand-in pickup's place so the pool keeps its size.
+   */
+  referenceCopies?: number;
+  /** The ticks a new profile starts with and an absent row reads as. Omitted, every tier. */
+  defaultTicks?: ProgressiveTierTicks;
 }
 
 export type {

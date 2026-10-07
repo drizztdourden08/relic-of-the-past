@@ -17,10 +17,12 @@ interface SubjectFixedRowsProps {
   lockedGroups: LockedGroupsByTab;
   valueOf: (option: OptionDef) => OptionValue;
   cellOf: (key: string) => ImpactCell;
+  /** Every row shows its value as a tag: the read-only panel. */
+  readout?: boolean;
 }
 
 const SubjectFixedRows = (props: SubjectFixedRowsProps) => {
-  const { tab, lockedGroups, valueOf, cellOf } = props;
+  const { tab, lockedGroups, valueOf, cellOf, readout } = props;
 
   if (!isSubjectFixedTab(tab)) return null;
 
@@ -30,6 +32,7 @@ const SubjectFixedRows = (props: SubjectFixedRowsProps) => {
       groups={lockedGroups[tab]}
       valueOf={valueOf}
       cellOf={cellOf}
+      readout={readout}
     />
   );
 };

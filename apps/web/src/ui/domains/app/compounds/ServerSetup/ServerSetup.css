@@ -1,0 +1,25 @@
+/* @layer renderer-components @kind style */
+
+/* Host takes the room; the port fits five digits. */
+.server-setup__address {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-sm);
+}
+
+.server-setup__port {
+  width: 9ch;
+}
+
+.server-setup__result {
+  font-size: var(--text-sm);
+  color: var(--c-text-muted);
+}
+
+.server-setup__result[data-tone='ok'] { color: var(--c-green-bright); }
+.server-setup__result[data-tone='failed'] { color: var(--c-danger); }
+
+/* Save and Revert sit at the far end of the Test connection row. */
+.server-setup__actions {
+  margin-left: auto;
+}

@@ -15,8 +15,10 @@
  * through the world-item scope switch. The items tab reads its item-power rows
  * through the blade ticks above them: a row the ticks have decided is shown
  * on and inert with the reason on it, the stored answer untouched.
+ *
+ * Given no change handler the tab is drawn read-only: every block receives no
+ * handler of its own, and every row and block shows its value as a tag.
  */
-import { CapacityUpgradesSection } from '@domains/app/views/Randomizer/sub-components/CapacityUpgradesSection';
 import { ShopPricesBlock } from '@domains/app/compounds/ShopPricesBlock';
 import { ShopSlotsBlock } from '@domains/app/compounds/ShopSlotsBlock';
 import { DifficultyBlock } from '@domains/app/compounds/DifficultyBlock';
@@ -27,10 +29,9 @@ import { WishingPondSection } from '@domains/app/views/Randomizer/sub-components
 import { DarkRoomsSection } from '@domains/app/views/Randomizer/sub-components/DarkRoomsSection';
 import { StoryGatesSection } from '@domains/app/views/Randomizer/sub-components/StoryGatesSection';
 import { DEFAULT_STORY_GATES } from '@shared/randomizer/world/story-gates/story-gates.data';
-import { REFERENCE_CAPACITY_PROFILE, holdWalletToFloor, walletFloorOf } from '@shared/randomizer/world/capacity';
+import { holdWalletToFloor, walletFloorOf } from '@shared/randomizer/world/capacity';
 import { pondStatusOf } from '@shared/randomizer/world/capacity-pond';
 import { holdPondToWallet, pondWalletTopOf } from '@shared/randomizer/world/pond/pond-wallet-top';
-import { applyRowChange } from '@app/hooks/randomizer/capacity-row-state';
 import { capacityPondStateOf, withCapacityPondRule } from '@app/hooks/randomizer/capacity-pond-choices';
 import { FROZEN_POND_KEYS, NO_FROZEN_KEYS, pondGroupsFor } from '@app/hooks/randomizer/pond-mode-rows';
 import { CAPACITY_POND, POND_IDS } from '@shared/randomizer/world/pond/pond-instances';
@@ -41,9 +42,11 @@ import type { PondProfiles } from '@shared/randomizer/world/pond/pond-profiles.t
 import { darkRoomSettingOfChoices, withDarkRoomSetting } from '@app/hooks/randomizer/dark-room-choices';
 import { forcedItemPowerRows } from '@app/hooks/randomizer/item-power-rows';
 import { DARK_ROOM_REQUIRED_KEY, forcedDarkRoomLightReasons } from '@shared/randomizer/world/dark-rooms';
+import { CapacityTabBody } from './CapacityTabBody';
 import { OptionGroupList } from './OptionGroupList';
 import { SubjectFixedRows } from './SubjectFixedRows';
 import { UpcomingTabBody } from './UpcomingTabBody';
+import { choiceEditOf } from './choice-edit';
 import { UPCOMING_TITLE, isUpcomingTab } from './option-tab-copy';
 import type { OptionDef } from '@shared/randomizer/world/options.type';
 import type { OptionTabBodyProps } from './OptionTabBody.type';
@@ -67,6 +70,8 @@ const OptionTabBody = (props: OptionTabBodyProps) => {
     choices, seed, pondDemands, notes, fillerHeadroom, onRowChange, onChange,
   } = props;
 
+  const readout = onChange === undefined;
+  const edit = choiceEditOf(onChange);
   const rule = capacityPondStateOf(choices);
   // What these settings let the seed charge at once, and the families with the
   // wallet's final cap already standing on that floor. Every ceiling below
@@ -91,26 +96,14 @@ const OptionTabBody = (props: OptionTabBodyProps) => {
 
   if (tab === 'capacity') {
     return (
-      <CapacityUpgradesSection
-        profile={capacity}
-        fillerHeadroom={fillerHeadroom}
-        notes={[...notes, ...rule.notes]}
-        enabled={rule.enabled}
-        progressive={choices.capacityProgressive}
-        forced={rule.forcedFamilies}
+      <CapacityTabBody
+        choices={choices}
+        rule={rule}
+        capacity={capacity}
         walletFloor={walletFloor}
-        bonus={choices.capacityBonus}
-        onChange={(family, next) => onChange(withCapacityPondRule(
-          { ...choices, capacity: applyRowChange(capacity, family, next, walletFloor) }, family,
-        ))}
-        onBonusChange={(family, next) => onChange({
-          ...choices, capacityBonus: { ...choices.capacityBonus, [family]: next },
-        })}
-        onEnabledChange={(capacityEnabled) => onChange({ ...choices, capacityEnabled })}
-        onProgressiveChange={(capacityProgressive) => onChange({ ...choices, capacityProgressive })}
-        onReset={() => onChange(withCapacityPondRule(
-          { ...choices, capacity: REFERENCE_CAPACITY_PROFILE }, 'capacity',
-        ))}
+        notes={notes}
+        fillerHeadroom={fillerHeadroom}
+        onChange={onChange}
       />
     );
   }
@@ -122,6 +115,7 @@ const OptionTabBody = (props: OptionTabBodyProps) => {
         groups={lockedGroups[tab]}
         valueOf={fixedValueOf}
         cellOf={cellOf}
+        readout={readout}
       />
     );
   }
@@ -144,22 +138,22 @@ const OptionTabBody = (props: OptionTabBodyProps) => {
           // the set this profile will really open.
           scope={{ ...choices.shops, seed }}
           retroBow={choices.retroBow}
-          onChange={(shops) => onChange({ ...choices, shops })}
+          onChange={edit((shops) => ({ ...choices, shops }))}
         />
       )}
       {tab === 'items' && (
         <ProgressiveTiersBlock
           setting={choices.progressiveTiers}
           modes={choices.progressiveModes}
-          onChange={(progressiveTiers) => onChange({ ...choices, progressiveTiers })}
-          onModesChange={(progressiveModes) => onChange({ ...choices, progressiveModes })}
+          onChange={edit((progressiveTiers) => ({ ...choices, progressiveTiers }))}
+          onModesChange={edit((progressiveModes) => ({ ...choices, progressiveModes }))}
         />
       )}
       {tab === 'items' && (
         <DifficultyBlock
           setting={choices.difficulty}
           tiers={choices.progressiveTiers}
-          onChange={(difficulty) => onChange({ ...choices, difficulty })}
+          onChange={edit((difficulty) => ({ ...choices, difficulty }))}
         />
       )}
       {tab === 'items' && (
@@ -167,7 +161,7 @@ const OptionTabBody = (props: OptionTabBodyProps) => {
           setting={choices.retroBow}
           capacity={capacity}
           tiers={choices.progressiveTiers}
-          onChange={(retroBow) => onChange({ ...choices, retroBow })}
+          onChange={edit((retroBow) => ({ ...choices, retroBow }))}
         />
       )}
       <OptionGroupList
@@ -177,14 +171,16 @@ const OptionTabBody = (props: OptionTabBodyProps) => {
         frozenKeys={frozenKeys}
         notes={tab === 'items' ? forcedItemPower.notes : undefined}
         onRowChange={onRowChange}
+        readout={readout}
         live
       />
       {tab === 'shops' && (
         <ShopPricesBlock
           values={values}
           capacity={capacity}
+          readout={readout}
           onChange={shopsShuffled
-            ? (patch) => onChange({ ...choices, shopPrices: { ...choices.shopPrices, ...patch } })
+            ? edit((patch) => ({ ...choices, shopPrices: { ...choices.shopPrices, ...patch } }))
             : undefined}
         />
       )}
@@ -195,9 +191,10 @@ const OptionTabBody = (props: OptionTabBodyProps) => {
           share={pondShare}
           demands={pondDemands}
           notes={rule.notes}
+          readOnly={readout}
           frozen={rule.pondEditable ? undefined : frozenPonds}
-          onShareChange={(next) => onChange({ ...choices, pondShare: next })}
-          onChange={(id, pond) => {
+          onShareChange={edit((next: boolean) => ({ ...choices, pondShare: next }))}
+          onChange={onChange === undefined ? undefined : (id, pond) => {
             const ponds = pondsWithEdit(pondProfiles, id, pond, pondShare);
             // The capacity families answer to one pond, so only its edit
             // settles the pair; the other two stand alone. While sharing, every
@@ -212,7 +209,7 @@ const OptionTabBody = (props: OptionTabBodyProps) => {
         <StoryGatesSection
           setting={choices.storyGates ?? DEFAULT_STORY_GATES}
           cellOf={cellOf}
-          onChange={(setting) => onChange({ ...choices, storyGates: setting })}
+          onChange={edit((setting) => ({ ...choices, storyGates: setting }))}
         />
       )}
       {tab === 'world' && (
@@ -220,7 +217,7 @@ const OptionTabBody = (props: OptionTabBodyProps) => {
           setting={darkRoomSettingOfChoices(choices)}
           impact={cellOf(DARK_ROOM_REQUIRED_KEY)}
           forced={forcedDarkRoomLightReasons(choices.includeWorldItems)}
-          onChange={(setting) => onChange(withDarkRoomSetting(choices, setting))}
+          onChange={edit((setting) => withDarkRoomSetting(choices, setting))}
         />
       )}
       <SubjectFixedRows
@@ -228,6 +225,7 @@ const OptionTabBody = (props: OptionTabBodyProps) => {
         lockedGroups={lockedGroups}
         valueOf={fixedValueOf}
         cellOf={cellOf}
+        readout={readout}
       />
     </>
   );

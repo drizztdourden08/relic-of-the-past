@@ -24,7 +24,6 @@
 
 import type { LocationKey } from '@shared/randomizer/world/location-key';
 import { getCheck } from '@shared/game/data';
-import { pondProfilesOfStats } from '@shared/randomizer/world/fill/placement-ponds';
 import { pondPlanOf } from '@shared/randomizer/world/pond/pond-plan';
 import { WISH_POND_WATERS } from './wish-pond-rung-keys';
 import type { CheckId } from '@shared/game/data';
@@ -111,7 +110,7 @@ const waterPlanOf = (
   byLocation: ReadonlyMap<string, PlanEntry>, context: WishPondArmContext,
 ): WishPondWaterPlan => {
   const { messageIdOf, fireIdOf, lines } = context;
-  const setting = pondProfilesOfStats(placement.stats)[instance.id];
+  const setting = placement.stats.ponds[instance.id];
   const base = { id: instance.id, label: instance.label, pond, mode: setting.mode, lines };
   if (setting.mode === 'capacity') return { ...base, rungs: [] };
   const pending: PendingRung[] = [];

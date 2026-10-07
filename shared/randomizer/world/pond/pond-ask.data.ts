@@ -12,12 +12,10 @@
  * demand with it. A fresh row still opens inside a native bag and quiver.
  *
  * The bottle row counts bottles. A file has four slots and no upgrade path to
- * a fifth, so its stops are one to four and a fresh row asks for one, which is
- * what a bottle demand meant before it could be counted.
+ * a fifth, so its stops are one to four and a fresh row asks for one.
  *
- * Every row but rupees is OFF for a fresh profile. A pond has always charged
- * rupees and nothing else, so an untouched profile asks for exactly what it
- * asked for before these rows existed.
+ * Every row but rupees is OFF for a fresh profile, so an untouched profile
+ * asks for rupees and nothing else, as the unmodified game does.
  */
 import { BOTTLE_CONTENTS } from '../shops/shop-price-options.data';
 import { POND_PRICE_LADDER, POND_VANILLA_WALLET_TOP } from './pond-ladder.data';

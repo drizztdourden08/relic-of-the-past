@@ -12,6 +12,7 @@
 import { useMemo } from 'react';
 import { Box, Button, Text } from '../../primitives';
 import { useLogWindow } from './behavior/useLogWindow';
+import { LogLine } from './sub-components/LogLine';
 import { LogToolbar } from './sub-components/LogToolbar';
 import type { LogPanelProps } from './LogPanel.type';
 import './LogPanel.css';
@@ -62,18 +63,7 @@ const LogPanel = (props: LogPanelProps) => {
                 <Text className="log-panel__older-note">{hiddenOlder} earlier rows hidden</Text>
               </Box>
             )}
-            {shown.slice(first).map((row) => {
-              const level = row.indent ?? 0;
-              return (
-                <Box key={row.id} className="log-panel__row">
-                  <Text className="log-panel__gutter">{row.gutter}</Text>
-                  <Box className={`log-panel__content${level > 0 ? ` log-panel__content--lvl${level}` : ''}`}>
-                    <Text className={`log-panel__tag log-panel__tag--${row.kind}`}>{row.tag}</Text>
-                    <Text className={`log-panel__msg log-panel__msg--${row.kind}`}>{row.message}</Text>
-                  </Box>
-                </Box>
-              );
-            })}
+            {shown.slice(first).map((row) => <LogLine key={row.id} row={row} />)}
           </Box>
           <Button variant="tertiary" size="sm" className="log-panel__to-bottom" onClick={jumpToBottom}>
             ↓ Newest

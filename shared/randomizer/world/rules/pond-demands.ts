@@ -81,9 +81,8 @@ const registerSelfLocks = (world: World): void => {
 
 /**
  * Every pond's ladder, registered the same way for every setting and seed; the demands the seed
- * rolled are read off the seed table when the rule is asked. Nothing rolled (every pond legacy,
- * or a placement frozen before the demands existed) leaves every rung ungated there, so such a
- * seed keeps the rules it was built with.
+ * rolled are read off the seed table when the rule is asked. Nothing rolled (every pond legacy)
+ * leaves every rung ungated there.
  *
  * Which ponds may carry one is the ROLL's question, not this one
  * (pond/pond-demand-seed.ts: a custom pond and nothing else). This reads

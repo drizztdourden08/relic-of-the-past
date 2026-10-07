@@ -128,4 +128,23 @@
      compact list rows, where a name beside the art carries the identity and
      24px is enough; here the picture has to be recognised on its own. */
   --dark-room-sprite-d: 32px;
+
+  /* Narrowest a dashboard column may be: a card of a few tiles or a short log
+     still reads at this width. A window the width of a laptop screen holds two
+     columns, a wide desktop window three or four. */
+  --dashboard-col-min: 340px;
+
+  /* One stat tile of a dashboard card: two sit side by side in the narrowest
+     dashboard column, and a label of three short words still fits on its line. */
+  --tile-w-min: 128px;
+
+  /* One on/off flag pill: a two-word name beside its state dot. */
+  --flag-w-min: 148px;
+
+  /* The state dot at the head of a flag pill. */
+  --flag-dot-d: 8px;
+
+  /* A segmented data bar's thickness, and the colour dot a legend entry leads with. */
+  --segmented-bar-h: 6px;
+  --legend-dot-d: 8px;
 }

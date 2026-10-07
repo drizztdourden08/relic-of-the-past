@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
  * Randomizer section of the profile-creation form: enable toggle, then seed +
- * mode, and the server fields when Archipelago is picked.
+ * mode, and the server setup when Archipelago is picked (ArchipelagoFields.tsx).
  *
  * The seed arrives already thrown (build-randomizer-config.ts) so the options
  * panel can preview what it rolls. Typing over it is the point; emptying it is
@@ -12,6 +12,7 @@ import { Toggle } from '../../../../../../design-system/primitives/Toggle';
 import { Select } from '../../../../../../design-system/primitives/Select';
 import { TextInput } from '../../../../../../design-system/primitives/TextInput';
 import { Field } from '../../../../../../design-system/primitives/Field';
+import { ArchipelagoFields } from './ArchipelagoFields';
 import type { RandomizerFormState } from './build-randomizer-config';
 
 interface RandomizerFieldsProps {
@@ -52,45 +53,7 @@ const RandomizerFields = (props: RandomizerFieldsProps) => {
               options={MODE_OPTIONS}
             />
           </Field>
-          {value.mode === 'online' && (
-            <>
-              <Field label="Server URL">
-                <TextInput
-                  type="text"
-                  placeholder="archipelago.gg:38281"
-                  value={value.serverUrl}
-                  onChange={(e) => patch({ serverUrl: e.target.value })}
-                />
-              </Field>
-              <Field label="Slot Name">
-                <TextInput
-                  type="text"
-                  placeholder="Player"
-                  value={value.slotName}
-                  onChange={(e) => patch({ slotName: e.target.value })}
-                />
-              </Field>
-              <Field label="Password">
-                <TextInput
-                  type="password"
-                  placeholder="optional"
-                  autoComplete="off"
-                  value={value.password}
-                  onChange={(e) => patch({ password: e.target.value })}
-                />
-              </Field>
-              <Toggle
-                label="DeathLink"
-                checked={value.deathLink}
-                onChange={(deathLink) => patch({ deathLink })}
-              />
-              <Toggle
-                label="Track other players"
-                checked={value.trackOtherPlayers}
-                onChange={(trackOtherPlayers) => patch({ trackOtherPlayers })}
-              />
-            </>
-          )}
+          {value.mode === 'online' && <ArchipelagoFields value={value} onChange={patch} />}
           <Text variant="caption">
             {value.mode === 'online'
               ? 'Seed and options lock once the profile is created. The connection stays editable.'

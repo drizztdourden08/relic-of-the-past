@@ -10,9 +10,8 @@
  * and the running game can only ever say the same thing.
  *
  * REFERENCE is the reference's own reading: light is required, and the lamp
- * alone provides it, the rule every seed rolled before this option existed
- * was generated under, and what an absent row still means. DEFAULT is where a
- * NEW profile starts: light required, and all four lights provide it.
+ * alone provides it. DEFAULT is where a NEW profile starts and the rows'
+ * baseline: light required, and all four lights provide it.
  */
 import { ITEM } from '../item-ids.data';
 import type { ItemId } from '@shared/game/data/types/ids';

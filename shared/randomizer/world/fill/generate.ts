@@ -6,9 +6,7 @@
  * weapon onto the mentor check, ItemPool.py 294-318) → place the dungeon
  * prizes: shuffled uniformly over the ten prize slots with the prize option
  * on (the reference's own model), each dungeon's VANILLA prize on its own
- * slot with it off, so a placement generated before the core could
- * substitute a boss prize keeps playing exactly as generated (see
- * vanilla-prizes.data.ts) → restrictive
+ * slot with it off (see vanilla-prizes.data.ts) → restrictive
  * dungeon prefill → assumed fill of the progression pool → shuffled junk
  * fill of the rest → verification sweep judged against the profile's
  * accessibility contract (accessibility/) + completion check, retried
@@ -103,7 +101,8 @@ const attemptPlacement = (
 
   const sweep = sweepPlacementSpheres(world);
   const unreachable = accessibilityFailures({
-    mode: accessibility, capacity, uncollected: sweep.uncollected, placedItems: world.placedItems,
+    mode: accessibility, capacity, uncollected: sweep.uncollected, missedEvents: sweep.missedEvents,
+    placedItems: world.placedItems,
   });
   if (unreachable.length > 0) {
     throw new FillError(`${accessibility} accessibility`,

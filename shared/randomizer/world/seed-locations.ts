@@ -9,9 +9,9 @@
  *  - a SHOP SLOT is never one here. A shelf opens through the shop scope, which decides how
  *    many slots a shop sells and how deep each one restocks, so build-world adds those rows
  *    from the shop surface instead of from the collection.
- *  - an EVENT is one only where the fill hands it an event item (pool/event-items.data.ts).
- *    Most of the 280 events are this port's own ledger, which the tracker reads and the seed
- *    never fills.
+ *  - an EVENT is never one. It is a thing that happened, which the tracker reads from the
+ *    ledger; the few the rules ask about are found by the sweep where they happen
+ *    (events/story-events.data.ts), and none of them holds a reward.
  *  - an NPC row is one only under a scope. A scripted giver carries `scope: 'npc'`; a
  *    scope-less npc row reads a rung of a counter ladder (the fairy's bomb and arrow counts)
  *    and stands for no spot at all.
@@ -21,14 +21,13 @@
  * The rule replaces four transcribed lists of location names, one per half of the map. Its
  * set is pinned in tests/randomizer/world-from-records.keep.test.ts.
  */
-import { EVENT_LOCATIONS } from './scope-tables';
 import type { CheckRecord } from '@shared/game/data';
 
 const isSeedLocation = (check: CheckRecord): boolean => {
-  const { id, kind, scope } = check;
+  const { kind, scope } = check;
   if (scope === 'fixed') return false;
   if (kind === 'shop-slot') return false;
-  if (kind === 'event') return EVENT_LOCATIONS.has(id);
+  if (kind === 'event') return false;
   if (kind === 'npc') return scope !== undefined;
   return true;
 };

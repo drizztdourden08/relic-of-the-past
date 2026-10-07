@@ -24,7 +24,7 @@
  * nothing, which is the reference's swordless behaviour arrived at from the
  * ticks instead of from a second switch.
  */
-import { PROGRESSIVE_FAMILIES, REPLACEMENT_ITEM } from './progressive-families.data';
+import { PROGRESSIVE_FAMILIES, REPLACEMENT_ITEM, referenceCopiesOf } from './progressive-families.data';
 import { tickedCountOf } from './progressive-reach';
 import type { ProgressiveSetting } from './progressive.type';
 
@@ -38,12 +38,20 @@ import type { ProgressiveSetting } from './progressive.type';
  */
 const applyProgressiveTicks = (pool: string[], setting: ProgressiveSetting): void => {
   for (const family of PROGRESSIVE_FAMILIES) {
-    let remove = family.tiers.length - tickedCountOf(setting, family.id);
+    let remove = referenceCopiesOf(family) - tickedCountOf(setting, family.id);
     while (remove > 0) {
       const index = pool.lastIndexOf(family.poolItem);
       if (index === -1) break;
       pool[index] = REPLACEMENT_ITEM;
       remove -= 1;
+    }
+    // A family whose pool held fewer copies than it has tiers gains one per extra ticked tier,
+    // each in a stand-in pickup's place.
+    while (remove < 0) {
+      const index = pool.lastIndexOf(REPLACEMENT_ITEM);
+      if (index === -1) break;
+      pool[index] = family.poolItem;
+      remove += 1;
     }
   }
 };

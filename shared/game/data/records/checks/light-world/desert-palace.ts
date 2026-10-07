@@ -100,10 +100,8 @@ const LW_DESERT_PALACE_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-131',
-    // The reward pickup is its own ledger bit; a file older than the ledger reads the heart bit
-    // and this dungeon's own reward in hand, which is what taking it meant before shuffles.
+    // The reward pickup is its own ledger bit.
     gameId: { eventBit: 22 },
-    fallback: { allOf: [{ checkId: 'check-130' }, { itemId: 'item-058' }] },
     kind: 'prize',
     screenId: 'screen-113',
     regionId: 'region-167',

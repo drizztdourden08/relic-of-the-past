@@ -18,6 +18,11 @@ const REGION = {
    * magic-extension branch of `can_extend_magic` reaches for.
    */
   potionSeller: 'region-112',
+  /**
+   * Capacity Upgrade: the fairy's room where a vanilla bomb or arrow family is bought up to its
+   * top rung (capacity/capacity-shop.data.ts).
+   */
+  capacityFairy: 'region-113',
   /** Light World Death Mountain Shop, the one region the reference's bunny pass handles apart. */
   mountainShop: 'region-128',
   /** Desert Palace Main (Outer). */

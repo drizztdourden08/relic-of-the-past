@@ -1,12 +1,15 @@
 /* @layer renderer-components @kind component */
 /**
- * One section of the network tab: a titled panel, an optional chip at the right of the title,
- * then label and value rows, and anything else the section adds below them.
+ * One panel of the network tab: a dashboard panel at its place on the grid, an optional chip
+ * at the right of the title, then label and value rows, and anything else the panel adds below
+ * them. With nothing to show (`rows` null), it says why in one line.
  */
-import { Box, SectionHeader, StatRow } from '@ds/primitives';
+import { Box, StatRow, Text } from '@ds/primitives';
+import { DashboardPanel } from '@ds/composites/DashboardGrid';
 import { StateChip } from './StateChip';
 import type { ReactNode } from 'react';
 import type { Chip } from '../behavior/network-tone';
+import type { PanelPlacement } from '../../../Randomizer.constants';
 
 interface NetworkRow {
   label: string;
@@ -14,22 +17,25 @@ interface NetworkRow {
 }
 
 interface NetworkSectionProps {
+  placement: PanelPlacement;
   title: string;
   chip?: Chip;
-  rows?: readonly NetworkRow[];
+  /** Null when the panel has no picture to draw; `empty` then says why. */
+  rows?: readonly NetworkRow[] | null;
+  empty?: string;
   children?: ReactNode;
 }
 
-const NetworkSection = ({ title, chip, rows = [], children }: NetworkSectionProps) => (
-  <Box className="randomizer-page__panel network-tab__section">
-    <SectionHeader title={title} action={chip ? <StateChip {...chip} /> : undefined} />
-    {rows.length > 0 && (
+const NetworkSection = ({ placement, title, chip, rows = [], empty, children }: NetworkSectionProps) => (
+  <DashboardPanel {...placement} title={title} action={chip ? <StateChip {...chip} /> : undefined}>
+    {rows === null && empty !== undefined && <Text className="randomizer-page__hint">{empty}</Text>}
+    {rows !== null && rows.length > 0 && (
       <Box className="network-tab__rows">
         {rows.map((row) => <StatRow key={row.label} label={row.label} value={row.value} mono />)}
       </Box>
     )}
     {children}
-  </Box>
+  </DashboardPanel>
 );
 
 export { NetworkSection };

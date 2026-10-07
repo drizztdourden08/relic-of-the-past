@@ -9,11 +9,9 @@ import type { GameSettings } from './settings';
  * password, DeathLink, tracking) can change afterwards, through a RandomizerConnectionPatch
  * (shared/storage/randomizer-connection-patch.ts), so a wrong password never strands a run.
  *
- * `options` is the full frozen catalog snapshot (schema 'ap-options-v2').
- * Profiles created before the snapshot existed carry the old
- * { mode, accessibility, randomizedKinds } shape on disk. Readers go through
- * normalizeRandomizerOptions (shared/randomizer/options-snapshot.ts), which
- * accepts both.
+ * `options` is the full frozen catalog snapshot (schema 'ap-options-v2'). Readers go through
+ * normalizeRandomizerOptions (shared/randomizer/options-snapshot.ts), which lays it over the
+ * catalog baselines.
  */
 interface ProfileRandomizerConfig {
   mode: 'local' | 'online';

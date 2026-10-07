@@ -56,8 +56,9 @@
   gap: var(--space-sm);
 }
 
-/* Intro | open space for the art | last save. The bottom row repeats the
-   side column's width so progress lines up under the last-save tile. */
+/* Intro | open space for the art | last save. The intro grows to fit its title and buttons on
+   one line each, and only a narrow hero squeezes it back to its minimum, where they wrap. The
+   bottom row repeats the side column's width so progress lines up under the last-save tile. */
 .profile-hero__main,
 .profile-hero__bottom {
   display: grid;
@@ -67,7 +68,7 @@
 }
 
 .profile-hero__main {
-  grid-template-columns: var(--profile-hero-intro-w) 1fr minmax(0, var(--profile-hero-save-w));
+  grid-template-columns: minmax(var(--profile-hero-intro-w), max-content) 1fr minmax(0, var(--profile-hero-save-w));
 }
 
 .profile-hero__bottom {

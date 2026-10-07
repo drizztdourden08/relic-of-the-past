@@ -48,7 +48,7 @@ export { BOTTLE_ITEMS, CRYSTAL_ITEMS, MEDALLION_ITEMS, VANILLA_MEDALLIONS } from
 export type { MedallionId } from './item-groups';
 export { REGION } from './region-ids.data';
 export { PROGRESSION_TIERS } from './progressive/progression-tiers.data';
-export { CAPACITY_SHOP_EVENT, isSlotKey, pondRungKey, shopLocationKey } from './location-key';
+export { isSlotKey, pondRungKey, shopLocationKey } from './location-key';
 export type { LocationKey, ShopLocationKey, SlotKey } from './location-key';
 export { checkIdOfLocation, locationKeyOfCheck } from './location-record';
 export { isSeedLocation } from './seed-locations';
@@ -56,20 +56,22 @@ export { locationDisplayName } from './display-names/location-display-name';
 export { DUNGEON_ORDER } from './fill/dungeon-order.data';
 export { worldDungeonOf } from './world-dungeon';
 export {
-  CAPACITY_UPGRADE_LOCATIONS, EVENT_LOCATIONS, KEY_DROP_LOCATIONS, NPC_SCOPE_LOCATIONS,
-  PRIZE_LOCATIONS, VANILLA_PRIZES, WORLD_ITEM_SCOPE_LOCATIONS,
+  CAPACITY_UPGRADE_LOCATIONS, KEY_DROP_LOCATIONS, NPC_SCOPE_LOCATIONS, PRIZE_LOCATIONS, VANILLA_PRIZES,
+  WORLD_ITEM_SCOPE_LOCATIONS,
 } from './scope-tables';
 export { registerRules } from './rules/register';
 export type { RuleCoverageReport } from './rules/register';
-export { canCollectLocation, collectableLocations, sweepEvents } from './rules/collect';
+export { canCollectLocation, collectableLocations } from './rules/collect';
+export { canReachEvent, collectReachableEvents, GOAL_EVENT, STORY_EVENT, WORLD_EVENT_IDS } from './events';
 export { buildItemPool } from './pool/build-item-pool';
 export type { BottlePicker } from './pool/build-item-pool';
 export type { ItemPool } from './pool/item-pool.type';
-export { EVENT_ITEMS, PRIZE_ITEMS, VICTORY_ITEM } from './pool/event-items.data';
+export { PRIZE_ITEMS } from './pool/prize-items.data';
 export type { Rule, ItemRule, AlwaysAllowRule, World, WorldOptions } from './world.type';
 export type {
   RegionGraphRow,
   WorldLocation,
+  WorldEvent,
   Exit,
   Region,
   WorldDungeon,
@@ -93,7 +95,6 @@ export { generatePlacement, MAX_PLACEMENT_ATTEMPTS } from './fill/generate';
 export type { Placement, PlacementStats } from './fill/placement.type';
 export { fillFlagsOf, fillOptionsFromSnapshot } from './fill/fill-options-from-snapshot';
 export type { DeliverableSets, FillPickers, SnapshotFillFlags } from './fill/fill-options-from-snapshot';
-export { capacityProfileOfStats } from './fill/placement-capacity';
 export {
   explosivesCapacity, hasMeterCapacity, meterUsesMultiplier, projectilesCapacity, walletCapacity, walletRungFor,
 } from './state-helpers-capacity';

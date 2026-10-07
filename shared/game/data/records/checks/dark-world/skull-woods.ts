@@ -123,10 +123,8 @@ const DW_SKULL_WOODS_CHECKS: CheckRecord[] = [
   },
   {
     id: 'check-192',
-    // The reward pickup is its own ledger bit; a file older than the ledger reads the heart bit
-    // and this dungeon's own reward in hand, which is what taking it meant before shuffles.
+    // The reward pickup is its own ledger bit.
     gameId: { eventBit: 27 },
-    fallback: { allOf: [{ checkId: 'check-191' }, { itemId: 'item-114' }] },
     kind: 'prize',
     screenId: 'screen-342',
     regionId: 'region-196',

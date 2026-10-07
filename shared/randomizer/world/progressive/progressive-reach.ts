@@ -37,7 +37,7 @@ const FAMILY_OF_POOL_ITEM: ReadonlyMap<ItemId, ProgressiveFamilyId> = new Map([
   [ITEM.progressiveBowAlt, 'bow' as ProgressiveFamilyId],
 ]);
 
-/** A world built before the rows existed reads as every tier ticked. */
+/** A world built without the setting reads as every tier ticked. */
 const progressiveSettingOf = (world: World): ProgressiveSetting =>
   world.options.progressiveTiers ?? DEFAULT_PROGRESSIVE_SETTING;
 

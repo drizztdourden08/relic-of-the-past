@@ -17,8 +17,6 @@ interface ActivityLogProps {
   roomLines: readonly RoomMessage[];
 }
 
-const NOTHING_HIDDEN: ReadonlySet<string> = new Set();
-
 const ActivityLog = ({ entries, roomLines }: ActivityLogProps) => {
   const [hidden, setHidden] = useState<Set<string>>(() => new Set());
   const [search, setSearch] = useState('');
@@ -34,7 +32,7 @@ const ActivityLog = ({ entries, roomLines }: ActivityLogProps) => {
   const rows = useMemo(() => buildActivityRows(entries, roomLines, hidden), [entries, roomLines, hidden]);
 
   const copyText = useCallback(
-    () => rowsToText(buildActivityRows(entries, roomLines, NOTHING_HIDDEN)),
+    () => rowsToText(buildActivityRows(entries, roomLines)),
     [entries, roomLines],
   );
 
