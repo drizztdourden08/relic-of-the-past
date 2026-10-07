@@ -3,18 +3,16 @@
  * The multiworld client against an in-process server (ap-fake-server.ts) and a recording
  * core (ap-fake-core.ts), in node: the handshake, slot data, the received index across a
  * reconnect, the gap Sync, the own-pickup echo, server items, offline checks, the goal, the
- * reconnect backoff, rendered messages, DeathLink both ways with the slot data deciding over
- * the profile flag, and the refusal of a slot from another world package version.
+ * reconnect backoff, rendered messages and the server address candidates. DeathLink and the
+ * world package version are in ap-deathlink.keep.test.ts; the shared room and boot are in
+ * ap-protocol-harness.ts.
  */
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { createOnlineClient } from '@app/lib/game/randomizer-client/online-client';
 import { serverUrlCandidates } from '@app/lib/game/randomizer-client/server-url';
 import { createFakeServer, VERSION } from './ap-fake-server';
 import { createFakeCore } from './ap-fake-core';
-import { parseSlotData } from '@shared/randomizer/archipelago/parse-slot-data';
-import { AP_WORLD_VERSION } from '@shared/randomizer/archipelago/ap-game';
-import type { FakeRoom, FakeServer } from './ap-fake-server';
-import type { OnlineSessionConfig } from '@app/lib/game/randomizer-client/online-session-config.type';
+import { boot, installClientHarness, item, makeRoom, OWN, settle } from './ap-protocol-harness';
 
 // The real bus installs window error handlers on import; node has no window.
 vi.mock('@app/lib/log-bus', () => {
@@ -22,71 +20,7 @@ vi.mock('@app/lib/log-bus', () => {
   return { log: { core: quiet, app: quiet, randomizer: quiet, wasm: quiet, ipc: quiet, sim: quiet, error: quiet } };
 });
 
-const OWN = 'Relic of the Past';
-
-const makeRoom = (overrides: Partial<FakeRoom> = {}): FakeRoom => ({
-  games: {
-    [OWN]: {
-      item_name_to_id: { Bow: 100, Hookshot: 101, Lamp: 102, Boots: 103 },
-      location_name_to_id: { 'check-001': 1, 'check-002': 2, 'check-003': 3 },
-      checksum: 'own-1',
-    },
-    Other: { item_name_to_id: { 'Other Sword': 500 }, location_name_to_id: { 'Other Place': 900 }, checksum: 'other-1' },
-  },
-  items: [],
-  checked: [],
-  missing: [1, 2, 3],
-  players: [{ team: 0, slot: 1, alias: 'Link', name: 'Link' }, { team: 0, slot: 2, alias: 'Zelda', name: 'Zelda' }],
-  slotInfo: {
-    1: { name: 'Link', game: OWN, type: 1, group_members: [] },
-    2: { name: 'Zelda', game: 'Other', type: 1, group_members: [] },
-  },
-  slotData: {
-    worldVersion: '0.1.0', options: { goal: 'ganon' }, medallions: { mire: 'Ether', turtleRock: 'Quake' },
-    preRolled: { shopPrices: [10] }, deathLink: false,
-  },
-  placements: {
-    1: { item: 101, location: 1, player: 1, flags: 0 },
-    2: { item: 500, location: 2, player: 2, flags: 0 },
-    3: { item: 102, location: 3, player: 1, flags: 0 },
-  },
-  refusedUrls: new Set(),
-  ...overrides,
-});
-
-const item = (id: number, player: number, location: number) => ({ item: id, player, location, flags: 0 });
-
-const settle = async (): Promise<void> => {
-  for (let i = 0; i < 60; i += 1) await Promise.resolve();
-};
-
-const boot = async (room: FakeRoom, extra: Partial<OnlineSessionConfig> = {}) => {
-  const server = createFakeServer(room);
-  const core = createFakeCore();
-  const session = createOnlineClient(
-    { url: 'localhost:38281', slotName: 'Link', password: room.password, ...extra },
-    { core, createSocket: server.createSocket },
-  );
-  await session.start();
-  await settle();
-  return { server, core, session };
-};
-
-beforeEach(() => {
-  vi.useFakeTimers();
-  const store = new Map<string, string>();
-  vi.stubGlobal('localStorage', {
-    getItem: (key: string) => store.get(key) ?? null,
-    setItem: (key: string, value: string) => { store.set(key, value); },
-    removeItem: (key: string) => { store.delete(key); },
-  });
-});
-
-afterEach(() => {
-  vi.useRealTimers();
-  vi.unstubAllGlobals();
-  vi.restoreAllMocks();
-});
+installClientHarness();
 
 describe('handshake', () => {
   it('connects a local server over plain ws only, with password, uuid, the server version and DeathLink', async () => {
@@ -230,98 +164,6 @@ describe('messages', () => {
     await settle();
     expect(seen).toEqual(['Zelda sent Bow to Link (Other Place)']);
     expect(session.messages[0]).toMatchObject({ kind: 'item', text: 'Zelda sent Bow to Link (Other Place)' });
-  });
-});
-
-const withDeathLink = (deathLink: boolean): FakeRoom => {
-  const room = makeRoom();
-  room.slotData = { ...(room.slotData as Record<string, unknown>), deathLink };
-  return room;
-};
-
-/** The DeathLink bounces only: the network ping is a Bounce too. */
-const deathLinkBounces = (server: FakeServer) => server.of('Bounce').filter((packet) => packet.tags?.includes('DeathLink'));
-
-describe('DeathLink', () => {
-  it('kills on a room death, sends our own, and guards both ways for 5 s', async () => {
-    const { server, core } = await boot(withDeathLink(true), { deathLink: true });
-    const bounce = (source: string) => server.push([{ cmd: 'Bounced', tags: ['DeathLink'], data: { source, time: 0, cause: `${source} fell` } }]);
-    bounce('Zelda');
-    await settle();
-    expect(core.kills).toBe(1);
-    core.die('killed by the room');
-    expect(deathLinkBounces(server)).toHaveLength(0);
-    await vi.advanceTimersByTimeAsync(6000);
-    core.die('fell in a pit');
-    expect(deathLinkBounces(server)).toEqual([{
-      cmd: 'Bounce', tags: ['DeathLink'], data: { time: Date.now() / 1000, source: 'Link', cause: 'fell in a pit' },
-    }]);
-    bounce('Link');
-    bounce('Zelda');
-    await settle();
-    expect(core.kills).toBe(1);
-    await vi.advanceTimersByTimeAsync(6000);
-    bounce('Zelda');
-    await settle();
-    expect(core.kills).toBe(2);
-    expect([server.of('ConnectUpdate'), core.deathLinkBits]).toEqual([[], [true]]);
-  });
-
-  it('a death the room caused (core cause 1) is never sent, however late it commits', async () => {
-    const { server, core } = await boot(withDeathLink(true), { deathLink: true });
-    server.push([{ cmd: 'Bounced', tags: ['DeathLink'], data: { source: 'Zelda', time: 0, cause: 'fell' } }]);
-    await settle();
-    expect(core.kills).toBe(1);
-    await vi.advanceTimersByTimeAsync(6000);
-    core.die(1);
-    expect(deathLinkBounces(server)).toHaveLength(0);
-  });
-
-  it('a genuine death after a room kill a fairy undid (core cause 0) is sent', async () => {
-    const { server, core } = await boot(withDeathLink(true), { deathLink: true });
-    server.push([{ cmd: 'Bounced', tags: ['DeathLink'], data: { source: 'Zelda', time: 0, cause: 'fell' } }]);
-    await settle();
-    expect(core.kills).toBe(1);
-    // The fairy revived Link, so the core reported nothing and cleared its room-kill flag.
-    await vi.advanceTimersByTimeAsync(6000);
-    core.die(0);
-    expect(deathLinkBounces(server)).toEqual([{
-      cmd: 'Bounce', tags: ['DeathLink'], data: { time: Date.now() / 1000, source: 'Link', cause: 'Link died' },
-    }]);
-  });
-
-  it('the slot data decides once Connected, and a ConnectUpdate corrects the tags', async () => {
-    const off = await boot(withDeathLink(false), { deathLink: true });
-    expect(off.server.of('Connect')[0].tags).toEqual(['DeathLink']);
-    expect(off.server.of('ConnectUpdate')).toEqual([{ cmd: 'ConnectUpdate', items_handling: 0b111, tags: [] }]);
-    expect(off.core.deathLinkBits).toEqual([true, false]);
-    off.server.push([{ cmd: 'Bounced', tags: ['DeathLink'], data: { source: 'Zelda', time: 0, cause: 'fell' } }]);
-    await settle();
-    off.core.die('fell in a pit');
-    expect([off.core.kills, deathLinkBounces(off.server).length]).toEqual([0, 0]);
-
-    const on = await boot(withDeathLink(true));
-    expect(on.server.of('Connect')[0].tags).toEqual([]);
-    expect(on.server.of('ConnectUpdate')).toEqual([{ cmd: 'ConnectUpdate', items_handling: 0b111, tags: ['DeathLink'] }]);
-    on.server.push([{ cmd: 'Bounced', tags: ['DeathLink'], data: { source: 'Zelda', time: 0, cause: 'fell' } }]);
-    await settle();
-    expect(on.core.kills).toBe(1);
-  });
-});
-
-describe('the world package version', () => {
-  it('a slot generated by another package version ends the session and says why', async () => {
-    const room = makeRoom();
-    room.slotData = { ...(room.slotData as Record<string, unknown>), worldVersion: '0.0.9' };
-    const { session, core, server } = await boot(room);
-    expect(session.status).toBe('error');
-    expect(core.disarms).toBeGreaterThan(0);
-    expect(server.of('LocationScouts')).toHaveLength(0);
-    expect(parseSlotData(room.slotData)).toEqual({
-      kind: 'version',
-      message: `World package version 0.0.9 does not match this app (${AP_WORLD_VERSION}). `
-        + 'Regenerate the game with the package this app saves.',
-    });
   });
 });
 
