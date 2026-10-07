@@ -1,0 +1,6 @@
+set confirm off
+set pagination off
+set remotetimeout 3
+set architecture arm
+target remote localhost:2345
+display/i $pc

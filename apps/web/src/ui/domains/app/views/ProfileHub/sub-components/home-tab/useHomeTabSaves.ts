@@ -75,8 +75,7 @@ const useHomeTabSaves = (params: { profileId: string; isGameRunning: boolean; on
   const handleQuickLoad = useCallback(async (slot: number) => {
     setBusySlot(slot);
     log.app(`Loading state from slot ${slot + 1}`);
-    await ensureGameRunning(isGameRunning, onStartGame);
-    await loadState(slot);
+    if (await ensureGameRunning(isGameRunning, onStartGame)) await loadState(slot);
     setBusySlot(null);
   }, [profileId, isGameRunning, onStartGame]);
 
@@ -103,8 +102,8 @@ const useHomeTabSaves = (params: { profileId: string; isGameRunning: boolean; on
   const handleLoadNormal = useCallback(async (id: string) => {
     setBusyNormal(id);
     log.app(`Loading normal save: ${id}`);
-    await ensureGameRunning(isGameRunning, onStartGame);
-    const buffer = await savesStore.loadNormalSave(profileId, id);
+    const ready = await ensureGameRunning(isGameRunning, onStartGame);
+    const buffer = ready ? await savesStore.loadNormalSave(profileId, id) : null;
     if (buffer) {
       loadStateFromBuffer(buffer);
       await restoreMusicPosition(profileId, 'normal', id);
@@ -156,8 +155,8 @@ const useHomeTabSaves = (params: { profileId: string; isGameRunning: boolean; on
   const handleLoadAuto = useCallback(async (id: string) => {
     setBusyAuto(id);
     log.app(`Loading auto-save: ${id}`);
-    await ensureGameRunning(isGameRunning, onStartGame);
-    const buffer = await savesStore.loadAutoSave(profileId, id);
+    const ready = await ensureGameRunning(isGameRunning, onStartGame);
+    const buffer = ready ? await savesStore.loadAutoSave(profileId, id) : null;
     if (buffer) {
       loadStateFromBuffer(buffer);
       await restoreMusicPosition(profileId, 'auto', id);

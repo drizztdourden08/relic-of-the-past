@@ -15,6 +15,7 @@ const FEATURES2_FLAGS = {
   widescreenPlayArea: 16777216, // kFeatures2_WidescreenPlayArea = 1 << 24
   widescreenIdleAI: 33554432, // kFeatures2_WidescreenIdleAI = 1 << 25
   titleOverride: 67108864, // kFeatures2_TitleOverride = 1 << 26
+  allowDiving: 536870912, // kFeatures2_AllowDiving = 1 << 29
 } as const;
 
 // Each fix is on when its granular toggle is set, falling back to the legacy bundle setting it was
@@ -37,6 +38,11 @@ const buildFeatureWords = (s: GameSettings): { features1: number; features2: num
   }
   // The title hide: registered, so Vanilla Safe strips it through the same resolver.
   if (effective.has('titleOverride')) f2 |= FEATURES2_FLAGS.titleOverride;
+  // The extra dungeon's water room cannot be crossed as designed without the dive, so turning the
+  // dungeon on turns the ability on. Neither answers to Vanilla Safe: added content is already a
+  // departure from the cartridge, and stripping the ability out from under it would only leave the
+  // room unplayable.
+  if (s.allowDiving || s.extraDungeon) f2 |= FEATURES2_FLAGS.allowDiving;
   return { features1: f1, features2: f2 };
 };
 

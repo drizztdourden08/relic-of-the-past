@@ -24,6 +24,7 @@ let lastHideSpaceBeyondWalls = false;
 // Frame pacing mode. The core boots on the timer schedule and has no INI key for this, so the
 // startup re-assert is what applies the profile's choice, not only a post-load repair.
 let lastVsync = false;
+let lastExtraDungeon = false;
 // Track the last-pushed hudHidden value so we can re-assert after state loads
 let lastHudHidden = false;
 // Track the last-pushed pauseHidden value so we can re-assert after state loads
@@ -127,6 +128,13 @@ const pushLiveSettings = (settings: GameSettings): boolean => {
       mod.ccall('WasmSetPauseHidden', null, ['number'], [hidePause ? 1 : 0]);
     } catch { /* WASM not rebuilt yet */ }
 
+    // Optional second-cartridge content. Guarded like its neighbours: an older WASM build
+    // has no such export, and the base game must not care.
+    try {
+      lastExtraDungeon = !!settings.extraDungeon;
+      mod.ccall('WasmSetExtraDungeonEnabled', null, ['number'], [settings.extraDungeon ? 1 : 0]);
+    } catch { /* WASM not rebuilt yet */ }
+
     // Dialog pacing and the native message box hide, own module, same guard inside
     pushDialogLive(settings);
 
@@ -152,6 +160,11 @@ const tryVoidCcall = (fn: string, value: number): void => {
 const reassertHideSpaceBeyondWalls = (): void => tryVoidCcall('WasmSetHideSpaceBeyondWalls', lastHideSpaceBeyondWalls ? 1 : 0);
 
 const reassertVsync = (): void => tryVoidCcall('WasmSetVsync', lastVsync ? 1 : 0);
+
+// Same shape as the flags above, and for the same reason: this only ever reaches the core
+// through the live path, so a boot that loads straight into a save state would leave the
+// extra content switched off until a setting was touched.
+const reassertExtraDungeon = (): void => tryVoidCcall('WasmSetExtraDungeonEnabled', lastExtraDungeon ? 1 : 0);
 
 const reassertHudHidden = (): void => tryVoidCcall('WasmSetHudHidden', lastHudHidden ? 1 : 0);
 
@@ -212,6 +225,7 @@ const reassertLiveFlagsAfterLoad = (): void => {
   // after a start until some other setting change happens to push the settings again.
   pushTurboSpeed(lastSettings ?? DEFAULT_SETTINGS);
   reassertVolumes();
+  reassertExtraDungeon();
   // The remembered cheat rules, again: a load is one more moment the core may have refused them.
   restoreCheatRules();
 };
@@ -241,6 +255,7 @@ const primeLiveSettings = (settings: GameSettings): void => {
   lastMasterVolume = settings.masterVolume;
   lastMusicVol = settings.musicMuted ? 0 : Math.round(settings.musicVolume * 1.28);
   lastSfxVol = settings.sfxMuted ? 0 : Math.round(settings.sfxVolume * 1.28);
+  lastExtraDungeon = !!settings.extraDungeon;
 };
 
 export { LIVE_SETTINGS, liveSettingsNow, pushLiveSettings, reassertFeatureWords, reassertHideSpaceBeyondWalls, reassertVsync, reassertHudHidden, reassertPauseHidden, reassertVolumes, reassertLiveFlagsAfterLoad, reassertFeatureFlags, reassertGateWord3, primeLiveSettings };

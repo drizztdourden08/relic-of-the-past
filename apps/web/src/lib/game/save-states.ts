@@ -4,6 +4,8 @@ import { checkLoadable, stripStamp } from '@shared/game/save-state';
 import { log } from '../log-bus';
 import * as savesStore from '../storage/saves-store';
 import { getModule, getProfileId } from './wasm-bridge';
+import { isCoreReady, whenCoreReady } from './core-ready';
+import { loadStateFromBuffer } from './state-buffers';
 import { markStateLoaded } from './state-load-signal';
 import { pollInventoryState } from './tracker';
 import { reassertLiveFlagsAfterLoad } from './live-settings';
@@ -16,8 +18,10 @@ const saveState = async (slot: number): Promise<boolean> => {
   const mod = getModule();
   const profileId = getProfileId();
   log.app(`[SaveState] saveState(${slot}) called with module=${!!mod}, profileId=${profileId}`);
-  if (!mod || !profileId) {
-    log.app('[SaveState] ABORT: no module or no profileId');
+  // Unlike a load, a save is not worth waiting a boot out for: what it would capture once the
+  // core came up is the boot screen, written over whatever the slot already held.
+  if (!isCoreReady() || !mod || !profileId) {
+    log.error(`[SaveState] Slot ${slot} not saved: the core is not running yet`);
     return false;
   }
   try {
@@ -67,11 +71,18 @@ const saveState = async (slot: number): Promise<boolean> => {
 };
 
 const loadState = async (slot: number): Promise<boolean> => {
+  log.app(`[LoadState] loadState(${slot}) called`);
+  // The shortcuts and the overlay arm with the game VIEW, which is up about two seconds before
+  // the core is. A request from that window is early, not wrong, so it waits for the core. It
+  // used to be dropped instead, which is what made a load right after boot silently do nothing.
+  if (!(await whenCoreReady())) {
+    log.error(`[LoadState] Slot ${slot} not loaded: the core never became ready`);
+    return false;
+  }
   const mod = getModule();
   const profileId = getProfileId();
-  log.app(`[LoadState] loadState(${slot}) called with module=${!!mod}, profileId=${profileId}`);
   if (!mod || !profileId) {
-    log.app('[LoadState] ABORT: no module or no profileId');
+    log.error(`[LoadState] Slot ${slot} not loaded: no module or no profileId`);
     return false;
   }
   try {
@@ -131,9 +142,14 @@ const loadState = async (slot: number): Promise<boolean> => {
  * so automation pins to a name. Case-insensitive; the newest save wins if two share a name.
  */
 const loadNamedState = async (name: string): Promise<boolean> => {
+  // Same reason as loadState: a named load can be asked for while the core is still coming up.
+  if (!(await whenCoreReady())) {
+    log.error(`[LoadState] "${name}" not loaded: the core never became ready`);
+    return false;
+  }
   const profileId = getProfileId();
   if (!profileId) {
-    log.app('[LoadState] ABORT: no profileId');
+    log.error('[LoadState] ABORT: no profileId');
     return false;
   }
   const wanted = name.trim().toLowerCase();
@@ -156,42 +172,4 @@ const loadNamedState = async (name: string): Promise<boolean> => {
 const loadStateRef = (ref: number | string): Promise<boolean> =>
   typeof ref === 'number' ? loadState(ref) : loadNamedState(ref);
 
-/** Capture the current game state into a temp slot and return its raw bytes. */
-const captureStateBuffer = (slot = 98): ArrayBuffer | null => {
-  const mod = getModule();
-  if (!mod) return null;
-  mod.ccall('WasmSaveState', null, ['number'], [slot]);
-  const savePath = `/saves/save${slot}.sav`;
-  if (!mod.FS.analyzePath(savePath).exists) return null;
-  const data = mod.FS.readFile(savePath);
-  const ab = withDialogState(mod, (data.buffer as ArrayBuffer).slice(data.byteOffset, data.byteOffset + data.byteLength));
-  try { mod.FS.unlink(savePath); } catch { /* ignore */ }
-  return ab;
-};
-
-/** Load a captured state buffer, re-asserting live settings and refreshing the tracker. Mirrors loadState() for buffers not on disk. */
-const loadStateFromBuffer = (buffer: ArrayBuffer, slot = 98): boolean => {
-  const mod = getModule();
-  if (!mod) return false;
-
-  // Same guard as loadState. Buffers captured in-session carry at most the capture stamp and
-  // pass straight through; the check matters for the ones that came off disk.
-  const verdict = checkLoadable(buffer);
-  if (!verdict.ok) {
-    log.error(`[LoadState] Refusing buffer: ${verdict.message}`);
-    return false;
-  }
-
-  const savePath = `/saves/save${slot}.sav`;
-  mod.FS.writeFile(savePath, new Uint8Array(stripStamp(buffer)));
-  mod.ccall('WasmLoadState', null, ['number'], [slot]);
-  reassertLiveFlagsAfterLoad();
-  resumeDialogAfterLoad(mod, verdict.stamp);
-  requestLocationRebaseline();
-  markStateLoaded();
-  pollInventoryState(true);
-  try { mod.FS.unlink(savePath); } catch { /* ignore */ }
-  return true;
-};
-
-export { captureStateBuffer, loadNamedState, loadState, loadStateFromBuffer, loadStateRef, saveState };
+export { loadNamedState, loadState, loadStateRef, saveState };

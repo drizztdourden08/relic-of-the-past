@@ -1,5 +1,6 @@
 /* @layer core-game-hooks @kind native */
 #include "game_hooks_internal.h"
+#include "gba_alttp.h"
 #include "sprite_art_slots.h"
 
 // ─── Transition Settled Events ───
@@ -19,6 +20,10 @@ static uint8 s_prev_module = 0xFF;
 static uint8 s_prev_submodule = 0;
 
 void GameHook_ModuleFrameEnd(void) {
+  // Every frame, after logic and before the draw: hold pinned camera bounds for the rooms
+  // whose baked side columns are padding. No-op everywhere else.
+  GbaAlttp_PinCameraBounds();
+  // Also every frame, after the player's own movement has settled: the water current.
   const uint8 mod = main_module_index;
   const uint8 sub = submodule_index;
   const uint8 prev_module = s_prev_module;

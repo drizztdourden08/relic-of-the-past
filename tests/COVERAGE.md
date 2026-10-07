@@ -168,9 +168,14 @@
 | item-sprites/* (drop/hud/receipt decoders, extract-items) | none | none |
 | item-sprites extraction stamp + extracted-set freshness (`extraction-stamp.ts`, `shared/storage/sprites.ts` isStale/extractedFileNames) | tests/storage/sprite-set-freshness.keep.test.ts | covered: the stale/missing/current decision and the rewritten-set URL; the extraction itself is still untested |
 | music/* (compile/decode/extract/serialize) | none | none |
-| compile-*.ts orchestrators + asset-builder.ts | none | none |
+| compile-*.ts orchestrators + asset-builder.ts | tests/asset-extraction/alttp-asset-set.keep.test.ts | partial |
+| sources/gba-alttp/* (second-cartridge extraction) | tests/asset-extraction/gba-alttp-supplement.keep.test.ts | partial |
 
-**~70 source files in this zone, 1 tested. Biggest concrete coverage hole in the repo.**
+**~70 source files in this zone, 3 tested. Still the biggest concrete coverage hole in the repo.**
+
+The two rows above cover the multi-source aggregator (the base stays byte-identical with or
+without a supplement) and the second-cartridge extractor. Neither exercises the base-only
+compile path itself, which remains untested.
 
 ## Feature gating (`shared/features/`)
 

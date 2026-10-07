@@ -20,6 +20,7 @@ import keyboardIcon from '@iconify-icons/lucide/keyboard';
 import vibrateIcon from '@iconify-icons/lucide/vibrate';
 import wrenchIcon from '@iconify-icons/lucide/wrench';
 import phoneIcon from '@iconify-icons/lucide/smartphone';
+import joystickIcon from '@iconify-icons/lucide/joystick';
 import globeIcon from '@iconify-icons/lucide/globe';
 import type { GameSettings } from '@shared/types/settings';
 import type { Section } from '../../compounds/SettingsLayout';
@@ -94,6 +95,8 @@ const PROFILE_HUB_TABS: Record<ProfileHubTab, ProfileHubTabSpec> = {
   haptics: { icon: '📳', navIcon: vibrateIcon, label: 'Haptics', sections: () => HAPTICS_SECTIONS },
   online: { icon: '🌐', navIcon: globeIcon, label: 'Online', sections: () => ONLINE_SECTIONS, onlineOnly: true },
   developer: { icon: '🛠️', navIcon: wrenchIcon, label: 'Contributing', sections: () => DEVELOPER_SECTIONS },
+  // Read-only reference catalogue, not a SettingsLayout screen, so there are no sections to index.
+  gba: { icon: '🕹️', navIcon: joystickIcon, label: 'Game Boy Advance' },
   mobile: { icon: '📱', navIcon: phoneIcon, label: 'Mobile', sections: () => [MOBILE_SECTION], mobileOnly: true },
 };
 
@@ -101,7 +104,7 @@ const PROFILE_HUB_TABS: Record<ProfileHubTab, ProfileHubTabSpec> = {
 const PROFILE_HUB_NAV_GROUPS: { id: string; label: string; tabs: ProfileHubTab[] }[] = [
   { id: 'video', label: 'Video', tabs: ['settings', 'graphics', 'camera', 'window'] },
   { id: 'gameplay', label: 'Gameplay', tabs: ['gameplay', 'audio', 'hud', 'controls'] },
-  { id: 'extras', label: 'Extras', tabs: ['bugfixes', 'haptics', 'online', 'developer', 'mobile'] },
+  { id: 'extras', label: 'Extras', tabs: ['bugfixes', 'haptics', 'online', 'developer', 'gba', 'mobile'] },
 ];
 
 export { isHubTabShown, PROFILE_HUB_NAV_GROUPS, PROFILE_HUB_TABS };

@@ -5,30 +5,55 @@
  * and per-language extraction. Inputs/outputs are plain bytes; Buffers are built here.
  */
 import { loadRomFromBuffer } from '@shared/asset-extraction/rom/rom-loader';
+import { loadGbaAlttpRomFromBuffer } from '@shared/asset-extraction/rom/gba-rom';
 import {
   decodeCredits, decodeEndingCaptions, decodeMenuText,
 } from '@shared/asset-extraction/text/menu-text';
-import { compileResources } from '@shared/asset-extraction/compile-resources';
+import { compileAlttpAssetSet } from '@shared/asset-extraction/compile-alttp-asset-set';
 import { extractLangEntry } from '@shared/asset-extraction/text/build-language-entry';
 import { compileSets } from '@shared/game/language';
 import type { SetBakeInput } from '@shared/game/language';
 import { extractSpriteBuffers, type SpriteDef } from '@shared/asset-extraction/item-sprites/extract-items';
+import type { AssetSourceId } from '@shared/asset-extraction/sources/source-ids';
 
+type SupplementRoms = Partial<Record<AssetSourceId, Uint8Array>>;
 type Req =
-  | { op: 'assets'; romBytes: Uint8Array; languages: SetBakeInput[] }
+  | { op: 'assets'; romBytes: Uint8Array; supplementRoms?: SupplementRoms; languages: SetBakeInput[] }
   | { op: 'language'; romBytes: Uint8Array; code: string }
   | { op: 'sprites'; romBytes: Uint8Array; defs: SpriteDef[] }
   | { op: 'menu-text'; romBytes: Uint8Array };
+
+interface AssetsResult {
+  base: Uint8Array;
+  sidecars: { id: AssetSourceId; bytes: Uint8Array }[];
+  /** Optional sources that failed. The base is still valid; the UI surfaces these. */
+  failures: { id: AssetSourceId; reason: string }[];
+}
 
 const ctx = self as unknown as {
   onmessage: ((e: MessageEvent<Req>) => void) | null;
   postMessage: (msg: unknown) => void;
 };
 
-const runAssets = (romBytes: Uint8Array, languages: SetBakeInput[]): Uint8Array => {
-  const rom = loadRomFromBuffer(Buffer.from(romBytes));
+// The renderer's compile, and the only one that builds the second cartridge's supplement. The
+// Electron main process also rebuilds the base blob after a language or store change; that
+// path writes only the base file, so the supplement beside it survives the rebuild.
+const runAssets = async (
+  romBytes: Uint8Array, supplementRoms: SupplementRoms, languages: SetBakeInput[],
+): Promise<AssetsResult> => {
   const extraLanguages = compileSets(languages, (message) => console.warn(`[assets] ${message}`));
-  return new Uint8Array(compileResources(rom, { extraLanguages }));
+  const gbaBytes = supplementRoms['gba-alttp'];
+  const gbaRom = gbaBytes ? loadGbaAlttpRomFromBuffer(Buffer.from(gbaBytes)) : undefined;
+  const set = await compileAlttpAssetSet({
+    snes: loadRomFromBuffer(Buffer.from(romBytes)),
+    gbaAlttp: gbaRom,
+  }, { extraLanguages });
+
+  return {
+    base: new Uint8Array(set.base),
+    sidecars: set.supplements.flatMap((s) => (s.ok ? [{ id: s.id, bytes: new Uint8Array(s.container) }] : [])),
+    failures: set.supplements.flatMap((s) => (s.ok ? [] : [{ id: s.id, reason: s.reason }])),
+  };
 };
 
 const runLanguage = (romBytes: Uint8Array, code: string) => {
@@ -73,14 +98,14 @@ const runMenuText = (romBytes: Uint8Array) => {
 };
 
 ctx.onmessage = (e) => {
-  try {
+  const respond = async (): Promise<unknown> => {
     const req = e.data;
-    const result = req.op === 'assets' ? runAssets(req.romBytes, req.languages)
-      : req.op === 'language' ? runLanguage(req.romBytes, req.code)
-        : req.op === 'menu-text' ? runMenuText(req.romBytes)
-          : runSprites(req.romBytes, req.defs);
-    ctx.postMessage({ ok: true, result });
-  } catch (err) {
-    ctx.postMessage({ ok: false, error: err instanceof Error ? err.message : String(err) });
-  }
+    if (req.op === 'assets') return runAssets(req.romBytes, req.supplementRoms ?? {}, req.languages);
+    if (req.op === 'language') return runLanguage(req.romBytes, req.code);
+    if (req.op === 'menu-text') return runMenuText(req.romBytes);
+    return runSprites(req.romBytes, req.defs);
+  };
+  respond()
+    .then(result => ctx.postMessage({ ok: true, result }))
+    .catch((err: unknown) => ctx.postMessage({ ok: false, error: err instanceof Error ? err.message : String(err) }));
 };

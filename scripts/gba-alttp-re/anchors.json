@@ -1,0 +1,293 @@
+{
+  "romProfile": {
+    "name": "The Legend of Zelda: A Link to the Past & Four Swords (USA)",
+    "size": 8388608,
+    "md5": "3287ca66e5cc285a9fe3a922051e84c6",
+    "sha256": "f328f8f07d736288a00c80d31cc1630f3aa02aaf20efdcba73d31dae832b5d76",
+    "gameCode": "AZLE",
+    "revision": 0
+  },
+  "anchors": [
+    {
+      "name": "entity_damage_routine",
+      "address": "0x080C2160",
+      "kind": "rom-code",
+      "confidence": "research-lead",
+      "source": "Sideway ALttP GBA reverse-engineering notes"
+    },
+    {
+      "name": "drop_logic",
+      "address": "0x080C6A10",
+      "kind": "rom-code",
+      "confidence": "research-lead",
+      "source": "Sideway ALttP GBA reverse-engineering notes"
+    },
+    {
+      "name": "drop_table",
+      "address": "0x0817217A",
+      "kind": "rom-data",
+      "confidence": "static-confirmed",
+      "source": "Sideway ALttP GBA reverse-engineering notes",
+      "evidence": "56 bytes exactly match the SNES kPrizeItems table at 0x86FA72"
+    },
+    {
+      "name": "link_y_update_store",
+      "address": "0x08097A04",
+      "kind": "rom-code",
+      "confidence": "runtime-confirmed",
+      "source": "local mGBA hardware watchpoint",
+      "evidence": "strh r0, [r2] writes link_y at 0x030038F0; GDB stops at the following instruction 0x08097A08"
+    },
+    {
+      "name": "dungeon_sprite_pointer_table",
+      "address": "0x08228DF0",
+      "kind": "rom-data",
+      "confidence": "runtime-confirmed",
+      "source": "local ROM correlation and mGBA capture",
+      "evidence": "384 pointers; room 0x12 matches SNES exactly and live Palace room 0x88 resolves to 0x0822A7B1"
+    },
+    {
+      "name": "dungeon_screen_chunk_pointer_table",
+      "address": "0x0814FCC0",
+      "kind": "rom-data",
+      "confidence": "research-lead",
+      "source": "local ROM structure analysis and loader disassembly",
+      "evidence": "320 LZ77 streams expanding to 0x2000-byte tilemap-like words; copied through EWRAM into screen-map VRAM regions"
+    },
+    {
+      "name": "dungeon_screen_chunk_selector_table",
+      "address": "0x0814FC30",
+      "kind": "rom-data",
+      "confidence": "runtime-confirmed",
+      "source": "local loader disassembly and Palace state",
+      "evidence": "live selector 0x5B maps to base chunk 0x5B; loader selects base, base+1, base+8, and base+9"
+    },
+    {
+      "name": "dungeon_screen_chunk_loader",
+      "address": "0x08076D10",
+      "kind": "rom-code",
+      "confidence": "static-confirmed",
+      "source": "local Thumb disassembly",
+      "evidence": "decompresses selected chunks to EWRAM scratch banks; exact rendering role remains under investigation"
+    },
+    {
+      "name": "dungeon_screen_chunk_selector_state",
+      "address": "0x03002BF6",
+      "kind": "iwram",
+      "confidence": "runtime-confirmed",
+      "source": "local Palace debugger capture",
+      "evidence": "live value 0x5B while Palace room 0x88 is active"
+    },
+    {
+      "name": "dungeon_room_header_pointer_table",
+      "address": "0x08164020",
+      "kind": "rom-data",
+      "confidence": "static-confirmed",
+      "source": "local disassembly of the room-header loader",
+      "evidence": "320 pointers to 14-byte records decoded into the same semantic fields as the SNES room header"
+    },
+    {
+      "name": "dungeon_room_layer_1_pointer_table",
+      "address": "0x081618D8",
+      "kind": "rom-data",
+      "confidence": "runtime-confirmed",
+      "source": "local loader disassembly and Palace VRAM correlation",
+      "evidence": "room-indexed LZ77 layers; Palace room 0x88 expands to 0x2000 bytes matching VRAM at 0x0600C000"
+    },
+    {
+      "name": "dungeon_room_layer_2_pointer_table",
+      "address": "0x08161D98",
+      "kind": "rom-data",
+      "confidence": "runtime-confirmed",
+      "source": "local loader disassembly and Palace VRAM correlation",
+      "evidence": "room-indexed LZ77 layers; Palace room 0x88 expands to 0x2000 bytes matching VRAM at 0x0600A000"
+    },
+    {
+      "name": "dungeon_room_layer_3_pointer_table",
+      "address": "0x08162258",
+      "kind": "rom-data",
+      "confidence": "runtime-confirmed",
+      "source": "local loader disassembly and Palace VRAM correlation",
+      "evidence": "room-indexed LZ77 layers; Palace room 0x88 expands to 0x2000 bytes matching VRAM at 0x0600E000"
+    },
+    {
+      "name": "dungeon_room_layer_loader",
+      "address": "0x0807FF10",
+      "kind": "rom-code",
+      "confidence": "static-confirmed",
+      "source": "local Thumb disassembly",
+      "evidence": "loads the room header and decompresses three room-indexed layers before object-state processing"
+    },
+    {
+      "name": "dungeon_room_header_loader",
+      "address": "0x08080D00",
+      "kind": "rom-code",
+      "confidence": "static-confirmed",
+      "source": "local Thumb disassembly",
+      "evidence": "indexes 0x08164020 by current room and decodes all 14 bytes into room state"
+    },
+    {
+      "name": "dungeon_secret_pointer_table",
+      "address": "0x082264C8",
+      "kind": "rom-data",
+      "confidence": "static-confirmed",
+      "source": "local ROM correlation against the SNES secret table",
+      "evidence": "320 pointers to SNES-format 3-byte secret records; 316 complete lists match SNES byte-for-byte"
+    },
+    {
+      "name": "dungeon_sprite_loader",
+      "address": "0x080CB5A0",
+      "kind": "rom-code",
+      "confidence": "runtime-confirmed",
+      "source": "local disassembly and live-state correlation",
+      "evidence": "indexes 0x08228DF0 by current room and iterates 3-byte records to 0xFF"
+    },
+    {
+      "name": "dungeon_sprite_record_loader",
+      "address": "0x080CB638",
+      "kind": "rom-code",
+      "confidence": "runtime-confirmed",
+      "source": "local disassembly and zelda3 semantic comparison"
+    },
+    {
+      "name": "text_data_block",
+      "address": "0x08180CE8",
+      "kind": "rom-data",
+      "confidence": "research-lead",
+      "source": "hansenhahn/zelda-alttp text routine notes"
+    },
+    {
+      "name": "text_pointer_table",
+      "address": "0x08180D08",
+      "kind": "rom-data",
+      "confidence": "research-lead",
+      "source": "hansenhahn/zelda-alttp text routine notes"
+    },
+    {
+      "name": "text_base",
+      "address": "0x08181448",
+      "kind": "rom-data",
+      "confidence": "research-lead",
+      "source": "hansenhahn/zelda-alttp text routine notes"
+    },
+    {
+      "name": "entity_coords_a",
+      "address": "0x03003102",
+      "kind": "iwram",
+      "confidence": "research-lead",
+      "source": "Sideway ALttP GBA reverse-engineering notes"
+    },
+    {
+      "name": "entity_type_array",
+      "address": "0x03003222",
+      "kind": "iwram",
+      "confidence": "runtime-confirmed",
+      "source": "Sideway trace and local Palace capture",
+      "evidence": "live room 0x88 types match serialized list at 0x0822A7B1"
+    },
+    {
+      "name": "entity_coords_b",
+      "address": "0x03003112",
+      "kind": "iwram",
+      "confidence": "research-lead",
+      "source": "Sideway ALttP GBA reverse-engineering notes"
+    },
+    {
+      "name": "entity_coords_c",
+      "address": "0x03003122",
+      "kind": "iwram",
+      "confidence": "research-lead",
+      "source": "Sideway ALttP GBA reverse-engineering notes"
+    },
+    {
+      "name": "entity_coords_d",
+      "address": "0x03003132",
+      "kind": "iwram",
+      "confidence": "research-lead",
+      "source": "Sideway ALttP GBA reverse-engineering notes"
+    },
+    {
+      "name": "riddle_quest_state",
+      "address": "0x03003182",
+      "kind": "iwram",
+      "confidence": "research-lead",
+      "source": "community RAM research"
+    },
+    {
+      "name": "palace_access_state",
+      "address": "0x030031D8",
+      "kind": "iwram",
+      "confidence": "research-lead",
+      "source": "community RAM research"
+    },
+    {
+      "name": "sword_piece_state",
+      "address": "0x030038E3",
+      "kind": "iwram",
+      "confidence": "research-lead",
+      "source": "community RAM research"
+    },
+    {
+      "name": "link_y",
+      "address": "0x030038F0",
+      "kind": "iwram",
+      "confidence": "runtime-confirmed",
+      "source": "Sideway notes and local mGBA watchpoint",
+      "evidence": "changed from 0x11B8 to 0x11B6 on upward movement; write at 0x08097A04"
+    },
+    {
+      "name": "dungeon_room_index",
+      "address": "0x03002D66",
+      "kind": "iwram",
+      "confidence": "runtime-confirmed",
+      "source": "local dungeon sprite-loader disassembly",
+      "evidence": "live value 0x0088 indexes 0x08228DF0 and reproduces active Palace entities"
+    },
+    {
+      "name": "link_x",
+      "address": "0x030038F4",
+      "kind": "iwram",
+      "confidence": "runtime-confirmed",
+      "source": "Sideway notes and local mGBA observation",
+      "evidence": "live coordinate changed during controlled movement in Palace of the Four Sword"
+    },
+    {
+      "name": "text_decode_position",
+      "address": "0x03003D06",
+      "kind": "iwram",
+      "confidence": "research-lead",
+      "source": "hansenhahn/zelda-alttp text routine notes"
+    },
+    {
+      "name": "text_relative_pointer",
+      "address": "0x03003D18",
+      "kind": "iwram",
+      "confidence": "research-lead",
+      "source": "hansenhahn/zelda-alttp text routine notes"
+    },
+    {
+      "name": "text_data_block_pointer",
+      "address": "0x03003D28",
+      "kind": "iwram",
+      "confidence": "runtime-confirmed",
+      "source": "hansenhahn notes and local Palace IWRAM capture",
+      "evidence": "live value 0x08180CE8"
+    },
+    {
+      "name": "text_pointer_table_pointer",
+      "address": "0x03003D2C",
+      "kind": "iwram",
+      "confidence": "runtime-confirmed",
+      "source": "hansenhahn notes and local Palace IWRAM capture",
+      "evidence": "live value 0x08180D08"
+    },
+    {
+      "name": "text_base_pointer",
+      "address": "0x03003D30",
+      "kind": "iwram",
+      "confidence": "runtime-confirmed",
+      "source": "hansenhahn notes and local Palace IWRAM capture",
+      "evidence": "live value 0x08181448"
+    }
+  ]
+}

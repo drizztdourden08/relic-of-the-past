@@ -1,5 +1,6 @@
 /* @layer core-game-hooks @kind native */
 #include "game_hooks_internal.h"
+#include "gba_alttp.h"
 #include "src/misc.h"
 #include "src/dungeon.h"
 
@@ -119,7 +120,7 @@ static void TriggerCheckImpl(uint16 room_id, uint8 chest_index, uint8 item_id, b
   bool here = dungeon_room_index == room_id && (!console || player_is_indoors);
   uint16 already = here
       ? (uint16)(dung_savegame_state_bits & mask)
-      : (uint16)(save_dung_info[room_id] & (mask >> 4));
+      : (uint16)((*SaveDungInfoFor(room_id)) & (mask >> 4));
   if (already) {
     printf("[GameHook] TriggerCheck: room=0x%03x chest=%d already collected, no re-grant\n",
            room_id, chest_index);
@@ -131,9 +132,9 @@ static void TriggerCheckImpl(uint16 room_id, uint8 chest_index, uint8 item_id, b
     printf("[GameHook] TriggerCheck: room=0x%03x chest=%d item=0x%02x state_bits=0x%04x (current room)\n",
            room_id, chest_index, item_id, dung_savegame_state_bits);
   } else {
-    save_dung_info[room_id] |= (kChestOpenMasksHook[chest_index] >> 4);
+    (*SaveDungInfoFor(room_id)) |= (kChestOpenMasksHook[chest_index] >> 4);
     printf("[GameHook] TriggerCheck: room=0x%03x chest=%d item=0x%02x flags=0x%04x (remote room)\n",
-           room_id, chest_index, item_id, save_dung_info[room_id]);
+           room_id, chest_index, item_id, (*SaveDungInfoFor(room_id)));
   }
 
   TryVisualChestOpen(room_id, chest_index, console);
@@ -224,7 +225,7 @@ static void TriggerNpcCheckImpl(uint8 flag_type, uint8 flag_mask, uint8 item_id,
 
   if (sprite_type_id == 0x28) {
     uint16 room = dungeon_room_index;
-    save_dung_info[room] |= 0x40;
+    (*SaveDungInfoFor(room)) |= 0x40;
     printf("[GameHook] Room flag: save_dung_info[0x%03x] |= 0x40\n", room);
   }
 }

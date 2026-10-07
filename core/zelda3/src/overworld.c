@@ -12,6 +12,7 @@
 #include "player_oam.h"
 #include "snes/snes_regs.h"
 #include "assets.h"
+#include "gba_alttp.h"
 
 const uint16 kOverworld_OffsetBaseX[64] = {
   0,     0, 0x400, 0x600, 0x600, 0xa00, 0xa00, 0xe00,
@@ -257,11 +258,13 @@ bool LookupInOwEntranceTab(uint16 r0, uint16 r2) {
     if (r0 == kOverworld_Entrance_Tab0[i] && r2 == kOverworld_Entrance_Tab1[i])
       return true;
   }
-  return false;
+  return GbaAlttp_IsExtraEntranceTilePair(r0, r2);
 }
 
 int LookupInOwEntranceTab2(uint16 pos) {
-  for (int i = 128; i >= 0; i--) {
+  // Size-derived rather than a literal 128: the port appends entrance records, and a
+  // fixed bound would never see them.
+  for (int i = (int)kOverworld_Entrance_Id_SIZE - 1; i >= 0; i--) {
     if (pos == kOverworld_Entrance_Pos[i] && overworld_area_index == kOverworld_Entrance_Area[i])
       return i;
   }
@@ -1792,8 +1795,8 @@ void LoadOverworldFromDungeon() {  // 82e4a3
     LoadCachedEntranceProperties();
   } else {
 
-    int k = 79;
-    do k--; while (kExitDataRooms[k] != dungeon_room_index);
+    int k = (int)(kExitDataRooms_SIZE / sizeof(uint16));
+    do k--; while (k > 0 && kExitDataRooms[k] != dungeon_room_index);
     BG1VOFS_copy2 = BG2VOFS_copy2 = BG1VOFS_copy = BG2VOFS_copy = kExitData_ScrollY[k];
     BG1HOFS_copy2 = BG2HOFS_copy2 = BG1HOFS_copy = BG2HOFS_copy = kExitData_ScrollX[k];
     link_y_coord = kExitData_YCoord[k];
@@ -2108,6 +2111,7 @@ void Overworld_HandleOverlaysAndBombDoors() {  // 82ef29
     dung_bg2[pos + 0] = 0xdb4;
     dung_bg2[pos + 1] = 0xdb5;
   }
+  GbaAlttp_ApplyPyramidEntrance();
 }
 
 void TriggerAndFinishMapLoadStripe_Y(int n) {  // 82ef7a
@@ -2403,7 +2407,7 @@ uint16 *BufferAndBuildMap16Stripes_X(uint16 *dst) {  // 82f3b9
     dst++;
     for (int j = 0; j < 16; j++) {
       int k = *tmp++;
-      assert(k < 0xea8);
+      assert(k < (int)(kMap16ToMap8_SIZE / (4 * sizeof(uint16))));
       const uint16 *s = map8 + k * 4;
       dst[0] = s[0];
       dst[33] = s[1];
@@ -2434,7 +2438,7 @@ uint16 *BufferAndBuildMap16Stripes_Y(uint16 *dst) {  // 82f482
     *dst++ = r0;
     for (int j = 0; j < 16; j++) {
       int k = *tmp++;
-      assert(k < 0xea8);
+      assert(k < (int)(kMap16ToMap8_SIZE / (4 * sizeof(uint16))));
       const uint16 *s = map8 + k * 4;
       dst[0] = s[0];
       dst[32] = s[2];

@@ -1,0 +1,31 @@
+/* @layer renderer-components @kind style */
+.gba-difference-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.gba-difference-row__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+
+.gba-difference-row__label {
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  color: var(--c-text);
+}
+
+.gba-difference-row__detail {
+  font-size: var(--text-sm);
+  color: var(--c-text-muted);
+  margin: 0;
+}
+
+.gba-difference-row__badge {
+  flex-shrink: 0;
+  text-transform: capitalize;
+}

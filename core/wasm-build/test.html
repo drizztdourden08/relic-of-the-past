@@ -35,6 +35,18 @@
       font-size: 12px;
       color: #888;
     }
+    #reload-state {
+      display: none;
+      margin-top: 12px;
+      padding: 8px 14px;
+      border: 1px solid #4a9;
+      border-radius: 4px;
+      background: #102d32;
+      color: #bfe8d8;
+      font: inherit;
+      cursor: pointer;
+    }
+    #reload-state:hover { background: #174047; }
   </style>
 </head>
 <body>
@@ -49,17 +61,20 @@
 
   <canvas id="canvas" tabindex="0" style="display:none;"></canvas>
 
+  <button id="reload-state" type="button">Reload test state</button>
+
   <div class="controls" id="controls" style="display:none;">
     <p>Arrow keys = D-pad | Z = Y | X = B | S = A | A = X | Enter = Start | RShift = Select | D = L | C = R</p>
   </div>
 
-  <script src="output/zelda3.js"></script>
+  <script src="output/zelda3.js?build=palace-camera-4"></script>
   <script>
     const dropZone = document.getElementById('drop-zone');
     const fileInput = document.getElementById('file-input');
     const status = document.getElementById('status');
     const canvas = document.getElementById('canvas');
     const controls = document.getElementById('controls');
+    const reloadState = document.getElementById('reload-state');
 
     dropZone.addEventListener('click', () => fileInput.click());
     dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('active'); });
@@ -73,36 +88,230 @@
       if (e.target.files.length > 0) loadAssetFile(e.target.files[0]);
     });
 
+    if (new URLSearchParams(location.search).has('auto')) {
+      const statePath = new URLSearchParams(location.search).get('state');
+      const assetPath = new URLSearchParams(location.search).get('assets') || 'assets/zelda3_assets.dat';
+      Promise.all([
+        fetch(assetPath).then((response) => {
+          if (!response.ok) throw new Error(`Asset request failed: ${response.status}`);
+          return response.arrayBuffer();
+        }),
+        statePath ? fetch(statePath).then((response) => {
+          if (!response.ok) throw new Error(`State request failed: ${response.status}`);
+          return response.arrayBuffer();
+        }) : null,
+      ])
+        .then(([assets, state]) => startGame(new Uint8Array(assets), state && new Uint8Array(state)))
+        .catch((error) => { status.textContent = `Error: ${error.message}`; });
+    }
+
     function loadAssetFile(file) {
       status.textContent = 'Loading ' + file.name + '...';
       const reader = new FileReader();
       reader.onload = (e) => {
         const data = new Uint8Array(e.target.result);
-        startGame(data);
+        startGame(data, null);
       };
       reader.onerror = () => { status.textContent = 'Failed to read file'; };
       reader.readAsArrayBuffer(file);
     }
 
-    function startGame(assetData) {
+    function stripStateStamp(bytes) {
+      if (!bytes || bytes.length < 12) return bytes;
+      const magic = new TextDecoder().decode(bytes.subarray(bytes.length - 8));
+      if (magic !== 'ROTPMETA') return bytes;
+      const jsonLength = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength)
+        .getUint32(bytes.length - 12, true);
+      return jsonLength + 12 <= bytes.length ? bytes.subarray(0, bytes.length - jsonLength - 12) : bytes;
+    }
+
+    function startGame(assetData, stateData) {
       status.textContent = 'Initializing WASM...';
       dropZone.classList.add('hidden');
 
       canvas.style.display = 'block';
       controls.style.display = 'block';
 
+      let wasmModule;
       Zelda3({
         canvas: canvas,
+        locateFile: (path) => path.endsWith('.wasm') ? `output/${path}?build=palace-camera-4` : path,
         preRun: [(module) => {
+          wasmModule = module;
+          window.wasmModule = module;
           // Write the assets file to the virtual filesystem
           module.FS.writeFile('/zelda3_assets.dat', assetData);
           // Create saves directory
           module.FS.mkdir('/saves');
+          if (stateData) module.FS.writeFile('/saves/save99.sav', stripStateStamp(stateData));
         }],
         print: (text) => console.log('[zelda3]', text),
         printErr: (text) => console.error('[zelda3]', text),
         onRuntimeInitialized: () => {
+          window.wasmDebugCall = (name, ...args) =>
+            wasmModule.ccall(name, 'number', args.map(() => 'number'), args);
           status.textContent = 'Running!';
+          if (stateData) {
+            const resetTestState = () => {
+              wasmModule.ccall('WasmLoadState', null, ['number'], [99]);
+              wasmModule.ccall('WasmDebugResetGbaPalace', null, [], []);
+              const shiftX = Number(new URLSearchParams(location.search).get('shiftx')) || 0;
+              const shiftY = Number(new URLSearchParams(location.search).get('shifty')) || 0;
+              if (shiftX || shiftY)
+                wasmModule.ccall('WasmDebugShiftOverworld', null,
+                  ['number', 'number'], [shiftX, shiftY]);
+              wasmModule.ccall('WasmSetInput', null, ['number'], [0]);
+              wasmModule.ccall('WasmSetInputMode', null, ['number'], [0]);
+              canvas.focus();
+            };
+            reloadState.style.display = 'block';
+            reloadState.addEventListener('click', resetTestState);
+            setTimeout(() => {
+              resetTestState();
+              const mapDebug = document.createElement('pre');
+              mapDebug.id = 'map-debug';
+              mapDebug.hidden = true;
+              mapDebug.textContent = JSON.stringify({
+                baseX: wasmModule.ccall('WasmDebugGetOverworldBaseX', 'number', [], []),
+                baseY: wasmModule.ccall('WasmDebugGetOverworldBaseY', 'number', [], []),
+                cells: Array.from({ length: 4096 }, (_, index) =>
+                  wasmModule.ccall('WasmDebugGetOverworldMap16Cell', 'number', ['number'], [index])),
+              });
+              document.body.appendChild(mapDebug);
+              const runtimeDebug = document.createElement('pre');
+              runtimeDebug.id = 'runtime-debug';
+              runtimeDebug.hidden = true;
+              document.body.appendChild(runtimeDebug);
+              const runtimeNames = [
+                'indoors', 'room', 'linkX', 'linkY', 'scrollX', 'scrollY',
+                'cameraX', 'cameraY', 'boundX0', 'boundX1', 'boundY0', 'boundY1',
+                'quadrantX', 'quadrantY', 'fullsizeX', 'fullsizeY', 'doorway',
+                'facing', 'tileBelow', 'entranceValue', 'module', 'submodule',
+                'palaceActive', 'layoutQuadrant', 'collision',
+                'lowerLevel', 'lowerLevelMirror', 'oamPriority',
+                'walkThroughWalls',
+                'fixedHorizontalCamera',
+              ];
+              const updateRuntimeDebug = () => {
+                runtimeDebug.textContent = JSON.stringify({
+                  ...Object.fromEntries(runtimeNames.map((name, index) => [
+                    name,
+                    wasmModule.ccall('WasmDebugGetRuntimeState', 'number', ['number'], [index]),
+                  ])),
+                  inputMode: wasmModule.ccall('WasmDebugGetInputMode', 'number', [], []),
+                });
+              };
+              updateRuntimeDebug();
+              const collisionDebug = document.createElement('pre');
+              collisionDebug.id = 'collision-debug';
+              collisionDebug.hidden = true;
+              const updateCollisionDebug = () => {
+                collisionDebug.textContent = JSON.stringify(Array.from({ length: 0x2000 }, (_, index) =>
+                  wasmModule.ccall('WasmDebugGetDungeonAttr', 'number', ['number'], [index])));
+              };
+              updateCollisionDebug();
+              setTimeout(updateCollisionDebug, 1800);
+              document.body.appendChild(collisionDebug);
+              const move = new URLSearchParams(location.search).get('move');
+              const moveBits = { up: 4, down: 5, left: 6, right: 7 };
+              const route = new URLSearchParams(location.search).get('route');
+              const moves = route
+                ? route.split(',').map((step) => {
+                    const [direction, milliseconds] = step.split(':');
+                    return [direction, Number(milliseconds) || 500];
+                  })
+                : move in moveBits
+                  ? [[move, Number(new URLSearchParams(location.search).get('duration')) || 500]]
+                  : [];
+              if (moves.length) {
+                wasmModule.ccall('WasmSetInputMode', null, ['number'], [1]);
+                let elapsed = 0;
+                for (const [direction, duration] of moves) {
+                  setTimeout(() =>
+                    wasmModule.ccall('WasmSetInput', null, ['number'],
+                      [direction in moveBits ? 1 << moveBits[direction] : 0]), elapsed);
+                  elapsed += duration;
+                }
+                setTimeout(() => {
+                  wasmModule.ccall('WasmSetInput', null, ['number'], [0]);
+                  wasmModule.ccall('WasmSetInputMode', null, ['number'], [0]);
+                  canvas.focus();
+                }, elapsed);
+              }
+              const requestedRoundTrips = Number(new URLSearchParams(location.search).get('roundtrips')) || 0;
+              if (requestedRoundTrips > 0) {
+                const roundTripDebug = document.createElement('pre');
+                roundTripDebug.id = 'roundtrip-debug';
+                roundTripDebug.hidden = true;
+                document.body.appendChild(roundTripDebug);
+                wasmModule.ccall('WasmSetInputMode', null, ['number'], [1]);
+                let completed = 0;
+                const returns = [];
+                let phase = 'enter';
+                const timer = setInterval(() => {
+                  const indoors = wasmModule.ccall('WasmDebugGetRuntimeState', 'number', ['number'], [0]);
+                  const module = wasmModule.ccall('WasmDebugGetRuntimeState', 'number', ['number'], [20]);
+                  const submodule = wasmModule.ccall('WasmDebugGetRuntimeState', 'number', ['number'], [21]);
+                  let input = 0;
+                  let releaseInput = false;
+                  if (phase === 'enter') {
+                    if (indoors) phase = 'exit';
+                    else if (module === 9) input = 1 << moveBits.up;
+                  } else if (indoors) {
+                    if (module === 7 && submodule === 0) input = 1 << moveBits.down;
+                  } else {
+                    completed++;
+                    returns.push({
+                      x: wasmModule.ccall('WasmDebugGetRuntimeState', 'number', ['number'], [2]),
+                      y: wasmModule.ccall('WasmDebugGetRuntimeState', 'number', ['number'], [3]),
+                    });
+                    if (completed >= requestedRoundTrips) {
+                      clearInterval(timer);
+                      roundTripDebug.textContent = JSON.stringify({ completed, returns });
+                      releaseInput = true;
+                    } else {
+                      phase = 'enter';
+                    }
+                  }
+                  wasmModule.ccall('WasmSetInput', null, ['number'], [input]);
+                  if (releaseInput) {
+                    wasmModule.ccall('WasmSetInputMode', null, ['number'], [0]);
+                    canvas.focus();
+                  }
+                }, 16);
+              }
+              setInterval(() => {
+                updateRuntimeDebug();
+                const screen = wasmModule.ccall('WasmDebugGetOverworldScreen', 'number', [], []);
+                const x = wasmModule.ccall('WasmDebugGetLinkX', 'number', [], []);
+                const y = wasmModule.ccall('WasmDebugGetLinkY', 'number', [], []);
+                status.textContent = `Electron state - Screen 0x${screen.toString(16)} - Link ${x.toString(16)},${y.toString(16)}`;
+              }, 100);
+              canvas.focus();
+            }, 100);
+          }
+          if (new URLSearchParams(location.search).has('palace')) {
+            setTimeout(() => {
+              const entered = wasmModule.ccall('WasmDebugEnterGbaPalace', 'number', [], []);
+              status.textContent = entered ? 'Running Palace room 0x88' : 'Palace assets unavailable';
+              if (entered) setInterval(() => {
+                const room = wasmModule.ccall('WasmDebugGetDungeonRoom', 'number', [], []);
+                const x = wasmModule.ccall('WasmDebugGetLinkX', 'number', [], []);
+                const y = wasmModule.ccall('WasmDebugGetLinkY', 'number', [], []);
+                status.textContent = `Running Palace room 0x${room.toString(16)} - Link ${x.toString(16)},${y.toString(16)}`;
+              }, 100);
+              if (entered && new URLSearchParams(location.search).has('walk')) {
+                const duration = Number(new URLSearchParams(location.search).get('walk')) || 500;
+                wasmModule.ccall('WasmSetInputMode', null, ['number'], [1]);
+                wasmModule.ccall('WasmSetInput', null, ['number'], [1 << 4]);
+                setTimeout(() => {
+                  wasmModule.ccall('WasmSetInput', null, ['number'], [0]);
+                  wasmModule.ccall('WasmSetInputMode', null, ['number'], [0]);
+                  canvas.focus();
+                }, duration);
+              }
+            }, 100);
+          }
           canvas.focus();
         },
       }).catch((err) => {

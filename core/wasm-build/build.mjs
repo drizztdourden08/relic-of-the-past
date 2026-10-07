@@ -68,6 +68,8 @@ const hookSrcs = [
   'room_clear_reach', 'sprite_room_reach', 'world_scroll_carry',
   'cheat_lighting', 'cheat_wallet', 'cheat_unblock', 'cheat_check_mark', 'cheat_inventory', 'cheat_capacity', 'dev_frame_dump',
   'title_override', 'title_mirror', 'title_skip',
+  'gba_alttp', 'gba_dungeon_room', 'gba_dungeon_gfx', 'gba_pyramid_entrance', 'gba_save_bank', 'gba_camera_bounds', 'gba_baked_room',
+  'gba_torches', 'gba_dive_tint', 'gba_water_room',
   'ap_received_index', 'ap_room_hash', 'foreign_item', 'foreign_icon', 'foreign_icon_bank', 'death_link',
 ].map((f) => h(`${f}.c`));
 
@@ -75,6 +77,7 @@ const hookSrcs = [
 const emMain = [
   'emscripten_main.c', 'emscripten_sdl.c', 'emscripten_api.c', 'emscripten_io.c',
   'emscripten_pacing.c', 'emscripten_sound_preview.c', 'emscripten_volumes.c',
+  'emscripten_debug_gba.c', 'object_probe.c', 'room_probe.c',
 ].map((f) => join(here, f));
 
 const cflags = [

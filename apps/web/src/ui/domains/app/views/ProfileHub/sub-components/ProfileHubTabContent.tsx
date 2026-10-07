@@ -19,6 +19,7 @@ import { ControlsSettings } from './ControlsSettings';
 import { HapticsSettings } from './HapticsSettings';
 import { DeveloperSettings } from './DeveloperSettings';
 import { MobileSettings } from './MobileSettings';
+import { GbaSettings } from './GbaSettings';
 import { OnlineSettings } from './OnlineSettings';
 import { PROFILE_HUB_TABS } from '../ProfileHub.constants';
 import type { ProfileHubProps, ProfileHubTab } from '../ProfileHub.type';
@@ -65,6 +66,13 @@ const ProfileHubTabContent = (props: ProfileHubTabContentProps) => {
     case 'online': return <OnlineSettings profile={profile} settings={settings} onChange={onChange} />;
     case 'developer': return <DeveloperSettings settings={settings} onChange={onChange} />;
     case 'mobile': return <MobileSettings settings={settings} onChange={onChange} />;
+    case 'gba':
+      // A reference page with its own layout, not a SettingsLayout, so the page draws its header.
+      return (
+        <SettingsPage icon={<IconifyIcon icon={PROFILE_HUB_TABS.gba.navIcon} />} title={PROFILE_HUB_TABS.gba.label} backdrop={page?.backdrop}>
+          <GbaSettings settings={settings} onChange={onChange} />
+        </SettingsPage>
+      );
     case 'controls':
       // The binding screen lays out and scrolls its own columns, so the page only draws its header.
       return (

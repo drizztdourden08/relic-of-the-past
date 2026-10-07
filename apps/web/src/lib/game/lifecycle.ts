@@ -1,6 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 
 import { log } from '../log-bus';
+import { reportWasmCrash } from './report-wasm-crash';
 import * as savesStore from '../storage/saves-store';
 import type { EmscriptenModule } from './types';
 import { writeBootFiles } from './boot-files';
@@ -154,16 +155,7 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
     if (!armed || crashed) return;
     crashed = true;
     setState({ status: 'error', error: `WASM crashed: ${err.message}` });
-    log.error(`WASM crashed: ${err.message}`);
-    if (err.stack) {
-      for (const line of err.stack.split('\n').slice(1, 10)) {
-        const trimmed = line.trim();
-        if (trimmed) log.error(`  ${trimmed}`);
-      }
-    }
-    if (event.filename) {
-      log.error(`  at ${event.filename}:${event.lineno}:${event.colno}`);
-    }
+    reportWasmCrash(err, event);
   };
 
   try {

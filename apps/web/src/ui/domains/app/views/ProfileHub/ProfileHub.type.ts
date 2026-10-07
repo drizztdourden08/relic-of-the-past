@@ -16,6 +16,7 @@ type ProfileHubTab =
   | 'haptics'
   | 'online' // Archipelago profiles only
   | 'developer'
+  | 'gba'
   | 'mobile';
 
 interface ProfileHubProps {

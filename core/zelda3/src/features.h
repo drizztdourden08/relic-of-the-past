@@ -9,6 +9,11 @@ enum {
   kRam_APUI00 = 0x648,
   kRam_CrystalRotateCounter = 0x649,
   kRam_BugsFixed = 0x64a,
+  // How many frames the player stays under while diving. One byte of the same unused block as its
+  // neighbours: no symbol for it in variables.h, no reader anywhere in the game code, and it sits in
+  // the gap between BugsFixed and the first gate word. Recorded WRAM like the rest, so a save state
+  // carries a dive in progress without the snapshot changing size.
+  kRam_DiveTimer = 0x64b,
   kRam_Features0 = 0x64c,
   // Gates overflow features0 (>32 bits), so they continue in further recorded WRAM words taken from the
   // free 0x659-0x66f gap (msu/hud end at 0x658, next named var is 0x670). Recorded for determinism.
@@ -117,6 +122,11 @@ enum {
   // The host draws the title screen itself and the native one is kept off the picture
   // (core/game-hooks/title_override.c). Render-only, but a divergence, so Vanilla Safe strips it.
   kFeatures2_TitleOverride      = 1u << 26,
+  // Press B while swimming to duck under the surface for a moment, as the handheld port allows.
+  // While under, sprites cannot touch the player at all: no damage, no recoil, no shove. That is
+  // what makes the second cartridge's water room crossable the way it was designed. Bits 27 and 28
+  // are taken by the modern controls work.
+  kFeatures2_AllowDiving        = 1u << 29,
 };
 
 // Enum values for kRam_Features3 — cheats and other C-side hook divergences. Unlike kFeatures0 (opt-in

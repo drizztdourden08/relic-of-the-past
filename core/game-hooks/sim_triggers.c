@@ -1,5 +1,6 @@
 /* @layer core-game-hooks @kind native */
 #include "game_hooks_internal.h"
+#include "gba_alttp.h"
 
 
 // Simulator trigger writes: door unlock/close and virtual enemy kills. These
@@ -25,7 +26,7 @@ void WasmSimUnlockDoor(int room_id, int door_index, int consume) {
   if (!SimTrigRoomValid(room_id) || door_index < 0 || door_index > 3) return;
   // Door-open bits are REVERSE-ordered: slot 0 = 0x8000 (kUpperBitmasks).
   uint16 bit = (uint16)(0x8000 >> door_index);
-  save_dung_info[room_id] |= bit;
+  (*SaveDungInfoFor(room_id)) |= bit;
   if (SimTrigIsCurrentRoom(room_id)) dung_door_opened |= bit;
   if (consume && link_num_keys > 0 && link_num_keys != 0xff) link_num_keys -= 1;
 }
@@ -39,7 +40,7 @@ void WasmSimCloseDoor(int room_id, int door_index) {
   if (!SimMutateGate()) return;
   if (!SimTrigRoomValid(room_id) || door_index < 0 || door_index > 3) return;
   uint16 bit = (uint16)(0x8000 >> door_index);
-  save_dung_info[room_id] &= ~bit;
+  (*SaveDungInfoFor(room_id)) &= ~bit;
   if (SimTrigIsCurrentRoom(room_id)) dung_door_opened &= ~bit;
 }
 
@@ -113,7 +114,7 @@ int WasmGetRoomCellLocks(int room_id) {
     off += 2;
   }
 
-  uint16 sram = save_dung_info[room_id];
+  uint16 sram = (*SaveDungInfoFor(room_id));
   uint8 count = 0;
   for (int i = 0; i < n; i++) {
     if (slots[i] > 5) continue;
@@ -138,7 +139,7 @@ EMSCRIPTEN_KEEPALIVE
 void WasmSimOpenCellLock(int room_id, int slot) {
   if (!SimMutateGate()) return;
   if (!SimTrigRoomValid(room_id) || slot < 0 || slot > 5) return;
-  save_dung_info[room_id] |= (uint16)(kSimChestOpenMasks[slot] >> 4);
+  (*SaveDungInfoFor(room_id)) |= (uint16)(kSimChestOpenMasks[slot] >> 4);
   if (SimTrigIsCurrentRoom(room_id)) dung_savegame_state_bits |= kSimChestOpenMasks[slot];
 }
 
@@ -174,7 +175,7 @@ EMSCRIPTEN_KEEPALIVE
 void WasmSimKillDrop(int room_id, int item_id) {
   if (!SimMutateGate()) return;
   if (!SimTrigRoomValid(room_id)) return;
-  save_dung_info[room_id] |= (item_id == 0xff) ? 0x800 : 0x400;
+  (*SaveDungInfoFor(room_id)) |= (item_id == 0xff) ? 0x800 : 0x400;
   if (item_id != 0xff) {
     item_receipt_method = 0;
     SimCountReceive(3, (uint8)item_id);

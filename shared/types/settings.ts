@@ -139,6 +139,9 @@ interface GameSettings extends OnlineNoticeSettings, QuietReceiptSettings {
   // A new file is named Link with the naming strip parked on End. Non-vanilla.
   prefillFileName: boolean;
   turnWhileDashing: boolean;
+  // Press B while swimming to duck under for a moment, as the handheld port allows. Non-vanilla.
+  // Forced on by the extra dungeon, whose water room is built around it.
+  allowDiving: boolean;
   mirrorToDarkworld: boolean;
   collectItemsWithSword: boolean;
   breakPotsWithSword: boolean;
@@ -287,6 +290,12 @@ interface GameSettings extends OnlineNoticeSettings, QuietReceiptSettings {
   // When cheats are enabled, keep their effects constrained to changes that stay comparable to a
   // vanilla run (the VanillaSafe bit in kRam_Features3). Off by default alongside cheatsEnabled.
   vanillaSafe: boolean;
+
+  // ─── Second cartridge ───
+  // Whether the optional extra dungeon carried by the second cartridge is offered. Separate from
+  // whether its data is present: owning the cartridge and leaving this off must give an untouched
+  // overworld. Off by default, so a profile that never sets it behaves exactly like the base game.
+  extraDungeon: boolean;
 
   // ─── Developer ───
   // Master gate for developer-only instrumentation (transition-settled events and any future dev-only

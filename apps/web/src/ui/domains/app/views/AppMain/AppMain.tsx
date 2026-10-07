@@ -1,5 +1,6 @@
 /* @layer renderer-app @kind component */
 import { useEffect, useMemo } from 'react';
+import { subscribeGameState } from '@app/lib/game/wasm-bridge';
 import { Box, Image } from '@ds/primitives';
 import { WidgetManager, useWidgetLayout } from '@ds/composites/Widget';
 import { WIDGET_CONTENT, WIDGET_SETTINGS_CONTENT } from '@domains/widgets';
@@ -110,6 +111,10 @@ const AppMain = () => {
   // A store install link the browser opened lands on the Hookshop tab.
   useStoreLinks(nav.setActivePage);
   useAppMainEffects({ isGameRunning: game.isRunning, activePage: nav.activePage, openNavWidget: () => widgets.open('navigation') });
+  // A core crash surfaces its own evidence: the logs widget opens on the spot.
+  useEffect(() => subscribeGameState((state) => {
+    if (state.status === 'error') widgets.open('logs');
+  }), [widgets.open]);
 
   // Splash window → main window: reveal only once startup has settled and painted,
   // so the first frame the user sees is the finished shell (electron only).

@@ -65,6 +65,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   autoSkipDialog: false,
   prefillFileName: false,
   turnWhileDashing: false,
+  allowDiving: false,
   mirrorToDarkworld: false,
   collectItemsWithSword: false,
   breakPotsWithSword: false,
@@ -194,6 +195,9 @@ const DEFAULT_SETTINGS: GameSettings = {
   cheatsEnabled: false,
   vanillaSafe: false,
 
+  // Second cartridge
+  extraDungeon: false,
+
   // Developer
   developerToolsEnabled: false,
   devNavigationData: true,
@@ -301,6 +305,7 @@ SecondaryItemSlots = ${boolToIni(settings.secondaryItemSlots)}
 AutoSkipDialog = ${boolToIni(settings.autoSkipDialog)}
 PrefillFileName = ${boolToIni(settings.prefillFileName)}
 TurnWhileDashing = ${boolToIni(settings.turnWhileDashing)}
+AllowDiving = ${boolToIni(settings.allowDiving || settings.extraDungeon)}
 MirrorToDarkworld = ${boolToIni(settings.mirrorToDarkworld)}
 CollectItemsWithSword = ${boolToIni(settings.collectItemsWithSword)}
 BreakPotsWithSword = ${boolToIni(settings.breakPotsWithSword)}
