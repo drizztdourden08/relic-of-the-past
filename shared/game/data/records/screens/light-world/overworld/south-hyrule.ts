@@ -1,5 +1,5 @@
 /* @layer shared-game @kind data */
-/** Split out of the flat seed files by scripts/generate-ids/split-seeds.ts. */
+
 import type { ScreenRecord } from '@shared/game/data/types';
 
 const LW_OVERWORLD_SOUTH_HYRULE_SCREENS: ScreenRecord[] = [
@@ -8,9 +8,10 @@ const LW_OVERWORLD_SOUTH_HYRULE_SCREENS: ScreenRecord[] = [
     gameId: { overworldIndex: 50 },
     kind: 'overworld',
     world: 'light',
-    randomizerName: 'Haunted Terrace',
+    name: 'Haunted Terrace',
     areaId: 'area-016',
-    locationId: 'location-002',
+    locationId: 'location-025',
+    regionId: 'region-002',
     position: { gridX: 2, gridY: 6 },
     tags: ['tag-001'],
   },
@@ -19,9 +20,10 @@ const LW_OVERWORLD_SOUTH_HYRULE_SCREENS: ScreenRecord[] = [
     gameId: {},
     kind: 'overworld',
     world: 'light',
-    randomizerName: 'Cave 45 Ledge',
+    name: 'Cave 45 Ledge',
     areaId: 'area-016',
-    locationId: 'location-002',
+    locationId: 'location-025',
+    regionId: 'region-009',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001'],
   },

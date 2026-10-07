@@ -14,7 +14,8 @@ import { SectionNav, type SectionNavConfig } from '../../../../../design-system/
 import { RandomizerLockContext, SettingsPageContext } from '../../../compounds/SettingsLayout';
 import { SceneBackdrop } from '../../../../title';
 import { usePlatform } from '@app/platform';
-import { PROFILE_HUB_NAV_GROUPS, PROFILE_HUB_TABS } from '../ProfileHub.constants';
+import { runKindOfProfile } from '@app/lib/game/randomizer-client';
+import { isHubTabShown, PROFILE_HUB_NAV_GROUPS, PROFILE_HUB_TABS } from '../ProfileHub.constants';
 import { ProfileHubTabContent } from './ProfileHubTabContent';
 import { HubSearchResults } from './hub-search/HubSearchResults';
 import type { ProfileHubProps, ProfileHubTab } from '../ProfileHub.type';
@@ -41,20 +42,23 @@ const navItem = (tab: ProfileHubTab) => ({
 });
 
 const ProfileHubBody = (props: ProfileHubBodyProps) => {
-  const { activeTab, setActiveTab, settings, onChange, profile, isGameRunning, onStartGame, onStopGame, onResetGame } = props;
+  const { activeTab: chosenTab, setActiveTab, settings, onChange, profile, isGameRunning, onStartGame, onStopGame, onResetGame } = props;
   const { info } = usePlatform();
   const [query, setQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
   // In the field, or holding a query: no tab is current and the pane belongs to the search.
   const searching = searchFocused || query.trim() !== '';
+  const isOnline = runKindOfProfile(profile.randomizer) === 'online';
+  // A profile switch away from Archipelago drops the Online tab; its page goes with it.
+  const activeTab = chosenTab === 'online' && !isOnline ? 'home' : chosenTab;
 
-  // Mobile options have their own tab, listed last and only on mobile.
+  // Mobile options have their own tab, shown only on mobile; the Online tab only for Archipelago.
   const groups = useMemo(
     () => PROFILE_HUB_NAV_GROUPS.map((group) => ({
       ...group,
-      tabs: group.tabs.filter((tab) => !PROFILE_HUB_TABS[tab].mobileOnly || info.formFactor === 'mobile'),
+      tabs: group.tabs.filter((tab) => isHubTabShown(PROFILE_HUB_TABS[tab], { isMobile: info.formFactor === 'mobile', isOnline })),
     })),
-    [info.formFactor],
+    [info.formFactor, isOnline],
   );
   const navConfig = useMemo<SectionNavConfig>(() => ({
     home: navItem('home'),

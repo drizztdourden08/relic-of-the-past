@@ -97,6 +97,8 @@ static OamEnt *DrawAncillaAsReceiptItem(int k, int grant, ReceiptArt art, int x,
   if (row != 0xff) {
     for (OamEnt *e = start; e < oam; e++) e->flags = (uint8)((e->flags & ~0x0e) | (row * 2));
   }
+  // A foreign item's game icon reads the icons' own palette bank (foreign_icon_bank.c).
+  if (art.icon) GameHook_ForeignIconWorldOam((uint8)grant, start, oam);
   ancilla_item_to_link[k] = saved_item;
   ancilla_arr4[k] = saved_pal;
   return oam;

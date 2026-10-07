@@ -8,6 +8,8 @@
  * path is a plan ERROR, never a silent skip, so a session must refuse to start
  * on any.
  */
+import type { ItemKey } from '@shared/randomizer/world/item-ids.data';
+import type { LocationKey } from '@shared/randomizer/world/location-key';
 import type { CheckDetection } from './check-detection';
 import type { ScriptedGrantSurface } from '../scripted-grant-overrides';
 
@@ -89,9 +91,9 @@ interface PlanDropOverride {
 }
 
 interface PlanEntry {
-  locationName: string;
+  location: LocationKey;
   /** The assigned (or scouted) community-standard item name. */
-  itemName: string;
+  item: ItemKey;
   checkId?: string;
   planClass: PlanClass;
   /** How completion is observed live; absent = poll-blind (locked only). */
@@ -115,8 +117,8 @@ interface PlanEntry {
 }
 
 interface PlanError {
-  locationName: string;
-  itemName: string;
+  location: LocationKey;
+  item: ItemKey;
   reason: string;
 }
 

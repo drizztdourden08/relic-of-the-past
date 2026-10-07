@@ -1,0 +1,52 @@
+/* @layer renderer-components @kind style */
+
+/* Laid over the game picture, the same box the HUD overlay uses. */
+.check-toasts {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  pointer-events: none;
+  z-index: var(--z-nav-overlay);
+}
+
+/* The tracker's card, a size up: it is read at a glance over the game, not in a list. */
+.check-toast {
+  min-width: 16rem;
+  max-width: 22rem;
+}
+
+.check-toast .tracker-card__sprite,
+.check-toast .tracker-card__sprite-placeholder {
+  width: 32px;
+  height: 32px;
+}
+
+.check-toast .tracker-card__item-name {
+  font-size: var(--text-sm);
+}
+
+/* An online notice: the same card surface, text only. Item and player names take the message
+   highlight colours the profile chose (set on .check-toasts), with the app's gold and green
+   when none is set. */
+.online-notice-toast {
+  min-width: 16rem;
+  max-width: 22rem;
+  padding: var(--space-xs) var(--space-sm);
+}
+
+.online-notice-toast__line {
+  color: var(--c-text);
+  font-size: var(--text-sm);
+  line-height: var(--leading-tight);
+  overflow-wrap: anywhere;
+}
+
+.online-notice-toast__item {
+  color: var(--notice-item, var(--c-gold-bright));
+  font-weight: var(--weight-semi);
+}
+
+.online-notice-toast__player {
+  color: var(--notice-player, var(--c-green-bright));
+  font-weight: var(--weight-semi);
+}

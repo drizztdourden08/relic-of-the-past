@@ -20,7 +20,7 @@ const getConnectionDestinationName = (currentScreenId: string, targetRoomId: num
   for (const toId of destinations) {
     const screen = getScreen(toId);
     const nativeIndex = screen.gameId.overworldIndex ?? screen.gameId.roomIndex;
-    if (nativeIndex === targetRoomId) return screen.vanillaName ?? screen.randomizerName;
+    if (nativeIndex === targetRoomId) return screen.name;
   }
   return null;
 };

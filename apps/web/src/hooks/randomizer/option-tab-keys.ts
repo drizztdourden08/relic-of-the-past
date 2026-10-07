@@ -12,9 +12,9 @@
  */
 import {
   CAPACITY_BONUS_KEYS, CAPACITY_ENABLED_KEY, CAPACITY_PROGRESSIVE_KEY,
-} from '@shared/randomizer/ap-world/capacity';
-import { POND_OPTION_KEYS } from '@shared/randomizer/ap-world/pond/pond-option-keys';
-import { MEDALLION_OPTION_KEYS } from '@shared/randomizer/ap-world/options.data';
+} from '@shared/randomizer/world/capacity';
+import { POND_OPTION_KEYS } from '@shared/randomizer/world/pond/pond-option-keys';
+import { MEDALLION_OPTION_KEYS } from '@shared/randomizer/world/options.data';
 
 /** Everything the wishing pond block owns, its mode row included. */
 const POND_KEYS: ReadonlySet<string> = new Set(POND_OPTION_KEYS);

@@ -5,6 +5,10 @@ import type { ViewMode } from '@domains/app/compounds/ChecksTracker';
 /** The widget id every checks pref is keyed under; the tracker data uses the same one. */
 const CHECKS_PREF_KEY = 'checks';
 
+/** Toasts for completed checks: on at all, and also while the tracker is closed. */
+const NOTIFY_PREF = 'notify';
+const NOTIFY_WHEN_CLOSED_PREF = 'notifyWhenClosed';
+
 /** Pref name for the pinned header, shared by the widget and its settings. */
 const STICKY_HEADER_PREF = 'stickyHeader';
 const STICKY_HEADER_DEFAULT = true;
@@ -20,4 +24,7 @@ const VIEW_OPTIONS: SegmentOption<ViewMode>[] = [
   { value: 'visual', label: 'Cards', title: 'Item cards' },
 ];
 
-export { CHECKS_PREF_KEY, STICKY_HEADER_DEFAULT, STICKY_HEADER_PREF, VIEW_MODE_DEFAULT, VIEW_MODE_PREF, VIEW_OPTIONS };
+export {
+  CHECKS_PREF_KEY, NOTIFY_PREF, NOTIFY_WHEN_CLOSED_PREF, STICKY_HEADER_DEFAULT, STICKY_HEADER_PREF,
+  VIEW_MODE_DEFAULT, VIEW_MODE_PREF, VIEW_OPTIONS,
+};

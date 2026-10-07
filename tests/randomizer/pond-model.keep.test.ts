@@ -1,37 +1,40 @@
 /* @layer tests @kind test */
 /**
  * The pond model: the rupee decomposition, the modes' schedules, the snapshot
- * adapter (a snapshot with no pond row means the legacy pond, and so does a
- * mode the model no longer offers), the wallet reading of a prize, and the
+ * adapter (a snapshot with no pond row means the baseline pond, and a mode the
+ * model does not offer means the legacy pond), the wallet reading of a prize, and the
  * pond's own receipt lines: the price of a toss, a prize award, an emptied
  * pond, which have to quote the plan's real amounts, because every vanilla
  * line they replace names an amount no plan charges or asks a question no
  * plan puts. And the item demand: which names it may pick, the order its
  * curve climbs, and what a pond with nothing to name falls back to.
  */
+import type { ItemKey } from '@shared/randomizer/world/item-ids.data';
+import { itemKeyOfName } from '@shared/randomizer/world/display-names/item-key-name';
+import { ITEM } from '@shared/randomizer/world/item-ids.data';
 import { describe, expect, it } from 'vitest';
-import { apBaselineValues } from '@shared/randomizer/ap-world/options.data';
-import { parsePondSetting, pondValuesOf } from '@shared/randomizer/ap-world/pond/pond-from-snapshot';
-import { pondPlanOf } from '@shared/randomizer/ap-world/pond/pond-plan';
-import { decomposeRupees, describeRupees, rupeeVolleysOf } from '@shared/randomizer/ap-world/pond/rupee-gems';
-import { DEFAULT_POND_SETTING, LEGACY_POND_SETTING } from '@shared/randomizer/ap-world/pond/pond-profile-defaults';
+import { baselineValues } from '@shared/randomizer/world/options.data';
+import { parsePondSetting, pondValuesOf } from '@shared/randomizer/world/pond/pond-from-snapshot';
+import { pondPlanOf } from '@shared/randomizer/world/pond/pond-plan';
+import { decomposeRupees, describeRupees, rupeeVolleysOf } from '@shared/randomizer/world/pond/rupee-gems';
+import { DEFAULT_POND_SETTING, LEGACY_POND_SETTING } from '@shared/randomizer/world/pond/pond-profile-defaults';
 import {
   POND_AWARD_LAST_LINE, POND_AWARD_MORE_LINE, POND_CLOSED_LINE, pondLinesOf,
 } from '@shared/randomizer/receipt-text/pond-lines';
 import { receiptLineCandidates } from '@shared/randomizer/receipt-text/receipt-line.type';
-import { isDemandableItem } from '@shared/randomizer/ap-world/pond/pond-demand-eligibility';
-import { DEMAND_ITEM_ORDER } from '@shared/randomizer/ap-world/pond/pond-demand-order.data';
-import { demandCandidatesOf } from '@shared/randomizer/ap-world/pond/pond-demand-item';
-import { rollPondDemands } from '@shared/randomizer/ap-world/pond/pond-demand-roll';
-import { POND_ASK_ROW_BY_KIND, pondRupeesOnlyAsk } from '@shared/randomizer/ap-world/pond/pond-ask.data';
-import { curvePositionsOf } from '@shared/randomizer/ap-world/pond/pond-demand-ramp';
-import { POND_INSTANCE_BY_ID } from '@shared/randomizer/ap-world/pond/pond-instances.data';
-import { REFERENCE_CAPACITY_PROFILE } from '@shared/randomizer/ap-world/capacity/capacity-profile-defaults';
-import { ALL_ITEMS } from '@shared/game/data/items';
+import { isDemandableItem } from '@shared/randomizer/world/pond/pond-demand-eligibility';
+import { DEMAND_ITEM_ORDER } from '@shared/randomizer/world/pond/pond-demand-order.data';
+import { demandCandidatesOf } from '@shared/randomizer/world/pond/pond-demand-item';
+import { rollPondDemands } from '@shared/randomizer/world/pond/pond-demand-roll';
+import { POND_ASK_ROW_BY_KIND, pondRupeesOnlyAsk } from '@shared/randomizer/world/pond/pond-ask.data';
+import { curvePositionsOf } from '@shared/randomizer/world/pond/pond-demand-ramp';
+import { POND_INSTANCE_BY_ID } from '@shared/randomizer/world/pond/pond-instances';
+import { REFERENCE_CAPACITY_PROFILE } from '@shared/randomizer/world/capacity/capacity-profile-defaults';
+import { all } from '@shared/game/data';
 import { createRng } from '@shared/randomizer/rng';
-import type { CurveId } from '@shared/randomizer/ap-world/capacity/capacity-profile.type';
-import type { PondAskAmountKind, PondAskSetting } from '@shared/randomizer/ap-world/pond/pond-ask.type';
-import type { PondSetting } from '@shared/randomizer/ap-world/pond/pond-profile.type';
+import type { CurveId } from '@shared/randomizer/world/capacity/capacity-profile.type';
+import type { PondAskAmountKind, PondAskSetting } from '@shared/randomizer/world/pond/pond-ask.type';
+import type { PondSetting } from '@shared/randomizer/world/pond/pond-profile.type';
 
 const CUSTOM: PondSetting = {
   mode: 'custom', start: 100, max: 300, throws: 5, items: 3, shape: { curve: 'equal' },
@@ -79,7 +82,7 @@ describe('pond plan', () => {
     expect(plan.throws).toHaveLength(14);
     expect(plan.throws.every((entry) => entry.price === 100)).toBe(true);
     expect(plan.totalPrice).toBe(1400);
-    expect(plan.locations).toEqual(['Hylia Fairy 1', 'Hylia Fairy 2']);
+    expect(plan.locations).toEqual(['slot-pond-capacity-1', 'slot-pond-capacity-2']);
     expect(plan.throws.map((entry) => entry.prize).slice(0, 3)).toEqual([0, 1, -1]);
   });
 
@@ -173,14 +176,14 @@ describe('pond receipt lines', () => {
 });
 
 describe('pond snapshot adapter', () => {
-  it('reads a snapshot with no pond row as the legacy pond', () => {
-    const values = { ...apBaselineValues };
+  it('reads a snapshot with no pond row as the baseline pond', () => {
+    const values = { ...baselineValues };
     delete (values as Record<string, unknown>)['pond_capacity_mode'];
-    expect(parsePondSetting(values).setting).toEqual(LEGACY_POND_SETTING);
+    expect(parsePondSetting(values).setting).toEqual(DEFAULT_POND_SETTING);
   });
 
   it('the shipped baseline is the fresh-profile pond', () => {
-    expect(parsePondSetting(apBaselineValues).setting).toEqual(DEFAULT_POND_SETTING);
+    expect(parsePondSetting(baselineValues).setting).toEqual(DEFAULT_POND_SETTING);
   });
 
   it('round-trips every mode', () => {
@@ -240,31 +243,36 @@ describe('pond held to the wallet', () => {
 describe('pond item demand', () => {
   const ITEM_ONLY = { ...pondRupeesOnlyAsk(100, 300), rupees: { enabled: false, min: 100, max: 300 }, item: { enabled: true } };
   const plan = pondPlanOf({ ...CUSTOM, items: 5 }, POND_INSTANCE_BY_ID.wishing);
-  const roll = (pool: readonly string[], ask = ITEM_ONLY, seed = 'demand') =>
+  const roll = (pool: readonly ItemKey[], ask = ITEM_ONLY, seed = 'demand') =>
     rollPondDemands(plan, ask, { curve: 'equal' }, createRng(seed), REFERENCE_CAPACITY_PROFILE, pool);
 
   it('names only items the player holds and the core can test', () => {
-    const held = ['Hookshot', 'Ether', 'Moon Pearl', 'Progressive Sword', 'Progressive Glove', 'Red Pendant', 'Crystal 3'];
-    const never = [
+    const held: readonly string[] = [
+      'Hookshot', 'Ether', 'Moon Pearl', 'Progressive Sword', 'Progressive Glove', 'Red Pendant', 'Crystal 3',
+    ];
+    const never: readonly string[] = [
       'Rupees (20)', 'Rupee (1)', 'Rupees (300)', 'Bombs (3)', 'Arrows (10)', 'Single Arrow', 'Piece of Heart',
       'Boss Heart Container', 'Sanctuary Heart Container', 'Progressive Bomb Capacity', 'Progressive Wallet',
       'Progressive Magic Capacity', 'Magic Upgrade (1/2)', 'Bottle', 'Bottle (Fairy)', 'Small Key (Ice Palace)',
       'Big Key (Desert Palace)', 'Map (Eastern Palace)', 'Compass (Turtle Rock)', 'Triforce Piece',
       'Master Sword', 'Titans Mitts', 'Silver Bow', 'Silver Arrows', 'Shovel', 'Flute', 'Mushroom', 'Blue Boomerang',
     ];
-    for (const name of held) expect(isDemandableItem(name), name).toBe(true);
-    for (const name of never) expect(isDemandableItem(name), name).toBe(false);
+    for (const name of held) expect(isDemandableItem(itemKeyOfName(name)), name).toBe(true);
+    for (const name of never) expect(isDemandableItem(itemKeyOfName(name)), name).toBe(false);
   });
 
   it('orders every eligible record, and orders nothing ineligible', () => {
-    for (const name of DEMAND_ITEM_ORDER) expect(isDemandableItem(name), name).toBe(true);
-    const eligible = new Set(ALL_ITEMS.map((item) => item.randomizerName).filter(isDemandableItem));
-    for (const name of eligible) expect(DEMAND_ITEM_ORDER, name).toContain(name);
+    for (const item of DEMAND_ITEM_ORDER) expect(isDemandableItem(item), item).toBe(true);
+    const eligible = new Set(all('item').map((item) => item.id).filter(isDemandableItem));
+    for (const item of eligible) expect(DEMAND_ITEM_ORDER, item).toContain(item);
   });
 
   it('ranks the pool early to late, once each, and climbs that ranking', () => {
-    const pool = ['Rupees (20)', 'Rupees (20)', 'Cane of Byrna', 'Lamp', 'Hammer', 'Piece of Heart', 'Moon Pearl', 'Lamp'];
-    expect(demandCandidatesOf(pool)).toEqual(['Lamp', 'Moon Pearl', 'Hammer', 'Cane of Byrna']);
+    const pool: readonly ItemKey[] = [
+      ITEM.rupees20, ITEM.rupees20, ITEM.caneOfByrna, ITEM.lamp, ITEM.hammer, ITEM.pieceOfHeart,
+      ITEM.moonPearl, ITEM.lamp,
+    ];
+    expect(demandCandidatesOf(pool)).toEqual([ITEM.lamp, ITEM.moonPearl, ITEM.hammer, ITEM.caneOfByrna]);
     for (let seed = 0; seed < 50; seed += 1) {
       const view = roll(pool, ITEM_ONLY, `climb-${seed}`);
       const names = plan.locations.map((rung) => view[rung]);
@@ -274,7 +282,10 @@ describe('pond item demand', () => {
   });
 
   it('with nothing eligible, falls back to another ticked kind, then to a free rung', () => {
-    const bare = ['Rupees (20)', 'Rupee (1)', 'Piece of Heart', 'Progressive Wallet'];
+    // Ids, not names: the pool the roll reads is keyed by id, and a name in it named no record.
+    const bare: readonly ItemKey[] = [
+      ITEM.rupees20, ITEM.rupee1, ITEM.pieceOfHeart, itemKeyOfName('Progressive Wallet'),
+    ];
     expect(roll(bare)).toEqual({});
     const withBombs = roll(bare, { ...ITEM_ONLY, bombs: { enabled: true, min: 1, max: 5 } });
     expect(Object.values(withBombs).map((demand) => demand.currency)).toEqual(plan.locations.map(() => 'bombs'));
@@ -331,7 +342,7 @@ describe('one ramp per demand', () => {
 
   it('the bottle demand carries a count, one by default and never past four', () => {
     const plan = pondPlanOf(pondOf('equal'), POND_INSTANCE_BY_ID.capacity);
-    const fresh = parsePondSetting(apBaselineValues).setting;
+    const fresh = parsePondSetting(baselineValues).setting;
     expect(fresh.mode === 'custom' && fresh.ask).toBeUndefined();
     const single = rollPondDemands(
       plan, oneKind('bottle', 1, 1), { curve: 'equal' }, createRng('one'), REFERENCE_CAPACITY_PROFILE, []);

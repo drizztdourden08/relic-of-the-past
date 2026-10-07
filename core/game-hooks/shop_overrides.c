@@ -55,12 +55,14 @@ static void ShopBeep(int k, uint8 beep) {
 static void GrantShopSlot(const ShopSlotOverride *entry) {
   if (entry->msg >= 0)
     GameHook_ArmReceiptMessageIfClear(entry->msg);
+  // Read before resolving: the resolve turns another player's item into its presentation id.
+  bool foreign = GameHook_IsForeignGrantId(entry->new_item);
   uint8 grant = GameHook_ResolveGrantItem(entry->new_item);
   item_receipt_method = 0;
   // The assigned item must not be re-substituted by the receive-seam table.
   GameHook_NpcOverrideBypassOnce();
   Link_ReceiveItem(grant, 0);
-  int msg = ShopPurchaseMessage(GameHook_TakeReceiptMessage());
+  int msg = ShopPurchaseLines(GameHook_TakeReceiptMessage(), foreign);
   if (msg >= 0) Sprite_ShowMessageUnconditional((uint16)msg);
   ShopKeeper_RapidTerminateReceiveItem();
   GameHook_NotifyOverrideFired(entry->fire_id);

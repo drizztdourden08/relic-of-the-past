@@ -15,7 +15,9 @@
  * a question inline when that wording is itself a single row.
  */
 
-import { VISIBLE_ROWS, fitsRows, sanitizeForAlphabet, wrapRows } from './wrap-message';
+import { toDialogueText } from './dialogue-text';
+import { VISIBLE_ROWS, fitsRows, wrapRows } from './wrap-message';
+import type { DialogueCharset } from '@shared/game/dialog/dialogue-charset';
 import type { ChoiceReceiptLine } from '@shared/randomizer/receipt-text/receipt-line.type';
 
 const YES_INDENT = '    > ';
@@ -28,15 +30,14 @@ const CHOOSE_COMMAND = '[Choose]';
 const INLINE_QUESTION_ROWS = VISIBLE_ROWS - 2;
 
 /** The two answers, indented the way the game's own two-answer lines indent theirs. */
-const answerRowsOf = (line: ChoiceReceiptLine, alphabet: readonly string[]): string[] => [
-  `${YES_INDENT}${sanitizeForAlphabet(line.yes, alphabet)}`,
-  `${NO_INDENT}${sanitizeForAlphabet(line.no, alphabet)}`,
+const answerRowsOf = (line: ChoiceReceiptLine, charset: DialogueCharset): string[] => [
+  `${YES_INDENT}${toDialogueText(line.yes, charset)}`,
+  `${NO_INDENT}${toDialogueText(line.no, charset)}`,
 ];
 
 /** The fullest candidate that fits |rows| rows, if any does. */
-const fitCandidate = (
-  candidates: readonly string[], rows: number, alphabet: readonly string[], widths: Uint8Array,
-): string | undefined => candidates.find((candidate) => fitsRows(candidate, rows, alphabet, widths));
+const fitCandidate = (candidates: readonly string[], rows: number, charset: DialogueCharset): string | undefined =>
+  candidates.find((candidate) => fitsRows(candidate, rows, charset.alphabet, charset.widths));
 
 /** One box: the question on the top row, both answers under it, nothing scrolled away. */
 const inlineText = (question: string, answers: readonly string[]): string =>
@@ -58,24 +59,20 @@ const pagedText = (questionRows: readonly string[], recap: string, answers: read
 };
 
 /** The one row above the answers: the line's own prompt, or the last row of what she said. */
-const promptRowOf = (
-  line: ChoiceReceiptLine, saidRows: readonly string[], alphabet: readonly string[], widths: Uint8Array,
-): string => {
+const promptRowOf = (line: ChoiceReceiptLine, saidRows: readonly string[], charset: DialogueCharset): string => {
   const candidates = (line.prompt === undefined ? [] : [line.prompt].flat())
-    .map((text) => sanitizeForAlphabet(text, alphabet));
-  const fits = fitCandidate(candidates, INLINE_QUESTION_ROWS, alphabet, widths);
+    .map((text) => toDialogueText(text, charset));
+  const fits = fitCandidate(candidates, INLINE_QUESTION_ROWS, charset);
   return fits ?? saidRows[saidRows.length - 1];
 };
 
-/** The whole line, laid out with its two answers and the choose command. */
-const choiceMessageText = (
-  line: ChoiceReceiptLine, candidates: readonly string[], alphabet: readonly string[], widths: Uint8Array,
-): string => {
-  const answers = answerRowsOf(line, alphabet);
-  const said = fitCandidate(candidates, VISIBLE_ROWS, alphabet, widths) ?? candidates[candidates.length - 1];
-  const saidRows = wrapRows(said, alphabet, widths);
+/** The whole line, laid out with its two answers and the choose command. |candidates| are drawable already. */
+const choiceMessageText = (line: ChoiceReceiptLine, candidates: readonly string[], charset: DialogueCharset): string => {
+  const answers = answerRowsOf(line, charset);
+  const said = fitCandidate(candidates, VISIBLE_ROWS, charset) ?? candidates[candidates.length - 1];
+  const saidRows = wrapRows(said, charset.alphabet, charset.widths);
   if (saidRows.length <= INLINE_QUESTION_ROWS) return inlineText(said, answers);
-  return pagedText(saidRows, promptRowOf(line, saidRows, alphabet, widths), answers);
+  return pagedText(saidRows, promptRowOf(line, saidRows, charset), answers);
 };
 
 export { choiceMessageText };

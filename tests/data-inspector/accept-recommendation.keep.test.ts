@@ -1,11 +1,11 @@
 /* @layer tests @kind test */
 /**
  * Accepting a finding routes to the CRUD verb its action names, in a fixed
- * order: write, stamp the review layer, record the verdict. A verdict before
- * the write would mark a finding done that nobody applied, so a refused write
- * leaves both untouched and the finding open.
+ * order: write, then record the verdict. A verdict before the write would mark a
+ * finding done that nobody applied, so a refused write leaves both untouched and
+ * the finding open.
  *
- * The five collaborators are mocked because each really writes to disk or
+ * The four collaborators are mocked because each really writes to disk or
  * the recommendation store.
  */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -15,7 +15,6 @@ const mocks = vi.hoisted(() => ({
   create: vi.fn(),
   write: vi.fn(),
   remove: vi.fn(),
-  markWritten: vi.fn(),
   decide: vi.fn(),
 }));
 
@@ -27,9 +26,6 @@ vi.mock('@app/ui/domains/app/views/DataInspector/behavior/record-writers', () =>
 }));
 vi.mock('@app/ui/domains/app/views/DataInspector/behavior/delete-record', () => ({
   recordDeleterFor: (kind: string) => (kind === 'tag' ? mocks.remove : undefined),
-}));
-vi.mock('@app/ui/domains/app/views/DataInspector/behavior/review-store', () => ({
-  markWritten: mocks.markWritten,
 }));
 vi.mock('@app/ui/domains/app/views/DataInspector/behavior/recommendations/recommendation-cache', () => ({
   decideRecommendation: mocks.decide,
@@ -62,7 +58,6 @@ beforeEach(() => {
   mocks.create.mockReset().mockResolvedValue({ success: true, id: 'tag-009' });
   mocks.write.mockReset().mockResolvedValue(undefined);
   mocks.remove.mockReset().mockResolvedValue({ success: true });
-  mocks.markWritten.mockReset();
   mocks.decide.mockReset().mockResolvedValue(undefined);
 });
 
@@ -106,16 +101,15 @@ describe('acceptRecommendation uses one verb per action', () => {
 });
 
 describe('acceptRecommendation closing out', () => {
-  it('stamps the review layer and records the verdict once the write lands', async () => {
+  it('records the verdict once the write lands', async () => {
     await acceptRecommendation(finding(), { id: 'tag-001', value: 'cavern' });
-    expect(mocks.markWritten).toHaveBeenCalledWith('tag', 'tag-001');
     expect(mocks.decide).toHaveBeenCalledWith('tag', 'r-1', 'accepted');
   });
 
-  it('stamps the ALLOCATED id after a create, not the absent target', async () => {
+  it('reports the ALLOCATED id after a create, not the absent target', async () => {
     const entry = finding({ action: 'create', targetId: null, current: null, proposed: { value: 'cavern' } });
-    await acceptRecommendation(entry, { value: 'cavern' });
-    expect(mocks.markWritten).toHaveBeenCalledWith('tag', 'tag-009');
+    const outcome = await acceptRecommendation(entry, { value: 'cavern' });
+    expect(outcome.success && outcome.id).toBe('tag-009');
   });
 
   it('leaves the finding open when the write is refused', async () => {
@@ -125,7 +119,6 @@ describe('acceptRecommendation closing out', () => {
 
     expect(outcome.success).toBe(false);
     expect(outcome.error).toBe('no room');
-    expect(mocks.markWritten).not.toHaveBeenCalled();
     expect(mocks.decide).not.toHaveBeenCalled();
   });
 
@@ -153,6 +146,5 @@ describe('dismissRecommendation', () => {
     expect(mocks.create).not.toHaveBeenCalled();
     expect(mocks.write).not.toHaveBeenCalled();
     expect(mocks.remove).not.toHaveBeenCalled();
-    expect(mocks.markWritten).not.toHaveBeenCalled();
   });
 });

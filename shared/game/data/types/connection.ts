@@ -2,12 +2,19 @@
 import type { ActorId, ConnectionId, DungeonId, ScreenId, TagId } from './ids';
 import type { Requirement } from './check';
 import type { ConnectionNavData } from '../../navigation/nav-data.types';
+import type { ReviewMark } from './review';
 import type { ConnectionKind, ConnectionSide } from '../enumeration/generated-types';
 
 interface ConnectionGameId {
   entranceId?: number;
   stairIndex?: number;
   exitId?: number;
+  /**
+   * For a fall hole or its landing spot: which of the cartridge's 19 `kFallHole_*` slots
+   * this crossing is. A hole two tiles tall fills two slots that share one entrance id, and
+   * the record carries the LOWEST of them.
+   */
+  holeIndex?: number;
 }
 
 /** How the point is laid out on its screen. */
@@ -71,6 +78,7 @@ interface ConnectionRecord {
   tags: readonly TagId[];
   /** Pre-computed flood-fill facts. Holds requirements and this side's connection point. */
   nav?: ConnectionNavData;
+  review?: ReviewMark;
 }
 
 export type {

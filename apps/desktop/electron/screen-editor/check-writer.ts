@@ -29,6 +29,7 @@ import type { RecordWriterSpec } from './dataset-record-writer';
 
 const SPEC: RecordWriterSpec<CheckRecord> = {
   kind: 'check',
+  recordType: 'CheckRecord',
   target: record => checkRecordFile(record),
   serialize: serializeCheckRecord,
 };

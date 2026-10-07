@@ -1,11 +1,10 @@
 /* @layer renderer-widgets @kind logic */
 /**
  * Annotates EVERY screen the flood covered, not just the one the player stands on.
- * On a multi-screen area, annotating only the player's screen hid three quarters of
- * the mechanics. The entry tile still only applies to the player's own screen, since
- * that is where the walk distances are measured from.
+ * On a multi-screen area, annotating only the player's screen hides three quarters
+ * of the mechanics.
  */
-import type { FloodFillResult, GridPos } from '@shared/game/navigation';
+import type { FloodFillResult } from '@shared/game/navigation';
 import type { ScreenAnnotations } from '@shared/game/simulation';
 import { annotateScreen } from '../../../../../lib/game/flood';
 import { screenIdForGameId } from '@shared/game/logic/queries/game-id';
@@ -14,13 +13,12 @@ interface AnnotateArgs {
   fillResults: FloodFillResult[];
   isIndoors: boolean;
   primaryScreenIndex: number;
-  startPos?: GridPos;
   /** The DETECTED screen's own id, which is the only correct id for an indoor room. */
   primaryScreenId: string | null;
 }
 
 const annotateFlooded = (args: AnnotateArgs): ScreenAnnotations[] => {
-  const { fillResults, isIndoors, primaryScreenIndex, startPos, primaryScreenId } = args;
+  const { fillResults, isIndoors, primaryScreenIndex, primaryScreenId } = args;
   return fillResults.map((r) => {
     // Indoors the flood covers exactly one room, so the detected id IS this
     // screen's id. Outdoors, a sub-screen's id is resolved from the screen DATA
@@ -32,7 +30,6 @@ const annotateFlooded = (args: AnnotateArgs): ScreenAnnotations[] => {
     return annotateScreen(
       id,
       { isIndoors, roomId: isIndoors ? r.screenIndex : 0, owScreenIndex: isIndoors ? 0 : r.screenIndex },
-      r.screenIndex === primaryScreenIndex ? startPos : undefined,
       r.reachable,
     );
   }).filter((a): a is ScreenAnnotations => a !== null);

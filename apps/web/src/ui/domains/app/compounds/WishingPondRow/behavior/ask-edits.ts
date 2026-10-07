@@ -12,8 +12,8 @@
  */
 import type {
   PondAskAmountKind, PondAskCurrency, PondAskSetting,
-} from '@shared/randomizer/ap-world/pond/pond-ask.type';
-import type { ShopBottleContent } from '@shared/randomizer/ap-world/shops/shop-price.type';
+} from '@shared/randomizer/world/pond/pond-ask.type';
+import type { ShopBottleContent } from '@shared/randomizer/world/shops/shop-price.type';
 
 /** One counted row ticked or unticked. */
 const askWithCurrencyTick = (

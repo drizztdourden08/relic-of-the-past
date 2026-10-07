@@ -26,8 +26,8 @@ const useTrackRows = (manifest: MsuPackManifest, files: MsuFile[]) => {
   const extended = profile.isDeluxe;
 
   const rows = useMemo((): MatchedTrack[] => {
-    // The vanilla range is a property of the FORMAT, not the name dataset: a checkout without vault
-    // access would otherwise turn missing names into missing tracks.
+    // The vanilla range is a property of the FORMAT, not the name dataset, which would
+    // otherwise turn a slot with no name into a slot that is not there.
     const numbers = new Set<number>();
     for (let trackNum = 1; trackNum <= VANILLA_TRACK_COUNT; trackNum += 1) numbers.add(trackNum);
     // Extended slots come from the tables, so an extended pack shows every slot it COULD fill.

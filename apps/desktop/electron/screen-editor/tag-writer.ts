@@ -14,7 +14,7 @@
 import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { serializeTagRecord } from '@shared/game/data/record-codegen';
-import { splitTagKey } from '@shared/game/data/tags/lookup';
+import { splitTagKey } from '@shared/game/data';
 import type { TagRecord } from '@shared/game/data/types';
 import type {
   Allocated, AllocateTagArgs, AllocateTagResult, DeleteTagArgs, WriteRecordResult, WriteTagArgs,

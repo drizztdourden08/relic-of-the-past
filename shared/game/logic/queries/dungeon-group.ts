@@ -78,7 +78,7 @@ const dungeonForGroup = (group: number): DungeonId | null => {
  */
 const dungeonGroupName = (group: number): string => {
   const id = dungeonForGroup(group);
-  return id ? getDungeon(id).randomizerName : `group ${group}`;
+  return id ? getDungeon(id).name : `group ${group}`;
 };
 
 /** The dungeon a traversal id sits in, or null when it is not a dungeon room. */

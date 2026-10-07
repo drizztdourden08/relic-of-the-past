@@ -5,7 +5,7 @@
  * Header, 20 bytes: 0 active, 1 flags (bit0 bordered, bit1 story, bit2 native box withheld), 2-3 top-left word address,
  * 4 render state, 5 last command, 6 choice index, 7 scroll step, 8-9 message id, 10-12 cells per
  * row, 13 generation, 14 the message's widest row, 15 its most rows, 16-17 and 18-19 the text layer's
- * signed horizontal and vertical scroll. Then 3 rows of 40 cells of (glyph, x, w).
+ * signed horizontal and vertical scroll. Then 3 rows of 40 cells of (glyph, x, w | highlight << 4).
  */
 import type { DialogCell, DialogFrame } from '@shared/game/dialog/dialog-frame.types';
 import { kindOf } from '@shared/game/dialog/dialog-kind';
@@ -16,12 +16,16 @@ const HEADER_BYTES = 20;
 const ROWS = 3;
 const CELLS_PER_ROW = 40;
 const CELL_BYTES = 3;
+/** A cell's width byte: the width in its low nibble, the highlight span (dialog_highlight.c) above. */
+const CELL_WIDTH_MASK = 0x0f;
+const CELL_HIGHLIGHT_SHIFT = 4;
 
 const readRow = (heap: Uint8Array, base: number, count: number): DialogCell[] => {
   const cells: DialogCell[] = [];
   for (let i = 0; i < Math.min(count, CELLS_PER_ROW); i++) {
     const at = base + i * CELL_BYTES;
-    cells.push({ glyph: heap[at], x: heap[at + 1], w: heap[at + 2] });
+    const width = heap[at + 2];
+    cells.push({ glyph: heap[at], x: heap[at + 1], w: width & CELL_WIDTH_MASK, highlight: width >> CELL_HIGHLIGHT_SHIFT });
   }
   return cells;
 };

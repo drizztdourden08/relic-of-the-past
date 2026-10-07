@@ -16,6 +16,7 @@ import type { RecordWriterSpec } from './dataset-record-writer';
 
 const SPEC: RecordWriterSpec<ActorRecord> = {
   kind: 'actor',
+  recordType: 'ActorRecord',
   target: record => actorRecordFile(record),
   serialize: serializeActorRecord,
 };

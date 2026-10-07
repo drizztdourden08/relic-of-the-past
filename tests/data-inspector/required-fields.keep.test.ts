@@ -11,11 +11,11 @@ const field = (path: string, kind: FieldDescriptor['kind'], overrides: Partial<F
 describe('requiredPaths', () => {
   it('names every non-optional top-level field, and none of the optional ones', () => {
     const schema = [
-      field('randomizerName', 'string'),
-      field('vanillaName', 'string', { optional: true }),
+      field('name', 'string'),
+      field('note', 'string', { optional: true }),
       field('world', 'enum', { options: ['light', 'dark'] }),
     ];
-    expect(requiredPaths(schema)).toEqual(['randomizerName', 'world']);
+    expect(requiredPaths(schema)).toEqual(['name', 'world']);
   });
 
   it('recurses into a required object\'s own required children', () => {
@@ -53,8 +53,8 @@ describe('requiredPaths', () => {
 
 describe('blankRecordFor + requiredPaths together gate a create form', () => {
   const schema = [
-    field('randomizerName', 'string'),
-    field('vanillaName', 'string', { optional: true }),
+    field('name', 'string'),
+    field('note', 'string', { optional: true }),
     field('world', 'enum', { options: ['light', 'dark'] }),
   ];
 
@@ -65,7 +65,7 @@ describe('blankRecordFor + requiredPaths together gate a create form', () => {
   });
 
   it('a draft with every required field filled in satisfies them all', () => {
-    const draft = { ...blankRecordFor(schema), randomizerName: 'The Wilds' };
+    const draft = { ...blankRecordFor(schema), name: 'The Wilds' };
     const paths = requiredPaths(schema);
     const missing = paths.filter((path) => {
       const value = getPath(draft, path);

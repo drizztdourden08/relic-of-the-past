@@ -15,8 +15,8 @@
  */
 
 import { getCheck, getScreen } from '@shared/game/data';
-import { NPC_SCOPE_LOCATIONS, WORLD_ITEM_SCOPE_LOCATIONS } from '@shared/randomizer/ap-world/scope-vanilla.data';
-import { checkIdByStandardName } from './check-names';
+import { NPC_SCOPE_LOCATIONS, WORLD_ITEM_SCOPE_LOCATIONS } from '@shared/randomizer/world/scope-tables';
+import { isSlotKey } from '@shared/randomizer/world/location-key';
 import { nativeGrantIdOf } from './native-grant-id';
 import { standingOverrideKeyOf, worldGrantReceiveIdOf } from './standing-override-key';
 import type { CheckId, CheckRecord } from '@shared/game/data';
@@ -84,11 +84,12 @@ const roomlessGrantIdOf = (check: CheckRecord): number | undefined => {
 const computeAmbiguousRoomlessIds = (): ReadonlySet<number> => {
   const seen = new Set<number>();
   const ambiguous = new Set<number>();
-  const names = [...NPC_SCOPE_LOCATIONS.keys(), ...WORLD_ITEM_SCOPE_LOCATIONS.keys()];
-  for (const locationName of names) {
-    const checkId = checkIdByStandardName(locationName);
-    if (checkId === undefined) continue;
-    const grantId = roomlessGrantIdOf(getCheck(checkId as CheckId));
+  // The two tables are keyed by the check itself; a slot key (a restock, a pond rung) has no
+  // record and no giver, so it is skipped.
+  const locations = [...NPC_SCOPE_LOCATIONS.keys(), ...WORLD_ITEM_SCOPE_LOCATIONS.keys()];
+  for (const location of locations) {
+    if (isSlotKey(location)) continue;
+    const grantId = roomlessGrantIdOf(getCheck(location));
     if (grantId === undefined) continue;
     if (seen.has(grantId)) ambiguous.add(grantId);
     seen.add(grantId);
@@ -103,7 +104,7 @@ const ambiguousRoomlessIds = (): ReadonlySet<number> => {
 
 /**
  * The substitution key for one npc/boss check, or null when its grant cannot
- * be keyed (no native grant id, or an uncertified roomless giver of an
+ * be keyed (no native grant id, or a roomless giver of an
  * ambiguous item, so the caller falls back to the delivery path).
  */
 const npcOverrideKeyOf = (checkId: CheckId): NpcOverrideKey | null => {

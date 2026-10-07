@@ -9,6 +9,7 @@ import type { ActorId } from './ids';
 import type { Requirement } from './check';
 import type { ActorCombatProfile } from './combat';
 import type { ActorKind } from '../enumeration/generated-types';
+import type { ReviewMark } from './review';
 
 interface ActorGameId {
   /** Native sprite type byte (sprite.c) for enemies, bosses, NPCs and objects. */
@@ -23,15 +24,15 @@ interface ActorRecord {
   id: ActorId;
   gameId: ActorGameId;
   kind: ActorKind;
-  vanillaName?: string;
-  /** Most enemies have no rando-specific name. */
-  randomizerName?: string;
+  /** The one name this actor answers to. */
+  name?: string;
   /** Trigger/obstacle semantics. What firing or clearing this does. */
   effect?: string;
   /** What removes or opens an obstacle or lock. The mechanism side of Connection.gatedBy. */
   clearedBy?: Requirement;
   /** Enemies and bosses, read from the game's own tables. */
   combat?: ActorCombatProfile;
+  review?: ReviewMark;
 }
 
 export type { ActorGameId, ActorKind, ActorRecord };

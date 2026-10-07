@@ -141,7 +141,7 @@ interface FloodFillResult {
  * Affects tile layout via overlay patches applied to the base tilemap.
  */
 interface ScreenVariant {
-  /** sram_progress_indicator: 0=intro, 1=post-mentor, 2=princess-rescued, 3=usurper-defeated */
+  /** The progress indicator byte. The tiers are documented in logic/queries/progress-tier.ts. */
   progressTier: number;
   /** save_ow_event_info[screen] & 0x20, meaning the event overlay is applied */
   eventOverlay: boolean;

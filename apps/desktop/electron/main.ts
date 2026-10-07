@@ -20,7 +20,7 @@ import { isEphemeralLaunch } from './window/startup-config';
 import { registerDisplayHandlers } from './display/ipc-handlers';
 import { onFullscreenChange, restoreOnShutdown } from './display/mode-switch';
 import { registerDialogHandlers } from './dialogs/ipc-handlers';
-import { registerProfileHandlers, migrateDataFolder } from './profiles';
+import { registerProfileHandlers } from './profiles';
 import { registerRomHandlers } from './roms';
 import { registerAssetHandlers } from './assets/ipc-handlers';
 import { registerSaveHandlers } from './saves/ipc-handlers';
@@ -45,8 +45,8 @@ import { registerConnectionHandlers } from './connections/ipc-handlers';
 import { registerScreenEditorHandlers } from './screen-editor/ipc-handlers';
 import { registerShadowCastingHandlers } from './shadow-casting';
 import { registerUiViewsHandlers } from './ui-views';
-import { registerReviewHandlers } from './review';
 import { registerRecommendationHandlers } from './recommendations';
+import { registerArchipelagoHandlers } from './archipelago';
 import { registerAppHandlers } from './app/ipc-handlers';
 import { registerDiagnosticsHandlers } from './diagnostics/ipc-handlers';
 import { registerWasmHandlers } from './wasm/ipc-handlers';
@@ -108,8 +108,8 @@ const IPC_HANDLERS: Array<{ register: () => void; devOnly?: boolean }> = [
   { register: registerSessionLogHandler },
   { register: registerConnectionHandlers },
   { register: registerUiViewsHandlers },
-  { register: registerReviewHandlers },
   { register: registerRecommendationHandlers },
+  { register: registerArchipelagoHandlers },
   // Writes to source files: never registered in a packaged build.
   { register: registerScreenEditorHandlers, devOnly: true },
   { register: registerShadowCastingHandlers },
@@ -170,7 +170,6 @@ app.whenReady().then(async () => {
   // Velopack writes the size in a type Windows ignores. Not awaited: it is cosmetic.
   if (!portableData) void registerInstallSize();
   initPaths(dataPath);
-  await migrateDataFolder();
   await ensureDataDirectories();
   // Always-on: keep the previous session.log as session-1.log and start fresh,
   // so the renderer's session-log batches land in a file scoped to this launch.

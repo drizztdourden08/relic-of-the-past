@@ -41,11 +41,13 @@ describe('search catalog', () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
-  it('indexes every ProfileHub tab except home (and mobile-only tabs off mobile)', () => {
+  it('indexes every ProfileHub tab except home (and mobile-only tabs off mobile, online-only tabs off an online profile)', () => {
     const catalog = buildCatalog(ctx);
     const tabIds = new Set(catalog.filter((e) => e.kind === 'tab').map((e) => e.id));
+    expect(tabIds.has('tab:online')).toBe(false);
+    expect(buildCatalog({ ...ctx, isOnline: true }).some((e) => e.id === 'tab:online')).toBe(true);
     for (const [tab, spec] of Object.entries(PROFILE_HUB_TABS) as [ProfileHubTab, typeof PROFILE_HUB_TABS[ProfileHubTab]][]) {
-      if (tab === 'home' || spec.mobileOnly) continue;
+      if (tab === 'home' || spec.mobileOnly || spec.onlineOnly) continue;
       expect(tabIds.has(`tab:${tab}`)).toBe(true);
     }
   });

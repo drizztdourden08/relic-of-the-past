@@ -44,6 +44,8 @@ static struct { uint8 armed; uint16 room_id; uint8 new_item; int16 msg; int16 fi
 #define SUBST_KEY_NONE 0xFF
 
 static void GrantScriptedSlot(const ScriptedGrantSlot *slot, uint8 subst_key) {
+  // Another player's item with the online gate clear has no receipt to show: nothing goes out.
+  if (GameHook_ForeignSentinelStranded(slot->new_item)) return;
   if (slot->msg >= 0)
     GameHook_ArmReceiptMessageIfClear(slot->msg);
   uint8 grant = GameHook_ResolveGrantItem(slot->new_item);

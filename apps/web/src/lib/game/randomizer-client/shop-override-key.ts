@@ -2,20 +2,20 @@
 /**
  * The in-core substitution key of a shop-slot location.
  *
- * Shop slots have no check record, because the app has never had a physical record
- * for a shelf, because in the unmodified game a shelf is not a check at all,
- * it is a repeatable purchase. So this key is derived from the shop dataset
- * instead of looked up: the shelf's room, the entrance that disambiguates a
- * shared room, and the shelf sprite's own subtype, which is unique inside
- * any one shop. Together those name exactly one shelf in the running game.
+ * The key comes off the slot's own check record (`gameId.shopSeam`): the shelf's room, the
+ * entrance and overworld area that disambiguate a room several doors share, and the shelf
+ * sprite's own subtype, which is unique inside any one shop. Together those name exactly one
+ * shelf in the running game. A restock past the first has no record of its own, because the
+ * unmodified game has no such spot; it takes the first one's seam and its own depth index.
  *
  * The depth pair rides along so the core knows which purchase of the slot
  * this entry is, and when the slot runs out.
  */
-import { shopSlotLocationOf } from '@shared/randomizer/ap-world/shops/shop-slots';
-import { nativePriceOf } from '@shared/randomizer/ap-world/shops/shop-price-native';
-import type { ShopScope } from '@shared/randomizer/ap-world/shops/shop-scope.type';
-import type { ShopPriceView } from '@shared/randomizer/ap-world/shops/shop-price.type';
+import type { LocationKey } from '@shared/randomizer/world/location-key';
+import { shopSlotLocationOf } from '@shared/randomizer/world/shops/shop-slots';
+import { nativePriceOf } from '@shared/randomizer/world/shops/shop-price-native';
+import type { ShopScope } from '@shared/randomizer/world/shops/shop-scope.type';
+import type { ShopPriceView } from '@shared/randomizer/world/shops/shop-price.type';
 import type { PlanShopOverride } from './physical-plan.type';
 
 /** The core's "match anything" values, for a shop the earlier fields already name. */
@@ -25,14 +25,14 @@ const OW_AREA_ANY = -1;
 type ShopKey = Omit<PlanShopOverride, 'targetLocalId'>;
 
 const shopOverrideKeyOf = (
-  locationName: string, shops: ShopScope, prices: ShopPriceView,
+  location: LocationKey, shops: ShopScope, prices: ShopPriceView,
 ): ShopKey | null => {
-  const row = shopSlotLocationOf(locationName);
+  const row = shopSlotLocationOf(location);
   if (row === null || row === undefined) return null;
-  const { shop, slot, depthIndex, canonicalIndex } = row;
+  const { slot, depthIndex } = row;
   // A rolled price replaces the shelf's own; with nothing rolled the shelf
   // keeps charging the rupees the unmodified game charges.
-  const price = prices[locationName] ?? { currency: 'rupees' as const, amount: slot.price };
+  const price = prices[location] ?? { currency: 'rupees' as const, amount: slot.price };
   // A price with no native form (shop-price-native.ts) cannot be sent at all,
   // so the shelf gets no override and keeps what the unmodified game put on
   // it. Only an item price is shaped that way, and no shelf can roll one, so
@@ -40,10 +40,10 @@ const shopOverrideKeyOf = (
   const native = nativePriceOf(price);
   if (native === null) return null;
   return {
-    slotIndex: canonicalIndex,
-    roomId: shop.roomId,
-    entrance: shop.entrance ?? ENTRANCE_ANY,
-    owArea: shop.owArea ?? OW_AREA_ANY,
+    slotIndex: slot.canonicalIndex,
+    roomId: slot.roomId,
+    entrance: slot.entrance ?? ENTRANCE_ANY,
+    owArea: slot.owArea ?? OW_AREA_ANY,
     subtype: slot.subtype,
     depthIndex,
     depth: shops.depth,

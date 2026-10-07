@@ -18,21 +18,26 @@
  * wallet ladder only ever lowers that setting's cap.
  */
 import type { ProfileRandomizerConfig } from '@shared/types/profile';
-import { DEFAULT_CAPACITY_BONUS, DEFAULT_CAPACITY_PROFILE } from '@shared/randomizer/ap-world/capacity';
-import { DEFAULT_POND_PROFILES } from '@shared/randomizer/ap-world/pond/pond-profile-defaults';
-import { defaultShopScope } from '@shared/randomizer/ap-world/shops/shop-scope-from-values';
-import { DEFAULT_DARK_ROOM_SETTING } from '@shared/randomizer/ap-world/dark-rooms/dark-room-lights.data';
-import { defaultDifficulty } from '@shared/randomizer/ap-world/difficulty/difficulty-from-snapshot';
-import { DEFAULT_ITEM_POWER } from '@shared/randomizer/ap-world/item-power/item-power.data';
-import { defaultProgressiveSetting } from '@shared/randomizer/ap-world/progressive/progressive-from-snapshot';
-import { defaultProgressiveModes } from '@shared/randomizer/ap-world/progressive/progressive-modes.data';
-import { defaultRetroBow } from '@shared/randomizer/ap-world/retro/retro-from-snapshot';
-import { DEFAULT_ACCESSIBILITY } from '@shared/randomizer/ap-world/accessibility/accessibility-from-snapshot';
-import { apBaselineValues } from '@shared/randomizer/ap-world/options.data';
-import { INCLUDE_NPC_CHECKS_KEY, INCLUDE_WORLD_ITEMS_KEY } from '@shared/randomizer/ap-world/scope-option-keys';
+import { DEFAULT_CAPACITY_BONUS, DEFAULT_CAPACITY_PROFILE } from '@shared/randomizer/world/capacity';
+import { DEFAULT_POND_PROFILES } from '@shared/randomizer/world/pond/pond-profile-defaults';
+import { defaultShopScope } from '@shared/randomizer/world/shops/shop-scope-from-values';
+import { DEFAULT_DARK_ROOM_SETTING } from '@shared/randomizer/world/dark-rooms/dark-room-lights.data';
+import { defaultDifficulty } from '@shared/randomizer/world/difficulty/difficulty-from-snapshot';
+import { DEFAULT_ITEM_POWER } from '@shared/randomizer/world/item-power/item-power.data';
+import { defaultProgressiveSetting } from '@shared/randomizer/world/progressive/progressive-from-snapshot';
+import { defaultProgressiveModes } from '@shared/randomizer/world/progressive/progressive-modes.data';
+import { defaultRetroBow } from '@shared/randomizer/world/retro/retro-from-snapshot';
+import { DEFAULT_ACCESSIBILITY } from '@shared/randomizer/world/accessibility/accessibility-from-snapshot';
+import { baselineValues } from '@shared/randomizer/world/options.data';
+import { INCLUDE_NPC_CHECKS_KEY, INCLUDE_WORLD_ITEMS_KEY } from '@shared/randomizer/world/scope-option-keys';
 import { buildOptionsSnapshot } from '@shared/randomizer/options-snapshot';
 import { randomizerChoiceOverrides } from '@app/hooks/randomizer/randomizer-choices';
-import { DEFAULT_DUNGEON_ITEM_SETTING } from '@shared/randomizer/ap-world/dungeon-items/dungeon-item-modes';
+import { DEFAULT_DUNGEON_ITEM_SETTING } from '@shared/randomizer/world/dungeon-items/dungeon-item-modes';
+import { DEFAULT_STORY_GATES } from '@shared/randomizer/world/story-gates/story-gates.data';
+import {
+  absorbPort, draftError, EMPTY_SERVER_SETUP, serverUrlOf,
+} from '@app/hooks/randomizer/server-setup/server-setup-draft';
+import type { ServerSetupDraft } from '@app/hooks/randomizer/server-setup/server-setup-draft';
 import type { RandomizerOptionChoices } from '@app/hooks/randomizer/randomizer-choices';
 
 /** The connection fields plus every catalog choice the options panel edits. */
@@ -40,16 +45,19 @@ interface RandomizerFormState extends RandomizerOptionChoices {
   enabled: boolean;
   seed: string;
   mode: 'local' | 'online';
-  serverUrl: string;
-  slotName: string;
+  /** Archipelago only: the server setup, as its fields hold it. */
+  server: ServerSetupDraft;
+  deathLink: boolean;
+  trackOtherPlayers: boolean;
 }
 
 /** A plain switch starts where its catalog row's baseline says. */
-const baselineSwitch = (key: string): boolean => apBaselineValues[key] === true;
+const baselineSwitch = (key: string): boolean => baselineValues[key] === true;
 
 /** The form as a new profile first sees it: the catalog baselines, block by block. */
 const EMPTY_RANDOMIZER_FORM: RandomizerFormState = {
-  enabled: false, seed: '', mode: 'local', serverUrl: '', slotName: '',
+  enabled: false, seed: '', mode: 'local', server: EMPTY_SERVER_SETUP, deathLink: false,
+  trackOtherPlayers: true,
   keyDropShuffle: baselineSwitch('key_drop_shuffle'),
   includeNpcChecks: baselineSwitch(INCLUDE_NPC_CHECKS_KEY),
   includeWorldItems: baselineSwitch(INCLUDE_WORLD_ITEMS_KEY),
@@ -74,6 +82,7 @@ const EMPTY_RANDOMIZER_FORM: RandomizerFormState = {
   progressiveModes: defaultProgressiveModes(),
   retroBow: defaultRetroBow(),
   itemPower: DEFAULT_ITEM_POWER,
+  storyGates: DEFAULT_STORY_GATES,
   // Every family carries the copies it always carried, and the hearts climb to
   // the ceiling the game itself enforces.
   difficulty: defaultDifficulty(),
@@ -98,9 +107,12 @@ const freshRandomizerForm = (): RandomizerFormState => ({ ...EMPTY_RANDOMIZER_FO
 
 const NO_SEED_ERROR = 'The randomizer needs a seed. Type one, or keep the one thrown for you.';
 
-/** Why this form cannot be submitted; nothing while it can. */
-const randomizerFormError = (form: RandomizerFormState): string | undefined =>
-  (form.enabled && form.seed.trim() === '' ? NO_SEED_ERROR : undefined);
+/** Why this form cannot be submitted; nothing while it can. An Archipelago profile needs a server it can boot against. */
+const randomizerFormError = (form: RandomizerFormState): string | undefined => {
+  if (!form.enabled) return undefined;
+  if (form.seed.trim() === '') return NO_SEED_ERROR;
+  return form.mode === 'online' ? draftError(absorbPort(form.server)) ?? undefined : undefined;
+};
 
 const buildRandomizerConfig = (form: RandomizerFormState): ProfileRandomizerConfig | undefined => {
   if (!form.enabled) return undefined;
@@ -111,8 +123,12 @@ const buildRandomizerConfig = (form: RandomizerFormState): ProfileRandomizerConf
   };
   if (form.capacity.wallet.mode === 'custom') config.frozenSettings = { carryMoreRupees: true };
   if (form.mode === 'online') {
-    if (form.serverUrl.trim()) config.serverUrl = form.serverUrl.trim();
-    if (form.slotName.trim()) config.slotName = form.slotName.trim();
+    const server = absorbPort(form.server);
+    if (server.host.trim() !== '') config.serverUrl = serverUrlOf(server);
+    if (server.slotName.trim() !== '') config.slotName = server.slotName.trim();
+    if (server.password !== '') config.password = server.password;
+    config.deathLink = form.deathLink;
+    config.trackOtherPlayers = form.trackOtherPlayers;
   }
   return config;
 };

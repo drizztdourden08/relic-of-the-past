@@ -45,6 +45,13 @@ const canBombOrBonk: Requirement = {
 
 // ─── Fire / Ice ───
 
+/**
+ * An unlit room crossed by sight. The game lets a player walk it blind, so this is a rule of
+ * comfort: the tracker's resolver swaps this exact object for the lights the file accepts, or
+ * for nothing when dark rooms are not asked to be lit. Read on its own it is the Lamp.
+ */
+const canSeeInDarkRooms: Requirement = { allOf: [{ itemId: 'item-019' }] };
+
 const hasFireSource: Requirement = {
   anyOf: [{ itemId: 'item-008' }, { itemId: 'item-019' }], // Fire Rod / Lamp
 };
@@ -104,6 +111,7 @@ const hasCrystals = (n: number): Requirement => ({
 });
 
 export {
+  canSeeInDarkRooms,
   canActivateCrystalSwitch,
   canBombOrBonk,
   canKillMostThings,

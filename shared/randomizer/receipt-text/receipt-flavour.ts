@@ -13,7 +13,8 @@
  * first that fits the box (receipt-line.type.ts), so a long location name
  * costs the flavour, then the source, and never the numbers.
  */
-import { RETRO_QUIVER_ITEM } from '../ap-world/retro/retro-bow.data';
+import { itemKeyOfName } from '../world/display-names/item-key-name';
+import { RETRO_QUIVER_ITEM } from '../world/retro/retro-bow.data';
 import { countClassOf } from './receipt-counts';
 import type { ReceiptCount } from './receipt-counts';
 
@@ -157,8 +158,9 @@ const DIRECT_KEYS: ReadonlySet<string> = new Set<FlavourKey>([
  * pieces, otherwise the plain found line.
  */
 const flavourKeyOf = (itemName: string, isDungeonItem: boolean): FlavourKey => {
-  if (itemName === RETRO_QUIVER_ITEM) return 'quiver';
-  const countClass = countClassOf(itemName);
+  const item = itemKeyOfName(itemName);
+  if (item === RETRO_QUIVER_ITEM) return 'quiver';
+  const countClass = countClassOf(item);
   if (countClass !== undefined) {
     if (countClass.startsWith('small-key:')) return 'small-key';
     if (countClass.startsWith('progressive:')) return 'progressive';

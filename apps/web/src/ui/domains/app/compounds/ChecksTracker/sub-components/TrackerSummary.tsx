@@ -27,17 +27,14 @@ const TrackerSummary = (props: TrackerSummaryProps) => {
 
   return (
     <Box className="tracker-summary">
-      <Box className="tracker-summary__meter">
-        <ProgressBar
-          className="tracker-summary__bar"
-          value={completed}
-          secondaryValue={completed + reachable}
-          secondaryVariant="gold"
-          variant="green"
-          max={Math.max(total, 1)}
-        />
-        <Text className="tracker-summary__pct" title="Percent complete">{pct}%</Text>
-      </Box>
+      <ProgressBar
+        value={completed}
+        secondaryValue={completed + reachable}
+        secondaryVariant="gold"
+        variant="green"
+        max={Math.max(total, 1)}
+        readout={<Text title="Percent complete">{pct}%</Text>}
+      />
       <Box className="tracker-summary__stats">
         {STATS.map(({ key, label }) => (
           <Box key={key} className={`tracker-summary__stat tracker-summary__stat--${key}`} title={STATUS_LABELS[key]}>

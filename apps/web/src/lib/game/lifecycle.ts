@@ -23,6 +23,7 @@ import { useGameUIStore } from '../../stores/game-ui-store';
 import { DEFAULT_SETTINGS } from './settings';
 import { deliveryQueue } from './delivery-queue';
 import { createInstantiateWasm } from './instantiate-wasm';
+import { restoreLostContext } from './canvas-context';
 import { readOamSnapshot } from './oam-snapshot';
 import { readOamRing } from './oam-ring';
 import { loadGlueScript } from './wasm-warmup';
@@ -188,6 +189,8 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
     // this same-type context. MUST be 'webgl' (WebGL1) because SDL2's Emscripten renderer is
     // GLES2/WebGL1. A 'webgl2' context makes SDL's getContext('webgl') null, then the
     // software fallback's getContext('2d') is null too ("createImageData of null" on Android).
+    // A restart finds the context stopGame lost; bring it back before SDL asks for it.
+    await restoreLostContext(canvas);
     canvas.getContext('webgl', { preserveDrawingBuffer: true });
 
     const module: EmscriptenModule = await Zelda3({

@@ -15,7 +15,7 @@ import { spriteUrlOf } from '@shared/game/logic/queries/item-sprites';
 import { poolItemSpriteOf } from './pool-item-sprite';
 import type {
   ShopBottleContent, ShopCountedCurrency, ShopPrice,
-} from '@shared/randomizer/ap-world/shops/shop-price.type';
+} from '@shared/randomizer/world/shops/shop-price.type';
 
 const CURRENCY_SPRITE_FILES: Readonly<Record<ShopCountedCurrency, string>> = {
   rupees: 'currency-rupee',

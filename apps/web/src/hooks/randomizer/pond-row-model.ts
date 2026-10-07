@@ -5,22 +5,22 @@
  * and the preview is the plan the seed will use, not a second description of
  * it.
  */
-import { pondPlanOf } from '@shared/randomizer/ap-world/pond/pond-plan';
-import { CAPACITY_POND } from '@shared/randomizer/ap-world/pond/pond-instances.data';
-import { POND_MAX_ITEMS, POND_MAX_THROWS, POND_PRICE_LADDER } from '@shared/randomizer/ap-world/pond/pond-ladder.data';
-import { VANILLA_POND_CEILINGS } from '@shared/randomizer/ap-world/pond/pond-ceilings';
-import { pondCeilingRungOf } from '@shared/randomizer/ap-world/pond/pond-wallet-top';
-import { askOfSetting } from '@shared/randomizer/ap-world/pond/pond-ask-from-snapshot';
-import { asksOnlyRupees } from '@shared/randomizer/ap-world/pond/pond-ask.data';
-import { NO_POND_DEMANDS } from '@shared/randomizer/ap-world/pond/pond-demand-seed';
+import { pondPlanOf } from '@shared/randomizer/world/pond/pond-plan';
+import { CAPACITY_POND } from '@shared/randomizer/world/pond/pond-instances';
+import { POND_MAX_ITEMS, POND_MAX_THROWS, POND_PRICE_LADDER } from '@shared/randomizer/world/pond/pond-ladder.data';
+import { VANILLA_POND_CEILINGS } from '@shared/randomizer/world/pond/pond-ceilings';
+import { pondCeilingRungOf } from '@shared/randomizer/world/pond/pond-wallet-top';
+import { askOfSetting } from '@shared/randomizer/world/pond/pond-ask-from-snapshot';
+import { asksOnlyRupees } from '@shared/randomizer/world/pond/pond-ask.data';
+import { NO_POND_DEMANDS } from '@shared/randomizer/world/pond/pond-demand-seed';
 import { pondAskModelOf } from './pond-ask-rows';
 import { pondChargesOf, pondPreviewOf, pondWalletNoteOf } from './pond-preview';
-import { CURVE_LABELS } from '@shared/randomizer/ap-world/capacity';
-import type { CurveId } from '@shared/randomizer/ap-world/capacity';
-import type { PondDemandView } from '@shared/randomizer/ap-world/pond/pond-ask.type';
-import type { PondCeilings } from '@shared/randomizer/ap-world/pond/pond-ceilings';
-import type { PondInstance } from '@shared/randomizer/ap-world/pond/pond-instance.type';
-import type { PondSetting } from '@shared/randomizer/ap-world/pond/pond-profile.type';
+import { CURVE_LABELS } from '@shared/randomizer/world/capacity';
+import type { CurveId } from '@shared/randomizer/world/capacity';
+import type { PondDemandView } from '@shared/randomizer/world/pond/pond-ask.type';
+import type { PondCeilings } from '@shared/randomizer/world/pond/pond-ceilings';
+import type { PondInstance } from '@shared/randomizer/world/pond/pond-instance.type';
+import type { PondSetting } from '@shared/randomizer/world/pond/pond-profile.type';
 import type { PondRowModel, PondRowState } from '@domains/app/compounds/WishingPondRow';
 
 const MODE_LABELS: Readonly<Record<PondSetting['mode'], string>> = {

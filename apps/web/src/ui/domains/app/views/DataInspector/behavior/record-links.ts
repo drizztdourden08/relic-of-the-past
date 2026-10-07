@@ -1,37 +1,42 @@
 /* @layer renderer-app @kind logic */
-import {
-  all, getActor, getArea, getCheck, getConnection, getDungeon, getItem, getLocation, getScreen, getTag,
-  itemGroupById, KIND_ID_PREFIXES,
-} from '@shared/game/data';
+import { all, get, itemGroupById, KIND_ID_PREFIXES } from '@shared/game/data';
 import type { EntityKind } from '@shared/game/data';
 import { ENTITY_KINDS } from '../DataInspector.constants';
 
-/** A loose named record. Every kind carries some subset of these name fields. */
+/** A loose named record: one name field, which a few kinds leave empty. */
 interface NamedRecord {
-  vanillaName?: string;
-  randomizerName?: string;
   name?: string;
 }
 
 /** An item group has no lookup-by-id in the facade beyond `itemGroupById`; its `label` IS its name. */
-const getItemGroupRecord = (id: string): NamedRecord => ({ name: itemGroupById(id)?.label ?? id });
+const getItemGroupRecord = (id: string): NamedRecord | undefined => {
+  const label = itemGroupById(id)?.label;
+  return label === undefined ? undefined : { name: label };
+};
 
 /** No single-id lookup exists for enumeration entries (only by category); scan the small seeded set. */
-const getEnumerationRecord = (id: string): NamedRecord => ({
-  name: all('enumeration').find(entry => entry.id === id)?.label ?? id,
-});
+const getEnumerationRecord = (id: string): NamedRecord | undefined => {
+  const label = all('enumeration').find(entry => entry.id === id)?.label;
+  return label === undefined ? undefined : { name: label };
+};
 
-/** Exhaustive: every `EntityKind` resolves to a real getter. */
-const GETTERS: Record<EntityKind, (id: string) => NamedRecord> = {
-  screen: getScreen,
-  connection: getConnection,
-  check: getCheck,
-  item: getItem,
-  dungeon: getDungeon,
-  area: getArea,
-  location: getLocation,
-  actor: getActor,
-  tag: getTag,
+/**
+ * Exhaustive: every `EntityKind` resolves to a lookup that can answer "nothing".
+ *
+ * `get`, never a `getFoo` getter: the inspector labels whatever id a column holds, including
+ * one a row names before its record exists, and a getter throws on that.
+ */
+const GETTERS: Record<EntityKind, (id: string) => NamedRecord | undefined> = {
+  screen: (id) => get('screen', id),
+  connection: (id) => get('connection', id),
+  check: (id) => get('check', id),
+  item: (id) => get('item', id),
+  dungeon: (id) => get('dungeon', id),
+  area: (id) => get('area', id),
+  location: (id) => get('location', id),
+  region: (id) => get('region', id),
+  actor: (id) => get('actor', id),
+  tag: (id) => get('tag', id),
   'item-group': getItemGroupRecord,
   enumeration: getEnumerationRecord,
 };
@@ -61,8 +66,7 @@ const defaultIdRefDisplay = (id: string, targetKindHint?: string): string | unde
   const kind = asEntityKind(targetKindHint) ?? entityKindFromId(id);
   const getter = kind && GETTERS[kind];
   if (!getter) return undefined;
-  const record = getter(id);
-  return record.vanillaName ?? record.randomizerName ?? record.name;
+  return getter(id)?.name;
 };
 
 /** The display name an id resolves to, for link text. Falls back to the id itself. */

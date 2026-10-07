@@ -1899,7 +1899,8 @@ bool Sprite_PrepOamCoordOrDoubleRet(int k, PrepOamCoordsRet *ret) {  // 86e41e
   // spawn rect could sit outside the keep-alive window: spawned, killed, spawned again, which reads on
   // screen as the sprite flickering in and out. Width is unchanged; only the frame is corrected, so with
   // no lock this is the stock window.
-  if (xr < -(0x40 + xt) || xr >= 0x130 + xt ||
+  if (GameHook_SpriteBeyondShownRoom(k, xr, yr) ||
+      xr < -(0x40 + xt) || xr >= 0x130 + xt ||
       (yr < -(0x40 + yt) || yr >= 0x130 + yt) && !(sprite_flags4[k] & 0x20)) {
     sprite_pause[k]++;
     if (!(sprite_defl_bits[k] & 0x80))
@@ -2389,7 +2390,7 @@ void Sprite_CalculateSwordDamage(int k) {  // 86ed3f
 void Sprite_ApplyCalculatedDamage(int k, int a) {  // 86ed89
   if ((sprite_flags3[k] & 0x40) || sprite_type[k] >= 0xD8)
     return;
-  uint8 dmg = kEnemyDamages[damage_type_determiner * 8 | enemy_damage_data[sprite_type[k] * 16 | damage_type_determiner]];
+  uint8 dmg = GameHook_BarrierDamage(k, kEnemyDamages[damage_type_determiner * 8 | enemy_damage_data[sprite_type[k] * 16 | damage_type_determiner]]);
   Sprite_GiveDamage(k, dmg, a);
 }
 
@@ -2755,6 +2756,8 @@ uint8 Sprite_CheckDamageFromLink(int k) {  // 86f2b4
   if (link_position_mode & 0x10)
     return kCheckDamageFromPlayer_Carry | kCheckDamageFromPlayer_Ne;
 
+  if (sprite_type[k] >= 0xd6 && !GameHook_StoryGate(kGate_Ganon, true))
+    return 0;
   if (link_item_in_hand & 10) {
     if (sprite_type[k] >= 0xd6 && !GameHook_HammerReachesLastFight())
       return 0;

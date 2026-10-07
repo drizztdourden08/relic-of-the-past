@@ -720,6 +720,7 @@ void GameOver_SplatAndFade() {  // 89f3de
       return;
     }
   }
+  GameHook_LinkDied();
   index_of_changable_dungeon_objs[0] = 0;
   index_of_changable_dungeon_objs[1] = 0;
   nmi_subroutine_index = 22;
@@ -2241,6 +2242,8 @@ enum {
 #define TEXTCMD_MK(c, x, m) ((c) << 6 | (x) << 1 | (m))
 
 uint32 Text_DecodeCmd(uint8 a, const uint8 *src) {
+  { uint32 highlight = GameHook_DialogHighlightDecode(a, src); if (highlight) return highlight; }
+  { uint32 extra = GameHook_DialogExtraGlyphDecode(a, src); if (extra) return extra; }
   if ((g_zenv.dialogue_flags & 1) == 0) {
     // US encoding
     if (a < kTextCommandStart_US)
@@ -2466,6 +2469,10 @@ RESTART:;
     if ((vwf_line_speed_cur == 0 && !GameHook_DialogTypewriter()) || (enhanced_features0 & kFeatures0_AutoSkipDialog))
       goto RESTART;
     break;
+  case kDialogCmd_Highlight:  // a highlight span opens or closes (dialog_highlight.c); draws nothing
+    GameHook_DialogHighlightSet(TEXTCMD_PARAM(cmd));
+    dialogue_msg_read_pos += 1 + TEXTCMD_MULTIBYTE(cmd);
+    goto RESTART;
   case kTextCmd_NextPic:  // RenderText_Draw_NextImage
     if (main_module_index == 20) {
       PaletteFilterHistory();
@@ -2651,6 +2658,7 @@ void VWF_RenderSingle(int c) {  // 8ecab8
     if (r4 != 0)
       WORD(mbuf[x + 0]) = r4;
   }
+  GameHook_DialogGlyphDrawn();
 }
 
 void RenderText_Draw_Choose2LowOr3() {  // 8ecd1a

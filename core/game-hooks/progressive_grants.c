@@ -1,9 +1,9 @@
 /* @layer core-game-hooks @kind native */
 // Virtual receive ids for the progressive equipment families (blade, shield, lift
-// gloves, armor, bow). The pool carries N copies of one "progressive" item per family;
+// gloves, armor, bow, ocarina). The pool carries N copies of one "progressive" item per family;
 // the native receive routine SETS a tier (kValueToGiveItemTo, misc.c), it never
 // increments, so a copy resolved to a fixed native id at session-arm time re-set the
-// same tier on every grant. This module reserves 0x62-0x66, ABOVE the upgrade range
+// same tier on every grant. This module reserves 0x62-0x66 and 0x82, ABOVE the upgrade range
 // 0x50-0x61 of upgrade_grants.c, so a progressive copy rides every substitution table
 // unresolved and is mapped to the NEXT tier's native id from live inventory at the
 // last moment before the receive flow (the same contract as the counter upgrades):
@@ -12,8 +12,11 @@
 //   0x64  gloves  tiers 0x1b / 0x1c                (link_item_gloves 0..2)
 //   0x65  armor   tiers 0x22 / 0x23                (link_armor 0..2)
 //   0x66  bow     tiers 0x0b / 0x3b                (link_item_bow: 1-2 = first, 3-4 = second)
+//   0x82  ocarina tiers 0x14 / 0x4a                (link_item_flute: 2 = flute, 3 = woken)
+// The ocarina came after 0x66's neighbours were taken, so its id sits in the free span above the
+// prize crystals (dungeon_item_ids.h) and FamilyOfVirtualId maps it to the sixth family.
 // A session may also leave RUNGS OUT of a family. The pool then carries one copy per rung that
-// is still there (the option catalog's tier ticks, shared/randomizer/ap-world/progressive/), and
+// is still there (the option catalog's tier ticks, shared/randomizer/world/progressive/), and
 // a pickup climbs to the next rung that is still there instead of to the next native tier, so
 // unticking a middle rung shortens the ladder instead of leaving a hole in it. The mask is
 // armed per family at session start (WasmSetProgressiveTiers); an unarmed family, which is every
@@ -37,6 +40,8 @@
 
 #define PROGRESSIVE_VIRT_FIRST 0x62
 #define PROGRESSIVE_VIRT_LAST 0x66
+#define PROGRESSIVE_OCARINA_ID 0x82
+#define OCARINA_FAMILY 5
 // The reference randomizer's replacement past the top tier: twenty rupees.
 #define PROGRESSIVE_CAP_ITEM 0x36
 // The blade tier whose native receipt starts the pedestal ceremony.
@@ -52,12 +57,14 @@ static const uint8 kShieldTierIds[3] = {0x04, 0x05, 0x06};
 static const uint8 kGloveTierIds[2] = {0x1b, 0x1c};
 static const uint8 kArmorTierIds[2] = {0x22, 0x23};
 static const uint8 kBowTierIds[2] = {0x0b, 0x3b};
+static const uint8 kOcarinaTierIds[2] = {0x14, 0x4a};
 
-static const ProgressiveFamily kFamilies[5] = {
+static const ProgressiveFamily kFamilies[6] = {
   {kBladeTierIds, 4}, {kShieldTierIds, 3}, {kGloveTierIds, 2}, {kArmorTierIds, 2}, {kBowTierIds, 2},
+  {kOcarinaTierIds, 2},
 };
 
-#define PROGRESSIVE_FAMILY_COUNT 5
+#define PROGRESSIVE_FAMILY_COUNT 6
 // Bit k set: rung k is in this seed. Zero is UNARMED, not "no rungs": a session that never
 // speaks gets the whole ladder, which is what keeps an unarmed core byte-identical.
 static uint8 g_tier_mask[PROGRESSIVE_FAMILY_COUNT];
@@ -84,16 +91,24 @@ static int NextPresentTier(int family, int tier) {
 // so its tier is the halved value.
 static int CurrentTier(int family) {
   switch (family) {
-    case 0: return link_sword_type;
+    // While the smiths keep the sword the byte reads 255; the level they keep is the tier.
+    case 0: return GameHook_SwordLevelOwned();
     case 1: return link_shield_type;
     case 2: return link_item_gloves;
     case 3: return link_armor;
-    default: return (link_item_bow + 1) >> 1;
+    case 4: return (link_item_bow + 1) >> 1;
+    // The byte shares its slot with the shovel (1); 2 is the flute, 3 the woken flute.
+    default: return link_item_flute >= 3 ? 2 : link_item_flute == 2 ? 1 : 0;
   }
 }
 
 bool GameHook_IsProgressiveVirtualId(uint8 item) {
-  return item >= PROGRESSIVE_VIRT_FIRST && item <= PROGRESSIVE_VIRT_LAST;
+  return (item >= PROGRESSIVE_VIRT_FIRST && item <= PROGRESSIVE_VIRT_LAST) || item == PROGRESSIVE_OCARINA_ID;
+}
+
+// The family a progressive id belongs to. Only called on an id the test above accepted.
+static int FamilyOfVirtualId(uint8 item) {
+  return item == PROGRESSIVE_OCARINA_ID ? OCARINA_FAMILY : item - PROGRESSIVE_VIRT_FIRST;
 }
 
 // Pure lookup for the draw seams and the resolver alike: the native id the NEXT tier
@@ -101,7 +116,7 @@ bool GameHook_IsProgressiveVirtualId(uint8 item) {
 // item can be drawn with it every frame and always agree with the eventual grant.
 uint8 GameHook_ProgressivePresentationOf(uint8 item) {
   if (!GameHook_IsProgressiveVirtualId(item)) return item;
-  int family = item - PROGRESSIVE_VIRT_FIRST;
+  int family = FamilyOfVirtualId(item);
   int tier = NextPresentTier(family, CurrentTier(family));
   if (tier >= kFamilies[family].tier_count) return PROGRESSIVE_CAP_ITEM;
   return kFamilies[family].ids[tier];
@@ -157,7 +172,7 @@ uint8 GameHook_ResolveProgressiveItem(uint8 item) {
   if (!GrantSeamOpen()) return native;
   if (native == PEDESTAL_BLADE_ID) ArmCeremonyGuard();
   printf("[Randomizer] Progressive grant resolved: 0x%02x -> 0x%02x (tier %d)\n",
-         item, native, CurrentTier(item - PROGRESSIVE_VIRT_FIRST));
+         item, native, CurrentTier(FamilyOfVirtualId(item)));
   return native;
 }
 
@@ -181,7 +196,7 @@ void WasmClearProgressiveTiers(void) {
 // ─── Families whose rungs arrive as themselves ───
 //
 // A session may put a family's rungs in the pool AS THE RUNGS instead of as nameless
-// copies (the per-family order setting, shared/randomizer/ap-world/progressive/). Those
+// copies (the per-family order setting, shared/randomizer/world/progressive/). Those
 // pickups carry the tier's own native id, so they never reach the resolver above and the
 // ladder mask never touches them: finding the top rung first really does hand over the
 // top rung, which is the whole point of the setting.

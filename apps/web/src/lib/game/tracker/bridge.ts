@@ -10,7 +10,8 @@ import { log } from '../../log-bus';
 import { getItem, getItemByGameId } from '@shared/game/data';
 import type { CheckId, ItemId } from '@shared/game/data';
 import { parseInventoryBuffer, inventoryToItemSet, setsEqual } from './inventory';
-import { readCompletedChecks } from './flag-polling';
+import { readCompletedChecks, readEventStatus } from './flag-polling';
+import { eventStatusEqual } from './event-status';
 
 
 /**
@@ -74,13 +75,34 @@ const getCompletedChecks = (): Set<CheckId> => {
   return currentCompletedChecks;
 };
 
+let currentEventStatus: Map<CheckId, boolean> = new Map();
+const eventStatusListeners = new Set<(status: ReadonlyMap<CheckId, boolean>) => void>();
+
+const onEventStatusChanged = (fn: (status: ReadonlyMap<CheckId, boolean>) => void): () => void => {
+  eventStatusListeners.add(fn);
+  return () => eventStatusListeners.delete(fn);
+};
+
+const getEventStatus = (): ReadonlyMap<CheckId, boolean> => currentEventStatus;
+
+/** The live side of the reversible events, polled beside the completed set. */
+const pollEventStatus = (mod: Parameters<typeof readEventStatus>[0]): void => {
+  const next = readEventStatus(mod, currentInventory);
+  if (!next || eventStatusEqual(currentEventStatus, next)) return;
+  currentEventStatus = next;
+  for (const fn of eventStatusListeners) {
+    try { fn(next); } catch { /* ignore */ }
+  }
+};
+
 const pollRoomFlags = (force = false): void => {
   const mod = getModule();
   if (!mod) return;
 
   try {
-    const newCompleted = readCompletedChecks(mod as any);
+    const newCompleted = readCompletedChecks(mod as any, currentInventory);
     if (!newCompleted) return;
+    pollEventStatus(mod as any);
 
     if (force || !setsEqual(currentCompletedChecks, newCompleted)) {
       log.app(`[Tracker] Completed checks: ${newCompleted.size} (was ${currentCompletedChecks.size})`);
@@ -113,7 +135,7 @@ const pollInventoryState = (force = false): void => {
 
     if (force || !setsEqual(currentInventory, newInventory)) {
       // Logged by name: a reader needs to recognise what the player picked up.
-      log.app(`[Tracker] Inventory changed: ${[...newInventory].map((id) => getItem(id).randomizerName).join(', ') || '(empty)'}`);
+      log.app(`[Tracker] Inventory changed: ${[...newInventory].map((id) => getItem(id).name).join(', ') || '(empty)'}`);
       currentInventory = newInventory;
       for (const fn of inventoryListeners) {
         try { fn(newInventory); } catch { /* ignore */ }
@@ -137,7 +159,7 @@ const initTrackerBridge = (): void => {
   (window as any).__onItemReceived = (itemId: number, method: number) => {
     const item = getItemByGameId({ receiveItemId: itemId });
     if (item) {
-      log.app(`[Tracker] Item received: ${item.id} ${item.randomizerName} (0x${itemId.toString(16)}, method=${method})`);
+      log.app(`[Tracker] Item received: ${item.id} ${item.name} (0x${itemId.toString(16)}, method=${method})`);
       for (const fn of itemListeners) {
         try { fn(item.id, itemId, method); } catch { /* ignore */ }
       }
@@ -180,6 +202,8 @@ export {
   destroyTrackerBridge,
   getCompletedChecks,
   getCurrentInventory,
+  getEventStatus,
+  onEventStatusChanged,
   getUnknownItems,
   initTrackerBridge,
   loadUnknownItems,

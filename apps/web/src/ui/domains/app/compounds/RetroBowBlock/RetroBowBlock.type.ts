@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
-import type { CapacityProfile } from '@shared/randomizer/ap-world/capacity';
-import type { ProgressiveSetting } from '@shared/randomizer/ap-world/progressive/progressive.type';
-import type { RetroBowSetting } from '@shared/randomizer/ap-world/retro/retro.type';
+import type { CapacityProfile } from '@shared/randomizer/world/capacity';
+import type { ProgressiveSetting } from '@shared/randomizer/world/progressive/progressive.type';
+import type { RetroBowSetting } from '@shared/randomizer/world/retro/retro.type';
 
 interface RetroBowBlockProps {
   setting: RetroBowSetting;
@@ -17,7 +17,7 @@ interface RetroBowBlockProps {
    * apply and its slider is shown inert with the reason on it.
    */
   tiers: ProgressiveSetting;
-  /** Absent renders the whole block frozen. */
+  /** Absent renders the whole block as a read-out: the read-only Options page. */
   onChange?: (next: RetroBowSetting) => void;
 }
 

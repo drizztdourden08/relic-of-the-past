@@ -165,9 +165,9 @@ const useSimRun = ({ activeProfile, loadProfileForGame }: SimRunDeps) => {
         // Id first so the entry is unambiguous and sorts stably, name after so a
         // person can read the artifact. The name is resolved here and stored nowhere.
         const inventory = {
-          items: [...state.inventory].sort().map((id) => `${id} ${getItem(id).randomizerName}`),
+          items: [...state.inventory].sort().map((id) => `${id} ${getItem(id).name}`),
           keys: Object.fromEntries([...state.keys].filter(([, n]) => n > 0)),
-          bigKeys: [...state.bigKeys].sort().map((id) => `${id} ${getDungeon(id).randomizerName}`),
+          bigKeys: [...state.bigKeys].sort().map((id) => `${id} ${getDungeon(id).name}`),
           events: [...state.events].sort(),
           // What the player actually holds, read from the save, not tallied from
           // check names: hearts, equipment tiers and the per-dungeon

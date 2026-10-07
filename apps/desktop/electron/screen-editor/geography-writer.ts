@@ -8,8 +8,8 @@
  * one take the whole record, like every other record-facade collection, and go
  * through the shared engine.
  *
- * Both files are flat and singular, so there is no destination to derive. That
- * one thing makes these two the cheapest of the six.
+ * Each collection is one file per world, so the destination comes from the record's
+ * own world (record-file-targets.ts). That one thing makes these two the cheapest of the six.
  */
 
 import { readFile, writeFile } from 'fs/promises';
@@ -21,6 +21,7 @@ import type {
   Allocated, AllocateGeographyArgs, AllocateGeographyResult, DeleteRecordArgs, WriteRecordArgs, WriteRecordResult,
 } from '@shared/ipc/screen-editor-contract';
 import { deleteRecord, updateRecord } from './dataset-record-writer';
+import type { FileTarget } from '@shared/game/data/record-file-targets';
 import type { RecordWriterSpec } from './dataset-record-writer';
 import { withAllocatedIds } from './id-allocator';
 import { insertBeforeArrayClose } from './source-writers';
@@ -29,6 +30,9 @@ import { insertBeforeArrayClose } from './source-writers';
 // Areas and locations are records, so they sit under the synced record tree.
 const dataFile = (root: string, name: string): string =>
   join(root, 'shared', 'game', 'data', 'records', name);
+
+// Both resolvers read a world off the record, so neither can come back without a path.
+const fileFor = (target: FileTarget): string => target.relativePath as string;
 
 const append = async (path: string, code: string): Promise<string | null> => {
   const content = await readFile(path, 'utf-8');
@@ -39,13 +43,13 @@ const append = async (path: string, code: string): Promise<string | null> => {
 };
 
 const allocateGeography = async (root: string, args: AllocateGeographyArgs): Promise<AllocateGeographyResult> => {
-  const name = args.randomizerName.trim();
+  const name = args.name.trim();
   if (!name) return { success: false, error: 'A display name is required' };
 
   if (args.kind === 'area') {
     return withAllocatedIds(root, 'area', 1, async ([id]) => {
-      const record: AreaRecord = { id: id as AreaRecord['id'], world: args.world, randomizerName: name };
-      const error = await append(dataFile(root, 'areas.ts'), serializeAreaRecord(record));
+      const record: AreaRecord = { id: id as AreaRecord['id'], world: args.world, name: name };
+      const error = await append(dataFile(root, fileFor(areaRecordFile(record))), serializeAreaRecord(record));
       if (error) return { success: false, error };
       return { success: true, kind: 'area', record: record as Allocated<AreaRecord> };
     });
@@ -55,9 +59,9 @@ const allocateGeography = async (root: string, args: AllocateGeographyArgs): Pro
     const record: LocationRecord = {
       id: id as LocationRecord['id'],
       areaId: args.areaId as AreaId,
-      randomizerName: name,
+      name: name,
     };
-    const error = await append(dataFile(root, 'locations.ts'), serializeLocationRecord(record));
+    const error = await append(dataFile(root, fileFor(locationRecordFile(record))), serializeLocationRecord(record));
     if (error) return { success: false, error };
     return { success: true, kind: 'location', record: record as Allocated<LocationRecord> };
   });
@@ -65,13 +69,15 @@ const allocateGeography = async (root: string, args: AllocateGeographyArgs): Pro
 
 const AREA_SPEC: RecordWriterSpec<AreaRecord> = {
   kind: 'area',
-  target: () => areaRecordFile(),
+  recordType: 'AreaRecord',
+  target: record => areaRecordFile(record),
   serialize: serializeAreaRecord,
 };
 
 const LOCATION_SPEC: RecordWriterSpec<LocationRecord> = {
   kind: 'location',
-  target: () => locationRecordFile(),
+  recordType: 'LocationRecord',
+  target: record => locationRecordFile(record),
   serialize: serializeLocationRecord,
 };
 

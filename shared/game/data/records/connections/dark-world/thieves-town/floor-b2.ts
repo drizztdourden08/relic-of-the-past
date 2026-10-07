@@ -1,0 +1,90 @@
+/* @layer shared-game @kind data */
+
+import type { ConnectionRecord } from '@shared/game/data/types';
+
+const DW_THIEVES_TOWN_FLOOR_B2_CONNECTIONS: ConnectionRecord[] = [
+  {
+    id: 'connection-681',
+    screenId: 'screen-419',
+    toConnectionId: 'connection-1048',
+    kind: 'edge',
+    placement: { form: 'border', side: 'east', rect: { x: 63, y: 0, w: 1, h: 64 }, tiles: [] },
+    canExit: true,
+    dungeonId: 'dungeon-009',
+    tags: ['tag-076'],
+  },
+  {
+    id: 'connection-682',
+    screenId: 'screen-419',
+    toConnectionId: 'connection-1049',
+    kind: 'door',
+    placement: {
+      form: 'border',
+      side: 'south',
+      rect: { x: 15, y: 63, w: 2, h: 1 },
+      tiles: [{ x: 15, y: 63 }, { x: 16, y: 63 }],
+    },
+    canExit: true,
+    dungeonId: 'dungeon-009',
+    tags: ['tag-076'],
+  },
+  {
+    id: 'connection-684',
+    screenId: 'screen-430',
+    toConnectionId: 'connection-1051',
+    kind: 'edge',
+    placement: { form: 'border', side: 'south', rect: { x: 0, y: 63, w: 64, h: 1 }, tiles: [] },
+    canExit: true,
+    dungeonId: 'dungeon-009',
+    tags: ['tag-076'],
+  },
+  {
+    id: 'connection-685',
+    screenId: 'screen-430',
+    toConnectionId: 'connection-1052',
+    kind: 'door',
+    placement: { form: 'border', side: 'east', rect: { x: 63, y: 0, w: 1, h: 64 }, tiles: [] },
+    canExit: true,
+    dungeonId: 'dungeon-009',
+    tags: ['tag-076'],
+  },
+  {
+    id: 'connection-686',
+    screenId: 'screen-431',
+    toConnectionId: 'connection-1053',
+    kind: 'door',
+    placement: { form: 'border', side: 'south', rect: { x: 0, y: 63, w: 64, h: 1 }, tiles: [] },
+    canExit: true,
+    dungeonId: 'dungeon-009',
+    tags: ['tag-076'],
+  },
+  {
+    id: 'connection-1049',
+    screenId: 'screen-430',
+    toConnectionId: 'connection-682',
+    kind: 'door',
+    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
+    canExit: true,
+    tags: [],
+  },
+  {
+    id: 'connection-1050',
+    screenId: 'screen-431',
+    toConnectionId: 'connection-683',
+    kind: 'door',
+    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
+    canExit: true,
+    tags: [],
+  },
+  {
+    id: 'connection-1052',
+    screenId: 'screen-431',
+    toConnectionId: 'connection-685',
+    kind: 'door',
+    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
+    canExit: true,
+    tags: [],
+  },
+];
+
+export { DW_THIEVES_TOWN_FLOOR_B2_CONNECTIONS };

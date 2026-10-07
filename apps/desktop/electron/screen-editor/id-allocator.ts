@@ -11,16 +11,16 @@ import { collectKindFiles } from './data-files';
 
 /**
  * Where each kind's records live, relative to shared/game/data/. A LIST because a
- * collection split by size (the two dungeon files) has no folder of its own to scan.
+ * kind may one day be spread over more than one folder.
  */
 const KIND_ROOTS = {
   screen: ['screens'],
   connection: ['connections'],
   check: ['checks'],
   item: ['items'],
-  dungeon: ['dungeons-1.ts', 'dungeons-2.ts'],
-  area: ['areas.ts'],
-  location: ['locations.ts'],
+  dungeon: ['dungeons'],
+  area: ['areas'],
+  location: ['locations'],
   actor: ['actors'],
   tag: ['tags'],
   'item-group': ['item-groups/item-groups.ts'],

@@ -12,28 +12,22 @@ import { readSnapshotBytes, readStamp } from './state-file';
 import type { Loadability, StateStamp, TargetCompat } from './types';
 
 /**
- * Whether this build can load a save state file.
- *
- * An unstamped file predates the stamp, so its format is the baseline one by definition.
- * No build that could have written it produced anything else. Falling back to the
- * snapshot total keeps that judgement honest without inventing a stamp for it.
+ * Whether this build can load a save state file. Every save this app writes carries a
+ * stamp, so a file without one was made by a version this build does not read.
  */
 const checkLoadable = (buffer: ArrayBuffer): Loadability => {
-  const snapshotBytes = readSnapshotBytes(buffer);
-  if (snapshotBytes === null) {
+  if (readSnapshotBytes(buffer) === null) {
     return { ok: false, stamp: null, reason: 'not-a-state', message: 'This file is not a save state.' };
   }
 
   const stamp = readStamp(buffer);
   if (!stamp) {
-    return snapshotBytes === CURRENT_STATE_FORMAT.totalBytes
-      ? { ok: true, stamp: null }
-      : {
-        ok: false,
-        stamp: null,
-        reason: 'format-mismatch',
-        message: 'This save state was made by a version that used a different save state format.',
-      };
+    return {
+      ok: false,
+      stamp: null,
+      reason: 'format-mismatch',
+      message: 'This save state was made by a version that used a different save state format.',
+    };
   }
 
   if (stamp.formatId === CURRENT_STATE_FORMAT.id) return { ok: true, stamp };

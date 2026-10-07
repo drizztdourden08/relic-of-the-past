@@ -4,9 +4,8 @@
  * again from the same stats so the bridge and the fill always name the same
  * rows. Option toggles lock whole scope tables; a toggle on locks the
  * capability probe's undeliverable remainder. The capacity spots follow the
- * profile the placement was generated with (capacityProfileOfStats: a
- * placement from before the profile existed maps through the legacy shape):
- * a present fairy slot not proven deliverable stays vanilla, and a vanilla
+ * profile the placement was generated with: a present fairy slot not proven
+ * deliverable stays vanilla, and a vanilla
  * meter locks the bat explicitly, exactly as fill-world.ts does. A Custom
  * family with a locked spot also hands the poller its starting rung (0 is
  * the empty tier), so the pond's "purchased" compare keeps meaning "advanced
@@ -15,27 +14,25 @@
  * upgrade runs; only a placement that recorded the rule does.
  */
 
-import { capacityProfileOfStats } from '@shared/randomizer/ap-world/fill/placement-capacity';
-import { familyById, startTierOf } from '@shared/randomizer/ap-world/capacity';
+import type { LocationKey } from '@shared/randomizer/world/location-key';
+import { familyById, startTierOf } from '@shared/randomizer/world/capacity';
 import {
   familyOfSpot, lockedCapacitySpotsOf, spotOfFamily,
-} from '@shared/randomizer/ap-world/capacity/capacity-spots';
+} from '@shared/randomizer/world/capacity/capacity-spots';
 import {
   probeDeliverablePondLocations, undeliverableNpcLocations, undeliverableWorldLocations,
 } from './npc-capability';
-import type { ApPlacementStats } from '@shared/randomizer/ap-world/fill/ap-placement.type';
-import type { CapacityProfile } from '@shared/randomizer/ap-world/capacity';
-import { POND_PRIZE_LOCATIONS } from '@shared/randomizer/ap-world/pond/pond-locations.data';
-import { pondProfilesOfStats } from '@shared/randomizer/ap-world/fill/placement-ponds';
-import { NO_SHOP_SCOPE } from '@shared/randomizer/ap-world/shops/shop-scope-from-values';
-import { pondVanillaSlotsOf } from '@shared/randomizer/ap-world/pond/pond-vanilla-slots';
+import type { PlacementStats } from '@shared/randomizer/world/fill/placement.type';
+import type { CapacityProfile } from '@shared/randomizer/world/capacity';
+import { POND_PRIZE_LOCATIONS } from '@shared/randomizer/world/pond/pond-rungs';
+import { pondVanillaSlotsOf } from '@shared/randomizer/world/pond/pond-vanilla-slots';
 import { wishPondRungKeysOf } from './wish-pond-rung-keys';
 import type { ScopeFlags } from './scope-lock';
 
 
 
 /** The capacity spots this profile keeps vanilla: undeliverable fairy slots, plus the bat of a vanilla meter. */
-const capacityLockedSpotsOf = (profile: CapacityProfile): ReadonlySet<string> => {
+const capacityLockedSpotsOf = (profile: CapacityProfile): ReadonlySet<LocationKey> => {
   const locked = new Set(lockedCapacitySpotsOf(profile, probeDeliverablePondLocations()));
   const meterSpot = spotOfFamily('meter');
   if (profile.meter.mode === 'vanilla' && meterSpot !== undefined) locked.add(meterSpot);
@@ -44,7 +41,7 @@ const capacityLockedSpotsOf = (profile: CapacityProfile): ReadonlySet<string> =>
 
 /** location → starting rung, for the locked spots of a Custom family (rung 0 included; other modes omitted). */
 const capacityStartTiersOf = (
-  profile: CapacityProfile, locked: ReadonlySet<string>,
+  profile: CapacityProfile, locked: ReadonlySet<LocationKey>,
 ): ReadonlyMap<string, number> => {
   const tiers = new Map<string, number>();
   for (const location of locked) {
@@ -56,41 +53,37 @@ const capacityStartTiersOf = (
   return tiers;
 };
 
-const scopeFlagsOfStats = (stats: ApPlacementStats): ScopeFlags => {
-  const includeWorldItems = stats.includeWorldItems ?? stats.includeNpcChecks;
-  const profile = capacityProfileOfStats(stats);
+const scopeFlagsOfStats = (stats: PlacementStats): ScopeFlags => {
+  const { includeWorldItems, capacity: profile, ponds } = stats;
   // A non-legacy pond owns its prize slots outright: they are proven deliverable
   // at generation or they are not locations at all, so nothing of the pond is
   // ever capability-locked here.
-  const ponds = pondProfilesOfStats(stats);
   const pondOwnsSlots = ponds.capacity.mode !== 'capacity';
   const wishPondRungs = wishPondRungKeysOf(ponds);
-  const followMode = stats.pondSlotsFollowMode === true;
-  const pondLocked = pondVanillaSlotsOf(ponds, probeDeliverablePondLocations(), followMode).locked;
-  const capacityLockedLocations = pondOwnsSlots ? new Set<string>() : capacityLockedSpotsOf(profile);
+  const pondSlots = pondVanillaSlotsOf(ponds, probeDeliverablePondLocations(), stats.pondSlotsFollowMode);
+  const pondLocked = pondSlots.locked;
+  const capacityLockedLocations = pondOwnsSlots ? new Set<LocationKey>() : capacityLockedSpotsOf(profile);
   return {
     keyDropShuffle: stats.keyDropShuffle,
     includeNpcChecks: stats.includeNpcChecks,
     includeWorldItems,
-    // Absent on a placement generated before the option existed: those hold the
-    // vanilla prizes and must keep every prize slot locked.
-    shufflePrizes: stats.shufflePrizes === true,
+    shufflePrizes: stats.shufflePrizes,
     // A toggle on: generation locked the undeliverable scope remainder;
     // classify with the same probe so both sides always name the same rows.
     ...(stats.includeNpcChecks ? { npcLockedLocations: undeliverableNpcLocations() } : {}),
     ...(includeWorldItems ? { worldLockedLocations: undeliverableWorldLocations() } : {}),
     capacityLockedLocations,
     ...(pondLocked.size > 0 ? { pondLockedItems: pondLocked } : {}),
+    // A slot sold as a prize rung is out of the npc and world scopes, as the fill left it.
+    ...(pondSlots.pairAsPrizes.length > 0 ? { pondPrizeSlots: new Set(pondSlots.pairAsPrizes) } : {}),
     capacityStartTiers: capacityStartTiersOf(profile, capacityLockedLocations),
-    // A placement frozen before shops existed opened no shelf.
-    shops: stats.shops ?? NO_SHOP_SCOPE,
+    shops: stats.shops,
     // The rolled prices live on the placement, not its stats; the plan builder merges them in.
     shopPrices: {},
-    // A placement frozen before the pond option, or one that kept the legacy
-    // pond, carries no prize slots at all: its two pond names stay the capacity
-    // families' spots and every classification below is the one it always was.
+    // A placement that kept the legacy pond carries no prize slots at all: its two
+    // pond names stay the capacity families' spots.
     ...(pondOwnsSlots
-      ? { pondPrizeLocations: POND_PRIZE_LOCATIONS.slice(0, stats.pondPrizeCount ?? 0) }
+      ? { pondPrizeLocations: POND_PRIZE_LOCATIONS.slice(0, stats.pondPrizeCount) }
       : {}),
     // Each wish pond's numbered rungs are that pond's own, apart from the capacity pond's.
     ...(wishPondRungs.size > 0 ? { wishPondRungs } : {}),

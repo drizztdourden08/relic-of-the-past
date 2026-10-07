@@ -9,10 +9,13 @@
  * (completed-checks-core.ts), which the offline battery-save reader feeds
  * with file-backed readers of the same shape.
  */
+import { buildPresenceState } from '@shared/game/simulation/presence/state';
 import { isCheckPhysicallyArmed } from '../randomizer-client/override-fire-registry';
 import { computeCompletedChecks } from './completed-checks-core';
+import { computeEventStatus } from './event-status';
 import { outOfBedCheckId } from './check-facts';
-import type { CheckId } from '@shared/game/data';
+import { withCollectedChecks } from './collected-checks';
+import type { CheckId, ItemId } from '@shared/game/data';
 
 interface WasmModule {
   ccall(name: string, returnType: string, argTypes: string[], args: unknown[]): unknown;
@@ -40,7 +43,7 @@ const roomWordReader = (heap: Uint8Array, roomPtr: number, livePtr: number): Roo
   };
 };
 
-const readCompletedChecks = (mod: WasmModule): Set<CheckId> | null => {
+const readCompletedChecks = (mod: WasmModule, inventory: ReadonlySet<ItemId> | null = null): Set<CheckId> | null => {
   const heap = mod.HEAPU8;
   if (!heap) return null;
 
@@ -48,12 +51,17 @@ const readCompletedChecks = (mod: WasmModule): Set<CheckId> | null => {
   const livePtr = mod.ccall('WasmGetLiveRoomFlags', 'number', [], []) as number;
   const owPtr = mod.ccall('WasmGetOverworldFlags', 'number', [], []) as number;
   const progPtr = mod.ccall('WasmGetProgressFlags', 'number', [], []) as number;
+  // The event ledger, guarded: a core built before it has no export to call.
+  let eventPtr = 0;
+  try { eventPtr = mod.ccall('WasmGetEventBytes', 'number', [], []) as number; } catch { eventPtr = 0; }
 
   const words = roomPtr ? roomWordReader(heap, roomPtr, livePtr) : null;
   const newCompleted = computeCompletedChecks({
     readRoomWord: words ? words.read : null,
     readOwByte: owPtr ? (owScreen: number): number => heap[owPtr + owScreen] : null,
     readProgByte: progPtr ? (bufferIndex: number): number => heap[progPtr + bufferIndex] : null,
+    readEventByte: eventPtr ? (byteIndex: number): number => heap[eventPtr + byteIndex] : null,
+    inventory,
   }, isCheckPhysicallyArmed);
 
   // Direct read of the bed state, for the window before the progress buffer is
@@ -63,7 +71,36 @@ const readCompletedChecks = (mod: WasmModule): Set<CheckId> | null => {
     if (id) newCompleted.add(id);
   }
 
-  return newCompleted;
+  // What the online room holds as done shows as done too (collected-checks.ts).
+  return withCollectedChecks(newCompleted);
 };
 
-export { readCompletedChecks };
+/** How many progress bytes, overworld event bytes and room words the exports expose. */
+const PROGRESS_BYTES = 32;
+const OW_EVENT_BYTES = 0x82;
+const ROOM_WORDS = 0x140;
+const STORY_STATUS_BYTES = 4;
+
+/** The live status of every reversible event, from the same pointers the sweep reads. */
+const readEventStatus = (mod: WasmModule, inventory: ReadonlySet<ItemId>): Map<CheckId, boolean> | null => {
+  const heap = mod.HEAPU8;
+  if (!heap) return null;
+  const roomPtr = mod.ccall('WasmGetRoomFlags', 'number', [], []) as number;
+  const owPtr = mod.ccall('WasmGetOverworldFlags', 'number', [], []) as number;
+  const progPtr = mod.ccall('WasmGetProgressFlags', 'number', [], []) as number;
+  if (!roomPtr || !owPtr || !progPtr) return null;
+  const roomState = new Uint16Array(heap.buffer, heap.byteOffset + roomPtr, ROOM_WORDS);
+  // The live status bytes, guarded like the ledger: a core built before them has no export.
+  let statusPtr = 0;
+  try { statusPtr = mod.ccall('WasmGetStoryStatusBytes', 'number', [], []) as number; } catch { statusPtr = 0; }
+  const state = buildPresenceState({
+    progress: heap.subarray(progPtr, progPtr + PROGRESS_BYTES),
+    owEventInfo: heap.subarray(owPtr, owPtr + OW_EVENT_BYTES),
+    roomState,
+    inventory,
+    ...(statusPtr ? { statusBytes: heap.subarray(statusPtr, statusPtr + STORY_STATUS_BYTES) } : {}),
+  });
+  return computeEventStatus(state);
+};
+
+export { readCompletedChecks, readEventStatus };

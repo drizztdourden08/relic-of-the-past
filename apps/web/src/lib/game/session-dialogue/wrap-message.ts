@@ -1,17 +1,21 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Message text preparation: makes an arbitrary rendered line encodable and
- * displayable: characters outside the active language's alphabet are mapped
- * to shared equivalents (or dropped), and the text is word-wrapped against
- * the real per-glyph pixel widths into the text box's line commands ([2] and
- * [3] for rows two and three, [Waitkey][Scroll] for every row past the visible
- * three, the engine renders variable-width glyphs and never wraps on its own).
+ * Message text layout: a line already made drawable (dialogue-text.ts) is
+ * word-wrapped against the real per-glyph pixel widths into the text box's
+ * line commands ([2] and [3] for rows two and three, [Waitkey][Scroll] for
+ * every row past the visible three, the engine renders variable-width glyphs
+ * and never wraps on its own). The alphabet and widths are a charset's
+ * (dialogue-charset.ts), so an extra glyph's token measures by its slot.
  *
  * A row past the third scrolls the top row off the box, and the engine never
  * waits on its own, so each of those breaks carries a [Waitkey] first. Without
  * it a long line pushes its own opening away before it can be read, which is
  * what the game's own long lines pause for.
+ *
+ * The highlight markup (highlight-markup.ts) passes through untouched and
+ * measures zero pixels: it becomes control bytes the engine draws nothing for.
  */
+import { balanceRows, isHighlightMarker, stripHighlight } from '@shared/randomizer/receipt-text/highlight-markup';
 
 /**
  * Usable pixels per text-box row, minus a safety margin: the engine draws 21
@@ -27,37 +31,41 @@ const FALLBACK_WIDTH_PX = 8;
 const LINE_COMMANDS = ['', '[2]', '[3]'];
 const SCROLL_COMMAND = '[Scroll]';
 const WAIT_COMMAND = '[Waitkey]';
-
-/** Substitutions for characters most alphabets lack but can approximate. */
-const REPLACEMENTS: ReadonlyMap<string, string> = new Map([
-  ['—', '-'], ['–', '-'], [':', ' -'], [';', ','], // eslint-disable-line local/no-em-dash -- the characters ARE the mapping
-  ['‘', "'"], ['’', "'"], ['“', '"'], ['”', '"'], // eslint-disable-line local/no-smart-punctuation -- the characters ARE the mapping
-  ['&', 'and'], ['>', ' to '],
-]);
-
-/** Single-character alphabet entries (bracket glyph tokens are not typeable text). */
-const charSetOf = (alphabet: readonly string[]): Set<string> =>
-  new Set(alphabet.filter((entry) => entry.length === 1));
-
-/** Map |text| onto the alphabet: substitute what can be, drop what cannot. */
-const sanitizeForAlphabet = (text: string, alphabet: readonly string[]): string => {
-  const chars = charSetOf(alphabet);
-  let out = '';
-  for (const ch of text) {
-    if (chars.has(ch)) { out += ch; continue; }
-    const replacement = REPLACEMENTS.get(ch) ?? '';
-    for (const sub of replacement) { if (chars.has(sub)) out += sub; }
-  }
-  return out.replace(/ {2,}/g, ' ').trim();
-};
+const LETTER_OR_DIGIT = /[\p{L}\p{N}]/u;
 
 const pixelWidthOf = (word: string, alphabet: readonly string[], widths: Uint8Array): number => {
   let px = 0;
   for (const ch of word) {
+    if (isHighlightMarker(ch)) continue;
     const index = alphabet.indexOf(ch);
     px += index >= 0 && index < widths.length ? widths[index] : FALLBACK_WIDTH_PX;
   }
   return px;
+};
+
+/** True for a word with no letter or digit: an arrow or another lone symbol. */
+const isLoneSymbol = (word: string): boolean => {
+  const bare = stripHighlight(word);
+  return bare !== '' && !LETTER_OR_DIGIT.test(bare);
+};
+
+/**
+ * The words that wrap as one: a lone symbol binds to the words on both sides, so a range
+ * ("0 > 99") stays on one row and no row ends or starts with the arrow.
+ */
+const wrapUnits = (text: string): string[] => {
+  const words = text.split(' ');
+  const units: string[] = [];
+  for (let i = 0; i < words.length; i += 1) {
+    const word = words[i];
+    if (isLoneSymbol(word) && units.length > 0 && i + 1 < words.length) {
+      units[units.length - 1] += ` ${word} ${words[i + 1]}`;
+      i += 1;
+      continue;
+    }
+    units.push(word);
+  }
+  return units;
 };
 
 /** Word-wrap sanitized |text| into box rows against the real glyph widths. */
@@ -66,7 +74,7 @@ const wrapRows = (text: string, alphabet: readonly string[], widths: Uint8Array)
   const rows: string[] = [];
   let row = '';
   let rowPx = 0;
-  for (const word of text.split(' ')) {
+  for (const word of wrapUnits(text)) {
     const wordPx = pixelWidthOf(word, alphabet, widths);
     if (row !== '' && rowPx + spacePx + wordPx > LINE_WIDTH_PX) {
       rows.push(row);
@@ -78,7 +86,7 @@ const wrapRows = (text: string, alphabet: readonly string[], widths: Uint8Array)
     row = row === '' ? word : `${row} ${word}`;
   }
   if (row !== '') rows.push(row);
-  return rows;
+  return balanceRows(rows);
 };
 
 /** Word-wrap sanitized |text| into box rows and join with the line commands. */
@@ -102,4 +110,4 @@ const fitsVisibleRows = (text: string, alphabet: readonly string[], widths: Uint
 const fitReceiptLine = (candidates: readonly string[], alphabet: readonly string[], widths: Uint8Array): string =>
   candidates.find((candidate) => fitsVisibleRows(candidate, alphabet, widths)) ?? candidates[candidates.length - 1];
 
-export { VISIBLE_ROWS, fitReceiptLine, fitsRows, fitsVisibleRows, sanitizeForAlphabet, wrapMessageText, wrapRows };
+export { VISIBLE_ROWS, fitReceiptLine, fitsRows, fitsVisibleRows, wrapMessageText, wrapRows };

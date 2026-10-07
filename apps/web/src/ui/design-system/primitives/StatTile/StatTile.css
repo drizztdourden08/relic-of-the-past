@@ -1,0 +1,38 @@
+/* @layer renderer-components @kind style */
+
+/* A well inside its card: the label small and dim, the value in mono under it,
+   the meter pinned to the bottom so a row of tiles lines its bars up. */
+
+.stat-tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+  padding: var(--space-xs) var(--space-sm);
+  border: var(--border-width-thin) solid var(--c-hairline);
+  border-radius: var(--radius-md);
+  background: var(--c-inset);
+}
+
+.stat-tile__label {
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-tile__value {
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  color: var(--c-text);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.stat-tile[data-tone='ok'] .stat-tile__value { color: var(--c-green-bright); }
+.stat-tile[data-tone='warn'] .stat-tile__value { color: var(--c-warning); }
+.stat-tile[data-tone='bad'] .stat-tile__value { color: var(--c-danger); }
+
+.stat-tile__meter {
+  margin-top: auto;
+}

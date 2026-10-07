@@ -50,7 +50,7 @@ const hookSrcs = [
   'state_queries_tables', 'state_queries_rooms', 'state_queries_room_exits',
   'state_queries_room_objects', 'attr_grid_state', 'gated_empty', 'receive_counters',
   'sim_queries', 'sim_triggers', 'item_overrides', 'check_triggers', 'ui_state', 'cheats', 'haptic_events',
-  'receipt_grant', 'receipt_messages', 'receipt_gfx_guard', 'receipt_tile_decode', 'npc_overrides', 'stumpy_gift', 'drop_overrides',
+  'receipt_grant', 'receipt_messages', 'receipt_pages', 'receipt_gfx_guard', 'receipt_tile_decode', 'npc_overrides', 'stumpy_gift', 'smith_sword', 'drop_overrides',
   'standing_overrides', 'shop_overrides', 'shop_table', 'shop_payment', 'shop_refusal', 'shop_draw', 'world_item_draws', 'receipt_sprite_draw', 'receipt_ancilla_draws',
   'sprite_art_slots', 'shop_symbols',
   'rupee_gem_draw', 'rupee_holdup_draw', 'item_sheen', 'item_sheen_holdup', 'session_dialogue',
@@ -61,13 +61,14 @@ const hookSrcs = [
   'dungeon_item_grants', 'dungeon_item_probes',
   'player_sprite', 'player_sprite_map', 'transition_events', 'state_queries_combat', 'state_queries_oam',
   'state_queries_pose',
-  'item_power', 'swordless_paths', 'retro_bow', 'retro_drops', 'retro_shelf', 'retro_quiver_icon', 'archery_host',
+  'item_power', 'swordless_paths', 'story_events', 'story_probes', 'story_barrier', 'story_status', 'events/event_ledger', 'events/event_watch', 'events/event_receipts', 'retro_bow', 'retro_drops', 'retro_shelf', 'retro_quiver_icon', 'archery_host',
   'dark_room_lights', 'file_name_prefill',
-  'host_gates', 'hud_override', 'dialog_pacing', 'dialog_mirror', 'dialog_presence', 'dialog_suppress', 'running_man', 'music_hooks', 'sound_hooks',
+  'host_gates', 'hud_override', 'dialog_pacing', 'dialog_mirror', 'dialog_presence', 'dialog_suppress', 'dialog_hook_state', 'dialog_glyphs', 'dialog_highlight', 'dialog_highlight_draw', 'dialog_extra_glyphs','running_man', 'music_hooks', 'sound_hooks',
   'view_gates', 'attract_view', 'spotlight_growth', 'attract_sprites', 'iris_wide', 'hide_space_beyond_walls', 'fixed_picture_edges',
-  'room_clear_reach',
+  'room_clear_reach', 'sprite_room_reach', 'world_scroll_carry',
   'cheat_lighting', 'cheat_wallet', 'cheat_unblock', 'cheat_check_mark', 'cheat_inventory', 'cheat_capacity', 'dev_frame_dump',
   'title_override', 'title_mirror', 'title_skip',
+  'ap_received_index', 'ap_room_hash', 'foreign_item', 'foreign_icon', 'foreign_icon_bank', 'death_link',
 ].map((f) => h(`${f}.c`));
 
 // Our Emscripten entry points (replace the native main.c). Resolved from this dir.

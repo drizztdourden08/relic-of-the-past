@@ -1,7 +1,8 @@
 /* @layer renderer-components @kind logic */
 /**
- * Draws ScreenAnnotations. One marker shape for everything, differing only by glyph and colour,
- * so the overlay stays readable at 8px tiles; `open`/`done` draws dimmed.
+ * Draws ScreenAnnotations. Ways on and off the screen are drawn by draw-entrances.ts instead.
+ * One marker shape for everything, differing only by glyph and colour, so the overlay stays
+ * readable at 8px tiles; `open`/`done` draws dimmed.
  */
 import type { ScreenAnnotation, ScreenAnnotations } from '@shared/game/simulation';
 import type { DrawContext } from './draw-context';
@@ -14,15 +15,8 @@ import { ANNOTATION_STYLES } from '../annotation-style';
  * wide in rows), so sizing every door the same only centers one orientation.
  */
 const DOOR_KINDS: ReadonlySet<ScreenAnnotation['kind']> = new Set([
-  'key-door', 'big-key-door', 'shutter', 'bombable', 'follower-gate', 'warp-door', 'exit-door',
+  'key-door', 'big-key-door', 'shutter', 'bombable', 'follower-gate',
 ]);
-
-/**
- * Kinds whose `tile` is a WALKABLE POSITION, not an object record's top-left corner, so the
- * corner-anchor nudge must NOT apply. `exit` is the flood's own crossing tile; `exitFromEdge`
- * reports row/col 63, so a nudge pushed the marker onto the adjacent screen's first tile.
- */
-const WALK_TILE_KINDS: ReadonlySet<ScreenAnnotation['kind']> = new Set(['exit']);
 
 /**
  * Records name the TOP-LEFT tile of a block, so markers are nudged in along their narrow axis
@@ -48,13 +42,12 @@ const drawAnnotations = (dc: DrawContext, sets: readonly ScreenAnnotations[], hi
 
     // Only a door's narrow through-wall axis needs the nudge; its wide axis starts flush.
     const isDoor = DOOR_KINDS.has(a.kind);
-    const onWalkTile = WALK_TILE_KINDS.has(a.kind);
     const wideCols = isDoor && (a.direction === 'n' || a.direction === 's');
     const wideRows = isDoor && (a.direction === 'e' || a.direction === 'w');
     const sizeCols = TILE_PX * (wideCols ? 4 : 2);
     const sizeRows = TILE_PX * (wideRows ? 4 : 2);
-    const nudgeCols = wideCols || onWalkTile ? 0 : nudge;
-    const nudgeRows = wideRows || onWalkTile ? 0 : nudge;
+    const nudgeCols = wideCols ? 0 : nudge;
+    const nudgeRows = wideRows ? 0 : nudge;
 
     const screenX = origin.x + a.tile.col * TILE_PX + nudgeCols - viewLeft;
     const screenY = origin.y + a.tile.row * TILE_PX + nudgeRows - viewTop;

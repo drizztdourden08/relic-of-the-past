@@ -4,8 +4,7 @@
  * lives in the main process (electron/recommendations/) behind a per-kind
  * queue; this module never merges an edit of its own, it stores what the main
  * process returned, so two quick accepts cannot disagree about the file.
- * Plain module functions, like `review-store.ts`, so non-React callers can
- * read synchronously.
+ * Plain module functions, so non-React callers can read synchronously.
  */
 import { ENTITY_KINDS } from '../../DataInspector.constants';
 import type { EntityKind } from '@shared/game/data';

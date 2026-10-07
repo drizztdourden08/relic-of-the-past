@@ -12,6 +12,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const DATA_INSPECTOR = '../../apps/web/src/ui/domains/app/views/DataInspector/behavior';
+/** The first import loads the whole data graph cold: about three seconds alone, more under a full run. */
+const COLD_GRAPH_TIMEOUT_MS = 30_000;
 
 describe('module init order from every entry point into the cycle', () => {
   beforeEach(() => {
@@ -25,7 +27,7 @@ describe('module init order from every entry point into the cycle', () => {
     // to poison, so an empty-but-present map would still be a regression.
     expect(RECORD_WRITERS.tag).toBeTypeOf('function');
     expect(RECORD_WRITERS.screen).toBeTypeOf('function');
-  });
+  }, COLD_GRAPH_TIMEOUT_MS);
 
   it('survives entering through record-creators, which has the same shape', async () => {
     const { RECORD_CREATORS } = await import(`${DATA_INSPECTOR}/record-creators`);

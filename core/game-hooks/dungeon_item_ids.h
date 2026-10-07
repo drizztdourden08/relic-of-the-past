@@ -25,8 +25,9 @@
 //
 // The palace index is the game's own cur_palace_index_x2 >> 1, so 0-13 covers every dungeon
 // the dataset names and the two ids per block above 13 (0x?E/0x?F) are never valid. The gap
-// at 0x82-0xBF, between the last prize id and this block, is the price of that alignment and
-// is left free for a future dense family.
+// at 0x82-0xBF, between the last prize id and this block, is the price of that alignment. Its
+// first id is the ocarina's progressive id (progressive_grants.c) and 0xB0-0xBF the foreign
+// icons (foreign_item.c); the rest is free.
 #ifndef DUNGEON_ITEM_IDS_H
 #define DUNGEON_ITEM_IDS_H
 

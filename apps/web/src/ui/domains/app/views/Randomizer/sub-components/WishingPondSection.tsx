@@ -4,7 +4,8 @@
  * ponds on one set of settings, a tab per pond under it, and the tab's own
  * pond drawn in the block every pond shares. Wrapped in an ErrorBoundary so a
  * setting the model cannot plan shows an inline notice instead of taking the
- * whole options screen down. Shared by the creation panel and the Run tab; the
+ * whole options screen down. Shared by the creation panel and the read-only
+ * Options page, where the share switch reads as a True or False tag; the
  * mode dropdowns themselves live with the player's other choices, under their
  * own section.
  *
@@ -21,15 +22,16 @@
 import { useMemo, useState } from 'react';
 import { Box, TabBar, Text, Toggle } from '@ds/primitives';
 import { ErrorBoundary } from '@ds/composites';
+import { OptionValueTag } from '@domains/app/compounds/OptionValueTag';
 import { RandomizerOptionGroup } from '@domains/app/compounds/RandomizerOptionGroup';
-import { POND_INSTANCES } from '@shared/randomizer/ap-world/pond/pond-instances.data';
-import { pondCeilingsOf } from '@shared/randomizer/ap-world/pond/pond-ceilings';
+import { POND_INSTANCES } from '@shared/randomizer/world/pond/pond-instances';
+import { pondCeilingsOf } from '@shared/randomizer/world/pond/pond-ceilings';
 import { PondInstanceRow } from './PondInstanceRow';
-import type { CapacityProfile } from '@shared/randomizer/ap-world/capacity/capacity-profile.type';
-import type { PondDemandView } from '@shared/randomizer/ap-world/pond/pond-ask.type';
-import type { PondId } from '@shared/randomizer/ap-world/pond/pond-instance.type';
-import type { PondSetting } from '@shared/randomizer/ap-world/pond/pond-profile.type';
-import type { PondProfiles } from '@shared/randomizer/ap-world/pond/pond-profiles.type';
+import type { CapacityProfile } from '@shared/randomizer/world/capacity/capacity-profile.type';
+import type { PondDemandView } from '@shared/randomizer/world/pond/pond-ask.type';
+import type { PondId } from '@shared/randomizer/world/pond/pond-instance.type';
+import type { PondSetting } from '@shared/randomizer/world/pond/pond-profile.type';
+import type { PondProfiles } from '@shared/randomizer/world/pond/pond-profiles.type';
 import './WishingPondSection.css';
 
 interface WishingPondSectionProps {
@@ -42,7 +44,7 @@ interface WishingPondSectionProps {
   demands?: PondDemandView;
   /** Every fallback the setting reader applied, each naming its own pond. */
   notes?: readonly string[];
-  /** Every pond frozen: the Run tab, which shows a seed already rolled. */
+  /** Every pond frozen: the read-only Options page, which shows a seed already rolled. */
   readOnly?: boolean;
   /** The ponds a sibling rule took out of the player's hands, on top of readOnly. */
   frozen?: readonly PondId[];
@@ -74,12 +76,14 @@ const WishingPondSection = (props: WishingPondSectionProps) => {
     <ErrorBoundary label={NOTICE} resetKey={profiles}>
       <RandomizerOptionGroup title="Fairy ponds" live>
         <Box className="pond-section__head">
-          <Toggle
-            checked={share}
-            disabled={readOnly || onShareChange === undefined}
-            label={SHARE_LABEL}
-            onChange={(next) => onShareChange?.(next)}
-          />
+          {readOnly ? <OptionValueTag label={SHARE_LABEL} value={share} /> : (
+            <Toggle
+              checked={share}
+              disabled={onShareChange === undefined}
+              label={SHARE_LABEL}
+              onChange={(next) => onShareChange?.(next)}
+            />
+          )}
           <TabBar tabs={TABS} activeTab={pond.id} onTabChange={(id) => setTab(id as PondId)} />
         </Box>
         <PondInstanceRow
@@ -90,6 +94,7 @@ const WishingPondSection = (props: WishingPondSectionProps) => {
           demands={demands}
           sources={sources}
           readOnly={readOnly || frozen.includes(pond.id)}
+          readout={readOnly}
           onChange={onChange === undefined ? undefined : (next) => onChange(pond.id, next)}
           onImport={onChange === undefined
             ? undefined

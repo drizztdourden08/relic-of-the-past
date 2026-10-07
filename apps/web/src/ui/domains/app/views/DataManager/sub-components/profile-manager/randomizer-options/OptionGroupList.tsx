@@ -13,12 +13,12 @@ import { RandomizerOptionRow } from '@domains/app/compounds/RandomizerOptionRow'
 import { RandomizerOptionGroup } from '@domains/app/compounds/RandomizerOptionGroup';
 import type { LockedOptionGroup } from '@domains/app/compounds/RandomizerOptionRow';
 import type { ImpactCell } from '@domains/app/compounds/PoolImpactCell';
-import type { ApOptionDef, ApOptionValue } from '@shared/randomizer/ap-world/options.type';
+import type { OptionDef, OptionValue } from '@shared/randomizer/world/options.type';
 
 interface OptionGroupListProps {
   groups: readonly LockedOptionGroup[];
   /** The value each row shows. */
-  valueOf: (option: ApOptionDef) => ApOptionValue;
+  valueOf: (option: OptionDef) => OptionValue;
   cellOf: (key: string) => ImpactCell;
   /** The player's own sections; absent renders the group as a fixed one. */
   live?: boolean;
@@ -26,11 +26,13 @@ interface OptionGroupListProps {
   frozenKeys?: ReadonlySet<string>;
   /** Per-row reason a frozen row is showing a value the player did not choose. */
   notes?: ReadonlyMap<string, string>;
-  onRowChange?: (key: string, next: ApOptionValue) => void;
+  onRowChange?: (key: string, next: OptionValue) => void;
+  /** Every row shows its value as a tag: the read-only panel. */
+  readout?: boolean;
 }
 
 const OptionGroupList = (props: OptionGroupListProps) => {
-  const { groups, valueOf, cellOf, live = false, frozenKeys, notes, onRowChange } = props;
+  const { groups, valueOf, cellOf, live = false, frozenKeys, notes, onRowChange, readout } = props;
 
   return (
     <>
@@ -42,6 +44,7 @@ const OptionGroupList = (props: OptionGroupListProps) => {
               option={option}
               value={valueOf(option)}
               impact={cellOf(option.key)}
+              readout={readout}
               disabled={frozenKeys?.has(option.key)}
               note={notes?.get(option.key)}
               onChange={onRowChange === undefined ? undefined : (next) => onRowChange(option.key, next)}

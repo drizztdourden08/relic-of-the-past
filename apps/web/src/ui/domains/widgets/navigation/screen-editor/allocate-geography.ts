@@ -15,15 +15,15 @@ type NewLocation = Allocated<LocationRecord>;
 
 type Allocation<T> = { record: T } | { error: string };
 
-const allocateArea = async (randomizerName: string, world: AreaRecord['world']): Promise<Allocation<NewArea>> => {
-  const result = await window.api.screenEditor.allocateGeography({ kind: 'area', randomizerName, world });
+const allocateArea = async (name: string, world: AreaRecord['world']): Promise<Allocation<NewArea>> => {
+  const result = await window.api.screenEditor.allocateGeography({ kind: 'area', name, world });
   if (!result.success) return { error: result.error };
   if (result.kind !== 'area') return { error: 'Allocator answered with the wrong record kind' };
   return { record: result.record };
 };
 
-const allocateLocation = async (randomizerName: string, areaId: AreaId): Promise<Allocation<NewLocation>> => {
-  const result = await window.api.screenEditor.allocateGeography({ kind: 'location', randomizerName, areaId });
+const allocateLocation = async (name: string, areaId: AreaId): Promise<Allocation<NewLocation>> => {
+  const result = await window.api.screenEditor.allocateGeography({ kind: 'location', name, areaId });
   if (!result.success) return { error: result.error };
   if (result.kind !== 'location') return { error: 'Allocator answered with the wrong record kind' };
   return { record: result.record };

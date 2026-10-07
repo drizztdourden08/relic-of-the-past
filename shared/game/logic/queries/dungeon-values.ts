@@ -8,24 +8,19 @@
  * indexed by `cur_palace_index_x2 >> 1`.
  *
  * The labels themselves are transcribed game wording, so they live in the record
- * dataset and are synced in from the private companion repo. Without it the table
- * is empty and `getPalaceName` falls back to the raw index, which is exactly the
- * behaviour it already had for an unrecognised value. The two predicates below
- * are structural and work either way.
+ * dataset and are read from it. `getPalaceName` falls back to the raw index for a
+ * value the record has no label for, and the two predicates below are structural.
  */
 
-const modules = import.meta.glob<{ PALACE_INDEX_NAMES?: Record<number, string> }>(
-  '../../data/records/palace-names.ts',
-  { eager: true },
-);
+import { PALACE_INDEX_NAMES } from '../../data';
 
-const PALACE_INDEX_NAMES: Record<number, string> =
-  Object.values(modules)[0]?.PALACE_INDEX_NAMES ?? {};
+/** The value RAM $040C holds for a room in no palace, such as a cave or a house. */
+const PALACE_NONE = 0xFF;
 
 const getPalaceName = (palaceIndex: number): string =>
   PALACE_INDEX_NAMES[palaceIndex] ?? `Unknown (0x${palaceIndex.toString(16).toUpperCase()})`;
 
 const isDungeonPalace = (palaceIndex: number): boolean =>
-  palaceIndex !== 0xFF && palaceIndex <= 0x1A;
+  palaceIndex !== PALACE_NONE && palaceIndex <= 0x1A;
 
-export { PALACE_INDEX_NAMES, getPalaceName, isDungeonPalace };
+export { PALACE_INDEX_NAMES, PALACE_NONE, getPalaceName, isDungeonPalace };

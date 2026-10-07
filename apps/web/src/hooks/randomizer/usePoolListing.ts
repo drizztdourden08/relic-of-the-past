@@ -12,15 +12,15 @@
  * that extraction rewrote a set the rows were already drawing.
  */
 import { useMemo } from 'react';
-import { buildFillWorld } from '@shared/randomizer/ap-world/fill/fill-world';
-import { fillOptionsFromSnapshot } from '@shared/randomizer/ap-world/fill/fill-options-from-snapshot';
-import { UNCLE_LOCATION } from '@shared/randomizer/ap-world/pool/standard-escape.data';
+import { buildFillWorld } from '@shared/randomizer/world/fill/fill-world';
+import { fillOptionsFromSnapshot } from '@shared/randomizer/world/fill/fill-options-from-snapshot';
+import { UNCLE_LOCATION } from '@shared/randomizer/world/pool/standard-escape.data';
 import { useSpriteAvailability } from '../../lib/sprites/useSpriteAvailability';
 import { useSpriteRevision } from '../../lib/sprites/useSpriteRevision';
 import { deliverableSets } from './deliverable-sets';
 import { poolListingGroupsOf } from './pool-listing-model';
 import { startingWeaponGroupOf, withStartingWeaponGroup } from './starting-weapon-group';
-import type { RandomizerOptionsSnapshot } from '@shared/randomizer/ap-world/options.type';
+import type { RandomizerOptionsSnapshot } from '@shared/randomizer/world/options.type';
 import type { PoolListingGroup } from '@domains/app/compounds/PoolListing';
 
 const NO_GROUPS: readonly PoolListingGroup[] = [];

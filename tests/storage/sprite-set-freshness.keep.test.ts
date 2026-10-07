@@ -16,6 +16,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import * as sprites from '@shared/storage/sprites';
 import { EXTRACTION_STAMP_FILE, extractionVersionOf } from '@shared/asset-extraction/item-sprites/extraction-stamp';
 import { CURRENCY_SYMBOLS_FILE } from '@shared/asset-extraction/item-sprites/currency-symbols';
+import { FOREIGN_ICONS_FILE } from '@shared/asset-extraction/item-sprites/foreign-icons';
 import { GEAR_ICONS_FILE } from '@shared/asset-extraction/item-sprites/gear-icons';
 import { QUIVER_ICON_FILE } from '@shared/asset-extraction/item-sprites/quiver-icon';
 import { SPRITE_DEFINITIONS } from '@shared/game/data/sprite-manifest/manifest';
@@ -38,11 +39,12 @@ const writeCurrentSet = async (files: FileStore): Promise<void> => {
 };
 
 describe('extracted sprite set freshness', () => {
-  it('names the four binaries and one PNG per definition as the files an extraction writes', () => {
-    expect(EXPECTED).toHaveLength(DEFS.length + 4);
+  it('names the five binaries and one PNG per definition as the files an extraction writes', () => {
+    expect(EXPECTED).toHaveLength(DEFS.length + 5);
     expect(EXPECTED).toContain(GEAR_ICONS_FILE);
     expect(EXPECTED).toContain(QUIVER_ICON_FILE);
     expect(EXPECTED).toContain(CURRENCY_SYMBOLS_FILE);
+    expect(EXPECTED).toContain(FOREIGN_ICONS_FILE);
   });
 
   it('keeps a complete, currently stamped set', async () => {

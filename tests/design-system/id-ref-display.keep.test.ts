@@ -38,7 +38,7 @@ const screens = all('screen') as unknown as readonly InspectorLikeRow[];
 const areas = all('area') as unknown as readonly InspectorLikeRow[];
 
 const AREA_PATH = 'areaId';
-const NAME_PATH = 'randomizerName';
+const NAME_PATH = 'name';
 
 let resolveIdRefDisplayValue: typeof DisplayModule.resolveIdRefDisplayValue;
 let resolveIdRefTargetFields: typeof DisplayModule.resolveIdRefTargetFields;

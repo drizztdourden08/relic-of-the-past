@@ -13,8 +13,10 @@
 
 import { upgradeItemOfName } from '@shared/game/data/capacity-upgrade-item';
 import { progressiveCapacityFamilyOf } from '@shared/game/data/capacity-progressive-item';
-import { PROGRESSION_ITEMS, USEFUL_ITEMS } from '../ap-world/pool/item-classes.data';
+import { PROGRESSION_ITEMS, USEFUL_ITEMS } from '../world/pool/item-classes.data';
+import { itemKeyOfName } from '../world/display-names/item-key-name';
 import type { CapacityFamilyId } from '@shared/game/data/capacity-family.type';
+import type { ItemId } from '@shared/game/data/types/ids';
 
 const PROGRESSIVE_PREFIX = 'Progressive ';
 
@@ -51,7 +53,11 @@ const classifyReceiptItem = (itemName: string): ReceiptItemClass => {
   }
   const upgrade = upgradeItemOfName(itemName);
   if (upgrade !== undefined) return { kind: 'capacity', family: upgrade.family, jump: upgrade.jump };
-  if (!PROGRESSION_ITEMS.has(itemName) && !USEFUL_ITEMS.has(itemName)) return { kind: 'junk' };
+  // The two classes are id sets now, and the caller has a name because the wire speaks names.
+  const itemId = itemKeyOfName(itemName) as ItemId | undefined;
+  if (itemId === undefined || (!PROGRESSION_ITEMS.has(itemId) && !USEFUL_ITEMS.has(itemId))) {
+    return { kind: 'junk' };
+  }
   return { kind: 'standard' };
 };
 

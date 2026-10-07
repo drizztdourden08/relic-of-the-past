@@ -9,7 +9,7 @@ import { Box, Text } from '@ds/primitives';
 import { GroupTree } from '@ds/composites/GroupTree';
 import type { TreeNode } from '@ds/composites/GroupTree';
 import type { CheckRecord } from '@shared/game/data';
-import type { CheckStatus } from '@shared/game/logic/eval';
+import type { CheckStatus } from '@shared/game/logic';
 import type { GroupNode, RunContext } from '@shared/game/logic/queries/check-grouping';
 import type { ViewMode } from '../ChecksTracker.type';
 import { CheckList } from './CheckList';
@@ -18,6 +18,7 @@ import '../ChecksTracker.css';
 interface TrackerGroupTreeProps {
   node: GroupNode;
   statuses: Map<string, CheckStatus>;
+  eventStatus?: ReadonlyMap<string, boolean>;
   viewMode: ViewMode;
   run?: RunContext;
   /** Controlled expansion, passed straight through to GroupTree. */
@@ -46,12 +47,12 @@ const toTreeNode = (node: GroupNode): TreeNode<CheckRecord> => ({
 });
 
 const TrackerGroupTree = (props: TrackerGroupTreeProps) => {
-  const { node, statuses, viewMode, run, expandedGroups, onToggleGroup } = props;
+  const { node, statuses, eventStatus, viewMode, run, expandedGroups, onToggleGroup } = props;
 
   const root = useMemo(() => toTreeNode(node), [node]);
   const renderItems = useCallback(
-    (checks: CheckRecord[]) => <CheckList checks={checks} statuses={statuses} viewMode={viewMode} run={run} />,
-    [statuses, viewMode, run],
+    (checks: CheckRecord[]) => <CheckList checks={checks} statuses={statuses} eventStatus={eventStatus} viewMode={viewMode} run={run} />,
+    [statuses, eventStatus, viewMode, run],
   );
 
   return (

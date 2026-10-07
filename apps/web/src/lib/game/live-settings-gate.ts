@@ -16,7 +16,7 @@ import { rendersExtended } from './ratio-capability';
 const RAW_FEATURE_KEYS = [
   'extendedRendering', 'linearWorldTilemap', 'ultrawideRendering', 'tallRendering',
   'widescreenSprites', 'widescreenVisualFixes', 'cameraLockToViewport', 'smoothTransitions',
-  'pauseOffscreenAI', 'perGroupVolume', 'inventoryReorder', 'secondaryItemSlots', 'autoSkipDialog',
+  'perGroupVolume', 'inventoryReorder', 'secondaryItemSlots', 'autoSkipDialog',
   'prefillFileName',
   // World-item presentation, and the archery host's refusal. Their bits live in features3
   // instead of features0, but the resolver only cares about ids, so they cascade and strip
@@ -28,9 +28,10 @@ const RAW_FEATURE_KEYS = [
 const requestedFeatureIds = (s: GameSettings): string[] => {
   const ids: string[] = RAW_FEATURE_KEYS.filter((key) => Boolean(s[key]));
   // Registered ids whose raw field is not a boolean of the same name: the three-way off-screen
-  // mode requests its 'idle' bit, and the play-area toggle is optional on GameSettings. Without
-  // these the resolver never sees either id, so neither features2 bit is ever sent.
+  // mode requests its 'idle' or 'paused' bit, and the play-area toggle is optional on GameSettings.
+  // Without these the resolver never sees those ids, so their bits are never sent.
   if (offscreenAiMode(s) === 'idle') ids.push('offscreenAI');
+  if (offscreenAiMode(s) === 'paused') ids.push('pauseOffscreenAI');
   if (s.titleScreen === 'reimagined') ids.push('titleOverride');
   if (s.widescreenPlayArea === true) ids.push('widescreenPlayArea');
   for (const fix of BUNDLE_FIXES) {

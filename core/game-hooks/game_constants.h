@@ -54,6 +54,7 @@
 
 // Rooms named by id where the game's own grouping does not describe how they play.
 #define ROOM_SANCTUARY 0x12  // filed under the sewers' palace index, plays as a house
+#define ROOM_TOWER_AGAHNIM 0x20  // Hyrule Castle Tower, the Agahnim fight: a bright blue surround, not the ceiling word
 
 // The Ceiling object (dungeon.c, subtype 1 index 0) paints a 2x2 block of tilemap words: the void past a
 // room's walls. Dungeon_CeilingTileWords hands it over.

@@ -6,8 +6,9 @@
  * requested alongside it, and it stays open only while the table has entries.
  */
 
-import { isGrantableReceiveId, isNativeReceiveId } from '@shared/game/data';
+import { isNativeReceiveId } from '@shared/game/data';
 import { log } from '../log-bus';
+import { isArmableOverrideId } from './foreign-item-id';
 import { getModule } from './wasm-bridge';
 import { setNpcOverridesActive } from './live-settings-flags';
 import { reassertGateWord3 } from './live-settings';
@@ -18,7 +19,7 @@ const ROOM_ANY = -1;
 const refuse = (vanillaItem: number, newItem: number, where: string): boolean => {
   // Both ids index the 76-entry native grant tables, so an out-of-range one would
   // corrupt the receipt, so refuse it here like the chest-table setter does.
-  if (isNativeReceiveId(vanillaItem) && isGrantableReceiveId(newItem)) return false;
+  if (isNativeReceiveId(vanillaItem) && isArmableOverrideId(newItem)) return false;
   log.error(`[Randomizer] Npc override refused: item pair 0x${vanillaItem.toString(16)} -> `
     + `0x${newItem.toString(16)} is outside the native grant table (${where})`);
   return true;

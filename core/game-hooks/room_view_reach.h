@@ -1,6 +1,6 @@
 /* @layer core-game-hooks @kind native */
-// How far a wide view reaches inside a room: when it must collapse to the base frame, and which
-// enemies it lets count toward a cleared screen. game_hooks.h includes it so the vendored callers
+// How far a wide view reaches inside a room: when it must collapse to the base frame, which
+// enemies it lets count toward a cleared screen, and which sprites it may wake. game_hooks.h includes it so the vendored callers
 // in zelda_rtl.c and sprite.c can ask.
 #ifndef GAME_HOOKS_ROOM_VIEW_REACH_H
 #define GAME_HOOKS_ROOM_VIEW_REACH_H
@@ -19,5 +19,12 @@ bool GameHook_LightConeSuppressesExtraWidth(void);
 // overworld it grows by the full side budget. Called only from the widescreen play area branch of
 // Sprite_CheckIfScreenIsClear; the original test is untouched. (room_clear_reach.c)
 bool GameHook_EnemyCountsTowardClear(int x, int y);
+
+// True when sprite |k| sits outside the part of the room this frame shows, so the wide view's grown
+// keep-alive window must not wake it. |x| and |y| are its screen coordinates. Indoors only: the
+// original window is grown by the columns and rows the frame renders, which stop at the edge of the
+// current room section. False on the overworld, with no wide or tall view, and with the gate off.
+// (sprite_room_reach.c)
+bool GameHook_SpriteBeyondShownRoom(int k, int x, int y);
 
 #endif  // GAME_HOOKS_ROOM_VIEW_REACH_H

@@ -28,5 +28,7 @@ bool GameHook_StumpyFinished(void) {
   if (GameHook_GiftOverrideArmed(STUMPY_VANILLA_ITEM) &&
       !GameHook_SubstitutedGiftTaken(STUMPY_VANILLA_ITEM))
     return false;
-  return (sram_progress_indicator_3 & 8) || GameHook_StumpyFluteSlot() > 2;
+  // The flute half is a story gate too (story_events.c kGate_Vane): under it the stump reads
+  // the weathervane scene instead of the slot; with that field zero it is the slot, verbatim.
+  return (sram_progress_indicator_3 & 8) || GameHook_StoryGate(kGate_Vane, GameHook_StumpyFluteSlot() > 2);
 }

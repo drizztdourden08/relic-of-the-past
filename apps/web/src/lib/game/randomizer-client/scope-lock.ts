@@ -10,11 +10,14 @@
  * (vanilla-prizes.data.ts).
  */
 
-import { KEY_DROP_LOCATIONS, CAPACITY_UPGRADE_LOCATIONS, PRIZE_LOCATIONS } from '@shared/randomizer/ap-world/special-locations.data';
-import { NPC_SCOPE_LOCATIONS, WORLD_ITEM_SCOPE_LOCATIONS } from '@shared/randomizer/ap-world/scope-vanilla.data';
-import { VANILLA_PRIZES } from '@shared/randomizer/ap-world/vanilla-prizes.data';
-import type { ShopScope } from '@shared/randomizer/ap-world/shops/shop-scope.type';
-import type { ShopPriceView } from '@shared/randomizer/ap-world/shops/shop-price.type';
+import type { ItemKey } from '@shared/randomizer/world/item-ids.data';
+import type { LocationKey } from '@shared/randomizer/world/location-key';
+import {
+  CAPACITY_UPGRADE_LOCATIONS, KEY_DROP_LOCATIONS, NPC_SCOPE_LOCATIONS, PRIZE_LOCATIONS,
+  VANILLA_PRIZES, WORLD_ITEM_SCOPE_LOCATIONS,
+} from '@shared/randomizer/world/scope-tables';
+import type { ShopScope } from '@shared/randomizer/world/shops/shop-scope.type';
+import type { ShopPriceView } from '@shared/randomizer/world/shops/shop-price.type';
 import type { WishPondRungKey } from './wish-pond-rung-keys';
 
 interface ScopeFlags {
@@ -31,23 +34,23 @@ interface ScopeFlags {
    * have no certified physical path (npc-capability). Absent (the online
    * flags) means nothing is capability-locked.
    */
-  npcLockedLocations?: ReadonlySet<string>;
+  npcLockedLocations?: ReadonlySet<LocationKey>;
   /** World-item option ON only: same mechanism over the world-item table. */
-  worldLockedLocations?: ReadonlySet<string>;
+  worldLockedLocations?: ReadonlySet<LocationKey>;
   /**
    * The capacity spots generation keeps vanilla under the placement's
    * profile: present fairy slots with no certified physical path, and the
    * bat of a vanilla meter (plan-scope-flags.ts). Absent (the online flags)
    * means nothing is capacity-locked.
    */
-  capacityLockedLocations?: ReadonlySet<string>;
+  capacityLockedLocations?: ReadonlySet<LocationKey>;
   /**
    * A wish pond's vanilla slots generation locked at Vanilla grants, each to the
    * item her upgrade produces there (pond/pond-vanilla-slots.ts), so no override
-   * is armed and the real upgrade runs. Absent (the online flags, and every
-   * placement generated before the rule) locks nothing this way.
+   * is armed and the real upgrade runs. Absent (the online flags) locks nothing
+   * this way.
    */
-  pondLockedItems?: ReadonlyMap<string, string>;
+  pondLockedItems?: ReadonlyMap<LocationKey, ItemKey>;
   /**
    * Locked spots of a Custom family: location → starting tier index, so a
    * polled "purchased" threshold is read past the tier a new file starts at.
@@ -67,41 +70,53 @@ interface ScopeFlags {
    * of the shuffle. Absent (a legacy pond, and the online flags) means the two
    * reference slots are the capacity families' own spots, as they always were.
    */
-  pondPrizeLocations?: readonly string[];
+  pondPrizeLocations?: readonly LocationKey[];
   /**
    * The numbered rungs of each wish pond whose plan carries them: location
    * to the water and the place in its sequence (wish-pond-rung-keys.ts).
    * Absent (both wish ponds legacy or at their native economy, and the online
    * flags) means no rung is a location.
    */
-  wishPondRungs?: ReadonlyMap<string, WishPondRungKey>;
+  wishPondRungs?: ReadonlyMap<LocationKey, WishPondRungKey>;
+  /**
+   * A wish pond's own two slots that her Custom mode sells as prize rungs
+   * (pond/pond-vanilla-slots.ts). The npc and world scopes no longer decide them, in
+   * the fill (fill-world.ts) and here alike: they carry a pool item handed over by
+   * the rung table. Absent (the online flags) exempts nothing.
+   */
+  pondPrizeSlots?: ReadonlySet<LocationKey>;
 }
 
-const isLockedVanilla = (locationName: string, flags: ScopeFlags): boolean =>
-  (!flags.shufflePrizes && PRIZE_LOCATIONS.has(locationName))
-  || (!flags.keyDropShuffle && KEY_DROP_LOCATIONS.has(locationName))
-  || (!flags.includeNpcChecks && NPC_SCOPE_LOCATIONS.has(locationName))
-  || (!flags.includeWorldItems && WORLD_ITEM_SCOPE_LOCATIONS.has(locationName))
-  || flags.npcLockedLocations?.has(locationName) === true
-  || flags.worldLockedLocations?.has(locationName) === true
-  || flags.capacityLockedLocations?.has(locationName) === true
-  || flags.pondLockedItems?.has(locationName) === true;
+/** The npc and world scopes, toggle and probe remainder, minus a slot sold as a pond prize. */
+const isScopeLocked = (location: LocationKey, flags: ScopeFlags): boolean =>
+  flags.pondPrizeSlots?.has(location) !== true && (
+    (!flags.includeNpcChecks && NPC_SCOPE_LOCATIONS.has(location))
+    || (!flags.includeWorldItems && WORLD_ITEM_SCOPE_LOCATIONS.has(location))
+    || flags.npcLockedLocations?.has(location) === true
+    || flags.worldLockedLocations?.has(location) === true);
+
+const isLockedVanilla = (location: LocationKey, flags: ScopeFlags): boolean =>
+  (!flags.shufflePrizes && PRIZE_LOCATIONS.has(location))
+  || (!flags.keyDropShuffle && KEY_DROP_LOCATIONS.has(location))
+  || isScopeLocked(location, flags)
+  || flags.capacityLockedLocations?.has(location) === true
+  || flags.pondLockedItems?.has(location) === true;
 
 /** The capability-locked vanilla item a stale-placement check compares against. */
-const capabilityVanillaItemOf = (locationName: string, flags: ScopeFlags): string | undefined => {
-  if (!flags.shufflePrizes && PRIZE_LOCATIONS.has(locationName)) return VANILLA_PRIZES.get(locationName);
+const capabilityVanillaItemOf = (location: LocationKey, flags: ScopeFlags): ItemKey | undefined => {
+  if (!flags.shufflePrizes && PRIZE_LOCATIONS.has(location)) return VANILLA_PRIZES.get(location);
   // Checked before the npc remainder: the pond's own table names the item she produces.
-  const pondItem = flags.pondLockedItems?.get(locationName);
+  const pondItem = flags.pondLockedItems?.get(location);
   if (pondItem !== undefined) return pondItem;
-  if (flags.npcLockedLocations?.has(locationName) === true) {
-    return NPC_SCOPE_LOCATIONS.get(locationName);
+  if (flags.npcLockedLocations?.has(location) === true) {
+    return NPC_SCOPE_LOCATIONS.get(location);
   }
-  if (flags.worldLockedLocations?.has(locationName) === true) {
-    return WORLD_ITEM_SCOPE_LOCATIONS.get(locationName);
+  if (flags.worldLockedLocations?.has(location) === true) {
+    return WORLD_ITEM_SCOPE_LOCATIONS.get(location);
   }
-  if (flags.capacityLockedLocations?.has(locationName) === true) {
+  if (flags.capacityLockedLocations?.has(location) === true) {
     // The fairy slots carry their vanilla item in the capacity table; the bat is an npc-scope row.
-    return CAPACITY_UPGRADE_LOCATIONS.get(locationName) ?? NPC_SCOPE_LOCATIONS.get(locationName);
+    return CAPACITY_UPGRADE_LOCATIONS.get(location) ?? NPC_SCOPE_LOCATIONS.get(location);
   }
   return undefined;
 };

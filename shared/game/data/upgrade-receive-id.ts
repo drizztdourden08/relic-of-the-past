@@ -16,6 +16,7 @@
  *   0x62-0x66  progressive equipment              (progressive-receive-id.ts, untouched)
  *   0x67-0x76  wallet, SLOT 0-15 into the session's jump table (wallet-jump-table.ts)
  *   0x77-0x7A  progressive capacity, one id per family (capacity-progressive-receive-id.ts)
+ *   0x82       progressive ocarina                (progressive-receive-id.ts)
  *
  * The three counted families keep a step per id (a jump never exceeds their
  * eight-rung span); the wallet's 100-rupee ladder needs jumps up to 100,

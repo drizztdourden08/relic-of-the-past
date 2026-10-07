@@ -2,8 +2,8 @@
 /**
  * One row per AnnotationKind, exhaustive by type so a kind without a visual is a compile error.
  * Colours are semantic: amber = lock or gate, green = pickup or check, red-clay = trigger, grey =
- * informational. The three ways off the screen each get their own shade; they used to be
- * identical. Entrance/stair/walk-boundary icons are a SEPARATE renderer (draw-entrances.ts).
+ * informational. Ways on and off the screen are a SEPARATE renderer (draw-entrances.ts,
+ * amber/purple) and never come through this table at all.
  */
 import type { AnnotationKind } from '@shared/game/simulation';
 
@@ -19,9 +19,6 @@ interface AnnotationStyle {
 
 const LOCK = '#e8a33d';
 const PICKUP = '#7fb861';
-const EXIT = '#5fb3c4';
-const EXIT_DOOR = '#3d8fa3';
-const WARP = '#9b6fd6';
 const TRIGGER = '#c9663f';
 const INFO = '#a89e8d';
 
@@ -42,10 +39,6 @@ const ANNOTATION_STYLES: Record<AnnotationKind, AnnotationStyle> = {
   'kill-trigger': { glyph: '✦', color: TRIGGER, legend: 'Clear room to open doors', panelOnly: true },
   'key-carrier': { glyph: '⚔', color: TRIGGER, legend: 'Enemy drops a small key' },
   'big-key-carrier': { glyph: '⚔', color: TRIGGER, legend: 'Enemy drops the big key' },
-
-  'warp-door': { glyph: '➘', color: WARP, legend: 'Warp door' },
-  'exit-door': { glyph: '⤴', color: EXIT_DOOR, legend: 'Exit to overworld' },
-  exit: { glyph: '→', color: EXIT, legend: 'Traversable exit' },
 
   unknown: { glyph: '?', color: INFO, legend: 'Unmapped (the sim found something new)' },
 };

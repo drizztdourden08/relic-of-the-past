@@ -40,6 +40,12 @@ module.exports = {
       from: 'apps/web/public/logos/generated/msul.ico',
       to: 'msul.ico',
     },
+    // The Archipelago world package, copied out by archipelago:save-files
+    // (apps/desktop/electron/archipelago/world-package-path.ts).
+    {
+      from: 'build/archipelago',
+      to: 'archipelago',
+    },
   ],
   // The Velopack bindings are a prebuilt .node and cannot be require()d from inside
   // an asar archive.

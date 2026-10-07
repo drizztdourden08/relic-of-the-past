@@ -12,8 +12,8 @@
  * only.
  */
 
-import { isGrantableReceiveId } from '@shared/game/data';
 import { log } from '../log-bus';
+import { isArmableOverrideId } from './foreign-item-id';
 import { getModule } from './wasm-bridge';
 import { setWishPondPlanActive } from './item-power';
 
@@ -59,7 +59,7 @@ const setWishPondRungs = (rungs: readonly WishPondRungArm[]): void => {
     return;
   }
   const grantable = rungs.filter((arm) => {
-    if (isGrantableReceiveId(arm.newItem)) return true;
+    if (isArmableOverrideId(arm.newItem)) return true;
     log.error(`[Randomizer] Wish pond rung refused: item 0x${arm.newItem.toString(16)} `
       + `is outside the grantable id range (pond ${arm.pond}, rung ${arm.rung})`);
     return false;

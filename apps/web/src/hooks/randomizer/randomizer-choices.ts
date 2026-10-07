@@ -13,34 +13,37 @@
  * value through it and the snapshot writes that row through it, so there is
  * no second list that could disagree.
  */
-import { ACCESSIBILITY_KEY } from '@shared/randomizer/ap-world/accessibility/accessibility-from-snapshot';
+import { ACCESSIBILITY_KEY } from '@shared/randomizer/world/accessibility/accessibility-from-snapshot';
 import {
   CAPACITY_ENABLED_KEY, CAPACITY_PROGRESSIVE_KEY, DEFAULT_CAPACITY_BONUS, capacityBonusValuesOf, capacityValuesOf,
-} from '@shared/randomizer/ap-world/capacity';
-import { reconcileCapacityPond } from '@shared/randomizer/ap-world/capacity-pond';
-import { darkRoomLightKeyOf, DARK_ROOM_REQUIRED_KEY } from '@shared/randomizer/ap-world/dark-rooms/dark-room-option-keys';
-import { difficultyValuesOf } from '@shared/randomizer/ap-world/difficulty/difficulty-from-snapshot';
-import { DUNGEON_ITEM_OPTION_KEYS } from '@shared/randomizer/ap-world/dungeon-items/dungeon-item-modes';
-import { itemPowerValuesOf } from '@shared/randomizer/ap-world/item-power/item-power-from-snapshot';
-import { potionPriceOverrides } from '@shared/randomizer/ap-world/potion-price';
-import { progressiveValuesOf } from '@shared/randomizer/ap-world/progressive/progressive-from-snapshot';
-import { progressiveModeValuesOf } from '@shared/randomizer/ap-world/progressive/progressive-mode-from-snapshot';
-import { retroBowValuesOf } from '@shared/randomizer/ap-world/retro/retro-from-snapshot';
-import { pondProfileValuesOf } from '@shared/randomizer/ap-world/pond/pond-profiles-from-snapshot';
-import { INCLUDE_NPC_CHECKS_KEY, INCLUDE_WORLD_ITEMS_KEY } from '@shared/randomizer/ap-world/scope-option-keys';
-import { shopScopeValues } from '@shared/randomizer/ap-world/shops/shop-scope-from-values';
+} from '@shared/randomizer/world/capacity';
+import { reconcileCapacityPond } from '@shared/randomizer/world/capacity-pond';
+import { darkRoomLightKeyOf, DARK_ROOM_REQUIRED_KEY } from '@shared/randomizer/world/dark-rooms/dark-room-option-keys';
+import { difficultyValuesOf } from '@shared/randomizer/world/difficulty/difficulty-from-snapshot';
+import { DUNGEON_ITEM_OPTION_KEYS } from '@shared/randomizer/world/dungeon-items/dungeon-item-modes';
+import { itemPowerValuesOf } from '@shared/randomizer/world/item-power/item-power-from-snapshot';
+import { storyGateValuesOf } from '@shared/randomizer/world/story-gates/story-gate-from-snapshot';
+import { DEFAULT_STORY_GATES } from '@shared/randomizer/world/story-gates/story-gates.data';
+import type { StoryGateSetting } from '@shared/randomizer/world/story-gates/story-gate.type';
+import { potionPriceOverrides } from '@shared/randomizer/world/potion-price';
+import { progressiveValuesOf } from '@shared/randomizer/world/progressive/progressive-from-snapshot';
+import { progressiveModeValuesOf } from '@shared/randomizer/world/progressive/progressive-mode-from-snapshot';
+import { retroBowValuesOf } from '@shared/randomizer/world/retro/retro-from-snapshot';
+import { pondProfileValuesOf } from '@shared/randomizer/world/pond/pond-profiles-from-snapshot';
+import { INCLUDE_NPC_CHECKS_KEY, INCLUDE_WORLD_ITEMS_KEY } from '@shared/randomizer/world/scope-option-keys';
+import { shopScopeValues } from '@shared/randomizer/world/shops/shop-scope-from-values';
 import { buildOptionsSnapshot } from '@shared/randomizer/options-snapshot';
-import type { AccessibilityMode } from '@shared/randomizer/ap-world/accessibility/accessibility.type';
-import type { CapacityBonusSetting, CapacityProfile } from '@shared/randomizer/ap-world/capacity';
-import type { CapacityPondSelection } from '@shared/randomizer/ap-world/capacity-pond';
-import type { DifficultySetting } from '@shared/randomizer/ap-world/difficulty/difficulty.type';
-import type { DungeonItemMode } from '@shared/randomizer/ap-world/dungeon-items/dungeon-item.type';
-import type { ItemPowerSetting } from '@shared/randomizer/ap-world/item-power/item-power.type';
-import type { ProgressiveModeSetting, ProgressiveSetting } from '@shared/randomizer/ap-world/progressive/progressive.type';
-import type { RetroBowSetting } from '@shared/randomizer/ap-world/retro/retro.type';
-import type { ApOptionValue, RandomizerOptionsSnapshot } from '@shared/randomizer/ap-world/options.type';
-import type { PondProfiles } from '@shared/randomizer/ap-world/pond/pond-profiles.type';
-import type { ShopScope } from '@shared/randomizer/ap-world/shops/shop-scope.type';
+import type { AccessibilityMode } from '@shared/randomizer/world/accessibility/accessibility.type';
+import type { CapacityBonusSetting, CapacityProfile } from '@shared/randomizer/world/capacity';
+import type { CapacityPondSelection } from '@shared/randomizer/world/capacity-pond';
+import type { DifficultySetting } from '@shared/randomizer/world/difficulty/difficulty.type';
+import type { DungeonItemMode } from '@shared/randomizer/world/dungeon-items/dungeon-item.type';
+import type { ItemPowerSetting } from '@shared/randomizer/world/item-power/item-power.type';
+import type { ProgressiveModeSetting, ProgressiveSetting } from '@shared/randomizer/world/progressive/progressive.type';
+import type { RetroBowSetting } from '@shared/randomizer/world/retro/retro.type';
+import type { OptionValue, RandomizerOptionsSnapshot } from '@shared/randomizer/world/options.type';
+import type { PondProfiles } from '@shared/randomizer/world/pond/pond-profiles.type';
+import type { ShopScope } from '@shared/randomizer/world/shops/shop-scope.type';
 
 interface RandomizerOptionChoices {
   keyDropShuffle: boolean;
@@ -63,7 +66,7 @@ interface RandomizerOptionChoices {
    */
   shops: ShopScope;
   /** The shop-price rows, by catalog key. The block owns their whole set. */
-  shopPrices: Readonly<Record<string, ApOptionValue>>;
+  shopPrices: Readonly<Record<string, OptionValue>>;
   shufflePrizes: boolean;
   /** The master switch: off leaves all four families vanilla and the pond native. */
   capacityEnabled: boolean;
@@ -75,8 +78,8 @@ interface RandomizerOptionChoices {
   /** What each of the three ponds sells; the legacy setting leaves one exactly as it was. */
   ponds: PondProfiles;
   /**
-   * One set of settings across all three ponds. Absent on a choices object
-   * written before the switch existed, which read as three ponds set apart.
+   * One set of settings across all three ponds. Absent reads as three ponds
+   * set apart.
    */
   pondShare?: boolean;
   /**
@@ -101,6 +104,8 @@ interface RandomizerOptionChoices {
   difficulty: DifficultySetting;
   /** The seven item-power switches, one field for the whole set. */
   itemPower: ItemPowerSetting;
+  /** Which recorded event each story gate reads, and what the counts ask for; one field for all thirteen rows. */
+  storyGates: StoryGateSetting;
   /** How much of the seed has to be reachable for it to count as valid. */
   accessibility: AccessibilityMode;
   /** Must an unlit room be lit to count as passable? */
@@ -116,7 +121,7 @@ interface RandomizerOptionChoices {
 type ChoiceField = Exclude<
   keyof RandomizerOptionChoices,
   'capacity' | 'capacityBonus' | 'capacityEnabled' | 'capacityProgressive' | 'difficulty' | 'itemPower' | 'ponds'
-  | 'pondShare' | 'progressiveTiers' | 'progressiveModes' | 'retroBow' | 'shopPrices' | 'shops'
+  | 'pondShare' | 'progressiveTiers' | 'progressiveModes' | 'retroBow' | 'shopPrices' | 'shops' | 'storyGates'
 >;
 
 /**
@@ -171,7 +176,7 @@ const capacityPondOf = (choices: RandomizerOptionChoices): CapacityPondSelection
 });
 
 /** The plain scalar rows, read off the one map above. */
-const plainOverrides = (choices: RandomizerOptionChoices): Record<string, ApOptionValue> =>
+const plainOverrides = (choices: RandomizerOptionChoices): Record<string, OptionValue> =>
   Object.fromEntries(Object.entries(PLAIN_FIELD_BY_KEY).map(([key, field]) => [key, choices[field]]));
 
 /**
@@ -186,7 +191,7 @@ const plainOverrides = (choices: RandomizerOptionChoices): Record<string, ApOpti
  */
 const randomizerChoiceOverrides = (
   choices: RandomizerOptionChoices,
-): Readonly<Record<string, ApOptionValue>> => {
+): Readonly<Record<string, OptionValue>> => {
   const { enabled, capacity, pond } = reconcileCapacityPond(capacityPondOf(choices));
   return {
     ...plainOverrides(choices),
@@ -204,6 +209,8 @@ const randomizerChoiceOverrides = (
     ...retroBowValuesOf(choices.retroBow),
     ...itemPowerValuesOf(choices.itemPower),
     ...difficultyValuesOf(choices.difficulty),
+    // A choices object that never carried the story gates reads as the story as the game tells it.
+    ...storyGateValuesOf(choices.storyGates ?? DEFAULT_STORY_GATES),
   };
 };
 

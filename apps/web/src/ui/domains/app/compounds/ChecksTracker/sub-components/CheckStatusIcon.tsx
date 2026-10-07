@@ -5,7 +5,7 @@
  */
 import { Icon } from '@ds/primitives';
 import type { IconProps } from '@ds/primitives';
-import type { CheckStatus } from '@shared/game/logic/eval';
+import type { CheckStatus } from '@shared/game/logic';
 import { CHECK_PATHS, DOT_CIRCLES, RING_PATHS, STACK_PATHS } from '../ChecksTracker.constants';
 
 /** The three check states plus the whole-set total the summary also marks. */

@@ -8,6 +8,7 @@
  * above. Only the second carries a note.
  */
 import { Box, Checkbox, Text } from '@ds/primitives';
+import { OptionValueTag } from '../../OptionValueTag';
 import type { BottleContentRowModel } from '../CurrencyPriceRow.type';
 import './BottleContentRow.css';
 
@@ -15,21 +16,25 @@ interface BottleContentRowProps {
   row: BottleContentRowModel;
   /** The bottle row itself is not ticked, or the whole section is frozen. */
   disabled: boolean;
+  /** Show the tick as a True or False tag: the read-only panel. */
+  readout?: boolean;
   onChange?: (checked: boolean) => void;
 }
 
 const BottleContentRow = (props: BottleContentRowProps) => {
-  const { row, disabled, onChange } = props;
+  const { row, disabled, readout = false, onChange } = props;
   const { label, checked, blocked, note } = row;
 
   return (
     <Box className="bottle-content-row" data-blocked={blocked ? '' : undefined}>
-      <Checkbox
-        label={label}
-        checked={checked}
-        disabled={disabled || blocked || onChange === undefined}
-        onChange={(next) => onChange?.(next)}
-      />
+      {readout ? <OptionValueTag label={label} value={checked} /> : (
+        <Checkbox
+          label={label}
+          checked={checked}
+          disabled={disabled || blocked || onChange === undefined}
+          onChange={(next) => onChange?.(next)}
+        />
+      )}
       {note !== '' && <Text className="bottle-content-row__note">{note}</Text>}
     </Box>
   );

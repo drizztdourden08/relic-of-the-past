@@ -10,12 +10,12 @@
  * stored answer is left exactly where it was: unticking is what gives the
  * question back, not this file.
  */
-import { forcedItemPowerReasons } from '@shared/randomizer/ap-world/item-power/item-power-forced';
+import { forcedItemPowerReasons } from '@shared/randomizer/world/item-power/item-power-forced';
 import {
   beamSwordReachable, swordReachable,
-} from '@shared/randomizer/ap-world/progressive/progressive-reach';
-import type { ApOptionDef, ApOptionValue } from '@shared/randomizer/ap-world/options.type';
-import type { ProgressiveSetting } from '@shared/randomizer/ap-world/progressive/progressive.type';
+} from '@shared/randomizer/world/progressive/progressive-reach';
+import type { OptionDef, OptionValue } from '@shared/randomizer/world/options.type';
+import type { ProgressiveSetting } from '@shared/randomizer/world/progressive/progressive.type';
 
 const NO_FORCED_KEYS: ReadonlySet<string> = new Set();
 
@@ -25,11 +25,11 @@ interface ForcedItemPowerRows {
   /** The sentence to show under each of them. */
   notes: ReadonlyMap<string, string>;
   /** The value each row shows: on for a forced row, the stored answer otherwise. */
-  valueOf: (option: ApOptionDef) => ApOptionValue;
+  valueOf: (option: OptionDef) => OptionValue;
 }
 
 const forcedItemPowerRows = (
-  tiers: ProgressiveSetting, storedValueOf: (option: ApOptionDef) => ApOptionValue,
+  tiers: ProgressiveSetting, storedValueOf: (option: OptionDef) => OptionValue,
 ): ForcedItemPowerRows => {
   const notes = forcedItemPowerReasons(swordReachable(tiers), beamSwordReachable(tiers));
   const keys = notes.size === 0 ? NO_FORCED_KEYS : new Set(notes.keys());

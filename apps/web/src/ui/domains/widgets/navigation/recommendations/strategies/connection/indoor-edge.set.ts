@@ -22,27 +22,32 @@ import type { Probe, SetProbe } from '@shared/game/recommendations/compare';
 import type { ObservedTransition, ScreenObservations } from '@shared/game/recommendations';
 import { buildConnectionRecord } from '../../../build-connection-record';
 import { resolveRealDestId } from '../../../connection-audit-resolve';
-import { auditableFromHere, otherEndpoint, transitionKey } from './screen-endpoint';
-
-const readLive = (observations: ScreenObservations): Probe<readonly ObservedTransition[]> => {
-  if (!observations.isIndoors || !observations.walkBoundaries || !observations.doorBoundaries) return unread();
-  const seen = new Set<number>();
-  const crossings: ObservedTransition[] = [];
-  for (const boundary of observations.walkBoundaries) {
-    if (boundary.destRoom === 0 || seen.has(boundary.destRoom)) continue;
-    seen.add(boundary.destRoom);
-    crossings.push({ source: 'walk-boundary', kind: 'room', index: boundary.destRoom });
-  }
-  return { known: true, value: crossings };
-};
+import { auditableFromHere, otherEndpoint, storedOnFarSide, transitionKey } from './screen-endpoint';
 
 const readDataset = (observations: ScreenObservations, screenId: ScreenId | null): readonly ConnectionRecord[] => {
   if (!screenId || !observations.isIndoors) return [];
   return observations.existingConnections.filter(c => c.kind === 'edge' && auditableFromHere(screenId, c));
 };
 
+const readLive = (observations: ScreenObservations, screenId: ScreenId | null): Probe<readonly ObservedTransition[]> => {
+  if (!observations.isIndoors || !observations.walkBoundaries || !observations.doorBoundaries) return unread();
+  const here = readDataset(observations, screenId);
+  const seen = new Set<number>();
+  const crossings: ObservedTransition[] = [];
+  for (const boundary of observations.walkBoundaries) {
+    if (boundary.destRoom === 0 || seen.has(boundary.destRoom)) continue;
+    seen.add(boundary.destRoom);
+    const crossing: ObservedTransition = { source: 'walk-boundary', kind: 'room', index: boundary.destRoom };
+    if (storedOnFarSide(screenId, transitionKey(crossing), observations.existingConnections, here)) continue;
+    crossings.push(crossing);
+  }
+  return { known: true, value: crossings };
+};
+
+// A pair with no far side yet keys on the record's own id, the same as a screen-less pass:
+// neither can collide with a real ScreenId, so neither can read as "already covered".
 const datasetKey = (record: ConnectionRecord, screenId: ScreenId | null): string =>
-  (screenId ? otherEndpoint(screenId, record) : record.id);
+  (screenId ? otherEndpoint(screenId, record) ?? record.id : record.id);
 
 const toProposed = (item: ObservedTransition, observations: ScreenObservations, screenId: ScreenId | null) => {
   if (!screenId) return null;
@@ -64,6 +69,7 @@ const INDOOR_EDGE_PROBE: SetProbe<'connection', ObservedTransition> = {
   removable: true,
   source: 'native:room-boundaries',
   confidence: 'certain',
+  removalConfidence: 'likely',
 };
 
 export { INDOOR_EDGE_PROBE };

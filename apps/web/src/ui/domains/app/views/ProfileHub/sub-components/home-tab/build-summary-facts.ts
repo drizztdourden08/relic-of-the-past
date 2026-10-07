@@ -36,7 +36,7 @@ const buildRandomizerFacts = (
   // game running, so the per-save-file strips carry it instead (offline read).
   return [
     { label: 'Seed', value: randomizer.seed, title: randomizer.seed, mono: true },
-    { label: 'Connection', value: randomizer.mode === 'online' ? 'Online' : 'Local' },
+    { label: 'Connection', value: randomizer.mode === 'online' ? 'Archipelago' : 'Local' },
     { label: 'Session', value: sessionStatusLabel },
   ];
 };

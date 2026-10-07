@@ -171,7 +171,7 @@ void Link_Main() {  // 878000
 }
 
 void Link_ControlHandler() {  // 87807f
-
+  GameHook_ApKillApply();
   if (link_give_damage) {
     if (link_cape_mode) {
       link_give_damage = 0;
@@ -2680,7 +2680,7 @@ void LinkItem_Flute() {  // 87a3db
     if (ancilla_type[i] == 0x27)
       return;
   } while (--i >= 0);
-  if (link_item_flute == 2) {
+  if (!GameHook_StoryGate(kGate_Vane, link_item_flute != 2)) {
     if (overworld_screen_index == 0x18 && link_y_coord >= 0x760 && link_y_coord < 0x7e0 && link_x_coord >= 0x1cf && link_x_coord < 0x230) {
       submodule_index = 45;
       AncillaAdd_ExplodingWeatherVane(55, 0);

@@ -38,7 +38,7 @@ interface FeatureDef {
   group: FeatureGroup;
   kind: FeatureKind;
   origin: FeatureOrigin;
-  /** For split bug-fixes: the snesrev bundle they were extracted from (drives legacy-setting migration). */
+  /** For split bug-fixes: the snesrev bundle they were extracted from (an unset toggle follows its bulk switch). */
   bundleOrigin?: 'MiscBugFixes' | 'GameChangingBugFixes' | 'WidescreenVisualFixes';
   /** C symbol gating it, e.g. 'kFeatures0_CameraLockToViewport' (omitted for render-geometry/cheat). */
   flag?: string;

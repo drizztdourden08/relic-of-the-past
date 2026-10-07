@@ -26,6 +26,10 @@ const useProfileSettings = (props: ProfileHubProps) => {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const restartToastShownRef = useRef(false);
   const wasRunningRef = useRef(isGameRunning);
+  /** Whether the profile's file has been read: no change is written before it is. */
+  const loadedRef = useRef(false);
+  const pendingRef = useRef<Partial<GameSettings>>({});
+
   // Push live settings when game starts; clear restart toast when it stops.
   useEffect(() => {
     if (!wasRunningRef.current && isGameRunning) {
@@ -39,6 +43,13 @@ const useProfileSettings = (props: ProfileHubProps) => {
   }, [isGameRunning]);
 
   const handleSettingsChange = useCallback((patch: Partial<GameSettings>) => {
+    // Until the profile's file has been read, `settings` still holds the app defaults, and
+    // applying a change here would write those defaults over the whole file. So a change that
+    // arrives first (the launch's mute, re-pressed after a reload) waits and lands on the file.
+    if (!loadedRef.current) {
+      pendingRef.current = { ...pendingRef.current, ...patch };
+      return;
+    }
     const changedKeys = Object.keys(patch) as (keyof GameSettings)[];
     const details = changedKeys.map((k) => `${k}=${JSON.stringify(patch[k])}`).join(', ');
 
@@ -72,8 +83,19 @@ const useProfileSettings = (props: ProfileHubProps) => {
     }
   }, [masterVolumeOverride?.version]);
 
-  // Load settings from disk on mount
+  // The latest handler, so the queued change lands through the current render's closure.
+  const handleRef = useRef(handleSettingsChange);
+  handleRef.current = handleSettingsChange;
+
+  // Load settings from disk on mount, then apply whatever change arrived before the file did.
   useEffect(() => {
+    loadedRef.current = false;
+    const flushPending = () => {
+      loadedRef.current = true;
+      const pending = pendingRef.current;
+      pendingRef.current = {};
+      if (Object.keys(pending).length > 0) handleRef.current(pending);
+    };
     (async () => {
       try {
         const saved = await readConfig(profile.id);
@@ -95,6 +117,7 @@ const useProfileSettings = (props: ProfileHubProps) => {
           pushLiveSettings(merged);
         }
       } catch { /* use defaults */ }
+      flushPending();
     })();
   }, [profile.id]);
 

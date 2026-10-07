@@ -9,18 +9,20 @@ import { LockedRowsSection } from './LockedRowsSection';
 import { SUBJECT_FIXED_TITLE, isSubjectFixedTab } from './option-tab-copy';
 import type { LockedGroupsByTab, OptionTabId } from '@app/hooks/randomizer/option-tab-model';
 import type { ImpactCell } from '@domains/app/compounds/PoolImpactCell';
-import type { ApOptionDef, ApOptionValue } from '@shared/randomizer/ap-world/options.type';
+import type { OptionDef, OptionValue } from '@shared/randomizer/world/options.type';
 
 interface SubjectFixedRowsProps {
   tab: OptionTabId;
   /** The fixed sections each tab that shows some owns, already split. */
   lockedGroups: LockedGroupsByTab;
-  valueOf: (option: ApOptionDef) => ApOptionValue;
+  valueOf: (option: OptionDef) => OptionValue;
   cellOf: (key: string) => ImpactCell;
+  /** Every row shows its value as a tag: the read-only panel. */
+  readout?: boolean;
 }
 
 const SubjectFixedRows = (props: SubjectFixedRowsProps) => {
-  const { tab, lockedGroups, valueOf, cellOf } = props;
+  const { tab, lockedGroups, valueOf, cellOf, readout } = props;
 
   if (!isSubjectFixedTab(tab)) return null;
 
@@ -30,6 +32,7 @@ const SubjectFixedRows = (props: SubjectFixedRowsProps) => {
       groups={lockedGroups[tab]}
       valueOf={valueOf}
       cellOf={cellOf}
+      readout={readout}
     />
   );
 };

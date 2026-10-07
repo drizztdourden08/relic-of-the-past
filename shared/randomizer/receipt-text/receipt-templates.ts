@@ -10,12 +10,14 @@
  * first, so a long location name costs the flavour and then the source, never
  * the numbers (receipt-line.type.ts). The found line's wording is per item
  * class and per set position (receipt-flavour.ts); the situations below are
- * the ones a class cannot speak for.
+ * the ones a class cannot speak for. Item names carry the primary highlight
+ * and player names the secondary one (highlight-markup.ts). A capacity
+ * upgrade has no situation of its own: it takes the line of its context, and
+ * its climb follows as a second page (capacity-rung-values.ts).
  */
 
-import { capacityGrowthLine, capacityNextStepLine } from './capacity-rung-values';
+import { primary, secondary } from './highlight-markup';
 import { foundCandidates } from './receipt-flavour';
-import type { CapacityFamilyId } from '@shared/game/data/capacity-family.type';
 import type { FlavourParams } from './receipt-flavour';
 import type { ReceiptLine } from './receipt-line.type';
 
@@ -29,7 +31,7 @@ const renderFoundItem = (params: FlavourParams): ReceiptLine => foundCandidates(
  * is the whole subject, so naming the item too would only say it twice.
  */
 const renderProgressive = (slot: string): string =>
-  `Your ${slot.toLowerCase()} is better than it was.`;
+  `Your ${primary(slot.toLowerCase())} is better than it was.`;
 
 /** 4: delivered from a check with no physical container. */
 const renderDelivered = (source: string, label: string): ReceiptLine =>
@@ -37,30 +39,13 @@ const renderDelivered = (source: string, label: string): ReceiptLine =>
 
 /** 5, online (multiworld): another player found this item for us. */
 const renderOnline = (sender: string, item: string, world = 'their world'): string =>
-  `${sender} turned up your ${item} over in ${world}.`;
+  `${secondary(sender)} turned up your ${primary(item)} over in ${world}.`;
+
+/** 5b, online: the server itself sent this item (a command, the starting inventory). */
+const renderFromServer = (item: string): string => `The server sent you ${primary(item)}!`;
 
 /** 6: junk / trap. */
 const renderJunk = (item: string): string =>
-  `It is ${item}. The pool can be cruel.`;
+  `It is ${primary(item)}. The pool can be cruel.`;
 
-/**
- * 7, fixed-jump capacity upgrade, the location's own line: the jump this
- * item performs. The capacity it climbs from is only known at grant time, so
- * the core swaps in the (jump, starting rung) line pre-rendered for it
- * (capacity-fixed-lines.ts); this is what shows when no such line exists.
- */
-const renderCapacityJump = (family: CapacityFamilyId, jump: number): string =>
-  capacityGrowthLine(family, jump);
-
-/**
- * 8, progressive capacity upgrade, the location's own line: the jump is
- * the plan's next step, so the core swaps in the per-rung line at grant
- * time (capacity_progressive.c); this is what shows when it cannot.
- */
-const renderCapacityNextStep = (family: CapacityFamilyId): string =>
-  capacityNextStepLine(family);
-
-export {
-  renderCapacityJump, renderCapacityNextStep, renderDelivered, renderFoundItem, renderJunk, renderOnline,
-  renderProgressive,
-};
+export { renderDelivered, renderFoundItem, renderFromServer, renderJunk, renderOnline, renderProgressive };

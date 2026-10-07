@@ -2,22 +2,20 @@
 /**
  * The minimal draft `ScreenRecord` a `create` recommendation proposes for an
  * uncatalogued room/overworld index: everything BESIDES the identity
- * (`gameId`/`kind`) and the label, which differ by caller. Shared by
- * `presence.set.ts` (the current screen) and the connection strategy's
- * `onUnresolvable` mapper (a crossing destination).
+ * (`gameId`/`kind`) and the label, which differ by caller.
+ *
+ * Two callers share it: `presence.set.ts` (the screen the player is standing on)
+ * and the connection strategy's `onUnresolvable` mapper (an arbitrary crossing
+ * destination). They disagree on how much identity they can supply, because the
+ * current screen's live registers carry a palace index a crossing's destination
+ * never can, but the REST of a minimal draft is the same either way.
+ *
+ * Nothing here is enough to write. Geography has no native answer at all, so the
+ * draft carries the dataset's own placeholder ids and an obviously unfinished
+ * name; `validate-create.ts` is what refuses to let that reach disk.
  */
-import type { AreaId, LocationId, ScreenGameId, ScreenRecord } from '../../../data/types';
-
-/**
- * No dataset "unknown area/location" sentinel exists. `facade.ts`'s
- * `missingRecord` fallback fills a broken reference with `'area-000'`/
- * `'location-000'`, ids no real record holds, which `getArea`/`getLocation`
- * render as `(unregistered)`. Reused here so an unresolved id reads as
- * obviously wrong as the name placeholder does. A real "unknown area" concept
- * should replace this if one is added.
- */
-const UNKNOWN_AREA_ID: AreaId = 'area-000';
-const UNKNOWN_LOCATION_ID: LocationId = 'location-000';
+import { PLACEHOLDER_AREA_ID, PLACEHOLDER_LOCATION_ID } from '../../../data/facade';
+import type { ScreenGameId, ScreenRecord } from '../../../data/types';
 
 /** `kind`/`world` and the `label` are the caller's; everything else about a
  *  fresh, unreviewed screen record is identical regardless of who proposes it. */
@@ -30,10 +28,9 @@ const buildScreenDraftRecord = (
   gameId,
   kind,
   world,
-  randomizerName: `Unnamed screen ${label}`,
-  // No native answer for either field (see above).
-  areaId: UNKNOWN_AREA_ID,
-  locationId: UNKNOWN_LOCATION_ID,
+  name: `Unnamed screen ${label}`,
+  areaId: PLACEHOLDER_AREA_ID,
+  locationId: PLACEHOLDER_LOCATION_ID,
   tags: [],
 });
 

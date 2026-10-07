@@ -13,6 +13,9 @@ import { describeDataset } from '../../dataset-guard';
 
 const GENERATED_FILE = resolve(__dirname, '../../../shared/game/data/enumeration/generated-types.ts');
 
+/** The categories the generator emits a union for: the rule, not a count. */
+const GENERATED_CATEGORIES = new Set(Object.keys(CATEGORY_TYPE_NAMES as Record<string, string>));
+
 describeDataset('enumeration/generated-types.ts', () => {
   it('matches what generate-enum-types.mjs would emit from the current ALL_ENUMERATION', () => {
     const committed = readFileSync(GENERATED_FILE, 'utf8');
@@ -32,9 +35,22 @@ describeDataset('enumeration/generated-types.ts', () => {
       byCategory.set(entry.category, values);
     }
     for (const [category, values] of byCategory) {
-      if (!(category in CATEGORY_TYPE_NAMES)) continue;
+      if (!GENERATED_CATEGORIES.has(category)) continue;
       for (const value of values) expect(source, value).toContain(`'${value}'`);
     }
+  });
+
+  /**
+   * A category earns a union only when the field it labels stores the value as a
+   * string. One labels a numeric field, so generating its union would retype
+   * that field to string literals. The generator's category table is what
+   * decides, and this holds that line.
+   */
+  it('leaves a category that labels a non-string field out of the unions', () => {
+    const source = readFileSync(GENERATED_FILE, 'utf8');
+    const ungenerated = ALL_ENUMERATION.filter((entry) => !GENERATED_CATEGORIES.has(entry.category));
+    expect(ungenerated.length).toBeGreaterThan(0);
+    for (const entry of ungenerated) expect(source, entry.value).not.toContain(`'${entry.value}'`);
   });
 });
 

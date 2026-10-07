@@ -6,6 +6,7 @@
  * currency is ticked: with nothing rolled there is no price to scale.
  */
 import { Box, Slider, Text } from '@ds/primitives';
+import { OptionValueTag } from '../../OptionValueTag';
 import './ShopPriceModifierRow.css';
 
 interface ShopPriceModifierRowProps {
@@ -15,26 +16,30 @@ interface ShopPriceModifierRowProps {
   max: number;
   /** No currency is ticked, or the whole section is frozen. */
   disabled: boolean;
+  /** Show the percentage as a tag in place of the slider: the read-only panel. */
+  readout?: boolean;
   onChange?: (next: number) => void;
 }
 
 const percent = (value: number): string => `${value}%`;
 
 const ShopPriceModifierRow = (props: ShopPriceModifierRowProps) => {
-  const { label, value, min, max, disabled, onChange } = props;
+  const { label, value, min, max, disabled, readout = false, onChange } = props;
 
   return (
     <Box className={`shop-price-modifier-row${disabled ? ' shop-price-modifier-row--off' : ''}`}>
       <Text className="shop-price-modifier-row__label">{label}</Text>
-      <Slider
-        value={value}
-        min={min}
-        max={max}
-        step={5}
-        disabled={disabled || onChange === undefined}
-        formatValue={percent}
-        onChange={(next) => onChange?.(next)}
-      />
+      {readout ? <OptionValueTag value={percent(value)} /> : (
+        <Slider
+          value={value}
+          min={min}
+          max={max}
+          step={5}
+          disabled={disabled || onChange === undefined}
+          formatValue={percent}
+          onChange={(next) => onChange?.(next)}
+        />
+      )}
     </Box>
   );
 };

@@ -24,8 +24,8 @@
 import { log } from '../log-bus';
 import { darkRoomLightWordOf } from './dark-room-lights';
 import { getModule } from './wasm-bridge';
-import type { DarkRoomSetting } from '@shared/randomizer/ap-world/dark-rooms/dark-room.type';
-import type { ItemPowerSetting } from '@shared/randomizer/ap-world/item-power/item-power.type';
+import type { DarkRoomSetting } from '@shared/randomizer/world/dark-rooms/dark-room.type';
+import type { ItemPowerSetting } from '@shared/randomizer/world/item-power/item-power.type';
 
 /** features.h kFeatures4_*: keep in lockstep with that enum. */
 const ITEM_POWER_BIT = {

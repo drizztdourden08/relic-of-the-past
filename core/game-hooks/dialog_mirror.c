@@ -9,13 +9,15 @@
 // message paints spaces over the old pointer and a new pointer elsewhere.
 //
 // Exposed as one frozen buffer per call (WasmGetDialogState), the same contract as WasmGetGameUIState.
-// Everything lives in hook statics, never WRAM, so the save-state snapshot is untouched. After a state
-// load the rows are stale until the next message clears them; the host knows when it loaded one and
-// holds its box back until the next clear (dialog-store.ts).
+// Everything lives in hook statics, never WRAM, so the save-state snapshot is untouched. A save made
+// by the host carries these statics beside the snapshot and hands them back on load
+// (dialog_hook_state.c). A load without them leaves the rows stale until the next message clears
+// them; the host knows when it loaded one and holds its box back until the next clear (dialog-store.ts).
 
 enum { kDialogRows = 3, kDialogCells = 40 };
 // The text area is 21 tiles wide; a pen past it is a row the engine itself would not show.
 enum { kTextAreaWidthPx = 168 };
+enum { kCellWidthMask = 0x0f, kCellHighlightShift = 4 };
 
 typedef struct DialogCell {
   uint8 glyph, x, w;
@@ -83,20 +85,25 @@ static void EvictOverlap(int line, int x, int w) {
   DialogCell *row = g_mirror.rows[line];
   int n = g_mirror.count[line], kept = 0;
   for (int i = 0; i < n; i++) {
-    bool overlaps = row[i].x < x + w && x < row[i].x + row[i].w;
+    bool overlaps = row[i].x < x + w && x < row[i].x + (row[i].w & kCellWidthMask);
     if (!overlaps) row[kept++] = row[i];
   }
   g_mirror.count[line] = (uint8)kept;
 }
 
+// A cell's width byte carries the glyph's highlight span in its high nibble (dialog_highlight.c); a
+// glyph is at most 8 px wide, so the low nibble is the width and a plain cell reads as before.
 void GameHook_DialogGlyph(uint8 c, uint8 line, uint8 x, uint8 w) {
+  DialogHighlight_GlyphAt(line, x, w);
   if (!DialogMirror_Recording() || line >= kDialogRows || x >= kTextAreaWidthPx) return;
   EvictOverlap(line, x, w);
   if (g_mirror.count[line] >= kDialogCells) return;
-  g_mirror.rows[line][g_mirror.count[line]++] = (DialogCell){ c, x, w };
+  uint8 marked = (uint8)(w | DialogHighlight_Kind() << kCellHighlightShift);
+  g_mirror.rows[line][g_mirror.count[line]++] = (DialogCell){ c, x, marked };
 }
 
 void GameHook_DialogScrolled(void) {
+  DialogHighlight_Scrolled();
   if (!DialogMirror_Recording()) return;
   for (int r = 0; r + 1 < kDialogRows; r++) {
     memcpy(g_mirror.rows[r], g_mirror.rows[r + 1], sizeof g_mirror.rows[r]);
@@ -147,9 +154,12 @@ void GameHook_DialogMeasure(void) {
 }
 
 void GameHook_DialogCleared(void) {
+  // Runs right after the loader, ahead of the measure: a paged receipt joins its next page here.
+  ReceiptPages_MessageLoaded();
   // Ahead of the gate: the box's owner is decided once per message whatever the feature words say,
   // since Skip Dialog withholds the native box with the mirror off (dialog_suppress.c).
   DialogSuppress_MessageStarted();
+  DialogHighlight_Cleared();
   if (!DialogMirror_Recording()) return;
   memset(&g_mirror, 0, sizeof g_mirror);
   g_generation++;
@@ -177,6 +187,45 @@ void WasmDialogMarkStale(void) {
   DialogSuppress_RepairStrandedBox();
 }
 
+// ─── Travelling with a save (dialog_hook_state.c) ───
+// The rows, their counts, the five message fields and the generation, in that order. A mirror left
+// stale by an earlier load is not worth carrying, so the caller asks first.
+_Static_assert(sizeof g_mirror.rows + kDialogRows + 6 == kDialogMirrorPackBytes, "mirror pack size");
+
+bool DialogMirror_Stale(void) {
+  return g_stale;
+}
+
+void DialogMirror_Pack(uint8 *out) {
+  memcpy(out, g_mirror.rows, sizeof g_mirror.rows);
+  out += sizeof g_mirror.rows;
+  memcpy(out, g_mirror.count, kDialogRows);
+  out += kDialogRows;
+  out[0] = g_mirror.bordered;
+  out[1] = g_mirror.story;
+  out[2] = g_mirror.last_cmd;
+  out[3] = g_mirror.msg_width;
+  out[4] = g_mirror.msg_rows;
+  out[5] = g_generation;
+}
+
+// Counts are clamped to the row size, so a damaged blob cannot make a reader walk past a row.
+void DialogMirror_Unpack(const uint8 *in) {
+  memcpy(g_mirror.rows, in, sizeof g_mirror.rows);
+  in += sizeof g_mirror.rows;
+  for (int r = 0; r < kDialogRows; r++)
+    g_mirror.count[r] = in[r] > kDialogCells ? kDialogCells : in[r];
+  in += kDialogRows;
+  g_mirror.bordered = in[0] != 0;
+  g_mirror.story = in[1] != 0;
+  g_mirror.last_cmd = in[2];
+  g_mirror.msg_width = in[3];
+  g_mirror.msg_rows = in[4];
+  g_generation = in[5];
+  // The mirror now matches the loaded game, so the host box may draw it.
+  g_stale = false;
+}
+
 // ─── Snapshot ───
 // Header, 20 bytes:
 //   0 active   1 flags (bit0 bordered, bit1 story, bit2 native box withheld)   2-3 text_msgbox_topleft
@@ -184,7 +233,7 @@ void WasmDialogMarkStale(void) {
 //   8-9 dialogue_message_index   10-12 cell count per row   13 generation
 //   14 the message's widest row in text-area pixels   15 the most rows it shows
 //   16-17 text layer horizontal scroll   18-19 text layer vertical scroll (signed, as the PPU draws)
-// Rows follow: 3 x kDialogCells cells of (glyph, x, w).
+// Rows follow: 3 x kDialogCells cells of (glyph, x, w), w's high nibble the glyph's highlight span.
 enum { kSnapshotHeader = 20 };
 static uint8 g_snapshot[kSnapshotHeader + kDialogRows * kDialogCells * 3];
 
@@ -211,33 +260,4 @@ int WasmGetDialogState(void) {
   PutU16(b, 18, g_zenv.ppu ? g_zenv.ppu->bgLayer[2].vScroll : 0);
   memcpy(b + kSnapshotHeader, g_mirror.rows, sizeof g_mirror.rows);
   return (int)(intptr_t)b;
-}
-
-// The active language's glyph sheet (which = 0: 256 tiles of 16 bytes, 2bpp, glyph c at tile
-// (c & 0x70) * 2 + (c & 0xf) with its lower half 16 tiles on) or its width table (which = 1: one byte
-// per glyph). A pointer into the loaded asset blob, so no copy and no lifetime beyond the session.
-EMSCRIPTEN_KEEPALIVE
-int WasmGetDialogFont(int which) {
-  if (!RenderQueryGate() || (unsigned)which > 1) return 0;
-  return (int)(intptr_t)FindIndexInMemblk(g_zenv.dialogue_font_blk, which).ptr;
-}
-
-EMSCRIPTEN_KEEPALIVE
-int WasmGetDialogFontSize(int which) {
-  if (!RenderQueryGate() || (unsigned)which > 1) return 0;
-  return (int)FindIndexInMemblk(g_zenv.dialogue_font_blk, which).size;
-}
-
-// The four colours the text box is drawing with right now: BG palette |text_tilemap_cur| names
-// (bits 10-12, palette 6 unless a [Color] command moved it), read from live CGRAM so the host paints
-// the glyph sheet the way the game does this frame. Four SNES 15-bit words.
-static uint16 g_text_palette[4];
-
-EMSCRIPTEN_KEEPALIVE
-int WasmGetDialogPalette(void) {
-  if (!RenderQueryGate() || g_zenv.ppu == NULL) return 0;
-  int palette = (text_tilemap_cur >> 10) & 7;
-  for (int i = 0; i < 4; i++)
-    g_text_palette[i] = g_zenv.ppu->cgram[palette * 4 + i];
-  return (int)(intptr_t)g_text_palette;
 }

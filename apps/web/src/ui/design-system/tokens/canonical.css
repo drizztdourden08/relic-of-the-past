@@ -42,6 +42,8 @@
   --c-gold:          #c8a84e;
   --c-gold-bright:   #e4c65a;
   --c-gold-dim:      #2a2418;            /* dim fill bg */
+  --c-gold-shade:    #8c6a2a;            /* pixel art: gold one step down, the shaded side */
+  --c-gold-deep:     #50431f;            /* pixel art: gold two steps down, a fill that sits under digits */
   --c-gold-soft:     rgb(200 168 78 / 0.14);
 
   /* ─── Accent: GREEN = secondary, used contextually for positive / success / go ─── */
@@ -94,6 +96,7 @@
      media/container queries that consume them. These tokens are the source. */
   --bp-narrow:  600px;   /* below: drop secondary side-navs */
   --bp-compact: 820px;   /* below: collapse nav rails, tighten full-page padding */
+  --bp-dashboard-pair: 696px; /* a dashboard this wide holds two columns: 2 x --dashboard-col-min + --space-lg */
   --pad-page:   clamp(var(--space-sm), 2.5vw, var(--space-2xl)); /* tight on phones, roomy on desktop */
 
   /* Device safe-area (notch / display-cutout) insets, in CSS px. 0 by default; the

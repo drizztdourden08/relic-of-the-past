@@ -1,0 +1,146 @@
+/* @layer shared-game @kind data */
+
+import type { ScreenRecord } from '@shared/game/data/types';
+
+const DW_INTERIORS_VILLAGE_OF_OUTCASTS_SCREENS: ScreenRecord[] = [
+  {
+    id: 'screen-468',
+    gameId: { roomIndex: 295, entranceId: 131 },
+    kind: 'interior',
+    world: 'dark',
+    interiorKind: 'cave',
+    name: 'Dark World Hammer Peg Cave',
+    areaId: 'area-017',
+    locationId: 'location-031',
+    regionId: 'region-146',
+    tags: ['tag-003', 'tag-024'],
+    spawns: [
+      { actorId: 'actor-262', tile: { x: 14, y: 44 } },
+    ],
+  },
+  {
+    id: 'screen-470',
+    gameId: { roomIndex: 262, entranceId: 71 },
+    kind: 'interior',
+    world: 'dark',
+    interiorKind: 'gamble',
+    name: 'Chest Game',
+    areaId: 'area-017',
+    locationId: 'location-031',
+    regionId: 'region-150',
+    tags: ['tag-002', 'tag-024'],
+    spawns: [
+      { actorId: 'actor-230', tile: { x: 16, y: 54 } },
+    ],
+  },
+  {
+    id: 'screen-469',
+    gameId: { roomIndex: 273, entranceId: 89 },
+    kind: 'interior',
+    world: 'dark',
+    interiorKind: 'gamble',
+    name: 'Archery Game',
+    areaId: 'area-017',
+    locationId: 'location-031',
+    regionId: 'region-137',
+    tags: ['tag-002'],
+    spawns: [
+      { actorId: 'actor-192', tile: { x: 22, y: 54 } },
+    ],
+  },
+  {
+    id: 'screen-480',
+    gameId: { roomIndex: 290, entranceId: 102 },
+    kind: 'interior',
+    world: 'dark',
+    interiorKind: 'hint',
+    name: 'Fortune Teller (Dark)',
+    areaId: 'area-017',
+    locationId: 'location-031',
+    regionId: 'region-141',
+    tags: ['tag-002'],
+    spawns: [
+      { actorId: 'actor-170', tile: { x: 14, y: 48 } },
+      { actorId: 'actor-170', tile: { x: 46, y: 48 } },
+    ],
+  },
+  {
+    id: 'screen-481',
+    // Room 0x11C has two doors: entrance 83 from the bomb shop's screen, and entrance 84
+    // from the village. The chest the table holds in this room is this house's.
+    gameId: { roomIndex: 284, entranceId: 84 },
+    kind: 'interior',
+    world: 'dark',
+    interiorKind: 'house',
+    name: 'C-Shaped House',
+    areaId: 'area-017',
+    locationId: 'location-031',
+    regionId: 'region-149',
+    tags: ['tag-002'],
+    spawns: [
+      { actorId: 'actor-225', tile: { x: 18, y: 50 } },
+    ],
+  },
+  {
+    id: 'screen-473',
+    gameId: { roomIndex: 262, entranceId: 72 },
+    kind: 'interior',
+    world: 'dark',
+    interiorKind: 'house',
+    name: 'Brewery',
+    areaId: 'area-017',
+    locationId: 'location-031',
+    regionId: 'region-148',
+    tags: ['tag-002', 'tag-024'],
+    spawns: [
+      { actorId: 'actor-230', tile: { x: 16, y: 54 } },
+    ],
+  },
+  {
+    id: 'screen-482',
+    gameId: { roomIndex: 271, entranceId: 96 },
+    kind: 'interior',
+    world: 'dark',
+    interiorKind: 'shop',
+    name: 'Village of Outcasts Shop',
+    areaId: 'area-017',
+    locationId: 'location-031',
+    regionId: 'region-142',
+    tags: ['tag-002'],
+    spawns: [
+      { actorId: 'actor-230', tile: { x: 14, y: 42 } },
+    ],
+  },
+  {
+    id: 'screen-478',
+    gameId: { roomIndex: 271, entranceId: 96 },
+    kind: 'interior',
+    world: 'dark',
+    interiorKind: 'shop',
+    name: 'Dark World Potion Shop',
+    areaId: 'area-017',
+    locationId: 'location-031',
+    regionId: 'region-145',
+    tags: ['tag-002'],
+    spawns: [
+      { actorId: 'actor-230', tile: { x: 14, y: 42 } },
+    ],
+  },
+  {
+    id: 'screen-476',
+    gameId: { roomIndex: 272, entranceId: 87 },
+    kind: 'interior',
+    world: 'dark',
+    interiorKind: 'shop',
+    name: 'Red Shield Shop',
+    areaId: 'area-017',
+    locationId: 'location-031',
+    regionId: 'region-151',
+    tags: ['tag-002'],
+    spawns: [
+      { actorId: 'actor-230', tile: { x: 14, y: 42 } },
+    ],
+  },
+];
+
+export { DW_INTERIORS_VILLAGE_OF_OUTCASTS_SCREENS };

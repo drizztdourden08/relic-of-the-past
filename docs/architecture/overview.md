@@ -55,6 +55,11 @@ Aliases: `@shared/*` → `shared/`, `@app/*` → `apps/web/src/`.
    the wiring. See @docs/contributing/design-system.md.
 7. The native SDL3 controller addon lives in electron main only.
 8. `core/` C is edited only per the bridge rules (`add-wasm-function`).
+9. The dataset has one door: `shared/game/data`'s facade (`all`, `find`, `get*`),
+   re-exported by its barrel. No code outside `shared/game/data/` imports a record
+   file, a collection loader or the registry; an ESLint `no-restricted-imports`
+   rule refuses it. The randomizer engine, the tracker, the electron writers and
+   the tests all read a record through the same queries.
 
 If a change would break an invariant, the code is in the wrong zone. Re-place it.
 

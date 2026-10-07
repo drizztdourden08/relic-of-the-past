@@ -6,6 +6,7 @@
 import type { FileStore } from '@shared/platform';
 import { CAPACITY_ICONS_FILE } from '@shared/asset-extraction/item-sprites/capacity-icons';
 import { CURRENCY_SYMBOLS_FILE } from '@shared/asset-extraction/item-sprites/currency-symbols';
+import { FOREIGN_ICONS_FILE } from '@shared/asset-extraction/item-sprites/foreign-icons';
 import { GEAR_ICONS_FILE } from '@shared/asset-extraction/item-sprites/gear-icons';
 import { IN_GAME_BINARY_FILES } from '@shared/asset-extraction/item-sprites/in-game-binaries';
 import { QUIVER_ICON_FILE } from '@shared/asset-extraction/item-sprites/quiver-icon';
@@ -55,6 +56,10 @@ const readQuiverIcon = (files: FileStore, romFile: string): Promise<Uint8Array |
 const readCurrencySymbols = (files: FileStore, romFile: string): Promise<Uint8Array | null> =>
   files.readBytes(`${dir(romFile)}/${CURRENCY_SYMBOLS_FILE}`);
 
+/** The in-game pool icon binary of the ROM's set; null when the set predates it. */
+const readForeignIcons = (files: FileStore, romFile: string): Promise<Uint8Array | null> =>
+  files.readBytes(`${dir(romFile)}/${FOREIGN_ICONS_FILE}`);
+
 /** The content version the ROM's set was extracted with; null before it carried a stamp. */
 const readStampVersion = async (files: FileStore, romFile: string): Promise<string | null> =>
   parseExtractionStamp(await files.readText(`${dir(romFile)}/${EXTRACTION_STAMP_FILE}`));
@@ -83,6 +88,6 @@ const saveReview = (files: FileStore, data: unknown) => writeJson(files, 'sprite
 
 export {
   check, extractedFileNames, isStale, missing, writeSprites, remove, readCapacityIcons, readCurrencySymbols, readGearIcons,
-  readQuiverIcon, readStampVersion,
+  readForeignIcons, readQuiverIcon, readStampVersion,
   loadDebug, saveDebug, loadReview, saveReview,
 };

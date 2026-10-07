@@ -11,8 +11,12 @@
  * inert and off, and the one line saying why takes the range's place,
  * so the greying reads as a consequence of another setting instead of as
  * this row's own choice.
+ *
+ * A `readout` row draws the tick as a True or False tag and the range as its
+ * two ends in words: the face of a panel shown read-only.
  */
 import { Box, Checkbox, RangeSlider, Text } from '@ds/primitives';
+import { OptionValueTag, rangeLabelOf } from '../OptionValueTag';
 import './CurrencyPriceRow.css';
 
 interface CurrencyPriceRowProps {
@@ -28,18 +32,22 @@ interface CurrencyPriceRowProps {
   /** [low, high] indexes into `stops`. */
   range?: readonly [number, number];
   onRangeChange?: (next: [number, number]) => void;
+  /** Show the tick and the range as tags in place of their controls: the read-only panel. */
+  readout?: boolean;
   children?: React.ReactNode;
 }
 
 const CurrencyPriceRow = (props: CurrencyPriceRowProps) => {
   const {
     label, enabled, onEnabledChange, blocked = false, note = '',
-    stops, range, onRangeChange, children,
+    stops, range, onRangeChange, readout = false, children,
   } = props;
   const readOnly = onEnabledChange === undefined;
 
   const control = blocked && note !== '' ? (
     <Text className="currency-price-row__note">{note}</Text>
+  ) : stops !== undefined && range !== undefined && readout ? (
+    <OptionValueTag value={rangeLabelOf(stops, range)} />
   ) : stops !== undefined && range !== undefined ? (
     <RangeSlider
       stops={stops}
@@ -56,12 +64,14 @@ const CurrencyPriceRow = (props: CurrencyPriceRowProps) => {
       className={`currency-price-row${enabled ? '' : ' currency-price-row--off'}`}
       data-blocked={blocked ? '' : undefined}
     >
-      <Checkbox
-        checked={enabled}
-        disabled={readOnly || blocked}
-        onChange={(next) => onEnabledChange?.(next)}
-        label={label}
-      />
+      {readout ? <OptionValueTag label={label} value={enabled} /> : (
+        <Checkbox
+          checked={enabled}
+          disabled={readOnly || blocked}
+          onChange={(next) => onEnabledChange?.(next)}
+          label={label}
+        />
+      )}
       {control ?? <Box className="currency-price-row__contents">{children}</Box>}
       {control !== undefined && children !== undefined && (
         <Box className="currency-price-row__contents currency-price-row__contents--below">{children}</Box>

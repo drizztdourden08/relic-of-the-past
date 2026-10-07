@@ -8,7 +8,8 @@
 // values that byte holds once the item is owned, so a higher tier of a family counts as holding
 // the lower one, the way the game itself treats a stronger blade.
 //
-// A progressive family's virtual id (progressive_grants.c, 0x62-0x66) is held once its first
+// A progressive family's virtual id (progressive_grants.c, 0x62-0x66; the ocarina's 0x82 is
+// never asked for, since a shovel found later takes its byte) is held once its first
 // tier is, and its toss shows the tier held now. A dungeon prize is held while its own bit is
 // set: a pendant's native id banks a fixed bit, and a crystal's virtual id (prize_grants.c,
 // 0x7B-0x81) names one crystal's bit and throws as the native crystal. Every other id (a key, a

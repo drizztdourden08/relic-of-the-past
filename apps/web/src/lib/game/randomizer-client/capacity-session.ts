@@ -16,8 +16,8 @@
  */
 
 import {
-  FAMILIES, LEGACY_CAPACITY_BONUS, WALLET, maxTierOf, planOf, startTierOf,
-} from '@shared/randomizer/ap-world/capacity';
+  FAMILIES, REFERENCE_CAPACITY_BONUS, WALLET, maxTierOf, planOf, startTierOf,
+} from '@shared/randomizer/world/capacity';
 import { walletJumpTableOf } from '@shared/game/data';
 import { log } from '../../log-bus';
 import {
@@ -30,7 +30,7 @@ import { applyUpgradeIcons, clearUpgradeIcons } from '../upgrade-icons';
 import { clearSessionWalletTable, setSessionWalletTable } from './session-wallet-table';
 import { setActiveCapacity } from './active-capacity-profile';
 import { NO_CAPACITY_LINES } from './capacity-rung-messages';
-import type { CapacityBonusSetting, CapacityFamilyId, CapacityProfile } from '@shared/randomizer/ap-world/capacity';
+import type { CapacityBonusSetting, CapacityFamilyId, CapacityProfile } from '@shared/randomizer/world/capacity';
 import type { CapacityFamilyArm } from '../capacity-profile';
 import type { CapacityLineMessages } from './capacity-rung-messages';
 
@@ -63,7 +63,7 @@ interface CapacitySessionPlan {
 }
 
 const capacitySessionOf = (
-  profile: CapacityProfile, progressive = false, bonus: CapacityBonusSetting = LEGACY_CAPACITY_BONUS,
+  profile: CapacityProfile, progressive = false, bonus: CapacityBonusSetting = REFERENCE_CAPACITY_BONUS,
 ): CapacitySessionPlan => {
   const families = FAMILIES.map((family): CapacityFamilyArm => {
     const setting = profile[family.id];

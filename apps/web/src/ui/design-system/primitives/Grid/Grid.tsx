@@ -4,17 +4,20 @@ import type { CSSProperties } from 'react';
 import type { GridProps } from './Grid.type';
 
 const Grid = (props: GridProps) => {
-  const { columns, minColWidth, gap, className = '', style, children, ...rest } = props;
-  // Column template is a dynamic/computed value → legitimately inline.
-  const templateStyle: CSSProperties | undefined = minColWidth
-    ? { gridTemplateColumns: `repeat(auto-fill, minmax(${minColWidth}px, 1fr))` }
-    : columns
-      ? { gridTemplateColumns: `repeat(${columns}, 1fr)` }
-      : undefined;
+  const { columns, minColWidth, track, gap, className = '', style, children, ...rest } = props;
+  // Column template is a dynamic/computed value → legitimately inline. A named track is CSS.
+  const templateStyle: CSSProperties | undefined = track
+    ? undefined
+    : minColWidth
+      ? { gridTemplateColumns: `repeat(auto-fill, minmax(${minColWidth}px, 1fr))` }
+      : columns
+        ? { gridTemplateColumns: `repeat(${columns}, 1fr)` }
+        : undefined;
   return (
     <div
       className={`grid${className ? ` ${className}` : ''}`}
       data-gap={gap}
+      data-track={track}
       style={templateStyle ? { ...templateStyle, ...style } : style}
       {...rest}
     >

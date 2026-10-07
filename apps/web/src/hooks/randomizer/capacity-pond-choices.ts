@@ -15,12 +15,12 @@
  *                          already reconciled by the time they are stored, so
  *                          this never changes a value.
  */
-import { reconcileCapacityPond } from '@shared/randomizer/ap-world/capacity-pond';
+import { reconcileCapacityPond } from '@shared/randomizer/world/capacity-pond';
 import { capacityPondOf } from './randomizer-choices';
-import type { CapacityProfile } from '@shared/randomizer/ap-world/capacity';
+import type { CapacityProfile } from '@shared/randomizer/world/capacity';
 import type {
   CapacityPondAuthority, ReconciledCapacityPond,
-} from '@shared/randomizer/ap-world/capacity-pond';
+} from '@shared/randomizer/world/capacity-pond';
 import type { RandomizerOptionChoices } from './randomizer-choices';
 
 /** The settled profile, with every pinned family's stored setting put back. */
