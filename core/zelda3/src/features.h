@@ -122,10 +122,15 @@ enum {
   // The host draws the title screen itself and the native one is kept off the picture
   // (core/game-hooks/title_override.c). Render-only, but a divergence, so Vanilla Safe strips it.
   kFeatures2_TitleOverride      = 1u << 26,
+  // The host-owned pause menu and the host-driven active-item register (core/game-hooks/host_menu.c).
+  // Both change what the game computes: one holds the native browse state and rewrites gear, the other
+  // drives hud_cur_item and current_item_y. Parity divergences, so Vanilla Safe strips both. They live
+  // in this word because features3 has no free bit left.
+  kFeatures2_HostMenu           = 1u << 27, // host owns the pause menu; gear writes; 24-item lookup
+  kFeatures2_ModernControls     = 1u << 28, // host drives the active item register
   // Press B while swimming to duck under the surface for a moment, as the handheld port allows.
   // While under, sprites cannot touch the player at all: no damage, no recoil, no shove. That is
-  // what makes the second cartridge's water room crossable the way it was designed. Bits 27 and 28
-  // are taken by the modern controls work.
+  // what makes the second cartridge's water room crossable the way it was designed.
   kFeatures2_AllowDiving        = 1u << 29,
 };
 

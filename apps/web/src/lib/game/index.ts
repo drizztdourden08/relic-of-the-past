@@ -37,6 +37,12 @@ export {
 export type { BottleContentsValue, CapacityKind, CapacityRung, CheatCategory, DungeonItemKind } from './cheats';
 export { grantFromCheck, planCheckGrant } from './cheat-check-grant';
 export type { CheckGrantPlan } from './cheat-check-grant';
+export {
+  closeHostMenu, initHostMenu, reassertActiveItem, reassertAfterSaveLoad, reassertHostMenu,
+  reconcileHostMenu, saveAndQuitHostMenu, setActiveItem, setGear, setTakeover, wantedActiveItem,
+} from './host-menu';
+export { initGearOwnership, observeGear, ownedMax } from './gear-ownership';
+export type { GearTiers } from './gear-ownership';
 export { getInputManager, resolveFunctionMappingIcon } from '../input/input-manager';
 export type { UnknownItemEntry } from './tracker';
 export {

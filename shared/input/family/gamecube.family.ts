@@ -18,10 +18,20 @@ import type { FamilyMetadata } from './family.type';
 const GAMECUBE_FAMILY: FamilyMetadata = {
   types: ['gamecube'],
   brandLogoKey: 'nintendo',
-  // Face/d-pad labels come from SDL's own per-device label; these cover
-  // positions SDL does not label at all (system buttons, the Z shoulder,
-  // and the trigger-click buttons).
+  // The face buttons are named here instead of left to SDL's live label. SDL
+  // does label them correctly on this pad, but only while it is plugged in:
+  // a saved binding for an unplugged one, buildConsoleDefaultMappings and the
+  // synthetic profile buildDeviceProfileFromSdlType builds all have no live
+  // device to ask and would fall through to generic's "Button 1 (South)"
+  // beside the correct A glyph. The crossed EAST/WEST pairing matches
+  // buttonIcons below, for the reason given there. The rest cover positions
+  // SDL does not label at all (system buttons, the Z shoulder, and the
+  // trigger-click buttons).
   buttonLabels: {
+    SOUTH: 'A',
+    EAST: 'X',
+    WEST: 'B',
+    NORTH: 'Y',
     START: 'Start',
     GUIDE: 'Home',
     RIGHT_SHOULDER: 'Z',
@@ -76,6 +86,12 @@ const GAMECUBE_FAMILY: FamilyMetadata = {
   // SNES L/R land on the trigger clicks (MISC3/MISC4), not on LEFT_SHOULDER/RIGHT_SHOULDER:
   // RIGHT_SHOULDER is Z on this pad, and the player expects R on the trigger's own click.
   // Z stays unbound by default.
+  //
+  // Movement's DEFAULT is the left stick, not the four d-pad entries below: the stick half
+  // lives once on the generic family (axisConsoleDefaults), the terminal fallback in this
+  // chain, so it applies here without being repeated. That is doubly right on this pad, whose
+  // d-pad is a tiny afterthought beside a full-size analog stick. The d-pad entries stay on as
+  // movement's second binding, so the pad moves on both out of the box.
   consoleDefaults: {
     SOUTH: 'A',
     EAST: 'B',

@@ -12,6 +12,7 @@ import { findFamily } from './family-registry';
 import { GENERIC_FAMILY } from './generic.family';
 import { DEFAULT_TRIGGER_PRESS_THRESHOLD } from './live-control-state';
 import type {
+  AxisConsoleDefault,
   ConsoleButton,
   DeviceOverride,
   FamilyMetadata,
@@ -93,6 +94,13 @@ const resolveConsoleDefault = (ctx: DisplayContext, position: SdlButtonName): Co
   return ctx.override?.consoleDefaults?.[position] ?? ctx.family.consoleDefaults?.[position] ?? ctx.generic.consoleDefaults?.[position];
 };
 
+/** The same, for an axis: which console button each end of it defaults to.
+ *  This is where movement's left-stick default arrives from (generic answers
+ *  for every family; see FamilyMetadata.axisConsoleDefaults). */
+const resolveAxisConsoleDefault = (ctx: DisplayContext, position: SdlAxisName): AxisConsoleDefault | undefined => {
+  return ctx.override?.axisConsoleDefaults?.[position] ?? ctx.family.axisConsoleDefaults?.[position] ?? ctx.generic.axisConsoleDefaults?.[position];
+};
+
 /** How far a trigger axis must travel before it also counts as pressed;
  *  see FamilyMetadata.triggerPressThreshold. */
 const resolveTriggerPressThreshold = (ctx: DisplayContext): number => {
@@ -116,6 +124,7 @@ const resolveMinDurationMs = (ctx: DisplayContext): number => {
 
 export {
   buildDisplayContext,
+  resolveAxisConsoleDefault,
   resolveAxisIcon,
   resolveAxisLabel,
   resolveBrandLogoKey,

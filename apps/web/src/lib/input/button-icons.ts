@@ -158,6 +158,7 @@ const BUTTON_ICON_MAP: Record<string, string> = {
   'snes-dright':    `${SNES_BASE}/snes_dpad_right.svg`,
 
   // Keyboard
+  'kb-any': `${KB_BASE}/keyboard_any.svg`,
   'kb-a': `${KB_BASE}/keyboard_a.svg`, 'kb-b': `${KB_BASE}/keyboard_b.svg`,
   'kb-c': `${KB_BASE}/keyboard_c.svg`, 'kb-d': `${KB_BASE}/keyboard_d.svg`,
   'kb-e': `${KB_BASE}/keyboard_e.svg`, 'kb-f': `${KB_BASE}/keyboard_f.svg`,

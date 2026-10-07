@@ -1,0 +1,267 @@
+{
+  "kind": "container",
+  "id": "face-group",
+  "$comment": "four discs in a diamond at a half-span of 12; each item points radially outward, 10px off its own glyph box, so no sprite ever travels toward a neighbour - lifted unchanged from the shipped default layout, which already proved this geometry.",
+  "padding": {
+    "left": 10,
+    "top": 10,
+    "bottom": 10
+  },
+  "layout": "grid",
+  "columns": [
+    "auto"
+  ],
+  "rows": [
+    "auto"
+  ],
+  "justifyItems": "start",
+  "alignItems": "start",
+  "children": [
+    {
+      "kind": "container",
+      "id": "face-south",
+      "$comment": "the button box is the GLYPH box; the item hangs off it, so the diamond is never opened up by a sprite that may not even be there",
+      "size": {
+        "w": {
+          "px": 16
+        },
+        "h": {
+          "px": 16
+        }
+      },
+      "margin": {
+        "left": 12,
+        "top": 24
+      },
+      "layout": "grid",
+      "columns": [
+        "auto"
+      ],
+      "rows": [
+        "auto"
+      ],
+      "justifyItems": "start",
+      "alignItems": "start",
+      "children": [
+        {
+          "kind": "element",
+          "id": "face-south-glyph",
+          "element": {
+            "type": "glyph",
+            "slot": 4
+          },
+          "dimWhenEmpty": [
+            4
+          ],
+          "place": {
+            "column": 1,
+            "row": 1
+          }
+        },
+        {
+          "kind": "element",
+          "id": "face-south-item",
+          "element": {
+            "type": "slot",
+            "index": 4
+          },
+          "margin": {
+            "top": 10
+          },
+          "place": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ],
+      "place": {
+        "column": 1,
+        "row": 1
+      }
+    },
+    {
+      "kind": "container",
+      "id": "face-east",
+      "$comment": "the button box is the GLYPH box; the item hangs off it, so the diamond is never opened up by a sprite that may not even be there",
+      "size": {
+        "w": {
+          "px": 16
+        },
+        "h": {
+          "px": 16
+        }
+      },
+      "margin": {
+        "left": 24,
+        "top": 12
+      },
+      "layout": "grid",
+      "columns": [
+        "auto"
+      ],
+      "rows": [
+        "auto"
+      ],
+      "justifyItems": "start",
+      "alignItems": "start",
+      "children": [
+        {
+          "kind": "element",
+          "id": "face-east-glyph",
+          "element": {
+            "type": "glyph",
+            "slot": 3
+          },
+          "dimWhenEmpty": [
+            3
+          ],
+          "place": {
+            "column": 1,
+            "row": 1
+          }
+        },
+        {
+          "kind": "element",
+          "id": "face-east-item",
+          "element": {
+            "type": "slot",
+            "index": 3
+          },
+          "margin": {
+            "left": 10
+          },
+          "place": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ],
+      "place": {
+        "column": 1,
+        "row": 1
+      }
+    },
+    {
+      "kind": "container",
+      "id": "face-west",
+      "$comment": "the button box is the GLYPH box; the item hangs off it, so the diamond is never opened up by a sprite that may not even be there",
+      "size": {
+        "w": {
+          "px": 16
+        },
+        "h": {
+          "px": 16
+        }
+      },
+      "margin": {
+        "top": 12
+      },
+      "layout": "grid",
+      "columns": [
+        "auto"
+      ],
+      "rows": [
+        "auto"
+      ],
+      "justifyItems": "start",
+      "alignItems": "start",
+      "children": [
+        {
+          "kind": "element",
+          "id": "face-west-glyph",
+          "element": {
+            "type": "glyph",
+            "slot": 2
+          },
+          "dimWhenEmpty": [
+            2
+          ],
+          "place": {
+            "column": 1,
+            "row": 1
+          }
+        },
+        {
+          "kind": "element",
+          "id": "face-west-item",
+          "element": {
+            "type": "slot",
+            "index": 2
+          },
+          "margin": {
+            "left": -10
+          },
+          "place": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ],
+      "place": {
+        "column": 1,
+        "row": 1
+      }
+    },
+    {
+      "kind": "container",
+      "id": "face-north",
+      "$comment": "the button box is the GLYPH box; the item hangs off it, so the diamond is never opened up by a sprite that may not even be there",
+      "size": {
+        "w": {
+          "px": 16
+        },
+        "h": {
+          "px": 16
+        }
+      },
+      "margin": {
+        "left": 12
+      },
+      "layout": "grid",
+      "columns": [
+        "auto"
+      ],
+      "rows": [
+        "auto"
+      ],
+      "justifyItems": "start",
+      "alignItems": "start",
+      "children": [
+        {
+          "kind": "element",
+          "id": "face-north-glyph",
+          "element": {
+            "type": "glyph",
+            "slot": 1
+          },
+          "dimWhenEmpty": [
+            1
+          ],
+          "place": {
+            "column": 1,
+            "row": 1
+          }
+        },
+        {
+          "kind": "element",
+          "id": "face-north-item",
+          "element": {
+            "type": "slot",
+            "index": 1
+          },
+          "margin": {
+            "top": -10
+          },
+          "place": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ],
+      "place": {
+        "column": 1,
+        "row": 1
+      }
+    }
+  ]
+}

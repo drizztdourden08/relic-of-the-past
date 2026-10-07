@@ -1,5 +1,5 @@
 /* @layer shared-types @kind logic */
-import type { FunctionMapping } from './controls';
+import type { FunctionMapping, ModernScheme } from './controls';
 import type { TitleSword } from '../game/title/title-swords';
 import type { DialogHoldStop, DialogSpeedStop, DialogStrokeWidth } from '../game/dialog/pacing';
 import type {
@@ -128,12 +128,6 @@ interface GameSettings extends OnlineNoticeSettings, QuietReceiptSettings {
   renderIntoNotch: boolean;
 
   // ─── Gameplay features ───
-  itemSwitchLR: boolean;
-  itemSwitchLRLimit: boolean;
-  // Split out of itemSwitchLR (snesrev bundled them): reorder items in the inventory with Y + arrows,
-  // and assign separate items to the X / L / R buttons. Both non-vanilla, opt-in.
-  inventoryReorder: boolean;
-  secondaryItemSlots: boolean;
   // Render dialog instantly and auto-advance message-box waits; choice prompts stay interactive. Non-vanilla.
   autoSkipDialog: boolean;
   // A new file is named Link with the naming strip parked on End. Non-vanilla.
@@ -252,7 +246,14 @@ interface GameSettings extends OnlineNoticeSettings, QuietReceiptSettings {
 
   // ─── HUD ───
   hudMode: 'original' | 'enhanced';
-  hudStyle: 'vanilla' | 'modern';
+  // 'vanilla' rebuilds the original look from extracted sprites; 'enhanced' is that same sprite set
+  // driven by the host (host-owned pause menu, free HUD layout) and needs a 16:9-or-wider display;
+  // 'modern' is Enhanced plus the modern control scheme. The value and the label are the same word
+  // on purpose (§59.7): 'enhanced' was stored as 'extended' until the label was corrected, and a
+  // stored value that disagrees with the screen is a reading of the code that is wrong.
+  // `mergeSettings` migrates the old spelling on every read. There is no separate control-scheme
+  // key. The scheme is derived from this one field, see shared/features/hud-style.ts.
+  hudStyle: 'vanilla' | 'enhanced' | 'modern';
   hudRatio: 'match' | '4:3' | '3:2' | '16:9' | '16:10' | 'custom';
   customHudAspectW: number; // ratio width when hudRatio === 'custom'; 0 = auto-detect from screen
   customHudAspectH: number; // ratio height; 0 = auto-detect
@@ -261,8 +262,6 @@ interface GameSettings extends OnlineNoticeSettings, QuietReceiptSettings {
   hudMagicMode: 'original' | 'accurate';
   hudCountLayout: 'centered' | 'original';
   hudCountdownStyle: 'pixel' | 'smooth';
-  hudPauseStyle: 'vanilla' | 'enhanced';
-  hudPauseHighlight: 'box' | 'glow' | 'none';
 
   // ─── Title screen (HUD tab: the host draws the title over the hidden native one) ───
   titleScreen: 'original' | 'reimagined';
@@ -272,6 +271,11 @@ interface GameSettings extends OnlineNoticeSettings, QuietReceiptSettings {
 
   // ─── Controls ───
   activeInputProfileId: string | null;
+  // Classic-only convenience: open the map from the select/map verb instead of the pause menu.
+  mapOnSelect: boolean;
+  // What each modern slot fires. Host-only, because the core is told the resulting item id per
+  // frame, not the table, so this never reaches the INI.
+  modernScheme: ModernScheme;
   functionMappings?: FunctionMapping[];
   enhancedSaveSlotShortcut: boolean;
   saveHoldDuration: number; // seconds, 1-5

@@ -7,6 +7,7 @@
  */
 import { Button } from '../../../primitives/Button';
 import { Text } from '../../../primitives/Text';
+import { MenuIcon } from './MenuIcon';
 import type { MenuItem } from '../DropdownMenu.type';
 
 interface MenuItemButtonProps {
@@ -23,8 +24,9 @@ const MenuItemButton = (props: MenuItemButtonProps) => {
       onClick={item.onClick}
       disabled={item.disabled}
     >
-      {item.icon && <Text className="dropdown__icon">{item.icon}</Text>}
+      {item.icon && <MenuIcon icon={item.icon} />}
       <Text className="dropdown__label">{item.label}</Text>
+      {item.shortcut && <Text className="dropdown__shortcut">{item.shortcut}</Text>}
       {item.checked && <Text className="dropdown__check">✓</Text>}
     </Button>
   );

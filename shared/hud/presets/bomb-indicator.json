@@ -1,0 +1,85 @@
+{
+  "kind": "container",
+  "id": "bomb-indicator",
+  "direction": "row",
+  "align": "center",
+  "$comment": "Same shape as arrow-indicator - a different sprite and gutter offset (BOMB_ICON.inkRight=11, margin.left = 12-11 = 1) and a different variable.",
+  "children": [
+    {
+      "kind": "container",
+      "id": "bomb-gutter",
+      "size": {
+        "w": {
+          "px": 12
+        },
+        "h": {
+          "px": 8
+        }
+      },
+      "layout": "grid",
+      "columns": [
+        "auto"
+      ],
+      "rows": [
+        "auto"
+      ],
+      "justifyItems": "start",
+      "alignItems": "start",
+      "children": [
+        {
+          "kind": "element",
+          "id": "bomb-icon",
+          "margin": {
+            "left": 1
+          },
+          "element": {
+            "type": "sprite",
+            "file": "hud-bomb-icon",
+            "box": {
+              "w": 16,
+              "h": 8
+            }
+          },
+          "place": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ]
+    },
+    {
+      "kind": "element",
+      "id": "bomb-gap",
+      "size": {
+        "w": {
+          "px": 2
+        },
+        "h": {
+          "px": 8
+        }
+      },
+      "element": {
+        "type": "spacer"
+      }
+    },
+    {
+      "kind": "element",
+      "id": "bomb-count",
+      "element": {
+        "type": "text",
+        "value": {
+          "from": "data",
+          "expr": "bomb_current"
+        },
+        "format": {
+          "digits": 2,
+          "pad": "zero"
+        },
+        "face": {
+          "from": "sprite",
+          "set": "hud-digits"
+        }
+      }
+    }
+  ]
+}

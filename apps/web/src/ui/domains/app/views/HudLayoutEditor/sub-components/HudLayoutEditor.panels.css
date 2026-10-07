@@ -1,0 +1,345 @@
+/* @layer renderer-components @kind style */
+
+/* The three panels the tree needs: the insert bar, the outline and the
+   inspector. Kept beside the editor's own sheet because that one is at its
+   length already, and these are one screen region each. */
+
+/* ── the insert bar ── */
+.hud-toolbar {
+  display: flex;
+  gap: var(--space-2xs);
+  align-items: center;
+  flex-wrap: wrap;
+  padding: var(--space-2xs) var(--space-xs);
+  background: var(--color-surface-inset);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-sm);
+}
+
+.hud-toolbar__spacer {
+  flex: 1;
+}
+
+.hud-toolbar__button {
+  display: flex;
+  gap: var(--space-2xs);
+  align-items: center;
+  padding: var(--space-2xs) var(--space-xs);
+  border: var(--border-width-thin) solid transparent;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  cursor: pointer;
+}
+
+.hud-toolbar__button:hover:not(:disabled) {
+  background: var(--color-surface-hover);
+  border-color: var(--c-border);
+}
+
+.hud-toolbar__button.is-open {
+  background: var(--color-surface-selected);
+  border-color: var(--c-gold);
+}
+
+.hud-toolbar__button:focus-visible {
+  outline: var(--border-width-thick) solid var(--c-gold);
+  outline-offset: var(--space-2xs);
+}
+
+.hud-toolbar__icon {
+  font-size: var(--text-sm);
+}
+
+.hud-toolbar__caret {
+  color: var(--c-text-muted);
+}
+
+.hud-toolbar__target {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+.hud-toolbar__field {
+  display: flex;
+  gap: var(--space-2xs);
+  align-items: center;
+}
+
+.hud-toolbar__field-label {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--c-text-muted);
+}
+
+.hud-toolbar__chips {
+  display: flex;
+  gap: var(--space-2xs);
+  align-items: center;
+}
+
+.hud-toolbar__chip {
+  padding: var(--space-2xs) var(--space-xs);
+  background: var(--color-surface-inset);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  cursor: pointer;
+}
+
+.hud-toolbar__chip.is-selected {
+  border-color: var(--c-gold);
+  color: var(--c-gold-bright);
+}
+
+.hud-ground__swatch {
+  width: var(--space-lg);
+  height: var(--space-lg);
+  padding: 0;
+  background-repeat: repeat;
+  background-size: var(--space-lg) var(--space-lg);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-sm);
+  image-rendering: pixelated;
+  cursor: pointer;
+}
+
+.hud-ground__swatch.is-selected {
+  border-color: var(--c-gold-bright);
+  border-width: var(--border-width-thick);
+}
+
+/* ── outline ──
+   Bordered, radiused and shadowed so both rails read as panels FLOATING over
+   the stage instead of dissolving into the same background it sits on. It is
+   `--shadow-lg` because that is this design system's own "a persistent panel,
+   not a transient popover" weight (`DialogShell`, `Drawer`; a popover reaches
+   for `--shadow-dropdown` instead, as `HudLayoutEditor.pickers.css` already
+   does for the picker grids that float OVER the stage). `--radius-md` matches
+   `DropdownMenu`'s own floating-surface radius, one step up from the stage's
+   own `--radius-sm`, so the two read as different KINDS of surface. */
+.hud-outline,
+.hud-inspect {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-width: 0;
+  padding: var(--space-sm);
+  background: var(--c-surface);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+}
+
+/* The row list scrolls INSIDE this panel instead of the rail scrolling around
+   it; the three declarations that do it live in `HudLayoutEditor.drag.css`
+   beside the pan band they exist for, because this sheet is at 287 of 300. */
+.hud-outline__rows {
+  display: flex;
+  flex-direction: column;
+}
+
+/* The drag is pointer-based now, not HTML5, so nothing suppresses the text
+   selection a press-and-move over a label would otherwise start. A tree row is
+   not prose; `draggable` used to do this for free. */
+.hud-outline__row {
+  display: flex;
+  gap: var(--space-2xs);
+  align-items: center;
+  border-top: var(--border-width-thin) solid transparent;
+  border-bottom: var(--border-width-thin) solid transparent;
+  cursor: grab;
+  user-select: none;
+}
+
+.hud-outline__row:hover {
+  background: var(--color-surface-hover);
+}
+
+.hud-outline__row.is-selected {
+  background: var(--color-surface-selected);
+}
+
+.hud-outline__row.is-screen {
+  cursor: default;
+  border-bottom-color: var(--c-border);
+}
+
+.hud-outline__row.is-screen .hud-outline__text {
+  color: var(--c-gold-bright);
+  font-weight: var(--weight-semi);
+}
+
+/* The disclosure triangle sits outside the name button (a button cannot
+   nest another button); a row with no subtree gets an equal-width blank so
+   every row's name still lines up under the one above it. */
+.hud-outline__caret,
+.hud-outline__caret-spacer {
+  flex: none;
+  width: 20px;
+  height: 20px;
+}
+
+.hud-outline__caret {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: var(--c-text-muted);
+}
+
+.hud-outline__row:hover .hud-outline__caret,
+.hud-outline__row.is-selected .hud-outline__caret {
+  color: var(--c-text);
+}
+
+.hud-outline__caret:hover {
+  color: var(--c-gold-bright);
+}
+
+/* One shape, two states: closed points right, open is the same triangle turned
+   a quarter turn. Rotating beats swapping glyphs - the silhouette stays
+   identical, so the eye reads a state change, not a different mark. */
+.hud-outline__caret-mark {
+  transition: transform var(--transition-fast);
+}
+
+.hud-outline__caret.is-open .hud-outline__caret-mark {
+  transform: rotate(90deg);
+}
+
+.hud-outline__row.is-dragging {
+  opacity: var(--opacity-muted);
+}
+
+.hud-outline__row.is-drop-before {
+  border-top-color: var(--c-gold-bright);
+}
+
+.hud-outline__row.is-drop-after {
+  border-bottom-color: var(--c-gold-bright);
+}
+
+.hud-outline__row.is-drop-inside {
+  background: var(--color-surface-selected);
+  outline: var(--border-width-thin) dashed var(--c-gold-bright);
+  outline-offset: calc(-1 * var(--border-width-thick));
+}
+
+.hud-outline__name {
+  display: flex;
+  gap: var(--space-2xs);
+  align-items: baseline;
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-2xs) 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+.hud-outline__text {
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.hud-outline__badge {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+.hud-outline__note {
+  font-size: var(--text-xs);
+  color: var(--c-info);
+}
+
+/* ── inspector ── */
+.hud-inspect__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.hud-inspect__head {
+  display: flex;
+  gap: var(--space-xs);
+  align-items: baseline;
+}
+
+.hud-inspect__name {
+  font-size: var(--text-sm);
+  color: var(--c-gold-bright);
+}
+
+.hud-inspect__id,
+.hud-inspect__sub {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+/* `flex-wrap` is the other half of ValueInput's promotion: a formula being
+ * edited in a half-width pair sets `flex-basis: 100%` on itself, and this lets
+ * its sibling drop to the next line instead of overflowing. Inert otherwise,
+ * because every row's children already fit on one line. */
+.hud-inspect__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  align-items: flex-end;
+}
+
+/* Only the flex behaviour: the column and its 2px label gap are `Field`'s own
+   (`field--sm`), since every property row in the panel IS a `Field` now. */
+.hud-inspect__extent,
+.hud-inspect__edge {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── stage picking ── */
+.hud-stage__picks {
+  position: absolute;
+  inset: 0;
+}
+
+.hud-stage__pick {
+  position: absolute;
+  border: var(--border-width-thin) solid transparent;
+  cursor: pointer;
+}
+
+.hud-stage__pick:hover {
+  border-color: var(--c-info);
+}
+
+.hud-stage__pick.is-container:hover {
+  border-style: dashed;
+}
+
+.hud-stage__pick.is-selected {
+  border-color: var(--c-gold-bright);
+}
+
+.hud-editor-stage__ground {
+  position: absolute;
+  inset: 0;
+  background-repeat: repeat;
+  image-rendering: pixelated;
+}
+
+.hud-editor-stage__stamp {
+  position: absolute;
+  right: var(--space-2xs);
+  bottom: var(--space-2xs);
+  padding: 0 var(--space-2xs);
+  background: var(--color-surface-inset);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  pointer-events: none;
+}

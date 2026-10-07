@@ -15,6 +15,7 @@ const SegmentedControl = <T extends string = string>(props: SegmentedControlProp
     label,
     description,
     disabled = false,
+    size = 'md',
   } = props;
 
   const trackRef = useRef<HTMLDivElement>(null);
@@ -43,7 +44,7 @@ const SegmentedControl = <T extends string = string>(props: SegmentedControlProp
   }, [updateIndicator]);
 
   return (
-    <div className={`segmented ${disabled ? 'segmented--disabled' : ''}`}>
+    <div className={`segmented${size === 'sm' ? ' segmented--sm' : ''} ${disabled ? 'segmented--disabled' : ''}`}>
       {(label || description) && (
         <div className="segmented__header">
           {label && <span className="segmented__label">{label}</span>}

@@ -4,14 +4,14 @@ import './Checkbox.css';
 import type { CheckboxProps } from './Checkbox.type';
 
 const Checkbox = (props: CheckboxProps) => {
-  const { checked, onChange, label, ariaLabel, disabled, indeterminate = false, className = '' } = props;
+  const { checked, onChange, label, ariaLabel, disabled, indeterminate = false, className = '', size = 'md' } = props;
   const inputRef = useRef<HTMLInputElement>(null);
   // The mixed state has no attribute; it lives on the element only.
   useEffect(() => {
     if (inputRef.current) inputRef.current.indeterminate = indeterminate;
   }, [indeterminate]);
   return (
-    <label className={`checkbox${disabled ? ' checkbox--disabled' : ''}${className ? ` ${className}` : ''}`}>
+    <label className={`checkbox${size === 'sm' ? ' checkbox--sm' : ''}${disabled ? ' checkbox--disabled' : ''}${className ? ` ${className}` : ''}`}>
       <input
         ref={inputRef}
         type="checkbox"

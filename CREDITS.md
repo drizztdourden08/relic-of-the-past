@@ -35,7 +35,7 @@
 
 | Who | Project | Use | License |
 |-----|---------|-----|---------|
-| **Kenney** | [Input Prompts](https://kenney.nl/assets/input-prompts) | Assets Used Directly: Switch, Xbox, PlayStation, GameCube, Keyboard, and Generic SVG icons used as-is for button prompts | CC0 |
+| **Kenney** | [Input Prompts](https://kenney.nl/assets/input-prompts) | Assets Used Directly: Switch, Xbox, PlayStation, GameCube, Keyboard, and Generic SVG icons used as-is for button prompts. Kenney's pack has no whole-d-pad glyph, so `buttons/generic/generic_dpad.svg` is original work by this project, drawn in the same 64-unit style | CC0 (Kenney's icons) |
 | **Tiago Alexander** | [SNES Controller in Sketch](https://www.sketchappsources.com/free-source/4788-snes-controller-sketch-freebie-resource.html) | Assets Modified: Sketch file converted to Figma, individual button SVGs exported and heavily modified for SNES button prompts | - |
 
 ## Map & Entrance Icons

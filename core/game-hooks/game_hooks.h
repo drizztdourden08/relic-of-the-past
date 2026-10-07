@@ -800,6 +800,9 @@ void HudOverride_SetWantedDialogHidden(bool on);
 // ─── Dialog pacing and mirror (dialog_pacing.c, dialog_mirror.c): dialog_hooks.h ───
 #include "dialog_hooks.h"
 
+// ─── Host-owned pause menu (host_menu.c, host_menu_gear.c): host_menu_hooks.h ───
+#include "host_menu_hooks.h"
+
 // ─── Dark-room lighting cheat (cheat_lighting.c) ───
 
 // Re-assert (or take back down) the lamp cone in a dark room the player has no lamp for. Runs every

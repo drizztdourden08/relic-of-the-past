@@ -10,6 +10,22 @@
   font-size: var(--text-sm);
 }
 
+/* Compact tier: one step down the same scale on every axis. Pad lg→sm,
+   gap sm→xs, message sm→xs, glyph xl→lg. */
+.empty-state--sm {
+  gap: var(--space-xs);
+  padding: var(--space-sm);
+  font-size: var(--text-xs);
+}
+
+.empty-state--sm .empty-state__icon {
+  font-size: var(--text-lg);
+}
+
+.empty-state--sm .empty-state__action {
+  margin-top: var(--space-2xs);
+}
+
 .empty-state__icon {
   font-size: var(--text-xl);
   opacity: var(--opacity-faint);

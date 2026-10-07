@@ -11,9 +11,23 @@
   cursor: not-allowed;
 }
 
+/* Compact tier. Four of these in a row (a `sides` field) is the worst case the
+   inspector has, so the box drops to the small glyph box and the gap with
+   it. The 14px md box stays a literal: correcting it to a token is the
+   unification pass, which moves pixels outside this design system. */
+.checkbox--sm {
+  --checkbox-box: var(--icon-sm);
+
+  gap: var(--space-xs);
+}
+
+.checkbox--sm .checkbox__label {
+  font-size: var(--text-xs);
+}
+
 .checkbox__input {
-  width: 14px;
-  height: 14px;
+  width: var(--checkbox-box, 14px);
+  height: var(--checkbox-box, 14px);
   accent-color: var(--c-gold);
   cursor: inherit;
 }

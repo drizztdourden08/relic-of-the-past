@@ -86,7 +86,8 @@ const useProfileManager = ({ profiles, romStatuses, onCreateProfile, onRefresh }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') void handleCreate();
-    if (e.key === 'Escape') setCreating(false);
+    // Consumed here, so abandoning the new-profile row does not also close the page.
+    if (e.key === 'Escape') { e.preventDefault(); setCreating(false); }
   };
 
   return {

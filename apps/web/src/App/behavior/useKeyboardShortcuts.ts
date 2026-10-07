@@ -2,6 +2,8 @@
 import { useEffect } from 'react';
 import { usePlatform } from '@app/platform';
 import { useSearchStore } from '@app/stores/search-store';
+import { isPrimaryModifier } from '@shared/platform';
+import { dismissStackDepth } from '@ds/primitives/Portal';
 import type { PageId, ConfirmDialog } from '../types';
 
 const useKeyboardShortcuts = (
@@ -11,7 +13,8 @@ const useKeyboardShortcuts = (
   activeProfile: Profile | null,
   developerToolsEnabled = false,
 ) => {
-  const { window: win } = usePlatform();
+  const { window: win, info } = usePlatform();
+  const os = info.os;
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.altKey && e.key === 'Enter') {
@@ -26,7 +29,7 @@ const useKeyboardShortcuts = (
         nav.setActivePage(nav.activePage === 'sprite-debug' ? 'none' : 'sprite-debug');
         return;
       }
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      if (isPrimaryModifier(e, os) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         const search = useSearchStore.getState();
         if (search.open) search.closePalette(); else search.openPalette();
@@ -34,8 +37,12 @@ const useKeyboardShortcuts = (
       }
       if (e.key !== 'Escape') return;
 
-      // The search palette owns Escape first when open, because it's the top-most surface.
-      if (useSearchStore.getState().open) { e.preventDefault(); useSearchStore.getState().closePalette(); return; }
+      // Every layered surface answers first. A popover, menu, dialog, full-screen page or
+      // the search palette that is open has registered with the design system's dismiss
+      // stack, and the stack's own listener has already closed exactly one of them. This
+      // shortcut is the floor beneath all of it and only acts on an Escape that had nothing
+      // above it. Two document listeners cannot order themselves, so neither one tries.
+      if (dismissStackDepth() > 0) return;
       e.preventDefault();
 
       // Dismiss confirm dialog
@@ -47,7 +54,7 @@ const useKeyboardShortcuts = (
     };
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
-  }, [win, nav, activeProfile, dialog, dismissDialog, developerToolsEnabled]);
+  }, [win, os, nav, activeProfile, dialog, dismissDialog, developerToolsEnabled]);
 };
 
 export { useKeyboardShortcuts };

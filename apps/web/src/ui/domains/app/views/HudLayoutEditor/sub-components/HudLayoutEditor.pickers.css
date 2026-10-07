@@ -1,0 +1,152 @@
+/* @layer renderer-components @kind style */
+
+/* Icon-only toolbar buttons are square footprints now that the label lives
+   in the tooltip instead of beside the icon. */
+.hud-toolbar__button {
+  justify-content: center;
+  width: 30px;
+  height: 26px;
+  padding: 0;
+}
+
+.hud-toolbar__sep {
+  width: 1px;
+  height: 20px;
+  margin: 0 var(--space-2xs);
+  background: var(--c-border);
+}
+
+/* ── sprite / glyph / slot picker panels ──
+   These float OVER the stage, which itself draws a ground tile plus live
+   preview art, so unlike the toolbar's own inline chrome (which can afford
+   `--color-surface-inset`'s faint wash because it sits on the app background,
+   not on top of game art), a panel here needs an actually opaque surface or
+   the grass and sprites underneath show straight through it. `--c-surface` is
+   the same fully-opaque token `DropdownMenu` already uses for exactly this
+   reason. Border + shadow give it the elevation to read as floating above the
+   stage instead of painted onto it. */
+.hud-picker-grid {
+  position: fixed;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  width: 300px;
+  max-height: 22rem;
+
+  /* Extra on the right: `scrollbar-gutter` reserves the thumb's own strip, but
+     the tiles still need their own breathing room short of it, or a label runs
+     up against the gutter the moment the grid is tall enough to scroll. */
+  padding: var(--space-xs) var(--space-sm) var(--space-xs) var(--space-xs);
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  background: var(--c-surface);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-dropdown);
+}
+
+/* Flipped above its trigger: shifted up by its own full height after layout,
+   the same `Select`/`TagInput` already use for their own dropdowns. See
+   `SpritePicker.css`'s longer note (the design-system composite this shares
+   `usePickerPopover` with). */
+.hud-picker-grid[data-drop-up='true'] {
+  transform: translateY(-100%);
+}
+
+/* The pack/category strip can outgrow the popover's fixed width (seven built-in
+   glyph packs plus Auto). `TabBar` itself now owns scrolling past its own
+   edge (wheel-to-scroll + a fade affordance), so this wrapper only has to stay
+   out of its way instead of forcing it back to its natural content width. */
+.hud-picker-grid__tabs {
+  flex-shrink: 0;
+}
+
+.hud-picker-grid__tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr));
+  gap: var(--space-2xs);
+}
+
+/* Doubled selector: a tile is also a bare `Button`, whose own rules are the
+   same specificity, so this has to win regardless of stylesheet import order. */
+.hud-picker-grid__tiles .hud-picker-grid__tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2xs);
+  padding: var(--space-2xs);
+  background: none;
+  border: var(--border-width-thin) solid transparent;
+  border-radius: var(--radius-sm);
+}
+
+.hud-picker-grid__tiles .hud-picker-grid__tile:hover,
+.hud-picker-grid__tiles .hud-picker-grid__tile:focus-visible {
+  background: var(--color-surface-hover);
+  border-color: var(--c-border);
+  outline: none;
+}
+
+.hud-picker-grid__thumb {
+  width: 2.75rem;
+  height: 2.75rem;
+  image-rendering: pixelated;
+}
+
+.hud-picker-grid__thumb--glyph {
+  image-rendering: auto;
+}
+
+.hud-picker-grid__label {
+  overflow: hidden;
+  max-width: 100%;
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* ── slot picker: a numeric entry row above a list, never a fixed grid ── */
+.hud-slot-picker__manual {
+  display: flex;
+  gap: var(--space-2xs);
+  align-items: center;
+  padding-bottom: var(--space-xs);
+  border-bottom: var(--border-width-thin) solid var(--c-border);
+}
+
+.hud-slot-picker__manual .number-input {
+  flex: 1;
+}
+
+.hud-slot-picker__rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.hud-slot-picker__row {
+  display: flex;
+  gap: var(--space-2xs);
+  align-items: center;
+  padding: var(--space-2xs);
+  border-radius: var(--radius-sm);
+}
+
+.hud-slot-picker__row:hover {
+  background: var(--color-surface-hover);
+}
+
+.hud-slot-picker__label {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+}
+
+/* `.hud-sprite-field` LIVED HERE AND IS NOW `.hud-ref-field`, in
+   `HudLayoutEditor.content.css`. Phase 9 generalised this exact row to glyph,
+   button face, switch case and repeat child, so keeping a sprite-only copy of
+   it would have meant two rules to change the day the row's height moves.
+   `SpriteContent` renders the shared control and looks the same. */

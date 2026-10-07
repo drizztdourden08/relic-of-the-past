@@ -1,5 +1,7 @@
 /* @layer shared-platform @kind barrel */
 export { detectHost, osFromProcess } from './detect';
+export { isPrimaryModifier, primaryModifierLabel } from './primary-modifier';
+export type { ModifierFlags } from './primary-modifier';
 export { createPlatform, resolvePlatform } from './platform';
 
 export type { HostShell, OsKind, FormFactor, InputModel, PlatformInfo, Capabilities } from './types';

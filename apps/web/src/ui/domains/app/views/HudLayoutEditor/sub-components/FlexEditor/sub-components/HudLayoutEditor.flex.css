@@ -1,0 +1,119 @@
+/* @layer renderer-components @kind style */
+
+/* THE FLEX MANIPULATION SECTION'S DRAWING (§58) has one cell per child, in flow
+   order, at the proportions the engine gave them. The two BANDS around it (the
+   contextual strip and the legend) are `SelectionBands`, shared with the grid;
+   only the drawing is here, because only the drawing is different.
+
+   IT IS DRAWN THE WAY THE CONTAINER IS DRAWN. `flex-direction` follows the
+   container's own `direction` and `flex-wrap` its own `wrap`: a column's
+   children stack in the panel exactly as they stack on the stage. A strip that
+   always ran left to right would be a picture of a different container.
+
+   IT BORROWS THE LATTICE'S VOCABULARY DELIBERATELY. The dashed idle cell, the
+   gold selected fill and the monospace ellipsised label are the same because it
+   is the same kind of control one dimension down, and two different-looking
+   "pick a thing in this container" drawings in one panel is one too many. */
+
+.hud-flex {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+
+/* FLAT, LIKE THE LATTICE (§55.1). No well, no padding, no border of its own: the
+   cells are the drawing, and a sunken box around them is a container inside a
+   section that is already a container. */
+.hud-flex-strip {
+  display: flex;
+  gap: var(--space-2xs);
+  align-content: flex-start;
+  min-width: 0;
+}
+
+.hud-flex-strip:focus-visible {
+  outline: var(--border-width-thin) solid var(--c-gold);
+  outline-offset: 2px;
+}
+
+/* A ROW of children draws across and is one band tall; a COLUMN draws down, and
+   each cell keeps the band height so the strip is a readable stack instead of
+   a hairline per child. */
+.hud-flex-strip[data-flow='row'] {
+  flex-direction: row;
+}
+
+.hud-flex-strip[data-flow='column'] {
+  flex-direction: column;
+}
+
+.hud-flex-strip[data-wrap='true'] {
+  flex-wrap: wrap;
+}
+
+/* THE WEIGHT IS THE CHILD'S REAL PLACED SIZE. `flex-grow` carries it the same
+   way the lattice carries `fr`, over a floor big enough to press and to read a
+   couple of characters in. Past that point the strip overflows, which
+   is the lattice's own answer too. */
+.hud-flex-strip__cell {
+  display: flex;
+  flex: var(--hud-flex-weight, 1) 1 0;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  min-height: 30px;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--c-hover);
+  border: var(--border-width-thin) dashed var(--c-border-strong);
+  border-radius: var(--r-sm);
+}
+
+/* A column's cells share the strip's width and take their weight in HEIGHT, so
+   the proportions still read along the axis the children actually run on. */
+.hud-flex-strip[data-flow='column'] > .hud-flex-strip__cell {
+  flex: var(--hud-flex-weight, 1) 1 0;
+  min-height: 24px;
+}
+
+.hud-flex-strip__cell[data-state='selected'] {
+  background: var(--c-gold-dim);
+  border-style: solid;
+  border-color: var(--c-gold-bright);
+}
+
+/* The keyboard's own cell, inside whatever is selected. Arrowing has to be
+   visible WITHIN a selection, so it is a rim, not a fill, and only while
+   the strip actually holds the focus. */
+.hud-flex-strip:focus-visible .hud-flex-strip__cell[data-cursor='true'] {
+  box-shadow: inset 0 0 0 1px var(--c-text);
+}
+
+/* ELLIPSISED, AND IN THE MIDDLE OF ITS CELL (§55.1's fix, applied here): as an
+   anonymous flex item a long name clips at BOTH ends, so the label is its own
+   block with the overflow rule on it. */
+.hud-flex-strip__label {
+  display: block;
+  min-width: 0;
+  padding: 0 var(--space-2xs);
+  overflow: hidden;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.hud-flex-strip__cell[data-state='selected'] > .hud-flex-strip__label {
+  color: var(--c-gold-bright);
+}
+
+.hud-flex-strip__empty {
+  padding: var(--space-2xs);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  font-style: italic;
+}

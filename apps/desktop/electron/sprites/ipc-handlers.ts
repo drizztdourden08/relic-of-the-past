@@ -1,7 +1,8 @@
 /* @layer electron-main @kind logic */
 import { join, basename, extname } from 'path';
 import { handle } from '../lib/ipc/handle';
-import { readdir, mkdir, access, rm } from 'fs/promises';
+import { mkdir, access, rm } from 'fs/promises';
+import { checkExtraction, writeExtractionReceipt } from './extraction-state';
 import { getUserDataPath } from '../lib/paths';
 import { readJson, writeJson } from '../lib/json-store';
 import { logToRenderer } from '../lib/renderer-log';
@@ -49,10 +50,14 @@ const registerSpriteHandlers = (): void => {
           logToRenderer('core', 'error', err);
         }
       }
-      logToRenderer('app', 'info', `Sprites extracted: ${result.total} files (${result.counts.hud} HUD, ${result.counts.receipt} receipt, ${result.counts.drop} drop)`);
+      logToRenderer('app', 'info', `Sprites extracted: ${result.total} files (${result.counts.hud} HUD, ${result.counts.receipt} receipt, ${result.counts.drop} drop, ${result.counts.ground} ground)`);
       if (result.removedStale > 0) {
         logToRenderer('app', 'info', `Removed ${result.removedStale} stale sprite files`);
       }
+      // The receipt is what stops the completeness check re-running the whole
+      // extraction on every launch when a definition this ROM cannot satisfy
+      // leaves its file missing. Written after the files, never before.
+      await writeExtractionReceipt(outDir);
       report('done');
       return { success: true, count: result.total };
     } catch (e) {
@@ -63,16 +68,9 @@ const registerSpriteHandlers = (): void => {
     }
   });
 
-  handle('sprites:check', async (_e, romFile: string) => {
-    const outDir = spriteDir(romFile);
-    try {
-      const files = await readdir(outDir);
-      const pngCount = files.filter(f => f.endsWith('.png')).length;
-      return { extracted: pngCount > 0, count: pngCount };
-    } catch {
-      return { extracted: false, count: 0 };
-    }
-  });
+  // "Complete against the current manifest", not "has any files at all". See
+  // extraction-state.ts for why the difference is the whole point.
+  handle('sprites:check', async (_e, romFile: string) => checkExtraction(spriteDir(romFile)));
 
   handle('sprites:delete', async (_e, romFile: string) => {
     const outDir = spriteDir(romFile);

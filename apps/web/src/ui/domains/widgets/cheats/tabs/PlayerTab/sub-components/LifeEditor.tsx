@@ -56,6 +56,8 @@ const LifeEditor = ({ scale, spritesBase }: LifeEditorProps) => {
         healthCurrent={healthCurrent}
         healthCapacity={healthCapacity}
         heartMode="smooth"
+        heartArt="sprite"
+        showCaption
         scale={scale}
         spritesBase={spritesBase}
       />

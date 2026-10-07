@@ -80,9 +80,11 @@ const HeaderCell = (props: HeaderCellProps) => {
     setDraft(null);
   };
 
+  // `preventDefault` on Escape marks the key consumed by this editor, so the
+  // dismiss stack leaves the surface around the table alone.
   const handleRenameKey = (event: KeyboardEvent<HTMLInputElement>): void => {
     if (event.key === 'Enter') commitRename();
-    if (event.key === 'Escape') setDraft(null);
+    if (event.key === 'Escape') { event.preventDefault(); setDraft(null); }
   };
 
   const classes = [

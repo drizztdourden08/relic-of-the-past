@@ -1,0 +1,18 @@
+/* @layer renderer-hud @kind style */
+
+/*
+ * The pose canvas ships with the sprite studio's editor chrome. It is a checkerboard
+ * behind it and a rounded hairline around it. Both are right for an editor and
+ * ruinous here: the portrait is drawn AT the live player's position, over the
+ * running game, so a plate behind it would be a rectangle of editor grey
+ * covering the ground the character is standing on, and the hairline a box
+ * around them. The compound selector beats `.pose-canvas` on specificity, so
+ * the reset holds whichever stylesheet happens to load first.
+ */
+.pose-canvas.pause-hero__canvas {
+  background: none;
+  background-color: transparent;
+  border: 0;
+  border-radius: 0;
+  image-rendering: pixelated;
+}

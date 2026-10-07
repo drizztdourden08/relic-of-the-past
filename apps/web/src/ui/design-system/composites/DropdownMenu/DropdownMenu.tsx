@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useRef } from 'react';
-import { Portal, useAnchorTracking } from '../../primitives/Portal';
+import { Portal, useAnchorTracking, useDismissable } from '../../primitives/Portal';
 import { Box } from '../../primitives/Box';
 import { MenuItemButton } from './sub-components/MenuItemButton';
 import { SubMenu } from './sub-components/SubMenu';
@@ -17,9 +17,16 @@ const placementOf = (rect: DOMRect, side: MenuSide, align: MenuAlign): CSSProper
   ...(align === 'start' ? { left: rect.left } : { right: window.innerWidth - rect.right }),
 });
 
+const noop = (): void => undefined;
+
 const DropdownMenu = (props: DropdownMenuProps) => {
-  const { items, anchorRef, side = 'below', align = 'start' } = props;
+  const { items, anchorRef, side = 'below', align = 'start', onClose } = props;
   const detached = useRef<HTMLElement>(null);
+
+  // A menu is only rendered while it is open, so being mounted is being open.
+  // It sits above a dialog and below a popover, which is what stops Escape over
+  // an open submenu's Select from closing the menu as well.
+  useDismissable({ active: Boolean(onClose), level: 'menu', onDismiss: onClose ?? noop });
 
   // Menus are portalled and placed in viewport coordinates, so the position
   // has to be re-measured while anything between the anchor and the root

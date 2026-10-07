@@ -12,9 +12,19 @@ import type { FamilyMetadata } from './family.type';
 const PLAYSTATION_FAMILY: FamilyMetadata = {
   types: ['ps3', 'ps4', 'ps5'],
   brandLogoKey: 'playstation',
-  // Face/d-pad/shoulder labels come from SDL's own per-device label; these
-  // cover positions SDL does not label at all (system buttons, stick clicks).
+  // The face buttons are named here instead of left to SDL's live label:
+  // buttonIcons below already commits this family to the shapes (EAST draws
+  // playstation_button_circle.svg), and the label is the same fact as the
+  // icon. Without them, every reader with no live device to ask (a saved
+  // binding for an unplugged pad, buildConsoleDefaultMappings, the synthetic
+  // profile buildDeviceProfileFromSdlType builds) falls through to generic's
+  // "Button 2 (East)" beside the correct circle glyph. D-pad and shoulders
+  // still come from the chain.
   buttonLabels: {
+    SOUTH: 'Cross',
+    EAST: 'Circle',
+    WEST: 'Square',
+    NORTH: 'Triangle',
     LEFT_STICK: 'L3 Stick',
     RIGHT_STICK: 'R3 Stick',
     BACK: 'Share',
@@ -54,6 +64,11 @@ const PLAYSTATION_FAMILY: FamilyMetadata = {
     LEFT_TRIGGER: 'ps-l2',
     RIGHT_TRIGGER: 'ps-r2',
   },
+  // Movement's DEFAULT is the left stick, not these four d-pad entries: the
+  // stick half lives once on the generic family (axisConsoleDefaults), which
+  // is the terminal fallback in this chain, so it applies here without being
+  // repeated. The d-pad entries below are movement's second binding, since a pad
+  // moves on both out of the box. They also feed the glyph packs' layout.
   consoleDefaults: {
     SOUTH: 'A',
     EAST: 'B',

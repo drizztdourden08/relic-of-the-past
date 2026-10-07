@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind types */
-﻿import type { ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import type { ControlSize } from '../control-size';
 
 interface SegmentOption<T extends string = string> {
   value: T;
@@ -25,6 +26,12 @@ interface SegmentedControlProps<T extends string = string> {
   label?: string;
   description?: string;
   disabled?: boolean;
+  /**
+   * Control density. Defaults to `md`, which is the tier this control draws today.
+   * `sm` also closes the 16px gap between the label and the track, which is
+   * 8% of the inspector rail's 188px content floor spent on nothing.
+   */
+  size?: ControlSize;
 }
 
 export type {

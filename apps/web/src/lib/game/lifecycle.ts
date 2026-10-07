@@ -10,6 +10,7 @@ import { startSramSync, stopSramSync } from './sram-sync';
 import { startAutoSave, stopAutoSave, saveOnQuit } from './auto-save';
 import { resetMasterVolume } from './audio-volume';
 import { reassertHostGates, resetHostGates } from './bridge/host-gates';
+import { startHostSubscriptions, stopHostSubscriptions } from './host-subscriptions';
 import { reassertLiveFlagsAfterLoad } from './live-settings';
 import { initTrackerBridge, destroyTrackerBridge } from './tracker';
 import { initTransitionEventsBridge, destroyTransitionEventsBridge } from './events/transition-events';
@@ -122,6 +123,9 @@ const resetGame = async (): Promise<void> => {
   // skips pushing a value it believes is already set, so a stale mirror would make the next
   // arming a silent no-op. Drop it with the module.
   resetHostGates();
+  // Same class of mirror: the gear high-water record is keyed by profile, so it is dropped with
+  // the module instead of left for the next profile's pause menu to read as its own.
+  stopHostSubscriptions();
   setState({ status: 'idle', error: null });
 };
 
@@ -221,6 +225,10 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
     // A fresh module starts with every live flag at default; push the primed values now or
     // the native HUD renders alongside the enhanced overlay.
     reassertLiveFlagsAfterLoad();
+
+    // Gear record, host pause menu watcher and music debugger (host-subscriptions.ts). All three
+    // run before the UI bridge below takes its first reading.
+    startHostSubscriptions(profileId ?? null);
 
     const inputMgr = getInputManager();
     inputMgr.setWasmBridge(setInput);

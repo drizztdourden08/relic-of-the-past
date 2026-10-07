@@ -9,6 +9,7 @@ import type { InputProfile } from '@shared/types/controls';
 import { KEYBOARD_DEFAULT } from '@shared/input';
 import { getInputManager, profileFromPreset } from '../../../../../../../lib/input/input-manager';
 import { readInputProfiles, writeInputProfiles } from '@app/lib/storage/profile-data-store';
+import { migrateProfilesLoudly } from '@app/lib/input/migrate-profiles';
 
 interface UseProfileActionsArgs {
   settings: GameSettings;
@@ -30,7 +31,9 @@ const useProfileActions = ({ settings, onChange, profileId }: UseProfileActionsA
 
     (async () => {
       const raw = await readInputProfiles(profileId);
-      let loaded = raw as InputProfile[];
+      // Numbered slots, or a loud console error and that profile left out. See
+      // migrate-profiles.ts. Never a silent half-load.
+      let loaded: InputProfile[] = migrateProfilesLoudly(raw);
 
       if (loaded.length === 0) {
         const defaultProfile = profileFromPreset(KEYBOARD_DEFAULT);

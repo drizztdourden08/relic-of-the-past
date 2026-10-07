@@ -216,4 +216,22 @@ void DialogPacing_Unpack(const uint8 *in);
 void DialogSuppress_Pack(uint8 *out);
 void DialogSuppress_Unpack(const uint8 *in);
 
+// ─── Host-owned pause menu / active item ───
+
+// The host owns the pause menu: it holds the native browse state, writes gear tiers, and switches the
+// inventory lookup to the 24-entry table. One bit, so every export and every vendored call-site stays a
+// single condition. Both bits live in features2 because features3 has no free bit left.
+static inline bool HostMenuGate(void) {
+  return (enhanced_features2 & kFeatures2_HostMenu) != 0;
+}
+
+// The host drives hud_cur_item directly. Deliberately a conjunction, resolved HERE and not at the
+// call site: the ids the host sends are the 24-entry set, and Hud_LookupInventoryItem only reaches that
+// table while kFeatures2_HostMenu is also open. With ModernControls alone an id of 21-24 would index
+// the 21-entry table out of bounds. The renderer already sets both bits together, but a gate is not
+// allowed to depend on a caller's good manners.
+static inline bool ModernControlsGate(void) {
+  return HostMenuGate() && (enhanced_features2 & kFeatures2_ModernControls) != 0;
+}
+
 #endif // GAME_HOOKS_INTERNAL_H

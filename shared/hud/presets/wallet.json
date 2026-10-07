@@ -1,0 +1,75 @@
+{
+  "kind": "container",
+  "id": "wallet",
+  "direction": "row",
+  "align": "center",
+  "$comment": "48x16 reserved (16 icon + up to 4 digits at 8px), matching WALLET_SIZE - the digit count switches with the wallet tier (rupee_max above 999 once the upgrade is owned), exactly as HudWallet always computed it.",
+  "size": {
+    "w": {
+      "px": 48
+    },
+    "h": {
+      "px": 16
+    }
+  },
+  "children": [
+    {
+      "kind": "element",
+      "id": "wallet-icon",
+      "element": {
+        "type": "sprite",
+        "file": "hud-wallet"
+      }
+    },
+    {
+      "kind": "element",
+      "id": "wallet-count",
+      "element": {
+        "type": "switch",
+        "cases": [
+          {
+            "when": "rupee_max > 999",
+            "node": {
+              "kind": "element",
+              "id": "wallet-count-4",
+              "element": {
+                "type": "text",
+                "value": {
+                  "from": "data",
+                  "expr": "rupee_current"
+                },
+                "format": {
+                  "digits": 4,
+                  "pad": "zero"
+                },
+                "face": {
+                  "from": "sprite",
+                  "set": "hud-digits"
+                }
+              }
+            }
+          }
+        ],
+        "otherwise": {
+          "kind": "element",
+          "id": "wallet-count-3",
+          "element": {
+            "type": "text",
+            "value": {
+              "from": "data",
+              "expr": "rupee_current"
+            },
+            "format": {
+              "digits": 3,
+              "pad": "zero"
+            },
+            "face": {
+              "from": "sprite",
+              "set": "hud-digits"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

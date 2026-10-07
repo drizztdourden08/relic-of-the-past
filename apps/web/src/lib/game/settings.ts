@@ -2,9 +2,19 @@
 
 import type { GameSettings, OffscreenAiMode } from '@shared/types/settings';
 import { DEFAULT_TURBO_SPEED } from '@shared/display/turbo-speed';
+import { hostDrawnHud } from '@shared/features/hud-style';
 import { ONLINE_NOTICE_DEFAULTS } from '@shared/randomizer/archipelago/online-notice-settings';
 import { QUIET_RECEIPT_DEFAULTS } from '@shared/game/quiet-receipts';
+import { aspectRatioValue } from './aspect-ratio';
 import { allowedRatio, ratioToString, rendersExtended } from './ratio-capability';
+
+// The two host-drawn HUD styles (Enhanced and Modern) draw the life/magic/consumable groups and the
+// host-owned menu out into the side bands, which only exist from 16:9 up. The epsilon absorbs the
+// rounding in a reduced W:H pair so a display that IS 16:9 is never rejected by a last-decimal miss.
+const MIN_ENHANCED_ASPECT = 16 / 9 - 0.001;
+
+/** What the Enhanced style was called on disk before §59.7. Only `mergeSettings` may read it. */
+const LEGACY_ENHANCED = 'extended';
 
 const DEFAULT_SETTINGS: GameSettings = {
   // General
@@ -58,10 +68,6 @@ const DEFAULT_SETTINGS: GameSettings = {
   renderIntoNotch: true,
 
   // Gameplay
-  itemSwitchLR: false,
-  itemSwitchLRLimit: false,
-  inventoryReorder: false,
-  secondaryItemSlots: false,
   autoSkipDialog: false,
   prefillFileName: false,
   turnWhileDashing: false,
@@ -163,8 +169,6 @@ const DEFAULT_SETTINGS: GameSettings = {
   hudMagicMode: 'original',
   hudCountLayout: 'centered',
   hudCountdownStyle: 'pixel',
-  hudPauseStyle: 'vanilla',
-  hudPauseHighlight: 'box',
 
   // Title screen
   titleScreen: 'reimagined',
@@ -174,6 +178,8 @@ const DEFAULT_SETTINGS: GameSettings = {
 
   // Controls
   activeInputProfileId: null,
+  mapOnSelect: false,
+  modernScheme: { assignments: {} },
   enhancedSaveSlotShortcut: true,
   saveHoldDuration: 2,
 
@@ -211,6 +217,10 @@ const DEFAULT_SETTINGS: GameSettings = {
   // Randomizer rupees, bombs and arrows arrive without a hold-up or message
   ...QUIET_RECEIPT_DEFAULTS,
 };
+
+/** Whether the display is wide enough for a host-drawn HUD style (16:9 or wider). */
+const enhancedAspectAllowed = (s: GameSettings): boolean =>
+  aspectRatioValue(s.aspectRatio, s.customAspectW, s.customAspectH, s.renderIntoNotch) >= MIN_ENHANCED_ASPECT;
 
 const boolToIni = (v: boolean): string => {
   return v ? '1' : '0';
@@ -298,10 +308,6 @@ PerGroupVolume = ${boolToIni(settings.perGroupVolume)}
 ${msuPathIni ? `MSUPath = ${msuPathIni}
 ` : ''}
 [Features]
-ItemSwitchLR = ${boolToIni(settings.itemSwitchLR)}
-ItemSwitchLRLimit = ${boolToIni(settings.itemSwitchLRLimit)}
-InventoryReorder = ${boolToIni(settings.inventoryReorder)}
-SecondaryItemSlots = ${boolToIni(settings.secondaryItemSlots)}
 AutoSkipDialog = ${boolToIni(settings.autoSkipDialog)}
 PrefillFileName = ${boolToIni(settings.prefillFileName)}
 TurnWhileDashing = ${boolToIni(settings.turnWhileDashing)}
@@ -328,6 +334,9 @@ ${renderFlagsIni}
 
 const mergeSettings = (partial: Partial<GameSettings>): GameSettings => {
   const merged = { ...DEFAULT_SETTINGS, ...partial };
+  // The profile AS STORED. The style migration below asks what the file actually said, which is not
+  // the same question as what `merged` holds. A default filled in for a missing key is not a choice.
+  const raw = partial as Record<string, unknown>;
 
   // Tall rendering forces the enhanced HUD: the native HUD is a fixed 4:3 tile strip, wrong under tall.
   // Forcing it here (not in the settings UI) covers every consumer at once: INI, live push and HUD gate
@@ -338,10 +347,44 @@ const mergeSettings = (partial: Partial<GameSettings>): GameSettings => {
       merged.hudEnhancedParts = [...merged.hudEnhancedParts, 'main'];
   }
 
+  // THE STYLE WAS SPELLED `'extended'` BEFORE IT WAS CALLED ENHANCED. The value is internal, so it
+  // was renamed with the label instead of left to disagree with it. The old spelling is what
+  // every profile on disk still carries, so both migrations below read `LEGACY_ENHANCED`, never
+  // `'enhanced'`. Order matters: the scheme collapse is asked first, because a profile that picked
+  // Modern controls is NOT an Enhanced profile and must not be answered as one.
+  //
+  // THE CONTROL SCHEME IS NO LONGER STORED either. It is derived from the style (controlSchemeOf).
+  // A profile that picked Modern controls picked them ON TOP of the app-drawn HUD, and that pairing
+  // is exactly what the Modern style now is, so the two old fields collapse into the one new value.
+  // Anything else (Modern controls on the Original style was never reachable; Classic on Enhanced)
+  // keeps its style and loses the key below.
+  //
+  // Both are idempotent: an already-migrated profile carries `'enhanced'` and no `controlScheme`,
+  // which neither condition can match.
+  if (raw.hudStyle === LEGACY_ENHANCED) {
+    merged.hudStyle = raw.controlScheme === 'modern' ? 'modern' : 'enhanced';
+  }
+
+  // Both host-drawn styles ARE the host-drawn HUD plus the host-owned pause menu. They have no
+  // meaning with the native rendering left in place, so they force the overlay on for both parts.
+  // Same reasoning as tall above: doing it here instead of in the settings UI keeps it true for
+  // every consumer at once.
+  if (hostDrawnHud(merged.hudStyle)) {
+    merged.hudMode = 'enhanced';
+    merged.hudEnhancedParts = ['main', 'pause'];
+  }
+
+  // Removed settings: the four item-selection toggles (L/R cycling and its limit, inventory reorder,
+  // secondary X/L/R slots), the two dead pause-overlay keys, and the control scheme now that the HUD
+  // style derives it. The secondary-slot behaviour is armed internally by the modern control scheme;
+  // the rest are gone. Stripped so they stop round-tripping through saved profiles.
+  for (const key of ['itemSwitchLR', 'itemSwitchLRLimit', 'inventoryReorder', 'secondaryItemSlots', 'hudPauseStyle', 'hudPauseHighlight', 'controlScheme'])
+    delete (merged as Record<string, unknown>)[key];
+
   // enableAudio is no longer exposed in UI; always keep enabled
   merged.enableAudio = true;
 
   return merged;
 };
 
-export { DEFAULT_SETTINGS, mergeSettings, serializeToIni, offscreenAiMode, rendersExtended };
+export { DEFAULT_SETTINGS, MIN_ENHANCED_ASPECT, enhancedAspectAllowed, mergeSettings, serializeToIni, offscreenAiMode, rendersExtended };

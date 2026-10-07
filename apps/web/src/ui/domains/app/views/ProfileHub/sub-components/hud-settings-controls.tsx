@@ -9,6 +9,7 @@ import { AspectRatioControl } from './AspectRatioControl';
 import { aspectRatioValue, parseRatioString } from '@app/lib/game/aspect-ratio';
 import { renderDialogControl, isDialogDisabled } from './hud-dialog-controls';
 import { renderTitleControl, isTitleDisabled } from './hud-title-controls';
+import { hostDrawnHud } from '@shared/features/hud-style';
 
 const HUD_MODE_OPTIONS = [
   { value: 'original', label: 'Original' },
@@ -59,17 +60,6 @@ const ENHANCED_PARTS_OPTIONS = [
   { value: 'pause', label: 'Pause' },
 ];
 
-const PAUSE_STYLE_OPTIONS = [
-  { value: 'vanilla', label: 'Vanilla' },
-  { value: 'enhanced', label: 'Enhanced' },
-];
-
-const PAUSE_HIGHLIGHT_OPTIONS = [
-  { value: 'box', label: 'Box' },
-  { value: 'glow', label: 'Glow' },
-  { value: 'none', label: 'None' },
-];
-
 const renderControl = (key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void): ReactNode | null => {
   switch (key) {
     case 'hudMode':
@@ -86,7 +76,13 @@ const renderControl = (key: string, settings: GameSettings, onChange: (patch: Pa
       return (
         <HudStyleControl
           value={settings.hudStyle}
-          onChange={(v) => onChange({ hudStyle: v })}
+          settings={settings}
+          // Enhanced and Modern ARE the host-drawn HUD plus the host-owned menu, so either one
+          // carries the overlay settings it depends on instead of leaving the user to find them
+          // (mergeSettings applies the same rule to a stored profile).
+          onChange={(v) => onChange(hostDrawnHud(v)
+            ? { hudStyle: v, hudMode: 'enhanced', hudEnhancedParts: ['main', 'pause'] }
+            : { hudStyle: v })}
         />
       );
     case 'hudRatio':
@@ -151,26 +147,6 @@ const renderControl = (key: string, settings: GameSettings, onChange: (patch: Pa
           value={settings.hudCountdownStyle}
           options={COUNTDOWN_STYLE_OPTIONS}
           onChange={(v) => onChange({ hudCountdownStyle: v as GameSettings['hudCountdownStyle'] })}
-        />
-      );
-    case 'hudPauseStyle':
-      return (
-        <SegmentedControl
-          label="Pause Style"
-          description="Vanilla keeps the original pause menu. Enhanced renders it through the high-quality overlay."
-          value={settings.hudPauseStyle}
-          options={PAUSE_STYLE_OPTIONS}
-          onChange={(v) => onChange({ hudPauseStyle: v as GameSettings['hudPauseStyle'] })}
-        />
-      );
-    case 'hudPauseHighlight':
-      return (
-        <SegmentedControl
-          label="Item Highlight"
-          description="How the selected item cursor appears. Box draws a border. Glow adds a pulsing highlight. None hides it."
-          value={settings.hudPauseHighlight}
-          options={PAUSE_HIGHLIGHT_OPTIONS}
-          onChange={(v) => onChange({ hudPauseHighlight: v as GameSettings['hudPauseHighlight'] })}
         />
       );
     default:

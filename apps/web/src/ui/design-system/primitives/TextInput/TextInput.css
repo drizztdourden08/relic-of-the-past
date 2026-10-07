@@ -1,14 +1,31 @@
 /* @layer renderer-components @kind style */
+
+/* The four `--ctl-*` reads below are the compact tier's seam. Each falls back
+   to the exact token this rule used before the tier existed, so an input with
+   no `--sm` class computes identically; `min-height` falls back to `auto`,
+   which is min-height's own initial value. Nothing in this design system sets
+   `--ctl-*` except a control's own `--sm` class, and none of those controls
+   take arbitrary children, so the inheritance cannot reach a control that did
+   not ask for it. */
 .text-input {
   width: 100%;
-  padding: var(--space-sm) var(--space-md);
+  min-height: var(--ctl-h, auto);
+  padding: var(--ctl-pad-y, var(--space-sm)) var(--ctl-pad-x, var(--space-md));
   background: var(--c-surface);
   border: 1px solid var(--c-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--ctl-radius, var(--radius-md));
   color: var(--c-text);
-  font-size: var(--text-base);
+  font-size: var(--ctl-font, var(--text-base));
   outline: none;
   transition: border-color var(--transition-normal);
+}
+
+.text-input--sm {
+  --ctl-h: var(--control-h-sm);
+  --ctl-pad-y: var(--space-xs);
+  --ctl-pad-x: var(--space-sm);
+  --ctl-font: var(--text-sm);
+  --ctl-radius: var(--radius-sm);
 }
 
 .text-input:focus {

@@ -14,7 +14,7 @@ const toNum = (v: unknown): number | undefined => {
 };
 
 const NumberInput = (props: NumberInputProps) => {
-  const { onChange, className = '', value, min, max, step, disabled = false, sizeToContent = false, ...rest } = props;
+  const { onChange, className = '', value, min, max, step, disabled = false, sizeToContent = false, size = 'md', htmlSize, ...rest } = props;
 
   const stepBy = (dir: 1 | -1): void => {
     const stepN = toNum(step) ?? 1;
@@ -52,7 +52,7 @@ const NumberInput = (props: NumberInputProps) => {
 
   return (
     <div
-      className={`number-input ${columns === undefined ? '' : 'number-input--auto'} ${disabled ? 'number-input--disabled' : ''} ${className}`}
+      className={`number-input${size === 'sm' ? ' number-input--sm' : ''} ${columns === undefined ? '' : 'number-input--auto'} ${disabled ? 'number-input--disabled' : ''} ${className}`}
       style={sizingVars}
     >
       <input
@@ -62,6 +62,7 @@ const NumberInput = (props: NumberInputProps) => {
         min={min}
         max={max}
         step={step}
+        size={htmlSize}
         disabled={disabled}
         onChange={(e) => onChange?.(e.target.valueAsNumber)}
         {...rest}

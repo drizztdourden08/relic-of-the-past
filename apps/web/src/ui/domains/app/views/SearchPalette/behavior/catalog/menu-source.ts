@@ -19,7 +19,9 @@ const walk = (items: MenuEntry[], trail: string[]): SearchEntry[] =>
       id: `menu:${item.key}`,
       kind: trail.length ? 'action' : 'screen',
       label: item.label,
-      icon: item.icon,
+      // A search row's icon is a character it prints; a Lucide row has no
+      // character to print, so it goes without one, not with a stub.
+      icon: typeof item.icon === 'string' ? item.icon : undefined,
       breadcrumb: trail,
       keywords: breadcrumb.join(' '),
       disabled: item.disabled,

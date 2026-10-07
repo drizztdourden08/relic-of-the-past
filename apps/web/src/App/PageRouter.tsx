@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { HubGameControls, ProfileHub } from '../ui/domains/app/views/ProfileHub';
 import { DataManager } from '../ui/domains/app/views/DataManager';
 import { Store } from '../ui/domains/app/views/Store';
+import { HudLayoutEditor } from '../ui/domains/app/views/HudLayoutEditor';
 import { SpriteDebug } from '../ui/domains/app/views/SpriteDebug';
 import { Randomizer } from '../ui/domains/app/views/Randomizer';
 import { SIMPLE_PAGES } from './simple-pages';
@@ -115,6 +116,10 @@ const PageRouter = (props: PageRouterProps) => {
         <Store onLibraryChanged={profileMgmt.refreshProfilesAndRoms} onDeleteConfirm={handleDeleteConfirm} />
       </FullScreenLayer>
     );
+  } else if (nav.activePage === 'hud-layout') {
+    // The editor brings its own FullScreenLayer (title + close), the way the
+    // sprite studio does, because it wants the whole width for a true-scale stage.
+    otherPage = <HudLayoutEditor onClose={nav.closePage} />;
   } else if (simplePage) {
     otherPage = (
       <FullScreenLayer onClose={nav.closePage} title={simplePage.title}>

@@ -3,7 +3,7 @@ import { create } from 'zustand';
 
 interface HudSettings {
   mode: 'original' | 'enhanced';
-  style: 'vanilla' | 'modern';
+  style: 'vanilla' | 'enhanced' | 'modern';
   ratio: 'match' | '4:3' | '3:2' | '16:9' | '16:10' | 'custom';
   customW: number; // ratio width when ratio === 'custom'; 0 = auto-detect
   customH: number; // ratio height; 0 = auto-detect
@@ -12,8 +12,6 @@ interface HudSettings {
   magicMode: 'original' | 'accurate';
   countLayout: 'centered' | 'original';
   countdownStyle: 'pixel' | 'smooth';
-  pauseStyle: 'vanilla' | 'enhanced';
-  pauseHighlight: 'box' | 'glow' | 'none';
   showMaxInYellow: boolean;
 }
 
@@ -32,8 +30,6 @@ const useHudSettingsStore = create<HudSettingsStore>()((set) => ({
   magicMode: 'original',
   countLayout: 'centered',
   countdownStyle: 'pixel',
-  pauseStyle: 'vanilla',
-  pauseHighlight: 'box',
   showMaxInYellow: false,
   setHudSettings: (patch) => set(patch),
 }));

@@ -62,3 +62,21 @@
 .position-input--disabled .position-input__cap {
   color: var(--c-text-faint);
 }
+
+/* Compact tier (contract §32): the shell's own padding and gaps, for a pair
+   placed in an inspector rail that can be 188px wide. `md` declares nothing,
+   so a caller that omits `size` renders exactly what it always did. The axes'
+   inputs are handed the same tier and shrink themselves. */
+.position-input--sm {
+  gap: var(--space-2xs);
+}
+
+.position-input--sm .position-input__axes {
+  gap: var(--space-xs);
+  padding: var(--space-2xs);
+  border-radius: var(--radius-sm);
+}
+
+.position-input--sm .position-input__axis {
+  gap: var(--space-2xs);
+}

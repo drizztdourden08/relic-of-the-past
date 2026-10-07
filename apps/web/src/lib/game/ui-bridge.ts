@@ -12,6 +12,8 @@ import { pollHapticState, resetHapticPolling } from './haptic-polling';
 import { parseGameUIBuffer } from './ui-bridge-parser';
 import { stateChanged } from './ui-bridge-diff';
 import { pollDialogFrame } from './dialog/dialog-bridge';
+import { observeGear } from './gear-ownership';
+import { reassertAfterSaveLoad } from './host-menu';
 
 
 let rafId: number | null = null;
@@ -26,6 +28,17 @@ const checkMapPause = (_state: GameUIState): void => {
   // no-op, map pause removed to fix input deadlock
 };
 
+// Post-file-load repair. Leaving the title/file-select modules is the one moment the core has just
+// copied a save FILE out of SRAM into WRAM, and with it hud_cur_item_x/l/r, the abandoned lane
+// design's per-button registers. Two vendored paths read those bytes with no feature bit of their own
+// (see HostMenu_DropSecondaryItems in core/game-hooks/host_menu.c), so an old save silently moves the
+// map button to Select while the modern scheme is still sending X. Re-arming the takeover here
+// re-zeroes them; it is a no-op when the host never armed one.
+const checkSaveFileLoad = (prev: GameUIState | null, next: GameUIState): void => {
+  if (prev?.mode !== 'title' || next.mode === 'title') return;
+  reassertAfterSaveLoad();
+};
+
 
 const pollFrame = (): void => {
   const result = wasmGetGameUIState();
@@ -35,6 +48,12 @@ const pollFrame = (): void => {
 
     const state = parseGameUIBuffer(result.heap, result.ptr);
     if (!prevState || stateChanged(prevState, state)) {
+      checkSaveFileLoad(prevState, state);
+      // The gear high-water mark follows the state decoded here instead of a store
+      // subscription, so it is recorded whether or not the pause menu has ever been opened
+      // this session. A tier earned and then dropped has to stay reversible either way.
+      // The whole state, not its equipment block: the arrow row's mark is an inventory byte.
+      observeGear(state);
       prevState = state;
       checkMapPause(state);
       storeUpdater?.(state);

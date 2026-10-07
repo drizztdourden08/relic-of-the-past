@@ -5,8 +5,37 @@
  * the controller overlays so icon/label rendering has a single source of truth.
  */
 
+import { SDL_AXIS } from '@shared/input/sdl-buttons';
 import type { InputBinding, ButtonIcon, KeyboardBinding } from '@shared/types/controls';
 import { getButtonIconUrl, keyCodeToIconId } from './button-icons';
+
+/**
+ * Where the icon chain ENDS. A bound control always draws a glyph: one row
+ * falling back to bare text beside neighbours that have art reads as broken,
+ * not as "this device is unplugged". The device-specific art is preferred and
+ * arrives through `icon`, but it is absent whenever the pad is disconnected or
+ * its family has no picture for that control. And an axis never carried a
+ * stored icon at all, since its glyph depends on which end of the stick is
+ * meant. So these generics are keyed off the binding's own shape, which is
+ * always knowable, and only `none` may draw nothing.
+ */
+const AXIS_FALLBACK: Record<number, Record<'-' | '+', string>> = {
+  [SDL_AXIS.LEFT_X]: { '-': 'generic-stick-left', '+': 'generic-stick-right' },
+  [SDL_AXIS.RIGHT_X]: { '-': 'generic-stick-left', '+': 'generic-stick-right' },
+  [SDL_AXIS.LEFT_Y]: { '-': 'generic-stick-up', '+': 'generic-stick-down' },
+  [SDL_AXIS.RIGHT_Y]: { '-': 'generic-stick-up', '+': 'generic-stick-down' },
+  [SDL_AXIS.LEFT_TRIGGER]: { '-': 'generic-trigger-a', '+': 'generic-trigger-a' },
+  [SDL_AXIS.RIGHT_TRIGGER]: { '-': 'generic-trigger-b', '+': 'generic-trigger-b' },
+};
+
+const fallbackIconId = (binding: InputBinding): string | null => {
+  if (binding.type === 'keyboard') return 'kb-any';
+  if (binding.type === 'gamepad-button') return 'generic-btn';
+  if (binding.type === 'gamepad-axis') {
+    return AXIS_FALLBACK[binding.axisIndex]?.[binding.direction] ?? 'generic-stick';
+  }
+  return null;
+};
 
 const formatKeyCode = (code: string): string => {
   if (code.startsWith('Key')) return code.slice(3);
@@ -54,9 +83,11 @@ const getBindingIconUrl = (binding: InputBinding, icon?: ButtonIcon | null): str
   }
   if (binding.type === 'keyboard') {
     const iconId = keyCodeToIconId(binding.code);
-    if (iconId) return getButtonIconUrl(iconId);
+    const url = iconId ? getButtonIconUrl(iconId) : null;
+    if (url) return url;
   }
-  return null;
+  const fallback = fallbackIconId(binding);
+  return fallback ? getButtonIconUrl(fallback) : null;
 };
 
 export { formatKeyCode, formatKeyBinding, getBindingLabel, getBindingIconUrl };

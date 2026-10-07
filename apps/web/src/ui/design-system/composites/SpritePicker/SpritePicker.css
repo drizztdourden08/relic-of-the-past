@@ -1,0 +1,91 @@
+/* @layer renderer-components @kind style */
+
+/* Floats over whatever opened it (a stage with live art, an inspector row,
+   a toolbar) so it needs an actually opaque surface, not a faint wash. It is the
+   same `--c-surface` `DropdownMenu` already uses for exactly this reason. */
+.sprite-picker {
+  position: fixed;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  width: 300px;
+  max-height: 22rem;
+  padding: var(--space-xs) var(--space-sm) var(--space-xs) var(--space-xs);
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  background: var(--c-surface);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-dropdown);
+}
+
+/* Flipped above its trigger: `top` is still measured downward from the
+   trigger's own top edge (there is no panel height to subtract from it in
+   advance), so the panel is shifted up by its own full height after layout,
+   using the same technique `Select`/`TagInput` already use for their dropdowns.
+   Without this a "dropped up" panel draws DOWN from a point above the field,
+   over the very control that opened it, instead of above it. */
+.sprite-picker[data-drop-up='true'] {
+  transform: translateY(-100%);
+}
+
+.sprite-picker__tabs {
+  flex-shrink: 0;
+}
+
+.sprite-picker__tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr));
+  gap: var(--space-2xs);
+}
+
+/* Doubled selector: a tile is also a bare `Button`, whose own rules are the
+   same specificity, and this has to win regardless of stylesheet import order. */
+.sprite-picker__tiles .sprite-picker__tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2xs);
+  padding: var(--space-2xs);
+  background: none;
+  border: var(--border-width-thin) solid transparent;
+  border-radius: var(--radius-sm);
+}
+
+.sprite-picker__tiles .sprite-picker__tile:hover,
+.sprite-picker__tiles .sprite-picker__tile:focus-visible {
+  background: var(--color-surface-hover);
+  border-color: var(--c-border);
+  outline: none;
+}
+
+.sprite-picker__thumb {
+  width: 2.75rem;
+  height: 2.75rem;
+  image-rendering: pixelated;
+}
+
+.sprite-picker__label {
+  overflow: hidden;
+  max-width: 100%;
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.sprite-picker__notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: var(--space-2xs) var(--space-xs);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-inset);
+}
+
+.sprite-picker__notice .text {
+  color: var(--c-text-dim);
+}

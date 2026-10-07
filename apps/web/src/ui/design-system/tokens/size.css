@@ -6,9 +6,24 @@
   --titlebar-btn-width: 46px;
   --scrollbar-size: 6px;
 
-  /* One compact control row, the small tier the icon button and the small
-     dropdown trigger already draw themselves at. */
+  /* The two control rows, named. `sm` is the compact tier the icon button and
+     the small dropdown trigger already draw themselves at; `md` is the roomy
+     one Select's default trigger and IconButton's default box hardcode.
+     Naming `md` does not point those two at it: that swap is the token
+     unification pass, which moves pixels outside this editor and ships on its
+     own. This token exists so the compact tier has a size to be compact
+     AGAINST, and so the literal 34 has one home to be corrected in. */
   --control-h-sm: 26px;
+  --control-h-md: 34px;
+
+  /* Glyph boxes. Three names for three sizes already drawn in the app:
+     12 is what the outline row and the number spinner pass to <Icon>, 16 is
+     Icon's own default and its 0 0 16 16 viewBox, 20 is .btn__icon's width.
+     <Icon size={n}> still takes a raw number. These are for CSS-sized boxes
+     (a checkbox, a toggle thumb) that need the same ladder. */
+  --icon-sm: 12px;
+  --icon-md: 16px;
+  --icon-lg: 20px;
 
   /* The inline drop target in a header line: wide enough to read as a target, and
      a label that fits on one line inside it. */

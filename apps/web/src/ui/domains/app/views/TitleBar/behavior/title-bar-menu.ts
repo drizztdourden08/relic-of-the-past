@@ -10,7 +10,7 @@ type MenuItems = Parameters<typeof DropdownMenu>[0]['items'];
 type MenuBuilderDeps = Pick<TitleBarProps,
   'activeProfile' | 'gameRunning' | 'onShowProfile' | 'onToggleSaveStates' | 'onShowDataManager'
   | 'onToggleInventory' | 'onToggleChecks' | 'onToggleCheats' | 'onShowLogs' | 'onToggleDebug'
-  | 'onShowConnectionDebug' | 'onToggleDataset' | 'onToggleSimulator' | 'onToggleMusic' | 'onShowInputTester' | 'onShowSpriteDebug' | 'onShowDataInspector'
+  | 'onShowConnectionDebug' | 'onToggleDataset' | 'onToggleSimulator' | 'onToggleMusic' | 'onShowInputTester' | 'onShowHudLayout' | 'onShowSpriteDebug' | 'onShowDataInspector'
   | 'onShowShadowEditor' | 'onCheckForUpdates' | 'onShowCredits' | 'onShowDesignGallery' | 'onShowAbout' | 'onShowRandomizer'
   | 'widgetVisibility' | 'developerToolsEnabled'
 > & { closeMenu: () => void; win: WindowControlsPort };
@@ -20,7 +20,7 @@ const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
     closeMenu, win, activeProfile, gameRunning,
     onShowProfile, onToggleSaveStates, onShowDataManager, onToggleInventory, onToggleChecks,
     onToggleCheats, onShowLogs, onToggleDebug, onShowConnectionDebug, onToggleDataset, onToggleSimulator, onToggleMusic,
-    onShowInputTester, onShowSpriteDebug, onShowDataInspector, onShowShadowEditor, onCheckForUpdates, onShowCredits, onShowDesignGallery, onShowAbout, onShowRandomizer,
+    onShowInputTester, onShowHudLayout, onShowSpriteDebug, onShowDataInspector, onShowShadowEditor, onCheckForUpdates, onShowCredits, onShowDesignGallery, onShowAbout, onShowRandomizer,
     widgetVisibility = {}, developerToolsEnabled = false,
   } = deps;
 
@@ -86,6 +86,7 @@ const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
         // Input Calibration and Data Inspector are real user options, so they are always available.
         // The rest are developer tools, shown only when developerToolsEnabled is on.
         { key: 'input-tester', icon: '🎮', label: 'Input Calibration', onClick: () => { closeMenu(); onShowInputTester(); } },
+        { key: 'hud-layout', icon: '🧩', label: 'HUD Layout Editor', onClick: () => { closeMenu(); onShowHudLayout(); } },
         { key: 'data-inspector', icon: '🔍', label: 'Data Inspector', onClick: () => { closeMenu(); onShowDataInspector(); } },
         ...(developerToolsEnabled ? [
           { key: 'dev-console', icon: '🛠️', label: 'Dev Console', onClick: () => { closeMenu(); win.openDevTools(); } },

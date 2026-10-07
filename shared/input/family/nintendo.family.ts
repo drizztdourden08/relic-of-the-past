@@ -12,9 +12,27 @@ import type { FamilyMetadata } from './family.type';
 const NINTENDO_FAMILY: FamilyMetadata = {
   types: ['switch-pro', 'joycon-left', 'joycon-right', 'joycon-pair'],
   brandLogoKey: 'nintendo',
-  // Face/d-pad/shoulder labels come from SDL's own per-device label; these
-  // cover positions SDL does not label at all (system buttons, stick clicks).
+  // The face buttons are named here, not left to SDL's live per-device label,
+  // for the same reason the shoulders always were: this family has ALREADY
+  // committed to the layout one line down, in buttonIcons, where EAST is the A
+  // button on this pad, and it draws switch_button_a.svg. The label and the
+  // icon are one fact, so leaving the label out did not defer the decision, it
+  // only stranded every reader that has no live device to ask (a saved binding
+  // for an unplugged pad, buildConsoleDefaultMappings, the synthetic profile in
+  // buildDeviceProfileFromSdlType) on generic's "Button 2 (East)" filler beside
+  // the correct A glyph. SDL's live label agrees with these anyway; where the
+  // two could ever differ, a family's own name for its own button should win,
+  // which is exactly the precedence resolveButtonLabelSpecific encodes.
+  //
+  // The d-pad is still left to the chain: generic's "D-Pad Up" is what this pad
+  // prints too, so there is nothing to correct.
   buttonLabels: {
+    SOUTH: 'B',
+    EAST: 'A',
+    WEST: 'Y',
+    NORTH: 'X',
+    LEFT_SHOULDER: 'L',
+    RIGHT_SHOULDER: 'R',
     LEFT_STICK: 'L Stick',
     RIGHT_STICK: 'R Stick',
     BACK: 'Minus',
@@ -66,6 +84,11 @@ const NINTENDO_FAMILY: FamilyMetadata = {
     LEFT_TRIGGER: 'switch-zl',
     RIGHT_TRIGGER: 'switch-zr',
   },
+  // Movement's DEFAULT is the left stick, not these four d-pad entries: the
+  // stick half lives once on the generic family (axisConsoleDefaults), which
+  // is the terminal fallback in this chain, so it applies here without being
+  // repeated. The d-pad entries below are movement's second binding, since a pad
+  // moves on both out of the box. They also feed the glyph packs' layout.
   consoleDefaults: {
     SOUTH: 'B',
     EAST: 'A',

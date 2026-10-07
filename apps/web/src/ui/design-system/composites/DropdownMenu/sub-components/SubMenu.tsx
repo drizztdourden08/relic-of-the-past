@@ -13,6 +13,7 @@ import { useRef, useState } from 'react';
 import { Box } from '../../../primitives/Box';
 import { Text } from '../../../primitives/Text';
 import { SUB_MENU_PADDING, SUB_MENU_WIDTH, SUB_ROW_HEIGHT } from '../DropdownMenu.constants';
+import { MenuIcon } from './MenuIcon';
 import { MenuItemButton } from './MenuItemButton';
 import type { MenuItem } from '../DropdownMenu.type';
 
@@ -54,7 +55,7 @@ const SubMenu = (props: SubMenuProps) => {
       onMouseLeave={() => setPosition(null)}
     >
       <Box className="dropdown__item dropdown__item--parent">
-        {item.icon && <Text className="dropdown__icon">{item.icon}</Text>}
+        {item.icon && <MenuIcon icon={item.icon} />}
         <Text className="dropdown__label">{item.label}</Text>
         <Text className="dropdown__chevron">›</Text>
       </Box>

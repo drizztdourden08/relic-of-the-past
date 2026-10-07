@@ -1,14 +1,21 @@
 /* @layer renderer-components @kind hook */
 /**
- * Rebind listening, capture, and clear logic for
- * SNES button mappings and function-action mappings.
+ * Rebind listening, capture, and clear logic for SNES button mappings,
+ * function-action mappings, and (under the modern scheme) the ten core verbs
+ * and the player's numbered slots.
+ *
+ * Core and slot captures are handed straight to useModernScheme's writers:
+ * this hook owns "what are we listening for", never the shape of what a
+ * modern profile stores.
  */
 
 import { useState, useCallback, useMemo } from 'react';
 import type { GameSettings } from '@shared/types/settings';
+import type { CoreVerb } from '@shared/input/scheme';
 import type {
   InputProfile,
   InputBinding,
+  ModernSlot,
   SnesButton,
   FunctionAction,
   FunctionMapping,
@@ -20,20 +27,25 @@ import { allowedDevices } from '@app/lib/input/profile-devices';
 import { resolveLiveFamilyIcon } from './family-icon-map';
 import { padHex } from './controls-settings.type';
 
+type ListeningTarget =
+  | { type: 'snes'; button: SnesButton }
+  | { type: 'function'; action: FunctionAction }
+  | { type: 'core'; verb: CoreVerb }
+  | { type: 'slot'; slot: ModernSlot };
+
 interface UseBindingStateArgs {
   settings: GameSettings;
   onChange: (patch: Partial<GameSettings>) => void;
   activeProfile: InputProfile | null;
   updateActiveProfile: (profile: InputProfile) => void;
   devices: DetectedDevice[];
+  applyCoreBinding: (verb: CoreVerb, binding: InputBinding) => void;
+  applySlotBinding: (slot: ModernSlot, binding: InputBinding) => void;
 }
 
-const useBindingState = ({ settings, onChange, activeProfile, updateActiveProfile, devices }: UseBindingStateArgs) => {
-  const [listeningFor, setListeningFor] = useState<
-    | { type: 'snes'; button: SnesButton }
-    | { type: 'function'; action: FunctionAction }
-    | null
-  >(null);
+const useBindingState = (args: UseBindingStateArgs) => {
+  const { settings, onChange, activeProfile, updateActiveProfile, devices, applyCoreBinding, applySlotBinding } = args;
+  const [listeningFor, setListeningFor] = useState<ListeningTarget | null>(null);
 
   // ─── Function mappings resolution ───
   const functionMappings: FunctionMapping[] = useMemo(() => {
@@ -73,6 +85,14 @@ const useBindingState = ({ settings, onChange, activeProfile, updateActiveProfil
     setListeningFor({ type: 'function', action });
   }, []);
 
+  const handleCoreRebind = useCallback((verb: CoreVerb) => {
+    setListeningFor({ type: 'core', verb });
+  }, []);
+
+  const handleSlotRebind = useCallback((slot: ModernSlot) => {
+    setListeningFor({ type: 'slot', slot });
+  }, []);
+
   // ─── Clear a SNES button binding ───
   const handleSnesClear = useCallback((snesButton: SnesButton) => {
     if (!activeProfile) return;
@@ -100,6 +120,16 @@ const useBindingState = ({ settings, onChange, activeProfile, updateActiveProfil
 
     const vid = vendorId ? padHex(vendorId) : null;
     const pid = productId ? padHex(productId) : null;
+
+    if (listeningFor.type === 'core') {
+      applyCoreBinding(listeningFor.verb, binding);
+      return;
+    }
+
+    if (listeningFor.type === 'slot') {
+      applySlotBinding(listeningFor.slot, binding);
+      return;
+    }
 
     if (listeningFor.type === 'snes') {
       if (!activeProfile) return;
@@ -142,7 +172,7 @@ const useBindingState = ({ settings, onChange, activeProfile, updateActiveProfil
       });
       onChange({ functionMappings: updatedFn });
     }
-  }, [listeningFor, activeProfile, updateActiveProfile, functionMappings, onChange]);
+  }, [listeningFor, activeProfile, updateActiveProfile, functionMappings, onChange, applyCoreBinding, applySlotBinding]);
 
   return {
     listeningFor,
@@ -151,6 +181,8 @@ const useBindingState = ({ settings, onChange, activeProfile, updateActiveProfil
     setListeningFor,
     handleSnesRebind,
     handleFunctionRebind,
+    handleCoreRebind,
+    handleSlotRebind,
     handleSnesClear,
     handleFunctionClear,
     handleCapture,
@@ -158,3 +190,4 @@ const useBindingState = ({ settings, onChange, activeProfile, updateActiveProfil
 };
 
 export { useBindingState };
+export type { ListeningTarget };

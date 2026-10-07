@@ -1,0 +1,80 @@
+/* @layer renderer-components @kind style */
+.modern-tab__slots-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  padding: var(--space-lg) var(--space-md) var(--space-sm);
+  border-top: 1px solid var(--c-border);
+}
+
+.modern-tab__slots-title {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semi);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--c-gold-bright);
+}
+
+.modern-tab__slots-hint,
+.modern-tab__absent-title {
+  color: var(--c-text-muted);
+  line-height: var(--leading-tight);
+}
+
+.modern-tab__empty {
+  padding: var(--space-md);
+  font-size: var(--text-base);
+  color: var(--c-text-muted);
+  font-style: italic;
+}
+
+/* ─── Inert assignments for absent slots ─── */
+.modern-tab__absent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  margin: var(--space-lg) var(--space-md) var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  border: 1px dashed var(--c-border);
+  border-radius: var(--radius-lg);
+  opacity: var(--opacity-muted);
+}
+
+.modern-tab__absent-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-md);
+  font-size: var(--text-sm);
+}
+
+.modern-tab__absent-slot {
+  color: var(--c-text-dim);
+  text-transform: capitalize;
+}
+
+.modern-tab__absent-value {
+  color: var(--c-text-muted);
+}
+
+/* ─── Add slot ─── */
+.modern-tab__add {
+  display: flex;
+  padding: var(--space-sm) var(--space-md);
+}
+
+.modern-tab__add-button {
+  padding: var(--space-2xs) var(--space-sm);
+  background: transparent;
+  border: 1px dashed var(--c-border);
+  border-radius: var(--r-sm);
+  color: var(--c-text-dim);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: color 0.12s, border-color 0.12s;
+}
+
+.modern-tab__add-button:hover {
+  color: var(--c-gold-bright);
+  border-color: var(--c-gold);
+}

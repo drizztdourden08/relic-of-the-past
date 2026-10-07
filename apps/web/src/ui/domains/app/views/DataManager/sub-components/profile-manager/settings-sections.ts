@@ -61,8 +61,6 @@ const SETTINGS_SECTIONS: Array<{ title: string; keys: Array<{ key: string; label
   {
     title: 'Gameplay',
     keys: [
-      { key: 'itemSwitchLR', label: 'Item Switch L/R' },
-      { key: 'itemSwitchLRLimit', label: 'Item Switch L/R Limit' },
       { key: 'turnWhileDashing', label: 'Turn While Dashing' },
       { key: 'mirrorToDarkworld', label: 'Mirror to Dark World' },
       { key: 'collectItemsWithSword', label: 'Collect Items with Sword' },

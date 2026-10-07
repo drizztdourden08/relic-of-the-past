@@ -152,6 +152,14 @@ int WasmGetGameUIState(void) {
   b[129] = super_bomb_indicator_unk2;
   b[130] = super_bomb_indicator_unk1;
 
+  // ─── Bytes 131-132: Host-owned pause menu ───
+  // 132 repeats byte 14 on purpose. Byte 14 is the HUD's equipped-item readout; this one is the
+  // host's own register, read back so it can see when the native menu moved it (Hud_Init runs
+  // Hud_SearchForEquippedItem before the hold takes effect at browse state 4, and that walks the
+  // 21-entry grid, so any id the 21-entry table has no row for is replaced) and re-assert.
+  b[131] = HostMenu_Holding() ? 1 : 0;
+  b[132] = hud_cur_item;
+
   return (int)g_ui_state_buf;
 }
 

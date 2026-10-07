@@ -32,8 +32,10 @@ const VANILLA_SAFE_LOCKED_SETTINGS: readonly string[] = [
   'hudMagicMode',
   'hudCountLayout',
   'hudCountdownStyle',
-  'hudPauseStyle',
-  'hudPauseHighlight',
+  // Modern controls: the ModernControls gate bit is stripped from word 2 under Vanilla Safe, so the
+  // core keeps its own equipped-item register and the slot assignments drive nothing. The scheme
+  // itself has no key of its own any more. It is derived from `hudStyle`, locked just above.
+  'modernScheme',
   // Renderer effects that visibly differ from the cartridge, hand-gated in buildPpuFlags.
   'enhancedMode7',
   'noSpriteLimits',

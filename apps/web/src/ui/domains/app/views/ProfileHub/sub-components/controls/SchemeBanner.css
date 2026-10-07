@@ -1,0 +1,22 @@
+/* @layer renderer-components @kind style */
+
+/* The box the old scheme notice used, unchanged. One row, the text taking the
+   slack and the button pinned to the end. It is not a container inside a
+   container: it sits directly in the controls column, above the tab strip. */
+.scheme-banner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm) var(--space-md);
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  background: var(--c-surface);
+}
+
+.scheme-banner .text {
+  flex: 1 1 24em;
+  color: var(--c-text-dim);
+}

@@ -1,0 +1,21 @@
+{
+  "$comment": "Named expression strings used by tests/hud/hud-data-*.keep.test.ts. `valid` are real formulas straight out of plans/hud-data-binding.html's worked examples (with `&&` corrected to `and` - see the test file's own note on that). `invalid` are the disabled-operator and malformed cases the parser must refuse.",
+  "valid": {
+    "arrow-count": "arrow_current",
+    "life-in-hearts": "life_current / 8",
+    "heart-count": "ceil(life_max / 8)",
+    "heart-fill": "min(max(life_current - index * 8, 0), 8)",
+    "last-heart-gate": "index == count - 1 and item < 8 and item > 0",
+    "half-magic-bar": "magic_current / 128 * 24 * (1 + half_magic)"
+  },
+  "invalid": {
+    "unknown-variable": "life_curent / 8",
+    "assignment": "x = 5",
+    "function-definition": "square(x) = x * x",
+    "array-literal": "[1, 2, 3]",
+    "in-operator": "3 in [1, 2, 3]",
+    "empty": "",
+    "whitespace": "   ",
+    "javascript-and": "index == count - 1 && item < 8"
+  }
+}

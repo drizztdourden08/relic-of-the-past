@@ -152,6 +152,11 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
               healthCurrent={data.healthCurrent}
               healthCapacity={data.healthCapacity}
               heartMode={heartMode}
+              // The Original style is a replica of the console's own bar, drawn
+              // from sprites extracted out of the ROM. Both opt-ins say the same
+              // thing: this bar is the console's, not ours.
+              heartArt="sprite"
+              showCaption
               scale={scale}
               spritesBase={spritesBase}
             />

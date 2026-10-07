@@ -6,6 +6,7 @@
  */
 import type { GameSettings } from '@shared/types/settings';
 import { BUNDLE_FIXES } from '@shared/features/bundle-fixes.generated';
+import { controlSchemeOf, hostDrawnHud } from '@shared/features/hud-style';
 import { effectiveFeatureIds } from './live-settings-gate';
 import { offscreenAiMode } from './settings';
 
@@ -15,8 +16,19 @@ const FEATURES2_FLAGS = {
   widescreenPlayArea: 16777216, // kFeatures2_WidescreenPlayArea = 1 << 24
   widescreenIdleAI: 33554432, // kFeatures2_WidescreenIdleAI = 1 << 25
   titleOverride: 67108864, // kFeatures2_TitleOverride = 1 << 26
+  hostMenu: 134217728, // kFeatures2_HostMenu = 1 << 27
+  modernControls: 268435456, // kFeatures2_ModernControls = 1 << 28
   allowDiving: 536870912, // kFeatures2_AllowDiving = 1 << 29
 } as const;
+
+/** The modern control scheme may drive the item register. It IS the Modern HUD style, which is
+ *  also the HUD that can show the bindings, so this is one condition and never two that disagree. */
+const modernControlsWanted = (s: GameSettings): boolean =>
+  controlSchemeOf(s) === 'modern' && !s.vanillaSafe;
+
+/** The host may own the pause menu: both host-drawn styles ask for it. */
+const hostMenuWanted = (s: GameSettings): boolean =>
+  !s.vanillaSafe && hostDrawnHud(s.hudStyle);
 
 // Each fix is on when its granular toggle is set, falling back to the legacy bundle setting it was
 // extracted from so existing profiles keep their behavior. Values come from the generated registry
@@ -38,6 +50,14 @@ const buildFeatureWords = (s: GameSettings): { features1: number; features2: num
   }
   // The title hide: registered, so Vanilla Safe strips it through the same resolver.
   if (effective.has('titleOverride')) f2 |= FEATURES2_FLAGS.titleOverride;
+  // Host-owned pause menu and host-driven item register. Neither is a raw user toggle: both are
+  // derived from the HUD style, and both are stripped by Vanilla Safe here and by the
+  // C-side kGateWordParityMask. modernControls implies hostMenu: the host writes hud_cur_item with a
+  // NEW-STYLE item id (1..24), and the HostMenu gate is what makes Hud_LookupInventoryItem read the
+  // new-style table at all. Granting it only permits the takeover; the host still has to ask for it
+  // (WasmHostMenuSetTakeover).
+  if (modernControlsWanted(s)) f2 |= FEATURES2_FLAGS.modernControls;
+  if (hostMenuWanted(s)) f2 |= FEATURES2_FLAGS.hostMenu;
   // The extra dungeon's water room cannot be crossed as designed without the dive, so turning the
   // dungeon on turns the ability on. Neither answers to Vanilla Safe: added content is already a
   // departure from the cartridge, and stripping the ability out from under it would only leave the

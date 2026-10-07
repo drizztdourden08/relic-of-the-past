@@ -1,0 +1,311 @@
+{
+  "id": "spc2-test",
+  "name": "Switch 2 Pro (simulated)",
+  "deviceType": "gamepad",
+  "deviceFamily": "nintendo",
+  "mappings": [],
+  "isDefault": false,
+  "assignedDevice": null,
+  "createdAt": 0,
+  "modifiedAt": 0,
+  "core": {
+    "up": {
+      "type": "keyboard",
+      "code": "ArrowUp",
+      "label": "Up"
+    },
+    "down": {
+      "type": "keyboard",
+      "code": "ArrowDown",
+      "label": "Down"
+    },
+    "left": {
+      "type": "keyboard",
+      "code": "ArrowLeft",
+      "label": "Left"
+    },
+    "right": {
+      "type": "keyboard",
+      "code": "ArrowRight",
+      "label": "Right"
+    },
+    "pause": {
+      "type": "keyboard",
+      "code": "Enter",
+      "label": "Enter"
+    },
+    "map": {
+      "type": "keyboard",
+      "code": "ShiftRight",
+      "label": "RShift"
+    },
+    "confirm": {
+      "type": "keyboard",
+      "code": "KeyD",
+      "label": "D"
+    },
+    "cancel": {
+      "type": "keyboard",
+      "code": "KeyS",
+      "label": "S"
+    },
+    "prevScreen": {
+      "type": "keyboard",
+      "code": "KeyQ",
+      "label": "Q"
+    },
+    "nextScreen": {
+      "type": "keyboard",
+      "code": "KeyE",
+      "label": "E"
+    }
+  },
+  "modern": {
+    "core": {
+      "up": {
+        "type": "keyboard",
+        "code": "ArrowUp",
+        "label": "Up"
+      },
+      "down": {
+        "type": "keyboard",
+        "code": "ArrowDown",
+        "label": "Down"
+      },
+      "left": {
+        "type": "keyboard",
+        "code": "ArrowLeft",
+        "label": "Left"
+      },
+      "right": {
+        "type": "keyboard",
+        "code": "ArrowRight",
+        "label": "Right"
+      },
+      "pause": {
+        "type": "keyboard",
+        "code": "Enter",
+        "label": "Enter"
+      },
+      "map": {
+        "type": "keyboard",
+        "code": "ShiftRight",
+        "label": "RShift"
+      },
+      "confirm": {
+        "type": "keyboard",
+        "code": "KeyD",
+        "label": "D"
+      },
+      "cancel": {
+        "type": "keyboard",
+        "code": "KeyS",
+        "label": "S"
+      },
+      "prevScreen": {
+        "type": "keyboard",
+        "code": "KeyQ",
+        "label": "Q"
+      },
+      "nextScreen": {
+        "type": "keyboard",
+        "code": "KeyE",
+        "label": "E"
+      }
+    },
+    "slots": [
+      {
+        "id": "slot:NORTH",
+        "binding": {
+          "type": "keyboard",
+          "code": "KeyW",
+          "label": "X"
+        },
+        "position": "NORTH",
+        "category": "face",
+        "label": "X",
+        "icon": {
+          "key": "switch-x",
+          "path": null,
+          "label": "X"
+        }
+      },
+      {
+        "id": "slot:WEST",
+        "binding": {
+          "type": "keyboard",
+          "code": "KeyA",
+          "label": "Y"
+        },
+        "position": "WEST",
+        "category": "face",
+        "label": "Y",
+        "icon": {
+          "key": "switch-y",
+          "path": null,
+          "label": "Y"
+        }
+      },
+      {
+        "id": "slot:EAST",
+        "binding": {
+          "type": "keyboard",
+          "code": "KeyD",
+          "label": "A"
+        },
+        "position": "EAST",
+        "category": "face",
+        "label": "A",
+        "icon": {
+          "key": "switch-a",
+          "path": null,
+          "label": "A"
+        }
+      },
+      {
+        "id": "slot:SOUTH",
+        "binding": {
+          "type": "keyboard",
+          "code": "KeyS",
+          "label": "B"
+        },
+        "position": "SOUTH",
+        "category": "face",
+        "label": "B",
+        "icon": {
+          "key": "switch-b",
+          "path": null,
+          "label": "B"
+        }
+      },
+      {
+        "id": "slot:LEFT_SHOULDER",
+        "binding": {
+          "type": "keyboard",
+          "code": "KeyQ",
+          "label": "L"
+        },
+        "position": "LEFT_SHOULDER",
+        "category": "shoulder",
+        "label": "L",
+        "icon": {
+          "key": "switch-l",
+          "path": null,
+          "label": "L"
+        }
+      },
+      {
+        "id": "slot:RIGHT_SHOULDER",
+        "binding": {
+          "type": "keyboard",
+          "code": "KeyE",
+          "label": "R"
+        },
+        "position": "RIGHT_SHOULDER",
+        "category": "shoulder",
+        "label": "R",
+        "icon": {
+          "key": "switch-r",
+          "path": null,
+          "label": "R"
+        }
+      },
+      {
+        "id": "slot:LEFT_TRIGGER",
+        "binding": {
+          "type": "keyboard",
+          "code": "Digit1",
+          "label": "ZL"
+        },
+        "position": "LEFT_TRIGGER",
+        "category": "trigger",
+        "label": "ZL",
+        "icon": {
+          "key": "switch-zl",
+          "path": null,
+          "label": "ZL"
+        }
+      },
+      {
+        "id": "slot:RIGHT_TRIGGER",
+        "binding": {
+          "type": "keyboard",
+          "code": "Digit2",
+          "label": "ZR"
+        },
+        "position": "RIGHT_TRIGGER",
+        "category": "trigger",
+        "label": "ZR",
+        "icon": {
+          "key": "switch-zr",
+          "path": null,
+          "label": "ZR"
+        }
+      },
+      {
+        "id": "slot:LEFT_PADDLE1",
+        "binding": {
+          "type": "keyboard",
+          "code": "Digit3",
+          "label": "GL"
+        },
+        "position": "LEFT_PADDLE1",
+        "category": "shoulder",
+        "label": "GL",
+        "icon": {
+          "key": "switch-gl",
+          "path": null,
+          "label": "GL"
+        }
+      },
+      {
+        "id": "slot:RIGHT_PADDLE1",
+        "binding": {
+          "type": "keyboard",
+          "code": "Digit4",
+          "label": "GR"
+        },
+        "position": "RIGHT_PADDLE1",
+        "category": "shoulder",
+        "label": "GR",
+        "icon": {
+          "key": "switch-gr",
+          "path": null,
+          "label": "GR"
+        }
+      },
+      {
+        "id": "slot:LEFT_STICK",
+        "binding": {
+          "type": "keyboard",
+          "code": "KeyZ",
+          "label": "L3"
+        },
+        "position": "LEFT_STICK",
+        "category": "stick",
+        "label": "L3",
+        "icon": {
+          "key": "switch-ls",
+          "path": null,
+          "label": "L3"
+        }
+      },
+      {
+        "id": "slot:RIGHT_STICK",
+        "binding": {
+          "type": "keyboard",
+          "code": "KeyX",
+          "label": "R3"
+        },
+        "position": "RIGHT_STICK",
+        "category": "stick",
+        "label": "R3",
+        "icon": {
+          "key": "switch-rs",
+          "path": null,
+          "label": "R3"
+        }
+      }
+    ]
+  }
+}

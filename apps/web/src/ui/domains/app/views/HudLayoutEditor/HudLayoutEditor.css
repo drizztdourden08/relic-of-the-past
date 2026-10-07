@@ -1,0 +1,230 @@
+/* @layer renderer-components @kind style */
+
+/* The editor is a full page now, reached from the Advanced menu, so it fills
+   whatever the layer gives it instead of floating over another screen. */
+.hud-editor-portal {
+  height: 100%;
+  min-height: 0;
+}
+
+/* Toolbar across the top, with the outline, stage and inspector columns under it.
+   The rails are fixed and the stage takes the rest, because the stage is the
+   thing whose proportions are being judged and it must not jump when a panel
+   beside it grows a row. */
+.hud-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  min-width: 0;
+  height: 100%;
+  min-height: 0;
+}
+
+.hud-editor__body {
+  display: flex;
+  gap: var(--space-md);
+  align-items: stretch;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Width is set inline, in px, from `hud-editor-view-store`'s own
+   `outlineWidth`/`inspectorWidth`. The seam's drag previews straight onto
+   this element's own `style.width` and commits to the store on release, so
+   there is nothing left for this rule to fix. `scrollbar-gutter: stable`
+   reserves the thumb's own width whether or not this rail is tall enough to
+   need one right now, so the scrolling content's padding never runs under it
+   and back out again as the panel's height changes. */
+.hud-editor__rail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  flex: none;
+  min-height: 0;
+  padding: 0 var(--space-xs);
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+/* The stage keeps the play field's aspect at whatever width it is given, so on a
+   short window it can end up taller than the panel. Scrolling the column is the
+   guard: an element pushed past the fold stays reachable instead of being
+   silently unclickable, which is what stranded the bottom-left wallet. */
+.hud-editor__stage-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+/* ── the editor's own global settings (§55) ── */
+
+/* UNDER THE PREVIEW, IN THE CENTRE COLUMN. The maintainer asked for it there:
+   "that setting should be in a global settings at the bottom of the layout
+   preview (bottom center column)". `margin-top: auto` pins it to the bottom of
+   the column however tall the stage above it is, so it reads as the column's
+   footer instead of one more thing under the hint.
+
+   A RULE, NOT A CARD. Same reasoning as `.hud-subsec`: a line says "a different
+   kind of thing starts here" for one pixel, where a bordered box costs eight of
+   padding on four sides and another frame to look past. */
+.hud-editor__globals {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+  margin-top: auto;
+  padding-top: var(--space-xs);
+  border-top: var(--border-width-thin) solid var(--c-border);
+}
+
+/* The track is intrinsically sized, so the label does not stretch away from it
+   the way `.segmented`'s own `space-between` would across the whole column. */
+.hud-editor__globals > .segmented {
+  flex: 0 0 auto;
+  gap: var(--space-xs);
+}
+
+
+.hud-editor__label {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semi);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--c-text-muted);
+}
+
+.hud-editor__hint {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+/* ── stage ── */
+.hud-editor-stage {
+  position: relative;
+  width: 100%;
+  background: var(--color-bg-deep);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.hud-editor-stage__grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: var(--opacity-faint);
+  background-image:
+    linear-gradient(to right, var(--c-border-strong) var(--border-width-thin), transparent var(--border-width-thin)),
+    linear-gradient(to bottom, var(--c-border-strong) var(--border-width-thin), transparent var(--border-width-thin));
+}
+
+/* ── the layout list ── */
+.hud-editor-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.hud-editor-list__row {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: baseline;
+  width: 100%;
+  padding: var(--space-2xs) var(--space-xs);
+  background: var(--color-surface-inset);
+  border: var(--border-width-thin) solid transparent;
+  border-radius: var(--radius-sm);
+  text-align: left;
+  cursor: pointer;
+}
+
+.hud-editor-list__row:hover {
+  background: var(--color-surface-hover);
+}
+
+.hud-editor-list__row:focus-visible {
+  outline: var(--border-width-thick) solid var(--c-gold);
+  outline-offset: var(--space-2xs);
+}
+
+.hud-editor-list__row.is-selected {
+  border-color: var(--c-gold);
+  background: var(--color-surface-selected);
+}
+
+.hud-editor-list__name {
+  flex: 1;
+  font-size: var(--text-sm);
+  color: var(--c-text);
+}
+
+.hud-editor-list__kind,
+.hud-editor-list__hidden {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+.hud-editor-list__hidden {
+  color: var(--c-warning);
+}
+
+/* ── glyph packs ── */
+.hud-editor-packs,
+.hud-editor-packs__custom {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.hud-editor-packs__row {
+  display: flex;
+  gap: var(--space-2xs);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.hud-editor-packs__chip {
+  padding: var(--space-2xs) var(--space-xs);
+  background: var(--color-surface-inset);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  cursor: pointer;
+}
+
+.hud-editor-packs__chip:focus-visible {
+  outline: var(--border-width-thick) solid var(--c-gold);
+  outline-offset: var(--space-2xs);
+}
+
+.hud-editor-packs__chip.is-selected {
+  border-color: var(--c-gold);
+  color: var(--c-gold-bright);
+}
+
+.hud-editor-packs__chip.is-custom {
+  border-style: dashed;
+}
+
+.hud-editor-packs__override {
+  display: flex;
+  gap: var(--space-2xs);
+  align-items: center;
+  padding-left: var(--space-xs);
+  background: var(--color-surface-inset);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.hud-editor-presets__actions {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}

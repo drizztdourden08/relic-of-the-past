@@ -47,11 +47,13 @@ const useSearchStore = create<SearchStore>((set) => ({
 
 /** Tab + anchor for every setting a DisabledOverlay can deep-link to, keyed by the setting's
  *  GameSettings key, so every overlay (widgets, Controls bindings, locked settings controls)
- *  lands on the same spot for a given cause. Both entries currently point at the same tab
- *  because both toggles live in Gameplay settings; a future gate can point elsewhere. */
+ *  lands on the same spot for a given cause. The two Gameplay toggles share a tab; the HUD
+ *  style lives on its own. */
 const SETTINGS_TARGETS: Record<string, { tab: string; anchor: string }> = {
   vanillaSafe: { tab: 'gameplay', anchor: 'vanillaSafe' },
   cheatsEnabled: { tab: 'gameplay', anchor: 'cheatsEnabled' },
+  // The Modern control scheme IS the Modern HUD style, so the Controls tab's banner links here.
+  hudStyle: { tab: 'hud', anchor: 'hudStyle' },
 };
 
 /**

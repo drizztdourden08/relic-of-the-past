@@ -1,0 +1,60 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * A grabbable seam between two flex siblings. It is a thin hit target with a
+ * thinner line centred inside it, drawn AT REST and under the cursor
+ * (a boundary is a standing fact, not something to go looking for). Hover and
+ * drag intensify the same line instead of conjuring a second one. It is the same
+ * choice `DataTable`'s own column-resize handle makes, which this primitive
+ * was lifted out of (`composites/DataTable/sub-components/ColumnResizeHandle.css`).
+ *
+ * It is a real flex child (`flex: none`), not absolutely positioned over a
+ * shared gutter, because the layouts this primitive resizes (an editor's side
+ * panels) have no grid track to hang off, unlike `DataTable`'s header row.
+ */
+.ds-resize-handle {
+  position: relative;
+  flex: none;
+  touch-action: none;
+}
+
+.ds-resize-handle[data-axis='horizontal'] {
+  width: var(--space-sm);
+  cursor: col-resize;
+}
+
+.ds-resize-handle[data-axis='vertical'] {
+  height: var(--space-sm);
+  cursor: row-resize;
+}
+
+.ds-resize-handle::after {
+  content: '';
+  position: absolute;
+  background: var(--c-border);
+  transition: background var(--duration-fast) var(--ease-standard);
+}
+
+.ds-resize-handle[data-axis='horizontal']::after {
+  top: var(--space-xs);
+  bottom: var(--space-xs);
+  left: 50%;
+  width: var(--border-width-thick);
+  transform: translateX(-50%);
+}
+
+.ds-resize-handle[data-axis='vertical']::after {
+  top: 50%;
+  left: var(--space-xs);
+  right: var(--space-xs);
+  height: var(--border-width-thick);
+  transform: translateY(-50%);
+}
+
+.ds-resize-handle:hover::after {
+  background: var(--c-gold-dim);
+}
+
+.ds-resize-handle--active::after {
+  background: var(--c-gold-bright);
+}

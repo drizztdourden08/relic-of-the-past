@@ -1339,7 +1339,8 @@ static const uint32 kGateWordParityMask[kGateWordCount] = {
   kFeatures2_FixPortalMusicRestart | kFeatures2_IcePortalRevealChime |
   kFeatures2_WidescreenLinkHideViaOffscreenY | kFeatures2_SaveMenuLockoutAfterMedallionFix |
   kFeatures2_FixBunnyPaletteAfterMap |
-  kFeatures2_WidescreenPlayArea | kFeatures2_WidescreenIdleAI | kFeatures2_TitleOverride,
+  kFeatures2_WidescreenPlayArea | kFeatures2_WidescreenIdleAI | kFeatures2_TitleOverride |
+  kFeatures2_HostMenu | kFeatures2_ModernControls,
 
   // features3: cheats (the master + all four per-category permission bits), the randomizer item-override
   // table, tracker notifications, the custom player sprite/palette, and the HUD override all diverge
@@ -1393,6 +1394,16 @@ static void GateWordSideEffects(int i, uint32 wanted) {
   // teardown is the opposite case and runs before the write, in GateWordTeardown below.
   if (i == 3 && !(wanted & kFeatures3_HudOverride))
     HudOverride_Restore();
+
+  // Same reason, and the reason is sharper here than for the HUD masks: HostMenu_Restore clamps
+  // hud_cur_item back to an id the 21-entry lookup understands and then re-derives current_item_y
+  // through Hud_LookupInventoryItem — which picks its table from this very gate. Run before the
+  // write and it would re-derive against the 24-entry table it is trying to get off, landing the
+  // new-style value it exists to remove. Dropping the hold has no ordering requirement either way:
+  // GameHook_HostMenuHolds re-reads the gate every frame, so the hold is already released by the
+  // time this runs.
+  if (i == 2 && !(wanted & kFeatures2_HostMenu))
+    HostMenu_Restore();
 }
 
 // Undo for bits that are about to CLEAR, run while the OLD word is still in WRAM, i.e. while the gate

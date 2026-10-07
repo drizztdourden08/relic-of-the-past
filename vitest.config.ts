@@ -7,6 +7,12 @@ export default defineConfig({
     include: ['tests/**/*.test.ts'],
     exclude: ['**/node_modules/**', '**/dist/**'],
     globals: true,
+    // The default 5s is a measure of how loaded the machine is, not of whether a
+    // test is correct. Two dataset suites render every screen in the record set
+    // and finish in about two seconds alone; the moment a jsdom suite runs
+    // alongside them they cross five and fail for no reason of their own. Raised
+    // so the number is a real hang, not a busy CPU.
+    testTimeout: 20000,
   },
   resolve: {
     alias: {

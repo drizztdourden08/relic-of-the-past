@@ -11,6 +11,7 @@ import { controllerInputStore } from './controller-input-store';
 import type { ControllerInputState, DeviceStickCalibration } from './controller-input-store';
 import { profileFromPreset } from './profile-utils';
 import { connectedGamepadKeys } from './input-manager-events';
+import { rebuildSchemeBindings } from './scheme-runtime';
 import type { InputManager } from './input-manager';
 
 const startInput = (m: InputManager): void => {
@@ -128,6 +129,10 @@ const refreshDevicesImpl = (m: InputManager): void => {
   listControllerDevices()
     .then(deviceEntries => {
       m.hidDeviceCache = deviceEntries;
+      // The modern scheme derives its slots from what SDL reports, and the snapshot arrives
+      // after the profile is set. Without this, a pad profile keeps the null bindings it
+      // resolved to on the frame it was applied and the modern scheme never engages.
+      rebuildSchemeBindings(m.activeProfile, deviceEntries);
       const updated = detectAllDevices(deviceEntries);
       if (JSON.stringify(updated) !== JSON.stringify(m.devices)) {
         m.devices = updated;

@@ -1,0 +1,37 @@
+/* @layer renderer-components @kind style */
+
+/* A CAP, NOT TEXT IN BRACKETS. The bottom border is thicker than the other
+   three, which is the whole trick: one extra pixel under the label reads as the
+   side wall of a physical key, and it is what separates a cap from an inline
+   code span at a glance. */
+.keycap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  line-height: 1;
+  color: var(--c-text);
+  white-space: nowrap;
+  vertical-align: middle;
+  background: var(--c-surface);
+  border: var(--border-width-thin) solid var(--c-border-strong);
+  border-bottom-width: 2px;
+  border-radius: var(--r-sm);
+}
+
+/* Square-ish whatever the label: a one-glyph cap (`⇧`) and a four-glyph one
+   (`Ctrl`) have to sit on the same baseline in the same strip, so the height is
+   fixed and only the width grows. */
+.keycap--sm {
+  min-width: 18px;
+  height: 16px;
+  padding: 0 var(--space-xs);
+  font-size: var(--text-xs);
+}
+
+.keycap--md {
+  min-width: 24px;
+  height: 22px;
+  padding: 0 var(--space-xs);
+  font-size: var(--text-sm);
+}

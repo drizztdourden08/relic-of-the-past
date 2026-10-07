@@ -10,9 +10,20 @@ import type { FamilyMetadata } from './family.type';
 const XBOX_FAMILY: FamilyMetadata = {
   types: ['xbox360', 'xboxone'],
   brandLogoKey: 'xbox',
-  // Face/d-pad/shoulder labels come from SDL's own per-device label; these
-  // cover positions SDL does not label at all (system buttons, stick clicks).
+  // The face buttons are named here instead of left to SDL's live label,
+  // because buttonIcons below already commits this family to the layout.
+  // SOUTH draws xbox_button_a.svg, so SOUTH is A, and the label is the same
+  // fact as the icon. Every reader with no live device to ask (a saved binding
+  // for an unplugged pad, buildConsoleDefaultMappings, the synthetic profile
+  // buildDeviceProfileFromSdlType builds) would otherwise fall through to
+  // generic's "Button 1 (South)" beside the correct A glyph. D-pad and
+  // shoulders still come from the chain: generic's "D-Pad Up" and "Left Bumper"
+  // are what this pad is printed with.
   buttonLabels: {
+    SOUTH: 'A',
+    EAST: 'B',
+    WEST: 'X',
+    NORTH: 'Y',
     LEFT_STICK: 'L Stick',
     RIGHT_STICK: 'R Stick',
     BACK: 'View',
@@ -56,6 +67,11 @@ const XBOX_FAMILY: FamilyMetadata = {
     LEFT_TRIGGER: 'xbox-lt',
     RIGHT_TRIGGER: 'xbox-rt',
   },
+  // Movement's DEFAULT is the left stick, not these four d-pad entries: the
+  // stick half lives once on the generic family (axisConsoleDefaults), which
+  // is the terminal fallback in this chain, so it applies here without being
+  // repeated. The d-pad entries below are movement's second binding, since a pad
+  // moves on both out of the box. They also feed the glyph packs' layout.
   consoleDefaults: {
     SOUTH: 'A',
     EAST: 'B',

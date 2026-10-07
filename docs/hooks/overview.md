@@ -14,7 +14,7 @@ game fires out to JS. If you want to read or drive the running game, this is the
 flowchart LR
     JS["JS bridge & renderer"]
     C["C game core (WASM)"]
-    JS -->|"ccall('Wasm...') · 79 exports · JS drives/reads"| C
+    JS -->|"ccall('Wasm...') · 85 exports · JS drives/reads"| C
     C -->|"EM_ASM(window.__on...) · 3 events · game notifies JS"| JS
 ```
 
@@ -57,7 +57,7 @@ Full procedure: the `add-wasm-function` skill and [Contributing → Adding a WAS
 > `--dump-*`) instead of the interactive renderer, so they have no renderer `ccall` by design and
 > dead-code sweeps should not flag them.
 
-## The catalogue (79 exports, by category)
+## The catalogue (85 exports, by category)
 
 | Category | Count | Page | Source |
 |----------|------:|------|--------|
@@ -70,6 +70,7 @@ Full procedure: the `add-wasm-function` skill and [Contributing → Adding a WAS
 | Audio | 3 | [→](audio.md) | `emscripten_api.c` |
 | Save / Load / I-O | 7 | [→](save-load-io.md) | `emscripten_io.c` |
 | Item Overrides | 2 | [→](item-overrides.md) | `item_overrides.c` |
+| Host Menu & Gear | 6 | [→](host-menu.md) | `host_menu.c`, `host_menu_gear.c` |
 | **C→JS callbacks** | 14 | [→](callbacks.md) | `haptic_events.c`, `game_hooks.c`, `check_triggers.c`, `item_overrides.c`, `cheats.c` |
 
 ## Conventions used on every page

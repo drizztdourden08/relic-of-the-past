@@ -80,7 +80,9 @@ const FileRow = (props: FileRowProps) => {
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>): void => {
     if (event.key === 'Enter') event.currentTarget.blur();
-    else if (event.key === 'Escape') { cancelled.current = true; event.currentTarget.blur(); }
+    // preventDefault marks the key consumed here: abandoning a rename must not
+    // also close the page this row is on.
+    else if (event.key === 'Escape') { event.preventDefault(); cancelled.current = true; event.currentTarget.blur(); }
   };
 
   const loopText = loopSeconds === undefined ? UNKNOWN : loopSeconds === null ? 'none' : clock(loopSeconds);

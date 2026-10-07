@@ -26,9 +26,26 @@ const ADDR_SHIELD_PALETTE = 0x9bd648;
 /** Player armor palette (Green Mail = armor 0, 15 colors) */
 const ADDR_ARMOR_PALETTE = 0x9bd308;
 
+// ─── Background palette addresses ──────────────────────────────────────────
+/** Indoor background palettes: 90 words per set (6 rows × 15 colors) */
+const ADDR_DUNGEON_BG_MAIN = 0x9bd734;
+
+/** Outdoor background main palettes: 35 words per mode (5 rows × 7 colors) */
+const ADDR_OVERWORLD_BG_MAIN = 0x9be6c8;
+
+/** Outdoor background auxiliary palettes: 21 words per index (3 rows × 7 colors) */
+const ADDR_OVERWORLD_BG_AUX12 = 0x9be86c;
+
+/** Outdoor background third auxiliary palette: 7 words per index (one row) */
+const ADDR_OVERWORLD_BG_AUX3 = 0x9be604;
+
 export {
   ADDR_ARMOR_PALETTE,
+  ADDR_DUNGEON_BG_MAIN,
   ADDR_HUD_PALETTE,
+  ADDR_OVERWORLD_BG_AUX12,
+  ADDR_OVERWORLD_BG_AUX3,
+  ADDR_OVERWORLD_BG_MAIN,
   ADDR_SHIELD_PALETTE,
   ADDR_SPRITE_PALETTE_AUX1,
   ADDR_SPRITE_PALETTE_AUX3,

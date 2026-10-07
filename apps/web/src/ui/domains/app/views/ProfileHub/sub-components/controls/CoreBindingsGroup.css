@@ -1,0 +1,31 @@
+/* @layer renderer-components @kind style */
+.core-bindings {
+  display: flex;
+  flex-direction: column;
+}
+
+.core-bindings__group-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-md) var(--space-2xs);
+  border-top: 1px solid var(--c-border);
+}
+
+.core-bindings__group:first-child .core-bindings__group-head {
+  border-top: none;
+}
+
+.core-bindings__group-title {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semi);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--c-gold-bright);
+  white-space: nowrap;
+}
+
+.core-bindings__group-hint {
+  color: var(--c-text-muted);
+  line-height: var(--leading-tight);
+}

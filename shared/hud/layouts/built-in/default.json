@@ -1,0 +1,935 @@
+{
+  "id": "default",
+  "name": "Default",
+  "builtIn": true,
+  "$comment": "The shipped baseline. Vitals top-left, wallet in the bottom-left legend band, the button cluster in the one corner the play field rarely needs. Re-authored from shared/hud/presets/*.json (phase 5, plans/hud-data-binding.html) - every vitals/wallet node below is an ordinary expanded subtree, not a special element kind.",
+  "screen": {
+    "$comment": "The screen itself. Always exactly the view; give it a background and the whole HUD sits on one.",
+    "id": "screen",
+    "kind": "container",
+    "layout": "grid",
+    "columns": [
+      "auto",
+      "fill",
+      "auto"
+    ],
+    "rows": [
+      "auto",
+      "fill",
+      "auto"
+    ],
+    "justifyItems": "start",
+    "alignItems": "start",
+    "children": [
+      {
+        "kind": "container",
+        "id": "vitals",
+        "direction": "row",
+        "gap": { "x": 6, "y": 6 },
+        "align": "start",
+        "$comment": "THE COUNTS ARE A SECOND COLUMN, not a third row: stacked three deep the vitals reach y74 and the pause panels start at y56, and the column has eight px of slack in total.",
+        "margin": {
+          "left": 8,
+          "top": 6
+        },
+        "children": [
+          {
+            "kind": "container",
+            "id": "vitals-column",
+            "direction": "column",
+            "gap": { "x": 6, "y": 6 },
+            "children": [
+              {
+                "kind": "container",
+                "id": "hearts",
+                "direction": "row",
+                "wrap": true,
+                "$comment": "Ten hearts wide, wrapping - the same 80px lane HudLife always reserved. Each heart is a shape (a curved vector fill, not a sprite swap - see hud-shape.ts) so its fill reads continuously, exactly like the drawing it replaces.",
+                "size": {
+                  "w": {
+                    "px": 80
+                  }
+                },
+                "children": [
+                  {
+                    "kind": "element",
+                    "id": "heart",
+                    "element": {
+                      "type": "repeat",
+                      "count": {
+                        "from": "data",
+                        "expr": "ceil(life_max / 8)"
+                      },
+                      "item": "min(max(life_current - index * 8, 0), 8) / 8",
+                      "child": {
+                        "kind": "element",
+                        "id": "heart-shape",
+                        "element": {
+                          "type": "shape",
+                          "shape": "heart",
+                          "fill": {
+                            "from": "data",
+                            "expr": "item"
+                          },
+                          "armor": {
+                            "from": "data",
+                            "expr": "armor"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "kind": "element",
+                "id": "magic-bar",
+                "$comment": "80x16 reserved at every value, per HudMagicBar.constants.ts - the bar's own length is the value, drawn by the shape leaf, not a sprite, because the rounded frame and its banded sheen are not a sprite/tint composition.",
+                "element": {
+                  "type": "shape",
+                  "shape": "magic-bar",
+                  "fill": {
+                    "from": "data",
+                    "expr": "magic_current / magic_max"
+                  },
+                  "bands": {
+                    "from": "data",
+                    "expr": "half_magic + 1"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "kind": "container",
+            "id": "consumables",
+            "direction": "column",
+            "$comment": "Bomb, arrow, key - stacked with no gap, each row exactly 8px tall (three of them is the old CONSUMABLES_SIZE.h = 24).",
+            "children": [
+              {
+                "kind": "container",
+                "id": "bomb-indicator",
+                "direction": "row",
+                "align": "center",
+                "$comment": "Same shape as arrow-indicator - a different sprite and gutter offset (BOMB_ICON.inkRight=11, margin.left = 12-11 = 1) and a different variable.",
+                "children": [
+                  {
+                    "kind": "container",
+                    "id": "bomb-gutter",
+                    "size": {
+                      "w": {
+                        "px": 12
+                      },
+                      "h": {
+                        "px": 8
+                      }
+                    },
+                    "layout": "grid",
+                    "columns": [
+                      "auto"
+                    ],
+                    "rows": [
+                      "auto"
+                    ],
+                    "justifyItems": "start",
+                    "alignItems": "start",
+                    "children": [
+                      {
+                        "kind": "element",
+                        "id": "bomb-icon",
+                        "margin": {
+                          "left": 1
+                        },
+                        "element": {
+                          "type": "sprite",
+                          "file": "hud-bomb-icon",
+                          "box": {
+                            "w": 16,
+                            "h": 8
+                          }
+                        },
+                        "place": {
+                          "column": 1,
+                          "row": 1
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "element",
+                    "id": "bomb-gap",
+                    "size": {
+                      "w": {
+                        "px": 2
+                      },
+                      "h": {
+                        "px": 8
+                      }
+                    },
+                    "element": {
+                      "type": "spacer"
+                    }
+                  },
+                  {
+                    "kind": "element",
+                    "id": "bomb-count",
+                    "element": {
+                      "type": "text",
+                      "value": {
+                        "from": "data",
+                        "expr": "bomb_current"
+                      },
+                      "format": {
+                        "digits": 2,
+                        "pad": "zero"
+                      },
+                      "face": {
+                        "from": "sprite",
+                        "set": "hud-digits"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "kind": "container",
+                "id": "arrow-indicator",
+                "direction": "row",
+                "align": "center",
+                "$comment": "Icon right-aligned in a 12px gutter by its own ink (HudConsumables.constants.ts's ARROW_ICON.inkRight=14, so margin.left = 12-14 = -2), then a 2px gap, then a zero-padded 2-digit counter - the exact geometry the compound it replaces measured. The icon switches to the silver-arrow art while that upgrade is owned, matching hasSilverArrows.",
+                "children": [
+                  {
+                    "kind": "container",
+                    "id": "arrow-gutter",
+                    "size": {
+                      "w": {
+                        "px": 12
+                      },
+                      "h": {
+                        "px": 8
+                      }
+                    },
+                    "layout": "grid",
+                    "columns": [
+                      "auto"
+                    ],
+                    "rows": [
+                      "auto"
+                    ],
+                    "justifyItems": "start",
+                    "alignItems": "start",
+                    "children": [
+                      {
+                        "kind": "element",
+                        "id": "arrow-icon",
+                        "element": {
+                          "type": "switch",
+                          "cases": [
+                            {
+                              "when": "silver_arrows",
+                              "node": {
+                                "kind": "element",
+                                "id": "arrow-icon-silver",
+                                "margin": {
+                                  "left": -2
+                                },
+                                "element": {
+                                  "type": "sprite",
+                                  "file": "hud-silver-arrow-icon",
+                                  "box": {
+                                    "w": 16,
+                                    "h": 8
+                                  }
+                                }
+                              }
+                            }
+                          ],
+                          "otherwise": {
+                            "kind": "element",
+                            "id": "arrow-icon-normal",
+                            "margin": {
+                              "left": -2
+                            },
+                            "element": {
+                              "type": "sprite",
+                              "file": "hud-arrow-icon",
+                              "box": {
+                                "w": 16,
+                                "h": 8
+                              }
+                            }
+                          }
+                        },
+                        "place": {
+                          "column": 1,
+                          "row": 1
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "element",
+                    "id": "arrow-gap",
+                    "size": {
+                      "w": {
+                        "px": 2
+                      },
+                      "h": {
+                        "px": 8
+                      }
+                    },
+                    "element": {
+                      "type": "spacer"
+                    }
+                  },
+                  {
+                    "kind": "element",
+                    "id": "arrow-count",
+                    "element": {
+                      "type": "text",
+                      "value": {
+                        "from": "data",
+                        "expr": "arrow_current"
+                      },
+                      "format": {
+                        "digits": 2,
+                        "pad": "zero"
+                      },
+                      "face": {
+                        "from": "sprite",
+                        "set": "hud-digits"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "kind": "element",
+                "id": "key-indicator",
+                "$comment": "Same shape again (KEY_ICON.inkRight=7, box 8x8, margin.left = 12-7 = 5), no max-yellow variant, and the row stays RESERVED at 30x8 even while the game hides the counter (key_current === 255) - the switch is the whole point of this preset over a plain row.",
+                "element": {
+                  "type": "switch",
+                  "cases": [
+                    {
+                      "when": "key_current == 255",
+                      "node": {
+                        "kind": "element",
+                        "id": "key-hidden",
+                        "size": {
+                          "w": {
+                            "px": 30
+                          },
+                          "h": {
+                            "px": 8
+                          }
+                        },
+                        "element": {
+                          "type": "spacer"
+                        }
+                      }
+                    }
+                  ],
+                  "otherwise": {
+                    "kind": "container",
+                    "id": "key-row",
+                    "direction": "row",
+                    "align": "center",
+                    "children": [
+                      {
+                        "kind": "container",
+                        "id": "key-gutter",
+                        "size": {
+                          "w": {
+                            "px": 12
+                          },
+                          "h": {
+                            "px": 8
+                          }
+                        },
+                        "layout": "grid",
+                        "columns": [
+                          "auto"
+                        ],
+                        "rows": [
+                          "auto"
+                        ],
+                        "justifyItems": "start",
+                        "alignItems": "start",
+                        "children": [
+                          {
+                            "kind": "element",
+                            "id": "key-icon",
+                            "margin": {
+                              "left": 5
+                            },
+                            "element": {
+                              "type": "sprite",
+                              "file": "hud-key-icon",
+                              "box": {
+                                "w": 8,
+                                "h": 8
+                              }
+                            },
+                            "place": {
+                              "column": 1,
+                              "row": 1
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "element",
+                        "id": "key-gap",
+                        "size": {
+                          "w": {
+                            "px": 2
+                          },
+                          "h": {
+                            "px": 8
+                          }
+                        },
+                        "element": {
+                          "type": "spacer"
+                        }
+                      },
+                      {
+                        "kind": "element",
+                        "id": "key-count",
+                        "element": {
+                          "type": "text",
+                          "value": {
+                            "from": "data",
+                            "expr": "key_current"
+                          },
+                          "format": {
+                            "digits": 2,
+                            "pad": "zero"
+                          },
+                          "face": {
+                            "from": "sprite",
+                            "set": "hud-digits"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "place": {
+          "column": 1,
+          "row": 1
+        }
+      },
+      {
+        "kind": "container",
+        "id": "wallet-region",
+        "direction": "row",
+        "$comment": "flush with the bottom edge - the wallet sits IN the pause legend band, on its own plate, because a 16px element does not fit in the 8px above it",
+        "margin": {
+          "left": 8,
+          "bottom": 0
+        },
+        "children": [
+          {
+            "kind": "container",
+            "id": "wallet",
+            "direction": "row",
+            "align": "center",
+            "$comment": "48x16 reserved (16 icon + up to 4 digits at 8px), matching WALLET_SIZE - the digit count switches with the wallet tier (rupee_max above 999 once the upgrade is owned), exactly as HudWallet always computed it.",
+            "size": {
+              "w": {
+                "px": 48
+              },
+              "h": {
+                "px": 16
+              }
+            },
+            "children": [
+              {
+                "kind": "element",
+                "id": "wallet-icon",
+                "element": {
+                  "type": "sprite",
+                  "file": "hud-wallet"
+                }
+              },
+              {
+                "kind": "element",
+                "id": "wallet-count",
+                "element": {
+                  "type": "switch",
+                  "cases": [
+                    {
+                      "when": "rupee_max > 999",
+                      "node": {
+                        "kind": "element",
+                        "id": "wallet-count-4",
+                        "element": {
+                          "type": "text",
+                          "value": {
+                            "from": "data",
+                            "expr": "rupee_current"
+                          },
+                          "format": {
+                            "digits": 4,
+                            "pad": "zero"
+                          },
+                          "face": {
+                            "from": "sprite",
+                            "set": "hud-digits"
+                          }
+                        }
+                      }
+                    }
+                  ],
+                  "otherwise": {
+                    "kind": "element",
+                    "id": "wallet-count-3",
+                    "element": {
+                      "type": "text",
+                      "value": {
+                        "from": "data",
+                        "expr": "rupee_current"
+                      },
+                      "format": {
+                        "digits": 3,
+                        "pad": "zero"
+                      },
+                      "face": {
+                        "from": "sprite",
+                        "set": "hud-digits"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "place": {
+          "column": 1,
+          "row": 3
+        },
+        "alignSelf": "end",
+        "justifySelf": "start"
+      },
+      {
+        "kind": "container",
+        "id": "buttons",
+        "direction": "row",
+        "gap": { "x": 4, "y": 4 },
+        "align": "center",
+        "$comment": "the gap is measured between the two groups CELL boxes; the face group reserves its item reach on the outer edge only, so the east item hangs into the gap instead of a sprite width of empty grass sitting in it",
+        "margin": {
+          "top": 8,
+          "right": 8
+        },
+        "children": [
+          {
+            "kind": "container",
+            "id": "face-group",
+            "$comment": "four discs in a diamond at a half-span of 12; each item points radially outward, 10px off its own glyph box, so no sprite ever travels toward a neighbour",
+            "padding": {
+              "left": 10,
+              "top": 10,
+              "bottom": 10
+            },
+            "layout": "grid",
+            "columns": [
+              "auto"
+            ],
+            "rows": [
+              "auto"
+            ],
+            "justifyItems": "start",
+            "alignItems": "start",
+            "children": [
+              {
+                "kind": "container",
+                "id": "face-south",
+                "$comment": "the button box is the GLYPH box; the item hangs off it, so the diamond is never opened up by a sprite that may not even be there",
+                "size": {
+                  "w": {
+                    "px": 16
+                  },
+                  "h": {
+                    "px": 16
+                  }
+                },
+                "margin": {
+                  "left": 12,
+                  "top": 24
+                },
+                "layout": "grid",
+                "columns": [
+                  "auto"
+                ],
+                "rows": [
+                  "auto"
+                ],
+                "justifyItems": "start",
+                "alignItems": "start",
+                "children": [
+                  {
+                    "kind": "element",
+                    "id": "face-south-glyph",
+                    "element": {
+                      "type": "glyph",
+                      "slot": 4
+                    },
+                    "dimWhenEmpty": [
+                      4
+                    ],
+                    "place": {
+                      "column": 1,
+                      "row": 1
+                    }
+                  },
+                  {
+                    "kind": "element",
+                    "id": "face-south-item",
+                    "element": {
+                      "type": "slot",
+                      "index": 4
+                    },
+                    "margin": {
+                      "top": 10
+                    },
+                    "place": {
+                      "column": 1,
+                      "row": 1
+                    }
+                  }
+                ],
+                "place": {
+                  "column": 1,
+                  "row": 1
+                }
+              },
+              {
+                "kind": "container",
+                "id": "face-east",
+                "$comment": "the button box is the GLYPH box; the item hangs off it, so the diamond is never opened up by a sprite that may not even be there",
+                "size": {
+                  "w": {
+                    "px": 16
+                  },
+                  "h": {
+                    "px": 16
+                  }
+                },
+                "margin": {
+                  "left": 24,
+                  "top": 12
+                },
+                "layout": "grid",
+                "columns": [
+                  "auto"
+                ],
+                "rows": [
+                  "auto"
+                ],
+                "justifyItems": "start",
+                "alignItems": "start",
+                "children": [
+                  {
+                    "kind": "element",
+                    "id": "face-east-glyph",
+                    "element": {
+                      "type": "glyph",
+                      "slot": 3
+                    },
+                    "dimWhenEmpty": [
+                      3
+                    ],
+                    "place": {
+                      "column": 1,
+                      "row": 1
+                    }
+                  },
+                  {
+                    "kind": "element",
+                    "id": "face-east-item",
+                    "element": {
+                      "type": "slot",
+                      "index": 3
+                    },
+                    "margin": {
+                      "left": 10
+                    },
+                    "place": {
+                      "column": 1,
+                      "row": 1
+                    }
+                  }
+                ],
+                "place": {
+                  "column": 1,
+                  "row": 1
+                }
+              },
+              {
+                "kind": "container",
+                "id": "face-west",
+                "$comment": "the button box is the GLYPH box; the item hangs off it, so the diamond is never opened up by a sprite that may not even be there",
+                "size": {
+                  "w": {
+                    "px": 16
+                  },
+                  "h": {
+                    "px": 16
+                  }
+                },
+                "margin": {
+                  "top": 12
+                },
+                "layout": "grid",
+                "columns": [
+                  "auto"
+                ],
+                "rows": [
+                  "auto"
+                ],
+                "justifyItems": "start",
+                "alignItems": "start",
+                "children": [
+                  {
+                    "kind": "element",
+                    "id": "face-west-glyph",
+                    "element": {
+                      "type": "glyph",
+                      "slot": 2
+                    },
+                    "dimWhenEmpty": [
+                      2
+                    ],
+                    "place": {
+                      "column": 1,
+                      "row": 1
+                    }
+                  },
+                  {
+                    "kind": "element",
+                    "id": "face-west-item",
+                    "element": {
+                      "type": "slot",
+                      "index": 2
+                    },
+                    "margin": {
+                      "left": -10
+                    },
+                    "place": {
+                      "column": 1,
+                      "row": 1
+                    }
+                  }
+                ],
+                "place": {
+                  "column": 1,
+                  "row": 1
+                }
+              },
+              {
+                "kind": "container",
+                "id": "face-north",
+                "$comment": "the button box is the GLYPH box; the item hangs off it, so the diamond is never opened up by a sprite that may not even be there",
+                "size": {
+                  "w": {
+                    "px": 16
+                  },
+                  "h": {
+                    "px": 16
+                  }
+                },
+                "margin": {
+                  "left": 12
+                },
+                "layout": "grid",
+                "columns": [
+                  "auto"
+                ],
+                "rows": [
+                  "auto"
+                ],
+                "justifyItems": "start",
+                "alignItems": "start",
+                "children": [
+                  {
+                    "kind": "element",
+                    "id": "face-north-glyph",
+                    "element": {
+                      "type": "glyph",
+                      "slot": 1
+                    },
+                    "dimWhenEmpty": [
+                      1
+                    ],
+                    "place": {
+                      "column": 1,
+                      "row": 1
+                    }
+                  },
+                  {
+                    "kind": "element",
+                    "id": "face-north-item",
+                    "element": {
+                      "type": "slot",
+                      "index": 1
+                    },
+                    "margin": {
+                      "top": -10
+                    },
+                    "place": {
+                      "column": 1,
+                      "row": 1
+                    }
+                  }
+                ],
+                "place": {
+                  "column": 1,
+                  "row": 1
+                }
+              }
+            ]
+          },
+          {
+            "kind": "container",
+            "id": "dpad-group",
+            "$comment": "a d-pad direction has no glyph of its own, so its item IS its cell",
+            "layout": "grid",
+            "columns": [
+              "auto"
+            ],
+            "rows": [
+              "auto"
+            ],
+            "justifyItems": "start",
+            "alignItems": "start",
+            "children": [
+              {
+                "kind": "element",
+                "id": "dpad-glyph",
+                "$comment": "ONE cross for all four directions, 16 x 1.25 - slightly larger than a face disc and no larger - dimmed while none of the four fires anything",
+                "element": {
+                  "type": "glyph",
+                  "position": "DPAD"
+                },
+                "size": {
+                  "w": {
+                    "px": 20
+                  },
+                  "h": {
+                    "px": 20
+                  }
+                },
+                "margin": {
+                  "left": 16,
+                  "top": 16
+                },
+                "dimWhenEmpty": [
+                  5,
+                  6,
+                  7,
+                  8
+                ],
+                "place": {
+                  "column": 1,
+                  "row": 1
+                }
+              },
+              {
+                "kind": "element",
+                "id": "dpad-down-item",
+                "element": {
+                  "type": "slot",
+                  "index": 8
+                },
+                "margin": {
+                  "left": 18,
+                  "top": 36
+                },
+                "place": {
+                  "column": 1,
+                  "row": 1
+                }
+              },
+              {
+                "kind": "element",
+                "id": "dpad-right-item",
+                "element": {
+                  "type": "slot",
+                  "index": 7
+                },
+                "margin": {
+                  "left": 36,
+                  "top": 18
+                },
+                "place": {
+                  "column": 1,
+                  "row": 1
+                }
+              },
+              {
+                "kind": "element",
+                "id": "dpad-left-item",
+                "element": {
+                  "type": "slot",
+                  "index": 6
+                },
+                "margin": {
+                  "top": 18
+                },
+                "place": {
+                  "column": 1,
+                  "row": 1
+                }
+              },
+              {
+                "kind": "element",
+                "id": "dpad-up-item",
+                "element": {
+                  "type": "slot",
+                  "index": 5
+                },
+                "margin": {
+                  "left": 18
+                },
+                "place": {
+                  "column": 1,
+                  "row": 1
+                }
+              }
+            ]
+          }
+        ],
+        "place": {
+          "column": 3,
+          "row": 1
+        },
+        "justifySelf": "end"
+      },
+      {
+        "kind": "element",
+        "id": "countdown",
+        "$comment": "The digging game and Super Bomb countdown, where the Original style draws it: centred across the screen, its box 12 px above the bottom edge, which puts the pie's disc two HUD tiles up. It spans all nine cells so it sizes no band and moves nothing else, and it is not placed at all while nothing is counting (section 62).",
+        "element": {
+          "type": "countdown"
+        },
+        "place": {
+          "column": 1,
+          "row": 1,
+          "colSpan": 3,
+          "rowSpan": 3
+        },
+        "alignSelf": "end",
+        "justifySelf": "center",
+        "margin": {
+          "bottom": 12
+        }
+      }
+    ]
+  }
+}

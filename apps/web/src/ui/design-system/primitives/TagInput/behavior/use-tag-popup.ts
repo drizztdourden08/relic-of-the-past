@@ -10,7 +10,7 @@
  * and what dismisses it outright once the field has scrolled out of sight.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { dropPanelPositionFor, useAnchorTracking } from '../../Portal';
+import { dropPanelPositionFor, useAnchorTracking, useDismissable } from '../../Portal';
 
 /** Below this much room underneath, flipping above is worth considering. */
 const ROOM_FOR_DROP_DOWN = 220;
@@ -62,16 +62,7 @@ const useTagPopup = (disabled: boolean) => {
     return () => document.removeEventListener('mousedown', handler);
   }, [open]);
 
-  useEffect(() => {
-    if (!open) return undefined;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key !== 'Escape') return;
-      e.stopPropagation();
-      setOpen(false);
-    };
-    document.addEventListener('keydown', handler, true);
-    return () => document.removeEventListener('keydown', handler, true);
-  }, [open]);
+  useDismissable({ active: open, level: 'popover', onDismiss: handleClose });
 
   return { open, pos: position, anchorRef, panelRef, handleOpen, handleClose };
 };

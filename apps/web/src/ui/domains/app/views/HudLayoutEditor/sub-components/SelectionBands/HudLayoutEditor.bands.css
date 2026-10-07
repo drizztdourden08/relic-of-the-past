@@ -1,0 +1,145 @@
+/* @layer renderer-components @kind style */
+
+/* THE TWO BANDS A MANIPULATION SECTION WEARS, shared by the grid editor and the
+   flex editor (§58). They are the contextual strip above the drawing and the
+   legend under it. It was `HudLayoutEditor.grid.css`'s opening block until "the flex
+   should have a manipulation section as well. same principle" made it two
+   callers, at which point a copy would have been two strips drifting apart.
+
+   THE CLASS NAMES KEEP THEIR `hud-grid__` PREFIX, and that is deliberate rather
+   than lazy: six measurement tests pin these blocks by name at three rails
+   (`hud-grid-strip`, `layout-bands.probe`, `hud-inspector-layout-widths` among
+   them), and renaming a block nobody can see just to re-record numbers
+   somebody does read is a bad trade. They are the BANDS' names now, whichever
+   editor mounts them.
+
+   `.hud-toolbar.hud-grid__bar` INSTEAD OF `.hud-grid .hud-grid__bar`. Same
+   specificity (0,2,0, so it still beats `.hud-toolbar`'s own border and wash)
+   and no ancestor, so the strip is the same strip inside `.hud-flex`. */
+
+/* ── the contextual toolbar: ONLY actions on the selection ── */
+
+/* ONE ROW, AND SINCE §55 IT IS ONE ROW AT EVERY RAIL. It inherits
+   `.hud-toolbar`'s own `display: flex; flex-wrap: wrap; gap` from `panels.css`,
+   so a wrap is still the screen toolbar's own behaviour, not a second
+   rule here.
+
+   STICKY, AND THEREFORE OPAQUE. `--color-surface-inset` is a 5% white wash meant
+   to sit on a solid parent; a sticky strip with a translucent background shows
+   the drawing sliding under its own buttons. */
+.hud-toolbar.hud-grid__bar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  align-items: center;
+  min-width: 0;
+  padding: var(--space-2xs) 0;
+  background: var(--c-surface);
+
+  /* FLAT. `.hud-toolbar` brings a border, a radius and an inset wash, which here
+     drew one more box inside a section. The panel's own surface keeps it opaque
+     for `sticky`; the chip is what says this is the selection's strip. */
+  border: 0;
+  border-radius: 0;
+}
+
+/* THE RESERVED HEIGHT IS ON THE LEADING ELEMENT, not on the strip. The chip and
+   the hint are the two things that are ALWAYS there. Exactly one of them shows in
+   every state, so a 26px floor on both is a floor on the strip that cannot be
+   defeated by an empty action list. A `min-height` on the strip itself would
+   measure its content box and disagree with its own padding. */
+.hud-grid__bar-chip,
+.hud-grid__bar-hint {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  min-height: 26px;
+  font-size: var(--text-xs);
+  white-space: nowrap;
+}
+
+/* WHAT THE STRIP IS ACTING ON, in the strip. "be clear what section or purpose
+   they're for". Icon buttons that appear on a press are only legible if
+   something in the row names the subject: `COLUMN 2`, `ITEM 2`, `3 ITEMS`. */
+.hud-grid__bar-chip {
+  padding: 0 var(--space-xs);
+  background: var(--c-gold-dim);
+  border-radius: var(--r-sm);
+  color: var(--c-gold-bright);
+  text-transform: uppercase;
+}
+
+.hud-grid__bar-hint {
+  color: var(--c-text-muted);
+  font-style: italic;
+}
+
+/* 26px, not the insert bar's 30. Every other icon button in the editor is an
+   `icon-btn--sm` at 26, and the four pixels each are what put a cell's four
+   inserts on ONE line at the 188px rail instead of two (§54.4). */
+.hud-grid__bar .hud-toolbar__button {
+  width: 26px;
+}
+
+/* A move that cannot apply keeps its PLACE and loses its ink. See
+   `selection-bands.type.ts` for why it is not dropped. */
+.hud-grid__bar .hud-toolbar__button:disabled {
+  cursor: default;
+  opacity: 0.3;
+}
+
+/* The strip's own 2px gap already separates the divider from its neighbours, so
+   the divider's 2px margins were 4px apiece of a strip that is short at every
+   rail below 320. The line is what groups; the air around it was decoration. */
+.hud-grid__bar .hud-toolbar__sep {
+  margin: 0;
+}
+
+/* ── the legend ── */
+
+/* Two rows. It swaps its text instead of reflowing. */
+.hud-grid__legend {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+
+/* Truncated, not wrapped: a status that grows a second line moves
+   whatever is under it, and the full sentence is on the element's `title`. */
+.hud-grid__status {
+  overflow: hidden;
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* WRAPS. It scrolled sideways with the scrollbar hidden, so at 232 px a column's
+   legend ended mid-word ("Remove co") with nothing to say there was more. The
+   legend is the LAST thing in the block - a second line moves nothing the
+   author is aiming at, which was the only reason to hold it to one. */
+.hud-grid__keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs) var(--space-xs);
+  min-width: 0;
+  min-height: 20px;
+}
+
+/* One entry: its caps, its mouse, then what it does. It is a row so the picture
+   and the word never wrap apart from each other. */
+.hud-grid__key {
+  display: inline-flex;
+  flex: 0 1 auto;
+  gap: var(--space-2xs);
+  align-items: center;
+  min-width: 0;
+  color: var(--c-text-muted);
+}
+
+.hud-grid__key-text {
+  margin-left: var(--space-2xs);
+  font-size: var(--text-xs);
+  color: inherit;
+}

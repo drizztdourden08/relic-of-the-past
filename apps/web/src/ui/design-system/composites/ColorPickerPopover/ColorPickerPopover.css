@@ -3,3 +3,9 @@
   position: fixed;
   pointer-events: auto;
 }
+
+/* Too little room underneath: the panel is anchored to the trigger's top edge
+   and lifted clear of it, over its own measured height. */
+.color-picker-popover[data-drop-up='true'] {
+  transform: translateY(-100%);
+}

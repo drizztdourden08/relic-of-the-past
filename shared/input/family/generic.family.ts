@@ -91,6 +91,12 @@ const GENERIC_FAMILY: FamilyMetadata = {
     LEFT_TRIGGER: 'generic-trigger-a',
     RIGHT_TRIGGER: 'generic-trigger-b',
   },
+  // The d-pad entries stay. They are movement's SECOND default binding, not
+  // its only one (see axisConsoleDefaults), and this table is also read as a
+  // position -> console button LAYOUT by the built-in glyph packs
+  // (shared/input/glyphs/built-in-packs.ts): dropping the four directions
+  // here would silently strip the d-pad glyphs out of the Console and
+  // Keyboard packs, which has nothing to do with what a pad is bound to.
   consoleDefaults: {
     SOUTH: 'A',
     EAST: 'B',
@@ -104,6 +110,18 @@ const GENERIC_FAMILY: FamilyMetadata = {
     DPAD_DOWN: 'Down',
     DPAD_LEFT: 'Left',
     DPAD_RIGHT: 'Right',
+  },
+  // MOVEMENT'S DEFAULT, FOR EVERY GAMEPAD FAMILY. SDL normalizes the left
+  // stick to LEFT_X/LEFT_Y whatever the pad is, and this family is the
+  // terminal fallback in every other family's resolve chain, so one table
+  // here is the whole answer for Nintendo, Xbox, PlayStation, GameCube and
+  // unrecognized pads alike. A family that ever needs to disagree overrides
+  // it the same way it overrides any other field.
+  //
+  // SDL's Y axis points down, so '-' is up and '+' is down.
+  axisConsoleDefaults: {
+    LEFT_X: { '-': 'Left', '+': 'Right' },
+    LEFT_Y: { '-': 'Up', '+': 'Down' },
   },
 };
 

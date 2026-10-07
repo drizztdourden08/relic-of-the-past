@@ -1,0 +1,42 @@
+{
+  "kind": "container",
+  "id": "hearts",
+  "direction": "row",
+  "wrap": true,
+  "$comment": "Ten hearts wide, wrapping - the same 80px lane HudLife always reserved. Each heart is a shape (a curved vector fill, not a sprite swap - see hud-shape.ts) so its fill reads continuously, exactly like the drawing it replaces.",
+  "size": {
+    "w": {
+      "px": 80
+    }
+  },
+  "children": [
+    {
+      "kind": "element",
+      "id": "heart",
+      "element": {
+        "type": "repeat",
+        "count": {
+          "from": "data",
+          "expr": "ceil(life_max / 8)"
+        },
+        "item": "min(max(life_current - index * 8, 0), 8) / 8",
+        "child": {
+          "kind": "element",
+          "id": "heart-shape",
+          "element": {
+            "type": "shape",
+            "shape": "heart",
+            "fill": {
+              "from": "data",
+              "expr": "item"
+            },
+            "armor": {
+              "from": "data",
+              "expr": "armor"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

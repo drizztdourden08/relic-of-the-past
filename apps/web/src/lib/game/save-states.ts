@@ -10,6 +10,7 @@ import { markStateLoaded } from './state-load-signal';
 import { pollInventoryState } from './tracker';
 import { reassertLiveFlagsAfterLoad } from './live-settings';
 import { requestLocationRebaseline } from './randomizer-client/location-poller';
+import { reassertAfterSaveLoad } from './host-menu';
 import { captureGameFrameBlob } from './capture-frame';
 import { saveMusicPosition, restoreMusicPosition } from './msu-save-glue';
 import { resumeDialogAfterLoad, withDialogState } from './state-dialog';
@@ -121,6 +122,10 @@ const loadState = async (slot: number): Promise<boolean> => {
     // The loaded state's completions are the poller's new baseline, not a burst of fresh
     // checks to report (and re-deliver).
     requestLocationRebaseline();
+    // And the takeover's own side effect: the snapshot brought its hud_cur_item_x/l/r back with it,
+    // and the map button reads that byte with no gate of its own. Runs after the flags above so the
+    // gate word is already back in WRAM when the C side checks it.
+    reassertAfterSaveLoad();
     markStateLoaded();
 
     // A save with no music sidecar restores nothing, and its track starts from the beginning.

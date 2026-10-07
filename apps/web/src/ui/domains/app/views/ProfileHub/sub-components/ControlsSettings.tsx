@@ -8,9 +8,11 @@
  */
 
 import type { GameSettings } from '@shared/types/settings';
+import type { ListeningTarget } from './controls-settings/useBindingState';
 import { SNES_BUTTON_LABELS, FUNCTION_ACTION_LABELS } from '@shared/types/controls';
 import { openSettingsTarget } from '@app/stores/search-store';
 import { BindingListener } from './controls/BindingListener';
+import { CORE_VERB_LABELS } from './controls/core-verbs';
 import { ControlsSidebar } from './controls/ControlsSidebar';
 import { ControlsMain } from './controls/ControlsMain';
 import { ControlsDevices } from './controls/ControlsDevices';
@@ -25,6 +27,16 @@ interface ControlsSettingsProps {
   profileId: string;
 }
 
+/** What the capture modal says it is listening for. */
+const listeningLabel = (target: ListeningTarget): string => {
+  switch (target.type) {
+    case 'snes': return SNES_BUTTON_LABELS[target.button];
+    case 'function': return FUNCTION_ACTION_LABELS[target.action];
+    case 'core': return CORE_VERB_LABELS[target.verb];
+    case 'slot': return target.slot.label;
+  }
+};
+
 const ControlsSettings = (props: ControlsSettingsProps) => {
   const { settings, onChange, profileId } = props;
   const ctrl = useControlsSettings({ settings, onChange, profileId });
@@ -36,17 +48,14 @@ const ControlsSettings = (props: ControlsSettingsProps) => {
         ctrl={ctrl}
         cheatsEnabled={settings.cheatsEnabled}
         onOpenCheatsSettings={() => openSettingsTarget('cheatsEnabled')}
+        onOpenHudStyle={() => openSettingsTarget('hudStyle')}
       />
       <ControlsDevices ctrl={ctrl} />
 
       {/* Rebind listener modal */}
       {ctrl.listeningFor && (
         <BindingListener
-          actionLabel={
-            ctrl.listeningFor.type === 'snes'
-              ? SNES_BUTTON_LABELS[ctrl.listeningFor.button]
-              : FUNCTION_ACTION_LABELS[ctrl.listeningFor.action]
-          }
+          actionLabel={listeningLabel(ctrl.listeningFor)}
           onCapture={ctrl.handleCapture}
           onCancel={() => ctrl.setListeningFor(null)}
         />

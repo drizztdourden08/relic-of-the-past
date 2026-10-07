@@ -42,6 +42,7 @@ const TitleBar = (props: TitleBarProps) => {
     onToggleCheats,
     onShowDataManager,
     onShowInputTester,
+    onShowHudLayout,
     onShowCredits,
     onShowDesignGallery,
     onShowSpriteDebug, onShowDataInspector,
@@ -131,7 +132,7 @@ const TitleBar = (props: TitleBarProps) => {
     closeMenu, win, activeProfile, gameRunning,
     onShowProfile, onToggleSaveStates, onShowDataManager, onToggleInventory, onToggleChecks,
     onToggleCheats, onShowLogs, onToggleDebug, onShowConnectionDebug, onToggleDataset, onToggleSimulator, onToggleMusic,
-    onShowInputTester, onShowSpriteDebug, onShowDataInspector, onShowShadowEditor, onCheckForUpdates, onShowCredits, onShowDesignGallery, onShowAbout, onShowRandomizer,
+    onShowInputTester, onShowHudLayout, onShowSpriteDebug, onShowDataInspector, onShowShadowEditor, onCheckForUpdates, onShowCredits, onShowDesignGallery, onShowAbout, onShowRandomizer,
     widgetVisibility, developerToolsEnabled,
   });
 
@@ -199,7 +200,7 @@ const TitleBar = (props: TitleBarProps) => {
             Update available
           </Button>
         )}
-        {menuOpen && <DropdownMenu items={menuItems} anchorRef={menuRef} />}
+        {menuOpen && <DropdownMenu items={menuItems} anchorRef={menuRef} onClose={closeMenu} />}
         {showFps && fps > 0 && (
           <Text className="titlebar__fps">{fps} FPS{refreshHz !== null ? ` (${Math.round(refreshHz)} Hz)` : ''}</Text>
         )}

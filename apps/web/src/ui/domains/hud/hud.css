@@ -1,13 +1,4 @@
 /* @layer renderer-hud @kind style */
-@keyframes hud-heart-out {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
-@keyframes hud-heart-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
 
 /* Pause menu cursor: 16 frames on, 16 off at 60fps = 533ms cycle */
 @keyframes pause-cursor-flash {
@@ -26,6 +17,91 @@
 @keyframes bottle-panel-collapse {
   from { clip-path: inset(0 0 0 0); }
   to   { clip-path: inset(100% 0 0 0); }
+}
+
+/* ─── Enhanced pause menu ─── */
+
+/*
+ * THE MENU HAS NO GROUND OF ITS OWN. The player paused a game; painting over it
+ * hides the thing they paused to look at. So the world stays visible between
+ * the panels, and every part of the menu that has to stay readable brings its
+ * own ground instead. Four rules do that (the three below and the column plate
+ * further down), and each one is here because removing the backdrop broke
+ * something specific.
+ *
+ * 1. `--hud-silhouette` is a SURFACE's answer to "what colour is an unowned
+ *    thing?". HudSprite defaults to the dark shape the gameplay cluster needs
+ *    over bright terrain, and the pale one is right on the menu's black
+ *    panels, where a black silhouette is an empty cell. It used to be declared
+ *    on `.enhanced-pause`, for the WHOLE subtree, which was correct only while
+ *    a near-black backdrop lay under all of it. With the backdrop gone the
+ *    button chips are back over live terrain and want the dark shape again. So
+ *    the pale tone is scoped to the panels, which are the only surface that is
+ *    actually dark, and everything outside them falls back to the gameplay
+ *    default. That is the same rule as before, applied to the real ground
+ *    and not to an assumed one.
+ *
+ * 2. Text drawn OUTSIDE a panel (the tab strip, the selected item's name, the
+ *    assignment hint) sat on the backdrop and now sits on grass. The glyphs
+ *    are light, so they take a dark halo: a filter instead of a plate, because
+ *    the game's own font sprites are irregularly shaped and a rectangle behind
+ *    them reads as a box the menu did not ask for. Inside a panel there is
+ *    already a black ground, so the halo is switched off again there.
+ *    That includes the border tiles, which carry their own outline.
+ *
+ * 3. The tab strip additionally takes a faint plate. It is the one run of text
+ *    with nothing else near it and the one the eye has to find first. The item
+ *    name and the assignment hint take one too, for a reason of their own; see
+ *    the column-plate rule below.
+ */
+.enhanced-pause .pause-panel {
+  --hud-silhouette: brightness(0) invert(0.93) sepia(0.55) opacity(0.42);
+}
+
+/*
+ * Two rings, not one. A single soft shadow is a smudge behind a light glyph and
+ * loses to bright terrain; repeating the tight one compounds its alpha into a
+ * near-solid black edge (the same read the HUD's own sprite outline gives),
+ * and the wide one behind it separates the whole word from whatever it crosses.
+ * It has to survive `PauseText`'s dim opacity, which fades the halo along with
+ * the glyph, so the tight rings are stacked instead of merely darkened.
+ */
+.enhanced-pause img {
+  filter:
+    drop-shadow(0 0 1px #000) drop-shadow(0 0 1px #000) drop-shadow(0 0 1px #000)
+    drop-shadow(0 0 5px rgb(0 0 0 / 85%));
+}
+
+.enhanced-pause .pause-panel img {
+  filter: none;
+}
+
+.enhanced-pause__plate {
+  background: rgb(12 10 8 / 62%);
+  box-shadow: 0 0 0 2px rgb(12 10 8 / 62%);
+}
+
+/*
+ * The item's name and the hint under it are the two strings a screen writes
+ * OUTSIDE its panel, in the column the portrait stands in. They sat on the
+ * backdrop and now sit on terrain, so they take a plate.
+ *
+ * The plate goes on the COLUMN, not on the line of text. `PauseText` fades a
+ * dim line to 45% and would fade a plate of its own with it. The hint, the one
+ * that needs the help most, would get the weakest ground. The column box above
+ * it carries no opacity, so a plate there stays at full strength under a line
+ * that is deliberately quiet, which is the whole point: the hint should be a
+ * whisper, not an unreadable one.
+ *
+ * `:has(> div > img[src*="font-"])` IS that column: the box whose children are
+ * runs of the game's own font sprites. It carries no class and needs none, and
+ * it is the same shape on the items screen and the gear screen. Scoped inside
+ * the screen area, so the legend and the tab strip (both of which have a plate
+ * already) do not get a second one, and to outside a panel, where the ground
+ * is black anyway.
+ */
+.enhanced-pause__screen div:has(> div > img[src*="font-"]):not(.pause-panel *) {
+  background: rgb(10 8 6 / 72%);
 }
 
 /* ─── Location Notifications ─── */

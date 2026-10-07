@@ -30,6 +30,7 @@ const initialState: GameUIState = {
   floorIndicator: { timer: 0, floor: 0, isVisible: false },
   countdown: { seconds: 0xff, frames: 0, isRunning: false },
   saveMenu: { cursorPosition: 0, sourceModule: 0, progressIndicator: 0 },
+  hostMenu: { holding: false, activeItem: 0 },
 };
 
 const useGameUIStore = create<GameUIStore>()((set) => ({

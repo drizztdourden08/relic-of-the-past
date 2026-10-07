@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { dropPanelPositionFor, useAnchorTracking } from '../../Portal';
+import { dropPanelPositionFor, useAnchorTracking, useDismissable } from '../../Portal';
 import type { SelectOption } from '../Select.type';
 
 /** Below this much room underneath, flipping above is worth considering. */
@@ -104,18 +104,9 @@ const useSelectDropdown = (params: UseSelectDropdownParams) => {
     return () => document.removeEventListener('mousedown', handler);
   }, [open, handleClose]);
 
-  // Close on Escape
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        e.stopPropagation();
-        handleClose();
-      }
-    };
-    document.addEventListener('keydown', handler, true);
-    return () => document.removeEventListener('keydown', handler, true);
-  }, [open, handleClose]);
+  // Close on Escape through the shared dismiss stack, so an open list beats
+  // whatever dialog or full-screen layer it happens to be sitting inside.
+  useDismissable({ active: open, level: 'popover', onDismiss: handleClose });
 
   // Keyboard navigation
   const handleKeyDown = useCallback(

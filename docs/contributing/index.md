@@ -29,6 +29,7 @@ is the short version GitHub surfaces, and points here.
 | Renderer ↔ main (Electron IPC) | [Adding an IPC Channel](adding-an-ipc-channel.md), [Electron & IPC](../architecture/electron-ipc.md) |
 | Architecture / where code goes | [Architecture overview](../architecture/overview.md) |
 | UI components | [Design System](design-system.md), [Design Language](design-language.md) |
+| The in-game HUD, its layouts or its glyphs | [HUD Layouts & Glyph Packs](hud-layouts.md) |
 | Anything user-visible | run the app and verify; see [Testing](testing.md) |
 | Linux / Android targets | [Testing on a Linux VM & Android emulator](testing-linux-and-android.md) |
 | Sharing files or bug reports with other contributors | [The Sanctuary](sanctuary.md) |

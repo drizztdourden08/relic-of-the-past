@@ -48,6 +48,7 @@ const buildChromeProps = (deps: ChromePropsDeps): TitleBarProps => {
     onToggleCheats: () => widgets.toggle('cheats'),
     onShowDataManager: handleShowDataManager,
     onShowInputTester: () => nav.setActivePage('input-tester'),
+    onShowHudLayout: () => nav.setActivePage('hud-layout'),
     onShowCredits: () => nav.setActivePage('credits'),
     onShowDesignGallery: () => nav.setActivePage('design-gallery'),
     onShowSpriteDebug: () => nav.setActivePage('sprite-debug'),

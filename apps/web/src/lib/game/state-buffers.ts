@@ -12,6 +12,7 @@ import { isCoreReady } from './core-ready';
 import { pollInventoryState } from './tracker';
 import { reassertLiveFlagsAfterLoad } from './live-settings';
 import { requestLocationRebaseline } from './randomizer-client/location-poller';
+import { reassertAfterSaveLoad } from './host-menu';
 import { markStateLoaded } from './state-load-signal';
 import { resumeDialogAfterLoad, withDialogState } from './state-dialog';
 
@@ -62,6 +63,7 @@ const loadStateFromBuffer = (buffer: ArrayBuffer, slot = SCRATCH_SLOT): boolean 
   reassertLiveFlagsAfterLoad();
   resumeDialogAfterLoad(mod, verdict.stamp);
   requestLocationRebaseline();
+  reassertAfterSaveLoad();
   markStateLoaded();
   pollInventoryState(true);
   try { mod.FS.unlink(savePath); } catch { /* ignore */ }

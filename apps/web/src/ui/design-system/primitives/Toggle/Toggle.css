@@ -13,6 +13,37 @@
   pointer-events: none;
 }
 
+/* ─── Compact tier ───
+   This is the one control whose geometry is not derivable from a height token:
+   a switch is a track, a thumb and the distance between them, and the three
+   have to stay in step. So the four numbers below are named here, the rules
+   read them with md's existing literals as fallbacks (nothing computes
+   differently without the `--sm` class), and `sm` restates all four together.
+   Travel is track − thumb − 2 × inset − 2 × border, which is 16 at md and 12
+   here; getting it wrong parks the thumb short of the end instead of at it. */
+.toggle--sm {
+  --toggle-track-w: 28px;
+  --toggle-track-h: var(--icon-md);
+  --toggle-thumb: var(--icon-sm);
+  --toggle-inset: 1px;
+  --toggle-travel: 12px;
+
+  gap: var(--space-sm);
+}
+
+.toggle--sm .toggle__text {
+  gap: var(--space-2xs);
+}
+
+.toggle--sm .toggle__label {
+  font-size: var(--text-sm);
+}
+
+.toggle--sm .toggle__description,
+.toggle--sm .toggle__link {
+  font-size: var(--text-xs);
+}
+
 .toggle__text {
   display: flex;
   flex-direction: column;
@@ -60,8 +91,8 @@
 .toggle__track {
   position: relative;
   flex-shrink: 0;
-  width: 36px;
-  height: 20px;
+  width: var(--toggle-track-w, 36px);
+  height: var(--toggle-track-h, 20px);
   border-radius: var(--r-lg);
   background: var(--c-surface);
   border: 1px solid var(--c-border);
@@ -80,16 +111,16 @@
 
 .toggle__thumb {
   position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 14px;
-  height: 14px;
+  top: var(--toggle-inset, 2px);
+  left: var(--toggle-inset, 2px);
+  width: var(--toggle-thumb, 14px);
+  height: var(--toggle-thumb, 14px);
   border-radius: 50%;
   background: var(--c-text-dim);
   transition: transform var(--transition-normal), background var(--transition-normal);
 }
 
 .toggle__input:checked + .toggle__track .toggle__thumb {
-  transform: translateX(16px);
+  transform: translateX(var(--toggle-travel, 16px));
   background: var(--c-bg);
 }

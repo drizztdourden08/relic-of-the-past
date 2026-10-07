@@ -12,6 +12,15 @@
   justify-content: center;
 }
 
+/* Compact tier. The size already came from `--swatch-size`, so `sm` sets that
+   one variable and nothing else. That is the same hook `ColorPicker` reaches for
+   on its own grids, instead of a second rule competing with it. `md` declares
+   nothing, so an unsized swatch inside the picker keeps inheriting the
+   picker's 16px. */
+.color-swatch--sm {
+  --swatch-size: var(--icon-md);
+}
+
 .color-swatch:hover {
   border-color: var(--c-border-strong);
 }

@@ -29,7 +29,7 @@
         },
         "category": {
           "type": "string",
-          "enum": ["hud", "hud-pause", "hud-item", "fonts", "drop", "receipt", "randomizer", "title"],
+          "enum": ["hud", "hud-pause", "hud-item", "fonts", "drop", "receipt", "randomizer", "title", "ground"],
           "description": "Sprite category determining extraction pipeline."
         },
         "extract": { "$ref": "#/definitions/ExtractConfig" }
@@ -54,7 +54,8 @@
         { "$ref": "#/definitions/UpgradeCompositeExtract" },
         { "$ref": "#/definitions/PaletteSwapExtract" },
         { "$ref": "#/definitions/TitleScreenExtract" },
-        { "$ref": "#/definitions/StoryLegendExtract" }
+        { "$ref": "#/definitions/StoryLegendExtract" },
+        { "$ref": "#/definitions/BgTileExtract" }
       ]
     },
     "HudTilesExtract": {
@@ -208,7 +209,7 @@
             "currency-rupee", "currency-arrow", "currency-bomb", "currency-heart",
             "currency-red-potion", "currency-green-potion", "currency-blue-potion",
             "currency-fairy", "currency-bee",
-            "pool-archipelago"
+            "pool-archipelago", "wallet"
           ],
           "description": "One of the app's own drawings, used whole as the sprite."
         }
@@ -307,6 +308,49 @@
       "properties": {
         "from": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$", "description": "A colour of the base, matched exactly." },
         "to": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$", "description": "The colour it becomes." }
+      },
+      "additionalProperties": false
+    },
+    "BgTileExtract": {
+      "type": "object",
+      "required": ["method", "sheets", "tiles", "paletteSet", "palette"],
+      "properties": {
+        "method": { "type": "string", "const": "bg-tile" },
+        "sheets": {
+          "type": "array",
+          "items": { "type": "integer" },
+          "minItems": 1,
+          "maxItems": 8,
+          "description": "Background sheet ids in VRAM slot order; a tile number's high bits pick one."
+        },
+        "upper": {
+          "type": "array",
+          "items": { "type": "integer" },
+          "description": "Sheet slots widened into the upper half of their palette row."
+        },
+        "tiles": {
+          "type": "array",
+          "items": { "type": "integer" },
+          "minItems": 4,
+          "maxItems": 4,
+          "description": "Four tilemap words composing the 16x16 block, in reading order."
+        },
+        "paletteSet": {
+          "type": "string",
+          "enum": ["overworld", "dungeon"],
+          "description": "Which palette family the block's rows are assembled from."
+        },
+        "palette": {
+          "type": "integer",
+          "description": "Outdoor palette mode, or indoor palette set index."
+        },
+        "paletteAux": {
+          "type": "array",
+          "items": { "type": "integer" },
+          "minItems": 3,
+          "maxItems": 3,
+          "description": "Outdoor auxiliary palette selections: aux1, aux2, aux3."
+        }
       },
       "additionalProperties": false
     }
