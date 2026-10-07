@@ -1,0 +1,27 @@
+/* @layer renderer-components @kind style */
+.stars {
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.stars__row {
+  display: inline-flex;
+  letter-spacing: 0;
+}
+
+.stars__star {
+  color: var(--c-text-faint);
+}
+
+.stars__star--on {
+  color: var(--c-gold);
+}
+
+.stars__value {
+  color: var(--c-text);
+  font-weight: var(--weight-medium);
+}
+
+.stars__count {
+  color: var(--c-text-muted);
+}

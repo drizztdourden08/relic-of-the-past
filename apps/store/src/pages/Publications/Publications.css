@@ -1,0 +1,36 @@
+/* @layer store-site @kind style */
+
+/* The content fills the page body, so the table scrolls, not the page. */
+.publications {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.publications__totals {
+  font-variant-numeric: tabular-nums;
+}
+
+.publications__public {
+  color: var(--c-gold-bright);
+  font-size: var(--text-sm);
+}
+
+.publications__publish {
+  align-self: center;
+}
+
+/* The detail pane's text blocks: the changes and the reviewer's note. */
+.publication-detail__text {
+  margin: 0;
+  padding: var(--space-sm) var(--space-md);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--r-md);
+  background: var(--c-sunken);
+  color: var(--c-text);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.publication-detail__note {
+  border-left: var(--border-width-thick) solid var(--c-gold);
+}

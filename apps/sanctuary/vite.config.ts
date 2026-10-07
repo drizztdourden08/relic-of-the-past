@@ -1,15 +1,19 @@
 /* @layer root-config @kind config */
 /**
  * The Sanctuary site: a plain Vite + React build of apps/sanctuary, served by Firebase
- * Hosting. Same aliases as the app so it reuses the design system. In dev, /api is
- * proxied to the functions-framework so the cookie session stays same-origin.
+ * Hosting. Same aliases as the app so it reuses the design system, plus the site kit it
+ * stands on. In dev, /api is proxied to the functions-framework so the cookie session
+ * stays same-origin.
  */
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
+import { portFor } from '../../shared/config/ports.constants';
+import { readPortSlot } from '../../shared/config/port-slot';
 
 const SITE_ROOT = __dirname;
 const WEB_SRC = resolve(SITE_ROOT, '../web/src');
+const PORT_SLOT = readPortSlot(resolve(SITE_ROOT, '../..'));
 
 export default defineConfig({
   root: SITE_ROOT,
@@ -22,13 +26,16 @@ export default defineConfig({
       '@app': WEB_SRC,
       '@ds': resolve(WEB_SRC, 'ui/design-system'),
       '@domains': resolve(WEB_SRC, 'ui/domains'),
+      '@site-kit': resolve(SITE_ROOT, '../site-kit'),
     },
   },
   server: {
-    port: 5180,
+    port: portFor('site', PORT_SLOT),
+    strictPort: true,
     proxy: {
-      // The functions-framework running locally (the router strips the /api prefix itself).
-      '/api': { target: 'http://localhost:8080', changeOrigin: false },
+      // The functions-framework running locally (npm run sanctuary:api). The router strips
+      // the /api prefix itself.
+      '/api': { target: `http://localhost:${portFor('siteApi', PORT_SLOT)}`, changeOrigin: false },
     },
   },
   build: {

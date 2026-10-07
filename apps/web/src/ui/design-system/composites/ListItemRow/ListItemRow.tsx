@@ -5,7 +5,7 @@ import './ListItemRow.css';
 import type { ListItemRowProps } from './ListItemRow.type';
 
 const ListItemRow = (props: ListItemRowProps) => {
-  const { name, icon, meta, action, selected, onClick, onDoubleClick, className = '' } = props;
+  const { name, icon, meta, badge, action, selected, onClick, onDoubleClick, className = '' } = props;
   return (
     <Box
       className={`list-item-row${selected ? ' list-item-row--selected' : ''}${className ? ` ${className}` : ''}`}
@@ -17,6 +17,7 @@ const ListItemRow = (props: ListItemRowProps) => {
         <Box className="list-item-row__name">{name}</Box>
         {meta != null && <Box className="list-item-row__meta">{meta}</Box>}
       </Box>
+      {badge != null && <Box className="list-item-row__badge">{badge}</Box>}
       {action != null && <Box className="list-item-row__action">{action}</Box>}
     </Box>
   );

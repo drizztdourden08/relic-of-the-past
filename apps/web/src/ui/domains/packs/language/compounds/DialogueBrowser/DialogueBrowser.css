@@ -1,0 +1,33 @@
+/* @layer renderer-components @kind style */
+.dialogue-browser {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-height: 0;
+}
+
+/* Text in a set is there to be read and copied, so selection is back on for the whole viewer. */
+.dialogue-browser,
+.dialogue-browser * {
+  user-select: text;
+}
+
+.dialogue-browser__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-height: 0;
+}
+
+/*
+ * The list is the QUERY CONTAINER for its rows, the same as the editor's list: whether a
+ * closed row has room for the line's own words depends on the list's width (see
+ * `EntryCardCollapsed.css`).
+ */
+.dialogue-browser__scroll {
+  container: entry-list / inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-2xs);
+}

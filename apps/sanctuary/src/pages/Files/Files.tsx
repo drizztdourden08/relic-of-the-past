@@ -2,8 +2,8 @@
 /**
  * Files: the scope tabs in the header with the drop target at its end, the FilterBar and
  * the DataTable over the files (rows can be picked several at a time), and the side
- * column on the right with the uploads panel over the picked file's details, or over the
- * selection panel when several are picked, plus the three dialogs a drop can lead to.
+ * column on the right with the picked file's details, or the selection panel when several
+ * are picked, plus the three dialogs a drop can lead to. Uploads show in the site's tray.
  * Everything stateful lives in useFilesPage.
  */
 import { useMemo } from 'react';
@@ -11,15 +11,14 @@ import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
 import { DataTable } from '@ds/composites/DataTable';
 import { FilterBar } from '@ds/composites/FilterBar';
-import { SitePage } from '../../layout/SitePage/SitePage';
-import { SideColumn } from '../../layout/SideColumn/SideColumn';
-import { Workbench } from '../../layout/Workbench/Workbench';
-import { SavedViewsMenu } from '../../views/SavedViewsMenu';
+import { SitePage } from '@site-kit/layout/SitePage/SitePage';
+import { SideColumn } from '@site-kit/layout/SideColumn/SideColumn';
+import { Workbench } from '@site-kit/layout/Workbench/Workbench';
+import { SavedViewsMenu } from '@site-kit/views/SavedViewsMenu';
 import { UploadDialog } from '../../components/UploadDialog/UploadDialog';
-import { UploadsPanel } from '../../components/UploadsPanel/UploadsPanel';
 import { fileRowId } from '../../files/file-row';
 import { FILE_DEFAULT_COLUMNS } from '../../files/file-schema';
-import { formatBytes } from '../../lib/format-bytes';
+import { formatBytes } from '@site-kit/lib/format-bytes';
 import { useFilesPage } from './behavior/useFilesPage';
 import { FileDetail } from './sub-components/FileDetail';
 import { SameNameDialog } from './sub-components/SameNameDialog';
@@ -39,7 +38,7 @@ const SEARCH_PLACEHOLDER = 'Search files...';
 const Files = (props: FilesProps) => {
   const { selectedId = null } = props;
   const page = useFilesPage(selectedId);
-  const { data, scope, view, uploads, uploadsPanel, drops, selected } = page;
+  const { data, scope, view, drops, selected } = page;
   const headerTabs = useMemo(
     () => ({ items: scope.tabs, activeId: scope.activeId, onSelect: scope.select }),
     [scope.tabs, scope.activeId, scope.select],
@@ -80,25 +79,12 @@ const Files = (props: FilesProps) => {
   );
 
   const headerActions = (
-    <UploadActions
-      canUpload={page.types.length > 0}
-      onDrop={drops.drop}
-      hiddenUploads={uploadsPanel.isOpen ? 0 : uploadsPanel.count}
-      onShowUploads={uploadsPanel.show}
-    />
+    <UploadActions canUpload={page.types.length > 0} onDrop={drops.drop} />
   );
 
   const several = page.picked.length > 1;
-  const aside = (uploadsPanel.isOpen || selected || several) && (
+  const aside = (selected || several) && (
     <SideColumn>
-      {uploadsPanel.isOpen && (
-        <UploadsPanel
-          jobs={uploads.jobs}
-          onDismiss={uploads.dismiss}
-          onClearFinished={uploads.clearFinished}
-          onClose={uploadsPanel.close}
-        />
-      )}
       {several && (
         <SelectionPanel
           files={page.picked}

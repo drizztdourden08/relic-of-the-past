@@ -16,12 +16,29 @@ const FILE_TYPE_LABELS: Record<FileType, string> = {
   other: 'Other',
 };
 
+/** The shelf wording: the tabs, the search groups and the group editor, plural where the type label is singular. */
+const FILE_TYPE_SHELF_LABELS: Record<FileType, string> = {
+  build: 'Test builds',
+  'save-state': 'Save states',
+  sprite: 'Sprites & art',
+  music: 'Music',
+  document: 'Documents',
+  other: 'Other',
+};
+
 type FileStatus = 'uploading' | 'ready' | 'deleted';
 
 type FileOwner = { userId: string; displayName: string };
 
 /** The in-flight multipart upload; cleared at complete. */
-type FileUpload = { multipartId: string; parts: number };
+type FileUpload = {
+  multipartId: string;
+  parts: number;
+  /** Parts the uploader reported up with its last batch; 0 at begin. */
+  partsDone: number;
+  /** When the uploader last asked for part URLs. */
+  updatedAt: number;
+};
 
 /**
  * One upload of a file, kept forever unless the owner or an admin deletes it. Versions
@@ -73,5 +90,5 @@ type SanctuaryFile = {
   createdAt: number;
 };
 
-export { FILE_TYPES, FILE_TYPE_LABELS };
+export { FILE_TYPES, FILE_TYPE_LABELS, FILE_TYPE_SHELF_LABELS };
 export type { FileType, FileStatus, FileOwner, FileUpload, FileVersion, SanctuaryFile };

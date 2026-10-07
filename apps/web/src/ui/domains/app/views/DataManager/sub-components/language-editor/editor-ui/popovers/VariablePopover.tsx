@@ -17,7 +17,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { ScrollArea, Text, TextInput } from '@ds/primitives';
 import { PopoverShell } from './PopoverShell';
 import { VariableChoice } from './VariableChoice';
-import { filterVariables } from '../../sub-components/variables/variable-groups';
+import { filterVariables } from '@domains/packs/language/compounds/variables/variable-groups';
 import { tokenForVariable } from '../../sub-components/variables/variable-token';
 import type { ChangeEvent, KeyboardEvent } from 'react';
 import type { Token, Variable } from '@shared/game/language';

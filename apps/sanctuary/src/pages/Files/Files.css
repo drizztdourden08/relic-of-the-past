@@ -55,11 +55,6 @@
   white-space: pre-wrap;
 }
 
-/* The header's drop target fills the line's height; the uploads button stays a button. */
-.upload-actions .upload-actions__show {
-  align-self: center;
-}
-
 /* The selection panel: the same card as the details, scrolling on its own when tall. */
 .selection-panel {
   min-width: 0;

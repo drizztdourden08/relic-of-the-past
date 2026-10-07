@@ -41,8 +41,8 @@ const LIBS = [
 // The brand art lives with the app, not beside the installer, so it is pulled in
 // at build time instead of being duplicated in the tree.
 const ASSETS = [
-  ['apps/web/public/logos/logo-256.png', 'logo-256.png'],
-  ['apps/web/public/logos/icon.ico', 'app.ico'],
+  ['apps/web/public/logos/logo/logo-256.png', 'logo-256.png'],
+  ['apps/web/public/logos/logo/logo.ico', 'app.ico'],
 ];
 
 const findVcvars = () => {

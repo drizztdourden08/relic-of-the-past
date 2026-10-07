@@ -1,0 +1,25 @@
+/* @layer store-site @kind style */
+
+/* The content fills the page body, so the grid scrolls, not the page. */
+.browse {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.browse__summary {
+  font-variant-numeric: tabular-nums;
+}
+
+.browse__toolbar {
+  flex: 0 0 auto;
+}
+
+.browse__toolbar > .filter-bar {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0;
+}
+
+.browse__toolbar .browse__sort {
+  flex: 0 0 auto;
+}

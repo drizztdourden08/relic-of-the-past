@@ -9,6 +9,7 @@ import { DEFAULT_SLOT_NAME } from '@app/lib/game/randomizer-client/online-config
 import {
   joinServerAddress, serverAddressError, splitServerAddress,
 } from '@app/lib/game/randomizer-client/server-address';
+import { ARCHIPELAGO_DEFAULT_PORT } from '@shared/config/ports.constants';
 import type { ProfileRandomizerConfig, RandomizerConnectionPatch } from '@shared/types/profile';
 
 interface ServerSetupDraft {
@@ -21,7 +22,7 @@ interface ServerSetupDraft {
 type ConnectionFields = Pick<ProfileRandomizerConfig, 'serverUrl' | 'slotName' | 'password'>;
 
 /** Archipelago's own default port, which a room hosted with default settings listens on. */
-const DEFAULT_PORT = '38281';
+const DEFAULT_PORT = String(ARCHIPELAGO_DEFAULT_PORT);
 
 /** The setup a new profile starts on: no host yet, the default port and slot name. */
 const EMPTY_SERVER_SETUP: ServerSetupDraft = { host: '', port: DEFAULT_PORT, password: '', slotName: DEFAULT_SLOT_NAME };

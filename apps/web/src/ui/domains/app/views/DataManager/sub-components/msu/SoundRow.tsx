@@ -16,7 +16,7 @@ import type { SoundRowProps } from './msu.type';
 
 const SoundRow = (props: SoundRowProps) => {
   const {
-    row, channel, showChannel = false, playing, additive, busy, expanded, playingOriginal, chipAudible,
+    row, channel, showChannel = false, playing, additive, busy, expanded, playingOriginal, chipAudible, readOnly,
     onPreview, onStopPreview, onPlayOriginal, onToggleLayers, onStopReplacing,
   } = props;
   const { soundId, hex, label, triggers, sites, layerCount, unlisted, role, unreachable } = row;
@@ -98,11 +98,11 @@ const SoundRow = (props: SoundRowProps) => {
           </IconButton>
         )}
         {replaced ? (
-          <Button variant="tertiary" size="sm" disabled={busy} onClick={() => onStopReplacing(soundId)}>
+          <Button variant="tertiary" size="sm" disabled={busy || readOnly} onClick={() => onStopReplacing(soundId)}>
             Stop replacing
           </Button>
         ) : (
-          <Button variant="secondary" size="sm" disabled={busy} onClick={() => onToggleLayers(soundId)}>
+          <Button variant="secondary" size="sm" disabled={busy || readOnly} onClick={() => onToggleLayers(soundId)}>
             {expanded ? 'Cancel' : 'Replace'}
           </Button>
         )}

@@ -27,8 +27,9 @@ const arg = (name, fallback = null) => {
 const root = process.cwd();
 const dir = arg('dir', join('release', 'win'));
 const tag = arg('tag');
-// --base http://localhost:8000 exercises the download-and-install path against a
-// local server before anything is published.
+// --base pointed at a local static server exercises the download-and-install path before
+// anything is published. Serve it on the static port, portFor('static') in
+// shared/config/ports.constants.ts.
 const base = arg('base');
 if (!tag && !base) throw new Error('--tag is required, e.g. --tag v0.16.0');
 

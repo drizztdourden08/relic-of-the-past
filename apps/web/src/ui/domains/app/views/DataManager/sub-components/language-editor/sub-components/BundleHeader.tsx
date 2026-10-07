@@ -20,15 +20,25 @@ type BundleHeaderProps = {
   dirty: boolean;
   saving: boolean;
   saveError: string | null;
+  /** An installed set: nothing is ever written, so the save state reads "Read only". */
+  readOnly?: boolean;
   onDuplicate?: () => void;
   onSaveNow?: () => void;
+  /** Saves the set as a `.rlang` file. */
+  onExport?: () => void;
+  exporting?: boolean;
+  /** What the last export did, or why it failed. */
+  exportStatus?: string | null;
 };
 
 /** The base language in words, falling back to its bare code. */
 const baseLabel = (base: string): string => LANGUAGE_NAMES[base] ?? base;
 
 const BundleHeader = (props: BundleHeaderProps) => {
-  const { set, warnings, dirty, saving, saveError, onDuplicate, onSaveNow } = props;
+  const {
+    set, warnings, dirty, saving, saveError, readOnly = false,
+    onDuplicate, onSaveNow, onExport, exporting = false, exportStatus,
+  } = props;
 
   const facts = useMemo(() => [
     `id: ${set.id}`,
@@ -53,13 +63,20 @@ const BundleHeader = (props: BundleHeaderProps) => {
 
       <Box className="bundle-header__state">
         {saveError && <Badge variant="danger">{saveError}</Badge>}
-        {!saveError && saving && <Badge variant="neutral">Saving...</Badge>}
-        {!saveError && !saving && dirty && <Badge variant="warning">Not saved yet</Badge>}
-        {!saveError && !saving && !dirty && <Badge variant="success">Saved</Badge>}
-        {onSaveNow && (
+        {!saveError && readOnly && <Badge variant="neutral">Read only</Badge>}
+        {!saveError && !readOnly && saving && <Badge variant="neutral">Saving...</Badge>}
+        {!saveError && !readOnly && !saving && dirty && <Badge variant="warning">Not saved yet</Badge>}
+        {!saveError && !readOnly && !saving && !dirty && <Badge variant="success">Saved</Badge>}
+        {onSaveNow && !readOnly && (
           <Button variant="ghost" size="sm" disabled={!dirty || saving} onClick={onSaveNow}>Save now</Button>
         )}
         {onDuplicate && <Button variant="ghost" size="sm" onClick={onDuplicate}>Duplicate</Button>}
+        {onExport && (
+          <Button variant="ghost" size="sm" disabled={saving || exporting} onClick={onExport}>
+            {exporting ? 'Exporting...' : 'Export .rlang'}
+          </Button>
+        )}
+        {exportStatus && <Text variant="caption">{exportStatus}</Text>}
       </Box>
     </Box>
   );

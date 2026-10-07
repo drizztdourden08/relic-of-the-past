@@ -12,10 +12,9 @@ import fileTextIcon from '@iconify-icons/lucide/file-text';
 import fileIcon from '@iconify-icons/lucide/file';
 import flagIcon from '@iconify-icons/lucide/flag';
 import gamepadIcon from '@iconify-icons/lucide/gamepad-2';
-import { FILE_TYPES } from '@shared/sanctuary/file-types';
+import { FILE_TYPES, FILE_TYPE_SHELF_LABELS } from '@shared/sanctuary/file-types';
 import type { FileType } from '@shared/sanctuary/file-types';
 import type { ReportKind } from '@shared/sanctuary/report-types';
-import { SCOPE_TYPE_LABELS } from '../pages/Files/Files.constants';
 import { REPORT_SCOPE_IDS } from '../pages/Reports/Reports.constants';
 import type { ListSurface } from '../data/site-data-context';
 
@@ -44,7 +43,7 @@ const FILE_TYPE_ICONS: Record<FileType, IconifyIcon> = {
 
 const fileCategory = (type: FileType): SearchCategory => ({
   key: `files:${type}`,
-  label: SCOPE_TYPE_LABELS[type],
+  label: FILE_TYPE_SHELF_LABELS[type],
   icon: FILE_TYPE_ICONS[type],
   surface: 'files',
   scope: type,

@@ -16,7 +16,7 @@ import {
   buildPlacementView, getSessionState, runKindOfSession, subscribeSessionStore,
 } from '@app/lib/game/randomizer-client';
 import { CheckCard } from '@domains/app/compounds/ChecksTracker';
-import { CHECKS_WIDGET_ID, NOTIFY_PREF, NOTIFY_WHEN_CLOSED_PREF } from '@domains/widgets/checks/checks.constants';
+import { CHECKS_PREF_KEY, NOTIFY_PREF, NOTIFY_WHEN_CLOSED_PREF } from '@domains/widgets/checks/checks.constants';
 import { useWidgetPref } from '../../../../../hooks/useWidgetPref';
 import { useTrackerPresenceStore } from '@app/stores/tracker-presence-store';
 import { useCheckToasts } from './behavior/useCheckToasts';
@@ -33,8 +33,8 @@ interface CheckToastsProps {
 }
 
 const CheckToasts = ({ width, height }: CheckToastsProps) => {
-  const [notify] = useWidgetPref<boolean>(CHECKS_WIDGET_ID, NOTIFY_PREF, true);
-  const [notifyWhenClosed] = useWidgetPref<boolean>(CHECKS_WIDGET_ID, NOTIFY_WHEN_CLOSED_PREF, true);
+  const [notify] = useWidgetPref<boolean>(CHECKS_PREF_KEY, NOTIFY_PREF, true);
+  const [notifyWhenClosed] = useWidgetPref<boolean>(CHECKS_PREF_KEY, NOTIFY_WHEN_CLOSED_PREF, true);
   const trackerOpen = useTrackerPresenceStore((state) => state.open);
   const { entries, dismiss } = useCheckToasts(notify && (trackerOpen || notifyWhenClosed));
   const notices = useOnlineNoticeToasts();

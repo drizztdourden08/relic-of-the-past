@@ -4,8 +4,9 @@ import type { FieldProps } from './Field.type';
 
 const Field = (props: FieldProps) => {
   const { label, hint, error, htmlFor, required, inline, className = '', children } = props;
+  const cls = ['field', inline && 'field--inline', error != null && 'field--invalid', className].filter(Boolean).join(' ');
   return (
-    <div className={`field${inline ? ' field--inline' : ''}${className ? ` ${className}` : ''}`}>
+    <div className={cls}>
       {label != null && (
         <label className="field__label" htmlFor={htmlFor}>
           {label}

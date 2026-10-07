@@ -1,7 +1,7 @@
 <!-- @layer root-config @kind doc -->
 <div align="center">
 
-<img src="apps/web/public/logos/logo-256.png" alt="Relic of the Past" width="160" />
+<img src="apps/web/public/logos/logo/logo-256.png" alt="Relic of the Past" width="160" />
 
 # Relic of the Past
 

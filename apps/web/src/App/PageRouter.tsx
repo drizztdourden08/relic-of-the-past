@@ -2,13 +2,10 @@
 import { useCallback } from 'react';
 import { HubGameControls, ProfileHub } from '../ui/domains/app/views/ProfileHub';
 import { DataManager } from '../ui/domains/app/views/DataManager';
-import { InputCalibration } from '../ui/domains/app/views/InputTester';
-import { CreditsPage } from '../ui/domains/app/views/ProfileHub/sub-components/CreditsTab';
-import { DesignGallery } from '../ui/domains/app/views/DesignGallery';
+import { Store } from '../ui/domains/app/views/Store';
 import { SpriteDebug } from '../ui/domains/app/views/SpriteDebug';
-import { DataInspector } from '../ui/domains/app/views/DataInspector';
-import { About } from '../ui/domains/app/views/About';
 import { Randomizer } from '../ui/domains/app/views/Randomizer';
+import { SIMPLE_PAGES } from './simple-pages';
 import { FullScreenLayer } from '../ui/design-system/composites/FullScreenLayer';
 import { WorkspaceSwitch, type Workspace } from '../ui/domains/app/compounds/WorkspaceSwitch';
 import type { PageId, RomDisplayInfo } from './types';
@@ -85,6 +82,8 @@ const PageRouter = (props: PageRouterProps) => {
     <WorkspaceSwitch current={current} hasProfile={!!profileMgmt.activeProfile} hasRandomizer={!!profileMgmt.activeProfile?.randomizer} onSelect={nav.setActivePage} />
   );
 
+  const simplePage = SIMPLE_PAGES[nav.activePage];
+
   if (nav.activePage === 'data') {
     otherPage = (
       <FullScreenLayer onClose={nav.closePage} title="Data Manager" floating={switchTo('data')}>
@@ -110,39 +109,21 @@ const PageRouter = (props: PageRouterProps) => {
         />
       </FullScreenLayer>
     );
-  } else if (nav.activePage === 'input-tester') {
+  } else if (nav.activePage === 'store') {
     otherPage = (
-      <FullScreenLayer onClose={nav.closePage} title="Input Calibration">
-        <InputCalibration />
+      <FullScreenLayer onClose={nav.closePage} title="Hookshop" floating={switchTo('store')}>
+        <Store onLibraryChanged={profileMgmt.refreshProfilesAndRoms} onDeleteConfirm={handleDeleteConfirm} />
       </FullScreenLayer>
     );
-  } else if (nav.activePage === 'credits') {
+  } else if (simplePage) {
     otherPage = (
-      <FullScreenLayer onClose={nav.closePage} title="Credits">
-        <CreditsPage />
-      </FullScreenLayer>
-    );
-  } else if (nav.activePage === 'design-gallery') {
-    otherPage = (
-      <FullScreenLayer onClose={nav.closePage} title="Design Gallery">
-        <DesignGallery />
+      <FullScreenLayer onClose={nav.closePage} title={simplePage.title}>
+        {simplePage.render()}
       </FullScreenLayer>
     );
   } else if (nav.activePage === 'sprite-debug') {
     // SpriteDebug brings its own FullScreenLayer (title + close), so render it directly.
     otherPage = <SpriteDebug onClose={nav.closePage} romFile={profileMgmt.activeProfile?.romFile ?? ''} />;
-  } else if (nav.activePage === 'data-inspector') {
-    otherPage = (
-      <FullScreenLayer onClose={nav.closePage} title="Data Inspector">
-        <DataInspector />
-      </FullScreenLayer>
-    );
-  } else if (nav.activePage === 'about') {
-    otherPage = (
-      <FullScreenLayer onClose={nav.closePage} title="About">
-        <About />
-      </FullScreenLayer>
-    );
   } else if (nav.activePage === 'randomizer') {
     otherPage = (
       <FullScreenLayer onClose={nav.closePage} title="Randomizer" floating={switchTo('randomizer')}>

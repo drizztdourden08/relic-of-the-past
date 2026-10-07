@@ -8,7 +8,7 @@
 import { useCallback, useState } from 'react';
 import type { FileType, SanctuaryFile } from '@shared/sanctuary/file-types';
 import { deleteFile, patchFile } from '../../../api/files-endpoints';
-import { errorMessage } from '../../../api/client';
+import { errorMessage } from '@site-kit/api/api-error';
 import { fileLink } from './useFileActions';
 import {
   EMPTY_TALLY, addTagsPatch, batchReport, removeTagsPatch, splitByRight, typePatch,

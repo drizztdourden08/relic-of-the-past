@@ -7,7 +7,7 @@ import { Icon as IconifyIcon } from '@iconify/react/offline';
 import imageIcon from '@iconify-icons/lucide/image';
 import type { SanctuaryFile } from '@shared/sanctuary/file-types';
 import { Image } from '@ds/primitives/Image';
-import { usePixelArt } from '../../../components/MediaPreview/usePixelArt';
+import { usePixelArt } from '@site-kit/components/MediaPreview/usePixelArt';
 import { useFilePreview } from '../../../files/useFilePreview';
 
 type SelectionImageProps = {

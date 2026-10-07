@@ -13,7 +13,7 @@ const formatSaveTime = (timestamp: number): string => new Date(timestamp).toLoca
 const HeroLastSaveTile = (props: { save: HeroLastSave }) => {
   const { save } = props;
   return (
-    <Box className="profile-hero__glass profile-hero__save">
+    <Box className="hero__glass profile-hero__save">
       <Thumbnail
         src={save.screenshotUrl}
         alt={save.name}
@@ -22,7 +22,7 @@ const HeroLastSaveTile = (props: { save: HeroLastSave }) => {
       />
       <Box className="profile-hero__save-body">
         <Box className="profile-hero__save-text">
-          <Text className="profile-hero__eyebrow">Last save</Text>
+          <Text className="hero__eyebrow">Last save</Text>
           <Text className="profile-hero__save-name" title={save.name}>{save.name}</Text>
           <Text className="profile-hero__save-time">{formatSaveTime(save.timestamp)}</Text>
         </Box>

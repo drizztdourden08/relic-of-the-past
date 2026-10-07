@@ -31,6 +31,8 @@ interface MsuFilePanelProps {
   /** What a rename WRITES into. Null for a classic pack, which stays classic. */
   saveBase: MsuPackManifest | null;
   files: MsuFile[];
+  /** An installed pack: files play, and none can be added, renamed, converted or deleted. */
+  readOnly: boolean;
   onDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
   onReload: () => void;
 }
@@ -45,7 +47,7 @@ const NO_USES: string[] = [];
 const COLUMNS = ['Name', 'Format', 'Size', 'Length', 'Rate', 'Repeats', 'Played by', ''];
 
 const MsuFilePanel = (props: MsuFilePanelProps) => {
-  const { pack, manifest, saveBase, files, onDeleteConfirm, onReload } = props;
+  const { pack, manifest, saveBase, files, readOnly, onDeleteConfirm, onReload } = props;
   const panel = useFilePanel({ pack, files, saveBase, reload: onReload });
   const audition = useFileAudition(pack, files);
   const usage = useFileUsage(manifest);
@@ -105,7 +107,7 @@ const MsuFilePanel = (props: MsuFilePanelProps) => {
         supersededCount={covered.count}
         supersededBytes={covered.totalBytes}
         optimizeBlockedBecause={metadata.length === 0 ? EMPTY_PACK : null}
-        busy={panel.busy || covered.removing}
+        busy={panel.busy || covered.removing || readOnly}
         onOptimize={() => setOptimizing(true)}
         onRemoveSuperseded={confirmRemoveSuperseded}
       />
@@ -114,7 +116,7 @@ const MsuFilePanel = (props: MsuFilePanelProps) => {
         accept={AUDIO_ACCEPT}
         label="Drop audio here to add it to the pack"
         hint={AUDIO_ACCEPT_HINT}
-        disabled={panel.busy}
+        disabled={panel.busy || readOnly}
         onDrop={panel.handleUpload}
       />
 
@@ -171,6 +173,7 @@ const MsuFilePanel = (props: MsuFilePanelProps) => {
                 loading={audition.loading === file.name}
                 audition={audition.playing === file.name ? audition.audition : null}
                 busy={panel.busy}
+                readOnly={readOnly}
                 onPlay={audition.toggle}
                 onRename={panel.renameFile}
                 onDelete={confirmDelete}

@@ -11,6 +11,8 @@
  *    case, or left over from an earlier run) moves to the converted file.
  * 4. Originals are kept. Deleting them is a separate, confirmed action.
  *
+ * A pack installed from the Hookshop is read only, so it is refused before any step runs.
+ *
  * A pack with no manifest is promoted to one first (the same synthesized view the player
  * uses), so the loop points have somewhere to live and the rename is a manifest edit like
  * any other. Refusing would exclude the packs most worth converting.
@@ -23,7 +25,7 @@ import { withSupersededRepointed } from '@shared/storage/msu-superseded';
 import { errMessage } from '../../lib/result';
 import { synthesizeClassicManifest } from '@shared/storage/msu-classic-manifest';
 import { trackNumberOf } from '@shared/storage/msu-paths';
-import { packFilePath, readPackManifest, writePackManifest } from '../pack-fs';
+import { packFilePath, readPackManifest, refuseInstalledPack, writePackManifest } from '../pack-fs';
 import { describeSource } from './audio-source';
 import { encodeToTarget } from './flac-encode';
 import { readLoopSample } from './loop-point';
@@ -76,6 +78,7 @@ const manifestToEdit = async (pack: string, names: string[]): Promise<MsuPackMan
 
 const convertPack = async (request: RunRequest): Promise<OptimizeRunResult> => {
   const { pack, ffmpegPath, fileNames, report } = request;
+  await refuseInstalledPack(pack);
 
   const audio = await listPackAudio(pack);
   const sizes = new Map(audio.map((file) => [file.name, file.sizeBytes]));

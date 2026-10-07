@@ -59,7 +59,9 @@ const listAudioFiles = async (files: FileStore, pack: string): Promise<{ name: s
 const readTrackFile = (files: FileStore, pack: string, fileName: string): Promise<Uint8Array | null> =>
   files.readBytes(packFile(pack, fileName));
 
-const deletePack = (files: FileStore, pack: string): Promise<void> => files.remove(packDir(pack));
+/** To the recycle bin where the platform has one, so a deleted pack can be put back. */
+const deletePack = (files: FileStore, pack: string): Promise<void> =>
+  (files.trash ? files.trash(packDir(pack)) : files.remove(packDir(pack)));
 
 const installTracks = async (files: FileStore, pack: string, tracks: { name: string; bytes: Uint8Array }[]): Promise<void> => {
   for (const t of tracks) await files.writeBytes(packFile(pack, t.name), t.bytes);

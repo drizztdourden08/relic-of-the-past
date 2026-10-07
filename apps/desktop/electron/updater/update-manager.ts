@@ -5,9 +5,10 @@
  * preference is part of the source, so switching it has to build a new one.
  */
 import { app } from 'electron';
-import { UpdateManager, GithubSource, FileSource } from 'velopack';
+import type { UpdateManager } from 'velopack';
 import { FEED_REPO_URL, MAX_DELTAS } from './updater.constants';
 import { readPrefs } from './updater-prefs';
+import { loadVelopack } from './velopack-loader';
 
 let cached: UpdateManager | null = null;
 let cachedPrerelease: boolean | null = null;
@@ -23,11 +24,15 @@ const localSourceDir = (): string | null => {
 
 /**
  * Null when this build cannot update itself (a dev run, a portable copy, anything
- * Velopack does not recognise). Callers treat null as "not available", not an error.
+ * Velopack does not recognise, or a system Velopack cannot load on). Callers treat
+ * null as "not available", not an error.
  */
 const getUpdateManager = (): UpdateManager | null => {
   const { allowPrerelease } = readPrefs();
   if (cached && cachedPrerelease === allowPrerelease) return cached;
+  const velopack = loadVelopack();
+  if (!velopack) return null;
+  const { UpdateManager, GithubSource, FileSource } = velopack;
 
   try {
     const local = localSourceDir();

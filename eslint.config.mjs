@@ -185,7 +185,7 @@ export default tseslint.config(
   {
     ignores: [
       'node_modules/**',
-      'dist/**',
+      '**/dist/**',
       'out/**',
       'release/**',
       'core/**',

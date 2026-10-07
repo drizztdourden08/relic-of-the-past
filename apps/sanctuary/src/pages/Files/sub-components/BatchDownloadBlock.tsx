@@ -9,7 +9,7 @@ import { Flex } from '@ds/primitives/Flex';
 import { ProgressBar } from '@ds/primitives/ProgressBar';
 import { Stack } from '@ds/primitives/Stack';
 import { Text } from '@ds/primitives/Text';
-import { formatBytes } from '../../../lib/format-bytes';
+import { formatBytes } from '@site-kit/lib/format-bytes';
 import { BATCH_ZIP_MAX_BYTES } from '../Files.constants';
 import { fitsInZip } from '../behavior/batch-size';
 import { pickKeyOf } from '../behavior/useBatchDownload';

@@ -15,10 +15,14 @@
   --view-name-maxw: 160px;
   --upload-list-maxh: 160px;
 
-  /* The column right of a page card (uploads, file details), and what sits in it. */
+  /* The column right of a page card (file details), and what sits in it. */
   --side-column-w: 360px;
-  --uploads-panel-maxh: 280px;
   --media-preview-maxh: 240px;
+
+  /* The uploads tray in the corner and the dialog of one upload. */
+  --upload-tray-w: 360px;
+  --upload-tray-maxh: 320px;
+  --upload-dialog-w: 440px;
 
   /* One picked file in the selection panel's grid, three to a row of the side column. */
   --selection-tile-h: 72px;

@@ -57,6 +57,8 @@ interface MsuEffectsPanelProps {
   saveBase: MsuPackManifest;
   files: MsuFile[];
   isLayered: boolean;
+  /** An installed pack: sounds play, nothing changes. */
+  readOnly: boolean;
   onDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
   onReload: () => void;
 }
@@ -73,6 +75,8 @@ interface TrackRowProps {
   expanded: boolean;
   /** True while the sound chip's own version of this slot is the one sounding. */
   playingOriginal: boolean;
+  /** An installed pack: the slot plays, its file cannot be changed. */
+  readOnly: boolean;
   onAssign: (trackNum: number, fileName: string) => void;
   onPreview: (trackNum: number) => void;
   onStopPreview: () => void;
@@ -114,6 +118,8 @@ interface SoundRowProps {
   playingOriginal: boolean;
   /** Null while the channel is still being scanned; false once known to make no sound. */
   chipAudible: boolean | null;
+  /** An installed pack: the sound plays, it cannot be replaced or released. */
+  readOnly: boolean;
   onPreview: (channel: SoundChannel, soundId: number) => void;
   onStopPreview: () => void;
   onPlayOriginal: (soundId: number) => void;
@@ -136,6 +142,8 @@ interface SoundListItemProps {
   isLayered: boolean;
   /** Tags the row with its channel. Set wherever one list holds more than one. */
   showChannel?: boolean;
+  /** An installed pack: the row and its editor only play and show. */
+  readOnly: boolean;
   onPreview: (channel: SoundChannel, soundId: number) => void;
   onPlayOriginal: (channel: SoundChannel, soundId: number) => void;
   onToggleLayers: (channel: SoundChannel, soundId: number) => void;

@@ -9,6 +9,7 @@
  * MSU-1 itself cannot represent layers (single audio stream, one track register), so
  * layering is our extension. The `.msul` container keeps it, and MSU-1 export flattens it.
  */
+import type { BasedOn } from '@shared/store/based-on';
 
 /** Longest crossfade a loop may use, in seconds. */
 const MAX_CROSSFADE_SECONDS = 10;
@@ -114,6 +115,8 @@ interface MsuPackMeta {
   cover?: string;
   createdAt: number;
   modifiedAt: number;
+  /** Set on a copy of a pack installed from the Hookshop: the original it credits. */
+  basedOn?: BasedOn;
 }
 
 interface MsuPackManifest {

@@ -38,9 +38,9 @@ const HeroProgressRow = (props: { file: HeroProgressFile }) => {
 const HeroProgress = (props: { files: HeroProgressFile[] }) => {
   const { files } = props;
   return (
-    <Box className="profile-hero__glass hero-progress">
+    <Box className="hero__glass hero-progress">
       <Box className="hero-progress__head">
-        <Text className="profile-hero__eyebrow">Progress</Text>
+        <Text className="hero__eyebrow">Progress</Text>
         <Box className="hero-progress__legend" aria-hidden="true">
           <Text as="span" className="hero-progress__key hero-progress__key--taken">Taken</Text>
           <Text as="span" className="hero-progress__key hero-progress__key--available">Available</Text>

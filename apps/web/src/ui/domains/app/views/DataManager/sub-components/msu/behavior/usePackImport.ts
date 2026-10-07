@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
-// Reads a dropped `.msul` into a pack. The install lives in lib/msu/import/install-msul-pack, shared with the file-association path.
+// Reads a dropped `.msul` into a pack. The install lives in shared/storage/msul/install-msul-pack, shared with the file-association path and the store.
 import { useCallback } from 'react';
-import { installMsulPack } from '@app/lib/msu/import/install-msul-pack';
+import { installMsulFile } from '@app/lib/storage/msu-store';
 import { publishImportProgress } from '@app/lib/storage/import-progress-bus';
 import { stemOf } from './track-file-name';
 import { failure } from './usePackList';
@@ -20,7 +20,7 @@ const usePackImport = (params: PackImportParams) => {
   const importMsul = useCallback(async (file: File, desiredName: string): Promise<ActionResult> => {
     try {
       const bytes = new Uint8Array(await file.arrayBuffer());
-      const result = await installMsulPack(bytes, desiredName || stemOf(file.name));
+      const result = await installMsulFile(bytes, desiredName || stemOf(file.name));
       await refresh();
       onImported(result.pack);
       // A pack that lists more than it holds is worth naming at once, while the archive is to hand.

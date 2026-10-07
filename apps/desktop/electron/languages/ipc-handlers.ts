@@ -14,8 +14,13 @@ import { createNodeFileStore } from '../lib/node-file-store';
 import { createSet, duplicateSet, getSet, list, saveSet } from '@shared/storage/languages';
 import type { NewSetParams } from '@shared/storage/languages';
 import type { LanguageSet } from '@shared/game/language';
+import { setDir } from '@shared/storage/languages/paths';
+import { refuseInstalled } from '../storage/installed-guard';
 
 const files = createNodeFileStore();
+
+/** A set installed from the Hookshop is read only: every write into its folder is refused. */
+const refuseInstalledSet = (id: string): Promise<void> => refuseInstalled(setDir(id));
 
 type ExtractResult = { success: boolean; error?: string };
 
@@ -23,6 +28,7 @@ const extractDialogueFromRom = async (romAbsPath: string, langCode: string): Pro
   const report = makeImportReporter('language', langCode);
   logToRenderer('app', 'info', `Extracting language '${langCode}'...`);
   try {
+    await refuseInstalledSet(langCode);
     report('decode', undefined, undefined, 'Decoding dialogue...');
     const rom = loadRom(romAbsPath, true);
     // The picked code must match the ROM's region, or the font/encoder configs won't line up.
@@ -83,6 +89,7 @@ const registerLanguageHandlers = () => {
     extractFromSource({ kind: 'url', url }, langCode));
 
   handle('languages:delete', async (_event, langCode: string) => {
+    await refuseInstalledSet(langCode);
     await rm(getUserDataPath('languages', langCode), { recursive: true, force: true });
     await recompileAllAssets();
   });
@@ -94,17 +101,20 @@ const registerLanguageHandlers = () => {
   handle('languages:getSet', (_event, id: string) => getSet(files, id));
 
   handle('languages:saveSet', async (_event, set: LanguageSet) => {
+    await refuseInstalledSet(set.id);
     await saveSet(files, set);
     await recompileAllAssets();
   });
 
   handle('languages:createSet', async (_event, params: NewSetParams) => {
+    await refuseInstalledSet(params.id);
     const set = await createSet(files, params);
     await recompileAllAssets();
     return set;
   });
 
   handle('languages:duplicateSet', async (_event, sourceId: string, id: string, name: string) => {
+    await refuseInstalledSet(id);
     const set = await duplicateSet(files, sourceId, id, name);
     await recompileAllAssets();
     return set;

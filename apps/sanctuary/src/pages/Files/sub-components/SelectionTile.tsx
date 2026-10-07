@@ -9,7 +9,7 @@ import type { SanctuaryFile } from '@shared/sanctuary/file-types';
 import { Flex } from '@ds/primitives/Flex';
 import { Text } from '@ds/primitives/Text';
 import { FILE_TYPE_ICONS } from '../../../files/file-type-icon';
-import { mediaKindOf } from '../../../files/media-kind';
+import { mediaKindOf } from '@site-kit/lib/media-kind';
 import { SelectionImage } from './SelectionImage';
 
 type SelectionTileProps = {

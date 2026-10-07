@@ -1,0 +1,25 @@
+/* @layer store-site @kind style */
+
+/* The same panel as a page card, the results scrolling inside it. */
+.store-search {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--space-md);
+  min-height: 0;
+  padding: var(--space-lg);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-xl);
+  background: var(--c-panel);
+  backdrop-filter: blur(var(--blur));
+}
+
+.store-search--idle {
+  justify-content: center;
+}
+
+.store-search__summary {
+  margin: 0;
+  color: var(--c-text);
+  font-variant-numeric: tabular-nums;
+}

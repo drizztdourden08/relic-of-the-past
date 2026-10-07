@@ -5,7 +5,8 @@
  * and validation come from that module so the two never drift.
  *
  * Paths and manifest reads/writes come from ./pack-fs, which is also what guards every
- * renderer-supplied name against traversal before it becomes a path segment.
+ * renderer-supplied name against traversal before it becomes a path segment. Every write into a
+ * pack the Hookshop installed is refused there too.
  */
 import { join, dirname } from 'path';
 import { writeFile, readdir, rename, rm, stat, mkdir } from 'fs/promises';
@@ -13,7 +14,9 @@ import type { MsuPackManifest, MsuPackMeta } from '@shared/types/msu-manifest';
 import { isAudioFile } from '@shared/storage/msu-paths';
 import { newManifest } from '@shared/storage/msu-edit';
 import { handle } from '../lib/ipc/handle';
-import { packFilePath, packPath, pathExists, readPackManifest, writePackManifest } from './pack-fs';
+import {
+  packFilePath, packPath, pathExists, readPackManifest, refuseInstalledPack, writePackManifest,
+} from './pack-fs';
 
 const registerMsuEditHandlers = (): void => {
   handle('msu:listAudioFiles', async (_event, packName: string) => {
@@ -32,30 +35,43 @@ const registerMsuEditHandlers = (): void => {
 
   handle('msu:readManifest', (_event, packName: string) => readPackManifest(packName));
 
-  handle('msu:writeManifest', (_event, packName: string, manifest: MsuPackManifest) =>
-    writePackManifest(packName, manifest));
+  handle('msu:writeManifest', async (_event, packName: string, manifest: MsuPackManifest) => {
+    await refuseInstalledPack(packName);
+    await writePackManifest(packName, manifest);
+  });
 
   handle('msu:createPack', async (_event, packName: string, meta?: Partial<MsuPackMeta>) => {
     if (await pathExists(packPath(packName))) throw new Error(`MSU pack already exists: ${packName}`);
+    await refuseInstalledPack(packName);
     await writePackManifest(packName, newManifest(packName, meta));
   });
 
   handle('msu:renamePack', async (_event, from: string, to: string) => {
     if (from === to) return;
     if (await pathExists(packPath(to))) throw new Error(`MSU pack already exists: ${to}`);
+    await refuseInstalledPack(from);
+    await refuseInstalledPack(to);
     await rename(packPath(from), packPath(to));
+    // Rewritten so the name inside its settings becomes the new folder name.
+    const manifest = await readPackManifest(to);
+    if (manifest) await writePackManifest(to, manifest);
   });
 
   handle('msu:renameTrackFile', async (_event, packName: string, from: string, to: string) => {
     if (from === to) return;
+    await refuseInstalledPack(packName);
     await rename(packFilePath(packName, from), packFilePath(packName, to));
   });
 
-  handle('msu:deleteTrackFile', (_event, packName: string, fileName: string) =>
-    rm(packFilePath(packName, fileName), { force: true }));
+  handle('msu:deleteTrackFile', async (_event, packName: string, fileName: string) => {
+    const path = packFilePath(packName, fileName);
+    await refuseInstalledPack(packName);
+    await rm(path, { force: true });
+  });
 
   handle('msu:writeTrackFile', async (_event, packName: string, fileName: string, data: ArrayBuffer) => {
     const path = packFilePath(packName, fileName);
+    await refuseInstalledPack(packName);
     await mkdir(dirname(path), { recursive: true });
     await writeFile(path, Buffer.from(data));
   });
