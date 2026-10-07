@@ -4,19 +4,19 @@
  * (`resolveDuplicate`) that an observed grant contradicts: the record's own
  * raw id was granted verbatim while its OWN item was already owned, at which
  * point `resolveDuplicate` says the swap should have applied. That is a
- * genuinely checkable disagreement using only the record's own id and the
+ * checkable disagreement using only the record's own id and the
  * observation's owned-set snapshot, not a guess about some other site.
  *
- * Split into two `FieldProbe`s on the same path rather than one, for the same
+ * Split into two `FieldProbe`s on the same path instead of one, for the same
  * reason `grants.set.ts` splits into three: confidence is fixed per probe,
- * not per comparison, and this fix genuinely varies — a direct native tally
+ * not per comparison, and this fix varies: a direct native tally
  * (`fromInventoryDelta: false`) is `certain`, a tracker-inventory-delta grant
  * is only `likely`. The two `applies` gates are mutually exclusive on the
  * SAME grant's own flag, so at most one of the pair ever fires for a given
  * record in one pass.
  *
- * `format` renders the dataset side as the alias's own display name rather
- * than its bare id, so the reason a reviewer reads names the item they would
+ * `format` renders the dataset side as the alias's own display name instead
+ * of its bare id, so the reason a reviewer reads names the item they would
  * actually recognize.
  */
 import { getItem } from '../../../data';
@@ -26,7 +26,7 @@ import { known } from '../../compare/probe-helpers';
 import type { FieldProbe } from '../../compare/probe.types';
 import type { GrantedItemObservation, ScreenObservations } from '../../detection-types';
 
-const formatAlias = (value: unknown): string => (value ? getItem(value as ItemId).randomizerName : '—');
+const formatAlias = (value: unknown): string => (value ? getItem(value as ItemId).randomizerName : '-');
 
 const grantFor = (observations: ScreenObservations, primary: number | undefined): GrantedItemObservation | undefined => {
   if (primary == null) return undefined;

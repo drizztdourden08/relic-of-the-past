@@ -1,11 +1,11 @@
 /* @layer renderer-components @kind hook */
 /**
- * The working draft and the submit flow for a create dialog — the create-flow
- * analogue of `RecordEditor`'s own `use-record-editor-state`. Simpler in one
- * way (there is no baseline to compare against — every field starts absent or
+ * The working draft and the submit flow for a create dialog, the create-flow
+ * analogue of `RecordEditor`'s own `use-record-editor-state`. Simpler in one way
+ * (there is no baseline to compare against, since every field starts absent or
  * blank, so "dirty" is not a question this form asks) and stricter in another:
- * a save here is gated on every required path actually holding a value, not
- * merely on something having changed.
+ * a save here is gated on every required path holding a value, not merely on
+ * something having changed.
  */
 import { useCallback, useEffect, useState } from 'react';
 import { getPath, setPath } from '../../../data/schema/path';

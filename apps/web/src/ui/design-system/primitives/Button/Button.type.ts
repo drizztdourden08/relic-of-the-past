@@ -9,6 +9,10 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   fullWidth?: boolean;
+  /** Toggled-on state, given the same gold treatment IconButton uses. */
+  active?: boolean;
+  /** Work in progress: disables the button and spins its icon. A plain `disabled` does not spin. */
+  busy?: boolean;
   icon?: ReactNode;
 }
 

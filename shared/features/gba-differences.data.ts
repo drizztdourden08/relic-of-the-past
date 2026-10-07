@@ -46,7 +46,7 @@ const GBA_DIFFERENCES: GbaDifference[] = [
     id: 'riddle-quest',
     group: 'Extra content',
     label: 'Riddle quest',
-    detail: 'Ten-riddle sidequest from the lumberjack, gated on the bug net plus ten medals from the linked multiplayer game. Dialogue occupies message ids 0x1A8–0x1C6.',
+    detail: 'Ten-riddle sidequest from the lumberjack, gated on the bug net plus ten medals from the linked multiplayer game. Dialogue occupies message ids 0x1A8-0x1C6.',
     evidence: 'extracted',
   },
   {
@@ -256,7 +256,7 @@ const GBA_DIFFERENCES: GbaDifference[] = [
     id: 'talking-trees-reordered',
     group: 'World & exploration',
     label: 'Talking trees reordered',
-    detail: 'Angry Dark World trees speak before spitting bombs rather than after.',
+    detail: 'Angry Dark World trees speak before spitting bombs, not after.',
     evidence: 'documented',
   },
   {
@@ -319,7 +319,7 @@ const GBA_DIFFERENCES: GbaDifference[] = [
     id: 'viewport-240x160',
     group: 'Presentation',
     label: 'Viewport 240×160',
-    detail: 'Against 256×224 on the original, so the view is cropped rather than scaled.',
+    detail: 'Against 256×224 on the original, so the view is cropped, not scaled.',
     evidence: 'documented',
   },
   {
@@ -410,7 +410,7 @@ const GBA_DIFFERENCES: GbaDifference[] = [
     id: 'maiden-text-clears-per-paragraph',
     group: 'Presentation',
     label: 'Maiden text clears per paragraph',
-    detail: 'Matches the original Japanese release rather than scrolling.',
+    detail: 'Matches the original Japanese release, which does not scroll.',
     evidence: 'documented',
   },
   {
@@ -473,7 +473,7 @@ const GBA_DIFFERENCES: GbaDifference[] = [
     id: 'spear-carrying-prologue-soldiers',
     group: 'Presentation',
     label: 'Spear-carrying prologue soldiers',
-    detail: 'The blue soldiers in the prologue carry spears rather than swords.',
+    detail: 'The blue soldiers in the prologue carry spears instead of swords.',
     evidence: 'documented',
   },
   {
@@ -536,7 +536,7 @@ const GBA_DIFFERENCES: GbaDifference[] = [
     id: 'full-message-corpus',
     group: 'Text & naming',
     label: 'Full message corpus',
-    detail: '455 messages, ids 0x000–0x1C6, behind obfuscated big-endian relative pointers with a rolling decoder at 0x08129E0C. All decoded and re-encoded through our own dialogue encoder.',
+    detail: '455 messages, ids 0x000-0x1C6, behind obfuscated big-endian relative pointers with a rolling decoder at 0x08129E0C. All decoded and re-encoded through our own dialogue encoder.',
     evidence: 'extracted',
   },
   {
@@ -564,7 +564,7 @@ const GBA_DIFFERENCES: GbaDifference[] = [
     id: 'footwear-renamed',
     group: 'Text & naming',
     label: 'Footwear renamed',
-    detail: 'The dash footwear is renamed. Sources disagree on the direction, so this one gets settled against our own extracted corpus rather than a wiki.',
+    detail: 'The dash footwear is renamed. Sources disagree on the direction, so this one gets settled against our own extracted corpus, not a wiki.',
     evidence: 'documented',
   },
   {
@@ -585,7 +585,7 @@ const GBA_DIFFERENCES: GbaDifference[] = [
     id: 'gatekeeper-dialogue',
     group: 'Text & naming',
     label: 'Gatekeeper dialogue',
-    detail: 'Message ids 0x1A5–0x1A6.',
+    detail: 'Message ids 0x1A5-0x1A6.',
     evidence: 'extracted',
   },
   {
@@ -606,7 +606,7 @@ const GBA_DIFFERENCES: GbaDifference[] = [
     id: 'resume-at-last-save',
     group: 'Save & meta',
     label: 'Resume at last save',
-    detail: 'Loading offers the last save location rather than only the mountain cave.',
+    detail: 'Loading offers the last save location, not only the mountain cave.',
     evidence: 'documented',
   },
   {

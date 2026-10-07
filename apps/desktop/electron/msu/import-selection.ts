@@ -1,21 +1,14 @@
 /* @layer electron-main @kind logic */
 /**
- * Which of an archive's audio files actually belong to the pack.
+ * Which of an archive's audio files belong to the pack.
  *
- * An MSU pack is flat by construction: the filename carries the track number, so every track sits
- * beside its siblings. Anything an archive keeps in a SUBFOLDER is therefore not a track — it is
- * the extras packs ship with, most often alternate takes offered as a swap. Copying those in by
- * basename, which is what a plain recursive walk leads to, puts two files on one slot: either they
- * collide on the name and one silently overwrites the other, or they differ and both claim the
- * track, leaving which one plays down to directory order.
+ * An MSU pack is flat: the filename carries the track number. Anything in a SUBFOLDER is an
+ * extra (usually alternate takes), and a recursive walk copying by basename would put two
+ * files on one slot. So the rule is depth: keep the shallowest level that has audio. That
+ * reads a pack at the archive root and one nested a folder down alike.
  *
- * So the rule is depth, not name: keep the shallowest level that has audio in it and drop the rest.
- * That reads a pack at the archive root and a pack nested one folder down — both common — without
- * having to know which of the two it was given.
- *
- * Track numbers are then made unique as a backstop. Two files can claim one slot without either
- * being in a subfolder (a pack shipping both `alttp_msu-3.pcm` and `something-3.pcm`), and a slot
- * that plays one of two files depending on how the disk lists them is not something to leave in.
+ * Track numbers are then made unique as a backstop: two files at the same level can still
+ * claim one slot, and which one plays must not depend on directory order.
  */
 import { dirname, basename } from 'path';
 import { trackNumberOf } from '@shared/storage/msu-paths';
@@ -29,7 +22,7 @@ interface PackSelection {
   duplicates: string[];
 }
 
-/** How many separators deep a path is — only ever compared against its siblings. */
+/** How many separators deep a path is. Only meaningful next to its siblings. */
 const depthOf = (path: string): number => dirname(path).split(/[\/]/).length;
 
 const selectPackFiles = (files: string[]): PackSelection => {
@@ -41,8 +34,8 @@ const selectPackFiles = (files: string[]): PackSelection => {
   const kept: string[] = [];
   const duplicates: string[] = [];
   const claimed = new Set<number>();
-  // Sorted so the winner of a contested slot is decided by the name, not by the order a directory
-  // happened to be read in — the same archive has to import the same way twice.
+  // Sorted so a contested slot is decided by name, not directory order: the same archive
+  // has to import the same way twice.
   for (const file of files.filter((file) => depthOf(file) === top).sort()) {
     const track = trackNumberOf(basename(file));
     if (track !== null && claimed.has(track)) { duplicates.push(file); continue; }

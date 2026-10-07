@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind style */
 
 /*
- * A toolbar button and the card it may open. The wrapper is the anchor — the
- * card positions against it — which is why the wrapper, not the button, carries
+ * A toolbar button and the card it may open. The card positions against the
+ * wrapper, which is why the wrapper, not the button, carries
  * `position: relative`.
  */
 

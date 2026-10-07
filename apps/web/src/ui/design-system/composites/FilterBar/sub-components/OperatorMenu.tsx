@@ -1,19 +1,9 @@
 /* @layer renderer-components @kind component */
 /**
- * The operator picker for one clause, and the leading half of the merged
- * control strip the row draws. The button shows only the current operator's
- * glyph — the plan's stated reason is saving space in the button itself — and
- * the dropdown lists every operator the field's kind offers, each with its
- * glyph AND its text label, since the label only ever appears there.
- *
- * The dropdown also carries the clause's comparison modifiers (see
- * behavior/operator-menu-items). Picking an operator is exclusive, so it closes
- * the menu; toggling a modifier is not, so the menu stays open and the check
- * mark moves under the pointer.
- *
- * Case folding is the default, so only the opt-in is worth marking on the
- * button: the glyph takes an accent colour rather than growing a second
- * character, which would cost the icon-only button its width.
+ * The operator picker for one clause. The button shows only the glyph; the
+ * dropdown lists every operator with glyph and label, plus the comparison
+ * modifiers. Picking an operator closes the menu; toggling a modifier keeps it
+ * open. Case-sensitive is marked with colour so the button does not widen.
  */
 import { Button } from '../../../primitives/Button';
 import { operatorsFor } from '../../../data/filter/operators';
@@ -55,9 +45,8 @@ const OperatorMenu = (props: OperatorMenuProps) => {
     onToggleCaseSensitive: onChangeCaseSensitive,
   });
 
-  // A flag left over from when this path held text — the field's kind can drift
-  // under a saved view — must not advertise a modifier the menu no longer
-  // offers, and that no tester would honour either.
+  // A field's kind can drift under a saved view; a leftover flag must not
+  // advertise a modifier no tester would honour.
   const marked = caseSensitive === true && supportsCaseModifier(field.kind);
   const label = current ? `Filter operator: ${current.label}` : 'Filter operator';
 

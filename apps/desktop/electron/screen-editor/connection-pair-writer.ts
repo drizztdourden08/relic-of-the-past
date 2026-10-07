@@ -2,22 +2,14 @@
 /**
  * Minting BOTH halves of a brand-new crossing atomically.
  *
- * A connection point only makes sense paired with its partner (see
- * shared/game/data/types/connection.ts): every `toConnectionId` is required,
- * never optional. So a create for a crossing with no existing partner mints
- * two ids on ONE allocator turn (`withAllocatedIds`'s `count`) and writes both
- * halves before either id is observable anywhere — nothing can allocate in
- * between, and nothing can see a `toConnectionId` naming a record that was
- * never actually written.
+ * Every `toConnectionId` is required (shared/game/data/types/connection.ts), so
+ * a crossing with no partner mints two ids on ONE allocator turn and writes both
+ * halves before either id is observable.
  *
- * The two halves usually belong to different screens, hence two independent
- * file targets rather than the one `writeConnections` (insert mode) assumes.
- * Both computed edits are validated (read + `insertBeforeArrayClose`) before
- * EITHER file is touched, so a bad path or a malformed array on either side
- * fails with nothing written at all. The remaining risk — `writeFile` itself
- * failing between the two writes, e.g. a full disk — is narrow, and the near
- * half (already on disk at that point) is rolled back on a best-effort basis
- * so a dangling `toConnectionId` cannot survive it silently.
+ * The halves usually belong to different screens, so two file targets. Both
+ * edits are validated before EITHER file is touched. If `writeFile` itself fails
+ * between the two writes (a full disk), the near half is rolled back best-effort
+ * so a dangling `toConnectionId` cannot survive silently.
  */
 
 import { readFile, writeFile } from 'fs/promises';
@@ -32,7 +24,7 @@ import { getWorkspaceRoot } from './workspace-root';
 
 const rolledBack = (msg: string): string => `The partner half failed to write (${msg}); the first half was rolled back.`;
 const notRolledBack = (msg: string): string =>
-  `The partner half failed to write (${msg}), and the first half could NOT be rolled back — check the connections data for a dangling id.`;
+  `The partner half failed to write (${msg}), and the first half could NOT be rolled back. Check the connections data for a dangling id.`;
 
 const writeConnectionPair = (root: string, args: WriteConnectionPairArgs): Promise<WriteConnectionPairResult> => {
   const nearPath = resolveSourceFile(root, args.near.filePath, 'data');
@@ -45,8 +37,7 @@ const writeConnectionPair = (root: string, args: WriteConnectionPairArgs): Promi
     const farCode = serializeConnectionRecord(far);
 
     if (nearPath === farPath) {
-      // One file, one edit: both halves land in the same write, so a mid-air
-      // failure cannot leave either one referencing an unwritten partner.
+      // One file, one edit: a mid-air failure cannot leave a dangling partner.
       const content = await readFile(nearPath, 'utf-8');
       const result = insertBeforeArrayClose(content, `${nearCode}\n${farCode}`);
       if (result.error) return { success: false, error: result.error };

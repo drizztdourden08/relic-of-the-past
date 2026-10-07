@@ -2,6 +2,7 @@
 #include "gba_alttp_internal.h"
 
 #include <string.h>
+#include <emscripten.h>
 
 #include "src/variables.h"
 #include "src/zelda_rtl.h"
@@ -19,6 +20,20 @@ void GbaAlttp_SetExtraDungeonEnabled(bool enabled) {
 
 bool GbaAlttp_IsExtraDungeonEnabled(void) {
   return g_extra_dungeon_enabled;
+}
+
+// Whether the optional extra dungeon is offered. Separate from whether its data is loaded: a
+// player can own the second cartridge and still want an untouched overworld, so this gates the
+// entrance, not the asset container. Opt-in, so a host that never calls it leaves the world
+// exactly as the base game.
+EMSCRIPTEN_KEEPALIVE
+void WasmSetExtraDungeonEnabled(int enabled) {
+  GbaAlttp_SetExtraDungeonEnabled(enabled != 0);
+}
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetExtraDungeonAvailable(void) {
+  return GbaAlttp_IsAvailable() ? 1 : 0;
 }
 
 MemBlk GbaAlttpAsset(int index) {
@@ -39,7 +54,7 @@ bool GbaAlttp_IsAvailable(void) {
   return g_gba_alttp_asset_ptrs[kGbaAssetRoomIds] != NULL;
 }
 
-// Derived from the room rather than a lifecycle flag: the engine enters and leaves through
+// Derived from the room, not from a lifecycle flag: the engine enters and leaves through
 // its own entrance and exit tables now, so there is no longer a moment we own in which to
 // set or clear one, and a stale flag was a bug waiting to happen.
 bool GbaAlttp_IsPalaceRoom(uint16 room) {
@@ -57,9 +72,8 @@ bool GbaAlttp_IsPalaceActive(void) {
  * The gate for every behavioural difference the room bank introduces.
  *
  * All three conditions matter: the supplement must be present, the profile's setting must be
- * on, and the id must be in the bank. Vanilla behaviour — including its overflow quirks,
- * which the glitch community relies on — is preserved bit-exactly whenever any of them is
- * false, so a profile without the dungeon can never observe a difference, glitched states
+ * on, and the id must be in the bank. Vanilla behaviour is preserved bit-exactly whenever any
+ * of them is false, including the overflow quirks the glitch community relies on, so a profile without the dungeon can never observe a difference, glitched states
  * included.
  */
 bool GbaAlttp_IsBankRoom(uint16 room) {
@@ -100,8 +114,8 @@ const uint16 *GbaAlttp_GetRoomDoors(uint16 room) {
 /**
  * This dungeon's enemy spawn list, in the engine's own format.
  *
- * The port stores spawns exactly as the base game does — a sort byte, three-byte records, a
- * terminator — so this is a pointer swap, not a conversion. NULL for any other room, which is
+ * The port stores spawns exactly as the base game does (a sort byte, three-byte records, a
+ * terminator), so this is a pointer swap, not a conversion. NULL for any other room, which is
  * what makes the caller fall through to the base table.
  */
 static const uint8 kNoSprites[] = { 0x00, 0xff };

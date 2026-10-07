@@ -1,33 +1,13 @@
 /* @layer renderer-app @kind logic */
 /**
- * The vocabulary half of the tag handoff, and the sibling of `id-ref-options`.
- *
- * `RecordEditor` knows a field is a tag list and stops there — what tags exist
- * is dataset knowledge the design system may not import. This is the other
- * side: given a collection and the field being edited, hand back everything a
- * tag on it could reasonably be.
- *
- * It reads TWO sources and unions them. The tag collection is the canonical
- * vocabulary, and it is the whole point of having one — an editor that only
- * offered what happens to be in use would quietly hide every term nobody has
- * reached for yet. What is already IN USE is the other half, because a dataset
- * grows values before the vocabulary catches up, and a tag somebody added by
- * hand has to be findable or it gets retyped slightly differently next time.
- *
- * The suggestions are TERMS (`env:outdoor`), not tag ids, because a term is
- * what a person searches for and the ids are the storage detail underneath.
- * The editor translates between the two through the reference lookup, which
- * carries both halves already.
- *
- * `appliesTo` is what makes the list per-collection: the vocabulary is one
- * collection, but a crossing's terms are no use on a screen and offering all of
- * them would bury the twenty that apply under sixty that do not.
- *
- * Values in use lead, because they are far and away the likelier pick, and each
- * half is sorted so the panel reads the same way every time. Each list is built
- * once per collection-and-path and kept, exactly as the reference lists are:
- * the rows are module-level and never change, and the search box would
- * otherwise rebuild the whole vocabulary per keystroke.
+ * Tag suggestions for the editor (sibling of `id-ref-options`). Unions two
+ * sources: the tag collection (the canonical vocabulary, including terms not
+ * yet in use) and the values already in use at this path (a hand-added tag
+ * must be findable or it gets retyped differently). Suggestions are terms
+ * (`env:outdoor`), not ids; the editor translates through the reference
+ * lookup. `appliesTo` filters the vocabulary per collection. Values in use
+ * lead, each half sorted. Cached per collection-and-path: the rows never
+ * change, and the search box would otherwise rebuild per keystroke.
  */
 import { all, tagKey, tagsFor } from '@shared/game/data';
 import { getPath } from '@ds/data/schema/path';
@@ -44,11 +24,7 @@ const resolvers = new Map<string, TagSuggestionResolver>();
 const asEntityKind = (value: string): EntityKind | undefined =>
   ENTITY_KINDS.find(kind => kind === value);
 
-/**
- * Every term the collection's rows actually hold at this path. A stored value
- * is a tag id, so it is resolved back to its term; an id nothing resolves is
- * skipped rather than offered, since a dangling reference is not a suggestion.
- */
+/** Every term the rows hold at this path. Stored ids resolve to terms; dangling ids are skipped. */
 const valuesInUse = (kind: EntityKind, path: string): readonly string[] => {
   const used = new Set<string>();
   for (const row of all(kind) as readonly unknown[]) {
@@ -79,10 +55,7 @@ const suggestionsFor = (kind: EntityKind, path: string): readonly string[] => {
   return built;
 };
 
-/**
- * What a tag on this field could be. Empty for a collection this screen cannot
- * answer for, which leaves the entry usable and simply unassisted.
- */
+/** What a tag on this field could be. Empty when unanswerable; the entry stays usable, unassisted. */
 const resolveTagSuggestionsFor = (
   collectionKind: string,
   field: FieldDescriptor,
@@ -91,10 +64,7 @@ const resolveTagSuggestionsFor = (
   return kind ? suggestionsFor(kind, field.path) : NONE;
 };
 
-/**
- * The resolver bound to one collection, kept so the editor's binding memo is
- * not invalidated by a fresh closure on every render.
- */
+/** Cached per collection so the editor's binding memo is not invalidated every render. */
 const tagSuggestionsResolverFor = (collectionKind: string): TagSuggestionResolver => {
   const held = resolvers.get(collectionKind);
   if (held) return held;

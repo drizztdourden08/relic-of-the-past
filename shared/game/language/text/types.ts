@@ -3,7 +3,7 @@
  * The translatable-text model: every string the game shows that is NOT a
  * dialogue line, described as a flat list of slots the editor can render.
  *
- * The CATALOG is the source of truth for which slots exist — it is rebuilt from
+ * The CATALOG is the source of truth for which slots exist. It is rebuilt from
  * the shipped data on every load, so a set that has never been touched still
  * shows every slot with its original text beside it. Storage only ever holds
  * the translator's overrides, keyed by the same slot keys, which is why a set
@@ -46,7 +46,7 @@ type TextGroup = {
   id: TextGroupId;
   title: string;
   slots: TextSlot[];
-  /** A caveat true of the whole group, said once rather than on every row. */
+  /** A caveat true of the whole group, said once instead of on every row. */
   note?: string;
 };
 

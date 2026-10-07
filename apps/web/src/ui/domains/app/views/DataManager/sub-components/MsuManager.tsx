@@ -1,19 +1,20 @@
 /* @layer renderer-components @kind component */
-import { useCallback, useEffect, useState } from 'react';
+/**
+ * The music packs: the list with create and import, and the selected pack's studio. A pack
+ * installed from the Hookshop is read only: its row carries the lock, its studio opens under
+ * the origin bar, and Delete uninstalls it the way the Hookshop tab does.
+ */
+import { useCallback, useState } from 'react';
 import { ImportForm } from './ImportForm';
-import { Box } from '../../../../../design-system/primitives/Box';
-import { TabBar } from '../../../../../design-system/primitives/TabBar';
 import { Text } from '../../../../../design-system/primitives/Text';
 import { MasterDetailLayout } from '../../../../../design-system/composites/MasterDetailLayout';
 import { deleteMsuPack } from '@app/lib/storage/msu-store';
+import { useInstalledKind } from '@app/hooks/useInstalledKind';
+import { InstalledOriginBar, useConfirmUninstall } from '@domains/app/views/InstalledOriginBar';
 import { useMsuManager } from './msu/useMsuManager';
 import { MsuPackList } from './msu/MsuPackList';
 import { MsuPackToolbar } from './msu/MsuPackToolbar';
-import { MsuEffectsPanel } from './msu/MsuEffectsPanel';
-import { MsuFilePanel } from './msu/MsuFilePanel';
-import { MsuSoundPanel } from './msu/MsuSoundPanel';
-import { MsuTrackPanel } from './msu/MsuTrackPanel';
-import { STUDIO_TABS } from './msu/sound-labels';
+import { MsuStudio } from './msu/MsuStudio';
 import type { StudioTab } from './msu/sound-labels';
 import type { MsuManagerProps } from './msu/msu.type';
 
@@ -22,131 +23,87 @@ const MsuManager = (props: MsuManagerProps) => {
   const msu = useMsuManager(onRefresh);
   const { selected, setSelected, refresh } = msu;
   const [tab, setTab] = useState<StudioTab>('music');
+  const { pack: installed, packFor } = useInstalledKind('music', selected);
+  const { confirmUninstall, uninstallError } = useConfirmUninstall(onDeleteConfirm);
+  const nameInstalled = packFor(msu.newPackName.trim()) !== null;
 
-  // A music audition is owned above the tabs, so leaving the music tab has to silence it — the
-  // sound tabs stop themselves by unmounting.
-  const { onStopPreview } = msu;
-  useEffect(() => {
-    if (tab !== 'music') onStopPreview();
-  }, [tab, onStopPreview]);
+  const isInstalled = useCallback((name: string) => packFor(name) !== null, [packFor]);
+
+  // After a duplicate or an update the pack to show may be one the list has not read yet.
+  const select = useCallback((name: string) => {
+    void refresh().then(() => setSelected(name));
+  }, [refresh, setSelected]);
+
+  const forget = useCallback(async (packName: string) => {
+    if (selected === packName) setSelected(null);
+    await refresh();
+  }, [selected, setSelected, refresh]);
 
   const handleDelete = useCallback((packName: string) => {
+    const owner = packFor(packName);
+    if (owner) {
+      confirmUninstall(owner, () => { void forget(packName); });
+      return;
+    }
     onDeleteConfirm('Delete Music Pack', `Delete pack "${packName}"? This cannot be undone.`, async () => {
       await deleteMsuPack(packName);
-      if (selected === packName) setSelected(null);
-      await refresh();
+      await forget(packName);
     });
-  }, [selected, refresh, onDeleteConfirm, setSelected]);
+  }, [packFor, confirmUninstall, forget, onDeleteConfirm]);
 
-  const { handleDeleteFile } = msu;
-  const confirmDeleteFile = useCallback((fileName: string) => {
-    onDeleteConfirm('Delete Audio File', `Delete "${fileName}" from this pack? This cannot be undone.`, () => {
-      handleDeleteFile(fileName);
-    });
-  }, [onDeleteConfirm, handleDeleteFile]);
+  const handleUninstalled = useCallback(() => {
+    if (selected !== null) void forget(selected);
+  }, [selected, forget]);
 
   const list = (
     <>
       <MsuPackToolbar
         name={msu.newPackName}
         busy={msu.busy}
+        nameInstalled={nameInstalled}
         onNameChange={msu.setNewPackName}
         onCreate={msu.handleCreatePack}
       />
       <ImportForm
         kind="msu"
-        placeholder="Paste pack download URL…"
+        placeholder="Paste pack download URL..."
         accept={['.msul', '.zip', '.7z', '.rar']}
         dropLabel="Drop a pack here"
         dropHint=".msul, or a .zip / .7z / .rar archive of audio"
+        disabled={nameInstalled}
         onUrlImport={msu.handleUrlImport}
         onFileImport={msu.handleFileImport}
       />
+      {uninstallError !== null && <Text className="import-form__status import-form__status--error">{uninstallError}</Text>}
       <MsuPackList
         packs={msu.packs}
         selected={selected}
+        isInstalled={isInstalled}
         onSelect={setSelected}
         onDelete={handleDelete}
       />
     </>
   );
 
-  const studio = selected === null ? null : (
-    <Box className="msu-studio">
-      <TabBar tabs={STUDIO_TABS} activeTab={tab} onTabChange={(id) => setTab(id as StudioTab)} />
-      {tab === 'ambient' && (
-        <MsuSoundPanel
-          pack={selected}
-          channel="ambient"
-          manifest={msu.resolved}
-          saveBase={msu.manifest ?? msu.resolved}
-          files={msu.files}
-          isLayered={msu.format === 'layered'}
-          onDeleteConfirm={onDeleteConfirm}
-          onReload={msu.reload}
-        />
-      )}
-      {tab === 'effects' && (
-        // Both effect ports, one section each — see MsuEffectsPanel for why they are not merged.
-        <MsuEffectsPanel
-          pack={selected}
-          manifest={msu.resolved}
-          saveBase={msu.manifest ?? msu.resolved}
-          files={msu.files}
-          isLayered={msu.format === 'layered'}
-          onDeleteConfirm={onDeleteConfirm}
-          onReload={msu.reload}
-        />
-      )}
-      {tab === 'files' && (
-        // saveBase is the pack's OWN manifest: a rename must not hand a classic pack one.
-        <MsuFilePanel
-          pack={selected}
-          manifest={msu.resolved}
-          saveBase={msu.manifest}
-          files={msu.files}
-          onDeleteConfirm={onDeleteConfirm}
-          onReload={msu.reload}
-        />
-      )}
-      {tab === 'music' && (
-        <MsuTrackPanel
-          selected={selected}
-          files={msu.files}
-          manifest={msu.resolved}
-          saveBase={msu.manifest ?? msu.resolved}
-          format={msu.format}
-          totalSize={msu.totalSize}
-          isDeluxe={msu.isDeluxe}
-          hasOpuz={msu.hasOpuz}
-          rows={msu.rows}
-          unusedFiles={msu.unusedFiles}
-          fileOptions={msu.fileOptions}
-          playing={msu.playing}
-          reportStore={msu.reportStore}
-          openTrack={msu.openTrack}
-          busy={msu.busy}
-          exporting={msu.exporting}
-          statusMessage={msu.statusMessage}
-          statusOk={msu.statusOk}
-          onTrackAssign={msu.handleTrackAssign}
-          onTrackUpload={msu.handleTrackUpload}
-          onToggleLayers={msu.handleToggleLayers}
-          onPreview={msu.onPreview}
-          onStopPreview={msu.onStopPreview}
-          onRename={msu.handleRenamePack}
-          onExport={msu.handleExport}
-          onDeleteFile={confirmDeleteFile}
-          onConfirm={onDeleteConfirm}
-          onReload={msu.reload}
-        />
-      )}
-    </Box>
+  const origin = installed === null ? null : (
+    <InstalledOriginBar pack={installed} onDuplicated={select} onUpdated={select} onUninstalled={handleUninstalled} />
   );
 
   const detail = selected === null
     ? <Text>Select a music pack to edit its slots, layers and sounds</Text>
-    : msu.loadingFiles ? <Text>Loading…</Text> : studio;
+    : msu.loadingFiles
+      ? <Text>Loading...</Text>
+      : (
+        <MsuStudio
+          msu={msu}
+          pack={selected}
+          readOnly={installed !== null}
+          origin={origin}
+          tab={tab}
+          onTabChange={setTab}
+          onDeleteConfirm={onDeleteConfirm}
+        />
+      );
 
   return <MasterDetailLayout list={list} detail={detail} detailEmpty={!selected} />;
 };

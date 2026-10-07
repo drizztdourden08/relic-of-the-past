@@ -12,7 +12,9 @@ interface LogEntry {
 
 type LogListener = (entry: LogEntry) => void;
 
-const MAX_ENTRIES = 200;
+// Large enough to keep a whole randomizer session-start burst (a full plan
+// application logs ~500 entries) readable after the fact.
+const MAX_ENTRIES = 1000;
 
 let nextId = 0;
 const entries: LogEntry[] = [];
@@ -40,15 +42,19 @@ const emit = (channel: LogChannel, level: LogLevel, message: string): void => {
     }
   }
 
-  // Dev-only: mirror into the native console so main-process file logging
+  // Mirrored into the native console so main-process file logging
   // (apps/desktop/electron/lib/dev-file-logger.ts) captures this app's own
   // structured log channels too, not just ad-hoc console.* calls.
-  if (import.meta.env.DEV) {
-    const line = `[${channel}] ${message}`;
-    if (level === 'error') console.error(line);
-    else if (level === 'warn') console.warn(line);
-    else console.log(line);
-  }
+  //
+  // Unconditional on purpose. This used to be behind `import.meta.env.DEV`, which is decided when
+  // the bundle is BUILT, while the file logger on the other side is attached on `is.dev`, which is
+  // decided when the app RUNS. Any unpackaged run of a production bundle therefore opened the log
+  // files and then wrote no channel line to them at all, which is the one case a crash log is for.
+  // Nothing consumes the console in a packaged build, so mirroring there costs a call and no more.
+  const line = `[${channel}] ${message}`;
+  if (level === 'error') console.error(line);
+  else if (level === 'warn') console.warn(line);
+  else console.log(line);
 };
 
 const log = {
@@ -84,7 +90,7 @@ const CHANNEL_COLORS: Record<LogChannel, string> = {
 const installGlobalHandlers = (): void => {
   window.addEventListener('error', (e) => {
     // WASM RuntimeErrors are handled exclusively by the lifecycle crash handler.
-    // Never log them here — they would flood during the game loop.
+    // Never log them here. They would flood during the game loop.
     if (e.error instanceof WebAssembly.RuntimeError) {
       e.preventDefault();
       return;
@@ -98,8 +104,10 @@ const installGlobalHandlers = (): void => {
 
 installGlobalHandlers();
 
-// Expose getEntries for Playwright / devtools access
+// Expose getEntries + subscribe for Playwright / devtools access. The ring
+// keeps only the last 200 entries, so a burst-safe capture needs a listener.
 (window as any).__logEntries = getEntries;
+(window as any).__logSubscribe = subscribe;
 
 export { log, subscribe, getEntries, CHANNEL_COLORS };
 export type { LogChannel, LogLevel, LogEntry, LogListener };

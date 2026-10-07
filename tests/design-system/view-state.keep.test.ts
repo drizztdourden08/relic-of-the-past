@@ -29,7 +29,7 @@ const TABLE: TableState = {
   groupBy: ['tag'],
 };
 
-describe('capture and restore — the memento round trip', () => {
+describe('capture and restore make one memento round trip', () => {
   it('carries the whole arrangement out and back', () => {
     const filters = [createClause('name', 'contains', 'a')];
     const snapshot = capture(TABLE, filters, 'editor');
@@ -39,7 +39,7 @@ describe('capture and restore — the memento round trip', () => {
     expect(restored.tab).toBe('editor');
   });
 
-  it('stamps a version so a future shape change can discard rather than migrate', () => {
+  it('stamps a version so a future shape change can discard instead of migrate', () => {
     expect(capture(TABLE, []).v).toBe(1);
   });
 
@@ -60,7 +60,7 @@ describe('capture and restore — the memento round trip', () => {
     expect('collapsed' in restore(capture(TABLE, []))).toBe(false);
   });
 
-  it('copies rather than aliases, so later edits cannot reach back in', () => {
+  it('copies instead of aliases, so later edits cannot reach back in', () => {
     const snapshot = capture(TABLE, [createClause('name', 'contains', 'a')]);
     expect(snapshot.columns[0]).not.toBe(TABLE.columns[0]);
     expect(restore(snapshot).table.columns[0]).not.toBe(snapshot.columns[0]);
@@ -76,7 +76,7 @@ describe('capture and restore — the memento round trip', () => {
   });
 });
 
-describe('prune — schema drift', () => {
+describe('prune after schema drift', () => {
   const stale: ViewSnapshot = {
     v: 1,
     columns: [{ path: 'id' }, { path: 'gone' }, { path: 'name' }],
@@ -113,7 +113,7 @@ describe('prune — schema drift', () => {
     expect(prune(snapshot, schema, [{ path: 'id' }]).filters.map((f) => f.op)).toEqual(['anyOf']);
   });
 
-  it('falls back to the given columns rather than leaving the table empty', () => {
+  it('falls back to the given columns instead of leaving the table empty', () => {
     const allStale: ViewSnapshot = { ...emptySnapshot(), columns: [{ path: 'gone' }, { path: 'also-gone' }] };
     expect(prune(allStale, schema, [{ path: 'id' }, { path: 'name' }]).columns)
       .toEqual([{ path: 'id' }, { path: 'name' }]);
@@ -128,7 +128,7 @@ describe('prune — schema drift', () => {
     expect(prune(fresh, schema, [{ path: 'id' }])).toEqual(fresh);
   });
 
-  it('accepts a raw field list as well as an index', () => {
+  it('accepts a raw field list and an index', () => {
     expect(prune(stale, buildSchema(ROWS, CONFIG), [{ path: 'id' }]).columns.map((c) => c.path))
       .toEqual(['id', 'name']);
   });

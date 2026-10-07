@@ -1,12 +1,12 @@
 <!-- @layer docs @kind doc -->
-# Linux — controller setup (udev rules)
+# Linux controller setup (udev rules)
 
 SDL3 is the only input layer this app uses, on every platform, including Linux. On
 Linux, its raw-HID backend needs permission to the `hidraw` and `usb` device nodes to
 talk to a controller directly. Without that permission, a controller from one of the
 vendors below may fall back to SDL3's standard gamepad mode (buttons and axes only) or
-may not be usable at all — see the per-controller notes in
-[support-matrix.md](support-matrix.md#limitations). Xbox pads are the one exception:
+may not be usable at all, as the per-controller notes in
+[support-matrix.md](support-matrix.md#limitations) describe. Xbox pads are the one exception:
 they work through SDL3's standard mode without needing these rules at all.
 
 ## .deb (automatic)

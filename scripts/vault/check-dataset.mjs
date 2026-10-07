@@ -1,23 +1,11 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * Assert the private record dataset is present, for release builds only.
- *
- * Everything under `shared/game/data/records/` reaches the app through Vite
- * globs that resolve to an empty object when the folder is absent, and every
- * consumer falls back to an empty dataset. That fallback is CORRECT for a clone
- * without vault access: the app builds, lints and runs with nothing to show,
- * which is the same state as a user who has supplied no ROM.
- *
- * The cost is that "no dataset" and "the dataset failed to arrive" are the same
- * value, and a release build cannot tell them apart. It did not: v0.17.0 through
- * v0.18.0 shipped with an empty dataset and a green build, because CI had no way
- * to reach the vault and nothing said so. Sprite extraction reported success and
- * wrote zero files.
- *
- * So this runs in the release workflow ONLY, immediately after the vault is
- * fetched, and is the one place where an empty dataset is an error rather than a
- * normal state. It never runs on `npm run ci`, which must stay green without a
- * vault — that property is what proves the fallbacks still work.
+ * Assert the private record dataset is present, for release builds only. The Vite
+ * globs under `shared/game/data/records/` resolve to empty when the folder is absent,
+ * so "no dataset" and "the dataset failed to arrive" look the same: v0.17.0 through
+ * v0.18.0 shipped empty with a green build. This runs in the release workflow only,
+ * right after the vault fetch. Never on `npm run ci`, which must stay green without
+ * a vault.
  *
  *   node scripts/vault/check-dataset.mjs
  */
@@ -28,11 +16,7 @@ const ROOT = resolve(import.meta.dirname, '..', '..');
 const RECORDS = join(ROOT, 'shared', 'game', 'data', 'records');
 const DEFINITIONS = join(RECORDS, 'sprite-manifest', 'definitions.json');
 
-/**
- * Roots whose absence has a visible effect in the app, so a partial fetch is
- * caught rather than passing on the strength of one file. Not the full list on
- * purpose: this is a smoke test for "the vault arrived", not a schema check.
- */
+// Roots whose absence is visible in the app. Not the full list: a smoke test, not a schema check.
 const REQUIRED_ROOTS = ['actors', 'checks', 'connections', 'items', 'screens', 'sprite-manifest'];
 
 const fail = (message) => {
@@ -51,23 +35,23 @@ const countSprites = () => {
 
 const main = () => {
   if (!existsSync(RECORDS)) {
-    fail('no record dataset at shared/game/data/records — the vault was never fetched');
+    fail('the vault was never fetched, so there is no record dataset at shared/game/data/records');
     return;
   }
 
   const missing = REQUIRED_ROOTS.filter((root) => !existsSync(join(RECORDS, root)));
   if (missing.length > 0) {
-    fail(`record dataset is incomplete — missing ${missing.join(', ')}`);
+    fail(`record dataset is missing ${missing.join(', ')}`);
     return;
   }
 
   const sprites = countSprites();
   if (typeof sprites !== 'number') {
-    fail(`sprite definitions ${sprites ?? 'are absent'} — extraction would silently do nothing`);
+    fail(`sprite definitions ${sprites ?? 'are absent'}, so extraction would silently do nothing`);
     return;
   }
   if (sprites === 0) {
-    fail('sprite definitions list is empty — extraction would silently do nothing');
+    fail('sprite definitions list is empty, so extraction would silently do nothing');
     return;
   }
 

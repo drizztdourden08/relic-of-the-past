@@ -25,7 +25,7 @@ interface ButtonRefs {
   excludedRef: React.MutableRefObject<Set<number>>;
   noiseRef: React.MutableRefObject<NoiseTracker>;
   /** Set whenever a button item becomes active. The next frame is spent
-   *  recording what already differs from rest rather than accepting anything,
+   *  recording what already differs from rest instead of accepting anything,
    *  which is what stops a still-held previous button from being read as this
    *  item's answer. */
   awaitingButtonRestRef: React.MutableRefObject<boolean>;
@@ -59,9 +59,9 @@ const processButtonItem = (bytes: Uint8Array, item: InputItem, idx: number, refs
   const diffs = findButtonBits(bl, bytes, excl);
 
   // What was already differing the moment this item became active is not this
-  // item's answer: a previous button still being held, or a report that simply
+  // item's answer: a previous button still being held, or a report that
   // never reads clean. Recorded once, then filtered out, so a press is a bit
-  // that ARRIVES rather than a moment when the whole report falls silent.
+  // that ARRIVES, not a moment when the whole report falls silent.
   // Waiting for silence cannot work: reports with a counter or timestamp byte
   // never provide one, and the capture would hang forever with no explanation.
   if (refs.awaitingButtonRestRef.current) {
@@ -83,7 +83,7 @@ const processButtonItem = (bytes: Uint8Array, item: InputItem, idx: number, refs
     // a second so holding a button cannot flood the log.
     if (diffs.length > 0 && Date.now() - refs.lastDetectLogAtRef.current > 1000) {
       refs.lastDetectLogAtRef.current = Date.now();
-      cb.addLog(`[detect] ${item.label}: ${diffs.length} byte(s) changed but all filtered — [${diffs.map(diffKey).join(' ')}]`);
+      cb.addLog(`[detect] ${item.label}: ${diffs.length} byte(s) changed but all filtered: [${diffs.map(diffKey).join(' ')}]`);
     }
     return;
   }
@@ -140,10 +140,10 @@ const processConfirmingPress = (bytes: Uint8Array, bl: Uint8Array, excl: Set<num
       const sub = refs.axisSubStepRef.current;
       if (sub === 'pos') {
         refs.axisCapRef.current[axisId].posBytes = new Uint8Array(bytes);
-        cb.addLog(`✓ ${item.label}+ — ${diffs.map(d => `[${d.byteIndex}]:${d.baseVal}→${d.sampleVal}`).join(', ')}`);
+        cb.addLog(`✓ ${item.label}+ on ${diffs.map(d => `[${d.byteIndex}]:${d.baseVal}→${d.sampleVal}`).join(', ')}`);
       } else {
         refs.axisCapRef.current[axisId].negBytes = new Uint8Array(bytes);
-        cb.addLog(`✓ ${item.label}− — ${diffs.map(d => `[${d.byteIndex}]:${d.baseVal}→${d.sampleVal}`).join(', ')}`);
+        cb.addLog(`✓ ${item.label}− on ${diffs.map(d => `[${d.byteIndex}]:${d.baseVal}→${d.sampleVal}`).join(', ')}`);
       }
       cb.setCaptureState('waiting-release');
     }

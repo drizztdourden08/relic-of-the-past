@@ -1,12 +1,11 @@
 /* @layer shared-input @kind data */
 /**
- * Helper builders for haptic vibration segments.
- * ─── Intensity Guide ───
- *   0.10–0.20  Very faint — ambient feedback
- *   0.20–0.35  Faint — subtle confirmation (footsteps, small clicks)
- *   0.35–0.55  Medium — standard action feedback (sword swing, item use)
- *   0.55–0.75  Strong — impactful hits (damage, hammer, explosions)
- *   0.75–1.00  Heavy — maximum force (death, boss defeat, quake)
+ * Helper builders for haptic vibration segments. Intensity guide:
+ *   0.10-0.20  very faint (ambient)
+ *   0.20-0.35  faint (footsteps, small clicks)
+ *   0.35-0.55  medium (sword swing, item use)
+ *   0.55-0.75  strong (damage, hammer, explosions)
+ *   0.75-1.00  heavy (death, boss defeat, quake)
  */
 
 import type { VibrationSegment } from '../../vibration-segment.type';

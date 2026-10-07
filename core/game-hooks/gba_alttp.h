@@ -11,7 +11,7 @@ extern uint32 g_gba_alttp_asset_sizes[kGbaAlttpAssetCount];
 // "Available" is about the data: the supplement container is loaded. "Enabled" is the
 // player's choice. Both must hold before anything appears in the world, so that a user
 // who owns the second cartridge but leaves the option off still gets an untouched
-// overworld rather than a hole in it.
+// overworld, not a hole in it.
 void GbaAlttp_SetExtraDungeonEnabled(bool enabled);
 bool GbaAlttp_IsExtraDungeonEnabled(void);
 
@@ -72,6 +72,8 @@ uint16 GbaAlttp_TorchDataOffset(uint16 offset);
 bool GbaAlttp_RoomTorchLit(void);
 uint8 GbaAlttp_AnimationPeriod(uint8 vanilla);
 bool GbaAlttp_IsWaterRoom(void);
+/* Forget the last room's current; the room loader calls it before a room's own effect runs. */
+void GbaAlttp_ResetWaterRoom(void);
 
 /* Shade the player while he is under; a no-op the rest of the time. */
 void GbaAlttp_SyncDiveTint(void);
@@ -82,7 +84,7 @@ void GbaAlttp_ApplyPyramidEntrance();
 // The engine recognises an overworld doorway by the pair of lower 8x8 tiles in the cell at
 // the player's feet, matched against a fixed list. The wall the extra opening is cut into is
 // built from a course that is not on that list, so this reports the pair belonging to the
-// cells that opening draws — the position table still decides where anything actually opens.
+// cells that opening draws. The position table still decides where anything actually opens.
 bool GbaAlttp_IsExtraEntranceTilePair(uint16 lower_left, uint16 lower_right);
 
 #endif

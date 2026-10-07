@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 /**
- * A stored token stream as the lines an author edits — the model's own splitter,
- * with the one guard the editor needs around it.
+ * A stored token stream as the lines an author edits. It is the model's own
+ * splitter, with the one guard the editor needs around it.
  *
  * Splitting measures each line as it goes, and measuring resolves glossary
  * references, which throws on a key the set no longer carries. Opening an entry

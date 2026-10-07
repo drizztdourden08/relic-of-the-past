@@ -2,7 +2,7 @@
 /**
  * Data model for the gamepad diagnostics report: who the device is, what the
  * input layer can tell us about it, and how it was identified. The per-step
- * observations the wizard gathers are not modelled here — the wizard attaches
+ * observations the wizard gathers are not modelled here. The wizard attaches
  * its byte capture and positional capture to a report as their own artefacts,
  * each in its own native shape.
  */

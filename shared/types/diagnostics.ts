@@ -1,10 +1,8 @@
 /* @layer shared-types @kind logic */
 /**
- * Host hardware/OS readout behind the debug-info block. Collected in the main
- * process because none of it is reachable from the renderer sandbox.
- *
- * Deliberately free of anything identifying — no host name, user name, or file
- * path — because this text is written to be pasted into a public bug report.
+ * Host hardware/OS readout behind the debug-info block, collected in the main process (none of
+ * it is reachable from the renderer sandbox). Deliberately free of anything identifying (host
+ * name, user name, file path) because it is meant to be pasted into a public bug report.
  */
 
 interface DiagnosticsRect {
@@ -21,7 +19,7 @@ interface DisplayDiagnostics {
   internal: boolean;
   /** Logical (DIP) bounds in the virtual desktop, as the window manager sees them. */
   bounds: DiagnosticsRect;
-  /** Native resolution — logical size multiplied by the scale factor. */
+  /** Native resolution, the logical size multiplied by the scale factor. */
   nativeSize: { width: number; height: number };
   workArea: DiagnosticsRect;
   scaleFactor: number;
@@ -64,7 +62,7 @@ interface GpuDiagnostics {
   glVersion: string | null;
   driverVersion: string | null;
   hardwareAccelerated: boolean;
-  /** Per-feature acceleration status ('enabled' / 'disabled_software' / …). */
+  /** Per-feature acceleration status ('enabled', 'disabled_software', ...). */
   features: Record<string, string>;
 }
 

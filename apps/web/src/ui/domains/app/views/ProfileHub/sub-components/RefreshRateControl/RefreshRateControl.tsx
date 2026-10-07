@@ -35,7 +35,7 @@ const RefreshRateControl = (props: RefreshRateControlProps) => {
 
   const rates = status.availableRates;
   // A stored rate the display no longer offers would leave nothing selected, so fall back to
-  // the highest — which is also what the default of 0 resolves to.
+  // the highest, which is also what the default of 0 resolves to.
   const selected = value > 0 && rates.includes(value) ? value : rates[rates.length - 1];
   // The detected value leads: it comes from the shared store, which is re-read after a switch,
   // so it is the only one of the three guaranteed to reflect the display as it is now. The
@@ -72,13 +72,13 @@ const RefreshRateControl = (props: RefreshRateControlProps) => {
             disabled={!status.supported || !rates.length || applying}
             onClick={() => setDialogOpen(true)}
           >
-            {applying ? 'Changing…' : 'Change refresh rate'}
+            {applying ? 'Changing...' : 'Change refresh rate'}
           </Button>
         </Box>
         {!compatible && currentHz !== null && (
           <Text className="refresh-rate__warning">
             {Math.round(currentHz)} Hz is not a multiple of 60. The game runs at 60 frames a second,
-            so your display cannot show every frame for the same length of time — some are held
+            so your display cannot show every frame for the same length of time, so some are held
             longer than others, which looks like stuttering when the screen scrolls.
           </Text>
         )}

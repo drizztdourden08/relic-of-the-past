@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 /**
- * Binding display — resolves an InputBinding to a human label and an icon URL.
+ * Resolves an InputBinding to a human label and an icon URL.
  * Shared by BindingRow (controls editor), the save-state hints, InputGlyph, and
  * the controller overlays so icon/label rendering has a single source of truth.
  */
@@ -33,7 +33,7 @@ const formatKeyBinding = (b: KeyboardBinding): string => {
 };
 
 const getBindingLabel = (binding: InputBinding, icon?: ButtonIcon | null): string => {
-  if (binding.type === 'none') return '—';
+  if (binding.type === 'none') return '-';
   if (icon?.label) return icon.label;
   switch (binding.type) {
     case 'keyboard':

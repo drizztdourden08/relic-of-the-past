@@ -1,8 +1,9 @@
 /* @layer renderer-widgets @kind barrel */
 export { InventoryWidgetContent, InventoryWidgetSettings } from './inventory';
-export { ChecksWidgetContent } from './checks';
+export { ChecksWidgetContent, ChecksWidgetSettings } from './checks';
 export { LogsWidgetContent } from './logs';
 export { DebugWidgetContent } from './debug';
 export { NavigationWidgetContent, LiveDataInspectorContent } from './navigation';
 export { CheatsWidgetContent } from './cheats';
 export { SimulatorWidgetContent } from './simulator';
+export { MusicWidgetContent } from './music';

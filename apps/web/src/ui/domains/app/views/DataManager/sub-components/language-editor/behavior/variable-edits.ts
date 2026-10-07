@@ -1,18 +1,10 @@
 /* @layer renderer-components @kind logic */
 /**
- * One variable's value, written back into the pair the set actually stores.
- *
- * The set persists a glossary and a name table and rebuilds its variable list
- * from them, so an edit made against the list has to land in whichever of the
- * two the variable came from. `kind` says which: a term is a glossary row, a
- * menu name is one of the three name-table groups, and an engine variable has
- * no stored value at all — the running game supplies it, so an edit to one is
- * refused rather than written somewhere it would be ignored.
- *
- * The key shapes mirror the projection exactly (`variables/from-legacy.ts`):
- * `bottle-<content>` and `label-<section>` name their group, and anything else
- * is an item. Reversing them here rather than guessing keeps a round trip
- * through the tables byte-identical.
+ * One variable's value written back into the pair the set stores (glossary
+ * and name table). `kind` says which; an engine variable has no stored value
+ * and is refused. The key shapes mirror `variables/from-legacy.ts` exactly
+ * (`bottle-<content>`, `label-<section>`, anything else is an item), so a
+ * round trip is byte-identical.
  */
 import type { Variable } from '@shared/game/language';
 import type { PauseLabelKey } from '@shared/game/language';

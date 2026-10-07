@@ -1,6 +1,6 @@
 /* @layer electron-main @kind native */
 // Raw HID device enumeration (SDL_hid_enumerate), independent of SDL's own
-// gamepad backend. Runs inline on the calling thread — see the EnumerateHid
+// gamepad backend. Runs inline on the calling thread. See the EnumerateHid
 // doc comment in sdl-thread.h for why that is safe to run concurrently with
 // the SDL thread's own hidapi use.
 #include "sdl-thread.h"
@@ -21,7 +21,7 @@ const char* BusTypeToString(SDL_hid_bus_type busType) {
 }
 
 // hidapi reports strings as wchar_t*, which is UTF-16 on Windows and UTF-32
-// elsewhere; decode either width into UTF-8 rather than assume one.
+// elsewhere; decode either width into UTF-8 instead of assuming one.
 std::string WideToUtf8(const wchar_t* wide) {
   if (wide == nullptr) {
     return "";

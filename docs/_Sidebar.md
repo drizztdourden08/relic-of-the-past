@@ -62,10 +62,10 @@
 **Game Hooks Reference**
 
 - [Overview](hooks/overview.md)
-- [State Queries — Inventory](hooks/state-queries-inventory.md)
-- [State Queries — Rooms & Collision](hooks/state-queries-rooms.md)
-- [State Queries — Navigation Tables](hooks/state-queries-navigation.md)
-- [State Queries — Sprites](hooks/state-queries-sprites.md)
+- [State Queries for Inventory](hooks/state-queries-inventory.md)
+- [State Queries for Rooms & Collision](hooks/state-queries-rooms.md)
+- [State Queries for Navigation Tables](hooks/state-queries-navigation.md)
+- [State Queries for Sprites](hooks/state-queries-sprites.md)
 - [Cheats & Commands](hooks/cheats-commands.md)
 - [Rendering & Settings](hooks/rendering-settings.md)
 - [Audio](hooks/audio.md)
@@ -84,7 +84,6 @@
 - [Testing](contributing/testing.md)
 - [Design System](contributing/design-system.md)
 - [Design Language](contributing/design-language.md)
-- [Copyright / Media Gate](contributing/copyright-gate.md)
 
 **Legal**
 

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * Entries whose trigger comes from a lookup table rather than an individual
+ * Entries whose trigger comes from a lookup table instead of an individual
  * call site, so every id in the group shares one piece of evidence.
  *
  * Index convention and the proof behind it: see ./context.ts.

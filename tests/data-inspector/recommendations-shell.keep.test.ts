@@ -1,15 +1,9 @@
 /* @layer tests @kind test */
 /**
- * The two bits of shell around the comparison view: the permanent rail entry,
- * and the foldable detail column.
- *
- * The rail entry is permanent, exactly like the eleven real collections: a
- * review pass is something the user can navigate into directly, not only
- * arrive at through a jump from the widget.
- * The fold is the Controls page's Profiles column mechanism, reused rather
- * than reinvented, so what is pinned here is the part a stylesheet cannot
- * express on its own: which glyph is shown, and the modifier class the CSS
- * hangs everything off.
+ * The shell around the comparison view: the permanent rail entry (a review
+ * pass is navigable directly, like the eleven real collections) and the
+ * foldable detail column (the Controls page's Profiles column mechanism,
+ * reused). Pinned: which glyph is shown, and the modifier class the CSS hangs off.
  */
 import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';
@@ -63,16 +57,14 @@ describe('the foldable detail column', () => {
     expect(html).toContain('◀');
   });
 
-  // The CSS hides the content rather than unmounting it, so a fold never
+  // The CSS hides the content instead of unmounting it, so a fold never
   // discards a half-made amendment in the pane behind it.
   it('keeps the panes mounted while folded', () => {
     expect(render('Comparison', true)).toContain('the panes');
   });
 
-  // The component carries no knowledge of recommendations at all — it takes
-  // whatever title and children it is given — which is what makes it usable
-  // for a plain collection's detail pane (DataInspector.tsx wraps both the
-  // same way) and not only the comparison view it originated in.
+  // The component knows nothing about recommendations: it takes any title and
+  // children, so a plain collection's detail pane uses it too (DataInspector.tsx).
   it('works the same for a plain collection\'s title as for the comparison\'s', () => {
     const html = render('Screens', true);
     expect(html).toContain('collapsible-detail--collapsed');

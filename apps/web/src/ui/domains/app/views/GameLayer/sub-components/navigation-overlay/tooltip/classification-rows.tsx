@@ -28,16 +28,8 @@ const Row = ({ label, value, tag, color }: RowProps) => (
 );
 
 /**
- * The five rows every tooltip layer block shows — always present, always in
- * this order — sourced from ONE `TileClassification`
- * (@shared/game/navigation/tile-classification). This is the single shared
- * body every mode (single/dual/locked) renders, so the row list and order can
- * never diverge between them again.
- *
- * Each row's right-hand tag says where its value came from: `attr` is the raw
- * grid read; behavior/visual/collision are all keyed purely off that attr via
- * native tables; interactable is resolved from a live side-table and carries
- * its own family + slot tag (see classification-format.ts).
+ * The five rows every layer block shows, from ONE `TileClassification`, so modes cannot diverge.
+ * Each row's tag says where its value came from: the grid, the attr, or a live side-table.
  */
 const ClassificationRows = ({ attr, classification, canPass }: ClassificationRowsProps) => {
   const { behavior, visual, collision, interactable } = classification;
@@ -54,7 +46,7 @@ const ClassificationRows = ({ attr, classification, canPass }: ClassificationRow
       />
       <Row
         label="interactable"
-        value={interactable ? interactableText(interactable) : '—'}
+        value={interactable ? interactableText(interactable) : '-'}
         tag={interactable ? interactableTag(interactable) : undefined}
       />
     </>

@@ -1,9 +1,8 @@
 /* @layer renderer-components @kind component */
 /**
- * ControllerStatusBar — the second row of a controller card: connection,
- * rumble, and gyro rendered as icons instead of bare words, plus the
- * device's identifier in monospace. Renders nothing for a feature the
- * device doesn't have, rather than greying out an absent one.
+ * The second row of a controller card: connection, rumble, and gyro rendered as
+ * icons instead of bare words, plus the device's identifier in monospace.
+ * Renders nothing for a feature the device doesn't have.
  */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import usbIcon from '@iconify-icons/lucide/usb';

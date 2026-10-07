@@ -11,7 +11,7 @@ interface WizardDialogShellProps {
   onClose: () => void;
   /** Heading text shown at the left of the header row. */
   title: string;
-  /** Optional trailing header content (ids, status badges) — right-aligned. */
+  /** Optional trailing header content (ids, status badges), right-aligned. */
   headerExtra?: ReactNode;
   /** Ordered step tabs. */
   steps: WizardStep[];

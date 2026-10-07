@@ -1,8 +1,8 @@
 /* @layer renderer-lib @kind logic */
 /**
- * Controller Detection — turns the SDL3 controller snapshot (main process)
+ * Turns the SDL3 controller snapshot (main process)
  * into the renderer's DetectedDevice list. SDL3 is the only controller
- * transport on every platform now (the browser Gamepad API path is gone —
+ * transport on every platform now (the browser Gamepad API path is gone,
  * see the platform hosts), so a device is either an SDL entry or the
  * keyboard; there is no separate "activation" concept left to track.
  */
@@ -52,7 +52,7 @@ const detectKeyboard = (index = 0): DetectedDevice => {
     productId: null,
     deviceFamily: 'keyboard',
     displayName: 'Keyboard',
-    // Not a real SDL type — SDL never enumerates a keyboard — but a stable,
+    // Not a real SDL type, since SDL never enumerates a keyboard, but a stable,
     // truthy sentinel so the drag-and-drop "apply defaults" flow can tell
     // this card apart from a gamepad's sdlType without a separate flag.
     sdlType: 'keyboard',

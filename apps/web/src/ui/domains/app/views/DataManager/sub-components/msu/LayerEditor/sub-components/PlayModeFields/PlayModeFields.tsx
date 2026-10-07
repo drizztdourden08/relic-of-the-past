@@ -1,18 +1,9 @@
 /* @layer renderer-components @kind component */
 /**
- * The scheduling half of a layer: which play mode, plus only the parameters that mode actually
- * has. Switching mode replaces the parameters wholesale rather than carrying stale ones over,
- * so what is on screen is always exactly what will be written to the manifest.
- *
- * Every edit within a mode spreads the current mode instead of rebuilding it, so changing the
- * order does not quietly reset the crossfade sitting beside it.
- *
- * The two optional settings — the crossfade and the wait switch — are each framed as a block of
- * their own rather than stacked in with the rest, because both were being missed entirely among
- * controls that look identical to them. Every control that can appear more than once on a page is
- * given an id from the layer it belongs to: without one the switch derives its id from its own
- * label, so two random layers produce duplicate ids and the second layer's switch operates the
- * first layer's.
+ * Switching mode replaces the parameters wholesale; edits within a mode spread the current mode so
+ * changing the order does not reset the crossfade. Crossfade and wait switch get their own framed
+ * blocks because both were missed among look-alike controls. Repeatable controls take an id from
+ * the layer: the switch otherwise derives its id from its label, and two random layers collide.
  */
 import { Badge } from '@ds/primitives/Badge';
 import { Box } from '@ds/primitives/Box';

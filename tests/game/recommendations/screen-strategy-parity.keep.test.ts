@@ -1,10 +1,9 @@
 /* @layer test @kind test */
 /**
- * The `screen` comparison strategy against the two mechanisms the deleted
- * `screen-identity.ts` detector revived (a `screenDataStatus` correction, and
- * the palace-mismatch map), PLUS the cases that detector silently missed: a
- * WRONG (not just missing) roomIndex/overworldIndex/entranceId, and a palace
- * mismatch on a screen that is not the one currently loaded.
+ * The `screen` strategy against what the deleted `screen-identity.ts` detector
+ * did (a `screenDataStatus` correction, the palace-mismatch map), PLUS what it
+ * missed: a WRONG roomIndex/overworldIndex/entranceId, and a palace mismatch
+ * on a screen that is not the one loaded.
  */
 import { describe, it, expect, beforeEach } from 'vitest';
 import { all, findOne } from '@shared/game/data';
@@ -17,10 +16,7 @@ import { detectorFromStrategy } from '@shared/game/recommendations/compare';
 import { screenStrategy } from '@shared/game/recommendations/strategies/screen';
 import { describeDataset } from '../../dataset-guard';
 
-/**
- * A palace index no record uses, so "the game says X, the record says Y" is
- * genuinely a disagreement for every screen.
- */
+/** A palace index no record uses, so the disagreement is real for every screen. */
 const WRONG_PALACE = Math.max(...all('screen').map(s => s.gameId.palaceIndex ?? 0)) + 2;
 
 const dungeonScreen = (exclude?: string): ScreenRecord => {
@@ -61,7 +57,7 @@ const palaceScanMatch = (screen: ScreenRecord): ScreenMatchResult => ({
 
 const detector = detectorFromStrategy(screenStrategy);
 
-describeDataset('screen strategy parity with screen-identity — palace mismatches', () => {
+describeDataset('screen strategy parity with screen-identity on palace mismatches', () => {
   beforeEach(() => { clearPalaceMismatches(); });
 
   it('proposes the live palace index for exactly the mismatch the correction described', () => {
@@ -126,7 +122,7 @@ describeDataset('screen strategy parity with screen-identity — palace mismatch
     expect(forScreen).toHaveLength(1);
   });
 
-  it('proposes a fix for a palace mismatch on a screen that is NOT the current one — the bug the old detector had', () => {
+  it('proposes a fix for a palace mismatch on a screen that is NOT the current one, which is the bug the old detector had', () => {
     const current = dungeonScreen();
     const other = dungeonScreen(current.id);
     const room = other.gameId.roomIndex as number;
@@ -169,7 +165,7 @@ describeDataset('screen strategy: a WRONG value is reported, not just a missing 
     expect((owDrafts[0].proposed as ScreenRecord).gameId.overworldIndex).toBe(wrongOw);
   });
 
-  it('never compares overworldIndex indoors — the RAM slot is stale, leftover from the last outdoor screen', () => {
+  it('never compares overworldIndex indoors, because the RAM slot is stale, leftover from the last outdoor screen', () => {
     const screen = dungeonScreen();
     const match: ScreenMatchResult = { screen, method: 'exact' };
     const liveGameId = { ...screen.gameId, overworldIndex: 0x3f };
@@ -198,13 +194,13 @@ describeDataset('screen strategy: a WRONG value is reported, not just a missing 
     const room = screen.gameId.roomIndex as number;
     const liveGameId = { ...screen.gameId, entranceId: 0x2b };
     const entranceRooms: number[] = [];
-    entranceRooms[0x2b] = room + 1; // stale — entrance 0x2b actually leads elsewhere
+    entranceRooms[0x2b] = room + 1; // stale, because entrance 0x2b actually leads elsewhere
 
     const drafts = detector.detect(contextFor(observations({ match, liveGameId, isIndoors: true, entranceRooms })));
     expect(drafts.filter(d => d.key === 'gameId.entranceId')).toEqual([]);
   });
 
-  it('does not compare entranceId at all without an entranceRooms observation — absent means "not read"', () => {
+  it('does not compare entranceId at all without an entranceRooms observation, since absent means "not read"', () => {
     const screen = dungeonScreen();
     const match: ScreenMatchResult = { screen, method: 'exact' };
     const liveGameId = { ...screen.gameId, entranceId: 0x2b };
@@ -222,7 +218,7 @@ describeDataset('screen strategy: kind, and authoring gaps the game cannot settl
     expect(drafts.some(d => d.key === 'kind')).toBe(true);
   });
 
-  it('never proposes a kind indoors — the game cannot distinguish dungeon/interior/cave', () => {
+  it('never proposes a kind indoors, because the game cannot distinguish dungeon/interior/cave', () => {
     const screen = dungeonScreen();
     const match: ScreenMatchResult = { screen, method: 'exact' };
     const drafts = detector.detect(contextFor(observations({ match, liveGameId: screen.gameId, isIndoors: true })));

@@ -1,13 +1,10 @@
 /* @layer tests @kind test */
 /**
- * The renderer's read model of the recommendation store.
- *
- * It never merges an edit of its own: a verdict goes to the main process, which
- * owns the file, and what comes back replaces the cached collection wholesale.
- * That is what keeps two accepts fired in quick succession from disagreeing
- * about what the file holds. The flattened snapshot has to be stable between
- * changes as well — it is what `useSyncExternalStore` compares, and a fresh
- * array per read would re-render forever.
+ * The renderer's read model of the recommendation store. It never merges an
+ * edit of its own: a verdict goes to the main process and what comes back
+ * replaces the cache wholesale, so two quick accepts cannot disagree. The
+ * flattened snapshot must be stable between changes (`useSyncExternalStore`
+ * compares it; a fresh array per read re-renders forever).
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type * as CacheModule from '@app/ui/domains/app/views/DataInspector/behavior/recommendations/recommendation-cache';
@@ -71,7 +68,7 @@ describe('loading', () => {
     expect(cache.allRecommendations().map(item => item.id).sort()).toEqual(['r-item', 'r-tag']);
   });
 
-  it('treats a failed read as an empty collection rather than throwing', async () => {
+  it('treats a failed read as an empty collection instead of throwing', async () => {
     loadRecommendations.mockRejectedValue(new Error('disk error'));
     cache.allRecommendations();
     await settle();

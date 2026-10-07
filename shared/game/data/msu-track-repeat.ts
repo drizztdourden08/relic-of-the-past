@@ -1,6 +1,6 @@
 /* @layer shared-game-data @kind data */
 /**
- * Which music slots loop and which play once — transcribed from the game's own table.
+ * Which music slots loop and which play once. Transcribed from the game's own table.
  *
  * Most music repeats, but fanfares and stings (item found, dungeon cleared, a death) are
  * meant to play through and stop. A classic MSU-1 pack carries no per-track metadata, so

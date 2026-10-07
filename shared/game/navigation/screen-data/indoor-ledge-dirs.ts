@@ -21,7 +21,7 @@ const inferAxisDir = (
   if (hasWallPos && !hasWallNeg) return posDir;
   if (hasWallNeg && !hasWallPos) return negDir;
 
-  // Ambiguous — count walls up to 3 tiles out on each side
+  // Ambiguous, so count walls up to 3 tiles out on each side
   let neg = 0, pos = 0;
   for (let d = 1; d <= 3; d++) {
     if (wallAt(d)) pos++;
@@ -34,8 +34,8 @@ const inferAxisDir = (
 
 /**
  * Compute the inferred jump direction for every indoor straight-ledge trigger tile.
- * Keyed by row * GRID_SIZE + col. Pure inference — no grid mutation — so callers can
- * check neighbor directions (Link's 2-wide body needs a same-direction pair).
+ * Keyed by row * GRID_SIZE + col. Pure inference with no grid mutation, so callers can
+ * check neighbor directions (the player's 2-wide body needs a same-direction pair).
  */
 const computeIndoorLedgeDirs = (rawAttr: number[][], cliffWall: ReadonlySet<number>): Map<number, LedgeDir> => {
   const dirs = new Map<number, LedgeDir>();

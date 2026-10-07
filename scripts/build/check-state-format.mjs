@@ -1,15 +1,10 @@
 // @layer tooling-scripts @kind build
 /**
- * Release gate for the save state format, and the writer of the asset that publishes it.
- *
- * The id itself is computed by the build (core/wasm-build/layout-probe.mjs) and needs no
- * human input, so there is nothing here to forget. This exists for the narrower job of
- * refusing to publish an id that nobody has written down: if the layout moved, the release
- * stops until a KNOWN_FORMATS row says what moved and why.
- *
- * The emitted asset carries the id IN ITS FILENAME — `state-format-<id>.json` — so an older
- * build can answer "will my save states still load?" from the release listing alone, with
- * no extra request per version.
+ * Release gate for the save state format. The id is computed by the build
+ * (core/wasm-build/layout-probe.mjs); this refuses to publish one that no
+ * KNOWN_FORMATS row describes. The emitted asset carries the id in its filename,
+ * `state-format-<id>.json`, so an older build can answer "will my save states still
+ * load?" from the release listing alone.
  *
  * Usage:
  *   node scripts/build/check-state-format.mjs                  # gate only
@@ -23,10 +18,7 @@ const generatedPath = join(root, 'shared', 'game', 'save-state', 'current-format
 const formatsPath = join(root, 'shared', 'game', 'save-state', 'formats.ts');
 const pkgPath = join(root, 'package.json');
 
-/**
- * Both files are read as text rather than imported: this runs as plain node in a release
- * job with no TypeScript loader, and the shapes involved are two literals.
- */
+// Read as text, not imported: this runs as plain node with no TypeScript loader.
 const readGenerated = () => {
   if (!existsSync(generatedPath)) {
     fail('shared/game/save-state/current-format.generated.ts is missing. Run the wasm build (it runs the layout probe).');
@@ -63,7 +55,7 @@ const run = () => {
     );
   }
 
-  console.log(`[state-format] ok — ${id} (${totalBytes} bytes) is registered`);
+  console.log(`[state-format] ${id} (${totalBytes} bytes) is registered`);
 
   const emitIndex = process.argv.indexOf('--emit');
   if (emitIndex === -1) return;

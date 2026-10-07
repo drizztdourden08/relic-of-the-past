@@ -3,12 +3,10 @@
  * Resolves the name table the running profile should display names from, and
  * caches it at module scope.
  *
- * Two lookups sit behind one call: the profile's chosen language-set id (a
- * profile read) and that set's name table (a set read, which pulls the whole
- * set off disk). Both are memoised per key and kept in module scope rather than
- * component state, so the menu opening or re-rendering never touches storage
- * again — and switching profiles resolves the new one once, then hits the cache
- * on the way back.
+ * Two lookups sit behind one call: the profile's chosen language-set id and
+ * that set's name table (which pulls the whole set off disk). Both are memoised
+ * per key in module scope, so the menu opening or re-rendering never touches
+ * storage again, and switching profiles resolves the new one once.
  */
 import type { NameTable } from '@shared/game/language';
 import { listProfiles } from '@app/lib/storage/profile-store';
@@ -40,8 +38,8 @@ const readTable = (languageId: string): Promise<NameTable | null> => {
 
 /**
  * The running profile's name table, or null when there is no profile, no
- * language set selected, or the set cannot be read — every one of which the
- * caller answers with the built-in defaults.
+ * language set selected, or the set cannot be read; the caller answers each
+ * with the built-in defaults.
  */
 const loadNameTable = async (profileId: string | null): Promise<NameTable | null> => {
   if (!profileId) return null;

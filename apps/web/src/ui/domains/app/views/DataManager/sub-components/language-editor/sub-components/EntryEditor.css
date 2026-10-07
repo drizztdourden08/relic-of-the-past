@@ -5,7 +5,7 @@
  * They share this file the way the chips share theirs: none of them appears
  * anywhere else, so one prefix and one stylesheet keeps the relationship obvious.
  *
- * The identity of the entry is NOT here — the panel around this draws it, along
+ * The identity of the entry is NOT here. The panel around this draws it, along
  * with the metadata and the view switch, so edit mode is only the work and the
  * two buttons that end it.
  */
@@ -25,8 +25,8 @@
 }
 
 /*
- * Why the save is refused. Long on purpose — it is a sentence, because "too long"
- * on its own reads as though the text will be trimmed, and it will not.
+ * Why the save is refused. It is long on purpose, a whole sentence, because "too
+ * long" on its own reads as though the text will be trimmed, and it will not.
  */
 .entry-editor__blocked {
   max-width: 60ch;

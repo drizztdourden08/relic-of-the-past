@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 /**
- * Editor document to lines — the return half of the bridge, and the pivot every
- * consumer reads.
+ * Editor document to lines. This is the return half of the bridge, and the pivot
+ * every consumer reads.
  *
  * There is exactly one view per paragraph, always, which is what keeps the
  * gutter beside the text honest: row three of the gutter belongs to the third

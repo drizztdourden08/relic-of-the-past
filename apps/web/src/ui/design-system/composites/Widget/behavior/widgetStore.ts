@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 /**
- * Widget Store — localStorage + profile-based persistence for widget layouts.
+ * localStorage plus profile-based persistence for widget layouts.
  *
  * Two layers:
  *  1. localStorage ("widget-layout"): current in-memory layout for fast restore on reload.
@@ -10,7 +10,7 @@
 
 import type { WidgetLayout, WidgetState } from '../Widget.type';
 import { WIDGET_DEFINITIONS } from '../Widget.constants';
-import { createDefaultLayout, createDefaultWidgetState } from './createWidgetState';
+import { createDefaultLayout, createDefaultWidgetState, getWidgetDefinition } from './createWidgetState';
 
 /** Persistence round-trip injected by the View tier (keeps IPC out of the composite). */
 interface WidgetPersistenceIO {
@@ -27,7 +27,7 @@ const loadLayoutLocal = (): WidgetLayout => {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed: WidgetLayout = JSON.parse(raw);
-      // Ensure all known widgets exist (handles new widgets added in updates)
+      // Make sure all known widgets exist (handles new widgets added in updates)
       return ensureAllWidgets(parsed);
     }
   } catch { /* corrupt, use defaults */ }
@@ -63,14 +63,26 @@ const saveLayoutForProfile = async (profileId: string, layout: WidgetLayout, io:
 
 // ─── Helpers ───
 
-/** Ensure the layout has entries for all defined widgets (forward-compat). */
+/**
+ * Adds entries for any defined widget the layout is missing (forward-compat), and
+ * takes `visibility` back from the definition.
+ *
+ * Nothing in the UI can change a widget's visibility, so a stored value that
+ * disagrees with its definition is corruption, not a choice. The `--widgets=`
+ * startup flag used to write 'always' into the saved layout, which turned a
+ * game-only widget into one that never left the screen, permanently, in a profile
+ * the flag was only meant to pass through. Reading it from the definition here
+ * repairs any layout already carrying that.
+ */
 const ensureAllWidgets = (layout: WidgetLayout): WidgetLayout => {
   const existing = new Set(layout.widgets.map((w) => w.id));
   const missing = WIDGET_DEFINITIONS.filter((d) => !existing.has(d.id));
-  if (missing.length === 0) return layout;
   return {
     widgets: [
-      ...layout.widgets,
+      ...layout.widgets.map((w) => {
+        const def = getWidgetDefinition(w.id);
+        return def ? { ...w, visibility: def.defaultVisibility } : w;
+      }),
       ...missing.map((def, i) => createDefaultWidgetState(def, layout.widgets.length + i)),
     ],
   };

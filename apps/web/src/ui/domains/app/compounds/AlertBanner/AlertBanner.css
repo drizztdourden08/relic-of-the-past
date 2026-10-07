@@ -1,0 +1,19 @@
+/* @layer renderer-components @kind style */
+
+/* Gold on a transparent gold wash, with the rule down the left the panel's
+   other callouts already use, so a banner reads as part of the page rather
+   than as a box dropped onto it. */
+
+.alert-banner {
+  background: var(--c-gold-soft);
+  border-left: var(--border-width-thick) solid var(--c-gold);
+  border-radius: var(--radius-sm);
+  color: var(--c-gold-bright);
+  display: flex;
+  flex-direction: column;
+  font-size: var(--text-xs);
+  gap: var(--space-2xs);
+  line-height: var(--leading-normal);
+  min-width: 0;
+  padding: var(--space-xs) var(--space-sm);
+}

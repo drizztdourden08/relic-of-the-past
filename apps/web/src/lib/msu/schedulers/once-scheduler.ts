@@ -19,7 +19,7 @@ const createOnceScheduler = (ctx: LayerContext): LayerScheduler => {
     });
   };
 
-  // A finished one-shot resumes from the start rather than replaying its tail.
+  // A finished one-shot resumes from the start instead of replaying its tail.
   const position = (): LayerResume => ({
     fileIndex,
     offsetSeconds: finished ? 0 : (voice?.offsetSeconds() ?? 0),

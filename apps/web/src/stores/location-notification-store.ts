@@ -1,7 +1,7 @@
 /* @layer renderer-stores @kind logic */
 /**
- * Location Notification Store — manages screen/transition notification state.
- * Fed by a subscription to game-ui-store map changes.
+ * Manages screen/transition notification state, fed by a subscription to
+ * game-ui-store map changes.
  */
 
 import { create } from 'zustand';

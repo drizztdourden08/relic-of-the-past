@@ -1,0 +1,85 @@
+/* @layer renderer-widgets @kind style */
+
+/* Same rhythm as the Game State widget: padded column of sections, inset row groups inside. */
+.music-widget {
+  height: 100%;
+  overflow-y: auto;
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.music-widget__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.music-widget__section--feed {
+  flex: 1;
+  min-height: 160px;
+}
+
+.music-widget__rows {
+  display: flex;
+  flex-direction: column;
+  background: var(--c-inset);
+  border: 1px solid var(--c-hairline);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+.music-widget__rows--scroll {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.music-widget__rows .stat-row {
+  padding: var(--space-xs) var(--space-sm);
+}
+
+.music-widget__rows .stat-row:nth-child(even) {
+  background: var(--c-hover);
+}
+
+/* The studio's readout carries its own margins for the slot list; here it sits in a gap. */
+.music-widget .preview-readout {
+  margin: 0;
+}
+
+.music-widget__feed {
+  flex: 1;
+  min-height: 0;
+}
+
+.music-event {
+  display: grid;
+  grid-template-columns: auto auto auto 1fr;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.music-event:nth-child(even) {
+  background: var(--c-hover);
+}
+
+.music-event__time {
+  color: var(--c-text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.music-event__channel {
+  color: var(--c-text-dim);
+  min-width: 4em;
+}
+
+.music-event__detail {
+  color: var(--c-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

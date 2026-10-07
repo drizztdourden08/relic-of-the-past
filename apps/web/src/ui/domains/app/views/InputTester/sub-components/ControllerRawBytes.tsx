@@ -17,7 +17,7 @@ interface ControllerRawBytesProps {
 const ControllerRawBytes = ({ state }: ControllerRawBytesProps) => (
   <Box as="details" style={S.details}>
     <Box as="summary" style={S.summary}>
-      Raw Bytes {state.reportId != null ? `(0x${state.reportId.toString(16).padStart(2, '0')})` : ''} — {state.rawBytes ? state.rawBytes.length : 0}B
+      Raw Bytes {state.reportId != null ? `(0x${state.reportId.toString(16).padStart(2, '0')})` : ''} · {state.rawBytes ? state.rawBytes.length : 0}B
     </Box>
     {state.rawBytes && (
       <Box style={S.grid}>

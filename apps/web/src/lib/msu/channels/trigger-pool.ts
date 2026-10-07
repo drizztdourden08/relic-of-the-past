@@ -4,7 +4,7 @@
  *
  * A sword swing authored with four recordings should sound like four recordings, not like the
  * first one four times. That variation is a property of the trigger, not of the play mode, so
- * it is chosen here and handed to the scheduler as the file to start on — no new play mode, and
+ * it is chosen here and handed to the scheduler as the file to start on, so no new play mode, and
  * the continuous modes (which already draw from their own pool) are left alone.
  *
  * Deliberately unseeded: an effect firing differently each time is the point. Only the exporter,
@@ -13,7 +13,7 @@
 import type { LayerResume, MsuLayer } from '@shared/types/msu-manifest';
 
 const createTriggerPool = () => {
-  // Last file used, per layer — enough to keep a repeat from landing twice running.
+  // Last file used, per layer. Enough to keep a repeat from landing twice running.
   const last = new Map<string, number>();
 
   /** A file for this trigger, or null to let the scheduler start where it normally would. */

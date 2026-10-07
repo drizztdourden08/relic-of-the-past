@@ -61,6 +61,8 @@ const SegmentedControl = <T extends string = string>(props: SegmentedControlProp
             type="button"
             role="radio"
             aria-checked={value === opt.value}
+            aria-label={opt.title}
+            title={opt.title}
             className={`segmented__btn ${value === opt.value ? 'segmented__btn--active' : ''}`}
             onClick={() => {
               const outcome = resolveClick(opt.value, value, onDeselect !== undefined);

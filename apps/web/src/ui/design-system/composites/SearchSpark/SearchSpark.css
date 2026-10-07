@@ -1,0 +1,49 @@
+/* @layer renderer-components @kind style */
+
+/* Permanent gold glow: the search mark is always "lit". Hosts brighten it on hover. */
+.search-spark {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  color: var(--c-gold);
+  filter: drop-shadow(0 0 3px var(--c-gold-soft));
+  transition: filter var(--transition-normal), color var(--transition-normal);
+}
+
+/* Over the lens. At the original 14px glass this is 2px down, 3px in, at --text-xs. */
+.search-spark__star {
+  position: absolute;
+  top: calc(var(--search-spark-size) * 0.14);
+  left: calc(var(--search-spark-size) * 0.21);
+  font-size: calc(var(--search-spark-size) * 0.72);
+  line-height: 1;
+  color: var(--c-gold-bright);
+  transform-origin: center;
+  opacity: 0;
+  pointer-events: none;
+  animation: search-twinkle var(--duration-twinkle) var(--ease-standard) infinite;
+}
+
+/* Only ~12% of the cycle is visible, so it reads as an occasional sparkle, not a pulse. */
+@keyframes search-twinkle {
+  0%, 88%, 100% {
+    opacity: 0;
+    transform: scale(0.3) rotate(0deg);
+  }
+
+  92% {
+    opacity: 1;
+    transform: scale(1) rotate(35deg);
+  }
+
+  96% {
+    opacity: 0.7;
+    transform: scale(0.75) rotate(60deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search-spark__star {
+    animation: none;
+  }
+}

@@ -8,10 +8,8 @@ import type * as OptionsMenuModule from '../../apps/web/src/ui/design-system/com
 import type * as TableFooterModule from '../../apps/web/src/ui/design-system/composites/DataTable/sub-components/TableFooter';
 import type { TableActions } from '../../apps/web/src/ui/design-system/composites/DataTable/DataTable.type';
 
-// SSR smoke tests for the table's footer — the row count, the table-wide
-// options menu trigger, and (once, on the left) the sort/group summary that
-// used to open every column's own ⋯ menu, repeated once per column. See
-// data-table-render.test.ts for why these are SSR-only.
+// SSR smoke tests for the footer: row count, options menu trigger, and the
+// sort/group summary that used to be repeated in every column's ⋯ menu.
 
 let TableOptionsMenu: typeof OptionsMenuModule.TableOptionsMenu;
 let TableFooter: typeof TableFooterModule.TableFooter;
@@ -44,11 +42,9 @@ const stubTableActions = (): TableActions => ({
   onFitAllToContent: () => {}, onResetColumns: () => {},
 });
 
-describe('TableOptionsMenu — the footer trigger', () => {
-  // The entries themselves are asserted in data-table-menus.test.ts, where they
-  // are a pure list. All that can be checked here is that the component takes
-  // the fuller action set and renders — the menu is portalled, so opening it
-  // needs a document this suite does not have.
+describe('TableOptionsMenu behind the footer trigger', () => {
+  // The entries are asserted in data-table-menus.test.ts. The menu is
+  // portalled, so only rendering with the fuller action set is checked here.
   const render = (): string =>
     renderToStaticMarkup(createElement(TableOptionsMenu, {
       sortActive: false, groupActive: false, actions: stubTableActions(),
@@ -65,7 +61,7 @@ describe('TableOptionsMenu — the footer trigger', () => {
 // The sort/group summary used to open every column's own ⋯ menu, repeated
 // once per column. It now renders once, here, on the left of the same strip
 // that already carries the row count and the options trigger.
-describe('TableFooter — the sort/group summary, once, on the left', () => {
+describe('TableFooter shows the sort/group summary once, on the left', () => {
   const renderFooter = (summary: TableFooterModule.TableFooterProps['summary']): string =>
     renderToStaticMarkup(createElement(TableFooter, {
       count: 3, sortActive: false, groupActive: false, actions: stubTableActions(), summary,

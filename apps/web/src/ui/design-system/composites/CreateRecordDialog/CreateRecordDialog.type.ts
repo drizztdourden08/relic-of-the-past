@@ -10,10 +10,10 @@ type CreateOutcome =
 interface CreateRecordDialogProps {
   open: boolean;
   title: string;
-  /** Already trimmed to what this collection's create channel can actually carry — see `create-schema.ts`. */
+  /** Already trimmed to what this collection's create channel can carry. See `create-schema.ts`. */
   schema: readonly FieldDescriptor[];
   config?: SchemaConfig;
-  /** A blank starting record — every optional field left absent, every required one seeded. */
+  /** A blank starting record: every optional field left absent, every required one seeded. */
   initialRecord: Record<string, unknown>;
   /** Paths that must hold a value before the record can be created. */
   requiredPaths: readonly string[];
@@ -21,9 +21,9 @@ interface CreateRecordDialogProps {
   resolveTagSuggestions?: TagSuggestionResolver;
   onCreateTag?: TagCreator;
   resolveNumberBounds?: NumberBoundsResolver;
-  /** Sends the filled-in draft to wherever this kind's records are actually written. */
+  /** Sends the filled-in draft to wherever this kind's records are written. */
   onCreate: (record: Record<string, unknown>) => Promise<CreateOutcome>;
-  /** The record was created — carries its freshly allocated id. */
+  /** The record was created. Carries its freshly allocated id. */
   onCreated: (id: string) => void;
   onCancel: () => void;
 }

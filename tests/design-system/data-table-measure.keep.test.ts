@@ -4,15 +4,13 @@ import {
   CLONE_STYLE, HOST_STYLE, naturalContentWidth, naturalContentWidths,
 } from '../../apps/web/src/ui/design-system/composites/DataTable/behavior/measure-natural-width';
 
-// There is no DOM in this runner, so the browser rule the measurement rests on
-// is modelled here rather than run: an element reports the box it is laid out
-// in, an element laid out nowhere reports nothing, and `scrollWidth` rises above
-// the box only once the content is genuinely spilling out of it.
+// No DOM, so the browser rule is modelled: an element reports the box it is
+// laid out in, one laid out nowhere reports nothing, and `scrollWidth` rises
+// above the box only once content spills.
 //
-// That last part is the whole bug. A short value in a roomy column has nothing
-// spilling, so its scroll width IS the column's current width — asking it how
-// much room it needs answered with the room it already had, and a fit built on
-// that could hold a column where it was or push it wider, never bring it in.
+// That last part is the bug: a short value in a roomy column has nothing
+// spilling, so its scroll width IS the column width, and a fit built on it
+// could never bring the column in.
 
 interface FakeDoc {
   body: FakeNode;
@@ -104,7 +102,7 @@ describe('measuring what a clipped cell actually wants', () => {
     expect(naturalContentWidth(asElement(cell))).toBe(60);
   });
 
-  it('is the answer the scroll width could not give — that one just echoes the column', () => {
+  it('is the answer the scroll width could not give, since that one just echoes the column', () => {
     const doc = makeDoc();
     const cell = cellIn(doc, 320, 60);
     expect(cell.scrollWidth).toBe(320);
@@ -178,7 +176,7 @@ describe('the styles the measurement depends on', () => {
     expect(CLONE_STYLE).toContain('display: block');
   });
 
-  it('parks the host out of sight rather than hiding it, since it has to lay out', () => {
+  it('parks the host out of sight instead of hiding it, since it has to lay out', () => {
     expect(HOST_STYLE).toContain('position: fixed');
     expect(HOST_STYLE).toContain('visibility: hidden');
     expect(HOST_STYLE).not.toContain('display: none');

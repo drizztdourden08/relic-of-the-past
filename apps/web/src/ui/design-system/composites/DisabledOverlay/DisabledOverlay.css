@@ -5,8 +5,8 @@
   isolation: isolate;
 }
 
-/* The disabled content stays visible but takes no input and drops out of the tab order —
-   `inert` (set in the component) does the real work; this is a visual/defensive backstop. */
+/* The disabled content stays visible but takes no input and drops out of the tab order.
+   `inert` (set in the component) does the real work; this is a visual backstop. */
 .disabled-overlay__content {
   pointer-events: none;
   user-select: none;
@@ -15,9 +15,9 @@
 /* A real overlay ON TOP of the content, not a participant in its layout: absolutely
    positioned over the covered region so the content beneath keeps its own layout untouched.
    Overhangs the covered region by 10px on every side so it reads as something laid over the
-   top rather than a same-size panel swapped in. Low alpha + a blur so labels stay unreadable
-   through it without hiding that something is there — with a visible border so the covered
-   region reads as one bordered unit. */
+   top instead of a same-size panel swapped in. Low alpha + a blur so labels stay unreadable
+   through it without hiding that something is there. A visible border keeps the covered
+   region reading as one unit. */
 .disabled-overlay__scrim {
   position: absolute;
   inset: -10px;
@@ -37,7 +37,7 @@
 }
 
 /* Contained variant: the anchor sits inside an `overflow: hidden`/`auto` ancestor, or flush
-   against a neighboring row with no gap to bleed into — the default overhang would get clipped
+   against a neighboring row with no gap to bleed into. The default overhang would get clipped
    by the ancestor or spill onto adjacent, still-enabled content. Sitting a few px INSIDE the
    covered region instead keeps the same "not pixel-identical to what it covers" cue without
    needing room to spill into. */

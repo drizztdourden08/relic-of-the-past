@@ -49,7 +49,7 @@ const MsuDetectedSummary = (props: MsuDetectedSummaryProps) => {
         <Text as="span" className="msu-detected__description">
           {pack
             ? 'Read from the pack assigned to this profile.'
-            : 'No pack assigned to this profile — assign one in Data Manager.'}
+            : 'No pack assigned to this profile. Assign one in Data Manager.'}
         </Text>
       </Box>
       <Box className="msu-detected__value">

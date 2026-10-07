@@ -3,8 +3,8 @@
  * Optional second-cartridge content (core/game-hooks/gba_alttp.c).
  *
  * Two separate questions, deliberately not collapsed into one:
- *   available — the supplement container is present in the asset blob.
- *   enabled   — the player asked for the extra content.
+ *   available: the supplement container is present in the asset blob.
+ *   enabled:   the player asked for the extra content.
  *
  * Both must hold before anything appears in the world, so owning the cartridge with the
  * option switched off still gives an untouched overworld. The core defaults to disabled,

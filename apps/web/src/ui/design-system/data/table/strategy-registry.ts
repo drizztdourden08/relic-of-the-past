@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 /**
- * Registry of per-kind comparators and group-key functions — the table's half
- * of the strategy seam (the filter's half is filter/tester-registry.ts).
+ * Registry of per-kind comparators and group-key functions. This is the table's
+ * half of the strategy seam; the filter's half is filter/tester-registry.ts.
  *
  * Unlike the tester registry, lookups here ALWAYS resolve: an unregistered kind
  * falls back to a generic string ordering and a generic group key, so the table
@@ -43,7 +43,7 @@ const getComparator = (kind: FieldKind): Comparator => comparators.get(kind) ?? 
 
 const getGroupKey = (kind: FieldKind): GroupKeyFn => groupKeys.get(kind) ?? fallbackGroupKey;
 
-/** Test hygiene only — production code registers once and never clears. */
+/** Test hygiene only. Production code registers once and never clears. */
 const clearFieldStrategies = (): void => {
   comparators.clear();
   groupKeys.clear();

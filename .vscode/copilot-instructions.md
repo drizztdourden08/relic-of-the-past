@@ -1,4 +1,4 @@
-# Copilot Instructions — ALttP Port
+# Copilot Instructions for the ALttP Port
 
 The coding standards for this repository now live in a tool-neutral location so
 that GitHub Copilot and Claude Code share one source of truth:

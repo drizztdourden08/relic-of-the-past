@@ -56,7 +56,7 @@ bool Launch(const std::wstring& exe, const std::wstring& args, const wchar_t* ve
   return code == 0;
 }
 
-// Resolved from the system directory rather than the search path: the archive
+// Resolved from the system directory, never the search path: the archive
 // tool that understands these packages is the one shipped with the OS, and a
 // bare name could pick up an unrelated build earlier on the path.
 std::wstring SystemTar() {
@@ -150,7 +150,7 @@ bool RunSetup(const std::wstring& exe, const std::vector<std::wstring>& args, bo
 
 std::wstring InstalledRoot(ui::Mode mode, const std::wstring& chosen) {
   // A per-user install goes where Velopack puts it, which is the pack id under
-  // LocalAppData rather than the Programs folder a location screen would suggest.
+  // LocalAppData, not the Programs folder a location screen would suggest.
   if (mode != ui::Mode::PerUser) return chosen;
   return KnownFolder(CSIDL_LOCAL_APPDATA) + L"\\" + theme::kPackId;
 }
@@ -179,7 +179,7 @@ bool Unpack(const std::wstring& archive, const std::wstring& directory) {
 
   // The package already carries its own portable marker, so the only thing
   // missing is the writable folder the app keeps its profile in, which sits
-  // alongside the payload rather than inside it.
+  // alongside the payload, not inside it.
   std::wstring data = directory + L"\\data";
   CreateDirectoryW(data.c_str(), nullptr);
   return true;

@@ -39,7 +39,7 @@ const useCreateRecordDialog = (
     createSchema,
     initialRecord,
     requiredPaths: paths,
-    /** Undefined when this collection has no create write path — omit the button entirely. */
+    /** Undefined when this collection has no create write path, so the button is omitted. */
     onCreate: RECORD_CREATORS[kind],
   };
 };

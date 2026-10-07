@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 /**
- * useControlsSettings — thin orchestrator composing focused sub-hooks.
+ * Thin orchestrator composing focused sub-hooks.
  */
 
 import { useState } from 'react';

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 /** Merges every SearchSource into one flat catalog. Adding a searchable domain later
- *  (game checks, items) means adding one file here — the engine never changes. */
+ *  (game checks, items) means adding one file here. The engine never changes. */
 import type { SearchContext, SearchEntry, SearchSource } from '../../SearchPalette.type';
 import { menuSource } from './menu-source';
 import { settingsSource } from './settings-source';

@@ -18,7 +18,7 @@ interface ReportDeps {
   screens?: ScreenRecord[];
 }
 
-/** Requirement sets on every edge that leads into a screen — why it stayed blocked. */
+/** Requirement sets on every edge that leads into a screen, which is why it stayed blocked. */
 const gatesInto = (adjacency: Adjacency, screenId: string): TraversalRequirement[][] => {
   const missing: TraversalRequirement[][] = [];
   for (const edges of adjacency.values()) {

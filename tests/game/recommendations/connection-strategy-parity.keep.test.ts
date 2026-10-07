@@ -1,10 +1,8 @@
 /* @layer test @kind test */
 /**
- * The `connection` strategy's nav probe against `connection-shape.ts`
- * (deleted). The hand-written direction-tag detector that used to ride
- * alongside it is gone along with the whole `dir:*` tag namespace — the
- * connection-model migration derives direction from `canExit` instead (see
- * `data/connections/derive.ts`), so there is no tag left to backfill.
+ * The `connection` strategy's nav probe (`connection-shape.ts` is deleted).
+ * The direction-tag detector is gone with the `dir:*` namespace; direction
+ * derives from `canExit` (see `data/connections/derive.ts`).
  */
 import { describe, it, expect } from 'vitest';
 import { all, connectionTagKeysOf, find } from '@shared/game/data';
@@ -90,7 +88,7 @@ describeDataset('connection strategy (nav probe) parity with connectionIssues', 
 
   const backing = floodBackedConnection(connections);
 
-  it('finds a flood-backed connection to compare — the fixture is not vacuously green', () => {
+  it('finds a flood-backed connection to compare, so the fixture is not vacuously green', () => {
     expect(backing).not.toBeNull();
   });
 
@@ -107,7 +105,7 @@ describeDataset('connection strategy (nav probe) parity with connectionIssues', 
     const navDrafts = backed.filter(d => d.key === 'nav');
     expect(navDrafts.length).toBeGreaterThan(0);
     for (const d of navDrafts) {
-      // Flood evidence proves presence only — it can never be graded certain.
+      // Flood evidence proves presence only, so it can never be graded certain.
       expect(d.confidence).toBe('likely');
       expect(d.action).toBe('update');
       expect((d.proposed as ConnectionRecord).nav).toBeDefined();
@@ -125,13 +123,11 @@ describeDataset('connection strategy (nav probe) parity with connectionIssues', 
     expect(navDetector.detect(contextFor(screen.id, [persisted], [backing.info])).filter(d => d.key === 'nav')).toEqual([]);
   });
 
-  it('proposes no NAV fix for an unresolvable endpoint rather than inventing one', () => {
+  it('proposes no NAV fix for an unresolvable endpoint instead of inventing one', () => {
     const broken: ConnectionRecord = { ...connections[0], toConnectionId: 'connection-999999' as ConnectionRecord['toConnectionId'] };
     expect(issuesFor(broken, [], screen.id).some(i => i.includes('unknown screen'))).toBe(true);
-    // Filtered to the nav probe's own findings — `connectionStrategy` also
-    // carries the phase-4-part-2 crossing `SetProbe`s now, and THOSE are
-    // right to flag a record pointing at a nonexistent screen for removal;
-    // that is a different, legitimate finding this assertion is not about.
+    // Filtered to the nav probe's own findings: the crossing `SetProbe`s are
+    // right to flag a record pointing at a nonexistent screen, a different finding.
     expect(navDetector.detect(contextFor(screen.id, [broken])).filter(d => d.key === 'nav')).toEqual([]);
   });
 });

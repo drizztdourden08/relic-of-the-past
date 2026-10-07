@@ -2,8 +2,8 @@
 /**
  * The half an object kind and a union kind have in common. Both hold a nested
  * value at runtime, both offer existence and nothing else, and both show a
- * one-line summary in a cell — so they share one strategy factory instead of
- * two files that drift apart.
+ * one-line summary in a cell, so they share one strategy factory instead of two
+ * files that drift apart.
  *
  * Sorting and grouping key off the value's serialized form: identical nested
  * values land in the same bucket and sit next to each other, where the core's
@@ -23,7 +23,7 @@ import type { EditorControlProps, FieldTypeStrategy } from './registry';
 import type { FieldKind } from '../../data/schema/field-descriptor';
 import './field-kits.css';
 
-const ABSENT = '—';
+const ABSENT = '-';
 
 const structuredCompare = nullsLast((a, b) => naturalTextCompare(toJson(a), toJson(b)));
 
@@ -44,7 +44,7 @@ const renderCell = (value: unknown): ReactNode => {
 /**
  * Nested editing belongs to RecordEditor, which walks `children` recursively and
  * (for a union) picks the branch first. Until it exists, the field states plainly
- * that it is edited elsewhere rather than pretending to be writable.
+ * that it is edited elsewhere instead of pretending to be writable.
  */
 const createPlaceholderEditor = (note: string) => {
   const EditorControl = (props: EditorControlProps) => {

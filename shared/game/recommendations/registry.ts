@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
- * Registry of detectors — the same Strategy registry the field kits use, for the
- * same reason: adding a ninth way of noticing the dataset is wrong should be one
+ * Registry of detectors, the same Strategy registry the field kits use. Adding a
+ * ninth way of noticing the dataset is wrong should be one
  * registration, not an edit in every consumer.
  *
  * Registration is a side effect of importing `detectors/index.ts`, so a caller
@@ -25,7 +25,7 @@ const allDetectors = (): readonly RecommendationDetector[] => [...detectors.valu
 const detectorsFor = (kind: EntityKind): readonly RecommendationDetector[] =>
   allDetectors().filter(detector => detector.kinds.includes(kind));
 
-/** For tests that need a clean registry rather than whatever a barrel installed. */
+/** For tests that need a clean registry instead of whatever a barrel installed. */
 const clearDetectors = (): void => { detectors.clear(); };
 
 interface DetectionRun {
@@ -41,7 +41,7 @@ interface DetectionRun {
 /**
  * Runs every detector registered for `kind` and returns their drafts, deduped by
  * the id they would mint. Two detectors that independently notice the same thing
- * about the same record are agreeing, not disagreeing — and the ids say so.
+ * about the same record are agreeing, not disagreeing, and the ids say so.
  */
 const runDetection = (kind: EntityKind, context: DetectionContext): DetectionRun => {
   const chosen = detectorsFor(kind);

@@ -2,12 +2,12 @@
 /**
  * Stamps outgoing save state bytes with the version and format that produced them.
  *
- * Applied at the storage boundary rather than at each call site, so quick slots, manual
+ * Applied at the storage boundary, not at each call site, so quick slots, manual
  * saves and auto-saves are all covered by one write path.
  *
  * Also where layout drift gets caught: the bytes the core just produced are already in
  * hand, so comparing their snapshot length against the generated constant costs nothing.
- * If a C change moves the layout, this fires the first time anyone saves — long before a
+ * If a C change moves the layout, this fires the first time anyone saves, long before a
  * release, and without needing the probe to run.
  */
 import { CURRENT_STATE_FORMAT, appendStamp, readSnapshotBytes } from '@shared/game/save-state';
@@ -23,7 +23,7 @@ const appVersion = async (): Promise<string> => {
   return cachedVersion;
 };
 
-/** Once per session — a wrong layout is a standing condition, not a per-save event. */
+/** Once per session. A wrong layout is a standing condition, not a per-save event. */
 const reportDrift = (produced: number | null): void => {
   if (driftReported) return;
   driftReported = true;

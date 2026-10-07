@@ -16,10 +16,8 @@ interface ChannelInputProps {
 const ChannelInput = (props: ChannelInputProps) => {
   const { label, value, max, onCommit } = props;
 
-  // Its own editing buffer, for the reason documented on the hex field: the displayed
-  // number is derived from a controlled prop, so without a buffer a keystroke can be
-  // concatenated onto the value the field already showed rather than replacing it —
-  // which is how typing "42" once produced "042". Re-sync only on an external change.
+  // Its own editing buffer, for the reason documented on the hex field. Re-sync
+  // only on an external change.
   const [buffer, setBuffer] = useState(String(value));
   useEffect(() => setBuffer(String(value)), [value]);
 

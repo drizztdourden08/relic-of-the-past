@@ -1,0 +1,90 @@
+/* @layer shared-game @kind data */
+/** Split out of the flat seed files by scripts/generate-ids/split-seeds.ts. */
+import type { ScreenRecord } from '@shared/game/data/types';
+
+const DW_DUNGEON_TURTLE_ROCK_SCREENS_FLOOR_B1: ScreenRecord[] = [
+  {
+    id: 'screen-416',
+    gameId: { roomIndex: 164, palaceIndex: 24 },
+    kind: 'dungeon',
+    world: 'dark',
+    randomizerName: 'Trinexx',
+    areaId: 'area-002',
+    locationId: 'location-030',
+    position: { gridX: 4, gridY: 10, floor: -1 },
+    tags: ['tag-003', 'tag-006'],
+    triggerIds: ['actor-041'],
+    spawns: [
+      { actorId: 'actor-146', tile: { x: 14, y: 42 } },
+      { actorId: 'actor-147', tile: { x: 14, y: 42 } },
+      { actorId: 'actor-148', tile: { x: 14, y: 42 } },
+    ],
+  },
+  {
+    id: 'screen-426',
+    gameId: { roomIndex: 180, palaceIndex: 24 },
+    kind: 'dungeon',
+    world: 'dark',
+    randomizerName: 'Dark Maze',
+    areaId: 'area-002',
+    locationId: 'location-030',
+    position: { gridX: 4, gridY: 11, floor: -1 },
+    tags: ['tag-003', 'tag-016'],
+  },
+  {
+    id: 'screen-427',
+    gameId: { roomIndex: 181, palaceIndex: 24 },
+    kind: 'dungeon',
+    world: 'dark',
+    randomizerName: 'Laser Bridge',
+    areaId: 'area-002',
+    locationId: 'location-030',
+    position: { gridX: 5, gridY: 11, floor: -1 },
+    tags: ['tag-003', 'tag-015'],
+    triggerIds: ['actor-028'],
+    spawns: [
+      { actorId: 'actor-204', tile: { x: 44, y: 20 } },
+      { actorId: 'actor-204', tile: { x: 18, y: 30 } },
+      { actorId: 'actor-204', tile: { x: 44, y: 44 } },
+    ],
+  },
+  {
+    id: 'screen-428',
+    gameId: { roomIndex: 182, palaceIndex: 24 },
+    kind: 'dungeon',
+    world: 'dark',
+    randomizerName: 'Map Chest Room',
+    areaId: 'area-002',
+    locationId: 'location-030',
+    position: { gridX: 6, gridY: 11, floor: -1 },
+    tags: ['tag-003', 'tag-024'],
+    triggerIds: ['actor-047'],
+    spawns: [
+      { actorId: 'actor-134', tile: { x: 12, y: 14 } },
+      { actorId: 'actor-134', tile: { x: 20, y: 14 } },
+      { actorId: 'actor-161', tile: { x: 6, y: 8 } },
+      { actorId: 'actor-161', tile: { x: 24, y: 8 } },
+      { actorId: 'actor-255', tile: { x: 46, y: 14 } },
+      { actorId: 'actor-132', tile: { x: 14, y: 42 } },
+      { actorId: 'actor-118', tile: { x: 14, y: 54 } },
+      { actorId: 'actor-118', tile: { x: 16, y: 54 } },
+    ],
+  },
+  {
+    id: 'screen-429',
+    gameId: { roomIndex: 183, palaceIndex: 24 },
+    kind: 'dungeon',
+    world: 'dark',
+    randomizerName: 'Laser Key Room',
+    areaId: 'area-002',
+    locationId: 'location-030',
+    position: { gridX: 7, gridY: 11, floor: -1 },
+    tags: ['tag-003', 'tag-015'],
+    spawns: [
+      { actorId: 'actor-189', tile: { x: 8, y: 18 } },
+      { actorId: 'actor-187', tile: { x: 8, y: 34 } },
+    ],
+  },
+];
+
+export { DW_DUNGEON_TURTLE_ROCK_SCREENS_FLOOR_B1 };

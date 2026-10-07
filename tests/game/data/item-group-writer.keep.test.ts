@@ -1,11 +1,8 @@
 /* @layer tests @kind test */
 /**
- * The item-group writer's create path — the seven-group ceiling is gone, so
- * an eighth group now mints a real `ig-NNN` id through the allocator, the
- * same round trip `allocateTag` already proves out for its own collection.
- * Run against a throwaway workspace shaped like the real one, so the
- * allocator's file scan and the array-splice both exercise real code paths
- * without touching the committed dataset.
+ * The item-group writer's create path: the seven-group ceiling is gone, so an
+ * eighth group mints a real `ig-NNN` id through the allocator. Run in a
+ * throwaway workspace shaped like the real one.
  */
 import { mkdtemp, mkdir, readFile, rm, writeFile } from 'fs/promises';
 import { tmpdir } from 'os';
@@ -65,7 +62,7 @@ describe('allocateItemGroup', () => {
     expect(source).toContain("memberIds: ['item-028', 'item-029']");
   });
 
-  it('refuses a blank label rather than minting an id', async () => {
+  it('refuses a blank label instead of minting an id', async () => {
     const result = await allocateItemGroup(root, { label: '   ', memberIds: [] });
     expect(result).toEqual({ success: false, error: 'An item group needs a label.' });
     expect(await sourceOf()).not.toContain('ig-003');

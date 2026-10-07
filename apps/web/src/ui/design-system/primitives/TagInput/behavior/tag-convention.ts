@@ -39,18 +39,18 @@ interface BlockParams {
   raw: string;
   /** True when the vocabulary does not already hold this value. */
   isNew: boolean;
-  /** Off by default — the advisory bargain stays the default everywhere. */
+  /** Off by default, so the advisory bargain stays the default everywhere. */
   enforce: boolean;
   validate?: TagValidator;
 }
 
 /**
- * Whether the typed entry must be REFUSED rather than merely flagged.
+ * Whether the typed entry must be REFUSED instead of merely flagged.
  *
  * Three things have to be true at once, and each one is load-bearing. Enforcing,
  * or the advice is advice. Brand new, because picking something the vocabulary
- * already holds is a pick and a pick is never refused — including a legacy value
- * that would fail the check today. And failing, obviously. Anything else commits.
+ * already holds is a pick and a pick is never refused, including a legacy value
+ * that would fail the check today. And failing. Anything else commits.
  */
 const blocksCreate = (params: BlockParams): boolean => {
   const { raw, isNew, enforce, validate } = params;

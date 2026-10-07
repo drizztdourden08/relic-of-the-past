@@ -13,12 +13,7 @@ interface LayerBlockProps {
   locked?: boolean;
 }
 
-/**
- * One canonical layer block: its own header — name left, ITS OWN reach status
- * pinned top-right — over the five shared classification rows. Single-layer
- * and locked-layer modes render exactly one of these; dual-layer mode (below)
- * renders two side by side. No mode gets its own row list or layout.
- */
+// One layer block: name left, ITS OWN reach status right, over the shared classification rows.
 const LayerBlock = ({ name, nameColor, data, locked }: LayerBlockProps) => {
   const status = reachStatusFor(data.reach, data.classification.collision, data.isAboveLayer);
   return (
@@ -40,7 +35,7 @@ interface DualLayerPanelsProps {
   above: LayerTileData;
 }
 
-/** Dual-layer mode: two LayerBlocks side by side — ground first, same body, same row order. */
+/** Dual-layer mode: two LayerBlocks side by side, ground first. */
 const DualLayerPanels = ({ ground, above }: DualLayerPanelsProps) => (
   <Box style={S.dualRow}>
     <Box style={S.dualColLeft}>

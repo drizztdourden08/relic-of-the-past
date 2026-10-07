@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import type { CSSProperties } from 'react';
 import type { LanguageSetSummary } from '@shared/storage/languages';
 import { ImportForm } from './ImportForm';
@@ -7,13 +7,14 @@ import { LANGUAGE_NAMES } from './language-names';
 import { LanguageEditor } from './language-editor';
 import { SetCreateForm } from './language-editor/sub-components/SetCreateForm';
 import * as languagesStore from '@app/lib/storage/languages-store';
+import { useInstalledKind } from '@app/hooks/useInstalledKind';
+import { InstalledOriginBar, useConfirmUninstall } from '@domains/app/views/InstalledOriginBar';
+import { LanguageSetList } from './LanguageSetList';
+import { Text } from '../../../../../design-system/primitives/Text';
 import { Box } from '../../../../../design-system/primitives/Box';
-import { IconButton } from '../../../../../design-system/primitives/IconButton';
 import { Select } from '../../../../../design-system/primitives/Select';
 import { Field } from '../../../../../design-system/primitives/Field';
-import { EmptyState } from '../../../../../design-system/primitives/EmptyState';
 import { MasterDetailLayout } from '../../../../../design-system/composites/MasterDetailLayout';
-import { ListItemRow } from '../../../../../design-system/composites/ListItemRow';
 
 const IL: Record<string, CSSProperties> = {
   importForm: { marginBottom: 0, paddingBottom: 'var(--space-xs)' },
@@ -30,6 +31,8 @@ const LanguageManager = (props: LanguageManagerProps) => {
   const [selected, setSelected] = useState<string | null>(null);
   const [extractLang, setExtractLang] = useState('');
   const [busy, setBusy] = useState(false);
+  const { pack: installed, packFor } = useInstalledKind('language', selected);
+  const { confirmUninstall, uninstallError } = useConfirmUninstall(onDeleteConfirm);
 
   const refresh = useCallback(async () => {
     const langs = await languagesStore.listLanguageSets();
@@ -85,14 +88,37 @@ const LanguageManager = (props: LanguageManagerProps) => {
     return { success: false, message: result.error ?? 'Extraction failed' };
   }, [extractLang, refresh]);
 
+  const forget = useCallback(async (code: string) => {
+    if (selected === code) setSelected(null);
+    await refresh();
+  }, [selected, refresh]);
+
+  // An installed set is uninstalled the way the Hookshop tab does it, so its record goes too.
   const handleDelete = useCallback((code: string) => {
+    const owner = packFor(code);
+    if (owner) {
+      confirmUninstall(owner, () => { void forget(code); });
+      return;
+    }
     const name = LANGUAGE_NAMES[code] ?? code;
     onDeleteConfirm('Delete Language', `Delete language set "${name}"? This cannot be undone.`, async () => {
       await languagesStore.deleteLanguage(code);
-      if (selected === code) setSelected(null);
-      await refresh();
+      await forget(code);
     });
-  }, [selected, refresh, onDeleteConfirm]);
+  }, [packFor, confirmUninstall, forget, onDeleteConfirm]);
+
+  const isInstalled = useCallback((code: string) => packFor(code) !== null, [packFor]);
+  // An installed set is copied through its origin bar, which checks the licence and keeps the credit.
+  const ownSets = useMemo(() => languages.filter((set) => !isInstalled(set.id)), [languages, isInstalled]);
+
+  // After a duplicate or an update the set to show may be one the list has not read yet.
+  const select = useCallback((code: string) => {
+    void refresh().then(() => setSelected(code));
+  }, [refresh]);
+
+  const handleUninstalled = useCallback(() => {
+    if (selected !== null) void forget(selected);
+  }, [selected, forget]);
 
   const list = (
     <>
@@ -102,19 +128,19 @@ const LanguageManager = (props: LanguageManagerProps) => {
             value={extractLang}
             onChange={(val) => setExtractLang(val)}
             options={[
-              { value: '', label: 'Select language…' },
+              { value: '', label: 'Select language...' },
               ...Object.entries(LANGUAGE_NAMES).map(([code, name]) => ({
                 value: code,
                 label: `${name} (${code})`,
               })),
             ]}
-            placeholder="Select language…"
+            placeholder="Select language..."
           />
         </Field>
       </Box>
       <ImportForm
         kind="language"
-        placeholder="Paste ROM download URL…"
+        placeholder="Paste ROM download URL..."
         accept={['.sfc', '.smc', '.zip', '.7z', '.rar']}
         dropLabel="Drop a ROM file to extract language"
         dropHint="The ROM is used temporarily and not saved"
@@ -124,34 +150,28 @@ const LanguageManager = (props: LanguageManagerProps) => {
       />
 
       <SetCreateForm
-        sets={languages}
+        sets={ownSets}
         busy={busy}
         onCreate={handleCreate}
         onDuplicate={handleDuplicate}
       />
 
-      <Box className="data-list">
-        {languages.length === 0 && <EmptyState message="No languages extracted yet" />}
-        {languages.map((lang) => (
-          <ListItemRow
-            key={lang.id}
-            icon="🌐"
-            name={setLabel(lang)}
-            meta={`${lang.lineCount} lines · base ${lang.base}${lang.origin === 'custom' ? ' · custom' : ''}`}
-            selected={selected === lang.id}
-            onClick={() => setSelected(lang.id)}
-            action={
-              <IconButton variant="ghost" size="sm" label="Delete" onClick={(e) => { e.stopPropagation(); handleDelete(lang.id); }}>
-                ✕
-              </IconButton>
-            }
-          />
-        ))}
-      </Box>
+      {uninstallError !== null && <Text className="import-form__status import-form__status--error">{uninstallError}</Text>}
+      <LanguageSetList
+        sets={languages}
+        selected={selected}
+        labelOf={setLabel}
+        isInstalled={isInstalled}
+        onSelect={setSelected}
+        onDelete={handleDelete}
+      />
     </>
   );
 
-  const detail = <LanguageEditor id={selected} />;
+  const origin = installed === null ? null : (
+    <InstalledOriginBar pack={installed} onDuplicated={select} onUpdated={select} onUninstalled={handleUninstalled} />
+  );
+  const detail = <LanguageEditor id={selected} readOnly={installed !== null} origin={origin} />;
 
   return <MasterDetailLayout list={list} detail={detail} detailEmpty={!selected} />;
 };

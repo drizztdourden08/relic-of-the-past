@@ -92,7 +92,7 @@ Napi::Value AddMappingsFromFile(const Napi::CallbackInfo& info) {
     return Napi::Number::New(env, -1);
   }
   // Mapping databases are normally loaded during startup, before Start() has
-  // created the thread. Create it here so the request is recorded rather than
+  // created the thread. Create it here so the request is recorded instead of
   // refused; it is applied as soon as SDL comes up.
   if (!g_sdlThread) {
     g_sdlThread = std::make_unique<SdlThread>();

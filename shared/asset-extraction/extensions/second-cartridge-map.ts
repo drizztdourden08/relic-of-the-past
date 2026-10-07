@@ -1,6 +1,6 @@
 /* @layer shared-asset-extraction @kind data */
 /**
- * A palace index for the extra dungeon, so the engine treats it as a dungeon rather than a
+ * A palace index for the extra dungeon, so the engine treats it as a dungeon and not as a
  * cave.
  *
  * `cur_palace_index_x2` is what the whole dungeon identity hangs off: the map screen refuses
@@ -18,7 +18,7 @@
 const BASE_PALACE_COUNT = 14;
 
 /**
- * The engine stores this field DOUBLED — the base table holds 0, 2, ... 26 for its fourteen
+ * The engine stores this field DOUBLED. The base table holds 0, 2, ... 26 for its fourteen
  * dungeons and -1 for a cave, and every table is reached by shifting it back down. Storing the
  * plain index here would land on an existing dungeon.
  */

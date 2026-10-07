@@ -6,12 +6,12 @@ dead code gets stripped, or throws at the `ccall`. Do both, then [rebuild WASM](
 Pick the direction first. The repo's `add-wasm-function` skill scaffolds this, and the
 [hooks reference](../hooks/overview.md) covers the existing surface and buffer conventions.
 
-## Direction A — TypeScript calls into C (`Wasm*` export)
+## Direction A, from TypeScript into C (`Wasm*` export)
 
 For reading a game value/state or commanding the game.
 
 **1 · C implementation** in `core/game-hooks/<domain>.c` (`state_queries*.c` for reads, `cheats.c`,
-`check_triggers.c`, `ui_state.c`, `item_overrides.c`, …):
+`check_triggers.c`, `ui_state.c`, `item_overrides.c`, ...):
 
 ```c
 #include "game_hooks_internal.h"
@@ -22,10 +22,10 @@ int WasmGetMyFlag(void) { return some_game_global ? 1 : 0; }
 // Bulk data: fill a static buffer, return its address.
 static uint8 g_my_buf[N];
 EMSCRIPTEN_KEEPALIVE
-int WasmGetMyData(void) { g_my_buf[0] = /* … */; return (int)g_my_buf; }
+int WasmGetMyData(void) { g_my_buf[0] = /* ... */; return (int)g_my_buf; }
 
 EMSCRIPTEN_KEEPALIVE
-void WasmSetMyThing(int value) { /* … */ }
+void WasmSetMyThing(int value) { /* ... */ }
 ```
 
 `EMSCRIPTEN_KEEPALIVE` is mandatory. It both retains and exports the symbol, so there's no
@@ -44,7 +44,7 @@ const bytes = mod.HEAPU8.subarray(ptr, ptr + N);                       // read t
 Guard on module readiness like the existing helpers, document the buffer layout, and follow the
 [coding standards](coding-standards.md) (exports at end, destructure first line).
 
-## Direction B — C calls into JS (event callback)
+## Direction B, from C into JS (event callback)
 
 For notifying the UI of a game event.
 
@@ -56,11 +56,11 @@ void GameHook_NotifyMyEvent(uint8 arg) {
 }
 ```
 
-**2 · Call site** in upstream `core/zelda3/` — insert the `GameHook_NotifyMyEvent(…)` call at the game
+**2 · Call site** in upstream `core/zelda3/`: insert the `GameHook_NotifyMyEvent(...)` call at the game
 event. This is the one sanctioned reason to edit `zelda3/`: a single call line, with the logic staying in
 `game-hooks/`.
 
-**3 · JS registers the handler** in the renderer: `window.__onMyEvent = (arg) => { … }`, mirroring how
+**3 · JS registers the handler** in the renderer: `window.__onMyEvent = (arg) => { ... }`, mirroring how
 `window.__onItemReceived` is wired. This direction needs no `EXPORTED_FUNCTIONS` entry.
 
 ## Finally

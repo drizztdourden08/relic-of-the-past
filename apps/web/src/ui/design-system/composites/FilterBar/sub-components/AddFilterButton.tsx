@@ -1,12 +1,5 @@
 /* @layer renderer-components @kind component */
-/**
- * The trailing "+ Add filter" control. Reuses DataTable's FieldPicker — the
- * same recursive field tree its column-add menu opens — rather than a second
- * one; picking a leaf field appends a fresh clause on it. FieldPicker holds no
- * positioning policy of its own (by design — see its own doc comment), so
- * this button is what decides where it floats, the same way DataTable's own
- * header "+" button does.
- */
+/** The "+ Add filter" control. Reuses DataTable's FieldPicker; this button decides where it floats. */
 import { Box } from '../../../primitives/Box';
 import { Button } from '../../../primitives/Button';
 import { Portal, useAnchorTracking } from '../../../primitives/Portal';
@@ -20,7 +13,7 @@ import '../FilterBar.css';
 
 interface AddFilterButtonProps {
   schema: SchemaLike;
-  /** Paths already carrying a clause — FieldPicker keeps them out of the tree. */
+  /** Paths already carrying a clause. FieldPicker keeps them out of the tree. */
   excludePaths?: readonly string[];
   onAdd: (clause: FilterClause) => void;
 }
@@ -30,8 +23,8 @@ const AddFilterButton = (props: AddFilterButtonProps) => {
   const menu = useAnchorMenu<HTMLButtonElement>('.filter-bar__add-picker');
   const index = toSchemaIndex(schema);
 
-  // Portalled and placed in viewport coordinates, so it has to be re-measured
-  // as the bar scrolls under it — and dismissed once the button is gone.
+  // Portalled in viewport coordinates, so it is re-measured as the bar scrolls
+  // and dismissed once the button is gone.
   const { position: pos } = useAnchorTracking({
     active: menu.open,
     anchorRef: menu.anchorRef,

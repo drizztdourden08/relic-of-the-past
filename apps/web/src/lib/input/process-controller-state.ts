@@ -1,16 +1,16 @@
 /* @layer renderer-lib @kind logic */
 /**
- * SDL3 controller state intake — the native addon already decodes and
+ * SDL3 controller state intake. The native addon already decodes and
  * factory-calibrates raw reports into normalized buttons/axes, so this
  * bypasses the legacy per-device HID report parser (process-hid-report.ts)
  * entirely.
  *
- * Trigger calibration still applies unchanged — it already operates on the
+ * Trigger calibration still applies unchanged, since it already operates on the
  * normalized 0..1 domain. Stick calibration is different: it was captured
  * against raw HID values (0-255 / 0-65535), and SDL's sticks are already
  * normalized to -1..1, so applying an old calibration entry to them would
  * produce garbage. A stored entry from that old domain is detected by its
- * magnitude and skipped, logged once per device rather than every frame.
+ * magnitude and skipped, logged once per device, not every frame.
  */
 import { applyTriggerCalibration } from './stick-calibration';
 import type { DeviceStickCalibration, TriggerCalibration } from './stick-calibration';

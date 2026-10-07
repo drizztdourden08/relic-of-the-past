@@ -3,7 +3,7 @@
  * Global controller vibration API.
  *
  * SDL3 batches frame writes via the main-process worker for every gamepad
- * now (Switch Pro, Xbox, PlayStation, 8BitDo — one transport, one path). The
+ * now (Switch Pro, Xbox, PlayStation, 8BitDo, all one transport and one path). The
  * browser Gamepad API's vibrationActuator path has been removed along with
  * the rest of that transport.
  *
@@ -13,10 +13,9 @@
 
 import * as controllersStore from './controllers-store';
 
-// ── Public API ────────────────────────────────────────────────────────────
 
 interface VibrateOptions {
-  /** Vibration strength 0–1. Default 0.7. */
+  /** Vibration strength 0-1. Default 0.7. */
   intensity?: number;
 }
 

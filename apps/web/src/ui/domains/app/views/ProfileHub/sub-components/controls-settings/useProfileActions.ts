@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 /**
- * useProfileActions — profile loading, CRUD, selection, persistence.
+ * Profile loading, CRUD, selection, persistence.
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';

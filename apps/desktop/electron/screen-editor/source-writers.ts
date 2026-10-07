@@ -65,13 +65,8 @@ const topLevelBraceSpans = (content: string): Span[] => {
 
 /**
  * The full lines occupied by the record carrying `id`, trailing comma included.
- *
- * `extraNeedle` covers the one collection whose entries are not all written the
- * same way: an item group's `id` field may still read the symbolic
- * `ITEM_GROUP_IDS.<Key>` form rather than a plain string literal (see
- * item-group-writer.ts), so a caller that knows the record's own file
- * convention can offer a second string to match on. Every other kind never
- * needs it — `id: '<id>'` is the only shape those files ever write.
+ * `extraNeedle` is for item groups, whose `id` may still read the symbolic
+ * `ITEM_GROUP_IDS.<Key>` form (see item-group-writer.ts). No other kind needs it.
  */
 const recordSpan = (content: string, id: string, extraNeedle?: string): Span | null => {
   const needle = `id: '${escapeSingleQuote(id)}'`;

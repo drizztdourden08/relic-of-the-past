@@ -1,0 +1,17 @@
+/* @layer renderer-components @kind style */
+.wearing-bar {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+  flex-wrap: wrap;
+  padding: var(--space-sm);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+}
+
+.wearing-bar__label {
+  font-size: var(--text-sm);
+  color: var(--c-text-dim);
+  white-space: nowrap;
+}

@@ -14,9 +14,9 @@
 // offset arithmetic stops being a copy-paste hazard.
 //
 // Two access styles:
-//   • PutU16 — random access at a known offset (fixed-layout structs like the
+//   • PutU16: random access at a known offset (fixed-layout structs like the
 //     UI-state and viewport buffers).
-//   • BufW   — a sequential append cursor (count-prefixed list builders, where
+//   • BufW:   a sequential append cursor (count-prefixed list builders, where
 //     the per-entry offset `2 + i * stride` was previously open-coded).
 
 // Random-access little-endian uint16 store.

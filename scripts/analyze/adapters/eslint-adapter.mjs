@@ -2,24 +2,27 @@
  * @layer tooling-scripts
  * @kind logic
  *
- * ESLint adapter (TS/JS quality: max-lines, func-style, exports-at-end, …).
- * Full mode lints `.`; diff mode lints only the changed files.
+ * ESLint adapter (TS/JS quality: max-lines, func-style, exports-at-end, the
+ * AI-writing rules, ...). Full mode lints `.`; diff mode lints only the changed
+ * files, in batches: Windows caps a command line at 8191 characters, and a wide
+ * changeset used to blow past that and report nothing at all.
  */
-import { sh, toolExists, toRel } from './_run.mjs';
+import { batchQuoted, sh, toolExists, toRel } from './_run.mjs';
 
 const LANGS = new Set(['TypeScript', 'TypeScript-React', 'JavaScript', 'JavaScript-React']);
+const lint = (target, root) => {
+  // Changed files are passed explicitly, so a config-ignored one (vite.config.ts) would
+  // otherwise come back as a "File ignored" warning instead of being skipped.
+  const { stdout } = sh(`npx eslint ${target} -f json --no-warn-ignored`, root);
+  const start = stdout.indexOf('[');
+  if (start < 0) return [];
+  try { return JSON.parse(stdout.slice(start)); } catch { return []; }
+};
 
 const run = async (records, ctx) => {
   const { root, mode } = ctx;
-  const target = mode === 'diff'
-    ? records.map((r) => `"${r.rel}"`).join(' ')
-    : '.';
-  if (!target) return [];
-  const { stdout } = sh(`npx eslint ${target} -f json`, root);
-  const start = stdout.indexOf('[');
-  if (start < 0) return [];
-  let results;
-  try { results = JSON.parse(stdout.slice(start)); } catch { return []; }
+  const targets = mode === 'diff' ? batchQuoted(records.map((r) => r.rel)) : ['.'];
+  const results = targets.flatMap((t) => lint(t, root));
   return results.flatMap((res) =>
     (res.messages ?? []).map((m) => ({
       path: toRel(res.filePath, root), tool: 'eslint',

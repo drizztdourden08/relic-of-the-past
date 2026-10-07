@@ -1,9 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
- * Per-device rumble amplification control — a small multiplier layered on top
- * of the family strength curve (see shared/input/family/vibration-shaping.ts)
- * for a controller whose motors still feel weak after shaping. Neutral at 1,
- * persisted per device key so it survives a restart without touching a profile.
+ * Per-device rumble multiplier on top of the family strength curve (see
+ * shared/input/family/vibration-shaping.ts). Neutral at 1, persisted per device key.
  */
 import { useCallback, useEffect, useState } from 'react';
 import { getPlatform } from '@app/platform/get-platform';

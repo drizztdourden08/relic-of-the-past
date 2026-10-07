@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
  * Lookup into the dialogue-context dataset. Ids are 1-based, matching the
- * editor's entry numbering — see ./context.ts for the convention.
+ * editor's entry numbering (see ./context.ts for the convention).
  */
 import type { DialogueContext } from './types';
 import { dialogueContexts } from './context';

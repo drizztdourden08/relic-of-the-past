@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-// Public API — re-exports from all game modules
+// Public API, re-exporting from all game modules
 
 export type { EmscriptenFS, EmscriptenModule, GameStatus, GameState } from './types';
 export { getGameState, getModule, subscribeGameState } from './wasm-bridge';
@@ -17,19 +17,25 @@ export { saveState, loadState, loadNamedState, loadStateRef } from './save-state
 export { captureStateBuffer, loadStateFromBuffer } from './state-buffers';
 export { isCoreReady, whenCoreReady } from './core-ready';
 export { captureGameFrameBlob, fulfillFrameCapture } from './capture-frame';
-export { setItemOverride, clearItemOverrides } from './randomizer';
-export { pushLiveSettings, reassertBackdropBlack, reassertVsync, reassertHudHidden, reassertPauseHidden, reassertVolumes, reassertLiveFlagsAfterLoad, reassertFeatureFlags, primeLiveSettings, LIVE_SETTINGS } from './live-settings';
+export { setChestSlotOverride, clearItemOverrides } from './randomizer';
+export { pushLiveSettings, reassertHideSpaceBeyondWalls, reassertVsync, reassertHudHidden, reassertPauseHidden, reassertVolumes, reassertLiveFlagsAfterLoad, reassertFeatureFlags, primeLiveSettings, LIVE_SETTINGS } from './live-settings';
 export { initMasterVolume, setMasterVolume, suspendAudio, resumeAudio } from './audio-volume';
 export { getFps } from './fps';
 export {
   cheatGiveItem, cheatTriggerCheck, cheatTriggerNpcCheck,
-  cheatSetHealth, cheatSetMaxHealth, cheatSetRupees, cheatSetBombs, cheatSetArrows, cheatRefillMagic,
-  cheatFillBottle, cheatSetIgnoreCollision, getIgnoreCollisionEnabled,
-  cheatKillAllEnemies, cheatSetDamageMultiplier, cheatSetExtraArmorPct,
+  cheatSetHealth, cheatSetMaxHealth, cheatSetRupees, cheatSetBombs, cheatSetArrows,
+  cheatSetMaxBombs, cheatSetMaxArrows, cheatSetMaxWallet, cheatSetMagic, cheatRefillMagic,
+  cheatSetBottle, cheatSetInventorySlot, cheatSetSmallKeys, cheatSetDungeonItem, CheatSlot,
+  cheatCapacityLadder, cheatCapacityRung, cheatSetCapacityRung,
+  cheatCategoryAllowed, cheatSetIgnoreCollision, getIgnoreCollisionEnabled, cheatUnblockLink,
+  cheatSetIlluminateDarkRooms, getIlluminateDarkRoomsEnabled,
+  cheatKillAllEnemies, cheatSetDamageMultiplier, getDamageMultiplier, cheatSetExtraArmorPct, getExtraArmorPct,
   cheatStartTrace,
   BottleContents,
 } from './cheats';
-export type { BottleContentsValue } from './cheats';
+export type { BottleContentsValue, CapacityKind, CapacityRung, CheatCategory, DungeonItemKind } from './cheats';
+export { grantFromCheck, planCheckGrant } from './cheat-check-grant';
+export type { CheckGrantPlan } from './cheat-check-grant';
 export { getInputManager, resolveFunctionMappingIcon } from '../input/input-manager';
 export type { UnknownItemEntry } from './tracker';
 export {
@@ -41,5 +47,6 @@ export {
 export { deliveryQueue } from './delivery-queue';
 export type { DeliveryEntry, DeliveryAction, DeliveryQueueState } from './delivery-queue';
 export { deliverItem, deliverCheck, deliverNpcCheck, deliverCustom } from './delivery-api';
+export { armNextReceiptMessage, grantCapacityUpgrade } from './receipt-grants';
 export type { TransitionKind, TransitionSettled, TransitionListener } from './events';
 export { subscribeTransitionSettled } from './events';

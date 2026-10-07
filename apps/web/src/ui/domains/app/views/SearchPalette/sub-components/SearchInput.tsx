@@ -3,7 +3,7 @@ import type { KeyboardEvent, RefObject } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { TextInput } from '@ds/primitives/TextInput';
 import { Icon } from '@ds/primitives/Icon';
-import { SEARCH_ICON_PATHS } from '../../TitleBar/TitleBar.constants';
+import { SEARCH_ICON_PATHS } from '@ds/composites/SearchSpark';
 
 interface SearchInputProps {
   inputRef: RefObject<HTMLInputElement | null>;
@@ -22,7 +22,7 @@ const SearchInput = (props: SearchInputProps) => {
       <TextInput
         ref={inputRef}
         className="search-palette__input"
-        placeholder="Search settings, screens, anything…"
+        placeholder="Search settings, screens, anything..."
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={onKeyDown}

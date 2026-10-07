@@ -4,7 +4,7 @@ import type { ButtonHTMLAttributes, ReactNode } from 'react';
 interface ColorSwatchProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'color'> {
   /** The colour to show, as `#rrggbb`. */
   color: string;
-  /** Small caption inside the swatch — a palette index, usually. */
+  /** Small caption inside the swatch, usually a palette index. */
   caption?: ReactNode;
   /** Draws the selection ring. */
   selected?: boolean;

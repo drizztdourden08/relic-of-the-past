@@ -70,7 +70,7 @@ node scripts/gba-alttp-re/correlate-snes.mjs --room 0x12 --chunk 16 --stride 8
 
 An exact match gives a direct data anchor. Scattered chunk matches suggest copied
 tables or partially transformed room data. No matches suggest compression, a changed
-layout encoding, or runtime construction; proceed to tracing rather than weakening
+layout encoding, or runtime construction; proceed to tracing instead of weakening
 the chunks until false positives dominate.
 
 The initial run found no matching 16-byte windows for room `0x12`. As a control, the

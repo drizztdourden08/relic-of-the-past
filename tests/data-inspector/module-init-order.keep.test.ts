@@ -1,26 +1,19 @@
 /* @layer tests @kind test */
 /**
- * These four modules form a cycle: record-writers imports updateIdRefOption
- * from id-ref-options, which reads COLLECTION_SOURCES from collection-sources,
- * which reads RECORD_WRITERS back from record-writers.
+ * These modules form a cycle: record-writers -> id-ref-options ->
+ * collection-sources -> record-writers. A cycle only faults when something is
+ * READ during module evaluation, which collection-sources used to do (eager
+ * build at module scope). Entering through collection-sources worked;
+ * entering through record-writers hit an undefined RECORD_WRITERS.
  *
- * A cycle is only a real fault when something is READ during module
- * evaluation, and that is exactly what collection-sources used to do: it built
- * every source eagerly at module scope. Entering the graph through
- * collection-sources happened to work, because record-writers had finished
- * evaluating by then. Entering through record-writers did not, because the
- * eager build ran mid-way through record-writers' own evaluation, when
- * RECORD_WRITERS was still undefined.
- *
- * So the assertion is about ENTRY POINT, not about any one module: each of
- * these has to be safe to import first, in a fresh graph, with nothing else
- * loaded to paper over the order.
+ * So the assertion is about ENTRY POINT: each module must be safe to import
+ * first, in a fresh graph.
  */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const DATA_INSPECTOR = '../../apps/web/src/ui/domains/app/views/DataInspector/behavior';
 
-describe('module init order — every entry point into the cycle', () => {
+describe('module init order from every entry point into the cycle', () => {
   beforeEach(() => {
     vi.resetModules();
   });
@@ -52,11 +45,8 @@ describe('module init order — every entry point into the cycle', () => {
     expect(COLLECTION_SOURCES.tag.onSave).toBeTypeOf('function');
   });
 
-  /*
-   * The write path is the half the cycle exists to serve, so it is worth
-   * pinning that it is really wired after a record-writers-first load, rather
-   * than only that the import returned.
-   */
+  // The write path is what the cycle exists to serve, so pin that it is wired
+  // after a record-writers-first load, not only that the import returned.
   it('wires a collection its write path when record-writers loaded first', async () => {
     await import(`${DATA_INSPECTOR}/record-writers`);
     const { COLLECTION_SOURCES } = await import(`${DATA_INSPECTOR}/collection-sources`);

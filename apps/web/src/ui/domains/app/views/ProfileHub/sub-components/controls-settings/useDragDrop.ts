@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind hook */
 /**
- * useDragDrop — drag-over/drop handling and "apply console defaults".
+ * Drag-over/drop handling and "apply console defaults".
  *
- * A dropped device carries only its sdlType (plus vid/pid) now — there is no
+ * A dropped device carries only its sdlType (plus vid/pid) now, and there is no
  * per-model preset any more. The keyboard is the one sentinel case (sdlType
  * 'keyboard', see device-detector.ts) still resolved from its own hand-authored
  * KEYBOARD_DEFAULT; every gamepad's defaults come from the family layer's
@@ -49,7 +49,7 @@ const useDragDrop = ({ devices, activeProfile, updateActiveProfile }: UseDragDro
     const pid = e.dataTransfer.getData('application/x-pid');
     if (!sdlType) return;
 
-    // The dragged card carries its own resolved name (device-drag-data.ts) —
+    // The dragged card carries its own resolved name (device-drag-data.ts),
     // only a legacy drag source without one falls back to the device list.
     const device = devices.find(d => d.id === deviceId);
     setConfirmPreset({
@@ -76,7 +76,7 @@ const useDragDrop = ({ devices, activeProfile, updateActiveProfile }: UseDragDro
       ? 'keyboard'
       : (resolveBrandLogoKey(buildDisplayContext({ sdlType: confirmPreset.sdlType as SdlGamepadType })) || 'generic') as DeviceFamily;
 
-    // Icons are never stored on a freshly-applied binding — they resolve live
+    // Icons are never stored on a freshly-applied binding, since they resolve live
     // from sourceVid/sourcePid + the binding's index (see useDisplayMappings.ts),
     // the same as any other saved binding.
     const mappingsWithSource = defaultMappings.map(m => ({

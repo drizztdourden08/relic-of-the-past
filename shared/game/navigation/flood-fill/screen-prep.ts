@@ -30,7 +30,7 @@ const prepareScreen = (rawAttrGrid: number[][], indoors: boolean, dynamicBlocker
     }
   }
 
-  // Cliff preprocessing (ledge one-way traversals) — skip for layer 1 (no cliffs there)
+  // Cliff preprocessing (ledge one-way traversals), skipped for layer 1 (no cliffs there)
   const ledges: LedgeTraversal[] = [];
   if (!skipCliffs) {
     processStraightCliffs(grid.tiles, grid.rawAttr, ledges, indoors);
@@ -56,8 +56,8 @@ const DOORWAY_MAX_WIDTH = 6;
 
 /**
  * Boundary 0x00 cells that are safe to seed the void flood from. Walkable exit corridors
- * (room transitions) reach the grid edge as narrow, wall-flanked gaps — standard dungeon
- * doorways are 4 tiles wide — and must NOT seed the flood, or it walks up the corridor and
+ * (room transitions) reach the grid edge as narrow, wall-flanked gaps, since standard
+ * dungeon doorways are 4 tiles wide. They must NOT seed the flood, or it walks up the corridor and
  * wipes the room's real floor (e.g. room 0x72's lower floor via its open south passage).
  * Structural void touches the edge in wide open spans, which do seed.
  */
@@ -77,7 +77,7 @@ const collectVoidSeeds = (layer: number[][]): Array<[number, number]> => {
       if (isOpen && runStart < 0) runStart = i;
       if (isOpen || runStart < 0) continue;
 
-      // Run [runStart, i) ended — a doorway needs walls on BOTH flanks (grid corners don't count).
+      // Run [runStart, i) ended. A doorway needs walls on BOTH flanks (grid corners don't count).
       const runLen = i - runStart;
       const hasFlankBefore = runStart > 0;
       const hasFlankAfter = i < GRID_SIZE;

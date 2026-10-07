@@ -24,7 +24,7 @@ const RUPEES = 'item-054';
 
 const freshState = () => createEngineState({ screenId: 'A', tile: { row: 0, col: 0 } }, new Set(), {});
 
-describe('explorer — consumable small keys', () => {
+describe('explorer with consumable small keys', () => {
   it('adds, spends, and reports availability per dungeon', () => {
     const s = freshState();
     addKey(s, EASTERN);
@@ -55,7 +55,7 @@ describe('explorer — consumable small keys', () => {
   });
 });
 
-describeDataset('explorer — inventory → traversal tokens', () => {
+describeDataset('explorer turns inventory into traversal tokens', () => {
   it('grants the lower lift rungs with the top one, from the token progression', () => {
     const s = freshState();
     applyItem(s, TITANS_MITTS);
@@ -66,7 +66,7 @@ describeDataset('explorer — inventory → traversal tokens', () => {
   });
 });
 
-describeDataset('explorer — unlock-reset rule', () => {
+describeDataset('explorer and the unlock-reset rule', () => {
   const detected = (opts: Partial<DetectedCheck>): DetectedCheck => ({
     evidence: [],
     at: { screenId: 'A', tile: { row: 0, col: 0 } },
@@ -106,7 +106,7 @@ describeDataset('explorer — unlock-reset rule', () => {
   });
 });
 
-describe('goal — terminal conditions', () => {
+describe('goal terminal conditions', () => {
   it('returns null while the frontier still has work', () => {
     const s = freshState();
     s.frontier = ['B'];

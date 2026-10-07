@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 /**
- * BindingListener — modal overlay that captures the next key or gamepad button press.
+ * Modal overlay that captures the next key or gamepad button press.
  * Uses the shared InputManager's raw input events so every input source
  * (keyboard, Web Gamepad API, SDL3 controllers) works identically everywhere.
  */
@@ -32,7 +32,7 @@ const BindingListener = (props: BindingListenerProps) => {
     return () => clearTimeout(timeout);
   }, []);
 
-  // Single unified listener — uses InputManager's raw input events for ALL sources
+  // Single unified listener, using InputManager's raw input events for ALL sources
   useEffect(() => {
     let cancelled = false;
     // Synchronous one-shot guard, deliberately NOT React state: a stick
@@ -43,7 +43,7 @@ const BindingListener = (props: BindingListenerProps) => {
     // schedules. Without this flag both events reach handleCapture while its
     // closed-over `listeningFor` is still the old truthy value, so the
     // second (often an incidental drift on the other axis) silently
-    // overwrites the first — the exact way a rebind could end up pointing at
+    // overwrites the first, which is the exact way a rebind could end up pointing at
     // the wrong axis, or two different actions ending up bound identically.
     let captured = false;
     let unsub: (() => void) | null = null;
@@ -64,7 +64,7 @@ const BindingListener = (props: BindingListenerProps) => {
         onCapture({ type: 'none' }, 'keyboard');
         return;
       }
-      // Ignore bare modifier presses — wait for the actual key
+      // Ignore bare modifier presses and wait for the actual key
       if (MODIFIER_CODES.has(e.code)) return;
       if (captured) return;
       captured = true;

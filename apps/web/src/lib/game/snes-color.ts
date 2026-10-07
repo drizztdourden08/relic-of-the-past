@@ -2,13 +2,13 @@
 /**
  * SNES colour words, as the palette editor needs them.
  *
- * The hardware stores a colour as BGR555 — one little-endian word laid out
+ * The hardware stores a colour as BGR555, one little-endian word laid out
  * `0bbbbbgg gggrrrrr`, five bits per channel. Only 32 levels per channel exist, so a
  * value a colour picker hands back has to be quantised before it is believed: otherwise
  * the swatch shows a colour the console cannot produce.
  *
- * The 5-to-8 bit expansion replicates the high bits into the low ones rather than
- * multiplying by 8, so a full 5-bit channel reaches 255 instead of stopping at 248 —
+ * The 5-to-8 bit expansion replicates the high bits into the low ones instead of
+ * multiplying by 8, so a full 5-bit channel reaches 255 instead of stopping at 248,
  * which is what lets a hex value survive a round trip through the picker unchanged.
  */
 

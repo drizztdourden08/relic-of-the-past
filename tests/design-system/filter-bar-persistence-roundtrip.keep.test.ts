@@ -9,13 +9,11 @@ import { capture } from '../../apps/web/src/ui/design-system/data/view-state/sna
 import type { FilterClause } from '../../apps/web/src/ui/design-system/data/filter/clause';
 import type { TableState, ViewKey, ViewSnapshot } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
 
-// End-to-end coverage for the debounced write path itself: exactly what a
-// rapid sequence of add/remove/add clicks leaves on disk once the 400ms
-// debounce (lib/storage/ui-views.ts) finally flushes. Nothing here mocks
-// `saveViewSnapshot`/`loadViewSnapshot` — the reported bug was a live
-// persistence issue ("filters being added without me doing it"), so this
-// exercises the real repository the same way view-state-load-race.test.ts
-// does, only for the write side rather than the load-versus-edit race.
+// The debounced write path end to end: what a rapid add/remove/add sequence
+// leaves on disk once the 400ms debounce (lib/storage/ui-views.ts) flushes.
+// Nothing mocks `saveViewSnapshot`/`loadViewSnapshot`: the reported bug
+// ("filters being added without me doing it") was live persistence, so this
+// uses the real repository like view-state-load-race.test.ts, for the write side.
 
 const KEY = 'data-inspector-query:screen' as ViewKey;
 const ROWS = [{ id: 'item-001', name: 'alpha' }];
@@ -97,7 +95,7 @@ describe('a full add/remove sequence round-trips through the disk repository', (
     expect(save.mock.calls[0][0][KEY].filters).toEqual([]);
   });
 
-  it('what was saved is exactly what a fresh load hands back — nothing added, nothing dropped', async () => {
+  it('what was saved is exactly what a fresh load hands back, with nothing added and nothing dropped', async () => {
     const kept = [createClause('name', 'eq', 'alpha'), createClause('name', 'eq', 'beta')];
     saveViewSnapshot(KEY, snapshotOf(kept));
     await vi.advanceTimersByTimeAsync(400);

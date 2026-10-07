@@ -5,7 +5,7 @@ import { parseDialogueText, dialogueTexts } from '@shared/asset-extraction/text/
 
 /**
  * Extra language packs are re-compressed from the stored dialogue.txt, so parsing
- * must be the exact inverse of formatDialogueText — including the control string the
+ * must be the exact inverse of formatDialogueText, down to the control string the
  * formatter injects when a ROM yields 396 strings.
  */
 describe('dialogue text round-trip', () => {
@@ -15,7 +15,7 @@ describe('dialogue text round-trip', () => {
     const texts = [
       'Hello [Name]!',
       'Press [A] to continue.[Scroll]Then [B].',
-      'Une porte secrète… [Waitkey]',
+      'Une porte secrète... [Waitkey]',
     ];
     const dump = formatDialogueText(asDecoded(texts));
     const parsed = parseDialogueText(dump);

@@ -1,18 +1,16 @@
 /* @layer renderer-components @kind component */
 /**
- * Lists. Sorting and grouping both key off LENGTH, which is the only ordering a
- * list has that means anything; the generic fallback would stringify the whole
- * list and sort on its first character.
+ * Lists. Sorting and grouping both key off LENGTH, the only ordering a list has
+ * that means anything; the generic fallback would stringify the whole list and
+ * sort on its first character.
  *
  * Editing is a read-only summary in this pass. Adding, removing and reordering
- * elements is a RecordEditor concern (a later composite) because it needs the
- * element's own editor recursively plus row affordances this kit has no place
- * for — a table cell and a filter row are both one line tall.
+ * elements is a RecordEditor concern: it needs the element's own editor
+ * recursively plus row affordances a one-line cell has no place for.
  *
- * The one element kind that is NOT read as raw text: a list of `idRef`s reads
- * as one resolved chip per entry (see `IdRefBadgeList`), the array counterpart
- * of the single-value reference cell — everything else keeps the flattened
- * one-line summary.
+ * One element kind is not read as raw text. A list of `idRef`s reads as one
+ * resolved chip per entry (see `IdRefBadgeList`), the array counterpart of the
+ * single-value reference cell. Everything else keeps the flattened summary.
  */
 import type { ReactNode } from 'react';
 import { registerFieldTester } from '../../data/filter/tester-registry';

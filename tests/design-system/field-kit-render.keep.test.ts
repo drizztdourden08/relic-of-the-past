@@ -10,10 +10,8 @@ import type { CellRenderOptions } from '../../apps/web/src/ui/design-system/comp
 import type { FieldDescriptor, FieldKind } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
 import { describeDataset } from '../dataset-guard';
 
-// There is no jsdom or testing-library in this repo, so these are SSR smoke
-// tests: they prove each control and cell renders without throwing for a
-// representative value of its kind. Appearance and interaction (opening the
-// multi-select, typing, clicking a reference) are NOT covered here.
+// SSR smoke tests (no jsdom): each control and cell renders for a representative
+// value of its kind. Appearance and interaction are not covered.
 
 const field = (kind: FieldKind, extra: Partial<FieldDescriptor> = {}): FieldDescriptor => ({
   path: 'sample', label: 'Sample', kind, optional: false, ...extra,
@@ -65,7 +63,7 @@ const SAMPLES: readonly { kind: FieldKind; descriptor: FieldDescriptor; value: u
   { kind: 'unknown', descriptor: field('unknown'), value: connectionRow },
 ];
 
-describeDataset('field kits — every control and cell renders', () => {
+describeDataset('field kits render every control and cell', () => {
   for (const { kind, descriptor, value } of SAMPLES) {
     it(`${kind}: filter, editor and cell`, () => {
       expect(() => renderFilter(descriptor, defaultOperatorFor(kind), null)).not.toThrow();
@@ -87,7 +85,7 @@ describeDataset('field kits — every control and cell renders', () => {
   }
 });
 
-describeDataset('field kits — the parts a screen has to bind to', () => {
+describeDataset('field kits expose the parts a screen has to bind to', () => {
   it('marks an id cell with the id and the collection it points at', () => {
     const markup = renderCell(field('idRef', { targetKind: 'screen' }), 'screen-183');
     expect(markup).toContain('data-id-ref="screen-183"');
@@ -127,7 +125,7 @@ describeDataset('field kits — the parts a screen has to bind to', () => {
   });
 });
 
-describeDataset('formatIdRefDisplay — the one "Name (id)" rule every reference reads through', () => {
+describeDataset('formatIdRefDisplay holds the one "Name (id)" rule every reference reads through', () => {
   it('reads as "Name (id)" once a name resolves', () => {
     expect(formatIdRefDisplay('screen-183', 'Jail Cell')).toBe('Jail Cell (screen-183)');
   });
@@ -143,7 +141,7 @@ describeDataset('formatIdRefDisplay — the one "Name (id)" rule every reference
   });
 });
 
-describeDataset('idRef cell — reads through the same formatter', () => {
+describeDataset('the idRef cell reads through the same formatter', () => {
   it('shows "Name (id)" once a display name is passed', () => {
     const markup = renderCell(field('idRef', { targetKind: 'screen' }), 'screen-183', { display: 'Jail Cell' });
     expect(markup).toContain('Jail Cell (screen-183)');
@@ -156,7 +154,7 @@ describeDataset('idRef cell — reads through the same formatter', () => {
   });
 });
 
-describeDataset('array of idRef — one resolved chip per entry, not a flattened summary', () => {
+describeDataset('an array of idRef gives one resolved chip per entry, not a flattened summary', () => {
   const descriptor = field('array', { of: field('idRef', { path: 'sample[]', targetKind: 'screen' }) });
 
   it('resolves each entry through the injected per-element resolver', () => {
@@ -183,7 +181,7 @@ describeDataset('array of idRef — one resolved chip per entry, not a flattened
     expect(markup).toContain('>screen-002<');
   });
 
-  it('skips a blank entry rather than rendering an empty chip', () => {
+  it('skips a blank entry instead of rendering an empty chip', () => {
     const markup = renderCell(descriptor, ['screen-001', '', '  ']);
     expect(markup.match(/data-id-ref=/g)?.length).toBe(1);
   });

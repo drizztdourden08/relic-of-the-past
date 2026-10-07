@@ -14,7 +14,7 @@ const ROWS = [
 
 const paths = (fields: readonly { path: string }[]): string[] => fields.map((f) => f.path);
 
-describe('buildSchema — derivation of a nested fixture', () => {
+describe('buildSchema derives a nested fixture', () => {
   const schema = createSchemaIndex(buildSchema(ROWS));
 
   it('walks objects recursively to full depth', () => {
@@ -40,7 +40,7 @@ describe('buildSchema — derivation of a nested fixture', () => {
   });
 });
 
-describe('buildSchema — the config layers on without removing derivation', () => {
+describe('buildSchema layers the config on without removing derivation', () => {
   it('reorders listed paths first and appends the rest in derived order', () => {
     const config: SchemaConfig = { order: ['size', 'id'] };
     expect(paths(buildSchema(ROWS, config))).toEqual(['size', 'id', 'name', 'nested', 'only']);
@@ -56,7 +56,7 @@ describe('buildSchema — the config layers on without removing derivation', () 
     expect(schema.byPath('name')?.label).toBe('Name');
   });
 
-  it('marks a hidden path rather than dropping it, so the path still resolves', () => {
+  it('marks a hidden path instead of dropping it, so the path still resolves', () => {
     const schema = createSchemaIndex(buildSchema(ROWS, { hidden: ['name'] }));
     expect(schema.byPath('name')?.hidden).toBe(true);
     expect(schema.byPath('size')?.hidden).toBeUndefined();
@@ -87,7 +87,7 @@ describe('buildSchema — the config layers on without removing derivation', () 
   });
 });
 
-describe('buildSchema — degenerate input', () => {
+describe('buildSchema on degenerate input', () => {
   it('returns nothing for no rows at all', () => {
     expect(buildSchema([])).toEqual([]);
   });

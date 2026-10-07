@@ -23,11 +23,11 @@ interface AspectRatioControlProps {
   description?: string;
   value: string;
   options: SegmentOption[];
-  /** Legacy HUD usage — single flat preset row. */
+  /** Legacy HUD usage, a single flat preset row. */
   presetOptions?: SegmentOption[];
-  /** Game usage — wide preset row (shown when mode = 'wide'). */
+  /** Game usage, the wide preset row (shown when mode = 'wide'). */
   widePresets?: SegmentOption[];
-  /** Game usage — tall preset row (shown when mode = 'tall'). Omit when tall rendering is off. */
+  /** Game usage, the tall preset row (shown when mode = 'tall'). Omit when tall rendering is off. */
   tallPresets?: SegmentOption[];
   /** Per-mode description text. */
   descriptions?: Record<string, string>;
@@ -51,7 +51,7 @@ const renderReadout = (r: RatioReadout) => {
     <Box className="aspect-ratio-control__custom">
       <Text className="aspect-ratio-control__detected">Detected: {detected.w}:{detected.h}</Text>
       <Text className={r.capped ? 'aspect-ratio-control__capped' : 'aspect-ratio-control__detected'}>
-        Calculated: {used.w}:{used.h}{r.capped ? ' — capped (engine limit)' : ''}
+        Calculated: {used.w}:{used.h}{r.capped ? ' (capped by the engine limit)' : ''}
       </Text>
     </Box>
   );

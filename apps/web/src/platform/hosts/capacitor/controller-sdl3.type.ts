@@ -5,7 +5,7 @@
  * "state" members of Sdl3Event (apps/desktop/electron/input/native/sdl3/
  * sdl3.type.ts), verified against controller_sdl3_jni.c, which writes this
  * exact JSON, so nothing here needs reshaping before use. Declared locally
- * rather than imported: that desktop type file lives inside the Electron
+ * instead of imported, since that desktop type file lives inside the Electron
  * app's own module graph, outside this app's.
  *
  * Only these three event types exist on Android: the native layer never

@@ -1,20 +1,15 @@
 /* @layer test @kind test */
 /**
- * The `check` strategy, driven by the room-addressable chest table.
+ * The `check` strategy (`strategy:check`), driven by the room-addressable
+ * chest table.
  *
- * Ported from the hand-written `check-presence` detector (deleted) onto the
- * declarative comparison engine — `strategy:check` is the detector id now.
- * The screen-correction probe's live value is "the screen we are currently
- * on", which a `FieldProbe` can only read off `observations.match?.screen.id`
- * (see `corrections.probes.ts`'s own header for why), so unlike the original
- * detector's bare `screenId` context argument, `contextFor` here also builds
- * a matching `ScreenMatchResult` — exactly what production always carries in
- * lockstep with `context.screenId` (`use-screen-observations.ts`).
+ * The screen-correction probe reads its live value off
+ * `observations.match?.screen.id` (see `corrections.probes.ts`), so
+ * `contextFor` builds a matching `ScreenMatchResult`, as production does in
+ * `use-screen-observations.ts`.
  *
- * The fixture is the real starting interior — the screen a fresh save opens on,
- * whose single chest is the earliest check in the game — rather than a
- * hand-built room, so what the strategy is asked about is a shape the dataset
- * actually holds. The dataset is put back the way it was after each case.
+ * The fixture is the real starting interior, whose single chest is the earliest
+ * check in the game. The dataset is restored after each case.
  */
 import { describe, it, expect, afterEach } from 'vitest';
 import {
@@ -33,7 +28,7 @@ const CHECK_ID = 'check-026';
 
 const ORIGINAL: CheckRecord = getCheck(CHECK_ID);
 
-/** The raw contents byte the chest table reports — the catalogued reward's own receive id. */
+/** The raw contents byte the chest table reports, which is the catalogued reward's own receive id. */
 const CONTENTS = getItem(ORIGINAL.vanillaItemIds[0]).gameId?.receiveItemId as number;
 
 /** What `wasmGetRoomChests(260)` reports: one small chest in draw slot 0. */
@@ -78,7 +73,7 @@ afterEach(restore);
 
 const detector = detectorFromStrategy(checkStrategy);
 
-describeDataset('check strategy — create', () => {
+describeDataset('check strategy on create', () => {
   it('proposes a check for a chest the room draws that no record covers', () => {
     unregisterRecord('check', CHECK_ID);
 
@@ -103,7 +98,7 @@ describeDataset('check strategy — create', () => {
     expect(proposed.vanillaItemIds).toEqual(ORIGINAL.vanillaItemIds);
   });
 
-  it('leaves vanillaItemIds empty rather than inventing one for an uncatalogued reward', () => {
+  it('leaves vanillaItemIds empty instead of inventing one for an uncatalogued reward', () => {
     unregisterRecord('check', CHECK_ID);
     const unknown = Math.max(...all('item').map(i => i.gameId?.receiveItemId ?? 0)) + 5;
 
@@ -123,7 +118,7 @@ describeDataset('check strategy — create', () => {
   });
 });
 
-describeDataset('check strategy — already covered', () => {
+describeDataset('check strategy when already covered', () => {
   it('proposes nothing for a chest the dataset already catalogues', () => {
     expect(detector.detect(contextFor({ chests: [roomChest()] }))).toEqual([]);
   });
@@ -136,7 +131,7 @@ describeDataset('check strategy — already covered', () => {
   });
 });
 
-describeDataset('check strategy — update', () => {
+describeDataset('check strategy on update', () => {
   it('corrects a record catalogued as something other than a chest', () => {
     replaceRecord('check', { ...ORIGINAL, kind: 'npc' });
 
@@ -163,7 +158,7 @@ describeDataset('check strategy — update', () => {
   });
 });
 
-describeDataset('check strategy — what it refuses to read', () => {
+describeDataset('check strategy and what it refuses to read', () => {
   it('stays silent when the chest table was never read', () => {
     expect(detector.detect(contextFor({}))).toEqual([]);
   });

@@ -7,7 +7,7 @@
  * padding and stores the true camera range per room. This holds the engine's own room-bounds
  * registers to that range every frame, after game logic and before the draw, so the incremental
  * quadrant and transition adjustments cannot walk the camera onto the padding. Rooms with an
- * empty record — and every base-game room — keep fully vanilla camera behaviour.
+ * empty record keep fully vanilla camera behaviour, and so does every base-game room.
  */
 #include "gba_alttp_internal.h"
 

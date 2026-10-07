@@ -1,10 +1,7 @@
 /* @layer renderer-hud @kind component */
 /**
- * PauseNamePanel — shows the selected item's name.
- *
+ * Shows the selected item's name with its icon sprite above the text.
  * Game layout: tiles (21,5)→(30,10) = 10×6 tiles
- * Displays the item name using font sprites,
- * with the item's icon sprite above the text.
  */
 import { HudBox } from '../../primitives/HudBox';
 import { HudImage } from '../../primitives/HudImage';
@@ -67,10 +64,9 @@ const PauseNamePanel = ({ itemName, itemSprite, borderColor = 'green', scale, sp
   const innerCols = 8;
   const innerRows = 4;
   const lines = Array.isArray(itemName) ? itemName : [itemName];
-  // One shared size for every line in the name: the caller has already broken the name
-  // onto this grid (see the view's wrap-name), so a line still wider than the box shrinks
-  // the whole name rather than one row, keeping every row at the same scale.
-  // '&' counts as 2 columns (see AMPERSAND_COLS) since its sprite is double-width.
+  // One shared size for every line: the caller already broke the name onto this grid
+  // (see the view's wrap-name), so a line still wider than the box shrinks the whole
+  // name, keeping every row at the same scale. '&' counts as 2 columns (AMPERSAND_COLS).
   const lineWidth = (line: string): number =>
     line.split('').reduce((cols, char) => cols + (char === '&' ? AMPERSAND_COLS : 1), 0);
   const longestLine = Math.max(...lines.map(lineWidth));
@@ -78,7 +74,7 @@ const PauseNamePanel = ({ itemName, itemSprite, borderColor = 'green', scale, sp
 
   return (
     <PauseBorderBox color={borderColor} cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase} style={style}>
-      {/* Item icon + name — packed directly together, matching the original's fixed 2-row icon + 2-row name layout */}
+      {/* Item icon + name packed together, matching the original's fixed 2-row icon + 2-row name layout */}
       <HudBox style={{
         display: 'flex',
         flexDirection: 'column',

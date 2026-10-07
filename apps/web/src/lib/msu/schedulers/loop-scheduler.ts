@@ -1,19 +1,15 @@
 /* @layer renderer-lib @kind logic */
 /**
- * `loop`: play continuously. One file loops on itself (using its MSU-1 loop point when it
- * has one); several files play one after another — in order, or shuffled, which is how a
- * "ten themes at random" overworld and a "two themes back to back" area are both expressed.
- *
- * With a crossfade the passes are chained by hand instead: the next one starts early and
- * rises while the outgoing one falls, so the two overlap for the crossfade window. That means
- * giving up the browser's own seamless looping, which is why a zero crossfade keeps the
- * simpler path — a self-looping file should not be re-triggered for nothing.
+ * `loop`: play continuously. One file loops on itself (MSU-1 loop point when it has one);
+ * several play one after another, in order or shuffled. With a crossfade the passes are
+ * chained by hand (next starts early and rises while the outgoing falls), which gives up the
+ * browser's own gapless looping, so a zero crossfade keeps the simpler path.
  */
 import type { LayerResume } from '@shared/types/msu-manifest';
 import type { LayerActivity, LayerContext, LayerScheduler, SoundingVoice } from './scheduler.type';
 import type { Voice } from '../voice';
 
-/** Live sounds, oldest first, each with its own position and fade — one preview row apiece. */
+/** Live sounds, oldest first, each with its own position and fade. One preview row apiece. */
 const soundingVoices = (
   entries: { voice: Voice; fileIndex: number }[], names: string[], loopSeconds: number,
 ): SoundingVoice[] => entries.map((e) => ({
@@ -30,7 +26,7 @@ const createLoopScheduler = (
   ctx: LayerContext, order: 'sequential' | 'random' | 'single', crossfadeSeconds = 0,
 ): LayerScheduler => {
   // `single` is one track repeating on itself, so there is nothing to cross into and any crossfade
-  // set on the layer is ignored rather than half-applied.
+  // set on the layer is ignored, not half-applied.
   const crossfade = order === 'single' ? 0 : Math.max(0, crossfadeSeconds);
   let voices: { voice: Voice; fileIndex: number }[] = [];
   let fileIndex = 0;
@@ -39,7 +35,7 @@ const createLoopScheduler = (
   const nextIndex = (): number => {
     if (ctx.files.length <= 1 || order === 'single') return 0;
     if (order === 'sequential') return (fileIndex + 1) % ctx.files.length;
-    // Never repeat the same file twice running — a shuffle that stutters reads as a bug.
+    // Never repeat the same file twice running, because a shuffle that stutters reads as a bug.
     let candidate = fileIndex;
     while (candidate === fileIndex) candidate = Math.floor(Math.random() * ctx.files.length);
     return candidate;
@@ -64,9 +60,8 @@ const createLoopScheduler = (
   };
 
   /**
-   * Crossfaded chaining. Each pass fades out over its final `crossfade` seconds while the
-   * next fades in, so the overlap is audible rather than a seam. A file shorter than the
-   * crossfade would otherwise never finish rising, so the window is clamped to half its length.
+   * Crossfaded chaining: each pass fades out over its final `crossfade` seconds while the next
+   * fades in. The window is clamped to half the file length so a short file still finishes rising.
    */
   const playFaded = (index: number, offsetSeconds: number, fadeIn: boolean): void => {
     fileIndex = index;
@@ -87,7 +82,7 @@ const createLoopScheduler = (
 
     handoff = setTimeout(() => {
       handoff = null;
-      // Repeat from the loop point rather than the top: the intro is meant to be heard once.
+      // Repeat from the loop point, not the top: the intro is meant to be heard once.
       playFaded(nextIndex(), ctx.loopSeconds, true);
     }, handoffIn * 1000);
   };

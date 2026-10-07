@@ -12,7 +12,7 @@ if ! command -v node >/dev/null 2>&1; then
   [ -n "${NODE_BIN:-}" ] && export PATH="$NODE_BIN:$PATH"
 fi
 command -v node >/dev/null 2>&1 || {
-  echo "[build-in-wsl] Node not found — run scripts/deploy/setup-wsl-builder.sh first." >&2
+  echo "[build-in-wsl] Node not found. Run scripts/deploy/setup-wsl-builder.sh first." >&2
   exit 1
 }
 echo "[build-in-wsl] node $(node -v), npm $(npm -v)"

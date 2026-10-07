@@ -19,11 +19,8 @@ const drawCliffArrows = (dc: DrawContext, drawResults: FloodFillResult[]): void 
 
       if (endWorldX === startWorldX && endWorldY === startWorldY) continue;
 
-      // Both ends sit on a tile CENTRE. The tail used to be pulled half a tile
-      // back along the direction, which put it inside the neighbouring tile and
-      // made a jump look like it began one tile further back than it does — and on
-      // a diagonal it also skewed the drawn angle away from the 45 degrees the hop
-      // actually travels.
+      // Both ends sit on a tile CENTRE. Pulling the tail back half a tile made a jump look like
+      // it began a tile early and skewed diagonals away from 45 degrees.
       const startSX = startWorldX - viewLeft;
       const startSY = startWorldY - viewTop;
       const endSX = endWorldX - viewLeft;

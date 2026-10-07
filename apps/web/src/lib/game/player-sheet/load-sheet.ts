@@ -10,7 +10,8 @@ import type { PlayerSheet, SheetPalette } from '@shared/game/data/player-sheet/t
 import { readLinkSprite, writeLinkSprite } from '@app/lib/storage/link-sprites-store';
 import { parseZspr } from '../zspr';
 import { toZsprBytes } from '../zspr-write';
-import { parseRsp, toRspBytes, isRspName } from '../rsp';
+import { toRspBytes } from '../rsp';
+import { parseRsp, isRspName } from '@shared/storage/link-sprites/parse-rsp';
 
 const loadSheet = async (name: string, stockPalette?: SheetPalette): Promise<PlayerSheet | null> => {
   const bytes = await readLinkSprite(name);
@@ -29,9 +30,9 @@ const saveSheet = async (name: string, sheet: PlayerSheet): Promise<void> => {
 /**
  * A stored sprite as bytes the core will accept, whatever container it lives in.
  *
- * The core only ever reads ZSPR — the INI points at one path and PlayerSprite_Apply checks
- * for the magic — so a pack has to be flattened before it can be staged for boot or pushed
- * at a running game. A ZSPR is passed through untouched rather than re-serialized: there is
+ * The core only ever reads ZSPR, because the INI points at one path and PlayerSprite_Apply checks
+ * for the magic, so a pack has to be flattened before it can be staged for boot or pushed
+ * at a running game. A ZSPR is passed through untouched, not re-serialized: there is
  * nothing to gain from rewriting bytes that are already in the right shape.
  */
 const readSpriteAsZspr = async (name: string): Promise<Uint8Array | null> => {

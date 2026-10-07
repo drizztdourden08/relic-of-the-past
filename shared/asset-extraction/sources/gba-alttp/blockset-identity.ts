@@ -3,29 +3,29 @@
  * The extra dungeon's background blockset is a base-game blockset.
  *
  * Measured against the base cartridge: the eight 64-tile sheets are packs 0, 1, 17, 12, 14,
- * 37, 27, 15 — exactly what the engine composes from main theme 9 plus aux theme 9 — and 453
- * of the 512 tiles are byte-identical to those packs in planes 0-2. Five of the eight sheets
+ * 37, 27, 15, which is exactly what the engine composes from main theme 9 plus aux theme 9.
+ * 453 of the 512 tiles are byte-identical to those packs in planes 0-2. Five of the eight sheets
  * match 64 out of 64.
  *
  * What that buys is tile ids: the room maps address the base game's own tiles by the base
  * game's own numbers, which is what makes derived collision and rebuilt object streams
  * possible at all. What it does NOT buy is the pixels. The base game stores background art as
- * 3bpp and synthesises the fourth plane on load — zero for some VRAM slots, the OR of the
- * other three for others — while this port stores real 4bpp and re-encoded three sheets to
- * carry their colour in the palette instead. So the sheet still has to be uploaded whole; the
+ * 3bpp and synthesises the fourth plane on load: zero for some VRAM slots, the OR of the
+ * other three for others. This port stores real 4bpp, and re-encoded three sheets to carry
+ * their colour in the palette instead. So the sheet still has to be uploaded whole; the
  * theme indices are for everything the engine DERIVES from a blockset.
  *
  * This module is the guard on that claim. If a future extraction drifts far enough that the
- * tiles are no longer the base game's, the build fails here rather than shipping rooms whose
+ * tiles are no longer the base game's, the build fails here instead of shipping rooms whose
  * ids mean something else.
  */
 import { lzDecompressWithLen } from '../../asset-builder';
 import { kCompBgPtrs } from '../../data/tables';
 import type { RomData } from '../../rom/rom-types';
 
-/** main_tile_theme_index — the entrance record's blockset field carries it. */
+/** main_tile_theme_index, carried by the entrance record's blockset field. */
 const MAIN_TILE_THEME = 9;
-/** aux_tile_theme_index — the room header's third byte carries it. */
+/** aux_tile_theme_index, carried by the room header's third byte. */
 const AUX_TILE_THEME = 9;
 
 /** The packs those two themes resolve to, in VRAM order. */

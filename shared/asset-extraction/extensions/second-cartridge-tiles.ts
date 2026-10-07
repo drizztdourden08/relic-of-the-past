@@ -5,22 +5,22 @@
  * A map16 cell carries its four 8x8 tiles AND, in bit 13 of each, whether they draw in front
  * of the player. The wall the opening is cut into has no foreground-priority variant of its
  * own course, so walking "into" it had been faked by borrowing the cells from the base game's
- * own opening — a different course of brick, which is why the two rows above the doorway came
- * out in the wrong colour.
+ * own opening. That is a different course of brick, which is why the two rows above the
+ * doorway came out in the wrong colour.
  *
  * These append that missing variant instead: the exact same tile numbers, palette and flips as
  * the cells already in the wall, with only the priority bit added. The wall is therefore
  * pixel-identical whether or not the option is on; the sole difference is that the player now
  * passes behind it.
  *
- * The ids are positional — the base table's length is asserted so that the two appended cells
+ * The ids are positional. The base table's length is asserted so that the two appended cells
  * land at a known index, which is the constant the C side draws.
  */
 
 /** Bit 13 of a map8 word: draw this tile in front of the player. */
 const PRIORITY_BIT = 0x2000;
 
-/** Words per map16 cell — a 2x2 block of 8x8 tiles. */
+/** Words per map16 cell, which is a 2x2 block of 8x8 tiles. */
 const WORDS_PER_CELL = 4;
 
 /** The base game ships 3752 map16 cells; the two appended ones follow it. */

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * Lines back to a token stream — the exact inverse of `splitLines`.
+ * Lines back to a token stream. The exact inverse of `splitLines`.
  *
  * Each line contributes its own advance code, its content, then a wait when it
  * ends a box, and NOTHING else. In particular no code is invented for a line
@@ -8,7 +8,7 @@
  * with its row: an entry that was only read, never edited, comes back out
  * identical, so opening it in the editor cannot rewrite a translator's data.
  *
- * A line that should be given a derived code has to be handed one first —
+ * A line that should be given a derived code has to be handed one first.
  * `advanceForNewLine` exists for exactly that, and only the caller knows a line
  * is new.
  */

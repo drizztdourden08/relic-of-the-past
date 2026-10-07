@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 /**
  * The insert menu's model: what a translator can add to an entry, grouped into
- * plain-language sections. Every field here is presentation — the menu builder
+ * plain-language sections. Every field here is presentation. The menu builder
  * fills them from the control-code catalog and the language's own alphabet, and
  * the component only lays them out.
  */

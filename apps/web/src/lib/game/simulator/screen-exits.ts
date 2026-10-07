@@ -1,12 +1,7 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Game-driven exit detection: flood a screen the way the game sees it and turn
- * everything the flood reached into traversal exits — border connections to
- * adjacent screens, doors/holes into rooms, exit doors back outside. This is
- * the ONLY source the simulator traverses on: no static connection data.
- * Overworld sub-screens of a big area are separate visits; indoor rooms are
- * handled by room-exits.ts.
- */
+// Game-driven exit detection: flood a screen and turn everything reached into traversal exits.
+// This is the ONLY source the simulator traverses on; no static connection data. Sub-screens of
+// a big area are separate visits; indoor rooms are room-exits.ts.
 import type { GridPos } from '@shared/game/navigation';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
 import type { SimExit } from '@shared/game/simulation';
@@ -24,18 +19,17 @@ import { locationForScreen } from './screen-location';
 interface DetectedScreen {
   flood: ScreenFlood;
   exits: SimExit[];
-  /** Flood-reached tiles — the engine's region memory for re-visits. */
+  /** Flood-reached tiles: the engine's region memory for re-visits. */
   reached: boolean[][];
 }
 
-/** Entrance ids at or above this offset are fall holes, not doors — you drop in
- *  and must find another way out, so the edge is genuinely one-way. Below it is
- *  an ordinary doorway, which the player can always walk straight back through
+/** Entrance ids at or above this offset are fall holes, not doors: one-way edges.
+ *  Below it is an ordinary doorway the player can walk back through
  *  (`enrichEntrances` merges holes in at `200 + id`). */
 const FALL_HOLE_ID_BASE = 200;
 
 /** Entrance-transition exits of one flood run (doors + holes into rooms);
- *  item-gated entrances are excluded — the player can't take them yet. */
+ *  item-gated entrances are excluded because the player can't take them yet. */
 const entranceExits = (run: ScreenFloodRun, items: TileReq[], fromKey: string, src?: ScreenRecord): SimExit[] => {
   const rooms = wasmGetEntranceRooms();
   if (!rooms) return [];
@@ -60,7 +54,7 @@ const entranceExits = (run: ScreenFloodRun, items: TileReq[], fromKey: string, s
   return exits;
 };
 
-/** A crossing's tile span — its identity on the wall. Two crossings on the same
+/** A crossing's tile span is its identity on the wall. Two crossings on the same
  *  side of a screen have disjoint spans, which is what tells them apart. */
 const spanOf = (positions: readonly number[]): string =>
   positions.length === 0 ? '?' : `${Math.min(...positions)}-${Math.max(...positions)}`;
@@ -73,10 +67,8 @@ const OW_EDGE_ADJ = {
 } as const;
 
 /**
- * Flood ONE overworld sub-screen exactly like any other screen. Sub-screens of a
- * big area (castle-style groups) are separate visits: borders into sibling
- * sub-screens are ordinary exits, ordered before out-of-area ones so the whole
- * big screen gets explored before moving on.
+ * Flood ONE overworld sub-screen like any other screen. Borders into sibling sub-screens are
+ * ordinary exits, ordered before out-of-area ones so the whole big screen is explored first.
  */
 const detectOverworld = (screenIndex: number, items: TileReq[], entryTile?: GridPos, src?: ScreenRecord, fromKey = `ow:${screenIndex}`): DetectedScreen | null => {
   const run = floodOneOverworld(screenIndex, items, entryTile);
@@ -107,22 +99,16 @@ const detectOverworld = (screenIndex: number, items: TileReq[], entryTile?: Grid
 };
 
 /**
- * Detect a screen's flood numbers + game-driven exits.
- *
- * A synthetic id the dataset does not define still names a real room, so it is
- * detected from its number with no `src` to disambiguate against — better a room
- * with real geometry and a coarse name than a hole in the graph.
+ * Detect a screen's flood numbers + game-driven exits. A synthetic id the dataset does not
+ * define still names a real room, so it is detected from its number with no `src`.
  */
 const detectScreenExits = (screenId: string, opts?: { entryTile?: GridPos; items?: TileReq[] }): DetectedScreen | null => {
   const items = opts?.items ?? ['lift.1'];
-  // ONE resolution for both vocabularies. A second copy here read the overworld
-  // index out of `roomIndex`, which an overworld record does not carry, so every
-  // dataset-id overworld detection silently ran on screen 0 — a whole screen's
-  // worth of exits belonging to somewhere else.
+  // ONE resolution for both vocabularies. A second copy read the overworld index out of
+  // `roomIndex`, which overworld records lack, so every dataset-id detection ran on screen 0.
   const loc = locationForScreen(screenId);
   if (!loc) return null;
-  // The resolved screen record is never consulted for matching logic on the
-  // indoor path — it plays no part in the outcome, so it is not passed through.
+  // The resolved screen record plays no part on the indoor path, so it is not passed through.
   return loc.isIndoors
     ? detectRoom(loc.roomId, items, opts?.entryTile, undefined, screenId)
     : detectOverworld(loc.owScreenIndex, items, opts?.entryTile, findOne('screen', (s) => s.id === screenId), screenId);

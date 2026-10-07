@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 /**
- * The "States" chips: everything the game currently holds true at once — a
- * follower, story beats, keys in hand. Renders whatever the registry reports, so
+ * The "States" chips: everything the game currently holds true at once, like a
+ * follower, story beats, or keys in hand. Renders whatever the registry reports, so
  * a new state needs no change here.
  */
 import type { CSSProperties } from 'react';
@@ -19,7 +19,7 @@ const IL: Record<string, CSSProperties> = {
     border: '1px solid var(--c-border)',
     color: 'var(--c-text-dim)',
   },
-  /** Traversal-affecting states read brighter — they change what is reachable. */
+  /** Traversal-affecting states read brighter, because they change what is reachable. */
   chipGating: {
     background: 'var(--c-green-soft)',
     border: '1px solid var(--c-green)',

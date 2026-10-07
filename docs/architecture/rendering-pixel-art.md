@@ -1,12 +1,12 @@
 <!-- @layer docs @kind doc -->
-# Pixel Art & Rendering — How to Read This Game's Screen
+# Pixel Art & Rendering
 
 This doc exists so screenshots of the running game can be interpreted **correctly**.
 Low-resolution pixel art is read *differently* from photographs: in a photo,
 recognition comes from abundant detail; in pixel art, **every pixel is a
 deliberate decision** and meaning comes from *limitation, not abundance*. When a
-screenshot is scaled up, one source pixel becomes a large square block — so the
-thing you're looking at is coarse by design, and small offsets matter a lot.
+screenshot is scaled up, one source pixel becomes a large square block. What you
+are looking at is coarse by design, and small offsets matter a lot.
 
 > Companion to this doc: the `interpret-game-screenshot` skill (the step-by-step
 > protocol) and the standing "flag missing sprites" rule in the root `CLAUDE.md`.
@@ -29,7 +29,7 @@ Source: `core/wasm-build/emscripten_main.c`, `shared/game/navigation/`.
 **Coordinate model for position bugs:** world space is continuous pixels; a
 *screen/room* is a 512px cell; *collision* is reasoned in 16px Map16 tiles;
 *fine* placement is 8px tiles. So "Link is at the bottom-left but offset" is best
-expressed as *which tile cell* he occupies vs. where he should be — not vague
+expressed as *which tile cell* he occupies vs. where he should be, not as a vague
 visual position.
 
 ---
@@ -38,14 +38,14 @@ visual position.
 
 The 256×224 frame is **upscaled** to the window. Pixel-art rule (from the
 references): **only integer scaling (2×, 3×, 4×) with nearest-neighbor keeps
-pixels crisp.** If the window is a non-integer multiple, the upscaler blurs —
+pixels crisp.** If the window is a non-integer multiple, the upscaler blurs, and
 and a blurred edge can look like a real sub-pixel feature that isn't there.
 
 **Implication when reading a screenshot:**
 
 - Decide first whether pixels look **crisp (integer-scaled)** or **blurry
-  (fractional / bilinear)**. If blurry, do **not** infer fine detail from edges —
-  reason in whole tiles, and ask for an integer-scaled or 1× capture if detail matters.
+  (fractional / bilinear)**. If blurry, do **not** infer fine detail from edges.
+  Reason in whole tiles, and ask for an integer-scaled or 1× capture if detail matters.
 - A single source pixel may span many screen pixels. Count in *source* pixels/tiles,
   not screen pixels.
 
@@ -55,16 +55,16 @@ and a blurred edge can look like a real sub-pixel feature that isn't there.
 
 From the three reference guides (sprite-ai.art, civitai, ai-media-studio):
 
-1. **Every pixel is intentional.** Unlike a downsampled photo, there's no noise —
-   if a pixel is a different color, it *means* something (an edge, a highlight, a
+1. **Every pixel is intentional.** Unlike a downsampled photo, there's no noise. If
+   a pixel is a different color, it *means* something (an edge, a highlight, a
    distinct object). Don't dismiss single-pixel differences.
 2. **Value contrast over hue.** Readability comes from light/dark structure.
    Identify silhouettes by value first, color second.
-3. **Limited palette.** Sprites use ~4–16 colors. A color that's "off-palette"
+3. **Limited palette.** Sprites use ~4-16 colors. A color that's "off-palette"
    for an object is a strong signal something is wrong (wrong sprite, overlay
    bleed, palette bug).
 4. **Hue-shifted shadows.** Shadows are darker *and* shifted in hue (often cooler),
-   not just black — don't mistake a legitimate shadow color for a different object.
+   not just black. Don't mistake a legitimate shadow color for a different object.
 5. **Dithering = checkerboard pixels** simulating a shade/gradient. Read it as one
    surface, not as texture/noise.
 6. **Hard edges are normal.** Aliased "staircase" edges are correct for sprites at
@@ -76,7 +76,7 @@ From the three reference guides (sprite-ai.art, civitai, ai-media-studio):
 
 Eyeballing pixel art has a low accuracy ceiling. The reliable move is to **fetch
 the actual extracted sprite and compare.** The game's own sprites are extracted
-from the user's ROM to PNG — see §5. If the user says "Link should be here but
+from the user's ROM to PNG, which §5 covers. If the user says "Link should be here but
 looks wrong," fetch the reference sprite, confirm its true size/silhouette/palette,
 then judge the screenshot against that ground truth.
 
@@ -104,15 +104,15 @@ Categories: `hud`, `hud-item`, `hud-pause`, `fonts`, `drop`, `receipt`.
 
 **No Link character sprite, no enemies/NPCs, no overworld/dungeon map tiles.**
 These are exactly the sprites most relevant to overlay/pathfinding bugs. They are
-added **iteratively, on demand** — see the standing rule below.
+added **iteratively, on demand** under the standing rule below.
 
 ---
 
-## 6. Standing rule — flag missing sprites immediately
+## 6. Standing rule for missing sprites
 
 When interpreting a screenshot would be more reliable with a reference sprite that
 **is not currently extracted**, do not guess and move on. **Raise a flag**: name
 the specific sprite needed (e.g. "Link walking south, green tunic" or "overworld
-grass Map16 tile") and ask the user to extract it, so the reference library — and
-accuracy — grows over time. Extraction is done one-at-a-time as needed, never as a
+grass Map16 tile") and ask the user to extract it, so the reference library, and its
+accuracy, grow over time. Extraction is done one-at-a-time as needed, never as a
 bulk pass. This rule is mirrored in the root `CLAUDE.md` so it always applies.

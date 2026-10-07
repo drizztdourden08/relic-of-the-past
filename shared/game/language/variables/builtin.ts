@@ -4,14 +4,14 @@
  * variables.
  *
  * The message renderer injects a save file's name field and ONE digit of a live
- * counter, and nothing else — there is no item-name, place-name or count
+ * counter, and nothing else. There is no item-name, place-name or count
  * injection anywhere in it. So everything else a set can vary is OURS and has
  * to be expanded to literal text before the dialogue is packed. These two are
  * locked because their value comes from the running game, never from the set.
  *
  * The worst cases are the engine's, not a guess: the name field holds at most
- * `MAX_NAME_GLYPHS` glyphs — the same figure the layout planner already bills
- * it at, so a row judged safe here is safe there — and the numeric
+ * `MAX_NAME_GLYPHS` glyphs, the same figure the layout planner already bills
+ * it at, so a row judged safe here is safe there. The numeric
  * substitution draws exactly one digit.
  */
 import { MAX_NAME_GLYPHS } from '../layout/layout-plan';

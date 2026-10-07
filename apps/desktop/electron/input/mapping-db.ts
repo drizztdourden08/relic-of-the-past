@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 /**
- * Mapping database — the Ship of Harkinian pattern: a bundled
+ * Mapping database, following the Ship of Harkinian pattern. A bundled
  * gamecontrollerdb.txt ships with the app, then an optional user copy at
  * <userData>/gamecontrollerdb.txt loads SECOND on top of it, so a line the
  * player adds or edits there wins over the bundled default for that GUID.
@@ -13,9 +13,8 @@ import { isMappingLine } from './mapping-line-validate';
 
 /** Loads the bundled db, then the user db (if present) on top of it. Call once at startup. */
 const loadMappingDatabases = (): void => {
-  // A count is only meaningful once the controller layer has parsed the file,
-  // which happens after this runs. Report what was registered and from where;
-  // the applied total is logged by the layer itself when it processes them.
+  // The applied total is logged by the controller layer once it parses these
+  // files, so only what was registered and from where is reported here.
   const bundledPath = resolveBundledMappingDbPath();
   if (bundledPath) {
     addMappingsFromFile(bundledPath);
@@ -31,7 +30,7 @@ const loadMappingDatabases = (): void => {
   }
 };
 
-/** Whether the file's last byte is missing a trailing newline (so a new line can join it cleanly). */
+/** Whether the file's last byte is missing a trailing newline, so an appended line needs one first. */
 const missingTrailingNewline = async (path: string): Promise<boolean> => {
   const contents = await readFile(path, 'utf8');
   return contents.length > 0 && !contents.endsWith('\n');

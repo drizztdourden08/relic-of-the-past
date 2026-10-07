@@ -4,11 +4,13 @@
  * and the namespaced IPC channels. Every value is `satisfies`-checked to be a real
  * channel, and the friendly API types are derived from these (see ./api.ts), so a
  * method's signature is never hand-written twice. Nested namespaces (updater,
- * shadowCasting, screenEditor) are wired explicitly in the preload, not here.
+ * shadowCasting, screenEditor) are wired explicitly in the preload, not here. The account,
+ * Sanctuary and Hookshop rows live in ./site-maps.ts and are spread in below.
  */
 import type { InvokeContract } from './invoke-contract';
 import type { SendContract } from './send-contract';
 import type { EventContract } from './event-contract';
+import { SITE_EVENT_MAP, SITE_INVOKE_MAP } from './site-maps';
 
 const INVOKE_MAP = {
   getUserDataPath: 'app:getUserDataPath',
@@ -23,6 +25,7 @@ const INVOKE_MAP = {
   fileWriteText: 'file:writeText',
   fileList: 'file:list',
   fileRemove: 'file:remove',
+  fileTrash: 'file:trash',
   fileExists: 'file:exists',
   fileMkdir: 'file:mkdir',
   fileStat: 'file:stat',
@@ -52,6 +55,9 @@ const INVOKE_MAP = {
   importRomUrl: 'roms:importUrl',
   deleteRom: 'roms:delete',
   getRomInfo: 'roms:getInfo',
+  checkAssets: 'assets:check',
+  loadAssets: 'assets:load',
+  extractAssets: 'assets:extract',
   writeSram: 'saves:writeSram',
   readSram: 'saves:readSram',
   writeState: 'saves:writeState',
@@ -164,7 +170,11 @@ const INVOKE_MAP = {
   writeSimRun: 'debug:writeSimRun',
   appendSimLog: 'sim:appendLog',
   openSimLog: 'sim:openLog',
-  createGithubIssue: 'github:createIssue',
+  finalizeDebugCaptureSession: 'debug-capture:finalizeSession',
+  listDebugCaptureSessions: 'debug-capture:listSessions',
+  deleteDebugCaptureSession: 'debug-capture:deleteSession',
+  buildDebugReport: 'debug-report:build',
+  ...SITE_INVOKE_MAP,
 } as const satisfies Record<string, keyof InvokeContract>;
 
 const SEND_MAP = {
@@ -176,6 +186,7 @@ const SEND_MAP = {
   setFullscreen: 'window:setFullscreen',
   setAspectRatioLock: 'window:setAspectRatioLock',
   shellReady: 'window:shellReady',
+  appendSessionLog: 'debug:appendSessionLog',
 } as const satisfies Record<string, keyof SendContract>;
 
 const EVENT_MAP = {
@@ -184,6 +195,7 @@ const EVENT_MAP = {
   onLogEntry: 'log:entry',
   onImportProgress: 'import:progress',
   onMsuOpenPack: 'msu:openPack',
+  ...SITE_EVENT_MAP,
   onMsuOptimizeProgress: 'msu:optimize:progress',
   onFfmpegProgress: 'ffmpeg:progress',
   onControllerAdded: 'controller:added',

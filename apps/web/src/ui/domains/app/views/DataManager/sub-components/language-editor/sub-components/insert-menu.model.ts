@@ -34,7 +34,7 @@ const SECTION_OF_CODE: Record<string, SectionId> = {
 /** Rows are ordered by this list, not by object-key order, which sorts digits first. */
 const CODE_ORDER = ['Name', 'Number', 'Waitkey', 'Wait', 'Speed', '1', '2', '3', 'Scroll'];
 
-/** Every bracketed alphabet entry — a picture character or a code, spelled alike. */
+/** Every bracketed alphabet entry. A picture character and a code are spelled alike. */
 const BRACKETED = /^\[([^\]]+)\]$/;
 
 const isBreakRow = (name: string): name is '1' | '2' | '3' => (
@@ -43,9 +43,9 @@ const isBreakRow = (name: string): name is '1' | '2' | '3' => (
 
 /**
  * The token shape a code round-trips as. `parseTokens` gives three names their
- * own token kind — the line-start markers become `break`, the two substitutions
- * become `var` — so the menu has to emit those shapes or the insert would come
- * back as something else after a save and reload.
+ * own token kind: the line-start markers become `break` and the two
+ * substitutions become `var`. So the menu has to emit those shapes or the insert
+ * would come back as something else after a save and reload.
  */
 const makeToken = (name: string, choice: string | null): Token => {
   const param = choice === null ? null : Number(choice);
@@ -97,8 +97,8 @@ const glossaryOption = (glossary: GlossaryTerm[]): InsertOption => ({
 });
 
 /**
- * The picture characters this language's alphabet carries — button icons,
- * arrows, the ellipsis. Discovered from the alphabet rather than listed, so a
+ * The picture characters this language's alphabet carries, such as button icons,
+ * arrows and the ellipsis. Discovered from the alphabet, not listed, so a
  * set built on any base offers exactly its own. They are spelled like a control
  * code and round-trip as paramless `cmd` tokens by design (see parseTokens); a
  * bracket name the catalog claims is a real code and is skipped here.

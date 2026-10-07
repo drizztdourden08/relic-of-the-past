@@ -5,9 +5,9 @@
  * The return type is the record shape itself, so the editor cannot emit a stale
  * one: a field the migration added is either filled in here or fails to compile.
  * Fields the form does not edit (`vanillaName`, `nav`, `triggerIds`, `spawns`)
- * are carried across from the record being edited rather than dropped.
+ * are carried across from the record being edited.
  *
- * Anything missing comes back as a blocker instead of a fabricated value — no
+ * Anything missing comes back as a blocker instead of a fabricated value: no
  * placeholder ids, no zeroed grid positions.
  */
 import type { PendingScreenRecord } from '@shared/game/data/record-codegen';

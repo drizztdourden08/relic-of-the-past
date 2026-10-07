@@ -5,13 +5,13 @@
  * A screen ends at a wait-for-button and nowhere else. A scroll is NOT a cut:
  * it shifts the box up a line and parks the pen on the last row, so the text
  * either side of it shares one box. Because the engine clears nothing at a
- * wait, the walk carries straight on across the cut — which is why each screen
+ * wait, the walk carries straight on across the cut. That is why each screen
  * reports the rows VISIBLE while it waits, leftovers from earlier screens
- * included, rather than only the rows it wrote itself.
+ * included, and not only the rows it wrote itself.
  *
  * Trailing content after the last wait becomes a final screen with
  * `waitsForButton: false`; so does a stream that never waits at all. A stream
- * ending exactly on its wait adds no such screen — nothing was drawn after it.
+ * ending exactly on its wait adds no such screen, because nothing was drawn after it.
  *
  * For an overflow audit use `measureRows`: it reports every run the pen closed,
  * including ones a later run overwrote, whereas the rows here are the surviving

@@ -1,22 +1,15 @@
 /* @layer shared-asset-extraction @kind logic */
 /**
- * SNES LZ decompression — 7-mode format used by the game for compressed assets.
+ * SNES LZ decompression, the 7-mode format the game uses for compressed assets. Ported from
+ * util.py `decomp()`; must produce byte-identical output.
  *
- * Ported from util.py `decomp()`. This must produce byte-identical output.
+ * Command byte: top 3 bits != 0b111: cmd = bits[7:5], length = bits[4:0] + 1.
+ * Top 3 bits == 0b111: cmd = (byte << 3) & 0xE0, length = ((byte & 3) << 8 | next) + 1.
+ * 0xFF = end of stream.
  *
- * Command byte encoding:
- * - If top 3 bits != 0b111: cmd = bits[7:5], length = bits[4:0] + 1
- * - If top 3 bits == 0b111: cmd = (byte << 3) & 0xE0, length = ((byte & 3) << 8 | next) + 1
- * - 0xFF = end of stream
- *
- * Commands:
- * - 0x00 (000): Literal — copy N bytes from stream
- * - 0x20 (001): Memset — repeat 1 byte N times
- * - 0x40 (010): Memset16 — alternate 2 bytes for N bytes
- * - 0x60 (011): Increment — start at byte, increment each copy
- * - 0x80 (100): Copy — copy N bytes from earlier in output (offset from stream, big-endian default)
- * - 0xA0 (101): Copy — same as 0x80 (alternative encoding)
- * - 0xC0 (110): Copy — same as 0x80 (alternative encoding)
+ * Commands: 0x00 literal (copy N bytes from stream); 0x20 memset (repeat 1 byte N times);
+ * 0x40 memset16 (alternate 2 bytes for N bytes); 0x60 increment (start at byte, +1 each copy);
+ * 0x80/0xA0/0xC0 copy N bytes from earlier in output (offset from stream, big-endian default).
  */
 import type { RomData } from '../rom/rom-types';
 
@@ -24,12 +17,8 @@ import type { RomData } from '../rom/rom-types';
 type GetByteFn = (addr: number) => number;
 
 /**
- * Decompress data from a SNES address using the game's LZ format.
- *
- * @param ea - Starting SNES address of compressed data
- * @param getByte - Byte-read function (typically rom.getByte)
- * @param offsetIsBe - If true (default), copy offsets are big-endian
- * @param returnLength - If true, returns [data, compressedLength] tuple
+ * Decompress from SNES address `ea`. `offsetIsBe` (default true): copy offsets are big-endian.
+ * `returnLength`: return a [data, compressedLength] tuple.
  */
 function decompress(
   ea: number,

@@ -24,7 +24,7 @@
   color: var(--c-danger);
 }
 
-/* The list can run to a hundred files, so it scrolls inside the dialog rather than
+/* The list can run to a hundred files, so it scrolls inside the dialog instead of
    pushing the actions off the bottom of it. */
 .msu-optimize__rows {
   display: flex;

@@ -1,0 +1,141 @@
+/* @layer sanctuary-site @kind component */
+/**
+ * Files: the scope tabs in the header with the drop target at its end, the FilterBar and
+ * the DataTable over the files (rows can be picked several at a time), and the side
+ * column on the right with the picked file's details, or the selection panel when several
+ * are picked, plus the three dialogs a drop can lead to. Uploads show in the site's tray.
+ * Everything stateful lives in useFilesPage.
+ */
+import { useMemo } from 'react';
+import { Stack } from '@ds/primitives/Stack';
+import { Text } from '@ds/primitives/Text';
+import { DataTable } from '@ds/composites/DataTable';
+import { FilterBar } from '@ds/composites/FilterBar';
+import { SitePage } from '@site-kit/layout/SitePage/SitePage';
+import { SideColumn } from '@site-kit/layout/SideColumn/SideColumn';
+import { Workbench } from '@site-kit/layout/Workbench/Workbench';
+import { SavedViewsMenu } from '@site-kit/views/SavedViewsMenu';
+import { UploadDialog } from '../../components/UploadDialog/UploadDialog';
+import { fileRowId } from '../../files/file-row';
+import { FILE_DEFAULT_COLUMNS } from '../../files/file-schema';
+import { formatBytes } from '@site-kit/lib/format-bytes';
+import { useFilesPage } from './behavior/useFilesPage';
+import { FileDetail } from './sub-components/FileDetail';
+import { SameNameDialog } from './sub-components/SameNameDialog';
+import { NewVersionDialog } from './sub-components/NewVersionDialog';
+import { UploadActions } from './sub-components/UploadActions';
+import { SelectionPanel } from './sub-components/SelectionPanel';
+import './Files.css';
+
+type FilesProps = {
+  /** From the `/files/:id` route; selects that row. */
+  selectedId?: string;
+};
+
+const COUNT_LABEL = ['file', 'files'] as const;
+const SEARCH_PLACEHOLDER = 'Search files...';
+
+const Files = (props: FilesProps) => {
+  const { selectedId = null } = props;
+  const page = useFilesPage(selectedId);
+  const { data, scope, view, drops, selected } = page;
+  const headerTabs = useMemo(
+    () => ({ items: scope.tabs, activeId: scope.activeId, onSelect: scope.select }),
+    [scope.tabs, scope.activeId, scope.select],
+  );
+
+  const toolbar = (
+    <>
+      <FilterBar
+        schema={page.schema}
+        clauses={view.clauses}
+        onChange={view.setClauses}
+        search={view.search}
+        onSearchChange={view.setSearch}
+        searchPlaceholder={SEARCH_PLACEHOLDER}
+        searchLabel="Search files"
+        facets={page.facets}
+      />
+      <SavedViewsMenu state={view.savedViews} />
+    </>
+  );
+
+  const table = (
+    <DataTable
+      rows={page.shown}
+      schema={page.schema}
+      getRowId={fileRowId}
+      viewKey={view.tableKey}
+      viewStorage={view.storage}
+      fallbackColumns={FILE_DEFAULT_COLUMNS}
+      selectable
+      selectedId={selectedId}
+      selectedIds={page.pickedIds}
+      onSelect={page.select}
+      onSelectionChange={page.pick}
+      countLabel={COUNT_LABEL}
+      emptyMessage={data.loading ? 'Loading files...' : 'No file matches.'}
+    />
+  );
+
+  const headerActions = (
+    <UploadActions canUpload={page.types.length > 0} onDrop={drops.drop} />
+  );
+
+  const several = page.picked.length > 1;
+  const aside = (selected || several) && (
+    <SideColumn>
+      {several && (
+        <SelectionPanel
+          files={page.picked}
+          types={page.types}
+          knownTags={page.knownTags}
+          canEdit={page.canEdit}
+          batch={page.batch}
+          download={page.download}
+          onClear={page.clearPick}
+        />
+      )}
+      {selected && (
+        <FileDetail
+          key={selected.id}
+          file={selected}
+          knownTags={page.knownTags}
+          types={page.types}
+          canEdit={page.canEdit(selected)}
+          canDelete={page.canEdit(selected)}
+          actions={page.actions}
+          onDropVersion={drops.dropOnFile}
+          onClose={page.deselect}
+        />
+      )}
+    </SideColumn>
+  );
+
+  return (
+    <>
+      <SitePage section="files" tabs={headerTabs} scroll={false} actions={headerActions} aside={aside}>
+        <Stack gap="md" align="stretch" className="files">
+          <Text as="span" variant="caption" className="files__summary">
+            {page.shown.length === 1 ? '1 file' : `${page.shown.length} files`} · {formatBytes(scope.bytes)}
+          </Text>
+          {data.error && <Text as="p" variant="caption" role="alert">{data.error}</Text>}
+          <Workbench toolbar={toolbar} table={table} detail={null} />
+        </Stack>
+      </SitePage>
+      <SameNameDialog question={drops.asking} onSeparate={drops.separate} onVersion={drops.version} onClose={drops.skip} />
+      <NewVersionDialog request={drops.request} onConfirm={drops.confirmVersion} onCancel={drops.cancelVersion} />
+      <UploadDialog
+        files={drops.upload}
+        types={page.types}
+        defaultType={page.uploadType}
+        knownTags={page.knownTags}
+        onConfirm={drops.confirmUpload}
+        onCancel={drops.cancelUpload}
+      />
+    </>
+  );
+};
+
+export { Files };
+export type { FilesProps };

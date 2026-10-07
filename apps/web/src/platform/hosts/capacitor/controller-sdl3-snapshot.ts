@@ -13,7 +13,7 @@ import type { ControllerConnectionState, ControllerGamepadType, DeviceEntry } fr
 interface LiveDevice {
   deviceKey: string;
   sdlId: number;
-  /** SDL's own name for the device, carried in the snapshot rather than left
+  /** SDL's own name for the device, carried in the snapshot instead of left
    *  to the connect event, which fires once and is missed by a listener that
    *  subscribes later. */
   name: string;

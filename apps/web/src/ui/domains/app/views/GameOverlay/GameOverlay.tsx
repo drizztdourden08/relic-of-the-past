@@ -1,13 +1,5 @@
 /* @layer renderer-components @kind component */
-/**
- * GameOverlay — sized to match the game canvas exactly.
- * pointer-events: none so it doesn't interfere with input.
- * Renders the HUD replacement when enhanced mode is active.
- * Handles the pause menu slide transition (483ms linear, matching vanilla).
- *
- * Hierarchy: OverlayRoot > (PauseMenuView | HudView | LocationNotification)
- * Each view is absolutely positioned and uses translateY for the slide animation.
- */
+// Sized to the game canvas, pointer-events: none. Pause menu slide is 483ms linear, matching vanilla.
 
 import { useEffect, useRef, useState } from 'react';
 import { Box } from '../../../../design-system/primitives/Box';
@@ -15,9 +7,13 @@ import { HudView, PauseMenuView } from '../../../hud';
 import { LocationNotification } from '../../../hud/views/LocationNotification';
 import { DeliveryQueueIndicator } from '../../../hud/views/DeliveryQueueIndicator';
 import { HudUnavailableNotice } from '../../../hud/views/HudUnavailableNotice';
+import { DialogView } from '../../../hud/views/DialogView';
 import { useLocationNotification } from '../../../hud/hooks/useLocationNotification';
 import { isMainHudVisibleForMode } from '../../../hud/hud-visibility';
 import { useHudSettingsStore } from '../../../../../stores/hud-settings-store';
+import { useDialogSettingsStore } from '../../../../../stores/dialog-settings-store';
+import { useTitleSettingsStore } from '../../../../../stores/title-settings-store';
+import { TitleView } from '../../../title';
 import { useGameUIStore } from '../../../../../stores/game-ui-store';
 import { useSpriteAvailabilityStore } from '../../../../../stores/sprite-availability-store';
 import { useDeliveryQueueStore } from '../../../../../stores/delivery-queue-store';
@@ -27,6 +23,8 @@ import '../../../hud/hud.css';
 interface GameOverlayProps {
   width: number;
   height: number;
+  /** The profile whose battery save the reimagined title reads. */
+  profileId?: string;
 }
 
 /** Menu transition: 29 frames at 60fps = 483ms */
@@ -34,32 +32,31 @@ const MENU_TRANSITION_MS = 483;
 
 type MenuPhase = 'gameplay' | 'opening' | 'open' | 'closing';
 
-const GameOverlay = ({ width, height }: GameOverlayProps) => {
+const GameOverlay = ({ width, height, profileId }: GameOverlayProps) => {
   const { mode: hudMode, style: hudStyle, enhancedParts } = useHudSettingsStore();
   const gameMode = useGameUIStore((s) => s.mode);
   const spritesAvailable = useSpriteAvailabilityStore((s) => s.available);
+  const enhancedDialogBox = useDialogSettingsStore((s) => s.box) === 'enhanced';
+  const reimaginedTitle = useTitleSettingsStore((s) => s.screen) === 'reimagined';
   const isEnhanced = hudMode === 'enhanced';
 
   // The sprite HUD can only render when the Vanilla style is paired with
   // extracted sprites for the active ROM; otherwise we show an HTML notice.
   const spriteHudRenderable = hudStyle === 'vanilla' && spritesAvailable;
-  // Gate the main overlay on the live game mode — only present during gameplay
-  // and dialogue (see hud-visibility), never the intro, maps, or other menus.
+  // Gated on the live game mode: gameplay and dialogue only (see hud-visibility).
   const showMainSlot = isEnhanced && enhancedParts.includes('main') && isMainHudVisibleForMode(gameMode);
   const showPauseMenu = isEnhanced && enhancedParts.includes('pause') && spriteHudRenderable;
   const [menuPhase, setMenuPhase] = useState<MenuPhase>('gameplay');
   const rafRef = useRef<number>(0);
 
-  // Subscribe to map changes → fire location notifications
   useLocationNotification();
 
-  // Subscribe delivery queue → zustand store sync
   useEffect(() => {
     const unsub = deliveryQueue.subscribe(useDeliveryQueueStore.getState()._sync);
     return unsub;
   }, []);
 
-  // Poll WASM menu state each frame — active whenever enhanced mode is on
+  // Poll WASM menu state each frame while enhanced mode is on.
   useEffect(() => {
     if (!isEnhanced) return;
     const poll = () => {
@@ -76,7 +73,6 @@ const GameOverlay = ({ width, height }: GameOverlayProps) => {
     return () => cancelAnimationFrame(rafRef.current);
   }, [isEnhanced]);
 
-  // Determine slide position
   const isMenuVisible = menuPhase === 'opening' || menuPhase === 'open';
   const isTransitioning = menuPhase === 'opening' || menuPhase === 'closing';
   const transition = isTransitioning ? `transform ${MENU_TRANSITION_MS}ms linear` : 'none';
@@ -95,14 +91,14 @@ const GameOverlay = ({ width, height }: GameOverlayProps) => {
         overflow: 'hidden',
       }}
     >
-      {/* Pause menu — slides down from above */}
+      {/* Pause menu slides down from above. */}
       {showPauseMenu && (
         <PauseMenuView
           slideTransform={isMenuVisible ? 'translateY(0)' : 'translateY(-100%)'}
           slideTransition={transition}
         />
       )}
-      {/* HUD — slides down when menu opens. Falls back to an HTML notice when the
+      {/* HUD slides down when the menu opens. Falls back to an HTML notice when the
           sprite HUD can't render (Modern style, or Vanilla without sprites). */}
       {showMainSlot && (
         spriteHudRenderable ? (
@@ -114,6 +110,10 @@ const GameOverlay = ({ width, height }: GameOverlayProps) => {
           <HudUnavailableNotice reason={hudStyle === 'modern' ? 'modern' : 'no-sprites'} />
         )
       )}
+      {/* The reimagined title draws over the hidden native one while the intro runs; it covers the view. */}
+      {reimaginedTitle && gameMode === 'title' && <TitleView profileId={profileId ?? null} />}
+      {/* The enhanced message box draws in either HUD mode; the native one is kept off VRAM meanwhile. */}
+      {enhancedDialogBox && <DialogView />}
       {/* Location change notifications */}
       <LocationNotification />
       {/* Delivery queue indicator (bottom-right) */}

@@ -1,12 +1,8 @@
 /* @layer renderer-app @kind logic */
 /**
- * The two read-only renderings of a record.
- *
- * The source form is the dataset's own emitter, so what the tab shows is
- * exactly the text a save would write — not a second stringifier that could
- * drift from it. That emitter refuses a record carrying a field it does not
- * know, and refusing loudly is the point: the failure is shown in the panel as
- * a comment rather than blanking the tab or taking the screen down with it.
+ * The two read-only renderings of a record. The source form uses the dataset's
+ * own emitter, so the tab shows exactly what a save would write. The emitter
+ * refuses unknown fields; that failure is shown in the panel as a comment.
  */
 import type { InspectorRow, InspectorSource } from '../DataInspector.type';
 

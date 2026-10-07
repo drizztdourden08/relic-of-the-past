@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * Bracket string to token stream — the import half of the adapter between the
+ * Bracket string to token stream. The import half of the adapter between the
  * stored dialogue dump format (produced by `formatDialogueText` in
  * shared/asset-extraction/text/dialogue-decoder.ts) and the editable
  * language-set model.
@@ -16,7 +16,7 @@
  *
  * That last rule deliberately also absorbs the bracketed *pseudo-glyph* entries
  * some alphabet tables carry (icon/button/arrow/ellipsis names). Those are
- * ordinary characters rather than control codes, but they are spelled exactly
+ * ordinary characters, not control codes, but they are spelled exactly
  * like a paramless code and no glyph name can collide with the param form,
  * because none of them contains a space. Treating them as paramless cmd tokens
  * therefore keeps `serializeTokens(parseTokens(s)) === s` exact for every
@@ -32,7 +32,7 @@ import type { Token } from '../types';
 /** Every bracketed run, non-greedy on the closing bracket. */
 const BRACKET_RE = /\[[^\]]*\]/g;
 
-/** `Name Param` — command names never contain whitespace. */
+/** `Name Param`, since command names never contain whitespace. */
 const PARAM_RE = /^(\S+) (\d+)$/;
 
 /** Command names that map onto the model's dedicated `var` token. */

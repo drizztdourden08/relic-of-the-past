@@ -1,27 +1,11 @@
 /* @layer renderer-components @kind hook */
 /**
- * Keeps "fit to content" honest as a MODE rather than a one-shot click: a fit
- * column keeps re-measuring the widest value it can see and rendering at
- * that width, instead of freezing at whatever it measured the moment the
- * mode was turned on.
- *
- * The flag itself is never touched — what comes out of here is a per-render
- * override the track list consults, the same shape `use-grow-fallback` next
- * door returns. The difference is what triggers a re-measure. A grow column
- * only cares whether the scroller can still give it space, so that hook
- * watches the scroller and deliberately ignores content. A fit column has no
- * such condition — it always renders at its content width — so it has to
- * watch the content instead: a filtered-out row, a re-sorted order, an edited
- * cell's text and an added or removed column are all a DOM mutation inside
- * the scroller, so one `MutationObserver` covers every one of them without
- * this hook needing to know which actually happened.
- *
- * That observer only has to watch structure and text, never attributes — the
- * one thing this hook itself writes back is a custom property on the
- * scroller's own `style`, and the offscreen clones `measuredFitWidths` reads
- * are appended to `document.body`, not here. Neither shows up as a childList
- * or characterData change in this subtree, so a re-measure can never trigger
- * a re-measure of its own.
+ * Keeps "fit to content" a mode: a fit column re-measures as content changes.
+ * The flag is never touched; this returns a per-render override like
+ * `use-grow-fallback`. Content changes are all DOM mutations in the scroller,
+ * so one `MutationObserver` covers them. It watches structure and text only:
+ * this hook writes a custom property (an attribute) and the measuring clones
+ * go on `document.body`, so a re-measure never triggers itself.
  */
 import {
   useCallback, useEffect, useMemo, useRef, useState,
@@ -37,7 +21,7 @@ const MEASURE_DELAY_MS = 80;
 
 interface UseFitFallbackInput {
   columns: readonly TableColumn[];
-  /** The scroller the header and rows live in — everything measurable is inside it. */
+  /** The scroller the header and rows live in. */
   rootRef: RefObject<HTMLElement | null>;
 }
 
@@ -68,12 +52,12 @@ const useFitFallback = ({ columns, rootRef }: UseFitFallbackInput): GrowFallback
     setFallback((previous) => (sameFallback(previous, next) ? previous : next));
   }, [rootRef]);
 
-  /* The column set moved — a fit column arrived, left, or the set to measure changed. */
+  /* The column set changed. */
   useEffect(() => {
     measure();
   }, [measure, signature]);
 
-  /* What the columns are showing moved — filtering, sorting, an edit, a resize elsewhere. */
+  /* The content changed: filtering, sorting, an edit, a resize elsewhere. */
   useEffect(() => {
     const root = rootRef.current;
     if (!root || typeof MutationObserver === 'undefined') return undefined;

@@ -1,19 +1,19 @@
 /* @layer renderer-lib @kind logic */
 /**
  * Plays `.opuz` by repackaging it, not by decoding it ourselves. The container's payload is
- * ordinary Opus, and Chromium already has an Opus decoder — it just will not read this
+ * ordinary Opus, and Chromium already has an Opus decoder that just will not read this
  * container. So each range's packets get wrapped in an Ogg stream in memory and handed to
  * `decodeAudioData`, which costs us a muxer and no codec at all.
  *
  * Each range is its own stream because a range is a seek: the decoder has to start clean, the
  * way the C player reset its decoder before every seek. The samples a range asks us to drop are
- * dropped here rather than declared as the stream's pre-skip, so the trimming happens in one
+ * dropped here, not declared as the stream's pre-skip, so the trimming happens in one
  * place and cannot be applied twice.
  *
  * Ranges are laid end to end into a single buffer, which turns the container's "jump back to
  * this range" into the plain loop point the rest of the engine expects: the sample the loop
  * range's audio starts at, at the buffer's own 48 kHz rate. Decoding runs in a private 48 kHz
- * context so no resampling can shift those sample counts — the finished buffer keeps its 48 kHz
+ * context so no resampling can shift those sample counts. The finished buffer keeps its 48 kHz
  * rate and the graph resamples it to the device rate on playback.
  */
 import { buildOggOpus } from './ogg-opus';
@@ -34,7 +34,7 @@ const channelSlices = (decoded: AudioBuffer, from: number, to: number): Float32A
   for (let channel = 0; channel < OPUZ_CHANNELS; channel += 1) {
     const source = decoded.getChannelData(Math.min(channel, decoded.numberOfChannels - 1));
     // `subarray` widens the backing buffer to ArrayBufferLike; a decoded AudioBuffer is never
-    // shared memory, so narrowing it back is safe and keeps this a view rather than a copy.
+    // shared memory, so narrowing it back is safe and keeps this a view, not a copy.
     slices.push(source.subarray(from, to) as Float32Array<ArrayBuffer>);
   }
   return slices;

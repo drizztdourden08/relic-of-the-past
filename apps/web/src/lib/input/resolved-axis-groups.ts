@@ -3,7 +3,7 @@
  * Groups a ResolvedDevice's axis controls into stick pairs (X plus Y) and
  * lone trigger axes, the shape the sticks/triggers panel actually renders.
  * Pairing is by position name (LEFT_X pairs with LEFT_Y, RIGHT_X with
- * RIGHT_Y) rather than array order, so a device reporting only one axis of
+ * RIGHT_Y), not array order, so a device reporting only one axis of
  * a pair still resolves the rest correctly instead of misaligning.
  */
 import type { ResolvedControl } from '@shared/input/family';

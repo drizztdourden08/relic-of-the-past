@@ -3,8 +3,8 @@
  * Dot-path get/set over nested records. Array steps are plain numeric segments
  * (`items.0.name`), because JS indexes arrays by string key anyway.
  *
- * `getPath` never throws — a missing intermediate yields `undefined`, which is
- * exactly what a filter or a cell renderer wants for an absent field.
+ * `getPath` never throws. A missing intermediate yields `undefined`, which is
+ * what a filter or a cell renderer wants for an absent field.
  * `setPath` is immutable: it clones every container along the path and leaves
  * the input untouched, so React state updates stay referentially honest.
  */

@@ -351,17 +351,39 @@ int Ancilla_AllocHigh() {
   return -1;
 }
 
+// True when this screen Y is on the picture. A tall view shows rows above the stock frame (a negative
+// screen Y) and below row 240, so the band widens with the budget; with no tall view this is the stock
+// test, where a Y at or past 0xf0 is the hardware's hide value rather than a row.
+static bool Ancilla_RowOnScreen(uint16 y) {
+  if (!Tall_Active())
+    return y < 0xf0;
+  int16 ys = (int16)y;
+  return ys >= -TallTopPx() && ys < 240 + TallBottomPx();
+}
+
+// Writes an accepted Y. A tall coordinate needs the 9th bit the entry cannot hold, which OamSetY carries
+// for the PPU in the per-slot marker; with no tall view it is the same byte the vanilla store wrote.
+static void Ancilla_WriteOamY(OamEnt *oam, uint16 y) {
+  if (Tall_Active())
+    OamSetY(oam, y);
+  else
+    oam->y = (uint8)y;
+}
+
 static void Ancilla_SetOam(OamEnt *oam, uint16 x, uint16 y, uint8 charnum, uint8 flags, uint8 big) {
-  uint8 yval = 0xf0;
+  bool placed = false;
   if (!Wide_Active()) {
     int xt = enhanced_features0 & kFeatures0_ExtendScreen64 ? 0x40 : 0;
-    if ((uint16)(x + xt) < 256 + xt * 2 && y < 256) {
+    if ((uint16)(x + xt) < 256 + xt * 2 && (y < 256 || Tall_Active())) {
       big |= (x >> 8) & 1;
       oam->x = x;
-      if (y < 0xf0)
-        yval = y;
+      if (Ancilla_RowOnScreen(y)) {
+        Ancilla_WriteOamY(oam, y);
+        placed = true;
+      }
     }
-    oam->y = yval;
+    if (!placed)
+      OamSetYRaw(oam, 0xf0);
     oam->charnum = charnum;
     oam->flags = flags;
     bytewise_extended_oam[oam - oam_buf] = big;
@@ -372,15 +394,18 @@ static void Ancilla_SetOam(OamEnt *oam, uint16 x, uint16 y, uint8 charnum, uint8
     // else here writes it this frame, and a slot reused from an earlier wide sprite
     // would otherwise keep flinging this one hundreds of pixels off-screen.
     int16 xs = (int16)x;
-    if (xs >= -WideLeftPx() && xs < 256 + WideRightPx() && y < 256) {
+    if (xs >= -WideLeftPx() && xs < 256 + WideRightPx() && (y < 256 || Tall_Active())) {
       big |= (x >> 8) & 1;
       OamSetX(oam, x);
-      if (y < 0xf0)
-        yval = y;
+      if (Ancilla_RowOnScreen(y)) {
+        Ancilla_WriteOamY(oam, y);
+        placed = true;
+      }
     } else {
       g_oam_x_high[oam - oam_buf] = 0;
     }
-    oam->y = yval;
+    if (!placed)
+      OamSetYRaw(oam, 0xf0);
     oam->charnum = charnum;
     oam->flags = flags;
     bytewise_extended_oam[oam - oam_buf] = big;
@@ -552,7 +577,7 @@ void Ancilla_CheckDamageToSprite(int k, uint8 type) {  // 86ecb7
 
 void Ancilla_CheckDamageToSprite_aggressive(int k, uint8 type) {  // 86ecbd
   uint8 dmg = kAncilla_Damage[type];
-  if (dmg == 6 && link_item_bow >= 3) {
+  if (dmg == 6 && link_item_bow >= 3 && GameHook_SilverArrowsBite(k)) {
     if (sprite_type[k] == 0xd7)
       sprite_delay_aux4[k] = 32;
     dmg = 9;
@@ -807,6 +832,17 @@ void Ancilla01_SomariaBullet(int k) {  // 88851b
   SomarianBlast_Draw(k);
 }
 
+// The vertical half of the bounds test, which the wide work left at the stock screen: a tall view shows
+// rows above and below it, so a projectile crossing one of those edges is still on screen and must live
+// until it leaves the view. The stock path keeps the low-byte residue it always used.
+static bool Ancilla_RowOutsideView(int k, AncillaOamInfo *info) {
+  if (!Tall_Active())
+    return (info->y = ancilla_y_lo[k] - BG2VOFS_copy2) >= 0xf0;
+  int rel_y = Ancilla_GetY(k) - BG2VOFS_copy2;
+  info->y = (uint16)rel_y;
+  return rel_y < -TallTopPx() || rel_y >= 240 + TallBottomPx();
+}
+
 bool Ancilla_ReturnIfOutsideBounds(int k, AncillaOamInfo *info) {  // 88862a
   static const uint8 kAncilla_FloorFlags[2] = {0x20, 0x10};
   info->flags = kAncilla_FloorFlags[ancilla_floor[k]];
@@ -815,7 +851,7 @@ bool Ancilla_ReturnIfOutsideBounds(int k, AncillaOamInfo *info) {  // 88862a
     // residue mod 256 of the true screen-relative X, not the signed distance
     // itself; cast explicitly so widening the field above cannot change the result.
     if ((info->x = (uint8)(ancilla_x_lo[k] - BG2HOFS_copy2)) >= 0xf4 ||
-        (info->y = ancilla_y_lo[k] - BG2VOFS_copy2) >= 0xf0) {
+        Ancilla_RowOutsideView(k, info)) {
       ancilla_type[k] = 0;
       return true;
     }
@@ -827,7 +863,7 @@ bool Ancilla_ReturnIfOutsideBounds(int k, AncillaOamInfo *info) {  // 88862a
     int rel_x = Ancilla_GetX(k) - BG2HOFS_copy2;
     info->x = (uint16)rel_x;
     if (rel_x < -WideLeftPx() || rel_x >= 256 + WideRightPx() ||
-        (info->y = ancilla_y_lo[k] - BG2VOFS_copy2) >= 0xf0) {
+        Ancilla_RowOutsideView(k, info)) {
       ancilla_type[k] = 0;
       return true;
     }
@@ -3506,7 +3542,7 @@ endif_11:
   } else if (a == 0x42) {
     link_hearts_filler += 8;
   } else if (a == 0x45) {
-    link_magic_filler += 16;
+    link_magic_filler += GameHook_ReceiptPayout(a, 16);
   } else if (a == 0x22 || a == 0x23) {
     Palette_Load_LinkArmorAndGloves();
   }
@@ -3514,11 +3550,12 @@ endif_11:
   ancilla_type[k] = 0;
   flag_unk1 = 0;
   a = ancilla_item_to_link[k];
-  if (ancilla_step[k] == 3 && a != 0x10 && a != 0x26 && a != 0xf && a != 0x20) {
+  if (ancilla_step[k] == 3 && a != 0x10 && a != 0x26 && a != 0xf && a != 0x20 &&
+      !GameHook_SubstitutedReceiptSkipsBossExit()) {
     PrepareDungeonExitFromBossFight();
   }
 
-  if (ancilla_step[k] != 2)
+  if (ancilla_step[k] != 2 || GameHook_SubstitutedReceiptNeedsUnfreeze())
     flag_is_link_immobilized = 0;
   return;
 
@@ -3541,6 +3578,7 @@ endif_6:
     else
       msg = kReceiveItemMsgs[ancilla_item_to_link[k]];
   }
+  msg = GameHook_ReceiptMessageOverride(ancilla_item_to_link[k], msg);
   if (msg != -1) {
     dialogue_message_index = msg;
     if (msg == 0x70)
@@ -3602,13 +3640,14 @@ OamEnt *Ancilla_ReceiveItem_Draw(int k, int x, int y) {  // 88c690
   OamEnt *oam = GetOamCurPtr();
   int j = ancilla_item_to_link[k];
   oam->charnum = 0x24;
-  uint8 a = kWishPond2_OamFlags[j];
+  uint8 a = GameHook_QuiverPalette(j, GameHook_ReceiptPalette(j, GameHook_RupeeGemPalette(j, kWishPond2_OamFlags[j])));
   if (sign8(a))
     a = ancilla_arr4[k];
-  Ancilla_SetOam(oam, x, y, 0x24, a * 2 | 0x30, kReceiveItem_Tab1[j]);
+  uint8 col = GameHook_PondGemColumn(j);
+  Ancilla_SetOam(oam, x, y, 0x24 + col, a * 2 | 0x30, GameHook_QuiverShape(j, GameHook_ReceiptShape(j, GameHook_RupeeGemShape(j, kReceiveItem_Tab1[j]))));
   oam++;
-  if (kReceiveItem_Tab1[j] == 0) {
-    Ancilla_SetOam(oam, x, y + 8, 0x34, a * 2 | 0x30, 0);
+  if (GameHook_RupeeGemShape(j, kReceiveItem_Tab1[j]) == 0) {
+    Ancilla_SetOam(oam, x, y + 8, 0x34 + col, a * 2 | 0x30, 0);
     oam++;
   }
   return oam;
@@ -3669,6 +3708,7 @@ void Ancilla42_HappinessPondRupees(int k) {  // 88c7de
     if (happiness_pond_arr1[i])
       return;
   }
+  if (GameHook_PondTossNextVolley()) return;
   ancilla_type[k] = 0;
 }
 
@@ -3853,7 +3893,8 @@ void Ancilla29_MilestoneItemReceipt(int k) {  // 88ca8c
 
   Point16U pt;
   Ancilla_PrepAdjustedOamCoord(k, &pt);
-  OamEnt *oam = Ancilla_ReceiveItem_Draw(k, pt.x, pt.y - ancilla_z[k]);
+  OamEnt *oam = GameHook_DrawFallingPrizeOverride(k, pt.x, pt.y - ancilla_z[k]);
+  if (!oam) oam = Ancilla_ReceiveItem_Draw(k, pt.x, pt.y - ancilla_z[k]);
 
   if (sign8(--ancilla_aux_timer[k])) {
     ancilla_aux_timer[k] = 9;
@@ -3891,7 +3932,7 @@ void Ancilla_RisingCrystal(int k) {  // 88cbf2
   if (y < 0x49) {
     Ancilla_SetY(k, 0x49 + BG2VOFS_copy);
     if (!submodule_index) {
-      link_has_crystals |= kDungeonCrystalPendantBit[BYTE(cur_palace_index_x2) >> 1];
+      link_has_crystals |= GameHook_CrystalPrizeBit(kDungeonCrystalPendantBit[BYTE(cur_palace_index_x2) >> 1]);
       submodule_index = 0x18;
       subsubmodule_index = 0;
       memset(aux_palette_buffer + 0x20, 0, sizeof(uint16) * 0x60);
@@ -4091,7 +4132,8 @@ void Ancilla36_Flute(int k) {  // 88cfaa
   Point16U pt;
   Ancilla_PrepAdjustedOamCoord(k, &pt);
   OamEnt *oam = GetOamCurPtr();
-  Ancilla_SetOam(oam, pt.x, pt.y - (int8)ancilla_z[k], 0x24, HIBYTE(oam_priority_value) | 4, 2);
+  if (!GameHook_DrawDugUpItemOverride(k, pt.x, pt.y - (int8)ancilla_z[k]))
+    Ancilla_SetOam(oam, pt.x, pt.y - (int8)ancilla_z[k], 0x24, HIBYTE(oam_priority_value) | 4, 2);
   if (oam->y == 0xf0)
     ancilla_type[k] = 0;
 }
@@ -4556,7 +4598,7 @@ kill_me:
       link_give_damage = 0;
       return;
     }
-    link_disable_sprite_damage = 1;
+    link_disable_sprite_damage = GameHook_ByrnaBarrierGuard();
     if (!--ancilla_aux_timer[k]) {
       ancilla_aux_timer[k] = 1;
       uint8 r0 = kCaneSpark_Magic[link_magic_consumption];
@@ -7021,7 +7063,7 @@ bool Ancilla_AddRupees(int k) {  // 89ad6c
   if (a == 0x34 || a == 0x35 || a == 0x36) {
     link_rupees_goal += kGiveRupeeGift_Tab[a - 0x34];
   } else if (a == 0x40 || a == 0x41) {
-    link_rupees_goal += kGiveRupeeGift_Tab[a - 0x40 + 3];
+    link_rupees_goal += GameHook_ReceiptPayout(a, kGiveRupeeGift_Tab[a - 0x40 + 3]);
   } else if (a == 0x46) {
     link_rupees_goal += 300;
   } else if (a == 0x47) {
@@ -7180,20 +7222,27 @@ int DashTremor_TwiddleOffset(int k) {  // 8ffafe
   }
 }
 
+// The vertical twin of the band above, for the same reason: with rows visible past the stock picture, a
+// projectile leaves the screen later than row 240.
+static bool Ancilla_RowOffscreen(int j) {
+  int rel_y = Ancilla_GetY(j) - BG2VOFS_copy2;
+  if (!Tall_Active())
+    return (uint16)rel_y >= 240;
+  return rel_y < -TallTopPx() || rel_y >= 240 + TallBottomPx();
+}
+
 void Ancilla_TerminateIfOffscreen(int j) {  // 8ffd52
   if (!Wide_Active()) {
     int xt = (enhanced_features0 & kFeatures0_ExtendScreen64) ? 0x40 : 0;
     uint16 x = Ancilla_GetX(j) - BG2HOFS_copy2 + xt;
-    uint16 y = Ancilla_GetY(j) - BG2VOFS_copy2;
-    if (x >= 244 + xt * 2 || y >= 240)
+    if (x >= 244 + xt * 2 || Ancilla_RowOffscreen(j))
       ancilla_type[j] = 0;
   } else {
     // Same band as the stock check, but sized to the live wide budget on each side
     // instead of the fixed 64px allowance, so a projectile survives the full width
     // of the extended view instead of being destroyed 64px into the band.
     int rel_x = Ancilla_GetX(j) - BG2HOFS_copy2;
-    uint16 y = Ancilla_GetY(j) - BG2VOFS_copy2;
-    if (rel_x < -WideLeftPx() || rel_x >= 244 + WideRightPx() || y >= 240)
+    if (rel_x < -WideLeftPx() || rel_x >= 244 + WideRightPx() || Ancilla_RowOffscreen(j))
       ancilla_type[j] = 0;
   }
 }

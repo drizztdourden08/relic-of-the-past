@@ -4,12 +4,12 @@
  * they are.
  *
  * A choice prompt stores its option text as the LAST lines of the entry, one
- * option per line, with the prompt code as the stream's final token — verified
- * against every prompt in the vanilla corpus. So the options need no second
- * editing surface: this plugin finds the prompt code in the document, marks the
- * option lines, and the stylesheet dresses them as the selectable rows the
- * player will see. Typing in one is typing in the entry; every editor behavior
- * (wrapping, measuring, undo) applies unchanged.
+ * option per line, with the prompt code as the stream's final token. That was
+ * verified against every prompt in the vanilla corpus. So the options need no
+ * second editing surface: this plugin finds the prompt code in the document,
+ * marks the option lines, and the stylesheet dresses them as the selectable
+ * rows the player will see. Typing in one is typing in the entry; every editor
+ * behavior (wrapping, measuring, undo) applies unchanged.
  *
  * The decoration carries the option's 1-based index, which the line's gutter
  * and the option tag both read.

@@ -1,14 +1,12 @@
 /* @layer renderer-widgets @kind data */
 /**
- * Field probe for the tile-data fix `connection-shape.ts` used to compute by
- * hand. Where the crossing physically sits, derived from the live flood
- * crossing — flood evidence proves presence only, so this is `likely`, never
- * `certain`.
+ * Field probe for the tile-data fix: where the crossing physically sits,
+ * derived from the live flood crossing. Flood evidence proves presence only,
+ * so this is `likely`, never `certain`.
  *
- * `applies` reproduces `connection-shape.ts`'s two guards exactly: a record
- * that already has `nav` is complete regardless of what the display is doing,
- * and an endpoint that does not resolve to a real screen gets no fix at all —
- * inventing one is the one thing the connection path refuses to do.
+ * `applies` keeps two guards: a record that already has `nav` is complete,
+ * and an endpoint that does not resolve to a real screen gets no fix at all.
+ * Inventing one is the one thing the connection path refuses to do.
  */
 import { connectionTagKeysOf, findOne } from '@shared/game/data';
 import { toScreenIdOf } from '@shared/game/data/connections/derive';

@@ -5,7 +5,7 @@
  * Everything else in this folder draws its icons through the React component, and
  * should. This exists for the one place that cannot: the markers the editor
  * itself draws at the end of a line are built as plain DOM by the document view,
- * outside React's tree entirely, so they need the icon as an element rather than
+ * outside React's tree entirely, so they need the icon as an element, not
  * as an element type.
  *
  * The icon data is the same bundled offline icon every other surface uses, so a

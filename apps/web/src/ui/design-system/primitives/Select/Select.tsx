@@ -12,7 +12,7 @@ const Select = (props: SelectProps) => {
     onChange,
     options,
     groups,
-    placeholder = 'Select…',
+    placeholder = 'Select...',
     disabled = false,
     searchable = false,
     size = 'md',
@@ -61,7 +61,7 @@ const Select = (props: SelectProps) => {
             className="select-content"
             data-drop-up={dropdown.pos?.dropUp ? 'true' : undefined}
             style={dropdown.pos
-              ? { top: dropdown.pos.top, left: dropdown.pos.left, width: dropdown.pos.width }
+              ? { top: dropdown.pos.top, left: dropdown.pos.left, minWidth: dropdown.pos.width }
               : undefined}
             role="listbox"
             onKeyDown={dropdown.handleKeyDown}
@@ -72,7 +72,7 @@ const Select = (props: SelectProps) => {
                   ref={dropdown.searchRef}
                   className="select-search__input"
                   type="text"
-                  placeholder="Search…"
+                  placeholder="Search..."
                   value={dropdown.search}
                   onChange={(e) => { dropdown.setSearch(e.target.value); dropdown.setHighlightIdx(0); }}
                   onKeyDown={dropdown.handleKeyDown}

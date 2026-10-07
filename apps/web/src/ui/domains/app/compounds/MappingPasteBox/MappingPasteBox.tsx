@@ -1,9 +1,8 @@
 /* @layer renderer-components @kind component */
 /**
- * MappingPasteBox — lets a user paste an SDL mapping line for a controller
- * that isn't recognized, instead of running the calibration wizard. Owns
- * only its own input text and submit status; the actual IPC call happens in
- * whatever View wires `onSubmit` (see UnavailableControllerNotice's callers).
+ * Lets a user paste an SDL mapping line for a controller that isn't recognized,
+ * instead of running the calibration wizard. Owns only its own input text and
+ * submit status; the IPC call happens in whatever View wires `onSubmit`.
  */
 import { useCallback, useState } from 'react';
 import { Box } from '../../../../design-system/primitives/Box';
@@ -17,7 +16,7 @@ import './MappingPasteBox.css';
 const HINT = 'Get a mapping line from the SDL Gamepad Tool or a community controller database.';
 
 const STATUS_TEXT: Record<'success' | 'error', string> = {
-  success: 'Mapping added — the controller should pick it up now.',
+  success: 'Mapping added. The controller should pick it up now.',
   error: "That line wasn't recognized as a valid mapping.",
 };
 

@@ -1,10 +1,10 @@
 /* @layer renderer-components @kind data */
 /**
- * FAMILY_ICON_MAP — one brand silhouette per controller family, shared by the
+ * One brand silhouette per controller family, shared by the
  * required-inputs strip and the per-binding device glyph so both read the
  * same icon for a given family. resolveLiveFamilyIcon resolves which family
  * a vid:pid belongs to, preferring this session's remembered SDL type and
- * falling back to a currently-connected device's own live family — the same
+ * falling back to a currently-connected device's own live family, the same
  * precedence the required-inputs strip already used before this file existed.
  */
 import type { DetectedDevice } from '@shared/types/controls';

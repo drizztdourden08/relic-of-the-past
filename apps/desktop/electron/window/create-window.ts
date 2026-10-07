@@ -18,24 +18,15 @@ const getMainWindow = (): BrowserWindow | null => {
   return mainWindow;
 };
 
-// NOTE: there is deliberately no "show it quietly" helper here any more.
-// showInactive() + blur() + SetWindowPos(HWND_BOTTOM) was tried and still
-// disturbed the user: appearing anywhere in the z-order drops a fullscreen game
-// out of exclusive fullscreen, and the unconditional blur() pushed the foreground
-// to the desktop instead of back to its owner. Hence the current approach — see
-// offscreenOrigin() and the noFocus branch in createWindow.
+// No "show in background" helper: showInactive() + blur() + SetWindowPos(HWND_BOTTOM)
+// still dropped a fullscreen game out of exclusive fullscreen and pushed the foreground
+// to the desktop. See offscreenOrigin() and the noFocus branch below.
 
 /**
  * A position beyond every display, so an automation window sits on NO monitor.
- *
- * Keeping the window hidden outright is even quieter, but Chromium does not
- * schedule requestAnimationFrame for a hidden page, so the emulator never ticks
- * and any spec that PLAYS the game (rather than just reading a loaded state)
- * cannot advance. Off-screen keeps the window "shown" — frames run, CDP input
- * routes normally — while never compositing a pixel onto the user's screens.
- *
- * Derived from the real display layout rather than a magic negative constant, so
- * Windows cannot clamp it back onto a monitor.
+ * A hidden window gets no requestAnimationFrame, so the emulator never ticks;
+ * off-screen keeps it "shown" (frames run, CDP input routes) without compositing
+ * a pixel. Derived from the real display layout so Windows cannot clamp it back.
  */
 const offscreenOrigin = (): { x: number; y: number } => {
   const displays = screen.getAllDisplays();
@@ -63,22 +54,17 @@ const createWindow = (): BrowserWindow => {
     autoHideMenuBar: true,
     // A named instance carries its name in the title and swaps to the bot icon, so
     // parallel agent launches are tellable apart from the taskbar alone.
-    title: instance.name ? `${APP_TITLE} — ${instance.name}` : APP_TITLE,
+    title: instance.name ? `${APP_TITLE} - ${instance.name}` : APP_TITLE,
     icon: resolveWindowIcon(instance.name),
     backgroundColor: '#000000',
-    // A normal launch is born transparent and is faded in by the boot mediator once
-    // the renderer's shell has settled — see armReveal. Automation has no splash to
-    // hand over from, so it stays opaque (and off-screen).
+    // A normal launch starts transparent and is faded in by armReveal once the
+    // renderer's shell has settled. Automation has no splash, so it stays opaque.
     opacity: noFocus ? 1 : 0,
     show: false,
-    // An automation window must be UNABLE to take focus, not merely reluctant to.
-    // focusable:false sets WS_EX_NOACTIVATE on Windows, so the OS refuses to
-    // activate it at all — SetForegroundWindow (which is what Chromium's
-    // Page.bringToFront ends up calling, and what a Playwright click triggers)
-    // simply cannot succeed. Undoing focus after the fact was too late: by then
-    // the user's own window had already been deactivated, which IS the complaint.
-    // Playwright still drives the renderer fine — CDP input needs no OS focus.
-    // On Windows this also implies skipTaskbar, so runs stop churning the taskbar.
+    // focusable:false sets WS_EX_NOACTIVATE on Windows, so SetForegroundWindow (what
+    // Page.bringToFront and a Playwright click end up calling) cannot succeed. Undoing
+    // focus after the fact was too late: the user's window was already deactivated.
+    // CDP input needs no OS focus. On Windows this also implies skipTaskbar.
     focusable: !noFocus,
     // Paint even before/without being on a visible surface, so an off-screen
     // automation run still renders for screenshots.
@@ -96,12 +82,10 @@ const createWindow = (): BrowserWindow => {
     },
   });
 
-  // The WASM core sets an SDL window title (kWindowTitle in emscripten_main.c), which
-  // reaches document.title and overrides the BrowserWindow title — so without this an
-  // instance name never shows in the window or on the taskbar. Hold our own title for a
-  // named instance; a normal launch keeps whatever it does today.
+  // The WASM core's SDL window title (kWindowTitle in emscripten_main.c) reaches
+  // document.title and would override the instance name, so hold our own title.
   if (instance.name) {
-    const instanceTitle = `${APP_TITLE} — ${instance.name}`;
+    const instanceTitle = `${APP_TITLE} - ${instance.name}`;
     mainWindow.on('page-title-updated', (event) => {
       event.preventDefault();
       mainWindow?.setTitle(instanceTitle);
@@ -109,19 +93,10 @@ const createWindow = (): BrowserWindow => {
   }
 
   if (noFocus) {
-    // Shown, but on no monitor (offscreenOrigin). "Shown" is what makes Chromium
-    // schedule frames, so the emulator ticks and a spec can actually play the game
-    // — which a fully hidden window cannot do. Off every display is what keeps the
-    // user undisturbed: nothing is ever composited over their fullscreen session,
-    // and focusable:false means it cannot take focus either.
-    //
-    // showInactive() rather than show(), so we never even ask to be activated.
-    // keepWindowInBackground is the backstop if anything raises us later.
-    //
-    // Sized, never positioned: the saved SIZE keeps anything layout-sensitive matching
-    // a real session, while the saved position would drag the window back onto a
-    // display and into the user's way. Maximize/fullscreen are skipped for the same
-    // reason, and because both would activate it.
+    // Shown on no monitor: "shown" makes Chromium schedule frames, off-screen keeps
+    // the user undisturbed. showInactive() so we never ask to be activated;
+    // keepWindowInBackground is the backstop. Saved SIZE only: the saved position
+    // (or maximize/fullscreen) would drag the window back onto a display.
     if (!startup.windowSize) mainWindow.setContentSize(saved.width, saved.height);
     keepWindowInBackground(mainWindow);
     mainWindow.showInactive();
@@ -132,14 +107,9 @@ const createWindow = (): BrowserWindow => {
     else applyWindowState(mainWindow, saved);
     trackWindowState(mainWindow);
     armReveal(mainWindow);
-    // show(), not showInactive(). The splash is a CHILD of this window, and a child of
-    // a window that was never activated does not hold the foreground: it appeared for a
-    // moment and then sank behind whatever the user already had open. Activating here
-    // costs nothing visually, because this window is still at opacity 0, and it is the
-    // correct behaviour anyway for a launch the user just asked for.
-    //
-    // The automation branch above is untouched and stays showInactive() with
-    // focusable:false, so an automated launch still cannot take focus.
+    // show(), not showInactive(): the splash is a CHILD of this window, and a child of
+    // a never-activated window sinks behind whatever the user had open. Activating
+    // costs nothing visually because this window is still at opacity 0.
     mainWindow.show();
     openSplash(mainWindow, app.getVersion());
   }
@@ -166,17 +136,9 @@ const createWindow = (): BrowserWindow => {
     callback(true);
   });
 
-  // Muting deliberately does NOT happen here any more. setAudioMuted is a webContents
-  // kill switch the app's own audio state cannot see or undo: the in-app speaker kept
-  // reading "unmuted" while nothing could play, and toggling it did nothing, because the
-  // real gate sat outside the app entirely. Worse, it was inferred from
-  // isHeadlessLaunch(), so merely pinning a save state silenced a window someone was
-  // sitting in front of.
-  //
-  // --muted is now forwarded to the renderer (startup-config) and starts the app's own
-  // master volume at zero. One mechanism for every launch shape, no flag combination
-  // that behaves differently, and the in-app control remains the single owner of the
-  // state — which is what the flag always meant.
+  // No setAudioMuted here: it is a webContents kill switch the in-app audio state
+  // cannot see or undo. --muted is forwarded to the renderer (startup-config) and
+  // starts the app's own master volume at zero instead.
 
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
     const { shell } = require('electron');

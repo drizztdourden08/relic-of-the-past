@@ -1,20 +1,14 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Every game state that is ACTIVE right now, as a flat list.
- *
- * A follower in tow was the first one we needed, but the game holds several such
- * states at once — a follower, sleeping in bed, keys in hand — so this is a
- * registry rather than a single boolean. Adding a state means adding one rule;
- * nothing else changes, and the widget renders whatever comes back.
- *
- * Everything is read from LIVE game memory (the flag snapshot mirrors real
- * variables — see state_queries.c), never from something the simulator recorded.
- * A save state loaded by hand therefore reports the truth.
+ * Every game state that is ACTIVE right now, as a flat list. The game holds several at once
+ * (a follower, sleeping in bed, keys in hand), so this is a registry: adding a state means
+ * adding one rule. Everything is read from LIVE game memory (see state_queries.c), never from
+ * something the simulator recorded, so a hand-loaded save state reports the truth.
  */
 
 /** The live values the rules read. Plain data, so rules stay testable. */
 interface StateSnapshot {
-  /** follower_indicator — the tagalong id, 0 = nobody. */
+  /** follower_indicator holds the tagalong id, 0 = nobody. */
   follower: number;
   /** progress_buf, as returned by the flag snapshot (a typed array in practice). */
   progress: ArrayLike<number>;
@@ -23,19 +17,15 @@ interface StateSnapshot {
 interface ActiveState {
   id: string;
   label: string;
-  /** Secondary text shown next to the label — a count, a name, a caveat. */
+  /** Secondary text shown next to the label, such as a count, a name or a caveat. */
   detail?: string;
-  /** Tooltip-only provenance (a raw flag mask) — kept out of the chip so labels stay readable. */
+  /** Tooltip-only provenance (a raw flag mask). Kept out of the chip so labels stay readable. */
   hint?: string;
   /** Rendering hint: states that gate traversal deserve emphasis. */
   gating?: boolean;
 }
 
-/**
- * Tagalong ids, named from the routine that sets each one in the decompilation
- * (`follower_indicator = N`). Ids with no confirmed source are reported by number
- * rather than guessed at.
- */
+/** Tagalong ids, named from the routine that sets each (`follower_indicator = N`). Unconfirmed ids are reported by number. */
 const TAGALONG_NAMES: Readonly<Record<number, string>> = {
   1: 'Princess',
   4: 'Old Man',
@@ -57,13 +47,10 @@ const SLOT = {
   bigKey: 15,
 } as const;
 
-/**
- * `link_num_keys` is set to 0xFF on leaving a dungeon (overworld.c:429), meaning
- * "no key count here" — not 255 keys.
- */
+/** `link_num_keys` is 0xFF after leaving a dungeon (overworld.c:429): "no key count here", not 255 keys. */
 const NO_KEY_COUNT = 0xff;
 
-/** sram_progress_indicator thresholds — the story beats it counts off. */
+/** sram_progress_indicator thresholds for the story beats it counts off. */
 const PROGRESS_LABELS: Readonly<Record<number, string>> = {
   1: 'Uncle rescued',
   2: 'Princess rescued',
@@ -101,9 +88,8 @@ const progressRule: StateRule = (snap) => {
 };
 
 /**
- * What the player is DOING (asleep, dashing, swimming…) and the named progress bits come
- * from live player-state bytes, not this SRAM buffer — see player-state-rules.ts.
- * They are merged in by `liveGameStates`.
+ * What the player is DOING (asleep, dashing, swimming) and the named progress bits come from
+ * live player-state bytes, not this SRAM buffer (player-state-rules.ts, merged by `liveGameStates`).
  */
 const STATE_RULES: readonly StateRule[] = [
   followerRule, progressRule, bigKeyRule, smallKeyRule,

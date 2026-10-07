@@ -1,10 +1,5 @@
 /* @layer renderer-app @kind component */
-/**
- * The four verdicts. Accept and Reject are about the finding on screen; Revert
- * is about the reviewer's own amendments to it, so it stays disabled until
- * there are some; and the batch is about the whole list, so it names its own
- * scope rather than sitting next to the other three unlabelled.
- */
+/** The four verdicts. Revert stays disabled until there are amendments; the batch names its own scope. */
 import { Button, Flex, Text } from '@ds/primitives';
 
 const ACCEPT = 'Accept';

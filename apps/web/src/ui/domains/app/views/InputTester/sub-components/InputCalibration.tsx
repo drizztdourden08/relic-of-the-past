@@ -1,12 +1,5 @@
 /* @layer renderer-components @kind component */
-/**
- * InputCalibration — Controller input visualization & calibration page.
- *
- * Shows detected controllers with real-time button/axis state using proper
- * SVG icons, joystick circle testers, and vibration testing. SDL3 is the
- * only controller transport now (the browser Gamepad API path has been
- * removed everywhere), so every card here comes from the SDL3 snapshot.
- */
+// SDL3 is the only controller transport (the browser Gamepad API path is gone), so every card comes from its snapshot.
 
 import { useState } from 'react';
 import type { CSSProperties } from 'react';
@@ -68,7 +61,7 @@ const InputCalibration = () => {
         </Button>
       </Box>
 
-      {/* Diagnostics Wizard — a modal, so it replaces this screen while open. */}
+      {/* A modal, so it replaces this screen while open. */}
       <DiagnosticsWizardDialog
         open={calibrating}
         onClose={() => setCalibrating(false)}
@@ -125,9 +118,8 @@ const InputCalibration = () => {
       {/* Diagnostics */}
       <DiagnosticsLog events={events} controllerDiag={controllerDiag} logRef={logRef} />
 
-      {/* Mounted by the screen, not by the card that opened it: the report
-          releases SDL partway through, which drops that device out of the
-          ready list and unmounts its card mid-run. */}
+      {/* Mounted by the screen, not the card: the report releases SDL partway through, which
+          unmounts the card mid-run. */}
       {reportDeviceKey && (
         <ControllerReportDialog
           open

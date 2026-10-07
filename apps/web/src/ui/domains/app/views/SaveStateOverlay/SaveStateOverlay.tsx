@@ -88,7 +88,7 @@ const SaveStateOverlay = (props: SaveStateOverlayProps) => {
   }, [visible]);
 
   // Center the highlighted slot (the one whose shortcut was hit) in the track,
-  // scrolling only as far as needed. Manual calc rather than scrollIntoView so it
+  // scrolling only as far as needed. Manual calc instead of scrollIntoView so it
   // never nudges the page vertically and always centers within the track.
   useEffect(() => {
     const track = trackRef.current;
@@ -101,7 +101,7 @@ const SaveStateOverlay = (props: SaveStateOverlayProps) => {
   }, [highlightedSlot, visible]);
 
   // Stay open after saving so the freshly-captured thumbnail updates in place
-  // immediately (loading dismisses instead — you're resuming the game).
+  // immediately (loading dismisses instead, since you're resuming the game).
   const handleSave = useCallback(async (slot: number) => {
     setBusy(slot);
     log.app(`[UI] Save to slot ${slot}`);
@@ -180,7 +180,7 @@ const SaveStateOverlay = (props: SaveStateOverlayProps) => {
                 <Text className="save-overlay__hint-label">
                   {hint.action === 'tap-load' && 'Tap to load'}
                   {hint.action === 'hold-save' && 'Hold to save'}
-                  {hint.action === 'holding-save' && 'Saving…'}
+                  {hint.action === 'holding-save' && 'Saving...'}
                   {hint.action === 'esc-cancel' && 'Cancel'}
                 </Text>
               </Box>

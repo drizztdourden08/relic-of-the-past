@@ -12,16 +12,31 @@
 
 /* The layer the app boots into must be finished before the window is revealed, and a
    200ms entrance means it is not: the reveal lands two frames in, so the screen appears
-   after the window does. During boot the layer is simply present. Set in index.html,
+   after the window does. During boot the layer is present with no entrance. Set in index.html,
    cleared by useShellReady. */
 html.booting .fullscreen-layer {
   animation: none;
 }
 
-.fullscreen-layer__card {
+.fullscreen-layer__frame {
   position: relative;
   width: 90%;
   height: 90%;
+  display: flex;
+}
+
+.fullscreen-layer__floating {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: var(--z-base);
+  transform: translate(-50%, -50%);
+}
+
+.fullscreen-layer__card {
+  position: relative;
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
 
@@ -39,7 +54,7 @@ html.booting .fullscreen-layer {
   padding: var(--space-md) var(--space-xl);
 }
 
-/* Window titles read like page titles — bigger than dialog titles. */
+/* Window titles read like page titles, bigger than dialog titles. */
 .fullscreen-layer__header .window-header__title {
   font-size: var(--text-xl);
 }
@@ -65,16 +80,25 @@ html.booting .fullscreen-layer {
   }
 }
 
-/* Mobile platform: the SAME page container as desktop, only made full-screen —
-   drop the outer gap, the border, and the radius (card fills the screen). Header,
+/* Mobile platform: the SAME page container as desktop, only made full-screen.
+   Drop the outer gap, the border, and the radius (card fills the screen). Header,
    inner padding, background, and everything else stay identical to desktop. */
 .platform-mobile .fullscreen-layer {
   padding: 0;
 }
 
-.platform-mobile .fullscreen-layer__card {
+.platform-mobile .fullscreen-layer__frame {
   width: 100%;
   height: 100%;
+}
+
+/* No room above a full-screen card, so the switch sits just inside its top edge. */
+.platform-mobile .fullscreen-layer__floating {
+  top: var(--space-sm);
+  transform: translateX(-50%);
+}
+
+.platform-mobile .fullscreen-layer__card {
   border: none;
   border-radius: 0;
 }

@@ -20,10 +20,9 @@ interface ConnectionTile {
 }
 
 /**
- * A base-tile rect. There is no single-tile feature: attributes are read per
- * 8px tile, but every feature is stamped by a map16 room object, so the minimum
- * footprint is one 16px collision block — `w` and `h` are always >= 2, wider
- * for pit floors and whirlpool pools.
+ * A base-tile rect. Every feature is stamped by a map16 room object, so the
+ * minimum footprint is one 16px collision block: `w` and `h` are always >= 2,
+ * wider for pit floors and whirlpool pools.
  */
 interface ConnectionRect {
   x: number;
@@ -38,12 +37,8 @@ interface ConnectionPlacement {
   side?: ConnectionSide;
   /** Bounding box in base tiles. Denormalized from `tiles` for cheap hit-testing. */
   rect: ConnectionRect;
-  /**
-   * EVERY base tile the point occupies, contiguous. A cliff splitting a border
-   * into two gaps is TWO points, not one point with a hole in it, which is
-   * exactly what the old `tileRange: { start, end }` could not express. May be
-   * empty when the migration had nothing to derive it from.
-   */
+  /** EVERY base tile the point occupies, contiguous. A cliff splitting a border
+   *  into two gaps is TWO points, not one with a hole. May be empty. */
   tiles: readonly ConnectionTile[];
   /** BG1 / BG2. Indoors a door and the stair beneath it can share tiles. */
   layer?: 0 | 1;
@@ -53,38 +48,28 @@ interface ConnectionRecord {
   id: ConnectionId;
   /** The screen this point SITS ON. One record, one screen, always. */
   screenId: ScreenId;
-  /**
-   * The point on the other side. ALWAYS present: every crossing registers both
-   * ends, including the ones you cannot come back through. A fall hole's
-   * landing spot is a real `drop` point that names the `hole` above it.
-   */
+  /** The point on the other side. ALWAYS present: every crossing registers both
+   *  ends, even one-way ones. A fall hole's landing spot is a `drop` point naming the `hole`. */
   toConnectionId: ConnectionId;
   kind: ConnectionKind;
   placement: ConnectionPlacement;
-  /**
-   * Whether the player can LEAVE this screen through this point. False for a
-   * receive-only point: a `drop`, a one-way warp's destination pad. A crossing
-   * is two-way exactly when BOTH ends can exit, which is one fact held once,
-   * in the only place that cannot contradict itself.
-   */
+  /** Whether the player can LEAVE this screen through this point. False for a
+   *  receive-only point (a `drop`, a one-way warp's pad). Two-way iff BOTH ends can exit. */
   canExit: boolean;
-  /** Many connections are derived from the flood, not native — no id then. */
+  /** Absent on the many connections derived from the flood instead of native data. */
   gameId?: ConnectionGameId;
-  /** For crossings into or out of a dungeon — which one, without parsing anything. */
+  /** Names the dungeon a crossing enters or leaves, so nothing has to be parsed. */
   dungeonId?: DungeonId;
-  /** The trigger/obstacle actor MECHANISM that opens or blocks it — not a player prerequisite. */
+  /** The trigger/obstacle actor MECHANISM that opens or blocks it. Player prerequisites go in `requirements`. */
   gatedBy?: ActorId;
-  /** What the PLAYER must have or have done to use it — id-based leaves only. THIS side's. */
+  /** What the PLAYER must have or have done to use THIS side. Id-based leaves only. */
   requirements?: Requirement;
-  /** Rare — most doorways are unnamed. */
+  /** Set only on the rare named doorway. */
   name?: string;
-  /**
-   * Approach + barrier + context, as references into the tag collection — read
-   * the terms back with `tagKeysOf` (transit:ledge, barrier:small-key, …). The
-   * whole `dir:*` namespace is retired: direction is derived from `canExit`.
-   */
+  /** Approach + barrier + context, as references into the tag collection; read
+   *  the terms back with `tagKeysOf`. No `dir:*` terms: direction is derived from `canExit`. */
   tags: readonly TagId[];
-  /** Pre-computed flood-fill navigation facts — requirements, this side's connection point. */
+  /** Pre-computed flood-fill facts. Holds requirements and this side's connection point. */
   nav?: ConnectionNavData;
 }
 

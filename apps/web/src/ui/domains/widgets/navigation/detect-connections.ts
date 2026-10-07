@@ -3,7 +3,7 @@
  * Turns the game's live exit data into `DetectedConnection`s.
  *
  * Every detection carries the screen ID it resolves to, so no consumer has to
- * recover identity from the label — the "Exit → " prefix that a later step used
+ * recover identity from the label. The "Exit → " prefix that a later step used
  * to strip is now the `isExit` flag instead.
  */
 import { findOne, getScreenByGameId } from '@shared/game/data';

@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind logic */
 /**
  * Which operators a field kind offers. Kinds that cannot be compared directly
- * (object, union, unknown) get existence only — better a visibly inert field
- * than a filter that silently never matches.
+ * (object, union, unknown) get existence only. A visibly inert field beats a
+ * filter that silently never matches.
  *
  * `icon` is a stable semantic id, not a glyph. A future composite maps these
  * onto real icons; this package stays free of anything visual.
@@ -21,7 +21,7 @@ type OperatorIcon =
 
 interface OperatorSpec {
   id: string;
-  /** Shown in the dropdown only — the button carries the icon. */
+  /** Shown in the dropdown only, since the button carries the icon. */
   label: string;
   icon: OperatorIcon;
   /** Drives which control renders: none takes no operand, many takes a list. */

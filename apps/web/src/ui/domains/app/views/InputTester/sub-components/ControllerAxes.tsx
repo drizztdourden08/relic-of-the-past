@@ -1,8 +1,5 @@
 /* @layer renderer-components @kind component */
-/** Sticks + triggers panel for a controller card, derived from the
- *  device's resolved axis controls (see resolve-device.ts) rather than a
- *  preset's axis list, so a control SDL reports here is the only thing that
- *  decides whether a stick or trigger shows up. */
+// Derived from the device's resolved axis controls (see resolve-device.ts), not a preset's axis list.
 import type { CSSProperties } from 'react';
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Button } from '../../../../../design-system/primitives/Button';

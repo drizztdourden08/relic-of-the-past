@@ -6,7 +6,7 @@ import {
 import type { EntityKind } from '@shared/game/data';
 import { ENTITY_KINDS } from '../DataInspector.constants';
 
-/** A named record, loosely — every kind carries some subset of these name fields. */
+/** A loose named record. Every kind carries some subset of these name fields. */
 interface NamedRecord {
   vanillaName?: string;
   randomizerName?: string;
@@ -21,7 +21,7 @@ const getEnumerationRecord = (id: string): NamedRecord => ({
   name: all('enumeration').find(entry => entry.id === id)?.label ?? id,
 });
 
-/** Exhaustive — every `EntityKind` resolves to a real getter, so a link never falls back for want of one. */
+/** Exhaustive: every `EntityKind` resolves to a real getter. */
 const GETTERS: Record<EntityKind, (id: string) => NamedRecord> = {
   screen: getScreen,
   connection: getConnection,
@@ -31,20 +31,13 @@ const GETTERS: Record<EntityKind, (id: string) => NamedRecord> = {
   area: getArea,
   location: getLocation,
   actor: getActor,
-  // A tag's `name` IS its term, which is the only sensible thing to call it.
   tag: getTag,
   'item-group': getItemGroupRecord,
   enumeration: getEnumerationRecord,
 };
 
-/**
- * The reverse of `KIND_ID_PREFIXES`: every id prefix this app mints, mapped
- * back to the kind it names. Built off that table rather than off `EntityKind`
- * itself, because a kind's id prefix is not always its own name — `item-group`
- * mints `ig-NNN` and `enumeration` mints `enum-NNN` — so inferring a kind from
- * an id has to go through the prefix table, not through string surgery on the
- * kind name.
- */
+/** The reverse of `KIND_ID_PREFIXES`. A kind's prefix is not always its name
+ *  (`item-group` mints `ig-NNN`, `enumeration` mints `enum-NNN`). */
 const PREFIX_TO_KIND: Record<string, EntityKind> = Object.fromEntries(
   ENTITY_KINDS.map(kind => [KIND_ID_PREFIXES[kind], kind]),
 );
@@ -59,16 +52,10 @@ const asEntityKind = (value: string | undefined): EntityKind | undefined =>
   value ? ENTITY_KINDS.find((kind) => kind === value) : undefined;
 
 /**
- * The baseline name for an id with no column-level display choice behind it —
- * the fallback `DataTable`'s `resolveIdRefDefault` and `CompactRecordView`'s
- * `resolveIdRefDisplay` both call. `targetKindHint` wins when it names a real
- * kind (a column whose every row points at the same collection); with none —
- * `undefined`, or a hint that names nothing, which is exactly what a MIXED
- * column like the Recommendations table's `targetId` produces — this falls
- * back to reading the kind off the id's OWN prefix, so each row still
- * resolves correctly even though the column as a whole cannot say what kind
- * it holds. `undefined` here means "cannot answer", same contract as
- * `resolveIdRefDisplayValue`, which is what tells the caller to show the id.
+ * The baseline name for an id with no column-level display choice. A valid
+ * `targetKindHint` wins; otherwise the kind is read off the id's own prefix,
+ * so a mixed column (the Recommendations table's `targetId`) still resolves
+ * per row. `undefined` means "cannot answer" and the caller shows the id.
  */
 const defaultIdRefDisplay = (id: string, targetKindHint?: string): string | undefined => {
   const kind = asEntityKind(targetKindHint) ?? entityKindFromId(id);
@@ -78,7 +65,7 @@ const defaultIdRefDisplay = (id: string, targetKindHint?: string): string | unde
   return record.vanillaName ?? record.randomizerName ?? record.name;
 };
 
-/** The display name an id resolves to, for link text — falls back to the id itself. */
+/** The display name an id resolves to, for link text. Falls back to the id itself. */
 const resolveRecordLabel = (id: string): string => defaultIdRefDisplay(id) ?? id;
 
 export { defaultIdRefDisplay, entityKindFromId, resolveRecordLabel };

@@ -1,9 +1,7 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * `wt refresh <name>` — fetch and rebase one worktree, or all of them.
- *
- * Claiming refreshes automatically, so this is for a worktree already in hand that has
- * fallen behind mid-task.
+ * `wt refresh <name>`: fetch and rebase one worktree, or all of them. Claiming refreshes
+ * automatically, so this is for a worktree already in hand that fell behind mid-task.
  */
 import { surveyAll, surveyOne } from '../survey.mjs';
 import { refreshWorktree } from '../refresh.mjs';
@@ -15,7 +13,7 @@ const run = async ({ positional, options }) => {
   if (flag(options, 'all')) {
     const entries = surveyAll();
     if (entries.length === 0) {
-      console.log('[wt] Nothing to refresh — the pool is empty.');
+      console.log('[wt] The pool is empty, so there is nothing to refresh.');
       return;
     }
     for (const { record } of entries) refreshWorktree(record);

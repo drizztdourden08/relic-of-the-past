@@ -74,7 +74,7 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
       const loadResult = await loadStateRef(slot);
       console.log(`[DumpNav] load ${kind} ${slot} returned: ${loadResult}`);
       if (!loadResult) {
-        const dump = { slot, error: `loading ${kind} "${slot}" returned false — state not found or module not ready` };
+        const dump = { slot, error: `loading ${kind} "${slot}" returned false. The state was not found, or the module is not ready.` };
         await window.api.writeDumpNav(dump);
         setTimeout(() => window.close(), 500);
         return;
@@ -140,16 +140,13 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
       // After WasmBuildRoomAttrGrid, toggle floor positions are populated
       const toggleFloorPositions = isIndoors ? wasmGetToggleFloorPositions() : [];
 
-      // ─── Flood fill + connections (for internal edge verification) ───
+      // Flood fill + connections (for internal edge verification).
       // The flood starts on the sub-screen the player is PHYSICALLY on, which for a
-      // multi-screen area is not the area index the game reports: standing in the
-      // first castle's north-east quadrant reads as screen 0x1B (the area head) while
-      // the player is really on 0x1C. Anchoring the flood to the head then measures
-      // his position against the wrong origin, pushing the start tile past 63 where it
-      // clamps to the far corner and seeds the walk in a sealed pocket. The navigation
-      // widget already derives the live sub-screen this way (useNavigation.ts), so the
-      // dumper must too or the two describe different floods — which is precisely what
-      // tests/e2e/flood-parity.keep.spec.ts exists to catch.
+      // multi-screen area is not the area index the game reports (the area head).
+      // Anchoring the flood to the head measures the position against the wrong
+      // origin, pushing the start tile past 63 where it clamps and seeds the walk in
+      // a sealed pocket. The navigation widget derives the live sub-screen the same
+      // way (useNavigation.ts); tests/e2e/flood-parity.keep.spec.ts catches drift.
       const floodScreenIndex = !isIndoors && viewport
         ? ((((viewport.linkY >> 9) & 7) << 3) | ((viewport.linkX >> 9) & 7))
         : overworldScreenIndex;
@@ -233,9 +230,8 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
           col: p.col,
         })),
         floodFill: floodFillData,
-        // Mechanics with their REACHABILITY — a detected check the flood cannot
-        // walk to is flagged `blocked`, so a dump says whether a thing is
-        // obtainable and not merely that it exists.
+        // Mechanics with their REACHABILITY. A detected check the flood cannot
+        // walk to is flagged `blocked`, so a dump says whether a thing is obtainable.
         annotations,
       };
 

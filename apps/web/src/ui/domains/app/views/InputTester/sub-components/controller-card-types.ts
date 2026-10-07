@@ -10,20 +10,17 @@ interface ControllerCardProps {
   resolvedDevice: ResolvedDevice;
   hasStickCal?: boolean;
   existingStickCal?: DeviceStickCalibration | null;
-  /** Reported directly by SDL3 (controller:added / the device snapshot) —
-   *  undefined when this card was built without a snapshot entry. */
+  /** Reported by SDL3 (controller:added / the device snapshot); undefined without a snapshot entry. */
   busType?: ControllerBusType;
   hasRumble?: boolean;
-  /** Raised rather than handled here: the report releases SDL partway
-   *  through, which drops this device out of the ready list and unmounts
-   *  its card. A dialog owned by the card would go with it. */
+  /** Raised, not handled here: the report releases SDL partway through, which unmounts this card. */
   onReportDevice?: (deviceKey: string) => void;
   hasGyro?: boolean;
   onStickCalibrationComplete?: (cal: DeviceStickCalibration) => void;
   onTriggerCalibrationComplete?: (axisIndex: number, cal: TriggerCalibrationData) => void;
 }
 
-/** What's being calibrated — null means nothing open */
+/** What's being calibrated; null means nothing open. */
 type CalibrationTarget =
   | { type: 'stick'; side: 'left' | 'right' | 'both' }
   | { type: 'trigger'; axisIndex: number; label: string }

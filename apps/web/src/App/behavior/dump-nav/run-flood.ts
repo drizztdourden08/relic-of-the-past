@@ -2,11 +2,11 @@
 /**
  * Runs the `--dump-nav` flood and derives its annotations.
  *
- * Lives beside the pure builders rather than inside them because it DOES touch the
- * game: it deliberately goes through the same runner the simulator uses
- * (`floodRoomRun` / `floodOneOverworld`) so a dump and a run can never report
- * different reachability for the same screen — the bug this replaced was a
- * hand-built option set with an empty inventory.
+ * Lives beside the pure builders, not inside them, because it DOES touch the
+ * game: it goes through the same runner the simulator uses (`floodRoomRun` /
+ * `floodOneOverworld`) so a dump and a run can never report different
+ * reachability for the same screen. The bug this replaced was a hand-built
+ * option set with an empty inventory.
  */
 import type { ScreenAnnotations } from '@shared/game/simulation';
 import type { GridPos } from '@shared/game/navigation';
@@ -34,7 +34,7 @@ interface RunFloodArgs {
 
 interface RunFloodResult {
   floodFill: FloodFillDump | null;
-  /** Mechanics with their reachability — a check the flood can't reach is `blocked`. */
+  /** Mechanics with their reachability, where a check the flood can't reach is `blocked`. */
   annotations: ScreenAnnotations | null;
 }
 
@@ -51,11 +51,9 @@ const runDumpFlood = (args: RunFloodArgs): RunFloodResult => {
     : computeOverworldFloodFill(run, wasmBuildOverworldAttrGrid(overworldScreenIndex));
 
   // reachableCount/totalTiles describe the whole connected AREA (propagateArea),
-  // the same total the widget shows, not just this one screen — everything else
-  // in floodFill (rows, attrs, connections) still describes this screen alone.
-  // Without this a room that only reaches its full extent through a stitched
-  // neighbour (a stair, a walk-boundary, an overworld big-screen crossing)
-  // silently under-reports next to what a user actually sees in the live widget.
+  // the same total the widget shows; everything else in floodFill still
+  // describes this screen alone. Without this a room that only reaches its
+  // full extent through a stitched neighbour under-reports next to the widget.
   if (floodFill && run) {
     const areaResults = propagateArea({
       isIndoors,

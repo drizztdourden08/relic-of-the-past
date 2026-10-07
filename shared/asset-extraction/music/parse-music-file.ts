@@ -1,7 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
-/**
- * Music file parser — parses extracted text back into compilable entity structures.
- */
+/** Parses extracted music text back into compilable entity structures. */
 import type {
   CompiledPattern,
   CompiledPhrase,

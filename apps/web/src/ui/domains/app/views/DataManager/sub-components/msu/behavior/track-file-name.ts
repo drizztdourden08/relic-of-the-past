@@ -1,10 +1,7 @@
 /* @layer renderer-components @kind logic */
 /**
- * Filename rules for a pack's numbered slots.
- *
- * A pack without a manifest identifies a slot purely by the number at the end of a filename,
- * so assigning or uploading audio to a slot means producing the right name — and the prefix
- * has to match whatever the pack already uses, or the pack stops recognising its own files.
+ * Filename rules for numbered slots. Without a manifest the number at the end of a filename IS
+ * the slot, and the prefix must match what the pack already uses.
  */
 
 /** `pack-05.pcm` → prefix `pack-`, number `05`, extension `pcm`. */

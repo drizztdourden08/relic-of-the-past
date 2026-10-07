@@ -1,16 +1,9 @@
 /* @layer renderer-app @kind component */
 /**
- * The editor tab. `RecordEditor` already renders read-only when it is handed no
- * save function, so the only thing added here is a note saying why — a form
- * that quietly refuses to save looks broken, and a save button that cannot
- * write would be worse.
- *
- * This is also where the lookups are injected — the collections behind the ids
- * it edits, the vocabulary behind its tags, how a term that does not exist yet
- * gets filed, the real limits on its numbers, and — for the two kinds other
- * records can point at — what still references this one and how to delete it
- * safely. Each resolver is bound to the collection once and reused, so the
- * form's binding is not rebuilt on every render.
+ * The editor tab. `RecordEditor` renders read-only with no save function; the
+ * note says why, since a form that silently refuses to save looks broken.
+ * The dataset lookups are injected here, each bound to the collection once
+ * so the form's binding is not rebuilt on every render.
  */
 import { Box, Text } from '@ds/primitives';
 import { DeleteGuardDialog, RecordEditor } from '@ds/composites';
@@ -23,13 +16,13 @@ import { useDeleteGuard } from '../behavior/useDeleteGuard';
 import type { FieldDescriptor } from '@ds/data';
 import type { InspectorRow, InspectorSource } from '../DataInspector.type';
 
-const READ_ONLY_NOTE = 'No write path is wired for this collection yet — this form reads the record, it cannot save it.';
+const READ_ONLY_NOTE = 'No write path is wired for this collection yet. This form reads the record, it cannot save it.';
 
 interface RecordEditorPanelProps {
   source: InspectorSource;
   schema: readonly FieldDescriptor[];
   record: InspectorRow;
-  /** The record open here was just deleted — nothing is left to show. */
+  /** Called when the record open here is deleted and nothing is left to show. */
   onDeleted: () => void;
 }
 

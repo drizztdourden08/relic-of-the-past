@@ -1,24 +1,11 @@
 /* @layer renderer-components @kind hook */
 /**
- * The catalogue of one channel's sounds crossed with what the pack authors.
+ * One channel's catalogue crossed with what the pack authors. Replaced rows are lifted to the top.
  *
- * Every sound the channel can raise is listed, native ones included, because an unclaimed id is
- * exactly the thing someone needs to see in order to claim it. Replaced ones are lifted to the
- * top: an effects channel has fifty-odd ids, and what the pack actually does should not have to
- * be hunted for among them.
- *
- * On the EFFECTS channels every id the channel can carry gets a row, not only the ones the
- * catalogue names. The catalogue is built by reading the game's own source, so it can only see a
- * sound whose id is written there as a literal — one picked from a table at runtime (the sword
- * beam by sword level, for instance) is invisible to it. Listing the whole range is what makes
- * the promise "any sound in the game can be replaced" true rather than "any sound we managed to
- * name".
- *
- * The AMBIENT channel is the exception, and defaults to the twelve ids the game can actually
- * reach (see `ambient-reach.ts` for the evidence). No runtime table feeds that channel, so the
- * remaining ids are not merely unnamed — nothing can ever raise them, and offering fifty dead
- * slots is worse than offering none. They stay one toggle away, and a row the pack already
- * claims is listed either way so that nobody's existing work disappears.
+ * EFFECTS channels list every id, not only the named ones: the catalogue reads the game's source
+ * and cannot see an id picked from a table at runtime (the sword beam by sword level). The
+ * AMBIENT channel defaults to the ids the game can reach (see `ambient-reach.ts`); nothing can
+ * raise the rest, so they stay a toggle away, except that a claimed row is always listed.
  */
 import { useMemo } from 'react';
 import type { MsuPackManifest, SoundChannel } from '@shared/types/msu-manifest';
@@ -64,8 +51,7 @@ const useSoundRows = (
       ...reachOf(channel, sound.id),
     }));
     const known = new Set(named.map((row) => row.soundId));
-    // The rest of the range, in id order after the named ones. Id 0 is the game's "nothing to
-    // play" write rather than a sound, so it is not one of these.
+    // The rest of the range, in id order after the named ones. Id 0 is "nothing to play", not a sound.
     const rest: SoundRowData[] = [];
     for (let id = 1; id < SOUND_ID_COUNT; id++) {
       if (known.has(id)) continue;
@@ -104,9 +90,7 @@ const useSoundRows = (
   }, [listed, filter]);
 
   const replacedCount = useMemo(() => listed.filter((row) => row.layerCount > 0).length, [listed]);
-  // How many of the listed ids the game's own code actually raises. The rest are ids the channel
-  // can carry — replaceable, but nothing in the game asks for them, which is worth saying once at
-  // the top of the tab instead of on fifty rows.
+  // How many listed ids the game's own code raises; said once at the top instead of on fifty rows.
   const raisedCount = useMemo(() => listed.filter((row) => row.sites > 0).length, [listed]);
   const reachableCount = useMemo(() => listed.filter((row) => !row.unreachable).length, [listed]);
   // Over the whole range, so the count the toggle offers does not change once it is on.

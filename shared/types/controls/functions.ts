@@ -13,10 +13,11 @@ const SHORTCUT_ACTIONS = [
   'pause', 'reset',
   'fullscreen', 'turbo',
   'profile-next', 'profile-prev',
+  'toggle-debug-capture',
 ] as const;
 
 const CHEAT_ACTIONS = [
-  'cheat-health', 'cheat-ignore-collision', 'cheat-kill-enemies', 'cheat-restore-magic',
+  'cheat-health', 'cheat-max-health', 'cheat-ignore-collision', 'cheat-kill-enemies', 'cheat-restore-magic',
 ] as const;
 
 const FUNCTION_ACTIONS = [...SHORTCUT_ACTIONS, ...CHEAT_ACTIONS] as const;
@@ -54,7 +55,9 @@ const FUNCTION_ACTION_LABELS: Record<FunctionAction, string> = {
   'turbo': 'Turbo',
   'profile-next': 'Next Input Profile',
   'profile-prev': 'Previous Input Profile',
+  'toggle-debug-capture': 'Toggle Debug Capture',
   'cheat-health': 'Restore Full Health',
+  'cheat-max-health': 'Raise Maximum Health',
   'cheat-ignore-collision': 'Ignore movement restriction/collision',
   'cheat-kill-enemies': 'Kill All Enemies',
   'cheat-restore-magic': 'Restore All Magic',
@@ -68,10 +71,10 @@ interface FunctionMapping {
   sourcePid?: string | null;
 }
 
-// Every default is deliberately unbound ({ type: 'none' }): the project no longer inherits snesrev's
-// legacy defaults, so every binding is user-assigned through the controls UI. This also fixes a real
-// collision — cheat-health used to default to KeyW, the same physical key the keyboard gameplay preset
-// assigns to the SNES Y button.
+// Every default is deliberately unbound ({ type: 'none' }). The project no longer inherits snesrev's
+// legacy defaults, so every binding is user-assigned through the controls UI. That also fixes a real
+// collision, because cheat-health used to default to KeyW, the same physical key the keyboard
+// gameplay preset assigns to the SNES Y button.
 const DEFAULT_FUNCTION_MAPPINGS: FunctionMapping[] = [
   { action: 'save-state-1', binding: { type: 'none' }, icon: null },
   { action: 'save-state-2', binding: { type: 'none' }, icon: null },
@@ -103,7 +106,12 @@ const DEFAULT_FUNCTION_MAPPINGS: FunctionMapping[] = [
   { action: 'turbo', binding: { type: 'none' }, icon: null },
   { action: 'profile-next', binding: { type: 'none' }, icon: null },
   { action: 'profile-prev', binding: { type: 'none' }, icon: null },
+  // Only default that ships bound: the debug-report tool is off by default (allowDebugLogging),
+  // so this costs nothing for a normal player, and a contributor who turns it on gets a working
+  // shortcut immediately. Rebindable/clearable like every other entry here.
+  { action: 'toggle-debug-capture', binding: { type: 'keyboard', code: 'Tab' }, icon: null },
   { action: 'cheat-health', binding: { type: 'none' }, icon: null },
+  { action: 'cheat-max-health', binding: { type: 'none' }, icon: null },
   { action: 'cheat-ignore-collision', binding: { type: 'none' }, icon: null },
   { action: 'cheat-kill-enemies', binding: { type: 'none' }, icon: null },
   { action: 'cheat-restore-magic', binding: { type: 'none' }, icon: null },

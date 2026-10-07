@@ -1,19 +1,15 @@
 /* @layer renderer-components @kind hook */
 /**
- * Normalising a pack to one format, as a sequence: get the tool, measure, show the numbers,
- * convert.
+ * Get the tool, measure, show the numbers, convert. Measuring runs on its own once the tool is
+ * available and nothing is written until the numbers are accepted.
  *
- * Measuring is a separate step from converting because it is not free — a slice of every
- * candidate is really encoded — and because that is the whole point: nothing is written until
- * someone has read what it would cost and said yes.
- *
- * The measure runs on its own the moment the tool is available, so an installed setup opens
- * straight onto the numbers. A missing tool stops at its own step instead, and the same
- * automatic measure picks up once the install finishes.
+ * The pack is re-read the moment a run SETTLES (success or failure), not when the dialog closes:
+ * the run rewrites the manifest as it goes, and an edit saved from the stale copy would write the
+ * old references back over the new ones.
  */
 import { useCallback, useEffect, useState } from 'react';
 import type { OptimizeAnalysis, OptimizeProgress, OptimizeRunResult } from '@shared/types/msu-optimize';
-import { useFfmpegInstall } from './useFfmpegInstall';
+import { useFfmpegInstall } from '@app/hooks/useFfmpegInstall';
 
 /** Where the flow is. `tool` covers both offering the download and watching it arrive. */
 type OptimizeStep = 'checking' | 'tool' | 'measuring' | 'preview' | 'converting' | 'result' | 'error';
@@ -22,17 +18,19 @@ interface OptimizeParams {
   pack: string;
   /** False tears the flow back down, so re-opening starts from the tool check again. */
   open: boolean;
+  /** Fired once a run has settled, success or failure, so the pack's files and manifest are re-read. */
+  onRunSettled: () => void;
 }
 
 const messageOf = (err: unknown, fallback: string): string =>
   (err instanceof Error && err.message.length > 0 ? err.message : fallback);
 
-/** The candidates a run would actually touch — an unreadable file is not one of them. */
+/** The candidates a run would actually touch. An unreadable file is not one of them. */
 const convertibleNames = (analysis: OptimizeAnalysis | null): string[] =>
   (analysis?.candidates ?? []).filter((row) => row.excludedBecause === null).map((row) => row.name);
 
 const useOptimize = (params: OptimizeParams) => {
-  const { pack, open } = params;
+  const { pack, open, onRunSettled } = params;
   const tool = useFfmpegInstall(open);
   const [step, setStep] = useState<OptimizeStep>('checking');
   const [analysis, setAnalysis] = useState<OptimizeAnalysis | null>(null);
@@ -85,8 +83,11 @@ const useOptimize = (params: OptimizeParams) => {
     } catch (err) {
       setError(messageOf(err, 'Could not convert this pack.'));
       setStep('error');
+    } finally {
+      // A failed run may still have converted part of the pack, so the re-read is unconditional.
+      onRunSettled();
     }
-  }, [analysis, pack]);
+  }, [analysis, pack, onRunSettled]);
 
   return {
     step,

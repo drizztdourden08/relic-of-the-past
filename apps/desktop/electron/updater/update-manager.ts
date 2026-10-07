@@ -1,25 +1,21 @@
 /* @layer electron-main @kind logic */
 /**
- * The Velopack UpdateManager, built on demand.
- *
- * Two reasons it is never constructed at import time. It throws outright when the app
- * was not installed by Velopack ("Could not auto-locate app manifest"), which is every
- * dev run and every portable copy. And the pre-release preference is part of the
- * source, so switching that preference has to build a new one.
+ * The Velopack UpdateManager, built on demand: it throws when the app was not
+ * installed by Velopack (every dev run and portable copy), and the pre-release
+ * preference is part of the source, so switching it has to build a new one.
  */
 import { app } from 'electron';
-import { UpdateManager, GithubSource, FileSource } from 'velopack';
+import type { UpdateManager } from 'velopack';
 import { FEED_REPO_URL, MAX_DELTAS } from './updater.constants';
 import { readPrefs } from './updater-prefs';
+import { loadVelopack } from './velopack-loader';
 
 let cached: UpdateManager | null = null;
 let cachedPrerelease: boolean | null = null;
 
 /**
- * `--update-source=<dir>` points the updater at a local folder of packed releases
- * instead of the release page. This is how the whole install-and-update path gets
- * exercised before anything is published: pack two versions into a folder, install
- * the first, and take the update from there.
+ * `--update-source=<dir>` points the updater at a local folder of packed releases,
+ * so the install-and-update path can be exercised before anything is published.
  */
 const localSourceDir = (): string | null => {
   const arg = process.argv.find((a) => a.startsWith('--update-source='));
@@ -27,13 +23,16 @@ const localSourceDir = (): string | null => {
 };
 
 /**
- * Null when this build cannot update itself: a dev run, a portable copy, or anything
- * else Velopack does not recognise as one of its installs. Callers treat null as
- * "updating is not available here" rather than an error.
+ * Null when this build cannot update itself (a dev run, a portable copy, anything
+ * Velopack does not recognise, or a system Velopack cannot load on). Callers treat
+ * null as "not available", not an error.
  */
 const getUpdateManager = (): UpdateManager | null => {
   const { allowPrerelease } = readPrefs();
   if (cached && cachedPrerelease === allowPrerelease) return cached;
+  const velopack = loadVelopack();
+  if (!velopack) return null;
+  const { UpdateManager, GithubSource, FileSource } = velopack;
 
   try {
     const local = localSourceDir();
@@ -56,20 +55,15 @@ const getUpdateManager = (): UpdateManager | null => {
 const canSelfUpdate = (): boolean => getUpdateManager() !== null;
 
 /**
- * True when the updater has been pointed at a fixture origin instead of the release page.
- * Only a developer exercising the update path ever sets it; no shipped build does.
- *
- * It makes a dev run behave like a packaged one for CHECKING and LISTING, which is what the
- * dialog needs in order to be looked at without publishing anything. Applying is left alone
- * on purpose: it still goes through Velopack and still fails here, because a dev run
- * genuinely has no install to replace.
+ * True when a developer has pointed the updater at a fixture origin. Makes a dev run
+ * behave like a packaged one for CHECKING and LISTING, so the dialog can be looked at
+ * without publishing. Applying still goes through Velopack and still fails here.
  */
 const isUpdateHarness = (): boolean => !!process.env.ROTP_UPDATE_API_ORIGIN;
 
 /**
- * Whether it is worth asking what the newest version is. True for any packaged build,
- * including the ones that cannot install what they find: knowing an update exists is
- * useful even when applying it means visiting the release page.
+ * True for any packaged build, including ones that cannot install what they find:
+ * knowing an update exists is useful even when applying means the release page.
  */
 const canCheckForUpdates = (): boolean => app.isPackaged || isUpdateHarness();
 

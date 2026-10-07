@@ -4,12 +4,12 @@
  *
  * A variable only earns its keep once the lines that say it point at it: a
  * reference follows a later rename, literal text does not. This is the pure
- * half of that job — it reports every run that could become a reference and
+ * half of that job. It reports every run that could become a reference and
  * says which variable it should be, and changes nothing. Applying a report is a
  * separate, deliberate step.
  *
  * Only `text` runs are searched, so a phrase broken by a control code, a line
- * break or an existing reference is not a match — the same rule the editor's
+ * break or an existing reference is not a match, by the same rule the editor's
  * term linking has always followed. Case policy and its near-miss reporting
  * live in `./scan-run`.
  *

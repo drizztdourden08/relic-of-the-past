@@ -1,11 +1,7 @@
 /* @layer renderer-components @kind logic */
 /**
- * Merges the report's own steps with the diagnostics wizard's own dynamic
- * step list into one strip, so the run reads as continuous rather than a
- * single flat "Diagnostics" entry hiding five steps behind it. The
- * diagnostic portion's count and labels come straight from the wizard
- * (byte-capture drops out for a controller with no byte capability), never
- * restated here.
+ * Merges the report's steps with the wizard's dynamic step list into one strip. The diagnostic
+ * labels come from the wizard (byte-capture drops out without byte capability), never restated here.
  */
 import type { DiagnosticsWizardState } from '../diagnostics-wizard/behavior/useDiagnosticsWizardState';
 

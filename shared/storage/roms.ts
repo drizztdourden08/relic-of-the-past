@@ -84,7 +84,7 @@ const getInfo = async (files: FileStore, romFile: string): Promise<{ name: strin
 
 /**
  * Deleting a base cartridge takes its blob and its profiles with it, as before. Deleting a
- * supplement only drops the sidecars it produced — the base game is untouched, which is the
+ * supplement only drops the sidecars it produced. The base game is untouched, which is the
  * whole point of the two being separate files.
  */
 const deleteRom = async (files: FileStore, romFile: string): Promise<void> => {
@@ -152,7 +152,7 @@ const importBytes = async (
       return {
         success: false,
         romFile: '',
-        error: `Not a recognised ${spec.label} (SHA-256 ${sha.slice(0, 16)}…). This build only accepts the revision it was reverse-engineered against.`,
+        error: `Not a recognised ${spec.label} (SHA-256 ${sha.slice(0, 16)}...). This build only accepts the revision it was reverse-engineered against.`,
       };
     }
   }

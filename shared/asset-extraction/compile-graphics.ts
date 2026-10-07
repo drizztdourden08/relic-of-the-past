@@ -1,7 +1,4 @@
 /* @layer shared-asset-extraction @kind logic */
-/**
- * Graphics asset compilation — sprites, backgrounds, player graphics, misc data, tilemaps, map32.
- */
 import type { RomData } from './rom/rom-types';
 import type { AssetBuilder } from './asset-builder';
 import { bufToArr, lzDecompressWithLen } from './asset-builder';

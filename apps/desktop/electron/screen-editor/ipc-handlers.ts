@@ -83,7 +83,7 @@ const writeConnections = (args: WriteConnectionsArgs): Promise<WriteRecordResult
 const registerScreenEditorHandlers = (): void => {
   // The six record-facade collections, whose channels are all one shape.
   registerRecordHandlers();
-  // A brand-new crossing's pair mint — see connection-pair-writer.ts.
+  // A brand-new crossing's pair mint. See connection-pair-writer.ts.
   registerConnectionPairHandler();
 
   handle('screenEditor:writeScreen', async (_e, args) => {

@@ -47,10 +47,10 @@ const collectOs = (): OsDiagnostics => ({
 });
 
 const collectVersions = (): RuntimeVersions => ({
-  node: process.versions.node ?? '—',
-  v8: process.versions.v8 ?? '—',
-  chrome: process.versions.chrome ?? '—',
-  electron: process.versions.electron ?? '—',
+  node: process.versions.node ?? 'unknown',
+  v8: process.versions.v8 ?? 'unknown',
+  chrome: process.versions.chrome ?? 'unknown',
+  electron: process.versions.electron ?? 'unknown',
 });
 
 export { collectCpu, collectMemory, collectOs, collectVersions };

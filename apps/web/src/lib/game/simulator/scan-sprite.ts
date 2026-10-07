@@ -5,7 +5,7 @@
  * A check's room index comes from our own data, and when that index is wrong the
  * failure is silent: the room exists, it just holds something else, so the check
  * never fires and nothing says why. Asking every room's spawn table which ones
- * hold the sprite settles it against the game rather than against the dataset.
+ * hold the sprite settles it against the game, not against the dataset.
  */
 import { wasmGetRoomSpriteSpawns, wasmGetEntranceRooms, wasmGetOverworldEntrances } from '../';
 
@@ -13,7 +13,7 @@ import { wasmGetRoomSpriteSpawns, wasmGetEntranceRooms, wasmGetOverworldEntrance
 const LAST_ROOM = 0x17f;
 
 const scanRoomsForSprite = (spriteType: number): Array<{ room: number; tiles: string; from: string }> => {
-  // Which overworld screen a room is entered from is what names it — a room index
+  // Which overworld screen a room is entered from is what names it. A room index
   // alone cannot be checked against anything.
   const rooms = wasmGetEntranceRooms();
   const areas = new Map<number, number>();

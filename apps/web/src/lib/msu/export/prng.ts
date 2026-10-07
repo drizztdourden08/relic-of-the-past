@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 /**
- * mulberry32 — a seeded 32-bit PRNG, used wherever export has to make a random choice.
+ * mulberry32, a seeded 32-bit PRNG used wherever export has to make a random choice.
  *
  * `Math.random()` cannot be used on the export path at all: flattening a `random` layer or a
  * shuffled `loop` layer picks files and gaps, so an unseeded source would make every export of

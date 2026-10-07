@@ -1,13 +1,8 @@
 /* @layer renderer-hud @kind data */
 /**
- * PauseBorderBox — renders a bordered box using 8 tiled DOM elements:
- * 4 corner images + 4 edge divs with background-repeat.
- * All dimensions are integer pixels so tiling is seamless.
- *
- * Props:
- *   color - border color name matching sprite filenames
- *   cols  - inner width in tiles (total width = cols + 2)
- *   rows  - inner height in tiles (total height = rows + 2)
+ * Bordered box from 8 tiled DOM elements: 4 corner images + 4 edge divs with
+ * background-repeat. All dimensions are integer pixels so the tiles meet.
+ * `cols`/`rows` are the inner size in tiles; total size is +2 each way.
  */
 
 interface PauseBorderBoxProps {
@@ -45,7 +40,7 @@ const PauseBorderBox = (props: PauseBorderBoxProps) => {
 
   const bgInset = Math.round(T * 7 / 16);
 
-  // SVG outline filter — same as HudSprite: cross-shaped black outline via feMorphology
+  // SVG outline filter copied from HudSprite, a cross-shaped black outline via feMorphology
   const s = scale;
   const outlineSvg = [
     `<svg xmlns='http://www.w3.org/2000/svg'>`,
@@ -62,7 +57,7 @@ const PauseBorderBox = (props: PauseBorderBoxProps) => {
 
   return (
     <div className="pause-panel" style={{ position: 'relative', width: totalW, height: totalH, ...style }}>
-      {/* Black background — inset so it doesn't bleed past outer border edge */}
+      {/* Black background, inset so it doesn't bleed past the outer border edge */}
       <div style={{ background: 'black', position: 'absolute', inset: bgInset }} />
       {/* Content area */}
       <div className="pause-panel__content" style={{
@@ -76,7 +71,7 @@ const PauseBorderBox = (props: PauseBorderBoxProps) => {
       }}>
         {children}
       </div>
-      {/* Border tiles — on top, with outline filter */}
+      {/* Border tiles on top, with outline filter */}
       <div className="pause-panel__border" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', filter: outlineFilter }}>
         <img src={corner} style={{ ...cornerStyle, top: 0, left: 0 }} />
         <img src={corner} style={{ ...cornerStyle, top: 0, right: 0, transform: 'scaleX(-1)' }} />

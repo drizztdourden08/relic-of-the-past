@@ -1,35 +1,25 @@
 /* @layer shared-game @kind logic */
 /**
- * The text box as the renderer actually drives it: three row buffers and one
- * pen, advanced token by token. Both public entry points (`measureRows`,
- * `splitScreens`) run this same walk so their verdicts can never disagree.
+ * The text box as the renderer drives it: three row buffers and one pen,
+ * advanced token by token. `measureRows` and `splitScreens` both run this walk
+ * so their verdicts cannot disagree.
  *
- * The engine's behaviour being modelled here:
+ * Engine behaviour modelled:
+ * - Writing advances the pen by each glyph's width and NEVER checks the row
+ *   bound: a run wider than the interior is recorded as overflow, not wrapped.
+ * - A row marker parks the pen at the LEFT EDGE of that row without clearing it.
+ * - A scroll shifts the box up one line and parks the pen on the last row.
+ * - A wait-for-button holds the box without clearing anything, so the next
+ *   screen inherits whichever rows are still standing.
  *
- * - Writing advances the pen by each glyph's own width and NEVER checks the row
- *   bound, so a run wider than the interior is recorded as overflow rather than
- *   wrapped.
- * - A row marker parks the pen at the LEFT EDGE of that row without clearing
- *   it. Measurement therefore closes the run the pen was on and starts a fresh
- *   one: whatever the earlier run left further right is stale tiles, not part
- *   of the new run's width.
- * - A scroll shifts the box up one line (first row falls off, a blank row
- *   arrives at the bottom) and parks the pen on the last row.
- * - A wait-for-button holds the box without clearing anything, which is why the
- *   next screen inherits whichever rows are still standing.
- *
- * TWO CONVENTIONS FOR A ROW JUMP, and they are not the same thing:
- *
- * - `blankOnJump: true` (the DEFAULT, and what `measureRows`/`splitScreens`
- *   use) treats the landing row as empty. That is a MEASUREMENT convention, not
- *   the engine: it is how a fresh run gets sized without an earlier run's
- *   leftovers being charged to it, and every published width depends on it.
- * - `blankOnJump: false` is the ENGINE's real behaviour. The pixel buffer is
- *   cleared exactly once per message and no code path clears it again, so a row
- *   marker blanks nothing at all — the row keeps standing, and a shorter
- *   rewrite only overpaints its left part. Anything claiming to show what is on
- *   screen (`blocks/inherited-rows.ts`) has to use this mode; anything reporting
- *   a width must not.
+ * TWO CONVENTIONS FOR A ROW JUMP:
+ * - `blankOnJump: true` (the DEFAULT) treats the landing row as empty. A
+ *   MEASUREMENT convention: a fresh run is sized without an earlier run's
+ *   leftovers, and every published width depends on it.
+ * - `blankOnJump: false` is the ENGINE's real behaviour: the pixel buffer is
+ *   cleared once per message, so a row marker blanks nothing and a shorter
+ *   rewrite only overpaints the left part. Anything showing what is on screen
+ *   (`blocks/inherited-rows.ts`) must use this mode; anything reporting a width must not.
  */
 import type { Token } from '../types';
 import type { GlyphMetrics, RowFit } from './types';
@@ -55,10 +45,8 @@ type Run = {
 type BoxRow = Run & {
   /** Something was written here, even if it turned out to be unmeasurable. */
   drawn: boolean;
-  /**
-   * What was standing when the pen last returned to this row's left edge, kept
-   * only in the faithful mode — `blankOnJump: true` wipes the row instead.
-   */
+  /** What was standing when the pen last returned to this row's left edge;
+   *  kept only in the faithful mode (`blankOnJump: true` wipes the row). */
   stale: Run | null;
 };
 
@@ -67,7 +55,7 @@ type Pen = {
   /** 1-based row the pen is on. */
   row: number;
   slots: BoxRow[];
-  /** Every closed run, oldest first — including runs later overwritten. */
+  /** Every closed run, oldest first. Runs later overwritten are kept too. */
   runs: RowFit[];
   /** Text no glyph could be found for, in encounter order. */
   unmatched: string[];
@@ -76,12 +64,9 @@ type Pen = {
   blankOnJump: boolean;
 };
 
-/** How a walk treats a row jump — see the two conventions in the header. */
+/** How a walk treats a row jump (see the two conventions in the header). */
 type PenOptions = {
-  /**
-   * Whether landing on a row wipes it. Defaults to true, the measurement
-   * convention; pass false for the engine's behaviour, where nothing is cleared.
-   */
+  /** Whether landing on a row wipes it. Default true (measurement); false is the engine's behaviour. */
   blankOnJump?: boolean;
 };
 
@@ -112,7 +97,7 @@ const asRowFit = (row: number, run: Run): RowFit => ({
  * The row as the player sees it: the pen's own run, then the part of an earlier
  * run it did not paint over. A glyph straddling the new run's right edge is half
  * repainted, so it drops out of `glyphs` while its pixels still count toward
- * `widthPx` — which is why a row's glyph widths need not add up to its width.
+ * `widthPx`; a row's glyph widths need not add up to its width.
  */
 const visibleRun = (buf: BoxRow): Run => {
   const { stale } = buf;
@@ -128,10 +113,7 @@ const visibleRun = (buf: BoxRow): Run => {
   };
 };
 
-/**
- * Record the run the pen just finished. The row itself stays on screen — this
- * only ends the pen's involvement with it.
- */
+/** Record the run the pen just finished. The row itself stays on screen. */
 const closeRun = (pen: Pen): void => {
   const buf = pen.slots[pen.row - 1];
   if (buf.drawn) pen.runs.push(asRowFit(pen.row, buf));
@@ -183,14 +165,12 @@ const visibleRows = (pen: Pen): RowFit[] => pen.slots.flatMap(
 );
 
 /**
- * A paramless bracketed name is a glyph when the alphabet spells it — several
+ * A paramless bracketed name is a glyph when the alphabet spells it (several
  * alphabets carry bracketed pseudo-glyphs, and the token parser cannot tell
- * those from a control code without a language to consult. Anything else is a
- * real control code and advances the pen by nothing.
- *
- * `codes/glyph.ts` answers the same question for a caller holding a
- * LanguageConfig; measurement holds only the metrics, and needs the index
- * rather than a yes or no, so it goes through the matcher instead.
+ * those from a control code without a language). Anything else is a real
+ * control code and advances the pen by nothing. `codes/glyph.ts` answers the
+ * same question given a LanguageConfig; measurement holds only the metrics and
+ * needs the index, so it goes through the matcher.
  */
 const glyphForName = (name: string, metrics: GlyphMetrics): number | null => {
   const match = glyphIndexOf(`[${name}]`, 0, metrics);

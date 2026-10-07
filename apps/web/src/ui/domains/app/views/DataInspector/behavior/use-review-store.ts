@@ -1,11 +1,5 @@
 /* @layer renderer-app @kind logic */
-/**
- * React binding over `review-store.ts`'s cache: subscribes a component to one
- * collection's review data so a note/status edit re-renders every viewer of
- * that kind, not just the one that made the edit. The plain functions
- * underneath stay directly importable for non-React callers (the
- * collection-sources join reads `reviewFor` synchronously without this hook).
- */
+/** React binding over `review-store.ts`: subscribes a component to one collection's review data. */
 import { useCallback, useSyncExternalStore } from 'react';
 import { reviewFileFor, reviewFor, setReviewNote, setReviewStatus, subscribeReview } from './review-store';
 import type { EntityKind } from '@shared/game/data';
@@ -18,10 +12,9 @@ interface UseReviewStoreResult {
 }
 
 const useReviewStore = (kind: EntityKind): UseReviewStoreResult => {
-  // Client-only cache — there is no separate server snapshot, so the same
-  // getter serves both. Without a third argument React's server renderer
-  // throws rather than falling back (see react-dom/server's useSyncExternalStore),
-  // and this dev-only view is still rendered through that path in tests.
+  // Client-only cache, so the same getter serves the server snapshot. Without a
+  // third argument react-dom/server's useSyncExternalStore throws, and tests
+  // render this view through that path.
   const getSnapshot = useCallback(() => reviewFileFor(kind), [kind]);
   useSyncExternalStore(
     useCallback((listener: () => void) => subscribeReview(kind, listener), [kind]),

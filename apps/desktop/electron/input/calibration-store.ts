@@ -1,6 +1,6 @@
 /* @layer electron-main @kind logic */
 /**
- * Calibration persistence — stick and trigger calibration data per device.
+ * Stores stick and trigger calibration data per device.
  */
 
 import { getUserDataPath } from '../lib/paths';

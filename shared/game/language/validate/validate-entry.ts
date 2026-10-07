@@ -15,7 +15,7 @@ type EntryIssue =
  * does (`encodeGreedyFromDict` in dialogue-encoder.ts, alphabet branch): a
  * `[...]`-bracketed run is matched whole against the alphabet, everything
  * else is matched one character at a time. Dictionary matching is not
- * simulated — every dictionary entry is itself composed of alphabet
+ * simulated, because every dictionary entry is itself composed of alphabet
  * characters (encodeDictionary enforces this), so skipping it never turns a
  * bake-time success into a reported failure here.
  */
@@ -48,7 +48,7 @@ const findInvalidChars = (text: string, alphabet: ReadonlySet<string>): string[]
 
 /**
  * Predict, without baking, whether a dialogue entry's tokens will encode
- * cleanly: every `text` token's characters must resolve against the
+ * without error: every `text` token's characters must resolve against the
  * language's alphabet, and every `ref` token's key must resolve against the
  * glossary. `cmd`/`break`/`var` tokens are assumed well-formed by the editor
  * and are not checked here.

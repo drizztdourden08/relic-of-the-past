@@ -1,9 +1,8 @@
 /* @layer tests @kind test */
 /**
- * `referencesTo` is new logic with no prior coverage — it backs a later
- * delete-guard UI ("what still points at this tag/item group before you
- * remove it"), so this pins that it actually finds a real reference and
- * actually returns empty for a group nothing points at.
+ * `referencesTo` backs the delete-guard UI ("what still points at this before
+ * you remove it"): it must find a real reference and return empty for a group
+ * nothing points at.
  */
 import { describe, it, expect } from 'vitest';
 import { referencesTo } from '../../../shared/game/data/relationships/reference-index';
@@ -34,7 +33,7 @@ describeDataset('referencesTo', () => {
   });
 
   it('finds a tag reference on the real screen or connection that carries it', () => {
-    // Picks a real tag off the live dataset rather than hardcoding an id, so
+    // Picks a real tag off the live dataset instead of hardcoding an id, so
     // the assertion holds regardless of how the seed data is renumbered.
     const tagged = all('screen').find(screen => screen.tags.length > 0);
     expect(tagged).toBeDefined();

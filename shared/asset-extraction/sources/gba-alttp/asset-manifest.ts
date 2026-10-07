@@ -2,8 +2,8 @@
 /**
  * Single source of truth for the GBA ALttP supplement's asset ORDER.
  *
- * The supplement container is read positionally by the C engine — an index is
- * "the Nth `assets.add*` call", nothing more — so the TS compiler
+ * The supplement container is read positionally by the C engine. An index means
+ * "the Nth `assets.add*` call" and nothing more, so the TS compiler
  * (`compile-resources-gba-alttp.ts`) and the C reader (`gba_alttp.c`) used to
  * each hand-maintain that ordering independently. Inserting or reordering an
  * entry in only one of them would silently desync the two: the engine would
@@ -15,7 +15,7 @@
  * `core/game-hooks/gba_asset_index.generated.h`, a C enum in the same order.
  * Add, remove or reorder an asset here and both sides move together.
  *
- * `name` is the exact string literal passed to `assets.add*` — it also
+ * `name` is the exact string literal passed to `assets.add*`. It also
  * contributes to the container's key signature hash, so it must stay stable
  * for a given asset once shipped.
  */

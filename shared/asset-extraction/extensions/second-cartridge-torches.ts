@@ -9,7 +9,7 @@
  * the base game stops scanning at - so its torches come from data exactly like every other
  * torch in the game, and the only thing missing on our side was the appended tail.
  *
- * Found by matching the base game's own copy rather than by a stored offset: the two are
+ * Found by matching the base game's own copy, not by a stored offset: the two are
  * byte-identical up to the append point, which makes the base table its own address.
  */
 
@@ -37,7 +37,7 @@ const baseTableBytes = (snes: RomData): Buffer => {
  *
  * Entries run until one names no room, which is how the cartridge closes the table. Rooms the
  * dungeon does not own are dropped: the tail is read positionally, so anything unexpected in
- * it stays out of the engine's table rather than being trusted.
+ * it stays out of the engine's table instead of being trusted.
  */
 const torchTableRecord = (gba: GbaRomReader, snes: RomData, roomIds: ReadonlySet<number>): Buffer => {
   const at = gba.bytes.indexOf(baseTableBytes(snes).subarray(0, MATCH_BYTES));

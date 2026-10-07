@@ -23,10 +23,10 @@ see how `lib/input/` composes it before calling `WasmSetInput`.
 
 | Function | Signature | Effect |
 |----------|-----------|--------|
-| `WasmSaveState` | `void(int slot)` | `SaveLoadSlot(Save, slot)` — snapshot full machine state to an in-memory slot. The Electron layer persists slot blobs + screenshots to disk. |
+| `WasmSaveState` | `void(int slot)` | `SaveLoadSlot(Save, slot)`. Snapshots full machine state to an in-memory slot. The Electron layer persists slot blobs + screenshots to disk. |
 | `WasmLoadState` | `void(int slot)` | Restore a slot. |
-| `WasmSaveSram` | `void(void)` | `ZeldaWriteSram` — flush the persistent battery save. |
-| `WasmLoadSram` | `void(void)` | `ZeldaReadSram` — load the persistent battery save. |
+| `WasmSaveSram` | `void(void)` | `ZeldaWriteSram`. Flushes the persistent battery save. |
+| `WasmLoadSram` | `void(void)` | `ZeldaReadSram`. Loads the persistent battery save. |
 
 > Save states (full machine snapshots) are distinct from SRAM (the in-game battery save). See
 > [Save States](../user-guide/save-states.md) for how the app wires slots, screenshots, and auto-save

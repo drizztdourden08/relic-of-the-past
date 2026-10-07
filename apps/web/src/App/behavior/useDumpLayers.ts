@@ -1,14 +1,9 @@
 /* @layer renderer-appshell @kind hook */
 /**
- * Debug hook: reacts to --dump-layers=N [--hover-tile=col,row] CLI flags.
- *
- * Self-contained: starts the game, loads state N, takes a screenshot,
- * reads the room index + dual-layer grids from WASM (same data the overlay
- * uses), sends it to the main process to write as JSON, then exits.
- *
- * With --hover-tile: opens the navigation widget, waits for the overlay
- * to render, dispatches a mousemove at the target tile to trigger the
- * tooltip, takes a screenshot showing the tooltip, and verifies data.
+ * Debug hook: reacts to --dump-layers=N [--hover-tile=col,row] CLI flags. Runs
+ * the whole pass itself and exits, dumping the room index and dual-layer grids
+ * (the same data the overlay uses) as JSON. --hover-tile also drives a mousemove
+ * over the target tile so the screenshot captures the tooltip.
  *
  * Usage:
  *   npx electron dist/electron/main.js --muted --dump-layers=6
@@ -108,7 +103,7 @@ const useDumpLayers = ({ activeProfile, loadProfileForGame, openNavWidget }: Dum
           console.log(`[DumpLayers] Data at [${hoverTile.col},${hoverTile.row}]: layer0=0x${l0.toString(16)}, layer1=0x${l1.toString(16)}, wouldSplit=${wouldSplit}`);
           console.log(`[DumpLayers] layer1Reachable=${layer1Reachable}, tooltipWouldShow=${tooltipWouldShow}`);
         } else {
-          console.log(`[DumpLayers] No dual-layer grids (single-layer room) — tooltip would NOT show split`);
+          console.log(`[DumpLayers] No dual-layer grids (single-layer room), so the tooltip would NOT show split`);
         }
 
         // Navigation widget is auto-opened via autoFlood (--hover-tile implies autoFlood in preload).

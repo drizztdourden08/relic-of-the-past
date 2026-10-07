@@ -4,7 +4,7 @@ import { getGameState, isCoreReady, whenCoreReady, captureGameFrameBlob } from '
 
 const QUICK_SAVE_SLOTS = 12;
 
-/** Ceiling on waiting out a boot — a first run extracts assets before the core starts. */
+/** Ceiling on waiting out a boot. It is long because a first run extracts assets before the core starts. */
 const BOOT_WAIT_MS = 120_000;
 
 const formatRelativeTime = (ts: number | undefined): string => {
@@ -29,7 +29,7 @@ const defaultSaveName = (): string => {
 /**
  * Resolve once the core can take a command, booting it first if nothing is on its way.
  *
- * `isGameRunning` is the caller's view flag — it says the game view has its asset blob, which
+ * `isGameRunning` is the caller's view flag. It says the game view has its asset blob, which
  * happens about two seconds before the core exists. Trusting it was what let a load fire into
  * a null module and be dropped, so the boot went ahead with no state loaded. The bridge's own
  * state decides here; the flag only answers "has a boot already been asked for", so this does

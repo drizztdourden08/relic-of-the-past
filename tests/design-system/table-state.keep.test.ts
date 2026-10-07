@@ -10,7 +10,7 @@ import {
 } from '../../apps/web/src/ui/design-system/data/table/strategy-registry';
 import { initialState } from '../../apps/web/src/ui/design-system/data/table/use-data-table';
 
-// The hook is a thin binding over these transforms — there is no renderer in
+// The hook is a thin binding over these transforms. There is no renderer in
 // this test setup, so the transforms are exercised directly and the hook's
 // sequences are replayed through them, which is the same state machine.
 
@@ -53,7 +53,7 @@ describe('initial table state', () => {
   });
 });
 
-describe('columns — add, remove, move, rename', () => {
+describe('columns can be added, removed, moved and renamed', () => {
   let state: TableState;
   beforeEach(() => {
     state = initialState(schema);
@@ -69,11 +69,8 @@ describe('columns — add, remove, move, rename', () => {
     expect(next).toBe(state.columns);
   });
 
-  /*
-   * The insertion index a "add column before / after this one" menu computes:
-   * a column at index N asks for N to land in front of itself, and N + 1 to
-   * land behind. Both are the index the NEW column ends up at.
-   */
+  // The insertion index "add column before / after" computes: N lands in
+  // front of column N, N + 1 behind. Both are where the NEW column ends up.
   it('inserts before a column, which is that column\'s own index', () => {
     // state.columns is [id, name, size]; "before name" is index 1.
     expect(columnOps.insertColumnAt(state.columns, 'extra', 1).map((c) => c.path))
@@ -81,7 +78,7 @@ describe('columns — add, remove, move, rename', () => {
   });
 
   it('inserts after a column, which is one past its own index', () => {
-    // "after name" — name is index 1, so the new column lands at 2.
+    // "after name" means name is index 1, so the new column lands at 2.
     expect(columnOps.insertColumnAt(state.columns, 'extra', 2).map((c) => c.path))
       .toEqual(['id', 'name', 'extra', 'size']);
   });
@@ -93,7 +90,7 @@ describe('columns — add, remove, move, rename', () => {
       .toEqual(['id', 'name', 'size', 'extra']);
   });
 
-  it('clamps an index past either end rather than dropping the column', () => {
+  it('clamps an index past either end instead of dropping the column', () => {
     expect(columnOps.insertColumnAt(state.columns, 'extra', 99).map((c) => c.path))
       .toEqual(['id', 'name', 'size', 'extra']);
     expect(columnOps.insertColumnAt(state.columns, 'extra', -4).map((c) => c.path))
@@ -148,7 +145,7 @@ describe('columns — add, remove, move, rename', () => {
   });
 });
 
-describe('width, grow and fit — one setting in three forms', () => {
+describe('width, grow and fit are one setting in three forms', () => {
   const columns: readonly TableColumn[] = [{ path: 'id' }, { path: 'kind' }];
 
   it('turns on persistent fit-to-content, clearing any width or grow', () => {
@@ -174,7 +171,7 @@ describe('width, grow and fit — one setting in three forms', () => {
   });
 });
 
-describe('sorting — a header click replaces, a menu names a direction', () => {
+describe('sorting where a header click replaces and a menu names a direction', () => {
   it('cycles one column asc then desc then off', () => {
     let sort = sortOps.setSingleSort([], 'name');
     expect(sort).toEqual([{ path: 'name', dir: 'asc' }]);
@@ -189,7 +186,7 @@ describe('sorting — a header click replaces, a menu names a direction', () => 
     expect(sort).toEqual([{ path: 'size', dir: 'asc' }]);
   });
 
-  it('restarts the cycle rather than continuing it when several columns are sorted', () => {
+  it('restarts the cycle instead of continuing it when several columns are sorted', () => {
     const multi = [{ path: 'name', dir: 'asc' as const }, { path: 'size', dir: 'asc' as const }];
     expect(sortOps.setSingleSort(multi, 'name')).toEqual([{ path: 'name', dir: 'asc' }]);
   });
@@ -207,7 +204,7 @@ describe('sorting — a header click replaces, a menu names a direction', () => 
       .toEqual([{ path: 'name', dir: 'desc' }, { path: 'size', dir: 'asc' }]);
   });
 
-  it('never flips — the caller has already said which way, so asking twice is idempotent', () => {
+  it('never flips, because the caller has already said which way, so asking twice is idempotent', () => {
     const once = sortOps.setSortDir([], 'name', 'desc');
     expect(sortOps.setSortDir(once, 'name', 'desc')).toEqual([{ path: 'name', dir: 'desc' }]);
   });

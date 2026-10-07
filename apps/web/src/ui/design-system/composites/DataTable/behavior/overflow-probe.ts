@@ -1,22 +1,10 @@
 /* @layer renderer-components @kind logic */
 /**
- * Whether "expand to available space" has any available space to expand into.
- *
- * A `1fr` track only means "take what is left" while something IS left. Once the
- * columns need more room than the scroller can show, there is nothing left to
- * take and the flexible track stops saying anything useful — so the answer to
- * "is this table overflowing?" decides whether a grow column can be honoured.
- *
- * The catch is that asking the question of a table that already has a grow
- * column in it answers a different question: the flexible track has by then
- * stretched to whatever it could, so the measured total says how wide the table
- * IS, not how wide it needs to be. Hence the probe puts the flexible columns
- * back at their content width before comparing — the same total either way,
- * whichever mode the table happens to be rendering in. That is what keeps the
- * two modes from taking turns switching each other on.
- *
- * Pure arithmetic on four numbers, so the rule is assertable without a browser;
- * reading those numbers off the DOM is the hook's job.
+ * Whether a grow column has any space to expand into. A table that already has
+ * a grow column reports how wide it is, not how wide it needs to be, so the
+ * probe puts flexible columns back at content width before comparing. That
+ * keeps the two modes from switching each other on. Pure arithmetic; the hook
+ * reads the numbers off the DOM.
  */
 
 /** Sub-pixel layout rounding is not an overflow, so a hair of slack is allowed. */
@@ -33,19 +21,14 @@ interface OverflowProbe {
   flexibleFitted: number;
 }
 
-/** The width the table wants with nothing claiming slack — mode-independent. */
+/** The width the table wants with nothing claiming slack. Same in every mode. */
 const naturalWidth = (probe: OverflowProbe): number =>
   probe.scrollWidth - probe.flexibleRendered + probe.flexibleFitted;
 
 const isOverflowing = (probe: OverflowProbe): boolean =>
   naturalWidth(probe) > probe.clientWidth + OVERFLOW_TOLERANCE;
 
-/**
- * The widths a grow column renders at while there is no slack — keyed by path,
- * or null when every grow column can genuinely fill. Null rather than an empty
- * map on purpose: "nothing is falling back" and "these columns fall back to
- * nothing" are not the same thing.
- */
+/** Widths grow columns render at while there is no slack, keyed by path; null when they can fill. Null, not an empty map, on purpose. */
 type GrowFallback = ReadonlyMap<string, number> | null;
 
 /** Two fallbacks that would render identically, so a re-measure can keep the old one. */

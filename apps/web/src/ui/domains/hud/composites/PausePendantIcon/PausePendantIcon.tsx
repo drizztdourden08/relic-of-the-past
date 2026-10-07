@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind component */
 /**
- * PausePendantIcon — renders a single pendant (empty or colored).
+ * Renders a single pendant, empty or colored.
  * Pendants are 16×16 (2×2 tiles).
  */
 import { HudImage } from '../../primitives/HudImage';

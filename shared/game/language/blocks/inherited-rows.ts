@@ -12,7 +12,7 @@
  *   not reset.
  * - Reaching the end of the message. A wait removes nothing.
  *
- * A ROW MARKER removes nothing either — it only moves the pen to that row's left
+ * A ROW MARKER removes nothing either. It only moves the pen to that row's left
  * edge. That is the one place this walk cannot use the default pen: `measureRows`
  * runs it with `blankOnJump: true`, treating the landing row as empty so a fresh
  * run is sized without an earlier run's leftovers being charged to it. That is a
@@ -21,7 +21,7 @@
  * conventions are written out in full in `layout/box-pen.ts`.
  *
  * The walk replays each block's own tokens (`joinLines`) through the shared pen
- * rather than re-reading the line views, so there is one layout engine and the
+ * instead of re-reading the line views, so there is one layout engine and the
  * row a line lands on is the engine's answer, not the editor's. Those two differ
  * in one authored case: a line carrying no code of its own after a wait is
  * numbered row 1 by box convention, while the engine leaves the pen wherever the

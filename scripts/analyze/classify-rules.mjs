@@ -1,11 +1,7 @@
 /* @layer tooling-scripts @kind logic */
-/**
- * Classification rules: language (by extension), architectural role (by path),
- * and file type (by path + content heuristics). Tags in a file header, when
- * present, are authoritative and override the heuristics — see classifyType().
- *
- * Tag convention (proposed): a header line `@layer <role>` and `@kind <type>`.
- */
+// Classification rules: language (by extension), architectural role (by path), and
+// file type (path + content heuristics). A header `@layer <role>` / `@kind <type>`
+// overrides the heuristics; see classifyType().
 
 const BINARY_EXT = new Set(['wav', 'png', 'jpg', 'jpeg', 'gif', 'ico', 'svg', 'sfc', 'dat', 'bin', 'ttf', 'woff', 'woff2', 'zip', 'exe', 'icns']);
 
@@ -35,13 +31,22 @@ const ROLE_RULES = [
   ['apps/web/src/App/', 'renderer-appshell'],
   ['apps/web/src/', 'renderer-other'],
   ['apps/web/public/', 'renderer-public'],
+  ['apps/sanctuary/', 'sanctuary-site'],
+  ['shared/config/', 'shared-config'],
+  ['apps/site-kit/', 'site-kit'],
+  ['apps/store/', 'store-site'],
   ['shared/platform/', 'shared-platform'],
   ['shared/storage/', 'shared-storage'],
   ['shared/asset-extraction/', 'shared-asset-extraction'],
   ['shared/game/', 'shared-game'],
   ['shared/input/', 'shared-input'],
+  ['shared/hub/', 'shared-hub'],
+  ['shared/sanctuary/', 'shared-sanctuary'],
+  ['shared/store/', 'shared-store'],
   ['shared/types/', 'shared-types'],
   ['shared/', 'shared-other'],
+  ['cloud-functions/hub-core/', 'hub-core'],
+  ['cloud-functions/store-api/', 'store-api'],
   ['scripts/', 'tooling-scripts'],
   ['tests/', 'tests'],
   ['docs/', 'docs'],

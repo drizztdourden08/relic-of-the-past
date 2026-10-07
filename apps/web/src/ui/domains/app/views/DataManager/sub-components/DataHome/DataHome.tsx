@@ -20,7 +20,7 @@ const DataHome = () => {
     <Box className="data-home">
       <Box className="data-home__location">
         <Box className="data-home__location-text">
-          <Text className="data-home__os">{summary?.location.osLabel ?? '…'}</Text>
+          <Text className="data-home__os">{summary?.location.osLabel ?? '...'}</Text>
           <Text className="data-home__path">{summary?.location.path ?? ''}</Text>
         </Box>
         {capabilities.revealDataFolder ? (

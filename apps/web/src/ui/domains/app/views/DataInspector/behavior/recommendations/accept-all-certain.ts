@@ -1,25 +1,13 @@
 /* @layer renderer-app @kind logic */
 /**
- * "Accept every certain finding in what I am looking at."
+ * Strictly sequential on purpose. Two findings routinely land in the same
+ * dataset source file, and each write is a read-modify-write of that file;
+ * fired concurrently, the file would come out holding only one edit. The same
+ * sequencing keeps `connection` pairs (two records per create, see
+ * `create-connection.ts`) from interleaving their ids or writes.
  *
- * Strictly sequential, and that is the whole point of the file. Two findings
- * routinely land in the SAME dataset source file — two connections leaving one
- * screen, two tags in one namespace — and each write is a read-modify-write of
- * that file. Fired concurrently, the second one's read would predate the first
- * one's write and the file would come out holding only one of the two edits.
- * Awaiting each in turn is what makes a batch equivalent to accepting each
- * entry by hand, one after the other.
- *
- * `certain` is the gate because `likely` means the evidence only ever proved
- * presence (see the note on `Confidence`), and nothing inferred that way should
- * be written to the dataset without somebody looking at it.
- *
- * A `connection` create is the sharpest version of the same hazard: it mints
- * TWO records (see `create-connection.ts`) through one main-process allocator
- * turn, and a batch routinely holds several. Nothing here needs to special-case
- * that — the same strict sequencing that protects a shared file already means
- * one pair's allocate-and-write finishes before the next entry's begins, so
- * pairs from the same batch can never interleave their ids or their writes.
+ * `certain` is the gate: `likely` only ever proved presence (see `Confidence`)
+ * and should not be written without somebody looking at it.
  */
 import type { Recommendation } from '@shared/game/recommendations';
 import type { AcceptOutcome } from './accept-recommendation';
@@ -35,11 +23,7 @@ const FAILED = 'The write failed.';
 const certainOnly = (entries: readonly Recommendation[]): readonly Recommendation[] =>
   entries.filter(entry => entry.confidence === 'certain' && entry.state === 'open');
 
-/**
- * A failure does not stop the run: the remaining findings are independent, and
- * abandoning them because one collection has no write path would make the
- * button's outcome depend on list order.
- */
+/** A failure does not stop the run; stopping would make the outcome depend on list order. */
 const acceptAllCertain = async (
   entries: readonly Recommendation[],
   accept: (entry: Recommendation) => Promise<AcceptOutcome>,

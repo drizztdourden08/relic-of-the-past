@@ -1,7 +1,4 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Save States — save/load game state snapshots + screenshot capture.
- */
 
 import { checkLoadable, stripStamp } from '@shared/game/save-state';
 import { log } from '../log-bus';
@@ -11,13 +8,15 @@ import { isCoreReady, whenCoreReady } from './core-ready';
 import { loadStateFromBuffer } from './state-buffers';
 import { pollInventoryState } from './tracker';
 import { reassertLiveFlagsAfterLoad } from './live-settings';
+import { requestLocationRebaseline } from './randomizer-client/location-poller';
 import { captureGameFrameBlob } from './capture-frame';
 import { saveMusicPosition, restoreMusicPosition } from './msu-save-glue';
+import { useDialogStore } from '../../stores/dialog-store';
 
 const saveState = async (slot: number): Promise<boolean> => {
   const mod = getModule();
   const profileId = getProfileId();
-  log.app(`[SaveState] saveState(${slot}) called — module=${!!mod}, profileId=${profileId}`);
+  log.app(`[SaveState] saveState(${slot}) called with module=${!!mod}, profileId=${profileId}`);
   // Unlike a load, a save is not worth waiting a boot out for: what it would capture once the
   // core came up is the boot screen, written over whatever the slot already held.
   if (!isCoreReady() || !mod || !profileId) {
@@ -72,8 +71,8 @@ const saveState = async (slot: number): Promise<boolean> => {
 const loadState = async (slot: number): Promise<boolean> => {
   log.app(`[LoadState] loadState(${slot}) called`);
   // The shortcuts and the overlay arm with the game VIEW, which is up about two seconds before
-  // the core is. A request from that window is early, not wrong — so it waits for the core
-  // rather than being dropped, which is what made a load right after boot silently do nothing.
+  // the core is. A request from that window is early, not wrong, so it waits for the core. It
+  // used to be dropped instead, which is what made a load right after boot silently do nothing.
   if (!(await whenCoreReady())) {
     log.error(`[LoadState] Slot ${slot} not loaded: the core never became ready`);
     return false;
@@ -112,13 +111,17 @@ const loadState = async (slot: number): Promise<boolean> => {
 
     log.app(`[LoadState] Calling ccall('WasmLoadState', slot=${slot})...`);
     mod.ccall('WasmLoadState', null, ['number'], [slot]);
-    log.app(`[LoadState] ccall returned — state loaded ✓`);
+    log.app(`[LoadState] ccall returned; state loaded`);
 
     // Re-assert all WASM flags that state load resets
     reassertLiveFlagsAfterLoad();
+    useDialogStore.getState().markStale();
+    // The loaded state's completions are the poller's new baseline, not a burst of fresh
+    // checks to report (and re-deliver).
+    requestLocationRebaseline();
 
     // A save written before music positions were recorded has no sidecar; restoring null
-    // simply starts its track from the beginning.
+    // starts its track from the beginning.
     await restoreMusicPosition(profileId, 'quick', slot);
 
     // Force inventory poll so tracker reflects the loaded state
@@ -133,10 +136,8 @@ const loadState = async (slot: number): Promise<boolean> => {
 };
 
 /**
- * Load a NORMAL (manual) save by its name rather than a quick-slot number.
- * Names are stable and quick-save can never overwrite them, so automation and
- * regression baselines pin to a name instead of a slot index. Matching is
- * case-insensitive; the newest save wins if two share a name.
+ * Load a NORMAL (manual) save by name. Names are stable and quick-save never overwrites them,
+ * so automation pins to a name. Case-insensitive; the newest save wins if two share a name.
  */
 const loadNamedState = async (name: string): Promise<boolean> => {
   // Same reason as loadState: a named load can be asked for while the core is still coming up.
@@ -165,10 +166,7 @@ const loadNamedState = async (name: string): Promise<boolean> => {
   return loadStateFromBuffer(buffer);
 };
 
-/**
- * Load whichever the CLI asked for: a number is a quick-save slot, a string is
- * a manual save's name. One resolver so every automation flag behaves alike.
- */
+/** Load whichever the CLI asked for: a number is a quick-save slot, a string is a manual save's name. */
 const loadStateRef = (ref: number | string): Promise<boolean> =>
   typeof ref === 'number' ? loadState(ref) : loadNamedState(ref);
 

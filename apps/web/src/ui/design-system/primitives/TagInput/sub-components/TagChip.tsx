@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
  * One applied value. It is a Badge with a surface treatment and a remove
- * button, rather than a chip built from scratch, so it stays in the same visual
+ * button, not a chip built from scratch, so it stays in the same visual
  * family as every other small label in the library.
  */
 import { Badge } from '../../Badge';

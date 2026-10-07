@@ -1,14 +1,14 @@
 /* @layer renderer-components @kind logic */
 /**
- * Kind inference — the only genuinely tricky derivation.
+ * Kind inference, the trickiest derivation here.
  *
  * Types are erased at runtime, so the schema is read off the values. Sampling
  * EVERY row (collections here are in the hundreds) makes enum and optional
- * detection exact rather than probabilistic.
+ * detection exact, not probabilistic.
  *
  * Inference can only be wrong in one direction: a free-text field that happens
  * to hold few distinct values in this dataset reads as an enum. That is what
- * `SchemaConfig.kinds` is for — a one-line override, with the derived base left
+ * `SchemaConfig.kinds` is for: a one-line override that leaves the derived base
  * untouched.
  */
 import type { FieldKind } from './field-descriptor';
@@ -31,8 +31,8 @@ const present = (values: readonly unknown[]): readonly unknown[] =>
 
 /**
  * A union is a set of objects that do NOT all share every key with the same
- * primitive-vs-object shape — i.e. genuinely variant branches rather than one
- * record shape with the same fields throughout.
+ * primitive-vs-object shape, so they are variant branches instead of one record
+ * shape with the same fields throughout.
  */
 const shapeOf = (value: unknown): 'container' | 'primitive' =>
   typeof value === 'object' && value !== null ? 'container' : 'primitive';
@@ -56,12 +56,12 @@ const distinctSignatures = (objects: readonly Record<string, unknown>[]): readon
 };
 
 /**
- * True when every pair of distinct key-sets is comparable by subset — the
- * objects only ever differ by SOME carrying fewer keys than others, never by
- * each holding a key the other lacks. That is one shape with optional fields.
- * A pair that is mutually incomparable (each has a key the other doesn't) is
- * a genuine variant branch. Branch counts stay small in practice, so the
- * pairwise check is plenty — no need for anything cleverer.
+ * True when every pair of distinct key-sets is comparable by subset. The objects
+ * only ever differ by SOME carrying fewer keys than others, never by each
+ * holding a key the other lacks. That is one shape with optional fields.
+ * A pair that is mutually incomparable (each has a key the other doesn't) is a
+ * variant branch. Branch counts stay small in practice, so the pairwise check is
+ * plenty.
  */
 const isKeySubsetChain = (signatures: readonly ReadonlySet<string>[]): boolean => {
   for (let i = 0; i < signatures.length; i += 1) {

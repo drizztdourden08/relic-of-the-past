@@ -1,19 +1,9 @@
 /* @layer renderer-app @kind logic */
 /**
- * Adapter: the eleven dataset collections, each expressed as the one interface
- * the generic composites understand.
- *
- * A `CollectionSource` is the whole contract — rows, how to identify one, and
- * optionally a config diff, a serializer and a write path. Everything else
- * (which fields exist, what filters them, how a cell renders, what form edits
- * it) is derived from the rows, so adding another collection here is this
- * file and nothing else.
- *
- * Rows are read once per collection, on first use, and then kept. The facade is
- * seeded synchronously by its own barrel before anything can import from it,
- * and a write goes to the source files on disk rather than to the in-memory
- * registry, so a stable array per collection is both correct and what keeps the
- * derived schema memo stable.
+ * The eleven dataset collections as `CollectionSource`s. Adding a collection is
+ * this file and nothing else. Rows are read once per collection, on first use,
+ * and kept: writes go to the source files on disk, not the in-memory registry,
+ * so a stable array is correct and keeps the derived schema memo stable.
  */
 import { all } from '@shared/game/data';
 import {
@@ -29,14 +19,7 @@ import type { InspectorRow, InspectorSource } from '../DataInspector.type';
 
 type Serializer = (row: InspectorRow) => string;
 
-/**
- * The one place a concrete record type is still needed: the emitter is typed
- * per kind, and it is the same emitter the write path uses, so the source tab
- * shows exactly the text a save would produce.
- *
- * Partial rather than exhaustive, so a collection wired up later needs no
- * change here beyond adding its own entry.
- */
+/** Same emitters the write path uses, so the source tab shows exactly what a save would produce. */
 const SERIALIZERS: Partial<Record<EntityKind, Serializer>> = {
   screen: row => serializeScreenRecord(row as never),
   connection: row => serializeConnectionRecord(row as never),
@@ -76,19 +59,10 @@ const collectionSource = (kind: EntityKind): InspectorSource => {
 };
 
 /**
- * One property per collection, each built on the first read rather than up
- * front.
- *
- * These modules form an import cycle: record-writers needs id-ref-options to
- * refresh a renamed record's label, id-ref-options reads the collections here,
- * and a collection's `onSave` comes back out of record-writers. A cycle is only
- * a fault when something is READ while a module in it is still evaluating, and
- * building every source at module scope did exactly that — entering the graph
- * through record-writers ran this build mid-way through record-writers' own
- * evaluation, when RECORD_WRITERS was still undefined, and every collection
- * silently lost its write path. Deferring to first use moves the read past the
- * point where all four have finished, so entry order stops mattering. See
- * tests/data-inspector/module-init-order.keep.test.ts.
+ * Built lazily on first read, not at module scope. record-writers,
+ * id-ref-options and this file form an import cycle; building at module scope
+ * ran while RECORD_WRITERS was still undefined and every collection silently
+ * lost its write path. See tests/data-inspector/module-init-order.keep.test.ts.
  */
 const COLLECTION_SOURCES = Object.defineProperties(
   {},
@@ -99,14 +73,8 @@ const COLLECTION_SOURCES = Object.defineProperties(
   }])),
 ) as Record<EntityKind, InspectorSource>;
 
-/**
- * Drops one collection's cached source after a record is minted into the live
- * registry, so the next read picks the new row up. `rows` is a snapshot (see
- * the note above), so a created record is invisible to the table until this
- * runs — the create flow calls it the moment its own write lands, the same way
- * a delete or an edit would need to if either ever grew a collection instead of
- * mutating one already in it.
- */
+/** Drops a cached source so the next read sees a newly minted record. `rows` is
+ *  a snapshot, so anything that grows a collection must call this. */
 const refreshCollectionSource = (kind: EntityKind): void => {
   built.delete(kind);
 };

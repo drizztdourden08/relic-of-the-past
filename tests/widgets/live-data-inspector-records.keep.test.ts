@@ -1,11 +1,8 @@
 /* @layer tests @kind test */
 /**
- * `recordsFor` — the LiveDataInspector widget's join from (kind, live context)
- * to every record relating to the current screen, not just one. The bug this
- * replaces (`observations.existingConnections[0]`) only ever showed the FIRST
- * connection on a screen with several; these assertions are built around real
- * multi-record screens so a regression back to "just the first one" would
- * actually be caught.
+ * `recordsFor`: every record relating to the current screen, not just one. The
+ * bug this replaces (`observations.existingConnections[0]`) only showed the
+ * FIRST connection, so these use real multi-record screens.
  */
 import { describe, it, expect } from 'vitest';
 import {
@@ -34,7 +31,7 @@ const baseContext = (over: Partial<DetectionContext> = {}): DetectionContext => 
   ...over,
 });
 
-describeDataset('recordsFor — screen', () => {
+describeDataset('recordsFor a screen', () => {
   const screen = all('screen')[0];
 
   it('resolves the current screen\'s own record', () => {
@@ -47,8 +44,8 @@ describeDataset('recordsFor — screen', () => {
   });
 });
 
-describeDataset('recordsFor — connection, EVERY edge touching this screen', () => {
-  it('passes existingConnections through unchanged — no [0] truncation', () => {
+describeDataset('recordsFor a connection, EVERY edge touching this screen', () => {
+  it('passes existingConnections through unchanged, with no [0] truncation', () => {
     const connections = all('connection').slice(0, 3);
     expect(connections.length).toBeGreaterThanOrEqual(3);
     const ctx = baseContext({ observations: { existingConnections: connections } as never });
@@ -57,7 +54,7 @@ describeDataset('recordsFor — connection, EVERY edge touching this screen', ()
   });
 });
 
-describeDataset('recordsFor — check, every check that names this screen', () => {
+describeDataset('recordsFor a check, every check that names this screen', () => {
   it('finds a real screen with several checks and returns all of them, none other', () => {
     const byScreen = new Map<string, number>();
     for (const check of all('check')) {
@@ -80,7 +77,7 @@ describeDataset('recordsFor — check, every check that names this screen', () =
   });
 });
 
-describeDataset('recordsFor — actor, one card per DISTINCT sprite type, not per spawn', () => {
+describeDataset('recordsFor an actor, one card per DISTINCT sprite type, not per spawn', () => {
   const actorsWithSpriteType = all('actor').filter((actor) => actor.gameId.spriteType != null);
 
   it('resolves every distinct sprite type spawned here, deduped', () => {
@@ -106,7 +103,7 @@ describeDataset('recordsFor — actor, one card per DISTINCT sprite type, not pe
   });
 });
 
-describeDataset('recordsFor — item, one card per DISTINCT granted item, not per grant', () => {
+describeDataset('recordsFor an item, one card per DISTINCT granted item, not per grant', () => {
   const itemsWithReceiveId = all('item').filter((item) => item.gameId?.receiveItemId != null);
 
   it('resolves every distinct item granted this session, deduped', () => {
@@ -131,7 +128,7 @@ describeDataset('recordsFor — item, one card per DISTINCT granted item, not pe
   });
 });
 
-describeDataset('recordsFor — dungeon, the one currently loaded', () => {
+describeDataset('recordsFor a dungeon, the one currently loaded', () => {
   const dungeon = all('dungeon')[0];
 
   it('resolves the indoor palace by its live index', () => {
@@ -152,9 +149,9 @@ describeDataset('recordsFor — dungeon, the one currently loaded', () => {
   });
 });
 
-describeDataset('recordsFor — a kind with no direct live link', () => {
+describeDataset('recordsFor a kind with no direct live link', () => {
   it.each(['area', 'location', 'tag', 'item-group', 'enumeration'] satisfies EntityKind[])(
-    'resolves nothing for %s rather than guessing',
+    'resolves nothing for %s instead of guessing',
     (kind) => {
       expect(recordsFor(kind, baseContext({ screenId: 'screen-1' as never }))).toEqual([]);
     },

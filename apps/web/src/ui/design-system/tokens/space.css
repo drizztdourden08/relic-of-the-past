@@ -1,9 +1,9 @@
 /* @layer renderer-design-system @kind style */
 
-/* Spacing scale — ONE scale, reused for gap / margin / padding. */
+/* Spacing scale: ONE scale, reused for gap / margin / padding. */
 :root {
-  /* Pairing step: a caption and the control it names read as one thing rather
-     than two stacked ones. Too small for anything that separates. */
+  /* Pairing step: a caption and the control it names read as one thing, not
+     two stacked ones. Too small for anything that separates. */
   --space-2xs:  2px;
   --space-xs:   4px;
   --space-sm:   8px;

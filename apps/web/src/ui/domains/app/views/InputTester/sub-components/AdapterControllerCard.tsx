@@ -1,10 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
- * AdapterControllerCard — one entry for a device that presents one port per
- * physical slot (e.g. a 4-port wired adapter), so it renders as a single
- * card with a port list instead of several near-identical cards. Every port
- * shows, occupied or not — there's no reliable way yet to tell an empty
- * port from a resting controller, and hiding one risks hiding a real one.
+ * One card with a port list for a multi-port adapter. Every port shows, occupied or not: there is
+ * no reliable way yet to tell an empty port from a resting controller.
  */
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../design-system/primitives/Text';

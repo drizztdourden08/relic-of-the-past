@@ -2,22 +2,15 @@
 /**
  * A closed set of literals. Filtering asks "is it any of these", so the filter
  * control is a multi-select; editing sets one value, so the editor picks one.
- * Those are two different questions about the same field and the kit
- * deliberately does not conflate them.
  *
- * The editor picks its control by how many options there are, because one
- * control cannot read well across the whole range: a segmented track is a
- * single fixed-width row that stays crisp for a handful of short labels and
- * gets cramped past that; chips wrap, so they carry the rest of what inference
- * is willing to call a closed set; anything wider than that is a list, and a
- * list belongs in a dropdown.
+ * The editor picks its control by option count: a segmented track stays crisp
+ * for a handful of short labels, chips wrap and carry the rest of the set, and
+ * anything wider belongs in a dropdown.
  *
- * All three tiers are closed by construction, and the set they close over is
- * only what inference has seen — so every one of them is wrapped in the same
- * escape hatch rather than any tier being singled out. See `open-set.ts` and
- * `sub-components/OpenSetControl.tsx`; the tier is chosen from the set the
- * control will actually show, so a value entered through the hatch counts
- * towards it like any other.
+ * All three tiers close over what inference has seen, so all three get the same
+ * escape hatch (see `open-set.ts` and `sub-components/OpenSetControl.tsx`). The
+ * tier is chosen from the set the control will show, so a value entered through
+ * the hatch counts towards it like any other.
  */
 import type { ReactNode } from 'react';
 import { registerFieldTester } from '../../data/filter/tester-registry';
@@ -38,12 +31,12 @@ import type { SegmentOption } from '../../primitives/SegmentedControl';
 import type { SelectOption } from '../../primitives/Select';
 import './field-kits.css';
 
-const ABSENT = '—';
+const ABSENT = '-';
 
 /** Up to this many options fit one segmented track without crowding. */
 const SEGMENT_MAX = 4;
 
-/** Chips carry the rest of the closed set — by construction nothing exceeds this. */
+/** Chips carry the rest of the closed set. By construction nothing exceeds this. */
 const TAG_MAX = ENUM_MAX;
 
 const toSelection = (operand: unknown): readonly string[] => {
@@ -51,7 +44,7 @@ const toSelection = (operand: unknown): readonly string[] => {
   return isNullish(operand) || operand === '' ? [] : [toText(operand)];
 };
 
-/** An empty selection is no constraint at all — a fresh clause must not hide every row. */
+/** An empty selection is no constraint, so a fresh clause must not hide every row. */
 const test = (value: unknown, op: string, operand: unknown): boolean => {
   const selection = toSelection(operand);
   if (!selection.length) return true;
@@ -81,7 +74,7 @@ const FilterControl = (props: FilterControlProps) => {
 
 interface ClosedSetProps {
   field: FieldDescriptor;
-  /** Already merged with the current value — the tier follows what is shown. */
+  /** Already merged with the current value. The tier follows what is shown. */
   options: readonly string[];
   current: string;
   disabled?: boolean;
@@ -98,8 +91,8 @@ const closedSetControl = (props: ClosedSetProps): ReactNode => {
         options={segmentsOf(options)}
         disabled={disabled}
         onChange={onChange}
-        // Re-clicking the active segment clears the field — allowed only
-        // where the schema says absence is legal, same gate as the chip tier.
+        // Re-clicking the active segment clears the field. That is allowed
+        // only where the schema says absence is legal, same gate as the chips.
         onDeselect={field.optional ? () => onChange('') : undefined}
       />
     );
@@ -115,8 +108,8 @@ const closedSetControl = (props: ClosedSetProps): ReactNode => {
         single
         onChange={(selected) => {
           // Re-clicking the active chip clears the field, which the segmented
-          // track and the dropdown cannot do — allowed only where the schema
-          // says absence is legal.
+          // track and the dropdown cannot do. That is allowed only where the
+          // schema says absence is legal.
           const [next] = selected;
           if (next !== undefined || field.optional) onChange(next ?? '');
         }}

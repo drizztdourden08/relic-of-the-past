@@ -9,10 +9,10 @@
  * clean if only the final state were reported, and the overrun would ship.
  * Runs come out in the order the pen closed them.
  *
- * Unmatched text is never charged a width — no glyph, no advance — so it cannot
- * quietly count as zero either: `measureRowsDetailed` returns it alongside the
- * rows, and any entry with a non-empty `unmatched` list should be read as
- * unmeasurable rather than safe. `measureRows` is the thin form for callers that
+ * Unmatched text is never charged a width, since it has no glyph and no advance,
+ * so it cannot count as zero either. `measureRowsDetailed` returns it alongside
+ * the rows, and any entry with a non-empty `unmatched` list should be read as
+ * unmeasurable, not safe. `measureRows` is the thin form for callers that
  * have already validated their text (see `validateEntry`).
  */
 import { resolveRefs } from '../glossary/resolve-refs';

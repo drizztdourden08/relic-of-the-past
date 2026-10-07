@@ -4,7 +4,7 @@
  * presents one entry per port (an adapter) renders as a single group with a
  * port list, instead of several near-identical entries. The main process
  * already disambiguates ports with a "#N" deviceKey suffix for the second
- * and later device sharing a vid:pid (see sdl3-device-key.ts) — this reads
+ * and later device sharing a vid:pid (see sdl3-device-key.ts). This reads
  * that back out to number the ports, falling back to arrival order for the
  * rare case a port has no suffix to read (e.g. several unclaimed listed
  * devices sharing a vid:pid, which never get a suffix since only SDL-claimed
@@ -35,7 +35,7 @@ const portSuffixOf = (deviceKey: string): number | null => {
 const groupKeyOf = (entry: DeviceEntry): string => `${entry.vendorId}:${entry.productId}`;
 
 /** An unclaimed entry's `product` can be blank when the lister found no
- *  metadata for it — fall back to the first group member that has one. */
+ *  metadata for it, so fall back to the first group member that has one. */
 const productNameOf = (entries: readonly DeviceEntry[]): string =>
   entries.find((e) => e.product)?.product ?? 'Unknown controller';
 

@@ -1,21 +1,20 @@
 /* @layer electron-main @kind logic */
 /**
- * The boot splash — its own frameless window, so the main window never has to be
- * splash-sized and then grow in front of the user.
+ * The boot splash gets its own frameless window, so the main window never has to
+ * be splash-sized and then grow in front of the user.
  *
- * It is a CHILD of the main window rather than alwaysOnTop: a child floats above its
- * parent only, so a boot that happens while the user is in another app never covers
- * their work. It carries no preload and no bundle — plain markup that paints on the
- * first frame, driven from here through one tiny global.
+ * It is a CHILD of the main window, not alwaysOnTop. A child floats above its
+ * parent only, so a boot while the user is in another app never covers their
+ * work. There is no preload and no bundle, just plain markup driven from here
+ * through one tiny global.
  */
 import { BrowserWindow, screen } from 'electron';
 import { join } from 'path';
 import { is } from '@electron-toolkit/utils';
 import { fadeWindow } from './fade-window';
 
-// The size the boot splash has always been. Kept exactly, because the installer's
-// animated splash is generated to match it frame for frame (scripts/build/make-installer-splash.mjs),
-// so install and first launch read as one continuous thing.
+// Kept exactly: the installer's animated splash is generated to match it frame for
+// frame (scripts/build/make-installer-splash.mjs).
 const SPLASH_WIDTH = 480;
 const SPLASH_HEIGHT = 360;
 
@@ -48,8 +47,7 @@ const openSplash = (parent: BrowserWindow, version: string): void => {
     height: SPLASH_HEIGHT,
     frame: false,
     resizable: false,
-    // A frameless page with no -webkit-app-region:drag cannot be dragged anyway; this
-    // is the second lock, against a window manager that offers its own move handle.
+    // Second lock, against a window manager that offers its own move handle.
     movable: false,
     minimizable: false,
     maximizable: false,
@@ -63,10 +61,7 @@ const openSplash = (parent: BrowserWindow, version: string): void => {
   splash.once('ready-to-show', () => splash?.show());
 };
 
-/**
- * Status line under the spinner. Best-effort by design: the splash's job is done by
- * its logo and spinner, so a lost message must never be able to break the boot.
- */
+/** Status line under the spinner. Best-effort: a lost message must never break the boot. */
 const setSplashStatus = (message: string): void => {
   if (!splash || splash.isDestroyed()) return;
   const call = `window.__splashStatus?.(${JSON.stringify(message)})`;

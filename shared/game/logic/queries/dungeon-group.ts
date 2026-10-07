@@ -1,15 +1,15 @@
 /* @layer shared-game @kind logic */
 /**
- * Dungeon group id — what the sim's per-dungeon ledger keys on instead of a raw
+ * Dungeon group id. What the sim's per-dungeon ledger keys on instead of a raw
  * palace index. Every dungeon stands alone under its own index, except one: the
  * sewers (palace index 0) are reachable ONLY through the castle above them
  * (palace index 1), so a run that leaves through the castle and comes back
  * through it must find the sewers' owed checks under the SAME ledger entry.
- * No other palace shares this property — this is a single named exception,
+ * No other palace shares this property. It is a single named exception,
  * not a general grouping rule.
  *
  * `screenId` here is the SIMULATOR's traversal id (`room:N`, a native room
- * number), not a dataset screen id — see simulation/traversal-id.ts.
+ * number), not a dataset screen id (see simulation/traversal-id.ts).
  *
  * The room map resolves to a `DungeonId`. It used to resolve to a LOCATION's
  * display name, which the sim then slugified into its key-bucket identity, so the
@@ -36,7 +36,7 @@ let dungeonByRoom: Map<number, DungeonId> | null = null;
 
 /**
  * Rooms come from each dungeon's own `roomScreenIds`, so a room's dungeon is the
- * dungeon that claims it rather than something inferred from the screen's
+ * dungeon that claims it, not something inferred from the screen's
  * geography. The group still comes off the screen's palace index, which is what
  * folds the sewers in with the castle.
  */
@@ -73,7 +73,7 @@ const dungeonForGroup = (group: number): DungeonId | null => {
 
 /**
  * What to call a group in the run's log. Resolved from the dungeon record, so no
- * game name is spelled out in code — a group spanning two palace indices takes
+ * game name is spelled out in code. A group spanning two palace indices takes
  * the name of the dungeon that claims its rooms. Falls back to the bare number.
  */
 const dungeonGroupName = (group: number): string => {

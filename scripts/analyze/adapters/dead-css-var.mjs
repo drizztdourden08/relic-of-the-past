@@ -2,14 +2,10 @@
  * @layer tooling-scripts
  * @kind logic
  *
- * Dead-CSS-variable gate — flags `var(--x)` references whose custom property
- * `--x` is never defined anywhere (a CSS def `--x:`, a JS inline-style key
- * `'--x':`, or a `setProperty('--x', …)`). Catches typos and orphaned tokens
- * left behind by refactors (e.g. --color-bg-inset, --color-success).
- *
- * Global by design: the defined-set is built by walking the WHOLE tree (not
- * just the changed subset), so a var defined in a token file still counts in
- * --diff mode. Dynamic refs like `var(--track-${i})` are skipped.
+ * Flags `var(--x)` references whose custom property is never defined (CSS `--x:`,
+ * JS inline-style key `'--x':`, or `setProperty('--x', ...)`). The defined-set walks
+ * the whole tree, so a token-file definition still counts in --diff mode. Dynamic
+ * refs like `var(--track-${i})` are skipped.
  */
 import fs from 'fs';
 import path from 'path';
@@ -18,7 +14,7 @@ import { walkFiles } from '../walk.mjs';
 const VAR_REF = /var\(\s*(--[\w-]+)/g;          // var(--x  → reference
 const CSS_DEF = /(--[\w-]+)\s*:/g;              // --x:     → CSS declaration
 const TS_OBJ_DEF = /['"`](--[\w-]+)['"`]\s*:/g; // '--x':   → JS inline-style custom prop
-const SET_PROP = /setProperty\(\s*['"`](--[\w-]+)['"`]/g; // el.style.setProperty('--x', …)
+const SET_PROP = /setProperty\(\s*['"`](--[\w-]+)['"`]/g; // el.style.setProperty('--x', ...)
 
 let definedCache = null;
 
@@ -48,7 +44,7 @@ const run = async (records, ctx) => {
     for (const m of content.matchAll(VAR_REF)) {
       const name = m[1];
       if (defined.has(name) || seen.has(name)) continue;
-      // Skip dynamic refs: var(--track-${i}) — the name is interpolated, not literal.
+      // Skip dynamic refs like var(--track-${i}): the name is interpolated.
       const after = content[m.index + m[0].length];
       if (after === '$' || after === '{') continue;
       seen.add(name);

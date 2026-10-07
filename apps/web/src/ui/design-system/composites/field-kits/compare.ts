@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 /**
  * Comparator plumbing shared by the kits. Absent values sort last in both
- * directions — the same promise the core's fallback makes — so flipping a
+ * directions, which is the promise the core's fallback also makes. Flipping a
  * column never hides the rows that have no value for it.
  */
 import { isNullish, toText } from './coerce';

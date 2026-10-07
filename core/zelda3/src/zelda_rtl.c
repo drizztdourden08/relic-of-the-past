@@ -156,24 +156,25 @@ extern const uint16 kOverworld_Size2[2];  // area camera X span (small/big); use
 // partway through the transition, so we must keep our own copy of the source.
 static uint16 g_ow_src_map16[0x1000];  // copy of dung_bg2 (64x64 map16) for the source area
 static int g_ow_src_xs, g_ow_src_xe, g_ow_src_ys, g_ow_src_ye, g_ow_src_area;
+// First scroll-chain submodule a frame can report with the destination map in dung_bg2: submodule 3
+// (Module09_LoadNewMapAndGFX) decompresses it and advances to 4 before the frame is drawn.
+enum { kOwSubmoduleDestMapLoaded = 4 };
 
 // Blit one overworld area's map16 (64-wide) into the linear world buffer as map8 tiles, at tile offset
-// (offX, offY). Tiles falling outside the buffer are skipped (the caller clears it first for the gaps).
+// (offX, offY). The offset may be NEGATIVE (the map starts before the buffer), so the source range is
+// clamped up front rather than tested per cell; tiles outside the buffer are simply never visited, and
+// the caller clears the buffer first wherever gaps can remain.
 static void BlitAreaMap16(uint16 *world, int worldW, int worldH, const uint16 *map16,
                           int areaWt, int areaHt, int offX, int offY, const uint16 *map8) {
-  for (int ay = 0; ay < areaHt; ay++) {
-    int by = offY + ay;
-    if ((unsigned)by >= (unsigned)worldH)
-      continue;
+  int ay0 = IntMax(0, -offY), ay1 = IntMin(areaHt, worldH - offY);
+  int ax0 = IntMax(0, -offX), ax1 = IntMin(areaWt, worldW - offX);
+  for (int ay = ay0; ay < ay1; ay++) {
     const uint16 *m16row = map16 + (size_t)(ay >> 1) * 64;
-    uint16 *dst = world + (size_t)by * worldW;
+    uint16 *dst = world + (size_t)(offY + ay) * worldW;
     int suby = ay & 1;
-    for (int ax = 0; ax < areaWt; ax++) {
-      int bx = offX + ax;
-      if ((unsigned)bx >= (unsigned)worldW)
-        continue;
+    for (int ax = ax0; ax < ax1; ax++) {
       const uint16 *s = map8 + (size_t)m16row[ax >> 1] * 4;  // 2x2 sub-tiles: TL=s[0] TR=s[1] BL=s[2] BR=s[3]
-      dst[bx] = s[suby * 2 + (ax & 1)];
+      dst[offX + ax] = s[suby * 2 + (ax & 1)];
     }
   }
 }
@@ -181,7 +182,7 @@ static void BlitAreaMap16(uint16 *world, int worldW, int worldH, const uint16 *m
 // Expand the resident overworld map16 (dung_bg2 — the full current area) into the BG2 layer's linear
 // "world" tilemap so the widescreen view can extend past the 512px SNES tilemap into real map instead of
 // wrapping. Out-of-area columns clamp to transparent (edge-mirror). Also snapshots the area for transitions.
-static void BuildOverworldWorldTilemap() {
+static void BuildOverworldWorldTilemap(bool specialArea) {
   BgLayer *bg = &g_zenv.ppu->bgLayer[1];  // BG2 carries the overworld terrain (dung_bg2)
   if (!PpuEnsureWorldTilemap(bg)) { bg->worldW = bg->worldH = 0; bg->useWorld = false; return; }  // OOM: stock path
   int originX = ow_scroll_vars0.xstart, originY = ow_scroll_vars0.ystart;
@@ -189,20 +190,39 @@ static void BuildOverworldWorldTilemap() {
   int h = (((int)ow_scroll_vars0.yend - originY) >> 3) + 32;
   w = IntMax(0, IntMin(w, kPpuWorldTiles));
   h = IntMax(0, IntMin(h, kPpuWorldTiles));
-  // dung_bg2 is a 64x64 map16 = at most 128x128 map8 tiles. The special overworld's scroll range
-  // overshoots that (yend 0x320 + the 256px view = 132 tile rows), and blitting the overshoot would read
-  // past the map16 (see the same note in BuildTransitionWorldTilemap), so only the real extent is blitted.
-  int bw = IntMin(w, 128), bh = IntMin(h, 128);
-  if (bw < w || bh < h)
+  // Where dung_bg2's tile (0,0) actually sits in world pixels. The overworld special areas pack several
+  // sub-locations into one map16 and give each its own camera bounds, so the map's origin and the scroll
+  // range's origin are different values there. Blitting at (0,0) regardless made such a sub-location draw
+  // the tiles of whichever one sits at the map origin, while collision and every other lookup, which all
+  // go through this same origin, kept using the right ones.
+  //
+  // A normal area has the two equal by construction: Overworld_SetCameraBoundaries and
+  // Overworld_LoadGFXAndScreenSize read the same kOverworld_OffsetBase* entry. So the offset is zero
+  // there, and consulting the base can only do harm, because the two are updated at different moments.
+  // A crossing repoints the base at the destination area as it starts, while the camera bounds keep
+  // describing the area still on screen until the scroll lands. Between those two moments the pair names
+  // two different areas, the offset comes out one whole area wide, and the blit lands outside the buffer
+  // entirely, so every visible frame of the crossing draws the no-data gap instead of terrain.
+  int offX = 0, offY = 0;
+  if (specialArea) {
+    offX = ((((int)overworld_offset_base_x) << 3) - originX) >> 3;
+    offY = (((int)overworld_offset_base_y) - originY) >> 3;
+  }
+  // dung_bg2 is a 64x64 map16 = 128x128 map8 tiles, and that is its whole extent: blitting further would
+  // read past it (the special overworld's scroll range alone reaches 132 tile rows).
+  int bw = 128, bh = 128;
+  if (offX > 0 || offY > 0 || offX + bw < w || offY + bh < h)
     memset(bg->world, 0, (size_t)w * h * sizeof(uint16));
-  BlitAreaMap16(bg->world, w, h, dung_bg2, bw, bh, 0, 0, GetMap16toMap8Table());
+  BlitAreaMap16(bg->world, w, h, dung_bg2, bw, bh, offX, offY, GetMap16toMap8Table());
   // Repeat the last real row over the vertical overshoot instead of leaving it a no-data gap. The camera
   // range genuinely allows one row more than the area owns: the bottom scanline samples vScroll + 224, so
   // at the range's lowest camera (yend) that is row 1024 of a 1024-row area. Left as a gap it rendered as
   // a hard coloured line across the foot of the screen; repeating the row above makes it continue the
   // terrain, which is what the hardware's overscan hid.
-  for (int ry = bh; ry < h; ry++)
-    memcpy(bg->world + (size_t)ry * w, bg->world + (size_t)(bh - 1) * w, (size_t)w * sizeof(uint16));
+  int lastRow = offY + bh - 1;
+  if (lastRow >= 0)
+    for (int ry = lastRow + 1; ry < h; ry++)
+      memcpy(bg->world + (size_t)ry * w, bg->world + (size_t)lastRow * w, (size_t)w * sizeof(uint16));
   bg->worldW = w, bg->worldH = h;
   // The overworld BG scroll wraps at the 1024px tilemap, so the PPU hScroll/vScroll carry only the low 10
   // bits. worldOff re-adds the 1024-aligned high part minus the area origin, so the fetch's local (x,y)
@@ -221,7 +241,7 @@ static void BuildOverworldWorldTilemap() {
 // Build a world tilemap spanning the source area (from the snapshot) AND the destination area (live
 // dung_bg2, loaded partway through the transition), so the camera-locked wide/tall view pans smoothly
 // across the seam with real content on both sides — no 512px wrap, no black, at any aspect ratio.
-static void BuildTransitionWorldTilemap(int destArea) {
+static void BuildTransitionWorldTilemap(int destArea, bool destMapLoaded) {
   BgLayer *bg = &g_zenv.ppu->bgLayer[1];
   if (!PpuEnsureWorldTilemap(bg)) { bg->worldW = bg->worldH = 0; bg->useWorld = false; return; }  // OOM: stock path
   // Blit each area's ACTUAL map16 extent (32x32 small / 64x64 large = 64/128 map8 tiles per side), NOT the
@@ -239,8 +259,11 @@ static void BuildTransitionWorldTilemap(int destArea) {
   memset(bg->world, 0, (size_t)w * h * sizeof(uint16));  // gaps / out-of-area = transparent
   BlitAreaMap16(bg->world, w, h, g_ow_src_map16, srcTiles, srcTiles,
                 (g_ow_src_xs - left) >> 3, (g_ow_src_ys - top) >> 3, map8);
-  BlitAreaMap16(bg->world, w, h, dung_bg2, destTiles, destTiles,
-                (destXs - left) >> 3, (destYs - top) >> 3, map8);
+  // Until the destination is decompressed, dung_bg2 still holds the source. Blitting it at the
+  // destination origin drew the source's own terrain across the seam as if it were the next area.
+  if (destMapLoaded)
+    BlitAreaMap16(bg->world, w, h, dung_bg2, destTiles, destTiles,
+                  (destXs - left) >> 3, (destYs - top) >> 3, map8);
   bg->worldW = w, bg->worldH = h;
   bg->worldOffX = ((int)BG2HOFS_copy2 & ~0x3ff) - left;
   bg->worldOffY = ((int)BG2VOFS_copy2 & ~0x3ff) - top;
@@ -373,6 +396,7 @@ static int g_lock_last_cam_x, g_lock_last_cam_y;
 // parallax (BG1) holds when non-zero so it doesn't drift against the static scene; the sprite proximity
 // loader scans the lock band (the shifted side) so sprites in the extended view spawn even while pinned.
 int g_camera_lock_shift_x, g_camera_lock_shift_y;
+int g_oam_tall_fold_shift;
 int g_render_extra_left, g_render_extra_right;
 int g_render_extra_top, g_render_extra_bottom;
 int g_band_lo_x, g_band_hi_x;  // window the sprite band classifier last used, for the diagnostic dump
@@ -400,13 +424,26 @@ static void ConfigurePpuSideSpace() {
   int mod = main_module_index;
   if (mod == 14)
     mod = saved_module_for_menu;
-  // The overworld-special-area flavor of MODULE_FALLING_ENTRANCE is normal interactive
-  // outdoor gameplay even though the module never returns to 9. Checked against `mod`
+  // The game-over module is drawn over the play it interrupted, which it leaves standing. Reading it as
+  // the module the player died in keeps the wide/tall view through the red fill and the menu. Resolved
+  // before the special-area test so a death in one of those areas still reads as that area.
+  mod = GameHook_GameOverViewModule(mod);
+  // A spotlight transition draws the scene it is crossing between, so it is read as that scene's module.
+  mod = GameHook_SpotlightViewModule(mod);
+  // MODULE_OVERWORLD_SPECIAL_AREA is normal interactive outdoor gameplay even though the
+  // module never returns to 9. Checked against `mod`
   // (already menu-remapped above) via the *For() form, not GameHook_IsOverworldSpecialArea()
   // — that reads the raw module and would miss this case the instant the pause menu opens
   // over it (main_module_index is 14 then, not 11, even though the location hasn't
   // changed), collapsing the view back to the base 256x224 frame on every pause.
+  // A victory, a save and quit, a mirror warp, the pyramid scene and the triforce room all draw over the
+  // scene the player is standing in. Resolved before the special-area test, since the triforce room is one.
+  mod = GameHook_InterruptedSceneModule(mod);
   bool isSpecialArea = GameHook_IsOverworldSpecialAreaFor(mod);
+  // The pit-fall crossing is its own module and shows no scene of its own: it renders the departure
+  // area, then the room below. Reading it as whichever of those two it is currently showing carries
+  // the wide/tall view through the crossing instead of collapsing to the base frame for its duration.
+  mod = GameHook_PitFallViewModule(mod);
   if (mod == 9 || isSpecialArea) {
     if (main_module_index == 14 && submodule_index == 7 && overworld_map_state >= 4) {
       // World map
@@ -427,7 +464,10 @@ static void ConfigurePpuSideSpace() {
       // overworld_area_index (>=128) would index kOverworldMapIsSmall/kOverworld_OffsetBaseX/etc out of
       // bounds. Its own scroll bounds (ow_scroll_vars0, set by Overworld_EnterSpecialArea) are already
       // correct here regardless of submodule_index.
-      if (submodule_index == 0 || main_module_index == 14 || isSpecialArea) {
+      // The game-over module never scrolls, whatever its submodule reads, so it holds this lock too. It
+      // only reaches this branch through GameHook_GameOverViewModule, which leaves it out with the gate off.
+      if (submodule_index == 0 || main_module_index == 14 || isSpecialArea || main_module_index == 18
+          || GameHook_SpotlightCoversScreen() || GameHook_InterruptedSceneCoversScreen()) {
         if (enhanced_features0 & kFeatures0_CameraLockToViewport) {
           // Render-level camera lock: clamp the RENDERED view to the area so its edges rest on the
           // boundary (no out-of-area black), then shift the world fetch (below) + sprites (ppu eval) by
@@ -451,7 +491,7 @@ static void ConfigurePpuSideSpace() {
           g_lock_last_shift_y = g_zenv.ppu->cameraLockShiftY;
           g_lock_last_cam_x = BG2HOFS_copy2;
           g_lock_last_cam_y = BG2VOFS_copy2;
-          BuildOverworldWorldTilemap();
+          BuildOverworldWorldTilemap(isSpecialArea);
         }
       } else {
         // Non-stationary outdoor sub-states. A screen-to-screen scroll transition (the submodule 1-8 chain)
@@ -499,11 +539,34 @@ static void ConfigurePpuSideSpace() {
             int destShiftY = destCamY - CameraLockClamp(destCamY, destYs, destYe, (int)g_oam_tall_budget);
             g_zenv.ppu->cameraLockShiftX = g_lock_last_shift_x + (destShiftX - g_lock_last_shift_x) * num / den;
             g_zenv.ppu->cameraLockShiftY = g_lock_last_shift_y + (destShiftY - g_lock_last_shift_y) * num / den;
-            // Render the full wide/tall view: the two-area world tilemap (below) supplies real content on
-            // both sides of the seam; no-data gaps fall through to the black backdrop in PpuDrawBackground.
-            extra_left = extra_right = (int)g_oam_wide_budget;
-            extra_top = extra_bottom = (int)g_oam_tall_budget;
-            BuildTransitionWorldTilemap(destArea);
+            // The margins come from the map bounds this frame's view shows, measured from the rendered
+            // camera exactly as the stationary branch does, so a margin exists only past the map and
+            // carries straight across the crossing. A frame can only show an area whose map is loaded.
+            // Submodule 3 decompresses the destination into dung_bg2 and advances to 4 within the same
+            // frame, so a frame that reports 1-3 still holds the source there: the view shows the source
+            // alone, exactly like the stationary frame before it, and the destination is not blitted.
+            // From 4 to 6 both maps are real, so the bounds are their union. Once the scroll has landed
+            // (7-8) the live scroll bounds already name the arrival area, and the frames match the
+            // stationary one that follows. PpuSetExtraSideSpace caps each side to its budget, so a side
+            // deep inside the map renders its full budget. No-data gaps inside the union still fall
+            // through to the black backdrop.
+            bool destMapLoaded = submodule_index >= kOwSubmoduleDestMapLoaded;
+            int viewH = (int)BG2HOFS_copy2 - g_zenv.ppu->cameraLockShiftX;
+            int viewV = (int)BG2VOFS_copy2 - g_zenv.ppu->cameraLockShiftY;
+            int shownXs = (int)ow_scroll_vars0.xstart, shownXe = (int)ow_scroll_vars0.xend;
+            int shownYs = (int)ow_scroll_vars0.ystart, shownYe = (int)ow_scroll_vars0.yend;
+            if (!destMapLoaded) {
+              shownXs = g_ow_src_xs, shownXe = g_ow_src_xe;
+              shownYs = g_ow_src_ys, shownYe = g_ow_src_ye;
+            } else if (submodule_index <= 6) {
+              shownXs = IntMin(g_ow_src_xs, destXs), shownXe = IntMax(g_ow_src_xe, destXe);
+              shownYs = IntMin(g_ow_src_ys, destYs), shownYe = IntMax(g_ow_src_ye, destYe);
+            }
+            extra_left = IntMax(0, viewH - shownXs);
+            extra_right = IntMax(0, shownXe - viewH);
+            extra_top = IntMax(0, viewV - shownYs);
+            extra_bottom = IntMax(0, shownYe - viewV);
+            BuildTransitionWorldTilemap(destArea, destMapLoaded);
             // The full-width pan exposes the no-data gaps; PpuDrawBackground paints them with a sentinel that
             // BlackBackdrop renders black, matching the letterboxed margins — while the real green backdrop that
             // shows through transparent terrain (tree bases, doorways) is left untouched. (PpuBeginDrawing
@@ -519,7 +582,7 @@ static void ConfigurePpuSideSpace() {
             extra_right = (int)ow_scroll_vars0.xend - clampedH;
             extra_top = IntMax(0, clampedV - (int)ow_scroll_vars0.ystart);
             extra_bottom = (int)ow_scroll_vars0.yend - clampedV;
-            BuildOverworldWorldTilemap();
+            BuildOverworldWorldTilemap(isSpecialArea);
           }
         }
         if (!g_zenv.ppu->bgLayer[1].useWorld) {
@@ -532,37 +595,62 @@ static void ConfigurePpuSideSpace() {
       }
     }
   } else if (mod == 7) {
-    // indoors, except when the light cone is in use
-    if (!(hdr_dungeon_dark_with_lantern && TS_copy != 0)) {
+    // indoors, except when the light cone is in use, including the room-transition frames where the
+    // game has cleared hdr_dungeon_dark_with_lantern but the cone mask is still on the subscreen.
+    // Leaving a room, the bounds already hold the destination area's scroll bounds (the same bytes), so
+    // the closing circle keeps the measure of the room it is still drawing.
+    if (GameHook_HeldRoomView(&extra_left, &extra_right, &extra_top, &extra_bottom)) {
+    } else if (!GameHook_LightConeSuppressesExtraWidth()) {
       int qm = quadrant_fullsize_x >> 1;
       extra_left = IntMax(BG2HOFS_copy2 - room_bounds_x.v[qm], 0);
       extra_right = IntMax(room_bounds_x.v[qm + 2] - BG2HOFS_copy2, 0);
-    }
 
-    int qy = quadrant_fullsize_y >> 1;
-    extra_bottom = IntMax(room_bounds_y.v[qy + 2] - BG2VOFS_copy2, 0);
-    // tall: rows above the camera, bounded by the room's top edge (mirror of extra_bottom). The room's
-    // tilemap is fully resident, so the stock vertical fetch represents it without wrap.
-    extra_top = IntMax(BG2VOFS_copy2 - room_bounds_y.v[qy], 0);
-    // Bank rooms render over the world tilemap whenever the wide view is on: stationary frames
-    // get the room ringed by its stipple void (no black bar at a room edge), and an inter-room
-    // scroll adds the room being left at its visual position so the previous screen stays drawn
-    // until the transition completes — the same opt-in as the overworld's smooth transitions.
-    if (GbaAlttp_IsBakedRoomActive() && g_oam_wide_budget != 0
-        && !(hdr_dungeon_dark_with_lantern && TS_copy != 0)) {
-      bool inTrans = submodule_index == 2;
-      bool smooth = (enhanced_features0 & kFeatures0_SmoothTransitions) != 0;
-      if ((!inTrans || smooth) && BuildDungeonWorldTilemap(inTrans && smooth)) {
-        extra_left = extra_right = (int)g_oam_wide_budget;
-        // The vertical bands fetch from the same ring: the tall budget when configured, and
-        // the legacy 16-row extend-y band at the bottom otherwise (harmless at 224 lines).
-        extra_top = (int)g_oam_tall_budget;
-        extra_bottom = g_oam_tall_budget != 0 ? (int)g_oam_tall_budget : 16;
+      int qy = quadrant_fullsize_y >> 1;
+      extra_bottom = IntMax(room_bounds_y.v[qy + 2] - BG2VOFS_copy2, 0);
+      // tall: rows above the camera, bounded by the room's top edge (mirror of extra_bottom). The room's
+      // tilemap is fully resident, so the stock vertical fetch represents it without wrap.
+      extra_top = IntMax(BG2VOFS_copy2 - room_bounds_y.v[qy], 0);
+      // Bank rooms render over the world tilemap whenever the wide view is on: stationary frames
+      // get the room ringed by its stipple void (no black bar at a room edge), and an inter-room
+      // scroll adds the room being left at its visual position so the previous screen stays drawn
+      // until the transition completes, the same opt-in as the overworld's smooth transitions.
+      // Before the view is noted, so a held view keeps the ring it was drawn with.
+      if (GbaAlttp_IsBakedRoomActive() && g_oam_wide_budget != 0
+          && !(hdr_dungeon_dark_with_lantern && TS_copy != 0)) {
+        bool inTrans = submodule_index == 2;
+        bool smooth = (enhanced_features0 & kFeatures0_SmoothTransitions) != 0;
+        if ((!inTrans || smooth) && BuildDungeonWorldTilemap(inTrans && smooth)) {
+          extra_left = extra_right = (int)g_oam_wide_budget;
+          // The vertical bands fetch from the same ring: the tall budget when configured, and
+          // the legacy 16-row extend-y band at the bottom otherwise (harmless at 224 lines).
+          extra_top = (int)g_oam_tall_budget;
+          extra_bottom = g_oam_tall_budget != 0 ? (int)g_oam_tall_budget : 16;
+        }
       }
+      if (main_module_index == 7)
+        GameHook_NoteRoomView(extra_left, extra_right, extra_top, extra_bottom);
     }
-  } else if (mod == 20 || mod == 0 || mod == 1) {
-    extra_left = kPpuExtraLeftRight, extra_right = kPpuExtraLeftRight;
-    extra_bottom = 16;
+  } else if (mod == 20 || mod == 0 || mod == 1 || GameHook_FileScreenIsWide(mod)) {
+    // The opening story is five scenes of three different constructions, each with its own real extent
+    // on every side, so it measures its own frame (attract_view.c). Every other module here, and the
+    // story itself with the gate off, keeps the fixed frame below.
+    if (!GameHook_AttractViewBudget(&extra_left, &extra_right, &extra_top, &extra_bottom)) {
+      extra_left = kPpuExtraLeftRight, extra_right = kPpuExtraLeftRight;
+      extra_bottom = 16;
+      // A still picture stops at the original frame, so rows above and below it could only ever have shown
+      // the tilemap wrapping back onto the picture. They open once the space around the picture draws that
+      // screen's own background instead (fixed_picture_edges.c). PpuSetExtraSideSpace caps each side to the
+      // configured budget, so a view with no extra rows still gets the same 16 the line above asks for.
+      if (GameHook_FixedPictureEdgeLayers() != 0)
+        extra_top = extra_bottom = kPpuExtraTopBottom;
+    }
+  }
+  // The game-over frames that draw over the whole screen fill every side, so the iris, the colour fill and
+  // the fade reach the edges. Past the loaded map the fetch finds no data, which would show the fixed colour
+  // where the game shows black, so those gaps render black as they do during an area transition.
+  if (GameHook_GameOverCoversScreen()) {
+    extra_left = extra_right = extra_top = extra_bottom = kPpuExtraLeftRight;
+    g_zenv.ppu->renderFlags |= kPpuRenderFlags_BlackBackdrop;
   }
   PpuSetExtraSideSpace(g_zenv.ppu, extra_left, extra_right, extra_top, extra_bottom);
   // The shift is by definition how far the rendered view is inset from the game camera, so it cannot
@@ -575,12 +663,31 @@ static void ConfigurePpuSideSpace() {
   g_zenv.ppu->cameraLockShiftY = IntMax(-budget_y, IntMin(budget_y, g_zenv.ppu->cameraLockShiftY));
   g_camera_lock_shift_x = g_zenv.ppu->cameraLockShiftX;
   g_camera_lock_shift_y = g_zenv.ppu->cameraLockShiftY;
+  // The sprite fold travels with the lock only while the widescreen corrections are on; off, both the OAM
+  // writer and the renderer keep the fixed fold they always had.
+  g_oam_tall_fold_shift = (enhanced_features0 & kFeatures0_WidescreenVisualFixes) ? g_camera_lock_shift_y : 0;
+  g_zenv.ppu->tallFoldShift = g_oam_tall_fold_shift;
   // Per-frame visible band widths, for the sprite band classifier: the rendered view spans
   // [-g_render_extra_left, 256 + g_render_extra_right] in stock-screen coordinates.
   g_render_extra_left = (int)g_zenv.ppu->extraLeftCur;
   g_render_extra_right = (int)g_zenv.ppu->extraRightCur;
   g_render_extra_top = (int)g_zenv.ppu->extraTopCur;
   g_render_extra_bottom = (int)g_zenv.ppu->extraBottomCur;
+}
+
+// Hands the renderer the iris edges for the next content row, moved with the camera lock so the circle
+// stays on the player the scene shows, or leaves the 8-bit register values when it is not a wide iris
+// frame. |line| is the draw loop's index: the row drawn next is that line less the top budget. Counting
+// from the loop keeps the extra rows past the table's end outside the circle, where HDMA has stopped
+// and would otherwise leave its last pair standing.
+static void SetIrisWideWindow(int line) {
+  int row = line - (int)g_zenv.ppu->extraTopBottom;  // the content row the next transfer draws
+  int left, right;
+  g_zenv.ppu->window1Wide = GameHook_IrisWideWindow(row, g_zenv.ppu->cameraLockShiftX, g_zenv.ppu->cameraLockShiftY, &left, &right);
+  if (g_zenv.ppu->window1Wide) {
+    g_zenv.ppu->window1leftWide = (int16)left;
+    g_zenv.ppu->window1rightWide = (int16)right;
+  }
 }
 
 void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
@@ -612,6 +719,23 @@ void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
   if (g_zenv.ppu->extraLeftRight != 0 || g_zenv.ppu->extraTopBottom != 0 || render_flags & kPpuRenderFlags_Height240)
     ConfigurePpuSideSpace();
 
+  // Indoors: black out the ceiling past a room's walls (hide_space_beyond_walls.c). Asked per frame
+  // because PpuBeginDrawing just reset the flags, so the overworld never carries it. The ceiling words
+  // make the PPU draw those tiles as the gap sentinel, and BlackBackdrop renders the sentinel black.
+  {
+    const uint16 *fill = NULL;
+    int fillWords = GameHook_HideSpaceBeyondWallsFill(&fill);
+    PpuSetHiddenTiles(g_zenv.ppu, fill, fillWords);
+    if (fillWords) g_zenv.ppu->renderFlags |= kPpuRenderFlags_BlackBackdrop;
+  }
+
+  // A still picture that fills the original frame (the title, the file screen) has one tilemap screen
+  // and nothing past it, so the space around it sampled the picture again. Hand the PPU the layers that
+  // should carry the screen's own background block out there instead (fixed_picture_edges.c). Asked per
+  // frame, like the hide above, because PpuBeginDrawing just cleared the request.
+  PpuSetEdgeTiles(g_zenv.ppu, GameHook_FixedPictureEdgeLayers());
+  GameHook_TitleMaskLayers(g_zenv.ppu);
+
   // Total physical buffer rows = base 224 + top budget + bottom budget. The top budget is the tall extra
   // per side (extraTopBottom); the bottom budget matches it for tall, else the legacy +16 (extend_y). This
   // MUST equal g_snes_height (emscripten_main.c) or ppu_runLine overruns the texture. V == 0 ⇒ 224 or 240.
@@ -637,6 +761,41 @@ void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
     for (int s = 0; s < 128; s++)
       g_zenv.ppu->oamIsPlayer[s] = g_oam_player[s];
   }
+  // Sprites placed for the base frame on a frame whose scene the camera lock shifts: they keep their place.
+  g_zenv.ppu->lockShiftSomeFixed = GameHook_LockFixedSlots(g_zenv.ppu->oamLockFixed);
+
+  // The iris writes its circle to the window through this indirect table. On the frames that widen it,
+  // each transferred line also hands the renderer the circle's unclamped edges (iris_wide.c).
+  // A tall view draws rows before the picture; the tables HDMA feeds describe the picture's own lines, so
+  // the transfers wait for it. Those rows belong to no line of the table, so window 1 is opened across
+  // them first: left at 0 and right at the last column is the same as no window at all, where the stale
+  // pair the channel happened to hold could be a one column slit, which is what leaked down the screen.
+  const int hdma_first_line = GameHook_HdmaWaitsForPicture() ? topBudget : 0;
+  if (hdma_first_line) {
+    // Where the window carries the scene's own effect, opening it leaves those rows undarkened. Push
+    // the table's first line into the registers and put the channels back, so the band holds the
+    // picture's first line and the picture still starts from it.
+    bool held = false;
+    if (GameHook_HdmaBandHoldsFirstLine() && (hdma_chans[0].table || hdma_chans[1].table)) {
+      SimpleHdma save0 = hdma_chans[0], save1 = hdma_chans[1];
+      SimpleHdma_DoLine(&hdma_chans[0]);
+      SimpleHdma_DoLine(&hdma_chans[1]);
+      hdma_chans[0] = save0, hdma_chans[1] = save1;
+      held = true;
+    }
+    if (!held) {
+      zelda_ppu_write(WH0, 0);
+      zelda_ppu_write(WH1, 0xff);
+    }
+  }
+
+  bool iris_wide = false;
+  if (g_zenv.ppu->extraLeftCur | g_zenv.ppu->extraRightCur | g_zenv.ppu->extraTopCur | g_zenv.ppu->extraBottomCur) {
+    for (int c = 0; c < 2; c++)
+      if ((hdma_chans[c].table == kSpotlightIndirectHdma || hdma_chans[c].table == kHdmaTableForPrayingScene)
+          && hdma_chans[c].ppu_addr == (uint8)WH0)
+        iris_wide = true;
+  }
 
   for (int i = 0; i <= height; i++) {
     if (i == 128 + topBudget && irq_flag) {  // file-select BG3 split fires at content line 128 (shifted down by the top budget)
@@ -650,8 +809,12 @@ void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
       }
     }
     ppu_runLine(g_zenv.ppu, i);
-    SimpleHdma_DoLine(&hdma_chans[0]);
-    SimpleHdma_DoLine(&hdma_chans[1]);
+    if (i >= hdma_first_line) {
+      SimpleHdma_DoLine(&hdma_chans[0]);
+      SimpleHdma_DoLine(&hdma_chans[1]);
+    }
+    if (iris_wide)
+      SetIrisWideWindow(i);
   }
   // After the draw, so the OAM and the rasteriser's own account of what it drew describe the same frame.
   GameHook_CaptureOamFrame();
@@ -1152,22 +1315,26 @@ static const uint32 kGateWordParityMask[kGateWordCount] = {
   kFeatures0_DimFlashes | kFeatures0_DisableTelepathy | kFeatures0_CameraLockToViewport |
   kFeatures0_PerGroupVolume | kFeatures0_PauseOffscreenAI | kFeatures0_ExtendedRendering |
   kFeatures0_LinearWorldTilemap | kFeatures0_Ultrawide | kFeatures0_TallRender | kFeatures0_SmoothTransitions |
-  kFeatures0_InventoryReorder | kFeatures0_SecondaryItemSlots | kFeatures0_AutoSkipDialog,
+  kFeatures0_InventoryReorder | kFeatures0_SecondaryItemSlots | kFeatures0_AutoSkipDialog |
+  kFeatures0_PrefillFileName,
 
   // features1: all 32 split bug-fix bits (features_bugfixes.h) are affectsVanillaParity: true in
   // bundle-fixes.generated.ts and the word is fully packed with no unused bits, so the mask is total.
   0xFFFFFFFFu,
 
-  // features2: the 10 split bug-fix bits in use (bits 0-9), plus the hand-authored bits allocated downward
+  // features2: the 11 split bug-fix bits in use (bits 0-10), plus the hand-authored bits allocated downward
   // from bit 31 (features.h). Both widescreen bits change what the game computes — the play area moves the
   // sprite spawn, spawner-activity and room-clear windows off the original 256x224 area, and the idle-AI
   // bit lets a sprite outside the active section keep animating — so Vanilla Safe forces both off.
+  // AllowDiving is left out on purpose: it rides with the extra dungeon, which is added content, and
+  // that dungeon's water room cannot be crossed without it.
   kFeatures2_SkipRoomTagsDuringStaircaseTransition | kFeatures2_SkipDungeonUpdateAfterModuleExit |
   kFeatures2_KholdstareShellPaletteRange | kFeatures2_PreserveGlovesColorOnGearReload |
   kFeatures2_SuperBombClearFollowerOnExplode | kFeatures2_SuperBombPaletteOnFrameZero |
   kFeatures2_FixPortalMusicRestart | kFeatures2_IcePortalRevealChime |
   kFeatures2_WidescreenLinkHideViaOffscreenY | kFeatures2_SaveMenuLockoutAfterMedallionFix |
-  kFeatures2_WidescreenPlayArea | kFeatures2_WidescreenIdleAI,
+  kFeatures2_FixBunnyPaletteAfterMap |
+  kFeatures2_WidescreenPlayArea | kFeatures2_WidescreenIdleAI | kFeatures2_TitleOverride,
 
   // features3: cheats (the master + all four per-category permission bits), the randomizer item-override
   // table, tracker notifications, the custom player sprite/palette, and the HUD override all diverge
@@ -1178,11 +1345,23 @@ static const uint32 kGateWordParityMask[kGateWordCount] = {
   // enable bit would be self-defeating.
   kFeatures3_CheatsEnabled | kFeatures3_CheatIgnoreCollision | kFeatures3_CheatItemGrant |
   kFeatures3_CheatStats | kFeatures3_CheatCombat | kFeatures3_ItemOverrides |
-  kFeatures3_TrackerNotifications | kFeatures3_PlayerSpriteOverride | kFeatures3_HudOverride,
+  kFeatures3_TrackerNotifications | kFeatures3_PlayerSpriteOverride | kFeatures3_HudOverride |
+  kFeatures3_ReceiptExport | kFeatures3_ReceiptMessages | kFeatures3_NpcOverrides |
+  kFeatures3_DropOverrides | kFeatures3_StandingOverrides | kFeatures3_ScriptedGrants | kFeatures3_CapacityProfile |
+  kFeatures3_ColoredRupees | kFeatures3_ItemSheen | kFeatures3_PrizeShuffle | kFeatures3_ShopOverrides |
+  kFeatures3_PondPlan | kFeatures3_GearArt | kFeatures3_DungeonItemGrants | kFeatures3_RetroBow |
+  kFeatures3_ArcheryNeedsBow | kFeatures3_DialogControls,
 
-  // features4 / features5: reserved — no bits allocated yet.
-  0,
-  0,
+  // features4 — the item-power switches, and the wish ponds' plan. Every bit is a divergence from the
+  // unmodified game, so all of them are stripped by Vanilla Safe.
+  kFeatures4_NoFairyCatching | kFeatures4_NoByrnaBarrierGuard | kFeatures4_CapeDoubleMagic |
+  kFeatures4_SilverArrowsBossOnly | kFeatures4_NoPowderFairy | kFeatures4_HammerWakesTablets |
+  kFeatures4_SwordlessMedallions | kFeatures4_PullableCurtains | kFeatures4_HammerHurtsLastFight |
+  kFeatures4_HammerBreaksSeal | kFeatures4_RodLightsDarkRoom | kFeatures4_MedallionLightsDarkRoom |
+  kFeatures4_RedCaneLightsDarkRoom | kFeatures4_WishPondPlan,
+
+  // features5: the capacity pickup bonus rewrites what a borrowed receipt pays out, so Vanilla Safe strips it.
+  kFeatures5_CapacityBonus,
 };
 
 // Host-side reactions that must fire the instant a gate word changes, keyed by gate-word index. Kept
@@ -1242,13 +1421,19 @@ static const CheatWramSlot kCheatWramSlots[] = {
 // clobber the byte and the very next frame writes it right back — nothing "reapplies cheats on load"
 // as a special case, because there is no load-specific code path here at all.
 static void SyncCheatWram(void) {
-  for (int i = 0; i < (int)(sizeof(kCheatWramSlots) / sizeof(kCheatWramSlots[0])); i++) {
-    uint8 *byte = &g_ram[kCheatWramSlots[i].addr];
-    uint8 wanted = kCheatWramSlots[i].wanted();
-    if (*byte == wanted) continue;
-    *byte = wanted;
-    StateRecorder_RecordPatchByte(&state_recorder, kCheatWramSlots[i].addr, byte, 1);
-  }
+  for (int i = 0; i < (int)(sizeof(kCheatWramSlots) / sizeof(kCheatWramSlots[0])); i++)
+    ZeldaWriteCheatByte(kCheatWramSlots[i].addr, kCheatWramSlots[i].wanted());
+}
+
+// The single write primitive every cheat-owned WRAM byte goes through, whether it comes from the
+// table above or from a hook that has to decide more than one byte at a time (game-hooks'
+// CheatLighting_Sync). Writes only on mismatch and records the patch, so a replay reproduces the
+// same bytes frame-for-frame and an unchanged byte costs nothing.
+void ZeldaWriteCheatByte(uint16 addr, uint8 value) {
+  uint8 *byte = &g_ram[addr];
+  if (*byte == value) return;
+  *byte = value;
+  StateRecorder_RecordPatchByte(&state_recorder, addr, byte, 1);
 }
 
 // Copy each changed gate word into WRAM, mirror it into the emulator's RAM, and record the patch in the
@@ -1324,6 +1509,8 @@ bool ZeldaRunFrame(int inputs) {
       SyncCheatWram();
       // Same ordering requirement: reads the HUD-override gate SyncGateWords() just latched.
       HudOverride_Sync();
+      // Same again: the dark-room lighting cheat tests the master cheat switch this frame.
+      CheatLighting_Sync();
     }
   }
 

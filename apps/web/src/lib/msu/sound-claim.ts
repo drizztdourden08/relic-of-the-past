@@ -22,8 +22,8 @@ interface SoundClaim {
 const EMPTY_SOUND_CLAIM: SoundClaim = { low: 0, high: 0 };
 
 /**
- * The ids a claim can actually carry. Anything outside 0..63 is dropped rather than wrapped —
- * a typo'd id must claim nothing, not silently claim some unrelated sound.
+ * The ids a claim can actually carry. Anything outside 0..63 is dropped, never wrapped.
+ * A typo'd id must claim nothing, not silently claim some unrelated sound.
  */
 const claimableIds = (ids: Iterable<number>): number[] =>
   [...ids].filter((id) => Number.isInteger(id) && id >= 0 && id < CLAIM_BITS);
@@ -39,7 +39,7 @@ const soundClaimMask = (ids: Iterable<number>): SoundClaim => {
   return { low: low >>> 0, high: high >>> 0 };
 };
 
-/** The ids this manifest actually authors on a channel — the honest basis for its claim. */
+/** The ids this manifest actually authors on a channel, the honest basis for its claim. */
 const manifestSoundIds = (manifest: MsuPackManifest, channel: SoundChannel): number[] =>
   claimableIds((manifest.sounds?.[channel] ?? [])
     .filter((sound) => sound.layers.length > 0)

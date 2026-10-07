@@ -1,14 +1,5 @@
 /* @layer shared-game @kind logic */
-/**
- * Joins a live collection against its dataset counterpart by key.
- *
- * This is the direct generalization of `connection-audit-core.ts`'s two
- * halves (`buildBadFindings` for the reverse direction, `buildAddFindings`
- * for the forward one), lifted out of connections specifically so any
- * enumerable collection — edges, entrances, chests, spawns — gets the same
- * treatment through one `SetProbe` instead of its own bespoke pair of
- * functions.
- */
+/** Joins a live collection against its dataset counterpart by key, for any enumerable collection through one `SetProbe`. */
 import type { EntityKind, ScreenId } from '../../data/types';
 import type { ScreenObservations } from '../detection-types';
 import type { ComparisonStrategy, SetProbe } from './probe.types';
@@ -20,7 +11,7 @@ const compareSet = <K extends EntityKind, Item>(
   screenId: ScreenId | null,
 ): readonly SetDifference<K, Item>[] => {
   const live = probe.readLive(observations, screenId);
-  // Not read this pass — silence, not "the collection is empty".
+  // Not read this pass, so stay silent. It does not mean the collection is empty.
   if (!live.known) return [];
 
   const dataset = probe.readDataset(observations, screenId);
@@ -36,18 +27,15 @@ const compareSet = <K extends EntityKind, Item>(
 
     const proposed = probe.toProposed(item, observations, screenId);
     // The live evidence alone cannot become a valid record (e.g. a crossing
-    // whose destination has no screen of its own). `connection-audit-core.ts`
-    // used to drop this case silently — here it survives as its own status,
-    // carrying the original `item` so a strategy's `onUnresolvable` mapper
-    // can still act on it (see `difference.types.ts`).
+    // whose destination has no screen). It survives as its own status, carrying
+    // the original `item` so a strategy's `onUnresolvable` mapper can act on it.
     out.push(proposed === null
       ? { status: 'unresolvable', noun: probe.noun, key, item }
       : { status: 'missing-in-dataset', noun: probe.noun, key, proposed });
   }
 
-  // A flood-backed (non-enumerable) set can never prove a record is gone —
-  // it only ever proves what IS reachable — so only a `removable` probe may
-  // report an unmatched dataset record.
+  // A flood-backed (non-enumerable) set only proves what IS reachable, never
+  // that a record is gone, so only a `removable` probe may report an unmatched record.
   if (probe.removable) {
     for (const [key, record] of datasetByKey) {
       if (!liveKeys.has(key)) out.push({ status: 'unbacked-in-dataset', noun: probe.noun, key, record });

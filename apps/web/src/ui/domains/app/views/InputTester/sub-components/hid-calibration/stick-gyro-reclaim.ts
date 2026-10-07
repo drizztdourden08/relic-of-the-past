@@ -20,7 +20,7 @@ interface GyroReclaimRefs {
    *  since claimed. */
   gyroExcludedBytesRef: React.MutableRefObject<Set<number>>;
   /** Set by the caller when stick recording starts (Date.now()), read here to
-   *  gate the reclaim on elapsed time rather than sample count. */
+   *  gate the reclaim on elapsed time, not sample count. */
   stickCaptureStartedAtRef: React.MutableRefObject<number>;
   /** Reclaim runs at most once per stick capture; the caller resets this to
    *  false when a new capture starts. */

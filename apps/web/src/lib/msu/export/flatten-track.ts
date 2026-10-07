@@ -22,7 +22,7 @@ interface FlattenOptions {
 interface FlattenedTrack {
   /** Planar stereo at 44100 Hz, ready for ./write-pcm. */
   channels: Float32Array[];
-  /** Frame to restart from — see the note on carriedLoopPoint. */
+  /** Frame to restart from. See the note on carriedLoopPoint. */
   loopSample: number;
 }
 
@@ -33,7 +33,7 @@ interface FlattenedTrack {
  * window IS one pass of the loop layer, and a player restarting at frame 0 hears exactly what
  * the engine would have played.
  *
- * The one exception is the case that matters most in practice — a track whose body is a single
+ * The one exception is the case that matters most in practice, a track whose body is a single
  * file with its own loop point (every classic pack track, and any authored track built the same
  * way). There, dropping the loop point would either lose the intro or make the intro repeat
  * forever. Instead that layer is rendered as ONE pass (no repeats) and its loop point is carried
@@ -46,14 +46,14 @@ interface FlattenedTrack {
  * A CROSSFADED loop layer is excluded, and that is the second half of the same decision. Live,
  * a crossfade abandons native looping entirely (loop-scheduler.ts re-triggers each pass by hand,
  * from the top of the file, ignoring its loop point), so carrying that loop point here would
- * export a behaviour the preview never produces — and rendering the layer as one pass would drop
+ * export a behaviour the preview never produces, and rendering the layer as one pass would drop
  * every crossfade with it. So a crossfaded track exports with loopSample 0, meaning: the whole
  * flattened window IS the loop, and a player restarting at frame 0 restarts the cycle.
  *
  * What that costs, stated plainly: the render window is one crossfaded cycle, so every crossfade
  * INSIDE the cycle is reproduced exactly, and the one join left uncovered is the wrap from the
  * window's last frame back to frame 0. There the outgoing pass is truncated mid-tail and the
- * opening pass begins at full gain — a hard cut, once per cycle, in the same place and of the
+ * opening pass begins at full gain, a hard cut once per cycle, in the same place and of the
  * same kind as the seam a zero-crossfade pack already has at every pass boundary. The
  * alternatives were worse: fading the last pass out and the first in would put an audible dip
  * at the loop point of every cycle, and folding the outgoing tail into the head of the stream is

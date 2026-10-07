@@ -1,8 +1,7 @@
 /* @layer shared-asset-extraction @kind logic */
 /**
- * Dialogue encoder — compresses dialogue strings back to ROM format.
- *
- * Ported from: upstream's text_compression.py compress_strings() + encoders
+ * Compresses dialogue strings back to ROM format.
+ * Ported from upstream's text_compression.py compress_strings() plus encoders.
  */
 import type { LanguageConfig } from './data/language-data';
 import { kLanguages } from './data/language-data';

@@ -1,15 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
- * The pack as files rather than as slots: what each one is, what plays it, and the edits that only
- * make sense at this level — retitling one, dropping new ones in, throwing one out.
- *
- * The drop zone lives here because a pack's files are a shared pool. Every slot and every sound
- * draws from the same set, so "add audio" belongs to the pack once, rather than to whichever row
- * happened to be expanded.
- *
- * Normalising the pack to one format also belongs here for the same reason: it is the whole pool
- * that gets converted, and afterwards it is this list that holds both halves until the superseded
- * originals are thrown out.
+ * The pack as files, not slots. The drop zone and the format conversion live here because the
+ * files are one shared pool that every slot and sound draws from.
  */
 import { useCallback, useMemo, useState } from 'react';
 import type { MsuPackManifest } from '@shared/types/msu-manifest';
@@ -39,6 +31,8 @@ interface MsuFilePanelProps {
   /** What a rename WRITES into. Null for a classic pack, which stays classic. */
   saveBase: MsuPackManifest | null;
   files: MsuFile[];
+  /** An installed pack: files play, and none can be added, renamed, converted or deleted. */
+  readOnly: boolean;
   onDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
   onReload: () => void;
 }
@@ -49,18 +43,15 @@ const EMPTY_PACK = 'Add some audio to this pack first.';
 /** Stable empty list, so a row with no uses is not handed a fresh array on every render. */
 const NO_USES: string[] = [];
 
-/**
- * The column headings, in the order the grid lays them out. They live beside the template that
- * sizes them so a column cannot be added to one and forgotten in the other.
- */
+// Column headings in grid order; keep in step with the template that sizes them.
 const COLUMNS = ['Name', 'Format', 'Size', 'Length', 'Rate', 'Repeats', 'Played by', ''];
 
 const MsuFilePanel = (props: MsuFilePanelProps) => {
-  const { pack, manifest, saveBase, files, onDeleteConfirm, onReload } = props;
+  const { pack, manifest, saveBase, files, readOnly, onDeleteConfirm, onReload } = props;
   const panel = useFilePanel({ pack, files, saveBase, reload: onReload });
   const audition = useFileAudition(pack, files);
   const usage = useFileUsage(manifest);
-  const covered = useSupersededFiles({ pack, files, reload: onReload });
+  const covered = useSupersededFiles({ pack, files, saveBase, reload: onReload });
   const { metadata, rows, deleteFile, report } = panel;
   const [supersededOnly, setSupersededOnly] = useState(false);
   const [optimizing, setOptimizing] = useState(false);
@@ -75,8 +66,7 @@ const MsuFilePanel = (props: MsuFilePanelProps) => {
     [rows, supersededOnly, covered.superseded],
   );
 
-  // Deleting a file a slot still names leaves that slot silent, so the confirmation says what is
-  // about to lose its audio rather than only what is about to be removed.
+  // Deleting a file a slot still names leaves that slot silent, so the confirmation says which.
   const confirmDelete = useCallback((fileName: string) => {
     const uses = usage.get(fileName) ?? NO_USES;
     const played = uses.length > 0 ? ` ${uses.join(', ')} will be left with nothing to play.` : '';
@@ -87,13 +77,12 @@ const MsuFilePanel = (props: MsuFilePanelProps) => {
     );
   }, [usage, onDeleteConfirm, deleteFile]);
 
-  // Same care in bulk: a converted pack re-points its manifest, so these are normally orphans —
-  // but one still named by a slot would take that slot's audio with it, and that is worth saying.
+  // These are normally orphans; one still named by a slot is re-pointed to its converted file first.
   const confirmRemoveSuperseded = useCallback(() => {
     const doomed = [...covered.superseded];
     const stillNamed = doomed.filter((name) => (usage.get(name) ?? NO_USES).length > 0);
     const played = stillNamed.length > 0
-      ? ` ${stillNamed.length} of them is still named by a slot or sound, which will be left with nothing to play.`
+      ? ` ${stillNamed.length} of them ${stillNamed.length === 1 ? 'is' : 'are'} still named by a slot or sound, which will play the converted file instead.`
       : '';
     onDeleteConfirm(
       'Remove Superseded Originals',
@@ -118,7 +107,7 @@ const MsuFilePanel = (props: MsuFilePanelProps) => {
         supersededCount={covered.count}
         supersededBytes={covered.totalBytes}
         optimizeBlockedBecause={metadata.length === 0 ? EMPTY_PACK : null}
-        busy={panel.busy || covered.removing}
+        busy={panel.busy || covered.removing || readOnly}
         onOptimize={() => setOptimizing(true)}
         onRemoveSuperseded={confirmRemoveSuperseded}
       />
@@ -127,14 +116,14 @@ const MsuFilePanel = (props: MsuFilePanelProps) => {
         accept={AUDIO_ACCEPT}
         label="Drop audio here to add it to the pack"
         hint={AUDIO_ACCEPT_HINT}
-        disabled={panel.busy}
+        disabled={panel.busy || readOnly}
         onDrop={panel.handleUpload}
       />
 
       <Field label="Find a file" hint="Matches the name, or a format on its own.">
         <TextInput
           type="text"
-          placeholder="intro, pcm…"
+          placeholder="intro, pcm..."
           value={panel.filter}
           onChange={(event) => panel.setFilter(event.target.value)}
         />
@@ -154,11 +143,10 @@ const MsuFilePanel = (props: MsuFilePanelProps) => {
         </Text>
       )}
 
-      {/* Until the first metadata read settles there is nothing truthful to show, so nothing is
-          shown — an empty state here would claim a pack with files has none. */}
+      {/* Nothing until the first metadata read settles: an empty state would claim the pack has no files. */}
       {!panel.ready ? null : shown.length === 0 ? (
         <EmptyState message={metadata.length === 0
-          ? 'This pack has no audio yet — drop some in above'
+          ? 'This pack has no audio yet. Drop some in above'
           : supersededOnly
             ? 'No superseded original matches this filter'
             : `No file matches "${panel.filter}"`}
@@ -185,6 +173,7 @@ const MsuFilePanel = (props: MsuFilePanelProps) => {
                 loading={audition.loading === file.name}
                 audition={audition.playing === file.name ? audition.audition : null}
                 busy={panel.busy}
+                readOnly={readOnly}
                 onPlay={audition.toggle}
                 onRename={panel.renameFile}
                 onDelete={confirmDelete}

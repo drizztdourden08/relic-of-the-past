@@ -14,7 +14,7 @@ const ADDR_SPRITE_PALETTE_MAIN = 0x9bd218;
 /** Auxiliary sprite palette data (168 words) */
 const ADDR_SPRITE_PALETTE_AUX1 = 0x9bd4e0;
 
-/** Auxiliary sprite palette 3 (84 words) — palette 0 */
+/** Auxiliary sprite palette 3 for palette 0 (84 words) */
 const ADDR_SPRITE_PALETTE_AUX3 = 0x9bd39e;
 
 /** Sword palette colors (4 swords × 3 colors = 12 words) */

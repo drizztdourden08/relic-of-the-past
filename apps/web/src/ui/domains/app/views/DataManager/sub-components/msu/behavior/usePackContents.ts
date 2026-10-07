@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind hook */
-/**
- * Everything the detail panel knows about the selected pack: its audio files, its numbered
- * slots, and its manifest. `reload` is exposed because every editing action changes what is on
- * disk and the panel has to re-read rather than guess.
- */
+// The selected pack's files, slots and manifest. `reload` re-reads after every edit.
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { MsuPackManifest } from '@shared/types/msu-manifest';
 import * as msuStore from '@app/lib/storage/msu-store';
@@ -21,8 +17,7 @@ const usePackContents = (pack: string | null) => {
 
   const reload = useCallback(() => { setGeneration((n) => n + 1); }, []);
 
-  // Only a pack SWITCH starts from nothing. A reload of the same pack keeps what is on screen —
-  // the contents stay up while the re-read is in flight, so `loaded` survives it.
+  // Only a pack SWITCH starts from nothing. A reload keeps the contents up, so `loaded` survives it.
   useEffect(() => { setLoaded(false); }, [pack]);
 
   useEffect(() => {

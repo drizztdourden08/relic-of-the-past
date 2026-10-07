@@ -1,12 +1,8 @@
 /* @layer shared-features @kind logic */
 /**
- * Works out the whole technical side of a music pack from the pack itself.
- *
- * Packs come in a handful of shapes — standard or extended track numbering, raw PCM or
- * Opus-compressed, and our own layered format — and each has exactly one correct set of values:
- * the format, the output sample rate, the channel count. Getting any of them wrong is audible (a
- * rate that disagrees with the audio plays it at the wrong speed), and there is no judgement
- * involved, so Auto reads them off the files and Manual is only there to override.
+ * Works out the technical side of a music pack from the pack itself. Each pack shape (standard
+ * or extended numbering, PCM or Opus, our layered format) has exactly one correct format, sample
+ * rate and channel count, and a wrong one is audible. Auto reads them off the files; Manual overrides.
  */
 import type { GameSettings } from '@shared/types/settings';
 import { DELUXE_TRACK_THRESHOLD } from '@shared/types/msu-manifest';
@@ -22,9 +18,8 @@ interface MsuPackProfile {
   /** Holds Opus-compressed audio, which is 48 kHz where raw PCM is 44.1 kHz. */
   hasOpuz: boolean;
   /**
-   * Carries a `pack.json`, so slots can stack several scheduled layers instead of one file. This
-   * is the defining property of a pack that has it — it says how playback works, where the other
-   * two only describe the audio — so it is what the format is reported as.
+   * Carries a `pack.json`, so slots can stack scheduled layers instead of one file. This decides
+   * how playback works (the other two only describe the audio), so it is the reported format.
    */
   isLayered: boolean;
 }
@@ -50,9 +45,8 @@ const detectMsuPackProfile = (tracks: MsuTrackInfo[], isLayered = false): MsuPac
 });
 
 /**
- * The format that matches a pack's shape. A layered pack reports as `msul` regardless of what
- * its audio happens to be, because the manifest is what governs playback; its track numbering
- * still applies on top and is carried separately (see `resolveMsuPlayback`).
+ * The format matching a pack's shape. A layered pack reports as `msul` whatever its audio is,
+ * because the manifest governs playback; track numbering is carried separately (`resolveMsuPlayback`).
  */
 const modeForPack = (pack: MsuPackProfile): GameSettings['enableMSU'] => {
   if (pack.isLayered) return 'msul';
@@ -66,21 +60,17 @@ const modeForPack = (pack: MsuPackProfile): GameSettings['enableMSU'] => {
 const isDeluxeMode = (mode: GameSettings['enableMSU']): boolean =>
   mode === 'deluxe' || mode === 'deluxe-opuz';
 
-/**
- * The sample rate a format's audio actually is, or null when there is no single answer: off, or
- * a layered pack, whose files may be any mixture of formats and are each resampled anyway.
- */
+/** The sample rate a format's audio is, or null when there is no single answer (off, or a layered pack whose files are resampled anyway). */
 const requiredSampleRate = (mode: GameSettings['enableMSU']): number | null => {
   if (mode === 'false' || mode === 'msul') return null;
   return mode === 'opuz' || mode === 'deluxe-opuz' ? OPUS_SAMPLE_RATE : PCM_SAMPLE_RATE;
 };
 
 /**
- * In Auto every technical value is derived: the mode from the pack's shape, the rate from its
- * audio format, stereo because MSU audio always is, and the buffer left at a safe default since
- * it depends on the machine rather than the pack. Manual passes the user's own values straight
- * through, including a wrong combination — `detectMsuMismatch` is what warns them about it.
- * Vanilla Safe suppresses replacement music entirely, as it always has.
+ * Auto derives everything: mode from the pack's shape, rate from its audio format, stereo (MSU
+ * always is), buffer at a safe default since it depends on the machine, not the pack. Manual
+ * passes the user's values through, wrong combinations included (`detectMsuMismatch` warns).
+ * Vanilla Safe suppresses replacement music entirely.
  */
 const resolveAudioConfig = (settings: GameSettings, pack: MsuPackProfile | null): ResolvedAudioConfig => {
   const asIs: ResolvedAudioConfig = {
@@ -101,15 +91,14 @@ const resolveAudioConfig = (settings: GameSettings, pack: MsuPackProfile | null)
 };
 
 /**
- * A human-readable warning when manual settings disagree with what the chosen mode's audio
- * actually is — the condition the old C player only ever reported to stderr. Null when the
- * settings are consistent, when replacement music is off, or in Auto (which cannot disagree).
+ * A human-readable warning when manual settings disagree with the chosen mode's audio (the old
+ * C player only reported this to stderr). Null when consistent, off, or in Auto.
  */
 const detectMsuMismatch = (settings: GameSettings): string | null => {
   if (settings.msuConfigMode === 'auto' || settings.vanillaSafe) return null;
   const required = requiredSampleRate(settings.enableMSU);
   if (required === null || settings.audioFreq === required) return null;
-  return `${settings.enableMSU} packs are ${required} Hz — the output is set to ${settings.audioFreq} Hz, which plays them at the wrong speed.`;
+  return `${settings.enableMSU} packs are ${required} Hz, but the output is set to ${settings.audioFreq} Hz, which plays them at the wrong speed.`;
 };
 
 /** Whether replacement music plays at all, and in which numbering, once everything is resolved. */

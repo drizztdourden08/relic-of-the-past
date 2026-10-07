@@ -1,11 +1,7 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Numeric screen/room indices → dataset screen ids, progress-aware. Display and
- * traversal both key on screen ids, but the game only speaks indices; room
- * indices additionally collide across the dataset (e.g. room 0x55 is BOTH 'dam'
- * and a castle's secret passage), so interior resolution prefers candidates
- * sharing the SOURCE screen's world, then its location.
- */
+// Numeric screen/room indices -> dataset screen ids, progress-aware. Room indices collide across
+// the dataset (room 0x55 is BOTH 'dam' and a castle's secret passage), so interior resolution
+// prefers candidates sharing the SOURCE screen's world, then its location.
 import type { GridPos } from '@shared/game/navigation';
 import type { VariantGameState } from '@shared/game/logic/queries/detection';
 import type { ScreenRecord } from '@shared/game/data';
@@ -21,13 +17,9 @@ const variantState = (): VariantGameState => ({
 });
 
 /**
- * Overworld screen index → traversal key.
- *
- * The key is the GAME's number, never a dataset id. Identity drives `visited`,
- * the frontier and the discovered graph, so routing it through the dataset let a
- * wrong or missing `roomIndex` decide whether two places were the same — and a
- * room the dataset didn't know became a hole in the graph. Names are resolved
- * separately, for logs only.
+ * Overworld screen index -> traversal key. That key is the GAME's number, never a dataset id:
+ * identity drives `visited`, the frontier and the graph, and a dataset-keyed identity let a
+ * wrong or missing `roomIndex` merge two places or drop a room. Names are for logs only.
  */
 const owScreenId = (idx: number): string => `ow:${idx}`;
 
@@ -43,25 +35,14 @@ const pickVariant = (list: ScreenRecord[]): ScreenRecord => {
 };
 
 /**
- * Interior room index → traversal key. Same rule as `owScreenId`: the game's
- * number is the identity.
- *
- * This used to resolve to a dataset id, disambiguated by the source screen's
- * world and location. That made the dataset load-bearing for traversal: two
- * interiors sharing a `roomIndex` swapped places, a room index with no entry
- * became unreachable, and the world of a node was read from a table instead of
- * from the game. `src` is kept in the signature because callers still pass their
- * own screen, but it no longer influences identity.
+ * Interior room index -> traversal key. Same rule as `owScreenId`: the game's number is the
+ * identity. `src` stays in the signature (callers pass it) but no longer influences identity.
  */
 /**
- * Which half of the room a landing tile sits in. One room SLOT can hold two
- * separate interiors side by side — room 0x122 is the psychic's hut on its left
- * half (entrance 101, light-world screen 0x11, lands at col 15) and the hut's
- * counterpart on its right (entrance 102, screen 0x51 = the same screen in the
- * other world, lands at col 47). The two halves do not connect, and the flood
- * knows it, but a node keyed on the room alone made them one place — so the
- * graph joined the two worlds through a hut. Quantising the landing tile keeps
- * them apart, and does the same for any room slot reused elsewhere.
+ * Which half of the room a landing tile sits in. One room SLOT can hold two separate interiors
+ * side by side (room 0x122: entrance 101 lands at col 15, entrance 102 at col 47, in different
+ * worlds). A node keyed on the room alone joined the two worlds through a hut; quantising the
+ * landing tile keeps them apart.
  */
 const REGION_SHIFT = 5;
 
@@ -69,21 +50,18 @@ const regionQualifier = (tile?: GridPos): string =>
   tile ? `@${tile.row >> REGION_SHIFT},${tile.col >> REGION_SHIFT}` : '';
 
 /**
- * Rooms the game leaves by RESTORING the overworld state it cached on the way in,
- * instead of looking the exit up by room — `LoadOverworldFromDungeon`,
- * core/zelda3/src/overworld.c:1791:
+ * Rooms the game leaves by RESTORING the overworld state it cached on the way in
+ * (`LoadOverworldFromDungeon`, core/zelda3/src/overworld.c:1791):
  *
  *   if (room != 0x104 && room < 0x180 && room >= 0x100) LoadCachedEntranceProperties();
  *
- * Several overworld doors share one such interior: the psychic's hut is entered
- * from lw-11 AND from lw-35, both through entrance id 101, landing on the same
- * tile. The game tells them apart by remembering the door, so the way out is
- * never ambiguous — and neither is it for us, once the node carries it.
+ * Several overworld doors share one such interior (lw-11 and lw-35 both use entrance 101),
+ * so the node has to carry the door it came in by.
  */
 const usesCachedEntrance = (roomId: number): boolean =>
   roomId >= 0x100 && roomId < 0x180 && roomId !== 0x104;
 
-/** The `^from` suffix of a node key, or '' — the cached entrance it was reached by. */
+/** The `^from` suffix of a node key, naming the cached entrance it was reached by, or ''. */
 const cachedEntranceOf = (screenId: string): string => {
   const at = screenId.indexOf('^');
   return at === -1 ? '' : screenId.slice(at);
@@ -92,11 +70,11 @@ const cachedEntranceOf = (screenId: string): string => {
 const interiorScreenId = (destRoom: number, landing?: GridPos, cameFrom?: string): string => {
   const base = `room:${destRoom}${regionQualifier(landing)}`;
   if (!usesCachedEntrance(destRoom) || !cameFrom) return base;
-  // Already qualified (a hop deeper into the same cave) — keep the original door.
+  // Already qualified (a hop deeper into the same cave), so keep the original door.
   return cameFrom.startsWith('^') ? `${base}${cameFrom}` : `${base}^${cameFrom}`;
 };
 
-/** In-room landing tile for an entrance (its spawn point — always walkable). */
+/** In-room landing tile for an entrance (its spawn point, always walkable). */
 const spawnTile = (entranceId: number, destRoom: number): GridPos | undefined => {
   const spawn = wasmGetEntranceSpawns()?.[entranceId];
   if (!spawn) return undefined;

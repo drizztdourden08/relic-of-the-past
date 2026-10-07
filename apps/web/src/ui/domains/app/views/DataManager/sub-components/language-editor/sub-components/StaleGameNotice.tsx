@@ -3,12 +3,12 @@
  * The running game is playing older text than the set on screen.
  *
  * Text reaches the emulator once, when a profile is loaded and the game boots
- * with the assets as they were on disk. Nothing re-reads them afterwards — not
- * a save, not a save state — so an edit saved mid-session is real, baked, and
+ * with the assets as they were on disk. Nothing re-reads them afterwards, not a
+ * save and not a save state, so an edit saved mid-session is real, baked, and
  * invisible until the profile is loaded again. Without this notice that reads
  * as the edit having done nothing, which is exactly how it was first hit.
  *
- * Reloading reboots the core, so the warning says so plainly rather than
+ * Reloading reboots the core, so the warning says so plainly instead of
  * leaving it to be discovered: the button is a shortcut, not a surprise.
  */
 import { Box, Button, Text } from '@ds/primitives';

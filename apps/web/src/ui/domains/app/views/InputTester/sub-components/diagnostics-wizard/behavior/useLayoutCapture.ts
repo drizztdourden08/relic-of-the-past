@@ -11,7 +11,7 @@
  * here is frozen and used for the remainder of the run, since nothing can
  * answer these questions again until the very end.
  *
- * Reported as stages rather than a single boolean because the window is long
+ * Reported as stages, not a single boolean, because the window is long
  * enough to see, and a spinner with no explanation looks like a hang.
  */
 import { useCallback, useState } from 'react';

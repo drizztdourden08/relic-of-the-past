@@ -2,9 +2,9 @@
 /**
  * One entry in the rail: a group's name and how much of it is written.
  *
- * A group with no slots is LISTED, not hidden — a dataset can legitimately come
+ * A group with no slots is LISTED, not hidden. A dataset can legitimately come
  * back with nothing in it, and a rail that silently drops the entry leaves a
- * translator hunting for a group that is simply empty today. So it says so, in
+ * translator hunting for a group that is empty today. So it says so, in
  * plain words, where its tally would be.
  */
 import { useCallback } from 'react';
@@ -15,7 +15,7 @@ type TextGroupRailItemProps = {
   group: TextGroup;
   /** Slots in this group the translator has written words for. */
   translated: number;
-  /** False when this group's overrides were not supplied — see `GroupTally`. */
+  /** False when this group's overrides were not supplied (see `GroupTally`). */
   showTally: boolean;
   selected: boolean;
   onSelect: (id: TextGroupId) => void;

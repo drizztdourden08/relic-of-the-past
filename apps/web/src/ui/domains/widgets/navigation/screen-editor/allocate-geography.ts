@@ -3,9 +3,9 @@
  * The renderer's ONLY source of a new area/location id.
  *
  * Nothing here derives an id: the request carries a display name and the main
- * process answers with an `Allocated<…>` record it numbered itself. The brand is
- * nominal, so a record assembled locally — from a slugified name, a hex index, or
- * anything else — is not assignable where these are expected.
+ * process answers with an `Allocated<...>` record it numbered itself. The brand is
+ * nominal, so a record assembled locally (from a slugified name, a hex index, or
+ * anything else) is not assignable where these are expected.
  */
 import type { AreaId, AreaRecord, LocationRecord } from '@shared/game/data';
 import type { Allocated } from '@shared/ipc/screen-editor-contract';

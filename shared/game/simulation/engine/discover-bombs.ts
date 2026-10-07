@@ -3,7 +3,7 @@
  * Cracked walls the run can blow open right now.
  *
  * The flood models one as an obstacle needing bombs, which only lets the player
- * stand ON it — the passage beyond stays shut, which is not what a bomb does. So
+ * stand ON it. The passage beyond stays shut, which is not what a bomb does. So
  * a reachable wall is offered as a TARGET instead: blast it, mark it floor, and
  * re-flood. One target per contiguous patch, since a single blast opens the lot.
  */
@@ -13,7 +13,7 @@ import { hasReachableNeighbor, DOOR_REACH_RADIUS } from './discover-reach';
 import type { Reached } from './discover-reach';
 import type { EngineState, SimTarget } from './state';
 
-/** Cracked-wall attrs (TileBehavior_FlaggableDoor) — solid until blasted. */
+/** Cracked-wall attrs (TileBehavior_FlaggableDoor), solid until blasted. */
 const BOMBABLE_ATTR_MIN = 0xf0;
 const BOMBABLE_ATTR_MAX = 0xff;
 
@@ -21,7 +21,7 @@ const discoverBombableWalls = (state: EngineState, obs: SimObservation, reached:
   const bundle = obs.grids;
   if (!bundle) return [];
   // A split-level room keeps its floor on the LAYER grids and the dual-layer flood
-  // reads those, not rawAttrGrid — so a wall scan that only looked at the raw grid
+  // reads those, not rawAttrGrid, so a wall scan that only looked at the raw grid
   // missed every cracked wall in such a room. Scan all of them.
   const grids = [bundle.rawAttrGrid, ...(bundle.dualLayerGrids ? [bundle.dualLayerGrids.layer0, bundle.dualLayerGrids.layer1] : [])];
   const roomId = bundle.screenIndex;

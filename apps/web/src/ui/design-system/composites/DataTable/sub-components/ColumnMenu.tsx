@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind component */
-/**
- * The ⋯ menu: the shared dropdown, fed by a pure entry builder. Nothing about
- * what the actions DO lives here — every one of them is a call into the
- * headless table hook, handed down as `actions`.
- */
+/** The ⋯ menu: the shared dropdown, fed by a pure entry builder. */
 import { DropdownMenu } from '../../DropdownMenu';
 import { buildColumnMenuItems } from '../behavior/column-menu-items';
 import type { RefObject } from 'react';
@@ -22,7 +18,7 @@ interface ColumnMenuProps {
   grow?: boolean;
   /** This column is already in the persistent fit-to-content mode. */
   fit?: boolean;
-  /** This column's field, and its reference-display state — see "Display as…". */
+  /** This column's field, and its reference-display state (the "Display as" submenu). */
   field?: FieldDescriptor;
   displayField?: string;
   resolveTargetFields?: IdRefTargetFieldResolver;

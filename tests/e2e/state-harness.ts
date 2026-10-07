@@ -1,15 +1,10 @@
 /* @layer tests @kind test */
 /**
- * Shared launch harness for the per-save-state specs in this folder.
+ * Shared launch harness for the per-save-state specs: boot the BUILT app on a
+ * named manual save with the navigation widget open, read the panel, shut down.
  *
- * Every one of them does the same three things: boot the BUILT app on a named
- * manual save with the navigation widget open, read facts out of the rendered
- * panel, shut down. Only the assertions differ, so the launching, the settle and
- * the teardown live here once.
- *
- * The `.sav` fixtures are ROM-derived and gitignored, so a clone without the
- * private vault has none of them. A missing fixture therefore SKIPS the spec
- * rather than failing it — a public checkout must stay green.
+ * The `.sav` fixtures are ROM-derived and gitignored. A missing fixture SKIPS
+ * the spec; a public checkout must stay green.
  */
 import { test } from '@playwright/test';
 import { _electron as electron } from 'playwright';
@@ -29,7 +24,7 @@ const FIXTURES = join(PROJECT_ROOT, 'tests', 'fixtures', 'save-states');
 /** How long the core needs before the widget reports live memory. */
 const SETTLE_MS = 16_000;
 
-/** Keyboard codes per SNES button — shared/input/keyboard-default.ts. */
+/** Keyboard codes per SNES button, see shared/input/keyboard-default.ts. */
 const KEYS: Readonly<Record<string, string>> = {
   Up: 'ArrowUp', Down: 'ArrowDown', Left: 'ArrowLeft', Right: 'ArrowRight',
   A: 'KeyD', B: 'KeyS', X: 'KeyA', Y: 'KeyW', L: 'KeyQ', R: 'KeyE',
@@ -38,7 +33,7 @@ const KEYS: Readonly<Record<string, string>> = {
 
 interface StateReader {
   window: Page;
-  /** Bind the standard keyboard keys in the live input manager — see below. */
+  /** Bind the standard keyboard keys in the live input manager. See below. */
   enableKeyboard: () => Promise<void>;
   states: () => Promise<string[]>;
   awaitState: (match: RegExp, timeoutMs?: number) => Promise<string>;
@@ -56,17 +51,11 @@ interface StateReader {
 const hasFixture = (name: string): boolean => existsSync(join(FIXTURES, `${name}.sav`));
 
 /**
- * Make `press()` work whatever controller the machine happens to have.
- *
- * Input is gated on the ACTIVE PROFILE's device map by design: only a keyboard
- * whose keys the profile binds may drive the game (profile-devices.ts). On a
- * machine whose active profile is a gamepad, `allowed.keyboard` is false and the
- * key map is empty, so synthesized keystrokes reach the renderer and stop there.
- *
- * A permanent test must not depend on which pad the user last used, so this binds
- * the default keyboard layout into the live manager. It is an in-memory change in
- * the page under test — the user's stored profile is never touched — and it opens
- * exactly the one gate, leaving the rest of the input path real.
+ * Make `press()` work whatever controller the machine has. Input is gated on
+ * the ACTIVE PROFILE's device map (profile-devices.ts): on a gamepad profile,
+ * `allowed.keyboard` is false and synthesized keystrokes stop at the renderer.
+ * This binds the default keyboard layout in memory, in the page under test;
+ * the stored profile is never touched.
  */
 const enableKeyboard = async (window: Page): Promise<void> => {
   const pairs = Object.entries(KEYS).map(([button, code]) => [code, button]);
@@ -80,7 +69,7 @@ const enableKeyboard = async (window: Page): Promise<void> => {
     im.allowed = { ...im.allowed, keyboard: true };
     return im.keyboardMap.size;
   }, pairs as [string, string][]);
-  if (bound === 0) throw new Error('no __inputManager on the page — cannot drive input');
+  if (bound === 0) throw new Error('no __inputManager on the page, so input cannot be driven');
 };
 
 const buildReader = (window: Page): StateReader => ({
@@ -103,12 +92,9 @@ const buildReader = (window: Page): StateReader => ({
   },
 });
 
-/**
- * Launch on `name`, hand the body a reader, always close. Skips (never fails)
- * when the build or the private fixture is absent.
- */
+/** Launch on `name`, hand the body a reader, always close. Skips when the build or fixture is absent. */
 const withState = async (name: string, body: (r: StateReader) => Promise<void>): Promise<void> => {
-  test.skip(!existsSync(MAIN_JS), 'dist/electron/main.js missing — run `npx electron-vite build` first');
+  test.skip(!existsSync(MAIN_JS), 'dist/electron/main.js missing. Run `npx electron-vite build` first');
   test.skip(!hasFixture(name), `save-state fixture ${name}.sav is not present (private vault)`);
   await ensureTestProfile();
   const app: ElectronApplication = await electron.launch({

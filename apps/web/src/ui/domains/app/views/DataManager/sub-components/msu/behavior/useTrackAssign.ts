@@ -1,10 +1,7 @@
 /* @layer renderer-components @kind hook */
 /**
- * Makes "assign this file to slot N" a real change to the pack rather than a UI state.
- *
- * The two pack shapes need opposite treatment. A classic pack has no manifest, so the FILENAME
- * is the assignment and the file has to be renamed; a layered pack's manifest is the assignment,
- * so its files must be left alone or every other layer referencing them breaks.
+ * "Assign this file to slot N" as a change on disk. Classic packs have no manifest, so the
+ * FILENAME is the assignment and the file is renamed; a layered pack's manifest is, so files stay.
  */
 import { useCallback, useState } from 'react';
 import type { MsuPackManifest } from '@shared/types/msu-manifest';
@@ -39,7 +36,7 @@ const useTrackAssign = (params: TrackAssignParams) => {
     if (!fileName) {
       if (!occupant) return { success: true, message: `Slot ${trackNum} was already empty` };
       const parked = await parkFile(pack, occupant, taken);
-      return { success: true, message: `Slot ${trackNum} cleared — the audio is still in the pack as "${parked}"` };
+      return { success: true, message: `Slot ${trackNum} cleared. The audio is still in the pack as "${parked}"` };
     }
 
     const target = canonicalTrackName(namePrefixOf(names, pack), trackNum, extensionOf(fileName));
@@ -50,7 +47,7 @@ const useTrackAssign = (params: TrackAssignParams) => {
     }
     if (fileName === target) {
       const parked = await parkFile(pack, occupant, taken);
-      return { success: true, message: `Slot ${trackNum} now plays "${fileName}" — "${occupant}" moved aside as "${parked}"` };
+      return { success: true, message: `Slot ${trackNum} now plays "${fileName}". "${occupant}" moved aside as "${parked}"` };
     }
     // A true swap, so neither file is lost: the displaced audio takes the name the
     // newly-assigned file gave up, which keeps it visible in the pack.

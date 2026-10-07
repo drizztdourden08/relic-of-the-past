@@ -1,15 +1,10 @@
 /* @layer tests @kind test */
 /**
- * `generateEnumTypes`'s explicit `root` parameter — the fix for a real
- * production crash. Its default guess (a path relative to THIS script's own
- * file) is only correct for the CLI running from its real, unbundled location;
- * `enumeration-writer.ts` runs from a bundled `dist/electron/main.js`, where
- * `import.meta.url` resolves to the bundle's own location instead — a
- * different directory depth in dev, an electron-vite production build and a
- * packaged app. The guess landed on a nonexistent `dist/shared/...` path and
- * crashed every production launch (`ERR_MODULE_NOT_FOUND`). This proves an
- * explicit root is honoured instead of the guess, using a temp workspace whose
- * location cannot possibly match the script's own by accident.
+ * `generateEnumTypes`'s explicit `root` parameter, the fix for a production
+ * crash. Its default guess is relative to THIS script's file, which is wrong
+ * from the bundled `dist/electron/main.js` (`import.meta.url` resolves to the
+ * bundle), so every production launch hit `ERR_MODULE_NOT_FOUND`. This proves
+ * an explicit root wins, in a temp workspace that cannot match the guess.
  */
 import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -17,10 +12,9 @@ import { join } from 'node:path';
 import { describe, it, expect, afterEach } from 'vitest';
 import { generateEnumTypes } from '../../../scripts/generate-enum-types.mjs';
 
-// buildGeneratedTypesSource requires at least one row per category it knows
-// about, so the fixture seeds a minimal one-row stand-in for every category —
-// `world` carries the two values this test actually reads back, since it's
-// the one that would give away a fallback to the real committed file.
+// buildGeneratedTypesSource needs one row per category, so the fixture seeds
+// a stand-in for each; `world` carries the two values read back, since it
+// would give away a fallback to the real committed file.
 const FIXTURE_ENUMERATION = `
 export const ALL_ENUMERATION = [
   { id: 'enum-000', category: 'world', value: 'light', label: 'Light World', appliesTo: ['screen'] },
@@ -45,7 +39,7 @@ afterEach(() => {
   tempRoot = null;
 });
 
-describe('generateEnumTypes(root) — an explicit root wins over the file-relative guess', () => {
+describe('generateEnumTypes(root) lets an explicit root win over the file-relative guess', () => {
   it('reads and writes under the GIVEN root, not the script\'s own directory', async () => {
     tempRoot = mkdtempSync(join(tmpdir(), 'enum-root-'));
     // The seed is read from the synced record tree; the generated union is
@@ -57,7 +51,7 @@ describe('generateEnumTypes(root) — an explicit root wins over the file-relati
     writeFileSync(join(recordsDir, 'enumeration.ts'), FIXTURE_ENUMERATION);
 
     // Every OTHER category this repo's real ALL_ENUMERATION carries is absent
-    // from this fixture on purpose — proving the read really came from the
+    // from this fixture on purpose, which proves the read really came from the
     // temp root, not a fallback to the real committed file.
     const outputPath = await generateEnumTypes(tempRoot);
 
@@ -66,7 +60,7 @@ describe('generateEnumTypes(root) — an explicit root wins over the file-relati
     expect(generated).toContain("type World = 'light' | 'dark';");
   });
 
-  it('fails cleanly rather than silently reading some other root\'s data when the given root has none', async () => {
+  it('fails instead of silently reading some other root\'s data when the given root has none', async () => {
     tempRoot = mkdtempSync(join(tmpdir(), 'enum-root-empty-'));
     await expect(generateEnumTypes(tempRoot)).rejects.toThrow();
   });

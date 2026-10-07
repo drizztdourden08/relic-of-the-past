@@ -1,15 +1,8 @@
 /* @layer renderer-lib @kind logic */
 /**
- * Haptic Bridge — connects C game events to the haptic service and controller vibration.
- *
- * Uses a vibration mixer to coalesce overlapping events into a single active
- * envelope. This prevents flooding the HID worker (which opens/writes/closes
- * the device synchronously per request).
- *
- * Merge strategy:
- *  - Motor OFF + new event → send immediately
- *  - Motor ON + stronger event → interrupt with new pattern
- *  - Motor ON + same/weaker event → extend active duration (motor already running)
+ * Connects C game events to controller vibration. Overlapping events are coalesced into one
+ * active envelope so the HID worker (synchronous open/write/close per request) is not flooded:
+ * motor off -> send now; stronger event -> interrupt; same/weaker -> extend the duration.
  */
 
 import { getHapticIntensityScale, handleHapticEvent, setVibrateFunction, updateHapticSettings } from '@shared/input/haptics';
@@ -28,17 +21,13 @@ import * as controllersStore from './controllers-store';
 
 let initialized = false;
 
-// ─── Per-profile haptics gate ───
-// A single on/off switch for the active profile (see GameSettings.hapticsEnabled),
-// rather than a hand-curated per-device list. When on, targeting still narrows to
-// specific devices — but the device set comes from the profile's own mappings
-// (InputManager.allowed.gamepadKeys, kept live by setProfile), read fresh on every
-// send so a profile switch or a rebind takes effect immediately.
+// One on/off switch for the active profile (GameSettings.hapticsEnabled). When on, targeting
+// narrows to the profile's own mapped devices (InputManager.allowed.gamepadKeys), read fresh on
+// every send so a profile switch or rebind applies immediately.
 let hapticsProfileEnabled = true;
 const deviceHapticsEnabled = (deviceKey: string): boolean =>
   hapticsProfileEnabled && getInputManager().allowed.gamepadKeys.has(deviceKey);
 
-// ─── Vibration Mixer State ───
 
 /** Timestamp (performance.now) when the current vibration is expected to end */
 let activeUntil = 0;
@@ -47,7 +36,6 @@ let activeIntensity = 0;
 /** Timer to reset state after vibration expires (for bookkeeping) */
 let decayTimer: ReturnType<typeof setTimeout> | null = null;
 
-// ─── Debug Counters ───
 let debugEventCount = 0;
 let debugDispatchCount = 0;
 let debugMergedCount = 0;
@@ -95,15 +83,14 @@ const dispatchVibration = (pattern: VibrationSegment[], gapMs?: number, minDurat
     activeUntil = now + effectiveDuration;
     scheduleDecay(effectiveDuration);
   } else {
-    // Motor already vibrating at this intensity — drop to prevent queue buildup
+    // Motor already vibrating at this intensity, so drop it to prevent queue buildup
     debugMergedCount++;
   }
 };
 
-// Apply a device's family strength curve, its user-set amplification override, and
-// (when the family needs one) a minimum-duration floor, resolved from the SDL type it
-// announced at connect (see controller-family-cache.ts). See vibration-shaping.ts for
-// the single place all three are combined.
+// Family strength curve, user amplification override and (where needed) a minimum-duration
+// floor, resolved from the SDL type announced at connect (controller-family-cache.ts). Combined
+// in vibration-shaping.ts.
 const shapeForDevice = (vendorId: number, productId: number, deviceKey: string, pattern: VibrationSegment[], minDurationExempt?: boolean): VibrationSegment[] => {
   const sdlType = recallControllerSdlType(vendorId, productId);
   if (!sdlType) return pattern;
@@ -114,20 +101,10 @@ const sendToController = (pattern: VibrationSegment[], gapMs?: number, minDurati
   const gap = gapMs ?? 0;
   const manager = getInputManager();
 
-  // Target the profile's own mapped devices, not whichever pads happened to have
-  // sent a state event this session: SDL only emits state on change, so a pad
-  // nobody has touched since launch never appears in an event-derived set even
-  // though it is fully connected. Connection comes from the device snapshot
-  // (hidDeviceCache), which is seeded on startup from the full controller list
-  // and kept live independently of any input event.
-  //
-  // Deliberately NOT gated on entry.hasRumble: that capability read comes from
-  // whichever backend SDL used to claim the device, and a device can end up on
-  // a backend that under-reports it even though the hardware can rumble (SDL
-  // itself, not this project's code, decides that). Attempting the send and
-  // letting the native call quietly no-op when the hardware genuinely can't
-  // rumble is strictly safer than a capability flag being able to silence the
-  // whole feature on a false reading.
+  // Target the profile's mapped devices, with connection from the device snapshot
+  // (hidDeviceCache): SDL only emits state on change, so an untouched pad never appears in an
+  // event-derived set. Deliberately NOT gated on entry.hasRumble: SDL's backend can under-report
+  // it, and a silent native no-op is safer than a false flag silencing the whole feature.
   for (const key of manager.allowed.gamepadKeys) {
     if (!deviceHapticsEnabled(key)) continue;
     const entry = manager.hidDeviceCache.find((d) => d.deviceKey === key);
@@ -139,10 +116,9 @@ const sendToController = (pattern: VibrationSegment[], gapMs?: number, minDurati
 };
 
 /**
- * Fires a real authored haptic pattern at a single device directly, bypassing the
- * mixer/cooldown/profile targeting -- this is a manual calibration-screen test, not
- * a game event, so it must always fire on demand. Goes through the exact same
- * scaling and shaping as a live event, so the felt strength matches gameplay.
+ * Fires an authored haptic pattern at one device directly, bypassing mixer/cooldown/profile
+ * targeting (a calibration-screen test must always fire). Same scaling and shaping as a live
+ * event, so the felt strength matches gameplay.
  */
 const previewHapticPattern = (deviceKey: string, patternId: HapticPatternId): Promise<VibrateResult> => {
   const entry = HAPTIC_PATTERNS[patternId];
@@ -162,7 +138,6 @@ const scheduleDecay = (ms: number): void => {
   }, ms);
 };
 
-// ─── Bridge Lifecycle ───
 
 const initHapticBridge = (settings: HapticSettings): void => {
   if (initialized) return;

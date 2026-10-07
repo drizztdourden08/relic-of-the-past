@@ -1,15 +1,13 @@
 /* @layer shared-storage @kind logic */
 /**
- * Pack editing over FileStore: the `.msul` manifest plus the create/rename/delete
- * operations the pack editor drives. The read-side listing stays in ./msu, which
- * re-exports this file so callers keep a single import site.
- *
- * The three text helpers (parse/serialize/new) are pure so the main-process handlers,
- * which speak Node fs rather than FileStore, share the same format and validation.
+ * Pack editing over FileStore: the `.msul` manifest plus create/rename/delete. The read-side
+ * listing stays in ./msu, which re-exports this file. The three text helpers (parse/serialize/new)
+ * are pure so the main-process handlers, which speak Node fs, share the same format and validation.
  */
 import type { FileStore } from '@shared/platform';
 import type { MsuPackManifest, MsuPackMeta } from '@shared/types/msu-manifest';
 import { MSUL_MANIFEST_NAME } from '@shared/types/msu-manifest';
+import { listPackEntries } from './msu-inventory';
 import { assertSafeName, packDir, packFile } from './msu-paths';
 
 const manifestPath = (pack: string): string => `${packDir(pack)}/${MSUL_MANIFEST_NAME}`;
@@ -21,11 +19,9 @@ const isManifest = (value: unknown): value is MsuPackManifest => {
 
 /** null for missing text, malformed JSON, or a version this build does not know. */
 /**
- * Rewrites a play mode this build no longer has into its current equivalent.
- *
- * There was briefly a separate `repeat` kind for a single self-looping file, before it turned out to
- * be what `loop` with one file already is. A pack saved while it existed must still open, and it must
- * open as the same thing it sounded like, which is now the `single` order.
+ * Rewrites a play mode this build no longer has. There was briefly a separate `repeat` kind for
+ * a single self-looping file, which is what `loop` with one file already is; a pack saved then
+ * must still open as the same thing, now the `single` order.
  */
 const migrateMode = (mode: { kind?: unknown }): unknown =>
   (mode?.kind === 'repeat' ? { kind: 'loop', order: 'single' } : mode);
@@ -66,19 +62,34 @@ const serializeManifest = (manifest: MsuPackManifest): string => {
   return `${JSON.stringify(stamped, null, 2)}\n`;
 };
 
-/** A fresh v1 manifest for an empty pack — the pack name doubles as the default title. */
+/** A fresh v1 manifest for an empty pack, using the pack name as the default title. */
 const newManifest = (pack: string, meta?: Partial<MsuPackMeta>): MsuPackManifest => {
   const now = Date.now();
   return { version: 1, meta: { name: pack, ...meta, createdAt: now, modifiedAt: now }, tracks: [] };
 };
 
-/** null for a classic pack (no manifest), and for one that is unreadable or an unknown version. */
-const readManifest = async (files: FileStore, pack: string): Promise<MsuPackManifest | null> =>
-  parseManifest(await files.readText(manifestPath(pack)));
+/**
+ * A pack's name is its folder. The name inside its settings follows the folder on every read and
+ * every write, so a renamed pack, its export and its store install all carry the same name.
+ */
+const withPackName = (manifest: MsuPackManifest, pack: string): MsuPackManifest =>
+  ({ ...manifest, meta: { ...manifest.meta, name: pack } });
 
-const writeManifest = (files: FileStore, pack: string, manifest: MsuPackManifest): Promise<void> => {
+/** null for a classic pack (no manifest), and for one that is unreadable or an unknown version. */
+const readManifest = async (files: FileStore, pack: string): Promise<MsuPackManifest | null> => {
+  const manifest = parseManifest(await files.readText(manifestPath(pack)));
+  return manifest && withPackName(manifest, pack);
+};
+
+/**
+ * The inventory is taken from the folder at write time, never from the caller: a manifest from
+ * memory only knows the files it was read with, and the folder has moved on since. That keeps
+ * the list a record of the pack, not a claim about it.
+ */
+const writeManifest = async (files: FileStore, pack: string, manifest: MsuPackManifest): Promise<void> => {
   assertSafeName(pack);
-  return files.writeText(manifestPath(pack), serializeManifest(manifest));
+  const inventory = await listPackEntries(files, pack);
+  await files.writeText(manifestPath(pack), serializeManifest({ ...withPackName(manifest, pack), files: inventory }));
 };
 
 const createPack = async (files: FileStore, pack: string, meta?: Partial<MsuPackMeta>): Promise<void> => {
@@ -97,6 +108,9 @@ const renamePack = async (files: FileStore, from: string, to: string): Promise<v
     const bytes = await files.readBytes(`${packDir(from)}/${name}`);
     if (bytes) await files.writeBytes(`${packDir(to)}/${name}`, bytes);
   }
+  // Rewritten so the name inside its settings becomes the new folder name.
+  const manifest = await readManifest(files, to);
+  if (manifest) await writeManifest(files, to, manifest);
   await files.remove(packDir(from));
 };
 

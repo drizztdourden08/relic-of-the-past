@@ -2,15 +2,15 @@
 /**
  * The fixed-text tab: the groups on the left, the chosen group's slots as rows.
  *
- * These are the words the engine draws in fixed places rather than in a message
- * box — every one of them has a stated budget and a surface that may not be able
- * to draw every letter, so the row states both rather than letting a translator
+ * These are the words the engine draws in fixed places, not in a message
+ * box. Every one of them has a stated budget and a surface that may not be able
+ * to draw every letter, so the row states both instead of letting a translator
  * find out from the running game.
  *
  * CAPPED, NOT VIRTUALIZED. One group runs to the high hundreds of slots and each
  * row holds a live field; drawing them all costs far more than a translator can
  * read at once. So a fixed number are drawn and the rest are stated plainly as
- * not drawn — the search is the way to them, which is also how anyone finds one
+ * not drawn. The search is the way to them, which is also how anyone finds one
  * slot among hundreds anyway.
  *
  * Presentational. The groups, the chosen one and the words arrive from above and
@@ -32,12 +32,14 @@ type TextGroupsTabProps = {
   activeGroup: TextGroupId;
   /** The translator's overrides for the active group; missing key = untranslated. */
   values: Record<string, string>;
+  /** An installed set: every slot shows, none can be changed. */
+  readOnly?: boolean;
   onSelectGroup: (id: TextGroupId) => void;
   onChangeValue: (key: string, value: string) => void;
 };
 
 const TextGroupsTab = (props: TextGroupsTabProps) => {
-  const { groups, activeGroup, values, onSelectGroup, onChangeValue } = props;
+  const { groups, activeGroup, values, readOnly = false, onSelectGroup, onChangeValue } = props;
 
   const [query, setQuery] = useState('');
   const [untranslatedOnly, setUntranslatedOnly] = useState(false);
@@ -66,7 +68,7 @@ const TextGroupsTab = (props: TextGroupsTabProps) => {
     <TextInput
       value={query}
       onChange={handleQuery}
-      placeholder="Search name, key or original…"
+      placeholder="Search name, key or original..."
       aria-label="Search text slots"
     />
   );
@@ -104,13 +106,14 @@ const TextGroupsTab = (props: TextGroupsTabProps) => {
               key={slot.key}
               slot={slot}
               value={values[slot.key] ?? ''}
+              readOnly={readOnly}
               onChangeValue={onChangeValue}
             />
           ))}
 
           {hidden > 0 && (
             <Text as="span" className="text-groups-tab__capped">
-              {`${hidden} more match but are not drawn — search to narrow the list down to them.`}
+              {`${hidden} more match but are not drawn. Search to narrow the list down to them.`}
             </Text>
           )}
         </ScrollArea>

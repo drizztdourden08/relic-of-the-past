@@ -1,7 +1,7 @@
 name: CI
 
 # Runs on demand (manual "Run workflow") and on contributor PRs only.
-# Direct pushes to master do NOT auto-run — release/verify by asking explicitly.
+# Direct pushes to master do NOT auto-run. Ask for a release or a verify run.
 on:
   workflow_dispatch:
   pull_request:
@@ -22,7 +22,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        # npm install (not ci) — the lockfile resolves differently across npm
+        # npm install instead of ci, because the lockfile resolves differently across npm
         # versions/platforms with the ensure-electron auto-fetch setup; install is tolerant.
         run: npm install --no-audit --no-fund
 

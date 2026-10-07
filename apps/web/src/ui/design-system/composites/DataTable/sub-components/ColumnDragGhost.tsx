@@ -1,22 +1,9 @@
 /* @layer renderer-components @kind component */
 /**
- * What the cursor carries while a column is being moved: the column itself —
- * its name, then the first few values under it — drawn as a narrow strip, so
- * the gesture reads as lifting a whole column out rather than dragging a label
- * around.
- *
- * It is a real element, parked offscreen, rather than anything drawn during the
- * drag: `setDragImage` has to be handed a node that is already laid out at the
- * instant `dragstart` fires, which rules out building one in response to the
- * drag. So every header keeps one ready and hands it over on the way past.
- *
- * The values go through the field kit for the field's kind — the same route the
- * real cells take — rather than being copied out of the rendered table. A kit
- * that renders a badge renders a badge here too, and nothing interactive is
- * duplicated onto a node whose only job is to be photographed.
- *
- * The header's controls (caret, ⋯) are left out: the strip says WHICH COLUMN is
- * moving, not what can be done to it.
+ * The drag image for a column: its name over its first few values. A real
+ * element parked offscreen, because `setDragImage` needs a node already laid
+ * out when `dragstart` fires. Values go through the field kit, the same route
+ * the real cells take.
  */
 import { forwardRef } from 'react';
 import { Box } from '../../../primitives/Box';
@@ -26,7 +13,7 @@ import type { FieldDescriptor } from '../../../data/schema/field-descriptor';
 
 interface ColumnDragGhostProps {
   label: string;
-  /** The column's dot-path — the same read every real cell in it does. */
+  /** The column's dot-path. Every real cell in it reads the same way. */
   path: string;
   field?: FieldDescriptor;
   /** Rows sampled off the top of the rendered order; already capped. */

@@ -1,11 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Builds a SimObservation from live game state. The real location comes from the
- * game UI-state buffer; the virtual location is that same spot expressed as a
- * known screen id (via screen detection) plus the player's pixel→tile conversion.
- * Inventory is the tracker's Set of item ids; flags are independent SRAM copies
- * for diffing.
- */
+// SimObservation from live game state: real location from the UI-state buffer, virtual location
+// as a screen id + tile, inventory from the tracker, flags as independent SRAM copies for diffing.
 import type { SimObservation, VirtualPlayer, FlagSnapshot, SimLocation, SimulatorPort, SimSprite, CombatContext } from '@shared/game/simulation';
 import type { EngineState } from '@shared/game/simulation';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
@@ -33,12 +28,10 @@ const tileOf = (map: MapState): GridPos => {
 };
 
 const virtualFrom = (map: MapState): VirtualPlayer => {
-  // The traversal key is the GAME's own number — room index indoors, overworld
-  // screen index outdoors. Screen DETECTION (which dataset entry this is) used to
-  // seed it, which meant a colliding room index put the virtual player in the
-  // wrong place before the first hop. Identity no longer depends on the dataset.
-  // Region-qualified indoors, so the live position keys the same node the exit
-  // that led here named — see interiorScreenId.
+  // The traversal key is the GAME's own number (room index indoors, overworld screen index
+  // outdoors), never a dataset entry: a colliding room index used to misplace the virtual
+  // player before the first hop. Region-qualified indoors so the live position keys the same
+  // node the exit that led here named; see interiorScreenId.
   const screenId = map.isIndoors
     ? interiorScreenId(map.roomIndex, tileOf(map))
     : `ow:${map.overworldScreenIndex}`;
@@ -50,7 +43,7 @@ const readFlags = (): FlagSnapshot => wasmReadFlagSnapshot() ?? emptySnapshot();
 
 const observe = (): SimObservation => {
   // Refresh the tracker's inventory/completed-check sets from WRAM so the
-  // observation reflects the latest state (notably right after a delivered item).
+  // observation reflects the latest state (e.g. right after a delivered item).
   // Non-forced: it re-reads every call but only logs/notifies on an actual change.
   pollInventoryState();
   const map = readMapState();
@@ -83,21 +76,13 @@ const observe = (): SimObservation => {
 
 export { observe };
 
-// ─── Shared runner-loop pieces ───────────────────────────────────────────────
-// The widget runner and the headless `--sim-run` driver both step the engine, and
-// both needed the same four things around it. They each had their own verbatim
-// copy (including the cache key), so a fix to one silently missed the other.
+// Shared by the widget runner and the headless `--sim-run` driver; keep one copy.
 
 /**
- * Traversal tokens the tile attributes actually gate on. `bombs` belongs here:
- * one interior attr is a bombable wall (`req: 'bombs'`, interior-attrs.ts), and
- * omitting the token left those tiles blocked forever rather than opening once
- * bombs are carried.
- *
- * NOTE the overworld tables carry NO bomb requirement at all, so a cave mouth
- * behind a bombable wall — the ice rod cave — is reachable regardless. That is a
- * revealed-secret mechanic (an overworld event flag), not a tile requirement, and
- * it is not modelled yet.
+ * Traversal tokens the tile attributes gate on. `bombs` belongs here: one interior attr is a
+ * bombable wall (`req: 'bombs'`, interior-attrs.ts). The overworld tables carry NO bomb
+ * requirement, so a cave mouth behind a bombable wall is reachable regardless; that is a
+ * revealed-secret event flag, not a tile requirement, and is not modelled yet.
  */
 const TILE_REQS: readonly string[] = ['lift.1', 'lift.2', 'lift.3', 'hammer', 'boots', 'flippers', 'hookshot', 'bombs'];
 
@@ -111,11 +96,7 @@ const floodItems = (state: EngineState): TileReq[] => {
   return [...items];
 };
 
-/**
- * Detect (flood + exits) the virtual player's current screen, cached per epoch.
- * Keyed by entry REGION (quantized tile) too — a room re-entered through a
- * different door floods a different region and needs its own detection.
- */
+/** Detect (flood + exits) the current screen, cached per epoch and entry REGION (a room re-entered through another door floods a different region). */
 const detectFor = (state: EngineState, cache: DetectCache): DetectedScreen | null => {
   const t = state.virtual.tile;
   const key = `${state.virtual.screenId}#${state.epoch}#${t.row >> 4},${t.col >> 4}`;

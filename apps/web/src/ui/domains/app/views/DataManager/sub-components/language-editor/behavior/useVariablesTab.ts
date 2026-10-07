@@ -1,26 +1,19 @@
 /* @layer renderer-components @kind hook */
 /**
- * The variables tab's own state: how the list is narrowed, how often each
- * variable is used, and the hardcoded-name scan.
- *
- * The SCAN IS LAZY. `findHardcoded` walks every text run of every entry against
- * every candidate phrase, which is far too much work to repeat on each render of
- * a tab nobody has asked to scan — so it runs when the dialog opens and not
- * before.
- *
- * Applying a report is ONE edit, not one per entry: the rewrites are collected
- * and written together, so the debounced save sees a single new set rather than a
- * few dozen half-applied ones.
+ * The variables tab's state: filtering, usage counts, and the hardcoded-name
+ * scan. The scan runs only when the dialog opens; `findHardcoded` walks every
+ * text run against every candidate phrase. Applying a report is one edit, so
+ * the debounced save sees a single new set.
  */
 import { useCallback, useMemo, useState } from 'react';
 import { findHardcoded } from '@shared/game/language';
-import { countVariableUses } from './editor-selectors';
+import { countVariableUses } from '@domains/packs/language/behavior/entry-selectors';
+import { filterVariables } from '@domains/packs/language/compounds/variables/variable-groups';
+import type { VariableFilter } from '@domains/packs/language/compounds/variables/variable-groups';
 import { acceptedOf, groupHardcoded } from './hardcoded-report';
 import { applyHardcoded } from './apply-hardcoded';
-import { filterVariables } from '../sub-components/variables/variable-groups';
 import type { DialogueEntry, Token, Variable } from '@shared/game/language';
 import type { HardcodedGroup } from './hardcoded-report';
-import type { VariableFilter } from '../sub-components/variables/variable-groups';
 
 type UseVariablesTabParams = {
   dialogue: DialogueEntry[];

@@ -2,31 +2,23 @@
 /**
  * Decoder for the words baked into the file-select and name-entry screens.
  *
- * Format. Those screens are not built from text at all — they are four prebuilt
- * tilemap uploads in ROM (SNES 0xCE7BF, 0xCE2A8, 0xCE63C, 0xCE456), each a chain
- * of "stripe" runs shaped `[address hi][address lo][control hi][control lo]
- * [payload]` and closed by a byte with bit 7 set. The control word carries the
- * payload length in its low 14 bits (`length + 1` bytes) and a fixed-source flag
- * at 0x4000, which means the payload is a single word repeated instead of a list.
- * A listed payload is a run of tilemap words, two bytes each.
+ * Format. Those screens are four prebuilt tilemap uploads in ROM (SNES 0xCE7BF, 0xCE2A8,
+ * 0xCE63C, 0xCE456), each a chain of "stripe" runs shaped `[address hi][address lo]
+ * [control hi][control lo][payload]`, closed by a byte with bit 7 set. The control word
+ * carries the payload length in its low 14 bits (`length + 1` bytes) and a fixed-source flag at
+ * 0x4000 (payload is one word repeated). A listed payload is a run of tilemap words, two bytes each.
  *
- * Glyphs. The letters are the dialogue font in its 8x16 arrangement, where the
- * font tile for character code `c` is `(c & 0x70) * 2 + (c & 0xf)` and its lower
- * half sits 0x10 later. Reading a run therefore means inverting that to recover
- * the character code and looking the code up in the language's own alphabet.
- * Runs made only of lower halves are dropped: they repeat the row above. Runs
- * whose tiles fall outside the 256-tile font sheet are frame and border art and
+ * Glyphs. The letters are the dialogue font in its 8x16 arrangement: the tile for character
+ * code `c` is `(c & 0x70) * 2 + (c & 0xf)`, lower half 0x10 later. Reading a run inverts that
+ * and looks the code up in the language's alphabet. Runs made only of lower halves repeat the
+ * row above and are dropped; runs whose tiles fall outside the 256-tile sheet are frame art and
  * are dropped too.
  *
- * A handful of codes sit past the end of the alphabet table because the font
- * sheet has more glyphs than the text compressor can encode; they are supplied
- * here. Code 0x5f is a narrow bar the roll uses as a capital I and the on-screen
- * keyboard reuses as a lowercase l — it is read as I, so the keyboard's l reads
- * as I in that one row.
+ * A few codes past the end of the alphabet table are supplied here (the sheet has more glyphs
+ * than the compressor can encode). Code 0x5f is a narrow bar the roll uses as capital I and the
+ * on-screen keyboard reuses as lowercase l; it is read as I.
  *
- * Limits. A run writes into a fixed span of video memory bounded by the runs and
- * frame art around it, so its own tile count is the room the screen gives that
- * line, and that is what is reported. It is read straight from the control word.
+ * Limits. A run's tile count, read from the control word, is the room the screen gives that line.
  */
 import type { RomData } from '../../rom/rom-types';
 import type { DecodedLine } from './types';

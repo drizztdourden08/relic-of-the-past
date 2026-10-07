@@ -1,10 +1,5 @@
 /* @layer renderer-components @kind component */
-/**
- * One row of the add-column tree, recursing into itself. A leaf is a button; a
- * branch is a hover target that opens its own panel of children, which are
- * again `FieldPickerNode`s — so nesting has no depth limit here, and the
- * schema's own recursion cap is what makes it terminate.
- */
+/** One row of the add-column tree, recursing into itself. The schema's recursion cap is what makes it terminate. */
 import { useRef, useState } from 'react';
 import { Box } from '../../../primitives/Box';
 import { Button } from '../../../primitives/Button';

@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
  * The only door into the dataset. Nothing outside this module ever imports a
- * data file directly — every read, everywhere in the app, goes through here.
+ * data file directly. Every read, everywhere in the app, goes through here.
  */
 import { all, get } from './registry';
 import { actorByGameId, checkByGameId, dungeonByGameId, itemByGameId, screenByGameId } from './indexes';
@@ -17,7 +17,7 @@ import type {
 // the RECORD's own `.id` field (and on generate-ids.ts's output) where the id
 // is actually produced, which is where the type safety is useful.
 //
-// The dataset is bundled and seeded synchronously before any getter can run —
+// The dataset is bundled and seeded synchronously before any getter can run, so
 // there is no load in flight and no missing-fetch case to stub, and a bundled
 // dataset lookup that misses on a REAL id is a bug. But two callers still
 // legitimately look up ids that are not in the registry: the simulation engine
@@ -25,9 +25,9 @@ import type {
 // deliberate default (shared/game/simulation/engine/traversal.ts), and its
 // screen-graph unit tests build small synthetic worlds (screen ids like 'A'/'B')
 // that were never meant to resolve against the real dataset. So a miss cannot
-// throw here. What the old sources/neutral.ts got wrong — and what actually made
-// this "actively harmful" — was echoing the id into `randomizerName`, so a
-// genuine name-lookup bug elsewhere in the app rendered a plausible-looking
+// throw here. The old sources/neutral.ts echoed the id into `randomizerName`,
+// which is what made it actively harmful: a genuine name-lookup bug elsewhere
+// in the app rendered a plausible-looking
 // label instead of something obviously broken. This keeps the same safe,
 // structurally-typed stand-in but never lets a name field look like real data.
 const NOT_REGISTERED = '(unregistered)';

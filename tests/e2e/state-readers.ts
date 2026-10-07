@@ -2,24 +2,17 @@
 /**
  * Reading the navigation widget as data.
  *
- * The widget renders inline-styled divs and spans, so there is nothing to query
- * by role or class — each fact needs its own anchor. Anchoring on the section
- * TITLE text ("States", "On this screen") rather than on styling means a restyle
- * cannot break these specs, only a rename can, and a rename is a real change.
+ * The widget renders inline-styled divs, so each fact is anchored on section
+ * TITLE text ("States", "On this screen"): a restyle cannot break these, only
+ * a rename can. Every poll asserts a predicate, never a fixed sleep.
  *
- * Every poll here asserts a predicate rather than sleeping a fixed time: the
- * emulator boots at whatever speed the machine allows, so a slow machine must
- * wait longer, not fail.
- *
- * ORDERING MATTERS. The flood is what derives the annotations, so `readGroups`,
- * `readRows`, `readTags` and `readCheckSummary` all report nothing until
- * `readFlood` has run. Call the flood first; reading annotations before it reads
- * as "the mechanic is missing", which looks exactly like the regression these
- * specs exist to catch.
+ * ORDERING MATTERS. `readGroups`, `readRows`, `readTags` and
+ * `readCheckSummary` report nothing until `readFlood` has run. Reading
+ * annotations first looks exactly like the regression these specs catch.
  */
 import type { Page } from 'playwright';
 
-/** Ceiling for any poll — generous, machine-dependent. */
+/** Generous ceiling for any poll, since timings are machine-dependent. */
 const POLL_TIMEOUT_MS = 60_000;
 const POLL_STEP_MS = 500;
 
@@ -27,7 +20,7 @@ const POLL_STEP_MS = 500;
 const STATE_WORDS = new Set(['open', 'shut', 'done', 'available', 'unreachable']);
 
 interface AnnotationRow {
-  /** Annotation kind, taken from the row's own tooltip (`chest at r54 c56 — …`). */
+  /** Annotation kind, taken from the row's own tooltip (`chest at r54 c56 - click to ...`). */
   kind: string;
   glyph: string;
   label: string;
@@ -67,11 +60,8 @@ const awaitState = async (window: Page, match: RegExp, timeoutMs = POLL_TIMEOUT_
 
 /** Run the flood and read the widget's own reachable/total once it stops moving. */
 const readFlood = async (window: Page): Promise<{ reachable: number; total: number }> => {
-  // dispatchEvent, NOT click(): Playwright's click path calls Chromium's
-  // Page.bringToFront() before dispatching the mouse event, which activates and
-  // raises the window on Windows and steals the focus of whoever is at the
-  // keyboard — defeating --no-focus, which only covers launch. A dispatched DOM
-  // click reaches the same React handler without touching the OS z-order.
+  // dispatchEvent, NOT click(): Playwright's click calls Page.bringToFront(),
+  // which raises the window on Windows and steals focus, defeating --no-focus.
   await window.getByTestId('nav-flood-btn').dispatchEvent('click');
   const label = window.locator('text=/^\\d+\\/\\d+ \\(\\d+%\\)$/').first();
   await label.waitFor({ state: 'visible', timeout: POLL_TIMEOUT_MS });
@@ -112,12 +102,9 @@ const parseRow = (title: string, spans: string[]): AnnotationRow => {
   return { kind, glyph, label, ...(detail ? { detail } : {}), ...(state ? { state } : {}) };
 };
 
-/**
- * Every annotation row under "On this screen". The rows are the only elements
- * carrying the "click to hide/show" tooltip, which makes it the reliable anchor.
- */
+/** Every annotation row under "On this screen", anchored on the "click to hide/show" tooltip. */
 const readRows = async (window: Page): Promise<AnnotationRow[]> => {
-  const rows = window.locator('div[title*=" — click to "]');
+  const rows = window.locator('div[title*=". Click to "]');
   const count = await rows.count();
   const out: AnnotationRow[] = [];
   for (let i = 0; i < count; i++) {
@@ -128,7 +115,7 @@ const readRows = async (window: Page): Promise<AnnotationRow[]> => {
   return out;
 };
 
-/** Decoded room-tag chips — the tooltip carries the raw tag byte. */
+/** Decoded room-tag chips. The tooltip carries the raw tag byte. */
 const readTags = async (window: Page): Promise<string[]> =>
   (await window.locator('span[title^="tag 0x"]').allTextContents()).map((t) => t.trim());
 

@@ -1,9 +1,8 @@
 /* @layer renderer-components @kind component */
 /**
- * RescanButton — the one screen-level control that tears down and
- * repopulates the controller list. Icon-only and small by design: it lives
- * in a screen header, never on an individual device card, because the
- * rescan it triggers is subsystem-wide rather than per-device.
+ * The one screen-level control that tears down and repopulates the controller
+ * list. Icon-only and small by design: it lives in a screen header, never on a
+ * device card, because the rescan is subsystem-wide, not per-device.
  */
 import { Icon as IconifyIcon } from '@iconify/react/offline';
 import refreshIcon from '@iconify-icons/lucide/refresh-cw';

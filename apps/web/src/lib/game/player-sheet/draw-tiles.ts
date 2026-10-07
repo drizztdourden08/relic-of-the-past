@@ -4,8 +4,8 @@
  *
  * Everything the studio draws reduces to this: a rectangular run of tiles taken from the
  * 16-column sheet, looked up through a resolved 16-colour row, optionally flipped on either
- * axis — the engine stores one copy of the art and sets flip bits in OAM, so a preview has
- * to be able to do the same. Palette index 0 is left untouched rather than written as
+ * axis. The engine stores one copy of the art and sets flip bits in OAM, so a preview has
+ * to be able to do the same. Palette index 0 is left untouched, not written as
  * transparent black, so overlapping quads compose the way sprites do.
  */
 import { decode4bppTile } from '@shared/asset-extraction/graphics';

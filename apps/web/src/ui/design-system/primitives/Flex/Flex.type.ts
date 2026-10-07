@@ -12,7 +12,7 @@ interface FlexProps extends HTMLAttributes<HTMLElement> {
   justify?: FlexJustify;
   wrap?: boolean;
   inline?: boolean;
-  /** Render as a different element (still a primitive — raw element lives here). */
+  /** Render as a different element (still a primitive; the raw element lives here). */
   as?: ElementType;
   children?: ReactNode;
 }

@@ -1,12 +1,9 @@
 /* @layer electron-main @kind logic */
 /**
- * Boot mediator — the one place that knows both the splash and the main window exist.
- *
- * The splash never references the main window and the main window never references the
- * splash; the renderer's shell-ready signal lands here and this module performs the
- * swap. Idempotent, because three separate things can trigger it: the signal itself, a
- * watchdog, and a dead renderer. A boot that goes wrong must still end with a visible
- * window — an invisible app is a worse failure than an ugly one.
+ * Boot mediator. This is the one place that knows both the splash and the main
+ * window exist. The renderer's shell-ready signal lands here and drives the swap.
+ * It is idempotent because the signal, a watchdog, and a dead renderer can all
+ * trigger it, and a boot that goes wrong must still end with a visible window.
  */
 import type { BrowserWindow } from 'electron';
 import { fadeWindow } from './fade-window';
@@ -41,11 +38,8 @@ const revealMainWindow = (): void => {
 
 /**
  * Hold `win` invisible until the renderer says its shell has settled.
- *
- * Opacity, not show:false — Chromium does not schedule requestAnimationFrame for a
- * hidden page, so a hidden window would mount React into a stalled frame loop. A shown
- * window at opacity 0 lays out and paints normally while compositing nothing the user
- * can see.
+ * Opacity, not show:false: Chromium does not schedule requestAnimationFrame for a
+ * hidden page, so React would mount into a stalled frame loop.
  */
 const armReveal = (win: BrowserWindow): void => {
   target = win;

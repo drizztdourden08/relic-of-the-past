@@ -15,20 +15,15 @@ import type {
 } from '../../apps/web/src/ui/design-system/composites/DataTable/DataTable.type';
 import type { TableColumn } from '../../apps/web/src/ui/design-system/data/table/types';
 
-// One reorder working proves almost nothing: the failure this file exists for
-// was that the FIRST drop landed and every drop after it was refused, so a
-// column returned to where it started the moment it was released. Everything
-// below therefore runs a gesture, checks it landed, and then runs ANOTHER one
-// against the list the first one produced.
+// The failure this file exists for: the FIRST drop landed and every drop after
+// was refused. So every case runs a gesture, checks it landed, then runs
+// ANOTHER against the list the first produced.
 //
-// The refusal itself was geometric and lives outside these functions — the
-// columns step aside to open the gap the carried one falls into, and a cursor
-// held still long enough for them to finish is left standing in that gap, on
-// bare grid no cell owns. A release over ground that accepts no drop is one
-// the browser cancels outright: `dragend` fires and `drop` never does. That
-// needs a real browser to see; what is pinned down here is the contract that
-// closes the hole — the surface behind the cells says yes to the drag, and a
-// cell's own drop is not answered twice.
+// The refusal was geometric: columns step aside to open a gap, and a cursor
+// held still ends up on bare grid no cell owns, which the browser cancels
+// (`dragend` fires, `drop` never does). That needs a real browser. Pinned here:
+// the surface behind the cells says yes to the drag, and a cell's own drop is
+// not answered twice.
 
 const PATHS = ['a', 'b', 'c', 'd', 'e'] as const;
 const COLUMNS: readonly TableColumn[] = PATHS.map((path) => ({ path }));
@@ -54,13 +49,13 @@ describe('two reorders in a row, each read off what the last one left', () => {
     expect(pathsOf(twice)).toEqual(['b', 'a', 'c', 'd', 'e']);
   });
 
-  it('is not the identity: two drags do not quietly undo each other', () => {
+  it('is not the identity: two drags do not silently undo each other', () => {
     const twice = reorderColumn(reorderColumn(COLUMNS, 'b', 4), 'd', 0);
     expect(pathsOf(twice)).not.toEqual(pathsOf(COLUMNS));
     expect(pathsOf(twice)).toEqual(['d', 'a', 'c', 'e', 'b']);
   });
 
-  it('reads the second drag off the NEW positions — the old index is a different column now', () => {
+  it('reads the second drag off the NEW positions because the old index is a different column now', () => {
     const once = reorderColumn(COLUMNS, 'a', 3);
     /* 'a' sat at 0 and now sits at 3; a second gesture that still thought it
        was at 0 would pick up 'b' instead and land somewhere else entirely. */
@@ -100,12 +95,9 @@ describe('the preview still tells the truth on the second gesture', () => {
   });
 });
 
-/*
- * The binding, driven straight. There is no DOM in this suite, so the hook is
- * rendered for its return value and never commits state — which is exactly the
- * condition the drop handler is built to survive: with no remembered path it
- * falls back to the one the drag itself is carrying.
- */
+// The hook, driven straight. No DOM, so it never commits state, which is the
+// condition the drop handler must survive: with no remembered path it falls
+// back to the one the drag carries.
 
 interface FakeEvent {
   event: DragEvent<HTMLElement>;
@@ -152,7 +144,7 @@ describe('the drop binding lands one gesture after another', () => {
     expect(pathsOf(columns)).toEqual(['e', 'b', 'c', 'd', 'a']);
   });
 
-  it('answers a cell drop once and once only — the surface behind it must not answer too', () => {
+  it('answers a cell drop once and once only, so the surface behind it must not answer too', () => {
     const drop = fakeEvent('a');
     renderDrag(() => {}).onDrop(2, drop.event);
     expect(drop.stopped()).toBe(1);
@@ -168,7 +160,7 @@ describe('the ground between the columns accepts the drag', () => {
     expect(hover.dropEffect()).toBe('move');
   });
 
-  it('claims no column of its own — the hovered slot stays whatever the cells said', () => {
+  it('claims no column of its own, so the hovered slot stays whatever the cells said', () => {
     const binding = renderDrag(() => {});
     const hover = fakeEvent('a');
     binding.onSurfaceHover(hover.event);

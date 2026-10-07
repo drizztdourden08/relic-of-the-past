@@ -1,12 +1,8 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * `wt pr <name> <url|number>` — record the pull request opened from this worktree.
- *
- * Bookkeeping only. Whether the work has landed is never read from here — that comes
- * from git (`merged` in git-status.mjs). The PR is recorded so a person can find the
- * discussion, and so `list` can show that a worktree reached the review stage.
- *
- * This command does not open, push or merge anything.
+ * `wt pr <name> <url|number>` records the pull request opened from this worktree.
+ * Bookkeeping only; whether the work landed comes from git (`merged` in
+ * git-status.mjs). Does not open, push or merge anything.
  */
 import { updateRegistry, findRecord } from '../registry.mjs';
 

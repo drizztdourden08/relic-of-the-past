@@ -1,11 +1,7 @@
 /* @layer renderer-components @kind logic */
 /**
- * Hands an exported pack to the user as a file.
- *
- * There is no save-file channel in the app's IPC surface — every other write goes into the
- * app's own data folder — so this uses the one path that already exists on both hosts: a blob
- * download. The desktop shell has no `will-download` handler, so Chromium's default applies
- * and the user gets a real save dialog; in a plain browser it lands in Downloads.
+ * A blob download, the one save path both hosts share (there is no save-file IPC channel). The
+ * desktop shell has no `will-download` handler, so Chromium shows a real save dialog.
  */
 
 const saveBytesAsFile = (fileName: string, bytes: Uint8Array): void => {

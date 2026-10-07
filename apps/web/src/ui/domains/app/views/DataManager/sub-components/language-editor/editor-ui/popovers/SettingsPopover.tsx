@@ -1,7 +1,8 @@
 /* @layer renderer-components @kind component */
 /**
  * What holds for the whole message: its palette, where its box sits, whether the
- * box is framed — and how much of the entry the editor may restructure.
+ * box is framed. It also settles how much of the entry the editor may
+ * restructure.
  *
  * The three display codes are not punctuation. The engine reads them in a
  * pre-pass and the last one in the message wins, so their position in the stream

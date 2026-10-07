@@ -25,39 +25,21 @@
 #include "num_util.h"
 #include "emscripten_internal.h"
 
-// Backdrop-black flag pairs with g_ppu_render_flags; only the API touches it.
-static bool g_force_backdrop_black = false;
-
 // ---------------------------------------------------------------------------
-// Live settings — callable from JS while game is running
+// Live settings, callable from JS while the game is running
 // ---------------------------------------------------------------------------
-
-// ─── Second-cartridge content ───
-// Whether the optional extra dungeon is offered. Separate from whether its data is
-// loaded: a player can own the second cartridge and still want an untouched overworld,
-// so this gates the entrance rather than the asset container. Opt-in — a host that never
-// calls this leaves the world exactly as the base game.
-EMSCRIPTEN_KEEPALIVE
-void WasmSetExtraDungeonEnabled(int enabled) {
-  GbaAlttp_SetExtraDungeonEnabled(enabled != 0);
-}
-
-EMSCRIPTEN_KEEPALIVE
-int WasmGetExtraDungeonAvailable(void) {
-  return GbaAlttp_IsAvailable() ? 1 : 0;
-}
 
 // ─── Gate words ───
 // A gate bit is one bit of one 32-bit word. Words 0-5 are recorded WRAM (features.h) and so are part of
 // save states and replays; the host-gate words are plain globals for gates the game core cannot observe.
-// Indices are frozen — see the note on kGateWordCount.
+// Indices are frozen, as the note on kGateWordCount explains.
 EMSCRIPTEN_KEEPALIVE
 void WasmSetGateWord(int index, uint32_t value) {
   if ((unsigned)index < (unsigned)kGateWordCount)
     g_wanted_gate_words[index] = value;
 }
 
-// Returns what was last REQUESTED for this word, before any masking (e.g. Vanilla Safe) is applied —
+// Returns what was last REQUESTED for this word, before any masking (e.g. Vanilla Safe) is applied.
 // useSimRun.ts's readWantedFeatures() relies on seeing this immediately, before the request has even
 // latched into WRAM on the next SyncGateWords(). Callers that need to know what the core will actually
 // honour (e.g. "is this cheat allowed to fire right now") want WasmGetEffectiveGateWord instead.
@@ -66,7 +48,7 @@ uint32_t WasmGetGateWord(int index) {
   return (unsigned)index < (unsigned)kGateWordCount ? g_wanted_gate_words[index] : 0;
 }
 
-// The value actually landed in WRAM as of the last SyncGateWords() — i.e. after the Vanilla Safe mask,
+// The value actually landed in WRAM as of the last SyncGateWords(), so after the Vanilla Safe mask,
 // unlike WasmGetGateWord which can disagree with this the instant a bit gets stripped before it ever
 // reaches WRAM. Reads 0 before the very first simulated frame, since WRAM starts zeroed and nothing has
 // synced into it yet: the honest answer for "what is in effect" is nothing.
@@ -108,7 +90,7 @@ void WasmAnnounceMusic(void) {
 
 // Which entrances the host's extended pack has a track for, 32 per word (5 words). Lets the core hand
 // back a selectable indoor song for entrances the game would otherwise only duck or carry an overworld
-// song into — see GameHook_EntranceMusic.
+// song into. GameHook_EntranceMusic does the work.
 EMSCRIPTEN_KEEPALIVE
 void WasmSetDeluxeEntrances(int index, uint32_t bits) {
   GameHook_SetDeluxeEntrances(index, bits);
@@ -148,8 +130,7 @@ uint32_t WasmGetFeatures2(void) {
 
 EMSCRIPTEN_KEEPALIVE
 void WasmSetPpuRenderFlags(int flags) {
-  // Preserve BlackBG2 flag (managed separately by WasmSetForceBackdropBlack)
-  g_ppu_render_flags = flags | (g_force_backdrop_black ? kPpuRenderFlags_BlackBG2 : 0);
+  g_ppu_render_flags = flags;
 }
 
 // Hiding the native HUD/pause menu requires kFeatures3_HudOverride. Both exports only record the
@@ -162,10 +143,16 @@ void WasmSetHudHidden(int hidden) {
   HudOverride_SetWantedHudHidden(hidden != 0);
 }
 
-// See WasmSetHudHidden above — same gate, same deferred reconcile.
+// Same gate and same deferred reconcile as WasmSetHudHidden above.
 EMSCRIPTEN_KEEPALIVE
 void WasmSetPauseHidden(int hidden) {
   HudOverride_SetWantedPauseHidden(hidden != 0);
+}
+
+// The native message box, same gate and same deferred reconcile as the two above.
+EMSCRIPTEN_KEEPALIVE
+void WasmSetDialogHidden(int hidden) {
+  HudOverride_SetWantedDialogHidden(hidden != 0);
 }
 
 EMSCRIPTEN_KEEPALIVE
@@ -208,8 +195,27 @@ int WasmGetVsync(void) {
   return g_vsync ? 1 : 0;
 }
 
+// Turbo speed as a percent of real time (125 to 1000; 100 means the feature is off). Live-safe:
+// the profile pushes it with the other live settings, and it only takes effect while the turbo
+// key is held (WasmSetTurboHeld), so a profile with turbo off never leaves real time.
+EMSCRIPTEN_KEEPALIVE
+void WasmSetTurboSpeed(int percent) {
+  SetTurboSpeed(percent);
+}
+
+EMSCRIPTEN_KEEPALIVE
+void WasmSetTurboHeld(int held) {
+  SetTurboHeld(held != 0);
+}
+
+// The speed the loop is running at right now, as a percent (100 when turbo is off or released).
+EMSCRIPTEN_KEEPALIVE
+int WasmGetTurboFactorPercent(void) {
+  return (int)(TurboFactor() * 100.0 + 0.5);
+}
+
 // ---------------------------------------------------------------------------
-// Volume — masters the SDL audio mixer + per-channel DSP volumes
+// Volume masters the SDL audio mixer + per-channel DSP volumes
 // ---------------------------------------------------------------------------
 EMSCRIPTEN_KEEPALIVE
 void WasmSetAppMasterVolume(int volume) {
@@ -253,7 +259,7 @@ void WasmSetSfxVolume(int volume) {
 }
 
 // ---------------------------------------------------------------------------
-// Game commands — callable from JavaScript for pause, reset, cheats
+// Game commands, callable from JavaScript for pause, reset, cheats
 // ---------------------------------------------------------------------------
 EMSCRIPTEN_KEEPALIVE
 void WasmSetPaused(int paused) {
@@ -270,30 +276,41 @@ void WasmTogglePause(void) {
   g_paused = !g_paused;
 }
 
+// Retire this core for good: the host is about to drop the module and boot another one. The
+// glue's own emscripten_cancel_main_loop is a closure local, not a module export, so JS has no
+// way to reach it; this is the one exported route. Without it the abandoned core keeps stepping
+// the game at full speed and keeps reporting music, sounds and transitions through the same
+// window hooks the next core installs, so a restart leaves a second game playing into the first.
+// Same shape as the SDL_QUIT path in emscripten_main.c. Pausing first covers the tick that may
+// already be scheduled.
+EMSCRIPTEN_KEEPALIVE
+void WasmStop(void) {
+  g_paused = 1;
+  emscripten_cancel_main_loop();
+}
+
 EMSCRIPTEN_KEEPALIVE
 void WasmReset(int warm) {
   ZeldaReset(warm ? true : false);
 }
 
 // Legacy single-letter cheat command (health/magic fill, ammo/rupee fill, key grant, ignore-collision
-// toggle) — forwards straight to vendored PatchCommand, which writes through StateRecoderMultiPatch and
+// toggle). Forwards straight to vendored PatchCommand, which writes through StateRecoderMultiPatch and
 // so lands in the replay log. No renderer caller exists (the TS cheat surface goes through the typed
 // WasmCheatSet*/WasmCheatGive* exports in cheats.c instead), but the symbol stays reachable from the
 // console or any future embedder, so it needs the same permission any other mutating cheat export
-// requires rather than acting on every request unconditionally.
+// requires instead of acting on every request unconditionally.
 EMSCRIPTEN_KEEPALIVE
 void WasmCheat(int cmd) {
   if (!CheatGate(kFeatures3_CheatStats)) return;
   PatchCommand((char)cmd);
 }
 
+// Only the request is recorded; hide_space_beyond_walls.c answers per frame, so a frame showing a
+// house, a cave or the sanctuary hides its fill and the overworld never does.
 EMSCRIPTEN_KEEPALIVE
-void WasmSetForceBackdropBlack(int enable) {
-  g_force_backdrop_black = enable != 0;
-  if (g_force_backdrop_black)
-    g_ppu_render_flags |= kPpuRenderFlags_BlackBG2;
-  else
-    g_ppu_render_flags &= ~kPpuRenderFlags_BlackBG2;
+void WasmSetHideSpaceBeyondWalls(int enable) {
+  GameHook_SetHideSpaceBeyondWalls(enable != 0);
 }
 
 // ---------------------------------------------------------------------------

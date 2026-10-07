@@ -3,7 +3,7 @@
 /*
  * The set's identity, pinned above the entry list: name and origin first, the
  * countable facts in a quiet mono row, save state last so it reads as status
- * rather than as part of the name.
+ * and not as part of the name.
  */
 
 .bundle-header {

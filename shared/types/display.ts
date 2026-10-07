@@ -29,7 +29,7 @@ interface SyncedRateStatus {
   supported: boolean;
   /** Plain-language reason, shown to the user when `supported` is false. */
   unsupportedReason: string;
-  /** Multiples of 60 this display offers — the choices for the target picker. */
+  /** Multiples of 60 this display offers, which is what the target picker lists. */
   availableRates: number[];
   /** Rate in effect right now. */
   currentHz: number | null;

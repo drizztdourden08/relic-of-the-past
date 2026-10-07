@@ -1,13 +1,8 @@
 /* @layer renderer-components @kind component */
 /**
- * The paired half of a grid position: two axes as one control, bounded by
- * whatever the caller says the real limits are.
- *
- * It writes the WHOLE object in one go rather than an axis at a time. That is
- * what makes the control safe on a record that has no position yet — the object
- * is created complete, with both axes set, instead of existing for a moment
- * holding one of them — and it is what keeps the object's other keys (a floor,
- * say) intact through an edit that has nothing to do with them.
+ * Two axes of a grid position as one control. Writes the whole object in one
+ * go, so a record with no position yet gets it complete and the object's other
+ * keys stay intact.
  */
 import { PositionInput } from '../../../primitives/PositionInput';
 import { toNumber } from '../../field-kits/coerce';

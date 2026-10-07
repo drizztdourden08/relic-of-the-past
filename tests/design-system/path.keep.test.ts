@@ -26,7 +26,7 @@ describe('getPath', () => {
     expect(getPath(ROW, 'items.length')).toBe(2);
   });
 
-  it('returns undefined rather than throwing on a missing intermediate', () => {
+  it('returns undefined instead of throwing on a missing intermediate', () => {
     expect(getPath(ROW, 'nope.deeper.still')).toBeUndefined();
     expect(getPath(ROW, 'nested.missing.value')).toBeUndefined();
     expect(getPath(ROW, 'items.9.name')).toBeUndefined();
@@ -71,7 +71,7 @@ describe('setPath', () => {
     expect(next.items).toBe(ROW.items);
   });
 
-  it('creates a missing intermediate rather than throwing', () => {
+  it('creates a missing intermediate instead of throwing', () => {
     const next = setPath(ROW, 'fresh.branch.leaf', 1);
     expect(getPath(next, 'fresh.branch.leaf')).toBe(1);
     expect(getPath(next, 'id')).toBe('a');

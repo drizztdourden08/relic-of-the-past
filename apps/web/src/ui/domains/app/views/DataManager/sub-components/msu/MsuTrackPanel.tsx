@@ -34,6 +34,8 @@ interface MsuTrackPanelProps {
   reportStore: PreviewReportStore;
   openTrack: number | null;
   busy: boolean;
+  /** An installed pack: slots play and export, nothing changes. */
+  readOnly: boolean;
   exporting: ExportFormat | null;
   statusMessage: string | null;
   statusOk: boolean;
@@ -45,7 +47,7 @@ interface MsuTrackPanelProps {
   onRename: (name: string) => void;
   onExport: (format: ExportFormat) => void;
   onDeleteFile: (fileName: string) => void;
-  /** The app's confirm dialog, for a layer edit that discards files — see `LayerEditorProps`. */
+  /** The app's confirm dialog, for a layer edit that discards files. See `LayerEditorProps`. */
   onConfirm: (title: string, message: string, onConfirm: () => void) => void;
   onReload: () => void;
 }
@@ -53,15 +55,14 @@ interface MsuTrackPanelProps {
 const MsuTrackPanel = (props: MsuTrackPanelProps) => {
   const {
     selected, files, manifest, saveBase, format, totalSize, isDeluxe, hasOpuz, rows, unusedFiles, fileOptions,
-    playing, reportStore, openTrack, busy, exporting, statusMessage, statusOk,
+    playing, reportStore, openTrack, busy, readOnly, exporting, statusMessage, statusOk,
     onTrackAssign, onTrackUpload, onToggleLayers, onPreview, onStopPreview, onRename, onExport,
     onDeleteFile, onConfirm, onReload,
   } = props;
 
   const filled = rows.filter((r) => r.fileName !== null).length;
 
-  // The chip's own music, for hearing a slot as the game plays it. Owned here rather than passed
-  // in: it needs no pack context, only the slot number.
+  // The chip's own music. Owned here, not passed in: it needs only the slot number.
   const original = useOriginalPreview('music');
 
   // One thing sounds at a time, so each start silences the other.
@@ -87,11 +88,12 @@ const MsuTrackPanel = (props: MsuTrackPanelProps) => {
       reportStore={reportStore}
       onConfirm={onConfirm}
       onSaved={onReload}
+      readOnly={readOnly}
     />
-  ), [selected, manifest, saveBase, files, format, reportStore, onConfirm, onReload]);
+  ), [selected, manifest, saveBase, files, format, reportStore, onConfirm, onReload, readOnly]);
 
   const sectionProps = {
-    files, fileOptions, playing, reportStore, openTrack, busy,
+    files, fileOptions, playing, reportStore, openTrack, busy, readOnly,
     playingOriginal: original.playing,
     onAssign: onTrackAssign, onPreview: previewTrack, onStopPreview, onPlayOriginal: playOriginal,
     onToggleLayers, renderDetail,
@@ -108,6 +110,7 @@ const MsuTrackPanel = (props: MsuTrackPanelProps) => {
         isDeluxe={isDeluxe}
         hasOpuz={hasOpuz}
         busy={busy}
+        readOnly={readOnly}
         exporting={exporting}
         onRename={onRename}
         onExport={onExport}
@@ -138,11 +141,11 @@ const MsuTrackPanel = (props: MsuTrackPanelProps) => {
           <Box className="track-list">
             {unusedFiles.map((file) => (
               <Box key={file.name} className="track-list__item">
-                <Text className="track-list__num">—</Text>
+                <Text className="track-list__num">-</Text>
                 <Text className="track-list__name">{file.name}</Text>
                 <Text className="track-list__size">{formatBytes(file.size)}</Text>
                 <IconButton
-                  variant="ghost" size="sm" label={`Delete ${file.name}`} disabled={busy}
+                  variant="ghost" size="sm" label={`Delete ${file.name}`} disabled={busy || readOnly}
                   onClick={() => onDeleteFile(file.name)}
                 >
                   ✕

@@ -14,7 +14,7 @@ shader. All live in `emscripten_api.c`; setters are callable while the game runs
 |----------|-----------|--------|
 | `WasmSetFeatures` | `void(uint32_t features)` | Sets `g_wanted_zelda_features`, the enhancement bitmask covering widescreen, sprite limits, and similar flags. |
 | `WasmGetFeatures` | `uint32_t(void)` | Current feature bitmask. |
-| `WasmSetPpuRenderFlags` | `void(int flags)` | Sets PPU render flags; preserves the separately-managed `BlackBG2` bit. |
+| `WasmSetPpuRenderFlags` | `void(int flags)` | Sets PPU render flags. |
 | `WasmGetPpuRenderFlags` | `int(void)` | Current PPU render flags. |
 
 ## HUD & menu

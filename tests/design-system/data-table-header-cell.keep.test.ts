@@ -12,7 +12,7 @@ import type {
 } from '../../apps/web/src/ui/design-system/composites/DataTable/DataTable.type';
 import { describeDataset } from '../dataset-guard';
 
-// SSR smoke tests for one column header — its label, sort caret, ⋯ trigger and
+// SSR smoke tests for one column header: its label, sort caret, ⋯ trigger and
 // resize seam. See data-table-render.test.ts for why these are SSR-only (no
 // live DOM, so no drag/drop and no menu actually opening).
 
@@ -61,7 +61,7 @@ const renderHeaderCell = (extra: Record<string, unknown> = {}): string => {
   }));
 };
 
-describeDataset('HeaderCell — label, caret and handles', () => {
+describeDataset('HeaderCell label, caret and handles', () => {
   it('falls back to the field label and offers both controls', () => {
     const markup = renderHeaderCell();
     expect(markup).toContain('Kind');
@@ -83,7 +83,7 @@ describeDataset('HeaderCell — label, caret and handles', () => {
     const markup = renderHeaderCell();
     expect(markup).toContain('data-table__resize');
     expect(markup).toContain('aria-label="Resize Kind"');
-    // The seam must never be picked up as the column — that is the other gesture.
+    // The seam must never be picked up as the column, because that is the other gesture.
     expect(markup).toContain('draggable="false"');
   });
 
@@ -100,35 +100,24 @@ describeDataset('HeaderCell — label, caret and handles', () => {
     expect(renderHeaderCell()).toContain('↕');
   });
 
-  /*
-   * The rank badge and the grouping flag were both unreadable at header size
-   * and both charged the label for the space. They are one read-only sentence
-   * about the whole table now, in the footer — asserted as text in
-   * data-table-sort-group-summary.test.ts.
-   */
+  // The rank badge and grouping flag were unreadable at header size. They are
+  // one sentence in the footer now (data-table-sort-group-summary.test.ts).
   it('carries neither a sort-rank badge nor a grouping flag any more', () => {
     expect(renderHeaderCell({ sortDir: 'asc' })).not.toContain('data-table__sort-rank');
     expect(renderHeaderCell({ grouped: true })).not.toContain('data-table__header-flag');
     expect(renderHeaderCell({ grouped: true })).not.toContain('▦');
   });
 
-  /*
-   * The reveal itself is CSS and needs a cursor, which this suite has not got.
-   * What CAN be proved here is the hook the stylesheet hangs off: both controls
-   * are always in the markup (so they stay focusable and nothing reflows), and
-   * a sorted column marks itself as the one whose caret stays visible at rest.
-   */
-  it('always renders both controls, so the reveal is opacity rather than presence', () => {
+  // The reveal is CSS. Pinned: both controls are always in the markup (focusable,
+  // no reflow), and a sorted column marks itself so its caret stays visible.
+  it('always renders both controls, so the reveal is opacity instead of presence', () => {
     const markup = renderHeaderCell();
     expect(markup).toContain('data-table__sort');
     expect(markup).toContain('data-table__menu-trigger');
   });
 
-  /*
-   * Both controls are one absolutely-positioned cluster, so they overlay the
-   * name instead of taking width off it — the label's own track is the whole
-   * cell and the ellipsis answers to that alone.
-   */
+  // Both controls are one absolutely-positioned cluster overlaying the name,
+  // so the label's track is the whole cell and the ellipsis answers to that.
   it('holds both controls in one overlay cluster, outside the label\'s flow', () => {
     const markup = renderHeaderCell();
     expect(markup).toContain('data-table__header-chrome');
@@ -145,7 +134,7 @@ describeDataset('HeaderCell — label, caret and handles', () => {
 
   it('carries the caret in its own fixed box, which is what caps its width', () => {
     expect(renderHeaderCell({ sortDir: 'asc' })).toContain('data-table__caret');
-    // Unsorted, the glyph is dimmed as well as hidden until hover.
+    // Unsorted, the glyph is dimmed and hidden until hover.
     expect(renderHeaderCell()).toContain('data-table__caret--off');
   });
 

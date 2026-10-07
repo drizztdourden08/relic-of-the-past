@@ -42,6 +42,6 @@ Cheats are optional bindings for actions like restore health, restore equipment,
 
 This panel lists the keyboards and controllers the app has detected. Each entry shows the device name and, when it can be identified, a matching preset.
 
-You can apply a controller preset such as **Xbox**, **PlayStation**, or **Switch Pro** to fill in a full set of mappings at once. Applying a preset overwrites the current bindings, so use it as a fresh starting point rather than a tweak. You can also assign a device to a profile so it's tied to that layout.
+You can apply a controller preset such as **Xbox**, **PlayStation**, or **Switch Pro** to fill in a full set of mappings at once. Applying a preset overwrites the current bindings, so use it as a fresh starting point, not a tweak. You can also assign a device to a profile so it's tied to that layout.
 
 Stick and trigger calibration lives in [Controller Calibration](controller-calibration.md), and rumble settings are in [Haptics](haptics.md).

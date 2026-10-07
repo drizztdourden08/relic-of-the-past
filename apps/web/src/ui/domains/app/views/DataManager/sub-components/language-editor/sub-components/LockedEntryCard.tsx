@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 /**
- * The stand-in for a dialogue entry a translator must never edit — a
+ * The stand-in for a dialogue entry a translator must never edit, such as a
  * choice-prompt cursor frame or the extraction pipeline's padding string (see
  * `structuralEntry` in `shared/game/language/codes/structural-entries.ts`).
  *
@@ -14,7 +14,7 @@
  * warning about what will go wrong.
  */
 import { Badge, Box, Text } from '@ds/primitives';
-import './entry/EntryCardCollapsed.css';
+import '@domains/packs/language/compounds/entry/EntryCardCollapsed.css';
 
 type LockedEntryCardProps = {
   id: number;

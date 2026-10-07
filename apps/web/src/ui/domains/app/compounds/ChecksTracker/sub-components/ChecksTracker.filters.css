@@ -1,0 +1,171 @@
+/* @layer renderer-components @kind style */
+
+/* ═══════════════════════════════════════════════════════════════
+   SUMMARY BAR
+   ═══════════════════════════════════════════════════════════════ */
+
+.tracker-summary {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--c-border);
+  flex-shrink: 0;
+}
+
+.tracker-summary__meter {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.tracker-summary__pct {
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.tracker-summary__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs) var(--space-md);
+  font-size: var(--text-xs);
+}
+
+.tracker-summary__stat {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  white-space: nowrap;
+  color: var(--c-text-dim);
+}
+
+.tracker-summary__stat-value {
+  color: var(--c-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.tracker-summary__stat--completed .tracker-summary__stat-value { color: var(--c-green); }
+.tracker-summary__stat--reachable .tracker-summary__stat-value { color: var(--c-warning); }
+
+/* The word is the first thing to go when the widget cannot fit the row. */
+@container (max-width: 320px) {
+  .tracker-summary__stat-label { display: none; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FILTERS & CONTROLS
+   ═══════════════════════════════════════════════════════════════ */
+
+.tracker-filters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--c-border);
+  flex-shrink: 0;
+}
+
+.tracker-filters__search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.tracker-filters__search-icon {
+  position: absolute;
+  left: var(--space-sm);
+  color: var(--c-text-muted);
+  pointer-events: none;
+}
+
+/* Room for the leading icon, and a row height that matches the 26px buttons. */
+.tracker-filters__input {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-xs) var(--space-sm) var(--space-xs) var(--space-xl);
+  font-size: var(--text-sm);
+}
+
+.tracker-filters__toggle {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+/* A corner count, so the funnel keeps its square footprint. */
+.tracker-filters__count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  pointer-events: none;
+  font-size: var(--text-xs);
+  padding: 0 var(--space-2xs);
+  min-width: 13px;
+  text-align: center;
+}
+
+/* Toolbar wraps, and never produces a horizontal scrollbar in a narrow widget. */
+.tracker-filters__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* An icon segment is square; the text ones keep the control's own padding. */
+.tracker-filters__controls .segmented__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2xs) var(--space-sm);
+  min-height: 20px;
+}
+
+/* ─── Drawer panels (tags, grouping) ─── */
+
+.tracker-filters__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+}
+
+.tracker-filters__group-current {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.tracker-filters__group-empty {
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  font-style: italic;
+}
+
+.tracker-filters__group-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  padding: var(--space-2xs) var(--space-2xs) var(--space-2xs) var(--space-sm);
+  background: var(--c-gold-soft);
+  border: 1px solid var(--c-gold);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  color: var(--c-gold-bright);
+}
+
+.tracker-filters__group-remove {
+  width: 16px;
+  height: 16px;
+  color: var(--c-gold-bright);
+}
+
+.tracker-filters__group-add {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}

@@ -31,7 +31,7 @@ import {
 /**
  * Entity types the base engine has a handler for. The port added four of its own beyond this
  * (a gatekeeper, two quest actors and a marker) and dispatch is an indirect call through a
- * fixed table, so handing one to the engine is not a wrong enemy — it is a hard crash. They
+ * fixed table, so handing one to the engine does not spawn a wrong enemy. It crashes. They
  * are dropped until they have implementations, and the count is reported.
  */
 const BASE_ENTITY_TYPE_COUNT = 243;
@@ -56,7 +56,7 @@ const wordsToBuffer = (words: Uint16Array): Buffer => {
   return result;
 };
 
-/** One buffer per layer per room, room-major — the C side indexes them as room*3+layer. */
+/** One buffer per layer per room, room-major, because the C side indexes them as room*3+layer. */
 const layerBuffers = (
   rooms: readonly DungeonRoomRecord[], select: (layer: NativeDungeonLayer) => Buffer,
 ): Buffer[] => {
@@ -82,11 +82,11 @@ const uint32Buffer = (values: readonly number[]): Buffer => {
 /**
  * Bit 0 of the first header byte, which the base game reads as "this room starts unlit".
  *
- * The cartridge sets it on five of these rooms including the dungeon's central hub — the room
- * seven others lead back into, and the one the guides describe as a large lit room with four
+ * The cartridge sets it on five of these rooms, including the dungeon's central hub. That is the
+ * room seven others lead back into, and the one the guides describe as a large lit room with four
  * doorways. It renders pitch black if the bit is passed through, so whatever the cartridge
  * means by it, the base game's reading of it is wrong here. Cleared until it is understood;
- * the dungeon does have genuinely dark rooms, and they will need it back under whatever the
+ * the dungeon does have dark rooms of its own, and they will need it back under whatever the
  * real condition turns out to be.
  */
 const HEADER_LIGHTS_OUT = 0x01;
@@ -111,12 +111,12 @@ const UNUSED_DESTINATION = 0x00;
  * that the room has anything to do with this dungeon, so a misread destination teleports the
  * player somewhere unrelated instead of erroring. That is exactly what a fixed-width read of a
  * variable-length header used to produce: short records handed over the next room's bytes, and
- * two thirds of the slots named a room outside the dungeon — most often room 0, which the
- * cartridge means as "unused" and the engine reads as the base game's final boss room.
+ * two thirds of the slots named a room outside the dungeon. Most often that was room 0, which
+ * the cartridge means as "unused" and the engine reads as the base game's final boss room.
  *
  * A slot the cartridge never stored reads as zero and is never reached, because the room has no
  * such staircase to step on. Every slot that does carry a destination must name one of ours, so
- * anything else is a reader bug and is raised as one rather than quietly rewritten.
+ * anything else is a reader bug and is raised as one, never rewritten to fit.
  */
 const assertTravelStaysInDungeon = (bytes: Buffer, roomId: number, rooms: ReadonlySet<number>): void => {
   const stray: string[] = [];
@@ -196,10 +196,10 @@ const compileGbaAlttpSupplement = (rom: GbaRomReader, snes: RomData): Buffer => 
   const spritePalettes = extractPalaceSpritePalettes(rom);
   const roomIds: ReadonlySet<number> = new Set(rooms.map(room => room.id));
   const bgTiles = extractPalaceSnes4bppTiles(rom);
-  // Fails the supplement — never the base game — if the blockset stops being a base-game one.
+  // Fails the supplement, and never the base game, if the blockset stops being a base-game one.
   assertBlocksetIdentity(snes, bgTiles);
-  // The cartridge names its enemy sheets in the base game's own numbering — verified against
-  // the three blocksets the base table also defines, where the two quartets are identical. So
+  // The cartridge names its enemy sheets in the base game's own numbering. That was verified
+  // against the three blocksets the base table also defines, where the two quartets match. So
   // what ships is the composition alone; the pixels are already in the base cartridge.
   const sheetMatches = compareSpriteSheets(snes, spriteGraphics.sheets);
   const matched = sheetMatches.filter(match => match.matchingTiles === 64).length;
@@ -208,9 +208,9 @@ const compileGbaAlttpSupplement = (rom: GbaRomReader, snes: RomData): Buffer => 
   }
   const assets = new AssetBuilder();
 
-  // One builder per manifest entry, keyed by the asset's name. The MANIFEST —
-  // not the order these are declared below — decides call order, so inserting
-  // or reordering an asset only ever means editing asset-manifest.ts.
+  // One builder per manifest entry, keyed by the asset's name. The MANIFEST decides call
+  // order, not the order these are declared below, so inserting or reordering an asset
+  // only ever means editing asset-manifest.ts.
   const builders: Record<string, () => void> = {
     kGbaPalaceRoomIds: () => assets.addUint16('kGbaPalaceRoomIds', rooms.map(room => bankedRoomId(room.id))),
     kGbaPalaceRoomHeaders: () => assets.addPacked('kGbaPalaceRoomHeaders', rooms.map(room => nativeHeaderBytes(room, roomIds))),
@@ -243,7 +243,7 @@ const compileGbaAlttpSupplement = (rom: GbaRomReader, snes: RomData): Buffer => 
     kGbaAlttpRoomTagHandlers: () => assets.addUint8('kGbaAlttpRoomTagHandlers', [...uint32Buffer(roomTagHandlers.map(handler => handler.thumbAddress))]),
     // Empty on purpose: hardware pans these rooms in full, and the grey backdrop beyond the
     // walls is real map content. The pin machinery stays for a future room that measures as
-    // genuinely clamped.
+    // clamped on hardware.
     kGbaPalaceCameraBounds: () => assets.addPacked('kGbaPalaceCameraBounds', rooms.map(() => Buffer.alloc(0))),
     kGbaPalaceRoomLayersSnes: () => assets.addPacked('kGbaPalaceRoomLayersSnes', rooms.flatMap(room => {
       // The cells the port occludes with sprites move onto the TOP layer, which the loader

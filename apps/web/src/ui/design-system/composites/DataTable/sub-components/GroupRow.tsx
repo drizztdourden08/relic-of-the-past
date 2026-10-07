@@ -1,10 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
- * One grouping level's header: a chevron, which field produced the level, the
- * group's value and how many rows are underneath it. Indentation is computed
- * from `level`, so a layered grouping reads as a tree without the row tree
- * having to know anything about widths. The field label and the row count
- * travel together at the far right, pinned there through horizontal scroll —
+ * One grouping level's header. Indentation is computed from `level`. The field
+ * label and row count are pinned at the far right through horizontal scroll;
  * see `.data-table__group-total` in DataTable.css.
  */
 import { Badge } from '../../../primitives/Badge';
@@ -23,10 +20,7 @@ interface GroupRowProps {
   count: number;
   expanded: boolean;
   onToggle: () => void;
-  /**
-   * Grouping by a reference column that shows a name rather than an id: the
-   * same substitution its cells get, so the header agrees with the rows.
-   */
+  /** The same reference substitution its cells get, so the header agrees with the rows. */
   display?: DisplaySubstitution;
 }
 
@@ -34,7 +28,7 @@ const INDENT_STEP = 'var(--space-lg)';
 
 const GroupRow = (props: GroupRowProps) => {
   const { level, groupKey, field, count, expanded, onToggle, display } = props;
-  // Depth is data, so the indent has to be computed rather than sit in a class.
+  // Depth is data, so the indent is computed, not a class.
   const indent: CSSProperties = { paddingLeft: `calc(${INDENT_STEP} * ${level + 1})` };
 
   return (

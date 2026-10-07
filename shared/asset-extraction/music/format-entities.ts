@@ -1,7 +1,4 @@
 /* @layer shared-asset-extraction @kind logic */
-/**
- * Formatters — produce text output from decoded music entities.
- */
 import type { MusicEntity, Pattern, Phrase, Song, SongList } from './extract-types';
 import { toStr } from './extract-types';
 

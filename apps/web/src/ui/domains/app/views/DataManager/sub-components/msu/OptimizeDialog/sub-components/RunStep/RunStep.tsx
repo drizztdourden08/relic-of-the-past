@@ -1,13 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
- * The run: which file is being encoded, and what the whole thing came to.
- *
- * The repeat-point count is reported first because it is the part that had to happen before any
- * format changed — a loop position lives in the file's own container and dies with it, so it is
- * written into the manifest up front, and saying how many moved is how that is verifiable.
- *
- * Originals are kept, and the summary says so: the pack is now holding both halves until the
- * superseded ones are thrown out from its files list.
+ * Repeat points are reported first: a loop position dies with the file's container, so it is
+ * written into the manifest before any format changes, and the count makes that verifiable.
  */
 import { Box } from '@ds/primitives/Box';
 import { ProgressBar } from '@ds/primitives/ProgressBar';
@@ -24,7 +18,7 @@ const RunStep = (props: RunStepProps) => {
     return (
       <Box className="msu-optimize__step">
         <Text className="msu-optimize__note">
-          {progress === null ? 'Starting…' : `Converting ${progress.fileName} — ${done} of ${total}`}
+          {progress === null ? 'Starting...' : `Converting ${progress.fileName} (${done} of ${total})`}
         </Text>
         <ProgressBar value={done} max={Math.max(1, total)} />
       </Box>

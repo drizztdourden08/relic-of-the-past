@@ -16,7 +16,7 @@ const applyPlayerSprite = (bytes: Uint8Array): boolean => {
   const mod = getModule();
   if (!mod) return false;
   if (!isZspr(bytes)) {
-    log.app('[PlayerSprite] Refusing to apply — not a ZSPR sheet');
+    log.app('[PlayerSprite] Not a ZSPR sheet, refusing to apply');
     return false;
   }
   try {

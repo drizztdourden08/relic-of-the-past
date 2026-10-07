@@ -11,16 +11,16 @@ import { getItemByGameId, registerRecord, unregisterRecord } from '../../shared/
 import type { CheckId, ConnectionId, ItemId } from '../../shared/game/data';
 import { describeDataset } from '../dataset-guard';
 
-/** Chest-open bit per slot — same native fact the matcher itself uses. */
+/** Chest-open bit per slot, taken from the same native fact the matcher uses. */
 const CHEST_OPEN_MASKS = [0x10, 0x20, 0x40, 0x80, 0x100, 0x200, 0x400] as const;
 
-// ─── Synthetic world (3 screens, chests wired to real room IDs so the matcher names them) ───
-// A — start; chest 0x103 (Kakariko Tavern) hands over the Hammer that unlocks B→C.
-// B — empty corridor. C — chest 0x104 (Link's House) = the goal check.
+// Synthetic world (3 screens, chests wired to real room IDs so the matcher names them)
+// A is the start; chest 0x103 (Kakariko Tavern) hands over the Hammer that unlocks B→C.
+// B is an empty corridor. C holds chest 0x104 (Link's House), the goal check.
 
 const KAKARIKO_TAVERN_ROOM = 0x103;
 const LINKS_HOUSE_ROOM = 0x104;
-/** The checks those two chests ARE — identity is the id, not the display name. */
+/** The checks those two chests ARE. Identity is the id, not the display name. */
 const TAVERN_CHECK: CheckId = 'check-027';
 const HOUSE_CHECK: CheckId = 'check-026';
 const HAMMER_ID = 0x09;
@@ -34,14 +34,11 @@ interface WorldChest extends SimChest {
 const EMPTY_PLACEMENT = { form: 'area' as const, tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } };
 
 /**
- * A one-sided point always resolves its partner through the GLOBAL facade
- * (`toScreenIdOf` calls `getConnection`, see `data/connections/derive.ts`) —
- * not through whatever array `buildAdjacency` was handed — so this synthetic
- * world's points are registered into the real session registry, not just
- * built as bare objects. `lockBToC` is always `true` across every call site
- * in this file; both directions of the B<->C door carry the same hammer
- * requirement, matching the OLD single-record model's one `nav` applying to
- * whichever direction it produced.
+ * A one-sided point resolves its partner through the GLOBAL facade
+ * (`toScreenIdOf` calls `getConnection`), not the array `buildAdjacency` was
+ * handed, so this world's points are registered in the real session registry.
+ * `lockBToC` is always `true` here; both directions of the B<->C door carry
+ * the same hammer requirement.
  */
 const CONNECTION_IDS = ['connection-t01', 'connection-t01r', 'connection-t02', 'connection-t02r'] as ConnectionId[];
 
@@ -155,7 +152,7 @@ describeDataset('simulation engine loop', () => {
       { screenId: 'C', roomId: LINKS_HOUSE_ROOM, chestIndex: 0, tile: { row: 0, col: 0 }, opened: false, posKnown: true, itemId: LAMP_ID },
     ]);
     const { state } = runLoop(world, makeConnections(true), HOUSE_CHECK);
-    // Screen C is only reachable after the Hammer unlock — reaching it proves the re-flood.
+    // Screen C is only reachable after the Hammer unlock, so reaching it proves the re-flood.
     expect(state.reachedScreens.has('C')).toBe(true);
     expect(state.visited.has('C')).toBe(true);
   });
@@ -191,7 +188,7 @@ describeDataset('simulation engine loop', () => {
     expect(state.completedChecks.has(HOUSE_CHECK)).toBe(false);
   });
 
-  it('attaches the DetectedCheck to the "Verified …" event as its data payload', () => {
+  it('attaches the DetectedCheck to the "Verified ..." event as its data payload', () => {
     const world = new FakeWorld([
       { screenId: 'A', roomId: KAKARIKO_TAVERN_ROOM, chestIndex: 0, tile: { row: 0, col: 0 }, opened: false, posKnown: true, itemId: HAMMER_ID },
       { screenId: 'C', roomId: LINKS_HOUSE_ROOM, chestIndex: 0, tile: { row: 0, col: 0 }, opened: false, posKnown: true, itemId: LAMP_ID },

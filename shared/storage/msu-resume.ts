@@ -1,13 +1,10 @@
 /* @layer shared-storage @kind logic */
 /**
- * The per-save music-resume sidecar: `{save}.msu.json` written next to the save it
- * belongs to. A sidecar rather than a manifest field because quick slots have no
- * manifest at all, so this is the one mechanism that fits all three save kinds.
- *
- * Lifetime is owned by the save that it shadows — ./saves and ./save-manifest clear
- * it whenever that save is written or deleted, so a fresh save can never inherit the
- * previous one's music position. A caller persisting a new snapshot therefore writes
- * it AFTER the save bytes, never before.
+ * The per-save music-resume sidecar: `{save}.msu.json` next to the save it belongs to. A
+ * sidecar, not a manifest field, because quick slots have no manifest; this fits all three
+ * save kinds. Lifetime is owned by the save: ./saves and ./save-manifest clear it whenever
+ * that save is written or deleted, so a caller persisting a new snapshot writes it AFTER the
+ * save bytes, never before.
  */
 import type { FileStore } from '@shared/platform';
 import type { MsuResumeState } from '@shared/types/msu-manifest';

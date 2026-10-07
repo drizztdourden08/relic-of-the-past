@@ -2,22 +2,21 @@
 /**
  * The sprite library: what is on disk, and the operations that change it.
  *
- * Thumbnails are rendered once per refresh rather than per render, because decoding tiles
+ * Thumbnails are rendered once per refresh, not per render, because decoding tiles
  * for every entry is the expensive part of showing the list. A ROM with compiled assets is
  * needed to create a sprite from scratch, so the hook reports whether one is available
  * instead of leaving the caller to work it out.
  */
 import { useState, useEffect, useCallback } from 'react';
-import {
-  listLinkSprites, importLinkSprite, spriteStem,
-} from '@app/lib/storage/link-sprites-store';
+import { listLinkSprites, importLinkSprite } from '@app/lib/storage/link-sprites-store';
+import { spriteStem } from '@shared/storage/link-sprites/link-sprites';
 import { deleteSprite } from '@app/lib/game/player-sheet/delete-sprite';
 import { loadSheet } from '@app/lib/game/player-sheet/load-sheet';
 import { renderThumbnail } from '@app/lib/game/player-sheet/thumbnail';
-import { isRspName } from '@app/lib/game/rsp';
+import { isRspName } from '@shared/storage/link-sprites/parse-rsp';
 
 interface LibraryEntry {
-  /** File name including extension — the key everything else uses. */
+  /** File name including extension. This is the key everything else uses. */
   name: string;
   label: string;
   container: 'zspr' | 'rsp';

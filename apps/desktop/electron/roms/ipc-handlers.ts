@@ -34,7 +34,7 @@ const selectSingleRom = (files: string[]): string => {
   return files[0];
 };
 
-// URL fallback: the download wasn't an archive — accept it as a raw ROM if plausible.
+// URL fallback: the download wasn't an archive, so accept it as a raw ROM if plausible.
 const importRawDownload = async (downloadedPath: string, url: string): Promise<ImportResult> => {
   const s = await stat(downloadedPath);
   if (s.size === 0 || s.size > RAW_ROM_MAX_BYTES) {
@@ -97,8 +97,8 @@ const registerRomHandlers = (): void => {
       return fail(err);
     }
     try {
-      // The download wasn't an archive — accept it as a raw ROM. A real archive
-      // that simply contains no ROM falls through to selectSingleRom's error.
+      // A non-archive download is accepted as a raw ROM. A real archive with no
+      // ROM falls through to selectSingleRom's error.
       const result = (!resolved.extractedArchive && resolved.downloadedPath)
         ? await importRawDownload(resolved.downloadedPath, url)
         : await importRomFile(selectSingleRom(resolved.files));

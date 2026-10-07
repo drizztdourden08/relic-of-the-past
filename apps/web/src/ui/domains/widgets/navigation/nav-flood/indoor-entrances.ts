@@ -3,11 +3,10 @@
  * Merges the canonical indoor entrance list into the widget's seed array and
  * reports which of them are respawn points.
  *
- * This used to build its own list — spawn tiles, exit-door refinement, stairs and
- * walk boundaries — in parallel with the simulator's. The list itself now comes
- * from `roomEntrances`; what remains here is the two things only the widget needs:
- * replacing overworld entries whose grid coords belong to a different screen, and
- * telling the UI which ids are respawn points.
+ * The list itself comes from `roomEntrances` (it used to be built here in
+ * parallel with the simulator's). What remains is the two things only the
+ * widget needs: replacing overworld entries whose grid coords belong to a
+ * different screen, and telling the UI which ids are respawn points.
  */
 import { wasmGetEntranceRooms } from '../../../../../lib/game';
 import { roomEntrances, STAIR_ID_BASE } from '../../../../../lib/game/flood';
@@ -34,8 +33,8 @@ const collectIndoorEntrances = (args: CollectArgs): Set<number> => {
       if (fallHoleEntIds.has(entrance.id)) continue;
       if (!overworldDoorEntIds.has(entrance.id)) currentRespawnIds.add(entrance.id);
     }
-    // The overworld pass may already hold this id with OUTDOOR grid coords —
-    // replace it, don't add a second marker on the wrong tile.
+    // The overworld pass may already hold this id with OUTDOOR grid coords, so
+    // replace it instead of adding a second marker on the wrong tile.
     const existing = allEntrances.findIndex((e) => e.id === entrance.id);
     if (existing !== -1) allEntrances[existing] = entrance;
     else allEntrances.push(entrance);

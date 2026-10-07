@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 /**
  * The control's state: what has been typed, which row is highlighted, and the
- * one place a value is actually committed.
+ * one place a value is committed.
  *
  * The highlight sits at -1 until an arrow key moves it, and -1 is meaningful:
  * it is what hands Enter to the typed text instead of to a row, which is how
@@ -31,7 +31,7 @@ interface UseTagInputParams {
   validate?: TagValidator;
   /** Refuses a NEW value the check rejects; existing values are never refused. */
   enforce?: boolean;
-  /** A failure past this control's own check — see `TagInputProps.createError`. */
+  /** A failure past this control's own check. See `TagInputProps.createError`. */
   createError?: string | null;
 }
 
@@ -45,7 +45,7 @@ const useTagInput = (params: UseTagInputParams) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const popup = useTagPopup(disabled);
 
-  // Latched locally rather than read straight off the prop: a fresh failure
+  // Latched locally instead of read straight off the prop: a fresh failure
   // should show up right away, but the moment the entry is edited again the
   // message is stale, and the caller has no way to know that happened.
   const [visibleCreateError, setVisibleCreateError] = useState<string | null>(createError ?? null);

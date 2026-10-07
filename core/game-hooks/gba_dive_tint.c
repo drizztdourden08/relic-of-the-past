@@ -13,7 +13,7 @@
  * half of that translates directly here. The surface is not on the main screen at all - it is
  * the sub-screen layer colour maths mixes in - so no sprite depth sits under it; and opening
  * colour maths up to sprites, which was the obvious next lever, tints every sprite in the room
- * rather than the one that went under.
+ * instead of the one that went under.
  *
  * What does reach exactly one sprite is the renderer's private player bank: sixteen colours past
  * the hardware palette that the player's own pixels, and only those, resolve against. Filling it
@@ -63,7 +63,7 @@ void GbaAlttp_SyncDiveTint(void) {
     g_saved_active = ppu->playerPalActive;
     g_tinted = true;
   }
-  /* Re-mixed every frame rather than once: the gear palette changes under us on a damage flash
+  /* Re-mixed every frame, not once: the gear palette changes under us on a damage flash
      or a sheet swap, and a bank filled at the start of the dive would keep the old colours. */
   uint16 water = ppu->cgram[kWaterPalRow + kWaterSample];
   ppu->cgram[kPpuPlayerPalBase] = 0;  /* index 0 is transparent and never sampled */

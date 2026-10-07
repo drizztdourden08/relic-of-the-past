@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind data */
 /**
- * AdapterDeviceCard — one card for a device that presents one entry per
+ * One card for a device that presents one entry per
  * port (e.g. a 4-port wired adapter), instead of several near-identical
  * DeviceCards. Assigning a preset applies to the adapter as a whole (every
  * port shares the same vendor:product id), so the drag/click affordance

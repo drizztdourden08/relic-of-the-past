@@ -2,7 +2,7 @@
 /**
  * Open/close state for a trigger that anchors a portalled menu. The menu is
  * rendered elsewhere in the DOM, so an outside click has to allow for both the
- * trigger and the portal — the same two-part check the title bar menu uses.
+ * trigger and the portal, the same two-part check the title bar menu uses.
  */
 import { useEffect, useRef, useState } from 'react';
 

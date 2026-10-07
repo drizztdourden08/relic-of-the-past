@@ -1,13 +1,13 @@
 /* @layer shared-types @kind data */
 // ─── Shadow Casting & Lighting System Types ───
 
-/** Unified shape definition — N-sided polygon with radius/stretch/rotation */
+/** Shape definition for an N-sided polygon with radius/stretch/rotation */
 interface ShapeDefinition {
   id: string;
   type: 'polygon' | 'freehand';
   /** Number of sides for polygon (3=triangle, 4=rect, 64+=circle). Ignored for freehand. */
   sides?: number;
-  /** Corner rounding radius 0–1. 0=sharp corners, 1=fully rounded (circle at 4 sides). */
+  /** Corner rounding radius 0-1. 0=sharp corners, 1=fully rounded (circle at 4 sides). */
   cornerRadius?: number;
   /** Horizontal stretch factor (default 1) */
   scaleX?: number;
@@ -15,9 +15,9 @@ interface ShapeDefinition {
   scaleY?: number;
   /** Rotation in degrees */
   rotation?: number;
-  /** Center X in screen-local coords (0–512) */
+  /** Center X in screen-local coords (0-512) */
   x: number;
-  /** Center Y in screen-local coords (0–448) */
+  /** Center Y in screen-local coords (0-448) */
   y: number;
   /** Bounding width */
   width: number;
@@ -31,7 +31,7 @@ interface ShapeDefinition {
 interface HeightmapElement {
   id: string;
   shape: ShapeDefinition;
-  /** Normalized height 0.0–1.0 */
+  /** Normalized height 0.0-1.0 */
   height: number;
   /** Edge falloff/smoothing radius in pixels */
   smoothing: number;
@@ -45,7 +45,7 @@ interface LightSource {
   x: number;
   /** Position Y in screen-local coords */
   y: number;
-  /** Light intensity 0–1 */
+  /** Light intensity 0-1 */
   intensity: number;
   /** Falloff radius in pixels */
   radius: number;
@@ -64,15 +64,15 @@ interface ScreenLightingConfig {
   sunAngle: number;
   /** Sun elevation above horizon in degrees */
   sunElevation: number;
-  /** Sun light intensity 0–1 */
+  /** Sun light intensity 0-1 */
   sunIntensity: number;
-  /** Ambient light intensity 0–1 */
+  /** Ambient light intensity 0-1 */
   ambientIntensity: number;
   /** Enable animated day/night cycle */
   dayNightCycle: boolean;
   /** Full cycle duration in seconds */
   cycleSpeed: number;
-  /** Global shadow edge blur/smoothing 0–1 */
+  /** Global shadow edge blur/smoothing 0-1 */
   shadowSoftness: number;
 }
 

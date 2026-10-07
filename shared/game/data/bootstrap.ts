@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
  * The ONLY seeding path: every kind is populated the moment this module is first
- * imported. Synchronous, no network I/O, no second source — the records are
+ * imported. Synchronous, no network I/O, no second source. The records are
  * typed .ts files compiled into the bundle, so tests and any other consumer get
  * real data with no await and no async gap.
  */

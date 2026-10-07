@@ -78,7 +78,7 @@ const runBFS = (strategy: LayerStrategy, startRow: number, startCol: number, ent
       }
     }
 
-    // Expand in 4 directions — strategy handles layer transitions
+    // Expand in 4 directions. The strategy handles layer transitions.
     for (const [dr, dc] of DIRECTIONS) {
       const results = strategy.expand(cell, dr, dc, inventory, bounds);
       for (const result of results) {

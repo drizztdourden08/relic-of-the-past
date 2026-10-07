@@ -10,7 +10,7 @@
  * record shape the way `serializeCheckRecord` is.
  *
  * A check is filed with its dungeon when it names one, and otherwise with the
- * area of the screen it sits on — see record-file-targets.ts. Neither is
+ * area of the screen it sits on (see record-file-targets.ts). Neither is
  * derived from a name, so renaming a check never moves it.
  */
 

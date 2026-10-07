@@ -1,20 +1,10 @@
 /* @layer renderer-components @kind hook */
 /**
- * Live per-entry validation, incremental by design.
- *
- * A set holds a few hundred entries, so re-running the validator over all of
- * them on every keystroke is not an option. Edits are immutable, so only the
- * edited entry gets a fresh `tokens` array: a cache keyed by entry id and
- * compared by array identity therefore re-validates exactly the one entry that
- * changed and reuses every other result untouched.
- *
- * Two things invalidate the whole cache rather than one entry — the set's base
- * language (a different alphabet) and the reference key set (which references
- * resolve). Both are compared by a cheap signature.
- *
- * The keys come from the set's whole substitution list, not from its glossary
- * alone: a menu name is now referenceable from a line, and validating against
- * the glossary would report every such reference as missing.
+ * Live per-entry validation, incremental: edits are immutable, so a cache
+ * keyed by entry id and compared by `tokens` identity re-validates only the
+ * entry that changed. The base language and the reference key set invalidate
+ * the whole cache, via a cheap signature. The keys come from the whole
+ * substitution list, not the glossary alone, since menu names are referenceable.
  */
 import { useMemo, useRef } from 'react';
 import type { EntryIssue, GlossaryTerm, LanguageSet, Token } from '@shared/game/language';
@@ -35,8 +25,7 @@ const useEntryIssues = (set: LanguageSet | null, terms: GlossaryTerm[]): EntryIs
 
   const refKeys = useMemo(() => new Set(terms.map((term) => term.key)), [terms]);
 
-  // The validator reads its alphabet/dictionary from the extraction language
-  // table, resolved through the set's declared base language code.
+  // The validator's alphabet comes from the extraction language table via the base code.
   const config = useMemo(() => (base ? kLanguages[base] ?? null : null), [base]);
 
   return useMemo(() => {

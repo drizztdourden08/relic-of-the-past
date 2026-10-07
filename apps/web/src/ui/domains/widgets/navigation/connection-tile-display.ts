@@ -1,9 +1,8 @@
 /* @layer renderer-widgets @kind logic */
 /**
- * Connection tile display — resolves WHERE a connection crosses, for the
- * connection editor. Prefers a connection's persisted `nav` (overlap tiles or
- * entry point); falls back to the live flood's matching ConnectionInfo when the
- * connection has no nav yet.
+ * Resolves WHERE a connection crosses, for the connection editor. Prefers a
+ * connection's persisted `nav` (overlap tiles or entry point) and falls back to
+ * the live flood's matching ConnectionInfo when the connection has no nav yet.
  *
  * Also exposes the flood-matcher the add path uses to attach derived nav.
  */

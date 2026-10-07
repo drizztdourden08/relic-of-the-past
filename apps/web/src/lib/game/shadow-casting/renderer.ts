@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Shadow Casting Renderer — WebGL post-processing pipeline.
+ * WebGL post-processing pipeline for shadow casting.
  *
  * Architecture:
  *   1. Heightmap texture: CPU-rasterized from shape elements, uploaded when data changes
@@ -32,7 +32,6 @@ const createShadowRenderer = (canvas: HTMLCanvasElement, _options: ShadowRendere
 
   const gl: WebGLRenderingContext = glOrNull;
 
-  // ─── Compile shaders ───
   const progs = compilePrograms(gl);
   if (!progs) {
     console.error('[ShadowCasting] Failed to compile shader programs');
@@ -40,22 +39,18 @@ const createShadowRenderer = (canvas: HTMLCanvasElement, _options: ShadowRendere
   }
   const { shadow: shadowProg, blur: blurProg, composite: compositeProg } = progs;
 
-  // ─── Uniform locations ───
   const { shadow: shadowUniforms, blur: blurUniforms, composite: compositeUniforms } = getUniformLocations(gl, progs);
 
-  // ─── Quad buffer ───
   const quadBuffer = gl.createBuffer()!;
   gl.bindBuffer(gl.ARRAY_BUFFER, quadBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
 
-  // ─── Framebuffers ───
   let width = canvas.width;
   let height = canvas.height;
   let shadowFBO = createFBO(gl, width, height);
   let blurFBO1 = createFBO(gl, width, height);
   let blurFBO2 = createFBO(gl, width, height);
 
-  // ─── Textures ───
   // Heightmap is rebuilt every frame at viewport dimensions (matches game canvas exactly)
   const heightmapTex = gl.createTexture()!;
   gl.bindTexture(gl.TEXTURE_2D, heightmapTex);
@@ -73,12 +68,11 @@ const createShadowRenderer = (canvas: HTMLCanvasElement, _options: ShadowRendere
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 
-  // ─── State ───
   let enabled = false;
   let debugMode = false;
   let screenData: ScreenShadowData | null = null;
 
-  // Viewport world-space origin (viewLeft, viewTop) — updated every frame
+  // Viewport world-space origin (viewLeft, viewTop), updated every frame
   let viewOriginX = 0;
   let viewOriginY = 0;
   // Viewport size in SNES pixels
@@ -133,7 +127,7 @@ const createShadowRenderer = (canvas: HTMLCanvasElement, _options: ShadowRendere
         lightUniforms.positions[i * 3 + 1] -= viewOriginY;
       }
 
-      // ─── Pass 1: Shadow computation ───
+      // Pass 1: shadow computation.
       gl.bindFramebuffer(gl.FRAMEBUFFER, shadowFBO.framebuffer);
       gl.viewport(0, 0, width, height);
       gl.useProgram(shadowProg);
@@ -166,8 +160,8 @@ const createShadowRenderer = (canvas: HTMLCanvasElement, _options: ShadowRendere
 
       drawQuad(gl, shadowProg, quadBuffer);
 
-      // ─── Pass 2: Blur H ───
-      const blurRadius = lighting.shadowSoftness * 8.0; // 0–8px blur
+      // Pass 2: horizontal blur.
+      const blurRadius = lighting.shadowSoftness * 8.0; // 0-8px blur
       if (blurRadius > 0.1 && !debugMode) {
         gl.bindFramebuffer(gl.FRAMEBUFFER, blurFBO1.framebuffer);
         gl.viewport(0, 0, width, height);
@@ -185,7 +179,7 @@ const createShadowRenderer = (canvas: HTMLCanvasElement, _options: ShadowRendere
 
         drawQuad(gl, blurProg, quadBuffer);
 
-        // ─── Pass 3: Blur V ───
+        // Pass 3: vertical blur.
         gl.bindFramebuffer(gl.FRAMEBUFFER, blurFBO2.framebuffer);
         gl.viewport(0, 0, width, height);
 
@@ -200,7 +194,7 @@ const createShadowRenderer = (canvas: HTMLCanvasElement, _options: ShadowRendere
         drawQuad(gl, blurProg, quadBuffer);
       }
 
-      // ─── Pass 4: Composite ───
+      // Pass 4: composite.
       gl.bindFramebuffer(gl.FRAMEBUFFER, null);
       gl.viewport(0, 0, width, height);
       gl.useProgram(compositeProg);

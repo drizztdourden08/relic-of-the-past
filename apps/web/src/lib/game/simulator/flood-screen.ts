@@ -27,12 +27,12 @@ interface ScreenFlood {
   /** Intra-room scroll boundaries (a 2×2 room's internal doorway crossings). */
   intraCount: number;
   connections: ConnectionInfo[];
-  /** Raw attrs + reach for the rows nearest one edge — shows whether a border
+  /** Raw attrs + reach for the rows nearest one edge. Shows whether a border
    *  crossing runs over open ground or over a cliff face. Diagnostic only. */
   edgeRows?: Array<{ row: number; raw: string; reached: string }>;
   /** Sprites this screen's spawn table reports, and whether the flood can stand
    *  by each. ⚠ For a LARGE (multi-screen) area the table is the whole area's and
-   *  its coordinates are area-relative — they run past 63 and do not index a
+   *  its coordinates are area-relative, so they run past 63 and do not index a
    *  single screen's grid, so `reached` is only meaningful on a small screen. */
   sprites?: Array<{ type: string; row: number; col: number; reached: boolean }>;
 }
@@ -43,7 +43,7 @@ interface ScreenFloodRun {
 }
 
 /** Run one addressable overworld screen flood; null when the grid can't build.
- *  Straight through to the shared flood — the widget calls the same function, so
+ *  Straight through to the shared flood. The widget calls the same function, so
  *  the same seed on the same screen cannot give the two of them different numbers. */
 const floodOneOverworld = (
   screenIndex: number,
@@ -58,7 +58,7 @@ const floodOneOverworld = (
 /**
  * An entrance transition the player can ACTUALLY take right now: the BFS reached it
  * without unmet item tiles, and the entrance tile itself isn't sitting under an
- * item-locked obstacle (e.g. the Uncle-Estate-West stairs buried under a rock —
+ * item-locked obstacle (e.g. the Uncle-Estate-West stairs buried under a rock, where
  * the proximity trigger fires from beside the rock, but the way in is sealed).
  */
 

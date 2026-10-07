@@ -1,8 +1,8 @@
 <!-- @layer docs @kind doc -->
-# State Queries — Navigation Tables
+# State Queries for Navigation Tables
 
 Static game tables exposed for the navigation/minimap system: entrance positions, fall-hole landings,
-exit→screen mapping, and overworld area heads. These read ROM/asset tables rather than live RAM, so
+exit→screen mapping, and overworld area heads. These read ROM/asset tables, not live RAM, so
 they're stable across frames. All return `HEAPU8` pointers.
 
 **Source:** `core/game-hooks/state_queries_tables.c` · **Bridge:** `lib/game/bridge/nav-tables.ts`

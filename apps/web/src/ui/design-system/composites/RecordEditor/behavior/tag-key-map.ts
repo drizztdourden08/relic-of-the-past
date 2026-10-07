@@ -1,15 +1,8 @@
 /* @layer renderer-components @kind logic */
 /**
- * The translation a referenced tag list needs, both ways.
- *
- * The record stores ids; a person edits terms. The injected reference lookup
- * already hands back both halves for every record in the vocabulary — the id as
- * the option's value, the term as its label — so nothing new has to be
- * supplied and this package still knows nothing about what a tag IS.
- *
- * An id with no option resolves to itself. That is deliberate: a reference to a
- * record the lookup has not got is a real state (a term created moments ago, or
- * a dangling id), and showing the raw id says so instead of hiding it.
+ * Id-to-term translation for a referenced tag list, built from the injected
+ * reference options. An id with no option resolves to itself on purpose: a
+ * dangling or just-created reference is a real state, and the raw id says so.
  */
 import type { IdRefOption } from '../../field-kits/registry';
 

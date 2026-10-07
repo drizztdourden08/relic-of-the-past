@@ -1,13 +1,9 @@
 /* @layer electron-main @kind logic */
 /**
- * Assigns and frees deviceKeys for connected SDL joysticks — the collision
- * rule is documented at the top of sdl3-source.ts. In short: "vid:pid" is
- * the key while it is unique among currently connected devices; the second
- * and later device sharing a vid:pid (the GameCube adapter's four ports are
- * the reason this exists) gets a "#N" suffix. Slots are tracked per
- * vid:pid rather than counted, so removing a mid-numbered device frees
- * exactly its own slot — a later connect can reuse the lowest free slot
- * (including the plain key) without disturbing devices already connected.
+ * Assigns and frees deviceKeys for connected SDL joysticks (rule at the top of
+ * sdl3-source.ts): "vid:pid" while unique, "#N" suffix for the second and later
+ * device sharing one. Slots are tracked per vid:pid, not counted, so removing a
+ * mid-numbered device frees exactly its own slot.
  */
 const toVidPid = (vendorId: number, productId: number): string =>
   `${vendorId.toString(16).padStart(4, '0')}:${productId.toString(16).padStart(4, '0')}`;

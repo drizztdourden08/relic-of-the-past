@@ -1,20 +1,13 @@
 /* @layer electron-main @kind logic */
 /**
- * Remembers what ffprobe said about a file, so it is asked once per file rather than once per
- * look at the list.
+ * Remembers what ffprobe said about a file, so it is asked once per file, not once per
+ * draw of the files list (a native process launch per encoded file, per redraw).
  *
- * A probe is a native process launch, and the files list asks about every encoded file in the
- * pack each time it is drawn — after a pack has been converted that is a hundred launches in a
- * row, repeated by every rename and delete. The answer cannot change unless the bytes do, so the
- * key is the path plus the size and the modification time: a rewritten file misses on its own,
- * and nothing ever has to be invalidated by hand.
+ * Keyed on path + size + mtime, so a rewritten file misses on its own and nothing is
+ * invalidated by hand. Only a real answer is kept: a null (tool missing, file
+ * unreadable) can change without the file changing, so it is asked again next time.
  *
- * Only a real answer is kept. A null means the tool was missing or the file unreadable, and both
- * of those can change without the file changing — installing ffmpeg is the obvious case — so a
- * null is asked again next time rather than remembered.
- *
- * Persisted as one JSON file under the app's own data root and written at most once per second,
- * so a burst of first-time probes costs one write rather than a hundred.
+ * Persisted as one JSON file under the app's data root, written at most once per second.
  */
 import { mkdir, readFile, stat, writeFile } from 'fs/promises';
 import { dirname } from 'path';

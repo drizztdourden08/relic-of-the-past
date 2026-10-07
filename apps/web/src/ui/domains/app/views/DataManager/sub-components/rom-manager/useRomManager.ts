@@ -7,8 +7,8 @@
  *
  * A supplement only reaches the game through a rebuild of the base blob that
  * carries it, so a successful supplement import re-triggers `onExtractAssets`
- * for every base cartridge that already has assets built — the same call the
- * base lane uses for itself, just fanned out.
+ * for every base cartridge that already has assets built. It is the same call the
+ * base lane uses for itself, fanned out.
  */
 import { useState, useEffect, useCallback } from 'react';
 import type { RomKind } from '@shared/storage/rom-kinds';

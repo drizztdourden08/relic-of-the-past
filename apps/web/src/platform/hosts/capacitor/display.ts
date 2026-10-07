@@ -4,7 +4,7 @@
  *
  * Android reports its supported rates and lets an app state the rate it intends to present at,
  * which the platform then uses to pick a display mode. That request is made once here, at
- * startup, rather than exposed as a setting: unlike desktop there is no mode for the user to
+ * startup, not exposed as a setting. Unlike desktop there is no mode for the user to
  * choose between, and the platform may decline regardless.
  */
 import { UNSUPPORTED_SYNCED_RATE } from '@shared/platform';

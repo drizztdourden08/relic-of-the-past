@@ -18,7 +18,7 @@ interface RomIdentEntry {
 type RomHashTable = Record<string, RomIdentEntry>;
 
 /**
- * Loaded ROM data — the primary dependency injected into all extraction functions.
+ * Loaded ROM data, the dependency injected into every extraction function.
  * Replaces the Python global `ROM` singleton.
  */
 interface RomData {

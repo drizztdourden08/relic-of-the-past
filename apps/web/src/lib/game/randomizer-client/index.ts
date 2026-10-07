@@ -1,0 +1,40 @@
+/* @layer bridge-wasm @kind barrel */
+export type { RandomizerSession, SessionStatusListener } from './session.type';
+export { createLocalSession } from './local-session';
+export type { LocalSession } from './local-session';
+export { createOnlineSession } from './online-session';
+export type { OnlineSession, OnlineSessionConfig } from './online-session';
+export {
+  clearPendingBoot, getPendingBoot, getSessionState, resetSession, setPendingBoot,
+  startLocalFromPlacement, startOnline, stopActive, subscribeSessionStore,
+} from './session-store';
+export type { ActiveSession, PendingBoot, SessionSource, SessionStoreState } from './session-store';
+export { normalizeServerUrl, probeOnlineServer } from './online-probe';
+export type { ProbeConfig, ProbeResult } from './online-probe';
+export type {
+  ApClientPacket,
+  ApGameData,
+  ApNetworkItem,
+  ApServerPacket,
+} from './ap-protocol.type';
+export { startLocationPolling, stopLocationPolling } from './location-poller';
+export type { PollEntry } from './location-poller';
+export { buildPhysicalPlan, classifyLocation, logPlanSummary } from './ap-bridge';
+export type { ScopeFlags } from './ap-bridge';
+export { detectionOf } from './check-detection';
+export type { CheckDetection } from './check-detection';
+export type { PhysicalPlan, PlanClass, PlanCounts, PlanEntry, PlanError } from './physical-plan.type';
+export { adaptLegacyPlacement } from './legacy-placement';
+export {
+  probeDeliverablePondLocations, probeDeliverableNpcLocations, probeDeliverableWorldLocations,
+  undeliverableCapacityLocations, undeliverableNpcLocations, undeliverableWorldLocations,
+} from './npc-capability';
+export { checkIdByStandardName, standardCheckName, standardNameOfCheck } from './check-names';
+export { checkDisplayName } from './check-display-name';
+export { armedCheckIdsOfPlacement } from './plan-armed-checks';
+export { buildPlacementView } from './placement-view';
+export type { PlacementView } from './placement-view';
+export { computeApTrackerSnapshot } from './tracker-availability';
+export { firedLocations, onFiredLocation } from './override-fire-registry';
+export { apAlignedCheckRecords, virtualChecksOf } from './virtual-locations';
+export { itemIdByStandardName, resolveLocalItemId } from './item-lookup';

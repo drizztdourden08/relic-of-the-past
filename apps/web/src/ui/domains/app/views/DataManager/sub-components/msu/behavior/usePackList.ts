@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind hook */
-/**
- * The pack list itself: what packs exist, which is selected, and the whole-pack operations
- * (create an empty one, rename one). Reading each pack's manifest here is what lets the list
- * label a pack layered or classic without every row asking storage on its own.
- */
+// The pack list, selection, and whole-pack operations. Manifests are read here so rows need not ask storage.
 import { useCallback, useEffect, useState } from 'react';
 import * as msuStore from '@app/lib/storage/msu-store';
 import type { ActionResult, MsuPackRow } from '../msu.type';

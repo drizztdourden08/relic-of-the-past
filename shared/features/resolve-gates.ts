@@ -1,9 +1,8 @@
 /* @layer shared @kind logic */
 /**
- * Vanilla Safe entry point for the feature resolver. Vanilla Safe forces off every divergence from
- * stock game behavior — every FeatureDef with affectsVanillaParity: true, no exemptions. This is the
- * "normal path" (the TS settings pipeline); the un-bypassable C-side mirror lives in
- * zelda_rtl.c's SyncGateWords (see kGateWordParityMask there).
+ * Vanilla Safe entry point for the feature resolver: forces off every FeatureDef with
+ * affectsVanillaParity: true, no exemptions. This is the TS settings pipeline; the un-bypassable
+ * C-side mirror is zelda_rtl.c's SyncGateWords (kGateWordParityMask).
  */
 import type { FeatureDef } from './feature.type'
 import { FEATURES_BY_ID } from './feature-registry'
@@ -16,11 +15,9 @@ interface ResolveGatesOptions {
 }
 
 /**
- * Seed from the requested set, remove every id whose FeatureDef is affectsVanillaParity: true when
- * `vanillaSafe` is on, then run the existing requires-fixpoint (resolveFeatures) so anything that only
- * depended on a stripped id dies too — automatically, with no separate list to maintain. An id with no
- * registry entry (not yet a FeatureDef) is left alone by the strip step, same forward-compat contract as
- * resolveFeatures itself.
+ * Strip every affectsVanillaParity id when `vanillaSafe` is on, then run the requires-fixpoint
+ * (resolveFeatures) so dependents of a stripped id die too, with no separate list to maintain.
+ * Ids with no registry entry are left alone, same forward-compat contract as resolveFeatures.
  */
 const resolveGates = (requested: Iterable<string>, { vanillaSafe }: ResolveGatesOptions): ResolveResult => {
   const isParityAffecting = (id: string): boolean => (FEATURES_BY_ID as Record<string, FeatureDef | undefined>)[id]?.affectsVanillaParity === true

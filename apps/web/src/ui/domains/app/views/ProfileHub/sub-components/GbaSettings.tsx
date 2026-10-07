@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 /**
- * Game Boy Advance tab — everything the second cartridge changes. Every difference row
+ * Game Boy Advance tab: everything the second cartridge changes. Every difference row
  * is read-only reference material; the only interactive control is the Extra Dungeon
  * toggle at the top, which is itself gated on the supplement being imported.
  */
@@ -59,8 +59,8 @@ const GbaSettings = ({ settings, onChange }: GbaSettingsProps) => {
 
       <Box className="gba-settings__catalogue">
         <Text as="p" className="gba-settings__note">
-          Everything below is documented for reference — none of these individual
-          differences are switchable yet.
+          Everything below is documented for reference. None of these differences
+          can be switched on or off yet.
         </Text>
 
         <Box className="gba-settings__filters">
@@ -68,7 +68,7 @@ const GbaSettings = ({ settings, onChange }: GbaSettingsProps) => {
             <TextInput
               id="gba-settings-search"
               type="text"
-              placeholder="Search differences…"
+              placeholder="Search differences..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />

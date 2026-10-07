@@ -14,7 +14,7 @@
  *
  * It cannot live in the base blob: that blob must be byte-identical whether or not the second
  * cartridge is present, and these 128 bytes come from the cartridge. And it cannot borrow a
- * base-game bank either — the closest one agrees on only 81 of its 128 entries. So the bank
+ * base-game bank either, because the closest one agrees on only 81 of its 128 entries. So the bank
  * ships in the supplement and is handed to the engine here, at the point the engine would
  * otherwise read the base table.
  */
@@ -63,7 +63,7 @@ void GbaAlttp_PatchTransAuxStaging(void) {
  * The engine keeps three frames of one background tile window in memory and uploads the
  * current one every frame, which is how the base game's water moves. This dungeon's rooms
  * reference tiles inside that window, so without its own frames there the base game's
- * animation simply overwrites them - the art is in the shipped sheet, uploaded correctly,
+ * animation overwrites them - the art is in the shipped sheet, uploaded correctly,
  * and then replaced a frame later. Writing the frames into the same buffers hands the whole
  * mechanism, cycling included, back to the engine.
  */
@@ -80,11 +80,11 @@ void GbaAlttp_ApplyAnimatedTiles(void) {
 
 void GbaAlttp_ApplyDungeonPalette(void) {
   // Indoors-gated: this runs at the tail of the shared palette load, which also feeds the
-  // overworld, and the room id still reads as ours after leaving — so a room-only test would
+  // overworld, and the room id still reads as ours after leaving, so a room-only test would
   // repaint the overworld in this dungeon's colours.
   if (!GbaAlttp_IsPalaceActive())
     return;
-  // One record per room, so nothing has to match on the header's palette byte — that byte now
+  // One record per room, so nothing has to match on the header's palette byte. That byte now
   // names an appended entry in the engine's own palette-set table instead.
   int index = GbaAlttpFindRoom(dungeon_room_index);
   if (index < 0)
@@ -118,7 +118,7 @@ void GbaAlttp_ApplyDungeonPalette(void) {
  * What the cartridge contributes is the quartet, not the pixels: measured, 19 of the 21 sheets
  * it references are byte-identical to a base game sheet, and the extraction already translates
  * its ids into the engine's. So this only replaces the four subset numbers and lets the engine
- * load them the way it loads everyone else's — which matters, because enemies draw from tile
+ * load them the way it loads everyone else's. That matters, because enemies draw from tile
  * numbers baked into the sprite code that assume the base game's sheet in each slot.
  */
 void GbaAlttp_SelectDungeonSpriteSheets(uint8 *slot0, uint8 *slot1, uint8 *slot2, uint8 *slot3) {

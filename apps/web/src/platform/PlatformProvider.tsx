@@ -15,8 +15,8 @@ const PlatformProvider = ({ children }: { children: ReactNode }) => {
   const platform = useMemo(() => getPlatform(), []);
 
   // Reflect the platform on the document root so CSS (including portaled modals,
-  // which sit outside the app subtree) can branch on it — e.g. plain full-screen
-  // pages on mobile.
+  // which sit outside the app subtree) can branch on it. One example is plain
+  // full-screen pages on mobile.
   useEffect(() => {
     const root = document.documentElement;
     root.classList.toggle('platform-mobile', platform.info.formFactor === 'mobile');

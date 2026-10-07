@@ -24,16 +24,13 @@ void SdlThread::ApplyHidCaptureOpen(const SdlCommand& command) {
     rawCapture_.productId = command.hidProductId;
     result.status = RawCaptureResult::Status::kOk;
   } else {
-    // hidapi has no dedicated "already open elsewhere" error code, so the
-    // exclusive-access case (expected for a device SDL itself holds through
-    // libusb) is told apart from a genuinely absent device by whether the
-    // same vendor/product still shows up in a fresh enumeration: that scan
-    // does not require opening the device, so an existing exclusive open
-    // elsewhere does not hide it. SDL_GetError() at this point describes
-    // hid_open's own internal failure path, which does not always agree
-    // with that distinction in wording, so it is not surfaced as `message`
-    // for either of these two classified cases, only for the fallback
-    // below, where `reason` alone has nothing more specific to say.
+    // hidapi has no dedicated "already open elsewhere" error code, so a device
+    // held exclusively (expected when SDL itself holds it through libusb) is
+    // told apart from an absent one by whether the same vendor/product still
+    // shows up in a fresh enumeration. That scan never opens the device, so an
+    // exclusive open elsewhere does not hide it. SDL_GetError() here describes
+    // hid_open's own failure path and often disagrees with that distinction, so
+    // it is surfaced as `message` only for the fallback below.
     SDL_hid_device_info* first = SDL_hid_enumerate(static_cast<unsigned short>(command.hidVendorId),
                                                     static_cast<unsigned short>(command.hidProductId));
     const bool stillPresent = first != nullptr;

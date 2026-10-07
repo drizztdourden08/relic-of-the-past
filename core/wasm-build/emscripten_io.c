@@ -30,14 +30,14 @@ const uint8 *g_asset_ptrs[kNumberOfAssets];
 uint32 g_asset_sizes[kNumberOfAssets];
 
 // ---------------------------------------------------------------------------
-// WASM-safe ZeldaInitialize — workaround for ppu_init() signature mismatch.
+// WASM-safe ZeldaInitialize, working around a ppu_init() signature mismatch.
 // zelda_rtl.c calls ppu_init(NULL) but ppu.c declares ppu_init() with no args.
 // In native C this is harmless; in WASM, mismatched call signatures trap.
 // We provide our own ZeldaInitialize that calls ppu_init() correctly.
 // ---------------------------------------------------------------------------
 void WasmZeldaInitialize(void) {
   g_zenv.dma = dma_init(NULL);
-  g_zenv.ppu = ppu_init();  // no args — matches ppu.c definition
+  g_zenv.ppu = ppu_init();  // no args, matching the ppu.c definition
   g_zenv.ram = g_ram;
   g_zenv.sram = (uint8*)calloc(8192, 1);
   g_zenv.vram = g_zenv.ppu->vram;
@@ -108,19 +108,21 @@ MemBlk FindInAssetArray(int asset, int idx) {
 }
 
 // ---------------------------------------------------------------------------
-// Headless initialization — loads assets + initializes game core without SDL.
+// Headless initialization: loads assets and initializes the game core without SDL.
 // Used by Node.js scripts that only need grid building (no rendering/audio).
 // Call with noInitialRun:true, then ccall('WasmInitHeadless') from JS.
 // ---------------------------------------------------------------------------
 EMSCRIPTEN_KEEPALIVE
 int WasmInitHeadless(void) {
   LoadAssets();
+  // The default dialogue language, so a probe sees real message text; main() picks the INI's.
+  ZeldaSetLanguage(NULL);
   WasmZeldaInitialize();
   return 1;
 }
 
 // ---------------------------------------------------------------------------
-// JS-driven input — called from JavaScript via ccall each frame
+// JS-driven input, called from JavaScript via ccall each frame
 // ---------------------------------------------------------------------------
 EMSCRIPTEN_KEEPALIVE
 void WasmSetInput(int mask) {
@@ -154,7 +156,7 @@ void WasmLoadState(int slot) {
   // room marked finished, which is how a boss came back dead in a room nobody had cleared.
   GbaAlttp_SanitizeSaveBank();
   // A snapshot carries the palette buffers that were live when it was recorded, so a state saved
-  // under a different sheet reinstates that sheet's colors — the selected one would sit unused in
+  // under a different sheet reinstates that sheet's colors, and the selected one would sit unused in
   // the assets until some in-game event happened to reload gear palettes. Re-push it here.
   if (PlayerSprite_HasCustom())
     PlayerSprite_RefreshPalette();

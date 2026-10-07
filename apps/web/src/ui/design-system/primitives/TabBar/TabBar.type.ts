@@ -3,7 +3,7 @@
   id: string;
   label: string;
   icon?: string;
-  /** A count shown beside the label — omit for a tab with nothing to tally. */
+  /** A count shown beside the label. Omit it for a tab with nothing to tally. */
   badge?: string | number;
 }
 

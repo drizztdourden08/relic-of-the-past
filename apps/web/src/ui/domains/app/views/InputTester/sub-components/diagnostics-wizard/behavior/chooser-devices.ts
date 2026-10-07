@@ -4,7 +4,7 @@
  * honest about what is connected:
  *  - the raw HID enumeration (see HidListedDevice), which works while SDL's
  *    gamepad backend is released (step 1 onward), but a controller read
- *    through XInput rather than HID (most Xbox-style pads) never appears
+ *    through XInput and not HID (most Xbox-style pads) never appears
  *    here at all;
  *  - the SDL-claimed snapshot taken BEFORE step 1 releases the hold, the
  *    only source that ever sees an XInput-only pad, since SDL's own gamepad

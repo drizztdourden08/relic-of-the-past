@@ -1,17 +1,17 @@
 /* @layer shared-game @kind logic */
 /**
- * Closes a dungeon group once nothing in it is actionable, and reopens an
+ * Closes a dungeon group once nothing in it can be acted on, and reopens an
  * exhausted one when the run acquires something on its `reopensOn` list. This
  * is the ONLY path back into a dungeon group: it hooks the existing
- * frontier-reset-on-item-gain flow (`onCheckVerified` in explorer.ts) rather
- * than adding a second reset mechanism.
+ * frontier-reset-on-item-gain flow (`onCheckVerified` in explorer.ts) instead
+ * of adding a second reset mechanism.
  */
 import type { SimEvent } from '../types';
 import { dungeonGroupForScreen, dungeonGroupName } from '../../logic/queries/dungeon-group';
 import { narrative } from './event-log';
 import type { EngineState } from './state';
 
-/** True while some part of the group is still reachable/actionable this epoch. */
+/** True while some part of the group is still reachable or workable this epoch. */
 const groupStillLive = (state: EngineState, group: number): boolean => {
   const inGroup = (id: string): boolean => dungeonGroupForScreen(id) === group;
   return inGroup(state.virtual.screenId)
@@ -29,7 +29,7 @@ const closeIdleDungeonGroups = (state: EngineState, events: SimEvent[]): void =>
 
     if (ledger.owed.length === 0) {
       ledger.complete = true;
-      events.push(narrative(state, `${dungeonGroupName(ledger.group)} complete — nothing left owed, will not be re-entered`));
+      events.push(narrative(state, `${dungeonGroupName(ledger.group)} complete. Nothing left owed, will not be re-entered`));
       continue;
     }
     ledger.exhausted = true;
@@ -43,7 +43,7 @@ const closeIdleDungeonGroups = (state: EngineState, events: SimEvent[]): void =>
 
 /**
  * Reopen every exhausted group whose `reopensOn` includes one of the tokens
- * just gained. Un-visiting the group's own screens is enough — the discovered
+ * just gained. Un-visiting the group's own screens is enough, because the discovered
  * graph already has their edges, so the next frontier computation offers them
  * again without a full exploration reset.
  */
@@ -56,7 +56,7 @@ const reopenLedgersFor = (state: EngineState, tokens: string[], itemLabel: strin
     for (const id of [...state.visited]) {
       if (dungeonGroupForScreen(id) === ledger.group) state.visited.delete(id);
     }
-    events.push(narrative(state, `${dungeonGroupName(ledger.group)} reopening — acquired ${itemLabel}`));
+    events.push(narrative(state, `${dungeonGroupName(ledger.group)} reopening after acquiring ${itemLabel}`));
   }
 };
 

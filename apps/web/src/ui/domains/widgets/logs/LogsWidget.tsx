@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 /**
- * LogsWidgetContent — Content for the Logs widget.
+ * Content for the Logs widget.
  * Adapts the existing log-bus subscription into widget content form. Rows keep their
  * component structure; selection works on whole lines (click, ctrl-click, shift-click)
  * and the toolbar copies everything, the selection, or the error lines.

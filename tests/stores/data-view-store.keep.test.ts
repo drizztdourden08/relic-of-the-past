@@ -3,10 +3,9 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { DEFAULT_SESSION_VIEW, useDataViewStore } from '../../apps/web/src/stores/data-view-store';
 import type { ViewKey } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
 
-// Session state (scroll, expanded groups, selection, draft) is in-memory only
-// and keyed the same way durable snapshots are. The one property that matters
-// here is isolation: touching one collection's session view must never leak
-// into another's, and a key nobody has written to yet reads as the default.
+// Session state is in-memory, keyed like durable snapshots. Pinned: isolation
+// (one collection's view never leaks into another's) and the default for an
+// unwritten key.
 
 const SCREEN = 'data-inspector:screen' as ViewKey;
 const ITEM = 'data-inspector:item' as ViewKey;
@@ -15,7 +14,7 @@ beforeEach(() => {
   useDataViewStore.setState({ views: {}, pendingRecord: null, pendingRecommendation: null });
 });
 
-describe('data-view-store — per-key isolation', () => {
+describe('data-view-store keeps per-key isolation', () => {
   it('reads the default session view for a key nothing has touched', () => {
     expect(useDataViewStore.getState().getSessionView(SCREEN)).toEqual(DEFAULT_SESSION_VIEW);
   });
@@ -64,7 +63,7 @@ describe('data-view-store — per-key isolation', () => {
     expect(useDataViewStore.getState().getSessionView(ITEM).scrollTop).toBe(20);
   });
 
-  it('replaces the whole session view rather than merging partial patches', () => {
+  it('replaces the whole session view instead of merging partial patches', () => {
     useDataViewStore.getState().setSessionView(SCREEN, { ...DEFAULT_SESSION_VIEW, scrollTop: 10, selectedId: 'screen-1' });
     useDataViewStore.getState().setSessionView(SCREEN, { ...DEFAULT_SESSION_VIEW, scrollTop: 30 });
 
@@ -77,7 +76,7 @@ describe('data-view-store — per-key isolation', () => {
 // `openRecord` is the plain-record sibling of `openRecommendation`: same
 // bargain (stash the request, ring the registered opener), a different field
 // so a pending finding and a pending plain record never clobber each other.
-describe('data-view-store — openRecord, the plain-record handoff', () => {
+describe('data-view-store openRecord, the plain-record handoff', () => {
   it('starts with nothing pending', () => {
     expect(useDataViewStore.getState().pendingRecord).toBeNull();
   });

@@ -3,12 +3,12 @@ import { useEffect, useMemo } from 'react';
 import { subscribeGameState } from '@app/lib/game/wasm-bridge';
 import { Box, Image } from '@ds/primitives';
 import { WidgetManager, useWidgetLayout } from '@ds/composites/Widget';
-import { Dialog } from '@ds/composites/Dialog';
-import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent, DebugWidgetContent, NavigationWidgetContent, LiveDataInspectorContent, CheatsWidgetContent, SimulatorWidgetContent } from '@domains/widgets';
-import { loadTrackerStateBlob, saveTrackerStateBlob } from '@app/lib/tracker-state-io';
+import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, ChecksWidgetSettings, LogsWidgetContent, DebugWidgetContent, NavigationWidgetContent, LiveDataInspectorContent, CheatsWidgetContent, SimulatorWidgetContent, MusicWidgetContent } from '@domains/widgets';
+import { widgetLayoutIO } from '@app/lib/storage/widget-state';
 import { primeLiveSettings } from '@app/lib/game';
 import { useExclusiveInsetsStore } from '@app/stores/exclusive-insets-store';
 import { useDevToolsWidgetGate } from '@app/App/behavior/useDevToolsWidgetGate';
+import { useWidgetPrefs } from '@app/App/behavior/useWidgetPrefs';
 import { useWidgetDisabledGate } from '@app/App/behavior/useWidgetDisabledGate';
 import { applyNotchMode } from '@app/hooks/useSafeAreaInsets';
 import { useAutoUpdate } from '@app/hooks/useAutoUpdate';
@@ -23,6 +23,7 @@ import { useDisplaySettings } from '@app/App/behavior/useDisplaySettings';
 import { useGameLifecycle } from '@app/App/behavior/useGameLifecycle';
 import { useIpcLogBridge } from '@app/App/behavior/useIpcLogBridge';
 import { useMsulOpen } from '@app/App/behavior/useMsulOpen';
+import { useStoreLinks } from '@app/App/behavior/useStoreLinks';
 import { useKeyboardShortcuts } from '@app/App/behavior/useKeyboardShortcuts';
 import { useProfileManagement } from '@app/App/behavior/useProfileManagement';
 import { useSaveOverlay } from '@app/App/behavior/useSaveOverlay';
@@ -31,6 +32,7 @@ import { useStartup } from '@app/App/behavior/useStartup';
 import { useShellReady } from '@app/App/behavior/useShellReady';
 import { useWasmWarmup } from '@app/App/behavior/useWasmWarmup';
 import { useDebugLaunchHooks } from '@app/App/behavior/useDebugLaunchHooks';
+import { useRandomizerBoot } from '@app/App/behavior/useRandomizerBoot';
 import { useAppMainEffects } from '@app/App/behavior/useAppMainEffects';
 import { useCapability } from '@app/platform';
 import { TitleBar } from '../TitleBar';
@@ -38,14 +40,10 @@ import { MobileChrome } from '../MobileChrome';
 import { SearchPalette } from '../SearchPalette';
 import type { TitleBarProps } from '../TitleBar/TitleBar.type';
 import { GameLayer } from '../GameLayer';
-import { BootProgressBar } from '../BootProgressBar';
 import { SaveStateOverlay } from '../SaveStateOverlay/SaveStateOverlay';
-import { UpdateDialog } from '../../compounds/UpdateDialog';
-import { BugReportDialog } from '../BugReport';
+import { DebugFloatingControls } from '../../compounds/DebugFloatingControls';
+import { AppDialogs } from './sub-components/AppDialogs';
 import './AppMain.css';
-
-// Profile-layout persistence injected into the bare Widget composite (keeps IPC out of it).
-const widgetIO = { load: loadTrackerStateBlob, save: saveTrackerStateBlob };
 
 const AppMain = () => {
   const windowChrome = useCapability('windowChrome');
@@ -79,7 +77,9 @@ const AppMain = () => {
     onGameClear: () => game.clearGame(),
   });
   const nav = useAppNavigation({ activeProfile: profileMgmt.activeProfile, refreshLists: profileMgmt.refreshProfilesAndRoms });
-  const widgets = useWidgetLayout(profileMgmt.activeProfile?.id ?? null, widgetIO, window.api.startup);
+  // Layout and content prefs share one debounced, flushed writer (lib/storage/widget-state).
+  const widgets = useWidgetLayout(profileMgmt.activeProfile?.id ?? null, widgetLayoutIO, window.api.startup);
+  useWidgetPrefs(profileMgmt.activeProfile?.id ?? null);
   // Master gate for developer-only UI (widgets, dev pages, shadow editor); also closes
   // devOnly widgets the moment it flips off.
   const developerToolsEnabled = useDevToolsWidgetGate(widgets.layout, widgets.close, window.api.startup.widgets);
@@ -104,17 +104,17 @@ const AppMain = () => {
   const startup = useStartup(profileMgmt, nav);
   useWasmWarmup();
   useDebugLaunchHooks({ activeProfile: profileMgmt.activeProfile, loadProfileForGame: profileMgmt.loadProfileForGame, openNavWidget: () => widgets.open('navigation') });
+  useRandomizerBoot(profileMgmt.activeProfile?.id ?? null);
   useIpcLogBridge();
   // A music pack opened from the desktop imports itself.
   useMsulOpen();
+  // A store install link the browser opened lands on the Hookshop tab.
+  useStoreLinks(nav.setActivePage);
   useAppMainEffects({ isGameRunning: game.isRunning, activePage: nav.activePage, openNavWidget: () => widgets.open('navigation') });
   // A core crash surfaces its own evidence: the logs widget opens on the spot.
   useEffect(() => subscribeGameState((state) => {
     if (state.status === 'error') widgets.open('logs');
   }), [widgets.open]);
-
-  // Default notch mode until a profile loads (keeps startup windows clear of a cutout).
-  useEffect(() => { applyNotchMode(true); }, []);
 
   // Splash window → main window: reveal only once startup has settled and painted,
   // so the first frame the user sees is the finished shell (electron only).
@@ -136,7 +136,7 @@ const AppMain = () => {
 
       <Box className="app__content">
         {!game.isRunning && (
-          <Image className="app__bg-logo" src="./logos/logo-512.png" alt="" />
+          <Image className="app__bg-logo" src="./logos/logo/logo-512.png" alt="" />
         )}
 
         <GameLayer
@@ -173,11 +173,12 @@ const AppMain = () => {
 
         <WidgetManager
           layout={widgets.layout}
-          gameRunning={game.isRunning && nav.activePage === 'none'}
+          gameRunning={game.isRunning}
+          pageOpen={nav.activePage !== 'none'}
           onUpdate={widgets.update}
           onClose={widgets.close}
           onInsetsChange={setExclusiveInsets}
-          settingsContent={{ inventory: <InventoryWidgetSettings /> }}
+          settingsContent={{ inventory: <InventoryWidgetSettings />, checks: <ChecksWidgetSettings /> }}
           developerToolsEnabled={developerToolsEnabled}
           startupForcedWidgetIds={window.api.startup.widgets}
           vanillaSafe={vanillaSafe}
@@ -193,40 +194,28 @@ const AppMain = () => {
             dataset: <LiveDataInspectorContent />,
             cheats: <CheatsWidgetContent />,
             simulator: <SimulatorWidgetContent />,
+            music: <MusicWidgetContent />,
           }}
         </WidgetManager>
 
+        <DebugFloatingControls
+          profileId={profileMgmt.activeProfile?.id ?? null}
+          gameRunning={game.isRunning}
+          onOpenReport={() => setShowBugReportDialog(true)}
+        />
       </Box>
 
-      <Dialog
-        open={dialog != null}
-        title={dialog?.title ?? ''}
-        message={dialog?.message ?? ''}
-        confirmLabel={dialog?.confirmLabel}
-        variant={dialog?.variant}
-        onConfirm={dialog?.onConfirm ?? (() => {})}
-        onCancel={dismissDialog}
+      <AppDialogs
+        dialog={dialog}
+        dismissDialog={dismissDialog}
+        canUpdate={canUpdate}
+        update={update}
+        showUpdateDialog={showUpdateDialog}
+        setShowUpdateDialog={setShowUpdateDialog}
+        showBugReportDialog={showBugReportDialog}
+        setShowBugReportDialog={setShowBugReportDialog}
+        profileId={profileMgmt.activeProfile?.id ?? null}
       />
-
-      {canUpdate && (
-      <UpdateDialog
-        open={showUpdateDialog}
-        state={update}
-        canInstall={update.canInstall}
-        onApply={update.apply}
-        onOpenReleasePage={update.openReleasePage}
-        onLoadVersions={update.loadVersions}
-        onSetPrefs={update.setPrefs}
-        onReportBug={() => { setShowUpdateDialog(false); setShowBugReportDialog(true); }}
-        onClose={() => setShowUpdateDialog(false)}
-      />
-      )}
-      <BugReportDialog
-        open={showBugReportDialog}
-        onClose={() => setShowBugReportDialog(false)}
-      />
-
-      <BootProgressBar />
 
       <SearchPalette navProps={chromeProps} navDeps={{ setActivePage: nav.setActivePage, setProfileHubTab }} />
     </Box>

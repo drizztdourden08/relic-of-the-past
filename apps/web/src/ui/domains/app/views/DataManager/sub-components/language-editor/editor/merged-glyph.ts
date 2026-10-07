@@ -5,21 +5,20 @@
  *
  * A few pictures are too wide for one cell, so the alphabet spells them with a
  * pair of adjacent entries and the engine draws the halves side by side. To an
- * author that is one picture: it is inserted as one thing, it reads as one thing,
- * and it is deleted as one thing. Drawing the halves as two separate objects gave
- * a caret position in the middle of a picture that the browser could not even
- * paint — a zero-width rectangle between two uneditable boxes with no text
- * between them — and a click that could only ever select half of it.
+ * author it is one picture: inserted, read and deleted as one thing. Drawing the
+ * halves as two separate objects gave a caret position in the middle of a
+ * picture that the browser could not even paint, a zero-width rectangle between
+ * two uneditable boxes, and a click that could only ever select half of it.
  *
  * The pairs are NOT listed here. The sprite manifest already records them: an
  * extraction recipe that names a second glyph produces one sprite covering both
  * entries, and the derived map marks the two entries `first` and `second` of that
  * one file. Reading that is what keeps the two from drifting apart.
  *
- * Names are the BARE bracket names — `1HeartL`, not `[1HeartL]` — because that is
- * the form a token carries and the form the drawing code asks with. Only the base
- * alphabet's pairs are known; a localized alphabet that splits a picture its own
- * way keeps its own entry names, resolves to nothing here, and simply draws as
+ * Names are the BARE bracket names, so `1HeartL` and not `[1HeartL]`, because
+ * that is the form a token carries and the form the drawing code asks with. Only
+ * the base alphabet's pairs are known; a localized alphabet that splits a picture
+ * its own way keeps its own entry names, resolves to nothing here, and draws as
  * two cells the way it did before.
  */
 import { PICTURE_GLYPH_SPRITES } from '@shared/game/data/sprite-manifest/picture-glyph-sprites';

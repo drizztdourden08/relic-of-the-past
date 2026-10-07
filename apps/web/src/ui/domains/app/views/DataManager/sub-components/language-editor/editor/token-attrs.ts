@@ -4,9 +4,9 @@
  * line's content as the inline children of a paragraph.
  *
  * What is an atom is now a shorter list than it used to be. A row marker and the
- * wait that closes a box are LINE STRUCTURE — they only ever occur at a line's
+ * wait that closes a box are LINE STRUCTURE. They only ever occur at a line's
  * edges, so they live in the block's attributes (see `line-attrs.ts`) and never
- * appear in a run. What is left is what genuinely sits IN the text: a
+ * appear in a run. What is left is what sits IN the text: a
  * substitution, a glossary reference, a picture character, and any control code
  * that really does take effect mid-line.
  *
@@ -26,7 +26,7 @@ import type { Token } from '@shared/game/language';
 /** Document node type name for every non-text token. */
 const DIALOGUE_TOKEN_TYPE = 'dialogueToken';
 
-/** Which token family an atom stands for — mirrors `Token['t']` minus 'text'. */
+/** Which token family an atom stands for. Mirrors `Token['t']` minus 'text'. */
 type DialogueTokenKind = 'cmd' | 'break' | 'var' | 'ref';
 
 /** The full attribute set of one atom; every field is always present. */
@@ -56,7 +56,7 @@ const tokenToAttrs = (token: Token): DialogueTokenAttrs | null => {
 };
 
 /**
- * One non-text token as an insertable document node — what a toolbar hands to
+ * One non-text token as an insertable document node. A toolbar hands this to
  * `editor.commands.insertContent` to drop an atom at the caret.
  */
 const tokenToNode = (token: Token): JSONContent | null => {

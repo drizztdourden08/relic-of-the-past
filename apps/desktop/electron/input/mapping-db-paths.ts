@@ -33,7 +33,7 @@ const resolveBundledMappingDbPath = (): string | null => {
   return candidates.find((candidate) => existsSync(candidate)) ?? null;
 };
 
-/** The user's own db copy — may not exist yet; addUserMapping creates it on first write. */
+/** The user's own db copy. addUserMapping creates it on the first write. */
 const resolveUserMappingDbPath = (): string => getLegacyPath(DB_FILENAME);
 
 export { DB_FILENAME, resolveBundledMappingDbPath, resolveUserMappingDbPath };

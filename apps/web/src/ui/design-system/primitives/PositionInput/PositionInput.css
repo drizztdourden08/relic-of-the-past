@@ -57,8 +57,8 @@
   min-width: 0;
 }
 
-/* The fields carry their own disabled treatment — dim the caps to match rather
-   than fading the shell a second time on top of it. */
+/* The fields carry their own disabled treatment, so dim the caps to match
+   instead of fading the shell a second time on top of it. */
 .position-input--disabled .position-input__cap {
   color: var(--c-text-faint);
 }

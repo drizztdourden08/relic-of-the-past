@@ -1,6 +1,6 @@
 /* @layer renderer-design-system @kind style */
 
-/* Z-index scale — mirrors the Portal layer ladder. */
+/* Z-index scale, mirroring the Portal layer ladder. */
 :root {
   --z-base:        1;
   --z-sticky:      10;

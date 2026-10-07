@@ -1,14 +1,14 @@
 /* @layer shared-asset-extraction @kind logic */
 /**
- * Read one named entry out of a compiled assets blob — the inverse of AssetBuilder.serialize().
+ * Reads one named entry out of a compiled assets blob. The inverse of AssetBuilder.serialize().
  *
  * Layout: a 16-byte signature and a 32-byte key hash, 32 bytes of padding, then the entry
  * count and the length of the name block. After that come the entry sizes as u32s, the
  * NUL-separated names, and finally the payloads in the same order, each aligned to the next
  * 4-byte boundary of the file.
  *
- * This exists so a caller can pull a single asset without re-running extraction from a ROM:
- * the studio needs the stock player tiles and gear palette, and the blob is already cached.
+ * A caller can pull one asset without re-running extraction from a ROM. The studio needs the
+ * stock player tiles and gear palette, and the blob is already cached.
  */
 
 const SIGNATURE = 'Zelda3_v0     \n\0';

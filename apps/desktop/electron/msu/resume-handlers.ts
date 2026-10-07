@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 /**
- * Per-save music-resume sidecars over Node fs — `{save}.msu.json` written beside the
- * save it belongs to. Quick slots carry no manifest, so a sidecar is the one mechanism
+ * Per-save music-resume sidecars over Node fs. Each `{save}.msu.json` is written beside
+ * the save it belongs to. Quick slots carry no manifest, so a sidecar is the one mechanism
  * that fits all three save kinds; the naming comes from shared/storage/save-paths so
  * the renderer's FileStore path and this one address the same file.
  */

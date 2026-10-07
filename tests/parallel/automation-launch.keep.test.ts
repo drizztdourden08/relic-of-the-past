@@ -1,11 +1,9 @@
 /* @layer test @kind test */
 /**
- * The automation predicate decides whether a launch may write the configuration every
- * launch shares — which profile opens by default, and where the window sits.
- *
- * It must answer YES for every automation flag, including a run that forgot `--instance`,
- * and NO for an ordinary launch. Getting it wrong in the permissive direction means an
- * agent run silently repoints the user's default profile.
+ * The automation predicate decides whether a launch may write the shared
+ * configuration (default profile, window position). It must answer YES for
+ * every automation flag, including a run that forgot `--instance`, and NO for
+ * an ordinary launch; a false NO lets an agent run repoint the user's profile.
  */
 import { describe, it, expect, afterEach } from 'vitest';
 // @ts-expect-error -- plain .ts module under electron/, imported here for its pure logic

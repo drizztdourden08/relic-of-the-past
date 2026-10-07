@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Shared WebGL helpers — shader compilation, program linking, texture/FBO
+ * Shared WebGL helpers for shader compilation, program linking, texture/FBO
  * management, and quad drawing. Used by every fullscreen post-process pipeline
  * (shadow-casting, edge-glow). Filter and draw mode are parameterized so each
  * pipeline supplies only what differs; `label` prefixes compile/link errors.
@@ -12,9 +12,9 @@ interface FBO {
 }
 
 interface DrawQuadOptions {
-  /** Primitive mode — defaults to TRIANGLE_STRIP. */
+  /** Primitive mode, defaults to TRIANGLE_STRIP. */
   mode?: number;
-  /** Vertex count — defaults to 4 (a strip quad). */
+  /** Vertex count, defaults to 4 (a strip quad). */
   count?: number;
 }
 

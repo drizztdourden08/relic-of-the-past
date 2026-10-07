@@ -6,7 +6,7 @@
  * Every method is allowed to fail softly: `available` false means this platform has no
  * implementation at all, and an empty rate list or a false from `setRate` means the platform
  * has one but the display or compositor would not cooperate. The caller reports either state
- * to the user rather than pretending the setting worked.
+ * to the user instead of pretending the setting worked.
  */
 interface DisplayModeDriver {
   readonly platform: string;

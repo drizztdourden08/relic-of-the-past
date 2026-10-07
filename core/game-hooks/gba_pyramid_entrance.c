@@ -6,7 +6,7 @@
 /**
  * A map16 cell carries its artwork AND, in bit 13 of each of its four tiles, whether they draw
  * in front of the player. Every course of wall the opening reaches into therefore needs a twin
- * of itself that differs only in that bit — same tiles, same palette, same flips — so the wall
+ * of itself that differs only in that bit (same tiles, same palette, same flips), so the wall
  * is pixel-identical whether or not the option is on and the sole change is that the player
  * passes behind it.
  *
@@ -47,12 +47,12 @@ bool GbaAlttp_IsExtraEntranceTilePair(uint16 lower_left, uint16 lower_right) {
 }
 
 void GbaAlttp_ApplyPyramidEntrance() {
-  // Data present AND the player opted in — otherwise the overworld stays untouched.
+  // Data present AND the player opted in. Otherwise the overworld stays untouched.
   if (!GbaAlttp_IsAvailable() || !GbaAlttp_IsExtraDungeonEnabled() ||
       BYTE(overworld_screen_index) != 0x5b)
     return;
 
-  // Only the recess itself is borrowed from the base game's own opening — it is the one row
+  // Only the recess itself is borrowed from the base game's own opening. It is the one row
   // that has to change, because the dark opening is also what makes the cell walkable. The
   // courses above it keep this wall's own brick, promoted to foreground priority, so they are
   // drawn exactly as they are with the option off while still passing in front of the player.

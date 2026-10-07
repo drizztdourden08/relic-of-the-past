@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind component */
 /**
  * Detail panel for the selected ROM. A base cartridge keeps its extract-assets
- * affordance; a supplement has none — it only shows which bases currently carry
- * its sidecar, since there is nothing to extract from a supplement on its own.
+ * affordance. A supplement has none, because there is nothing to extract from it on its
+ * own, so it shows which bases currently carry its sidecar.
  */
 import type { CSSProperties } from 'react';
 import { Box } from '@ds/primitives/Box';
@@ -31,7 +31,7 @@ const AssetsRow = ({ base, onExtractAssets }: { base: RomDisplayInfo; onExtractA
   if (base.extractionStatus === 'ready') {
     return <Text style={IL.green}>✓ Extracted{base.assetSize ? ` (${formatBytes(base.assetSize)})` : ''}</Text>;
   }
-  if (base.extractionStatus === 'extracting') return <Text style={IL.gold}>⟳ Extracting…</Text>;
+  if (base.extractionStatus === 'extracting') return <Text style={IL.gold}>⟳ Extracting...</Text>;
   return (
     <Button variant="primary" size="sm" onClick={() => onExtractAssets(base.romFile)}>
       Extract Assets
@@ -49,7 +49,7 @@ const RomDetailPanel = (props: RomDetailPanelProps) => {
   const { selected, loadingDetail, detail, selectedBase, selectedSupplement, onExtractAssets } = props;
 
   if (!selected) return <Text>Select a ROM to view details</Text>;
-  if (loadingDetail) return <Text>Loading…</Text>;
+  if (loadingDetail) return <Text>Loading...</Text>;
   if (!detail) return <Text>ROM info not available</Text>;
 
   return (

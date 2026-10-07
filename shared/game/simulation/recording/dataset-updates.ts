@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * Turns recorder output into DatasetSuggestion[] — ready-to-write code blocks
+ * Turns recorder output into DatasetSuggestion[], the ready-to-write code blocks
  * for the widget's Apply button. Suggestions arise where what the run observed
  * disagrees with or extends the static screen/connection/check data.
  */

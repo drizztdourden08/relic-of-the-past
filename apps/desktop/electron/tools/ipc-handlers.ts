@@ -2,9 +2,9 @@
 /**
  * IPC for the optional ffmpeg tool: query, install, probe.
  *
- * The probe takes a Data-root-relative POSIX path, not an absolute one — the renderer
- * never gets to name a path outside the app's own storage, and traversal out of the root
- * is refused the same way the generic file store refuses it.
+ * The probe takes a Data-root-relative POSIX path, not an absolute one, so the renderer
+ * never gets to name a path outside the app's own storage. Traversal out of the root is
+ * refused the same way the generic file store refuses it.
  */
 import { isAbsolute, join, normalize, relative } from 'path';
 import type { FfmpegState } from '@shared/types/ffmpeg-tool';

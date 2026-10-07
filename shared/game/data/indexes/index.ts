@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
- * Reverse gameId -> record lookups, pre-built once per rebuild() call — never a
- * per-call scan. Native code (the WASM bridge, C hooks) only ever knows native
+ * Reverse gameId -> record lookups, pre-built once per rebuild() call. There is
+ * no per-call scan. Native code (the WASM bridge, C hooks) only ever knows native
  * values (a room index, a chest index, a sprite type byte), never our app ids.
  * Split by entity kind (see coding-standards' file-size rule); this barrel is
  * the only thing the rest of the dataset layer imports from.

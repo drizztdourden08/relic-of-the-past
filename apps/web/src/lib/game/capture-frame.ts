@@ -4,7 +4,7 @@
  *
  * Reading the game's WebGL canvas asynchronously is unreliable: the backbuffer can
  * be cleared after present, and toBlob on a hidden WebGL canvas returns blank in
- * some WebViews (Android's). Instead we piggyback on the FX render loop — a save
+ * some WebViews (Android's). Instead we piggyback on the FX render loop. A save
  * requests a capture, and the loop, right after it draws the *visible* FX canvas,
  * encodes that just-rendered frame. Reading in the same turn as the draw sidesteps
  * every async / visibility / preserveDrawingBuffer quirk.
@@ -23,7 +23,7 @@ const clearPending = (): void => {
   pending = null;
 };
 
-// Copy into a 2D canvas first — toBlob is rock-solid on a 2D canvas, and drawImage
+// Copy into a 2D canvas first, because toBlob is rock-solid on a 2D canvas and drawImage
 // reads the source canvas's freshly-rendered contents.
 const encode = (canvas: HTMLCanvasElement): Promise<Blob | null> => {
   try {

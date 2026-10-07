@@ -4,11 +4,11 @@ import type { EntityKind, TagId } from './ids';
 /**
  * One term of the shared tag vocabulary, as a first-class record.
  *
- * A tag reads `namespace:value` — two levels, always, with the separator
+ * A tag reads `namespace:value`, always two levels, with the separator
  * required. That shape is the whole point: the first level groups the
  * vocabulary so it can be browsed and searched, and the second names one term
  * inside that group. Every record that carries tags now stores TagIds, so a
- * term is a relationship to this collection rather than a string repeated a
+ * term is a relationship to this collection instead of a string repeated a
  * few hundred times.
  *
  * `name` holds the joined key and is therefore redundant with
@@ -19,7 +19,7 @@ import type { EntityKind, TagId } from './ids';
  */
 interface TagRecord {
   id: TagId;
-  /** `namespace:value` — the vocabulary's own key, and this record's display name. */
+  /** `namespace:value`, the vocabulary's own key and this record's display name. */
   name: string;
   /** First level of the hierarchy: the part before the separator. */
   namespace: string;

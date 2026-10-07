@@ -4,7 +4,7 @@
  *
  * A staircase's destination is the header slot named by the slot attribute the engine derives
  * for it, and that attribute is decided by the order stair objects register across the
- * engine's stair buckets — information the baked maps do not carry. These are the observed
+ * engine's stair buckets, which the baked maps do not record. These are the observed
  * facts: the game was run on original hardware with a memory tracer attached, each staircase
  * was walked, and the arrival room identifies the slot because the header's destinations are
  * independently known to be correct.

@@ -8,16 +8,11 @@ import { RecordEditor } from '../../apps/web/src/ui/design-system/composites/Rec
 import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
 import { describeDataset } from '../dataset-guard';
 
-// A requirement expression's `anyOf`/`allOf` is an ARRAY OF A UNION — each
-// entry is one of several branches (own an item, own a check, own N of a
-// group, nest another anyOf/allOf, or the impossible sentinel), which is the
-// shape `ObjectArrayEditor` cannot serve (its elements are one fixed shape)
-// and `array-kit`'s read-only fallback used to be the only thing offered.
-//
-// SSR smoke tests over a synthetic fixture, matching the house style for the
-// object-array editor: they prove branch-aware rows render and the list
-// plumbing (add/remove/branch picker) is present. Clicking add, switching a
-// branch or dragging need a browser and are NOT covered here.
+// A requirement expression's `anyOf`/`allOf` is an ARRAY OF A UNION (own an
+// item, own a check, own N of a group, nest, or the impossible sentinel), which
+// `ObjectArrayEditor` cannot serve (one fixed element shape). SSR smoke tests
+// over a synthetic fixture: branch-aware rows render and the add/remove/branch
+// picker plumbing is present. Clicking and dragging need a browser.
 
 const ITEM_BRANCH: FieldDescriptor = {
   path: 'anyOf[].itemId', label: 'Item id', kind: 'idRef', optional: true, targetKind: 'item',

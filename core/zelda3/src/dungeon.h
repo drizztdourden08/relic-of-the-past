@@ -45,6 +45,7 @@ typedef struct DungPalInfo {
 
 extern const uint8 kDungAnimatedTiles[24];
 uint16 *DstoPtr(uint16 d);
+const uint16 *Dungeon_CeilingTileWords(void);
 void Object_Fill_Nx1(int n, const uint16 *src, uint16 *dst);
 void Object_Draw_5x4(const uint16 *src, uint16 *dst);
 void Object_Draw_4x2_BothBgs(const uint16 *src, uint16 dsto);

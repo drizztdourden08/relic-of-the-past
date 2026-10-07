@@ -2,12 +2,12 @@
 /**
  * Grouping dimension catalog + per-dimension value resolution for a check.
  * World/area/location/dungeon read ScreenRecord/AreaRecord/DungeonRecord
- * directly — they used to go through a precomputed CheckTag, which only ever
+ * directly. They used to go through a precomputed CheckTag, which only ever
  * duplicated these same fields.
  */
 import type { CheckRecord } from '../../../data';
 import { getArea, getDungeon, getScreen, hasTagKey, labelOf } from '../../../data';
-import type { GroupDimension, GroupDimensionDef } from './types';
+import type { GroupDimension, GroupDimensionDef, RunContext } from './types';
 
 const GROUP_DIMENSIONS: GroupDimensionDef[] = [
   { id: 'world', label: 'World', description: 'Light World / Dark World' },
@@ -19,7 +19,17 @@ const GROUP_DIMENSIONS: GroupDimensionDef[] = [
   { id: 'content', label: 'Content', description: 'Key, Map/Compass, Boss Item, etc.' },
 ];
 
-/** Death Mountain (area-008) is the one area that spans both worlds — the check's own screen breaks the tie. */
+/**
+ * Only meaningful with a run loaded, so it is NOT in the base catalog. A
+ * caller that has spheres appends it, and the widget without a run never
+ * offers a dimension that would bucket everything under "outside the sweep".
+ */
+const SPHERE_DIMENSION: GroupDimensionDef =
+  { id: 'sphere', label: 'Sphere', description: 'How deep into the seed the check first becomes reachable' };
+
+const OUTSIDE_SWEEP = 'Outside the sweep';
+
+/** Death Mountain (area-008) is the one area that spans both worlds, so the check's own screen breaks the tie. */
 const areaLabel = (check: CheckRecord): string => {
   if (check.screenId) {
     const screen = getScreen(check.screenId);
@@ -31,7 +41,7 @@ const areaLabel = (check: CheckRecord): string => {
   return 'Other';
 };
 
-const getGroupValue = (check: CheckRecord, dimension: GroupDimension): string => {
+const getGroupValue = (check: CheckRecord, dimension: GroupDimension, run?: RunContext): string => {
   const screen = check.screenId ? getScreen(check.screenId) : undefined;
   switch (dimension) {
     case 'world':
@@ -59,7 +69,11 @@ const getGroupValue = (check: CheckRecord, dimension: GroupDimension): string =>
       if (hasTagKey(tags, 'content:boss-item')) return 'Boss Items';
       return 'Other';
     }
+    case 'sphere': {
+      const sphere = run?.spheres?.get(check.id);
+      return sphere === undefined ? OUTSIDE_SWEEP : `Sphere ${sphere}`;
+    }
   }
 };
 
-export { GROUP_DIMENSIONS, getGroupValue };
+export { GROUP_DIMENSIONS, OUTSIDE_SWEEP, SPHERE_DIMENSION, getGroupValue };

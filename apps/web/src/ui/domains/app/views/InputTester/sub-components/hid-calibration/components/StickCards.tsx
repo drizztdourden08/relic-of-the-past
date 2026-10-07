@@ -76,7 +76,7 @@ const StickCards = (props: StickCardsProps) => {
             )}
             {!isActive && isDone && (
               <Text as="p" className="hid-cal__desc" style={DESC_SMALL}>
-                X: {xItem?.result ?? '—'}<Box as="br" />Y: {yItem?.result ?? '—'}
+                X: {xItem?.result ?? '-'}<Box as="br" />Y: {yItem?.result ?? '-'}
               </Text>
             )}
 

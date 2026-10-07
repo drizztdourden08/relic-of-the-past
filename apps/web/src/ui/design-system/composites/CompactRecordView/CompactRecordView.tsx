@@ -1,19 +1,18 @@
 /* @layer renderer-components @kind component */
 /**
- * A read-only, one-line-per-field property sheet for a single record — the
- * same schema-derived grouping `RecordEditor` shows, with every field kit's
+ * A read-only, one-line-per-field property sheet for a single record. It shows
+ * the same schema-derived grouping `RecordEditor` does, with every field kit's
  * own compact `renderCell` on the right instead of a live control. Built for a
  * floating widget panel a few hundred pixels wide, so it is closer to a
  * glanceable summary than a smaller editor: nothing here is interactive beyond
- * whatever tooltip the kit already carries, and there is no save, no dirty
- * state — `resolveIdRefDisplay` is the one lookup it takes, purely cosmetic,
- * for showing a reference field's name instead of its raw id.
+ * whatever tooltip the kit already carries, and there is no save and no dirty
+ * state. `resolveIdRefDisplay` is the one lookup it takes, purely cosmetic, for
+ * showing a reference field's name instead of its raw id.
  *
- * Layout is `layoutGroups`, unchanged — a group label only appears once there
- * is more than one group, since a single unnamed set needs no heading. The
- * optional `groups` prop narrows that layout further (see `filterGroups`),
- * which is how a caller keeps a wide collection down to the handful of fields
- * that actually fit.
+ * Layout is `layoutGroups`, unchanged. A group label only appears once there is
+ * more than one group, since a single unnamed set needs no heading. The optional
+ * `groups` prop narrows that layout further (see `filterGroups`), which is how a
+ * caller keeps a wide collection down to the handful of fields that fit.
  */
 import { useMemo } from 'react';
 import { Box } from '../../primitives/Box';

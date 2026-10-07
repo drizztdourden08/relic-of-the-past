@@ -1,17 +1,24 @@
 /* @layer renderer-design-system @kind style */
 
-/* Fixed sizes — control heights, chrome dimensions. */
+/* Fixed sizes: control heights, chrome dimensions. */
 :root {
   --titlebar-height: 38px;
   --titlebar-btn-width: 46px;
   --scrollbar-size: 6px;
 
-  /* One compact control row — the small tier the icon button and the small
+  /* One compact control row, the small tier the icon button and the small
      dropdown trigger already draw themselves at. */
   --control-h-sm: 26px;
 
+  /* The inline drop target in a header line: wide enough to read as a target, and
+     a label that fits on one line inside it. */
+  --dropzone-inline-w: 288px;
+
+  /* A table's leading checkbox column, when its rows can be picked several at a time. */
+  --table-select-w: 28px;
+
   /* The inline entry a closed-set control offers for a value its option list
-     has never seen — wide enough for a short identifier, free to grow. */
+     has never seen. Wide enough for a short identifier, free to grow. */
   --open-entry-width: 140px;
 
   /* One filter clause: narrow enough that several sit side by side, and a
@@ -22,11 +29,116 @@
 
   /* The box a sort-direction glyph is centred in. Fixing it is what keeps the
      indicator's footprint the same however wide the fallback font draws the
-     character — every pixel not spent here goes to the column's own label. */
+     character. Every pixel not spent here goes to the column's own label. */
   --sort-caret-width: 8px;
 
   /* The ⋯ trigger beside it. Fixed for the same reason and one more: the
      caret is parked in this slot while the trigger is hidden and steps out of
      it when the trigger appears, so the shift is exactly this number. */
   --menu-trigger-width: 18px;
+
+  /* Play-mode badge slot: a fixed square the 128px badge art scales into
+     smoothly (roughly 60% of the summary panel's height). Image and fallback
+     chip share this footprint, so swapping one for the other never shifts layout. */
+  --mode-badge-d: 80px;
+
+  /* A signed-in account avatar: one control row tall, round. */
+  --avatar-d: 40px;
+
+  /* Widest a single summary-fact value may grow before it ellipsizes. Long
+     ROM names and seeds truncate instead of pushing the row apart. */
+  --summary-fact-maxw: 220px;
+
+  /* Section nav: collapsed and open widths, item height, and the round toggle on its edge. */
+  --section-nav-w: 58px;
+  --section-nav-w-open: 236px;
+  --section-nav-item-h: 40px;
+  --section-nav-toggle-d: 24px;
+
+  /* Settings page header backdrop height, full and once the page has scrolled. */
+  --settings-page-head-h: 88px;
+  --settings-page-head-h-compact: 52px;
+
+  /* Hero (a scene with details over it): its minimum height, the intro column and the
+     side column. A hero's modifier class may override them. */
+  --hero-h: 300px;
+  --hero-intro-w: 200px;
+  --hero-side-w: 360px;
+
+  /* Home hero: where the mode's art starts beside the intro, the art's height, the last
+     save's thumbnail, and the progress bar thickness. */
+  --profile-hero-art-left: 232px;
+  --profile-hero-art-h: 256px; /* the 128px piece at 2x */
+  --profile-hero-bar-h: 6px;
+  --profile-hero-thumb-w: 160px;
+
+  /* The option catalog lays every row (a plain option or a capacity family)
+     on the same label | control | impact grid, so a value that changes width
+     ("+33 loc · +33 items" to "0 loc · 0 items") never moves the control next
+     to it. The impact track fits the widest cell in mono at the small size. */
+  --option-control-w: 200px;
+  --option-impact-w: 140px;
+
+  /* A capacity family reads as named lines (range, items, jumps, bonus,
+     ladder): the label track is as wide as the longest of those words in
+     small caps, a slider on a line keeps at least this much before the line
+     wraps, and the curve dropdown holds a fixed share so a long preset label
+     never squeezes the count slider beside it. */
+  --capacity-line-label-w: 56px;
+  --capacity-slider-w-min: 160px;
+  --capacity-curve-w: 200px;
+
+  /* The label track of a pond block. Every setting there names itself in this
+     column, a demand tick and a plain caption alike, so the widest name would
+     otherwise set the width for all of them and leave the sliders nothing. A
+     cap, not a fixed width: a shorter set of names still packs tight, and the
+     one long demand label wraps. */
+  --pond-label-w-max: 200px;
+
+  /* One extracted item sprite in a compact list row. */
+  --item-sprite-d: 24px;
+
+  /* The currency symbol drawn inside a price chip, beside its number. Smaller
+     than a list row's sprite because the number carries the reading here and
+     the picture only says which currency. */
+  --price-symbol-d: 14px;
+
+  /* Narrowest a shop card may be drawn before the grid drops a column: wide
+     enough for a two-word shop name and three slot boxes side by side, each
+     holding its own label. The grid tracks are auto-fill minmax on this, so
+     the column count follows the PANE's width, not the window's, so the
+     options panel lives in a split pane and is routinely dragged narrow. */
+  --shop-card-w-min: 260px;
+
+  /* One slot toggle inside a shop card. Fixed so the three boxes of a shelf
+     and the single box of the bomb counter are the same size everywhere,
+     whatever length of label each of them carries. */
+  --shop-slot-box-h: 34px;
+
+  /* One rung toggle inside a family card. A floor on the HEIGHT only: the
+     boxes size themselves to the name each one carries, so the two-rung
+     families draw narrower boxes than the four-rung one, but every box in
+     every card still comes out on the same line height. */
+  --tier-box-h: 28px;
+
+  /* One dark-room light tile: a square holding the item's sprite with its
+     tick under it. Taller than the slot and rung boxes because the art is the
+     label here, since there is no text to read the tile by. */
+  --dark-room-tile-d: 64px;
+
+  /* The sprite inside it, at twice its source pixels. A step up from the
+     compact list rows, where a name beside the art carries the identity and
+     24px is enough; here the picture has to be recognised on its own. */
+  --dark-room-sprite-d: 32px;
+
+  /* Narrowest a Hookshop item card may be before its grid drops a column: a
+     16:9 card picture still reads at this width, and so does a two-word name. */
+  --store-card-w-min: 200px;
+
+  /* The Hookshop's detail panel beside the card grid, the same width as the
+     list column of the master-detail layout it mirrors. */
+  --store-detail-w: 340px;
+
+  /* The Hookshop's signed-out screen: one readable centred column. */
+  --store-sign-in-w: 480px;
 }

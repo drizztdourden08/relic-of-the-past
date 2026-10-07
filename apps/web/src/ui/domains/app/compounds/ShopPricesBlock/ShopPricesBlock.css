@@ -1,0 +1,30 @@
+/* @layer renderer-components @kind style */
+
+/* A section of its own, matching the capacity block beside it: room above the
+   title, then the rows on one two-column grid. Every row lays its checkbox
+   (or label) in the first track and its control in the second, so the sliders
+   of the four currencies, the bottle contents and the percentage all start on
+   the same vertical line however long the names in front of them are. */
+
+.shop-prices-block {
+  padding-top: var(--space-md);
+}
+
+.shop-prices-block__rows {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  min-width: 0;
+}
+
+/* Each row spans the grid and inherits its tracks, so it stays a real box
+   (its dimming and its blocked marker apply to the whole line) while its two
+   cells still sit on the block's shared columns. */
+.shop-prices-block__rows > * {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  column-gap: var(--space-md);
+  align-items: center;
+  padding: var(--space-xs) var(--space-sm);
+  border-top: var(--border-width-thin) solid var(--c-hairline);
+}

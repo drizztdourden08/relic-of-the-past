@@ -1,13 +1,9 @@
 /* @layer electron-main @kind logic */
 /**
- * Haptic pattern player — turns a timed pattern of {durationMs, intensity}
- * segments into a sequence of SDL rumble calls. SDL only offers a single
- * rumble(low, high, durationMs) primitive, so a pattern is this player
- * calling it once per segment and waiting durationMs + gapMs before the
- * next one. Runs here in the main process rather than the renderer, so the
- * timing never drifts under renderer load and survives the window being
- * busy. Starting a new pattern on a device cancels whatever was still
- * playing on it, so overlapping haptic events never interleave on one motor.
+ * Turns a timed pattern of {durationMs, intensity} segments into one SDL
+ * rumble(low, high, durationMs) call per segment, waiting durationMs + gapMs
+ * between. In the main process so timing never drifts under renderer load.
+ * A new pattern on a device cancels whatever was still playing on it.
  */
 import { sdl3Source } from './sdl3-source';
 
@@ -32,8 +28,7 @@ class HapticPatternPlayer {
     this.cancel(deviceKey);
     if (pattern.length === 0) return { ok: true };
 
-    // A silent rumble both stops whatever the motor was doing and doubles as an
-    // up-front existence check — a device SDL doesn't have open just fails here.
+    // A silent rumble stops the motor and doubles as an existence check.
     if (!sdl3Source.rumble(deviceKey, 0, 0, 0)) {
       return { ok: false, error: `Device not found or has no rumble: "${deviceKey}"` };
     }

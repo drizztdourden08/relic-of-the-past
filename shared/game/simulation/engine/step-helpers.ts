@@ -1,8 +1,4 @@
 /* @layer shared-game @kind logic */
-/**
- * Stateless helpers for the step machine: event constructors, edge key-spending,
- * and the tile the virtual player lands on when crossing an edge.
- */
 import type { SimEvent, SimExit, SimObservation, TriggerAction } from '../types';
 import type { GridPos } from '../../navigation/types';
 import { getConnection } from '../../data';
@@ -29,22 +25,20 @@ const spendKeysForEdge = (s: EngineState, edge: ScreenEdge): void => {
     for (const token of group) {
       if (!token.startsWith('smallkey:')) continue;
       const target = keyTargetOf(token.slice('smallkey:'.length));
-      // A wildcard token spends nothing: it names no dungeon, so there is no
-      // bucket to draw from. That is a real leak — the static graph lets a run
-      // walk a `barrier:small-key` edge for free — and it is preserved here
-      // rather than quietly changed, because spending would alter what the
-      // simulator can reach. Same family as the unsatisfiable `bigkey:*` in
-      // requirements-map; both want the connections dataset to name the dungeon.
+      // A wildcard token names no dungeon, so there is no bucket to spend from.
+      // That is a real leak (the static graph lets a run walk a
+      // `barrier:small-key` edge for free), kept as-is because spending would
+      // change what the simulator can reach. Same family as the unsatisfiable
+      // `bigkey:*` in requirements-map; both want the connections dataset to name the dungeon.
       if (target && target !== ANY_DUNGEON) spendKey(s, target);
     }
   }
 };
 
 /**
- * Where the virtual player lands when crossing an edge — the entry point, else
- * screen centre. The landing tile lives on the OTHER side's own record now (a
- * connection point is one-sided): `edge.connection` is the point being left,
- * so its partner's `nav.fromPoint` is the point being arrived at.
+ * Where the virtual player lands when crossing an edge. The entry point, else
+ * screen centre. A connection point is one-sided: `edge.connection` is the
+ * point being left, so its partner's `nav.fromPoint` is the point arrived at.
  */
 const entryTileFor = (edge: ScreenEdge): GridPos =>
   getConnection(edge.connection.toConnectionId).nav?.fromPoint?.position ?? SCREEN_CENTER;
@@ -56,17 +50,10 @@ const landingTile = (exit?: SimExit, edge?: ScreenEdge): GridPos =>
   exit ? (exit.entryTile ?? SCREEN_CENTER) : entryTileFor(edge!);
 
 /**
- * Full narration for one screen hop: END position (the tile the player leaves
- * from), Exiting (with big-area via), area enter/leave markers, Screen entry,
- * START position (the tile the player lands on). Mutates s.virtual and s.area.
- */
-/**
  * How the player got in, in words. A screen id alone cannot say which of its
- * several ways in was used, and two of them need not lead to the same ground —
- * so the log has to name the crossing, not just the destination.
- *
- * Border signatures carry the tile SPAN, because one side of a screen can hold
- * more than one separate crossing.
+ * several ways in was used, and two of them need not lead to the same ground.
+ * So the log names the crossing. Border signatures carry the tile SPAN because
+ * one side of a screen can hold more than one crossing.
  */
 const arrivalLabel = (exit?: SimExit, tile?: GridPos): string => {
   const sig = exit?.edgeSig;
@@ -84,6 +71,7 @@ const arrivalLabel = (exit?: SimExit, tile?: GridPos): string => {
   return `via ${sig}`;
 };
 
+/** Narrates one screen hop. Mutates s.virtual and s.area. */
 const emitHop = (s: EngineState, events: SimEvent[], next: string, exit?: SimExit, edge?: ScreenEdge): void => {
   const from = s.virtual.screenId;
   events.push(narrative(s, posMsg('END', exit?.fromTile ?? s.virtual.tile)));
@@ -104,7 +92,7 @@ const emitHop = (s: EngineState, events: SimEvent[], next: string, exit?: SimExi
   // side resolve to this key too, so the run never walks one doorway twice.
   const crossed = exit ? crossingKey(from, next, exit.edgeSig) : null;
   if (crossed) s.crossings.add(crossed);
-  // The way back is used up too — observe() marks it once `next`'s own exits
+  // The way back is used up too. observe() marks it once `next`'s own exits
   // name it (see markWayBackUsed).
   s.cameFrom = { screenId: from, tile };
   events.push(narrative(s, `Screen ${screenLabel(next)} ${arrivalLabel(exit, tile)}`));
@@ -125,10 +113,10 @@ const emitDoorUnlock = (s: EngineState, events: SimEvent[], label: string, key: 
 };
 
 /**
- * A pulled switch raised the room's trapdoors, or — when `drain` is set —
- * lowered the water on a remote overworld screen instead. The local case
- * re-floods just this room; the remote case invalidates everywhere but here,
- * since a screen the run already passed through may now offer new ground.
+ * A pulled switch raised the room's trapdoors, or, when `drain` is set, lowered
+ * the water on a remote overworld screen. Local: re-flood this room. Remote:
+ * invalidate everywhere but here, since a screen already passed through may
+ * now offer new ground.
  */
 const emitSwitchPulled = (
   s: EngineState,
@@ -139,11 +127,11 @@ const emitSwitchPulled = (
 ): void => {
   s.done.add(key);
   if (drain) {
-    events.push(narrative(s, `Pulled switch (room ${roomId.toString(16)}) — drained screen 0x${drain.screen.toString(16)}`));
+    events.push(narrative(s, `Pulled switch (room ${roomId.toString(16)}) and drained screen 0x${drain.screen.toString(16)}`));
     globalRefresh(s);
     events.push(narrative(s, 'Reset: re-exploring with the drained screen open'));
   } else {
-    events.push(narrative(s, `Pulled switch (room ${roomId.toString(16)}) — shutter doors opened`));
+    events.push(narrative(s, `Pulled switch (room ${roomId.toString(16)}) and the shutter doors opened`));
     localRefresh(s);
     events.push(narrative(s, `Reset: re-flooding ${screenLabel(s.virtual.screenId)} with new state`));
   }
@@ -154,13 +142,13 @@ const emitSwitchPulled = (
 
 /**
  * A cracked wall blown open. Unlike every other trigger this writes NO game
- * state — the opened tiles live in the flood facade — so it produces no flag diff
+ * state (the opened tiles live in the flood facade), so it produces no flag diff
  * and must never reach the diff check, which would mark it failed. Re-flood in
- * place: the whole point is the passage the blast just opened.
+ * place for the passage the blast just opened.
  */
 const emitWallBombed = (s: EngineState, events: SimEvent[], key: string, label: string): void => {
   s.done.add(key);
-  events.push(narrative(s, `Bombed ${label} — wall opened`));
+  events.push(narrative(s, `Bombed ${label} and the wall opened`));
   localRefresh(s);
   events.push(narrative(s, `Reset: re-flooding ${screenLabel(s.virtual.screenId)} with new state`));
   s.currentTarget = undefined;
@@ -168,10 +156,10 @@ const emitWallBombed = (s: EngineState, events: SimEvent[], key: string, label: 
   s.phase = 'observing';
 };
 
-/** Room-clear kill trigger verified: the shutters are open — re-flood in place. */
+/** Room-clear kill trigger verified. The shutters are open, so re-flood in place. */
 const emitShutterClear = (s: EngineState, events: SimEvent[], label: string, key: string): void => {
   s.done.add(key);
-  events.push(narrative(s, `Defeated ${label} — shutter doors opened`));
+  events.push(narrative(s, `Defeated ${label} and the shutter doors opened`));
   localRefresh(s);
   events.push(narrative(s, `Reset: re-flooding ${screenLabel(s.virtual.screenId)} with new state`));
   s.currentTarget = undefined;
@@ -179,8 +167,8 @@ const emitShutterClear = (s: EngineState, events: SimEvent[], label: string, key
   s.phase = 'observing';
 };
 
-/** The follower now tags along: state progress, not a check. Her tagalong unlocks
- *  the throne room's passage — a REMOTE screen — so the whole graph re-opens. */
+/** The follower now tags along: state progress, not a check. It unlocks the
+ *  throne room's passage, a REMOTE screen, so the whole graph re-opens. */
 const emitFollower = (s: EngineState, events: SimEvent[], key: string): void => {
   s.done.add(key);
   s.events.add('event:follower-joined');
@@ -197,7 +185,7 @@ const emitFollower = (s: EngineState, events: SimEvent[], key: string): void => 
 const TRAP_ENTRY_RADIUS = 8;
 
 /** Arriving beside a closed shutter in a kill-tag room: it just slammed shut
- *  behind the player — narrate it (the flood's edges-0 line is the hard evidence). */
+ *  behind the player. Narrate it (the flood's edges-0 line is the hard evidence). */
 const emitEntryTrapSlam = (s: EngineState, obs: SimObservation, events: SimEvent[]): void => {
   const inter = obs.interactables;
   if (!inter || !(inter.tags ?? [0, 0]).some(KILL_GATE_TAG)) return;
@@ -208,9 +196,8 @@ const emitEntryTrapSlam = (s: EngineState, obs: SimObservation, events: SimEvent
 
 /**
  * Interacting inside a still-hostile trap section slams every open shutter shut
- * FIRST: the player walks in (the virtual tile moves to the target), the real target
- * is requeued, and the slam runs as its own trigger/verify cycle. Returns true
- * when the interception consumed this step.
+ * FIRST: the virtual tile moves to the target, the real target is requeued, and
+ * the slam runs as its own trigger/verify cycle. Returns true when it consumed this step.
  */
 const interceptTrap = (s: EngineState, obs: SimObservation, events: SimEvent[], actions: TriggerAction[]): boolean => {
   const target = s.currentTarget;

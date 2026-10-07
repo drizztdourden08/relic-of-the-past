@@ -5,10 +5,10 @@
  *
  * `apps/web/src/ui/design-system/data/schema/path.ts` already does get/set
  * over a path grammar, but its grammar is a plain dot-numeric one
- * (`items.0.name`), not the bracketed one `diff.ts` emits — and it lives in
+ * (`items.0.name`), not the bracketed one `diff.ts` emits. It also lives in
  * the renderer package, which `shared/` may never import from (`shared/`
  * stays a leaf; see `detection-types.ts` for the same constraint applied to
- * observation types). So this is a small local parser rather than a shared
+ * observation types). So this is a small local parser instead of a shared
  * import, kept deliberately close in spirit to that file: `getPath` never
  * throws, `setPath` clones every container along the path and creates missing
  * intermediates, leaving the input untouched.

@@ -1,7 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
-/**
- * Dungeon room data compilation — room objects, chests, pits, headers.
- */
+/** Dungeon room data compilation: room objects, chests, pits, headers. */
 import type { RomData } from './rom/rom-types';
 import type { AssetBuilder } from './asset-builder';
 
@@ -75,7 +73,7 @@ const buildDungeonRooms = (rom: RomData, A: AssetBuilder): void => {
     if (pitsSet.has(i)) pitsHurt.push(i);
   }
 
-  // Chests — handle big chest flag
+  // Chests, including the big chest flag
   const chestAddr = 0x81e96e;
   const chestsByRoom = new Map<number, { item: number; big: boolean }[]>();
   for (let i = 0; i < 168; i++) {

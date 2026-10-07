@@ -93,7 +93,7 @@ can be converted safely to existing objects or require baked tilemap support.
 - [x] Decode the Palace room-palette-record addressing.
 - [x] Extract every referenced background/sprite sheet and BG palette.
 - [ ] Determine exact BG priority/transparency rules for all Palace effects.
-- [x] Emit lossless pre-expanded SNES runtime tilemaps rather than inventing SNES objects.
+- [x] Emit lossless pre-expanded SNES runtime tilemaps instead of inventing SNES objects.
 - [x] Render every Palace room offline from converted output.
 
 ### Collision and interaction

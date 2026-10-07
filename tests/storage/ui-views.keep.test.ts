@@ -5,16 +5,12 @@ import {
 import { emptySnapshot } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
 import type { ViewKey, ViewSnapshot } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
 
-// The repo is the single boundary the rest of the app calls through — nothing
-// else touches window.api.uiViews directly. These tests cover the write
-// discipline the plan calls out: debounced+coalesced, whole-file, and never
-// throwing back into a caller on a failed load or save.
+// The repo is the single boundary to window.api.uiViews. Covered: debounced +
+// coalesced, whole-file, and never throwing back into a caller.
 //
-// The module keeps its cache/timer as private top-level state, so each test
-// gets a clean instance via `vi.resetModules()` + a fresh dynamic import —
-// that also defers evaluating log-bus's window.addEventListener side effect
-// until AFTER `window` has been stubbed for this test (a static import would
-// run before the stub, since imports are hoisted above everything else).
+// The module keeps cache/timer as private top-level state, so each test gets a
+// fresh dynamic import via `vi.resetModules()`. That also defers log-bus's
+// window.addEventListener until AFTER `window` is stubbed.
 
 let load: ReturnType<typeof vi.fn>;
 let save: ReturnType<typeof vi.fn>;
@@ -51,7 +47,7 @@ describe('loadViewSnapshot', () => {
     expect(await loadViewSnapshot('missing:key' as ViewKey)).toBeUndefined();
   });
 
-  it('drops a malformed entry rather than trust untyped disk JSON', async () => {
+  it('drops a malformed entry instead of trusting untyped disk JSON', async () => {
     load.mockResolvedValue({ 'a:b': { not: 'a snapshot' } });
     expect(await loadViewSnapshot('a:b' as ViewKey)).toBeUndefined();
   });
@@ -62,7 +58,7 @@ describe('loadViewSnapshot', () => {
   });
 });
 
-describe('saveViewSnapshot — debounce and coalesce', () => {
+describe('saveViewSnapshot debounces and coalesces', () => {
   it('does not write immediately', () => {
     saveViewSnapshot('a:b' as ViewKey, emptySnapshot());
     expect(save).not.toHaveBeenCalled();
@@ -108,7 +104,7 @@ describe('saveViewSnapshot — debounce and coalesce', () => {
     expect(save).toHaveBeenCalledTimes(2);
   });
 
-  it('never throws when the write fails — fire and forget', async () => {
+  it('never throws when the write fails, because it is fire and forget', async () => {
     save.mockRejectedValue(new Error('disk full'));
     saveViewSnapshot('a:b' as ViewKey, emptySnapshot());
     await Promise.resolve();

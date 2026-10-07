@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 /**
- * InputProfileList — left column showing saved input profiles.
+ * Left column showing saved input profiles.
  * Active profile is highlighted. Supports create/delete/select/rename.
  */
 
@@ -100,7 +100,7 @@ const InputProfileList = (props: InputProfileListProps) => {
               <Text className="input-profile-list__item-name">{profile.name}</Text>
             )}
             {profile.id === activeId && editingId !== profile.id && (
-              <Text className="input-profile-list__item-badge" title="Active — drives the game">Active</Text>
+              <Text className="input-profile-list__item-badge" title="Active, drives the game">Active</Text>
             )}
             {editingId !== profile.id && (
               <Text

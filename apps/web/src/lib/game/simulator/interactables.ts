@@ -36,12 +36,12 @@ const getRoomChests = (roomId: number): SimChest[] =>
  * remote rooms the virtual player isn't in (static placement from the room's
  * sprite table). The progress-conditional NPCs the table lists (intro uncle,
  * pre-Flippers King Zora, ...) are filtered later by the engine's presence gate
- * (evaluatePresence over the NPC's declarative condition) — the sanctioned
+ * (evaluatePresence over the NPC's declarative condition), the sanctioned
  * single data read for the otherwise data-free detector.
  *
  * `posKnown` is always true: spawn positions come from the static room sprite
  * table and are valid remotely, and the engine floods the VIRTUAL room's grid
- * (built room-addressably) — so the flood can always judge these tiles. A
+ * (built room-addressably), so the flood can always judge these tiles. A
  * fail-open here would let unreachable NPCs trigger through walls/blockers.
  */
 const getRoomSprites = (roomId: number): SimSprite[] =>
@@ -65,7 +65,7 @@ const getRoomSprites = (roomId: number): SimSprite[] =>
  * screens is queried, with every spawn's tile relative to the area's head
  * screen. Each spawn is resolved to the screen it actually sits on before it
  * becomes a `SimSprite`, so `roomId` always names the screen that owns it and
- * `tile` is always local to that screen — never area-relative.
+ * `tile` is always local to that screen, never area-relative.
  */
 const getOverworldSprites = (screenIndex: number): SimSprite[] => {
   const heads = wasmGetAreaHeads();
@@ -84,7 +84,7 @@ const getOverworldSprites = (screenIndex: number): SimSprite[] => {
 };
 
 /**
- * A room's doors, plus its CELL LOCKS — the keyhole plates that gate a jail
+ * A room's doors, plus its CELL LOCKS, the keyhole plates that gate a jail
  * cell (room object 0x18). They carry no door-table record at all, so they
  * arrive as big-key doors flagged `cellLock`, keyed by chest slot.
  */

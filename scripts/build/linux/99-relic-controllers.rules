@@ -1,13 +1,8 @@
 # @layer tooling-scripts @kind build
-# Relic of the Past — game controller access (Linux)
-#
-# Grants the logged-in desktop user read/write access to game controllers over
-# hidraw + USB, so the SDL3 controller transport can open them without root.
-# `TAG+="uaccess"` hands access to the active seat's user via systemd-logind
-# (the modern, group-free approach).
-#
-# Installed automatically by the .deb (see deb-postinst.sh); AppImage users copy
-# this file to /etc/udev/rules.d/ manually (see docs/controllers/linux-setup.md).
+# Relic of the Past: game controller access (Linux). `TAG+="uaccess"` grants the
+# active seat's user access via systemd-logind, so the SDL3 controller transport
+# can open controllers without root. Installed by the .deb (deb-postinst.sh);
+# AppImage users copy this to /etc/udev/rules.d/ (docs/controllers/linux-setup.md).
 
 # Nintendo (Switch Pro / Pro 2 / NSO GameCube / Joy-Con)
 SUBSYSTEM=="hidraw", ATTRS{idVendor}=="057e", TAG+="uaccess"
@@ -17,7 +12,7 @@ SUBSYSTEM=="usb", ATTRS{idVendor}=="057e", TAG+="uaccess"
 SUBSYSTEM=="hidraw", ATTRS{idVendor}=="054c", TAG+="uaccess"
 SUBSYSTEM=="usb", ATTRS{idVendor}=="054c", TAG+="uaccess"
 
-# Microsoft (Xbox — usually XInput, included for completeness)
+# Microsoft (Xbox, usually XInput; included for completeness)
 SUBSYSTEM=="hidraw", ATTRS{idVendor}=="045e", TAG+="uaccess"
 SUBSYSTEM=="usb", ATTRS{idVendor}=="045e", TAG+="uaccess"
 

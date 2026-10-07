@@ -1,9 +1,7 @@
 /* @layer shared-input @kind data */
 /**
- * Xbox family display metadata: Xbox 360 and Xbox One reports (covers
- * Series X|S, Elite and Adaptive, which all report as one of those two
- * types). Icons and console defaults only, carried over from the existing
- * xbox preset; no parsing and no decision about what a device has.
+ * Xbox family display metadata: Xbox 360 and Xbox One reports (Series X|S, Elite and Adaptive
+ * all report as one of those two). Icons and console defaults only; no parsing.
  */
 
 import { registerFamily } from './family-registry';
@@ -48,10 +46,8 @@ const XBOX_FAMILY: FamilyMetadata = {
     GUIDE: 'xbox-home',
     MISC1: 'xbox-share',
   },
-  // LEFT_X/LEFT_Y (and RIGHT_X/RIGHT_Y) share one base icon key per stick.
-  // The four direction glyphs and the neutral pose are inferred from the
-  // live axis pair at render time (see resolveStickDirectionIcon), never
-  // configured per direction here.
+  // One base icon key per stick; direction glyphs and the neutral pose are inferred at render
+  // time (resolveStickDirectionIcon).
   axisIcons: {
     LEFT_X: 'xbox-stick-l',
     LEFT_Y: 'xbox-stick-l',
@@ -74,9 +70,9 @@ const XBOX_FAMILY: FamilyMetadata = {
     DPAD_LEFT: 'Left',
     DPAD_RIGHT: 'Right',
   },
-  // Xbox dual-rumble is a linear ERM magnitude that feels weak at low values — and the motors
-  // barely move below ~0.25 — versus Switch HD rumble's punchy pre-baked pulses. Lift onto a
-  // floor and boost so short combat pulses land hard. Strength only; duration is untouched.
+  // Xbox dual-rumble is a linear ERM magnitude that feels weak at low values (the motors barely
+  // move below ~0.25), unlike Switch HD rumble's punchy pulses. Lift onto a floor and boost so
+  // short combat pulses land hard. Strength only; duration is untouched.
   shapeVibration: (intensity) => (intensity <= 0 ? 0 : Math.min(1, 0.3 + intensity * 0.85)),
 };
 

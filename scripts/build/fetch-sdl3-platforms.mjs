@@ -1,21 +1,16 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * Per-platform fetch strategies for scripts/build/fetch-sdl3.mjs, split out to
- * keep that file under the repo's line limit. Each function takes the pinned
- * versions, a `fetchAndVerify(url, filename)` downloader already wired to the
- * checksums map and the shared downloads dir, and the third_party/sdl3
- * extraction root — and returns the artifact paths to record in the marker
- * (a literal `'system'` entry means "satisfied by a system package, nothing
- * on disk to check next time").
+ * Per-platform fetch strategies for scripts/build/fetch-sdl3.mjs. Each takes the
+ * pinned versions, a `fetchAndVerify(url, filename)` downloader and the
+ * third_party/sdl3 root, and returns the artifact paths to record in the marker
+ * (a literal `'system'` means a system package, nothing on disk to check).
  */
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { extractTarGz, extractSevenZipBestEffort, commandSucceeds } from './fetch-sdl3-helpers.mjs';
 
-// Every platform builds SDL from this source tree (see build-sdl3.mjs), so the
-// source is always fetched, never an official prebuilt and never a system
-// package. Those are all compiled without libusb, which is the one thing this
-// addon needs, so none of them can stand in for a build of our own.
+// Always source (see build-sdl3.mjs): official prebuilts and system packages are
+// compiled without libusb, the one thing this addon needs.
 const fetchSdlSource = async (sdl3Version, fetchAndVerify, thirdPartyDir) => {
   const tarball = await fetchAndVerify(
     `https://github.com/libsdl-org/SDL/releases/download/release-${sdl3Version}/SDL3-${sdl3Version}.tar.gz`,
@@ -24,7 +19,7 @@ const fetchSdlSource = async (sdl3Version, fetchAndVerify, thirdPartyDir) => {
   const sourceDir = join(thirdPartyDir, `SDL3-${sdl3Version}`);
   extractTarGz(tarball, thirdPartyDir);
   if (!existsSync(join(sourceDir, 'CMakeLists.txt'))) {
-    throw new Error(`Expected ${sourceDir}/CMakeLists.txt after extracting SDL3 source — the tarball layout may have changed.`);
+    throw new Error(`Expected ${sourceDir}/CMakeLists.txt after extracting SDL3 source. The tarball layout may have changed.`);
   }
   console.log(`[fetch-sdl3] SDL3 source ready at ${sourceDir}`);
   return sourceDir;

@@ -15,13 +15,8 @@ const S: Record<string, CSSProperties> = {
 };
 
 /**
- * Only the annotation kinds actually PRESENT get a legend row — a full 20-row key
- * would dwarf the game view, and most screens carry a handful of kinds. Dots and
- * arrows have their own box (DotLegend), so this panel stays one short column.
- *
- * Rows are display-only: the container is pointer-events:none apart from each
- * panel's own chevron, so the overlay never eats a game click. A kind switched off
- * in the navigation widget shows struck through here.
+ * Only the annotation kinds PRESENT get a legend row; a full 20-row key would dwarf the game view.
+ * A kind switched off in the navigation widget shows struck through here.
  */
 const OverlayLegend = ({ annotations }: { annotations?: readonly ScreenAnnotations[] }) => {
   const hiddenKinds = useNavigationOverlayStore((s) => s.hiddenKinds);
@@ -30,14 +25,14 @@ const OverlayLegend = ({ annotations }: { annotations?: readonly ScreenAnnotatio
 
   return (
     <CollapsiblePanel title="on this screen">
-      {present.length === 0 && <Text style={S.none}>nothing detected yet — run the flood</Text>}
+      {present.length === 0 && <Text style={S.none}>nothing detected yet. Run the flood</Text>}
       {present.map((kind) => {
         const off = hiddenKinds.has(kind);
         return (
           <Box
             key={kind}
             style={S.row}
-            title={off ? 'hidden — re-enable in the navigation widget' : undefined}
+            title={off ? 'Hidden. Re-enable it in the navigation widget.' : undefined}
           >
             <Text style={{ color: ANNOTATION_STYLES[kind].color, opacity: off ? 0.4 : 1 }}>
               {ANNOTATION_STYLES[kind].glyph}

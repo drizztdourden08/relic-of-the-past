@@ -1,18 +1,10 @@
 /* @layer renderer-components @kind hook */
 /**
- * Keeps "expand to available space" honest: it only fills while there is space
- * to fill, and sizes itself to its content while there is not.
- *
- * The flag itself is never touched. What comes out of here is a per-render
- * override the track list consults, so a column the user asked to expand STAYS
- * asked-to-expand — close a column, widen the window, and it goes back to
- * filling on its own, with nothing to click again.
- *
- * Two things can change the answer and each has its own trigger: the columns
- * (a signature effect, since a width or a removal changes what the table needs)
- * and the scroller (a ResizeObserver, since the window changes what it can
- * show). Nothing observes the CONTENT — a re-measure that the measurement
- * itself could set off is how a layout loop starts.
+ * A grow column fills while there is space and sizes to content while there is
+ * not. The flag is never touched; this returns a per-render override, so the
+ * column goes back to filling by itself. Triggers: the column signature and a
+ * ResizeObserver on the scroller. Nothing observes content, which would start a
+ * layout loop.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { measuredFitWidths, renderedHeaderWidth } from './measure-column';
@@ -21,16 +13,12 @@ import type { RefObject } from 'react';
 import type { GrowFallback } from './overflow-probe';
 import type { TableColumn } from '../../../data/table/types';
 
-/**
- * A window drag fires the observer far faster than a re-measure is worth doing.
- * Long enough to coalesce a drag into a handful of passes, short enough that
- * letting go of the edge looks instant.
- */
+/** Coalesces a window drag into a handful of passes. */
 const MEASURE_DELAY_MS = 80;
 
 interface UseGrowFallbackInput {
   columns: readonly TableColumn[];
-  /** The scroller the header and rows live in — the thing that overflows. */
+  /** The scroller the header and rows live in. It is what overflows. */
   rootRef: RefObject<HTMLElement | null>;
 }
 

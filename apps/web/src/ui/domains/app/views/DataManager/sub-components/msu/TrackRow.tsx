@@ -11,7 +11,7 @@ import type { TrackRowProps } from './msu.type';
 const TrackRow = (props: TrackRowProps) => {
   const {
     trackNum, description, fileName, fileSize, layerCount, options,
-    playing, busy, expanded, playingOriginal,
+    playing, busy, expanded, playingOriginal, readOnly,
     onAssign, onPreview, onStopPreview, onPlayOriginal, onToggleLayers,
   } = props;
   const [editing, setEditing] = useState(false);
@@ -28,7 +28,7 @@ const TrackRow = (props: TrackRowProps) => {
             value={fileName ?? ''}
             onChange={(value) => { onAssign(trackNum, value); setEditing(false); }}
             options={options}
-            placeholder="Select file…"
+            placeholder="Select file..."
             searchable
             size="sm"
           />
@@ -37,10 +37,10 @@ const TrackRow = (props: TrackRowProps) => {
         <>
           <Text
             className={`msu-track-row__file${hasAudio ? '' : ' msu-track-row__file--empty'}`}
-            title={fileName ?? 'Click to assign a file'}
-            onClick={() => setEditing(true)}
+            title={readOnly ? fileName ?? undefined : fileName ?? 'Click to assign a file'}
+            onClick={readOnly ? undefined : () => setEditing(true)}
           >
-            {fileName ?? '—'}
+            {fileName ?? '-'}
           </Text>
           {fileSize != null && <Text className="track-list__size">{formatBytes(fileSize)}</Text>}
         </>

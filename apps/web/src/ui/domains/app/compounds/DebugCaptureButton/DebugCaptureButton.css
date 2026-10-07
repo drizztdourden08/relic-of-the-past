@@ -1,0 +1,64 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * The colorful-glow-on-hover technique (codingnepalweb.com/colorful-glowing-effect-on-hover),
+ * copied structurally and recolored to the project's green/gold tokens, state-triggered by
+ * --active instead of :hover: the outer circle and its two same-size span layers all share ONE
+ * background (spans use `background: inherit`), idle dark like every other round button. Active
+ * swaps ONLY the outer's background to the gradient - the spans inherit it and get blurred,
+ * bleeding a colorful halo outward, while the inner button (higher z-index, its own fixed dark
+ * background) stays sharp and unchanged on top.
+ */
+.debug-capture-glow {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+
+  /* Transparent at rest: the layers (background: inherit) stay invisible too, so nothing
+     shows beyond the 40px button itself until --active swaps this to the gradient. */
+  background: transparent;
+}
+
+.debug-capture-glow__layer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+  background: inherit;
+  transform: translate(-50%, -50%);
+}
+
+/* Rendered after the two span layers, so plain DOM order already puts it on top - no z-index needed. */
+.debug-capture-glow .debug-capture-button.debug-round-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.debug-capture-glow--active .debug-capture-glow__layer--1 {
+  filter: blur(7px);
+}
+
+.debug-capture-glow--active .debug-capture-glow__layer--2 {
+  filter: blur(14px);
+}
+
+.debug-capture-glow--active {
+  background: linear-gradient(var(--c-green), var(--c-gold-bright), var(--c-green-bright));
+  animation: debug-capture-glow-rotate 2.2s ease-in-out infinite alternate;
+}
+
+/* A narrow +/-20deg swing (not the reference's full 360deg spin) so the glow floats between
+   green and gold and never crosses into blue/purple territory. */
+@keyframes debug-capture-glow-rotate {
+  0% { filter: hue-rotate(-20deg); }
+  100% { filter: hue-rotate(20deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .debug-capture-glow--active { animation: none; }
+}

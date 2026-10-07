@@ -28,13 +28,13 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'newRenderer',
   'enhancedMode7',
   // Extended-rendering feature bits that are pure per-frame flags (no buffer-geometry change, so no
-  // restart). The geometry settings they sit beside — extendedRendering, aspectRatio, ultrawideRendering,
-  // tallRendering, extendY — are baked at init and are deliberately NOT here.
+  // restart). The geometry settings beside them (extendedRendering, aspectRatio, ultrawideRendering,
+  // tallRendering, extendY) are baked at init and are deliberately NOT here.
   'cameraLockToViewport',
   'smoothTransitions',
   'widescreenPlayArea',
   'offscreenAI',
-  // Deprecated migration source for offscreenAI, never written going forward; kept live so any
+  // Deprecated migration source for offscreenAI, never written any more; kept live so any
   // stray legacy write still applies without forcing a restart.
   'pauseOffscreenAI',
   'widescreenSprites',
@@ -44,6 +44,51 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'inventoryReorder',
   'secondaryItemSlots',
   'autoSkipDialog',
+  'prefillFileName',
+  // World-item presentation (synced every frame via features3, same path as cheatsEnabled)
+  'coloredRupees',
+  'itemSheen',
+  // The archery host's refusal (features3, same path again)
+  'archeryNeedsBow',
+  // Dialog pacing (pushed as plain values, gated by the DialogControls bit in features3)
+  'dialogSpeed',
+  'dialogHoldSpeed',
+  'dialogHoldToAccelerate',
+  'dialogFillOnB',
+  'dialogTypewriter',
+  // Dialog box look (React overlay, plus one hidden flag the core reads every frame)
+  'dialogBox',
+  'dialogFont',
+  'dialogFontScale',
+  'dialogInkColor',
+  'dialogStrokeColor',
+  'dialogStrokeWidth',
+  'dialogBoxOpacity',
+  'dialogButtonPrompts',
+  'dialogFloatingGround',
+  'dialogIntroTelepathyGround',
+  'dialogGroundFade',
+  'dialogBoxFit',
+  'dialogBorder',
+  'dialogBorderThickness',
+  'dialogBorderColor',
+  'dialogCorner',
+  'dialogCornerMark',
+  'dialogCornerMarkAngle',
+  'dialogTexture',
+  'dialogTextureColor',
+  'dialogTextureOpacity',
+  'dialogTextureAnimation',
+  'dialogTextureSpeed',
+  'dialogTextureScale',
+  'dialogTextureDensity',
+  'dialogTextureScatter',
+  'dialogGroundColor',
+  // Title screen (React overlay, plus the hide bit in features2 and one wanted flag the core reconciles)
+  'titleScreen',
+  'titleMotion',
+  'titleFollowsProgress',
+  'titleSword',
   // Per-group volume enable gate (DSP flag pushed live)
   'perGroupVolume',
   // Window settings (Electron-managed, no WASM restart needed)
@@ -52,10 +97,13 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   // Host-side display switch: pushed on change, applied on the next fullscreen transition
   'syncedRefreshRate',
   'syncedRefreshRateHz',
-  // Canvas fit is recomputed from a React prop — no WASM restart needed
+  // Canvas fit is recomputed from a React prop, so no WASM restart is needed
   'pixelPerfect',
-  // Frame pacing (swapped via WasmSetVsync — the main loop's schedule can change mid-run)
+  // Frame pacing, swapped via WasmSetVsync because the main loop's schedule can change mid-run
   'vsync',
+  // Turbo speed, pushed via WasmSetTurboSpeed; a plain pacing global, read on every tick
+  'turboEnabled',
+  'turboSpeed',
   // Audio volume (Web Audio gain, no restart needed)
   'masterVolume',
   // Sub-volumes (WASM DSP-level, no restart needed)
@@ -63,7 +111,7 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'musicMuted',
   'sfxVolume',
   'sfxMuted',
-  // Ambience is app-mixed only (msuSyncVolume on every push) — the sound chip has no ambient split
+  // Ambience is app-mixed only (msuSyncVolume on every push) because the sound chip has no ambient split
   'ambientVolume',
   'ambientMuted',
   // FPS display (toggled via WasmSetDisplayPerf)
@@ -76,8 +124,8 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'activeInputProfileId',
   // Edge effect (React prop, no WASM restart needed)
   'overworldEdgeEffect',
-  // Backdrop color (WASM flag, pushed live)
-  'forceBackdropBlack',
+  // Space beyond a room's walls (WASM request, pushed live)
+  'hideSpaceBeyondWalls',
   // HUD settings (React-only, no WASM restart needed)
   'hudMode',
   'hudStyle',
@@ -96,13 +144,15 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'developerToolsEnabled',
   // Cheat gating (synced every frame via features3, same path as developerToolsEnabled)
   'cheatsEnabled',
-  // vanillaSafe is deliberately NOT here: its gate-word masking (SyncGateWords) is instant regardless of
-  // this set — pushLiveSettings runs on every change either way — but flipping it also has to correct
-  // aspectRatio/extendY (baked into the render buffer at init) and MSU (opened once at boot), which are
-  // restart-only. Leaving it off this list makes any vanillaSafe toggle surface the restart toast below,
-  // same as those settings do on their own.
+  // vanillaSafe is deliberately NOT here: its gate-word masking is instant regardless (pushLiveSettings
+  // runs on every change), but flipping it also has to correct aspectRatio/extendY and MSU, which are
+  // restart-only. Leaving it off makes the toggle surface the restart toast.
   // Player sprite sheet (swapped in place via WasmApplyPlayerSpriteFile)
   'linkSprite',
+  // Replacement-music position handling. Both are read on every music event, not captured at
+  // session start, so a change applies to the very next one.
+  'resumeMSU',
+  'resetMSUAtTitle',
 ]);
 
 export { LIVE_SETTINGS };

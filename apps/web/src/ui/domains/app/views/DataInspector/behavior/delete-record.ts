@@ -1,16 +1,10 @@
 /* @layer renderer-app @kind logic */
 /**
- * Deleting a record.
- *
- * Every kind the reference index answers for is wired, because a delete path
- * without a reverse index would be a delete with nothing to warn about. Each
- * deleter mirrors `create-tag.ts`'s own shape — the main process writes the
- * source file first, and only on success is the in-memory session folded back
- * into step, so a failed write never desyncs the registry from disk.
- *
- * Tag and item group each keep lookup maps of their own beside the registry, so
- * each has its own unregister; the six record-facade collections keep nothing
- * else, so one factory covers them with the generic `unregisterRecord`.
+ * Only kinds the reference index answers for are wired: a delete without a
+ * reverse index has nothing to warn about. The main process writes the source
+ * file first; the in-memory registry is updated only on success, so a failed
+ * write never desyncs it from disk. Tag and item group keep their own lookup
+ * maps, so each has its own unregister.
  */
 import { unregisterItemGroupRecord, unregisterRecord, unregisterTag } from '@shared/game/data';
 import { invalidateTagSuggestions } from './tag-suggestions';
@@ -40,7 +34,7 @@ const deleteItemGroupRecord = async (id: string): Promise<DeleteResult> => {
   return { success: true };
 };
 
-/** One delete for a record-facade collection — only the channel differs. */
+/** One delete for a record-facade collection. Only the channel differs. */
 const facadeDeleter = (
   kind: EntityKind,
   send: (args: DeleteRecordArgs) => Promise<WriteRecordResult>,

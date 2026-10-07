@@ -30,7 +30,7 @@ const MsuImport = (props: MsuImportProps) => {
     }
 
     setBusy(true);
-    setStatus({ message: 'Downloading…', variant: '' });
+    setStatus({ message: 'Downloading...', variant: '' });
 
     try {
       const result = await msuStore.importMsu(profileId, trimmed);
@@ -50,7 +50,7 @@ const MsuImport = (props: MsuImportProps) => {
   const handleDrop = useCallback(async (files: File[]) => {
     if (files.length === 0) return;
     setBusy(true);
-    setStatus({ message: 'Importing…', variant: '' });
+    setStatus({ message: 'Importing...', variant: '' });
 
     try {
       const result = await msuStore.importMsuFile(profileId, files[0]);
@@ -78,7 +78,7 @@ const MsuImport = (props: MsuImportProps) => {
         <TextInput
           className="msu-import__url-input"
           type="text"
-          placeholder="Paste MSU pack download URL…"
+          placeholder="Paste MSU pack download URL..."
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -90,7 +90,7 @@ const MsuImport = (props: MsuImportProps) => {
           onClick={handleDownload}
           disabled={busy || !url.trim()}
         >
-          {busy ? '…' : 'Download'}
+          {busy ? '...' : 'Download'}
         </Button>
       </Box>
       <Box className="msu-import__divider">or</Box>

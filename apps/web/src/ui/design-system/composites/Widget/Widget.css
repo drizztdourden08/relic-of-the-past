@@ -1,9 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* ═══════════════════════════════════════════════════════════════
-   Widget Window System — Styles
-   ═══════════════════════════════════════════════════════════════ */
-
 /* ─── Widget Manager (container, no visual) ─── */
 .widget-manager {
   position: fixed;
@@ -26,7 +22,7 @@
   color: var(--c-text);
   overflow: hidden;
 
-  /* Frame uses variable opacity — neutral (NOT bluish), matches the one bg family.
+  /* Frame uses variable opacity, neutral (NOT bluish), matching the one bg family.
      rgb() with a runtime opacity multiplier can't be a flat token (dynamic per-instance). */
   background: rgb(14 14 18 / calc(0.96 * var(--widget-frame-opacity))); /* stylelint-disable-line function-disallowed-list */
   border: 1px solid rgb(255 255 255 / calc(0.06 * var(--widget-frame-opacity))); /* stylelint-disable-line function-disallowed-list */
@@ -40,7 +36,7 @@
   z-index: var(--z-floating);
 }
 
-/* Docked — remove rounded corners on the docked edge */
+/* Docked: remove rounded corners on the docked edge */
 .widget--docked {
   border-radius: 0;
 }

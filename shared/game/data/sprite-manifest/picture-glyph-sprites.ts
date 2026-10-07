@@ -6,7 +6,7 @@
  * bracket run (see `codes/glyph.ts`, which tells those apart from control
  * codes). Each picture has a sprite-manifest entry cut from the dialogue font,
  * and this map is the lookup an editor needs to go from the token it parsed to
- * the file name it should show — derived from the manifest itself plus the base
+ * the file name it should show. It is derived from the manifest itself plus the base
  * alphabet, so the two can never drift apart.
  *
  * Keys are base-alphabet tokens with their brackets intact. A localized
@@ -25,7 +25,7 @@ interface PictureGlyphSprite {
   /** The token's index in the base alphabet. */
   glyph: number;
   /**
-   * `whole` — the sprite is this token on its own. `first`/`second` — the sprite
+   * `whole` means the sprite is this token on its own. `first`/`second` mean the sprite
    * holds both halves of a two-token picture: draw it on `first`, skip `second`.
    */
   span: GlyphSpan;

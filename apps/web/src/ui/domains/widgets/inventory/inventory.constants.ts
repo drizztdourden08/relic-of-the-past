@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind constants */
 import type { InventoryViewMode } from '@shared/game/data';
 
-const STORAGE_KEY = 'inventory-view-mode';
+const DEFAULT_VIEW_MODE: InventoryViewMode = 'default';
 
 const VIEW_OPTIONS: { value: InventoryViewMode; label: string }[] = [
   { value: 'default', label: 'List' },
@@ -9,4 +9,4 @@ const VIEW_OPTIONS: { value: InventoryViewMode; label: string }[] = [
   { value: 'compact', label: 'Grid' },
 ];
 
-export { STORAGE_KEY, VIEW_OPTIONS };
+export { DEFAULT_VIEW_MODE, VIEW_OPTIONS };

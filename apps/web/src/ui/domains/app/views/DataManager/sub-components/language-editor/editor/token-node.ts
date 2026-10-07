@@ -2,34 +2,32 @@
 /**
  * The atomic inline node a non-text token occupies in the editor.
  *
- * Everything that is not plain text and genuinely sits IN the run — a mid-line
- * control code, a substitution variable, a glossary reference, a picture
- * character — is ONE indivisible character as far as the caret is concerned: it
- * can be selected and deleted whole, never typed into and never split. Text
- * around it stays ordinary editable text, which is the whole point of the node:
- * a translator types normally and the toolbar drops atoms in at the caret.
+ * Everything that is not plain text and sits IN the run is ONE indivisible
+ * character as far as the caret is concerned: a mid-line control code, a
+ * substitution variable, a glossary reference, a picture character. It can be
+ * selected and deleted whole, never typed into and never split. Text around it
+ * stays ordinary editable text.
  *
- * What is NOT here any more is line structure. A row marker and the wait that
- * closes a box occur only at a line's edges, so they are attributes of the line
- * (see `line-attrs.ts`) rather than objects in the text. The node still knows
- * how to draw one if a paste brings it in, so nothing is ever lost silently.
+ * Line structure is not here. A row marker and the wait that closes a box occur
+ * only at a line's edges, so they are attributes of the line (see
+ * `line-attrs.ts`), not objects in the text. The node still knows how to draw
+ * one if a paste brings it in, so nothing is lost silently.
  *
  * The attribute contract lives in `token-attrs.ts` and the reverse mapping in
- * `attrs-to-token.ts`; this file only declares them to the schema and decides
- * how an atom leaves the editor:
+ * `attrs-to-token.ts`; this file declares them to the schema and decides how an
+ * atom leaves the editor:
  *
- *   - HTML (copy/paste inside the editor) — `span[data-dialogue-token]` with one
+ *   - HTML (copy/paste inside the editor) is `span[data-dialogue-token]` with one
  *     data attribute per field, so a round trip through the clipboard rebuilds
  *     the identical token. The node is a leaf, so its inner label is never
  *     re-parsed as content.
- *   - plain text (copy out, `editor.getText()`) — the bracket form the stored
+ *   - plain text (copy out, `editor.getText()`) is the bracket form the stored
  *     dialogue format uses, via `serializeTokens`. A glossary reference has no
- *     bracket form, so it renders as `{key}`: unambiguous against the bracket
- *     syntax, and readable. Plain text is one-way; nothing parses it back.
+ *     bracket form, so it renders as `{key}`. Plain text is one-way; nothing
+ *     parses it back.
  *
- * Presentation is deliberately absent. The node renders a bare labelled span;
- * chip styling and any interactive parameter editing belong to a node view in
- * the UI layer.
+ * The node renders a bare labelled span; chip styling and parameter editing
+ * belong to a node view in the UI layer.
  */
 import { Node, mergeAttributes } from '@tiptap/core';
 import { serializeTokens } from '@shared/game/language';
@@ -43,7 +41,7 @@ type AttrSpec = {
   renderHTML: (attributes: Record<string, unknown>) => Record<string, string>;
 };
 
-/** Absent fields are omitted from the DOM rather than written as "null". */
+/** Absent fields are omitted from the DOM, not written as "null". */
 const renderIf = (dataName: string, value: unknown): Record<string, string> => (
   value === null || value === undefined ? {} : { [dataName]: String(value) }
 );

@@ -10,6 +10,7 @@
 #include "tagalong.h"
 #include "dungeon.h"
 #include "misc.h"
+#include "game_hooks.h"
 #include "player_oam.h"
 #include "sprite_main.h"
 #include "game_hooks.h"
@@ -1691,7 +1692,7 @@ void HandleDungeonLandingFromPit() {  // 879520
  */
 static void Link_HandleDiving() {
   enum { kDiveFrames = 32 };  /* measured off the cartridge: 12 of 13 captured dives ran 32 frames */
-  if (!(enhanced_features0 & kFeatures0_AllowDiving))
+  if (!(enhanced_features2 & kFeatures2_AllowDiving))
     return;
   if (g_ram[kRam_DiveTimer])
     g_ram[kRam_DiveTimer]--;
@@ -1712,7 +1713,7 @@ static void Link_HandleDiving() {
  */
 static uint8 Link_SwimStrokeButtons() {
   uint8 high = filtered_joypad_H;
-  if (enhanced_features0 & kFeatures0_AllowDiving)
+  if (enhanced_features2 & kFeatures2_AllowDiving)
     high &= ~kJoypadH_B;
   return ((filtered_joypad_L & kJoypadL_A) | high) & 0xc0;
 }
@@ -1962,6 +1963,7 @@ void PlayerHandler_15_HoldItem() {  // 8799ac
 }
 
 void Link_ReceiveItem(uint8 item, int chest_position) {  // 8799ad
+  item = GameHook_OverrideNpcGrantItem(item);
   if (link_auxiliary_state) {
     link_auxiliary_state = 0;
     link_incapacitated_timer = 0;
@@ -2467,12 +2469,9 @@ void LinkItem_Bow() {  // 87a006
     if (obj >= 0) {
       if (archery_game_arrows_left) {
         archery_game_arrows_left--;
-        link_num_arrows += 2;
+        GameHook_ArcheryShotAmmo();
       }
-      if (!archery_game_out_of_arrows && link_num_arrows) {
-        if (--link_num_arrows == 0)
-          Hud_RefreshIcon();
-      } else {
+      if (!GameHook_BowShotSpend(!archery_game_out_of_arrows && link_num_arrows)) {
         ancilla_type[obj] = 0;
         Ancilla_Sfx2_Near(60);
       }
@@ -2682,7 +2681,7 @@ void LinkItem_Shovel() {  // 87a32c
 
   if (player_handler_timer == 1) {
     TileDetect_MainHandler(2);
-    if (BYTE(word_7E04B2)) {
+    if (BYTE(word_7E04B2) && !GameHook_SubstitutedGiftTaken(0x14)) {
       Ancilla_Sfx3_Near(27);
       AncillaAdd_DugUpFlute(54, 0);
     }
@@ -2751,7 +2750,7 @@ void LinkItem_Ether() {  // 87a494
     return;
   button_mask_b_y &= ~0x40;
 
-  if (is_standing_in_doorway || flag_block_link_menu || dung_savegame_state_bits & 0x8000 || !((uint8)(link_sword_type + 1) & ~1) ||
+  if (is_standing_in_doorway || flag_block_link_menu || dung_savegame_state_bits & 0x8000 || GameHook_MedallionBlockedBySword() ||
       follower_dropped && follower_indicator == 13) {
     Ancilla_Sfx2_Near(60);
     return;
@@ -2800,7 +2799,7 @@ void LinkItem_Bombos() {  // 87a569
     return;
   button_mask_b_y &= ~0x40;
 
-  if (is_standing_in_doorway || flag_block_link_menu || dung_savegame_state_bits & 0x8000 || !((uint8)(link_sword_type + 1) & ~1) ||
+  if (is_standing_in_doorway || flag_block_link_menu || dung_savegame_state_bits & 0x8000 || GameHook_MedallionBlockedBySword() ||
       follower_dropped && follower_indicator == 13) {
     Ancilla_Sfx2_Near(60);
     return;
@@ -2848,7 +2847,7 @@ void LinkItem_Quake() {  // 87a64b
     return;
   button_mask_b_y &= ~0x40;
 
-  if (is_standing_in_doorway || flag_block_link_menu || dung_savegame_state_bits & 0x8000 || !((uint8)(link_sword_type + 1) & ~1) ||
+  if (is_standing_in_doorway || flag_block_link_menu || dung_savegame_state_bits & 0x8000 || GameHook_MedallionBlockedBySword() ||
       follower_dropped && follower_indicator == 13) {
     Ancilla_Sfx2_Near(60);
     return;
@@ -3332,7 +3331,7 @@ void LinkItem_Cape() {  // 87adc1
     }
     player_handler_timer = 0;
     link_cape_mode = 1;
-    cape_decrement_counter = kCapeDepletionTimers[link_magic_consumption];
+    cape_decrement_counter = GameHook_CapeDrainRate(kCapeDepletionTimers[link_magic_consumption]);
     link_bunny_transform_timer = 20;
     AncillaAdd_CapePoof(35, 4);
     Ancilla_Sfx2_Near(20);
@@ -3341,7 +3340,7 @@ void LinkItem_Cape() {  // 87adc1
     HaltLinkWhenUsingItems();
     link_direction &= ~0xf;
     if (!--cape_decrement_counter) {
-      cape_decrement_counter = kCapeDepletionTimers[link_magic_consumption];
+      cape_decrement_counter = GameHook_CapeDrainRate(kCapeDepletionTimers[link_magic_consumption]);
       // Avoid magic underflow if an anti-fairy consumes magic.
       if (link_magic_power == 0 && (enhanced_features1 & kFeatures1_CapeMagicUnderflowFix) ||
           !--link_magic_power) {
@@ -3394,7 +3393,7 @@ void Player_CheckHandleCapeStuff() {  // 87ae8f
     if (current_item_active == current_item_y) {
       if (--cape_decrement_counter)
         return;
-      cape_decrement_counter = kCapeDepletionTimers[link_magic_consumption];
+      cape_decrement_counter = GameHook_CapeDrainRate(kCapeDepletionTimers[link_magic_consumption]);
       if (!link_magic_power || --link_magic_power)
         return;
     }
@@ -3445,9 +3444,11 @@ void LinkItem_CaneOfSomaria() {  // 87aec0
     return;
   player_handler_timer++;
 
-  link_delay_timer_spin_attack = kRodAnimDelays[player_handler_timer];
-  if (player_handler_timer != 3)
+  // Intentional, behavior-equivalent OOB-read cleanup: guard before indexing kRodAnimDelays (vanilla read past end at timer==3).
+  if (player_handler_timer != 3) {
+    link_delay_timer_spin_attack = kRodAnimDelays[player_handler_timer];
     return;
+  }
   link_speed_setting = 0;
   player_handler_timer = 0;
   link_delay_timer_spin_attack = 0;
@@ -3547,7 +3548,7 @@ bool CheckYButtonPress() {  // 87b073
 }
 
 bool LinkCheckMagicCost(uint8 x) {  // 87b0ab
-  uint8 cost = kLinkItem_MagicCosts[x * 3 + link_magic_consumption];
+  uint8 cost = GameHook_MagicCost(kLinkItem_MagicCosts[x * 3 + link_magic_consumption]);
   uint8 a = link_magic_power;
   if (a && (a -= cost) < 0x80) {
     link_magic_power = a;
@@ -3829,10 +3830,12 @@ void LinkState_TreePull() {  // 87b416
     if (!sign8(--some_animation_timer))
       goto out;
     int j = ++link_var30d;
-    some_animation_timer_steps = kGrabWall_AnimSteps[j];
-    some_animation_timer = kGrabWall_AnimTimer[j];
-    if (j != 7)
+    // Intentional, behavior-equivalent OOB-read cleanup: guard before indexing the grab tables (vanilla read past end at step 7).
+    if (j != 7) {
+      some_animation_timer_steps = kGrabWall_AnimSteps[j];
+      some_animation_timer = kGrabWall_AnimTimer[j];
       goto out;
+    }
 
     link_grabbing_wall = 0;
     link_var30d = 0;
@@ -3896,7 +3899,7 @@ void Link_PerformOpenChest() {  // 87b574
   bitfield_for_a_button = 0;
   int chest_position = -1;
   uint8 item = OpenChestForItem(index_of_interacting_tile, &chest_position);
-  item = GameHook_OverrideChestItem(dungeon_room_index, item);
+  item = GameHook_OverrideChestItem(dungeon_room_index, (uint8)index_of_interacting_tile - 0x58, item);
   if (sign8(item)) {
     item_receipt_method = 0;
     return;

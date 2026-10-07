@@ -21,14 +21,14 @@ const useCalibrationActions = (d: ActionDeps) => {
     const bi = p.buttons.map(b => ({ kind: 'button' as const, id: b.id, label: b.label, category: b.category, status: 'pending' as const }));
     const oi = p.axes.filter(a => !STICK_IDS.has(a.id) && !TRIGGER_IDS.has(a.id)).map(a => ({ kind: 'axis' as const, id: a.id, label: a.label, category: a.category, status: 'pending' as const }));
     d.setItems([...si, ...ti, ...bi, ...oi]); d.setPhase('live');
-    d.addLog(`Calibrating ${p.name} — ${si.length + ti.length + bi.length + oi.length} inputs`);
+    d.addLog(`Calibrating ${p.name} with ${si.length + ti.length + bi.length + oi.length} inputs`);
   }, [d.detectedProfile, d.addLog]);
 
   const handleGyroStart = useCallback(() => {
     const len = d.latestBytes.length || 64;
     d.gyroMinsRef.current = new Uint8Array(len).fill(255); d.gyroMaxsRef.current = new Uint8Array(len).fill(0); d.gyroBufferRef.current = [];
     d.gyroRecordingRef.current = true; d.setGyroState('recording'); d.setGyroChangedBytes(new Set());
-    d.addLog('Gyro recording started — tilt, rotate, shake the controller...');
+    d.addLog('Gyro recording started. Tilt, rotate and shake the controller...');
   }, [d.latestBytes.length, d.addLog]);
 
   const handleGyroStop = useCallback(() => {
@@ -46,7 +46,7 @@ const useCalibrationActions = (d: ActionDeps) => {
   const handleGyroRedo = useCallback(() => {
     d.setGyroState('idle'); d.setGyroChangedBytes(new Set()); d.excludedRef.current = new Set(); d.setGyroExcluded(new Set());
     d.gyroExcludedBytesRef.current = new Set();
-    d.addLog('Gyro data cleared — ready to re-record.'); if (d.latestBytes.length > 0) d.updateByteStatuses(d.latestBytes.length);
+    d.addLog('Gyro data cleared. Ready to re-record.'); if (d.latestBytes.length > 0) d.updateByteStatuses(d.latestBytes.length);
   }, [d.addLog, d.latestBytes.length, d.updateByteStatuses]);
 
   const handleGyroSkip = useCallback(() => { d.setGyroState('done'); d.gyroExcludedBytesRef.current = new Set(); d.addLog('Gyro profiling skipped.'); }, [d.addLog]);
@@ -74,11 +74,11 @@ const useCalibrationActions = (d: ActionDeps) => {
    * baseline it compares zero bytes and every press is discarded in silence.
    * Sticks and triggers do not need one, which is why capture could look
    * half-working. Captured here on demand so starting a capture can never be
-   * the thing that quietly does nothing.
+   * the thing that does nothing.
    */
   const ensureBaseline = useCallback((): boolean => {
     if (d.baselineRef.current.length > 0) return true;
-    if (d.latestBytes.length === 0) { d.addLog('⚠ No reports received yet — press nothing and try again.'); return false; }
+    if (d.latestBytes.length === 0) { d.addLog('⚠ No reports received yet. Press nothing and try again.'); return false; }
     d.baselineRef.current = new Uint8Array(d.latestBytes);
     d.setIdleState('done');
     d.addLog(`✓ Idle baseline captured automatically: ${d.latestBytes.length} bytes`);
@@ -105,7 +105,7 @@ const useCalibrationActions = (d: ActionDeps) => {
   const handleManualByteAssign = useCallback((byteIdx: number) => {
     const idx = d.activeIdxRef.current; const item = d.itemsRef.current[idx];
     if (!item || item.status === 'captured') return;
-    if (item.kind !== 'button') { d.addLog(`Manual byte assign is for buttons only — ${item.label} is an axis.`); return; }
+    if (item.kind !== 'button') { d.addLog(`Manual byte assign is for buttons only, and ${item.label} is an axis.`); return; }
     const bl = d.baselineRef.current; const currentVal = d.latestBytes[byteIdx] ?? 0; const baseVal = bl[byteIdx] ?? 0;
     const delta = Math.abs(currentVal - baseVal); const xor = currentVal ^ baseVal;
     let mapping: HidButtonMapping; let result: string;

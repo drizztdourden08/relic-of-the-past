@@ -240,6 +240,10 @@
   margin-top: var(--space-xs);
 }
 
+.profile-form__error {
+  color: var(--c-danger);
+}
+
 /* ─── Profile overview (right panel) ─── */
 
 .profile-overview__settings {

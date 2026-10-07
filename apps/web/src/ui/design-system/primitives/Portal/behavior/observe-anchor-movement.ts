@@ -5,8 +5,8 @@
  *
  * The scroll listener is registered in the CAPTURE phase deliberately. Scroll
  * events do not bubble, so a window-level listener in the bubble phase only
- * ever hears the document scrolling — capture is what lets one listener catch
- * a scroll fired on any container in between as well.
+ * ever hears the document scrolling. Capture is what lets one listener catch a
+ * scroll fired on any container in between as well.
  *
  * Kept out of the hook, and taking its event target as an argument, so the
  * wiring can be checked without a DOM.
@@ -15,9 +15,9 @@
 type EventTargetLike = Pick<Window, 'addEventListener' | 'removeEventListener'>;
 
 interface AnchorMovementHandlers {
-  /** Something in the tree scrolled — the anchor may have moved or gone. */
+  /** Something in the tree scrolled, so the anchor may have moved or gone. */
   onScroll: () => void;
-  /** The viewport resized — the anchor is still there, but elsewhere. */
+  /** The viewport resized, so the anchor is still there but elsewhere. */
   onResize: () => void;
 }
 

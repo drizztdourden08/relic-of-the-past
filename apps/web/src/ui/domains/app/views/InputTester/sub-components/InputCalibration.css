@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind style */
 
-/* Input Calibration — uses design tokens from tokens.css */
-
 .input-cal {
   padding: 0;
   height: 100%;
@@ -10,8 +8,6 @@
   font-size: var(--text-base);
   color: var(--c-text);
 }
-
-/* ─── Header ─── */
 
 .input-cal__header {
   display: flex;
@@ -37,8 +33,6 @@
   color: var(--c-text-muted);
 }
 
-/* ─── Section ─── */
-
 .input-cal__section {
   margin-bottom: var(--space-xl);
 }
@@ -53,8 +47,6 @@
   padding-bottom: var(--space-xs);
   border-bottom: 1px solid var(--c-border);
 }
-
-/* ─── Actions bar ─── */
 
 .input-cal__actions {
   display: flex;
@@ -111,8 +103,6 @@
   border-color: var(--c-border);
 }
 
-/* ─── Controller Cards Grid ─── */
-
 .input-cal__cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
@@ -129,7 +119,7 @@
   overflow: hidden;
 }
 
-/* Continuous shimmer animation — stutter = UI thread blocked */
+/* Continuous shimmer: a stutter means the UI thread is blocked. */
 .input-cal__card::after {
   content: '';
   position: absolute;
@@ -183,8 +173,6 @@
   color: var(--c-text);
 }
 
-/* ─── Button Grid inside Card ─── */
-
 .input-cal__btn-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
@@ -233,8 +221,6 @@
   color: var(--c-green-bright);
 }
 
-/* ─── Rumble strength override ─── */
-
 .input-cal__rumble-strength {
   display: flex;
   align-items: center;
@@ -249,8 +235,6 @@
 .input-cal__rumble-strength-input {
   width: 64px;
 }
-
-/* ─── Adapter port list ─── */
 
 .adapter-controller-card__ports {
   display: flex;

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 /**
- * The rail of text groups — every group there is, one line each, with the one
+ * The rail of text groups. Every group there is gets one line, with the one
  * being worked on marked.
  *
  * Each line carries its own tally so a translator can see where the work is

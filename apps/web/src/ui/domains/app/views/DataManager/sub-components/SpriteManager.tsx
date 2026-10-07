@@ -14,6 +14,7 @@ import { SpriteGrid } from './SpriteGrid';
 import { ImportProgress } from './ImportProgress';
 import { useImportProgress } from '@app/hooks/useImportProgress';
 import * as spritesStore from '@app/lib/storage/sprites-store';
+import { useSpriteAvailabilityStore } from '@app/stores/sprite-availability-store';
 import './SpriteManager.css';
 
 interface SpriteManagerProps {
@@ -40,7 +41,10 @@ const SpriteManager = (props: SpriteManagerProps) => {
     setExtractedMap(Object.fromEntries(entries));
   }, [romsWithAssets]);
 
-  useEffect(() => { refreshExtracted(); }, [refreshExtracted]);
+  // Also re-read when the background extraction for the active ROM lands, so a set
+  // that appeared on its own moves from "available" to "imported" without a remount.
+  const spritesAvailable = useSpriteAvailabilityStore((s) => s.available);
+  useEffect(() => { refreshExtracted(); }, [refreshExtracted, spritesAvailable]);
 
   const importedRoms = useMemo(
     () => romsWithAssets.filter(r => extractedMap[r.romFile]?.extracted),
@@ -92,7 +96,7 @@ const SpriteManager = (props: SpriteManagerProps) => {
   }, [refreshExtracted]);
 
   const emptyDropdownMessage = romsWithAssets.length === 0
-    ? 'No ROMs available — import a ROM first'
+    ? 'No ROMs available. Import a ROM first.'
     : 'All imported ROMs have sprites';
 
   const list = (
@@ -103,8 +107,8 @@ const SpriteManager = (props: SpriteManagerProps) => {
             <Select
               value={toExtract}
               onChange={setToExtract}
-              options={[{ value: '', label: 'Select a ROM…' }, ...availableRoms.map(r => ({ value: r.romFile, label: r.romFile }))]}
-              placeholder="Select a ROM…"
+              options={[{ value: '', label: 'Select a ROM...' }, ...availableRoms.map(r => ({ value: r.romFile, label: r.romFile }))]}
+              placeholder="Select a ROM..."
             />
           ) : (
             <EmptyState message={emptyDropdownMessage} />
@@ -113,11 +117,11 @@ const SpriteManager = (props: SpriteManagerProps) => {
         {availableRoms.length > 0 && (
           <ButtonRow align="start">
             <Button variant="primary" size="sm" onClick={handleExtract} disabled={!toExtract || busy}>
-              {busy ? '⟳ Working…' : '🖼️ Extract Sprites'}
+              {busy ? '⟳ Working...' : '🖼️ Extract Sprites'}
             </Button>
           </ButtonRow>
         )}
-        {busy && <ImportProgress state={progress} fallbackLabel="Extracting sprites…" />}
+        {busy && <ImportProgress state={progress} fallbackLabel="Extracting sprites..." />}
         {message && (
           <Box className={`sprite-manager__message sprite-manager__message--${message.type}`}>{message.text}</Box>
         )}

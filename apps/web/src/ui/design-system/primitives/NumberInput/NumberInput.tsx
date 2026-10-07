@@ -29,8 +29,8 @@ const NumberInput = (props: NumberInputProps) => {
 
   // Digit columns the field must show, taken from |max| so the widest legal value fits.
   // Only the FIELD gets sized, never the wrapper: the wrapper is an inline-flex row that also holds
-  // the spinner column, so a width there is split between the two — and since the field carries
-  // min-width:0 it collapses to nothing while the chevrons keep their padding.
+  // the spinner column, so a width there is split between the two. The field carries
+  // min-width:0, so it collapses to nothing while the chevrons keep their padding.
   const digitColumns = (): number | undefined => {
     if (!sizeToContent) return undefined;
     const maxNum = toNum(max);

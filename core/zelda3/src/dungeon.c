@@ -2283,6 +2283,12 @@ const uint8 *GetDungeonRoomLayout(int i) {
   return kDungeonRoom + kDungeonRoomOffs[i];
 }
 
+// The 2x2 block the Ceiling object (subtype 1, index 0) paints: the void past a room's walls. Read by
+// the hook layer (core/game-hooks/hide_space_beyond_walls.c); nothing in the game calls it.
+const uint16 *Dungeon_CeilingTileWords(void) {
+  return SrcPtr(kObjectSubtype1Params[0]);
+}
+
 static inline void WriteAttr1(int j, uint16 attr) {
   dung_bg1_attr_table[j + 0] = attr;
   dung_bg1_attr_table[j + 1] = attr >> 8;
@@ -4489,7 +4495,7 @@ void RoomTag_RoomTrigger_BlockDoor(int k) {  // 81c4e7
 // Used for bosses
 void RoomTag_PrizeTriggerDoorDoor(int k) {  // 81c508
   int t = savegame_is_darkworld ? link_has_crystals : link_which_pendants;
-  if (t & kDungeonCrystalPendantBit[BYTE(cur_palace_index_x2) >> 1]) {
+  if (GameHook_DungeonPrizeTaken(t & kDungeonCrystalPendantBit[BYTE(cur_palace_index_x2) >> 1])) {
     dung_flag_trapdoors_down = 0;
     dung_cur_door_pos = 0;
     door_animation_step_indicator = 0;
@@ -4615,9 +4621,9 @@ void RoomTag_GetHeartForPrize(int k) {  // 81c709
   if (!(dung_savegame_state_bits & 0x8000))
     return;
   int t = savegame_is_darkworld ? link_has_crystals : link_which_pendants;
-  if (!(t & kDungeonCrystalPendantBit[BYTE(cur_palace_index_x2) >> 1])) {
+  if (!GameHook_DungeonPrizeTaken(t & kDungeonCrystalPendantBit[BYTE(cur_palace_index_x2) >> 1])) {
     byte_7E04C2 = 128;
-    if (Ancilla_SpawnFallingPrize(kBossFinishedFallingItem[BYTE(cur_palace_index_x2) >> 1]) < 0)
+    if (Ancilla_SpawnFallingPrize(GameHook_FallingPrizeKind(kBossFinishedFallingItem[BYTE(cur_palace_index_x2) >> 1])) < 0)
       return; // Zelda bugfix. Price won't spawn if we're out of ancillas
   }
   dung_hdr_tag[k] = 0;
@@ -5150,11 +5156,10 @@ not_openable:
     }
   }
 
-  if (!(button_mask_b_y & 0x80) || button_b_frames != 4)
+  if (!GameHook_CurtainSequenceRuns())
     return;
 
-  int pos = ((link_y_coord + (int8)player_oam_y_offset) & 0x1f8) << 3;
-  pos |= ((link_x_coord + (int8)player_oam_x_offset) & 0x1f8) >> 3;
+  int pos = GameHook_CurtainSequenceAnchor();
   uint8 attr, y;
 
 #define is_6c_fx(yv,x) (y=yv, ((attr = (dung_bg2_attr_table[x] & 0xfc)) == 0x6c || (attr & 0xf0) == 0xf0))
@@ -5939,7 +5944,7 @@ uint8 OpenMiniGameChest(int *chest_position) {  // 81edab
         dung_savegame_state_bits |= 0x4000;
       }
     }
-    rv = kDungeon_MinigameChestPrizes1[t];
+    rv = GameHook_OverrideMinigamePrize(GameHook_RetroMinigamePrize(kDungeon_MinigameChestPrizes1[t]), t);
   }
   some_menu_ctr = t;
   nmi_load_bg_from_vram = 1;
@@ -7752,7 +7757,7 @@ void Module07_18_RescuedMaiden() {  // 82980a
     PaletteFilter_Crystal();
     TS_copy = 1;
     flag_is_link_immobilized = 2;
-    int j = FindInWordArray(kBossRooms, dungeon_room_index, countof(kBossRooms)) - 4;
+    int j = GameHook_CrystalCutsceneSlot(FindInWordArray(kBossRooms, dungeon_room_index, countof(kBossRooms)) - 4);
     uint16 *dst = &dung_bg1[kCrystal_Tab0[j] >> 1];
     for (int n = 0, t = 0; n != 4; n++) {
       for (int i = 0; i != 8; i++, t++) {

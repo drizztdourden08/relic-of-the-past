@@ -4,7 +4,7 @@ import type { SimDoor } from '../../simulation';
 import type { TilePassability } from '../types';
 
 /**
- * `indoors` is the ONLY field any tile lookup keys on — the engine's whole
+ * `indoors` is the ONLY field any tile lookup keys on, and it is the engine's whole
  * tile-dispatch context (core/zelda3/src/tile_detect.c:256 takes one bool).
  * Everything else is descriptive and read only by the tooltip.
  */
@@ -15,7 +15,7 @@ interface RoomContext {
 }
 
 /**
- * Resolved from a live side-table slot — NEVER inferred from the attribute
+ * Resolved from a live side-table slot, NEVER inferred from the attribute
  * byte. `source` records which table answered, so an unresolvable tile stays
  * honestly unresolved instead of being guessed.
  */
@@ -39,7 +39,7 @@ interface TileClassification {
 }
 
 /**
- * Everything classifyTile needs, all passed as plain values — `shared/game/**`
+ * Everything classifyTile needs, all passed as plain values. `shared/game/**`
  * never touches WASM/React/DOM/Node, so live state (side-tables, room context)
  * always arrives as parameters from the caller.
  */

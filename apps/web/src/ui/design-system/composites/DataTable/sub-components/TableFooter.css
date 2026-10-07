@@ -1,11 +1,6 @@
 /* @layer renderer-components @kind style */
 
-/*
- * The strip under the grid, outside the scroller: everything on it is about
- * the table as a whole, so none of it may scroll away with the rows. The
- * summary sits on its own at the left; the count and the options button stay
- * paired at the right, exactly as they were before it arrived.
- */
+/* The strip under the grid, outside the scroller so it never scrolls away. */
 .data-table__footer {
   display: flex;
   flex: none;
@@ -15,12 +10,7 @@
   padding: var(--space-xs) var(--space-sm);
 }
 
-/*
- * What the table is sorted/grouped by, read-only — the same dim, small text
- * the ⋯ menu used to show it in, before it moved here. Truncates rather than
- * wrapping: a long multi-level sort sentence is a detail worth opening the
- * table options for, not a second footer line.
- */
+/* The sort/group summary. Truncates instead of wrapping. */
 .data-table__summary {
   min-width: 0;
   overflow: hidden;
@@ -30,8 +20,7 @@
   text-overflow: ellipsis;
 }
 
-/* The count and the options trigger, kept together on the right regardless
-   of how much room the summary on the left is asking for. */
+/* The count and the options trigger, kept together on the right. */
 .data-table__footer-right {
   display: flex;
   flex: none;
@@ -44,13 +33,7 @@
   font-size: var(--text-sm);
 }
 
-/*
- * The ⋯ on the strip. It used to share a rule with the two in the header, back
- * when all three were the same quiet button; the header pair has since been
- * lifted out of its cell's flow and given a hover reveal, and none of that
- * applies here — this one is always shown, because the table's own actions
- * have no column to hover. Its own sheet is where it can stay unchanged.
- */
+/* The options button. Always shown: the table's own actions have no column to hover. */
 .data-table__options {
   display: flex;
   align-items: center;

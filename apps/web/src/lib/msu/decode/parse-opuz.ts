@@ -4,7 +4,7 @@
  * built so a player can seek straight to the loop point instead of decoding from the top. Every
  * field is little-endian.
  *
- *   +0  u32   magic — the bytes O,P,U,Z, i.e. "OPUZ" read as a uint32
+ *   +0  u32   magic: the bytes O,P,U,Z, i.e. "OPUZ" read as a uint32
  *   +4  u32   unused here (the sibling `.pcm` header keeps its loop point in these four bytes)
  *   +8        the range table, ten bytes per record, first record at +8:
  *       +0  u32   file offset where this range's packet stream starts
@@ -15,7 +15,7 @@
  *
  * A record without bit 15 continues at the next record, ten bytes on; a record offset of zero
  * ends playback. Ranges may overlap in the file, because the loop range starts a little ahead
- * of the loop point and its drop count covers the difference — that run-up is what lets an
+ * of the loop point and its drop count covers the difference. That run-up is what lets an
  * Opus decoder resume mid-stream without an audible seam.
  *
  * A range's packet stream is a run of framed packets:
@@ -35,7 +35,7 @@ const OPUZ_HEADER_BYTES = 8;
 const OPUZ_RANGE_BYTES = 10;
 const OPUZ_SAMPLE_RATE = 48000;
 const OPUZ_CHANNELS = 2;
-/** Fullband stereo, 20 ms, one frame — the mode marker the framing bit stands in for. */
+/** Fullband stereo, 20 ms, one frame. This is the mode marker the framing bit stands in for. */
 const OPUZ_IMPLIED_TOC = 0xfc;
 const OPUZ_MAX_PACKET_BYTES = 1275;
 const SIZE_MASK = 0x7fff;

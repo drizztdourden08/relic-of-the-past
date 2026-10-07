@@ -1,15 +1,11 @@
 /* @layer shared-input @kind logic */
 /**
- * DeviceProfile — the calibration wizard's view of a device: an ordered
- * buttons/axes list for display, plus an icon+label lookup keyed by the
- * binding index a stored ButtonMapping actually carries. Built entirely from
- * SDL's own capability report through the family layer (see
- * shared/input/family) — never from a hand-authored per-model database.
+ * The calibration wizard's view of a device: an ordered buttons/axes list for display, plus an
+ * icon+label lookup keyed by the binding index a stored ButtonMapping carries. Built from SDL's
+ * capability report through the family layer (shared/input/family), never from a per-model database.
  */
-// Imported from the family barrel (./family), never the deep sdl-capabilities
-// module directly — the barrel is what runs every family's self-registration
-// side effect (see family-registry.ts); a deep import would see an empty
-// registry unless something else happened to import the barrel first.
+// Import from the family barrel (./family), never the deep sdl-capabilities module: the barrel
+// runs every family's self-registration (family-registry.ts); a deep import would see an empty registry.
 import { BUTTON_INDEX, resolveDeviceControls } from './family';
 import type { ResolvedControl, ResolvedDevice, SdlAxisName, SdlButtonName, SdlGamepadType } from './family';
 import type { DeviceFamily, InputApi } from '../types/controls';
@@ -52,9 +48,8 @@ interface DeviceProfileIdentity {
   productId?: string;
 }
 
-/** Axis ids the calibration wizard already groups sticks/triggers by (see
- *  STICK_IDS/TRIGGER_IDS there) — kept stable independent of SDL's own
- *  positional names so that grouping logic needs no change. */
+/** Axis ids the calibration wizard groups sticks/triggers by (STICK_IDS/TRIGGER_IDS there),
+ *  kept stable independent of SDL's positional names. */
 const AXIS_ID_ALIAS: Partial<Record<SdlAxisName, string>> = {
   LEFT_X: 'leftX', LEFT_Y: 'leftY', RIGHT_X: 'rightX', RIGHT_Y: 'rightY',
   LEFT_TRIGGER: 'leftTrigger', RIGHT_TRIGGER: 'rightTrigger',
@@ -89,8 +84,7 @@ const fromControls = (identity: DeviceProfileIdentity, controls: readonly Resolv
   };
 };
 
-/** Builds a DeviceProfile from a live device's own SDL capability arrays —
- *  only positions it actually reports appear. */
+/** Builds a DeviceProfile from a live device's SDL capability arrays; only positions it reports appear. */
 const buildDeviceProfile = (identity: DeviceProfileIdentity, params: {
   sdlType: SdlGamepadType;
   hasButton: readonly boolean[];
@@ -113,10 +107,9 @@ const buildDeviceProfile = (identity: DeviceProfileIdentity, params: {
 const buildDeviceProfileFromResolved = (identity: DeviceProfileIdentity, resolved: ResolvedDevice): DeviceProfile =>
   fromControls(identity, resolved.controls);
 
-/** A synthetic full-capability profile for a device known only by sdlType —
- *  a disconnected saved binding, or the wizard's manual family-override
- *  picker. Every position the family/generic chain can label is treated as
- *  present, since there is no live hasButton/hasAxis to gate on. */
+/** A synthetic full-capability profile for a device known only by sdlType (a disconnected
+ *  saved binding, or the wizard's manual family-override picker). Every position the
+ *  family/generic chain can label counts as present; there is no live hasButton/hasAxis. */
 const ALL_BUTTONS = new Array(Object.keys(BUTTON_INDEX).length).fill(true);
 const ALL_AXES = new Array(6).fill(true);
 

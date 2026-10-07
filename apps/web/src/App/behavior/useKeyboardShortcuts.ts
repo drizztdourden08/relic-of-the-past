@@ -19,7 +19,7 @@ const useKeyboardShortcuts = (
         win.toggleFullscreen();
         return;
       }
-      // Dev-only Sprite Debug toggle (Ctrl+Shift+D) — opens it as a full-window page,
+      // Dev-only Sprite Debug toggle (Ctrl+Shift+D) opens it as a full-window page,
       // so it switches with / is dismissed by the same logic as every other page.
       if (developerToolsEnabled && e.ctrlKey && e.shiftKey && e.key === 'D') {
         e.preventDefault();
@@ -34,7 +34,7 @@ const useKeyboardShortcuts = (
       }
       if (e.key !== 'Escape') return;
 
-      // The search palette owns Escape first when open — it's the top-most surface.
+      // The search palette owns Escape first when open, because it's the top-most surface.
       if (useSearchStore.getState().open) { e.preventDefault(); useSearchStore.getState().closePalette(); return; }
       e.preventDefault();
 

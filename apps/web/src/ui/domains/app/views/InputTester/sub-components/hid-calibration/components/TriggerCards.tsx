@@ -57,13 +57,13 @@ const TriggerCards = (props: TriggerCardsProps) => {
 
             {isPicking && (
               <Text as="p" className="hid-cal__desc">
-                Click 1 byte box below, then Confirm. [{triggerPickedByte ?? '—'}]
+                Click 1 byte box below, then Confirm. [{triggerPickedByte ?? '-'}]
               </Text>
             )}
             {isRecording && triggerLiveInfo && <Box className="hid-cal__stick-info">{triggerLiveInfo}</Box>}
             {isRecording && !triggerLiveInfo && <Text as="p" className="hid-cal__desc">Press the trigger fully and release...</Text>}
             {!isActive && isDone && (
-              <Text as="p" className="hid-cal__desc" style={DESC_SMALL}>{item.result ?? '—'}</Text>
+              <Text as="p" className="hid-cal__desc" style={DESC_SMALL}>{item.result ?? '-'}</Text>
             )}
 
             <Box className="hid-cal__prereq-actions">

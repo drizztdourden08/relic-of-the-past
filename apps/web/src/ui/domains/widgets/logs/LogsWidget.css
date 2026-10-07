@@ -27,23 +27,20 @@
   color: var(--c-text-dim);
 }
 
-/* Compact rows: horizontal padding only, tight line-height (no vertical gaps). */
+/* Compact rows: horizontal padding only, tight line-height (no vertical gaps). Selection is by
+   whole line, so a report copies exactly what the widget shows. */
 .logs-widget-content .log-entry {
   display: flex;
   gap: var(--space-sm);
   padding: 0 var(--space-sm);
   border-radius: var(--r-sm);
   line-height: var(--leading-tight);
+  cursor: default;
+  user-select: none;
 }
 
 .logs-widget-content .log-entry:hover {
   background: var(--c-hover);
-}
-
-/* Selection is by whole line, so a report copies exactly what the widget shows. */
-.logs-widget-content .log-entry {
-  cursor: default;
-  user-select: none;
 }
 
 .logs-widget-content .log-entry--selected,

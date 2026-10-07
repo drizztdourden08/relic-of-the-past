@@ -1,0 +1,20 @@
+/* @layer renderer-components @kind style */
+
+/* The copy control: a label, the pond to copy from, and the press that does
+   it, on one line. It sits above the pond it writes to, so it keeps the
+   caption voice the rest of the block's small labels wear. */
+
+.pond-import {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.pond-import__label {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}

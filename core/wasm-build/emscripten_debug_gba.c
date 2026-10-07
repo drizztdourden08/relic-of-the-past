@@ -27,7 +27,7 @@ int WasmDebugEnterGbaPalace(void) {
   if (!GbaAlttp_IsAvailable())
     return 0;
   // The extra dungeon's entrance is the last record the asset pipeline appends, so derive
-  // it rather than restating an index that lives in the data.
+  // it instead of restating an index that lives in the data.
   which_entrance = (uint16)(kEntranceData_rooms_SIZE / sizeof(uint16) - 1);
   sram_progress_indicator = 3;
   if (link_health_capacity == 0)

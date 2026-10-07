@@ -4,8 +4,8 @@
  *
  * Grouping and sorting compose in one pass: the groupBy paths sort FIRST (so
  * groups come out in their comparator's order), then the sort list orders rows
- * within each group. The invariant that falls out of that is worth relying on —
- * `flattenGroups(groupedRows)` is exactly `sortedRows`.
+ * within each group. One invariant falls out and is worth relying on:
+ * `flattenGroups(groupedRows)` equals `sortedRows`.
  */
 import type { SchemaIndex } from '../schema/build-schema';
 import { getPath } from '../schema/path';

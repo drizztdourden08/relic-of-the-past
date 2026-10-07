@@ -6,16 +6,16 @@
  * The walk is flat: a paragraph's children are either text nodes, which
  * accumulate into one maximal run, or atoms, which rebuild their original token
  * from the attributes. A run is flushed only when it is non-empty, so two
- * adjacent atoms produce no phantom empty text token between them — the case a
- * naive walker gets wrong.
+ * adjacent atoms produce no phantom empty text token between them. That is the
+ * case a naive walker gets wrong.
  *
- * Values are read defensively rather than trusted: a paste, an older stored
+ * Values are read defensively, not trusted: a paste, an older stored
  * document, or a node view that stringified an attribute can all put a decimal
  * string where a number belongs, and an out-of-range row must still resolve to
- * something the model accepts. Anything unrecognisable is dropped rather than
+ * something the model accepts. Anything unrecognisable is dropped, not
  * allowed to become an invalid token.
  *
- * Like its counterpart this module imports no editor runtime — it reads plain
+ * Like its counterpart this module imports no editor runtime. It reads plain
  * ProseMirror JSON, so it needs no DOM.
  */
 import { DIALOGUE_TOKEN_TYPE } from './token-attrs';

@@ -1,19 +1,14 @@
 /* @layer renderer-widgets @kind hook */
 /**
- * EVERY record in the selected collection that relates to the current screen
- * — not just one. A screen commonly owns several `connection` records (each
- * door/exit its own edge) and several `check` records (each NPC or chest its
- * own entry); `actor`/`item` can repeat too, whenever more than one sprite
- * type or granted item showed up on the same visit. Only the kinds a screen
- * has a direct, unambiguous live link to resolve are handled here — a
- * collection with no such link (area, tag, …) shows nothing rather than
+ * EVERY record in the selected collection that relates to the current screen.
+ * A screen commonly owns several `connection` and `check` records, and
+ * `actor`/`item` can repeat too. Only kinds with a direct live link are
+ * handled; a collection without one (area, tag) shows nothing instead of
  * guessing.
  *
  * `connection` reuses `observations.existingConnections` as-is: it is already
- * every point touching this screen (see `useConnectionStatus`'s
- * `c.screenId === screenId || c.toConnectionId`-resolved screen match), the
- * same list the widget's own recommendation filtering already trusts — there
- * was never a "one connection" to pick here, only a `[0]` that discarded the rest.
+ * every point touching this screen, the same list the widget's recommendation
+ * filtering trusts. The old `[0]` discarded the rest.
  */
 import { useMemo } from 'react';
 import {
@@ -26,7 +21,7 @@ type AnyRecord = EntityRecordMap[EntityKind];
 
 const NO_RECORDS: readonly AnyRecord[] = [];
 
-/** Distinct sprite spawns (or grants) of the same type resolve to the same record — one card each, not one per spawn. */
+/** Distinct spawns (or grants) of the same type resolve to one record: one card each, not one per spawn. */
 const dedupeById = <T extends { id: string }>(records: readonly (T | undefined)[]): readonly T[] => {
   const seen = new Set<string>();
   const out: T[] = [];

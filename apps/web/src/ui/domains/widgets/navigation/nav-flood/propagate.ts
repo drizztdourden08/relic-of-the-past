@@ -6,8 +6,8 @@
  * lib/game/flood/flood-area.ts and the simulator runs the very same code. The
  * widget used to assemble FloodFillOptions by hand and read its solid-sprite
  * blockers from the live sprite list, which made its numbers diverge from the
- * simulator's on every screen the game was not standing on — exactly the numbers
- * you reach for when a simulator run looks wrong.
+ * simulator's on every screen the game was not standing on, which are exactly the
+ * numbers you reach for when a simulator run looks wrong.
  */
 import { buildScreenBundle } from '@shared/game/navigation';
 import type { ConnectionInfo, FloodFillResult, ScreenBundle } from '@shared/game/navigation';

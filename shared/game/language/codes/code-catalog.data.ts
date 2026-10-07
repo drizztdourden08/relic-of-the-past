@@ -6,8 +6,8 @@
  *
  * `EndMessage` (EU-only) has no documented behavior of its own here: it is
  * absent from `kCmdInfo` in `dialogue-encoder.ts`, which is consistent with
- * it being an automatic message terminator rather than something a
- * translator places by hand — it is catalogued as `structural` on that
+ * it being an automatic message terminator instead of something a
+ * translator places by hand. It is catalogued as `structural` on that
  * basis, not from a confirmed engine fact.
  */
 import type { CodeInfo } from './code-catalog.types';

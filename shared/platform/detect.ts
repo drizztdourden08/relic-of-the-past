@@ -1,8 +1,8 @@
 /* @layer shared-platform @kind logic */
 /**
- * Host + OS detection. Reads runtime globals only — the Capacitor global is
- * probed without importing @capacitor/core so this stays dependency-free (the
- * Capacitor dep is added with its host factory in a later phase).
+ * Host + OS detection, reading runtime globals only. The Capacitor global is
+ * probed without importing @capacitor/core so this stays dependency-free. The
+ * Capacitor dep arrives with its host factory in a later phase.
  */
 import type { HostShell, OsKind } from './types';
 

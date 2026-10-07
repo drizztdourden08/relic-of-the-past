@@ -3,31 +3,30 @@
  * @kind logic
  *
  * Generates `core/game-hooks/gba_asset_index.generated.h` from
- * `GBA_ALTTP_ASSET_MANIFEST` — one `kGbaAsset<Name>` enum member per
- * supplement asset, in the manifest's own order, plus the total count as the
- * final member.
+ * `GBA_ALTTP_ASSET_MANIFEST`: one `kGbaAsset<Name>` enum member per supplement
+ * asset, in the manifest's own order, plus the total count as the final member.
  *
  * The GBA ALttP supplement container is read positionally by the C engine:
  * an asset's "index" is just its position among the `assets.add*` calls in
  * `compile-resources-gba-alttp.ts`. That compiler now iterates
  * `GBA_ALTTP_ASSET_MANIFEST` to decide call order (see that file), and this
- * script reads the same manifest to emit the matching C side — so inserting,
- * removing or reordering an asset only ever means editing the one manifest;
- * both languages move together instead of silently drifting apart.
+ * script reads the same manifest to emit the matching C side. Inserting,
+ * removing or reordering an asset therefore only ever means editing the one
+ * manifest, and both languages move together instead of silently drifting apart.
  *
- * `GBA_ALTTP_ASSET_MANIFEST` is imported directly from its `.ts` source —
- * Node 24 strips erasable TypeScript syntax natively, and the module has no
- * runtime deps, so no ts-node / build step is needed here (same approach as
+ * `GBA_ALTTP_ASSET_MANIFEST` is imported directly from its `.ts` source. Node 24
+ * strips erasable TypeScript syntax natively and the module has no runtime deps,
+ * so no ts-node or build step is needed here (same approach as
  * `generate-enum-types.mjs`).
  *
  * Run with: `npm run generate:gba-asset-index` (which runs
  * `generate-gba-asset-index-cli.mjs`, the only file that ever invokes
- * `generateGbaAssetIndex` unprompted — see `generate-enum-types-cli.mjs` for
- * why that trigger lives in its own never-imported file).
+ * `generateGbaAssetIndex` unprompted; `generate-enum-types-cli.mjs` explains why
+ * that trigger lives in its own never-imported file).
  *
- * The repo root defaults to a path relative to THIS script's own file —
- * correct for the CLI, where the script always runs from its real,
- * unbundled location. A caller that already knows the real repo root may
+ * The repo root defaults to a path relative to THIS script's own file, which is
+ * correct for the CLI because the script always runs from its real, unbundled
+ * location. A caller that already knows the real repo root may
  * pass it in and skip the guess entirely.
  */
 import { writeFileSync } from 'node:fs';
@@ -41,7 +40,7 @@ const outputPathFor = (root) => path.join(root, 'core/game-hooks/gba_asset_index
 
 const HEADER = `/* @layer core-game-hooks @kind generated */
 /**
- * GENERATED — do not hand-edit. Regenerate with \`npm run generate:gba-asset-index\`
+ * GENERATED: do not hand-edit. Regenerate with \`npm run generate:gba-asset-index\`
  * (scripts/generate-gba-asset-index.mjs), which reads
  * shared/asset-extraction/sources/gba-alttp/asset-manifest.ts and emits one
  * enum member per GBA ALttP supplement asset, in manifest order.
@@ -77,7 +76,7 @@ const buildGeneratedHeaderSource = (manifest) => {
     }
     seen.add(memberName);
     const assignment = index === 0 ? ` = ${index}` : '';
-    return `  ${memberName}${assignment},  // ${entry.name} — ${entry.description}`;
+    return `  ${memberName}${assignment},  // ${entry.name}: ${entry.description}`;
   });
 
   return `${HEADER}\nenum {\n${lines.join('\n')}\n  kGbaAlttpAssetCount,\n};\n${FOOTER}`;
@@ -85,7 +84,7 @@ const buildGeneratedHeaderSource = (manifest) => {
 
 /**
  * A cache-busting query string on every import, matching
- * `generate-enum-types.mjs` — harmless for the one-shot CLI, and correct for
+ * `generate-enum-types.mjs`. It is harmless for the one-shot CLI, and correct for
  * any future long-lived caller that regenerates repeatedly in one process.
  */
 const loadManifest = async (manifestSource) => {
@@ -94,7 +93,7 @@ const loadManifest = async (manifestSource) => {
 };
 
 /**
- * The core generation step — reads the real manifest, writes the generated header.
+ * The core generation step: reads the real manifest and writes the generated header.
  */
 const generateGbaAssetIndex = async (root = DEFAULT_ROOT) => {
   const manifest = await loadManifest(manifestSourceFor(root));

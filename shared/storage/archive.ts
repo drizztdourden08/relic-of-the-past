@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-/** ZIP extraction via jszip (pure JS) — replaces node-stream-zip on every platform. */
+/** ZIP extraction via jszip (pure JS), replacing node-stream-zip on every platform. */
 import JSZip from 'jszip';
 
 interface ArchiveEntry {

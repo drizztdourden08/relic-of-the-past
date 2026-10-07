@@ -1,11 +1,7 @@
 /* @layer renderer-components @kind logic */
 /**
- * Where a layer list lives inside a manifest.
- *
- * A music slot and a claimed sound hold the identical layer shape in two different places, so
- * the editor is handed the pair of accessors instead of a slot number (Strategy). One editor,
- * one save path, one live readout — and none of them has to learn which kind it is looking at,
- * which is what keeps a sound's layers from needing a second copy of all of it.
+ * Where a layer list lives inside a manifest. A music slot and a claimed sound hold the same layer
+ * shape in two places, so the editor gets a pair of accessors instead of a slot number (Strategy).
  */
 import type { MsuLayer, MsuPackManifest, SoundChannel } from '@shared/types/msu-manifest';
 import { layersOfTrack, withTrackLayers } from './pack-manifest';
@@ -20,6 +16,8 @@ interface LayerTarget {
   label: string;
   read: (manifest: MsuPackManifest) => MsuLayer[];
   write: (base: MsuPackManifest, layers: MsuLayer[]) => MsuPackManifest;
+  /** True on the effect channels, where a looping layer has nothing to end it and would follow the player around. */
+  oneShot: boolean;
 }
 
 const trackTarget = (trackNum: number): LayerTarget => ({
@@ -27,6 +25,7 @@ const trackTarget = (trackNum: number): LayerTarget => ({
   label: `slot ${trackNum}`,
   read: (manifest) => layersOfTrack(manifest, trackNum),
   write: (base, layers) => withTrackLayers(base, trackNum, layers),
+  oneShot: false,
 });
 
 const soundTarget = (channel: SoundChannel, soundId: number): LayerTarget => ({
@@ -34,6 +33,7 @@ const soundTarget = (channel: SoundChannel, soundId: number): LayerTarget => ({
   label: soundTitle(channel, soundId),
   read: (manifest) => layersOfSound(manifest, channel, soundId),
   write: (base, layers) => withSoundLayers(base, channel, soundId, layers),
+  oneShot: channel !== 'ambient',
 });
 
 export { trackTarget, soundTarget };

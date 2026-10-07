@@ -22,11 +22,9 @@ const ColorPicker = (props: ColorPickerProps) => {
 
   const { seed, beginDrag, followWheel } = useWheelColor(value, alpha, disableAlpha);
 
-  // The hex field needs its own editing buffer: it is fully controlled by `value`, a
-  // keystroke re-renders the parent, and the parent hands back a value computed from what
-  // it just received. A field showing "8" given a "4" keystroke does not re-render cleared
-  // first, so the leftover "8" and the fresh "4" can end up concatenated — which is how
-  // typing "42" once produced "042". Re-sync only on a change from OUTSIDE the field.
+  // The hex field needs its own editing buffer: fully controlled by `value`, a
+  // keystroke can be concatenated onto what the field already showed (typing
+  // "42" once produced "042"). Re-sync only on a change from outside the field.
   const [hexInput, setHexInput] = useState(value.replace('#', ''));
   useEffect(() => setHexInput(value.replace('#', '')), [value]);
 
@@ -36,9 +34,8 @@ const ColorPicker = (props: ColorPickerProps) => {
   }, [onChange]);
 
   const handleWheelChange = useCallback((c: ColorResult) => {
-    // Hand the wheel straight back what it just produced, before the consumer has had a
-    // chance to quantise it — see use-wheel-color for why that is what keeps the pointer
-    // under the cursor.
+    // Hand the wheel back what it just produced before the consumer quantises
+    // it; see use-wheel-color.
     followWheel(c.hsl);
     onChange(c.hex);
     if (!disableAlpha && onAlphaChange && c.rgb.a !== undefined) onAlphaChange(c.rgb.a);
@@ -48,9 +45,8 @@ const ColorPicker = (props: ColorPickerProps) => {
     <Box className="color-picker">
       {title && <Text className="color-picker__title">{title}</Text>}
 
-      {/* Capture phase, and on the wrapper rather than inside each of the three strips:
-          the flag has to be set before react-color's own mousedown handler runs, or the
-          initial click of a drag snaps to the quantised colour before tracking begins. */}
+      {/* Capture phase on the wrapper: the flag must be set before react-color's
+          own mousedown handler runs, or the initial click snaps to the quantised colour. */}
       <Box className="color-picker__wheel" onMouseDownCapture={beginDrag}>
         <PickerWheel color={seed} onChange={handleWheelChange} disableAlpha={disableAlpha} />
       </Box>

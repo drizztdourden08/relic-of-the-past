@@ -138,7 +138,7 @@ const OverworldMinimap = ({ bundle, connections, renderResults, playerScreenInde
         return <Box style={{ position: 'absolute', left: cellLeft + x - 3, top: cellTop + y - 3, width: 6, height: 6, borderRadius: '50%', background: 'var(--c-green)', boxShadow: '0 0 3px var(--c-green)', pointerEvents: 'none' }} />;
       })()}
 
-      {/* Every annotated screen draws in its OWN cell — a multi-screen area has
+      {/* Every annotated screen draws in its OWN cell, because a multi-screen area has
           mechanics on sub-screens the player is not standing on. */}
       {annotations.map((set) => {
         const scrIdx = bundle.screens.indexOf(set.screenIndex);

@@ -1,7 +1,6 @@
 /* @layer shared-asset-extraction @kind logic */
 /**
- * BRR (Bit Rate Reduction) audio codec — SNES DSP sample format.
- *
+ * BRR (Bit Rate Reduction) audio codec for the SNES DSP sample format.
  * Ported from util.py decode_brr() and encode_brr_generic().
  * Must produce bit-exact output for game audio fidelity.
  */

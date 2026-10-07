@@ -7,10 +7,10 @@
 
 /**
  * How risky it is to let a translator insert this code.
- * - `safe` — an ordinary formatting/timing code.
- * - `structural` — builds part of a fixed UI shape (a choice cursor, an item
- *   picker); legitimate to place, but the surrounding lines matter.
- * - `dangerous` — has no working handler; inserting it breaks or hangs the
+ * - `safe`: an ordinary formatting/timing code.
+ * - `structural`: builds part of a fixed UI shape (a choice cursor, an item
+ *   picker). Fine to place, but the surrounding lines matter.
+ * - `dangerous`: has no working handler. Inserting it breaks or hangs the
  *   game. Never offered in a menu.
  */
 type CodeRisk = 'safe' | 'structural' | 'dangerous';
@@ -18,7 +18,7 @@ type CodeRisk = 'safe' | 'structural' | 'dangerous';
 /**
  * Where a code's effect applies. `positional` codes act at the point they
  * appear in the token stream. `message` codes are consumed in a pre-pass
- * before the message is shown and apply to the whole message — when more
+ * before the message is shown and apply to the whole message. When more
  * than one appears, the LAST one in the string wins.
  */
 type CodeScope = 'positional' | 'message';

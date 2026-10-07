@@ -1,20 +1,16 @@
 /* @layer tests @kind test */
 /**
- * ╔══════════════════════════════════════════════════════════╗
- * ║  THIS TEST MUST NEVER BE MODIFIED BY THE AI             ║
- * ╚══════════════════════════════════════════════════════════╝
- *
- * Visual snapshot test — launches the app with the built-in auto-test API route.
- * The app itself loads the current profile, loads save state slot N, takes a
- * screenshot, and saves it to tests/screenshots/{NAME}.png — all via CLI args.
+ * Visual snapshot test, driven entirely by CLI args. It launches the app through
+ * the built-in auto-test API route. The app loads the current profile, loads save
+ * state slot N, takes a screenshot and writes tests/screenshots/{NAME}.png.
  *
  * Usage:
  *   npx playwright test tests/snapshot.spec.ts
  *
  * Environment variables:
- *   SNAPSHOT_SLOT  — save state slot to load (default: 2)
- *   SNAPSHOT_NAME  — output filename without extension (default: 'snapshot')
- *   SNAPSHOT_WAIT  — extra ms to wait for app to finish (default: 20000)
+ *   SNAPSHOT_SLOT: save state slot to load (default 2)
+ *   SNAPSHOT_NAME: output filename without extension (default 'snapshot')
+ *   SNAPSHOT_WAIT: extra ms to wait for the app to finish (default 20000)
  */
 
 import { test, expect } from '@playwright/test';

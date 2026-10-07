@@ -37,8 +37,8 @@ const fnv1a = (input: string): string => {
 type Identifiable = Pick<DraftRecommendation, 'kind' | 'action' | 'targetId' | 'screenId' | 'detector' | 'key'>;
 
 /**
- * The identity parts, in a fixed order, joined through `JSON.stringify` rather
- * than a separator character. Any separator can in principle occur inside a
+ * The identity parts, in a fixed order, joined through `JSON.stringify` instead
+ * of a separator character. Any separator can in principle occur inside a
  * detector name or a field path, and two findings whose parts join to the same
  * string would share an id and silently swallow one another; quoting removes
  * that class of collision instead of betting against it.
@@ -56,7 +56,7 @@ const identityOf = (draft: Identifiable): string => JSON.stringify([
 ]);
 
 /**
- * `rec-<kind>-<action>-<hash>` — the readable head makes a persisted file
+ * `rec-<kind>-<action>-<hash>`. The readable head makes a persisted file
  * skimmable, and the hash carries the rest of the identity.
  */
 const recommendationId = <K extends EntityKind>(draft: DraftRecommendation<K>): string =>

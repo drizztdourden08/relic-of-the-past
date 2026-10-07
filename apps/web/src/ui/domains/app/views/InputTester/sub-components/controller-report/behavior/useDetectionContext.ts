@@ -13,9 +13,7 @@ interface DetectionContext {
   hidReport: string;
 }
 
-/** Snapshots what the app currently knows about a device — its remembered
- *  name and SDL type from this session's own controller:added events, and
- *  recent raw HID traffic — for a "report as not working" bundle. */
+/** What the app knows about a device (remembered name, SDL type, recent raw HID traffic) for a report bundle. */
 const useDetectionContext = (deviceKey: string): DetectionContext => {
   return useMemo(() => {
     const [vendorId = '0000', productId = '0000'] = deviceKey.split(':');

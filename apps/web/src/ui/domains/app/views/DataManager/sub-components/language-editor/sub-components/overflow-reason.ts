@@ -3,7 +3,7 @@
  * Why a line cannot be saved, in terms a translator can act on.
  *
  * Naming the consequence matters here: "too long" sounds like it will be
- * trimmed or wrapped, and it will not — the engine writes straight past the
+ * trimmed or wrapped, and it will not. The engine writes straight past the
  * edge of the box and over the line below.
  */
 import { ROW_WIDTH_PX } from '@shared/game/language/layout/types';

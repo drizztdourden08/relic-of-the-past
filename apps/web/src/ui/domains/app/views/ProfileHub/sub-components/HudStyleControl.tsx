@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 /**
- * HUD Style control — Vanilla vs Modern. Vanilla rebuilds the SNES HUD from the
+ * Vanilla vs Modern. Vanilla rebuilds the SNES HUD from the
  * active ROM's extracted sprites, so it is locked when none exist; Modern is the
  * sprite-free fallback (still WIP). When sprites are missing we surface a notice
  * with a one-click extract action that unlocks Vanilla once it succeeds.
@@ -24,7 +24,7 @@ const HudStyleControl = ({ value, onChange }: HudStyleControlProps) => {
   const { available, romFile, setAvailability } = useSpriteAvailabilityStore();
   const [extracting, setExtracting] = useState(false);
 
-  // Re-check on mount — sprites may have been extracted from the Data Manager.
+  // Re-check on mount, since sprites may have been extracted from the Data Manager.
   useEffect(() => {
     if (!romFile) return;
     void spritesStore.checkSpritesExtracted(romFile).then(({ extracted }) => setAvailability(romFile, extracted));
@@ -59,7 +59,7 @@ const HudStyleControl = ({ value, onChange }: HudStyleControlProps) => {
         <Box className="hud-style-control__notice">
           <Text variant="caption">No HUD sprites are extracted for this ROM, so Vanilla is unavailable. Extract them to use the sprite-accurate HUD.</Text>
           <Button variant="secondary" size="sm" onClick={handleExtract} disabled={extracting || !romFile}>
-            {extracting ? 'Extracting…' : 'Extract sprites'}
+            {extracting ? 'Extracting...' : 'Extract sprites'}
           </Button>
         </Box>
       )}

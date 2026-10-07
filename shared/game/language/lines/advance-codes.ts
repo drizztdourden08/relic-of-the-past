@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * The three codes that shape a line — row marker, scroll, wait — read in one
+ * The three codes that shape a line (row marker, scroll and wait), read in one
  * direction and written back in the other. Split and join share this module so
  * they cannot drift: whatever is recognised as an advance here is exactly what
  * gets re-emitted, which is what makes an untouched entry round-trip.
@@ -33,7 +33,7 @@ const advanceOfToken = (token: Token): LineAdvance | undefined => {
   return undefined;
 };
 
-/** A wait-for-button — the code that ends a box. */
+/** A wait-for-button, the code that ends a box. */
 const isWaitToken = (token: Token): boolean => isParamlessCmd(token, kWaitCommand);
 
 /** The token an advance was read from, or null when there was no code. */

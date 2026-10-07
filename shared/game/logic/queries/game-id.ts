@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
  * The link between OUR screen ids and the identifiers the GAME uses. Moved
- * from data/screens/game-id.ts — now a thin wrapper over getScreenByGameId,
+ * from data/screens/game-id.ts, and now a thin wrapper over getScreenByGameId,
  * with the "any palace holding that room" fallback preserved (a dataset
  * palaceIndex that disagrees with the live cur_palace_index_x2 must still
  * resolve, or a dungeon room could resolve to a cave sharing its room number).
@@ -25,7 +25,7 @@ const gameScreenIdOf = (screen: ScreenRecord): GameScreenId | null => {
 /**
  * Our screen record for a game id:
  *   1. exact `palace:room`
- *   2. any palace holding that room — a safety net for rooms whose dataset
+ *   2. any palace holding that room, a safety net for rooms whose dataset
  *      palaceIndex does not match the live cur_palace_index_x2
  *   3. cave / interior by room alone
  */
@@ -41,7 +41,7 @@ const screenForGameId = (gameId: GameScreenId): ScreenRecord | undefined => {
   return getScreenByGameId({ roomIndex: gameId.room });
 };
 
-/** Our id string for a game id — the correct replacement for hand-formatting one. */
+/** Our id string for a game id. Use this instead of hand-formatting one. */
 const screenIdForGameId = (gameId: GameScreenId): string | null => screenForGameId(gameId)?.id ?? null;
 
 /** Display name for a game id, falling back to the raw numbers when unmapped. */

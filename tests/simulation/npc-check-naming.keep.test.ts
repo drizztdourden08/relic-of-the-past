@@ -1,11 +1,10 @@
 /* @layer tests @kind test */
 /**
- * An NPC marker must carry the CHECK it is — its id, plus the name to draw — and
- * it must not claim a check for a sprite that only LOOKS like one. Sprite 0x73
- * spawns both in the scripted opening room (not a check) and in the passage where
- * the sword is handed over (the check), so the room narrowing is what matters
- * here. Completion is asked by id: names are not unique, so a name-keyed set
- * cannot answer this question reliably.
+ * An NPC marker carries the CHECK it is (its id) plus the name to draw, and
+ * must not claim a check for a sprite that only LOOKS like one: sprite 0x73
+ * spawns in the scripted opening room (not a check) and in the passage where
+ * the sword is handed over (the check). Completion is asked by id; names are
+ * not unique.
  */
 import { describe, it, expect } from 'vitest';
 import type { CheckId } from '../../shared/game/data';
@@ -41,7 +40,7 @@ describeDataset('npc check naming', () => {
   });
 
   // Most configs carry no `room`, which asserts "this sprite type is always this
-  // check wherever it spawns" — the same contract the flag matcher uses. Pinned
+  // check wherever it spawns", which is the same contract the flag matcher uses. Pinned
   // so a future `room:` addition to one of these is a deliberate change.
   it('matches an unroomed config in any room', () => {
     expect(npcCheckFor(0xff, 0x55, NONE)?.checkId).toBe('check-077');

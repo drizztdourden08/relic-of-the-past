@@ -1,11 +1,5 @@
 /* @layer renderer-components @kind data */
-/**
- * The wording for the play-mode controls, kept beside the component so the copy can be read and
- * corrected without stepping through JSX.
- *
- * The wait-for-completion hint is written per state rather than as one sentence about the option,
- * because what matters is the audible consequence of where the switch is standing right now.
- */
+// The wait-for-completion hint is written per state: what matters is the audible consequence now.
 import type { SegmentOption } from '@ds/primitives/SegmentedControl';
 import { MODE_LABELS } from '../../behavior/layer-ops';
 import type { PlayModeKind } from '../../behavior/layer-ops';
@@ -33,11 +27,11 @@ const ORDER_OPTIONS: SegmentOption<LoopOrder>[] = [
 const ORDER_HINTS: Record<LoopOrder, string> = {
   sequential: 'Plays the files in the order listed, then starts over.',
   random: 'Draws a different file each pass.',
-  single: 'One track, repeating at its own loop point — the intro plays once and the body repeats. '
+  single: 'One track, repeating at its own loop point. The intro plays once and the body repeats. '
     + 'No crossfade: the seam is wherever the file says it is. This is how MSU-1 itself works.',
 };
 
-const CROSSFADE_LABEL = 'Crossfade — overlap into the next pass';
+const CROSSFADE_LABEL = 'Crossfade into the next pass';
 
 const CROSSFADE_HINT
   = 'How long one pass overlaps the next: the outgoing file fades out while the incoming one '

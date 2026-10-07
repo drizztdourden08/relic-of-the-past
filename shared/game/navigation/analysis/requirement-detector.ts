@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * Requirement Detector — Determines which items gate which connection points.
+ * Determines which items gate which connection points.
  *
  * Runs BFS with increasing item sets to determine the minimum requirements
  * for reaching each connection point from the screen's walkable interior.
@@ -77,7 +77,7 @@ const detectRequirements = (input: RequirementDetectorInput): DetectedRequiremen
       const col = Math.min(pos.col, GRID_SIZE - 1);
       if (!floodResult.reachable[row]?.[col]) continue;
 
-      // This inventory level reaches the tile — record it as the minimum AND set
+      // This inventory level reaches the tile, so record it as the minimum AND set
       reached.add(key);
       const reqs: RequirementSet = inventoryItems.length > 0
         ? [inventoryItems.slice()]

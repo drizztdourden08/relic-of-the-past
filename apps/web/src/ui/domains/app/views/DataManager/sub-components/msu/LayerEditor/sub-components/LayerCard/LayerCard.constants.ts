@@ -1,11 +1,5 @@
 /* @layer renderer-components @kind data */
-/**
- * The wording for the one layer edit that takes something away, kept beside the card so the
- * sentence the author reads under pressure can be corrected without stepping through a hook.
- *
- * The message names the file that survives and counts the ones that do not, because "the rest are
- * removed" is only answerable if you can see what "the rest" is.
- */
+// Names the surviving file and counts the dropped ones: "the rest are removed" needs a number.
 
 const SINGLE_DISCARD_TITLE = 'Keep One Track?';
 

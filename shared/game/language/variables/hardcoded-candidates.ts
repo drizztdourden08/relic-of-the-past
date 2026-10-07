@@ -6,11 +6,11 @@
  * The needles are the SET'S OWN variables, and only those: a term or a menu name
  * the translator has defined is the answer whenever its text turns up in a line.
  * Their values came out of the player's own file, which is the only place the
- * game's own spellings may live — this repository ships none of them.
+ * game's own spellings may live. This repository ships none of them.
  *
  * Longest phrase first, and one candidate per spelling. That ordering is what
  * lets the scan claim the widest match: a line naming a castle should offer the
- * castle, not the realm whose name is a prefix of it.
+ * castle, not the wider region whose name is a prefix of it.
  */
 import { isSearchablePhrase } from './scan-run';
 import type { Variable } from './types';

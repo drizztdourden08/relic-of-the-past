@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 /**
- * useDisplayMappings — derived display data: requiredInputs & displayMappings.
+ * Derived display data: requiredInputs and displayMappings.
  */
 
 import { useMemo } from 'react';
@@ -67,7 +67,7 @@ const useDisplayMappings = ({ activeProfile, devices }: UseDisplayMappingsArgs) 
     return inputs;
   }, [activeProfile, devices]);
 
-  // More than one physical controller feeding this profile's bindings — each
+  // More than one physical controller feeding this profile's bindings, so each
   // binding row then also shows which one it came from (see BindingRow's
   // deviceIconUrl). A single-controller profile never needs that disambiguation.
   const multiController = useMemo(() => allowedDevices(activeProfile).gamepadKeys.size > 1, [activeProfile]);

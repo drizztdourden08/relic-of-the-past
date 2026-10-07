@@ -7,7 +7,7 @@ import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-sys
 import { describeDataset } from '../dataset-guard';
 
 // The adapter layer against the real dataset. `buildSchema` is imported from its
-// own module rather than the ds/data barrel on purpose: the barrel pulls in the
+// own module instead of the ds/data barrel on purpose: the barrel pulls in the
 // view-state binding, which touches `window` at module load.
 
 describeDataset('collection sources', () => {
@@ -22,7 +22,7 @@ describeDataset('collection sources', () => {
   });
 
   // Every id is `${prefix}-${digits}`, where the prefix equals the kind name
-  // for every kind except `item-group` (`ig`) and `enumeration` (`enum`) — see
+  // for every kind except `item-group` (`ig`) and `enumeration` (`enum`). See
   // `KIND_ID_PREFIXES`.
   it('identifies a row by the id the row itself carries, prefixed with its kind', () => {
     const idPrefixes: Partial<Record<string, string>> = { 'item-group': 'ig', enumeration: 'enum' };
@@ -60,10 +60,9 @@ describeDataset('collection sources', () => {
     }
   });
 
-  // Editor groups may name a path no row happens to carry (an optional field
-  // absent from the whole collection derives to nothing), so existence is not
-  // the assertion. Claiming the same field twice is, because the layout would
-  // then render it in whichever group ran first and silently drop the other.
+  // Editor groups may name a path no row carries, so existence is not the
+  // assertion. Claiming a field twice is: the layout would render it in the
+  // first group and silently drop the other.
   it('claims each grouped path once per collection', () => {
     for (const kind of ENTITY_KINDS) {
       const groups = COLLECTION_SOURCES[kind].config?.groups ?? [];

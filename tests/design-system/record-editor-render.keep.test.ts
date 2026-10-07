@@ -8,11 +8,9 @@ import { RecordEditor } from '../../apps/web/src/ui/design-system/composites/Rec
 import type { SchemaConfig } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
 import { describeDataset } from '../dataset-guard';
 
-// There is no jsdom or testing-library in this repo, so these are SSR smoke
-// tests: they prove the form builds and renders for real records of several
-// shapes, read-only and interactive. Typing into a control, clicking Save and
-// the pending/error states around the promise are NOT covered here — they need
-// a browser.
+// SSR smoke tests (no jsdom): the form builds for real records of several
+// shapes, read-only and interactive. Typing, Save and the pending/error states
+// need a browser.
 
 const noop = async (): Promise<void> => undefined;
 
@@ -35,7 +33,7 @@ const COLLECTIONS = [
   { kind: 'item' as const, rows: all('item') },
 ];
 
-describeDataset('RecordEditor — a real record from several collections', () => {
+describeDataset('RecordEditor on a real record from several collections', () => {
   for (const { kind, rows } of COLLECTIONS) {
     const record = rows[0];
 
@@ -63,12 +61,10 @@ describeDataset('RecordEditor — a real record from several collections', () =>
   }
 });
 
-describeDataset('RecordEditor — what auto-layout puts on the page', () => {
+describeDataset('what RecordEditor auto-layout puts on the page', () => {
   const rows = all('connection');
-  // Placement is a plain nested object now (form/rect/tiles, `side` only on a
-  // border point) rather than a discriminated union — see the connection-model
-  // migration report — so the area-form record is still the right fixture for
-  // nested-object recursion, just not for union-branch detection.
+  // Placement is a plain nested object now, not a discriminated union, so the
+  // area-form record covers nested-object recursion, not union-branch detection.
   const withRect = rows.find((row) => row.placement.form === 'area') ?? rows[0];
   // `requirements` IS still a genuine discriminated union on a connection
   // record (itemId / checkId / allOf / anyOf / count / impossible), so it is
@@ -83,10 +79,8 @@ describeDataset('RecordEditor — what auto-layout puts on the page', () => {
 
   it('recurses into a nested object inside a plain field', () => {
     const markup = render(withRect, rows, true);
-    // Placement's own rect, and the rect's leaves. The schema is derived from
-    // the whole collection, so `side` (a border-only field elsewhere in the
-    // dataset) still appears as an optional field here — only the nested
-    // `Rect` recursion is what this test pins.
+    // The schema is derived from the whole collection, so `side` (border-only
+    // elsewhere) appears as optional here. Only the nested `Rect` recursion is pinned.
     expect(markup).toContain('Placement');
     expect(markup).toContain('Rect');
     expect(markup).toContain('record-editor__nested');
@@ -118,8 +112,8 @@ describeDataset('RecordEditor — what auto-layout puts on the page', () => {
 
   it('offers add, remove and reorder for a list of single values', () => {
     // A list of references, which is a sequence: order and membership both
-    // matter, so it keeps the rows. (A list of TAGS deliberately does not —
-    // see the tag-array tests.)
+    // matter, so it keeps the rows. (A list of TAGS deliberately does not; the
+    // tag-array tests cover that.)
     const dungeons = all('dungeon');
     const withRooms = dungeons.find((row) => (row.roomScreenIds?.length ?? 0) > 1) ?? dungeons[0];
     const markup = render(withRooms, dungeons, true);
@@ -129,11 +123,8 @@ describeDataset('RecordEditor — what auto-layout puts on the page', () => {
   });
 
   it('gives a list of VARIANT elements a branch-aware editor, not the read-only summary', () => {
-    // See `record-editor-variant-array.test.ts` for the full behaviour —
-    // this only pins that the real dataset actually reaches it: a real
-    // requirement expression's own `anyOf` renders branch rows and the same
-    // add/remove/reorder plumbing every other list editor has, rather than
-    // the count-and-preview `array-kit` fallback.
+    // Full behaviour in `record-editor-variant-array.test.ts`. This pins that a
+    // real requirement's `anyOf` reaches the branch editor, not the `array-kit` fallback.
     const checks = all('check');
     const withAnyOf = checks.find((row) => (row.requirements?.anyOf?.length ?? 0) > 1);
     expect(withAnyOf).toBeDefined();

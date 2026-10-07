@@ -1,5 +1,5 @@
 /* @layer renderer-other @kind logic */
-/** Shared timestamp formatter — presets replace the per-card duplicated Date logic. */
+/** Shared timestamp formatter. Presets replace the per-card duplicated Date logic. */
 type DatePreset = 'short' | 'long' | 'session';
 
 const PRESET_OPTS: Record<DatePreset, Intl.DateTimeFormatOptions> = {

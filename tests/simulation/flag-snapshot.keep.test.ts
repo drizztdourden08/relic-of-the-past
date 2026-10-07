@@ -4,7 +4,7 @@ import { emptySnapshot, cloneSnapshot, diffSnapshots } from '../../shared/game/s
 import { matchDiffs } from '../../shared/game/simulation/detect/check-matcher';
 import { describeDataset } from '../dataset-guard';
 
-/** Chest-open bit for slot 0 — same native fact the matcher itself uses. */
+/** Chest-open bit for slot 0, taken from the same native fact the matcher uses. */
 const CHEST_SLOT_0_MASK = 0x10;
 
 describeDataset('flag-snapshot diffing', () => {
@@ -35,7 +35,7 @@ describeDataset('flag-snapshot diffing', () => {
     expect(kinds).toEqual(['overworld', 'progress']);
   });
 
-  it('cloneSnapshot is a deep copy — mutating the clone leaves the original clean', () => {
+  it('cloneSnapshot is a deep copy, so mutating the clone leaves the original clean', () => {
     const a = emptySnapshot();
     const b = cloneSnapshot(a);
     b.dungInfo[0] = 0x1234;

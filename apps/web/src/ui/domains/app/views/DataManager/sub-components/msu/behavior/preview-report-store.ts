@@ -1,40 +1,22 @@
 /* @layer renderer-components @kind logic */
 /**
- * A frame-rate feed of the preview's live state, kept outside React on purpose.
+ * A frame-rate feed of the preview's live state, kept outside React: pushing it through state
+ * would re-render the whole slot list sixty times a second. Readouts read it via
+ * `useSyncExternalStore`.
  *
- * The preview polls the engine once per animation frame, and only the readout should redraw that
- * often — pushing the report through component state would re-render the whole slot list sixty
- * times a second. So the report lives here, in a small observable that the readout leaves read
- * through `useSyncExternalStore`: nothing above them ever hears about a frame.
- *
- * A frame that would draw exactly as the last one did is not published at all. The signature
- * below rounds every number to the precision it is actually SHOWN at, so the publish rate settles
- * around ten a second however fast the loop runs, and the bar's own width transition carries the
- * motion between them.
- *
- * "Shown at" means the finest thing drawn from a number, not the text beside it. A position reads
- * as m:ss but also sets the width of the sound bar, so it is tracked to tenths: rounded to whole
- * seconds the bar would step once a second, and a layer whose only live number is its position —
- * a wait-for-completion one-shot, with no countdown running alongside — would visibly stall
- * between steps.
- *
- * The readout draws a row PER VOICE, so the signature has to walk them: a frame in which only the
- * second of three overlapping sounds moved, or in which one of a crossfade's two halves advanced
- * its fade, is a frame that looks different and must be published. Summarising the voices by their
- * count alone would freeze those rows until something else in the layer happened to change.
+ * A frame that would draw the same as the last is not published. The signature rounds every
+ * number to the precision it is SHOWN at (the finest thing drawn from it, so a position that also
+ * sets a bar's width is tracked to tenths), and walks every voice, since one voice moving is a
+ * visible change.
  */
 import type { LayerReport } from '@app/lib/msu/engine';
 
-/**
- * One thing being auditioned, whatever it is: a music slot, or a sound on one of the three
- * replaceable channels. The key says WHICH, so a readout can tell "nothing is playing" apart
- * from "something else is" without knowing how the other kind is identified.
- */
+/** One thing being auditioned. The key says WHICH, so a readout can tell "nothing" from "something else". */
 interface PreviewReport {
   key: string;
   elapsedSeconds: number;
   layers: LayerReport[];
-  /** A short live note beside the clock — how many effects are overlapping, or null. */
+  /** A short live note beside the clock, like how many effects overlap. Null when there is none. */
   detail: string | null;
 }
 

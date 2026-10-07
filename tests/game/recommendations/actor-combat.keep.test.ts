@@ -1,13 +1,9 @@
 /* @layer test @kind test */
 /**
- * The `actor` strategy's combat field probe: an ActorRecord whose stored
- * combat profile disagrees with (or, today, is simply absent from) the
- * resolved combat row the native table reports for its sprite type.
- *
- * Ported from the hand-written `actor-combat` detector (deleted) onto the
- * declarative comparison engine — `strategy:actor` is the detector id now,
- * shared with the spawns finding (`actor-spawns.keep.test.ts`), since the
- * engine's contract is one strategy, and so one detector, per kind.
+ * The `actor` strategy's combat field probe: an ActorRecord whose stored combat
+ * profile disagrees with (or is absent from) the native table's row for its
+ * sprite type. `strategy:actor` is shared with the spawns finding
+ * (`actor-spawns.keep.test.ts`): one strategy, one detector, per kind.
  */
 import { describe, it, expect } from 'vitest';
 import { all, getActorByGameId, replaceRecord } from '@shared/game/data';
@@ -96,7 +92,7 @@ describeDataset('actor strategy (combat probe)', () => {
     }
   });
 
-  it('proposes nothing for a sprite type no ActorRecord catalogues — that gap belongs to the spawns probe', () => {
+  it('proposes nothing for a sprite type no ActorRecord catalogues, because that gap belongs to the spawns probe', () => {
     const uncatalogued = Math.max(...all('actor').map(a => a.gameId.spriteType ?? 0)) + 5;
     expect(getActorByGameId({ spriteType: uncatalogued })).toBeUndefined();
     const drafts = detector.detect(contextFor({

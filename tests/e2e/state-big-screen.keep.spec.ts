@@ -1,19 +1,14 @@
 /* @layer tests @kind test */
 /**
- * PERMANENT (`.keep.spec.ts`) — do not delete with the scratch specs.
+ * PERMANENT (`.keep.spec.ts`). Do not delete with the scratch specs.
  *
  * `test-big-screen` is the first castle's exterior, a FOUR-screen area
- * (0x1B/0x1C/0x23/0x24). Multi-screen areas are where per-screen logic
- * under-reports silently: everything looks plausible, it is just describing the
- * one sub-screen the player stands on and quietly ignoring the other three.
+ * (0x1B/0x1C/0x23/0x24). Per-screen logic under-reports silently here: it
+ * describes the one sub-screen the player stands on.
  *
- * The tell is arithmetic. One overworld screen is 64×64 = 4096 tiles, so a
- * four-screen area must total 16384. A regression to single-screen handling shows
- * up as a total of 4096 with a proportionally smaller reachable count — which on
- * its own would still look like a reasonable number.
- *
- * The second tell is the exits: they must include ways out that live on a
- * DIFFERENT sub-screen than Link's, which only happens if every screen was walked.
+ * The tell is arithmetic: one screen is 64×64 = 4096 tiles, so the area must
+ * total 16384. The second tell: exits must include ways out on a DIFFERENT
+ * sub-screen, which only happens if every screen was walked.
  */
 import { test, expect } from '@playwright/test';
 import { withState } from './state-harness';
@@ -43,7 +38,7 @@ test('test-big-screen covers every sub-screen, not just Link\'s', async () => {
     const elsewhere = exits.filter((row) => /other screen/.test(row.detail ?? ''));
     expect(
       elsewhere.length,
-      `no exit came from a neighbouring sub-screen — the area collapsed to one screen: ${JSON.stringify(exits)}`,
+      `no exit came from a neighbouring sub-screen, so the area collapsed to one screen: ${JSON.stringify(exits)}`,
     ).toBeGreaterThan(0);
 
     // And the exits are not all copies of one screen's set.

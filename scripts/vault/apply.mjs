@@ -1,13 +1,8 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * Writing one side of the comparison onto the other, and committing the vault
- * when it is the side that changed.
- *
- * The vault is the maintainer's own checkout, so this commits on whatever branch
- * is already out — it never creates a branch, never switches one, and never
- * pushes. Sending the commit on is a decision made by a person; leaving it
- * committed locally means the working tree stays clean and the next comparison
- * starts from a state that is actually recorded.
+ * Writes one side of the comparison onto the other and commits the vault when it
+ * changed. Commits on whatever branch is checked out; never creates or switches a
+ * branch, never pushes. Sending the commit on is a person's decision.
  */
 import { execFileSync } from 'node:child_process';
 import { copyFileSync, mkdirSync, rmSync, existsSync } from 'node:fs';
@@ -22,11 +17,7 @@ const remove = (path) => {
   if (existsSync(path)) rmSync(path, { force: true });
 };
 
-/**
- * Apply every entry that has a direction. `pull` writes the vault's copy into
- * the repo, `push` writes the repo's copy into the vault; a `*-deleted` status
- * removes on the receiving side instead.
- */
+/** `pull` writes vault → repo, `push` writes repo → vault; `*-deleted` removes on the receiving side. */
 const applyEntries = ({ entries, root, treeDir }) => {
   const applied = { pulled: 0, pushed: 0, removed: 0 };
 
@@ -58,10 +49,7 @@ const applyEntries = ({ entries, root, treeDir }) => {
 const run = (args, cwd) =>
   execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
 
-/**
- * Commit whatever the apply step wrote into the vault. Returns the short hash,
- * or null when there was nothing to record.
- */
+/** Commit what the apply step wrote into the vault. Returns the short hash, or null when nothing changed. */
 const commitVault = (vaultDir, subject) => {
   if (run(['status', '--porcelain'], vaultDir).trim() === '') return null;
   run(['add', '-A'], vaultDir);

@@ -1,9 +1,8 @@
 /* @layer renderer-components @kind hook */
 /**
- * useInputCalibration — State management hook for the InputCalibration page.
+ * State management hook for the InputCalibration page.
  *
- * Subscribes to InputManager for HID state, manages calibration flow, and
- * event logging. Every controller is SDL3-claimed now (the browser Gamepad
+ * Every controller is SDL3-claimed now (the browser Gamepad
  * API path has been removed), so connect/disconnect events for the log come
  * from the same SDL3 channels as everything else.
  */
@@ -84,7 +83,7 @@ const useInputCalibration = () => {
     };
   }, []);
 
-  // HID diagnostics (lightweight listener — no input polling)
+  // HID diagnostics (lightweight listener, no input polling)
   useEffect(() => {
     const unsubDiag = controllerInputStore.onDiag(() => {
       setControllerDiag([...controllerInputStore.getDiagLog()]);

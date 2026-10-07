@@ -19,7 +19,7 @@ const canDownload = (): boolean => isWindows();
 
 const exeName = (stem: string): string => (isWindows() ? `${stem}.exe` : stem);
 
-/** `<data>/tools/ffmpeg` — the install destination. */
+/** The install destination, `<data>/tools/ffmpeg`. */
 const ffmpegToolDir = (): string => getUserDataPath('tools', 'ffmpeg');
 
 /** The two paths a managed install occupies (whether or not they exist yet). */

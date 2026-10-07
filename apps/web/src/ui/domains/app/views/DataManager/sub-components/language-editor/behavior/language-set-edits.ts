@@ -1,12 +1,8 @@
 /* @layer renderer-components @kind logic */
 /**
- * Pure immutable transforms on a loaded language set — the whole edit
- * vocabulary of the translation editor, kept out of the hook so it stays
- * testable and so the hook only has to worry about when to persist.
- *
- * Every transform returns a new set and shares everything it did not touch:
- * only the edited entry gets a fresh `tokens` array, which is what lets the
- * validation layer skip the other entries by array identity.
+ * Pure immutable transforms on a loaded language set. Every transform shares
+ * everything it did not touch: only the edited entry gets a fresh `tokens`
+ * array, which lets the validation layer skip the others by array identity.
  */
 import type {
   DialogueEntry, GlossaryTerm, LanguageSet, SetStructure, TextGroupId, Token,
@@ -31,12 +27,7 @@ const mapEntry = (
 const withEntryTokens = (set: LanguageSet, id: number, tokens: Token[]): LanguageSet =>
   mapEntry(set, id, (entry) => ({ ...entry, tokens }));
 
-/**
- * Several entries at once, in ONE new set. Applying a batch one entry at a time
- * would mark the set dirty once per entry and hand the debounced write a
- * half-applied snapshot; a sweep across the whole set (retagging a name as a
- * variable) is one edit, so it produces one set.
- */
+/** Several entries at once, in one new set, so the debounced write never sees a half-applied snapshot. */
 const withManyEntryTokens = (
   set: LanguageSet,
   edits: { entryId: number; tokens: Token[] }[],
@@ -59,11 +50,8 @@ const withStructure = (set: LanguageSet, structure: SetStructure): LanguageSet =
   set.structure === structure ? set : { ...set, structure }
 );
 
-/**
- * One slot of one text group. The catalog decides which slots EXIST; a set only
- * ever stores what a translator actually changed, so clearing a field drops the
- * key rather than storing an empty string that would read as a translation.
- */
+/** One slot of one text group. A set only stores what a translator changed, so
+ *  clearing a field drops the key; an empty string would read as a translation. */
 const withTextValue = (
   set: LanguageSet,
   group: TextGroupId,

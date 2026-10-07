@@ -9,8 +9,8 @@ import type { FieldKind } from '../../apps/web/src/ui/design-system/data/schema/
 import { describeDataset } from '../dataset-guard';
 
 // The kits register themselves when the barrel above is imported. Everything
-// here goes back through the CORE registries rather than importing a kit's
-// internals, so a passing case proves the registration as well as the semantics.
+// here goes back through the CORE registries instead of importing a kit's
+// internals, so a passing case proves the registration and the semantics.
 
 const KINDS: readonly FieldKind[] = [
   'string', 'number', 'boolean', 'enum', 'idRef', 'array', 'object', 'union', 'unknown',
@@ -22,7 +22,7 @@ const testerFor = (kind: FieldKind) => {
   return (value: unknown, op: string, operand?: unknown) => tester.test(value, op, operand);
 };
 
-describeDataset('field kits — registration', () => {
+describeDataset('field kit registration', () => {
   it('registers a tester AND a kit for every kind, with no orphans either way', () => {
     for (const kind of KINDS) {
       expect(getFieldTester(kind), `tester for ${kind}`).toBeDefined();
@@ -106,7 +106,7 @@ describeDataset('number kit', () => {
     expect(test('n/a', 'lt', 5)).toBe(false);
   });
 
-  it('sorts numerically, not as text — the reason the kit registers one', () => {
+  it('sorts numerically, not as text, which is why the kit registers one', () => {
     const compare = getComparator('number');
     expect(compare(9, 10)).toBeLessThan(0);
     expect(compare(10, 9)).toBeGreaterThan(0);
@@ -160,7 +160,7 @@ describeDataset('enum kit', () => {
 describeDataset('id-ref kit', () => {
   const test = testerFor('idRef');
 
-  it('matches exactly — these are machine values, not prose', () => {
+  it('matches exactly, because these are machine values, not prose', () => {
     expect(test('screen-183', 'eq', 'screen-183')).toBe(true);
     expect(test('screen-183', 'eq', ' screen-183 ')).toBe(true);
     expect(test('screen-183', 'eq', 'SCREEN-183')).toBe(false);
@@ -240,7 +240,7 @@ describeDataset('object, union and unknown kits', () => {
     }
   });
 
-  it('survives a self-referencing value rather than throwing', () => {
+  it('survives a self-referencing value instead of throwing', () => {
     const cyclic: Record<string, unknown> = { name: 'loop' };
     cyclic.self = cyclic;
     expect(() => getGroupKey('unknown')(cyclic)).not.toThrow();

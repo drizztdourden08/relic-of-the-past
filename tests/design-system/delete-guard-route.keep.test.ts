@@ -1,9 +1,8 @@
 /* @layer tests @kind test */
 /**
- * The delete-guard's actual rule, pulled out of `useDeleteGuard` as a pure
- * function precisely so it can be pinned down without a browser: a record
- * something still references must stop at confirmation, and a record nothing
- * references deletes immediately, with no dialog in the way at all.
+ * The delete-guard's rule, pulled out of `useDeleteGuard` as a pure function:
+ * a referenced record stops at confirmation, an unreferenced one deletes
+ * immediately with no dialog.
  */
 import { describe, it, expect } from 'vitest';
 import { all, ITEM_GROUP_IDS } from '@shared/game/data';
@@ -14,7 +13,7 @@ import { isReferenceGuarded, referencedByHitsFor } from '../../apps/web/src/ui/d
 import type { ReferencedByHit } from '../../apps/web/src/ui/design-system/composites/RecordEditor';
 import { describeDataset } from '../dataset-guard';
 
-describeDataset('routeDelete — the guard\'s whole rule', () => {
+describeDataset('routeDelete carries the guard\'s whole rule', () => {
   it('deletes immediately when nothing references the record', () => {
     expect(routeDelete([])).toEqual({ kind: 'immediate' });
   });
@@ -37,7 +36,7 @@ describeDataset('routeDelete — the guard\'s whole rule', () => {
   });
 });
 
-describeDataset('routeDelete — against the real dataset', () => {
+describeDataset('routeDelete against the real dataset', () => {
   it('confirms before deleting a tag that is actually carried by a real screen', () => {
     const tagged = all('screen').find(screen => screen.tags.length > 0);
     expect(tagged).toBeDefined();
@@ -49,7 +48,7 @@ describeDataset('routeDelete — against the real dataset', () => {
 
   it('deletes an item group nothing currently references with no confirmation', () => {
     // Swords is a real, seeded group with no static Requirement pointing at it today
-    // (pinned by reference-index.test.ts) — the guard's "no friction" path for real data.
+    // (pinned by reference-index.test.ts). This is the guard's "no friction" path for real data.
     const hits = referencesTo('item-group', ITEM_GROUP_IDS.Swords);
     expect(hits).toEqual([]);
     expect(routeDelete(hits)).toEqual({ kind: 'immediate' });

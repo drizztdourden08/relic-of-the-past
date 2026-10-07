@@ -1,18 +1,8 @@
 /* @layer renderer-components @kind component */
 /**
- * The seam between one header and the next, made grabbable: a thin strip over
- * the gutter, so it reads as the line between two columns rather than as part
- * of either.
- *
- * It is deliberately NOT `draggable` — the cell around it is, and the whole
- * point is that pulling the seam resizes rather than picks up. The hook behind
- * it stops its pointer events from reaching that cell.
- *
- * It answers a column drag all the same, with its own column's index. The
- * strip covers the gutter, which is exactly the ground a cursor carrying a
- * column crosses on its way from one column to the next — so this is the one
- * place a drop zone cannot afford a hole, and it says so itself rather than
- * leaning on the event reaching the cell behind it.
+ * The grabbable seam between two headers. Deliberately not `draggable`: pulling
+ * it resizes, never picks up. It still answers a column drag with its own
+ * column's index, since the gutter is the ground a carried column crosses.
  */
 import { Box } from '../../../primitives/Box';
 import type { DragEvent } from 'react';
@@ -22,7 +12,7 @@ import './ColumnResizeHandle.css';
 interface ColumnResizeHandleProps {
   /** Named for the screen reader, since the strip itself shows no text. */
   label: string;
-  /** The column this seam belongs to — and the slot a drop over it means. */
+  /** The column this seam belongs to. A drop over it lands in that slot. */
   index: number;
   resize: ColumnResizeBinding;
   onDragOver?: (index: number, event: DragEvent<HTMLElement>) => void;

@@ -1,16 +1,11 @@
 /* @layer renderer-app @kind data */
-/**
- * Why this override exists: twelve derived top-level fields, of which four are
- * deep unions (`gameId`, `requirements`, `presence`) or free prose
- * (`sourceFunc`, `visualNote`) that mean nothing at a glance. The default
- * column set is the one a reader scans by — what it is, where it is, what it
- * holds.
- */
+/** Twelve derived fields, several deep unions or free prose that mean nothing
+ *  at a glance. The default columns are what a reader scans by. */
 import type { SchemaConfig } from '@ds/data';
 
 const CHECK_CONFIG: SchemaConfig = {
   defaultColumns: ['id', 'randomizerName', 'kind', 'screenId', 'dungeonId', 'vanillaItemIds'],
-  // Same hex convention as SCREEN_CONFIG — roomId is a room id (hex4), chestIndex isn't.
+  // Same hex convention as SCREEN_CONFIG. roomId is a room id (hex4), chestIndex isn't.
   formats: {
     'gameId.roomId': 'hex4',
     'gameId.chestIndex': 'hex2',

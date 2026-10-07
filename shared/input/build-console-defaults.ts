@@ -1,19 +1,12 @@
 /* @layer shared-input @kind logic */
 /**
- * Builds a device's default SNES button mappings from the family layer's
- * consoleDefaults — the drag-and-drop "apply this device" flow's only
- * remaining source of default bindings, now that there is no per-model
- * preset to ask.
- *
- * This only has an sdlType to go on, never a live device, so every position
- * the family recognizes a console default for gets a binding regardless of
- * whether the physical unit actually has it (see buildDeviceProfileFromSdlType
- * for the same tradeoff, made for the same reason: a drag-and-drop payload
- * carries no hasButton/hasAxis of its own).
+ * Builds a device's default SNES button mappings from the family layer's consoleDefaults, the
+ * drag-and-drop "apply this device" flow's only source of defaults. Only an sdlType is known,
+ * never a live device, so every position the family has a default for gets a binding whether
+ * the physical unit has it or not (same tradeoff as buildDeviceProfileFromSdlType).
  */
-// Imported from the family barrel (./family), never the deep resolve-display/
-// sdl-capabilities modules directly — see the equivalent note in
-// device-profile.ts for why that matters (family self-registration).
+// Import from the family barrel (./family), never the deep resolve-display/sdl-capabilities
+// modules; see device-profile.ts (family self-registration).
 import { BUTTON_INDEX, buildDisplayContext, resolveButtonIcon, resolveButtonLabel, resolveConsoleDefault } from './family';
 import type { SdlButtonName, SdlGamepadType } from './family';
 import type { ButtonMapping } from '../types/controls';

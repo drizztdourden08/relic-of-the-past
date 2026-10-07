@@ -1,0 +1,49 @@
+/* @layer renderer-components @kind style */
+.state-list {
+  width: 13rem;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.state-list__scroll {
+  max-height: 26rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.state-list__group {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--c-text-muted);
+  padding: var(--space-sm) 0 var(--space-xs);
+}
+
+.state-list__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-sm);
+  width: 100%;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  text-align: left;
+}
+
+.state-list__item:hover { background: var(--c-hover); }
+
+.state-list__item--active {
+  background: var(--c-selected);
+  color: var(--c-gold-bright);
+}
+
+.state-list__count {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}

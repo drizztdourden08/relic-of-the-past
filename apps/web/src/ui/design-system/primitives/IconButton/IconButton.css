@@ -84,7 +84,7 @@
   color: var(--c-bg);
 }
 
-/* ─── Active / toggled-on (gold) — wins over any variant ─── */
+/* ─── Active / toggled-on (gold), wins over any variant ─── */
 .icon-btn--active {
   background: var(--c-selected);
   border-color: var(--c-gold);

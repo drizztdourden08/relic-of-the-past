@@ -1,0 +1,120 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "sanctuary-files",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "sanctuary-files",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "type", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "sanctuary-reports",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "reporter.userId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "sanctuary-reports",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "issue.state", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "sanctuary-reports",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "reporter.userId", "order": "ASCENDING" },
+        { "fieldPath": "issue.state", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "sanctuary-users",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "sites.sanctuary.state", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "sanctuary-devices",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "code.userCode", "order": "ASCENDING" },
+        { "fieldPath": "code.status", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "sanctuary-views",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "userId", "order": "ASCENDING" },
+        { "fieldPath": "surface", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "store-items",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "store-items",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "kind", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "store-items",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "stats.installs30d", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "store-items",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "stats.score", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "store-items",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "updatedAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "store-items",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "author.userId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

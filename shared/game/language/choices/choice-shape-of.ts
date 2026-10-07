@@ -3,13 +3,13 @@
  * Detect a choice prompt and take it apart into question and options.
  *
  * The shape below was worked out from a stored language set (397 entries, 43
- * of them prompts — ids 2, 3, 7-13, 25, 38, 45, 51, 134, 137, 138, 140, 142,
+ * of them prompts, at ids 2, 3, 7-13, 25, 38, 45, 51, 134, 137, 138, 140, 142,
  * 150, 201, 202, 210, 217, 218, 219, 230, 244, 255, 266, 284, 287, 315, 323,
  * 324, 331, 335, 353, 383, 386, 389-392). In every one of them:
  *
  * - The prompt code is the LAST token of the entry, always without a param.
- * - The options are the last N lines before it — three for `Choose3`, two for
- *   the other codes — one option per line, and no wait-for-button falls inside
+ * - The options are the last N lines before it, three for `Choose3` and two for
+ *   the other codes. One option per line, and no wait-for-button falls inside
  *   them: a wait always sits at the end of the question part.
  * - Option lines open with a row marker (rows 2+3 after an in-box question,
  *   e.g. 142/218/219/315; rows 1+2 for `Choose2`, 389/391; rows 1-3 for
@@ -25,7 +25,7 @@
  *   text.
  *
  * Detection mirrors those facts exactly and answers null for anything that
- *   deviates, so the caller falls back to the raw stream editor rather than
+ *   deviates, so the caller falls back to the raw stream editor instead of
  *   guessing.
  */
 import type { Token } from '../types';
@@ -42,7 +42,7 @@ const optionCountOf = (code: ChoiceCode): number => (code === 'Choose3' ? 3 : 2)
 
 /** One line located by token index, mirroring the split in `lines/split-lines`. */
 type LineSpan = {
-  /** Index of the line's first token — its advance code when it has one. */
+  /** Index of the line's first token, which is its advance code when it has one. */
   start: number;
   advance: LineAdvance;
   /** Index of the first content token. */

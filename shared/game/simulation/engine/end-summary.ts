@@ -2,10 +2,10 @@
 /**
  * What the run FOUND versus what it resolved.
  *
- * `not-completable` on its own is a verdict, not a report — it says the frontier
+ * `not-completable` on its own is a verdict, not a report. It says the frontier
  * emptied but nothing about whether that was correct. This counts everything
  * discovery saw and how much of it was actually dealt with, so a run that stops
- * early can be told apart from one that genuinely exhausted its reach, and so a
+ * early can be told apart from one that exhausted its reach, and so a
  * blocked chest or an unentered room is visible instead of merely absent.
  */
 import type { DungeonId } from '../../data';
@@ -20,7 +20,7 @@ interface EndSummary {
   keys: { held: Partial<Record<DungeonId, number>>; bigKeys: DungeonId[] };
 }
 
-/** Cap the listing — a run that entered nothing should not print a novel. */
+/** Cap the listing, since a run that entered nothing should not print a novel. */
 const MAX_LISTED = 40;
 
 const buildEndSummary = (state: EngineState): EndSummary => {

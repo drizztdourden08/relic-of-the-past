@@ -45,7 +45,7 @@ const spawnLandingTile = (x: number, y: number, origin: { x: number; y: number }
 };
 
 /**
- * The origin of the screen a consumer is looking at — the ONE place that decides
+ * The origin of the screen a consumer is looking at. The ONE place that decides
  * "indoors, use the page the player stands on; outdoors, use the screen index".
  *
  * Five call sites re-derived this ternary inline (the dumper, the sim-run flag,

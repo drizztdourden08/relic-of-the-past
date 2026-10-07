@@ -40,7 +40,7 @@ const SuggestionCard = (props: SuggestionCardProps) => {
 
   const button = (
     <Button size="sm" variant="secondary" onClick={handleApply} disabled={disabled}>
-      {state === 'applied' ? 'Applied' : state === 'applying' ? 'Applying …' : 'Apply'}
+      {state === 'applied' ? 'Applied' : state === 'applying' ? 'Applying...' : 'Apply'}
     </Button>
   );
 

@@ -27,9 +27,9 @@ const byFile = (list) => {
 };
 
 const section = (title, list, topN = 15) => {
-  console.log(`\n=== ${title} — ${list.length} findings across ${new Set(list.map((f) => f.path)).size} files ===`);
+  console.log(`\n=== ${title}: ${list.length} findings across ${new Set(list.map((f) => f.path)).size} files ===`);
   for (const [file, n] of byFile(list).slice(0, topN)) console.log(`  ${String(n).padStart(4)}  ${file}`);
-  if (byFile(list).length > topN) console.log(`  … ${byFile(list).length - topN} more files`);
+  if (byFile(list).length > topN) console.log(`  ... ${byFile(list).length - topN} more files`);
 };
 
 if (which === 'html' || which === 'all') section('R11  Raw HTML outside primitives (warn → error)', sel.html);

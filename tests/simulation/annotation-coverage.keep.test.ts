@@ -1,21 +1,14 @@
 /* @layer tests @kind test */
 /**
- * The safety net for "we're going to miss some things".
- *
- * Phase 2 renders a GENERATED annotation list, not a hand-maintained checklist,
- * so the risk is a new mechanic producing a kind nothing draws. These tests make
- * that a build failure instead of an invisible gap: every AnnotationKind must
- * have a style + legend, and the derivation's kinds must all be renderable.
+ * Phase 2 renders a GENERATED annotation list, so a new mechanic could produce
+ * a kind nothing draws. These make that a build failure: every AnnotationKind
+ * has a style + legend, and the derivation's kinds are all renderable.
  */
 import { describe, it, expect } from 'vitest';
 import { ANNOTATION_STYLES, DRAWN_KINDS } from '../../apps/web/src/ui/domains/app/views/GameLayer/sub-components/navigation-overlay/annotation-style';
 import type { AnnotationKind } from '../../shared/game/simulation';
 
-/**
- * Mirrors the AnnotationKind union. Kept explicit so ADDING a kind to the union
- * without adding it here fails the count assertion — the union itself is a type
- * and cannot be enumerated at runtime.
- */
+/** Mirrors the AnnotationKind union (a type cannot be enumerated at runtime). Adding a kind without adding it here fails the count. */
 const EXPECTED_KINDS: AnnotationKind[] = [
   'chest', 'big-chest', 'npc-check', 'standing-item',
   'key-door', 'big-key-door', 'cell-lock', 'shutter', 'bombable', 'follower-gate',
@@ -46,7 +39,7 @@ describe('annotation coverage', () => {
 
   it('screen-wide kinds are panel-only, not dropped', () => {
     // kill-trigger describes the whole room, so it has no meaningful tile; it must
-    // be marked panelOnly rather than silently skipped by the canvas.
+    // be marked panelOnly instead of silently skipped by the canvas.
     expect(ANNOTATION_STYLES['kill-trigger'].panelOnly).toBe(true);
     expect(DRAWN_KINDS).not.toContain('kill-trigger');
   });

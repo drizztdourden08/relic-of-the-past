@@ -1,23 +1,10 @@
 /* @layer renderer-components @kind hook */
 /**
- * The column-width jobs that need the DOM rather than the state.
- *
- * A resize drag must not go through state at all while it is running — the
- * table renders every row it holds, so a setState per mouse move would
- * re-render the lot thirty times a second. It goes through the one element
- * the header and the rows hang off instead: the track list is a custom
- * property there, so a preview is a single property write and the committed
- * width is what lands in state when the pointer comes up.
- *
- * The same element answers two more questions, each with its own fallback
- * hook next door: whether the table has any room left over for a grow column
- * to take, and — now that "fit to content" is a persistent MODE rather than a
- * one-shot measurement — what a fit column is currently measuring at. Both
- * fallbacks ride alongside the column list rather than being written into it;
- * see `use-grow-fallback` and `use-fit-fallback`.
- *
- * Scoped to one table on purpose: two tables on a page must never measure or
- * resize each other.
+ * Column-width jobs that need the DOM. A resize drag never goes through state
+ * (a setState per mouse move would re-render every row); it writes the track
+ * list custom property and commits on pointer up. The fallbacks ride alongside
+ * the column list; see `use-grow-fallback` and `use-fit-fallback`. Scoped to
+ * one table so two tables never measure each other.
  */
 import { useCallback, useRef } from 'react';
 import { trackListWith } from '../DataTable.constants';
@@ -38,26 +25,17 @@ interface UseColumnSizingInput {
 interface ColumnSizing {
   /** Put this on the element the header and rows live inside. */
   rootRef: RefObject<HTMLElement | null>;
-  /** Shows a width without committing it — for the length of a drag only. */
+  /** Shows a width without committing it. Lasts only as long as the drag. */
   previewWidth: (path: string, width: number) => void;
-  /**
-   * What each grow column renders at while the table has no slack to give it.
-   * Null while they can genuinely fill. Never written back into the column
-   * list: the flag stays, so the fill returns on its own once space does.
-   */
+  /** What each grow column renders at while there is no slack. Null while they can fill. Never written back into the column list. */
   growFallback: GrowFallback;
-  /**
-   * What each fit-mode column is currently measuring at. Unlike the grow
-   * fallback this is not conditional on overflow — a fit column always
-   * renders at its own measured width — so it is null only before the first
-   * measurement lands or while no column is in fit mode.
-   */
+  /** What each fit-mode column measures at. Null only before the first measurement or while no column is in fit mode. */
   fitFallback: GrowFallback;
 }
 
 const useColumnSizing = ({ columns, onResize }: UseColumnSizingInput): ColumnSizing => {
   const rootRef = useRef<HTMLElement>(null);
-  /* Read during a drag, so it must be the CURRENT list without re-binding the handler. */
+  /* Read during a drag, so it must be the current list without re-binding the handler. */
   const columnsRef = useRef(columns);
   columnsRef.current = columns;
 

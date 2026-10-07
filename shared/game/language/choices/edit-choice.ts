@@ -9,8 +9,8 @@
  * otherwise. Anything past three options has no code at all, so the growers
  * answer null instead of producing a stream the engine cannot run.
  *
- * A new option follows the pattern of the line above it — the next row number
- * down, or another scroll — and starts with the spaces that keep its text out
+ * A new option follows the pattern of the line above it, taking the next row
+ * number down or another scroll, and starts with the spaces that keep its text out
  * of the selection-cursor column. Removal renumbers only trailing row markers
  * so the survivors stay consecutive; scroll advances are left alone.
  */

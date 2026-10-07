@@ -1,16 +1,10 @@
 /* @layer tests @kind test */
 /**
- * Revert, and the state it reverts.
- *
- * A reviewer may amend what a detector proposed before accepting it, so the
- * comparison view keeps an editable copy — and that copy must never reach the
- * recommendation store, or a re-detection would collide with a half-made edit
- * instead of reconciling onto the same entry. Revert is therefore not an undo
- * history: it drops the amendment, and the proposal falls back to what the
- * detector recorded.
- *
- * The amendment is keyed to the finding it belongs to, which is what makes
- * selecting another one drop it with no clean-up step to forget.
+ * Revert, and the state it reverts. A reviewer may amend a proposal before
+ * accepting, so the comparison view keeps an editable copy that must never
+ * reach the store (a re-detection would collide with a half-made edit).
+ * Revert is not an undo history: it drops the amendment. The amendment is
+ * keyed to its finding, so selecting another drops it with no clean-up step.
  */
 import { describe, it, expect } from 'vitest';
 import {

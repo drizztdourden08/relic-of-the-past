@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind logic */
 /**
- * Enter — start a new line.
+ * Enter starts a new line.
  *
  * This is the ONE gesture in the whole editor that invents a control code, and
- * it asks the model for it (`advanceForNewLine`) rather than deciding: the box
+ * it asks the model for it (`advanceForNewLine`) instead of deciding: the box
  * fills from the top, so the line after row one is row two, after row two is row
  * three, and once the bottom row is taken the box has to scroll to make room. A
  * line opened after a box-ending wait starts the next box at row one again.
@@ -13,9 +13,9 @@
  * is what an author means by pressing Enter in the middle of a sentence: the
  * words that moved down still finish the box.
  *
- * The advance is computed against the first half as it will be AFTER the split —
- * no longer ending its box — so a line that used to close the box hands the new
- * line the next row down rather than restarting at row one.
+ * The advance is computed against the first half as it will be AFTER the split,
+ * when it no longer ends its box, so a line that used to close the box hands the
+ * new line the next row down instead of restarting at row one.
  */
 import { ROWS_PER_BOX } from '@shared/game/language';
 import { editorRuntime } from './editor-runtime';
@@ -24,7 +24,7 @@ import { attrsForLine, DIALOGUE_LINE_TYPE, advanceOfAttrs, endsBoxOfAttrs } from
 import { lineHere } from './line-here';
 import type { Command } from '@tiptap/pm/state';
 
-/** Lines in the caret's box so far — counted back to the previous wait. */
+/** Lines in the caret's box so far, counted back to the previous wait. */
 const rowsInBoxBefore = (state: Parameters<Command>[0], caretPos: number): number => {
   let rows = 0;
   state.doc.forEach((node, offset) => {

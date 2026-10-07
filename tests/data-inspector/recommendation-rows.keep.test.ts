@@ -1,13 +1,9 @@
 /* @layer tests @kind test */
 /**
- * The recommendations pseudo-collection's rows.
- *
- * Three properties matter and none of them is cosmetic. The columns are
- * KIND-AGNOSTIC — a findings list mixes collections, so a column only earns its
- * place if every row can answer it. The order is the order a review pass works
- * through: certain first (that being the batch-accept gate), oldest first
- * within each. And a decided finding is gone from the list, which is what makes
- * Reject "remove from view" without writing to the dataset.
+ * The recommendations pseudo-collection's rows. Columns are KIND-AGNOSTIC
+ * (a findings list mixes collections). Order is review order: certain first
+ * (the batch-accept gate), oldest first within each. A decided finding is gone
+ * from the list, which is what makes Reject "remove from view".
  */
 import { describe, it, expect } from 'vitest';
 import {
@@ -16,7 +12,7 @@ import {
 import {
   RECOMMENDATION_GROUP_BY, RECOMMENDATION_SCHEMA, recommendationSource,
 } from '@app/ui/domains/app/views/DataInspector/behavior/recommendations/recommendation-source';
-// Imported from its own module rather than the `@ds/data` barrel on purpose:
+// Imported from its own module instead of the `@ds/data` barrel on purpose:
 // the barrel pulls in the view-state binding, which touches `window` at
 // module load.
 import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
@@ -41,7 +37,7 @@ const entry = (over: Partial<Recommendation> = {}): Recommendation => ({
   ...over,
 } as Recommendation);
 
-describe('recommendationRows — one flat, kind-agnostic table', () => {
+describe('recommendationRows builds one flat, kind-agnostic table', () => {
   it('carries exactly the columns every finding can answer, whatever its collection', () => {
     const [row] = recommendationRows([entry()]);
     expect(Object.keys(row).sort()).toEqual(
@@ -54,15 +50,14 @@ describe('recommendationRows — one flat, kind-agnostic table', () => {
       entry({ id: 'a', kind: 'screen', targetId: 'screen-001' }),
       entry({ id: 'b', kind: 'item', targetId: 'item-004' }),
     ]);
-    // Every row declares the same keys — nothing leaks in from one record shape.
+    // Every row declares the same keys, so nothing leaks in from one record shape.
     expect(Object.keys(rows[0])).toEqual(Object.keys(rows[1]));
   });
 
   it('keeps a create\'s missing target/screen as null, not a placeholder string', () => {
-    // A literal dash would be a sampled STRING value that fails the id pattern,
-    // degrading the whole column to plain text the moment a create sits next to
-    // any targeted finding — see the file header. null is invisible to the
-    // sampler, so the column still infers idRef off whatever real ids exist.
+    // A literal dash would be a sampled STRING that fails the id pattern and
+    // degrades the column to text (see the file header). null is invisible to
+    // the sampler.
     const [row] = recommendationRows([entry({ action: 'create', targetId: null, screenId: null })]);
     expect(row.targetId).toBeNull();
     expect(row.screenId).toBeNull();
@@ -89,7 +84,7 @@ describe('recommendationRows — one flat, kind-agnostic table', () => {
   });
 });
 
-describe('recommendationRows — the default order is the pass order', () => {
+describe('recommendationRows keeps the pass order by default', () => {
   it('puts certain findings ahead of likely ones', () => {
     const rows = recommendationRows([
       entry({ id: 'maybe', confidence: 'likely', firstSeenAt: 1 }),
@@ -119,7 +114,7 @@ describe('recommendationRows — the default order is the pass order', () => {
   });
 });
 
-describe('recommendationRows — only what is still open', () => {
+describe('recommendationRows returns only what is still open', () => {
   it('drops accepted, dismissed and resolved findings', () => {
     const entries = [
       entry({ id: 'open', state: 'open' }),

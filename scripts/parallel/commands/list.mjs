@@ -1,9 +1,7 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * `wt list` — every worktree, its verdict, and what it was last used for.
- *
- * The verdict column is derived live from git, so it cannot go stale. `--json` prints
- * the same survey for an agent to read directly.
+ * `wt list`: every worktree, its verdict (derived live from git), and what it was last
+ * used for. `--json` prints the same survey for an agent to read directly.
  */
 import { surveyAll } from '../survey.mjs';
 import { describeLease } from '../lease.mjs';
@@ -37,8 +35,8 @@ const printTable = (entries) => {
     const row = [
       record.name,
       assessment.verdict + (assessment.staleLease ? '*' : ''),
-      status.missing ? '—' : drift(status),
-      status.missing ? '—' : status.merged ? 'yes' : 'no',
+      status.missing ? '-' : drift(status),
+      status.missing ? '-' : status.merged ? 'yes' : 'no',
       describeLease(record.lease),
       String(record.notes?.length ?? 0),
     ];
@@ -46,7 +44,7 @@ const printTable = (entries) => {
   }
 
   const stale = entries.some((e) => e.assessment.staleLease);
-  if (stale) console.log('\n* lease expired — the pool treats it as free');
+  if (stale) console.log('\n* lease expired, so the pool treats it as free');
 
   for (const { record } of entries) {
     const note = lastNote(record);

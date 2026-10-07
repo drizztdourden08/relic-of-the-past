@@ -2,18 +2,17 @@
 /**
  * Reading a saved layout back is asynchronous, and the user does not wait for
  * it. Between the moment a view asks for its snapshot and the moment the answer
- * arrives, the user can already have rearranged that view — cleared the filter
- * clauses one by one, say — and the answer, which describes the view as it
- * stood BEFORE any of that, must never be allowed to land on top of it.
+ * arrives, the user can already have rearranged that view, say by clearing the
+ * filter clauses one by one. The answer describes the view as it stood BEFORE
+ * any of that, and must never land on top of it.
  *
- * The rule is a generation counter rather than a timestamp or a deep compare:
+ * The rule is a generation counter, not a timestamp or a deep compare:
  * a load opens a generation, a local write retires it, and a result may only be
  * applied while the generation it opened in is still current and unwritten.
- * Everything that has to lose the race loses it the same way — a superseded
- * key, a view that went away, and a user edit are all just a result that
- * arrived too late.
+ * Everything that has to lose the race loses it the same way. A superseded key,
+ * a view that went away, and a user edit are all a result that arrived too late.
  *
- * The reader is injected rather than imported so this stays headless like the
+ * The reader is injected, not imported, so this stays headless like the
  * rest of the package; binding it to real storage is the hook's job.
  */
 import type { SchemaLike } from '../schema/build-schema';
@@ -26,7 +25,7 @@ import type { ViewSnapshot } from './snapshot';
 interface LoadGuard {
   /** Opens a generation for a load about to start; hand the token back on resolve. */
   begin: () => number;
-  /** Closes the open generation without opening another — the view went away. */
+  /** Closes the open generation without opening another, for when the view went away. */
   cancel: () => void;
   /** Records a local write, which retires every load still in flight. */
   markEdited: () => void;
@@ -63,10 +62,10 @@ const emptySnapshotFor = (
 });
 
 /**
- * A clause id must be unique within its own list — FilterBar's add/remove/update
- * all key off it (see FilterBar.tsx) — but a disk file written before clause ids
- * were switched to `crypto.randomUUID()` (see filter/clause.ts) can still carry
- * two clauses that collided under the old per-session counter. Reassigning a
+ * A clause id must be unique within its own list, because FilterBar's
+ * add/remove/update all key off it (see FilterBar.tsx). A disk file written
+ * before clause ids were switched to `crypto.randomUUID()` (see filter/clause.ts)
+ * can still carry two clauses that collided under the old per-session counter. Reassigning a
  * fresh id to every repeat occurrence heals that file in place, the first time
  * it is loaded, without dropping the clause outright.
  */

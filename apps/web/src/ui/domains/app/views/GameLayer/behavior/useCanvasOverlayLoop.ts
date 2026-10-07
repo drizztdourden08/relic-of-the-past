@@ -1,9 +1,7 @@
 /* @layer renderer-components @kind hook */
 /**
- * Shared rAF lifecycle for a fullscreen WebGL overlay driven off the game canvas
- * (edge-glow, shadow-casting). Encapsulates the guard → size-fx-canvas → create
- * renderer → requestAnimationFrame loop → dispose scaffold so each feature
- * supplies only its async setup, per-frame body, and optional teardown.
+ * Shared rAF lifecycle for a WebGL overlay driven off the game canvas (edge-glow, shadow-casting):
+ * each feature supplies only its async setup, per-frame body, and optional teardown.
  */
 import { useEffect } from 'react';
 import type React from 'react';

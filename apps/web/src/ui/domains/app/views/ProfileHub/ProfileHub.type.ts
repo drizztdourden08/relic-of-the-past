@@ -4,7 +4,9 @@ import type { GameSettings } from '@shared/types/settings';
 
 type ProfileHubTab =
   | 'home'
-  | 'settings' // Display: rendering, camera, window, performance
+  | 'settings' // Display: screen geometry and performance
+  | 'camera'
+  | 'window'
   | 'graphics'
   | 'audio'
   | 'gameplay'

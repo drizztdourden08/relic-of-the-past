@@ -1,9 +1,8 @@
 /* @layer test @kind test */
 /**
- * Structural diff + line mapping. Genuinely new logic with no precedent in the
- * codebase, so the shapes exercised here are the ones real records actually
- * have: an array field (tags), a union field (requirements), a plain nested
- * object (placement.rect), and a deeply nested object (nav.fromPoint.position).
+ * Structural diff + line mapping, over the shapes real records have: an array
+ * field (tags), a union (requirements), a nested object (placement.rect), and
+ * a deeply nested one (nav.fromPoint.position).
  */
 import { describe, it, expect } from 'vitest';
 import { changedPaths, linesForPaths } from '@shared/game/recommendations';
@@ -28,7 +27,7 @@ describe('changedPaths', () => {
     expect(changedPaths(base(), base())).toEqual([]);
   });
 
-  it('ignores key ORDER — a reordered object is not a change', () => {
+  it('ignores key ORDER, so a reordered object is not a change', () => {
     const reordered = { toConnectionId: 'connection-002', screenId: 'screen-100' };
     const original = { screenId: 'screen-100', toConnectionId: 'connection-002' };
     expect(changedPaths(original, reordered)).toEqual([]);
@@ -69,7 +68,7 @@ describe('changedPaths', () => {
     expect(changedPaths(base(), withUndefined)).toEqual([]);
   });
 
-  it('reports a shape change at its own path rather than recursing into it', () => {
+  it('reports a shape change at its own path instead of recursing into it', () => {
     const paths = changedPaths({ nav: { weight: 1 } }, { nav: 3 });
     expect(paths).toEqual(['nav']);
   });
@@ -109,7 +108,7 @@ describe('linesForPaths', () => {
     expect(new Set(lines).size).toBe(lines.length);
   });
 
-  it('reads plain JSON as well as the record emitter output', () => {
+  it('reads plain JSON and the record emitter output', () => {
     const json = JSON.stringify(base(), null, 2);
     const [line] = linesForPaths(json, ['placement.rect.w']);
     expect(json.split('\n')[line - 1]).toContain('"w"');

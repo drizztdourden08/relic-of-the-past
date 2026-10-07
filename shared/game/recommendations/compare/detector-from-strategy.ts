@@ -5,7 +5,7 @@
  * strategy instead of hand-written.
  *
  * One draft per DIFFERING FIELD PATH, not one lumped "update the record"
- * draft — a reviewer wants to accept "fix the room index" separately from
+ * draft. A reviewer wants to accept "fix the room index" separately from
  * "fix the palace index" even when both come from the same stale record, and
  * a batch accept over `certain` findings would otherwise have to swallow a
  * `likely` one riding along in the same draft.
@@ -25,7 +25,7 @@ import { setPath } from './set-path';
  * deliberately the bare `DraftRecommendation` union, NOT `DraftRecommendation<K>`:
  * the connection strategy's own mapper (phase 4, part 2) proposes a `screen`
  * record for an uncatalogued crossing destination, a DIFFERENT kind than the
- * strategy (`connection`) that found it — the one thing an `onUnresolvable`
+ * strategy (`connection`) that found it. The one thing an `onUnresolvable`
  * mapper is for is crossing that exact boundary.
  */
 type UnresolvableMapper<K extends EntityKind> =
@@ -83,7 +83,7 @@ const draftsForSet = <K extends EntityKind>(
       } else if (difference.status === 'unbacked-in-dataset') {
         out.push({
           kind: strategy.kind, action: 'delete', targetId: difference.record.id, current: difference.record,
-          // Nothing replaces a deletion — see `connection-remove.ts` for the
+          // Nothing replaces a deletion. `connection-remove.ts` follows the
           // same convention: the action IS the change, not any field.
           proposed: difference.record,
           reason: `The dataset has a ${difference.noun} (${difference.key}) the game does not confirm.`,

@@ -5,13 +5,13 @@
  * The engine draws the player as two 16x16 sprites per frame: an upper half placed at an
  * offset the frame chooses, and a lower half always eight pixels below the origin. Each
  * half reads a 2x2 block of tiles from the sheet, and either half can be marked as not
- * drawn — so a frame legitimately carries two quads, one, or none. A frame with none is
+ * drawn, so a frame carries two quads, one, or none. A frame with none is
  * deliberately invisible: the fall-into-a-hole animation uses three of them for the beats
  * after the player has gone under. A renderer must treat that as a frame, not as missing
  * data, or the animation loses its timing.
  *
  * Frames are addressed by slot because the engine shares them: 511 pose ids resolve onto
- * 303 distinct slots, so a state's animation is a list of slot numbers rather than a list
+ * 303 distinct slots, so a state's animation is a list of slot numbers, not a list
  * of inlined frames.
  */
 

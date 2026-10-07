@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind logic */
 /**
  * Flattens every ProfileHub settings tab's Section[] (built from PROFILE_HUB_TABS, the
- * same registry the NavRail renders from) into one setting per search entry. The
- * breadcrumb and keywords come straight from data the settings screens already carry —
+ * same registry the hub nav renders from) into one setting per search entry. The
+ * breadcrumb and keywords come straight from data the settings screens already carry, so
  * new settings become searchable with no catalog change.
  */
 import type { GameSettings } from '@shared/types/settings';
@@ -26,21 +26,25 @@ const build = (ctx: SearchContext): SearchEntry[] => {
     .filter(([, spec]) => !spec.mobileOnly || ctx.isMobile)
     .flatMap(([tab, spec]) => {
       if (!spec.sections) return [];
-      return spec.sections(settings).flatMap((section) =>
-        section.subsections.flatMap((sub) =>
-          sub.items.map((item): SearchEntry => ({
+      return spec.sections(settings).flatMap((section) => {
+        // A flat section has no second heading, so its trail stops at the section.
+        const groups = section.subsections
+          ? section.subsections.map((sub) => ({ trail: [section.title, sub.title], items: sub.items }))
+          : [{ trail: [section.title], items: section.items ?? [] }];
+        return groups.flatMap((group) =>
+          group.items.map((item): SearchEntry => ({
             id: `setting:${item.key}`,
             kind: 'setting',
             label: item.label,
             icon: spec.icon,
-            breadcrumb: ['Home', spec.label, section.title, sub.title],
+            breadcrumb: ['Home', spec.label, ...group.trail],
             description: item.description,
             keywords: item.keywords,
             ...booleanSettingInfo(settings, item.key),
             target: { page: 'profile', tab, anchor: item.key },
           })),
-        ),
-      );
+        );
+      });
     });
 };
 

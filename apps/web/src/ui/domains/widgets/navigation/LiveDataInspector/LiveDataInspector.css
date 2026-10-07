@@ -1,15 +1,10 @@
 /* @layer renderer-widgets @kind style */
 
-/* The recommendation list and the record region below each own their own
-   ScrollArea, so in normal use neither needs this shell to scroll: the list is
-   capped at a share of the height and the record region takes the rest, which
-   always adds up to fit.
-   `auto` rather than `hidden` is the escape hatch for the one case that does
-   not fit: shrink the widget far enough and two tab strips plus the list header
-   alone exceed the body, and the record region's own floor below cannot yield
-   any further. Clipping there would hide the record area with no way to reach
-   it, which is the very bug this file exists to fix, arriving from the opposite
-   direction. */
+/* The recommendation list and the record region each own a ScrollArea, so
+   normally this shell never scrolls. `auto`, not `hidden`, is the escape hatch
+   for the one case that does not fit: shrink the widget far enough and two tab
+   strips plus the list header exceed the body, and the record region's floor
+   cannot yield further. Clipping there would hide the record area entirely. */
 .live-data-inspector {
   display: flex;
   flex-direction: column;
@@ -25,14 +20,13 @@
   gap: var(--space-sm);
   flex: 1;
 
-  /* A real floor, not 0 — enough for one record card's header plus a line or
-     two of fields, so a long recommendation list above can shrink this region
-     but never past the point where it disappears entirely. No token in
-     size.css covers a content-area floor like this yet, hence the rem value. */
+  /* A real floor, not 0. Enough for one record card's header plus a line or
+     two of fields, so a long recommendation list above can never shrink this
+     region away. No size.css token covers a content-area floor yet, hence rem. */
   min-height: 6rem;
 }
 
-/* Eleven tabs never fit the widget's docked width — scroll rather than clip. */
+/* Eleven tabs never fit the widget's docked width; scroll instead of clipping. */
 .live-data-inspector .tab-bar {
   overflow-x: auto;
   flex-shrink: 0;

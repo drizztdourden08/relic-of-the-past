@@ -10,16 +10,13 @@ interface HudCountProps {
   iconWidth?: number;
   value: number;
   digits?: number;
-  /** Renders the count in the "at max" yellow digit variant — see the "Indicate Max Resources" setting. */
+  /** Renders the count in the "at max" yellow digit variant. See the "Indicate Max Resources" setting. */
   isMax?: boolean;
   scale: number;
   spritesBase: string;
 }
 
-/**
- * HudCount — vertical flex stack: icon on top, digits below.
- * Fully flex-driven — no absolute positioning.
- */
+/** Vertical flex stack: icon on top, digits below. No absolute positioning. */
 const HudCount = (props: HudCountProps) => {
   const { icon, iconWidth = 8, value, digits = 2, isMax = false, scale, spritesBase } = props;
 

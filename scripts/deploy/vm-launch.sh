@@ -41,7 +41,7 @@ sleep 4
 if kill -0 "$PID" 2>/dev/null || pgrep -f rotp-linux.AppImage >/dev/null; then
   echo "[vm-launch] running (log: $LOG)"
 else
-  echo "[vm-launch] exited early — tail of log:" >&2
+  echo "[vm-launch] exited early. Last lines of the log:" >&2
   grep -vE 'appimage_extracted|usb/prebuilds' "$LOG" | tail -20 >&2
   exit 1
 fi

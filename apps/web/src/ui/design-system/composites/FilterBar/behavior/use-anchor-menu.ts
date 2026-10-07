@@ -1,10 +1,5 @@
 /* @layer renderer-components @kind hook */
-/**
- * Open/close state for a trigger that anchors a portalled popover — the
- * operator dropdown and the add-filter field picker both need one. An outside
- * click has to tolerate both the trigger and whatever selector the portal
- * content renders under, since the portal sits elsewhere in the DOM.
- */
+/** Open/close state for a trigger anchoring a portalled popover. An outside click must tolerate the trigger and the portal selector. */
 import { useEffect, useRef, useState } from 'react';
 
 const useAnchorMenu = <T extends HTMLElement>(portalSelector: string) => {

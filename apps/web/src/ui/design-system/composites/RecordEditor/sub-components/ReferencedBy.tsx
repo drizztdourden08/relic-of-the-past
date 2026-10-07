@@ -1,16 +1,9 @@
 /* @layer renderer-components @kind component */
 /**
- * A usage-overview panel for a record other collections point at (a tag, an
- * item group). It only renders what it is handed — the hits, already grouped
- * by nothing more than their own kind, and a display label already resolved —
- * because looking a record up by id is exactly the dataset read this package
- * may not make itself.
- *
- * Each entry publishes `data-id-ref` / `data-target-kind`, the same handoff
- * `id-ref-kit` already uses for a reference cell: the screen that owns the
- * dataset already listens for a click on those attributes (DataInspector's
- * delegated capture handler) and opens whatever they name, so a link here
- * follows to the referencing record with no new navigation wired up.
+ * A usage-overview panel for a record other collections point at. Renders only
+ * what it is handed, since this package cannot look records up. Each entry
+ * publishes `data-id-ref` / `data-target-kind`, the same handoff `id-ref-kit`
+ * uses, so the owning screen's click handler follows the link.
  */
 import { useState } from 'react';
 import { Box } from '../../../primitives/Box';
@@ -45,11 +38,8 @@ const groupByKind = (hits: readonly ReferencedByHit[]): readonly KindGroup[] => 
 
 const ReferencedBy = (props: ReferencedByProps) => {
   const { hits } = props;
-  // Groups start COLLAPSED: this is a compact summary first, expandable to the
-  // actual list on request. A heavily-referenced record (a common tag can sit
-  // on hundreds of screens) makes that the only default that stays compact —
-  // starting expanded would make the panel, and any dialog built around it,
-  // grow past the window for exactly the records this overview matters most for.
+  // Groups start collapsed: a common tag can sit on hundreds of screens, and
+  // starting expanded would grow the panel past the window.
   const [expanded, setExpanded] = useState<ReadonlySet<string>>(new Set());
 
   if (hits.length === 0) {

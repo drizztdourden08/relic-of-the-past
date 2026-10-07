@@ -1,12 +1,8 @@
 /* @layer electron-main @kind logic */
 /**
- * IPC registration for the six record-facade collections.
- *
- * Kept apart from ipc-handlers.ts because these eighteen channels are all one
- * shape — take the workspace root and a record payload, report a thrown error
- * as a refusal rather than letting it cross the bridge — so each is a single
- * line here, and the older editor channels (which each carry a payload of their
- * own) stay readable next to each other over there.
+ * IPC registration for the six record-facade collections. Apart from
+ * ipc-handlers.ts because these channels are all one shape: workspace root plus
+ * a record payload, with a thrown error reported as a refusal.
  */
 
 import { handle } from '../lib/ipc/handle';

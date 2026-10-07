@@ -27,7 +27,7 @@ interface SimRunDeps {
   loadProfileForGame: (profile: Profile) => Promise<void>;
 }
 
-/** The features word the core has been ASKED for — it latches on the next frame.
+/** The features word the core has been ASKED for. It latches on the next frame.
  *  -1 means the module was not reachable, which is NOT the same as no features. */
 const readWantedFeatures = (): number => {
   const mod = getModule();
@@ -72,16 +72,13 @@ const useSimRun = ({ activeProfile, loadProfileForGame }: SimRunDeps) => {
       }
       await new Promise((r) => setTimeout(r, 3000));
 
-      // Developer tools unlock the combat-table queries the diagnostics below and the
-      // full simulation both rely on. The tables are the game's own read-only combat
-      // data, the gate is a read-only instrumentation switch, and the sim run is itself
-      // a developer tool — so it may switch the gate on for its own duration without
-      // touching the user's persisted setting, and must switch it back off afterwards.
+      // Developer tools unlock the combat-table queries below and the full simulation.
+      // The sim run is itself a developer tool, so it may switch the gate on for its own
+      // duration without touching the user's persisted setting, and must switch it back off.
       const port = createLiveGamePort();
       pauseSramSync();
-      // Arms the WasmSim* mutators (kHostGate_SimulatorSupport) for this run's duration — without
-      // it every door-unlock/kill-drop/cell-lock trigger silently no-ops. Dropped in the finally
-      // below so a crashed or early-returning run can never leave it armed against a live session.
+      // Arms the WasmSim* mutators (kHostGate_SimulatorSupport) for this run; without it every
+      // door-unlock/kill-drop/cell-lock trigger silently no-ops. Dropped in the finally below.
       port.setSimulatorSupport(true);
       port.setAutoSkipDialog(true);
       port.setDeveloperTools(true);
@@ -90,7 +87,7 @@ const useSimRun = ({ activeProfile, loadProfileForGame }: SimRunDeps) => {
       // nothing if they run in the same tick. Give the core frames to pick it up.
       await new Promise((r) => setTimeout(r, 500));
       try {
-        // Diagnostic: addressable flood of one screen — validates the sim's flood
+        // Diagnostic: addressable flood of one screen. Validates the sim's flood
         // matches the normal in-game flood without running the whole simulation.
         if (config.floodScreen !== null) {
           // Seed from the live player tile only when the game is actually standing on
@@ -140,7 +137,7 @@ const useSimRun = ({ activeProfile, loadProfileForGame }: SimRunDeps) => {
         if (config.combatSprite !== null) {
           // The damage rows are unpacked from a compressed asset when a file is
           // loaded (select_file.c:228), so this reads all zeros unless the run also
-          // loads a state — pair `combat=` with `slot=` or `state=`.
+          // loads a state. Pair `combat=` with `slot=` or `state=`.
           const spriteCombat = wasmGetSpriteCombat(config.combatSprite);
           const tables = wasmGetCombatTables();
           const combat = {
@@ -172,9 +169,9 @@ const useSimRun = ({ activeProfile, loadProfileForGame }: SimRunDeps) => {
           keys: Object.fromEntries([...state.keys].filter(([, n]) => n > 0)),
           bigKeys: [...state.bigKeys].sort().map((id) => `${id} ${getDungeon(id).randomizerName}`),
           events: [...state.events].sort(),
-          // What the player actually holds, read from the save rather than
-          // tallied from check names — hearts, equipment tiers and the
-          // per-dungeon map/compass/big-key state the run does not track.
+          // What the player actually holds, read from the save, not tallied from
+          // check names: hearts, equipment tiers and the per-dungeon
+          // map/compass/big-key state the run does not track.
           loadout: readLoadout(),
         };
         const outPath = await window.api.writeSimRun({ ...report, screenFloods, visits, path, checks, log, inventory, tally, endSummary });

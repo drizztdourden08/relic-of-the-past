@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Auto-Save Service — timer-based and save-on-quit state persistence.
+ * Timer-based and save-on-quit state persistence.
  * Creates full save state snapshots at configurable intervals and on game stop.
  */
 

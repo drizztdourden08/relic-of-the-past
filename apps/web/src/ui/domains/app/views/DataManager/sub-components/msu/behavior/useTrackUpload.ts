@@ -1,11 +1,7 @@
 /* @layer renderer-components @kind hook */
 /**
- * Drops audio straight into a slot. Nothing is transcoded on the way in — the engine decodes
- * wav/mp3/ogg/flac/opus itself and MSU-1 pcm natively — so the only decisions here are what to
- * call the file and what to do with whatever already occupied the slot.
- *
- * Progress goes through the shared import bus, so it lands in the same progress bar as a
- * downloaded pack instead of inventing a second one.
+ * Drops audio straight into a slot. Nothing is transcoded, so the only decisions are the file's
+ * name and what to do with the slot's occupant. Progress goes through the shared import bus.
  */
 import { useCallback, useState } from 'react';
 import type { MsuPackManifest } from '@shared/types/msu-manifest';
@@ -50,8 +46,7 @@ const useTrackUpload = (params: TrackUploadParams) => {
           ? canonicalTrackName(prefix, trackNum, extensionOf(file.name))
           : uniqueFileName(sanitizeFileName(file.name), taken);
         if (claimsSlot) {
-          // Any file already numbered for this slot has to move aside, whatever its extension —
-          // two files claiming one slot is the one state the classic layout cannot express.
+          // Any file already numbered for this slot moves aside, whatever its extension.
           const occupant = [...taken].find((n) => n !== name && getTrackNumber(n) === trackNum);
           if (occupant) await parkFile(pack, occupant, taken);
         }

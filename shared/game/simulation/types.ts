@@ -1,17 +1,11 @@
 /* @layer shared-game @kind types */
-/**
- * Core value types for the gameplay simulator. The raw flag snapshots are
- * byte-for-byte SRAM copies; the simulator only diffs them and never reads
- * check data to decide what happened (see check-matcher for naming).
- */
+/** Flag snapshots are raw SRAM copies; the simulator only byte-diffs them and never reads check data to decide what happened (see check-matcher). */
 import type { GridPos, ScreenVariant } from '../navigation/types';
 import type { TraversalRequirement } from '../navigation/nav-data.types';
 import type { CheckId, CheckRecord, ItemId } from '../data';
 import type { TraversalId } from './traversal-id';
 import type { PresenceGameState } from './presence/state';
 import type { RoomSectionSplit } from './room-section';
-
-// ─── Phases & Outcomes ───────────────────────────────────────────────────────
 
 type SimPhase =
   | 'idle'
@@ -33,9 +27,7 @@ interface SimConfig {
   screenLimit?: number;
 }
 
-// ─── Virtual Player & Observation ────────────────────────────────────────────
-
-/** Simulated position — the screen the virtual player character explores. */
+/** Simulated position: the screen the virtual player character explores. */
 interface VirtualPlayer {
   screenId: TraversalId;
   tile: GridPos;
@@ -43,18 +35,18 @@ interface VirtualPlayer {
 
 /** Raw SRAM copies used purely for byte-diffing. */
 interface FlagSnapshot {
-  /** save_dung_info — uint16[320], indexed by room ID. */
+  /** save_dung_info, a uint16[320] indexed by room ID. */
   dungInfo: Uint16Array;
-  /** save_ow_event_info — uint8[0x82], indexed by overworld screen. */
+  /** save_ow_event_info, a uint8[0x82] indexed by overworld screen. */
   owEventInfo: Uint8Array;
-  /** WasmGetProgressFlags — 16-byte progress buffer. */
+  /** The 16-byte progress buffer from WasmGetProgressFlags. */
   progress: Uint8Array;
 }
 
 interface SimObservation {
   virtual: VirtualPlayer;
   realLocation: SimLocation;
-  /** Items held, by dataset id — the tracker's own set, passed through. */
+  /** Items held, by dataset id (the tracker's own set, passed through). */
   inventory: Set<ItemId>;
   /** Raw SRAM copies for diffing. */
   flags: FlagSnapshot;
@@ -62,21 +54,15 @@ interface SimObservation {
   interactables?: RoomInteractables;
   /** Attr grids for the current screen, used to flood-fill tile reachability. */
   grids?: ScreenGridBundle;
-  /**
-   * Live-state snapshot the discover step evaluates NPC presence conditions
-   * against — the sim's sanctioned single data read (see presence-condition.ts).
-   * Optional: when absent, NPC presence gating fails open (all present).
-   */
+  /** Live-state snapshot for NPC presence conditions, the sim's one sanctioned
+   *  data read (see presence-condition.ts). Absent: presence gating fails open. */
   presenceState?: PresenceGameState;
   /** Item delivered since the previous step (from onItemReceived). The tracker
-   *  already resolves the native id to a record, so the id travels intact rather
-   *  than being flattened to a native number and looked up again downstream. */
+   *  already resolves the native id to a record, so the id travels intact instead
+   *  of being flattened to a native number and looked up again downstream. */
   itemReceived?: ItemId;
-  /**
-   * Exits detected by flooding the current screen in-game (border connections,
-   * doors, holes, stairs). When present, traversal runs purely on this
-   * discovered graph — the static connection dataset is not consulted.
-   */
+  /** Exits detected by flooding the current screen in-game. When present,
+   *  traversal runs on this graph alone and never consults the static connection dataset. */
   exits?: SimExit[];
   /** Flood-reached tiles of the current screen (region memory for re-visits). */
   reached?: boolean[][];
@@ -105,11 +91,10 @@ interface CombatTables {
 }
 
 /**
- * Combat rows for the sprites on the current screen. `tables` is null when
- * the developer-tools combat gate is off — combat reasoning is then
- * unavailable and every gating sprite must read as not killable, never as
- * killable. `bySpriteType` carries one row per distinct sprite type seen;
- * a missing/null row means the query missed (gate off, or an out-of-range type).
+ * Combat rows for the sprites on the current screen. `tables` is null when the
+ * developer-tools combat gate is off: combat reasoning is then unavailable and
+ * every gating sprite must read as not killable. `bySpriteType` has one row per
+ * sprite type seen; a missing/null row means the query missed.
  */
 interface CombatContext {
   tables: CombatTables | null;
@@ -123,7 +108,7 @@ interface SimArea {
   size: number;
 }
 
-/** Which detection branch produced an exit. Diagnosis only — never a decision.
+/** Which detection branch produced an exit. For diagnosis only. Never a decision.
  *  A fabricated edge is useless to chase until you know which branch invented it. */
 type SimExitOrigin = 'ow-border' | 'ow-entrance' | 'room-border' | 'room-stair' | 'room-door' | 'room-doorway' | 'room-warp' | 'exit-table';
 
@@ -132,15 +117,11 @@ interface SimExit {
   to: TraversalId;
   origin?: SimExitOrigin;
   /**
-   * Which way in this crossing uses, as seen from the destination.
-   *
-   * Arriving on a screen through its west edge says nothing about what is
-   * reachable from its east edge, and a wall can carry SEVERAL separate
-   * crossings — Uncle's Estate East has two on its west border. Keying explored
-   * state on the screen alone therefore skips real ground. For a border the
-   * signature is the contiguous tile span the crossing occupies (from the
-   * flood's own ConnectionInfo.positions); for a door, hole or stair it is the
-   * game's entrance id, already unique.
+   * Which way in this crossing uses, as seen from the destination. A wall can
+   * carry several separate crossings, so explored state keyed on the screen
+   * alone skips real ground. Border: the contiguous tile span the crossing
+   * occupies (from the flood's ConnectionInfo.positions). Door, hole or stair:
+   * the game's entrance id.
    */
   edgeSig?: string;
   entryTile?: GridPos;
@@ -150,11 +131,8 @@ interface SimExit {
   fromTile?: GridPos;
   /** Big-area sub-screen the exit physically sits on, when not the visited one. */
   via?: TraversalId;
-  /**
-   * TRUE walk-steps from the entry tile, or undefined when the distance is
-   * genuinely unknown. Never carries a sort bias — showing the raw ordering score
-   * as a step count is what produced nonsense like "4096 steps".
-   */
+  /** TRUE walk-steps from the entry tile, or undefined when unknown. Never carries
+   *  a sort bias: showing the raw ordering score as a step count produced "4096 steps". */
   steps?: number;
   /** The raw ordering score (may include the out-of-area bias). Sorting only. */
   score?: number;
@@ -195,8 +173,6 @@ interface RoomInteractables {
   tags?: [number, number];
 }
 
-// ─── Trigger Actions ─────────────────────────────────────────────────────────
-
 type TriggerAction =
   | { type: 'chest'; roomId: number; chestIndex: number; itemId: number }
   | { type: 'npc'; flagType: number; flagMask: number; itemId: number }
@@ -206,14 +182,12 @@ type TriggerAction =
   | { type: 'kill'; roomId: number; itemId: number; opensShutters: boolean }
   | { type: 'trapShutters'; roomId: number }
   /** Blast a cracked wall open. Bombs are permanent once obtained, so this needs
-   *  no count — see flood/bombed-walls.ts. */
+   *  no count (see flood/bombed-walls.ts). */
   | { type: 'bombWall'; roomId: number; tile: GridPos }
-  /** `drain` is set when the switch's effect reaches beyond its own room — a
-   *  remote overworld screen's event byte, not a local shutter. */
+  /** `drain` is set when the switch's effect reaches beyond its own room, onto a
+   *  remote overworld screen's event byte instead of a local shutter. */
   | { type: 'pullSwitch'; roomId: number; drain?: { screen: number; mask: number } }
   | { type: 'progress'; step: 'follower-join' | 'follower-deliver' | 'shelf-push' | 'sage-quest' };
-
-// ─── Detection ───────────────────────────────────────────────────────────────
 
 type FlagBufferKind = 'room' | 'overworld' | 'progress';
 
@@ -230,7 +204,7 @@ interface FlagDiff {
 
 interface DetectedCheck {
   evidence: FlagDiff[];
-  /** The identified check's record — display and dungeon attribution, never detection. */
+  /** The identified check's record, for display and dungeon attribution, never detection. */
   matched?: CheckRecord;
   /** Which check this was, absent when the diff matched none. */
   checkId?: CheckId;
@@ -238,16 +212,12 @@ interface DetectedCheck {
   at: VirtualPlayer;
 }
 
-// ─── Events ──────────────────────────────────────────────────────────────────
-
 interface SimEvent {
   level: 'narrative' | 'debug';
   msg: string;
   step: number;
   data?: unknown;
 }
-
-// ─── Dataset Suggestions ─────────────────────────────────────────────────────
 
 interface DatasetSuggestion {
   kind: 'connection' | 'screen' | 'check';
@@ -260,20 +230,16 @@ interface DatasetSuggestion {
   reason: string;
 }
 
-// ─── Softlock Report ─────────────────────────────────────────────────────────
-
 interface SoftlockReport {
   completed: CheckId[];
   blocked: Array<{ checkId: CheckId; missing: TraversalRequirement[][] }>;
   unreachedScreens: string[];
 }
 
-// ─── In-game Interactables ───────────────────────────────────────────────────
-
 interface SimChest {
   roomId: number;
   chestIndex: number;
-  /** A BIG chest (bit 15 of the chest-room word) — needs the big key to open. */
+  /** A BIG chest (bit 15 of the chest-room word). Needs the big key to open. */
   isBig: boolean;
   tile: GridPos;
   /** False when the C layer reports posKnown=0 (col=row=0xFF) for a remote room. */
@@ -286,10 +252,9 @@ interface SimSprite {
   roomId: number;
   /**
    * True when this came from the OVERWORLD spawn table, so `roomId` is a screen
-   * index rather than a room. A check-giving NPC is classified `kind: 'npc'`
-   * whether it stands indoors or out, so the kind cannot answer this — and it
-   * has to be answerable, because an overworld screen index says which world the
-   * sprite is in (see NpcCheckConfig.owWorld).
+   * index, not a room. `kind` cannot answer this (a check-giving NPC is 'npc'
+   * indoors or out), and it has to be answerable because the screen index says
+   * which world the sprite is in (see NpcCheckConfig.owWorld).
    */
   outdoor?: boolean;
   spriteType: number;
@@ -306,17 +271,17 @@ interface SimSprite {
 
 interface SimDoor {
   roomId: number;
-  /** Slot in the room's door table — also the open-bit index (slots 0-3). */
+  /** Slot in the room's door table, which is also the open-bit index (slots 0-3). */
   index: number;
   tiles: GridPos[];
   direction: 'n' | 's' | 'e' | 'w';
   kind: 'normal' | 'small-key' | 'big-key' | 'bombable' | 'shutter' | 'switch' | 'trap';
   /** From the room's door-open flag bits. */
   opened: boolean;
-  /** A jail-cell keyhole plate (room object 0x18) rather than a door-table door:
+  /** A jail-cell keyhole plate (room object 0x18), not a door-table door:
    *  `index` is its chest slot and opening it writes that slot's open bit. */
   cellLock?: boolean;
-  /** Raw kDoorType — distinguishes doors that share a `kind` (throne push wall
+  /** Raw kDoorType: tells apart doors that share a `kind` (throne push wall
    *  0x14, warp-room door 0x46) and that only the native value identifies. */
   nativeType?: number;
   /** 0 = upper/BG2, 1 = lower/BG1 (door position slots 6-11). */

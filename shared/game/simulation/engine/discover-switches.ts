@@ -9,7 +9,7 @@ import type { PresenceGameState } from '../presence/state';
 
 /**
  * Pulling a switch sets dung_flag_statechange_waterpuzzle, which the room's tag
- * routine reads to raise its trapdoors — that is what opens the Behind-Sanctuary
+ * routine reads to raise its trapdoors. That is what opens the Behind-Sanctuary
  * shutter onto the Sanctuary. Only meaningful in a room that still has a shutter shut.
  */
 const isPullSwitch = (spriteType: number): boolean => spriteType >= 0x04 && spriteType <= 0x07;
@@ -19,7 +19,7 @@ const isPullSwitch = (spriteType: number): boolean => spriteType >= 0x04 && spri
  * writes an overworld event bit on a REMOTE screen (`save_ow_event_info[screen]
  * |= mask`), lowering water there instead of raising a local shutter. The same
  * bit also gates the one standing item whose own spawn code stays inactive
- * until it is set (see `standingItemPresent`) — both read this one table so
+ * until it is set (see `standingItemPresent`). Both read this one table so
  * the switch offer and the item's presence can never drift apart.
  */
 const DRAIN_SWITCHES: ReadonlyArray<{ switchRoom: number; screen: number; mask: number }> = [
@@ -35,7 +35,7 @@ const owEventSet = (presenceState: PresenceGameState | undefined, screen: number
 
 /**
  * A standing/overworld item can additionally be held inactive by its OWN spawn
- * code until a remote drain runs — the one instance the game does this is a
+ * code until a remote drain runs. The one instance the game does this is a
  * heart-piece-type sprite on the drain-gated screen, which checks
  * `save_ow_event_info[screen] & mask` and stays dormant otherwise (same class
  * of hardcoded-C gate as the NPC presence conditions, transcribed the same

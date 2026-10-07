@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * Connection Updater — Writes computed ConnectionNavData back into connections.
+ * Writes computed ConnectionNavData back into connections.
  *
  * After analysis completes, this module takes border overlap data + entrance
  * resolver output and produces ConnectionNavData for each connection.

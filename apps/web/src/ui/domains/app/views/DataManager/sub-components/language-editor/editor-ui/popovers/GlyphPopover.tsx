@@ -3,7 +3,7 @@
  * The alphabet's picture characters, as a compact grid.
  *
  * They are characters of the dialogue alphabet, not icons of ours, so they are
- * drawn from the pack's own font and picked by sight — a grid, with nothing
+ * drawn from the pack's own font and picked by sight. It is a grid, with nothing
  * between the pictures to read. Which names are characters comes from the
  * language's own alphabet (`toolbar.model.ts`), so a set built on any base
  * offers exactly its own.

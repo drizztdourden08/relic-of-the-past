@@ -44,7 +44,7 @@ const startInput = (m: InputManager): void => {
     m.hidStates.set(state.deviceKey, { buttons: state.buttons, axes: state.axes });
     m.currentHidStates.set(state.deviceKey, state);
     m.hidStatesDirty = true;
-    // A mapped pad sending data again means it's back — resume (gated to the profile).
+    // A mapped pad sending data again means it's back, so resume (gated to the profile).
     if (m.pauseManager.isPaused) m.resumeIfControllerPresent();
   });
   m.hidDisconnectUnsub = controllerInputStore.onDisconnect((_deviceKey) => {
@@ -56,14 +56,14 @@ const startInput = (m: InputManager): void => {
     m.refreshDevices();
   });
 
-  // SDL3 transport — already-decoded state, bypasses any report parser.
+  // SDL3 transport, already-decoded state that bypasses any report parser.
   m.ipcControllerStateUnsub = controllersStore.onControllerState((deviceKey, buttons, axes) => {
     controllerInputStore.handleControllerState(deviceKey, buttons, axes);
   });
   m.controllerRemovedUnsub = window.api.onControllerRemoved((deviceKey) => {
     controllerInputStore.handleControllerRemoved(deviceKey);
   });
-  // Diagnostic raw HID bytes — only flow while some UI (the calibration
+  // Diagnostic raw HID bytes only flow while some UI (the calibration
   // wizard) has a raw capture open; harmless to stay subscribed otherwise.
   m.controllerRawUnsub = onControllerRaw((report) => {
     controllerInputStore.handleRawReport(report);
@@ -74,13 +74,13 @@ const startInput = (m: InputManager): void => {
   m.controllerNameCacheUnsub = startControllerNameCache();
   // Same reasoning for the SDL type: a saved binding's icon is resolved from
   // this cache long after the device announced itself, so recording has to
-  // start here rather than waiting for whichever screen happens to import it.
+  // start here instead of waiting for whichever screen happens to import it.
   m.controllerFamilyCacheUnsub = startControllerFamilyCache();
 
   m.refreshDevices();
   m.devicePollId = setInterval(() => {
     m.refreshDevices();
-    // Safety net for a reconnect that fired no event — resume only, never re-pause,
+    // Safety net for a reconnect that fired no event. Resume only, never re-pause,
     // so a manual resume of a still-absent controller stays resumed.
     if (m.pauseManager.isPaused) m.resumeIfControllerPresent();
   }, 2000);

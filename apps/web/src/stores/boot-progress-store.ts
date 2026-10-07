@@ -1,6 +1,6 @@
 /* @layer renderer-stores @kind logic */
 /**
- * Boot-progress store — broadcasts the background game-core warmup progress
+ * Boot-progress store, broadcasting the background game-core warmup progress
  * (glue script → .wasm fetch → compile) to the BootProgressBar view. The warmup
  * facade (lib/game/wasm-warmup) reports here; the bar observes. Keeps warmup
  * logic out of React and the bar purely presentational.

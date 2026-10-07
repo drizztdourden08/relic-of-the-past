@@ -182,8 +182,8 @@ void Bar(Graphics& g, const RectF& r, float fraction, float phase, bool determin
   g.SetClip(&clip);
   if (determinate) {
     float w = r.Width * (std::max)(0.0f, (std::min)(1.0f, fraction));
-    // A sliver narrower than the cap radius would render as a nick rather than
-    // a readable start, so the fill never goes below one full round end.
+    // A sliver narrower than the cap radius renders as a nick, not a readable
+    // start, so the fill never goes below one full round end.
     if (w > 0.0f) {
       FillRound(g, RectF(r.X, r.Y, (std::max)(w, r.Height), r.Height), rad, Rgb(theme::kAccent));
     }

@@ -97,7 +97,7 @@ void GameHook_BankSaveLoad(int sram_offset) {
  * being believed has the finished-dungeon words baked into it, and loading it brings them back
  * however the block itself is fixed. A word of 0xffff is not a room anyone can be standing in -
  * it claims every door open and every chest taken in a room whose quadrants were never even
- * entered - so it is read here as the absence of a record rather than as a record.
+ * entered - so it is read here as the absence of a record, not as a record.
  */
 void GbaAlttp_SanitizeSaveBank(void) {
   if (!GbaAlttp_IsBankRoom(kBankFirstRoom))

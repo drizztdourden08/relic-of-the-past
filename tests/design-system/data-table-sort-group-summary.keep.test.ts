@@ -5,13 +5,9 @@ import {
 } from '../../apps/web/src/ui/design-system/composites/DataTable/behavior/sort-group-summary';
 import type { SortEntry } from '../../apps/web/src/ui/design-system/data/table/types';
 
-// The header used to carry a rank number beside its caret and a flag glyph
-// beside a grouped column's name, then a read-only sentence at the top of
-// every column's own ⋯ menu. Both are gone; what is left is one sentence,
-// worded here and shown once, at the bottom-left of the table (see
-// `TableFooter` and `data-table-render.test.ts`). That sentence is pure text,
-// so it is asserted here directly — no DOM involved, which is the reason it
-// was built as a pure function.
+// The header used to carry a rank number and a flag glyph, then every ⋯ menu a
+// sentence. Now it is one sentence at the bottom-left (`TableFooter`), built as
+// a pure function so it can be asserted here without a DOM.
 
 /** Titles the way a header spells them, so the sentence reads like the table. */
 const TITLES: Record<string, string | undefined> = {
@@ -79,20 +75,20 @@ describe('the grouping sentence', () => {
   });
 
   /* "then", not a comma: the levels NEST, and a flat list reads as peers. */
-  it('reads layered grouping as a nesting rather than a list', () => {
+  it('reads layered grouping as a nesting instead of a list', () => {
     expect(summarize([], ['kind', 'status']).grouped).toBe('Grouped by: Kind, then Status');
     expect(summarize([], ['world', 'kind', 'status']).grouped)
       .toBe('Grouped by: World, then Kind, then Status');
   });
 
-  it('reports both halves independently — one can be set without the other', () => {
+  it('reports both halves independently, so one can be set without the other', () => {
     const both = summarize([{ path: 'kind', dir: 'asc' }], ['world']);
     expect(both.sorted).toBe('Sorted: Kind (ascending)');
     expect(both.grouped).toBe('Grouped by: World');
   });
 });
 
-describe('summaryLine — the one line the footer shows', () => {
+describe('summaryLine builds the one line the footer shows', () => {
   it('shows a placeholder when neither sort nor grouping is active', () => {
     expect(summaryLine(summarize([]))).toBe('No sorting or grouping');
   });

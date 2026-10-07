@@ -14,13 +14,10 @@ import type {
   EventTargetLike,
 } from '../../apps/web/src/ui/design-system/primitives/Portal/behavior/observe-anchor-movement';
 
-// A portalled panel is placed in viewport coordinates, so it drifts away from
-// its trigger the moment anything scrolls. The fix has two halves, and both of
-// them are here: the geometry that decides where the panel goes and whether
-// the trigger can still be seen, and the listener wiring that re-runs it. The
-// React glue between the two (use-anchor-tracking) cannot be exercised without
-// a DOM — this suite has no jsdom — so it is deliberately kept thin, with the
-// decisions living in the plain functions covered below.
+// A portalled panel is placed in viewport coordinates, so it drifts when
+// anything scrolls. Covered here: the geometry (where the panel goes, whether
+// the trigger is still visible) and the listener wiring. The React glue
+// (use-anchor-tracking) needs a DOM this suite has not got.
 
 const rect = (top: number, left: number, height: number, width: number): DOMRect => ({
   top,
@@ -44,7 +41,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe('anchor visibility — when a panel has nothing left to point at', () => {
+describe('anchor visibility when a panel has nothing left to point at', () => {
   const viewport = bounds(0, 1000, 800, 0);
 
   it('keeps the panel while any sliver of the anchor is inside the bounds', () => {
@@ -66,7 +63,7 @@ describe('anchor visibility — when a panel has nothing left to point at', () =
   });
 });
 
-describe('visible bounds — the viewport narrowed by every clipping ancestor', () => {
+describe('visible bounds are the viewport narrowed by every clipping ancestor', () => {
   it('is the whole viewport when nothing clips', () => {
     vi.stubGlobal('window', { innerWidth: 1000, innerHeight: 800 });
     expect(visibleBoundsOf([])).toEqual(viewportBounds());
@@ -94,7 +91,7 @@ describe('visible bounds — the viewport narrowed by every clipping ancestor', 
   });
 });
 
-describe('clipping ancestors — resolved once, so scroll ticks stay cheap', () => {
+describe('clipping ancestors are resolved once, so scroll ticks stay cheap', () => {
   it('collects only the ancestors whose overflow can hide a descendant', () => {
     const body = { parentElement: null } as unknown as HTMLElement;
     const scroller = { parentElement: body, __overflow: 'auto' } as unknown as HTMLElement;
@@ -110,7 +107,7 @@ describe('clipping ancestors — resolved once, so scroll ticks stay cheap', () 
     expect(clippingAncestorsOf(anchor)).toEqual([scroller]);
   });
 
-  it('stops at the body rather than walking into the document element', () => {
+  it('stops at the body instead of walking into the document element', () => {
     const body = { parentElement: null } as unknown as HTMLElement;
     const anchor = { parentElement: body } as unknown as HTMLElement;
 
@@ -121,7 +118,7 @@ describe('clipping ancestors — resolved once, so scroll ticks stay cheap', () 
   });
 });
 
-describe('movement listeners — capture, and symmetric teardown', () => {
+describe('movement listeners use capture and tear down symmetrically', () => {
   const fakeTarget = () => {
     const added: unknown[][] = [];
     const removed: unknown[][] = [];
@@ -156,7 +153,7 @@ describe('movement listeners — capture, and symmetric teardown', () => {
   });
 });
 
-describe('drop panel placement — exercised with the Select trigger\'s own numbers', () => {
+describe('drop panel placement run against the Select trigger\'s own numbers', () => {
   // Mirrors the options useSelectDropdown passes: 200 / 4 / 180.
   const selectPositionFor = (r: DOMRect) =>
     dropPanelPositionFor(r, { roomForDropDown: 200, gap: 4, minPanelWidth: 180 });

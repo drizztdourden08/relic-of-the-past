@@ -2,7 +2,7 @@
 
 /*
  * The variable list: a filter over a scrolling column of plain rows. No kind
- * chips and no counts — the label is what a translator is looking for, and
+ * chips and no counts. The label is what a translator is looking for, and
  * anything beside it competes with the word itself.
  */
 

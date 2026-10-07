@@ -1,7 +1,5 @@
 /* @layer renderer-components @kind hook */
-/**
- * useWidgetDrag — Hook for dragging floating widgets by their titlebar.
- */
+/** Dragging floating widgets by their titlebar. */
 import { useRef, useCallback } from 'react';
 
 interface DragPosition {

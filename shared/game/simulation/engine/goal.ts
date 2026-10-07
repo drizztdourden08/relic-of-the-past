@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
- * Terminal-condition evaluation. The `not-completable` verdict — frontier
- * exhausted with no progress since the epoch began — is the softlock signal
+ * Terminal-condition evaluation. The `not-completable` verdict, meaning the
+ * frontier emptied with no progress since the epoch began, is the softlock signal
  * this whole tool exists to produce.
  */
 import type { CheckId } from '../../data';
@@ -17,7 +17,7 @@ const goalCheckDone = (s: EngineState): boolean => {
   return s.completedChecks.has(goal);
 };
 
-/** All known checks done — true only when a non-empty universe is fully covered. */
+/** All known checks done. True only when a non-empty universe is fully covered. */
 const allChecksDone = (s: EngineState, totalChecks?: number): boolean =>
   totalChecks !== undefined && totalChecks > 0 && s.completedChecks.size >= totalChecks;
 

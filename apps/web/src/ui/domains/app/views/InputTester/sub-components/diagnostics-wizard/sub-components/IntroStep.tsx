@@ -25,7 +25,7 @@ const IntroStep = (props: IntroStepProps) => {
       </Text>
       <HoldStatusLine
         status={releaseStatus}
-        pendingText="Releasing the hold on every controller…"
+        pendingText="Releasing the hold on every controller..."
         doneText="The hold is dropped. Move on to pick which controller this run captures."
         errorText="Couldn't release the hold. The byte-capture step later in this run may stay empty."
       />

@@ -1,24 +1,12 @@
 /* @layer renderer-components @kind hook */
 /**
- * Column reordering on the browser's own drag events — no dnd dependency. The
- * hook owns nothing but transient drag chrome (which header is moving, where it
- * started, which gap is under the cursor); the reorder itself is the headless
- * hook's.
+ * Column reordering on native drag events; no dnd dependency. The hook owns
+ * only transient drag chrome; the reorder itself is the headless hook's.
  *
- * `ghost` is the strip the header cell parks offscreen for exactly this moment:
- * handed to `setDragImage`, it replaces Chromium's screenshot of the whole
- * header cell — caret, ⋯ button and all — with the column itself, name over
- * values. Passing none is legal and simply leaves the browser default in place.
- *
- * Two tiers answer the drag, in the order a chain of responsibility answers
- * anything: a CELL is the precise answer and names its own index, and the
- * SURFACE behind the cells is the fallback that catches everything else and
- * lands it wherever the preview already said it would go. The fallback is not
- * a nicety — the columns step aside to open the gap the carried one will drop
- * into, and that gap is bare grid. A cursor held still over a column for longer
- * than the step takes ends up standing in it, and a release over ground that
- * accepts no drop is a release the browser cancels outright: `dragend` fires,
- * `drop` never does, and the column snaps back.
+ * Two tiers answer the drag: a cell names its own index, and the surface behind
+ * the cells catches everything else and lands it where the preview said. The
+ * surface tier is required: the gap the columns open is bare grid, and a
+ * release over ground that accepts no drop is cancelled by the browser.
  */
 import { useCallback, useState } from 'react';
 import type { DragEvent } from 'react';
@@ -26,11 +14,7 @@ import type { ColumnDragBinding, ColumnDragStart } from '../DataTable.type';
 
 const DRAG_MIME = 'text/plain';
 
-/**
- * Where the cursor holds the ghost. The strip's first child is its own header
- * bar, and holding a column by its header is what the gesture started as — held
- * halfway down instead, a tall strip reads as skewered rather than lifted.
- */
+/** Where the cursor holds the ghost: by its header bar, so a tall strip reads as lifted. */
 const grabPoint = (ghost: HTMLElement): { x: number; y: number } => {
   const head = ghost.firstElementChild;
   const centred = ghost.offsetHeight / 2;
@@ -38,7 +22,7 @@ const grabPoint = (ghost: HTMLElement): { x: number; y: number } => {
   return { x: ghost.offsetWidth / 2, y };
 };
 
-/** Says "yes, a column may land here" — the one thing that keeps a drop alive. */
+/** Says "a column may land here", which is what keeps a drop alive. */
 const accept = (event: DragEvent<HTMLElement>): void => {
   event.preventDefault();
   event.dataTransfer.dropEffect = 'move';
@@ -88,14 +72,9 @@ const useColumnDrag = (onReorder: (path: string, to: number) => void): ColumnDra
     commit(index, event);
   }, [commit]);
 
-  /*
-   * Bound to dragenter as well as dragover, and that is the half that matters
-   * here: a cursor that has not moved gets no dragover at all, and the only
-   * thing the browser asks before a release over new ground is dragenter.
-   */
+  /* Bound to dragenter and dragover: a cursor that has not moved gets no dragover. */
   const onSurfaceHover = useCallback((event: DragEvent<HTMLElement>) => {
-    /* Deliberately silent about WHICH column — the gap under the cursor is the
-       slot the preview already opened, so the hovered index must not move. */
+    /* Silent about which column: the hovered index must not move. */
     accept(event);
   }, []);
 

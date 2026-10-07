@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind component */
 /**
- * Combined ROM list: base cartridges (with their extraction status, as before)
- * and supplement cartridges (with attachment status instead — a supplement has
- * no extraction affordance of its own, only a sidecar per attached base).
+ * Combined ROM list: base cartridges with their extraction status, and supplement
+ * cartridges with their attachment status. A supplement has no extraction of its own,
+ * only a sidecar per attached base.
  */
 import { Badge } from '@ds/primitives/Badge';
 import { Box } from '@ds/primitives/Box';
@@ -38,7 +38,7 @@ const RomList = (props: RomListProps) => {
           meta={
             <>
               {rom.extractionStatus === 'ready' ? '✓ Assets extracted' :
-               rom.extractionStatus === 'extracting' ? '⟳ Extracting…' :
+               rom.extractionStatus === 'extracting' ? '⟳ Extracting...' :
                rom.extractionStatus === 'failed' ? '✗ Extraction failed' :
                'No assets'}
               {rom.assetSize ? ` · ${formatBytes(rom.assetSize)}` : ''}

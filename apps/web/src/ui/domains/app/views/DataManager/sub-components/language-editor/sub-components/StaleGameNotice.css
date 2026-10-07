@@ -2,7 +2,7 @@
 
 /*
  * A warning strip, not a card: it sits above the set it is about, and the
- * warning tone carries it rather than a heavy fill.
+ * warning tone carries it, not a heavy fill.
  */
 .stale-game-notice {
   display: flex;

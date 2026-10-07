@@ -8,13 +8,13 @@ import './ImportProgress.css';
 
 interface ImportProgressProps {
   state: ImportProgressState;
-  /** Shown before the first progress event arrives (e.g. the form's "Downloading…"). */
+  /** Shown before the first progress event arrives (e.g. the form's "Downloading..."). */
   fallbackLabel?: string;
 }
 
 const ImportProgress = (props: ImportProgressProps) => {
   const { state, fallbackLabel } = props;
-  const label = state.label || fallbackLabel || 'Working…';
+  const label = state.label || fallbackLabel || 'Working...';
   const percent = state.percent;
 
   return (
@@ -22,7 +22,7 @@ const ImportProgress = (props: ImportProgressProps) => {
       {percent != null ? (
         <>
           <ProgressBar value={percent} />
-          <Text className="import-progress__label">{label} — {Math.round(percent)}%</Text>
+          <Text className="import-progress__label">{label} · {Math.round(percent)}%</Text>
         </>
       ) : (
         <Box className="import-progress__row">

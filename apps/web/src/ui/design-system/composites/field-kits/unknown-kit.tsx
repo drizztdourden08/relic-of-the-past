@@ -5,9 +5,9 @@
  * the tooltip.
  *
  * It still registers a tester. The core offers `is empty` / `is not empty` for
- * this kind, and existence is well defined for any value at all — leaving the
- * tester out would let someone add one of those clauses and have it quietly do
- * nothing, which is the failure the registry exists to avoid. No other operator
+ * this kind, and existence is well defined for any value. Leaving the tester out
+ * would let someone add one of those clauses and have it silently do nothing,
+ * which is the failure the registry exists to avoid. No other operator
  * is offered, so no filter control is ever rendered.
  */
 import type { ReactNode } from 'react';
@@ -22,7 +22,7 @@ import { registerFieldKit } from './registry';
 import type { EditorControlProps, FieldTypeStrategy } from './registry';
 import './field-kits.css';
 
-const ABSENT = '—';
+const ABSENT = '-';
 
 const compare = nullsLast((a, b) => naturalTextCompare(toJson(a), toJson(b)));
 

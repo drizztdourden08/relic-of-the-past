@@ -5,9 +5,9 @@
  * first and finish first: SDL closes every gamepad through the normal
  * "removed" path as part of releasing, so waiting until after the release
  * would see nothing SDL-claimed at all. See chooser-devices.ts for why step
- * 2 needs this frozen snapshot rather than a live one.
+ * 2 needs this frozen snapshot, not a live one.
  *
- * The snapshot is settled rather than read once. Devices are claimed one at a
+ * The snapshot is settled, not read once. Devices are claimed one at a
  * time and each arrives on its own event, so a single read catches whatever
  * happens to be ready at that instant. That cost a controller its gyro flag
  * (only present on a claimed entry) and, on a restart right after the hold

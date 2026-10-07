@@ -1,10 +1,5 @@
 /* @layer renderer-components @kind logic */
-/**
- * Pure helpers for two moments in a clause's life: the value a freshly added
- * clause starts with, and what happens to that value when its operator
- * changes to a different arity. Kept free of JSX so both are unit tested
- * without rendering anything.
- */
+/** The value a new clause starts with, and what happens to it when the operator's arity changes. */
 import { createClause } from '../../../data/filter/clause';
 import { defaultOperatorFor, findOperator } from '../../../data/filter/operators';
 import type { FilterClause } from '../../../data/filter/clause';
@@ -30,12 +25,7 @@ interface OperatorChangeInput {
   currentValue: unknown;
 }
 
-/**
- * A clause's value is shaped by its operator's arity — `between` needs a pair,
- * `anyOf` needs a list, `eq` needs one value. Switching operators only resets
- * the value when that shape actually changes; two 'one'-arity operators (e.g.
- * `gt` to `lt`) keep whatever the user already entered.
- */
+/** Switching operators only resets the value when the arity changes; `gt` to `lt` keeps what was entered. */
 const valueForOperatorChange = (input: OperatorChangeInput): unknown => {
   const { kind, previousOp, nextOp, currentValue } = input;
   const previousArity = findOperator(kind, previousOp)?.arity ?? 'one';

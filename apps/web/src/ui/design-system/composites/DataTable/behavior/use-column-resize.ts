@@ -1,22 +1,11 @@
 /* @layer renderer-components @kind hook */
 /**
- * Dragging the seam between two headers, on pointer events rather than the
- * HTML5 drag API. That API exists to carry a thing to a drop target — it fires
- * a coarse, throttled stream, it insists on a drag image, and it ends at a
- * target rather than at a position. A resize is the opposite gesture: it is a
- * continuous delta with no payload and no destination, which is what
- * `setPointerCapture` is for — the pointer keeps reporting to this element even
- * once it has left it, so the drag survives a fast pull across the table.
- *
- * Keeping the two gestures apart matters, because the header cell around this
- * handle IS an HTML5 drag source. Two things stop a seam pull from being read
- * as a column reorder: every pointer event here stops bubbling, and `resizing`
- * lets the cell drop its `draggable` flag for the length of the drag.
- *
- * The drag itself never touches state. It PREVIEWS — one custom-property write
- * that the header and every row follow — and commits the width it ended on when
- * the pointer comes up. A table renders every row it holds, so a setState per
- * mouse move would re-render all of them, repeatedly, mid-gesture.
+ * Seam drag on pointer events, not the HTML5 drag API: a resize is a continuous
+ * delta with no payload, and `setPointerCapture` keeps the pointer reporting
+ * here after it leaves the element. The header cell around this handle is an
+ * HTML5 drag source, so every pointer event stops bubbling and `resizing` lets
+ * the cell drop `draggable`. The drag previews via one custom-property write
+ * and commits on pointer up; state per move would re-render every row.
  */
 import { useCallback, useRef, useState } from 'react';
 import { widthFromDrag } from './column-width-math';
@@ -25,7 +14,7 @@ import type { ColumnResizeBinding } from '../DataTable.type';
 
 interface UseColumnResizeInput {
   path: string;
-  /** The header cell this seam sizes — where the starting width is measured. */
+  /** The header cell this seam sizes. The starting width is measured from it. */
   cellRef: RefObject<HTMLElement | null>;
   /** Shown for the length of the drag, committed to state at the end of it. */
   onPreview: (path: string, width: number) => void;
@@ -65,12 +54,8 @@ const useColumnResize = (input: UseColumnResizeInput): ColumnResizeBinding => {
     setResizing(false);
     const handle = event.currentTarget;
     if (handle.hasPointerCapture?.(event.pointerId)) handle.releasePointerCapture(event.pointerId);
-    /*
-     * The preview was never state; this is the one write the whole gesture
-     * makes. A press that never moved writes nothing at all — clicking a seam
-     * must not quietly pin an automatic column to whatever width it happened
-     * to have.
-     */
+    /* The one state write of the gesture. A press that never moved writes
+       nothing, so clicking a seam does not pin an automatic column. */
     if (drag.width !== drag.startWidth) onResize(path, drag.width);
   }, [onResize, path]);
 

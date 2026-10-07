@@ -1,7 +1,7 @@
 /* @layer shared-asset-extraction @kind data */
 /**
  * Overworld/dungeon wiring for the extra dungeon, expressed as records in the game's own
- * tables rather than as engine special cases.
+ * tables, not as engine special cases.
  *
  * Entering and leaving a place is entirely table-driven in this engine:
  *   kOverworld_Entrance_{Area,Pos,Id}  an overworld cell -> an entrance id
@@ -14,7 +14,7 @@
  *
  * The overworld and exit records are CLONED from the base game's own Pyramid opening and
  * shifted, so their many opaque fields (map16 load offsets, the two unknown scroll deltas,
- * door settings) stay whatever the original was rather than being guessed at.
+ * door settings) stay whatever the original was, never guessed at.
  *
  * These records are appended unconditionally, not only when the second cartridge is
  * present. That keeps the base blob identical whether or not a supplement is compiled,
@@ -37,7 +37,7 @@ const CELL_DELTA = EXTRA_HOLE_CELL - PYRAMID_HOLE_CELL;
 const POS_DELTA = CELL_DELTA * 2;
 const PIXEL_DELTA = CELL_DELTA * 16;
 
-/** The room the Pyramid opening leads to — the exit record we clone is keyed on it. */
+/** The room the Pyramid opening leads to. The exit record we clone is keyed on it. */
 const PYRAMID_ROOM = 0x10;
 
 /** The extra dungeon's entrance chamber, in its own room bank. */
@@ -61,7 +61,7 @@ interface EntranceArrays {
 /**
  * One entrance record for the extra dungeon's chamber.
  *
- * Every geometry field is derived from the room's place in the 16x20 room grid rather than
+ * Every geometry field is derived from the room's place in the 16x20 room grid, not
  * measured by hand. Verified against two base-game entrances into full-size rooms: id 19 into
  * room 0xf8 (row 15, column 8) and id 9 into room 0x84 (row 8, column 4) both reproduce
  * exactly from these formulas.
@@ -76,7 +76,7 @@ interface EntranceArrays {
 const ROOM_SPAN = 0x200;
 const ROOMS_PER_GRID_ROW = 16;
 
-/** Both axes full size — one viewport, no page split. */
+/** Both axes full size: one viewport, no page split. */
 const QUADRANT_FULLSIZE_BOTH = 0x22;
 /** The player arrives in the left half of the room, lower vertical quadrant. */
 const PLAYER_QUADRANT = 0x02;

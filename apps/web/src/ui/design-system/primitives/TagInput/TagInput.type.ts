@@ -9,8 +9,8 @@ import type { RefObject } from 'react';
  * A failing verdict is ADVISORY by default: the value still commits, because a
  * dataset grows values nobody predicted. `enforce` opts one field out of that,
  * for the case where a new value is not a string being appended to a list but a
- * RECORD being created — a record that cannot be filed under a namespace it
- * does not have. Advice stays advice for anything already in the vocabulary;
+ * RECORD being created, and a record cannot be filed under a namespace it does
+ * not have. Advice stays advice for anything already in the vocabulary;
  * only creation is refused.
  */
 type TagValidationResult = boolean | string;
@@ -46,7 +46,7 @@ interface TagInputProps {
   enforce?: boolean;
   /**
    * The reason the most recent create attempt was refused past this control's
-   * own check — a server-side revalidation failure the caller could not have
+   * own check: a server-side revalidation failure the caller could not have
    * predicted (a duplicate, a write it could not make). Shown in the same hint
    * as the convention advice, and cleared the moment the entry is edited again,
    * so a resolved failure never lingers over a value the user has moved on from.
@@ -73,7 +73,7 @@ interface TagSuggestionPanelProps {
   listId: string;
   optionId: (idx: number) => string;
   panelRef: RefObject<HTMLDivElement | null>;
-  /** Null until the field has been measured — the panel renders unpositioned. */
+  /** Null until the field has been measured, so the panel renders unpositioned. */
   pos: PopupPosition | null;
   suggestions: readonly string[];
   /** -1 when nothing is highlighted, which is what hands Enter to the raw text. */

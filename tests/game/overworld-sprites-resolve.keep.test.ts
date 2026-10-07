@@ -1,8 +1,8 @@
 /* @layer tests @kind test */
 import { describe, it, expect, vi } from 'vitest';
 
-// getOverworldSprites reads two bridge queries directly — the spawn table and
-// the area-head table — so both are mocked here rather than running the game.
+// getOverworldSprites reads two bridge queries directly: the spawn table and
+// the area-head table, so both are mocked here instead of running the game.
 vi.mock('@app/lib/game', () => ({
   wasmGetOverworldSpriteSpawns: vi.fn(),
   wasmGetAreaHeads: vi.fn(),
@@ -26,7 +26,7 @@ const heads = (() => {
   return table;
 })();
 
-describe('getOverworldSprites — resolves spawns to their true screen', () => {
+describe('getOverworldSprites resolves spawns to their true screen', () => {
   it('emits a far-half spawn already resolved to its true screen and local tile', () => {
     vi.mocked(wasmGetAreaHeads).mockReturnValue(heads);
     vi.mocked(wasmGetOverworldSpriteSpawns).mockReturnValue([

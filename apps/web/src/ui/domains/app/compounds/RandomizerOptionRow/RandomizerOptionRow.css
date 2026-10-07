@@ -1,0 +1,80 @@
+/* @layer renderer-components @kind style */
+
+/* One catalog option on the panel's fixed grid: the text block takes what is
+   left, the control and the In Pool cell sit in their own tracks so nothing
+   moves when a value changes width. Used both interactively (profile
+   creation) and read-only (the randomizer page). */
+
+.rand-opt-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--option-control-w) var(--option-impact-w);
+  column-gap: var(--space-md);
+  align-items: start;
+  padding: var(--space-sm) 0;
+  border-top: 1px solid var(--c-border);
+}
+
+.rand-opt-row--locked {
+  opacity: var(--opacity-muted);
+}
+
+/* A row a sibling setting overruled keeps its full contrast: its control is
+   still drawn disabled by the control itself, but the sentence saying why must
+   not be dimmed along with it. */
+.rand-opt-row--forced {
+  opacity: 1;
+}
+
+.rand-opt-row__note {
+  color: var(--c-danger);
+  font-size: var(--text-xs);
+  line-height: var(--leading-tight);
+}
+
+.rand-opt-row__text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.rand-opt-row__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.rand-opt-row__label {
+  min-width: 0;
+  font-size: var(--text-sm);
+  color: var(--c-text);
+  overflow-wrap: break-word;
+}
+
+.rand-opt-row__tag {
+  flex: none;
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-xs);
+  white-space: nowrap;
+}
+
+.rand-opt-row__description {
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  line-height: 1.5;
+  overflow-wrap: break-word;
+}
+
+.rand-opt-row__control {
+  min-width: 0;
+}
+
+/* The In Pool cell sits on the title's baseline, not the description's. */
+.rand-opt-row > .pool-impact-cell {
+  padding-top: var(--space-xs);
+}

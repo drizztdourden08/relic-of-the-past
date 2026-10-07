@@ -1,9 +1,9 @@
 /* @layer shared-game @kind logic */
 /**
- * Adapter from the decoder's output to catalog slots — how the menu and credits
+ * Adapter from the decoder's output to catalog slots. This is how the menu and credits
  * groups get their contents.
  *
- * The decoded lines arrive as a PARAMETER rather than an import: the decoder
+ * The decoded lines arrive as a PARAMETER, not an import: the decoder
  * lives in the asset-extraction pipeline, which reads a user ROM and has no
  * business being pulled in by a model this side of the app. `DecodedLine` is
  * therefore restated structurally here; the caller supplies whatever satisfies
@@ -23,7 +23,7 @@ type DecodedLine = {
 type DecodedSlotOptions = {
   /** Prefixed onto each key so two decoded groups can never collide. */
   keyPrefix?: string;
-  /** Attached to every slot produced — a caveat true of the whole surface. */
+  /** Attached to every slot produced, as a caveat true of the whole surface. */
   note?: string;
 };
 

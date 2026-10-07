@@ -1,8 +1,5 @@
 /* @layer test @kind test */
-/**
- * Device gate — input from a controller only reaches the game when that device
- * appears in the active profile's map. A connected-but-unmapped pad is dropped.
- */
+/** Device gate: controller input reaches the game only when the device is in the active profile's map. */
 
 import { describe, it, expect } from 'vitest';
 import type { InputProfile, ButtonMapping, SnesButton } from '@shared/types/controls';
@@ -45,7 +42,7 @@ describe('allowedDevices', () => {
 });
 
 describe('computeBitmask device gate', () => {
-  // Source-less binding (no owning device recorded) — applies to every gamepad.
+  // Source-less binding (no owning device recorded) applies to every gamepad.
   const gamepadButtonMap = new Map([[ANY_DEVICE, new Map<number, SnesButton>([[0, 'A']])]]);
   const empty = new Map();
 

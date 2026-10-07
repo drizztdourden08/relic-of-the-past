@@ -1,8 +1,5 @@
 /* @layer renderer-components @kind hook */
-/**
- * useWidgetLayout — React hook that manages widget layout state.
- * Handles local persistence + profile-based save/load.
- */
+/** Widget layout state: local persistence plus profile-based save/load. */
 import { useState, useCallback, useEffect, useRef } from 'react';
 import type { WidgetLayout, WidgetState } from '../Widget.type';
 import { loadLayoutLocal, saveLayoutLocal, loadLayoutForProfile, saveLayoutForProfile, updateWidget } from './widgetStore';
@@ -17,13 +14,19 @@ interface StartupOverride {
 
 /**
  * Force the requested widgets open + docked (shrinking the game) on their default
- * side. `visibility: 'always'` so they render even when no game is running yet.
+ * side.
+ *
+ * It deliberately does NOT touch `visibility`. Writing 'always' here was persisted,
+ * so one `--widgets=` screenshot run permanently converted those widgets into ones
+ * that never leave the screen, in a profile the flag was never meant to change.
+ * WidgetManager exempts the forced ids from the game-only filter instead, which is
+ * where a render-time override belongs.
  */
 const applyStartupWidgets = (layout: WidgetLayout, ids: string[]): WidgetLayout => {
   if (ids.length === 0) return layout;
   return {
     widgets: layout.widgets.map((w) => (ids.includes(w.id)
-      ? { ...w, visible: true, mode: 'docked', exclusive: true, visibility: 'always', side: getWidgetDefinition(w.id)?.defaultSide ?? w.side }
+      ? { ...w, visible: true, mode: 'docked', exclusive: true, side: getWidgetDefinition(w.id)?.defaultSide ?? w.side }
       : w)),
   };
 };
@@ -51,7 +54,7 @@ const useWidgetLayout = (profileId: string | null, io: WidgetPersistenceIO, star
     });
   }, [profileId]);
 
-  // Persist on every change — skipped under --fresh so tests never clobber the
+  // Persist on every change, skipped under --fresh so tests never clobber the
   // user's real saved layout.
   const setLayout = useCallback((updater: (prev: WidgetLayout) => WidgetLayout) => {
     setLayoutRaw((prev) => {
@@ -82,7 +85,7 @@ const useWidgetLayout = (profileId: string | null, io: WidgetPersistenceIO, star
     setLayout((prev) => {
       const w = prev.widgets.find((w) => w.id === id);
       if (!w) {
-        // Widget not in layout yet — create it as visible
+        // Widget not in layout yet, so create it as visible
         const def = getWidgetDefinition(id);
         if (!def) return prev;
         return { widgets: [...prev.widgets, { ...createDefaultWidgetState(def, prev.widgets.length), visible: true }] };

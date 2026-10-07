@@ -6,12 +6,9 @@ import {
 import { createClause } from '../../apps/web/src/ui/design-system/data/filter/clause';
 import type { FilterClause } from '../../apps/web/src/ui/design-system/data/filter/clause';
 
-// FilterBar itself only wires these three transitions to onClick/onChange
-// handlers (see FilterBar.tsx) — the actual logic a "full test of the filter
-// add/remove" needs to cover lives here, where it can be driven directly
-// without a DOM. Every clause is keyed by its own id, never by array index,
-// so these tests build lists out of order and interleave removals to prove
-// position is never what identifies a clause.
+// FilterBar only wires these transitions to handlers (FilterBar.tsx); the
+// logic lives here. Every clause is keyed by its own id, never array index,
+// so these build lists out of order and interleave removals.
 
 const clauseOn = (path: string, value: unknown): FilterClause => createClause(path, 'eq', value);
 
@@ -55,14 +52,14 @@ describe('removeClause', () => {
     expect(result[1].value).toBe('red');
   });
 
-  it('removing the last remaining clause empties the list rather than reverting to an earlier one', () => {
+  it('removing the last remaining clause empties the list instead of reverting to an earlier one', () => {
     const a = clauseOn('name', 'alpha');
     const afterFirstRemoval = removeClause([a, clauseOn('size', 5)], a.id);
     const afterSecondRemoval = removeClause(afterFirstRemoval, afterFirstRemoval[0].id);
     expect(afterSecondRemoval).toEqual([]);
   });
 
-  it('is a no-op when the id is not present, rather than clearing the list', () => {
+  it('is a no-op when the id is not present, instead of clearing the list', () => {
     const a = clauseOn('name', 'alpha');
     expect(removeClause([a], 'not-a-real-id')).toEqual([a]);
   });

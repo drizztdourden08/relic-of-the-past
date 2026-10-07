@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * Border Bundle Detection — identifies contiguous groups of reachable border tiles
+ * Border bundle detection. Finds contiguous groups of reachable border tiles
  * and validates two-sided overlap between adjacent screens.
  *
  * A "bundle" is a contiguous run of reachable tiles on one border of a screen.
@@ -18,7 +18,7 @@ interface BorderBundle {
   id: string;
   /** Which border */
   direction: 'n' | 's' | 'e' | 'w';
-  /** Tile positions (0–63) that are contiguous and reachable */
+  /** Tile positions (0-63) that are contiguous and reachable */
   tiles: number[];
   /** Requirements to reach these tiles from the screen interior */
   requirements: string[][];
@@ -29,19 +29,19 @@ const findBorderBundles = (result: FloodFillResult): BorderBundle[] => {
   const prefix = `lw-${screen.toString(16).padStart(2, '0')}`;
   const bundles: BorderBundle[] = [];
 
-  // North border: row 0, columns 0–63
+  // North border: row 0, columns 0-63
   const northTiles = getReachableBorderTiles(result, 'n');
   splitIntoBundles(northTiles, 'n', prefix, bundles);
 
-  // South border: row 63, columns 0–63
+  // South border: row 63, columns 0-63
   const southTiles = getReachableBorderTiles(result, 's');
   splitIntoBundles(southTiles, 's', prefix, bundles);
 
-  // East border: col 63, rows 0–63
+  // East border: col 63, rows 0-63
   const eastTiles = getReachableBorderTiles(result, 'e');
   splitIntoBundles(eastTiles, 'e', prefix, bundles);
 
-  // West border: col 0, rows 0–63
+  // West border: col 0, rows 0-63
   const westTiles = getReachableBorderTiles(result, 'w');
   splitIntoBundles(westTiles, 'w', prefix, bundles);
 

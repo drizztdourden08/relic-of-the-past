@@ -3,7 +3,7 @@
 /* Bounded to under half the widget body: long enough to be useful, short
    enough that the record region below it (LiveDataInspector.css) always keeps
    its own floor. `flex-shrink` (the default, 1) lets it go smaller still when
-   the widget itself is short — the cap only ever stops it from GROWING past
+   the widget itself is short. The cap only ever stops it from GROWING past
    this share. */
 .live-rec-list {
   display: flex;

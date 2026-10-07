@@ -1,28 +1,19 @@
 /* @layer electron-main @kind logic */
 /**
- * SDL3 controller transport — owns the native addon's lifecycle in main:
- * starts polling on app ready, translates its raw events into the
- * `controller:*` IPC contract, and stops on quit. The sole controller input
- * transport (see ipc-handlers.ts for where it's started).
+ * SDL3 controller transport: owns the native addon's lifecycle in main and
+ * translates its raw events into the `controller:*` IPC contract. The sole
+ * controller input transport (started from ipc-handlers.ts).
  *
- * deviceKey rule: existing bindings/profiles/calibration are keyed by a
- * "vid:pid" string (4-hex-digit lowercase, e.g. "057e:2009") and this MUST
- * keep working for the common case of one device per vid:pid. The GameCube
- * adapter is the exception it exists for — it exposes four ports as four
- * devices sharing one vid:pid. So: "vid:pid" is the deviceKey whenever it
- * is unique among currently connected devices; the second and later device
- * sharing a vid:pid gets a "#N" suffix appended (N = 2, 3, ...). The
- * discriminator is freed when its device is removed, so a later connect
- * can reuse a freed slot — including the plain key once the collision
- * clears — without changing the key of any device still connected. See
- * sdl3-device-key.ts for the assignment itself.
+ * deviceKey rule: bindings/profiles/calibration are keyed by "vid:pid"
+ * (4-hex-digit lowercase, e.g. "057e:2009"), which MUST keep working for one
+ * device per vid:pid. A four-port adapter exposes four devices sharing one
+ * vid:pid, so the second and later get a "#N" suffix (N = 2, 3, ...). A freed
+ * discriminator can be reused by a later connect without changing the key of
+ * any device still connected. See sdl3-device-key.ts.
  *
- * Listed-device cache: `listDevices()` bottoms out in a synchronous native
- * HID enumeration (measured ~10ms on a 2-device machine, and it runs once
- * more per connected device for the mapping lookup this class used to make
- * on every snapshot). Calling it per `controller:list` request stalled the
- * calibration screen on open, so this class enumerates only on connect,
- * disconnect, and rescan, and serves every snapshot from that cache.
+ * Listed-device cache: `listDevices()` is a synchronous native HID enumeration
+ * (~10ms on a 2-device machine). Calling it per `controller:list` stalled the
+ * calibration screen, so it runs only on connect, disconnect and rescan.
  */
 import type { BrowserWindow } from 'electron';
 import * as sdl3 from './native/sdl3';
@@ -52,11 +43,9 @@ class Sdl3Source {
       console.log('[controllers] not started: native addon unavailable');
       return;
     }
-    // Order matters: the HID listing must not be touched until the SDL thread
-    // has initialised. listDevices() bottoms out in SDL's own hidapi, and
-    // reaching it from this thread first leaves SDL's gamepad backend unable
-    // to claim anything through HIDAPI, which silently drops every controller
-    // onto a legacy driver that reports no rumble, no gyro and no input.
+    // Order matters: listDevices() bottoms out in SDL's own hidapi, and reaching
+    // it before the SDL thread initialises leaves the gamepad backend unable to
+    // claim anything through HIDAPI (no rumble, no gyro, no input).
     sdl3.start((event) => this.handleEvent(event));
     this.refreshListedCache();
     console.log('[controllers] started');
@@ -67,9 +56,8 @@ class Sdl3Source {
     this.live.clear();
   }
 
-  /** User-initiated "look again" — the OS-level listing can change without
-   *  any SDL claim event (e.g. a device SDL still can't claim), so this is
-   *  the one other place the cache is refreshed outside of connect/disconnect. */
+  /** User-initiated "look again". The OS-level listing can change without any
+   *  SDL claim event (a device SDL still can't claim), hence the cache refresh. */
   rescan(): void {
     sdl3.rescan();
     this.refreshListedCache();

@@ -1,14 +1,10 @@
 /* @layer renderer-appshell @kind hook */
 /**
- * ╔══════════════════════════════════════════════════════════╗
- * ║  THIS TEST MUST NEVER BE MODIFIED BY THE AI             ║
- * ╚══════════════════════════════════════════════════════════╝
- *
- * Auto-test hook — reacts to CLI args --auto-state=N|NAME --screenshot=NAME.
+ * Reacts to the CLI args --auto-state=N|NAME and --screenshot=NAME.
  * When present, automatically:
  *   1. Starts the game with the current profile
- *   2. Loads the requested state — a number is a quick-save slot, a string is a
- *      manual (normal) save's name
+ *   2. Loads the requested state. A number is a quick-save slot, a string is the
+ *      name of a manual (normal) save
  *   3. Waits for rendering to settle
  *   4. Captures a screenshot via the main process
  */

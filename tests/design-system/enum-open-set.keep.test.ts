@@ -1,17 +1,12 @@
 /* @layer tests @kind test */
 /**
- * The escape hatch every enum editor carries.
+ * The escape hatch every enum editor carries. Kind inference derives `options`
+ * from the values a collection holds, so a field only ever written one way,
+ * that the schema calls non-optional, leaves a picker with one segment that
+ * cannot be changed or cleared. These cover the way out.
  *
- * Kind inference derives `options` from the values a collection happens to
- * hold, so a closed-set control can only ever re-offer the past. On a field
- * that has only ever been written one way — and that the schema calls
- * non-optional — that leaves a picker with one segment, already active, that
- * cannot be changed and cannot be cleared. These cover the way out.
- *
- * SSR smoke tests, as everywhere else in this folder: there is no jsdom here,
- * so the toggle cannot be clicked and the box cannot be typed into. Both
- * states of the entry are rendered directly and the decisions behind them are
- * covered as the plain functions they were extracted into.
+ * SSR smoke tests (no jsdom): both states of the entry are rendered directly,
+ * the decisions behind them as plain functions.
  */
 import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';
@@ -48,7 +43,7 @@ const renderEditor = (field: FieldDescriptor, value: unknown): string =>
     field, value, onChange: () => undefined,
   }));
 
-/** The decorator's `onSubmit` — what the entry writes through when applied. */
+/** The decorator's `onSubmit`, which is what the entry writes through when applied. */
 const submitOf = (field: FieldDescriptor, value: unknown, onChange: (next: unknown) => void) =>
   (kit().EditorControl({ field, value, onChange }) as unknown as {
     props: { onSubmit: (next: string) => void };
@@ -108,11 +103,9 @@ describeDataset('the entry renders in both of its states', () => {
 describeDataset('a field the dataset has only ever written one way', () => {
   const screens = all('screen');
 
-  // The premise, asserted rather than assumed: if this ever grows a second
-  // value the dead end this fix addresses stops being reproducible here.
-  // (`status` used to be a second example of this shape before it was
-  // retired along with `ScreenRecord.status` — see the connection-model
-  // migration report.)
+  // The premise, asserted: if this ever grows a second value, the dead end this
+  // fix addresses stops being reproducible here. (`status` was the other
+  // example before it was retired with `ScreenRecord.status`.)
   it('is a single-option, non-optional enum today', () => {
     const field = fieldAt(screens, 'variant.key');
     expect(field.kind).toBe('enum');
@@ -137,7 +130,7 @@ describeDataset('a field the dataset has only ever written one way', () => {
   });
 });
 
-describeDataset('a genuinely multi-option enum keeps what it already had', () => {
+describeDataset('a multi-option enum keeps what it already had', () => {
   const optionalMulti = fieldAt(all('screen'), 'interiorKind');
   const requiredMulti = fieldAt(all('connection'), 'kind');
 

@@ -1,21 +1,10 @@
 /* @layer renderer-components @kind logic */
 /**
- * The two things a list of records needs that a list of values does not: a
- * starting shape for a new element, and real addresses for the element it
- * already holds.
- *
- * ADDRESSES. An element descriptor's path is descriptive — `spawns[].actorId`
- * addresses nothing, because there is no element in general, only element 3.
- * Rebasing swaps that descriptive prefix for a real one (`spawns.3`), and from
- * there every existing part of the form works unchanged: the dot-path walk
- * already indexes arrays by numeric segment, so reads, writes and the dirty
- * check all land on the right element with nothing special threaded through.
- *
- * A STARTING SHAPE. `blankFor` answers per scalar kind; an object element needs
- * the same answer for each of its own children, recursively. Only the required
- * children are seeded — an optional field that starts absent is exactly what
- * the record says it is, and inventing a value for it would be a lie the
- * serializer then writes out.
+ * A starting shape for a new element, and real addresses for existing ones.
+ * An element descriptor's path (`spawns[].actorId`) addresses nothing; rebasing
+ * swaps the prefix for `spawns.3`, after which the dot-path walk handles reads,
+ * writes and the dirty check. Only required children are seeded in a blank:
+ * inventing an optional value would be written out by the serializer.
  */
 import { keyOf } from './tag-field';
 import type { FieldDescriptor } from '../../../data/schema/field-descriptor';

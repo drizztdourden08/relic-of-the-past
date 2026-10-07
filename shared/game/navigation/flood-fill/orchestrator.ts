@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * Flood-fill orchestrator — dispatches to the dual- or single-layer run path.
+ * Flood-fill orchestrator. Dispatches to the dual- or single-layer run path.
  * Screen prep, run paths, helpers, and connection derivation live in sibling modules.
  */
 import type { FloodFillResult } from '../types';

@@ -2,12 +2,12 @@
 /**
  * Exports a pack as a plain MSU-1 set, for players that are not this app.
  *
- * The naming is the SD2SNES convention — `<baseName>.msu` plus `<baseName>-<track>.pcm` — which
+ * The naming is the SD2SNES convention, `<baseName>.msu` plus `<baseName>-<track>.pcm`, which
  * is what snes9x 1.55+, bsnes/higan, the FXPak/SD2SNES and MiSTer all look for. The `.msu` file
- * is genuinely empty: it exists as the marker that says "this ROM has MSU-1 audio beside it",
+ * is empty: it exists as the marker that says "this ROM has MSU-1 audio beside it",
  * and carries no data of its own.
  *
- * Layers cannot survive the trip (MSU-1 is one stream), so every track is flattened first — see
+ * Layers cannot survive the trip (MSU-1 is one stream), so every track is flattened first. See
  * ./flatten-track for what that costs and how it stays reproducible.
  */
 import type { MsuPackManifest, MsuTrackDef } from '@shared/types/msu-manifest';
@@ -30,7 +30,7 @@ interface ExportMsu1Params {
   loadBuffer: (fileName: string) => Promise<AudioBuffer | null>;
   /** Filename stem the whole set shares, usually the ROM's own basename. */
   baseName: string;
-  /** Called after each track — a real pack takes minutes, so this is not optional in practice. */
+  /** Called after each track. A real pack takes minutes, so this is not optional in practice. */
   onProgress?: (progress: Msu1ExportProgress) => void;
   /** Overrides the per-track flatten seed. Only useful for deliberately re-rolling a mix. */
   seed?: number;

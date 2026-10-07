@@ -1,19 +1,13 @@
 /* @layer renderer-components @kind component */
 /**
- * One value in one row — and, while a column is in the air, one square of that
- * column's drop target.
- *
- * That second job is why this is a component rather than a `<Box>` inline in
- * the row: a cell already knows which column it belongs to, so it can answer a
- * drag with the same index its header would and the drop zone becomes the whole
- * column, top to bottom, with no pointer arithmetic anywhere. Dragging over the
- * body of a column now does exactly what dragging over its header does.
+ * One value in one row, and one square of its column's drop target while a
+ * column is in the air. A cell answers a drag with the same index its header would.
  */
 import { Box } from '../../../primitives/Box';
 import type { DragEvent, ReactNode } from 'react';
 
 interface DataCellProps {
-  /** The column's path — also what "fit to content" measures this cell by. */
+  /** The column's path. "Fit to content" measures this cell by it. */
   path: string;
   /** The column's position, which is what a drop here means. */
   index: number;

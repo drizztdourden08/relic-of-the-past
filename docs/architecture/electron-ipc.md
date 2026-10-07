@@ -10,7 +10,7 @@ IPC, never by importing main-process code (an [architecture invariant](overview.
 ```mermaid
 flowchart LR
     R["Renderer (React)"] -->|"window.api.domainAction(args)"| P["preload"]
-    P -->|"invoke(channel, …)"| M["main handler"]
+    P -->|"invoke(channel, ...)"| M["main handler"]
     M -->|"typed result"| R
 ```
 

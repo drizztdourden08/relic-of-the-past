@@ -71,11 +71,11 @@ enum {
   kPpuRenderFlags_NoBG3 = 16,
   // Skip OBJ/sprite rendering
   kPpuRenderFlags_NoSprites = 32,
-  // Force BG1 + backdrop pixels to black (for indoor scenes)
-  kPpuRenderFlags_BlackBG2 = 64,
-  // Render the wide overworld view's no-data-gap sentinel (kPpuWorldGapPixel: backdrop layer 5 with a
-  // non-zero colour index) as black, while leaving the real green backdrop (cidx 0, which shows through
-  // transparent terrain such as tree bases and doorways) untouched. Set per-frame during scroll transitions.
+  // Render the gap sentinel (kPpuWorldGapPixel: backdrop layer 5 with a non-zero colour index) as black,
+  // while leaving the real backdrop (cidx 0, which shows through transparent terrain such as tree bases
+  // and doorways) untouched. Two things paint the sentinel: the wide overworld view's no-data gaps during
+  // a scroll transition, and indoors the ceiling tiles past a room's walls (hiddenTiles below). Set
+  // per frame by ZeldaDrawPpuFrame in both cases.
   kPpuRenderFlags_BlackBackdrop = 128,
 };
 
@@ -93,6 +93,9 @@ struct Ppu {
   // rendered view edge rests on the area boundary (no out-of-area black). Set per-frame by
   // ConfigurePpuSideSpace; the game camera (BG2VOFS) is untouched. 0 = no shift (not locked / mid-area).
   int32_t cameraLockShiftX, cameraLockShiftY;
+  // How far the 9-bit sprite Y fold moves with the lock (g_oam_tall_fold_shift). 0 leaves the fold where
+  // every build had it, which is what the corrections being off means.
+  int32_t tallFoldShift;
   float mode7PerspectiveLow, mode7PerspectiveHigh;
 
   // TMW / TSW etc
@@ -172,6 +175,30 @@ struct Ppu {
   // False unless a custom sheet is loaded, in which case the bank above is live. Keeps the stock game
   // on exactly the path it had before the bank existed.
   bool playerPalActive;
+  // The ceiling block as tilemap words, handed over each frame by ZeldaDrawPpuFrame (PpuSetHiddenTiles).
+  // A BG2 tile equal to one of them is the void past the room's walls and draws as the gap sentinel
+  // instead of its graphics, which BlackBackdrop then renders black. Count 0 means nothing is hidden and
+  // the draw never reaches the compare. Not part of a save state.
+  uint16_t hiddenTiles[8];
+  uint8_t hiddenTileCount;
+  // A still picture that fills the original frame (the title, the file screen) has one tilemap screen
+  // and nothing past it, so the stock wrapping fetch draws a second copy of it in the margins of a wider
+  // or taller view. Per layer, the 2x2 block that screen uses as its background, read from the tilemap's
+  // own corner by PpuSetEdgeTiles; a tile fetched from outside the picture's tilemap screen draws the
+  // block's word for its position instead. edgeTileLayers names the layers this is on, and PpuBeginDrawing
+  // clears it every frame, so a frame that never asks draws exactly as before. Not part of a save state.
+  uint16_t edgeTiles[4][4];
+  uint8_t edgeTileLayers;
+  // Window 1 edges past the 8-bit registers, for a view wider than the base frame. When window1Wide is
+  // set the window calculation reads these in place of window1left / window1right; ZeldaDrawPpuFrame sets
+  // it per line and PpuBeginDrawing clears it, so a frame that never sets it draws exactly as before. Not
+  // part of a save state.
+  bool window1Wide;
+  int16_t window1leftWide, window1rightWide;
+  // Slots whose sprite is placed for the base frame while the scene behind it is shifted by the camera
+  // lock, so they skip the shift. Only read while lockShiftSomeFixed is set, which PpuBeginDrawing clears.
+  bool lockShiftSomeFixed;
+  uint8_t oamLockFixed[128];
 
   // store 31 extra entries to remove the need for clamp
   uint8_t brightnessMult[32 + 31];
@@ -209,6 +236,12 @@ int PpuGetCurrentRenderScale(Ppu *ppu, uint32_t render_flags);
 
 void PpuSetMode7PerspectiveCorrection(Ppu *ppu, int low, int high);
 void PpuSetExtraSideSpace(Ppu *ppu, int left, int right, int top, int bottom);
+// The tilemap words to draw as the gap sentinel on BG2 this frame (at most 8), or count 0 for none.
+void PpuSetHiddenTiles(Ppu *ppu, const uint16_t *words, int count);
+// Carry each named layer's background block into the space around a fixed picture this frame, taking the
+// block from that layer's own tilemap corner. |layerMask| is a bit per layer; 0 leaves every layer on the
+// stock wrapping fetch. A layer reading the linear world tilemap is skipped, since that one clamps already.
+void PpuSetEdgeTiles(Ppu *ppu, int layerMask);
 
 // Rasteriser diagnostics, see ppu.c. Per frame: which OAM slots actually drew pixels, and how often the
 // per-line sprite/tile budgets cut evaluation short.

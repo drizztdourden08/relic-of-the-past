@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * Unified tile attribute map — single source of truth for collision behavior,
+ * Unified tile attribute map. The single source of truth for collision behavior,
  * equipment requirements, semantic labels, and category grouping.
  *
  * Tables live in overworld-attrs.ts / the native INTERIOR_ATTRS table; types in
@@ -16,7 +16,7 @@ const TILE_ATTRS = OVERWORLD_TILE_ATTRS;
 /**
  * Selects the attribute map for a tile's classification rules. The engine's own
  * dispatcher (TileDetect_ExecuteInner, core/zelda3/src/tile_detect.c:256) branches
- * on a single `is_indoors` bool — house/cave/dungeon interiors all read the same
+ * on a single `is_indoors` bool. House, cave and dungeon interiors all read the same
  * table until they diverge, so that is all a caller here needs to say.
  */
 const tileAttrsFor = (indoors: boolean): Readonly<Record<number, TileAttrDef>> =>

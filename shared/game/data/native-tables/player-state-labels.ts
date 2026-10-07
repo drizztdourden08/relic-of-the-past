@@ -3,8 +3,8 @@
  * Names for the engine's player action ids.
  *
  * The decompilation numbers these and never names them, so every label here was read off
- * the branch in `LinkOam_Main` that selects the id — the condition it tests is quoted as
- * the `from` field so a label can be checked rather than trusted. Anything that reads wrong
+ * the branch in `LinkOam_Main` that selects the id. The condition it tests is quoted as
+ * the `from` field so a label can be checked instead of trusted. Anything that reads wrong
  * in the studio is a one-line edit here; nothing downstream depends on the wording.
  *
  * Frame counts are not listed: they come from the atlas, which derives them.

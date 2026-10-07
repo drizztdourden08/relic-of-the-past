@@ -1,8 +1,7 @@
 /* @layer shared-asset-extraction @kind logic */
 /**
- * Dialogue asset compilation — packs the US ROM dialogue plus any extra language
- * packs into the parallel kDialogue / kDialogueFont / kDialogueMap arrays. The
- * running game selects one at startup via the INI `Language` key.
+ * Packs the US ROM dialogue plus any extra language packs into the parallel kDialogue /
+ * kDialogueFont / kDialogueMap arrays. The game selects one at startup via the INI `Language` key.
  */
 import type { RomData } from './rom/rom-types';
 import type { AssetBuilder } from './asset-builder';

@@ -1,8 +1,7 @@
 /* @layer shared-input @kind data */
 /**
- * Haptic pattern configuration barrel — merges per-category chunks into the
- * single HAPTIC_PATTERNS map. Public symbols (HAPTIC_PATTERNS, HapticPatternEntry,
- * HapticPatternId) are unchanged. The global "intensity" slider scales all values.
+ * Merges the per-category chunks into the single HAPTIC_PATTERNS map.
+ * The global "intensity" slider scales all values.
  */
 
 import { COMBAT_PATTERNS } from './combat.data';

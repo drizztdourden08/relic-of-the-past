@@ -8,7 +8,7 @@
  * are the only three things the modes actually disagree about:
  *
  * - CONTINUOUS treats the whole entry as one flowing stack of lines. Opening a
- *   line is always allowed, and everything after it moves down — across box
+ *   line is always allowed, and everything after it moves down, across box
  *   boundaries, because a wait clears nothing: the pen is still on the bottom
  *   row when the next box opens, so the honest code for the line after a wait is
  *   a scroll, not a return to row 1.
@@ -17,7 +17,7 @@
  * - OFF opens no lines at all. The author's structure is theirs to type.
  *
  * What is NOT a question here: whether the row and scroll codes are derived.
- * They are derived in all three modes — that is the point of the feature, and a
+ * They are derived in all three modes. That is the point of the feature, and a
  * flag for it would only invite a mode that lets an author hand-type a code the
  * engine then disagrees with. Off means "do not restructure", not "let the codes
  * rot".
@@ -29,13 +29,13 @@ import type { SetStructure } from '../types';
  * How much of the entry the editor may restructure by itself.
  *
  * The union itself lives with the set's own types, because it is a stored field
- * on the set as well as a behaviour here, and a second copy would be free to
+ * on the set and a behaviour here, and a second copy would be free to
  * drift from the one that gets written to disk. This name is the behavioural
  * reading of it.
  */
 type StructureMode = SetStructure;
 
-/** One mode's answers. Every edit reads these rather than the mode name. */
+/** One mode's answers. Every edit reads these, not the mode name. */
 type StructurePolicy = {
   mode: StructureMode;
   /** May a line be opened inside a box that currently holds this many? */

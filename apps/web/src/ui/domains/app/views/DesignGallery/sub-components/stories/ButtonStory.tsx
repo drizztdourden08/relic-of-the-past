@@ -2,10 +2,10 @@
 import { Box, Button, IconButton, Badge, StatusBadge } from '../../../../../../design-system/primitives';
 import { Specimen } from '../Specimen';
 
-/** Components › buttons, icon buttons, badges — the real primitives. */
+/** Components: buttons, icon buttons, badges. */
 const ButtonStory = () => (
   <Box className="dg-stack">
-    <Specimen label="Button tiers" hint="gold primary · green secondary · grey tertiary · ghost · danger — primary & secondary sit next to each other">
+    <Specimen label="Button tiers" hint="gold primary · green secondary · grey tertiary · ghost · danger. Primary & secondary sit next to each other">
       <Box className="dg-row">
         <Button variant="primary">Primary</Button>
         <Button variant="secondary">Secondary</Button>
@@ -43,7 +43,7 @@ const ButtonStory = () => (
       </Box>
     </Specimen>
 
-    <Specimen label="StatusBadge" hint="draft / mapped / verified — click to cycle">
+    <Specimen label="StatusBadge" hint="draft / mapped / verified. Click to cycle">
       <Box className="dg-row">
         <StatusBadge status="draft" />
         <StatusBadge status="mapped" />

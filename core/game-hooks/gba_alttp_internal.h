@@ -2,8 +2,8 @@
 /**
  * Shared internals for the optional second-cartridge files.
  *
- * The supplement's assets and the room lookup are needed by every part of the feature — room
- * loading, graphics, palettes — so they live here rather than being duplicated per file.
+ * The supplement's assets and the room lookup are needed by every part of the feature (room
+ * loading, graphics, palettes), so they live here instead of being duplicated per file.
  */
 #ifndef ZELDA3_GBA_ALTTP_INTERNAL_H_
 #define ZELDA3_GBA_ALTTP_INTERNAL_H_

@@ -1,12 +1,12 @@
 /* @layer renderer-components @kind hook */
 /**
- * One axis' edit-in-flight — the state around the rules in draft-rules.
+ * One axis' edit-in-flight, the state around the rules in draft-rules.
  *
  * Clamping every keystroke was the other option and it is the wrong one here:
  * with a floor of 10, typing "12" passes through "1", which would snap to "10"
  * and leave the next keystroke building "102". So a keystroke that is already
- * valid goes straight up and anything else waits for the commit — blur or Enter
- * — which clamps it into range or drops it.
+ * valid goes straight up and anything else waits for the commit. Blur or Enter
+ * clamps it into range or drops it.
  */
 import { useCallback, useState } from 'react';
 import { SETTLED, displayValue, resolveTyped, settleDraft } from './draft-rules';

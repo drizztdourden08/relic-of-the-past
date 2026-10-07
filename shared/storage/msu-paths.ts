@@ -17,9 +17,9 @@ const isAudioFile = (name: string): boolean => AUDIO_RE.test(name);
 /**
  * The track number a classic pack's filename ends in, or null when it carries none.
  *
- * Built from AUDIO_EXTENSIONS on purpose. A classic pack has no manifest — the FILENAME is the
- * wiring, so whatever set of formats we accept as audio must be the same set we can read a track
- * number out of. Hardcoding `(pcm|opuz)` here is what made a converted `foo-2.flac` stop being
+ * Built from AUDIO_EXTENSIONS on purpose. A classic pack has no manifest, so the FILENAME does
+ * the wiring, and whatever set of formats we accept as audio must be the same set we can read a
+ * track number out of. Hardcoding `(pcm|opuz)` here is what made a converted `foo-2.flac` stop being
  * track 2: the file was accepted into the pack and then matched nothing, so the slot read empty and
  * the file read unused.
  */

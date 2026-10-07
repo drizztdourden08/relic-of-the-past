@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind types */
 /**
  * The schema every consumer reads. A field is either a leaf or a node with
- * children, uniformly (Composite pattern) — so a filter picker, a column menu
- * and an editor all walk the same recursive structure to any depth.
+ * children, uniformly (Composite pattern). A filter picker, a column menu and an
+ * editor all walk the same recursive structure to any depth.
  *
  * These types are deliberately domain-agnostic: nothing here knows what a
  * collection holds. A caller supplies rows and, optionally, a config diff.
@@ -12,29 +12,29 @@ type FieldKind =
   | 'string'
   | 'number'
   | 'boolean'
-  /** Small closed set of literals — a multi-select control. */
+  /** Small closed set of literals, edited with a multi-select control. */
   | 'enum'
   /** A `<prefix>-<digits>` reference to another collection; the prefix IS the target. */
   | 'idRef'
   /** Element descriptor is carried in `of`. */
   | 'array'
-  /** Has `children` — drills down. */
+  /** Has `children` and drills down. */
   | 'object'
-  /** Variant shapes under one path — `children` is the merged branch set. */
+  /** Variant shapes under one path. `children` is the merged branch set. */
   | 'union'
   /** Honest fallback: read-only, existence operators only. */
   | 'unknown';
 
 /**
- * A display-only reinterpretation of a `number` field's cell — the value
- * itself is never touched, so filtering, sorting and editing all keep working
- * on the plain decimal underneath. `hex4`/`hex2` name the zero-padded width
+ * A display-only reinterpretation of a `number` field's cell. The value itself
+ * is never touched, so filtering, sorting and editing all keep working on the
+ * plain decimal underneath. `hex4`/`hex2` name the zero-padded width
  * (native room ids vs. every other byte-sized game index), not a size limit.
  */
 type NumberFormat = 'hex2' | 'hex4';
 
 interface FieldDescriptor {
-  /** Dot path, e.g. `gameId.roomIndex` — the stable identity used everywhere. */
+  /** Dot path, e.g. `gameId.roomIndex`. This is the stable identity used everywhere. */
   path: string;
   /** Derived from the last segment; a config may override it. */
   label: string;
@@ -45,22 +45,22 @@ interface FieldDescriptor {
   options?: readonly string[];
   /**
    * idRef: the id prefix shared by every observed value, which names the
-   * collection it points at. A plain string on purpose — this package never
-   * imports a domain type.
+   * collection it points at. A plain string on purpose, because this package
+   * never imports a domain type.
    */
   targetKind?: string;
   /**
    * array: the element descriptor. Its `path` ends in `[]` and is descriptive
-   * only — element paths are not addressable and never appear in `all()`.
+   * only. Element paths are not addressable and never appear in `all()`.
    */
   of?: FieldDescriptor;
-  /** object | union — the recursion lives here. */
+  /** object | union. The recursion lives here. */
   children?: readonly FieldDescriptor[];
   /** Editor fieldset id, attached from the config's `groups`. */
   group?: string;
   /** Config-hidden: still a valid path, just not offered by default. */
   hidden?: boolean;
-  /** number only — see `NumberFormat`. Config-applied, same mechanism as `label`. */
+  /** number only. See `NumberFormat`. Config-applied, same mechanism as `label`. */
   format?: NumberFormat;
 }
 
@@ -79,7 +79,7 @@ interface SchemaConfig {
   hidden?: readonly string[];
   /** Force a kind that inference got wrong. */
   kinds?: Record<string, FieldKind>;
-  /** A `number` field that is really a native game index — display it in hex. */
+  /** A `number` field that is really a native game index, displayed in hex. */
   formats?: Record<string, NumberFormat>;
   /** Initial visible column set. */
   defaultColumns?: readonly string[];

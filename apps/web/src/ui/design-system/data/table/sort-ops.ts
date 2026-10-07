@@ -21,10 +21,10 @@ const setSingleSort = (sort: readonly SortEntry[], path: string): readonly SortE
 
 /**
  * Sets a column to ONE named direction: appends a level when the column is not
- * sorted yet, and rewrites the direction in place — keeping its rank — when it
+ * sorted yet, and rewrites the direction in place (keeping its rank) when it
  * is. Unlike `appendSort` this never flips, because the caller has already said
  * which way it wants; that is what lets a menu offer "ascending" and
- * "descending" as two separate choices rather than one toggle.
+ * "descending" as two separate choices instead of one toggle.
  */
 const setSortDir = (
   sort: readonly SortEntry[],

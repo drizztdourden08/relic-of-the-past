@@ -3,32 +3,32 @@
 
 Every file in the repo is tagged and analyzed by one harness: **`npm run analyze`**
 (`scripts/analyze/analyze.mjs`). This is the single source of truth for project
-health across **all** languages — not just the eslint-able ones.
+health across **all** languages, including the ones eslint cannot read.
 
 ## Tags
 
 Each file carries two tags:
 
-- `@layer` — architectural zone (e.g. `renderer-components`, `shared-game`,
+- `@layer`: architectural zone (e.g. `renderer-components`, `shared-game`,
   `bridge-wasm`, `electron-main`, `core-game-hooks`, `core-zelda3`, `tooling-scripts`).
-- `@kind` — what the file *is*: `data` · `logic` · `component` · `hook` · `types` ·
+- `@kind`: what the file *is*, `data` · `logic` · `component` · `hook` · `types` ·
   `style` · `constants` · `barrel` · `generated` · `test` · `config` · `build` ·
   `doc` · `native` · `asset`.
 
 ### Two tag channels (precedence: manifest → header → heuristic)
 
-1. **In-file header** — for any file that can hold a comment:
+1. **In-file header:** for any file that can hold a comment:
 
    ```ts
    /* @layer shared-input @kind data */
    ```
 
    (CSS/C use `/* */`, Markdown `<!-- -->`, shell/yaml `#`.)
-2. **Manifest** — `scripts/analyze/file-tags.jsonc` — for files that *can't* hold a
+2. **Manifest:** `scripts/analyze/file-tags.jsonc`, for files that *can't* hold a
    comment (JSON, binaries, asm) and to bulk-tag trees we must not edit (vendored
    `core/zelda3/**`). Manifest entries are authoritative.
 
-Add/refresh headers automatically: **`npm run analyze:tag`** (idempotent — skips
+Add/refresh headers automatically: **`npm run analyze:tag`** (idempotent, so it skips
 files already tagged). New comment-less or vendored files → add a manifest glob.
 
 ## Per-kind policy (`scripts/analyze/policy.mjs`)
@@ -45,17 +45,17 @@ Baseline cap is **200 code lines**; documented variances:
 | **data / generated / asset / doc / config** | **exempt** | (tsc for data) |
 
 *Data is the deliberate exception:* large tables are organized by **category under
-`data/` folders** (or named `*.data.ts`) instead of being held to the logic cap —
-see eslint's data override and the P2 reorg.
+`data/` folders** (or named `*.data.ts`) instead of being held to the logic cap. The
+details are in eslint's data override and the P2 reorg.
 
 **Vendored** `core/zelda3/**` is analyzed but its findings are **hints (info)**,
-never gating — it's an upstream project we don't fully own.
+never gating, because it's an upstream project we don't fully own.
 
-## Tools (Adapter pattern — `scripts/analyze/adapters/`)
+## Tools (Adapter pattern in `scripts/analyze/adapters/`)
 
 `line-policy` (universal, all languages) · `eslint` (TS/JS) · `tsc` · `stylelint`
 (CSS) · `markdownlint` (docs, warn-only) · `clang-format` (our C, *enabled once a
-`.clang-format` exists*). Each tool degrades gracefully if not installed.
+`.clang-format` exists*). Nothing breaks if a tool is not installed.
 
 ## Commands
 

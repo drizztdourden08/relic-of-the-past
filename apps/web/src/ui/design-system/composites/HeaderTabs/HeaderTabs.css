@@ -1,0 +1,42 @@
+/* @layer renderer-components @kind style */
+
+.header-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.header-tabs__tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--c-sunken) 55%, transparent);
+  color: var(--c-text-dim);
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.header-tabs__tab:hover {
+  color: var(--c-text);
+  border-color: var(--c-border-strong);
+}
+
+.header-tabs__tab--active,
+.header-tabs__tab--active:hover {
+  color: var(--c-gold-bright);
+  border-color: var(--c-gold);
+  background: var(--c-gold-soft);
+}
+
+.header-tabs__badge {
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--c-text-muted);
+}
+
+.header-tabs__tab--active .header-tabs__badge {
+  color: var(--c-gold);
+}

@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind component */
 /**
- * UnavailableControllerNotice — explains an unavailable device and offers
- * both remedies on the same card, since the API can prove the device is
- * connected and unclaimed but can't prove why: another process might hold
- * it (Steam is the common case) or the mapping database might not know it.
+ * Explains an unavailable device and offers both remedies on the same card,
+ * since the API can prove the device is connected and unclaimed but can't
+ * prove why: another process might hold it (Steam is the common case) or the
+ * mapping database might not know it.
  */
 import { Box } from '../../../../design-system/primitives/Box';
 import { Text } from '../../../../design-system/primitives/Text';

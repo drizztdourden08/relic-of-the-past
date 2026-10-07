@@ -26,7 +26,7 @@ ItemSwitchLR = 0
 TurnWhileDashing = 0
 CollectItemsWithSword = 0
 DisableLowHealthBeep = 0
-SkipIntroOnKeypress = 0
+SkipIntroOnKeypress = 1
 DisableTelepathy = 0
 `;
 

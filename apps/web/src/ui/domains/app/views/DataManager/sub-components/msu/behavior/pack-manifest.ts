@@ -1,11 +1,7 @@
 /* @layer renderer-components @kind logic */
 /**
- * Manifest shaping for the editor.
- *
- * A pack with no `pack.json` still has to be editable, previewable and exportable, so the UI
- * works against an *effective* manifest: the pack's own when it has one, otherwise the
- * synthesized single-layer view of its numbered files. Only an explicit save writes one out,
- * which is the moment a pack stops being classic.
+ * The UI works against an *effective* manifest: the pack's own when it has one, otherwise a
+ * synthesized single-layer view of its numbered files. Only an explicit save writes one out.
  */
 import type { MsuLayer, MsuPackManifest, MsuTrackDef } from '@shared/types/msu-manifest';
 import { effectivePackManifest } from '@shared/storage/msu-classic-manifest';
@@ -36,13 +32,7 @@ const withTrackLayers = (
   return { ...manifest, tracks };
 };
 
-/**
- * The layer a slot gets when nothing has described it yet: one body of music, looping.
- *
- * `single` while it holds one file — that is the plain music case and it repeats at the file's own
- * loop point. Several files are a pool the author assembled deliberately, so those get an order that
- * moves between them.
- */
+// The default layer for a slot: `single` with one file (repeats at the file's loop point), sequential with several.
 const bodyLayer = (trackNum: number, files: string[]): MsuLayer => ({
   id: `track-${trackNum}`,
   name: `Track ${trackNum}`,
@@ -51,7 +41,7 @@ const bodyLayer = (trackNum: number, files: string[]): MsuLayer => ({
   volume: 100,
 });
 
-/** Replaces a track's first layer's files — the "assign this file to this slot" edit. */
+/** Replaces a track's first layer's files. This is the "assign this file to this slot" edit. */
 const withTrackFiles = (
   manifest: MsuPackManifest, trackNum: number, files: string[],
 ): MsuPackManifest => {

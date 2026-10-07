@@ -5,9 +5,8 @@ const FEED_REPO = 'relic-of-the-past';
 const FEED_REPO_URL = `https://github.com/${FEED_OWNER}/${FEED_REPO}`;
 
 /**
- * Where the release list is read from. Overridable so the whole update path — fetch,
- * parse, compare, warn — can be pointed at a local fixture server and exercised without
- * publishing anything. Unset in every shipped build.
+ * Where the release list is read from. Overridable so the whole update path can be
+ * pointed at a local fixture server. Unset in every shipped build.
  */
 const API_ORIGIN = process.env.ROTP_UPDATE_API_ORIGIN || 'https://api.github.com';
 
@@ -22,15 +21,13 @@ const FIRST_CHECK_DELAY_MS = 5000;
 
 /**
  * The release index Velopack writes next to each release. The channel suffix is the
- * platform name unless a build passed `--channel`, and everything here uses the
- * default, so a single file lists every installable version.
+ * platform name (no build passes `--channel`), so one file lists every version.
  */
 const FEED_FILE = 'releases.win.json';
 
 /**
- * How many deltas Velopack will chain before it gives up and pulls the whole package.
- * Shared with the size shown in the picker: if these two disagree, the dialog promises
- * an 80 KB download and then fetches 137 MB.
+ * How many deltas Velopack chains before pulling the whole package. Shared with the
+ * size shown in the picker, or the dialog promises 80 KB and fetches 137 MB.
  */
 const MAX_DELTAS = 10;
 

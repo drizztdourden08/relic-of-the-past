@@ -5,7 +5,7 @@ import type { SettingsShellProps } from './SettingsShell.type';
 import './SettingsShell.css';
 
 /**
- * SettingsShell — the canonical "searchable side-nav + scrollable content panel"
+ * The canonical "searchable side-nav + scrollable content panel"
  * layout used by settings-style pages (and the Design Gallery). Generic: the nav
  * is data, the panel is children.
  */

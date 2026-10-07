@@ -1,0 +1,44 @@
+/* @layer store-site @kind style */
+
+/* Four columns; the changes take what is left, the rest fit their content. */
+.version-history {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  column-gap: var(--space-lg);
+}
+
+/* A reviewer's copy adds the actions column. */
+.version-history--actions {
+  grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+}
+
+.version-history__row {
+  display: contents;
+}
+
+.version-history__row > * {
+  padding: var(--space-sm) 0;
+  border-bottom: var(--border-width-thin) solid var(--c-hairline);
+}
+
+.version-history__head > * {
+  color: var(--c-text-muted);
+  font-size: var(--text-xs);
+  letter-spacing: var(--eyebrow-tracking);
+  text-transform: uppercase;
+}
+
+.version-history__semver {
+  color: var(--c-text);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+
+.version-history__num {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.version-history__changes {
+  overflow-wrap: anywhere;
+}

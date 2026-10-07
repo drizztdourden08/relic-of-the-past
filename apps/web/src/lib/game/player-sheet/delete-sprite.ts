@@ -3,7 +3,7 @@
  * Delete a sprite from the library and drop it from every profile that had it selected.
  *
  * A profile's `linkSprite` is only a file name, so removing the file on its own leaves a
- * dangling selection: the boot path logs "not found" and quietly falls back to the stock
+ * dangling selection: the boot path logs "not found" and falls back to the stock
  * sheet, which reads as the setting having changed itself. Putting the setting back to its
  * default at delete time keeps the profile honest about what will actually happen, and a
  * running game still wearing the deleted sheet is returned to stock in the same breath.

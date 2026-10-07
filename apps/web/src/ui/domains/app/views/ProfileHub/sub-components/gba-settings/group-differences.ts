@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-/** Filters and groups the GBA difference catalogue for the settings list — pure data
-  * shaping, no rendering. Groups are emitted in the order declared by GbaGroup so the
+/** Filters and groups the GBA difference catalogue for the settings list. It shapes data
+  * and renders nothing. Groups are emitted in the order declared by GbaGroup so the
   * list reads the same every time regardless of which rows survive the filter. */
 import { GBA_DIFFERENCES } from '@shared/features/gba-differences.data';
 import type { GbaDifference, GbaGroup } from '@shared/features/gba-difference.type';

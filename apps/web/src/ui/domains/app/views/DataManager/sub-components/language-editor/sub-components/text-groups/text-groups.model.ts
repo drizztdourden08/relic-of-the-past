@@ -6,7 +6,7 @@
  *
  * TRANSLATED means the translator wrote something of their own. An override
  * that is missing, blank, or still the exact original leaves the surface drawing
- * the original, so all three read as untranslated — a blank field showing the
+ * the original, so all three read as untranslated. A blank field showing the
  * original as its placeholder would otherwise be counted as work done.
  *
  * The fit is a plain count against a stated budget, not a rendered measurement:
@@ -26,7 +26,7 @@ import type { TextGroup, TextLimit, TextSlot } from '@shared/game/language';
  */
 const ROW_CAP = 200;
 
-/** Everything the caps-only surface can draw. Case is irrelevant — it upper-cases. */
+/** Everything the caps-only surface can draw. Case is irrelevant, since it upper-cases. */
 const CAPS_ALPHABET = /^[a-z0-9 &]*$/i;
 
 /** How a typed value stands against the room it has. */
@@ -81,7 +81,7 @@ const variantFor = (used: number, max: number): ProgressVariant => {
   return 'green';
 };
 
-/** Null for a slot with no stated budget — there is nothing to meter. */
+/** Null for a slot with no stated budget, since there is nothing to meter. */
 const fitOf = (limit: TextLimit, value: string): SlotFit | null => {
   if (limit.kind === 'none') return null;
 

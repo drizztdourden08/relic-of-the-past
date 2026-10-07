@@ -2,9 +2,9 @@
 /**
  * The game's music fades, reproduced on a gain node.
  *
- * The game asks for volume transitions with three control bytes rather than a level: fade
+ * The game asks for volume transitions with three control bytes, not a level: fade
  * out, duck to a low level, and return to full. Each has its own speed, expressed by the
- * original as a per-frame step out of 256 at 60 frames a second — converted here into the
+ * original as a per-frame step out of 256 at 60 frames a second, converted here into the
  * ramp duration Web Audio wants, so a fade takes the same wall-clock time it always did.
  */
 
@@ -15,7 +15,7 @@ const TRANSITIONS: Record<number, { target: number; step: number }> = {
   0xf3: { target: 255, step: 3 },
 };
 
-/** Instant restore used when a track starts, rather than easing in from nothing. */
+/** Instant restore used when a track starts, with no ease in from nothing. */
 const FULL_STEP = 24;
 const FRAMES_PER_SECOND = 60;
 
@@ -40,7 +40,7 @@ const applyFade = (gain: GainNode, now: number, ctrl: number): number => {
   return target;
 };
 
-/** Brings a gain node back to full at the original's fastest step — used when a track starts. */
+/** Brings a gain node back to full at the original's fastest step, used when a track starts. */
 const restoreFull = (gain: GainNode, now: number): void => {
   const seconds = rampSeconds(gain.gain.value, 1, FULL_STEP);
   gain.gain.cancelScheduledValues(now);

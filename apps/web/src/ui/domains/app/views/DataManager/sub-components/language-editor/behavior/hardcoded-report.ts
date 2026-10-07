@@ -1,17 +1,9 @@
 /* @layer renderer-components @kind logic */
 /**
- * The hardcoded-name scan, arranged the way a translator reads it: one group
- * per variable rather than one row per occurrence.
- *
- * A proper noun typically appears dozens of times, and a list of dozens of
- * identical rows is a list nobody audits. Grouping puts the decision where it
- * belongs — "should every mention of this name become a reference" — and keeps
- * the per-line detail available underneath.
- *
- * Near misses are counted, never folded into the group's applicable total. They
- * matched only with case ignored, so applying one would recase a line someone
- * wrote that way on purpose; the group reports them as a sentence and leaves
- * them exactly as they are.
+ * The hardcoded-name scan grouped per variable, not per occurrence: a proper
+ * noun appears dozens of times, and the decision is "should every mention
+ * become a reference". Near misses (case-insensitive matches) are counted but
+ * never applied, since applying one would recase a deliberate line.
  */
 import type { Occurrence, Variable } from '@shared/game/language';
 
@@ -50,11 +42,7 @@ const labelled = (group: HardcodedGroup, variables: Variable[]): HardcodedGroup 
 const countEntries = (occurrences: Occurrence[]): number =>
   new Set(occurrences.map((occurrence) => occurrence.entryId)).size;
 
-/**
- * The scan as groups, most-found first so the biggest win is at the top. A
- * variable with nothing but near misses still appears: "nothing to apply here,
- * and here is why" is the answer a translator came for.
- */
+/** Groups, most-found first. A variable with only near misses still appears, so the reader sees why. */
 const groupHardcoded = (occurrences: Occurrence[], variables: Variable[]): HardcodedGroup[] => {
   const groups = new Map<string, HardcodedGroup>();
 

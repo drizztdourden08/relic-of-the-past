@@ -14,7 +14,7 @@ const TAG_GROUPS = [
   { id: 'ctx', label: 'Context', options: [{ value: 'dark', label: 'dark' }, { value: 'water', label: 'water' }] },
 ];
 
-/** Components › text / number / select / slider inputs. */
+/** Components: text / number / select / slider inputs. */
 const InputStory = () => {
   const [text, setText] = useState('Player');
   const [num, setNum] = useState(3);
@@ -30,7 +30,7 @@ const InputStory = () => {
       <Specimen label="Select" hint="searchable dropdown"><Field label="Bottle contents"><Select value={bottle} options={BOTTLE_OPTIONS} onChange={setBottle} /></Field></Specimen>
       <Specimen label="Slider"><Slider value={vol} min={0} max={100} onChange={setVol} label="Master volume" showValue /></Specimen>
       <Specimen label="RangeInput" hint="raw range input"><RangeInput min={0} max={100} value={range} onChange={e => setRange(Number(e.target.value))} /></Specimen>
-      <Specimen label="TagPicker" hint="grouped multi-select tags — selected = gold"><TagPicker groups={TAG_GROUPS} value={tags} onChange={setTags} /></Specimen>
+      <Specimen label="TagPicker" hint="grouped multi-select tags, selected in gold"><TagPicker groups={TAG_GROUPS} value={tags} onChange={setTags} /></Specimen>
     </Box>
   );
 };

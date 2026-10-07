@@ -1,16 +1,16 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Which background layer a flood starts on. This was derived two different ways
- * — the widget/dumper trusted the live `wasmGetLinkLayer()`, the simulator ran a
- * stair/door/floor heuristic — and the engine's own flood derived it not at all,
+ * Which background layer a flood starts on. This was derived two different ways:
+ * the widget/dumper trusted the live `wasmGetLinkLayer()`, the simulator ran a
+ * stair/door/floor heuristic, and the engine's own flood derived it not at all,
  * silently falling back to layer 0. In a split-level room that made the flood
  * gating every chest/door/NPC target start on the wrong layer while the exit
  * flood started on the right one.
  *
  * One rule, most-authoritative signal first:
  *   1. the live layer bit, when the flood starts where the player actually stands
- *   2. arrival ON an inter-room stair — stairs deposit the player on their own layer
- *   3. arrival through a door — position slots 6-11 are the lower page, and the
+ *   2. arrival ON an inter-room stair, which deposits the player on their own layer
+ *   3. arrival through a door, where position slots 6-11 are the lower page, and the
  *      game keeps the player's level bit across a door transition
  *   4. only layer 1 has floor near the landing (a BG1 border strip)
  */

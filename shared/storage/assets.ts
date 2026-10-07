@@ -62,7 +62,7 @@ const concatBytes = (parts: Uint8Array[]): Uint8Array => {
   return out;
 };
 
-/** Base plus every present sidecar, in append order — the single buffer the core expects. */
+/** Base plus every present sidecar, in append order, as the single buffer the core expects. */
 const load = async (files: FileStore, romFile: string): Promise<Uint8Array | null> => {
   const base = await files.readBytes(basePath(romFile));
   if (!base) return null;
@@ -100,7 +100,7 @@ const readSupplementRoms = async (files: FileStore): Promise<Partial<Record<Asse
 };
 
 /**
- * Every stored language set, with the font pair it bakes with — the extras for
+ * Every stored language set, with the font pair it bakes with. These are the extras for
  * one asset recompile, in the order the set list reports. Reads the EDITED set
  * files, so a translator's saved changes are what lands in the blob; a folder
  * missing either the set payload or its font pair is skipped as incomplete.

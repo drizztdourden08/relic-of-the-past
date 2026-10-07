@@ -1,8 +1,8 @@
 {
   "name": "relic-of-the-past",
-  "version": "0.19.0",
+  "version": "0.20.7",
   "private": true,
-  "description": "Relic of the Past – Electron + React + WASM",
+  "description": "Relic of the Past, built with Electron, React and WASM",
   "author": {
     "name": "drizztdourden_",
     "email": "drizztdourden08@users.noreply.github.com"
@@ -15,6 +15,9 @@
   "main": "dist/electron/main.js",
   "engines": {
     "node": ">=24"
+  },
+  "config": {
+    "emsdk": "5.0.7"
   },
   "scripts": {
     "postinstall": "node scripts/ensure-electron.mjs && node scripts/ensure-sdl3.mjs && npm run vault:sync",
@@ -30,6 +33,7 @@
     "dev": "electron-vite dev",
     "prebuild": "node scripts/ensure-electron.mjs && node scripts/ensure-wasm.mjs && node scripts/ensure-sdl3.mjs",
     "build": "npm run build:win",
+    "logos": "node apps/web/public/logos/build.mjs",
     "msul:icon": "node scripts/build/make-msul-icon.mjs",
     "prebuild:win": "node scripts/ensure-electron.mjs && node scripts/ensure-wasm.mjs && node scripts/ensure-sdl3.mjs && node scripts/build/make-msul-icon.mjs",
     "build:win": "rimraf dist release && electron-vite build && electron-builder --win --dir --config scripts/build/electron-builder.config.js -c.directories.output=release && npm run pack:win",
@@ -39,6 +43,11 @@
     "build:linux": "rimraf dist release && electron-vite build && electron-builder --linux --config scripts/build/electron-builder.config.js -c.directories.output=release",
     "preview": "electron-vite preview",
     "build:web": "vite build --config apps/web/vite.config.ts",
+    "sanctuary:dev": "vite -c apps/sanctuary/vite.config.ts",
+    "sanctuary:api": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON cloud-functions/sanctuary-api/dev-server.mjs",
+    "sanctuary:build": "vite build -c apps/sanctuary/vite.config.ts",
+    "store:dev": "vite -c apps/store/vite.config.ts",
+    "store:build": "vite build -c apps/store/vite.config.ts",
     "assets:android": "cd apps/mobile && npx @capacitor/assets generate --android --iconBackgroundColor=#0f0f12 --splashBackgroundColor=#0f0f12",
     "cap:sync": "npm run build:web && cd apps/mobile && npx cap sync && npx @capacitor/assets generate --android --iconBackgroundColor=#0f0f12 --splashBackgroundColor=#0f0f12",
     "android:open": "cd apps/mobile && npx cap open android",
@@ -48,7 +57,6 @@
     "emulator:start": "node scripts/deploy/push-android.mjs --emulator-only",
     "prepare": "git config core.hooksPath .githooks || true",
     "lint": "tsc --noEmit && eslint .",
-    "gate": "node scripts/copyright-gate/scan.mjs --staged",
     "sync:check": "node scripts/hooks/sync-check/index.mjs",
     "state-format": "node scripts/build/check-state-format.mjs",
     "ci": "npm run lint && npm run state-format && node scripts/analyze/analyze.mjs --ci",
@@ -85,7 +93,9 @@
     "@capawesome/capacitor-file-picker": "^8.0.2",
     "@electron-toolkit/utils": "^4.0.0",
     "@iconify-icons/game-icons": "^1.2.1",
+    "@iconify-icons/logos": "^1.2.37",
     "@iconify-icons/lucide": "^1.2.135",
+    "@iconify-icons/simple-icons": "^1.2.75",
     "@iconify/react": "^6.0.2",
     "@tiptap/core": "^3.30.2",
     "@tiptap/extension-document": "^3.30.2",
@@ -105,6 +115,7 @@
     "react-color": "^2.19.3",
     "react-dom": "^19.2.6",
     "velopack": "^1.2.110-ge826545",
+    "zod": "^3.25.76",
     "zustand": "^5.0.13"
   },
   "devDependencies": {

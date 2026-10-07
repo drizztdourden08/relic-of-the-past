@@ -2,15 +2,14 @@
 /**
  * Linux refresh-rate driver, via the xrandr CLI.
  *
- * No FFI here on purpose. xrandr ships with every X11 desktop, so shelling out costs nothing
- * and avoids binding against a libXrandr whose soname varies by distribution.
+ * No FFI on purpose: xrandr ships with every X11 desktop, and libXrandr's soname varies
+ * by distribution.
  *
- * Wayland is the real limitation: xrandr talks to X11, so under a Wayland session it either
- * reports nothing or only sees XWayland. Rather than guess, an empty rate list is returned and
- * the setting reports itself unavailable. Per-compositor tools (wlr-randr, kscreen-doctor) each
- * speak a different protocol and would each need their own driver.
+ * Wayland is the limitation: xrandr either reports nothing or only sees XWayland, so an
+ * empty rate list is returned and the setting reports itself unavailable. Per-compositor
+ * tools (wlr-randr, kscreen-doctor) would each need their own driver.
  *
- * NOT VERIFIED ON HARDWARE — needs a pass in the Linux VM.
+ * NOT VERIFIED ON HARDWARE. Needs a pass in the Linux VM.
  */
 import { execFileSync } from 'node:child_process';
 import type { DisplayModeDriver } from './types';
@@ -90,7 +89,7 @@ const setRate = (hz: number): boolean => {
   if (!state) return false;
   const result = runXrandr(['--output', state.output, '--mode', state.resolution, '--rate', String(hz)]);
   if (result === null) return false;
-  // xrandr exits 0 even when a rate is quietly rounded, so confirm by reading back.
+  // xrandr exits 0 even when a rate is silently rounded, so confirm by reading back.
   return currentRate() === hz;
 };
 
@@ -103,7 +102,7 @@ const createLinuxDriver = (): DisplayModeDriver => {
     available: ready,
     unavailableReason: ready
       ? ''
-      : 'xrandr could not read this display, which usually means a Wayland session rather than X11',
+      : 'xrandr could not read this display, which usually means a Wayland session instead of X11',
     listRates,
     currentRate,
     setRate,

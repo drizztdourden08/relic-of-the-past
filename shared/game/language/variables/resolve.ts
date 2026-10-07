@@ -3,8 +3,8 @@
  * The ONE expansion, used by both the editor's preview and the bake step so the
  * two can never disagree about what a line will say.
  *
- * A reference to a term or a menu name becomes its literal text in both modes —
- * that text is ours and is packed into the dialogue. A reference to an engine
+ * A reference to a term or a menu name becomes its literal text in both modes.
+ * That text is ours and is packed into the dialogue. A reference to an engine
  * variable is the one thing that differs, because the game performs that
  * substitution itself:
  *
@@ -56,7 +56,7 @@ const engineToken = (key: string, opts: ResolveOptions): Token => (
 /**
  * Rewrites only what the literal expansion cannot handle: an engine reference
  * in either mode, and an already-placed control code in preview mode. Anything
- * else is handed on untouched — including a reference to a key the set does not
+ * else is handed on untouched, including a reference to a key the set does not
  * have, so the missing-key failure stays where it has always been.
  */
 const stage = (token: Token, index: VariableIndex, opts: ResolveOptions): Token => {

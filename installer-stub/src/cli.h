@@ -13,7 +13,7 @@ struct Options {
   // /releases/latest/download resolves to, so testing one needs this.
   std::wstring manifestUrl;
   // Runs the post-install launch against this directory and exits. Exists so the
-  // launch can be proven against a stand-in binary rather than a real install.
+  // launch can be proven against a stand-in binary, with no real install.
   std::wstring selfTestLaunch;
   std::wstring renderPng;
   std::wstring screen;

@@ -1,0 +1,20 @@
+/* @layer renderer-components @kind style */
+
+/* A selectable table puts one checkbox track ahead of the column tracks. */
+.data-table--selectable .data-table__header,
+.data-table--selectable .data-table__row {
+  grid-template-columns: var(--table-select-w) var(--dt-tracks);
+}
+
+.data-table__select {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  cursor: default;
+}
+
+/* The grid takes focus on a row click so Escape can clear; that focus is not a place to show. */
+.data-table--selectable .data-table__scroll:focus {
+  outline: none;
+}

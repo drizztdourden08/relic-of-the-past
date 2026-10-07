@@ -1,10 +1,7 @@
 /* @layer renderer-components @kind logic */
 /**
- * Builds one hover's tooltip data: room context + doors/side-tables resolved
- * ONCE, then `classifyTile` called once per layer that's actually shown (one
- * for single/locked, two for dual). Nothing here re-derives a fact classifyTile
- * already owns — this only assembles its inputs and shapes its outputs into
- * `TooltipLayers` for the presentational tooltip package to render.
+ * Builds one hover's tooltip data: room context and side-tables resolved ONCE, then `classifyTile`
+ * per shown layer. Nothing here re-derives a fact classifyTile already owns.
  */
 import { classifyTile, resolveRoomContext, roomTypeLabel } from '@shared/game/navigation/tile-classification';
 import type { FloodFillResult } from '@shared/game/navigation';
@@ -29,7 +26,7 @@ interface BuildTooltipLayersParams {
   inventoryItems: ArrayLike<number>;
 }
 
-/** True once a layer's own attr or reach carries real content — the dual-mode fallback gate. */
+/** The dual-mode fallback gate. True once a layer's own attr or reach carries real content. */
 const hasContent = (attr: number, reach: ReachState): boolean => attr !== 0x00 || reach !== 0;
 
 const buildTooltipLayers = (params: BuildTooltipLayersParams): { roomTypeLabel: string; layers: TooltipLayers } => {

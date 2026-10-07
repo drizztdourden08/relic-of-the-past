@@ -4,17 +4,17 @@
  *
  * The caret's line is cut in two: what was before the caret stays where it is,
  * what was after it becomes a new line directly below. Nothing about the wait
- * moves — it belongs after the last line of a box, so the SECOND half inherits
+ * moves. It belongs after the last line of a box, so the SECOND half inherits
  * it and the box still ends where the author put it.
  *
  * Everything below the cut then moves down a row, and the codes that say so are
- * derived rather than typed (`pushDown`). How far that reaches is the mode's
+ * derived instead of typed (`pushDown`). How far that reaches is the mode's
  * decision, not this file's:
  *
  * - CONTINUOUS pushes to the end of the entry, past every wait, so a line
  *   inserted in the first box shifts the whole message down one row.
  * - BLOCK pushes only to the end of the caret's own box, and refuses outright
- *   once that box already holds its three rows — the author asked for their
+ *   once that box already holds its three rows. The author asked for their
  *   boxes to be left alone, and silently spilling into the next one is not
  *   leaving them alone.
  * - OFF does nothing at all.
@@ -35,7 +35,7 @@ import type { Caret, StructureContext } from './types';
 /**
  * True for a line with nothing to write: no code, no content, no wait. Such a
  * line leaves no trace in the token stream and would be lost on the way back, so
- * the push has to give it a code — which is also what an author expects, having
+ * the push has to give it a code. That is also what an author expects, having
  * just asked for a blank row.
  */
 const isTraceless = (line: DialogueLineView): boolean => (

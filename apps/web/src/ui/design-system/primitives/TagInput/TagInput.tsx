@@ -2,20 +2,16 @@
 /**
  * A creatable combobox for a list of string values.
  *
- * It searches what already exists first — type, and the panel filters the
- * values handed in as `suggestions` — and by default it never refuses a value
- * that is not there yet, because a real vocabulary grows. The convention check
- * is the same bargain: it flags an entry that does not read `namespace:value`,
- * and commits it anyway.
+ * It searches what already exists first: type, and the panel filters the values
+ * handed in as `suggestions`. By default it never refuses a value that is not
+ * there yet, because a real vocabulary grows. The convention check is the same
+ * bargain: it flags an entry that does not read `namespace:value` and commits
+ * it anyway.
  *
  * `enforce` is the opt-out, for a field where creating a value means creating a
- * RECORD rather than appending a string. There the convention is the record's
- * own shape, so an entry that does not follow it has nowhere to be filed, and
- * the entry refuses it instead of writing something unfilable. Picking an
- * existing value is never refused either way.
- *
- * Knows nothing beyond strings in and strings out. The caller supplies the
- * vocabulary and, if it wants one, the convention.
+ * RECORD instead of appending a string. There the convention is the record's
+ * own shape, so an entry that does not follow it has nowhere to be filed and is
+ * refused. Picking an existing value is never refused either way.
  */
 import { useId } from 'react';
 import { useTagInput } from './behavior/use-tag-input';
@@ -36,7 +32,7 @@ const TagInput = (props: TagInputProps) => {
     validate,
     enforce = false,
     createError,
-    placeholder = 'Add a tag…',
+    placeholder = 'Add a tag...',
     disabled = false,
     label,
     maxSuggestions = DEFAULT_MAX_SUGGESTIONS,
@@ -54,8 +50,8 @@ const TagInput = (props: TagInputProps) => {
   });
   const { popup } = tags;
 
-  // The live convention advice wins while there is one — it is about what is
-  // typed right now. A past creation failure only gets the slot once the entry
+  // The live convention advice wins while there is one, since it is about what
+  // is typed right now. A past creation failure only gets the slot once the entry
   // has nothing more current to say.
   const hintMessage = tags.advice.message ?? tags.createError;
   const hintDanger = tags.blocked || (tags.advice.message == null && tags.createError != null);

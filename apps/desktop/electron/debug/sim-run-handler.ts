@@ -38,7 +38,7 @@ const parseSimRunConfig = (): SimRunConfig | null => {
     if (key === 'slot') config.startSlot = parseInt(value, 10);
     else if (key === 'state') config.stateName = value;
     else if (key === 'target') config.target = value;
-    // `stop` is a check ID (`check-072`), not a check name — the engine's stop
+    // `stop` is a check ID (`check-072`), not a check name. The engine's stop
     // condition compares identities, and 11 dungeons share a "Big Chest".
     else if (key === 'stop') config.stopAtCheckId = isCheckId(value) ? value : null;
     else if (key === 'max') config.maxSteps = parseInt(value, 10);

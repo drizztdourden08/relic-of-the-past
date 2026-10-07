@@ -1,11 +1,8 @@
 /* @layer renderer-components @kind component */
 /**
- * A layer's file pool. Order is meaningful — a sequential loop plays it top to bottom, and the
- * resume snapshot stores an index into it — so reordering is an explicit move rather than a sort.
- *
- * A pool capped at one file says so in words where the add control would be, rather than leaving a
- * greyed-out picker: a disabled control that was live a moment ago reads as a fault, and the reason
- * it went away lives two controls further up the card.
+ * Order matters (sequential loops play top to bottom, the resume snapshot stores an index), so
+ * reordering is an explicit move. A pool capped at one file says so in words instead of showing a
+ * greyed-out picker, since the reason lives two controls further up the card.
  */
 import { useMemo, useState } from 'react';
 import { Box } from '@ds/primitives/Box';
@@ -18,7 +15,7 @@ import { moveItem } from '../../behavior/layer-ops';
 import type { LayerFileListProps } from './LayerFileList.type';
 
 const ONE_FILE_NOTE
-  = 'One file only while the order is Single — that one track repeats on itself. Remove it to '
+  = 'One file only while the order is Single, and that one track repeats on itself. Remove it to '
   + 'choose another, or pick Sequential or Shuffle to play several.';
 
 const LayerFileList = (props: LayerFileListProps) => {
@@ -34,7 +31,7 @@ const LayerFileList = (props: LayerFileListProps) => {
 
   return (
     <Box className="layer-card__files">
-      {files.length === 0 && <Text variant="caption">No files — this layer will not play.</Text>}
+      {files.length === 0 && <Text variant="caption">No files. This layer will not play.</Text>}
       {files.map((name, index) => (
         <Flex key={name} gap="xs" align="center" className="layer-card__file">
           <Text className="layer-card__file-name" title={name}>{index + 1}. {name}</Text>
@@ -66,7 +63,7 @@ const LayerFileList = (props: LayerFileListProps) => {
             <Select
               value={picked}
               options={options}
-              placeholder={options.length > 0 ? 'Add a file…' : 'No other audio in this pack'}
+              placeholder={options.length > 0 ? 'Add a file...' : 'No other audio in this pack'}
               disabled={disabled || options.length === 0}
               searchable
               size="sm"

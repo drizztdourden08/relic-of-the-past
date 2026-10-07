@@ -9,12 +9,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: file: app-sprite:; font-src 'self' data:"
+      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: file: app-sprite: app-debug-capture: https://*.backblazeb2.com; media-src 'self' app-debug-capture:; font-src 'self' data:; connect-src 'self' ws: wss:"
     />
     <title>Relic of the Past</title>
     <!-- Boot splash: painted instantly (no bundle/JS/WASM needed). React replaces
          #root on first render, so the splash tears itself down for free.
-         Desktop no longer relies on this — it has its own splash WINDOW (splash.html)
+         Desktop no longer relies on this. It has its own splash WINDOW (splash.html)
          and keeps this one invisible until the shell settles. It stays for web and
          Android, where nothing else covers the gap before React mounts. -->
     <style>
@@ -49,7 +49,7 @@
   <body>
     <div id="root">
       <div id="boot-splash">
-        <img src="./logos/logo-256.png" alt="" />
+        <img src="./logos/logo/logo-256.png" alt="" />
         <div class="boot-splash__spinner"></div>
       </div>
     </div>

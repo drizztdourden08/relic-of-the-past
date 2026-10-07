@@ -1,0 +1,47 @@
+/* @layer store-site @kind style */
+
+/*
+ * Faint charcoal stripes on a layer of their own, masked to fade out towards all four edges
+ * in a rectangle; the message stays solid. No border, so the empty part reads as space.
+ */
+.empty-state {
+  position: relative;
+  isolation: isolate;
+  padding: var(--space-xl);
+  text-align: center;
+}
+
+.empty-state--banner {
+  min-height: var(--hero-min-h);
+}
+
+.empty-state--row {
+  min-height: var(--shelf-empty-h);
+}
+
+.empty-state::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: repeating-linear-gradient(
+    135deg,
+    var(--c-hover) 0 var(--empty-stripe),
+    transparent var(--empty-stripe) calc(var(--empty-stripe) * 2)
+  );
+  content: '';
+
+  /* A rectangle that fades out along all four edges: a side-to-side fade and a top-to-bottom
+     fade, kept only where both are solid. */
+  mask-image:
+    linear-gradient(90deg, transparent, var(--c-text) var(--empty-fade), var(--c-text) calc(100% - var(--empty-fade)), transparent),
+    linear-gradient(0deg, transparent, var(--c-text) var(--empty-fade), var(--c-text) calc(100% - var(--empty-fade)), transparent);
+  mask-composite: intersect;
+}
+
+/* Two classes, so the text primitive's own colour and size never win on load order. */
+.empty-state .empty-state__message {
+  margin: 0;
+  color: var(--c-gold);
+  font-family: var(--font-game);
+  font-size: var(--text-2xl);
+}

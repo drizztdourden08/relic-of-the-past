@@ -60,7 +60,7 @@ const PlayerSpriteSelector = (props: PlayerSpriteSelectorProps) => {
           );
         })}
       </Box>
-      {loading && <Text className="player-sprite-selector__hint">Loading sprites…</Text>}
+      {loading && <Text className="player-sprite-selector__hint">Loading sprites...</Text>}
     </Box>
   );
 };

@@ -1,16 +1,12 @@
 /* @layer tests @kind test */
 /**
- * PERMANENT (`.keep.spec.ts`) — do not delete with the scratch specs.
+ * PERMANENT (`.keep.spec.ts`). Do not delete with the scratch specs.
  *
- * `test-tag-room` is the kill-gate room: room tag 0x08, "clear enemies → doors
- * open". It is the one place where the whole gated-by-combat story is visible at
- * once — trap shutters that close behind you, a small-key door, and a guard
- * carrying the key.
- *
- * The decoded TAG is the fragile part. A raw byte means nothing to a reader, so
- * the widget names it; if the tag table regresses the room silently looks like an
- * ordinary corridor and the shutters look permanent. This pins the decode, the
- * three barriers, the two triggers and the blessed reachable count together.
+ * `test-tag-room` is the kill-gate room (room tag 0x08, "clear enemies →
+ * doors open"): trap shutters, a small-key door, and a guard carrying the key.
+ * The decoded TAG is the fragile part: if the tag table regresses the room
+ * looks like an ordinary corridor with permanent shutters. Pinned: the decode,
+ * three barriers, two triggers and the reachable count.
  */
 import { test, expect } from '@playwright/test';
 import { withState } from './state-harness';

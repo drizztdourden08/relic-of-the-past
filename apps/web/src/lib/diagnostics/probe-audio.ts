@@ -2,7 +2,7 @@
 /**
  * Audio-device probe. The core's mixer runs inside the wasm module, so instead of
  * reaching into it this opens a short-lived context to read the properties the
- * output device imposes on any context — the sample rate the resampler has to hit
+ * output device imposes on any context. That is the sample rate the resampler has to hit
  * and the buffer latency behind crackle reports.
  */
 import type { AudioDiagnostics } from './types';

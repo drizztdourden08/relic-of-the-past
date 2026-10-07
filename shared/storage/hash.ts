@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-/** SHA-256 via Web Crypto — works in the renderer/Worker on every platform. */
+/** SHA-256 via Web Crypto, so it works in the renderer/Worker on every platform. */
 
 const sha256Hex = async (bytes: Uint8Array): Promise<string> => {
   const digest = await crypto.subtle.digest('SHA-256', bytes as BufferSource);

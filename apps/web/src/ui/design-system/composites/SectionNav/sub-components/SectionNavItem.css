@@ -1,0 +1,82 @@
+/* @layer renderer-components @kind style */
+
+/* One nav entry. Labels and chevrons appear only while the nav is open. */
+.section-nav__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  width: 100%;
+  height: var(--section-nav-item-h);
+  flex-shrink: 0;
+  padding: 0 var(--space-sm) 0 calc((var(--section-nav-item-h) - var(--text-xl)) / 2); /* icon in the search mark's column */
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+  background: none;
+  color: var(--c-text-dim);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.section-nav__icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  font-size: var(--text-xl);
+  color: var(--c-gold);
+  opacity: 0.8;
+  transition: opacity var(--transition-fast), filter var(--transition-fast);
+}
+
+.section-nav__label {
+  display: none;
+  flex: 1;
+  min-width: 0;
+  font-size: var(--text-base);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.section-nav__chevron {
+  display: none;
+  flex-shrink: 0;
+  color: var(--c-text-muted);
+}
+
+.section-nav--open .section-nav__label,
+.section-nav--open .section-nav__chevron {
+  display: block;
+}
+
+.section-nav__item:hover {
+  background: var(--c-hover);
+}
+
+.section-nav__item:hover .section-nav__icon {
+  opacity: 1;
+}
+
+/* Active: gold edge, soft glow, and the icon itself lit. */
+.section-nav__item--active,
+.section-nav__item--active:hover {
+  border-color: var(--c-gold);
+  background: var(--c-gold-soft);
+  box-shadow: 0 0 var(--space-md) var(--c-gold-soft), inset 0 0 var(--space-sm) var(--c-gold-soft);
+  color: var(--c-gold-bright);
+}
+
+.section-nav__item--active .section-nav__icon {
+  color: var(--c-gold-bright);
+  opacity: 1;
+  filter: drop-shadow(0 0 var(--blur-glow) var(--c-gold));
+}
+
+.section-nav__item--active .section-nav__label {
+  font-weight: var(--weight-semi);
+}
+
+.section-nav__item--active .section-nav__chevron {
+  color: var(--c-gold);
+}

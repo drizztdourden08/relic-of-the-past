@@ -1,10 +1,8 @@
 /* @layer renderer-hud @kind data */
 /**
- * PauseItemGrid — the Y-button item grid (5 columns × 4 rows = 20 slots).
- * Enclosed in a green border box with the Y-button indicator.
- *
- * Game layout: tiles (1,5)→(19,19) = 19×15 tiles
- * Inner grid: 5 items × 4 rows, each item is 2×2 tiles with 1-tile gaps.
+ * The Y-button item grid (5 columns × 4 rows = 20 slots) in a green border box
+ * with the Y-button indicator. Game layout: tiles (1,5)→(19,19) = 19×15 tiles;
+ * each item is 2×2 tiles with 1-tile gaps.
  */
 import { HudBox } from '../../primitives/HudBox';
 import { PauseBorderBox } from '../../primitives/PauseBorderBox';
@@ -21,11 +19,7 @@ interface PauseItemGridProps {
   style?: React.CSSProperties;
 }
 
-/**
- * The item grid is 5 columns wide. The game uses a 19×15 tile box.
- * Items are arranged in a 5×4 grid with spacing.
- * Visual order = sequential save-RAM indices 0-19.
- */
+/** Visual order = sequential save-RAM indices 0-19. */
 const PauseItemGrid = ({ items, selectedIndex, staticSelection, scale, spritesBase, style }: PauseItemGridProps) => {
   const tile = 8 * scale;
   const innerCols = 17;
@@ -39,7 +33,7 @@ const PauseItemGrid = ({ items, selectedIndex, staticSelection, scale, spritesBa
         <PauseButtonLabel button="y" scale={scale} spritesBase={spritesBase} />
       </HudBox>
 
-      {/* Item grid: 5 cols × 4 rows — positioned to match SNES BG3 layout */}
+      {/* Item grid of 5 cols × 4 rows, positioned to match the SNES BG3 layout */}
       <HudBox style={{
         display: 'grid',
         gridTemplateColumns: `repeat(5, ${tile * 2}px)`,

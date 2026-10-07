@@ -4,7 +4,7 @@
  * used by the connection audit as ground truth. Indoors pulls the exit map,
  * stair/walk/travel tables and fall holes; outdoors uses the flood's border
  * crossings PLUS the overworld entrances (doors) and fall holes on the current
- * area — the flood alone omits interior doors and fall holes. Flood
+ * area, because the flood alone omits interior doors and fall holes. Flood
  * connections are included so the audit refreshes on re-flood.
  */
 

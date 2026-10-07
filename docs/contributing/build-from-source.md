@@ -5,8 +5,8 @@
 
 - Node.js ≥ 24 (see [`.nvmrc`](https://github.com/drizztdourden08/relic-of-the-past/blob/master/.nvmrc)).
 - A legally obtained *A Link to the Past* ROM, supplied at runtime and kept out of commits.
-- Emscripten SDK (Windows; the repo expects it at `E:\GameProjects\emsdk` or `$EMSDK`). The WASM core
-  is gitignored rather than committed. `npm run dev` / `npm run build` auto-build it on first run, and
+- Emscripten SDK (Windows; at `third_party/emsdk` in the main checkout, or `$EMSDK`; version pinned in `package.json`). The WASM core
+  is gitignored, not committed. `npm run dev` / `npm run build` auto-build it on first run, and
   again whenever C under `core/` changes, via the `ensure-wasm` pre-step. See
   [Building the WASM Core](building-wasm.md).
 
@@ -15,19 +15,39 @@
 ```bash
 npm install          # install deps; auto-fetches the Electron binary (ensure-electron)
 npm run dev          # electron-vite dev server + Electron (auto-builds WASM if missing/stale)
-npm run build        # production build (electron-vite) — also auto-builds WASM
+npm run build        # production build (electron-vite), auto-builds WASM too
 npm run build:win    # packaged build (see package.json for :mac / :linux)
 ```
 
 `npm install` runs `ensure-electron` (re-fetches Electron's native binary if a bare `node_modules`
-left it out), and `dev`/`build` run `ensure-wasm` first — a fast mtime check that rebuilds the WASM
-core only when it's missing or a C source changed. Force a WASM rebuild with `npm run ensure-wasm`.
+left it out), and `dev`/`build` run `ensure-wasm` first. That is a fast mtime check, and it rebuilds the
+WASM core only when it's missing or a C source changed. Force a WASM rebuild with `npm run ensure-wasm`.
 
 For testing, always launch so the app never steals focus or makes noise:
 
 ```bash
 npm run dev -- -- --no-focus --muted
 ```
+
+## Local ports
+
+Every local server the project runs sits in one fixed block of ports. The base and each role
+are defined once, in `shared/config/ports.constants.ts`; nothing else writes a port number.
+
+| Offset | Role |
+|---|---|
+| +0 | the app's renderer dev server (`npm run dev`) |
+| +1 | reserved for a component catalogue |
+| +2 | the Sanctuary site (`npm run sanctuary:dev`) |
+| +3 | the Sanctuary API (`npm run sanctuary:api`), which the site proxies `/api` to |
+| +4 | a static file server, for testing install manifests |
+| +5 | the mGBA Lua socket tracer |
+| +6 to +9 | free for other project tools |
+
+A worktree can carry a `.rotp-port-slot` file holding a slot number N (or set
+`ROTP_PORT_SLOT`); the whole block then moves up by 10 x N, so two checkouts never ask for
+the same port. The main checkout is slot 0. The dev servers use `strictPort`, so a port
+already in use stops them with an error instead of moving them somewhere unexpected.
 
 ## Quality gate
 
@@ -63,23 +83,22 @@ Path aliases: `@shared/*` → `shared/`, `@app/*` → `apps/web/src/`. See the
 
 ## The private companion repository (optional)
 
-Some material this project uses is derived from the original game and therefore is not
-in this repository: the record dataset (screens, connections, checks, items, actors and
-the rest of `shared/game/data/records/`), the named save states the end-to-end tests
-load, and the blessed navigation baselines. Those live in a separate **private**
-repository and are copied into place on demand.
+Some material this project uses is derived from the original game and is not tracked in
+this repository: the named save states the end-to-end tests load. Those live in a
+separate **private** repository and are copied into place on demand. The record dataset
+itself is not one of them: `shared/game/data/records/` (screens, connections, checks,
+items, actors and the rest) is an ordinary tracked directory in this repository, and
+needs no access to the private one.
 
-**You do not need it.** Without access:
+**You do not need the private repository.** Without access:
 
-- the app builds and runs,
+- the app builds and runs, with the full record dataset already in place,
 - `npm run lint` and the unit tests pass,
-- the dataset is empty, so the map, checks and navigation views have nothing to show,
-- the unit suites that assert on real records report as *skipped*,
 - the end-to-end tests that need a save state report as *skipped*.
 
 The private repository is a **sibling checkout**, not something this repository clones.
 Put it beside this one as `../rotp-vault`, or point `ROTP_VAULT_DIR` at it. Inside it,
-one folder — `tree/` — mirrors this repository's own paths, so a file at
+the `tree/` folder mirrors this repository's own paths, so a file at
 `tree/shared/game/data/records/areas.ts` lands at `shared/game/data/records/areas.ts`.
 The path is the whole mapping; there is nothing else to configure, and anything the
 vault keeps outside `tree/` is never touched.
@@ -92,11 +111,11 @@ Sync runs **both ways**. It indexes both sides by content, compares them against
 state recorded by the last run, and applies every change that is unambiguous: a file
 edited only here is written to the vault, a file edited only there is written to your
 checkout, and a deletion on either side is carried across. Anything edited on *both*
-sides since the last sync is a conflict — reported, and left alone. Writes into the
+sides since the last sync is a conflict, so it is reported and left alone. Writes into the
 vault are committed there on its current branch; pushing them onward is left to you.
 
 It also runs automatically after `npm install`, and is a no-op with a single line of
-output when you have no access — it never fails a build. To see what would change
+output when you have no access, and it never fails a build. To see what would change
 without writing anything:
 
 ```bash

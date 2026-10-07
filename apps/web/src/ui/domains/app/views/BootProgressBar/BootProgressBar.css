@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind style */
 
-/* Fixed bottom track — spans the viewport, floats above app content. */
+/* Fixed bottom track spanning the viewport, above app content. */
 .boot-bar {
   position: fixed;
   inset: auto 0 0;
@@ -30,7 +30,7 @@
   white-space: nowrap;
 }
 
-/* Gold fill grows L→R; clips the black duplicate label to its width. */
+/* Gold fill grows left to right; clips the black duplicate label to its width. */
 .boot-bar__fill {
   position: absolute;
   inset: 0 auto 0 0;
@@ -62,5 +62,5 @@
 
 @keyframes boot-bar-sweep {
   0%   { transform: translateX(-100%); }
-  100% { transform: translateX(285.7%); } /* (100/35)*100 — travel full width */
+  100% { transform: translateX(285.7%); } /* (100/35)*100 to cross the full width */
 }

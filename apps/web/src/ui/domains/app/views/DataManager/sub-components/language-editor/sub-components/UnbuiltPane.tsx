@@ -4,12 +4,12 @@
  *
  * These tabs are real: they read the shipped text, measure it against the room
  * each surface actually has, and keep what is typed. What they do NOT do is
- * change anything a player would see — nothing here is baked into the assets or
+ * change anything a player would see. Nothing here is baked into the assets or
  * read by the menu. Left unmarked that is indistinguishable from a bug, so the
  * pane says it twice: once in a notice that stays readable, and once as a scrim
  * over the surface itself, which also takes the surface out of the tab order.
  *
- * Kept visible rather than hidden for the same reason the widget locks are: the
+ * Kept visible, not hidden for the same reason the widget locks are: the
  * shape of the work is worth seeing while it is being decided.
  */
 import { Box, Text } from '@ds/primitives';

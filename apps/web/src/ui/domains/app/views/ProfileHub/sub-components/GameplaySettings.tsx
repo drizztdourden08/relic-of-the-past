@@ -2,6 +2,7 @@
 import type { GameSettings } from '@shared/types/settings';
 import { SettingsLayout } from '../../../compounds/SettingsLayout';
 import { openVanillaSafeSettings } from '@app/stores/search-store';
+import { DEFAULT_SETTINGS } from '@app/lib/game/settings';
 import { SECTIONS } from './gameplay-settings-sections';
 import { renderControl, isDisabled } from './gameplay-settings-controls';
 
@@ -16,6 +17,7 @@ const GameplaySettings = (props: GameplaySettingsProps) => {
     <SettingsLayout
       sections={SECTIONS}
       settings={settings}
+      defaults={DEFAULT_SETTINGS}
       onChange={onChange}
       renderControl={renderControl}
       isDisabled={isDisabled}

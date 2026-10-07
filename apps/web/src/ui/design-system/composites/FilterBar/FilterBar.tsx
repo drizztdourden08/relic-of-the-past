@@ -1,74 +1,46 @@
 /* @layer renderer-components @kind component */
 /**
- * The clause list for one schema: a FilterClauseCard per clause plus a
- * trailing "+ Add filter" button, laid out as a wrapping row of small cards
- * rather than one full-width line each — a filter is a small thing, and half a
- * dozen of them should read as half a dozen small things.
+ * One filter surface for a list of rows: a permanent free-text search, an
+ * optional schema-driven clause list, and optional enumerated facets. The
+ * search box is a fixed part of the bar, not something callers bolt on
+ * beside it, so every screen that filters rows offers the same control in the
+ * same place.
  *
- * FilterBar only ever produces and consumes
- * plain FilterClause values through onChange — filters are data, and the
- * compiled predicate belongs to whoever renders the filtered rows, one layer
- * up (see data/filter/clause.ts's `compile`).
- *
- * A clause whose path the current schema no longer has (dropped by a schema
- * change) is skipped rather than rendered broken; pruning that clause out of
- * persisted state is a view-state concern, not this component's.
+ * The bar only ever reports state: the query through onSearchChange, plain
+ * FilterClause values through onChange, a facet toggle through the facet's own
+ * handler. Filters are data; the compiled predicates belong to whoever renders
+ * the filtered rows, one layer up (data/filter/clause.ts's `compile` for the
+ * clauses, data/filter/text-search.ts's `compileTextSearch` for the query).
  */
-import { useCallback, useMemo } from 'react';
 import { Box } from '../../primitives/Box';
-import { toSchemaIndex } from '../../data/schema/build-schema';
-import { addClause, removeClause, updateClauseById } from './behavior/clause-list';
-import { valueForOperatorChange } from './behavior/filter-clause-defaults';
-import { AddFilterButton } from './sub-components/AddFilterButton';
-import { FilterClauseCard } from './sub-components/FilterClauseCard';
+import { TextInput } from '../../primitives/TextInput';
+import { FacetPicker } from './sub-components/FacetPicker';
+import { FilterClauseList } from './sub-components/FilterClauseList';
 import type { FilterBarProps } from './FilterBar.type';
-import type { FilterClause } from '../../data/filter/clause';
 import './FilterBar.css';
 
 const FilterBar = (props: FilterBarProps) => {
-  const { schema, clauses, onChange } = props;
-  const index = useMemo(() => toSchemaIndex(schema), [schema]);
-  const filteredPaths = useMemo(() => clauses.map((clause) => clause.path), [clauses]);
-
-  const updateClause = useCallback((id: string, patch: Partial<FilterClause>) => {
-    onChange(updateClauseById(clauses, id, patch));
-  }, [clauses, onChange]);
-
-  const handleOperatorChange = useCallback((clause: FilterClause, nextOp: string) => {
-    const field = index.byPath(clause.path);
-    const nextValue = field
-      ? valueForOperatorChange({ kind: field.kind, previousOp: clause.op, nextOp, currentValue: clause.value })
-      : clause.value;
-    updateClause(clause.id, { op: nextOp, value: nextValue });
-  }, [index, updateClause]);
-
-  const handleRemove = useCallback((id: string) => {
-    onChange(removeClause(clauses, id));
-  }, [clauses, onChange]);
-
-  const handleAdd = useCallback((clause: FilterClause) => {
-    onChange(addClause(clauses, clause));
-  }, [clauses, onChange]);
+  const {
+    search, onSearchChange, searchPlaceholder = 'Search...', searchLabel = 'Search',
+    schema, clauses, onChange, facets, className,
+  } = props;
 
   return (
-    <Box className="filter-bar">
-      {clauses.map((clause) => {
-        const field = index.byPath(clause.path);
-        if (!field) return null;
-        return (
-          <FilterClauseCard
-            key={clause.id}
-            field={field}
-            clause={clause}
-            onChangeOperator={(nextOp) => handleOperatorChange(clause, nextOp)}
-            onChangeValue={(value) => updateClause(clause.id, { value })}
-            onChangeCaseSensitive={(caseSensitive) => updateClause(clause.id, { caseSensitive })}
-            onToggleEnabled={(enabled) => updateClause(clause.id, { enabled })}
-            onRemove={() => handleRemove(clause.id)}
-          />
-        );
-      })}
-      <AddFilterButton schema={index} excludePaths={filteredPaths} onAdd={handleAdd} />
+    <Box className={`filter-bar${className ? ` ${className}` : ''}`}>
+      <TextInput
+        type="text"
+        className="filter-bar__search"
+        placeholder={searchPlaceholder}
+        value={search}
+        onChange={(e) => onSearchChange(e.target.value)}
+        aria-label={searchLabel}
+      />
+      {schema !== undefined && clauses !== undefined && onChange !== undefined && (
+        <FilterClauseList schema={schema} clauses={clauses} onChange={onChange} />
+      )}
+      {facets?.map((facet) => (
+        <FacetPicker key={facet.id} facet={facet} />
+      ))}
     </Box>
   );
 };

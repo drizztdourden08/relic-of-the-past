@@ -4,7 +4,7 @@
  *
  * Two things travel together and must never disagree: the gate bit that hands a channel over,
  * and the mask of ids taken over on it. A channel the settings switch off publishes an empty
- * mask AND a cleared gate, so the core cannot report it at all — the app is not merely ignoring
+ * mask AND a cleared gate, so the core cannot report it at all. The app is not merely ignoring
  * those events, it never receives them.
  *
  * A gate is armed only when the pack actually authors something on that channel. An armed gate
@@ -15,7 +15,7 @@ import { manifestSoundIds, soundClaimMask, SOUND_CHANNELS } from '../msu/sound-c
 import { setExternalAmbient, setExternalSfx } from './bridge/host-gates';
 import { clearSoundClaims, setSoundClaim } from './bridge/sound-claim';
 
-/** Whether each group of channels may be replaced at all — both false under Vanilla Safe. */
+/** Whether each group of channels may be replaced at all. Both false under Vanilla Safe. */
 interface SoundReplacement {
   ambient: boolean;
   sfx: boolean;

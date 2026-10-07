@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 /**
- * Profile management for InputManager — the saved-profile list, the active-profile
+ * Profile management for InputManager, covering the saved-profile list, the active-profile
  * change subscription, and the profile-cycle shortcut. Operates on the instance
  * (like input-manager-{lifecycle,events}); the class exposes thin delegators.
  */
@@ -38,7 +38,7 @@ const cycleActiveProfile = (m: InputManager, direction: 1 | -1): void => {
   for (const fn of m.activeProfileListeners) {
     try { fn(next); } catch { /* ignore */ }
   }
-  // The mapped device set just changed — pause if the new profile's controller is
+  // The mapped device set just changed, so pause if the new profile's controller is
   // absent, or resume if it's now present.
   m.reevaluateControllerPresence();
 };

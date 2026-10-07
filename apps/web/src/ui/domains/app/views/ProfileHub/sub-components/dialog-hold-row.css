@@ -1,0 +1,8 @@
+/* @layer renderer-components @kind style */
+
+/* The toggle and its speed slider share the row: each takes half, the slider never collapses. */
+.dialog-hold-row > .toggle,
+.dialog-hold-row > .slider {
+  flex: 1 1 0;
+  min-width: 0;
+}

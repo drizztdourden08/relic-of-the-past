@@ -12,14 +12,14 @@ import { orDash, yesNo } from './units';
 
 // Chromium reports the colour space as a braced struct; the braces add nothing
 // once it is inside a parenthesised clause.
-const colorSpace = (raw: string): string => raw.replace(/[{}]/g, '').trim() || '—';
+const colorSpace = (raw: string): string => raw.replace(/[{}]/g, '').trim() || '-';
 
 const displayLines = (display: DisplayDiagnostics, index: number): string[] => {
   const tags = [display.primary && 'primary', display.internal ? 'internal' : 'external', display.monochrome && 'monochrome']
     .filter(Boolean)
     .join(', ');
   return [
-    `${index + 1}. ${display.label} — ${tags}`,
+    `${index + 1}. ${display.label} - ${tags}`,
     `   Native ${display.nativeSize.width}×${display.nativeSize.height}`
       + ` @ ${display.refreshHz ? `${display.refreshHz} Hz` : 'unreported Hz'}`
       + ` · scale ${display.scaleFactor}× · rotation ${display.rotation}°`,

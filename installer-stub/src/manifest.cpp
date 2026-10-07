@@ -23,8 +23,8 @@ const wchar_t kManifestUrl[] = ROTP_MANIFEST_URL;
 
 namespace {
 
-// The document has a known, tiny shape, so rather than a general object model
-// this walks the text directly: find a member, take the span of its value, and
+// The document has a known, tiny shape, so there is no general object model.
+// This walks the text directly: find a member, take the span of its value, and
 // recurse into the two nesting levels the schema actually uses.
 size_t SkipWs(const std::string& s, size_t i) {
   while (i < s.size() && (s[i] == ' ' || s[i] == '\t' || s[i] == '\r' || s[i] == '\n')) ++i;

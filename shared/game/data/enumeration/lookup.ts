@@ -25,9 +25,9 @@ const labelOf = (category: EnumerationCategory, value: string): string | undefin
 
 /**
  * Adds an entry the allocator minted after seeding, so the session answers for
- * it without a reload — the same bargain `registerTag`/`registerItemGroupRecord`
- * make on their own collections. Ignored when the id is already registered,
- * which a genuinely new allocation never is.
+ * it without a reload. `registerTag` and `registerItemGroupRecord` make the same
+ * bargain on their own collections. Ignored when the id is already registered,
+ * which a new allocation never is.
  */
 const registerEnumerationRecord = (record: EnumerationEntry): boolean => {
   if (byId.has(record.id)) return false;
@@ -43,10 +43,10 @@ const registerEnumerationRecord = (record: EnumerationEntry): boolean => {
 
 /**
  * Folds an edited record back in once its write has already landed on disk, so
- * a relabel resolves in the session without a reload — the same bargain
- * `replaceItemGroupRecord`/`replaceTagRecord` make on their own collections.
+ * a relabel resolves in the session without a reload. `replaceItemGroupRecord`
+ * and `replaceTagRecord` make the same bargain on their own collections.
  * The category/value pair can change along with the label, so the old
- * `byCategoryAndValue` entry is dropped rather than left to shadow the new one.
+ * `byCategoryAndValue` entry is dropped instead of left to shadow the new one.
  */
 const replaceEnumerationRecord = (record: EnumerationEntry): boolean => {
   const existing = byId.get(record.id);

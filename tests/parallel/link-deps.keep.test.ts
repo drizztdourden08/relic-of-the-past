@@ -1,19 +1,17 @@
 /* @layer test @kind test */
 /**
  * Regression test for the most dangerous operation in the worktree tooling.
+ * A worktree used to share the record dataset with the main repo through a
+ * junction, and `git worktree remove --force` walks INTO a junction and
+ * deletes what it points at (it emptied the real .claude once). Links must be
+ * detached first, WITHOUT touching contents.
  *
- * A worktree shares the record dataset with the main repo through a directory junction.
- * `git worktree remove --force` walks INTO a junction and deletes what it points at:
- * verified, it emptied the real .claude (skills, tools, settings) back when that was
- * linked too. So the links must be detached first, and detaching must remove the link
- * WITHOUT touching its contents.
- *
- * .claude is COPIED now, precisely because of that incident, so it is no longer the
- * subject here. This exercises whatever LINKED_DIRS actually holds, which is the record
- * dataset; pointing the test at a directory the tooling no longer links would leave the
- * dangerous operation untested while still looking green.
- *
- * These tests use a throwaway target; they never point a link at a real repo directory.
+ * .claude is COPIED now because of that incident, and the record dataset is an
+ * ordinary tracked directory that no longer needs linking at all (see
+ * LINKED_DIRS in link-deps.mjs, now empty). The mechanism itself stays for the
+ * next gitignored-but-regenerable directory that needs it, so this exercises
+ * it with a synthetic linked-dir name passed explicitly, not through the
+ * (now empty) production LINKED_DIRS.
  */
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { mkdirSync, writeFileSync, existsSync, rmSync, readdirSync, symlinkSync } from 'node:fs';
@@ -26,7 +24,7 @@ import { assertNoSharedLinks, unlinkSharedDirs } from '../../scripts/parallel/li
 const ROOT = join(tmpdir(), 'rotp-link-deps-test');
 const TARGET = join(ROOT, 'shared-target');
 const WORKTREE = join(ROOT, 'worktree');
-const LINKED_NAME = 'shared/game/data/records';
+const LINKED_NAME = 'example-linked-dir';
 const LINK = join(WORKTREE, LINKED_NAME);
 const CANARY = join(TARGET, 'screens', 'canary.md');
 
@@ -43,13 +41,13 @@ beforeEach(() => {
   rmSync(ROOT, { recursive: true, force: true });
   mkdirSync(join(TARGET, 'screens'), { recursive: true });
   writeFileSync(CANARY, 'precious\n');
-  mkdirSync(join(WORKTREE, 'shared', 'game', 'data'), { recursive: true });
+  mkdirSync(WORKTREE, { recursive: true });
   makeLink();
 });
 
 afterEach(() => {
   // Detach before cleaning up, or the cleanup itself is the hazard under test.
-  unlinkSharedDirs(WORKTREE);
+  unlinkSharedDirs(WORKTREE, [LINKED_NAME]);
   rmSync(ROOT, { recursive: true, force: true });
 });
 
@@ -57,7 +55,7 @@ describe('unlinkSharedDirs', () => {
   it('removes the link and leaves the shared contents untouched', () => {
     expect(existsSync(join(LINK, 'screens', 'canary.md'))).toBe(true);
 
-    unlinkSharedDirs(WORKTREE);
+    unlinkSharedDirs(WORKTREE, [LINKED_NAME]);
 
     expect(existsSync(LINK)).toBe(false);
     expect(existsSync(CANARY)).toBe(true);
@@ -65,8 +63,8 @@ describe('unlinkSharedDirs', () => {
   });
 
   it('is safe to call when no links are present', () => {
-    unlinkSharedDirs(WORKTREE);
-    expect(() => unlinkSharedDirs(WORKTREE)).not.toThrow();
+    unlinkSharedDirs(WORKTREE, [LINKED_NAME]);
+    expect(() => unlinkSharedDirs(WORKTREE, [LINKED_NAME])).not.toThrow();
   });
 });
 
@@ -76,11 +74,11 @@ describe('assertNoSharedLinks', () => {
   });
 
   it('names the directory that would be destroyed', () => {
-    expect(() => assertNoSharedLinks(WORKTREE)).toThrow(/records/);
+    expect(() => assertNoSharedLinks(WORKTREE)).toThrow(/example-linked-dir/);
   });
 
   it('passes once the links are detached', () => {
-    unlinkSharedDirs(WORKTREE);
+    unlinkSharedDirs(WORKTREE, [LINKED_NAME]);
     expect(() => assertNoSharedLinks(WORKTREE)).not.toThrow();
   });
 });

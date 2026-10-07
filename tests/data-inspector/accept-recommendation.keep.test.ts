@@ -1,16 +1,12 @@
 /* @layer tests @kind test */
 /**
- * Accepting a finding routes to the CRUD verb its action names, and closes out
- * in a fixed order: write, then stamp the review layer, then record the verdict.
+ * Accepting a finding routes to the CRUD verb its action names, in a fixed
+ * order: write, stamp the review layer, record the verdict. A verdict before
+ * the write would mark a finding done that nobody applied, so a refused write
+ * leaves both untouched and the finding open.
  *
- * The order is the point of most of these. A verdict recorded before the write
- * would mark a finding done that nobody applied; a review stamp before the
- * write would date a change that never happened. So a refused write must leave
- * both untouched and the finding still open.
- *
- * The five collaborators are mocked because each of them really writes: the
- * creators, writers and deleters go through the screen-editor IPC channels to
- * source files on disk, and the cache goes to the recommendation store.
+ * The five collaborators are mocked because each really writes to disk or
+ * the recommendation store.
  */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Recommendation } from '@shared/game/recommendations';
@@ -70,7 +66,7 @@ beforeEach(() => {
   mocks.decide.mockReset().mockResolvedValue(undefined);
 });
 
-describe('acceptRecommendation — one verb per action', () => {
+describe('acceptRecommendation uses one verb per action', () => {
   it('mints a record for a create, and reports the id that was allocated', async () => {
     const entry = finding({ action: 'create', targetId: null, current: null, proposed: { value: 'cavern' } });
     const outcome = await acceptRecommendation(entry, { value: 'cavern' });
@@ -89,8 +85,8 @@ describe('acceptRecommendation — one verb per action', () => {
     expect(mocks.remove).not.toHaveBeenCalled();
   });
 
-  // The store reconciles on targetId, so that is the identity the write is
-  // keyed by — never whatever id the proposal happens to be carrying.
+  // The store reconciles on targetId, so the write is keyed by that identity
+  // and not by whatever id the proposal happens to be carrying.
   it('keys an update by the target, not by the id on the proposal', async () => {
     await acceptRecommendation(finding(), { id: 'tag-999', value: 'cavern' });
     expect(mocks.write).toHaveBeenCalledWith({ id: 'tag-001', value: 'cavern' });
@@ -103,13 +99,13 @@ describe('acceptRecommendation — one verb per action', () => {
     expect(mocks.write).not.toHaveBeenCalled();
   });
 
-  it('writes the amended proposal rather than the detector\'s original', async () => {
+  it('writes the amended proposal instead of the detector\'s original', async () => {
     await acceptRecommendation(finding(), { id: 'tag-001', value: 'grotto' });
     expect(mocks.write).toHaveBeenCalledWith({ id: 'tag-001', value: 'grotto' });
   });
 });
 
-describe('acceptRecommendation — closing out', () => {
+describe('acceptRecommendation closing out', () => {
   it('stamps the review layer and records the verdict once the write lands', async () => {
     await acceptRecommendation(finding(), { id: 'tag-001', value: 'cavern' });
     expect(mocks.markWritten).toHaveBeenCalledWith('tag', 'tag-001');
@@ -133,7 +129,7 @@ describe('acceptRecommendation — closing out', () => {
     expect(mocks.decide).not.toHaveBeenCalled();
   });
 
-  it('reports a thrown write as a failure rather than taking the screen down', async () => {
+  it('reports a thrown write as a failure instead of taking the screen down', async () => {
     mocks.write.mockRejectedValue(new Error('the file is read-only'));
     const outcome = await acceptRecommendation(finding(), { id: 'tag-001' });
 

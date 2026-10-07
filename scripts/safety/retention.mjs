@@ -1,15 +1,8 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * Keeping the snapshot branches from piling up, without ever pruning to nothing.
- *
- * Two rules, and the second always wins: drop anything older than KEEP_DAYS, but keep at
- * least KEEP_MIN regardless of age. A run of operations in one sitting must not be able
- * to age out the snapshot taken before that sitting started, which is the one you would
- * actually want when something went wrong an hour ago.
- *
- * Deletion is `update-ref -d`, which names the exact ref and cannot be talked into
- * touching something that merely looks similar. (`branch -D` would not work here anyway:
- * these refs deliberately do not live under refs/heads.)
+ * Snapshot retention: drop anything older than KEEP_DAYS, but keep at least KEEP_MIN
+ * regardless of age. Deletion is `update-ref -d`, which names the exact ref
+ * (`branch -D` would not work: these refs are not under refs/heads).
  */
 import { execFileSync } from 'node:child_process';
 import { repoRoot } from '../parallel/paths.mjs';
@@ -34,10 +27,7 @@ const listSnapshots = () => {
   });
 };
 
-/**
- * Which snapshots the rules would remove. Split out from the deleting so the CLI can
- * show the decision before acting, and so it is testable without side effects.
- */
+/** Which snapshots the rules would remove. Pure, so the CLI can show the decision first. */
 const selectExpired = (snapshots, { keepMin = KEEP_MIN, keepDays = KEEP_DAYS } = {}) => {
   const kept = snapshots.slice(0, keepMin);
   const rest = snapshots.slice(keepMin);

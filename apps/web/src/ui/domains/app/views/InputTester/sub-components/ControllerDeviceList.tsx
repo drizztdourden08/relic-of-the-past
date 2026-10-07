@@ -1,10 +1,5 @@
 /* @layer renderer-components @kind component */
-/**
- * ControllerDeviceList — renders the SDL3 controller snapshot: a rich live
- * card for each ready single device, a compact explain+remedy card for each
- * unavailable device, and one grouped card per adapter. SDL3 is the only
- * controller transport now, so every group here is shown exactly once.
- */
+// SDL3 is the only controller transport now, so every group here is shown exactly once.
 import { useMemo } from 'react';
 import type { ControllerInputState, DeviceStickCalibration } from '../../../../../../lib/input/controller-input-store';
 import type { ControllerDeviceGroup } from '../../../../../../lib/input/controller-device-groups';
@@ -31,10 +26,7 @@ const ControllerDeviceList = (props: ControllerDeviceListProps) => {
     onStickCalibrationComplete, onTriggerCalibrationComplete, onAddMapping, onReportDevice,
   } = props;
 
-  // Resolved once per device, keyed off `groups`, which only changes on a
-  // real snapshot update (see useControllerDevices), rather than recomputed
-  // on every render this list gets from a `controllerStates` tick (up to 60/s
-  // while the screen is open).
+  // Keyed off `groups` (changes only on a snapshot update), not on every `controllerStates` tick (up to 60/s).
   const resolvedByKey = useMemo(() => {
     const map = new Map<string, ResolvedDevice>();
     for (const group of groups) {

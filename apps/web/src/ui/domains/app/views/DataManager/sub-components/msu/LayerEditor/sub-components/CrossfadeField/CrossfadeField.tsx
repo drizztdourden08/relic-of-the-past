@@ -1,16 +1,8 @@
 /* @layer renderer-components @kind component */
 /**
- * How long one pass of a looping layer overlaps the next: the outgoing file fades out while the
- * incoming one fades in over this window.
- *
- * It is a framed block with its own heading, an exact seconds box beside the slider, and the state
- * spelled out in words — not a bare slider. A lone slider at its default of zero draws no fill at
- * all, which put an empty grey line directly under the identical-looking Volume slider: the
- * setting was on screen and still could not be found. The number box also lets a value be typed,
- * since half-second steps are coarse for a musical overlap.
- *
- * Zero is a different behaviour rather than a short crossfade, so it is named ("no overlap")
- * instead of reading as an unset control.
+ * Crossfade window of a looping layer. Framed block with a number box and a state label, not a
+ * bare slider: a slider at zero draws no fill and was invisible under the Volume slider. Zero is
+ * "no overlap", a distinct behaviour, so it is named instead of reading as unset.
  */
 import { Badge } from '@ds/primitives/Badge';
 import { Box } from '@ds/primitives/Box';
@@ -22,17 +14,14 @@ import { MAX_CROSSFADE_SECONDS } from '@shared/types/msu-manifest';
 import { CROSSFADE_HINT, CROSSFADE_LABEL } from '../PlayModeFields/PlayModeFields.constants';
 import type { CrossfadeFieldProps } from './CrossfadeField.type';
 
-/**
- * Snapped to hundredths. Tenths were too coarse once the arrows moved by a quarter second, which
- * lands on .25 and .75 — rounding those to a tenth silently moved the value the arrow just set.
- */
+// Hundredths: the arrows step by .25, and rounding .25/.75 to a tenth moved the value just set.
 const clamp = (value: number): number => {
   if (!Number.isFinite(value)) return 0;
   return Math.round(Math.max(0, Math.min(MAX_CROSSFADE_SECONDS, value)) * 100) / 100;
 };
 
 const stateOf = (seconds: number): string =>
-  (seconds === 0 ? 'Off — no overlap, hard cut' : `${seconds.toFixed(2)}s of overlap`);
+  (seconds === 0 ? 'Off, so one pass cuts straight into the next' : `${seconds.toFixed(2)}s of overlap`);
 
 const CrossfadeField = (props: CrossfadeFieldProps) => {
   const { seconds, layerId, disabled = false, onChange } = props;

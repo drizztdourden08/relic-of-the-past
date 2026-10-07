@@ -22,9 +22,9 @@ There's no live profile switch while you're playing. To use another profile, sto
 
 ## What profiles are good for
 
-- **Casual vs. speedrun** — different bindings and HUD for each.
-- **Different languages** — an English profile and a French one sharing the same ROM.
-- **MSU experiments** — try music packs without touching your main setup.
+- **Casual vs. speedrun:** different bindings and HUD for each.
+- **Different languages:** an English profile and a French one sharing the same ROM.
+- **MSU experiments:** try music packs without touching your main setup.
 
 ## Isolation
 

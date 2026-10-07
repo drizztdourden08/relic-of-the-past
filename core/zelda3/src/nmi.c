@@ -32,21 +32,18 @@ static const uint16 kHudTiles_Magic[] = {
 };
 #define kHudTiles_Magic_Count (sizeof(kHudTiles_Magic) / sizeof(kHudTiles_Magic[0]))
 
-// Item box tiles — the 0x20f5 "empty" background plus all possible
-// item icon tiles. Rather than listing 100+ item tiles, we use a
-// simpler rule: the item box occupies known positions (37,38,69,70)
-// so any non-0x207f tile at those positions is an item tile.
-// We still list the empty-item background tile for value matching.
-static const uint16 kHudTiles_Item[] = {
-  0x20f5, // empty item background
-};
-#define kHudTiles_Item_Count (sizeof(kHudTiles_Item) / sizeof(kHudTiles_Item[0]))
+// Item box: matched by POSITION, not by value. The icon is one of ~100 2x2 quads
+// drawn by Hud_DrawItem, and several of their tiles (0x20f5, 0x24f5) double as plain
+// background elsewhere — a value list would both miss icons and hit non-icons. The
+// box occupies four fixed slots, so anything drawn there is the icon by definition.
+// See kHudItemBoxPositions below.
 
 // "— LIFE —" text tiles (from kHudTilemapRightPart row 0)
 // Plus heart tiles (full, half, empty container)
 static const uint16 kHudTiles_Life[] = {
   0x288b, 0x288f, 0x24ab, 0x24ac, 0x688f, 0x688b, // LIFE text
   0x24A2, 0x24A1, 0x24A0, // heart: full, half, empty
+  0x24A3, 0x24A4,         // heart refill animation frames (kAnimHeartPartial)
 };
 #define kHudTiles_Life_Count (sizeof(kHudTiles_Life) / sizeof(kHudTiles_Life[0]))
 
@@ -56,12 +53,14 @@ static const uint16 kHudTiles_Counters[] = {
   0x3ca8, 0x2c88, 0x2c89, 0x20a7, 0x20a9, 0x2871,
   // Bow slot indicators
   0x2486, 0x2487,
-  // Digits 0-9 in normal palette
-  0x2400, 0x2401, 0x2402, 0x2403, 0x2404,
-  0x2405, 0x2406, 0x2407, 0x2408, 0x2409,
+  // Digits 0-9 in normal palette. Hud_IntToDecimal (hud.c) hands back digit + 0x90 and
+  // Hud_Update_Inventory ORs that into the base tile, so a drawn digit is base | 0x9d,
+  // never base | 0x0d — the blank below is the same form with 0x7f.
+  0x2490, 0x2491, 0x2492, 0x2493, 0x2494,
+  0x2495, 0x2496, 0x2497, 0x2498, 0x2499,
   // Digits 0-9 in yellow (max reached) palette
-  0x3400, 0x3401, 0x3402, 0x3403, 0x3404,
-  0x3405, 0x3406, 0x3407, 0x3408, 0x3409,
+  0x3490, 0x3491, 0x3492, 0x3493, 0x3494,
+  0x3495, 0x3496, 0x3497, 0x3498, 0x3499,
   // Blank digit
   0x247f,
 };
@@ -70,6 +69,15 @@ static const uint16 kHudTiles_Counters[] = {
 // Item box known positions (HUDXY(5,1), HUDXY(6,1), HUDXY(5,2), HUDXY(6,2))
 static const uint8 kHudItemBoxPositions[] = { 37, 38, 69, 70 };
 
+// Two things the value lists above deliberately do NOT carry, both verified against a live
+// hud_tile_indices_buffer dump rather than read off the source tables:
+//   - 0x2871 appears in the left-part tilemap at the meter's interior AND as the small-key
+//     icon in the counter row. It is not in kHudTiles_Magic because Hud_Update_Magic always
+//     overwrites that cell with a fill-level tile inside the same Hud_Rebuild call, so the
+//     value only ever reaches the buffer at a counter position. Adding it to the magic list
+//     would make hiding the counters erase a meter tile.
+//   - The floor / super-bomb indicator (Hud_FloorIndicator, positions 121/122/153/154) has no
+//     category of its own, so only HUD_HIDE_ALL removes it.
 // Check if a tile value should be hidden given the active mask.
 static bool Nmi_ShouldHideTile(uint16 tile, int position) {
   if (tile == 0x207f)
@@ -277,8 +285,9 @@ static const uint16 kPauseTiles_Text[] = {
   0x2C01, 0x2C18, 0x2C28,  // "A" "X" "0x28" graphics in ability row 7
   // Equipment header tiles "EQUIP"
   0x2479, 0x247A, 0x247B, 0x247C, 0x248C,
-  // Dungeon items header "D.ITEMS"
-  0x2469, 0x246A, 0x246B, 0x246C, 0x246D,
+  // Dungeon items header "D.ITEMS" — the last two tiles are the same pair the item-grid
+  // section marker uses, so they also appear in kPauseTiles_UI.
+  0x2469, 0x246A, 0x246B, 0x246C, 0x246D, 0x246E, 0x246F,
 };
 #define kPauseTiles_Text_Count (sizeof(kPauseTiles_Text) / sizeof(kPauseTiles_Text[0]))
 

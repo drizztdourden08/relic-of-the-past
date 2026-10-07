@@ -17,7 +17,7 @@ const parseDialogueText = (text: string): DialogueLine[] => {
   return lines;
 };
 
-/** Just the content strings, ordered by id — ready to feed back to compressStrings. */
+/** Just the content strings, ordered by id and ready to feed back to compressStrings. */
 const dialogueTexts = (text: string): string[] => {
   return parseDialogueText(text).map((l) => l.content);
 };

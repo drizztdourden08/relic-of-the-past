@@ -4,7 +4,7 @@
  *
  * A line is closed by whatever comes next: the following advance code, a
  * wait-for-button, or the end of the entry. So a code is always the FIRST thing
- * in a line and a wait is always the LAST — which is why neither needs to sit
+ * in a line and a wait is always the LAST. That is why neither needs to sit
  * inline in the editor as a labelled chip.
  *
  * Nothing is normalised. An advance is stored as it was read, so a row marker
@@ -16,7 +16,7 @@
  *
  * - A row marker parks the pen at that row, so the line's row is the marker's.
  * - A scroll parks the pen on the BOTTOM row, so a scrolled line is row 3
- *   whatever came before it — including the irregular case of a scroll while the
+ *   whatever came before it, including the irregular case of a scroll while the
  *   pen was still on row 1, where the box shifts the earlier rows off the top.
  * - A wait starts the next box, and a box begins at row 1. The pen itself is not
  *   moved by a wait, so a line with no code of its own is reported at row 1 by
@@ -58,7 +58,7 @@ const splitDrafts = (tokens: Token[]): LineDraft[] => {
     }
 
     // Opened lazily: a line only exists once something lands on it, so a wait
-    // followed by a row marker yields one line rather than an empty one first.
+    // followed by a row marker yields one line instead of an empty one first.
     if (open === null) open = emptyDraft(null);
 
     if (isWaitToken(token)) {

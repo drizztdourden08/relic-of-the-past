@@ -4,9 +4,9 @@
  *
  * The caret is addressed by line across the whole entry, because that is what an
  * editor's gutter counts and what `DialogueLineView.index` already means. Every
- * edit here needs the same three things from it — the box, where the box starts,
- * and how many lines it holds — so the walk is done once, in one place, and an
- * out-of-range caret is answered with null rather than a clamped guess.
+ * edit here needs the same three things from it: the box, where the box starts,
+ * and how many lines it holds. So the walk is done once, in one place, and an
+ * out-of-range caret is answered with null instead of a clamped guess.
  */
 import type { BlockDoc } from '../blocks/types';
 import type { Caret } from './types';

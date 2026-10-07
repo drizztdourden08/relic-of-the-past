@@ -48,7 +48,7 @@ const StopAtCheckFilters = (props: StopAtCheckFiltersProps) => {
       <TextInput
         type="text"
         className="stop-picker__search"
-        placeholder="Search checks…"
+        placeholder="Search checks..."
         value={filter.searchQuery}
         onChange={(e) => onFilterChange({ ...filter, searchQuery: e.target.value })}
       />

@@ -35,6 +35,10 @@ extern double g_frame_accumulator;
 extern double g_last_frame_time;
 void SetVsyncMode(bool enable);
 int StepsOwedThisTick(void);
+// Turbo: a configured speed (percent of real time, 100 = off) applied while the shortcut is held.
+void SetTurboSpeed(int percent);
+void SetTurboHeld(bool held);
+double TurboFactor(void);
 
 // ── Audio (defined in emscripten_main.c) ──
 extern uint8 *g_audiobuffer, *g_audiobuffer_cur, *g_audiobuffer_end;

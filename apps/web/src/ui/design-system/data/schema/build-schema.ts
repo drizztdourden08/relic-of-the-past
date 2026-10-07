@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 /**
  * The schema Builder: derive from the data, then layer the config as a DIFF.
- * The config never removes what derivation found — it relabels, reorders,
+ * The config never removes what derivation found. It relabels, reorders,
  * hides, re-kinds and re-groups it. Anything the config does not mention keeps
  * exactly what the data said.
  */

@@ -3,8 +3,8 @@ import type { FieldDescriptor, SchemaConfig } from '../../data/schema/field-desc
 
 /**
  * The baseline name for a reference field's id, with no per-field display
- * choice to speak of — this view has no column configuration at all, so this
- * is the only display substitution it offers. `targetKind` is a hint, not a
+ * choice to speak of. This view has no column configuration at all, so this is
+ * the only display substitution it offers. `targetKind` is a hint, not a
  * requirement: omitted or unresolvable, the caller is expected to fall back
  * to reading the kind off the id's own prefix (see `defaultIdRefDisplay`).
  */
@@ -13,7 +13,7 @@ type CompactIdRefResolver = (id: string, targetKind?: string) => string | undefi
 /**
  * Structurally satisfied by the comparison engine's `Difference`
  * (`shared/game/recommendations/compare/difference.types.ts`), declared
- * locally so this package keeps importing no domain type — same bargain
+ * locally so this package keeps importing no domain type, the same bargain
  * `targetKind` above already makes for a field's reference target. A widget
  * that already has a real `Difference` passes its map straight in; nothing
  * here needs to know that type exists.
@@ -28,7 +28,7 @@ interface CompactRecordViewProps<T> {
   record: T;
   /** Top-level fields; nesting lives in each field's own `children`, same as RecordEditor. */
   schema: readonly FieldDescriptor[];
-  /** A diff over the derived schema — layout works fully without it. */
+  /** A diff over the derived schema. Layout works fully without it. */
   config?: SchemaConfig;
   /**
    * An optional allow-list, as group ids (from the derived layout) or individual
@@ -40,8 +40,8 @@ interface CompactRecordViewProps<T> {
   groups?: readonly string[];
   /**
    * Shows a reference field's target name instead of its raw id. Omitted, a
-   * reference reads as its id — exactly how this view behaved before it had
-   * a resolver to ask.
+   * reference reads as its id, exactly how this view behaved before it had a
+   * resolver to ask.
    */
   resolveIdRefDisplay?: CompactIdRefResolver;
   /**
@@ -54,13 +54,13 @@ interface CompactRecordViewProps<T> {
 }
 
 interface CompactFieldProps {
-  /** The whole record — every field path, nested or not, reads off this directly. */
+  /** The whole record. Every field path, nested or not, reads off this directly. */
   record: unknown;
   field: FieldDescriptor;
   /** 0 at the top level; a nested object/union's own children sit one deeper. */
   depth: number;
   resolveIdRefDisplay?: CompactIdRefResolver;
-  /** Threaded straight through recursion — see `CompactRecordViewProps.diffs`. */
+  /** Threaded straight through recursion. See `CompactRecordViewProps.diffs`. */
   diffs?: ReadonlyMap<string, FieldDifference>;
 }
 

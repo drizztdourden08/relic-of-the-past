@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
- * Every live reference to a deletable record, read off the registry rather
- * than re-imported from source data files by hand — the same "read every
+ * Every live reference to a deletable record, read off the registry instead
+ * of re-imported from source data files by hand. It is the same "read every
  * record of kind X off the store" shape `find`/`all` already use (facade.ts),
  * so this stays correct as the data changes instead of drifting from a second,
  * hand-maintained list.
@@ -12,9 +12,9 @@
  * onto the same table below.
  *
  * Only the fields real records carry TODAY are walked. A `tags` array is
- * read defensively (optional chaining) rather than assumed present, so a kind
- * whose `tags` field is optional and often absent (e.g. `CheckRecord.tags` —
- * only the content family populates it) is skipped rather than crashed on.
+ * read defensively (optional chaining) instead of assumed present, so a kind
+ * whose `tags` field is optional and often absent (e.g. `CheckRecord.tags`,
+ * which only the content family populates) is skipped, not crashed on.
  */
 import { all } from '../registry';
 import {
@@ -33,7 +33,7 @@ const requirementUsesGroup = (req: Requirement, groupId: string): boolean => {
 };
 
 /** `record.tags` is a branded `readonly TagId[]`; the id being searched for is a plain
- *  runtime string (same rationale as the facade's getters — see facade.ts). */
+ *  runtime string (same rationale as the facade's getters in facade.ts). */
 const carriesTag = (tags: readonly string[] | undefined, id: string): boolean => tags?.includes(id) ?? false;
 
 const referencesToTag = (id: string): ReferenceHit[] => {
@@ -77,7 +77,7 @@ const referencesToItemGroup = (id: string): ReferenceHit[] => {
 /**
  * The reverse index, one entry per collection that can be deleted.
  *
- * A table rather than a chain of ternaries: eight kinds answer here now, the
+ * A table, not a chain of ternaries: eight kinds answer here now, the
  * six newer ones live in dataset-references.ts, and a kind that gains a delete
  * path later adds a row instead of another branch. `ReferenceTarget` is what
  * the delete-guard narrows against, so a kind with no entry cannot be asked.

@@ -15,15 +15,15 @@ const ROWS = [
   { id: 'cave', name: 'Mysterious Cave' },
 ];
 const SHELLS = [
-  'SettingsShell — the shell you are viewing now (SideNav + scrollable panel).',
-  'MasterDetailLayout — two-column list / detail.',
-  'WizardDialogShell — multi-step modal (Screen & Connection editors).',
-  'DropdownMenu — anchored popup menu (the title-bar menu).',
-  'Widget — draggable floating widget frame.',
-  'Toast — transient notifications (bottom corner).',
+  'SettingsShell: the shell you are viewing now (SideNav + scrollable panel).',
+  'MasterDetailLayout: two-column list / detail.',
+  'WizardDialogShell: multi-step modal (Screen & Connection editors).',
+  'DropdownMenu: anchored popup menu (the title-bar menu).',
+  'Widget: draggable floating widget frame.',
+  'Toast: transient notifications (bottom corner).',
 ];
 
-/** Components › composites (live where inline-able, documented for shells/overlays). */
+/** Components: composites (live where inline-able, documented for shells/overlays). */
 const CompositeStory = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [navId, setNavId] = useState('audio');
@@ -66,7 +66,7 @@ const CompositeStory = () => {
         </Box>
       </Specimen>
 
-      <Specimen label="Shell & overlay composites" hint="full-page / portal — shown live in the app, not inline">
+      <Specimen label="Shell & overlay composites" hint="full-page / portal, shown live in the app instead of inline">
         <Box className="dg-stack-sm">
           {SHELLS.map(s => <Text key={s} className="dg-doc">{s}</Text>)}
         </Box>

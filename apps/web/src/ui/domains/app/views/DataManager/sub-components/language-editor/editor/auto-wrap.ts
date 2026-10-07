@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 /**
- * Wrapping while you type — the editor's half of "the author never thinks about
- * the row".
+ * Wrapping while you type. This is the editor's half of "the author never thinks
+ * about the row".
  *
  * The engine never wraps: a row drawn past its 168px interior is drawn into the
  * next row's tiles. So the wrap happens here, live. After every change, the
@@ -11,9 +11,9 @@
  * advance. The pass repeats until nothing is overlong, so a long paste settles
  * in one transaction.
  *
- * A single word or variable wider than a whole row has no safe cut — cutting
- * it would change what it says — so it is left whole for the validator to flag,
- * and `breakLine` answering null there is also what keeps this loop finite.
+ * A single word or variable wider than a whole row has no safe cut, since
+ * cutting it would change what it says, so it is left whole for the validator to
+ * flag. `breakLine` answering null there is also what keeps this loop finite.
  *
  * The wait travels with the text: wrapping a line that ended its box moves the
  * wait onto the remainder, because the words that moved down still finish the

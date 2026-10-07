@@ -14,7 +14,7 @@ if ! command -v node >/dev/null 2>&1; then
   [ -n "${NODE_BIN:-}" ] && export PATH="$NODE_BIN:$PATH"
 fi
 command -v node >/dev/null 2>&1 || {
-  echo "[build-in-vm] Node not found — run scripts/deploy/setup-vm-builder.sh first." >&2
+  echo "[build-in-vm] Node not found. Run scripts/deploy/setup-vm-builder.sh first." >&2
   exit 1
 }
 echo "[build-in-vm] node $(node -v), npm $(npm -v)"

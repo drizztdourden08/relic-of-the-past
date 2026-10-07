@@ -4,17 +4,17 @@
  * the game.
  *
  * Typing wraps at the row's real width, rows number themselves, a full box
- * scrolls, and a wait is a property of a line rather than a thing to type --
+ * scrolls, and a wait is a property of a line, not a thing to type --
  * all of that lives in the schema's plugins. What remains here is chrome, and
  * as little of it as possible: one icon toolbar, the surface, and a quiet
  * status line that names the caret's box and row the way a word processor
  * counts pages.
  *
- * The font is reachable by the node view at ITS render time rather than handed
+ * The font is reachable by the node view at ITS render time instead of handed
  * over once at build time: the node view is built once per extension list and
  * the pack's font is read from disk asynchronously, so a value captured there
  * would stay null for good. Same story for the automation mode, which the
- * structure plugins read from the live runtime rather than a captured prop.
+ * structure plugins read from the live runtime, not a captured prop.
  */
 import { useEffect, useMemo, useRef } from 'react';
 import { EditorContent } from '@tiptap/react';

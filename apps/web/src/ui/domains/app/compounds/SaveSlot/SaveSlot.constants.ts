@@ -1,14 +1,32 @@
 /* @layer renderer-components @kind constants */
 
-/* Floppy-disk (save) glyph paths, 16-unit viewBox. */
-const SAVE_ICON_PATHS = [
-  'M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4.414A1 1 0 0 0 14.707 4L12 1.293A1 1 0 0 0 11.293 1H2zm0 1h1v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V2.414L14 5.414V14H2V2zm3 0v3h4V2H5z',
+/* Open-folder glyph: load a state out of the slot. */
+const LOAD_GLYPH = '📂';
+
+/* Floppy-disk glyph: write the running game into the slot. */
+const SAVE_GLYPH = '💾';
+
+/* How long an armed action waits for its confirming click. */
+const ARM_TIMEOUT_MS = 3000;
+
+/* "No screenshot", drawn as two layers so the cancel ring can carry its own colour and sit
+   clearly on top of the frame. Coordinates are chosen so the COMBINED ink of both layers is
+   centred on the 16-unit grid: the frame alone sits left, the ring alone sits low-right. */
+const NO_SCREENSHOT_FRAME_PATHS = [
+  'M2.8 1.9h7A1.4 1.4 0 0 1 11.2 3.3v5A1.4 1.4 0 0 1 9.8 9.7H2.8A1.4 1.4 0 0 1 1.4 8.3V3.3A1.4 1.4 0 0 1 2.8 1.9Z',
+  'M2 8.5l2.2-2.2 1.5 1.5 1.6-1.6 2.5 2.5',
 ];
 
-/* Download (load) glyph paths, 16-unit viewBox. */
-const LOAD_ICON_PATHS = [
-  'M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z',
-  'M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z',
-];
+/* The sun inside the frame. */
+const NO_SCREENSHOT_FRAME_CIRCLES = [{ cx: 4.1, cy: 4.4, r: 0.85 }];
 
-export { SAVE_ICON_PATHS, LOAD_ICON_PATHS };
+/* The cancel ring's slash; the ring itself is the circle below. */
+const NO_SCREENSHOT_CANCEL_PATHS = ['M8.8 8.3l4.8 4.8'];
+
+const NO_SCREENSHOT_CANCEL_CIRCLES = [{ cx: 11.2, cy: 10.7, r: 3.4 }];
+
+export {
+  LOAD_GLYPH, SAVE_GLYPH, ARM_TIMEOUT_MS,
+  NO_SCREENSHOT_FRAME_PATHS, NO_SCREENSHOT_FRAME_CIRCLES,
+  NO_SCREENSHOT_CANCEL_PATHS, NO_SCREENSHOT_CANCEL_CIRCLES,
+};

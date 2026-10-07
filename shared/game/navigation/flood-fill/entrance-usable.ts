@@ -3,8 +3,8 @@
  * Whether a flooded entrance is one Link can actually USE.
  *
  * Reaching an entrance's transition is not enough: the tile it sits on may still
- * demand an item Link doesn't hold (the classic case is a staircase buried under
- * a rock that needs the Power Glove — flooded, visible, and not usable). The
+ * demand an item the player doesn't hold (the classic case is a staircase buried
+ * under a rock that needs the lifting glove: flooded, visible, not usable). The
  * simulator applied this test; the widget, minimaps and overlay each carried a
  * weaker copy that only asked "did any transition mention this entrance id?", so
  * they advertised entrances the flood itself considered unusable.

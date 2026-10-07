@@ -7,7 +7,7 @@
  * guess wearing a number's clothes. A fixed slice is really encoded, and its bytes-per-second
  * is scaled to the file's own duration.
  *
- * A file shorter than the slice IS the slice, so its estimate is not scaled at all — it is
+ * A file shorter than the slice IS the slice, so its estimate is not scaled at all. It is
  * the exact size the conversion will produce.
  */
 import { rm, stat } from 'fs/promises';

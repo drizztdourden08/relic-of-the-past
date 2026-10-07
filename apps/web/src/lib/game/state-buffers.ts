@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Save states held in memory rather than on disk — capture the live state into a buffer, and
- * push a buffer back into the core. The simulator and the manual/auto save flows work this way;
+ * Save states held in memory, not on disk: capture the live state into a buffer, and push a
+ * buffer back into the core. The simulator and the manual/auto save flows work this way;
  * quick slots go through save-states.ts.
  */
 
@@ -11,6 +11,8 @@ import { getModule } from './wasm-bridge';
 import { isCoreReady } from './core-ready';
 import { pollInventoryState } from './tracker';
 import { reassertLiveFlagsAfterLoad } from './live-settings';
+import { requestLocationRebaseline } from './randomizer-client/location-poller';
+import { useDialogStore } from '../../stores/dialog-store';
 
 /** Scratch slot for buffers that never touch disk. Written, read by the core, then unlinked. */
 const SCRATCH_SLOT = 98;
@@ -33,9 +35,9 @@ const captureStateBuffer = (slot = SCRATCH_SLOT): ArrayBuffer | null => {
 
 /**
  * Load a previously-captured state buffer, re-asserting live settings and refreshing the
- * tracker. Mirrors loadState() for buffers not on disk — synchronous, so unlike loadState it
- * cannot wait out a boot: callers reach it through ensureGameRunning() or already hold a live
- * core. A core that is not ready says so rather than returning a quiet false.
+ * tracker. Mirrors loadState() for buffers not on disk. It is synchronous, so unlike loadState
+ * it cannot wait out a boot: callers reach it through ensureGameRunning() or already hold a live
+ * core. A core that is not ready is logged as such, never answered with a quiet false.
  */
 const loadStateFromBuffer = (buffer: ArrayBuffer, slot = SCRATCH_SLOT): boolean => {
   if (!isCoreReady()) {
@@ -57,6 +59,8 @@ const loadStateFromBuffer = (buffer: ArrayBuffer, slot = SCRATCH_SLOT): boolean 
   mod.FS.writeFile(savePath, new Uint8Array(stripStamp(buffer)));
   mod.ccall('WasmLoadState', null, ['number'], [slot]);
   reassertLiveFlagsAfterLoad();
+  useDialogStore.getState().markStale();
+  requestLocationRebaseline();
   pollInventoryState(true);
   try { mod.FS.unlink(savePath); } catch { /* ignore */ }
   return true;

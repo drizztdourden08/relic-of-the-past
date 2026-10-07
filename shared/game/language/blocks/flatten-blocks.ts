@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * Blocks back to lines — the exact inverse of `splitBlocks`.
+ * Blocks back to lines. The exact inverse of `splitBlocks`.
  *
  * Every line comes back out in its original order and as the same value it went
  * in as, so `joinLines(flattenBlocks(splitBlocks(lines)))` is `joinLines(lines)`

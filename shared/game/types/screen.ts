@@ -7,8 +7,8 @@ import type { RegionNavData, ConnectionNavData } from '../navigation/nav-data.ty
 // ═══════════════════════════════════════════════════════════════════════════════
 
 /**
- * The three fundamental screen contexts in ALttP:
- * - overworld: outdoor OW screens (64 per world, indexed 0x00–0x3F)
+ * The three fundamental screen contexts in the game:
+ * - overworld: outdoor OW screens (64 per world, indexed 0x00-0x3F)
  * - dungeon: indoor rooms belonging to a dungeon (keyed by palace index + room)
  * - interior: all other indoor rooms (caves, houses, shops, fairy, etc.)
  */
@@ -39,7 +39,7 @@ interface OverworldContext {
 }
 
 interface DungeonContext {
-  /** Runtime cur_palace_index_x2 (0x00–0x1A) — the canonical dungeon identifier.
+  /** Runtime cur_palace_index_x2 (0x00-0x1A), the canonical dungeon identifier.
    *  The dungeon entity is resolved from it via `dungeonForPalaceIndex`. */
   palaceIndex: number;
   /** Floor level (-2, -1, 0, 1, 2...) */
@@ -59,7 +59,7 @@ interface InteriorContext {
 
 /**
  * Conditions that determine when a screen variant is active.
- * Multiple variants of the same roomIndex can coexist — the first
+ * Multiple variants of the same roomIndex can coexist. The first
  * whose condition evaluates to true at runtime wins.
  */
 type VariantCondition =
@@ -108,7 +108,7 @@ interface ScreenBase {
   name: string;
   /** Which game world */
   world: World;
-  /** Structural parent — all screens sharing a location are "one place" */
+  /** Structural parent. All screens sharing a location are "one place" */
   location: string;
   /** Broad zone for notification line 2 (e.g. "Death Mountain", "Kakariko") */
   area: string;
@@ -116,7 +116,7 @@ interface ScreenBase {
   // ─── Game Values ───
   /** Native game room/screen index */
   roomIndex?: number;
-  /** Entrance ID (RAM $010E) — disambiguates shared room indices */
+  /** Entrance ID (RAM $010E), which disambiguates shared room indices */
   entranceId?: number;
 
   // ─── Variant ───

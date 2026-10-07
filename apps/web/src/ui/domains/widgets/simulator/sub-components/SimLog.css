@@ -17,7 +17,7 @@
   user-select: text;
 }
 
-/* Force selection on every descendant too — ancestor user-select: none rules
+/* Force selection on every descendant too. Ancestor user-select: none rules
    (body reset, widget frame) otherwise re-resolve `auto` children to none. */
 .sim-log * {
   user-select: text;
@@ -172,7 +172,7 @@
 
 /* ── Pop-out dialog ── */
 .sim-log-dialog {
-  /* Override the base .dialog max-width: 400px — the log needs room. */
+  /* Override the base .dialog max-width of 400px, because the log needs room. */
   width: min(1100px, 95vw);
   max-width: 95vw;
   height: min(82vh, 900px);

@@ -17,11 +17,13 @@ const stateChanged = (a: GameUIState, b: GameUIState): boolean => {
   if (ah.equippedL !== bh.equippedL || ah.equippedR !== bh.equippedR) return true;
   if (ah.heartsFiller !== bh.heartsFiller || ah.magicFiller !== bh.magicFiller) return true;
   if (ah.bombFiller !== bh.bombFiller || ah.arrowFiller !== bh.arrowFiller) return true;
+  if (ah.maxRupees !== bh.maxRupees || ah.maxBombs !== bh.maxBombs || ah.maxArrows !== bh.maxArrows) return true;
 
   const ae = a.equipment, be = b.equipment;
   if (ae.sword !== be.sword || ae.shield !== be.shield || ae.armor !== be.armor) return true;
   if (ae.gloves !== be.gloves || ae.boots !== be.boots) return true;
   if (ae.flippers !== be.flippers || ae.moonPearl !== be.moonPearl) return true;
+  if (ae.heartPieces !== be.heartPieces || ae.abilityFlags !== be.abilityFlags) return true;
 
   const ad = a.dungeonProgress, bd = b.dungeonProgress;
   if (ad.pendants !== bd.pendants || ad.crystals !== bd.crystals) return true;
@@ -47,7 +49,7 @@ const stateChanged = (a: GameUIState, b: GameUIState): boolean => {
   const as_ = a.saveMenu, bs = b.saveMenu;
   if (as_.cursorPosition !== bs.cursorPosition || as_.sourceModule !== bs.sourceModule) return true;
 
-  // Inventory items — check array equality
+  // Check array equality for inventory items
   for (let i = 0; i < 20; i++) {
     if (a.inventory.items[i] !== b.inventory.items[i]) return true;
   }

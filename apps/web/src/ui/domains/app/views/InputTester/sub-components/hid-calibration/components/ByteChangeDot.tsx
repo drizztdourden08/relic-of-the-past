@@ -50,7 +50,7 @@ const ByteChangeDot = ({ delta, span = 128, signed }: ByteChangeDotProps) => {
 
   const color = rampColor(magnitude);
   const base: CSSProperties = { background: color, boxShadow: `0 0 4px ${color}` };
-  // Floored so the smallest real change still reads as a dot rather than nothing.
+  // Floored so the smallest real change still reads as a dot, not nothing.
   const reach = `max(var(--space-2xs), ${magnitude * 50}%)`;
 
   const style: CSSProperties = signed

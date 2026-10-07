@@ -9,10 +9,10 @@ upstream's Python tools, and it lives in `shared/asset-extraction/`.
 
 ```mermaid
 flowchart TD
-    ROM["user ROM (.sfc)"] -->|"rom/ — load · SNES↔linear · SHA-1 validation"| COMP["compression/ — LZ + BRR decoders"]
-    COMP --> GFX["graphics/ — 2/3/4bpp tile decode, palettes"]
-    GFX --> CMP["compile-*.ts — one extractor per asset domain"]
-    CMP --> AB["asset-builder.ts — serializes → zelda3_assets.dat"]
+    ROM["user ROM (.sfc)"] -->|"rom/ · load · SNES↔linear · SHA-1 validation"| COMP["compression/ · LZ + BRR decoders"]
+    COMP --> GFX["graphics/ · 2/3/4bpp tile decode, palettes"]
+    GFX --> CMP["compile-*.ts · one extractor per asset domain"]
+    CMP --> AB["asset-builder.ts · serializes → zelda3_assets.dat"]
 ```
 
 Public surface is the barrel `shared/asset-extraction/index.ts`.
@@ -30,7 +30,7 @@ Public surface is the barrel `shared/asset-extraction/index.ts`.
 
 ## Rules
 
-- Match the granularity: one `compile-*.ts` per asset domain. Add a new file rather than bolting onto an existing one.
+- Match the granularity: one `compile-*.ts` per asset domain. Add a new file instead of bolting onto an existing one.
 - Addresses are SNES addresses. Always convert with `snesToLinear` before indexing a linear
   buffer, and don't hardcode linear offsets.
 - Validate the ROM against `ZELDA3_SHA1` / `ZELDA3_SHA1_US` so the wrong ROM fails loudly.

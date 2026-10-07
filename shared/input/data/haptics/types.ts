@@ -1,8 +1,4 @@
 /* @layer shared-input @kind data */
-/**
- * Haptic pattern entry type — shared by all category chunks.
- */
-
 import type { VibrationSegment } from '../../vibration-segment.type';
 
 interface HapticPatternEntry {

@@ -2,19 +2,18 @@
 /**
  * A `<prefix>-<digits>` value pointing at a record in another collection.
  *
- * Matching is EXACT (trimmed, case-sensitive) — these are machine values, not
+ * Matching is EXACT (trimmed, case-sensitive). These are machine values, not
  * prose, and the text kind is where forgiving matching belongs.
  *
  * The cell renders the id as a marked reference and publishes what it points at
- * on `data-id-ref` / `data-target-kind`. It deliberately does NOT navigate: this
- * package has no business knowing what collections exist. The screen that owns
- * the data resolves the id to a name and handles the click — see the handoff
- * note on `renderCell` below.
+ * on `data-id-ref` / `data-target-kind`. It does NOT navigate: this package has
+ * no business knowing what collections exist. The screen that owns the data
+ * resolves the id to a name and handles the click (see the handoff note on
+ * `renderCell` below).
  *
- * Editing is the same handoff in the other direction. Given a resolver the
- * editor becomes a searchable picker over the real target collection; given
- * none — or a target it cannot answer for — it stays the plain input it has
- * always been, so the kit still works with nothing wired to it.
+ * Editing is the same handoff in reverse. Given a resolver the editor becomes a
+ * searchable picker over the target collection; without one it stays a plain
+ * input, so the kit still works with nothing wired to it.
  */
 import type { ReactNode } from 'react';
 import { findOperator } from '../../data/filter/operators';
@@ -35,7 +34,7 @@ import type {
 import type { FieldDescriptor } from '../../data/schema/field-descriptor';
 import './field-kits.css';
 
-const ABSENT = '—';
+const ABSENT = '-';
 
 const NO_OPTIONS: readonly IdRefOption[] = [];
 
@@ -98,11 +97,10 @@ const EditorControl = (props: EditorControlProps) => {
  * output (or delegates from the row) and reads those attributes to resolve a
  * display name and to open the referenced record.
  *
- * `options.display` only changes the TEXT — `formatIdRefDisplay` turns whatever
+ * `options.display` only changes the TEXT. `formatIdRefDisplay` turns whatever
  * resolved (or nothing) into `"Name (id)"` or the bare id, the one formatting
- * rule every reference reads through. Both attributes, and the tooltip, keep
- * the real id regardless — what a reference points at is not a matter of how
- * it is being shown, so a cell reading as a name still follows to the same
+ * rule every reference reads through. Both attributes, and the tooltip, keep the
+ * real id regardless, so a cell reading as a name still follows to the same
  * record.
  */
 const renderCell = (

@@ -1,21 +1,14 @@
 /* @layer renderer-lib @kind logic */
 /**
- * `random`: fire one file, wait a random gap, fire another — forever. Drawing from a pool of
- * several files is what stops a repeated ambient effect (a gust, a distant bird) from sounding
- * like the same sample on a timer.
- *
- * The gap is measured from the START of a sound by default, so a sound longer than the gap is
- * still playing when the next fires and they layer up. `waitForCompletion` measures from the
- * END instead, so exactly one plays at a time.
- *
- * Resume keeps the remaining gap rather than the file position: what matters when returning to
- * an area is that the next event is not bunched up against the previous one.
+ * `random`: fire one file, wait a random gap, fire another, forever. The gap is measured from
+ * the START of a sound by default (long sounds layer up); `waitForCompletion` measures from the
+ * END, so exactly one plays at a time. Resume keeps the remaining gap, not the file position.
  */
 import type { LayerResume } from '@shared/types/msu-manifest';
 import type { LayerActivity, LayerContext, LayerScheduler, SoundingVoice } from './scheduler.type';
 import type { Voice } from '../voice';
 
-/** Live sounds, oldest first, each with its own position and fade — one preview row apiece. */
+/** Live sounds, oldest first, each with its own position and fade. One preview row apiece. */
 const soundingVoices = (
   entries: { voice: Voice; fileIndex: number }[], names: string[],
 ): SoundingVoice[] => entries.map((e) => ({
@@ -35,8 +28,8 @@ const createRandomScheduler = (
   let timer: ReturnType<typeof setTimeout> | null = null;
   let live: { voice: Voice; fileIndex: number }[] = [];
   let dueAt = 0;
-  // The gap the current countdown started from, and what last fired — reported to the studio's
-  // preview so the wait it chose is visible instead of a silence you have to guess at.
+  // The gap the current countdown started from, and what last fired. Both are reported to the studio's
+  // preview so the wait it chose is visible.
   let currentWait: number | null = null;
   let lastFileIndex: number | null = null;
 
@@ -51,7 +44,7 @@ const createRandomScheduler = (
       loop: false,
       onEnded: () => {
         live = live.filter((v) => v !== entry);
-        // Waiting for completion means the gap starts here rather than at the sound's start.
+        // Waiting for completion means the gap starts here, not at the sound's start.
         if (waitForCompletion) scheduleIn(gap());
       },
     });
@@ -86,8 +79,7 @@ const createRandomScheduler = (
     const newest = live[live.length - 1];
     return {
       fileName: ctx.fileNames[newest?.fileIndex ?? lastFileIndex ?? 0] ?? null,
-      // While waiting for a sound to finish there is no countdown yet — say so rather than
-      // showing a stale one.
+      // While waiting for a sound to finish there is no countdown yet; say so, don't show a stale one.
       nextEventInSeconds: timer === null ? null : Math.max(0, dueAt - ctx.elapsedSeconds()),
       waitSeconds: timer === null ? null : currentWait,
       positionSeconds: newest?.voice.offsetSeconds() ?? null,

@@ -10,7 +10,7 @@ import type { SettingField } from './settings-fields';
 
 type SettingRowProps = {
   field: SettingField;
-  /** Empty string means "automatic" — the code is not present at all. */
+  /** Empty string means "automatic", so the code is not present at all. */
   value: string;
   onChange: (name: string, value: string) => void;
 };

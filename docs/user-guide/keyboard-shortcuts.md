@@ -7,8 +7,8 @@ app has a handful of global shortcuts handled by the renderer's `useKeyboardShor
 | Shortcut | Action |
 |----------|--------|
 | `Esc` | Open/close the menu |
-| `F1`–`F8` | Quick-access [save-state](save-states.md) slots 0–7 |
-| Widget toggles | Show/hide widgets (inventory, checks, cheats, logs, …) — see the title bar for current bindings |
+| `F1`-`F8` | Quick-access [save-state](save-states.md) slots 0-7 |
+| Widget toggles | Show/hide widgets (inventory, checks, cheats, logs, and so on); see the title bar for current bindings |
 | Game controls | Pause / stop / reset the running game |
 | Profile switching | Jump between profiles |
 

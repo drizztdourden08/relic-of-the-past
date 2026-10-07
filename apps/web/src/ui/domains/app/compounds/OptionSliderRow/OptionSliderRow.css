@@ -1,0 +1,38 @@
+/* @layer renderer-components @kind style */
+
+/* The catalog row's own grid, one track short of it: text takes what is left,
+   the control sits in the same fixed track a catalog row gives it, so the
+   sliders a block draws line up with the rows underneath them. */
+.option-slider-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--option-control-w);
+  column-gap: var(--space-md);
+  align-items: center;
+}
+
+.option-slider-row__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+
+.option-slider-row__label {
+  min-width: 0;
+  color: var(--c-text);
+  font-size: var(--text-sm);
+  overflow-wrap: break-word;
+}
+
+/* One line, at the size a catalog description is set in; the gold term it
+   opens with is the only colour it brings with it. */
+.option-slider-row__description {
+  color: var(--c-text-dim);
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  overflow-wrap: break-word;
+}
+
+.option-slider-row__control {
+  min-width: 0;
+}

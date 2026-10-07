@@ -14,7 +14,7 @@
   pointer-events: none;
 }
 
-/* Busy spinner — covers the card with a scrim so feedback reads while the
+/* Busy spinner covers the card with a scrim so feedback reads while the
    screenshot is captured and the slots reload. */
 .save-slot__spinner {
   position: absolute;
@@ -53,7 +53,7 @@
   border-color: var(--c-danger);
 }
 
-/* Hold-to-save fill overlay — rises from bottom */
+/* Hold-to-save fill overlay that rises from the bottom */
 .save-slot__fill {
   position: absolute;
   bottom: 0;
@@ -74,12 +74,95 @@
   image-rendering: pixelated;
 }
 
+/* Placeholder for a slot with no screenshot. Stops short of the action bar so the
+   mascot is centred in the visible area, not behind the Load/Save split. */
 .save-slot__empty {
+  position: absolute;
+  inset: 0 0 30%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.save-slot__empty-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* Both layers share the grid, so their coordinates alone decide the overlap. */
+.save-slot__empty-badge svg {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
 }
 
-/* Overlaid slot number — top left */
+.save-slot__badge-frame {
+  color: var(--c-text-muted);
+  opacity: 0.34;
+}
+
+/* The ring reads as a separate object in front of the frame: its own colour, plus a halo in
+   the card's own background so the frame's strokes stop short of it instead of blending. */
+.save-slot__badge-cancel {
+  color: var(--c-danger);
+  opacity: 0.6;
+  filter:
+    drop-shadow(0 0 1px var(--c-scrim-game))
+    drop-shadow(0 0 1px var(--c-scrim-game))
+    drop-shadow(0 0 1px var(--c-scrim-game));
+}
+
+.save-slot__empty-mascot {
+  position: relative;
+  width: 28%;
+  height: auto;
+  filter: grayscale(1);
+  opacity: 0.45;
+  transform-origin: 50% 100%;
+  pointer-events: none;
+  user-select: none;
+  animation: save-slot-mascot-hop var(--duration-mascot-hop) linear infinite;
+}
+
+/* Two jumps per cycle: over to the right, then back to the left, forever. Each one
+   runs crouch → launch → arc → land → settle. Squash and stretch happen off the feet
+   (transform-origin sits at the bottom edge), so the push-off and the impact read as
+   weight, not as a resize. The arc frames are spaced wide near the apex and tight near
+   the ground, which is what gives the jump its gravity under linear time. */
+@keyframes save-slot-mascot-hop {
+  0%   { transform: translate(-34%, 0)    scale(1, 1); }
+  5%   { transform: translate(-34%, 0)    scale(1.14, 0.86); }
+  12%  { transform: translate(-28%, -22%) scale(0.9, 1.14); }
+  19%  { transform: translate(-16%, -37%) scale(0.95, 1.07); }
+  26%  { transform: translate(0%, -44%)   scale(0.99, 1.02); }
+  33%  { transform: translate(16%, -37%)  scale(0.95, 1.07); }
+  40%  { transform: translate(28%, -22%)  scale(0.92, 1.11); }
+  44%  { transform: translate(34%, 0)     scale(1.18, 0.82); }
+  50%  { transform: translate(34%, 0)     scale(1, 1); }
+  55%  { transform: translate(34%, 0)     scale(1.14, 0.86); }
+  62%  { transform: translate(28%, -22%)  scale(0.9, 1.14); }
+  69%  { transform: translate(16%, -37%)  scale(0.95, 1.07); }
+  76%  { transform: translate(0%, -44%)   scale(0.99, 1.02); }
+  83%  { transform: translate(-16%, -37%) scale(0.95, 1.07); }
+  90%  { transform: translate(-28%, -22%) scale(0.92, 1.11); }
+  94%  { transform: translate(-34%, 0)    scale(1.18, 0.82); }
+  100% { transform: translate(-34%, 0)    scale(1, 1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .save-slot__empty-mascot {
+    animation: none;
+  }
+}
+
+/* Overlaid slot number, top left */
 .save-slot__num {
   position: absolute;
   top: 3px;
@@ -92,7 +175,7 @@
   pointer-events: none;
 }
 
-/* Overlaid shortcut key — top right */
+/* Overlaid shortcut key, top right */
 .save-slot__key {
   position: absolute;
   top: 3px;
@@ -108,8 +191,8 @@
   pointer-events: none;
 }
 
-/* Split action bar — bottom slice of the card, blackened so it stays legible
-   over the screenshot, split into two flush halves (Save | Load). */
+/* Split action bar: the bottom slice of the card, blackened so it stays legible
+   over the screenshot, split into two flush halves (Load | Save), see SlotActionButton. */
 .save-slot__actions {
   position: absolute;
   left: 0;
@@ -120,43 +203,6 @@
   min-height: 24px;
   z-index: var(--z-base);
   background: var(--c-scrim);
-}
-
-.save-slot__action {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background: transparent;
-  color: var(--c-text);
-  cursor: pointer;
-  transition: background var(--transition-fast), color var(--transition-fast);
-}
-
-.save-slot__action--save {
-  border-right: 1px solid var(--c-border-strong);
-}
-
-.save-slot__action--save:hover:not(:disabled),
-.save-slot__action--save:focus-visible {
-  background: var(--c-gold-soft);
-  color: var(--c-gold-bright);
-}
-
-.save-slot__action--load:hover:not(:disabled),
-.save-slot__action--load:focus-visible {
-  background: var(--c-green-soft);
-  color: var(--c-green-bright);
-}
-
-.save-slot__action:focus-visible {
-  outline: none;
-}
-
-.save-slot__action:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
 }
 
 /* Timestamp below card */

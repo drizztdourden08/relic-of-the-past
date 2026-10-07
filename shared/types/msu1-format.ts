@@ -1,14 +1,9 @@
 /* @layer shared-types @kind constants */
 /**
- * The MSU-1 `.pcm` container, as the format defines it.
- *
- * Shared rather than renderer-local because both sides read this header now: the renderer decodes
- * the audio, and the main process reads the loop point out of the first eight bytes to describe a
- * pack without shipping it. Two copies of a format constant is the kind of duplication that goes
- * wrong quietly, so there is one.
- *
- * The rate and channel count are FIXED by the format — an MSU-1 track is always 44100 Hz 16-bit
- * signed stereo, little-endian, left channel first. That is why they are constants and not fields.
+ * The MSU-1 `.pcm` container, as the format defines it. Shared because both sides read the
+ * header: the renderer decodes the audio, the main process reads the loop point from the first
+ * eight bytes. The rate and channel count are FIXED by the format (44100 Hz 16-bit signed stereo,
+ * little-endian, left channel first), hence constants and not fields.
  */
 const MSU1_MAGIC_TEXT = 'MSU1';
 const MSU1_HEADER_BYTES = 8;

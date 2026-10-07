@@ -32,12 +32,9 @@ const useAudioSettings = () => {
   /**
    * A launch flag is applied by USING the mute control, not by working around it.
    *
-   * The control already does the whole job when a person clicks it, and the only reason
-   * a flag could not simply do the same was timing: the settings push that runs when the
-   * game starts re-applies the profile's volume, so anything set before that is undone.
-   * So this waits for the game to be running — the same moment a person could reach the
-   * button — and then presses it once. Nothing new gates the audio, and nothing has to
-   * out-shout the settings push, because this happens after it.
+   * The settings push that runs when the game starts re-applies the profile's
+   * volume, so anything set before that is undone. So this waits for the game to
+   * be running, then presses the mute button once. Nothing new gates the audio.
    *
    * Both flags are honoured, so the result never depends on the volume the profile
    * happens to hold: --muted presses it only if sound is on, --sound only if it is off.
@@ -67,11 +64,10 @@ const useAudioSettings = () => {
 
   /**
    * Takes the volume as loaded. A `--muted` launch is already zero here, because the
-   * flag is applied once in mergeSettings where the setting is born — not layered on
-   * afterwards. Two earlier attempts set the engine volume (and then the muteOverride)
-   * from here instead, and both lost: pushLiveSettings re-applies settings.masterVolume
-   * to the gain node AND the WASM mixer when the game starts, so anything not in the
-   * setting itself is overwritten while the control keeps showing the value it set.
+   * flag is applied once in mergeSettings where the setting is born. Two earlier
+   * attempts set the engine volume (and the muteOverride) from here instead, and
+   * both lost: pushLiveSettings re-applies settings.masterVolume to the gain node
+   * AND the WASM mixer when the game starts.
    */
   const initFromSettings = useCallback((volume: number) => {
     setMasterVolumeState(volume);

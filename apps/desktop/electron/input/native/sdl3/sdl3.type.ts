@@ -2,8 +2,8 @@
 /**
  * Types for the SDL3 gamepad Node-API addon (sdl3_input.node).
  *
- * This module describes the raw transport surface only — the fixed SDL button
- * order and axis layout the addon reports. It carries no device-specific or
+ * This module describes the raw transport surface only. That is the fixed SDL
+ * button order and axis layout the addon reports. It carries no device-specific or
  * SNES-mapping meaning; that lives in the consumers of this transport.
  */
 
@@ -114,7 +114,7 @@ type Sdl3EventCallback = (event: Sdl3Event) => void;
 /**
  * One HID device reported by the OS, whether or not SDL could claim it as a
  * gamepad. Already filtered to the generic desktop usage page's joystick/
- * gamepad/multi-axis usages (HID spec constants, not a device list) — see
+ * gamepad/multi-axis usages (HID spec constants, not a device list). See
  * `enumerateHid` in index.ts for why. `busType` is `'unknown'` when the OS
  * doesn't report one.
  */

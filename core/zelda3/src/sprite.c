@@ -1381,6 +1381,7 @@ void Sprite_CheckAbsorptionByPlayer(int k) {  // 86d116
 }
 
 void Sprite_HandleAbsorptionByPlayer(int k) {  // 86d13c
+  if (GameHook_OverrideDropAbsorption(k)) return;
   sprite_state[k] = 0;
   int t = sprite_type[k] - 0xd8;
   SpriteSfx_QueueSfx3WithPan(k, kAbsorptionSfx[t]);
@@ -1447,6 +1448,7 @@ bool SpriteDraw_AbsorbableTransient(int k, bool transient) {  // 86d22f
       sprite_B[k] = 0;
     return true;
   }
+  if (GameHook_DrawDropOverride(k)) return false;
   uint8 j = sprite_type[k];
   assert(j >= 0xd8 && j < 0xd8 + 19);
   uint8 a = kAbsorbable_Tab2[j - 0xd8];
@@ -2402,7 +2404,7 @@ void Sprite_GiveDamage(int k, uint8 dmg, uint8 r0_hit_timer) {  // 86edc5
     }
   }
   if (dmg == 249) {
-    Sprite_Func18(k, 0xe3);
+    Sprite_Func18(k, GameHook_PowderTransmuteType(0xe3));
     return;
   }
   if (dmg == 250) {
@@ -2646,7 +2648,7 @@ bool Sprite_CheckDamageToLink_ignore_layer(int k) {  // 86f15c
   uint8 carry, t;
   // Under the surface nothing can reach the player: this is the one point every contact test
   // funnels through, so refusing here withholds the shove and the recoil as well as the damage.
-  // The timer only ever leaves zero behind kFeatures0_AllowDiving, so this reads as vanilla with
+  // The timer only ever leaves zero behind kFeatures2_AllowDiving, so this reads as vanilla with
   // the setting off.
   if (g_ram[kRam_DiveTimer])
     return false;
@@ -2761,7 +2763,7 @@ uint8 Sprite_CheckDamageFromLink(int k) {  // 86f2b4
     return kCheckDamageFromPlayer_Carry | kCheckDamageFromPlayer_Ne;
 
   if (link_item_in_hand & 10) {
-    if (sprite_type[k] >= 0xd6)
+    if (sprite_type[k] >= 0xd6 && !GameHook_HammerReachesLastFight())
       return 0;
     if (sprite_state[k] == 11 && sprite_unk5[k] != 0) {
       sprite_state[k] = 2;
@@ -3117,7 +3119,7 @@ void ForcePrizeDrop(int k, uint8 prize, uint8 slot) {  // 86f9bc
 }
 
 void PrepareEnemyDrop(int k, uint8 item) {  // 86f9d1
-  sprite_type[k] = item;
+  sprite_type[k] = GameHook_RetroPrizeType(item);
   if (item == 0xe5)
     SpritePrep_BigKey_load_graphics(k);
   else if (item == 0xe4)
@@ -3334,7 +3336,7 @@ bool Sprite_CheckIfScreenIsClear() {  // 89af32
         if (x < 256 && y < 256)
           return false;
       } else {
-        if ((int16)x >= -WideLeftPx() && (int16)x < 256 + WideRightPx() && y < 256)
+        if (GameHook_EnemyCountsTowardClear((int16)x, y))
           return false;
       }
     }
@@ -3486,9 +3488,23 @@ void Garnish13_PyramidDebris(int k) {  // 89b216
     }
     OamSetX(oam, t);
   }
-  if ((t = garnish_y_lo[k] - BG2VOFS_copy2) >= 240) {
-    garnish_type[k] = 0;
-    return;
+  t = garnish_y_lo[k] - BG2VOFS_copy2;
+  if (!Tall_Active()) {
+    if (t >= 240) {
+      garnish_type[k] = 0;
+      return;
+    }
+  } else {
+    // Only a low byte of Y is tracked here, exactly as with X above, so widen the kill margin instead of
+    // testing a true position: the rows a tall view adds on either side read as a small negative distance,
+    // which the stock test threw away along with everything genuinely above the screen.
+    int margin = 8 + (TallTopPx() > TallBottomPx() ? TallTopPx() : TallBottomPx());
+    if (margin > 128)
+      margin = 128;
+    if ((int8)t < -margin) {
+      garnish_type[k] = 0;
+      return;
+    }
   }
   oam->y = t;
   oam->charnum = 0x5c;
@@ -3878,7 +3894,13 @@ void Sprite_ResetAll() {  // 89c44e
   Sprite_ResetAll_noDisable();
 }
 
+// Lattice rect covered by the last Sprite_ActivateWithinViewRect sweep, and whether it can be trusted.
+// Invalid means "sweep the whole rect": nothing was swept yet, or the loaded bitmap was just wiped.
+static struct { int x0, y0, x1, y1; } g_sprite_view_rect;
+static bool g_sprite_view_rect_valid;
+
 void Sprite_ResetAll_noDisable() {  // 89c452
+  g_sprite_view_rect_valid = false;  // the loaded bitmap is cleared below, so the rect must be re-swept whole
   byte_7E0FDD = 0;
   sprite_alert_flag = 0;
   byte_7E0FFD = 0;
@@ -3942,20 +3964,65 @@ void Sprite_ActivateAllProxima() {  // 89c55e
   BG2HOFS_copy2 = bak0;
 }
 
-// Phase 2: spawn every sprite whose true world position lies in the rendered view rectangle (game camera ±
-// the camera-lock shift ± the wide/tall budget), regardless of distance to Link — so nothing in a wide /
+// Phase 2: spawn sprites by their true world position within the rendered view rectangle (game camera ±
+// the camera-lock shift ± the wide/tall budget) rather than by distance to Link, so nothing in a wide /
 // locked multi-screen view is missing or pops in as the camera nears. Supersedes the old camera-anchored
 // edge + lock-band scans. Sprite_Overworld_ProximityMotivatedLoad bounds-checks the area and dedups via the
 // loaded bitmap, so out-of-area cells and already-resident sprites are cheap no-ops. The 16-slot cap still
-// applies (a very dense area can exceed it — Phase 3 lifts it); the sweep is row-major (top-left first).
-static void Sprite_ActivateWithinViewRect() {
+// applies (a very dense area can exceed it — Phase 3 lifts it); each band is swept row-major, top-left first.
+static bool g_sprite_view_rect_alloc_full;  // a load in this sweep found no free slot; don't advance the rect
+
+// The swept region, snapped down to the 16px block lattice the loader resolves to, so a sub-block camera
+// step leaves it unchanged. Both margins pad the view by the worst-case sprite extent and both must stay
+// INSIDE the keep-alive window of Sprite_PrepOamCoordOrDoubleRet (-0x40 - 2*budget .. 0x130 + 2*budget).
+// The vertical one used to be 0x30, which put the bottom row exactly ON the kill line whenever the tall
+// budget was 0 (the shipped default, tall render being gated separately): that row spawned a sprite and
+// killed it the same frame. 0x20 leaves the same 16px margin the stock scans keep by stopping at +0x120.
+static void Sprite_ViewRect(int *x0, int *y0, int *x1, int *y1) {
   int wb = (int)g_oam_wide_budget, tb = (int)g_oam_tall_budget;
   int vx = (int)BG2HOFS_copy2 - g_camera_lock_shift_x;  // clamped (rendered) view origin = game cam - shift
   int vy = (int)BG2VOFS_copy2 - g_camera_lock_shift_y;
-  int x1 = vx + 0x100 + wb + 0x20, y1 = vy + 0x100 + tb + 0x30;  // +margin for sprite extent
-  for (int y = vy - tb - 0x30; y <= y1; y += 16)
-    for (int x = vx - wb - 0x20; x <= x1; x += 16)
+  *x0 = (vx - wb - 0x20) & ~15;
+  *y0 = (vy - tb - 0x30) & ~15;
+  *x1 = (vx + 0x100 + wb + 0x20) & ~15;
+  *y1 = (vy + 0x100 + tb + 0x20) & ~15;
+}
+
+static void Sprite_SweepViewBand(int x0, int y0, int x1, int y1) {
+  for (int y = y0; y <= y1; y += 16)
+    for (int x = x0; x <= x1; x += 16)
       Sprite_Overworld_ProximityMotivatedLoad((uint16)x, (uint16)y);
+}
+
+// Sweep only what the view rect newly covers. The stock scans read a single leading edge and only while the
+// camera is moving, so a block deep inside the view is never re-armed: a sprite that removed itself by
+// running off screen (the grove animals, which flee on cue) stays gone until its home block leaves and
+// re-enters the loading region. Sweeping the whole rect every frame broke that, because Sprite_KillSelf
+// frees the home block on the way out, so the next frame spawned a replacement, and the next, without end.
+// The four bands below are that leading edge generalized to a 2D rect, so a wide / locked view still
+// populates fully without re-arming anything already inside it.
+static void Sprite_ActivateWithinViewRect() {
+  int x0, y0, x1, y1;
+  Sprite_ViewRect(&x0, &y0, &x1, &y1);
+  g_sprite_view_rect_alloc_full = false;
+  if (!g_sprite_view_rect_valid ||
+      x0 > g_sprite_view_rect.x1 || x1 < g_sprite_view_rect.x0 ||
+      y0 > g_sprite_view_rect.y1 || y1 < g_sprite_view_rect.y0) {
+    Sprite_SweepViewBand(x0, y0, x1, y1);  // first sweep, or a jump with nothing to reuse (warp, mirror)
+  } else {
+    if (x0 < g_sprite_view_rect.x0) Sprite_SweepViewBand(x0, y0, g_sprite_view_rect.x0 - 16, y1);
+    if (x1 > g_sprite_view_rect.x1) Sprite_SweepViewBand(g_sprite_view_rect.x1 + 16, y0, x1, y1);
+    if (y0 < g_sprite_view_rect.y0) Sprite_SweepViewBand(x0, y0, x1, g_sprite_view_rect.y0 - 16);
+    if (y1 > g_sprite_view_rect.y1) Sprite_SweepViewBand(x0, g_sprite_view_rect.y1 + 16, x1, y1);
+  }
+  // A band is swept once, so a load that lost the race for the last of the 16 slots would just be dropped.
+  // Hold the rect where it is instead: the same bands are re-swept, plus whatever the camera has covered
+  // since, until a sweep places everything it found. The overlap is never re-swept either way.
+  if (g_sprite_view_rect_alloc_full)
+    return;
+  g_sprite_view_rect.x0 = x0, g_sprite_view_rect.y0 = y0;
+  g_sprite_view_rect.x1 = x1, g_sprite_view_rect.y1 = y1;
+  g_sprite_view_rect_valid = true;
 }
 
 void Sprite_ProximityActivation() {  // 89c58f
@@ -3963,6 +4030,7 @@ void Sprite_ProximityActivation() {  // 89c58f
     Sprite_ActivateWithinViewRect();
     return;
   }
+  g_sprite_view_rect_valid = false;  // stock path ran: the rect no longer describes what has been swept
   if (submodule_index != 0) {
     Sprite_ActivateWhenProximal();
     Sprite_ActivateWhenProximalBig();
@@ -4050,8 +4118,10 @@ void Overworld_LoadProximaSpriteIfAlive(uint16 blk) {  // 89c739
   if (sprite_to_spawn >= 0xf4) {
     // load overlord
     int k = AllocOverlord();
-    if (k < 0)
+    if (k < 0) {
+      g_sprite_view_rect_alloc_full = true;
       return;
+    }
     *loadedp |= loadedmask;
     overlord_offset_sprite_pos[k] = blk;
     overlord_type[k] = sprite_to_spawn - 0xf3;
@@ -4067,8 +4137,10 @@ void Overworld_LoadProximaSpriteIfAlive(uint16 blk) {  // 89c739
   } else {
     // load regular sprite
     int k = Overworld_AllocSprite(sprite_to_spawn);
-    if (k < 0)
+    if (k < 0) {
+      g_sprite_view_rect_alloc_full = true;
       return;
+    }
     *loadedp |= loadedmask;
 
     sprite_N_word[k] = blk;
@@ -4483,7 +4555,7 @@ int Sprite_SpawnDynamically(int k, uint8 what, SpriteSpawnInfo *info) {  // 9df6
 int Sprite_SpawnDynamicallyEx(int k, uint8 what, SpriteSpawnInfo *info, int j) {  // 9df65f
   do {
     if (sprite_state[j] == 0) {
-      sprite_type[j] = what;
+      sprite_type[j] = GameHook_RetroPrizeType(what);
       sprite_state[j] = 9;
       info->r0_x = Sprite_GetX(k);
       info->r2_y = Sprite_GetY(k);

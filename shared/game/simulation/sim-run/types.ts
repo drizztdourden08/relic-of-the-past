@@ -10,7 +10,7 @@ import type { SimOutcome, DatasetSuggestion } from '../types';
 interface SimRunConfig {
   /** 0-based save-state slot to load before running (null = current state). */
   startSlot: number | null;
-  /** Named MANUAL save to load instead of a slot — `--auto-state` cannot be
+  /** Named MANUAL save to load instead of a slot. `--auto-state` cannot be
    *  combined with `--sim-run` because both hooks load the profile on mount and
    *  race, so the flag has to do it itself. */
   stateName: string | null;
@@ -23,11 +23,11 @@ interface SimRunConfig {
   /** Diagnostic: flood this overworld screen addressably and report its numbers, then exit. */
   floodScreen: number | null;
   /** Diagnostic: report this ROOM's entrance seeds, exit-table entry and detected
-   *  exits, then exit — the indoor counterpart of `floodScreen`, for finding out
+   *  exits, then exit. The indoor counterpart of `floodScreen`, for finding out
    *  why a room reads as a dead end. */
   probeRoom: number | null;
   /** Extra traversal TOKENS for the `floodScreen` diagnostic ('lift.2', 'boots'),
-   *  comma separated — fed straight to the flood, not item ids. */
+   *  comma separated and fed straight to the flood, not item ids. */
   probeItems: string[] | null;
   /** Optional entry tile for `probeRoom`, as the flood's start position. */
   probeTile: { row: number; col: number } | null;
@@ -61,7 +61,7 @@ interface SimRunReport {
   reachedScreens: string[];
   /** Real checks verified (triggered + flag-confirmed) this run, by id. */
   verifiedChecks: CheckId[];
-  /** Edges leaving the reached set — where traversal stopped (gates / bad edges). */
+  /** Edges leaving the reached set, showing where traversal stopped (gates / bad edges). */
   boundaryEdges: BoundaryEdge[];
   /** Recorder-derived, ready-to-write corrections (traversed-but-unmapped, etc.). */
   suggestions: DatasetSuggestion[];

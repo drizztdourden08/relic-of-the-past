@@ -3,13 +3,13 @@
  * Computes the save state format id and writes the generated module the app imports.
  *
  * Compiles state-layout-probe.c against the same headers and the same compiler the real
- * build uses, so the region sizes it reports carry the real wasm32 ABI rather than the
+ * build uses, so the region sizes it reports carry the real wasm32 ABI and not the
  * host's. Runs it, hashes the region sequence, and writes
  * shared/game/save-state/current-format.generated.ts.
  *
  * That generated file is COMMITTED. `npm run ci` does not build wasm, so a gitignored
- * module would break typecheck on a fresh clone — and committing it means a change to the
- * save state layout shows up as a reviewable one-line diff rather than a surprise at
+ * module would break typecheck on a fresh clone. Committing it also means a change to the
+ * save state layout shows up as a reviewable one-line diff instead of a surprise at
  * release time.
  *
  * Prerequisite: emcc on PATH (emsdk activated), same as build.mjs.
@@ -114,7 +114,7 @@ const run = () => {
     const prev = existsSync(generatedPath) ? readFileSync(generatedPath, 'utf8') : null;
 
     if (prev === next) {
-      console.log(`[layout-probe] unchanged — format ${id} (${total} bytes)`);
+      console.log(`[layout-probe] unchanged, still format ${id} (${total} bytes)`);
       return;
     }
 
@@ -124,7 +124,7 @@ const run = () => {
     // Only an id change is a layout change. Rewording the header of this file is not,
     // and saying so would train everyone to ignore the line that actually matters.
     const prevId = prev?.match(/id: '([0-9a-f]+)'/)?.[1] ?? null;
-    console.log(`[layout-probe] ${prevId ? 'rewritten' : 'created'} — format ${id} (${total} bytes)`);
+    console.log(`[layout-probe] ${prevId ? 'rewritten' : 'created'} as format ${id} (${total} bytes)`);
     if (prevId && prevId !== id) {
       console.log(`[layout-probe] LAYOUT CHANGED: ${prevId} -> ${id}.`);
       console.log('[layout-probe] Add a KNOWN_FORMATS row saying what moved, or the release will refuse to publish.');

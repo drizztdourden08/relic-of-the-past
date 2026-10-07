@@ -8,10 +8,16 @@
  * extraction finds no definitions and the sprite views list nothing, which is the
  * same state as a user who has not supplied a ROM.
  *
- * The schema beside this file stays here — it describes the shape, which is ours.
+ * The schema beside this file stays here, because it describes the shape, which is ours.
  */
+import { DIALOG_SPRITE_DEFINITIONS } from './dialog-sprites';
+import { POOL_SPRITE_DEFINITIONS } from './pool-sprites';
+import { RANDOMIZER_SPRITE_DEFINITIONS } from './randomizer-sprites';
+import { RUPEE_SPRITE_DEFINITIONS } from './rupee-sprites';
+import { TITLE_SPRITE_DEFINITIONS } from './title-sprites';
+import { UPGRADE_SPRITE_DEFINITIONS } from './upgrade-sprites';
 
-type SpriteCategory = 'hud' | 'hud-pause' | 'hud-item' | 'fonts' | 'receipt' | 'drop';
+type SpriteCategory = 'hud' | 'hud-pause' | 'hud-item' | 'fonts' | 'receipt' | 'drop' | 'randomizer' | 'title';
 
 interface SpriteManifestEntry {
   /** Filename without extension (e.g. "hud-bow"). */
@@ -27,15 +33,28 @@ interface SpriteDefinition extends SpriteManifestEntry {
   extract: unknown;
 }
 
-// A glob rather than an import: the file is not in this repository, and a static
+// A glob instead of an import: the file is not in this repository, and a static
 // import of an absent path fails the build instead of yielding nothing.
 const modules = import.meta.glob<{ default: { sprites?: SpriteDefinition[] } }>(
   '../records/sprite-manifest/definitions.json',
   { eager: true },
 );
 
-const SPRITE_DEFINITIONS: readonly SpriteDefinition[] =
+const VAULT_DEFINITIONS: readonly SpriteDefinition[] =
   Object.values(modules)[0]?.default?.sprites ?? [];
+
+// Our own definitions ride on the vault set: the capacity-upgrade composites are
+// stamped onto its sprites and the recoloured gems are derived from one, so
+// without it they have nothing to stand on and the list stays empty, which keeps
+// "no definitions" meaning exactly that. The drawn sprites need nothing from the
+// ROM at all, but they ride along too: extraction only ever runs with one loaded,
+// and a set that appears with the others missing would read as a broken set.
+const SPRITE_DEFINITIONS: readonly SpriteDefinition[] =
+  VAULT_DEFINITIONS.length === 0 ? [] : [
+    ...VAULT_DEFINITIONS, ...UPGRADE_SPRITE_DEFINITIONS, ...RUPEE_SPRITE_DEFINITIONS,
+    ...RANDOMIZER_SPRITE_DEFINITIONS, ...POOL_SPRITE_DEFINITIONS, ...DIALOG_SPRITE_DEFINITIONS,
+    ...TITLE_SPRITE_DEFINITIONS,
+  ];
 
 const SPRITE_MANIFEST: SpriteManifestEntry[] = SPRITE_DEFINITIONS.map(sprite => ({
   file: sprite.file,
@@ -50,9 +69,12 @@ const CATEGORY_LABELS: Record<SpriteCategory, string> = {
   fonts: 'Fonts',
   receipt: 'Receipt / Chest',
   drop: 'Droppable',
+  randomizer: 'Randomizer',
+  title: 'Title & Story',
 };
 
-const CATEGORY_ORDER: SpriteCategory[] = ['hud', 'hud-pause', 'hud-item', 'fonts', 'receipt', 'drop'];
+const CATEGORY_ORDER: SpriteCategory[] =
+  ['hud', 'hud-pause', 'hud-item', 'fonts', 'receipt', 'drop', 'randomizer', 'title'];
 
 export { CATEGORY_LABELS, CATEGORY_ORDER, SPRITE_DEFINITIONS, SPRITE_MANIFEST };
 export type { SpriteCategory, SpriteDefinition, SpriteManifestEntry };

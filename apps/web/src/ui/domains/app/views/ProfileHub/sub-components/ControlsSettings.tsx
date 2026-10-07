@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 /**
- * ControlsSettings — full input mapping UI.
+ * Full input mapping UI.
  *
  * Layout:  sidebar (profiles) | main (tabbed binding editor) | devices column,
  * plus rebind-listener + confirm-preset/delete modals. Logic lives in

@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 /**
- * useWidgetResize — Hook for resizing floating widgets from edges/corners.
- * For docked widgets, only the "thickness" edge is resizable.
+ * Resizing floating widgets from edges/corners. For docked widgets, only the
+ * "thickness" edge is resizable.
  */
 import { useRef, useCallback } from 'react';
 import type { SnapSide } from '../Widget.type';

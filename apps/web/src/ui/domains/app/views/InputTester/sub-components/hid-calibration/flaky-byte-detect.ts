@@ -8,7 +8,7 @@
  */
 
 /** Below this range over the sample window, a byte's wobble reads as normal
- *  ADC noise rather than something worth interrupting the flow for. */
+ *  ADC noise, not something worth interrupting the flow for. */
 const FLAKY_MIN_RANGE = 3;
 
 /** How long to watch the idle stream before deciding a byte is flaky. */

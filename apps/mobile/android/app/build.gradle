@@ -8,34 +8,27 @@ def appVersionName = rootPkg.version
 def (vMaj, vMin, vPat) = appVersionName.tokenize('.').collect { it.toInteger() }
 def appVersionCode = vMaj * 10000 + vMin * 100 + vPat
 
-// The controller-input plugin's native build (src/main/cpp/controllersdl3) links
-// against the SAME SDL3 source scripts/build/fetch-sdl3.mjs fetches for the
-// desktop Node addon — this file is the one place the version is pinned, so the
-// two platforms can never drift onto different SDL3 releases. See that addon's
-// package.json doc comment for what fetches/builds it (`npm run ensure-sdl3`).
+// The controller-input plugin's native build links against the SAME SDL3 source the
+// desktop Node addon uses; that addon's package.json is the one place the version is
+// pinned (`npm run ensure-sdl3` fetches it).
 def sdl3Pkg = new JsonSlurper().parse(file("../../../desktop/electron/input/native/sdl3/package.json"))
-// Forward slashes even on Windows: CMake's own convention for path-valued
-// variables, and required here — a raw backslash path flows into a generated
-// try_compile() project (SDL3's cmake/sdlcpu.cmake CPU-arch detection) where a
-// backslash followed by a letter is read as an (invalid) string escape.
+// Forward slashes even on Windows: a raw backslash path flows into a generated
+// try_compile() project (SDL3's cmake/sdlcpu.cmake) where backslash+letter is an
+// invalid string escape.
 def sdl3SourceDir = file("../../../../third_party/sdl3/SDL3-${sdl3Pkg.sdl3}").absolutePath.replace('\\', '/')
 
-// ABI list is an open product decision (APK size vs. device coverage) — see the
-// integration report. arm64-v8a alone covers effectively all controller-capable
-// phones sold since ~2017; add armeabi-v7a/x86_64 here if older-device or emulator
-// coverage turns out to matter more than the size cost.
+// APK size vs. device coverage: arm64-v8a alone covers effectively all
+// controller-capable phones since ~2017. Add armeabi-v7a/x86_64 if older-device or
+// emulator coverage matters more than the size cost.
 def controllerAbis = ["arm64-v8a"]
 
-// Where SDL's Java classes are staged for compilation. Inside the build dir on
-// purpose: nothing upstream ever lands in this repo's source tree, so there is
-// no vendored copy to review, to keep in step with the pinned release, or to
-// mistake for ours.
+// SDL's Java classes are staged inside the build dir so there is no vendored copy
+// to review or keep in step with the pinned release.
 def sdlJavaDir = layout.buildDirectory.dir("generated/sdl3-java").get().asFile
 def sdlJavaUpstream = file("${sdl3SourceDir}/android-project/app/src/main/java/org/libsdl/app")
 
-// Refuses to build rather than compile against a stale copy: without the
-// fetched source there is nothing to stage, and a missing SDL class fails much
-// later with an unhelpful ClassNotFoundException at runtime instead.
+// Refuses to build without the fetched source: a missing SDL class would otherwise
+// fail much later with an unhelpful ClassNotFoundException at runtime.
 tasks.register('stageSdlJava', Copy) {
     doFirst {
         if (!sdlJavaUpstream.exists()) {
@@ -80,12 +73,9 @@ android {
             version "3.22.1"
         }
     }
-    // SDL's own Java classes are compiled straight out of the fetched SDL3
-    // source rather than kept in this repo. They are the Java half of the same
-    // JNI contract the native library implements, so taking them from the very
-    // tree that builds that library is what guarantees the two halves cannot
-    // drift apart. Copying them in by hand would also mean silently owning
-    // someone else's code and re-vendoring it by hand on every SDL bump.
+    // SDL's Java classes come straight from the fetched SDL3 source: they are the
+    // Java half of the JNI contract the native library implements, so the two
+    // halves cannot drift apart.
     sourceSets {
         main {
             java.srcDirs += sdlJavaDir
@@ -94,7 +84,7 @@ android {
     signingConfigs {
         release {
             // Creds come from env vars (CI) or gradle properties (local). When absent,
-            // the release build stays unsigned — build a debug APK instead.
+            // the release build stays unsigned. Build a debug APK instead.
             def ksFile = System.getenv('RELIC_KEYSTORE_FILE') ?: findProperty('RELIC_KEYSTORE_FILE')
             if (ksFile) {
                 storeFile file(ksFile)
@@ -106,9 +96,8 @@ android {
     }
     buildTypes {
         debug {
-            // Its own package, so a test build never has to displace an
-            // installed release build (their signatures can never match) and
-            // both can sit on the same phone.
+            // Own package, so a debug build never displaces an installed release
+            // build (their signatures can never match).
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
         }

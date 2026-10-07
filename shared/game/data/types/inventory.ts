@@ -3,7 +3,7 @@ import type { ItemId } from './ids';
 
 interface InventorySlot {
   displayName: string;
-  /** The tracker item id(s) to check in the inventory set — first match wins. */
+  /** The tracker item id(s) to check in the inventory set. First match wins. */
   trackerItemIds: ItemId[];
   sprite: string;
 }

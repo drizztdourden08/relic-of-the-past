@@ -1,5 +1,5 @@
 # @layer core-wasm-build @kind build
-# Emscripten WASM build for zelda3 — thin wrapper.
+# Thin wrapper for the Emscripten WASM build of zelda3.
 #
 # The source list and emcc flags live in build.mjs, the single source of truth
 # shared by this Makefile, build.bat, ensure-wasm, and CI. Keeping the build in

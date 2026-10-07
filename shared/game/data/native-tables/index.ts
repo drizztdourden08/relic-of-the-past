@@ -8,14 +8,14 @@
  *
  * That is a real loss of function, not a cosmetic one: collision classification,
  * ledge detection, flood fill and the navigation overlay all read these, and with
- * empty tables they report nothing rather than something wrong. Every table is
- * byte-keyed, so an absent entry already means "no information about this byte" —
- * the empty case is the existing miss path, taken for every byte at once.
+ * empty tables they report nothing instead of something wrong. Every table is
+ * byte-keyed, so an absent entry already means "no information about this byte".
+ * The empty case is the existing miss path, taken for every byte at once.
  *
  * One glob covers the whole folder and exports are picked by name, because these
- * are twenty differently shaped tables rather than one collection: sets, byte
+ * are twenty differently shaped tables, not one collection: sets, byte
  * maps, string lists. Their SHAPES stay in this repository
- * (`types/native-tables.ts`, `attr-group-map.ts`) — a type is erased at runtime
+ * (`types/native-tables.ts`, `attr-group-map.ts`), because a type is erased at runtime
  * and still has to compile in a checkout with no tables to read.
  */
 import type { AttrGroup } from './attr-group-map';
@@ -55,7 +55,7 @@ const ITEM_TO_TOKEN = pick<Partial<Record<ItemId, TraversalRequirement>>>('ITEM_
 const IMPLIED_TOKENS = pick<Partial<Record<TraversalRequirement, readonly TraversalRequirement[]>>>('IMPLIED_TOKENS', {});
 const BARRIER_TO_TOKEN = pick<Partial<Record<ConnectionTag, TraversalRequirement>>>('BARRIER_TO_TOKEN', {});
 
-// Every door kind has to be present, so the fallback names them all rather than
+// Every door kind has to be present, so the fallback names them all instead of
 // being empty: the map is total by type, and a missing key would read as a door
 // kind nobody has decided about yet.
 const NO_BARRIERS: Record<DoorKind, string | null> = {

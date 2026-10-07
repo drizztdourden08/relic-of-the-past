@@ -7,26 +7,24 @@
  *
  * Lines are the pivot, in both directions. An edit produces line views from the
  * document, the gutter draws them, and the token stream is the model's own
- * inverse of those same views — so what an author sees measured and what gets
+ * inverse of those same views, so what an author sees measured and what gets
  * stored can never be two different readings of the entry. Nothing here writes a
  * control code.
  *
  * The instance is created once per extension list, so the `onUpdate` closure
- * outlives whatever `onChange`, font or glossary was current at creation time —
- * hence the refs. Without them, an insert made ten renders later would be
- * reported to a stale parent callback, or measured against a font that has since
- * been replaced.
+ * outlives whatever `onChange`, font or glossary was current at creation time.
+ * That is what the refs are for. Without them, an insert made ten renders later
+ * would be reported to a stale parent callback, or measured against a font that
+ * has since been replaced.
  *
  * Caret safety on the way DOWN is `useTokenSync`'s job; the shared `emittedRef`
- * is the record of what this editor last sent up, and the two halves read it
- * together.
+ * is the record of what this editor last sent up.
  *
  * The CARET LINE is reported for the block actions, which need to know which box
  * the author is in. It is deliberately not cleared on blur: pressing one of those
  * buttons takes focus out of the text, and an action that disabled itself the
  * instant it was pressed would never run. The editor keeps its own selection
- * through a blur, so the line the buttons act on is still the line the caret is
- * on.
+ * through a blur.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useEditor } from '@tiptap/react';
@@ -101,7 +99,7 @@ const useDialogueEditor = (params: UseDialogueEditorParams) => {
     onBlur: () => setFocused(false),
   }, [extensions, readOnly]);
 
-  // The structure plugins read the live context rather than a captured one, so a
+  // The structure plugins read the live context, not a captured one, so a
   // font that arrives late still measures the very next keystroke.
   useEffect(() => {
     updateEditorRuntime({ metrics, glossary });
@@ -122,10 +120,10 @@ const useDialogueEditor = (params: UseDialogueEditorParams) => {
   }, [editor, metrics, glossary]);
 
   /*
-   * `tokenToNode` yields the single inline atom — handing `insertContent` a whole
+   * `tokenToNode` yields the single inline atom. Handing `insertContent` a whole
    * `doc` would replace the entry instead of adding to it at the caret.
    *
-   * A LIST rather than one token, because a picture the alphabet spells as two
+   * A LIST, not one token, because a picture the alphabet spells as two
    * entries is one thing to insert: both atoms go in on one press, in one
    * transaction, so a single undo takes the whole picture back out again.
    */
@@ -150,7 +148,7 @@ const useDialogueEditor = (params: UseDialogueEditorParams) => {
     editor.view.focus();
   }, [editor]);
 
-  /** Toggle the wait on the caret's line — the toolbar's "end box here". */
+  /** Toggle the wait on the caret's line. This is the toolbar's "end box here". */
   const endBoxHere = useCallback(() => {
     if (!editor || editor.isDestroyed) return;
     toggleWaitHere(editor.state, editor.view.dispatch);

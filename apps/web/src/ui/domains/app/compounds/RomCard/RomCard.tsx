@@ -31,7 +31,7 @@ const RomCard = (props: RomCardProps) => {
           </Badge>
         )}
         {rom.extractionStatus === 'extracting' && (
-          <Badge variant="warning">⟳ Extracting…</Badge>
+          <Badge variant="warning">⟳ Extracting...</Badge>
         )}
         {rom.extractionStatus === 'failed' && (
           <Flex direction="column" align="end" gap="xs" className="rom-card__failed-group">

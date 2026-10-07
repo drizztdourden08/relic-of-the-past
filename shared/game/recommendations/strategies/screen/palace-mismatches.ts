@@ -2,8 +2,8 @@
 /**
  * Every palace mislabel the fallback has rescued THIS SESSION, folded with
  * whatever the live match just resolved. Moved here from the app-layer
- * screen-identity detector this strategy replaces — the live match is folded
- * in rather than handled separately so a screen that appears in both produces
+ * screen-identity detector this strategy replaces. The live match is folded
+ * in instead of handled separately so a screen that appears in both produces
  * one finding, not two that happen to share an id.
  *
  * `screen.strategy.ts`'s `subjects` uses this to widen past the current

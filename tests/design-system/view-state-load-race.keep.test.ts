@@ -14,17 +14,13 @@ import type { LoadGuard } from '../../apps/web/src/ui/design-system/data/view-st
 import type { TableState, ViewKey, ViewSnapshot } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
 import type { TableColumn } from '../../apps/web/src/ui/design-system/data/table/types';
 
-// The reported bug: clear the filter clauses one at a time and, around the last
-// one, an EARLIER set of clauses reappears. The cause is a read that was still
-// out when the user started editing — it comes back describing the view as it
-// was before any of that, and used to be applied unconditionally.
+// The reported bug: clear the filter clauses one at a time and an EARLIER set
+// reappears. A read still in flight when the user started editing came back
+// describing the old view and was applied unconditionally.
 //
-// There is no DOM in this suite (see data-table-drag.test.ts for the same
-// constraint), so the sequence below replays exactly what the hook does — the
-// real beginDurableLoad on mount, the real repository underneath it, and the
-// real markEdited-then-write of setSnapshot — with the answer held back until
-// after the removals. The timing is controlled, so the race is deterministic
-// rather than something that reproduces on a slow machine and nowhere else.
+// No DOM here, so the sequence replays what the hook does: the real
+// beginDurableLoad, the real repository, the real markEdited-then-write, with
+// the answer held back until after the removals. The race is deterministic.
 
 const KEY = 'data-inspector-query:screen' as ViewKey;
 const OTHER_KEY = 'data-inspector-query:check' as ViewKey;
@@ -75,7 +71,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe('load guard — which read is still allowed to land', () => {
+describe('load guard and which read is still allowed to land', () => {
   it('lets a read that nothing overtook apply its result', () => {
     const guard = createLoadGuard();
     expect(guard.mayApply(guard.begin())).toBe(true);
@@ -187,7 +183,7 @@ describe('switching collections', () => {
     load.mockResolvedValue({ [OTHER_KEY]: withFilters(saved) });
 
     // One hook instance, two keys in turn: the first is edited, then the effect
-    // re-runs for the second and there is genuinely nothing local to preserve.
+    // re-runs for the second and there is nothing local to preserve.
     const guard = createLoadGuard();
     let snapshot: ViewSnapshot = withFilters();
 

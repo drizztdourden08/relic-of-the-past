@@ -1,6 +1,6 @@
 /* @layer shared-game @kind data */
 /**
- * Screen tag taxonomy — our own invented vocabulary for categorizing every
+ * Screen tag taxonomy. Our own invented vocabulary for categorizing every
  * location, not a game secret. Ported from data/screens/tags.ts verbatim;
  * only the metadata table lives here, the query helpers moved to logic/queries.
  */

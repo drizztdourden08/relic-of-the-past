@@ -8,20 +8,15 @@
  * characters is `((control >> 9) & 0x7f) + 1`. Records use the same 160-entry
  * character set as the credits roll.
  *
- * Roles. Each scene carries a caption drawn in the small 8x8 font and a place
- * name drawn in the large 8x16 font. The large one costs two records — upper
- * halves, then lower halves, at two different tilemap addresses — so the upper
- * record is dropped and the lower one is emitted as the scene's `location`.
- * Small-font records are emitted as `title`. Where a scene holds more than one
- * record of a role the later ones are suffixed `-2`, `-3`; scene 2 is the only
- * place this happens in the source ROM, because it opens with a stray
- * one-character record before its real caption.
+ * Roles. Each scene carries a caption in the small 8x8 font and a place name in the large 8x16
+ * font. The large one costs two records (upper halves, then lower halves, at two tilemap
+ * addresses), so the upper record is dropped and the lower one is emitted as `location`.
+ * Small-font records are emitted as `title`. Extra records of a role are suffixed `-2`, `-3`;
+ * only scene 2 does this, opening with a stray one-character record before its caption.
  *
- * Limits. Every record writes horizontally into a 32x32 tilemap, so a line has a
- * 32-tile row to sit in and is positioned by its own start column. 32 is the
- * widest value provable from the renderer, so it is what every caption gets: the
- * record's own length is not a real ceiling, since the offset table means a
- * record can be repacked to any size.
+ * Limits. Every record writes horizontally into a 32x32 tilemap, so every caption gets a
+ * 32-tile row positioned by its start column. The record's own length is not a ceiling, since
+ * the offset table lets a record be repacked to any size.
  */
 import type { RomData } from '../../rom/rom-types';
 import type { DecodedLine } from './types';

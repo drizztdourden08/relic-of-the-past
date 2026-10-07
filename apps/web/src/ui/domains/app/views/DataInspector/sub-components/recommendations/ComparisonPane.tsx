@@ -1,10 +1,5 @@
 /* @layer renderer-app @kind component */
-/**
- * One side of the comparison. It is a titled `DetailTabs` and nothing more —
- * the pairing lives entirely in what the two panes are HANDED (the same tab,
- * each other's scroll offset, their own changed lines), so neither side knows
- * the other exists.
- */
+/** One side of the comparison: a titled `DetailTabs`. The pairing lives in the props, so neither side knows the other exists. */
 import { Box, Text } from '@ds/primitives';
 import { DetailTabs } from '../DetailTabs';
 import type { ReactNode } from 'react';
@@ -16,7 +11,7 @@ interface ComparisonPaneProps {
   title: string;
   source: InspectorSource;
   schema: readonly FieldDescriptor[];
-  /** Absent for the current side of a `create` — there is nothing there yet. */
+  /** Absent for the current side of a `create`, which has nothing there yet. */
   record?: InspectorRow;
   emptyMessage: string;
   tab: DetailTab;

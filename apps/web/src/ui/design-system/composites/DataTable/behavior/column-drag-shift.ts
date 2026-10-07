@@ -1,16 +1,9 @@
 /* @layer renderer-components @kind logic */
 /**
- * Where the other columns go while one is being carried over them.
- *
- * Dropping on index `to` puts the column INTO that slot. Carried rightwards it
- * therefore lands after the hovered column, and everything from just past its
- * own slot up to and including the hovered one slides LEFT to close the hole it
- * left. Carried leftwards it lands before the hovered column, and everything
- * from the hovered one up to its own slot slides RIGHT. Either way the gap that
- * opens is exactly the slot the column will occupy.
- *
- * Pure on purpose: the direction rule is the part worth testing, and the drag
- * gesture that produces it cannot be tested without a browser.
+ * Where the other columns go while one is carried over them. Dropping on index
+ * `to` puts the column into that slot: carried rightwards, everything from past
+ * its own slot through the hovered one slides left; carried leftwards, everything
+ * from the hovered one up to its own slot slides right.
  */
 
 /** Which way a cell steps aside, if at all. */

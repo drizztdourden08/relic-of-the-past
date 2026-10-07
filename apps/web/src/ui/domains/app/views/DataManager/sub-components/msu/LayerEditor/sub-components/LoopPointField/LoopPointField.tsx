@@ -1,16 +1,8 @@
 /* @layer renderer-components @kind component */
 /**
- * Where a looping layer restarts from, giving any file the intro-then-loop structure that MSU-1
- * otherwise only grants a `.pcm`.
- *
- * MSU-1 keeps this in the `.pcm` header as a sample count, and it is normally NOT zero: a track
- * opens with an intro played once and then repeats only the body after it. No other format has
- * anywhere to say that, so for a `.wav`, `.mp3` or `.ogg` layer the point lives in the manifest
- * instead, and set here it also overrides whatever a `.pcm` declared.
- *
- * Edited in seconds because that is what an author hears, stored in samples because that is the
- * unit MSU-1 writes and reads. Resolution is a millisecond, finer than the other time fields: a
- * loop that lands a few samples off clicks audibly every time it comes round.
+ * Loop point of a looping layer. MSU-1 stores it in the `.pcm` header as a sample count; other
+ * formats have nowhere to put it, so it lives in the manifest and overrides what a `.pcm` declares.
+ * Edited in seconds, stored in samples. Millisecond resolution: a loop a few samples off clicks.
  */
 import { Badge } from '@ds/primitives/Badge';
 import { Box } from '@ds/primitives/Box';
@@ -23,11 +15,7 @@ import type { LoopPointFieldProps } from './LoopPointField.type';
 /** Longest loop point worth offering: past an hour it is not an intro any more. */
 const MAX_LOOP_SECONDS = 3600;
 
-/**
- * Rounded to the millisecond for DISPLAY only. A sample count rarely divides into a round number of
- * seconds — the loop point read out of a real track came to 13.181768707482993 — and a field full of
- * float noise reads as a bug. What gets stored is still whole samples, converted back on edit.
- */
+// Rounded to the millisecond for DISPLAY only (a real track gave 13.181768707482993); whole samples are stored.
 const toSeconds = (samples: number | undefined): number => {
   if (samples === undefined || !Number.isFinite(samples)) return 0;
   return Math.round((samples / MSU1_SAMPLE_RATE) * 1000) / 1000;
@@ -41,10 +29,10 @@ const toSamples = (seconds: number): number | undefined => {
 };
 
 const stateOf = (samples: number | undefined, fromFile: boolean): string => {
-  if (samples === undefined || samples <= 0) return 'From the start — the whole file repeats';
+  if (samples === undefined || samples <= 0) return 'From the start, so the whole file repeats';
   const where = `${toSeconds(samples).toFixed(3)}s`;
   return fromFile
-    ? `The file declares ${where} — intro plays once, then repeats from there`
+    ? `The file declares ${where}, so the intro plays once and then repeats from there`
     : `Intro plays once, then repeats from ${where}`;
 };
 

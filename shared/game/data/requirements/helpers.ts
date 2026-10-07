@@ -34,7 +34,7 @@ const canShootArrows: Requirement = {
 
 // ─── Bombs ───
 // No dedicated "own the ability to use bombs" ItemRecord exists in the catalog
-// (only the refill pickups — see item-041/item-050). This uses the initial
+// (only the refill pickups, item-041 and item-050). This uses the initial
 // bomb-bag pickup as the best-available proxy; flagged in the migration report
 // for a real capability item to be added to the catalog.
 const canUseBombs: Requirement = { itemId: 'item-041' };

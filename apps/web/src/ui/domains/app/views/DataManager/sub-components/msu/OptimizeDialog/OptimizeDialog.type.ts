@@ -3,7 +3,7 @@ interface OptimizeDialogProps {
   open: boolean;
   pack: string;
   onClose: () => void;
-  /** Fired once a run has written something, so the pack's files are re-read. */
+  /** Fired the moment a run settles, success or failure, so the pack's files and manifest are re-read. */
   onConverted: () => void;
 }
 

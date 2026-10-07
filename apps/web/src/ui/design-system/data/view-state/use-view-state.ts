@@ -2,11 +2,11 @@
 /**
  * The reusable binding: point a composite at a `ViewKey` and it gets durable +
  * session view state for free; omit the key and it gets a purely in-memory,
- * unpersisted snapshot — no IPC call, no store write — which is what lets a
+ * unpersisted snapshot with no IPC call and no store write. That is what lets a
  * composite be used with zero persistence setup outside the inspector.
  *
  * This is the one file under ds/data/ allowed to reach into app-level renderer
- * code (`lib/storage`, `stores`) — see the data-inspector plan §8/§11. Every
+ * code (`lib/storage`, `stores`). See the data-inspector plan §8/§11. Every
  * other module in this folder stays headless and does not know either exists.
  */
 import { useCallback, useEffect, useState } from 'react';
@@ -24,12 +24,23 @@ const DEFAULT_SESSION_VIEW: SessionView = {
   selectedId: null,
 };
 
+/**
+ * Where the durable half is read and written. The Electron pair is the default;
+ * a surface outside the app (the Sanctuary site) passes its own pair over HTTP.
+ */
+interface ViewStorage {
+  load: (key: ViewKey) => Promise<ViewSnapshot | undefined>;
+  save: (key: ViewKey, snapshot: ViewSnapshot) => void;
+}
+
+const ELECTRON_VIEW_STORAGE: ViewStorage = { load: loadViewSnapshot, save: saveViewSnapshot };
+
 interface UseViewStateResult {
   snapshot: ViewSnapshot;
   sessionView: SessionView;
   /** Updates local state immediately and debounce-saves the durable half. */
   setSnapshot: (next: ViewSnapshot) => void;
-  /** Writes straight to the session store (or local state, keyless) — no debounce. */
+  /** Writes straight to the session store (or local state, keyless) with no debounce. */
   setSessionView: (next: SessionView) => void;
 }
 
@@ -38,6 +49,7 @@ const useViewState = (
   schema: SchemaLike,
   fallbackColumns: readonly TableColumn[],
   fallbackGroupBy?: readonly string[],
+  storage: ViewStorage = ELECTRON_VIEW_STORAGE,
 ): UseViewStateResult => {
   const [localSnapshot, setLocalSnapshot] = useState<ViewSnapshot>(
     () => emptySnapshotFor(fallbackColumns, fallbackGroupBy),
@@ -49,7 +61,7 @@ const useViewState = (
   const [loadGuard] = useState(createLoadGuard);
 
   // A constant selector output (DEFAULT_SESSION_VIEW) when there's no key means this
-  // never re-renders off store activity — as inert as not subscribing at all.
+  // never re-renders off store activity. It is as inert as not subscribing.
   const storedSession = useDataViewStore((state) => (key ? state.views[key] ?? DEFAULT_SESSION_VIEW : DEFAULT_SESSION_VIEW));
   const setStoredSession = useDataViewStore((state) => state.setSessionView);
 
@@ -60,14 +72,14 @@ const useViewState = (
     }
     beginDurableLoad({
       guard: loadGuard,
-      load: () => loadViewSnapshot(key),
+      load: () => storage.load(key),
       schema,
       fallbackColumns,
       fallbackGroupBy,
       apply: setLocalSnapshot,
     });
     // A new key opens its own generation, so the outgoing one's read can no
-    // longer land — and it starts unwritten, so switching collections still
+    // longer land. It starts unwritten, so switching collections still
     // restores what that collection had saved.
     return () => { loadGuard.cancel(); };
     // Re-running on `key` alone is deliberate: the schema/fallback only matter at
@@ -80,8 +92,8 @@ const useViewState = (
     // definition newer than anything the disk was asked for before they did it.
     loadGuard.markEdited();
     setLocalSnapshot(next);
-    if (key) saveViewSnapshot(key, next);
-  }, [key]);
+    if (key) storage.save(key, next);
+  }, [key, storage]);
 
   const setSessionView = useCallback((next: SessionView) => {
     if (key) setStoredSession(key, next);
@@ -97,4 +109,4 @@ const useViewState = (
 };
 
 export { useViewState };
-export type { UseViewStateResult };
+export type { UseViewStateResult, ViewStorage };

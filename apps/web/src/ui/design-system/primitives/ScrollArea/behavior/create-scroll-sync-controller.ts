@@ -2,9 +2,9 @@
 import { createScrollGuard } from './create-scroll-guard';
 import type { ScrollPosition } from '../ScrollArea.type';
 
-/** The slice of a scrolling element this controller needs — real enough that
- * an `HTMLDivElement` satisfies it, minimal enough that a plain test object
- * standing in for one does too, with no DOM or React involved. */
+/** The slice of a scrolling element this controller needs. Real enough that an
+ * `HTMLDivElement` satisfies it, small enough that a plain test object standing
+ * in for one does too, with no DOM or React involved. */
 interface ScrollNode {
   readonly scrollTop: number;
   readonly scrollLeft: number;
@@ -22,15 +22,15 @@ const createScrollSyncController = (getNode: () => ScrollNode | null) => {
   const guard = createScrollGuard();
 
   /** Imperatively moves the node toward `target` (missing fields hold their
-   * current value), instantly rather than via the CSS's smooth default, then
+   * current value), instantly instead of via the CSS's smooth default, then
    * arms the guard with where the node actually settled. A no-op if the node
    * is already there, or not mounted yet.
    *
-   * `'instant'` rather than `'auto'`, and the difference is load-bearing:
+   * `'instant'`, not `'auto'`, and the difference is load-bearing:
    * `'auto'` defers to the element's `scroll-behavior`, which `.scroll-area`
    * sets to `smooth`. The move would then ANIMATE, the read on the next line
-   * would report where the node still is rather than where it is going, and the
-   * guard would be armed with a position the node is leaving — after which it
+   * would report where the node still is instead of where it is going, and the
+   * guard would be armed with a position the node is leaving. After that it
    * suppresses every event forever, because the target it is waiting for never
    * comes back. A mirrored pane would follow once and then go deaf. */
   const applyScrollTo = (target: Partial<ScrollPosition>): void => {

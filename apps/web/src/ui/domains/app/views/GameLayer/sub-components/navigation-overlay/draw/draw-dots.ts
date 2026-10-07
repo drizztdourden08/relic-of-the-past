@@ -8,7 +8,7 @@ import type { DrawContext } from './draw-context';
 const DOT_COLOR_REACHABLE = 'rgba(80, 200, 255, 0.6)';
 const DOT_COLOR_REQ = 'rgba(255, 100, 180, 0.35)';
 
-/** Ring colour by which layer(s) reached the tile — ground (layer 1), above (layer 0), or both. */
+/** Ring colour, keyed by which layer(s) reached the tile: ground (layer 1), above (layer 0), or both. */
 const RING_COLOR_GROUND = '#5b9bd5';
 const RING_COLOR_ABOVE = '#c8a84e';
 const RING_COLOR_BOTH = '#000';
@@ -21,9 +21,8 @@ const drawReachableDots = (dc: DrawContext, drawResults: FloodFillResult[], laye
     const origin = getScreenWorldOrigin(drawResult.screenIndex);
     const perLayer = layer1ReachableOverride;
     const isDualLayer = !!perLayer;
-    // A one-layer screen still sits on a layer, and the ring must name the SAME one
-    // the tooltip does or the two disagree on the same tile. Outdoors is always the
-    // ground; a single-layer room takes the layer the flood started on.
+    // The ring must name the SAME layer the tooltip does. Outdoors is always the ground; a
+    // single-layer room takes the layer the flood started on.
     const singleLayerIsAbove = !isDualLayer && drawResult.indoors && (drawResult.startLayer ?? 0) === 0;
     for (let r = 0; r < 64; r++) {
       for (let c = 0; c < 64; c++) {
@@ -32,30 +31,20 @@ const drawReachableDots = (dc: DrawContext, drawResults: FloodFillResult[], laye
         const mergedReachable = perLayer ? (layer0Reach || layer1Reach) : drawResult.reachable[r][c] === 1;
         if (!mergedReachable) continue;
 
-        // A split (two-layer) dot means the flood genuinely REACHED the tile on both
-        // layers. Keying this off raw attr content instead drew single-layer tiles that
-        // merely have geometry on the other layer (e.g. a wall/object on the layer below
-        // a reached upper floor) as misleading two-state dots.
+        // A two-layer dot means the flood REACHED the tile on both layers. Keying it off raw attr
+        // content drew tiles that merely have geometry on the other layer as two-state dots.
         const hasOverlap = isDualLayer && layer0Reach && layer1Reach;
 
-        // Judge the tile by the attrs of the layer it ACTUALLY STANDS ON.
-        //
-        // `attrGrid` is the upper/BG2 layer, so testing it for every tile checks a
-        // ground-only dot against whatever sits ABOVE it — and above an open floor
-        // that is a wall or a ledge almost by definition. The result is that every
-        // reachable tile running alongside a raised walkway draws no dot at all:
-        // e.g. ground 0x00 (plain floor, reachable) under above 0x02 (wall) vanished,
-        // because 0x02 is in the skip set. Reached on the ground only? Then the
-        // ground grid is the one that decides.
-        //
-        // DO NOT collapse this back to a single `attrGrid` read — that regression has
-        // now happened twice, and it silently blanks large runs of correct dots.
+        // Judge the tile by the attrs of the layer it ACTUALLY STANDS ON. `attrGrid` is the upper
+        // layer, so testing it for a ground-only dot checks against the wall or ledge above it and
+        // blanks every reachable tile alongside a raised walkway. DO NOT collapse this back to a
+        // single `attrGrid` read; that regression has happened twice.
         const dotAttr = isDualLayer && !layer0Reach
           ? drawResult.dualLayerGrids?.layer1?.[r]?.[c]
           : drawResult.attrGrid?.[r]?.[c];
         if (!hasOverlap && dotAttr !== undefined && DRAW_DOTS_LEDGE_ATTRS.has(dotAttr)) continue;
         if (perLayer && (perLayer[0][r][c] === STAIRS_TRAVERSAL_STATE || perLayer[1][r][c] === STAIRS_TRAVERSAL_STATE)) continue;
-        // Skip dots for ledge traversal tiles (states 2-9) — arrows are drawn separately
+        // Skip dots for ledge traversal tiles (states 2-9); arrows are drawn separately.
         if (perLayer) {
           const s0 = perLayer[0][r][c];
           const s1 = perLayer[1][r][c];
@@ -74,8 +63,7 @@ const drawReachableDots = (dc: DrawContext, drawResults: FloodFillResult[], laye
         const hasReq = drawResult.reqGrid && drawResult.reqGrid[r][c] !== '';
         const radius = dotRadius * 0.6;
 
-        // Fill conveys the flood result only — identical on both layers. The ring
-        // (drawn next) is what conveys which layer(s) reached the tile.
+        // Fill conveys the flood result only; the ring (drawn next) conveys which layer(s) reached the tile.
         ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_REACHABLE;
         ctx.beginPath();
         ctx.arc(dx, dy, radius, 0, Math.PI * 2);
@@ -96,7 +84,7 @@ const drawReachableDots = (dc: DrawContext, drawResults: FloodFillResult[], laye
     }
   }
 
-  // Draw flood fill starting position as a black dot with white outline
+  // Flood fill start: black dot with white outline.
   const primaryResult = drawResults[0];
   if (primaryResult?.startPos) {
     const spWorldX = dc.screenWorldX + primaryResult.startPos.col * TILE_PX + TILE_PX / 2;
@@ -115,8 +103,7 @@ const drawReachableDots = (dc: DrawContext, drawResults: FloodFillResult[], laye
     ctx.fill();
   }
 
-  // Draw hookshot targets as ordinary dots — hookshot-ability is already
-  // reported in the tile tooltip, so no separate ring marks these tiles.
+  // Hookshot targets are ordinary dots; the tile tooltip already reports hookshot-ability.
   ctx.globalAlpha = 0.7;
   for (const drawResult of drawResults) {
     if (!drawResult.hookTargets || drawResult.hookTargets.length === 0) continue;

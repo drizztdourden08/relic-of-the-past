@@ -3,10 +3,9 @@
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
-import { PNG } from 'pngjs';
 import { compileGbaAlttpSupplement } from '../../shared/asset-extraction/compile-resources-gba-alttp';
-import { decode4bppTile } from '../../shared/asset-extraction/graphics/bitplane-decoder';
 import { loadGbaAlttpRomFromBuffer } from '../../shared/asset-extraction/rom/gba-rom';
+import { loadRomFromBuffer } from '../../shared/asset-extraction/rom/rom-loader';
 import {
   GbaAlttpDungeonSource,
   GBA_NEW_ENTITY_HANDLERS,
@@ -26,118 +25,9 @@ import {
   extractPalaceSpritePalettes,
   decodeGbaAlttpSaveProgression,
 } from '../../shared/asset-extraction/sources/gba-alttp';
-
-interface CliArguments {
-  rom?: string;
-  out?: string;
-  'allow-unknown-rom'?: boolean;
-}
-
-const parseArguments = (): CliArguments => {
-  const result: CliArguments = {};
-  const values = process.argv.slice(2);
-  for (let i = 0; i < values.length; i++) {
-    const key = values[i];
-    if (!key.startsWith('--')) throw new Error(`Unexpected argument: ${key}`);
-    if (key === '--allow-unknown-rom') {
-      result['allow-unknown-rom'] = true;
-      continue;
-    }
-    const value = values[++i];
-    if (!value) throw new Error(`Missing value for ${key}`);
-    if (key === '--rom') result.rom = value;
-    else if (key === '--out') result.out = value;
-    else throw new Error(`Unknown argument: ${key}`);
-  }
-  return result;
-};
-
-const wordsToBuffer = (words: Uint16Array): Buffer => {
-  const result = Buffer.alloc(words.length * 2);
-  for (let i = 0; i < words.length; i++) result.writeUInt16LE(words[i], i * 2);
-  return result;
-};
-
-const entityBytes = (sortMode: number, records: readonly { nativeBytes: Uint8Array }[]): Buffer => Buffer.concat([
-  Buffer.from([sortMode]),
-  ...records.map(record => Buffer.from(record.nativeBytes)),
-  Buffer.from([0xff]),
-]);
-
-const secretBytes = (records: readonly { nativeBytes: Uint8Array }[]): Buffer => Buffer.concat([
-  ...records.map(record => Buffer.from(record.nativeBytes)),
-  Buffer.from([0xff, 0xff]),
-]);
-
-const decodeColor = (value: number): readonly [number, number, number, number] => [
-  Math.round((value & 0x1f) * 255 / 31),
-  Math.round(((value >>> 5) & 0x1f) * 255 / 31),
-  Math.round(((value >>> 10) & 0x1f) * 255 / 31),
-  0xff,
-];
-
-const renderRoom = (
-  layers: readonly { snesWords: Uint16Array }[],
-  graphics: Buffer,
-  palette: Buffer,
-): Buffer => {
-  const width = 512;
-  const png = new PNG({ width, height: 512 });
-  const tiles = Array.from({ length: 512 }, (_, index) => decode4bppTile(graphics, index * 32));
-  const colors = Array.from({ length: 8 }, (_, bank) => Array.from({ length: 16 }, (_, color) => {
-    if (bank < 2) return [0, 0, 0, 0] as const;
-    return decodeColor(palette.readUInt16LE((bank - 2) * 32 + color * 2));
-  }));
-
-  for (const layer of layers) {
-    for (let tileY = 0; tileY < 64; tileY++) {
-      for (let tileX = 0; tileX < 64; tileX++) {
-        const word = layer.snesWords[tileY * 64 + tileX];
-        const tile = tiles[word & 0x03ff];
-        const bank = (word >>> 10) & 7;
-        const horizontalFlip = Boolean(word & 0x4000);
-        const verticalFlip = Boolean(word & 0x8000);
-        for (let y = 0; y < 8; y++) {
-          for (let x = 0; x < 8; x++) {
-            const sourceX = horizontalFlip ? 7 - x : x;
-            const sourceY = verticalFlip ? 7 - y : y;
-            const colorIndex = tile[sourceY * 8 + sourceX];
-            if (colorIndex === 0 || bank < 2) continue;
-            const color = colors[bank][colorIndex];
-            const destination = ((tileY * 8 + y) * width + tileX * 8 + x) * 4;
-            png.data[destination] = color[0];
-            png.data[destination + 1] = color[1];
-            png.data[destination + 2] = color[2];
-            png.data[destination + 3] = color[3];
-          }
-        }
-      }
-    }
-  }
-  return PNG.sync.write(png);
-};
-
-const renderCollision = (collision: Uint8Array): Buffer => {
-  const png = new PNG({ width: 512, height: 512 });
-  for (let tileY = 0; tileY < 64; tileY++) {
-    for (let tileX = 0; tileX < 64; tileX++) {
-      const attribute = collision[tileY * 64 + tileX];
-      const red = (attribute * 73) & 0xff;
-      const green = (attribute * 151) & 0xff;
-      const blue = (attribute * 211) & 0xff;
-      for (let y = 0; y < 8; y++) {
-        for (let x = 0; x < 8; x++) {
-          const destination = ((tileY * 8 + y) * 512 + tileX * 8 + x) * 4;
-          png.data[destination] = red;
-          png.data[destination + 1] = green;
-          png.data[destination + 2] = blue;
-          png.data[destination + 3] = 0xff;
-        }
-      }
-    }
-  }
-  return PNG.sync.write(png);
-};
+import { parseArguments } from './lib/export-arguments';
+import { entityBytes, secretBytes, wordsToBuffer } from './lib/room-bytes';
+import { renderCollision, renderRoom } from './lib/room-images';
 
 const args = parseArguments();
 const defaultRom = resolve('test-roms/Legend of Zelda, The - A Link to the Past & Four Swords (USA).gba');
@@ -161,7 +51,8 @@ mkdirSync(outputRoot, { recursive: true });
 mkdirSync(resolve(outputRoot, 'graphics'), { recursive: true });
 mkdirSync(resolve(outputRoot, 'graphics', 'sprites'), { recursive: true });
 mkdirSync(resolve(outputRoot, 'dialogue'), { recursive: true });
-writeFileSync(resolve(outputRoot, 'palace-assets.dat'), compileGbaAlttpSupplement(rom));
+if (!args.snes) throw new Error('Pass --snes <base cartridge>: the supplement is compiled against it');
+writeFileSync(resolve(outputRoot, 'palace-assets.dat'), compileGbaAlttpSupplement(rom, loadRomFromBuffer(readFileSync(resolve(args.snes)))));
 writeFileSync(resolve(outputRoot, 'graphics', 'palace-bg.snes-4bpp'), graphics);
 for (const sheet of spriteGraphics.sheets) {
   writeFileSync(resolve(outputRoot, 'graphics', 'sprites', `sheet-${sheet.id.toString(16).padStart(2, '0')}.snes-4bpp`), sheet.snes4bpp);

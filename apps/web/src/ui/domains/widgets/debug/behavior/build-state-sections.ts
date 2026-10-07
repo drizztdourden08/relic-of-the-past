@@ -28,7 +28,7 @@ const formatHearts = (current: number, capacity: number): string => {
 
 const bin = (value: number, bits: number): string => value.toString(2).padStart(bits, '0');
 const hex = (value: number, pad = 2): string => `0x${value.toString(16).padStart(pad, '0')}`;
-const yn = (v: boolean | number): string => (v ? '✓' : '—');
+const yn = (v: boolean | number): string => (v ? '✓' : '-');
 
 const buildStateSections = (state: GameUIState, fps?: number): StateSectionData[] => {
   const { mode, gameMode, hud, inventory, equipment, dungeonProgress, text, map, floorIndicator, saveMenu } = state;
@@ -43,7 +43,7 @@ const buildStateSections = (state: GameUIState, fps?: number): StateSectionData[
       { label: 'Indoors', value: yn(map.isIndoors) },
       { label: 'OW Screen / Area', value: `${map.overworldScreenIndex} / ${map.overworldAreaIndex}` },
       { label: 'Room', value: hex(map.roomIndex, 3), mono: true },
-      { label: 'Palace', value: map.palaceIndex === 0xff ? '—' : String(map.palaceIndex >> 1) },
+      { label: 'Palace', value: map.palaceIndex === 0xff ? '-' : String(map.palaceIndex >> 1) },
       { label: 'Entrance', value: hex(map.whichEntrance), mono: true },
       { label: 'Floor', value: String(map.currentFloor) },
       { label: 'Layer', value: map.linkLayer === 0 ? 'Upper' : 'Lower' },
@@ -54,7 +54,7 @@ const buildStateSections = (state: GameUIState, fps?: number): StateSectionData[
       { label: 'Magic', value: `${hud.magicPower}/128${hud.halfMagic ? ' (½)' : ''}` },
       { label: 'Rupees', value: hud.rupees !== hud.rupeeTarget ? `${hud.rupees} → ${hud.rupeeTarget}` : String(hud.rupees) },
       { label: 'Bombs / Arrows', value: `${hud.bombs} / ${hud.arrows}` },
-      { label: 'Keys', value: hud.keys === 255 ? '—' : String(hud.keys) },
+      { label: 'Keys', value: hud.keys === 255 ? '-' : String(hud.keys) },
       { label: 'Equipped (Y X L R)', value: `${hud.equippedY} ${hud.equippedX} ${hud.equippedL} ${hud.equippedR}`, mono: true },
     ] },
     { title: 'Equipment', rows: [
@@ -70,7 +70,7 @@ const buildStateSections = (state: GameUIState, fps?: number): StateSectionData[
       ...inventory.items
         .map((v, i) => ({ label: ITEM_NAMES[i] ?? `Item ${i}`, value: String(v) }))
         .filter((_, i) => inventory.items[i] > 0),
-      { label: 'Bottles', value: inventory.bottles.map((v) => (v > 0 ? (BOTTLE_NAMES[v] ?? `?${v}`) : '—')).join(', ') },
+      { label: 'Bottles', value: inventory.bottles.map((v) => (v > 0 ? (BOTTLE_NAMES[v] ?? `?${v}`) : '-')).join(', ') },
     ] },
     { title: 'Dungeon Progress', rows: [
       { label: 'Pendants', value: bin(dungeonProgress.pendants, 3), mono: true },

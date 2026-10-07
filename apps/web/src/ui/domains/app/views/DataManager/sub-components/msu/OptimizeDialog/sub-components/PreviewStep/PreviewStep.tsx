@@ -1,13 +1,5 @@
 /* @layer renderer-components @kind component */
-/**
- * The measured preview: every file the run would touch, and what it would really cost — read
- * before a single byte is written.
- *
- * The pack figures sum only the rows that were really measured. A convertible file whose length
- * nothing could report is counted apart rather than folded in at its current size, because that
- * would present a guess as part of a measured total. Growth is added exactly like saving, so a
- * pack of already-compressed audio shows the total going UP instead of a flattering net figure.
- */
+// Pack figures sum only measured rows; see preview-totals for why unmeasured files are counted apart.
 import { useMemo } from 'react';
 import { Box } from '@ds/primitives/Box';
 import { EmptyState } from '@ds/primitives/EmptyState';
@@ -44,7 +36,7 @@ const PreviewStep = (props: PreviewStepProps) => {
         <Text className="detail-panel__label">Converts</Text>
         <Text className="detail-panel__value">
           {convertibleCount} file{convertibleCount === 1 ? '' : 's'}
-          {analysis.alreadyTargetCount > 0 && ` · ${analysis.alreadyTargetCount} already in the target format`}
+          {analysis.alreadyTargetCount > 0 && ` · ${analysis.alreadyTargetCount} already held in the target format`}
         </Text>
 
         {totals.growingCount > 0 && (

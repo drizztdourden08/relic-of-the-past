@@ -1,7 +1,7 @@
 /* @layer renderer-hud @kind component */
 /**
- * PauseEquipSlot — renders an equipment item (sword, shield, armor, etc.)
- * with its level-dependent sprite. 16×16 SNES pixels.
+ * Renders an equipment item (sword, shield, armor, etc.) with its
+ * level-dependent sprite. 16×16 SNES pixels.
  */
 import { HudBox } from '../../primitives/HudBox';
 import { HudImage } from '../../primitives/HudImage';

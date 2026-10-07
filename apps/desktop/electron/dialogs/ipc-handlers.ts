@@ -34,7 +34,7 @@ const registerDialogHandlers = () => {
     return { name: basename(picked), data: toArrayBuffer(await readFile(picked)) };
   });
 
-  // A cancelled dialog reports saved: false with no error — declining is not a failure.
+  // A cancelled dialog reports saved: false with no error, because declining is not a failure.
   handle('dialog:saveFile', async (_event, name: string, data: ArrayBuffer, extensions: string[]) => {
     const mainWindow = getMainWindow();
     if (!mainWindow) return { saved: false, error: 'No window to attach the dialog to' };

@@ -1,11 +1,5 @@
 /* @layer renderer-components @kind logic */
-/**
- * Pure add/remove/update transitions over a clause list, keyed by the clause's
- * own id — never by array index, so a clause survives reordering and a stale
- * index captured before a re-render can never touch the wrong row. Extracted
- * out of FilterBar so the transitions are unit-tested without rendering
- * anything (see filter-bar-clause-list.test.ts).
- */
+/** Pure clause-list transitions keyed by clause id, never array index, so a stale index can never touch the wrong row. */
 import type { FilterClause } from '../../../data/filter/clause';
 
 const addClause = (

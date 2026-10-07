@@ -71,7 +71,7 @@ void OnClick(HWND window, ui::Btn id) {
       Repaint(window);
       break;
     case ui::Btn::Cancel:
-    // A download in progress has to be abandoned rather than left running: the
+    // A download in progress has to be abandoned, never left running: the
     // worker sees the cancel and stops before anything is written.
     case ui::Btn::Close: flow::Cancel(); DestroyWindow(window); break;
     default: break;

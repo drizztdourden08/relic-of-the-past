@@ -8,7 +8,7 @@
  *
  * `SCREEN_ID_PROBE`'s live value is the CURRENT screen's id, which a
  * `FieldProbe` has no direct channel for (`read` only ever receives
- * `(observations, record)` — see `probe.types.ts`). `observations.match?
+ * `(observations, record)`, as `probe.types.ts` says). `observations.match?
  * .screen.id` is the same value `context.screenId` always carries in
  * production (`use-screen-observations.ts` sets `screenId = match?.screen.id
  * ?? null`), so reading it off `match` here is not a guess, just the one
@@ -16,12 +16,12 @@
  *
  * Chest CONTENTS are deliberately left alone by both probes: the check
  * collection's `vanillaItemIds` is edited per dungeon-specific reward in ways
- * the raw chest byte cannot adjudicate — that is `item-grants`' business, not
+ * the raw chest byte cannot adjudicate. That is `item-grants`' business, not
  * this one's. The screen comparison also goes through the RECORDED screen's
- * own `roomIndex` rather than comparing screen ids directly: one room can
+ * own `roomIndex` instead of comparing screen ids directly: one room can
  * legitimately carry several screen records (a progress variant of the same
  * interior), so a check attached to a variant this pass did not resolve is
- * correct, not wrong — only a recorded screen belonging to ANOTHER room
+ * correct, not wrong. Only a recorded screen belonging to ANOTHER room
  * entirely is a real mismatch.
  */
 import { getScreen } from '../../../data';

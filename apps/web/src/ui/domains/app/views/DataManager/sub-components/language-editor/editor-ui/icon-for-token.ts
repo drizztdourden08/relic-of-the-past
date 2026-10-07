@@ -4,14 +4,14 @@
  * inline chips and legend rows all read from here, so the same thing is never
  * drawn two ways in the same line.
  *
- * The table maps NAMES ONLY — it is not a second catalog. Whether a code may be
+ * The table maps NAMES ONLY. It is not a second catalog. Whether a code may be
  * offered, what it is called and what it does all come from the catalog in
  * `shared/game/language/codes`; a name missing from this table still works and
- * simply falls back to the neutral symbol.
+ * falls back to the neutral symbol.
  *
  * The three line-start markers deliberately share one symbol: they are the same
  * gesture aimed at a different row, and the row number is carried as a small
- * numeral beside the icon rather than by three shapes nobody can tell apart.
+ * numeral beside the icon, not by three shapes nobody can tell apart.
  */
 import asteriskIcon from '@iconify-icons/lucide/asterisk';
 import bookIcon from '@iconify-icons/lucide/book-marked';
@@ -58,13 +58,13 @@ const CODE_ICONS: Record<string, IconifyIcon> = {
   Item: crosshairIcon,
 };
 
-/** Anything the table has no symbol for — including a code added later. */
+/** Anything the table has no symbol for, such as a code added later. */
 const FALLBACK_ICON: IconifyIcon = asteriskIcon;
 
 /** A reference to one of the set's reusable phrases. */
 const GLOSSARY_ICON: IconifyIcon = bookIcon;
 
-/** A picture character, on the rare surface that wants a symbol rather than the character. */
+/** A picture character, on the rare surface that wants a symbol, not the character. */
 const GLYPH_ICON: IconifyIcon = smileIcon;
 
 const iconForCodeName = (name: string): IconifyIcon => CODE_ICONS[name] ?? FALLBACK_ICON;

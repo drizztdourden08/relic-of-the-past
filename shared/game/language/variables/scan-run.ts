@@ -2,15 +2,15 @@
 /**
  * Locating a phrase inside one text run, split by the case policy.
  *
- * CASE POLICY — detect insensitively, offer only an exact match.
+ * CASE POLICY. Detect insensitively, offer only an exact match.
  * A reference bakes back as the variable's value verbatim, so swapping a run
  * that reads a word in caps for a variable whose value is in title case would
  * silently restyle the line. Shouted words are a real device in this dialogue
  * and are not ours to normalise. So a run is offered for replacement only when
  * its characters match exactly, and the ones that match ignoring case are
  * reported separately, with their positions, so a caller can say "six to
- * replace, two differ in case" instead of quietly rewriting or quietly
- * dropping them. Fixing a near miss stays a deliberate edit.
+ * replace, two differ in case" instead of silently rewriting or dropping
+ * them. Fixing a near miss stays a deliberate edit.
  *
  * This is the same policy the editor's term-linking helper already applies to a
  * glossary term, ported down here because that helper lives in the renderer and
@@ -26,7 +26,7 @@ const MIN_PHRASE_LENGTH = 2;
 
 /** Where a phrase sits inside one text run, split by the case policy. */
 type RunScan = {
-  /** Start offsets of exact-case occurrences — the replaceable ones. */
+  /** Start offsets of exact-case occurrences, the replaceable ones. */
   exact: number[];
   /** Start offsets of occurrences that match only when case is ignored. */
   caseMiss: number[];
@@ -47,7 +47,7 @@ const scanRun = (text: string, phrase: string): RunScan => {
   const needle = phrase.toLowerCase();
   // Lowercasing changes the length of a handful of exotic characters, which
   // would misalign the offsets a caller slices with. When that happens, scan
-  // the original text instead so a wrong span can never be offered — the cost
+  // the original text instead so a wrong span can never be offered. The cost
   // is that near misses go unreported for that run.
   const aligned = haystack.length === text.length && needle.length === phrase.length;
   const source = aligned ? haystack : text;

@@ -2,8 +2,8 @@
 /**
  * The optional-ffmpeg invoke channels: query its state, install it on request, and probe
  * one media file with it. Split out of invoke-contract.ts's single `InvokeContract`
- * (which extends this) to keep that file under the line cap — this is still the one
- * source of truth for these signatures.
+ * (which extends this) to keep that file under the line cap, but these signatures still
+ * have their one source of truth here.
  *
  * Install progress arrives on the `ffmpeg:progress` EVENT (see event-contract.ts), which
  * carries the same `FfmpegState` these channels return, so the renderer reads one shape.

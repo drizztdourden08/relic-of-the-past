@@ -29,7 +29,7 @@ const DataStory = () => (
     <Specimen label="Thumbnail" hint="image frame with placeholder fallback">
       <Box className="dg-row">
         <Thumbnail placeholder="No screenshot" />
-        <Thumbnail src="./logos/logo-512.png" alt="logo" />
+        <Thumbnail src="./logos/logo/logo-512.png" alt="logo" />
       </Box>
     </Specimen>
 

@@ -8,7 +8,7 @@ interface FitSize {
 
 interface CanvasFitParams {
   containerRef: RefObject<HTMLElement | null>;
-  /** Canvas backing-store size. Twice the source resolution — the core presents at 2x. */
+  /** Canvas backing-store size. Twice the source resolution, because the core presents at 2x. */
   bufW: number;
   bufH: number;
   /** Fill the container outright, ignoring the source proportions. */
@@ -36,8 +36,8 @@ const fitWholePixels = (containerW: number, containerH: number, bufW: number, bu
   const sourceW = bufW / BUFFER_OVERSAMPLE;
   const sourceH = bufH / BUFFER_OVERSAMPLE;
 
-  // Whole device pixels per source pixel. Never below 1 — a container too small for even 1:1 gets
-  // the smallest honest size and overflows rather than collapsing to nothing.
+  // Whole device pixels per source pixel. Never below 1, so a container too small for even 1:1
+  // gets the smallest honest size and overflows instead of collapsing to nothing.
   const scale = Math.max(1, Math.floor(Math.min((containerW * dpr) / sourceW, (containerH * dpr) / sourceH)));
 
   return { width: (sourceW * scale) / dpr, height: (sourceH * scale) / dpr };
@@ -83,11 +83,10 @@ const useCanvasFit = (params: CanvasFitParams): FitSize => {
     return () => ro.disconnect();
   }, [compute]);
 
-  // Dragging the window to a monitor with different display scaling changes how many real pixels a
-  // CSS pixel is worth without changing the container's CSS size, so the resize observer above never
-  // fires — this media query does. Re-armed on each change, because a query only ever matches the
-  // ratio it was built with. Nothing but pixel-perfect mode depends on the ratio, so nothing else
-  // pays for the listener.
+  // Moving the window to a monitor with different display scaling changes the device pixel ratio
+  // without changing the container's CSS size, so the resize observer never fires; this media
+  // query does. Re-armed on each change, because a query only matches the ratio it was built
+  // with. Only pixel-perfect mode depends on the ratio, so nothing else pays for the listener.
   useEffect(() => {
     if (!pixelPerfect) return;
     const query = window.matchMedia(`(resolution: ${pixelRatio}dppx)`);

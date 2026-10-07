@@ -2,7 +2,7 @@
 import type { AreaId, LocationId } from './ids';
 import type { World } from '../enumeration/generated-types';
 
-/** A broad geographic zone — a mountain range, a village, a desert. */
+/** A broad geographic zone, such as a mountain range, a village or a desert. */
 interface AreaRecord {
   id: AreaId;
   world: World;
@@ -10,7 +10,7 @@ interface AreaRecord {
   randomizerName: string;
 }
 
-/** A named structure or landmark inside exactly one area — a dungeon, a village, a landmark. */
+/** A named structure or landmark inside exactly one area, such as a dungeon or a village. */
 interface LocationRecord {
   id: LocationId;
   areaId: AreaId;

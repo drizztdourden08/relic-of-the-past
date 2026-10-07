@@ -2,13 +2,13 @@
 /**
  * Wraps bare Opus packets in an Ogg stream, in memory, so the browser's own decoder can take
  * them. Chromium decodes Ogg-Opus natively, so this muxer is the whole of what a custom Opus
- * container needs from us — no codec, no library, no wasm.
+ * container needs from us, with no codec, no library and no wasm.
  *
  * The stream is the layout RFC 7845 requires: an `OpusHead` identification packet alone on the
  * first page, an `OpusTags` comment packet alone on the second, then the audio packets. Every
- * page states its length as a run of "lacing" bytes — 255 for each full 255 bytes of a packet
+ * page states its length as a run of "lacing" bytes, 255 for each full 255 bytes of a packet
  * then the remainder, so a packet whose length is an exact multiple of 255 needs a trailing
- * zero to mark its end — and no page may carry more than 255 of them. Packets here are at most
+ * zero to mark its end, and no page may carry more than 255 of them. Packets here are at most
  * 1276 bytes, so none ever has to be split across a page boundary.
  *
  * Granule positions count decoded samples at 48 kHz from the start of the stream, and the

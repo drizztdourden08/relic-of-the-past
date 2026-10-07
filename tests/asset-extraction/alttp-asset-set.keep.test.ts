@@ -13,8 +13,8 @@ const integration = existsSync(snesPath) && existsSync(gbaPath) ? it : it.skip;
 
 describe('multi-source asset aggregation', () => {
   // Full compile options on purpose. The cheap variant (skipDialogue/skipMusic) proved
-  // byte-identity only for a blob the app never actually ships, which left the real
-  // question — does adding a second source perturb the base at all — unanswered.
+  // byte-identity only for a blob the app never actually ships. That left the real
+  // question unanswered: does adding a second source perturb the base at all?
   integration('leaves the base byte-identical whether or not a supplement is present', async () => {
     const snes = loadRomFromBuffer(readFileSync(snesPath));
     const gba = loadGbaAlttpRomFromBuffer(readFileSync(gbaPath));
@@ -26,22 +26,34 @@ describe('multi-source asset aggregation', () => {
     expect(combined.base).toEqual(baseOnly.base);
   });
 
-  integration('reports the supplement as its own container, and its failure as data', async () => {
+  integration('reports the supplement as its own container', async () => {
     const snes = loadRomFromBuffer(readFileSync(snesPath));
     const gba = loadGbaAlttpRomFromBuffer(readFileSync(gbaPath));
 
     const baseOnly = await compileAlttpAssetSet({ snes }, { skipDialogue: true, skipMusic: true });
     expect(baseOnly.supplements).toEqual([]);
 
-    // Without an engine to solve room streams the supplement must fail as data — reason and
-    // all — while the base stays untouched. The full solve path is covered by the supplement
-    // test; this one is about the error boundary.
     const combined = await compileAlttpAssetSet({ snes, gbaAlttp: gba }, { skipDialogue: true, skipMusic: true });
     expect(combined.supplements).toHaveLength(1);
     const [supplement] = combined.supplements;
     expect(supplement.id).toBe('gba-alttp');
+    expect(supplement.ok).toBe(true);
+    expect(combined.base).toEqual(baseOnly.base);
+  });
+
+  integration('reports an unreadable supplement as data and leaves the base alone', async () => {
+    const snes = loadRomFromBuffer(readFileSync(snesPath));
+    // Everything past the cartridge header wiped: it loads, and every table it points at is gone.
+    const wiped = Buffer.from(readFileSync(gbaPath));
+    wiped.fill(0, 0x200);
+    const gba = loadGbaAlttpRomFromBuffer(wiped, { allowUnknownHash: true });
+
+    const baseOnly = await compileAlttpAssetSet({ snes }, { skipDialogue: true, skipMusic: true });
+    const combined = await compileAlttpAssetSet({ snes, gbaAlttp: gba }, { skipDialogue: true, skipMusic: true });
+    const [supplement] = combined.supplements;
+    expect(supplement.id).toBe('gba-alttp');
     expect(supplement.ok).toBe(false);
-    if (!supplement.ok) expect(supplement.reason).toContain('streams');
+    if (!supplement.ok) expect(supplement.reason.length).toBeGreaterThan(0);
     expect(combined.base).toEqual(baseOnly.base);
   });
 });

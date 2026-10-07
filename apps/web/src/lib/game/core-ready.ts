@@ -1,12 +1,12 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Core readiness — the one honest answer to "can the core take a command right now?".
+ * Core readiness: the one honest answer to "can the core take a command right now?".
  *
  * The renderer has a second, looser notion of "running": the game view has its asset blob
  * (useGameLifecycle's isRunning). The Emscripten module behind that view appears roughly two
- * seconds later, and everything gated on the loose flag — the save-state overlay, its
- * shortcuts, the Home tab's load buttons — is live for that whole gap. A command issued in
- * it used to find a null module and be dropped where it stood.
+ * seconds later. Everything gated on the loose flag is live for that whole gap: the save-state
+ * overlay, its shortcuts and the Home tab's load buttons. A command issued in it used to find a
+ * null module and be dropped where it stood.
  *
  * So anything that reaches into the core orders itself against THIS, not against the flag.
  */
@@ -21,7 +21,7 @@ const isCoreReady = (): boolean => getModule() !== null && getGameState().status
 /**
  * Resolves true once the core can take a command, false if it never gets there.
  *
- * A request made mid-boot is not a mistake to drop — it is early. Waiting it out is what makes
+ * A request made mid-boot is not a mistake to drop. It is early, and waiting it out is what makes
  * "load slot 3" mean the same thing whether the core came up a second ago or is still a second
  * away. Resolves false on a crash, and on the timeout, so no caller waits forever.
  */

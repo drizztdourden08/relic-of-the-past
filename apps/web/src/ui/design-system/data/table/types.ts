@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 /**
- * Table state is plain, serialisable data — that is what lets a snapshot of it
- * be written to disk and restored without the table knowing storage exists.
+ * Table state is plain, serialisable data. That is what lets a snapshot of it be
+ * written to disk and restored without the table knowing storage exists.
  */
 
 interface TableColumn {
@@ -10,17 +10,17 @@ interface TableColumn {
   label?: string;
   /**
    * A fixed track width in pixels. Absent, the column takes the automatic
-   * track. Mutually exclusive with `grow` and `fit` — a column cannot be a
-   * measured width and also whatever is left over, or also a width that
-   * keeps re-measuring itself.
+   * track. Mutually exclusive with `grow` and `fit`, because a column cannot be
+   * a measured width and also whatever is left over, or a width that keeps
+   * re-measuring itself.
    */
   width?: number;
   /** Take the leftover width of the row instead of a fixed or automatic track. */
   grow?: boolean;
   /**
    * Persistent "fit to content": the column keeps re-measuring the widest
-   * value currently on screen and renders at that width, rather than
-   * freezing at whatever it measured the moment this was turned on. Mutually
+   * value currently on screen and renders at that width instead of freezing at
+   * whatever it measured the moment this was turned on. Mutually
    * exclusive with `width` and `grow`, the same way those two are with each
    * other.
    */
@@ -28,7 +28,7 @@ interface TableColumn {
   /**
    * For a reference column: which field of the RECORD IT POINTS AT to show in
    * the cell, instead of the raw id. A path in the TARGET collection's schema,
-   * not in this one — the column's own `path` still says which id is read, and
+   * not in this one. The column's own `path` still says which id is read, and
    * the id itself still travels on the cell, so following the reference is
    * unaffected by whatever is on screen. Absent, the cell shows the id.
    */
@@ -51,9 +51,9 @@ interface TableState {
 type ColumnMove = 'left' | 'right' | 'first' | 'last';
 
 /**
- * The renderable result of layered grouping. Group nodes NEST — a group's
- * `children` are either the next grouping level or the rows themselves — so a
- * renderer walks the tree recursively and collapsing a node is a local
+ * The renderable result of layered grouping. Group nodes NEST, so a group's
+ * `children` are either the next grouping level or the rows themselves. A
+ * renderer walks the tree recursively, and collapsing a node is a local
  * decision. `count` is the total number of leaf rows beneath the node.
  */
 type GroupedRow<T> =

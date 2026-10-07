@@ -20,11 +20,11 @@ describe('evaluatePresence', () => {
     expect(evaluatePresence(undefined, baseState())).toBe(true);
   });
 
-  it('progressFlag clear/set — masked bit of sram_progress_flags', () => {
+  it('progressFlag clear/set reads the masked bit of sram_progress_flags', () => {
     const cond: PresenceCondition = { progressFlag: 0x10, state: 'clear' };
     expect(evaluatePresence(cond, baseState({ progressFlags: 0x00 }))).toBe(true);
     expect(evaluatePresence(cond, baseState({ progressFlags: 0x10 }))).toBe(false);
-    // The masked bit set among others — still counts as set.
+    // The masked bit set among others still counts as set.
     expect(evaluatePresence(cond, baseState({ progressFlags: 0x1f }))).toBe(false);
     expect(evaluatePresence({ progressFlag: 0x10, state: 'set' }, baseState({ progressFlags: 0x10 }))).toBe(true);
   });
@@ -36,7 +36,7 @@ describe('evaluatePresence', () => {
     expect(evaluatePresence({ progressIndicator3: 0x10, state: 'set' }, baseState({ progressIndicator3: 0x10 }))).toBe(true);
   });
 
-  it('item owned/not — asked of the inventory by id', () => {
+  it('item owned/not is asked of the inventory by id', () => {
     const cond: PresenceCondition = { itemId: 'item-031', owned: false };
     expect(evaluatePresence(cond, baseState())).toBe(true);
     expect(evaluatePresence(cond, baseState({ inventory: new Set<ItemId>(['item-031']) }))).toBe(false);
@@ -65,7 +65,7 @@ describe('evaluatePresence', () => {
     expect(evaluatePresence({ roomBossDead: room, dead: false }, baseState({ roomState: [] }))).toBe(true);
   });
 
-  it('and requires every sub-condition — Old Man (no follower AND no mirror)', () => {
+  it('and requires every sub-condition, as with Old Man (no follower AND no mirror)', () => {
     const cond: PresenceCondition = { and: [{ follower: 'none' }, { itemId: 'item-027', owned: false }] };
     expect(evaluatePresence(cond, baseState())).toBe(true);
     expect(evaluatePresence(cond, baseState({ followerIndicator: 1 }))).toBe(false);
@@ -78,7 +78,7 @@ describe('evaluatePresence', () => {
     expect(evaluatePresence(cond, baseState({ followerIndicator: 3, inventory: new Set<ItemId>(['item-019']) }))).toBe(true);
   });
 
-  it('not inverts — Locksmith absent while escorting follower 9', () => {
+  it('not inverts, so Locksmith is absent while escorting follower 9', () => {
     const cond: PresenceCondition = { and: [{ not: { followerEq: 9 } }, { progressIndicator3: 0x10, state: 'clear' }] };
     expect(evaluatePresence(cond, baseState())).toBe(true);
     expect(evaluatePresence(cond, baseState({ followerIndicator: 9 }))).toBe(false);

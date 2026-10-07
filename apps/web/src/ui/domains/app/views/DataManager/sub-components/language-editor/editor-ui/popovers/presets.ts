@@ -3,16 +3,16 @@
  * The handful of values worth offering for the two codes an author still places
  * by hand: how long the text holds still, and how fast it draws.
  *
- * Both take a raw 0..15 parameter, which is a byte editor rather than a choice.
- * A pause is roughly half a second per step, so four points across that range —
- * a beat, a breath, a long hold, the full stop — cover everything a line is
- * written for. The speed presets are the four the engine's own draw loop makes
+ * Both take a raw 0..15 parameter, which is a byte editor, not a choice.
+ * A pause is roughly half a second per step, so four points across that range
+ * cover everything a line is written for: a beat, a breath, a long hold, the
+ * full stop. The speed presets are the four the engine's own draw loop makes
  * meaningfully different.
  *
  * Every preset is filtered through what the LANGUAGE can bake before it is
  * shown, so nothing offered here can fail to compile. An encoder that refuses
  * the code outright leaves an empty list, and the button that would open it is
- * disabled rather than opening on nothing.
+ * disabled instead of opening on nothing.
  */
 import { encodableParams } from '@shared/game/language';
 import type { LanguageConfig } from '@shared/asset-extraction/text/data/language-data';

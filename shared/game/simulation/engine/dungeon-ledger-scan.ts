@@ -1,16 +1,11 @@
 /* @layer shared-game @kind logic */
 /**
  * Fills a dungeon group's ledger from one observed room: every chest and
- * key-drop guard the room holds becomes an owed entry (regardless of whether
- * it is currently reachable), and anything else the engine already turned
- * into an actionable target (a standing item, an NPC check) is recorded the
- * first time it is seen. Gates — doors, cracked walls, switches — are never
- * owed themselves; they only explain why something else is blocked.
- *
- * Which of the two a target is comes off `SimTarget.role`. It used to come from
- * matching the target's English noun against a word list, so the ledger's answer
- * to "does this dungeon still owe something" depended on the wording of a log
- * label — reword "key door" and every locked door became a check the run owed.
+ * key-drop guard becomes an owed entry (reachable or not), and anything else
+ * the engine turned into a target (a standing item, an NPC check) is recorded
+ * the first time it is seen. Gates (doors, cracked walls, switches) are never
+ * owed; they only explain why something else is blocked. Which of the two a
+ * target is comes off `SimTarget.role`, never off its log noun.
  */
 import type { SimObservation } from '../types';
 import type { DungeonId } from '../../data';
@@ -21,7 +16,7 @@ import { dungeonGroupForScreen, dungeonForScreen } from '../../logic/queries/dun
 import { ensureLedger, upsertOwed, pruneDoneChecks } from './dungeon-ledger';
 import type { EngineState, SimTarget } from './state';
 
-/** Any bombable-attribute tile still standing, ignoring reach — a wall the
+/** Any bombable-attribute tile still standing, ignoring reach. A wall the
  *  flood already treats as impassable never shows up as a target without bombs. */
 const hasUnblastedWall = (obs: SimObservation): boolean => {
   const bundle = obs.grids;
@@ -30,8 +25,8 @@ const hasUnblastedWall = (obs: SimObservation): boolean => {
   return grids.some(g => g.some(row => row.some(a => a >= BOMBABLE_ATTR_MIN && a <= BOMBABLE_ATTR_MAX)));
 };
 
-/** Best-effort reason a present-but-not-actionable check is blocked, from the
- *  same gates discoverTargets already checks for doors/walls/kills. */
+/** Best-effort reason a present-but-blocked check is blocked, from the same
+ *  gates discoverTargets already checks for doors/walls/kills. */
 const guessBlocker = (state: EngineState, obs: SimObservation, dungeon: DungeonId | null): string | undefined => {
   const inter = obs.interactables;
   if (!state.reachTokens.has('bombs')
@@ -52,9 +47,8 @@ const guessBlocker = (state: EngineState, obs: SimObservation, dungeon: DungeonI
 
 /**
  * Record what the current room owes into its dungeon group's ledger. `targets`
- * is the SAME list `discoverTargets` already produced this step — reused
- * rather than re-derived, so actionability here never disagrees with what the
- * engine is actually about to trigger.
+ * is the SAME list `discoverTargets` produced this step, so what counts as
+ * reachable here never disagrees with what the engine is about to trigger.
  */
 const updateDungeonLedger = (state: EngineState, obs: SimObservation, targets: SimTarget[]): void => {
   const group = dungeonGroupForScreen(state.virtual.screenId);
@@ -66,7 +60,7 @@ const updateDungeonLedger = (state: EngineState, obs: SimObservation, targets: S
   const inter = obs.interactables;
   if (!inter) return;
 
-  // A chest's `opened` bit is the live ground truth, independent of `done` —
+  // A chest's `opened` bit is the live ground truth, independent of `done`, so
   // strike it even if this run did not open it itself (a pre-opened save).
   const openedChests = new Set(inter.chests.filter(c => c.opened).map(chestKey));
   ledger.owed = ledger.owed.filter(o => !openedChests.has(o.checkId));

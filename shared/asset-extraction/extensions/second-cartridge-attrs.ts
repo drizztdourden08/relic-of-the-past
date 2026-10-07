@@ -5,8 +5,8 @@
  * The port's own collision arrays are the source of truth for the baked rooms, but two kinds
  * of cell need translation into this engine's attribute language: exit doorways (the native
  * doorway stripe value the exit tables key on) and cells the collision conversion still gets
- * wrong (the entrance chamber's side-wall columns — the conversion gap is tracked separately;
- * these records make the correction explicit data instead of code).
+ * wrong (the entrance chamber's side-wall columns; the conversion gap is tracked separately,
+ * and these records make the correction explicit data instead of code).
  *
  * Format per record: layer byte, cell low byte, cell high byte, attribute byte.
  */
@@ -72,7 +72,7 @@ const WATER_TILE_LAST = 0x1b9;
 
 /**
  * Water is a property of the cells the water surface is drawn on, so it is derived from the
- * room rather than listed by hand. Without it the surface is plain floor: the player walks
+ * room, not listed by hand. Without it the surface is plain floor: the player walks
  * across it, and the room's current has nothing to carry.
  */
 const waterOverlay = (room: DungeonRoomRecord): AttrOverlayCell[] => {
@@ -125,7 +125,7 @@ const WATER_LEDGE_SIDES: Readonly<Record<number, readonly (readonly [number, num
 /**
  * Both layers, because a swimmer reads the lower one: the engine moves the player there the
  * moment all four of its probes read deep water. The room's two levels are kept in step
- * anyway, so this is belt and braces rather than the only thing carrying the ledge across.
+ * anyway, so this is belt and braces, not the only thing carrying the ledge across.
  */
 const ledgeOverlay = (room: DungeonRoomRecord): AttrOverlayCell[] => {
   const cell = (column: number, row: number, attr: number): AttrOverlayCell[] =>

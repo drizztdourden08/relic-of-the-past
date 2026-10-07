@@ -3,7 +3,7 @@
  * Put an edited entry back in shape: wrap what the author has overrun, and
  * re-derive the codes that say where each line sits.
  *
- * Two passes, and the order matters — a wrap adds lines, and the numbering has
+ * Two passes, and the order matters. A wrap adds lines, and the numbering has
  * to be the numbering of the final stack:
  *
  * 1. WRAP. Only a TOUCHED line is re-cut, at its last word boundary, and only
@@ -15,7 +15,7 @@
  *    code, as far as the mode reaches (`pushDown`).
  *
  * A line the author has NOT touched, sitting before anything they have, comes
- * back exactly as it was read — irregular code and all. With an empty `touched`
+ * back exactly as it was read, irregular code and all. With an empty `touched`
  * set that is the whole entry, so opening an entry, measuring it and writing it
  * out again cannot rewrite a single byte of it. That is the property this whole
  * folder is built not to break: the line model never invents a code on its own,

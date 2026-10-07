@@ -1,8 +1,8 @@
 /* @layer renderer-widgets @kind logic */
 /**
  * Line-level selection over the log list: click selects one line, ctrl/cmd-click toggles,
- * shift-click extends from the last anchor. The unit is always a whole entry — the widget's
- * rows are flex components, so browser text selection cannot cross them; this replaces it.
+ * shift-click extends from the last anchor. The unit is always a whole entry, because the
+ * widget's rows are flex components that browser text selection cannot cross; this replaces it.
  */
 import { useCallback, useRef, useState } from 'react';
 import type { LogEntry } from '../../../../../lib/log-bus';

@@ -1,19 +1,15 @@
 /* @layer tests @kind test */
 /**
- * PERMANENT (`.keep.spec.ts`) — do not delete with the scratch specs.
+ * PERMANENT (`.keep.spec.ts`). Do not delete with the scratch specs.
  *
- * One location must flood to the SAME number no matter who asks. Three consumers
- * run the reachability flood — the navigation widget, the simulator's runner and
- * the offline `--dump-nav` dumper — and for a long time they disagreed: the
- * dumper reported 590 reachable tiles in the Jail Cell where the widget reported
- * 608, because the dumper hand-built its options with an EMPTY inventory and a
- * hard-coded interior tile context.
+ * One location must flood to the SAME number no matter who asks: the
+ * navigation widget, the simulator's runner and the offline `--dump-nav`
+ * dumper. They disagreed for a long time (Jail Cell: dumper 590, widget 608)
+ * because the dumper hand-built its options with an EMPTY inventory and a
+ * hard-coded interior tile context. That was found by eye in a screenshot.
  *
- * That gap was found by eye, in a screenshot. This test is what finds it next
- * time: it drives the real app once per state, reads the widget's own reachable
- * count out of the UI, reads the dumper's count out of the JSON it writes, and
- * asserts they match. The dumper now floods through the same runner the simulator
- * uses, so agreeing here means all three agree.
+ * This drives the real app once per state, reads the widget's reachable count
+ * and the dumper's JSON, and asserts they match.
  */
 import { test, expect } from '@playwright/test';
 import { _electron as electron } from 'playwright';
@@ -25,7 +21,7 @@ const PROJECT_ROOT = join(__dirname, '..', '..');
 const MAIN_JS = join(PROJECT_ROOT, 'dist', 'electron', 'main.js');
 const DUMP_PATH = join(PROJECT_ROOT, 'debug-output', 'dump-nav.json');
 
-/** Named manual saves — stable by design, unlike quick slots. */
+/** Named manual saves. They are stable by design, unlike quick slots. */
 const STATES = ['test-jail-cell', 'test-throne-room', 'test-sanctuary-grounds'];
 
 /** The widget's own reachable count, read from the rendered panel. */
@@ -75,7 +71,7 @@ const dumpReachable = async (state: string): Promise<number> => {
 };
 
 for (const state of STATES) {
-  test(`flood parity — ${state}`, async () => {
+  test(`flood parity: ${state}`, async () => {
     test.setTimeout(600_000);
     const widget = await widgetReachable(state);
     const dump = await dumpReachable(state);

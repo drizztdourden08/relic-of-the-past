@@ -1,0 +1,41 @@
+/* @layer renderer-components @kind style */
+.installed-origin {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  border-color: var(--c-gold);
+}
+
+.installed-origin__name {
+  color: var(--c-text);
+  font-weight: var(--weight-semi);
+  font-size: var(--text-lg);
+}
+
+.installed-origin__spacer {
+  flex: 1;
+}
+
+.installed-origin__facts {
+  color: var(--c-text-muted);
+  font-size: var(--text-xs);
+}
+
+.installed-origin__update {
+  color: var(--c-gold-bright);
+}
+
+.installed-origin__refusal {
+  color: var(--c-text-muted);
+  font-size: var(--text-sm);
+}
+
+.installed-origin__note {
+  margin: 0;
+}
+
+.installed-origin__error {
+  margin: 0;
+  color: var(--c-danger);
+  font-size: var(--text-sm);
+}

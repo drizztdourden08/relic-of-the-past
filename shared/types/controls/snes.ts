@@ -41,7 +41,7 @@ const SNES_BUTTON_LABELS: Record<SnesButton, string> = {
   Right: 'D-Pad Right',
 };
 
-/** Game action labels — what each SNES button does in ALttP */
+/** What each SNES button does in-game */
 const SNES_ACTION_LABELS: Record<SnesButton, string> = {
   A: 'Interact',
   B: 'Sword',

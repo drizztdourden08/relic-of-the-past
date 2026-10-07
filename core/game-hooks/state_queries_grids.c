@@ -10,7 +10,7 @@ static uint8 g_overworld_guard_spawns_buf[1 + 16 * 4];
 
 static uint8 g_nav_overworld_grid[64 * 64];
 
-// Forward-declared here rather than added to game_hooks_internal.h: only this call site needs them.
+// Forward-declared here instead of added to game_hooks_internal.h: only this call site needs them.
 void AttrGridState_Snapshot(void);  // attr_grid_state.c
 void AttrGridState_Restore(void);   // attr_grid_state.c
 
@@ -26,7 +26,7 @@ int WasmBuildOverworldAttrGrid(int screen_idx) {
   }
 
   // The decode step below writes through a fixed WRAM scratch span (attr_grid_state.c has the
-  // full account) that a real screen load always leaves overwritten before it's read again — but
+  // full account) that a real screen load always leaves overwritten before it's read again. Even so,
   // this query has no business leaving that decode sitting in the live run's WRAM once it's done.
   AttrGridState_Snapshot();
 

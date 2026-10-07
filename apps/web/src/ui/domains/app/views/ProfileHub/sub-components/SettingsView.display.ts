@@ -3,8 +3,8 @@
  * Builds the Display and Camera sections dynamically from current settings.
  *
  * Display order when Extended Rendering is on:
- *   1. Capability toggles first — you enable a capability, then the picker below reflects it
- *   2. Aspect ratio picker — shows only the presets the enabled capabilities have unlocked
+ *   1. Capability toggles first. You enable a capability, then the picker below reflects it
+ *   2. Aspect ratio picker, showing only the presets the enabled capabilities have unlocked
  *   3. Sprite / AI behaviour
  *
  * Camera is a separate section (same Extended Rendering gate, all off by default).
@@ -23,10 +23,10 @@ const buildDisplaySection = (s: GameSettings): Section => {
   const items: SettingItem[] = [EXTENDED_TOGGLE];
 
   if (!s.extendedRendering) {
-    return { id: 'display', title: 'Display', subsections: [{ id: 'display-main', title: 'Rendering', items }] };
+    return { id: 'display', title: 'Display', items };
   }
 
-  // ── 1. Capability toggles — unlock options in the picker below ───────────────
+  // 1. Capability toggles, which unlock options in the picker below
   items.push({
     key: 'linearWorldTilemap',
     label: 'Linear World Tilemap',
@@ -46,11 +46,11 @@ const buildDisplaySection = (s: GameSettings): Section => {
   items.push({
     key: 'tallRendering',
     label: 'Tall Rendering',
-    description: 'Adds extra rows above and below — enables tall presets in the picker. Separate from widescreen.',
+    description: 'Adds extra rows above and below, which enables tall presets in the picker. Separate from widescreen.',
     keywords: 'tall portrait vertical aspect ratio height rows',
   });
 
-  // ── 2. Aspect ratio picker — reflects the capabilities above ─────────────────
+  // 2. Aspect ratio picker, which reflects the capabilities above
   items.push(
     {
       key: 'aspectRatio',
@@ -66,8 +66,16 @@ const buildDisplaySection = (s: GameSettings): Section => {
     },
   );
 
-  // ── 3. Sprite / AI behaviour (only relevant for non-4:3) ─────────────────────
+  // ── 3. Sprite / AI behaviour (only relevant past the original picture) ───────
   const isWide = s.aspectRatio !== '4:3';
+  if (s.extendedRendering) {
+    items.push({
+      key: 'widescreenVisualFixes',
+      label: 'Widescreen Fixes',
+      description: 'Corrections for a view wider or taller than the original: transitions, effects and sprites drawn for the 4:3 screen. One switch; on by default.',
+      keywords: 'visual fixes widescreen tall tiles edges transitions iris link hide',
+    });
+  }
   if (isWide) {
     items.push(
       {
@@ -75,12 +83,6 @@ const buildDisplaySection = (s: GameSettings): Section => {
         label: 'Widescreen Sprites',
         description: 'Extend sprite spawn ranges so enemies and objects behave correctly in the wider view.',
         keywords: 'sprites widescreen spawn despawn ranges',
-      },
-      {
-        key: 'widescreenVisualFixes',
-        label: 'Widescreen Visual Fixes',
-        description: 'Apply graphics corrections for the wider view (edges and sprites that assume a 4:3 screen).',
-        keywords: 'visual fixes widescreen tiles edges',
       },
       {
         key: 'widescreenPlayArea',
@@ -98,7 +100,7 @@ const buildDisplaySection = (s: GameSettings): Section => {
     keywords: 'sprite AI pause idle freeze off screen wide guard enemy alarm',
   });
 
-  return { id: 'display', title: 'Display', subsections: [{ id: 'display-main', title: 'Rendering', items }] };
+  return { id: 'display', title: 'Display', items };
 };
 
 const buildCameraSection = (s: GameSettings): Section | null => {
@@ -108,7 +110,7 @@ const buildCameraSection = (s: GameSettings): Section | null => {
     {
       key: 'cameraLockToViewport',
       label: 'Lock Camera to View',
-      description: 'Pins the rendered view to the area boundary — no out-of-area black space. Off = original camera (speedrun/glitch parity).',
+      description: 'Pins the rendered view to the area boundary, so there is no out-of-area black space. Off = original camera (speedrun/glitch parity).',
       keywords: 'camera lock viewport edge black border bound speedrun glitch wide tall',
     },
   ];
@@ -117,12 +119,12 @@ const buildCameraSection = (s: GameSettings): Section | null => {
     items.push({
       key: 'smoothTransitions',
       label: 'Smooth Transitions',
-      description: 'Pans through area seams via a 2-area tilemap — removes the wrapped-edge slice at screen boundaries. Requires camera lock.',
+      description: 'Pans through area seams via a 2-area tilemap, which removes the wrapped-edge slice at screen boundaries. Requires camera lock.',
       keywords: 'smooth transition scroll area seam tilemap',
     });
   }
 
-  return { id: 'camera', title: 'Camera', subsections: [{ id: 'camera-main', title: 'Behaviour', items }] };
+  return { id: 'camera', title: 'Camera', items };
 };
 
 export { buildDisplaySection, buildCameraSection };

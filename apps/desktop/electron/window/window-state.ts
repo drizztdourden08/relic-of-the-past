@@ -22,9 +22,8 @@ const DEFAULT_STATE: WindowState = {
   isFullscreen: false,
 };
 
-// Cached normal-mode bounds, updated via move/resize events.
-// This avoids relying on getNormalBounds() which is unreliable on Windows
-// with titleBarStyle: 'hidden' (returns coordinates including invisible frame).
+// Tracked via move/resize: getNormalBounds() is unreliable on Windows with
+// titleBarStyle: 'hidden' (it includes the invisible frame).
 let cachedNormalBounds: Rectangle | null = null;
 
 const getStatePath = (): string => {
@@ -73,12 +72,9 @@ const loadWindowState = (): WindowState => {
 };
 
 /**
- * Put a window at its saved size/position/mode. Called BEFORE the window is ever
- * visible, so none of these moves are seen.
- *
- * Saved state holds CONTENT bounds while the BrowserWindow constructor takes WINDOW
- * bounds, and titleBarStyle:'hidden' makes the two disagree on Windows — which is why
- * the geometry is applied here rather than passed as constructor options.
+ * Put a window at its saved size/position/mode, BEFORE it is ever visible.
+ * Saved state holds CONTENT bounds while the constructor takes WINDOW bounds, and
+ * titleBarStyle:'hidden' makes the two disagree on Windows, hence not constructor options.
  */
 const applyWindowState = (win: BrowserWindow, state: WindowState): void => {
   if (state.x !== undefined && state.y !== undefined) {
@@ -109,8 +105,6 @@ const saveWindowState = (win: BrowserWindow): void => {
   const isMaximized = win.isMaximized();
   const isFullscreen = win.isFullScreen();
 
-  // Use the manually-tracked normal bounds to avoid getNormalBounds() bugs
-  // on Windows with titleBarStyle: 'hidden'.
   const bounds = cachedNormalBounds ?? win.getContentBounds();
 
   const state: WindowState = {

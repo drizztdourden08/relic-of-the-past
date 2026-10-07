@@ -18,12 +18,12 @@ interface Props {
   annotations: readonly ScreenAnnotations[];
   edges: readonly EdgeLike[];
   isIndoors: boolean;
-  /** Needed to name an indoor room — room numbers collide across palaces/caves. */
+  /** Needed to name an indoor room, because room numbers collide across palaces/caves. */
   palaceIndex: number;
 }
 
 /**
- * "On this screen" — every annotation the simulator derived, grouped the way the
+ * "On this screen" lists every annotation the simulator derived, grouped the way the
  * overlay colours them, plus the decoded room tags and the exit/edge parity.
  *
  * This is the list side of the same ScreenAnnotations the canvas draws, so a
@@ -89,7 +89,7 @@ const ScreenPanel = ({ annotations, edges, isIndoors, palaceIndex }: Props) => {
                   key={`${group.id}-${i}-${item.kind}`}
                   style={{ ...PS.row, ...PS.rowToggle, ...(off ? PS.rowOff : {}) }}
                   onClick={() => toggleKind(item.kind)}
-                  title={`${item.kind} at r${item.tile.row} c${item.tile.col}${item.layer !== undefined ? ` L${item.layer}` : ''} — click to ${off ? 'show' : 'hide'}`}
+                  title={`${item.kind} at r${item.tile.row} c${item.tile.col}${item.layer !== undefined ? ` L${item.layer}` : ''}. Click to ${off ? 'show' : 'hide'}`}
                 >
                   <Text style={{ ...PS.glyph, color: style.color, opacity: settled ? 0.5 : 1 }}>{style.glyph}</Text>
                   <Text style={{ ...PS.label, ...(settled ? PS.labelSettled : {}) }}>{item.label}</Text>

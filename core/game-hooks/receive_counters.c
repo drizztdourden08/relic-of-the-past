@@ -3,7 +3,7 @@
 
 // Diagnostic: how many times each item id was actually handed over, and by which call site.
 // Link_ReceiveItem is not idempotent, so a check granted twice really does give the item twice; this
-// is how that gets caught instead of inferred. Counting lives here rather than beside the trigger
+// is how that gets caught instead of inferred. Counting lives here instead of beside the trigger
 // logic because it observes grants without taking part in them.
 uint16 g_receive_counts[256];
 uint16 g_receive_by_site[4];

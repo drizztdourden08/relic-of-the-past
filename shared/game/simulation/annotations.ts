@@ -1,14 +1,9 @@
 /* @layer shared-game @kind types */
 /**
- * ScreenAnnotations — the one description of "what is on this screen and what
- * state is it in", derived from the simulator's own discovery so the overlay, the
- * minimaps and the widget panel cannot disagree with the run.
- *
- * Deliberately a GENERATOR, not a checklist: annotations come from the same
- * interactable reads the engine gates targets on, so a mechanic the simulator
- * learns to find shows up here automatically. A kind with no renderer is a test
- * failure (see the renderer registry), and an unmapped kind still draws as a
- * neutral marker — a new mechanic can never ship invisible.
+ * "What is on this screen and what state is it in", derived from the
+ * simulator's own discovery so the overlay, the minimaps and the widget panel
+ * cannot disagree with the run. A kind with no renderer is a test failure (see
+ * the renderer registry); an unmapped kind still draws as a neutral marker.
  */
 import type { GridPos } from '../navigation/types';
 import type { CheckId } from '../data';
@@ -22,10 +17,7 @@ type AnnotationKind =
   | 'pull-switch' | 'kill-trigger' | 'key-carrier' | 'big-key-carrier'
   // Ways off the screen. Real entrances, stairs and walk-through boundaries are
   // NOT here: they come from the room-entrances/OverworldEntrance pipeline
-  // (apps/web/src/lib/game/flood/room-entrances.ts) and draw through their own
-  // icon renderer, not this one. A 'stair'/'walk-boundary'/'entrance' kind used
-  // to sit in this union with a style nothing ever constructed — dead, and
-  // confusable with the real markers of the same name.
+  // (apps/web/src/lib/game/flood/room-entrances.ts) and draw through their own renderer.
   | 'warp-door' | 'exit-door' | 'exit'
   // Anything the simulator reports that has no mapping yet.
   | 'unknown';
@@ -39,26 +31,20 @@ interface ScreenAnnotation {
   /** BG layer the thing sits on, when it is layer-specific. */
   layer?: 0 | 1;
   /**
-   * Wall the door record sits in, for door-table kinds only. A door's real
-   * footprint is wide along the wall and shallow through it — 'n'/'s' doors are
-   * wide in columns, 'e'/'w' doors are wide in rows — so a marker sized/nudged
-   * the same way regardless of direction ends up centered for one orientation
-   * and pushed to one side of the opening for the other.
+   * Wall the door record sits in, for door-table kinds only. A door's footprint
+   * is wide along the wall and shallow through it ('n'/'s' wide in columns,
+   * 'e'/'w' wide in rows), so a marker must be sized per direction.
    */
   direction?: 'n' | 's' | 'e' | 'w';
-  /** Short human label, resolved for display only — never an identity. */
+  /** Short human label, resolved for display only. Never an identity. */
   label: string;
-  /**
-   * The check this thing IS, when it is one. Without it a standing item has no
-   * check identity, so `state` can only ever say "available" — it cannot know
-   * whether the run already collected it. Identity is the id; `label` is the
-   * rendering of it.
-   */
+  /** The check this thing IS, when it is one. Without it `state` can only say
+   *  "available", since nothing knows whether the run already collected it. */
   checkId?: CheckId;
   state?: AnnotationState;
   /** Secondary line: item name, destination screen, walk distance. */
   detail?: string;
-  /** Traversal tokens this thing demands ('smallkey:*', 'bigkey:*', 'sword'…). */
+  /** Traversal tokens this thing demands ('smallkey:*', 'bigkey:*', 'sword', ...). */
   requires?: string[];
   /** For a way off the screen: the screen id it leads to. */
   target?: string;
@@ -72,12 +58,12 @@ interface ScreenTag {
 
 interface ScreenAnnotations {
   screenId: string;
-  /** Room id indoors, overworld screen index outdoors — for world placement. */
+  /** Room id indoors, overworld screen index outdoors. Used for world placement. */
   screenIndex: number;
   items: ScreenAnnotation[];
   /** Check progress for this screen, for the minimap badge. */
   checks: { done: number; available: number; blocked: number };
-  /** Decoded room tags — what mechanic the room header arms. Indoors only. */
+  /** Decoded room tags saying what mechanic the room header arms. Indoors only. */
   tags?: readonly ScreenTag[];
 }
 

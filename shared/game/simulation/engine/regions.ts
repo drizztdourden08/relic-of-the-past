@@ -1,10 +1,8 @@
 /* @layer shared-game @kind logic */
 /**
  * Region-aware exploration memory. A room can hold several walkable regions
- * that don't connect internally (the castle hall vs. its stair landing); a
- * screen-id visited set alone would mark the whole room explored after seeing
- * one region. The engine keeps a per-screen union of every flood's reached
- * tiles, and treats an entry landing OUTSIDE that union as a fresh visit.
+ * that do not connect internally, so the engine keeps a per-screen union of
+ * every flood's reached tiles and treats an entry landing OUTSIDE it as a fresh visit.
  */
 import type { GridPos } from '../../navigation/types';
 import type { SimExit } from '../types';
@@ -65,17 +63,11 @@ interface RegionJob {
 }
 
 /**
- * Canonical identity of a screen-to-screen crossing, the SAME from either side.
- *
- * An edge is always a run of tiles down one side, so a right edge spanning rows
- * 12-25 and the left edge spanning rows 12-25 on the screen to its right are one
- * physical boundary. Matching on that — the pair of screens, the axis, and the span
- * — lets a crossing be recognised from the far side, which an arrival key cannot
- * do: each side derives its own `edgeSig` from its own flood, so the two never
- * compare equal.
- *
- * Region qualifiers are stripped for the pair: which quadrant each side happened to
- * land in says nothing about which boundary was crossed.
+ * Canonical identity of a screen-to-screen crossing, the SAME from either
+ * side: the pair of screens, the axis, and the tile span. An arrival key
+ * cannot do this because each side derives its own `edgeSig` from its own
+ * flood. Region qualifiers are stripped from the pair: the quadrant each side
+ * landed in says nothing about which boundary was crossed.
  */
 const crossingKey = (from: string, to: string, edgeSig?: string): string | null => {
   const parts = /^(north|south|east|west):(.+)$/.exec(edgeSig ?? '');
@@ -90,15 +82,11 @@ const crossingKey = (from: string, to: string, edgeSig?: string): string | null 
 const arrivalKey = (to: string, edgeSig?: string): string => `${to}#${edgeSig ?? 'x'}`;
 
 /**
- * Is this way in already accounted for?
- *
- * Either we have used it, or it lands inside ground we already explored — a
- * screen has several edges on one side and most of them drop you in the same
- * place, so there is nothing to learn by walking each one. What must NOT be
- * skipped is an edge landing OUTSIDE the explored region: the sanctuary grounds
- * hold a ledge the lower part cannot reach, so entering from the sanctuary door
- * floods 1762 tiles and entering from the screen to the west floods 2139. Those
- * are two different places behind one screen id.
+ * Is this way in already accounted for? Either it was used, or it lands inside
+ * ground already explored (several edges on one side mostly drop you in the
+ * same place). An edge landing OUTSIDE the explored region must NOT be
+ * skipped: a ledge the lower part of a screen cannot reach is a different
+ * place behind the same screen id.
  */
 const arrivalAccountedFor = (
   arrivals: Set<string>,
@@ -108,7 +96,7 @@ const arrivalAccountedFor = (
   from?: string,
 ): boolean => {
   if (arrivals.has(arrivalKey(exit.to, exit.edgeSig))) return true;
-  // Already crossed this boundary from the other side — same tiles, same result.
+  // Already crossed this boundary from the other side, so same tiles, same result.
   if (crossings && from) {
     const key = crossingKey(from, exit.to, exit.edgeSig);
     if (key && crossings.has(key)) return true;
@@ -122,20 +110,13 @@ const arrivalAccountedFor = (
 const SAME_DOORWAY_RADIUS = 6;
 
 /**
- * Crossing a link uses it up from BOTH ends.
- *
- * Walking A -> B leaves B's way back to A unaccounted for, so it reads as
- * unexplored ground and schedules a job to return through it. From A the same
- * thing happens in reverse, and the run ping-pongs across one doorway forever,
- * one step forward and one back, inflating the step count for no new ground.
- *
- * The far end cannot be named in advance: each side computes its own crossing
- * span from its own flood, so the two signatures do not match. It IS identifiable
- * on arrival — the exit that leads back where we came from, launching from the
- * tile we just landed on, is the door we walked through. Matching on POSITION
- * rather than on the axis matters: two crossings can share a pair of screens and
- * an axis while landing in places that do not connect (the sanctuary ledge), and
- * collapsing those would make one of them permanently unreachable.
+ * Crossing a link uses it up from BOTH ends; otherwise B's way back to A reads
+ * as unexplored ground and the run ping-pongs across one doorway forever. The
+ * far end cannot be named in advance (each side computes its own span from its
+ * own flood) but IS identifiable on arrival: the exit leading back where we
+ * came from, launching from the tile we landed on. Match on POSITION, not the
+ * axis: two crossings can share screens and axis while landing in places that
+ * do not connect, and collapsing them makes one permanently unreachable.
  */
 const markWayBackUsed = (
   arrivals: Set<string>,
@@ -151,8 +132,8 @@ const markWayBackUsed = (
   }
 };
 
-/** Visited screens some discovered exit enters OUTSIDE their explored region —
- *  multi-region rooms still owe a visit through that specific doorway. */
+/** Visited screens some discovered exit enters OUTSIDE their explored region.
+ *  Multi-region rooms still owe a visit through that specific doorway. */
 const unexploredRegionJobs = (
   discovered: Map<string, SimExit[]>,
   map: Map<string, boolean[][]>,

@@ -10,12 +10,13 @@ import { toArrayBuffer } from '../lib/buffer';
 import { fail, errMessage } from '../lib/result';
 import { makeImportReporter } from '../lib/import-progress';
 import { selectPackFiles } from './import-selection';
+import { refuseInstalledPack } from './pack-fs';
 
 type MsuImportResult = {
   success: boolean;
   fileCount?: number;
   error?: string;
-  /** Audio the archive kept below the pack's own level — alternates and extras, not tracks. */
+  /** Alternates and extras the archive kept below the pack's own level, never tracks. */
   skippedNested?: number;
   /** Audio dropped because an earlier file already claimed its track number. */
   skippedDuplicate?: number;
@@ -32,6 +33,7 @@ const installMsuTracks = async (source: ImportSource, packName: string): Promise
   const report = makeImportReporter('msu', packName);
   let resolved;
   try {
+    await refuseInstalledPack(packName);
     resolved = await resolveSourceFiles(source, MSU_EXTENSIONS, (s) => report(s.phase, s.loaded, s.total));
   } catch (err) {
     report('error', undefined, undefined, errMessage(err));
@@ -43,7 +45,7 @@ const installMsuTracks = async (source: ImportSource, packName: string): Promise
       report('error', undefined, undefined, error);
       return { success: false, error };
     }
-    // Extras in subfolders are not tracks, and two files cannot share a slot — see selectPackFiles.
+    // Extras in subfolders are not tracks, and two files cannot share a slot (see selectPackFiles).
     const selected = selectPackFiles(resolved.files);
     const msuDir = getMsuDir(packName);
     await mkdir(msuDir, { recursive: true });
@@ -106,8 +108,10 @@ const registerMsuHandlers = (): void => {
     } catch { return []; }
   });
 
-  handle('msu:deletePack', (_event, packName: string) =>
-    rm(getMsuDir(packName), { recursive: true, force: true }));
+  handle('msu:deletePack', async (_event, packName: string) => {
+    await refuseInstalledPack(packName);
+    await rm(getMsuDir(packName), { recursive: true, force: true });
+  });
 
   handle('msu:getTrackList', async (_event, packName: string) => {
     const packDir = getMsuDir(packName);
@@ -123,9 +127,8 @@ const registerMsuHandlers = (): void => {
     } catch { return []; }
   });
 
-  // A pack file the app was opened with (file association). Scoped to the one extension on
-  // purpose: this reads a path chosen outside the app's own storage, so it must not become a
-  // general-purpose file reader for the renderer.
+  // Scoped to the one extension: this reads a path outside the app's own storage, so it
+  // must not become a general-purpose file reader for the renderer.
   handle('msu:readMsulFile', async (_event, filePath: string) => {
     if (!filePath.toLowerCase().endsWith('.msul')) throw new Error('Not a music-pack file');
     return toArrayBuffer(await readFile(filePath));

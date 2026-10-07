@@ -12,7 +12,7 @@
 namespace app {
 
 // One process, one window, one flow. The shell is shared between the window
-// procedure and the transitions rather than threaded through every call.
+// procedure and the transitions, instead of being threaded through every call.
 struct Shell {
   ui::State ui;
   std::vector<ui::Hit> hits;

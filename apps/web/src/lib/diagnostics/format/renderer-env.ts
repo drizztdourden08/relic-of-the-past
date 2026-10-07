@@ -26,7 +26,7 @@ const processSection = (device: DeviceEnvironment): DebugSection => section('Ren
   device.jsHeap
     && `JS heap: ${mib(device.jsHeap.usedBytes)} used / ${mib(device.jsHeap.totalBytes)} allocated`
       + ` (limit ${mib(device.jsHeap.limitBytes)})`,
-  `Languages: ${device.languages.join(', ') || '—'} · time zone ${orDash(device.timeZone)}`,
+  `Languages: ${device.languages.join(', ') || '-'} · time zone ${orDash(device.timeZone)}`,
   `Online: ${yesNo(device.online)}`,
 ]);
 

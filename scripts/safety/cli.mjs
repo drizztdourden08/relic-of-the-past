@@ -1,15 +1,12 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * `npm run safety -- <command>` — hand control of the snapshots to a person.
+ * `npm run safety -- <command>`: manual control of the snapshots.
  *
  *   snapshot [label]   take one now
  *   list               every snapshot, newest first, and what retention would do
  *   verify <ref>       compare a snapshot against what is on disk now
  *   restore <ref>      write the snapshot's protected files back over the working tree
  *   prune              apply retention (older than 7 days, but never below the last 2)
- *
- * The destructive operations take snapshots on their own; this is for looking at them,
- * getting something back by hand, and clearing them out.
  */
 import { createSnapshot, restoreFrom, verifyAgainst } from './snapshot.mjs';
 import { listSnapshots, pruneSnapshots, selectExpired } from './retention.mjs';
@@ -36,7 +33,7 @@ const reportVerify = (ref, result) => {
   }
   console.error(`\n✗ ${result.missing.length} protected file(s) present in ${ref} are GONE from disk:`);
   for (const p of result.missing.slice(0, 20)) console.error(`    ${p}`);
-  if (result.missing.length > 20) console.error(`    …and ${result.missing.length - 20} more`);
+  if (result.missing.length > 20) console.error(`    ...and ${result.missing.length - 20} more`);
   console.error(`\nGet them back with:  npm run safety -- restore ${ref}\n`);
   return false;
 };

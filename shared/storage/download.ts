@@ -1,5 +1,5 @@
 /* @layer shared-storage @kind logic */
-/** Fetch a URL to bytes with optional progress — replaces electron.net on every platform. */
+/** Fetch a URL to bytes with optional progress, replacing electron.net on every platform. */
 
 type DownloadProgress = (loaded: number, total: number | null) => void;
 

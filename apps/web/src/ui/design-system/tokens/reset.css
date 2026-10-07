@@ -1,8 +1,6 @@
 /* @layer renderer-design-system @kind style */
 
-/*
- * Reset — minimal normalization
- */
+/* Minimal normalization. */
 
 *, *::before, *::after {
   box-sizing: border-box;

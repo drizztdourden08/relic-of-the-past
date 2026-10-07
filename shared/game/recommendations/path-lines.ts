@@ -1,14 +1,10 @@
 /* @layer shared-game @kind logic */
 /**
- * Every path in a serialized record, mapped to the line it is written on.
- *
- * This exists so a comparison view can highlight the lines a structural diff
- * already identified, without diffing the TEXT a second time. It scans
- * characters rather than matching per-line regexes because both serializations
- * it has to read are free-form: the record emitter writes unquoted keys, single
- * quotes and trailing commas, and puts several fields on one line; JSON writes
- * none of those. A brace/bracket scanner handles both, and — crucially — knows
- * when a `{` is inside a string and therefore not a container at all.
+ * Every path in a serialized record, mapped to the line it is written on, so a
+ * comparison view can highlight the lines a structural diff identified. A
+ * character scanner, not per-line regexes: the record emitter writes unquoted
+ * keys, single quotes, trailing commas and several fields per line, JSON writes
+ * none of those, and a `{` inside a string is not a container.
  */
 
 /** One open container, and where inside it the scan currently sits. */
@@ -27,12 +23,8 @@ const childPath = (parent: string, segment: string, isIndex: boolean): string =>
   return parent ? `${parent}.${segment}` : segment;
 };
 
-/**
- * Reads the quoted or bare key that ends at `colonAt`, scanning backwards.
- * Returns null when nothing key-shaped precedes the colon — a colon inside a
- * string never reaches here, but one in an unexpected position should be
- * ignored rather than invent a segment.
- */
+/** Reads the quoted or bare key that ends at `colonAt`, scanning backwards.
+ *  Null when nothing key-shaped precedes the colon (ignored, never a made-up segment). */
 const keyBefore = (source: string, colonAt: number): string | null => {
   let i = colonAt - 1;
   while (i >= 0 && /\s/.test(source[i])) i -= 1;
@@ -47,12 +39,8 @@ const keyBefore = (source: string, colonAt: number): string | null => {
   return end > i ? source.slice(i + 1, end + 1) : null;
 };
 
-/**
- * Path → 1-based line number, for every member and element the source declares.
- *
- * A container records the line its KEY sits on, so a nested object highlights
- * where a reader would look for it rather than at its closing brace.
- */
+/** Path -> 1-based line number for every member and element. A container
+ *  records the line its KEY sits on, not its closing brace. */
 const pathLines = (source: string): ReadonlyMap<string, number> => {
   const lines = new Map<string, number>();
   const stack: Frame[] = [{ path: '', isArray: false, index: 0 }];

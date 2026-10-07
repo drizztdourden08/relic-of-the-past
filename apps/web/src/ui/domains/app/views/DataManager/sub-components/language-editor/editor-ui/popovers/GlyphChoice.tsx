@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind component */
 /**
- * One picture character in the grid, drawn with the game's own pixels rather
- * than a lookalike from an icon set — the button previews exactly what will
- * land in the line.
+ * One picture character in the grid, drawn with the game's own pixels, not
+ * a lookalike from an icon set. The button previews exactly what will land in
+ * the line.
  *
  * A character the alphabet spells as a pair of entries draws as one picture and
  * inserts both tokens, which is what its maker already returns.

@@ -17,7 +17,7 @@ if (!withRect) throw new Error('the dataset no longer holds an area placement');
 
 const PATHS = ['id', 'tags', 'placement', 'placement.rect', 'placement.rect.x', 'placement.rect.y'];
 
-describeDataset('dirty tracking — which paths changed', () => {
+describeDataset('dirty tracking of which paths changed', () => {
   it('reports nothing changed for the record itself', () => {
     expect(changedPaths(withRect, withRect, PATHS)).toEqual([]);
     expect(hasPathChanged(withRect, withRect, '')).toBe(false);
@@ -40,7 +40,7 @@ describeDataset('dirty tracking — which paths changed', () => {
     expect(hasPathChanged(withRect, working, '')).toBe(true);
   });
 
-  it('leaves the original record untouched — edits are immutable', () => {
+  it('leaves the original record untouched, because edits are immutable', () => {
     const before = JSON.stringify(withRect);
     setPath(withRect, 'placement.rect.x', 1234);
     expect(JSON.stringify(withRect)).toBe(before);
@@ -62,7 +62,7 @@ describeDataset('dirty tracking — which paths changed', () => {
   });
 });
 
-describeDataset('auto-layout — a real schema with no config at all', () => {
+describeDataset('auto-layout on a real schema with no config at all', () => {
   const schema = buildSchema(all('screen'));
 
   it('lays every top-level field out as one unnamed group', () => {
@@ -87,7 +87,7 @@ describeDataset('auto-layout — a real schema with no config at all', () => {
   });
 });
 
-describeDataset('auto-layout — a config steering it', () => {
+describeDataset('auto-layout with a config steering it', () => {
   const rows = all('connection');
   const config: SchemaConfig = {
     groups: [
@@ -107,7 +107,7 @@ describeDataset('auto-layout — a config steering it', () => {
     expect(groups[0].fields.map((field) => field.path)).toEqual(['toConnectionId', 'screenId']);
   });
 
-  it('puts everything unclaimed in a final implicit group rather than losing it', () => {
+  it('puts everything unclaimed in a final implicit group instead of losing it', () => {
     const last = groups[groups.length - 1];
     expect(last.id).toBe('other');
     const laidOut = groups.flatMap((group) => group.fields.map((field) => field.path));

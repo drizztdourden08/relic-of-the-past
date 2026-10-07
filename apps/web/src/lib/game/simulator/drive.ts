@@ -1,11 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Headless sim drive loop for the `--sim-run` automation. Steps the pure engine
- * against a SimulatorPort exactly like the widget runner, but with no store/UI —
- * it only records into a RecorderState and returns the finished EngineState. The
- * interactive widget keeps its own runner (store + log fan-out); this is the
- * unattended path the data-correction loop uses.
- */
+// Headless sim drive loop for `--sim-run`: steps the pure engine against a SimulatorPort like the
+// widget runner, but records into a RecorderState with no store/UI.
 import type { SimulatorPort, SimObservation, SimEvent, DetectedCheck, EngineState, SimLocation, SimConfig, SimRunConfig } from '@shared/game/simulation';
 import type { CheckId, ItemId } from '@shared/game/data';
 import { getCheck, getItem } from '@shared/game/data';
@@ -28,14 +23,13 @@ interface ScreenFloodLog {
 }
 
 /**
- * One OBSERVE, recorded verbatim: where the virtual player stood and what the
- * detection handed the engine there. `screenFloods` cannot answer "why was this
- * exit never seen" — it only samples on a screen change outside traversal, which
- * skips every screen arrived at as a route destination.
+ * One OBSERVE, recorded verbatim: where the virtual player stood and what detection handed the
+ * engine there. `screenFloods` only samples on a screen change outside traversal, so it skips
+ * every route destination and cannot answer "why was this exit never seen".
  */
 interface VisitLog {
   screenId: string;
-  /** Dataset display name — for the log only, never for a decision. */
+  /** Dataset display name, used for the log only and never for a decision. */
   name: string;
   indoors: boolean;
   /** Room index indoors, overworld screen index (0-63 = the map cell) outdoors. */
@@ -50,11 +44,8 @@ const countReached = (grid?: boolean[][]): number =>
   grid ? grid.reduce((n, row) => n + row.reduce((m, v) => m + (v ? 1 : 0), 0), 0) : 0;
 
 /**
- * Every screen the virtual player stood on, in order — including the ones a
- * multi-hop route only passed THROUGH. Those are never observed, so `visits`
- * skips them and two consecutive entries there can be nowhere near each other;
- * anything that needs a real walked route (a map, an adjacency claim) has to read
- * this instead.
+ * Every screen the virtual player stood on, in order, including the ones a multi-hop route only
+ * passed THROUGH. `visits` skips those, so anything needing a real walked route reads this.
  */
 interface PathStep {
   screenId: string;
@@ -63,7 +54,7 @@ interface PathStep {
   index: number;
   /** False when the route only passed through without stopping to observe. */
   observed: boolean;
-  /** How this screen was entered — see arrivalLabel. */
+  /** How this screen was entered. See arrivalLabel. */
   via?: string;
   /** Items that appeared on arriving here. */
   gained?: string[];
@@ -91,9 +82,8 @@ interface CheckLog {
   /** Index into `path` at the moment it verified. */
   atPathIndex: number;
   step: number;
-  /** Inventory the moment it verified, as display names for the reader — an item
-   *  that LEAVES this list between two checks was clobbered by something, which
-   *  no end-of-run total can show. */
+  /** Inventory the moment it verified, as display names. An item that LEAVES this
+   *  list between two checks was clobbered, which no end-of-run total can show. */
   items: string[];
 }
 
@@ -111,11 +101,9 @@ const recordEvents = (recorder: RecorderState, events: SimEvent[], checks: Check
   }
 };
 
-/** One narrative-level line the engine emitted, in order. This is the run's own
- *  account of what it did and why — trigger attempts, unlocks, resets, trap
- *  slams — the same wording the widget's log shows, just persisted for a
- *  headless run so a stall can be read back afterward instead of re-derived
- *  from cold probes. */
+/** One narrative-level line the engine emitted, in order (trigger attempts, unlocks,
+ *  resets, trap slams): the widget's log wording, persisted so a headless stall can
+ *  be read back afterward. */
 interface LogLine {
   step: number;
   msg: string;
@@ -150,8 +138,7 @@ const runSimulation = async (port: SimulatorPort, config: SimRunConfig): Promise
   const unsub = port.onItemReceived((id) => { item = id; });
   const cache = new Map<string, DetectedScreen | null>();
 
-  // Per-screen flood stats, captured on entry + unlock — the same numbers a
-  // normal in-game flood produces, matching the widget.
+  // Per-screen flood stats, captured on entry + unlock; same numbers as the widget.
   const screenFloods: ScreenFloodLog[] = [];
   const visits: VisitLog[] = [];
   const path: PathStep[] = [{ ...describeScreen(state.virtual.screenId), observed: true }];
@@ -217,7 +204,7 @@ const runSimulation = async (port: SimulatorPort, config: SimRunConfig): Promise
         });
       }
       if ((changedScreen || nextState.epoch > prevEpoch) && nextState.phase !== 'traversing' && !nextState.stopHit && !nextState.outcome) captureFlood(nextState);
-      // `target` = physically traversed to (visited), not merely flood-reachable.
+      // `target` = physically traversed to (visited), not only flood-reachable.
       if (config.target && state.visited.has(config.target)) { reachedTarget = true; break; }
       if (actions.length > 0) await waitAfterTrigger();
     }

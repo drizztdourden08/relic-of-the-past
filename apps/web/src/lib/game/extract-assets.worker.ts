@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Extraction Web Worker — runs the pure-TS pipeline off the UI thread (Buffer/
+ * Runs the pure-TS extraction pipeline off the UI thread (Buffer/
  * crypto/fs polyfilled by vite-plugin-node-polyfills). Handles asset compilation
  * and per-language extraction. Inputs/outputs are plain bytes; Buffers are built here.
  */
@@ -35,9 +35,9 @@ const ctx = self as unknown as {
   postMessage: (msg: unknown) => void;
 };
 
-// This is the ONLY place the asset blob is compiled. An Electron-main copy used to exist
-// alongside it and drifted — it learned about the second cartridge while this one, the path
-// the app actually runs, did not. Keep it that way: one compile, every platform.
+// The renderer's compile, and the only one that builds the second cartridge's supplement. The
+// Electron main process also rebuilds the base blob after a language or store change; that
+// path writes only the base file, so the supplement beside it survives the rebuild.
 const runAssets = async (
   romBytes: Uint8Array, supplementRoms: SupplementRoms, languages: SetBakeInput[],
 ): Promise<AssetsResult> => {
@@ -81,13 +81,13 @@ const runSprites = (romBytes: Uint8Array, defs: SpriteDef[]) =>
 /*
  * The menu, credits and closing captions. The extractor copies these bodies
  * into the blob without decoding them, so the studio reads them straight from
- * the player's own file — here, off the UI thread, because reaching them means
+ * the player's own file, here off the UI thread, because reaching them means
  * parsing a whole ROM.
  */
 const runMenuText = (romBytes: Uint8Array) => {
   const rom = loadRomFromBuffer(Buffer.from(romBytes), true);
   // Decoded through the ROM'S OWN alphabet, never a requested one: reading these
-  // glyphs against the wrong language yields nonsense rather than nothing. The
+  // glyphs against the wrong language yields nonsense, not nothing. The
   // caller is told which language answered and decides what to do about it.
   const code = rom.language;
   return {

@@ -2,7 +2,7 @@
 /**
  * Wire types for the recommendation store's three channels. The engine's own
  * shapes ARE the domain model (shared/game/recommendations), and IPC carries
- * them unchanged, so this file only re-exports them for the contract — the same
+ * them unchanged, so this file only re-exports them for the contract. That is the same
  * bargain `review-contract.ts` and `ui-views-contract.ts` make.
  *
  * Everything crossing here is already plain data by construction: a detector may

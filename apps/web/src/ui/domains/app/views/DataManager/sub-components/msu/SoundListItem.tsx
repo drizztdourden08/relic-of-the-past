@@ -1,15 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
- * One sound in a list: the row, the meters while it sounds, and the layer editor when it is open.
- *
- * Pulled out because two lists draw it — the ambient channel on its own, and both effect channels
- * merged into one — and the three parts have to stay together. The readout belongs under the row
- * that is playing and the editor under the row that is open, so a list that assembled them itself
- * would be free to drift on which row each one lands under.
- *
- * The channel's controller arrives whole rather than as a dozen callbacks. It is one cohesive
- * thing — the channel's rows, its audition and its writes — and a merged list picks the controller
- * per row, which is what lets one list drive two channels without either knowing about the other.
+ * Shared by the ambient list and the merged effects list so the row, readout and editor stay
+ * together. The channel's controller arrives whole; a merged list picks one per row.
  */
 import { Box } from '@ds/primitives/Box';
 import { PreviewReadout } from './PreviewReadout';
@@ -24,7 +16,7 @@ import type { SoundListItemProps } from './msu.type';
 
 const SoundListItem = (props: SoundListItemProps) => {
   const {
-    pack, channel, row, sound, manifest, saveBase, availableFiles, isLayered, showChannel = false,
+    pack, channel, row, sound, manifest, saveBase, availableFiles, isLayered, showChannel = false, readOnly,
     onPreview, onPlayOriginal, onToggleLayers, onStopReplacing, onConfirm, onReload,
   } = props;
   const previewKey = soundPreviewKey(channel, row.soundId);
@@ -43,6 +35,7 @@ const SoundListItem = (props: SoundListItemProps) => {
         expanded={expanded}
         playingOriginal={sound.playingOriginal === row.soundId}
         chipAudible={sound.chipAudible(row.soundId)}
+        readOnly={readOnly}
         onPreview={onPreview}
         onStopPreview={sound.stop}
         onPlayOriginal={(soundId) => onPlayOriginal(channel, soundId)}
@@ -75,6 +68,7 @@ const SoundListItem = (props: SoundListItemProps) => {
           uploading={sound.uploading}
           onUpload={sound.handleUpload}
           onSaved={onReload}
+          readOnly={readOnly}
         />
       )}
     </Box>

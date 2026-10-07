@@ -4,10 +4,8 @@ import type { ObservedCheck } from '../../shared/game/simulation/recording/recor
 import { createRecorder, recordCheck } from '../../shared/game/simulation/recording/recorder';
 import { buildDatasetSuggestions } from '../../shared/game/simulation/recording/dataset-updates';
 
-// ─── recordCheck — dedup key includes location ───────────────────────────────
-// Every observation the matcher could not identify carries a null checkId, so an
-// identity-only dedup key collapses all of them in a run down to the first seen —
-// and those are exactly the ones worth reporting one by one.
+// recordCheck: dedup key includes location. Unidentified observations carry a
+// null checkId, so an identity-only key would collapse them to the first seen.
 
 const unidentifiedAt = (screenId: string, roomId: number, row: number, col: number): ObservedCheck => ({
   checkId: null,
@@ -16,7 +14,7 @@ const unidentifiedAt = (screenId: string, roomId: number, row: number, col: numb
   tile: { row, col },
 });
 
-describe('recordCheck — unidentified-observation collapse', () => {
+describe('recordCheck collapses an unidentified observation', () => {
   it('keeps two unidentified observations made in different rooms', () => {
     const rec = createRecorder();
     recordCheck(rec, unidentifiedAt('A', 0x10, 0, 0));

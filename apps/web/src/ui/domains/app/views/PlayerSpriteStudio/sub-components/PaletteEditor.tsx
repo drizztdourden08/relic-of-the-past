@@ -9,11 +9,13 @@ import { COLORS_PER_OUTFIT, GLOVES_INDEX, OUTFIT_IDS } from '@shared/game/data/p
 import type { OutfitId, PlayerSheet } from '@shared/game/data/player-sheet/types';
 import { bgr555ToHex, hexToBgr555, isExactColor } from '@app/lib/game/snes-color';
 import { flattenPalette } from '@app/lib/game/player-sheet/flatten-palette';
-import { OUTFIT_LABELS } from '../behavior/useWearing';
+import { OUTFIT_LABELS } from '@domains/packs/character/behavior/useWearing';
 
 interface PaletteEditorProps {
   sheet: PlayerSheet;
   outfit: OutfitId;
+  /** An installed sprite: the colours show, and no swatch opens the picker. */
+  readOnly?: boolean;
   onColor: (index: number, word: number) => void;
   onGloveColor: (slot: 0 | 1, word: number) => void;
   onReset: (index: number) => void;
@@ -23,7 +25,7 @@ interface PaletteEditorProps {
 type Slot = number | 'g0' | 'g1' | null;
 
 const PaletteEditor = (props: PaletteEditorProps) => {
-  const { sheet, outfit, onColor, onGloveColor, onReset } = props;
+  const { sheet, outfit, readOnly = false, onColor, onGloveColor, onReset } = props;
   const [slot, setSlot] = useState<Slot>(null);
   const anchorRef = useRef<HTMLElement | null>(null);
 
@@ -32,9 +34,10 @@ const PaletteEditor = (props: PaletteEditorProps) => {
   const originals = sheet.original.outfits[outfit];
 
   const openAt = useCallback((el: HTMLElement, s: Exclude<Slot, null>) => {
+    if (readOnly) return;
     anchorRef.current = el;
     setSlot((cur) => (cur === s ? null : s));
-  }, []);
+  }, [readOnly]);
 
   const wordOf = useCallback((s: Exclude<Slot, null>): number =>
     (typeof s === 'number' ? colors[s] : live.gloves[s === 'g0' ? 0 : 1]), [colors, live.gloves]);
@@ -62,7 +65,7 @@ const PaletteEditor = (props: PaletteEditorProps) => {
       : `Gloves · ${slot === 'g0' ? 'power' : 'titan'}`;
 
   // Quick-assign: every colour already in this sheet, grouped by exactly where it comes
-  // from — a flat list would make it impossible to tell a green-outfit shadow from a
+  // from. A flat list would make it impossible to tell a green-outfit shadow from a
   // blue-outfit one at a glance, which is the whole point of offering them for reuse.
   const swatchGroups = useMemo<SwatchGroup[]>(() => {
     if (slot === null) return [];
@@ -91,7 +94,7 @@ const PaletteEditor = (props: PaletteEditorProps) => {
               caption={i + 1}
               selected={slot === i}
               edited={colors[i] !== originals[i]}
-              title={`Index ${i + 1}${i + 1 === GLOVES_INDEX ? ' — replaced by the glove colour when gloves are worn' : ''}`}
+              title={`Index ${i + 1}${i + 1 === GLOVES_INDEX ? ' (replaced by the glove colour when gloves are worn)' : ''}`}
               onClick={(e) => openAt(e.currentTarget, i)}
             />
           ))}
@@ -114,7 +117,7 @@ const PaletteEditor = (props: PaletteEditorProps) => {
       </Box>
 
       <ColorPickerPopover
-        open={slot !== null}
+        open={slot !== null && !readOnly}
         anchorRef={anchorRef}
         value={slot === null ? '#000000' : bgr555ToHex(wordOf(slot))}
         onChange={change}

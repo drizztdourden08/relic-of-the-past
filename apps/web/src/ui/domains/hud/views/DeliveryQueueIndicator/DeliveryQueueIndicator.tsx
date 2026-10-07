@@ -1,8 +1,7 @@
 /* @layer renderer-hud @kind component */
 /**
- * DeliveryQueueIndicator — bottom-right overlay showing the full delivery queue.
- * Visible only when items are queued. Shows up to 20 items individually,
- * with a "...N more" overflow indicator beyond that.
+ * Bottom-right overlay showing the full delivery queue. Visible only when items
+ * are queued. Shows up to 20 items individually, with a "...N more" overflow beyond that.
  */
 
 import { HudBox } from '../../primitives/HudBox';
@@ -90,7 +89,7 @@ const DeliveryQueueIndicator = () => {
         ))}
         {overflow > 0 && (
           <HudBox className="dq-overflow">
-            …{overflow} more in queue
+            ...{overflow} more in queue
           </HudBox>
         )}
       </HudBox>

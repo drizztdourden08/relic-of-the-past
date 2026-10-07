@@ -1,16 +1,9 @@
 /* @layer renderer-components @kind hook */
 /**
- * Auditions the sound chip's own version of a sound or a music track, alongside the pack preview
- * rather than instead of it.
- *
- * Kept separate from `useSoundPreview` on purpose: that one builds a pack session with layers,
- * schedules and meters, and an original has none of those — it is a single buffer straight from the
- * chip. Sharing one hook would mean one of the two carrying machinery it has no use for.
- *
- * The button is never disabled on an availability check. Whether the core can render is not
- * something this view is told about — it changes when the game boots, with no re-render here to
- * notice — so a cached "no" would grey the button out for the rest of the session. Pressing it
- * always tries, and says why if it cannot.
+ * Auditions the sound chip's own version of a sound or track. Separate from `useSoundPreview`,
+ * which builds a whole pack session; an original is one buffer. The button is never disabled on
+ * an availability check: whether the core can render changes when the game boots, with no
+ * re-render here to notice, so pressing always tries and says why if it cannot.
  */
 import { useCallback, useEffect, useState } from 'react';
 import { playOriginalSound, stopOriginalSound } from '@app/lib/game/original-sound';

@@ -1,8 +1,5 @@
 /* @layer renderer-hud @kind component */
-/**
- * PauseItemSlot — a single item in the pause menu item grid.
- * Displays 16×16 item sprite or empty. Highlights the currently selected item.
- */
+/** A single item in the pause menu item grid: 16×16 sprite or empty, highlighted when selected. */
 import { useMemo } from 'react';
 import { HudBox } from '../../primitives/HudBox';
 import { HudImage } from '../../primitives/HudImage';
@@ -93,7 +90,7 @@ const PauseItemSlot = ({ saveSlotIndex, itemValue, selected, animate = true, sca
       height: size,
       position: 'relative',
     }}>
-      {/* Pixel-art selection circle — native 32×32 scaled up with pixelated rendering */}
+      {/* Pixel-art selection circle, a native 32×32 sprite scaled up with pixelated rendering */}
       {selected && (
         <HudImage
           src={circleUrl}

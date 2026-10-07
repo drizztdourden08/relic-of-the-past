@@ -1,9 +1,8 @@
 /* @layer renderer-components @kind types */
 /**
  * Shared state types for the translation editor's data layer: what the editor
- * hook hands the UI (the loaded set, save/dirty flags, per-entry validation),
- * what an edit to the name table looks like, and what a full-set text search
- * returns.
+ * hook hands the UI (the loaded set, save/dirty flags, per-entry validation)
+ * and what an edit to the name table looks like.
  */
 import type {
   EntryIssue, GlossaryTerm, LanguageSet, PauseLabelKey, SetStructure, TextGroupId, Token, Variable,
@@ -11,9 +10,6 @@ import type {
 
 /** Validation results per dialogue entry, keyed by the entry's own game index. */
 type EntryIssueMap = Record<number, EntryIssue[]>;
-
-/** The three name-table groups an editable display string can live in. */
-type NameGroup = 'items' | 'bottles' | 'labels';
 
 /**
  * One name-table write, discriminated on the group so every group keeps its
@@ -39,7 +35,7 @@ type LanguageEditorActions = {
   /**
    * One variable's literal text. Routed to whichever table the variable is
    * projected from; an engine-owned variable has no stored value, so a write to
-   * one is ignored rather than landing where nothing would read it.
+   * one is ignored instead of landing where nothing would read it.
    */
   setVariableValue: (variable: Variable, value: string) => void;
   /** Replaces several entries' streams in one pass (the hardcoded-name apply). */
@@ -52,7 +48,7 @@ type LanguageEditorActions = {
 type LanguageEditorState = LanguageEditorActions & {
   set: LanguageSet | null;
   loading: boolean;
-  /** Load failure — a missing set id, or an unreadable payload. */
+  /** Load failure, such as a missing set id or an unreadable payload. */
   error: string | null;
   /** Edits exist that the debounced write has not persisted yet. */
   dirty: boolean;
@@ -74,41 +70,6 @@ type LanguageEditorState = LanguageEditorActions & {
   terms: GlossaryTerm[];
 };
 
-/** Which part of the set a search hit was found in. */
-type SearchHitKind = 'dialogue' | 'glossary' | 'name';
-
-/**
- * Which field inside that record matched: a dialogue entry's plain text runs,
- * its translator note, one of its control/reference chips, or a glossary /
- * name-table key or value.
- */
-type SearchField = 'text' | 'note' | 'chip' | 'key' | 'value';
-
-/** One search result, carrying enough to navigate straight to its source. */
-type SearchHit = {
-  kind: SearchHitKind;
-  /** Jump target: the entry id as a string, a glossary key, or `<group>:<key>`. */
-  id: string;
-  field: SearchField;
-  /** Set only for dialogue hits, so a row can scroll itself into view. */
-  entryId: number | null;
-  /** Set only for name hits. */
-  group: NameGroup | null;
-  /** Single-line excerpt with the match in context. */
-  preview: string;
-};
-
-/** What the search hook returns: the hits plus what the UI needs to label them. */
-type TranslationSearchState = {
-  hits: SearchHit[];
-  count: number;
-  /** The query the hits actually reflect (post-debounce), trimmed. */
-  applied: string;
-  /** The typed query has not reached the hits yet. */
-  pending: boolean;
-};
-
 export type {
-  EntryIssueMap, LanguageEditorActions, LanguageEditorState, NameEdit, NameGroup,
-  SearchField, SearchHit, SearchHitKind, TranslationSearchState,
+  EntryIssueMap, LanguageEditorActions, LanguageEditorState, NameEdit,
 };

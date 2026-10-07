@@ -5,7 +5,7 @@
  * rectangle through the shared anchor tracker, and closes on an outside
  * mousedown or Escape.
  *
- * Using `useAnchorTracking` rather than measuring once on open is what keeps
+ * Using `useAnchorTracking` instead of measuring once on open is what keeps
  * the panel attached while the page or any container underneath it scrolls,
  * and what dismisses it outright once the field has scrolled out of sight.
  */
@@ -18,7 +18,7 @@ const ROOM_FOR_DROP_DOWN = 220;
 /** Breathing space between the field and the panel. */
 const FIELD_GAP = 4;
 
-/** A narrow field still gets a readable list — mirrors `.tag-input__panel`. */
+/** A narrow field still gets a readable list, mirroring `.tag-input__panel`. */
 const MIN_PANEL_WIDTH = 200;
 
 const tagPanelPositionFor = (rect: DOMRect) =>

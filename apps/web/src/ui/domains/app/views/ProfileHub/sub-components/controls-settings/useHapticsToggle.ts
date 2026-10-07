@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 /**
- * useHapticsToggle — the profile-level haptics on/off switch. When on, every
+ * The profile-level haptics on/off switch. When on, every
  * controller this profile uses receives rumble; there is no per-device list
  * to curate here (see the routing itself in lib/input/haptic-bridge.ts,
  * which reads the profile's own device set live).

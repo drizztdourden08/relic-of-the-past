@@ -1,21 +1,16 @@
 /* @layer tests @kind test */
 /**
- * Invariants over the migrated connection-points model (one record = one
- * point on one screen; `toConnectionId` always names its partner). These pin
- * down the six guarantees the connection-model migration promised — see
- * `shared/game/data/connections/derive.ts` for the helpers this reads
- * through.
+ * Invariants over the connection-points model (one record = one point on one
+ * screen; `toConnectionId` names its partner). See
+ * `shared/game/data/connections/derive.ts`.
  *
- * Two of the six do not hold for every record today, and per the migration's
- * own rule ("do not weaken the assertion") both stay `test.todo` with the
- * exact violating ids named, rather than being loosened to pass:
- *  - tile-footprint uniqueness: 8 pairs share tiles with another point on the
- *    same screen (a door and the stair beneath it, sharing tiles by design —
- *    see `ConnectionPlacement.layer` — but the migration had no source data
- *    to populate `layer`, so these read as unresolved collisions).
- *  - same-screen pairs: connection-896/connection-1143 name the same screen
- *    on both ends (inherited from the pre-migration data, not introduced by
- *    the migration) and carry no `ctx:internal` tag to explain it.
+ * Two of the six do not hold today and stay `test.todo` with the violating
+ * ids named ("do not weaken the assertion"):
+ *  - tile-footprint uniqueness: 8 pairs share tiles on the same screen (a door
+ *    and the stair beneath it, by design, but the migration had no data for
+ *    `ConnectionPlacement.layer`).
+ *  - same-screen pairs: connection-896/connection-1143 name the same screen on
+ *    both ends (pre-migration data) with no `ctx:internal` tag.
  */
 import { describe, it, expect } from 'vitest';
 import { all, getConnection } from '@shared/game/data';
@@ -35,8 +30,8 @@ describe('connection pairing invariants', () => {
   });
 
   // 1 known violation: connection-896 <-> connection-1143 (screen-236, both
-  // ends), inherited from the pre-migration source data rather than
-  // introduced by the migration — neither side carries `ctx:internal`. The
+  // ends), inherited from the pre-migration source data instead of
+  // introduced by the migration, and neither side carries `ctx:internal`. The
   // check this would run, kept here for whoever re-enables it:
   //   const violators = ALL_CONNECTIONS.filter(c => {
   //     const partner = getConnection(c.toConnectionId);
@@ -47,7 +42,7 @@ describe('connection pairing invariants', () => {
   it.todo('a pair spans two different screens, or is explicitly an internal crossing (1 violation: connection-896 <-> connection-1143)');
 
   // 8 known violations (16 records): a door and the stair/entrance beneath it
-  // legitimately share a tile footprint on different layers — the model has
+  // legitimately share a tile footprint on different layers. The model has
   // `ConnectionPlacement.layer` for exactly this, but the migration had no
   // source data to populate it, so these currently read as unresolved
   // collisions: connection-324/325 (screen-051), connection-212/243

@@ -10,7 +10,7 @@ import { describeDataset } from '../dataset-guard';
 
 const probe = (rows: readonly unknown[]) => createSchemaIndex(buildSchema(rows));
 
-describeDataset('buildSchema — a large, deeply nested collection', () => {
+describeDataset('buildSchema on a large, deeply nested collection', () => {
   const rows = all('connection');
   const schema = probe(rows);
 
@@ -39,8 +39,8 @@ describeDataset('buildSchema — a large, deeply nested collection', () => {
     // Branches that never co-occur: one requirement is an id, another is a list.
     expect(schema.byPath('requirements')?.kind).toBe('union');
     // Placement is one uniform shape now (form/rect/tiles, `side` an additive
-    // optional field on a border point) — not a discriminated union anymore,
-    // see the connection-model migration report.
+    // optional field on a border point), not a discriminated union anymore.
+    // See the connection-model migration report.
     expect(schema.byPath('placement')?.kind).toBe('object');
     expect(schema.byPath('placement.form')?.kind).toBe('enum');
     // One consistent shape, so an object, and it nests three levels deep.
@@ -54,7 +54,7 @@ describeDataset('buildSchema — a large, deeply nested collection', () => {
   });
 });
 
-describeDataset('buildSchema — a second real collection', () => {
+describeDataset('buildSchema on a second real collection', () => {
   const schema = probe(all('item'));
 
   it('derives the same way over a different shape', () => {
@@ -63,7 +63,7 @@ describeDataset('buildSchema — a second real collection', () => {
     expect(schema.byPath('randomizerName')?.kind).toBe('string');
     // Uniform nested shape → object. weapon.range's branches only ever ADD a
     // key on top of the smaller ones (unbounded ⊂ estimated ⊂ contact), so
-    // it's one shape with optional fields, not a genuine variant — object.
+    // it's one shape with optional fields, not a genuine variant, so object.
     expect(schema.byPath('gameId')?.kind).toBe('object');
     expect(schema.byPath('gameId.receiveItemId')?.kind).toBe('number');
     expect(schema.byPath('weapon.range')?.kind).toBe('object');
@@ -81,7 +81,7 @@ describeDataset('buildSchema — a second real collection', () => {
   });
 });
 
-describeDataset('buildSchema — a third real collection', () => {
+describeDataset('buildSchema on a third real collection', () => {
   const schema = probe(all('screen'));
 
   it('keeps element descriptors out of the flattened list', () => {

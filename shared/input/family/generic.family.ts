@@ -3,7 +3,7 @@
  * Generic family display metadata: the fallback for 'standard' (a device
  * the platform already normalizes) and 'unknown' (a device SDL cannot
  * classify at all). This is the Null Object of the family layer; every
- * lookup lands here eventually, so it always answers rather than leaving a
+ * lookup lands here eventually, so it always answers instead of leaving a
  * gap for a caller to branch around. Icons carried over from the existing
  * generic preset.
  */

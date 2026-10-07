@@ -99,7 +99,7 @@ node scripts/gba-alttp-re/correlate-snes.mjs --room 0x12 --chunk 16 --stride 8
 - These streams are copied through EWRAM into screen-map VRAM regions. Interpreting
   each 32-byte block as a 4bpp graphics tile was disproved: none of the referenced
   Palace tiles matched live VRAM, with or without SNES-planar conversion.
-- The earlier graphics-chunk extractor was removed rather than preserving a false
+- The earlier graphics-chunk extractor was removed instead of preserving a false
   semantic interpretation. Exact classification remains a research lead.
 
 ## 2026-08-20: dungeon secret format extracted
@@ -134,7 +134,7 @@ node scripts/gba-alttp-re/correlate-snes.mjs --room 0x12 --chunk 16 --stride 8
 - For live Palace room `0x88`, the decompressed layers match the existing VRAM
   capture exactly at `0x0600C000`, `0x0600A000`, and `0x0600E000` respectively.
 - Palace layer pointers are `0x0836407C`, `0x082F19A4`, and `0x083AD8EC`.
-- The GBA port therefore stores pre-rendered room geometry layers rather than the
+- The GBA port therefore stores pre-rendered room geometry layers instead of the
   original SNES object command stream. `extract-dungeon-layers.mjs` exports both
   hardware-neutral logical cells and exact decompressed data.
 - A capture-based renderer using the live VRAM and palette reconstructs the complete
@@ -180,7 +180,7 @@ node scripts/gba-alttp-re/correlate-snes.mjs --room 0x12 --chunk 16 --stride 8
 - The ALttP save-slot power bitmap is byte zero of each `0x500`-byte slot beginning
   at SRAM offset `0x580`. Bit `0x02` is Hurricane Spin and bit `0x01` is sword beam.
 - SRAM files may reverse every eight-byte block. The production decoder accepts both
-  forms and ignores erased `INIT` slots rather than interpreting `0xFF` as powers.
+  forms and ignores erased `INIT` slots instead of interpreting `0xFF` as powers.
 - The normal entity dispatch table at `0x08174148` contains 248 Thumb pointers for
   types `0x00..0xF7`; its following word for `0xF8` is zero. Palace `0xF8` records
   therefore remain special markers until their consumer is traced semantically.

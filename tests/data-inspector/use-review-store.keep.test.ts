@@ -1,16 +1,9 @@
 /* @layer tests @kind test */
 /**
- * `useReviewStore` is a thin `useSyncExternalStore` wrapper over
- * `review-store.ts` (see that file's own tests for the cache/debounce logic
- * it delegates to). What matters here is the hook's own contract: it answers
- * the untouched default for an unreviewed id, and its bound setters reach the
- * same underlying store a plain caller would.
- *
- * Rendered via `renderToStaticMarkup`, the same harness
- * `use-view-state.test.ts` uses for a hook with no jsdom/testing-library in
- * this project — `useSyncExternalStore`'s subscribe/getSnapshot run during
- * render itself (unlike a `useEffect`-driven load), so this is enough to
- * observe the hook's return value.
+ * `useReviewStore` wraps `review-store.ts` in `useSyncExternalStore`. Pinned:
+ * the untouched default for an unreviewed id, and bound setters reaching the
+ * same store. Rendered via `renderToStaticMarkup` (as `use-view-state.test.ts`
+ * does): subscribe/getSnapshot run during render, so that is enough.
  */
 import {
   describe, it, expect, vi, beforeEach, afterEach,

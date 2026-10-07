@@ -1,10 +1,10 @@
 /* @layer shared-game @kind logic */
 /**
- * Connection Nav From Flood — derives ConnectionNavData from a live flood
- * crossing (ConnectionInfo) plus the connection's tags.
+ * Derives ConnectionNavData from a live flood crossing (ConnectionInfo) plus
+ * the connection's tags.
  *
  * The flood produces one ConnectionInfo per border/entrance crossing: the
- * crossing tile positions (0–63), the edge they sit on, and the requirements
+ * crossing tile positions (0-63), the edge they sit on, and the requirements
  * to reach them. This maps that into the persisted ConnectionNavData shape so a
  * written connection records WHERE it connects.
  *
@@ -23,7 +23,7 @@ const EDGE_TO_DIR: Record<Edge, 'n' | 's' | 'e' | 'w'> = {
   north: 'n', south: 's', east: 'e', west: 'w',
 };
 
-// A border position (0–63) maps to a grid cell using the edge it sits on:
+// A border position (0-63) maps to a grid cell using the edge it sits on:
 // N/S positions are columns (fixed row), E/W positions are rows (fixed col).
 const positionToGrid = (edge: Edge, pos: number): { row: number; col: number } => {
   switch (edge) {

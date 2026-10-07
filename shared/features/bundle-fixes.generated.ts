@@ -718,6 +718,23 @@ const BUNDLE_FIXES: FeatureDef[] = [
     affectsVanillaParity: true,
     live: true,
   },
+  {
+    id: 'fixBunnyPaletteAfterMap',
+    label: "Bunny colors after the map",
+    description: "Bundled under MiscBugFixes upstream. Sites: core/zelda3/src/messaging.c (WorldMap_ExitMap, DungeonMap_RecoverGFX) via GameHook_MapClosed",
+    userMessage: "Fix the bunny keeping Link's mail colors after the map screen closes in the Dark World.",
+    group: 'Bug fixes',
+    kind: 'features0-bit',
+    origin: 'snesrev',
+    bundleOrigin: 'MiscBugFixes',
+    flag: 'kFeatures2_FixBunnyPaletteAfterMap',
+    word: 2,
+    bit: 1024,
+    default: false,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
 ];
 
 export { BUNDLE_FIXES };

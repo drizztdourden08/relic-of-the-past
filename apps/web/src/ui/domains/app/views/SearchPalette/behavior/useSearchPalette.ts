@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 /**
  * Drives the SearchPalette shell. The palette is always mounted (a zero-size seed at
- * top-center, like Jex's CommandSurface pill) and just toggles an `is-open` class — the
+ * top-center, like Jex's CommandSurface pill) and just toggles an `is-open` class. The
  * CSS transition runs on the persisting DOM node with no mount/unmount timing to manage.
  * Also owns keyboard navigation and running/toggling the active result.
  */

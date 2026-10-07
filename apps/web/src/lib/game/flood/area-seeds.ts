@@ -6,7 +6,7 @@
  * it happened to hold at that moment, and then discard every crossing later
  * discovered into it (`analyzed.has(...) → continue`). A screen whose real way
  * in is only found once a NEIGHBOUR has been flooded therefore kept the small
- * extent its first, partial seed set produced — which is why the first
+ * extent its first, partial seed set produced, which is why the first
  * castle's four exterior quadrants each stopped at the first wall instead of
  * joining up, even though nothing had actually walked in or out of them yet.
  *

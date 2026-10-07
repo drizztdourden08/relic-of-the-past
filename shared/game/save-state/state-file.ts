@@ -9,8 +9,8 @@
  *   [ core bytes ][ stamp json ][ uint32 json length ][ 8-byte magic ]
  *
  * One write site covers quick, manual and auto saves alike, and the metadata travels with
- * the file when it is copied or synced. Loading strips the trailer anyway rather than
- * relying on the core to ignore it — the assumption holds today, and this way nothing
+ * the file when it is copied or synced. Loading strips the trailer anyway instead of
+ * relying on the core to ignore it. The assumption holds today, and this way nothing
  * depends on it continuing to.
  */
 import type { StateStamp } from './types';
@@ -72,7 +72,7 @@ const stripStamp = (buffer: ArrayBuffer): ArrayBuffer => {
   return total ? buffer.slice(0, buffer.byteLength - total) : buffer;
 };
 
-/** Re-stamping replaces rather than stacks, so a round-tripped buffer stays single-stamped. */
+/** Re-stamping replaces instead of stacking, so a round-tripped buffer stays single-stamped. */
 const appendStamp = (buffer: ArrayBuffer, stamp: StateStamp): ArrayBuffer => {
   const base = new Uint8Array(stripStamp(buffer));
   const json = encoder.encode(JSON.stringify(stamp));

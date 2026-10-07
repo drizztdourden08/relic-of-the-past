@@ -1,24 +1,17 @@
 /* @layer renderer-widgets @kind hook */
-import { useState, useEffect } from 'react';
+/**
+ * The inventory widget's view mode. Both the widget and its settings popover read
+ * this, so picking a mode in one is seen by the other with no event plumbing.
+ *
+ * It used to be a single localStorage key, which meant every profile on the
+ * machine shared one view mode and neither reader saw the other's write without a
+ * hand-dispatched StorageEvent.
+ */
 import type { InventoryViewMode } from '@shared/game/data';
-import { STORAGE_KEY } from '../inventory.constants';
+import { useWidgetPref } from '@app/hooks/useWidgetPref';
+import { DEFAULT_VIEW_MODE } from '../inventory.constants';
 
-const useInventoryViewMode = () => {
-  const [viewMode, setViewMode] = useState<InventoryViewMode>(() => {
-    return (localStorage.getItem(STORAGE_KEY) as InventoryViewMode) || 'default';
-  });
-
-  useEffect(() => {
-    const handler = (e: StorageEvent) => {
-      if (e.key === STORAGE_KEY && e.newValue) {
-        setViewMode(e.newValue as InventoryViewMode);
-      }
-    };
-    window.addEventListener('storage', handler);
-    return () => window.removeEventListener('storage', handler);
-  }, []);
-
-  return viewMode;
-};
+const useInventoryViewMode = (): readonly [InventoryViewMode, (next: InventoryViewMode) => void] =>
+  useWidgetPref<InventoryViewMode>('inventory', 'viewMode', DEFAULT_VIEW_MODE);
 
 export { useInventoryViewMode };

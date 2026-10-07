@@ -68,7 +68,7 @@ const wasmGetRoomLayoutInfo = (): RoomLayoutInfo | null =>
  *
  * `intraEdges` only carries an edge when the room's own quadrant flags say that
  * axis isn't merged, so seeing an east/west entry means the room is split in X
- * and a north/south entry means it's split in Y — regardless of which quadrant
+ * and a north/south entry means it's split in Y, regardless of which quadrant
  * the player currently occupies within that split. The player's own section
  * comes straight from the game's live quadrant read (`quadrantX`/`quadrantY`),
  * not re-derived from a pixel position.

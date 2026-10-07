@@ -6,7 +6,7 @@ import type { WizardDialogShellProps } from './WizardDialogShell.type';
 import './WizardDialogShell.css';
 
 /**
- * WizardDialogShell — a multi-step modal built on DialogShell. Adds the shared
+ * A multi-step modal built on DialogShell. Adds the shared
  * wizard chrome (header row with title + extras, a numbered step indicator) on
  * top of DialogShell's portal/backdrop/escape/actions. The body for the active
  * step is passed as children.

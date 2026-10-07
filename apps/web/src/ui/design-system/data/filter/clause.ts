@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind logic */
 /**
  * Specification pattern: a filter row is a plain `{path, op, value}` object
- * that compiles to a predicate, and clauses combine with AND. Being data rather
- * than a closure is what lets filter state be persisted, shared and
- * round-tripped — impossible if a filter were a function.
+ * that compiles to a predicate, and clauses combine with AND. Being data instead
+ * of a closure is what lets filter state be persisted, shared and round-tripped.
+ * A filter that was a function could do none of that.
  */
 import type { SchemaLike } from '../schema/build-schema';
 import { toSchemaIndex } from '../schema/build-schema';
@@ -23,7 +23,7 @@ interface FilterClause {
   enabled: boolean;
   /**
    * Optional modifier, absent on a clause that never asked for it: text
-   * comparisons fold case unless this is on. It sits here rather than inside
+   * comparisons fold case unless this is on. It sits here instead of inside
    * `value` so the operand keeps whatever plain shape its arity calls for, and
    * so a snapshot round-trips it for free.
    */
@@ -40,8 +40,8 @@ const PASS: RowPredicate = () => true;
  * on a later launch, at which point a freshly created clause sits in the same
  * array as clauses that survived from a previous session. A per-session
  * counter that restarts at 1 on every launch is guaranteed to collide with
- * whatever a prior session already wrote to disk — and a collision means two
- * clauses share the React key FilterBar renders them under, and the id every
+ * whatever a prior session already wrote to disk. A collision means two clauses
+ * share the React key FilterBar renders them under, and the id every
  * `onChange` handler filters/maps by, so acting on one silently acts on both.
  * `crypto.randomUUID()` has no notion of "session" to restart, so it cannot
  * repeat a disk-persisted id.
@@ -55,7 +55,7 @@ const clauseToPredicate = (clause: FilterClause, schema: SchemaLike): RowPredica
   if (!field) return undefined;
   const tester = getFieldTester(field.kind);
   if (!tester) return undefined;
-  // Built once per clause rather than per row — the predicate runs over every
+  // Built once per clause, not per row, since the predicate runs over every
   // row in the collection.
   const options: FilterTestOptions = { caseSensitive: clause.caseSensitive };
   return (row: unknown) => tester.test(getPath(row, clause.path), clause.op, clause.value, options);
@@ -63,7 +63,7 @@ const clauseToPredicate = (clause: FilterClause, schema: SchemaLike): RowPredica
 
 /**
  * A clause whose path is gone, or whose kind has no registered tester, is
- * skipped rather than failing every row.
+ * skipped instead of failing every row.
  */
 const compile = (clauses: readonly FilterClause[], schema: SchemaLike): RowPredicate => {
   const index = toSchemaIndex(schema);

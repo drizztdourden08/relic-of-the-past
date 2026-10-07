@@ -1,9 +1,8 @@
 /* @layer tests @kind test */
 /**
- * The review store's cache/debounce discipline, in the same style
- * `tests/storage/ui-views.test.ts` uses for its IPC-backed repo: stub
- * `window.api`, fake timers, and a fresh dynamic import per test (the module
- * keeps its cache/timers as private top-level state).
+ * The review store's cache/debounce discipline, in the style of
+ * `tests/storage/ui-views.test.ts`: stub `window.api`, fake timers, fresh
+ * dynamic import per test (the module keeps cache/timers as top-level state).
  */
 import {
   describe, it, expect, vi, beforeEach, afterEach,
@@ -32,7 +31,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe('reviewFor — default-entry behavior', () => {
+describe('reviewFor and its default entry', () => {
   it('answers the untouched default for an id with no saved entry', () => {
     expect(reviewStore.reviewFor('screen' as EntityKind, 'screen-001')).toEqual(DEFAULT);
   });
@@ -77,7 +76,7 @@ describe('setReviewStatus / setReviewNote', () => {
     expect(entry.reviewedAt).toBeGreaterThanOrEqual(before);
   });
 
-  it('debounces the IPC save rather than writing on every keystroke', () => {
+  it('debounces the IPC save instead of writing on every keystroke', () => {
     reviewStore.setReviewNote('screen' as EntityKind, 'screen-001', 'first');
     reviewStore.setReviewNote('screen' as EntityKind, 'screen-001', 'first draft');
     expect(saveReview).not.toHaveBeenCalled();
@@ -93,7 +92,7 @@ describe('setReviewStatus / setReviewNote', () => {
     expect(entry).toMatchObject({ note: 'a note', status: 'untouched' });
   });
 
-  it('debounces per (kind, id) — editing two different ids saves both', async () => {
+  it('debounces per (kind, id) so editing two different ids saves both', async () => {
     reviewStore.setReviewStatus('screen' as EntityKind, 'screen-001', 'accepted');
     reviewStore.setReviewStatus('screen' as EntityKind, 'screen-002', 'needs-work');
     await vi.advanceTimersByTimeAsync(300);

@@ -1,0 +1,184 @@
+/* @layer renderer-widgets @kind style */
+
+/* The Rules tab: three sections of tiles in a widget about 340px wide. The square
+   tiles share one size, set here from the spacing scale so the sheet holds no
+   magic number: three squares and their gaps fit the widget with room to spare. */
+
+.cheats-rules {
+  --cheats-rules-tile: calc(var(--space-2xl) * 3);
+  --cheats-rules-sprite: var(--space-2xl);
+
+  display: flex;
+  flex-direction: column;
+}
+
+.cheats-rules__grid {
+  display: grid;
+  grid-template-columns: repeat(3, var(--cheats-rules-tile));
+  gap: var(--space-xs);
+}
+
+.cheats-rules__ladders {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+/* ─── Shared by every tile: the art and the short name under it ─── */
+
+.cheats-rules__sprite {
+  width: var(--cheats-rules-sprite);
+  height: var(--cheats-rules-sprite);
+  image-rendering: pixelated;
+  object-fit: contain;
+}
+
+.cheats-rules__sprite--placeholder {
+  background: var(--c-hover);
+  border-radius: var(--radius-sm);
+}
+
+.cheats-rules__name {
+  font-size: var(--text-xs);
+  line-height: var(--leading-tight);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--c-text-dim);
+}
+
+/* ─── A state tile: sprite over a tick box, three faces on data-state ─── */
+
+.cheats-rule {
+  display: flex;
+  width: var(--cheats-rules-tile);
+  height: var(--cheats-rules-tile);
+  background: var(--c-bg);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-sm);
+}
+
+.cheats-rule[data-state='on'] {
+  border-color: var(--c-gold);
+}
+
+.cheats-rule[data-state='off'] {
+  opacity: var(--opacity-muted);
+}
+
+.cheats-rule[data-state='off']:hover {
+  opacity: 1;
+}
+
+.cheats-rule[data-state='disabled'] {
+  background: transparent;
+}
+
+/* The box IS the tile: the label fills the square so the whole thing is one click
+   target. Reversed so the art reads first and its tick sits under it. Written
+   through the tile so it outranks the checkbox's own single-class rules. */
+.cheats-rule .cheats-rule__control {
+  flex: 1;
+  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2xs);
+  min-width: 0;
+  padding: var(--space-2xs);
+}
+
+.cheats-rule .cheats-rule__control .checkbox__label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+/* ─── A ladder tile: full width, art on the left, the rungs wrapping on the right ─── */
+
+.cheats-rung {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--c-bg);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-sm);
+}
+
+.cheats-rung[data-state='on'] {
+  border-color: var(--c-gold);
+}
+
+.cheats-rung[data-state='disabled'] {
+  background: transparent;
+  opacity: var(--opacity-disabled);
+}
+
+.cheats-rung__art {
+  display: flex;
+  flex: 0 0 var(--cheats-rules-tile);
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.cheats-rung__chips {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+
+.cheats-rung__chip {
+  font-size: var(--text-xs);
+  padding: var(--space-2xs) var(--space-xs);
+}
+
+/* ─── An action tile: dashed, holds nothing, dips when pressed ─── */
+
+.cheats-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2xs);
+  width: var(--cheats-rules-tile);
+  height: var(--cheats-rules-tile);
+  padding: var(--space-2xs);
+  background: var(--c-bg);
+  border: var(--border-width-thin) dashed var(--c-border-strong);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: transform var(--duration-fast), border-color var(--duration-fast);
+}
+
+.cheats-action:hover:not(:disabled) {
+  border-color: var(--c-danger);
+}
+
+.cheats-action:hover:not(:disabled) .cheats-rules__name {
+  color: var(--c-danger);
+}
+
+.cheats-action:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.cheats-action[data-state='disabled'] {
+  background: transparent;
+  opacity: var(--opacity-disabled);
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cheats-action {
+    transition: none;
+  }
+
+  .cheats-action:active:not(:disabled) {
+    transform: none;
+  }
+}

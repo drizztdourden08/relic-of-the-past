@@ -1,5 +1,5 @@
 <!-- @layer docs @kind doc -->
-# Design System — Structure & Rules
+# Design System Structure & Rules
 
 The foundation for the app's UI is a set of design tokens plus a four-tier
 component library. All code obeys @docs/contributing/coding-standards.md. For where
@@ -12,16 +12,16 @@ All UI lives under `apps/web/src/ui/`, split into a reusable
 
 ```
 ui/
-├── design-system/          @ds/*  — reusable, domain-agnostic
+├── design-system/          @ds/*  - reusable, domain-agnostic
 │   ├── tokens/             concept files (color, space, size, radius, border,
 │   │                       typography, shadow, motion, z-index, opacity, reset)
 │   │                       + index.css (the single @import entry; imported once in main.tsx)
-│   ├── primitives/         tier 1 — generic atoms; the one place raw HTML is allowed
-│   └── composites/         tier 2 — generic structural combos
-└── domains/                @domains/*  — domain-specific UI
+│   ├── primitives/         tier 1 - generic atoms; the one place raw HTML is allowed
+│   └── composites/         tier 2 - generic structural combos
+└── domains/                @domains/*  - domain-specific UI
     ├── app/
-    │   ├── compounds/      tier 3 — domain presentational
-    │   └── views/          tier 4 — page/feature with logic + data
+    │   ├── compounds/      tier 3 - domain presentational
+    │   └── views/          tier 4 - page/feature with logic + data
     ├── widgets/            domain: overlay widgets
     └── hud/                domain: game HUD (own primitives/composites/compounds/views)
 ```
@@ -30,7 +30,7 @@ Aliases: `@ds/*` → `ui/design-system/*`, `@domains/*` → `ui/domains/*` (plus
 existing `@app/*` → `apps/web/src/*`, `@shared/*`). Non-presentational code
 (`App/`, `stores/`, `lib/`, `hooks/`, `utils/`) stays at `src/` root.
 
-## Component taxonomy — four tiers
+## The four component tiers
 
 Every UI component is exactly one tier. Pick the tier first, then build it in the
 right folder. The first three are bare, self-contained, and presentational: data comes
@@ -44,21 +44,21 @@ navigation. Only Views are wired to data and logic.
 | **Compound** | **Domain-specific** presentational unit composed from primitives/composites | ✅ a concept | ❌ (data via props) | `components/compounds/` | ProfileCard, RomCard, SaveSlot, HeroSaveCard, CreateProfileForm |
 | **View** | Page/feature with business logic + data | ✅ | ✅ stores, IPC, game | `components/views/`, `widgets/` | ProfileHub, GameLayer, TrackerView, SpriteDebug, TitleBar |
 
-**Primitive** — a generic atom with no domain knowledge. `<Button>`, `<Select>`,
+**Primitive:** a generic atom with no domain knowledge. `<Button>`, `<Select>`,
 `<Toggle>`. Pure props in, events out, reusable in any app.
 
-**Composite** — a generic, reusable structural or layout component built from
+**Composite:** a generic, reusable structural or layout component built from
 primitives, still domain-agnostic. `<Card>`, `<Dialog>`, `<Overlay>`,
 `<DropdownMenu>`. Often a small Facade over markup and tokens.
 
-**Compound** — a domain-specific presentational component for a concrete concept,
+**Compound:** a domain-specific presentational component for a concrete concept,
 composed from primitives and composites. `<ProfileCard>`, `<RomCard>`, `<SaveSlot>`.
 It knows a domain shape (it takes a `Profile`/`Rom`/`Slot` prop) but stays bare: it
 fetches nothing, owns no store, and fires callbacks up. Here "compound" means a
 composed domain card or form, which is different from the React-Context "compound
 components" pattern.
 
-**View** — the container. Owns state via Zustand stores, `window.api` IPC, or
+**View:** the container. Owns state via Zustand stores, `window.api` IPC, or
 `lib/game`, and passes data and callbacks down into the bare tiers. It's the only tier
 with business logic, which lives in its `behavior/` hooks.
 
@@ -78,13 +78,13 @@ with business logic, which lives in its `behavior/` hooks.
 
 ```
 <tier>/<Name>/
-├── <Name>.tsx          — one component, arrow fn, exports at end, ≤200 lines  ┐
-├── <Name>.css          — scoped styles, tokens only, class names prefixed     │ ONLY
-├── <Name>.type.ts      — <Name>Props etc. (exports at end)                    │ these
-├── <Name>.constants.ts — static config (optional)                            │ at root
-├── index.ts            — barrel (re-export only)                              ┘
-├── behavior/           — hooks/handlers, one per file
-└── sub-components/<Child>/  — children used only here (recursive: same shape)
+├── <Name>.tsx          - one component, arrow fn, exports at end, ≤200 lines  ┐
+├── <Name>.css          - scoped styles, tokens only, class names prefixed     │ ONLY
+├── <Name>.type.ts      - <Name>Props etc. (exports at end)                    │ these
+├── <Name>.constants.ts - static config (optional)                            │ at root
+├── index.ts            - barrel (re-export only)                              ┘
+├── behavior/           - hooks/handlers, one per file
+└── sub-components/<Child>/  - children used only here (recursive: same shape)
 ```
 
 Root files are name-prefixed (`<Name>.type.ts`, `<Name>.constants.ts`). The
@@ -110,7 +110,7 @@ subfolder besides `behavior/` and `sub-components/`.
 **Styling**
 7. Colocate CSS as `<Name>.css` with scoped, prefixed class names so nothing bleeds
    globally. Prefer CSS over inline `style`.
-8. Reserve inline `style={{}}` for genuinely dynamic values such as computed transforms
+8. Reserve inline `style={{}}` for dynamic values such as computed transforms
    and measured sizes.
 
 **Boundaries**
@@ -126,7 +126,7 @@ each reaches zero. See the full rules table in
 
 | Rule | Tool | What it flags |
 |------|------|---------------|
-| **R11 no-raw-html** | ESLint (`local/no-raw-html`) | any lowercase JSX element outside `primitives/` — use `Box`/`Text`/`Flex`/`Button`/… |
+| **R11 no-raw-html** | ESLint (`local/no-raw-html`) | any lowercase JSX element outside `primitives/`; use `Box`/`Text`/`Flex`/`Button`/... |
 | **R12 structure-policy** | analyze adapter | component-root files other than `<Name>.{tsx,css,type.ts,constants.ts}`+`index.ts`, or subfolders other than `behavior/`/`sub-components/` |
 | **R13 token-policy** | stylelint (`color-no-hex`, `color-named`) | raw hex / named colors in `ui/**` component CSS (tokens/ exempt) |
 

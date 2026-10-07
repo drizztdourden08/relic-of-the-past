@@ -1,7 +1,12 @@
 /* @layer renderer-components @kind types */
-﻿interface SegmentOption<T extends string = string> {
+﻿import type { ReactNode } from 'react';
+
+interface SegmentOption<T extends string = string> {
   value: T;
-  label: string;
+  /** Text, or an icon for a control too narrow to spell its options out. */
+  label: ReactNode;
+  /** Tooltip and accessible name, needed whenever the label is an icon. */
+  title?: string;
   disabled?: boolean;
 }
 

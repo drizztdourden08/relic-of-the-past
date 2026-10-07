@@ -1,14 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
- * The continuity group of one claimed sound: sounds sharing a group hand playback across when one
- * replaces the other, for the layers that match.
- *
- * A free-text name rather than a toggle, because dependence is BETWEEN sounds: "these two are the
- * same storm" is a relation, and the name is what says which sounds are in it. Typing the same
- * word on both ends is the whole setup.
- *
- * Saves on blur, straight into the manifest — it is sound-level, so it cannot ride the layer
- * editor's save, and a field that silently waited for one would look saved while not being.
+ * Continuity group: a free-text name, not a toggle, because the relation is BETWEEN sounds. Saves
+ * on blur straight into the manifest; it is sound-level, so it cannot ride the layer editor's save.
  */
 import { useEffect, useState } from 'react';
 import type { MsuPackManifest, SoundChannel } from '@shared/types/msu-manifest';
@@ -24,13 +17,13 @@ interface SoundGroupFieldProps {
   soundId: number;
   /** The group as saved. The field re-syncs when it changes underneath. */
   group: string | undefined;
-  /** What a save WRITES into — absent for a pack that cannot hold one. */
+  /** What a save WRITES into. Absent for a pack that cannot hold one. */
   saveBase: MsuPackManifest;
   disabled?: boolean;
   onSaved: () => void;
 }
 
-const HINT = 'Sounds sharing a group continue seamlessly into each other: layers with the same files'
+const HINT = 'Sounds sharing a group continue into each other without a break: layers with the same files'
   + ' and timing carry their position across, and only what differs changes. Leave empty for none.';
 
 const SoundGroupField = (props: SoundGroupFieldProps) => {
@@ -50,7 +43,7 @@ const SoundGroupField = (props: SoundGroupFieldProps) => {
       <Field label="Continuity group" hint={HINT}>
         <TextInput
           type="text"
-          placeholder="storm…"
+          placeholder="storm..."
           value={draft}
           disabled={disabled}
           onChange={(event) => setDraft(event.target.value)}

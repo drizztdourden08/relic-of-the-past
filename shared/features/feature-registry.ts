@@ -3,30 +3,24 @@ import type { FeatureDef } from './feature.type';
 import { BUNDLE_FIXES } from './bundle-fixes.generated';
 
 /**
- * The feature registry — intended as the one place that defines every divergence from vanilla.
+ * The feature registry: the planned single place defining every divergence from vanilla.
  *
- * WIP (not yet wired into the runtime): today only tests/features/ + resolve-features.ts read this; the
- * shipping UI still defines its sections/cascade inline (SettingsView.*). Keep it — it's the planned
- * source of truth (see plans/settings-registry-map.md) — but don't treat it as dead code.
- *
- * NOTE (in progress): this holds the "relic" display/audio/input features plus the resolution
- * dependency tree. The 16 snesrev quality-of-life flags and the 42 individual bug-fix toggles
- * (see plans/_bundle_settings.json) are bulk-imported in a follow-up pass; their FeatureDefs are
- * generated from that catalog so they stay in lockstep with the C gate sites.
+ * WIP, not yet wired into the runtime: only tests/features/ and resolve-features.ts read this; the
+ * shipping UI still defines its sections/cascade inline (SettingsView.*). Not dead code; see
+ * plans/settings-registry-map.md. The 16 snesrev quality-of-life flags and the 42 bug-fix toggles
+ * (plans/_bundle_settings.json) are generated from that catalog so they stay in lockstep with the C gate sites.
  */
 
-// --- Display / aspect ratio --------------------------------------------------
-// Rendering dependency tree (plans/settings-registry-map.md §4). UI vocabulary is canonical:
+// Rendering dependency tree (plans/settings-registry-map.md §4):
 //   extendedRendering (master) → linearWorldTilemap → { ultrawideRendering, tallRendering };
 //   cameraLockToViewport → extendedRendering; smoothTransitions → cameraLockToViewport.
-// The old aspectRatioWide / experimentalWideRender / tallView entries are retired in favor of these.
 const DISPLAY_FEATURES: FeatureDef[] = [
   {
     id: 'extendedRendering',
     label: 'Extended rendering',
     description: 'Master opt-in for every wide/tall/camera enhancement. Off => the core renders pure 4:3 vanilla.',
     userMessage:
-      'Unlocks widescreen, tall, and camera enhancements below. Off keeps the original fixed 4:3 view — pixel- and timing-identical to the cartridge, so leave it off for vanilla/speedrun parity.',
+      'Unlocks the widescreen, tall, and camera options below. Off keeps the original fixed 4:3 view, which is pixel- and timing-identical to the cartridge, so leave it off for vanilla/speedrun parity.',
     group: 'Display / Aspect',
     kind: 'features0-bit',
     origin: 'relic',
@@ -59,7 +53,7 @@ const DISPLAY_FEATURES: FeatureDef[] = [
     label: 'Ultrawide',
     description: 'Raises the horizontal budget cap from ~19:9 up to the engine maximum (~32:9).',
     userMessage:
-      'Allows aspect ratios beyond ~19:9, up to ~32:9. Requires the linear world tilemap. Changes a lot of what is on-screen — leave off for vanilla parity.',
+      'Allows aspect ratios beyond ~19:9, up to ~32:9. Requires the linear world tilemap. Changes a lot of what is on-screen, so leave off for vanilla parity.',
     group: 'Display / Aspect',
     kind: 'features0-bit',
     origin: 'relic',
@@ -132,10 +126,10 @@ const DISPLAY_FEATURES: FeatureDef[] = [
   },
   {
     id: 'widescreenVisualFixes',
-    label: 'Widescreen visual fixes',
-    description: 'Graphics corrections for sprites/edges that assume a 4:3 screen.',
+    label: 'Widescreen fixes',
+    description: 'Corrections for a view wider or taller than the original: transitions, effects and sprites drawn for the 4:3 screen.',
     userMessage:
-      'Corrects sprites and edges that were drawn assuming a 4:3 screen. On by default when a wide ratio is active.',
+      'Corrects transitions, effects and sprites that were drawn for the 4:3 screen, in a wide or a tall view. On by default with extended rendering.',
     group: 'Display / Aspect',
     kind: 'features0-bit',
     origin: 'snesrev',
@@ -185,7 +179,7 @@ const DISPLAY_FEATURES: FeatureDef[] = [
     description:
       'Extends hazards, enemy spawns and "room cleared" checks to the whole widescreen picture instead of just the original 4:3 area.',
     userMessage:
-      'Extends game activity to the whole widescreen picture rather than only the original 4:3 area: where hazards and enemies spawn, how long enemy spawners stay active, and how much of the view a "room cleared" check considers. Off, the extra width you can see stays inactive. This changes gameplay, so leave it off for vanilla parity.',
+      'Extends game activity to the whole widescreen picture instead of only the original 4:3 area: where hazards and enemies spawn, how long enemy spawners stay active, and how much of the view a "room cleared" check considers. Off, the extra width you can see stays inactive. This changes gameplay, so leave it off for vanilla parity.',
     group: 'Display / Aspect',
     kind: 'features0-bit',
     origin: 'relic',
@@ -198,10 +192,26 @@ const DISPLAY_FEATURES: FeatureDef[] = [
     live: true,
   },
   {
-    // NOTE: offscreenAI is a three-way setting, not a single bit, so the registry's flag/bit/default
-    // model only carries one bit cleanly. This entry documents the new 'idle' bit (the default);
-    // 'paused' resolves to the older kFeatures0_PauseOffscreenAI bit instead, and 'vanilla' sets
-    // neither. See offscreenAiMode in apps/web/src/lib/game/settings.ts for the real resolution.
+    id: 'titleOverride',
+    label: 'Title screen: reimagined',
+    description: 'Keeps the native title screen off the picture while the app draws its own over the running intro.',
+    userMessage:
+      'The app draws the title screen itself, from its own scene art, on the same frames as the original. Off keeps the game\'s own title.',
+    group: 'HUD',
+    kind: 'features0-bit',
+    origin: 'relic',
+    flag: 'kFeatures2_TitleOverride',
+    word: 2,
+    bit: 67108864,
+    default: true,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
+    // offscreenAI is three-way, but the registry model carries one bit. This entry is the 'idle' bit
+    // (default); 'paused' maps to the older kFeatures0_PauseOffscreenAI bit and 'vanilla' sets neither.
+    // See offscreenAiMode in apps/web/src/lib/game/settings.ts.
     id: 'offscreenAI',
     label: 'Off-screen enemy AI',
     description:
@@ -224,7 +234,7 @@ const DISPLAY_FEATURES: FeatureDef[] = [
     label: 'Dim flashes',
     description: 'Reduces the intensity of bright flashes to ease eye strain and improve accessibility.',
     userMessage:
-      'Dims bright flashes in the game to reduce eye strain. Accessibility improvement — does not change gameplay.',
+      'Dims bright flashes in the game to reduce eye strain. An accessibility option that does not change gameplay.',
     group: 'Quality of life',
     kind: 'features0-bit',
     origin: 'snesrev',
@@ -238,9 +248,8 @@ const DISPLAY_FEATURES: FeatureDef[] = [
 ]
 
 // Native-HUD-hide is intentionally NOT a registry feature: it's driven by g_hud_hide_mask via
-// WasmSetHudHidden, tied to the existing hudMode='enhanced' setting — not a features0 bit.
+// WasmSetHudHidden and tied to the existing hudMode='enhanced' setting, so it is not a features0 bit.
 
-// --- Audio -------------------------------------------------------------------
 const AUDIO_FEATURES: FeatureDef[] = [
   {
     id: 'perGroupVolume',
@@ -260,14 +269,13 @@ const AUDIO_FEATURES: FeatureDef[] = [
   },
 ]
 
-// --- Input -------------------------------------------------------------------
 const INPUT_FEATURES: FeatureDef[] = [
   {
     id: 'itemSwitchLR',
     label: 'L/R item cycling',
     description: 'Use L/R buttons to cycle through equipped items instead of the fixed Y-only slot.',
     userMessage:
-      'Lets you press L or R to cycle through your equipped items. Not in the original game — leave off for vanilla parity.',
+      'Lets you press L or R to cycle through your equipped items. Not in the original game, so leave off for vanilla parity.',
     group: 'Input',
     kind: 'features0-bit',
     origin: 'snesrev',
@@ -312,7 +320,7 @@ const INPUT_FEATURES: FeatureDef[] = [
   },
 ]
 
-// --- Gameplay (item selection split out of snesrev's SwitchLR bundle) -------
+// Item selection split out of snesrev's SwitchLR bundle.
 const GAMEPLAY_FEATURES: FeatureDef[] = [
   {
     id: 'allowDiving',
@@ -323,12 +331,13 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
     group: 'Quality of life',
     kind: 'features0-bit',
     origin: 'relic',
-    flag: 'kFeatures0_AllowDiving',
-    bit: 2147483648,
+    flag: 'kFeatures2_AllowDiving',
+    word: 2,
+    bit: 536870912,
     default: false,
     requires: [],
     // Deliberately not a Vanilla Safe casualty: it rides with the extra dungeon, which is added
-    // content rather than a parity question, and the room it exists for is impassable without it.
+    // content, not a parity question, and the room it exists for is impassable without it.
     affectsVanillaParity: false,
     live: true,
   },
@@ -369,7 +378,7 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
     label: 'Cancel bird travel',
     description: 'Press a button to cancel arrival travel instead of watching the full animation.',
     userMessage:
-      'Lets you cancel bird arrival animations with a button press. Not in the original game — leave off for vanilla parity.',
+      'Lets you cancel bird arrival animations with a button press. Not in the original game, so leave off for vanilla parity.',
     group: 'Quality of life',
     kind: 'features0-bit',
     origin: 'snesrev',
@@ -417,7 +426,7 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
     label: 'More active bombs',
     description: 'Increases the maximum number of bombs that can be active at once.',
     userMessage:
-      'Increases the bomb count limit so more bombs can explode at once. Not in the original game — leave off for vanilla parity.',
+      'Increases the bomb count limit so more bombs can explode at once. Not in the original game, so leave off for vanilla parity.',
     group: 'Quality of life',
     kind: 'features0-bit',
     origin: 'snesrev',
@@ -455,7 +464,7 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
     origin: 'snesrev',
     flag: 'kFeatures0_SkipIntroOnKeypress',
     bit: 128,
-    default: false,
+    default: true,
     requires: [],
     affectsVanillaParity: true,
     live: true,
@@ -466,7 +475,7 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
     description: 'Stops the sage thoughts that interrupt exploration and dungeon progression.',
     userMessage:
       'Disables the sage messages that pop up at key story points. Changes pacing, so leave off for vanilla parity.',
-    group: 'Quality of life',
+    group: 'Dialog',
     kind: 'features0-bit',
     origin: 'snesrev',
     flag: 'kFeatures0_DisableTelepathy',
@@ -493,11 +502,147 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
     live: true,
   },
   {
+    id: 'capacityProfile',
+    label: 'Randomizer capacity profile',
+    description:
+      'Starting tiers for a new file, the tier a counted family may reach, and the wallet ladder cap, armed by a randomizer session from its seed, never a user toggle.',
+    userMessage:
+      'Set by a randomized profile: a new file starts at the chosen capacity tiers and the pond and wallet stop at the chosen maximums. Changes save bytes and economy limits, so Vanilla Safe strips it.',
+    group: 'Quality of life',
+    kind: 'host-event',
+    origin: 'relic',
+    flag: 'kFeatures3_CapacityProfile',
+    bit: 2097152,
+    default: false,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
+    id: 'prizeShuffle',
+    label: 'Randomizer dungeon prize shuffle',
+    description:
+      "A boss's falling reward can be any item: the room reads a hook-owned \"reward claimed\" save bit alongside its own reward bit, so the reward stops respawning and the arena door still opens, and an assigned crystal banks the one the seed named instead of the one the room index names. Armed by a randomizer session from its seed, never a user toggle.",
+    userMessage:
+      'Set by a randomized profile whose dungeon rewards are shuffled: a boss can hand over any item, and the pendants and crystals are placed like everything else. Changes save bytes and dungeon progress, so Vanilla Safe strips it.',
+    group: 'Quality of life',
+    kind: 'host-event',
+    origin: 'relic',
+    flag: 'kFeatures3_PrizeShuffle',
+    bit: 16777216,
+    default: false,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
+    id: 'dungeonItemGrants',
+    label: 'Randomizer dungeon-item grants',
+    description:
+      "The four dungeon-flavoured families share one receive id each and the game credits whichever dungeon is loaded, so a key or a map found elsewhere would land on the wrong one. The assigned id names its dungeon instead: the receipt adds a small key to that dungeon's own earned count, and sets that dungeon's compass, big-key or map bit. Armed by a randomizer session from its seed, never a user toggle.",
+    userMessage:
+      'Set by a randomized profile whose keys, maps or compasses may leave their dungeons: one found elsewhere still counts for the dungeon it belongs to. Changes save bytes, so Vanilla Safe strips it.',
+    group: 'Quality of life',
+    kind: 'host-event',
+    origin: 'relic',
+    flag: 'kFeatures3_DungeonItemGrants',
+    bit: 268435456,
+    default: false,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
+    id: 'retroBow',
+    label: 'Randomizer retro bow',
+    description:
+      'The bow stops eating ammunition and starts eating money: the shot branch of the bow handler pays for each shot out of the wallet at the moment it is fired (one cost for a plain shot, a dearer one for a silver shot), and refuses the shot outright when the wallet cannot pay, spending nothing. No save byte: the two costs are session state. Armed by a randomizer session from its seed, never a user toggle.',
+    userMessage:
+      'Set by a randomized profile playing retro: arrows are never found or carried, and every shot costs rupees. Changes what firing the bow does, so Vanilla Safe strips it.',
+    group: 'Quality of life',
+    kind: 'host-event',
+    origin: 'relic',
+    flag: 'kFeatures3_RetroBow',
+    bit: 536870912,
+    default: false,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
+    id: 'pondPlan',
+    label: 'Randomizer wishing-pond plan',
+    description:
+      'The rupee pond sells a planned sequence of throws instead of its native purchase loop: the plan says what each throw costs, the whole price is paid in one toss (drawn as the gems that add up to it), and what comes back is the seed\'s next item, a consolation or a capacity level. Keeps one hook-owned save byte counting the throws taken. Armed by a randomizer session from its seed, never a user toggle.',
+    userMessage:
+      'Set by a randomized profile whose pond is part of the shuffle: the pond charges its own prices and can hand over any item. Changes save bytes and the pond\'s economy, so Vanilla Safe strips it.',
+    group: 'Quality of life',
+    kind: 'host-event',
+    origin: 'relic',
+    flag: 'kFeatures3_PondPlan',
+    bit: 67108864,
+    default: false,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
+    id: 'archeryNeedsBow',
+    label: 'Archery game asks for a bow',
+    description:
+      "The archery host refuses the fee when the five shots it buys could not be fired: no bow in the slot, or, in a retro seed, the bow's first purchase still unmade. He says so in his own message box instead of taking the money. Nothing else in the minigame moves, and the refusal spends nothing either way.",
+    userMessage:
+      'Stops the archery game from taking your money when you have nothing to shoot with. The owner tells you why instead. Not in the original game, which lets you pay and shoot nothing, so leave off for vanilla parity.',
+    group: 'Quality of life',
+    kind: 'features0-bit',
+    origin: 'relic',
+    flag: 'kFeatures3_ArcheryNeedsBow',
+    bit: 1073741824,
+    default: false,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
+    id: 'coloredRupees',
+    label: 'Coloured rupees',
+    description:
+      'A rupee reward lying in the world draws as the plain coloured gem, one colour per value, instead of the numbered hold-up picture. Draw-only: the same gem art, a different palette row, no new graphics and no palette written.',
+    userMessage:
+      'Shows rupees waiting in the world as plain coloured gems, a colour for each value, instead of the picture with the amount written beside it. Only changes how they look, never what you get. On by default; not in the original game, so turn it off for vanilla parity.',
+    group: 'Quality of life',
+    kind: 'features0-bit',
+    origin: 'relic',
+    flag: 'kFeatures3_ColoredRupees',
+    bit: 4194304,
+    default: true,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
+    id: 'itemSheen',
+    label: 'Item sheen',
+    description:
+      'Sweeps a one-pixel bright diagonal across a drawn world item, and across the item held up on receipt, roughly once a second, in the lightest colour of the palette row it drew with. Repaints the decode slot only, with no extra sprite entry, no shadow or palette change.',
+    userMessage:
+      'Makes items waiting in the world catch the light every second or so, so a pickup on the floor stands out from the scenery. Purely a visual effect. Not in the original game, so leave off for vanilla parity.',
+    group: 'Quality of life',
+    kind: 'features0-bit',
+    origin: 'relic',
+    flag: 'kFeatures3_ItemSheen',
+    bit: 8388608,
+    default: false,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
     id: 'showMaxItemsInYellow',
     label: 'Show max items in yellow',
     description: 'Colors the item count in yellow when carrying the maximum amount.',
     userMessage:
-      'Shows item counts in yellow when you have the max of that item. A HUD color change only — does not affect gameplay.',
+      'Shows item counts in yellow when you have the max of that item. This only changes HUD color and does not affect gameplay.',
     group: 'Display / HUD',
     kind: 'features0-bit',
     origin: 'snesrev',
@@ -513,7 +658,7 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
     label: 'Reorder inventory',
     description: 'Hold Y + a direction in the inventory to move items around (split out of SwitchLR).',
     userMessage:
-      'Lets you rearrange items in the inventory by holding Y and pressing a direction. Not in the original game — leave off for vanilla parity.',
+      'Lets you rearrange items in the inventory by holding Y and pressing a direction. Not in the original game, so leave off for vanilla parity.',
     group: 'Quality of life',
     kind: 'features0-bit',
     origin: 'snesrev',
@@ -529,7 +674,7 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
     label: 'Secondary item slots (X / L / R)',
     description: 'Assign separate items to the X, L and R buttons instead of only Y (split out of SwitchLR).',
     userMessage:
-      'Lets you put different items on the X, L and R buttons, not just Y. Not in the original game — leave off for vanilla parity.',
+      'Lets you put different items on the X, L and R buttons, not only Y. Not in the original game, so leave off for vanilla parity.',
     group: 'Quality of life',
     kind: 'features0-bit',
     origin: 'snesrev',
@@ -545,8 +690,8 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
     label: 'Auto-skip dialog',
     description: 'Renders dialog text instantly and auto-advances message-box waits; interactive choice prompts still wait for you.',
     userMessage:
-      'Shows dialog text at once and dismisses message boxes for you, including item-get text, without skipping anything that happens when a dialog ends. Yes/no and shop prompts still wait for your answer. Not in the original game — leave off for vanilla parity.',
-    group: 'Quality of life',
+      'Shows dialog text at once and dismisses message boxes for you, including item-get text, without skipping anything that happens when a dialog ends. Yes/no and shop prompts still wait for your answer. Not in the original game, so leave off for vanilla parity.',
+    group: 'Dialog',
     kind: 'features0-bit',
     origin: 'relic',
     flag: 'kFeatures0_AutoSkipDialog',
@@ -556,9 +701,41 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
     affectsVanillaParity: true,
     live: true,
   },
+  {
+    id: 'dialogControls',
+    label: 'Dialog pacing controls',
+    description:
+      'Runs the text engine more than once per frame by a text speed multiplier, with instant as the top stop; while A is held the hold multiplier applies instead, and a press of B writes the rest of the current box so the next press advances it. Off, the engine takes one step per frame and the buttons keep their stock meaning.',
+    userMessage:
+      'Speeds up dialog by a multiplier, lets you hold A to go faster still, and lets B finish the current box in one press. Not in the original game, so leave off for vanilla parity.',
+    group: 'Dialog',
+    kind: 'features0-bit',
+    origin: 'relic',
+    flag: 'kFeatures3_DialogControls',
+    bit: 2147483648,
+    default: false,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
+    id: 'prefillFileName',
+    label: 'Prefill file name',
+    description: 'A new file opens its naming screen named Link, with the character strip parked on End.',
+    userMessage: 'New files start named Link, with the cursor on End.',
+    group: 'Quality of life',
+    kind: 'features0-bit',
+    origin: 'relic',
+    flag: 'kFeatures0_PrefillFileName',
+    bit: 2147483648,
+    default: false,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
 ]
 
-// --- Bug Fixes (legacy bundle masters — no active C read sites, behavior moved to features1/2 gates) ---
+// Legacy bundle masters: no active C read sites, behavior moved to features1/2 gates.
 const BUG_FIXES_FEATURES: FeatureDef[] = [
   {
     id: 'miscBugFixes',
@@ -579,11 +756,11 @@ const BUG_FIXES_FEATURES: FeatureDef[] = [
   },
   {
     id: 'gameChangingBugFixes',
-    label: 'Game-changing bug fixes',
+    label: 'Gameplay-altering bug fixes',
     description:
-      'Legacy bundle of bug fixes that change gameplay behavior. The individual fixes have moved to features1/2 split gates; this entry is kept for backward compatibility.',
+      'Legacy bundle of bug fixes that change gameplay behavior. The individual fixes have moved to features1/2 split gates, so this entry only exists for backward compatibility.',
     userMessage:
-      'Enables a bundle of game-changing bug fixes. This is now split into individual toggles; this entry is kept for backward compatibility.',
+      'Enables a bundle of bug fixes that change how the game plays. It is now split into individual toggles and kept only for backward compatibility.',
     group: 'Bug fixes',
     kind: 'features0-bit',
     origin: 'snesrev',
@@ -596,7 +773,6 @@ const BUG_FIXES_FEATURES: FeatureDef[] = [
   },
 ]
 
-// --- Dev ----------------------------------------------------------------------
 const DEV_FEATURES: FeatureDef[] = [
   {
     id: 'developerToolsEnabled',
@@ -612,7 +788,7 @@ const DEV_FEATURES: FeatureDef[] = [
     default: false,
     requires: [],
     // Observational, but its hook is compiled into vendored misc.c, and touching that code is the
-    // line under Vanilla Safe rather than whether the feature changes the outcome.
+    // line under Vanilla Safe, not whether the feature changes the outcome.
     affectsVanillaParity: true,
     live: true,
   },
@@ -629,17 +805,15 @@ const DEV_FEATURES: FeatureDef[] = [
     bit: 2048,
     default: true,
     requires: ['developerToolsEnabled'],
-    // Dead under Vanilla Safe either way, since it requires developer tools and those are masked.
-    // Flagged so it is covered by the same lock rather than sitting enabled next to a locked control
-    // and inviting the user to toggle something that cannot take effect.
+    // Dead under Vanilla Safe either way (requires developer tools, which are masked). Flagged so
+    // it sits under the same lock instead of looking toggleable next to a locked control.
     affectsVanillaParity: true,
     live: true,
   },
 ]
 
-// --- Host systems reading emulated state --------------------------------------
-// A normal player feature (not developer-only): the checks tracker polls inventory and save flags out of
-// the running game. Grouped with the other player-facing toggles rather than Dev.
+// A normal player feature, not developer-only: the checks tracker polls inventory and save flags
+// out of the running game. Grouped with the player-facing toggles, not Dev.
 const HOST_QUERY_FEATURES: FeatureDef[] = [
   {
     id: 'trackerEnabled',

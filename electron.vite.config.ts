@@ -3,6 +3,8 @@ import { defineConfig, externalizeDepsPlugin } from 'electron-vite';
 import react from '@vitejs/plugin-react';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import { resolve } from 'path';
+import { portFor } from './shared/config/ports.constants';
+import { readPortSlot } from './shared/config/port-slot';
 
 const nodeAlias = {
   '@shared': resolve(__dirname, 'shared'),
@@ -35,11 +37,13 @@ export default defineConfig({
   renderer: {
     root: resolve(__dirname, 'apps/web/src'),
     publicDir: resolve(__dirname, 'apps/web/public'),
-    // node polyfills (Buffer/crypto/fs/…) so the pure-TS asset-extraction pipeline
+    // A port taken by another checkout is an error, never a silent move to the next one.
+    server: { port: portFor('renderer', readPortSlot(__dirname)), strictPort: true },
+    // node polyfills (Buffer/crypto/fs) so the pure-TS asset-extraction pipeline
     // runs in the renderer/Worker, not just Electron main.
     plugins: [react(), nodePolyfills({ globals: { Buffer: true, process: true } })],
     // The extraction Web Worker is bundled separately and needs the same polyfills,
-    // or `Buffer` is undefined in the packaged build — dev leaks a global, prod doesn't.
+    // or `Buffer` is undefined in the packaged build (dev leaks a global, prod does not).
     worker: {
       plugins: () => [nodePolyfills({ globals: { Buffer: true, process: true } })],
     },

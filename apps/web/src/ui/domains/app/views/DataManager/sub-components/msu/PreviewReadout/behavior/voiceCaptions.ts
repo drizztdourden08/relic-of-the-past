@@ -1,20 +1,9 @@
 /* @layer renderer-components @kind logic */
 /**
- * Names each row of a layer's live readout after the file it is playing.
- *
- * A row is captioned with the file, not with a word for "a sound": with several audible at once
- * the only thing worth reading is WHICH of the pool landed, and a shared caption turns five
- * distinct hits into five identical lines.
- *
- * Long names are shortened from the middle rather than the end, because the tail carries the part
- * that usually differs — a numbered variant and the extension. The full name always travels with
- * the row so it can still be read in full.
- *
- * Two rows CAN legitimately name the same file: a single-file loop crossfades against itself, and
- * a random pool can draw the same hit twice while the first is still sounding. Those rows are
- * marked so the repetition reads as two passes rather than as the same row drawn twice — by fade
- * direction when they are fading, since that is what actually distinguishes them to the ear, and
- * by their order otherwise.
+ * Captions rows by file name, since WHICH of the pool landed is the point. Names are shortened
+ * from the middle because the tail (variant number, extension) is what differs. Two rows can name
+ * the same file (a loop crossfading against itself, a random pool drawing twice); those are marked
+ * by fade direction when fading, by order otherwise.
  */
 import type { ReportedVoice } from '../PreviewReadout.type';
 
@@ -23,7 +12,7 @@ const MAX_CAPTION = 24;
 const HEAD_CHARS = 12;
 const TAIL_CHARS = 10;
 
-const UNKNOWN_NAME = '—';
+const UNKNOWN_NAME = '-';
 
 /** What separates two rows of the same file: which way each one is heading. */
 const FADE_MARK: Record<'in' | 'out', string> = { in: '↗', out: '↘' };
@@ -35,7 +24,7 @@ interface VoiceCaption {
 }
 
 const shortName = (name: string): string =>
-  (name.length <= MAX_CAPTION ? name : `${name.slice(0, HEAD_CHARS)}…${name.slice(-TAIL_CHARS)}`);
+  (name.length <= MAX_CAPTION ? name : `${name.slice(0, HEAD_CHARS)}...${name.slice(-TAIL_CHARS)}`);
 
 const countByName = (voices: ReportedVoice[]): Map<string, number> => {
   const counts = new Map<string, number>();

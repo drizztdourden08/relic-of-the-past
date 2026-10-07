@@ -15,7 +15,7 @@
  * of those sheets to carry their colour in the palette instead. So the engine's own expansion
  * would put the right shapes on screen in the wrong colours, and the sheet has to arrive
  * whole. The room records still name the native theme indices, which is what everything the
- * engine DERIVES from a blockset — the collision bank, the animated-tile set — reads.
+ * engine DERIVES from a blockset reads: the collision bank and the animated-tile set.
  */
 void GbaAlttp_ApplyDungeonGraphics(void) {
   if (!GbaAlttp_IsPalaceActive())

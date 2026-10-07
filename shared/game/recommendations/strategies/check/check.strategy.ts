@@ -1,13 +1,13 @@
 /* @layer shared-game @kind logic */
 /**
- * The `check` comparison strategy — replaces the `check-presence.ts`
+ * The `check` comparison strategy. It replaces the `check-presence.ts`
  * detector (deleted): `CHEST_PRESENCE_PROBE` covers a chest the room draws
  * that no record catalogues, `CHECK_CORRECTION_PROBES` cover an existing
  * record the same chest table proves wrong about its `kind` or `screenId`.
  *
  * `subjects` resolves each of the current room's chests to its own
  * `CheckRecord`, exactly like the detector this replaces did per chest via
- * `getCheckByGameId` — a check with no chest match here gets no field-level
+ * `getCheckByGameId`. A check with no chest match here gets no field-level
  * correction at all, which is correct: `CHEST_PRESENCE_PROBE` is what
  * proposes a record for it instead.
  */

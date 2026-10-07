@@ -40,7 +40,7 @@ const walkFiles = async (dir: string, extensions?: Set<string>): Promise<string[
 };
 
 /**
- * Extract only the entries whose BASENAME is wanted, straight into `destDir` — the rest
+ * Extract only the entries whose BASENAME is wanted, straight into `destDir`. The rest
  * of the archive is never inflated. Used for tool archives, where a few hundred MB of
  * docs and extra executables sit beside the two binaries we keep. Returns what was
  * written, so a caller can tell a partial archive from a complete one.

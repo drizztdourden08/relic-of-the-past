@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind hook */
 /**
- * useTriggerCalibration — state management hook for 2-step analog trigger calibration.
+ * State management hook for 2-step analog trigger calibration.
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';

@@ -1,24 +1,12 @@
 /* @layer tooling-scripts @kind build */
 /**
- * Ensure Electron's prebuilt binary is present and usable before dev/build.
- *
- * `node_modules/electron` is a two-part package: npm installs the JS shim
- * (package.json / index.js / install.js) and a separate download step extracts the
- * platform binary into `dist/` and records it in `path.txt`. Either half can go
- * missing on its own — Electron's `postinstall` not firing leaves the shim without a
- * binary, and an install interrupted while the app is running (EBUSY on the locked
- * `electron.exe`) leaves a stray `dist/` with no shim around it. Both look the same
- * from the outside: `electron-vite` dies with an opaque `Error: Electron uninstall`.
- *
- * So this guard validates the whole package, then repairs whatever is wrong:
- *   1. the shim is intact but the binary is missing/stale -> run Electron's install.js
- *   2. the shim itself is broken/absent -> reinstall the package, then install.js
- * It's wired as `postinstall` and as `predev`/`prebuild`, and no-ops when all is well.
- *
- * A repair wipes the package directory and re-downloads, rather than trying to salvage
- * a partial `dist/` — install.js re-downloads on a missing `path.txt` anyway, so the
- * salvage would buy nothing. Locked files are reported, never force-killed: the user
- * runs their own game session alongside this.
+ * Check that Electron's prebuilt binary is present and usable before dev/build.
+ * `node_modules/electron` is two parts (the JS shim and the downloaded binary in
+ * `dist/` + `path.txt`), and either can go missing on its own; both look like an
+ * opaque `Error: Electron uninstall` from electron-vite. Repairs: shim intact but
+ * binary missing/stale, run install.js; shim broken, reinstall the package first.
+ * Wired as postinstall and predev/prebuild. Locked files are reported, never
+ * force-killed: the user may be running the app alongside.
  */
 import { existsSync, readFileSync, rmSync } from 'node:fs';
 import { execSync } from 'node:child_process';
@@ -99,14 +87,14 @@ const reinstallPackage = () => {
     rmSync(packageDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
   } catch {
     console.error(
-      '[ensure-electron] Could not clear node_modules/electron — a file in it is in use. Close any instance of the app running from this checkout, then run `npm run ensure-electron`.',
+      '[ensure-electron] Could not clear node_modules/electron. A file in it is in use. Close any instance of the app running from this checkout, then run `npm run ensure-electron`.',
     );
     process.exit(1);
   }
   try {
     execSync(`npm install ${spec} --no-save --no-audit --no-fund`, { cwd: repoRoot, stdio: 'inherit' });
   } catch {
-    console.error('[ensure-electron] `npm install` failed — see the output above (offline? registry unreachable?).');
+    console.error('[ensure-electron] `npm install` failed. See the output above (offline? registry unreachable?).');
     process.exit(1);
   }
 };
@@ -117,7 +105,7 @@ if (!reason) {
   process.exit(0);
 }
 
-console.log(`[ensure-electron] ${reason} — repairing...`);
+console.log(`[ensure-electron] ${reason}. Repairing...`);
 runInstallScript();
 
 if (brokenReason()) {

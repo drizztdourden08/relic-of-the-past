@@ -1,13 +1,7 @@
 /* @layer renderer-components @kind data */
 /**
- * HID Calibration Wizard v6 — enhanced byte-level visualization.
- *
- * Flow:
- *  1. Select profile → immediately opens live view
- *  2. GYRO: manual toggle — user clicks Start, moves controller, clicks Stop.
- *  3. IDLE: one-click snapshot captures baseline state.
- *  4. STICKS: rotate each stick in full circle → auto-detect 2 bytes with largest range.
- *  5. BUTTONS: auto-detect presses using only non-excluded bytes.
+ * Byte-level HID calibration. Flow: profile, GYRO (manual start/stop), IDLE (one-click baseline),
+ * STICKS (full circle auto-detects the 2 widest-range bytes), BUTTONS (auto-detect on non-excluded bytes).
  */
 import { forwardRef, useEffect, useImperativeHandle } from 'react';
 import { Box } from '../../../../../design-system/primitives/Box';
@@ -37,16 +31,14 @@ const HidCalibrationWizard = forwardRef<HidWizardHandle, HidCalibrationWizardPro
     onCapturedCountChange?.(wiz.capturedCount);
   }, [wiz.capturedCount, onCapturedCountChange]);
 
-  // The device and its layout are settled before this component is reached,
-  // so there is nothing to pick. This renders for the single frame between
-  // mounting and the layout arriving.
+  // The device and layout are settled before this mounts; this covers the one frame before the layout arrives.
   if (wiz.phase === 'select-profile') return null;
 
   return (
     <Box className="hid-cal">
       {/* Header */}
       <Box className="hid-cal__header">
-        <Text as="h3" className="hid-cal__title">Byte capture — {wiz.profile?.name ?? 'Controller'}</Text>
+        <Text as="h3" className="hid-cal__title">Byte capture for {wiz.profile?.name ?? 'Controller'}</Text>
         {!hideOwnActions && (
           <WizardHeaderActions
             copyStatus={copyStatus}
@@ -103,9 +95,8 @@ const HidCalibrationWizard = forwardRef<HidWizardHandle, HidCalibrationWizardPro
         setInputPhaseActiveWrapped={wiz.setInputPhaseActiveWrapped}
       />
 
-      {/* Byte Grid. A controller can be held exclusively at a lower level, in
-          which case no raw HID bytes are available. The wizard still runs on
-          gamepad and joystick data, so show a notice rather than an empty grid. */}
+      {/* A controller held exclusively at a lower level has no raw HID bytes; the wizard still
+          runs on gamepad and joystick data, so show a notice, not an empty grid. */}
       {wiz.rawAvailable ? (
         <ByteGrid
           latestBytes={wiz.latestBytes}

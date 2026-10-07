@@ -1,10 +1,9 @@
 /* @layer shared-asset-extraction @kind logic */
-/**
- * AssetBuilder — accumulates named assets and serializes to zelda3_assets.dat format.
- */
+/** Accumulates named assets and serializes to zelda3_assets.dat format. */
 import { createHash } from 'crypto';
 import type { RomData } from './rom/rom-types';
 import { decompress as lzDecompress } from './compression/lz-decompress';
+import { stampBakeVersion } from './bake-version';
 
 const bufToArr = (buf: Buffer): number[] => {
   return Array.from(buf);
@@ -75,7 +74,11 @@ class AssetBuilder {
       parts.push(v);
     }
 
-    return Buffer.concat(parts);
+    // Stamp the bake-format version into the header's reserved pad, so a cached
+    // blob from an older bake pipeline is detectable at load time (bake-version.ts).
+    const out = Buffer.concat(parts);
+    stampBakeVersion(out);
+    return out;
   }
 }
 

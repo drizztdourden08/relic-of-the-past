@@ -1,10 +1,10 @@
 /* @layer shared-game @kind data */
 /**
- * Check content tag taxonomy — the one CheckTag family that was never a pure
+ * Check content tag taxonomy. This is the one CheckTag family that was never a pure
  * duplicate of another record's field (world/location/area/dungeon all were,
  * and were deleted in favor of joining ScreenRecord/AreaRecord/DungeonRecord
- * directly). A check's content — does it carry a key, the big key, the
- * map/compass, or a boss's prize — is derived from name-matching, so it earns
+ * directly). A check's content, meaning whether it carries a key, the big key,
+ * the map/compass or a boss's prize, is derived from name-matching, so it earns
  * a real, stored tag instead of a value recomputed on every read.
  */
 

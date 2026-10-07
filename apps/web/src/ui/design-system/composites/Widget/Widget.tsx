@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind component */
 /**
- * Widget — Generic container shell.
- * Renders: titlebar with settings, frame (affected by opacity), content (fully opaque).
- * Handles: docking, floating, drag, resize, hover-to-reveal-frame.
+ * Generic container shell: titlebar with settings, a frame that takes the
+ * opacity setting, and fully opaque content. Handles docking, floating, drag,
+ * resize and hover-to-reveal-frame.
  */
 import { useState, useCallback, useRef, useMemo } from 'react';
 import { Box } from '../../primitives/Box';
@@ -63,14 +63,12 @@ const Widget = (props: WidgetProps) => {
     handleResize,
   );
 
-  // Build class names
   const cls = [
     'widget',
     `widget--${state.mode}`,
     state.mode === 'docked' && `widget--${state.side}`,
   ].filter(Boolean).join(' ');
 
-  // Build inline style
   const style: React.CSSProperties = useMemo(() => {
     const s: React.CSSProperties = {
       '--widget-frame-opacity': frameOpacity,

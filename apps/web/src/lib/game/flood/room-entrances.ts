@@ -19,7 +19,7 @@ import { readMapState } from '../simulator/read-game-state';
 import { isFollowerActive } from '../follower-state';
 import { roomOrigin, tileInScreen } from './world-origin';
 
-/** kDoorType_ThroneRoom — its walk-through boundary needs the follower in tow. */
+/** kDoorType_ThroneRoom, whose walk-through boundary needs the follower in tow. */
 const THRONE_DOOR = 0x14;
 /** Synthetic id bases, so a seed's origin is readable from its id. */
 const STAIR_ID_BASE = 1000;

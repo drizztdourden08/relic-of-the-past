@@ -1,8 +1,8 @@
 /* @layer shared-game @kind logic */
 /**
- * Screen Bundle — groups overworld screens into logical areas. Moved from
- * data/screens/bundles.ts — logic unchanged, ScreenDefinition → ScreenRecord,
- * `location` string → getLocation(locationId).
+ * Screen Bundle. Groups overworld screens into logical areas. Moved from
+ * data/screens/bundles.ts with the logic unchanged: ScreenDefinition became
+ * ScreenRecord, and the `location` string became getLocation(locationId).
  */
 import { find, getLocation } from '../../data';
 import type { ScreenRecord } from '../../data';

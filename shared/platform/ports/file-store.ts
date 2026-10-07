@@ -1,10 +1,8 @@
 /* @layer shared-platform @kind logic */
 /**
- * FileStore primitive — the per-OS storage backend abstraction. Paths are POSIX,
- * relative to the platform's Data root. Electron backs this with Node fs under
- * userData; Capacitor with the Filesystem plugin (app-private Directory.Data).
- * Domain logic (profiles, config, saves, …) is expressed on top of this so it runs
- * unchanged on every platform.
+ * The per-OS storage backend. Paths are POSIX, relative to the platform's Data root. Electron
+ * backs this with Node fs under userData; Capacitor with the Filesystem plugin (app-private
+ * Directory.Data). Domain logic (profiles, config, saves) sits on top so it runs everywhere.
  */
 
 interface FileStat {
@@ -20,6 +18,11 @@ interface FileStore {
   writeText: (path: string, data: string) => Promise<void>;
   list: (dir: string) => Promise<string[]>; // immediate child names, [] if missing
   remove: (path: string) => Promise<void>; // recursive; no-op if missing
+  /**
+   * Moves a file or folder to the OS recycle bin, so a delete the player regrets can be
+   * undone there. Only where the OS has one (the desktop app); callers fall back to `remove`.
+   */
+  trash?: (path: string) => Promise<void>;
   exists: (path: string) => Promise<boolean>;
   mkdir: (dir: string) => Promise<void>; // recursive
   stat: (path: string) => Promise<FileStat | null>;

@@ -14,21 +14,17 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 /**
  * Asks Android for a display refresh rate that divides evenly into the game's frame rate.
  *
- * The game advances exactly 60 times a second. On a 120Hz panel that is two refreshes per
- * frame and looks right; on a 90Hz one it is 1.5, so frames alternate between one and two
- * refreshes and scrolling looks uneven — the same arithmetic that makes 144Hz a problem on
- * desktop.
+ * The game advances exactly 60 times a second. On a 90Hz panel that is 1.5 refreshes per
+ * frame, so scrolling looks uneven (the same arithmetic that makes 144Hz a problem on desktop).
  *
- * The lever used here is WindowManager.LayoutParams.preferredRefreshRate. Surface.setFrameRate
- * is the API usually cited for this, but it needs a Surface the app owns, and a WebView-hosted
- * Activity has none to hand; the window-level preference is the supported route and reaches the
- * same platform machinery. preferredDisplayModeId is deliberately not used — Android has
- * discouraged it since 11 because it forces a full mode change rather than expressing intent.
+ * Uses WindowManager.LayoutParams.preferredRefreshRate: Surface.setFrameRate needs a Surface
+ * the app owns, and a WebView-hosted Activity has none. preferredDisplayModeId is not used;
+ * Android has discouraged it since 11 because it forces a full mode change.
  *
- * Before API 34 the requested value has to be one the display actually reports, so the rate is
- * chosen from getSupportedRefreshRates() rather than passed as a raw 60.
+ * Before API 34 the requested value has to be one the display reports, so the rate is chosen
+ * from getSupportedRefreshRates(), not passed as a raw 60.
  *
- * NOT VERIFIED ON A DEVICE — needs a pass on the emulator or hardware.
+ * NOT VERIFIED ON A DEVICE. Needs a pass on the emulator or hardware.
  */
 @CapacitorPlugin(name = "FrameRate")
 public class FrameRatePlugin extends Plugin {

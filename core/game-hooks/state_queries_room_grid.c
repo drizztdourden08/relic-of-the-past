@@ -11,7 +11,7 @@
 static uint8 g_nav_room_ram_backup[sizeof(g_ram)];
 static uint8 g_nav_room_grid[0x2000];
 // The tilemap the rebuild drew, both layers: 0x1000 words of BG2 then 0x1000 of BG1, which
-// are contiguous in WRAM. Captured for the same reason as the grid — it belongs to the room
+// are contiguous in WRAM. Captured for the same reason as the grid: it belongs to the room
 // just drawn and the restore puts the live room's words back.
 static uint16 g_nav_room_tilemap[0x2000];
 // [count][pad] then per entry: [posLo, posHi, row, col]

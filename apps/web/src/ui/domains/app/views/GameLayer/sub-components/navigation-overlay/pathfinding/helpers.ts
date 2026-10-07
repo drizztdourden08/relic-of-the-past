@@ -62,7 +62,7 @@ const isTraversalDirCompatible = (state: number, dr: number, dc: number): boolea
     case 7: return dr === 1 || dc === -1;  // sw
     case 8: return dr === -1 || dc === 1;  // ne
     case 9: return dr === -1 || dc === -1; // nw
-    case 10: return true;                  // stairs — bidirectional
+    case 10: return true;                  // stairs are bidirectional
     default: return false;
   }
 };

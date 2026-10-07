@@ -1,23 +1,10 @@
 /* @layer renderer-app @kind logic */
 /**
- * Where an edited record can actually be written back.
- *
- * Five collections have a write path: screen and connection already existed
- * for the dev editor in the navigation widget, tag/item-group reuse the
- * delete-guard feature's own IPC channels the other way round — the same
- * round trip that removes a record can just as well replace it in place —
- * and enumeration gets the same "replace an id already open" write despite
- * having no delete-guard half of its own (nothing references an enumeration
- * entry's id, so there is nothing for a guard to check). Every other
- * collection is deliberately absent from the map below, which is what makes
- * its editor tab read-only — `RecordEditor` renders no save button when
- * `onSave` is omitted, so an unwritable collection is honest by construction
- * rather than by a disabled button.
- *
- * The six record-facade collections below them are uniform, and written as one
- * factory rather than six near-copies: send the whole record under its id, let
- * the main process find the file the record actually sits in, then fold the
- * result into the live session and refresh the label the id-ref pickers cache.
+ * Where an edited record is written back. A collection absent from the map is
+ * read-only by construction: `RecordEditor` renders no save button when
+ * `onSave` is omitted. The record-facade collections share one factory: send
+ * the whole record under its id, let the main process find its file, then
+ * fold the result into the live session and refresh the id-ref picker label.
  */
 import { isTagKey, replaceEnumerationRecord, replaceItemGroupRecord, replaceRecord, replaceTagRecord } from '@shared/game/data';
 import { connectionRecordFile, screenRecordFile } from '@shared/game/data/record-file-targets';
@@ -71,14 +58,8 @@ const writeConnection: RecordWriter = async (row) => {
   }));
 };
 
-/**
- * Folds the edit back into the live registry on success, so a rename resolves
- * everywhere in the session with no reload. That includes the id-ref OPTIONS
- * cache (`id-ref-options.ts`) as well as the registry itself — a screen's tag
- * chips read a tag's label through that cache, not through the registry
- * directly, so updating only the registry would leave the chip showing the
- * old label until the cache was rebuilt from scratch.
- */
+/** Folds the edit into the live registry and the id-ref options cache: tag
+ *  chips read labels through that cache, so the registry alone is not enough. */
 const writeTag: RecordWriter = async (row) => {
   const record = row as unknown as TagRecord;
   const { id, ...rest } = record;
@@ -99,12 +80,7 @@ const writeItemGroupRecord: RecordWriter = async (row) => {
   updateIdRefOption('item-group', id);
 };
 
-/**
- * Same round trip as `writeTag`/`writeItemGroupRecord`, minus the reference
- * guard neither of those actually needs here — nothing stores a foreign-key
- * reference to an enumeration entry's id (see reference-usage.ts), only the
- * "fold the edit back into the live registry" half applies.
- */
+/** Same round trip as `writeTag`, minus the reference guard: nothing references an enumeration entry's id. */
 const writeEnumerationRecord: RecordWriter = async (row) => {
   const record = row as unknown as EnumerationEntry;
   const { id, ...rest } = record;
@@ -113,12 +89,7 @@ const writeEnumerationRecord: RecordWriter = async (row) => {
   updateIdRefOption('enumeration', id);
 };
 
-/**
- * One write-back for a record-facade collection. The channel is the only thing
- * that differs, so it is the only thing passed in — and no destination goes
- * with it, because the main process locates the record by the id it already
- * carries rather than re-deriving where it ought to live.
- */
+/** One write-back for a record-facade collection. No destination is passed; the main process locates the record by id. */
 const facadeWriter = <T extends { id: string }>(
   kind: EntityKind,
   send: (args: WriteRecordArgs<T>) => Promise<WriteRecordResult>,

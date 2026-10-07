@@ -1,12 +1,8 @@
 /* @layer electron-main @kind logic */
 /**
- * The single owner of record numbering.
- *
- * Ids are never supplied by a caller: this module reads every id already present
- * in a kind's source tree and hands out the next free `<kind>-NNN`. Every
- * allocation runs on one serialized queue, so two callers asking at the same time
- * get different numbers — an id cannot be minted twice, and it certainly cannot
- * be derived from a name, a hex index or a slug.
+ * The single owner of record numbering. Ids are never supplied by a caller: this
+ * reads every id in a kind's source tree and hands out the next free `<kind>-NNN`
+ * on one serialized queue, so an id cannot be minted twice.
  */
 
 import { readFile } from 'fs/promises';
@@ -14,12 +10,8 @@ import { KIND_ID_PREFIXES, makeId } from '@shared/game/data/types/ids';
 import { collectKindFiles } from './data-files';
 
 /**
- * Where each kind's records live, relative to shared/game/data/.
- *
- * A LIST rather than one path, because a collection split by size alone spreads
- * its records over sibling files with no folder of their own to scan — the two
- * dungeon files being the case that forced it. Every entry is read, so a number
- * already in use anywhere in the kind is seen.
+ * Where each kind's records live, relative to shared/game/data/. A LIST because a
+ * collection split by size (the two dungeon files) has no folder of its own to scan.
  */
 const KIND_ROOTS = {
   screen: ['screens'],
@@ -49,15 +41,11 @@ const serialize = <T>(task: () => Promise<T>): Promise<T> => {
 };
 
 /**
- * Matches the quoted id literal itself, wherever it sits — not only right
- * after `id:`. Every other kind's records only ever carry the pattern as an
- * `id:` value, but `item-groups.ts` also writes it as `Swords: 'ig-001'` in
- * the symbolic `ITEM_GROUP_IDS` map a pristine row's `id` still points at
- * (see item-group-writer.ts) — a scan anchored on `id:` would never see
- * those and would keep minting the already-used `ig-001`. Any other kind
- * referencing a sibling's id (e.g. a connection's `toConnectionId`) is still
- * counted as "used" either way, which is the safe direction: it can only
- * make the scan skip a taken number, never hand one out twice.
+ * Matches the quoted id literal wherever it sits, not only after `id:`:
+ * `item-groups.ts` also writes it as `Swords: 'ig-001'` in the `ITEM_GROUP_IDS`
+ * map (see item-group-writer.ts), which an `id:`-anchored scan would miss. A
+ * sibling reference (e.g. `toConnectionId`) also counts as used, which is the
+ * safe direction.
  */
 const highestUsed = async (root: string, kind: AllocatableKind): Promise<number> => {
   const files = await collectKindFiles(root, KIND_ROOTS[kind]);

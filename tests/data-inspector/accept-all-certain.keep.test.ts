@@ -1,17 +1,12 @@
 /* @layer tests @kind test */
 /**
- * Batch accept, and the reason it is a loop rather than a `Promise.all`.
+ * Batch accept, and why it is a loop, not a `Promise.all`: two findings often
+ * land in the SAME source file, and every write is a read-modify-write. Fired
+ * concurrently, one edit is lost. The fixture runs both ways: through
+ * `acceptAllCertain` (keeps both) and concurrently (loses one).
  *
- * Two findings routinely land in the SAME dataset source file, and every write
- * is a read-modify-write of that file. Fired concurrently, the second one's
- * read predates the first one's write and the file comes out holding only one
- * of the two edits. The fixture below is exactly that shape — one file, two
- * findings — and it is run twice: once through `acceptAllCertain`, which must
- * keep both edits, and once concurrently, which must lose one. The second half
- * is what makes the first half mean something.
- *
- * The gate is `certain`, because `likely` evidence only ever proved presence
- * (see the note on `Confidence`) and must not be written unreviewed.
+ * The gate is `certain`: `likely` evidence only proves presence and must not
+ * be written unreviewed.
  */
 import { describe, it, expect, vi } from 'vitest';
 import {
@@ -39,10 +34,8 @@ const finding = (over: Partial<Recommendation> = {}): Recommendation => ({
 } as Recommendation);
 
 /**
- * A stand-in for one dataset source file, written the way the real writers
- * write: read the whole thing, wait (the IPC round trip), then write it back.
- * The gap between the read and the write is where an interleaved accept
- * corrupts it.
+ * A stand-in source file, written the way the real writers write: read, wait
+ * (the IPC round trip), write back. The gap is where an interleaved accept corrupts it.
  */
 const createSourceFile = () => {
   let contents: string[] = [];
@@ -57,7 +50,7 @@ const createSourceFile = () => {
   };
 };
 
-describe('certainOnly — the gate', () => {
+describe('the certainOnly gate', () => {
   it('takes the certain findings and leaves the likely ones', () => {
     const entries = [
       finding({ id: 'sure', confidence: 'certain' }),
@@ -76,14 +69,14 @@ describe('certainOnly — the gate', () => {
   });
 });
 
-describe('acceptAllCertain — two findings, one source file', () => {
+describe('acceptAllCertain with two findings in one source file', () => {
   const twoInOneFile = [
     finding({ id: 'first', targetId: 'tag-001' }),
     finding({ id: 'second', targetId: 'tag-002' }),
     finding({ id: 'unsure', confidence: 'likely', targetId: 'tag-003' }),
   ];
 
-  it('keeps both edits — the second read sees the first write', async () => {
+  it('keeps both edits so the second read sees the first write', async () => {
     const file = createSourceFile();
     const result = await acceptAllCertain(twoInOneFile, async (entry) => {
       await file.apply(entry.id);
@@ -123,7 +116,7 @@ describe('acceptAllCertain — two findings, one source file', () => {
   });
 });
 
-describe('acceptAllCertain — a refusal mid-run', () => {
+describe('acceptAllCertain when a refusal lands mid-run', () => {
   it('carries on and reports what could not be written', async () => {
     const entries = [finding({ id: 'a' }), finding({ id: 'b' }), finding({ id: 'c' })];
     const result = await acceptAllCertain(entries, entry => Promise.resolve(

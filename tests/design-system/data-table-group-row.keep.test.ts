@@ -9,7 +9,7 @@ import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-sys
 import type * as GroupRowModule from '../../apps/web/src/ui/design-system/composites/DataTable/sub-components/GroupRow';
 import { describeDataset } from '../dataset-guard';
 
-// SSR smoke tests for one group-header row — its depth, key, field label and
+// SSR smoke tests for one group-header row: its depth, key, field label and
 // count. See data-table-render.test.ts for why these are SSR-only.
 
 const screens = all('screen') as readonly Record<string, unknown>[];
@@ -36,7 +36,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describeDataset('GroupRow — level, key and count', () => {
+describeDataset('GroupRow level, key and count', () => {
   const renderGroup = (extra: Record<string, unknown> = {}): string => {
     const schema = createSchemaIndex(buildSchema(screens));
     return renderToStaticMarkup(createElement(GroupRow, {
@@ -61,8 +61,8 @@ describeDataset('GroupRow — level, key and count', () => {
     expect(renderGroup({ level: 2 })).toContain('* 3');
   });
 
-  it('renders an absent group value as a dash rather than a blank row', () => {
-    expect(renderGroup({ groupKey: '' })).toContain('—');
+  it('renders an absent group value as a dash instead of a blank row', () => {
+    expect(renderGroup({ groupKey: '' })).toContain('-');
   });
 
   it('puts the field label after the group key, not before it', () => {

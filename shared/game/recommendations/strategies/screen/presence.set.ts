@@ -2,14 +2,14 @@
 /**
  * The missing-screen-record gap (F3): the live room resolves to NO screen
  * record at all. Before this, `use-detection-pass.ts`'s `if (!context.screenId)
- * return undefined;` guard made a null `screenId` unreachable — an unmapped
+ * return undefined;` guard made a null `screenId` unreachable, so an unmapped
  * room produced silence, not a finding. Removing that guard (see that file's
  * own header) is what lets this probe actually run.
  *
  * Both sides carry at most one entry: "the one screen the player is
  * currently on", identified by its game id. `datasetKey` deliberately does
  * NOT re-derive a room/palace key from the matched record's own `gameId` via
- * `gameScreenIdOf` — several of `resolveCurrentScreenDetailed`'s resolution
+ * `gameScreenIdOf`. Several of `resolveCurrentScreenDetailed`'s resolution
  * methods (`palace-scan`, `cave-single`, `cave-ambiguous`, `variant`) return a
  * record whose own `gameId` legitimately disagrees with, or omits, the live
  * values: a palace-scan match's record still carries the STALE expected
@@ -20,7 +20,7 @@
  * room fail the join and mint a spurious duplicate `create` right alongside
  * the correction the field probes already propose for the same disagreement.
  * Instead the live item carries the id `observations.match` ALREADY
- * resolved (`matchedScreenId`), and `liveKey` prefers that when present — so
+ * resolved (`matchedScreenId`), and `liveKey` prefers that when present, so
  * the join can only fail, and only ever propose a `create`, when
  * `observations.match` itself is null. That is exactly the F3 case.
  */
@@ -40,13 +40,13 @@ interface CurrentScreenIdentity {
 }
 
 /**
- * `room:<index>:<palace>` or `overworld:<index>` — carries the palace index
+ * `room:<index>:<palace>` or `overworld:<index>`, which carries the palace index
  * indoors so room 0x80 (a castle room) and room 0x80 (a cave) never collide.
  * This is also the finding's persisted `key` (see `detector-from-strategy.ts`):
  * a `create` draft's `screenId` is null for every unmapped room, so without a
  * per-room key every unmapped room in the game would collapse onto the same
  * one persisted recommendation. Never synthesize an id like `room-080` by
- * hand instead — a room number alone is ambiguous, per the project's own rule.
+ * hand instead, because a room number alone is ambiguous, per the project's own rule.
  */
 const keyOfGameScreenId = (gameId: GameScreenId): string =>
   (gameId.kind === 'overworld' ? `overworld:${gameId.screen}` : `room:${gameId.room}:${gameId.palace ?? '-'}`);
@@ -116,7 +116,7 @@ const SCREEN_PRESENCE_PROBE: SetProbe<'screen', CurrentScreenIdentity> = {
   liveKey,
   datasetKey,
   toProposed,
-  // The absence of a MATCH is not proof a record is wrong — it may be a
+  // The absence of a MATCH is not proof a record is wrong. It may be a
   // detection bug, an unresolved variant, or a stale palace index the field
   // probes above are already correcting. Never propose deleting a screen
   // record from this.

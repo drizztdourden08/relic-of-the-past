@@ -1,13 +1,9 @@
 /* @layer tests @kind test */
 /**
- * ScrollArea's `onScroll`/`scrollTo` sync mechanism lives in
- * behavior/create-scroll-sync-controller.ts (and the guard it wraps,
- * create-scroll-guard.ts) precisely so it can be driven here without a real
- * DOM or React render — there is no jsdom in this repo (see
- * enum-kit-tiering.test.ts). A fake node stands in for the scrolling element;
- * `fireNativeScroll` below stands in for the browser's own 'scroll' event,
- * firing only when a `scrollTo()` call actually changed the offset, exactly
- * as a real browser would.
+ * ScrollArea's sync lives in behavior/create-scroll-sync-controller.ts (and
+ * create-scroll-guard.ts) so it can be driven without a DOM. A fake node
+ * stands in for the element; `fireNativeScroll` fires only when `scrollTo()`
+ * changed the offset, as a browser would.
  */
 import { describe, it, expect } from 'vitest';
 import { createScrollGuard } from '../../apps/web/src/ui/design-system/primitives/ScrollArea/behavior/create-scroll-guard';
@@ -37,7 +33,7 @@ const createFakeNode = (): FakeNode => {
   return node;
 };
 
-describe('createScrollGuard — swallows exactly the programmatic echo', () => {
+describe('createScrollGuard swallows exactly the programmatic echo', () => {
   it('does not suppress when nothing is pending', () => {
     const guard = createScrollGuard();
     expect(guard.shouldSuppress({ top: 5, left: 0 })).toBe(false);
@@ -46,11 +42,11 @@ describe('createScrollGuard — swallows exactly the programmatic echo', () => {
   it('suppresses every event up to and including the one that reaches the target', () => {
     const guard = createScrollGuard();
     guard.markProgrammatic({ top: 100, left: 0 });
-    // A smooth scroll can fire several intermediate events before arrival —
+    // A smooth scroll can fire several intermediate events before arrival, so
     // the guard has to survive all of them, not just the first.
     expect(guard.shouldSuppress({ top: 40, left: 0 })).toBe(true);
     expect(guard.shouldSuppress({ top: 80, left: 0 })).toBe(true);
-    expect(guard.shouldSuppress({ top: 100, left: 0 })).toBe(true); // arrival — still the echo
+    expect(guard.shouldSuppress({ top: 100, left: 0 })).toBe(true); // arrival, and still the echo
     expect(guard.shouldSuppress({ top: 130, left: 0 })).toBe(false); // a real scroll, after
   });
 
@@ -83,13 +79,9 @@ describe('setNodeOnRef', () => {
   });
 });
 
-describe('createScrollSyncController — two ScrollAreas wired to mirror each other', () => {
-  // Each side stands in for one ScrollArea instance: its own fake node and
-  // its own controller, wired the same way ScrollArea.tsx wires the real
-  // one — a scroll on one side calls the other's applyScrollTo, and (only if
-  // that actually moved the node) the resulting native scroll is fed back
-  // through that side's own controller. Without the guard this is exactly
-  // the ping-pong that would recurse forever.
+describe('createScrollSyncController wires two ScrollAreas to mirror each other', () => {
+  // Each side is one ScrollArea: its own node and controller, wired as
+  // ScrollArea.tsx wires them. Without the guard this recurses forever.
   const buildMirroredPair = () => {
     const nodeA = createFakeNode();
     const nodeB = createFakeNode();
@@ -116,7 +108,7 @@ describe('createScrollSyncController — two ScrollAreas wired to mirror each ot
     return { nodeA, nodeB, controllerA, onScrollA };
   };
 
-  it('propagates a real scroll on one side to the other, exactly once — no bounce back', () => {
+  it('propagates a real scroll on one side to the other exactly once, with no bounce back', () => {
     const { nodeA, nodeB, controllerA, onScrollA } = buildMirroredPair();
 
     nodeA.scrollTop = 120; // the user scrolled A

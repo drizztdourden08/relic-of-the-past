@@ -1,7 +1,7 @@
 // @layer core-wasm-build @kind native
 // Deferred sub-volumes: a volume set before the player and its DSP exist is held here and
 // applied on the first frame that has them. Its own file so the group set can grow without
-// crowding the main loop — the flush is one call there.
+// crowding the main loop, where the flush is one call.
 #include <stdint.h>
 #include "snes/dsp.h"
 #include "src/types.h"

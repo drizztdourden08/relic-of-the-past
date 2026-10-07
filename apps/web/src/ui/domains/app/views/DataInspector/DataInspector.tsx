@@ -1,28 +1,18 @@
 /* @layer renderer-app @kind component */
 /**
- * Browses every collection in the game dataset through one set of generic,
- * schema-driven parts: nothing below is written per collection. The fields, the
- * filter operators, the cell renderers and the edit form are all derived from
- * the rows themselves, so a collection that gains a field gains a column, a
- * filter and a form row with no edit here.
- *
- * The one collection that is not a collection — recommendations — reuses every
- * one of those parts for its list and swaps only the DETAIL side, because a
- * finding is not a record to inspect but a change to compare (see
- * RecommendationDetail). It is reachable only while it is being shown, which is
- * why the rail's items are derived from the active kind.
- *
- * The other piece of real domain knowledge on this screen is the click handler:
- * id-reference cells publish what they point at as data attributes, and this
- * tier — which may know what the collections are — turns that into a jump.
+ * Every part here is schema-driven and derived from the rows: nothing is written
+ * per collection. Recommendations reuse the list and swap only the detail side
+ * (see RecommendationDetail). Id-reference cells publish their target as data
+ * attributes; this tier, which knows the collections, turns that into a jump.
  */
 import { useMemo } from 'react';
 import { Box } from '@ds/primitives';
 import { DataTable } from '@ds/composites/DataTable';
 import { FilterBar } from '@ds/composites/FilterBar';
 import { MasterDetailLayout } from '@ds/composites/MasterDetailLayout';
-import { NavRail } from '@ds/composites/NavRail';
-import { NAV_ITEMS, isEntityKind, tableViewKey } from './DataInspector.constants';
+import { SectionNav } from '@ds/composites/SectionNav';
+import { isEntityKind, tableViewKey } from './DataInspector.constants';
+import { DATA_INSPECTOR_NAV } from './behavior/data-inspector-nav';
 import { buildDefaultColumns } from './behavior/default-table-columns';
 import { resolveIdRefDisplayValue, resolveIdRefTargetFields } from './behavior/id-ref-display';
 import { defaultIdRefDisplay } from './behavior/record-links';
@@ -37,24 +27,21 @@ import './DataInspector.css';
 import './sub-components/recommendations/Recommendations.css';
 
 const NOTHING_MATCHES = 'No records match these filters.';
-const NO_FINDINGS = 'No open findings — the dataset agrees with everything seen so far.';
+const NO_FINDINGS = 'No open findings. The dataset agrees with everything seen so far.';
 const COMPARISON = 'Comparison';
 
 const DataInspector = () => {
   const {
     kind, showKind, source, schema, rows, entries,
-    clauses, setClauses, tab, setTab,
+    clauses, setClauses, search, setSearch, tab, setTab,
     selectedId, record, selectRecord, selectRecommendation, clearSelection, openIdRef,
     detailCollapsed, toggleDetail,
   } = useDataInspector();
   const { handleIdRefClickCapture } = useIdRefNavigation(openIdRef);
   const isCollection = isEntityKind(kind);
 
-  /*
-   * A collection with no curated column list (area, location) leaves this
-   * undefined, which is exactly the signal DataTable already treats as "fall
-   * back to the schema's own visible top level" — nothing more to do for those.
-   */
+  // Undefined for collections with no curated column list (area, location):
+  // DataTable then falls back to the schema's own visible top level.
   const defaultColumns = useMemo(
     () => (source.config?.defaultColumns ? buildDefaultColumns(source.config.defaultColumns, schema) : undefined),
     [source, schema],
@@ -63,13 +50,20 @@ const DataInspector = () => {
   const list = (
     <>
       <Box className="data-inspector__list-actions">
-        <FilterBar schema={schema} clauses={clauses} onChange={setClauses} />
+        <FilterBar
+          schema={schema}
+          clauses={clauses}
+          onChange={setClauses}
+          search={search}
+          onSearchChange={setSearch}
+          searchPlaceholder="Search records..."
+          searchLabel="Search records"
+        />
         {/* A finding is minted by a detection pass, never created by hand. */}
         {isCollection && (
           <CreateRecordButton kind={kind} label={source.label} schema={schema} onCreated={selectRecord} />
         )}
       </Box>
-      {/* The count is the table's own footer's business — it knows the rows. */}
       <DataTable
         rows={rows}
         schema={schema}
@@ -80,9 +74,7 @@ const DataInspector = () => {
         selectedId={selectedId}
         onSelect={selectRecord}
         emptyMessage={isCollection ? NOTHING_MATCHES : NO_FINDINGS}
-        /* The reading half of the same handoff the click handler below is:
-           the table offers to show a name in place of an id, and only this
-           tier may look up what the other collection calls that record. */
+        /* Only this tier may look up what another collection calls a record. */
         resolveTargetFields={resolveIdRefTargetFields}
         resolveIdRefDisplay={resolveIdRefDisplayValue}
         resolveIdRefDefault={defaultIdRefDisplay}
@@ -90,9 +82,6 @@ const DataInspector = () => {
     </>
   );
 
-  // Every collection's detail pane folds the same way — a plain record just as
-  // much as the recommendation comparison — so the wrapper is unconditional;
-  // only what it wraps, and the title on its header, differ by kind.
   const detail = (
     <CollapsibleDetail title={isCollection ? source.label : COMPARISON} collapsed={detailCollapsed} onToggle={toggleDetail}>
       {isCollection
@@ -118,19 +107,13 @@ const DataInspector = () => {
     </CollapsibleDetail>
   );
 
-  // The comparison needs the greater share of the width — it holds two records
-  // side by side where a collection's detail holds one — until it is folded away.
+  // The comparison holds two records side by side, so it needs more width until folded.
   const folded = detailCollapsed;
   const comparing = !isCollection && !detailCollapsed;
 
   return (
     <Box className="data-inspector">
-      <NavRail
-        className="data-inspector__nav"
-        items={NAV_ITEMS}
-        activeId={kind}
-        onSelect={showKind}
-      />
+      <SectionNav config={DATA_INSPECTOR_NAV} activeId={kind} onSelect={showKind} />
       {/* One delegated listener covers every reference the composites render. */}
       <Box className="data-inspector__panes" onClickCapture={handleIdRefClickCapture}>
         <MasterDetailLayout

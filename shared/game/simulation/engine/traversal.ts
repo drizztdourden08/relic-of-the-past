@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 /**
  * Screen-level traversal over the static screen graph (all screens /
- * connections from the data facade). No tile walking — a route is a sequence
+ * connections from the data facade). No tile walking, since a route is a sequence
  * of screen IDs. Connection requirements gate every edge: `ConnectionNavData.requirements`
  * when present, else a fallback derived from `barrier:*` tags.
  */
@@ -22,7 +22,7 @@ type Adjacency = Map<string, ScreenEdge[]>;
 
 /**
  * A light↔dark crossing, detected two ways: explicitly via the cross-world /
- * warp tags, and structurally by comparing the endpoints' `world` fields —
+ * warp tags, and structurally by comparing the endpoints' `world` fields, since
  * some crossings in the dataset carry no cross-world marker (e.g. the
  * Superbunny Cave doors joining light-world East Death Mountain screens to a
  * dark-world interior). Endpoints missing from the registry count as
@@ -42,8 +42,8 @@ const connectionRequirements = (conn: ConnectionRecord): RequirementSet => {
   // Fallback for a cross-world portal with no explicit nav data: traversing the
   // Dark World as the player needs the Moon Pearl, so gate on it at minimum. Without
   // this the rain-intro empty-inventory run warped lw-10 → west-dark-world and
-  // swept the whole dark world. Conservative placeholder — the connections
-  // dataset pass will replace it with the real requirement set.
+  // swept the whole dark world. This placeholder is conservative, and the
+  // connections dataset pass will replace it with the real requirement set.
   if (isCrossWorld(conn)) return [['moonpearl']];
   return [];
 };
@@ -57,7 +57,7 @@ const addEdge = (adj: Adjacency, from: string, edge: ScreenEdge): void => {
 /**
  * One `addEdge` per record now: a `ConnectionRecord` is one point on one
  * screen, and `canExit` says outright whether the player can leave THROUGH
- * it — no more synthesizing a reverse edge from a tag/field/nav trio that
+ * it. There is no more synthesizing a reverse edge from a tag/field/nav trio that
  * could (and did) disagree. A two-way crossing still gets two edges, because
  * both of its paired records carry `canExit: true` and each contributes its
  * own; a `drop`'s `canExit: false` correctly contributes none.

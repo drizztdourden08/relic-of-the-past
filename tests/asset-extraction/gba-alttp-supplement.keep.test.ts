@@ -36,7 +36,7 @@ describe('GBA to SNES native translation', () => {
 });
 
 const romPath = resolve('test-roms', 'Legend of Zelda, The - A Link to the Past & Four Swords (USA).gba');
-// The base-game fixture is discovered rather than named: the ROM's own filename carries the
+// The base-game fixture is discovered, not named: the ROM's own filename carries the
 // trademark, and code stays clean of those. The USA image is the one the extractor validates.
 const snesFixture = existsSync('test-roms')
   ? readdirSync('test-roms').find(name => name.endsWith('(USA).sfc'))

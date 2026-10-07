@@ -1,7 +1,7 @@
 /* @layer renderer-stores @kind logic */
 /**
- * Game UI Store — zustand store for real-time game UI state.
- * Updated every frame by the ui-bridge polling loop.
+ * Zustand store for real-time game UI state, updated every frame by the
+ * ui-bridge polling loop.
  */
 
 import { create } from 'zustand';

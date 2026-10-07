@@ -1,18 +1,8 @@
 /* @layer renderer-components @kind hook */
 /**
- * One sound channel's tab, wired: the rows, the filter, which row is open, the audition, and
- * the one write that un-claims a sound.
- *
- * The filter and the unreachable toggle are NOT owned here. Two channels shown as one list have to
- * search as one list, so whoever renders the list holds the query and hands the same one to each
- * channel it draws from — a filter per channel would give one box that only searches half of what
- * is on screen.
- *
- * Claiming works the other way round on purpose. There is nothing to write until a sound has a
- * layer with audio in it — a manifest entry with an empty layer would claim the id, the core
- * would stop playing the chip's version, and the pack would answer with silence. So "replace"
- * only opens the editor, and the editor's own save is what writes the claim; un-claiming is a
- * real write, because there is something on disk to take back out.
+ * One sound channel's tab, wired. The filter and unreachable toggle are owned by the list, so two
+ * channels shown as one list search as one. "Replace" only opens the editor: an empty claim would
+ * silence the chip's version, so the editor's save writes the claim. Un-claiming is a real write.
  */
 import { useCallback, useState } from 'react';
 import type { MsuPackManifest, SoundChannel } from '@shared/types/msu-manifest';
@@ -36,7 +26,7 @@ interface SoundPanelParams {
   showUnreachable: boolean;
   /** What the rows and the editor SHOW. */
   manifest: MsuPackManifest;
-  /** What a write goes into — the pack's own manifest when it has one. */
+  /** What a write goes into, which is the pack's own manifest when it has one. */
   saveBase: MsuPackManifest;
   files: MsuFile[];
   reload: () => void;
@@ -55,8 +45,7 @@ const useSoundPanel = (params: SoundPanelParams) => {
   const original = useOriginalPreview(channel);
   const { upload, uploading } = useSoundUpload({ pack, files, reload });
 
-  // One thing sounds at a time, so each start silences the other. Comparing a replacement with the
-  // original means hearing them one after the other, not on top of each other.
+  // One thing sounds at a time, so each start silences the other.
   const play = useCallback((soundChannel: SoundChannel, soundId: number) => {
     original.stop();
     void playPack(soundChannel, soundId);

@@ -1,24 +1,17 @@
-# Android native build for the controller-input Capacitor plugin. Builds SDL3
-# from the SAME pinned source scripts/build/fetch-sdl3.mjs already fetches for
-# the desktop addon (apps/desktop/electron/input/native/sdl3) — SDL3_SOURCE_DIR
-# is passed in from app/build.gradle, which reads the version pin out of that
-# addon's package.json so there is exactly one place the SDL3 version lives.
+# Android native build for the controller-input Capacitor plugin. Builds SDL3 from
+# the SAME pinned source as the desktop addon (apps/desktop/electron/input/native/
+# sdl3); SDL3_SOURCE_DIR comes from app/build.gradle, which reads the pin from that
+# addon's package.json.
 #
-# Statically linked (SDL_STATIC, not SDL_SHARED): the whole plugin ships as one
-# controllersdl3.so instead of two libraries needing to find each other on the
-# APK's native lib path at runtime.
+# Statically linked (SDL_STATIC): one controllersdl3.so instead of two libraries
+# that must find each other on the APK's native lib path.
 #
-# Video/audio/render/camera subsystems are left at their SDL3 Android defaults
-# (mostly ON) rather than trimmed here — see the "APK size" open question in
-# the integration report; trimming those is a deliberate follow-up once this
-# links, not something to guess at blind.
+# Video/audio/render/camera subsystems are left at SDL3's Android defaults; trimming
+# them for APK size is a follow-up once this links.
 cmake_minimum_required(VERSION 3.22)
-# CXX is enabled (even though this plugin's own sources are all C) because
-# SDL3's Android hidapi backend (src/hidapi/android/hid.cpp) is C++. CMake
-# otherwise picks a target's link driver from its OWN sources' languages, not
-# its dependencies' — with C only, it links controllersdl3.so through clang
-# instead of clang++ and the C++ runtime (operator new/delete, unwinding,
-# __gxx_personality_v0) never gets pulled in, which fails at link time.
+# CXX because SDL3's Android hidapi backend (src/hidapi/android/hid.cpp) is C++.
+# With C only, CMake links through clang instead of clang++ and the C++ runtime
+# (operator new/delete, unwinding, __gxx_personality_v0) is never pulled in.
 project(controllersdl3 LANGUAGES C CXX)
 
 set(CMAKE_C_STANDARD 11)
@@ -49,8 +42,6 @@ add_library(controllersdl3 SHARED
 target_link_libraries(controllersdl3 PRIVATE SDL3::SDL3-static log android)
 set_target_properties(controllersdl3 PROPERTIES LINKER_LANGUAGE CXX)
 
-# Devices with 16 KB memory pages refuse to load a library whose segments are
-# aligned to the older 4 KB, and warn about it on install. This NDK still
-# defaults to 4 KB, so ask for it explicitly; NDK r28 and later do it on their
-# own and this becomes a no-op.
+# Devices with 16 KB memory pages refuse to load a 4 KB-aligned library. This NDK
+# still defaults to 4 KB; NDK r28 and later do this on their own.
 target_link_options(controllersdl3 PRIVATE "-Wl,-z,max-page-size=16384")

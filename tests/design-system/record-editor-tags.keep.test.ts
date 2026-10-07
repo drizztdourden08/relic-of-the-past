@@ -13,10 +13,8 @@ import {
 import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
 import { describeDataset } from '../dataset-guard';
 
-// SSR smoke tests plus straight unit tests over the resolver. They prove which
-// control a tag list is offered as and what vocabulary reaches it. Typing in
-// the entry, opening the panel and picking a row need a browser and are NOT
-// covered here.
+// SSR smoke tests plus unit tests over the resolver: which control a tag list
+// is offered as and what vocabulary reaches it. Typing and picking need a browser.
 
 const TAG_ENTRY = 'class="tag-input';
 const ROW_EDITOR = 'aria-label="Move up"';
@@ -92,7 +90,7 @@ describeDataset('the vocabulary behind a tag field', () => {
   it('offers the whole canonical taxonomy, including terms nobody has used yet', () => {
     const canonical = TAG_METADATA.map((entry) => entry.id);
     for (const tag of canonical) expect(screenTags, tag).toContain(tag);
-    // The dataset uses far fewer than the taxonomy defines — that gap is the point.
+    // The dataset uses far fewer than the taxonomy defines, and that gap is the point.
     expect(canonical.length).toBeGreaterThan(0);
   });
 
@@ -125,7 +123,7 @@ describeDataset('the vocabulary behind a tag field', () => {
   it('answers per collection, with that collection\'s own taxonomy', () => {
     const connectionTags = resolveTagSuggestionsFor('connection', fieldAt(all('connection'), 'tags'));
     for (const entry of CONNECTION_TAG_METADATA) expect(connectionTags).toContain(entry.id);
-    // The two vocabularies are genuinely different sets.
+    // The two vocabularies are different sets.
     expect(connectionTags).not.toContain(TAG_METADATA[0].id);
   });
 
@@ -141,7 +139,7 @@ describeDataset('the vocabulary behind a tag field', () => {
 });
 
 describeDataset('the whole form, with a real tag list on it', () => {
-  it('renders the tag entry rather than a row per tag', () => {
+  it('renders the tag entry instead of a row per tag', () => {
     const screens = all('screen');
     const record = screens.find((row) => row.tags.length > 1) ?? screens[0];
     const markup = render(record, screens);
@@ -153,7 +151,7 @@ describeDataset('the whole form, with a real tag list on it', () => {
     expect(markup.indexOf(TAG_ENTRY)).toBeGreaterThan(-1);
   });
 
-  it('keeps the rows for a list that is a sequence rather than a vocabulary', () => {
+  it('keeps the rows for a list that is a sequence instead of a vocabulary', () => {
     const dungeons = all('dungeon');
     const record = dungeons.find((row) => (row.roomScreenIds?.length ?? 0) > 1) ?? dungeons[0];
     const markup = renderToStaticMarkup(createElement(RecordEditor, {

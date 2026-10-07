@@ -21,7 +21,7 @@ interface RomKindSpec {
   pickExtensions: readonly string[];
   maxBytes: number;
   /**
-   * Accepted SHA-256 digests, checked at import. Empty means "no gate here" — the base
+   * Accepted SHA-256 digests, checked at import. Empty means "no gate here": the base
    * cartridge is validated by the extractor's own multi-region SHA-1 profiles instead,
    * so hashing it here would reject the regional ROMs the pipeline already supports.
    */

@@ -12,11 +12,9 @@ import { onCheckVerified } from '../../shared/game/simulation/engine/explorer';
 import { dungeonGroupOf, dungeonGroupForScreen } from '../../shared/game/logic/queries/dungeon-group';
 import { describeDataset } from '../dataset-guard';
 
-// Real dungeon-group data: the sewers (hc-0x11, palace index 0x00) are reachable
-// only through the castle above (hc-0x01, palace index 0x02) — the one case the
-// ledger groups together.
-// Traversal ids are the game's own room numbers, never a definition's slug —
-// the ledger has to resolve a group from the id shape the run actually emits.
+// Real dungeon-group data: the sewers (hc-0x11, palace 0x00) are reachable only
+// through the castle above (hc-0x01, palace 0x02), the one case the ledger
+// groups. Traversal ids are the game's room numbers, never a slug.
 const SEWERS_SCREEN = 'room:17';
 const CASTLE_SCREEN = 'room:1';
 const SEWERS_ROOM = 0x11;
@@ -58,7 +56,7 @@ describeDataset('dungeon group derivation', () => {
   });
 });
 
-describeDataset('updateDungeonLedger — owed accumulation', () => {
+describeDataset('updateDungeonLedger accumulates what is owed', () => {
   it('records an unopened chest as owed, blocked by bombs when a bombable wall stands and none are held', () => {
     const state = freshState();
     const obs = baseObs();
@@ -72,7 +70,7 @@ describeDataset('updateDungeonLedger — owed accumulation', () => {
     expect(ledger.owed[0]).toMatchObject({ checkId: chestKey(makeChest(0)), roomId: SEWERS_ROOM, blockedBy: 'bombs' });
   });
 
-  it('clears the blocker once the chest is an actionable target (bombs in hand)', () => {
+  it('clears the blocker once the chest is a reachable target (bombs in hand)', () => {
     const state = freshState();
     state.reachTokens.add('bombs');
     const obs = baseObs();
@@ -188,7 +186,7 @@ describeDataset('reopenLedgersFor', () => {
   });
 });
 
-describeDataset('onCheckVerified — reopen hooked into the item-gained path', () => {
+describeDataset('onCheckVerified hooks reopen into the item-gained path', () => {
   it('reopens an exhausted group when the received item grants a listed token', () => {
     const state = freshState('some-other-screen');
     const group = dungeonGroupOf(0x00);

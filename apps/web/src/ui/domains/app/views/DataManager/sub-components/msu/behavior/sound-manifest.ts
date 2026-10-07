@@ -1,14 +1,8 @@
 /* @layer renderer-components @kind logic */
 /**
- * The `sounds` half of a manifest, shaped for the editor.
- *
- * A manifest is written WHOLE, so every function here rebuilds only the one channel it touches
- * and copies `tracks` and the other two channels forward untouched — anything not carried over
- * would be dropped from the pack on the next save.
- *
- * A channel with nothing left in it is removed rather than left as an empty list, and a pack
- * with no claimed sounds at all loses the `sounds` key entirely, so claiming and then
- * un-claiming a sound leaves the file exactly as it was found.
+ * A manifest is written WHOLE, so every function here touches one channel and copies the rest
+ * forward. An empty channel is removed and an empty `sounds` key dropped, so claim-then-unclaim
+ * leaves the file as it was found.
  */
 import type { MsuLayer, MsuPackManifest, MsuSoundDef, SoundChannel } from '@shared/types/msu-manifest';
 
@@ -33,10 +27,7 @@ const withChannelDefs = (
   return { ...manifest, sounds: Object.keys(next).length > 0 ? next : undefined };
 };
 
-/**
- * The manifest with one sound's layers replaced, inserting the sound when it is new. The rest of
- * the definition is carried, not rebuilt — a layer save must never eat the sound's other fields.
- */
+/** One sound's layers replaced (inserted when new). The rest of the definition is carried, not rebuilt. */
 const withSoundLayers = (
   manifest: MsuPackManifest, channel: SoundChannel, soundId: number, layers: MsuLayer[],
 ): MsuPackManifest => {
@@ -55,10 +46,7 @@ const syncGroupOf = (
 ): string | undefined =>
   soundDefsOfChannel(manifest, channel).find((sound) => sound.soundId === soundId)?.syncGroup;
 
-/**
- * The manifest with one sound's continuity group set or cleared. Only a claimed sound can carry
- * one — with no definition there is nothing to hand playback across from.
- */
+/** One sound's continuity group set or cleared. Only a claimed sound can carry one. */
 const withSoundGroup = (
   manifest: MsuPackManifest, channel: SoundChannel, soundId: number, group: string | undefined,
 ): MsuPackManifest => {
@@ -79,10 +67,7 @@ const withoutSound = (
   soundDefsOfChannel(manifest, channel).filter((sound) => sound.soundId !== soundId),
 );
 
-/**
- * What the preview engine is handed: the one sound asked for, on its own channel, and no music
- * at all — an audition should decode a bonk, not the pack's whole soundtrack.
- */
+/** What the preview engine is handed: the one sound asked for and no music, so only that decodes. */
 const singleSoundManifest = (
   manifest: MsuPackManifest, channel: SoundChannel, soundId: number,
 ): MsuPackManifest => ({

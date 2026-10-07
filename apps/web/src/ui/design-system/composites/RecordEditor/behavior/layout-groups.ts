@@ -1,13 +1,8 @@
 /* @layer renderer-components @kind logic */
 /**
- * Auto-layout. The config is a diff, never a requirement: with no groups at all
- * the whole schema lays out as one unnamed set in schema order, which is the
- * only sensible default for a collection nobody has configured yet.
- *
- * With groups, each one is laid out in the order the config lists it, holding
- * the fields it claims in the order it names them. Anything left over lands in a
- * final implicit group rather than disappearing — a config that forgets a field
- * must not be able to hide it.
+ * Auto-layout. With no groups the schema lays out as one unnamed set in schema
+ * order. With groups, each is laid out in config order; anything left over
+ * lands in a final implicit group, so a config that forgets a field cannot hide it.
  */
 import type { FieldDescriptor, FieldGroup, SchemaConfig } from '../../../data/schema/field-descriptor';
 import type { EditorGroupModel } from '../RecordEditor.type';
@@ -52,8 +47,8 @@ const layoutGroups = (
     for (const field of fields) taken.add(field.path);
     laid.push({ id: group.id, label: group.label, fields: orderWithin(fields, group.paths) });
   }
-  // Every group matched nothing — treat it as the unconfigured case rather than
-  // labelling the entire record "Other".
+  // Every group matched nothing: treat it as unconfigured instead of labelling
+  // the entire record "Other".
   if (!laid.length) return singleGroup(visible);
 
   const leftover = visible.filter((field) => !taken.has(field.path));

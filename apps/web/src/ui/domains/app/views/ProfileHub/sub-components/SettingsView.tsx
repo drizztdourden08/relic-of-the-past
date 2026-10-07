@@ -1,13 +1,13 @@
 /* @layer renderer-components @kind component */
 /**
- * Display tab — everything about how the game reaches the screen: rendering geometry, camera,
- * the window it lives in, and the frame pacing between the two. Window and performance used to
- * sit in a separate "System" tab, which split one subject across two places.
+ * How the game reaches the screen, drawn as three tabs that share one set of controls and
+ * cascades: Display (rendering geometry and frame pacing), Camera, and Window.
  */
 import { useMemo, type ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { SettingsLayout, type Section } from '../../../compounds/SettingsLayout';
 import { openVanillaSafeSettings } from '@app/stores/search-store';
+import { DEFAULT_SETTINGS } from '@app/lib/game/settings';
 import { buildDisplaySection, buildCameraSection } from './SettingsView.display';
 import { buildWindowSection, buildPerformanceSection } from './SettingsView.constants';
 import { renderDisplayControl } from './SettingsView.controls';
@@ -18,13 +18,17 @@ import { effectiveHz } from '@shared/display/refresh-rate';
 interface SettingsViewProps {
   settings: GameSettings;
   onChange: (patch: Partial<GameSettings>) => void;
+  /** Which of the three tabs this subject is split across. */
+  part?: 'display' | 'camera' | 'window';
 }
+
+const CAMERA_OFF_MESSAGE = 'Camera options appear once Extended Rendering is on, in Display.';
 
 // Wide preset values that require linearWorldTilemap to be valid
 const REQUIRES_LINEAR = new Set(['21:9']);
 // Wide preset values that additionally require ultrawideRendering
 const REQUIRES_ULTRAWIDE = new Set(['32:9']);
-// Tall preset values — only shown when tallRendering is on
+// Tall preset values, only shown when tallRendering is on
 const TALL_PRESET_VALUES = new Set(['4:5', '3:4']);
 
 const getWidePresets = (s: GameSettings) => {
@@ -54,7 +58,7 @@ const getAspectOptions = (s: GameSettings) => {
   return opts;
 };
 
-// Cascade resets when a capability is disabled: ensure the active ratio is still valid.
+// Cascade resets when a capability is disabled, so the active ratio stays valid.
 const withCascade = (patch: Partial<GameSettings>, current: GameSettings): Partial<GameSettings> => {
   const cascade = { ...patch };
   if ('linearWorldTilemap' in patch && !patch.linearWorldTilemap) {
@@ -74,23 +78,22 @@ const withCascade = (patch: Partial<GameSettings>, current: GameSettings): Parti
 };
 
 const SettingsView = (props: SettingsViewProps) => {
-  const { settings, onChange } = props;
+  const { settings, onChange, part = 'display' } = props;
   const handleChange = (patch: Partial<GameSettings>) => onChange(withCascade(patch, settings));
 
   const detectedHz = effectiveHz(useRefreshRate());
   // Pushing the preference here also arms it for the session; the host applies it on the next
-  // fullscreen transition rather than on this call.
+  // fullscreen transition, not on this call.
   const { status: syncedRate } = useSyncedRate(settings.syncedRefreshRate, settings.syncedRefreshRateHz);
 
   const sections = useMemo<Section[]>(() => {
-    const camera = buildCameraSection(settings);
-    return [
-      buildDisplaySection(settings),
-      ...(camera ? [camera] : []),
-      buildWindowSection(settings),
-      buildPerformanceSection(detectedHz, syncedRate),
-    ];
-  }, [settings, detectedHz, syncedRate]);
+    if (part === 'camera') {
+      const camera = buildCameraSection(settings);
+      return camera ? [camera] : [];
+    }
+    if (part === 'window') return [buildWindowSection(settings)];
+    return [buildDisplaySection(settings), buildPerformanceSection(detectedHz, syncedRate)];
+  }, [part, settings, detectedHz, syncedRate]);
 
   const renderControl = (key: string, s: GameSettings, change: (patch: Partial<GameSettings>) => void): ReactNode | null =>
     renderDisplayControl({
@@ -108,9 +111,11 @@ const SettingsView = (props: SettingsViewProps) => {
     <SettingsLayout
       sections={sections}
       settings={settings}
+      defaults={DEFAULT_SETTINGS}
       onChange={handleChange}
       renderControl={renderControl}
       onOpenVanillaSafeSettings={openVanillaSafeSettings}
+      emptyMessage={part === 'camera' ? CAMERA_OFF_MESSAGE : undefined}
     />
   );
 };

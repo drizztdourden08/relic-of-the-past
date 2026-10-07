@@ -1,14 +1,19 @@
 /* @layer renderer-appshell @kind hook */
 import { useState, useCallback } from 'react';
 import type { ConfirmDialog } from '../types';
+import type { CreateProfileOptions, CreateProfileResult } from '@shared/types/profile';
+import { runCreateProfileFlow } from './create-profile-flow';
 import { log } from '../../lib/log-bus';
 import { resetGame, setAutoSaveConfig } from '../../lib/game';
 import { serializeToIni, mergeSettings } from '../../lib/game/settings';
-import { applySpritesForRom } from '../../lib/sprites/apply-sprites-for-rom';
+import { spriteRomOf } from '../../lib/sprites/sprite-rom';
+import { useActivateRomSprites } from '../../lib/sprites/useActivateRomSprites';
 import * as profileStore from '../../lib/storage/profile-store';
 import * as romsStore from '../../lib/storage/roms-store';
 import * as assetsStore from '../../lib/storage/assets-store';
-import { loadInputProfile, loadMsuPack, loadPlayerSprite } from './load-profile-helpers';
+import { ensureProfileAssets, loadInputProfile, loadMsuPack, loadPlayerSprite } from './load-profile-helpers';
+import { gateRandomizerBoot } from './randomizer-boot-gate';
+import { resetSession } from '../../lib/game/randomizer-client';
 import { useReloadTarget } from './useReloadTarget';
 
 const useProfileManagement = (params: {
@@ -30,6 +35,13 @@ const useProfileManagement = (params: {
   const [importingRom, setImportingRom] = useState(false);
   const [loadingProfile, setLoadingProfile] = useState<string | null>(null);
 
+  // Every path that changes the active profile lands in setActiveProfile, so this is the
+  // one place the ROM's sprite set is activated (base URL + availability + extraction).
+  // With no profile active a ready ROM stands in (spriteRomOf), because the creation
+  // form draws item art before any profile exists and would otherwise show placeholders
+  // over a set that is sitting on disk.
+  useActivateRomSprites(spriteRomOf(activeProfile?.romFile, romStatuses));
+
   const refreshProfilesAndRoms = useCallback(async () => {
     const [profileList, romStatusList] = await Promise.all([
       profileStore.listProfiles(),
@@ -46,17 +58,16 @@ const useProfileManagement = (params: {
 
     // Re-read the profile from storage for THIS boot: the caller's object can be a snapshot
     // from an earlier load, and fields edited in Data Manager since (msuPack, language) must
-    // reach the game rather than the values the snapshot was taken with.
+    // reach the game, not the values the snapshot was taken with.
     const profile = (await profileStore.listProfiles()).find((p) => p.id === staleProfile.id) ?? staleProfile;
 
     // Deliberately the CALLER's object, not the re-read one. Automation keys an effect on
     // activeProfile's identity (App/behavior/useAutoTest.ts), so handing back a fresh object
-    // re-runs that effect, whose cleanup cancels the launch already in flight — the run then
+    // re-runs that effect, whose cleanup cancels the launch already in flight. The run then
     // stops before it loads its save state. Nothing needs the fresh object in state: the
     // settings UI reads the pack from storage itself.
     setActiveProfile(staleProfile);
     setLoadingProfile(profile.name);
-    void applySpritesForRom(profile.romFile);
     log.app(`Loading profile: ${profile.name} (${profile.romFile})`);
 
     const savedSettings = await profileStore.readConfig(profile.id);
@@ -79,30 +90,36 @@ const useProfileManagement = (params: {
       saveOnQuit: settings.saveOnQuit,
     });
 
-    const hasAssets = await assetsStore.checkAssets(profile.romFile);
-    if (!hasAssets) {
-      log.app(`No cached assets for ${profile.romFile}, extracting...`);
-      const result = await assetsStore.extractAssets(profile.romFile);
-      if (!result.success) {
-        log.error(`Extraction failed: ${result.error}`);
+    const buffer = await ensureProfileAssets(profile.romFile);
+    if (!buffer) {
+      setLoadingProfile(null);
+      return;
+    }
+
+    // Whatever the profile before this one left behind goes now, ahead of the gate that may
+    // park new material. Its placement is what the tracker builds its roster from, and
+    // nothing used to clear it, so a vanilla profile loaded after a randomized one went on
+    // listing the seed's locations instead of the game in front of the player.
+    resetSession();
+
+    // Randomizer gate: a randomized profile only boots when its session can
+    // actually start afterwards (placement on disk / server reachable).
+    if (profile.randomizer) {
+      const gate = await gateRandomizerBoot(profile.id, profile.randomizer);
+      if (!gate.ok) {
+        log.error(gate.reason);
         setLoadingProfile(null);
         return;
       }
     }
 
-    const buffer = await assetsStore.loadAssets(profile.romFile);
-    if (buffer) {
-      log.app(`Loaded assets (${(buffer.byteLength / 1024).toFixed(0)} KB)`);
-      onProfileLoaded({
-        assetData: new Uint8Array(buffer),
-        configIni: ini,
-        settings,
-      });
-      await profileStore.setLastProfile(profile.id);
-      await profileStore.updateLastPlayed(profile.id);
-    } else {
-      log.error('Failed to load assets after extraction');
-    }
+    onProfileLoaded({
+      assetData: new Uint8Array(buffer),
+      configIni: ini,
+      settings,
+    });
+    await profileStore.setLastProfile(profile.id);
+    await profileStore.updateLastPlayed(profile.id);
     setLoadingProfile(null);
   }, [onGameClear, onProfileLoaded]);
 
@@ -110,18 +127,16 @@ const useProfileManagement = (params: {
 
   const handleSelectProfile = useCallback(async (profile: Profile) => {
     setActiveProfile(profile);
-    void applySpritesForRom(profile.romFile);
     await profileStore.setLastProfile(profile.id);
   }, []);
 
-  const handleCreateProfile = useCallback(async (name: string, romFile: string, language?: string, msuPack?: string) => {
-    const profile = await profileStore.createProfile(name, romFile, language, msuPack);
-    log.app(`Created profile: ${profile.name}`);
+  const handleCreateProfile = useCallback(async (opts: CreateProfileOptions): Promise<CreateProfileResult> => {
+    const result = await runCreateProfileFlow(opts);
+    if (!result.success) return result;
     await refreshProfilesAndRoms();
-    setActiveProfile(profile);
-    void applySpritesForRom(profile.romFile);
-    await profileStore.setLastProfile(profile.id);
-  }, [refreshProfilesAndRoms]);
+    await handleSelectProfile(result.profile);
+    return result;
+  }, [refreshProfilesAndRoms, handleSelectProfile]);
 
   const handleDeleteProfile = useCallback((id: string) => {
     const profile = profiles.find((p) => p.id === id);

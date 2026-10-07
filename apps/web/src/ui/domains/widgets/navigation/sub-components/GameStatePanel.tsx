@@ -11,7 +11,6 @@ const GameStatePanel = (props: Props) => {
   const { isIndoors, palaceIndex, roomIndex, dungeonMapPos, roomLayoutInfo, whichEntrance, roomStartLayer, overworldScreenIndex, isDarkWorld, progressInfo, displayedVariant, dynamicBlockerCount } = props;
   return (
     <>
-      {/* ═══ 1a. GAME STATE ═══ */}
       <Box style={S.section}>
         <Box style={S.sectionTitle}>Game State</Box>
         <Box style={S.infoBox}>
@@ -20,10 +19,10 @@ const GameStatePanel = (props: Props) => {
           </DescRow>
           {isIndoors ? (
             <>
-              <DescRow label="Type" desc="The type of interior: Dungeon (palace index 0–13, has maps/keys/bosses), or Cave/House (palace 0xFF, standalone interiors with no dungeon logic).">
+              <DescRow label="Type" desc="The type of interior: Dungeon (palace index 0-13, has maps/keys/bosses), or Cave/House (palace 0xFF, standalone interiors with no dungeon logic).">
                 <Text style={{ color: palaceIndex === 0xFF ? 'var(--c-green)' : 'var(--c-info)' }}>{palaceIndex === 0xFF ? 'Cave / House' : 'Dungeon'}</Text>
               </DescRow>
-              <DescRow label="Room" desc="The current room ID in the indoor tilemap (0x0000–0x0127). Each indoor room is a 512×512 pixel area.">
+              <DescRow label="Room" desc="The current room ID in the indoor tilemap (0x0000-0x0127). Each indoor room is a 512×512 pixel area.">
                 <Text>0x{roomIndex.toString(16).toUpperCase().padStart(4, '0')}</Text>
               </DescRow>
               <DescRow label="Grid Pos" desc="The room's position in the dungeon's 5×5 map grid for the current floor (from the dungeon map layout data). 1-based row,col. Falls back to absolute room grid (16×16) for caves/houses.">
@@ -36,7 +35,7 @@ const GameStatePanel = (props: Props) => {
               {dungeonMapPos && (
                 <DescRow label="Floor" desc="The current dungeon floor. Derived from dung_cur_floor: 0=1F, 1=2F, 0xFF=B1, 0xFE=B2, etc. The range shows all floors in this dungeon from highest to lowest.">
                   <Text style={S.valWarning}>{dungeonMapPos.floorLabel}</Text>
-                  <Text style={S.valBadge}>[{dungeonMapPos.numAboveFloors > 0 ? `${dungeonMapPos.numAboveFloors}F` : ''}{dungeonMapPos.numAboveFloors > 0 && dungeonMapPos.numBasementFloors > 0 ? ' … ' : ''}{dungeonMapPos.numBasementFloors > 0 ? `B${dungeonMapPos.numBasementFloors}` : ''}]</Text>
+                  <Text style={S.valBadge}>[{dungeonMapPos.numAboveFloors > 0 ? `${dungeonMapPos.numAboveFloors}F` : ''}{dungeonMapPos.numAboveFloors > 0 && dungeonMapPos.numBasementFloors > 0 ? ' - ' : ''}{dungeonMapPos.numBasementFloors > 0 ? `B${dungeonMapPos.numBasementFloors}` : ''}]</Text>
                 </DescRow>
               )}
               {roomLayoutInfo && (() => {
@@ -61,9 +60,9 @@ const GameStatePanel = (props: Props) => {
                 </DescRow>
               )}
               <DescRow label="Last Entrance" desc="The entrance ID the player last used to enter from the overworld. Determines spawn position, starting layer, and palace assignment. Does NOT update for indoor-to-indoor transitions.">
-                <Text style={{ color: whichEntrance ? 'var(--c-info)' : 'var(--c-text-muted)' }}>{whichEntrance ? `0x${whichEntrance.toString(16).toUpperCase().padStart(2, '0')} (${whichEntrance})` : '—'}</Text>
+                <Text style={{ color: whichEntrance ? 'var(--c-info)' : 'var(--c-text-muted)' }}>{whichEntrance ? `0x${whichEntrance.toString(16).toUpperCase().padStart(2, '0')} (${whichEntrance})` : '-'}</Text>
               </DescRow>
-              <DescRow label="Palace Index" desc="Identifies which dungeon the player is in (0–13). 0xFF = cave/house (non-dungeon interior). Used for dungeon-specific logic like boss keys and maps.">
+              <DescRow label="Palace Index" desc="Identifies which dungeon the player is in (0-13). 0xFF = cave/house (non-dungeon interior). Used for dungeon-specific logic like boss keys and maps.">
                 <Text>{palaceIndex === 0xFF ? 'Cave/House' : `${palaceIndex >> 1} (0x${palaceIndex.toString(16).toUpperCase()})`}</Text>
               </DescRow>
               <DescRow label="Starting Layer" desc="The layer the player was on when this room was first entered. Captured at room load. In rooms with staircase type 2 (Blocked), the player stays locked to this layer. Layer toggles are caused by door type 22 (kDoorType_PlayerBgChange).">
@@ -72,13 +71,13 @@ const GameStatePanel = (props: Props) => {
                     {roomStartLayer === 0 ? 'Upper (BG2)' : 'Lower (BG1)'}
                   </Text>
                 ) : (
-                  <Text style={S.valMuted}>—</Text>
+                  <Text style={S.valMuted}>-</Text>
                 )}
               </DescRow>
             </>
           ) : (
             <>
-              <DescRow label="Screen" desc="The overworld screen index (0x00–0x3F). Grid position: row = upper bits, col = lower bits. Each screen is 512×512 pixels.">
+              <DescRow label="Screen" desc="The overworld screen index (0x00-0x3F). Grid position: row = upper bits, col = lower bits. Each screen is 512×512 pixels.">
                 <Text>0x{overworldScreenIndex.toString(16).toUpperCase().padStart(2, '0')} (R{(overworldScreenIndex >> 3) & 7} C{overworldScreenIndex & 7})</Text>
               </DescRow>
               <DescRow label="World" desc="Light World or Dark World. The two 8×8 overworld grids occupy the same coordinate space but are separate maps.">

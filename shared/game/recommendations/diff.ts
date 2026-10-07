@@ -23,8 +23,8 @@ const join = (parent: string, segment: string, isIndex: boolean): string => {
 
 /**
  * An absent key and a key set to `undefined` mean the same thing in every record
- * shape here — a connection with `nav: undefined` has no nav data, exactly like
- * one that never declared the field — so neither counts as a difference.
+ * shape here. A connection with `nav: undefined` has no nav data, exactly like
+ * one that never declared the field, so neither counts as a difference.
  */
 const bothEmpty = (a: unknown, b: unknown): boolean => a === undefined && b === undefined;
 
@@ -63,8 +63,8 @@ const walk = (current: unknown, proposed: unknown, path: string, out: string[]):
     }
   }
 
-  // Either a genuine leaf, or a shape change (object became a scalar, array
-  // became an object). A shape change is reported at its own path rather than
+  // Either a real leaf, or a shape change (object became a scalar, array
+  // became an object). A shape change is reported at its own path instead of
   // recursed into: the whole subtree is what changed.
   if (!Object.is(current, proposed)) out.push(path);
 };
@@ -81,7 +81,7 @@ const changedPaths = (current: unknown, proposed: unknown): readonly string[] =>
 };
 
 /**
- * The 1-based lines those paths sit on in a serialized record — JSON or the
+ * The 1-based lines those paths sit on in a serialized record, either JSON or the
  * record emitter's TS output, both of which the scanner reads.
  *
  * A path the source does not declare falls back to its nearest declared

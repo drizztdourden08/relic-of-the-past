@@ -1,19 +1,9 @@
 /* @layer renderer-components @kind component */
 /**
- * A list whose elements are VARIANT records — each one is one of several
- * branches (a requirement expression's `anyOf`/`allOf` is the case this exists
- * for), not one fixed shape the way `ObjectArrayEditor`'s elements are.
- *
- * The schema merges every branch into one `children` list, exactly as it does
- * for a top-level union field — so branch detection reuses the very same
- * `detectUnionBranch` a top-level union row already relies on, rather than a
- * second reading of the same rule. What is new here is the LIST plumbing (add,
- * remove, reorder) and a branch picker per element, since a fresh element has
- * no value yet to detect a branch from.
- *
- * An element whose branch cannot be resolved (freshly added with no branch
- * chosen, or a shape the schema does not recognise) shows the picker with
- * nothing selected and no rows below it, rather than guessing a branch.
+ * A list of variant records (a requirement's `anyOf`/`allOf`). Branch
+ * detection reuses `detectUnionBranch`; what is new is the list plumbing and a
+ * branch picker per element. An unresolved element shows the picker with
+ * nothing selected and no rows below it.
  */
 import { Box } from '../../../primitives/Box';
 import { Button } from '../../../primitives/Button';
@@ -75,7 +65,7 @@ const VariantArrayEditor = (props: ObjectArrayEditorProps) => {
               <Select
                 size="sm"
                 value={currentKey}
-                placeholder="Shape…"
+                placeholder="Shape..."
                 disabled={disabled}
                 options={branchOptions(branches)}
                 onChange={(next) => setBranch(index, next)}

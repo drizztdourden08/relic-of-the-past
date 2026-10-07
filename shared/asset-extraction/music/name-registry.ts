@@ -1,7 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
-/**
- * NameRegistry — tracks compiled music entities by name for cross-referencing.
- */
+/** Tracks compiled music entities by name for cross-referencing. */
 import type { Entity } from './compile-types';
 
 class NameRegistry {

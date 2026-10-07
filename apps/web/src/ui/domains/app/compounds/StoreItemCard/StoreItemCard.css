@@ -1,0 +1,57 @@
+/* @layer renderer-components @kind style */
+.store-item-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  min-width: 0;
+  padding: var(--space-sm);
+}
+
+.store-item-card:focus-visible {
+  outline: 2px solid var(--c-gold);
+  outline-offset: 2px;
+}
+
+.store-item-card--selected {
+  border-color: var(--c-gold);
+  background: var(--c-selected);
+}
+
+/* Cards are uploaded at 16:9, so the frame keeps that shape at any column width. */
+.store-item-card__image {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+.store-item-card__icon {
+  display: inline-flex;
+  color: var(--c-gold);
+  font-size: var(--text-2xl);
+}
+
+.store-item-card__body {
+  min-width: 0;
+}
+
+.store-item-card__kind {
+  color: var(--c-text-muted);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.store-item-card__name {
+  color: var(--c-text);
+  font-weight: var(--weight-semi);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.store-item-card__byline {
+  color: var(--c-text-dim);
+  font-size: var(--text-sm);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

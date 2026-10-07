@@ -2,7 +2,7 @@
 /**
  * Serves the WASM core bytes to the renderer. In the built app the renderer loads
  * over file://, where fetch() is blocked, so it asks the main process for the bytes
- * and instantiates them with the non-streaming WebAssembly.instantiate — avoiding
+ * and instantiates them with the non-streaming WebAssembly.instantiate, which avoids
  * the instantiateStreaming renderer segfault. The path mirrors create-window's
  * loadFile('../renderer/index.html') anchor.
  */

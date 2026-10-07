@@ -63,10 +63,10 @@ bool SdlThread::QueueRestoreGamepads() {
   return true;
 }
 
-// The two mapping calls run inline rather than through the command queue.
+// The two mapping calls run inline instead of going through the command queue.
 // SDL documents both as safe to call from any thread, and queueing them
 // would mean blocking the JS thread on a promise the SDL thread can never
-// fulfil if Stop() races the queued command — a hang, not a slow call.
+// fulfil if Stop() races the queued command. That is a hang, not a slow call.
 // Callers legitimately load mappings before the SDL thread has finished
 // starting, so a not-yet-running subsystem records the request instead of
 // rejecting it. ApplyPendingMappings() applies whatever accumulated once SDL

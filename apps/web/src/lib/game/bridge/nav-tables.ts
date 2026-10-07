@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind logic */
-/** Navigation table bridges — entrances, fall holes, exit map, area heads, rooms/spawns. */
+/** Navigation table bridges for entrances, fall holes, exit map, area heads, rooms/spawns. */
 import { callPtr, callWhenRunning, decodeCountPrefixed, decodeTable, readU16 } from './wasm-call';
 
 interface OverworldEntrance {

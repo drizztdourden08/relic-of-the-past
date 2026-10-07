@@ -24,7 +24,7 @@ import type { DeviceOverride, ResolvedControl, ResolvedControlCategory, SdlAxisN
 
 /** Full positional index table. The first sixteen reuse the existing named
  *  constants; SDL's remaining button positions have no entry there yet, so
- *  they are named here once rather than left as bare indices at every call
+ *  they are named here once instead of left as bare indices at every call
  *  site. */
 const BUTTON_INDEX: Record<SdlButtonName, number> = {
   ...SDL_BUTTON,

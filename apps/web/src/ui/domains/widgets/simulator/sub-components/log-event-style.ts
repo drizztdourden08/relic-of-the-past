@@ -7,6 +7,7 @@
  * a screen one deeper still.
  */
 import type { SimEvent } from '@shared/game/simulation';
+import type { LogKindDef, LogRow } from '@ds/composites/LogPanel';
 
 type LogKind = 'seq' | 'area' | 'screen' | 'pos' | 'backtrack' | 'flood' | 'reset' | 'check' | 'item' | 'move' | 'unlock' | 'outcome' | 'discover' | 'info' | 'debug';
 
@@ -31,7 +32,7 @@ const classifyEvent = (event: SimEvent): LogStyle => {
   if (/^Reset/i.test(m)) return { kind: 'reset', tag: 'RESET' };
   if (/^Unlock|^Defeated |^Shutter door|^Pulled |^The follower is tagging along/.test(m)) return { kind: 'unlock', tag: 'UNLK' };
   if (/^Running |^→/.test(m)) return { kind: 'move', tag: 'MOVE' };
-  if (/^Got ["“]/.test(m)) return { kind: 'item', tag: 'ITEM' };
+  if (/^Got "/.test(m)) return { kind: 'item', tag: 'ITEM' };
   if (/^Found |^discovered/.test(m)) return { kind: 'discover', tag: 'FIND' };
   if (/^Opening |^Talking to |^Triggering |^Defeating |^Bombing |^Unlocking |^Walking into |^Pulling |^Rescuing |^Bringing |^Verified/.test(m)) return { kind: 'check', tag: 'CHECK' };
   if (/^flood |reachable|\bedges\b|\bentrances\b/i.test(m)) return { kind: 'flood', tag: 'FLOOD' };
@@ -57,7 +58,7 @@ const computeIndents = (events: SimEvent[]): number[] => {
   });
 };
 
-/** All kinds in display order, with human labels — drives the show/hide filter. */
+/** All kinds in display order, with human labels. Drives the show/hide filter. */
 const ALL_KINDS: LogKind[] = ['seq', 'area', 'screen', 'pos', 'backtrack', 'flood', 'reset', 'check', 'item', 'discover', 'move', 'unlock', 'outcome', 'info', 'debug'];
 
 const KIND_LABEL: Record<LogKind, string> = {
@@ -78,6 +79,29 @@ const KIND_LABEL: Record<LogKind, string> = {
   debug: 'Debug',
 };
 
+/**
+ * Adapts a run's events into the neutral rows LogPanel renders. Line numbers are
+ * the event's real position in the run (1..N), NOT the engine step (which
+ * repeats). Position rows drop the redundant START/END prefix, since the tag says it.
+ */
+const toLogRows = (events: SimEvent[]): LogRow[] => {
+  const indents = computeIndents(events);
+  return events.map((event, index) => {
+    const { kind, tag } = classifyEvent(event);
+    return {
+      id: `${event.step}-${index}`,
+      gutter: String(index + 1),
+      tag,
+      kind,
+      message: kind === 'pos' ? event.msg.replace(/^(START|END) /, '') : event.msg,
+      indent: indents[index],
+    };
+  });
+};
+
+/** The filter catalog, in display order, as LogPanel wants it. */
+const LOG_KINDS: LogKindDef[] = ALL_KINDS.map((kind) => ({ id: kind, label: KIND_LABEL[kind] }));
+
 /** Format events as plain text for clipboard copy: indent + TAG<tab>message. */
 const eventsToText = (events: SimEvent[]): string => {
   const indents = computeIndents(events);
@@ -87,5 +111,5 @@ const eventsToText = (events: SimEvent[]): string => {
   }).join('\n');
 };
 
-export { classifyEvent, computeIndents, ALL_KINDS, KIND_LABEL, eventsToText };
+export { classifyEvent, computeIndents, ALL_KINDS, KIND_LABEL, LOG_KINDS, eventsToText, toLogRows };
 export type { LogKind, LogStyle };

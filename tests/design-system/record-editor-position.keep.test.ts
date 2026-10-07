@@ -11,10 +11,9 @@ import {
 import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
 import { describeDataset } from '../dataset-guard';
 
-// SSR smoke tests plus unit tests over the shape check and the bounds rule.
-// They prove which control a grid position is offered as and which limits reach
-// it for a given record. Typing a coordinate, stepping it and watching it clamp
-// need a browser and are NOT covered here.
+// SSR smoke tests plus unit tests over the shape check and bounds rule: which
+// control a grid position is offered as and which limits reach it. Typing and
+// clamping need a browser.
 
 const PAIR_CONTROL = 'class="position-input';
 
@@ -47,7 +46,7 @@ describeDataset('which nested object is a grid position', () => {
     expect(pair?.others.map((child) => child.path)).toEqual(['position.floor']);
   });
 
-  it('leaves a rectangle alone — extents are not a second coordinate', () => {
+  it('leaves a rectangle alone, because extents are not a second coordinate', () => {
     const rect = buildSchema(all('connection'))
       .find((entry) => entry.path === 'placement')?.children
       ?.find((child) => child.path === 'placement.rect');

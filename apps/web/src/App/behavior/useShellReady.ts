@@ -1,12 +1,11 @@
 /* @layer renderer-appshell @kind hook */
 /**
- * useShellReady — tells the main process the UI may be shown.
+ * Tells the main process the UI may be shown.
  *
- * The old signal fired on first mount, which was too early: the window was revealed
- * while profiles were still resolving and the landing page had not been chosen, so the
- * shell visibly assembled itself afterwards. This one waits for startup to settle and
- * then for two frames — the first commits the settled layout, the second proves it
- * painted — so the first thing the user sees is the finished UI.
+ * Firing on first mount was too early: the window was revealed while profiles
+ * were still resolving, so the shell visibly assembled itself afterwards. This
+ * waits for startup to settle and then for two frames (the first commits the
+ * settled layout, the second proves it painted).
  *
  * No-op off Electron (web/mobile have no window to reveal).
  */

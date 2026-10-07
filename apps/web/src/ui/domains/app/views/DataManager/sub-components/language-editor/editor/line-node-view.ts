@@ -2,10 +2,10 @@
 /**
  * How one line is drawn: its row information and its text, as ONE element.
  *
- * The gutter — the row the line lands on, the pixels its characters take, the
- * pixels left before the row's edge — is a child of the same paragraph that
- * holds the text, so the two cannot be laid out apart: there is no second
- * column to drift, and nothing to align. It is re-painted from the line's own
+ * The gutter is a child of the same paragraph that holds the text, so the two
+ * cannot be laid out apart: there is no second column to drift, and nothing to
+ * align. It shows the row the line lands on, the pixels its characters take, and
+ * the pixels left before the row's edge. It is re-painted from the line's own
  * node every time the node changes, which is every keystroke in that line and
  * nothing else.
  *
@@ -49,7 +49,7 @@ const buildGutter = (): HTMLSpanElement => {
   return root;
 };
 
-/** How many characters the line holds — atoms count as one, like the caret steps. */
+/** How many characters the line holds. Atoms count as one, like the caret steps. */
 const countOf = (tokens: ReturnType<typeof tokensOfLine>): number =>
   tokens.reduce((sum, token) => sum + (token.t === 'text' ? token.v.length : 1), 0);
 
@@ -60,8 +60,8 @@ const TIGHT_FROM = 0.85;
  * (Re)paints one line's gutter from the line's node: the line number, a meter
  * of the row's 168px filled so far, the pixels left, and the character count.
  * Exported so the refresh plugin can drive every gutter from the editor state
- * after each transaction — the one source that is correct no matter how the
- * change arrived. The line number comes from that walk too (a node cannot know
+ * after each transaction, which is correct no matter how the change arrived.
+ * The line number comes from that walk too (a node cannot know
  * its own position), so the node view paints with it unknown and the refresh
  * that follows every update fills it in.
  */

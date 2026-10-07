@@ -2,7 +2,7 @@
 /**
  * Door records for the extra dungeon's rooms.
  *
- * A door is not part of a room's tilemap the way a wall is — the engine reaches doors past a
+ * A door is not part of a room's tilemap the way a wall is. The engine reaches doors past a
  * marker in the room's object stream and reads them as two-byte records, and drawing one is
  * also what REGISTERS it: the tilemap address, the type and slot, the direction, and the
  * doorway's transit attribute all come from that pass. The cartridge ships its rooms
@@ -12,8 +12,8 @@
  * (type, position, direction) the engine can draw was enumerated through its own door drawer,
  * then matched against each room's baked maps; a record is listed here when every cell it
  * writes is already present in the room exactly as the engine would have written it. The
- * results agree across room boundaries — each room's north door is answered by a south door in
- * the room above it — which is the check that this is recovery rather than pattern-matching.
+ * results agree across room boundaries: each room's north door is answered by a south door in
+ * the room above it. That agreement is the check that this is recovery and not pattern-matching.
  *
  * Word layout, the same one the engine decodes: type in the high byte, position in bits 4-7,
  * direction in bits 0-1 (0 north, 1 south, 2 west, 3 east).
@@ -40,22 +40,17 @@ const EXTRA_DUNGEON_DOORS: Readonly<Record<number, readonly number[]>> = {
   // a working exit. The real east door is on the east wall at the lower position, mirroring
   // the east neighbour's own west record at the same height.
   0x78: [0x0071, 0x1022, 0x0083],
-  // North position 0, answering room 0x69's south edge door at the same column group. The three
-  // pairs below are the same defect the miniboss room had: the room BELOW carries an outer-edge
-  // record and this one carried only its own inner wall's two faces, so the transition started
-  // and found nothing to arrive at. Plain rather than the neighbour's shutter type - a shutter
-  // needs the room's own tag to reopen it, and until each of these rooms has that, a shutter here
-  // is a way to be sealed in. Appended, never inserted.
+  // Rooms 0x79, 0xbd and 0xfc each end with a north edge record that answers the south edge door
+  // of the room above at the same column group (0x69, 0xad and 0xec). They had the defect the
+  // boss room had: the room above carries an outer-edge record, this one carried only its own
+  // inner wall's two faces, so the transition started and found nothing to arrive at. These are
+  // plain doors, not the neighbour's shutter type: a shutter needs a tag in this room to reopen
+  // it, and none of the three has one. Appended, never inserted.
   0x79: [0x3660, 0x0001, 0x0022, 0x0000],
   0x88: [0x0010, 0x0a71],
   0x9a: [0x0020, 0x0071],
   0xad: [0x3680, 0x0021, 0x1881],
-  // North position 2, answering room 0xad's south edge door at the same column group. The three
-  // pairs below are the same defect the miniboss room had: the room BELOW carries an outer-edge
-  // record and this one carried only its own inner wall's two faces, so the transition started
-  // and found nothing to arrive at. Plain rather than the neighbour's shutter type - a shutter
-  // needs the room's own tag to reopen it, and until each of these rooms has that, a shutter here
-  // is a way to be sealed in. Appended, never inserted.
+  // The last record answers room 0xad's south edge door; see room 0x79.
   0xbd: [0x3680, 0x0021, 0x0083, 0x0020],
   // South position 8, the room's own south edge, which is where the engine puts that position -
   // positions 0-2 are the INNER wall between this room's two halves, and both records above are
@@ -63,7 +58,7 @@ const EXTRA_DUNGEON_DOORS: Readonly<Record<number, readonly number[]>> = {
   // room's north door starts the transition, the engine finds nothing to arrive at, and it aborts
   // partway - dropping the player deep into the room with the scroll left mid-move. The art here
   // is the port's own shutter, which this engine's door drawer cannot reproduce, so the record is
-  // reasoned from the geometry rather than matched against the tilemap: it answers the water
+  // reasoned from the geometry, not matched against the tilemap: it answers the water
   // room's north door at the same columns, which is the cross-boundary agreement the rest of this
   // table is built on. Appended, never inserted - slots are handed out in list order.
   //
@@ -80,12 +75,7 @@ const EXTRA_DUNGEON_DOORS: Readonly<Record<number, readonly number[]>> = {
   0xdd: [0x1083, 0x0020],
   0xe9: [0x0022, 0x0083],
   0xec: [0x3660, 0x0001, 0x1861],
-  // North position 0, answering room 0xec's south edge door at the same column group. The three
-  // pairs below are the same defect the miniboss room had: the room BELOW carries an outer-edge
-  // record and this one carried only its own inner wall's two faces, so the transition started
-  // and found nothing to arrive at. Plain rather than the neighbour's shutter type - a shutter
-  // needs the room's own tag to reopen it, and until each of these rooms has that, a shutter here
-  // is a way to be sealed in. Appended, never inserted.
+  // The last record answers room 0xec's south edge door; see room 0x79.
   0xfc: [0x3660, 0x0001, 0x0022, 0x0000],
 };
 
@@ -98,7 +88,7 @@ const DUNGEON_ROOMS: ReadonlySet<number> = new Set([
 const STEP = [-16, 16, -1, 1] as const;
 
 /**
- * Door types that leave for the overworld rather than a neighbouring room. Their destination
+ * Door types that leave for the overworld instead of a neighbouring room. Their destination
  * comes from the exit table, so the adjacency rule below does not apply to them.
  */
 const LEAVES_DUNGEON: ReadonlySet<number> = new Set([6, 10, 12, 14, 16, 18]);
@@ -106,7 +96,7 @@ const LEAVES_DUNGEON: ReadonlySet<number> = new Set([6, 10, 12, 14, 16, 18]);
 /**
  * Keep only the doors that stay inside this dungeon.
  *
- * A plain door has no destination of its own — the engine walks to the neighbouring room by
+ * A plain door has no destination of its own: the engine walks to the neighbouring room by
  * arithmetic on the room id. These twelve rooms are scattered across the grid, so several of
  * the recovered records point at whatever the base game has next door, and walking through one
  * drops the player into an unrelated part of the world. Those are dropped: some are shapes that

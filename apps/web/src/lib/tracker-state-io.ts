@@ -1,7 +1,7 @@
 /* @layer renderer-lib @kind logic */
 /**
  * Typed wrapper around the per-profile tracker-state IPC. Keeps `window.api`
- * (and `any`) out of presentational component tiers — they call these instead.
+ * (and `any`) out of presentational component tiers, which call these instead.
  */
 import { loadTrackerState, saveTrackerState } from './storage/profile-data-store';
 

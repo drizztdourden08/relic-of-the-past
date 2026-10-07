@@ -1,26 +1,8 @@
 /* @layer renderer-components @kind logic */
 /**
- * "Show me the name, not the id" — expressed as the two things this package
- * cannot work out for itself, plus the one rule that it can.
- *
- * A reference column knows an id and the collection it points at, and that is
- * where the design system stops: which fields that collection HAS, and what any
- * one of its records holds, are facts about a dataset. So both arrive injected,
- * exactly as the editor's option lookup does — one to fill the "Display as…"
- * submenu, one to answer a single cell. Given neither, every cell reads as it
- * always has, which is what keeps the table usable with nothing wired to it.
- *
- * The rule that IS local: substitution is cosmetic and per column. It never
- * touches the value the cell carries, so a cell reading as the referenced
- * record's name still holds that record's id, and following it is unchanged.
- *
- * A THIRD thing this package cannot work out for itself, added alongside the
- * two above: the sensible name to show when a column has not been told to
- * show one at all. That is still a domain fact — which collection an id
- * belongs to, and what that collection calls its records — so it arrives the
- * same way, as `resolveDefault`. It only ever runs when `displayField` is
- * unset, so a column that already opts into a specific field keeps reading
- * exactly that field, unchanged.
+ * Which fields a target collection has, what a record holds, and the default
+ * name for an id are dataset facts, so all three arrive injected. Substitution
+ * is cosmetic and per column: the cell still carries the id.
  */
 import { isIdentityField } from '../../RecordEditor';
 import type { FieldDescriptor } from '../../../data/schema/field-descriptor';
@@ -31,27 +13,17 @@ interface IdRefTargetField {
   label: string;
 }
 
-/** What the target collection offers as a display field — for the ⋯ submenu. */
+/** Display fields the target collection offers, listed in the ⋯ submenu. */
 type IdRefTargetFieldResolver = (targetKind: string) => readonly IdRefTargetField[];
 
-/**
- * One referenced record's value at one path, as text. `undefined` for anything
- * the caller cannot answer for, which puts the id back rather than blanking the
- * cell — a reference that resolves to nothing must still be readable.
- */
+/** One referenced record's value at one path, as text. `undefined` puts the id back instead of blanking the cell. */
 type IdRefDisplayResolver = (
   targetKind: string,
   id: string,
   displayField: string,
 ) => string | undefined;
 
-/**
- * The baseline name for an id with no column-level choice behind it at all.
- * `targetKind` is a hint, not a requirement: a column whose rows point at
- * different collections (the Recommendations table's `targetId`, mixed by
- * design) has none, so the resolver falls back to reading it off the id
- * itself, per call — see `defaultIdRefDisplay`.
- */
+/** Baseline name for an id with no column-level choice. `targetKind` is a hint: a mixed column has none, so the resolver reads it off the id. */
 type IdRefDefaultResolver = (id: string, targetKind?: string) => string | undefined;
 
 /** A column's display choice paired with whoever can answer it. */
@@ -68,23 +40,13 @@ const asId = (value: unknown): string => {
 };
 
 /**
- * The text to show in place of a reference's id, or `undefined` for "show the
- * id". A configured `displayField` (with a `resolve` to answer it) wins when
- * present, unchanged from before this had a fallback; with none configured,
- * `resolveDefault` gets a turn — the new baseline every reference gets rather
- * than only the columns a schema config happened to opt in. Every missing
- * piece still falls through to the plain id, so a half-wired table degrades
- * exactly as it always has.
+ * Text to show in place of a reference's id, or `undefined` for "show the id".
+ * A configured `displayField` wins; otherwise `resolveDefault` gets a turn; any
+ * missing piece falls through to the plain id.
  *
- * The identity field is exempt from all of this, default included. Every
- * collection's own `id` is itself id-shaped, so it infers as `idRef` targeting
- * its OWN collection — and the default resolver, asked to explain an id by
- * looking the id up, finds the record itself and returns its own name. The
- * `Id` column's one job is showing the id; substituting a name there just
- * duplicates whatever name field is already its own column, and hides the
- * value the column exists to show behind a hover. An explicit `displayField`
- * still wins if a column has genuinely been told to show one for `id` — this
- * only closes the default, not a deliberate choice.
+ * The identity field is exempt from the default: it infers as `idRef` to its
+ * own collection, so the default resolver would return the record's own name
+ * and hide the id the column exists to show. An explicit `displayField` still wins.
  */
 const substituteDisplay = (
   value: unknown,

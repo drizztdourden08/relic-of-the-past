@@ -3,7 +3,7 @@
  * The CRC-32 Ogg uses for its page checksums. It shares only the polynomial (0x04c11db7)
  * with the familiar zip/PNG CRC: Ogg reflects neither the input bytes nor the result, starts
  * from zero and applies no final xor. Feeding page bytes to a stock CRC-32 therefore produces
- * a number a demuxer rejects, and it rejects it quietly — a bad checksum simply looks like a
+ * a number a demuxer rejects, and it rejects it silently. A bad checksum looks like a
  * corrupt page, so the stream decodes to nothing with no error to read.
  *
  * The checksum covers the entire page, header included, with the four checksum bytes

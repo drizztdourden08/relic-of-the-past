@@ -1,11 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
- * A layer's effect chain: a preset to start from, then the effects themselves, editable one by one.
- *
- * The preset picker reads back which preset the chain currently IS, by comparing, rather than
- * remembering which one was chosen. So a chain edited away from a preset shows as none of them,
- * and one edited back into the exact shape of a preset shows as that preset again — the picker
- * never claims a state the numbers underneath do not bear out.
+ * The preset picker derives its value by comparing the chain to each preset instead of remembering
+ * the choice, so it never claims a state the numbers underneath do not bear out.
  */
 import { Box } from '@ds/primitives/Box';
 import { Button } from '@ds/primitives/Button';

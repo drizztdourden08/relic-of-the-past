@@ -2,22 +2,19 @@
 /**
  * Whether the running game is playing the text that is currently on disk.
  *
- * The assets blob reaches the emulator ONCE — a profile load reads it from
- * disk, and the game boots with it. Nothing re-reads it afterwards, and loading
- * a save state restores emulated memory rather than the blob, so an edit saved
- * while a game is running is on disk, baked, and invisible until the profile is
- * loaded again. That trap is what this store exists to surface.
+ * The assets blob reaches the emulator ONCE: a profile load reads it from disk
+ * and the game boots with it. Nothing re-reads it afterwards, and loading a
+ * save state restores emulated memory, not the blob, so an edit saved while a
+ * game is running is invisible until the profile is loaded again.
  *
- * It counts BAKES rather than comparing files: every rebuild of the blob bumps
- * the generation, a boot records the generation it took, and the two drifting
- * apart is the whole signal. Comparing the files themselves would mean hashing
- * a multi-megabyte blob on every save to learn something a counter already
- * knows.
+ * It counts BAKES instead of comparing files: every rebuild bumps the
+ * generation, a boot records the generation it took, and the two drifting
+ * apart is the signal. Hashing a multi-megabyte blob on every save would
+ * learn nothing a counter does not already know.
  *
- * The reload itself is a capability the app shell lends — it owns the profile
- * and the game lifecycle, neither of which a data screen can reach. Same
- * bargain the data view store strikes with the inspector, and kept beside the
- * store for the same reason: re-registering it costs no subscriber a render.
+ * The reload is a capability the app shell lends (it owns the profile and the
+ * game lifecycle). Kept beside the store, like the data view store's opener,
+ * so re-registering it costs no subscriber a render.
  */
 import { create } from 'zustand';
 
@@ -69,7 +66,7 @@ const useAssetsOutOfDate = (): boolean => useGameAssetsStore(
   (state) => state.bootedGeneration !== null && state.bootedGeneration !== state.bakedGeneration,
 );
 
-/** Callable from outside React — the storage layer bumps this after a rebake. */
+/** Callable from outside React, so the storage layer can bump this after a rebake. */
 const markAssetsBaked = (): void => { useGameAssetsStore.getState().markBaked(); };
 
 export { markAssetsBaked, useAssetsOutOfDate, useGameAssetsStore };

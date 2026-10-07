@@ -1,7 +1,4 @@
 /* @layer renderer-components @kind component */
-/**
- * DiagnosticsLog — Displays controller event log and HID diagnostics.
- */
 
 import { type RefObject, type CSSProperties } from 'react';
 import { Box } from '../../../../../design-system/primitives/Box';

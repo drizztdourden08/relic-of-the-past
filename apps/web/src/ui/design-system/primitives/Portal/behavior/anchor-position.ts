@@ -5,8 +5,8 @@
  * A portalled panel is placed in viewport coordinates, which makes it blind to
  * the scrolling of whatever container its anchor lives in: the anchor slides
  * away and the panel stays behind. These helpers answer the two questions that
- * fixes — where the anchor is now, and whether it can still be seen at all —
- * as plain geometry, with no React and no state, so they can be reasoned about
+ * fixes: where the anchor is now, and whether it can still be seen at all. They
+ * are plain geometry, with no React and no state, so they can be reasoned about
  * and tested on their own.
  */
 
@@ -18,7 +18,7 @@ interface Bounds {
   left: number;
 }
 
-/** Overflow values that clip a descendant rather than letting it spill out. */
+/** Overflow values that clip a descendant instead of letting it spill out. */
 const CLIPPING_OVERFLOW = /^(auto|scroll|overlay|hidden|clip)$/;
 
 const viewportBounds = (): Bounds => ({
@@ -60,7 +60,7 @@ const clippingAncestorsOf = (el: Element): Element[] => {
   return chain;
 };
 
-/** The region the anchor is actually visible through — every clip, plus the viewport. */
+/** The region the anchor is visible through: every clip, plus the viewport. */
 const visibleBoundsOf = (ancestors: readonly Element[]): Bounds =>
   ancestors.reduce<Bounds>((acc, el) => intersect(acc, el.getBoundingClientRect()), viewportBounds());
 

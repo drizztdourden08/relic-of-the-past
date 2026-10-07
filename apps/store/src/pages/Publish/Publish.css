@@ -1,0 +1,82 @@
+/* @layer store-site @kind style */
+.publish {
+  max-width: var(--store-form-maxw);
+}
+
+/* A picture at its own shape, the same width for the card and the banner, never stretched
+   to the drop zone's height. */
+.publish .publish__preview {
+  position: relative;
+  flex: 0 0 auto;
+  width: var(--picture-preview-w);
+  overflow: hidden;
+  border-radius: var(--radius-md);
+}
+
+.publish__preview--card {
+  aspect-ratio: var(--item-card-ratio);
+}
+
+.publish__preview--banner {
+  aspect-ratio: var(--item-banner-ratio);
+}
+
+.publish__preview .item-picture,
+.publish__preview .publish__preview-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Shown over the preview while it is hovered or focused, when a picked picture can be adjusted. */
+.publish .publish__adjust {
+  position: absolute;
+  right: var(--space-sm);
+  bottom: var(--space-sm);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.publish__preview:hover .publish__adjust,
+.publish__preview:focus-within .publish__adjust {
+  opacity: 1;
+}
+
+.publish__picture-actions {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.publish__licence {
+  flex: 0 0 auto;
+}
+
+.publish__tags {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.publish__footer {
+  padding-top: var(--space-md);
+  border-top: var(--border-width-thin) solid var(--c-border);
+}
+
+/* A reason no field can fix, such as a version already in review. */
+.publish .publish__note {
+  color: var(--c-warning);
+}
+
+/* The count of fields still wrong, over the form once Submit is pressed. */
+.publish .publish__alert {
+  padding: var(--space-sm) var(--space-md);
+  border-left: var(--border-width-thick) solid var(--c-danger);
+  border-radius: var(--radius-sm);
+  background: var(--c-danger-soft);
+  color: var(--c-danger);
+}
+
+/* Under the description while it copies the short description. */
+.publish .publish__following {
+  color: var(--c-green-bright);
+}

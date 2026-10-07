@@ -2,7 +2,7 @@
 /**
  * Tells the core which entrances the extended pack gives a track of their own.
  *
- * The remap tables are the renderer's, and the core keeps no copy — it only needs to know, per
+ * The remap tables are the renderer's, and the core keeps no copy. It only needs to know, per
  * entrance, whether a dedicated track exists, so it can hand the game a selectable indoor song
  * for the entrances whose own byte would never select one (a duck, or an overworld song carried
  * indoors). Pushed as a bitmask, 32 entrances per word, whenever a session starts.

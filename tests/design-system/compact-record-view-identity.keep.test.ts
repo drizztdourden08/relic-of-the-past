@@ -1,14 +1,9 @@
 /* @layer tests @kind test */
 /**
- * The identity field is exempt from `resolveIdRefDisplay`, split out of
- * `compact-record-view-render.test.ts` (already near the line cap) alongside
- * `id-ref-display-default.test.ts`'s equivalent coverage for `DataTable`.
- *
- * A collection's own `id` is itself id-shaped, so it infers as `idRef`
- * targeting its own collection — with the default resolver wired in
- * generally, that would otherwise look the id up and hand back its own name,
- * making the `Id` row repeat whatever name field the record already shows
- * elsewhere. The `Id` row's one job is showing the id.
+ * The identity field is exempt from `resolveIdRefDisplay` (split from
+ * `compact-record-view-render.test.ts` for the line cap). A collection's own
+ * `id` infers as `idRef` to its own collection; with the default resolver the
+ * `Id` row would repeat the record's name. Its one job is showing the id.
  */
 import { describe, it, expect } from 'vitest';
 import { createElement } from 'react';
@@ -19,7 +14,7 @@ import { CompactRecordView } from '../../apps/web/src/ui/design-system/composite
 import { defaultIdRefDisplay } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/record-links';
 import { describeDataset } from '../dataset-guard';
 
-describeDataset('CompactRecordView — the identity field always shows its own id', () => {
+describeDataset('CompactRecordView always shows its own id in the identity field', () => {
   it('is itself inferred as idRef, targeting its own collection', () => {
     const rows = all('screen');
     const schema = buildSchema(rows);
@@ -37,8 +32,8 @@ describeDataset('CompactRecordView — the identity field always shows its own i
     }));
     // The Id row reads the raw id...
     expect(markup).toContain(`>${record.id}<`);
-    // ...even though the SAME resolver correctly turns a genuine reference —
-    // Randomizer Name — into readable text elsewhere on the same record, so
+    // ...even though the SAME resolver correctly turns a genuine reference like
+    // Randomizer Name into readable text elsewhere on the same record, so
     // this is the identity exemption, not the resolver failing to run at all.
     expect(markup).toContain(String(record.randomizerName));
   });

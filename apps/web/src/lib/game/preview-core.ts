@@ -6,7 +6,7 @@
  * gives it its own SpcPlayer), but it reads the sound banks out of the parsed assets, and those are
  * only parsed once a core has booted. Auditioning a sound in the pack studio should not require
  * starting the game first, so when there is no game module this boots one that never runs the game:
- * `noInitialRun` skips `main`, so no SDL, no canvas, no frame loop — just the assets in memory and
+ * `noInitialRun` skips `main`, so no SDL, no canvas, no frame loop, just the assets in memory and
  * the preview export reading them.
  *
  * It is a second WebAssembly instance of the same compiled module, which costs its own heap. That is
@@ -15,7 +15,7 @@
  */
 import { log } from '../log-bus';
 import * as assetsStore from '../storage/assets-store';
-import * as profileStore from '../storage/profile-store';
+import { activeRomFile } from './active-rom-file';
 import { writeBootFiles } from './boot-files';
 import { createInstantiateWasm } from './instantiate-wasm';
 import { loadGlueScript } from './wasm-warmup';
@@ -28,23 +28,6 @@ let standalone: EmscriptenModule | null = null;
 /** The ROM whose assets the standalone core holds, so switching profile rebuilds it. */
 let standaloneRom: string | null = null;
 let booting: Promise<EmscriptenModule | null> | null = null;
-
-/**
- * The ROM to read sound banks from: the one the active profile would boot. Falls back to the first
- * profile that has one, so a fresh install with a single profile works before anything is played.
- */
-const activeRomFile = async (): Promise<string | null> => {
-  try {
-    const [state, profiles] = await Promise.all([
-      profileStore.getAppState(),
-      profileStore.listProfiles(),
-    ]);
-    const active = profiles.find((p) => p.id === state.lastProfileId);
-    return active?.romFile ?? profiles.find((p) => p.romFile)?.romFile ?? null;
-  } catch {
-    return null;
-  }
-};
 
 const bootStandalone = async (): Promise<EmscriptenModule | null> => {
   const romFile = await activeRomFile();
@@ -69,7 +52,7 @@ const bootStandalone = async (): Promise<EmscriptenModule | null> => {
       printErr: (text: string) => log.core(text, 'error'),
     });
     // Parses zelda3_assets.dat and sets the core up without SDL, which is what makes the sound
-    // banks readable. Whatever else it initialises simply goes unused here.
+    // banks readable. Whatever else it initialises goes unused here.
     module.ccall('WasmInitHeadless', null, [], []);
     standaloneRom = romFile;
     log.app('Sound preview: core loaded for auditioning original sounds');

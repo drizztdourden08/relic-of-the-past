@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 /**
  * The live value in brackets, beside a field whose live reading disagrees
- * with the dataset — `260 [0x0104]`. The dataset value is whatever the
+ * with the dataset, as in `260 [0x0104]`. The dataset value is whatever the
  * field's own kit already rendered, untouched; this is only the live half,
  * coloured so a scan finds the row without reading its label. The title
  * names the source table (e.g. `native:room-identity`), so hovering answers

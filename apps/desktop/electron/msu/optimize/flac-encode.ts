@@ -1,23 +1,15 @@
 /* @layer electron-main @kind logic */
 /**
  * The encoder invocation, in one place, so the slice that MEASURES a file and the run that
- * CONVERTS it cannot disagree.
+ * CONVERTS it use the same compression level.
  *
- * That is the whole reason this is a module and not two argument lists: the preview's promise
- * is only worth anything if the compression level it measured is the level the conversion
- * then uses. Change one and both change.
- *
- * `-map 0:a:0` takes the first audio stream and nothing else, so an mp3 carrying cover art
- * does not turn into a file with a video stream in it. The sample format is left to the
- * encoder to negotiate rather than pinned to 16-bit: a 24-bit source pinned down to 16 would
- * quietly stop being a lossless copy of itself.
+ * `-map 0:a:0` takes the first audio stream only, so an mp3 with cover art does not gain a
+ * video stream. The sample format is left to the encoder, not pinned to 16-bit: a 24-bit
+ * source pinned to 16 would silently stop being lossless.
  */
 import { ENCODE_TIMEOUT_MS, runTool } from '../../tools/ffmpeg-run';
 
-/**
- * Encoder effort, 0-12. The default 5 is the balance point — the levels above it buy a couple
- * of percent for several times the time, which a pack of a hundred files pays for once per file.
- */
+/** Encoder effort, 0-12. Above 5 buys a couple of percent for several times the time. */
 const FLAC_COMPRESSION_LEVEL = '5';
 
 interface EncodeRequest {

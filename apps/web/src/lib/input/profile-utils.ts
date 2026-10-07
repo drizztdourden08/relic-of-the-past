@@ -1,6 +1,6 @@
 /* @layer renderer-lib @kind logic */
 /**
- * Profile Utilities — create InputProfiles from presets and resolve
+ * Create InputProfiles from presets and resolve
  * function mapping display icons.
  */
 
@@ -24,7 +24,7 @@ const profileFromPreset = (preset: DevicePreset): InputProfile => {
 };
 
 /** Resolves the icon for a saved binding by vid/pid + binding index, through
- *  the family layer. The device need not be currently connected — only its
+ *  the family layer. The device need not be currently connected, only its
  *  SDL type from this session's controller-family-cache is required; a
  *  `liveSdlType` (a currently-connected device's own reported type) fills in
  *  when the cache has no record yet, which happens for anything that

@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 /**
- * The icon strip switching which collection's compact record shows below —
- * the same eleven icons/labels the Data Inspector's own side rail uses
+ * The icon strip switching which collection's compact record shows below. It reuses
+ * the eleven icons/labels from the Data Inspector's own side rail
  * (`KIND_NAV_ITEMS`), so a reviewer never learns a second iconography.
  *
  * Icon-only: eleven full labels do not fit a docked widget's width, and this

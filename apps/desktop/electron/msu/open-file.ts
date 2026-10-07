@@ -1,47 +1,59 @@
 /* @layer electron-main @kind logic */
 /**
- * Opening a `.msul` music pack from the desktop.
+ * Opening a pack file from the desktop. Windows and Linux pass the path in argv, macOS
+ * delivers an `open-file` event; both dispatch on the extension. A `.msul` music pack goes to
+ * the renderer, which owns that import; a `.rsp` character or a `.rlang` language set is
+ * imported here through the shared installers.
  *
- * The path arrives differently per platform: Windows and Linux pass it in argv, macOS delivers
- * an `open-file` event instead. Both funnel into one notification to the renderer, which owns
- * the import itself.
- *
- * This app deliberately holds no single-instance lock (a person's own session and an automated
- * one must coexist), so a launch from a file association is simply a new process that happens
- * to start with a path — there is no running instance to hand it to, and no attempt is made to
- * find one.
+ * No single-instance lock (a person's session and an automated one must coexist), so a
+ * file-association launch is a new process that starts with a path. No attempt is made
+ * to find a running instance.
  */
 import { app } from 'electron';
 import type { BrowserWindow } from 'electron';
 import { emit } from '../lib/ipc/handle';
+import { importOpenedDocument } from '../documents/import-document';
+import type { OpenedContainer } from '../documents/import-document';
 
-const MSUL_EXT = '.msul';
+type OpenedKind = 'msul' | OpenedContainer;
 
-const isMsulPath = (value: string): boolean => value.toLowerCase().endsWith(MSUL_EXT);
+const EXTENSION_KINDS: Record<string, OpenedKind> = { '.msul': 'msul', '.rsp': 'rsp', '.rlang': 'rlang' };
+
+/** The kind of pack a path names, by its extension; null for anything else. */
+const openedKindOf = (value: string): OpenedKind | null => {
+  const dot = value.lastIndexOf('.');
+  return dot === -1 ? null : EXTENSION_KINDS[value.slice(dot).toLowerCase()] ?? null;
+};
+
+const isMsulPath = (value: string): boolean => openedKindOf(value) === 'msul';
 
 /** Pack paths in argv, ignoring the executable and any `--flags`. */
-const msulPathsFromArgv = (argv: string[]): string[] =>
-  argv.slice(1).filter((arg) => !arg.startsWith('-') && isMsulPath(arg));
+const packPathsFromArgv = (argv: string[]): string[] =>
+  argv.slice(1).filter((arg) => !arg.startsWith('-') && openedKindOf(arg) !== null);
 
 /**
- * Forward any pack the app was opened with, plus any that arrive later (macOS can deliver
+ * Handle any pack the app was opened with, plus any that arrive later (macOS can deliver
  * `open-file` at any time). Safe to call once the window exists.
  */
 const registerMsulOpenHandler = (window: BrowserWindow): void => {
-  const send = (path: string): void => { emit(window, 'msu:openPack', path); };
-
-  // Wait for the renderer to be listening; a file association launch races window creation.
-  const sendWhenReady = (path: string): void => {
-    if (window.webContents.isLoading()) window.webContents.once('did-finish-load', () => send(path));
-    else send(path);
+  const dispatch = (path: string): void => {
+    const kind = openedKindOf(path);
+    if (kind === 'msul') emit(window, 'msu:openPack', path);
+    else if (kind) importOpenedDocument(path, kind);
   };
 
-  for (const path of msulPathsFromArgv(process.argv)) sendWhenReady(path);
+  // Wait for the renderer to be listening; a file association launch races window creation.
+  const dispatchWhenReady = (path: string): void => {
+    if (window.webContents.isLoading()) window.webContents.once('did-finish-load', () => dispatch(path));
+    else dispatch(path);
+  };
+
+  for (const path of packPathsFromArgv(process.argv)) dispatchWhenReady(path);
 
   app.on('open-file', (event, path) => {
     event.preventDefault();
-    if (isMsulPath(path)) sendWhenReady(path);
+    if (openedKindOf(path)) dispatchWhenReady(path);
   });
 };
 
-export { registerMsulOpenHandler, msulPathsFromArgv, isMsulPath };
+export { registerMsulOpenHandler, packPathsFromArgv, isMsulPath, openedKindOf };

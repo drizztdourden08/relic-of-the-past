@@ -46,9 +46,8 @@
   padding-inline-start: var(--space-md);
   list-style: none;
 
-  /* A single kind can carry hundreds of hits (a common tag sits on most
-     screens) — capped and scrollable so expanding one group never grows the
-     panel, or a dialog built around it, past the window. */
+  /* A single kind can carry hundreds of hits; capped and scrollable so
+     expanding one group never grows the panel past the window. */
   max-block-size: 220px;
   overflow-y: auto;
 }

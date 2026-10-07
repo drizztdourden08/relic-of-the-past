@@ -9,11 +9,11 @@
 // combat outcomes without re-deriving them. Both exports are gated on the
 // developer-tools feature flag. Each buffer opens with a STATUS byte: 1 when
 // the row that follows was filled, 0 when the gate is off or the query was out
-// of range. A zero row is a legitimate answer — a harmless sprite really does
-// have no health and no damage entries — so the caller cannot infer "no data"
+// of range. A zero row is a legitimate answer, because a harmless sprite really does
+// have no health and no damage entries, so the caller cannot infer "no data"
 // from the payload alone and needs to be told outright.
 
-// The parameter is `type_index` rather than a name matching the game's own
+// The parameter is `type_index` and not a name matching the game's own
 // sprite fields: those are macros over the emulated RAM block, so reusing one as
 // a local identifier expands mid-declaration and the file will not compile.
 //

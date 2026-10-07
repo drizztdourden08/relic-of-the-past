@@ -1,6 +1,6 @@
 /* @layer renderer-app @kind component */
 /**
- * Touch chrome — the mobile replacement for the desktop TitleBar (rendered when
+ * The mobile replacement for the desktop TitleBar (rendered when
  * !windowChrome). The Android back gesture/button opens the Options drawer (the full
  * menu plus FPS, quick mute and Quit); Home lives inside it. Back
  * also closes the drawer first, then any open page, mirroring desktop Esc. Reuses the

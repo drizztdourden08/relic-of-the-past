@@ -18,13 +18,9 @@ import './ControllerReportDialog.css';
 import '../diagnostics-wizard/DiagnosticsWizardDialog.css';
 
 /**
- * One persistent dialog for the whole flow — step content swaps inside a
- * fixed header (title + step strip) / footer (actions) shell, so neither
- * re-mounts between steps. The diagnostic portion (intro through summary)
- * is the same DiagnosticsFlowBody + DiagnosticsStepActions the standalone
- * Gamepad Diagnostics dialog renders, driven by the same
- * useDiagnosticsWizardState machine, so this report can never drift from
- * what that dialog actually does.
+ * One persistent dialog: step content swaps inside a fixed header/footer shell. The diagnostic
+ * portion is the same DiagnosticsFlowBody + DiagnosticsStepActions the standalone dialog renders,
+ * so this report cannot drift from it.
  */
 const ControllerReportDialog = (props: ControllerReportDialogProps) => {
   const { open, onClose, deviceKey } = props;
@@ -33,15 +29,17 @@ const ControllerReportDialog = (props: ControllerReportDialogProps) => {
   const [capturedCount, setCapturedCount] = useState(0);
   const { handleCopyJson } = useSummaryExport(form.wizard.byteCapture, form.wizard.positionalRecords);
   const [copyStatus, flashCopy] = useFlashStatus();
-  const showResult = open && form.status === 'done' && form.resultUrl !== null;
+  const filed = form.status === 'done' ? form.filed : null;
+  const showResult = open && filed !== null;
 
   const closeForm = () => {
     onClose();
     form.reset();
   };
 
-  const openOnGithub = () => {
-    if (form.resultUrl) window.open(form.resultUrl, '_blank');
+  // window.open on an external URL is routed to the system browser by the main process.
+  const openAndClose = (url: string) => {
+    window.open(url, '_blank');
     closeForm();
   };
 
@@ -73,10 +71,11 @@ const ControllerReportDialog = (props: ControllerReportDialogProps) => {
     />
   );
 
-  const actions = showResult ? (
+  const actions = filed ? (
     <>
       <Button variant="secondary" onClick={closeForm}>Close</Button>
-      <Button variant="primary" onClick={openOnGithub}>Open on GitHub</Button>
+      <Button variant="secondary" onClick={() => openAndClose(filed.sanctuaryUrl)}>See it in the Sanctuary</Button>
+      <Button variant="primary" onClick={() => openAndClose(filed.issueUrl)}>Open on GitHub</Button>
     </>
   ) : form.step === 'about' ? (
     <>
@@ -92,7 +91,7 @@ const ControllerReportDialog = (props: ControllerReportDialogProps) => {
     <>
       <Button variant="secondary" onClick={form.backToDiagnostics}>Back</Button>
       <Button variant="primary" onClick={form.submit} disabled={!form.canSubmit}>
-        {form.status === 'submitting' ? 'Submitting…' : 'Send report'}
+        {form.status === 'submitting' ? 'Submitting...' : 'Send report'}
       </Button>
     </>
   );
@@ -109,14 +108,14 @@ const ControllerReportDialog = (props: ControllerReportDialogProps) => {
       <Box className="controller-report__body">
         {showResult ? (
           <>
-            <Text as="p">Thanks — your report was filed.</Text>
-            <Text as="p" className="controller-report__result-url">{form.resultUrl}</Text>
+            <Text as="p">Thanks, your report was filed.</Text>
+            <Text as="p" className="controller-report__result-url">{filed?.issueUrl}</Text>
           </>
         ) : form.step === 'about' ? (
           <IntroStep />
         ) : form.step === 'user-info' ? (
           <UserInfoStep
-            email={form.email} setEmail={form.setEmail} emailTouched={form.emailTouched} emailValid={form.emailValid}
+            me={form.me} email={form.email} setEmail={form.setEmail} emailTouched={form.emailTouched} emailValid={form.emailValid}
             name={form.name} setName={form.setName} additionalInfo={form.additionalInfo} setAdditionalInfo={form.setAdditionalInfo}
             debugText={form.debugText}
           />
@@ -124,7 +123,7 @@ const ControllerReportDialog = (props: ControllerReportDialogProps) => {
           <DiagnosticsFlowBody wizard={form.wizard} wizardRef={wizardRef} onCapturedCountChange={setCapturedCount} />
         ) : (
           <ConfirmStep
-            email={form.email} name={form.name} additionalInfo={form.additionalInfo} debugText={form.debugText}
+            me={form.me} email={form.email} name={form.name} additionalInfo={form.additionalInfo} debugText={form.debugText}
             detection={form.detection} calibrationMap={form.calibrationMap} diagnosticsReport={form.diagnosticsReport} status={form.status}
           />
         )}

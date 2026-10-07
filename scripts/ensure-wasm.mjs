@@ -1,22 +1,13 @@
 /* @layer tooling-scripts @kind build */
 /**
- * Ensure the WASM core (apps/web/public/wasm/zelda3.{js,wasm}) exists and is
- * current before dev/build.
- *
- * The wasm is gitignored and produced by Emscripten (core/wasm-build/build.mjs) — a
- * step npm doesn't run — so a fresh clone, or a change to any C source, would leave a
- * missing/stale core and the game would black-screen. Wired as predev/prebuild, this:
- *   - is a fast mtime check that NO-OPS when the wasm is newer than every C source, and
- *   - rebuilds automatically when the wasm is missing or any C source / build.mjs is newer.
- *
- * Cross-platform: it delegates to core/wasm-build/build.mjs (the single source of truth).
- * On Windows it sources emsdk_env first ($EMSDK, else the documented default
- * E:\GameProjects\emsdk; set EMSDK to override). On Linux/macOS it expects emcc already
- * on PATH (CI activates it via emscripten-core/setup-emsdk); if emcc is missing it warns
- * and you build manually (docs/contributing/building-wasm.md).
+ * Check that the WASM core (apps/web/public/wasm/zelda3.{js,wasm}) exists and is
+ * newer than every C source and build.mjs; rebuild via core/wasm-build/build.mjs
+ * otherwise. Wired as predev/prebuild. On Windows it sources emsdk_env first
+ * ($EMSDK, else the main checkout's third_party/emsdk). On Linux/macOS emcc must be on PATH
+ * (CI uses emscripten-core/setup-emsdk); see docs/contributing/building-wasm.md.
  */
 import { existsSync, statSync, readdirSync, writeFileSync, rmSync } from 'node:fs';
-import { join, resolve, extname } from 'node:path';
+import { dirname, join, resolve, extname } from 'node:path';
 import { tmpdir } from 'node:os';
 import { execSync } from 'node:child_process';
 
@@ -37,6 +28,13 @@ const newestSourceMtime = (dir) => {
   return newest;
 };
 
+// The one SDK lives in the MAIN checkout's third_party/emsdk, so a worktree asks git for
+// the shared .git dir and uses the checkout that owns it.
+const mainEmsdk = () => {
+  const gitCommon = execSync('git rev-parse --path-format=absolute --git-common-dir', { cwd: repoRoot, encoding: 'utf8' }).trim();
+  return join(dirname(gitCommon), 'third_party', 'emsdk');
+};
+
 // Returns a human reason the wasm needs (re)building, or null when it's current.
 const staleReason = () => {
   if (!wasmOutputs.every(existsSync)) return 'WASM core is missing';
@@ -51,13 +49,12 @@ if (!reason) {
   process.exit(0);
 }
 
-console.log(`[ensure-wasm] ${reason} — building the WASM core (this takes a minute)...`);
+console.log(`[ensure-wasm] ${reason}. Building the WASM core (this takes a minute)...`);
 
 if (process.platform === 'win32') {
-  // Windows: emcc isn't on PATH until emsdk_env is sourced. Use a sequential
-  // wrapper batch (more reliable than && chaining): activate emsdk, then run the
-  // shared build script BY FULL PATH.
-  const emsdk = process.env.EMSDK || 'E:\\GameProjects\\emsdk';
+  // A wrapper batch is more reliable than && chaining: activate emsdk, then run the
+  // build script by full path.
+  const emsdk = process.env.EMSDK || mainEmsdk();
   const emsdkEnv = join(emsdk, 'emsdk_env.bat');
   if (!existsSync(emsdkEnv)) {
     console.warn(`[ensure-wasm] ${reason}, but the Emscripten SDK was not found at "${emsdk}". Set the EMSDK env var or build manually (build-wasm). The game will not load until the WASM core is built.`);
@@ -68,7 +65,7 @@ if (process.platform === 'win32') {
   try {
     execSync(`cmd /c "${wrapper}"`, { stdio: 'inherit' });
   } catch {
-    console.error('[ensure-wasm] WASM build failed — see the emcc output above.');
+    console.error('[ensure-wasm] WASM build failed. See the emcc output above.');
     process.exit(1);
   } finally {
     rmSync(wrapper, { force: true });

@@ -5,7 +5,7 @@
  * A sheet is `0x7000` bytes of 4bpp tiles (16 columns x 56 rows) holding every pose the
  * engine can draw, plus a palette. The palette is kept as two layers: `original` is what
  * the file was imported with (or the stock colours), `override` a sparse diff of edits.
- * Reverting is dropping the diff, so an edit never destroys what it replaced — and both
+ * Reverting is dropping the diff, so an edit never destroys what it replaced. Both
  * layers survive being written to a pack and read back.
  *
  * `PlayerSprite_Apply` (core/game-hooks/player_sprite.c) reads four outfits of 15 colours
@@ -13,6 +13,7 @@
  * in the stock asset is the flash palette used while the player is zapped; no sheet format
  * carries it and the core deliberately leaves the player on the shared row for it.
  */
+import type { BasedOn } from '@shared/store/based-on';
 
 /** The four outfits a sheet supplies. The first three are recolours; `bunny` is its own art. */
 type OutfitId = 'green' | 'blue' | 'red' | 'bunny';
@@ -37,7 +38,7 @@ interface PaletteOverride {
   gloves?: readonly [number, number];
 }
 
-/** What the player is wearing — the second axis of the preview, and palette-only. */
+/** What the player is wearing. The second axis of the preview, and palette-only. */
 interface Wearing {
   outfit: OutfitId;
   gloves: GloveLevel;
@@ -52,6 +53,8 @@ interface SheetMeta {
    */
   authorShort: string;
   notes?: string;
+  /** Set on a copy of a sprite installed from the Hookshop: the original it credits. */
+  basedOn?: BasedOn;
 }
 
 interface PlayerSheet {
@@ -67,7 +70,7 @@ const SHEET_COLS = 16;
 const COLORS_PER_OUTFIT = 15;
 const OUTFIT_IDS: readonly OutfitId[] = ['green', 'blue', 'red', 'bunny'];
 
-/** Index of the row entry the glove colour lands on — CGRAM 0xFD in the core. */
+/** Index of the row entry the glove colour lands on (CGRAM 0xFD in the core). */
 const GLOVES_INDEX = 13;
 
 export { SHEET_BYTES, SHEET_COLS, COLORS_PER_OUTFIT, OUTFIT_IDS, GLOVES_INDEX };

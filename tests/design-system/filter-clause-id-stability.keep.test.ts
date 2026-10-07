@@ -6,27 +6,20 @@ import { capture } from '../../apps/web/src/ui/design-system/data/view-state/sna
 import type { FilterClause } from '../../apps/web/src/ui/design-system/data/filter/clause';
 import type { TableState, ViewSnapshot } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
 
-// The reported bug: filters "behaving weirdly" — a delete that removes the
-// wrong thing, or takes two, or a filter that changes when the user only
-// touched a different one. Root cause: `createClause` used to hand out ids
-// from a plain module-level counter (`clause-1`, `clause-2`, ...) that reset
-// to zero every time the app relaunched, while a clause's id is persisted to
-// disk verbatim (see snapshot.ts's `capture`). The very first clause created
-// in a fresh session was therefore near-guaranteed to collide with whatever
-// a PRIOR session had already saved under the same low id — and FilterBar's
-// add/remove/update all key off `clause.id` (see clause-list.ts), so two
-// clauses sharing an id meant acting on one silently acted on both, and React
-// rendered them under a duplicate key.
+// The reported bug: a delete that removes the wrong clause, or two, or a filter
+// that changes when another was touched. `createClause` handed out ids from a
+// module-level counter (`clause-1`, `clause-2`, ...) that reset on relaunch,
+// while clause ids persist to disk verbatim (snapshot.ts's `capture`). The first
+// clause of a fresh session collided with a saved one, and FilterBar keys
+// add/remove/update off `clause.id` (clause-list.ts).
 //
-// The fix has two parts: `createClause` now hands out `crypto.randomUUID()`
-// ids, which cannot repeat across a relaunch (covered below), and
-// `restoreDurableSnapshot` heals a disk file that already has a collision
-// from before this fix, by reassigning a fresh id to every repeat occurrence.
+// The fix: `createClause` uses `crypto.randomUUID()`, and `restoreDurableSnapshot`
+// heals a disk file that already has a collision by reassigning repeat ids.
 
 const ROWS = [{ id: 'item-001', name: 'alpha' }];
-// Forced rather than inferred: a single row's `name` would otherwise read as a
+// Forced instead of inferred: a single row's `name` would otherwise read as a
 // one-value closed set (kind 'enum'), which does not offer the 'eq' operator
-// these fixture clauses use — see filter-clause.test.ts for the same override.
+// these fixture clauses use. filter-clause.test.ts carries the same override.
 const schema = createSchemaIndex(buildSchema(ROWS, { kinds: { name: 'string' } }));
 const NO_TABLE: TableState = { columns: [], sort: [], groupBy: [] };
 
@@ -38,7 +31,7 @@ describe('createClause ids survive a relaunch', () => {
     const first = await import('../../apps/web/src/ui/design-system/data/filter/clause');
     const persistedAcrossSessions = first.createClause('name', 'contains', 'a');
 
-    // A relaunch re-evaluates every module from scratch — this stands in for that,
+    // A relaunch re-evaluates every module from scratch, and this stands in for that,
     // the same way the old per-session counter would have reset to 0 here.
     vi.resetModules();
     const second = await import('../../apps/web/src/ui/design-system/data/filter/clause');
@@ -53,7 +46,7 @@ describe('createClause ids survive a relaunch', () => {
   });
 });
 
-describe('dedupeClauseIds — healing a disk file from before the fix', () => {
+describe('dedupeClauseIds heals a disk file from before the fix', () => {
   it('leaves a list with no duplicates alone', () => {
     const clauses = [
       { id: 'a', path: 'name', op: 'eq', value: 1, enabled: true },

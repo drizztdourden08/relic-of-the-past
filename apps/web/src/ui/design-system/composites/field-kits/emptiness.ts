@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind logic */
 /**
- * Existence — the one comparison every kind supports. A blank string, an empty
+ * Existence, the one comparison every kind supports. A blank string, an empty
  * list and an object with no keys all read as "nothing recorded here", which is
- * what someone filtering for `is empty` is actually asking.
+ * what someone filtering for `is empty` is asking.
  */
 import { isNullish } from './coerce';
 
@@ -17,7 +17,7 @@ const isEmptyValue = (value: unknown): boolean => {
 /**
  * The whole tester for kinds that offer existence and nothing else. An operator
  * this does not know returns true, matching the core's rule that a clause it
- * cannot honour is inert rather than silently hiding every row.
+ * cannot honour is inert instead of silently hiding every row.
  */
 const testExistence = (value: unknown, op: string): boolean => {
   if (op === 'isEmpty') return isEmptyValue(value);

@@ -4,12 +4,12 @@
  * of which may be open.
  *
  * CLOSED IS THE RESTING STATE. A set is a few hundred entries and the list's job
- * is finding one, so each row is a dense line of facts — who says it, what opens
- * it, how much of it there is, whether it fits — and opening one is the
- * deliberate act. Reading a card can never change it either; only the editing
- * view can, and only one entry may hold unsaved work at a time.
+ * is finding one, so each row is a dense line of facts: who says it, what opens
+ * it, how much of it there is, whether it fits. Opening one is the deliberate
+ * act. Reading a card can never change it either; only the editing view can, and
+ * only one entry may hold unsaved work at a time.
  *
- * Entries the engine uses as scaffolding are shown locked instead — they hold no
+ * Entries the engine uses as scaffolding are shown locked instead. They hold no
  * translatable words, and editing one breaks every choice prompt.
  *
  * Every listed entry is MEASURED, not only the ones near the viewport. A closed
@@ -17,15 +17,15 @@
  * what the row is for; and a closed row paints no canvas, which is what made
  * measuring the whole set too expensive when a card drew its boxes. The layout
  * cache is keyed on each entry's token array, so this is one walk per entry for
- * the life of the set rather than one per render.
+ * the life of the set, not one per render.
  */
 import { useCallback } from 'react';
 import { Box, Text, TextInput, EmptyState, SectionHeader, SegmentedControl } from '@ds/primitives';
 import { structuralEntry } from '@shared/game/language';
 import { EntryEditor } from './EntryEditor';
 import { LockedEntryCard } from './LockedEntryCard';
-import { EntryListItem } from './entry';
-import { PreviewView } from './preview';
+import { EntryListItem } from '@domains/packs/language/compounds/entry';
+import { PreviewView } from '@domains/packs/language/compounds/preview';
 import type { ChangeEvent } from 'react';
 import type {
   DialogueEntry, GlossaryTerm, SetStructure, Variable, VariableIndex,
@@ -34,8 +34,8 @@ import type { LanguageConfig } from '@shared/asset-extraction/text/data/language
 import type { GlyphMetrics, GlyphSheet } from '@shared/game/language/layout/types';
 import type { EntryIssueMap } from '../language-editor.type';
 import type { EntryDraftState } from '../behavior/useEntryDraft';
-import type { LayoutLookup } from '../behavior/useEntryLayout';
-import type { EntryViewMode, EntryViewState } from '../behavior/useEntryView';
+import type { LayoutLookup } from '@domains/packs/language/behavior/useEntryLayout';
+import type { EntryViewMode, EntryViewState } from '@domains/packs/language/behavior/useEntryView';
 import './DialogueTab.css';
 
 type EntryFilter = 'all' | 'warnings' | 'choices';
@@ -57,6 +57,8 @@ type DialogueTabProps = {
   draft: EntryDraftState;
   view: EntryViewState;
   structureMode: SetStructure;
+  /** An installed set: lines open and preview, and the editor cannot change them. */
+  readOnly: boolean;
   onQueryChange: (query: string) => void;
   onFilterChange: (filter: EntryFilter) => void;
   onOpen: (id: number) => void;
@@ -74,7 +76,7 @@ const FILTER_OPTIONS = [
 const DialogueTab = (props: DialogueTabProps) => {
   const {
     entries, total, issues, query, filter, cfg, glossary, variables, variableIndex,
-    metrics, sheet, layout, draft, view, structureMode,
+    metrics, sheet, layout, draft, view, structureMode, readOnly,
     onQueryChange, onFilterChange, onOpen, onClose, onModeChange, onChangeStructureMode,
   } = props;
 
@@ -88,7 +90,7 @@ const DialogueTab = (props: DialogueTabProps) => {
 
   const searching = query.trim().length > 0 || filter !== 'all';
   const search = (
-    <TextInput value={query} onChange={handleQuery} placeholder="Search all text…" />
+    <TextInput value={query} onChange={handleQuery} placeholder="Search all text..." />
   );
 
   return (
@@ -136,6 +138,7 @@ const DialogueTab = (props: DialogueTabProps) => {
                   sheet={sheet}
                   structureMode={structureMode}
                   dirty={draft.isDirty(entry.id)}
+                  readOnly={readOnly}
                   onChangeTokens={(next) => draft.setTokens(entry.id, next)}
                   onChangeStructureMode={onChangeStructureMode}
                   onSave={() => draft.commit(entry.id)}

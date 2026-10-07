@@ -4,24 +4,24 @@
  *
  * Proven by the three blocksets both tables define: for 21, 25 and 26 the cartridge's quartet
  * is byte-identical to the base game's. So the sheets themselves are a non-problem and
- * uploading their pixels is the wrong fix — enemies draw from tile numbers baked into the
+ * uploading their pixels is the wrong fix: enemies draw from tile numbers baked into the
  * engine's sprite code, which assume the base game's sheet in each slot.
  *
  * What the cartridge actually contributes is the COMPOSITION for the blocksets the base table
  * leaves empty, which is most of this dungeon's. This checks that a sheet id still names the
- * same art on both cartridges, so a wrong pointer table cannot ship quietly again.
+ * same art on both cartridges, so a wrong pointer table cannot ship unnoticed again.
  */
 import { lzDecompressWithLen } from '../../asset-builder';
 import { kCompSpritePtrs } from '../../data/tables';
 import type { RomData } from '../../rom/rom-types';
 
-/** Same numbering on both cartridges — kept named so a future divergence has somewhere to go. */
+/** Same numbering on both cartridges. Kept named so a future divergence has somewhere to go. */
 const BASE_SHEET_DELTA = 0;
 
 /** A slot the cartridge leaves to whatever was already loaded. */
 const SHEET_UNCHANGED = 0xff;
 
-/** Sheets below this index are stored raw rather than compressed. */
+/** Sheets below this index are stored raw, not compressed. */
 const FIRST_COMPRESSED_SHEET = 12;
 /** A sheet is 64 tiles; the base game stores them 3bpp, so 24 bytes each. */
 const SOURCE_SHEET_BYTES = 0x600;
@@ -59,7 +59,7 @@ const toBaseSheetId = (cartridgeId: number): number =>
 
 /**
  * Check every referenced sheet against the base sheet it maps to, so a wrong delta cannot ship
- * quietly. Returns one row per sheet; a caller decides what to do with an imperfect match.
+ * unnoticed. Returns one row per sheet; a caller decides what to do with an imperfect match.
  */
 const compareSpriteSheets = (
   snes: RomData,

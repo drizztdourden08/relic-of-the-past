@@ -3,10 +3,10 @@
  * What a key requirement token points at.
  *
  * A `smallkey:`/`bigkey:` token either names the dungeon whose key it wants, by
- * `DungeonId`, or carries the wildcard — which is what a connection's
+ * `DungeonId`, or carries the wildcard, which is what a connection's
  * `barrier:small-key`/`barrier:big-key` tag turns into, because the tag says a key
- * is needed without saying whose. Keeping the wildcard as its own value (rather
- * than a string that gets looked up in a per-dungeon map and always misses) is
+ * is needed without saying whose. Keeping the wildcard as its own value (instead
+ * of a string that gets looked up in a per-dungeon map and always misses) is
  * what makes the two cases answerable separately.
  */
 import type { DungeonId } from '../data';

@@ -4,14 +4,14 @@ import { TYPE_SCALE, SPACE_SCALE, RADIUS_SCALE, SHADOW_SCALE } from '../../Desig
 import { Swatch } from '../Swatch';
 import { Specimen } from '../Specimen';
 
-/** Foundations › type / spacing / radius / elevation scales. */
+/** Foundations: type / spacing / radius / elevation scales. */
 const ScaleStory = () => (
   <Box className="dg-stack">
-    <Specimen label="Type scale" hint="Tight 5-step scale — densify with weight & color, not new sizes.">
+    <Specimen label="Type scale" hint="Tight 5-step scale. Densify with weight & color, not new sizes.">
       <Box className="dg-type">
         {TYPE_SCALE.map(t => (
           <Text key={t.cssVar} className="dg-type__row" style={{ fontSize: `var(${t.cssVar})` }}>
-            {t.name} · {t.value} — The quick brown fox jumps
+            {t.name} · {t.value} · The quick brown fox jumps
           </Text>
         ))}
       </Box>
@@ -39,7 +39,7 @@ const ScaleStory = () => (
       </Box>
     </Specimen>
 
-    <Specimen label="Elevation — three shadows + one blur">
+    <Specimen label="Elevation (three shadows + one blur)">
       <Box className="dg-swatch-grid">
         {SHADOW_SCALE.map(t => <Swatch key={t.cssVar} token={t} kind="shadow" />)}
       </Box>

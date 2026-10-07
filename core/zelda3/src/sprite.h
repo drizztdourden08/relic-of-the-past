@@ -66,11 +66,19 @@ enum {
   kOamY_High  = 2,  // tall-encoded, 9th bit set
 };
 
+// The row a 9-bit Y stops meaning "below the picture" and starts meaning "above it". The stored value is
+// camera-relative and the renderer adds the camera lock's offset after decoding, so the fold moves with
+// that offset: without this a locked tall view cannot express its own lowest rows, and everything drawn
+// there (a shot, its sparkle, the follower) vanishes for the last rows of the picture.
+static inline int OamTallFold(int budget) {
+  return 256 + budget - g_oam_tall_fold_shift;
+}
+
 static inline void OamSetY(OamEnt *oam, uint16 y) {
   if (g_oam_tall_budget) {
     int16 ys = (int16)y;
     int b = (int)g_oam_tall_budget;
-    if (ys >= b - 256 && ys < 256 + b) {
+    if (ys >= OamTallFold(b) - 512 && ys < OamTallFold(b)) {
       oam->y = (uint8)y;
       g_oam_y_high[oam - oam_buf] = ((y >> 8) & 1) ? kOamY_High : kOamY_Low;
     } else {

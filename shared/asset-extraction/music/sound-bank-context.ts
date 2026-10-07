@@ -1,7 +1,5 @@
 /* @layer shared-asset-extraction @kind logic */
-/**
- * SoundBankContext — manages SPC memory state and decodes song/phrase/pattern structures.
- */
+/** Manages SPC memory state and decodes song/phrase/pattern structures. */
 import type { RomData } from '../rom/rom-types';
 import type { MusicEntity, Pattern, Phrase, PhraseLoop, Song, SongList } from './extract-types';
 import { kEffectByteLength, kEffectNames, noteToStr } from './extract-types';

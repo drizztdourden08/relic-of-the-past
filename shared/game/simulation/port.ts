@@ -1,6 +1,6 @@
 /* @layer shared-game @kind types */
 /**
- * SimulatorPort — the single seam between the pure engine and the outside
+ * SimulatorPort is the single seam between the pure engine and the outside
  * world. `LiveGamePort` drives the real game via the wasm bridge; a future
  * `DataWorldPort` replays the recorded dataset offline. The engine only ever
  * speaks to this interface.
@@ -26,7 +26,7 @@ interface SimulatorPort {
   getRoomSprites: (roomId: number) => SimSprite[];
   getOverworldSprites: (screenIndex: number) => SimSprite[];
   getRoomDoors: (roomId: number) => SimDoor[];
-  /** Room-header TAG bytes — scripted effects (kill-to-open-door family etc.). */
+  /** Room-header TAG bytes for scripted effects (kill-to-open-door family etc.). */
   getRoomTags: (roomId: number) => [number, number];
   /** Resolved combat row for one sprite type; null off the developer-tools gate or out of range. */
   getSpriteCombat: (spriteType: number) => SpriteCombatInfo | null;
@@ -42,7 +42,7 @@ interface SimulatorPort {
   setDeveloperTools: (on: boolean | null) => void;
   /** Host gate (kHostGate_SimulatorSupport): arms the WasmSim* mutators (and the item-grant
    *  fallback in TriggerGrantAllowed) for the duration of a run. On at start, off at the
-   *  end — including on abort/crash — so it can never linger armed against a live session. */
+   *  end, including on abort or crash, so it can never linger armed against a live session. */
   setSimulatorSupport: (on: boolean) => void;
   /** Memento: snapshot pre-run state so it can be restored afterwards. */
   snapshotState: () => Promise<ArrayBuffer>;

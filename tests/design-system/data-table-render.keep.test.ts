@@ -9,14 +9,10 @@ import { buildSchema } from '../../apps/web/src/ui/design-system/data/schema/bui
 import type * as DataTableModule from '../../apps/web/src/ui/design-system/composites/DataTable';
 import { describeDataset } from '../dataset-guard';
 
-// There is no jsdom or testing-library here, so these are SSR smoke tests: they
-// prove the table renders real collections without throwing, and that a
-// keyless table is silent. What they CANNOT cover is anything that needs a
-// live DOM — column drag and drop, clicking a caret or an action, and the
-// ⋯ / + menus opening at all (both are portalled, and a portal needs a
-// document). Those are unverified in this pass. HeaderCell, GroupRow, the
-// footer and the view-signature helpers each have their own file — see
-// data-table-{header-cell,group-row,footer,view-signature}.test.ts.
+// SSR smoke tests (no jsdom): real collections render, a keyless table is
+// silent. Drag and drop, carets, actions and the portalled ⋯ / + menus need a
+// live DOM. HeaderCell, GroupRow, the footer and view-signature each have
+// their own file.
 
 const screens = all('screen') as readonly Record<string, unknown>[];
 const connections = all('connection') as readonly Record<string, unknown>[];
@@ -52,7 +48,7 @@ const renderTable = (
     rows, schema: buildSchema(rows), getRowId, ...extra,
   }));
 
-describeDataset('DataTable — renders real collections', () => {
+describeDataset('DataTable renders real collections', () => {
   it('renders a screen collection with a header and a row per record', () => {
     const markup = renderTable(screens);
     expect(markup).toContain('data-table__header');
@@ -72,7 +68,7 @@ describeDataset('DataTable — renders real collections', () => {
     expect(markup).toContain('data-table__header-cell--trailing');
   });
 
-  it('offers no standalone + any more — adding a column is a menu entry now', () => {
+  it('offers no standalone + any more, because adding a column is a menu entry now', () => {
     const markup = renderTable(screens, { fallbackColumns: [{ path: 'id' }, { path: 'kind' }] });
     expect(markup).not.toContain('data-table__add');
     expect(markup).not.toContain('aria-label="Add column"');
@@ -90,7 +86,7 @@ describeDataset('DataTable — renders real collections', () => {
     expect(markup).toContain('data-table__row--selected');
   });
 
-  it('says so rather than rendering an empty grid when there is nothing to show', () => {
+  it('says so instead of rendering an empty grid when there is nothing to show', () => {
     const markup = renderToStaticMarkup(createElement(DataTable, {
       rows: [], schema: buildSchema(screens), getRowId, emptyMessage: 'No records.',
     }));
@@ -111,7 +107,7 @@ describeDataset('DataTable — renders real collections', () => {
     expect(markup).toContain(`+${screens.length - 6} more`);
   });
 
-  it('counts its own rows in a footer, rather than leaving that to the caller', () => {
+  it('counts its own rows in a footer, instead of leaving that to the caller', () => {
     const markup = renderTable(screens);
     expect(markup).toContain('data-table__footer');
     expect(markup).toContain(`${screens.length} entries`);
@@ -125,7 +121,7 @@ describeDataset('DataTable — renders real collections', () => {
     expect(renderTable(screens.slice(0, 1), { countLabel: ['screen', 'screens'] })).toContain('1 screen');
   });
 
-  it('offers the table-wide actions once, in that footer — not once per column', () => {
+  it('offers the table-wide actions once in that footer, never once per column', () => {
     const markup = renderTable(screens, { fallbackColumns: [{ path: 'id' }, { path: 'kind' }] });
     expect(markup.match(/data-table__options/g)).toHaveLength(1);
     expect(markup).toContain('aria-label="Table options"');
@@ -146,7 +142,7 @@ describeDataset('DataTable — renders real collections', () => {
 
   it('publishes one track list for the whole grid, with nothing measured yet', () => {
     // Nothing has been laid out on the server, so no column can be falling back
-    // to its content width — every one is on the track its own state asks for.
+    // to its content width. Every one is on the track its own state asks for.
     const markup = renderTable(screens, { fallbackColumns: [{ path: 'id' }, { path: 'kind' }] });
     expect(markup).toContain('--dt-tracks');
     expect(markup).not.toContain('1fr 1fr');

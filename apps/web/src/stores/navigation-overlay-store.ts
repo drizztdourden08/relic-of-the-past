@@ -4,8 +4,8 @@
  *
  * The navigation widget is `game-only`, so opening the hub unmounts it and takes any
  * component state with it. That is how the minimap used to vanish while the overlay
- * survived: the two halves of one result were stored in two places. A flood result outlives
- * the panel that asked for it, so this store owns all of it and the widget only reads.
+ * survived. A flood result outlives the panel that asked for it, so this store owns
+ * all of it and the widget only reads.
  */
 import { create } from 'zustand';
 import type { FloodFillResult, ConnectionInfo, ScreenBundle } from '@shared/game/navigation';
@@ -34,11 +34,11 @@ interface NavigationOverlayState {
   /** Entrance IDs classified as respawn points (not physical doors) */
   respawnEntIds: Set<number>;
   /**
-   * What the simulator knows about the flooded screen — chests, locks, triggers,
-   * exits and their state. Fed separately from the flood so the overlay, the
-   * minimap and the widget panel all read one description.
+   * What the simulator knows about each flooded screen (chests, locks, triggers,
+   * exits and their state), one entry per screen; a multi-screen area annotates
+   * all of them. Fed separately from the flood so the overlay, the minimap and
+   * the widget panel all read one description.
    */
-  /** One entry per flooded screen — a multi-screen area annotates all of them. */
   annotations: ScreenAnnotations[];
   /** Annotation kinds the viewer has switched off in the legend. */
   hiddenKinds: ReadonlySet<string>;

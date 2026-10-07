@@ -2,7 +2,7 @@
 
 /*
  * The dialogue face, used wherever the app shows text that the game itself will
- * display — so a translator reads their line in the shape it will take on
+ * display, so a translator reads their line in the shape it will take on
  * screen. It is a pixel font: it only looks right at whole multiples of its
  * design size, and it must not be hinted or smoothed.
  *
@@ -10,7 +10,7 @@
  * Commons Attribution 3.0. Its LICENSE.txt and README.txt sit beside the file
  * in this folder and must travel with it; the credits entry names it in full.
  *
- * KNOWN ASSET GAP — six characters of this face are not the pack's characters.
+ * KNOWN ASSET GAP: six characters of this face are not the pack's characters.
  *
  * Being a recreation, it is close but not identical to the font a language pack
  * carries, and a surface that measures a line reads the PACK's width table (the
@@ -30,8 +30,8 @@
  * character out of it, so the numbers a translator steers by stay the game's. The
  * consequence is purely visual and confined to these six: their ink sits up to a
  * game pixel and a half off centre in a cell sized for the real character. That
- * is why a cell centres its ink rather than parking it left — it halves the
- * error instead of collecting all of it on one side.
+ * is why a cell centres its ink instead of parking it left. Centring halves the
+ * error; parking collects all of it on one side.
  *
  * Closing the gap means an asset change, not a code change: a face whose glyphs
  * are the pack's own. Until then this is the divergence, written down.

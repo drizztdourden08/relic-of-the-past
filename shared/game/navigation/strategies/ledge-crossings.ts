@@ -8,7 +8,7 @@
  * ledge offers only N-1 places to stand, and recording per body left the last
  * tile of every ledge without an arrow while halving a 2-tile gap to a single
  * one. A 1-tile gap still records nothing, because it offers no body position
- * at all — which is the correct answer, since Link cannot jump from it.
+ * at all, which is the correct answer, since the player cannot jump from it.
  */
 import type { LedgeTraversal } from '../types';
 

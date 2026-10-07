@@ -4,13 +4,13 @@
  *
  * A raised surface has to be supported: somewhere along its extent it sits over
  * the lower layer's structure. A connected run of upper-layer 0x00 that is open
- * on the lower layer at every single tile is not a surface at all — it is the
+ * on the lower layer at every single tile is not a surface at all. It is the
  * gap beside a walkway, and the ground seen through it belongs to the layer
  * below. Boundary flooding cannot find these: they are enclosed by the walkway's
  * own edges, so they never touch the grid border.
  *
  * Room 0x62 is the case that forced it. A bridge crosses the room, splitting the
- * upper layer into three 0x00 regions: the deck itself (supported — it overlaps
+ * upper layer into three 0x00 regions: the deck itself (supported, since it overlaps
  * lower-layer structure) and the two gaps either side (supported nowhere).
  * Treating the gaps as floor let the walk reach the deck's ledge edge from the
  * wrong side and hop onto a surface the two never share, which is what put a
@@ -29,9 +29,9 @@ const hasStructure = (layer: number[][]): boolean =>
  * Mask of every upper-layer 0x00 tile whose region never overlaps lower-layer
  * structure.
  *
- * A MASK rather than a rewritten grid on purpose. Stamping these as 0x01 would
+ * A MASK instead of a rewritten grid, on purpose. Stamping these as 0x01 would
  * fold them into `CLIFF_WALL`, and cliff preprocessing walks a wall run to find
- * a ledge's landing — so a gap turned into wall silently extends the cliff
+ * a ledge's landing, so a gap turned into wall silently extends the cliff
  * beside it and invents hops dozens of tiles long. The caller applies this to
  * the collision tiles AFTER cliffs are processed, which blocks the walk without
  * touching what the cliff scan reads.

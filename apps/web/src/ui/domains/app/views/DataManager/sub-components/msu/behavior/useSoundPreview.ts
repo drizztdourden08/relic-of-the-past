@@ -1,16 +1,8 @@
 /* @layer renderer-components @kind hook */
 /**
- * Auditions one claimed sound the way the game raises it: the channel's own program, triggered
- * through `onGameSound` rather than the music control byte.
- *
- * On an effects channel a second press is the point rather than a restart — the game fires the
- * same bonk five times in a second and they overlap — so a repeat press on the sound already
- * live fires into the RUNNING session instead of rebuilding it. Rebuilding would tear down the
- * voices still sounding and turn overlap into a stutter, which is the one thing this view exists
- * to let someone hear.
- *
- * The ambient channel is stateful, so there a repeat press does replace the bed, exactly as
- * re-entering an area does in the game.
+ * Auditions one claimed sound through `onGameSound`, as the game raises it. On an effects channel
+ * a repeat press fires into the RUNNING session: rebuilding would turn overlap into a stutter. The
+ * ambient channel is stateful, so there a repeat press replaces the bed, as in the game.
  */
 import { useCallback, useEffect, useState } from 'react';
 import type { MsuPackManifest, SoundChannel } from '@shared/types/msu-manifest';

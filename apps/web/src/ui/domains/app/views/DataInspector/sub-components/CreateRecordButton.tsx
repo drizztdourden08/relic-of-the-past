@@ -1,12 +1,8 @@
 /* @layer renderer-app @kind component */
 /**
- * The "New record" action for one collection — the trigger and the dialog it
- * opens, together, so a collection with no create write path (`onCreate`
- * undefined) renders neither rather than a button that cannot do anything.
- *
- * Wires the same injected resolvers `RecordEditorPanel` gives an existing
- * record's editor, so a picker, a tag entry or a bounded number behaves
- * identically whether the record already exists or is being created right now.
+ * The "New record" trigger and its dialog together, so a collection with no
+ * create write path renders neither. Wires the same resolvers as
+ * `RecordEditorPanel`, so fields behave the same when creating and editing.
  */
 import { Button } from '@ds/primitives';
 import { CreateRecordDialog } from '@ds/composites';

@@ -1,16 +1,9 @@
 /* @layer renderer-components @kind constants */
 /**
- * One row per AnnotationKind: the glyph, colour and legend text. Exhaustive by
- * type (`Record<AnnotationKind, …>`), so adding a kind without a visual is a
- * compile error rather than something that silently never draws.
- *
- * Colours are semantic, not decorative: amber = a lock or gate, green = a pickup
- * or check, red-clay = a trigger that needs an action, grey = informational.
- * The three ways off the screen this file draws (warp-door, exit-door, exit)
- * each get their own shade of cyan/purple rather than one shared colour — they
- * used to be visually identical, distinguishable only by a tiny glyph. Real
- * entrance/stair/walk-boundary icons are a SEPARATE renderer (draw-entrances.ts,
- * amber/purple) and never come through this table at all.
+ * One row per AnnotationKind, exhaustive by type so a kind without a visual is a compile error.
+ * Colours are semantic: amber = lock or gate, green = pickup or check, red-clay = trigger, grey =
+ * informational. The three ways off the screen each get their own shade; they used to be
+ * identical. Entrance/stair/walk-boundary icons are a SEPARATE renderer (draw-entrances.ts).
  */
 import type { AnnotationKind } from '@shared/game/simulation';
 
@@ -18,7 +11,7 @@ interface AnnotationStyle {
   /** Single glyph drawn in the marker. */
   glyph: string;
   color: string;
-  /** Legend wording — what the player/reader is actually looking at. */
+  /** Legend wording for what the player or reader is actually looking at. */
   legend: string;
   /** Screen-wide facts (room tags) have no meaningful tile; drawn in the panel. */
   panelOnly?: boolean;
@@ -43,7 +36,7 @@ const ANNOTATION_STYLES: Record<AnnotationKind, AnnotationStyle> = {
   'cell-lock': { glyph: '⚿', color: LOCK, legend: 'Cell lock (big key)' },
   shutter: { glyph: '▤', color: LOCK, legend: 'Shutter door' },
   bombable: { glyph: '✸', color: LOCK, legend: 'Bombable wall' },
-  'follower-gate': { glyph: '◫', color: LOCK, legend: 'Gate — needs the follower' },
+  'follower-gate': { glyph: '◫', color: LOCK, legend: 'Gate (needs the follower)' },
 
   'pull-switch': { glyph: '⇵', color: TRIGGER, legend: 'Pull switch' },
   'kill-trigger': { glyph: '✦', color: TRIGGER, legend: 'Clear room to open doors', panelOnly: true },
@@ -54,7 +47,7 @@ const ANNOTATION_STYLES: Record<AnnotationKind, AnnotationStyle> = {
   'exit-door': { glyph: '⤴', color: EXIT_DOOR, legend: 'Exit to overworld' },
   exit: { glyph: '→', color: EXIT, legend: 'Traversable exit' },
 
-  unknown: { glyph: '?', color: INFO, legend: 'Unmapped — the sim found something new' },
+  unknown: { glyph: '?', color: INFO, legend: 'Unmapped (the sim found something new)' },
 };
 
 /** Kinds that draw on the canvas (everything except screen-wide facts). */

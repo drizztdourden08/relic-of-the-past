@@ -1,0 +1,4 @@
+/* @layer renderer-components @kind style */
+
+/* Base round-button look lives in DebugFloatingControls.css (.debug-round-button), shared
+   with DebugCaptureButton. This button has no states of its own. */

@@ -1,0 +1,26 @@
+/* @layer renderer-components @kind style */
+
+/* A section of its own: room above the title so it reads apart from the
+   choices before it, and the reader's fallback notes under the rows. */
+
+.capacity-block {
+  padding-top: var(--space-md);
+}
+
+/* The families answer to the master switch above them: with the feature off
+   the whole body greys out, the same way a frozen row does. */
+.capacity-block__body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.capacity-block__body--off {
+  opacity: var(--opacity-disabled);
+}
+
+.capacity-block__note {
+  font-size: var(--text-xs);
+  color: var(--c-warning);
+  padding-top: var(--space-xs);
+}

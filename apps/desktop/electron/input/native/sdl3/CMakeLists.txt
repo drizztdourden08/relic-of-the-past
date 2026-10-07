@@ -14,8 +14,8 @@ find_package(SDL3 REQUIRED CONFIG)
 
 # `include` yields an absolute path (unlike `include_dir`, which is relative to
 # the caller's cwd and so resolves wrong from CMake's build directory). It comes
-# back quoted and with Windows separators, both of which CMake needs stripped —
-# a backslash would otherwise be read as an escape.
+# back quoted and with Windows separators, both of which CMake needs stripped,
+# since a backslash would otherwise be read as an escape.
 execute_process(
   COMMAND node -p "require('node-addon-api').include"
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}

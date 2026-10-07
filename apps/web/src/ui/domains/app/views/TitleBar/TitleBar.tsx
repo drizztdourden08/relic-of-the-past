@@ -3,6 +3,7 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { usePlatform } from '@app/platform';
 import { DropdownMenu } from '../../../../design-system/composites/DropdownMenu';
+import { SearchSpark } from '../../../../design-system/composites/SearchSpark';
 import { IconButton } from '../../../../design-system/primitives/IconButton';
 import { BugReportButton } from '../../compounds/BugReportButton';
 import { Box } from '../../../../design-system/primitives/Box';
@@ -23,7 +24,7 @@ import { effectiveHz, isSyncedRate } from '@shared/display/refresh-rate';
 import { RefreshRateTag } from './sub-components/RefreshRateTag';
 import './TitleBar.css';
 import {
-  MENU_ICON_CIRCLES, PIN_ICON_PATHS, MUTE_ICON_PATHS, VOLUME_ICON_PATHS, SAVE_ICON_PATHS, SEARCH_ICON_PATHS,
+  MENU_ICON_CIRCLES, PIN_ICON_PATHS, MUTE_ICON_PATHS, VOLUME_ICON_PATHS, SAVE_ICON_PATHS,
 } from './TitleBar.constants';
 import type { TitleBarProps } from './TitleBar.type';
 
@@ -47,8 +48,10 @@ const TitleBar = (props: TitleBarProps) => {
     onShowConnectionDebug,
     onToggleDataset,
     onToggleSimulator,
+    onToggleMusic,
     onShowShadowEditor,
     onShowAbout,
+    onShowRandomizer,
     onShowBugReport,
     activeProfile,
     gameRunning,
@@ -71,7 +74,7 @@ const TitleBar = (props: TitleBarProps) => {
   const [hovered, setHovered] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [fps, setFps] = useState(0);
-  // Shown beside the FPS so the two can be compared at a glance — the game runs at 60, and a
+  // Shown beside the FPS so the two can be compared at a glance. The game runs at 60, and a
   // refresh rate that is not a whole multiple of that is what makes scrolling look uneven.
   const refreshHz = effectiveHz(useRefreshRate());
   const titlebarRef = useRef<HTMLDivElement>(null);
@@ -127,16 +130,16 @@ const TitleBar = (props: TitleBarProps) => {
   const menuItems = buildTitleBarMenuItems({
     closeMenu, win, activeProfile, gameRunning,
     onShowProfile, onToggleSaveStates, onShowDataManager, onToggleInventory, onToggleChecks,
-    onToggleCheats, onShowLogs, onToggleDebug, onShowConnectionDebug, onToggleDataset, onToggleSimulator,
-    onShowInputTester, onShowSpriteDebug, onShowDataInspector, onShowShadowEditor, onCheckForUpdates, onShowCredits, onShowDesignGallery, onShowAbout,
+    onToggleCheats, onShowLogs, onToggleDebug, onShowConnectionDebug, onToggleDataset, onToggleSimulator, onToggleMusic,
+    onShowInputTester, onShowSpriteDebug, onShowDataInspector, onShowShadowEditor, onCheckForUpdates, onShowCredits, onShowDesignGallery, onShowAbout, onShowRandomizer,
     widgetVisibility, developerToolsEnabled,
   });
 
 
 
-  // An automated launch wears the bot logo so a screenshot identifies itself.
+  // An automated launch wears Sentri so a screenshot identifies itself.
   const instance = instanceName();
-  const logoSrc = instance ? './logos/logo-bot-128.png' : './logos/logo-128.png';
+  const logoSrc = instance ? './logos/sentri/sentri-128.png' : './logos/logo/logo-128.png';
 
   const titlebarClass = [
     'titlebar',
@@ -170,8 +173,7 @@ const TitleBar = (props: TitleBarProps) => {
           className="titlebar__search"
           onClick={openSearch}
         >
-          <Icon paths={SEARCH_ICON_PATHS} size={14} />
-          <Text as="span" className="titlebar__search-spark" aria-hidden>✦</Text>
+          <SearchSpark size={14} />
         </IconButton>
         <BugReportButton onClick={onShowBugReport} />
         <IconButton

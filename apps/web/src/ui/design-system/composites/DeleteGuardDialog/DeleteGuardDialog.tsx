@@ -2,12 +2,12 @@
 /**
  * Stands between a delete and the record it would remove, whenever something
  * else still points at it. Parameterized by nothing more than a label and a
- * hit list, so the same dialog serves a tag or an item group — or any future
- * kind a caller can compute `ReferenceHit[]` for.
+ * hit list, so the same dialog serves a tag, an item group, or any future kind
+ * a caller can compute `ReferenceHit[]` for.
  *
- * Built on the existing `Dialog` chrome rather than a new overlay: the only
- * thing this adds is the reference breakdown as its body, reusing
- * `ReferencedBy`'s own grouping and rendering rather than restating it.
+ * Built on the existing `Dialog` chrome instead of a new overlay: the only thing
+ * this adds is the reference breakdown as its body, reusing `ReferencedBy`'s own
+ * grouping and rendering instead of restating it.
  */
 import { Box } from '../../primitives/Box';
 import { Text } from '../../primitives/Text';

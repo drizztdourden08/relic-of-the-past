@@ -4,8 +4,8 @@
  *
  * The cartridge stores the fourteen-byte room header with its trailing zero bytes trimmed, and
  * the pointer table is what records where one record ends and the next begins. The first seven
- * bytes are always present; everything after them — the quadrant nibbles, the hole destination
- * and the four staircase destinations — is only stored up to the last non-zero byte, so records
+ * bytes are always present. Everything after them (the quadrant nibbles, the hole destination
+ * and the four staircase destinations) is only stored up to the last non-zero byte, so records
  * come out at seven, ten, eleven, twelve, thirteen or fourteen bytes.
  *
  * Reading a fixed fourteen bytes therefore walks off the end of every short record and picks up
@@ -24,8 +24,8 @@ const MANDATORY_HEADER_BYTES = 7;
 /**
  * Measure every room's stored record length from the pointer table.
  *
- * Rooms may share one record — the table holds duplicate pointers — so the gap is taken to the
- * next *distinct* address rather than to the next entry.
+ * Rooms may share one record, because the table holds duplicate pointers, so the gap is taken
+ * to the next *distinct* address instead of to the next entry.
  */
 const headerRecordLengths = (rom: GbaRomReader, table: number, roomCount: number): number[] => {
   const addresses = Array.from({ length: roomCount }, (_, roomId) => rom.romUint32(table + roomId * 4));

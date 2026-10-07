@@ -47,9 +47,8 @@ interface DebugTextBuilder {
   osLabel: string;
 }
 
-/** The same debug-info builder backs the About page's "Copy debug info" button and the
- *  bug-report form's auto-attached debug block — one source, sourced from the platform
- *  facade rather than the user agent. */
+/** One builder backs the About page's "Copy debug info" button and the bug-report form's
+ *  auto-attached debug block, sourced from the platform facade, not the user agent. */
 const useDebugTextBuilder = (): DebugTextBuilder => {
   const { info } = usePlatform();
   const version = useAppVersion();
@@ -61,15 +60,15 @@ const useDebugTextBuilder = (): DebugTextBuilder => {
     info.host === 'electron' && electron ? `Electron ${electron}`
     : info.host === 'capacitor' ? `Capacitor${cap ? ` ${cap}` : ''}`
     : HOST_LABEL[info.host];
-  const engine = chromium ? `Chromium ${chromium}` : '—';
+  const engine = chromium ? `Chromium ${chromium}` : '-';
   const osLabel = OS_LABEL[info.os];
 
   const buildText = useCallback(async (): Promise<string> => {
     const [system, renderer] = await Promise.all([fetchSystem(), collectRendererDiagnostics()]);
     return buildDebugText({
       header: [
-        'Relic of the Past — debug info',
-        `Version: ${version || '—'}`,
+        'Relic of the Past - debug info',
+        `Version: ${version || '-'}`,
         `Runtime: ${runtime}`,
         `Engine: ${engine}`,
         `Platform: ${osLabel} (host: ${info.host}, os: ${info.os})`,

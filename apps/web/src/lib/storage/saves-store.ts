@@ -15,7 +15,7 @@ const u8 = (ab: ArrayBuffer): Uint8Array => new Uint8Array(ab);
 
 /**
  * Every save state leaves through one of the four writers below, so the version+format
- * stamp goes on here rather than at each call site. SRAM is deliberately excluded: it is
+ * stamp goes on here, not at each call site. SRAM is deliberately excluded: it is
  * the game's own save file and has nothing to do with snapshot layout.
  */
 const stampedU8 = async (ab: ArrayBuffer): Promise<Uint8Array> => u8(await stampStateBuffer(ab));

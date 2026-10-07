@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * The player's full loadout, read from the game rather than tallied by the run.
+ * The player's full loadout, read from the game, not tallied by the run.
  *
  * The run's own inventory is a set of check names, which answers "what did the
  * run collect" but not "what does the player actually have": it carries no
@@ -23,7 +23,7 @@ const PER_HEART = 8;
 const DUNGEON_SLOTS = 16;
 
 interface DungeonItems {
-  /** `palaceIndex >> 1` — how the game's own dungeon tables index. */
+  /** `palaceIndex >> 1`, how the game's own dungeon tables index. */
   dungeonIndex: number;
   /** Display only, resolved from the screen data. */
   name: string;
@@ -56,7 +56,7 @@ interface Loadout {
 const hasDungeonBit = (field: number, dungeonIndex: number): boolean =>
   ((field << dungeonIndex) & 0x8000) !== 0;
 
-/** Only report a dungeon the player has something for — the full sixteen slots
+/** Only report a dungeon the player has something for. The full sixteen slots
  *  are mostly empty this early and would bury the ones that matter. */
 const collectDungeonItems = (maps: number, compasses: number, bigKeys: number): DungeonItems[] => {
   const out: DungeonItems[] = [];

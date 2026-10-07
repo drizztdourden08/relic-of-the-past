@@ -9,20 +9,59 @@
 // `-I ../game-hooks`), so the meaning of a value is defined once.
 
 // main_module_index values (the engine's top-level game mode).
+#define MODULE_PRE_DUNGEON      6   // Module_PreDungeon: entrance load, the room comes up under force blank
 #define MODULE_DUNGEON          7   // indoor gameplay (house / cave / palace)
 #define MODULE_OVERWORLD        9   // outdoor gameplay
 #define MODULE_MENU             14  // text / inventory / map overlay
 #define MODULE_SPOTLIGHT_CLOSE  15  // transient spotlight (iris closing)
 #define MODULE_SPOTLIGHT_OPEN   16  // transient spotlight (iris opening)
-#define MODULE_FALLING_ENTRANCE 11  // dungeon pit-fall transition — also reused, unchanged, by
-                                    // Overworld_CheckSpecialSwitchArea for the 3 vanilla overworld
+#define MODULE_ATTRACT          20  // Module14_Attract: the title demo, no live room behind it
+#define MODULE_TRIFORCE_ROOM    25  // Module19_TriforceRoom: first of the ending modules
+#define MODULE_INTRO             0  // Module00_Intro: the logo, the falling triforce and the title screen
+#define MODULE_FILE_SELECT       1  // Module01_FileSelect: the three files and the copy/erase choices
+#define MODULE_FILE_COPY         2  // Module02: the copy flow, on the file screen's own art
+#define MODULE_FILE_ERASE        3  // Module03: the erase flow, the same art
+#define MODULE_FILE_NAME         4  // Module04: naming a new file, the same art
+#define MODULE_BOSS_VICTORY_PENDANT 19  // Module13: the prize held up in the boss's room, then the fade
+#define MODULE_MIRROR_WARP          21  // Module15: the warp out of the tower, over both scenes it crosses
+#define MODULE_GANON_EMERGES        24  // Module18: the bat smashing the pyramid, over the room then the overworld
+#define MODULE_TRIFORCE_SCENE       25  // Module19: fades out, then stands the player in a special area
+#define MODULE_BOSS_VICTORY_CRYSTAL 22  // Module16: the crystal flavour of 19
+#define MODULE_SAVE_AND_QUIT        23  // Module17: the room fading out under the menu's choice
+#define MODULE_GAME_OVER        18  // Module12_GameOver: the fall, the red fill, the GAME OVER letters, the save
+                                    // menu and the revival fairy, drawn over the interrupted play
+#define GAME_OVER_SUB_IRIS_WIPE  3  // kModule_Death: the circle closing on the player
+#define GAME_OVER_SUB_LETTERS    7  // kModule_Death: the GAME OVER letters falling in
+#define GAME_OVER_SUB_SAVE_MENU  9  // kModule_Death: the save / continue choice
+#define GAME_OVER_LETTER_SLOTS  16  // GameOverText_Draw: two OAM slots per letter from the start of oam_buf
+#define GAME_OVER_CURSOR_SLOT   20  // GameOver_AnimateChoiceFairy: oam_buf[0x14]
+#define GAME_OVER_SUB_FAIRY_RISE 12  // kModule_Death: the revival fairy lifting the player, still over the fill;
+                                    // 13 onward brings the scene back
+#define MODULE_PIT_FALL_ENTRANCE 17  // Module11_DungeonFallingEntrance: the crossing a hole in the
+                                     // overworld hands control to, from the palette bounce over the
+                                     // departure screen to the landing in the room below. A wallmaster
+                                     // sending the player back to the last entrance reuses it unchanged,
+                                     // starting from indoors; player_is_indoors tells the two halves
+                                     // apart, which is what GameHook_PitFallViewModule reads.
+#define MODULE_OVERWORLD_SPECIAL_AREA 11  // Module09_Overworld's second table entry, which
+                                    // Overworld_CheckSpecialSwitchArea hands the 3 vanilla overworld
                                     // locations reached by walking onto a switch tile. Interactive
-                                    // gameplay resumes normally in that flavor even though the module
-                                    // never returns to 9 — see GameHook_IsOverworldSpecialArea, the only
-                                    // reliable way to tell it apart from an actual, non-interactive
-                                    // pit-fall into a dungeon room.
-#define OVERWORLD_SPECIAL_AREA_SCREEN_MIN 128  // overworld_screen_index floor for the flavor above —
+                                    // gameplay resumes normally here even though the module never
+                                    // returns to 9, so GameHook_IsOverworldSpecialArea exists to tell
+                                    // it apart from the plain outdoor module for the view gates.
+#define OVERWORLD_SPECIAL_AREA_SCREEN_MIN 128  // overworld_screen_index floor for the flavor above, since
                                                 // real overworld screens (light or dark world) are 0-127.
+
+// Rooms named by id where the game's own grouping does not describe how they play.
+#define ROOM_SANCTUARY 0x12  // filed under the sewers' palace index, plays as a house
+
+// The Ceiling object (dungeon.c, subtype 1 index 0) paints a 2x2 block of tilemap words: the void past a
+// room's walls. Dungeon_CeilingTileWords hands it over.
+#define kCeilingBlockWords 4
+
+// The layers that carry a fixed picture's background into the space around it (PpuSetEdgeTiles):
+// BG1 and BG2 hold the art, BG3 holds the text. Bit per layer, in the renderer's own numbering.
+#define kFixedPictureEdgeLayers 0x7
 
 // Sprite type ids referenced by hook branching logic.
 #define SPRITE_UNCLE_PRIEST     0x73  // Uncle (sprite_E == 0) / Priest family

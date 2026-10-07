@@ -11,7 +11,7 @@ http('reportIssue', async (req, res) => {
   const ip = (typeof forwardedFor === 'string' ? forwardedFor.split(',')[0]?.trim() : undefined) ?? req.ip ?? 'unknown';
 
   if (!(await checkRateLimit(ip))) {
-    res.status(429).json({ error: 'Too many reports — try again later.' });
+    res.status(429).json({ error: 'Too many reports. Try again later.' });
     return;
   }
 

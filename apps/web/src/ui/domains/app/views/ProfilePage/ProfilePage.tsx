@@ -61,7 +61,7 @@ const ProfilePage = (props: ProfilePageProps) => {
           onClick={onStartGame}
           disabled={!assetsReady || isGameRunning}
         >
-          {isGameRunning ? '⟳ Game Running…' : '▶ Start Game'}
+          {isGameRunning ? '⟳ Game Running...' : '▶ Start Game'}
         </Button>
         <Button variant="tertiary" size="md" onClick={onSwitchProfile}>
           Switch Profile

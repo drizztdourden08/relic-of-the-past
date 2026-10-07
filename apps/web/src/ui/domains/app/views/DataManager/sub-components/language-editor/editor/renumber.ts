@@ -1,13 +1,13 @@
 /* @layer renderer-components @kind logic */
 /**
- * Row codes follow the lines — the author never renumbers anything.
+ * Row codes follow the lines, so the author never renumbers anything.
  *
  * When a line is opened, wrapped in, or removed, every line after it has
- * genuinely moved, so its advance code is re-derived: rows fill downward, and
+ * moved, so its advance code is re-derived: rows fill downward, and
  * once the bottom row is taken the box scrolls. A wait is ignored by the
- * derivation on purpose — the engine clears nothing at a wait, so continuing
+ * derivation on purpose. The engine clears nothing at a wait, so continuing
  * downward (and scrolling from the bottom row) is the one continuation that
- * draws cleanly over what is already on screen. That is also the vanilla
+ * draws over what is already on screen. That is also the vanilla
  * corpus's own idiom: scrolls outnumber row-one returns thirty-five to one.
  *
  * Reach follows the automation mode. Continuous renumbers to the end of the

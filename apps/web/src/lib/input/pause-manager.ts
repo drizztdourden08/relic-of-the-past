@@ -1,9 +1,6 @@
 /* @layer renderer-lib @kind logic */
-/**
- * Pause Manager — handles game pause/resume state triggered by
- * controller disconnect, manual toggle, or other sources.
- * Emits events only — audio suspend/resume is handled by subscribers.
- */
+// Pause/resume state (controller disconnect, manual toggle). Emits events only; audio
+// suspend/resume is handled by subscribers.
 
 import type { DetectedDevice } from '@shared/types/controls';
 import type { InputProfile } from '@shared/types/controls';
@@ -70,10 +67,9 @@ class PauseManager {
   }
 
   /**
-   * Pause if any device the active profile's map references is no longer connected.
-   * `connectedKeys` is the fresh set of "vid:pid" for currently-connected pads (HID
-   * + Gamepad API) — passed in rather than read from the device cache, which lags a
-   * disconnect by a refresh cycle. `devices` is used only to name the missing pad.
+   * Pause if any device the active profile maps is no longer connected. `connectedKeys` is
+   * passed in, not read from the device cache, which lags a disconnect by a refresh cycle.
+   * `devices` only names the missing pad.
    */
   checkControllerDisconnect(profile: InputProfile | null, connectedKeys: Set<string>, devices: DetectedDevice[]): void {
     if (this.paused || !profile) return;
@@ -89,12 +85,7 @@ class PauseManager {
     }
   }
 
-  /**
-   * Resume from a disconnect pause only once EVERY device the active profile maps is
-   * connected again. Gating on the mapped set means an unrelated controller can't
-   * dismiss the overlay — only the right one reconnecting (or being activated) does.
-   * Never touches a manual pause.
-   */
+  /** Resume from a disconnect pause only once EVERY mapped device is back, so an unrelated controller can't dismiss the overlay. Never touches a manual pause. */
   resumeIfPresent(profile: InputProfile | null, connectedKeys: Set<string>): void {
     if (!this.paused || this.pausedControllerName === 'Manual pause' || !profile) return;
     const { gamepadKeys } = allowedDevices(profile);
@@ -104,11 +95,7 @@ class PauseManager {
     this.resume();
   }
 
-  /**
-   * Re-evaluate after the ACTIVE PROFILE changes — the mapped device set is now
-   * different, so pause (or re-name the pause) if the new profile's controller is
-   * missing, or resume if it's present. Leaves a manual pause untouched.
-   */
+  /** Re-evaluate after the ACTIVE PROFILE changes: pause (or re-name the pause) if the new profile's controller is missing, resume if present. Leaves a manual pause untouched. */
   reevaluateForProfile(profile: InputProfile | null, connectedKeys: Set<string>, devices: DetectedDevice[]): void {
     if (!profile || this.pausedControllerName === 'Manual pause') return;
     const { gamepadKeys } = allowedDevices(profile);

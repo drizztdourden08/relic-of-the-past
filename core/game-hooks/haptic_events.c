@@ -3,7 +3,7 @@
 
 // ─── Haptic Event Hooks ───
 // Emit haptic feedback events to the JS layer via EM_ASM.
-// These are called from strategic points in the game logic (player.c, sprite.c,
+// These are called from specific points in the game logic (player.c, sprite.c,
 // ancilla.c) to notify the frontend about combat/action events that should
 // produce vibration. Event-type constants (HAPTIC_*) live in game_constants.h
 // and must match HapticEventType in haptics.ts.

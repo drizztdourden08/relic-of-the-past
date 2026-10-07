@@ -1,0 +1,63 @@
+/* @layer renderer-components @kind style */
+
+/* The Home hero on the shared Hero: its mode's art beside the intro, and the last-save tile.
+   The frame, shade, rows, title and glass are in Hero.css. */
+
+/* The mode's piece stands in the open space right of the intro column, behind the details,
+   at twice its pixels so it stays pixel art. */
+.profile-hero .profile-hero__art {
+  left: var(--profile-hero-art-left);
+  bottom: var(--space-lg);
+  height: var(--profile-hero-art-h);
+  image-rendering: pixelated;
+  filter: drop-shadow(0 var(--space-sm) var(--space-lg) color-mix(in srgb, var(--c-bg) 70%, transparent));
+}
+
+.profile-hero__save {
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-sm);
+}
+
+.profile-hero__save-thumb {
+  width: var(--profile-hero-thumb-w);
+  aspect-ratio: 4 / 3;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+}
+
+.profile-hero__save-empty {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+.profile-hero__save-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.profile-hero__save-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+  max-width: 100%;
+}
+
+.profile-hero__save-name {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semi);
+  color: var(--c-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-hero__save-time {
+  font-size: var(--text-sm);
+  color: var(--c-text-dim);
+}

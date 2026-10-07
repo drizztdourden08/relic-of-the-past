@@ -7,7 +7,7 @@ const digitShadowFilter = (s: number): string => {
 interface HudNumberProps {
   value: number;
   digits?: number;
-  /** Renders with the "at max" yellow digit variant instead of white — see the "Indicate Max Resources" setting. */
+  /** Renders with the "at max" yellow digit variant instead of white. See the "Indicate Max Resources" setting. */
   isMax?: boolean;
   scale: number;
   spritesBase: string;

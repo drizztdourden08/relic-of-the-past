@@ -5,14 +5,14 @@
  * The names are NOT in this repository. They are the game's own vocabulary, so they live in the
  * private companion repo with the rest of the game-derived dataset and are copied in by
  * `npm run vault:sync`, the same way every other file under `records/` arrives. That is the whole
- * reason this module is a loader rather than a table: keeping the vocabulary out of a public repo
+ * reason this module is a loader instead of a table: keeping the vocabulary out of a public repo
  * is a copyright position, not a filing preference.
  *
  * `import.meta.glob` resolves to an empty object when the record is absent, so a checkout without
- * vault access builds, lints and tests exactly the same, and every slot simply reads as its number.
+ * vault access builds, lints and tests exactly the same, and every slot reads as its number.
  *
  * Only the NAMES come from outside. Which slots exist is a property of the format, so the panel
- * counts the vanilla range out itself — deriving the list from this dataset would turn a checkout
+ * counts the vanilla range out itself. Deriving the list from this dataset would turn a checkout
  * without vault access from "slots with no names" into "no slots at all".
  */
 import { collectRecords } from './collect-records';

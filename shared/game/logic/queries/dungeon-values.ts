@@ -4,7 +4,7 @@
  *
  * The index is the raw value from RAM $040C (cur_palace_index_x2). It identifies
  * which dungeon "context" the game considers the player to be in. Cave/house
- * rooms report 0xFF. The value is DOUBLED — the game's own dungeon tables are
+ * rooms report 0xFF. The value is DOUBLED, because the game's own dungeon tables are
  * indexed by `cur_palace_index_x2 >> 1`.
  *
  * The labels themselves are transcribed game wording, so they live in the record

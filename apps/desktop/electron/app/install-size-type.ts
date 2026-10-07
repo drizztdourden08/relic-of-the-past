@@ -5,7 +5,7 @@
  * Velopack writes EstimatedSize as a REG_QWORD. Windows only reads that value as a
  * REG_DWORD, so it is ignored and the size column stays blank next to every other
  * installed app. The number itself is right, so this rewrites it in the type Windows
- * reads rather than working it out again.
+ * reads, without working it out again.
  *
  * Runs on every launch because an update rewrites the key, which reintroduces the
  * wrong type. Costs one registry read when there is nothing to do.

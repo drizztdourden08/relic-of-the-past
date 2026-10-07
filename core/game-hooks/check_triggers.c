@@ -7,7 +7,7 @@
 // Room-state bits by slot. 0-5 are the chest-open bits; 6 is the OTHER bit a
 // standing heart piece can use. HeartUpgrade_CheckIfAlreadyObtained
 // (sprite_main.c:1311) records an indoor pickup at 0x4000, or 0x2000 when the
-// sprite sits in the room's right half (sprite_x_hi & 1) — and 0x2000 is
+// sprite sits in the room's right half (sprite_x_hi & 1). 0x2000 is
 // already slot 5, so only 0x4000 was missing.
 // A heart piece is not an ordinary receive. Sprite_HeartPiece (sprite_main.c:6493)
 // advances the piece counter FIRST and only hands over a container when it wraps
@@ -27,8 +27,10 @@ static const uint16 kChestOpenMasksHook[] = { 0x100, 0x200, 0x400, 0x800, 0x1000
 #define kChestOpenMasksHook_COUNT 7
 
 // Try to visually open the chest tiles if the player is in the matching room.
-static void TryVisualChestOpen(uint16 room_id, uint8 chest_index) {
-  if (dungeon_room_index != room_id) {
+// |console| is the cheat console's route: the room only counts as loaded while the player is
+// indoors, and a slot that is not a small chest keeps its tiles (a big chest opens elsewhere).
+static void TryVisualChestOpen(uint16 room_id, uint8 chest_index, bool console) {
+  if (dungeon_room_index != room_id || (console && !player_is_indoors)) {
     printf("[GameHook] Visual skip: player in room 0x%03x, chest in 0x%03x\n",
            dungeon_room_index, room_id);
     return;
@@ -40,6 +42,10 @@ static void TryVisualChestOpen(uint16 room_id, uint8 chest_index) {
     uint16 chest_room = *(uint16 *)chest_data;
     if ((chest_room & 0x7fff) == room_id) {
       if (target_idx == 0) {
+        if (console && ((chest_room & 0x8000) || dung_chest_locations[chest_index] >= 0x8000)) {
+          printf("[GameHook] Visual skip: room 0x%03x slot %d is not a small chest\n", room_id, chest_index);
+          return;
+        }
         uint16 loc = dung_chest_locations[chest_index];
         uint16 pos = (loc & 0x7fff) >> 1;
         const uint16 *ptr = SrcPtr(0x14A4);
@@ -86,7 +92,7 @@ static void TryVisualChestOpen(uint16 room_id, uint8 chest_index) {
 }
 
 // Vanilla duplicate-item rule, mirrored from the chest handler (player.c:3850):
-// an item with an alternate swaps to it when the primary is already owned —
+// an item with an alternate swaps to it when the primary is already owned, so
 // e.g. a second Lamp (0x12) becomes 5 Rupees (0x35, the Secret Passage chest).
 static const uint8 kSimReceiveItemAlternates[76] = {
   255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,  68, 255, 255, 255,
@@ -96,7 +102,10 @@ static const uint8 kSimReceiveItemAlternates[76] = {
   255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
 };
 
-void GameHook_TriggerCheck(uint16 room_id, uint8 chest_index, uint8 item_id) {
+// |console| is set by the cheat console's export alone. Clear, this is the delivery trigger as it
+// always was. Set, 0xFF records the chest with nothing handed over, and a virtual id resolves
+// through the receive seam like any other grant.
+static void TriggerCheckImpl(uint16 room_id, uint8 chest_index, uint8 item_id, bool console) {
   if (!TriggerGrantAllowed()) return;
   if (chest_index >= kChestOpenMasksHook_COUNT) {
     printf("[GameHook] Invalid chest_index %d (max %d)\n", chest_index, kChestOpenMasksHook_COUNT - 1);
@@ -104,11 +113,12 @@ void GameHook_TriggerCheck(uint16 room_id, uint8 chest_index, uint8 item_id) {
   }
 
   // Already collected? Setting the bit again is harmless, but Link_ReceiveItem is
-  // NOT idempotent — granting a second time really does hand over another item.
+  // NOT idempotent, because granting a second time really does hand over another item.
   // A heart piece re-granted this way silently inflated the heart count, since
   // every fourth one converts into a container (sprite_main.c:6493).
   uint16 mask = kChestOpenMasksHook[chest_index];
-  uint16 already = (dungeon_room_index == room_id)
+  bool here = dungeon_room_index == room_id && (!console || player_is_indoors);
+  uint16 already = here
       ? (uint16)(dung_savegame_state_bits & mask)
       : (uint16)((*SaveDungInfoFor(room_id)) & (mask >> 4));
   if (already) {
@@ -117,7 +127,7 @@ void GameHook_TriggerCheck(uint16 room_id, uint8 chest_index, uint8 item_id) {
     return;
   }
 
-  if (dungeon_room_index == room_id) {
+  if (here) {
     dung_savegame_state_bits |= kChestOpenMasksHook[chest_index];
     printf("[GameHook] TriggerCheck: room=0x%03x chest=%d item=0x%02x state_bits=0x%04x (current room)\n",
            room_id, chest_index, item_id, dung_savegame_state_bits);
@@ -127,7 +137,9 @@ void GameHook_TriggerCheck(uint16 room_id, uint8 chest_index, uint8 item_id) {
            room_id, chest_index, item_id, (*SaveDungInfoFor(room_id)));
   }
 
-  TryVisualChestOpen(room_id, chest_index);
+  TryVisualChestOpen(room_id, chest_index, console);
+  if (console && item_id == 0xFF) return;
+  if (console) item_id = GameHook_ResolveGrantItem(item_id);
 
   if (item_id < 76) {
     uint8 alt = kSimReceiveItemAlternates[item_id];
@@ -143,48 +155,54 @@ void GameHook_TriggerCheck(uint16 room_id, uint8 chest_index, uint8 item_id) {
   Link_ReceiveItem(item_id, 0);
 }
 
+void GameHook_TriggerCheck(uint16 room_id, uint8 chest_index, uint8 item_id) {
+  TriggerCheckImpl(room_id, chest_index, item_id, false);
+}
+
 EMSCRIPTEN_KEEPALIVE
 void WasmTriggerCheck(int room_id, int chest_index, int item_id) {
   GameHook_TriggerCheck((uint16)room_id, (uint8)chest_index, (uint8)item_id);
 }
 
+void GameHook_TriggerCheckFromConsole(uint16 room_id, uint8 chest_index, uint8 item_id) {
+  TriggerCheckImpl(room_id, chest_index, item_id, true);
+}
+
 // ─── NPC Check Trigger ───
 
-void GameHook_TriggerNpcCheck(uint8 flag_type, uint8 flag_mask, uint8 item_id,
-                              uint8 sprite_type_id, uint8 post_gfx) {
+// |assigned| tells the npc-override seam who is granting: false replays the giver's own
+// vanilla grant (the substitution table applies, matched by item since the trigger
+// already names the check), true delivers an item the host already assigned (the table
+// must not re-substitute it). Either one-shot arms right beside the grant call, so a
+// refused or itemless trigger leaves nothing armed.
+static void TriggerNpcCheckImpl(uint8 flag_type, uint8 flag_mask, uint8 item_id,
+                                uint8 sprite_type_id, uint8 post_gfx, bool assigned) {
+  (void)post_gfx;
   if (!TriggerGrantAllowed()) return;
-  switch (flag_type) {
-    case 0:
-      sram_progress_flags |= flag_mask;
-      printf("[GameHook] TriggerNpcCheck: sram_progress_flags |= 0x%02x → 0x%02x, item=0x%02x\n",
-             flag_mask, sram_progress_flags, item_id);
-      break;
-    case 1:
-      sram_progress_indicator |= flag_mask;
-      printf("[GameHook] TriggerNpcCheck: sram_progress_indicator |= 0x%02x → 0x%02x, item=0x%02x\n",
-             flag_mask, sram_progress_indicator, item_id);
-      break;
-    case 2:
-      sram_progress_indicator_3 |= flag_mask;
-      printf("[GameHook] TriggerNpcCheck: sram_progress_indicator_3 |= 0x%02x → 0x%02x, item=0x%02x\n",
-             flag_mask, sram_progress_indicator_3, item_id);
-      break;
-    default:
-      printf("[GameHook] TriggerNpcCheck: invalid flag_type %d\n", flag_type);
-      return;
+  // Already granted? The flag write is idempotent but Link_ReceiveItem is NOT (the
+  // same guard the chest and overworld triggers carry), so a replayed trigger for a
+  // flag that is already set must not hand the item over a second time.
+  uint8 *flags = flag_type == 0 ? &sram_progress_flags
+               : flag_type == 1 ? &sram_progress_indicator
+               : flag_type == 2 ? &sram_progress_indicator_3 : NULL;
+  if (flags == NULL) {
+    printf("[GameHook] TriggerNpcCheck: invalid flag_type %d\n", flag_type);
+    return;
   }
+  if (flag_mask != 0 && (*flags & flag_mask) == flag_mask) {
+    printf("[GameHook] TriggerNpcCheck: flag_type %d mask 0x%02x already set, no re-grant\n",
+           flag_type, flag_mask);
+    return;
+  }
+  *flags |= flag_mask;
+  printf("[GameHook] TriggerNpcCheck: flag_type %d |= 0x%02x → 0x%02x, item=0x%02x\n",
+         flag_type, flag_mask, *flags, item_id);
 
-  if (sprite_type_id != 0xFF) {
-    for (int k = 15; k >= 0; k--) {
-      if (sprite_state[k] != 0 && sprite_type[k] == sprite_type_id) {
-        sprite_ai_state[k] = 2;
-        sprite_graphics[k] = post_gfx;
-        printf("[GameHook] Sprite slot %d (type=0x%02x): ai_state→2, graphics→%d\n",
-               k, sprite_type_id, post_gfx);
-        break;
-      }
-    }
-  }
+  // NOTE: this trigger deliberately does NOT touch the giver sprite's ai state. The
+  // old "post-grant pose" poke set ai_state 2 on the named sprite type, and for
+  // several givers ai 2 IS the granting state, so the poke replayed the giver's own
+  // vanilla grant right after the delivery (the double-bottle bug). Visual post-grant
+  // state now comes only from the giver's own script or from the flags above.
 
   if (sprite_type_id == SPRITE_UNCLE_PRIEST) {
     which_starting_point = 3;
@@ -198,7 +216,11 @@ void GameHook_TriggerNpcCheck(uint8 flag_type, uint8 flag_mask, uint8 item_id,
   if (item_id != 0xFF) {
     SimCountReceive(1, item_id);
     if (item_id == 0x17) SimGiveHeartPiece();
-    else Link_ReceiveItem(item_id, 0);
+    else {
+      if (assigned) GameHook_NpcOverrideBypassOnce();
+      else GameHook_NpcOverrideMatchAnywhereOnce();
+      Link_ReceiveItem(item_id, 0);
+    }
   }
 
   if (sprite_type_id == 0x28) {
@@ -208,11 +230,25 @@ void GameHook_TriggerNpcCheck(uint8 flag_type, uint8 flag_mask, uint8 item_id,
   }
 }
 
+void GameHook_TriggerNpcCheck(uint8 flag_type, uint8 flag_mask, uint8 item_id,
+                              uint8 sprite_type_id, uint8 post_gfx) {
+  TriggerNpcCheckImpl(flag_type, flag_mask, item_id, sprite_type_id, post_gfx, false);
+}
+
 EMSCRIPTEN_KEEPALIVE
 void WasmTriggerNpcCheck(int flag_type, int flag_mask, int item_id,
                          int sprite_type_id, int post_gfx) {
-  GameHook_TriggerNpcCheck((uint8)flag_type, (uint8)flag_mask, (uint8)item_id,
-                           (uint8)sprite_type_id, (uint8)post_gfx);
+  TriggerNpcCheckImpl((uint8)flag_type, (uint8)flag_mask, (uint8)item_id,
+                      (uint8)sprite_type_id, (uint8)post_gfx, false);
+}
+
+// The delivery queue's form: |item_id| is the host-assigned item for the check, granted
+// exactly as passed: the npc-override seam is bypassed for this one receipt.
+EMSCRIPTEN_KEEPALIVE
+void WasmTriggerNpcCheckAssigned(int flag_type, int flag_mask, int item_id,
+                                 int sprite_type_id, int post_gfx) {
+  TriggerNpcCheckImpl((uint8)flag_type, (uint8)flag_mask, (uint8)item_id,
+                      (uint8)sprite_type_id, (uint8)post_gfx, true);
 }
 
 // ─── Overworld Check Trigger ───

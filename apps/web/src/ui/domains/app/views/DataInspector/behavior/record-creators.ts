@@ -1,24 +1,10 @@
 /* @layer renderer-app @kind logic */
 /**
- * Where a brand-new record actually gets minted — the create-flow's
- * counterpart to `record-writers.ts`.
- *
- * Every collection here predates the record facade in its OWN way (a tag's
- * key, an item group's members, a geography record's world/area — see
- * `shared/ipc/screen-editor-contract.ts`), except the four that came after,
- * which all share one generic `Allocate*` shape. Screen has no `Allocate*`
- * channel of its own at all: a brand-new one goes through the same
- * `writeScreen` channel an edit does, with no id supplied, which is what tells
- * the main process to allocate one instead of replacing. Connection is pulled
- * into its own file, `create-connection.ts` — a connection can never be
- * created alone (every record requires a real partner id), so its create step
- * carries real branching the others don't.
- *
- * Every creator ends the same way regardless of its own shape: fold the
- * allocated record into the live registry, add it to the id-ref option list
- * this collection's own references resolve through, and rebuild this kind's
- * `CollectionSource` so the table shows the new row without a reload — see
- * `settle-created-record.ts` for that shared tail.
+ * Where a new record gets minted, the create-flow counterpart to
+ * `record-writers.ts`. Screen has no `Allocate*` channel: a new one goes
+ * through `writeScreen` with no id, which tells the main process to allocate
+ * instead of replace. Connection lives in `create-connection.ts` because it is
+ * never created alone. Every creator ends with `settleCreatedRecord`.
  */
 import {
   isTagKey, registerEnumerationRecord, registerItemGroupRecord, registerRecord, registerTag,
@@ -108,8 +94,7 @@ const createLocation: RecordCreator = async (draft) => {
   return settleCreatedRecord('location', result.record.id);
 };
 
-/** One creator for a record-facade collection — the channel is the only thing
- *  that differs, mirroring `record-writers.ts`'s own `facadeWriter`. */
+/** One creator for a record-facade collection; only the channel differs (see `facadeWriter`). */
 const facadeCreator = <T extends { id: string }>(
   kind: EntityKind,
   send: (args: AllocateRecordArgs<T>) => Promise<AllocateRecordResult<T>>,

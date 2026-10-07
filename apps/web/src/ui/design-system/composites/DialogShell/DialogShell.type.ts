@@ -9,7 +9,7 @@ interface DialogShellProps {
   /** Whether backdrop click, Escape, and the close ✕ can dismiss this dialog.
    *  Defaults to true. Set false for a wizard that owns some piece of external
    *  state (a device hold, an in-flight write) an accidental dismiss would
-   *  leave stranded — the only way out is then whatever explicit action the
+   *  leave stranded. The only way out is then whatever explicit action the
    *  dialog's own footer provides. */
   dismissable?: boolean;
   /** Heading shown in the dialog header (gold, uppercase). Always rendered. */

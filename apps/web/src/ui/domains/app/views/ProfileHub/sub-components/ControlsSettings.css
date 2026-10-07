@@ -25,7 +25,7 @@
   display: none;
 }
 
-/* Collapsed icon strip — shows just the device icons for quick selection */
+/* Collapsed icon strip showing just the device icons for quick selection */
 .controls-settings__sidebar-icons {
   display: none;
   flex-direction: column;

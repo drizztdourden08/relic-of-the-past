@@ -3,9 +3,8 @@
  * Screen data completeness, as a plain function of the detection result.
  *
  * Lifted out of `useScreenDataStatus` unchanged so it can be called without a
- * React render — the recommendation detector reads exactly this, which is what
- * makes the two provably agree instead of drifting into two opinions about what
- * "incomplete" means.
+ * React render. The recommendation detector reads exactly this, which is what
+ * makes the two agree on what "incomplete" means.
  */
 
 import { getPalaceName } from '@shared/game/logic/queries/dungeon-values';
@@ -52,7 +51,7 @@ const screenDataStatus = (matchResult: ScreenMatchResult | null, isIndoors: bool
 
   // Ambiguous cave match.
   if (method === 'cave-ambiguous') {
-    issues.push('Multiple caves share this room index — needs entranceId for disambiguation');
+    issues.push('Multiple caves share this room index, so entranceId is needed to disambiguate');
     corrections.push({
       field: 'gameId.entranceId',
       message: 'Add entranceId to disambiguate from other caves with same room',

@@ -1,12 +1,8 @@
 /* @layer renderer-components @kind hook */
 /**
- * One language set's font, as React state.
- *
- * The read itself is memoised at module scope (see load-set-font), so this hook
- * is only the mount/unmount wrapper around it: a `live` flag drops a late
- * resolution instead of setting state on an unmounted preview, and the returned
- * object is memoised because consumers feed `sheet`/`metrics` straight into a
- * canvas redraw effect's dependency list.
+ * One language set's font, as React state. The read is memoised in
+ * load-set-font; the returned object is memoised because consumers feed
+ * `sheet`/`metrics` straight into a canvas redraw effect's dependency list.
  */
 import { useEffect, useMemo, useState } from 'react';
 import type { GlyphMetrics, GlyphSheet } from '@shared/game/language/layout/types';
@@ -20,10 +16,7 @@ type SetFontState = {
   loading: boolean;
 };
 
-/**
- * `base` is the set's base language code. Pass it when the set is already
- * loaded (the editor always has it) to save a second read of the set.
- */
+/** Pass `base` (the set's base language code) when the set is already loaded to save a second read. */
 const useSetFont = (setId: string | null, base?: string): SetFontState => {
   const [assets, setAssets] = useState<SetFontAssets | null>(null);
   const [loading, setLoading] = useState<boolean>(Boolean(setId));

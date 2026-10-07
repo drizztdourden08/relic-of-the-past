@@ -3,7 +3,7 @@
  * A dungeon's geography, joined through ids alone.
  *
  * `DungeonRecord` carries no area/location of its own, so the answer comes from
- * the rooms it lists — every room of a dungeon shares one `areaId`, one
+ * the rooms it lists. Every room of a dungeon shares one `areaId`, one
  * `locationId` and one world. That replaces the old name-keyed meta table, whose
  * lookup silently returned nothing the moment a dungeon was renamed.
  */

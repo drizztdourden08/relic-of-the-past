@@ -1,7 +1,7 @@
 /* @layer renderer-hud @kind component */
 /**
- * PauseButtonLabel — Y/X button indicator with label text.
- * Shows the button letter sprite in its associated color.
+ * Y/X button indicator with label text, showing the button letter sprite in
+ * its associated color.
  */
 import { HudImage } from '../../primitives/HudImage';
 

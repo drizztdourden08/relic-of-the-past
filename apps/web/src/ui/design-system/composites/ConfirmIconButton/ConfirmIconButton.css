@@ -1,0 +1,11 @@
+/* @layer renderer-components @kind style */
+
+/* The armed pair occupies more width than the resting glyph, so the slot reserves room for
+   both from the start and the heading beside it never shifts when the action arms. */
+.confirm-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--space-2xs);
+  min-width: 56px;
+}

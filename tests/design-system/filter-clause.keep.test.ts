@@ -22,7 +22,7 @@ const ROWS = [
 
 // `name` holds only three distinct values here, so inference would read it as a
 // closed set. Forcing the kind is exactly what the config override is for, and
-// it keeps this test about compile() rather than about inference.
+// it keeps this test about compile() instead of about inference.
 const CONFIG = { kinds: { name: 'string' } } as const;
 const schema = createSchemaIndex(buildSchema(ROWS, CONFIG));
 
@@ -42,7 +42,7 @@ const registerStandIns = (): void => {
 const clause = (path: string, op: string, value: unknown): FilterClause =>
   createClause(path, op, value);
 
-describe('compile — clauses are data, and they AND together', () => {
+describe('compile treats clauses as data, and they AND together', () => {
   beforeEach(() => {
     clearFieldTesters();
     registerStandIns();
@@ -76,12 +76,12 @@ describe('compile — clauses are data, and they AND together', () => {
     expect(ROWS.filter(predicate).map((r) => r.id)).toEqual(['item-001', 'item-003']);
   });
 
-  it('accepts a raw field list as well as an index', () => {
+  it('accepts a raw field list and an index', () => {
     const predicate = compile([clause('name', 'contains', 'beta')], buildSchema(ROWS, CONFIG));
     expect(ROWS.filter(predicate)).toHaveLength(1);
   });
 
-  it('skips a clause whose path is gone rather than emptying the table', () => {
+  it('skips a clause whose path is gone instead of emptying the table', () => {
     expect(ROWS.filter(compile([clause('vanished', 'contains', 'x')], schema))).toHaveLength(3);
   });
 

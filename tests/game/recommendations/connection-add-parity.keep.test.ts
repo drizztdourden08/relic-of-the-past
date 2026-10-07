@@ -1,19 +1,11 @@
 /* @layer test @kind test */
 /**
- * The connection strategy's ADD side against the real dataset.
- *
- * Phase 4, part 2 replaced `connection-audit-core.ts`'s `buildAddFindings`
- * (and the `connection-add` detector that wrapped it, both deleted) with
- * `CONNECTION_CROSSING_PROBE` (`points.set.ts`), expressed generically
- * through `detectorFromStrategy` instead of a hand-rolled comparison — so
- * there is no longer an "original mechanism" to diff against. This exercises
- * the new detector (strategy + its `onUnresolvableConnection` mapper)
- * directly and pins the properties the deleted parity test cared about: a
- * create proposal names the right destination, mints no id, and grades a
- * native crossing `certain` — plus the two behaviours this phase actually
- * changed: a resolved destination is judged by the join, not a pre-filtered
- * list, and an UNRESOLVABLE destination now proposes a screen instead of
- * vanishing (F2).
+ * The connection strategy's ADD side against the real dataset:
+ * `CONNECTION_CROSSING_PROBE` (`points.set.ts`) through `detectorFromStrategy`
+ * (`connection-audit-core.ts`'s `buildAddFindings` is deleted). Pins: a create
+ * proposal names the right destination, mints no id, grades a native crossing
+ * `certain`; a resolved destination is judged by the join, not a pre-filtered
+ * list; an UNRESOLVABLE destination proposes a screen instead of vanishing (F2).
  */
 import { describe, it, expect } from 'vitest';
 import { all, findOne, registerRecord, unregisterRecord } from '@shared/game/data';
@@ -31,15 +23,13 @@ const detector = detectorFromStrategy(connectionStrategy, onUnresolvableConnecti
 const connected = (a: ScreenId, b: ScreenId): boolean =>
   findOne('connection', c => (c.screenId === a && toScreenIdOf(c) === b) || (c.screenId === b && toScreenIdOf(c) === a)) != null;
 
-// A bare room index can be ambiguous (a castle room and an unrelated cave can
-// share one) — this project's own hard rule. The fixture needs a destination
-// whose room index resolves UNAMBIGUOUSLY back to itself via the same
-// `resolveRealDestId` the probe under test uses, or the assertions below
-// would be pinned to whichever screen the lookup happens to prefer instead.
+// A bare room index can be ambiguous (a castle room and a cave can share one).
+// The destination must resolve UNAMBIGUOUSLY via the same `resolveRealDestId`
+// the probe uses, or the assertions pin whichever screen the lookup prefers.
 const resolvesToItself = (screen: ScreenRecord): boolean =>
   screen.gameId.roomIndex != null && resolveRealDestId('room', screen.gameId.roomIndex) === screen.id;
 
-/** Two real screens with no edge between them — a stair the dataset does not
+/** Two real screens with no edge between them. A stair the dataset does not
  *  map is exactly the finding the add side exists for. */
 const unmappedPair = (): { from: ScreenRecord; to: ScreenRecord } => {
   const rooms = all('screen').filter(s => s.gameId.roomIndex != null && resolvesToItself(s));
@@ -74,7 +64,7 @@ describeDataset('connection strategy ADD side (SetProbe) against the real datase
 
   const drafts = detector.detect(context).filter(d => d.kind === 'connection');
 
-  it('finds something to compare — the fixture is not vacuously green', () => {
+  it('finds something to compare, so the fixture is not vacuously green', () => {
     expect(drafts.length).toBeGreaterThan(0);
   });
 
@@ -83,11 +73,9 @@ describeDataset('connection strategy ADD side (SetProbe) against the real datase
     expect(drafts[0].targetId).toBeNull();
     expect(drafts[0].current).toBeNull();
     expect(drafts[0].proposed).not.toHaveProperty('id');
-    // The destination is named in the finding's own key (the crossing probe's
-    // `datasetKey`/`liveKey` resolve to the destination screen id), not on the
-    // proposed record itself — a brand-new crossing has no existing partner to
-    // link to yet, so `proposed.toConnectionId` is a placeholder (see
-    // `build-connection-record.ts`'s own header).
+    // The destination is in the finding's key, not on the proposed record: a
+    // brand-new crossing has no partner yet, so `proposed.toConnectionId` is a
+    // placeholder (see `build-connection-record.ts`).
     expect(drafts[0].key).toContain(to.id);
   });
 

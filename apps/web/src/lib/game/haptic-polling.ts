@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Haptic Polling — frame-by-frame detection of game state changes for haptics.
+ * Frame-by-frame detection of game state changes for haptics.
  *
  * Runs inside the existing rAF loop (ui-bridge) and detects:
  * - Dash state → periodic pulse vibrations
@@ -41,7 +41,6 @@ const pollHapticState = (heap: Uint8Array, ptr: number): void => {
   const isRunning = heap[ptr + 116];
   const dashCtr = heap[ptr + 117];
 
-  // ─── Dash vibration ───
   // The player is actively dashing when isRunning=1 and dashCtr < 64 (charging complete)
   const isDashing = isRunning !== 0 && dashCtr < 64 && dashCtr >= 32;
 
@@ -53,7 +52,6 @@ const pollHapticState = (heap: Uint8Array, ptr: number): void => {
     wasDashing = false;
   }
 
-  // ─── State transition detection ───
   if (handlerState !== prevHandlerState) {
     // Falling into pit
     if (handlerState === kPlayerState_FallingIntoHole && prevHandlerState !== kPlayerState_FallingIntoHole) {
@@ -84,7 +82,7 @@ const pollHapticState = (heap: Uint8Array, ptr: number): void => {
     }
   }
 
-  // ─── Death detection (module 18 = game over) ───
+  // Death detection (module 18 = game over).
   if (mainModule === 18 && prevMainModule !== 18) {
     handleDeath();
   }

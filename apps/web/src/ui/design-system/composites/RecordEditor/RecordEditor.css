@@ -45,10 +45,8 @@
   text-transform: none;
 }
 
-/* Changed by whatever produced this record, not by the person looking at it —
-   the same green a code block marks a changed line with. Declared before the
-   dirty rule so a row that is both reads as dirty: an edit made here is the
-   more urgent of the two facts. */
+/* Marks a row the producer changed, not one the person edited. Declared before
+   the dirty rule so a row that is both reads as dirty. */
 .record-editor__row--changed {
   background: var(--c-green-soft);
   border-inline-start-color: var(--c-green-bright);

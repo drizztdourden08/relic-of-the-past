@@ -46,11 +46,11 @@ const useConnectionStatus = (screenId: ScreenId | null, detectedEntranceScreens:
     const detected = detectConnections({ detectedEntranceScreens, detectedStairs, exitScreen, detectedFallHoleRooms });
 
     // A detection is matched when an existing record actually covers a crossing
-    // LEAVING this screen toward the resolved target — direction matters: a
+    // LEAVING this screen toward the resolved target. Direction matters, because a
     // record only counts when it SITS on this screen and CAN be exited
     // (`conn.canExit`). A record is one-sided now (see `data/connections/derive.ts`),
-    // so there is no more "reverse endpoint of a two-way record" case to weigh —
-    // the arriving side, if it exists at all, is its own separate record.
+    // so there is no more "reverse endpoint of a two-way record" case to weigh.
+    // The arriving side, if it exists at all, is its own separate record.
     const unmatched = detected.filter(det => {
       const targetId = detectionTargetId(det);
       if (!targetId) return true;

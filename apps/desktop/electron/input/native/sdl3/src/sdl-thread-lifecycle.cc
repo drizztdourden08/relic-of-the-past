@@ -1,10 +1,7 @@
 /* @layer electron-main @kind native */
-// SdlThread lifecycle: Start/Stop/Run and the event loop Run() drives
-// (HandleEvent, OpenGamepad, CloseGamepad, FlushDirtyState, and the same
-// pair for joystick-level tracking: OpenJoystick/CloseJoystick live in
-// sdl-thread-joystick.cc). Everything here runs on the thread spawned by
-// Start(), except Start/Stop themselves, which only touch the thread
-// handle and the shutdown flag from the JS thread.
+// SdlThread lifecycle: Start/Stop/Run and the event loop Run() drives. Everything
+// here runs on the thread spawned by Start(), except Start/Stop themselves, which
+// only touch the thread handle and the shutdown flag from the JS thread.
 #include "sdl-thread.h"
 
 #include <algorithm>
@@ -17,10 +14,8 @@ namespace {
 
 constexpr int kWaitTimeoutMs = 16;
 
-// Longest Start() blocks waiting for the thread to finish initialising SDL,
-// in kStartupWaitStepMs increments. Generous: it is a one-time startup cost
-// that normally completes in a few milliseconds, and the alternative is
-// handing back a half-initialised subsystem.
+// Longest Start() blocks waiting for SDL init, in kStartupWaitStepMs steps.
+// Generous: normally a few ms, and the alternative is a half-initialised subsystem.
 constexpr int kStartupWaitSteps = 400, kStartupWaitStepMs = 5;
 
 float NormalizeStick(Sint16 raw) {
@@ -56,12 +51,10 @@ void SdlThread::Start(Napi::ThreadSafeFunction tsfn) {
   shuttingDown_.store(false, std::memory_order_relaxed);
   thread_ = std::thread(&SdlThread::Run, this);
 
-  // Return only once that thread has finished SDL_Init and SDL_hid_init.
-  // EnumerateHid() reaches SDL's hidapi from the calling thread, so enumerating
-  // right after a start would otherwise race this thread to initialise it, and
-  // losing silently costs everything: the gamepad backend can then claim nothing
-  // through HIDAPI, so every pad lands on a legacy driver with no rumble, no
-  // gyro and no input. Bounded, so a failed SDL_Init still returns.
+  // Return only once SDL_Init and SDL_hid_init are done. EnumerateHid() reaches
+  // hidapi from the calling thread and would otherwise race this init; losing
+  // means the gamepad backend claims nothing through HIDAPI (no rumble, gyro or
+  // input). Bounded, so a failed SDL_Init still returns.
   for (int i = 0; i < kStartupWaitSteps && !running_.load(std::memory_order_acquire); ++i) {
     std::this_thread::sleep_for(std::chrono::milliseconds(kStartupWaitStepMs));
   }
@@ -78,9 +71,8 @@ void SdlThread::Stop() {
 void SdlThread::Run() {
   SDL_SetHint(SDL_HINT_JOYSTICK_THREAD, "1");
 
-  // Must happen before SDL touches its joystick backends. Without it SDL
-  // silently drops every device that needs a bulk-endpoint handshake, and
-  // those devices then look identical to ones held by another application.
+  // Before SDL touches its joystick backends, or every device needing a
+  // bulk-endpoint handshake is dropped and looks held by another application.
   if (!PreloadLibusb()) {
     EmitError("libusb could not be loaded from beside the addon; controllers "
               "that require it will not be detected");
@@ -91,21 +83,16 @@ void SdlThread::Run() {
     tsfn_.Release();
     return;
   }
-  // Not strictly required — SDL_hid_enumerate() lazily inits on its own —
-  // but SDL's own doc comment on SDL_hid_init calls this out explicitly for
-  // exactly our situation: hidapi handles may be touched from more than one
-  // thread at once, since EnumerateHid() can run on the JS thread while this
-  // thread's own gamepad backend is using hidapi underneath it.
+  // SDL_hid_enumerate() lazily inits on its own, but SDL's doc on SDL_hid_init
+  // calls for this when hidapi is touched from more than one thread, which
+  // EnumerateHid() on the JS thread does.
   SDL_hid_init();
   running_.store(true, std::memory_order_release);
 
-  // Mapping databases are usually requested before this thread finishes
-  // starting, in which case they were recorded rather than applied. Apply them
-  // now, before any device is opened, so controllers are mapped on first sight.
-  // The registration-side log (mapping-db.ts) only knows what it queued, not
-  // what SDL actually accepted, so the real total is reported here instead.
-  // This is a normal startup fact, not a failure, so it goes through SDL's
-  // own plain logging rather than the JS-facing error event channel (EmitError).
+  // Mappings requested before this thread was up were recorded, not applied.
+  // Apply before any device is opened so controllers are mapped on first sight.
+  // Only SDL knows what it accepted, so the real total is logged here (plain
+  // SDL_Log: a startup fact, not an error for EmitError).
   int32_t appliedMappings = ApplyPendingMappings();
   SDL_Log("applied %d gamepad mapping(s)", appliedMappings);
 

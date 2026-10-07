@@ -4,13 +4,13 @@
  * going.
  *
  * END HERE puts the wait after the caret's line. It lands at the END of that
- * line rather than at the caret, because a box ends where a row ends — a wait
+ * line instead of at the caret, because a box ends where a row ends. A wait
  * dropped mid-row would hold the screen with half a sentence on it. Nothing is
  * added or removed: the same lines come back, cut into two boxes, so the text
  * itself is untouched and only the button press is new.
  *
  * KEEP GOING extends the box with one more line, reached by a scroll. That is
- * not one option among several — a scroll is the ONLY way the engine makes room.
+ * not one option among several, since a scroll is the ONLY way the engine makes room.
  * The pixel buffer is cleared once per message and the blitter draws by
  * inverting the tiles under it, so a row written a second time inverts what is
  * already there and leaves the tail of the older, longer row standing. There is

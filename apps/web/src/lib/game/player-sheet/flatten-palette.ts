@@ -2,10 +2,10 @@
 /**
  * Collapse a sheet's two palette layers into one.
  *
- * The override layer is sparse — it holds only the outfits and the glove pair that were
- * actually edited — so reading a colour means asking the override first and the original
+ * The override layer is sparse, holding only the outfits and the glove pair that were
+ * actually edited, so reading a colour means asking the override first and the original
  * second. Anything that needs a single complete palette (a ZSPR export, the boot
- * flatten) goes through here rather than repeating that fallback.
+ * flatten) goes through here instead of repeating that fallback.
  */
 import type { OutfitId, OutfitPalette, SheetPalette, PaletteOverride, PlayerSheet } from '@shared/game/data/player-sheet/types';
 import { OUTFIT_IDS } from '@shared/game/data/player-sheet/types';

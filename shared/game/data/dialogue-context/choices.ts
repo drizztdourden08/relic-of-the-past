@@ -3,14 +3,14 @@
  * Where a choice prompt's options lead.
  *
  * The arithmetic inside the prompt renderer (`dialogue_message_index = t + 1`
- * and friends, messaging.c:2648/2720/2742/2762) does NOT pick an outcome — it
+ * and friends, messaging.c:2648/2720/2742/2762) does NOT pick an outcome. It
  * swaps in a cursor-overlay entry so the caret can be redrawn in place. The
  * real outcome is decided by the caller, which reads the selection back out of
  * `choice_in_multiselect_box` and opens a message of its own; those branches
  * are what this table records.
  *
  * `outcomes` is sparse and may repeat an option: an option whose branch opens
- * no message is simply absent, and an option that opens different messages
+ * no message is absent, and an option that opens different messages
  * depending on game state gets one row per branch, each with its `when`.
  */
 import type { DialogueChoiceRecord } from './types';

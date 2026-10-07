@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 /**
- * HID byte-level analysis algorithms — detect buttons, axes, counters from raw reports.
+ * HID byte-level analysis. Detects buttons, axes and counters from raw reports.
  */
 import type { ButtonDiff, HidButtonMapping } from './hid-calibration.type';
 import { ANALOG_THRESHOLD_DELTA } from './hid-calibration.constants';

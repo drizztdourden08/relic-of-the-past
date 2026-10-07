@@ -8,9 +8,9 @@
  * encoder does (`encodeGreedyFromDict` in
  * shared/asset-extraction/text/dialogue-encoder.ts checks the whole bracketed
  * run against its alphabet map before it ever falls through to a single
- * character). Several alphabets carry multi-character entries — bracketed
- * pseudo-glyph names such as an icon or a button face, and the ellipsis run —
- * and each of those is ONE glyph with ONE advance. Matching a character at a
+ * character). Several alphabets carry multi-character entries, such as bracketed
+ * pseudo-glyph names for an icon or a button face, and the ellipsis run.
+ * Each of those is ONE glyph with ONE advance. Matching a character at a
  * time would score the ellipsis as three separate dots, so a row that the
  * engine draws at one glyph's width would be predicted three times too wide.
  * Longest-match keeps the prediction and the bake in step.
@@ -33,7 +33,7 @@ const FALLBACK_ADVANCE_PX = 8;
 type GlyphMatch = {
   /** Index into the language's alphabet, and into its width table. */
   index: number;
-  /** Characters consumed — more than one for a multi-character entry. */
+  /** Characters consumed. More than one for a multi-character entry. */
   length: number;
 };
 
@@ -44,7 +44,7 @@ type AlphabetLookup = {
 };
 
 /**
- * Reversal is memoised per metrics object rather than rebuilt per character.
+ * Reversal is memoised per metrics object instead of rebuilt per character.
  * The cache is keyed on identity and never observable, so the exported
  * functions stay pure: same metrics in, same result out.
  */
@@ -110,13 +110,13 @@ const widthOf = (index: number, metrics: GlyphMetrics): number => {
 /** Every glyph a string draws, plus the runs of it that draw nothing at all. */
 type GlyphRun = {
   glyphs: number[];
-  /** Text the alphabet has no glyph for — reported, never charged a width. */
+  /** Text the alphabet has no glyph for. Reported, never charged a width. */
   unmatched: string[];
 };
 
 /**
  * How much to skip past an unmatchable position. A bracketed run is reported
- * whole (`[Unknown]` rather than a lone `[`) so the report names something the
+ * whole (`[Unknown]`, not a lone `[`) so the report names something the
  * author can find, the same way `validateEntry` reports it.
  */
 const unmatchedAt = (text: string, at: number): string => {

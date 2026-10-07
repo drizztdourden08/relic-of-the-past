@@ -1,12 +1,7 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Addressable single-room indoor flood for the game-driven simulator. Unlike a
- * bare grid flood, this feeds floodFillScreen the room's REAL entrances — every
- * game entrance whose destination is this room (its exit doors back outside, at
- * the spawn tile the player appears on) plus, when the room is the live loaded
- * one, its inter-room stairs and walk-through boundaries — so an interior like
- * the player's house correctly detects its way out (entrances ≥ 1, never 0).
- */
+// Addressable single-room indoor flood. Feeds floodFillScreen the room's REAL entrances (exit
+// doors at their spawn tiles, plus stairs and walk-through boundaries for the live room) so an
+// interior always detects its way out (entrances >= 1, never 0).
 import {
   wasmGetEntranceSpawns, wasmGetEntranceRooms, wasmGetExitScreenMap, wasmGetFallHoles,
   wasmGetRoomStairInfo, wasmGetRoomStairInfoFor, wasmGetRoomWalkBoundaries, wasmGetRoomWalkBoundariesFor, wasmGetRoomLayoutInfo, wasmGetRoomDoorInfo,
@@ -27,22 +22,20 @@ interface RoomFloodRun {
 
 /** Flood one indoor room with its real entrances; null when the grid can't build.
  *  The grid bundle arrives with the uncle's blocker footprint already stamped
- *  (see screen-grids.ts) — remote rooms included. */
+ *  (see screen-grids.ts), remote rooms included. */
 const floodRoomRun = (roomId: number, items: TileReq[], startPos?: GridPos): RoomFloodRun | null => {
   const entrances = roomEntrances(roomId);
-  // Intra-room scroll boundaries (a 2×2 room's internal doorway) come from the
-  // live room-layout read — only available for the loaded room.
+  // Intra-room scroll boundaries (a 2x2 room's internal doorway) come from the
+  // live room-layout read, which is only available for the loaded room.
   const live = readMapState();
   const intraEdges = live?.isIndoors && live.roomIndex === roomId ? (wasmGetRoomLayoutInfo()?.intraEdges ?? []) : [];
   const runFrom = (from?: GridPos) => floodOneScreen(
     { isIndoors: true, roomId, owScreenIndex: 0 },
     { items, ...(from ? { startPos: from } : {}), entrances, intraEdges },
   );
-  // A room's spawn record can sit outside its own walkable floor — the threshold
-  // tile of the door rather than the ground behind it. Seeding there reaches
-  // nothing at all, which reads as a sealed room and sends the run straight back
-  // out. A seed that reaches nothing is not a seed, so fall back to the room's
-  // own entrance list, which lands on floor.
+  // A room's spawn record can sit outside its walkable floor (the door threshold, not the
+  // ground behind it). Seeding there reads as a sealed room, so fall back to the room's own
+  // entrance list, which lands on floor.
   const seeded = runFrom(startPos);
   if (!seeded) return null;
   const run = startPos && seeded.result.reachableCount === 0 ? runFrom(undefined) ?? seeded : seeded;

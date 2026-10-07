@@ -1,13 +1,6 @@
 /* @layer bridge-wasm @kind logic */
-/**
- * Derives ScreenAnnotations for one screen from the SAME game reads the
- * simulator's discovery uses, so what the overlay draws is what the run acts on.
- * Nothing here re-derives game facts: doors (including cell locks), sprites with
- * their key-carrier markers, chests, room tags and detected exits all arrive from
- * the existing bridge queries.
- *
- * This file only ORCHESTRATES — per-family mapping lives in `annotate/`.
- */
+// ScreenAnnotations for one screen, from the SAME bridge reads the simulator uses, so what the
+// overlay draws is what the run acts on. Per-family mapping lives in `annotate/`.
 import type { ScreenAnnotation, ScreenAnnotations, ScreenTag } from '@shared/game/simulation';
 import type { SimLocation, SimExit } from '@shared/game/simulation';
 import type { GridPos } from '@shared/game/navigation';
@@ -36,11 +29,9 @@ const annotateRoom = (roomId: number, items: ScreenAnnotation[], completed: Read
 
   for (const chest of getRoomChests(roomId)) {
     if (!chest.posKnown) continue;
-    // Name what the chest will ACTUALLY yield: the vanilla duplicate rule swaps
-    // an already-owned item for its alternate, so a lamp-owning save must not be
-    // promised a Lamp here when the run would deliver 5 Rupees.
-    // The item name IS the label — repeating it as detail renders "Lamp Lamp";
-    // detail carries the slot, which disambiguates two same-item chests.
+    // Name what the chest will ACTUALLY yield: the duplicate rule swaps an owned item for
+    // its alternate. The item name IS the label; detail carries the slot instead, which
+    // tells two same-item chests apart.
     const yielded = chest.itemId !== undefined ? resolveDuplicate(chest.itemId, inventory) : undefined;
     const name = yielded !== undefined ? itemLabel(yielded) : undefined;
     const swapped = chest.itemId !== undefined && yielded !== chest.itemId;
@@ -89,10 +80,7 @@ const annotateRoom = (roomId: number, items: ScreenAnnotation[], completed: Read
   return tags.filter((t) => t !== 0).map((t) => ({ value: t, name: roomTagName(t) }));
 };
 
-/**
- * How far the exit is, in words a reader can trust. `steps` is a real distance or
- * absent; the note says why it is absent rather than printing a sort score.
- */
+/** How far the exit is. `steps` is a real distance or absent; the note says why, never a sort score. */
 const exitDistance = (exit: { steps?: number; stepsNote?: string }): string | undefined => {
   const where = exit.stepsNote === 'other-screen' ? ' (other screen)' : '';
   if (exit.steps !== undefined) return `${exit.steps} steps${where}`;
@@ -102,13 +90,9 @@ const exitDistance = (exit: { steps?: number; stepsNote?: string }): string | un
 };
 
 /**
- * Distance, the WAY IN it uses, and which detection branch produced it.
- *
- * Several ways out of one screen can share a destination and still be different
- * crossings — a wall carries more than one — so a list of identical rows is
- * unreadable and, worse, unauditable: four entries reading "exit to overworld"
- * cannot be told apart or checked against the game. The simulator decides on
- * these three facts, so the widget shows all three.
+ * Distance, the WAY IN it uses, and which detection branch produced it. Several exits can
+ * share a destination and still be different crossings, so identical rows would be
+ * unauditable; the simulator decides on these three facts, so the widget shows all three.
  */
 const exitDetail = (exit: SimExit): string | undefined => {
   const parts = [exitDistance(exit), arrivalLabel(exit), exit.origin].filter(Boolean);
@@ -120,11 +104,10 @@ const annotateExits = (screenId: string, items: ScreenAnnotation[], entryTile?: 
   const detected = detectScreenExits(screenId, entryTile ? { entryTile } : {});
   for (const exit of detected?.exits ?? []) {
     if (!exit.fromTile) continue;
-    // An exit has to be able to say WHERE it goes. Its destination is a traversal
-    // id, not a dataset key, so the name comes from an explicit lookup that may
-    // answer nothing — and the asking screen lends the palace that tells two rooms
-    // sharing a number apart. `target` keeps the traversal id for the engine;
-    // `label` is display only, and falls back to the id rather than to a guess.
+    // The destination is a traversal id, not a dataset key, so the name comes from a lookup
+    // that may answer nothing (the asking screen lends the palace that tells two rooms sharing
+    // a number apart). `target` keeps the id for the engine; `label` is display only and
+    // falls back to the id, never a guess.
     const label = screenNameFor(exit.to, screenId) ?? exit.to;
     items.push({ kind: 'exit', tile: exit.fromTile, label, target: exit.to,
       ...(exitDetail(exit) ? { detail: exitDetail(exit) } : {}) });
@@ -134,13 +117,8 @@ const annotateExits = (screenId: string, items: ScreenAnnotation[], entryTile?: 
 const CHECK_KINDS: ReadonlySet<ScreenAnnotation['kind']> = new Set(['chest', 'big-chest', 'npc-check', 'standing-item']);
 
 /**
- * Progress for the screen's checks, off each annotation's own state.
- *
- * There used to be a second test here — the completed set asked about the
- * annotation's LABEL — which could never work: a chest's label is the item it
- * yields, not a check's name. Whoever knows the check sets `state` (chests from
- * the room's open bit, NPCs and standing items from the completed set by
- * `checkId`), so the state is the whole answer.
+ * Progress for the screen's checks, off each annotation's own `state`. Never test the LABEL
+ * against the completed set: a chest's label is the item it yields, not a check's name.
  */
 const tallyChecks = (items: readonly ScreenAnnotation[]) =>
   items.reduce(
@@ -170,7 +148,7 @@ const annotateScreen = (
   } else {
     for (const sprite of getOverworldSprites(loc.owScreenIndex)) {
       // A big area's spawn table lists every screen's sprites, already resolved
-      // to their true screen — one belonging to a neighbour is drawn when THAT
+      // to their true screen. One belonging to a neighbour is drawn when THAT
       // screen is annotated, not here.
       if (sprite.roomId !== loc.owScreenIndex) continue;
       const a = spriteAnnotation(sprite, { roomId: -1, completed, shutterCount: 0 });

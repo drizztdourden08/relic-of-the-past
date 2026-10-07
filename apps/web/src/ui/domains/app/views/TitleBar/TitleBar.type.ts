@@ -21,8 +21,10 @@ interface TitleBarProps {
   onShowConnectionDebug: () => void;
   onToggleDataset: () => void;
   onToggleSimulator: () => void;
+  onToggleMusic: () => void;
   onShowShadowEditor: () => void;
   onShowAbout: () => void;
+  onShowRandomizer: () => void;
   onShowBugReport: () => void;
   activeProfile: Profile | null;
   gameRunning: boolean;
@@ -34,7 +36,7 @@ interface TitleBarProps {
   isMuted?: boolean;
   onToggleMute?: () => void;
   showFps?: boolean;
-  /** Opens the Display settings — used by the incompatible-refresh-rate tag. */
+  /** Opens the Display settings, used by the incompatible-refresh-rate tag. */
   onShowDisplaySettings?: () => void;
   updateAvailable?: boolean;
   onUpdateClick?: () => void;

@@ -1,24 +1,13 @@
 /* @layer electron-main @kind logic */
 /**
  * Hold an automation window behind whatever the person at the keyboard is doing,
- * for the whole life of the window rather than just at launch.
+ * for the whole life of the window, not just at launch.
  *
- * Launch-time handling (showInactive + blur + SetWindowPos(HWND_BOTTOM)) only
- * covers the moment the window opens. Plenty of things raise a window LATER, and
- * each one steals focus mid-session:
- *   - Playwright's click path calls Chromium's Page.bringToFront() before
- *     dispatching the mouse event, so every `locator.click()` re-activates us.
- *   - DevTools opening activates its owner window.
- *   - The OS raises windows for its own reasons (taskbar grouping, focus-follows
- *     policies, a child process finishing).
- *
- * Enumerating those causes has repeatedly missed one. So instead of predicting
- * them, treat *gaining focus at all* as the fault: in automation mode the window
- * has no business being focused, so when it is, undo it immediately. That covers
- * every current cause and any future one for free.
- *
- * Input still works — Playwright drives the renderer over CDP
- * (Input.dispatchMouseEvent / dispatchKeyEvent), which does not need OS focus.
+ * Plenty of things raise a window LATER: Playwright's click path calls
+ * Page.bringToFront() before every `locator.click()`, DevTools activates its
+ * owner, the OS raises windows for its own reasons. Enumerating those has
+ * repeatedly missed one, so *gaining focus at all* is treated as the fault and
+ * undone immediately. Input still works: CDP does not need OS focus.
  */
 import type { BrowserWindow } from 'electron';
 import { sendWindowToBack } from './send-to-back';
@@ -31,11 +20,9 @@ const keepWindowInBackground = (win: BrowserWindow): void => {
 
   const bounce = (): void => {
     if (win.isDestroyed()) return;
-    // ONLY blur when we actually hold focus. An unconditional blur() is actively
-    // harmful: it takes focus off this window without handing it back to whoever
-    // had it, so the foreground falls through to the desktop ("Program Manager")
-    // — measured doing exactly that, which is itself the focus loss we are trying
-    // to prevent. isFocused() keeps this to the one case where blurring helps.
+    // ONLY blur when we hold focus. An unconditional blur() takes focus off this
+    // window without handing it back, so the foreground falls through to the
+    // desktop ("Program Manager"), measured doing exactly that.
     if (win.isFocused()) win.blur();
     if (timer) clearTimeout(timer);
     timer = setTimeout(() => {

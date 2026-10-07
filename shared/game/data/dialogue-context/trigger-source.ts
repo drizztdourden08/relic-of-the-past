@@ -3,7 +3,7 @@
  * WHO or WHAT opens each dialogue entry, mined from the game core's own sources.
  *
  * Index convention and the proof behind it: see ./context.ts. This table is the
- * companion to ./context.ts — that one says what KIND of thing an entry is, this
+ * companion to ./context.ts. That one says what KIND of thing an entry is, this
  * one says which concrete key opens it, so an editor can show "who says this".
  *
  * ## How each row was found
@@ -11,8 +11,8 @@
  * `kSpriteActiveRoutines[243]` (sprite_main.c:466) and `kSpritePrep_Main[243]`
  * (sprite_main.c:714) are literal function-pointer arrays indexed by the entity
  * type byte, so they ARE the type -> handler join. Every assignment to the core's
- * message index was collected — direct writes plus the five helpers in sprite.c
- * (lines 938, 953, 961, 977, 997) — each expression resolved to its constant(s)
+ * message index was collected, from direct writes plus the five helpers in
+ * sprite.c (lines 938, 953, 961, 977, 997). Each expression was resolved to its constant(s)
  * (ternaries, locals, parameters and static tables all followed), and each site
  * attributed to the type(s) whose handler reaches it.
  *
@@ -21,16 +21,16 @@
  * type's source (sprite_main.c:10957, 5953), and a routine gated by a single
  * type test belongs to that type alone (sprite.c:786).
  *
- * The remaining rows come from lookup tables rather than call sites: the
+ * The remaining rows come from lookup tables instead of call sites: the
  * per-item receipt table (ancilla.c:243/250/251), the per-area marker table and
  * the per-room remote-speech table (read through overworld.c:299 and
- * dungeon.c:2381 — both live in the extracted asset blob, not in source), and
+ * dungeon.c:2381, which both live in the extracted asset blob, not in source), and
  * the companion tables (tagalong.c:18/19/33).
  *
  * ## Two things to know when reading a row
  *
  * PRECEDENCE. Nine entries have more than one true source because the game
- * reuses one string in two mechanisms — a receipt table entry that a placed
+ * reuses one string in two mechanisms, such as a receipt table entry that a placed
  * entity also shows, a marker whose text an entity also speaks, a companion line
  * that its non-following form also speaks. A row keeps one source, chosen in a
  * fixed order: cursor overlay, then item, place, room, follower, actor, engine.

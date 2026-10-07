@@ -1,16 +1,12 @@
 /* @layer electron-main @kind logic */
 /**
- * Validates a single gamecontrollerdb.txt line before it is registered live
- * or appended to the user's db — rejects anything that isn't at least a
- * GUID, a name, and one button/axis binding.
+ * Validates a single gamecontrollerdb.txt line before it is registered live or
+ * appended to the user's db: at least a GUID, a name, and one button/axis binding.
  */
 
-// SDL's GUID is a 32-character hex string historically, and can run longer
-// on newer SDL revisions — accept any sufficiently long hex run rather than
-// pin an exact length that could change out from under this. SDL also uses
-// the literal "xinput" as a pseudo-GUID for its built-in generic XInput
-// mapping (seen verbatim in the bundled db), so that one literal is allowed
-// alongside the hex form.
+// SDL's GUID is historically 32 hex chars and can run longer on newer revisions,
+// so any long enough hex run is accepted. SDL also uses the literal "xinput" as a
+// pseudo-GUID for its built-in generic XInput mapping.
 const GUID_PATTERN = /^[0-9a-fA-F]{24,}$/;
 const XINPUT_PSEUDO_GUID = 'xinput';
 

@@ -1,12 +1,7 @@
 /* @layer renderer-components @kind hook */
-/**
- * Reads a dropped `.msul` back into a pack of its own — the inverse of the export above it.
- *
- * The install itself lives in lib/msu/import/install-msul-pack, shared with the desktop
- * file-association path, so an opened pack and a dropped one land identically.
- */
+// Reads a dropped `.msul` into a pack. The install lives in shared/storage/msul/install-msul-pack, shared with the file-association path and the store.
 import { useCallback } from 'react';
-import { installMsulPack } from '@app/lib/msu/import/install-msul-pack';
+import { installMsulFile } from '@app/lib/storage/msu-store';
 import { publishImportProgress } from '@app/lib/storage/import-progress-bus';
 import { stemOf } from './track-file-name';
 import { failure } from './usePackList';
@@ -25,10 +20,14 @@ const usePackImport = (params: PackImportParams) => {
   const importMsul = useCallback(async (file: File, desiredName: string): Promise<ActionResult> => {
     try {
       const bytes = new Uint8Array(await file.arrayBuffer());
-      const result = await installMsulPack(bytes, desiredName || stemOf(file.name));
+      const result = await installMsulFile(bytes, desiredName || stemOf(file.name));
       await refresh();
       onImported(result.pack);
-      return { success: true, message: `Imported "${result.pack}" — ${result.fileCount} files, ${result.trackCount} slots` };
+      // A pack that lists more than it holds is worth naming at once, while the archive is to hand.
+      const missing = result.missingFiles.length > 0
+        ? `. The archive was missing ${result.missingFiles.length}: ${result.missingFiles.join(', ')}`
+        : '';
+      return { success: true, message: `Imported "${result.pack}" with ${result.fileCount} files and ${result.trackCount} slots${missing}` };
     } catch (err) {
       const outcome = failure(err, 'Could not read that pack');
       publishImportProgress({ kind: 'msu', id: 'msu', phase: 'error', message: outcome.message });

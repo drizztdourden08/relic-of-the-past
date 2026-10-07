@@ -21,7 +21,7 @@ const ProgressSummary = (props: ProgressSummaryProps) => {
     ['Checks done', String(progress.checksDone)],
     ['Discovered', String(progress.discovered)],
     ['Epoch', String(progress.epoch)],
-    ['Virtual screen', progress.currentScreen || '—'],
+    ['Virtual screen', progress.currentScreen || '-'],
   ];
 
   return (

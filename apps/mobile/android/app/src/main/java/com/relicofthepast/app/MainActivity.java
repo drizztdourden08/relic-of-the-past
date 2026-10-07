@@ -31,39 +31,30 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(FrameRatePlugin.class);
         super.onCreate(savedInstanceState);
 
-        // Let the game's audio (Web Audio / SDL2) start without an explicit tap. The
-        // WebView otherwise gates all playback behind a user gesture, and players use a
-        // controller — they may never touch the screen, so the AudioContext would stay
-        // suspended and the game would be silent.
+        // Players use a controller and may never tap the screen, so the WebView must
+        // not gate audio behind a user gesture or the AudioContext stays suspended.
         final WebView webView = getBridge() != null ? getBridge().getWebView() : null;
         if (webView != null) {
             webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
-            // Black, not the default grey, so the area behind the WebView (display
-            // cutout, transiently-shown bars) matches the app's black background.
+            // Black, not the default grey, behind the WebView (cutout, transient bars).
             webView.setBackgroundColor(Color.BLACK);
         }
 
-        // Paint the window itself black and make the system bars transparent, so the
-        // notch/cutout and bar regions read as pure black instead of system grey.
+        // Window black and system bars transparent, so the cutout and bar regions
+        // read as pure black instead of system grey.
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
         getWindow().setStatusBarColor(Color.TRANSPARENT);
         getWindow().setNavigationBarColor(Color.TRANSPARENT);
 
-        // Keep the screen awake while the app is foregrounded — players use a controller
-        // and may never touch the screen, so the display would otherwise time out and
-        // interrupt the session.
+        // Controller players may never touch the screen, so it must not time out.
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        // Edge-to-edge + immersive: draw under the status/navigation bars and into the
-        // display cutout, so there's no grey system chrome around the app. The WebView's
-        // own (black) background fills those regions; the game stays letterboxed in its
-        // box, so nothing important lands under the camera notch.
+        // Edge-to-edge + immersive: draw under the bars and into the cutout. The game
+        // stays letterboxed, so nothing important lands under the camera notch.
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        // Consume all window insets so Capacitor's WebView fills the entire screen
-        // (including the display cutout) instead of being padded into the safe area —
-        // without this the content sits off-center next to the camera notch. We first
-        // forward the cutout insets to the web as CSS vars (--sai-*), since consuming
-        // them zeroes the page's env(safe-area-inset-*).
+        // Consume all insets so the WebView fills the screen including the cutout;
+        // otherwise the content sits off-center next to the notch. Consuming zeroes
+        // env(safe-area-inset-*), so the cutout insets go to the web as --sai-* first.
         ViewCompat.setOnApplyWindowInsetsListener(getWindow().getDecorView(), (v, insets) -> {
             injectSafeAreaInsets(insets);
             return WindowInsetsCompat.CONSUMED;
@@ -77,10 +68,9 @@ public class MainActivity extends BridgeActivity {
         }
         applyImmersive();
 
-        // Take over Back and route it per swipe edge using predictive back's swipe edge
-        // (reliable across the full edge). The JS chrome decides: left = home/close,
-        // right = options menu. Added after super.onCreate so it sits above Capacitor's
-        // own callback (the dispatcher is LIFO).
+        // Route Back per predictive-back swipe edge; the JS chrome decides (left =
+        // home/close, right = options menu). Added after super.onCreate so it sits
+        // above Capacitor's own callback (the dispatcher is LIFO).
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             private String edge = "right"; // button-press / non-gesture default
 
@@ -99,11 +89,8 @@ public class MainActivity extends BridgeActivity {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        // Controller button presses arrive as key events with a joystick-class
-        // source; route those into the SDL3 gamepad backend before anything
-        // else sees them (a WebView OnKeyListener would otherwise consume a
-        // BACK/START-mapped code first). Everything else falls through to
-        // Capacitor's own handling unchanged.
+        // Controller presses go to the SDL3 backend before anything else sees them
+        // (a WebView OnKeyListener would otherwise consume a BACK/START code first).
         if (Sdl3InputRouter.handleKeyEvent(event)) {
             return true;
         }
@@ -122,8 +109,7 @@ public class MainActivity extends BridgeActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        // Re-hide the bars after they're transiently revealed by a swipe or after
-        // returning from the background — otherwise the grey chrome creeps back. Also
+        // Re-hide the bars after a swipe reveal or a return from the background, and
         // re-dispatch insets so the web gets the cutout sizes once its DOM is ready.
         if (hasFocus) {
             applyImmersive();
@@ -131,9 +117,8 @@ public class MainActivity extends BridgeActivity {
         }
     }
 
-    // Forward the display-cutout insets to the web as CSS px custom properties on
-    // <html> (--sai-top/right/bottom/left). We consume insets for full-bleed, which
-    // zeroes env(safe-area-inset-*), so the renderer reads these instead.
+    // Cutout insets as CSS px custom properties on <html> (--sai-top/right/bottom/left),
+    // since consuming insets for full-bleed zeroes env(safe-area-inset-*).
     private void injectSafeAreaInsets(WindowInsetsCompat insets) {
         if (getBridge() == null) return;
         final WebView webView = getBridge().getWebView();

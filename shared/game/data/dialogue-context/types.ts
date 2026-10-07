@@ -86,7 +86,7 @@ type DialogueChoiceRecord = {
 };
 
 /**
- * WHAT causes an entry to open — the concrete key the game core looks the entry
+ * WHAT causes an entry to open. The concrete key the game core looks the entry
  * up by, one variant per kind of key.
  *
  * - `actor`        a placed entity, keyed by its native type byte. `alsoTypes`
@@ -98,7 +98,7 @@ type DialogueChoiceRecord = {
  * - `place`        a readable marker, keyed by overworld area.
  * - `room`         remote speech, keyed by indoor room.
  * - `item`         a fresh pickup, keyed by the received-item value.
- * - `engine`       opened by the core itself — a menu, a scripted sequence, or a
+ * - `engine`       opened by the core itself, whether a menu, a scripted sequence or a
  *                  game rule. `site` names the routine that opens it.
  * - `cursor-frame` NOT prose: a caret-only overlay the prompt renderer swaps in.
  */

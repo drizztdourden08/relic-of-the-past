@@ -11,7 +11,7 @@ const DialogShell = (props: DialogShellProps) => {
   const { open, onClose, title, headerExtra, actions, className = '', dismissable = true, initialFocusRef, children } = props;
 
   // Read via a ref so the escape listener always calls the latest onClose without
-  // needing it in a dependency array — onClose is typically a fresh closure on
+  // needing it in a dependency array. onClose is typically a fresh closure on
   // every parent render, which would otherwise re-run the effects below on every
   // keystroke inside the dialog.
   const onCloseRef = useRef(onClose);
@@ -43,7 +43,7 @@ const DialogShell = (props: DialogShellProps) => {
   }, [open, dismissable]);
 
   // Runs only when the dialog opens (not on every re-render). Skips stealing focus
-  // if a child already claimed it — e.g. a name TextInput with its own autoFocus.
+  // if a child already claimed it, such as a name TextInput with its own autoFocus.
   useEffect(() => {
     if (!open) return;
     const active = document.activeElement;

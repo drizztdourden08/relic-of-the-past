@@ -1,12 +1,7 @@
 /* @layer tooling-scripts @kind logic */
-// PostToolUse hook: lint the single file just written/edited and feed any
-// coding-standard violations straight back into the model's context so they get
-// fixed immediately (not at some later "lint pass"). Non-blocking by design.
-//
-// Wired in .claude/settings.json on Write|Edit. Reads the hook payload JSON on
-// stdin, extracts the file path, runs ESLint (eslint.config.mjs) on just that
-// file, and emits a PostToolUse JSON result. Any internal error exits 0 silently
-// so a hook failure never derails the actual work.
+// PostToolUse hook (wired in .claude/settings.json on Write|Edit): lint the one file
+// just edited and feed violations back into the model's context. Non-blocking; any
+// internal error exits 0 silently so a hook failure never derails the work.
 
 import { ESLint } from 'eslint';
 
@@ -31,7 +26,7 @@ const main = async () => {
 
   const eslint = new ESLint();
 
-  // Respect ignore patterns (core/, *.d.ts, etc.) — skip quietly if ignored.
+  // Respect ignore patterns (core/, *.d.ts, etc.).
   if (await eslint.isPathIgnored(filePath)) process.exit(0);
 
   const results = await eslint.lintFiles([filePath]);
@@ -44,12 +39,12 @@ const main = async () => {
 
   const report = (await formatter.format(results)).trim();
   const out = {
-    systemMessage: `⚠ ${total} coding-standard issue(s) in ${filePath} — see lint output.`,
+    systemMessage: `⚠ ${total} coding-standard issue(s) in ${filePath}. See lint output.`,
     hookSpecificOutput: {
       hookEventName: 'PostToolUse',
       additionalContext:
         `ESLint flagged coding-standard violations in the file you just changed ` +
-        `(${filePath}). Fix them before continuing — do not leave them for later:\n\n` +
+        `(${filePath}). Fix them before continuing:\n\n` +
         report,
     },
   };

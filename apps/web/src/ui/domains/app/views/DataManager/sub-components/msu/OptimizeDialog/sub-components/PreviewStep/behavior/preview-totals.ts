@@ -1,11 +1,8 @@
 /* @layer renderer-components @kind logic */
 /**
- * The pack-level figures under the per-file rows.
- *
- * Only rows that were really MEASURED are summed. A convertible file whose cost could not be
- * measured is counted separately rather than folded in at its current size, which would quietly
- * present a guess as part of a measured total — and a growth is added exactly like a saving, so
- * a pack of mp3s shows the total getting bigger instead of a flattering net figure.
+ * Only MEASURED rows are summed: folding an unmeasured file in at its current size would present a
+ * guess as part of a measured total. Growth counts like saving, so a pack of mp3s shows the total
+ * getting bigger instead of a flattering net figure.
  */
 import type { OptimizeCandidate } from '@shared/types/msu-optimize';
 
@@ -18,7 +15,7 @@ interface PreviewTotals {
   /** Convertible rows nothing could be measured for. */
   unmeasuredCount: number;
   excludedCount: number;
-  /** Rows the target format would make BIGGER — worth naming, not hiding. */
+  /** Rows the target format would make BIGGER. */
   growingCount: number;
 }
 

@@ -2,7 +2,7 @@
 /**
  * The pure edits behind the layer editor, kept out of the hook so each one can be read on its own.
  *
- * A layer's `id` is generated once, at creation, and never rewritten — the resume snapshot in a
+ * A layer's `id` is generated once, at creation, and never rewritten. The resume snapshot in a
  * save file is keyed by it, so a regenerated id would silently drop that layer's position and
  * restart it from the top on load.
  *
@@ -18,7 +18,7 @@ type PlayModeKind = LayerPlayMode['kind'];
 
 /** No overlap: one pass cuts straight to the next, which is what a lone looping file wants. */
 const DEFAULT_CROSSFADE_SECONDS = 0;
-/** Gap timed from the sound's start, so a long sound overlaps the next — the historical default. */
+/** Gap timed from the sound's start, so a long sound overlaps the next. The historical default. */
 const DEFAULT_WAIT_FOR_COMPLETION = false;
 
 const DEFAULT_MODES: Record<PlayModeKind, LayerPlayMode> = {
@@ -37,11 +37,15 @@ const MODE_LABELS: Record<PlayModeKind, string> = {
   once: 'Once', loop: 'Loop', random: 'Random', interval: 'Interval',
 };
 
-const createLayer = (existing: MsuLayer[]): MsuLayer => ({
+/**
+ * A new layer, in the mode its channel can actually end in. An effect channel gets `once`: it is
+ * fired at a moment and is over, and a loop there would still be playing long after that moment.
+ */
+const createLayer = (existing: MsuLayer[], oneShot = false): MsuLayer => ({
   id: newId(),
   name: `Layer ${existing.length + 1}`,
   files: [],
-  mode: DEFAULT_MODES.loop,
+  mode: oneShot ? DEFAULT_MODES.once : DEFAULT_MODES.loop,
   volume: 100,
 });
 

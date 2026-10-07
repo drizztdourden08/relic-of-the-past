@@ -1,8 +1,8 @@
 /* @layer shared-asset-extraction @kind logic */
 /**
- * Receipt/chest-getter sprite decoder — extracts 3bpp item sprites shown when
- * the player receives items. Decode tables live in receipt-tables.ts; palette loading
- * in receipt-palettes.ts. This module loads the sheets and decodes the tiles.
+ * Decodes the 3bpp item sprites shown when the player receives an item. This module loads
+ * the sheets and decodes tiles. Decode tables live in receipt-tables.ts, palette loading in
+ * receipt-palettes.ts.
  */
 import type { RomData } from '../rom/rom-types';
 import type { RGBA } from '../graphics/palette';

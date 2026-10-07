@@ -84,7 +84,7 @@ const finalizeStickCalibration = (c1: StickCandidate, c2: StickCandidate | null,
   // finding those ids in its own item list, so when a capture reads as having
   // reset, this line is what says whether the write landed or targeted ids the
   // list does not contain.
-  cb.addLog(`${label} stick calibration done — wrote ${xId}=captured, ${yId}=${yMapping ? 'captured' : 'skipped'}.`);
+  cb.addLog(`${label} stick calibration done, wrote ${xId}=captured, ${yId}=${yMapping ? 'captured' : 'skipped'}.`);
   cb.updateByteStatuses(mins.length);
 };
 
@@ -117,7 +117,7 @@ const resetStick = (side: StickSide, refs: Pick<StickFinalizeRefs, 'excludedRef'
   cb.setActiveStick(null);
   refs.activeStickRef.current = null;
   if (latestBytesLen > 0) cb.updateByteStatuses(latestBytesLen);
-  cb.addLog(`${label} stick reset — ready to redo.`);
+  cb.addLog(`${label} stick reset. Ready to redo.`);
 };
 
 // ── Trigger Finalization ────────────────────────────────────────────────────
@@ -170,7 +170,7 @@ const finalizeTriggerCalibration = (c: StickCandidate, refs: TriggerFinalizeRefs
 };
 
 /**
- * A trigger that is a switch rather than an axis. Some pads report their
+ * A trigger that is a switch, not an axis. Some pads report their
  * shoulder inputs as one bit inside a shared button byte, so there is no range
  * to measure and the analog path can never satisfy its threshold. The bit is
  * recorded the same way a button's is, and the byte is deliberately NOT
@@ -225,7 +225,7 @@ const resetTrigger = (side: TriggerSide, refs: Pick<TriggerFinalizeRefs, 'exclud
   cb.setActiveTrigger(null);
   refs.activeTriggerRef.current = null;
   if (latestBytesLen > 0) cb.updateByteStatuses(latestBytesLen);
-  cb.addLog(`${label} trigger reset — ready to redo.`);
+  cb.addLog(`${label} trigger reset. Ready to redo.`);
 };
 
 export { finalizeStickCalibration, resetStick, finalizeTriggerCalibration, finalizeDigitalTrigger, resetTrigger };

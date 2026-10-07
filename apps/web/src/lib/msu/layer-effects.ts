@@ -4,7 +4,7 @@
  *
  * Every effect is one or more biquad filters, because that is the whole vocabulary the manifest
  * allows: a description that plays the same everywhere and can be flattened into an export. The
- * three-band EQ is three filters in a row — a low shelf, a peak in the middle, a high shelf — at
+ * three-band EQ is three filters in a row (a low shelf, a peak in the middle, a high shelf) at
  * fixed corner frequencies, so the three numbers in the manifest are all there is to it.
  *
  * An empty chain is no nodes at all, so a layer without effects costs nothing it did not before.
@@ -19,7 +19,7 @@ interface EffectChain {
   dispose: () => void;
 }
 
-/** Corner frequencies of the three EQ bands — the shelf knees and the peak's centre. */
+/** Corner frequencies of the three EQ bands, the shelf knees and the peak's centre. */
 const EQ_LOW_HZ = 250;
 const EQ_MID_HZ = 1000;
 const EQ_HIGH_HZ = 4000;

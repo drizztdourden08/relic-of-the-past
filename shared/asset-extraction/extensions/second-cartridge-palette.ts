@@ -4,8 +4,8 @@
  *
  * A room header's second byte is a palette id, and the engine reads it as an index into its
  * own table of sprite/aux palette sets. The port's own id means nothing there, so the header
- * is rewritten to name an entry appended to that table for this dungeon — which is what lets
- * the engine's palette load run unmodified instead of having the index substituted underneath
+ * is rewritten to name an entry appended to that table for this dungeon. That lets the
+ * engine's palette load run unmodified instead of having the index substituted underneath
  * it. The background colours themselves still come from the cartridge, one record per room.
  */
 

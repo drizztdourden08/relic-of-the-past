@@ -2,9 +2,9 @@
 import type { CheckRecord, ItemId, CheckId, Requirement } from '../data';
 import { membersOf } from '../data';
 
-// ─── A resolved traversal edge — a real connection (or the virtual menu spawn
-// points), with its effective requirement (base record + any mode overlay)
-// already attached. This is what resolver.ts hands to the functions below. ───
+// A resolved traversal edge: a real connection, or one of the virtual menu spawn
+// points, with its effective requirement (base record plus any mode overlay)
+// already attached. resolver.ts hands this to the functions below.
 
 interface ReachConnection {
   from: string;

@@ -1,13 +1,11 @@
 /* @layer renderer-widgets @kind logic */
 /**
  * Every raw item id the native receive path has granted this session, kept as
- * a plain module Set rather than component state — the tracker bridge's own
- * listeners (`onItemReceived`/`onUnknownItem`) fire independently of any
- * widget being mounted, so the session record has to live somewhere that
- * outlives one. `onItemReceived`'s `nativeItemId` and `onUnknownItem`'s `id`
- * are the SAME raw index space `GrantedItemObservation.itemId` wants, so both
- * feed the one set — a granted id with no dataset record is exactly the case
- * `item-grants`' `create` draft exists for.
+ * a plain module Set, not component state: the tracker bridge's listeners
+ * (`onItemReceived`/`onUnknownItem`) fire whether or not a widget is mounted.
+ * `onItemReceived`'s `nativeItemId` and `onUnknownItem`'s `id` are the SAME raw
+ * index space `GrantedItemObservation.itemId` wants, so both feed the one set.
+ * A granted id with no dataset record is the case `item-grants`' `create` draft exists for.
  */
 import { onItemReceived, onUnknownItem } from '@app/lib/game/tracker';
 
@@ -16,9 +14,8 @@ const listeners = new Set<() => void>();
 
 /**
  * The snapshot `useSyncExternalStore` compares by reference. Rebuilt only when
- * `add` actually changes the set, never per read — a fresh array on every call
- * reads as "changed" on every render and free-runs the subscriber into React's
- * update-depth limit.
+ * `add` changes the set, never per read: a fresh array on every call reads as
+ * "changed" every render and free-runs the subscriber into React's update-depth limit.
  */
 let snapshot: readonly number[] = [];
 

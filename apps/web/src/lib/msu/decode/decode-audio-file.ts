@@ -2,12 +2,12 @@
 /**
  * Turns any supported pack file into an AudioBuffer the engine can schedule.
  *
- * Three paths, each picked from the file's own leading bytes rather than its name. MSU-1
+ * Three paths, each picked from the file's own leading bytes, not its name. MSU-1
  * `.pcm` is raw samples we convert ourselves (and it carries a loop point in its header);
  * `.opuz` is Opus in a container of the decompilation's own, which we repackage as Ogg so the
  * browser can decode it (it carries a loop point too); everything else goes straight to the
  * browser's decoder, which covers wav/mp3/ogg/flac/opus with no library of ours. An AudioBuffer
- * keeps its own sample rate, so the graph resamples to the device rate for free — the mismatch
+ * keeps its own sample rate, so the graph resamples to the device rate for free. The mismatch
  * that made 48kHz playback run fast in the C player cannot occur here.
  */
 import { decodeOpuz } from './decode-opuz';
@@ -31,7 +31,7 @@ const decodeMsu1 = (ctx: BaseAudioContext, bytes: Uint8Array): DecodedAudio => {
 };
 
 const decodeMedia = async (ctx: BaseAudioContext, bytes: Uint8Array): Promise<DecodedAudio> => {
-  // decodeAudioData detaches the buffer it is given, so hand it a copy — the caller's bytes
+  // decodeAudioData detaches the buffer it is given, so hand it a copy. The caller's bytes
   // may be a view into a larger array we do not own.
   const copy = new Uint8Array(bytes.byteLength);
   copy.set(bytes);

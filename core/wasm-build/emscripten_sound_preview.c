@@ -2,16 +2,16 @@
 // Renders what the game's own sound chip would play for one sound id, so the app can audition the
 // original next to a replacement.
 //
-// This runs on a SECOND, private sound chip — its own SpcPlayer, its own DSP, its own 64K of APU
-// ram — and never touches the one the game is playing on. That isolation is the whole point: the
+// This runs on a SECOND, private sound chip with its own SpcPlayer, its own DSP and its own 64K of
+// APU ram. It never touches the one the game is playing on. That isolation is the whole point: the
 // alternative (writing an id to the live chip's port) would mutate emulated state, so it could
 // desynchronise a replay, disturb whatever music is actually playing, and would only work while a
 // game is running at all. Here nothing observable by the game changes, and a preview works the
 // same whether a session is live or the player is only browsing packs.
 //
-// The audio is not shipped with the app and never could be — it is synthesised on demand from the
-// sound banks in the player's own assets file, which is also why this reports "not ready" rather
-// than silence when the core has not loaded assets yet.
+// The audio is not shipped with the app and never could be. It is synthesised on demand from the
+// sound banks in the player's own assets file, which is also why this reports "not ready" instead
+// of silence when the core has not loaded assets yet.
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -34,7 +34,7 @@ enum {
   kPreviewMaxFrames = 3600,
 };
 
-// ~7.7 MB at the cap, so it is allocated on the first preview rather than sitting in the core's
+// ~7.7 MB at the cap, so it is allocated on the first preview instead of sitting in the core's
 // footprint for every session that never asks for one.
 static int16 *s_samples;
 static SpcPlayer *s_player;
@@ -43,8 +43,8 @@ static int s_bank = -1;
 
 // The bank the chip always has: it carries the sound engine and the shared samples, and the game
 // uploads it at boot. The other two are uploaded ON TOP of it when the game moves indoors or into
-// the credits, replacing the song data and leaving the engine in place — which is why they produce
-// nothing at all on their own, and why a set here is a chain rather than a single blob.
+// the credits, replacing the song data and leaving the engine in place. That is why they produce
+// nothing at all on their own, and why a set here is a chain and not a single blob.
 static const uint8 *PreviewBankExtra(int bank) {
   switch (bank) {
   case 0: return NULL;               // overworld and intro: the base bank alone
@@ -112,7 +112,7 @@ static int RenderOnBank(int port, int raw, int bank, int frames) {
   for (int i = 0; i < frames; i++) {
     // The game writes an effect port for a single frame and clears it; holding the value would
     // retrigger the sound every frame. Music (port 0) and the ambient bed (port 1) are the
-    // opposite — the value stays put, and clearing it is what stops them.
+    // opposite, because the value stays put and clearing it is what stops them.
     if (i == 0)
       s_player->input_ports[port] = (uint8)raw;
     else if (port >= 2)
@@ -140,8 +140,8 @@ static int PeakOf(int sample_frames) {
   return peak;
 }
 
-// Below this a render counts as silence rather than a quiet sound. Chip output for a sound that is
-// simply absent from a bank is digital zero, so any real margin above zero separates the two.
+// Below this a render counts as silence, not a quiet sound. Chip output for a sound that is
+// absent from a bank is digital zero, so any real margin above zero separates the two.
 enum { kAudibleThreshold = 64 };
 
 // How much to render while deciding which bank holds a sound: a third of a second, which is far
@@ -153,10 +153,10 @@ enum { kBankSearchFrames = 20 };
 // sample frames written, or 0 if nothing could be rendered.
 //
 // The port matters as much as the id: the same number means a different sound on each port, which
-// is why the caller passes the port rather than a channel index.
+// is why the caller passes the port instead of a channel index.
 //
 // A negative |bank| means "find it": each bank holds a different set of songs, and a track number
-// on its own does not say which one it belongs to. Rather than make callers keep a table that would
+// on its own does not say which one it belongs to. Instead of making callers keep a table that would
 // drift from the assets, the banks are tried in turn and the first that produces something audible
 // wins. Sound effects are in every bank, so for those the first try always answers.
 EMSCRIPTEN_KEEPALIVE
@@ -182,7 +182,7 @@ int WasmRenderSoundPreview(int port, int raw, int bank, int frames) {
       return frames > kBankSearchFrames ? RenderOnBank(port, raw, candidate, frames) : rendered;
   }
   // Nothing anywhere: hand back a render of the length asked for, so the caller sees a buffer of
-  // silence and can report "this one is silent on the chip" rather than "the preview failed".
+  // silence and can report "this one is silent on the chip", not "the preview failed".
   return RenderOnBank(port, raw, 0, frames);
 }
 

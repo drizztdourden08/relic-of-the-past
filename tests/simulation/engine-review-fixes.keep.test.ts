@@ -24,12 +24,10 @@ const EMPTY_PLACEMENT = { form: 'area' as const, tiles: [], rect: { x: 0, y: 0, 
 const REGISTERED_IDS: ConnectionId[] = [];
 
 /**
- * A one-sided point always resolves its partner through the GLOBAL facade
- * (`toScreenIdOf` calls `getConnection`, see `data/connections/derive.ts`),
- * so every synthetic crossing below is registered into the real session
- * registry as a real pair, not just built as bare objects — mirroring
- * `engine-loop.keep.test.ts`. Returns the "forward" (`from`) side, the one
- * `buildAdjacency` needs in its input array.
+ * A one-sided point resolves its partner through the GLOBAL facade
+ * (`toScreenIdOf` calls `getConnection`), so every synthetic crossing is
+ * registered as a real pair, as in `engine-loop.keep.test.ts`. Returns the
+ * `from` side `buildAdjacency` needs.
  */
 const registerPair = (
   fromId: string, from: string, toId: string, to: string, nav?: ConnectionRecord['nav'],
@@ -54,9 +52,9 @@ afterAll(() => {
   for (const id of REGISTERED_IDS) unregisterRecord('connection', id);
 });
 
-// ─── Shared fixtures ─────────────────────────────────────────────────────────
+// Shared fixtures
 
-/** Chest-open bit per slot — same native fact the matcher itself uses. */
+/** Chest-open bit per slot, taken from the same native fact the matcher uses. */
 const CHEST_OPEN_MASKS = [0x10, 0x20, 0x40, 0x80, 0x100, 0x200, 0x400] as const;
 
 const KAKARIKO_TAVERN_ROOM = 0x103;
@@ -75,9 +73,9 @@ const baseObs = (screenId: string, flags: FlagSnapshot): SimObservation => ({
   interactables: { chests: [], sprites: [], doors: [] },
 });
 
-// ─── Finding 2: visited cleared on epoch reset ───────────────────────────────
+// Finding 2: visited cleared on epoch reset
 
-describeDataset('resetFrontier — epoch reset semantics', () => {
+describeDataset('resetFrontier and its epoch reset semantics', () => {
   it('clears visited and failed so everything is re-explored from here', () => {
     const s = freshState();
     s.visited = new Set(['A', 'B', 'C']);
@@ -95,7 +93,7 @@ describeDataset('resetFrontier — epoch reset semantics', () => {
   });
 });
 
-// ─── Finding 6: pass-through screens are observed mid-route ───────────────────
+// Finding 6: pass-through screens are observed mid-route
 
 interface WorldChest extends SimChest {
   screenId: string;
@@ -149,7 +147,7 @@ const CHAIN: ConnectionRecord[] = [
   registerPair('connection-t02', 'B', 'connection-t02r', 'C'),
 ];
 
-describeDataset('engine — visited pass-through screens are backtracked, not re-explored', () => {
+describeDataset('engine backtracks visited pass-through screens instead of re-exploring them', () => {
   it('routes through an already-visited screen with one Backtrack event and no re-discovery', () => {
     const world = new FakeWorld([
       { screenId: 'B', roomId: CHICKEN_HOUSE_ROOM, chestIndex: 0, tile: { row: 0, col: 0 }, opened: false, posKnown: true, itemId: BOMBS_ID },
@@ -171,16 +169,16 @@ describeDataset('engine — visited pass-through screens are backtracked, not re
 
     expect(state.phase).toBe('done');
     expect(state.completedChecks.has(HOUSE_CHECK)).toBe(true);
-    // Explored ground is passed through with a single BACKTRACK marker — its
+    // Explored ground is passed through with a single BACKTRACK marker, and its
     // interactables are NOT re-discovered (they were handled when first visited).
     expect(events.some(m => m.startsWith('Backtrack through B'))).toBe(true);
     expect(state.done.has(`chest:${CHICKEN_HOUSE_ROOM}:0`)).toBe(false);
   });
 });
 
-// ─── Finding 5: blocked-edge route abort (no teleport) ───────────────────────
+// Finding 5: blocked-edge route abort (no teleport)
 
-describeDataset('engine — traverse never teleports through a blocked edge', () => {
+describeDataset('engine traverse never teleports through a blocked edge', () => {
   it('aborts the route when the next hop has no passable edge', () => {
     // A→C is hammer-locked; a stale route to C exists but the virtual Link has no hammer.
     const conns: ConnectionRecord[] = [
@@ -200,7 +198,7 @@ describeDataset('engine — traverse never teleports through a blocked edge', ()
   });
 });
 
-// ─── Finding 10: unknown-position chest still discovered ──────────────────────
+// Finding 10: unknown-position chest still discovered
 
 const unreachableFlood = { reachable: [[0]] } as unknown as FloodFillResult;
 
@@ -213,7 +211,7 @@ const makeChest = (posKnown: boolean, tile: { row: number; col: number }): SimCh
   itemId: BOMBS_ID,
 });
 
-describeDataset('discover — unknown-position interactables', () => {
+describeDataset('discover on unknown-position interactables', () => {
   it('discovers a posKnown=false chest even when its tile is unreachable', () => {
     const state = freshState();
     const obs = baseObs('A', emptySnapshot());
@@ -244,7 +242,7 @@ describeDataset('discover — unknown-position interactables', () => {
   });
 });
 
-// ─── Finding 8: failed trigger (no diff) is not marked done, retried later ────
+// Finding 8: failed trigger (no diff) is not marked done, retried later
 
 const target: SimTarget = {
   screenId: 'A',
@@ -254,7 +252,7 @@ const target: SimTarget = {
   label: 'chest (test)',
 };
 
-describeDataset('engine — failed trigger handling', () => {
+describeDataset('engine handling of a failed trigger', () => {
   it('records a no-flag-change trigger as failed instead of done, then retries after an epoch reset', () => {
     const engine = createEngine({ adjacency: buildAdjacency(CHAIN) });
     const state = createEngineState({ screenId: 'A', tile: { row: 0, col: 0 } }, new Set(), {});
@@ -268,7 +266,7 @@ describeDataset('engine — failed trigger handling', () => {
     expect(nextState.failed.has(target.key)).toBe(true);
     expect(nextState.done.has(target.key)).toBe(false);
 
-    // Discovery skips a failed target this epoch …
+    // Discovery skips a failed target this epoch.
     const obsWithChest = baseObs('A', emptySnapshot());
     obsWithChest.interactables = {
       chests: [{ roomId: KAKARIKO_TAVERN_ROOM, chestIndex: 0, tile: { row: 0, col: 0 }, posKnown: true, opened: false, itemId: BOMBS_ID }],
@@ -277,15 +275,15 @@ describeDataset('engine — failed trigger handling', () => {
     };
     expect(discoverTargets(nextState, obsWithChest, null)).toHaveLength(0);
 
-    // … but a future epoch clears `failed`, so it becomes discoverable again.
+    // A future epoch clears `failed`, so it becomes discoverable again.
     resetFrontier(nextState);
     expect(discoverTargets(nextState, obsWithChest, null)).toHaveLength(1);
   });
 });
 
-// ─── Finding 9: generic small keys attributed via the matched check's dungeon ─
+// Finding 9: generic small keys attributed via the matched check's dungeon
 
-describeDataset('explorer — generic key attribution', () => {
+describeDataset('explorer attributes a generic key', () => {
   const detected = (opts: Partial<DetectedCheck>): DetectedCheck => ({
     evidence: [],
     at: { screenId: 'A', tile: { row: 0, col: 0 } },
@@ -297,7 +295,7 @@ describeDataset('explorer — generic key attribution', () => {
     const matched = { id: 'check-117', dungeonId: 'dungeon-003' } as CheckRecord;
     onCheckVerified(s, detected({ itemReceived: SMALL_KEY, matched, checkId: matched.id }));
     expect(s.keys.get('dungeon-003')).toBe(1);
-    // …and no other dungeon is credited by the same grant.
+    // No other dungeon is credited by the same grant.
     expect(s.keys.get('dungeon-009')).toBeUndefined();
   });
 
