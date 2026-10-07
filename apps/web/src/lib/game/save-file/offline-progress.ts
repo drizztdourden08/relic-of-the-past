@@ -10,6 +10,7 @@
 import { computeCompletedChecks } from '../tracker/completed-checks-core';
 import { slotBlockOffset } from './sram-slots';
 import { OW_EVENT_BASE, PROGRESS_OFFSETS, ROOM_FLAGS_BASE } from './progress-offsets';
+import { SRM_EVENT_LEDGER, blockOffsetOf } from './hook-save-bytes';
 import type { CheckId } from '@shared/game/data';
 
 /**
@@ -32,7 +33,9 @@ const offlineCompletedChecks = (
     const offset = PROGRESS_OFFSETS[bufferIndex];
     return offset === null || offset === undefined ? 0 : sram[base + offset];
   };
-  return computeCompletedChecks({ readRoomWord, readOwByte, readProgByte }, isArmed);
+  // The event ledger sits inside the same block, so a save on disk answers it too.
+  const readEventByte = (byteIndex: number): number => sram[base + blockOffsetOf(SRM_EVENT_LEDGER) + byteIndex];
+  return computeCompletedChecks({ readRoomWord, readOwByte, readProgByte, readEventByte }, isArmed);
 };
 
 export { offlineCompletedChecks };

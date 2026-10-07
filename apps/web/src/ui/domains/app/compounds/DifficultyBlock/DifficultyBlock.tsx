@@ -12,18 +12,18 @@
  * pointless, the same rule the retro costs follow under their own switch.
  *
  * Presentational only: the setting comes in as a prop and every edit leaves as
- * a whole new setting. An absent handler renders the block frozen, which is
- * the read-only face the run view shows.
+ * a whole new setting. An absent handler renders the block as a read-out,
+ * each value as a tag, which is the read-only Options page's face.
  */
 import { Box, Text } from '@ds/primitives';
 import {
   COPY_MULTIPLIERS, COPY_MULTIPLIER_LABELS, MAX_HEART_CAP, STARTING_HEARTS, asCopyMultiplier,
-} from '@shared/randomizer/ap-world/difficulty/difficulty.data';
-import { HEART_CAP_KEY, difficultyCopiesKeyOf } from '@shared/randomizer/ap-world/difficulty/difficulty-option-keys';
-import { PROGRESSIVE_FAMILIES } from '@shared/randomizer/ap-world/progressive/progressive-families.data';
-import { progressiveFamilyName } from '@shared/randomizer/ap-world/progressive/progressive-display-names';
-import { tickedCountOf } from '@shared/randomizer/ap-world/progressive/progressive-reach';
-import { apOptionByKey } from '@shared/randomizer/ap-world/options.data';
+} from '@shared/randomizer/world/difficulty/difficulty.data';
+import { HEART_CAP_KEY, difficultyCopiesKeyOf } from '@shared/randomizer/world/difficulty/difficulty-option-keys';
+import { PROGRESSIVE_FAMILIES } from '@shared/randomizer/world/progressive/progressive-families.data';
+import { progressiveFamilyName } from '@shared/randomizer/world/progressive/progressive-display-names';
+import { tickedCountOf } from '@shared/randomizer/world/progressive/progressive-reach';
+import { optionByKey } from '@shared/randomizer/world/options.data';
 import { OptionSliderRow } from '../OptionSliderRow';
 import { RandomizerOptionGroup } from '../RandomizerOptionGroup';
 import {
@@ -35,7 +35,7 @@ import './DifficultyBlock.css';
 const FIRST_STEP = COPY_MULTIPLIERS[0];
 const LAST_STEP = COPY_MULTIPLIERS[COPY_MULTIPLIERS.length - 1];
 
-const descriptionOf = (key: string) => apOptionByKey.get(key)?.description ?? '';
+const descriptionOf = (key: string) => optionByKey.get(key)?.description ?? '';
 const multipleLabel = (value: number): string => COPY_MULTIPLIER_LABELS[asCopyMultiplier(value)];
 const heartLabel = (value: number): string => `${value} hearts`;
 
@@ -62,6 +62,7 @@ const DifficultyBlock = (props: DifficultyBlockProps) => {
               max={LAST_STEP}
               disabled={readOnly || rungs === 0}
               formatValue={multipleLabel}
+              readout={readOnly}
               onChange={(value) => onChange?.({
                 ...setting,
                 copies: { ...setting.copies, [family.id]: asCopyMultiplier(value) },
@@ -72,13 +73,14 @@ const DifficultyBlock = (props: DifficultyBlockProps) => {
       </Box>
       <Text className="difficulty-block__heading">{DIFFICULTY_HEARTS_HEADING}</Text>
       <OptionSliderRow
-        label={apOptionByKey.get(HEART_CAP_KEY)?.displayName ?? HEART_CAP_KEY}
+        label={optionByKey.get(HEART_CAP_KEY)?.displayName ?? HEART_CAP_KEY}
         description={descriptionOf(HEART_CAP_KEY)}
         value={setting.heartCap}
         min={STARTING_HEARTS}
         max={MAX_HEART_CAP}
         disabled={readOnly}
         formatValue={heartLabel}
+        readout={readOnly}
         onChange={(heartCap) => onChange?.({ ...setting, heartCap })}
       />
     </RandomizerOptionGroup>

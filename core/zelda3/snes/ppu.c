@@ -86,6 +86,8 @@ void ppu_reset(Ppu* ppu) {
   memset(ppu->oam, 0, sizeof(ppu->oam));
   memset(ppu->oamIsPlayer, 0, sizeof(ppu->oamIsPlayer));
   ppu->playerPalActive = false;
+  memset(ppu->oamIsForeignIcon, 0, sizeof(ppu->oamIsForeignIcon));
+  ppu->foreignIconPalActive = false;
   ppu->oamAdr = 0;
   ppu->oamSecondWrite = false;
   ppu->oamBuffer = 0;
@@ -182,7 +184,7 @@ void PpuBeginDrawing(Ppu *ppu, uint8_t *pixels, size_t pitch, uint32_t render_fl
   }
 
   if (PpuGetCurrentRenderScale(ppu, ppu->renderFlags) == 4) {
-    for (int i = 0; i < 0x110; i++) {
+    for (int i = 0; i < kPpuCgramEntries; i++) {
       uint32 color = ppu->cgram[i];
       ppu->colorMapRgb[i] = ppu->brightnessMult[color & 0x1f] << 16 | ppu->brightnessMult[(color >> 5) & 0x1f] << 8 | ppu->brightnessMult[(color >> 10) & 0x1f];
     }
@@ -341,6 +343,17 @@ static inline bool PpuIsHiddenTile(const Ppu *ppu, uint32 tile) {
   return false;
 }
 
+// Paint |n| pixels as the gap sentinel. A no-data gap replaces the backdrop alone. A hidden tile (|solid|)
+// replaces sprite pixels too, whatever their priority, so the black past a room's walls covers a sprite
+// out there the way a wall would. A sprite entry is the one with layer bit 2 set and bit 0 clear (types 4
+// and 6, and the player's 12 and 14); the backdrop is 5 and the backgrounds are 0 to 2. BG1 is drawn
+// before BG2 and its pixels stay, and BG3 is drawn after and still wins over the sentinel's priority.
+static FORCEINLINE void PpuPaintGap(PpuZbufType *dstz, int n, bool solid) {
+  for (int q = 0; q < n; q++) {
+    if (dstz[q] == 0x0500 || (solid && (dstz[q] & 0x0500) == 0x0400)) dstz[q] = kPpuWorldGapPixel;
+  }
+}
+
 // The tile to draw at screen tile position (col, row): the word the fetch found while inside the 32x32
 // the picture is laid out on, and that screen's own background block outside it (PpuSetEdgeTiles). The
 // picture is the 32 columns and the first 28 rows of that block; these screens carry the same background
@@ -420,6 +433,7 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
       const uint16 *wrow = validY ? bglayer->world + (size_t)worldTileY * bglayer->worldW : NULL;
       for (int k = 0; k <= ntiles; k++) {
         int c = firstCol + k;
+        if (bglayer->worldRepeatColumns) c = IntMax(0, IntMin(c, (int)bglayer->worldW - 1));  // world_scroll_carry.c
         worldRowBuf[k] = (validY && c >= 0 && c < (int)bglayer->worldW) ? wrow[c] : 0;
       }
       tp = worldRowBuf, tp_next = worldRowBuf, tp_last = worldRowBuf + (kPpuXPixels / 8 + 7);
@@ -450,8 +464,8 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
           do DO_PIXEL_HFLIP(0); while (bits <<= 1, dstz++, --curw);
         }
       } else {
-        if ((useWorld && !tile) || hidden)  // no-data gap or hidden fill: paint the backdrop run black via the sentinel
-          for (int q = 0; q < curw; q++) { if (dstz[q] == 0x0500) dstz[q] = kPpuWorldGapPixel; }
+        if ((useWorld && !tile) || hidden)  // no-data gap or hidden fill: paint the run black via the sentinel
+          PpuPaintGap(dstz, curw, hidden);
         dstz += curw;
       }
     }
@@ -473,8 +487,8 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
           DO_PIXEL_HFLIP(0); DO_PIXEL_HFLIP(1); DO_PIXEL_HFLIP(2); DO_PIXEL_HFLIP(3);
           DO_PIXEL_HFLIP(4); DO_PIXEL_HFLIP(5); DO_PIXEL_HFLIP(6); DO_PIXEL_HFLIP(7);
         }
-      } else if ((useWorld && !tile) || hidden) {  // no-data gap or hidden fill: paint the backdrop run black via the sentinel
-        for (int q = 0; q < 8; q++) { if (dstz[q] == 0x0500) dstz[q] = kPpuWorldGapPixel; }
+      } else if ((useWorld && !tile) || hidden) {  // no-data gap or hidden fill: paint the run black via the sentinel
+        PpuPaintGap(dstz, 8, hidden);
       }
       dstz += 8, w -= 8;
     }
@@ -492,8 +506,8 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
         } else {
           do DO_PIXEL_HFLIP(0); while (bits <<= 1, dstz++, --w);
         }
-      } else if ((useWorld && !tile) || hidden) {  // no-data gap or hidden fill: paint the backdrop run black via the sentinel
-        for (int q = 0; q < w; q++) { if (dstz[q] == 0x0500) dstz[q] = kPpuWorldGapPixel; }
+      } else if ((useWorld && !tile) || hidden) {  // no-data gap or hidden fill: paint the run black via the sentinel
+        PpuPaintGap(dstz, (int)w, hidden);
       }
     }
   }
@@ -666,6 +680,7 @@ static void PpuDrawBackground_4bpp_mosaic(Ppu *ppu, uint y, bool sub, uint layer
       const uint16 *wrow = validY ? bglayer->world + (size_t)worldTileY * bglayer->worldW : NULL;
       for (int k = 0; k <= ntiles; k++) {
         int c = firstCol + k;
+        if (bglayer->worldRepeatColumns) c = IntMax(0, IntMin(c, (int)bglayer->worldW - 1));  // world_scroll_carry.c
         worldRowBuf[k] = (validY && c >= 0 && c < (int)bglayer->worldW) ? wrow[c] : 0;
       }
       tp = worldRowBuf, tp_next = worldRowBuf, tp_last = worldRowBuf + (kPpuXPixels / 8 + 7);
@@ -691,8 +706,8 @@ static void PpuDrawBackground_4bpp_mosaic(Ppu *ppu, uint y, bool sub, uint layer
           if (z > dstz[i])
             dstz[i] = pixel + z;
         } while (++i != w);
-      } else if ((useWorld && !tile) || hidden) {  // no-data gap or hidden fill: paint the backdrop run black via the sentinel
-        for (int q = 0; q < w; q++) { if (dstz[q] == 0x0500) dstz[q] = kPpuWorldGapPixel; }
+      } else if ((useWorld && !tile) || hidden) {  // no-data gap or hidden fill: paint the run black via the sentinel
+        PpuPaintGap(dstz, w, hidden);
       }
       dstz += w, x += w;
       // Crossing into the other half of the 2-screen tilemap has to re-arm both bounds, the way NEXT_TP
@@ -791,14 +806,26 @@ static void PpuDrawBackground_2bpp_mosaic(Ppu *ppu, int y, bool sub, uint layer,
 // color-math 6 -> 14), which is free: no layer type above 6 is otherwise used, and priority levels never
 // coincide between backgrounds and sprites, so the raised nibble can never decide an ordering comparison.
 // Masking the nibble with 7 recovers the layer the rest of the pipeline expects.
+//
+// A foreign item's game icon (foreign_icon_bank.c) is marked the same way with bit 8 raised as well (4 -> 13,
+// 6 -> 15). Bit 8 is the low bit of the layer nibble, which a sprite never sets (its types are 4 and 6), so
+// with bit 11 up it can only mean the icon; and bit 11 is never set on a background pixel, so a background
+// layer with bit 8 set (1, 3, 5) is untouched. The zbuf has no other free bit: this pair is how two private
+// banks share the one raised nibble. ZBUF_LAYER clears bit 8 again whenever bit 11 is set, so the icon reads
+// as the sprite layer it is, and every value without bit 11 decodes exactly as before.
 #define ZBUF_PLAYER_LAYER_BIT 0x800
-#define ZBUF_LAYER(z) (((z) >> 8) & 7)
+#define ZBUF_FOREIGN_ICON_BIT 0x100
+#define ZBUF_PRIVATE_BITS (ZBUF_PLAYER_LAYER_BIT | ZBUF_FOREIGN_ICON_BIT)
+#define ZBUF_LAYER(z) ((((z) >> 8) & 7) & ~(((z) >> 11) & 1))
 
 // CGRAM entry a z-buffer value resolves to. The player reads its private bank by color index alone, so it
 // keeps the sheet's colors whichever hardware palette its OAM entry happens to name — including palette 0,
-// where the translucency swap parks the player in rooms with a see-through layer.
+// where the translucency swap parks the player in rooms with a see-through layer. A foreign icon reads its
+// own bank the same way.
 static inline uint32 ZbufToCgram(PpuZbufType z) {
-  return (z & ZBUF_PLAYER_LAYER_BIT) ? (kPpuPlayerPalBase | (z & 0xf)) : (z & 0xff);
+  if (!(z & ZBUF_PLAYER_LAYER_BIT))
+    return z & 0xff;
+  return ((z & ZBUF_FOREIGN_ICON_BIT) ? kPpuForeignIconPalBase : kPpuPlayerPalBase) | (z & 0xf);
 }
 
 static void PpuDrawSprites(Ppu *ppu, uint y, uint sub, bool clear_backdrop) {
@@ -1383,7 +1410,7 @@ static int ppu_getPixel(Ppu *ppu, int x, int y, bool sub, int *r, int *g, int *b
         // get a pixel from the sprite buffer, keeping the player's bank bit so it resolves like the real path
         pixel = 0;
         if ((ppu->objBuffer.data[x + kPpuExtraLeftRight] >> 12) == SPRITE_PRIO_TO_PRIO_HI(curPriority))
-          pixel = ppu->objBuffer.data[x + kPpuExtraLeftRight] & (0xff | ZBUF_PLAYER_LAYER_BIT);
+          pixel = ppu->objBuffer.data[x + kPpuExtraLeftRight] & (0xff | ZBUF_PRIVATE_BITS);
       }
     }
     if (pixel > 0) {
@@ -1625,6 +1652,9 @@ static bool ppu_evaluateSprites(Ppu* ppu, int line) {
     // Mark the player's own body so its pixels resolve against the private bank rather than the shared row.
     if (ppu->playerPalActive && ppu->oamIsPlayer[index >> 1])
       z += ZBUF_PLAYER_LAYER_BIT;
+    // And a foreign item's game icon against its own bank (foreign_icon_bank.c).
+    else if (ppu->foreignIconPalActive && ppu->oamIsForeignIcon[index >> 1])
+      z += ZBUF_PRIVATE_BITS;
     
     for (int col = 0; col < spriteSize; col += 8) {
       if (col + x > -8 - extra_left_right && col + x < 256 + extra_left_right) {

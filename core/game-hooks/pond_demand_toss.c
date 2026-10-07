@@ -36,10 +36,9 @@ static const Bundle kHeartBundles[] = {{1, 0x42}};
 static const uint8 kBottleContentToss[][2] = {{3, 0x2E}, {4, 0x2F}, {5, 0x30}, {6, 0x3D}, {7, 0x3C}};
 #define BOTTLE_CONTENT_COUNT ((int)(sizeof(kBottleContentToss) / sizeof(kBottleContentToss[0])))
 
-// How many bottles a bottle demand asks for. A placement frozen before the count existed arms
-// zero there, and one bottle is what it meant, so zero reads as one.
+// How many bottles a bottle demand asks for.
 int PondDemandBottles(const PondDemand *demand) {
-  return demand->amount > 0 ? demand->amount : 1;
+  return demand->amount;
 }
 
 // The bundles a counted demand is thrown as, or NULL for a kind that is not counted.

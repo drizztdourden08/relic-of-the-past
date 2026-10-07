@@ -12,6 +12,9 @@ void GameHook_NotifyItemReceived(uint8 item_id, uint8 method) {
   // The receipt just created owns the armed one-shot message; a stale arm is dropped here
   // (receipt_messages.c). Precedes the notification gate for the same reason.
   GameHook_ReceiptMessageClaim();
+  // The event ledger classifies the receipt by its giver (events/event_receipts.c). Its own
+  // gate, kFeatures5_EventLedger, so it precedes the notification gate too.
+  GameHook_EventReceipt(item_id, method);
   // Opt-in gate: with tracker notifications off, fire zero JS host-calls, same contract as haptics.
   if (!(enhanced_features3 & kFeatures3_TrackerNotifications)) return;
   EM_ASM({

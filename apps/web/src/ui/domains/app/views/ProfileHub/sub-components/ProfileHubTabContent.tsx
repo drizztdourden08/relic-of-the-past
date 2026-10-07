@@ -20,6 +20,7 @@ import { HapticsSettings } from './HapticsSettings';
 import { DeveloperSettings } from './DeveloperSettings';
 import { MobileSettings } from './MobileSettings';
 import { GbaSettings } from './GbaSettings';
+import { OnlineSettings } from './OnlineSettings';
 import { PROFILE_HUB_TABS } from '../ProfileHub.constants';
 import type { ProfileHubProps, ProfileHubTab } from '../ProfileHub.type';
 
@@ -62,6 +63,7 @@ const ProfileHubTabContent = (props: ProfileHubTabContentProps) => {
     case 'bugfixes': return <BugFixesSettings settings={settings} onChange={onChange} />;
     case 'hud': return <HudSettings settings={settings} onChange={onChange} />;
     case 'haptics': return <HapticsSettings settings={settings} onChange={onChange} />;
+    case 'online': return <OnlineSettings profile={profile} settings={settings} onChange={onChange} />;
     case 'developer': return <DeveloperSettings settings={settings} onChange={onChange} />;
     case 'mobile': return <MobileSettings settings={settings} onChange={onChange} />;
     case 'gba':

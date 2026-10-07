@@ -7,7 +7,7 @@
 
 #include "src/types.h"
 
-// Currency tags, shared with shared/randomizer/ap-world/shops/shop-price-native.ts.
+// Currency tags, shared with shared/randomizer/world/shops/shop-price-native.ts.
 enum {
   kShopCurrency_Rupees = 0,
   kShopCurrency_Arrows = 1,
@@ -46,5 +46,11 @@ int ShopRefusalMessage(uint8 currency, uint16 amount, int vendored_msg);
 // The line a purchase shows over the hold-up: the shop's own template line when the loaded
 // dialogue blob carries it, else |fallback| (-1 for no box at all). shop_refusal.c.
 int ShopPurchaseMessage(int fallback);
+
+// The line to open for a purchase, given the location's taken one-shot |armed| (-1 for none)
+// and whether the shelf sold another player's item. A native item keeps ShopPurchaseMessage.
+// Another player's item always shows its line: the thanks with that line chained as the next
+// page, or the line alone when the blob has no thanks. shop_refusal.c.
+int ShopPurchaseLines(int armed, bool foreign);
 
 #endif  // GAME_HOOKS_SHOP_PAYMENT_H

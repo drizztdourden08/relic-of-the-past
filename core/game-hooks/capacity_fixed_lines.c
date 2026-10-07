@@ -6,10 +6,10 @@
 // record-only, never persisted, rebuilt at every session start like the plan and the
 // wallet table). The resolvers (upgrade_grants.c, wallet_grants.c) read the rung off the
 // save bytes before they climb (GameHook_CapacityRungOf / the wallet index) and ask for
-// the line of that rung and the steps they actually climbed; a hit replaces the
-// location's jump-only line (GameHook_ArmReceiptMessageReplace, gated on
+// the line of that rung and the steps they actually climbed; a hit becomes the next page
+// of the receipt's own line (GameHook_ArmReceiptDetailPage, gated on
 // kFeatures3_ReceiptMessages), a miss (an off-plan rung the host did not pre-render)
-// leaves it standing. Nothing here tests a gate: the read side is reached only from
+// leaves that line alone. Nothing here tests a gate: the read side is reached only from
 // inside the gated grant seams, and the arm answers to the message gate.
 #include "game_hooks_internal.h"
 #include "capacity_tiers.h"

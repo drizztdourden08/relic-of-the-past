@@ -17,22 +17,25 @@
  * piece counter by one.
  */
 
+import type { LocationKey } from '@shared/randomizer/world/location-key';
 import { receiptCountsOf } from '@shared/randomizer/receipt-text/receipt-counts';
 import { receiptLineKey } from '@shared/randomizer/receipt-text/receipt-line.type';
+import { isForeignItem } from '@shared/randomizer/archipelago/foreign-item';
 import { log } from '../../log-bus';
 import { setSessionReceiptMessages } from '../session-dialogue';
 import { getCompletedChecks, onCompletedChecksChanged } from '../tracker';
-import { standardCheckName } from './check-names';
+import { completedLocationKeys } from './check-names';
 import { firedLocations, onFiredLocation } from './override-fire-registry';
 import { buildPlanReceiptTexts } from './receipt-plan-messages';
 import { pondDemandLineKey } from './pond-demand-messages';
-import type { ApPlacement } from '@shared/randomizer/ap-world/fill/ap-placement.type';
+import type { Placement } from '@shared/randomizer/world/fill/placement.type';
 import type { CheckId } from '@shared/game/data';
 import type { ReceiptLine } from '@shared/randomizer/receipt-text/receipt-line.type';
 import type { CapacityFixedLineArm } from '../capacity-fixed-lines';
 import type { MessageIdOf } from './apply-overrides';
 import type { RungMessageIdOf } from './capacity-rung-messages';
 import type { PhysicalPlan } from './physical-plan.type';
+import type { ForeignItemOf } from './foreign-item-line';
 
 /**
  * The pond's own composed lines, by the amount each one quotes. Every getter
@@ -82,21 +85,27 @@ interface SessionReceiptTexts {
   stop: () => void;
 }
 
-const completedNamesOf = (checks: ReadonlySet<CheckId>): Set<string> =>
-  new Set([...[...checks].map((checkId) => standardCheckName(checkId)), ...firedLocations()]);
+const completedKeysOf = (checks: ReadonlySet<CheckId>): Set<LocationKey> =>
+  completedLocationKeys(checks, firedLocations());
 
+/** Another player's items count toward nothing this seed shows. */
+const ownLocations = (placement: Placement): Placement['locations'] =>
+  Object.fromEntries(Object.entries(placement.locations).filter(([, item]) => !isForeignItem(item))) as Placement['locations'];
 
-const startSessionReceiptTexts = (plan: PhysicalPlan, placement: ApPlacement, tag: string): SessionReceiptTexts => {
-  const { nameView, stats } = placement;
-  const textsFor = (completed: ReadonlySet<string>) =>
-    buildPlanReceiptTexts(plan, placement, receiptCountsOf({ nameView, keyDropShuffle: stats.keyDropShuffle, completed }));
-  const first = textsFor(completedNamesOf(getCompletedChecks()));
+const startSessionReceiptTexts = (
+  plan: PhysicalPlan, placement: Placement, tag: string, foreignItemOf?: ForeignItemOf,
+): SessionReceiptTexts => {
+  const { stats } = placement;
+  const locations = ownLocations(placement);
+  const textsFor = (completed: ReadonlySet<LocationKey>) => buildPlanReceiptTexts(plan, placement,
+    receiptCountsOf({ locations, keyDropShuffle: stats.keyDropShuffle, completed }), foreignItemOf);
+  const first = textsFor(completedKeysOf(getCompletedChecks()));
   const messageIds = setSessionReceiptMessages(first.lines);
   let lastKeys = first.lines.map(receiptLineKey);
 
   const refresh = (checks: ReadonlySet<CheckId>): void => {
     if (messageIds === null) return;
-    const next = textsFor(completedNamesOf(checks));
+    const next = textsFor(completedKeysOf(checks));
     const keys = next.lines.map(receiptLineKey);
     const changed = keys.filter((key, i) => key !== lastKeys[i]).length;
     if (changed === 0) return;
@@ -117,8 +126,8 @@ const startSessionReceiptTexts = (plan: PhysicalPlan, placement: ApPlacement, ta
     composed: messageIds !== null,
     // Composition refused (unreadable blob, untranslatable language): degrade to
     // the baked class-template line for the grant instead of showing nothing.
-    messageIdOf: (locationName) =>
-      idAt(first.indexByLocation.get(locationName)) ?? first.fallbackByLocation.get(locationName) ?? -1,
+    messageIdOf: (location) =>
+      idAt(first.indexByLocation.get(location)) ?? first.fallbackByLocation.get(location) ?? -1,
     rungMessageIdOf: (family) =>
       (messageIds === null ? undefined : first.rungIndexByFamily.get(family)?.map((index) => messageIds[index])),
     fixedLineMessages: messageIds === null ? [] : first.fixedLines.map(({ family, fromRung, jump, index }) =>

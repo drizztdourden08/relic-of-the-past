@@ -1,0 +1,91 @@
+/* @layer shared-game @kind data */
+
+import type { ConnectionRecord } from '@shared/game/data/types';
+
+const DW_INTERIORS_VILLAGE_OF_OUTCASTS_CONNECTIONS: ConnectionRecord[] = [
+  {
+    id: 'connection-897',
+    screenId: 'screen-468',
+    toConnectionId: 'connection-852',
+    kind: 'entrance',
+    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
+    canExit: true,
+    gameId: { entranceId: 131 },
+    tags: [],
+  },
+  {
+    id: 'connection-1087',
+    screenId: 'screen-470',
+    toConnectionId: 'connection-869',
+    kind: 'entrance',
+    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
+    canExit: true,
+    tags: [],
+  },
+  {
+    id: 'connection-1088',
+    screenId: 'screen-469',
+    toConnectionId: 'connection-870',
+    kind: 'entrance',
+    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
+    canExit: true,
+    tags: [],
+  },
+  {
+    id: 'connection-1090',
+    screenId: 'screen-480',
+    toConnectionId: 'connection-872',
+    kind: 'entrance',
+    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
+    canExit: true,
+    tags: [],
+  },
+  {
+    id: 'connection-1091',
+    screenId: 'screen-481',
+    toConnectionId: 'connection-873',
+    kind: 'entrance',
+    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
+    canExit: true,
+    gameId: { entranceId: 84 },
+    tags: [],
+  },
+  {
+    id: 'connection-1096',
+    screenId: 'screen-473',
+    toConnectionId: 'connection-878',
+    kind: 'entrance',
+    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
+    canExit: true,
+    tags: [],
+  },
+  {
+    id: 'connection-1276',
+    screenId: 'screen-482',
+    toConnectionId: 'connection-885',
+    kind: 'entrance',
+    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
+    canExit: true,
+    tags: [],
+  },
+  {
+    id: 'connection-1279',
+    screenId: 'screen-478',
+    toConnectionId: 'connection-888',
+    kind: 'entrance',
+    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
+    canExit: true,
+    tags: [],
+  },
+  {
+    id: 'connection-1280',
+    screenId: 'screen-476',
+    toConnectionId: 'connection-889',
+    kind: 'entrance',
+    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
+    canExit: true,
+    tags: [],
+  },
+];
+
+export { DW_INTERIORS_VILLAGE_OF_OUTCASTS_CONNECTIONS };

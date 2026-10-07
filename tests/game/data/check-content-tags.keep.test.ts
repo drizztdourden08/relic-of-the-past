@@ -12,27 +12,27 @@ import { describeDataset } from '../../dataset-guard';
 describeDataset('check content tags', () => {
   it('tags a key drop that also carries the big key', () => {
     const check = getCheck('check-111');
-    expect(check.randomizerName).toBe('Big Key Drop');
+    expect(check.name).toBe('Big Key Drop');
     expect(hasTagKey(check.tags ?? [], 'content:key')).toBe(true);
     expect(hasTagKey(check.tags ?? [], 'content:big-key')).toBe(true);
   });
 
   it('tags a map chest with map-compass', () => {
     const check = getCheck('check-101');
-    expect(check.randomizerName).toBe('Map Chest');
+    expect(check.name).toBe('Map Chest');
     expect(hasTagKey(check.tags ?? [], 'content:map-compass')).toBe(true);
   });
 
   it('tags a boss prize check with boss-item', () => {
     const check = getCheck('check-131');
-    expect(check.randomizerName).toBe('Prize');
+    expect(check.name).toBe('Prize');
     expect(check.kind).toBe('prize');
     expect(hasTagKey(check.tags ?? [], 'content:boss-item')).toBe(true);
   });
 
   it('leaves a plain chest with no content tags', () => {
     const check = getCheck('check-100');
-    expect(check.randomizerName).toBe('Boomerang Chest');
+    expect(check.name).toBe('Boomerang Chest');
     expect(check.tags ?? []).toEqual([]);
   });
 });

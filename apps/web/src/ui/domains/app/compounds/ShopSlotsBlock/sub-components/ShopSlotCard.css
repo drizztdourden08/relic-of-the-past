@@ -108,3 +108,8 @@
 .shop-slot-card[data-state='disabled'] .shop-slot-card__slot {
   background: transparent;
 }
+
+/* The read-only face: the slot's name over its True or False tag. */
+.shop-slot-card__slot--readout {
+  flex-direction: column;
+}

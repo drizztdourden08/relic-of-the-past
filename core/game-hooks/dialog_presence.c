@@ -43,3 +43,16 @@ bool DialogPresence_Active(void) {
   if (messaging_module == 0) return false;
   return g_rendered_last || (g_held_module != 0 && main_module_index == g_held_module);
 }
+
+// ─── Travelling with a save (dialog_hook_state.c) ───
+void DialogPresence_Pack(uint8 *out) {
+  out[0] = g_rendered_now;
+  out[1] = g_rendered_last;
+  out[2] = g_held_module;
+}
+
+void DialogPresence_Unpack(const uint8 *in) {
+  g_rendered_now = in[0] != 0;
+  g_rendered_last = in[1] != 0;
+  g_held_module = in[2];
+}

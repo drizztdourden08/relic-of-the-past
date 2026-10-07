@@ -1,5 +1,6 @@
 /* @layer core-game-hooks @kind native */
 #include "game_hooks_internal.h"
+#include "story_events.h"
 
 // ─── Overworld Special-Area Query ───
 
@@ -94,6 +95,19 @@ int WasmGetInventoryState(void) {
   g_inventory_buf[31] = link_has_crystals;
   g_inventory_buf[32] = link_heart_pieces;
   g_inventory_buf[33] = link_health_capacity;
+  // The big keys, one bit per dungeon in kUpperBitmasks order, so a rule that asks for one
+  // can be answered. Bytes 34-35 were spare.
+  g_inventory_buf[34] = link_bigkey & 0xff;
+  g_inventory_buf[35] = link_bigkey >> 8;
+  // How many bombs the bag holds, not how many are in it: a rule that asks for bombs is asking
+  // whether the player can carry them, and an empty bag refills at any bush.
+  int bomb_cap = GameHook_CapacityMax(0, link_bomb_upgrades);
+  g_inventory_buf[36] = bomb_cap < 0 ? 0 : (bomb_cap > 255 ? 255 : (uint8)bomb_cap);
+  // Whether a bomb was ever held (the ledger's own bit): from then on an empty count is a
+  // refill away, before it the player has never had one.
+  g_inventory_buf[37] = GameHook_HasEvent(kEvent_BombsFirstHeld) ? 1 : 0;
+  // The sword the smiths keep while byte 23 reads 255: 0x80 | level, or 0 (smith_sword.c).
+  g_inventory_buf[38] = GameHook_SwordAtSmithsRecord();
   return (int)g_inventory_buf;
 }
 
@@ -115,8 +129,11 @@ int WasmGetLiveRoomFlags(void) {
     memset(g_live_room_buf, 0, sizeof(g_live_room_buf));
     return (int)g_live_room_buf;
   }
-  uint16 room = dungeon_room_index;
-  uint16 flags = dung_savegame_state_bits >> 4;
+  // While a room change runs, the room number is already the next room's and the bits are still
+  // the last room's. Only plain play reports the pair; any other moment names no room at all.
+  bool settled = main_module_index == 7 && submodule_index == 0;
+  uint16 room = settled ? dungeon_room_index : 0xffff;
+  uint16 flags = settled ? dung_savegame_state_bits >> 4 : 0;
   PutU16(g_live_room_buf, 0, room);
   PutU16(g_live_room_buf, 2, flags);
   return (int)g_live_room_buf;

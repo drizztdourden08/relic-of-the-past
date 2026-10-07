@@ -1,0 +1,221 @@
+/* @layer shared-game @kind data */
+
+import type { RegionRecord } from '@shared/game/data/types';
+
+const DW_INTERIORS_REGIONS: RegionRecord[] = [
+  {
+    id: 'region-078',
+    world: 'dark',
+    type: 'cave',
+    name: 'Bonk Fairy (Dark)',
+  },
+  {
+    id: 'region-082',
+    world: 'dark',
+    type: 'cave',
+    name: 'Dark Lake Hylia Healer Fairy',
+  },
+  {
+    id: 'region-083',
+    world: 'dark',
+    type: 'cave',
+    name: 'Dark Lake Hylia Ledge Healer Fairy',
+  },
+  {
+    id: 'region-084',
+    world: 'dark',
+    type: 'cave',
+    name: 'Dark Desert Healer Fairy',
+  },
+  {
+    id: 'region-085',
+    world: 'dark',
+    type: 'cave',
+    name: 'Dark Death Mountain Healer Fairy',
+  },
+  {
+    id: 'region-108',
+    world: 'dark',
+    type: 'cave',
+    name: 'Cave Shop (Dark Death Mountain)',
+  },
+  {
+    id: 'region-134',
+    world: 'dark',
+    type: 'cave',
+    name: 'Palace of Darkness Hint',
+  },
+  {
+    id: 'region-135',
+    world: 'dark',
+    type: 'cave',
+    name: 'East Dark World Hint',
+  },
+  {
+    id: 'region-136',
+    world: 'dark',
+    type: 'cave',
+    name: 'Big Bomb Shop',
+  },
+  {
+    id: 'region-137',
+    world: 'dark',
+    type: 'cave',
+    name: 'Archery Game',
+  },
+  {
+    id: 'region-138',
+    world: 'dark',
+    type: 'cave',
+    name: 'Dark Lake Hylia Ledge Hint',
+  },
+  {
+    id: 'region-139',
+    world: 'dark',
+    type: 'cave',
+    name: 'Dark Lake Hylia Ledge Spike Cave',
+  },
+  {
+    id: 'region-140',
+    world: 'dark',
+    type: 'cave',
+    name: 'Hype Cave',
+  },
+  {
+    id: 'region-141',
+    world: 'dark',
+    type: 'cave',
+    name: 'Fortune Teller (Dark)',
+  },
+  {
+    id: 'region-142',
+    world: 'dark',
+    type: 'cave',
+    name: 'Village of Outcasts Shop',
+  },
+  {
+    id: 'region-143',
+    world: 'dark',
+    type: 'cave',
+    name: 'Dark Lake Hylia Shop',
+  },
+  {
+    id: 'region-144',
+    world: 'dark',
+    type: 'cave',
+    name: 'Dark World Lumberjack Shop',
+  },
+  {
+    id: 'region-145',
+    world: 'dark',
+    type: 'cave',
+    name: 'Dark World Potion Shop',
+  },
+  {
+    id: 'region-146',
+    world: 'dark',
+    type: 'cave',
+    name: 'Dark World Hammer Peg Cave',
+  },
+  {
+    id: 'region-147',
+    world: 'dark',
+    type: 'cave',
+    name: 'Pyramid Fairy',
+  },
+  {
+    id: 'region-148',
+    world: 'dark',
+    type: 'cave',
+    name: 'Brewery',
+  },
+  {
+    id: 'region-149',
+    world: 'dark',
+    type: 'cave',
+    name: 'C-Shaped House',
+  },
+  {
+    id: 'region-150',
+    world: 'dark',
+    type: 'cave',
+    name: 'Chest Game',
+  },
+  {
+    id: 'region-151',
+    world: 'dark',
+    type: 'cave',
+    name: 'Red Shield Shop',
+  },
+  {
+    id: 'region-152',
+    world: 'dark',
+    type: 'cave',
+    name: 'Dark Sanctuary Hint',
+  },
+  {
+    id: 'region-153',
+    world: 'dark',
+    type: 'cave',
+    name: 'Bumper Cave',
+    bunnyImpassable: true,
+  },
+  {
+    id: 'region-154',
+    world: 'dark',
+    type: 'cave',
+    name: 'Mire Shed',
+  },
+  {
+    id: 'region-155',
+    world: 'dark',
+    type: 'cave',
+    name: 'Dark Desert Hint',
+  },
+  {
+    id: 'region-156',
+    world: 'dark',
+    type: 'cave',
+    name: 'Superbunny Cave (Top)',
+  },
+  {
+    id: 'region-157',
+    world: 'dark',
+    type: 'cave',
+    name: 'Superbunny Cave (Bottom)',
+  },
+  {
+    id: 'region-158',
+    world: 'dark',
+    type: 'cave',
+    name: 'Spike Cave',
+  },
+  {
+    id: 'region-159',
+    world: 'dark',
+    type: 'cave',
+    name: 'Hookshot Cave',
+    bunnyImpassable: true,
+  },
+  {
+    id: 'region-160',
+    world: 'dark',
+    type: 'cave',
+    name: 'Hookshot Cave (Upper)',
+  },
+  {
+    id: 'region-162',
+    world: 'dark',
+    type: 'cave',
+    name: 'Pyramid',
+    bunnyImpassable: true,
+  },
+  {
+    id: 'region-163',
+    world: 'dark',
+    type: 'cave',
+    name: 'Bottom of Pyramid',
+  },
+];
+
+export { DW_INTERIORS_REGIONS };

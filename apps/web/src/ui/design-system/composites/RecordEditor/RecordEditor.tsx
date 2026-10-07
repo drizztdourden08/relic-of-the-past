@@ -16,6 +16,7 @@ import { layoutGroups } from './behavior/layout-groups';
 import { EditorGroup } from './sub-components/EditorGroup';
 import { ReferencedBy } from './sub-components/ReferencedBy';
 import type { EditorBinding, RecordEditorProps } from './RecordEditor.type';
+import type { IdRefOptionResolver } from '../field-kits/registry';
 import './RecordEditor.css';
 
 const SAVE = 'Save';
@@ -43,6 +44,18 @@ const RecordEditor = <T,>(props: RecordEditorProps<T>) => {
     [resolveNumberBounds, working],
   );
 
+  // The working copy, not the record: a picker that narrows by a sibling field
+  // has to see the value the FORM holds, or choosing a region and then a place
+  // inside it would offer the places from the region loaded with the record.
+  // Left undefined when nothing was injected, which is the kits' cue to fall
+  // back to a plain input instead of a picker with nothing in it.
+  const readIdRefOptions = useMemo<IdRefOptionResolver | undefined>(
+    () => (resolveIdRefOptions
+      ? (targetKind, field) => resolveIdRefOptions(targetKind, field, working)
+      : undefined),
+    [resolveIdRefOptions, working],
+  );
+
   // Closed over once per changed-path list; see markedPaths for why a container counts as changed too.
   const changed = useMemo(() => (changedPaths ? markedPaths(changedPaths) : null), [changedPaths]);
   const isChanged = useCallback((path: string) => changed?.has(path) ?? false, [changed]);
@@ -54,12 +67,12 @@ const RecordEditor = <T,>(props: RecordEditorProps<T>) => {
       isDirty: isPathDirty,
       isChanged: changed ? isChanged : undefined,
       disabled: readOnly,
-      resolveIdRefOptions,
+      resolveIdRefOptions: readIdRefOptions,
       resolveTagSuggestions,
       onCreateTag,
       bounds: readBounds,
     }),
-    [readValue, setValue, isPathDirty, changed, isChanged, readOnly, resolveIdRefOptions,
+    [readValue, setValue, isPathDirty, changed, isChanged, readOnly, readIdRefOptions,
       resolveTagSuggestions, onCreateTag, readBounds],
   );
 

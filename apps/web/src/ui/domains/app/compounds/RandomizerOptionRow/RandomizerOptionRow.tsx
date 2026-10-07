@@ -12,30 +12,44 @@
  * same greyed presentation but keeps its own tag, and a `note` beside it says
  * which setting decided it. The note reads in the blocking colour and the row
  * keeps full contrast: the value shown is the value the seed is built with.
+ *
+ * A `readout` row draws no control at all: the value sits in the control's
+ * track as a tag, True or False for a switch, the chosen label for a choice,
+ * the number for a range. That is the face of a panel shown read-only.
  */
 import { useMemo } from 'react';
 import { Box, Select, Slider, Text, TextInput, Toggle } from '@ds/primitives';
 import { OptionDescription } from '../OptionDescription';
+import { OptionValueTag, choiceLabelOf } from '../OptionValueTag';
 import { PoolImpactCell } from '../PoolImpactCell';
 import type { ImpactCell } from '../PoolImpactCell';
-import type { ApOptionDef, ApOptionValue } from '@shared/randomizer/ap-world/options.type';
+import type { OptionDef, OptionValue } from '@shared/randomizer/world/options.type';
 import './RandomizerOptionRow.css';
 
 interface RandomizerOptionRowProps {
-  option: ApOptionDef;
-  value: ApOptionValue;
-  onChange?: (value: ApOptionValue) => void;
+  option: OptionDef;
+  value: OptionValue;
+  onChange?: (value: OptionValue) => void;
   /** The In Pool cell, worded; omitted when the panel has no accounting to show. */
   impact?: ImpactCell;
   /** The panel freezes this row although the catalog leaves it open. */
   disabled?: boolean;
   /** Why a sibling setting overruled this row; shown under it in the blocking colour. */
   note?: string;
+  /** Show the value as a tag in place of the control: the read-only panel. */
+  readout?: boolean;
 }
 
-const EMPTY_CHOICES: ApOptionDef['choices'] = [];
+const EMPTY_CHOICES: OptionDef['choices'] = [];
 
-const tagFor = (option: ApOptionDef): string | null => {
+/** What a read-out row shows: a switch as a boolean, a choice as its own label. */
+const readoutOf = (option: OptionDef, value: OptionValue): boolean | string => {
+  if (option.kind === 'toggle') return Boolean(value);
+  if (option.kind === 'choice') return choiceLabelOf(option.choices ?? EMPTY_CHOICES, String(value));
+  return String(value);
+};
+
+const tagFor = (option: OptionDef): string | null => {
   if (!option.locked) return null;
   if (option.implementation === 'not-implemented') return 'not in this version';
   if (option.implementation === 'not-applicable') return 'not used here';
@@ -43,7 +57,7 @@ const tagFor = (option: ApOptionDef): string | null => {
 };
 
 const RandomizerOptionRow = (props: RandomizerOptionRowProps) => {
-  const { option, value, onChange, impact, disabled = false, note } = props;
+  const { option, value, onChange, impact, disabled = false, note, readout = false } = props;
   const frozen = option.locked || disabled;
   const forced = note !== undefined && note !== '';
 
@@ -54,7 +68,9 @@ const RandomizerOptionRow = (props: RandomizerOptionRowProps) => {
 
   const tag = tagFor(option);
 
-  const control = option.kind === 'toggle' ? (
+  const control = readout ? (
+    <OptionValueTag value={readoutOf(option, value)} />
+  ) : option.kind === 'toggle' ? (
     <Toggle
       checked={Boolean(value)}
       onChange={(checked) => onChange?.(checked)}

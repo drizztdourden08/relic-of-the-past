@@ -6,7 +6,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { all, connectionTagKeysOf, find } from '@shared/game/data';
-import { toScreenIdOf } from '@shared/game/data/connections/derive';
+import { toScreenIdOf, toScreenIdOrNone } from '@shared/game/data';
 import type { ConnectionRecord, ScreenId, ScreenRecord } from '@shared/game/data';
 import type { ConnectionInfo } from '@shared/game/navigation';
 import type { DetectionContext, ScreenObservations } from '@shared/game/recommendations';
@@ -40,7 +40,10 @@ const contextFor = (
 /** The original mechanism, driven exactly as the widget drives it. */
 const issuesFor = (conn: ConnectionRecord, flood: readonly ConnectionInfo[], screenId: ScreenId): string[] => {
   const tags = connectionTagKeysOf(conn.tags);
-  const view = { from: conn.screenId, to: toScreenIdOf(conn), tags, nav: conn.nav };
+  // A partner no record carries has no screen at all, so its own id stands where a screen id
+  // would, which is what the editor reads as an unknown screen.
+  const to = toScreenIdOrNone(conn) ?? conn.toConnectionId;
+  const view = { from: conn.screenId, to, tags, nav: conn.nav };
   return connectionIssues({ from: view.from, to: view.to, tags }, describeConnectionTiles(view, [...flood], screenId));
 };
 

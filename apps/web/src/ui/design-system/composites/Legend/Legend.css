@@ -1,0 +1,77 @@
+/* @layer renderer-components @kind style */
+
+.legend {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--c-text-muted);
+}
+
+.legend__dot {
+  width: var(--legend-dot-d);
+  height: var(--legend-dot-d);
+  border-radius: var(--r-pill);
+  background: var(--series-color, var(--c-hover));
+}
+
+.legend__dot--none {
+  background: transparent;
+}
+
+.legend__value {
+  color: var(--series-color, var(--c-text));
+}
+
+.legend__entry--total .legend__value {
+  color: var(--c-text);
+}
+
+/* Inline: one wrapping line, each entry as dot, count, label, with a dot between entries. */
+.legend--inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs) var(--space-sm);
+}
+
+.legend--inline .legend__entry {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  white-space: nowrap;
+}
+
+.legend--inline .legend__dot { order: -2; }
+.legend--inline .legend__value { order: -1; }
+.legend--inline .legend__dot--none { display: none; }
+
+.legend--inline .legend__entry + .legend__entry::before {
+  content: "·";
+  order: -3;
+  margin-right: var(--space-2xs);
+  color: var(--c-text-faint);
+}
+
+/* Stacked: a row per entry, dot, label, then the count at the right end; the total closes it. */
+.legend--stacked {
+  display: grid;
+  grid-template-columns: var(--legend-dot-d) 1fr auto;
+  align-items: center;
+  gap: var(--space-2xs) var(--space-sm);
+}
+
+.legend--stacked .legend__entry {
+  display: contents;
+}
+
+.legend--stacked .legend__value {
+  text-align: right;
+}
+
+.legend--stacked .legend__entry--total > * {
+  padding-top: var(--space-xs);
+  border-top: var(--border-width-thin) solid var(--c-border);
+}
+
+.legend--stacked .legend__entry--total .legend__label {
+  color: var(--c-text-dim);
+}

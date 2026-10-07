@@ -24,14 +24,15 @@ import { shopTotalTextOf } from '@app/ui/domains/app/compounds/ShopSlotsBlock/be
 import { shopSectionsOf } from '@app/ui/domains/app/compounds/ShopSlotsBlock/behavior/shop-sections';
 import { shopCountControlOf } from '@app/ui/domains/app/compounds/ShopSlotsBlock/behavior/shop-count-control';
 import { VANILLA_TOTAL } from '@app/ui/domains/app/compounds/ShopSlotsBlock/ShopSlotsBlock.constants';
-import { defaultShopScope } from '@shared/randomizer/ap-world/shops/shop-scope-from-values';
-import { DEFAULT_OFF_SHOPS, SHOP_DEFS, STANDARD_SHOP_SLOT_COUNT } from '@shared/randomizer/ap-world/shops/shops.data';
-import { SHOP_SLOT_ROWS } from '@shared/randomizer/ap-world/shops/shop-slot-options.data';
+import { defaultShopScope } from '@shared/randomizer/world/shops/shop-scope-from-values';
+import { SHOP_IDS, STANDARD_SHOP_SLOT_COUNT } from '@shared/randomizer/world/shops/shop-slot-facts';
+import { DEFAULT_OFF_SHOPS } from '@shared/randomizer/world/shops/shop-slot-options.data';
+import { SHOP_SLOT_ROWS } from '@shared/randomizer/world/shops/shop-slot-options.data';
 import { EMPTY_RANDOMIZER_FORM } from '@app/ui/domains/app/views/DataManager/sub-components/profile-manager/build-randomizer-config';
 import { snapshotOfChoices } from '@app/hooks/randomizer/randomizer-choices';
 import { normalizeRandomizerOptions } from '@shared/randomizer/options-snapshot';
-import { shopScopeOfValues } from '@shared/randomizer/ap-world/shops/shop-scope-from-values';
-import type { ShopScope } from '@shared/randomizer/ap-world/shops/shop-scope.type';
+import { shopScopeOfValues } from '@shared/randomizer/world/shops/shop-scope-from-values';
+import type { ShopScope } from '@shared/randomizer/world/shops/shop-scope.type';
 
 /** A stale stored count, which is what made the control lie in the first place. */
 const STALE_COUNT = 12;
@@ -92,7 +93,7 @@ describe('the cards are split by world and named for their section', () => {
   it('files every shop under exactly one heading', () => {
     const sections = shopSectionsOf(scopeOf({ mode: 'custom' }));
     expect(sections.map((section) => section.title)).toEqual(['Light World', 'Dark World']);
-    expect(sections.flatMap((section) => section.cards).length).toBe(SHOP_DEFS.length);
+    expect(sections.flatMap((section) => section.cards).length).toBe(SHOP_IDS.length);
   });
 
   it('drops the world words but keeps what tells two shops apart', () => {
@@ -152,7 +153,7 @@ describe('the count is drawn as whatever it honestly is', () => {
 
 describe('a brand-new profile starts on the shipped ticks', () => {
   const hutSlots = SHOP_SLOT_ROWS
-    .filter((row) => DEFAULT_OFF_SHOPS.includes(row.shop.name))
+    .filter((row) => DEFAULT_OFF_SHOPS.includes(row.slot.shopId))
     .map((row) => row.canonicalIndex);
 
   it('ticks every shelf and bomb slot and leaves the hut alone', () => {

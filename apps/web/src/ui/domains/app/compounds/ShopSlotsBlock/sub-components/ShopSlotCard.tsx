@@ -19,6 +19,7 @@
  * is what made it look as though it had started ticked.
  */
 import { Badge, Box, Checkbox, Text } from '@ds/primitives';
+import { OptionValueTag } from '../../OptionValueTag';
 import type { ShopCardModel } from '../behavior/shop-cards';
 import './ShopSlotCard.css';
 
@@ -26,6 +27,8 @@ interface ShopSlotCardProps {
   card: ShopCardModel;
   /** Vanilla mode or a read-only render: the card draws inert and takes no click. */
   disabled: boolean;
+  /** Each slot shows a True or False tag in place of its box: the read-only panel. */
+  readout?: boolean;
   onSlotChange?: (canonicalIndex: number, checked: boolean) => void;
 }
 
@@ -38,7 +41,7 @@ const stateOf = (disabled: boolean, noneOn: boolean): string => {
 };
 
 const ShopSlotCard = (props: ShopSlotCardProps) => {
-  const { card, disabled, onSlotChange } = props;
+  const { card, disabled, readout = false, onSlotChange } = props;
   const { name, stock, offByDefault, slots, noneOn } = card;
 
   return (
@@ -55,7 +58,15 @@ const ShopSlotCard = (props: ShopSlotCardProps) => {
       </Box>
       <Text className="shop-slot-card__stock">{stock}</Text>
       <Box className="shop-slot-card__slots">
-        {slots.map((slot) => (
+        {slots.map((slot) => (readout ? (
+          <OptionValueTag
+            key={slot.key}
+            className="shop-slot-card__slot shop-slot-card__slot--readout"
+            label={slot.label}
+            value={slot.checked}
+            compact
+          />
+        ) : (
           <Checkbox
             key={slot.key}
             className="shop-slot-card__slot"
@@ -64,7 +75,7 @@ const ShopSlotCard = (props: ShopSlotCardProps) => {
             disabled={disabled || onSlotChange === undefined}
             onChange={(next) => onSlotChange?.(slot.canonicalIndex, next)}
           />
-        ))}
+        )))}
       </Box>
     </Box>
   );

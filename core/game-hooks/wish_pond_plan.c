@@ -154,13 +154,15 @@ uint8 GameHook_WishPondThrowsTaken(int pond) {
 // Record-only setters, the shared contract: gates latch a frame after the host writes them, so
 // they are enforced at the application sites, never here. One call per rung, in the order the
 // water hands them over. An id past the 76 receipt entries that no resolver owns is refused,
-// so it can never reach the receipt arrays.
+// so it can never reach the receipt arrays. The foreign sentinel is admitted on the requested
+// online gate, and the grant seam re-checks the latched one (wish_pond_visit.c).
 EMSCRIPTEN_KEEPALIVE
 void WasmArmWishPondPlan(int pond, int rung, int new_item, int msg, int fire_id, int assigned) {
   if (pond < 0 || pond >= WISH_POND_COUNT) return;
   if (rung < 0 || rung >= WISH_POND_MAX_RUNGS) return;
   uint8 item = (uint8)new_item;
-  if (item >= 76 && !GameHook_IsVirtualGrantId(item) && !GameHook_IsPrizeGrantId(item)) {
+  if (item >= 76 && !GameHook_IsVirtualGrantId(item) && !GameHook_IsPrizeGrantId(item)
+      && !GameHook_ForeignSentinelRequested(item)) {
     printf("[Randomizer] Wish pond %d rung %d refused: item 0x%02x has no receipt\n", pond, rung, new_item);
     return;
   }

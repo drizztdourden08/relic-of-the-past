@@ -9,10 +9,10 @@
  * (capacity-rung-values.ts), where the from and to values of rung k are the plan's
  * cumulative rungs k and k+1.
  */
-import { FAMILIES } from '../ap-world/capacity/capacity-family';
-import { maxTierOf, planOf, startTierOf } from '../ap-world/capacity/family-plan';
+import { FAMILIES } from '../world/capacity/capacity-family';
+import { maxTierOf, planOf, startTierOf } from '../world/capacity/family-plan';
 import { renderCapacityStep } from './capacity-rung-values';
-import type { CapacityFamilyId, CapacityProfile } from '../ap-world/capacity/capacity-profile.type';
+import type { CapacityFamilyId, CapacityProfile } from '../world/capacity/capacity-profile.type';
 import type { ReceiptLine } from './receipt-line.type';
 
 interface CapacityRungLines {

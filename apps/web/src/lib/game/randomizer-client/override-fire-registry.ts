@@ -8,26 +8,27 @@
  * ids point into.
  */
 
+import type { LocationKey } from '@shared/randomizer/world/location-key';
 import { log } from '../../log-bus';
 import { armOverrideFiredEvents, disarmOverrideFiredEvents } from '../override-fired';
-import { checkIdByStandardName } from './check-names';
+import { checkIdOfLocation } from '@shared/randomizer/world/location-record';
 
-type ReportingSession = { reportCheck(locationName: string): void };
-type FiredLocationListener = (locationName: string) => void;
+type ReportingSession = { reportCheck(location: LocationKey): void };
+type FiredLocationListener = (location: LocationKey) => void;
 
-const locationByFireId = new Map<number, string>();
+const locationByFireId = new Map<number, LocationKey>();
 const armedCheckIds = new Set<string>();
 const fired = new Set<number>();
-const firedLocationNames = new Set<string>();
+const firedLocationKeys = new Set<LocationKey>();
 const firedListeners = new Set<FiredLocationListener>();
 let nextFireId = 0;
 
 /** Allocate the completion id for one armed entry. */
-const allocateFireId = (locationName: string): number => {
+const allocateFireId = (location: LocationKey): number => {
   const fireId = nextFireId;
   nextFireId += 1;
-  locationByFireId.set(fireId, locationName);
-  const checkId = checkIdByStandardName(locationName);
+  locationByFireId.set(fireId, location);
+  const checkId = checkIdOfLocation(location);
   if (checkId !== undefined) armedCheckIds.add(checkId);
   return fireId;
 };
@@ -42,13 +43,13 @@ const isCheckPhysicallyArmed = (checkId: string): boolean => armedCheckIds.has(c
 /** Route substitution reports to the session, one report per entry. */
 const armFireReporting = (session: ReportingSession): void => {
   armOverrideFiredEvents((fireId) => {
-    const locationName = locationByFireId.get(fireId);
-    if (locationName === undefined || fired.has(fireId)) return;
+    const location = locationByFireId.get(fireId);
+    if (location === undefined || fired.has(fireId)) return;
     fired.add(fireId);
-    firedLocationNames.add(locationName);
-    log.randomizer(`[Override] Substitution fired: ${locationName}`);
-    session.reportCheck(locationName);
-    for (const listener of firedListeners) listener(locationName);
+    firedLocationKeys.add(location);
+    log.randomizer(`[Override] Substitution fired: ${location}`);
+    session.reportCheck(location);
+    for (const listener of firedListeners) listener(location);
   });
 };
 
@@ -58,7 +59,7 @@ const armFireReporting = (session: ReportingSession): void => {
  * completed set never lists them; anything that counts completed locations
  * (the receipt lines' found/total numbers) reads these alongside it.
  */
-const firedLocations = (): ReadonlySet<string> => firedLocationNames;
+const firedLocations = (): ReadonlySet<LocationKey> => firedLocationKeys;
 
 /** Follow substitution reports as they land; returns the unsubscribe. */
 const onFiredLocation = (listener: FiredLocationListener): () => void => {
@@ -68,14 +69,15 @@ const onFiredLocation = (listener: FiredLocationListener): () => void => {
 
 /**
  * Backfills a substitution the core already recorded before this boot (a
- * shelf sold in an earlier session, per its persisted SRAM counter). No fire
- * id exists for a past purchase, so this bypasses the id ledger and reports
+ * shelf sold in an earlier session, per its persisted SRAM counter), or a
+ * location the multiworld room holds as checked (online-collected.ts). No
+ * fire id exists for either, so this bypasses the id ledger and reports
  * straight to the location set the live path also writes.
  */
-const markLocationFired = (locationName: string): void => {
-  if (firedLocationNames.has(locationName)) return;
-  firedLocationNames.add(locationName);
-  for (const listener of firedListeners) listener(locationName);
+const markLocationFired = (location: LocationKey): void => {
+  if (firedLocationKeys.has(location)) return;
+  firedLocationKeys.add(location);
+  for (const listener of firedListeners) listener(location);
 };
 
 const disarmFireReporting = (): void => {
@@ -83,7 +85,7 @@ const disarmFireReporting = (): void => {
   locationByFireId.clear();
   armedCheckIds.clear();
   fired.clear();
-  firedLocationNames.clear();
+  firedLocationKeys.clear();
   nextFireId = 0;
 };
 

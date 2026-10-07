@@ -60,8 +60,10 @@
   min-width: 0;
 }
 
+/* The intro grows to fit its title and buttons on one line each; only a narrow hero squeezes it
+   back to its minimum width, where they wrap. */
 .hero__main {
-  grid-template-columns: var(--hero-intro-w) 1fr minmax(0, var(--hero-side-w));
+  grid-template-columns: minmax(var(--hero-intro-w), max-content) 1fr minmax(0, var(--hero-side-w));
 }
 
 .hero__side {

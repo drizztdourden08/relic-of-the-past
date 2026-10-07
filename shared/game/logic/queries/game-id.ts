@@ -47,7 +47,7 @@ const screenIdForGameId = (gameId: GameScreenId): string | null => screenForGame
 /** Display name for a game id, falling back to the raw numbers when unmapped. */
 const gameIdLabel = (gameId: GameScreenId): string => {
   const screen = screenForGameId(gameId);
-  if (screen) return screen.vanillaName ?? screen.randomizerName;
+  if (screen) return screen.name;
   return gameId.kind === 'overworld'
     ? `screen 0x${gameId.screen.toString(16).padStart(2, '0')}`
     : `room 0x${gameId.room.toString(16).padStart(2, '0')}`;

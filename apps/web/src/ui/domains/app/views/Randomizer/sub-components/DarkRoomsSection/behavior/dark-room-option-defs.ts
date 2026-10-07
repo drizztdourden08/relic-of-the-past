@@ -9,11 +9,11 @@
  * Read off the shipped catalog once, at module load, the same way the catalog
  * partition is: the catalog is static module data.
  */
-import { apOptionCatalog } from '@shared/randomizer/ap-world/options.data';
-import { DARK_ROOM_REQUIRED_KEY } from '@shared/randomizer/ap-world/dark-rooms/dark-room-option-keys';
-import type { ApOptionDef } from '@shared/randomizer/ap-world/options.type';
+import { optionCatalog } from '@shared/randomizer/world/options.data';
+import { DARK_ROOM_REQUIRED_KEY } from '@shared/randomizer/world/dark-rooms/dark-room-option-keys';
+import type { OptionDef } from '@shared/randomizer/world/options.type';
 
-const DARK_ROOM_REQUIRED_OPTION: ApOptionDef | undefined =
-  apOptionCatalog.find((option) => option.key === DARK_ROOM_REQUIRED_KEY);
+const DARK_ROOM_REQUIRED_OPTION: OptionDef | undefined =
+  optionCatalog.find((option) => option.key === DARK_ROOM_REQUIRED_KEY);
 
 export { DARK_ROOM_REQUIRED_OPTION };

@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind types */
 import type { SelectGroup } from '@ds/primitives';
-import type { CapacityFamilyId, CapacityMode, CurveId, FamilyBonus } from '@shared/randomizer/ap-world/capacity';
-import type { CurvePresetId } from '@shared/randomizer/ap-world/capacity';
-import type { OptionDescription } from '@shared/randomizer/ap-world/option-description.type';
+import type { CapacityFamilyId, CapacityMode, CurveId, FamilyBonus } from '@shared/randomizer/world/capacity';
+import type { CurvePresetId } from '@shared/randomizer/world/capacity';
+import type { OptionDescription } from '@shared/randomizer/world/option-description.type';
 import type { LadderPreviewProps } from '../LadderPreview';
 import type { ImpactCell } from '../PoolImpactCell';
 
@@ -79,8 +79,10 @@ interface CapacityRowModel {
 
 interface CapacityFamilyRowProps {
   model: CapacityRowModel;
-  /** The Run tab: every control disabled, the preview and readouts kept. */
+  /** Every control disabled, the preview and readouts kept. */
   readOnly?: boolean;
+  /** Every control drawn as its value in a tag: the read-only Options page. */
+  readout?: boolean;
   onChange?: (next: CapacityRowState) => void;
   onBonusChange?: (next: FamilyBonus) => void;
 }

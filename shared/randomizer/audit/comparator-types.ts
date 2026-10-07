@@ -4,7 +4,7 @@
  * data-certification pipeline.
  */
 import type { CheckRecord, ItemRecord } from '../../game/data/types';
-import type { ApLocation } from './ap-source';
+import type { ReferenceLocation } from './reference-source';
 import type { RomCensus } from './rom-census';
 
 type ChestVerdictKind =
@@ -13,7 +13,7 @@ type ChestVerdictKind =
   | 'vanilla-alt-id'
   | 'vanilla-wrong'
   | 'phantom-chest'
-  | 'no-ap-address';
+  | 'no-reference-address';
 
 interface ChestPosition {
   roomId?: number;
@@ -36,9 +36,9 @@ interface ComparatorInput {
   census: RomCensus;
   /** The native chest table in table order: room ids drive the per-room ordinal join. */
   flatTable: readonly { roomId: number }[];
-  apLocations: readonly ApLocation[];
+  referenceLocations: readonly ReferenceLocation[];
   /** Datapackage location-name → id map: keydrop coverage is judged against it. */
-  apLocationIds: Record<string, number>;
+  referenceLocationIds: Record<string, number>;
   /** Builds the reference project's standard name for a dataset check. */
   nameOf: (check: CheckRecord) => string;
 }

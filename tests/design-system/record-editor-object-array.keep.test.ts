@@ -19,6 +19,8 @@ import { describeDataset } from '../dataset-guard';
 const PICKER = 'class="select-trigger';
 
 const screens = all('screen');
+/** Rendering every screen takes under two seconds alone and more under a full parallel run. */
+const WHOLE_COLLECTION_TIMEOUT_MS = 30_000;
 
 const fieldAt = (rows: readonly unknown[], path: string): FieldDescriptor => {
   const field = buildSchema(rows).find((entry) => entry.path === path);
@@ -162,5 +164,5 @@ describeDataset('the whole form, with a real list of records on it', () => {
       if (!row.spawns?.length) continue;
       expect(() => render(row, true), String(row.id)).not.toThrow();
     }
-  });
+  }, WHOLE_COLLECTION_TIMEOUT_MS);
 });

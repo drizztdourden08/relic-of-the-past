@@ -6,8 +6,8 @@
  * alongside it, and it stays open only while the table has entries.
  */
 
-import { isGrantableReceiveId } from '@shared/game/data';
 import { log } from '../log-bus';
+import { isArmableOverrideId } from './foreign-item-id';
 import { getModule } from './wasm-bridge';
 import { setDropOverridesActive } from './live-settings-flags';
 import { reassertGateWord3 } from './live-settings';
@@ -18,7 +18,7 @@ import { reassertGateWord3 } from './live-settings';
 const setDropOverride = (roomId: number, big: boolean, newItem: number, messageId = -1, fireId = -1): void => {
   // The id indexes the 76-entry native grant tables, so an out-of-range one would
   // corrupt the receipt, so refuse it here like the other override setters do.
-  if (!isGrantableReceiveId(newItem)) {
+  if (!isArmableOverrideId(newItem)) {
     log.error(`[Randomizer] Drop override refused: item 0x${newItem.toString(16)} `
       + `is outside the native grant table (room ${roomId})`);
     return;

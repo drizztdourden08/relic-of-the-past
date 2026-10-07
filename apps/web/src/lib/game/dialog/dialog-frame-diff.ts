@@ -5,7 +5,7 @@ import type { DialogCell, DialogFrame } from '@shared/game/dialog/dialog-frame.t
 const rowChanged = (a: DialogCell[], b: DialogCell[]): boolean => {
   if (a.length !== b.length) return true;
   for (let i = 0; i < a.length; i++) {
-    if (a[i].glyph !== b[i].glyph || a[i].x !== b[i].x || a[i].w !== b[i].w) return true;
+    if (a[i].glyph !== b[i].glyph || a[i].x !== b[i].x || a[i].w !== b[i].w || a[i].highlight !== b[i].highlight) return true;
   }
   return false;
 };

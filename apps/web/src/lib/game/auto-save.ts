@@ -9,9 +9,24 @@ import * as savesStore from '../storage/saves-store';
 import { saveMusicPosition } from './msu-save-glue';
 import { getModule, getProfileId } from './wasm-bridge';
 import { captureGameFrameBlob } from './capture-frame';
+import { withDialogState } from './state-dialog';
 
 let autoSaveInterval: ReturnType<typeof setInterval> | null = null;
 let autoSaveSlot = 99; // Dedicated MEMFS slot for auto-save (not user-visible)
+
+/** Told whenever the stored list changed: a new auto-save landed and the old ones were pruned. */
+const changeListeners = new Set<() => void>();
+
+const onAutoSavesChanged = (fn: () => void): (() => void) => {
+  changeListeners.add(fn);
+  return () => changeListeners.delete(fn);
+};
+
+const notifyChanged = (): void => {
+  for (const fn of changeListeners) {
+    try { fn(); } catch { /* a listener's failure is its own */ }
+  }
+};
 
 const captureScreenshot = async (): Promise<ArrayBuffer | undefined> => {
   const blob = await captureGameFrameBlob();
@@ -37,7 +52,9 @@ const performAutoSave = async (trigger: 'timer' | 'quit'): Promise<boolean> => {
     }
 
     const data = mod.FS.readFile(savePath);
-    const ab = (data.buffer as ArrayBuffer).slice(data.byteOffset, data.byteOffset + data.byteLength);
+    // Read before the screenshot awaits: the game keeps running, and the message box's hook state
+    // has to be the one from the frame the core saved (state-dialog.ts).
+    const ab = withDialogState(mod, (data.buffer as ArrayBuffer).slice(data.byteOffset, data.byteOffset + data.byteLength));
 
     // Capture screenshot
     const screenshot = await captureScreenshot();
@@ -76,6 +93,8 @@ const startAutoSave = (intervalSeconds: number, maxEntries: number): void => {
     const success = await performAutoSave('timer');
     if (success) {
       await pruneIfNeeded(maxEntries);
+      // After the prune, so a list that reloads now sees the final set.
+      notifyChanged();
     }
   }, intervalMs);
 };
@@ -91,4 +110,4 @@ const saveOnQuit = async (): Promise<boolean> => {
   return performAutoSave('quit');
 };
 
-export { performAutoSave, saveOnQuit, startAutoSave, stopAutoSave };
+export { onAutoSavesChanged, performAutoSave, saveOnQuit, startAutoSave, stopAutoSave };

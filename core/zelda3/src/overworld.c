@@ -1772,7 +1772,7 @@ void Overworld_SetSongList() {  // 82c463
   uint8 r0 = 2, y = 0xc0;
   if (sram_progress_indicator < 3) {
     y = 0x80;
-    if (link_sword_type < 2) {
+    if (!GameHook_PedestalClaimed()) {
       r0 = 5;
       y = 0x40;
       if (sram_progress_indicator < 2)

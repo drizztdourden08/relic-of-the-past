@@ -1,0 +1,44 @@
+/* @layer renderer-components @kind style */
+
+.dashboard-grid {
+  container: dashboard / inline-size;
+  min-width: 0;
+}
+
+/* auto-fill keeps every column the same readable width however few panels a
+   row holds; dense lets a one-column panel fill the hole a two-column one left. */
+.dashboard-grid__cells {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--dashboard-col-min)), 1fr));
+  grid-auto-flow: row dense;
+  align-items: stretch;
+  gap: var(--space-lg);
+}
+
+.dashboard-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.dashboard-panel__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.dashboard-panel[data-span='full'] {
+  grid-column: 1 / -1;
+}
+
+/* Two columns exist from --bp-dashboard-pair on (a container query cannot read
+   the token, so its value is repeated here). Below it a wide panel takes the one
+   column there is, instead of forcing a second one. */
+@container dashboard (width >= 696px) {
+  .dashboard-panel[data-span='2'] {
+    grid-column: span 2;
+  }
+}

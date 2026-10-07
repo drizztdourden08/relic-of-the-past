@@ -24,8 +24,8 @@ type Allocated<T> = T & { readonly [ALLOCATED]: true };
 
 /** New geography. The name is for display only, and the id comes back allocated. */
 type AllocateGeographyArgs =
-  | { kind: 'area'; randomizerName: string; world: AreaRecord['world'] }
-  | { kind: 'location'; randomizerName: string; areaId: AreaId };
+  | { kind: 'area'; name: string; world: AreaRecord['world'] }
+  | { kind: 'location'; name: string; areaId: AreaId };
 
 type AllocateGeographyResult =
   | { success: true; kind: 'area'; record: Allocated<AreaRecord> }

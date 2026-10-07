@@ -3,6 +3,10 @@
  * The Checks tab: the check list, with a Grant button that hands over what THIS run put at each location. The row
  * names the item it will give, so a randomized file shows the seed's item and never the vanilla
  * one the location used to hold.
+ *
+ * The rows are the tracker's own roster (tracker/tracker-roster.ts), so the console lists what
+ * the tracker lists. It used to build the whole dataset whatever the run, which both hid a
+ * seed's shop shelves and offered locations the seed never generated.
  */
 import { useEffect, useMemo, useState } from 'react';
 import { Box, Button, Text, TextInput } from '@ds/primitives';
@@ -12,6 +16,7 @@ import {
   getCompletedChecks, grantFromCheck, onCompletedChecksChanged, planCheckGrant,
 } from '@app/lib/game';
 import type { CheckGrantPlan } from '@app/lib/game';
+import { trackerCheckRecords } from '@app/lib/game/tracker/tracker-roster';
 import { getSessionState, subscribeSessionStore } from '@app/lib/game/randomizer-client';
 import { useWidgetPref } from '@app/hooks/useWidgetPref';
 import { DisabledOverlay } from '@ds/composites/DisabledOverlay';
@@ -26,7 +31,7 @@ type ChecksTabProps = {
 const screenLabelOf = (check: CheckRecord): string => {
   if (!check.screenId) return '';
   const screen = getScreen(check.screenId);
-  return screen.vanillaName ?? screen.randomizerName;
+  return screen.name;
 };
 
 const detailOf = (plan: CheckGrantPlan): string =>
@@ -40,11 +45,15 @@ const ChecksTab = ({ gates }: ChecksTabProps) => {
   useEffect(() => onCompletedChecksChanged((checks) => setCompletedChecks(new Set(checks))), []);
   useEffect(() => subscribeSessionStore(setSessionState), []);
 
-  const allChecks = useMemo(() => find('check', () => true), []);
+  const checkRecords = useMemo(() => find('check', () => true), []);
+  const allChecks = useMemo(
+    () => trackerCheckRecords(checkRecords, sessionState.placement),
+    [checkRecords, sessionState.placement],
+  );
   const filteredChecks = useMemo(() => {
     if (!search) return allChecks;
     const q = search.toLowerCase();
-    return allChecks.filter((c) => c.randomizerName.toLowerCase().includes(q)
+    return allChecks.filter((c) => c.name.toLowerCase().includes(q)
       || screenLabelOf(c).toLowerCase().includes(q));
   }, [search, allChecks]);
 
@@ -73,7 +82,7 @@ const ChecksTab = ({ gates }: ChecksTabProps) => {
             <Box key={check.id} className={`cheats-checks__entry ${done ? 'cheats-checks__entry--completed' : ''}`}>
               <Box className="cheats-checks__text">
                 <Text className="cheats-checks__name" title={`${screenLabelOf(check)} • ${check.kind}`}>
-                  {check.randomizerName}
+                  {check.name}
                 </Text>
                 <Text className={`cheats-checks__gives ${plan.kind === 'blocked' ? 'cheats-checks__gives--blocked' : ''}`}>
                   {detail}

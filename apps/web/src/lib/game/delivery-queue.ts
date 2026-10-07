@@ -7,7 +7,7 @@
 
 import { getModule } from './wasm-bridge';
 import { log } from '../log-bus';
-import { executeAction, isReceiptGrant } from './delivery-execute';
+import { executeEntry, isReceiptGrant } from './delivery-execute';
 import type { DeliveryAction, DeliveryEntry, DeliveryQueueState, StateListener } from './delivery-queue.type';
 
 // ─── Queue Implementation ───
@@ -104,7 +104,8 @@ const tick = (): void => {
   // complete. Only a confirmed execution moves the entry into the in-flight slot, so
   // the grant call fires exactly once per actual grant.
   const entry = queue[0];
-  if (executeAction(entry.action) === 'refused') {
+  const outcome = executeEntry(entry);
+  if (outcome === 'refused') {
     entry.refusals = (entry.refusals ?? 0) + 1;
     if (entry.refusals % REFUSAL_WARN_EVERY === 0) {
       log.app(`Delivery "${entry.message}" refused ${entry.refusals} times, retrying until the player can receive`, 'warn');
@@ -113,6 +114,13 @@ const tick = (): void => {
     return;
   }
   queue.shift();
+  // Nothing to show (quiet rupees): complete now, the game never goes busy for it.
+  if (outcome === 'settled') {
+    cooldownFrames = DELIVERY_COOLDOWN;
+    notify();
+    try { entry.onComplete?.(); } catch { /* ignore */ }
+    return;
+  }
   delivering = entry;
   deliveringBecameBusy = false;
   deliveringFrames = 0;
@@ -121,15 +129,10 @@ const tick = (): void => {
 
 // ─── Public API ───
 
-const enqueue = (message: string, source: string, action: DeliveryAction, onComplete?: () => void): string => {
-  const entry: DeliveryEntry = {
-    id: generateId(),
-    message,
-    source,
-    action,
-    enqueuedAt: Date.now(),
-    onComplete,
-  };
+const enqueue = (
+  message: string, source: string, action: DeliveryAction, onComplete?: () => void, onGranted?: () => void,
+): string => {
+  const entry: DeliveryEntry = { id: generateId(), message, source, action, enqueuedAt: Date.now(), onComplete, onGranted };
   queue.push(entry);
   notify();
   return entry.id;
@@ -158,13 +161,9 @@ const clear = (): void => {
   }
 };
 
-const peek = (): DeliveryEntry | undefined => {
-  return queue[0];
-};
+const peek = (): DeliveryEntry | undefined => queue[0];
 
-const size = (): number => {
-  return queue.length;
-};
+const size = (): number => queue.length;
 
 const subscribe = (listener: StateListener): () => void => {
   listeners.add(listener);

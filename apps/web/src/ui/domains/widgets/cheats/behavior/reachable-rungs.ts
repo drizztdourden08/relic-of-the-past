@@ -14,8 +14,8 @@
  * collected, so a lower value would leave a price or the ending's arrows unpayable while logic
  * still counts them as open. Without a seed the result is null and the core's ladder stands.
  */
-import { familyById, planOf } from '@shared/randomizer/ap-world/capacity';
-import type { CapacityFamily, CapacityFamilyId, FamilySetting } from '@shared/randomizer/ap-world/capacity';
+import { familyById, planOf } from '@shared/randomizer/world/capacity';
+import type { CapacityFamily, CapacityFamilyId, FamilySetting } from '@shared/randomizer/world/capacity';
 import type { ActiveCapacity } from '@app/lib/game/randomizer-client/active-capacity-profile';
 import type { CapacityKind } from '@app/lib/game';
 

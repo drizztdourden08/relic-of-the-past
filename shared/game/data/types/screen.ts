@@ -1,5 +1,7 @@
 /* @layer shared-game @kind types */
-import type { ActorId, AreaId, LocationId, ScreenId, TagId } from './ids';
+import type { ActorId, AreaId, LocationId, RegionId, ScreenId, TagId } from './ids';
+import type { RegionBounds } from './region';
+import type { ReviewMark } from './review';
 import type { RegionNavData } from '../../navigation/nav-data.types';
 import type { InteriorKind, ScreenKind, World } from '../enumeration/generated-types';
 
@@ -34,6 +36,16 @@ type VariantCondition =
 interface ScreenVariantInfo {
   key: string;
   label?: string;
+  /**
+   * The progress indicator byte value(s) this variant belongs to: one tier, or
+   * an inclusive `[from, to]` range. What each tier means is documented once, in
+   * `logic/queries/progress-tier.ts`, and labelled by the `progress-tier`
+   * enumeration category.
+   *
+   * A `{ type: 'progress' }` condition says the same thing in the form the
+   * runtime evaluates, so the two must agree: `screenBlockers` refuses a screen
+   * whose tier contradicts its own condition.
+   */
   progressTier?: number | [number, number];
   condition: VariantCondition;
 }
@@ -50,12 +62,19 @@ interface ScreenRecord {
   kind: ScreenKind;
   world: ScreenWorld;
   interiorKind?: InteriorKind;
-  /** Only set when a real in-game/guide term exists (see the naming policy). */
-  vanillaName?: string;
-  /** Always present; the randomizer-styled name. */
-  randomizerName: string;
+  /** The one name this screen answers to. */
+  name: string;
   areaId: AreaId;
   locationId: LocationId;
+  /**
+   * The reachability partition, which is neither the area nor the location: the region a
+   * player walks this screen from. Absent where no region owns the screen on its own, which
+   * happens for a variant of another screen and for the handful of places the reference
+   * splits differently than the dataset does (tests/game/data/regions.keep.test.ts lists them).
+   */
+  regionId?: RegionId;
+  /** A measured place inside this screen, for a region recorded by pixel box. */
+  bounds?: RegionBounds;
   position?: ScreenPosition;
   /** Tag collection references. Use `tagKeysOf` to read the terms back. */
   tags: readonly TagId[];
@@ -67,6 +86,7 @@ interface ScreenRecord {
   triggerIds?: readonly ActorId[];
   /** The room's static actor spawns, from the per-room sprite table. */
   spawns?: readonly ScreenSpawn[];
+  review?: ReviewMark;
 }
 
 export type {

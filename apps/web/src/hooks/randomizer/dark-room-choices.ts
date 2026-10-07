@@ -10,7 +10,7 @@
  * undefined at runtime and freezing a light the player never unticked.
  */
 import type { RandomizerOptionChoices } from './randomizer-choices';
-import type { DarkRoomSetting } from '@shared/randomizer/ap-world/dark-rooms/dark-room.type';
+import type { DarkRoomSetting } from '@shared/randomizer/world/dark-rooms/dark-room.type';
 
 const darkRoomSettingOfChoices = (choices: RandomizerOptionChoices): DarkRoomSetting => ({
   requireLight: choices.darkRoomLightRequired,

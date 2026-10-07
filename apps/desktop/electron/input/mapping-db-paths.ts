@@ -19,7 +19,7 @@
  */
 import { existsSync } from 'fs';
 import { join } from 'path';
-import { getLegacyPath } from '../lib/paths';
+import { getUserDataRootPath } from '../lib/paths';
 
 const DB_FILENAME = 'gamecontrollerdb.txt';
 
@@ -34,6 +34,6 @@ const resolveBundledMappingDbPath = (): string | null => {
 };
 
 /** The user's own db copy. addUserMapping creates it on the first write. */
-const resolveUserMappingDbPath = (): string => getLegacyPath(DB_FILENAME);
+const resolveUserMappingDbPath = (): string => getUserDataRootPath(DB_FILENAME);
 
 export { DB_FILENAME, resolveBundledMappingDbPath, resolveUserMappingDbPath };

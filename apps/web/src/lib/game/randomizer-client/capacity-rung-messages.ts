@@ -14,7 +14,7 @@
 import { capacityRungLinesOf } from '@shared/randomizer/receipt-text/capacity-rung-lines';
 import { capacityFixedLinesOf } from '@shared/randomizer/receipt-text/capacity-fixed-lines';
 import { setSessionReceiptMessages } from '../session-dialogue';
-import type { CapacityFamilyId, CapacityProfile } from '@shared/randomizer/ap-world/capacity';
+import type { CapacityFamilyId, CapacityProfile } from '@shared/randomizer/world/capacity';
 import type { CapacityFixedLineArm } from '../capacity-fixed-lines';
 
 /** family → its rung lines' message ids in plan order; undefined = no line composed for it. */

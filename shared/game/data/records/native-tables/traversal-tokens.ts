@@ -26,8 +26,8 @@ import type { ItemId } from '@shared/game/data/types/ids';
  * Item → traversal token. Keys/big-keys are handled separately (consumable /
  * per-dungeon), so no key record appears here.
  *
- * `item-059` and `item-012` are two distinct records that share the display name
- * "Bow"; both grant the token, because either one in hand means the run can shoot.
+ * `item-059` and `item-012` are the two native bow rows; both grant the token, because
+ * either one in hand means the run can shoot.
  */
 const ITEM_TO_TOKEN: Partial<Record<ItemId, TraversalRequirement>> = {
   // Bombs are a traversal item, not only a consumable. One interior tile attr is a

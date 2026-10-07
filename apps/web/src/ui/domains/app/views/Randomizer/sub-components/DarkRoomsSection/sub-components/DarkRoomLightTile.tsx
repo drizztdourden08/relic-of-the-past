@@ -13,6 +13,7 @@
  * tiles.ts) and every click leaves as a plain checked flag.
  */
 import { Box, Checkbox, Image } from '@ds/primitives';
+import { OptionValueTag } from '@domains/app/compounds/OptionValueTag';
 import type { DarkRoomLightTileModel } from '../behavior/dark-room-light-tiles';
 import './DarkRoomLightTile.css';
 
@@ -20,6 +21,8 @@ interface DarkRoomLightTileProps {
   tile: DarkRoomLightTileModel;
   /** A read-only render: the tile draws inert. */
   disabled: boolean;
+  /** The sprite over a True or False tag in place of the box: the read-only panel. */
+  readout?: boolean;
   onChange?: (checked: boolean) => void;
 }
 
@@ -35,23 +38,26 @@ const stateOf = (disabled: boolean, forced: boolean, checked: boolean): string =
 };
 
 const DarkRoomLightTile = (props: DarkRoomLightTileProps) => {
-  const { tile, disabled, onChange } = props;
+  const { tile, disabled, readout = false, onChange } = props;
   const { name, sprite, checked, reason } = tile;
   const forced = reason !== undefined;
   const title = forced ? `${name} ${reason}` : name;
+  const art = sprite === undefined ? PLACEHOLDER : (
+    <Image className="dark-room-light__sprite" src={sprite} alt="" draggable={false} fallback={PLACEHOLDER} />
+  );
 
   return (
     <Box className="dark-room-light" data-state={stateOf(disabled, forced, checked)} title={title}>
-      <Checkbox
-        className="dark-room-light__control"
-        checked={checked}
-        ariaLabel={title}
-        disabled={disabled || forced || onChange === undefined}
-        onChange={(next) => onChange?.(next)}
-        label={sprite === undefined ? PLACEHOLDER : (
-          <Image className="dark-room-light__sprite" src={sprite} alt="" draggable={false} fallback={PLACEHOLDER} />
-        )}
-      />
+      {readout ? <OptionValueTag className="dark-room-light__readout" label={art} value={checked} /> : (
+        <Checkbox
+          className="dark-room-light__control"
+          checked={checked}
+          ariaLabel={title}
+          disabled={disabled || forced || onChange === undefined}
+          onChange={(next) => onChange?.(next)}
+          label={art}
+        />
+      )}
     </Box>
   );
 };

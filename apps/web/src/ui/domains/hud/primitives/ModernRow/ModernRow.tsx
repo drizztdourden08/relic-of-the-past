@@ -18,6 +18,8 @@ interface ModernRowProps {
   /** CSS pixels per game pixel, magnification included. */
   unit: number;
   ink: string;
+  /** The primary then the secondary highlight's ink, for cells drawn in a highlight span. */
+  highlightInks?: readonly string[];
   stroke: string;
   /** Outline thickness in game pixels; 0 draws none. */
   strokeWidth: number;
@@ -43,8 +45,11 @@ const textStyle = (unit: number, ink: string, stroke: string, strokeWidth: numbe
   };
 };
 
+/** A highlighted cell takes its span's ink; every other cell the row's own. */
+const inkOf = (cell: DialogCell, ink: string, highlightInks: readonly string[] | undefined): string =>
+  (cell.highlight ? highlightInks?.[cell.highlight - 1] ?? ink : ink);
 const ModernRow = (props: ModernRowProps) => {
-  const { cells, alphabet, atlas, unit, ink, stroke, strokeWidth } = props;
+  const { cells, alphabet, atlas, unit, ink, highlightInks, stroke, strokeWidth } = props;
   const base = textStyle(unit, ink, stroke, strokeWidth);
   return (
     <>
@@ -60,7 +65,7 @@ const ModernRow = (props: ModernRowProps) => {
           );
         }
         return (
-          <span key={key} style={{ ...base, left: cell.x * unit, width: cell.w * unit }}>{entry}</span>
+          <span key={key} style={{ ...base, left: cell.x * unit, width: cell.w * unit, color: inkOf(cell, ink, highlightInks) }}>{entry}</span>
         );
       })}
     </>

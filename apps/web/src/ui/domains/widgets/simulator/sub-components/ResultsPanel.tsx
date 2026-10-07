@@ -25,7 +25,7 @@ interface ResultsPanelProps {
 type BannerTone = 'success' | 'danger';
 
 const resolveStopName = (stopAtCheckId: CheckId | ''): string =>
-  stopAtCheckId ? getCheck(stopAtCheckId).randomizerName : 'stop check';
+  stopAtCheckId ? getCheck(stopAtCheckId).name : 'stop check';
 
 const bannerFor = (outcome: SimOutcome, stopAtCheckId: CheckId | ''): { tone: BannerTone; icon: string; title: string; detail: string } => {
   switch (outcome) {

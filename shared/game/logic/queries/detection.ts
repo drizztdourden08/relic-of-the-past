@@ -65,21 +65,30 @@ interface ScreenLookup {
   byDungeonRoom: Map<string, ScreenRecord>;
   /** Cave/interior room index -> screen (first match only; lossy for duplicates) */
   byCaveRoom: Map<number, ScreenRecord>;
-  /** Entrance ID -> screen (disambiguates caves with shared room indices) */
-  byEntranceId: Map<number, ScreenRecord>;
+  /**
+   * Entrance id -> every screen that mouth enters. The cartridge reuses one entrance for
+   * several mouths (the generic fairy and hint caves), so this is a list, and a reader must
+   * still agree the room before it trusts a match: `which_entrance` records how the player
+   * came in, not where they are now.
+   */
+  byEntranceId: Map<number, ScreenRecord[]>;
   /** Cave room index -> all screens sharing that room (for fallback matching) */
   byCaveRoomAll: Map<number, ScreenRecord[]>;
+  /** Room index -> first screen holding it, palace or not (last-resort room match) */
+  byRoomAny: Map<number, ScreenRecord>;
 }
 
 const buildScreenLookup = (screens: readonly ScreenRecord[] = all('screen')): ScreenLookup => {
   const byOverworldScreen = new Map<number, ScreenRecord>();
   const byDungeonRoom = new Map<string, ScreenRecord>();
   const byCaveRoom = new Map<number, ScreenRecord>();
-  const byEntranceId = new Map<number, ScreenRecord>();
+  const byEntranceId = new Map<number, ScreenRecord[]>();
   const byCaveRoomAll = new Map<number, ScreenRecord[]>();
+  const byRoomAny = new Map<number, ScreenRecord>();
 
   for (const screen of screens) {
     const { overworldIndex, roomIndex, palaceIndex, entranceId } = screen.gameId;
+    if (roomIndex !== undefined && !byRoomAny.has(roomIndex)) byRoomAny.set(roomIndex, screen);
 
     if (screen.kind === 'overworld' && overworldIndex !== undefined) {
       byOverworldScreen.set(overworldIndex, screen);
@@ -92,10 +101,10 @@ const buildScreenLookup = (screens: readonly ScreenRecord[] = all('screen')): Sc
       list.push(screen);
     }
 
-    if (entranceId != null) byEntranceId.set(entranceId, screen);
+    if (entranceId != null) byEntranceId.set(entranceId, [...(byEntranceId.get(entranceId) ?? []), screen]);
   }
 
-  return { byOverworldScreen, byDungeonRoom, byCaveRoom, byEntranceId, byCaveRoomAll };
+  return { byOverworldScreen, byDungeonRoom, byCaveRoom, byEntranceId, byCaveRoomAll, byRoomAny };
 };
 
 let cachedLookup: ScreenLookup | null = null;
@@ -124,10 +133,13 @@ const resolveCurrentScreenDetailed = (isIndoors: boolean, palaceIndex: number, r
   const lookup = getScreenLookup();
 
   if (isIndoors) {
-    // 1. Try entrance ID first (most precise for caves with shared rooms)
+    // 1. The entrance the player came in by, but only for the room they are standing in: it is
+    //    the precise answer when two screens share a room, and no answer at all once they have
+    //    walked on, because `which_entrance` keeps naming the mouth they used.
     if (whichEntrance != null && whichEntrance !== 0) {
-      const byEntrance = lookup.byEntranceId.get(whichEntrance);
-      if (byEntrance) return { screen: byEntrance, method: 'entrance' };
+      const byEntrance = (lookup.byEntranceId.get(whichEntrance) ?? [])
+        .filter((candidate) => candidate.gameId.roomIndex === roomIndex);
+      if (byEntrance.length === 1) return { screen: byEntrance[0], method: 'entrance' };
     }
 
     const dungeonIdx = palaceIndex >> 1;

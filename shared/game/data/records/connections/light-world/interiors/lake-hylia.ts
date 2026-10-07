@@ -1,0 +1,92 @@
+/* @layer shared-game @kind data */
+
+import type { ConnectionRecord } from '@shared/game/data/types';
+
+const LW_INTERIORS_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
+  {
+    id: 'connection-1296',
+    screenId: 'screen-174',
+    toConnectionId: 'connection-317',
+    kind: 'entrance',
+    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
+    canExit: true,
+    tags: [],
+  },
+  {
+    id: 'connection-1297',
+    screenId: 'screen-228',
+    toConnectionId: 'connection-318',
+    kind: 'entrance',
+    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
+    canExit: true,
+    tags: [],
+  },
+  {
+    id: 'connection-1298',
+    screenId: 'screen-161',
+    toConnectionId: 'connection-319',
+    kind: 'entrance',
+    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
+    canExit: true,
+    tags: [],
+  },
+  {
+    id: 'connection-1396',
+    screenId: 'screen-217',
+    toConnectionId: 'connection-339',
+    kind: 'entrance',
+    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
+    canExit: true,
+    tags: [],
+  },
+  {
+    id: 'connection-1407',
+    screenId: 'screen-184',
+    toConnectionId: 'connection-352',
+    kind: 'entrance',
+    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
+    canExit: true,
+    tags: [],
+  },
+  {
+    id: 'connection-1617',
+    screenId: 'screen-214',
+    toConnectionId: 'connection-401',
+    kind: 'entrance',
+    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
+    canExit: true,
+    gameId: { entranceId: 88 },
+    tags: [],
+  },
+  {
+    id: 'connection-1295',
+    screenId: 'screen-166',
+    toConnectionId: 'connection-316',
+    kind: 'entrance',
+    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
+    canExit: true,
+    gameId: { entranceId: 108 },
+    tags: [],
+  },
+  {
+    id: 'connection-1422',
+    screenId: 'screen-170',
+    toConnectionId: 'connection-367',
+    kind: 'entrance',
+    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
+    canExit: true,
+    gameId: { entranceId: 78 },
+    tags: [],
+  },
+  {
+    id: 'connection-1400',
+    screenId: 'screen-188',
+    toConnectionId: 'connection-345',
+    kind: 'entrance',
+    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
+    canExit: true,
+    tags: [],
+  },
+];
+
+export { LW_INTERIORS_LAKE_HYLIA_CONNECTIONS };

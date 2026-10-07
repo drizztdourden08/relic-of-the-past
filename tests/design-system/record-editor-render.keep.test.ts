@@ -13,6 +13,8 @@ import { describeDataset } from '../dataset-guard';
 // need a browser.
 
 const noop = async (): Promise<void> => undefined;
+/** Rendering a whole collection takes under two seconds alone and more under a full parallel run. */
+const WHOLE_COLLECTION_TIMEOUT_MS = 30_000;
 
 const render = (
   record: unknown,
@@ -57,7 +59,7 @@ describeDataset('RecordEditor on a real record from several collections', () => 
           record: row, schema, onSave: noop,
         })), `${kind} ${String((row as { id?: string }).id)}`).not.toThrow();
       }
-    });
+    }, WHOLE_COLLECTION_TIMEOUT_MS);
   }
 });
 

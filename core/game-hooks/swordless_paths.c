@@ -137,5 +137,7 @@ bool GameHook_TowerSealRepels(void) {
   // uses for the same question (sprite.c Sprite_CalculateSwordDamage).
   if (SwordlessBit(kFeatures4_HammerBreaksSeal) && (link_item_in_hand & 10))
     return false;
-  return link_sword_type < 2;
+  // Under a story gate the seal parts for the chosen event instead of the blade (story_barrier.c);
+  // with that field at zero this is the vendored test, link_sword_type < 2.
+  return !GameHook_StoryGate(kGate_Barrier, link_sword_type >= 2);
 }

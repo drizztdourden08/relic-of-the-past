@@ -4,7 +4,8 @@
 // vendored refusal names rupees, which is right for a rupee price and wrong for every
 // other one, so a rupee price keeps the vendored line and nothing else does. When the
 // player buys: the shop's thanks, over the hold-up. The vendored thanks name the shelf's
-// own stock, which a randomized shelf is not selling, so the line here names nothing.
+// own stock, which a randomized shelf is not selling, so the line here names nothing. A shelf
+// selling another player's item adds the line saying where it went as the thanks' next page.
 //
 // The lines are randomizer template lines, positions 6-14 of the list the language bake
 // appends after the canonical vanilla dialogue (shared/asset-extraction/text/data/
@@ -62,6 +63,16 @@ int ShopPurchaseMessage(int fallback) {
   printf("[Randomizer] Shop purchase line %d not in the dialogue blob (stale assets?), keeping %d\n",
          SHOP_PURCHASE_MSG, fallback);
   return fallback;
+}
+
+// Only reached with an armed line when kFeatures3_ReceiptMessages is on (the take is gated), and
+// |foreign| only with kFeatures5_ApOnline on, so a native purchase is unchanged.
+int ShopPurchaseLines(int armed, bool foreign) {
+  if (!foreign || armed < 0) return ShopPurchaseMessage(armed);
+  int thanks = ShopPurchaseMessage(-1);
+  if (thanks < 0) return armed;
+  ReceiptPages_ChainAsPage(thanks, armed);
+  return thanks;
 }
 
 // Headless probe: the line a purchase would show over |fallback|, against the dialogue

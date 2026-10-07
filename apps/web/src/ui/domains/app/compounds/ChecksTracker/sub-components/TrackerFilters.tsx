@@ -6,7 +6,7 @@
  */
 import { useState } from 'react';
 import type {
-  FilterState, GroupDimension, GroupDimensionDef, ItemFilter, StatusFilter,
+  FilterState, GroupDimension, GroupDimensionDef, ItemFilter, RunContext, ShowMode, StatusFilter,
 } from '@shared/game/logic/queries/check-grouping';
 import { Badge, Box, Button, Icon, IconButton, SegmentedControl, TextInput } from '@ds/primitives';
 import type { SegmentOption } from '@ds/primitives';
@@ -16,6 +16,7 @@ import {
 import type { ViewMode } from '../ChecksTracker.type';
 import { CheckStatusIcon } from './CheckStatusIcon';
 import { TrackerFilterPanels } from './TrackerFilterPanels';
+import { activeLogicToggles, TrackerLogicToggles } from './TrackerLogicToggles';
 import '../ChecksTracker.css';
 
 /** Which disclosure panels are open. Small enough to travel as one value, which
@@ -44,12 +45,21 @@ interface TrackerFiltersProps {
    */
   panels?: TrackerPanels;
   onPanelsChange?: (next: TrackerPanels) => void;
+  /** Which run the list is for: the shop-shelves switch shows on the plain game only. */
+  run?: RunContext;
 }
 
 const VIEW_MODE_OPTIONS: SegmentOption<ViewMode>[] = [
   { value: 'compact', label: <Icon paths={LIST_PATHS} size={13} />, title: 'Compact rows' },
   { value: 'detailed', label: <Icon paths={LIST_DETAIL_PATHS} size={13} />, title: 'Rows with items' },
   { value: 'visual', label: <Icon paths={GRID_PATHS} size={13} />, title: 'Item cards' },
+];
+
+/** Items, events, or both: the one switch that is always in reach, above the drawer. */
+const SHOW_MODE_OPTIONS: SegmentOption<ShowMode>[] = [
+  { value: 'items', label: 'Items', title: 'The item checks' },
+  { value: 'events', label: 'Events', title: 'Story, dungeon, fairy and area events' },
+  { value: 'both', label: 'Both', title: 'Everything' },
 ];
 
 const ITEM_FILTER_OPTIONS: SegmentOption<ItemFilter>[] = [
@@ -66,7 +76,7 @@ const STATUS_OPTIONS: SegmentOption<StatusFilter>[] = [
 ];
 
 const TrackerFilters = (props: TrackerFiltersProps) => {
-  const { filter, onFilterChange, grouping, onGroupingChange, viewMode, onViewModeChange, dimensions, panels, onPanelsChange } = props;
+  const { filter, onFilterChange, grouping, onGroupingChange, viewMode, onViewModeChange, dimensions, panels, onPanelsChange, run } = props;
   const [localPanels, setLocalPanels] = useState<TrackerPanels>(CLOSED_PANELS);
   const open = panels ?? localPanels;
   const setOpen = (next: TrackerPanels) => {
@@ -77,7 +87,7 @@ const TrackerFilters = (props: TrackerFiltersProps) => {
 
   const itemFilter = filter.itemFilter ?? 'all';
   const statusFilter = filter.statusFilter ?? 'all';
-  const activeCount = (itemFilter !== 'all' ? 1 : 0) + (statusFilter !== 'all' ? 1 : 0)
+  const activeCount = (itemFilter !== 'all' ? 1 : 0) + (statusFilter !== 'all' ? 1 : 0) + activeLogicToggles(filter, run)
     + (filter.activeFacets.length > 0 ? 1 : 0) + (grouping.length > 0 ? 1 : 0);
 
   return (
@@ -107,6 +117,14 @@ const TrackerFilters = (props: TrackerFiltersProps) => {
             <Badge className="tracker-filters__count" variant="warning">{activeCount}</Badge>
           )}
         </Box>
+      </Box>
+
+      <Box className="tracker-filters__show-mode">
+        <SegmentedControl
+          value={filter.showMode ?? 'items'}
+          options={SHOW_MODE_OPTIONS}
+          onChange={(value) => onFilterChange({ ...filter, showMode: value })}
+        />
       </Box>
 
       {showFilters && (
@@ -140,6 +158,7 @@ const TrackerFilters = (props: TrackerFiltersProps) => {
           >
             Group{grouping.length > 0 ? ` (${grouping.length})` : ''}
           </Button>
+          <TrackerLogicToggles filter={filter} onFilterChange={onFilterChange} run={run} />
         </Box>
       )}
 

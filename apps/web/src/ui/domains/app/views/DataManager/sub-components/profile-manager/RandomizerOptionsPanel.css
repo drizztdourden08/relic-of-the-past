@@ -7,6 +7,16 @@
    Only the tab BODY scrolls: the header, the tabs and the pool total stay
    put, so the feedback for an edit never scrolls away with the rows. */
 
+/* The measured box: the panel reads its own width here to choose between the
+   split and the pool as a tab, so it fills its host in both. */
+.randomizer-options__root {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+}
+
 .randomizer-options__split {
   flex: 1;
   min-height: 0;

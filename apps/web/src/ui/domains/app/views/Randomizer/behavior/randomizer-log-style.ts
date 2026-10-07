@@ -12,7 +12,7 @@ import type { LogKindDef, LogRow } from '@ds/composites/LogPanel';
 
 type ActivityKind =
   | 'session' | 'plan' | 'override' | 'deliver' | 'check' | 'receipt'
-  | 'online' | 'info' | 'warn' | 'error';
+  | 'online' | 'ap' | 'info' | 'warn' | 'error';
 
 /** Ordered: the first match wins, so specific prefixes come before broad ones. */
 const RULES: readonly [RegExp, ActivityKind, string][] = [
@@ -45,6 +45,7 @@ const ACTIVITY_KINDS: LogKindDef[] = [
   { id: 'check', label: 'Checks' },
   { id: 'receipt', label: 'Receipts' },
   { id: 'online', label: 'Connection' },
+  { id: 'ap', label: 'Archipelago' },
   { id: 'info', label: 'Info' },
   { id: 'warn', label: 'Warnings' },
   { id: 'error', label: 'Errors' },
@@ -59,23 +60,20 @@ const formatTime = (timestamp: number): string =>
  */
 const stripPrefix = (message: string): string => message.replace(/^\[[^\]]+]\s*/, '');
 
-const toActivityRows = (entries: LogEntry[]): LogRow[] =>
-  entries.map((entry) => {
-    const { kind, tag } = classifyEntry(entry);
-    return {
-      id: String(entry.id),
-      gutter: formatTime(entry.timestamp),
-      tag,
-      kind,
-      message: stripPrefix(entry.message),
-    };
-  });
+const activityRowOf = (entry: LogEntry): LogRow => {
+  const { kind, tag } = classifyEntry(entry);
+  return {
+    id: String(entry.id),
+    gutter: formatTime(entry.timestamp),
+    tag,
+    kind,
+    message: stripPrefix(entry.message),
+  };
+};
 
-const entriesToText = (entries: LogEntry[]): string =>
-  entries.map((entry) => {
-    const { tag } = classifyEntry(entry);
-    return `${formatTime(entry.timestamp)}\t${tag.replace(/[▸◂] /, '')}\t${stripPrefix(entry.message)}`;
-  }).join('\n');
+/** The rows as tab-separated text for the copy button, arrows dropped from the tags. */
+const rowsToText = (rows: readonly LogRow[]): string =>
+  rows.map((row) => `${row.gutter}\t${row.tag.replace(/[▸◂] /, '')}\t${row.message}`).join('\n');
 
-export { ACTIVITY_KINDS, classifyEntry, entriesToText, toActivityRows };
+export { ACTIVITY_KINDS, activityRowOf, classifyEntry, formatTime, rowsToText };
 export type { ActivityKind };

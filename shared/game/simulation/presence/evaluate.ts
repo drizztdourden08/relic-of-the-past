@@ -36,6 +36,12 @@ const evaluatePresence = (condition: PresenceCondition | undefined, state: Prese
     const dead = ((state.roomState[condition.roomBossDead] ?? 0) & BOSS_DEAD_BIT) !== 0;
     return dead === condition.dead;
   }
+  if ('progressIndicatorEq' in condition) return state.progressIndicator === condition.progressIndicatorEq;
+  if ('progressIndicatorLt' in condition) return state.progressIndicator < condition.progressIndicatorLt;
+  if ('darkWorld' in condition) return (state.status?.darkWorld ?? false) === condition.darkWorld;
+  if ('bunny' in condition) return (state.status?.bunny ?? false) === condition.bunny;
+  if ('crystalSwitchFlipped' in condition) return (state.status?.crystalSwitchFlipped ?? false) === condition.crystalSwitchFlipped;
+  if ('desertStatuesMoved' in condition) return (state.status?.desertStatuesMoved ?? false) === condition.desertStatuesMoved;
   if ('and' in condition) return condition.and.every((c) => evaluatePresence(c, state));
   if ('or' in condition) return condition.or.some((c) => evaluatePresence(c, state));
   return !evaluatePresence(condition.not, state);

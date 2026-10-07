@@ -14,30 +14,6 @@ const getQuickSavesDir = (profileId: string): string => {
   return join(getProfileSavesDir(profileId), 'quick');
 };
 
-// Moves legacy save{N}.sav from root saves/ to saves/quick/.
-const migrateQuickSaves = async (profileId: string): Promise<void> => {
-  const savesDir = getProfileSavesDir(profileId);
-  const quickDir = getQuickSavesDir(profileId);
-  try {
-    const files = await readdir(savesDir);
-    const legacyFiles = files.filter((f) => /^save\d+\.(sav|png)$/.test(f));
-    if (legacyFiles.length === 0) return;
-    await mkdir(quickDir, { recursive: true });
-    for (const file of legacyFiles) {
-      const src = join(savesDir, file);
-      const dest = join(quickDir, file);
-      try {
-        await stat(dest);
-        // Skip files already in quick/
-      } catch {
-        await fsRename(src, dest);
-      }
-    }
-  } catch {
-    // No saves dir yet, so nothing to migrate
-  }
-};
-
 const writeSramFile = async (profileId: string, data: Buffer): Promise<void> => {
   const savesDir = getProfileSavesDir(profileId);
   await mkdir(savesDir, { recursive: true });
@@ -110,7 +86,6 @@ interface SaveSlotInfo {
 }
 
 const getQuickSlotInfos = async (profileId: string): Promise<SaveSlotInfo[]> => {
-  await migrateQuickSaves(profileId);
   const quickDir = getQuickSavesDir(profileId);
   const results: SaveSlotInfo[] = [];
   for (let slot = 0; slot < QUICK_SAVE_SLOTS; slot++) {
@@ -126,7 +101,6 @@ export {
   getQuickSavesDir,
   getQuickSlotInfos,
   listQuickStates,
-  migrateQuickSaves,
   readQuickScreenshot,
   readQuickState,
   readSramFile,

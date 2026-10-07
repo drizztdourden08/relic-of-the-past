@@ -1,5 +1,5 @@
 /* @layer shared-game @kind data */
-/** Split out of the flat seed files by scripts/generate-ids/split-seeds.ts. */
+
 import type { ScreenRecord } from '@shared/game/data/types';
 
 const LW_OVERWORLD_CENTRAL_HYRULE_SCREENS: ScreenRecord[] = [
@@ -8,9 +8,10 @@ const LW_OVERWORLD_CENTRAL_HYRULE_SCREENS: ScreenRecord[] = [
     gameId: { overworldIndex: 42 },
     kind: 'overworld',
     world: 'light',
-    randomizerName: 'Haunted Grove',
+    name: 'Haunted Grove',
     areaId: 'area-001',
     locationId: 'location-002',
+    regionId: 'region-002',
     position: { gridX: 2, gridY: 5 },
     tags: ['tag-001'],
   },
@@ -19,9 +20,10 @@ const LW_OVERWORLD_CENTRAL_HYRULE_SCREENS: ScreenRecord[] = [
     gameId: { overworldIndex: 43 },
     kind: 'overworld',
     world: 'light',
-    randomizerName: 'Uncle\'s Estate West',
+    name: 'Uncle\'s Estate West',
     areaId: 'area-001',
     locationId: 'location-002',
+    regionId: 'region-002',
     position: { gridX: 3, gridY: 5 },
     tags: ['tag-001'],
   },
@@ -30,9 +32,10 @@ const LW_OVERWORLD_CENTRAL_HYRULE_SCREENS: ScreenRecord[] = [
     gameId: { overworldIndex: 44 },
     kind: 'overworld',
     world: 'light',
-    randomizerName: 'Uncle\'s Estate East',
+    name: 'Uncle\'s Estate East',
     areaId: 'area-001',
     locationId: 'location-002',
+    regionId: 'region-002',
     position: { gridX: 4, gridY: 5 },
     tags: ['tag-001'],
   },
@@ -41,9 +44,10 @@ const LW_OVERWORLD_CENTRAL_HYRULE_SCREENS: ScreenRecord[] = [
     gameId: {},
     kind: 'overworld',
     world: 'light',
-    randomizerName: 'Light World',
+    name: 'Light World',
     areaId: 'area-001',
     locationId: 'location-002',
+    regionId: 'region-002',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001', 'tag-014'],
   },
@@ -52,7 +56,7 @@ const LW_OVERWORLD_CENTRAL_HYRULE_SCREENS: ScreenRecord[] = [
     gameId: {},
     kind: 'overworld',
     world: 'light',
-    randomizerName: 'Light World (Rain)',
+    name: 'Light World (Rain)',
     areaId: 'area-001',
     locationId: 'location-002',
     position: { gridX: 0, gridY: 0 },

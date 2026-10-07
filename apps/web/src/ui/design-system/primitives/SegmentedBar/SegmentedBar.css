@@ -1,0 +1,16 @@
+/* @layer renderer-components @kind style */
+
+.segmented-bar {
+  display: flex;
+  height: var(--segmented-bar-h);
+  border-radius: var(--radius-sm);
+  background: var(--c-hover);
+  overflow: hidden;
+}
+
+.segmented-bar__seg {
+  height: 100%;
+  flex-shrink: 0;
+  background: var(--series-color, var(--c-hover));
+  transition: width var(--transition-normal);
+}

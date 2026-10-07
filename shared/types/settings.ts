@@ -6,6 +6,8 @@ import type {
   DialogBorder, DialogBorderThickness, DialogCorner, DialogCornerMark,
   DialogTexture, DialogTextureAnimation, DialogTextureSpeed,
 } from '../game/dialog/box-style';
+import type { OnlineNoticeSettings } from '../randomizer/archipelago/online-notice-settings';
+import type { QuietReceiptSettings } from '../game/quiet-receipts';
 
 /** How sprites in the wide/tall extra band behave before reaching the stock 4:3 screen. */
 type OffscreenAiMode = 'idle' | 'vanilla' | 'paused';
@@ -23,8 +25,12 @@ interface HapticSettings {
   environmentalEffects: boolean;
 }
 
-/** Per-profile game settings. Mirrors zelda3 config.h / zelda3.ini fields. */
-interface GameSettings {
+/**
+ * Per-profile game settings. Mirrors zelda3 config.h / zelda3.ini fields. The online notice
+ * toggles (one `apNotify*` boolean per notice kind) come from online-notice-settings.ts, the
+ * quiet rupees, bombs and arrows switches from quiet-receipts.ts.
+ */
+interface GameSettings extends OnlineNoticeSettings, QuietReceiptSettings {
   // ─── General ───
   autosave: boolean; // Legacy C-level autosave (slot 0 save/restore), kept for INI compat
   autoSaveEnabled: boolean;
@@ -64,10 +70,10 @@ interface GameSettings {
   customAspectH: number; // ratio height; 0 = auto-detect
   extendY: boolean;
   // Extend sprite spawn/despawn ranges so enemies/objects revealed by the wider view behave correctly.
-  // Positive opt-in (replaces the old inverted `unchangedSprites`). Default on; only relevant when wide.
+  // Default on; only relevant when wide.
   widescreenSprites: boolean;
-  // Apply the widescreen graphics corrections (edges/sprites that assume a 4:3 screen). Positive opt-in
-  // (replaces the old inverted `noVisualFixes`). Default on; only relevant when wide.
+  // Apply the widescreen graphics corrections (edges/sprites that assume a 4:3 screen). Default on;
+  // only relevant when wide.
   widescreenVisualFixes: boolean;
   // Uses a clamped linear BG fetch instead of the wrapping 512px SNES tilemap, which prevents tile
   // garbage at edges in wide views. Required for any ratio above ~19:9. Memory cost: one world
@@ -92,8 +98,6 @@ interface GameSettings {
   // (move/animate but cannot act on the player), 'vanilla' (full behavior, matches the original),
   // or 'paused' (frozen). Default 'idle'.
   offscreenAI?: OffscreenAiMode;
-  /** @deprecated Read-only migration source for offscreenAI ('paused' when this was true), never written again. */
-  pauseOffscreenAI?: boolean;
 
   // ─── Graphics ───
   windowScale: number; // 1-5 (legacy, unused in Electron)
@@ -223,6 +227,8 @@ interface GameSettings {
   dialogInkColor: string;                // hex; modern font only
   dialogStrokeColor: string;
   dialogStrokeWidth: DialogStrokeWidth;    // game pixels around each modern glyph; 0 = none
+  hudHighlightPrimary: string;           // hex; item names in randomizer messages, either box
+  hudHighlightSecondary: string;         // hex; player names in randomizer messages
   dialogBoxOpacity: number;              // 0 .. 1, enhanced box ground
   dialogFloatingGround: boolean;         // draw the ground behind borderless messages such as telepathy
   dialogIntroTelepathyGround: boolean;   // draw it behind Zelda's telepathy in the opening at Link's house
@@ -254,6 +260,7 @@ interface GameSettings {
   hudHeartMode: 'original' | 'smooth';
   hudMagicMode: 'original' | 'accurate';
   hudCountLayout: 'centered' | 'original';
+  hudCountdownStyle: 'pixel' | 'smooth';
   hudPauseStyle: 'vanilla' | 'enhanced';
   hudPauseHighlight: 'box' | 'glow' | 'none';
 

@@ -22,7 +22,7 @@
  * two halves are OR'd there so a session makes one write.
  */
 
-import type { DarkRoomSetting } from '@shared/randomizer/ap-world/dark-rooms/dark-room.type';
+import type { DarkRoomSetting } from '@shared/randomizer/world/dark-rooms/dark-room.type';
 
 /** features.h kFeatures4_*: keep in lockstep with that enum. */
 const DARK_ROOM_LIGHT_BIT = {

@@ -18,18 +18,18 @@
  * tick is left alone so it comes straight back when the rule lets go.
  */
 import { stopsFor } from './price-stops';
-import { priceCeilingsOf } from '@shared/randomizer/ap-world/shops/shop-price-ceilings';
+import { priceCeilingsOf } from '@shared/randomizer/world/shops/shop-price-ceilings';
 import {
   blockedCurrencyKeysOfValues, blockedCurrencyNote,
-} from '@shared/randomizer/ap-world/shops/shop-price-currency-rule';
-import { shopPricePlanOf } from '@shared/randomizer/ap-world/shops/shop-price-plan';
+} from '@shared/randomizer/world/shops/shop-price-currency-rule';
+import { shopPricePlanOf } from '@shared/randomizer/world/shops/shop-price-plan';
 import type { CurrencyKeyHelpers } from '../CurrencyPriceRow.type';
-import type { CapacityProfile } from '@shared/randomizer/ap-world/capacity';
-import type { ApOptionValue } from '@shared/randomizer/ap-world/options.type';
-import type { CurrencyRow } from '@shared/randomizer/ap-world/shops/shop-price-options.data';
-import type { ShopCountedCurrency } from '@shared/randomizer/ap-world/shops/shop-price.type';
+import type { CapacityProfile } from '@shared/randomizer/world/capacity';
+import type { OptionValue } from '@shared/randomizer/world/options.type';
+import type { CurrencyRow } from '@shared/randomizer/world/shops/shop-price-options.data';
+import type { ShopCountedCurrency } from '@shared/randomizer/world/shops/shop-price.type';
 
-type Values = Readonly<Record<string, ApOptionValue>>;
+type Values = Readonly<Record<string, OptionValue>>;
 
 interface CurrencyRowModel {
   currency: ShopCountedCurrency;

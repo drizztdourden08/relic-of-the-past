@@ -1,8 +1,9 @@
 /* @layer renderer-stores @kind logic */
 /**
  * The message box as the core's dialog mirror reports it, updated by the dialog bridge whenever
- * it changes. `stale` is raised on a save-state load: the mirror cannot see what the loaded WRAM
- * put on screen, so the host box holds back until the next message clears it.
+ * it changes. `stale` is raised on a save-state load that brought no dialog hook state: the mirror
+ * cannot see what the loaded WRAM put on screen, so the host box holds back until the next message
+ * clears it. A load that put the mirror back (state-dialog.ts) lowers it instead.
  */
 import { create } from 'zustand';
 import type { DialogFrame } from '@shared/game/dialog/dialog-frame.types';
@@ -16,6 +17,8 @@ interface DialogStore {
   staleGeneration: number;
   _setFrame: (frame: DialogFrame) => void;
   markStale: () => void;
+  /** The load restored the mirror itself, so the next frame read is the loaded message as it was saved. */
+  markRestored: () => void;
 }
 
 const useDialogStore = create<DialogStore>()((set, get) => ({
@@ -32,6 +35,7 @@ const useDialogStore = create<DialogStore>()((set, get) => ({
     wasmDialogMarkStale();
     set({ stale: true, staleGeneration: get().frame.generation });
   },
+  markRestored: () => set({ stale: false }),
 }));
 
 export { useDialogStore };

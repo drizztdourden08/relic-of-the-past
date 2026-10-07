@@ -9,17 +9,17 @@
  * Only that one pond is bound by the rule: it is the game's only source of the
  * two families the rule protects, so the other two ponds keep every mode.
  */
-import { POND_MODE_KEYS } from '@shared/randomizer/ap-world/pond/pond-option-keys';
+import { POND_MODE_KEYS } from '@shared/randomizer/world/pond/pond-option-keys';
 import type { LockedOptionGroup } from '@domains/app/compounds/RandomizerOptionRow';
-import type { ApOptionDef } from '@shared/randomizer/ap-world/options.type';
-import type { PondMode } from '@shared/randomizer/ap-world/pond/pond-profile.type';
+import type { OptionDef } from '@shared/randomizer/world/options.type';
+import type { PondMode } from '@shared/randomizer/world/pond/pond-profile.type';
 
 /** The capacity pond's mode row, frozen: the master switch is off, so it is not the player's to set. */
 const FROZEN_POND_KEYS: ReadonlySet<string> = new Set([POND_MODE_KEYS.capacity]);
 
 const NO_FROZEN_KEYS: ReadonlySet<string> = new Set();
 
-const narrowed = (option: ApOptionDef, modes: readonly PondMode[]): ApOptionDef =>
+const narrowed = (option: OptionDef, modes: readonly PondMode[]): OptionDef =>
   (option.key === POND_MODE_KEYS.capacity
     ? { ...option, choices: option.choices?.filter((choice) => modes.includes(choice.value as PondMode)) }
     : option);

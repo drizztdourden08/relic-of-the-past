@@ -45,8 +45,7 @@ const NO_FACTS: TriggerFacts = {
 const hex = (value: number): string => `0x${value.toString(16).toUpperCase().padStart(2, '0')}`;
 
 /** A record's own name, preferring the in-game term the dataset recorded. */
-const nameOf = (record: { vanillaName?: string; randomizerName?: string }): string =>
-  record.vanillaName ?? record.randomizerName ?? '';
+const nameOf = (record: { name?: string }): string => record.name ?? '';
 
 const actorFacts = (row: TriggerSourceRow & { by: 'actor' }): TriggerFacts => {
   const candidates = find('actor', (actor) => actor.gameId.spriteType === row.spriteType);

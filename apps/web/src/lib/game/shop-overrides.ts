@@ -10,8 +10,8 @@
  * gate bit is requested alongside it, and it stays open only while armed.
  */
 
-import { isGrantableReceiveId } from '@shared/game/data';
 import { log } from '../log-bus';
+import { isArmableOverrideId } from './foreign-item-id';
 import { getModule } from './wasm-bridge';
 import { setShopOverridesActive } from './live-settings-flags';
 import { reassertGateWord3 } from './live-settings';
@@ -44,7 +44,7 @@ const setShopSlotOverride = (
   target: ShopSlotTarget, newItem: number, messageId = -1, fireId = -1,
 ): void => {
   const { slotIndex, roomId, entrance, owArea, subtype, depthIndex, depth, currency, amount } = target;
-  if (!isGrantableReceiveId(newItem)) {
+  if (!isArmableOverrideId(newItem)) {
     log.error(`[Randomizer] Shop slot override refused: item 0x${newItem.toString(16)} `
       + `is outside the grantable id range (room 0x${roomId.toString(16)} subtype ${subtype})`);
     return;

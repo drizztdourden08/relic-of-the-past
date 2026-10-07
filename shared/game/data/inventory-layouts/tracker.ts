@@ -53,9 +53,9 @@ const INVENTORY_LAYOUT: InventoryCategory[] = [
   {
     label: 'Progress',
     items: [
-      { displayName: 'Green Pendant', trackerItemIds: ['item-109'], sprite: 'hud-green-pendant' },
-      { displayName: 'Red Pendant', trackerItemIds: ['item-111'], sprite: 'hud-red-pendant' },
-      { displayName: 'Blue Pendant', trackerItemIds: ['item-110'], sprite: 'hud-blue-pendant' },
+      { displayName: 'Green Pendant', trackerItemIds: ['item-056'], sprite: 'hud-green-pendant' },
+      { displayName: 'Red Pendant', trackerItemIds: ['item-057'], sprite: 'hud-red-pendant' },
+      { displayName: 'Blue Pendant', trackerItemIds: ['item-058'], sprite: 'hud-blue-pendant' },
       { displayName: 'Crystal 1', trackerItemIds: ['item-112'], sprite: 'hud-crystal' },
       { displayName: 'Crystal 2', trackerItemIds: ['item-113'], sprite: 'hud-crystal' },
       { displayName: 'Crystal 3', trackerItemIds: ['item-114'], sprite: 'hud-crystal' },

@@ -1,10 +1,10 @@
 /* @layer renderer-components @kind types */
-import type { CurveId } from '@shared/randomizer/ap-world/capacity';
-import type { PondAskSetting } from '@shared/randomizer/ap-world/pond/pond-ask.type';
-import type { PondAskCurrency } from '@shared/randomizer/ap-world/pond/pond-ask.type';
-import type { ShopBottleContent } from '@shared/randomizer/ap-world/shops/shop-price.type';
-import type { OptionDescription } from '@shared/randomizer/ap-world/option-description.type';
-import type { PondMode } from '@shared/randomizer/ap-world/pond/pond-profile.type';
+import type { CurveId } from '@shared/randomizer/world/capacity';
+import type { PondAskSetting } from '@shared/randomizer/world/pond/pond-ask.type';
+import type { PondAskCurrency } from '@shared/randomizer/world/pond/pond-ask.type';
+import type { ShopBottleContent } from '@shared/randomizer/world/shops/shop-price.type';
+import type { OptionDescription } from '@shared/randomizer/world/option-description.type';
+import type { PondMode } from '@shared/randomizer/world/pond/pond-profile.type';
 import type { LadderPreviewProps } from '../LadderPreview';
 
 /** The row's own shape of the pond setting: indexes and choices, never prices. */
@@ -81,8 +81,10 @@ interface PondRowModel {
 
 interface WishingPondRowProps {
   model: PondRowModel;
-  /** The Run tab: every control disabled, the preview and readouts kept. */
+  /** Every control disabled, the preview and readouts kept. */
   readOnly?: boolean;
+  /** Every control drawn as its value in a tag: the read-only Options page. */
+  readout?: boolean;
   onChange?: (next: PondRowState) => void;
 }
 

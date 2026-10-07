@@ -26,8 +26,6 @@ const PS: Record<string, CSSProperties> = {
   rowToggle: { cursor: 'pointer' },
   rowOff: { opacity: 0.4 },
   glyph: { width: 12, textAlign: 'center', flexShrink: 0 },
-  warnGlyph: { width: 12, textAlign: 'center', flexShrink: 0, color: 'var(--c-warning)' },
-  infoGlyph: { width: 12, textAlign: 'center', flexShrink: 0, color: 'var(--c-text-muted)' },
   label: { color: 'var(--c-text-dim)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' },
   labelSettled: { color: 'var(--c-text-muted)', textDecoration: 'line-through' },
   detail: { color: 'var(--c-text-muted)', fontSize: 10, marginLeft: 'auto', flexShrink: 0 },

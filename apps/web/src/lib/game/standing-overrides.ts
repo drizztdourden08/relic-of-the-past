@@ -7,8 +7,8 @@
  * has entries.
  */
 
-import { isGrantableReceiveId } from '@shared/game/data';
 import { log } from '../log-bus';
+import { isArmableOverrideId } from './foreign-item-id';
 import { getModule } from './wasm-bridge';
 import { setStandingOverridesActive } from './live-settings-flags';
 import { reassertGateWord3 } from './live-settings';
@@ -30,7 +30,7 @@ const setStandingOverride = (target: StandingOverrideTarget, newItem: number, me
   const { area, indoors, sprite, half } = target;
   // The id indexes the 76-entry native grant tables, so an out-of-range one would
   // corrupt the receipt, so refuse it here like the other override setters do.
-  if (!isGrantableReceiveId(newItem)) {
+  if (!isArmableOverrideId(newItem)) {
     log.error(`[Randomizer] Standing override refused: item 0x${newItem.toString(16)} `
       + `is outside the native grant table (area ${area})`);
     return;

@@ -12,7 +12,8 @@ import { isCoreReady } from './core-ready';
 import { pollInventoryState } from './tracker';
 import { reassertLiveFlagsAfterLoad } from './live-settings';
 import { requestLocationRebaseline } from './randomizer-client/location-poller';
-import { useDialogStore } from '../../stores/dialog-store';
+import { markStateLoaded } from './state-load-signal';
+import { resumeDialogAfterLoad, withDialogState } from './state-dialog';
 
 /** Scratch slot for buffers that never touch disk. Written, read by the core, then unlinked. */
 const SCRATCH_SLOT = 98;
@@ -28,7 +29,7 @@ const captureStateBuffer = (slot = SCRATCH_SLOT): ArrayBuffer | null => {
   const savePath = `/saves/save${slot}.sav`;
   if (!mod.FS.analyzePath(savePath).exists) return null;
   const data = mod.FS.readFile(savePath);
-  const ab = (data.buffer as ArrayBuffer).slice(data.byteOffset, data.byteOffset + data.byteLength);
+  const ab = withDialogState(mod, (data.buffer as ArrayBuffer).slice(data.byteOffset, data.byteOffset + data.byteLength));
   try { mod.FS.unlink(savePath); } catch { /* ignore */ }
   return ab;
 };
@@ -47,8 +48,8 @@ const loadStateFromBuffer = (buffer: ArrayBuffer, slot = SCRATCH_SLOT): boolean 
   const mod = getModule();
   if (!mod) return false;
 
-  // Same guard as loadState. Buffers captured in-session are unstamped and pass
-  // straight through; the check matters for the ones that came off disk.
+  // Same guard as loadState. Buffers captured in-session carry at most the capture stamp and
+  // pass straight through; the check matters for the ones that came off disk.
   const verdict = checkLoadable(buffer);
   if (!verdict.ok) {
     log.error(`[LoadState] Refusing buffer: ${verdict.message}`);
@@ -59,8 +60,9 @@ const loadStateFromBuffer = (buffer: ArrayBuffer, slot = SCRATCH_SLOT): boolean 
   mod.FS.writeFile(savePath, new Uint8Array(stripStamp(buffer)));
   mod.ccall('WasmLoadState', null, ['number'], [slot]);
   reassertLiveFlagsAfterLoad();
-  useDialogStore.getState().markStale();
+  resumeDialogAfterLoad(mod, verdict.stamp);
   requestLocationRebaseline();
+  markStateLoaded();
   pollInventoryState(true);
   try { mod.FS.unlink(savePath); } catch { /* ignore */ }
   return true;

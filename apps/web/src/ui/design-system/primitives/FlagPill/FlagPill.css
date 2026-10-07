@@ -1,0 +1,52 @@
+/* @layer renderer-components @kind style */
+
+.flag-pill {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  min-width: 0;
+  padding: var(--space-2xs) var(--space-sm);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--r-pill);
+  font-size: var(--text-sm);
+  color: var(--c-text-muted);
+}
+
+.flag-pill__dot {
+  flex: none;
+  width: var(--flag-dot-d);
+  height: var(--flag-dot-d);
+  border: var(--border-width-thin) solid var(--c-text-faint);
+  border-radius: var(--r-pill);
+}
+
+.flag-pill__label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.flag-pill__state {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  color: var(--c-text-faint);
+}
+
+.flag-pill[data-on] {
+  border-color: var(--c-green);
+  background: var(--c-green-soft);
+  color: var(--c-text);
+}
+
+.flag-pill[data-on] .flag-pill__dot {
+  border-color: var(--c-green-bright);
+  background: var(--c-green-bright);
+}
+
+.flag-pill[data-on] .flag-pill__state {
+  color: var(--c-green-bright);
+}

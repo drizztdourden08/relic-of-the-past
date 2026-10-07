@@ -1,0 +1,133 @@
+/* @layer shared-game @kind data */
+
+import type { CheckRecord } from '@shared/game/data/types';
+
+const DW_OVERWORLD_DARK_LAKE_HYLIA_CHECKS: CheckRecord[] = [
+  {
+    id: 'check-084',
+    gameId: { roomId: 286, chestIndex: 0 },
+    kind: 'chest',
+    screenId: 'screen-455',
+    regionId: 'region-140',
+    name: 'Hype Cave - Top',
+    vanillaItemIds: ['item-055'],
+    review: {
+      status: 'accepted',
+      source: 'person',
+      note: 'vanillaItemIds[0] item-066 -> item-055: S1 census item byte at the certified position == receive-item id (decomp id-space ruling)',
+      at: '2026-08-26T03:06:52.923Z',
+    },
+  },
+  {
+    id: 'check-085',
+    gameId: { roomId: 286, chestIndex: 1 },
+    kind: 'chest',
+    screenId: 'screen-455',
+    regionId: 'region-140',
+    name: 'Hype Cave - Middle Right',
+    vanillaItemIds: ['item-055'],
+    review: {
+      status: 'accepted',
+      source: 'person',
+      note: 'vanillaItemIds[0] item-072 -> item-055: S1 census item byte at the certified position == receive-item id (decomp id-space ruling)',
+      at: '2026-08-26T03:06:52.923Z',
+    },
+  },
+  {
+    id: 'check-086',
+    gameId: { roomId: 286, chestIndex: 2 },
+    kind: 'chest',
+    screenId: 'screen-455',
+    regionId: 'region-140',
+    name: 'Hype Cave - Middle Left',
+    vanillaItemIds: ['item-055'],
+    review: {
+      status: 'accepted',
+      source: 'person',
+      note: 'vanillaItemIds[0] item-072 -> item-055: S1 census item byte at the certified position == receive-item id (decomp id-space ruling)',
+      at: '2026-08-26T03:06:52.923Z',
+    },
+  },
+  {
+    id: 'check-087',
+    gameId: { roomId: 286, chestIndex: 3 },
+    kind: 'chest',
+    screenId: 'screen-455',
+    regionId: 'region-140',
+    name: 'Hype Cave - Bottom',
+    vanillaItemIds: ['item-055'],
+    review: {
+      status: 'accepted',
+      source: 'person',
+      note: 'vanillaItemIds[0] item-072 -> item-055: S1 census item byte at the certified position == receive-item id (decomp id-space ruling)',
+      at: '2026-08-26T03:06:52.923Z',
+    },
+  },
+  {
+    id: 'check-088',
+    gameId: {
+      bufferIndex: 18,
+      mask: 4,
+      flagType: 2,
+      flagMask: 0,
+      itemId: 70,
+      roomFlag: { roomId: 286, chestIndex: 6 },
+      spriteType: 187,
+      postGfx: 0,
+      room: 286,
+    },
+    kind: 'npc',
+    screenId: 'screen-455',
+    regionId: 'region-140',
+    name: 'Hype Cave - Generous Guy',
+    vanillaItemIds: ['item-071'],
+    scope: 'npc',
+    actorId: 'actor-230',
+    visualNote: 'NPC keeps facing the player; no lasting visual change after the gift',
+    sourceFunc: 'NiceThiefWithGift',
+    review: {
+      status: 'accepted',
+      source: 'person',
+      note: 'gameId.itemId 255 -> 70: NiceThiefWithGift sprite_main.c:25100-25104 calls ShopItem_HandleReceipt(k, 0x46); 0x46 grants 300 rupees (ancilla.c:7028-7029) | gameId.roomFlag.chestIndex 2 -> 6: the giver\'s once-only gate writes dung_savegame_state_bits |= 0x4000 (sprite_main.c:25101-25102) -> saved 0x400 = chest-bit index 6 (0x10<<6), the same shape as certified sibling check-052 | gameId.bufferIndex/mask 11/64 -> 18/4: progress buffer [18] is save_dung_info[0x11E] high byte (state_queries.c); saved 0x400 >> 8 = mask 4 - matching sibling check-052\'s [17]/4 for room 0x123 | gameId.spriteType + actorId + sourceFunc 40 / actor-165 / Sprite_28_DarkWorldHintNPC -> 187 / actor-230 / NiceThiefWithGift: the giver is sprite 0xBB subtype 2 (Sprite_BB_Shopkeeper dispatch sprite_main.c:25007; NiceThiefWithGift sprite_main.c:25090); Hype Cave room is 0x11E (EntranceShuffle.py \'Hype Cave\' 0x011e)',
+      at: '2026-08-26T03:06:52.923Z',
+    },
+  },
+  // The shelf behind the lake door. Four dark-world doors open onto this one shelf room
+  // (0x010F through entrance 0x60), so the overworld area the player walked in from is what
+  // tells them apart; see the seam note on CheckGameId.shopSeam.
+  {
+    id: 'check-632',
+    gameId: { shopSeam: { roomId: 271, entrance: 96, owArea: 117, subtype: 7 } },
+    kind: 'shop-slot',
+    screenId: 'screen-483',
+    regionId: 'region-143',
+    name: 'Dark Lake Hylia Shop Left',
+    vanillaItemIds: ['item-047'],
+    price: 150,
+    shop: { shopId: 'dark-lake-hylia-shop', slot: 6, position: 'Left', seam: 'shelf' },
+  },
+  {
+    id: 'check-633',
+    gameId: { shopSeam: { roomId: 271, entrance: 96, owArea: 117, subtype: 8 } },
+    kind: 'shop-slot',
+    screenId: 'screen-483',
+    regionId: 'region-143',
+    name: 'Dark Lake Hylia Shop Center',
+    vanillaItemIds: ['item-005'],
+    price: 50,
+    shop: { shopId: 'dark-lake-hylia-shop', slot: 7, position: 'Center', seam: 'shelf' },
+  },
+  {
+    id: 'check-634',
+    gameId: { shopSeam: { roomId: 271, entrance: 96, owArea: 117, subtype: 12 } },
+    kind: 'shop-slot',
+    screenId: 'screen-483',
+    regionId: 'region-143',
+    name: 'Dark Lake Hylia Shop Right',
+    vanillaItemIds: ['item-050'],
+    price: 50,
+    shop: { shopId: 'dark-lake-hylia-shop', slot: 8, position: 'Right', seam: 'shelf' },
+  },
+];
+
+export { DW_OVERWORLD_DARK_LAKE_HYLIA_CHECKS };

@@ -34,4 +34,14 @@ const stopDialogBridge = (): void => {
   prevFrame = null;
 };
 
-export { initDialogBridge, pollDialogFrame, stopDialogBridge };
+/**
+ * After a load that put the mirror back. The box reads as closed for one poll, so everything the view
+ * latches per message lets go of the message that was up before the load, and the next poll reports
+ * the restored frame even when it equals the last one read.
+ */
+const resyncDialogFrames = (): void => {
+  frameUpdater?.(INACTIVE_FRAME);
+  prevFrame = null;
+};
+
+export { initDialogBridge, pollDialogFrame, resyncDialogFrames, stopDialogBridge };

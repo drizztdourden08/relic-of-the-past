@@ -4,6 +4,7 @@
 import { useMemo } from 'react';
 import { usePlatform } from '@app/platform';
 import { useSearchStore } from '@app/stores/search-store';
+import { runKindOfProfile } from '@app/lib/game/randomizer-client';
 import type { TitleBarProps } from '../../TitleBar/TitleBar.type';
 import type { SearchContext } from '../SearchPalette.type';
 import { buildCatalog } from './catalog/build-catalog';
@@ -20,6 +21,7 @@ const useSearchResults = (navProps: TitleBarProps) => {
     win,
     settings,
     isMobile: info.formFactor === 'mobile',
+    isOnline: runKindOfProfile(navProps.activeProfile?.randomizer) === 'online',
     closePalette,
   }), [navProps, win, settings, info.formFactor, closePalette]);
 

@@ -9,7 +9,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { all, findOne, registerRecord, unregisterRecord } from '@shared/game/data';
-import { toScreenIdOf } from '@shared/game/data/connections/derive';
+import { toScreenIdOf } from '@shared/game/data';
 import type { ConnectionId, ScreenId, ScreenRecord } from '@shared/game/data';
 import type { DetectionContext, ScreenObservations } from '@shared/game/recommendations';
 import { detectorFromStrategy } from '@shared/game/recommendations/compare';

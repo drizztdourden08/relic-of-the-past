@@ -99,7 +99,7 @@ needs no access to the private one.
 The private repository is a **sibling checkout**, not something this repository clones.
 Put it beside this one as `../rotp-vault`, or point `ROTP_VAULT_DIR` at it. Inside it,
 the `tree/` folder mirrors this repository's own paths, so a file at
-`tree/shared/game/data/records/areas.ts` lands at `shared/game/data/records/areas.ts`.
+`tree/tests/fixtures/save-states/intro.sav` lands at `tests/fixtures/save-states/intro.sav`.
 The path is the whole mapping; there is nothing else to configure, and anything the
 vault keeps outside `tree/` is never touched.
 

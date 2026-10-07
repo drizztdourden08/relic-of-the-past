@@ -9,18 +9,18 @@
  * seed and the core read, so the note can never describe a shelf the game
  * does not stock that way.
  */
-import { ARROW_SLOT_INDEXES, RETRO_QUIVER_SLOT_INDEX } from '@shared/randomizer/ap-world/retro/retro-shops';
-import { RETRO_QUIVER_PRICE } from '@shared/randomizer/ap-world/retro/retro-bow.data';
-import { RETRO_REFILL_ITEM } from '@shared/randomizer/ap-world/retro/retro-shelf.data';
-import { CANONICAL_SLOTS } from '@shared/randomizer/ap-world/shops/shop-slots';
+import { ARROW_SLOT_INDEXES, RETRO_QUIVER_SLOT_INDEX } from '@shared/randomizer/world/retro/retro-shops';
+import { RETRO_QUIVER_PRICE } from '@shared/randomizer/world/retro/retro-bow.data';
+import { RETRO_REFILL_ITEM } from '@shared/randomizer/world/retro/retro-shelf.data';
+import { CANONICAL_SLOTS } from '@shared/randomizer/world/shops/shop-slot-facts';
 import { retroShuffledNote, retroVanillaNote } from '../ShopSlotsBlock.constants';
-import type { CanonicalShopSlot } from '@shared/randomizer/ap-world/shops/shop-slots';
-import type { RetroBowSetting } from '@shared/randomizer/ap-world/retro/retro.type';
-import type { ShopScope } from '@shared/randomizer/ap-world/shops/shop-scope.type';
+import type { ShopSlotFacts } from '@shared/randomizer/world/shops/shop-slot-facts';
+import type { RetroBowSetting } from '@shared/randomizer/world/retro/retro.type';
+import type { ShopScope } from '@shared/randomizer/world/shops/shop-scope.type';
 
 /** The shelf as its location is named: the shop, then the shelf position. */
-const shelfNameOf = ({ shop, slot }: CanonicalShopSlot): string =>
-  slot.position === 'Single' ? shop.name : `${shop.name} ${slot.position}`;
+const shelfNameOf = ({ shopName, position }: ShopSlotFacts): string =>
+  (position === 'Single' ? shopName : `${shopName} ${position}`);
 
 const retroShopNoteOf = (scope: ShopScope, setting: RetroBowSetting | undefined): string | null => {
   if (setting === undefined || !setting.enabled) return null;
@@ -32,7 +32,7 @@ const retroShopNoteOf = (scope: ShopScope, setting: RetroBowSetting | undefined)
     quiverShelf: shelfNameOf(quiver),
     quiverPrice: RETRO_QUIVER_PRICE,
     refill: RETRO_REFILL_ITEM,
-    refillPrice: quiver.slot.price,
+    refillPrice: quiver.price,
     otherShelves: others,
   };
   return scope.mode === 'vanilla' ? retroVanillaNote(shelf) : retroShuffledNote(shelf);

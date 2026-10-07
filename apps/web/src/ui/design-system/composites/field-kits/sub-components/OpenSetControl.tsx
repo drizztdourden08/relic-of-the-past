@@ -11,10 +11,16 @@
  * So the picker keeps its options and gains one more move: an entry for a value
  * nobody has written yet. It sits beside the control instead of replacing it,
  * and the same toggle opens and closes it so nothing depends on Escape.
+ *
+ * This is also the element the picker has to fit inside, so it is the one that
+ * can answer whether it does. A caller that passes a narrower `fallback` gets the
+ * row measured, and the narrower control is swapped in whenever the one it
+ * prefers would push past the edge. See `behavior/use-fits-row`.
  */
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { Box } from '../../../primitives/Box';
 import { Button } from '../../../primitives/Button';
-import { Flex } from '../../../primitives/Flex';
+import { useFitsRow } from '../behavior/use-fits-row';
 import { committedValue } from '../open-set';
 import { OpenSetEntry } from './OpenSetEntry';
 import type { ReactNode } from 'react';
@@ -31,12 +37,18 @@ interface OpenSetControlProps {
   disabled?: boolean;
   /** The closed-set control being decorated. */
   children: ReactNode;
+  /** Shown in place of the children where they are too wide for the row. */
+  fallback?: ReactNode;
+  /** The text the children show. What changes it changes how wide they are. */
+  fitSignature?: string;
 }
 
 const OpenSetControl = (props: OpenSetControlProps) => {
-  const { current, label, onSubmit, disabled = false, children } = props;
+  const { current, label, onSubmit, disabled = false, children, fallback, fitSignature = '' } = props;
   // Closed while null. Any string, the empty one included, is an open entry.
   const [draft, setDraft] = useState<string | null>(null);
+  const rowRef = useRef<HTMLElement>(null);
+  const fits = useFitsRow({ rowRef, signature: fitSignature, enabled: fallback !== undefined });
 
   const commit = () => {
     const next = committedValue(draft ?? '', current);
@@ -45,8 +57,8 @@ const OpenSetControl = (props: OpenSetControlProps) => {
   };
 
   return (
-    <Flex className="field-kit__open-set" gap="xs" align="center" wrap>
-      {children}
+    <Box ref={rowRef} className="field-kit__open-set">
+      {fits ? children : fallback}
       <Button
         size="sm"
         variant="tertiary"
@@ -66,7 +78,7 @@ const OpenSetControl = (props: OpenSetControlProps) => {
           onCommit={commit}
         />
       )}
-    </Flex>
+    </Box>
   );
 };
 

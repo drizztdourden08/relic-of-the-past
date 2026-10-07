@@ -13,10 +13,13 @@
  * A row a sibling setting has taken out of the player's hands (`forced`)
  * renders inert with the reason in red under its head: the controls grey out,
  * the sentence does not, the same way a forced plain option row reads.
+ * A `readout` row, the read-only Options page, draws every control as its
+ * value in a tag.
  */
 import { Box, Select, Text } from '@ds/primitives';
 import { LadderPreview } from '../LadderPreview';
 import { OptionDescription } from '../OptionDescription';
+import { OptionValueTag, choiceLabelOf } from '../OptionValueTag';
 import { PoolImpactCell } from '../PoolImpactCell';
 import { BonusLine } from './sub-components/BonusLine';
 import { CustomControls } from './sub-components/CustomControls';
@@ -34,7 +37,7 @@ const MODE_OPTIONS: readonly SelectOption[] = [
 const WALLET_MODE_OPTIONS: readonly SelectOption[] = MODE_OPTIONS.filter((option) => option.value !== 'vanilla-in-pool');
 
 const CapacityFamilyRow = (props: CapacityFamilyRowProps) => {
-  const { model, readOnly = false, onChange, onBonusChange } = props;
+  const { model, readOnly = false, readout = false, onChange, onBonusChange } = props;
   const { label, caption, offersInPool, state, preview, impact, footnote, forced, bonus, bonusCaption } = model;
   const inert = readOnly || forced !== undefined;
 
@@ -48,21 +51,29 @@ const CapacityFamilyRow = (props: CapacityFamilyRowProps) => {
           {caption !== undefined && <OptionDescription className="capacity-row__caption" description={caption} />}
         </Box>
         <Box className="capacity-row__mode">
-          <Select
-            size="sm"
-            value={state.mode}
-            options={(offersInPool ? MODE_OPTIONS : WALLET_MODE_OPTIONS) as SelectOption[]}
-            onChange={(mode) => patch({ mode: mode as CapacityRowState['mode'] })}
-            disabled={inert}
-          />
+          {readout ? <OptionValueTag value={choiceLabelOf(MODE_OPTIONS, state.mode)} /> : (
+            <Select
+              size="sm"
+              value={state.mode}
+              options={(offersInPool ? MODE_OPTIONS : WALLET_MODE_OPTIONS) as SelectOption[]}
+              onChange={(mode) => patch({ mode: mode as CapacityRowState['mode'] })}
+              disabled={inert}
+            />
+          )}
         </Box>
         <PoolImpactCell cell={impact} />
       </Box>
       {forced !== undefined && <Text className="capacity-row__forced">{forced}</Text>}
       <Box className="capacity-row__lines">
-        {state.mode === 'custom' && <CustomControls model={model} readOnly={inert} onChange={patch} />}
+        {state.mode === 'custom' && <CustomControls model={model} readOnly={inert} readout={readout} onChange={patch} />}
         {bonus !== undefined && (
-          <BonusLine bonus={bonus} caption={bonusCaption} readOnly={inert} onChange={inert ? undefined : onBonusChange} />
+          <BonusLine
+            bonus={bonus}
+            caption={bonusCaption}
+            readOnly={inert}
+            readout={readout}
+            onChange={inert ? undefined : onBonusChange}
+          />
         )}
         <RowLine label="ladder" className="capacity-row__ladder">
           <LadderPreview {...preview} />

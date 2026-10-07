@@ -50,6 +50,8 @@ interface SearchContext {
   /** null when no profile is active. Settings entries and the settings bridge are empty. */
   settings: GameSettings | null;
   isMobile: boolean;
+  /** The active profile is an online (Archipelago) one, so its Online tab is listed. */
+  isOnline?: boolean;
   /** Closes the palette. Wired as `closeMenu` when reusing buildTitleBarMenuItems, so
    *  selecting a menu-derived result dismisses the palette exactly like the real menu does. */
   closePalette: () => void;

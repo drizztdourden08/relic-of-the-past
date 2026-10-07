@@ -6,12 +6,13 @@ import * as savesStore from '../storage/saves-store';
 import { getModule, getProfileId } from './wasm-bridge';
 import { isCoreReady, whenCoreReady } from './core-ready';
 import { loadStateFromBuffer } from './state-buffers';
+import { markStateLoaded } from './state-load-signal';
 import { pollInventoryState } from './tracker';
 import { reassertLiveFlagsAfterLoad } from './live-settings';
 import { requestLocationRebaseline } from './randomizer-client/location-poller';
 import { captureGameFrameBlob } from './capture-frame';
 import { saveMusicPosition, restoreMusicPosition } from './msu-save-glue';
-import { useDialogStore } from '../../stores/dialog-store';
+import { resumeDialogAfterLoad, withDialogState } from './state-dialog';
 
 const saveState = async (slot: number): Promise<boolean> => {
   const mod = getModule();
@@ -39,7 +40,8 @@ const saveState = async (slot: number): Promise<boolean> => {
     const data = mod.FS.readFile(savePath);
     log.app(`[SaveState] Read ${data.byteLength} bytes from MEMFS`);
 
-    const ab = (data.buffer as ArrayBuffer).slice(data.byteOffset, data.byteOffset + data.byteLength);
+    // The message box's hook state is read now, on the frame the core saved (state-dialog.ts).
+    const ab = withDialogState(mod, (data.buffer as ArrayBuffer).slice(data.byteOffset, data.byteOffset + data.byteLength));
     log.app(`[SaveState] Sending ${ab.byteLength} bytes to main process (profileId=${profileId}, slot=${slot})...`);
     await savesStore.writeState(profileId, slot, ab);
     log.app(`[SaveState] Slot ${slot} persisted to disk ✓`);
@@ -115,13 +117,13 @@ const loadState = async (slot: number): Promise<boolean> => {
 
     // Re-assert all WASM flags that state load resets
     reassertLiveFlagsAfterLoad();
-    useDialogStore.getState().markStale();
+    resumeDialogAfterLoad(mod, verdict.stamp);
     // The loaded state's completions are the poller's new baseline, not a burst of fresh
     // checks to report (and re-deliver).
     requestLocationRebaseline();
+    markStateLoaded();
 
-    // A save written before music positions were recorded has no sidecar; restoring null
-    // starts its track from the beginning.
+    // A save with no music sidecar restores nothing, and its track starts from the beginning.
     await restoreMusicPosition(profileId, 'quick', slot);
 
     // Force inventory poll so tracker reflects the loaded state

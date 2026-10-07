@@ -12,7 +12,6 @@ export type {
   StoreInvokeContract, StoreResult, StoreInstallRequest, StoreInstallResult, StoreUninstallResult,
   StoreDuplicateResult, StoreInstallProgress, StoreOpenInstall,
 } from './store-contract';
-export type { ReviewEntry, ReviewFile } from './review-contract';
 export type {
   DetectionContext, DraftRecommendation, PassResult, Recommendation,
 } from './recommendation-contract';

@@ -116,9 +116,16 @@ static void MarkTaken(int palace) {
 // masked out of the matching set), passed in so the gate-down answer is that expression
 // verbatim. Gate up, a claimed-but-substituted reward answers true through the hook bit.
 bool GameHook_DungeonPrizeTaken(int vanilla_flagged) {
+  int palace = BYTE(cur_palace_index_x2) >> 1;
+  // With the ledger's re-offer reading, this dungeon's own reward fact decides: a reward held
+  // from another dungeon no longer hides the drop here (story_events.c GameHook_GiverTaken).
+  if (enhanced_features5 & kFeatures5_GiverReoffer) {
+    if (GameHook_GiverTaken((EventId)(kEvent_PrizeTaken_Sewers + palace), vanilla_flagged != 0)) return true;
+    return PrizeGate() && TakenBit(palace);
+  }
   if (vanilla_flagged != 0) return true;
   if (!PrizeGate()) return false;
-  return TakenBit(BYTE(cur_palace_index_x2) >> 1);
+  return TakenBit(palace);
 }
 
 // Record that the reward of the dungeon the player is standing in was handed over. Called

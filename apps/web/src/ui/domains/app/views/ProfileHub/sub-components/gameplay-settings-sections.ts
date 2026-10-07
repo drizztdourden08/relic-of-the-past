@@ -55,6 +55,15 @@ const SECTIONS: Section[] = [
     ],
   },
   {
+    id: 'received-items',
+    title: 'Received Items',
+    items: [
+      { key: 'quietRupees', label: 'Quiet Rupees', description: 'Randomizer rupees arrive without a message.', keywords: 'quiet rupees message received randomizer archipelago online hold up' },
+      { key: 'quietBombs', label: 'Quiet Bombs', description: 'Randomizer bombs arrive without a message.', keywords: 'quiet bombs message received randomizer archipelago online hold up' },
+      { key: 'quietArrows', label: 'Quiet Arrows', description: 'Randomizer arrows arrive without a message.', keywords: 'quiet arrows message received randomizer archipelago online hold up' },
+    ],
+  },
+  {
     id: 'movement',
     title: 'Movement',
     items: [

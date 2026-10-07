@@ -8,11 +8,11 @@
  * being touched, and a section with no shop in it is dropped instead of
  * drawn empty.
  */
-import { SHOP_WORLD_LABELS } from '@shared/randomizer/ap-world/shops/shops.data';
+import { SHOP_WORLD_LABELS } from '@shared/randomizer/world/shops/shop-slot-facts';
 import { shopCardsOf } from './shop-cards';
 import type { ShopCardModel } from './shop-cards';
-import type { ShopScope } from '@shared/randomizer/ap-world/shops/shop-scope.type';
-import type { ShopWorld } from '@shared/randomizer/ap-world/shops/shops.data';
+import type { ShopScope } from '@shared/randomizer/world/shops/shop-scope.type';
+import type { ShopWorld } from '@shared/randomizer/world/shops/shop-slot-facts';
 
 interface ShopSectionModel {
   world: ShopWorld;

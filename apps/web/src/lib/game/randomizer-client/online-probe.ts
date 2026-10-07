@@ -1,85 +1,89 @@
 /* @layer bridge-wasm @kind logic */
 /**
  * Pre-flight probe for an online randomizer boot. Opens a WebSocket to the
- * server and walks the full handshake (RoomInfo, GetDataPackage, Connect,
- * Connected) with the same packet builders the real session uses, then closes.
- * No session, no scouts, no polling: the only question answered is whether a
- * real connection would succeed right now.
+ * server, reads the RoomInfo it greets every socket with, then closes. It never
+ * sends Connect, so the room sees no join and no leave: the probe answers only
+ * whether the server is reachable and hosts this game, and reads its version.
+ * A wrong slot name or password is the real session's to report, through its
+ * own error path. A bare local host:port tries ws:// only; any other tries
+ * wss:// first and ws:// when the secure socket never opens (server-url.ts).
  */
-import { buildConnect, buildGetDataPackage, parseServerPackets } from './online-handshake';
-import type { ApServerPacket } from './ap-protocol.type';
+import { AP_GAME } from '@shared/randomizer/archipelago/ap-game';
+import { parseServerPackets, versionOf } from './online-handshake';
+import { createBrowserSocket } from './browser-socket';
+import { normalizeServerUrl, serverUrlCandidates } from './server-url';
+import type { ApRoomInfoPacket, ApServerPacket } from './ap-protocol.type';
+import type { ApSocket, CreateSocket } from './ap-socket.type';
 
 const PROBE_TIMEOUT_MS = 8000;
-const DEFAULT_GAME = 'Relic of the Past';
 
-type ProbeResult = { ok: true } | { ok: false; reason: string };
+type ProbeResult = { ok: true; url?: string; version?: string } | { ok: false; reason: string };
 
 interface ProbeConfig {
   url: string;
-  slotName: string;
   /** Server-side game key; defaults to this app's own registered name. */
   game?: string;
+  createSocket?: CreateSocket;
 }
 
-/** A bare host:port from the creation form becomes a ws:// URL. */
-const normalizeServerUrl = (raw: string): string => {
-  const trimmed = raw.trim();
-  if (!trimmed || /^wss?:\/\//i.test(trimmed)) return trimmed;
-  return `ws://${trimmed}`;
+/** One attempt. `opened` tells the caller whether another scheme is worth a try. */
+type AttemptResult = { result: ProbeResult; opened: boolean };
+
+const roomInfoResult = (packet: ApRoomInfoPacket, url: string, game: string): ProbeResult => {
+  const { major, minor, build } = versionOf(packet);
+  const version = `${major}.${minor}.${build}`;
+  if (!packet.games.includes(game)) return { ok: false, reason: `the room (server ${version}) has no ${game} slot` };
+  return { ok: true, url, version };
 };
 
-const probeOnlineServer = (config: ProbeConfig): Promise<ProbeResult> =>
+const probeOnce = (url: string, config: ProbeConfig): Promise<AttemptResult> =>
   new Promise((resolve) => {
-    const { url, slotName, game = DEFAULT_GAME } = config;
+    const { game = AP_GAME, createSocket = createBrowserSocket } = config;
     let settled = false;
+    let opened = false;
     let timer: ReturnType<typeof setTimeout> | null = null;
-    let socket: WebSocket;
+    let socket: ApSocket;
 
     const finish = (result: ProbeResult): void => {
       if (settled) return;
       settled = true;
       if (timer != null) clearTimeout(timer);
       try { socket.close(); } catch { /* already closed */ }
-      resolve(result);
+      resolve({ result, opened });
     };
 
     try {
-      socket = new WebSocket(url);
+      socket = createSocket(url);
     } catch (error) {
-      resolve({ ok: false, reason: `invalid server URL: ${error instanceof Error ? error.message : String(error)}` });
+      resolve({ result: { ok: false, reason: `invalid server URL: ${error instanceof Error ? error.message : String(error)}` }, opened });
       return;
     }
-    timer = setTimeout(() => finish({ ok: false, reason: `no handshake within ${PROBE_TIMEOUT_MS / 1000}s` }), PROBE_TIMEOUT_MS);
+    timer = setTimeout(() => finish({ ok: false, reason: `no room info within ${PROBE_TIMEOUT_MS / 1000}s` }), PROBE_TIMEOUT_MS);
 
     const handlePacket = (packet: ApServerPacket): void => {
-      switch (packet.cmd) {
-        case 'RoomInfo':
-          socket.send(JSON.stringify([buildGetDataPackage(game)]));
-          break;
-        case 'DataPackage':
-          if (!packet.data.games[game]) {
-            finish({ ok: false, reason: `server data package has no entry for ${game}` });
-            return;
-          }
-          socket.send(JSON.stringify([buildConnect(game, slotName)]));
-          break;
-        case 'Connected':
-          finish({ ok: true });
-          break;
-        case 'ConnectionRefused':
-          finish({ ok: false, reason: `connection refused: ${packet.errors.join(', ')}` });
-          break;
-        default:
-          break; // Unrelated server chatter is ignored, and the handshake decides.
-      }
+      opened = true;
+      if (packet.cmd === 'RoomInfo') finish(roomInfoResult(packet, url, game));
     };
 
+    socket.onopen = () => { opened = true; };
     socket.onmessage = (event) => {
       for (const packet of parseServerPackets(String(event.data))) handlePacket(packet);
     };
-    socket.onerror = () => finish({ ok: false, reason: 'socket error before the handshake completed' });
-    socket.onclose = () => finish({ ok: false, reason: 'connection closed before the handshake completed' });
+    socket.onerror = () => finish({ ok: false, reason: 'socket error before the room info arrived' });
+    socket.onclose = () => finish({ ok: false, reason: 'connection closed before the room info arrived' });
   });
+
+const probeOnlineServer = async (config: ProbeConfig): Promise<ProbeResult> => {
+  const candidates = serverUrlCandidates(config.url);
+  if (candidates.length === 0) return { ok: false, reason: 'no server URL' };
+  let last: ProbeResult = { ok: false, reason: 'no server URL' };
+  for (const url of candidates) {
+    const { result, opened } = await probeOnce(url, config);
+    if (result.ok || opened) return result;
+    last = result;
+  }
+  return last;
+};
 
 export { normalizeServerUrl, probeOnlineServer, PROBE_TIMEOUT_MS };
 export type { ProbeConfig, ProbeResult };

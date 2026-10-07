@@ -2,9 +2,12 @@
 /**
  * Glyph ids to text for the modern font. The alphabet is the active language's, read the way the
  * core reads it (the INI's Language key). Picture glyphs keep their bracketed token name so a row
- * renderer can tell them apart and draw them from the glyph sheet instead.
+ * renderer can tell them apart and draw them from the glyph sheet instead. The extra glyphs a
+ * session wrote into the font's spare slots read as their own characters (extra-glyphs.ts).
  */
 import { kLanguages } from '@shared/asset-extraction/text/data/language-data';
+import { displayAlphabetOf } from '@shared/game/dialog/dialogue-charset';
+import { loadedExtraGlyphs } from '../session-dialogue/extra-glyphs';
 import { getModule } from '../wasm-bridge';
 
 const FALLBACK_CODE = 'us';
@@ -21,6 +24,6 @@ const activeLanguageCode = (): string => {
 };
 
 const activeAlphabet = (): readonly string[] =>
-  (kLanguages[activeLanguageCode()] ?? kLanguages[FALLBACK_CODE]).alphabet;
+  displayAlphabetOf((kLanguages[activeLanguageCode()] ?? kLanguages[FALLBACK_CODE]).alphabet, loadedExtraGlyphs());
 
 export { activeAlphabet, activeLanguageCode };
