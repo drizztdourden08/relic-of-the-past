@@ -25,7 +25,7 @@ interface CheckCardProps {
 const SPRITE_PLACEHOLDER = <Box className="tracker-card__sprite-placeholder" />;
 
 /** An event card carries the app's own mark where an item shows its sprite. */
-const EVENT_MARK = './logos/logo-128.png';
+const EVENT_MARK = './logos/logo/logo-128.png';
 
 const CheckCard = ({ check, status, item: itemId, foreignItem, now }: CheckCardProps) => {
   // The pill only says something once the row happened: 'not now' on a row never done is noise.
