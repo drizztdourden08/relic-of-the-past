@@ -8,6 +8,7 @@ import type { NormalSaveInfo, AutoSaveInfo, QuickSaveSlotInfo } from '@shared/ty
 import type { PlaySession } from '@shared/types/session';
 import type { ShadowCastingProject, ScreenShadowData } from '@shared/types/shadow-casting';
 import type { RefreshRateInfo, SyncedRateStatus } from '@shared/types/display';
+import type { WidgetInvokeContract } from './widget-contract';
 import type { DataLocation, StorageSummary, FileStat } from '@shared/platform';
 import type { SystemDiagnostics } from '@shared/types/diagnostics';
 import type { SimRunConfig } from '@shared/game/simulation';
@@ -46,7 +47,7 @@ type ReviewMap = Record<string, { status: string; comment?: string }>;
 
 interface InvokeContract extends
   ControllerInvokeContract, LanguageInvokeContract, MsuInvokeContract, FfmpegInvokeContract,
-  SanctuaryInvokeContract, HubInvokeContract, StoreInvokeContract {
+  SanctuaryInvokeContract, HubInvokeContract, StoreInvokeContract, WidgetInvokeContract {
   // App
   'app:getUserDataPath': () => Promise<string>;
 

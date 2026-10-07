@@ -95,6 +95,12 @@
      one long demand label wraps. */
   --pond-label-w-max: 200px;
 
+  /* The widget options panel: wide enough for a label, a hint and a control on
+     one row, and the slider inside such a row, which would otherwise size to
+     its content. */
+  --widget-options-w: 272px;
+  --widget-options-slider-w: 140px;
+
   /* One extracted item sprite in a compact list row. */
   --item-sprite-d: 24px;
 
@@ -141,4 +147,12 @@
 
   /* The Hookshop's signed-out screen: one readable centred column. */
   --store-sign-in-w: 480px;
+
+  /* The dock: a widget's title strip (the height a peeking pane folds to,
+     STRIP in layout-tree), a title bar button, the game's grip pill, and the
+     gold bar a divider draws while hovered. */
+  --widget-titlebar-h: 30px;
+  --widget-btn-d: 20px;
+  --dock-grip-h: 18px;
+  --dock-divider-bar: 3px;
 }

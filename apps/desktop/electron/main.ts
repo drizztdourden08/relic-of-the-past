@@ -58,6 +58,8 @@ import { registerSanctuaryHandlers } from './sanctuary/ipc-handlers';
 import { registerHubHandlers } from './hub/ipc-handlers';
 import { registerDebugReportHandlers } from './diagnostics/debug-report/ipc-handlers';
 import { registerFfmpegHandlers } from './tools/ipc-handlers';
+import { registerWidgetHandlers } from './widgets/ipc-handlers';
+import { closeAllPopOuts } from './widgets/popout-windows';
 import { emit } from './lib/ipc/handle';
 import { installDevFileLogging } from './lib/dev-file-logger';
 import { installCrashForensics } from './diagnostics/crash-forensics';
@@ -86,6 +88,7 @@ const userDataOverride = applyUserDataArg();
 // stays inline below after createWindow().
 const IPC_HANDLERS: Array<{ register: () => void; devOnly?: boolean }> = [
   { register: registerWindowHandlers },
+  { register: registerWidgetHandlers },
   { register: registerAspectRatioHandlers },
   { register: registerDisplayHandlers },
   { register: registerDialogHandlers },
@@ -185,6 +188,8 @@ app.whenReady().then(async () => {
   createWindow();
 
   const mainWindow = getMainWindow()!;
+  // A widget's own window has no game of its own: it goes when the main window goes.
+  mainWindow.on('closed', closeAllPopOuts);
 
   // Dev-only: mirror console output to disk so a hard crash leaves a trace.
   if (is.dev) {

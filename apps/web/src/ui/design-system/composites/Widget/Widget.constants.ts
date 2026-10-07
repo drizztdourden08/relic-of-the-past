@@ -24,6 +24,7 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     defaultFloatingSize: { width: 320, height: 280 },
     readsGameData: true,
     requiresSetting: 'trackerEnabled',
+    popOut: true,
   },
   {
     id: 'checks',
@@ -34,6 +35,7 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     defaultFloatingSize: { width: 380, height: 500 },
     readsGameData: true,
     requiresSetting: 'trackerEnabled',
+    popOut: true,
   },
   {
     id: 'logs',
@@ -43,6 +45,7 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     defaultDockedSize: 180,
     defaultFloatingSize: { width: 600, height: 220 },
     devOnly: true,
+    popOut: true,
   },
   {
     id: 'debug',

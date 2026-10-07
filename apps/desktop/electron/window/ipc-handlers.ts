@@ -2,6 +2,7 @@
 import { getMainWindow } from './create-window';
 import { revealMainWindow } from './boot';
 import { handle, on } from '../lib/ipc/handle';
+import { mirrorMainPin } from '../widgets/popout-registry';
 
 const registerWindowHandlers = (): void => {
   const win = () => getMainWindow();
@@ -25,7 +26,9 @@ const registerWindowHandlers = (): void => {
   handle('window:isMaximized', () => win()?.isMaximized() ?? false);
   handle('window:setAlwaysOnTop', (_event, value: boolean) => {
     win()?.setAlwaysOnTop(value);
-    return win()?.isAlwaysOnTop() ?? false;
+    const onTop = win()?.isAlwaysOnTop() ?? false;
+    mirrorMainPin(onTop);
+    return onTop;
   });
   handle('window:setAudioMuted', (_event, value: boolean) => {
     win()?.webContents.setAudioMuted(value);

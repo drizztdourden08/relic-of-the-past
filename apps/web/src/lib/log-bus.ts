@@ -67,6 +67,15 @@ const log = {
   error(msg: string): void { emit('error', 'error', msg); },
 };
 
+/** Takes an entry another window already logged, keeping its id and time, without mirroring it again. */
+const ingest = (entry: LogEntry): void => {
+  entries.push(entry);
+  if (entries.length > MAX_ENTRIES) entries.shift();
+  for (const listener of listeners) {
+    try { listener(entry); } catch { /* a bad listener never breaks the bus */ }
+  }
+};
+
 const subscribe = (listener: LogListener): () => void => {
   listeners.add(listener);
   return () => listeners.delete(listener);
@@ -109,5 +118,5 @@ installGlobalHandlers();
 (window as any).__logEntries = getEntries;
 (window as any).__logSubscribe = subscribe;
 
-export { log, subscribe, getEntries, CHANNEL_COLORS };
+export { log, subscribe, getEntries, ingest, CHANNEL_COLORS };
 export type { LogChannel, LogLevel, LogEntry, LogListener };

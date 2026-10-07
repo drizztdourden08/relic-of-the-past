@@ -1,0 +1,16 @@
+/* @layer renderer-components @kind style */
+
+/* The window is frameless: the widget's title bar is what the OS lets the user drag it by. */
+.widget-host {
+  position: fixed;
+  inset: 0;
+  background: var(--c-bg);
+}
+
+.widget-host [data-drag-widget] {
+  -webkit-app-region: drag;
+}
+
+.widget-host [data-drag-widget] button {
+  -webkit-app-region: no-drag;
+}

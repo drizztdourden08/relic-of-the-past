@@ -1,11 +1,13 @@
 /* @layer renderer-app @kind component */
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { Box, Image } from '@ds/primitives';
-import { WidgetManager, useWidgetLayout } from '@ds/composites/Widget';
-import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, ChecksWidgetSettings, LogsWidgetContent, DebugWidgetContent, NavigationWidgetContent, LiveDataInspectorContent, CheatsWidgetContent, SimulatorWidgetContent, MusicWidgetContent } from '@domains/widgets';
+import { WIDGET_CONTENT } from '@domains/widgets';
+import { usePopOutWindows } from '@app/App/behavior/usePopOutWindows';
 import { widgetLayoutIO } from '@app/lib/storage/widget-state';
 import { primeLiveSettings } from '@app/lib/game';
-import { useExclusiveInsetsStore } from '@app/stores/exclusive-insets-store';
+import { useWidgetLayoutStore } from '@app/stores/widget-layout-store';
+import { isWidgetOpen } from '@app/stores/widget-layout-edits';
+import { WIDGET_DEFINITIONS } from '@ds/composites/Widget';
 import { useDevToolsWidgetGate } from '@app/App/behavior/useDevToolsWidgetGate';
 import { useWidgetPrefs } from '@app/App/behavior/useWidgetPrefs';
 import { useWidgetDisabledGate } from '@app/App/behavior/useWidgetDisabledGate';
@@ -39,6 +41,7 @@ import { MobileChrome } from '../MobileChrome';
 import { SearchPalette } from '../SearchPalette';
 import type { TitleBarProps } from '../TitleBar/TitleBar.type';
 import { GameLayer } from '../GameLayer';
+import { WidgetDock } from '../WidgetDock';
 import { SaveStateOverlay } from '../SaveStateOverlay/SaveStateOverlay';
 import { DebugFloatingControls } from '../../compounds/DebugFloatingControls';
 import { AppDialogs } from './sub-components/AppDialogs';
@@ -77,15 +80,19 @@ const AppMain = () => {
   });
   const nav = useAppNavigation({ activeProfile: profileMgmt.activeProfile, refreshLists: profileMgmt.refreshProfilesAndRoms });
   // Layout and content prefs share one debounced, flushed writer (lib/storage/widget-state).
-  const widgets = useWidgetLayout(profileMgmt.activeProfile?.id ?? null, widgetLayoutIO, window.api.startup);
-  useWidgetPrefs(profileMgmt.activeProfile?.id ?? null);
+  const activeProfileId = profileMgmt.activeProfile?.id ?? null;
+  const hydrateLayout = useWidgetLayoutStore((s) => s.hydrate);
+  const widgetLayout = useWidgetLayoutStore((s) => s.layout);
+  const openWidget = useWidgetLayoutStore((s) => s.open);
+  const toggleWidget = useWidgetLayoutStore((s) => s.toggle);
+  useEffect(() => { void hydrateLayout(activeProfileId, widgetLayoutIO, window.api.startup); }, [activeProfileId, hydrateLayout]);
+  useWidgetPrefs(activeProfileId);
   // Master gate for developer-only UI (widgets, dev pages, shadow editor); also closes
   // devOnly widgets the moment it flips off.
-  const developerToolsEnabled = useDevToolsWidgetGate(widgets.layout, widgets.close, window.api.startup.widgets);
+  const developerToolsEnabled = useDevToolsWidgetGate(window.api.startup.widgets);
   // Vanilla Safe + per-widget requiresSetting gates: covers affected widgets with an overlay
   // instead of hiding them.
   const { vanillaSafe, settings: liveSettings, onOpenSettings: onOpenWidgetSettings } = useWidgetDisabledGate(nav.setActivePage);
-  const setExclusiveInsets = useExclusiveInsetsStore((s) => s.setInsets);
   const saveOverlay = useSaveOverlay(saveState, game.isRunning);
   const update = useAutoUpdate();
 
@@ -102,20 +109,27 @@ const AppMain = () => {
 
   const startup = useStartup(profileMgmt, nav);
   useWasmWarmup();
-  useDebugLaunchHooks({ activeProfile: profileMgmt.activeProfile, loadProfileForGame: profileMgmt.loadProfileForGame, openNavWidget: () => widgets.open('navigation') });
-  useRandomizerBoot(profileMgmt.activeProfile?.id ?? null);
+  const openNavWidget = useCallback(() => openWidget('navigation'), [openWidget]);
+  useDebugLaunchHooks({ activeProfile: profileMgmt.activeProfile, loadProfileForGame: profileMgmt.loadProfileForGame, openNavWidget });
+  useRandomizerBoot(activeProfileId);
   useIpcLogBridge();
   // A music pack opened from the desktop imports itself.
   useMsulOpen();
   // A store install link the browser opened lands on the Hookshop tab.
   useStoreLinks(nav.setActivePage);
-  useAppMainEffects({ isGameRunning: game.isRunning, activePage: nav.activePage, openNavWidget: () => widgets.open('navigation') });
+  useAppMainEffects({ isGameRunning: game.isRunning, activePage: nav.activePage, openNavWidget });
 
   // Splash window → main window: reveal only once startup has settled and painted,
   // so the first frame the user sees is the finished shell (electron only).
   useShellReady(startup.settled);
 
-  const widgetVisibility = useMemo(() => Object.fromEntries(widgets.layout.widgets.map((w) => [w.id, w.visible])), [widgets.layout]);
+  // A widget counts as open wherever it is: docked, floating or in its own window.
+  const widgetVisibility = useMemo(
+    () => Object.fromEntries(WIDGET_DEFINITIONS.map((def) => [def.id, isWidgetOpen(widgetLayout, def.id)])),
+    [widgetLayout],
+  );
+  const widgets = useMemo(() => ({ toggle: toggleWidget }), [toggleWidget]);
+  usePopOutWindows({ profileId: activeProfileId, settings: liveSettings, gameRunning: game.isRunning });
 
   const chromeProps: TitleBarProps = buildChromeProps({
     profileMgmt, widgets, saveOverlay, nav, game, display, audio, widgetVisibility, developerToolsEnabled,
@@ -166,35 +180,19 @@ const AppMain = () => {
           onProfileHubTabChange={setProfileHubTab}
         />
 
-        <WidgetManager
-          layout={widgets.layout}
+        <WidgetDock
+          contents={WIDGET_CONTENT}
           gameRunning={game.isRunning}
           pageOpen={nav.activePage !== 'none'}
-          onUpdate={widgets.update}
-          onClose={widgets.close}
-          onInsetsChange={setExclusiveInsets}
-          settingsContent={{ inventory: <InventoryWidgetSettings />, checks: <ChecksWidgetSettings /> }}
           developerToolsEnabled={developerToolsEnabled}
           startupForcedWidgetIds={window.api.startup.widgets}
           vanillaSafe={vanillaSafe}
-          settings={liveSettings}
+          settings={liveSettings ?? null}
           onOpenSettings={onOpenWidgetSettings}
-        >
-          {{
-            inventory: <InventoryWidgetContent />,
-            checks: <ChecksWidgetContent />,
-            logs: <LogsWidgetContent />,
-            debug: <DebugWidgetContent />,
-            navigation: <NavigationWidgetContent />,
-            dataset: <LiveDataInspectorContent />,
-            cheats: <CheatsWidgetContent />,
-            simulator: <SimulatorWidgetContent />,
-            music: <MusicWidgetContent />,
-          }}
-        </WidgetManager>
+        />
 
         <DebugFloatingControls
-          profileId={profileMgmt.activeProfile?.id ?? null}
+          profileId={activeProfileId}
           gameRunning={game.isRunning}
           onOpenReport={() => setShowBugReportDialog(true)}
         />

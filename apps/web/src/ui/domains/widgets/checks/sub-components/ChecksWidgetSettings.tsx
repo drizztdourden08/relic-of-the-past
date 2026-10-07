@@ -1,28 +1,24 @@
 /* @layer renderer-widgets @kind component */
-import { useState } from 'react';
-import { Box, Text, Toggle } from '@ds/primitives';
-import { STICKY_HEADER_KEY } from '../checks.constants';
-import { readSticky } from '../behavior/useStickyHeader';
+import { SegmentedControl, Toggle } from '@ds/primitives';
+import { OptionRow } from '@ds/composites/Widget/sub-components/WidgetOptions';
+import { useWidgetPref } from '@app/hooks/useWidgetPref';
+import type { ViewMode } from '@domains/app/compounds/ChecksTracker';
+import { useStickyHeader } from '../behavior/useStickyHeader';
+import { CHECKS_PREF_KEY, VIEW_MODE_DEFAULT, VIEW_MODE_PREF, VIEW_OPTIONS } from '../checks.constants';
 
 const ChecksWidgetSettings = () => {
-  const [sticky, setSticky] = useState<boolean>(readSticky);
-
-  const handleChange = (next: boolean) => {
-    setSticky(next);
-    const value = next ? 'on' : 'off';
-    localStorage.setItem(STICKY_HEADER_KEY, value);
-    window.dispatchEvent(new StorageEvent('storage', { key: STICKY_HEADER_KEY, newValue: value }));
-  };
+  const [sticky, setSticky] = useStickyHeader();
+  const [viewMode, setViewMode] = useWidgetPref<ViewMode>(CHECKS_PREF_KEY, VIEW_MODE_PREF, VIEW_MODE_DEFAULT);
 
   return (
-    <Box className="widget-settings__row">
-      <Text className="widget-settings__label">Pin header</Text>
-      <Toggle
-        checked={sticky}
-        onChange={handleChange}
-        description="Keep the summary and filters in place; scroll the list only."
-      />
-    </Box>
+    <>
+      <OptionRow label="View">
+        <SegmentedControl<ViewMode> value={viewMode} options={VIEW_OPTIONS} onChange={setViewMode} />
+      </OptionRow>
+      <OptionRow label="Pin header" hint="Keep the summary and filters in place">
+        <Toggle checked={sticky} onChange={setSticky} />
+      </OptionRow>
+    </>
   );
 };
 
