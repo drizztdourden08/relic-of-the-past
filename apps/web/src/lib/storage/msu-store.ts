@@ -55,6 +55,8 @@ const listMsuPackEntries = (pack: string) => msu.listPackEntries(files(), pack);
 const getMsuFileMetadata = (pack: string) => msu.packFileMetadata(files(), pack, probeAudioFile);
 const readMsuLoopSample = (pack: string, fileName: string) => msu.readMsu1LoopSample(files(), pack, fileName);
 const deleteMsuPack = (pack: string) => msu.deletePack(files(), pack);
+/** True when a deleted pack goes to the system's recycle bin; false when it is removed for good. */
+const canTrashMsuPack = (): boolean => files().trash !== undefined;
 
 // Pack editing: .msul manifest plus per-file operations.
 const readMsuManifest = (pack: string) => msu.readManifest(files(), pack);
@@ -104,7 +106,7 @@ const installMsulFile = async (bytes: Uint8Array, desiredName?: string): Promise
 
 export {
   listMsuPacks, getMsuPackFiles, getMsuTrackList, listMsuAudioFiles, listMsuPackEntries, getMsuFileMetadata,
-  readMsuLoopSample, deleteMsuPack, readMsuTrackFile,
+  readMsuLoopSample, deleteMsuPack, canTrashMsuPack, readMsuTrackFile,
   importMsuFile, importMsu, installMsulFile,
   readMsuManifest, writeMsuManifest, createMsuPack, renameMsuPack, renameMsuTrackFile, deleteMsuTrackFile,
   writeMsuTrackFile,

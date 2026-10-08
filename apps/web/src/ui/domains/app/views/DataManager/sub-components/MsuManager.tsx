@@ -8,7 +8,7 @@ import { useCallback, useState } from 'react';
 import { ImportForm } from './ImportForm';
 import { Text } from '../../../../../design-system/primitives/Text';
 import { MasterDetailLayout } from '../../../../../design-system/composites/MasterDetailLayout';
-import { deleteMsuPack } from '@app/lib/storage/msu-store';
+import { canTrashMsuPack, deleteMsuPack } from '@app/lib/storage/msu-store';
 import { useInstalledKind } from '@app/hooks/useInstalledKind';
 import { InstalledOriginBar, useConfirmUninstall } from '@domains/app/views/InstalledOriginBar';
 import { useMsuManager } from './msu/useMsuManager';
@@ -45,7 +45,8 @@ const MsuManager = (props: MsuManagerProps) => {
       confirmUninstall(owner, () => { void forget(packName); });
       return;
     }
-    onDeleteConfirm('Delete Music Pack', `Delete pack "${packName}"? This cannot be undone.`, async () => {
+    const outcome = canTrashMsuPack() ? 'It goes to the Recycle Bin.' : 'This cannot be undone.';
+    onDeleteConfirm('Delete Music Pack', `Delete pack "${packName}"? ${outcome}`, async () => {
       await deleteMsuPack(packName);
       await forget(packName);
     });
