@@ -1423,6 +1423,30 @@ rendered pie in the shipped layout with no store. It spans the whole screen grid
 no track, so it is not counted as a grid occupant (that would mark all nine cells taken, found on
 the grand merge test run), except in its own cell picker.
 
+### hud/hud-drag-timers
+
+Phase 5 of the HUD drag and drop plan: auto scroll and spring load, both loops. The claim worth
+testing is that they stop: a frame loop surviving a drop keeps panning a list nobody drags over,
+and a dwell timer surviving one opens a row after the gesture ended. Each exit has its own case
+(drop, Escape, `pointercancel`, unmount), and the frame queue is stubbed instead of faked so
+"nothing pending" is a readable number. The fixture is deep enough that the drag cannot reach the
+bottom, with one container low down for the spring to open.
+
+What is not proved: the outline runs over a stubbed `elementFromPoint` answering from y alone
+(§44.7), which does not model scrolling, so rows never move as `scrollTop` changes. Proved is that
+the right scroller is found (walking up from a row to the list), the ramp gives the right delta,
+the loop is pointer driven and re-emits the pointer each frame (so it keeps running under a
+stationary cursor), and every loop is cancelled; new rows arriving under the cursor need a real
+layout engine. jsdom lays nothing out, so the scroller is given a real box (its bottom band is
+y 176 to 200).
+
+The ramp is linear across the band (0 at the inner lip, the full rate at the edge, half way in is
+half speed), because a constant rate is a cliff and depth is the one control the gesture offers.
+Spring load waits 500ms with the caret turning (the only animation, which tells waiting apart
+from nothing happening), then expands. A drop elsewhere or a cancel re-collapses the row, since a
+drag that leaves folders open has damaged the view; a drop inside it leaves it open, since folding
+would hide the move. Leaving before the dwell resets it.
+
 ### hud/hud-drop-intent.keep.test.ts
 
 Phase 1 of the HUD drag and drop plan tests the resolver headless: every refusal reason and the
